@@ -1,0 +1,34 @@
+{
+ "_comment": "Wave D-1 (#155): near-threshold [Mixer] evolution at the Pallass alchemy benches. Mixer 9, synthesized_draught 66 (L9=57 met, L10=68 not). player_skills EMPTY so the field hotbar is exactly the three mixer field grants (low_grade_synthesis 1, magic_water_solvent 2, mineral_distillation 3). Player stands at (5,8) facing up, on the low_grade bench (alchemy_bench_synthesis at 5,7). Reachability: pallass_market needs door_awakened + pallass_attuned, so the door-awakening chain (door_understood/recovered_anchor_stone/bought_catalyst/door_study_sleeps:3/door_awakened) and met_relc are banked to satisfy test_fixture_coherence -- a Mixer who reached Pallass has done this arc. Three real bench casts push the counter to 69; the inn sleep levels to 10 and evolves Mixer -> Alchemist ([True Synthesis]); the true bench (8,7) then consumes solvent_phial + mineral_salts. No combat -> rng_state inert (reuses a derived seed-9 value).",
+ "version": 6,
+ "state": {
+  "current_map": "pallass_market",
+  "player_cell": [5, 8],
+  "player_facing": [0, -1],
+  "classes": {"mixer": 9},
+  "accomplishments": {
+   "synthesized_draught": 66,
+   "met_relc": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
+   "pallass_attuned": 1
+  },
+  "player_skills": [],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": {"weapon": "", "armor": ""},
+  "container_state": {},
+  "hotbar_loadout": [],
+  "actions_since_sleep": 0,
+  "gold": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

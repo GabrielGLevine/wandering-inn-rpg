@@ -1,0 +1,36 @@
+{
+	"_comment": "Wave D-1 (#155): Xif's 'Cunning Crafts' stall. Voice: friendly, distractible, cost-minded, 'I am a City Gnoll, if anyone asks.' Shop is haggle-FALSE (Pallass civic doctrine -- posted prices, final). Sells components + a potion. ONE Saliss banter name-drop (the 'naked lunatic' line), NEVER near Onieva or identity. His [Perfect Reduction]/[Poison Immunity] stay dialogue color, never player grants.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Xif",
+			"text": "Cunning Crafts, best on the tier. I am a City Gnoll, if anyone asks. Prices are posted and prices are final, this is Pallass, we do not haggle here. What do you need?",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "bought_from_xif": 1 } }, "text": "The repeat customer. I like repeat customers. They have already learned the prices are final. What now?" }
+			],
+			"options": [
+				{ "text": "A solvent phial. (7 gold)", "requires": { "gold": 7 }, "effects": [ { "gold": -7 }, { "item": "solvent_phial" }, { "accomplishment": "bought_from_xif" } ], "goto": "bought" },
+				{ "text": "A twist of mineral salts. (7 gold)", "requires": { "gold": 7 }, "effects": [ { "gold": -7 }, { "item": "mineral_salts" }, { "accomplishment": "bought_from_xif" } ], "goto": "bought" },
+				{ "text": "That mending draught, then. (10 gold)", "requires": { "gold": 10 }, "effects": [ { "gold": -10 }, { "item": "mending_draught" }, { "accomplishment": "bought_from_xif" } ], "goto": "bought" },
+				{ "text": "Who is the best alchemist in Pallass?", "goto": "banter" },
+				{ "text": "Nothing today.", "end": true }
+			]
+		},
+		"bought": {
+			"speaker": "Xif",
+			"text": "Sold, at the posted price, which is the only price. Come back when you have run out. You always run out.",
+			"options": [
+				{ "text": "Anything else?", "goto": "hub" },
+				{ "text": "That is all.", "end": true }
+			]
+		},
+		"banter": {
+			"speaker": "Xif",
+			"text": "Me, obviously. The only alchemist in this city better than me is a naked lunatic, and he does not keep regular hours, so for your purposes: me. Now, was there something you wanted to buy, or are we only flattering me?",
+			"options": [
+				{ "text": "Only flattering you.", "goto": "hub" },
+				{ "text": "Back to business.", "goto": "hub" }
+			]
+		}
+	}
+}

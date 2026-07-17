@@ -16,6 +16,30 @@ const PLAYER_STRING_FILES := [
 ]
 
 
+
+## GH#155 review L2: on a skill-gated prop, every id in on_skill_use.remove_item
+## (and its variants) must also appear in requires_item -- otherwise the gate
+## passes without the item and remove_item silently no-ops (free craft).
+func _validate_consume_subset(maps: Dictionary) -> void:
+	for map_id: String in maps:
+		for ent: Dictionary in maps[map_id].get("entities", []):
+			if not ent.has("on_skill_use"):
+				continue
+			var req: Array = []
+			var raw_req: Variant = ent.get("requires_item", "")
+			if raw_req is Array: req = raw_req
+			elif String(raw_req) != "": req = [String(raw_req)]
+			var payloads: Array = [ent["on_skill_use"]]
+			for v: Variant in (ent["on_skill_use"].get("variants", []) if ent["on_skill_use"] is Dictionary else []):
+				payloads.append(v)
+			for payload: Variant in payloads:
+				if not (payload is Dictionary) or not payload.has("remove_item"):
+					continue
+				var rems: Variant = payload["remove_item"]
+				var rem_list: Array = rems if rems is Array else [String(rems)]
+				for rem: String in rem_list:
+					assert(req.has(rem), "%s/%s: remove_item '%s' not in requires_item (silent free-craft)" % [map_id, ent.get("id","?"), rem])
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var graphs: Dictionary = _load_dialogue_graphs()
@@ -47,6 +71,7 @@ func _init() -> void:
 	_validate_hide_when_nodes_have_always_available_exit(graphs)
 	_validate_class_gains(classes, produced_accomplishments)
 	_validate_class_level_tables(classes)
+	_validate_consume_subset(WISceneCatalog.compose()["maps"])
 	_validate_class_skill_grant_ids(classes, skill_ids)
 	_validate_class_skill_grant_ids_shape_cases()
 	_validate_props(scene)

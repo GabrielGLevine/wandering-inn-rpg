@@ -615,6 +615,36 @@
    }
   },
   {
+   "script": "mixer_alchemist_loop",
+   "seed": 9,
+   "fixture": "near_mixer",
+   "note": "[Mixer] bench casts -> [Alchemist] evolution -> [True Synthesis] two-component consume",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "near_mixer"
+    ],
+    "skills": [
+     "low_grade_synthesis",
+     "magic_water_solvent",
+     "mineral_distillation",
+     "true_synthesis"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "runner_courier_loop",
    "seed": 9,
    "fixture": "near_runner_courier",

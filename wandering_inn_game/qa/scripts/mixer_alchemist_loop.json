@@ -1,0 +1,76 @@
+{
+ "_comment": "Wave D-1 (#155): THE alchemist arc proof. near_mixer fixture (Mixer 9 at the Pallass benches, player_skills empty so the field hotbar is exactly the 3 mixer field grants). PHASE A: three real field-hotbar casts at three co-located benches -- low_grade_synthesis (slot 1) -> crude_draught, magic_water_solvent (slot 2) -> solvent_phial, mineral_distillation (slot 3) -> mineral_salts -- each banks synthesized_draught (66 -> 69). PHASE B: sleep at the inn levels Mixer 9->10 and evolves it to [Alchemist] (grants [True Synthesis]; the alchemist's own grant sorts to hotbar slot 1, ahead of the inherited mixer grants). PHASE C: the true bench (slot 1) consumes BOTH solvent_phial and mineral_salts (the String|Array requires_item/remove_item seam) and yields tonic_of_the_clear_eye; crude_draught survives. No combat anywhere. Emit order per cast: skill_used -> accomplishment_recorded -> bench toast -> item_gained (the pickup fires AFTER the bench toast; item_lost, if any, fires after the pickup).",
+ "fixture_save": "near_mixer",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 10 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+
+  { "action": "assert_state", "path": "current_map", "equals": "pallass_market" },
+  { "action": "assert_state", "path": "player_cell", "equals": [5, 8] },
+  { "action": "assert_state", "path": "classes", "equals": { "mixer": 9 } },
+  { "action": "assert_state", "path": "accomplishments.synthesized_draught", "equals": 66 },
+  { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3, "slot_numbers": ["1", "2", "3"], "fallback_labels": ["LS", "MS", "MD"] }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "00_mixer_benches_boot" },
+
+  { "_comment": "== PHASE A cast 1: [Low-Grade Synthesis] (slot 1) at alchemy_bench_synthesis (5,7). Player boots facing up onto it.", "action": "press", "name": "hotbar_1" },
+  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "low_grade_synthesis", "context": "exploration", "target": "alchemy_bench_synthesis" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "synthesized_draught" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Low-Grade Synthesis] — Crude reagents over a low flame, and a draught that mostly does what it should. It will pass." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "crude_draught" }, "timeout_sec": 5 },
+
+  { "_comment": "== cast 2: step right to (6,8), bump up to face the solvent still (6,7), cast [Magic-Water Solvent] (slot 2).", "action": "move", "direction": "right", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [6, 8] },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [6, 8] },
+  { "action": "press", "name": "hotbar_2" },
+  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "magic_water_solvent", "context": "exploration", "target": "alchemy_bench_solvent" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "solvent_phial" }, "timeout_sec": 5 },
+
+  { "_comment": "== cast 3: step right to (7,8), bump up to face the retort (7,7), cast [Mineral Distillation] (slot 3).", "action": "move", "direction": "right", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [7, 8] },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [7, 8] },
+  { "action": "press", "name": "hotbar_3" },
+  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "mineral_distillation", "context": "exploration", "target": "alchemy_bench_distillation" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "mineral_salts" }, "timeout_sec": 5 },
+
+  { "action": "assert_state", "path": "inventory", "contains": "solvent_phial" },
+  { "action": "assert_state", "path": "inventory", "contains": "mineral_salts" },
+  { "action": "assert_state", "path": "accomplishments.synthesized_draught", "equals": 69 },
+  { "action": "screenshot", "name": "01_components_crafted" },
+
+  { "_comment": "== PHASE B: sleep at the inn bed to resolve progression. Teleport upstairs, bump up into your_bed (9,1), interact -> sleep -> Mixer 9->10 (level_up) -> evolve to [Alchemist].", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2] },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn_upstairs" }, "timeout_sec": 5 },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [9, 2] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "class_level_up", "payload_contains": { "class": "mixer", "level": 10 }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "class_evolved", "payload_contains": { "from": "mixer", "to": "alchemist" }, "timeout_sec": 5 },
+  { "action": "assert_state", "path": "classes", "equals": { "alchemist": 10 } },
+  { "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 4, "slot_numbers": ["1", "2", "3", "4"], "fallback_labels": ["TS", "LS", "MS", "MD"] } },
+  { "action": "screenshot", "name": "02_evolved_to_alchemist" },
+
+  { "_comment": "== PHASE C: back to the true bench (8,7). [True Synthesis] is now slot 1 (the alchemist's own grant sorts ahead of the inherited mixer skills). Bump up to face the bench, cast slot 1: it consumes BOTH solvent_phial and mineral_salts (String|Array remove_item) and yields tonic_of_the_clear_eye. Pickup (tonic) fires BEFORE the two item_lost removals.", "action": "teleport", "map": "pallass_market", "cell": [8, 8] },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "pallass_market" }, "timeout_sec": 5 },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [8, 8] },
+  { "action": "press", "name": "hotbar_1" },
+  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "true_synthesis", "context": "exploration", "target": "alchemy_bench_true" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "synthesized_draught" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[True Synthesis] — Solvent into salts, in the one order that holds. What settles in the vial is clearer than either half went in." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "tonic_of_the_clear_eye" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "solvent_phial" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "mineral_salts" }, "timeout_sec": 5 },
+
+  { "action": "assert_state", "path": "inventory", "equals": ["crude_draught", "tonic_of_the_clear_eye"] },
+  { "action": "screenshot", "name": "03_true_synthesis_tonic" },
+
+  { "action": "assert_event_absent", "type": "combat_started" }
+ ]
+}

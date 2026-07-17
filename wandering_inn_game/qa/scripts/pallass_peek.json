@@ -8,7 +8,7 @@
   { "action": "assert_state", "path": "current_map", "equals": "pallass_market" },
   { "action": "assert_event_logged", "type": "ui_mood_applied", "payload_contains": { "map": "pallass_market" } },
   { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "pallass_market", "floor_cells": 286, "blocked_cells": 80 } },
-  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 16, "fallbacks": 0 } },
+  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 22, "fallbacks": 0 } },
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "00_pallass_market_arrival_corner" },
 

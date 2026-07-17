@@ -1,0 +1,43 @@
+{
+	"_comment": "Wave D-1 (#155): Octavia's consignment day-trade stall (RELOCATION-FLAGGED -- a Celum day-tripper through the Door, non-citizen trader, NOT resident). Voice: fast-talking sales pitch, low-20s nerves, the stink/explosion gag (2.44) referenced ONCE. SHE teaches [Mixer]: the 'Show me' option is HIDDEN until the player buys anything from her (bought_from_octavia), runs a warmth beat (the 'lesson' node), then banks the FIRST synthesized_draught (mixer's gained_by). 'Apprentice of Saliss' NEVER appears. hide_when synthesized_draught retires the lesson once the player is already mixing.",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Octavia",
+			"text": "You look like someone who could use a potion. Everyone can use a potion. Especially mine, which are very reasonably priced and only occasionally on fire.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "synthesized_draught": 1 } }, "text": "Back already. Told you it gets in the blood. What are we mixing today?" },
+				{ "requires": { "accomplishment": { "bought_from_octavia": 1 } }, "text": "A paying customer, my favorite kind. Anything else, or do you want to see how the sausage actually gets made?" }
+			],
+			"options": [
+				{ "text": "That solvent phial. (6 gold)", "requires": { "gold": 6 }, "effects": [ { "gold": -6 }, { "item": "solvent_phial" }, { "accomplishment": "bought_from_octavia" } ], "goto": "bought" },
+				{ "text": "A twist of mineral salts. (6 gold)", "requires": { "gold": 6 }, "effects": [ { "gold": -6 }, { "item": "mineral_salts" }, { "accomplishment": "bought_from_octavia" } ], "goto": "bought" },
+				{ "text": "Show me how you make these.", "requires": { "accomplishment": { "bought_from_octavia": 1 } }, "hide_when": { "accomplishment": { "synthesized_draught": 1 } }, "goto": "lesson" },
+				{ "text": "Just browsing.", "end": true }
+			]
+		},
+		"bought": {
+			"speaker": "Octavia",
+			"text": "Corked and honest. Do not drink the solvent straight, I mean it, one person did that once and I am still not allowed back in that inn.",
+			"options": [
+				{ "text": "Anything else?", "goto": "hub" },
+				{ "text": "That is all.", "end": true }
+			]
+		},
+		"lesson": {
+			"speaker": "Octavia",
+			"text": "Okay. Real talk, because you actually bought something and that buys you the good lesson. Mixing is not magic. It is measuring and nerve and not flinching when it hisses at you. Here, take the bench. Cheap reagents, low flame. Watch my hands, then do exactly what I did and not one thing more.",
+			"options": [
+				{ "text": "Low flame. Steady hands.", "effects": [ { "accomplishment": "synthesized_draught" } ], "goto": "first_mix" },
+				{ "text": "Maybe later.", "goto": "hub" }
+			]
+		},
+		"first_mix": {
+			"speaker": "Octavia",
+			"text": "...and it holds. Look at that. First try, no fire, nobody crying. You have the knack, which is more than I can say for half of Celum. Keep at it and it stops being a trick and starts being a class. Xif keeps his benches right there. Go make a mess of your own.",
+			"options": [
+				{ "text": "Thanks, Octavia.", "end": true }
+			]
+		}
+	}
+}

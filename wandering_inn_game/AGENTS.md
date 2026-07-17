@@ -208,6 +208,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `combat_abandon` | 9 (fixture `post_tutorial`) | pause opens mid-fight (HOTBAR resting mode), Abandon returns to last autosave; combat_resolved never fires |
 | `class_evolution_loop` | 9 (fixture `near_evolution`) | grind → sleep → `class_evolved` + evolved kit |
 | `cook_chef_loop` | 9 (fixture `near_cook_chef`) | Cook threshold → `class_evolved` to [Chef] |
+| `mixer_alchemist_loop` | 9 (fixture `near_mixer`) | Wave D-1 (#155): [Mixer] bench casts → `class_evolved` to [Alchemist] → [True Synthesis] two-component consume (the String\|Array `requires_item`/`remove_item` seam) |
 | `runner_courier_loop` | 9 (fixture `near_runner_courier`) | delivery threshold → `class_evolved` to [Courier] |
 | `hedge_witch_loop` | 9 (fixture `near_hedge_witch`) | fixture-banked [Hedge Witch] gain → [Witch] + combat kit |
 | `necromancer_loop` | 9 (fixture `near_necromancer`) | fixture-banked [Necromancer] gain + L3 combat kit |

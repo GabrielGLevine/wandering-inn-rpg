@@ -38,6 +38,7 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `combat_abandon` | 9 | full | `post_tutorial` | pause opens mid-fight (HOTBAR resting mode), Abandon returns to last autosave; combat_resolved never fires |
 | `class_evolution_loop` | 9 | full | `near_evolution` | grind -> sleep -> class_evolved + evolved kit |
 | `cook_chef_loop` | 9 | full | `near_cook_chef` | Cook 10 threshold -> [Chef] evolution |
+| `mixer_alchemist_loop` | 9 | full | `near_mixer` | [Mixer] bench casts -> [Alchemist] evolution -> [True Synthesis] two-component consume |
 | `runner_courier_loop` | 9 | full | `near_runner_courier` | delivery threshold -> [Courier] evolution |
 | `hedge_witch_loop` | 9 | full | `near_hedge_witch` | fixture-banked [Hedge Witch] gain -> [Witch] + combat kit |
 | `necromancer_loop` | 9 | full | `near_necromancer` | fixture-banked [Necromancer] gain + L3 combat kit |

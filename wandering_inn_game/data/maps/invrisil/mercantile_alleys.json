@@ -1234,6 +1234,26 @@
     "toast": "You brace the stack and ease the wedge free by hand. Behind the bottom crate: a couple of coins someone forgot to collect.",
     "gold": 2
    }
+  },
+  {
+   "_comment": "Wave D-1 (#155): the invrisil SATELLITE bench -- entry [Low-Grade Synthesis] only, gives [Mixer] a second region (an apothecary corner off the boulevard). Placed at (1,6), a top-left corner off every QA path (invrisil_walkthrough walks row6 cols3-10 and row7 cols1-10; approach from (1,7)/(0,6)). Placeholder cauldron sprite (VISUAL-LOG). Banks synthesized_draught like every alchemist bench.",
+   "id": "invrisil_apothecary_bench",
+   "kind": "prop",
+   "cell": [
+    1,
+    6
+   ],
+   "display_name": "Apothecary Corner",
+   "sprite": "cauldron",
+   "requires_skill": "low_grade_synthesis",
+   "skill_hint_toast": "A cramped apothecary corner, its burner free for anyone who knows the working. Invrisil rents everything by the hour, including this.",
+   "locked_toast": "A back-alley apothecary's bench, crowded with someone else's half-finished work. None of it means anything to you.",
+   "observe": "Shelves of labelled jars, a rented burner, and a hand-lettered card: WORKING SPACE, BY THE HOUR, NO CREDIT.",
+   "on_skill_use": {
+    "accomplishment": "synthesized_draught",
+    "item": "crude_draught",
+    "toast": "[Low-Grade Synthesis] — Someone else's burner, your working. The draught comes out crude but honest, same as anywhere."
+   }
   }
  ]
 }

@@ -566,6 +566,39 @@
 				{ "level": 15, "requires_any": { "sneaked_past_danger": 52, "ranged_hit": 95 }, "grants": [] },
 				{ "level": 16, "requires_any": { "sneaked_past_danger": 61, "ranged_hit": 110 }, "grants": ["marked_quarry"] }
 			]
+		},
+		{
+			"_comment": "CANON: [Mixer] is the base class ('Alchemist = advanced [Mixer]', List of Classes). Curve: trader's per-level thresholds VERBATIM (L2=8 .. L10=68); gained-by-low (1) per Wave D-1 (#155) -- the first synthesis is the entry, the grind is the class. Single-axis Replacement to [Alchemist] (trader/cook/tactician precedent; min_uses 12 trivially cleared, 68 >> 12). v1 kit is field/bench-cast only (no combat skills), so sim_combat_batch stays untouched.",
+			"id": "mixer",
+			"display_name": "Mixer",
+			"stat_growth": { "int": 1 },
+			"gained_by": { "accomplishment": { "synthesized_draught": 1 } },
+			"evolution": { "at_level": 10, "dominance_share": 0.6, "min_uses": 12, "targets": { "synthesized_draught": "alchemist" } },
+			"levels": [
+				{ "level": 1, "requires": {}, "grants": ["low_grade_synthesis"] },
+				{ "level": 2, "requires": { "synthesized_draught": 8 }, "grants": [] },
+				{ "level": 3, "requires": { "synthesized_draught": 12 }, "grants": ["cleansing_heat"] },
+				{ "level": 4, "requires": { "synthesized_draught": 17 }, "grants": [] },
+				{ "level": 5, "requires": { "synthesized_draught": 23 }, "grants": ["magic_water_solvent"] },
+				{ "level": 6, "requires": { "synthesized_draught": 30 }, "grants": [] },
+				{ "level": 7, "requires": { "synthesized_draught": 38 }, "grants": ["mineral_distillation"] },
+				{ "level": 8, "requires": { "synthesized_draught": 47 }, "grants": [] },
+				{ "level": 9, "requires": { "synthesized_draught": 57 }, "grants": [] },
+				{ "level": 10, "requires": { "synthesized_draught": 68 }, "grants": [] }
+			]
+		},
+		{
+			"_comment": "SPARSE TABLE (GH#54): [Alchemist] is Replacement-only ('Alchemist = advanced [Mixer]') -- floor = mixer's evolution.at_level (10). Trader-delta continuation +12/+13 (chef precedent). L10 grants [True Synthesis] (ORIGINAL, canon-plausible; [Master Alchemist]/guild-class names are Vol-9 = FAIL). stat_growth int:2 (merchant/strategist evolution-bump precedent).",
+			"id": "alchemist",
+			"display_name": "Alchemist",
+			"stat_growth": { "int": 2 },
+			"inherits": "mixer",
+			"aspiration": { "display_name": "Guild Alchemist", "text": "The guilds certify what the cauldron already knows. Keep mixing." },
+			"levels": [
+				{ "level": 10, "requires": { "synthesized_draught": 68 }, "grants": ["true_synthesis"] },
+				{ "level": 11, "requires": { "synthesized_draught": 80 }, "grants": [] },
+				{ "level": 12, "requires": { "synthesized_draught": 93 }, "grants": [] }
+			]
 		}
 	]
 }
