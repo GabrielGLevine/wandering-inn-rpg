@@ -311,41 +311,42 @@
    "vignette": 0.34
   },
   "dungeon_approach": {
-   "_comment": "Per-prop accent variation (the 4 trap tells' post-reveal warning tints, the statue/rubble dressing) rides the live decor `tint` field (GH#55) on top of this base grade, not a second mood card.",
+   "_comment": "Per-prop accent variation (the 4 trap tells' post-reveal warning tints, the statue/rubble dressing) rides the live decor `tint` field (GH#55) on top of this base grade, not a second mood card. GH-VISUAL-LOG 2026-07-17: base grade lifted ~35% total (12% then a further 20% on user call) (user-ratified USER-EYES item -- vault shots read near-black).",
    "day": [
-    0.21,
-    0.22,
-    0.19
+    0.282,
+    0.295,
+    0.256
    ],
    "dusk": [
-    0.21,
-    0.22,
-    0.19
+    0.282,
+    0.295,
+    0.256
    ],
    "night": [
-    0.17,
-    0.18,
-    0.15
+    0.228,
+    0.242,
+    0.202
    ],
    "vignette": 0.56
   },
   "trapped_halls": {
    "day": [
-    0.21,
-    0.22,
-    0.19
+    0.282,
+    0.295,
+    0.256
    ],
    "dusk": [
-    0.21,
-    0.22,
-    0.19
+    0.282,
+    0.295,
+    0.256
    ],
    "night": [
-    0.17,
-    0.18,
-    0.15
+    0.228,
+    0.242,
+    0.202
    ],
-   "vignette": 0.56
+   "vignette": 0.56,
+   "_comment": "GH-VISUAL-LOG 2026-07-17: base grade lifted ~35% total (12% then a further 20% on user call) (user-ratified USER-EYES item -- vault shots read near-black)."
   },
   "pallass_market": {
    "_comment": "Crystal lamps (steady white #E9EEF2 PointLight2D per-entity) carry the after-dark read; NEVER amber (the standing quarantine check every future screenshot of this map must pass).",
@@ -443,39 +444,41 @@
   },
   "vault": {
    "day": [
-    0.21,
-    0.22,
-    0.19
+    0.282,
+    0.295,
+    0.256
    ],
    "dusk": [
-    0.21,
-    0.22,
-    0.19
+    0.282,
+    0.295,
+    0.256
    ],
    "night": [
-    0.17,
-    0.18,
-    0.15
+    0.228,
+    0.242,
+    0.202
    ],
-   "vignette": 0.56
+   "vignette": 0.56,
+   "_comment": "GH-VISUAL-LOG 2026-07-17: grade lifted ~35% total (12% then a further 20% on user call) with the field cards (user-ratified)."
   },
   "trapped_halls_snare": {
    "day": [
-    0.21,
-    0.22,
-    0.19
+    0.282,
+    0.295,
+    0.256
    ],
    "dusk": [
-    0.21,
-    0.22,
-    0.19
+    0.282,
+    0.295,
+    0.256
    ],
    "night": [
-    0.17,
-    0.18,
-    0.15
+    0.228,
+    0.242,
+    0.202
    ],
-   "vignette": 0.56
+   "vignette": 0.56,
+   "_comment": "GH-VISUAL-LOG 2026-07-17: grade lifted ~35% total (12% then a further 20% on user call) with the field cards (user-ratified)."
   }
  }
 }
