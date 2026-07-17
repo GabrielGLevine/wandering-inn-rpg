@@ -1,5 +1,5 @@
 {
- "_comment": "GH#152: proves the cisterns-report -> Watch-runner -> Zevara-summons -> deep-tremor chain with NO fixture hand-banks past the report (the arc's entry was a zero-producer dead end in v0.9.0).",
+ "_comment": "GH#152-followup: proves the REAL act-paced entry -- Act II conditions met, the SLEEP fires _maybe_fire_tremor_pointer (watch_runner_pointed + pointer toast), then Zevara summons -> heard_the_deep_tremor. No hand-banks of the chain counters.",
  "starts_at_title": true,
  "fixture_save": "raskghar_entry_start",
  "steps": [
@@ -37,41 +37,14 @@
    "timeout_sec": 5
   },
   {
-   "action": "assert_state",
-   "path": "current_map",
-   "equals": "street"
+   "action": "move",
+   "direction": "right",
+   "steps": 1,
+   "_comment": "bump your_bed (9,1)"
   },
   {
    "action": "press",
    "name": "interact"
-  },
-  {
-   "action": "press",
-   "name": "interact",
-   "_comment": "pool-line-then-conversation idiom: second interact opens the graph"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_started",
-   "payload_contains": {
-    "conversation": "olesm_intro"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "click_dialogue_option",
-   "option": 4,
-   "_comment": "hub visible: board(1)/appraise(2)/leave(3)/Any word on the cisterns?(4)"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_node",
-   "timeout_sec": 5
-  },
-  {
-   "action": "click_dialogue_option",
-   "option": 1,
-   "_comment": "cisterns node visible (brief hidden by heard_about_cisterns): It's dealt with(1)"
   },
   {
    "action": "wait_for_event",
@@ -79,16 +52,16 @@
    "payload_contains": {
     "id": "watch_runner_pointed"
    },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "confirm"
+   "timeout_sec": 10,
+   "_comment": "the act-paced code pointer fires at this sleep"
   },
   {
    "action": "wait_for_event",
-   "type": "ui_dialogue_hidden",
-   "timeout_sec": 10
+   "type": "toast",
+   "payload_contains": {
+    "text": "A Watch runner is looking for you."
+   },
+   "timeout_sec": 5
   },
   {
    "action": "teleport",
@@ -109,8 +82,7 @@
   },
   {
    "action": "press",
-   "name": "interact",
-   "_comment": "pool-line-then-conversation idiom: second interact opens the graph"
+   "name": "interact"
   },
   {
    "action": "wait_for_event",
@@ -123,7 +95,7 @@
   {
    "action": "click_dialogue_option",
    "option": 3,
-   "_comment": "zevara hub visible: Long shift?(1)/sweep(2)/You sent a runner for me?(3)/bearings(4)"
+   "_comment": "adjust from trace if hub list shifts"
   },
   {
    "action": "wait_for_event",
@@ -133,7 +105,7 @@
   {
    "action": "click_dialogue_option",
    "option": 1,
-   "_comment": "summons node: Then I'll go down.(1) -> summons_send banks heard_the_deep_tremor"
+   "_comment": "Then I'll go down. -> summons_send"
   },
   {
    "action": "wait_for_event",

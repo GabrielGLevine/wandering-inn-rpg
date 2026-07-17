@@ -1,37 +1,59 @@
 {
- "_comment": "GH#152 fixture: post-cisterns-clear, PRE-report, standing below Olesm at (29,4) facing up. Reachable position: cleared the nest solo, walked back. Deliberately does NOT hand-bank watch_runner_pointed / heard_the_deep_tremor -- proving the report->runner->summons chain end-to-end is this script's whole point (the old scripts' fixture hand-banks MASKED the missing producer, GH#152).",
+ "_comment": "GH#152-followup fixture: Act II conditions MET (two classes; the_errand + missing_crate + renns_warhammer completed; cisterns resolved AND reported), watch_runner_pointed NOT banked -- the sleep in-script must fire _maybe_fire_tremor_pointer. Standing upstairs beside the bed.",
  "version": 6,
  "state": {
-  "current_map": "street",
+  "current_map": "inn_upstairs",
   "player_cell": [
-   29,
-   4
+   8,
+   1
   ],
   "player_facing": [
-   0,
-   -1
+   1,
+   0
   ],
   "classes": {
-   "warrior": 2
+   "warrior": 2,
+   "helper": 1
   },
   "accomplishments": {
    "reached_liscor": 1,
    "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "cleaned_the_inn": 1,
+   "slept": 3,
+   "reached_two_classes": 1,
+   "has_package": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "kept_reward": 1,
+   "asked_about_crate": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "recovered_crate_watch": 1,
+   "heard_about_lost_hammer": 1,
+   "hammer_quest_started": 1,
+   "found_the_warhammer": 1,
+   "returned_the_warhammer": 1,
    "heard_about_cisterns": 1,
    "cleared_the_nest": 1,
    "resolved_the_cisterns": 1,
-   "won_combat": 3,
-   "melee_hit": 8,
-   "sparred_with_relc": 1,
-   "given_spear_by_relc": 1
+   "cisterns_reported": 1,
+   "commended_by_olesm": 1,
+   "won_combat": 4,
+   "melee_hit": 14
   },
   "player_skills": [
-   "basic_cleaning"
+   "basic_cleaning",
+   "basic_cooking"
   ],
   "removed_entities": [],
   "dormant_encounters": [],
   "generalist_classes": [],
   "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "renns_warhammer",
    "cisterns"
   ],
   "pending_consolidation": {},
@@ -44,7 +66,7 @@
    "armor": ""
   },
   "container_state": {},
-  "actions_since_sleep": 3,
+  "actions_since_sleep": 4,
   "rng_state": "-6393592048753323481"
  }
 }
