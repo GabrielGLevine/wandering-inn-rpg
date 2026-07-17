@@ -63,6 +63,11 @@ func _init() -> void:
 	produced_accomplishments["befriended_moments"] = true
 	produced_accomplishments["deliberate_commerce"] = true
 	produced_accomplishments["completed_delivery"] = true
+	# door_awakened is banked in code (wi_game.gd's sleep hook, the Act III gate), never
+	# by a scene/dialogue effect the scanner can see -- register it here so quest beats may
+	# gate on it (the door chain's `attune` beat, #148). Mirrors STRUCTURAL_LITERALS in
+	# test_shipped_ids.gd, which already lists door_awakened as a code-produced counter.
+	produced_accomplishments["door_awakened"] = true
 	_validate_conversations(scene, graphs)
 	_validate_dialogue_graphs(graphs, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
 	_validate_quests(quests, produced_accomplishments)

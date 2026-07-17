@@ -161,9 +161,9 @@
    "frames": 2
   },
   {
-   "_comment": "== Back (MOUSE path): row 11 = 'Back' (index 10, now the last row -- shifted again by 'Combat Speed' being appended before it, issue #87).",
+   "_comment": "== Back (MOUSE path): row 12 = 'Back' (index 11, now the last row -- shifted again by 'Quest Thread' being appended before it, issue #148; the same append-before-Back move #87 made for 'Combat Speed').",
    "action": "click_settings_row",
-   "row": 11
+   "row": 12
   },
   {
    "action": "wait_for_event",
@@ -363,10 +363,10 @@
    "equals": 2
   },
   {
-   "_comment": "== Close settings (KEYBOARD path): down x1 from 'Combat Speed' -> 'Back' (index 10, now the last row -- shifted again by 'Combat Speed' being appended before it, issue #87), Confirm closes -- the pause menu resumes right where it was (cursor untouched, no re-open).",
+   "_comment": "== Close settings (KEYBOARD path): down x2 from 'Combat Speed' (index 9) -> 'Back' (index 11, now the last row -- shifted by 'Quest Thread' appended before it, issue #148). The cursor passes THROUGH 'Quest Thread' (index 10) without toggling it (move never activates -- only Confirm does), so the setting stays default-OFF here; the dedicated Quest Thread toggle + round-trip is appended at the very end. Confirm closes -- the pause menu resumes right where it was (cursor untouched, no re-open).",
    "action": "move",
    "direction": "down",
-   "steps": 1
+   "steps": 2
   },
   {
    "action": "press",
@@ -462,6 +462,168 @@
    "action": "assert_settings_value",
    "path": "combat_speed_step",
    "equals": 2
+  },
+  {
+   "action": "assert_settings_file_exists"
+  },
+  {
+   "_comment": "== QUEST THREAD toggle (issue #148 tier 4, APPENDED): the opt-in field-HUD 'Quest Thread' line, default OFF. Open pause -> Settings (a FRESH panel instance -- the load above rebuilt every UI layer). This whole section is append-only; the default-OFF readout_lines byte-identity is pinned by field_skills_loop/mage_invisibility_loop/rogue_earn_loop, not here.",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_pause_row",
+   "row": 8
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Fresh open -> cursor at 'Master volume' (index 0). down x10 reaches 'Quest Thread' (index 10, appended immediately before 'Back'). Confirm toggles it ON (mirrors the Reduce Motion row's confirm-to-toggle).",
+   "action": "move",
+   "direction": "down",
+   "steps": 10
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "show_quest_thread": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Close settings: down x1 from 'Quest Thread' (index 10) -> 'Back' (index 11), Confirm closes.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "_comment": "== SAVE / LOAD round-trip for the new setting: same config-file-backed-autoload idiom reduce_motion/combat_speed_step already prove -- show_quest_thread survives swap_to_world (UI teardown/rebuild) because WISettings is never touched by Game.load_slot/WISave. pause cursor is on 'Settings' (index 7, the row that opened it) -- down x2 wraps to 'Save' (index 1).",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "save"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Game saved."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Save closed the pause menu -- reopen (fresh cursor 0) and down x2 reaches 'Load' (index 2).",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== PERSISTENCE PROOF: the load just tore down and rebuilt every UI layer (settings_panel included). Reopen Settings and force a FRESH render (the open()'s own render fires BEFORE ui_settings_shown, so it is already behind the forward-only wait cursor) by nudging the cursor -- that render reads the live WISettings, proving show_quest_thread is still ON post-round-trip. (assert_settings_value has no show_quest_thread path in the driver, so this render-payload read is the equivalent of the reduce_motion/combat_speed_step live-autoload assertions above.)",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_pause_row",
+   "row": 8
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "show_quest_thread": true
+   },
+   "timeout_sec": 5
   },
   {
    "action": "assert_settings_file_exists"

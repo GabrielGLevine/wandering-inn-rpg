@@ -462,6 +462,132 @@
      ]
     },
     {
+     "id": "erin_thread_cisterns",
+     "requires_accomplishment": {
+      "heard_about_cisterns": 1
+     },
+     "lines": [
+      "Olesm's been muttering at sewer maps all morning — go rescue him from himself."
+     ]
+    },
+    {
+     "id": "erin_thread_cisterns_report",
+     "requires_accomplishment": {
+      "resolved_the_cisterns": 1
+     },
+     "lines": [
+      "Word is the cistern thing's settled. Olesm will want it from you, not rumor."
+     ]
+    },
+    {
+     "id": "erin_thread_cisterns_neutral",
+     "requires_accomplishment": {
+      "cisterns_reported": 1
+     },
+     "lines": [
+      "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
+      "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
+      "Everything okay? You've got a look. I know that look - I make that look in mirrors."
+     ]
+    },
+    {
+     "id": "erin_thread_gate_runner",
+     "requires_accomplishment": {
+      "watch_runner_pointed": 1
+     },
+     "lines": [
+      "A runner was asking after you. Captain wants you at the gate."
+     ]
+    },
+    {
+     "id": "erin_thread_deep_tremor",
+     "requires_accomplishment": {
+      "heard_the_deep_tremor": 1
+     },
+     "lines": [
+      "You've got the look of someone the Watch pointed at a hole in the ground."
+     ]
+    },
+    {
+     "id": "erin_thread_warren_cleared",
+     "requires_accomplishment": {
+      "cleared_the_warren": 1
+     },
+     "lines": [
+      "You came back up. TELL Zevara you came back up — she counts."
+     ]
+    },
+    {
+     "id": "erin_thread_raskghar_neutral",
+     "requires_accomplishment": {
+      "raskghar_sealed": 1
+     },
+     "lines": [
+      "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
+      "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
+      "Everything okay? You've got a look. I know that look - I make that look in mirrors."
+     ]
+    },
+    {
+     "id": "erin_thread_ruin_east",
+     "requires_accomplishment": {
+      "door_understood": 1
+     },
+     "lines": [
+      "Pisces said something about a ruin east past the gate road. He used the word 'trivial,' which means it isn't."
+     ]
+    },
+    {
+     "id": "erin_thread_catalyst",
+     "requires_accomplishment": {
+      "recovered_anchor_stone": 1
+     },
+     "lines": [
+      "Krshia holds the catalyst at her stall. She will absolutely overcharge you. Pay it."
+     ]
+    },
+    {
+     "id": "erin_thread_pisces_ready",
+     "requires_accomplishment": {
+      "bought_catalyst": 1,
+      "recovered_anchor_stone": 1
+     },
+     "lines": [
+      "You have everything. Pisces is by the Guild steps, being smug at pigeons."
+     ]
+    },
+    {
+     "id": "erin_thread_door_neutral",
+     "requires_accomplishment": {
+      "door_awakened": 1
+     },
+     "lines": [
+      "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
+      "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
+      "Everything okay? You've got a look. I know that look - I make that look in mirrors."
+     ]
+    },
+    {
+     "id": "erin_thread_horns_gallery",
+     "requires_accomplishment": {
+      "horns_delve_started": 1
+     },
+     "lines": [
+      "Ceria's team went down to the gallery already. They'll wait. Ceria said so. Twice."
+     ]
+    },
+    {
+     "id": "erin_thread_horns_neutral",
+     "requires_accomplishment": {
+      "horns_party_formed": 1
+     },
+     "lines": [
+      "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
+      "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
+      "Everything okay? You've got a look. I know that look - I make that look in mirrors."
+     ]
+    },
+    {
      "_comment": "CONSTRAINT: this stage deliberately repeats every waking until the residue stage below takes over; it is the game's only signpost toward the new door, so it must keep firing until the player has actually acted on it, never for a fixed number of hearings.",
      "id": "erin_garden_open",
      "requires_accomplishment": {
@@ -518,6 +644,26 @@
       "You covered for me. With the order, I mean. You didn't have to, and you didn't make it a story to tell later. That is... rare. Thank you.",
       "Sit anywhere you like. The good chair by the fire, even. No, I insist — I'm allowed to insist, it's practically my inn too.",
       "I used to think kindness was something people spent on you to get something back. You keep not doing that. It's unsettling. In a good way. Mostly."
+     ]
+    },
+    {
+     "id": "lyonette_thread_door",
+     "requires_accomplishment": {
+      "door_chain_started": 1
+     },
+     "lines": [
+      "Erin's door is doing the thing again. She's pretending it's fine."
+     ]
+    },
+    {
+     "id": "lyonette_thread_door_neutral",
+     "requires_accomplishment": {
+      "door_understood": 1
+     },
+     "lines": [
+      "Yes, I work here. No, I did not always. That is the whole story, and you may have it for the price of a nod.",
+      "The floors are clean because I cleaned them. Twice. Mind where you set your boots.",
+      "...You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
      ]
     }
    ],

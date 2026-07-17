@@ -1,6 +1,9 @@
 {
  "_comment": "Statue (CASTLE 0.3) + rubble (CAVE) dressing per the family recipe, decor+blocked pairs (the ruin_surface boulder convention).",
  "biome": "dungeon",
+ "arrival_toasts": [
+  { "requires": { "heard_the_deep_tremor": 1 }, "hide_when": { "cleared_the_warren": 1 }, "text": "The fissure Zevara spoke of is down past the gallery. The dark has a direction today." }
+ ],
  "grid": {
   "width": 16,
   "height": 12

@@ -44,6 +44,7 @@ var _reduce_motion := false
 var _combat_speed_step := 0
 var _field_readout_expanded := true
 var _field_readout_choice := false
+var _show_quest_thread := false
 
 
 func _ready() -> void:
@@ -62,6 +63,7 @@ func _load_settings() -> void:
 			if _settings.has_section_key("field_hud", "readout_expanded") else null
 	_field_readout_choice = field_value is bool
 	_field_readout_expanded = bool(field_value) if _field_readout_choice else true
+	_show_quest_thread = bool(_settings.get_value("field_hud", "show_quest_thread", false))
 
 
 func _persist(section: String, key: String, value: Variant) -> void:
@@ -217,6 +219,19 @@ func set_field_readout_expanded(value: bool) -> void:
 	_field_readout_expanded = value
 	_field_readout_choice = true
 	_persist("field_hud", "readout_expanded", value)
+
+
+func show_quest_thread() -> bool:
+	return _show_quest_thread
+
+
+func set_show_quest_thread(value: bool) -> void:
+	_show_quest_thread = value
+	_persist("field_hud", "show_quest_thread", value)
+
+
+func toggle_show_quest_thread() -> void:
+	set_show_quest_thread(not _show_quest_thread)
 
 
 

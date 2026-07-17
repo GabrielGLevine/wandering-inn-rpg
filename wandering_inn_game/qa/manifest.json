@@ -2197,7 +2197,8 @@
      "economy",
      "exploration",
      "night_phase",
-     "portals"
+     "portals",
+     "quests"
     ]
    }
   },
@@ -2880,6 +2881,32 @@
      "boards",
      "combat",
      "exploration"
+    ]
+   }
+  },
+  {
+   "script": "thread_lattice_loop",
+   "seed": 9,
+   "fixture": "thread_lattice_loop_start",
+   "note": "#148 Tier 5: the rumor lattice armed->retire lifecycle. Loads the Raskghar handoff (cleared_the_warren banked, raskghar_sealed pending) so Erin's relay-5 talk_pool stage is ARMED and plays on the first interact; then installs the retired fixture (raskghar_sealed banked) and reloads it via the pause-menu Load path, and the next Erin interact shows her NEUTRAL retirement line -- the relay is gone. Proves the array-order last-match-wins talk_pool_stages progression the whole lattice depends on.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "thread_lattice_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "save"
     ]
    }
   },

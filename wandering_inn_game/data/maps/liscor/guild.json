@@ -255,6 +255,48 @@
       "Tell Erin her letters are still too long. And that I read all of them. Do not pass on the second part.",
       "Rough week on the board. If you're taking work, take the sane jobs. I flag the sane ones. It's not a service everyone gets."
      ]
+    },
+    {
+     "id": "selys_thread_horns_gallery",
+     "requires_accomplishment": {
+      "horns_delve_started": 1
+     },
+     "lines": [
+      "Ceria's team went down to the gallery already. They'll wait. Ceria said so. Twice."
+     ]
+    },
+    {
+     "id": "selys_thread_horns_neutral",
+     "requires_accomplishment": {
+      "horns_party_formed": 1
+     },
+     "lines": [
+      "Guild's the usual mess. Bounties on the board, arguments over the board, somebody bleeding near the board.",
+      "Need something stamped, filed, or explained slowly? That is the job. Mostly the slow part.",
+      "Try not to die out there. It is a mountain of paperwork when you do, and guess who is the mountain.",
+      "New face. You'll fit right in - everyone here is chasing coin they have not earned yet."
+     ]
+    },
+    {
+     "id": "selys_thread_pallass",
+     "requires_accomplishment": {
+      "pallass_sponsored": 1
+     },
+     "lines": [
+      "Krshia's stone, market row — the Door can't reach Pallass without it."
+     ]
+    },
+    {
+     "id": "selys_thread_pallass_neutral",
+     "requires_accomplishment": {
+      "pallass_attuned": 1
+     },
+     "lines": [
+      "Guild's the usual mess. Bounties on the board, arguments over the board, somebody bleeding near the board.",
+      "Need something stamped, filed, or explained slowly? That is the job. Mostly the slow part.",
+      "Try not to die out there. It is a mountain of paperwork when you do, and guess who is the mountain.",
+      "New face. You'll fit right in - everyone here is chasing coin they have not earned yet."
+     ]
     }
    ],
    "conversation": "selys_delivery",

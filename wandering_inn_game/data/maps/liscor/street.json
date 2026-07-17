@@ -1085,6 +1085,26 @@
       "The cistern file is closed. Do you know how few files CLOSE in this office? I keep it on top of the stack for morale.",
       "If you're between jobs, see me about bounty work. The Watch pays slow, but it pays. And I sign faster for people who don't invoice me for heroics."
      ]
+    },
+    {
+     "id": "zevara_thread_cisterns_report",
+     "requires_accomplishment": {
+      "resolved_the_cisterns": 1
+     },
+     "lines": [
+      "Word is the cistern thing's settled. Olesm will want it from you, not rumor."
+     ]
+    },
+    {
+     "id": "zevara_thread_cisterns_neutral",
+     "requires_accomplishment": {
+      "cisterns_reported": 1
+     },
+     "lines": [
+      "If you're here to report a crime, the form's on the left. If you're here to commit one, don't. I've had a day.",
+      "Ten years running this Watch. Six weeks of leave, total. That's the whole personality, if you were wondering.",
+      "Relc's off being enormous at someone. Klbkch is... Klbkch. The gate still stands. Don't jinx it."
+     ]
     }
    ],
    "conversation": "zevara_intro",
@@ -1175,6 +1195,27 @@
      "lines": [
       "Rematch, someday. Not today; I need my dignity back first.",
       "I still replay our game some nights. I win in my head. It isn't the same."
+     ]
+    },
+    {
+     "id": "olesm_thread_gate_runner",
+     "requires_accomplishment": {
+      "watch_runner_pointed": 1
+     },
+     "lines": [
+      "A runner was asking after you. Captain wants you at the gate."
+     ]
+    },
+    {
+     "id": "olesm_thread_gate_neutral",
+     "requires_accomplishment": {
+      "heard_the_deep_tremor": 1
+     },
+     "lines": [
+      "Three reports due by dawn and the ink is winning. If anyone asks, the [Tactician] of Liscor is 'strategizing'.",
+      "Three reports due by dusk and two clerks who can't count past a company. I'll manage. I always manage.",
+      "Supply lines, sightlines, morale: a city is only a very slow battle, and Liscor has been winning it for centuries. I intend to keep the streak.",
+      "Selys works the desk inside now, board and all. I still find reasons to linger out here more than the job requires. The paperwork doesn't ask why."
      ]
     }
    ],
@@ -1320,6 +1361,48 @@
      ]
     },
     {
+     "id": "pisces_thread_deep_tremor",
+     "requires_accomplishment": {
+      "heard_the_deep_tremor": 1
+     },
+     "lines": [
+      "You've got the look of someone the Watch pointed at a hole in the ground."
+     ]
+    },
+    {
+     "id": "pisces_thread_warren_neutral",
+     "requires_accomplishment": {
+      "cleared_the_warren": 1
+     },
+     "lines": [
+      "You linger. Either you have a question of substance or you are another gawker. I shall assume the former. Generously.",
+      "Magic is not the wand-waving the market storytellers sell. It is discipline. Precision. Neither, I observe, is common here.",
+      "Yes, a [Necromancer]. No, I will not apologize for a competence others lack the wit to appreciate.",
+      "Do continue standing there. I find the silence rather more edifying than most conversation."
+     ]
+    },
+    {
+     "id": "pisces_thread_door",
+     "requires_accomplishment": {
+      "door_chain_started": 1
+     },
+     "lines": [
+      "Erin's door is doing the thing again. She's pretending it's fine."
+     ]
+    },
+    {
+     "id": "pisces_thread_door_neutral",
+     "requires_accomplishment": {
+      "door_understood": 1
+     },
+     "lines": [
+      "You linger. Either you have a question of substance or you are another gawker. I shall assume the former. Generously.",
+      "Magic is not the wand-waving the market storytellers sell. It is discipline. Precision. Neither, I observe, is common here.",
+      "Yes, a [Necromancer]. No, I will not apologize for a competence others lack the wit to appreciate.",
+      "Do continue standing there. I find the silence rather more edifying than most conversation."
+     ]
+    },
+    {
      "_comment": "TWO stages, gated on the hidden `door_study_sleeps` counter (wi_game.gd's sleep()-beat hook, banked once the ruin-recovery chain's beat-3 counters are held)",
      "id": "pisces_door_study_1",
      "requires_accomplishment": {
@@ -1441,6 +1524,91 @@
       "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
       "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
       "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week."
+     ]
+    },
+    {
+     "id": "krshia_thread_cisterns",
+     "requires_accomplishment": {
+      "heard_about_cisterns": 1
+     },
+     "lines": [
+      "Olesm's been muttering at sewer maps all morning — go rescue him from himself."
+     ]
+    },
+    {
+     "id": "krshia_thread_cisterns_neutral",
+     "requires_accomplishment": {
+      "resolved_the_cisterns": 1
+     },
+     "lines": [
+      "You look, you do not buy. This is fine. Looking is its own kind of respect.",
+      "Silverfang goods - fair weight, fair price. I do not haggle down, and I do not forget a face.",
+      "You carry yourself better than before. Good. A city notices such things, even when its people pretend not to.",
+      "Speak plainly with me and we get along well. The other kind of talk, I have no patience for."
+     ]
+    },
+    {
+     "id": "krshia_thread_gate_runner",
+     "requires_accomplishment": {
+      "watch_runner_pointed": 1
+     },
+     "lines": [
+      "A runner was asking after you. Captain wants you at the gate."
+     ]
+    },
+    {
+     "id": "krshia_thread_gate_neutral",
+     "requires_accomplishment": {
+      "heard_the_deep_tremor": 1
+     },
+     "lines": [
+      "You look, you do not buy. This is fine. Looking is its own kind of respect.",
+      "Silverfang goods - fair weight, fair price. I do not haggle down, and I do not forget a face.",
+      "You carry yourself better than before. Good. A city notices such things, even when its people pretend not to.",
+      "Speak plainly with me and we get along well. The other kind of talk, I have no patience for."
+     ]
+    },
+    {
+     "id": "krshia_thread_ruin_east",
+     "requires_accomplishment": {
+      "door_understood": 1
+     },
+     "lines": [
+      "Pisces said something about a ruin east past the gate road. He used the word 'trivial,' which means it isn't."
+     ]
+    },
+    {
+     "id": "krshia_thread_ruin_neutral",
+     "requires_accomplishment": {
+      "recovered_anchor_stone": 1
+     },
+     "lines": [
+      "You look, you do not buy. This is fine. Looking is its own kind of respect.",
+      "Silverfang goods - fair weight, fair price. I do not haggle down, and I do not forget a face.",
+      "You carry yourself better than before. Good. A city notices such things, even when its people pretend not to.",
+      "Speak plainly with me and we get along well. The other kind of talk, I have no patience for."
+     ]
+    },
+    {
+     "id": "krshia_thread_pisces_ready",
+     "requires_accomplishment": {
+      "bought_catalyst": 1,
+      "recovered_anchor_stone": 1
+     },
+     "lines": [
+      "You have everything. Pisces is by the Guild steps, being smug at pigeons."
+     ]
+    },
+    {
+     "id": "krshia_thread_door_neutral",
+     "requires_accomplishment": {
+      "door_awakened": 1
+     },
+     "lines": [
+      "You look, you do not buy. This is fine. Looking is its own kind of respect.",
+      "Silverfang goods - fair weight, fair price. I do not haggle down, and I do not forget a face.",
+      "You carry yourself better than before. Good. A city notices such things, even when its people pretend not to.",
+      "Speak plainly with me and we get along well. The other kind of talk, I have no patience for."
      ]
     }
    ],

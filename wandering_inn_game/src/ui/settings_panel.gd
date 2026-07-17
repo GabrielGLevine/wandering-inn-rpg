@@ -16,7 +16,7 @@ const HELP_CONTENT_PATH := "res://data/help_content.json"
 const ROWS := [
 	"Master volume", "Music volume", "SFX volume",
 	"Fullscreen", "Text Scale", "Reduce Motion",
-	"Controls...", "Replay Hints", "Help...", "Combat Speed", "Back",
+	"Controls...", "Replay Hints", "Help...", "Combat Speed", "Quest Thread", "Back",
 ]
 const AUDIO_ROWS := {"Master volume": "Master", "Music volume": "Music", "SFX volume": "SFX"}
 
@@ -375,6 +375,8 @@ func _row_text(i: int) -> String:
 			return "Reduce Motion: %s" % ("On" if WISettings.reduce_motion() else "Off")
 		"Combat Speed":
 			return "Combat Speed: %s" % WISettings.combat_speed_label()
+		"Quest Thread":
+			return "Quest Thread: %s" % ("On" if WISettings.show_quest_thread() else "Off")
 		_:
 			return key
 
@@ -392,6 +394,7 @@ func _refresh() -> void:
 		"text_scale_step": WISettings.text_scale_step(),
 		"reduce_motion": WISettings.reduce_motion(),
 		"combat_speed_step": WISettings.combat_speed_step(),
+		"show_quest_thread": WISettings.show_quest_thread(),
 	})
 
 
@@ -420,6 +423,9 @@ func _activate_row() -> void:
 			_refresh()
 		"Reduce Motion":
 			WISettings.toggle_reduce_motion()
+			_refresh()
+		"Quest Thread":
+			WISettings.toggle_show_quest_thread()
 			_refresh()
 		"Controls...":
 			_enter_controls()

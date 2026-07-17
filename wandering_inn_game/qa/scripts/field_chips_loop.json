@@ -34,7 +34,7 @@
   { "action": "wait_for_event", "type": "ui_settings_shown", "timeout_sec": 5 },
   { "_comment": "assert_event_logged (whole-log scan), not wait_for_event: settings_loop.json's own precedent -- the all-defaults ui_settings_rendered snapshot fires as part of open() itself, BEFORE ui_settings_shown, so it is already behind the forward-only wait cursor by the time ui_settings_shown resolves.", "action": "assert_event_logged", "type": "ui_settings_rendered" },
   { "action": "screenshot", "name": "03_pause_chip_to_settings" },
-  { "action": "click_settings_row", "row": 11 },
+  { "_comment": "row 12 = 'Back' (the last settings row, shifted from 11 by 'Quest Thread' being appended before it, issue #148 -- matches settings_loop.json's own Back-index step).", "action": "click_settings_row", "row": 12 },
   { "action": "wait_for_event", "type": "ui_settings_hidden", "timeout_sec": 5 },
   { "action": "wait_frames", "frames": 2 },
   { "action": "click_pause_row", "row": 1 },

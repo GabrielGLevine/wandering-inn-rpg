@@ -1294,6 +1294,29 @@
     "Sorry, I don't mean to- never mind. Long nights lately.",
     "Wolves didn't used to come this close to the fences. Whatever's stirring up that hollow is pushing everything our way, wolves included."
    ],
+   "talk_pool_stages": [
+    {
+     "id": "riverfarm_headman_thread_hollow",
+     "requires_accomplishment": {
+      "heard_price_of_a_favor": 1
+     },
+     "lines": [
+      "The hollow's west past the fields. Nobody walks you there. Nobody local, anyway."
+     ]
+    },
+    {
+     "id": "riverfarm_headman_thread_neutral",
+     "requires_accomplishment": {
+      "blight_lifted": 1
+     },
+     "lines": [
+      "We don't truck with witches here. Didn't used to, anyway.",
+      "A bad crop year, you learn to count what's yours twice. Once for the harvest, once for what walked off with it.",
+      "Sorry, I don't mean to- never mind. Long nights lately.",
+      "Wolves didn't used to come this close to the fences. Whatever's stirring up that hollow is pushing everything our way, wolves included."
+     ]
+    }
+   ],
    "observe": "A ledger under one arm, mud to the knee, the look of a man doing three jobs badly instead of one job well.",
    "conversation": "riverfarm_headman",
    "dialogue": [
@@ -1356,6 +1379,29 @@
     "Lost two lambs to something with thorns for teeth. Wasn't a wolf.",
     "Know that treeline better than the headman does. He'd rather not.",
     "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "riverfarm_hunter_thread_hollow",
+     "requires_accomplishment": {
+      "heard_price_of_a_favor": 1
+     },
+     "lines": [
+      "The hollow's west past the fields. Nobody walks you there. Nobody local, anyway."
+     ]
+    },
+    {
+     "id": "riverfarm_hunter_thread_neutral",
+     "requires_accomplishment": {
+      "blight_lifted": 1
+     },
+     "lines": [
+      "Hollow's quieter than it should be. Doesn't sit right.",
+      "Lost two lambs to something with thorns for teeth. Wasn't a wolf.",
+      "Know that treeline better than the headman does. He'd rather not.",
+      "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health."
+     ]
+    }
    ],
    "observe": "Weathered hands, a hunting knife worn plain at the hip, eyes on the treeline more than on you.",
    "conversation": "riverfarm_hunter",

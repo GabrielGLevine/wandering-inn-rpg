@@ -125,6 +125,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 			"entities": ents,
 			"blocked": blocked,
 			"freezable": freezable,
+			"arrival_toasts": m.get("arrival_toasts", []),
 		}
 	_bind_map(String(scene_config["start_map"]))
 	_emit(WIEvents.SIM_INITIALIZED, {"seed": rng_seed})
@@ -170,6 +171,32 @@ func transition(to_map: String, to_cell: Vector2i) -> void:
 	_bind_map(to_map)
 	player_cell = to_cell
 	_emit(WIEvents.MAP_CHANGED, {"map": to_map, "cell": [to_cell.x, to_cell.y]})
+	_emit_arrival_toast(to_map)
+
+
+## #148 Tier 3: map-level re-orientation on arrival. Mirrors the portal
+## arrival_toast emit (_travel_to_portal below) but reads a map's OWN
+## `arrival_toasts` array (schema: [{requires:{counter:n}, hide_when:{counter:n},
+## text:...}]). First SATISFIED entry wins (requires all met AND hide_when none
+## met), at most one toast. Pure sim -- gate reads route through
+## accomplishment_count, output through the event sink.
+func _emit_arrival_toast(to_map: String) -> void:
+	for entry: Variant in (_maps.get(to_map, {}) as Dictionary).get("arrival_toasts", []):
+		if not (entry is Dictionary):
+			continue
+		if _arrival_gate_met((entry as Dictionary).get("requires", {}), (entry as Dictionary).get("hide_when", {})):
+			_emit(WIEvents.TOAST, {"text": String((entry as Dictionary).get("text", ""))})
+			return
+
+
+func _arrival_gate_met(requires: Dictionary, hide_when: Dictionary) -> bool:
+	for key: String in requires:
+		if accomplishment_count(key) < int(requires[key]):
+			return false
+	for key: String in hide_when:
+		if accomplishment_count(key) >= int(hide_when[key]):
+			return false
+	return true
 
 
 func find_entity(id: String) -> Dictionary:
