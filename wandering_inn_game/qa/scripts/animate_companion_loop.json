@@ -35,7 +35,7 @@
   {"action": "wait_for_event", "type": "ui_sleep_veil_finished", "timeout_sec": 5},
   {"action": "assert_state", "path": "companion", "equals": ""},
   {"action": "assert_event_logged", "type": "companion_changed", "payload_contains": {"active": false, "reason": "sleep"}},
-  {"action": "assert_event_logged", "type": "ui_companion_rendered", "payload_contains": {"active": false}},
+  {"action": "assert_event_count", "type": "ui_companion_rendered", "payload_contains": {"active": false}, "count": 3},
   {"action": "screenshot", "name": "01_companion_cleared_after_sleep"}
  ]
 }

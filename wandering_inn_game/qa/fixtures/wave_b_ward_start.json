@@ -1,6 +1,6 @@
 {
  "_comment": "Issue #132 ward fixture: [Greater Hearthward] is a QA-fixture affordance, curated as the only field slot at the floodplains road ambush approach; its exact Witch L10 grant is pinned in test_progression. Two real sleeps prove ward_sleeps:2 rather than a fixture-mutated ward state.",
- "version": 5,
+ "version": 6,
  "state": {
   "current_map": "floodplains",
   "player_cell": [30, 20],

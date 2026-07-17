@@ -1,5 +1,5 @@
 {
- "_comment": "A fire_mage-kitted PC fixture for the [Flame Pillar] blast_damage proof (flame_pillar_loop, GH#71). classes {fire_mage:11} exercises the inherited Mage kit with zero hand-stuffed combat skills; Wave B therefore also appends Mage L11 [Flash Step] to the hotbar while leaving [Flame Pillar] at slot 5. The loop drives Flame Pillar by real input and autoplays only after its footprint/cost proof. rng_state is a properly-derived state (.seed=1, captured .state = -1966449618399012673), never hand-typed.",
+ "_comment": "A fire_mage-kitted PC fixture for the [Flame Pillar] blast_damage proof (flame_pillar_loop, GH#71). classes {fire_mage:11} exercises the inherited Mage kit with zero hand-stuffed combat skills (do not add flame_pillar to player_skills; that would mask an inheritance regression instead of proving it); Wave B therefore also appends Mage L11 [Flash Step] to the hotbar while leaving [Flame Pillar] at slot 5. The loop drives Flame Pillar by real input and autoplays only after its footprint/cost proof. rng_state is a properly-derived state (.seed=1, captured .state = -1966449618399012673), never hand-typed.",
  "version": 5,
  "state": {
   "current_map": "floodplains",

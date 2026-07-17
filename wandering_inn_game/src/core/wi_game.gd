@@ -261,8 +261,8 @@ func move_player(dir: Vector2i) -> bool:
 	player_cell = target
 	_emit(WIEvents.PLAYER_MOVED, {"cell": [target.x, target.y]})
 	_tick_action()
-	# Proximity runs only after a successful real move: restore/teleport never
-	# trigger it. Encounters start directly, bypassing confirm conversations.
+	# Proximity follows real moves; restore/teleport never trigger it, while
+	# _blink_field deliberately calls it after landing. Encounters bypass confirms.
 	_check_trigger_radius()
 	_check_delivery_arrival()
 	return true
@@ -525,6 +525,7 @@ func use_skill_field(skill_id: String) -> Dictionary:
 ## and stops the ray; map edges stop it too. This wall-vs-water distinction
 ## is load-bearing overlap with [Snap Freeze].
 func _blink_field(skill_id: String, skill: Dictionary) -> Dictionary:
+	# Blink deliberately does not call _break_sneak: movement, not casting.
 	var start := player_cell
 	var crossed: Array[Vector2i] = []
 	var landing: Variant = null
@@ -544,6 +545,8 @@ func _blink_field(skill_id: String, skill: Dictionary) -> Dictionary:
 		_emit(WIEvents.TOAST, {"text": "No clear landing lies ahead."})
 		return {}
 	var destination := landing as Vector2i
+	var landing_index := crossed.find(destination)
+	crossed.resize(landing_index + 1)
 	player_cell = destination
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
 	_mark_skill_used(skill_id)
@@ -580,6 +583,7 @@ func _blink_bypassed_encounters(start: Vector2i, crossed: Array[Vector2i], desti
 		if not touched:
 			continue
 		bypassed.append(ent_id)
+		# Sneak/blink share danger:<id>; one waking banks one counter per danger.
 		var danger_key := "danger:%s" % ent_id
 		if not entity_first_use.has(danger_key):
 			entity_first_use[danger_key] = true
@@ -593,20 +597,27 @@ static func _cell_in_radius(cell: Vector2i, center: Vector2i, radius: int) -> bo
 
 func _ward_field(skill_id: String, skill: Dictionary, faced_cell: Vector2i) -> Dictionary:
 	var candidates: Array[Dictionary] = []
+	var already_warded := false
 	for ent: Dictionary in entities.values():
 		if String(ent.get(WIKeys.KIND, "")) != "encounter" or not ent.has("trigger_radius"):
 			continue
 		var ent_id := String(ent[WIKeys.ID])
-		if dormant_encounters.has(ent_id) or warded_encounters.has(ent_id) or not _encounter_gate_met(ent):
+		if dormant_encounters.has(ent_id) or not _encounter_gate_met(ent):
 			continue
 		var ent_cell: Vector2i = ent[WIKeys.CELL]
+		if warded_encounters.has(ent_id):
+			if _cell_in_radius(faced_cell, ent_cell, int(ent["trigger_radius"])):
+				already_warded = true
+			continue
 		if not _cell_in_radius(faced_cell, ent_cell, int(ent["trigger_radius"])):
 			continue
 		candidates.append({"id": ent_id, "distance": maxi(absi(faced_cell.x - ent_cell.x), absi(faced_cell.y - ent_cell.y))})
 	if candidates.is_empty():
 		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": ""})
-		_emit(WIEvents.TOAST, {"text": "No hidden danger answers the charm."})
+		var refusal := "The charm already holds here." if already_warded else "No hidden danger answers the charm."
+		_emit(WIEvents.TOAST, {"text": refusal})
 		return {}
+	# TRAP: nearest wins; equal distance resolves by id, independent of Dictionary order.
 	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		return int(a["distance"]) < int(b["distance"]) \
 			or (int(a["distance"]) == int(b["distance"]) and String(a["id"]) < String(b["id"]))
@@ -636,11 +647,9 @@ func _animate_field(skill_id: String, _skill: Dictionary, target: Dictionary) ->
 		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": target_id})
 		_emit(WIEvents.TOAST, {"text": "No bones here will answer."})
 		return {}
-	var target_cell: Vector2i = target[WIKeys.CELL]
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": target_id})
 	_mark_skill_used(skill_id)
 	remove_entity(target_id)
-	_emit(WIEvents.TERRAIN_CHANGED, {"map": current_map, "cell": [target_cell.x, target_cell.y], "to": "cleared"})
 	companion = "skeleton_ally"
 	_emit(WIEvents.COMPANION_CHANGED, {"id": companion, "active": true, "reason": "animated"})
 	_emit(WIEvents.TOAST, {"text": "The bones rise and fall into step behind you."})
@@ -1425,17 +1434,6 @@ func start_combat(entity_id: String) -> bool:
 		if accomplishment_count(key) < int(ally_req[key]):
 			allies = []
 			break
-	if companion != "" and by_id.has(companion) and not allies.has(companion):
-		allies.append(companion)
-	var hp_penalties: Dictionary = entity.get("ally_hp_penalty", {})
-	for ally: Variant in allies:
-		var ally_cfg: Dictionary = (by_id[String(ally)] as Dictionary).duplicate(true)
-		var penalty: Dictionary = hp_penalties.get(String(ally), {})
-		if not penalty.is_empty() and _accomplishment_gate_met(penalty.get("when", {}) as Dictionary):
-			ally_cfg[WIKeys.HP_MOD] = int(ally_cfg.get(WIKeys.HP_MOD, 0)) + int(penalty.get("hp_mod", 0))
-		cfgs.append(ally_cfg)
-	for enemy: Variant in entity.get("enemies", []):
-		cfgs.append((by_id[String(enemy)] as Dictionary).duplicate(true))
 	var arena_id := String(entity["arena"])
 	var repeat_arena_id := String(entity.get("repeat_arena", ""))
 	if repeat_arena_id != "" and accomplishment_count(String(entity.get("tutorial_seen_when", ""))) > 0:
@@ -1446,6 +1444,22 @@ func start_combat(entity_id: String) -> bool:
 			arena = a
 	if arena.is_empty():
 		return false
+	# ORDER/CAPACITY: inject after ally_requires, before ally_hp_penalty.
+	# PC + allies + companion must fit arena player_spawns.
+	if companion != "" and by_id.has(companion) and not allies.has(companion):
+		if allies.size() + 2 > (arena["player_spawns"] as Array).size():
+			_emit(WIEvents.TOAST, {"text": "A crowded field. The bones hang back at its edge."})
+		else:
+			allies.append(companion)
+	var hp_penalties: Dictionary = entity.get("ally_hp_penalty", {})
+	for ally: Variant in allies:
+		var ally_cfg: Dictionary = (by_id[String(ally)] as Dictionary).duplicate(true)
+		var penalty: Dictionary = hp_penalties.get(String(ally), {})
+		if not penalty.is_empty() and _accomplishment_gate_met(penalty.get("when", {}) as Dictionary):
+			ally_cfg[WIKeys.HP_MOD] = int(ally_cfg.get(WIKeys.HP_MOD, 0)) + int(penalty.get("hp_mod", 0))
+		cfgs.append(ally_cfg)
+	for enemy: Variant in entity.get("enemies", []):
+		cfgs.append((by_id[String(enemy)] as Dictionary).duplicate(true))
 	_break_sneak()
 	_pending_encounter = entity_id
 	combat = WICombat.new(arena, cfgs, skills_config_raw(), _combat_event_relay, rng.randi())

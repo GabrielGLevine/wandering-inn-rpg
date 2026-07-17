@@ -1289,6 +1289,14 @@ func _move_companion_visual(target: Vector2) -> void:
 
 
 func _render_blink_afterimage(from_cell: Vector2i, to_cell: Vector2i) -> void:
+	var reduced := WISettings.reduce_motion()
+	ObservableBus.emit_domain_event(WIEvents.UI_TELEPORT_RENDERED, {
+		"from": [from_cell.x, from_cell.y],
+		"to": [to_cell.x, to_cell.y],
+		"reduced_motion": reduced,
+	})
+	if reduced:
+		return
 	var streak := Line2D.new()
 	streak.width = 3.0
 	streak.default_color = Color(0.62, 0.82, 1.0, 0.72)
@@ -1300,21 +1308,14 @@ func _render_blink_afterimage(from_cell: Vector2i, to_cell: Vector2i) -> void:
 		to_pos - from_pos,
 	])
 	_entities_root.add_child(streak)
-	var reduced := WISettings.reduce_motion()
-	ObservableBus.emit_domain_event(WIEvents.UI_TELEPORT_RENDERED, {
-		"from": [from_cell.x, from_cell.y],
-		"to": [to_cell.x, to_cell.y],
-		"reduced_motion": reduced,
-	})
-	var qa_visual_hold: bool = not reduced \
-		and DisplayServer.get_name() != "headless" \
+	var qa_visual_hold: bool = DisplayServer.get_name() != "headless" \
 		and TestDriver != null and TestDriver.active() \
 		and QAPaths.user_args().get("blink-visual", "") == "1"
 	if qa_visual_hold:
 		# Freeze opt-in evidence; screenshot settling outlives transient cleanup.
 		# Scene teardown owns this QA-only streak. Gameplay still fades below.
 		return
-	if reduced or _presentation_delay(0.18) <= 0.0:
+	if _presentation_delay(0.18) <= 0.0:
 		streak.call_deferred("queue_free")
 		return
 	var tween := create_tween()

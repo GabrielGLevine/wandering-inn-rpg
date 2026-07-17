@@ -1745,6 +1745,31 @@ func _init() -> void:
 	assert(_count("player_teleported") == 1, "blink emits one player_teleported event")
 	assert(_count("skill_used") == 1, "successful blink emits one exploration skill_used")
 
+	var shoreline_scene := WISceneCatalog.compose()
+	(shoreline_scene["maps"]["sewers"]["entities"] as Array).append({
+		WIKeys.ID: "shoreline_danger",
+		WIKeys.KIND: "encounter",
+		WIKeys.CELL: [3, 10],
+		WIKeys.DISPLAY_NAME: "Shoreline Danger",
+		"arena": "goblin_ambush",
+		"enemies": ["goblin_raider"],
+		"allies": [],
+		"trigger_radius": 1,
+	})
+	var gBlinkShoreline := WIGame.new(shoreline_scene, wave_b_skill_config, _sink, 12345, combat_config)
+	gBlinkShoreline.player_skills.append("test_short_blink")
+	gBlinkShoreline.transition("sewers", Vector2i(3, 7))
+	gBlinkShoreline.player_facing = Vector2i.DOWN
+	_events.clear()
+	gBlinkShoreline.use_skill_field("test_short_blink")
+	assert(gBlinkShoreline.player_cell == Vector2i(3, 8), "shoreline blink lands before the unreached freezable cell")
+	assert(gBlinkShoreline.accomplishment_count("blinked_past_danger") == 0, "danger touching only unreached water earns no blink bypass credit")
+	assert(not gBlinkShoreline.entity_first_use.has("danger:shoreline_danger"), "unreached water does not consume the shared danger dedup")
+	gBlinkShoreline.transition("sewers", Vector2i(1, 10))
+	_events.clear()
+	assert(gBlinkShoreline.move_player(Vector2i.RIGHT), "later real move reaches the still-armed shoreline radius")
+	assert(gBlinkShoreline.combat != null and _count("combat_started") == 1, "unreached shoreline danger was not suppressed by the blink")
+
 	var gBlinkWall := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
 	gBlinkWall.player_skills.append("test_short_blink")
 	gBlinkWall.transition("floodplains", Vector2i(19, 25))
@@ -1785,6 +1810,9 @@ func _init() -> void:
 	assert(gWard.accomplishment_count("warded_danger") == 1 and gWard.accomplishment_count("witch_craft_used") == 1, "ward banks both counters")
 	assert(_count("ward_placed") == 1, "ward emits a placed-charm event")
 	_events.clear()
+	assert(gWard.use_skill_field("test_ward").is_empty(), "ward refuses an encounter already holding its charm")
+	assert(_toast_texts() == ["The charm already holds here."], "re-ward refusal has its own honest line")
+	_events.clear()
 	assert(gWard.move_player(Vector2i.DOWN), "warded player can step into the radius")
 	assert(gWard.combat == null and _count("combat_started") == 0, "warded trigger_radius encounter is suppressed")
 	gWard.sleep()
@@ -1808,6 +1836,24 @@ func _init() -> void:
 	gGreaterWard.sleep()
 	assert(not gGreaterWard.warded_encounters.has("goblin_encounter_1"), "greater ward clears after its second sleep")
 
+	var gAnimateCrowded := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gAnimateCrowded.player_skills.append("test_animate")
+	gAnimateCrowded.accomplishments["horns_party_formed"] = 1
+	gAnimateCrowded.transition("trapped_halls", Vector2i(17, 11))
+	gAnimateCrowded.player_facing = Vector2i.RIGHT
+	assert(String(gAnimateCrowded.use_skill_field("test_animate").get("animated", "")) == "bone_pile_halls", "vault regression animates the nearby halls bone pile")
+	_events.clear()
+	assert(gAnimateCrowded.start_combat("vault_boss_slot"), "full Horns vault combat starts while a companion is held")
+	assert(gAnimateCrowded.combat != null and _count("combat_started") == 1, "vault combat remains live with no constructor error cascade")
+	var crowded_player_ids: Array[String] = []
+	for combatant_id: String in gAnimateCrowded.combat.combatants:
+		if String(gAnimateCrowded.combat.combatants[combatant_id][WIKeys.SIDE]) == "player":
+			crowded_player_ids.append(combatant_id)
+	crowded_player_ids.sort()
+	assert(crowded_player_ids == ["ceria", "ksmvr", "pc", "yvlon"], "vault fields exactly the PC and three Horns in its four player spawns")
+	assert(gAnimateCrowded.companion == "skeleton_ally", "capacity skip preserves the held companion for a later fight")
+	assert(_toast_texts().has("A crowded field. The bones hang back at its edge."), "capacity skip explains why the bones stay off-field")
+
 	var gAnimate := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
 	gAnimate.player_skills.append("test_animate")
 	gAnimate.transition("ruin_surface", Vector2i(14, 10))
@@ -1817,7 +1863,8 @@ func _init() -> void:
 	assert(String(animate_result.get("animated", "")) == "bone_pile_ruin", "animate targets the faced Wave-A bone pile")
 	assert(gAnimate.companion == "skeleton_ally", "animate sets the persisted skeleton companion id")
 	assert(gAnimate.removed_entities.has("bone_pile_ruin"), "animate consumes the bone-pile prop through remove_entity")
-	assert(_count("terrain_changed") == 1 and _count("companion_changed") == 1, "animate emits terrain-swap and companion events")
+	assert(_count("terrain_changed") == 0 and _count("entity_removed") == 1 and _count("companion_changed") == 1,
+		"animate uses entity removal for the vanished pile and emits no unrendered terrain change")
 	gAnimate.transition("floodplains", Vector2i(27, 18))
 	assert(gAnimate.start_combat("goblin_encounter_2"), "animated companion carries into the next fight")
 	assert(gAnimate.combat.combatants.has("skeleton_ally"), "start_combat appends skeleton_ally to the ally roster")
