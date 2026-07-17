@@ -36,6 +36,10 @@
   [
    3,
    1
+  ],
+  [
+   3,
+   8
   ]
  ],
  "floor_layers": [
@@ -828,7 +832,7 @@
    ]
   },
   {
-   "_comment": "`allies:[\"relc\"]`/`ally_requires:{met_relc:1}` mirrors D2's own harness gated cell (`rift_vermin_leak_w8_relc`, the 0.55-0.95 tuned band) rather than the harder ungated `_solo` variant.",
+   "_comment": "`allies:[\"relc\"]`/`ally_requires:{met_relc:1}` mirrors D2's own harness gated cell (`rift_vermin_leak_w8_relc`, the 0.55-0.95 tuned band) rather than the harder ungated `_solo` variant. GH#150: encounter_when arms the FIGHT on door_chain_started (present_when is validator-forbidden on encounters -- trigger_radius never consults presence). Pre-quest the leak stays VISIBLE as inert foreshadowing with its own observe; hiding it would recreate #149's invisible-blocking-cell class mid-floor. Display/fight text unchanged post-arm.",
    "id": "rift_vermin_leak",
    "kind": "encounter",
    "cell": [
@@ -842,7 +846,7 @@
     0.5,
     0.42
    ],
-   "observe": "A hairline crack seams the plaster here, and the draft through it is colder than a pantry has any right to be. Something small moves on the other side of it, and doesn't like being watched back.",
+   "observe": "Something scratches behind the pantry wall, patient and small. Probably nothing. Probably.",
    "arena": "inn_cellar",
    "enemies": [
     "rift_vermin_a",
@@ -859,6 +863,20 @@
     "cleared_the_leak",
     "door_understood",
     "pedestal_unsealed"
+   ],
+   "encounter_when": {
+    "requires": {
+     "door_chain_started": 1
+    }
+   },
+   "visual_states": [
+    {
+     "when": {
+      "counter": "door_chain_started",
+      "at": 1
+     },
+     "observe": "The scratching has become a chewing. Whatever leaks through back there has teeth, and Erin asked you to look."
+    }
    ]
   },
   {
@@ -902,7 +920,7 @@
    }
   },
   {
-   "_comment": "CONSTRAINT: the free approach cell is (3,7), facing down (same column as before, shifted onto the wall). GH#128: the vine door must be EARNED -- base sprite stays garden_door_inner but the at:0 visual_state (always satisfied) hides it, and the at:1 entry un-hides + swaps observe once garden_door_unlocked banks (order-sensitive later-satisfied-wins, world.gd _resolve_entity_render; hidden is render-only per wi_game.gd entity_present doc -- the bare-wall interact/observe/toast still work). door_when already gates traversal on the same counter, so sight and passage flip together at the sleep beat. visual_states re-render live on the counter change (_refresh_entity_visual), so no same-map staleness.",
+   "_comment": "CONSTRAINT: the free approach cell is (3,7), facing down (same column as before, shifted onto the wall). GH#128: the vine door must be EARNED -- base sprite stays garden_door_inner but the at:0 visual_state (always satisfied) hides it, and the at:1 entry un-hides + swaps observe once garden_door_unlocked banks (order-sensitive later-satisfied-wins, world.gd _resolve_entity_render; hidden is render-only per wi_game.gd entity_present doc -- the bare-wall interact/observe/toast still work). door_when already gates traversal on the same counter, so sight and passage flip together at the sleep beat. visual_states re-render live on the counter change (_refresh_entity_visual), so no same-map staleness. GH#149: (3,8) joined the map's blocked set so the pre-unlock cell READS as wall (fallback-blocked tile) instead of an invisible bump -- the door only ever needs interact-from-(3,7), never entry, so permanent blocking serves both states.",
    "id": "garden_door",
    "kind": "prop",
    "cell": [

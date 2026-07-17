@@ -12,7 +12,7 @@
    "payload_contains": {
     "map": "inn",
     "floor_cells": 160,
-    "blocked_cells": 55
+    "blocked_cells": 56
    }
   },
   {
