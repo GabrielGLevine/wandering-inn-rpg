@@ -293,7 +293,8 @@
   },
   "render_scale": 0.375,
   "shadow": true,
-  "field_y_sort_bias_px": 20.0
+  "_comment_ysort": "GH#127: was +20 (copied from inn_roof; wrong-signed for south-approached furniture -- drew the bed OVER the fronting player). 0 = sort at the true cell; ~1-cell-tall art needs no north correction. One edit covers all five beds/cots.",
+  "field_y_sort_bias_px": 0.0
  },
  "door": {
   "render_scale": 0.5,
@@ -488,6 +489,8 @@
   }
  },
  "rug_tan": {
+  "_comment_ysort": "GH#127: flat floor decor must ALWAYS render under sorted content -- large north bias keeps it above the floor layers (different parent) but under every y-sorted sibling on any crossed cell. Small biases cannot fix a walk-across prop.",
+  "field_y_sort_bias_px": -160.0,
   "animations": {
    "idle": {
     "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
@@ -1663,6 +1666,8 @@
   }
  },
  "rug_green": {
+  "_comment_ysort": "GH#127: flat floor decor must ALWAYS render under sorted content -- large north bias keeps it above the floor layers (different parent) but under every y-sorted sibling on any crossed cell. Small biases cannot fix a walk-across prop.",
+  "field_y_sort_bias_px": -160.0,
   "render_scale": 0.4,
   "animations": {
    "idle": {
@@ -2912,6 +2917,8 @@
   }
  },
  "stairs_up": {
+  "_comment_ysort": "GH#127: 2-cell-tall sprite sorted at its bottom cell painted over the northern approach player. -32 (two cells, the raskghar_awakened decisive-margin pattern) -- NOT -16, which only TIES the approach player's key and would covertly depend on world.gd's entities-before-player tree-order tie-break.",
+  "field_y_sort_bias_px": -32.0,
   "_comment": "Full-bleed 64x64 single frame (art reaches y63 of 64, default bottom anchor fine).",
   "render_scale": 0.5,
   "shadow": true,
