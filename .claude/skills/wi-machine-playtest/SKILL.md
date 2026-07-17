@@ -30,3 +30,14 @@ is the loop-integration wrapper.
   only exists in the payload is a bug.
 - Findings ranked player-visible-first; every claim cites its screenshot;
   visual findings → docs/VISUAL-LOG.md; blockers → HANDOFF next-steps.
+
+## Targeted playtest requests (user directive 2026-07-17)
+Any request for USER eyes/ears on a specific surface (an eye-gate, an
+ear-gate, a taste call) MUST ship with a **prepared Playtest State**: a
+named save/fixture the user loads that lands them AT the thing being
+judged (right map, right cell, right counters, the feature armed) plus
+a one-line "load X, do Y, judge Z" instruction. Never ask the user to
+navigate there themselves — staging cost belongs to the agent. Fixture
+authoring per wi-writing-qa-scripts; park the save under
+playtest_saves/ with a dated name.
+
