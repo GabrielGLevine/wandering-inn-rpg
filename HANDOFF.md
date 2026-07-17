@@ -13,45 +13,40 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🏃 RUNNING (2026-07-16 evening)
+## 🏃 RUNNING (2026-07-17, release runway)
 
-- **FIVE MERGES TODAY: #135 (Wave A classes), #136 (#128 garden door),
-  #137 (#129 music continuity), #138 (#133 parlor + Ratici + music),
-  #139 (#130 bed nudge + slept counter, save v6).** Post-merge gates
-  green on each. Playtest triage queue from 2026-07-15/16: only #127
-  (y-sort) remains, blocked behind Wave B (world.gd).
-- **Wave B #132 — user-dispatched Codex session 019f6ce0 still live**
-  on the main checkout (branch issue/132-wave-b-verbs): tree shows the
-  three QA loops + world.gd visuals landed; currently ~35min quiet =
-  likely its gate battery. On completion: controller commits, REBASES
-  onto post-merge main (expected conflicts: wi_game.gd sleep() vs the
-  new slept bank, AGENTS.md seed table, qa/manifest — all controller-
-  owned resolutions), full alarm-wrapped gates, windowed shots,
-  whole-branch review, PR. If rollout stays silent past ~55min, treat
-  as wedge and ask the user before canceling THEIR session.
-- **USER pending:** #134 Wave D ruling; [Eagle Eyes] drift-flag ACK;
-  ear-gates (parlor music swap + inn music continuity) ride the human
-  audio pass.
-- Notable process catch today: #133's first commit CLAIMED the music
-  swap; review json-equality caught the no-op edit (audio.json music
-  lives in the `music` array, not `events`). Fold into wi-* library
-  next session.
-
-## 🩹 PLAYTEST TRIAGE (2026-07-15, mid-session user report — all filed)
-
-- **#127 props y-sort over player** (inn stairs/rugs/bed) — milestone-scoped
-  visual class; VISUAL-LOG entry added.
-- **#128 garden door visible before earned** — content-gate fidelity;
-  data-only (`visual_states` swap); candidate early standalone PR.
-- **#129 inn music restarts across floors** — audio polish; fold ear-gate
-  into the queued v0.8.0 audio pass.
-- **#130 onboarding: direct player to bed for first class** — high-value;
-  standalone, rides the expansion arc's playtest gate.
-- **#133 Brothers' parlor underpopulated + wrong music** — 3 entities
-  total today; music = junkala_childhood_friends (wholesome cue on a gang
-  den). Mockup-informed population plan in the issue; Mister Sable draft
-  exists unwired; **needs user ruling on shipping Ratici** (standing
-  do-not-reference note at character-profiles.md:255).
+- **NINE closes merged 2026-07-16/17:** #131 (Wave A: Runner/Courier,
+  Hedge Witch/Witch, Necromancer, Cook/Chef, Scout, mage Detect Magic),
+  #132 (Wave B: blink/ward/companion verbs), #127 (y-sort), #128
+  (garden door), #129 (music continuity), #130 (bed nudge + slept
+  counter, save v6), #133 (parlor + Ratici + music), #145 (VISUAL-LOG
+  drain: 14 bespoke icons, Ratici rig, hat stand) + a main-CI hotfix
+  (registry frame counts — premature #146 merge shipped a 30-min red;
+  repaired; lessons below).
+- **Milestone rotation DONE** (13 windowed scripts eyeballed, all
+  PASS). Main CI fully green.
+- **v0.9.0 GATES — USER, in order:** (1) **[Eagle Eyes] ACK** (drift
+  flag; freeze makes the name permanent — 'keep' or 'swap'); (2)
+  **ear-gates**: parlor = definitely_our_town, inn music continuity;
+  (3) **eye-gates**: dungeon grade (pre-logged), blink streak faintness
+  (taste), windup overlay (old item). Then freeze cut
+  (scripts/generate_shipped_ids.py — ~60 new ids go permanent) +
+  wi-shipping deploy = v0.9.0.
+- **Post-release queue:** Wave D specs (#134 RULED: Alchemist issue +
+  Beast Tamer+Druid issue; research complete on-issue); Hedault #142
+  (cleared, rides #92); Priest #141 (lore-gated); #140 renderer
+  survey; #92 economy pass (remedy/meal/courier riders parked).
+- **PixelLab budget: 18 generations left this cycle** — none without
+  user sign-off (hat-stand bowler inpaint queued in MANIFEST).
+- **Process lessons (fold into wi-* skills):** (1) audio.json music
+  entries live in `music` not `events` — events-loop edits silently
+  no-op (bit #133 commit 1; review json-equality caught it); (2) never
+  chain merge after a checks-watch in one command — grep mismatch let
+  #146 merge pre-CI (30-min red); (3) a lane's test-PASS claim must
+  postdate its LAST edit; (4) codex-companion status misreports both
+  ways — verify by tree evidence/result; (5) fresh worktrees need
+  overlay copy AND --import before gates; (6) subagents parked on their
+  own background jobs are stalled — 'your wake isn't coming'.
 
 ## 📋 QUEUE (value order)
 
