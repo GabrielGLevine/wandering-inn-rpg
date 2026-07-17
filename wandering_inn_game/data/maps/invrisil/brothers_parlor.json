@@ -313,7 +313,7 @@
    "sleep_toast": "Even a couch here fits like it was fitted for you. The Brothers do nothing halfway, not even hospitality."
   },
   {
-   "_comment": "GH#133 + Ratici SHIP APPROVAL (2026-07-16): the second Gentleman Caller. Voice/profile contract: docs/design/character-profiles.md Ratici section (fast, dropped g's, fancy-word overreach, menace opens polite; [Gentleman Thief] 7.24 is the class-name ceiling, [Aerial Dodge] is Vol-8 and BANNED). Sprite = pc_drake_m + brown tint PLACEHOLDER (short Drake + floppy cap need a bespoke pass, VISUAL-LOG).",
+   "_comment": "Bespoke short-Drake rig replaces the flagged pc_drake_m+tint placeholder. Voice/profile contract: docs/design/character-profiles.md Ratici section (fast, dropped g's, fancy-word overreach, menace opens polite; [Gentleman Thief] 7.24 is the class-name ceiling, [Aerial Dodge] is Vol-8 and BANNED).",
    "id": "ratici",
    "kind": "npc",
    "cell": [
@@ -321,12 +321,7 @@
     3
    ],
    "display_name": "Ratici",
-   "sprite": "pc_drake_m",
-   "tint": [
-    0.72,
-    0.6,
-    0.45
-   ],
+   "sprite": "ratici",
    "facing": "down",
    "observe": "A short Drake in careful browns, floppy cap settled down over the neck-spines. His eyes did your full inventory the moment you stepped in, and he's too polite to say what it came to.",
    "friendly_line": "A person of discernment, Wilovan said. I withdraw one full half of my suspicions.",
@@ -545,7 +540,7 @@
    "observe": "Less neat. A paperback under the pillow, spine broken at the same chapter."
   },
   {
-   "_comment": "GH#133: THE load-bearing prop (the Brothers' hats-off tell, attested from their first appearance). Sprite = crate PLACEHOLDER, flagged loose-fit in VISUAL-LOG — wants a bespoke hat-stand sprite.",
+   "_comment": "Bespoke hat-stand sprite replaces the flagged crate placeholder; preserves the Brothers' hats-off tell.",
    "id": "parlor_hat_stand",
    "kind": "prop",
    "cell": [
@@ -553,7 +548,7 @@
     5
    ],
    "display_name": "The Hat Stand",
-   "sprite": "crate",
+   "sprite": "hat_stand",
    "observe": "Hats on pegs, every one accounted for. House rule says they stay on. Nobody explains the exceptions, and nobody asks twice."
   }
  ]
