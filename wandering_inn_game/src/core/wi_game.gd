@@ -752,11 +752,10 @@ func _door_gate_met(door_when: Dictionary) -> bool:
 ## present_when = STRUCTURAL absence: is_cell_blocked/entity_at/_build_entities
 ## all skip the entity. NOT visual_states `hidden` (render-only — still blocks,
 ## still entity_at, still counts in ui_entities_rendered).
-## CONSTRAINT: a `requires`-gated producer must bank on a DIFFERENT map than the
-## entity lives on — sim reads are live but visuals build on MAP_CHANGED, so a
-## same-map bank leaves a sim-present INVISIBLE entity until re-entry. GH#104's
-## PHASE_CHANGED reconciler closes only the phase-shape same-map case; no
-## reconciler runs on ACCOMPLISHMENT_RECORDED.
+## Same-map banks are SAFE for present_when since world.gd's
+## _reconcile_entity_presence began running on ACCOMPLISHMENT_RECORDED (the
+## older different-map-only CONSTRAINT predated that reconciler; GH#150's
+## rift-vermin gate is the first deliberate same-map consumer).
 func entity_present(ent: Dictionary) -> bool:
 	if not ent.has("present_when"):
 		return true
