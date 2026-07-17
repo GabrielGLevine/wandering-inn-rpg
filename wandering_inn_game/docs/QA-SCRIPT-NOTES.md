@@ -139,3 +139,4 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `blink_bypass_loop` | 9 | full | `wave_b_blink_start` | Issue #132: Sneak, ward, and cardinal blink answer the same road ambush and bank three distinct counters |
 | `ward_loop` | 9 | full | `wave_b_ward_start` | Issue #132: Greater Hearthward suppresses the road ambush for two sleeps, then expires into a positive-control fight |
 | `animate_companion_loop` | 9 | full | `wave_b_animate_start` | Issue #132: animate a ruin bone pile, field skeleton_ally in combat, and clear the follower on sleep |
+| `raskghar_entry_loop` | 9 | full | `raskghar_entry_start` | GH#152: cisterns report -> Watch runner -> Zevara summons -> heard_the_deep_tremor, NO fixture hand-banks past the report (the arc's entry was a zero-producer dead end in v0.9.0) |
