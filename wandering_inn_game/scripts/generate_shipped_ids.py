@@ -99,7 +99,8 @@ STRUCTURAL_LITERALS = [
     "post_game", "victories", "melee_hit", "ranged_hit", "spell_cast",
     "slept",
     "completed_delivery", "blinked_past_danger",
-    "warded_danger", "witch_craft_used",
+    "warded_danger", "witch_craft_used", "second_door_study_sleeps",
+    "dungeon_attuned", "catalyst_attunement_sleeps", "resonance_grown",
 ]
 
 

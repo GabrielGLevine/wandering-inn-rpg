@@ -2,20 +2,11 @@ extends SceneTree
 
 const DIALOGUE_DIR := "res://data/dialogue"
 
-const STRUCTURAL_LITERALS := [
-	"observed_things", "befriended_moments", "deliberate_commerce",
-	"burned_the_debris", "sneaked_past_danger", "read_the_board",
-	"read_the_delivery_board", "door_study_sleeps", "door_awakened",
-	"watch_runner_pointed", "reached_two_classes", "garden_door_unlocked",
-	"post_game", "victories", "melee_hit", "ranged_hit", "spell_cast",
-	"slept", "completed_delivery", "blinked_past_danger",
-	"warded_danger", "witch_craft_used",
-]
+## Single source of truth: the canonical code-banked list lives in
+## test_shipped_ids.gd (synced with generate_shipped_ids.py per wi-shipping).
+## A third hand-copy here was the review finding -- preload, never copy.
+const _SHIPPED_IDS_TEST := preload("res://tests/test_shipped_ids.gd")
 
-const ADDITIONAL_CODE_BANKED_LITERALS := [
-	"second_door_study_sleeps", "dungeon_attuned",
-	"catalyst_attunement_sleeps", "resonance_grown",
-]
 
 const KNOWN_ORPHAN_GATES := {}
 
@@ -157,10 +148,8 @@ func _collect_portal_consumers(portals: Dictionary, consumed: Dictionary) -> voi
 
 
 func _collect_structural_producers(produced: Dictionary) -> void:
-	for counter: String in STRUCTURAL_LITERALS:
+	for counter: String in _SHIPPED_IDS_TEST.STRUCTURAL_LITERALS:
 		_mark_produced(counter, "STRUCTURAL_LITERALS", produced)
-	for counter: String in ADDITIONAL_CODE_BANKED_LITERALS:
-		_mark_produced(counter, "code-banked literal", produced)
 
 
 func _collect_skill_tally_producers(skills: Dictionary, produced: Dictionary) -> void:
