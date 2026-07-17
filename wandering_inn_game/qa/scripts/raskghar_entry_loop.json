@@ -1,0 +1,152 @@
+{
+ "_comment": "GH#152: proves the cisterns-report -> Watch-runner -> Zevara-summons -> deep-tremor chain with NO fixture hand-banks past the report (the arc's entry was a zero-producer dead end in v0.9.0).",
+ "starts_at_title": true,
+ "fixture_save": "raskghar_entry_start",
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "pool-line-then-conversation idiom: second interact opens the graph"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "olesm_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 4,
+   "_comment": "hub visible: board(1)/appraise(2)/leave(3)/Any word on the cisterns?(4)"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1,
+   "_comment": "cisterns node visible (brief hidden by heard_about_cisterns): It's dealt with(1)"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "watch_runner_pointed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 10
+  },
+  {
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    2,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact",
+   "_comment": "pool-line-then-conversation idiom: second interact opens the graph"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 3,
+   "_comment": "zevara hub visible: Long shift?(1)/sweep(2)/You sent a runner for me?(3)/bearings(4)"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1,
+   "_comment": "summons node: Then I'll go down.(1) -> summons_send banks heard_the_deep_tremor"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "heard_the_deep_tremor"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.heard_the_deep_tremor",
+   "equals": 1
+  }
+ ]
+}

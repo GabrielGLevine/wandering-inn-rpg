@@ -3560,6 +3560,35 @@
      "night_phase"
     ]
    }
+  },
+  {
+   "script": "raskghar_entry_loop",
+   "seed": 9,
+   "fixture": "raskghar_entry_start",
+   "note": "GH#152: cisterns report -> Watch runner -> Zevara summons -> heard_the_deep_tremor, NO fixture hand-banks past the report (the arc's entry was a zero-producer dead end in v0.9.0)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street"
+    ],
+    "fixtures": [
+     "raskghar_entry_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "olesm_intro",
+     "zevara_intro"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "input"
+    ]
+   }
   }
  ]
 }

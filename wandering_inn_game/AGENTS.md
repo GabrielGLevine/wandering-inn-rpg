@@ -213,6 +213,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `necromancer_loop` | 9 (fixture `near_necromancer`) | fixture-banked [Necromancer] gain + L3 combat kit |
 | `scout_consolidation_loop` | 9 (fixture `near_scout_consolidation`) | rogue/archer lines → [Scout] floor + combat kit |
 | `bed_nudge_loop` | 9 (fixture `pre_first_sleep`) | GH#130 bed nudge fires pre-sleep, retires after (`slept` counter) |
+| `raskghar_entry_loop` | 9 (fixture `raskghar_entry_start`) | GH#152 Act III entry chain, no hand-banks past the report |
 | `consolidation_flow` | 9 (fixture `near_consolidation`) | offer/decline/re-offer/accept → [Spellsword] |
 | `save_migration` | 1 | v2→v3 migration + v1 pause-load rejection + stale-slot defeat-reload |
 | `consolidation_reload` | 9 | pause-load reconstructs the consolidation prompt mid-offer |
