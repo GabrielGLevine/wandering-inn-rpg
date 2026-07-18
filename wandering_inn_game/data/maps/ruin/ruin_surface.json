@@ -208,7 +208,7 @@
     {
      "item": "remedy_draught",
      "chance": 1.0
-    }
+    }, { "item": "guardian_ward_fragment", "chance": 1.0 }
    ]
   },
   {

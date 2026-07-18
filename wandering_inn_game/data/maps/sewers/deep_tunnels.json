@@ -273,7 +273,7 @@
     {
      "item": "mending_draught",
      "chance": 1.0
-    }
+    }, { "item": "moonhide_fetish", "chance": 1.0 }
    ]
   },
   {

@@ -1,0 +1,44 @@
+{
+ "_comment": "GH#92 D3 fixture: established guest (resolved_wrong_order banked) with 30 gold at the room register prop (inn 10,4 facing 10,5).",
+ "version": 6,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [
+   10,
+   4
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "warrior": 2
+  },
+  "accomplishments": {
+   "resolved_wrong_order": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "reached_liscor": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": {
+   "weapon": "",
+   "armor": ""
+  },
+  "container_state": {},
+  "gold": 30,
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673",
+  "hotbar_loadout": []
+ }
+}

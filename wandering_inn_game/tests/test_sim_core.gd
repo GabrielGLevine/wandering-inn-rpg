@@ -1930,6 +1930,19 @@ func _init() -> void:
 	assert(int(wolf_combatant[WIKeys.MAX_HP]) == 34, "pack_bond_boon folds +4 max hp on the wolf (20 + 10 con + 4)")
 	assert(not (gBoons.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("basic_command_boon"), "the PC kit never carries the boon ids")
 
+	# --- GH#92 D3: room-tier max-HP bonus (persistent via accomplishment counters) ---
+	var gRoomBase := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gRoomBase.transition("floodplains", Vector2i(27, 18))
+	assert(gRoomBase.start_combat("goblin_encounter_2"), "control fight starts")
+	var base_hp := int(gRoomBase.combat.combatants["pc"][WIKeys.MAX_HP])
+	var gRoomTiers := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gRoomTiers.accomplishments["room_tier_1"] = 1
+	gRoomTiers.accomplishments["room_tier_2"] = 1
+	gRoomTiers.transition("floodplains", Vector2i(27, 18))
+	assert(gRoomTiers.start_combat("goblin_encounter_2"), "tiered fight starts")
+	assert(int(gRoomTiers.combat.combatants["pc"][WIKeys.MAX_HP]) == base_hp + 2,
+		"two held room tiers add +2 max HP at the combat build (GH#92 D3)")
+
 	var gBoonsPartial := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
 	gBoonsPartial.player_skills.append("animals_basic_command")
 	gBoonsPartial.companion = "wolf_companion"

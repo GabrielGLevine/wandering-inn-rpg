@@ -3,157 +3,918 @@
  "fixture_save": "riverfarm_talk_start",
  "starts_at_title": true,
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "riverfarm_village" },
-  { "action": "assert_state", "path": "player_cell", "equals": [11, 10] },
-  { "action": "screenshot", "name": "01_village_before_dim" },
-
-  { "_comment": "== GIVE: the headman (11,9). First interact = talk_pool line; second opens riverfarm_headman. ==", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Former Headman" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "riverfarm_headman" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Hub fresh: 0 'Tell me about the blight.', 1 'Just passing through.'. Take 0.", "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "quest_started", "payload_contains": { "id": "price_of_a_favor" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "heard_price_of_a_favor" }, "timeout_sec": 5 },
-  { "_comment": "brief: 0 'I'll see to it.' ends.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== TRAVEL: riverfarm_hollow_path (1,11). Teleport to (2,11), bump left to face it, interact. ==", "action": "teleport", "map": "riverfarm_village", "cell": [2, 11] },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "witch_hollow" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [10, 11] },
-
-  { "_comment": "== MEDIATE: Eloise (5,8). Teleport to (5,9), bump up to face her. First interact = pool line; second opens riverfarm_witch. ==", "action": "teleport", "map": "witch_hollow", "cell": [5, 9] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Eloise" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "riverfarm_witch" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Hub (heard_price_of_a_favor met, blight_lifted not): 0 'What's this blight really about?', 1 'Let's not make this ugly...' (Diplomat, visible-unlocked), 2 'Just tea, then.'. Take 1.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "mediate_pitch: 0 'Take a year of hearth-tending instead...', 1 'Never mind.'. Take 0.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "mediate_argue: 0 'It's settled, then.' -- fires the convergence effects (goto 'mediated', NOT end: dialogue_ended fires from WITHIN WIDialogue.choose() on the ENDING option, before wi_game.gd applies effects -- an end+effects option would report dialogue_ended before blight_lifted).", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "blight_lifted" }, "timeout_sec": 5 },
-  { "_comment": "record_accomplishment(blight_lifted) fires the quest re-evaluation INLINE, before the effects loop reaches the next two entries -- quest_beat_completed lands between blight_lifted and mediated_the_debt in the real stream, not after all three.", "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "price_of_a_favor", "beat": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "mediated_the_debt" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "persuaded_someone" }, "timeout_sec": 5 },
-  { "_comment": "mediated: 0 'Fair enough.' ends.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "assert_event_absent", "type": "combat_started", "payload_contains": {} },
-
-  { "_comment": "== RETURN: hollow_village_path (11,11). Teleport to (10,11), bump right to face it, interact. ==", "action": "teleport", "map": "witch_hollow", "cell": [10, 11] },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "riverfarm_village" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 11] },
-
-  { "_comment": "== REPORT: back to the headman (11,9). Same waking, pool spent -- interact opens riverfarm_headman directly. Teleport doesn't carry facing -- re-face up. ==", "action": "teleport", "map": "riverfarm_village", "cell": [11, 10] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "riverfarm_headman" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Hub post-mediation (blight_lifted met, heard_price_of_a_favor met, price_of_a_favor_reported not): 0 'It's handled. The blight's lifted.', 1 'You said you don't truck with witches.', 2 'Just passing through.'. Take 0.", "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "price_of_a_favor_reported" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "price_of_a_favor", "beat": 2 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "quest_completed", "payload_contains": { "id": "price_of_a_favor" }, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.blight_lifted", "equals": 1 },
-  { "action": "screenshot", "name": "02_village_after_bright" },
-
-  { "_comment": "== THE ECHO RETIRES: the charmed villager (6,10). Teleport to (7,10), bump left to face them -- first-ever talk this run, index 0 of the freed stage's lines, no more echo_of. ==", "action": "teleport", "map": "riverfarm_village", "cell": [7, 10] },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "A Villager", "text": "Thank you. I don't think I said that right the first ten times I tried." }, "timeout_sec": 5 },
-
-  { "_comment": "== issue #65 PRE-PURCHASE PORTAL CHECK: riverfarm_anchor_stone (12,5). door_awakened/riverfarm_attuned are both pre-banked in this fixture so the menu is already live, but invrisil_attuned is NOT (this is the one fixture the invrisil-attunement chain's own canonical exercises live). Teleport to (12,4) [open ground, row y=4 is clear of every entity/blocked cell here], bump down to face the stone (blocked by its own cell, sets facing without moving), interact. dialogue_node fires BEFORE ui_dialogue_shown (WIDialogue._enter's own emit order) -- waited on first. Exact options match proves Invrisil is genuinely absent from the real menu, not just untested: from riverfarm_village, the menu excludes riverfarm itself (current map, WIPortals.build_portal_graph's own current_map filter) and invrisil (ungated), leaving liscor_street + the_wandering_inn (both gated on door_awakened alone, already met) plus the fallback. ==", "action": "teleport", "map": "riverfarm_village", "cell": [12, 4] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [12, 4] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "portal_menu" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "options": [ { "text": "Liscor — the Gate District", "locked": false, "requirement": "" }, { "text": "The Wandering Inn", "locked": false, "requirement": "" }, { "text": "Let it be.", "locked": false, "requirement": "" } ] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "hub: 0 Liscor, 1 The Wandering Inn, 2 'Let it be.'. Close without traveling -- this beat's whole job is proving the menu's CONTENT, not exercising a trip (portal_menu/invrisil_walkthrough already own that).", "action": "move", "direction": "down", "steps": 2 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "riverfarm_village" },
-
-  { "_comment": "== THE VENDOR: back to the Witch (5,8) -- same waking, pool spent, interact opens riverfarm_witch directly. ==", "action": "teleport", "map": "riverfarm_village", "cell": [2, 11] },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "witch_hollow" }, "timeout_sec": 5 },
-  { "action": "teleport", "map": "witch_hollow", "cell": [5, 9] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "riverfarm_witch" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Hub post-resolution: 0 'What's this blight really about?', 1 'What have you got, for coin instead of favors?' (mediate now hidden), 2 'Just tea, then.'. Take 1.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Eloise", "text": "Coin, then. Fine — not everyone wants to owe me something bigger. Take what you need and go." }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "03_witch_vendor_shop" },
-  { "_comment": "shop: 0 the yarrow bundle (4 gold). Take 0.", "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "dried_yarrow_bundle" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "gold", "equals": 18 },
-  { "_comment": "bought: 0 'Show me again.' -- loop back to shop rather than ending, to also buy the Invrisil attunement stone (issue #65) in the same visit.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-
-  { "_comment": "== issue #65 THE STONE: shop (re-entered) -- 0 yarrow (already bought, still listed -- no hide_when on it), 1 sleeproot, 2 sachet, 3 warded bead, 4 the travel-stone (18 gold), 5 'Nothing today.'. Take 4 -- exactly enough gold, proving the priced gate composes at the edge, not with headroom. ==", "action": "wait_frames", "frames": 3 },
-  { "action": "move", "direction": "down", "steps": 4 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "invrisil_attunement_stone" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "invrisil_attuned" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "gold", "equals": 0 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Eloise", "text": "Distance is just another kindness, if you carry the right stone. This one already knows the road to Invrisil. Don't lose it before you get there." }, "timeout_sec": 5 },
-
-  { "_comment": "== issue #65 THE RETIRE PROOF: stone_sold's 0 'Show me again.' re-enters shop -- the stone row must be GONE (hide_when invrisil_attuned, the double-buy negative) and the exact options array pins its absence (the olesm_chess_loop exact-array idiom). At gold 0 every priced row shows visible-LOCKED ('costs N gold', the gold-gate honesty rule); the sachet/bead rows carry their generated effect_lines (price line stripped -- WIDialogue.current_options' item-granting shape), the flat consumables' price-only lines strip to nothing so the key is absent. ==", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Eloise", "options": [ { "text": "The yarrow bundle. (4 gold)", "locked": true, "requirement": "costs 4 gold" }, { "text": "The sleeproot draught. (5 gold)", "locked": true, "requirement": "costs 5 gold" }, { "text": "The herb sachet, sewn shut. (6 gold)", "locked": true, "requirement": "costs 6 gold", "effect_lines": ["+1 HP"] }, { "text": "That warded bead you're not selling. (16 gold)", "locked": true, "requirement": "costs 16 gold", "effect_lines": ["+2 HP", "Resonance 1"] }, { "text": "That pinch of warding salt, for the threshold. (7 gold)", "locked": true, "requirement": "costs 7 gold" }, { "text": "That dark red draught, for the road. (10 gold)", "locked": true, "requirement": "costs 10 gold", "effect_lines": ["Heals 8 HP (single use)"] }, { "text": "Nothing today.", "locked": false, "requirement": "" } ] }, "timeout_sec": 5 },
-  { "_comment": "shop (retired): row 6 'Nothing today.' loops to hub (issue #92 R5: the new mending_draught row at index 5 pushed 'Nothing today.' from index 5 to 6 -- class-foundation pass R5's own warding_salt_pinch addition already pushed it 4->5 earlier); hub's 2 'Just tea, then.' ends.", "action": "wait_frames", "frames": 3 },
-  { "action": "move", "direction": "down", "steps": 6 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Eloise", "text": "Paid, one way or another. I don't ask which. Sit if you like, or don't — I've got stock for coin now too, if that suits you better than favors." }, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 3 },
-  { "_comment": "Class-foundation pass R5 (2026-07-12): hub now carries a NEW sell option ('I've got a few things I don't need, myself. Buying?') between 'What have you got...' and 'Just tea, then.' -- visible index for 'Just tea, then.' moved 2 -> 3.", "action": "move", "direction": "down", "steps": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== issue #65 POST-PURCHASE PORTAL CHECK. Same round-trip pattern as the earlier RETURN beat: hollow_village_path (11,11), teleport to (10,11), bump right to face it, interact -> riverfarm_village (2,11). ==", "action": "teleport", "map": "witch_hollow", "cell": [10, 11] },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "riverfarm_village" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 11] },
-
-  { "_comment": "riverfarm_anchor_stone (12,5) again, same approach as the PRE-purchase check. The menu now includes Invrisil -- exact dialogue_node.options match proves the real rendered UI reflects the new attunement, not just the internal counter.", "action": "teleport", "map": "riverfarm_village", "cell": [12, 4] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [12, 4] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "portal_menu" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "options": [ { "text": "Liscor — the Gate District", "locked": false, "requirement": "" }, { "text": "The Wandering Inn", "locked": false, "requirement": "" }, { "text": "Invrisil — the City of Adventurers", "locked": false, "requirement": "" }, { "text": "Let it be.", "locked": false, "requirement": "" } ] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "04_portal_menu_now_includes_invrisil" },
-  { "_comment": "hub: 0 Liscor, 1 The Wandering Inn, 2 Invrisil, 3 'Let it be.'. Close without traveling -- this canonical's job ends at proving the menu reflects the purchase; invrisil_walkthrough already owns exercising the trip itself.", "action": "move", "direction": "down", "steps": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "assert_event_absent", "type": "combat_started", "payload_contains": {} }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    10
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "01_village_before_dim"
+  },
+  {
+   "_comment": "== GIVE: the headman (11,9). First interact = talk_pool line; second opens riverfarm_headman. ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Former Headman"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "riverfarm_headman"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub fresh: 0 'Tell me about the blight.', 1 'Just passing through.'. Take 0.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "price_of_a_favor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "heard_price_of_a_favor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "brief: 0 'I'll see to it.' ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== TRAVEL: riverfarm_hollow_path (1,11). Teleport to (2,11), bump left to face it, interact. ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    2,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "witch_hollow"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    11
+   ]
+  },
+  {
+   "_comment": "== MEDIATE: Eloise (5,8). Teleport to (5,9), bump up to face her. First interact = pool line; second opens riverfarm_witch. ==",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    5,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Eloise"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "riverfarm_witch"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub (heard_price_of_a_favor met, blight_lifted not): 0 'What's this blight really about?', 1 'Let's not make this ugly...' (Diplomat, visible-unlocked), 2 'Just tea, then.'. Take 1.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "mediate_pitch: 0 'Take a year of hearth-tending instead...', 1 'Never mind.'. Take 0.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "mediate_argue: 0 'It's settled, then.' -- fires the convergence effects (goto 'mediated', NOT end: dialogue_ended fires from WITHIN WIDialogue.choose() on the ENDING option, before wi_game.gd applies effects -- an end+effects option would report dialogue_ended before blight_lifted).",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "blight_lifted"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "record_accomplishment(blight_lifted) fires the quest re-evaluation INLINE, before the effects loop reaches the next two entries -- quest_beat_completed lands between blight_lifted and mediated_the_debt in the real stream, not after all three.",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "price_of_a_favor",
+    "beat": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "mediated_the_debt"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "persuaded_someone"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "mediated: 0 'Fair enough.' ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started",
+   "payload_contains": {}
+  },
+  {
+   "_comment": "== RETURN: hollow_village_path (11,11). Teleport to (10,11), bump right to face it, interact. ==",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    10,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "riverfarm_village"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    11
+   ]
+  },
+  {
+   "_comment": "== REPORT: back to the headman (11,9). Same waking, pool spent -- interact opens riverfarm_headman directly. Teleport doesn't carry facing -- re-face up. ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    11,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "riverfarm_headman"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub post-mediation (blight_lifted met, heard_price_of_a_favor met, price_of_a_favor_reported not): 0 'It's handled. The blight's lifted.', 1 'You said you don't truck with witches.', 2 'Just passing through.'. Take 0.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "price_of_a_favor_reported"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "price_of_a_favor",
+    "beat": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "price_of_a_favor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.blight_lifted",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "02_village_after_bright"
+  },
+  {
+   "_comment": "== THE ECHO RETIRES: the charmed villager (6,10). Teleport to (7,10), bump left to face them -- first-ever talk this run, index 0 of the freed stage's lines, no more echo_of. ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    7,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "A Villager",
+    "text": "Thank you. I don't think I said that right the first ten times I tried."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== issue #65 PRE-PURCHASE PORTAL CHECK: riverfarm_anchor_stone (12,5). door_awakened/riverfarm_attuned are both pre-banked in this fixture so the menu is already live, but invrisil_attuned is NOT (this is the one fixture the invrisil-attunement chain's own canonical exercises live). Teleport to (12,4) [open ground, row y=4 is clear of every entity/blocked cell here], bump down to face the stone (blocked by its own cell, sets facing without moving), interact. dialogue_node fires BEFORE ui_dialogue_shown (WIDialogue._enter's own emit order) -- waited on first. Exact options match proves Invrisil is genuinely absent from the real menu, not just untested: from riverfarm_village, the menu excludes riverfarm itself (current map, WIPortals.build_portal_graph's own current_map filter) and invrisil (ungated), leaving liscor_street + the_wandering_inn (both gated on door_awakened alone, already met) plus the fallback. ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    12,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "portal_menu"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "options": [
+     {
+      "text": "Liscor — the Gate District",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The Wandering Inn",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Let it be.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "hub: 0 Liscor, 1 The Wandering Inn, 2 'Let it be.'. Close without traveling -- this beat's whole job is proving the menu's CONTENT, not exercising a trip (portal_menu/invrisil_walkthrough already own that).",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "_comment": "== THE VENDOR: back to the Witch (5,8) -- same waking, pool spent, interact opens riverfarm_witch directly. ==",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    2,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "witch_hollow"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    5,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "riverfarm_witch"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub post-resolution: 0 'What's this blight really about?', 1 'What have you got, for coin instead of favors?' (mediate now hidden), 2 'Just tea, then.'. Take 1.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "text": "Coin, then. Fine — not everyone wants to owe me something bigger. Take what you need and go."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_witch_vendor_shop"
+  },
+  {
+   "_comment": "shop: 0 the yarrow bundle (4 gold). Take 0.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "dried_yarrow_bundle"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 18
+  },
+  {
+   "_comment": "bought: 0 'Show me again.' -- loop back to shop rather than ending, to also buy the Invrisil attunement stone (issue #65) in the same visit.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "== issue #65 THE STONE: shop (re-entered) -- 0 yarrow (already bought, still listed -- no hide_when on it), 1 sleeproot, 2 sachet, 3 warded bead, 4 the travel-stone (18 gold), 5 'Nothing today.'. Take 4 -- exactly enough gold, proving the priced gate composes at the edge, not with headroom. ==",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "invrisil_attunement_stone"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "invrisil_attuned"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "text": "Distance is just another kindness, if you carry the right stone. This one already knows the road to Invrisil. Don't lose it before you get there."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== issue #65 THE RETIRE PROOF: stone_sold's 0 'Show me again.' re-enters shop -- the stone row must be GONE (hide_when invrisil_attuned, the double-buy negative) and the exact options array pins its absence (the olesm_chess_loop exact-array idiom). At gold 0 every priced row shows visible-LOCKED ('costs N gold', the gold-gate honesty rule); the sachet/bead rows carry their generated effect_lines (price line stripped -- WIDialogue.current_options' item-granting shape), the flat consumables' price-only lines strip to nothing so the key is absent. ==",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "options": [
+     {
+      "locked": true,
+      "requirement": "costs 4 gold",
+      "text": "The yarrow bundle. (4 gold)"
+     },
+     {
+      "locked": true,
+      "requirement": "costs 5 gold",
+      "text": "The sleeproot draught. (5 gold)"
+     },
+     {
+      "effect_lines": [
+       "+1 HP",
+       "Grants [Witch's Warding] in combat"
+      ],
+      "locked": true,
+      "requirement": "costs 6 gold",
+      "text": "The herb sachet, sewn shut. (6 gold)"
+     },
+     {
+      "effect_lines": [
+       "+2 HP",
+       "Resonance 1"
+      ],
+      "locked": true,
+      "requirement": "costs 16 gold",
+      "text": "That warded bead you're not selling. (16 gold)"
+     },
+     {
+      "locked": true,
+      "requirement": "costs 7 gold",
+      "text": "That pinch of warding salt, for the threshold. (7 gold)"
+     },
+     {
+      "effect_lines": [
+       "Heals 8 HP (single use)"
+      ],
+      "locked": true,
+      "requirement": "costs 10 gold",
+      "text": "That dark red draught, for the road. (10 gold)"
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Nothing today."
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "shop (retired): row 6 'Nothing today.' loops to hub (issue #92 R5: the new mending_draught row at index 5 pushed 'Nothing today.' from index 5 to 6 -- class-foundation pass R5's own warding_salt_pinch addition already pushed it 4->5 earlier); hub's 2 'Just tea, then.' ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "text": "Paid, one way or another. I don't ask which. Sit if you like, or don't — I've got stock for coin now too, if that suits you better than favors."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "_comment": "Class-foundation pass R5 (2026-07-12): hub now carries a NEW sell option ('I've got a few things I don't need, myself. Buying?') between 'What have you got...' and 'Just tea, then.' -- visible index for 'Just tea, then.' moved 2 -> 3.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== issue #65 POST-PURCHASE PORTAL CHECK. Same round-trip pattern as the earlier RETURN beat: hollow_village_path (11,11), teleport to (10,11), bump right to face it, interact -> riverfarm_village (2,11). ==",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    10,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "riverfarm_village"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    11
+   ]
+  },
+  {
+   "_comment": "riverfarm_anchor_stone (12,5) again, same approach as the PRE-purchase check. The menu now includes Invrisil -- exact dialogue_node.options match proves the real rendered UI reflects the new attunement, not just the internal counter.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    12,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "portal_menu"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "options": [
+     {
+      "text": "Liscor — the Gate District",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The Wandering Inn",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Invrisil — the City of Adventurers",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Let it be.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_portal_menu_now_includes_invrisil"
+  },
+  {
+   "_comment": "hub: 0 Liscor, 1 The Wandering Inn, 2 Invrisil, 3 'Let it be.'. Close without traveling -- this canonical's job ends at proving the menu reflects the purchase; invrisil_walkthrough already owns exercising the trip itself.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started",
+   "payload_contains": {}
+  }
  ]
 }

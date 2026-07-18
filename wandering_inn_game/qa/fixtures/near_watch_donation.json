@@ -1,0 +1,41 @@
+{
+ "_comment": "GH#92 D3 fixture: Post-tutorial warrior with 12 gold beside Sergeant Ashgrave (barracks 5,4 facing 6,4). Donation option renders LAST at the recruit hub.",
+ "version": 6,
+ "state": {
+  "current_map": "barracks",
+  "player_cell": [
+   5,
+   4
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 1
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1
+  },
+  "player_skills": [],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": {
+   "weapon": "",
+   "armor": ""
+  },
+  "container_state": {},
+  "gold": 12,
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673",
+  "hotbar_loadout": []
+ }
+}

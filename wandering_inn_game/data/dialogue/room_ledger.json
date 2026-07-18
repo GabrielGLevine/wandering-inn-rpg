@@ -1,0 +1,106 @@
+{
+ "_comment": "GH#92 D3: the room ledger -- its OWN conversation surface so no existing hub's cursor/option pins move (three canonicals broke when the tiers rode erin_errand; lyonette_tip is pinned too). Lyonette keeps the register; tier-1 gates on resolved_wrong_order (HER arc) so the early-game inn stays purchase-free.",
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Lyonette",
+   "text": "The room register. Lyonette's hand, every line ruled straight: names, nights, and three columns of prices that mostly get paid.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "room_tier_3": 1
+      }
+     },
+     "text": "The register lists your room at the top of the page now, underlined once. Lyonette does not underline things twice for anyone."
+    }
+   ],
+   "options": [
+    {
+     "_comment": "Tier chain: each requires the previous, hides once owned. Persistent +1 max HP each via _room_tier_bonus (wi_game.gd).",
+     "text": "Take the draughty single upstairs. (25 gold)",
+     "requires": {
+      "gold": 25,
+      "accomplishment": {
+       "resolved_wrong_order": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "room_tier_1": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -25
+      },
+      {
+       "accomplishment": "room_tier_1"
+      }
+     ],
+     "goto": "tier_thanks"
+    },
+    {
+     "text": "Move up to the good room, the one with the window that shuts. (60 gold)",
+     "requires": {
+      "gold": 60,
+      "accomplishment": {
+       "room_tier_1": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "room_tier_2": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -60
+      },
+      {
+       "accomplishment": "room_tier_2"
+      }
+     ],
+     "goto": "tier_thanks"
+    },
+    {
+     "text": "The best room in the inn. Whatever it costs. (120 gold)",
+     "requires": {
+      "gold": 120,
+      "accomplishment": {
+       "room_tier_2": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "room_tier_3": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -120
+      },
+      {
+       "accomplishment": "room_tier_3"
+      }
+     ],
+     "goto": "tier_thanks"
+    },
+    {
+     "text": "Just checking the rates.",
+     "end": true
+    }
+   ]
+  },
+  "tier_thanks": {
+   "speaker": "Lyonette",
+   "text": "Lyonette enters it without looking up, and the line is perfect anyway. \"Paid in full. I'll have it aired by tonight — you'll sleep better than you have been, which frankly is not difficult.\"",
+   "options": [
+    {
+     "text": "Done, then.",
+     "end": true
+    }
+   ]
+  }
+ }
+}

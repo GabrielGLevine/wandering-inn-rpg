@@ -1231,6 +1231,16 @@
      "text": "I am still counting exits. There are still two."
     }
    ]
+  },
+  {
+   "_comment": "GH#92 D3 purchase surface (own conversation -- see room_ledger.json header). kind:npc DELIBERATE on an object: only npc/encounter kinds route interact into start_dialogue; no talk_pool means the conversation opens on the FIRST interact.",
+   "id": "inn_room_ledger",
+   "kind": "npc",
+   "cell": [10, 5],
+   "display_name": "Room Register",
+   "sprite": "dusty_scroll",
+   "conversation": "room_ledger",
+   "observe": "The inn's room register, open to today. Lyonette's handwriting could win awards; the prices underneath it could start fights."
   }
  ]
 }

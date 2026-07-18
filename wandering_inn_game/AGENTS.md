@@ -221,6 +221,8 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `beast_tamer_loop` | 7 (fixture `near_tamer`) | Wave D-2 (#156): wounded-corusdeer soothe → `class_gained` [Beast Tamer] at sleep; `once_per_waking` grind guard |
 | `tamer_bond_loop` | 7 (fixture `near_tamer_bond`) | Wave D-2 (#156): [Lesser Bond] wolf tame → crab refusal joke → boon-carrying roster fight → tamed bond persists sleep |
 | `druid_consolidation_loop` | 7 (fixture `near_druid_consolidation`) | tamer/mage lines → [Druid] floor 14 + [Peace of the Wild] kit |
+| `room_upgrade_loop` | 7 (fixture `near_room_upgrade`) | GH#92 D3: Erin tier-1 room purchase → gold spend + `room_tier_1` bank (HP step pinned in test_sim_core) |
+| `watch_donation_loop` | 7 (fixture `near_watch_donation`) | GH#92 D3: Ashgrave supply-fund donation → repeatable sink banks `donated_watch_supplies` |
 | `bed_nudge_loop` | 9 (fixture `pre_first_sleep`) | GH#130 bed nudge fires pre-sleep, retires after (`slept` counter) |
 | `raskghar_entry_loop` | 9 (fixture `raskghar_entry_start`) | GH#152 Act III entry chain, no hand-banks past the report |
 | `consolidation_flow` | 9 (fixture `near_consolidation`) | offer/decline/re-offer/accept → [Spellsword] |

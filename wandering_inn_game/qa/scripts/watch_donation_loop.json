@@ -1,0 +1,82 @@
+{
+ "_comment": "GH#92 D3: Watch supply donation at the Ashgrave hub (donation is the LAST rendered option -- lane appended it index-safe). Proves the repeatable gold sink banks donated_watch_supplies.",
+ "fixture_save": "near_watch_donation",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "dresk_recruit"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "text": "Logged and counted. Lamp oil, bandages, a spare gambeson for the next green recruit — it all goes somewhere it's needed. The Watch doesn't forget who stands the fund."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.donated_watch_supplies",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "00_donated"
+  }
+ ]
+}
