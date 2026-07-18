@@ -2895,6 +2895,19 @@ func _init() -> void:
 	assert(g_synth_dup.inventory.has("solvent_phial") and g_synth_dup.inventory.has("mineral_salts"), "dup-output: components NOT consumed")
 	assert(_count("item_lost") == 0 and _count("skill_used") == 0 and _count("accomplishment_recorded") == 0, "dup-output: no state changes at all")
 
+	# --- GH#165: [Perfect Reduction] recipe bench (lane deviation B, wired by controller) ---
+	var g_reduce := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_reduce.classes["alchemist"] = 14
+	assert(g_reduce.known_skills().has("perfect_reduction"), "[Alchemist] L14 grants [Perfect Reduction]")
+	g_reduce.transition("pallass_market", Vector2i(4, 8))
+	g_reduce.inventory.append("crude_draught")
+	_events.clear()
+	var r_reduce: Dictionary = g_reduce.use_skill("perfect_reduction", "alchemy_bench_reduction")
+	assert(String(r_reduce.get("item", "")) == "tonic_of_the_clear_eye", "reduction yields the tonic")
+	assert(not g_reduce.inventory.has("crude_draught"), "reduction consumes the crude draught")
+	assert(g_reduce.inventory.has("tonic_of_the_clear_eye"), "the tonic lands in the pack")
+	assert(g_reduce.accomplishment_count("synthesized_draught") == 1, "the cast banks synthesized_draught")
+
 	# #148 Tier 3: map-level arrival_toasts re-orientation (armed / retired / unmet + first-satisfied-wins).
 	# Placed last: each fresh WIGame emits sim_initialized, so this must run after the
 	# _count("sim_initialized") == 1 assertion above.
