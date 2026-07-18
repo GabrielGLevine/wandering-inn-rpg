@@ -40,6 +40,57 @@ func _validate_consume_subset(maps: Dictionary) -> void:
 				for rem: String in rem_list:
 					assert(req.has(rem), "%s/%s: remove_item '%s' not in requires_item (silent free-craft)" % [map_id, ent.get("id","?"), rem])
 
+## #92 D1: every CONSUMABLE (use_effect-bearing item) dispensed by a priced
+## shop-buy option or an alchemist/kitchen craft bench must carry price>0 (a
+## defined sell-back worth); and any component-consuming craft's output must be
+## worth strictly MORE than its components summed (no infinite-gold craft loop).
+## Non-consumables (reputation tokens, free comfort meals) are exempt by design.
+func _validate_economy_prices(scene: Dictionary, graphs: Dictionary, items: Dictionary) -> void:
+	var price: Dictionary = {}
+	var is_consumable: Dictionary = {}
+	for entry: Dictionary in items.get("items", []):
+		var iid := String(entry["id"])
+		price[iid] = int(entry.get("price", 0))
+		is_consumable[iid] = entry.has("use_effect")
+	# Shop buys: an option that charges gold AND grants a consumable.
+	for graph_id: String in graphs:
+		var nodes: Dictionary = graphs[graph_id]["nodes"]
+		for node_id: String in nodes:
+			for option: Dictionary in (nodes[node_id].get("options", []) as Array):
+				if not (option.get("requires", {}) as Dictionary).has("gold"):
+					continue
+				for effect: Dictionary in (option.get("effects", []) as Array):
+					if not effect.has("item"):
+						continue
+					var bought := String(effect["item"])
+					if not bool(is_consumable.get(bought, false)):
+						continue
+					assert(int(price.get(bought, 0)) > 0, "%s/%s: shop-buy option sells consumable '%s' but it has no price>0 (no sell margin) -- #92 D1" % [graph_id, node_id, bought])
+	# Crafts: a bench prop's on_skill_use output; consumable outputs must be
+	# priced, and any output that consumes components must beat their sum.
+	for map_id: String in scene["maps"]:
+		for ent: Dictionary in scene["maps"][map_id].get("entities", []):
+			if not ent.has("on_skill_use"):
+				continue
+			var payloads: Array = [ent["on_skill_use"]]
+			for v: Variant in (ent["on_skill_use"].get("variants", []) if ent["on_skill_use"] is Dictionary else []):
+				payloads.append(v)
+			for payload: Variant in payloads:
+				if not (payload is Dictionary) or not payload.has("item"):
+					continue
+				var out_id := String(payload["item"])
+				var rems: Variant = payload.get("remove_item", [])
+				var rem_list: Array = rems if rems is Array else ([String(rems)] if String(rems) != "" else [])
+				if bool(is_consumable.get(out_id, false)):
+					assert(int(price.get(out_id, 0)) > 0, "%s/%s: craft yields consumable '%s' but it has no price>0 -- #92 D1" % [map_id, ent.get("id", "?"), out_id])
+				if rem_list.is_empty():
+					continue
+				var comp_sum := 0
+				for rem: String in rem_list:
+					comp_sum += int(price.get(String(rem), 0))
+				assert(int(price.get(out_id, 0)) > comp_sum, "%s/%s: craft output '%s' (price %d) is not worth more than its components (%d summed) -- infinite-gold craft loop, #92 D1" % [map_id, ent.get("id", "?"), out_id, int(price.get(out_id, 0)), comp_sum])
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var graphs: Dictionary = _load_dialogue_graphs()
@@ -77,6 +128,7 @@ func _init() -> void:
 	_validate_class_gains(classes, produced_accomplishments)
 	_validate_class_level_tables(classes)
 	_validate_consume_subset(WISceneCatalog.compose()["maps"])
+	_validate_economy_prices(scene, graphs, items)
 	_validate_class_skill_grant_ids(classes, skill_ids)
 	_validate_class_skill_grant_ids_shape_cases()
 	_validate_props(scene)

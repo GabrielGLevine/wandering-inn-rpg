@@ -320,6 +320,10 @@
     {
      "item": "construct_core_shard",
      "chance": 1.0
+    },
+    {
+     "item": "tonic_of_the_clear_eye",
+     "chance": 1.0
     }
    ]
   },

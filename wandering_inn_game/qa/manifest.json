@@ -3718,6 +3718,59 @@
      "combat"
     ]
    }
+  },
+  {
+   "script": "room_upgrade_loop",
+   "seed": 7,
+   "fixture": "near_room_upgrade",
+   "note": "GH#92 D3: Erin tier-1 room purchase -> gold spend + room_tier_1 bank (HP math pinned in test_sim_core)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "near_room_upgrade"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "room_ledger"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "input"
+    ]
+   }
+  },
+  {
+   "script": "watch_donation_loop",
+   "seed": 7,
+   "fixture": "near_watch_donation",
+   "note": "GH#92 D3: Ashgrave supply-fund donation -> repeatable gold sink banks donated_watch_supplies",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "barracks"
+    ],
+    "fixtures": [
+     "near_watch_donation"
+    ],
+    "skills": [],
+    "dialogue": [
+     "dresk_recruit"
+    ],
+    "systems": [
+     "dialogue",
+     "input"
+    ]
+   }
   }
  ]
 }

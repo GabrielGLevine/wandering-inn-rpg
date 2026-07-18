@@ -1613,9 +1613,22 @@ func _build_player_combatant(template: Dictionary) -> Dictionary:
 	var meal_bonus: Dictionary = pending_meal
 	pending_meal = {}
 	pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD] + int(meal_bonus.get(WIKeys.DAMAGE_MOD, 0))
-	pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD] + (2 if well_fed else 0) + int(meal_bonus.get(WIKeys.HP_MOD, 0))
+	pc[WIKeys.HP_MOD] = mods[WIKeys.HP_MOD] + (2 if well_fed else 0) + int(meal_bonus.get(WIKeys.HP_MOD, 0)) + _room_tier_bonus()
 	pc[WIKeys.DAMAGE_REDUCTION] = mods[WIKeys.DAMAGE_REDUCTION] + int(meal_bonus.get(WIKeys.DAMAGE_REDUCTION, 0))
 	return pc
+
+
+func _room_tier_bonus() -> int:
+	# GH#92 D3: inn room upgrades. Better rest = +1 max HP per held tier
+	# (cumulative, cap +3). PERSISTENCE IS FREE: tiers are accomplishment
+	# counters (room_tier_1/2/3, banked by Erin's purchase dialogue), which
+	# already ride the save -- no new save field, unlike well_fed's
+	# one-waking bool. Each tier banks at most once (hide_when-gated option).
+	var bonus := 0
+	for tier: String in ["room_tier_1", "room_tier_2", "room_tier_3"]:
+		if accomplishment_count(tier) > 0:
+			bonus += 1
+	return bonus
 
 
 func item(item_id: String) -> Dictionary:
