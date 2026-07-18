@@ -473,6 +473,7 @@
    "allies": [],
    "respawns": true,
    "observe": "A stone shape stands too near the tier's own edge, cracks along its arms glowing a shade too bright for the forge-heat alone.",
+   "scales": true,
    "on_victory": "forge_golems_culled"
   }
  ]

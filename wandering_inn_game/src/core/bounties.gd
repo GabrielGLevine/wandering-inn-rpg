@@ -27,6 +27,36 @@ static func condition_met(condition: Dictionary, baseline: Dictionary, accomplis
 	return true
 
 
+## Issue #163: rank-scaled postings. Base record IS bronze; `tiers.silver/.gold`
+## optionally override condition/gold/copy/condition_mode. Returns a copy with
+## the highest DEFINED tier not exceeding `rank` applied (monotonic fallback: a
+## gold player on a silver-only posting still gets silver), stamped with the
+## resolved "rank". `tiers` is dropped from the result so downstream never
+## re-resolves. Pure -- the caller passes the player's rank (never read here).
+const RANK_ORDER := ["bronze", "silver", "gold"]
+
+static func resolve_tier(bounty: Dictionary, rank: String) -> Dictionary:
+	var out: Dictionary = bounty.duplicate(true)
+	out.erase("tiers")
+	out["rank"] = "bronze"
+	var tiers: Dictionary = bounty.get("tiers", {})
+	var rank_idx := RANK_ORDER.find(rank)
+	if rank_idx < 0:
+		rank_idx = 0
+	var chosen := ""
+	for i: int in range(1, rank_idx + 1):
+		if tiers.has(RANK_ORDER[i]):
+			chosen = RANK_ORDER[i]
+	if chosen == "":
+		return out
+	var override: Dictionary = tiers[chosen]
+	out["rank"] = chosen
+	for key: String in ["condition", "gold", "copy", "condition_mode"]:
+		if override.has(key):
+			out[key] = override[key]
+	return out
+
+
 static func requires_met(bounty: Dictionary, accomplishment_count_cb: Callable) -> bool:
 	# Filter requires before active_slate: locked rows do not affect old windows,
 	# then join and re-wrap rotation once unlocked.

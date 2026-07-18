@@ -538,6 +538,7 @@ func _init() -> void:
 	board_original.times_slept = 3
 	board_original.accepted_bounty_id = "bounty_gossip_tea"
 	board_original.accepted_bounty_baseline = {"heard_gossip": 1}
+	board_original.accepted_bounty_tier = "silver"
 	board_original.board_last_seen_times_slept = 2
 	var board_data := WISave.serialize(board_original)
 	assert(int(board_data["version"]) == WISave.VERSION, "DP2 board fields do not bump the save version")
@@ -546,22 +547,26 @@ func _init() -> void:
 	assert(board_restored.times_slept == 3, "times_slept round-trips")
 	assert(board_restored.accepted_bounty_id == "bounty_gossip_tea", "accepted_bounty_id round-trips")
 	assert(board_restored.accepted_bounty_baseline == {"heard_gossip": 1}, "accepted_bounty_baseline round-trips")
+	assert(board_restored.accepted_bounty_tier == "silver", "accepted_bounty_tier round-trips (#163 review MEDIUM)")
 	assert(board_restored.board_last_seen_times_slept == 2, "board_last_seen_times_slept round-trips")
 
 	var pre_dp2_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
 	(pre_dp2_data["state"] as Dictionary).erase("times_slept")
 	(pre_dp2_data["state"] as Dictionary).erase("accepted_bounty_id")
 	(pre_dp2_data["state"] as Dictionary).erase("accepted_bounty_baseline")
+	(pre_dp2_data["state"] as Dictionary).erase("accepted_bounty_tier")
 	(pre_dp2_data["state"] as Dictionary).erase("board_last_seen_times_slept")
 	var pre_dp2_target := _new_game()
 	pre_dp2_target.times_slept = 999
 	pre_dp2_target.accepted_bounty_id = "stale"
 	pre_dp2_target.accepted_bounty_baseline = {"stale": 999}
+	pre_dp2_target.accepted_bounty_tier = "stale"
 	pre_dp2_target.board_last_seen_times_slept = 999
 	assert(WISave.apply(pre_dp2_target, pre_dp2_data), "save missing all 4 DP2 board keys still applies")
 	assert(pre_dp2_target.times_slept == 0, "absent times_slept restores 0, not stale data")
 	assert(pre_dp2_target.accepted_bounty_id == "", "absent accepted_bounty_id restores \"\", not stale data")
 	assert(pre_dp2_target.accepted_bounty_baseline.is_empty(), "absent accepted_bounty_baseline restores {}, not stale data")
+	assert(pre_dp2_target.accepted_bounty_tier == "", "absent accepted_bounty_tier restores \"\" -- a legacy save resolves bronze, never a stale lock")
 	assert(pre_dp2_target.board_last_seen_times_slept == 0, "absent board_last_seen_times_slept restores 0, not stale data")
 
 	var bad_ts_data := WISave.serialize(_new_game()).duplicate(true)
@@ -573,6 +578,9 @@ func _init() -> void:
 	var bad_abbl_data := WISave.serialize(_new_game()).duplicate(true)
 	(bad_abbl_data["state"] as Dictionary)["accepted_bounty_baseline"] = "nope"
 	assert(not WISave.apply(_new_game(), bad_abbl_data), "wrong-typed accepted_bounty_baseline rejected")
+	var bad_tier_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_tier_data["state"] as Dictionary)["accepted_bounty_tier"] = 7
+	assert(not WISave.apply(_new_game(), bad_tier_data), "wrong-typed accepted_bounty_tier rejected")
 	var bad_blsts_data := WISave.serialize(_new_game()).duplicate(true)
 	(bad_blsts_data["state"] as Dictionary)["board_last_seen_times_slept"] = "two"
 	assert(not WISave.apply(_new_game(), bad_blsts_data), "wrong-typed board_last_seen_times_slept rejected")

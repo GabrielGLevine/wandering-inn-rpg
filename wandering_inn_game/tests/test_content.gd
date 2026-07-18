@@ -128,6 +128,8 @@ func _init() -> void:
 	_validate_dialogue_graphs(graphs, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
 	_validate_quests(quests, produced_accomplishments)
 	_validate_bounties(bounties, produced_accomplishments)
+	_validate_bounty_payout_anchors(bounties, items)
+	_validate_encounter_scaling(scene, quests)
 	_validate_deliveries(deliveries, produced_accomplishments)
 	_validate_hide_when_nodes_have_always_available_exit(graphs)
 	_validate_class_gains(classes, produced_accomplishments)
@@ -958,6 +960,82 @@ func _validate_bounties(bounties: Dictionary, produced_accomplishments: Dictiona
 				produced_accomplishments.has(accomplishment_id),
 				"bounty %s condition waits on unproduced accomplishment: %s" % [String(bounty["id"]), accomplishment_id]
 			)
+		# #163: every tier's condition keys must be producible too.
+		for rank: String in (bounty.get("tiers", {}) as Dictionary):
+			var tier: Dictionary = (bounty["tiers"] as Dictionary)[rank]
+			for accomplishment_id: String in (tier.get("condition", {}) as Dictionary):
+				assert(
+					produced_accomplishments.has(accomplishment_id),
+					"bounty %s tier %s condition waits on unproduced accomplishment: %s" % [String(bounty["id"]), rank, accomplishment_id]
+				)
+
+
+## #163 payout-anchor VALIDATOR (consumes #92's price ladder so a price move
+## fails loud HERE instead of drifting purchasing power). Per tiered posting:
+## silver.gold is a multiple of crude_draught's price (the entry rung), gold.gold
+## a multiple of tonic_of_the_clear_eye's price (the tonic tier); higher rank
+## never pays less (monotonicity); a top-tier COMBAT bounty clears the
+## purchasing-power floor (>= 2x mending_draught, its expected consumable burn).
+func _validate_bounty_payout_anchors(bounties: Dictionary, items: Dictionary) -> void:
+	var price: Dictionary = {}
+	for it: Dictionary in items.get("items", []):
+		price[String(it["id"])] = int(it.get("price", 0))
+	var crude := int(price.get("crude_draught", 0))
+	var tonic := int(price.get("tonic_of_the_clear_eye", 0))
+	var mending := int(price.get("mending_draught", 0))
+	assert(crude > 0 and tonic > 0 and mending > 0, "#163 anchor items (crude_draught/tonic_of_the_clear_eye/mending_draught) must all carry price>0")
+	for bounty: Dictionary in bounties.get("bounties", []):
+		var tiers: Dictionary = bounty.get("tiers", {})
+		if tiers.is_empty():
+			continue
+		var bid := String(bounty["id"])
+		var prev_gold := int(bounty.get("gold", 0))
+		for rank: String in ["silver", "gold"]:
+			if not tiers.has(rank):
+				continue
+			var g := int((tiers[rank] as Dictionary).get("gold", 0))
+			assert(g > prev_gold, "%s tier %s gold %d must exceed the lower rank's %d (monotonicity, #163)" % [bid, rank, g, prev_gold])
+			prev_gold = g
+			if rank == "silver":
+				assert(g % crude == 0, "%s silver gold %d is not a multiple of crude_draught price %d (payout anchor, #163/#92)" % [bid, g, crude])
+			else:
+				assert(g % tonic == 0, "%s gold gold %d is not a multiple of tonic_of_the_clear_eye price %d (payout anchor, #163/#92)" % [bid, g, tonic])
+		if String(bounty.get("pillar", "")) == "fight" and tiers.has("gold"):
+			var top := int((tiers["gold"] as Dictionary).get("gold", 0))
+			assert(top >= 2 * mending, "%s top-tier combat gold %d below purchasing-power floor 2x mending_draught (%d) (#163)" % [bid, top, 2 * mending])
+
+
+## #163 engine-seam guard: `scales:true` (rank-stepped enemies at start_combat)
+## is legal ONLY on a repeatable cull -- an encounter with respawns:true whose
+## on_victory counter feeds NO quest. Story/boss fights (respawns:false, or an
+## on_victory a quest beat waits on) must never scale. Rule DERIVED from data:
+## the forbidden-counter set is every quest beat's complete_when keys.
+func _validate_encounter_scaling(scene: Dictionary, quests: Dictionary) -> void:
+	var quest_counters: Dictionary = {}
+	for quest: Dictionary in quests.get("quests", []):
+		for beat: Dictionary in quest.get("beats", []):
+			for key: String in (beat.get("complete_when", {}) as Dictionary):
+				quest_counters[key] = true
+	for map_id: String in scene["maps"]:
+		for ent: Dictionary in scene["maps"][map_id].get("entities", []):
+			if not bool(ent.get("scales", false)):
+				continue
+			var eid := String(ent.get("id", "?"))
+			assert(String(ent.get("kind", "")) == "encounter", "%s has scales:true but is not an encounter (#163)" % eid)
+			assert(bool(ent.get("respawns", false)), "%s has scales:true but respawns:false -- only repeatable culls scale (#163)" % eid)
+			# on_victory is String-or-Array (wi_game accepts both) -- iterate
+			# the same way or the Array form crashes the String() ctor
+			# (review LOW: probe-proven on snare_nest_slot's list form).
+			var raw_ov: Variant = ent.get("on_victory", "")
+			var victories: Array = []
+			if raw_ov is Array:
+				victories = raw_ov
+			elif String(raw_ov) != "":
+				victories = [raw_ov]
+			assert(not victories.is_empty(), "%s has scales:true but no on_victory counter (#163)" % eid)
+			for ov_raw: Variant in victories:
+				var ov := String(ov_raw)
+				assert(not quest_counters.has(ov), "%s has scales:true but its on_victory '%s' feeds a quest counter -- story/quest fights never scale (#163)" % [eid, ov])
 
 
 func _validate_deliveries(deliveries: Dictionary, produced_accomplishments: Dictionary) -> void:

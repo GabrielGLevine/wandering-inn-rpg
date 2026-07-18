@@ -1901,6 +1901,37 @@
    }
   },
   {
+   "script": "bounty_rank_loop",
+   "seed": 9,
+   "fixture": "bounty_rank_loop_start",
+   "note": "Issue #163: rank-scaled bounties -- a SILVER-rank player (swordsman 13) accepts bounty_gossip_tea, its silver tier locks (accepted_bounty_tier), the journal shows the silver copy + 8-gold payout, completion via the delta contract across a sleep, turn in for the silver 8 gold (not bronze 2)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "guild",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "bounty_rank_loop_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "selys_delivery"
+    ],
+    "systems": [
+     "boards",
+     "dialogue",
+     "economy",
+     "exploration",
+     "night_phase"
+    ]
+   }
+  },
+  {
    "script": "upstairs_walkthrough",
    "seed": 9,
    "note": "M-DEPTH DP3: the inn's upstairs -- stairs door pair, Lyonette's locked door (observe+locked_toast), sleep-beat parity proven live at the PC's own bed (same events, one extra flavor toast)",

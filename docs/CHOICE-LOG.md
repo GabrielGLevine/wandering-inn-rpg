@@ -4,6 +4,37 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-18 — #163 rank-scaled Guild bounties (implementation adjudications)
+
+- **Rank boundaries derived from effective_power, never hardcoded levels**:
+  Bronze < power of a single L10 line (== 10.0 by construction); Silver <
+  power of a two-L10-line build (the spec's "14-equivalent consolidation" —
+  two L10 lines merge to L14 — whose UN-consolidated power is 10*2^(1/k) ≈
+  15.64); Gold at/above. `WIProgression.power_rank`; both edges pinned in
+  test_progression.
+- **Payout anchor relation** (validator, consumes #92's ladder): silver.gold
+  a multiple of crude_draught's price (the entry rung), gold.gold a multiple
+  of tonic_of_the_clear_eye's price (the tonic tier); monotonic; combat
+  top-tier ≥ 2× mending_draught (purchasing floor). Chose crude-for-silver /
+  tonic-for-gold (both anchor items referenced, economically sane silver
+  rungs) over a flat tonic-multiple-for-both (would 8× a work bounty at
+  silver). All three arms + the price-move coupling proven can-fail.
+- **10 postings tiered across all pillars** (fight/social/work/explore +
+  standing orders); every base (bronze) record kept BYTE-IDENTICAL so every
+  bronze-rank QA loop stays green — the rank register surfaces in the
+  silver/gold copy overrides.
+- **Only 2 encounters scaled (4 GATED cells), not 4 (8 cells)**:
+  gallery_vermin_nest (T4) + forge_calibration_golem (T5) have no live QA
+  loop fighting them, so scaling is regression-free. kingslayer_den /
+  market_watchgolems were EVALUATED but their loops run at silver-rank
+  spellsword11 fixtures that can't clear the scaled fight at the pinned seed;
+  they stay unscaled until rank-aware loop fixtures land (a follow-up).
+  Steps FIXED by spec (silver +25%HP/+1dmg, gold +50%HP/+2dmg), one site
+  (WIBountyScaling), mirrored in start_combat + sim_combat_batch.
+- **accepted_bounty_tier = one additive save field** (get-default "", no
+  VERSION bump — the board fields' own precedent); the accepted tier locks at
+  accept and turn-in pays it regardless of later rank shifts.
+
 ## 2026-07-18 — public-demo deploy gap (friend-playtest triage)
 
 - **pages.yml gains a release-tag trigger** (was manual-dispatch only, an

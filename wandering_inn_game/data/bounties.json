@@ -9,7 +9,19 @@
     "won_combat": 2
    },
    "gold": 4,
-   "copy": "WATCH NOTICE. Goblin raiders, Floodplains road, east approach. Cull two bands. Proof by Guild attestation. 4 gold on turn-in. No spoils claims against the Watch. Second Shift."
+   "copy": "WATCH NOTICE. Goblin raiders, Floodplains road, east approach. Cull two bands. Proof by Guild attestation. 4 gold on turn-in. No spoils claims against the Watch. Second Shift.",
+   "tiers": {
+     "silver": {
+      "condition": {"won_combat": 3},
+      "gold": 12,
+      "copy": "SILVER-RANK NOTICE. Goblin raiders press the Floodplains road in strength, east approach. Cull three bands, Silver attestation required. 12 gold on turn-in. No spoils claims against the Watch. Second Shift."
+     },
+     "gold": {
+      "condition": {"won_combat": 4},
+      "gold": 32,
+      "copy": "GOLD-RANK NOTICE. A war-band works the east road and the patrols are outmatched. Four engagements won, Gold attestation, and the Watch will not ask how. 32 gold on turn-in. No spoils claims against the Watch. Second Shift."
+     }
+   }
   },
   {
    "id": "bounty_settle_dispute",
@@ -19,7 +31,19 @@
     "persuaded_someone": 1
    },
    "gold": 3,
-   "copy": "Posted by order of the Watch Captain. The Watch is not a wall between every two fools in this city who disagree. End a quarrel with words, both parties still standing, and the Watch pays 3 gold on a guardsman's confirmation. This is cheaper than a cell and I am not above saying so. Z. Sunderscale."
+   "copy": "Posted by order of the Watch Captain. The Watch is not a wall between every two fools in this city who disagree. End a quarrel with words, both parties still standing, and the Watch pays 3 gold on a guardsman's confirmation. This is cheaper than a cell and I am not above saying so. Z. Sunderscale.",
+   "tiers": {
+     "silver": {
+      "condition": {"persuaded_someone": 3},
+      "gold": 8,
+      "copy": "SILVER-RANK, by order of the Watch Captain. Three quarrels ended with words, all parties still standing, on a guardsman's confirmation. Harder than it reads, and I know exactly how hard. 8 gold. Z. Sunderscale."
+     },
+     "gold": {
+      "condition": {"persuaded_someone": 5},
+      "gold": 16,
+      "copy": "GOLD-RANK, by order of the Watch Captain. Five settled without a blade drawn, both parties upright each time. This is diplomacy at a scale the cells cannot match. 16 gold, and my genuine thanks. Z. Sunderscale."
+     }
+   }
   },
   {
    "id": "bounty_gossip_tea",
@@ -29,7 +53,19 @@
     "heard_gossip": 3
    },
    "gold": 2,
-   "copy": "A request, for one with ears. Talk to people. The gate, the Guild, the stalls. What they say freely, you remember, and you tell me over tea. Not spying. Listening. Hrr. The difference matters to Gnolls. 2 gold, and the tea is mine to pour. Krshia Silverfang."
+   "copy": "A request, for one with ears. Talk to people. The gate, the Guild, the stalls. What they say freely, you remember, and you tell me over tea. Not spying. Listening. Hrr. The difference matters to Gnolls. 2 gold, and the tea is mine to pour. Krshia Silverfang.",
+   "tiers": {
+     "silver": {
+      "condition": {"heard_gossip": 5},
+      "gold": 8,
+      "copy": "SILVER-RANK request, for one with good ears. Five things heard freely -- the gate, the Guild, the stalls -- and told to me over tea. Not spying. Listening. Hrr. 8 gold, and the tea is mine to pour. Krshia Silverfang."
+     },
+     "gold": {
+      "condition": {"heard_gossip": 8},
+      "gold": 16,
+      "copy": "GOLD-RANK request, for one the city talks around. Eight things worth knowing, remembered and repeated to me. You hear more than most now; that is a thing worth paying for. Hrr. 16 gold. Krshia Silverfang."
+     }
+   }
   },
   {
    "id": "bounty_observe_survey",
@@ -39,7 +75,19 @@
     "observed_things": 3
    },
    "gold": 3,
-   "copy": "Request, Guild-posted, standing. The Guild's map of the district is older than my vest. Persons holding [Observe] or a comparable Skill: three fresh observations logged this rotation, any subject of note, reported to the desk. 3 gold from the tactics budget. Neat handwriting appreciated. Not required. Olesm Swifttail, [Tactician]."
+   "copy": "Request, Guild-posted, standing. The Guild's map of the district is older than my vest. Persons holding [Observe] or a comparable Skill: three fresh observations logged this rotation, any subject of note, reported to the desk. 3 gold from the tactics budget. Neat handwriting appreciated. Not required. Olesm Swifttail, [Tactician].",
+   "tiers": {
+     "silver": {
+      "condition": {"observed_things": 5},
+      "gold": 8,
+      "copy": "SILVER-RANK request, Guild-posted. The district map wants five fresh observations this rotation, any subject of note, reported to the desk. 8 gold from the tactics budget. Neat handwriting appreciated. Olesm Swifttail, [Tactician]."
+     },
+     "gold": {
+      "condition": {"observed_things": 8},
+      "gold": 16,
+      "copy": "GOLD-RANK request, Guild-posted. Eight observations of genuine tactical worth -- the kind a Silver would miss. Reported to the desk, logged, filed. 16 gold from the tactics budget. This is real work. Olesm Swifttail, [Tactician]."
+     }
+   }
   },
   {
    "id": "bounty_sewer_survey",
@@ -72,7 +120,19 @@
     "served_customer": 3
    },
    "gold": 2,
-   "copy": "HI! The Wandering Inn (the one on the hill, across the Floodplains, you literally cannot miss it) needs an extra pair of hands! Serve three guests. That's it! That's the whole job! Dinner included, and Lyonette says I can't keep adding exclamation points to these, so: two gold at the Guild. Promise! Erin Solstice, [Innkeeper]."
+   "copy": "HI! The Wandering Inn (the one on the hill, across the Floodplains, you literally cannot miss it) needs an extra pair of hands! Serve three guests. That's it! That's the whole job! Dinner included, and Lyonette says I can't keep adding exclamation points to these, so: two gold at the Guild. Promise! Erin Solstice, [Innkeeper].",
+   "tiers": {
+     "silver": {
+      "condition": {"served_customer": 5},
+      "gold": 8,
+      "copy": "SILVER-RANK! Okay so it's BUSY busy tonight, and five guests served properly would save us, Lyonette says I have to sound official so: eight gold at the Guild! Dinner included! Erin Solstice, [Innkeeper]."
+     },
+     "gold": {
+      "condition": {"served_customer": 8},
+      "gold": 16,
+      "copy": "GOLD-RANK!! A whole caravan came in at once and I cannot be eight people at the same time (I checked). Eight guests, served, and the common room not on fire. 16 gold at the Guild, PROMISE. Erin Solstice, [Innkeeper]."
+     }
+   }
   },
   {
    "id": "bounty_evening_stew",
@@ -82,7 +142,19 @@
     "cooked_meal": 2
    },
    "gold": 2,
-   "copy": "The Wandering Inn requires a competent hand at the stew pot for the evening service. Two proper meals, cooked, not burnt, not 'stretched.' Payment of 2 gold, lodged with the Guild, which I am assured is the respectable way these things are done. The kitchen is cleaner than the last notice implied. L."
+   "copy": "The Wandering Inn requires a competent hand at the stew pot for the evening service. Two proper meals, cooked, not burnt, not 'stretched.' Payment of 2 gold, lodged with the Guild, which I am assured is the respectable way these things are done. The kitchen is cleaner than the last notice implied. L.",
+   "tiers": {
+     "silver": {
+      "condition": {"cooked_meal": 3},
+      "gold": 8,
+      "copy": "SILVER-RANK. The Wandering Inn requires a steady hand at the pot through a full evening service. Three proper meals, cooked, not stretched. Payment of 8 gold, lodged with the Guild in the respectable way. L."
+     },
+     "gold": {
+      "condition": {"cooked_meal": 4},
+      "gold": 16,
+      "copy": "GOLD-RANK. A guild banquet's overflow lands on the Inn and the kitchen cannot do it alone. Four meals to a standard I will personally inspect. 16 gold, lodged with the Guild. The kitchen is spotless. L."
+     }
+   }
   },
   {
    "id": "bounty_vermin_grate",
@@ -210,7 +282,19 @@
     "rock_crabs_culled": 2
    },
    "gold": 5,
-   "copy": "Hunt notice. Rock Crabs wake with the rains, and a shell the size of a cart does not care that your leg was in the way. Two culled from the east hills, shown by shell-plate. 5 gold, pooled by the hunt families. Do not trouble the Corusdeer herd. Antlers freely shed only. Beshta, for the camp."
+   "copy": "Hunt notice. Rock Crabs wake with the rains, and a shell the size of a cart does not care that your leg was in the way. Two culled from the east hills, shown by shell-plate. 5 gold, pooled by the hunt families. Do not trouble the Corusdeer herd. Antlers freely shed only. Beshta, for the camp.",
+   "tiers": {
+     "silver": {
+      "condition": {"rock_crabs_culled": 3},
+      "gold": 12,
+      "copy": "SILVER-RANK NOTICE, hunt camp. The rains woke a big shell-season, east hills. Three culled, shown by shell-plate. 12 gold, pooled by the hunt families. Do not trouble the Corusdeer herd. Beshta, for the camp."
+     },
+     "gold": {
+      "condition": {"rock_crabs_culled": 4},
+      "gold": 32,
+      "copy": "GOLD-RANK NOTICE, hunt camp. Cart-sized shells, four of them, and one took a hunter's leg last waking. Four culled, shell-plate as proof. 32 gold, the families will not haggle it. Beshta, for the camp."
+     }
+   }
   },
   {
    "_comment": "Pay via scripts/generate_postings.py's own recovered formula: fight pillar 2.0g/unit * 2 units * T1 mult 1.0 = 4g.",
@@ -221,7 +305,19 @@
     "corusdeer_culled": 2
    },
    "gold": 4,
-   "copy": "Hunt notice. A stray buck's broken from the herd, east hills, antlers hot enough to start a grass fire if you let it stand too long. Two culled, shown by an antler each. 4 gold, pooled by the hunt families. The HERD stays off this notice -- one stray only. Beshta, for the camp."
+   "copy": "Hunt notice. A stray buck's broken from the herd, east hills, antlers hot enough to start a grass fire if you let it stand too long. Two culled, shown by an antler each. 4 gold, pooled by the hunt families. The HERD stays off this notice -- one stray only. Beshta, for the camp.",
+   "tiers": {
+     "silver": {
+      "condition": {"corusdeer_culled": 3},
+      "gold": 12,
+      "copy": "SILVER-RANK NOTICE, hunt camp. Three strays broke the herd, antlers hot enough to fire the grass. Three culled, an antler each. 12 gold, pooled by the hunt families. The HERD stays off this notice. Beshta, for the camp."
+     },
+     "gold": {
+      "condition": {"corusdeer_culled": 4},
+      "gold": 32,
+      "copy": "GOLD-RANK NOTICE, hunt camp. A whole broken line of them running hot, east hills. Four culled, an antler each. 32 gold. Bring water and a shield, not just a blade. Beshta, for the camp."
+     }
+   }
   },
   {
    "_comment": "Pay: 2.0g/unit * 2 units * T1 1.0 = 4g.",
@@ -265,7 +361,19 @@
     "forge_golems_culled": 2
    },
    "gold": 12,
-   "copy": "Forge-tier notice. Command spells drift, and a drifted golem doesn't know a shipment from a person. Two put down properly, cores intact for the smiths. 12 gold. Grimalkin."
+   "copy": "Forge-tier notice. Command spells drift, and a drifted golem doesn't know a shipment from a person. Two put down properly, cores intact for the smiths. 12 gold. Grimalkin.",
+   "tiers": {
+    "silver": {
+     "condition": { "forge_golems_culled": 3 },
+     "gold": 16,
+     "copy": "SILVER-RANK, Forge tier. Drifted golems in threes now, and the smiths want every core unscorched. Three down, proper form. 16 gold. Grimalkin."
+    },
+    "gold": {
+     "condition": { "forge_golems_culled": 4 },
+     "gold": 32,
+     "copy": "GOLD-RANK, Forge tier. Whatever is drifting the command spells is getting worse, and I am writing a paper about it. Four golems, cores intact, no heroics near the crucibles. 32 gold. Grimalkin."
+    }
+   }
   },
   {
    "_comment": "Pay: 2.0g/unit * 2 units * T5 3.0 = 12g.",
@@ -315,7 +423,19 @@
     "won_combat": 3
    },
    "gold": 6,
-   "copy": "Standing order of the Watch, posted for whoever keeps ending up in the reports. The roads out of this city do not police themselves and my roster says we cannot either. Three engagements won, anywhere the Watch's writ runs, confirmed by attestation. 6 gold per settlement. I would rather pay you than bury patrols. Z. Sunderscale."
+   "copy": "Standing order of the Watch, posted for whoever keeps ending up in the reports. The roads out of this city do not police themselves and my roster says we cannot either. Three engagements won, anywhere the Watch's writ runs, confirmed by attestation. 6 gold per settlement. I would rather pay you than bury patrols. Z. Sunderscale.",
+   "tiers": {
+     "silver": {
+      "condition": {"won_combat": 4},
+      "gold": 12,
+      "copy": "SILVER-RANK standing order of the Watch. The roads do not police themselves and the reports keep landing on my desk. Four engagements won per settlement, anywhere the writ runs, confirmed by attestation. 12 gold. I would rather pay you than bury patrols. Z. Sunderscale."
+     },
+     "gold": {
+      "condition": {"won_combat": 5},
+      "gold": 32,
+      "copy": "GOLD-RANK standing order of the Watch. The roads are worse than the roster admits and I need someone who ends fights, not survives them. Five won per settlement, attested. 32 gold. Do not make me post this a third time. Z. Sunderscale."
+     }
+   }
   },
   {
    "_comment": "All delta-mode (repeatable, on_victory-keyed, all three producers respawns:true), 2-unit convention (the crab_cull/corusdeer_cull/razorbeak_cull/forge_golem_cull/watchgolem_cull precedent, not the 1-unit 'apex predator' shape).",
@@ -329,7 +449,19 @@
     "gallery_vermin_culled": 2
    },
    "gold": 10,
-   "copy": "Guild standing order, Silver-rank and up. The reopened side-galleries past the trap gauntlet never stay swept either -- the same leak that fed the vermin nest the first time still feeds it. Two confirmed kills per rotation, shell-plate as proof, 10 gold. This notice does not come down. Selys, for the Guild."
+   "copy": "Guild standing order, Silver-rank and up. The reopened side-galleries past the trap gauntlet never stay swept either -- the same leak that fed the vermin nest the first time still feeds it. Two confirmed kills per rotation, shell-plate as proof, 10 gold. This notice does not come down. Selys, for the Guild.",
+   "tiers": {
+     "silver": {
+      "condition": {"gallery_vermin_culled": 3},
+      "gold": 12,
+      "copy": "SILVER-RANK Guild standing order. The reopened side-galleries never stay swept, and the leak that fed the first nest still runs. Three confirmed kills per rotation, shell-plate as proof. 12 gold. This notice does not come down. Selys, for the Guild."
+     },
+     "gold": {
+      "condition": {"gallery_vermin_culled": 4},
+      "gold": 32,
+      "copy": "GOLD-RANK Guild standing order. Whatever nests past the trap gauntlet has grown bolder and it recruits deep. Four confirmed kills per rotation, shell-plate as proof. 32 gold, and go armed for worse than vermin. Selys, for the Guild."
+     }
+   }
   },
   {
    "id": "bounty_standing_thicket_watch",
