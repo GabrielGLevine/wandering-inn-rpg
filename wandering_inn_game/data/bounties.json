@@ -361,7 +361,19 @@
     "forge_golems_culled": 2
    },
    "gold": 12,
-   "copy": "Forge-tier notice. Command spells drift, and a drifted golem doesn't know a shipment from a person. Two put down properly, cores intact for the smiths. 12 gold. Grimalkin."
+   "copy": "Forge-tier notice. Command spells drift, and a drifted golem doesn't know a shipment from a person. Two put down properly, cores intact for the smiths. 12 gold. Grimalkin.",
+   "tiers": {
+    "silver": {
+     "condition": { "forge_golems_culled": 3 },
+     "gold": 16,
+     "copy": "SILVER-RANK, Forge tier. Drifted golems in threes now, and the smiths want every core unscorched. Three down, proper form. 16 gold. Grimalkin."
+    },
+    "gold": {
+     "condition": { "forge_golems_culled": 4 },
+     "gold": 32,
+     "copy": "GOLD-RANK, Forge tier. Whatever is drifting the command spells is getting worse, and I am writing a paper about it. Four golems, cores intact, no heroics near the crucibles. 32 gold. Grimalkin."
+    }
+   }
   },
   {
    "_comment": "Pay: 2.0g/unit * 2 units * T5 3.0 = 12g.",

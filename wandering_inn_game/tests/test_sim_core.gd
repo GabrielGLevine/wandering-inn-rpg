@@ -2689,6 +2689,21 @@ func _init() -> void:
 	assert(not gB.turn_in_bounty(), "prior culls never pay twice")
 	gB.abandon_bounty()
 
+	# --- GH#163 review MEDIUM: the tier LOCK must survive a rank shift ---
+	var tier_cc: Dictionary = combat_config.duplicate(true)
+	tier_cc["classes"] = _load_json("res://data/classes.json")
+	tier_cc["bounties"] = _load_json("res://data/bounties.json")
+	var gTier := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 7, tier_cc)
+	gTier.classes["warrior"] = 10
+	assert(WIProgression.power_rank(gTier.classes, tier_cc["classes"]) == "silver", "one L10 line ranks silver")
+	gTier.accept_bounty("bounty_road_cull")
+	assert(gTier.accepted_bounty_tier == "silver", "accept locks the CURRENT rank's tier")
+	gTier.classes["mage"] = 10
+	assert(WIProgression.power_rank(gTier.classes, tier_cc["classes"]) == "gold", "two L10 lines rank gold")
+	var locked: Dictionary = gTier.accepted_bounty()
+	assert(int(locked.get("gold", 0)) == 12 and int((locked.get("condition", {}) as Dictionary).get("won_combat", 0)) == 3,
+		"mid-bounty rank-up keeps the SILVER condition and payout (the lock, not the live rank)")
+
 	var gate_scene := {
 		"start_map": "plaza",
 		"player": {WIKeys.CELL: [1, 1], "classes": {}, WIKeys.SKILLS: []},

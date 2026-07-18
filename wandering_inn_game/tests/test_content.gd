@@ -1023,9 +1023,19 @@ func _validate_encounter_scaling(scene: Dictionary, quests: Dictionary) -> void:
 			var eid := String(ent.get("id", "?"))
 			assert(String(ent.get("kind", "")) == "encounter", "%s has scales:true but is not an encounter (#163)" % eid)
 			assert(bool(ent.get("respawns", false)), "%s has scales:true but respawns:false -- only repeatable culls scale (#163)" % eid)
-			var ov := String(ent.get("on_victory", ""))
-			assert(ov != "", "%s has scales:true but no on_victory counter (#163)" % eid)
-			assert(not quest_counters.has(ov), "%s has scales:true but its on_victory '%s' feeds a quest counter -- story/quest fights never scale (#163)" % [eid, ov])
+			# on_victory is String-or-Array (wi_game accepts both) -- iterate
+			# the same way or the Array form crashes the String() ctor
+			# (review LOW: probe-proven on snare_nest_slot's list form).
+			var raw_ov: Variant = ent.get("on_victory", "")
+			var victories: Array = []
+			if raw_ov is Array:
+				victories = raw_ov
+			elif String(raw_ov) != "":
+				victories = [raw_ov]
+			assert(not victories.is_empty(), "%s has scales:true but no on_victory counter (#163)" % eid)
+			for ov_raw: Variant in victories:
+				var ov := String(ov_raw)
+				assert(not quest_counters.has(ov), "%s has scales:true but its on_victory '%s' feeds a quest counter -- story/quest fights never scale (#163)" % [eid, ov])
 
 
 func _validate_deliveries(deliveries: Dictionary, produced_accomplishments: Dictionary) -> void:
