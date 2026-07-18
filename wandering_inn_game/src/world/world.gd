@@ -515,6 +515,9 @@ func _build_field_blocked_props() -> void:
 		var frame_texture := frames.get_frame_texture(animation, 0)
 		assert(frame_texture != null, "blocked prop %s needs a frame" % sprite_id)
 		var spr := Sprite2D.new()
+		# GH#169: pixel sprites stay crisp at ANY render_scale (the 0.55 rock
+		# crab blurred under the default Linear filter); UI chrome keeps Linear.
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		spr.name = "BlockedProp_%d_%d" % [cell.x, cell.y]
 		spr.texture = frame_texture
 		spr.centered = false
@@ -940,6 +943,9 @@ func _make_entity_visual(
 	var uses_sprite := false
 	if sprite_id != "" and WISpriteRegistry.has_sprite(sprite_id):
 		var spr := AnimatedSprite2D.new()
+		# GH#169: pixel sprites stay crisp at ANY render_scale (the 0.55 rock
+		# crab blurred under the default Linear filter); UI chrome keeps Linear.
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		spr.sprite_frames = WISpriteRegistry.frames_for(sprite_id)
 		spr.centered = false
 		var facing_anim := "idle_side" if facing in ["left", "right"] else "idle_%s" % facing
@@ -986,6 +992,9 @@ func _make_entity_visual(
 		)
 		if bool(catalog_entry.get("shadow", false)):
 			var shadow := Sprite2D.new()
+			# GH#169: pixel sprites stay crisp at ANY render_scale (the 0.55 rock
+			# crab blurred under the default Linear filter); UI chrome keeps Linear.
+			shadow.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			shadow.texture = WISpriteRegistry.shadow_texture()
 			shadow.position = Vector2(CELL * 0.5, CELL - 2.0 - y_sort_bias)
 			var shadow_w := clampf(frame_size.x * spr.scale.x / 24.0, 0.6, 2.5)
