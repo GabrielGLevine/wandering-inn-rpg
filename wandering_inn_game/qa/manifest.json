@@ -3857,6 +3857,33 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "hedault_enchant_loop",
+   "seed": 7,
+   "fixture": "near_hedault",
+   "note": "GH#142: Hedault enchant swap -- fee paid, base consumed (equipped-unequip path unit-pinned), variant granted",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "mercantile_alleys"
+    ],
+    "fixtures": [
+     "near_hedault"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "hedault_enchanting"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
   }
  ]
 }

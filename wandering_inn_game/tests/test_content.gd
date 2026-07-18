@@ -125,6 +125,7 @@ func _init() -> void:
 	# STRUCTURAL_LITERALS set via the test_reachability preload pattern.
 	produced_accomplishments["garden_door_unlocked"] = true
 	_validate_conversations(scene, graphs)
+	_validate_enchant_pairs(graphs, items)
 	_validate_dialogue_graphs(graphs, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
 	_validate_quests(quests, produced_accomplishments)
 	_validate_bounties(bounties, produced_accomplishments)
@@ -531,7 +532,10 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		var sanctioned_stage_class := requires.has("accomplishment") and requires.has("class")
 		var sanctioned_once_item := requires.has("once_per_waking") and requires.has("item")
 		var sanctioned_stage_skill := requires.has("accomplishment") and requires.has("skill")
-		assert(sanctioned_gold_accomplishment or sanctioned_stage_once or sanctioned_stage_class or sanctioned_once_item or sanctioned_stage_skill, label + " the only sanctioned compound requires are {gold, accomplishment}, {accomplishment, once_per_waking}, {accomplishment, class}, {once_per_waking, item}, and {accomplishment, skill}")
+		# {gold, item}: priced item-services (GH#142 Hedault enchanting --
+		# hold the base item AND afford the fee; both gates show-locked).
+		var sanctioned_gold_item := requires.has("gold") and requires.has("item")
+		assert(sanctioned_gold_accomplishment or sanctioned_stage_once or sanctioned_stage_class or sanctioned_once_item or sanctioned_stage_skill or sanctioned_gold_item, label + " the only sanctioned compound requires are {gold, accomplishment}, {accomplishment, once_per_waking}, {accomplishment, class}, {once_per_waking, item}, {accomplishment, skill}, and {gold, item}")
 		return
 	assert(gate_keys == 1, label + " requires must use exactly one gate type")
 
@@ -1093,3 +1097,37 @@ func _validate_tutor_line_help_consistency() -> void:
 				"real_ones.solo_fallback_line has drifted from help_content.json's Classes & Levels wording"
 			)
 	assert(found, "goblin_ambush_tutorial's real_ones tutor line is missing (arenas.json)")
+
+
+## GH#142: enchant pairs are the dialogue-effect swap triple (negative gold
+## fee + remove_item base + item variant in ONE option). Derived from the
+## graphs, no list to maintain. Economics: variant price > base price +
+## fee/2 (Hedault charges for real value), both records accessories.
+func _validate_enchant_pairs(graphs: Dictionary, items: Dictionary) -> void:
+	var by_id: Dictionary = {}
+	for it: Dictionary in items.get("items", []):
+		by_id[String(it["id"])] = it
+	for conv_id: String in graphs:
+		for node_id: String in (graphs[conv_id] as Dictionary).get("nodes", {}):
+			var node: Dictionary = graphs[conv_id]["nodes"][node_id]
+			for opt: Variant in node.get("options", []):
+				var fee := 0
+				var removed := ""
+				var granted := ""
+				for effect: Dictionary in (opt as Dictionary).get("effects", []):
+					if effect.has("gold") and int(effect["gold"]) < 0:
+						fee = -int(effect["gold"])
+					elif effect.has("remove_item"):
+						removed = String(effect["remove_item"])
+					elif effect.has("item"):
+						granted = String(effect["item"])
+				if fee == 0 or removed == "" or granted == "":
+					continue
+				var base: Dictionary = by_id.get(removed, {})
+				var variant: Dictionary = by_id.get(granted, {})
+				assert(not base.is_empty() and not variant.is_empty(), "%s/%s enchant references unknown items %s -> %s" % [conv_id, node_id, removed, granted])
+				assert(String(variant.get("kind", "")) == "accessory" and String(base.get("kind", "")) == "accessory", "%s enchant pair must be accessories" % conv_id)
+				assert(
+					int(variant.get("price", 0)) * 2 > int(base.get("price", 0)) * 2 + fee,
+					"%s enchant %s->%s: variant price %d must exceed base %d + fee %d/2 (paid work must hold value)" % [conv_id, removed, granted, int(variant.get("price", 0)), int(base.get("price", 0)), fee]
+				)

@@ -975,6 +975,60 @@
 			},
 			"description": "A twist of waxed paper holding a fierce red powder. A pinch in the pot and the whole dish bites back.",
 			"lore": "Flarepepper grows wild on the Floodplains, hot enough to make a Drake blink. A good Chef keeps a supply put by; a great one knows exactly how much is too much."
+		},
+		{
+			"_comment": "GH#142 Hedault enchant variant of traveler_charm (base 5g + 20g fee; validator: price > base + fee/2). dangersense fold, +1 hp over base, res 1.",
+			"id": "hedaults_traveler_charm",
+			"name": "Warded Traveler Charm",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 3,
+			"damage_reduction": 0,
+			"resonance": 1,
+			"tier": "enchanted",
+			"price": 18,
+			"abilities": [
+				"dangersense"
+			],
+			"description": "The same worn charm, reworked in a fastidious hand: the old knots redone, one thread of real warding braided through.",
+			"lore": "Hedault does not gild things. He corrects them. The charm is what it always should have been, which he will tell you at length."
+		},
+		{
+			"_comment": "GH#142 Hedault enchant variant of hunters_fang_talisman (base 14g + 35g fee). eagle_eyes fold -- NEW id, so the t3/t4 gated sim builds that bake the BASE talisman are untouched (the #92 D5 lesson).",
+			"id": "hedaults_hunters_fang",
+			"name": "Keen-Set Hunters Fang",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 1,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 1,
+			"tier": "enchanted",
+			"price": 45,
+			"abilities": [
+				"eagle_eyes"
+			],
+			"description": "The fang reset in silver wire, point-first, angled like a compass needle that has chosen its prey.",
+			"lore": "An enchanter who hates waste, given a trophy that was mostly ornament. Now it is mostly not."
+		},
+		{
+			"_comment": "GH#142 Hedault enchant variant of witch_wardstone_bead (base 16g + 40g fee). mana_shield fold.",
+			"id": "hedaults_wardstone",
+			"name": "True-Set Wardstone",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 2,
+			"damage_reduction": 0,
+			"resonance": 2,
+			"tier": "enchanted",
+			"price": 50,
+			"abilities": [
+				"mana_shield"
+			],
+			"description": "The bead re-cut along its true grain, the witch-warding inside finally facing outward.",
+			"lore": "Riverfarm work finished Invrisil-style. Neither place would admit the pairing improves them both."
 		}
 	]
 }

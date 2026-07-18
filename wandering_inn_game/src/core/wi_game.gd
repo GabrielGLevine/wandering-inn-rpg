@@ -1034,7 +1034,16 @@ func dialogue_choose(index: int) -> bool:
 		elif effect.has("bank_first_use"):
 			entity_first_use[String(effect["bank_first_use"])] = true
 		elif effect.has("remove_item"):
-			remove_item(String(effect["remove_item"]), _dialogue_conversation_id)
+			# GH#142: a dialogue swap implies consent -- unequip first, or an
+			# EQUIPPED base hits remove_item's safety refusal and the player
+			# pays the fee, keeps the base, AND gains the variant (exploit).
+			# The bench/use_skill path keeps the plain guard: benches never
+			# consume equipment.
+			var removed_id := String(effect["remove_item"])
+			for slot_name: String in equipped:
+				if String(equipped[slot_name]) == removed_id:
+					equipped[slot_name] = ""
+			remove_item(removed_id, _dialogue_conversation_id)
 		elif effect.has("well_fed"):
 			well_fed = bool(effect["well_fed"])
 		elif effect.has("start_combat"):

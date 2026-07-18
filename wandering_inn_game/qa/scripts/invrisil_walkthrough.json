@@ -151,20 +151,94 @@
    "action": "screenshot",
    "name": "01_extras_density"
   },
-  { "_comment": "== BEAT 3: the merchant-prince, NPC surface pre-quest -- Master Coyle (24,6), talk_pool only (no conversation yet, Task C3's own deliverable). extra_1 still occupies (7,6) (entities are never removed by a talk), so the route detours south to the clear row y=9 (no lamp/fountain/extra cell crosses it) for the long eastward leg, then back up to (23,6): down 3 to (6,9), right 12 to (18,9) -- GH#68 (quest-stage rework) detour to Stage 1's shared scouting beat here, before continuing right 5 + up 3 to Coyle -- bump right, interact -- first talk this waking absorbs the pool's rotation-0 line. ==", "action": "move", "direction": "down", "steps": 3 },
-  { "action": "move", "direction": "right", "steps": 12 },
-  { "action": "assert_state", "path": "player_cell", "equals": [18, 9] },
-  { "_comment": "GH#68 (issue #68, quest-stage rework) Stage 1: coyle_operation_lookout (18,13), a plain on_interact_accomplishment prop -- 'cheap but real', no skill needed. Down 3 to (18,12), bump down to face it, interact.", "action": "move", "direction": "down", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [18, 12] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "coyle_operation_found" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "You circle the block twice before it clicks: the modest COYLE AND SONS sign out front doesn't match the two wagons idling round the side, or the men counting crates like men who've been shorted before. Whatever Coyle's really running out of, the front door is the least of it." }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "00b_scout_operation_found" },
-  { "action": "move", "direction": "up", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [18, 9] },
-  { "action": "move", "direction": "right", "steps": 5 },
-  { "action": "move", "direction": "up", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [23, 6] },
+  {
+   "_comment": "== BEAT 3: the merchant-prince, NPC surface pre-quest -- Master Coyle (24,6), talk_pool only (no conversation yet, Task C3's own deliverable). extra_1 still occupies (7,6) (entities are never removed by a talk), so the route detours south to the clear row y=9 (no lamp/fountain/extra cell crosses it) for the long eastward leg, then back up to (23,6): down 3 to (6,9), right 12 to (18,9) -- GH#68 (quest-stage rework) detour to Stage 1's shared scouting beat here, before continuing right 5 + up 3 to Coyle -- bump right, interact -- first talk this waking absorbs the pool's rotation-0 line. ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    9
+   ]
+  },
+  {
+   "_comment": "GH#68 (issue #68, quest-stage rework) Stage 1: coyle_operation_lookout (18,13), a plain on_interact_accomplishment prop -- 'cheap but real', no skill needed. Down 3 to (18,12), bump down to face it, interact.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "coyle_operation_found"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "You circle the block twice before it clicks: the modest COYLE AND SONS sign out front doesn't match the two wagons idling round the side, or the men counting crates like men who've been shorted before. Whatever Coyle's really running out of, the front door is the least of it."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00b_scout_operation_found"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    6
+   ]
+  },
   {
    "_comment": "The last move step left the player facing UP -- bump right (blocked by Coyle's own cell, sets facing without moving) before interacting.",
    "action": "move",
@@ -188,7 +262,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "Master Coyle",
-    "text": "New face. I do like a new face \u2014 they're cheap, and occasionally they appreciate into something useful."
+    "text": "New face. I do like a new face — they're cheap, and occasionally they appreciate into something useful."
    },
    "timeout_sec": 5
   },
@@ -621,7 +695,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "[Warrior Level 3] \u2014 unlocked [Quick Movement] (+1 Max HP)"
+    "text": "[Warrior Level 3] — unlocked [Quick Movement] (+1 Max HP)"
    },
    "timeout_sec": 5
   },

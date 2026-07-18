@@ -1,0 +1,83 @@
+{
+ "_comment": "GH#142: Hedault's enchanting. requires {item, gold} gates show-locked with the item/gold labels; effects = gold-fee + remove_item base + item variant (the shipped swap triple -- ZERO engine). Canon voice: exacting, formal, no haggling, hates being touched. Book-17 bar: no Vol 8+ content.",
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Hedault",
+   "text": "State the item and keep your hands where I can see them. I appraise, I correct, I charge exactly what the work is worth. In that order.",
+   "options": [
+    {
+     "text": "The traveler's charm. Improve it. (20 gold)",
+     "requires": {
+      "item": "traveler_charm",
+      "gold": 20
+     },
+     "effects": [
+      {
+       "gold": -20
+      },
+      {
+       "remove_item": "traveler_charm"
+      },
+      {
+       "item": "hedaults_traveler_charm"
+      }
+     ],
+     "goto": "work_done"
+    },
+    {
+     "text": "The hunter's fang. Make it more than a trophy. (35 gold)",
+     "requires": {
+      "item": "hunters_fang_talisman",
+      "gold": 35
+     },
+     "effects": [
+      {
+       "gold": -35
+      },
+      {
+       "remove_item": "hunters_fang_talisman"
+      },
+      {
+       "item": "hedaults_hunters_fang"
+      }
+     ],
+     "goto": "work_done"
+    },
+    {
+     "text": "The wardstone bead. Set it true. (40 gold)",
+     "requires": {
+      "item": "witch_wardstone_bead",
+      "gold": 40
+     },
+     "effects": [
+      {
+       "gold": -40
+      },
+      {
+       "remove_item": "witch_wardstone_bead"
+      },
+      {
+       "item": "hedaults_wardstone"
+      }
+     ],
+     "goto": "work_done"
+    },
+    {
+     "text": "Just looking.",
+     "end": true
+    }
+   ]
+  },
+  "work_done": {
+   "speaker": "Hedault",
+   "text": "Done. The work is correct; the item was merely early. Do not thank me, do not shake my hand, and do not let a street enchanter touch it afterward.",
+   "options": [
+    {
+     "text": "Understood.",
+     "end": true
+    }
+   ]
+  }
+ }
+}

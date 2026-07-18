@@ -65,6 +65,9 @@ const EXPECTED_ITEMS := {
 	"warded_coil_charm": ["+2 HP", "Resonance 1"],
 	"kingslayer_fang": ["+1 damage on melee hits", "+1 HP", "Resonance 1", "Grants [Battle Momentum] in combat"],
 	"guardian_ward_fragment": ["+2 HP", "Reduces every hit taken by 1", "Resonance 1", "Grants [Guarding Ward] in combat"],
+	"hedaults_traveler_charm": ["+3 HP", "Resonance 1", "Grants [Dangersense] in combat", "Worth 18 gold"],
+	"hedaults_hunters_fang": ["+1 damage on melee hits", "Resonance 1", "Grants [Eagle Eyes] in combat", "Worth 45 gold"],
+	"hedaults_wardstone": ["+2 HP", "Resonance 2", "Grants [Mana Shield] in combat", "Worth 50 gold"],
 	"moonhide_fetish": ["+1 damage on melee hits", "+1 HP", "Resonance 1", "Grants [Second Wind] in combat"],
 	"anchor_sliver": ["+4 HP", "Reduces every hit taken by 1", "Resonance 3"],
 }

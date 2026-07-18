@@ -2937,6 +2937,22 @@ func _init() -> void:
 	g_no_pepper.sleep()
 	assert(not g_no_pepper.inventory.has("flarepepper_powder"), "no skill, no restock")
 
+	# --- GH#142: dialogue swap unequips first (the pay-and-keep-both exploit) ---
+	var cc_ench: Dictionary = combat_config.duplicate(true)
+	cc_ench["dialogue"] = {"hedault_enchanting": _load_json("res://data/dialogue/hedault_enchanting.json")}
+	var g_ench := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_ench)
+	g_ench.transition("mercantile_alleys", Vector2i(3, 7))
+	g_ench.gold = 40
+	g_ench.inventory.append("hunters_fang_talisman")
+	g_ench.equipped["accessory_1"] = "hunters_fang_talisman"
+	g_ench.player_facing = Vector2i.UP
+	assert(g_ench.start_dialogue("hedault_enchanting", "hedault"), "hedault conversation opens")
+	g_ench.dialogue_choose(1)
+	assert(g_ench.gold == 5, "enchant fee paid")
+	assert(not g_ench.inventory.has("hunters_fang_talisman"), "EQUIPPED base still consumed (unequip-then-remove)")
+	assert(g_ench.inventory.has("hedaults_hunters_fang"), "variant granted")
+	assert(String(g_ench.equipped.get("accessory_1", "")) == "", "the dangling equip slot is cleared")
+
 	# #148 Tier 3: map-level arrival_toasts re-orientation (armed / retired / unmet + first-satisfied-wins).
 	# Placed last: each fresh WIGame emits sim_initialized, so this must run after the
 	# _count("sim_initialized") == 1 assertion above.

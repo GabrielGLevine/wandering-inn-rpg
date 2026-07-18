@@ -150,3 +150,4 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `watch_donation_loop` | 7 | full | `near_watch_donation` | GH#92 D3: Ashgrave supply-fund donation -> repeatable gold sink banks donated_watch_supplies |
 | `second_wind_loop` | 9 | full | `near_second_wind` | swordsman L13 -> organic L14 -> [Crescent Cut] grant lands in a live fight |
 | `dialogue_numkey_loop` | 7 | full | `near_room_upgrade` | GH#171: number keys select dialogue options; no field-cast leak; purchase via keypress |
+| `hedault_enchant_loop` | 7 | full | `near_hedault` | GH#142: Hedault enchant swap -- fee paid, base consumed (equipped-unequip path unit-pinned), variant granted |

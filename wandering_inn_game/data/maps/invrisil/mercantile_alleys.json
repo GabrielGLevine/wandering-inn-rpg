@@ -1254,6 +1254,22 @@
     "item": "crude_draught",
     "toast": "[Low-Grade Synthesis] — Someone else's burner, your working. The draught comes out crude but honest, same as anywhere."
    }
+  },
+  {
+   "_comment": "GH#142: Hedault, Invrisil enchanter (user placement ruling 2026-07-15). CANON-NATIVE Vol 6-7. Sprite: human placeholder + tint, VISUAL-LOG. No shop -- his commerce is the enchant dialogue.",
+   "id": "hedault",
+   "kind": "npc",
+   "cell": [0, 6],
+   "display_name": "Hedault",
+   "sprite": "human_laborer",
+   "tint": [0.85, 0.85, 0.95],
+   "conversation": "hedault_enchanting",
+   "talk_pool": [
+    "Appraisal is free to watch and expensive to interrupt.",
+    "Do not touch the workbench. Do not touch the wares. Ideally, do not touch anything, including me.",
+    "Half this city's 'enchantments' are paint. The other half are apologies. I sell neither."
+   ],
+   "observe": "A severe man at a spotless corner bench, tools laid out at right angles. Everything about him says the prices are exact and the opinions are free."
   }
  ]
 }
