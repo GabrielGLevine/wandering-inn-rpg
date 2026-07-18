@@ -2953,6 +2953,19 @@ func _init() -> void:
 	assert(g_ench.inventory.has("hedaults_hunters_fang"), "variant granted")
 	assert(String(g_ench.equipped.get("accessory_1", "")) == "", "the dangling equip slot is cleared")
 
+	# --- GH#185: widened entrance surfaces (facade + gate flanks) ---
+	var g_ent := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_ent.transition("floodplains", Vector2i(6, 6))
+	g_ent.player_facing = Vector2i.UP
+	g_ent.interact()
+	assert(g_ent.current_map == "inn", "interacting at the WEST facade cell enters the inn (GH#185)")
+	var g_gate := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_gate.transition("floodplains", Vector2i(32, 24))
+	g_gate.player_facing = Vector2i.DOWN
+	g_gate.interact()
+	assert(g_gate.current_map == "street", "the gate's east flank enters Liscor")
+	assert(g_gate.accomplishment_count("reached_liscor") == 1, "flank entry banks reached_liscor")
+
 	# #148 Tier 3: map-level arrival_toasts re-orientation (armed / retired / unmet + first-satisfied-wins).
 	# Placed last: each fresh WIGame emits sim_initialized, so this must run after the
 	# _count("sim_initialized") == 1 assertion above.

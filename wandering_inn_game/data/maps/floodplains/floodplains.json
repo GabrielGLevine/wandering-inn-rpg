@@ -1047,6 +1047,28 @@
    "_hide_comment": "Hide the generic door sprite because facade decor owns this cell; door interaction is unchanged."
   },
   {
+   "_comment": "GH#185 (user ruling): the inn facade's interaction surface widens -- interacting anywhere along the front enters instead of 'Nothing there'. Same transition as floodplains_inn_door; cell stays in the blocked set (doors block by entity, these are interact-only facade cells).",
+   "id": "floodplains_inn_door_west",
+   "kind": "door",
+   "cell": [6, 5],
+   "display_name": "The Wandering Inn",
+   "sprite": "door",
+   "to_map": "inn",
+   "to_cell": [14, 3],
+   "hide_sprite": true
+  },
+  {
+   "_comment": "GH#185 (user ruling): the inn facade's interaction surface widens -- interacting anywhere along the front enters instead of 'Nothing there'. Same transition as floodplains_inn_door; cell stays in the blocked set (doors block by entity, these are interact-only facade cells).",
+   "id": "floodplains_inn_door_east",
+   "kind": "door",
+   "cell": [8, 5],
+   "display_name": "The Wandering Inn",
+   "sprite": "door",
+   "to_map": "inn",
+   "to_cell": [14, 3],
+   "hide_sprite": true
+  },
+  {
    "_comment": "the sign's wording lives ONLY in the toast/observe copy below, by design (the art carries no baked text).",
    "id": "inn_sign",
    "kind": "prop",
@@ -1104,6 +1126,30 @@
     1,
     3
    ],
+   "on_enter_accomplishment": "reached_liscor"
+  },
+  {
+   "_comment": "GH#185: the city gate is wider than one cell -- flanking cells share the transition (same on_enter bank; record_accomplishment idempotent).",
+   "id": "liscor_gate_west",
+   "kind": "door",
+   "cell": [30, 25],
+   "display_name": "To Liscor",
+   "sprite": "door",
+   "to_map": "street",
+   "to_cell": [1, 3],
+   "hide_sprite": true,
+   "on_enter_accomplishment": "reached_liscor"
+  },
+  {
+   "_comment": "GH#185: the city gate is wider than one cell -- flanking cells share the transition (same on_enter bank; record_accomplishment idempotent).",
+   "id": "liscor_gate_east",
+   "kind": "door",
+   "cell": [32, 25],
+   "display_name": "To Liscor",
+   "sprite": "door",
+   "to_map": "street",
+   "to_cell": [1, 3],
+   "hide_sprite": true,
    "on_enter_accomplishment": "reached_liscor"
   },
   {
