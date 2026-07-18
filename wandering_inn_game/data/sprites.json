@@ -4784,5 +4784,213 @@
     "fps": 1
    }
   }
+ },
+ "icon_crescent_cut": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_crescent_cut.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_pierce_thrust": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_pierce_thrust.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_ice_wall": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_ice_wall.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_flashfire_spellcraft": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_flashfire_spellcraft.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_blinding_arrow": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_blinding_arrow.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_shadowstep": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_shadowstep.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_phantom_barrage": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_phantom_barrage.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_trusted_voice": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_trusted_voice.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_barmaids_prescience": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_barmaids_prescience.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_swift_service": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_swift_service.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_evaluation_of_wealth": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_evaluation_of_wealth.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_couriers_double_step": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_couriers_double_step.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_tea_omens": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_tea_omens.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_flarepepper_supplies": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_flarepepper_supplies.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_perfect_reduction": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_perfect_reduction.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_sworn_fang_ride_together": {
+  "_comment": "PLACEHOLDER (Second Wind #165): crude 16x16 glyph. PixelLab pass user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_sworn_fang_ride_together.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
  }
 }

@@ -3771,6 +3771,34 @@
      "input"
     ]
    }
+  },
+  {
+   "script": "second_wind_loop",
+   "seed": 9,
+   "fixture": "near_second_wind",
+   "note": "swordsman L13 -> organic L14 -> [Crescent Cut] grant lands in a live fight",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_second_wind"
+    ],
+    "skills": [
+     "crescent_cut"
+    ],
+    "dialogue": [
+     "goblin_parley"
+    ],
+    "systems": [
+     "combat",
+     "dialogue"
+    ]
+   }
   }
  ]
 }

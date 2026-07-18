@@ -1567,6 +1567,15 @@ func start_combat(entity_id: String) -> bool:
 			_emit(WIEvents.TOAST, {"text": "A crowded field. Your companion hangs back at its edge."})
 		else:
 			allies.append(companion)
+	# GH#165 [Sworn Fang: Ride Together]: PC-side boon (inverse of the
+	# companion boons below -- that carrier buffs the ally, this the PC).
+	# Hidden hit_bonus folded into the PC kit while a companion rides; never
+	# on the player-facing record (that fold would buff the PC always).
+	# Mirrored in sim_combat_batch.gd.
+	if companion != "" and known_skills().has("sworn_fang_ride_together"):
+		var pc_skills: Array = (cfgs[0].get(WIKeys.SKILLS, []) as Array).duplicate()
+		pc_skills.append("sworn_fang_boon")
+		cfgs[0][WIKeys.SKILLS] = pc_skills
 	var hp_penalties: Dictionary = entity.get("ally_hp_penalty", {})
 	for ally: Variant in allies:
 		var ally_cfg: Dictionary = (by_id[String(ally)] as Dictionary).duplicate(true)
@@ -1901,6 +1910,12 @@ func sleep() -> void:
 			accepted_delivery_baseline = {}
 			delivery_failed = true
 	actions_since_sleep = 0
+	# GH#165 [Supplies: Flarepepper Powder]: the Chef line restocks one at
+	# each rest (canon [Supplies:] cadence). Never stacks -- pickup() no-ops
+	# a held duplicate. known_skills() is empty when _combat_config is, so a
+	# pre-class save simply skips this.
+	if known_skills().has("flarepepper_supplies") and not inventory.has("flarepepper_powder"):
+		pickup("flarepepper_powder", "flarepepper_supplies")
 	times_slept += 1
 	# GH#130: the only unconditional sleep counter -- talk-pool/dialogue gates can
 	# now express "has slept" (times_slept is a plain var, invisible to gates).

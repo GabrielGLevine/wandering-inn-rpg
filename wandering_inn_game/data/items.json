@@ -954,6 +954,27 @@
 			],
 			"description": "A knot of raskghar hide and knuckle-bone, strung to sit over the heart. It beats warmer on some nights than others.",
 			"lore": "The awakened one wore this into the warren dark. Whatever the moon lends the raskghar, a little of it soaked into the hide, and it does not much care whose heart it sits over now."
+		},
+		{
+			"_comment": "GH#165 [Supplies: Flarepepper Powder] output. Meal-buff consumable (tempering_oil next_fight {damage_mod:1} shape). Restocked one-per-rest by the Chef's [Supplies:] sleep hook (wi_game.gd), never sold -- price carried for economy-validator parity + any future shop.",
+			"id": "flarepepper_powder",
+			"name": "Flarepepper Powder",
+			"kind": "meal",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 6,
+			"use_effect": {
+				"next_fight": {
+					"damage_mod": 1
+				}
+			},
+			"description": "A twist of waxed paper holding a fierce red powder. A pinch in the pot and the whole dish bites back.",
+			"lore": "Flarepepper grows wild on the Floodplains, hot enough to make a Drake blink. A good Chef keeps a supply put by; a great one knows exactly how much is too much."
 		}
 	]
 }

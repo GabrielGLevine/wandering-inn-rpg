@@ -1049,6 +1049,26 @@ PLACEHOLDER_ICONS: list[tuple[str, str, tuple[int, int, int], tuple[int, int, in
 	("bone_dart", "assets/ui/icons/icon_animate_dead.png", (220, 214, 184), (71, 91, 63)),
 	("magic_rune", "assets/ui/icons/icon_hearthward_charm.png", (210, 142, 102), (94, 44, 35)),
 	("magic_rune", "assets/ui/icons/icon_greater_hearthward.png", (235, 181, 111), (104, 55, 30)),
+	# --- Second Wind wave (#165): 16 L14 grant icons. Same code-drawn glyph
+	# policy as every skill icon above (PixelLab pass user-gated, VISUAL-LOG
+	# drain). Existing shapes reused, each in a distinct hue so the 16 read
+	# apart in the journal/hotbar.
+	("crescent", "assets/ui/icons/icon_crescent_cut.png", (200, 205, 215), (70, 75, 90)),
+	("spearhead", "assets/ui/icons/icon_pierce_thrust.png", (205, 160, 90), (95, 60, 20)),
+	("floor", "assets/ui/icons/icon_ice_wall.png", (170, 220, 245), (60, 110, 150)),
+	("burst", "assets/ui/icons/icon_flashfire_spellcraft.png", (255, 170, 60), (150, 60, 10)),
+	("sun", "assets/ui/icons/icon_blinding_arrow.png", (255, 245, 200), (180, 150, 60)),
+	("boot", "assets/ui/icons/icon_shadowstep.png", (150, 120, 180), (60, 40, 90)),
+	("fan", "assets/ui/icons/icon_phantom_barrage.png", (150, 180, 225), (60, 80, 130)),
+	("ripple", "assets/ui/icons/icon_trusted_voice.png", (245, 205, 120), (170, 110, 40)),
+	("hourglass", "assets/ui/icons/icon_barmaids_prescience.png", (225, 150, 160), (140, 60, 75)),
+	("jet", "assets/ui/icons/icon_swift_service.png", (150, 200, 205), (50, 90, 100)),
+	("target", "assets/ui/icons/icon_evaluation_of_wealth.png", (220, 180, 70), (120, 90, 20)),
+	("chevron", "assets/ui/icons/icon_couriers_double_step.png", (150, 205, 150), (50, 110, 60)),
+	("crescent", "assets/ui/icons/icon_tea_omens.png", (195, 165, 225), (95, 60, 135)),
+	("flame", "assets/ui/icons/icon_flarepepper_supplies.png", (220, 70, 50), (120, 25, 15)),
+	("shard", "assets/ui/icons/icon_perfect_reduction.png", (230, 225, 180), (150, 140, 80)),
+	("fan", "assets/ui/icons/icon_sworn_fang_ride_together.png", (170, 130, 90), (90, 60, 30)),
 ]
 
 

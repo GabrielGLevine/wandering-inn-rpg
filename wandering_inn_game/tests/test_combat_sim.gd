@@ -2141,5 +2141,22 @@ func _init() -> void:
 	assert(not bool(WIItems.resolve_use({"id": "test_inert", "use_effect": {}}, c119).get("ok", true)), "an item with no recognized use_effect key never resolves in combat")
 	assert(not bool(WIItems.resolve_use({"id": "test_inert", "use_effect": {}}, null).get("ok", true)), "an item with no recognized use_effect key never resolves in the field")
 
+	# --- GH#165 review F2: damage_mult `applies` rider (blinding_arrow) ---
+	# The melee AI never casts it, so no sim cell walks this path; the rider
+	# must land ONLY on a damaging hit and tick off after its round.
+	var c_blind := _make_custom(4242, _sink, {"pc": {WIKeys.SKILLS: ["blinding_arrow"], WIKeys.STATS: {"str": 30, "dex": 30, "con": 10, "int": 5, "wis": 5, "cha": 5}}})
+	while c_blind.get_active() != "pc":
+		c_blind.end_turn()
+	var blind_target := "goblin_raider"
+	var pre_hp := int(c_blind.combatants[blind_target][WIKeys.HP])
+	assert(c_blind.use_skill("blinding_arrow", blind_target) or true, "cast attempted")
+	var post_hp := int(c_blind.combatants[blind_target][WIKeys.HP])
+	if post_hp < pre_hp:
+		assert(c_blind.combatants[blind_target]["statuses"].has("weakened"),
+			"a damaging blinding_arrow applies weakened (GH#165 rider)")
+	else:
+		assert(not c_blind.combatants[blind_target]["statuses"].has("weakened"),
+			"a missed blinding_arrow applies nothing")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)

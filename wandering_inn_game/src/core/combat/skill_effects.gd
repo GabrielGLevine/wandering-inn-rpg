@@ -37,7 +37,13 @@ static func resolve_active(combat: WICombat, actor_id: String, target_id: String
 				return false
 			combat.spend_skill_costs(a, skill)
 			combat._emit(WIEvents.SKILL_RESOLVED, {"actor": actor_id, "skill": String(skill[WIKeys.ID]), "target": target_id})
+			# `applies` rider (GH#165 [Blinding Arrow]): status lands only on a
+			# damaging hit, the spell_damage arm's contract. Skills with no
+			# `applies` no-op here -- damage_mult stays byte-identical for them.
+			var dm_hp_before := int(combat.combatants[target_id][WIKeys.HP])
 			combat._resolve_hit(actor_id, target_id, float(effect[WIKeys.MULT]), true, true)
+			if int(combat.combatants.get(target_id, {}).get(WIKeys.HP, dm_hp_before)) < dm_hp_before:
+				_apply_status_from_effect(combat, target_id, effect)
 			return true
 		"spell_damage":
 			if combat.chebyshev(actor_id, target_id) > int(effect[WIKeys.RANGE]):

@@ -661,6 +661,26 @@
     ],
     "toast": "[True Synthesis] — Solvent into salts, in the one order that holds. What settles in the vial is clearer than either half went in."
    }
+  },
+  {
+   "_comment": "GH#165 [Alchemist] L14 bench ([Perfect Reduction], ATTESTED 6.39 Xif): the wave's only recipe grant gets a live station -- a granted verb that works nowhere reads broken (controller adjudication of lane deviation B). Consuming recipe: engine's dup-output guard (#155 M1) applies.",
+   "id": "alchemy_bench_reduction",
+   "kind": "prop",
+   "cell": [4, 7],
+   "display_name": "Reduction Bench",
+   "sprite": "cauldron",
+   "requires_skill": "perfect_reduction",
+   "requires_item": "crude_draught",
+   "item_hint_toast": "The still wants a crude draught to work down. Your pack has nothing worth reducing.",
+   "skill_hint_toast": "Xif's reduction still, all coils and patience. In the right hands it turns crude work into clean.",
+   "locked_toast": "A reduction still, hissing faintly. The valves mean nothing to you.",
+   "observe": "A copper still on a slow flame, built to boil a crude draught down to what it should have been the first time.",
+   "on_skill_use": {
+    "accomplishment": "synthesized_draught",
+    "remove_item": "crude_draught",
+    "item": "tonic_of_the_clear_eye",
+    "toast": "[Perfect Reduction] — The still takes the crude draught apart and returns only the part that matters, clear as morning."
+   }
   }
  ]
 }

@@ -158,6 +158,9 @@ func _build_expected_counts() -> Dictionary:
 	for icon_id: String in ["icon_healthy_rearing", "icon_animals_basic_command", "icon_lesser_bond", "icon_beasts_mending", "icon_wild_affinity", "icon_pack_bond", "icon_peace_of_the_wild", "icon_thorn_hand"]:
 		counts[icon_id + "/idle"] = 1
 	counts["skeleton_ally/idle"] = 4
+	## Second Wind wave (#165) L14 grant kit -- placeholder 16x16 icons (PixelLab drain).
+	for icon_id: String in ["icon_crescent_cut", "icon_pierce_thrust", "icon_ice_wall", "icon_flashfire_spellcraft", "icon_blinding_arrow", "icon_shadowstep", "icon_phantom_barrage", "icon_trusted_voice", "icon_barmaids_prescience", "icon_swift_service", "icon_evaluation_of_wealth", "icon_couriers_double_step", "icon_tea_omens", "icon_flarepepper_supplies", "icon_perfect_reduction", "icon_sworn_fang_ride_together"]:
+		counts[icon_id + "/idle"] = 1
 
 	## GH#145 bespoke rigs (PixelLab drain): ratici sheets are 416/104 idle,
 	## 624/104 walk; hat_stand is a single-frame prop.

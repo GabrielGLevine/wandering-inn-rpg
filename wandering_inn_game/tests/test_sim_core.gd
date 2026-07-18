@@ -1930,6 +1930,33 @@ func _init() -> void:
 	assert(int(wolf_combatant[WIKeys.MAX_HP]) == 34, "pack_bond_boon folds +4 max hp on the wolf (20 + 10 con + 4)")
 	assert(not (gBoons.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("basic_command_boon"), "the PC kit never carries the boon ids")
 
+	# --- GH#165: PC-side [Sworn Fang: Ride Together] boon (companion fielded -> boon on the PC) ---
+	var gSworn := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gSworn.player_skills.append("sworn_fang_ride_together")
+	gSworn.companion = "wolf_companion"
+	gSworn.companion_source = "tamed"
+	gSworn.transition("floodplains", Vector2i(27, 18))
+	assert(gSworn.start_combat("goblin_encounter_2"), "sworn-fang fight fields the wolf")
+	var sworn_pc: Dictionary = gSworn.combat.combatants["pc"]
+	assert((sworn_pc[WIKeys.SKILLS] as Array).has("sworn_fang_boon"), "the PC kit carries sworn_fang_boon while a companion rides")
+	assert(int(sworn_pc["hit_bonus"]) >= 8, "sworn_fang_boon folds at least +8 hit onto the PC")
+	assert(not (gSworn.combat.combatants["wolf_companion"][WIKeys.SKILLS] as Array).has("sworn_fang_boon"), "the PC-side boon rides the PC, never the companion")
+	# absent without a companion
+	var gSwornSolo := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gSwornSolo.player_skills.append("sworn_fang_ride_together")
+	gSwornSolo.transition("floodplains", Vector2i(27, 18))
+	assert(gSwornSolo.start_combat("goblin_encounter_2"), "solo sworn-fang fight starts")
+	assert(not (gSwornSolo.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("sworn_fang_boon"), "no companion -> no PC-side boon")
+	# the hidden carrier is never a class data grant (only the passive grant is)
+	var _sworn_granted := false
+	var _passive_granted := false
+	for _cls: Dictionary in (combat_config["classes"]["classes"] as Array):
+		for _lv: Dictionary in (_cls["levels"] as Array):
+			if (_lv["grants"] as Array).has("sworn_fang_boon"): _sworn_granted = true
+			if (_lv["grants"] as Array).has("sworn_fang_ride_together"): _passive_granted = true
+	assert(not _sworn_granted, "sworn_fang_boon (hidden carrier) is NEVER a class data grant")
+	assert(_passive_granted, "sworn_fang_ride_together IS granted in data (beast_master L14)")
+
 	# --- GH#92 D3: room-tier max-HP bonus (persistent via accomplishment counters) ---
 	var gRoomBase := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gRoomBase.transition("floodplains", Vector2i(27, 18))
@@ -2867,6 +2894,33 @@ func _init() -> void:
 	assert(String(r_dup.get("blocked_duplicate", "")) == "tonic_of_the_clear_eye", "dup-output: refusal names the held output")
 	assert(g_synth_dup.inventory.has("solvent_phial") and g_synth_dup.inventory.has("mineral_salts"), "dup-output: components NOT consumed")
 	assert(_count("item_lost") == 0 and _count("skill_used") == 0 and _count("accomplishment_recorded") == 0, "dup-output: no state changes at all")
+
+	# --- GH#165: [Perfect Reduction] recipe bench (lane deviation B, wired by controller) ---
+	var g_reduce := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_reduce.classes["alchemist"] = 14
+	assert(g_reduce.known_skills().has("perfect_reduction"), "[Alchemist] L14 grants [Perfect Reduction]")
+	g_reduce.transition("pallass_market", Vector2i(4, 8))
+	g_reduce.inventory.append("crude_draught")
+	_events.clear()
+	var r_reduce: Dictionary = g_reduce.use_skill("perfect_reduction", "alchemy_bench_reduction")
+	assert(String(r_reduce.get("item", "")) == "tonic_of_the_clear_eye", "reduction yields the tonic")
+	assert(not g_reduce.inventory.has("crude_draught"), "reduction consumes the crude draught")
+	assert(g_reduce.inventory.has("tonic_of_the_clear_eye"), "the tonic lands in the pack")
+	assert(g_reduce.accomplishment_count("synthesized_draught") == 1, "the cast banks synthesized_draught")
+
+	# --- GH#165 review F2: execute the two new seams the sim never walks ---
+	var g_pepper := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_pepper.player_skills.append("flarepepper_supplies")
+	g_pepper.sleep()
+	assert(g_pepper.inventory.has("flarepepper_powder"), "[Supplies] restocks one flarepepper at sleep")
+	g_pepper.sleep()
+	assert(g_pepper.inventory.count("flarepepper_powder") == 1, "restock never stacks a held powder")
+	g_pepper.inventory.erase("flarepepper_powder")
+	g_pepper.sleep()
+	assert(g_pepper.inventory.has("flarepepper_powder"), "restock returns after the powder is spent")
+	var g_no_pepper := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_no_pepper.sleep()
+	assert(not g_no_pepper.inventory.has("flarepepper_powder"), "no skill, no restock")
 
 	# #148 Tier 3: map-level arrival_toasts re-orientation (armed / retired / unmet + first-satisfied-wins).
 	# Placed last: each fresh WIGame emits sim_initialized, so this must run after the
