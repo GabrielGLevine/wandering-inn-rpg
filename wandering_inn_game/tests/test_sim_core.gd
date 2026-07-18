@@ -1852,7 +1852,7 @@ func _init() -> void:
 	crowded_player_ids.sort()
 	assert(crowded_player_ids == ["ceria", "ksmvr", "pc", "yvlon"], "vault fields exactly the PC and three Horns in its four player spawns")
 	assert(gAnimateCrowded.companion == "skeleton_ally", "capacity skip preserves the held companion for a later fight")
-	assert(_toast_texts().has("A crowded field. The bones hang back at its edge."), "capacity skip explains why the bones stay off-field")
+	assert(_toast_texts().has("A crowded field. Your companion hangs back at its edge."), "capacity skip explains why the bones stay off-field")
 
 	var gAnimate := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
 	gAnimate.player_skills.append("test_animate")
@@ -1876,6 +1876,89 @@ func _init() -> void:
 	gAnimateSleep.companion = "skeleton_ally"
 	gAnimateSleep.sleep()
 	assert(gAnimateSleep.companion == "", "sleep clears an active companion")
+
+	# --- GH#156: companion_source generalization + [Lesser Bond] taming ---
+	var gTameMismatch := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gTameMismatch.player_skills.append("test_animate")
+	gTameMismatch.transition("floodplains", Vector2i(10, 22))
+	gTameMismatch.player_facing = Vector2i.RIGHT
+	_events.clear()
+	assert(gTameMismatch.use_skill_field("test_animate").is_empty(), "an animates skill refuses a tamed-kind source (kind gate)")
+	assert(_toast_texts() == ["No bones here will answer."], "kind mismatch uses the animate refusal toast")
+
+	var gTame := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gTame.player_skills.append("lesser_bond")
+	gTame.transition("floodplains", Vector2i(10, 22))
+	gTame.player_facing = Vector2i.RIGHT
+	_events.clear()
+	var tame_result := gTame.use_skill_field("lesser_bond")
+	assert(String(tame_result.get("companion", "")) == "wolf_companion", "lesser_bond bonds the wolf-den pup")
+	assert(String(tame_result.get("source", "")) == "tamed", "tame reports its source kind")
+	assert(gTame.companion == "wolf_companion" and gTame.companion_source == "tamed", "tamed companion state is source-keyed")
+	assert(gTame.removed_entities.has("wolf_den"), "taming consumes the den prop through remove_entity")
+	assert(gTame.accomplishment_count("tended_beasts") == 1, "a tame banks one tended_beasts")
+	gTame.sleep()
+	assert(gTame.companion == "wolf_companion", "tamed companions PERSIST sleep (the bond holds; only animated workings fade)")
+	gTame.player_facing = Vector2i.RIGHT
+	gTame.transition("floodplains", Vector2i(7, 23))
+	_events.clear()
+	var rebond_result := gTame.use_skill_field("lesser_bond")
+	assert(String(rebond_result.get("companion", "")) == "razorbeak_companion", "a new bond takes the razorbeak chick")
+	assert(_toast_texts().has("Your old companion slips away; one bond at a time is all anyone holds."), "single-slot: the old bond is released with its toast")
+	assert(gTame.companion == "razorbeak_companion", "companion slot swaps to the new bond")
+
+	var gTameJoke := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gTameJoke.player_skills.append("lesser_bond")
+	gTameJoke.transition("floodplains", Vector2i(20, 16))
+	gTameJoke.player_facing = Vector2i.RIGHT
+	_events.clear()
+	assert(gTameJoke.use_skill_field("lesser_bond").is_empty(), "rock crabs refuse taming")
+	assert(_toast_texts() == ["The crab regards you with all the tameable warmth of a boulder."], "the crab refusal joke plays verbatim")
+
+	var gBoons := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gBoons.player_skills.append("animals_basic_command")
+	gBoons.player_skills.append("pack_bond")
+	gBoons.companion = "wolf_companion"
+	gBoons.companion_source = "tamed"
+	gBoons.transition("floodplains", Vector2i(27, 18))
+	assert(gBoons.start_combat("goblin_encounter_2"), "tamed wolf fields into the goblin fight")
+	var wolf_combatant: Dictionary = gBoons.combat.combatants.get("wolf_companion", {})
+	assert(not wolf_combatant.is_empty(), "start_combat appends the wolf companion to the roster")
+	assert((wolf_combatant[WIKeys.SKILLS] as Array).has("basic_command_boon") and (wolf_combatant[WIKeys.SKILLS] as Array).has("pack_bond_boon"),
+		"companion boons ride the COMPANION combatant, not the PC")
+	assert(int(wolf_combatant["hit_bonus"]) == 8, "basic_command_boon folds +8 hit on the wolf")
+	assert(int(wolf_combatant[WIKeys.MAX_HP]) == 34, "pack_bond_boon folds +4 max hp on the wolf (20 + 10 con + 4)")
+	assert(not (gBoons.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("basic_command_boon"), "the PC kit never carries the boon ids")
+
+	var affinity_scene := WISceneCatalog.compose()
+	(affinity_scene["maps"]["floodplains"]["entities"] as Array).append({
+		WIKeys.ID: "test_beast_ambush",
+		WIKeys.KIND: "encounter",
+		WIKeys.CELL: [33, 23],
+		WIKeys.DISPLAY_NAME: "Test Beast",
+		"beast": true,
+		"arena": "goblin_ambush",
+		"enemies": ["goblin_raider"],
+		"trigger_radius": 2,
+	})
+	var gAffinityOff := WIGame.new(affinity_scene, wave_b_skill_config, _sink, 12345, combat_config)
+	gAffinityOff.transition("floodplains", Vector2i(33, 20))
+	assert(gAffinityOff.move_player(Vector2i.DOWN), "control walks to dist 2")
+	assert(gAffinityOff.combat != null, "without [Wild Affinity] the beast ambush triggers at its authored radius")
+	var gAffinityOn := WIGame.new(affinity_scene, wave_b_skill_config, _sink, 12345, combat_config)
+	gAffinityOn.player_skills.append("wild_affinity")
+	gAffinityOn.transition("floodplains", Vector2i(33, 20))
+	assert(gAffinityOn.move_player(Vector2i.DOWN), "affinity walks to dist 2")
+	assert(gAffinityOn.combat == null, "[Wild Affinity] shrinks the beast ambush radius by 1")
+	assert(gAffinityOn.move_player(Vector2i.DOWN), "affinity walks to dist 1")
+	assert(gAffinityOn.combat != null, "[Wild Affinity] still triggers inside the reduced radius")
+	var gPeace := WIGame.new(affinity_scene, wave_b_skill_config, _sink, 12345, combat_config)
+	gPeace.player_skills.append("wild_affinity")
+	gPeace.player_skills.append("peace_of_the_wild")
+	gPeace.transition("floodplains", Vector2i(33, 20))
+	assert(gPeace.move_player(Vector2i.DOWN), "peace walks to dist 2")
+	assert(gPeace.move_player(Vector2i.DOWN), "peace walks to dist 1")
+	assert(gPeace.combat == null, "[Peace of the Wild] supersedes at -2: no ambush even at dist 1")
 
 	var gSneak := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gSneak.player_skills.append("sneak")

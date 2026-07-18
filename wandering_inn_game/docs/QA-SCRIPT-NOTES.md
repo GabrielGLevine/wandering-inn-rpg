@@ -142,3 +142,6 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `ward_loop` | 9 | full | `wave_b_ward_start` | Issue #132: Greater Hearthward suppresses the road ambush for two sleeps, then expires into a positive-control fight |
 | `animate_companion_loop` | 9 | full | `wave_b_animate_start` | Issue #132: animate a ruin bone pile, field skeleton_ally in combat, and clear the follower on sleep |
 | `raskghar_entry_loop` | 9 | full | `raskghar_entry_start` | GH#152-followup: the REAL act-paced Act III entry (Act II conditions -> sleep fires the tremor pointer -> Zevara summons -> heard_the_deep_tremor), no chain hand-banks |
+| `beast_tamer_loop` | 7 | full | `near_tamer` | wounded-corusdeer soothe -> [Beast Tamer] gain at sleep; once_per_waking grind guard |
+| `tamer_bond_loop` | 7 | full | `near_tamer_bond` | [Lesser Bond] wolf tame -> crab refusal joke -> boon-carrying roster fight -> bond persists sleep |
+| `druid_consolidation_loop` | 7 | full | `near_druid_consolidation` | tamer/mage lines -> [Druid] floor 14 + [Peace of the Wild] kit |

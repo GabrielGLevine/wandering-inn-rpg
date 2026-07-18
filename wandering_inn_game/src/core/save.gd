@@ -47,6 +47,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"hotbar_loadout": game.hotbar_loadout.duplicate(),
 		"warded_encounters": game.warded_encounters.duplicate(true),
 		"companion": game.companion,
+		"companion_source": game.companion_source,
 		"pc_name": game.pc_name,
 		"pc_race": game.pc_race,
 		"pc_gender": game.pc_gender,
@@ -205,6 +206,8 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 		return false
 	if s.has("companion") and not (s["companion"] is String):
 		return false
+	if s.has("companion_source") and not (s["companion_source"] is String):
+		return false
 	for pc_key: String in ["pc_name", "pc_race", "pc_gender"]:
 		if s.has(pc_key) and not (s[pc_key] is String):
 			return false
@@ -296,6 +299,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.hotbar_loadout.assign(s.get("hotbar_loadout", []))
 	game.warded_encounters = (s.get("warded_encounters", {}) as Dictionary).duplicate(true)
 	game.companion = String(s.get("companion", ""))
+	game.companion_source = String(s.get("companion_source", ""))
 	game.pc_name = WIGame._sanitize_pc_name(String(s.get("pc_name", "Traveler")))
 	game.pc_race = WIGame._sanitize_pc_race(String(s.get("pc_race", "human")))
 	game.pc_gender = WIGame._sanitize_pc_gender(String(s.get("pc_gender", "m")))

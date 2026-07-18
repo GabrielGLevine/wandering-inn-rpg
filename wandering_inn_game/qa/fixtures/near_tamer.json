@@ -1,0 +1,35 @@
+{
+ "_comment": "GH#156 [Beast Tamer] gain fixture: a classless PC stands beside the wounded corusdeer (floodplains 33,9); the soothe interact is the ORGANIC final bank (soothed_a_beast 0 -> 1), then the inn bed resolves the gain at sleep. No hand-banked counters (#152 lesson).",
+ "version": 6,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   32,
+   9
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {},
+  "accomplishments": {},
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": {
+   "weapon": "",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673",
+  "hotbar_loadout": []
+ }
+}

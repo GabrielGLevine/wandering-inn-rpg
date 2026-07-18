@@ -61,6 +61,16 @@ const ENCOUNTER_CELLS := [
 	# composition; combatant stats remained fixed.
 	{"name": "mage3_necromancer3_goblin_ambush_with_skeleton", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider", "goblin_shaman"], "build": "mage3_necromancer3_caster", "ally": "skeleton_ally", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "mage5_necromancer7_raskghar_scouts_with_skeleton", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "mage5_necromancer7_caster", "ally": "skeleton_ally", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# Wave-D-2 companion cells (#156): [Beast Tamer] with the tamed wolf
+	# (companion_boons mirrors the roster-inject boon path), [Beast Master]
+	# with wolf + [Pack Bond], and a consolidated [Druid] dual-kit build.
+	# All GATED 0.55-0.95 / 3-12 rounds; cell-selection-only tuning. Measured
+	# at authoring (100 seeds): 0.87/4, 0.90/4, 0.90/4 -- the tamer cell dropped
+	# the shaman (0.36 with it: bolts eat the wolf), the druid cell took a third
+	# scout (1.00 at two).
+	{"name": "beast_tamer5_goblin_ambush_with_wolf", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "beast_tamer5_melee", "ally": "wolf_companion", "companion_boons": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "beast_master10_raskghar_scouts_with_wolf", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "beast_master10_melee", "ally": "wolf_companion", "companion_boons": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "druid14_raskghar_scouts_with_wolf", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout", "raskghar_scout"], "build": "druid14_caster", "ally": "wolf_companion", "companion_boons": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 const BOSS_CELLS := [
@@ -119,6 +129,9 @@ const BUILDS := [
 	{"name": "pure_warrior10", "classes": {"warrior": 10}, "gated": false},
 	{"name": "pure_mage10_caster", "classes": {"mage": 10}, WIKeys.AI: "caster", "gated": false},
 	{"name": "mage3_necromancer3_caster", "classes": {"mage": 3, "necromancer": 3}, WIKeys.AI: "caster", "matrix": false},
+	{"name": "beast_tamer5_melee", "classes": {"beast_tamer": 5}, WIKeys.AI: "melee", "matrix": false},
+	{"name": "beast_master10_melee", "classes": {"beast_master": 10}, WIKeys.AI: "melee", "matrix": false},
+	{"name": "druid14_caster", "classes": {"druid": 14}, WIKeys.AI: "caster", "matrix": false},
 	{"name": "mage5_necromancer7_caster", "classes": {"mage": 5, "necromancer": 7}, WIKeys.AI: "caster", "matrix": false},
 	{"name": "warrior5_mage5", "classes": {"warrior": 5, "mage": 5}, "gated": false},
 	{"name": "warrior5_mage5_caster", "classes": {"warrior": 5, "mage": 5}, WIKeys.AI: "caster", "gated": false},
@@ -360,7 +373,21 @@ func _init() -> void:
 			pc[WIKeys.SKILLS] = WIProgression.granted_skills(build["classes"], classes)
 			var cfgs: Array = [pc]
 			if has_ally:
-				cfgs.append((by_id[ally_id] as Dictionary).duplicate(true))
+				var ally_cfg: Dictionary = (by_id[ally_id] as Dictionary).duplicate(true)
+				# GH#156: mirror wi_game.start_combat's companion-boon injection
+				# (basic_command_boon/pack_bond_boon keyed on the PC kit) -- the
+				# harness must measure the shipped companion, boons included.
+				if bool(cell.get("companion_boons", false)):
+					var boons: Array = []
+					if (pc[WIKeys.SKILLS] as Array).has("animals_basic_command"):
+						boons.append("basic_command_boon")
+					if (pc[WIKeys.SKILLS] as Array).has("pack_bond"):
+						boons.append("pack_bond_boon")
+					if not boons.is_empty():
+						var comp_skills: Array = (ally_cfg.get(WIKeys.SKILLS, []) as Array).duplicate()
+						comp_skills.append_array(boons)
+						ally_cfg[WIKeys.SKILLS] = comp_skills
+				cfgs.append(ally_cfg)
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
 			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)

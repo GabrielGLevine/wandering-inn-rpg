@@ -4642,5 +4642,147 @@
     "fps": 1
    }
   }
+ },
+ "wolf_companion": {
+  "_comment": "GH#156 follower visual: the world-layer companion visual keys on the companion ID, so the tamed wolf needs an id-named entry. Same OWNED river_wolf sheet at pup-adjacent scale; combat rendering keys on the combatant record's sprite (river_wolf) instead.",
+  "render_scale": 0.26,
+  "anchor": [
+   0.5,
+   0.7188
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/river_wolf/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "razorbeak_companion": {
+  "_comment": "GH#156 follower visual (see wolf_companion). OWNED razorbeak sheet, chick-adjacent scale.",
+  "render_scale": 0.6,
+  "anchor": [
+   0.4922,
+   0.7969
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/razorbeak/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_healthy_rearing": {
+  "_comment": "PLACEHOLDER (Wave D-2 #156): crude 16x16 glyph. PixelLab pass is user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_healthy_rearing.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_animals_basic_command": {
+  "_comment": "PLACEHOLDER (Wave D-2 #156): crude 16x16 glyph. PixelLab pass is user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_animals_basic_command.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_lesser_bond": {
+  "_comment": "PLACEHOLDER (Wave D-2 #156): crude 16x16 glyph. PixelLab pass is user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_lesser_bond.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_beasts_mending": {
+  "_comment": "PLACEHOLDER (Wave D-2 #156): crude 16x16 glyph. PixelLab pass is user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_beasts_mending.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_wild_affinity": {
+  "_comment": "PLACEHOLDER (Wave D-2 #156): crude 16x16 glyph. PixelLab pass is user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_wild_affinity.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_pack_bond": {
+  "_comment": "PLACEHOLDER (Wave D-2 #156): crude 16x16 glyph. PixelLab pass is user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_pack_bond.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_peace_of_the_wild": {
+  "_comment": "PLACEHOLDER (Wave D-2 #156): crude 16x16 glyph. PixelLab pass is user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_peace_of_the_wild.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_thorn_hand": {
+  "_comment": "PLACEHOLDER (Wave D-2 #156): crude 16x16 glyph. PixelLab pass is user-gated -- VISUAL-LOG drain note filed.",
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_thorn_hand.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
  }
 }
