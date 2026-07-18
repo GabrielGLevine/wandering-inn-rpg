@@ -13,44 +13,24 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🏃 RUNNING (2026-07-17 post-release)
+## 🏃 RUNNING (2026-07-18)
 
-- **v0.9.0 SHIPPED** (release run green: real-asset full QA, itch html5
-  deploy, Windows+Linux exports). Freeze cut = 557 ids (the #118
-  victories trap recurred with FOUR Wave-A/B code-banked counters —
-  caught by wi-shipping step-0 grep pre-cut). All release gates
-  user-passed ([Eagle Eyes] KEPT w/ flag; audio iteration 2 accepted;
-  dungeon grade lifted ~35% user-calibrated).
-- **Post-release fixes MERGED (#151 → closes #149 #150):** garden-door
-  cell wall-dressed (phantom bump fixed); rift vermin fight gated on
-  door_chain_started. Vermin visible-inert foreshadowing ACKED by user
-  2026-07-17 — shipped shape is final.
-- **#148 thread-legibility SHIPPED (PR #161, 2026-07-17)** — all four
-  tiers per ruling; Erin's verbal garden reveal masked in real play
-  (accepted trade-off, door visual is the signpost; revisit on playtest
-  miss). Playtest state: qa/playtest_saves/2026-07-17-raskghar-handoff/.
-- **#156 Wave D-2 (Beast Tamer + Druid) IMPLEMENTED INLINE, review in
-  flight** on /tmp/wi-155 (branch issue/156-tamer-druid). companion_source
-  seam (tamed persists sleep), boons companion-only, 3 QA loops can-fail
-  proven, sim cells 0.87/0.90/0.90, sweep 129 green. PR after reviewer
-  fix wave. Playtest state: qa/playtest_saves/2026-07-17-wave-d2-wolf-den/.
-- **#160 path-diversity balance sim FILED (user directive)** — harness
-  drafted (scratchpad sim_class_paths.gd, 15 archetypes × 200 runs,
-  funnel gate Spellsword ≤45% combat-lane + entropy ≥2 bits); lands
-  after #156 merges, distribution report + tuning proposals TO USER
-  pre-freeze.
-- **#92 economy: composed branch under final review** (issue/92-economy,
-  /tmp/wi-92). Lane slice + completion wave; spec at
-  docs/design/economy-pass-spec.md. D2 was ALREADY SHIPPED (item_use_loop);
-  new surfaces: price validator, 4 boss drop pairs, 3 accessory abilities,
-  Watch donation sink, room-ledger tier purchases (+1 max HP/tier).
-  Lesson banked: purchase options NEVER ride pinned hubs -- own
-  conversation surface (room_ledger.json header documents it).
-- #147 music sourcing filed (user acquisition, not a blocker).
-- **Post-release queue:** #148 spec+build; Wave D (two issues per
-  ruling: Alchemist; Beast Tamer+Druid — research on #134); Hedault
-  #142; Priest #141; #140 renderer survey; #92 economy pass.
-- PixelLab: 18 generations left this cycle (user gate).
+- **v0.10.0 TAGGED — release pipeline in flight** (watch live; verify
+  itch html5 + desktop exports green). Contents: #148 #152 #154 #155
+  #156 #160 #92 #167. Freeze = 597 ids (step-0 grep clean;
+  tended_beasts listed).
+- **AUTONOMY DIRECTIVE (2026-07-18)**: ship v0.10.0 without further
+  playtest gate ✓; run v0.11.0 autonomously through ship; judgment
+  calls go to docs/CHOICE-LOG.md (user defers). Session goal hook active.
+- **#165 Second Wind**: spec COMMITTED (docs/design/second-wind-spec.md;
+  16 canon-verified L14 grants, 3 collision adjudications in CHOICE-LOG).
+  Worktree /tmp/wi-165 (branch issue/165-second-wind) SET UP (overlay +
+  import done) — implementation lane NOT dispatched: usage guard CAUTION
+  (87%/hr burn). Dispatch when burn normalizes or window resets.
+- **#163 bounty scaling**: next after #165; consumes #92's price ladder.
+- Usage: CAUTION at 2026-07-18 (session 36% but burn-rate escalated);
+  research workflow spent ~1.6M subagent tokens (16/16 upheld, cheap at
+  the price — the whole #165 canon layer is done).
 
 ## 📋 QUEUE (value order)
 
