@@ -13,7 +13,7 @@
 | #92 economy pass (delta-first, five slices) | lane in flight |
 | Release mechanics | full rotation → user gates → freeze cut → deploy |
 
-## v0.11.0 — committed shape (user rulings 2026-07-17)
+## v0.11.0 — SHIPPED 2026-07-18 (all targets)
 
 - **#165 Second Wind wave** — extend every pure evolution line to ~L16
   (the #160 funnel fix, option 1 per user ruling). One late grant per

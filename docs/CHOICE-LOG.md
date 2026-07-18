@@ -4,6 +4,14 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-18 — v0.11.0 ship + environment fix
+
+- **github-pages environment gains a v* tag deployment policy** (via API):
+  the new tag trigger's first firing was rejected by the main-only rule
+  the environment shipped with. Structural pair to the pages.yml trigger.
+- v0.11.0 shipped same-day as v0.10.0 under the autonomy directive; all
+  wave adjudications above.
+
 ## 2026-07-18 — #163 rank-scaled Guild bounties (implementation adjudications)
 
 - **Rank boundaries derived from effective_power, never hardcoded levels**:

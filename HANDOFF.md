@@ -13,24 +13,21 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🏃 RUNNING (2026-07-18)
+## 🏃 RUNNING (2026-07-18, post-v0.11.0)
 
-- **v0.10.0 SHIPPED** (run 29636812223 green: real-asset QA, itch html5,
-  Win+Linux exports). Contents: #148 #152 #154 #155
-  #156 #160 #92 #167. Freeze = 597 ids (step-0 grep clean;
-  tended_beasts listed).
-- **AUTONOMY DIRECTIVE (2026-07-18)**: ship v0.10.0 without further
-  playtest gate ✓; run v0.11.0 autonomously through ship; judgment
-  calls go to docs/CHOICE-LOG.md (user defers). Session goal hook active.
-- **#165 Second Wind MERGED (PR #176)** — 16 pure lines to L16, canon
-  L14 grants, reduction bench live, review-clean. Funnel gates hold.
-- **#172 partial MERGED (PR #175)**; #173/#174 web fixes SHIPPED to
-  Pages. Friend-playtest remainder: #169 (overlay/filter), #170, #171,
-  #172 rest.
-- **#163 bounty scaling**: next after #165; consumes #92's price ladder.
-- Usage: CAUTION at 2026-07-18 (session 36% but burn-rate escalated);
-  research workflow spent ~1.6M subagent tokens (16/16 upheld, cheap at
-  the price — the whole #165 canon layer is done).
+- **v0.11.0 SHIPPED all three targets** (itch + desktop green; Pages
+  green after adding a v* tag rule to the github-pages environment --
+  the tag trigger's first firing). Freeze = 619 ids. Second release of
+  the day.
+- Contents: #165 Second Wind (16 pure lines to L16), #163 rank-scaled
+  bounties, #142 Hedault enchanting, #169/#173/#174/#177 web fixes,
+  #178 favicon, #171/#170/#172 slices. CHOICE-LOG.md carries every
+  adjudication (autonomy directive).
+- **v0.12.0 queue**: wi_game/world god-file dissection (user-prompted,
+  parked deliberately), #170 combat-log scrollback, #171 rest (hotbar
+  inspect, first-waking hint, Pisces repro), #172 rest (turn-in acks,
+  bracket style), rank-aware kingslayer/watchgolem fixtures, #147 music
+  (user acquisition).
 
 ## 📋 QUEUE (value order)
 
