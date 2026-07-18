@@ -50,6 +50,30 @@ static func power_multiplier(classes: Dictionary, class_catalog: Dictionary) -> 
 	return minf(1.0, effective_power(classes, class_catalog) / float(total))
 
 
+## Issue #163: player rank for scaled Guild bounties, DERIVED from
+## effective_power's OWN math (never hardcoded level ints). Boundaries:
+## bronze below a single L10 line's power (== 10.0 by construction), silver
+## below the power of a two-L10-line build -- the spec's "14-equivalent
+## consolidation" (two L10 lines merge to L14 via the consolidation formula
+## max(ceil(2*(10+10)/3),10)==14; that build's UN-consolidated power is
+## 10*2^(1/power_k)), gold at or above. Both edges pinned in test_progression.
+static func power_rank(classes: Dictionary, class_catalog: Dictionary) -> String:
+	var power := effective_power(classes, class_catalog)
+	if power < silver_power_floor(class_catalog):
+		return "bronze"
+	if power < gold_power_floor(class_catalog):
+		return "silver"
+	return "gold"
+
+
+static func silver_power_floor(class_catalog: Dictionary) -> float:
+	return effective_power({"_l10_line": 10}, class_catalog)
+
+
+static func gold_power_floor(class_catalog: Dictionary) -> float:
+	return effective_power({"_l10_a": 10, "_l10_b": 10}, class_catalog)
+
+
 static func derived_stat_bonuses(classes: Dictionary, class_catalog: Dictionary) -> Dictionary:
 	var raw: Dictionary = {"str": 0.0, "dex": 0.0, "con": 0.0, "int": 0.0}
 	for cls: Dictionary in class_catalog.get("classes", []):

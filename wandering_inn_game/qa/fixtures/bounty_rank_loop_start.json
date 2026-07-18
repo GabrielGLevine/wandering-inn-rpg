@@ -1,0 +1,47 @@
+{
+ "_comment": "FIXTURE-FIRST start for bounty_rank_loop (#163). A SILVER-rank player (swordsman 13 -> effective_power 13.0, in [10.0, ~15.64) = silver band, pinned in test_progression) standing at the guild desk-approach cell (8,3) facing up -- the exact cell guild_interior_walkthrough/board_loop prove stops blocked-adjacent to Selys (8,2). Curve counters copied from near_second_wind (melee_hit 57 / sword_skill_used 33 -- one short of L14), so the mid-loop sleep resolves NO level-up (the tier-lock proof stays clean). times_slept absent -> 0, so the slate window is [road_cull, settle_dispute, gossip_tea] (board_loop's own precedent) and bounty_gossip_tea resolves to its SILVER tier. rng_state cosmetic (no fight resolves off it).",
+ "version": 6,
+ "state": {
+  "current_map": "guild",
+  "player_cell": [
+   8,
+   3
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "swordsman": 13
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "melee_hit": 57,
+   "sword_skill_used": 33,
+   "won_combat": 3
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

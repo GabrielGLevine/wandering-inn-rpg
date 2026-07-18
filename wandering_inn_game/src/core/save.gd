@@ -56,6 +56,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"times_slept": game.times_slept,
 		"accepted_bounty_id": game.accepted_bounty_id,
 		"accepted_bounty_baseline": game.accepted_bounty_baseline.duplicate(true),
+		"accepted_bounty_tier": game.accepted_bounty_tier,
 		"board_last_seen_times_slept": game.board_last_seen_times_slept,
 		"accepted_delivery_id": game.accepted_delivery_id,
 		"accepted_delivery_baseline": game.accepted_delivery_baseline.duplicate(true),
@@ -219,6 +220,8 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 		return false
 	if s.has("accepted_bounty_baseline") and not (s["accepted_bounty_baseline"] is Dictionary):
 		return false
+	if s.has("accepted_bounty_tier") and not (s["accepted_bounty_tier"] is String):
+		return false
 	if s.has("accepted_delivery_id") and not (s["accepted_delivery_id"] is String):
 		return false
 	if s.has("accepted_delivery_baseline") and not (s["accepted_delivery_baseline"] is Dictionary):
@@ -313,6 +316,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.times_slept = int(s.get("times_slept", 0))
 	game.accepted_bounty_id = String(s.get("accepted_bounty_id", ""))
 	game.accepted_bounty_baseline = (s.get("accepted_bounty_baseline", {}) as Dictionary).duplicate(true)
+	game.accepted_bounty_tier = String(s.get("accepted_bounty_tier", ""))
 	game.board_last_seen_times_slept = int(s.get("board_last_seen_times_slept", 0))
 	game.accepted_delivery_id = String(s.get("accepted_delivery_id", ""))
 	game.accepted_delivery_baseline = (s.get("accepted_delivery_baseline", {}) as Dictionary).duplicate(true)

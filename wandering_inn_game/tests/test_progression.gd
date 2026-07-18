@@ -311,5 +311,26 @@ func _init() -> void:
 	assert(WIProgression.check_class_gains({}, {"sparred_with_relc": 5}, catalog).has("warrior"),
 		"retire rule leaves normal first-acquisition untouched")
 
+	# Issue #163: rank derivation, boundaries DERIVED from effective_power's own
+	# math (never hardcoded level ints). A single L10 line's power == 10.0 by
+	# construction ((10^k)^(1/k)); a two-L10-line build (the "14-equivalent
+	# consolidation": max(ceil(2*(10+10)/3),10)==14) has power 10*2^(1/k)~=15.64.
+	var k := float(catalog["meta"]["power_k"])
+	var silver_floor := WIProgression.silver_power_floor(catalog)
+	var gold_floor := WIProgression.gold_power_floor(catalog)
+	assert(is_equal_approx(silver_floor, 10.0), "silver floor == single L10 line power (10.0)")
+	assert(is_equal_approx(gold_floor, 10.0 * pow(2.0, 1.0 / k)), "gold floor == two-L10-line power (10*2^(1/k))")
+	assert(gold_floor > 15.0 and gold_floor < 16.0, "gold floor lands ~15.64 at k=1.55")
+	# Bronze below silver floor; both EDGES of each band pinned.
+	assert(WIProgression.power_rank({}, catalog) == "bronze", "classless == bronze")
+	assert(WIProgression.power_rank({"warrior": 9}, catalog) == "bronze", "L9 single line just under silver floor == bronze")
+	assert(WIProgression.power_rank({"swordsman": 10}, catalog) == "silver", "L10 single line == silver (silver floor is inclusive)")
+	assert(WIProgression.power_rank({"swordsman": 14}, catalog) == "silver", "L14 single line (power 14.0) still under gold floor == silver")
+	assert(WIProgression.power_rank({"spellsword": 15}, catalog) == "silver", "L15 single line (15.0 < 15.64) == silver")
+	assert(WIProgression.power_rank({"spellsword": 16}, catalog) == "gold", "L16 single line (16.0 >= gold floor) == gold")
+	# The literal "14-equivalent consolidation" build lands exactly on the gold
+	# floor -> gold (inclusive edge).
+	assert(WIProgression.power_rank({"warrior": 10, "mage": 10}, catalog) == "gold", "two L10 lines == gold (the consolidation-tier build IS the gold floor)")
+
 	print("PASS: progression checks behave correctly")
 	quit(0)

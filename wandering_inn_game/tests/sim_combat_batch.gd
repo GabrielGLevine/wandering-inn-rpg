@@ -157,6 +157,31 @@ const BUILDS := [
 	{"name": "infiltrator14", "classes": {"infiltrator": 14}, WIKeys.AI: "melee", "matrix": false, WIKeys.WEAPON: "gnollish_hunting_knife"},
 	{"name": "strategist14", "classes": {"strategist": 14}, WIKeys.AI: "melee", "matrix": false},
 	{"name": "beast_master14", "classes": {"beast_master": 14}, WIKeys.AI: "melee", "matrix": false},
+	# Issue #163: gold-rank build (spellsword16, effective_power 16.0 >= the gold
+	# floor 10*2^(1/k)~=15.64). Runs ONLY in SCALED_CELLS (matrix:false). Silver
+	# cells reuse t4_spellsword14_party (spellsword14, power 14.0, silver band).
+	{"name": "gold_spellsword16", "classes": {"spellsword": 16}, "matrix": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
+	# Gold build for the T5 forge/market culls -- a gold player who reached
+	# Pallass's forge tier runs deeper than the T4 gold build (both power 16.0+
+	# clear the gold floor; the +50% T5 two-golem step needs the extra levels to
+	# hold a 0.55-0.95 band). spellsword22 (line max), power 22.0.
+	{"name": "gold_spellsword22", "classes": {"spellsword": 22}, "matrix": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
+]
+
+# Issue #163: rank-scaled cull encounters. Each scaled encounter x silver/gold
+# is a GATED band against a RANK-APPROPRIATE build; enemies pass through THE one
+# WIBountyScaling.scale_enemy site (proving exactly what wi_game.start_combat
+# ships). Bronze cells are the pre-existing unscaled bands (BESTIARY/DUNGEON) --
+# never duplicated here. `rank` = the scaling tier applied to every enemy cfg.
+# SCALED SET = the two culls with no live QA loop fighting them (kingslayer_den
+# / market_watchgolems were evaluated but their loops run at silver-rank
+# spellsword11 fixtures that can't clear the scaled fight -- they stay unscaled
+# until rank-aware loop fixtures land; see CHOICE-LOG 2026-07-18).
+const SCALED_CELLS := [
+	{"name": "gallery_vermin_nest_t4_silver", "arena": "trapped_halls_snare", "enemies": ["rift_vermin_a", "rift_vermin_c"], "build": "t4_spellsword14_party", "rank": "silver", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "gallery_vermin_nest_t4_gold", "arena": "trapped_halls_snare", "enemies": ["rift_vermin_a", "rift_vermin_c"], "build": "gold_spellsword16", "rank": "gold", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "forge_calibration_golem_t5_silver", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword14_party", "rank": "silver", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "forge_calibration_golem_t5_gold", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "gold_spellsword22", "rank": "gold", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 const PARTY_CELLS := [
@@ -247,7 +272,7 @@ func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalog: Dict
 
 
 func _init() -> void:
-	var total_cells := COMPOSITIONS.size() * _matrix_build_count() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size() + PARTY_CELLS.size() + DUNGEON_CELLS.size() + BESTIARY_CELLS.size() + SECOND_WIND_CELLS.size()
+	var total_cells := COMPOSITIONS.size() * _matrix_build_count() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size() + PARTY_CELLS.size() + DUNGEON_CELLS.size() + BESTIARY_CELLS.size() + SECOND_WIND_CELLS.size() + SCALED_CELLS.size()
 	if OS.get_environment("WI_CELL_COUNT_ONLY") != "":
 		print("WI_CELL_COUNT: %d" % total_cells)
 		quit(0)
@@ -902,6 +927,54 @@ func _init() -> void:
 			if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
 				any_failed = true
 				printerr("FAIL [second_wind / %s]: median rounds %d outside 3-12" % [cell["name"], median])
+
+	for cell: Dictionary in SCALED_CELLS:
+		if not _cell_in_range(): continue
+		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
+		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
+		var rank := String(cell["rank"])
+		var wins := 0
+		var pc_alive_end := 0
+		var rounds: Array[int] = []
+		for seed_v in range(1, RUNS_PER_CELL + 1):
+			var pc: Dictionary = _build_pc(build, by_id["pc"], classes, skills_by_id, items_by_id)
+			var cfgs: Array = [pc]
+			for enemy_id: String in cell["enemies"]:
+				# THE one WIBountyScaling site -- mirrors wi_game.start_combat.
+				cfgs.append(WIBountyScaling.scale_enemy((by_id[enemy_id] as Dictionary).duplicate(true), rank))
+			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			combat.begin()
+			var guard := 0
+			while not combat.finished and guard < 2000:
+				guard += 1
+				WICombatAI.take_turn(combat)
+			assert(combat.finished, "scaled %s fight %d did not terminate" % [cell["name"], seed_v])
+			if combat.outcome["victory"]:
+				wins += 1
+			if bool(combat.combatants["pc"]["alive"]):
+				pc_alive_end += 1
+			rounds.append(int(combat.outcome["rounds"]))
+
+		rounds.sort()
+		var win_rate := float(wins) / float(RUNS_PER_CELL)
+		var median: int = rounds[RUNS_PER_CELL / 2]
+		var hist := {}
+		for r: int in rounds:
+			hist[r] = int(hist.get(r, 0)) + 1
+		print("[scaled / %s] arena=%s build=%s rank=%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
+			cell["name"], String(cell["arena"]), String(cell["build"]), rank,
+			win_rate, median, rounds[0], rounds[-1],
+		])
+		print("  rounds histogram: ", hist)
+		print("  pc_alive_rate=%.2f (%d/%d)" % [float(pc_alive_end) / float(RUNS_PER_CELL), pc_alive_end, RUNS_PER_CELL])
+		var lo := float(cell["win_lo"])
+		var hi := float(cell["win_hi"])
+		if win_rate < lo or win_rate > hi:
+			any_failed = true
+			printerr("FAIL [scaled / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
+		if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
+			any_failed = true
+			printerr("FAIL [scaled / %s]: median rounds %d outside 3-12" % [cell["name"], median])
 
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:

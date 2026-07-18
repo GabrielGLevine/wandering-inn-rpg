@@ -378,6 +378,7 @@
    },
    "gate_closed_toast": "Rubble and old wardwork still choke this side passage. Whatever's back there can wait until the main halls are actually safe.",
    "observe": "A narrower passage breaks off from the gauntlet proper, half-choked with fallen stone. Small shapes move in the dark past the rubble -- more than one.",
+   "scales": true,
    "on_victory": "gallery_vermin_culled"
   },
   {

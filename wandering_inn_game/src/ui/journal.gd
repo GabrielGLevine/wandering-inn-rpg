@@ -272,7 +272,7 @@ func _open() -> void:
 	for raw_beat: Variant in act_beats:
 		if bool((raw_beat as Dictionary).get("achieved", false)):
 			act_beats_achieved += 1
-	var posting := _posting_slot_state(bounty_pool, Game.sim.accepted_bounty_id, Game.sim.accepted_bounty_baseline, Callable(self, "_posting_title"), "copy")
+	var posting := _posting_slot_state(bounty_pool, Game.sim.accepted_bounty_id, Game.sim.accepted_bounty_baseline, Callable(self, "_posting_title"), "copy", Game.sim.accepted_bounty())
 	var delivery := _posting_slot_state(delivery_pool, Game.sim.accepted_delivery_id, Game.sim.accepted_delivery_baseline, Callable(self, "_delivery_title"), "slip_copy")
 	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_SHOWN, {
 		"quest_lines": quest_lines.size(),
@@ -539,7 +539,7 @@ func _build_body_text(act: Dictionary, quest_lines: Array, completed_quest_lines
 
 func _build_postings_lines(bounty_pool: Array, delivery_pool: Array) -> Array[String]:
 	var lines: Array[String] = []
-	var posting := _posting_slot_state(bounty_pool, Game.sim.accepted_bounty_id, Game.sim.accepted_bounty_baseline, Callable(self, "_posting_title"), "copy")
+	var posting := _posting_slot_state(bounty_pool, Game.sim.accepted_bounty_id, Game.sim.accepted_bounty_baseline, Callable(self, "_posting_title"), "copy", Game.sim.accepted_bounty())
 	if not posting.is_empty():
 		lines.append(UIChrome.bb_escape("%s — %s (%d gold)" % [String(posting["title"]), String(posting["status"]), int(posting["gold"])]))
 		var posting_detail := String(posting["detail"])
@@ -567,10 +567,13 @@ func _build_postings_lines(bounty_pool: Array, delivery_pool: Array) -> Array[St
 ## payload) -- each call site computes it independently rather than
 ## threading one result through both, the SAME duplication shape this file
 ## already accepts for the skill-groups/headings loop above.
-func _posting_slot_state(pool: Array, accepted_id: String, baseline: Dictionary, title_fn: Callable, detail_key: String) -> Dictionary:
+func _posting_slot_state(pool: Array, accepted_id: String, baseline: Dictionary, title_fn: Callable, detail_key: String, resolved_record: Dictionary = {}) -> Dictionary:
 	if accepted_id == "":
 		return {}
-	var record := _pool_record(pool, accepted_id)
+	# Issue #163: a tiered bounty accepted at silver/gold must show its LOCKED
+	# tier's copy/gold/condition, not the bronze base -- callers pass the
+	# resolved record (Game.sim.accepted_bounty()); deliveries pass none.
+	var record := resolved_record if not resolved_record.is_empty() else _pool_record(pool, accepted_id)
 	if record.is_empty():
 		return {}
 	var met := _condition_met(record.get("condition", {}), baseline, String(record.get("condition_mode", "delta")))

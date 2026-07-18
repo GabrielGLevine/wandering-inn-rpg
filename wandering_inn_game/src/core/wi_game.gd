@@ -38,6 +38,10 @@ var gold: int = 0
 var times_slept: int = 0
 var accepted_bounty_id: String = ""
 var accepted_bounty_baseline: Dictionary = {}
+# Issue #163: rank locked at accept ("bronze"/"silver"/"gold"); turn-in pays
+# the accepted tier even if the player's rank shifts before turning in. "" ==
+# bronze (old saves, base-record postings).
+var accepted_bounty_tier: String = ""
 var board_last_seen_times_slept: int = 0
 var accepted_delivery_id: String = ""
 var accepted_delivery_baseline: Dictionary = {}
@@ -1090,6 +1094,15 @@ func _bounty_by_id(id: String) -> Dictionary:
 	return {}
 
 
+func player_rank() -> String:
+	# Issue #163: rank derives from effective_power at the interaction (read-only,
+	# no new state). Empty catalog (bare unit contexts) degrades to bronze.
+	var catalog: Dictionary = _combat_config.get("classes", {})
+	if catalog.is_empty():
+		return "bronze"
+	return WIProgression.power_rank(classes, catalog)
+
+
 func board_bounties() -> Array:
 	var remaining: Array = []
 	for bounty: Dictionary in _bounty_pool():
@@ -1099,18 +1112,26 @@ func board_bounties() -> Array:
 		if not WIBounties.requires_met(bounty, Callable(self, "accomplishment_count")):
 			continue
 		remaining.append(bounty)
-	return WIBounties.active_slate(remaining, times_slept)
+	# Rank resolves at POST time -- the slate carries the player's own tier's
+	# condition/gold/copy; accept then LOCKS whatever tier was posted.
+	var rank := player_rank()
+	var resolved: Array = []
+	for bounty: Dictionary in WIBounties.active_slate(remaining, times_slept):
+		resolved.append(WIBounties.resolve_tier(bounty, rank))
+	return resolved
 
 
 func accept_bounty(id: String) -> void:
 	if accepted_bounty_id != "":
 		return
-	var bounty := _bounty_by_id(id)
-	if bounty.is_empty():
+	var base := _bounty_by_id(id)
+	if base.is_empty():
 		return
+	var bounty := WIBounties.resolve_tier(base, player_rank())
 	if String(bounty.get("condition_mode", "delta")) == "absolute" and accomplishment_count("completed_bounty_%s" % id) >= 1:
 		return
 	accepted_bounty_id = id
+	accepted_bounty_tier = String(bounty["rank"])
 	if String(bounty.get("condition_mode", "delta")) == "absolute":
 		accepted_bounty_baseline = {}
 	else:
@@ -1121,10 +1142,19 @@ func accept_bounty(id: String) -> void:
 	record_accomplishment("accepted_bounty_%s" % id)
 
 
-func _bounty_condition_met() -> bool:
+func accepted_bounty() -> Dictionary:
+	# The accepted posting resolved at its LOCKED tier (never the current rank).
 	if accepted_bounty_id == "":
-		return false
-	var bounty := _bounty_by_id(accepted_bounty_id)
+		return {}
+	var base := _bounty_by_id(accepted_bounty_id)
+	if base.is_empty():
+		return {}
+	var tier := accepted_bounty_tier if accepted_bounty_tier != "" else "bronze"
+	return WIBounties.resolve_tier(base, tier)
+
+
+func _bounty_condition_met() -> bool:
+	var bounty := accepted_bounty()
 	if bounty.is_empty():
 		return false
 	return WIBounties.condition_met(bounty.get("condition", {}), accepted_bounty_baseline, Callable(self, "accomplishment_count"), String(bounty.get("condition_mode", "delta")))
@@ -1135,17 +1165,19 @@ func abandon_bounty() -> void:
 		return
 	accepted_bounty_id = ""
 	accepted_bounty_baseline = {}
+	accepted_bounty_tier = ""
 
 
 func turn_in_bounty() -> bool:
 	if accepted_bounty_id == "" or not _bounty_condition_met():
 		return false
-	var bounty := _bounty_by_id(accepted_bounty_id)
+	var bounty := accepted_bounty()
 	var id := accepted_bounty_id
 	earn_gold(int(bounty.get("gold", 0)), "bounty_%s" % id)
 	record_accomplishment("completed_bounty_%s" % id)
 	accepted_bounty_id = ""
 	accepted_bounty_baseline = {}
+	accepted_bounty_tier = ""
 	return true
 
 
@@ -1596,8 +1628,13 @@ func start_combat(entity_id: String) -> bool:
 		if not penalty.is_empty() and _accomplishment_gate_met(penalty.get("when", {}) as Dictionary):
 			ally_cfg[WIKeys.HP_MOD] = int(ally_cfg.get(WIKeys.HP_MOD, 0)) + int(penalty.get("hp_mod", 0))
 		cfgs.append(ally_cfg)
+	# Issue #163: opt-in rank scaling on repeatable cull encounters only. Bronze
+	# == identity; silver/gold step enemy HP/damage via THE one WIBountyScaling
+	# site (mirrored in sim_combat_batch). Story/boss fights omit `scales`, so
+	# never step (a validator forbids scales on respawns:false / quest-fed wins).
+	var scale_rank := player_rank() if bool(entity.get("scales", false)) else "bronze"
 	for enemy: Variant in entity.get("enemies", []):
-		cfgs.append((by_id[String(enemy)] as Dictionary).duplicate(true))
+		cfgs.append(WIBountyScaling.scale_enemy((by_id[String(enemy)] as Dictionary).duplicate(true), scale_rank))
 	_break_sneak()
 	_pending_encounter = entity_id
 	combat = WICombat.new(arena, cfgs, skills_config_raw(), _combat_event_relay, rng.randi())
@@ -2218,6 +2255,8 @@ func snapshot() -> Dictionary:
 		"gold": gold,
 		"times_slept": times_slept,
 		"accepted_bounty_id": accepted_bounty_id,
+		"accepted_bounty_tier": accepted_bounty_tier,
+		"player_rank": player_rank(),
 		"board_active_bounties": board_bounties().map(func(b: Dictionary) -> String: return String(b["id"])),
 		"accepted_delivery_id": accepted_delivery_id,
 		"delivery_failed": delivery_failed,
