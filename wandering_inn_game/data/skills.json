@@ -998,6 +998,243 @@
 			"element": "nature",
 			"effect": { "type": "spell_damage", "range": 1, "applies": { "rooted": { "duration_rounds": 1 } } },
 			"description": "Green shoots burst from your palm and take the enemy at the ankle. The ground remembers being wild."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (6.56, Yvlon). Swordsman L14, line's first non-mult active -- line_damage (piercing_shot resolver), sword-gated.",
+			"id": "crescent_cut",
+			"display_name": "[Crescent Cut]",
+			"icon": "icon_crescent_cut",
+			"contexts": [
+				"combat"
+			],
+			"ap_cost": 3,
+			"weapon": "sword",
+			"effect": {
+				"type": "line_damage",
+				"length": 3
+			},
+			"description": "A single sweeping arc, wide enough that everyone caught in its path shares the wound."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (Vol 7 Gecko interlude, Relc). Spearmaster L14 through-the-target thrust -- line_damage, spear-gated.",
+			"id": "pierce_thrust",
+			"display_name": "[Pierce Thrust]",
+			"icon": "icon_pierce_thrust",
+			"contexts": [
+				"combat"
+			],
+			"ap_cost": 3,
+			"weapon": "spear",
+			"effect": {
+				"type": "line_damage",
+				"length": 3
+			},
+			"description": "The spear goes in and keeps going, and whatever stood behind the first foe learns why the line matters."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (4.27 H, Ceria/Illphres). Ice Mage L14 heavy shield. mana_shield absorber keys on the literal id 'mana_shield' (wi_combat.gd), already inherited from [Mage] L2 -- this capstone reinforces the shielded identity, not a second absorber.",
+			"id": "ice_wall",
+			"display_name": "[Ice Wall]",
+			"icon": "icon_ice_wall",
+			"contexts": [
+				"combat"
+			],
+			"ap_cost": 0,
+			"effect": {
+				"type": "mana_shield"
+			},
+			"description": "A slab of conjured ice rises between you and the blow, and drinks it cold."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (Vol <=7). Fire Mage L14 incantation-free flame -- quick_cast capstone (line already holds [Quick Cast] via [Mage] L1).",
+			"id": "flashfire_spellcraft",
+			"display_name": "[Flashfire Spellcraft]",
+			"icon": "icon_flashfire_spellcraft",
+			"contexts": [
+				"combat"
+			],
+			"ap_cost": 0,
+			"effect": {
+				"type": "quick_cast"
+			},
+			"description": "No words, no gathering. The flame is simply already there, because you did not wait for it."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED. Sharpshooter L14. damage_mult with a weakened rider -- the damage_mult arm gains status application (skill_effects.gd), mirroring spell_damage; existing damage_mult skills carry no `applies` so the combat sim stays byte-identical.",
+			"id": "blinding_arrow",
+			"display_name": "[Blinding Arrow]",
+			"icon": "icon_blinding_arrow",
+			"contexts": [
+				"combat"
+			],
+			"ap_cost": 2,
+			"weapon": "bow",
+			"effect": {
+				"type": "damage_mult",
+				"mult": 1.2,
+				"applies": {
+					"weakened": {
+						"duration_rounds": 1
+					}
+				}
+			},
+			"description": "A shaft loosed to burst bright at the eyes -- little force behind it, but the target fights half-blind for it."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED. Infiltrator L14 blink-flavored repositioning -- turn-start move_pool passive (0 AP), enhanced_movement shape at +2.",
+			"id": "shadowstep",
+			"display_name": "[Shadowstep]",
+			"icon": "icon_shadowstep",
+			"contexts": [
+				"combat"
+			],
+			"ap_cost": 0,
+			"effect": {
+				"type": "move_pool_bonus",
+				"amount": 2
+			},
+			"description": "You step into one shadow and out of another, and the distance between never happened."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED [Instantaneous Barrage (Phantom Arrows)]. Strategist L14, weaponless line_damage (no weapon gate -- conjured arrows). Ship id phantom_barrage; display keeps the shorter attested form.",
+			"id": "phantom_barrage",
+			"display_name": "[Instantaneous Barrage]",
+			"icon": "icon_phantom_barrage",
+			"contexts": [
+				"combat"
+			],
+			"ap_cost": 3,
+			"effect": {
+				"type": "line_damage",
+				"length": 4
+			},
+			"description": "A hundred arrows that were never real fall in the same instant, and everything beneath them is."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED. Emissary L14 social passive -- identity line (no combat effect, no dialogue gate wired this wave). pack_bond passive-record shape.",
+			"id": "trusted_voice",
+			"display_name": "[Trusted Voice]",
+			"icon": "icon_trusted_voice",
+			"contexts": [
+				"exploration"
+			],
+			"description": "When you speak, people lean in to believe you. Doors that stay shut for other envoys open at your word."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (5.59, Drassi -- barmaid-line inn work). Barmaid L14. Keeps the attested name; distinct id because shipped `servers_prescience` (a [Server] field skill) already owns that snake_case. dangersense passive.",
+			"id": "barmaids_prescience",
+			"display_name": "[Server's Prescience]",
+			"icon": "icon_barmaids_prescience",
+			"contexts": [
+				"combat"
+			],
+			"ap_cost": 0,
+			"effect": {
+				"type": "dangersense"
+			},
+			"description": "You feel the room tilt toward trouble a breath before it does: a dropped tray, a raised fist, a blade under a coat."
+		},
+		{
+			"_comment": "CANON-VERDICT: ORIGINAL (collision adjudication) -- [Server's Prescience] went to the barmaid sibling, so the hustle voice ships instead. Server L14, move_pool +1 turn-start passive.",
+			"id": "swift_service",
+			"display_name": "[Swift Service]",
+			"icon": "icon_swift_service",
+			"contexts": [
+				"combat"
+			],
+			"ap_cost": 0,
+			"effect": {
+				"type": "move_pool_bonus",
+				"amount": 1
+			},
+			"description": "Every step between the tables is already planned, so your feet never waste one."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED. Merchant L14 field value-read -- field_ambient identity (appraise_goods shape), no combat effect.",
+			"id": "evaluation_of_wealth",
+			"display_name": "[Evaluation of Wealth]",
+			"icon": "icon_evaluation_of_wealth",
+			"contexts": [
+				"exploration"
+			],
+			"field": true,
+			"field_ambient": "[Evaluation of Wealth] — You weigh the room for what it is worth. Nothing here carries a price worth naming today.",
+			"description": "A glance tells you the true worth of a thing: what it cost, what it will fetch, and what the seller hopes you do not notice."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (4.24, 4.44 M). Courier L14. Ships as couriers_double_step because shipped [Runner] L5 [Double Step] owns `double_step`; passive move_pool +2 (distinct from the inherited active).",
+			"id": "couriers_double_step",
+			"display_name": "[Double Step]",
+			"icon": "icon_couriers_double_step",
+			"contexts": [
+				"combat"
+			],
+			"ap_cost": 0,
+			"effect": {
+				"type": "move_pool_bonus",
+				"amount": 2
+			},
+			"description": "The road learns your name. Two strides for every one, and it never seems to tire you."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED. Witch L14 omen-read -- dangersense passive, the hedge-craft foresight.",
+			"id": "tea_omens",
+			"display_name": "[Tea Omens]",
+			"icon": "icon_tea_omens",
+			"contexts": [
+				"combat"
+			],
+			"ap_cost": 0,
+			"effect": {
+				"type": "dangersense"
+			},
+			"description": "The leaves settle into shapes, and the shapes are always about what is coming. Usually it is bad. Usually you are ready."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED [Supplies:]. Chef L14. Restocks one flarepepper_powder at each rest via the sleep() hook (wi_game.gd, known_skills gate, never stacks); passive identity record.",
+			"id": "flarepepper_supplies",
+			"display_name": "[Supplies: Flarepepper Powder]",
+			"icon": "icon_flarepepper_supplies",
+			"contexts": [
+				"exploration"
+			],
+			"description": "Your pack is never quite empty. There is always one more twist of flarepepper put by, ready for the pan."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (6.39, Xif). Alchemist L14 field bench-cast (true_synthesis shape) -- reduces crude_draught into tonic_of_the_clear_eye. Recipe rides an alchemy bench's on_skill_use; no bench wired this wave (field_ambient identity until one is placed).",
+			"id": "perfect_reduction",
+			"display_name": "[Perfect Reduction]",
+			"icon": "icon_perfect_reduction",
+			"contexts": [
+				"exploration"
+			],
+			"field": true,
+			"field_ambient": "[Perfect Reduction] — You lay out the reduction in your head, crude draught to clear tonic. It wants a proper bench you do not have here.",
+			"description": "Where a lesser hand throws out the crude batch, you boil it down to its one true part: nothing wasted, nothing left but the working itself."
+		},
+		{
+			"_comment": "CANON-VERDICT: ORIGINAL (collision adjudication -- research's [Lesser Bond] is ATTESTED 6.08 but the id is the shipped [Beast Tamer] tame verb). Beast Master L14. Passive on the PLAYER record (no effect -- the kit fold would buff the PC unconditionally); the +hit lives in sworn_fang_boon, injected PC-side at roster build while a companion rides (GH#156 pattern inverted).",
+			"id": "sworn_fang_ride_together",
+			"display_name": "[Sworn Fang: Ride Together]",
+			"icon": "icon_sworn_fang_ride_together",
+			"contexts": [
+				"exploration"
+			],
+			"description": "You and the beast beneath you think as one animal now. Where it turns, you strike; where you lean, it carries you."
+		},
+		{
+			"_comment": "COMPANION BOON (GH#165, inverse of GH#156): hidden PC-side carrier for [Sworn Fang: Ride Together] -- never granted to a class, never hotbar-bound; appended to the PC combatant at roster build while a companion rides. hit_bonus reuses the basic_command_boon tuned value.",
+			"id": "sworn_fang_boon",
+			"display_name": "[Sworn Fang: Ride Together]",
+			"contexts": [
+				"combat"
+			],
+			"ap_cost": 0,
+			"effect": {
+				"type": "hit_bonus",
+				"amount": 8
+			},
+			"description": "Two bodies, one certainty. The strike lands because both of you already knew it would."
 		}
 	]
 }

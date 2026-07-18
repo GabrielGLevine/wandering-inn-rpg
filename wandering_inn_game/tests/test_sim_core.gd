@@ -1930,6 +1930,33 @@ func _init() -> void:
 	assert(int(wolf_combatant[WIKeys.MAX_HP]) == 34, "pack_bond_boon folds +4 max hp on the wolf (20 + 10 con + 4)")
 	assert(not (gBoons.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("basic_command_boon"), "the PC kit never carries the boon ids")
 
+	# --- GH#165: PC-side [Sworn Fang: Ride Together] boon (companion fielded -> boon on the PC) ---
+	var gSworn := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gSworn.player_skills.append("sworn_fang_ride_together")
+	gSworn.companion = "wolf_companion"
+	gSworn.companion_source = "tamed"
+	gSworn.transition("floodplains", Vector2i(27, 18))
+	assert(gSworn.start_combat("goblin_encounter_2"), "sworn-fang fight fields the wolf")
+	var sworn_pc: Dictionary = gSworn.combat.combatants["pc"]
+	assert((sworn_pc[WIKeys.SKILLS] as Array).has("sworn_fang_boon"), "the PC kit carries sworn_fang_boon while a companion rides")
+	assert(int(sworn_pc["hit_bonus"]) >= 8, "sworn_fang_boon folds at least +8 hit onto the PC")
+	assert(not (gSworn.combat.combatants["wolf_companion"][WIKeys.SKILLS] as Array).has("sworn_fang_boon"), "the PC-side boon rides the PC, never the companion")
+	# absent without a companion
+	var gSwornSolo := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gSwornSolo.player_skills.append("sworn_fang_ride_together")
+	gSwornSolo.transition("floodplains", Vector2i(27, 18))
+	assert(gSwornSolo.start_combat("goblin_encounter_2"), "solo sworn-fang fight starts")
+	assert(not (gSwornSolo.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("sworn_fang_boon"), "no companion -> no PC-side boon")
+	# the hidden carrier is never a class data grant (only the passive grant is)
+	var _sworn_granted := false
+	var _passive_granted := false
+	for _cls: Dictionary in (combat_config["classes"]["classes"] as Array):
+		for _lv: Dictionary in (_cls["levels"] as Array):
+			if (_lv["grants"] as Array).has("sworn_fang_boon"): _sworn_granted = true
+			if (_lv["grants"] as Array).has("sworn_fang_ride_together"): _passive_granted = true
+	assert(not _sworn_granted, "sworn_fang_boon (hidden carrier) is NEVER a class data grant")
+	assert(_passive_granted, "sworn_fang_ride_together IS granted in data (beast_master L14)")
+
 	# --- GH#92 D3: room-tier max-HP bonus (persistent via accomplishment counters) ---
 	var gRoomBase := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gRoomBase.transition("floodplains", Vector2i(27, 18))

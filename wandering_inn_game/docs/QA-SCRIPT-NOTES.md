@@ -147,3 +147,4 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `druid_consolidation_loop` | 7 | full | `near_druid_consolidation` | tamer/mage lines -> [Druid] floor 14 + [Peace of the Wild] kit |
 | `room_upgrade_loop` | 7 | full | `near_room_upgrade` | GH#92 D3: Erin tier-1 room purchase -> gold spend + room_tier_1 bank (HP math pinned in test_sim_core) |
 | `watch_donation_loop` | 7 | full | `near_watch_donation` | GH#92 D3: Ashgrave supply-fund donation -> repeatable gold sink banks donated_watch_supplies |
+| `second_wind_loop` | 9 | full | `near_second_wind` | swordsman L13 -> organic L14 -> [Crescent Cut] grant lands in a live fight |

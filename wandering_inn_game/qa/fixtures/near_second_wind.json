@@ -1,0 +1,30 @@
+{
+	"state": {
+		"accomplishments": {
+			"melee_hit": 57,
+			"sword_skill_used": 33,
+			"won_combat": 3,
+			"met_relc": 1
+		},
+		"classes": {
+			"swordsman": 13
+		},
+		"current_map": "floodplains",
+		"dormant_encounters": [],
+		"generalist_classes": [],
+		"pending_consolidation": {},
+		"player_cell": [
+			28,
+			20
+		],
+		"player_facing": [
+			0,
+			1
+		],
+		"player_skills": [],
+		"removed_entities": [],
+		"rng_state": "-7124151667447473881",
+		"started_quests": []
+	},
+	"version": 3
+}

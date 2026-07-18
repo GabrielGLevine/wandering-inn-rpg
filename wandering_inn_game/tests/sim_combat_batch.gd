@@ -145,6 +145,18 @@ const BUILDS := [
 	{"name": "t3_warrior10", "classes": {"warrior": 10}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 	{"name": "t4_spellsword11_party", "classes": {"spellsword": 11}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
 	{"name": "t4_spellsword14_party", "classes": {"spellsword": 14}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},
+	# Second Wind wave (#165): terminal pure-line L14 solo builds. All
+	# matrix:false (they run only in SECOND_WIND_CELLS, cell-selection-tuned --
+	# never in the COMPOSITIONS matrix). Weapons gate the kit where the line is
+	# weapon-based (sword/spear/bow); casters/passive lines carry none.
+	{"name": "swordsman14", "classes": {"swordsman": 14}, WIKeys.AI: "melee", "matrix": false, WIKeys.WEAPON: "rusty_sword"},
+	{"name": "spearmaster14", "classes": {"spearmaster": 14}, WIKeys.AI: "melee", "matrix": false, WIKeys.WEAPON: "relcs_spare_spear"},
+	{"name": "ice_mage14", "classes": {"ice_mage": 14}, WIKeys.AI: "caster", "matrix": false},
+	{"name": "fire_mage14", "classes": {"fire_mage": 14}, WIKeys.AI: "caster", "matrix": false},
+	{"name": "sharpshooter14", "classes": {"sharpshooter": 14}, WIKeys.AI: "melee", "matrix": false, WIKeys.WEAPON: "hunting_bow"},
+	{"name": "infiltrator14", "classes": {"infiltrator": 14}, WIKeys.AI: "melee", "matrix": false, WIKeys.WEAPON: "gnollish_hunting_knife"},
+	{"name": "strategist14", "classes": {"strategist": 14}, WIKeys.AI: "melee", "matrix": false},
+	{"name": "beast_master14", "classes": {"beast_master": 14}, WIKeys.AI: "melee", "matrix": false},
 ]
 
 const PARTY_CELLS := [
@@ -168,6 +180,28 @@ const BESTIARY_CELLS := [
 	{"name": "forge_calibration_golem_t5_sw14_solo", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword14_party", "solo": true},
 	{"name": "market_watchgolems_t4_solo", "arena": "market_watch", "enemies": ["watchgolem_a", "watchgolem_b"], "build": "t4_spellsword11_party", "solo": true},
 	{"name": "market_watchgolems_t5_sw14_solo", "arena": "market_watch", "enemies": ["watchgolem_a", "watchgolem_b"], "build": "t4_spellsword14_party", "solo": true},
+]
+
+# Second Wind wave (#165): the six combat-active pure lines at their L14 solo
+# builds, GATED 0.55-0.95 / 3-12 rounds; strategist14 and beast_master14 (with
+# the tamed wolf + companion boons incl. the PC-side [Sworn Fang] boon) are
+# MEASURED only. Cell-selection tuning ONLY (enemy composition), never stats.
+# Measured at authoring (100 seeds): swordsman 0.65/3, spearmaster 0.68/3,
+# ice_mage 0.60/4, fire_mage 0.74/3, sharpshooter 0.76/4, infiltrator 0.65/4;
+# strategist 0.77/3, beast_master14 0.63/5 (wolf_downed 0.45).
+# AI=melee for sharpshooter14/strategist14 (NOT ranged): the sim has no dex/int
+# ranged-AI damage path -- the ranged profile only fires int-based line/spell,
+# never bow damage_mult, so a dex archer whiffs (0.00). melee AI mirrors how the
+# PC actually autoplays. Caster builds (ice/fire mage) keep caster AI.
+const SECOND_WIND_CELLS := [
+	{"name": "swordsman14_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout", "raskghar_scout"], "build": "swordsman14", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "spearmaster14_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout", "goblin_raider"], "build": "spearmaster14", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "ice_mage14_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "sewer_vermin"], "build": "ice_mage14", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "fire_mage14_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "sewer_vermin"], "build": "fire_mage14", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "sharpshooter14_solo", "arena": "goblin_ambush", "enemies": ["sewer_vermin", "sewer_vermin"], "build": "sharpshooter14", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "infiltrator14_solo", "arena": "goblin_ambush", "enemies": ["sewer_vermin", "sewer_vermin"], "build": "infiltrator14", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "strategist14_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout"], "build": "strategist14"},
+	{"name": "beast_master14_raskghar_scouts_with_wolf", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout", "raskghar_scout"], "build": "beast_master14", "ally": "wolf_companion", "companion_boons": true},
 ]
 
 
@@ -213,7 +247,7 @@ func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalog: Dict
 
 
 func _init() -> void:
-	var total_cells := COMPOSITIONS.size() * _matrix_build_count() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size() + PARTY_CELLS.size() + DUNGEON_CELLS.size() + BESTIARY_CELLS.size()
+	var total_cells := COMPOSITIONS.size() * _matrix_build_count() + LOADOUT_CELLS.size() + ENCOUNTER_CELLS.size() + BOSS_CELLS.size() + RUIN_CELLS.size() + RIVERFARM_CELLS.size() + INVRISIL_CELLS.size() + PARTY_CELLS.size() + DUNGEON_CELLS.size() + BESTIARY_CELLS.size() + SECOND_WIND_CELLS.size()
 	if OS.get_environment("WI_CELL_COUNT_ONLY") != "":
 		print("WI_CELL_COUNT: %d" % total_cells)
 		quit(0)
@@ -796,6 +830,78 @@ func _init() -> void:
 			if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
 				any_failed = true
 				printerr("FAIL [bestiary / %s]: median rounds %d outside 3-12" % [cell["name"], median])
+
+	for cell: Dictionary in SECOND_WIND_CELLS:
+		if not _cell_in_range(): continue
+		var build: Dictionary = _find_by_name(BUILDS, String(cell["build"]))
+		var arena: Dictionary = arenas_by_id[String(cell["arena"])]
+		var wins := 0
+		var rounds: Array[int] = []
+		var ally_downed := 0
+		var has_ally := cell.has("ally")
+		var ally_id := String(cell.get("ally", ""))
+		for seed_v in range(1, RUNS_PER_CELL + 1):
+			var pc: Dictionary = _build_pc(build, by_id["pc"], classes, skills_by_id, items_by_id)
+			# GH#165: mirror wi_game.start_combat's PC-side [Sworn Fang] boon --
+			# a fielded companion + the passive grant folds sworn_fang_boon into
+			# the PC's own kit (the inverse of the companion boons below).
+			if bool(cell.get("companion_boons", false)) and (pc[WIKeys.SKILLS] as Array).has("sworn_fang_ride_together"):
+				var pcs: Array = (pc[WIKeys.SKILLS] as Array).duplicate()
+				pcs.append("sworn_fang_boon")
+				pc[WIKeys.SKILLS] = pcs
+			var cfgs: Array = [pc]
+			if has_ally:
+				var ally_cfg: Dictionary = (by_id[ally_id] as Dictionary).duplicate(true)
+				if bool(cell.get("companion_boons", false)):
+					var boons: Array = []
+					if (pc[WIKeys.SKILLS] as Array).has("animals_basic_command"):
+						boons.append("basic_command_boon")
+					if (pc[WIKeys.SKILLS] as Array).has("pack_bond"):
+						boons.append("pack_bond_boon")
+					if not boons.is_empty():
+						var comp_skills: Array = (ally_cfg.get(WIKeys.SKILLS, []) as Array).duplicate()
+						comp_skills.append_array(boons)
+						ally_cfg[WIKeys.SKILLS] = comp_skills
+				cfgs.append(ally_cfg)
+			for enemy_id: String in cell["enemies"]:
+				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
+			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			combat.begin()
+			var guard := 0
+			while not combat.finished and guard < 2000:
+				guard += 1
+				WICombatAI.take_turn(combat)
+			assert(combat.finished, "second_wind %s fight %d did not terminate" % [cell["name"], seed_v])
+			if combat.outcome["victory"]:
+				wins += 1
+			rounds.append(int(combat.outcome["rounds"]))
+			if has_ally and not bool(combat.combatants.get(ally_id, {}).get(WIKeys.ALIVE, true)):
+				ally_downed += 1
+
+		rounds.sort()
+		var win_rate := float(wins) / float(RUNS_PER_CELL)
+		var median: int = rounds[RUNS_PER_CELL / 2]
+		var hist := {}
+		for r: int in rounds:
+			hist[r] = int(hist.get(r, 0)) + 1
+		var gated := cell.has("win_lo")
+		print("[second_wind / %s] arena=%s build=%s%s%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
+			cell["name"], String(cell["arena"]), String(cell["build"]),
+			"" if has_ally else " solo", "" if gated else " (measured)",
+			win_rate, median, rounds[0], rounds[-1],
+		])
+		print("  rounds histogram: ", hist)
+		if has_ally:
+			print("  %s_downed_rate=%.2f (%d/%d)" % [ally_id, float(ally_downed) / float(RUNS_PER_CELL), ally_downed, RUNS_PER_CELL])
+		if gated:
+			var lo := float(cell["win_lo"])
+			var hi := float(cell["win_hi"])
+			if win_rate < lo or win_rate > hi:
+				any_failed = true
+				printerr("FAIL [second_wind / %s]: win rate %.2f outside band %.2f-%.2f" % [cell["name"], win_rate, lo, hi])
+			if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
+				any_failed = true
+				printerr("FAIL [second_wind / %s]: median rounds %d outside 3-12" % [cell["name"], median])
 
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:
