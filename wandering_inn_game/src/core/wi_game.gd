@@ -537,6 +537,17 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 			var item_hint := String(target.get("item_hint_toast", "Bare hands won't do it. Something in your pack might."))
 			_emit(WIEvents.TOAST, {"text": item_hint})
 			return {"item_hint": req_item}
+	# GH#156 review M1: once_per_waking is OPT-IN here exactly as in interact()
+	# and SHARES interact's serve: key -- one careful visit per waking TOTAL
+	# (a soothe burns the mend and vice versa). Bench props never set the flag:
+	# unbounded bench casts are the alchemist curve's DESIGN (trader-shaped,
+	# grind-priced), so the gate must never become a default.
+	if bool(target.get("once_per_waking", false)):
+		var waking_key := "serve:%s" % target_id
+		if entity_first_use.has(waking_key):
+			_emit(WIEvents.TOAST, {"text": String(target.get("once_per_waking_toast", "Nothing more to carry out right now. Come back another day."))})
+			return {"once_per_waking_spent": true}
+		entity_first_use[waking_key] = true
 	var effect: Dictionary = _resolve_skill_use_effect(target["on_skill_use"])
 	# TRAP (#155 review M1): a CONSUMING recipe (both `item` and `remove_item`)
 	# must refuse BEFORE any state changes when the output can't be picked up
@@ -632,6 +643,13 @@ func _wild_affinity_reduction(ent: Dictionary) -> int:
 	# beast-kind (`beast: true`) ambushes give a practiced handler more room.
 	# AMBUSH CHECK ONLY -- ward targeting and blink-bypass credit keep the
 	# authored radius, or warding gets harder as the tamer levels.
+	# DELIBERATE (review M4): the sneak danger-credit branch sits behind this
+	# same check, so an affinity holder banks no sneaked_past_danger from
+	# beast ambushes -- never in danger, never credited.
+	# AUTHORING NOTE (review M3): all shipped beast ambushes are radius 1, so
+	# -1 already fully suppresses them; -2 only matters for radius >= 2
+	# encounters -- give future beast ambushes radius 2+ if the druid upgrade
+	# should read on them.
 	if not bool(ent.get("beast", false)):
 		return 0
 	var known := known_skills()

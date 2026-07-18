@@ -1930,6 +1930,45 @@ func _init() -> void:
 	assert(int(wolf_combatant[WIKeys.MAX_HP]) == 34, "pack_bond_boon folds +4 max hp on the wolf (20 + 10 con + 4)")
 	assert(not (gBoons.combat.combatants["pc"][WIKeys.SKILLS] as Array).has("basic_command_boon"), "the PC kit never carries the boon ids")
 
+	var gBoonsPartial := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gBoonsPartial.player_skills.append("animals_basic_command")
+	gBoonsPartial.companion = "wolf_companion"
+	gBoonsPartial.companion_source = "tamed"
+	gBoonsPartial.transition("floodplains", Vector2i(27, 18))
+	assert(gBoonsPartial.start_combat("goblin_encounter_2"), "partial-kit wolf fields into the goblin fight")
+	var partial_wolf: Dictionary = gBoonsPartial.combat.combatants.get("wolf_companion", {})
+	assert((partial_wolf[WIKeys.SKILLS] as Array).has("basic_command_boon"), "L2+ kit injects the command boon")
+	assert(not (partial_wolf[WIKeys.SKILLS] as Array).has("pack_bond_boon"), "pre-[Pack Bond] kit injects NO hp boon (review N1)")
+
+	# --- GH#156 review M2: wounded-corusdeer soothe/mend paths + variant flip ---
+	var gMend := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gMend.player_skills.append("beasts_mending")
+	gMend.transition("floodplains", Vector2i(32, 9))
+	gMend.player_facing = Vector2i.RIGHT
+	_events.clear()
+	gMend.interact()
+	assert(gMend.accomplishment_count("soothed_a_beast") == 1, "first corusdeer interact banks soothed_a_beast")
+	assert(gMend.accomplishment_count("tended_beasts") == 0, "the variant gate resolves BEFORE the bank -- first visit is the soothe, not a tend")
+	gMend.interact()
+	assert(gMend.accomplishment_count("soothed_a_beast") == 1 and gMend.accomplishment_count("tended_beasts") == 0,
+		"second same-waking interact is once_per_waking-spent")
+	assert(gMend.use_skill_field("beasts_mending").get("once_per_waking_spent", false) == true,
+		"the mend cast shares interact's serve: key -- one careful visit per waking TOTAL (review M1)")
+	assert(gMend.accomplishment_count("tended_beasts") == 0, "spent-waking mend banks nothing")
+	gMend.sleep()
+	_events.clear()
+	gMend.interact()
+	assert(gMend.accomplishment_count("tended_beasts") == 1 and gMend.accomplishment_count("soothed_a_beast") == 1,
+		"post-sleep interact flips to the tended_beasts variant")
+	gMend.sleep()
+	var mend_gold := gMend.gold
+	var mend_result := gMend.use_skill_field("beasts_mending")
+	assert(String(mend_result.get("accomplishment", "")) == "tended_beasts", "fresh-waking mend cast resolves the on_skill_use payload")
+	assert(gMend.accomplishment_count("tended_beasts") == 2, "the mend cast banks tended_beasts")
+	assert(gMend.gold == mend_gold + 2, "the mend cast pays its small care wage")
+	assert(gMend.use_skill_field("beasts_mending").get("once_per_waking_spent", false) == true,
+		"a second same-waking mend is spent -- the curve cannot be ground at one prop between sleeps")
+
 	var affinity_scene := WISceneCatalog.compose()
 	(affinity_scene["maps"]["floodplains"]["entities"] as Array).append({
 		WIKeys.ID: "test_beast_ambush",

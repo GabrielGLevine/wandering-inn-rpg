@@ -1462,7 +1462,7 @@
    "on_victory": "razorbeaks_culled"
   },
   {
-   "_comment": "GH#156 [Beast Tamer] entry producer. First careful visit banks soothed_a_beast (partial taming counts -- a hurt bee and Lyonette, 3.23 L); the variant flips later visits to tended_beasts, the curve counter. once_per_waking keeps the grind honest. Also a beasts_mending cast target via requires_skill/on_skill_use.",
+   "_comment": "GH#156 [Beast Tamer] entry producer. First careful visit banks soothed_a_beast (partial taming counts -- a hurt bee and Lyonette, 3.23 L); the variant flips later visits to tended_beasts, the curve counter. once_per_waking gates BOTH paths (interact and the beasts_mending cast share the serve: key -- one careful visit per waking total). Also a beasts_mending cast target via requires_skill/on_skill_use.",
    "id": "wounded_corusdeer",
    "kind": "prop",
    "cell": [33, 9],
