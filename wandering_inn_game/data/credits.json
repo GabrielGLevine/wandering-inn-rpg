@@ -1,0 +1,38 @@
+{
+ "_comment": "GH#147/#186-adjacent: attribution content for the Settings Credits panel (user ruling 2026-07-18: Settings section satisfies attribution; formal credits screen deferred). Ove Melaa line is VERBATIM per the pack's attribution instructions. Renders via settings_panel.gd -- content is DATA.",
+ "sections": [
+  {
+   "heading": "The Wandering Inn",
+   "lines": [
+    "An unofficial fan work based on The Wandering Inn by pirateaba (wanderinginn.com). Made with love for the story; no affiliation."
+   ]
+  },
+  {
+   "heading": "Music",
+   "lines": [
+    "16-Bit Fantasy & Adventure + 16-Bit Fantasy Battles by xDeviruchi.",
+    "JRPG music packs by Juhani Junkala.",
+    "Town Theme RPG and Battle Theme A by cynicmusic (pixelsphere.org).",
+    "16-bit RPG music by HydroGene.",
+    "Additional samples by Ove Melaa (Omsofware@hotmail.com) -2013 Ove Melaa",
+    "The Old Tower Inn by RandomMind."
+   ]
+  },
+  {
+   "heading": "Art & Audio Packs",
+   "lines": [
+    "Pixel Crawler environments by Anokolisa.",
+    "Minifantasy Dungeon audio by Leohpaz.",
+    "UI dialogue audio by Kenney and the Super Dialogue Audio Pack.",
+    "Additional sprites generated with PixelLab.",
+    "DejaVu fonts (symbol fallback subset)."
+   ]
+  },
+  {
+   "heading": "Engine",
+   "lines": [
+    "Made with Godot Engine (godotengine.org)."
+   ]
+  }
+ ]
+}

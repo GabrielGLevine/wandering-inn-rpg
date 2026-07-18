@@ -5,6 +5,7 @@ const CONTROLS_PANEL_SIZE := Vector2(620.0, 380.0)
 const HELP_PANEL_SIZE := Vector2(620.0, 530.0)
 const HELP_TEXT_WIDTH := HELP_PANEL_SIZE.x - 52.0
 const HELP_CONTENT_PATH := "res://data/help_content.json"
+const CREDITS_CONTENT_PATH := "res://data/credits.json"
 
 ## Row list. "Settings" is reached from a LATER-appended row on both
 ## pause_menu.gd's ROWS and title_screen.gd's ROWS (never inserted earlier --
@@ -16,7 +17,7 @@ const HELP_CONTENT_PATH := "res://data/help_content.json"
 const ROWS := [
 	"Master volume", "Music volume", "SFX volume",
 	"Fullscreen", "Text Scale", "Reduce Motion",
-	"Controls...", "Replay Hints", "Help...", "Combat Speed", "Quest Thread", "Back",
+	"Controls...", "Replay Hints", "Help...", "Combat Speed", "Quest Thread", "Credits...", "Back",
 ]
 const AUDIO_ROWS := {"Master volume": "Master", "Music volume": "Music", "SFX volume": "SFX"}
 
@@ -28,7 +29,7 @@ const MOUSE_LABELS := {
 	"field_readout": "Click Details",
 }
 
-enum State { ROWS, CONTROLS, HELP }
+enum State { ROWS, CONTROLS, HELP, CREDITS }
 
 ## True while this panel is visible -- world.gd/pause_menu.gd/title_screen.gd
 ## don't currently gate on this (see file doc comment: the caller hides its
@@ -47,6 +48,8 @@ var _controls_root: Control
 var _controls_back_label: Label
 
 var _help_root: Control
+var _credits_root: Control
+var _credits_section_count := 0
 var _help_back_label: Label
 var _help_sections: Array = []
 
@@ -59,6 +62,7 @@ func _ready() -> void:
 	_build_rows_panel()
 	_build_controls_panel()
 	_build_help_panel()
+	_build_credits_panel()
 
 
 func _build_rows_panel() -> void:
@@ -256,6 +260,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			_exit_controls()
 			vp.set_input_as_handled()
 		return
+	if _state == State.CREDITS:
+		if event.is_action_pressed("cancel") or event.is_action_pressed("confirm"):
+			_exit_credits()
+			vp.set_input_as_handled()
+		return
 	if _state == State.HELP:
 		if event.is_action_pressed("cancel") or event.is_action_pressed("confirm"):
 			_exit_help()
@@ -362,6 +371,62 @@ func _exit_help() -> void:
 	_refresh()
 
 
+## GH#147: attribution surface (user ruling 2026-07-18 -- the Settings
+## section satisfies pack attribution requirements; Ove Melaa's line is
+## verbatim). Content is DATA (data/credits.json); this only renders.
+func _build_credits_panel() -> void:
+	_credits_root = Control.new()
+	UIChrome.apply_theme(_credits_root)
+	_credits_root.set_anchors_preset(Control.PRESET_CENTER)
+	_credits_root.custom_minimum_size = HELP_PANEL_SIZE
+	_credits_root.size = HELP_PANEL_SIZE
+	UIChrome.set_offsets(_credits_root, -HELP_PANEL_SIZE.x * 0.5, -HELP_PANEL_SIZE.y * 0.5, HELP_PANEL_SIZE.x * 0.5, HELP_PANEL_SIZE.y * 0.5)
+	_credits_root.mouse_filter = Control.MOUSE_FILTER_STOP
+	_credits_root.hide()
+	add_child(_credits_root)
+	_credits_root.add_child(UIChrome.make_patch(UIChrome.CARVED_PANEL))
+	var margin := MarginContainer.new()
+	UIChrome.full_rect(margin)
+	UIChrome.add_margins(margin, 26, 20, 26, 20)
+	_credits_root.add_child(margin)
+	var stack := VBoxContainer.new()
+	stack.add_theme_constant_override("separation", 6)
+	margin.add_child(stack)
+	var title := UIChrome.make_label("Credits", "Menu")
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stack.add_child(title)
+	var payload: Variant = null
+	if FileAccess.file_exists(CREDITS_CONTENT_PATH):
+		payload = JSON.parse_string(FileAccess.get_file_as_string(CREDITS_CONTENT_PATH))
+	var sections: Array = (payload.get("sections", []) if payload is Dictionary else [])
+	_credits_section_count = sections.size()
+	for section: Variant in sections:
+		var head := UIChrome.make_label(String((section as Dictionary).get("heading", "")), "Menu")
+		stack.add_child(head)
+		for line: Variant in (section as Dictionary).get("lines", []):
+			var body := UIChrome.make_label(String(line))
+			body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			body.custom_minimum_size = Vector2(HELP_TEXT_WIDTH, 0.0)
+			stack.add_child(body)
+	var back := UIChrome.make_label("Back — Esc", "Menu")
+	back.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stack.add_child(back)
+
+
+func _enter_credits() -> void:
+	_state = State.CREDITS
+	_root.hide()
+	_credits_root.show()
+	ObservableBus.emit_domain_event(WIEvents.UI_CREDITS_RENDERED, {"sections": _credits_section_count})
+
+
+func _exit_credits() -> void:
+	_state = State.ROWS
+	_credits_root.hide()
+	_root.show()
+	_refresh()
+
+
 func _row_text(i: int) -> String:
 	var key := String(ROWS[i])
 	if AUDIO_ROWS.has(key):
@@ -435,5 +500,7 @@ func _activate_row() -> void:
 			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Tutorial hints will show again."})
 		"Help...":
 			_enter_help()
+		"Credits...":
+			_enter_credits()
 		"Back":
 			_close()

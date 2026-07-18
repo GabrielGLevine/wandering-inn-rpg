@@ -161,9 +161,9 @@
    "frames": 2
   },
   {
-   "_comment": "== Back (MOUSE path): row 12 = 'Back' (index 11, now the last row -- shifted again by 'Quest Thread' being appended before it, issue #148; the same append-before-Back move #87 made for 'Combat Speed').",
+   "_comment": "== Back (MOUSE path): row 13 = 'Back' (index 12 -- shifted by 'Credits...' GH#147, same append-before-Back lineage as Combat Speed #87 / Quest Thread #148).",
    "action": "click_settings_row",
-   "row": 12
+   "row": 13
   },
   {
    "action": "wait_for_event",
@@ -363,10 +363,10 @@
    "equals": 2
   },
   {
-   "_comment": "== Close settings (KEYBOARD path): down x2 from 'Combat Speed' (index 9) -> 'Back' (index 11, now the last row -- shifted by 'Quest Thread' appended before it, issue #148). The cursor passes THROUGH 'Quest Thread' (index 10) without toggling it (move never activates -- only Confirm does), so the setting stays default-OFF here; the dedicated Quest Thread toggle + round-trip is appended at the very end. Confirm closes -- the pause menu resumes right where it was (cursor untouched, no re-open).",
+   "_comment": "== Close settings (KEYBOARD path): down x3 from 'Combat Speed' (index 9) -> 'Back' (index 12, shifted by 'Credits...' GH#147; previously 'Quest Thread' appended before it, issue #148). The cursor passes THROUGH 'Quest Thread' (index 10) without toggling it (move never activates -- only Confirm does), so the setting stays default-OFF here; the dedicated Quest Thread toggle + round-trip is appended at the very end. Confirm closes -- the pause menu resumes right where it was (cursor untouched, no re-open).",
    "action": "move",
    "direction": "down",
-   "steps": 2
+   "steps": 3
   },
   {
    "action": "press",
@@ -504,10 +504,10 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Close settings: down x1 from 'Quest Thread' (index 10) -> 'Back' (index 11), Confirm closes.",
+   "_comment": "Close settings: down x2 from 'Quest Thread' (index 10) -> 'Back' (index 12, past 'Credits...' GH#147), Confirm closes.",
    "action": "move",
    "direction": "down",
-   "steps": 1
+   "steps": 2
   },
   {
    "action": "press",
@@ -627,6 +627,33 @@
   },
   {
    "action": "assert_settings_file_exists"
+  },
+  {
+   "_comment": "== CREDITS panel (GH#147, appended leg): from index 1 after the prior step's down x1, down x10 -> 'Credits...' (index 11). Confirm opens; sections count is data-driven from data/credits.json; cancel returns to ROWS.",
+   "action": "move",
+   "direction": "down",
+   "steps": 10
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_credits_rendered",
+   "payload_contains": {
+    "sections": 4
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "timeout_sec": 5
   }
  ]
 }
