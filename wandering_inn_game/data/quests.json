@@ -54,6 +54,16 @@
 			]
 		},
 		{
+			"_comment": "GH#167: the Raskghar arc finally gets a journal quest -- the MAIN story spine was the only thread without one, so its direction lived in a transient toast and once-per-waking relay lines. Started in CODE at the same sleep that fires the runner pointer (_maybe_fire_tremor_pointer), with a load-time backfill for mid-arc saves (save.gd).",
+			"id": "something_beneath",
+			"title": "Something Beneath",
+			"beats": [
+				{ "id": "summons", "description": "A Watch runner was asking for you. Find Captain Zevara at the Liscor gate.", "complete_when": { "heard_the_deep_tremor": 1 } },
+				{ "id": "delve", "description": "Zevara wants eyes on the fissure below the dungeon gallery -- down through the approach, into the deep tunnels. Find what's making the tremor.", "complete_when": { "cleared_the_warren": 1 } },
+				{ "id": "report", "description": "You came back up. Tell Zevara, at the gate — she counts heads.", "complete_when": { "raskghar_sealed": 1 } }
+			]
+		},
+		{
 			"_comment": "KNOWN COSMETIC SKIP (review NIT #6, NOT fixed by design): beats are authored stone-first (recover_stone idx 1, buy_catalyst idx 2), but buying the catalyst at Krshia's is not gated on the stone -- a player who buys catalyst-first completes idx 2 out of order, so beat_index (quests.gd, first-incomplete scan) leapfrogs recover_stone straight to attune when the stone lands and beat 2's text never surfaces as the current beat. Cosmetic only: both counters still bank and attune still gates on door_awakened.",
 			"id": "door_that_goes_elsewhere",
 			"title": "The Door That Goes Elsewhere",

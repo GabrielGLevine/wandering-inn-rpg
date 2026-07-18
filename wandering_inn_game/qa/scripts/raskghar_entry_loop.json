@@ -64,6 +64,12 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "GH#167: the pointer sleep now ALSO starts the journal quest (the arc's durable direction -- the toast is just the nudge).",
+   "action": "assert_state",
+   "path": "started_quests",
+   "contains": "something_beneath"
+  },
+  {
    "action": "teleport",
    "map": "street",
    "cell": [

@@ -300,6 +300,12 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.warded_encounters = (s.get("warded_encounters", {}) as Dictionary).duplicate(true)
 	game.companion = String(s.get("companion", ""))
 	game.companion_source = String(s.get("companion_source", ""))
+	# GH#167 backfill: something_beneath shipped after saves existed mid-arc;
+	# the quest normally starts when the runner pointer fires (a one-shot),
+	# so mid-arc loads start it here. start_quest is idempotent.
+	if int((s.get("accomplishments", {}) as Dictionary).get("watch_runner_pointed", 0)) >= 1 \
+			and not game.started_quests.has("something_beneath"):
+		game.started_quests.append("something_beneath")
 	game.pc_name = WIGame._sanitize_pc_name(String(s.get("pc_name", "Traveler")))
 	game.pc_race = WIGame._sanitize_pc_race(String(s.get("pc_race", "human")))
 	game.pc_gender = WIGame._sanitize_pc_gender(String(s.get("pc_gender", "m")))
