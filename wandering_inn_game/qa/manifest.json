@@ -3799,6 +3799,33 @@
      "dialogue"
     ]
    }
+  },
+  {
+   "script": "dialogue_numkey_loop",
+   "seed": 7,
+   "fixture": "near_room_upgrade",
+   "note": "GH#171: number keys select dialogue options; no field-cast leak; purchase via keypress",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "near_room_upgrade"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "room_ledger"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
   }
  ]
 }

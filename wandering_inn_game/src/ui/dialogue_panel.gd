@@ -428,6 +428,18 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif _on_last_page() and event.is_action_pressed("move_down"):
 		_move_cursor(1)
 		get_viewport().set_input_as_handled()
+	elif _on_last_page() and event is InputEventKey and event.pressed and not event.echo:
+		# GH#171: options render as "1. ...", so number keys should pick them
+		# (friend-playtest expectation). Reuses the hotbar_N actions' physical
+		# keys via unicode -- 1-9 map to visible option rows; locked rows
+		# refuse exactly like a cursor confirm would.
+		var digit := int(event.unicode) - int("1".unicode_at(0))
+		if digit >= 0 and digit <= 8 and digit < _options.size():
+			if not bool((_options[digit] as Dictionary).get("locked", false)):
+				_cursor = digit
+				_refresh_cursor()
+				Game.sim.dialogue_choose(digit)
+			get_viewport().set_input_as_handled()
 
 
 func _move_cursor(delta: int) -> void:

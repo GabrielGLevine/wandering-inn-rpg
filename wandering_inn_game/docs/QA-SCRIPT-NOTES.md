@@ -148,3 +148,4 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `room_upgrade_loop` | 7 | full | `near_room_upgrade` | GH#92 D3: Erin tier-1 room purchase -> gold spend + room_tier_1 bank (HP math pinned in test_sim_core) |
 | `watch_donation_loop` | 7 | full | `near_watch_donation` | GH#92 D3: Ashgrave supply-fund donation -> repeatable gold sink banks donated_watch_supplies |
 | `second_wind_loop` | 9 | full | `near_second_wind` | swordsman L13 -> organic L14 -> [Crescent Cut] grant lands in a live fight |
+| `dialogue_numkey_loop` | 7 | full | `near_room_upgrade` | GH#171: number keys select dialogue options; no field-cast leak; purchase via keypress |
