@@ -1234,6 +1234,15 @@
    ],
    "talk_pool_stages": [
     {
+     "_comment": "GH#186: the post-spar sleep nudge, durable (the victory toast is transient). Earliest-gated stage: every later stage outranks it as the story advances.",
+     "id": "relc_sleep_nudge",
+     "requires_accomplishment": { "sparred_with_relc": 1 },
+     "lines": [
+      "You spar like someone carrying something new. Go sleep at the inn -- upstairs, real bed. Classes settle at the pillow, not the podium.",
+      "Still walking around unslept? The thing you earned today doesn't count until you dream on it. Inn. Bed. Go."
+     ]
+    },
+    {
      "id": "relc_sparring_partner",
      "requires_accomplishment": {
       "sparred_with_relc": 1,
@@ -1275,6 +1284,7 @@
    ],
    "display_name": "Training Dummies",
    "sprite": "training_dummy",
+   "victory_toast": "Relc whistles. \"Not bad for a start. Now go SLEEP on it -- Classes come at the pillow, not the podium. Bed's upstairs at the inn.\"",
    "observe": "Straw and burlap lashed to posts, hacked half to ribbons. Someone drills here often, and hard. The stitching tells you where a real guard would break.",
    "arena": "training_yard",
    "enemies": [
