@@ -50,6 +50,11 @@ for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skill
 
 	# Balance harness — 200 seeded AI-vs-AI fights; THE authority on combat data tuning
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
+	# Path-diversity harness (GH#160) — archetype playstyles through the REAL
+	# WIProgression sleep sequence + an equal-playtime power battery; GATES
+	# pooled terminal entropy >= 2.0 bits and combat-lane [Spellsword] share
+	# <= 0.45. MIRROR CONTRACT with WIGame.sleep()'s progression order.
+	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_class_paths.gd
 	# Sharded (ARCH-1): partitions cells across N parallel godot processes and
 	# diffs each shard vs a baseline git ref (formalizes the manual git-stash
 	# byte-identity method). WI_CELL_RANGE=LO:HI / WI_CELL_COUNT_ONLY=1 are the
