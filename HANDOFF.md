@@ -25,9 +25,25 @@ merged`), not here.
   cell wall-dressed (phantom bump fixed); rift vermin fight gated on
   door_chain_started. Vermin visible-inert foreshadowing ACKED by user
   2026-07-17 — shipped shape is final.
-- **#148 thread-legibility APPROVED (tiers 1+2 core, 3 on stuck
-  points, 4 default-off toggle)** — NEXT MILESTONE HEADLINE; spec next
-  session. #147 music sourcing filed (not a blocker).
+- **#148 thread-legibility SHIPPED (PR #161, 2026-07-17)** — all four
+  tiers per ruling; Erin's verbal garden reveal masked in real play
+  (accepted trade-off, door visual is the signpost; revisit on playtest
+  miss). Playtest state: qa/playtest_saves/2026-07-17-raskghar-handoff/.
+- **#156 Wave D-2 (Beast Tamer + Druid) IMPLEMENTED INLINE, review in
+  flight** on /tmp/wi-155 (branch issue/156-tamer-druid). companion_source
+  seam (tamed persists sleep), boons companion-only, 3 QA loops can-fail
+  proven, sim cells 0.87/0.90/0.90, sweep 129 green. PR after reviewer
+  fix wave. Playtest state: qa/playtest_saves/2026-07-17-wave-d2-wolf-den/.
+- **#160 path-diversity balance sim FILED (user directive)** — harness
+  drafted (scratchpad sim_class_paths.gd, 15 archetypes × 200 runs,
+  funnel gate Spellsword ≤45% combat-lane + entropy ≥2 bits); lands
+  after #156 merges, distribution report + tuning proposals TO USER
+  pre-freeze.
+- **#92 economy delta-first spec drafted** (scratchpad
+  economy-pass-spec-draft.md: price unpriced consumables, use_item combat
+  verb, 2 sinks, deterministic boss drops, gear abilities; resonance
+  parked). Lane dispatches post-#156-merge.
+- #147 music sourcing filed (user acquisition, not a blocker).
 - **Post-release queue:** #148 spec+build; Wave D (two issues per
   ruling: Alchemist; Beast Tamer+Druid — research on #134); Hedault
   #142; Priest #141; #140 renderer survey; #92 economy pass.
