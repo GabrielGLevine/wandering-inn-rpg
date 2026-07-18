@@ -49,6 +49,7 @@ var _map_transition_rebuilt := false
 
 
 func _ready() -> void:
+	_install_symbol_font_fallback()
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	_ensure_viewport_nodes()
 	_ensure_map_transition_overlay()
@@ -401,3 +402,22 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		swap_to_world.bind(type == WIEvents.GAME_RESET, is_defeat).call_deferred()
 	elif type == WIEvents.ACCOMPLISHMENT_RECORDED and String(payload.get("id", "")) == "post_game":
 		_record_current_chronicle()
+
+
+func _install_symbol_font_fallback() -> void:
+	# GH#169: the default theme font lacks U+25CF/U+25CB/U+2713 (AP pips,
+	# move pips, journal checkmarks). Desktop silently borrows the glyphs
+	# from system fonts; the WEB export has no system fonts and renders
+	# tofu. A 4.6KB DejaVuSans subset (public-tier license, see
+	# assets/LICENSES/wi_symbol_fallback-verdict.md) rides as a global
+	# fallback so every Label/RichTextLabel resolves the symbols.
+	var sub := load("res://assets/fonts/wi_symbol_fallback.ttf") as Font
+	if sub == null:
+		print("[fallback_font] missing assets/fonts/wi_symbol_fallback.ttf")
+		return
+	var base := ThemeDB.fallback_font
+	if base == null:
+		return
+	var fallbacks: Array = base.fallbacks
+	fallbacks.append(sub)
+	base.fallbacks = fallbacks
