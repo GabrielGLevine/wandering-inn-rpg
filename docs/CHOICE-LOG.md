@@ -4,6 +4,17 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-18 — public-demo deploy gap (friend-playtest triage)
+
+- **pages.yml gains a release-tag trigger** (was manual-dispatch only, an
+  Actions-budget choice): the GitHub Pages demo sat at v0.7.0 while itch
+  had v0.10.0, and the README points players at Pages — a playtester hit
+  the 3-release-old build. One run per tag is within the budget the
+  manual-only rule protected. Immediate catch-up dispatch fired.
+- Friend-playtest triage: 4 issues filed (#169 web glyphs/filtering,
+  #170 message pacing+scrollback, #171 onboarding affordances, #172 copy
+  wave) — all folded into v0.11.0 scope per the discretionary-work goal.
+
 ## 2026-07-18 — v0.11.0 Second Wind spec adjudications (#165)
 
 - **beast_master's attested pick [Lesser Bond] rejected on id collision**
