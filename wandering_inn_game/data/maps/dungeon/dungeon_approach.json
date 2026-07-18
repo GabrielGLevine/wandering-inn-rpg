@@ -240,7 +240,7 @@
    "loot": [
     {
      "item": "kingslayer_fang",
-     "chance": 0.3
+     "chance": 1.0
     }
    ]
   }

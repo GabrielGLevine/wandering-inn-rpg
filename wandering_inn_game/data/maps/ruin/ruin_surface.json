@@ -203,6 +203,12 @@
    "on_victory": [
     "cleared_ruin_guardian",
     "pedestal_unsealed"
+   ],
+   "loot": [
+    {
+     "item": "remedy_draught",
+     "chance": 1.0
+    }
    ]
   },
   {

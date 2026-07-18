@@ -189,7 +189,7 @@
 			"damage_reduction": 0,
 			"resonance": 0,
 			"tier": "mundane",
-			"abilities": [],
+			"abilities": ["dangersense"],
 			"price": 4,
 			"description": "A thin copper ring, polished bright by worried thumbs. Drakes swear copper turns bad luck aside; copper-sellers agree loudly.",
 			"lore": "Every stall in the gate market moves a tray of these. The luck is arguable; the copper is real, and that is the Silverfang position on the matter."
@@ -249,7 +249,7 @@
 			"damage_reduction": 1,
 			"resonance": 2,
 			"tier": "enchanted",
-			"abilities": [],
+			"abilities": ["tough_body"],
 			"price": 35,
 			"description": "A grey Drake scale, shed and gone stone-hard, set in an iron clasp. Heavier on the mind than on the neck.",
 			"lore": "Shed scales with stone in them turn up in the southern hills, and enchanters pay well for the rare one that takes a binding. Drakes find wearing another Drake's scale distasteful; the stall keeps this one under the counter."
@@ -568,7 +568,7 @@
 			"damage_reduction": 0,
 			"resonance": 0,
 			"tier": "mundane",
-			"abilities": [],
+			"abilities": ["witchs_warding"],
 			"price": 6,
 			"description": "Dried herbs sewn into cloth, tied off with a loop of red thread.",
 			"lore": "The same knot the witch wears at her own wrist, sold plain rather than worked -- she says the thread is decoration and the herbs do the settling. Neither claim sounds entirely honest."
@@ -753,7 +753,7 @@
 			"damage_reduction": 1,
 			"resonance": 2,
 			"tier": "enchanted",
-			"abilities": [],
+			"abilities": ["read_the_field"],
 			"description": "A fist-sized shard of the Vault Construct's own core, still faintly warm, its inner light gone dim but not dark.",
 			"lore": "Warmage Thresk's vault work outlived the war it was built for, and so, it turns out, did the thing built to guard it. Whatever kept it standing three centuries in the dark keeps standing a while longer in a pocket."
 		},
@@ -783,7 +783,7 @@
 			"damage_reduction": 0,
 			"resonance": 1,
 			"tier": "enchanted",
-			"abilities": [],
+			"abilities": ["battle_momentum"],
 			"description": "A single fang, longer than a hand, drawn from the dark the gallery's silk led back to. The point is still sharp enough to matter.",
 			"lore": "Whatever nests south of the gallery has fangs enough to spare one and never notice. Krshia would call this Silverfang-caliber trophy work, if Krshia had ever seen the thing it came from."
 		},
