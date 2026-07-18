@@ -4,6 +4,18 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-18 — #147 music intake calls
+
+- Listening pass = inline signal analysis (tempo/RMS/brightness/mode vs
+  shipped anchors) after two Opus dispatch misfires; two placement swaps
+  made on the numbers, not names (night wolves = fast-minor; brightest
+  major to daytime fields; darker cave track deeper).
+- Attribution via Settings Credits panel (user ruling): Ove Melaa
+  verbatim line + fan-work disclaimer; formal credits screen deferred.
+- Boss arena takes the Battles finale cue, replacing a reused junkala
+  track; the common goblin fight gets the public-tier cynicmusic battle
+  so bundle tracks stay on the bigger fights.
+
 ## 2026-07-18 — v0.11.0 ship + environment fix
 
 - **github-pages environment gains a v* tag deployment policy** (via API):
