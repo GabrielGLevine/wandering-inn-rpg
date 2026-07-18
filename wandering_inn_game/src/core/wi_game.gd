@@ -1876,6 +1876,14 @@ func resolve_combat() -> void:
 			record_accomplishment(String(vid))
 		_bank_action_tally(entity)
 		_roll_loot(entity)
+		# GH#186: opt-in one-shot victory toast -- fires on the FIRST win of
+		# this encounter only (first on_victory counter just reached 1); the
+		# onboarding-beat seam (post-spar sleep nudge is the first user).
+		var victory_toast := String(entity.get("victory_toast", ""))
+		if victory_toast != "":
+			var first_vid := String((victories if victories is Array else [victories])[0])
+			if accomplishment_count(first_vid) == 1:
+				_emit(WIEvents.TOAST, {"text": victory_toast})
 		if bool(entity.get("respawns", false)):
 			if not dormant_encounters.has(_pending_encounter):
 				dormant_encounters.append(_pending_encounter)
