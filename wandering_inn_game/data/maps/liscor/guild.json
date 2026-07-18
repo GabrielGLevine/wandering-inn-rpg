@@ -243,6 +243,7 @@
     "Try not to die out there. It is a mountain of paperwork when you do, and guess who is the mountain.",
     "New face. You'll fit right in - everyone here is chasing coin they have not earned yet."
    ],
+   "_comment": "stages are last-match-wins; keep story order — earliest gates first; relays outrank standing signposts",
    "talk_pool_stages": [
     {
      "id": "selys_past_the_counter",
@@ -266,15 +267,15 @@
      ]
     },
     {
+     "_comment": "M2 warm terminal: retire to selys_past_the_counter's WARM lines, not the cold base pool -- once the Horns thread retires the player is past the counter with her, so the terminal register stays warm (the warm stage above keeps its own gate+position). Same warm lines in selys_thread_pallass_neutral below.",
      "id": "selys_thread_horns_neutral",
      "requires_accomplishment": {
       "horns_party_formed": 1
      },
      "lines": [
-      "Guild's the usual mess. Bounties on the board, arguments over the board, somebody bleeding near the board.",
-      "Need something stamped, filed, or explained slowly? That is the job. Mostly the slow part.",
-      "Try not to die out there. It is a mountain of paperwork when you do, and guess who is the mountain.",
-      "New face. You'll fit right in - everyone here is chasing coin they have not earned yet."
+      "Oh good, a face that doesn't come with a complaint form. You can stand there as long as you like.",
+      "Tell Erin her letters are still too long. And that I read all of them. Do not pass on the second part.",
+      "Rough week on the board. If you're taking work, take the sane jobs. I flag the sane ones. It's not a service everyone gets."
      ]
     },
     {
@@ -287,15 +288,15 @@
      ]
     },
     {
+     "_comment": "M2 warm terminal: selys_past_the_counter WARM lines (see selys_thread_horns_neutral).",
      "id": "selys_thread_pallass_neutral",
      "requires_accomplishment": {
       "pallass_attuned": 1
      },
      "lines": [
-      "Guild's the usual mess. Bounties on the board, arguments over the board, somebody bleeding near the board.",
-      "Need something stamped, filed, or explained slowly? That is the job. Mostly the slow part.",
-      "Try not to die out there. It is a mountain of paperwork when you do, and guess who is the mountain.",
-      "New face. You'll fit right in - everyone here is chasing coin they have not earned yet."
+      "Oh good, a face that doesn't come with a complaint form. You can stand there as long as you like.",
+      "Tell Erin her letters are still too long. And that I read all of them. Do not pass on the second part.",
+      "Rough week on the board. If you're taking work, take the sane jobs. I flag the sane ones. It's not a service everyone gets."
      ]
     }
    ],

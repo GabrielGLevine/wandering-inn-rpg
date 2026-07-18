@@ -1,0 +1,40 @@
+{
+ "_comment": "#148 H1 verification -- the garden signpost with NO main-thread relay armed. Act III garden-unlocked (mirrors garden_unlocked's coherence-valid warrior5+helper1+tactician1 build and its class-requirement counters), but the third completed quest is THE WRONG ORDER (resolved_wrong_order + wrong_order_reported), NOT the cisterns -- so cisterns_reported/resolved_the_cisterns are absent AND watch_runner_pointed is absent, leaving ZERO erin thread-relay/neutral stages armed. With no thread stage met, erin_garden_open (which H1 placed immediately BEFORE the thread-relay block) is the latest-armed stage and WINS erin's pool -- the standing garden signpost RETURNS when the main thread is quiet. visited_the_garden is deliberately absent (unvisited garden -> garden_open, not garden_shared). Standing at (7,3) facing Erin (7,2) so the FIRST interact fires her pool line. 3 completed quests via the_errand/missing_crate/wrong_order (garden's Act-III gate); 2 of 4 ratified legs via cleaned_the_inn + resolved_wrong_order. gold 15 = position-ledger Tier-3 (same as garden_unlocked/near_garden). equipped relcs_spare_spear. TRAP: rng_state is garden_unlocked's derived .state (large magnitude, inert -- no fight resolves off it here). version 6.",
+ "version": 6,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [7, 3],
+  "player_facing": [0, -1],
+  "classes": {"warrior": 5, "helper": 1, "tactician": 1},
+  "accomplishments": {
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_wrong_order": 1,
+   "wrong_order_reported": 1,
+   "cleaned_the_inn": 1,
+   "garden_door_unlocked": 1,
+   "chess_with_olesm": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "melee_hit": 18
+  },
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": ["the_errand", "missing_crate", "wrong_order"],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword", "relcs_spare_spear"],
+  "equipped": {"weapon": "relcs_spare_spear", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "times_slept": 7,
+  "gold": 15,
+  "rng_state": "-6393592048753323481"
+ }
+}

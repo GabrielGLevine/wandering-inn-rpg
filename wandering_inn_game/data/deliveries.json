@@ -60,7 +60,7 @@
 			"gold": 2,
 			"band": "cross-map, short",
 			"condition": { "delivered_delivery_barracks_gear": 1 },
-			"slip_copy": "TO: the barracks, Duty Sergeant Dresk. Bundled gambesons, watch-issue, itchy even folded. Same waking, and count them before you hand them over -- he will."
+			"slip_copy": "TO: the barracks, Duty Sergeant Ashgrave. Bundled gambesons, watch-issue, itchy even folded. Same waking, and count them before you hand them over -- he will."
 		},
 		{
 			"id": "delivery_guild_ledger",
@@ -133,7 +133,7 @@
 			"gold": 2,
 			"band": "cross-map short, standing",
 			"condition": { "delivered_delivery_standing_barracks_kit": 1 },
-			"slip_copy": "STANDING CONTRACT: barracks kit rotation, Guild counter to Duty Sergeant Dresk. Gambesons out, worn ones back on the next slip. The Watch mends faster than it marches. Count them before he does."
+			"slip_copy": "STANDING CONTRACT: barracks kit rotation, Guild counter to Duty Sergeant Ashgrave. Gambesons out, worn ones back on the next slip. The Watch mends faster than it marches. Count them before he does."
 		}
 	]
 }

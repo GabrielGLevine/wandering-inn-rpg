@@ -19,8 +19,11 @@ Something in the Cisterns all done), 40 gold, standing in the inn facing Erin.
    - macOS: `~/Library/Application Support/Godot/app_userdata/Wandering Inn RPG v4/saves/manual.json`
      ```sh
      mkdir -p "$HOME/Library/Application Support/Godot/app_userdata/Wandering Inn RPG v4/saves"
-     cp raskghar-handoff.json "$HOME/Library/Application Support/Godot/app_userdata/Wandering Inn RPG v4/saves/manual.json"
+     cp wandering_inn_game/qa/playtest_saves/2026-07-17-raskghar-handoff/raskghar-handoff.json \
+       "$HOME/Library/Application Support/Godot/app_userdata/Wandering Inn RPG v4/saves/manual.json"
      ```
+   (Paths are repo-root-relative, matching the sibling `2026-07-09-user-stage6`
+   archive convention under `wandering_inn_game/qa/playtest_saves/`.)
    (Do NOT overwrite `auto.json` — use the `manual` slot.)
 3. Launch the game (`/usr/local/bin/godot --path wandering_inn_game`), pick
    **Continue** on the title screen (the second row).

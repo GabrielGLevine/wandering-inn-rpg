@@ -370,6 +370,7 @@
     "Everything okay? You've got a look. I know that look - I make that look in mirrors.",
     "If you hear yelling about a door later, that's just the inn being the inn. Don't worry about it."
    ],
+   "_comment": "PRIORITY CONTRACT (H1): stages are last-match-wins (social.gd) — keep story order, earliest gates first. Active main-thread relays OUTRANK the standing garden signpost (relays sit LATER in the array than the erin_garden_open/erin_garden_shared pair); the garden signpost returns whenever no relay is armed; garden_shared retires garden_open on visited_the_garden as before.",
    "talk_pool_stages": [
     {
      "id": "erin_bed_nudge_helper",
@@ -459,6 +460,27 @@
       "There you are! Sit down, I'm testing a recipe on you. That came out wrong. WITH you. Testing it with you.",
       "Lyonette hums when she scrubs now. She'd deny it under oath, so don't tell her I said anything. That was you, by the way.",
       "Some days this place is a lot. Then somebody walks in and it's less a lot. You're one of the less-a-lot ones."
+     ]
+    },
+    {
+     "_comment": "CONSTRAINT: this stage deliberately repeats every waking until the residue stage below takes over; it is the game's only signpost toward the new door, so it must keep firing until the player has actually acted on it, never for a fixed number of hearings. H1: sits immediately BEFORE the thread-relay block so any ARMED main-thread relay (all later) wins over this signpost -- the garden only speaks when the thread is quiet.",
+     "id": "erin_garden_open",
+     "requires_accomplishment": {
+      "garden_door_unlocked": 1
+     },
+     "lines": [
+      "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just... knock first. Old habit."
+     ]
+    },
+    {
+     "_comment": "H1: MOVED here with erin_garden_open (both were authored LAST, which masked every main-thread relay once the garden unlocked). Positioned right after garden_open and before the thread-relay block: it still retires garden_open on visited_the_garden (later match wins over garden_open), and armed relays below still outrank it.",
+     "id": "erin_garden_shared",
+     "requires_accomplishment": {
+      "visited_the_garden": 1
+     },
+     "lines": [
+      "Still there this morning. I checked before breakfast. Okay, during. I checked during breakfast.",
+      "Take whoever needs it in there sometime. That's what it's for. I think that's what it's for."
      ]
     },
     {
@@ -585,27 +607,6 @@
       "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
       "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
       "Everything okay? You've got a look. I know that look - I make that look in mirrors."
-     ]
-    },
-    {
-     "_comment": "CONSTRAINT: this stage deliberately repeats every waking until the residue stage below takes over; it is the game's only signpost toward the new door, so it must keep firing until the player has actually acted on it, never for a fixed number of hearings.",
-     "id": "erin_garden_open",
-     "requires_accomplishment": {
-      "garden_door_unlocked": 1
-     },
-     "lines": [
-      "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just... knock first. Old habit."
-     ]
-    },
-    {
-     "_comment": "Array-order-wins: authored last, wins the moment the gate is met.",
-     "id": "erin_garden_shared",
-     "requires_accomplishment": {
-      "visited_the_garden": 1
-     },
-     "lines": [
-      "Still there this morning. I checked before breakfast. Okay, during. I checked during breakfast.",
-      "Take whoever needs it in there sometime. That's what it's for. I think that's what it's for."
      ]
     }
    ],

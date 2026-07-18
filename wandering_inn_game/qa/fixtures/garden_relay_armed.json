@@ -1,0 +1,42 @@
+{
+ "_comment": "#148 H1 verification -- the garden signpost with an ARMED main-thread relay. Identical accomplishment set to garden_unlocked (Act III garden-unlocked, watch_runner_pointed + cisterns_reported both banked, UNVISITED garden) but repositioned at (7,3) facing Erin (7,2) so the FIRST interact fires her pool line (garden_unlocked itself stands at the garden door for garden_unlocked_entry, so it can't be reused for a talk test). With the gate-runner relay armed (watch_runner_pointed) AND erin_garden_open now sitting immediately BEFORE the thread-relay block, the ARMED relay (later in the array) WINS -- Erin serves 'A runner was asking after you...', not the garden reveal. 3 completed quests via the_errand/missing_crate/cisterns; 2 of 4 legs via cleaned_the_inn + resolved_wrong_order; gold 15 (position-ledger Tier-3); equipped relcs_spare_spear. TRAP: rng_state is garden_unlocked's derived .state (large magnitude, inert). version 6.",
+ "version": 6,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [7, 3],
+  "player_facing": [0, -1],
+  "classes": {"warrior": 5, "helper": 1, "tactician": 1},
+  "accomplishments": {
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "met_relc": 1,
+   "watch_runner_pointed": 1,
+   "resolved_wrong_order": 1,
+   "cleaned_the_inn": 1,
+   "garden_door_unlocked": 1,
+   "chess_with_olesm": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "melee_hit": 18
+  },
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": ["the_errand", "missing_crate", "cisterns"],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword", "relcs_spare_spear"],
+  "equipped": {"weapon": "relcs_spare_spear", "armor": ""},
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "times_slept": 7,
+  "gold": 15,
+  "rng_state": "-6393592048753323481"
+ }
+}

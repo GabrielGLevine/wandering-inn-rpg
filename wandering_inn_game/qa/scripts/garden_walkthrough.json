@@ -160,7 +160,7 @@
    "equals": 1
   },
   {
-   "_comment": "== Erin's own acknowledgment, the PC witnesses (no GDI line) -- the talk_pool_stages seam, gated on the SAME flag. Teleport back down to (2,6) (the cell the old ground-floor route stood on), so the rest of this route (BFS-derived against the inn's real layout) resumes unchanged. ==",
+   "_comment": "== H1 CONTRACT (was Erin's garden-reveal acknowledgment): near_garden pre-holds watch_runner_pointed, so at the garden-unlock talk an ARMED main-thread relay (erin_thread_gate_runner) now OUTRANKS the standing garden signpost (erin_garden_open sits BEFORE the thread-relay block -- last-match-wins, social.gd). The runner pointer is guaranteed armed at any garden unlock (wi_game.gd _maybe_fire_tremor_pointer fires it at the same quests>=3 gate the garden needs), so Erin serves the GATE-RUNNER relay line here, not the garden reveal. This beat now doubles as a live proof of the H1 priority contract. Teleport back down to (2,6) (the cell the old ground-floor route stood on), so the rest of this route (BFS-derived against the inn's real layout) resumes unchanged. ==",
    "action": "teleport",
    "map": "inn",
    "cell": [
@@ -197,7 +197,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's \u2014 new. Go look, if you want. Just... knock first. Old habit."
+    "text": "A runner was asking after you. Captain wants you at the gate."
    },
    "timeout_sec": 5
   },
@@ -662,7 +662,7 @@
    }
   },
   {
-   "_comment": "== the reveal's residue (second waking): the garden-bed sleep above cleared social_talked, and visited_the_garden just banked on the exit -- so this next Erin talk must serve the erin_garden_shared residue stage (array-order-wins over erin_garden_open), NOT a verbatim repeat of the reveal. Rotation: chatted_with_erin is 1 (banked once by the reveal talk earlier this run), the residue pool has 2 lines -> index 1, deterministic. ==",
+   "_comment": "== H1 CONTRACT on the second waking (was the garden residue): even after visited_the_garden banks (arming erin_garden_shared), the still-armed gate-runner relay outranks it (relay sits LATER than the garden pair, last-match-wins). So this talk serves the gate-runner relay line again, not the garden residue. Under H1 both erin_garden_open and erin_garden_shared are dominated by the always-armed watch_runner_pointed relay at this Act-III state -- see the whole-run report's H1 NEEDS_CONTEXT flag. The gate-runner stage has ONE line, so rotation is deterministic regardless of chatted_with_erin. ==",
    "action": "move",
    "direction": "up",
    "steps": 2
@@ -691,7 +691,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Take whoever needs it in there sometime. That's what it's for. I think that's what it's for."
+    "text": "A runner was asking after you. Captain wants you at the gate."
    },
    "timeout_sec": 5
   },
