@@ -39,10 +39,13 @@ merged`), not here.
   funnel gate Spellsword ≤45% combat-lane + entropy ≥2 bits); lands
   after #156 merges, distribution report + tuning proposals TO USER
   pre-freeze.
-- **#92 economy delta-first spec drafted** (scratchpad
-  economy-pass-spec-draft.md: price unpriced consumables, use_item combat
-  verb, 2 sinks, deterministic boss drops, gear abilities; resonance
-  parked). Lane dispatches post-#156-merge.
+- **#92 economy: composed branch under final review** (issue/92-economy,
+  /tmp/wi-92). Lane slice + completion wave; spec at
+  docs/design/economy-pass-spec.md. D2 was ALREADY SHIPPED (item_use_loop);
+  new surfaces: price validator, 4 boss drop pairs, 3 accessory abilities,
+  Watch donation sink, room-ledger tier purchases (+1 max HP/tier).
+  Lesson banked: purchase options NEVER ride pinned hubs -- own
+  conversation surface (room_ledger.json header documents it).
 - #147 music sourcing filed (user acquisition, not a blocker).
 - **Post-release queue:** #148 spec+build; Wave D (two issues per
   ruling: Alchemist; Beast Tamer+Druid — research on #134); Hedault
