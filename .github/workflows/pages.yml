@@ -18,6 +18,13 @@ name: Deploy to GitHub Pages
 
 on:
   workflow_dispatch:
+  # GH#172-adjacent (2026-07-18): also deploy on release tags -- the manual-only
+  # trigger stranded the public demo at v0.7.0 while itch had v0.10.0 (a
+  # playtester hit the 3-release-old build). One tag-run per release is within
+  # the Actions budget the manual-only choice was protecting.
+  push:
+    tags:
+      - "v*"
 
 permissions:
   contents: read
