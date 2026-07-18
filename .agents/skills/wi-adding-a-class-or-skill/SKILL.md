@@ -98,6 +98,34 @@ changes the **level-1 kit's slot count** — any QA script asserting
 `ui_hotbar_rendered {"slots": N}` at that level needs `N` updated (see
 `mage_unlock_loop.json`, `slots: 6`).
 
+## THE REGISTRATION MATRIX (2026-07-17 — every surface a new class/skill/companion touches)
+
+Discovered serially at Wave D-2 cost (~7 boot-fail-diagnose cycles). Check ALL
+of these BEFORE the first test boot; each is a separate hand-maintained pin:
+1. `tests/test_effect_text.gd::EXPECTED_SKILLS` — EVERY new skill id needs a
+   pinned effect-lines entry (passives pin `[]`).
+2. `tests/test_combat_data.gd` — combat-context skills need `ap_cost` AND
+   `effect` (hidden boon carriers too: `ap_cost: 0`).
+3. `tests/test_sprite_registry.gd::_build_expected_counts` — every new
+   sprites.json entry (icons AND follower/combatant aliases) needs a frame
+   count pin.
+4. `tests/test_fixture_coherence.gd` — new fixtures need gained_by counters
+   for EVERY held class (check the class's actual gained_by id — mage is
+   `learned_magic_from_pisces`, NOT used_magic) and level-consistent curve
+   counters incl. inherited requires (mage L2+ needs won_combat).
+5. `qa/manifest.json` + `wandering_inn_game/AGENTS.md` canonical seed table —
+   BOTH, same seeds, or ci_sweep FATALs on drift.
+6. `scripts/derive_qa_surfaces.py` then (repo root) `scripts/render_qa_notes.py
+   --write` — in that order, after manifest edits.
+7. Code-banked counters → STRUCTURAL_LITERALS in BOTH
+   `tests/test_shipped_ids.gd` and `scripts/generate_shipped_ids.py` at the
+   moment the call site lands (not at cut time — the review WILL flag it).
+
+**Shipped-JSON edits: use `wandering_inn_game/scripts/splice_json.py`** (array
+`--container`, dict `--container-dict --key`) — it clones sibling indentation
+and PROVES top-level placement (a hand splice once nested ten records inside
+the last existing entry, parse-valid). Never `json.dump` a shipped file.
+
 ## Verification
 `tests/test_progression.gd` (pins the math); `tests/sim_combat_batch.gd`
 (balance harness, win-rate 0.55-0.95, rounds 3-12) after any kit/stat

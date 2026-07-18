@@ -120,3 +120,10 @@ short foreground calls (`sleep 60; tail -1 <log>`) until the verdict
 line appears; read rc from the log's own `rc=` echo, never from the
 promoted task. Controllers run sweeps as explicit background tasks and
 get real notifications — the trap is subagent-side only.
+
+
+### Sim cell tuning: never rerun the full batch per iteration
+`WI_CELL_COUNT_ONLY=1` prints the cell count; `WI_CELL_RANGE=LO:HI` (0-based,
+inclusive) runs just your cells — find your block's indexes once and iterate
+on the range (a full 111-cell batch is ~4 min; a 3-cell range is seconds).
+Full batch runs ONCE at the end as the gate, not per tuning iteration.

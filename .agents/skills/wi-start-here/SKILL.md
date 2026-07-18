@@ -65,3 +65,20 @@ issue-scoped evidence, then regenerate provider mirrors with
 Design/taste/canon-ambiguity calls, balance-bound changes, anything
 irreversible or outward-facing (publishing, licenses, purchases), and any
 playtest-feel verdict. Queue in HANDOFF with options + a recommendation.
+
+
+## Where things live (path traps that cost real retries, 2026-07-17)
+| thing | path |
+|---|---|
+| asset overlay manifest | `wandering_inn_game/assets_manifest.json` (entries under key `assets`, each `{path, bundle, fallback}`) |
+| QA notes renderer | repo root `scripts/render_qa_notes.py` (NOT wandering_inn_game/scripts/) |
+| surfaces deriver | `wandering_inn_game/scripts/derive_qa_surfaces.py` (no --write flag; always writes) |
+| QA screenshots | `wandering_inn_game/qa_output/<script>/` (NOT qa/output) |
+| JSON splice helper | `wandering_inn_game/scripts/splice_json.py` (shipped-JSON appends with placement proofs) |
+| ledger | `.superpowers/sdd/progress.md` (GITIGNORED — never `git add`) |
+| roadmap | `docs/ROADMAP.md` (recreated 2026-07-17 post-unification) |
+| playtest states | `wandering_inn_game/qa/playtest_saves/<date-slug>/` (README + slot jsons) |
+
+**Controller shell: every Bash call resets CWD to the repo root.** Use
+absolute paths or `git -C` for ALL worktree/lane operations — a bare
+`cd /tmp/<lane> && ...` chain is fine within ONE call but never carries over.
