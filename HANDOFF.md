@@ -22,11 +22,11 @@ merged`), not here.
 - **AUTONOMY DIRECTIVE (2026-07-18)**: ship v0.10.0 without further
   playtest gate ✓; run v0.11.0 autonomously through ship; judgment
   calls go to docs/CHOICE-LOG.md (user defers). Session goal hook active.
-- **#165 Second Wind**: spec COMMITTED (docs/design/second-wind-spec.md;
-  16 canon-verified L14 grants, 3 collision adjudications in CHOICE-LOG).
-  Worktree /tmp/wi-165 (branch issue/165-second-wind) SET UP (overlay +
-  import done) — implementation lane NOT dispatched: usage guard CAUTION
-  (87%/hr burn). Dispatch when burn normalizes or window resets.
+- **#165 Second Wind MERGED (PR #176)** — 16 pure lines to L16, canon
+  L14 grants, reduction bench live, review-clean. Funnel gates hold.
+- **#172 partial MERGED (PR #175)**; #173/#174 web fixes SHIPPED to
+  Pages. Friend-playtest remainder: #169 (overlay/filter), #170, #171,
+  #172 rest.
 - **#163 bounty scaling**: next after #165; consumes #92's price ladder.
 - Usage: CAUTION at 2026-07-18 (session 36% but burn-rate escalated);
   research workflow spent ~1.6M subagent tokens (16/16 upheld, cheap at
