@@ -980,6 +980,28 @@
    "weapon_die": 6,
    "ai": "melee",
    "skills": []
+  },
+  {
+   "_comment": "GH#156 tamed companion ([Lesser Bond], wolf-den prop). River-wolf frame at companion tuning: con down from 12 so it stays precious, not a second PC. Boon skills (basic_command_boon/pack_bond_boon) are injected at roster build, never listed here.",
+   "id": "wolf_companion",
+   "display_name": "Bonded Wolf",
+   "sprite": "river_wolf",
+   "side": "player",
+   "stats": { "str": 11, "dex": 14, "con": 10, "int": 3, "wis": 8, "cha": 4 },
+   "weapon_die": 5,
+   "ai": "skirmisher",
+   "skills": []
+  },
+  {
+   "_comment": "GH#156 tamed companion ([Lesser Bond], razorbeak-chick prop). Frailer than the wolf, faster to the flank. ai skirmisher NOT coward -- a fleeing ally reads as a bug.",
+   "id": "razorbeak_companion",
+   "display_name": "Bonded Razorbeak",
+   "sprite": "razorbeak",
+   "side": "player",
+   "stats": { "str": 9, "dex": 13, "con": 8, "int": 4, "wis": 6, "cha": 4 },
+   "weapon_die": 5,
+   "ai": "skirmisher",
+   "skills": []
   }
  ]
 }

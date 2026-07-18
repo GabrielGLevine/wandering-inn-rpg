@@ -1467,6 +1467,7 @@
    "_comment": "`ally_requires{hunter_will_come:1}` is banked ONLY by data/dialogue/riverfarm_hunter.json's come-along ask, at the village.",
    "id": "river_wolf_pack",
    "kind": "encounter",
+   "beast": true,
    "cell": [
     2,
     14

@@ -1,0 +1,196 @@
+{
+ "_comment": "GH#156 taming loop: [Lesser Bond] consumes the wolf den and renders the pup follower; the crab plays its refusal joke; the roster fight proves wolf_companion fields player-side with the basic-command boon absent (L3 kit has it -- animals_basic_command IS granted at 2, so the boon rides); the real sleep proves the tamed bond PERSISTS (the animated-working contrast is animate_companion_loop step 28).",
+ "fixture_save": "near_tamer_bond",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "companion_changed",
+   "payload_contains": {
+    "id": "wolf_companion",
+    "active": true,
+    "reason": "tamed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "wolf_den"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_companion_rendered",
+   "payload_contains": {
+    "active": true
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "companion",
+   "equals": "wolf_companion"
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.tended_beasts",
+   "equals": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_tamed_pup_follower"
+  },
+  {
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    20,
+    16
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "The crab regards you with all the tameable warmth of a boulder."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "companion",
+   "equals": "wolf_companion"
+  },
+  {
+   "action": "screenshot",
+   "name": "01_crab_refusal"
+  },
+  {
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    30,
+    20
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.wolf_companion.side",
+   "equals": "player"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.wolf_companion.skills",
+   "contains": "basic_command_boon"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "companion",
+   "equals": "wolf_companion"
+  },
+  {
+   "action": "screenshot",
+   "name": "02_bond_persists_sleep"
+  }
+ ]
+}

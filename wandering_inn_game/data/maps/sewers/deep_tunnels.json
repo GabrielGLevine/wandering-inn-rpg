@@ -149,6 +149,11 @@
    ],
    "display_name": "Old Bones",
    "sprite": "gnaw_pile",
+   "companion_source": {
+    "companion_id": "skeleton_ally",
+    "kind": "animated",
+    "taken_toast": "The bones rise and fall into step behind you."
+   },
    "observe": "Old bones, settled where they fell. They are not going anywhere. Probably."
   },
   {

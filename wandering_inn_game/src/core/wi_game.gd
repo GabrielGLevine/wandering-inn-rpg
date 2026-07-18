@@ -53,6 +53,9 @@ var sneaking := false
 var hotbar_loadout: Array[String] = []
 var warded_encounters: Dictionary = {}
 var companion: String = ""
+## "animated" (fades at sleep) or "tamed" (persists sleep) -- one source-keyed
+## branch at the sleep clear is the ONLY behavioral difference (GH#156).
+var companion_source: String = ""
 var rng := RandomNumberGenerator.new()
 
 var _event_sink: Callable
@@ -320,7 +323,7 @@ func _check_trigger_radius(skipped_ids: Array[String] = []) -> void:
 			continue
 		var ent_cell: Vector2i = ent[WIKeys.CELL]
 		var dist := maxi(absi(player_cell.x - ent_cell.x), absi(player_cell.y - ent_cell.y))
-		if dist > int(ent["trigger_radius"]):
+		if dist > int(ent["trigger_radius"]) - _wild_affinity_reduction(ent):
 			continue
 		if sneaking:
 			# Credit one danger per entity when its live phase/range gate is met.
@@ -534,6 +537,17 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 			var item_hint := String(target.get("item_hint_toast", "Bare hands won't do it. Something in your pack might."))
 			_emit(WIEvents.TOAST, {"text": item_hint})
 			return {"item_hint": req_item}
+	# GH#156 review M1: once_per_waking is OPT-IN here exactly as in interact()
+	# and SHARES interact's serve: key -- one careful visit per waking TOTAL
+	# (a soothe burns the mend and vice versa). Bench props never set the flag:
+	# unbounded bench casts are the alchemist curve's DESIGN (trader-shaped,
+	# grind-priced), so the gate must never become a default.
+	if bool(target.get("once_per_waking", false)):
+		var waking_key := "serve:%s" % target_id
+		if entity_first_use.has(waking_key):
+			_emit(WIEvents.TOAST, {"text": String(target.get("once_per_waking_toast", "Nothing more to carry out right now. Come back another day."))})
+			return {"once_per_waking_spent": true}
+		entity_first_use[waking_key] = true
 	var effect: Dictionary = _resolve_skill_use_effect(target["on_skill_use"])
 	# TRAP (#155 review M1): a CONSUMING recipe (both `item` and `remove_item`)
 	# must refuse BEFORE any state changes when the output can't be picked up
@@ -624,6 +638,28 @@ func _blink_field(skill_id: String, skill: Dictionary) -> Dictionary:
 	return {"teleported": [destination.x, destination.y]}
 
 
+func _wild_affinity_reduction(ent: Dictionary) -> int:
+	# GH#156 [Wild Affinity] (-1) / [Peace of the Wild] (-2, supersedes):
+	# beast-kind (`beast: true`) ambushes give a practiced handler more room.
+	# AMBUSH CHECK ONLY -- ward targeting and blink-bypass credit keep the
+	# authored radius, or warding gets harder as the tamer levels.
+	# DELIBERATE (review M4): the sneak danger-credit branch sits behind this
+	# same check, so an affinity holder banks no sneaked_past_danger from
+	# beast ambushes -- never in danger, never credited.
+	# AUTHORING NOTE (review M3): all shipped beast ambushes are radius 1, so
+	# -1 already fully suppresses them; -2 only matters for radius >= 2
+	# encounters -- give future beast ambushes radius 2+ if the druid upgrade
+	# should read on them.
+	if not bool(ent.get("beast", false)):
+		return 0
+	var known := known_skills()
+	if known.has("peace_of_the_wild"):
+		return 2
+	if known.has("wild_affinity"):
+		return 1
+	return 0
+
+
 func _blink_bypassed_encounters(start: Vector2i, crossed: Array[Vector2i], destination: Vector2i) -> Array[String]:
 	var bypassed: Array[String] = []
 	for ent: Dictionary in entities.values():
@@ -699,23 +735,41 @@ func _ward_field(skill_id: String, skill: Dictionary, faced_cell: Vector2i) -> D
 	return {"warded": encounter_id}
 
 
-func _animate_field(skill_id: String, _skill: Dictionary, target: Dictionary) -> Dictionary:
-	if companion != "":
-		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": ""})
-		_emit(WIEvents.TOAST, {"text": "The dead already follow you."})
-		return {}
+func _animate_field(skill_id: String, skill: Dictionary, target: Dictionary) -> Dictionary:
+	# GH#156 generalization: the prop declares its companion via
+	# `companion_source: {companion_id, skill, taken_toast}` -- the old
+	# hardcoded bone-pile id list is retired (Wave B review L1). The SKILL
+	# decides the source kind: `animates` -> "animated" (fades at sleep),
+	# `tames` -> "tamed" (persists sleep). Single companion slot: a new bond
+	# releases the old one with a toast (canon: tamers bond few animals).
 	var target_id := String(target.get(WIKeys.ID, ""))
-	if target_id not in ["bone_pile_halls", "bone_pile_tunnels", "bone_pile_ruin"]:
+	var kind := "tamed" if bool(skill.get("tames", false)) else "animated"
+	var source: Dictionary = target.get("companion_source", {})
+	# Match on source KIND, not skill id: any `animates` skill raises an
+	# "animated" source, any `tames` skill bonds a "tamed" one. Pairs prop
+	# families to skill families without pinning data to one skill id.
+	if source.is_empty() or String(source.get("kind", "")) != kind:
 		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": target_id})
-		_emit(WIEvents.TOAST, {"text": "No bones here will answer."})
+		var refusal := "No bones here will answer." if kind == "animated" else String(target.get("tame_refusal_toast", "Nothing here will take the bond."))
+		_emit(WIEvents.TOAST, {"text": refusal})
 		return {}
+	if companion != "":
+		if companion == String(source.get("companion_id", "")):
+			_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": target_id})
+			_emit(WIEvents.TOAST, {"text": "They already follow you."})
+			return {}
+		_clear_companion("released")
+		_emit(WIEvents.TOAST, {"text": "Your old companion slips away; one bond at a time is all anyone holds."})
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": target_id})
 	_mark_skill_used(skill_id)
+	if kind == "tamed":
+		record_accomplishment("tended_beasts")
 	remove_entity(target_id)
-	companion = "skeleton_ally"
-	_emit(WIEvents.COMPANION_CHANGED, {"id": companion, "active": true, "reason": "animated"})
-	_emit(WIEvents.TOAST, {"text": "The bones rise and fall into step behind you."})
-	return {"animated": target_id, "companion": companion}
+	companion = String(source["companion_id"])
+	companion_source = kind
+	_emit(WIEvents.COMPANION_CHANGED, {"id": companion, "active": true, "reason": kind})
+	_emit(WIEvents.TOAST, {"text": String(source.get("taken_toast", "The bones rise and fall into step behind you."))})
+	return {"animated": target_id, "companion": companion, "source": kind}
 
 
 func _clear_companion(reason: String) -> void:
@@ -723,6 +777,7 @@ func _clear_companion(reason: String) -> void:
 		return
 	var old_id := companion
 	companion = ""
+	companion_source = ""
 	_emit(WIEvents.COMPANION_CHANGED, {"id": old_id, "active": false, "reason": reason})
 
 
@@ -1509,12 +1564,25 @@ func start_combat(entity_id: String) -> bool:
 	# PC + allies + companion must fit arena player_spawns.
 	if companion != "" and by_id.has(companion) and not allies.has(companion):
 		if allies.size() + 2 > (arena["player_spawns"] as Array).size():
-			_emit(WIEvents.TOAST, {"text": "A crowded field. The bones hang back at its edge."})
+			_emit(WIEvents.TOAST, {"text": "A crowded field. Your companion hangs back at its edge."})
 		else:
 			allies.append(companion)
 	var hp_penalties: Dictionary = entity.get("ally_hp_penalty", {})
 	for ally: Variant in allies:
 		var ally_cfg: Dictionary = (by_id[String(ally)] as Dictionary).duplicate(true)
+		# GH#156 companion boons: [Animals: Basic Command]/[Pack Bond] carry NO
+		# effect on the player-facing skill records (the PC kit fold would buff
+		# the PC); the hidden *_boon carriers apply to the COMPANION only, here.
+		if String(ally) == companion:
+			var boons: Array = []
+			if known_skills().has("animals_basic_command"):
+				boons.append("basic_command_boon")
+			if known_skills().has("pack_bond"):
+				boons.append("pack_bond_boon")
+			if not boons.is_empty():
+				var comp_skills: Array = (ally_cfg.get(WIKeys.SKILLS, []) as Array).duplicate()
+				comp_skills.append_array(boons)
+				ally_cfg[WIKeys.SKILLS] = comp_skills
 		var penalty: Dictionary = hp_penalties.get(String(ally), {})
 		if not penalty.is_empty() and _accomplishment_gate_met(penalty.get("when", {}) as Dictionary):
 			ally_cfg[WIKeys.HP_MOD] = int(ally_cfg.get(WIKeys.HP_MOD, 0)) + int(penalty.get("hp_mod", 0))
@@ -1800,7 +1868,9 @@ func sleep() -> void:
 			warded_encounters.erase(encounter_id)
 		else:
 			ward["sleeps"] = remaining
-	_clear_companion("sleep")
+	# GH#156: tamed bonds PERSIST sleep (canon); only the animated working fades.
+	if companion_source != "tamed":
+		_clear_companion("sleep")
 	dormant_encounters.clear()
 	social_talked.clear()
 	entity_first_use.clear()

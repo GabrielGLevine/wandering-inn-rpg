@@ -45,6 +45,17 @@
 			],
 			"min_parent_level": 10,
 			"min_combined_level": 21
+		},
+		{
+			"_comment": "SAME gate shape as [Spellsword]/[Innkeeper]/[Ranger]/[Scout] (min_parent_level 10, min_combined_level 21). CANON LIBERTY (documented, GH#156): the two-way [Druid] route via tamer+mage is engine-shaped; Nalthaliarstrelous holds [Druid]+[Gardener] UNCONSOLIDATED (4.44 M), so the Gardener line is deliberately omitted here.",
+			"id": "druid",
+			"target": "druid",
+			"parent_lines": [
+				["beast_tamer", "beast_master"],
+				["mage", "ice_mage", "fire_mage"]
+			],
+			"min_parent_level": 10,
+			"min_combined_level": 21
 		}
 	],
 	"classes": [
@@ -598,6 +609,52 @@
 				{ "level": 10, "requires": { "synthesized_draught": 68 }, "grants": ["true_synthesis"] },
 				{ "level": 11, "requires": { "synthesized_draught": 80 }, "grants": [] },
 				{ "level": 12, "requires": { "synthesized_draught": 93 }, "grants": [] }
+			]
+		},
+		{
+			"_comment": "GH#156: new BASE class, the ally/companion mechanic's home. gained_by soothed_a_beast (partial taming counts -- Lyonette and a hurt bee, 3.23 L); producer = the wounded-corusdeer prop (floodplains). Curve: ROGUE per-level thresholds VERBATIM on umbrella counter tended_beasts. Single-axis Replacement to [Beast Master] (Redscar, 5.55 G). CANON FENCE: no tamer above Lv 40 anywhere in world data.",
+			"id": "beast_tamer",
+			"display_name": "Beast Tamer",
+			"stat_growth": { "con": 1 },
+			"gained_by": { "accomplishment": { "soothed_a_beast": 1 } },
+			"evolution": { "at_level": 10, "dominance_share": 0.6, "min_uses": 12, "targets": { "tended_beasts": "beast_master" } },
+			"levels": [
+				{ "level": 1, "requires": {}, "grants": ["healthy_rearing"] },
+				{ "level": 2, "requires": { "tended_beasts": 2 }, "grants": ["animals_basic_command"] },
+				{ "level": 3, "requires": { "tended_beasts": 4 }, "grants": ["lesser_bond"] },
+				{ "level": 4, "requires": { "tended_beasts": 7 }, "grants": [] },
+				{ "level": 5, "requires": { "tended_beasts": 10 }, "grants": ["beasts_mending"] },
+				{ "level": 6, "requires": { "tended_beasts": 14 }, "grants": [] },
+				{ "level": 7, "requires": { "tended_beasts": 18 }, "grants": ["wild_affinity"] },
+				{ "level": 8, "requires": { "tended_beasts": 23 }, "grants": [] },
+				{ "level": 9, "requires": { "tended_beasts": 29 }, "grants": [] },
+				{ "level": 10, "requires": { "tended_beasts": 36 }, "grants": [] }
+			]
+		},
+		{
+			"_comment": "SPARSE TABLE (GH#54): [Beast Master] is Replacement-only (Redscar 5.55 G) -- floor = beast_tamer's evolution.at_level (10). Rogue-delta continuation +8/+9. stat_growth con:2 (evolution-bump precedent, alchemist int:2).",
+			"id": "beast_master",
+			"display_name": "Beast Master",
+			"stat_growth": { "con": 2 },
+			"inherits": "beast_tamer",
+			"aspiration": { "display_name": "Beast Master", "text": "Redfang riders bond a wolf for life. Level far enough, and the wild starts offering." },
+			"levels": [
+				{ "level": 10, "requires": { "tended_beasts": 36 }, "grants": ["pack_bond"] },
+				{ "level": 11, "requires": { "tended_beasts": 44 }, "grants": [] },
+				{ "level": 12, "requires": { "tended_beasts": 53 }, "grants": [] }
+			]
+		},
+		{
+			"_comment": "SPARSE TABLE (GH#54): [Druid] is consolidation-only -- floor = 14, DERIVED from min_parent_level 10 / min_combined_level 21 via the merge formula (test_content re-derives, never hardcode elsewhere). requires_any thresholds: tended_beasts = rogue-delta continuation (L14=74), spell_cast = the spellsword mage-side numbers VERBATIM. CANON FENCES: druids are rare loners (no orders/temples); [Natural Allies: X] cross-class canon PARKED; Vol-8 druid content banned.",
+			"id": "druid",
+			"display_name": "Druid",
+			"stat_growth": { "int": 1, "con": 1 },
+			"inherits": ["beast_tamer", "mage"],
+			"aspiration": { "display_name": "Druid of the Wilds", "text": "Druids are not made by teachers. The wild decides, and it is a harsher judge of character than any guild." },
+			"levels": [
+				{ "level": 14, "requires_any": { "tended_beasts": 74, "spell_cast": 87 }, "grants": ["peace_of_the_wild"] },
+				{ "level": 15, "requires_any": { "tended_beasts": 86, "spell_cast": 100 }, "grants": [] },
+				{ "level": 16, "requires_any": { "tended_beasts": 99, "spell_cast": 114 }, "grants": ["thorn_hand"] }
 			]
 		}
 	]

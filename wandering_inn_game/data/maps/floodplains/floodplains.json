@@ -1353,6 +1353,8 @@
    "_comment": "`allies`/`ally_requires` mirror every other floodplains fight (goblin_encounter_1/2, chieftains_raid): Relc fields once met_relc is banked, solo before that.",
    "id": "rock_crab_nest",
    "kind": "encounter",
+   "beast": true,
+   "tame_refusal_toast": "The crab regards you with all the tameable warmth of a boulder.",
    "cell": [
     21,
     16
@@ -1421,6 +1423,7 @@
    "_comment": "respawns:true (dormant until the next sleep, the rock_crab_nest/river_wolf_pack mechanism).",
    "id": "corusdeer_range",
    "kind": "encounter",
+   "beast": true,
    "cell": [
     36,
     6
@@ -1440,6 +1443,7 @@
   {
    "id": "razorbeak_nest",
    "kind": "encounter",
+   "beast": true,
    "cell": [
     5,
     20
@@ -1456,6 +1460,67 @@
    "respawns": true,
    "observe": "A scrape of trampled grass, two long-beaked shapes hunched low over it, watching you watch them.",
    "on_victory": "razorbeaks_culled"
+  },
+  {
+   "_comment": "GH#156 [Beast Tamer] entry producer. First careful visit banks soothed_a_beast (partial taming counts -- a hurt bee and Lyonette, 3.23 L); the variant flips later visits to tended_beasts, the curve counter. once_per_waking gates BOTH paths (interact and the beasts_mending cast share the serve: key -- one careful visit per waking total). Also a beasts_mending cast target via requires_skill/on_skill_use.",
+   "id": "wounded_corusdeer",
+   "kind": "prop",
+   "cell": [33, 9],
+   "display_name": "Wounded Corusdeer",
+   "sprite": "corusdeer",
+   "tint": [0.82, 0.78, 0.72],
+   "observe": "A corusdeer, down in the grass with a leg it won't put weight on. Its antlers barely glow. It watches you the way anything hurt watches anything larger.",
+   "on_interact_accomplishment": "soothed_a_beast",
+   "once_per_waking": true,
+   "once_per_waking_toast": "It has let you close once today. Don't spend what little trust it has.",
+   "toast": "You move slow, keep your hands low, and it lets you check the leg. That, from a wild thing, is everything.",
+   "variants": [
+    {
+     "when": { "soothed_a_beast": 1 },
+     "accomplishment": "tended_beasts",
+     "toast": "It knows you now. It holds still while you work, and its antlers warm the air between you."
+    }
+   ],
+   "requires_skill": "beasts_mending",
+   "on_skill_use": {
+    "accomplishment": "tended_beasts",
+    "toast": "[Beast's Mending] — Splint and salve, and the leg sits straighter than it has any right to. The corusdeer breathes easier.",
+    "gold": 2
+   }
+  },
+  {
+   "_comment": "GH#156 [Lesser Bond] tame target. companion_source routes through the generalized _animate_field seam; the skill-unknown path falls to use_skill's locked_toast.",
+   "id": "wolf_den",
+   "kind": "prop",
+   "cell": [11, 22],
+   "display_name": "Wolf Den",
+   "sprite": "river_wolf",
+   "observe": "A scrape under the boulder line, and in it one wolf pup, ribs showing, too young to be alone. The pack that left it is not coming back.",
+   "requires_skill": "lesser_bond",
+   "skill_hint_toast": "It watches your hands. Whatever you mean to offer it, offer it properly.",
+   "locked_toast": "The pup shrinks back. Whatever you meant to do, you don't know how to do it gently enough yet.",
+   "companion_source": {
+    "companion_id": "wolf_companion",
+    "kind": "tamed",
+    "taken_toast": "The pup sniffs your hand once, twice — then leans its whole small weight against your leg. That's that, then."
+   }
+  },
+  {
+   "_comment": "GH#156 [Lesser Bond] tame target (razorbeak chick).",
+   "id": "razorbeak_chick",
+   "kind": "prop",
+   "cell": [8, 23],
+   "display_name": "Razorbeak Chick",
+   "sprite": "razorbeak",
+   "observe": "A razorbeak chick, blown or chased from the nest scrape, hissing at the whole world from behind a tussock. The nest is close. The parents are not.",
+   "requires_skill": "lesser_bond",
+   "skill_hint_toast": "It stops hissing when you crouch. Interested, then — if you make the offer the right way.",
+   "locked_toast": "It snaps at your fingers. Fair enough.",
+   "companion_source": {
+    "companion_id": "razorbeak_companion",
+    "kind": "tamed",
+    "taken_toast": "It bites you exactly once, decides you took it well, and climbs your sleeve to glare at the horizon from a better vantage."
+   }
   }
  ],
  "cover_skip": [

@@ -3647,6 +3647,77 @@
      "input"
     ]
    }
+  },
+  {
+   "script": "beast_tamer_loop",
+   "seed": 7,
+   "fixture": "near_tamer",
+   "note": "wounded-corusdeer soothe -> [Beast Tamer] gain at sleep; once_per_waking grind guard",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_tamer"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "tamer_bond_loop",
+   "seed": 7,
+   "fixture": "near_tamer_bond",
+   "note": "[Lesser Bond] wolf tame -> crab refusal joke -> boon-carrying roster fight -> bond persists sleep",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_tamer_bond"
+    ],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "combat"
+    ]
+   }
+  },
+  {
+   "script": "druid_consolidation_loop",
+   "seed": 7,
+   "fixture": "near_druid_consolidation",
+   "note": "tamer/mage lines -> [Druid] floor 14 + [Peace of the Wild] kit",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "near_druid_consolidation"
+    ],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "combat"
+    ]
+   }
   }
  ]
 }

@@ -154,6 +154,9 @@ func _build_expected_counts() -> Dictionary:
 	## Wave D-1 (#155) alchemist kit -- placeholder 16x16 icons (PixelLab drain).
 	for icon_id: String in ["icon_low_grade_synthesis", "icon_cleansing_heat", "icon_magic_water_solvent", "icon_mineral_distillation", "icon_true_synthesis"]:
 		counts[icon_id + "/idle"] = 1
+	## Wave D-2 (#156) tamer/druid kit -- placeholder 16x16 icons (PixelLab drain).
+	for icon_id: String in ["icon_healthy_rearing", "icon_animals_basic_command", "icon_lesser_bond", "icon_beasts_mending", "icon_wild_affinity", "icon_pack_bond", "icon_peace_of_the_wild", "icon_thorn_hand"]:
+		counts[icon_id + "/idle"] = 1
 	counts["skeleton_ally/idle"] = 4
 
 	## GH#145 bespoke rigs (PixelLab drain): ratici sheets are 416/104 idle,
@@ -320,6 +323,9 @@ func _build_expected_counts() -> Dictionary:
 
 	counts["corusdeer/idle"] = 1
 	counts["razorbeak/idle"] = 1
+	## GH#156 follower-visual aliases of the same owned single-frame sheets.
+	counts["wolf_companion/idle"] = 1
+	counts["razorbeak_companion/idle"] = 1
 	counts["mothbear/idle"] = 1
 	counts["kingslayer_spider/idle"] = 1
 	counts["forge_golem/idle"] = 1

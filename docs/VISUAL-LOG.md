@@ -1516,3 +1516,18 @@ events, and result files live in the gitignored
   `greater_hearthward`.
   - DRAINED 2026-07-16 (#145): picked PixelLab reductions now replace all
     five tracked placeholders.
+
+## 2026-07-17 — Wave D-2 (#156) placeholders
+
+- **8 tamer/druid kit icons are crude generated glyphs** (`icon_healthy_rearing`,
+  `icon_animals_basic_command`, `icon_lesser_bond`, `icon_beasts_mending`,
+  `icon_wild_affinity`, `icon_pack_bond`, `icon_peace_of_the_wild`,
+  `icon_thorn_hand`) — PixelLab pass user-gated, same drain class as the
+  D-1 alchemist five.
+- **wolf_den / razorbeak_chick / wounded_corusdeer props reuse ADULT
+  combatant sheets** (river_wolf / razorbeak / corusdeer at prop scale) — a
+  pup-sized wolf, a chick, and a LYING wounded corusdeer want bespoke
+  frames (PixelLab, user-gated).
+- **wolf_companion / razorbeak_companion follower visuals alias the same
+  adult sheets at reduced render_scale** (0.26 / 0.6) — reads fine in
+  motion; bespoke pup/chick idles would land with the prop pass above.

@@ -213,6 +213,9 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `hedge_witch_loop` | 9 (fixture `near_hedge_witch`) | fixture-banked [Hedge Witch] gain → [Witch] + combat kit |
 | `necromancer_loop` | 9 (fixture `near_necromancer`) | fixture-banked [Necromancer] gain + L3 combat kit |
 | `scout_consolidation_loop` | 9 (fixture `near_scout_consolidation`) | rogue/archer lines → [Scout] floor + combat kit |
+| `beast_tamer_loop` | 7 (fixture `near_tamer`) | Wave D-2 (#156): wounded-corusdeer soothe → `class_gained` [Beast Tamer] at sleep; `once_per_waking` grind guard |
+| `tamer_bond_loop` | 7 (fixture `near_tamer_bond`) | Wave D-2 (#156): [Lesser Bond] wolf tame → crab refusal joke → boon-carrying roster fight → tamed bond persists sleep |
+| `druid_consolidation_loop` | 7 (fixture `near_druid_consolidation`) | tamer/mage lines → [Druid] floor 14 + [Peace of the Wild] kit |
 | `bed_nudge_loop` | 9 (fixture `pre_first_sleep`) | GH#130 bed nudge fires pre-sleep, retires after (`slept` counter) |
 | `raskghar_entry_loop` | 9 (fixture `raskghar_entry_start`) | GH#152 Act III entry chain, no hand-banks past the report |
 | `consolidation_flow` | 9 (fixture `near_consolidation`) | offer/decline/re-offer/accept → [Spellsword] |

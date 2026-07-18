@@ -905,6 +905,99 @@
 			"field": true,
 			"field_ambient": "[True Synthesis] — You lay the whole working out in your mind, solvent into salts in the one order that holds. Only a proper bench will bear it.",
 			"description": "Where a mixer combines, an alchemist transforms. Solvent and salts, brought together in the right hand, become something neither one was."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (3.23 L). [Beast Tamer] L1 pure passive identity (actives-become-passives directive) -- no hotbar slot; icon carried for the journal panel only.",
+			"id": "healthy_rearing",
+			"display_name": "[Healthy Rearing]",
+			"icon": "icon_healthy_rearing",
+			"contexts": ["exploration"],
+			"description": "Animals in your care simply do better. They eat, they mend, they trust. It is not magic, except in the way it is."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (4.21 E). Passive on the PLAYER record (no effect key -- the kit fold would buff the PC); the companion-side +hit lives in basic_command_boon, injected onto the companion combatant at roster build (wi_game.gd, GH#156).",
+			"id": "animals_basic_command",
+			"display_name": "[Animals: Basic Command]",
+			"icon": "icon_animals_basic_command",
+			"contexts": ["exploration"],
+			"description": "Sit. Stay. Strike. A trained beast hears the shape of your intent, not just the word."
+		},
+		{
+			"_comment": "COMPANION BOON (GH#156): hidden effect-carrier for [Animals: Basic Command] -- never granted to a class, never hotbar-bound; appended to the COMPANION combatant's skill list at roster inject. hit_bonus amount reuses the steady_draw/eagle_eyes tuned value.",
+			"id": "basic_command_boon",
+			"display_name": "[Animals: Basic Command]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "hit_bonus", "amount": 8 },
+			"description": "A trained beast fights like it has heard the plan."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED shape '[Lesser Bond: Name]' (3.11 E). Field tame: `tames: true` routes through the companion_source seam (wi_game.gd _animate_field) -- casts at tameable props carrying `companion_source`, refusal toast otherwise. Tamed companions PERSIST sleep.",
+			"id": "lesser_bond",
+			"display_name": "[Lesser Bond]",
+			"icon": "icon_lesser_bond",
+			"contexts": ["exploration"],
+			"field": true,
+			"tames": true,
+			"mp_cost": 2,
+			"field_ambient": "[Lesser Bond] — You reach out, and nothing here reaches back. The wild keeps its own company today.",
+			"description": "A thin thread of trust, offered and accepted. It is not ownership. Nothing about it is ownership."
+		},
+		{
+			"_comment": "CANON-VERDICT: ORIGINAL, care-tier canon-plausible (flagged in spec). Field cast at wounded-beast props via the requires_skill/on_skill_use seam; banks tended_beasts.",
+			"id": "beasts_mending",
+			"display_name": "[Beast's Mending]",
+			"icon": "icon_beasts_mending",
+			"contexts": ["exploration"],
+			"field": true,
+			"mp_cost": 2,
+			"field_ambient": "[Beast's Mending] — Your hands know what to do, but nothing hurt waits here to be helped.",
+			"description": "Splint, salve, and a steadiness that tells a frightened animal the worst is over."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (Mrsha pre-upgrade). Passive: beast-kind (`beast: true`) ambush encounters trigger at radius -1 for this player -- code seam at wi_game.gd _wild_affinity_reduction, AMBUSH CHECK ONLY. [Peace of the Wild] supersedes at -2.",
+			"id": "wild_affinity",
+			"display_name": "[Wild Affinity]",
+			"icon": "icon_wild_affinity",
+			"contexts": ["exploration"],
+			"description": "Wild things startle later around you, and settle sooner. You smell like something that belongs."
+		},
+		{
+			"_comment": "CANON-VERDICT: ORIGINAL (companion max-hp step). Passive on the PLAYER record; the companion-side +hp lives in pack_bond_boon, injected at roster build (GH#156).",
+			"id": "pack_bond",
+			"display_name": "[Pack Bond]",
+			"icon": "icon_pack_bond",
+			"contexts": ["exploration"],
+			"description": "The bond runs both ways now. What follows you is harder to kill, because it knows you are coming back for it."
+		},
+		{
+			"_comment": "COMPANION BOON (GH#156): hidden effect-carrier for [Pack Bond] -- never granted to a class; appended to the COMPANION combatant at roster inject.",
+			"id": "pack_bond_boon",
+			"display_name": "[Pack Bond]",
+			"contexts": ["combat"],
+			"ap_cost": 0,
+			"effect": { "type": "hp_bonus", "amount": 4 },
+			"description": "Harder to kill, because it knows you are coming back for it."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (5.06 M) -- the [Wild Affinity] upgrade. Same code seam (wi_game.gd _wild_affinity_reduction), reduction 2, supersedes.",
+			"id": "peace_of_the_wild",
+			"display_name": "[Peace of the Wild]",
+			"icon": "icon_peace_of_the_wild",
+			"contexts": ["exploration"],
+			"description": "The wild has decided about you. Wolves note you and go back to their business; even the small things stop holding their breath."
+		},
+		{
+			"_comment": "CANON-VERDICT: ATTESTED (Two Rats interlude). [Druid] L16 combat cast: spell_damage range 1 + applies.rooted (slam's shipped rider shape). element nature banks nature_cast for free via the element-counter seam.",
+			"id": "thorn_hand",
+			"display_name": "[Thorn Hand]",
+			"icon": "icon_thorn_hand",
+			"contexts": ["combat"],
+			"ap_cost": 2,
+			"mp_cost": 3,
+			"element": "nature",
+			"effect": { "type": "spell_damage", "range": 1, "applies": { "rooted": { "duration_rounds": 1 } } },
+			"description": "Green shoots burst from your palm and take the enemy at the ankle. The ground remembers being wild."
 		}
 	]
 }

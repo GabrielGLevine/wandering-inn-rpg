@@ -54,7 +54,7 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 	if bool(skill.get("wards", false)):
 		_break_sneak.call()
 		return _ward.call(skill_id, skill, faced_cell)
-	if bool(skill.get("animates", false)):
+	if bool(skill.get("animates", false)) or bool(skill.get("tames", false)):
 		_break_sneak.call()
 		return _animate.call(skill_id, skill, target)
 	if not target.is_empty() and String(target.get("requires_skill", "")) == skill_id and target.has("on_skill_use"):

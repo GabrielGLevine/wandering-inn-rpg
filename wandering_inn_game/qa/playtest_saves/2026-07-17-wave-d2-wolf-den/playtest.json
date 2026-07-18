@@ -1,0 +1,46 @@
+{
+ "_comment": "GH#156 prepared Playtest State: Beast Tamer 3 at the floodplains wolf den, [Lesser Bond] on hotbar slot 1. One cast tames the pup; the crab nest (21,16) plays the refusal joke; the wounded corusdeer (33,9) is the tend/soothe producer.",
+ "version": 6,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   10,
+   22
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "beast_tamer": 3
+  },
+  "accomplishments": {
+   "soothed_a_beast": 1,
+   "tended_beasts": 4,
+   "met_relc": 1,
+   "won_combat": 1,
+   "sparred_with_relc": 1
+  },
+  "player_skills": [],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "gold": 12,
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673",
+  "hotbar_loadout": [
+   "lesser_bond"
+  ]
+ }
+}

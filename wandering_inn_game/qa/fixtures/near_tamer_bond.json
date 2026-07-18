@@ -1,0 +1,44 @@
+{
+ "_comment": "GH#156 taming fixture: Beast Tamer 3 ([Lesser Bond] just granted; tended_beasts 4 = the exact L3 threshold, soothed_a_beast 1 = the gained_by bank) faces the wolf den (floodplains 11,22). met_relc fields Relc in the roster fight so the fragile pup has a stable victory proof.",
+ "version": 6,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   10,
+   22
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "beast_tamer": 3
+  },
+  "accomplishments": {
+   "soothed_a_beast": 1,
+   "tended_beasts": 4,
+   "met_relc": 1,
+   "won_combat": 1
+  },
+  "player_skills": [],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-1966449618399012673",
+  "hotbar_loadout": [
+   "lesser_bond"
+  ]
+ }
+}

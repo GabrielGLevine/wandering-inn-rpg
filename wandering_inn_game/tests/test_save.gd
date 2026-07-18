@@ -61,6 +61,7 @@ func _init() -> void:
 		"goblin_encounter_1": {"sleeps": 2, "map": "floodplains", "cell": [30, 21]},
 	}
 	original.companion = "skeleton_ally"
+	original.companion_source = "tamed"
 
 	var data := WISave.serialize(original)
 	assert(data["version"] == WISave.VERSION, "save version matches the current constant")
@@ -101,13 +102,17 @@ func _init() -> void:
 	assert(restored.hotbar_loadout == ["flame_bolt", "basic_cleaning"], "hotbar_loadout round-trips in order")
 	assert(restored.warded_encounters == original.warded_encounters, "warded encounter state round-trips")
 	assert(restored.companion == "skeleton_ally", "companion state round-trips")
+	assert(restored.companion_source == "tamed", "companion_source round-trips (GH#156)")
 	var no_wave_b_state: Dictionary = (data["state"] as Dictionary).duplicate(true)
 	no_wave_b_state.erase("warded_encounters")
 	no_wave_b_state.erase("companion")
+	no_wave_b_state.erase("companion_source")
 	var no_wave_b_target := _new_game()
 	no_wave_b_target.warded_encounters = {"stale": {"sleeps": 9}}
 	no_wave_b_target.companion = "stale"
+	no_wave_b_target.companion_source = "stale_source"
 	assert(WISave.apply(no_wave_b_target, {"version": WISave.VERSION, "state": no_wave_b_state}), "pre-Wave-B save without ward/companion fields still applies")
+	assert(no_wave_b_target.companion_source == "", "legacy save defaults companion_source empty -- a pre-#156 skeleton keeps fades-at-sleep behavior")
 	assert(no_wave_b_target.warded_encounters.is_empty() and no_wave_b_target.companion == "", "absent Wave-B fields restore safe empty defaults")
 	var bad_wards_data := WISave.serialize(_new_game()).duplicate(true)
 	(bad_wards_data["state"] as Dictionary)["warded_encounters"] = []

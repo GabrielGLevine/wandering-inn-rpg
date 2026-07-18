@@ -1202,6 +1202,7 @@
   {
    "id": "boulevard_mothbears",
    "kind": "encounter",
+   "beast": true,
    "cell": [
     5,
     15
