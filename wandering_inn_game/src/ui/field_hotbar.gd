@@ -378,6 +378,16 @@ func _current_safe_rect() -> Rect2:
 	var viewport := get_viewport()
 	if viewport == null:
 		return Rect2()
+	# GH#173: display safe-area is a MOBILE-notch concept. In any windowed
+	# context (web canvas, desktop window) get_display_safe_area() returns
+	# the window's rect within the MONITOR, so the conversion below reads
+	# the space beneath the browser window as a bottom inset -- the hotbar
+	# then floats mid-screen and DRIFTS as the window moves. Insets apply
+	# only on mobile or true fullscreen; everything else gets the full
+	# viewport.
+	if not (OS.has_feature("mobile")
+			or DisplayServer.window_get_mode() >= DisplayServer.WINDOW_MODE_FULLSCREEN):
+		return Rect2(Vector2.ZERO, viewport.get_visible_rect().size)
 	return WIFieldHotbarLayout.viewport_safe_rect(
 		viewport.get_visible_rect().size,
 		DisplayServer.get_display_safe_area(),

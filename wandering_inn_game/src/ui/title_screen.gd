@@ -487,6 +487,10 @@ func _enter_new_game_confirm() -> void:
 	_menu_root.hide()
 	_new_game_confirm_root.show()
 	_refresh_new_game_confirm()
+	# GH#173: the slot summary wraps by player-name length; a fixed panel
+	# let the option rows spill below the parchment. Fit runs deferred so
+	# the autowrap label has a layout pass behind it.
+	_fit_new_game_confirm_panel.call_deferred()
 	ObservableBus.emit_domain_event(WIEvents.UI_NEW_GAME_CONFIRM_RENDERED, {"summary": summary})
 	if _is_qa():
 		# Same collapse contract as sleep_veil.gd's `_is_qa()` (opener/
@@ -498,6 +502,21 @@ func _enter_new_game_confirm() -> void:
 		# same precedent as every other veil mode's own doc comment.
 		_exit_new_game_confirm()
 		_start_new_game()
+
+
+func _fit_new_game_confirm_panel() -> void:
+	if _new_game_confirm_label == null or _new_game_confirm_root == null:
+		return
+	var margin_node := _new_game_confirm_label.get_parent().get_parent() as MarginContainer
+	if margin_node == null:
+		return
+	var needed: Vector2 = margin_node.get_combined_minimum_size()
+	var fitted := Vector2(
+		maxf(NEW_GAME_CONFIRM_PANEL_SIZE.x, needed.x),
+		maxf(NEW_GAME_CONFIRM_PANEL_SIZE.y, needed.y))
+	_new_game_confirm_root.custom_minimum_size = fitted
+	_new_game_confirm_root.size = fitted
+	UIChrome.set_offsets(_new_game_confirm_root, -fitted.x * 0.5, -fitted.y * 0.5, fitted.x * 0.5, fitted.y * 0.5)
 
 
 func _exit_new_game_confirm() -> void:
