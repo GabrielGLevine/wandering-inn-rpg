@@ -1,6 +1,12 @@
 extends CanvasLayer
 
 const TOAST_SECONDS := 3.75
+## GH#170: last-N toast texts for the journal's Recent Messages section --
+## the durable answer to "it went past before I could read it". Static so
+## the journal (created on open) reads history it never saw live. Sleep
+## does NOT clear it; it is a reading aid, not game state (unsaved).
+const RECENT_MESSAGES_CAP := 30
+static var recent_messages: Array[String] = []
 ## Toast hold under WINDOWED QA (TestDriver active, real DisplayServer) -- a
 ## 0.4s FLOOR, not zero: toast legibility in windowed screenshots is
 ## load-bearing for the controller-read discipline (wi-verifying-changes
@@ -341,8 +347,19 @@ func _drain_toasts() -> void:
 	_toast_draining = true
 	while not _toast_queue.is_empty():
 		var text: String = _toast_queue.pop_front()
-		await _show(_toast_panel, _toast_label, text, TOAST_SECONDS, WIEvents.UI_TOAST_RENDERED, "", true, true)
+		recent_messages.append(text)
+		while recent_messages.size() > RECENT_MESSAGES_CAP:
+			recent_messages.pop_front()
+		await _show(_toast_panel, _toast_label, text, _toast_seconds(text), WIEvents.UI_TOAST_RENDERED, "", true, true)
 	_toast_draining = false
+
+
+## GH#170 (friend playtest x3 + #167): reading time scales with text.
+## ~median 30-char toast keeps today's 3.75s feel; long lore toasts hold
+## up to 7s. QA/headless holds are untouched (_hold_seconds still floors
+## them), so canonical timing is byte-identical.
+func _toast_seconds(text: String) -> float:
+	return clampf(2.8 + 0.035 * float(text.length()), 3.4, 7.0)
 
 
 func _is_gold_toast(text: String) -> bool:

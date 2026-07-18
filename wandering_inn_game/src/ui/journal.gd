@@ -525,6 +525,15 @@ func _build_body_text(act: Dictionary, quest_lines: Array, completed_quest_lines
 		parts.append(UIChrome.bb_escape("Classes: %s" % (", ".join(chronicle_classes) if not chronicle_classes.is_empty() else "—")))
 		parts.append(UIChrome.bb_escape("Quests completed: %d  •  Victories: %d  •  Sleeps: %d" % [int(chronicle_facts.get("quests_completed", 0)), int(chronicle_facts.get("victories", 0)), int(chronicle_facts.get("sleeps", 0))]))
 		parts.append(UIChrome.bb_escape(String(chronicle_facts.get("ending", ""))))
+	# GH#170: Recent Messages tail -- APPEND-ONLY position so every
+	# contains-style body pin above survives. Newest last (reading order).
+	var layer_script := load("res://src/ui/message_layer.gd")
+	var recent: Array = layer_script.recent_messages if layer_script != null else []
+	if not recent.is_empty():
+		parts.append("")
+		parts.append("[b]Recent Messages[/b]")
+		for msg: Variant in recent:
+			parts.append("[i]%s[/i]" % UIChrome.bb_escape(String(msg)))
 	return {"text": "\n".join(parts), "cursor_line": cursor_line}
 
 
