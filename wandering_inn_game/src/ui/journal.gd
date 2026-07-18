@@ -472,6 +472,9 @@ func _build_body_text(act: Dictionary, quest_lines: Array, completed_quest_lines
 	parts.append(COMBAT_KIT_NOTE)
 	parts.append("Slotted skills appear on your bars.  •  Up/Down to move  •  %s to toggle" % WIInputHints.label("confirm"))
 	var flat_i := 0
+	# GH#171: the checkmarks were unlabeled -- players could not tell
+	# selection = hotbar loadout.
+	parts.append("[i]Checked skills ride your hotbar — confirm on a row to swap it.[/i]")
 	for raw_group: Variant in skill_groups:
 		var group := raw_group as Dictionary
 		var heading := String(group["heading"])

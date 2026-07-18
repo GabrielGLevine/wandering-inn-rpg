@@ -424,7 +424,7 @@
    "sprite": "snare_coil",
    "requires_skill": "disarm_trap",
    "skill_hint_toast": "Bone and wire, tangled at the drain mouth, rigged for something bigger than rats. A steady hand could clear it.",
-   "locked_toast": "Bone and wire, tangled at the drain mouth. It has the shape of a trap. You can't read it well enough to touch it.",
+   "locked_toast": "Bone and wire, tangled at the drain mouth. It has the shape of a trap. You can't read it well enough to touch it — that's trap-craft, a rogue's trade.",
    "on_skill_use": {
     "accomplishment": "trap_disarmed",
     "toast": "You work the bone pins loose and unwind the wire. A few coins sit wedged in the silt beneath it, dropped by whoever it once caught.",

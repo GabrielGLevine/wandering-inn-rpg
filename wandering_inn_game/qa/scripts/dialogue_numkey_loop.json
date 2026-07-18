@@ -1,0 +1,113 @@
+{
+ "_comment": "GH#171: number keys select numbered dialogue options (friend-playtest expectation). Reuses near_room_upgrade: rendered options are [1] tier-1 purchase, [2] rates-exit. Leg A types '2' -> exit, gold UNCHANGED (proves the keypress neither bought nor leaked into a field cast -- world input is dialogue-gated). Leg B types '1' -> purchase completes.",
+ "fixture_save": "near_room_upgrade",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "room_ledger"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "type_text",
+   "text": "2"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 30
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "skill_used"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "room_ledger"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "type_text",
+   "text": "1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lyonette"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.room_tier_1",
+   "equals": 1
+  },
+  {
+   "action": "type_text",
+   "text": "1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  }
+ ]
+}
