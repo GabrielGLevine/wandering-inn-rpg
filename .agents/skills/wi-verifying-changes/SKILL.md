@@ -127,3 +127,12 @@ get real notifications — the trap is subagent-side only.
 inclusive) runs just your cells — find your block's indexes once and iterate
 on the range (a full 111-cell batch is ~4 min; a 3-cell range is seconds).
 Full batch runs ONCE at the end as the gate, not per tuning iteration.
+
+
+### The local unit bar must mirror CI's THREE checks (2026-07-17 incident)
+A validator that reports via `quit(1)` keeps EXECUTING to the end of _init --
+so its log still prints `PASS` and only the EXIT CODE is red. A grep-only
+local bar (`grep ^PASS` + noise grep) declared test_effect_text green while
+five item pins were failing; CI would have caught it (`|| fail=1`). Local
+bar, always: (1) nonzero exit = red, (2) `^PASS` line present, (3) zero
+`SCRIPT ERROR|Parse Error|WARNING`. All three, every suite.
