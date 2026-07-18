@@ -1236,6 +1236,76 @@
    "verdict": "NEEDS-ATTESTATION",
    "bundle": true,
    "fallback": "placeholder"
+  },
+  {
+   "path": "assets/audio/music/battle_for_hope.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy Battles (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/battle_for_courage.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy Battles (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/battle_for_what_remains.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy Battles (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/battle_for_humanity.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy Battles (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/battle_for_the_fallen_ones.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy Battles (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/battle_for_vengeance.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy Battles (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/battle_for_despair.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy Battles (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/battle_for_ashes.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy Battles (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/battle_for_nothing.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy Battles (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
+  },
+  {
+   "path": "assets/audio/music/battle_the_final_of_the_fantasy.ogg",
+   "source_pack": "xDeviruchi - 16-Bit Fantasy Battles (2025)",
+   "verdict": "FORBIDDEN",
+   "bundle": true,
+   "fallback": "silent"
   }
  ]
 }

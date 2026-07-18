@@ -587,7 +587,7 @@
    "payload": {
     "arena": "deep_warren"
    },
-   "stream": "res://assets/audio/music/junkala_encounter_witches.ogg",
+   "stream": "res://assets/audio/music/battle_the_final_of_the_fantasy.ogg",
    "bus": "Music",
    "volume_db": -7.0,
    "loop": true
@@ -748,20 +748,6 @@
    "loop": true
   },
   {
-   "id": "music_mercantile_alleys",
-   "kind": "field",
-   "context": "mercantile_alleys",
-   "event": "map_changed",
-   "payload": {
-    "map": "mercantile_alleys"
-   },
-   "_comment": "GH#133 ear-gate iteration 2: the spooky alley must not share the boulevard's bustling bazaar cue -- silent_forest = hushed/eerie. Boulevard keeps bazaar.",
-   "stream": "res://assets/audio/music/silent_forest.ogg",
-   "bus": "Music",
-   "volume_db": -8.0,
-   "loop": true
-  },
-  {
    "id": "music_brothers_parlor",
    "kind": "field",
    "context": "brothers_parlor",
@@ -864,6 +850,227 @@
    "stream": "res://assets/audio/music/junkala_summer_memories.ogg",
    "bus": "Music",
    "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "music_pallass_market",
+   "kind": "field",
+   "context": "pallass_market",
+   "event": "map_changed",
+   "payload": {
+    "map": "pallass_market"
+   },
+   "stream": "res://assets/audio/music/hydrogene_east_town.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_pallass_forge",
+   "kind": "field",
+   "context": "pallass_forge",
+   "event": "map_changed",
+   "payload": {
+    "map": "pallass_forge"
+   },
+   "stream": "res://assets/audio/music/hydrogene_military_base.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_deep_tunnels",
+   "kind": "field",
+   "context": "deep_tunnels",
+   "event": "map_changed",
+   "payload": {
+    "map": "deep_tunnels"
+   },
+   "stream": "res://assets/audio/music/hydrogene_dangerous_cave.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_sewers",
+   "kind": "field",
+   "context": "sewers",
+   "event": "map_changed",
+   "payload": {
+    "map": "sewers"
+   },
+   "stream": "res://assets/audio/music/hydrogene_dwarven_mine.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_dungeon_approach",
+   "kind": "field",
+   "context": "dungeon_approach",
+   "event": "map_changed",
+   "payload": {
+    "map": "dungeon_approach"
+   },
+   "stream": "res://assets/audio/music/hydrogene_hidden_cavern.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_trapped_halls",
+   "kind": "field",
+   "context": "trapped_halls",
+   "event": "map_changed",
+   "payload": {
+    "map": "trapped_halls"
+   },
+   "stream": "res://assets/audio/music/hydrogene_malicious_scheme.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_mercantile_alleys_v2",
+   "kind": "field",
+   "context": "mercantile_alleys",
+   "event": "map_changed",
+   "payload": {
+    "map": "mercantile_alleys"
+   },
+   "stream": "res://assets/audio/music/cynicmusic_town_theme.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_goblin_ambush",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "goblin_ambush"
+   },
+   "stream": "res://assets/audio/music/cynicmusic_battle_a.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_cave_mouth",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "cave_mouth"
+   },
+   "stream": "res://assets/audio/music/battle_for_courage.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_boulder_flats",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "boulder_flats"
+   },
+   "stream": "res://assets/audio/music/battle_for_the_fallen_ones.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_village_edge_night",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "village_edge_night"
+   },
+   "stream": "res://assets/audio/music/battle_for_what_remains.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_witch_hollow_arena",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "witch_hollow"
+   },
+   "stream": "res://assets/audio/music/battle_for_vengeance.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_trapped_halls_snare",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "trapped_halls_snare"
+   },
+   "stream": "res://assets/audio/music/battle_for_despair.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_spider_den",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "spider_den"
+   },
+   "stream": "res://assets/audio/music/battle_for_ashes.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_forge_hall",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "forge_hall"
+   },
+   "stream": "res://assets/audio/music/battle_for_humanity.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_market_watch",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "market_watch"
+   },
+   "stream": "res://assets/audio/music/battle_for_nothing.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
+   "id": "music_combat_mercantile_alley",
+   "kind": "combat",
+   "context": "combat",
+   "event": "combat_started",
+   "payload": {
+    "arena": "mercantile_alley"
+   },
+   "stream": "res://assets/audio/music/battle_for_hope.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
    "loop": true
   }
  ],
