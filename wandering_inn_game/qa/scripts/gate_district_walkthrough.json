@@ -594,7 +594,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling elsewhere. A sign says she remembers faces, and debts."
+    "text": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling somebody UP, elsewhere \u2014 she does not haggle down. A sign says she remembers faces, and debts."
    },
    "timeout_sec": 5
   },

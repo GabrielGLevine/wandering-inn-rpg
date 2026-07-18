@@ -1296,7 +1296,7 @@
    "sprite": "food_basket",
    "observe": "Silverfang goods laid out with a trap's care: cheapest at the front, the good stock where a browsing hand drifts. A note warns that the seller remembers faces.",
    "on_interact_accomplishment": "browsed_market",
-   "toast": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling elsewhere. A sign says she remembers faces, and debts."
+   "toast": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling somebody UP, elsewhere — she does not haggle down. A sign says she remembers faces, and debts."
   },
   {
    "_comment": "(28,2) was already in the street's static `blocked` list (the gap between the two wall cells), so floor_cells/blocked_cells counts are unchanged.",
