@@ -33,7 +33,7 @@
   { "action": "move", "direction": "right", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [5, 4] },
   { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Sergeant Ashgrave", "text": "If you're here to report something, the slate's on the wall. Write it plain." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Sergeant Ashgrave", "text": "If you're here to report something, report it plain. The belt-slate does the writing; you do the talking." }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_rendered", "timeout_sec": 5 },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "dresk_recruit" }, "timeout_sec": 5 },

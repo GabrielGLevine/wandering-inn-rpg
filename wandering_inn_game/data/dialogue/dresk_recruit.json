@@ -1,7 +1,7 @@
 {
 	"start": "hub",
 	"nodes": {
-		"hub": { "speaker": "Sergeant Ashgrave", "text": "If you're here to report something, the slate's on the wall. Write it plain.", "text_variants": [
+		"hub": { "speaker": "Sergeant Ashgrave", "text": "If you're here to report something, report it plain. The belt-slate does the writing; you do the talking.", "text_variants": [
 				{ "_comment": "#92 D3 relay: standing donor acknowledgment, authored FIRST so it stays lowest priority -- any quest-status greeting below overrides it.", "requires": { "accomplishment": { "donated_watch_supplies": 1 } }, "text": "The supply fund's the better for your coin. Boots and bandages don't buy themselves. The Watch counts you a friend." },
 				{ "_comment": "Authored after the donor line, before the quest greetings: last-match-wins, so quest-status greetings (Pell etc.) override both standing lines.", "requires": { "accomplishment": { "studied_necromancy": 1 } }, "text": "Heard what you've been studying. Keep it out of my barracks and off my streets, and you and I stay civil." },
 				{ "requires": { "accomplishment": { "missing_recruit_started": 1 } }, "text": "Still no word from Pell. Kit's counted twice over on account of it. Slate stays open till someone finds them." },

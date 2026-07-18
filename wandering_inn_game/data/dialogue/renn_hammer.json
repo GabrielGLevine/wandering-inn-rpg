@@ -13,7 +13,7 @@
 			{ "text": "I'll keep an eye out.", "end": true }
 		] },
 		"thanks": { "speaker": "Renn", "text": "It WAS the back wall. I told him. Three gold, and don't tell Ilvo I paid for this — actually, tell him. It'll shut him up faster than the gold will.", "options": [
-			{ "text": "Your secret's safe.", "end": true }
+			{ "text": "Not a secret. Understood.", "end": true }
 		] }
 	}
 }

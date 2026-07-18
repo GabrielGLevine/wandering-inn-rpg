@@ -167,7 +167,7 @@
      "goto": "erin_home"
     },
     {
-     "text": "Sit, eat. Cook's orders.",
+     "text": "(Take the seat. The cook has spoken.)",
      "requires": {
       "accomplishment": {
        "resolved_wrong_order": 1,
@@ -251,7 +251,7 @@
   },
   "cleaning_directions": {
    "speaker": "Erin",
-   "text": "Really? It's the horror show by the south wall. I owe you one - or the table does. [Basic Cleaning]'s already on your bar — number key, then go introduce yourself to it.",
+   "text": "Really? It's the horror show by the west wall. I owe you one - or the table does. [Basic Cleaning]'s already on your bar — number key, then go introduce yourself to it.",
    "options": [
     {
      "text": "Wait, one more thing!",

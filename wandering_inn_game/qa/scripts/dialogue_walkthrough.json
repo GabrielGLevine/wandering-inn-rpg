@@ -153,7 +153,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Really? It's the horror show by the south wall. I owe you one - or the table does. [Basic Cleaning]'s already on your bar — number key, then go introduce yourself to it."
+    "text": "Really? It's the horror show by the west wall. I owe you one - or the table does. [Basic Cleaning]'s already on your bar — number key, then go introduce yourself to it."
    },
    "timeout_sec": 5
   },
