@@ -85,7 +85,7 @@ DATA = GAME_ROOT / "data"
 DIALOGUE_DIR = DATA / "dialogue"
 OUT_PATH = DATA / "shipped_ids.json"
 
-RELEASE = "0.9.0"
+RELEASE = "0.10.0"
 
 # ---------------------------------------------------------------------------
 # STRUCTURAL_LITERALS -- KEEP IN SYNC with tests/test_shipped_ids.gd's own
