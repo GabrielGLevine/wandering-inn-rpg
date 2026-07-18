@@ -4,6 +4,24 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-18 — v0.11.0 Second Wind spec adjudications (#165)
+
+- **beast_master's attested pick [Lesser Bond] rejected on id collision**
+  (shipped as the tamer's L3 tame verb; shipped ids never rename) — the
+  researcher's Redfang-voiced ⚑ORIGINAL fallback [Sworn Fang: Ride
+  Together] ships instead.
+- **[Server's Prescience] goes to BARMAID** (Drassi's attestation is
+  barmaid-line inn work); server takes ⚑ORIGINAL [Swift Service] — one
+  attested name cannot serve two sibling lines.
+- **D-1's "Xif skills are dialogue color only" fence RELAXED** for earned
+  late grants: [Perfect Reduction] becomes the alchemist L14 bench-cast
+  (crude → tonic). Shared skill names across holders are canon-normal;
+  the fence protected D-1 scope, not exclusivity.
+- **One grant per line at L14, L15/16 rows empty**: the funnel fix is the
+  LEVELS (stat growth), not kit inflation; second grant tier deferred to
+  demand.
+- v0.10.0 shipped on the autonomy directive with #167 fixes, no re-gate.
+
 ## 2026-07-18 — v0.10.0 gate fixes (#167) and ship ruling
 
 - **Ship v0.10.0 after #167 fixes without a further user playtest** — USER
