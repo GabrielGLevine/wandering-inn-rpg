@@ -15,8 +15,8 @@ merged`), not here.
 
 ## 🏃 RUNNING (2026-07-18)
 
-- **v0.10.0 TAGGED — release pipeline in flight** (watch live; verify
-  itch html5 + desktop exports green). Contents: #148 #152 #154 #155
+- **v0.10.0 SHIPPED** (run 29636812223 green: real-asset QA, itch html5,
+  Win+Linux exports). Contents: #148 #152 #154 #155
   #156 #160 #92 #167. Freeze = 597 ids (step-0 grep clean;
   tended_beasts listed).
 - **AUTONOMY DIRECTIVE (2026-07-18)**: ship v0.10.0 without further
