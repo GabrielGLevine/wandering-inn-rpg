@@ -34,6 +34,8 @@ const LOADOUT_CELLS := [
 	{"name": "construct_core_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["construct_core_shard"]},
 	{"name": "kingslayer_fang_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["kingslayer_fang"]},
 	{"name": "hollow_herb_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["hollow_herb_sachet"]},
+	{"name": "guardian_ward_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["guardian_ward_fragment"]},
+	{"name": "moonhide_fetish_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["moonhide_fetish"]},
 ]
 
 const ENCOUNTER_CELLS := [
