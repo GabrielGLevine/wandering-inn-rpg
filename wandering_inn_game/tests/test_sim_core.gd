@@ -2733,6 +2733,51 @@ func _init() -> void:
 	assert(g_synth_dup.inventory.has("solvent_phial") and g_synth_dup.inventory.has("mineral_salts"), "dup-output: components NOT consumed")
 	assert(_count("item_lost") == 0 and _count("skill_used") == 0 and _count("accomplishment_recorded") == 0, "dup-output: no state changes at all")
 
+	# #148 Tier 3: map-level arrival_toasts re-orientation (armed / retired / unmet + first-satisfied-wins).
+	# Placed last: each fresh WIGame emits sim_initialized, so this must run after the
+	# _count("sim_initialized") == 1 assertion above.
+	var arrival_game := WIGame.new(scene_config, skill_config, _sink, 4242)
+	_events.clear()
+	arrival_game.transition("ruin_surface", Vector2i(17, 5))
+	assert(not _toast_texts().any(func(t: String) -> bool: return t.contains("this is the ruin")),
+		"ruin_surface arrival toast stays silent until door_understood is banked")
+	arrival_game.record_accomplishment("door_understood")
+	_events.clear()
+	arrival_game.transition("inn", Vector2i(2, 3))
+	arrival_game.transition("ruin_surface", Vector2i(17, 5))
+	assert(_toast_texts().any(func(t: String) -> bool: return t == "East past the gate road — this is the ruin. The pedestal Pisces described is deeper in."),
+		"ruin_surface arrival toast fires when door_understood met and recovered_anchor_stone unmet")
+	arrival_game.record_accomplishment("recovered_anchor_stone")
+	_events.clear()
+	arrival_game.transition("inn", Vector2i(2, 3))
+	arrival_game.transition("ruin_surface", Vector2i(17, 5))
+	assert(not _toast_texts().any(func(t: String) -> bool: return t.contains("this is the ruin")),
+		"ruin_surface arrival toast retires once recovered_anchor_stone is banked (hide_when)")
+	var dungeon_game := WIGame.new(scene_config, skill_config, _sink, 4243)
+	dungeon_game.record_accomplishment("heard_the_deep_tremor")
+	_events.clear()
+	dungeon_game.transition("dungeon_approach", Vector2i(8, 10))
+	assert(_toast_texts().any(func(t: String) -> bool: return t == "The fissure Zevara spoke of is down past the gallery. The dark has a direction today."),
+		"dungeon_approach arrival toast fires on heard_the_deep_tremor")
+	dungeon_game.record_accomplishment("cleared_the_warren")
+	_events.clear()
+	dungeon_game.transition("inn", Vector2i(2, 3))
+	dungeon_game.transition("dungeon_approach", Vector2i(8, 10))
+	assert(not _toast_texts().any(func(t: String) -> bool: return t.contains("fissure Zevara spoke of")),
+		"dungeon_approach arrival toast retires once cleared_the_warren is banked (hide_when)")
+	var fsw_config := WISceneCatalog.compose()
+	(fsw_config["maps"]["ruin_surface"] as Dictionary)["arrival_toasts"] = [
+		{"requires": {"door_understood": 1}, "text": "FIRST"},
+		{"requires": {"door_understood": 1}, "text": "SECOND"},
+	]
+	var fsw_game := WIGame.new(fsw_config, skill_config, _sink, 4244)
+	fsw_game.record_accomplishment("door_understood")
+	_events.clear()
+	fsw_game.transition("ruin_surface", Vector2i(17, 5))
+	var fsw_toasts := _toast_texts()
+	assert(fsw_toasts.has("FIRST") and not fsw_toasts.has("SECOND"),
+		"arrival_toasts is first-satisfied-wins: only the earliest matching entry emits")
+
 	print("PASS: sim core behaves correctly")
 	quit(0)
 

@@ -278,6 +278,16 @@ func _render(reason: String = "skills") -> void:
 		_fallback_labels.append(fallback)
 		_readout_lines.append("%d  %s" % [number, _readout_line(sk, id, combatants_catalog)])
 		number += 1
+	# Opt-in "Quest Thread" line (issue #148 tier 4), default OFF. Strictly
+	# guarded so the default state leaves `_readout_lines` byte-identical to
+	# before this feature -- the field_skills_loop/mage_invisibility_loop/
+	# rogue_earn_loop scripts pin that exact array. Reuses quest_summary()'s
+	# already-formatted "Title (Region) — beat text" first entry (journal.gd's
+	# precedent call); appends nothing when there is no active quest.
+	if WISettings.show_quest_thread():
+		var quest_lines: Array = Game.sim.quest_summary()
+		if not quest_lines.is_empty():
+			_readout_lines.append(String(quest_lines[0]))
 	_last_slots = slots
 	_hotbar.render(slots, -1)
 	_update_readout()

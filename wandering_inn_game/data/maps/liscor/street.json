@@ -1073,12 +1073,34 @@
     "Ten years running this Watch. Six weeks of leave, total. That's the whole personality, if you were wondering.",
     "Relc's off being enormous at someone. Klbkch is... Klbkch. The gate still stands. Don't jinx it."
    ],
+   "_comment": "stages are last-match-wins; keep story order — earliest gates first; relays outrank standing signposts",
    "talk_pool_stages": [
     {
      "id": "zevara_trusted_irregular",
      "requires_accomplishment": {
       "resolved_the_cisterns": 1,
       "chatted_with_zevara": 2
+     },
+     "lines": [
+      "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
+      "The cistern file is closed. Do you know how few files CLOSE in this office? I keep it on top of the stack for morale.",
+      "If you're between jobs, see me about bounty work. The Watch pays slow, but it pays. And I sign faster for people who don't invoice me for heroics."
+     ]
+    },
+    {
+     "id": "zevara_thread_cisterns_report",
+     "requires_accomplishment": {
+      "resolved_the_cisterns": 1
+     },
+     "lines": [
+      "Word is the cistern thing's settled. Olesm will want it from you, not rumor."
+     ]
+    },
+    {
+     "_comment": "M2 warm terminal: retire to zevara_trusted_irregular's WARM lines, not the cold base pool -- by the time the cistern thread retires the player is a trusted irregular, so the terminal register stays warm (the warm stage above keeps its own gate+position).",
+     "id": "zevara_thread_cisterns_neutral",
+     "requires_accomplishment": {
+      "cisterns_reported": 1
      },
      "lines": [
       "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
@@ -1143,6 +1165,7 @@
     "Supply lines, sightlines, morale: a city is only a very slow battle, and Liscor has been winning it for centuries. I intend to keep the streak.",
     "Selys works the desk inside now, board and all. I still find reasons to linger out here more than the job requires. The paperwork doesn't ask why."
    ],
+   "_comment": "stages are last-match-wins; keep story order — earliest gates first; relays outrank standing signposts",
    "talk_pool_stages": [
     {
      "id": "olesm_worth_interrupting_a_tally",
@@ -1175,6 +1198,27 @@
      "lines": [
       "Rematch, someday. Not today; I need my dignity back first.",
       "I still replay our game some nights. I win in my head. It isn't the same."
+     ]
+    },
+    {
+     "id": "olesm_thread_gate_runner",
+     "requires_accomplishment": {
+      "watch_runner_pointed": 1
+     },
+     "lines": [
+      "A runner was asking after you. Captain wants you at the gate."
+     ]
+    },
+    {
+     "_comment": "M2 warm terminal: retire to olesm_board_partner's WARM friend-tier lines, not the cold base pool -- once the gate-runner thread retires the player is Olesm's board partner, so the terminal register stays warm (the warm stages above keep their own gates+positions).",
+     "id": "olesm_thread_gate_neutral",
+     "requires_accomplishment": {
+      "heard_the_deep_tremor": 1
+     },
+     "lines": [
+      "I set the board up when the bells go quiet now, on the chance you wander past. That isn't pathetic, that's PREPARED.",
+      "Erin beat me in eleven moves yesterday. Eleven! I wrote them all down. I'm going to frame the humiliation and study it daily.",
+      "You, me, the board, one hour. I've been saving an opening that is either brilliant or a resignation with extra steps."
      ]
     }
    ],
@@ -1306,12 +1350,55 @@
     "Yes, a [Necromancer]. No, I will not apologize for a competence others lack the wit to appreciate.",
     "Do continue standing there. I find the silence rather more edifying than most conversation."
    ],
+   "_comment": "stages are last-match-wins; keep story order — earliest gates first; relays outrank standing signposts",
    "talk_pool_stages": [
     {
      "id": "pisces_tolerable_company",
      "requires_accomplishment": {
       "learned_magic_from_pisces": 1,
       "chatted_with_pisces": 3
+     },
+     "lines": [
+      "Ah. You. Acceptable timing. I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
+      "Your channel has stopped embarrassing you, I trust. Good. I dislike wasted instruction; it reflects on the instructor.",
+      "The bread stall raises its prices after the fourth bell. Buy before. There — advice worth coin, given freely. Note the date."
+     ]
+    },
+    {
+     "id": "pisces_thread_deep_tremor",
+     "requires_accomplishment": {
+      "heard_the_deep_tremor": 1
+     },
+     "lines": [
+      "You've got the look of someone the Watch pointed at a hole in the ground."
+     ]
+    },
+    {
+     "_comment": "M2 warm terminal: retire to pisces_tolerable_company's WARM lines, not the cold base pool -- once the deep-tremor thread retires the player is tolerable company, so the terminal register stays warm (the warm stage above keeps its own gate+position).",
+     "id": "pisces_thread_warren_neutral",
+     "requires_accomplishment": {
+      "cleared_the_warren": 1
+     },
+     "lines": [
+      "Ah. You. Acceptable timing. I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
+      "Your channel has stopped embarrassing you, I trust. Good. I dislike wasted instruction; it reflects on the instructor.",
+      "The bread stall raises its prices after the fourth bell. Buy before. There — advice worth coin, given freely. Note the date."
+     ]
+    },
+    {
+     "id": "pisces_thread_door",
+     "requires_accomplishment": {
+      "door_chain_started": 1
+     },
+     "lines": [
+      "Erin's door is doing the thing again. She's pretending it's fine."
+     ]
+    },
+    {
+     "_comment": "M2 warm terminal: retire to pisces_tolerable_company's WARM lines, not the cold base pool (same warm register as pisces_thread_warren_neutral above).",
+     "id": "pisces_thread_door_neutral",
+     "requires_accomplishment": {
+      "door_understood": 1
      },
      "lines": [
       "Ah. You. Acceptable timing. I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
@@ -1419,6 +1506,7 @@
     "You carry yourself better than before. Good. A city notices such things, even when its people pretend not to.",
     "Speak plainly with me and we get along well. The other kind of talk, I have no patience for."
    ],
+   "_comment": "stages are last-match-wins; keep story order — earliest gates first; relays outrank standing signposts",
    "talk_pool_stages": [
     {
      "id": "krshia_fair_weight",
@@ -1436,6 +1524,91 @@
      "requires_accomplishment": {
       "crate_returned": 1,
       "chatted_with_krshia": 4
+     },
+     "lines": [
+      "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
+      "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
+      "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week."
+     ]
+    },
+    {
+     "id": "krshia_thread_cisterns",
+     "requires_accomplishment": {
+      "heard_about_cisterns": 1
+     },
+     "lines": [
+      "Olesm's been muttering at sewer maps all morning — go rescue him from himself."
+     ]
+    },
+    {
+     "_comment": "M2 warm terminal: retire to krshia_friend_of_the_silverfangs's WARM friend-tier lines, not the cold base pool -- by the time a thread retires the player is a friend of the Silverfangs, so every terminal register stays warm (the warm stages above keep their own gates+positions). Same warm lines across all four krshia retire stages below.",
+     "id": "krshia_thread_cisterns_neutral",
+     "requires_accomplishment": {
+      "resolved_the_cisterns": 1
+     },
+     "lines": [
+      "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
+      "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
+      "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week."
+     ]
+    },
+    {
+     "id": "krshia_thread_gate_runner",
+     "requires_accomplishment": {
+      "watch_runner_pointed": 1
+     },
+     "lines": [
+      "A runner was asking after you. Captain wants you at the gate."
+     ]
+    },
+    {
+     "_comment": "M2 warm terminal: krshia_friend_of_the_silverfangs WARM lines (see krshia_thread_cisterns_neutral).",
+     "id": "krshia_thread_gate_neutral",
+     "requires_accomplishment": {
+      "heard_the_deep_tremor": 1
+     },
+     "lines": [
+      "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
+      "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
+      "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week."
+     ]
+    },
+    {
+     "id": "krshia_thread_ruin_east",
+     "requires_accomplishment": {
+      "door_understood": 1
+     },
+     "lines": [
+      "Pisces said something about a ruin east past the gate road. He used the word 'trivial,' which means it isn't."
+     ]
+    },
+    {
+     "_comment": "M2 warm terminal: krshia_friend_of_the_silverfangs WARM lines (see krshia_thread_cisterns_neutral).",
+     "id": "krshia_thread_ruin_neutral",
+     "requires_accomplishment": {
+      "recovered_anchor_stone": 1
+     },
+     "lines": [
+      "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
+      "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
+      "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week."
+     ]
+    },
+    {
+     "id": "krshia_thread_pisces_ready",
+     "requires_accomplishment": {
+      "bought_catalyst": 1,
+      "recovered_anchor_stone": 1
+     },
+     "lines": [
+      "You have everything. Pisces is by the Guild steps, being smug at pigeons."
+     ]
+    },
+    {
+     "_comment": "M2 warm terminal: krshia_friend_of_the_silverfangs WARM lines (see krshia_thread_cisterns_neutral).",
+     "id": "krshia_thread_door_neutral",
+     "requires_accomplishment": {
+      "door_awakened": 1
      },
      "lines": [
       "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",

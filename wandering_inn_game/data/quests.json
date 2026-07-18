@@ -17,7 +17,7 @@
 			"title": "The Missing Crate",
 			"beats": [
 				{ "id": "find", "description": "Find out what happened to Krshia's missing crate near the south-square sewers.", "complete_when": { "found_the_crate": 1 } },
-				{ "id": "report", "description": "Tell Krshia what became of her crate.", "complete_when": { "crate_returned": 1 } }
+				{ "id": "report", "description": "Tell Krshia what became of her crate, at her market stall on Market Street.", "complete_when": { "crate_returned": 1 } }
 			],
 			"resolution_paths": [
 				{ "accomplishment": "recovered_crate_force", "text": "You cleared the scavengers by force." },
@@ -30,7 +30,7 @@
 			"id": "cisterns",
 			"title": "Something in the Cisterns",
 			"beats": [
-				{ "id": "resolve", "description": "Settle whatever has nested in the cisterns beneath the market -- however you see fit.", "complete_when": { "resolved_the_cisterns": 1 } },
+				{ "id": "resolve", "description": "Settle the nest Olesm marked in the cisterns beneath the market -- however you see fit.", "complete_when": { "resolved_the_cisterns": 1 } },
 				{ "id": "report", "description": "Report the outcome to Olesm at the Guild.", "complete_when": { "cisterns_reported": 1 } }
 			],
 			"resolution_paths": [
@@ -44,8 +44,8 @@
 			"id": "wrong_order",
 			"title": "The Wrong Order",
 			"beats": [
-				{ "id": "resolve", "description": "Set Lyonette's botched supply order right -- strong-arm, sweet-talk, or stretch it in the kitchen.", "complete_when": { "resolved_wrong_order": 1 } },
-				{ "id": "report", "description": "Tell Lyonette it's handled, before Erin hears of it.", "complete_when": { "wrong_order_reported": 1 } }
+				{ "id": "resolve", "description": "Set Lyonette's botched supply order right -- strong-arm the supplier on Market Street, sweet-talk Krshia at her stall, or stretch it in the inn kitchen.", "complete_when": { "resolved_wrong_order": 1 } },
+				{ "id": "report", "description": "Tell Lyonette it's handled, in the inn common room, before Erin hears of it.", "complete_when": { "wrong_order_reported": 1 } }
 			],
 			"resolution_paths": [
 				{ "accomplishment": "strongarmed_the_supplier", "text": "You strong-armed the supplier." },
@@ -54,11 +54,14 @@
 			]
 		},
 		{
+			"_comment": "KNOWN COSMETIC SKIP (review NIT #6, NOT fixed by design): beats are authored stone-first (recover_stone idx 1, buy_catalyst idx 2), but buying the catalyst at Krshia's is not gated on the stone -- a player who buys catalyst-first completes idx 2 out of order, so beat_index (quests.gd, first-incomplete scan) leapfrogs recover_stone straight to attune when the stone lands and beat 2's text never surfaces as the current beat. Cosmetic only: both counters still bank and attune still gates on door_awakened.",
 			"id": "door_that_goes_elsewhere",
 			"title": "The Door That Goes Elsewhere",
 			"beats": [
-				{ "id": "consult", "description": "Find out what's happening with the pantry door -- fight it, talk to Pisces, or read the wardwork yourself.", "complete_when": { "door_understood": 1 } },
-				{ "id": "recover", "description": "Recover the anchor stone from the ruin east past the gate road, on the floodplains, and buy Krshia's catalyst to attune it.", "complete_when": { "recovered_anchor_stone": 1, "bought_catalyst": 1 } }
+				{ "id": "consult", "description": "Find out what's happening with the pantry door -- fight what leaks through in the cellar, ask Pisces by the Guild steps, or read the wardwork on the pantry door yourself.", "complete_when": { "door_understood": 1 } },
+				{ "id": "recover_stone", "description": "Recover the anchor stone from the ruin east past the gate road — cross the floodplains and look for the sealed pedestal.", "complete_when": { "recovered_anchor_stone": 1 } },
+				{ "id": "buy_catalyst", "description": "Buy the attunement catalyst from Krshia's stall on Market Street in Liscor.", "complete_when": { "bought_catalyst": 1 } },
+				{ "id": "attune", "description": "Bring the anchor stone and Krshia's catalyst back to Pisces, by the Guild steps on Market Street, and see the door awakened.", "complete_when": { "door_awakened": 1 } }
 			],
 			"resolution_paths": [
 				{ "accomplishment": "cleared_the_leak", "text": "You fought the rift vermin in the cellar." },
@@ -72,7 +75,7 @@
 			"title": "The Price of a Favor",
 			"beats": [
 				{ "id": "resolve", "description": "Settle the debt collecting on Riverfarm -- the witch in the hollow west of the fields is the one collecting it. Drive her off, broker fair terms, or pay it yourself.", "complete_when": { "blight_lifted": 1 } },
-				{ "id": "report", "description": "Tell the headman it's done.", "complete_when": { "price_of_a_favor_reported": 1 } }
+				{ "id": "report", "description": "Tell the headman, at the village longhouse-side square, it's done.", "complete_when": { "price_of_a_favor_reported": 1 } }
 			],
 			"region": "Riverfarm",
 			"resolution_paths": [
@@ -88,7 +91,7 @@
 			"beats": [
 				{ "id": "scout", "description": "Find out exactly where Coyle's operation actually runs, along the boulevard, before you make a move on him.", "complete_when": { "coyle_operation_found": 1 } },
 				{ "id": "resolve", "description": "Clear Farley's name — corner Master Coyle, back on the boulevard, however you see fit.", "complete_when": { "merchant_fate_decided": 1 } },
-				{ "id": "report", "description": "Tell Wilovan it's done.", "complete_when": { "brothers_job_done": 1 } }
+				{ "id": "report", "description": "Tell Wilovan it's done, at the Brothers' parlor off the alleys.", "complete_when": { "brothers_job_done": 1 } }
 			],
 			"region": "Invrisil",
 			"_resolution_paths_comment": "The 3 info-gathering methods (STEALTH/TALK/FIGHT) feed the SAME resolve beat regardless of which fork is chosen, so they aren't separately surfaced here.",
@@ -105,7 +108,7 @@
 				{ "id": "delve", "description": "Reach the reopened gallery in the dungeon beneath Liscor and find Ceria Springwalker's team waiting.", "complete_when": { "horns_party_formed": 1 } },
 				{ "id": "halls", "description": "Get the Horns of Hammerad through the trapped halls -- fight, disarm the traps, or talk your way past.", "complete_when": { "halls_cleared": 1 } },
 				{ "id": "vault", "description": "Clear whatever the Horns are guarding against, deep past the trapped halls, and see what lies beyond it.", "complete_when": { "seal_kept_found": 1 } },
-				{ "id": "report", "description": "Tell Olesm what you found sealed behind the door.", "complete_when": { "seal_kept_reported": 1 } }
+				{ "id": "report", "description": "Tell Olesm what you found sealed behind the door, at the Guild.", "complete_when": { "seal_kept_reported": 1 } }
 			],
 			"region": "Liscor",
 			"resolution_paths": [
@@ -136,7 +139,7 @@
 			"beats": [
 				{ "id": "sponsor", "description": "Get Selys to sponsor your Pallass application, at the Guild.", "complete_when": { "pallass_sponsored": 1 } },
 				{ "id": "attune", "description": "Buy Krshia's attunement stone at her market stall so the Door can reach Pallass.", "complete_when": { "pallass_attuned": 1 } },
-				{ "id": "arrive", "description": "Present yourself to the stamp clerk once you step through into Pallass.", "complete_when": { "pallass_entry_stamped": 1 } }
+				{ "id": "arrive", "description": "Present yourself to the stamp clerk on the market tier, just through the Door.", "complete_when": { "pallass_entry_stamped": 1 } }
 			]
 		},
 		{

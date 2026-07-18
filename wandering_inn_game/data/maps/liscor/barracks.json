@@ -188,7 +188,7 @@
     6,
     4
    ],
-   "display_name": "Dresk",
+   "display_name": "Sergeant Ashgrave",
    "sprite": "royal_soldier",
    "tint": [
     0.55,
@@ -198,14 +198,14 @@
    "observe": "A belt-slate at his hip, chalk stub worn to a nub, already a line into today's tally. Rust-brown scales, no plate for a desk posting — he'd rather be finishing the count than talking to you.",
    "facing": "down",
    "talk_pool": [
-    "Sergeant Ashgrave. If you're here to report something, the slate's on the wall. Write it plain.",
+    "If you're here to report something, the slate's on the wall. Write it plain.",
     "Quiet shift. Kit's counted, slates are current, and the cell's empty. Write that down as a good day.",
     "Barracks business, filed here. Yours is filed at the gate."
    ],
    "conversation": "dresk_recruit",
    "dialogue": [
     {
-     "speaker": "Dresk",
+     "speaker": "Sergeant Ashgrave",
      "text": "Barracks is Watch business only. State yours."
     }
    ]

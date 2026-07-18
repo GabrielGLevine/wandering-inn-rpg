@@ -1,6 +1,9 @@
 {
  "_comment": "Entered ONLY from floodplains' `ruin_door` (door_when-gated)",
  "biome": "cave",
+ "arrival_toasts": [
+  { "requires": { "door_understood": 1 }, "hide_when": { "recovered_anchor_stone": 1 }, "text": "East past the gate road — this is the ruin. The pedestal Pisces described is deeper in." }
+ ],
  "grid": {
   "width": 20,
   "height": 14

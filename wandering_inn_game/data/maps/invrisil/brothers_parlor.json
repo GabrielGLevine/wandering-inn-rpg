@@ -333,6 +333,27 @@
    ],
    "talk_pool_stages": [
     {
+     "id": "ratici_thread_brothers_job",
+     "requires_accomplishment": {
+      "took_brothers_job": 1
+     },
+     "lines": [
+      "Boulevard's where the operation runs, friend. Start where the money's loudest."
+     ]
+    },
+    {
+     "id": "ratici_thread_operation_neutral",
+     "requires_accomplishment": {
+      "coyle_operation_found": 1
+     },
+     "lines": [
+      "Somethin' I can do for you? Ask quick — I talk faster'n I listen, as it were.",
+      "You'll pardon the hat stayin' on. Consider it a heretofore act of civic kindness.",
+      "Wilovan does the philosophizin'. I do the notin' of exits. You came in by the only one, incidentally.",
+      "We don't steal. We RECOVER. My associate's phrasin', that. Mine ran less charitable."
+     ]
+    },
+    {
      "_comment": "Marker-holders get the warmer register (fence-tier trust, same gate as Wilovan's fence).",
      "id": "ratici_marker",
      "requires_accomplishment": {
