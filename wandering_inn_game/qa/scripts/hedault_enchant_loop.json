@@ -1,0 +1,92 @@
+{
+ "_comment": "GH#142: Hedault enchant swap. Pool bark then conversation (two interacts); rendered options at this fixture: fang enchant (held+affordable), 'Just looking.' -- charm/wardstone rows are requires.item-hidden... VERIFY: requires.item unmet = hidden or locked? The loop asserts by TEXT, robust either way. Enchant: gold -35, fang swapped for hedaults_hunters_fang; fight proves eagle_eyes folds.",
+ "fixture_save": "near_hedault",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "hedault_enchanting"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "type_text",
+   "text": "2"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hedault",
+    "text": "Done. The work is correct; the item was merely early. Do not thank me, do not shake my hand, and do not let a street enchanter touch it afterward."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "hedaults_hunters_fang"
+  },
+  {
+   "action": "screenshot",
+   "name": "00_enchanted"
+  },
+  {
+   "action": "type_text",
+   "text": "1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  }
+ ]
+}

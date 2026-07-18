@@ -224,6 +224,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `room_upgrade_loop` | 7 (fixture `near_room_upgrade`) | GH#92 D3: Erin tier-1 room purchase → gold spend + `room_tier_1` bank (HP step pinned in test_sim_core) |
 | `watch_donation_loop` | 7 (fixture `near_watch_donation`) | GH#92 D3: Ashgrave supply-fund donation → repeatable sink banks `donated_watch_supplies` |
 | `dialogue_numkey_loop` | 7 (fixture `near_room_upgrade`) | GH#171: number keys pick numbered dialogue options; no field-cast leak |
+| `hedault_enchant_loop` | 7 (fixture `near_hedault`) | GH#142: enchant swap — fee, base consumed, variant granted |
 | `bed_nudge_loop` | 9 (fixture `pre_first_sleep`) | GH#130 bed nudge fires pre-sleep, retires after (`slept` counter) |
 | `raskghar_entry_loop` | 9 (fixture `raskghar_entry_start`) | GH#152 Act III entry chain, no hand-banks past the report |
 | `consolidation_flow` | 9 (fixture `near_consolidation`) | offer/decline/re-offer/accept → [Spellsword] |
