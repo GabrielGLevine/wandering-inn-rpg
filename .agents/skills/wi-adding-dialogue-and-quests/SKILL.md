@@ -286,3 +286,14 @@ and-map; `tests/test_shipped_ids.gd` enforces). New counters follow the
 prefix conventions (`completed_bounty_<id>`, `chatted_with_<entity>`,
 quest-beat verbs) — they freeze at the next release cut, so name them
 right the FIRST time (wi-shipping deploy step 0).
+
+
+## Purchase options NEVER ride pinned hubs (2026-07-18, cost 3 canonical reds twice)
+Walkthrough canonicals pin dialogue hubs by cursor position, visible-option
+count, and exact option arrays. Adding a commerce option to erin_errand
+broke 3 scripts; moving it to lyonette_tip would have broken others. NEW
+commerce/purchase surfaces get their OWN conversation on their own entity
+(the `room_ledger` register pattern: `kind: npc` object, no talk_pool, own
+dialogue file). Window-gated options on existing hubs are acceptable ONLY
+when no pinned fixture state falls inside the window — check every
+fixture's counters against the gate before wiring.
