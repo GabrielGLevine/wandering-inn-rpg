@@ -2021,6 +2021,9 @@ func _maybe_fire_tremor_pointer() -> bool:
 	if accomplishment_count("reached_two_classes") < 1 or _quests_completed_count() < 3:
 		return false
 	record_accomplishment("watch_runner_pointed")
+	# GH#167: the toast is a NUDGE; the durable direction is the journal
+	# quest started here (the arc was the only thread without one).
+	start_quest("something_beneath")
 	_emit(WIEvents.TOAST, {"text": "A Watch runner is looking for you."})
 	return true
 

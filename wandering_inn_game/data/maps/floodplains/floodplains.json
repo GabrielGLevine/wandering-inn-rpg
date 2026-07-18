@@ -1468,7 +1468,7 @@
    "cell": [33, 9],
    "display_name": "Wounded Corusdeer",
    "sprite": "corusdeer",
-   "tint": [0.82, 0.78, 0.72],
+   "tint": [0.6, 0.52, 0.47],
    "observe": "A corusdeer, down in the grass with a leg it won't put weight on. Its antlers barely glow. It watches you the way anything hurt watches anything larger.",
    "on_interact_accomplishment": "soothed_a_beast",
    "once_per_waking": true,

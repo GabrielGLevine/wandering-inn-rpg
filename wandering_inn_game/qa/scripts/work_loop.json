@@ -10,7 +10,7 @@
    "action": "assert_event_logged",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 21,
+    "sprites": 20,
     "fallbacks": 0
    }
   },

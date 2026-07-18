@@ -119,6 +119,11 @@ func _init() -> void:
 	# gate on it (the door chain's `attune` beat, #148). Mirrors STRUCTURAL_LITERALS in
 	# test_shipped_ids.gd, which already lists door_awakened as a code-produced counter.
 	produced_accomplishments["door_awakened"] = true
+	# garden_door_unlocked: same class (code-banked at the qualifying sleep,
+	# STRUCTURAL_LITERALS member) -- registered for the garden door's
+	# present_when (GH#167). If a third one appears, import the whole
+	# STRUCTURAL_LITERALS set via the test_reachability preload pattern.
+	produced_accomplishments["garden_door_unlocked"] = true
 	_validate_conversations(scene, graphs)
 	_validate_dialogue_graphs(graphs, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
 	_validate_quests(quests, produced_accomplishments)
@@ -784,7 +789,7 @@ func _validate_quests(quests: Dictionary, produced_accomplishments: Dictionary) 
 const LANDMARK_TOKENS := {
 	"inn": ["inn"],
 	"inn_upstairs": ["upstairs"],
-	"street": ["market", "square"],
+	"street": ["market", "square", "gate"],
 	"floodplains": ["floodplains"],
 	"sewers": ["sewer", "cistern"],
 	"deep_tunnels": ["deep tunnels", "tunnels"],

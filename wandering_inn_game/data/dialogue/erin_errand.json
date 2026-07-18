@@ -220,6 +220,13 @@
       }
      },
      "goto": "errand_recap"
+    },
+    {
+     "_comment": "GH#167: door-chain follow-up -- the consult window (door_chain_started, retired at door_understood) previously left Erin with NO new options, a dead end at the chain's stuck point. Appended LAST; visible only inside the window, so cursor-pinned canonicals outside it stay byte-identical.",
+     "text": "So what do I actually do about your door?",
+     "requires": { "accomplishment": { "door_chain_started": 1 } },
+     "hide_when": { "accomplishment": { "door_understood": 1 } },
+     "goto": "door_paths"
     }
    ]
   },
@@ -236,6 +243,11 @@
      "end": true
     }
    ]
+  },
+  "door_paths": {
+   "speaker": "Erin",
+   "text": "I don't KNOW, that's the fun part! Okay. Three ideas. Pisces knows creepy old magic — he's usually by the Guild steps on Market Street, being smug at pigeons. Or the frame itself — the grain does a thing, look at it properly if you know how. Or... there's the scratching in my cellar. If you go say hi to that, bring a weapon and don't tell me about it after.",
+   "options": [ { "text": "I'll look into it.", "end": true } ]
   },
   "cleaning_directions": {
    "speaker": "Erin",

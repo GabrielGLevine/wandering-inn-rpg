@@ -12,7 +12,7 @@
    "payload_contains": {
     "map": "inn",
     "floor_cells": 160,
-    "blocked_cells": 56
+    "blocked_cells": 55
    }
   },
   {
@@ -20,7 +20,7 @@
    "action": "assert_event_logged",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 21,
+    "sprites": 20,
     "fallbacks": 0
    }
   },
