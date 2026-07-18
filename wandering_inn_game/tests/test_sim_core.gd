@@ -2908,6 +2908,20 @@ func _init() -> void:
 	assert(g_reduce.inventory.has("tonic_of_the_clear_eye"), "the tonic lands in the pack")
 	assert(g_reduce.accomplishment_count("synthesized_draught") == 1, "the cast banks synthesized_draught")
 
+	# --- GH#165 review F2: execute the two new seams the sim never walks ---
+	var g_pepper := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_pepper.player_skills.append("flarepepper_supplies")
+	g_pepper.sleep()
+	assert(g_pepper.inventory.has("flarepepper_powder"), "[Supplies] restocks one flarepepper at sleep")
+	g_pepper.sleep()
+	assert(g_pepper.inventory.count("flarepepper_powder") == 1, "restock never stacks a held powder")
+	g_pepper.inventory.erase("flarepepper_powder")
+	g_pepper.sleep()
+	assert(g_pepper.inventory.has("flarepepper_powder"), "restock returns after the powder is spent")
+	var g_no_pepper := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_no_pepper.sleep()
+	assert(not g_no_pepper.inventory.has("flarepepper_powder"), "no skill, no restock")
+
 	# #148 Tier 3: map-level arrival_toasts re-orientation (armed / retired / unmet + first-satisfied-wins).
 	# Placed last: each fresh WIGame emits sim_initialized, so this must run after the
 	# _count("sim_initialized") == 1 assertion above.

@@ -402,12 +402,12 @@
 			"inherits": "rogue",
 			"levels": [
 				{ "level": 10, "requires": { "sneaked_past_danger": 36 }, "grants": [] },
-				{ "level": 11, "requires": { "sneaked_past_danger": 44 }, "grants": [] },
-				{ "level": 12, "requires": { "sneaked_past_danger": 53 }, "grants": [] },
-				{ "level": 13, "requires": { "sneaked_past_danger": 61 }, "grants": [] },
-				{ "level": 14, "requires": { "sneaked_past_danger": 70 }, "grants": ["shadowstep"] },
-				{ "level": 15, "requires": { "sneaked_past_danger": 78 }, "grants": [] },
-				{ "level": 16, "requires": { "sneaked_past_danger": 87 }, "grants": [] }
+				{ "level": 11, "requires": { "sneaked_past_danger": 43 }, "grants": [] },
+				{ "level": 12, "requires": { "sneaked_past_danger": 50 }, "grants": [] },
+				{ "level": 13, "requires": { "sneaked_past_danger": 57 }, "grants": [] },
+				{ "level": 14, "requires": { "sneaked_past_danger": 64 }, "grants": ["shadowstep"] },
+				{ "level": 15, "requires": { "sneaked_past_danger": 71 }, "grants": [] },
+				{ "level": 16, "requires": { "sneaked_past_danger": 78 }, "grants": [] }
 			]
 		},
 		{
