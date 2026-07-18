@@ -276,6 +276,9 @@ func _make_decor_visual(cell: Vector2i, sprite_id: String, tint: Variant = []) -
 	var holder := Node2D.new()
 	holder.position = Vector2(cell) * CELL
 	var spr := AnimatedSprite2D.new()
+	# GH#169: pixel sprites stay crisp at ANY render_scale (the 0.55 rock
+	# crab blurred under the default Linear filter); UI chrome keeps Linear.
+	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	spr.sprite_frames = WISpriteRegistry.frames_for(sprite_id)
 	spr.centered = false
 	var anim := "idle_down" if spr.sprite_frames.has_animation("idle_down") else "idle"
@@ -318,6 +321,9 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 	var label_top := -18.0
 	if sprite_id != "" and WISpriteRegistry.has_sprite(sprite_id):
 		var spr := AnimatedSprite2D.new()
+		# GH#169: pixel sprites stay crisp at ANY render_scale (the 0.55 rock
+		# crab blurred under the default Linear filter); UI chrome keeps Linear.
+		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		spr.sprite_frames = WISpriteRegistry.frames_for(sprite_id)
 		spr.centered = false
 		spr.flip_h = (String(c["side"]) != "player")
