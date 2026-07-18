@@ -16,9 +16,12 @@ def main() -> int:
 	if not doc_map.exists() or "Last verified: **2026-07-13**" not in doc_map.read_text():
 		errors.append("docs/DOC-MAP.md missing its verified-date marker")
 
+	# docs/ROADMAP.md UN-RETIRED 2026-07-17: recreated deliberately as the
+	# living milestone doc (roadmap-ownership directive); it was retired when
+	# planning moved to GitHub issues, but issue boards don't hold the
+	# next-release SHAPE -- the roadmap does.
 	for retired in (
 		"GOAL-CHAIN.md",
-		"docs/ROADMAP.md",
 		"docs/FULL-GAME-PLAYTEST.md",
 		"docs/superpowers/successor-briefs",
 		"docs/archive/HANDOVER-FABLE-TO-OPUS-2026-07-02.md",
@@ -35,7 +38,6 @@ def main() -> int:
 
 	retired_references = (
 		"GOAL-CHAIN.md",
-		"ROADMAP.md",
 		"FULL-GAME-PLAYTEST.md",
 		"successor-briefs",
 		"HANDOVER-FABLE-TO-OPUS-2026-07-02.md",
