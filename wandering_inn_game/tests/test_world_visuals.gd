@@ -542,6 +542,19 @@ func _init() -> void:
 		"World must defer destination mood/entity presentation until the covered MAP_CHANGED rebuild")
 	assert(_atmosphere_map_transition_contract_holds(atmosphere_source),
 		"Atmosphere must not apply destination mood to still-visible source geometry")
+	# a5 #205: the field legibility boost must exist AND be re-applied when
+	# the mood lands, or dark-map interactables silently regress to invisible.
+	assert(atmosphere_source.find("func field_entity_boost() -> float:") != -1
+		and atmosphere_source.find("FIELD_LEGIBILITY_TARGET") != -1,
+		"Atmosphere must expose field_entity_boost() with a field-tuned target")
+	assert(source.find("func _apply_field_legibility() -> void:") != -1
+		and source.find("WIEvents.UI_MOOD_APPLIED:") != -1,
+		"World must apply the field legibility boost and re-apply it on UI_MOOD_APPLIED (a5 #205)")
+	# a5 #205 review: the boost MUST be holder.modulate (inherits to the
+	# drawing children) — holder.self_modulate tints only the bare holder,
+	# which draws nothing, so the feature would be silently INERT. Lock it.
+	assert(source.find("holder.modulate = m") != -1 and source.find("holder.self_modulate = m") == -1,
+		"field legibility must use holder.modulate (inherits to children), never self_modulate (holder draws nothing)")
 	assert(_wave_b_field_visual_contract_holds(source),
 		"Wave-B blink, ward, and companion state need event-driven field visuals and reduced-motion parity")
 	assert(driver_source.find("step.get(\"when_user_args\", {})") != -1 \

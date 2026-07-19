@@ -21,7 +21,17 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 Source: full 10-region windowed walkthrough tour (seed 9, all scripts
 `QA_RESULT: PASS`); screenshots ephemeral under `wandering_inn_game/qa_output/`.
 
-- [ ] FIELD/DARK-MAPS — enemies/interactables on **field** (exploration, not
+- [ ] FIELD/DARK-MAPS (a5 #205, 2026-07-19 — fix landed, PIXEL-DIFF VERIFIED, eye-gate FEEL pending) — enemies/interactables on field dark-mood maps read
+  near-invisible before [Light]. FIXED via a per-entity legibility boost
+  (`atmosphere.field_entity_boost()` mirroring the combat board's floor,
+  gentler target 0.5 / cap 1.9): the mood grade/floor is untouched, only
+  encounter/prop/NPC holder self_modulate lifts, re-applied on every
+  UI_MOOD_APPLIED (so dusk->night re-lifts). Windowed before/after read:
+  `dungeon_peek/00` — the corner spider now reads (legs, eyes) vs. barely
+  separable; `invrisil_walkthrough/07` — the shadowed alley NPCs legible;
+  both keep their dark atmosphere (floors still shadowed, no wash-out).
+  Bright maps render byte-identical (boost 1.0 no-op). Original box:
+- [ ] (superseded) FIELD/DARK-MAPS — enemies/interactables on **field** (exploration, not
   combat) dark-mood maps read near-invisible before the player casts [Light].
   Distinct from the CLOSED COMBAT/DARK-ARENAS entry (GH#28 fixed combatant
   chips/HP legibility on the combat board) and the sewers-arena-silhouette
