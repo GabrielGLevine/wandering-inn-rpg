@@ -2582,6 +2582,7 @@
    "surfaces": {
     "maps": [
      "brothers_parlor",
+     "inn_upstairs",
      "invrisil_boulevard",
      "mercantile_alleys"
     ],
@@ -2601,6 +2602,7 @@
      "dialogue",
      "economy",
      "exploration",
+     "night_phase",
      "quests"
     ]
    }
@@ -2616,6 +2618,7 @@
    "surfaces": {
     "maps": [
      "brothers_parlor",
+     "inn_upstairs",
      "invrisil_boulevard",
      "mercantile_alleys"
     ],
@@ -2633,6 +2636,7 @@
      "combat",
      "dialogue",
      "exploration",
+     "night_phase",
      "quests"
     ]
    }

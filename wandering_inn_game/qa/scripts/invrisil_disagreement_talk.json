@@ -3,175 +3,999 @@
  "starts_at_title": true,
  "fixture_save": "near_invrisil_talk",
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "mercantile_alleys" },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 7] },
-  { "action": "assert_state", "path": "gold", "equals": 2 },
-
-  { "_comment": "== STAGE 2, PURCHASE 1: CUPS (2,6), facing up. First interact opens invrisil_fixer directly -- her graph is ALWAYS a conversation. Hub visible with gold:2, coyle_operation_found met (fixture), no rumor heard yet, bought_rumor_from_cups:0: [0..4 the five gold-gated rumor options, 5 'I need more than rumor...' (took_brothers_job met, fixer_will_testify unset) -- the NEW favor-trigger option stays hidden (bought_rumor_from_cups < 2), 6 'Just the tea today.']. Take index 0 (the footpads rumor). ==", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "invrisil_fixer" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "01_cups_testimony_ask" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "heard_rumor_footpads" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "bought_rumor_from_cups" }, "timeout_sec": 5 },
-  { "_comment": "rumor_footpads: [0 'Another cup.' -> hub, 1 'Useful fish. My thanks.' -> end]. Loop back for the second purchase.", "action": "press", "name": "confirm" },
-
-  { "_comment": "== STAGE 2, PURCHASE 2: hub now hides footpads (heard); visible [0 counting_house, 1 hellam, 2 hats, 3 door, 4 testimony-ask, 5 just_tea] -- favor-trigger still hidden (bought_rumor_from_cups:1). Take index 0 (counting_house).", "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "heard_rumor_counting_house" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "bought_rumor_from_cups" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "gold", "equals": 0 },
-  { "_comment": "rumor_counting_house: 'Another cup.' loops back to hub.", "action": "press", "name": "confirm" },
-
-  { "_comment": "== THE FAVOR BEAT: hub now hides counting_house too, and the trust threshold is met (bought_rumor_from_cups:2, coyle_operation_found:1) -- the NEW favor-trigger appears. visible [0 hellam, 1 hats, 2 door, 3 favor-trigger, 4 testimony-ask, 5 just_tea]. Take index 3.", "action": "move", "direction": "down", "steps": 3 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "cups_favor: single ungated option, grants cups_debt_chit + banks cups_favor_requested, loops back to hub.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "cups_debt_chit" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "cups_favor_requested" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "inventory", "contains": "cups_debt_chit" },
-
-  { "_comment": "== LEAVE CUPS: favor-trigger now hidden (cups_favor_requested met); testimony-ask still gated (returned_cups_debt unmet). visible [0 hellam, 1 hats, 2 door, 3 testimony-ask, 4 just_tea]. Take 'Just the tea today.' (index 4) -- it GOTOs the just_tea flavor node (not an immediate end), so a second confirm on its own single option ('Good tea, Cups.') is what actually closes the conversation.", "action": "move", "direction": "down", "steps": 4 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== CARRY THE CHIT TO WILOVAN: teleport to (5,3), still facing up (the fixture's own initial facing -- teleport never changes it). Bump right to face him (6,3). First interact plays his talk_pool line (first talk this waking); second opens invrisil_wilovan.", "action": "teleport", "map": "brothers_parlor", "cell": [5, 3] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "brothers_parlor" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Wilovan" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "invrisil_wilovan" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "hub: took_brothers_job met + coyle_operation_found met -> 'Remind me of the three doors.' shows (not scout_nudge); merchant_fate_decided unmet -> 'Coyle's answered for it' hidden; cups_debt_chit IS held -> the item-gated favor-return option shows too. visible [0 'Remind me of the three doors.', 1 'Evening.', 2 'Cups asked me to see something back to you.']. Take index 2.", "action": "move", "direction": "down", "steps": 2 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "cups_debt_chit" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "returned_cups_debt" }, "timeout_sec": 5 },
-  { "_comment": "cups_favor_returned: single ungated option, loops back to hub.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "hub again: the item-gated option is now hidden (returned_cups_debt met). visible [0 'Remind me...', 1 'Evening.']. Take 'Evening.' to leave.", "action": "wait_frames", "frames": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== BACK TO CUPS FOR THE TESTIMONY: teleport to (2,7). Facing is RIGHT (1,0) here -- carried over from the parlor bump (the Wilovan-hub 'move right 1' step), teleport/dialogue never touch facing -- so bump up first to face Cups (2,6) again before interacting; single interact opens invrisil_fixer directly (no talk_pool gate on her). hub now: heard_rumor_footpads/counting_house both met (hidden), favor-trigger hidden (cups_favor_requested met), testimony-ask visible (fixer_will_testify unmet). visible [0 hellam, 1 hats, 2 door, 3 testimony-ask, 4 just_tea]. Take index 3.", "action": "teleport", "map": "mercantile_alleys", "cell": [2, 7] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "mercantile_alleys" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 7] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 7] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "invrisil_fixer" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "balk: returned_cups_debt is met, so the ORIGINAL text_variant renders ('Swearing's different water...'). [0 Persuade (free, Diplomat -- returned_cups_debt+diplomat both met), 1 '10 gold...' (locked, broke -- gold is 0), 2 'Fair. Forget I asked.']. Take the free Persuade.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "fixer_will_testify" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "persuaded_someone" }, "timeout_sec": 5 },
-  { "_comment": "agreed_persuaded: [0 'Pour for three, then...' -> arranged, 1 'I'll be back for it.']. Take 0.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "secured_testimony" }, "timeout_sec": 5 },
-  { "_comment": "arranged: single ungated option, ends.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "gold", "equals": 0 },
-
-  { "_comment": "== CONFRONT COYLE: teleport to (23,6). Facing is STILL up (0,-1) from the fixture's own initial facing toward Cups -- teleport never changes it, and neither does a dialogue session. Bump right into Coyle's own cell (24,6) to reorient facing without moving (the invrisil_walkthrough precedent verbatim). ==", "action": "teleport", "map": "invrisil_boulevard", "cell": [23, 6] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "invrisil_boulevard" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [23, 6] },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [23, 6] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Master Coyle" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "invrisil_merchant_prince" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "accusation: coyle_operation_found is met, so the ORIGINAL text_variant renders. visible [0 'Cups will swear to the hiring...' (secured_testimony met -- lifted_true_ledger is UNMET on this path, so its option stays hidden), 1 '(Draw steel.)', 2 'Another day, Coyle.']. Cursor at 0.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "cornered (base text): options [0 EXPOSE, 1 EXTORT]. Take EXTORT.", "action": "wait_frames", "frames": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "merchant_extorted" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "merchant_fate_decided" }, "timeout_sec": 5 },
-  { "_comment": "GH#68: beat_index shifted +1 by the new shared 'scout' beat (already primed from the fixture's pre-banked coyle_operation_found) -- resolve's own completion now reads beat:2.", "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "a_gentlemans_disagreement", "beat": 2 }, "timeout_sec": 5 },
-  { "_comment": "ending_extorted: single option, ends.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "_comment": "The removal-man's own rate, re-priced: 40 gold banked (gold was 0 heading into this fork -- both rumor purchases already spent it).", "action": "assert_state", "path": "gold", "equals": 40 },
-
-  { "_comment": "== REPORT TO WILOVAN: teleport to (5,3). Same waking, so his pool is already spent -- one interact opens invrisil_wilovan directly. ==", "action": "teleport", "map": "brothers_parlor", "cell": [5, 3] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "brothers_parlor" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "invrisil_wilovan" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "hub: visible [0 'Remind me of the three doors.', 1 'Coyle's answered for it...' (merchant_fate_decided met), 2 'Evening.'] -- the item-gated favor option is hidden now (returned_cups_debt already met from the earlier visit). Take index 1.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "Discovered emission order (empirically verified against invrisil_disagreement_stealth's own log): quest_beat_completed/quest_completed fire IMMEDIATELY after brothers_job_done, before the array's later effects (brothers_marker/item/remove_entity) apply.", "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "brothers_job_done" }, "timeout_sec": 5 },
-  { "_comment": "GH#68: report's own completion now reads beat:3 (=beats.size(), completed:true).", "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "a_gentlemans_disagreement", "beat": 3 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "quest_completed", "payload_contains": { "id": "a_gentlemans_disagreement" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "brothers_marker" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "brothers_marker" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "entity_removed", "payload_contains": { "id": "alley_footpads_a" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "entity_removed", "payload_contains": { "id": "alley_footpads_b" }, "timeout_sec": 5 },
-  { "_comment": "marker: THE HATS-OFF BEAT (EXTORT variant, distinct line from the EXPOSE one). 'Glad Farley's out.' ends directly.", "action": "wait_frames", "frames": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== FINAL STATE PROOF: the OTHER fork than invrisil_disagreement_stealth, same shared reward. ==", "action": "assert_state", "path": "removed_entities", "contains": "alley_footpads_a" },
-  { "action": "assert_state", "path": "removed_entities", "contains": "alley_footpads_b" },
-  { "action": "assert_state", "path": "accomplishments.merchant_extorted", "equals": 1 },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "merchant_exposed" } },
-  { "action": "assert_event_absent", "type": "combat_started" },
-
-  { "_comment": "== THE FENCE (issue #89): brothers_marker is banked, so the hub's fence entry is visible. This path holds the EXTORT gold (40), covering the pendant's 20g -- the reason the fence leg lives on THIS canonical, not the gold-0 stealth one. Post-report hub visible: [0 'Evening.', 1 'Anything come through lately? (Show the marker.)'] -- every quest option is hidden (brothers_job_done/coyle_operation_found/returned_cups_debt all met). Same waking, pool spent -- one interact opens the graph directly. ==", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "invrisil_wilovan" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "fence node, PRE-purchase base text (bought_phosphor_pendant unmet, no variant). Visible [0 the pendant buy (gold 40 >= 20, ungreyed), 1 'Nothing today.']. Buy at index 0.", "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Wilovan", "text": "For a marker-holder, sir, always. One piece worth mentioning came through recently — sewer work, but HONEST sewer work, if you follow. No questions asked on either side of the counter." }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "Buy contract emission order (economy_loop's krshia precedent): gold_changed BEFORE the 'Paid' toast, then the item grant, then the retirement counter.", "action": "wait_for_event", "type": "gold_changed", "payload_contains": { "delta": -20, "total": 20, "source": "invrisil_wilovan" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Paid 20 gold." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "phosphor_pendant" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "bought_phosphor_pendant" }, "timeout_sec": 5 },
-  { "_comment": "fence_bought: single-exit reaction node, ends.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== RETIREMENT PROOF: re-enter the fence. The sold-out text_variant renders AND the buy option is hidden (hide_when bought_phosphor_pendant), so visible collapses to [0 'Nothing today.'] -- confirming at index 0 must route back to the hub with NO second purchase (the exact-once event counts below are the teeth). ==", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "invrisil_wilovan" }, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Wilovan", "text": "Nothing new on the shelf since your pendant, sir. Good stock finds us slowly, which is rather the point of it. Do check back." }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "Back at the hub (the brothers_job_done greeting variant) -- proves index 0 was 'Nothing today.', not a re-buy. 'Evening.' at index 0 ends.", "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Wilovan", "text": "Sir. The parlor door is never shut to you, the alleys are safe as churches. Safer, if anything — we keep better hours. And a man remembers. All of us remember." }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== FENCE FINAL PROOF: exact gold, pendant held, purchase happened EXACTLY once across the whole run. ==", "action": "assert_state", "path": "gold", "equals": 20 },
-  { "action": "assert_state", "path": "inventory", "contains": "phosphor_pendant" },
-  { "action": "assert_event_count", "type": "item_gained", "payload_contains": { "item": "phosphor_pendant" }, "count": 1 },
-  { "action": "assert_event_count", "type": "accomplishment_recorded", "payload_contains": { "id": "bought_phosphor_pendant" }, "count": 1 }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "mercantile_alleys"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    7
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 2
+  },
+  {
+   "_comment": "== STAGE 2, PURCHASE 1: CUPS (2,6), facing up. First interact opens invrisil_fixer directly -- her graph is ALWAYS a conversation. Hub visible with gold:2, coyle_operation_found met (fixture), no rumor heard yet, bought_rumor_from_cups:0: [0..4 the five gold-gated rumor options, 5 'I need more than rumor...' (took_brothers_job met, fixer_will_testify unset) -- the NEW favor-trigger option stays hidden (bought_rumor_from_cups < 2), 6 'Just the tea today.']. Take index 0 (the footpads rumor). ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_fixer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_cups_testimony_ask"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "heard_rumor_footpads"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "bought_rumor_from_cups"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "rumor_footpads: [0 'Another cup.' -> hub, 1 'Useful fish. My thanks.' -> end]. Loop back for the second purchase.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "== STAGE 2, PURCHASE 2: hub now hides footpads (heard); visible [0 counting_house, 1 hellam, 2 hats, 3 door, 4 testimony-ask, 5 just_tea] -- favor-trigger still hidden (bought_rumor_from_cups:1). Take index 0 (counting_house).",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "heard_rumor_counting_house"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "bought_rumor_from_cups"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "_comment": "rumor_counting_house: 'Another cup.' loops back to hub.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "== THE FAVOR BEAT: hub now hides counting_house too, and the trust threshold is met (bought_rumor_from_cups:2, coyle_operation_found:1) -- the NEW favor-trigger appears. visible [0 hellam, 1 hats, 2 door, 3 favor-trigger, 4 testimony-ask, 5 just_tea]. Take index 3.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "cups_favor: single ungated option, grants cups_debt_chit + banks cups_favor_requested, loops back to hub.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "cups_debt_chit"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cups_favor_requested"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "cups_debt_chit"
+  },
+  {
+   "_comment": "== LEAVE CUPS: favor-trigger now hidden (cups_favor_requested met); testimony-ask still gated (returned_cups_debt unmet). visible [0 hellam, 1 hats, 2 door, 3 testimony-ask, 4 just_tea]. Take 'Just the tea today.' (index 4) -- it GOTOs the just_tea flavor node (not an immediate end), so a second confirm on its own single option ('Good tea, Cups.') is what actually closes the conversation.",
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== CARRY THE CHIT TO WILOVAN: teleport to (5,3), still facing up (the fixture's own initial facing -- teleport never changes it). Bump right to face him (6,3). First interact plays his talk_pool line (first talk this waking); second opens invrisil_wilovan.",
+   "action": "teleport",
+   "map": "brothers_parlor",
+   "cell": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "brothers_parlor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Wilovan"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_wilovan"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "hub: took_brothers_job met + coyle_operation_found met -> 'Remind me of the three doors.' shows (not scout_nudge); merchant_fate_decided unmet -> 'Coyle's answered for it' hidden; cups_debt_chit IS held -> the item-gated favor-return option shows too. visible [0 'Remind me of the three doors.', 1 'Evening.', 2 'Cups asked me to see something back to you.']. Take index 2.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_lost",
+   "payload_contains": {
+    "item": "cups_debt_chit"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "returned_cups_debt"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "cups_favor_returned: single ungated option, loops back to hub.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "hub again: the item-gated option is now hidden (returned_cups_debt met). visible [0 'Remind me...', 1 'Evening.']. Take 'Evening.' to leave.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== BACK TO CUPS FOR THE TESTIMONY: teleport to (2,7). Facing is RIGHT (1,0) here -- carried over from the parlor bump (the Wilovan-hub 'move right 1' step), teleport/dialogue never touch facing -- so bump up first to face Cups (2,6) again before interacting; single interact opens invrisil_fixer directly (no talk_pool gate on her). hub now: heard_rumor_footpads/counting_house both met (hidden), favor-trigger hidden (cups_favor_requested met), testimony-ask visible (fixer_will_testify unmet). visible [0 hellam, 1 hats, 2 door, 3 testimony-ask, 4 just_tea]. Take index 3.",
+   "action": "teleport",
+   "map": "mercantile_alleys",
+   "cell": [
+    2,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "mercantile_alleys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_fixer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "balk: returned_cups_debt is met, so the ORIGINAL text_variant renders ('Swearing's different water...'). [0 Persuade (free, Diplomat -- returned_cups_debt+diplomat both met), 1 '10 gold...' (locked, broke -- gold is 0), 2 'Fair. Forget I asked.']. Take the free Persuade.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "fixer_will_testify"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "persuaded_someone"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "agreed_persuaded: [0 'Pour for three, then...' -> arranged, 1 'I'll be back for it.']. Take 0.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "secured_testimony"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "arranged: single ungated option, ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "_comment": "== CONFRONT COYLE: teleport to (23,6). Facing is STILL up (0,-1) from the fixture's own initial facing toward Cups -- teleport never changes it, and neither does a dialogue session. Bump right into Coyle's own cell (24,6) to reorient facing without moving (the invrisil_walkthrough precedent verbatim). ==",
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    23,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Master Coyle"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_merchant_prince"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "accusation: coyle_operation_found is met, so the ORIGINAL text_variant renders. visible [0 'Cups will swear to the hiring...' (secured_testimony met -- lifted_true_ledger is UNMET on this path, so its option stays hidden), 1 '(Draw steel.)', 2 'Another day, Coyle.']. Cursor at 0.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "cornered (base text): options [0 EXPOSE, 1 EXTORT]. Take EXTORT.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "merchant_extorted"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "merchant_fate_decided"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "GH#68: beat_index shifted +1 by the new shared 'scout' beat (already primed from the fixture's pre-banked coyle_operation_found) -- resolve's own completion now reads beat:2.",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "a_gentlemans_disagreement",
+    "beat": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "ending_extorted: single option, ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The removal-man's own rate, re-priced: 40 gold banked (gold was 0 heading into this fork -- both rumor purchases already spent it).",
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 40
+  },
+  {
+   "_comment": "== REPORT TO WILOVAN: teleport to (5,3). Same waking, so his pool is already spent -- one interact opens invrisil_wilovan directly. ==",
+   "action": "teleport",
+   "map": "brothers_parlor",
+   "cell": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "brothers_parlor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_wilovan"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "hub: visible [0 'Remind me of the three doors.', 1 'Coyle's answered for it...' (merchant_fate_decided met), 2 'Evening.'] -- the item-gated favor option is hidden now (returned_cups_debt already met from the earlier visit). Take index 1.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "Discovered emission order (empirically verified against invrisil_disagreement_stealth's own log): quest_beat_completed/quest_completed fire IMMEDIATELY after brothers_job_done, before the array's later effects (brothers_marker/item/remove_entity) apply.",
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "brothers_job_done"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "GH#68: report's own completion now reads beat:3 (=beats.size(), completed:true).",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "a_gentlemans_disagreement",
+    "beat": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "a_gentlemans_disagreement"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "brothers_marker"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "brothers_marker"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "alley_footpads_a"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "alley_footpads_b"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "marker: THE HATS-OFF BEAT (EXTORT variant, distinct line from the EXPOSE one). 'Glad Farley's out.' ends directly.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== FINAL STATE PROOF: the OTHER fork than invrisil_disagreement_stealth, same shared reward. ==",
+   "action": "assert_state",
+   "path": "removed_entities",
+   "contains": "alley_footpads_a"
+  },
+  {
+   "action": "assert_state",
+   "path": "removed_entities",
+   "contains": "alley_footpads_b"
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.merchant_extorted",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "merchant_exposed"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "_comment": "== THE FENCE (issue #89): brothers_marker is banked, so the hub's fence entry is visible. This path holds the EXTORT gold (40), covering the pendant's 20g -- the reason the fence leg lives on THIS canonical, not the gold-0 stealth one. Post-report hub visible: [0 'Evening.', 1 'Anything come through lately? (Show the marker.)'] -- every quest option is hidden (brothers_job_done/coyle_operation_found/returned_cups_debt all met). Same waking, pool spent -- one interact opens the graph directly. ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_wilovan"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "fence node, PRE-purchase base text (bought_phosphor_pendant unmet, no variant). Visible [0 the pendant buy (gold 40 >= 20, ungreyed), 1 'Nothing today.']. Buy at index 0.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Wilovan",
+    "text": "For a marker-holder, sir, always. One piece worth mentioning came through recently — sewer work, but HONEST sewer work, if you follow. No questions asked on either side of the counter."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "Buy contract emission order (economy_loop's krshia precedent): gold_changed BEFORE the 'Paid' toast, then the item grant, then the retirement counter.",
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "payload_contains": {
+    "delta": -20,
+    "total": 20,
+    "source": "invrisil_wilovan"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Paid 20 gold."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "phosphor_pendant"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "bought_phosphor_pendant"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "fence_bought: single-exit reaction node, ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== RETIREMENT PROOF: re-enter the fence. The sold-out text_variant renders AND the buy option is hidden (hide_when bought_phosphor_pendant), so visible collapses to [0 'Nothing today.'] -- confirming at index 0 must route back to the hub with NO second purchase (the exact-once event counts below are the teeth). ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_wilovan"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Wilovan",
+    "text": "Nothing new on the shelf since your pendant, sir. Good stock finds us slowly, which is rather the point of it. Do check back."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "Back at the hub (the brothers_job_done greeting variant) -- proves index 0 was 'Nothing today.', not a re-buy. 'Evening.' at index 0 ends.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Wilovan",
+    "text": "Sir. The parlor door is never shut to you, the alleys are safe as churches. Safer, if anything — we keep better hours. And a man remembers. All of us remember."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== FENCE FINAL PROOF: exact gold, pendant held, purchase happened EXACTLY once across the whole run. ==",
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 20
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "phosphor_pendant"
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "phosphor_pendant"
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "bought_phosphor_pendant"
+   },
+   "count": 1
+  },
+  {
+   "_comment": "== b5 #220 CONSEQUENCE (pool stage, the issue's deliverable): sleep clears social_talked, so the next-day FIRST interact fires the stage line (chat idx 1 -> line 2).",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 10
+  },
+  {
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    24,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Master Coyle",
+    "text": "My consultant returns. Everything remains... current. Do spend some of it here."
+   },
+   "timeout_sec": 5
+  }
  ]
 }
