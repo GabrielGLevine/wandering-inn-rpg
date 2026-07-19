@@ -21,14 +21,14 @@ merged`), not here.
   be648b4/62459f0), each byte-identity-proven + full bar + review clean.
   wi_game.gd 2345→2020; WIInteractions/WISleepBeat/WICombatBanking live.
   Lanes b/c dispatchable (a1 dependency met). #194b world.gd seams open.
-- **#211 in flight** (branch issue/211-challenge-weighted-leveling):
-  step 1 harness + baseline bands (warrior 6/14/16, caster 7/15/16,
-  helper 10/21/26 — issue comment has the table) AND step 2 weight/
-  decay/fractional-bank + save v7 BOTH COMMITTED (9210eff), flag OFF =
-  byte-identical (proven 3 ways). Decay-only probe recorded. Reviewer
-  on step 2 + power_level proposal agent running bg. Next: power_level
-  splice after controller review -> tripwire -> curve tuning vs bands
-  -> resolution_grant authoring -> canonical re-checks -> PR.
+- **#211 AT PR** (#230, 6 commits, [ci-full] watching): challenge-
+  weighted leveling SHIPPED FLAG-ON — weight×decay on combat deposits,
+  power_level ×53, 16 resolution grants (path-exclusive), save v7,
+  12-canonical re-derivation, pace harness with force-off regression
+  arm reproducing the old pacing exactly. Bands: warrior 6/9/13,
+  caster 6/10/15, helper 10/20/24 (were 6/14/16 / 7/15/16 / 10/21/26).
+  Three review layers ran; all findings fixed or CHOICE-LOG'd. Merge
+  on green checks.
 - **#111 spec on main** — go/no-go pending (Taste queue). USER-GATED.
 - CHOICE-LOG has 2026-07-19 adjudications (#111 rec, #211 §8, seam
   calls) awaiting review.
@@ -51,6 +51,13 @@ merged`), not here.
    Five flagged decisions in §8 need rulings before any lane dispatches.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
+
+- **#211 leveling FEEL (flag is ON)**: pacing now pays adversity, not
+  repetition — early real fights pay double, gray-band grinds pay ~0,
+  quest closes are the big movers. EVERY knob is data
+  (data/progression.json) and the pace harness re-measures in minutes;
+  say the word to soften any curve. Numeric act-band gates lock after
+  your read.
 
 - **#111 GO/NO-GO (spec ready)**: rename to "Wandering Inn RPG" via
   first-boot save migration (Option A in the spec, §6) — GO dispatches
