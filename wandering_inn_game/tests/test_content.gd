@@ -13,6 +13,7 @@ const PLAYER_STRING_FILES := [
 	"res://data/bounties.json",
 	"res://data/deliveries.json",
 	"res://data/portals.json",
+	"res://data/fence_stock.json",
 ]
 
 
@@ -143,6 +144,7 @@ func _init() -> void:
 	_validate_dialogue_graphs(graphs, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
 	_validate_quests(quests, produced_accomplishments)
 	_validate_bounties(bounties, produced_accomplishments)
+	_validate_fence(_load_json("res://data/fence_stock.json"), item_ids)
 	_validate_bounty_payout_anchors(bounties, items)
 	_validate_encounter_scaling(scene, quests)
 	_validate_deliveries(deliveries, produced_accomplishments)
@@ -981,6 +983,17 @@ func _validate_place_naming_shape_cases() -> void:
 	assert(not _description_names_place("Find out exactly where Coyle's operation actually runs, before you make a move on him.", boulevard_tokens), "NEGATIVE CONTROL: the pre-fix scout beat names no landmark")
 	assert(_description_names_place("Clear Farley's name — corner Master Coyle, back on the boulevard, however you see fit.", boulevard_tokens), "fixed resolve beat names the boulevard")
 	assert(not _description_names_place("Clear Farley's name — corner Master Coyle however you see fit.", boulevard_tokens), "NEGATIVE CONTROL: the pre-fix resolve beat names no landmark")
+
+## b2 #218: the fence pool is builder-consumed (code-built graph — never
+## scanned by the dialogue validators), so its records get the bounty-style
+## static check: item exists, price positive, patter non-empty.
+func _validate_fence(fence: Dictionary, item_ids: Dictionary) -> void:
+	for rec: Dictionary in fence.get("stock", []):
+		var rid := String(rec.get("id", "?"))
+		assert(item_ids.has(String(rec.get("item", ""))), "fence record %s references unknown item: %s" % [rid, rec.get("item")])
+		assert(int(rec.get("price", 0)) > 0, "fence record %s needs a positive price" % rid)
+		assert(String(rec.get("patter", "")) != "", "fence record %s needs a patter line" % rid)
+
 
 func _validate_bounties(bounties: Dictionary, produced_accomplishments: Dictionary) -> void:
 	for bounty: Dictionary in bounties.get("bounties", []):

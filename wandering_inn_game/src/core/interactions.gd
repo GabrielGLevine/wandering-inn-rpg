@@ -21,6 +21,7 @@ var _sleep: Callable
 var _interact_board: Callable
 var _interact_delivery_board: Callable
 var _interact_portal_menu: Callable
+var _interact_fence_menu: Callable
 var _transition: Callable
 var _current_map: Callable
 var _resolve_skill_use_effect: Callable
@@ -33,7 +34,7 @@ var _start_combat: Callable
 var _pickup: Callable
 
 
-func _init(event_sink: Callable, accomplishment_gate_met_cb: Callable, record_accomplishment_cb: Callable, break_sneak_cb: Callable, talk_pool_line_cb: Callable, start_dialogue_cb: Callable, sleep_cb: Callable, interact_board_cb: Callable, interact_delivery_board_cb: Callable, interact_portal_menu_cb: Callable, transition_cb: Callable, current_map_cb: Callable, resolve_skill_use_effect_cb: Callable, holds_weapon_family_cb: Callable, known_skills_cb: Callable, apply_gold_effect_cb: Callable, use_skill_cb: Callable, encounter_gate_met_cb: Callable, start_combat_cb: Callable, pickup_cb: Callable) -> void:
+func _init(event_sink: Callable, accomplishment_gate_met_cb: Callable, record_accomplishment_cb: Callable, break_sneak_cb: Callable, talk_pool_line_cb: Callable, start_dialogue_cb: Callable, sleep_cb: Callable, interact_board_cb: Callable, interact_delivery_board_cb: Callable, interact_portal_menu_cb: Callable, interact_fence_menu_cb: Callable, transition_cb: Callable, current_map_cb: Callable, resolve_skill_use_effect_cb: Callable, holds_weapon_family_cb: Callable, known_skills_cb: Callable, apply_gold_effect_cb: Callable, use_skill_cb: Callable, encounter_gate_met_cb: Callable, start_combat_cb: Callable, pickup_cb: Callable) -> void:
 	_event_sink = event_sink
 	_accomplishment_gate_met = accomplishment_gate_met_cb
 	_record_accomplishment = record_accomplishment_cb
@@ -44,6 +45,7 @@ func _init(event_sink: Callable, accomplishment_gate_met_cb: Callable, record_ac
 	_interact_board = interact_board_cb
 	_interact_delivery_board = interact_delivery_board_cb
 	_interact_portal_menu = interact_portal_menu_cb
+	_interact_fence_menu = interact_fence_menu_cb
 	_transition = transition_cb
 	_current_map = current_map_cb
 	_resolve_skill_use_effect = resolve_skill_use_effect_cb
@@ -100,6 +102,10 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 				return {"map": String(_current_map.call())}
 			if bool(target.get("portal_menu", false)) and _door_gate_met(target.get("portal_menu_when", {}) as Dictionary):
 				return _interact_portal_menu.call()
+			# b2 #218: the fence register opens only once trusted; unmet falls
+			# through to the plain prop (the eyed_the_stash doorbell).
+			if bool(target.get("fence_menu", false)) and _door_gate_met(target.get("fence_menu_when", {}) as Dictionary):
+				return _interact_fence_menu.call()
 			if target.has("on_interact_accomplishment"):
 				var req_family := String(target.get("requires_weapon_family", ""))
 				if req_family != "" and not bool(_holds_weapon_family.call(req_family)):

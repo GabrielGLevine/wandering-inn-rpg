@@ -89,7 +89,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	_economy = WIEconomy.new(event_sink, pickup, _set_gold)
 	_social = WISocial.new(event_sink, accomplishment_count, record_accomplishment, find_entity)
 	_field_skills = WIFieldSkills.new(event_sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active, _blink_field, _ward_field, _animate_field)
-	_interactions = WIInteractions.new(event_sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup)
+	_interactions = WIInteractions.new(event_sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup)
 	_sleep_beat = WISleepBeat.new(event_sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _enriched_offer, _set_pending_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
 	_banking = WICombatBanking.new(event_sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity, (combat_config.get("progression", {}) as Dictionary).get("challenge", {}), combat_config.get("classes", {}), (combat_config.get("combatants", {}) as Dictionary).get("combatants", []))
 	rng.seed = rng_seed
@@ -1270,6 +1270,12 @@ func _portal_rows() -> Array:
 
 func attuned_destinations() -> Array:
 	return WIPortals.attuned_destinations(_portal_rows(), Callable(self, "accomplishment_count"), Callable(self, "has_map"))
+
+
+func _interact_fence_menu() -> Dictionary:
+	var pool: Array = (_combat_config.get("fence", {}) as Dictionary).get("stock", [])
+	_begin_code_dialogue(WIFence.build_fence_graph(WIFence.active_stock(pool, times_slept)), "ratici_fence", "parlor_stash_chest")
+	return {"dialogue": true}
 
 
 func _interact_portal_menu() -> Dictionary:

@@ -148,6 +148,16 @@
     {
      "requires": {
       "accomplishment": {
+       "brothers_job_done": 1,
+       "eyed_the_stash": 1
+      }
+     },
+     "text": "Shelf's thin, sir, and likely stays so. The banded chest by the wall, though — my colleague keeps it interesting for friends of the house.",
+     "_comment": "b2 #218 handoff: gated on job_done AND eyed (he points people who NOTICED the chest); earliest slot so pendant/marker variants outrank when active."
+    },
+    {
+     "requires": {
+      "accomplishment": {
        "bought_phosphor_pendant": 1
       }
      },

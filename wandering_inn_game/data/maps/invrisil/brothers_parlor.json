@@ -525,6 +525,8 @@
    "sprite": "chest",
    "observe": "Banded oak, twice-locked, sitting where the quiet gentleman can count who looks at it.",
    "on_interact_accomplishment": "eyed_the_stash",
+   "fence_menu": true,
+   "fence_menu_when": { "requires": { "eyed_the_stash": 1, "brothers_job_done": 1 } },
    "toast": "Locked twice over. The quiet gentleman clears his throat, courteously."
   },
   {

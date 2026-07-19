@@ -158,3 +158,5 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `rags_gate_check` | 9 | full | `rags_gate_unmet_start` | b1 #199: encounter_when absent-arm refusal (hunted-the-camp fixture) -- gate toast, no dialogue; the arm's can-fail proof |
 | `parley_talkdowns_loop` | 9 | full | `parley_talkdowns_start` | GH#217: all four talk-downs close non-violently (skills/permit fixture); staked formal bout fights by design |
 | `parley_gates_check` | 9 | full | `parley_gates_unmet_start` | GH#217: tease legs -- skill/gold arms render LOCKED, permit arm stays HIDDEN (exact-list pins are the can-fail) |
+| `ratici_fence_loop` | 9 | full | `ratici_fence_start` | b2 #218: fence open (trust gate), EXACT day-0 slate, buy leg (gold/item/held-hides), sleep rotation to day-1 slate |
+| `ratici_fence_gate_check` | 9 | full | `ratici_fence_untrusted_start` | b2 #218: untrusted interact banks eyed_the_stash doorbell, NO fence dialogue (gate can-fail) |

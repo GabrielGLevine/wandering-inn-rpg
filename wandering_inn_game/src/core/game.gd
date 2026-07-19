@@ -121,6 +121,7 @@ func _make_sim(creation: Dictionary = {}) -> WIGame:
 	combat_config["deliveries"] = _load_json("res://data/deliveries.json")
 	combat_config["portals"] = _load_json("res://data/portals.json")
 	combat_config["progression"] = _load_json("res://data/progression.json")
+	combat_config["fence"] = _load_json("res://data/fence_stock.json")
 	var dialogue_graphs: Dictionary = {}
 	var dir: DirAccess = DirAccess.open("res://data/dialogue")
 	if dir != null:
