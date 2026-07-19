@@ -1581,6 +1581,41 @@
     "kind": "tamed",
     "taken_toast": "It bites you exactly once, decides you took it well, and climbs your sleeve to glare at the horizon from a better vantage."
    }
+  },
+  {
+   "id": "rags_scouting_party",
+   "kind": "encounter",
+   "tint": [0.82, 0.95, 0.78],
+   "allies": [],
+   "gate_closed_toast": "The small figure on the rise watches you. It does not move to meet you.",
+   "cell": [
+    16,
+    21
+   ],
+   "display_name": "Small Watchful Figure",
+   "sprite": "rags",
+   "arena": "goblin_ambush",
+   "enemies": [
+    "rags",
+    "goblin_raider",
+    "goblin_raider"
+   ],
+   "conversation": "rags_meeting",
+   "on_victory": [
+    "won_combat"
+   ],
+   "encounter_when": {
+    "requires": {
+     "reward_acknowledged": 1,
+     "chatted_with_erin": 3,
+     "goblins_spared": 1
+    },
+    "absent": {
+     "fought_chieftains_raid": 1
+    }
+   },
+   "observe": "A small figure on the rise south, standing very still. It has been watching you for a while, and it wants you to know that.",
+   "_comment": "b1 #199 'The Chieftain's Price'. Conversation-first (NO trigger radius — she waits; interact opens rags_meeting; combat only via the betrayal close's start_combat). present_when = the composed conduct+relationship gate (design doc 2026-07-19-b1-rags-design.md section 2; absent arm = never hunted the camp). Interim sprite: rags registry entry reuses the goblin_chieftain sheet reduced+tinted until the c3 bespoke (VISUAL-LOG row)."
   }
  ],
  "cover_skip": [

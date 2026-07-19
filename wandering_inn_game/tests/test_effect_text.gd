@@ -11,6 +11,7 @@ const EXPECTED_ITEMS := {
 	"leather_jerkin": ["+4 HP", "Worth 24 gold"],
 	"watch_issue_gambeson": ["Reduces every hit taken by 1", "Worth 20 gold"],
 	"traveler_charm": ["+2 HP", "Resonance 1", "Worth 5 gold"],
+	"carved_chess_pawn": ["Resonance 1", "Worth 12 gold"],
 	"gnollish_hunting_knife": ["+1 damage on melee hits", "Sword kit replaces other weapon Skills in combat", "Worth 15 gold"],
 	"wool_lined_cloak": ["+3 HP", "Worth 18 gold"],
 	"copper_luck_band": ["+1 HP", "Grants [Dangersense] in combat", "Worth 4 gold"],

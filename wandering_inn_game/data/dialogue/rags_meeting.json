@@ -1,0 +1,65 @@
+{
+	"_comment": "b1 #199 'The Chieftain's Price' meeting graph. NARRATIVE PURPOSE: first contact with Rags — the conduct-gated reward for goblin mercy; opens the quest and carries all three resolution paths (SUPPLY item / BROKER gold / FIGHT betrayal). TONE: wary, quiet, transactional warmth at the edges. LORE: early-volume Rags (profile: 1-4 word utterances, no articles; chess is the Erin link). Voice contract: docs/design/character-profiles.md#rags. Costs follow the witch pattern: SUPPLY consumes a 10g draught, BROKER charges 6g, FIGHT is the betrayal close (start_combat on end). Back-out exit stays free and ungated (softlock guard).",
+	"start": "hub",
+	"nodes": {
+		"hub": {
+			"speaker": "Rags",
+			"text": "You. The one who didn't kill.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "met_rags": 1 } }, "text": "Back. Good." }
+			],
+			"options": [
+				{ "text": "Who are you?", "effects": [ { "accomplishment": "met_rags" }, { "quest": "chieftains_price" } ], "goto": "name" },
+				{ "text": "(Say nothing. Wait.)", "effects": [ { "accomplishment": "met_rags" }, { "quest": "chieftains_price" } ], "goto": "name" },
+				{ "text": "(Draw steel.)", "effects": [ { "accomplishment": "met_rags" }, { "quest": "chieftains_price" }, { "accomplishment": "rags_price_named" }, { "accomplishment": "drove_off_rags" }, { "accomplishment": "rags_meeting_settled" }, { "start_combat": "rags_scouting_party" } ], "end": true },
+				{ "text": "(Leave them to their business.)", "end": true }
+			]
+		},
+		"name": {
+			"speaker": "Rags",
+			"text": "Rags. Chieftain.",
+			"options": [
+				{ "text": "What do you want?", "goto": "ask" },
+				{ "text": "(Leave.)", "end": true }
+			]
+		},
+		"ask": {
+			"speaker": "Rags",
+			"_comment": "The problem beat: wounded tribe, Watch sweep. She trades, never begs — offers the carved piece FIRST.",
+			"text": "Watch came. Goblins hurt. Not begging.",
+			"text_variants": [
+				{ "requires": { "accomplishment": { "rags_price_named": 1 } }, "text": "Medicine. Trade. Still waiting." }
+			],
+			"options": [
+				{ "text": "What's the trade?", "effects": [ { "accomplishment": "rags_price_named" } ], "goto": "price" },
+				{ "text": "(Come back later.)", "end": true }
+			]
+		},
+		"price": {
+			"speaker": "Rags",
+			"_comment": "She holds up a carved chess pawn — her own work. The chess link is the one shared language (profile).",
+			"text": "This. Carved it. For medicine.",
+			"options": [
+				{ "text": "(Hand over a mending draught.)", "requires": { "item": "mending_draught" }, "effects": [ { "remove_item": "mending_draught" }, { "accomplishment": "helped_rags_tribe" }, { "accomplishment": "rags_meeting_settled" }, { "item": "carved_chess_pawn" } ], "goto": "sealed" },
+				{ "text": "Krshia's stall could spare supplies. I'll stand the cost. (6 gold)", "requires": { "gold": 6, "accomplishment": { "rags_price_named": 1 } }, "effects": [ { "gold": -6 }, { "accomplishment": "brokered_goblin_trade" }, { "accomplishment": "rags_meeting_settled" }, { "item": "carved_chess_pawn" } ], "goto": "sealed" },
+				{ "text": "I'll come back with something.", "goto": "ask_back" },
+				{ "text": "(Draw steel.)", "effects": [ { "accomplishment": "drove_off_rags" }, { "accomplishment": "rags_meeting_settled" }, { "start_combat": "rags_scouting_party" } ], "end": true }
+			]
+		},
+		"ask_back": {
+			"speaker": "Rags",
+			"text": "Fine. Waiting.",
+			"options": [
+				{ "text": "(Leave.)", "end": true }
+			]
+		},
+		"sealed": {
+			"speaker": "Rags",
+			"_comment": "Close beat. The Erin chess nod — smallest possible thaw, no fluency.",
+			"text": "Good trade. Inn Human plays chess. Tell her: Rags wins next one.",
+			"options": [
+				{ "text": "I'll pass it on.", "end": true }
+			]
+		}
+	}
+}

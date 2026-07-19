@@ -5030,5 +5030,68 @@
     "fps": 1
    }
   }
+ },
+ "rags": {
+  "directional": true,
+  "render_scale": 0.08,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
+    "sheet_side": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
+    "sheet_up": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
+    "frame_size": [
+     256,
+     256
+    ],
+    "region_down": [
+     0,
+     0,
+     1536,
+     256
+    ],
+    "region_side": [
+     0,
+     768,
+     1536,
+     256
+    ],
+    "region_up": [
+     0,
+     256,
+     1536,
+     256
+    ],
+    "fps": 3
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
+    "sheet_side": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
+    "sheet_up": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
+    "frame_size": [
+     256,
+     256
+    ],
+    "region_down": [
+     0,
+     0,
+     1536,
+     256
+    ],
+    "region_side": [
+     0,
+     768,
+     1536,
+     256
+    ],
+    "region_up": [
+     0,
+     256,
+     1536,
+     256
+    ],
+    "fps": 8
+   }
+  },
+  "_comment": "b1 #199 INTERIM: goblin_chieftain sheet reduced (0.1->0.08) for Rags smaller silhouette; entity tint separates her; c3 bespoke replaces this entry wholesale (VISUAL-LOG row 2026-07-19)."
  }
 }
