@@ -137,6 +137,12 @@ player-visible feature.
 - Authoring a fixture without ever loading it in a run.
 - Comparing JSON-parsed coordinate Arrays directly with int cell Arrays.
 - Using a cumulative event assertion to prove a repeated post-action emission.
+- **Adding a driver action without grepping for the name first** — the
+  driver's match takes the FIRST matching arm, so a duplicate arm SHADOWS
+  the original silently (no parse error). A shadow with different
+  semantics (0- vs 1-based `click_dialogue_option`, 2026-07-18) off-by-oned
+  every consumer and cost 7 sweep reds. `grep '"<action>"' qa/test_driver.gd`
+  before authoring; extend the existing arm, never re-declare it.
 - **Pinning an option LIST and assuming contains-semantics** — `payload_contains`
   matches per-KEY, and an `options` key compares the WHOLE list (exact
   members, exact order): adding one option to a pinned dialogue node reds
