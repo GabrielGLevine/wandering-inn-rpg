@@ -78,13 +78,16 @@ merged`), not here.
   reviewer's lantern MEDIUM refuted by probe). Branch protection ON
   (6 required checks; [ci-full] platform-enforced on PR heads). #247
   Friends-of-the-Inn spec on main (4 asks gate implementation).
-  a3 #215 + a4 #216-slice1 SHIPPED (PRs #250/#251). a4 #216 STAYS
-  OPEN: slice 1 (credits tap-softlock + volume half-row taps) merged;
-  slices 2-3 (line-skill tap-aim = combat targeting controller,
-  Playtest States touch nav, journal body drag-scroll) commented on
-  #216 as follow-ups. Remaining board: #195 listening queue (user),
-  a4 slices 2-3, a5/a8 mobile-UI, c1-c6 art, d1 post-read. Ledger has
-  a ci_sweep grep-widen follow-up (bare ERROR: slips the net).
+  a3 #215, a4 #216 (all 3 slices — credits/volume, journal drag-scroll,
+  line-skill tap-aim + playtest touch nav), a5 #205 dark-field
+  legibility all SHIPPED. a5 is EYE-GATE: user FEEL confirm pending
+  (before/after sent; VISUAL-LOG box open; one knob tunes, reversible).
+  Remaining board: #195 listening queue (user), a8 journal tabs, c1-c6
+  art, d1 post-read. In flight: #257 ci_sweep result.json hardening
+  (closes #256 — the false-green class). Open follow-up: #256-adjacent
+  grep-widen (bare ERROR: slips the SCRIPT ERROR|Parse Error|WARNING
+  net). NEW BUGS filed: #253 Import Save mobile (web file-input flashes
+  refusal — DEBUG TOMORROW per user).
 - Spoiler bar reminders for b1: Rags early-volume-safe; "Magical Door".
 
 ## 📋 QUEUE (value order)
