@@ -1158,13 +1158,20 @@ func _open_board_picker_dialogue() -> void:
 
 
 func _open_board_turnin_dialogue(voice: String = "selys") -> void:
+	# b4 #219 review fix: a desk only settles its own paper — a foreign
+	# posting (met or not) is never consumed here; the foreign arm renders
+	# and the slot stays held.
+	if WIBounties.turnin_is_foreign(accepted_bounty(), voice):
+		_begin_code_dialogue(WIBounties.build_turnin_graph(false, voice, true), "board_turnin", "grimalkin" if voice == "grimalkin" else "selys")
+		return
 	var met := turn_in_bounty()
 	_begin_code_dialogue(WIBounties.build_turnin_graph(met, voice), "board_turnin", "grimalkin" if voice == "grimalkin" else "selys")
 
 
 func _open_board_abandon_dialogue() -> void:
+	var private := not bool(accepted_bounty().get("board", true))
 	abandon_bounty()
-	_begin_code_dialogue(WIBounties.build_abandon_graph(), "board_abandon", "selys")
+	_begin_code_dialogue(WIBounties.build_abandon_graph(private), "board_abandon", "selys")
 
 
 func _delivery_pool() -> Array:

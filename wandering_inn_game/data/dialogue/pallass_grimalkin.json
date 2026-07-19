@@ -30,7 +30,7 @@
      "requires": {
       "board_accepted": false
      },
-     "_comment": "b4 #219 slot gate: a held posting blocks enrollment (visible-locked bool render carries his refusal fiction).",
+     "_comment": "b4 #219 slot gate: a held posting blocks enrollment. The board_accepted bool gate HIDES (both directions, same as Selys's hub) — no visible-locked render exists; the study-loop canonical's mutual-exclusion option pins are the proof.",
      "goto": "studies"
     },
     {
@@ -57,7 +57,7 @@
        "completed_bounty_grimalkin_study_combat": 1
       }
      },
-     "text": "The field subject returns. Your engagement numbers were... adequate. The literature thanks you; the literature is me."
+     "text": "The field subject returns. Your engagement data survived review. It is in the literature now; that is the only compliment I issue."
     },
     {
      "requires": {
@@ -87,7 +87,7 @@
   "study_enrolled": {
    "speaker": "Grimalkin",
    "text": "Enrolled. Fight as you would; I will know if you perform for the ledger. Return when the numbers exist.",
-   "_comment": "b4 #219 enrollment ack. hide_when on the accept options is a re-enroll guard within one study arc (accepted counter); board_accepted:false blocks accept while ANY posting is held — his refusal is the locked render.",
+   "_comment": "b4 #219 enrollment ack. board_accepted:false on the hub's studies entry blocks accept while ANY posting is held (hidden, not locked); studies are re-acceptable after completion or abandon — delta rows are repeatable.",
    "options": [
     {
      "text": "Understood.",
@@ -101,11 +101,7 @@
    "options": [
     {
      "text": "Sign me on as a field subject. Three engagements, logged.",
-     "hide_when": {
-      "accomplishment": {
-       "accepted_bounty_grimalkin_study_combat": 1
-      }
-     },
+     "_comment": "b4 review fix: NO hide_when — accepted_bounty_* counters never reset, so hiding on them permanently retired the study after one accept-then-abandon (the hub's board_accepted:false gate already prevents double-accept while a posting is held; delta rows are repeatable by design).",
      "effects": [
       {
        "accept_bounty": "grimalkin_study_combat"
@@ -118,11 +114,6 @@
      "requires": {
       "accomplishment": {
        "learned_magic_from_pisces": 1
-      }
-     },
-     "hide_when": {
-      "accomplishment": {
-       "accepted_bounty_grimalkin_study_casting": 1
       }
      },
      "effects": [

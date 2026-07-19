@@ -26,7 +26,14 @@ merged`), not here.
   (board_loop/bounty_rank_loop/pallass_walkthrough; pallass_peek exit
   index re-derived after the hub gained rows). Full bar + review + PR
   next. Design-doc correction logged: board_accepted bool HIDES both
-  directions — no visible-locked tease exists.
+  directions — no visible-locked tease exists. WHOLE-BRANCH REVIEW
+  DONE (workflow, 14/14 confirmed): abandon-lockout hide_when killed,
+  desk/paper matching added (met foreign postings were consumed+paid
+  at the wrong desk — both directions live-reproed), his variant
+  de-Selys'd, row copy re-cut to corpus signature convention, three
+  new unit blocks. NOTE for the #211 taste read: study conditions ride
+  the same challenge-weighted counters as every combat bounty — grinds
+  starve them by design (adjudicated, CHOICE-LOG).
 - **#194 CLOSED** (god-file pair fully dissected): #227/#228/#229
   (wi_game 2345→2020: WIInteractions/WISleepBeat/WICombatBanking) +
   #231/#232 (world 1624→1435: WIEntityVisualFactory/WICameraController).

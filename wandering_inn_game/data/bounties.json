@@ -493,12 +493,12 @@
    "id": "grimalkin_study_combat",
    "board": false,
    "pillar": "social",
-   "giver": "grimalkin",
+   "giver": "Grimalkin, [Sinew Magus] (lab-notice hand: clipped, itemized, imprecision billed)",
    "condition": {
     "won_combat": 3
    },
    "gold": 16,
-   "copy": "FIELD SUBJECTS WANTED: three verified engagements, outcomes logged in person. Payment on data delivery. — Grimalkin, Sinew Magus",
+   "copy": "Field subjects wanted. Three verified engagements, outcomes logged in person. Payment on data delivery. Grimalkin, for the record.",
    "tiers": {
     "silver": {
      "condition": {
@@ -519,7 +519,7 @@
    "id": "grimalkin_study_casting",
    "board": false,
    "pillar": "social",
-   "giver": "grimalkin",
+   "giver": "Grimalkin, [Sinew Magus] (lab-notice hand: clipped, itemized, imprecision billed)",
    "requires": {
     "learned_magic_from_pisces": 1
    },
@@ -527,7 +527,7 @@
     "spell_cast": 8
    },
    "gold": 16,
-   "copy": "CASTING SUBJECTS WANTED: eight witnessed castings, wind and grip measured. Imprecision is deducted. — Grimalkin, Sinew Magus",
+   "copy": "Casting subjects wanted. Eight witnessed castings, wind and grip measured. Imprecision is deducted. Grimalkin, for the record.",
    "tiers": {
     "silver": {
      "condition": {
