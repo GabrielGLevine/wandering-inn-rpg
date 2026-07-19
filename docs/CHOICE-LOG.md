@@ -138,3 +138,24 @@ cross-release index of them.
   have leaked them). Regenerated + committed direct to main (9fc3e46).
   Lesson folded into wi-shipping's bundle-order step: verify the
   gitignore diff is IN the PR diff, not just the working tree.
+
+## 2026-07-18 — v0.12.0 queue closes + two re-sequencing calls
+
+- #184 shipped as PixelLab gate set + wall tiles DERIVED from the gate art
+  (castle pack rejected for the curtain wall: interior palette can't match).
+  User's mid-task directive ("give the rest of the wall the same texture
+  detail as the new gate") satisfied by cropping cap/face tiles from the
+  gatehouse sprite itself — palette match by construction.
+- #172/#171/#170 all closed (PRs #191/#192/#193): Selys retirement nodes,
+  paren-styled action options (square-bracket encounter confirms left as a
+  distinct pinned surface), first-waking controls hint (pending-until-
+  rendered pattern — the naive queue was eaten by the first map change),
+  biome-voiced empty interacts, About section with disclaimer +
+  wanderinginn.com + No Killing Goblins pre-order links (user directive),
+  combat blow-by-blow feeding Recent Messages FROM the HUD's existing feed
+  composer (review pass killed my parallel composer — one source of copy).
+- **Re-sequenced out of v0.12.0, both logged as issues**: the god-file
+  dissection pair (#194 — a ~700-line extraction is the wrong last change
+  before a freeze and the right first change after one) and the Ove Melaa
+  selection pass (#195 — attribution already cleared, wiring is any-cycle
+  content work). Ship the release on polish, open v0.13 on the refactor.
