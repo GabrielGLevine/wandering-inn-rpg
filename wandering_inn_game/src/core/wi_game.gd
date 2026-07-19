@@ -811,11 +811,18 @@ func entity_present(ent: Dictionary) -> bool:
 func _present_gate_met(when: Dictionary) -> bool:
 	if when.is_empty():
 		return true
-	if when.has("phase"):
-		return (when["phase"] as Array).has(phase())
+	# phase is a FALL-THROUGH gate (not an early return), so it ANDs with
+	# requires/absent/guest -- e.g. a guest who only visits at night
+	# (#247 review IMPORTANT-1). Behavior-preserving for the phase-only
+	# entities that ship today (a mismatched phase still returns false; a
+	# matched phase falls through to the other gates, of which they have
+	# none). NOTE: _encounter_gate_met keeps its own phase early-return
+	# (no encounter combines phase with another key; out of scope here).
+	if when.has("phase") and not (when["phase"] as Array).has(phase()):
+		return false
 	# GH#199: `absent` = negative counter gate (count < threshold), ANDed with
 	# `requires` when both present — the Rags conduct gate's "never hunted the
-	# camp" leg. phase-form gates keep their early return (no combos there).
+	# camp" leg. phase now ANDs here too (see the fall-through above).
 	if when.has("requires") and not _accomplishment_gate_met(when["requires"] as Dictionary):
 		return false
 	if when.has("absent"):
@@ -831,7 +838,10 @@ func _present_gate_met(when: Dictionary) -> bool:
 	if when.has("guest"):
 		var g: Dictionary = when["guest"]
 		var is_met := func(npc: String) -> bool: return accomplishment_count("chatted_with_" + String(npc)) >= 1
-		if not WIInnGuests.guest_active(String(g["npc"]), g.get("roster", []) as Array, is_met, times_slept, int(g.get("seats", 2))):
+		# get() defaults across the board (#247 review MINOR-4): a hand-authored
+		# malformed guest dict degrades to "absent" rather than spamming a
+		# missing-key SCRIPT ERROR on every entity-presence pass.
+		if not WIInnGuests.guest_active(String(g.get("npc", "")), g.get("roster", []) as Array, is_met, times_slept, int(g.get("seats", 2))):
 			return false
 	return true
 
