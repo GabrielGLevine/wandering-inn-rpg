@@ -56,17 +56,24 @@ merged`), not here.
   at the recovery beat, zero sim/combat changes, door-chain seeds all
   safe. CHOICE-LOG carries the ritual-vs-difficulty adjudication + the
   guardian-wake escalation offer (one word flips it).
-- **b7 ack wave ROLLING (day 2)**: #201/#203 SHIPPED (PR #240 — Relc
-  seated on the approach lane (11,4), leaves post-clear via absent
-  gate, departure sprite-count pin); #207 SHIPPED (PR #241 — all 13
-  delivery rows acknowledge: 10 pool stages + stall toast variant +
-  grate observe override; review fix promoted STANDING familiarity
-  stages above warm terminals so the ordinary path acks); #212/#213
-  PR #242 (Tamer signposts: Krshia pointer ×6 pools, dens' in-situ
-  telegraphs, Selys signpost above her terminal, corusdeer observe
-  extension). #214 (flavor trio) next; then b9 audio; a3-a8; c1-c6
-  (delegation split per the directive). Design authority:
-  docs/design/2026-07-19-b7-ack-wave-design.md.
+- **b7 ack wave COMPLETE (2026-07-19, 4 PRs / 6 issues)**: #201/#203
+  (PR #240 — Relc on the approach lane, leaves post-clear), #207
+  (PR #241 — every delivery recipient acknowledges; standing
+  familiarity stages promoted above warm terminals), #212/#213
+  (PR #242 — Tamer signposts: Krshia pointer ×6 pools, den
+  telegraphs, Selys signpost above her terminal, corusdeer observe),
+  #214 (PR #243 — Detect hint cited as shipped (cellar_wardwork),
+  [Open Doors] door_flavor arm with the openable-door predicate,
+  pond_edge fishing affordance + the interact requires_item seam).
+  Every PR: adversarially reviewed (workflow for b4, single agents
+  under the CAUTION usage tier), fix waves applied, 26/26 units +
+  147-script sweep + 6/6 checks READ. Skill folds: desk/paper seam,
+  bool-gate hides, facing vector, hub-row index shifts, pool-stage
+  shadow-out audit.
+- **USAGE-GUARD CAUTION** (fable ~60% weekly at b7 close): no new
+  packages started; b9 audio (#195/#200) + a3-a8 (delegation-ready)
+  + c1-c6 art are the remaining board — next session (or an upshifted
+  tier) picks them up from the wave plan + wi-* skills directly.
 - Spoiler bar reminders for b1: Rags early-volume-safe; "Magical Door".
 
 ## 📋 QUEUE (value order)
