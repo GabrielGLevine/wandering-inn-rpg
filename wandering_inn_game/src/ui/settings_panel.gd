@@ -63,6 +63,9 @@ var _credits_links: Dictionary = {}
 ## credits modal is fully tap-reachable on mobile (it was keyboard-only:
 ## open it on touch and you were stuck).
 var _credits_link_labels: Array = []
+## Parallel to _credits_link_labels (NOT _credits_links.keys(), which would
+## de-dupe a reused key and desync the rect lookup) — review hardening.
+var _credits_link_keys: Array = []
 var _credits_back_label: Control = null
 var _help_back_label: Label
 var _help_sections: Array = []
@@ -289,7 +292,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				if _credits_links.has(key_name):
 					var url := String(_credits_links[key_name])
 					ObservableBus.emit_domain_event(WIEvents.UI_CREDITS_LINK_OPENED, {"key": key_name, "url": url})
-					OS.shell_open(url)
+					if not _suppress_shell_open():
+						OS.shell_open(url)
 					vp.set_input_as_handled()
 		return
 	if _state == State.HELP:
@@ -373,9 +377,7 @@ func _on_help_back_gui_input(event: InputEvent) -> void:
 func credits_link_rect(key: String) -> Rect2:
 	if _state != State.CREDITS:
 		return Rect2()
-	# _credits_link_labels and _credits_links share insertion order.
-	var keys: Array = _credits_links.keys()
-	var idx := keys.find(key)
+	var idx := _credits_link_keys.find(key)
 	if idx < 0 or idx >= _credits_link_labels.size():
 		return Rect2()
 	var label := _credits_link_labels[idx] as Control
@@ -460,6 +462,7 @@ func _build_credits_panel() -> void:
 	_credits_section_count = sections.size()
 	_credits_links.clear()
 	_credits_link_labels.clear()
+	_credits_link_keys.clear()
 	for section: Variant in sections:
 		var head := UIChrome.make_label(String((section as Dictionary).get("heading", "")), "Menu")
 		stack.add_child(head)
@@ -471,6 +474,7 @@ func _build_credits_panel() -> void:
 		for link: Variant in (section as Dictionary).get("links", []):
 			var link_row: Dictionary = link
 			_credits_links[String(link_row.get("key", ""))] = String(link_row.get("url", ""))
+			_credits_link_keys.append(String(link_row.get("key", "")))
 			var row := UIChrome.make_label("%s — %s" % [String(link_row.get("key", "")), String(link_row.get("label", ""))], "Small")
 			var link_key := String(link_row.get("key", ""))
 			row.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -489,12 +493,21 @@ func _build_credits_panel() -> void:
 	_credits_root.gui_input.connect(_on_credits_panel_gui_input)
 
 
+## a4 #216 review: a QA/headless run must never actually launch a browser —
+## settings_loop taps a link every run (smoke + full tier). The event is
+## emitted regardless (QA asserts on it); only the real OS.shell_open is
+## gated, matching this file's headless-side-effect discipline.
+func _suppress_shell_open() -> bool:
+	return (TestDriver != null and TestDriver.active()) or DisplayServer.get_name() == "headless"
+
+
 func _open_credits_link(key: String) -> void:
 	if not _credits_links.has(key):
 		return
 	var url := String(_credits_links[key])
 	ObservableBus.emit_domain_event(WIEvents.UI_CREDITS_LINK_OPENED, {"key": key, "url": url})
-	OS.shell_open(url)
+	if not _suppress_shell_open():
+		OS.shell_open(url)
 
 
 func _on_credits_link_gui_input(event: InputEvent, key: String) -> void:
