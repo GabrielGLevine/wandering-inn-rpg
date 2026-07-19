@@ -417,6 +417,7 @@ func _rebuild_field() -> void:
 	_build_scatter(_current_map_cfg().get("scatter", []))
 	var render_counts := {"sprites": 0, "fallbacks": 0}
 	_count_visual(_build_entities(), render_counts)
+	_apply_field_legibility()  # a5 #205
 	var player_cfg: Dictionary = WIDataRegistry.scene_config()["player"]
 	var pc_sprite := _pc_variant_sprite(String(player_cfg.get("sprite", "")))
 	_player_visual = _make_entity_visual(
@@ -689,6 +690,26 @@ func exit_combat_camera() -> void:
 	_update_camera()
 
 
+## a5 #205: brighten field interactable sprites on dark-mood maps so
+## encounters/props/NPCs stay separable from the floor before [Light] (the
+## floor/mood grade is untouched — only these entity holders' self_modulate
+## lifts, mirroring the combat board's own legibility floor). Boost = 1.0 is
+## a no-op on bright maps, so their render is byte-identical. Re-runs on
+## every UI_MOOD_APPLIED, so a dusk->night darkening re-lifts automatically.
+func _apply_field_legibility() -> void:
+	if _atmosphere == null:
+		return
+	# holder.modulate (NOT self_modulate — the holder draws nothing; modulate
+	# INHERITS to the sprite/ColorRect/shadow children and composes with the
+	# sprite's own tint, exactly as the combat board's leaf-node boost does).
+	var boost := _atmosphere.field_entity_boost()
+	var m := Color(boost, boost, boost, 1.0)
+	for id: String in _entity_visuals.keys():
+		var holder := _entity_visuals[id] as Node2D
+		if holder != null:
+			holder.modulate = m
+
+
 func _build_entities() -> Array[Node2D]:
 	var visuals: Array[Node2D] = []
 	for ent: Dictionary in Game.sim.entities.values():
@@ -839,6 +860,7 @@ func _reconcile_entity_presence() -> void:
 			old_visual.queue_free()
 			_entity_visuals.erase(id)
 	if changed:
+		_apply_field_legibility()  # a5 #205: lift any newly-present interactable
 		assert(_light_count <= LIGHT_BUDGET,
 			"map %s exceeds the %d-light budget (%d) after a presence reconcile -- spec §5" % [Game.sim.current_map, LIGHT_BUDGET, _light_count])
 		var render_counts := {"sprites": 0, "fallbacks": 0}
@@ -1114,6 +1136,14 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_reconcile_ward_visuals()
 	elif type == WIEvents.COMPANION_CHANGED:
 		_reconcile_companion_visual()
+	elif type == WIEvents.UI_MOOD_APPLIED:
+		# Mood grade just landed (fresh map or a phase crossing) — re-lift the
+		# field interactables against the new darkness (a5 #205). Skip while a
+		# map transition still covers stale geometry, and while combat holds
+		# an arena override (those field entities are hidden — the
+		# UI_COMBAT_HIDDEN re-show re-applies).
+		if not _map_transition_stale_cover() and Game.sim.combat == null:
+			_apply_field_legibility()
 	elif type == WIEvents.PHASE_CHANGED:
 		if _map_transition_stale_cover():
 			return

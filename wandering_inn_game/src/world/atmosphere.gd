@@ -3,6 +3,16 @@ extends CanvasModulate
 
 const MOODS_PATH := "res://data/moods.json"
 
+## a5 #205: FIELD interactable legibility. On dark-mood field maps the mood
+## CanvasModulate multiplies encounters/props/NPCs down toward the floor —
+## the spider in the dungeon corner, the shadowed alley NPCs. This mirrors
+## the combat board's own _legibility_modulate, but with a GENTLER target
+## and cap: the point is to keep the dark atmosphere while making the things
+## you can ACT on separable, not to wash the map out. World applies the
+## returned boost to each entity sprite's self_modulate (floor untouched).
+const FIELD_LEGIBILITY_TARGET := 0.5
+const FIELD_LEGIBILITY_MAX_BOOST := 1.9
+
 static var _moods_cache: Dictionary = {}
 
 var _lights: Array[Dictionary] = []
@@ -44,6 +54,17 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		if _in_arena_override:
 			_in_arena_override = false
 			apply(Game.sim.current_map, phase_now())
+
+
+## The multiplicative boost that brings a dark field map's interactable
+## sprites back to the legibility target. 1.0 (no-op) on any map whose
+## current mood grade is already at/above target — bright maps render
+## byte-identical. Reads this node's own live `color` (the applied grade).
+func field_entity_boost() -> float:
+	var avg := (color.r + color.g + color.b) / 3.0
+	if avg >= FIELD_LEGIBILITY_TARGET:
+		return 1.0
+	return clampf(FIELD_LEGIBILITY_TARGET / maxf(avg, 0.05), 1.0, FIELD_LEGIBILITY_MAX_BOOST)
 
 
 func phase_now() -> String:
