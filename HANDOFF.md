@@ -16,46 +16,20 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🏃 RUNNING (2026-07-19, v0.13 wave EXECUTING per GOAL.md)
-- **#194a seams 1+2 MERGED** (PR #227 → a3801f9, PR #228 → be648b4;
-  each: byte-identity evidence + full bar + reviews clean). **Seam 3
-  (WICombatBanking) PR #229 open**, [ci-full] watching — merge = #194a
-  COMPLETE (wi_game.gd 2345→~2020 lines; interact routing, sleep beat,
-  combat banking all extracted behind Callables).
-- **#211 design doc on main** (d368d28,
-  docs/design/2026-07-19-211-challenge-weighted-leveling.md; issue
-  comment posted). Five §8 adjudications await user review via
-  CHOICE-LOG; execution is harness-first inside the seam-3 module.
-- **#111 rename SPEC on main** (79a5cc5) — go/no-go posted on the
-  issue; see Taste queue. Implementation USER-GATED.
-- Lambda-leak trap ledgered in AGENTS.md Gotchas (79a5cc5).
-- Next after #229: #211 harness + implementation (largest sim
-  package), then #194b world.gd seams; lanes b/c became dispatchable
-  when seam 1 merged (a1 dependency satisfied).
-
-
-- **v0.12.0 SHIPPED** (Release + Pages both green) (freeze 619 ids, ZERO new frozen ids -- polish/copy
-  cycle); release.yml + pages.yml watched at tag time (see git log for
-  the verified-table merges #190-#193). bundle-v7 is the assets Latest.
-- Contents: #184 city gates (PixelLab gatehouse + street arch + wall
-  tiles DERIVED from the gate art; per-segment sheet overrides), #172
-  close (Selys retirement acks + paren action-option styling), #171
-  close (first-waking controls hint with the pending-until-rendered
-  toast pattern, biome-voiced empty interacts, fountain-statue observe;
-  items 2/5 verified shipped/obsolete), #170 close (combat feed lines →
-  journal Recent Messages via combat_hud.feed_push, Victory/Defeat
-  line; mid-combat scrollback deferred), Settings About section
-  (unlicensed-fan-work disclaimer + wanderinginn.com + No Killing
-  Goblins pre-order numkey links -- user directive), ATTRIBUTION.md
-  synced with the #147 intake (verbatim Ove Melaa line).
-- **Re-sequenced with issues + CHOICE-LOG entries**: god-file pair →
-  #194 (FIRST task of v0.13, not last-before-freeze), Ove Melaa
-  selection pass → #195 (any-cycle content work).
-- Traps ledgered this window: gitignore regen must be IN the PR diff
-  (bundle-v7 near-miss, wi-shipping updated); `git checkout -- <file>`
-  wipes sibling uncommitted lanes in the same file (cost 3 bisect
-  cycles on #184); QA option-list pins are EXACT-list matches; driver
-  timeout failures now print subset + cursor.
+## 🏃 RUNNING (2026-07-19, v0.13 wave day 1)
+- **#194a COMPLETE**: three seam PRs merged (#227/#228/#229 → a3801f9/
+  be648b4/62459f0), each byte-identity-proven + full bar + review clean.
+  wi_game.gd 2345→2020; WIInteractions/WISleepBeat/WICombatBanking live.
+  Lanes b/c dispatchable (a1 dependency met). #194b world.gd seams open.
+- **#211 in flight** (branch issue/211-challenge-weighted-leveling,
+  pushed): design doc on main (d368d28) + pace harness committed with
+  BASELINE BANDS measured (p50/act: warrior 6/14/16 plateau, caster
+  7/15/16 plateau, helper 10/21/26) — posted to issue. Next: weight+
+  decay+fractional bank behind config inside WICombatBanking + save
+  VERSION 7; weight-off regression must reproduce baseline exactly.
+- **#111 spec on main** — go/no-go pending (Taste queue). USER-GATED.
+- CHOICE-LOG has 2026-07-19 adjudications (#111 rec, #211 §8, seam
+  calls) awaiting review.
 
 ## 📋 QUEUE (value order)
 
