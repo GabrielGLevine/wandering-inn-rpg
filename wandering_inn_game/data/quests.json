@@ -36,7 +36,7 @@
 			"resolution_paths": [
 				{ "accomplishment": "cleared_the_nest", "text": "You cleared the nest yourself.", "grant": {"melee_hit": 10, "won_combat": 2} },
 				{ "accomplishment": "watch_swept_cisterns", "text": "You sent the Watch to sweep it.", "grant": {"persuaded_someone": 3, "heard_gossip": 6} },
-				{ "accomplishment": "scouted_the_nest", "text": "You scouted it and reported the intelligence.", "grant": {"sneaked_past_danger": 4, "ranged_hit": 4} }
+				{ "accomplishment": "scouted_the_nest", "text": "You scouted it and reported the intelligence.", "grant": {"sneaked_past_danger": 4, "observed_things": 4} }
 			]
 		},
 		{

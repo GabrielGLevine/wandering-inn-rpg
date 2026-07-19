@@ -5,11 +5,12 @@ extends SceneTree
 ## resolved through the REAL banking seam (a locally-wired WICombatBanking —
 ## the exact deposit path #211's challenge weight / repetition decay will
 ## wrap), then the WIProgression sleep sequence. Reports per-act total-level
-## bands per archetype. HARNESS-FIRST CONTRACT: this file lands BEFORE any
-## weighting so the measured bands ratify CURRENT pacing; the weight
-## implementation must keep a weight-off config that reproduces these
-## counters EXACTLY (regression leg below is the determinism half of that
-## proof).
+## bands per archetype. The flag ships ON (step 5); WI_PACE_WEIGHTED=0
+## force-disables it to prove the legacy path still reproduces the
+## pre-#211 baseline bands (warrior 6/14/16, caster 7/15/16, helper
+## 10/21/26 p50 — recorded 2026-07-19); WI_PACE_WEIGHTED=1 force-enables
+## regardless of data (symmetric probe). The determinism leg asserts
+## same-seed runs reproduce counters exactly under whichever arm ran.
 ##
 ## MIRROR CONTRACT: _sleep_resolve() reproduces WIGame.sleep()'s progression
 ## order EXACTLY (gains -> level-ups -> consolidation offer preempts ->
@@ -89,13 +90,16 @@ func _init() -> void:
 	for c: Dictionary in _load_json("res://data/combatants.json")["combatants"]:
 		combatants_by_id[String(c[WIKeys.ID])] = c
 	var sink := func(_t: String, _p: Dictionary) -> void: pass
-	# WI_PACE_WEIGHTED=1: force-enable the challenge config (data flag stays
-	# false until tuning) — the preview arm for curve derivation. With no
-	# power_level authored yet, weight is neutral and this isolates DECAY.
+	# WI_PACE_WEIGHTED forces the flag either way (data ships enabled:true):
+	# "0" = legacy-path regression arm (must reproduce the pre-#211 baseline
+	# bands), "1" = force-on (symmetric; redundant while data is true).
 	var challenge: Dictionary = (_load_json("res://data/progression.json").get("challenge", {}) as Dictionary).duplicate(true)
 	if OS.get_environment("WI_PACE_WEIGHTED") == "1":
 		challenge["enabled"] = true
 		print("(WI_PACE_WEIGHTED probe: challenge weighting FORCED ON)")
+	elif OS.get_environment("WI_PACE_WEIGHTED") == "0":
+		challenge["enabled"] = false
+		print("(WI_PACE_WEIGHTED=0: challenge weighting FORCED OFF — legacy regression arm)")
 	var combatants_raw: Array = _load_json("res://data/combatants.json")["combatants"]
 	_banking = WICombatBanking.new(sink, _mark_skill_used, _find_entity, _record, _count, _roll_loot_noop, _remove_noop, challenge, catalog, combatants_raw)
 

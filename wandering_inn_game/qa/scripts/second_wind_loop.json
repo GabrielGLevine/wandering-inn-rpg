@@ -14,7 +14,7 @@
   { "action": "assert_state", "path": "classes", "equals": { "swordsman": 13 } },
   { "action": "assert_state", "path": "accomplishments.sword_skill_used", "equals": 34 },
 
-  { "_comment": "== FIGHT 1: proximity goblin_encounter_1 (30,23), trigger_radius 2. From (28,20) one step down to (28,21) is Chebyshev 2 -> springs the ambush. Relc fields (met_relc banked in the fixture). The autoplay melee AI uses power_strike (weapon:sword) -> sword_skill_used banks past 34.", "action": "move", "direction": "down", "steps": 1 },
+  { "_comment": "== FIGHT 1: proximity goblin_encounter_1 (30,23), trigger_radius 2. From (28,20) one step down to (28,21) is Chebyshev 2 -> springs the ambush. Relc fields (met_relc banked in the fixture). The autoplay melee AI uses power_strike (weapon:sword) -> sword_skill_used arrives at 34 from the fixture (GH#211: gray-band fights deposit fractionally at this power gap).", "action": "move", "direction": "down", "steps": 1 },
   { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
