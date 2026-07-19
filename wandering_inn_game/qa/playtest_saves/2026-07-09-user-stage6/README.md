@@ -16,7 +16,7 @@ Copy the wanted slot back and Continue (or load from the pause menu):
 
 ```bash
 cp wandering_inn_game/qa/playtest_saves/2026-07-09-user-stage6/auto.json \
-  "$HOME/Library/Application Support/Godot/app_userdata/Wandering Inn RPG v4/saves/auto.json"
+  "$HOME/Library/Application Support/Godot/app_userdata/Wandering Inn RPG/saves/auto.json"
 ```
 
 Saves are forward-compatible by design: `WISave.VERSION` migrations compose

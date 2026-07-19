@@ -189,3 +189,16 @@ UI transition that a QA `wait_for_event` depends on must EMIT its event
 (a title/menu re-show emits `UI_TITLE_RENDERED`); a menu-return helper
 that stays silent AND leaves a stale cursor makes the next `move` step
 overshoot — the exact shape that quit playtest_boot mid-run.
+
+### Two JSON-editing traps that cost re-dos (2026-07-19)
+- `python json.dump` DEFAULTS to ensure_ascii=True — it rewrites every
+  literal `—` as `—` across the whole file (60-line churn for a
+  3-line edit, and it flips the dash-lint's dual-form problem). Always
+  `ensure_ascii=False`; for shipped JSON with MIXED formatting (compact
+  one-line entries beside expanded ones) prefer a text-splice Edit over
+  any reserialize — json.dump reflows the compact entries too.
+- Switching git branches when either side adds `class_name` .gd files
+  invalidates .godot's global-class cache — the next run cascades
+  "Identifier not declared" compile errors repo-wide. Re-run
+  `godot --headless --import` after EVERY branch switch that changes
+  the .gd file set (bit twice in one session).

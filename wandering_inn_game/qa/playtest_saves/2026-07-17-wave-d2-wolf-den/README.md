@@ -19,7 +19,7 @@ What to look at from here:
 
 ```bash
 cp wandering_inn_game/qa/playtest_saves/2026-07-17-wave-d2-wolf-den/playtest.json \
-  "$HOME/Library/Application Support/Godot/app_userdata/Wandering Inn RPG v4/saves/playtest.json"
+  "$HOME/Library/Application Support/Godot/app_userdata/Wandering Inn RPG/saves/playtest.json"
 ```
 
 NOT a canonical QA fixture: fixture-coherence standards do not apply here

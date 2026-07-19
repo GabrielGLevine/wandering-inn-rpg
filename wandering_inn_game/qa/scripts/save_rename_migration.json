@@ -1,0 +1,18 @@
+{
+ "_comment": "#111 safe project rename -- the boot-ordered migration proof. run_qa.sh's `legacy_seed` places a REAL pre-rename save (near_pallass: guild map, gold 60) + a settings.cfg into this run's LEGACY user dir (the 'Wandering Inn RPG v4' sibling of the renamed build's app_userdata) BEFORE launch. So Game._ready() runs _migrate_legacy_userdir() and copies it into the fresh user:// BEFORE the title enumerates slots -- proving the real UX: a player who updates to the renamed build sees Continue light up on the very first launch with their old save intact. NO fixture_save (user://saves must be empty for the migration to fire). Boot nav mirrors save_port_loop/horns (fixture-in-manual -> title Continue via down 1). Asserts the migrated state loaded byte-faithfully + the settings.cfg carried over. The pure copy/no-clobber/derivation logic is unit-pinned in test_save_rename; this is the integration half (boot ordering + Continue visibility). The isolated HOME means every OTHER canonical (no legacy_seed) exercises the no-legacy no-op path -- the migration must never disturb a normal boot.",
+ "legacy_seed": "near_pallass",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "_comment": "The legacy save was carried into user://saves at boot, so Continue is now enabled on this FIRST launch of the renamed build.", "action": "wait_for_event", "type": "ui_title_rendered", "payload_contains": { "continue_enabled": true }, "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "_comment": "The migrated save loads byte-faithfully -- near_pallass's own known state (guild, (8,3), 60 gold), same values save_port_loop pins for this fixture.", "action": "assert_state", "path": "current_map", "equals": "guild" },
+  { "action": "assert_state", "path": "player_cell", "equals": [8, 3] },
+  { "action": "assert_state", "path": "gold", "equals": 60 },
+  { "_comment": "The legacy settings.cfg was carried over too (copied into user://).", "action": "assert_settings_file_exists" }
+ ]
+}

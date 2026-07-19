@@ -906,6 +906,28 @@
    13
   ]
  ],
+ "floor_layers": [
+  {
+   "_pick": "#225 first floor layer (was pristine biome-default invrisil marble, zero floor_layers): the back-alley reads as grimy worn cobble underfoot, distinct from the boulevard's marble plaza. Reuses the Free Pack Floors_Tiles cobble band already VERIFIED as the Liscor street/gate cobble ([16,2]/[17,2]/[18,2], rgb~116,106,94). Footstep-stone stays honest.",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     16,
+     2
+    ],
+    [
+     17,
+     2
+    ],
+    [
+     18,
+     2
+    ]
+   ],
+   "cells": "all"
+  }
+ ],
  "decor": [
   {
    "sprite": "crate",

@@ -32,25 +32,25 @@
  ],
  "floor_layers": [
   {
-   "_pick": "Reuses the inn hall's plank floor variant set (Interior_Walls_01.png) -- same wood-hall read as the inn common room.",
-   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "_pick": "#225 floor differentiation: the Adventurer's Guild reads as a richer, warmer hall than the inn's rough tavern planks. Library pack warm reddish parquet ([21,3]/[22,3]/[21,4]/[23,4], flat wood rgb~135,86,50) -- the pack the asset catalog casts for 'Liscor guild interiors'; already manifest-wired (bundle:true). Wood floor keeps the biome's wood footstep family honest.",
+   "sheet": "res://assets/tiles/library/Tiles.png",
    "tile_px": 16,
    "variants": [
     [
-     1,
-     21
+     21,
+     3
     ],
     [
-     2,
-     21
+     22,
+     3
     ],
     [
-     1,
-     22
+     21,
+     4
     ],
     [
-     2,
-     22
+     23,
+     4
     ]
    ],
    "cells": "all"

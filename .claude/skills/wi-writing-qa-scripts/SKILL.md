@@ -184,3 +184,15 @@ Verify per `wi-verifying-changes` before claiming a script is good.
   for an interact: don't trust the field — bump-move into the target's
   cell (blocked move sets facing without moving), the walkthroughs'
   own idiom.
+
+## Boot-time user-dir behavior: the `legacy_seed` hook (#111, 2026-07-19)
+A script proving something that must happen BEFORE the first frame
+(autoload _ready ordering — e.g. the rename save-migration) cannot use
+driver steps to set it up. `"legacy_seed": "<fixture>"` in the script
+root makes run_qa.sh seed a PRE-launch legacy user dir (the
+"Wandering Inn RPG v4" app_userdata sibling inside the run's isolated
+HOME) with that fixture + a settings.cfg, so Game._ready's migration
+runs against real state and the title's Continue proves it. The seeded
+path derivation mirrors Godot's own (Darwin vs XDG branch in
+run_qa.sh). derive_qa_surfaces treats legacy_seed as a fixture
+dependency. Canonical: save_rename_migration.
