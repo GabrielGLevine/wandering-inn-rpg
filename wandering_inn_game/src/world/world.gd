@@ -87,7 +87,7 @@ var _ice_overlay: TileMapLayer
 ## running before starting the other, or both fight over `.position` for up
 ## to ~0.12s. See `_kill_player_tween`.
 var _player_tween: Tween
-var _camera_tween: Tween
+var _camera_ctl: WICameraController
 var _entity_visuals: Dictionary = {}
 var _field_blocked_prop_plan: Dictionary = {}
 var _journal: Node
@@ -128,6 +128,7 @@ func _ready() -> void:
 	_camera = Camera2D.new()
 	add_child(_camera)
 	_camera.make_current()
+	_camera_ctl = WICameraController.new(_camera, CELL, VIEW_SIZE)
 	_sway_material = ShaderMaterial.new()
 	_sway_material.shader = SWAY_SHADER
 	_visual_factory = WIEntityVisualFactory.new(CELL, _sway_material)
@@ -662,47 +663,13 @@ func _current_map_cfg() -> Dictionary:
 
 
 func _update_camera() -> void:
-	_kill_camera_tween()
-	var grid_size := Game.sim.grid_size
-	var content_size := Vector2(grid_size) * CELL
-	var focus := Vector2(Game.sim.player_cell) * CELL + Vector2(CELL, CELL) * 0.5
-	_camera.position = Vector2(
-		_camera_axis(content_size.x, VIEW_SIZE.x, focus.x),
-		_camera_axis(content_size.y, VIEW_SIZE.y, focus.y)
-	)
-
-
-static func _camera_axis(content: float, view: float, focus: float) -> float:
-	if content <= view:
-		return content * 0.5
-	return clampf(focus, view * 0.5, content - view * 0.5)
+	# Camera math + pan tween live in WICameraController (#194b seam 2);
+	# wrappers keep the sim reads and QA-paced duration world-side.
+	_camera_ctl.update(Game.sim.grid_size, Game.sim.player_cell)
 
 
 func _pan_camera_to_player() -> void:
-	var duration := _presentation_delay(MOVE_TWEEN_SECONDS)
-	if duration <= 0.0:
-		_update_camera()
-		return
-	var grid_size := Game.sim.grid_size
-	var content_size := Vector2(grid_size) * CELL
-	var focus := Vector2(Game.sim.player_cell) * CELL + Vector2(CELL, CELL) * 0.5
-	var target := Vector2(
-		_camera_axis(content_size.x, VIEW_SIZE.x, focus.x),
-		_camera_axis(content_size.y, VIEW_SIZE.y, focus.y)
-	)
-	_kill_camera_tween()
-	_camera_tween = create_tween()
-	_camera_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	_camera_tween.tween_property(_camera, "position", target, duration)
-
-
-## Mirrors `_kill_player_tween`'s one-slot-not-two idiom
-## for the camera pan tween -- a move landing while the previous step's pan is
-## still finishing must kill it first, or two tweens fight over
-## `_camera.position` for up to ~0.12s.
-func _kill_camera_tween() -> void:
-	if _camera_tween != null and _camera_tween.is_valid():
-		_camera_tween.kill()
+	_camera_ctl.pan_to(Game.sim.grid_size, Game.sim.player_cell, _presentation_delay(MOVE_TWEEN_SECONDS))
 
 
 func combat_board_root() -> Node2D:
@@ -715,12 +682,7 @@ func combat_board_root() -> Node2D:
 
 
 func enter_combat_camera(grid_size: Vector2i) -> void:
-	_kill_camera_tween()
-	var content_size := Vector2(grid_size) * CELL
-	_camera.position = Vector2(
-		_camera_axis(content_size.x, VIEW_SIZE.x, content_size.x * 0.5),
-		_camera_axis(content_size.y, VIEW_SIZE.y, content_size.y * 0.5)
-	)
+	_camera_ctl.enter_combat(grid_size)
 
 
 func exit_combat_camera() -> void:
