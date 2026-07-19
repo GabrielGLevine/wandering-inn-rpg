@@ -211,6 +211,32 @@
    10
   ]
  ],
+ "floor_layers": [
+  {
+   "_pick": "#225 first floor layer (was flat biome-default fairy-forest green, zero floor_layers): a mottled underwood floor so the hollow no longer reads as one flat green plane. Same biome sheet (fairy_forest/Tiles.png) -- three flat underwood greens ([2,2]/[3,2]/[4,2], rgb~12,81,44) plus a darker mossy variant ([4,3], rgb~28,76,41) for texture. Footstep-earth stays honest.",
+   "sheet": "res://assets/tiles/fairy_forest/Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     4,
+     3
+    ]
+   ],
+   "cells": "all"
+  }
+ ],
  "decor": [
   {
    "sprite": "hollow_small_tree",

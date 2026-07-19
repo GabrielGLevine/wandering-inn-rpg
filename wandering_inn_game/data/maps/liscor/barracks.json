@@ -21,24 +21,25 @@
  ],
  "floor_layers": [
   {
-   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "_pick": "#225 floor differentiation: the Watch barracks reads as institutional grey stone, not inn planks. Castle Environment stone-floor block ([4,11]/[5,11]/[6,11]/[4,12], flat warm-grey rgb~104,97,81) -- the pack the asset catalog casts for 'Watch barracks interior'; already manifest-wired (bundle:true) and in-use for pallass. Biome stays 'inn' so footsteps keep the wood family (a biome-key swap is out of this floor lane's scope; logged as follow-up).",
+   "sheet": "res://assets/tiles/castle/Tiles.png",
    "tile_px": 16,
    "variants": [
     [
-     1,
-     21
+     4,
+     11
     ],
     [
-     2,
-     21
+     5,
+     11
     ],
     [
-     1,
-     22
+     6,
+     11
     ],
     [
-     2,
-     22
+     4,
+     12
     ]
    ],
    "cells": "all"
