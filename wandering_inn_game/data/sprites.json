@@ -237,6 +237,45 @@
    }
   }
  },
+ "inn_room_ledger": {
+  "_comment": "#198: owned PixelLab art (potential_assets/license-notes/pixellab-ai-generated-verdict.md) -- open guest-register book on a lectern; replaces the dusty_scroll stand-in on the inn_room_ledger entity.",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/inn_room_ledger/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "cellar_wardwork": {
+  "_comment": "#198: owned PixelLab art -- pale-blue ward sigil worked into dark planks; replaces the dusty_scroll stand-in on the cellar_wardwork entity (the [Detect Magic] hint target).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/cellar_wardwork/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "pantry_door_runes": {
+  "_comment": "#198: owned PixelLab art -- rune-carved door jamb with faint green glyphs; replaces the dusty_scroll stand-in on the pantry_door_runes entity (the door-chain SKILL-leg prop).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pantry_door_runes/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
  "dirty_table": {
   "render_scale": 0.46,
   "anchor": [
