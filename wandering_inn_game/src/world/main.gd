@@ -373,6 +373,7 @@ func _spawn_ui_layers() -> void:
 	_field_chips.journal_ref = _journal
 	_field_chips.inventory_ref = _inventory
 	_field_chips.main_ref = self
+	_field_chips.combat_ref = _combat_screen
 	add_child(_field_chips)
 	_sleep_veil = SLEEP_VEIL_SCRIPT.new()
 	_sleep_veil.name = "SleepVeil"

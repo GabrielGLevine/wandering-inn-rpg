@@ -1543,3 +1543,8 @@ events, and result files live in the gitignored
   marker on the pond's water-wall cell. c-lane art pass: a bespoke
   reed-cluster or ripple sprite; keep it readable against the
   Water_tiles band and the pond-shimmer overlay if that lands.
+- **Combat HP labels bleed through the pause panel** (seen in a3 #215's
+  04b shot, pre-existing — the combat pause was always reachable via
+  keyboard): the 32/32 / 21/21 combatant labels render OVER the pause
+  parchment. Layering fix: pause layer above the board's label layer,
+  or hide combat labels while paused.

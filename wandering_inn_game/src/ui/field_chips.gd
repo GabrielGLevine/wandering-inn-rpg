@@ -11,6 +11,7 @@ var pause_menu_ref: Node = null
 ## visibility never relies on the veil's own higher-CanvasLayer ColorRect
 ## swallowing taps (the implicit cross-file layer-ordering invariant).
 var main_ref: Node = null
+var combat_ref: Node = null
 var journal_ref: Node = null
 var inventory_ref: Node = null
 
@@ -57,6 +58,10 @@ func _on_pause_chip_gui_input(event: InputEvent) -> void:
 		return
 	if pause_menu_ref != null and pause_menu_ref.has_method("toggle_open"):
 		pause_menu_ref.call("toggle_open")
+		# review M3 self-heal: if the toggle was refused (e.g. a stale chip
+		# during a non-resting combat mode no event re-derived), re-derive
+		# now so the chip never stays a dead button past one tap.
+		_apply_visibility()
 
 
 func _on_journal_chip_gui_input(event: InputEvent) -> void:
@@ -99,6 +104,8 @@ func chip_rect(chip_name: String) -> Rect2:
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
 	match type:
 		WIEvents.WORLD_READY, WIEvents.COMBAT_STARTED, WIEvents.UI_COMBAT_HIDDEN, \
+		WIEvents.TURN_STARTED, WIEvents.COMBAT_RESOLVED, WIEvents.COMBAT_FINISHED, \
+		WIEvents.UI_HOTBAR_RENDERED, WIEvents.UI_AI_PLAYBACK_DONE, \
 		WIEvents.DIALOGUE_STARTED, WIEvents.DIALOGUE_ENDED, \
 		WIEvents.UI_PAUSE_SHOWN, WIEvents.UI_PAUSE_HIDDEN, \
 		WIEvents.UI_JOURNAL_SHOWN, WIEvents.UI_JOURNAL_HIDDEN, \
@@ -108,11 +115,30 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 
 
 func _apply_visibility() -> void:
-	var hard_blocked := Game.sim.combat != null or Game.sim.dialogue != null \
+	# a3 #215: while combat is RESTING (the player's own turn, Mode.HOTBAR)
+	# the Pause chip stays reachable — a touch player could otherwise never
+	# open the combat pause (keyboard cancel was the only route). Only the
+	# pause chip shows; journal/inventory stay combat-blocked.
+	var combat_resting := Game.sim.combat != null and combat_ref != null and bool(combat_ref.is_resting())
+	var hard_blocked := (Game.sim.combat != null and not combat_resting) or Game.sim.dialogue != null \
 			or not Game.sim.pending_consolidation.is_empty() \
 			or (main_ref != null and bool(main_ref.veil_modal_active()))
 	visible = not hard_blocked
 	if hard_blocked:
+		return
+	if combat_resting:
+		# The chip can go stale-VISIBLE when the player leaves HOTBAR without a
+		# chips-listened event (into targeting/dash) — no event re-derives to
+		# hide it. That is caught by the self-heal in _on_pause_chip_tapped:
+		# a tap while non-resting is refused by pause_menu and immediately
+		# re-derives, so the chip never survives as a dead button past one tap
+		# (review M3). We deliberately do NOT listen on UI_TARGETING_SHOWN —
+		# hiding on targeting-open leaves no event to re-show after the attack
+		# resolves (attacking starts no new turn), which would kill the chip
+		# for the rest of that turn.
+		_pause_chip.visible = true
+		_journal_chip.visible = false
+		_inventory_chip.visible = false
 		return
 	var pause_open := pause_menu_ref != null and bool(pause_menu_ref.get("open"))
 	var journal_open := journal_ref != null and bool(journal_ref.get("open"))

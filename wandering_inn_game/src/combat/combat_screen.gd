@@ -127,6 +127,7 @@ func _ready() -> void:
 	# (`_spawn_ui_layers()` runs before `_spawn_world()`). Resolved lazily by
 	# `_board_renderer.build()`, called from `_show_combat()`.
 	_hud = load("res://src/combat/combat_hud.gd").new(_root, main_ref, self)
+	_hud.banner_tapped.connect(_on_banner_tapped)
 	_hud.build()
 	_hud.hotbar_node().slot_clicked.connect(_on_hotbar_slot_clicked)
 	_hud.confirm_tapped.connect(_on_confirm_chip_tapped)
@@ -353,6 +354,10 @@ func _capture_playback_event(type: String, payload: Dictionary) -> Dictionary:
 func _feed_line_for_event(type: String, payload: Dictionary) -> String:
 	if _hud == null:
 		_hud = load("res://src/combat/combat_hud.gd").new(_root, main_ref, self)
+		# review H2: the connect MUST stay inside the lazy-init guard — this
+		# runs per captured event, and a re-connect prints a bare engine
+		# ERROR the sweep grep is blind to (242 lines in one delve run).
+		_hud.banner_tapped.connect(_on_banner_tapped)
 	return _hud.feed_line_for_event(type, payload, _combat_or_null(), _view)
 
 
@@ -661,6 +666,11 @@ func _switch_bar_slot(index: int) -> void:
 
 
 func handle_board_click(world_pos: Vector2) -> void:
+	# review M4: with the combat pause open (now a mainline touch state via
+	# the resting chip), a board tap must not move the PC under the menu —
+	# the same guard the hotbar/confirm-chip tap handlers already carry.
+	if main_ref != null and main_ref.pause_open():
+		return
 	var cell := Vector2i(floori(world_pos.x / CELL), floori(world_pos.y / CELL))
 	match _mode:
 		Mode.HOTBAR:
@@ -670,6 +680,17 @@ func handle_board_click(world_pos: Vector2) -> void:
 				_cancel_targeting()
 		Mode.DASH_CONFIRM:
 			_cancel_bar_action()
+		Mode.WAIT_AI:
+			# a3 #215: tap-to-skip parity with the confirm/cancel keys — a
+			# touch player is no longer forced to watch AI playback.
+			if _ai_playback.is_playing():
+				_ai_playback.request_skip()
+			return
+		Mode.BANNER:
+			# a3 #215: the victory/defeat banner used to dismiss only on
+			# keyboard confirm — every fight ended soft-locked on touch.
+			_close_banner()
+			return
 		_:
 			return
 	_refresh()
@@ -771,6 +792,14 @@ func _unhandled_input(event: InputEvent) -> void:
 			_input_target(event)
 		Mode.DASH_CONFIRM:
 			_input_dash_confirm(event)
+
+
+## a3 #215: the banner panel's own tap (it consumes clicks over its rect,
+## so the board-click BANNER arm below never sees those) — same close as
+## keyboard confirm.
+func _on_banner_tapped() -> void:
+	if _mode == Mode.BANNER:
+		_close_banner()
 
 
 func _close_banner() -> void:
