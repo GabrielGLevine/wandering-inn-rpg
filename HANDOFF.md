@@ -24,10 +24,14 @@ merged`), not here.
 - **#211 SHIPPED FLAG-ON** (PR #230): challenge-weighted leveling live —
   see Taste queue for the FEEL read; all knobs data.
 - **#111 spec on main** — go/no-go pending (Taste queue).
-- **NEXT: b1 Rags** (lane-b headline, Fable-class): goblin-conduct
-  audit → Erin-relationship + conduct gate → floodplains encounter +
-  quest with non-combat path; sprite rides c3. Then a5 dark-map (a2
-  dependency met), a3/a4 mobile + c1 art delegatable.
+- **b1 Rags SHIPPED** (PR #233 → 8f4dba8, closes #199): conduct-gated
+  meeting, two-visit "The Chieftain's Price" (SUPPLY/BROKER/FIGHT, all
+  real costs), widened mercy contract (back-away banks goblins_spared),
+  `absent` gate arm + validators, Erin betrayal consequence, interim
+  sprite (c3 bespoke in VISUAL-LOG). Whole-branch review's MAJOR
+  (one-visit Invrisil shape) fixed pre-merge.
+- Next: b3 parleys (mercy contract unblocked), a5 dark-map prep,
+  a3/a4 mobile + c1 art delegatable per the model directive.
 - Spoiler bar reminders for b1: Rags early-volume-safe; "Magical Door".
 
 ## 📋 QUEUE (value order)
@@ -48,6 +52,14 @@ merged`), not here.
    Five flagged decisions in §8 need rulings before any lane dispatches.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
+
+- **b1 Rags reads (3)**: (a) backing away from goblins now counts as
+  mercy everywhere (garden leg pacifist-reachable) — flip = split the
+  counters; (b) the conduct bar is "showed mercy once AND never hunted
+  the camp" — say if the bar should be stricter/looser; (c) Rags's
+  voice (1-4 word utterances; the sealed-node chess line is the one
+  earned stretch) — windowed shots in the PR, or meet her live:
+  gates are ~3 Erin chats + errand closed + one spare.
 
 - **#211 leveling FEEL (flag is ON)**: pacing now pays adversity, not
   repetition — early real fights pay double, gray-band grinds pay ~0,
