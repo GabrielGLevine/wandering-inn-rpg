@@ -1074,6 +1074,21 @@
 			"abilities": [],
 			"description": "A brass house token stamped with a door that has no handle. The stamp is crisp; the establishment is not.",
 			"lore": "Certain doors in certain cities were opened by certain coins. The doors are gone. The coins kept their manners."
+		},
+		{
+			"id": "hedaults_warded_setting",
+			"name": "Hedault's Warded Setting",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 2,
+			"damage_reduction": 1,
+			"resonance": 1,
+			"tier": "enchanted",
+			"price": 45,
+			"abilities": [],
+			"description": "A plain silver mount holding nothing, which is the point: the warding is in the setting itself, laid in Hedault's exact hand.",
+			"lore": "He kept the fragment. What he handed back holds the same discipline without the grief of the original — his phrase, delivered like an invoice."
 		}
 	]
 }
