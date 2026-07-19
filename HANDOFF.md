@@ -2,7 +2,10 @@
 
 ## Current release
 
-**v0.9.0 shipped 2026-07-17** (prior: v0.8.0 2026-07-15) (run 29451275728 green: full QA on real
+**v0.12.0 SHIPPED 2026-07-18, all three targets green** (Release: itch
+html5 + Windows/Linux desktop, full QA on real assets; Pages deploy
+green on the tag trigger). Prior: v0.11.1/v0.11.0/v0.10.0 (2026-07-18),
+v0.9.0 (2026-07-17), v0.8.0 (2026-07-15) (run 29451275728 green: full QA on real
 assets, itch html5 deploy, Windows+Linux desktop exports). Contents: #91/#118
 Chronicle all-encounter victories (PR #120), #115 collapsible field readout
 (PR #121), #119 verification hardening (PR #122), #114 scannable pickers
@@ -15,7 +18,7 @@ merged`), not here.
 
 ## 🏃 RUNNING (2026-07-18, v0.12.0 tagged)
 
-- **v0.12.0 TAGGED** (freeze 619 ids, ZERO new frozen ids -- polish/copy
+- **v0.12.0 SHIPPED** (Release + Pages both green) (freeze 619 ids, ZERO new frozen ids -- polish/copy
   cycle); release.yml + pages.yml watched at tag time (see git log for
   the verified-table merges #190-#193). bundle-v7 is the assets Latest.
 - Contents: #184 city gates (PixelLab gatehouse + street arch + wall
