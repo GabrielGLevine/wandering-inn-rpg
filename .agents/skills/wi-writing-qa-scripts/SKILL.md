@@ -137,5 +137,11 @@ player-visible feature.
 - Authoring a fixture without ever loading it in a run.
 - Comparing JSON-parsed coordinate Arrays directly with int cell Arrays.
 - Using a cumulative event assertion to prove a repeated post-action emission.
+- **Pinning an option LIST and assuming contains-semantics** — `payload_contains`
+  matches per-KEY, and an `options` key compares the WHOLE list (exact
+  members, exact order): adding one option to a pinned dialogue node reds
+  every script pinning that node's list (the #172 retirement-node wave hit
+  4 scripts). The driver's timeout failure prints the subset + cursor —
+  read it before seed-shopping.
 
 Verify per `wi-verifying-changes` before claiming a script is good.

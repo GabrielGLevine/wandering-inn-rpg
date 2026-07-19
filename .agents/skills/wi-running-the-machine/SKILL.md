@@ -172,6 +172,17 @@ re-evaluate fresh — do not resurrect the old setup from history.
   claim attaches to ITS tree state — the controller re-runs the gate on
   the MERGED tree (the K1×L1 tripwire red was only visible there).
 
+## Shared-file lane wipe (2026-07-18, cost three bisect cycles)
+`git checkout -- <file>` to revert ONE lane of edits also wipes every
+OTHER uncommitted lane in that file — #184's walls revert silently
+destroyed the sprite-wiring hunks in the same two map files, and every
+subsequent visual run tested `sprite: "door"` while the "mystery" was
+chased through z-sort, caches, and a full reimport. Discipline: before
+reverting a shared file, `git diff <file>` and name every hunk you are
+about to lose; if any belongs to another lane, commit or stash-split
+FIRST. Corollary: when a feature "vanishes" mid-iteration, `git diff`
+the wiring files BEFORE debugging the engine.
+
 ## Two landing-time red flags (2026-07-12, both bit the same day)
 - **A landing commit whose message describes more than its diffstat
   shows** — 93af9cd claimed six files of reconciliation work and
