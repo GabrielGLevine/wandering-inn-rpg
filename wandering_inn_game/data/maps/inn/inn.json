@@ -829,6 +829,64 @@
    ]
   },
   {
+   "_comment": "d1 #247 Friends of the Inn. Selys rotates through as a servable guest once met (chatted_with_selys>=1). present_when.guest = the WIInnGuests rotation arm: roster [selys,krshia], 2 seats, so both pilots are present every waking; the window slides by times_slept once the met-pool exceeds the seats (PR2+). Her OWN conversation (selys_inn) carries the inn register -- the guild hub never attaches, so no 'board's over there' here (the user's context-awareness requirement). ABSENT in every current sprite-count canonical (all boot fresh, chatted_with_selys=0), so inn_walkthrough/work_loop/upstairs pins are unaffected. sprite reuses her home stand-in (citizen_f) pending the c-lane upgrade.",
+   "id": "selys_inn_guest",
+   "kind": "npc",
+   "cell": [
+    6,
+    6
+   ],
+   "display_name": "Selys",
+   "sprite": "citizen_f",
+   "facing": "down",
+   "conversation": "selys_inn",
+   "present_when": {
+    "guest": {
+     "npc": "selys",
+     "roster": [
+      "selys",
+      "krshia"
+     ],
+     "seats": 2
+    }
+   },
+   "dialogue": [
+    {
+     "speaker": "Selys",
+     "text": "Off the clock, for once. Don't tell the Guild I remember how to sit down."
+    }
+   ]
+  },
+  {
+   "_comment": "d1 #247 Friends of the Inn. Krshia rotates through once met (chatted_with_krshia>=1). Own conversation (krshia_inn) in the inn register -- her market stall never rides along. Same present_when.guest arm (shared roster/seats with selys_inn_guest). Seated at (4,6): the WEST common-room table, deliberately clear of the armed rift_vermin_leak (9,7) so a met-state save never routes a guest visit through the leak's trigger radius. ABSENT in the fresh sprite-count canonicals. sprite reuses her home stand-in (pc_gnoll_f).",
+   "id": "krshia_inn_guest",
+   "kind": "npc",
+   "cell": [
+    4,
+    6
+   ],
+   "display_name": "Krshia",
+   "sprite": "pc_gnoll_f",
+   "facing": "down",
+   "conversation": "krshia_inn",
+   "present_when": {
+    "guest": {
+     "npc": "krshia",
+     "roster": [
+      "selys",
+      "krshia"
+     ],
+     "seats": 2
+    }
+   },
+   "dialogue": [
+    {
+     "speaker": "Krshia",
+     "text": "The market can keep until morning. A good bowl and a warm fire, yes?"
+    }
+   ]
+  },
+  {
    "id": "serving_tray",
    "kind": "prop",
    "cell": [

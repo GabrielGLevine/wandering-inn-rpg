@@ -65,12 +65,21 @@ canon cites · current sprite state.
   verbal tic used SPARINGLY. For variation, Gnoll speech can end
   sentences with ", yes?" (user note 2026-07-19) — prefer it over a
   second Hrr in any block of lines; applies to Gnolls generally.
+- Inn register (d1 #247, `krshia_inn`): off-duty, the day's market
+  closed. Still proud, still pragmatic ("a Gnoll knows when the market
+  is done"), but at ease — the ", yes?" palette leads. Never the stall's
+  wares hub; she is a guest here, not a vendor.
 - Sprite: stand-in (upgrade queued — Gnoll = tall hyena-folk).
 
 ## Selys Shivertail
 - Drake [Receptionist] (Adventurer's Guild), average build.
 - Green scales, guild desk context, unimpressed expression.
 - Voice: dry, competent, secretly soft-hearted.
+- Inn register (d1 #247, `selys_inn`): off the clock, guard down a
+  notch. The dryness stays, but the soft-hearted half shows through (she
+  admits the stew is good, then swears you to secrecy). Never the guild
+  hub — no delivery board, no "it's over there"; she is a patron, not
+  the receptionist.
 - Sprite: stand-in tint (upgrade queued).
 
 ## Dresk Ashgrave

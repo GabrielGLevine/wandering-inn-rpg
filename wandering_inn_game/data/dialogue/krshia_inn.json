@@ -1,0 +1,18 @@
+{
+	"_comment": "d1 #247 Friends of the Inn -- Krshia's INN register. Attached ONLY to the krshia_inn_guest entity; her market stall (and its wares hub) never rides along -- off-duty-at-the-inn context. Serve mirrors patron_serving ({once_per_waking, item}), banks the shared served_customer counter. Voice per docs/design/character-profiles.md: measured, proud Silverfang; 'Hrr.' used SPARINGLY, the ', yes?' Gnoll ending preferred for variation (user note 2026-07-19).",
+	"start": "greet",
+	"nodes": {
+		"greet": { "speaker": "Krshia", "text": "A Human inn, and the food does not insult me. This is worth the walk from the stall, yes?", "options": [
+			{ "text": "Bring her a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:krshia_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:krshia_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
+			{ "text": "\"Closed the stall early?\"", "goto": "stall" },
+			{ "text": "\"Rest easy, Krshia.\"", "end": true }
+		] },
+		"stall": { "speaker": "Krshia", "text": "A Gnoll knows when the market is done. Push past that and you sell nothing and smell of desperation, yes? Better to sit, and eat, and let the town come to me tomorrow.", "options": [
+			{ "text": "Bring her a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:krshia_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:krshia_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
+			{ "text": "\"Wise. Goodnight.\"", "end": true }
+		] },
+		"served": { "speaker": "Krshia", "text": "Hrr. Generous hands. The Silverfangs remember generous hands. You will not regret this, yes?", "options": [
+			{ "text": "\"Least I could do.\"", "end": true }
+		] }
+	}
+}

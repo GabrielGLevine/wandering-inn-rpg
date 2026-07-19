@@ -7,6 +7,14 @@ session doing game design can pick assets **without loading PNGs into
 context**. Written 2026-07-03 from direct visual inspection of every pack's
 mockups and key spritesheets.
 
+**2026-07-19 refresh:** the game now generates its own sprites — see the new
+**sec. 3c** (PixelLab generation batches: what's already generated and which
+picks are already wired into `sprites.json`, so a c-lane task does not
+regenerate) and **sec. 3d** (open c-lane art issues #198/#210/#222–#225 with a
+coverable-from-pack vs needs-generation verdict each). The mechanical
+`docs/asset-index.md`/`.json` were regenerated the same day to index every
+PixelLab batch. Read 3c before generating anything; note the balance flag.
+
 **2026-07-05 addendum:** three new packs (Ninja Adventure Asset Pack, Cute
 Fantasy Free, Pixel_16_interiors_v2_free — families `NINJA16`/`CUTE16`/
 `PC16-ADJACENT?` in sec. 1) were catalogued from **filenames, directory
@@ -727,6 +735,80 @@ Tiles.png sheet; a full fountain *structure* crop (basin + rim + statue,
 not just the water fill tile) is deferred to #9's own asset pass since it
 needs a windowed screenshot to compose correctly and #9 is out of scope
 here by charter.
+
+## 3c. PixelLab generation batches (2026-07-19 refresh) — read before generating anything
+
+**Why this section exists:** sections 1–3b were written 2026-07-03…07, before
+the game began generating its own sprites with PixelLab. Since 2026-07-11 the
+tree has accumulated **eight dated PixelLab batches** in `potential_assets/`,
+and *most of their picks are already wired into `data/sprites.json`*. A c-lane
+art task that skips this section will either (a) regenerate a sprite that
+already exists, wasting scarce balance, or (b) re-derive a prop that is already
+placed. **Read this first; the mechanical `docs/asset-index.md` now lists every
+PNG in these batches (regenerated 2026-07-19).** Provenance/license for ALL of
+them: user-owned + redistributable, **TIER-PUBLIC**, per
+`assets/LICENSES/pixellab-ai-generated-verdict.md` — no third-party clause,
+ship-OK in public and bundle builds alike. Family = `PIXELLAB-AI` (sec. 1).
+
+**⚠ Balance flag (the art lane's gate):** the 2026-07-16 drain
+(`pixellab_2026-07-16_drain/MANIFEST.md`) ended at **18 / 2000 generations
+remaining**. Almost every open c-lane issue (#198/#210/#222/#223/#224) needs
+*fresh* generation (see the per-issue notes below), and 18 will not cover a
+character batch. The user holds a paid PixelLab subscription (can top up) —
+**verify current balance via `GET api.pixellab.ai/v2/balance` before queueing
+batch A or B**, and do not start a character rig without confirming headroom.
+
+### Batch inventory (potential_assets/, newest-relevant first)
+
+| Batch dir | Contents (metadata only) | Status |
+|---|---|---|
+| `pixellab_2026-07-18` | `arch_1..3`, `gatehouse_1..3` (architecture props) | candidates, unwired |
+| `pixellab_2026-07-16_drain` | **has `MANIFEST.md`.** (A) 14 skill-icon subjects × ~2 variants + 32px sources (hedge_remedy, evil_eye, bone_dart, deathbolt, detect_magic, advanced_cooking, signature_dish, eagle_eyes, marked_quarry, double_step, flash_step, animate_dead, hearthward_charm, greater_hearthward — PICKs called in manifest); (B) **Ratici rig** `ratici_teal/` (PICK: animated directional + `/characters/{id}/zip`; wiring data measured — anchor `[0.5,0.7596]`, render_scale 0.4528; `ratici_plum` = reject); (C) `prop_hat_stand_v1` (PICK) | candidates, unwired — the manifest is the authority on picks |
+| `pixellab_2026-07-14_visual_log` | 139 PNGs: props (`delivery_board`, `guild_notice_wall`, `cold_hearth`, `deep_fissure`, `warren_mouth`, `nest_ledge`, `gnaw_pile`), trap tells (`dart_slit_tell`, `illusory_floor_tell`), creatures (`shield_spider_v2`, `rock_crab`), ~12 skill icons | **mostly WIRED** — see list below |
+| `pixellab_2026-07-12_pallass_rigs` | 1 PNG (Pallass rig work) | see #133 line |
+| `pixellab_2026-07-11_trap_props` | `dart_slit`, `illusory_floor`, `pressure_plate`, `snare_coil` | `snare_coil`/tells WIRED |
+| `pixellab_2026-07-11_tilesets` | 2 PNGs (tileset gen) | candidates |
+| `pixellab_2026-07-06 … 07-08` (`_garden`/`_invrisil`/`_pallass`/`_riverfarm`/`_invrisil_combat`/`_witch`) | region character/prop batches incl. the original Relc take (sec. 1 `PIXELLAB-AI`) | region sprites largely wired |
+
+### Already WIRED into `data/sprites.json` — DO NOT regenerate these
+
+Verified present in `sprites.json` (2026-07-19): `shield_spider`,
+`kingslayer_spider`, `rock_crab`, `deep_fissure`, `dart_slit_tell`,
+`illusory_floor_tell`, `snare_coil`, `nest_ledge`, `warren_mouth`,
+`cold_hearth`, `gnaw_pile`, `delivery_board`, `guild_notice_wall`,
+`training_dummy`, `dungeon_statue`, `dungeon_rubble`, `market_stall_pallass`,
+`food_basket`, `steam_vent`, the `memorial_statue_*` set, plus the shipped
+`icon_*` skill-glyph family. If a c-lane need maps onto one of these, the work
+is **placement/repoint (map JSON) not generation** — and placement/data edits
+belong to a data lane, not this art-scout charter.
+
+### Candidate-only (generated, picked, NOT yet wired)
+
+`ratici_teal` rig, `prop_hat_stand_v1`, the 14 drain skill-icon picks, the
+`pixellab_2026-07-18` arch/gatehouse props, `shield_spider_v2`. Wiring these is
+a sprites.json + sync_assets edit (data/code lane) — the art already exists.
+
+## 3d. Open c-lane art issues — coverage verdict (2026-07-19)
+
+Per-issue answer to "coverable from an in-hand pack, or needs PixelLab
+generation?" — the art-lane work-list. Current-sprite facts verified against
+`data/sprites.json` + the region map JSON on 2026-07-19. **Placement/repoint
+and floor_layers wiring are DATA-lane edits (map JSON / biomes.json), not this
+art-scout charter** — flagged as follow-ups, not done here.
+
+| Issue | Need | Verdict |
+|---|---|---|
+| **#198** inn ledger/wardwork/runes | `inn_room_ledger`(10,5), `cellar_wardwork`(13,5), `pantry_door_runes`(14,5) all wear `dusty_scroll` (the genuine scroll is at (12,7)) | **NEEDS GENERATION.** No bound-ledger / chalk-ward-sigil / distinct-note sprite exists in any pack or batch; PC16 `Esoteric.png` carries only the parchment scroll (= today's `dusty_scroll`). Batch A: bound ledger on a stand, ward sigil, parchment note. Subsumed by #222. |
+| **#222** Batch A + placement | 10 `dusty_scroll` placements across 6 maps (inn/sewers/invrisil/riverfarm/barracks) span ~3–7 semantics (genuine scroll / ledger ×3 / note ×4 / ward-rune ×2); plus chessboard, market stalls, alchemy-bench variants, trap tells | **MIXED, mostly NEEDS GENERATION.** ledger/note/ward-rune/chessboard/alchemy-bench = generate. `market_stall_pallass`, `food_basket`, trap tells (`dart_slit_tell`/`snare_coil`/`illusory_floor_tell`) **already exist** — the "food_basket dresses a person on the street" fix is a repoint (DATA lane). Placement sweep = DATA lane. |
+| **#210 / #223** Erin sprite | `erin` entity wears `sprite: citizen_f` (the shared PC16 villager base — indistinct from Riverfarm villagers) | **NEEDS GENERATION.** Not covered by any pack (Citizen_F is the *only* PC16 directional female, and indistinctness is the whole bug) and not in any batch. v2 8-dir character pipeline from `docs/design/character-profiles.md` (Erin profile present). |
+| **#223** other characters | Ruin Warden rig (`ruin_guardian`+wards fight as `training_dummy`), Ceria cast (falls back to idle), Rags (#199) | **NEEDS GENERATION** (v2 character rigs, directional + combat frames). No candidate exists. Budget-gated — a character batch will not fit in 18 generations. |
+| **#224** Batch B + placement | ladder/fissure/seam transitions; sewers web+moss; cart/tea; dormant-guardian statue; distinctive ruin rubble (#205) | **MIXED.** `deep_fissure` already wired. `dormant_guardian_marker`(dungeon_approach 8,9) wears the **boss** sprite `vault_construct` → could **REUSE existing `dungeon_statue`** (coverable, verify via screenshot) or generate a dormant variant. `phosphor_moss`→`mushroom_purple_m` and `warded_seam`→`illusory_floor_tell` are semantic mismatches → generate moss + a distinct seam. web / cart / tea / distinctive rubble → generate. Fauna+icon items **USER-GATED** per VISUAL-LOG Wave D-2. |
+| **#225** interior floor differentiation | 7/21 maps render identical inn floors; 3 maps have zero `floor_layers` | **COVERABLE FROM EXISTING PACKS — no generation.** Every biome floor tile is in-hand (Free Pack `Floors_Tiles`, plus Cave/Cemetery/Castle/Sewer/Library/Garden own floor sheets, and `topdown_floor_tiles_12`). The work is `biomes.json` per-building variants + map `floor_layers` wiring = **DATA lane**; the art side is fully unblocked. |
+
+**Net:** #198, #222 (ledger/note/rune/chessboard/alchemy), #210, #223 all
+require fresh PixelLab generation; #224 is mostly generation with one possible
+`dungeon_statue` reuse; #225 needs zero generation. The gating risk is balance
+(18/2000 at last check) — top up before batch A/B.
 
 ## 4. Audio packs
 
