@@ -16,6 +16,24 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
+## 🎯 NEXT SESSION FIRST ACTION (2026-07-19 close, 19 PRs merged this day)
+Tree is CLEAN, main green, nothing in flight. Pick in this order:
+1. **#253 Import Save mobile bug** (user asked to debug tomorrow) —
+   web file-input flashes refusal, no picker. Fix hypotheses + the fix
+   candidate are in the issue; repro needs the itch build / web-parity
+   Chromium. Start here.
+2. **a8 #209 journal tabs** — READY TO EXECUTE from
+   docs/design/2026-07-19-a8-journal-tabs-plan.md (the pin wave is ~3
+   scripts, not 40; the plan is mechanical). The heaviest remaining
+   code lane; do it with fresh runway.
+3. **c-lane art** (#198/#210/#222-225) — PixelLab pipeline; needs the
+   asset catalog→index→assembly-guide setup first (wi-art-and-sprites).
+USER-GATED (waiting on the user, don't self-start): class/skill spec GO
++ [Eagle Eyes] ACK (docs/design/class-expansion-spec.md, ready); #195
+audio listen (~30 files); a5 #205 FEEL confirm (before/after sent);
+#247 Friends-of-Inn 4 asks; #111 rename go/no-go; #211 leveling feel;
+3 Rags reads. All in the taste queue below.
+
 ## 🏃 RUNNING (2026-07-19, v0.13 wave day 1 — 7 PRs merged)
 - **b4 #219 Grimalkin studies SHIPPED** (PR #239 → 48b23da): two
   board:false private study rows (accept at his hub via the `studies`
