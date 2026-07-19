@@ -288,6 +288,22 @@ quest-beat verbs) — they freeze at the next release cut, so name them
 right the FIRST time (wi-shipping deploy step 0).
 
 
+## Grant-duplicate force-consume (3 bites in one wave, 2026-07-19)
+An option that CONSUMES something (item/gold) and GRANTS an item id
+obtainable elsewhere force-consumes for NOTHING when the player already
+holds the granted id — `pickup()` no-ops duplicates and
+`dialogue_choose` ignores the return (#221's reviewer live-reproed it;
+the fence hid slots on possession; Wilovan's pendant shelf was the
+pre-existing shape). Rules: grant DISTINCT ids for trade outputs, or
+`hide_when {item}` the option on possession. A static validator for the
+class is a ledgered follow-up.
+
+## text_variants vs PINNED base text (2026-07-19)
+Any MATCHING variant beats the node's base text — ordering cannot
+protect a canonical that pins the BASE line. Gate new variants so
+pinned-route fixtures can never match them (the Wilovan handoff needed
+a second counter for exactly this).
+
 ## Purchase options NEVER ride pinned hubs (2026-07-18, cost 3 canonical reds twice)
 Walkthrough canonicals pin dialogue hubs by cursor position, visible-option
 count, and exact option arrays. Adding a commerce option to erin_errand

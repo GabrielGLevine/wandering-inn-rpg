@@ -117,6 +117,14 @@ windowed walk — the #41 jitter methodology), post-viewport-scaling
 artifacts (in-engine dumps show pre-scale pixels only), and trailer
 capture. QA screenshots stay the default for content/legibility reads.
 
+## Settle the tree BEFORE launching a sweep (2 contaminated sweeps, 2026-07-19)
+A sweep launched while fixture/script/data edits continue produces a
+MIXED-STATE verdict (each script reads whatever the tree held at its
+moment). Twice in one day a sweep had to be killed and relaunched.
+Order: finish every edit, run the affected units, THEN launch the
+sweep; any tree edit after launch invalidates the run — kill and
+relaunch, never rationalize.
+
 ## The full sweep CANNOT run foreground in one subagent shell call
 A 60+-script `ci_sweep.sh` exceeds any single Bash-call budget, so the
 harness ALWAYS promotes it to background — and a subagent waiting for

@@ -36,8 +36,11 @@ merged`), not here.
   removal would have foreclosed four repeatable cull bounties).
 - **b2 #218 Ratici's fence SHIPPED** (PR #235): rotating stock behind
   the Brothers' trust, Wilovan handoff, all economy guards proven.
-- Next: b-lane rest (b4-b7, b9, b10), a5 dark-map prep, a3/a4 mobile +
-  c1 art delegatable per the model directive.
+- **b6 #221 fragment trade SHIPPED** (PR #236): trade-by-choice with
+  the reviewer-live-reproed duplicate-grant HIGH fixed via a distinct
+  setting item; grant-duplicate validator = ledgered follow-up.
+- Next: b4 Grimalkin, b5 Invrisil aftermath, b7 ack wave, b9 audio,
+  b10 ruin stone; a3-a8; c1-c6 (delegation split per the directive).
 - Spoiler bar reminders for b1: Rags early-volume-safe; "Magical Door".
 
 ## 📋 QUEUE (value order)
