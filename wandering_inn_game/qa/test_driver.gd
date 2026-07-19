@@ -310,6 +310,39 @@ func _execute(step: Dictionary) -> void:
 				if rect.size == Vector2.ZERO:
 					_fail("click_settings_row: row %d has no rendered rect" % settings_row_n)
 				else:
+					# a4 #216: optional "half" taps the left/right of the row
+					# (volume +/- decrement/increment); default centre = activate.
+					var half := String(step.get("half", ""))
+					var pt: Vector2 = rect.get_center()
+					if half == "left":
+						pt = Vector2(rect.position.x + rect.size.x * 0.25, rect.get_center().y)
+					elif half == "right":
+						pt = Vector2(rect.position.x + rect.size.x * 0.75, rect.get_center().y)
+					_inject_mouse_click(pt)
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"click_credits_link":
+			var link_key := String(step["key"])
+			var spc := get_tree().root.find_child("SettingsPanel", true, false)
+			if spc == null:
+				_fail("click_credits_link: SettingsPanel node not found")
+			else:
+				var rect: Rect2 = spc.call("credits_link_rect", link_key)
+				if rect.size == Vector2.ZERO:
+					_fail("click_credits_link: link '%s' has no rendered rect" % link_key)
+				else:
+					_inject_mouse_click(rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"click_credits_back":
+			var spb := get_tree().root.find_child("SettingsPanel", true, false)
+			if spb == null:
+				_fail("click_credits_back: SettingsPanel node not found")
+			else:
+				var rect: Rect2 = spb.call("credits_back_rect")
+				if rect.size == Vector2.ZERO:
+					_fail("click_credits_back: back label has no rendered rect")
+				else:
 					_inject_mouse_click(rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame

@@ -121,6 +121,29 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "== a4 #216: volume half-row taps. Master volume (row 1, index 0) is at 10. A LEFT-half tap decrements (touch had no way DOWN — a center/right tap always +1'd, and 10 is the cap so an increment is invisible). left -> 9, then a RIGHT-half tap -> back to 10.",
+   "action": "click_settings_row",
+   "row": 1,
+   "half": "left"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": { "master": 9 },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_settings_row",
+   "row": 1,
+   "half": "right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": { "master": 10 },
+   "timeout_sec": 5
+  },
+  {
    "_comment": "== Combat Speed (MOUSE path, issue #87): row 10 = 'Combat Speed' (index 9, appended before 'Back' -- 'Help...' keeps its own index 8). Confirm/click forwards by one step (0 Normal -> 1 Fast), same as the Text Scale/volume rows' click semantics.",
    "action": "click_settings_row",
    "row": 10
@@ -648,8 +671,23 @@
    "timeout_sec": 5
   },
   {
-   "action": "press",
-   "name": "cancel"
+   "action": "screenshot",
+   "name": "09_credits_tap_surface"
+  },
+  {
+   "_comment": "== a4 #216: the credits modal is now fully TAP-reachable (was keyboard-only — open it on mobile and you were stuck). Tap link row key '1' -> its URL opens (ui_credits_link_opened{key:1}, event-first so QA asserts without a browser; OS.shell_open follows).",
+   "action": "click_credits_link",
+   "key": "1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_credits_link_opened",
+   "payload_contains": { "key": "1", "url": "https://wanderinginn.com" },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== a4 #216: tap the Back label -> exit the modal to ROWS (the tap-escape; a tap anywhere outside a link row does the same via the panel handler).",
+   "action": "click_credits_back"
   },
   {
    "action": "wait_for_event",

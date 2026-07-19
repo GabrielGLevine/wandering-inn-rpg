@@ -5,6 +5,10 @@ extends CanvasLayer
 const PANEL_SIZE := Vector2(320.0, 648.0)
 const CONTROLS_PANEL_SIZE := Vector2(620.0, 380.0)
 const HELP_PANEL_SIZE := Vector2(620.0, 530.0)
+## a4 #216: credits content (5 sections) overflowed the 530-tall help panel —
+## the Back label (now a functional TAP target) rendered below the parchment.
+## Its own taller panel keeps every row, and Back, on the visible page.
+const CREDITS_PANEL_SIZE := Vector2(620.0, 680.0)
 const HELP_TEXT_WIDTH := HELP_PANEL_SIZE.x - 52.0
 const HELP_CONTENT_PATH := "res://data/help_content.json"
 const CREDITS_CONTENT_PATH := "res://data/credits.json"
@@ -55,6 +59,11 @@ var _credits_root: Control
 var _credits_section_count := 0
 ## key (numkey string) -> url, rebuilt on every credits-panel build.
 var _credits_links: Dictionary = {}
+## a4 #216: per-link-row labels (label -> numkey) + the Back label, so the
+## credits modal is fully tap-reachable on mobile (it was keyboard-only:
+## open it on touch and you were stuck).
+var _credits_link_labels: Array = []
+var _credits_back_label: Control = null
 var _help_back_label: Label
 var _help_sections: Array = []
 
@@ -327,6 +336,15 @@ func _on_rows_gui_input(event: InputEvent) -> void:
 	var idx := UIChrome.control_index_at(_row_labels, mb.position)
 	if idx >= 0:
 		_cursor = idx
+		# a4 #216: on a volume/scale/speed row (the +/- adjust rows), a tap on
+		# the LEFT half decrements and the RIGHT half increments — touch had
+		# no way to turn a value DOWN (tap always activated = +1).
+		var key := String(ROWS[idx])
+		if AUDIO_ROWS.has(key) or key == "Text Scale" or key == "Combat Speed":
+			var row_ctl := _row_labels[idx] as Control
+			var left_half := mb.position.x < row_ctl.position.x + row_ctl.size.x * 0.5
+			_adjust_row(-1 if left_half else 1)
+			return
 		_activate_row()
 
 
@@ -348,6 +366,28 @@ func _on_help_back_gui_input(event: InputEvent) -> void:
 	var mb := event as InputEventMouseButton
 	if mb.button_index == MOUSE_BUTTON_LEFT and mb.pressed:
 		_exit_help()
+
+
+## a4 #216: QA rect hooks for the credits modal's tap surfaces + the
+## volume half-row split. Mirror row_rect's null/visibility contract.
+func credits_link_rect(key: String) -> Rect2:
+	if _state != State.CREDITS:
+		return Rect2()
+	# _credits_link_labels and _credits_links share insertion order.
+	var keys: Array = _credits_links.keys()
+	var idx := keys.find(key)
+	if idx < 0 or idx >= _credits_link_labels.size():
+		return Rect2()
+	var label := _credits_link_labels[idx] as Control
+	if label == null or not label.visible:
+		return Rect2()
+	return Rect2(label.global_position, label.size)
+
+
+func credits_back_rect() -> Rect2:
+	if _state != State.CREDITS or _credits_back_label == null or not _credits_back_label.visible:
+		return Rect2()
+	return Rect2(_credits_back_label.global_position, _credits_back_label.size)
 
 
 func row_rect(i: int) -> Rect2:
@@ -396,9 +436,9 @@ func _build_credits_panel() -> void:
 	_credits_root = Control.new()
 	UIChrome.apply_theme(_credits_root)
 	_credits_root.set_anchors_preset(Control.PRESET_CENTER)
-	_credits_root.custom_minimum_size = HELP_PANEL_SIZE
-	_credits_root.size = HELP_PANEL_SIZE
-	UIChrome.set_offsets(_credits_root, -HELP_PANEL_SIZE.x * 0.5, -HELP_PANEL_SIZE.y * 0.5, HELP_PANEL_SIZE.x * 0.5, HELP_PANEL_SIZE.y * 0.5)
+	_credits_root.custom_minimum_size = CREDITS_PANEL_SIZE
+	_credits_root.size = CREDITS_PANEL_SIZE
+	UIChrome.set_offsets(_credits_root, -CREDITS_PANEL_SIZE.x * 0.5, -CREDITS_PANEL_SIZE.y * 0.5, CREDITS_PANEL_SIZE.x * 0.5, CREDITS_PANEL_SIZE.y * 0.5)
 	_credits_root.mouse_filter = Control.MOUSE_FILTER_STOP
 	_credits_root.hide()
 	add_child(_credits_root)
@@ -419,6 +459,7 @@ func _build_credits_panel() -> void:
 	var sections: Array = (payload.get("sections", []) if payload is Dictionary else [])
 	_credits_section_count = sections.size()
 	_credits_links.clear()
+	_credits_link_labels.clear()
 	for section: Variant in sections:
 		var head := UIChrome.make_label(String((section as Dictionary).get("heading", "")), "Menu")
 		stack.add_child(head)
@@ -431,10 +472,56 @@ func _build_credits_panel() -> void:
 			var link_row: Dictionary = link
 			_credits_links[String(link_row.get("key", ""))] = String(link_row.get("url", ""))
 			var row := UIChrome.make_label("%s — %s" % [String(link_row.get("key", "")), String(link_row.get("label", ""))], "Small")
+			var link_key := String(link_row.get("key", ""))
+			row.mouse_filter = Control.MOUSE_FILTER_STOP
+			row.gui_input.connect(_on_credits_link_gui_input.bind(link_key))
+			_credits_link_labels.append(row)
 			stack.add_child(row)
-	var back := UIChrome.make_label("Back — Esc", "Menu")
+	var back := UIChrome.make_label("Back — Esc / tap here", "Menu")
 	back.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	back.mouse_filter = Control.MOUSE_FILTER_STOP
+	back.gui_input.connect(_on_credits_back_gui_input)
+	_credits_back_label = back
 	stack.add_child(back)
+	# The panel itself takes a tap anywhere OUTSIDE a link row as escape —
+	# no dead modal on touch. Link rows and the back label STOP the event
+	# first, so their own handlers win.
+	_credits_root.gui_input.connect(_on_credits_panel_gui_input)
+
+
+func _open_credits_link(key: String) -> void:
+	if not _credits_links.has(key):
+		return
+	var url := String(_credits_links[key])
+	ObservableBus.emit_domain_event(WIEvents.UI_CREDITS_LINK_OPENED, {"key": key, "url": url})
+	OS.shell_open(url)
+
+
+func _on_credits_link_gui_input(event: InputEvent, key: String) -> void:
+	if _state != State.CREDITS:
+		return
+	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed \
+			and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+		_open_credits_link(key)
+		get_viewport().set_input_as_handled()
+
+
+func _on_credits_back_gui_input(event: InputEvent) -> void:
+	if _state != State.CREDITS:
+		return
+	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed \
+			and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+		_exit_credits()
+		get_viewport().set_input_as_handled()
+
+
+func _on_credits_panel_gui_input(event: InputEvent) -> void:
+	if _state != State.CREDITS:
+		return
+	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed \
+			and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+		_exit_credits()
+		get_viewport().set_input_as_handled()
 
 
 func _enter_credits() -> void:
