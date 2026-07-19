@@ -206,7 +206,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "Nothing there."
+    "text": "Nothing there — just the inn's old boards, and the faint smell of something Erin burned once, permanently."
    },
    "timeout_sec": 5
   },
@@ -642,7 +642,8 @@
    "action": "wait_for_event",
    "type": "ui_credits_rendered",
    "payload_contains": {
-    "sections": 4
+    "sections": 4,
+    "links": 2
    },
    "timeout_sec": 5
   },

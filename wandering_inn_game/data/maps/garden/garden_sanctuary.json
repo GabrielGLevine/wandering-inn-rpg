@@ -339,6 +339,20 @@
  ],
  "entities": [
   {
+   "_comment": "GH#171 item 7: the fountain statue is decor (basin+statue own the visual); this interact-only prop gives it a voice instead of 'Nothing there.' -- same hide_sprite overlay idiom as the inn facade doors.",
+   "id": "garden_fountain_statue_gaze",
+   "kind": "prop",
+   "cell": [
+    7,
+    6
+   ],
+   "display_name": "The Fountain Statue",
+   "sprite": "garden_fountain_statue",
+   "hide_sprite": true,
+   "toast": "Cool spray beads on the stone. The statue's face is worn soft — whoever it was, the water remembers them better than the carving does.",
+   "observe": "The stonework is older than the door you came through, and the pose is a dancer's, not a soldier's. Someone carved joy here, and meant it to last."
+  },
+  {
    "_comment": "pairs with `garden_door` (inn map, cell 3,6).",
    "id": "garden_exit",
    "kind": "door",

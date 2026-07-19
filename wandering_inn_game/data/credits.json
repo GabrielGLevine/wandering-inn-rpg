@@ -2,9 +2,23 @@
  "_comment": "GH#147/#186-adjacent: attribution content for the Settings Credits panel (user ruling 2026-07-18: Settings section satisfies attribution; formal credits screen deferred). Ove Melaa line is VERBATIM per the pack's attribution instructions. Renders via settings_panel.gd -- content is DATA.",
  "sections": [
   {
-   "heading": "The Wandering Inn",
+   "heading": "About",
    "lines": [
-    "An unofficial fan work based on The Wandering Inn by pirateaba (wanderinginn.com). Made with love for the story; no affiliation."
+    "An unofficial, unlicensed fan work based on The Wandering Inn by pirateaba. Made with love for the story; not affiliated with or endorsed by pirateaba. No Killing Goblins.",
+    "Read the story free at wanderinginn.com.",
+    "The first book, No Killing Goblins, releases August 12, 2026."
+   ],
+   "links": [
+    {
+     "key": "1",
+     "label": "Open wanderinginn.com",
+     "url": "https://wanderinginn.com"
+    },
+    {
+     "key": "2",
+     "label": "Pre-order No Killing Goblins",
+     "url": "https://www.amazon.com/dp/0063516403"
+    }
    ]
   },
   {

@@ -1,0 +1,55 @@
+{
+ "_comment": "Throwaway-grade visual check for the Settings Credits/About panel (GH#171-adjacent user directive 2026-07-18): title -> Settings -> Credits..., screenshot. Kept in-repo because the credits panel has no other windowed coverage; headless it just asserts the render event.",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_title_row",
+   "row": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 11
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_credits_rendered",
+   "payload_contains": {
+    "sections": 4,
+    "links": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "credits_panel"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  }
+ ]
+}

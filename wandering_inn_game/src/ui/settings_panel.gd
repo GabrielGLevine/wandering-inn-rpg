@@ -50,6 +50,8 @@ var _controls_back_label: Label
 var _help_root: Control
 var _credits_root: Control
 var _credits_section_count := 0
+## key (numkey string) -> url, rebuilt on every credits-panel build.
+var _credits_links: Dictionary = {}
 var _help_back_label: Label
 var _help_sections: Array = []
 
@@ -264,6 +266,19 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.is_action_pressed("cancel") or event.is_action_pressed("confirm"):
 			_exit_credits()
 			vp.set_input_as_handled()
+			return
+		# GH#186-adjacent (user directive 2026-07-18): numkey link rows --
+		# the About section's external links open in the OS browser (web
+		# builds open a tab). Event first so QA can assert without a browser.
+		if event is InputEventKey and (event as InputEventKey).pressed and not (event as InputEventKey).echo:
+			var keycode := (event as InputEventKey).keycode
+			if keycode >= KEY_1 and keycode <= KEY_9:
+				var key_name := str(keycode - KEY_1 + 1)
+				if _credits_links.has(key_name):
+					var url := String(_credits_links[key_name])
+					ObservableBus.emit_domain_event(WIEvents.UI_CREDITS_LINK_OPENED, {"key": key_name, "url": url})
+					OS.shell_open(url)
+					vp.set_input_as_handled()
 		return
 	if _state == State.HELP:
 		if event.is_action_pressed("cancel") or event.is_action_pressed("confirm"):
@@ -387,10 +402,10 @@ func _build_credits_panel() -> void:
 	_credits_root.add_child(UIChrome.make_patch(UIChrome.CARVED_PANEL))
 	var margin := MarginContainer.new()
 	UIChrome.full_rect(margin)
-	UIChrome.add_margins(margin, 26, 20, 26, 20)
+	UIChrome.add_margins(margin, 26, 12, 26, 10)
 	_credits_root.add_child(margin)
 	var stack := VBoxContainer.new()
-	stack.add_theme_constant_override("separation", 6)
+	stack.add_theme_constant_override("separation", 2)
 	margin.add_child(stack)
 	var title := UIChrome.make_label("Credits", "Menu")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -400,14 +415,20 @@ func _build_credits_panel() -> void:
 		payload = JSON.parse_string(FileAccess.get_file_as_string(CREDITS_CONTENT_PATH))
 	var sections: Array = (payload.get("sections", []) if payload is Dictionary else [])
 	_credits_section_count = sections.size()
+	_credits_links.clear()
 	for section: Variant in sections:
 		var head := UIChrome.make_label(String((section as Dictionary).get("heading", "")), "Menu")
 		stack.add_child(head)
 		for line: Variant in (section as Dictionary).get("lines", []):
-			var body := UIChrome.make_label(String(line))
+			var body := UIChrome.make_label(String(line), "Small")
 			body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			body.custom_minimum_size = Vector2(HELP_TEXT_WIDTH, 0.0)
 			stack.add_child(body)
+		for link: Variant in (section as Dictionary).get("links", []):
+			var link_row: Dictionary = link
+			_credits_links[String(link_row.get("key", ""))] = String(link_row.get("url", ""))
+			var row := UIChrome.make_label("%s — %s" % [String(link_row.get("key", "")), String(link_row.get("label", ""))], "Small")
+			stack.add_child(row)
 	var back := UIChrome.make_label("Back — Esc", "Menu")
 	back.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stack.add_child(back)
@@ -417,7 +438,7 @@ func _enter_credits() -> void:
 	_state = State.CREDITS
 	_root.hide()
 	_credits_root.show()
-	ObservableBus.emit_domain_event(WIEvents.UI_CREDITS_RENDERED, {"sections": _credits_section_count})
+	ObservableBus.emit_domain_event(WIEvents.UI_CREDITS_RENDERED, {"sections": _credits_section_count, "links": _credits_links.size()})
 
 
 func _exit_credits() -> void:
