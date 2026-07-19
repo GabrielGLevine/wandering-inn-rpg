@@ -231,3 +231,13 @@ chased a ghost path — one burned three stalled runs before a fresh
 agent diagnosed it. Discipline: `git add + commit` the plan doc BEFORE
 `git worktree add`, and the worktree-setup step verifies every
 brief-referenced path exists inside the worktree.
+
+## Branch protection on main (2026-07-19, user directive)
+main requires the SIX status checks (sweep, leak, smoke boot, smoke
+sweep, units, web parity) to merge a PR — a PR head whose commit
+message lacks `[ci-full]` never gets the sweep/parity contexts and is
+UNMERGEABLE until one is pushed. `[ci-full]` on every PR head is now
+platform-enforced, not convention. Force-pushes and deletion of main
+are blocked. enforce_admins is OFF deliberately: the owner-auth
+direct-to-main housekeeping flow (HANDOFF/ledger/skill commits) still
+works; do not "fix" that by enabling it without a user ruling.
