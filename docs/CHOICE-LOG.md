@@ -200,3 +200,10 @@ cross-release index of them.
   handlers read sim.combat); detector sets for seam byte-diffs must
   include work_loop/social_loop (only class-gain carriers) — the
   mutation lens proved level_up_loop alone is blind to that arm.
+- **#211 implementation refinement (2026-07-19)**: challenge weight
+  applies ONLY to combat action-tally counters + the literal
+  `won_combat`; `victories` (chronicle) and specific on_victory quest
+  ids stay integer-unconditional — fractional quest ids would break
+  their gates (design doc §1 updated in place). Also: enemies missing
+  `power_level` yield a NEUTRAL 1.0 weight (rollout-safe until the
+  authoring pass lands).

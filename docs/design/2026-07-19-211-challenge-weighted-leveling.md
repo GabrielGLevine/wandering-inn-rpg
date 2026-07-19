@@ -15,8 +15,12 @@ already flow through `_bank_action_tally` (post-fight, from
 multiplies THESE deposits only:
 
 - weighted: every action-tally counter (`melee_hit`, `spell_cast`,
-  `*_skill_used`, `ranged_hit`, …) and the `won_combat`/`on_victory`
-  family and `victories`.
+  `*_skill_used`, `ranged_hit`, …) and the LITERAL `won_combat` counter.
+  REFINED AT IMPLEMENTATION (2026-07-19): `victories` (chronicle tally)
+  and specific `on_victory` quest ids ALWAYS bank integer-unconditional —
+  a fractional `cleared_the_nest` would break its quest gate; zero
+  shipped quests key on `won_combat` (verified), so the XP lever loses
+  nothing.
 - raw (v1, per directive): non-combat pillars — Helper chores, social,
   craft, exploration, delivery, quest-path accomplishment banks. Canon
   adversity for those is an OPEN design question, deliberately out.

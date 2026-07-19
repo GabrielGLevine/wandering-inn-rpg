@@ -1,7 +1,7 @@
 class_name WISave
 extends RefCounted
 
-const VERSION := 6
+const VERSION := 7
 
 
 const DEPRECATED_IDS := {
@@ -24,6 +24,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"player_facing": [game.player_facing.x, game.player_facing.y],
 		"classes": game.classes.duplicate(true),
 		"accomplishments": game.accomplishments.duplicate(true),
+		"fractional_bank": game.fractional_bank.duplicate(true),
 		"player_skills": game.player_skills.duplicate(),
 		"removed_entities": game.removed_entities.duplicate(),
 		"dormant_encounters": game.dormant_encounters.duplicate(),
@@ -69,7 +70,7 @@ static func _migrated(data: Dictionary) -> Dictionary:
 	if not (data.get("state") is Dictionary):
 		return data
 	var version := int(data.get("version", -1))
-	if version != 2 and version != 3 and version != 4 and version != 5 and version != VERSION:
+	if version != 2 and version != 3 and version != 4 and version != 5 and version != 6 and version != VERSION:
 		return data
 	var out: Dictionary = data.duplicate(true)
 	var state: Dictionary = out["state"]
@@ -95,6 +96,11 @@ static func _migrated(data: Dictionary) -> Dictionary:
 		if not acc.has("slept") and int(state.get("times_slept", 0)) > 0:
 			acc["slept"] = 1
 			state["accomplishments"] = acc
+		version = 6
+	if version == 6:
+		# GH#211: fractional challenge-weight accumulators are new state; old
+		# saves resume with empty accumulators (no retroactive credit).
+		state["fractional_bank"] = {}
 		version = VERSION
 	out["version"] = version
 	var class_map: Dictionary = DEPRECATED_IDS["classes"]
@@ -264,6 +270,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 			game.classes, game._combat_config.get("classes", {})):
 		game.classes.erase(retired_id)
 	game.accomplishments = (s["accomplishments"] as Dictionary).duplicate(true)
+	game.fractional_bank = (s.get("fractional_bank", {}) as Dictionary).duplicate(true)
 	if int(game.accomplishments.get("reached_two_classes", 0)) < 1 \
 			and (game.classes.size() >= 2 or game._holds_consolidated_class()):
 		game.accomplishments["reached_two_classes"] = 1

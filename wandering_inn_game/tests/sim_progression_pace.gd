@@ -69,6 +69,7 @@ var _acc: Dictionary = {}
 var _used_skills: Array[String] = []
 var _entity: Dictionary = {}
 var _banking: WICombatBanking = null
+var _frac: Dictionary = {}
 
 
 func _init() -> void:
@@ -81,7 +82,15 @@ func _init() -> void:
 	for c: Dictionary in _load_json("res://data/combatants.json")["combatants"]:
 		combatants_by_id[String(c[WIKeys.ID])] = c
 	var sink := func(_t: String, _p: Dictionary) -> void: pass
-	_banking = WICombatBanking.new(sink, _mark_skill_used, _find_entity, _record, _count, _roll_loot_noop, _remove_noop)
+	# WI_PACE_WEIGHTED=1: force-enable the challenge config (data flag stays
+	# false until tuning) — the preview arm for curve derivation. With no
+	# power_level authored yet, weight is neutral and this isolates DECAY.
+	var challenge: Dictionary = (_load_json("res://data/progression.json").get("challenge", {}) as Dictionary).duplicate(true)
+	if OS.get_environment("WI_PACE_WEIGHTED") == "1":
+		challenge["enabled"] = true
+		print("(WI_PACE_WEIGHTED probe: challenge weighting FORCED ON)")
+	var combatants_raw: Array = _load_json("res://data/combatants.json")["combatants"]
+	_banking = WICombatBanking.new(sink, _mark_skill_used, _find_entity, _record, _count, _roll_loot_noop, _remove_noop, challenge, catalog, combatants_raw)
 
 	print("progression pace: %d archetypes x %d runs, act ends %s" % [ARCHETYPES.size(), RUNS_PER_ARCHETYPE, str(ACT_ENDS)])
 	var repeat_check := {}
@@ -97,6 +106,7 @@ func _init() -> void:
 			var generalists: Array = []
 			var wins := 0
 			_acc = {}
+			_frac = {}
 			_used_skills = []
 			var act_idx := 0
 			for waking: int in range(1, ACT_ENDS[-1] + 1):
@@ -149,6 +159,7 @@ func _init() -> void:
 		var classes: Dictionary = {}
 		var generalists: Array = []
 		_acc = {}
+		_frac = {}
 		_used_skills = []
 		var act_idx := 0
 		for waking: int in range(1, ACT_ENDS[-1] + 1):
@@ -199,7 +210,7 @@ func _run_fight(comp: Dictionary, classes: Dictionary, catalog: Dictionary, skil
 	assert(combat.finished, "%s fight (seed %d) did not terminate" % [comp["name"], fight_seed])
 	_entity = {"on_victory": comp["on_victory"]}
 	var dormant: Array[String] = []
-	_banking.resolve(combat, String(comp["name"]), dormant)
+	_banking.resolve(combat, String(comp["name"]), dormant, classes, _frac)
 	return bool(combat.outcome["victory"])
 
 
