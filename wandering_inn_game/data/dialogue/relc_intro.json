@@ -220,7 +220,7 @@
      "goto": "relc_army_two"
     },
     {
-     "text": "Back a step.",
+     "text": "(Back a step.)",
      "goto": "meet"
     },
     {
@@ -234,7 +234,7 @@
    "text": "Long version costs a drink. Short version: I got tired of holes in the ground and people I liked going into them. Watch work, the worst thing I dig is paperwork. ...What? I can be deep. It's the tail, nobody expects it.",
    "options": [
     {
-     "text": "Back a step.",
+     "text": "(Back a step.)",
      "goto": "meet"
     },
     {
@@ -248,7 +248,7 @@
    "text": "Miss it? I left people in it. Some I'd still take a spear for, even now. That's all the answer you're getting sober. ...Hey. You did good, down there. I don't say that to walls, so stand still while it lands.",
    "options": [
     {
-     "text": "Back a step.",
+     "text": "(Back a step.)",
      "goto": "meet"
     },
     {
@@ -262,7 +262,7 @@
    "text": "Ugh — fine, you win. Here's your cut. Watch doesn't pay enough for me to keep losing bets to my own students, but don't tell the paymaster I said that.",
    "options": [
     {
-     "text": "Back a step.",
+     "text": "(Back a step.)",
      "goto": "meet"
     },
     {

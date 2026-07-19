@@ -638,6 +638,11 @@
       "text": "Might as well ask.",
       "locked": false,
       "requirement": ""
+     },
+     {
+      "text": "(Leave.)",
+      "locked": false,
+      "requirement": ""
      }
     ]
    },
@@ -652,7 +657,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Selys",
-    "text": "Guild's closed for lunch. Unless you're here about the thing Erin won't stop signing her letters about?"
+    "text": "Back again. Erin's errand is filed and finished — which puts you one paperwork grade above most adventurers I deal with. What now?"
    },
    "timeout_sec": 5
   },

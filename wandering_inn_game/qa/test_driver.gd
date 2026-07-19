@@ -633,7 +633,7 @@ func _wait_for_event(type: String, timeout_sec: float, subset: Dictionary = {}, 
 				_wait_cursor = match_index + 1
 			return
 		await get_tree().process_frame
-	_fail("timeout (%.1fs) waiting for event: %s" % [timeout_sec, type])
+	_fail("timeout (%.1fs) waiting for event: %s subset=%s cursor=%d" % [timeout_sec, type, JSON.stringify(subset), _wait_cursor])
 
 
 func _screenshot(name: String) -> void:
