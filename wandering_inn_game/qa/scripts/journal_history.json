@@ -22,6 +22,7 @@
    "action": "wait_for_event",
    "type": "ui_journal_shown",
    "payload_contains": {
+    "active_tab": "quests",
     "completed_quest_lines": [
      "The Errand — You kept the coin as your own courier's fee."
     ],
@@ -50,23 +51,25 @@
    "name": "01_journal_history"
   },
   {
-   "_comment": "== a4 #216 slice 2: DRAG-scroll the journal body. This fixture's Completed + Postings + skills + aspirations body overflows the panel, so it is scrollable; a touch/mouse drag UP inside the body pans it DOWN (the body was wheel/keyboard-only — a touch player couldn't read past the fold). assert the scroll value MOVED off zero (fresh open resets it to 0).",
-   "action": "assert_journal_scrolled",
-   "greater_than": -0.5
+   "_comment": "Issue #209: the skill-row cursor lives on the SKILLS tab now, so switch to it (move_right, Quests->Skills) -- the emit carries active_tab:'skills' with the SAME full payload (skill fields unchanged, proving the split kept the payload tab-independent), and the cursor resets to row 0 (Innate's [Basic Cleaning]) on tab entry. (The a4 #216 touch drag-to-scroll proof this script used to carry moved to field_skills_loop's Skills tab: journal_history_start no longer overflows ANY single tab after the split -- measured -- so it can't prove scrolling; near_tactician's bigger kit can.)",
+   "action": "press",
+   "name": "move_right"
   },
   {
-   "action": "drag_journal_body"
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "active_tab": "skills",
+    "skill_count": 4,
+    "skill_groups": [
+     "Innate",
+     "Mage — Lv 1"
+    ]
+   },
+   "timeout_sec": 5
   },
   {
-   "action": "assert_journal_scrolled",
-   "greater_than": 0.0
-  },
-  {
-   "action": "screenshot",
-   "name": "01b_journal_drag_scrolled"
-  },
-  {
-   "_comment": "Issue #84 QA-teeth precedent: the pre-existing skill-row cursor still moves/toggles correctly with the new Completed/Postings-detail/aspiration content rendered above it in the SAME body -- cursor row 0 is Innate's [Basic Cleaning], one Down lands on Mage's [Frost Bolt].",
+   "_comment": "Issue #84 QA-teeth precedent: the pre-existing skill-row cursor still moves/toggles correctly on the Skills tab -- one Down from row 0 lands on Mage's [Frost Bolt].",
    "action": "press",
    "name": "move_down"
   },

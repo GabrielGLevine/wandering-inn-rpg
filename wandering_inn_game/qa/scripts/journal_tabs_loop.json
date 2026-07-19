@@ -1,0 +1,41 @@
+{
+ "_comment": "Issue #209 (journal internal tabs): THE canonical for the three-tab switcher. Loads journal_history_start (the same fixture journal_history pins -- the_errand complete, a bounty + delivery accepted, mage held@1) via title Continue, opens the journal, and proves: (1) every open lands on the Quests tab (active_tab:'quests' in the ui_journal_shown payload); (2) a TAP on each tab label (the new click_journal_tab driver action, mirroring click_credits_link/click_playtest_page) flips active_tab and re-emits ui_journal_shown with the FULL section payload intact (skill_count/skill_groups are present on EVERY tab's emit -- the plan's tab-independent-payload contract, which is why the ~20 payload-only journal canonicals survive the split untouched); (3) keyboard move_right/move_left switch tabs with wrap, parity with the taps. Body-text-per-tab is a windowed read (deferred to the controller with the real asset overlay); active_tab + the always-full payload are the headless-assertable proof. Canonical seed: 9 (fixture rng_state governs; held for convention).",
+ "fixture_save": "journal_history_start",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+
+  { "_comment": "Open -> lands on the Quests tab. The full section payload rides this event exactly as journal_history pins it (Postings/Completed/Skills all present regardless of the visible tab).", "action": "press", "name": "journal" },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "quests", "posting_title": "Goblin Cull, Floodplains Road", "skill_count": 4 }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "01_tab_quests" },
+
+  { "_comment": "TAP the Skills tab label -> active_tab flips to 'skills'; the skill-section fields (skill_count 4, Innate/Mage groups) are STILL in the payload, proving the emit is the same full payload with only active_tab changed.", "action": "click_journal_tab", "tab": "skills" },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "skills", "skill_count": 4, "skill_groups": [ "Innate", "Mage — Lv 1" ] }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "02_tab_skills" },
+
+  { "_comment": "TAP the History tab label -> active_tab 'history'; payload still full (postings + skills fields unchanged).", "action": "click_journal_tab", "tab": "history" },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "history", "posting_title": "Goblin Cull, Floodplains Road", "skill_count": 4 }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "03_tab_history" },
+
+  { "_comment": "TAP back to Quests -> active_tab 'quests'.", "action": "click_journal_tab", "tab": "quests" },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "quests" }, "timeout_sec": 5 },
+
+  { "_comment": "== KEYBOARD PARITY == move_right cycles Quests->Skills->History->Quests (wrap); the emits mirror the taps above.", "action": "press", "name": "move_right" },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "skills" }, "timeout_sec": 5 },
+  { "action": "press", "name": "move_right" },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "history" }, "timeout_sec": 5 },
+  { "action": "press", "name": "move_right" },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "quests" }, "timeout_sec": 5 },
+  { "_comment": "move_left wraps backward Quests->History.", "action": "press", "name": "move_left" },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "history" }, "timeout_sec": 5 },
+
+  { "action": "press", "name": "journal" },
+  { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 }
+ ]
+}
