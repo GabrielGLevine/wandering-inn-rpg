@@ -4279,6 +4279,30 @@
      "input"
     ]
    }
+  },
+  {
+   "script": "save_rename_migration",
+   "seed": 1,
+   "note": "#111 safe project rename: boot-ordered legacy user-dir migration. run_qa.sh's legacy_seed places a pre-rename save (near_pallass) + settings.cfg into the 'Wandering Inn RPG v4' app_userdata sibling BEFORE launch; Game._ready carries it over so Continue lights up on the first launch of the renamed build and the state loads byte-faithfully. Pure copy/no-clobber/sibling-derivation unit-pinned in test_save_rename; every OTHER canonical (no legacy_seed) proves the no-legacy no-op boot path.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "guild"
+    ],
+    "fixtures": [
+     "near_pallass"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "settings"
+    ]
+   }
   }
  ]
 }

@@ -237,6 +237,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `raskghar_entry_loop` | 9 (fixture `raskghar_entry_start`) | GH#152 Act III entry chain, no hand-banks past the report |
 | `consolidation_flow` | 9 (fixture `near_consolidation`) | offer/decline/re-offer/accept → [Spellsword] |
 | `save_migration` | 1 | v2→v3 migration + v1 pause-load rejection + stale-slot defeat-reload |
+| `save_rename_migration` | 1 (`legacy_seed` `near_pallass`) | #111 safe project rename: run_qa.sh's `legacy_seed` seeds a PRE-rename user dir (the `Wandering Inn RPG v4` app_userdata sibling) with a real save + settings.cfg BEFORE launch; `Game._ready` carries it into the fresh `user://` before the title enumerates, so Continue lights up on first launch of the renamed build and loads byte-faithfully (guild/(8,3)/60g). Pure copy/no-clobber/sibling-derivation unit-pinned in `test_save_rename`; every other canonical (no `legacy_seed`) proves the no-op boot path |
 | `consolidation_reload` | 9 | pause-load reconstructs the consolidation prompt mid-offer |
 | `generalist_loop` | 9 (fixture `near_generalist`) | Generalist evolution path + balanced-mastery grants |
 | `lantern_check` | 9 | [Light] `lit_the_common_room` payoff, after the Pisces mage arc |

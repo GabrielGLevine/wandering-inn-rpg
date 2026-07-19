@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Wandering Inn RPG v4"
+config/name="Wandering Inn RPG"
 run/main_scene="res://src/world/main.tscn"
 config/features=PackedStringArray("4.7")
 

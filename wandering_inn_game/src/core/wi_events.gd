@@ -8,6 +8,7 @@ const GAME_RESET := &"game_reset"
 const GAME_LOADED := &"game_loaded"
 const SAVE_EXPORTED := &"save_exported"
 const SAVE_IMPORTED := &"save_imported"
+const SAVE_MIGRATED := &"save_migrated"  ## #111: legacy user:// dir carried over after the project rename
 const GAME_OVER := &"game_over"
 const TOAST := &"toast"
 

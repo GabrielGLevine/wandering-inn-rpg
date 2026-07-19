@@ -3,6 +3,12 @@ extends Node
 const SAVE_DIR := "user://saves"
 const MANUAL_SLOTS: Array[String] = ["manual", "manual_2", "manual_3"]
 
+## #111 safe project rename: on first boot into a FRESH user:// we COPY (never
+## move) the pre-rename sibling dir across, then drop a permanent marker so it
+## is strictly one-time. Pure copy logic lives in WISaveMigration; this
+## autoload owns the trigger, the event, and the marker.
+const MIGRATION_MARKER := "user://migrated_from_v4"
+
 var sim: WIGame
 ## a9 #246 (review F1): true only while a world session is live (set by
 ## Main.swap_to_world, cleared by swap_to_title). Export at TITLE must dump
@@ -15,8 +21,47 @@ var _choice_snapshot_armed := false
 
 
 func _ready() -> void:
+	_migrate_legacy_userdir()
 	_build_sim()
 	ObservableBus.domain_event.connect(_on_domain_event)
+
+
+## #111: one-time first-boot carry-over of the pre-rename user:// dir. Runs
+## BEFORE anything enumerates slots (title/settings), so a migrated save is
+## visible to Continue on the very first launch of the renamed build. One
+## code path for native AND web: user:// globalizes to the real absolute
+## path on both, and the legacy dir is its same-parent sibling (so no
+## Godot/godot capitalization guesswork -- the sibling shares our casing).
+func _migrate_legacy_userdir() -> void:
+	if FileAccess.file_exists(MIGRATION_MARKER):
+		return
+	var result := _run_userdir_migration()
+	# Mark done ONLY on a fully-clean pass. A partial copy (disk full, IO
+	# error) leaves the marker UNWRITTEN so the next boot retries the un-copied
+	# slots; the copy is no-clobber, so the retry never overwrites a file
+	# already carried over. Gating on the marker (not "is user:// empty") is
+	# what makes the retry reachable -- a partially-filled user:// would
+	# otherwise look "established" and skip forever (#111 review I-1). The
+	# no-clobber guard also makes a re-run harmless for an established player.
+	if int(result.get("failed", 0)) == 0:
+		_write_file_text(MIGRATION_MARKER, "1")
+
+
+func _run_userdir_migration() -> Dictionary:
+	var legacy := WISaveMigration.legacy_userdir_path()
+	if legacy == "" or not DirAccess.dir_exists_absolute(legacy):
+		return {"copied": 0, "failed": 0}
+	var result := WISaveMigration.migrate_userdir(legacy, ProjectSettings.globalize_path("user://").trim_suffix("/"))
+	if int(result.get("copied", 0)) > 0:
+		ObservableBus.emit_domain_event(WIEvents.SAVE_MIGRATED, {"count": result["copied"]})
+	return result
+
+
+func _write_file_text(path: String, text: String) -> void:
+	var out := FileAccess.open(path, FileAccess.WRITE)
+	if out != null:
+		out.store_string(text)
+		out.close()
 
 
 func reset(creation: Dictionary = {}) -> void:
