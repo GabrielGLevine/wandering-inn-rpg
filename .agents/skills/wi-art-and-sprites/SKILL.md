@@ -159,3 +159,19 @@ directive.
 palette/silhouette contract — PixelLab prompts MUST be written from the
 profile (and the profile wiki-verified first). A generated sprite
 contradicting its profile fails the read regardless of quality.
+
+## PixelLab MCP (live 2026-07-19 — supersedes raw curl for generation)
+The `pixellab` MCP server is connected: `get_balance`, object/character
+create + review tools, per-object download. Prop pipeline: 
+`create_1_direction_object` (64px, top-down) → 16 candidates in `review`
+status (~$0.09/call at overage pricing; subscription generations bill
+first) → `get_object` shows inline previews → `select_object_frames`
+(keep primary + one alternate) → download `rotations/unknown.png`.
+Poll long queues via REST HEAD on the download URL, never blocking
+sleeps. Owned-art conventions unchanged: sheets commit at
+`assets/sprites/<id>/Idle-Sheet.png`, no manifest entry, verdict doc
+append (potential_assets/license-notes/pixellab-ai-generated-verdict.md
+— NOTE the assets/LICENSES path some sprites.json comments cite does
+not exist; license-notes is the real location). Scale check: 64px props
+at render_scale 0.5 read ~1.5 cells — 0.4 is the floor-prop default;
+windowed-read before calling size done (#198: 0.5 swallowed Lyonette).
