@@ -35,6 +35,18 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "== a4 #216 slice 3: TOUCH nav of the picker == the row-select tap already shipped; paging + exit were keyboard-only, stranding a touch player on page 1 of a multi-page list with no way out. TAP the page label -> next page (WRAPS at the last), asserted via the cursor's page; then TAP Back -> menu. Back now lands the cursor on the FIRST selectable row and emits ui_title_rendered, so re-entry is CONFIRM with NO move (a move here would overshoot onto Quit -- the review catch that had this script quit the game mid-run and write no result).",
+   "action": "assert_playtest_page",
+   "equals": 0
+  },
+  { "action": "click_playtest_page" },
+  { "action": "assert_playtest_page", "equals": 1 },
+  { "action": "click_playtest_back" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_playtest_list_rendered", "timeout_sec": 5 },
+  {
    "action": "move",
    "direction": "right",
    "steps": 3

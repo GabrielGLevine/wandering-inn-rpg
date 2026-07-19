@@ -173,6 +173,28 @@ func _init() -> void:
 	assert(String(sel_action["target_id"]) == "goblin_raider_2", "a click must re-point confirm() at the CLICKED combatant, not enter()'s default ordering")
 	assert(not sel_targeting.select_at_cell(Vector2i(99, 99)), "a click on a cell with no candidate must return false")
 
+	# --- a4 #216 slice 3: line-skill TAP-AIM. A tap during a line skill's
+	# aim must set the direction toward the tapped cell, NEVER cancel it
+	# (the pre-fix behavior: select_at_cell returned false in line mode, and
+	# the caller cancelled). Caster at (5,5); tap each cardinal + a diagonal
+	# (dominant axis wins) and confirm the line fires that way. ---
+	var s3_pc_cfg: Dictionary = (_combatant_config(tc_combatants, "pc") as Dictionary).duplicate(true)
+	s3_pc_cfg["skills"] = ["flame_jet"]
+	var s3_combat := WICombat.new(tc_arena, [s3_pc_cfg, (_combatant_config(tc_combatants, "goblin_raider") as Dictionary).duplicate(true)], tc_skills, func(_t: String, _p: Dictionary) -> void: pass, 9)
+	s3_combat.begin()
+	s3_combat.active_index = s3_combat.turn_order.find("pc")
+	s3_combat._start_turn()
+	s3_combat.combatants["pc"][WIKeys.CELL] = Vector2i(5, 5)
+	var s3_view := WICombatView.new(s3_combat)
+	var s3_targeting: RefCounted = targeting_script.new(s3_view, stub_screen)
+	s3_targeting.enter(0, "flame_jet")
+	assert(bool(s3_targeting.state()["line_mode"]), "flame_jet (line_damage) enters line mode")
+	for probe: Array in [[Vector2i(9, 5), "right"], [Vector2i(1, 5), "left"], [Vector2i(5, 9), "down"], [Vector2i(5, 1), "up"], [Vector2i(9, 6), "right"]]:
+		assert(s3_targeting.tap_at_cell(probe[0]), "a line-mode tap always registers (never cancels): %s" % str(probe[0]))
+		assert(String(s3_targeting.confirm()["direction"]) == String(probe[1]),
+			"tap at %s aims the line %s (dominant axis)" % [str(probe[0]), String(probe[1])])
+	assert(s3_targeting.tap_at_cell(Vector2i(5, 5)), "a line-mode tap ON the caster is a no-op but still never cancels")
+
 	var preview: Dictionary = sel_targeting.aim_preview()
 	assert(String(preview["kind"]) == "attack", "aim_preview() kind must be 'attack' for a bare Attack (no skill_id)")
 	assert((preview["ring_cell"] as Vector2i) == Vector2i(4, 5), "aim_preview() ring_cell must track the CURRENTLY selected candidate (post select_at_cell), never enter()'s default")

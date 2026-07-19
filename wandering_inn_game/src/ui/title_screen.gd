@@ -66,6 +66,9 @@ var _row_panels: Array[Control] = []
 var _playtest_root: Control
 var _playtest_row_labels: Array[Label] = []
 var _playtest_page_label: Label
+## a4 #216 slice 3: touch paging/exit for the playtest picker (row-select tap
+## already shipped; paging + exit were keyboard-only).
+var _playtest_back_label: Label
 var _fixture_entries: Array[Dictionary] = []
 var _playtest_cursor := 0
 
@@ -287,6 +290,10 @@ func _build_playtest_panel() -> void:
 	_playtest_page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stack.add_child(_playtest_page_label)
 
+	_playtest_back_label = UIChrome.make_label("‹ Back  (Esc)", "Small")
+	_playtest_back_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stack.add_child(_playtest_back_label)
+
 	stack.mouse_filter = Control.MOUSE_FILTER_STOP
 	stack.gui_input.connect(_on_playtest_gui_input)
 
@@ -465,6 +472,23 @@ func _on_menu_gui_input(event: InputEvent) -> void:
 	if idx >= 0 and _row_selectable(idx):
 		_cursor = idx
 		_confirm()
+
+
+## a4 #216 slice 3: QA rects/state for the playtest touch nav.
+func playtest_page_rect() -> Rect2:
+	if _state != State.PLAYTEST_LIST or _playtest_page_label == null or not _playtest_page_label.visible:
+		return Rect2()
+	return Rect2(_playtest_page_label.global_position, _playtest_page_label.size)
+
+
+func playtest_back_rect() -> Rect2:
+	if _state != State.PLAYTEST_LIST or _playtest_back_label == null or not _playtest_back_label.visible:
+		return Rect2()
+	return Rect2(_playtest_back_label.global_position, _playtest_back_label.size)
+
+
+func playtest_cursor_page() -> int:
+	return _playtest_cursor / PLAYTEST_PAGE_SIZE
 
 
 func row_rect(i: int) -> Rect2:
@@ -714,7 +738,12 @@ func _exit_playtest_list() -> void:
 	_state = State.MENU
 	_playtest_root.hide()
 	_menu_root.show()
+	# a4 #216 slice 3 review: land the cursor on the FIRST selectable row and
+	# emit the menu render (Back used to be silent — QA had no signal and the
+	# stale cursor at "Playtest States" made any follow-on nav overshoot).
+	_cursor = 0 if _row_selectable(0) else _first_selectable_row()
 	_refresh_rows()
+	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_RENDERED, {"continue_enabled": _continue_enabled, "selectable_rows": _selectable_row_count()})
 
 
 func _move_playtest_cursor(delta: int) -> void:
@@ -769,6 +798,19 @@ func _on_playtest_gui_input(event: InputEvent) -> void:
 	if idx >= 0:
 		_playtest_cursor = idx
 		_confirm_playtest_row()
+		return
+	# a4 #216 slice 3: tap the Back label to exit, or the page label to turn
+	# the page (wrap) — the multi-page picker was stuck on page 1 for touch.
+	if _playtest_back_label != null and Rect2(_playtest_back_label.position, _playtest_back_label.size).has_point(mb.position):
+		_exit_playtest_list()
+		return
+	if _playtest_page_count() > 1 and _playtest_page_label != null and Rect2(_playtest_page_label.position, _playtest_page_label.size).has_point(mb.position):
+		# WRAP to page 0 from the last page (touch has no backward page tap, so
+		# a clamp would strand the user on the final page). Land on that page's
+		# row 0, clamped to the real list end.
+		var next_page := (_playtest_cursor / PLAYTEST_PAGE_SIZE + 1) % _playtest_page_count()
+		_playtest_cursor = mini(next_page * PLAYTEST_PAGE_SIZE, _fixture_entries.size() - 1)
+		_refresh_playtest()
 
 
 func _playtest_global_index(local_i: int) -> int:
@@ -803,7 +845,7 @@ func _refresh_playtest() -> void:
 			line += " — " + summary
 		label.text = mark + line
 		label.add_theme_color_override("font_color", ENABLED_COLOR if idx == _playtest_cursor else DISABLED_COLOR)
-	_playtest_page_label.text = "Page %d / %d" % [page + 1, _playtest_page_count()]
+	_playtest_page_label.text = ("Page %d / %d  (tap to turn)" % [page + 1, _playtest_page_count()]) if _playtest_page_count() > 1 else "Page %d / %d" % [page + 1, _playtest_page_count()]
 
 
 func _display_fixture_name(fixture: String) -> String:

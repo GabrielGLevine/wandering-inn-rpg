@@ -676,7 +676,9 @@ func handle_board_click(world_pos: Vector2) -> void:
 		Mode.HOTBAR:
 			_tap_move(cell)
 		Mode.ATTACK, Mode.SKILL_TARGET:
-			if not _targeting.select_at_cell(cell):
+			# a4 #216 slice 3: tap_at_cell aims a line skill toward the tap
+			# (never cancels it); a target-mode empty tap still cancels.
+			if not _targeting.tap_at_cell(cell):
 				_cancel_targeting()
 		Mode.DASH_CONFIRM:
 			_cancel_bar_action()
