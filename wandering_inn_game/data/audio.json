@@ -587,7 +587,7 @@
    "payload": {
     "arena": "deep_warren"
    },
-   "stream": "res://assets/audio/music/battle_the_final_of_the_fantasy.ogg",
+   "stream": "res://assets/audio/music/battle_for_despair.ogg",
    "bus": "Music",
    "volume_db": -7.0,
    "loop": true
@@ -1016,7 +1016,7 @@
    "payload": {
     "arena": "trapped_halls_snare"
    },
-   "stream": "res://assets/audio/music/battle_for_despair.ogg",
+   "stream": "res://assets/audio/music/battle_the_final_of_the_fantasy.ogg",
    "bus": "Music",
    "volume_db": -7.0,
    "loop": true

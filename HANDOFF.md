@@ -95,6 +95,16 @@ merged`), not here.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 
+- **b9 #200 boss music EAR-GATE**: deep_warren now plays
+  battle_for_despair (bundle-top energy; the old moody track moved to
+  the snare fight). Load the deep-descent playtest state, pull the
+  boss — say the word if it reads wrong and the runner-up
+  (battle_for_humanity) wires instead.
+- **b9 #195 LISTENING QUEUE (~30 files)**: menu candidates ×3, jingles
+  ×8, flagged stingers ×16, bed exceptions ×2 — ordered in
+  docs/design/2026-07-19-b9-audio-selection.md. Survivors wire
+  slot-by-slot as small PRs.
+
 - **b1 Rags reads (3)**: (a) backing away from goblins now counts as
   mercy everywhere (garden leg pacifist-reachable) — flip = split the
   counters; (b) the conduct bar is "showed mercy once AND never hunted
