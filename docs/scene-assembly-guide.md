@@ -8,9 +8,11 @@ live in `potential_assets/_benchmarks/` (gitignored, local-only):
 `benchmark-forest-clearing-lightshafts`, `benchmark-formal-garden-fountain`,
 `benchmark-sewer-canal`, `benchmark-forge-lava-interior`. Load one for a
 side-by-side ONLY at ladder rung L4 (sec. 3) — everything else you need
-from them is already encoded below. Written 2026-07-03. Companions: `docs/asset-catalog.md` (which pack/sheet to use),
-`docs/asset-index.md` (exact paths/dimensions), `data/biomes.json` +
-`src/world/sprite_registry.gd` (the existing pipeline you extend).
+from them is already encoded below. Written 2026-07-03. Companions: `docs/asset-catalog.md` (which pack/sheet to use —
+**and sec. 3c/3d there for PixelLab-generated props that already exist or are
+already wired; check it before generating a prop**), `docs/asset-index.md`
+(exact paths/dimensions), `data/biomes.json` + `src/world/sprite_registry.gd`
+(the existing pipeline you extend).
 
 **Non-negotiable repo constraints this guide works inside:**
 - Content is data + codegen. No hand-authored `.tscn`. Scenes are described
