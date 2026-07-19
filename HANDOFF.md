@@ -34,8 +34,10 @@ merged`), not here.
   (Beast Tamer/Detect Magic/permit/Charming Smile+staked bout), all
   dormancy-based (new `dormant_entity` effect — the review's HIGH:
   removal would have foreclosed four repeatable cull bounties).
-- Next: b-lane rest (b2 Ratici, b4-b7, b9, b10), a5 dark-map prep,
-  a3/a4 mobile + c1 art delegatable per the model directive.
+- **b2 #218 Ratici's fence SHIPPED** (PR #235): rotating stock behind
+  the Brothers' trust, Wilovan handoff, all economy guards proven.
+- Next: b-lane rest (b4-b7, b9, b10), a5 dark-map prep, a3/a4 mobile +
+  c1 art delegatable per the model directive.
 - Spoiler bar reminders for b1: Rags early-volume-safe; "Magical Door".
 
 ## 📋 QUEUE (value order)
