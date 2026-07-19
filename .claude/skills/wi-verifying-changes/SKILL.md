@@ -158,3 +158,34 @@ local bar (`grep ^PASS` + noise grep) declared test_effect_text green while
 five item pins were failing; CI would have caught it (`|| fail=1`). Local
 bar, always: (1) nonzero exit = red, (2) `^PASS` line present, (3) zero
 `SCRIPT ERROR|Parse Error|WARNING`. All three, every suite.
+
+### Eye-gate verification needs a REAL before/after pair (2026-07-19, a5 #205)
+A render change verified against a TEXT description ("the log says the
+spider was barely separable") is a PLACEBO — you're reading the after
+and pattern-matching to a memory, not measuring a difference. An a5
+legibility "fix" that set `holder.self_modulate` (non-inheriting — the
+holder Node2D draws nothing, so it tinted nothing) was byte-identical
+to main, and the after-shot "looked brighter" only against the log's
+prose. Discipline for any eye-gate/render change: capture the actual
+BEFORE on `main` (stash → checkout main → shoot → checkout branch →
+pop) and the AFTER on the branch, then `ImageChops.difference` the
+entity region (RGB, not RGBA — Pillow ≥8.3 alpha_only trap above) and
+confirm a non-zero bbox where the change should be AND unchanged where
+it shouldn't. Read both shots. Godot: `modulate` INHERITS to child
+sprites/rects and composes with their tint; `self_modulate` tints only
+the node's OWN canvas drawing — a holder wrapper needs `modulate`, and
+the combat board's leaf-node `self_modulate` works because it targets
+the drawing leaves, not their holder.
+
+### "missing result.json" + rc=0 is a RED flag, never a pass (2026-07-19, #256)
+A canonical that `get_tree().quit()`s mid-run (a cursor overshoot onto
+"Quit", a bad re-entry) exits 0, writes NO result.json, trips no grep —
+and `ci_sweep` USED to print "ok" for it (fixed #257: the sweep now
+fails on missing/`passed!=true` result.json; the bare-`ERROR:` grep
+gap is #258). Until those propagate everywhere: any run whose log ends
+"--- result.json --- (missing result.json)" with rc=0 PROVED NOTHING —
+the script quit before `_finish`. Never read that as green. A silent
+UI transition that a QA `wait_for_event` depends on must EMIT its event
+(a title/menu re-show emits `UI_TITLE_RENDERED`); a menu-return helper
+that stays silent AND leaves a stale cursor makes the next `move` step
+overshoot — the exact shape that quit playtest_boot mid-run.
