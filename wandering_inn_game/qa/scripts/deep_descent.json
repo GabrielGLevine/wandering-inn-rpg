@@ -490,6 +490,13 @@
    "equals": "deep_tunnels"
   },
   {
+   "_comment": "b7 #203: the post-clear reconcile — Relc's cameo LEAVES once cleared_the_warren banks (absent gate). The 8 = 7 entities + PC, and the 7 INCLUDES the defeated awakened_boss: this reconcile fires on the cleared bank mid-combat-screen, and the boss's entity_removed lands later (render-silent) at the victory-banner confirm — do not 'correct' the count by subtracting the boss. A regression re-seating the cameo post-clear renders 9 here and this count fails. Captured stream: entry {9} -> post-reached reconcile {9} (the count:2 pin above) -> post-clear {8} (this one).",
+   "action": "assert_event_count",
+   "type": "ui_entities_rendered",
+   "payload_contains": { "sprites": 8, "fallbacks": 0 },
+   "count": 1
+  },
+  {
    "action": "screenshot",
    "name": "07_warren_cleared"
   }
