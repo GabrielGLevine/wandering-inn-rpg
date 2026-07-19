@@ -80,7 +80,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Issue #62 finding 24: 200 real actions (dusk_at doubled 100->200) via paced back-and-forth moves along inn row y=3, which is clear of every entity/blocked cell from x=1 to x=14 (only inn_door sits at [15,3], well outside this range) -- see CLAUDE.md's inn layout lock + skeleton_scene.json. (2,3)->right10->(12,3)->left10->(2,3), TWENTY round trips = 400 successful move_player calls (re-sized for a6 #206: dusk_at 200->400), zero blocked attempts, net displacement zero. Math: dusk_at is 400 (moods.json meta.phase_thresholds), so the 400th successful move crosses day->dusk exactly (before=399<400 day, after=400>=400 dusk). This route is SIZED to dusk_at and re-sizes with it -- see CLAUDE.md's phase-threshold change rule.",
+   "_comment": "a6 #206: 400 real actions (dusk_at doubled 200->400; lineage #62 doubled 100->200) via paced back-and-forth moves along inn row y=3, which is clear of every entity/blocked cell from x=1 to x=14 (only inn_door sits at [15,3], well outside this range) -- see CLAUDE.md's inn layout lock + skeleton_scene.json. (2,3)->right10->(12,3)->left10->(2,3), TWENTY round trips = 400 successful move_player calls (re-sized for a6 #206: dusk_at 200->400), zero blocked attempts, net displacement zero. Math: dusk_at is 400 (moods.json meta.phase_thresholds), so the 400th successful move crosses day->dusk exactly (before=399<400 day, after=400>=400 dusk). This route is SIZED to dusk_at and re-sizes with it -- see CLAUDE.md's phase-threshold change rule.",
    "action": "move",
    "direction": "right",
    "steps": 10

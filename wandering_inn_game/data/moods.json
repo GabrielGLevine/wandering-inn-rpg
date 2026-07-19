@@ -1,5 +1,5 @@
 {
- "_comment": "Current values (200/450) are a genuine 2x scale off the ORIGINAL 100/225 (the 1.5x that was promised-but-never-applied, compounded with another ~1.33x on top, landing on a clean round number) -- same 2.25x dusk->night ratio preserved.",
+ "_comment": "Current values (400/900) are a6 #206's doubling of 200/450 (lineage: #62 doubled the ORIGINAL 100/225) (the 1.5x that was promised-but-never-applied, compounded with another ~1.33x on top, landing on a clean round number) -- same 2.25x dusk->night ratio preserved.",
  "meta": {
   "phase_thresholds": {
    "dusk": 400,
