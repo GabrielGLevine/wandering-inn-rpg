@@ -189,6 +189,9 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 				_apply_turn_started(String(payload["id"]))
 		WIEvents.COMBAT_FINISHED:
 			if _mode != Mode.INACTIVE:
+				var layer_script := load("res://src/ui/message_layer.gd")
+				if layer_script != null:
+					layer_script.record_message("Victory — %d rounds." % int(payload.get("rounds", 0)) if bool(payload.get("victory", false)) else "Defeat — %d rounds." % int(payload.get("rounds", 0)))
 				_render_tutor_line(tutor)
 				_apply_combat_finished(payload)
 		# TRAP (issue #82): WINDUP_DECLARED is deliberately ABSENT from this
