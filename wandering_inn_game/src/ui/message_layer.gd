@@ -321,6 +321,12 @@ func _show_dialogue_line(text: String, fitted: String) -> void:
 
 func _clear_toast() -> void:
 	_toast_panel.hide()
+	# Transient counts pair with QUEUED texts -- discarding the queue
+	# without decrementing would leave stale counts that swallow a future
+	# REAL toast with identical text (review yellow).
+	for queued: String in _toast_queue:
+		if int(_transient_counts.get(queued, 0)) > 0:
+			_transient_counts[queued] -= 1
 	_toast_queue.clear()
 	if _first_wake_hint_pending:
 		_toast_queue.append(_first_wake_hint_text())

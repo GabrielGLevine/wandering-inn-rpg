@@ -67,14 +67,9 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "hub -> cursor to 'Something's got you rattled' (visible index 2 on a fresh state).",
-   "action": "move",
-   "direction": "down",
-   "steps": 2
-  },
-  {
-   "action": "press",
-   "name": "confirm"
+   "_comment": "Review-red proof (reshaped): enter the PAGED node by TAPPING its option row -- the driver's EXISTING 1-based click_dialogue_option (visible row 3 = 'Something's got you rattled'). The absence assert after the page-1 wait pins the no-first-page-skip contract.",
+   "action": "click_dialogue_option",
+   "option": 3
   },
   {
    "action": "wait_for_event",
@@ -92,6 +87,14 @@
     "pages": 4
    },
    "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "page": 2,
+    "pages": 4
+   }
   },
   {
    "action": "click_screen",

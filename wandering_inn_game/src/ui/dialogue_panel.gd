@@ -520,6 +520,13 @@ func _on_options_gui_input(event: InputEvent) -> void:
 	if idx >= 0:
 		_cursor = idx
 		_refresh_cursor()
+		# Defense-in-depth: _options_box's mouse_filter STOP already prevents
+		# this click reaching _on_panel_gui_input (mutation-tested -- removing
+		# this accept does NOT reproduce the reviewed first-page-skip theory),
+		# but accept documents intent and survives a future filter change.
+		# The no-skip contract itself is pinned by mobile_tap_check's
+		# tap-entry absence assert.
+		_options_box.accept_event()
 		_confirm()
 
 
