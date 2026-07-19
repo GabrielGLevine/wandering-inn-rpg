@@ -4992,5 +4992,43 @@
     "fps": 1
    }
   }
+ },
+ "city_gatehouse": {
+  "_comment": "GH#184 PixelLab gatehouse (potential_assets/pixellab_2026-07-18, candidate 1 of 3). Native 192x128 at 0.5 = 96x64 world px = 6x4 cells (CELL=16) centered on gate cell 31 x row 25 -- monumental on purpose (the great_lift precedent); towers overlap the curtain wall, arch reads ~1.5 cells; anchor MEASURED via PIL alpha-bbox (28,14,170,118) so the base sits on the wall line.",
+  "render_scale": 0.5,
+  "shadow": true,
+  "anchor": [
+   0.516,
+   0.9219
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/city_gatehouse/gatehouse.png",
+    "frame_size": [
+     192,
+     128
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "city_gate_arch": {
+  "_comment": "GH#184 PixelLab wall arch (same batch, candidate 2 of 3). 64x96 at 0.5 = 32x48 world px = 2x3 cells (CELL=16) for the street-side wall gap; anchor_x 0.375 (not the measured 0.5) shifts the sprite east so the arch straddles columns 0-1 instead of clipping half off the west map edge; anchor_y MEASURED (bbox 4,6,60,90).",
+  "render_scale": 0.5,
+  "shadow": true,
+  "anchor": [
+   0.375,
+   0.9375
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/city_gate_arch/arch.png",
+    "frame_size": [
+     64,
+     96
+    ],
+    "fps": 1
+   }
+  }
  }
 }

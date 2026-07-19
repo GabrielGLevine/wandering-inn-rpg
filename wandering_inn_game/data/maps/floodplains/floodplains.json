@@ -603,13 +603,15 @@
      25
     ],
     "cap": [
-     2,
-     11
+     0,
+     0
     ],
     "face": [
-     2,
-     13
-    ]
+     1,
+     0
+    ],
+    "sheet": "res://assets/tiles/city_wall/Tiles.png",
+    "tile_px": 32
    },
    {
     "from": [
@@ -621,13 +623,15 @@
      25
     ],
     "cap": [
-     2,
-     11
+     0,
+     0
     ],
     "face": [
-     2,
-     13
-    ]
+     1,
+     0
+    ],
+    "sheet": "res://assets/tiles/city_wall/Tiles.png",
+    "tile_px": 32
    },
    {
     "from": [
@@ -1120,7 +1124,7 @@
     25
    ],
    "display_name": "To Liscor",
-   "sprite": "door",
+   "sprite": "city_gatehouse",
    "to_map": "street",
    "to_cell": [
     1,
