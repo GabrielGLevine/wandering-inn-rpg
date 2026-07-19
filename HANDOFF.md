@@ -104,6 +104,10 @@ merged`), not here.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 
+- **#247 FRIENDS-OF-THE-INN SPEC READ (4 asks, defaults bold)**:
+  docs/design/2026-07-19-d1-friends-of-the-inn-spec.md — roster (6),
+  seat count (2), double-presence v1 adjudication (accept), pilot
+  pair (Selys+Krshia). Implementation gates on this read.
 - **a9 #246 CROSS-DEVICE ROUND-TRIP ASK**: Export Save / Import Save
   are live in Settings (PR pending). The web arms (itch html5 blob
   download + file picker) are traced-only in CI — do one REAL round
