@@ -75,6 +75,7 @@ var _run_seed: int = 0
 var _economy: WIEconomy
 var _social: WISocial
 var _field_skills: WIFieldSkills
+var _interactions: WIInteractions
 
 
 func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Callable, rng_seed: int = 0, combat_config: Dictionary = {}, phase_config: Dictionary = {}, creation_config: Dictionary = {}) -> void:
@@ -83,6 +84,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	_economy = WIEconomy.new(event_sink, pickup, _set_gold)
 	_social = WISocial.new(event_sink, accomplishment_count, record_accomplishment, find_entity)
 	_field_skills = WIFieldSkills.new(event_sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active, _blink_field, _ward_field, _animate_field)
+	_interactions = WIInteractions.new(event_sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup)
 	rng.seed = rng_seed
 	for s: Dictionary in skill_config.get(WIKeys.SKILLS, []):
 		skills[String(s[WIKeys.ID])] = s
@@ -155,6 +157,10 @@ static func _sanitize_pc_gender(raw: String) -> String:
 
 func pc_sprite_variant() -> String:
 	return "pc_%s_%s" % [pc_race, pc_gender]
+
+
+func _current_map_name() -> String:
+	return current_map
 
 
 func _bind_map(map_id: String) -> void:
@@ -371,129 +377,7 @@ func _check_delivery_arrival() -> void:
 
 func interact() -> Dictionary:
 	_tick_action()
-	var target := entity_at(player_cell + player_facing)
-	if target.is_empty():
-		_emit(WIEvents.INTERACT_NOTHING, {})
-		return {}
-	var is_door_transition := String(target[WIKeys.KIND]) == "door" \
-			or (target.has("door_when") and _door_gate_met(target["door_when"] as Dictionary))
-	if not is_door_transition:
-		_break_sneak()
-	match String(target[WIKeys.KIND]):
-		"npc":
-			var npc_id := String(target[WIKeys.ID])
-			if target.has("talk_pool") and not (target["talk_pool"] as Array).is_empty() and not bool(social_talked.get(npc_id, false)):
-				return _talk_pool_line(target)
-			if target.has(WIKeys.CONVERSATION):
-				if start_dialogue(String(target[WIKeys.CONVERSATION]), String(target[WIKeys.ID])):
-					return {"dialogue": true}
-				var line: Dictionary = target["dialogue"][0]
-				_emit(WIEvents.DIALOGUE_LINE, line)
-				return line
-			var line: Dictionary = target["dialogue"][0]
-			_emit(WIEvents.DIALOGUE_LINE, line)
-			return line
-		"prop":
-			if bool(target.get("sleep", false)):
-				var sleep_toast := String(target.get("sleep_toast", ""))
-				if sleep_toast != "":
-					_emit(WIEvents.TOAST, {"text": sleep_toast})
-				sleep()
-				return {"slept": true}
-			if bool(target.get("board", false)):
-				return _interact_board(target)
-			if bool(target.get("delivery_board", false)):
-				return _interact_delivery_board(target)
-			if target.has("contains") and (not target.has("contains_when") or _door_gate_met(target["contains_when"] as Dictionary)):
-				return _interact_container(target)
-			if target.has("door_when") and _door_gate_met(target["door_when"] as Dictionary):
-				var dw: Dictionary = target["door_when"]
-				var open_toast := String(dw.get("open_toast", ""))
-				if open_toast != "":
-					_emit(WIEvents.TOAST, {"text": open_toast})
-				transition(String(dw["to_map"]), Vector2i(int(dw["to_cell"][0]), int(dw["to_cell"][1])))
-				return {"map": current_map}
-			if bool(target.get("portal_menu", false)) and _door_gate_met(target.get("portal_menu_when", {}) as Dictionary):
-				return _interact_portal_menu()
-			if target.has("on_interact_accomplishment"):
-				var req_family := String(target.get("requires_weapon_family", ""))
-				if req_family != "" and not _holds_weapon_family(req_family):
-					var hint := String(target.get("item_hint_toast", "Empty hands won't do it. You'd need the right weapon in your pack."))
-					_emit(WIEvents.TOAST, {"text": hint})
-					return {"item_hint": req_family}
-				if bool(target.get("once_per_waking", false)):
-					var waking_key := "serve:%s" % String(target[WIKeys.ID])
-					if entity_first_use.has(waking_key):
-						var spent_toast := String(target.get("once_per_waking_toast", "Nothing more to carry out right now. Come back another day."))
-						_emit(WIEvents.TOAST, {"text": spent_toast})
-						return {"once_per_waking_spent": true}
-					# Bank precedes effect resolution: never combine with a met-gated
-					# locked variant, or its flavor read burns the waking use/wage.
-					entity_first_use[waking_key] = true
-				var resolved := _resolve_skill_use_effect({
-					"accomplishment": target["on_interact_accomplishment"],
-					"toast": target.get("toast", ""),
-					"gold": target.get("gold", 0),
-					"variants": target.get("variants", []),
-				})
-				var accomplishment_id := String(resolved["accomplishment"])
-				record_accomplishment(accomplishment_id)
-				var toast_text := String(resolved.get("toast", ""))
-				if toast_text != "":
-					_emit(WIEvents.TOAST, {"text": toast_text})
-				if int(resolved.get("gold", 0)) != 0:
-					var wage := int(resolved["gold"])
-					if bool(target.get("once_per_waking", false)) and known_skills().has("perfect_hospitality"):
-						wage += 1
-					_apply_gold_effect(wage, String(target[WIKeys.ID]))
-				return {"accomplishment": accomplishment_id}
-			var req_skill := String(target.get("requires_skill", ""))
-			if known_skills().has(req_skill):
-				var hint := String(target.get("skill_hint_toast", ""))
-				if hint == "":
-					hint = "Bare hands won't do it. Something you know how to do might."
-				_emit(WIEvents.TOAST, {"text": hint})
-				return {"skill_hint": req_skill}
-			return use_skill(req_skill, String(target[WIKeys.ID]))
-		"encounter":
-			if not _encounter_gate_met(target):
-				var gate_toast := String(target.get("gate_closed_toast", ""))
-				if gate_toast != "":
-					_emit(WIEvents.TOAST, {"text": gate_toast})
-				return {}
-			if target.has(WIKeys.CONVERSATION):
-				if start_dialogue(String(target[WIKeys.CONVERSATION]), String(target[WIKeys.ID])):
-					return {"dialogue": true}
-				if start_combat(String(target[WIKeys.ID])):
-					return {"combat": true}
-				return {}
-			if start_combat(String(target[WIKeys.ID])):
-				return {"combat": true}
-			return {}
-		"door":
-			transition(String(target["to_map"]), Vector2i(int(target["to_cell"][0]), int(target["to_cell"][1])))
-			if target.has("on_enter_accomplishment"):
-				record_accomplishment(String(target["on_enter_accomplishment"]))
-			return {"map": current_map}
-		_:
-			_emit(WIEvents.INTERACT_UNHANDLED, {"kind": String(target[WIKeys.KIND]), "id": String(target[WIKeys.ID])})
-			return {}
-
-
-func _interact_container(target: Dictionary) -> Dictionary:
-	var id := String(target[WIKeys.ID])
-	if bool(container_state.get(id, false)):
-		_emit(WIEvents.TOAST, {"text": "Empty."})
-		return {"container": id, "empty": true}
-	var granted: Array[String] = []
-	for raw: Variant in target["contains"]:
-		var item_id := String(raw)
-		if pickup(item_id, id):
-			granted.append(item_id)
-	container_state[id] = true
-	if target.has("on_open_accomplishment"):
-		record_accomplishment(String(target["on_open_accomplishment"]))
-	return {"container": id, "items": granted}
+	return _interactions.dispatch(entity_at(player_cell + player_facing), social_talked, entity_first_use, container_state)
 
 
 func _resolve_skill_use_effect(effect: Dictionary) -> Dictionary:
@@ -876,10 +760,6 @@ func _apply_gold_effect(amount: int, source: String) -> void:
 	gold = _economy.apply_gold_effect(gold, amount, source)
 	if amount <= -5:
 		record_accomplishment("deliberate_commerce", 1)
-
-
-func _door_gate_met(door_when: Dictionary) -> bool:
-	return _accomplishment_gate_met(door_when.get("requires", {}))
 
 
 ## present_when = STRUCTURAL absence: is_cell_blocked/entity_at/_build_entities
