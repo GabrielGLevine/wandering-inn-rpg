@@ -117,6 +117,7 @@ func _build_expected_counts() -> Dictionary:
 	counts["inn_room_ledger/idle"] = 1
 	counts["cellar_wardwork/idle"] = 1
 	counts["pantry_door_runes/idle"] = 1
+	counts["note_pinned/idle"] = 1
 	counts["dirty_table/idle"] = 1
 	counts["cauldron/idle"] = 1
 	counts["bed/idle"] = 1

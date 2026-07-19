@@ -301,7 +301,7 @@
     2
    ],
    "display_name": "The Headman's Ledger",
-   "sprite": "dusty_scroll",
+   "sprite": "inn_room_ledger",
    "observe": "A ledger left open on the corner table, the same one he carries everywhere else. Columns re-summed in three different inks -- he never trusts the first count, or the second.",
    "on_interact_accomplishment": "observed_headman_ledger",
    "toast": "Grain against debts, and the debts keep winning most years. Best not to read it over his shoulder."

@@ -1112,7 +1112,7 @@
     12
    ],
    "display_name": "The Counting-House Desk",
-   "sprite": "dusty_scroll",
+   "sprite": "inn_room_ledger",
    "requires_skill": "observe",
    "skill_hint_toast": "The clean ledger is the tell. Sizing up what is really here takes a practiced read.",
    "on_skill_use": {
@@ -1139,7 +1139,7 @@
     12
    ],
    "display_name": "A Shadowed Nook",
-   "sprite": "dusty_scroll",
+   "sprite": "crate",
    "tint": [
     0.5,
     0.5,
