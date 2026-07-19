@@ -160,7 +160,7 @@
    "equals": 1
   },
   {
-   "_comment": "== H1 CONTRACT (was Erin's garden-reveal acknowledgment): near_garden pre-holds watch_runner_pointed, so at the garden-unlock talk an ARMED main-thread relay (erin_thread_gate_runner) now OUTRANKS the standing garden signpost (erin_garden_open sits BEFORE the thread-relay block -- last-match-wins, social.gd). The runner pointer is guaranteed armed at any garden unlock (wi_game.gd _maybe_fire_tremor_pointer fires it at the same quests>=3 gate the garden needs), so Erin serves the GATE-RUNNER relay line here, not the garden reveal. This beat now doubles as a live proof of the H1 priority contract. Teleport back down to (2,6) (the cell the old ground-floor route stood on), so the rest of this route (BFS-derived against the inn's real layout) resumes unchanged. ==",
+   "_comment": "== H1 CONTRACT (was Erin's garden-reveal acknowledgment): near_garden pre-holds watch_runner_pointed, so at the garden-unlock talk an ARMED main-thread relay (erin_thread_gate_runner) now OUTRANKS the standing garden signpost (erin_garden_open sits BEFORE the thread-relay block -- last-match-wins, social.gd). The runner pointer is guaranteed armed at any garden unlock (sleep_beat.gd _maybe_fire_tremor_pointer fires it at the same quests>=3 gate the garden needs), so Erin serves the GATE-RUNNER relay line here, not the garden reveal. This beat now doubles as a live proof of the H1 priority contract. Teleport back down to (2,6) (the cell the old ground-floor route stood on), so the rest of this route (BFS-derived against the inn's real layout) resumes unchanged. ==",
    "action": "teleport",
    "map": "inn",
    "cell": [

@@ -76,6 +76,7 @@ var _economy: WIEconomy
 var _social: WISocial
 var _field_skills: WIFieldSkills
 var _interactions: WIInteractions
+var _sleep_beat: WISleepBeat
 
 
 func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Callable, rng_seed: int = 0, combat_config: Dictionary = {}, phase_config: Dictionary = {}, creation_config: Dictionary = {}) -> void:
@@ -85,6 +86,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	_social = WISocial.new(event_sink, accomplishment_count, record_accomplishment, find_entity)
 	_field_skills = WIFieldSkills.new(event_sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active, _blink_field, _ward_field, _animate_field)
 	_interactions = WIInteractions.new(event_sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup)
+	_sleep_beat = WISleepBeat.new(event_sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _enriched_offer, _set_pending_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
 	rng.seed = rng_seed
 	for s: Dictionary in skill_config.get(WIKeys.SKILLS, []):
 		skills[String(s[WIKeys.ID])] = s
@@ -1867,126 +1869,7 @@ func sleep() -> void:
 	# now express "has slept" (times_slept is a plain var, invisible to gates).
 	record_accomplishment("slept")
 	_emit(WIEvents.PHASE_CHANGED, {"phase": phase()})
-	if _combat_config.is_empty():
-		_emit(WIEvents.TOAST, {"text": "You sleep soundly."})
-		return
-	var anything_happened := false
-	var gained_classes := WIProgression.check_class_gains(classes, accomplishments, _combat_config["classes"])
-	for class_id: String in gained_classes:
-		classes[class_id] = 1
-		anything_happened = true
-		_emit(WIEvents.CLASS_GAINED, {"class": class_id})
-		_emit(WIEvents.TOAST, {"text": _class_gained_toast(class_id)})
-	var gains := WIProgression.check_level_ups(classes, accomplishments, _combat_config["classes"])
-	if not gains.is_empty():
-		anything_happened = true
-		var order: Array[String] = []
-		var summaries: Dictionary = {}
-		var gi := 0
-		while gi < gains.size():
-			var class_id := String((gains[gi] as Dictionary)["class"])
-			var from_level := int(classes[class_id])
-			var before_bonuses := WIProgression.derived_stat_bonuses(classes, _combat_config["classes"])
-			var names: Array = []
-			while gi < gains.size() and String((gains[gi] as Dictionary)["class"]) == class_id:
-				var gain: Dictionary = gains[gi]
-				classes[class_id] = int(gain["level"])
-				_emit(WIEvents.CLASS_LEVEL_UP, {"class": class_id, "level": gain["level"]})
-				for sk: Variant in gain["grants"]:
-					_emit(WIEvents.SKILL_UNLOCKED, {"skill": String(sk)})
-					names.append(String(skills.get(String(sk), {}).get(WIKeys.DISPLAY_NAME, String(sk))))
-				gi += 1
-			var after_bonuses := WIProgression.derived_stat_bonuses(classes, _combat_config["classes"])
-			order.append(class_id)
-			summaries[class_id] = {
-				"from": from_level,
-				"to": int(classes[class_id]),
-				"names": names,
-				"hp_delta": int(after_bonuses.get("con", 0)) - int(before_bonuses.get("con", 0)),
-				# TRAP: floor(bonus/2) equals combat's floor((base+bonus)/2) delta ONLY
-				# because PC base str/int are EVEN (combatants.json pc: str 12, int 8);
-				# odd base drifts this toast +-1 vs real delta — re-derive both clauses
-				# if a base stat edit lands.
-				"dmg_delta": int(after_bonuses.get("str", 0)) / 2 - int(before_bonuses.get("str", 0)) / 2,
-				"mp_delta": int(after_bonuses.get("int", 0)) / 2 - int(before_bonuses.get("int", 0)) / 2,
-			}
-		var has_mp_skill := false
-		for sk_id: String in known_skills():
-			if (skills.get(sk_id, {}) as Dictionary).has(WIKeys.MP_COST):
-				has_mp_skill = true
-				break
-		for class_id: String in order:
-			var summary: Dictionary = summaries[class_id]
-			var cls_name := String(_class_display_name(class_id))
-			var text := "[%s Level %d]" % [cls_name, int(summary["to"])]
-			if int(summary["to"]) > int(summary["from"]) + 1:
-				text = "[%s Level %d → %d]" % [cls_name, int(summary["from"]), int(summary["to"])]
-			var names: Array = summary["names"]
-			if not names.is_empty():
-				text += " — unlocked %s" % ", ".join(names)
-			var growth: Array[String] = []
-			if int(summary["hp_delta"]) > 0:
-				growth.append("+%d Max HP" % int(summary["hp_delta"]))
-			if int(summary["dmg_delta"]) > 0:
-				growth.append("+%d damage" % int(summary["dmg_delta"]))
-			if int(summary["mp_delta"]) > 0 and has_mp_skill:
-				growth.append("+%d Max MP" % int(summary["mp_delta"]))
-			if not growth.is_empty():
-				text += " (%s)" % ", ".join(growth)
-			_emit(WIEvents.TOAST, {"text": text})
-
-	_bank_reached_two_classes_if_earned()
-
-	var offer := WIProgression.check_consolidation(classes, _combat_config["classes"])
-	if not offer.is_empty():
-		pending_consolidation = offer
-		_emit(WIEvents.CONSOLIDATION_OFFERED, _enriched_offer(offer))
-		return
-
-	if _resolve_evolutions():
-		anything_happened = true
-
-	if _maybe_fire_tremor_pointer():
-		anything_happened = true
-
-	if accomplishment_count("door_understood") >= 1 and accomplishment_count("recovered_anchor_stone") >= 1 and accomplishment_count("bought_catalyst") >= 1 and accomplishment_count("door_awakened") < 1:
-		record_accomplishment("door_study_sleeps")
-		if accomplishment_count("door_study_sleeps") >= 3:
-			record_accomplishment("door_awakened")
-			anything_happened = true
-
-	if accomplishment_count("door_awakened") >= 1 and accomplishment_count("heard_pisces_second_door") >= 1 and accomplishment_count("dungeon_attuned") < 1:
-		record_accomplishment("second_door_study_sleeps")
-		if accomplishment_count("second_door_study_sleeps") >= 2:
-			record_accomplishment("dungeon_attuned")
-			anything_happened = true
-
-	if accomplishment_count("door_awakened") >= 1 and accomplishment_count("resonance_grown") < 1:
-		record_accomplishment("catalyst_attunement_sleeps")
-		if accomplishment_count("catalyst_attunement_sleeps") >= 2:
-			record_accomplishment("resonance_grown")
-			resonance_capacity += 1
-			anything_happened = true
-
-	_bank_garden_unlock_if_earned()
-
-	if not anything_happened:
-		_emit(WIEvents.TOAST, {"text": "You sleep soundly."})
-
-
-func _maybe_fire_tremor_pointer() -> bool:
-	if accomplishment_count("watch_runner_pointed") >= 1:
-		return false
-	if accomplishment_count("heard_the_deep_tremor") >= 1:
-		return false
-	if accomplishment_count("reached_two_classes") < 1 or _quests_completed_count() < 3:
-		return false
-	record_accomplishment("watch_runner_pointed")
-	# GH#167: the toast is a NUDGE; the durable direction is the journal
-	# quest started here (the arc was the only thread without one).
-	start_quest("something_beneath")
-	_emit(WIEvents.TOAST, {"text": "A Watch runner is looking for you."})
-	return true
+	_sleep_beat.run(classes, accomplishments, _combat_config)
 
 
 func _bank_reached_two_classes_if_earned() -> void:
@@ -2004,23 +1887,12 @@ func _holds_consolidated_class() -> bool:
 	return false
 
 
-func _garden_earn_met() -> bool:
-	if accomplishment_count("reached_two_classes") < 1 or _quests_completed_count() < 3:
-		return false
-	var legs := ["cleaned_the_inn", "goblins_spared", "sign_defended", "resolved_wrong_order"]
-	var met := 0
-	for leg: String in legs:
-		if accomplishment_count(leg) >= 1:
-			met += 1
-	return met >= 2
+func _set_pending_consolidation(offer: Dictionary) -> void:
+	pending_consolidation = offer
 
 
-func _bank_garden_unlock_if_earned() -> void:
-	if accomplishment_count("garden_door_unlocked") >= 1:
-		return
-	if not _garden_earn_met():
-		return
-	record_accomplishment("garden_door_unlocked")
+func _grow_resonance() -> void:
+	resonance_capacity += 1
 
 
 func _enriched_offer(offer: Dictionary) -> Dictionary:
@@ -2109,21 +1981,6 @@ func _class_display_name(id: String) -> String:
 		if String(cls[WIKeys.ID]) == id:
 			return String(cls[WIKeys.DISPLAY_NAME])
 	return id
-
-
-func _class_gained_toast(class_id: String) -> String:
-	var base := "[%s] class gained!" % _class_display_name(class_id)
-	var names: Array[String] = []
-	for cls: Dictionary in _combat_config["classes"]["classes"]:
-		if String(cls[WIKeys.ID]) == class_id:
-			for lv: Dictionary in cls.get("levels", []):
-				if int(lv.get("level", 0)) == 1:
-					for sk: Variant in lv.get("grants", []):
-						names.append(String(skills.get(String(sk), {}).get(WIKeys.DISPLAY_NAME, String(sk))))
-			break
-	if names.is_empty():
-		return base
-	return "%s — %s" % [base, ", ".join(names)]
 
 
 func skills_config_raw() -> Dictionary:
