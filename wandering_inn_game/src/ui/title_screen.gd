@@ -738,7 +738,12 @@ func _exit_playtest_list() -> void:
 	_state = State.MENU
 	_playtest_root.hide()
 	_menu_root.show()
+	# a4 #216 slice 3 review: land the cursor on the FIRST selectable row and
+	# emit the menu render (Back used to be silent — QA had no signal and the
+	# stale cursor at "Playtest States" made any follow-on nav overshoot).
+	_cursor = 0 if _row_selectable(0) else _first_selectable_row()
 	_refresh_rows()
+	ObservableBus.emit_domain_event(WIEvents.UI_TITLE_RENDERED, {"continue_enabled": _continue_enabled, "selectable_rows": _selectable_row_count()})
 
 
 func _move_playtest_cursor(delta: int) -> void:
@@ -800,7 +805,12 @@ func _on_playtest_gui_input(event: InputEvent) -> void:
 		_exit_playtest_list()
 		return
 	if _playtest_page_count() > 1 and _playtest_page_label != null and Rect2(_playtest_page_label.position, _playtest_page_label.size).has_point(mb.position):
-		_move_playtest_cursor(PLAYTEST_PAGE_SIZE)
+		# WRAP to page 0 from the last page (touch has no backward page tap, so
+		# a clamp would strand the user on the final page). Land on that page's
+		# row 0, clamped to the real list end.
+		var next_page := (_playtest_cursor / PLAYTEST_PAGE_SIZE + 1) % _playtest_page_count()
+		_playtest_cursor = mini(next_page * PLAYTEST_PAGE_SIZE, _fixture_entries.size() - 1)
+		_refresh_playtest()
 
 
 func _playtest_global_index(local_i: int) -> int:

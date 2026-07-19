@@ -35,7 +35,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== a4 #216 slice 3: TOUCH nav of the picker == the row-select tap already shipped; paging + exit were keyboard-only, stranding a touch player on page 1 of a multi-page list with no way out. TAP the page label -> next page (wrap), asserted via the cursor's page; then TAP Back -> return to the menu (ui_title_rendered). Re-enter by keyboard to continue the original keyboard proof below unchanged.",
+   "_comment": "== a4 #216 slice 3: TOUCH nav of the picker == the row-select tap already shipped; paging + exit were keyboard-only, stranding a touch player on page 1 of a multi-page list with no way out. TAP the page label -> next page (WRAPS at the last), asserted via the cursor's page; then TAP Back -> menu. Back now lands the cursor on the FIRST selectable row and emits ui_title_rendered, so re-entry is CONFIRM with NO move (a move here would overshoot onto Quit -- the review catch that had this script quit the game mid-run and write no result).",
    "action": "assert_playtest_page",
    "equals": 0
   },
