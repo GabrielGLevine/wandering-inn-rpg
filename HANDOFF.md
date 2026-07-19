@@ -2,7 +2,7 @@
 
 ## Current release
 
-**v0.12.0 SHIPPED 2026-07-18, all three targets green** (Release: itch
+**v0.12.1 SHIPPED 2026-07-19 (mobile hotfix: #196/#197/#202 + gold caps; deploys watched at tag). v0.12.0 2026-07-18, all three targets green** (Release: itch
 html5 + Windows/Linux desktop, full QA on real assets; Pages deploy
 green on the tag trigger). Prior: v0.11.1/v0.11.0/v0.10.0 (2026-07-18),
 v0.9.0 (2026-07-17), v0.8.0 (2026-07-15) (run 29451275728 green: full QA on real
@@ -17,6 +17,11 @@ note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
 ## 🏃 RUNNING (2026-07-18, v0.12.0 tagged)
+- **NEXT SESSION: execute GOAL.md** (v0.13 depth+polish wave charter,
+  user directive). Wave plan: docs/design/2026-07-18-v0.13-depth-polish-
+  wave.md; board #194-#225; #211 comments carry the leveling design
+  directives verbatim. First action: #194a WIInteractions seam.
+
 
 - **v0.12.0 SHIPPED** (Release + Pages both green) (freeze 619 ids, ZERO new frozen ids -- polish/copy
   cycle); release.yml + pages.yml watched at tag time (see git log for
