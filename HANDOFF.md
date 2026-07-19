@@ -16,22 +16,19 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🏃 RUNNING (2026-07-19, v0.13 wave day 1)
-- **#194a COMPLETE**: three seam PRs merged (#227/#228/#229 → a3801f9/
-  be648b4/62459f0), each byte-identity-proven + full bar + review clean.
-  wi_game.gd 2345→2020; WIInteractions/WISleepBeat/WICombatBanking live.
-  Lanes b/c dispatchable (a1 dependency met). #194b world.gd seams open.
-- **#211 AT PR** (#230, 6 commits, [ci-full] watching): challenge-
-  weighted leveling SHIPPED FLAG-ON — weight×decay on combat deposits,
-  power_level ×53, 16 resolution grants (path-exclusive), save v7,
-  12-canonical re-derivation, pace harness with force-off regression
-  arm reproducing the old pacing exactly. Bands: warrior 6/9/13,
-  caster 6/10/15, helper 10/20/24 (were 6/14/16 / 7/15/16 / 10/21/26).
-  Three review layers ran; all findings fixed or CHOICE-LOG'd. Merge
-  on green checks.
-- **#111 spec on main** — go/no-go pending (Taste queue). USER-GATED.
-- CHOICE-LOG has 2026-07-19 adjudications (#111 rec, #211 §8, seam
-  calls) awaiting review.
+## 🏃 RUNNING (2026-07-19, v0.13 wave day 1 — 7 PRs merged)
+- **#194 CLOSED** (god-file pair fully dissected): #227/#228/#229
+  (wi_game 2345→2020: WIInteractions/WISleepBeat/WICombatBanking) +
+  #231/#232 (world 1624→1435: WIEntityVisualFactory/WICameraController).
+  Every seam byte- or pixel-identity-proven + reviewed.
+- **#211 SHIPPED FLAG-ON** (PR #230): challenge-weighted leveling live —
+  see Taste queue for the FEEL read; all knobs data.
+- **#111 spec on main** — go/no-go pending (Taste queue).
+- **NEXT: b1 Rags** (lane-b headline, Fable-class): goblin-conduct
+  audit → Erin-relationship + conduct gate → floodplains encounter +
+  quest with non-combat path; sprite rides c3. Then a5 dark-map (a2
+  dependency met), a3/a4 mobile + c1 art delegatable.
+- Spoiler bar reminders for b1: Rags early-volume-safe; "Magical Door".
 
 ## 📋 QUEUE (value order)
 
