@@ -118,3 +118,23 @@ cross-release index of them.
   dialogue hubs (PR #166 incident writeup).
 - Bounty payout scaling (#163) anchors to the economy price ladder, not
   hand-tuned gold — hard dependency edge #92 → #163.
+
+## 2026-07-18 — rank-aware fixture follow-up closed won't-do
+
+- Attempted scaling the two repeatable culls (kingslayer_den,
+  market_watchgolems) to bounty-tier steps with rank-matched geared
+  fixtures. Ground truth from standalone win-rate probes through
+  WIBountyScaling.scale_enemy: kingslayer silver 26/50 caster-AI,
+  21/40 melee-AI; watchgolems silver 45/50 caster-AI but **15/40
+  melee-AI** — and QA autoplay drives the PC as melee, which is why
+  the loop failed at every seed while the caster probe said 90%.
+- Ruling: both culls stay fixed-difficulty (the original lane call,
+  now with numbers). Branch reverted wholesale; nothing merged.
+  Re-open conditions logged on #163: ally support at those sites, or
+  caster-aware PC autoplay (v0.13 QA-infrastructure candidate).
+- Bonus catch during the revert: the #147 gen_asset_ignores.sh regen
+  never made it into PR #188 — 10 licensed battle_*.ogg sat unignored
+  on main (untracked, so leak_check stayed green; a git add -A would
+  have leaked them). Regenerated + committed direct to main (9fc3e46).
+  Lesson folded into wi-shipping's bundle-order step: verify the
+  gitignore diff is IN the PR diff, not just the working tree.
