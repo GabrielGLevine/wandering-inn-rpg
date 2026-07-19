@@ -78,12 +78,13 @@ merged`), not here.
   reviewer's lantern MEDIUM refuted by probe). Branch protection ON
   (6 required checks; [ci-full] platform-enforced on PR heads). #247
   Friends-of-the-Inn spec on main (4 asks gate implementation).
-  a3 #215 SHIPPED (PR #250 — mobile combat resolution: banner tap,
-  WAIT_AI skip tap, resting Pause chip; review caught chip-dead-from-
-  turn-2 + a bare-ERROR spam class, both fixed). Remaining board: #195
-  listening queue (user), a4/a5/a8 mobile-UI lanes, c1-c6 art, d1
-  post-read. Ledger has a ci_sweep grep-widen follow-up (bare ERROR:
-  slips the SCRIPT ERROR|Parse Error|WARNING net).
+  a3 #215 + a4 #216-slice1 SHIPPED (PRs #250/#251). a4 #216 STAYS
+  OPEN: slice 1 (credits tap-softlock + volume half-row taps) merged;
+  slices 2-3 (line-skill tap-aim = combat targeting controller,
+  Playtest States touch nav, journal body drag-scroll) commented on
+  #216 as follow-ups. Remaining board: #195 listening queue (user),
+  a4 slices 2-3, a5/a8 mobile-UI, c1-c6 art, d1 post-read. Ledger has
+  a ci_sweep grep-widen follow-up (bare ERROR: slips the net).
 - Spoiler bar reminders for b1: Rags early-volume-safe; "Magical Door".
 
 ## 📋 QUEUE (value order)
