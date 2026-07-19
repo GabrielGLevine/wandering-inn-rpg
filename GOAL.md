@@ -150,11 +150,15 @@ file-ownership lanes). Board: issues #194–#225.
 - Controller shell: never `cd` into worktrees; absolute paths (CWD drift
   has misrouted edits twice).
 
-## First action after bootstrap
-Branch `issue/194-wi-game-seams`, extract the WIInteractions seam ONLY
-(interact routing out of `src/core/wi_game.gd`), full bar, PR with
-byte-identical pinned-seed evidence, merge. Then the next seam. Do not
-start any lane-b/c package before #194a's first seam is merged.
+## Progress (2026-07-19, wave day 1 — one Fable session)
+DONE: **#194a COMPLETE** (PRs #227/#228/#229 — WIInteractions, WISleepBeat,
+WICombatBanking; byte-identity-proven each). **#211 SHIPPED FLAG-ON**
+(PR #230 — weight×decay×grants, power_level ×53, save v7, 12-canonical
+re-derivation; leveling-feel entry in HANDOFF taste queue). #111 SPEC on
+main + go/no-go on the issue. CHOICE-LOG carries all adjudications.
+NEXT (charter order): #194b world.gd seams, then lanes b/c are OPEN
+(a1 dependency met) — b1 Rags design is the next Fable-class package;
+a3/a4 mobile + c1 art batch delegatable per the model directive.
 
 ## Definition of done
 All 18 wave packages merged or explicitly deferred with CHOICE-LOG

@@ -150,4 +150,22 @@ player-visible feature.
   4 scripts). The driver's timeout failure prints the subset + cursor —
   read it before seed-shopping.
 
+## Challenge-weighting pin traps (GH#211, 2026-07-19 — flag ships ON)
+- A gray-band fight (weak enemies vs a leveled build) emits NO
+  `won_combat` accomplishment event — the deposit is fractional and only
+  a whole-unit bank fires ACCOMPLISHMENT_RECORDED. Pin `victories`
+  instead when the script needs "a win happened": it banks integer under
+  BOTH flag states. Cost: boulevard_night_footpads_loop hang.
+- A low-power player beating a real fight banks `won_combat` at the
+  adversity CAP (2 per win on the classless tutorial arc) — pin actuals,
+  don't "fix" the double.
+- Milestone fixtures (evolution/level thresholds) must arrive
+  PRE-QUALIFIED: a below-band grind fight cannot push a L10+ axis
+  counter over its threshold anymore — that is the design, not a bug.
+- `ci_sweep.sh --touching` maps `data/quests.json` to ZERO scripts (the
+  quest surface joins the src/** false-safe class) — run the quest
+  canonicals explicitly on quest-data edits.
+- Comment keys must NEVER go inside `payload_contains` — the subset
+  match treats them as required payload keys (cost one hang).
+
 Verify per `wi-verifying-changes` before claiming a script is good.

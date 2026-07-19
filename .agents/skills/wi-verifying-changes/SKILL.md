@@ -41,6 +41,13 @@ Read `qa_output/<script>/result.json` for pass/failures; `events.jsonl` for
 the event log; `*.png` (windowed) for what a player sees.
 
 ## Iron rules
+- **Refactor byte-identity = the SIM event subsequence, never the full
+  stream** (#194a method, mutation-proven): capture `events.jsonl` at
+  pinned seeds pre/post, strip `t`, drop `ui_*` + `audio_played` (frame-
+  timing-noisy — run-vs-run diffs on ONE tree prove it), diff the rest
+  in order. Detector sets must include a script that actually EXERCISES
+  each moved arm (level_up_loop carries zero class_gained events;
+  work_loop/social_loop are the class-gain carriers).
 - **A "pre-existing failure" claim needs a HEALTHY-OVERLAY proof, never a
   git-stash proof.** Overlay assets (the manifest's 174 licensed paths) are
   gitignored — `git stash` is structurally blind to them, so "stashed my
