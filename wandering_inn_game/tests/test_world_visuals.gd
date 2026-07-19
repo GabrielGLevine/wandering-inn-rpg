@@ -5,8 +5,10 @@ func _occurrence_count(source: String, needle: String) -> int:
 	return source.split(needle).size() - 1
 
 
-func _y_sort_contract_holds(source: String) -> bool:
-	var make_body := source.get_slice("func _make_entity_visual", 1).get_slice("\nfunc ", 0)
+func _y_sort_contract_holds(source: String, factory_source: String) -> bool:
+	# #194b seam 1: construction body lives in WIEntityVisualFactory.make();
+	# the override-read call sites stay in world.gd.
+	var make_body := factory_source.get_slice("func make(", 1).get_slice("\nfunc ", 0)
 	if make_body.find("field_y_sort_bias_override is float or field_y_sort_bias_override is int") == -1:
 		return false
 	if make_body.find("else float(catalog_entry.get(\"field_y_sort_bias_px\", 0.0))") == -1:
@@ -158,7 +160,7 @@ func _shipped_blocked_prop_contract_holds() -> bool:
 	return true
 
 
-func _field_blocked_render_wiring_holds(source: String) -> bool:
+func _field_blocked_render_wiring_holds(source: String, factory_source: String) -> bool:
 	if source.find("const FIELD_BLOCKED_PROP_BUDGET := 200") == -1:
 		return false
 	var floor_body := _function_body(source, "_build_floor")
@@ -171,17 +173,21 @@ func _field_blocked_render_wiring_holds(source: String) -> bool:
 	]:
 		if floor_body.find(clause) == -1:
 			return false
-	var render_body := _function_body(source, "_build_field_blocked_props")
+	var prop_body := factory_source.get_slice("func make_blocked_prop(", 1).get_slice("\nfunc ", 0)
 	for clause: String in [
 		"Sprite2D.new()",
 		"get_frame_texture",
 		"spr.position = Vector2(cell) * CELL",
 		"WISpriteRegistry.anchor_for(sprite_id)",
 		"spr.offset = Vector2(",
-		"_entities_root.add_child",
 	]:
-		if render_body.find(clause) == -1:
+		if prop_body.find(clause) == -1:
 			return false
+	if prop_body.find("AnimatedSprite2D.new()") != -1:
+		return false
+	var render_body := _function_body(source, "_build_field_blocked_props")
+	if render_body.find("make_blocked_prop") == -1 or render_body.find("_entities_root.add_child") == -1:
+		return false
 	if render_body.find("AnimatedSprite2D.new()") != -1:
 		return false
 	var rebuild_body := _function_body(source, "_rebuild_field")
@@ -463,7 +469,9 @@ func _init() -> void:
 	WITestWatchdog.arm(self)
 	var source := FileAccess.get_file_as_string("res://src/world/world.gd")
 	var builder_source := FileAccess.get_file_as_string("res://src/world/tile_board_builder.gd")
+	var factory_source := FileAccess.get_file_as_string("res://src/world/entity_visual_factory.gd")
 	assert(not source.is_empty(), "world.gd must exist")
+	assert(not factory_source.is_empty(), "entity_visual_factory.gd must exist (#194b seam 1)")
 	assert(_blocked_prop_pool_contract_holds(),
 		"inn, street, cave, and floodplains need sprite-registry-backed blocked_props pools")
 	for helper: String in ["field_blocked_prop_index", "field_blocked_render_plan", "cover_skip_errors"]:
@@ -473,7 +481,7 @@ func _init() -> void:
 		"field blocked cover must select deterministically, fall back, and reject stale/conflicting cover_skip")
 	assert(_shipped_blocked_prop_contract_holds(),
 		"every shipped blocked cell needs exactly one honest render path within the 200-prop budget")
-	assert(_field_blocked_render_wiring_holds(source),
+	assert(_field_blocked_render_wiring_holds(source, factory_source),
 		"world must render budgeted static blocked props in the Y-sorted field layer")
 
 	var body := source.get_slice("func _reconcile_entity_presence", 1).get_slice("\nfunc ", 0)
@@ -487,22 +495,23 @@ func _init() -> void:
 	assert(body.find("hide_sprite") != -1,
 		"_reconcile_entity_presence must skip hide_sprite entities (matches _build_entities' guard)")
 
-	assert(_y_sort_contract_holds(source),
+	assert(_y_sort_contract_holds(source, factory_source),
 		"entity Y-sort overrides need numeric catalog fallback, holder bias, zero-shift sprite/shadow cancellation, and entity-only plumbing")
 	for deleted_clause: String in [
 		"else float(catalog_entry.get(\"field_y_sort_bias_px\", 0.0))",
 		"holder.position.y += y_sort_bias",
 		"CELL - anchor.y * frame_size.y * spr.scale.y - y_sort_bias",
 		"shadow.position = Vector2(CELL * 0.5, CELL - 2.0 - y_sort_bias)",
-		"ent.get(\"field_y_sort_bias_px\", null)",
 	]:
-		assert(not _y_sort_contract_holds(source.replace(deleted_clause, "")),
-			"Y-sort contract must reject deletion of: %s" % deleted_clause)
+		assert(not _y_sort_contract_holds(source, factory_source.replace(deleted_clause, "")),
+			"Y-sort contract must reject factory deletion of: %s" % deleted_clause)
+	assert(not _y_sort_contract_holds(source.replace("ent.get(\"field_y_sort_bias_px\", null)", ""), factory_source),
+		"Y-sort contract must reject deletion of the call-site override reads")
 	var broadened_scope := source.replace(
 		"\t\tPLAYER_COLOR\n\t)",
 		"\t\tPLAYER_COLOR,\n\t\tent.get(\"field_y_sort_bias_px\", null)\n\t)"
 	)
-	assert(broadened_scope != source and not _y_sort_contract_holds(broadened_scope),
+	assert(broadened_scope != source and not _y_sort_contract_holds(broadened_scope, factory_source),
 		"entity-scoped sort overrides must not leak into the player visual build")
 	var accomplishment_branch := source.get_slice("elif type == WIEvents.ACCOMPLISHMENT_RECORDED:", 1).get_slice("\nelif ", 0)
 	assert(accomplishment_branch.find("_reconcile_entity_presence()") != -1,
