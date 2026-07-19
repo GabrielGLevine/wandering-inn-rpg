@@ -50,6 +50,22 @@
    "name": "01_journal_history"
   },
   {
+   "_comment": "== a4 #216 slice 2: DRAG-scroll the journal body. This fixture's Completed + Postings + skills + aspirations body overflows the panel, so it is scrollable; a touch/mouse drag UP inside the body pans it DOWN (the body was wheel/keyboard-only — a touch player couldn't read past the fold). assert the scroll value MOVED off zero (fresh open resets it to 0).",
+   "action": "assert_journal_scrolled",
+   "greater_than": -0.5
+  },
+  {
+   "action": "drag_journal_body"
+  },
+  {
+   "action": "assert_journal_scrolled",
+   "greater_than": 0.0
+  },
+  {
+   "action": "screenshot",
+   "name": "01b_journal_drag_scrolled"
+  },
+  {
    "_comment": "Issue #84 QA-teeth precedent: the pre-existing skill-row cursor still moves/toggles correctly with the new Completed/Postings-detail/aspiration content rendered above it in the SAME body -- cursor row 0 is Innate's [Basic Cleaning], one Down lands on Mage's [Frost Bolt].",
    "action": "press",
    "name": "move_down"
