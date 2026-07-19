@@ -30,7 +30,11 @@ merged`), not here.
   `absent` gate arm + validators, Erin betrayal consequence, interim
   sprite (c3 bespoke in VISUAL-LOG). Whole-branch review's MAJOR
   (one-visit Invrisil shape) fixed pre-merge.
-- Next: b3 parleys (mercy contract unblocked), a5 dark-map prep,
+- **#217 parleys SHIPPED** (PR #234 → dc377b7): four talk-down arms
+  (Beast Tamer/Detect Magic/permit/Charming Smile+staked bout), all
+  dormancy-based (new `dormant_entity` effect — the review's HIGH:
+  removal would have foreclosed four repeatable cull bounties).
+- Next: b-lane rest (b2 Ratici, b4-b7, b9, b10), a5 dark-map prep,
   a3/a4 mobile + c1 art delegatable per the model directive.
 - Spoiler bar reminders for b1: Rags early-volume-safe; "Magical Door".
 
