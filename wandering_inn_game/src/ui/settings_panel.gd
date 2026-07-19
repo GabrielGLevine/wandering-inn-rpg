@@ -1,6 +1,8 @@
 extends CanvasLayer
 
-const PANEL_SIZE := Vector2(320.0, 492.0)
+# a9 #246: 492 fit the 14-row list; the import/export pair (+2 rows at the
+# ~36px pitch) overflowed the parchment (windowed catch) — grown to match.
+const PANEL_SIZE := Vector2(320.0, 648.0)
 const CONTROLS_PANEL_SIZE := Vector2(620.0, 380.0)
 const HELP_PANEL_SIZE := Vector2(620.0, 530.0)
 const HELP_TEXT_WIDTH := HELP_PANEL_SIZE.x - 52.0
@@ -17,7 +19,8 @@ const CREDITS_CONTENT_PATH := "res://data/credits.json"
 const ROWS := [
 	"Master volume", "Music volume", "SFX volume",
 	"Fullscreen", "Text Scale", "Reduce Motion",
-	"Controls...", "Replay Hints", "Help...", "Combat Speed", "Quest Thread", "Credits...", "Back",
+	"Controls...", "Replay Hints", "Help...", "Combat Speed", "Quest Thread", "Credits...",
+	"Export Save", "Import Save...", "Back",
 ]
 const AUDIO_ROWS := {"Master volume": "Master", "Music volume": "Music", "SFX volume": "SFX"}
 
@@ -498,6 +501,147 @@ func _adjust_row(delta: int) -> void:
 		_refresh()
 
 
+## a9 #246: Export dumps the Continue-grade save text (Game.export_save_text,
+## save_manual's own blocked-state guard); Import routes caller text through
+## Game.import_save_text (trial-sim validated, non-destructive on refusal).
+## Three platform arms each: web = JavaScriptBridge blob download / file
+## input; desktop = native dialogs; headless (QA) = user://exports files so
+## canonicals can assert the whole path without a dialog.
+const EXPORT_DIR := "user://exports"
+const IMPORT_REFUSED_TOAST := "That file isn't a Wandering Inn save this build can read. Nothing was changed."
+var _web_import_cb: JavaScriptObject = null
+
+
+func _export_save() -> void:
+	var text: String = Game.export_save_text()
+	if text == "":
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Cannot export right now."})
+		return
+	var fname := "wandering-inn-save-%d.json" % int(Game.sim.times_slept)
+	if OS.has_feature("web"):
+		var js := """
+var blob = new Blob([%s], {type: 'application/json'});
+var a = document.createElement('a');
+a.href = URL.createObjectURL(blob);
+a.download = %s;
+a.click();
+URL.revokeObjectURL(a.href);
+""" % [JSON.stringify(text), JSON.stringify(fname)]
+		JavaScriptBridge.eval(js, true)
+		_finish_export(fname)
+		return
+	if DisplayServer.get_name() == "headless":
+		DirAccess.make_dir_recursive_absolute(EXPORT_DIR)
+		var f := FileAccess.open("%s/%s" % [EXPORT_DIR, fname], FileAccess.WRITE)
+		if f == null:
+			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Couldn't write the export. Save not exported."})
+			return
+		f.store_string(text)
+		f.close()
+		_finish_export(fname)
+		return
+	var on_picked := func(status: bool, paths: PackedStringArray, _idx: int) -> void:
+		if not is_instance_valid(self) or not status or paths.is_empty():
+			return
+		var out := FileAccess.open(paths[0], FileAccess.WRITE)
+		if out == null:
+			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Couldn't write there. Save not exported."})
+			return
+		out.store_string(text)
+		out.close()
+		_finish_export(paths[0].get_file())
+	var err := DisplayServer.file_dialog_show("Export Save", OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS), fname, false,
+			DisplayServer.FILE_DIALOG_MODE_SAVE_FILE, PackedStringArray(["*.json"]), on_picked)
+	if err != OK:
+		DirAccess.make_dir_recursive_absolute(EXPORT_DIR)
+		var f2 := FileAccess.open("%s/%s" % [EXPORT_DIR, fname], FileAccess.WRITE)
+		if f2 == null:
+			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Couldn't write the export. Save not exported."})
+			return
+		f2.store_string(text)
+		f2.close()
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "No file dialog here — exported to %s" % ProjectSettings.globalize_path("%s/%s" % [EXPORT_DIR, fname])})
+		ObservableBus.emit_domain_event(WIEvents.SAVE_EXPORTED, {"file": fname, "fallback": true})
+
+
+func _finish_export(fname: String) -> void:
+	ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Save exported: %s" % fname})
+	ObservableBus.emit_domain_event(WIEvents.SAVE_EXPORTED, {"file": fname})
+
+
+func _import_save() -> void:
+	if OS.has_feature("web"):
+		_web_import_cb = JavaScriptBridge.create_callback(_on_web_import_text)
+		JavaScriptBridge.get_interface("window").__wi_import_cb = _web_import_cb
+		JavaScriptBridge.eval("""
+var inp = document.createElement('input');
+inp.type = 'file';
+inp.accept = '.json,application/json';
+inp.onchange = function() {
+	if (!inp.files.length) return;
+	var r = new FileReader();
+	r.onload = function() { window.__wi_import_cb(r.result); };
+	r.readAsText(inp.files[0]);
+};
+inp.click();
+""", true)
+		return
+	if DisplayServer.get_name() == "headless":
+		# QA probe order: an explicit import.json, else the NEWEST export —
+		# so a canonical can round-trip Export -> Import in one leg.
+		var probe := "%s/import.json" % EXPORT_DIR
+		if not FileAccess.file_exists(probe):
+			var newest := ""
+			var newest_key: Array = [0, 0, ""]
+			if DirAccess.dir_exists_absolute(EXPORT_DIR):
+				for f in DirAccess.get_files_at(EXPORT_DIR):
+					if String(f).ends_with(".json"):
+						var ts := FileAccess.get_modified_time("%s/%s" % [EXPORT_DIR, f])
+						# strict newest; same-second ties break by length-then-lex
+						# (natural order: -10 beats -9; review F8)
+						var key: Array = [ts, String(f).length(), String(f)]
+						if key > newest_key:
+							newest_key = key
+							newest = "%s/%s" % [EXPORT_DIR, f]
+			probe = newest
+		if probe != "" and FileAccess.file_exists(probe):
+			_apply_import_text(FileAccess.get_file_as_string(probe))
+		else:
+			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": IMPORT_REFUSED_TOAST})
+		return
+	var on_picked := func(status: bool, paths: PackedStringArray, _idx: int) -> void:
+		if not is_instance_valid(self) or not status or paths.is_empty():
+			return
+		_apply_import_text(FileAccess.get_file_as_string(paths[0]))
+	var err := DisplayServer.file_dialog_show("Import Save", OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS), "", false,
+			DisplayServer.FILE_DIALOG_MODE_OPEN_FILE, PackedStringArray(["*.json"]), on_picked)
+	if err != OK:
+		# review F2: no dialog on this platform — the fallback must actually
+		# WORK, so this arm reads the same import.json probe the headless arm
+		# uses, and names a real OS path.
+		var probe2 := "%s/import.json" % EXPORT_DIR
+		if FileAccess.file_exists(probe2):
+			_apply_import_text(FileAccess.get_file_as_string(probe2))
+		else:
+			DirAccess.make_dir_recursive_absolute(EXPORT_DIR)
+			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "No file dialog here — drop the file at %s and use Import again." % ProjectSettings.globalize_path(probe2)})
+
+
+func _on_web_import_text(args: Array) -> void:
+	if args.is_empty():
+		return
+	_apply_import_text(String(args[0]))
+
+
+func _apply_import_text(text: String) -> void:
+	if Game.import_save_text(text):
+		ObservableBus.emit_domain_event(WIEvents.SAVE_IMPORTED, {})
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Save imported. Welcome back."})
+		_close()
+	else:
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": IMPORT_REFUSED_TOAST})
+
+
 func _activate_row() -> void:
 	var key := String(ROWS[_cursor])
 	if AUDIO_ROWS.has(key) or key == "Text Scale" or key == "Combat Speed":
@@ -523,5 +667,9 @@ func _activate_row() -> void:
 			_enter_help()
 		"Credits...":
 			_enter_credits()
+		"Export Save":
+			_export_save()
+		"Import Save...":
+			_import_save()
 		"Back":
 			_close()

@@ -4,6 +4,11 @@ const SAVE_DIR := "user://saves"
 const MANUAL_SLOTS: Array[String] = ["manual", "manual_2", "manual_3"]
 
 var sim: WIGame
+## a9 #246 (review F1): true only while a world session is live (set by
+## Main.swap_to_world, cleared by swap_to_title). Export at TITLE must dump
+## the Continue slot's bytes, never the fresh boot sim — a fresh export
+## labeled like a backup, imported later, would overwrite a real save.
+var world_live := false
 var _autosave_announced := false
 var _rotate_auto_pending := false
 var _choice_snapshot_armed := false
@@ -71,6 +76,40 @@ func load_slot(slot: String, reason: String = "") -> bool:
 		return false
 	sim = trial
 	ObservableBus.emit_domain_event(WIEvents.GAME_LOADED, {"reason": reason})
+	return true
+
+
+## a9 #246: the import/export seam. Export serializes the LIVE sim (what a
+## manual save would write) under save_manual's own blocked-state guard;
+## empty string = "cannot export right now". Import runs load_slot's exact
+## trial-sim pattern on caller-supplied TEXT — a rejected file leaves the
+## running game AND every slot byte-identical (the non-destructive
+## contract); an accepted one becomes the live sim and persists to the
+## Continue slot.
+func export_save_text() -> String:
+	if not world_live:
+		var slot_path := "%s/manual.json" % SAVE_DIR
+		if not FileAccess.file_exists(slot_path):
+			return ""
+		return FileAccess.get_file_as_string(slot_path)
+	if sim.combat != null or sim.dialogue != null or not sim.pending_consolidation.is_empty():
+		return ""
+	return JSON.stringify(WISave.serialize(sim))
+
+
+func import_save_text(text: String) -> bool:
+	# review F4: JSON.new().parse refuses SILENTLY — parse_string would spray
+	# an engine ERROR for every non-JSON file a player picks (zero-noise bar).
+	var parser := JSON.new()
+	if parser.parse(text) != OK or not (parser.data is Dictionary):
+		return false
+	var parsed: Variant = parser.data
+	var trial := _make_sim()
+	if not WISave.apply(trial, parsed):
+		return false
+	sim = trial
+	_write_slot("manual")
+	ObservableBus.emit_domain_event(WIEvents.GAME_LOADED, {"reason": "import"})
 	return true
 
 

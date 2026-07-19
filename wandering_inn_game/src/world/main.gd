@@ -134,6 +134,7 @@ func map_transition_active() -> bool:
 
 
 func swap_to_title() -> void:
+	Game.world_live = false
 	_record_current_chronicle()
 	_clear_world_viewport()
 	_clear_ui_layers()
@@ -154,6 +155,7 @@ func swap_to_char_creation() -> void:
 
 
 func swap_to_world(new_game: bool = false, defeat_reload: bool = false) -> void:
+	Game.world_live = true
 	_clear_world_viewport()
 	_clear_ui_layers()
 	# ORDER: FieldHotbar must exist before World emits WORLD_READY

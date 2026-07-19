@@ -4197,6 +4197,32 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "save_port_loop",
+   "seed": 9,
+   "fixture": "near_pallass",
+   "note": "a9 #246: import/export round trip (headless arms) -- Export writes user://exports, Import trial-validates the newest export back, GAME_LOADED{reason:import} + state identity + Continue slot persisted",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "guild"
+    ],
+    "fixtures": [
+     "near_pallass"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "save",
+     "settings"
+    ]
+   }
   }
  ]
 }
