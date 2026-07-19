@@ -3,119 +3,720 @@
  "starts_at_title": true,
  "fixture_save": "near_invrisil_fight",
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "brothers_parlor" },
-  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
-
-  { "_comment": "== STAGE 2, LEG 1: the tailing chain's first beat. Teleport to invrisil_boulevard (20,12), facing down -- adjacent to the NEW coyle_runner_trail prop (20,13). Plain interact, no skill needed. ==", "action": "teleport", "map": "invrisil_boulevard", "cell": [20, 12] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "invrisil_boulevard" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [20, 12] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [20, 12] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "spotted_the_runner" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "You fall in a comfortable distance behind. The runner doesn't loop, doesn't double back -- just walks like a man with somewhere specific to be, heading for the alleys off the boulevard's east end." }, "timeout_sec": 5 },
-
-  { "_comment": "== STAGE 2, LEG 2: the tailing chain's second beat. Teleport to mercantile_alleys (18,11), facing right -- adjacent to the NEW warehouse_approach prop (19,11). Banks warehouse_located, the counter fists_door's 'Come with me.' now gates on. ==", "action": "teleport", "map": "mercantile_alleys", "cell": [18, 11] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "mercantile_alleys" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [18, 11] },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [18, 11] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "warehouse_located" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "The runner ducks inside, and you finally see the whole of it: crates stacked to the rafters, more of Coyle's livery than a legitimate warehouse ever needs. Wherever the come-along ends, it ends here." }, "timeout_sec": 5 },
-
-  { "_comment": "== THE COME-ALONG ASK: teleport back to (5,3) in the parlor, facing right (adjacent to Wilovan). warehouse_located is now met, so fists_door renders its ORIGINAL come-along speech and 'Come with me.' is visible. First interact plays Wilovan's talk_pool line, second opens invrisil_wilovan. ==", "action": "teleport", "map": "brothers_parlor", "cell": [5, 3] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "brothers_parlor" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Wilovan" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "invrisil_wilovan" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "hub: took_brothers_job + coyle_operation_found both met -> 'Remind me of the three doors.' shows (not scout_nudge). visible [0 'Remind me of the three doors.', 1 'Evening.'] -- the item-gated favor-return option is appended LAST and stays visible-locked (cups_debt_chit never held on this path), so it doesn't disturb these two indices. Cursor at 0.", "action": "press", "name": "confirm" },
-  { "_comment": "ways: visible [0 'The warehouse, then. Will you come?' (wilovan_will_fight unset), 1 'One more thing.', 2 'I'll pick my door.']. Cursor at 0.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "fists_door: warehouse_located met -> the ORIGINAL come-along text_variant renders. [0 'Come with me.' (requires warehouse_located, now met) -> banks wilovan_will_fight, 1 'I'll go alone.']. Take 0.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "wilovan_will_fight" }, "timeout_sec": 5 },
-  { "_comment": "back at hub (goto hub): visible [0 'Remind me of the three doors.', 1 'Evening.']. Take 'Evening.' to end.", "action": "wait_frames", "frames": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== THE WAREHOUSE FIGHT: teleport to (18,12) in mercantile_alleys, east corridor, adjacent to hired_blades (17,12; relocated off invrisil_walkthrough's own pinned route -- see that entity's own _comment). Facing is still right (1,0) from the tailing/ask legs -- bump left into hired_blades' own cell to reorient without moving (the invrisil_walkthrough bump-facing precedent). No trigger_radius (interact-only, the crate/cisterns FIGHT-leg precedent) -- a plain interact starts combat directly, no conversation gate. Wilovan fields as the ally (wilovan_will_fight met). ==", "action": "teleport", "map": "mercantile_alleys", "cell": [18, 12] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "mercantile_alleys" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [18, 12] },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [18, 12] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "combat.combatants.wilovan.side", "equals": "player" },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
-  { "_comment": "MID-COMBAT shot (locked shape correction -- the old single shot fired AFTER ui_combat_hidden, capturing the overworld alley, not the fight): board fully populated, Wilovan fielded as ally, first pc turn live, before any autoplay action executes.", "action": "screenshot", "name": "01_warehouse_fight_wilovan_ally" },
-  { "action": "combat_autoplay", "max_turns": 300 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "forced_confession" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "02_alley_after_fight" },
-
-  { "_comment": "== CONFRONT COYLE, POST-FIGHT ENTRY: teleport to (23,6). Facing is LEFT (-1,0) from the bump into hired_blades' own cell (17,12) before the fight -- combat never changes overworld facing. Bump right into Coyle's own cell (24,6) to reorient. ==", "action": "teleport", "map": "invrisil_boulevard", "cell": [23, 6] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "invrisil_boulevard" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [23, 6] },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [23, 6] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Master Coyle" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "invrisil_merchant_prince" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "hub: visible [0 'You framed a man...' (took_brothers_job met, merchant_fate_decided unset -- STILL visible), 1 'Your blades are groaning...' (forced_confession met), 2 'Just looking.']. Take index 1, the FIGHT path's own entry, straight to cornered.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "cornered, THE forced_confession text_variant ('Enough. You've made your point in bruises...' the beaten register -- only reachable via this entry). options [0 EXPOSE, 1 EXTORT]. Take EXPOSE.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "merchant_exposed" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "merchant_fate_decided" }, "timeout_sec": 5 },
-  { "_comment": "GH#68: beat_index shifted +1 by the new shared 'scout' beat (already primed from the fixture's pre-banked coyle_operation_found) -- resolve's own completion now reads beat:2.", "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "a_gentlemans_disagreement", "beat": 2 }, "timeout_sec": 5 },
-  { "_comment": "ending_exposed: single option, ends.", "action": "wait_frames", "frames": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== REPORT TO WILOVAN: teleport to (5,3), still facing right. Same waking, so his pool is already spent -- one interact opens invrisil_wilovan directly. ==", "action": "teleport", "map": "brothers_parlor", "cell": [5, 3] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "brothers_parlor" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "invrisil_wilovan" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "hub: visible [0 'Coyle's answered for it...' (merchant_fate_decided met) -- 'Remind me of the three doors' is STILL visible too (brothers_job_done unmet), so visible is [0 'Remind me of the three doors.', 1 'Coyle's answered for it...', 2 'Evening.']. Take index 1.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "Discovered emission order (empirically verified against invrisil_disagreement_stealth's own log): quest_beat_completed/quest_completed fire IMMEDIATELY after brothers_job_done, before the array's later effects (brothers_marker/remove_entity) apply.", "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "brothers_job_done" }, "timeout_sec": 5 },
-  { "_comment": "GH#68: report's own completion now reads beat:3 (=beats.size(), completed:true).", "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "a_gentlemans_disagreement", "beat": 3 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "quest_completed", "payload_contains": { "id": "a_gentlemans_disagreement" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "brothers_marker" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "entity_removed", "payload_contains": { "id": "alley_footpads_a" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "entity_removed", "payload_contains": { "id": "alley_footpads_b" }, "timeout_sec": 5 },
-  { "_comment": "marker: 'Glad Farley's out.' ends directly.", "action": "wait_frames", "frames": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== FINAL STATE PROOF: the ONLY one of the 3 scripts that fields Wilovan as a real combat ally + reaches the fork through the FIGHT-specific dialogue entry. ==", "action": "assert_state", "path": "removed_entities", "contains": "alley_footpads_a" },
-  { "action": "assert_state", "path": "removed_entities", "contains": "alley_footpads_b" },
-  { "action": "assert_state", "path": "accomplishments.forced_confession", "equals": 1 },
-  { "action": "assert_event_count", "type": "combat_started", "count": 1 }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "brothers_parlor"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "_comment": "== STAGE 2, LEG 1: the tailing chain's first beat. Teleport to invrisil_boulevard (20,12), facing down -- adjacent to the NEW coyle_runner_trail prop (20,13). Plain interact, no skill needed. ==",
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    20,
+    12
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    20,
+    12
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    20,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "spotted_the_runner"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "You fall in a comfortable distance behind. The runner doesn't loop, doesn't double back -- just walks like a man with somewhere specific to be, heading for the alleys off the boulevard's east end."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== STAGE 2, LEG 2: the tailing chain's second beat. Teleport to mercantile_alleys (18,11), facing right -- adjacent to the NEW warehouse_approach prop (19,11). Banks warehouse_located, the counter fists_door's 'Come with me.' now gates on. ==",
+   "action": "teleport",
+   "map": "mercantile_alleys",
+   "cell": [
+    18,
+    11
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "mercantile_alleys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    11
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "warehouse_located"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "The runner ducks inside, and you finally see the whole of it: crates stacked to the rafters, more of Coyle's livery than a legitimate warehouse ever needs. Wherever the come-along ends, it ends here."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE COME-ALONG ASK: teleport back to (5,3) in the parlor, facing right (adjacent to Wilovan). warehouse_located is now met, so fists_door renders its ORIGINAL come-along speech and 'Come with me.' is visible. First interact plays Wilovan's talk_pool line, second opens invrisil_wilovan. ==",
+   "action": "teleport",
+   "map": "brothers_parlor",
+   "cell": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "brothers_parlor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Wilovan"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_wilovan"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "hub: took_brothers_job + coyle_operation_found both met -> 'Remind me of the three doors.' shows (not scout_nudge). visible [0 'Remind me of the three doors.', 1 'Evening.'] -- the item-gated favor-return option is appended LAST and stays visible-locked (cups_debt_chit never held on this path), so it doesn't disturb these two indices. Cursor at 0.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "ways: visible [0 'The warehouse, then. Will you come?' (wilovan_will_fight unset), 1 'One more thing.', 2 'I'll pick my door.']. Cursor at 0.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "fists_door: warehouse_located met -> the ORIGINAL come-along text_variant renders. [0 'Come with me.' (requires warehouse_located, now met) -> banks wilovan_will_fight, 1 'I'll go alone.']. Take 0.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "wilovan_will_fight"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "back at hub (goto hub): visible [0 'Remind me of the three doors.', 1 'Evening.']. Take 'Evening.' to end.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE WAREHOUSE FIGHT: teleport to (18,12) in mercantile_alleys, east corridor, adjacent to hired_blades (17,12; relocated off invrisil_walkthrough's own pinned route -- see that entity's own _comment). Facing is still right (1,0) from the tailing/ask legs -- bump left into hired_blades' own cell to reorient without moving (the invrisil_walkthrough bump-facing precedent). No trigger_radius (interact-only, the crate/cisterns FIGHT-leg precedent) -- a plain interact starts combat directly, no conversation gate. Wilovan fields as the ally (wilovan_will_fight met). ==",
+   "action": "teleport",
+   "map": "mercantile_alleys",
+   "cell": [
+    18,
+    12
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "mercantile_alleys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    12
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.wilovan.side",
+   "equals": "player"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "_comment": "MID-COMBAT shot (locked shape correction -- the old single shot fired AFTER ui_combat_hidden, capturing the overworld alley, not the fight): board fully populated, Wilovan fielded as ally, first pc turn live, before any autoplay action executes.",
+   "action": "screenshot",
+   "name": "01_warehouse_fight_wilovan_ally"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "forced_confession"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_alley_after_fight"
+  },
+  {
+   "_comment": "== CONFRONT COYLE, POST-FIGHT ENTRY: teleport to (23,6). Facing is LEFT (-1,0) from the bump into hired_blades' own cell (17,12) before the fight -- combat never changes overworld facing. Bump right into Coyle's own cell (24,6) to reorient. ==",
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    23,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Master Coyle"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_merchant_prince"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "hub: visible [0 'You framed a man...' (took_brothers_job met, merchant_fate_decided unset -- STILL visible), 1 'Your blades are groaning...' (forced_confession met), 2 'Just looking.']. Take index 1, the FIGHT path's own entry, straight to cornered.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "cornered, THE forced_confession text_variant ('Enough. You've made your point in bruises...' the beaten register -- only reachable via this entry). options [0 EXPOSE, 1 EXTORT]. Take EXPOSE.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "merchant_exposed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "merchant_fate_decided"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "GH#68: beat_index shifted +1 by the new shared 'scout' beat (already primed from the fixture's pre-banked coyle_operation_found) -- resolve's own completion now reads beat:2.",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "a_gentlemans_disagreement",
+    "beat": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "ending_exposed: single option, ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== REPORT TO WILOVAN: teleport to (5,3), still facing right. Same waking, so his pool is already spent -- one interact opens invrisil_wilovan directly. ==",
+   "action": "teleport",
+   "map": "brothers_parlor",
+   "cell": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "brothers_parlor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_wilovan"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "hub: visible [0 'Coyle's answered for it...' (merchant_fate_decided met) -- 'Remind me of the three doors' is STILL visible too (brothers_job_done unmet), so visible is [0 'Remind me of the three doors.', 1 'Coyle's answered for it...', 2 'Evening.']. Take index 1.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "Discovered emission order (empirically verified against invrisil_disagreement_stealth's own log): quest_beat_completed/quest_completed fire IMMEDIATELY after brothers_job_done, before the array's later effects (brothers_marker/remove_entity) apply.",
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "brothers_job_done"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "GH#68: report's own completion now reads beat:3 (=beats.size(), completed:true).",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "a_gentlemans_disagreement",
+    "beat": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "a_gentlemans_disagreement"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "brothers_marker"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "alley_footpads_a"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "alley_footpads_b"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "marker: 'Glad Farley's out.' ends directly.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== FINAL STATE PROOF: the ONLY one of the 3 scripts that fields Wilovan as a real combat ally + reaches the fork through the FIGHT-specific dialogue entry. ==",
+   "action": "assert_state",
+   "path": "removed_entities",
+   "contains": "alley_footpads_a"
+  },
+  {
+   "action": "assert_state",
+   "path": "removed_entities",
+   "contains": "alley_footpads_b"
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.forced_confession",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_started",
+   "count": 1
+  },
+  {
+   "_comment": "== b5 #220 CONSEQUENCE (pool stage, the issue's deliverable): sleep clears social_talked, so the next-day FIRST interact fires the stage line (chat idx 1 -> line 2).",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 10
+  },
+  {
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    24,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Master Coyle",
+    "text": "The Guild holds my charter now. You hold my attention. Neither of us profits."
+   },
+   "timeout_sec": 5
+  }
  ]
 }

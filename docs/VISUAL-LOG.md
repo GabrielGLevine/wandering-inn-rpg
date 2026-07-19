@@ -1535,3 +1535,6 @@ events, and result files live in the gitignored
   entity tint — replace wholesale with the c3 bespoke (small frame, black
   hair, crimson eyes, rag-browns per profile); swap the sprites.json `rags`
   entry + test_sprite_registry count rows together.
+- [ ] b5 #220: three boulevard shopfront observes (glazier/cordwainer/
+  teahouse, wall cells 6,1 / 15,1 / 7,1) ship hide_sprite — optional
+  c-lane decor sprites would give the wall fronts a visual read.

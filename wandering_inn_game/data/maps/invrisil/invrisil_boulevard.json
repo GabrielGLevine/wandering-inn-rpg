@@ -968,6 +968,30 @@
      "speaker": "Master Coyle",
      "text": "Browsing, or selling?"
     }
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "coyle_extorted",
+     "_comment": "b5 #220: pool-day texture for the bought-and-oily register the shipped hub variant set ('your retainer is current'). Ordered before exposed; exposure outranks if both ever bank.",
+     "requires_accomplishment": {
+      "merchant_extorted": 1
+     },
+     "lines": [
+      "Prices hold for you. We have an arrangement, after all.",
+      "My consultant returns. Everything remains... current. Do spend some of it here."
+     ]
+    },
+    {
+     "id": "coyle_exposed",
+     "_comment": "b5 #220: pool-day texture matching the shipped wreckage facts (Guild took the charter, criers took the rest). Last slot outranks while banked.",
+     "requires_accomplishment": {
+      "merchant_exposed": 1
+     },
+     "lines": [
+      "Enjoy the view. The criers certainly did.",
+      "The Guild holds my charter now. You hold my attention. Neither of us profits."
+     ]
+    }
    ]
   },
   {
@@ -977,7 +1001,7 @@
     7,
     6
    ],
-   "display_name": "A Passerby",
+   "display_name": "A Rose-Cloaked Shopper",
    "sprite": "citizen_f",
    "tint": [
     0.72,
@@ -999,7 +1023,7 @@
     10,
     11
    ],
-   "display_name": "A Passerby",
+   "display_name": "A Woman in City Wool",
    "sprite": "citizen_f",
    "tint": [
     0.5,
@@ -1021,7 +1045,7 @@
     13,
     5
    ],
-   "display_name": "A Passerby",
+   "display_name": "A Porter at His Barrow",
    "sprite": "human_laborer",
    "tint": [
     0.6,
@@ -1043,7 +1067,7 @@
     17,
     12
    ],
-   "display_name": "A Passerby",
+   "display_name": "A Clerk Between Errands",
    "sprite": "human_laborer",
    "tint": [
     0.45,
@@ -1065,7 +1089,7 @@
     20,
     6
    ],
-   "display_name": "A Passerby",
+   "display_name": "A Man Who Isn't Lost",
    "sprite": "pc_human_m",
    "tint": [
     0.65,
@@ -1087,7 +1111,7 @@
     23,
     10
    ],
-   "display_name": "A Passerby",
+   "display_name": "A Lady in Plum Silk",
    "sprite": "pc_human_f",
    "tint": [
     0.55,
@@ -1109,7 +1133,7 @@
     9,
     13
    ],
-   "display_name": "A Passerby",
+   "display_name": "A Gnoll Traveler",
    "sprite": "gnoll_traveler",
    "tint": [
     0.6,
@@ -1257,6 +1281,39 @@
    "respawns": true,
    "observe": "A chalked ring on the cobbles, two of Coyle's regulars leaning against the wall beside it, already sizing you up.",
    "on_victory": "boulevard_duels_won"
+  },
+  {
+   "id": "boulevard_glazier",
+   "kind": "prop",
+   "cell": [
+    6,
+    1
+   ],
+   "display_name": "A Glazier's Front",
+   "observe": "Panes racked like coins on edge. The glazier watches the street through his own stock, which is either pride or advertising.",
+   "hide_sprite": true
+  },
+  {
+   "id": "boulevard_cordwainer",
+   "kind": "prop",
+   "cell": [
+    15,
+    1
+   ],
+   "display_name": "A Cordwainer's Bench",
+   "observe": "Boots on pegs, sorted by wear. The pair in the window has walked to Pallass and back, if the sign is honest. Signs here mostly are.",
+   "hide_sprite": true
+  },
+  {
+   "id": "boulevard_teahouse",
+   "kind": "prop",
+   "cell": [
+    7,
+    1
+   ],
+   "display_name": "A Narrow Teahouse",
+   "observe": "Three tables, steam on the glass, and a chalk line of prices that assumes you already know what smoke-leaf costs in Invrisil.",
+   "hide_sprite": true
   }
  ],
  "cover_skip": [

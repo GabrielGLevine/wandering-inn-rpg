@@ -298,6 +298,14 @@ pre-existing shape). Rules: grant DISTINCT ids for trade outputs, or
 `hide_when {item}` the option on possession. A static validator for the
 class is a ledgered follow-up.
 
+## Read a node's EXISTING text_variants before appending (2026-07-19)
+Appending a variant with a gate IDENTICAL to a shipped variant's gate
+silently SHADOWS the shipped text forever (last-match-wins) — #220's
+review caught two appended Coyle variants dead-texting the shipped
+post-fate pair AND retconning its world facts. Before adding any
+variant: read the node's full variant list, grep the gate counters, and
+harmonize with the shipped facts or delete in favor of them.
+
 ## text_variants vs PINNED base text (2026-07-19)
 Any MATCHING variant beats the node's base text — ordering cannot
 protect a canonical that pins the BASE line. Gate new variants so
