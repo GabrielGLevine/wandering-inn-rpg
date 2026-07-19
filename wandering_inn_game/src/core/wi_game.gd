@@ -88,8 +88,8 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	_run_seed = rng_seed
 	_economy = WIEconomy.new(event_sink, pickup, _set_gold)
 	_social = WISocial.new(event_sink, accomplishment_count, record_accomplishment, find_entity)
-	_field_skills = WIFieldSkills.new(event_sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active, _blink_field, _ward_field, _animate_field)
-	_interactions = WIInteractions.new(event_sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup)
+	_field_skills = WIFieldSkills.new(event_sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active, _blink_field, _ward_field, _animate_field, _door_openable)
+	_interactions = WIInteractions.new(event_sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup, _has_required_items)
 	_sleep_beat = WISleepBeat.new(event_sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _enriched_offer, _set_pending_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
 	_banking = WICombatBanking.new(event_sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity, (combat_config.get("progression", {}) as Dictionary).get("challenge", {}), combat_config.get("classes", {}), (combat_config.get("combatants", {}) as Dictionary).get("combatants", []))
 	rng.seed = rng_seed
@@ -477,6 +477,32 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 		for rem_item: String in _as_item_list(effect["remove_item"]):
 			remove_item(rem_item, target_id)
 	return effect
+
+
+## b7 #214c: the interact-arm face of the String|Array all-or-nothing
+## item gate (empty/absent = met; nothing consumed).
+## b7 #214b review M1: door_flavor only jokes at a door that would
+## actually open — plain doors always, door_when doors on a MET gate
+## (a sealed seam, the rusted grate, and the hidden garden door are not
+## doors yet), plus the explicit `door_flavor_target` opt-in (the pantry
+## door: a mundane openable pantry whose portal gate locks the PORTAL,
+## not the pantry — and the other portal_menu carriers are anchor
+## STONES, where "the door was not locked" would be nonsense).
+func _door_openable(target: Dictionary) -> bool:
+	if String(target.get(WIKeys.KIND, "")) == "door":
+		return true
+	if bool(target.get("door_flavor_target", false)):
+		return true
+	if target.has("door_when"):
+		return _accomplishment_gate_met(((target["door_when"] as Dictionary).get("requires", {})) as Dictionary)
+	return false
+
+
+func _has_required_items(raw: Variant) -> bool:
+	for req_item: String in _as_item_list(raw):
+		if not inventory.has(req_item):
+			return false
+	return true
 
 
 func _as_item_list(raw: Variant) -> Array:

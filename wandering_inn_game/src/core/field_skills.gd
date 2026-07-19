@@ -3,6 +3,7 @@ extends RefCounted
 
 var _event_sink: Callable
 var _skills: Dictionary
+var _door_openable: Callable
 var _break_sneak: Callable
 var _toggle_sneak: Callable
 var _mark_skill_used: Callable
@@ -15,9 +16,10 @@ var _ward: Callable
 var _animate: Callable
 
 
-func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, toggle_sneak_cb: Callable, mark_skill_used_cb: Callable, record_accomplishment_cb: Callable, remove_entity_cb: Callable, use_skill_cb: Callable, set_light_active_cb: Callable, blink_cb: Callable, ward_cb: Callable, animate_cb: Callable) -> void:
+func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, toggle_sneak_cb: Callable, mark_skill_used_cb: Callable, record_accomplishment_cb: Callable, remove_entity_cb: Callable, use_skill_cb: Callable, set_light_active_cb: Callable, blink_cb: Callable, ward_cb: Callable, animate_cb: Callable, door_openable_cb: Callable = Callable()) -> void:
 	_event_sink = event_sink
 	_skills = skills
+	_door_openable = door_openable_cb
 	_break_sneak = break_sneak_cb
 	_toggle_sneak = toggle_sneak_cb
 	_mark_skill_used = mark_skill_used_cb
@@ -102,6 +104,20 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 		var freeze_toast := String(_skills.get(skill_id, {}).get("freeze_toast", "Frost races across the water and locks it solid. You can cross now. Until it thaws."))
 		_emit(WIEvents.TOAST, {"text": freeze_toast})
 		return {"frozen": [faced_cell.x, faced_cell.y]}
+	# b7 #214b: skill-authored door flavor — a data key, not an effect block
+	# (test_effect_text's empty-effect-lines pin for open_doors stays
+	# honest). Fires only on an OPENABLE door (review M1): a sealed
+	# door_when/portal gate must not read "was not locked", and the hidden
+	# garden door must not leak via toast — unmet doors fall through to
+	# field_ambient like any non-door.
+	var door_flavor := String(_skills.get(skill_id, {}).get("door_flavor", ""))
+	if door_flavor != "" and not target.is_empty() \
+			and _door_openable.is_valid() and bool(_door_openable.call(target)):
+		_break_sneak.call()
+		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": String(target[WIKeys.ID])})
+		_mark_skill_used.call(skill_id)
+		_emit(WIEvents.TOAST, {"text": door_flavor})
+		return {"door_flavored": String(target[WIKeys.ID])}
 	var field_ambient := String(_skills.get(skill_id, {}).get("field_ambient", ""))
 	if field_ambient != "":
 		if skill_id == "light":

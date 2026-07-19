@@ -1538,3 +1538,8 @@ events, and result files live in the gitignored
 - [ ] b5 #220: three boulevard shopfront observes (glazier/cordwainer/
   teahouse, wall cells 6,1 / 15,1 / 7,1) ship hide_sprite — optional
   c-lane decor sprites would give the wall fronts a visual read.
+- **pond_edge (floodplains 9,17) is placeholder-grade** (b7 #214c,
+  2026-07-19): grass_tuft + cool tint standing in for a reeds/ripple
+  marker on the pond's water-wall cell. c-lane art pass: a bespoke
+  reed-cluster or ripple sprite; keep it readable against the
+  Water_tiles band and the pond-shimmer overlay if that lands.

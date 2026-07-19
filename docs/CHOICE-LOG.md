@@ -370,3 +370,18 @@ cross-release index of them.
   after the class is earned. Copy fixes: "Hrr." corpus form,
   "looked in on" (soothed_a_beast attests the visit, not the splint),
   signpost id prefix (thread_ implies a paired neutral retire).
+- **b7 #214 adjudications (2026-07-19)**: (a) the [Detect Magic] Door
+  hint is ALREADY SHIPPED — cellar_wardwork (13,5) beside the pantry
+  door is the detect quartet and its read copy already states the
+  Door's nature obliquely ("bound this cellar's door long before it
+  learned to go elsewhere"); no change, cited on the issue. (b) the
+  [Open Doors] joke is a skill-level `door_flavor` key + a small
+  field_skills fall-through arm on door-shaped targets (a data key,
+  not an effect block — test_effect_text's empty-effect pin holds);
+  fires on any door by design, the pantry door included. (c) fishing
+  = ONE item-gated bank prop (pond_edge, on the pond's water-wall
+  cell so it reads as reeds; the freezable (10,17) stays clear), no
+  catch item, no fishing system — the issue is affordance clarity.
+  The interact arm gained the String|Array requires_item gate the
+  bench path already had (absent key = met — every shipped prop
+  byte-identical; unit-pinned both ways).
