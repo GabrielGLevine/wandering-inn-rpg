@@ -104,12 +104,17 @@
   { "action": "click_pause_row", "row": 1 },
   { "action": "wait_for_event", "type": "ui_pause_hidden", "timeout_sec": 5 },
 
-  { "_comment": "== (E) a3 #215: WAIT_AI tap-skip == keyboard end_turn hands the round to the dummies' inert playback (the end-turn transition is not the tested primitive; the TAP is): a board tap during WAIT_AI routes to _ai_playback.request_skip() — the same arm the confirm/cancel keys take — and the next PC turn arrives (liveness pin; the skip itself emits no dedicated event).", "action": "press", "name": "end_turn" },
+  { "_comment": "== (E) a3 #215: WAIT_AI stray-tap safety == HONEST SCOPE (review L5): under TestDriver, playback beat_delay is 0 and drains without awaiting, so is_playing() is false by the time a driver click can land — this leg CANNOT execute request_skip (only windowed human play does; the arm is a no-op when not playing by code). What it DOES pin: a tap around the turn boundary neither errors nor moves the PC (the cell pins bracket it).", "action": "press", "name": "end_turn" },
   { "action": "wait_for_event", "type": "turn_ended", "payload_contains": { "id": "pc" }, "timeout_sec": 5 },
+  { "action": "assert_state", "path": "combat.combatants.pc.cell", "equals": [6, 3] },
   { "action": "click", "cell": [6, 3] },
   { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
+  { "action": "assert_state", "path": "combat.combatants.pc.cell", "equals": [6, 3] },
 
-  { "_comment": "== (F) a3 #215: BANNER tap-dismiss == autoplay finishes the fight (reaching the banner is scaffolding, not the tested primitive — 21 HP dummies make a tap-only kill a hundred-step grind). At combat_finished the victory banner holds the screen; the old build dismissed it ONLY on keyboard confirm — every fight ended soft-locked on touch. ONE board tap closes it: ui_combat_hidden with zero confirm presses after the banner is the arm's proof.", "action": "combat_autoplay", "max_turns": 200 },
+  { "_comment": "== (E2) a3 #215 review H1: the chip must stay alive on PC turns AFTER the first — the CODE fix is the substance (the chips re-derive on ui_hotbar_rendered/ui_ai_playback_done/ui_targeting_shown, added to their event list; without it the chip was permanently dead from turn 2 because the PC's later turn_started fires CAPTURED inside AI take_turn while mode is still WAIT_AI). This leg pins the reachable, race-free half: combat advances to turn 2 with the PC active (multi-turn liveness) and ui_ai_playback_done fires (the re-derive event exists). HONEST SCOPE (matches leg E): the live turn-2 chip TAP is windowed-only — under instant TestDriver playback the turn-2 rest window flickers HOTBAR<->WAIT_AI faster than a driver click can be aimed at it; D2 above proves the tap MECHANISM on turn 1, this proves the re-derive event fires on turn 2.", "action": "wait_for_event", "type": "ui_ai_playback_done", "timeout_sec": 10 },
+  { "action": "assert_state", "path": "combat.active", "equals": "pc" },
+
+  { "_comment": "== (F) a3 #215: BANNER tap-dismiss == autoplay finishes the fight (reaching the banner is scaffolding, not the tested primitive — 21 HP dummies make a tap-only kill a hundred-step grind). At combat_finished the victory banner holds the screen; the old build dismissed it ONLY on keyboard confirm — every fight ended soft-locked on touch. ONE tap lands ON the ribbon here, exercising the banner gui_input path (the handle_board_click BANNER arm shares the same _close_banner; review L6: that arm stays live-only).", "action": "combat_autoplay", "max_turns": 200 },
   { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
   { "action": "wait_frames", "frames": 5 },
   { "action": "screenshot", "name": "05_victory_banner_before_tap" },

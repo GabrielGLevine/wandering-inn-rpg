@@ -354,7 +354,10 @@ func _capture_playback_event(type: String, payload: Dictionary) -> Dictionary:
 func _feed_line_for_event(type: String, payload: Dictionary) -> String:
 	if _hud == null:
 		_hud = load("res://src/combat/combat_hud.gd").new(_root, main_ref, self)
-	_hud.banner_tapped.connect(_on_banner_tapped)
+		# review H2: the connect MUST stay inside the lazy-init guard — this
+		# runs per captured event, and a re-connect prints a bare engine
+		# ERROR the sweep grep is blind to (242 lines in one delve run).
+		_hud.banner_tapped.connect(_on_banner_tapped)
 	return _hud.feed_line_for_event(type, payload, _combat_or_null(), _view)
 
 
@@ -663,6 +666,11 @@ func _switch_bar_slot(index: int) -> void:
 
 
 func handle_board_click(world_pos: Vector2) -> void:
+	# review M4: with the combat pause open (now a mainline touch state via
+	# the resting chip), a board tap must not move the PC under the menu —
+	# the same guard the hotbar/confirm-chip tap handlers already carry.
+	if main_ref != null and main_ref.pause_open():
+		return
 	var cell := Vector2i(floori(world_pos.x / CELL), floori(world_pos.y / CELL))
 	match _mode:
 		Mode.HOTBAR:

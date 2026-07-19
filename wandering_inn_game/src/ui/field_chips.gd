@@ -58,6 +58,10 @@ func _on_pause_chip_gui_input(event: InputEvent) -> void:
 		return
 	if pause_menu_ref != null and pause_menu_ref.has_method("toggle_open"):
 		pause_menu_ref.call("toggle_open")
+		# review M3 self-heal: if the toggle was refused (e.g. a stale chip
+		# during a non-resting combat mode no event re-derived), re-derive
+		# now so the chip never stays a dead button past one tap.
+		_apply_visibility()
 
 
 func _on_journal_chip_gui_input(event: InputEvent) -> void:
@@ -100,7 +104,8 @@ func chip_rect(chip_name: String) -> Rect2:
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
 	match type:
 		WIEvents.WORLD_READY, WIEvents.COMBAT_STARTED, WIEvents.UI_COMBAT_HIDDEN, \
-		WIEvents.TURN_STARTED, WIEvents.COMBAT_RESOLVED, \
+		WIEvents.TURN_STARTED, WIEvents.COMBAT_RESOLVED, WIEvents.COMBAT_FINISHED, \
+		WIEvents.UI_HOTBAR_RENDERED, WIEvents.UI_AI_PLAYBACK_DONE, \
 		WIEvents.DIALOGUE_STARTED, WIEvents.DIALOGUE_ENDED, \
 		WIEvents.UI_PAUSE_SHOWN, WIEvents.UI_PAUSE_HIDDEN, \
 		WIEvents.UI_JOURNAL_SHOWN, WIEvents.UI_JOURNAL_HIDDEN, \
@@ -122,6 +127,15 @@ func _apply_visibility() -> void:
 	if hard_blocked:
 		return
 	if combat_resting:
+		# The chip can go stale-VISIBLE when the player leaves HOTBAR without a
+		# chips-listened event (into targeting/dash) — no event re-derives to
+		# hide it. That is caught by the self-heal in _on_pause_chip_tapped:
+		# a tap while non-resting is refused by pause_menu and immediately
+		# re-derives, so the chip never survives as a dead button past one tap
+		# (review M3). We deliberately do NOT listen on UI_TARGETING_SHOWN —
+		# hiding on targeting-open leaves no event to re-show after the attack
+		# resolves (attacking starts no new turn), which would kill the chip
+		# for the rest of that turn.
 		_pause_chip.visible = true
 		_journal_chip.visible = false
 		_inventory_chip.visible = false
