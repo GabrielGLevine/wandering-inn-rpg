@@ -393,3 +393,14 @@ cross-release index of them.
   loadouts; selection stays manual (a full bar never grows). Two call
   sites (sleep end, consolidation accept) reconcile a known-before
   snapshot — new field skills only, LOADOUT_CHANGED auto:true.
+- **a6 #206 adjudication (2026-07-19)**: both thresholds doubled
+  (dusk 200→400, night 450→900) — the directive names the day, but
+  "night still arrives too fast" is the second complaint and scaling
+  only dusk would have COMPRESSED the dusk window against night.
+  Seven night fixtures re-based 500→1000 actions (500 would read as
+  DUSK under the new bands — their canonicals' night semantics held).
+  Five sized in-run crossings re-derived with documented math
+  (atmosphere_check, garden, riverfarm ×2, invrisil); the riverfarm
+  seed-searched fight held (no-op interacts consume no rng). FEEL
+  read queued: the doubling is data (moods.json) — one knob to
+  re-tune on the word.

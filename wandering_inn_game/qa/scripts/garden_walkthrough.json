@@ -395,10 +395,140 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== an honest phase-clock crossing INSIDE the garden. The garden's phase clock is the SAME actions_since_sleep mechanism every map runs (wi_game.gd's phase()/`_tick_action`); this worktree's real threshold is data-driven (data/moods.json meta.phase_thresholds, dusk_at 200 -- issue #62 finding 24 doubled it from 100 -- NOT wi_game.gd's own 40 fallback -- traced, not assumed, the atmosphere_check.json precedent for sizing this correctly). 33 actions are already spent since the qualifying sleep's reset by this point (measured via a temporary probe assert, not estimated -- the dirty_table detour doesn't count, it happened BEFORE the reset); shuttling down the fully-open x=9 column (no memorial plot, no entity, clear y=2..10) and back, TWELVE round trips (doubled from the old FIVE to match dusk_at doubling, plus a little extra margin), carries the clock past 200 with room to spare. The garden's own `garden` mood card pins day/dusk/night all to [1,1,1] + vignette 0.0 -- this screenshot is the READ of that claim at a phase OTHER than day, not just an assertion. ==",
+   "_comment": "== an honest phase-clock crossing INSIDE the garden. The garden's phase clock is the SAME actions_since_sleep mechanism every map runs (wi_game.gd's phase()/`_tick_action`); this worktree's real threshold is data-driven (data/moods.json meta.phase_thresholds, dusk_at 400 -- a6 #206 doubled it from 200 (lineage: #62 doubled 100->200) -- NOT wi_game.gd's own 40 fallback -- traced, not assumed, the atmosphere_check.json precedent for sizing this correctly). 33 actions are already spent since the qualifying sleep's reset by this point (measured via a temporary probe assert, not estimated -- the dirty_table detour doesn't count, it happened BEFORE the reset); shuttling down the fully-open x=9 column (no memorial plot, no entity, clear y=2..10) and back, TWENTY-FIVE round trips (re-sized for a6 #206: dusk_at 200->400; 25x16=400 moves + the 33 baseline = 433, margin 33), carries the clock past 400 with room to spare. The garden's own `garden` mood card pins day/dusk/night all to [1,1,1] + vignette 0.0 -- this screenshot is the READ of that claim at a phase OTHER than day, not just an assertion. ==",
    "action": "move",
    "direction": "left",
    "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 8
   },
   {
    "action": "move",

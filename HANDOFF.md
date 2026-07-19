@@ -104,6 +104,10 @@ merged`), not here.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 
+- **a6 #206 PACING FEEL READ**: day is now ~2x (dusk 400, night 900
+  actions — both doubled; only-dusk would have compressed the dusk
+  window). One knob in data/moods.json — say the word and any band
+  re-tunes in minutes.
 - **#247 FRIENDS-OF-THE-INN SPEC READ (4 asks, defaults bold)**:
   docs/design/2026-07-19-d1-friends-of-the-inn-spec.md — roster (6),
   seat count (2), double-presence v1 adjudication (accept), pilot

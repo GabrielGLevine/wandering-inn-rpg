@@ -840,7 +840,7 @@
    "name": "06_facade_scale_shock"
   },
   {
-   "_comment": "== PHASE GRIND to night for shot 07 (the lantern-maze card is a NIGHT read, and light_multiplier is 0.0 at day -- the sconce pools are structurally invisible until dusk). Row 2 is fully open x0-27 (facade bands are y0-1; lamps sit at y3/y14), so pace it: 13 left + 17x26 swing = 455 ticks on top of the 47 the walk-out spent (measured via a temporary probe assert, matching the old ~47 estimate exactly), crossing dusk_at=200 and night_at=450 (issue #62 finding 24 doubled both from 100/225) before the swings end (502 total, a 52-action buffer over night_at). ODD swing count (17) preserves the old parity -- ends on a RIGHT swing, landing back at x=27 same as before, so shot 07's own route below needs no further changes. The two phase_changed waits after the swings match retroactively from the log (the since-cursor scans forward from the last match, and both fired after it).",
+   "_comment": "== PHASE GRIND to night for shot 07 (the lantern-maze card is a NIGHT read, and light_multiplier is 0.0 at day -- the sconce pools are structurally invisible until dusk). Row 2 is fully open x0-27 (facade bands are y0-1; lamps sit at y3/y14), so pace it: 13 left + 35x26 swing = 923 ticks on top of the 47 the walk-out spent (measured via a temporary probe assert), crossing dusk_at=400 and night_at=900 (a6 #206 doubled both from 200/450; lineage #62 doubled 100/225) before the swings end (970 total, a 70-action buffer over night_at). ODD swing count (35) preserves the old parity -- ends on a RIGHT swing, landing back at x=27 same as before, so shot 07's own route below needs no further changes. The two phase_changed waits after the swings match retroactively from the log (the since-cursor scans forward from the last match, and both fired after it).",
    "action": "move",
    "direction": "left",
    "steps": 13
@@ -945,6 +945,96 @@
     27,
     2
    ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 26
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 26
   },
   {
    "action": "wait_for_event",
