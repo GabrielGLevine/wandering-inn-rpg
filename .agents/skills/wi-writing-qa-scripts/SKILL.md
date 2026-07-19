@@ -175,3 +175,12 @@ player-visible feature.
   match treats them as required payload keys (cost one hang).
 
 Verify per `wi-verifying-changes` before claiming a script is good.
+- Fixture `player_facing` is a 2-VECTOR (`[0, -1]` = up), never a
+  string — `WISave.apply` type-rejects the whole save and the TITLE
+  shows the misleading "Save is from an older version" notice (the
+  version is fine; `_load_slot_or_notice` shows one notice for every
+  apply failure). A fixture that "won't load" gets its state checked
+  against apply()'s type guards FIRST, not its version. Robust facing
+  for an interact: don't trust the field — bump-move into the target's
+  cell (blocked move sets facing without moving), the walkthroughs'
+  own idiom.
