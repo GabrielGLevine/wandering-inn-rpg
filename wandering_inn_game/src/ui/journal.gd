@@ -189,6 +189,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
+## GH#170(b): the combat blow-by-blow feeds Recent Messages; this count in
+## the UI_JOURNAL_SHOWN payload lets QA prove the history is non-empty
+## after a fight without pinning volatile line text.
+func _recent_message_count() -> int:
+	var layer_script := load("res://src/ui/message_layer.gd")
+	return (layer_script.recent_messages as Array).size() if layer_script != null else 0
+
+
 func _can_open() -> bool:
 	if Game.sim.combat != null or Game.sim.dialogue != null:
 		return false
@@ -296,6 +304,7 @@ func _open() -> void:
 		"delivery_gold": int(delivery.get("gold", 0)),
 		"delivery_detail": String(delivery.get("detail", "")),
 		"found_notes": _found_note_ids(),
+		"recent_count": _recent_message_count(),
 	})
 	if not chronicle_facts.is_empty():
 		ObservableBus.emit_domain_event(WIEvents.UI_CHRONICLE_RENDERED, {

@@ -7,6 +7,15 @@ const TOAST_SECONDS := 3.75
 ## does NOT clear it; it is a reading aid, not game state (unsaved).
 const RECENT_MESSAGES_CAP := 30
 static var recent_messages: Array[String] = []
+
+
+## GH#170: shared history feed -- toasts land here via _drain_toasts, and
+## combat_screen appends its composed blow-by-blow lines so the journal's
+## Recent Messages answers "what just happened" after a fast fight.
+static func record_message(text: String) -> void:
+	recent_messages.append(text)
+	while recent_messages.size() > RECENT_MESSAGES_CAP:
+		recent_messages.pop_front()
 ## Toast hold under WINDOWED QA (TestDriver active, real DisplayServer) -- a
 ## 0.4s FLOOR, not zero: toast legibility in windowed screenshots is
 ## load-bearing for the controller-read discipline (wi-verifying-changes
@@ -385,9 +394,7 @@ func _drain_toasts() -> void:
 		var text: String = _toast_queue.pop_front()
 		if _first_wake_hint_pending and text == _first_wake_hint_text():
 			_first_wake_hint_pending = false
-		recent_messages.append(text)
-		while recent_messages.size() > RECENT_MESSAGES_CAP:
-			recent_messages.pop_front()
+		record_message(text)
 		await _show(_toast_panel, _toast_label, text, _toast_seconds(text), WIEvents.UI_TOAST_RENDERED, "", true, true)
 	_toast_draining = false
 
