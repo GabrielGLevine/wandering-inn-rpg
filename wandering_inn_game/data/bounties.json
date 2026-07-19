@@ -488,6 +488,61 @@
    },
    "gold": 8,
    "copy": "Standing arrangement, for regulars. My ring pays out same as always -- two rounds won against whoever's leaning on the wall that day, Guild-attested, 8 gold per settlement. Coyle."
+  },
+  {
+   "id": "grimalkin_study_combat",
+   "board": false,
+   "pillar": "social",
+   "giver": "grimalkin",
+   "condition": {
+    "won_combat": 3
+   },
+   "gold": 16,
+   "copy": "FIELD SUBJECTS WANTED: three verified engagements, outcomes logged in person. Payment on data delivery. — Grimalkin, Sinew Magus",
+   "tiers": {
+    "silver": {
+     "condition": {
+      "won_combat": 5
+     },
+     "gold": 24
+    },
+    "gold": {
+     "condition": {
+      "won_combat": 7
+     },
+     "gold": 32
+    }
+   },
+   "_comment": "b4 #219: PRIVATE posting (board:false — accepted only at his hub). SOCIAL pillar by adjudication: the loop pays participation; the kills already pay combat XP (CHOICE-LOG)."
+  },
+  {
+   "id": "grimalkin_study_casting",
+   "board": false,
+   "pillar": "social",
+   "giver": "grimalkin",
+   "requires": {
+    "learned_magic_from_pisces": 1
+   },
+   "condition": {
+    "spell_cast": 8
+   },
+   "gold": 16,
+   "copy": "CASTING SUBJECTS WANTED: eight witnessed castings, wind and grip measured. Imprecision is deducted. — Grimalkin, Sinew Magus",
+   "tiers": {
+    "silver": {
+     "condition": {
+      "spell_cast": 14
+     },
+     "gold": 24
+    },
+    "gold": {
+     "condition": {
+      "spell_cast": 20
+     },
+     "gold": 32
+    }
+   },
+   "_comment": "b4 #219: caster-gated private posting (see study_combat)."
   }
  ]
 }

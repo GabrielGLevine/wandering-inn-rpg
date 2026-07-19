@@ -4170,6 +4170,33 @@
      "input"
     ]
    }
+  },
+  {
+   "script": "grimalkin_study_loop",
+   "seed": 6,
+   "fixture": "grimalkin_study_start",
+   "note": "b4 #219: Grimalkin's private study contracts -- accept-at-hub via the studies node, single-slot mutual-exclusion option pins, turnin-graph voice param (his not-done arm verbatim)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_market"
+    ],
+    "fixtures": [
+     "grimalkin_study_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_grimalkin"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
   }
  ]
 }

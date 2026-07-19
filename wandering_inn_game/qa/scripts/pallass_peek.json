@@ -91,7 +91,7 @@
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
 
-  { "_comment": "== Grimalkin (18,3), MOVED here from the forge tier (he examines applicants BEFORE they descend) -- hosts C's pallass_grimalkin graph (the 8g exam, beat 2). Fresh state: the exam option is requires-hidden (forge_permit_filed 0), only the exit visible.", "action": "teleport", "map": "pallass_market", "cell": [18, 4] },
+  { "_comment": "== Grimalkin (18,3), MOVED here from the forge tier (he examines applicants BEFORE they descend) -- hosts C's pallass_grimalkin graph (the 8g exam, beat 2). Fresh state: the exam option is requires-hidden (forge_permit_filed 0), the b4 #219 studies row 'About the studies.' (board_accepted:false, MET here) is row 0 and the exit is row 1 -- down 1 before confirm.", "action": "teleport", "map": "pallass_market", "cell": [18, 4] },
   { "action": "wait_frames", "frames": 10 },
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [18, 4] },
@@ -99,6 +99,7 @@
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "pallass_grimalkin", "entity": "grimalkin" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
   { "action": "screenshot", "name": "08_grimalkin_at_office" },
+  { "action": "move", "direction": "down", "steps": 1 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
 

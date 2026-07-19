@@ -26,8 +26,46 @@
      "goto": "exam"
     },
     {
+     "text": "About the studies.",
+     "requires": {
+      "board_accepted": false
+     },
+     "_comment": "b4 #219 slot gate: a held posting blocks enrollment (visible-locked bool render carries his refusal fiction).",
+     "goto": "studies"
+    },
+    {
+     "text": "Reporting in on the study.",
+     "requires": {
+      "board_accepted": true
+     },
+     "effects": [
+      {
+       "open_board_turnin": "grimalkin"
+      }
+     ],
+     "end": true
+    },
+    {
      "text": "Just passing through.",
      "end": true
+    }
+   ],
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "completed_bounty_grimalkin_study_combat": 1
+      }
+     },
+     "text": "The field subject returns. Your engagement numbers were... adequate. The literature thanks you; the literature is me."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "completed_bounty_grimalkin_study_casting": 1
+      }
+     },
+     "text": "The casting subject. Your wind held past the eighth measure, which surprised exactly one of us. Speak."
     }
    ]
   },
@@ -42,6 +80,60 @@
        "accomplishment": "grimalkin_examination_passed"
       }
      ],
+     "end": true
+    }
+   ]
+  },
+  "study_enrolled": {
+   "speaker": "Grimalkin",
+   "text": "Enrolled. Fight as you would; I will know if you perform for the ledger. Return when the numbers exist.",
+   "_comment": "b4 #219 enrollment ack. hide_when on the accept options is a re-enroll guard within one study arc (accepted counter); board_accepted:false blocks accept while ANY posting is held — his refusal is the locked render.",
+   "options": [
+    {
+     "text": "Understood.",
+     "end": true
+    }
+   ]
+  },
+  "studies": {
+   "speaker": "Grimalkin",
+   "text": "Two open protocols. Field engagements, or witnessed casting. Both pay on data, neither pays for stories.",
+   "options": [
+    {
+     "text": "Sign me on as a field subject. Three engagements, logged.",
+     "hide_when": {
+      "accomplishment": {
+       "accepted_bounty_grimalkin_study_combat": 1
+      }
+     },
+     "effects": [
+      {
+       "accept_bounty": "grimalkin_study_combat"
+      }
+     ],
+     "goto": "study_enrolled"
+    },
+    {
+     "text": "Measure my casting. Eight witnessed, as posted.",
+     "requires": {
+      "accomplishment": {
+       "learned_magic_from_pisces": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "accepted_bounty_grimalkin_study_casting": 1
+      }
+     },
+     "effects": [
+      {
+       "accept_bounty": "grimalkin_study_casting"
+      }
+     ],
+     "goto": "study_enrolled"
+    },
+    {
+     "text": "Another time.",
      "end": true
     }
    ]

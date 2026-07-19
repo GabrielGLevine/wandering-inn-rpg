@@ -927,6 +927,7 @@ func dialogue_choose(index: int) -> bool:
 		dialogue = null
 	var pending_combat := ""
 	var pending_board_action := ""
+	var pending_board_voice := "selys"
 	var pending_travel := ""
 	var pending_sell_vendor := ""
 	for effect: Dictionary in result["effects"]:
@@ -982,6 +983,10 @@ func dialogue_choose(index: int) -> bool:
 			pending_board_action = "picker"
 		elif effect.has("open_board_turnin"):
 			pending_board_action = "turnin"
+			# b4 #219: an optional string value picks the turnin VOICE
+			# (private-posting givers); bare true keeps Selys.
+			if effect["open_board_turnin"] is String:
+				pending_board_voice = String(effect["open_board_turnin"])
 		elif effect.has("open_board_abandon"):
 			pending_board_action = "abandon"
 		elif effect.has("open_delivery_picker"):
@@ -1000,7 +1005,7 @@ func dialogue_choose(index: int) -> bool:
 	if pending_board_action == "picker":
 		_open_board_picker_dialogue()
 	elif pending_board_action == "turnin":
-		_open_board_turnin_dialogue()
+		_open_board_turnin_dialogue(pending_board_voice)
 	elif pending_board_action == "abandon":
 		_open_board_abandon_dialogue()
 	elif pending_board_action == "delivery_picker":
@@ -1037,6 +1042,10 @@ func player_rank() -> String:
 func board_bounties() -> Array:
 	var remaining: Array = []
 	for bounty: Dictionary in _bounty_pool():
+		# b4 #219: board:false rows are PRIVATE postings (accepted via their
+		# giver's own dialogue, never the guild rotation).
+		if not bool(bounty.get("board", true)):
+			continue
 		var one_shot := String(bounty.get("condition_mode", "delta")) == "absolute"
 		if one_shot and accomplishment_count("completed_bounty_%s" % String(bounty[WIKeys.ID])) >= 1:
 			continue
@@ -1148,9 +1157,9 @@ func _open_board_picker_dialogue() -> void:
 	_begin_code_dialogue(WIBounties.build_picker_graph(slate), "board_picker", "selys")
 
 
-func _open_board_turnin_dialogue() -> void:
+func _open_board_turnin_dialogue(voice: String = "selys") -> void:
 	var met := turn_in_bounty()
-	_begin_code_dialogue(WIBounties.build_turnin_graph(met), "board_turnin", "selys")
+	_begin_code_dialogue(WIBounties.build_turnin_graph(met, voice), "board_turnin", "grimalkin" if voice == "grimalkin" else "selys")
 
 
 func _open_board_abandon_dialogue() -> void:

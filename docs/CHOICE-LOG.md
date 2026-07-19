@@ -291,3 +291,21 @@ cross-release index of them.
   fiction fixed via toast variant; fixture monotone-chain rule for the
   new counters deferred (the coherence validator whitelists chains —
   #122 grandfather precedent; follow-up ledgered).
+- **b4 #219 adjudications (2026-07-19)**: Grimalkin's study contracts
+  are PRIVATE postings (`board: false` — they never ride Liscor's
+  rotation; slate purity proven by board_loop's unchanged pins) with
+  the SOCIAL pillar tag (participation pays, the kills themselves
+  already pay combat XP). Two "no new code" deviations, both
+  3-line-class: the board:false row flag, and an optional string value
+  on `open_board_turnin` = the turnin VOICE key (value-less keeps
+  Selys byte-identical — unit-pinned all four voice×met arms; his MET
+  arm has no canonical crossing, so the unit pin is its only
+  executable proof). Design-doc correction: the board_accepted bool
+  gate HIDES both directions (no visible-locked tease exists) — the
+  single-slot proof is the mutual-exclusion option-array pin pair, and
+  the slot+caster gate composition routes through a `studies` node
+  (one gate per option dict, no whitelist change). Payouts re-anchored
+  16/24/32 by the multiple-of-4 validator. Lean canonical scope:
+  delta-completion/payout/tiers are the shipped board machinery's own
+  proofs (board_loop/bounty_rank_loop re-run green) — the study loop
+  pins only the NEW surfaces (accept-at-hub, slot exclusion, voice).

@@ -16,6 +16,17 @@ everything, contempt for imprecision, pays for data).
    board posting BLOCKS enrollment, with his refusal line carrying the
    fiction: "One ledger at a time. Finish what the board holds first."
    No silent eviction.
+   **Implementation correction (2026-07-19, capture run 2):** the
+   board_accepted bool gate HIDES in both directions (same as Selys's
+   own hub — board_loop's comments say so; the doc's "visible-locked
+   tease" assumption was wrong, and no refusal line renders). The
+   single-slot proof became the PAIR of exact option-array pins
+   (fresh hub shows the accept entry and not the turn-in; enrolled hub
+   the inverse). Also: gate composition (slot bool + caster
+   accomplishment) is not expressible in one option dict — the hub
+   gained ONE slot-gated entry ("About the studies.") into a `studies`
+   node whose per-row options carry the accomplishment gates. All
+   sanctioned singles, no whitelist change.
 3. **Turn-in in HIS voice**: `WIBounties.build_turnin_graph` gains
    optional `speaker`/`copy` params (defaults preserve Selys verbatim —
    byte-identical for every existing caller; the board-picker precedent

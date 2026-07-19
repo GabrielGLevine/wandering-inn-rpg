@@ -147,7 +147,16 @@ static func build_picker_graph(slate: Array) -> Dictionary:
 	return {"start": "hub", "nodes": nodes}
 
 
-static func build_turnin_graph(met: bool) -> Dictionary:
+static func build_turnin_graph(met: bool, voice: String = "selys") -> Dictionary:
+	# b4 #219: optional voice key; the default is byte-identical Selys for
+	# every existing caller. "grimalkin" covers his private study contracts —
+	# the not-done copy is deliberately honest for FOREIGN postings too
+	# ("I did not assign you that errand").
+	if voice == "grimalkin":
+		var g_text := "Incomplete measurements are noise. I did not assign you that errand, or you have not finished mine. Either way: come back with data."
+		if met:
+			g_text = "Adequate. The numbers hold, which puts you above most of my subjects. Payment as contracted — precision costs, and I pay for it."
+		return {"start": "hub", "nodes": {"hub": {"speaker": "Grimalkin", "text": g_text, "options": [{"text": "Continue.", "end": true}]}}}
 	var text := "The notice says proof. Bring the proof, not the story. The story's free and so is my time apparently."
 	if met:
 		text = "Done? …So it is. Here. Counted twice, because the last adventurer counted once, loudly, and was wrong. The Guild thanks you. I'm the Guild. So: thanks."

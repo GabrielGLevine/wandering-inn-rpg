@@ -1,0 +1,80 @@
+{
+ "_comment": "b4 #219 grimalkin_study_loop start: delve_talk_start's validated caster identity (warrior5/mage5/tactician1, learned_magic_from_pisces held -> the casting study's row gate is MET and visible) relocated to pallass_market beside Grimalkin's exam hall (18,4), no posting held (board_accepted false -> both accept paths open). forge_permit_filed=0 keeps the exam option hidden, so the studies options are the hub's visible rows 0/1. Pallass reachability chain (door_awakened + pallass_sponsored/attuned, with the door-study monotone chain beneath) added for the coherence validator.",
+ "version": 5,
+ "state": {
+  "current_map": "pallass_market",
+  "player_cell": [
+   18,
+   5
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 5,
+   "mage": 5,
+   "tactician": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "reached_two_classes": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1,
+   "raskghar_sealed": 1,
+   "post_game": 1,
+   "horns_delve_started": 1,
+   "horns_party_formed": 1,
+   "won_combat": 3,
+   "melee_hit": 18,
+   "learned_magic_from_pisces": 1,
+   "spell_cast": 13,
+   "chess_with_olesm": 1,
+   "door_chain_started": 1,
+   "door_understood": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
+   "pallass_sponsored": 1,
+   "pallass_attuned": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns",
+   "what_the_seal_kept"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "gold": 40,
+  "actions_since_sleep": 0,
+  "times_slept": 12,
+  "rng_state": "-1966449618399012673"
+ }
+}

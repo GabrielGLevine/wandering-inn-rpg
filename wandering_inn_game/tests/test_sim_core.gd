@@ -2714,6 +2714,25 @@ func _init() -> void:
 	assert(not gB.turn_in_bounty(), "prior culls never pay twice")
 	gB.abandon_bounty()
 
+	# --- b4 #219: turnin-graph voice param, all four arms (the grimalkin
+	# MET arm has no canonical crossing -- QA's lean study loop only reaches
+	# not-done -- so this is that copy's only executable proof; the selys
+	# arms pin the default stays byte-identical for every existing caller) ---
+	var tg_s_no: Dictionary = WIBounties.build_turnin_graph(false)
+	var tg_s_yes: Dictionary = WIBounties.build_turnin_graph(true, "selys")
+	var tg_g_no: Dictionary = WIBounties.build_turnin_graph(false, "grimalkin")
+	var tg_g_yes: Dictionary = WIBounties.build_turnin_graph(true, "grimalkin")
+	assert(String((tg_s_no["nodes"]["hub"] as Dictionary)["speaker"]) == "Selys"
+		and String((tg_s_no["nodes"]["hub"] as Dictionary)["text"]) == "The notice says proof. Bring the proof, not the story. The story's free and so is my time apparently.",
+		"voice default (omitted) stays Selys not-done verbatim")
+	assert(String((tg_s_yes["nodes"]["hub"] as Dictionary)["text"]).begins_with("Done? "),
+		"explicit selys met arm matches the shipped copy")
+	assert(String((tg_g_no["nodes"]["hub"] as Dictionary)["speaker"]) == "Grimalkin"
+		and String((tg_g_no["nodes"]["hub"] as Dictionary)["text"]) == "Incomplete measurements are noise. I did not assign you that errand, or you have not finished mine. Either way: come back with data.",
+		"grimalkin not-done arm verbatim")
+	assert(String((tg_g_yes["nodes"]["hub"] as Dictionary)["text"]) == "Adequate. The numbers hold, which puts you above most of my subjects. Payment as contracted — precision costs, and I pay for it.",
+		"grimalkin met arm verbatim (no canonical reaches it)")
+
 	# --- GH#163 review MEDIUM: the tier LOCK must survive a rank shift ---
 	var tier_cc: Dictionary = combat_config.duplicate(true)
 	tier_cc["classes"] = _load_json("res://data/classes.json")
