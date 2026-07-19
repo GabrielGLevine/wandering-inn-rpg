@@ -350,3 +350,28 @@ fixture's counters against the gate before wiring.
   survived only because its row-0 stayed row 0). Before shipping a hub
   row: grep qa/scripts for the conversation id and re-derive every
   cursor path, not just the exact-pin ones.
+
+## Pool-stage SHADOW-OUT audit (b7 wave, 2026-07-19 — bit all three stage PRs)
+Stages are PERMANENT registers under last-match-wins; every new stage
+needs a reachability trace before shipping, not after review:
+- For each state a real player reaches, ask WHICH stage wins. A stage
+  placed below warm terminals/threads is near-dead once their gates
+  arm — and the board window forces delivery-keyed stages to
+  times_slept>=1, exactly when terminal gates are usually met.
+- Adjudicate by surface class: FLAVOR (acks) may accept shadow-out
+  (a months-later "it arrived!" is worse); GUIDANCE (signposts,
+  unlock hints) must survive mid-game — position above the warm
+  terminal, below active story threads, or duplicate the copy into
+  the warm/neutral stage POOLS (they share lines verbatim by the
+  retire-to-warm convention; fair_weight-style pools with exact idx
+  pins excepted).
+- Standing/repeatable counters (delivered_standing_*) = permanent
+  familiarity registers; order them ABOVE one-shot acks so the
+  forever-line is the right one.
+- Base-pool appends are near-dead on any NPC whose stages arm early
+  (their first stage permanently replaces the base pool).
+- Every stage line is an AMBIENT BARK for copy-fit: 2 wrapped lines
+  max (test_copy_fit budget — a 3-line Selys rumor red the suite).
+- GDScript unit-arm trap: lambdas capture locals BY VALUE — mutate
+  the captured dict (clear() + assign), never rebind, or the callback
+  reads the stale dict forever.
