@@ -1,0 +1,364 @@
+{
+ "_comment": "GH#217 POSITIVE legs: all four talk-downs close non-violently on the all-gates-met fixture (skills via player_skills + forge_permit_filed + 10g). Teleport-driven between sites; each close banks its counter and DORMANTS its entity (respawns next sleep — review HIGH: removal foreclosed the repeatable cull bounties), starts no combat except the staked formal bout (which IS combat by design — asserted via combat_started after the stake). Tease/locked legs live in parley_gates_check. Decline arm covered post-bout via a sleep-respawn return.",
+ "fixture_save": "parley_talkdowns_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== CORUSDEER: [Basic Command] steady (option 2, unlocked on this fixture).",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "corusdeer_range"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Stray Corusdeer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5,
+   "_comment": "end:true fires DIALOGUE_ENDED BEFORE the option effects (the skill trap) — wait ended first."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "corusdeer_calmed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== FORGE GOLEM: [Detect Magic] still it.",
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    20,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "forge_calibration_golem"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Miscalibrated Golem"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5,
+   "_comment": "end:true fires DIALOGUE_ENDED BEFORE the option effects (the skill trap) — wait ended first."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "forge_golem_stilled"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== WATCHGOLEMS: show the filed permit (hidden-gated arm, VISIBLE on this fixture at slot 2).",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    2,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "market_watchgolems"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Stone Golems"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5,
+   "_comment": "end:true fires DIALOGUE_ENDED BEFORE the option effects (the skill trap) — wait ended first."
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "watchgolems_stood_down"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "GH#217 review HIGH: talk-downs DORMANT the encounter (respawns next sleep) — never remove_entity, which permanently foreclosed the repeatable cull bounties.",
+   "action": "assert_state",
+   "path": "dormant_encounters",
+   "equals": [
+    "corusdeer_range",
+    "forge_calibration_golem",
+    "market_watchgolems"
+   ]
+  },
+  {
+   "_comment": "No combat so far — three peaceful closes.",
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "_comment": "== DUEL RING: the staked formal bout (option 3: Charming Smile=2, bout=3, back away=4). Gold-gated, pays 4, STARTS the fight by design.",
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    24,
+    14
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "boulevard_duel_ring"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Coyle's Regulars"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "boulevard_formal_bout"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 10
+  },
+  {
+   "_comment": "Victory banner needs a confirm to dismiss before resolve_combat fires.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_resolved",
+   "timeout_sec": 60
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.boulevard_formal_bout",
+   "equals": 1
+  },
+  {
+   "_comment": "== DECLINE ARM (review MEDIUM-1): bout left the ring dormant; sleep respawns it; return and decline via [Charming Smile] (option 2).",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 10
+  },
+  {
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    24,
+    14
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "boulevard_duel_ring"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Coyle's Regulars"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "boulevard_challenge_declined"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "persuaded_someone"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "dormant_encounters",
+   "equals": [
+    "boulevard_duel_ring"
+   ]
+  }
+ ]
+}

@@ -4010,6 +4010,79 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "parley_talkdowns_loop",
+   "seed": 9,
+   "fixture": "parley_talkdowns_start",
+   "note": "GH#217: all four talk-downs close non-violently (skills/permit fixture); staked formal bout fights by design",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "inn_upstairs",
+     "invrisil_boulevard",
+     "pallass_forge",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "parley_talkdowns_start"
+    ],
+    "skills": [
+     "animals_basic_command",
+     "basic_swordwork",
+     "charming_smile",
+     "detect_magic"
+    ],
+    "dialogue": [
+     "boulevard_duel_ring",
+     "corusdeer_range",
+     "forge_calibration_golem",
+     "market_watchgolems"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "input",
+     "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "parley_gates_check",
+   "seed": 9,
+   "fixture": "parley_gates_unmet_start",
+   "note": "GH#217: tease legs -- skill/gold arms render LOCKED, permit arm stays HIDDEN (exact-list pins are the can-fail)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "invrisil_boulevard",
+     "pallass_forge",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "parley_gates_unmet_start"
+    ],
+    "skills": [
+     "basic_swordwork"
+    ],
+    "dialogue": [
+     "boulevard_duel_ring",
+     "corusdeer_range",
+     "forge_calibration_golem",
+     "market_watchgolems"
+    ],
+    "systems": [
+     "combat",
+     "dialogue"
+    ]
+   }
   }
  ]
 }

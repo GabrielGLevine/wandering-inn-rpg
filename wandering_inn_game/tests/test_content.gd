@@ -594,7 +594,7 @@ func _validate_once_per_waking_shape_cases() -> void:
 
 
 const DIALOGUE_EFFECT_VERBS := [
-	"accomplishment", "quest", "remove_entity", "item", "gold",
+	"accomplishment", "quest", "remove_entity", "dormant_entity", "item", "gold",
 	"bank_first_use", "remove_item", "well_fed", "start_combat", "travel_to",
 	"accept_bounty", "accept_delivery", "sell_item", "open_board_picker",
 	"open_board_turnin", "open_board_abandon", "open_delivery_picker",
@@ -626,6 +626,9 @@ func _validate_effect(
 	if effect.has("remove_entity"):
 		var remove_id: String = String(effect["remove_entity"])
 		assert(entity_ids.has(remove_id), label + " removes unknown entity: " + remove_id)
+	if effect.has("dormant_entity"):
+		var dormant_id: String = String(effect["dormant_entity"])
+		assert(entity_ids.has(dormant_id), label + " removes unknown entity: " + dormant_id)
 	if effect.has("start_combat"):
 		var combat_id: String = String(effect["start_combat"])
 		assert(entity_ids.has(combat_id), label + " starts combat for unknown entity: " + combat_id)
