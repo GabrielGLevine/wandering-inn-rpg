@@ -21,12 +21,14 @@ merged`), not here.
   be648b4/62459f0), each byte-identity-proven + full bar + review clean.
   wi_game.gd 2345→2020; WIInteractions/WISleepBeat/WICombatBanking live.
   Lanes b/c dispatchable (a1 dependency met). #194b world.gd seams open.
-- **#211 in flight** (branch issue/211-challenge-weighted-leveling,
-  pushed): design doc on main (d368d28) + pace harness committed with
-  BASELINE BANDS measured (p50/act: warrior 6/14/16 plateau, caster
-  7/15/16 plateau, helper 10/21/26) — posted to issue. Next: weight+
-  decay+fractional bank behind config inside WICombatBanking + save
-  VERSION 7; weight-off regression must reproduce baseline exactly.
+- **#211 in flight** (branch issue/211-challenge-weighted-leveling):
+  step 1 harness + baseline bands (warrior 6/14/16, caster 7/15/16,
+  helper 10/21/26 — issue comment has the table) AND step 2 weight/
+  decay/fractional-bank + save v7 BOTH COMMITTED (9210eff), flag OFF =
+  byte-identical (proven 3 ways). Decay-only probe recorded. Reviewer
+  on step 2 + power_level proposal agent running bg. Next: power_level
+  splice after controller review -> tripwire -> curve tuning vs bands
+  -> resolution_grant authoring -> canonical re-checks -> PR.
 - **#111 spec on main** — go/no-go pending (Taste queue). USER-GATED.
 - CHOICE-LOG has 2026-07-19 adjudications (#111 rec, #211 §8, seam
   calls) awaiting review.
