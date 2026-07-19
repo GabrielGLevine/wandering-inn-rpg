@@ -81,6 +81,16 @@ file-ownership lanes). Board: issues #194–#225.
    files.
 4. **Pacing a6** (day ~2x, #206) and **hotbar auto-slot a7** (#208) are
    small and independent — slot into any gap.
+4b. **#111 rename SPEC ONLY** (user directive 2026-07-19): author the
+   safe-project-rename spec — save-compatibility strategy (config/name
+   drives the user:// path, so a rename strands every existing save;
+   enumerate migration options: path migration on first boot, dual-path
+   read + single-path write, or export-preset-only rename), rollout
+   order across itch/Pages/desktop, QA proof plan (fixture saved under
+   the OLD name must load post-rename), and the recommended cut.
+   Fable-class design work — front-load it per the model directive.
+   IMPLEMENTATION stays USER-GATED; the spec ends with an explicit
+   go/no-go ask.
 5. Release mechanics at wave end (wi-shipping): rotation playtest, freeze
    cut, tag v0.13.0, watch all three deploy targets. Interim tags
    (v0.12.2…) allowed if hotfix-class findings land before the wave
@@ -90,7 +100,9 @@ file-ownership lanes). Board: issues #194–#225.
 - PixelLab batch B fauna/icon items (VISUAL-LOG Wave D-2 standing gate).
 - Dark-map legibility lift (a5): ships behind a prepared-save Playtest
   State for the user's windowed eye-read.
-- #111 project rename and #19 Steam remain HOLD.
+- #111 project rename: IMPLEMENTATION on hold — the SPEC is in-scope
+  this wave (item 4b) and ends with a go/no-go ask. #19 Steam remains
+  HOLD entirely.
 
 ## Standing rules (unchanged)
 - PR-per-issue on `issue/<n>-<slug>`; verified 6/6 checks table before
