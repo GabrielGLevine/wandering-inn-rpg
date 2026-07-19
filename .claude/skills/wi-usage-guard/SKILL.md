@@ -25,10 +25,10 @@ skill firing and act on the new tier immediately.
 ## Tiers
 | Tier | Session % | Weekly % | Protocol |
 |------|-----------|----------|----------|
-| OK | <70 | <60 | Normal operations. |
-| CAUTION | ≥70 | ≥60 | No NEW lanes/workflows/waves. Finish in-flight work. Prefer cheap/delegated ops (see wi-running-the-machine delegation ladder). |
-| WINDDOWN | ≥85 | ≥75 | Drain: stop feeding running lanes new tasks; let current tasks land; commit WIP on lane branches (WIP-tagged messages — NO un-gated merges to main); update HANDOFF RUNNING/QUEUE. |
-| QUIESCE | ≥95 | ≥90 | State-saving actions ONLY: commit WIP, write HANDOFF. Then see end-state below. |
+| OK | <70 | <80 | Normal operations. |
+| CAUTION | ≥70 | ≥80 | No NEW lanes/workflows/waves. Finish in-flight work. Prefer cheap/delegated ops (see wi-running-the-machine delegation ladder). |
+| WINDDOWN | ≥85 | ≥90 | Drain: stop feeding running lanes new tasks; let current tasks land; commit WIP on lane branches (WIP-tagged messages — NO un-gated merges to main); update HANDOFF RUNNING/QUEUE. |
+| QUIESCE | ≥95 | ≥96 | State-saving actions ONLY: commit WIP, write HANDOFF. Then see end-state below. |
 
 Two automatic adjustments (already in the script — read the line's `[...]`
 reasons): burn-rate projection escalates one tier early when exhaustion is

@@ -52,19 +52,22 @@ class TestTiers(unittest.TestCase):
         self.assertEqual(self.tier(85, 0, 0, None, None), "WINDDOWN")
         self.assertEqual(self.tier(95, 0, 0, None, None), "QUIESCE")
 
-    def test_weekly_bands_stricter(self):
-        self.assertEqual(self.tier(0, 60, 0, None, None), "CAUTION")
-        self.assertEqual(self.tier(0, 0, 75, None, None), "WINDDOWN")
-        self.assertEqual(self.tier(0, 92, 0, None, None), "QUIESCE")
+    def test_weekly_bands(self):
+        # User directive 2026-07-19: weekly CAUTION not before ~80%
+        # (WEEK_BANDS 80/90/96); below 80 stays OK.
+        self.assertEqual(self.tier(0, 79, 0, None, None), "OK")
+        self.assertEqual(self.tier(0, 80, 0, None, None), "CAUTION")
+        self.assertEqual(self.tier(0, 0, 90, None, None), "WINDDOWN")
+        self.assertEqual(self.tier(0, 96, 0, None, None), "QUIESCE")
 
     def test_worst_wins(self):
-        self.assertEqual(self.tier(72, 80, 0, None, None), "WINDDOWN")
+        self.assertEqual(self.tier(72, 90, 0, None, None), "WINDDOWN")
 
     def test_near_reset_softening(self):
         self.assertEqual(self.tier(96, 0, 0, 10, None), "CAUTION")
 
     def test_weekly_never_softened(self):
-        self.assertEqual(self.tier(96, 92, 0, 10, None), "QUIESCE")
+        self.assertEqual(self.tier(96, 96, 0, 10, None), "QUIESCE")
 
     def test_dynamic_escalation(self):
         # 55% used, 0.75%/min -> exhaustion in 60m, reset 120m away -> escalate
