@@ -40,9 +40,14 @@ const COMPS := [
 	{"name": "goblin_night_patrol", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "on_victory": ["won_combat"]},
 ]
 
+## quest_grants: waking -> authored grant deposits (mirrors the quests.json
+## resolution_grant data for the path this archetype would take; applied via
+## the REAL WICombatBanking.grant seam at that waking, pre-sleep — the §5
+## "quest closes are the big movers" leg of the combined system).
 var ARCHETYPES := [
 	{"name": "warrior_line", "ai": "melee",
 		"entry": {1: {"sparred_with_relc": 1}},
+		"quest_grants": {10: {"melee_hit": 6, "won_combat": 1}, 22: {"melee_hit": 10, "won_combat": 2}, 36: {"melee_hit": 12, "won_combat": 2}},
 		"acts": [
 			{"fights": [0, 1, 2, 1], "chores": {}},
 			{"fights": [3, 4, 7, 1], "chores": {}},
@@ -50,6 +55,7 @@ var ARCHETYPES := [
 		]},
 	{"name": "caster_line", "ai": "caster",
 		"entry": {1: {"learned_magic_from_pisces": 1}},
+		"quest_grants": {10: {"sneaked_past_danger": 2, "heard_gossip": 3}, 22: {"spell_cast": 8}, 36: {"persuaded_someone": 5, "heard_gossip": 8}},
 		"acts": [
 			{"fights": [0, 1, 2, 1], "chores": {}},
 			{"fights": [3, 4, 7, 1], "chores": {}},
@@ -58,6 +64,7 @@ var ARCHETYPES := [
 	{"name": "helper_social", "ai": "melee",
 		"_comment": "fights every fourth waking; chores carry the pace — the non-combat pillar CONTROL (raw counting in v1, per directive)",
 		"entry": {1: {"sparred_with_relc": 1, "cleaned_the_inn": 1}},
+		"quest_grants": {10: {"cooked_meal": 4, "served_customer": 4}, 22: {"persuaded_someone": 3, "heard_gossip": 6}, 36: {"persuaded_someone": 5, "heard_gossip": 8}},
 		"acts": [
 			{"fights": [1, -1, -1, -1], "chores": {"cleaned_the_inn": 2, "served_customer": 3, "heard_gossip": 2}},
 			{"fights": [3, -1, -1, -1], "chores": {"cleaned_the_inn": 2, "served_customer": 3, "persuaded_someone": 1}},
@@ -124,6 +131,9 @@ func _init() -> void:
 						wins += 1
 				for k: String in act["chores"]:
 					_acc[k] = int(_acc.get(k, 0)) + int(act["chores"][k])
+				var qg: Dictionary = arch.get("quest_grants", {})
+				if qg.has(waking):
+					_banking.grant(qg[waking] as Dictionary, _frac)
 				_sleep_resolve(classes, _acc, catalog, generalists, true)
 				if waking >= 6:
 					assert(not classes.is_empty(), "%s classless at waking %d — entry ids drifted from classes.json gained_by" % [arch["name"], waking])
@@ -177,6 +187,9 @@ func _init() -> void:
 				_run_fight(comp, classes, catalog2, skills, arenas_by_id, combatants_by_id, String(arch["ai"]), fight_seed)
 			for k: String in act["chores"]:
 				_acc[k] = int(_acc.get(k, 0)) + int(act["chores"][k])
+			var qg: Dictionary = arch.get("quest_grants", {})
+			if qg.has(waking):
+				_banking.grant(qg[waking] as Dictionary, _frac)
 			_sleep_resolve(classes, _acc, catalog, generalists, true)
 			if waking == ACT_ENDS[act_idx]:
 				act_idx = mini(act_idx + 1, ACT_ENDS.size() - 1)

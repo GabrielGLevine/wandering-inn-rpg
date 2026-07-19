@@ -149,6 +149,20 @@ func resolve(combat: WICombat, encounter_id: String, dormant_encounters: Array[S
 		_emit(WIEvents.GAME_OVER, {})
 
 
+## GH#211 §5: resolution-path grant — the quest close IS the adversity, so
+## deposits skip challenge weight and repetition decay entirely; scaled only
+## by the global grant_scale knob. Flag-gated: disabled = strict no-op (the
+## byte-identity contract). Caller passes the resolved path entry's `grant`.
+func grant(deposits: Dictionary, fractional_bank: Dictionary) -> void:
+	if not bool(_challenge_cfg.get("enabled", false)) or deposits.is_empty():
+		return
+	var scale := float(_challenge_cfg.get("grant_scale", 1.0))
+	var counters: Array = deposits.keys()
+	counters.sort()
+	for counter: String in counters:
+		_deposit(counter, float(deposits[counter]) * scale, fractional_bank)
+
+
 func _bank_action_tally(combat: WICombat, entity: Dictionary, enabled: bool = false, adversity: float = 1.0, fractional_bank: Dictionary = {}) -> void:
 	if bool(entity.get("trivial", false)) or bool(combat.arena_config.get("trivial", false)):
 		return

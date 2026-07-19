@@ -1292,6 +1292,7 @@ func _check_quests() -> void:
 	if catalog.is_empty() or started_quests.is_empty():
 		return
 	var now := WIQuests.evaluate(catalog, started_quests, accomplishments)
+	var newly_completed: Array[String] = []
 	for id: String in now:
 		var prev: Dictionary = _quest_progress.get(id, {"beat_index": 0, "completed": false})
 		if int(now[id]["beat_index"]) > int(prev["beat_index"]) and not bool(now[id]["completed"]):
@@ -1301,7 +1302,17 @@ func _check_quests() -> void:
 			_emit(WIEvents.QUEST_BEAT_COMPLETED, {"id": id, "beat": now[id]["beat_index"]})
 			_emit(WIEvents.QUEST_COMPLETED, {"id": id})
 			_emit(WIEvents.TOAST, {"text": "Quest complete: %s" % _quest_title(id)})
+			newly_completed.append(id)
 	_quest_progress = now
+	# GH#211 §5: grants apply AFTER the progress write — a grant's deposits can
+	# complete ANOTHER quest, whose nested _check_quests must see fresh state
+	# (applying inside the loop would double-fire that completion). Flag-gated
+	# no-op inside grant(); grants are decay-exempt by design.
+	for id: String in newly_completed:
+		var quest: Dictionary = WIQuests.quest_by_id(catalog, id)
+		var path := WIQuests.resolved_path(quest, accomplishments)
+		if path.has("grant"):
+			_banking.grant(path["grant"] as Dictionary, fractional_bank)
 
 
 func reprime_quests() -> void:
