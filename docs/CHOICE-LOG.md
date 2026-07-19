@@ -181,3 +181,22 @@ cross-release index of them.
   page events + qa_real_paging opt-out; mutation-verified); standalone
   run_qa doesn't grep SCRIPT ERROR but the sweep does; three scripts
   were sweep-orphans (registered; sweep 136→139).
+
+## 2026-07-19 — v0.13 wave day 1 (Fable)
+
+- **#111 rename**: spec recommends Option A (first-boot COPY-migration +
+  rename in one release; legacy dir kept as rollback; desktop→Pages→itch
+  order). Full options + engine citations in the spec; GO/NO-GO is yours
+  on issue #111. No implementation until you answer.
+- **#211 design adjudications** (doc §8, each reversible): enemy power =
+  authored `power_level` field (NOT statline-derived); below-band fights
+  gray-out to a 0.15 scale (not hard zero — `trivial` stays the only
+  zero); old saves migrate with empty fractional accumulators (no
+  retroactive credit); non-combat pillars stay raw-counted in v1
+  (your directive); quest resolution grants skip repetition decay.
+- **#194a seam engineering calls** (PR-recorded, flagged here for
+  visibility): board/delivery/portal glue and _roll_loot stayed in
+  WIGame; combat/_pending_encounter clear AFTER banking resolve (sync
+  handlers read sim.combat); detector sets for seam byte-diffs must
+  include work_loop/social_loop (only class-gain carriers) — the
+  mutation lens proved level_up_loop alone is blind to that arm.
