@@ -220,19 +220,22 @@
    }
   },
   {
-   "_comment": "Conditional field cameo only; the awakened_boss entity retains the Relc join/veto conversation and ally gate.",
+   "_comment": "Conditional field cameo only; the awakened_boss entity retains the Relc join/veto conversation and ally gate. b7 #201: seated at (11,4), brushing the walkthrough lane (11,5)/(11,6) so players can't walk past him unseen. b7 #203: absent arm — the descent window only; post-clear he is back at his permanent floodplains post (which carries the brother_in_arms stage).",
    "id": "relc_descent_cameo",
    "kind": "npc",
    "cell": [
-    13,
+    11,
     4
    ],
-   "facing": "left",
+   "facing": "down",
    "display_name": "Relc",
    "sprite": "relc",
    "present_when": {
     "requires": {
      "reached_the_warren": 1
+    },
+    "absent": {
+     "cleared_the_warren": 1
     }
    },
    "dialogue": [
