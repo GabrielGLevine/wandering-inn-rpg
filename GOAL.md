@@ -5,6 +5,29 @@ User directive: continue autonomously; judgment calls to docs/CHOICE-LOG.md;
 user defers to recommendations to keep things moving. No user playtest gates
 except the items marked USER-GATED below.
 
+## Cold-start bootstrap (fresh session, zero context)
+1. Read in order: `CLAUDE.md` → `wandering_inn_game/AGENTS.md` → `HANDOFF.md`
+   → `docs/design/2026-07-18-v0.13-depth-polish-wave.md` (the wave map) →
+   this file. The `.claude/skills/wi-*` library is the process canon —
+   `wi-start-here` first, then `wi-running-the-machine` before any task and
+   `wi-shipping` before any release step.
+2. `git status` must be clean on `main`, synced with origin. Run
+   `bash scripts/usage_status.sh` (guard tiers in `wi-usage-guard`).
+   Fresh clone only: `scripts/fetch_private_assets.sh` then a headless
+   `--import` pass.
+3. Where truth lives: GitHub issues = dispatch briefs (`gh issue view <n>`);
+   merged PR bodies = per-issue history; `docs/CHOICE-LOG.md` =
+   adjudications; **issue #211's comments carry the user's leveling
+   directives VERBATIM** — read them before touching the progression
+   package, the two block-quotes there are the design authority.
+4. v0.12.1 (shipped just before this charter activates) contained: dialogue
+   tap-advance + page events + `qa_real_paging` driver opt-out (#196),
+   title gesture catcher (#197), Recent-Messages transient noise class
+   (#202), `gold_once_per_waking` on dirty_table + whole-prop
+   `once_per_waking` on 7 scavenge props, and QA registration for
+   gate_visual_check / credits_visual_check / mobile_tap_check. Do not
+   re-litigate; `git show v0.12.1` for the diff.
+
 ## Mission
 Ship v0.13.0 as a significant depth + polish release: textures, visual
 fixes, side quests, interiors/interactions, sprite & prop diversity,
@@ -61,6 +84,41 @@ file-ownership lanes). Board: issues #194–#225.
   handover).
 - Spoiler bar: Book 17 content ceiling, Vol 7 advertised; Rags is
   early-volume-safe; say "Magical Door", never the Vol-9 name.
+
+## Traps most likely to bite THIS wave (newest first; full library in wi-*)
+- The QA driver's `match` takes the FIRST arm: grep
+  `qa/test_driver.gd` for an action name before adding one — a duplicate
+  arm shadows the original silently (cost 7 sweep reds on 2026-07-18).
+  `click_dialogue_option` is 1-BASED.
+- Standalone `run_qa.sh` does NOT grep SCRIPT ERROR; the sweep does. A
+  standalone green can hide a runtime error — the sweep + exit-code-aware
+  unit bar is the only real bar.
+- New QA scripts need ALL THREE: `qa/manifest.json` entry + `AGENTS.md`
+  seed-table row + `python3 scripts/render_qa_notes.py --write`
+  (surfaces via `python3 scripts/derive_qa_surfaces.py` from
+  wandering_inn_game/). CI has separate drift checks for each.
+- `payload_contains` option lists are EXACT-list matches; adding one
+  option to a pinned node reds every pinning script. Driver timeout
+  failures print subset + cursor — read them before seed-shopping.
+- Reverting a shared file (`git checkout -- <file>`) wipes SIBLING
+  uncommitted hunks in it — `git diff <file>` and name every hunk first.
+- Dialogue QA jumps to the LAST page by contract; scripts testing paging
+  set `"qa_real_paging": true`. Dialogue `cancel` is NOT a dialogue
+  action — it opens the pause menu over everything; close conversations
+  via an end option.
+- `once_per_waking` gates a whole prop; `gold_once_per_waking` caps only
+  the payout (the Helper curve NEEDS unlimited clean counts — work_loop
+  pins it). Both reset at sleep via `entity_first_use`.
+- Shipped-JSON appends go through `wandering_inn_game/scripts/splice_json.py`
+  (format-preserving); whole-file json.dump churns hundreds of lines.
+- Controller shell: never `cd` into worktrees; absolute paths (CWD drift
+  has misrouted edits twice).
+
+## First action after bootstrap
+Branch `issue/194-wi-game-seams`, extract the WIInteractions seam ONLY
+(interact routing out of `src/core/wi_game.gd`), full bar, PR with
+byte-identical pinned-seed evidence, merge. Then the next seam. Do not
+start any lane-b/c package before #194a's first seam is merged.
 
 ## Definition of done
 All 18 wave packages merged or explicitly deferred with CHOICE-LOG
