@@ -51,6 +51,7 @@ var _continue_slot := ""
 
 var _root: Control
 var _gesture_label: Label
+var _gesture_catcher: Control
 var _notice_label: Label
 var _continue_caption_label: Label
 var _menu_root: VBoxContainer
@@ -103,6 +104,19 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
+func _on_gesture_catcher_input(event: InputEvent) -> void:
+	if _state != State.GESTURE:
+		return
+	var pressed := (event is InputEventMouseButton and (event as InputEventMouseButton).pressed) \
+		or (event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed)
+	if pressed:
+		# accept BEFORE _enter_menu(): entering the menu frees this very
+		# catcher, and accepting through the freed node is a null deref
+		# (the sweep's zero-SCRIPT-ERROR bar caught exactly this).
+		_gesture_catcher.accept_event()
+		_enter_menu()
+
+
 func _is_gesture_event(event: InputEvent) -> bool:
 	if event is InputEventKey:
 		return event.pressed and not event.echo
@@ -110,6 +124,8 @@ func _is_gesture_event(event: InputEvent) -> bool:
 		return event.pressed
 	if event is InputEventJoypadButton:
 		return event.pressed
+	if event is InputEventScreenTouch:
+		return (event as InputEventScreenTouch).pressed
 	return false
 
 
@@ -152,6 +168,16 @@ func _build_ui() -> void:
 	_gesture_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_gesture_label.add_theme_color_override("font_color", GESTURE_COLOR)
 	_root.add_child(_gesture_label)
+
+	# GH#197 (mobile): the title art consumed clicks before _unhandled_input's
+	# gesture check, so taps ON the title never satisfied "Press any key".
+	# A full-rect catcher above the chrome owns pointer input during GESTURE
+	# and is freed on menu entry; keyboard/pad still route via _unhandled_input.
+	_gesture_catcher = Control.new()
+	_gesture_catcher.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_gesture_catcher.mouse_filter = Control.MOUSE_FILTER_STOP
+	_gesture_catcher.gui_input.connect(_on_gesture_catcher_input)
+	_root.add_child(_gesture_catcher)
 
 	var menu_anchor := CenterContainer.new()
 	menu_anchor.set_anchors_preset(Control.PRESET_CENTER)
@@ -299,6 +325,9 @@ func _enter_menu() -> void:
 	_refresh_continue_state()
 	_cursor = 0 if _row_selectable(0) else _first_selectable_row()
 	_gesture_label.hide()
+	if _gesture_catcher != null:
+		_gesture_catcher.queue_free()
+		_gesture_catcher = null
 	_menu_root.show()
 	_refresh_rows()
 	# `selectable_rows` is the "device-of-truth" row count -- read live off

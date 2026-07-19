@@ -1200,6 +1200,8 @@
   {
    "_comment": "R6 (#95) trap placement 1/2: alley_footpads_a leftover, the footpad-era's remnant danger post-safe-passage.",
    "id": "alley_footpad_snag_a",
+   "once_per_waking": true,
+   "once_per_waking_toast": "The stash spot sits empty. Knowing this alley, someone will restock it.",
    "kind": "prop",
    "cell": [
     9,
@@ -1219,6 +1221,8 @@
   {
    "_comment": "Avoidable: (11,12)/(13,12) both clear (y12 blocks only x0-7).",
    "id": "alley_footpad_snag_b",
+   "once_per_waking": true,
+   "once_per_waking_toast": "Cleaned out — by you, earlier. The alley keeps its own inventory schedule.",
    "kind": "prop",
    "cell": [
     12,

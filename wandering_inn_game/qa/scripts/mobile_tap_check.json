@@ -1,0 +1,218 @@
+{
+ "_comment": "GH#196/#197 (mobile hotfix v0.12.1): tap-path proofs. (1) click_screen ON the title art satisfies the press-any-key gesture (previously the title panel consumed the click and the gate stuck). (2) Lyonette's order_brief (651 chars, multi-page) is advanced by PANEL TAPS; the keyboard confirm afterward picks option 0 -- if the taps had not turned pages, that confirm would advance a page instead of choosing, hub would never re-render, and the wait below reds. Extra taps on the last page are deliberate: with options visible the panel handler defers, so overshoot is a no-op (that contract is part of what this proves). This script sets qa_real_paging so the panel's jump-to-last-page QA contract is OFF -- page waits below are the honest observable.",
+ "qa_real_paging": true,
+ "fixture_save": "mobile_tap_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Tap dead-center of the title art (640,200): GH#197's exact repro.",
+   "action": "click_screen",
+   "pos": [
+    640,
+    200
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    4
+   ]
+  },
+  {
+   "_comment": "First interact = one-shot talk_pool line (social_talked flag); the conversation opens on the SECOND interact.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "lyonette_tip"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "hub -> cursor to 'Something's got you rattled' (visible index 2 on a fresh state).",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lyonette"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "page": 1,
+    "pages": 4
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_screen",
+   "pos": [
+    640,
+    660
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "page": 2,
+    "pages": 4
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_screen",
+   "pos": [
+    640,
+    660
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "page": 3,
+    "pages": 4
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_screen",
+   "pos": [
+    640,
+    660
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "page": 4,
+    "pages": 4
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Extra tap on the last page: options visible, panel handler defers -- must NOT choose. The dialogue_choice wait after the keyboard confirm below proves the choice came from the keyboard, and the absence assert pins no early choice.",
+   "action": "click_screen",
+   "pos": [
+    640,
+    660
+   ]
+  },
+  {
+   "_comment": "Cursor 0 = 'How bad is it, really?' -> hub. Only reachable if taps consumed the pages.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_choice",
+   "payload_contains": {
+    "index": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lyonette"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "'Maybe later.' (visible index 1 post-quest-start) ends the conversation cleanly -- bare cancel is NOT a dialogue action and would open the pause menu over everything.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_up"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Nothing there — just the inn's old boards, and the faint smell of something Erin burned once, permanently."
+   },
+   "timeout_sec": 8
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "_comment": "GH#202 bite: the run's only recorded message is the quest toast -- the interact-nothing flavor rendered (asserted above) yet stays OUT of Recent Messages. Unfixed message_layer records it and this pins 2.",
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "recent_count": 1
+   }
+  }
+ ]
+}

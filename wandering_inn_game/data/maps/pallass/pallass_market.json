@@ -491,6 +491,8 @@
   },
   {
    "id": "lift_overlook",
+   "once_per_waking": true,
+   "once_per_waking_toast": "No more dropped coins by the railing today. Pallass sweeps on schedule.",
    "kind": "prop",
    "cell": [
     23,
