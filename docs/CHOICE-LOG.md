@@ -159,3 +159,25 @@ cross-release index of them.
   before a freeze and the right first change after one) and the Ove Melaa
   selection pass (#195 — attribution already cleared, wiring is any-cycle
   content work). Ship the release on polish, open v0.13 on the refactor.
+
+## 2026-07-18 evening — v0.13 wave planned + v0.12.1 hotfix cut
+
+- User defined the wave (depth+polish) and streamed 19 playtest notes;
+  every note is an issue (#196-#214), the two mobile progression
+  blockers + journal noise + the infinite-gold exploit went straight to
+  a hotfix branch (PR #226) rather than waiting for the wave.
+- Infinite-gold adjudication: dirty_table keeps an UNLIMITED counter
+  (the Helper curve requires same-day repeat cleans — work_loop pins
+  proved gating the prop breaks a shipped progression) and gets a
+  daily-tip gold cap instead; the 7 snare/snag/overlook props take the
+  whole-prop daily gate. Economy re-priced in work_loop's pins.
+- Discovery ran as a 38-agent workflow: 5 auditors → 32 high-impact
+  claims → adversarial verification killed 4 (notably "guardian
+  fragment is inert" — it's a real accessory, so SEED 2 trades by
+  choice). Plan of record: docs/design/2026-07-18-v0.13-depth-polish-
+  wave.md; board issues #215-#225; #194 god-files stay first.
+- QA-infrastructure lessons banked: the dialogue panel's QA
+  jump-to-last-page contract hid a whole surface from gates (added
+  page events + qa_real_paging opt-out; mutation-verified); standalone
+  run_qa doesn't grep SCRIPT ERROR but the sweep does; three scripts
+  were sweep-orphans (registered; sweep 136→139).
