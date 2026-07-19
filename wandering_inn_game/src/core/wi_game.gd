@@ -77,6 +77,7 @@ var _social: WISocial
 var _field_skills: WIFieldSkills
 var _interactions: WIInteractions
 var _sleep_beat: WISleepBeat
+var _banking: WICombatBanking
 
 
 func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Callable, rng_seed: int = 0, combat_config: Dictionary = {}, phase_config: Dictionary = {}, creation_config: Dictionary = {}) -> void:
@@ -87,6 +88,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	_field_skills = WIFieldSkills.new(event_sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active, _blink_field, _ward_field, _animate_field)
 	_interactions = WIInteractions.new(event_sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup)
 	_sleep_beat = WISleepBeat.new(event_sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _enriched_offer, _set_pending_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
+	_banking = WICombatBanking.new(event_sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity)
 	rng.seed = rng_seed
 	for s: Dictionary in skill_config.get(WIKeys.SKILLS, []):
 		skills[String(s[WIKeys.ID])] = s
@@ -1757,47 +1759,9 @@ func unequip(slot: String) -> bool:
 func resolve_combat() -> void:
 	if combat == null or not combat.finished:
 		return
-	# Merge skill discovery before victory/trivial branching; combat statuses
-	# were already relayed live and must not be reconstructed here.
-	for skill_id: String in (combat.used_skills_tally.get("pc", {}) as Dictionary):
-		_mark_skill_used(skill_id)
-	var entity: Dictionary = find_entity(_pending_encounter)
-	if combat.outcome["victory"]:
-		# CONTRACT: bank once per won encounter, outside the multi-id on_victory loop.
-		record_accomplishment("victories")
-		var victories: Variant = entity.get("on_victory", "won_combat")
-		for vid: Variant in (victories if victories is Array else [victories]):
-			record_accomplishment(String(vid))
-		_bank_action_tally(entity)
-		_roll_loot(entity)
-		# GH#186: opt-in one-shot victory toast -- fires on the FIRST win of
-		# this encounter only (first on_victory counter just reached 1); the
-		# onboarding-beat seam (post-spar sleep nudge is the first user).
-		var victory_toast := String(entity.get("victory_toast", ""))
-		if victory_toast != "":
-			var first_vid := String((victories if victories is Array else [victories])[0])
-			if accomplishment_count(first_vid) == 1:
-				_emit(WIEvents.TOAST, {"text": victory_toast})
-		if bool(entity.get("respawns", false)):
-			if not dormant_encounters.has(_pending_encounter):
-				dormant_encounters.append(_pending_encounter)
-		elif not bool(entity.get("persistent", false)):
-			remove_entity(_pending_encounter)
-		_emit(WIEvents.COMBAT_RESOLVED, {"victory": true})
-	else:
-		_emit(WIEvents.GAME_OVER, {})
+	_banking.resolve(combat, _pending_encounter, dormant_encounters)
 	combat = null
 	_pending_encounter = ""
-
-
-func _bank_action_tally(entity: Dictionary) -> void:
-	if bool(entity.get("trivial", false)) or bool(combat.arena_config.get("trivial", false)):
-		return
-	var tally: Dictionary = combat.action_tally.get("pc", {})
-	var counters: Array = tally.keys()
-	counters.sort()
-	for counter: String in counters:
-		record_accomplishment(counter, int(tally[counter]))
 
 
 func _roll_loot(entity: Dictionary) -> void:
