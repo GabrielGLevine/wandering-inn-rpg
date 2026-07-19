@@ -151,6 +151,9 @@ func _ready() -> void:
 	_body_label.mouse_filter = Control.MOUSE_FILTER_STOP
 	_body_label.meta_hover_started.connect(_on_skill_row_hover_started)
 	_body_label.meta_clicked.connect(_on_skill_row_meta_clicked)
+	# a4 #216 slice 2: the body scrolls on touch/mouse DRAG (wheel-only
+	# before — a touch player had no way to read past the fold).
+	_body_label.gui_input.connect(_on_body_gui_input)
 	stack.add_child(_body_label)
 
 	_scroll_hint = UIChrome.make_label("▼")
@@ -166,6 +169,48 @@ func _ready() -> void:
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
 	if type == WIEvents.INPUT_DEVICE_CHANGED and open:
 		_rebuild_body_follow_cursor()
+
+
+## a4 #216 slice 2: drag-to-scroll the journal body. A held-button mouse
+## drag or a touch screen-drag pans the v-scroll bar; a stationary press
+## still reaches meta_clicked (skill rows) since we only act on motion.
+## a4 #216 slice 2: QA scroll hooks — the drag leg asserts the body
+## scroll VALUE moved and reads the body rect to aim the drag.
+func body_scroll_value() -> float:
+	if not open:
+		return -1.0
+	var vbar := _body_label.get_v_scroll_bar()
+	return vbar.value if vbar != null else -1.0
+
+
+func body_scrollable() -> bool:
+	if not open:
+		return false
+	var vbar := _body_label.get_v_scroll_bar()
+	return vbar != null and vbar.max_value > vbar.page
+
+
+func body_rect() -> Rect2:
+	if not open or _body_label == null or not _body_label.visible:
+		return Rect2()
+	return Rect2(_body_label.global_position, _body_label.size)
+
+
+func _on_body_gui_input(event: InputEvent) -> void:
+	if not open:
+		return
+	var dy := 0.0
+	if event is InputEventScreenDrag:
+		dy = (event as InputEventScreenDrag).relative.y
+	elif event is InputEventMouseMotion and ((event as InputEventMouseMotion).button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+		dy = (event as InputEventMouseMotion).relative.y
+	else:
+		return
+	var vbar := _body_label.get_v_scroll_bar()
+	if vbar != null and vbar.max_value > vbar.page:
+		vbar.value = clampf(vbar.value - dy, vbar.min_value, vbar.max_value - vbar.page)
+		_update_scroll_hint()
+		get_viewport().set_input_as_handled()
 
 
 func _unhandled_input(event: InputEvent) -> void:

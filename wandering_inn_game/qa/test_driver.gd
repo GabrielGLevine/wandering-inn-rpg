@@ -181,6 +181,40 @@ func _execute(step: Dictionary) -> void:
 				_inject_mouse_click(screen_pos as Vector2)
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"drag_journal_body":
+			# a4 #216: drag UP inside the journal body to scroll DOWN. Reads
+			# the body rect from the Journal node, drags from 70% to 25% of
+			# its height at mid-width.
+			var jn := get_tree().root.find_child("Journal", true, false)
+			if jn == null:
+				_fail("drag_journal_body: Journal node not found")
+			else:
+				var br: Rect2 = jn.call("body_rect")
+				if br.size == Vector2.ZERO:
+					_fail("drag_journal_body: body has no rendered rect")
+				else:
+					var cx := br.position.x + br.size.x * 0.5
+					_inject_drag(Vector2(cx, br.position.y + br.size.y * 0.7), Vector2(cx, br.position.y + br.size.y * 0.25), int(step.get("steps", 8)))
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"assert_journal_scrolled":
+			var jn2 := get_tree().root.find_child("Journal", true, false)
+			if jn2 == null:
+				_fail("assert_journal_scrolled: Journal node not found")
+			else:
+				var val: float = jn2.call("body_scroll_value")
+				var want_gt := float(step.get("greater_than", 0.0))
+				if val <= want_gt:
+					_fail("assert_journal_scrolled: scroll value %.1f not > %.1f" % [val, want_gt])
+			await get_tree().process_frame
+		"drag":
+			# a4 #216: press at `from`, step motion (button held) to `to`,
+			# release — a mouse-drag the journal body reads as a scroll pan.
+			var d_from := Vector2(float(step["from"][0]), float(step["from"][1]))
+			var d_to := Vector2(float(step["to"][0]), float(step["to"][1]))
+			_inject_drag(d_from, d_to, int(step.get("steps", 8)))
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"click_screen":
 			var pos := Vector2(float(step["pos"][0]), float(step["pos"][1]))
 			_inject_mouse_click(pos)
@@ -597,6 +631,31 @@ func _resolve_hotbar_node() -> Node:
 	if owner_node == null or not owner_node.has_method("hotbar_node"):
 		return null
 	return owner_node.call("hotbar_node")
+
+
+func _inject_drag(from: Vector2, to: Vector2, steps: int) -> void:
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	press.position = from
+	press.global_position = from
+	get_tree().root.push_input(press, true)
+	var prev := from
+	for i in range(1, steps + 1):
+		var pt := from.lerp(to, float(i) / float(steps))
+		var motion := InputEventMouseMotion.new()
+		motion.position = pt
+		motion.global_position = pt
+		motion.relative = pt - prev
+		motion.button_mask = MOUSE_BUTTON_MASK_LEFT
+		get_tree().root.push_input(motion, true)
+		prev = pt
+	var release := InputEventMouseButton.new()
+	release.button_index = MOUSE_BUTTON_LEFT
+	release.pressed = false
+	release.position = to
+	release.global_position = to
+	get_tree().root.push_input(release, true)
 
 
 func _inject_mouse_click(pos: Vector2) -> void:
