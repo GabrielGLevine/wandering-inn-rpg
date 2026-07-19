@@ -1,6 +1,19 @@
-> **USER RULING 2026-07-19: GO — dispatch Wave A. [Eagle Eyes] name KEPT
-> (AMBIGUOUS-lean-PASS ACK granted). Wave A executes now (data-only, 3
-> classes); Wave B follows as its own milestone.**
+> **STATUS 2026-07-19: ALREADY SHIPPED — BOTH WAVES. AUDIT-VERIFIED.**
+> User ruled GO + [Eagle Eyes] KEEP on 2026-07-19; on dispatch, an audit
+> found the entire expansion is ALREADY IMPLEMENTED and green on `main`
+> (a prior session shipped it; the tracking below was never updated).
+> Verified 2026-07-19: all 8 classes ([Runner]→[Courier], [Hedge Witch]→
+> [Witch], [Necromancer], [Cook]→[Chef], [Scout] consolidation) present
+> in classes.json with gained_by/evolution/grants; every Wave A/B skill
+> present (incl. eagle_eyes — the KEPT name, so the ACK is already
+> satisfied); the WB overworld verbs (blink/ward/animate) wired in
+> field_skills.gd (flash_step blinks / animate_dead animates /
+> greater_hearthward wards, all field-active); every counter has a
+> producer; test_content cross-ref PASSES; all five class-loop
+> canonicals (runner_courier/hedge_witch/necromancer/cook_chef/
+> scout_consolidation) green in the sweep. NOTHING TO IMPLEMENT. The
+> spec text below is preserved as the shipped record. (Wave D —
+> Alchemist/Druid/Priest, #134/#141 — remains separate + lore-gated.)
 
 # Class & Skill Expansion — Implementation Spec (Waves A+B)
 

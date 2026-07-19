@@ -129,15 +129,7 @@ audio listen (~30 files); a5 #205 FEEL confirm (before/after sent);
 3. **#19 Steam:** HOLD — user-secret provisioning + #20 ruling.
 4. **#123 canonical redesigns** (social_loop/garden_walkthrough/
    class_evolution_loop pre-hold the class their script earns) — post-release.
-5. **Class/Skill expansion — SPEC READY, awaits user GO + one ACK:**
-   `docs/design/class-expansion-spec.md` (Waves A+B, 445 lines) implements
-   the proposal with §8 decisions already RULED (witch no-gate, [Flash
-   Step] Necro L7 + Mage L11, Necro evo parked). Roster: [Runner]→
-   [Courier], [Hedge Witch]→[Witch], [Necromancer], [Cook]→[Chef],
-   [Scout] consolidation, mage [Detect Magic]/[Flash Step]. ONE pending:
-   ACK [Eagle Eyes]'s AMBIGUOUS-lean-PASS name (keep vs ORIGINAL). On go,
-   dispatch Wave A (data-only, zero engine risk) first. NOTE: user
-   expected this spec 2026-07-19 and hadn't seen it — surface it.
+5. **Class/Skill expansion — ALREADY SHIPPED (both waves), audit-verified 2026-07-19.** classes.json has all 8 classes with kits/evolutions; all skills present (eagle_eyes KEPT per user ACK); WB overworld verbs wired; test_content + all 5 class-loop canonicals green. A prior session shipped it; tracking was stale. NOTHING pending. (Wave D — Alchemist/Druid/Priest #134/#141 — separate + lore-gated.)
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 
