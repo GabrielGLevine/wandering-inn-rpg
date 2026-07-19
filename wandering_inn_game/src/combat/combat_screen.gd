@@ -410,37 +410,7 @@ func _pc_has_ally(id: String) -> bool:
 	return not c.is_empty() and String(c.get("side", "")) == "player"
 
 
-## GH#170(b) slice: compose a one-line record of each meaningful combat
-## beat into the shared Recent Messages feed (journal-readable after the
-## fight). Interactive mid-combat scrollback stays deferred -- this makes
-## the history HONEST first.
-func _log_event_line(type: String, payload: Dictionary) -> void:
-	var layer_script := load("res://src/ui/message_layer.gd")
-	if layer_script == null or _view == null:
-		return
-	match type:
-		WIEvents.ATTACK_RESOLVED:
-			var attacker: String = _view.display_name(String(payload["attacker"]))
-			var target: String = _view.display_name(String(payload["target"]))
-			if bool(payload.get("hit", false)):
-				layer_script.record_message("%s hits %s for %d (%d HP left)." % [attacker, target, int(payload.get("damage", 0)), int(payload.get("target_hp", 0))])
-			else:
-				layer_script.record_message("%s misses %s." % [attacker, target])
-		WIEvents.SKILL_RESOLVED:
-			var actor: String = _view.display_name(String(payload["actor"]))
-			var skill_id := String(payload.get("skill", ""))
-			var skill_name := String((Game.sim.skills.get(skill_id, {}) as Dictionary).get("display_name", skill_id))
-			var skill_target := String(payload.get("target", ""))
-			if skill_target != "" and skill_target != payload.get("actor"):
-				layer_script.record_message("%s uses %s on %s." % [actor, skill_name, _view.display_name(skill_target)])
-			else:
-				layer_script.record_message("%s uses %s." % [actor, skill_name])
-		WIEvents.COMBATANT_DOWNED:
-			layer_script.record_message("%s goes down." % _view.display_name(String(payload.get("id", ""))))
-
-
 func _play_event_visual(type: String, payload: Dictionary) -> void:
-	_log_event_line(type, payload)
 	var ui: Dictionary = payload.get("_ui", {})
 	match type:
 		WIEvents.AP_CHANGED:

@@ -563,6 +563,12 @@ func _feed_text_capacity_height() -> float:
 func feed_push(line: String) -> void:
 	if line == "":
 		return
+	# GH#170(b): every on-screen feed line also lands in the shared Recent
+	# Messages history -- the journal answers "what just happened" after a
+	# fight from the SAME composed copy the player saw scroll past.
+	var layer_script := load("res://src/ui/message_layer.gd")
+	if layer_script != null:
+		layer_script.record_message(line)
 	var capacity := _line_capacity(_feed_label, _feed_text_capacity_height())
 	_feed.append(_fit_to_lines(_feed_label, line, FEED_TEXT_WIDTH, capacity))
 	while _feed.size() > 1 and _feed_wrapped_total() > capacity:
