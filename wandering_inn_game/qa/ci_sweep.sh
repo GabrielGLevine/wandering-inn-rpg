@@ -409,7 +409,11 @@ for pair in "${LAUNCHED[@]}"; do
 
 	# Grep discipline: any SCRIPT ERROR / Parse Error / WARNING is a failure.
 	# Zero exemptions — the tree is clean.
-	HITS="$(grep -nE 'SCRIPT ERROR|Parse Error|WARNING' "$LOG" || true)"
+	# Bare `ERROR:` (the Godot engine error prefix) is NOW a failure too —
+	# it slipped the old net (a re-connect/orphan-signal spam printed 242
+	# `ERROR:` lines that ci_sweep read as green, a4 #216 review). Audited
+	# clean across all 148 current logs before widening.
+	HITS="$(grep -nE 'SCRIPT ERROR|Parse Error|WARNING|ERROR:' "$LOG" || true)"
 	if [ -n "$HITS" ]; then
 		echo "FAIL  $NAME — log tripped the error/warning grep:"
 		echo "$HITS" | sed 's/^/        /'
