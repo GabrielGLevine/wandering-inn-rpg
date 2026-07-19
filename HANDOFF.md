@@ -42,8 +42,12 @@ merged`), not here.
 - **b5 #220 Invrisil aftermath SHIPPED** (PR #237): Coyle answers both
   closes (pool stages harmonized to the shipped hub facts — the review
   caught a near-retcon), 7 passersby de-cloned, 3 shopfront observes.
-- Next: b4 Grimalkin, b7 ack wave, b9 audio, b10 ruin stone; a3-a8;
-  c1-c6 (delegation split per the directive).
+- **b10 #204 ruin stone SHIPPED** (PR #238): order-enforced rune pair
+  at the recovery beat, zero sim/combat changes, door-chain seeds all
+  safe. CHOICE-LOG carries the ritual-vs-difficulty adjudication + the
+  guardian-wake escalation offer (one word flips it).
+- Next: b4 Grimalkin, b7 ack wave, b9 audio; a3-a8; c1-c6
+  (delegation split per the directive).
 - Spoiler bar reminders for b1: Rags early-volume-safe; "Magical Door".
 
 ## 📋 QUEUE (value order)
