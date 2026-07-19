@@ -1531,3 +1531,7 @@ events, and result files live in the gitignored
 - **wolf_companion / razorbeak_companion follower visuals alias the same
   adult sheets at reduced render_scale** (0.26 / 0.6) — reads fine in
   motion; bespoke pup/chick idles would land with the prop pass above.
+- [ ] b1 #199: Rags INTERIM sprite = goblin_sword sheet at 0.08 + green-shift
+  entity tint — replace wholesale with the c3 bespoke (small frame, black
+  hair, crimson eyes, rag-browns per profile); swap the sprites.json `rags`
+  entry + test_sprite_registry count rows together.

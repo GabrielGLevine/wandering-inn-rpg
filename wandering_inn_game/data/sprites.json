@@ -5033,7 +5033,7 @@
  },
  "rags": {
   "directional": true,
-  "render_scale": 0.08,
+  "render_scale": 0.09,
   "animations": {
    "idle": {
     "sheet_down": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",

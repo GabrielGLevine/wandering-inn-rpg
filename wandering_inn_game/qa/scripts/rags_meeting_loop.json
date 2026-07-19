@@ -1,0 +1,209 @@
+{
+ "_comment": "b1 #199 canonical: the Rags meeting end-to-end on the gates-met fixture \u2014 approach, meeting graph (terse-voice hub -> name -> ask -> price), SUPPLY close (mending_draught consumed, carved_chess_pawn granted, quest chieftains_price completes, resolution grant deposits under GH#211 weighting: persuaded_someone+3/befriended_moments+4/heard_gossip+3 at grant_scale 1.0 = integer banks). The absent-arm refusal is its own canonical (rags_gate_check) on the sibling fixture \u2014 assert_event_absent is whole-run, so the two legs cannot share a script. Seed 9 (fixture rng_state overrides).",
+ "fixture_save": "rags_gates_met_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "approach_rags_south_rise"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    19
+   ]
+  },
+  {
+   "_comment": "One step south lands adjacent (16,20), facing the watcher at (16,21).",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "You. The one who didn't kill."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "rags_meeting_open"
+  },
+  {
+   "_comment": "Option 1 = 'Who are you?' (banks met_rags, starts the quest).",
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "met_rags"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "chieftains_price"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Rags. Chieftain."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "'What do you want?' -> the problem beat.",
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Watch came. Goblins hurt. Not begging."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "'What's the trade?' banks rags_price_named -> price node.",
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "rags_price_named"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "This. Carved it. For medicine."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "SUPPLY close: option 1 hands the draught (item-gated, visible with it in pack). Consumes it, banks helped_rags_tribe + rags_meeting_settled, grants the pawn.",
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "helped_rags_tribe"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "chieftains_price"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "carved_chess_pawn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Good trade. Inn Human plays chess. Tell her: Rags wins next one."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Close the sealed node.",
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "GH#211 resolution grant landed as integer banks (grant_scale 1.0, decay-exempt).",
+   "action": "assert_state",
+   "path": "accomplishments.persuaded_someone",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.befriended_moments",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.rags_meeting_settled",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  }
+ ]
+}

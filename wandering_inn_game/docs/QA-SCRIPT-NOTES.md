@@ -154,3 +154,5 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `gate_visual_check` | 9 | full | `gate_visual_start` | GH#184: Liscor gatehouse + street arch render and the gate transition survives (windowed screenshots; headless-honest asserts) |
 | `credits_visual_check` | 9 | full | `—` | GH#147/About: Settings Credits panel renders 4 sections + 2 links (windowed screenshot of the panel incl. Back row) |
 | `mobile_tap_check` | 9 | full | `mobile_tap_start` | GH#196/#197/#202: title-art tap clears the gesture gate; real-paging dialogue advanced by panel taps (qa_real_paging opt-out, page events pinned 1..4); last-page tap defers to options; interact-nothing renders but stays OUT of Recent Messages (recent_count 1) |
+| `rags_meeting_loop` | 9 | full | `rags_gates_met_start` | b1 #199: gated Rags meeting -> SUPPLY close (draught consumed, pawn granted, quest completes, #211 grant banks) |
+| `rags_gate_check` | 9 | full | `rags_gate_unmet_start` | b1 #199: encounter_when absent-arm refusal (hunted-the-camp fixture) -- gate toast, no dialogue; the arm's can-fail proof |
