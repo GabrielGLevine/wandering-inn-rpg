@@ -193,6 +193,8 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 		return false
 	if s.has("social_talked") and not (s["social_talked"] is Dictionary):
 		return false
+	if s.has("fractional_bank") and not (s["fractional_bank"] is Dictionary):
+		return false
 	if s.has("entity_first_use") and not (s["entity_first_use"] is Dictionary):
 		return false
 	if s.has("gold") and not (s["gold"] is int or s["gold"] is float):

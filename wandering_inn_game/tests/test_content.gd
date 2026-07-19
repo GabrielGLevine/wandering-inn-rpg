@@ -17,6 +17,20 @@ const PLAYER_STRING_FILES := [
 
 
 
+## GH#211 review LOW-4: a victory_toast carrier's FIRST on_victory id keys the
+## first-win==1 toast check; under challenge weighting the literal won_combat
+## counter is fractional, so a won_combat-first carrier would toast on the
+## wrong win. Data rule: victory_toast requires a quest-style first id.
+func _validate_victory_toast_keys(maps: Dictionary) -> void:
+	for map_id: String in maps:
+		for ent: Dictionary in maps[map_id].get("entities", []):
+			if not ent.has("victory_toast"):
+				continue
+			var victories: Variant = ent.get("on_victory", "won_combat")
+			var first := String((victories if victories is Array else [victories])[0])
+			assert(first != "won_combat", "%s/%s: victory_toast carrier's first on_victory id must not be won_combat (fractional under GH#211 weighting)" % [map_id, String(ent.get("id", "?"))])
+
+
 ## GH#155 review L2: on a skill-gated prop, every id in on_skill_use.remove_item
 ## (and its variants) must also appear in requires_item -- otherwise the gate
 ## passes without the item and remove_item silently no-ops (free craft).
@@ -136,6 +150,7 @@ func _init() -> void:
 	_validate_class_gains(classes, produced_accomplishments)
 	_validate_class_level_tables(classes)
 	_validate_consume_subset(WISceneCatalog.compose()["maps"])
+	_validate_victory_toast_keys(WISceneCatalog.compose()["maps"])
 	_validate_economy_prices(scene, graphs, items)
 	_validate_class_skill_grant_ids(classes, skill_ids)
 	_validate_class_skill_grant_ids_shape_cases()

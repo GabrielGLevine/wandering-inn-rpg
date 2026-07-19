@@ -70,9 +70,13 @@ func _enemy_party_power(combat: WICombat) -> float:
 		var c: Dictionary = combat.combatants[id]
 		if String(c[WIKeys.SIDE]) != "enemy":
 			continue
-		if not _power_levels.has(id):
+		# TEMPLATE_ID, never the runtime id: duplicate roster members get
+		# suffixed runtime ids (goblin_raider_2) that would always miss the
+		# data-keyed catalog (review HIGH-1, 2026-07-19).
+		var template_id := String(c.get(WIKeys.TEMPLATE_ID, id))
+		if not _power_levels.has(template_id):
 			return 0.0
-		levels.append(_power_levels[id])
+		levels.append(_power_levels[template_id])
 	if levels.is_empty():
 		return 0.0
 	var k: float = float((_class_catalog.get("meta", {}) as Dictionary).get("power_k", 1.55))
@@ -110,10 +114,16 @@ func resolve(combat: WICombat, encounter_id: String, dormant_encounters: Array[S
 		var enabled := bool(_challenge_cfg.get("enabled", false))
 		var adversity := 1.0
 		if enabled:
-			var prior_wins := int(_accomplishment_count.call(String(vid_list[0])))
+			# Decay keys on a dedicated integer per-ENCOUNTER counter, banked
+			# below — never on vid_list[0]: a won_combat-first encounter would
+			# key decay on the GLOBAL count, and fractional won_combat stops
+			# incrementing under gray-band grinds, exactly where decay must
+			# engage (review MEDIUM-2, 2026-07-19).
+			var prior_wins := int(_accomplishment_count.call("fought_%s" % encounter_id))
 			var player_power := WIProgression.effective_power(classes, _class_catalog)
 			adversity = challenge_weight(_challenge_cfg, player_power, _enemy_party_power(combat)) \
 					* repetition_decay(_challenge_cfg, prior_wins)
+			_record_accomplishment.call("fought_%s" % encounter_id, 1)
 		for vid: Variant in vid_list:
 			if enabled and String(vid) == "won_combat":
 				_deposit("won_combat", adversity, fractional_bank)

@@ -207,3 +207,24 @@ cross-release index of them.
   their gates (design doc §1 updated in place). Also: enemies missing
   `power_level` yield a NEUTRAL 1.0 weight (rollout-safe until the
   authoring pass lands).
+- **#211 step-2 review fixes (2026-07-19, all landed pre-flag-flip)**:
+  (1) enemy power lookup keys on TEMPLATE_ID (duplicate roster members
+  get suffixed runtime ids — the review proved every multi-enemy fight
+  would have silently neutralized); (2) repetition decay keys on a new
+  integer `fought_<encounter_id>` counter, enabled-path only (the
+  first-on_victory key was global for won_combat-first encounters AND
+  stopped counting under gray grinds); (3) wrong-typed fractional_bank
+  now rejected pre-mutation like every sibling save field. ADJUDICATED
+  (review LOW-5): bounty "win N fights" conditions + erin_errand's
+  won_combat gate become adversity-scaled when the flag flips —
+  ACCEPTED as coherent (bounties reward real fighting; Act-I par
+  fights weigh ~1.0 so the errand gate is unaffected in practice);
+  flip = exempt those readers explicitly.
+- **#211 power_level authoring (2026-07-19)**: 53 fields spliced from
+  the delegated proposal (scratchpad/power-level-proposal.md reasoning
+  preserved in git history of this entry's commit); four flags
+  adjudicated — raskghar_awakened 9.0 MECHANICAL reading (canon-L20
+  flavor loses to harness placement), rift_vermin T2 anchor (T4 reuse
+  understates conservatively), golems base-stat values (rank-scaling
+  interplay = follow-up if Pallass pacing reads wrong), relc 14.0
+  directed. pc carries NO power_level (live-derived) — tripwired.

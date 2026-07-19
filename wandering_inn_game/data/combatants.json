@@ -19,6 +19,7 @@
   },
   {
    "id": "relc",
+   "power_level": 14.0,
    "display_name": "Relc",
    "sprite": "relc",
    "combat_scale": 0.61,
@@ -40,6 +41,7 @@
   {
    "_comment": "Temporary [Animate Dead] companion: deliberately fragile, plain-melee, and skillless; Wave-B gated cells own its measured combat envelope.",
    "id": "skeleton_ally",
+   "power_level": 1.5,
    "display_name": "Raised Skeleton",
    "sprite": "skeleton_ally",
    "side": "player",
@@ -58,6 +60,7 @@
   {
    "_comment": "Voice/canon precedent: the #51 gate NPC (data/skeleton_scene.json's `klbkch` entity, whose talk_pool is precise/courteous/dry, never jokey) -- twin shortswords.",
    "id": "klbkch",
+   "power_level": 6.5,
    "display_name": "Klbkch",
    "sprite": "klbkch",
    "side": "player",
@@ -79,6 +82,7 @@
   {
    "_comment": "Fields only when `hunter_will_come` is banked (data/dialogue/riverfarm_hunter.json's own come-along beat, at the village) -- never on `met_relc` alone.",
    "id": "riverfarm_hunter",
+   "power_level": 10.5,
    "display_name": "The Hunter",
    "sprite": "a_hunter",
    "side": "player",
@@ -98,6 +102,7 @@
   },
   {
    "id": "goblin_raider",
+   "power_level": 2.0,
    "display_name": "Goblin Raider",
    "sprite": "goblin_base",
    "side": "enemy",
@@ -116,6 +121,7 @@
   {
    "_comment": "GH#90 area_skill AI-arm adoption: gains `icy_floor` (EXISTING skill, unmodified -- a shaman's second hex, not just fire) alongside flame_bolt (now `applies.burning`, see skills.json).",
    "id": "goblin_shaman",
+   "power_level": 2.5,
    "display_name": "Goblin Shaman",
    "sprite": "goblin_female",
    "side": "enemy",
@@ -136,6 +142,7 @@
   },
   {
    "id": "cave_spider",
+   "power_level": 1.8,
    "display_name": "Cave Bat",
    "sprite": "bat",
    "side": "enemy",
@@ -153,6 +160,7 @@
   },
   {
    "id": "goblin_chieftain",
+   "power_level": 4.5,
    "display_name": "Goblin Chieftain",
    "sprite": "goblin_sword",
    "side": "enemy",
@@ -173,6 +181,7 @@
   {
    "_comment": "str/weapon_die carry real crushing-pincer damage on the hits that DO land -- canon calls it dangerous enough that 'goblin hunting packs kill them WITH casualties'.",
    "id": "rock_crab",
+   "power_level": 5.0,
    "display_name": "Rock Crab",
    "sprite": "rock_crab",
    "combat_scale": 0.55,
@@ -192,6 +201,7 @@
   },
   {
    "id": "training_dummy_a",
+   "power_level": 0.2,
    "display_name": "Training Dummy",
    "sprite": "training_dummy",
    "side": "enemy",
@@ -209,6 +219,7 @@
   },
   {
    "id": "training_dummy_b",
+   "power_level": 0.2,
    "display_name": "Training Dummy",
    "sprite": "training_dummy",
    "side": "enemy",
@@ -227,6 +238,7 @@
   {
    "_comment": "Broad shield-like carapace, eight-leg silhouette, and dedicated directional combat animations distinguish it from Sewer Bats.",
    "id": "shield_spider",
+   "power_level": 4.0,
    "display_name": "Shield Spider",
    "sprite": "shield_spider",
    "combat_scale": 0.3,
@@ -246,6 +258,7 @@
   {
    "_comment": "Wiki lacks a named sewer-rat monster, so realized SPRITE-HONESTLY as cave bats (`bat` sheet, same as cave_spider's 'Cave Bat') -- canon-plausible tunnel vermin, flagged generic-diegetic per the spec.",
    "id": "sewer_vermin",
+   "power_level": 3.0,
    "display_name": "Sewer Bat",
    "sprite": "bat",
    "side": "enemy",
@@ -264,6 +277,7 @@
   {
    "_comment": "FICTION FLOOR (binding on any future retune): an elite Raskghar must STRICTLY dominate a plain goblin_raider on every combat axis -- currently str 11>10, con 14>9, weapon_die 5>4.",
    "id": "raskghar_scout",
+   "power_level": 5.0,
    "display_name": "Raskghar Scout",
    "sprite": "raskghar_scout",
    "combat_scale": 0.64,
@@ -283,6 +297,7 @@
   {
    "_comment": "The Awakened Raskghar BOSS -- canon (a Raskghar that ate a Gnoll's heart, permanently smarter, matches a Level-20 warrior).",
    "id": "raskghar_awakened",
+   "power_level": 9.0,
    "display_name": "Awakened Raskghar",
    "sprite": "raskghar_awakened",
    "combat_scale": 0.81,
@@ -304,6 +319,7 @@
   {
    "_comment": "CANON-PLAUSIBLE, wiki.wanderinginn.com/Magical_Rats: 'Magical Rats' are rodents drawn to ambient/leaking magic ('any place with magic'), display diverse powers incl.",
    "id": "rift_vermin_a",
+   "power_level": 6.0,
    "display_name": "Rift Vermin",
    "sprite": "bat",
    "side": "enemy",
@@ -321,6 +337,7 @@
   },
   {
    "id": "rift_vermin_b",
+   "power_level": 6.0,
    "display_name": "Rift Vermin",
    "sprite": "bat",
    "side": "enemy",
@@ -339,6 +356,7 @@
   {
    "_comment": "`ai: ranged` so combat_ai.gd's ranged profile actually fires it (see wi-adding-an-encounter's autoplay gotcha: a melee-profile combatant never casts).",
    "id": "rift_vermin_c",
+   "power_level": 6.5,
    "display_name": "Ember-Touched Vermin",
    "sprite": "bat",
    "side": "enemy",
@@ -360,6 +378,7 @@
   {
    "_comment": "Ruin_guardian -- the anchor-stone pedestal's warden (beat-3 recovery run; the entity lives in ruin_surface, the pedestal gate is wired separately).",
    "id": "ruin_guardian",
+   "power_level": 8.0,
    "display_name": "Ruin Warden",
    "sprite": "training_dummy",
    "combat_scale": 1.15,
@@ -381,6 +400,7 @@
   {
    "_comment": "TRAP: one shared combatant id cannot serve two contexts wanting different behavior -- there is no per-encounter AI override, and the two gated cells were edge-pinned in OPPOSITE directions off this one id.",
    "id": "ruin_ward_a",
+   "power_level": 5.0,
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
    "combat_scale": 0.85,
@@ -400,6 +420,7 @@
   {
    "_comment": "GH#90 support_skill AI-arm adoption: gains `guarding_ward` (a small ally heal + `applies.guarded`) -- ONLY this ward, not ruin_ward_a, the SAME asymmetric-pair precedent river_wolf_a/b vs c and briar_collector_deep_a vs b already establish.",
    "id": "ruin_ward_b",
+   "power_level": 5.5,
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
    "combat_scale": 0.85,
@@ -421,6 +442,7 @@
   {
    "_comment": "There is no per-encounter AI override mechanism; a distinct id IS the override, same roster-only pattern.",
    "id": "snare_ward_a",
+   "power_level": 11.0,
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
    "combat_scale": 0.85,
@@ -439,6 +461,7 @@
   },
   {
    "id": "snare_ward_b",
+   "power_level": 11.0,
    "display_name": "Lesser Ward",
    "sprite": "training_dummy",
    "combat_scale": 0.85,
@@ -458,6 +481,7 @@
   {
    "_comment": "Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); this roster is the witch's craft animating that plant into a debt-collecting construct, not an invented species.",
    "id": "briar_collector_a",
+   "power_level": 8.0,
    "display_name": "Briar Collector",
    "sprite": "briar_collector",
    "side": "enemy",
@@ -476,6 +500,7 @@
   {
    "_comment": "Briar_collectors' second member -- see briar_collector_a's _comment for the full canon cite.",
    "id": "briar_collector_b",
+   "power_level": 8.0,
    "display_name": "Briar Collector",
    "sprite": "briar_collector",
    "side": "enemy",
@@ -493,6 +518,7 @@
   },
   {
    "id": "briar_collector_deep_a",
+   "power_level": 9.5,
    "display_name": "Deep Briar Collector",
    "sprite": "briar_collector_deep",
    "side": "enemy",
@@ -513,6 +539,7 @@
   {
    "_comment": "Briar_collectors_deep's second member -- see briar_collector_deep_a's _comment for the canon cite + escalation rationale.",
    "id": "briar_collector_deep_b",
+   "power_level": 9.5,
    "display_name": "Deep Briar Collector",
    "sprite": "briar_collector_deep",
    "side": "enemy",
@@ -531,6 +558,7 @@
   {
    "_comment": "River wolf, `river_wolf_pack` roster (arena `village_edge_night`, spawns only under the night phase gate -- unreachable at day by design).",
    "id": "river_wolf_a",
+   "power_level": 7.0,
    "display_name": "River Wolf",
    "sprite": "river_wolf",
    "side": "enemy",
@@ -548,6 +576,7 @@
   },
   {
    "id": "river_wolf_b",
+   "power_level": 7.0,
    "display_name": "River Wolf",
    "sprite": "river_wolf",
    "side": "enemy",
@@ -566,6 +595,7 @@
   {
    "_comment": "River_wolf_pack's third member, the pack's alpha -- see river_wolf_a's _comment for the canon cite.",
    "id": "river_wolf_c",
+   "power_level": 8.5,
    "display_name": "River Wolf Alpha",
    "sprite": "river_wolf",
    "side": "enemy",
@@ -585,6 +615,7 @@
   },
   {
    "id": "footpad_lookout",
+   "power_level": 3.0,
    "display_name": "Footpad",
    "sprite": "human_laborer",
    "side": "enemy",
@@ -603,6 +634,7 @@
   {
    "_comment": "Alley_footpads' second member -- see footpad_lookout's own _comment for the canon-plausibility cite + the LOW-lethality design contract.",
    "id": "footpad_bruiser",
+   "power_level": 3.5,
    "display_name": "Footpad",
    "sprite": "human_laborer",
    "side": "enemy",
@@ -621,6 +653,7 @@
   {
    "_comment": "The game's FIRST all-human combatant family, per spec sec.2: 'his hired blades = the first all-human combatant family (art: doublets + clubs/knives -- NOT Watch-alike; distinct palette)'.",
    "id": "hired_blade_leader",
+   "power_level": 11.0,
    "display_name": "Hired Blade",
    "sprite": "hired_blade",
    "side": "enemy",
@@ -641,6 +674,7 @@
   {
    "_comment": "Hired_blades' first knife-thug -- see hired_blade_leader's own _comment for the canon-plausibility cite + the first-all-human-family design contract.",
    "id": "hired_blade_knife_a",
+   "power_level": 7.5,
    "display_name": "Hired Blade",
    "sprite": "citizen_f",
    "side": "enemy",
@@ -659,6 +693,7 @@
   {
    "_comment": "#49: sprite varied to `human_laborer` (ALREADY-registered directional human rig, idle+walk) so all 3 roster members read distinctly (leader keeps `hired_blade`, thug A is `citizen_f`, thug B is `human_laborer`).",
    "id": "hired_blade_knife_b",
+   "power_level": 7.5,
    "display_name": "Hired Blade",
    "sprite": "human_laborer",
    "side": "enemy",
@@ -677,6 +712,7 @@
   {
    "_comment": "con17 reflects his canon 'brick-like physique' AND is a harness-derived ceiling, not an arbitrary pick: below ~14 he goes down in 90%+ of hired_blades fights (too fragile for a come-along ally to feel like a real participant).",
    "id": "wilovan",
+   "power_level": 11.5,
    "display_name": "Wilovan",
    "sprite": "wilovan",
    "side": "player",
@@ -700,6 +736,7 @@
   {
    "_comment": "int18 -> max_mp = 8+9 = 17 (WICombat's own formula) -- spending MP on ice_shard/frost_bolt draws down the SAME pool mana_shield drains from, a real offense/defense tension by design.",
    "id": "ceria",
+   "power_level": 12.5,
    "display_name": "Ceria Springwalker",
    "sprite": "ceria",
    "side": "player",
@@ -721,6 +758,7 @@
   },
   {
    "id": "yvlon",
+   "power_level": 12.5,
    "display_name": "Yvlon Byres",
    "sprite": "yvlon",
    "side": "player",
@@ -742,6 +780,7 @@
   {
    "_comment": "`basic_swordwork` + `quick_slash` mirrors klbkch's exact kit shape -- flavor only, never AI-called by name (see klbkch's own record).",
    "id": "ksmvr",
+   "power_level": 11.5,
    "display_name": "Ksmvr",
    "sprite": "ksmvr",
    "side": "player",
@@ -764,6 +803,7 @@
   {
    "_comment": "Re-measured GATED at win_rate=0.86 / median_rounds=6 / rounds min 5 max 9 (inside the 0.55-0.95 / 3-12 contract with real margin both directions, no >12 tail).",
    "id": "vault_construct",
+   "power_level": 17.0,
    "display_name": "Guardian Construct",
    "sprite": "vault_construct",
    "combat_scale": 0.36,
@@ -788,6 +828,7 @@
   {
    "_comment": "`ai:ranged` realizes the heat-blast antlers via the EXISTING `flame_bolt` skill (goblin_shaman's own spell_damage bolt, no new skills.json entry) rather than an invented breath weapon.",
    "id": "corusdeer",
+   "power_level": 3.5,
    "display_name": "Stray Corusdeer",
    "sprite": "corusdeer",
    "side": "enemy",
@@ -807,6 +848,7 @@
   },
   {
    "id": "razorbeak_a",
+   "power_level": 1.5,
    "display_name": "Razorbeak",
    "sprite": "razorbeak",
    "side": "enemy",
@@ -825,6 +867,7 @@
   {
    "_comment": "Razorbeak nest's second member -- see razorbeak_a's own _comment for the canon cite + the `coward` profile rationale.",
    "id": "razorbeak_b",
+   "power_level": 1.5,
    "display_name": "Razorbeak",
    "sprite": "razorbeak",
    "side": "enemy",
@@ -843,6 +886,7 @@
   {
    "_comment": "Mothbear, T3 Invrisil-boulevard NIGHT-ONLY pack encounter (`boulevard_mothbears`, drawn to the boulevard's lanterns).",
    "id": "mothbear_a",
+   "power_level": 7.0,
    "display_name": "Mothbear",
    "sprite": "mothbear",
    "side": "enemy",
@@ -861,6 +905,7 @@
   {
    "_comment": "Boulevard_mothbears' pack alpha -- see mothbear_a's own _comment for the canon cite.",
    "id": "mothbear_b",
+   "power_level": 8.0,
    "display_name": "Mothbear",
    "sprite": "mothbear",
    "side": "enemy",
@@ -881,6 +926,7 @@
   {
    "_comment": "damage_reduction 2 models the armored carapace (lighter than rock_crab's 8 -- an ambush hunter, not a slow tank).",
    "id": "kingslayer_spider",
+   "power_level": 16.0,
    "display_name": "Kingslayer Spider",
    "sprite": "kingslayer_spider",
    "side": "enemy",
@@ -902,6 +948,7 @@
   {
    "_comment": "`ai:caster` (EXISTING `flame_bolt` skill reflavored as a superheated forge-bolt, no new skills.json entry) is REQUIRED, not decorative -- the melee profile never casts (the documented autoplay gotcha).",
    "id": "forge_golem",
+   "power_level": 15.0,
    "display_name": "Stone Golem",
    "sprite": "forge_golem",
    "side": "enemy",
@@ -922,6 +969,7 @@
   },
   {
    "id": "watchgolem_a",
+   "power_level": 12.5,
    "display_name": "Stone Golem",
    "sprite": "watchgolem",
    "side": "enemy",
@@ -941,6 +989,7 @@
   {
    "_comment": "The market guard pair's escort half -- see watchgolem_a's own _comment for the canon cite + the paired-guard rationale.",
    "id": "watchgolem_b",
+   "power_level": 13.0,
    "display_name": "Stone Golem",
    "sprite": "watchgolem",
    "side": "enemy",
@@ -962,6 +1011,7 @@
   {
    "_comment": "Balance: sim_combat_batch.gd RIVERFARM_CELLS' `riverfarm_thicket_patch_t3_solo`, GATED 0.55-0.95 at `t3_warrior10` (measured 0.81 -- solo, no hunter ally, the renewable-cull's own design point).",
    "id": "thicket_remnant_a",
+   "power_level": 7.5,
    "display_name": "Thicket Remnant",
    "sprite": "briar_collector",
    "side": "enemy",
@@ -973,6 +1023,7 @@
   {
    "_comment": "Riverfarm_thicket_patch's second remnant -- see thicket_remnant_a's own _comment for the full canon cite + distinct-id rationale.",
    "id": "thicket_remnant_b",
+   "power_level": 7.5,
    "display_name": "Thicket Remnant",
    "sprite": "briar_collector",
    "side": "enemy",
@@ -984,6 +1035,7 @@
   {
    "_comment": "GH#156 tamed companion ([Lesser Bond], wolf-den prop). River-wolf frame at companion tuning: con down from 12 so it stays precious, not a second PC. Boon skills (basic_command_boon/pack_bond_boon) are injected at roster build, never listed here.",
    "id": "wolf_companion",
+   "power_level": 3.0,
    "display_name": "Bonded Wolf",
    "sprite": "river_wolf",
    "side": "player",
@@ -995,6 +1047,7 @@
   {
    "_comment": "GH#156 tamed companion ([Lesser Bond], razorbeak-chick prop). Frailer than the wolf, faster to the flank. ai skirmisher NOT coward -- a fleeing ally reads as a bug.",
    "id": "razorbeak_companion",
+   "power_level": 2.5,
    "display_name": "Bonded Razorbeak",
    "sprite": "razorbeak",
    "side": "player",

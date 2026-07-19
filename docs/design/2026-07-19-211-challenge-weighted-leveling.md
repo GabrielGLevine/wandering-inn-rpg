@@ -63,8 +63,14 @@ not hand-picked; the doc's numbers are starting points.
 
 ## 3. Repetition decay (per-encounter-id)
 
-Kill count source: the encounter's first `on_victory` counter (already
-banked once per win, per-encounter-id by construction — no new state).
+Kill count source — REFINED AT REVIEW (2026-07-19): a dedicated integer
+`fought_<encounter_id>` counter banked on every weighted victory. The
+doc's original key (first `on_victory` counter) breaks twice on
+won_combat-first encounters: the count is GLOBAL across encounters, and
+fractional won_combat stops incrementing under gray-band grinds — the
+exact case decay exists for. Banked only when the flag is on (disabled
+path stays byte-identical; pre-flip grind history starts at zero, same
+no-retroactive-credit stance as the accumulators).
 
 ```
 decay = 1.0 / (1.0 + decay_rate * ln(1 + prior_wins))   decay_rate 0.9

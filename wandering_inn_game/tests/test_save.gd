@@ -365,6 +365,9 @@ func _init() -> void:
 	var frac_restored := _new_game()
 	assert(WISave.apply(frac_restored, JSON.parse_string(JSON.stringify(WISave.serialize(frac_original)))), "fractional save applies")
 	assert(is_equal_approx(float(frac_restored.fractional_bank.get("melee_hit", 0.0)), 0.75) and is_equal_approx(float(frac_restored.fractional_bank.get("won_combat", 0.0)), 0.25), "fractional_bank round-trips exactly")
+	var bad_frac_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_frac_data["state"] as Dictionary)["fractional_bank"] = "corrupt"
+	assert(not WISave.apply(_new_game(), bad_frac_data), "wrong-typed fractional_bank rejected before any mutation")
 
 	var street_v3_original := _new_game()
 	street_v3_original.transition("street", Vector2i(0, 0))
