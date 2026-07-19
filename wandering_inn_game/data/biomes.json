@@ -22,7 +22,8 @@
    7,
    21
   ],
-  "_comment_floor": "Warm plank swatch from Interior_Walls_01 bottom-left (tavern hall floor); variants via floor_layers."
+  "_comment_floor": "Warm plank swatch from Interior_Walls_01 bottom-left (tavern hall floor); variants via floor_layers.",
+  "interact_nothing": "Nothing there — just the inn's old boards, and the faint smell of something Erin burned once, permanently."
  },
  "street": {
   "footstep_family": "stone",
@@ -48,7 +49,8 @@
    0,
    0
   ],
-  "blocked_tile_px": 16
+  "blocked_tile_px": 16,
+  "interact_nothing": "Nothing there. A Drake shoulders past; Liscor has no patience for loiterers."
  },
  "cave": {
   "footstep_family": "stone",
@@ -72,7 +74,8 @@
   "skirt": [
    2,
    3
-  ]
+  ],
+  "interact_nothing": "Nothing there. Just stone, and the dark listening back."
  },
  "floodplains": {
   "footstep_family": "earth",
@@ -98,7 +101,8 @@
   "skirt": [
    0,
    0
-  ]
+  ],
+  "interact_nothing": "Nothing there — grass, wind, and somewhere below it all, water thinking about flooding."
  },
  "garden": {
   "footstep_family": "earth",
@@ -118,7 +122,8 @@
   "skirt": [
    0,
    0
-  ]
+  ],
+  "interact_nothing": "Nothing there. The garden is quiet in a way that feels deliberate."
  },
  "riverfarm_village": {
   "footstep_family": "earth",
@@ -140,7 +145,8 @@
   "skirt": [
    0,
    0
-  ]
+  ],
+  "interact_nothing": "Nothing there. Wheat-dust and river air, and someone's dog considering you from a doorway."
  },
  "witch_hollow": {
   "footstep_family": "earth",
@@ -161,7 +167,8 @@
   "skirt": [
    2,
    2
-  ]
+  ],
+  "interact_nothing": "Nothing there. Though the trees give the distinct impression of having just stopped talking."
  },
  "invrisil_street": {
   "footstep_family": "stone",
@@ -182,7 +189,8 @@
   "skirt": [
    0,
    0
-  ]
+  ],
+  "interact_nothing": "Nothing there. The City of Adventurers doesn't even slow down to notice you looking."
  },
  "brothers_parlor": {
   "footstep_family": "wood",
@@ -204,7 +212,8 @@
   "skirt": [
    7,
    21
-  ]
+  ],
+  "interact_nothing": "Nothing there. The furniture is bolted down anyway — hats stay on heads for a reason."
  },
  "invrisil_alley": {
   "footstep_family": "stone",
@@ -226,7 +235,8 @@
   "skirt": [
    8,
    17
-  ]
+  ],
+  "interact_nothing": "Nothing there. In this alley, that's probably good news."
  },
  "dungeon": {
   "footstep_family": "stone",
@@ -247,7 +257,8 @@
   "skirt": [
    8,
    2
-  ]
+  ],
+  "interact_nothing": "Nothing there. In this place, check twice anyway."
  },
  "pallass_market": {
   "footstep_family": "stone",
@@ -267,7 +278,8 @@
   "skirt": [
    0,
    0
-  ]
+  ],
+  "interact_nothing": "Nothing there. In Pallass, even the empty spots look zoned and permitted."
  },
  "pallass_forge": {
   "footstep_family": "stone",
@@ -288,6 +300,7 @@
   "skirt": [
    0,
    0
-  ]
+  ],
+  "interact_nothing": "Nothing there — just heat shimmer and the tier's endless clang of someone improving something."
  }
 }

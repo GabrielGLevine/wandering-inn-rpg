@@ -95,6 +95,24 @@ func _first_pickup_hint_text() -> String:
 	return "Press %s — your pack." % WIInputHints.label("inventory")
 
 
+## GH#171 item 7: empty interacts answer in the current biome's voice
+## (biomes.json `interact_nothing`, presentation-only) instead of a flat
+## "Nothing there." -- which stays as the fallback for biomes without a line.
+func _interact_nothing_text() -> String:
+	if Game.sim != null:
+		var maps: Dictionary = WIDataRegistry.scene_config().get("maps", {})
+		var map_cfg: Dictionary = maps.get(Game.sim.current_map, {})
+		var biome_id := String(map_cfg.get("biome", "inn"))
+		var line := String((WIDataRegistry.biomes().get(biome_id, {}) as Dictionary).get("interact_nothing", ""))
+		if line != "":
+			return line
+	return "Nothing there."
+
+
+func _first_wake_hint_text() -> String:
+	return "New morning. Every key and control is listed under %s — Settings — Help." % WIInputHints.label("cancel")
+
+
 func _hint_text() -> String:
 	return "%s — menu (save/load)   %s — journal   %s — inventory" % [
 		WIInputHints.label("cancel"), WIInputHints.label("journal"), WIInputHints.label("inventory"),
@@ -105,6 +123,11 @@ var _first_pickup_hint_pending := false
 ## Static lifetime is intentional: UI destruction must not replay the hint.
 ## The script-level hook catches GAME_RESET even before an instance exists.
 static var _first_pickup_hint_shown := false
+## GH#171 first-waking controls pointer -- same static-lifetime contract.
+static var _first_wake_hint_shown := false
+## True from first-wake until the hint actually RENDERS -- toast-queue
+## clears (map change, dialogue) re-queue it instead of eating it.
+var _first_wake_hint_pending := false
 static var _hint_reset_hooked := false
 
 var _conversation_open := false
@@ -115,10 +138,12 @@ var _toast_panel_height := TOAST_PANEL_BASE_SIZE.y
 static func _reset_first_pickup_hint(type: String, _payload: Dictionary) -> void:
 	if type == WIEvents.GAME_RESET:
 		_first_pickup_hint_shown = false
+		_first_wake_hint_shown = false
 
 
 static func reset_hints() -> void:
 	_first_pickup_hint_shown = false
+	_first_wake_hint_shown = false
 
 
 func _ready() -> void:
@@ -229,7 +254,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 				_first_pickup_hint_shown = true
 				_queue_toast(_first_pickup_hint_text())
 		WIEvents.INTERACT_NOTHING:
-			_queue_toast("Nothing there.")
+			_queue_toast(_interact_nothing_text())
 		WIEvents.DIALOGUE_LINE:
 			# An empty speaker (ambient/narration lines, e.g. the Invrisil
 			# crowd extras) must not render a bare leading ": " -- prefix
@@ -246,6 +271,14 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_clear_toast()
 		WIEvents.UI_COMBAT_HIDDEN:
 			_hint_panel.show()
+		WIEvents.UI_SLEEP_VEIL_FINISHED:
+			# GH#171: one pointer at the full key reference, on the genuine
+			# first waking only (times_slept == 1 filters loaded veteran
+			# saves whose next sleep is not their first).
+			if not _first_wake_hint_shown and Game.sim != null and Game.sim.times_slept == 1:
+				_first_wake_hint_shown = true
+				_first_wake_hint_pending = true
+				_queue_toast(_first_wake_hint_text())
 		WIEvents.DIALOGUE_STARTED:
 			_conversation_open = true
 			_apply_toast_position()
@@ -274,6 +307,9 @@ func _show_dialogue_line(text: String, fitted: String) -> void:
 func _clear_toast() -> void:
 	_toast_panel.hide()
 	_toast_queue.clear()
+	if _first_wake_hint_pending:
+		_toast_queue.append(_first_wake_hint_text())
+
 
 
 func _apply_toast_position() -> void:
@@ -347,6 +383,8 @@ func _drain_toasts() -> void:
 	_toast_draining = true
 	while not _toast_queue.is_empty():
 		var text: String = _toast_queue.pop_front()
+		if _first_wake_hint_pending and text == _first_wake_hint_text():
+			_first_wake_hint_pending = false
 		recent_messages.append(text)
 		while recent_messages.size() > RECENT_MESSAGES_CAP:
 			recent_messages.pop_front()
