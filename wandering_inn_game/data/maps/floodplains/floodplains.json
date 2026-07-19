@@ -1529,7 +1529,7 @@
    "display_name": "Wounded Corusdeer",
    "sprite": "corusdeer",
    "tint": [0.6, 0.52, 0.47],
-   "observe": "A corusdeer, down in the grass with a leg it won't put weight on. Its antlers barely glow. It watches you the way anything hurt watches anything larger.",
+   "observe": "A corusdeer, down in the grass with a leg it won't put weight on. Its antlers barely glow. It watches you the way anything hurt watches anything larger. It would let patient hands close, and hands that tend enough hurt beasts learn something no drill yard teaches.",
    "on_interact_accomplishment": "soothed_a_beast",
    "once_per_waking": true,
    "once_per_waking_toast": "It has let you close once today. Don't spend what little trust it has.",
@@ -1558,7 +1558,7 @@
    "observe": "A scrape under the boulder line, and in it one wolf pup, ribs showing, too young to be alone. The pack that left it is not coming back.",
    "requires_skill": "lesser_bond",
    "skill_hint_toast": "It watches your hands. Whatever you mean to offer it, offer it properly.",
-   "locked_toast": "The pup shrinks back. Whatever you meant to do, you don't know how to do it gently enough yet.",
+   "locked_toast": "The pup shrinks back. Whatever you meant to do, you don't know how to do it gently enough yet. The kind of hands it would trust learn on hurt beasts first.",
    "companion_source": {
     "companion_id": "wolf_companion",
     "kind": "tamed",
@@ -1575,7 +1575,7 @@
    "observe": "A razorbeak chick, blown or chased from the nest scrape, hissing at the whole world from behind a tussock. The nest is close. The parents are not.",
    "requires_skill": "lesser_bond",
    "skill_hint_toast": "It stops hissing when you crouch. Interested, then — if you make the offer the right way.",
-   "locked_toast": "It snaps at your fingers. Fair enough.",
+   "locked_toast": "It snaps at your fingers. Fair enough. Nothing wild takes an offer from hands that have never tended anything.",
    "companion_source": {
     "companion_id": "razorbeak_companion",
     "kind": "tamed",

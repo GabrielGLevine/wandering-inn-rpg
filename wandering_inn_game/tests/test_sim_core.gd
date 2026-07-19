@@ -2803,6 +2803,20 @@ func _init() -> void:
 	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "Rust holds the bars, not a lock. The phial crate you eased down the rungs is gone from the ledge below. Collected, unbroken. Somewhere down there, someone's working glass got to keep being glass."),
 		"the grate's delivered observe override renders (the only ack surface its door_when leaves reachable)")
 
+	# --- b7 #212: the bond-path rumor keys on the Tamer chain's entry
+	# counter (no canonical fixture banks soothed_a_beast outside the tamer
+	# loops, which pin other surfaces). ---
+	var selys_row: Dictionary = (_load_json("res://data/maps/liscor/guild.json")["entities"] as Array).filter(func(e: Variant) -> bool: return String((e as Dictionary).get("id", "")) == "selys")[0]
+	ack_counts.clear()
+	ack_counts["soothed_a_beast"] = 1
+	ack_soc.talk_pool_line(selys_row, {})
+	assert(ack_lines[-1].begins_with("Word came up you looked in on that lame corusdeer."),
+		"selys's wolf-pup signpost renders once the player has soothed a beast")
+	ack_counts["pallass_sponsored"] = 1
+	ack_soc.talk_pool_line(selys_row, {})
+	assert(ack_lines[-1].begins_with("Krshia's stone, market row"),
+		"an active story relay outranks the standing bond-path signpost")
+
 	# --- GH#163 review MEDIUM: the tier LOCK must survive a rank shift ---
 	var tier_cc: Dictionary = combat_config.duplicate(true)
 	tier_cc["classes"] = _load_json("res://data/classes.json")
