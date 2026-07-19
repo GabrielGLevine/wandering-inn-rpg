@@ -136,6 +136,13 @@ on the range (a full 111-cell batch is ~4 min; a 3-cell range is seconds).
 Full batch runs ONCE at the end as the gate, not per tuning iteration.
 
 
+### Suites whose asserts DON'T stop the run (2026-07-19, cost two lied tail-reads)
+`test_content.gd`'s asserts print `SCRIPT ERROR: Assertion failed` and the
+suite CONTINUES to its final `PASS` line — a `tail -1` read shows green
+over a real red (same family as test_effect_text's quit(1)-prints-PASS).
+The zero-noise grep is the ONLY honest detector for these suites; never
+verdict any unit run from its last line alone.
+
 ### The local unit bar must mirror CI's THREE checks (2026-07-17 incident)
 A validator that reports via `quit(1)` keeps EXECUTING to the end of _init --
 so its log still prints `PASS` and only the EXIT CODE is red. A grep-only

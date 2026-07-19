@@ -165,6 +165,12 @@ player-visible feature.
 - `ci_sweep.sh --touching` maps `data/quests.json` to ZERO scripts (the
   quest surface joins the src/** false-safe class) — run the quest
   canonicals explicitly on quest-data edits.
+- `click_dialogue_option` takes `"option"` (1-based), NOT `"index"` — a
+  wrong key silently no-ops the click (zero events; cost one hang).
+  Graph dialogues pin `dialogue_node` `{speaker, text}` subsets
+  (`ui_dialogue_rendered` is the plain line-panel path only);
+  `item_gained` payloads key `"item"`; `assert_state` on a MISSING
+  path ERRORS — use `assert_event_absent` for never-banked counters.
 - Comment keys must NEVER go inside `payload_contains` — the subset
   match treats them as required payload keys (cost one hang).
 
