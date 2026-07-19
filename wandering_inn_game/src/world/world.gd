@@ -114,6 +114,7 @@ var _atmosphere: WIAtmosphere
 var _light_count := 0
 var _ambience_count := 0
 var _sway_material: ShaderMaterial
+var _visual_factory: WIEntityVisualFactory
 var _sneak_shimmer_material: ShaderMaterial
 var _vignette: ColorRect
 
@@ -129,6 +130,7 @@ func _ready() -> void:
 	_camera.make_current()
 	_sway_material = ShaderMaterial.new()
 	_sway_material.shader = SWAY_SHADER
+	_visual_factory = WIEntityVisualFactory.new(CELL, _sway_material)
 	_sneak_shimmer_material = ShaderMaterial.new()
 	_sneak_shimmer_material.shader = WATER_SHIMMER_SHADER
 	# Parented under `_camera` (not this World node
@@ -510,28 +512,7 @@ func _build_floor() -> void:
 func _build_field_blocked_props() -> void:
 	for cell: Vector2i in _field_blocked_prop_plan:
 		var sprite_id := String(_field_blocked_prop_plan[cell])
-		var frames: SpriteFrames = WISpriteRegistry.frames_for(sprite_id)
-		var animation := &"idle_down" if frames.has_animation(&"idle_down") else &"idle"
-		var frame_texture := frames.get_frame_texture(animation, 0)
-		assert(frame_texture != null, "blocked prop %s needs a frame" % sprite_id)
-		var spr := Sprite2D.new()
-		# GH#169: pixel sprites stay crisp at ANY render_scale (the 0.55 rock
-		# crab blurred under the default Linear filter); UI chrome keeps Linear.
-		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		spr.name = "BlockedProp_%d_%d" % [cell.x, cell.y]
-		spr.texture = frame_texture
-		spr.centered = false
-		spr.position = Vector2(cell) * CELL
-		var catalog_entry: Dictionary = WISpriteRegistry.entry_for(sprite_id)
-		var scale_value := float(catalog_entry.get("render_scale", 1.0))
-		spr.scale = Vector2(scale_value, scale_value)
-		var frame_size := frame_texture.get_size()
-		var anchor := WISpriteRegistry.anchor_for(sprite_id)
-		spr.offset = Vector2(
-			CELL * 0.5 / scale_value - anchor.x * frame_size.x,
-			CELL / scale_value - anchor.y * frame_size.y
-		)
-		_entities_root.add_child(spr)
+		_entities_root.add_child(_visual_factory.make_blocked_prop(cell, sprite_id))
 
 
 func _build_water_shimmer() -> void:
@@ -938,77 +919,10 @@ func _make_entity_visual(
 	sway: bool = false,
 	field_y_sort_bias_override: Variant = null,
 ) -> Node2D:
-	var holder := Node2D.new()
-	holder.position = Vector2(cell) * CELL
-	var uses_sprite := false
-	if sprite_id != "" and WISpriteRegistry.has_sprite(sprite_id):
-		var spr := AnimatedSprite2D.new()
-		# GH#169: pixel sprites stay crisp at ANY render_scale (the 0.55 rock
-		# crab blurred under the default Linear filter); UI chrome keeps Linear.
-		spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		spr.sprite_frames = WISpriteRegistry.frames_for(sprite_id)
-		spr.centered = false
-		var facing_anim := "idle_side" if facing in ["left", "right"] else "idle_%s" % facing
-		var anim := "idle_down" if spr.sprite_frames.has_animation("idle_down") else "idle"
-		if facing != "" and spr.sprite_frames.has_animation(facing_anim):
-			anim = facing_anim
-			spr.flip_h = facing == "left"
-		spr.play(anim)
-		if tint is Array and (tint as Array).size() == 3:
-			var tint_values := tint as Array
-			spr.modulate = Color(float(tint_values[0]), float(tint_values[1]), float(tint_values[2]))
-		if sway:
-			spr.material = _sway_material
-		var catalog_entry: Dictionary = WISpriteRegistry.entry_for(sprite_id)
-		if catalog_entry.has("render_scale"):
-			var s := float(catalog_entry["render_scale"])
-			spr.scale = Vector2(s, s)
-		# `field_y_sort_bias_px` (sprites.json, opt-in, SIGNED -- negative pulls
-		# the key north, positive pushes it south; inn_roof's +20 is the first
-		# positive consumer) lets a
-		# catalog entry pull its own `holder`'s Y-SORT KEY north without
-		# moving the sprite: `holder.position.y` gets the bias (sorts as if
-		# further back), while `spr`/the shadow below get the bias
-		# SUBTRACTED BACK OUT of their own (holder-relative) position so the
-		# rendered pixels land exactly where the true cell puts them -- net
-		# zero visual shift, sort-only effect. (An earlier version of this
-		# fix used a raw `z_index`, which is a canvas-layer-GLOBAL sort key,
-		# not scoped to y-sort siblings -- it drew the boss BEHIND THE FLOOR
-		# TILES too, since those default to z_index 0, making it vanish
-		# outright rather than just tuck behind the PC. Bias must stay
-		# WITHIN the y-sort comparison, hence the position trick.)
-		var y_sort_bias := (
-			float(field_y_sort_bias_override)
-			if field_y_sort_bias_override is float or field_y_sort_bias_override is int
-			else float(catalog_entry.get("field_y_sort_bias_px", 0.0))
-		)
-		holder.position.y += y_sort_bias
-		var frame_tex := spr.sprite_frames.get_frame_texture(anim, 0)
-		var frame_size := frame_tex.get_size() if frame_tex != null else Vector2(CELL, CELL)
-		var anchor := WISpriteRegistry.anchor_for(sprite_id)
-		spr.position = Vector2(
-			CELL * 0.5 - anchor.x * frame_size.x * spr.scale.x,
-			CELL - anchor.y * frame_size.y * spr.scale.y - y_sort_bias
-		)
-		if bool(catalog_entry.get("shadow", false)):
-			var shadow := Sprite2D.new()
-			# GH#169: pixel sprites stay crisp at ANY render_scale (the 0.55 rock
-			# crab blurred under the default Linear filter); UI chrome keeps Linear.
-			shadow.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			shadow.texture = WISpriteRegistry.shadow_texture()
-			shadow.position = Vector2(CELL * 0.5, CELL - 2.0 - y_sort_bias)
-			var shadow_w := clampf(frame_size.x * spr.scale.x / 24.0, 0.6, 2.5)
-			shadow.scale = Vector2(shadow_w, shadow_w * 0.8)
-			holder.add_child(shadow)
-		holder.add_child(spr)
-		uses_sprite = true
-	else:
-		var rect := ColorRect.new()
-		rect.color = fallback_color
-		rect.size = Vector2(CELL - 8, CELL - 8)
-		rect.position = Vector2(4, 4)
-		holder.add_child(rect)
-	holder.set_meta("uses_sprite", uses_sprite)
+	# Construction lives in WIEntityVisualFactory (#194b seam 1); this wrapper
+	# owns what needs World state: light spawning (_atmosphere/_light_count)
+	# and the attach into _entities_root. Call sites unchanged.
+	var holder := _visual_factory.make(cell, sprite_id, tint, fallback_color, facing, sway, field_y_sort_bias_override)
 	if not light.is_empty():
 		_spawn_light(holder, light)
 	_entities_root.add_child(holder)
