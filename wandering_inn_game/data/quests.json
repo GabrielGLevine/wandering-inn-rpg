@@ -194,7 +194,6 @@
 					"accomplishment": "helped_rags_tribe",
 					"text": "You handed over medicine from your own pack.",
 					"grant": {
-						"persuaded_someone": 3,
 						"befriended_moments": 4,
 						"heard_gossip": 3
 					}

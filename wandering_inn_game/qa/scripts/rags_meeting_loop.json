@@ -1,5 +1,5 @@
 {
- "_comment": "b1 #199 canonical: the Rags meeting end-to-end on the gates-met fixture \u2014 approach, meeting graph (terse-voice hub -> name -> ask -> price), SUPPLY close (mending_draught consumed, carved_chess_pawn granted, quest chieftains_price completes, resolution grant deposits under GH#211 weighting: persuaded_someone+3/befriended_moments+4/heard_gossip+3 at grant_scale 1.0 = integer banks). The absent-arm refusal is its own canonical (rags_gate_check) on the sibling fixture \u2014 assert_event_absent is whole-run, so the two legs cannot share a script. Seed 9 (fixture rng_state overrides).",
+ "_comment": "b1 #199 canonical: the Rags meeting end-to-end on the gates-met fixture \u2014 approach, meeting graph (terse-voice hub -> name -> ask -> price), SUPPLY close (mending_draught consumed, carved_chess_pawn granted, quest chieftains_price completes, resolution grant deposits under GH#211 weighting: befriended_moments+4/heard_gossip+3 at grant_scale 1.0 = integer banks). The absent-arm refusal is its own canonical (rags_gate_check) on the sibling fixture \u2014 assert_event_absent is whole-run, so the two legs cannot share a script. Seed 9 (fixture rng_state overrides).",
  "fixture_save": "rags_gates_met_start",
  "starts_at_title": true,
  "steps": [
@@ -138,7 +138,57 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "SUPPLY close: option 1 hands the draught (item-gated, visible with it in pack). Consumes it, banks helped_rags_tribe + rags_meeting_settled, grants the pawn.",
+   "_comment": "TWO-VISIT SHAPE (whole-branch review MAJOR-1): first visit only NAMES the price. Leave via come-back -> ask_back -> exit.",
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Fine. Waiting."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Second visit: hub variant 'Back. Good.'; visible options = About the medicine(1) / Draw steel(2) / Leave(3).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Back. Good."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Brought it?"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "SUPPLY close on the RETURN: draught consumed, banks fire, quest completes, grant deposits (de-minted: no persuaded_someone), pawn after quest_completed.",
    "action": "click_dialogue_option",
    "option": 1
   },
@@ -176,7 +226,6 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Close the sealed node.",
    "action": "click_dialogue_option",
    "option": 1
   },
@@ -186,15 +235,14 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "GH#211 resolution grant landed as integer banks (grant_scale 1.0, decay-exempt).",
-   "action": "assert_state",
-   "path": "accomplishments.persuaded_someone",
-   "equals": 3
-  },
-  {
    "action": "assert_state",
    "path": "accomplishments.befriended_moments",
    "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.heard_gossip",
+   "equals": 3
   },
   {
    "action": "assert_state",
@@ -202,8 +250,55 @@
    "equals": 1
   },
   {
+   "_comment": "Grant de-mint (review LOW-5): handing medicine is not persuasion.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "persuaded_someone"
+   }
+  },
+  {
    "action": "assert_event_absent",
    "type": "combat_started"
+  },
+  {
+   "_comment": "Settled-state guard (review MEDIUM-2): a THIRD interact shows the settled hub with no settle/steel options and no counter re-banks.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Good trade. Plains quiet. Go safe."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "rags_meeting_settled"
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "carved_chess_pawn"
+   },
+   "count": 1
   }
  ]
 }

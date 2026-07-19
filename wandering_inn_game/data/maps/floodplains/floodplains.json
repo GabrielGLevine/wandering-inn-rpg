@@ -1601,7 +1601,9 @@
    ],
    "conversation": "rags_meeting",
    "on_victory": [
-    "won_combat"
+    "won_combat",
+    "drove_off_rags",
+    "rags_meeting_settled"
    ],
    "encounter_when": {
     "requires": {
