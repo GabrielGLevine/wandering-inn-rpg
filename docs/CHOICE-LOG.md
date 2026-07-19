@@ -268,3 +268,16 @@ cross-release index of them.
   silhouette). ALSO: the shared-file checkout trap fired live during the
   validator mutation probe (wiped the uncommitted on_victory hunk,
   caught same-minute by re-grep) — the ledger rule held.
+- **b2 #218 adjudications (2026-07-19, design §5 + review)**: trust gate
+  = `brothers_job_done` (the #133 arc close) + `eyed_the_stash`
+  doorbell; ~1.4× fence premium, buy-only v1, no buyback (all 8 records
+  verified loss-making on resale, [Bargain] can't touch the node); two
+  uniques (gray feather, parlor coin), flavor-tier. Review wave:
+  phosphor pulled from the pool (Wilovan's shelf sells it — a fence
+  copy made his 20g click a deterministic gold-for-nothing no-op;
+  replaced with the traveler charm, sold nowhere else); patter
+  contraction pass (Ratici drops g's — his parlor talk-pool is the
+  register contract); hub line first-person; Wilovan hands trusted
+  players to the chest (shelf dead-end retired). Fence pool gains
+  bounty-style static validation (code-built graphs bypass the
+  dialogue validators).

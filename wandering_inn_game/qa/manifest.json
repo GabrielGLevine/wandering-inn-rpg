@@ -4083,6 +4083,60 @@
      "dialogue"
     ]
    }
+  },
+  {
+   "script": "ratici_fence_loop",
+   "seed": 9,
+   "fixture": "ratici_fence_start",
+   "note": "b2 #218: fence open (trust gate), EXACT day-0 slate, buy leg (gold/item/held-hides), sleep rotation to day-1 slate",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "brothers_parlor",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "ratici_fence_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "ratici_fence_gate_check",
+   "seed": 9,
+   "fixture": "ratici_fence_untrusted_start",
+   "note": "b2 #218: untrusted interact banks eyed_the_stash doorbell, NO fence dialogue (gate can-fail)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "brothers_parlor"
+    ],
+    "fixtures": [
+     "ratici_fence_untrusted_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
   }
  ]
 }

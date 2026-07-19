@@ -1044,6 +1044,36 @@
 			"price": 12,
 			"description": "A pawn whittled from floodplains driftwood, small enough to lose in a pocket. The knife-work is patient and exact.",
 			"lore": "Goblins carve what they cannot say. Whoever made this one watched a chessboard long enough to get the proportions right, and meant the gift to be understood as a move."
+		},
+		{
+			"id": "ratici_gray_feather",
+			"name": "Gray Feather Charm",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 1,
+			"damage_reduction": 0,
+			"resonance": 1,
+			"tier": "enchanted",
+			"price": 11,
+			"abilities": [],
+			"description": "A long gray wing-feather bound in waxed thread, worn soft at the spine. It sits very still in the hand.",
+			"lore": "Rooftop couriers swear a gray feather keeps the footing honest. Nobody asks which bird, or what it was owed, or by whom."
+		},
+		{
+			"id": "ratici_parlor_coin",
+			"name": "Parlor House Coin",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 1,
+			"tier": "enchanted",
+			"price": 13,
+			"abilities": [],
+			"description": "A brass house token stamped with a door that has no handle. The stamp is crisp; the establishment is not.",
+			"lore": "Certain doors in certain cities were opened by certain coins. The doors are gone. The coins kept their manners."
 		}
 	]
 }

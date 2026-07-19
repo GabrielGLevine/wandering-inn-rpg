@@ -1,0 +1,13 @@
+{
+	"_comment": "b2 Ratici's fence stock pool (design: docs/design/2026-07-19-b2-ratici-fence-design.md). Rotation: WIBounties.active_slate(pool, times_slept), 2 visible per waking, zero rng. price = ~1.4x catalog (the fence premium; uniques priced fresh in the same logic). patter = Ratici's ONE line per record — voice contract: character-profiles.md#ratici (Drake understatement, courtesy over menace, item never named straight, 'recover' never 'steal', <=1 dash). The two ratici_* uniques ship in items.json with this package (flavor-tier resonance 1, effect-text-pinned).",
+	"stock": [
+		{ "id": "fence_luck_band", "item": "copper_luck_band", "price": 6, "patter": "Small thing. Previous owner had less luck than it promised. You might do better." },
+		{ "id": "fence_ward_charm", "item": "hedge_ward_charm", "price": 13, "patter": "A hedge-witch's work. It kept somebody safe right up until it didn't. Clean history since." },
+		{ "id": "fence_fang_talisman", "item": "hunters_fang_talisman", "price": 20, "patter": "Recovered from a gentleman who no longer hunts. The tooth still remembers how." },
+		{ "id": "fence_traveler_charm", "item": "traveler_charm", "price": 7, "patter": "Old stones give these up after rain. This one came to me dry, which is its own story." },
+		{ "id": "fence_sachet", "item": "hollow_herb_sachet", "price": 9, "patter": "Smells better than where it came from. That's the whole story an' I'm keepin' it." },
+		{ "id": "fence_wardstone_bead", "item": "witch_wardstone_bead", "price": 22, "patter": "Riverfarm make. Fell off a wagon that was very careless about its beads." },
+		{ "id": "fence_gray_feather", "item": "ratici_gray_feather", "price": 15, "patter": "Feather off a bird that owed me. Settles the nerves up high, or so I'm told." },
+		{ "id": "fence_parlor_coin", "item": "ratici_parlor_coin", "price": 18, "patter": "A house coin from an establishment that no longer exists. Doors remember it fondly." }
+	]
+}
