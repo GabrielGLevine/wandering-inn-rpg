@@ -16,11 +16,23 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🏃 RUNNING (2026-07-18, v0.12.0 tagged)
-- **NEXT SESSION: execute GOAL.md** (v0.13 depth+polish wave charter,
-  user directive). Wave plan: docs/design/2026-07-18-v0.13-depth-polish-
-  wave.md; board #194-#225; #211 comments carry the leveling design
-  directives verbatim. First action: #194a WIInteractions seam.
+## 🏃 RUNNING (2026-07-19, v0.13 wave EXECUTING per GOAL.md)
+- **#194a seam 1 (WIInteractions) DONE pending merge**: PR #227
+  [ci-full] — extraction verbatim, 26/26 units, local sweep 139/139
+  zero-grep, 11-canonical sim-stream byte-identity, review 0C/0I/1M
+  (Minor: npc fallback DIALOGUE_LINE arm uncovered by detector set —
+  address at seam 2). Awaiting CI full-sweep job, then squash-merge.
+- **NEW TRAP (fold into AGENTS gotchas at next housekeeping commit)**:
+  a lambda Callable stored in a long-lived RefCounted module leaks
+  ObjectDB instances at exit (stash-verified); bound methods don't —
+  module wiring must use bound methods, never lambdas.
+- **#111 rename SPEC AUTHORED** (docs/design/2026-07-19-111-safe-
+  project-rename-spec.md, engine-source-cited): recommends first-boot
+  copy-migration + rename in one release, desktop→Pages→itch order,
+  fixture QA + two rehearsal legs. ENDS WITH GO/NO-GO ASK — see Taste
+  queue. Implementation stays USER-GATED.
+- Next: seam 2 (sleep-beat orchestration + toast stream), seam 3
+  (combat banking), then #211 challenge-weighted leveling design+sim.
 
 
 - **v0.12.0 SHIPPED** (Release + Pages both green) (freeze 619 ids, ZERO new frozen ids -- polish/copy
@@ -64,6 +76,11 @@ merged`), not here.
    Five flagged decisions in §8 need rulings before any lane dispatches.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
+
+- **#111 GO/NO-GO (spec ready)**: rename to "Wandering Inn RPG" via
+  first-boot save migration (Option A in the spec, §6) — GO dispatches
+  implementation as a v0.13-window package; NO-GO keeps v4 name (a
+  zero-risk itch-page-only cosmetic rename is available either way).
 
 - **#92 Minor:** a heal consumable used at full HP still consumes
   (matches the skill precedent; honest "Healed 0 HP" toast). Want
