@@ -896,6 +896,39 @@ func field_hotbar_loadout() -> Array:
 	return WIGame.apply_loadout(candidates, skill_loadout)
 
 
+## a7 #208: newly acquired FIELD skills join a CUSTOM loadout automatically
+## when there is room (AUTO mode — empty loadout — already shows every field
+## skill, so it needs nothing). Selection stays manual; presence becomes
+## automatic. Cap = 9: the number-key affordance is the bar's honest capacity
+## (CHOICE-LOG). Emits LOADOUT_CHANGED with auto:true per slotted skill.
+const AUTO_SLOT_CAP := 9
+
+
+func _auto_slot_new_field_skills(known_before: Array) -> void:
+	# Review HIGH: AUTO is decided on the item-filtered SKILL list, exactly
+	# as field_hotbar_loadout() decides it — an item-only loadout is still
+	# an AUTO field bar (main pins that), and appending a skill to it would
+	# collapse the bar to that one skill. The cap likewise counts only
+	# skill entries: the field bar's number keys never render item pins.
+	var slotted := 0
+	for raw: Variant in hotbar_loadout:
+		if not String(raw).begins_with("item:"):
+			slotted += 1
+	if slotted == 0:
+		return
+	for raw: Variant in known_skills():
+		var id := String(raw)
+		if known_before.has(id):
+			continue
+		if not bool((skills.get(id, {}) as Dictionary).get("field", false)):
+			continue
+		if hotbar_loadout.has(id) or slotted >= AUTO_SLOT_CAP:
+			continue
+		hotbar_loadout.append(id)
+		slotted += 1
+		_emit(WIEvents.LOADOUT_CHANGED, {"skill": id, "assigned": true, "auto": true, "loadout": hotbar_loadout.duplicate()})
+
+
 func loadout_toggle(skill_id: String) -> void:
 	var already := hotbar_loadout.has(skill_id)
 	if already:
@@ -1880,6 +1913,7 @@ const _EVOLUTION_WAITING_TOASTS := {
 
 
 func sleep() -> void:
+	var known_before_sleep: Array = known_skills().duplicate()
 	for encounter_id: String in warded_encounters.keys():
 		var ward: Dictionary = warded_encounters[encounter_id]
 		var remaining := int(ward.get("sleeps", 1)) - 1
@@ -1919,6 +1953,7 @@ func sleep() -> void:
 	record_accomplishment("slept")
 	_emit(WIEvents.PHASE_CHANGED, {"phase": phase()})
 	_sleep_beat.run(classes, accomplishments, _combat_config)
+	_auto_slot_new_field_skills(known_before_sleep)
 
 
 func _bank_reached_two_classes_if_earned() -> void:
@@ -1997,6 +2032,7 @@ func _resolve_evolutions() -> bool:
 
 
 func accept_consolidation() -> void:
+	var known_before_cons: Array = known_skills().duplicate()
 	if pending_consolidation.is_empty():
 		return
 	var offer := pending_consolidation
@@ -2014,6 +2050,7 @@ func accept_consolidation() -> void:
 	var target_name := String(_class_display_name(target))
 	_emit(WIEvents.TOAST, {"text": "[%s] and [%s] merge into [%s]!" % [parent_names[0], parent_names[1], target_name]})
 	_bank_reached_two_classes_if_earned()
+	_auto_slot_new_field_skills(known_before_cons)
 
 
 func decline_consolidation() -> void:
@@ -2021,8 +2058,15 @@ func decline_consolidation() -> void:
 		return
 	pending_consolidation = {}
 	_emit(WIEvents.CONSOLIDATION_DECLINED, {})
+	# Review MEDIUM-HIGH: a consolidation offer defers evolutions out of the
+	# sleep beat — the decline path resolves them HERE, after the sleep-end
+	# reconcile already ran, and the next sleep's snapshot would treat the
+	# evolved grants as old. Reconcile around this resolution or those field
+	# skills never auto-slot.
+	var known_before_evo: Array = known_skills().duplicate()
 	if not _resolve_evolutions():
 		_emit(WIEvents.TOAST, {"text": "You sleep soundly."})
+	_auto_slot_new_field_skills(known_before_evo)
 
 
 func _class_display_name(id: String) -> String:
