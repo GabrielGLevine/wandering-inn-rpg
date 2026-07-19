@@ -3,104 +3,653 @@
  "fixture_save": "door_chain_sequence_break_start",
  "starts_at_title": true,
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "_comment": "Move down to the 'Continue' row, confirm loads the door_chain_sequence_break_start manual slot.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "inn" },
-  { "action": "assert_state", "path": "player_cell", "equals": [9, 6] },
-
-  { "_comment": "== FIGHT FIRST, NO CONSULT: clear rift_vermin_leak (inn, 9,7) -- the fixture already faces it, no teleport needed. ==", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
-  { "action": "combat_autoplay", "max_turns": 300 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "on_victory fires [cleared_the_leak, door_understood, pedestal_unsealed] in that order -- door_understood crossing completes quest beat 1 (consult), all WITHOUT Pisces ever having been spoken to.", "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "door_understood" }, "timeout_sec": 5 },
-  { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "cleared_the_leak" } },
-  { "action": "assert_event_logged", "type": "accomplishment_recorded", "payload_contains": { "id": "pedestal_unsealed" } },
-  { "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "door_that_goes_elsewhere", "beat": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "entity_removed", "payload_contains": { "id": "rift_vermin_leak" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 5 },
-
-  { "_comment": "== FIRST-EVER PISCES CONTACT: teleport to street beside Pisces (30,5) -- the door_chain_fight/talk/scout precedent cell -- move up1, interact. First talk this waking plays his rotating pool line (SOCIAL S4); a second interact opens the real graph. ==", "action": "teleport", "map": "street", "cell": [30, 5] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Pisces" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "pisces_magic", "entity": "pisces" }, "timeout_sec": 5 },
-  { "_comment": "THE RECAP SURFACES: greet's dialogue_node (emitted synchronously as the graph opens, BEFORE ui_dialogue_shown -- must be waited on first, or the ui_dialogue_shown wait's cursor-advance would pass right over it) with door_understood==1 (recap's own gate, banked by the fight above) and recovered_anchor_stone==0. The normal 3-path consult opener is hidden; the Wave-A necromancy study option is independently visible. Exact-array match proves the recap is reachable without duplicating the normal opener.", "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Pisces", "options": [{ "text": "You're a mage. Teach me to cast.", "locked": false, "requirement": "" }, { "text": "Never mind.", "locked": false, "requirement": "" }, { "text": "About the pantry door — I understand what it is now. Where does that leave me?", "locked": false, "requirement": "" }, { "text": "The other art. The one you actually practice. Teach me.", "locked": false, "requirement": "" }] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "00_recap_option_visible" },
-  { "_comment": "Move to index 2 (the recap) and confirm.", "action": "move", "direction": "down", "steps": 2 },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "The recap node itself renders -- proof it's not just a hidden option but a real, reachable node.", "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Pisces", "text": "Then attend, because I dislike repeating myself. The door remembers being elsewhere; it wants an anchor to remember BY. East across the floodplains, well past the gate road, there is a seam of old dressed stone in the open grass — a ruin, collapsed and rude, but its plinth still cradles an anchor stone. Retrieve it. Krshia's resonant catalyst will attune the pairing. And do try not to die somewhere so architecturally disappointing." }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "01_pisces_recap" },
-  { "_comment": "'East past the gate road. Understood.' -- index 0, ends the conversation.", "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== the chain still completes: the ruin recovery run, same cells door_chain_fight uses. Teleport straight to the guardian alcove (16,8), west of ruin_guardian (17,8). ==", "action": "teleport", "map": "ruin_surface", "cell": [16, 8] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "ruin_surface" }, "timeout_sec": 5 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
-  { "action": "combat_autoplay", "max_turns": 300 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "cleared_ruin_guardian" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "entity_removed", "payload_contains": { "id": "ruin_guardian" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 5 },
-
-  { "_comment": "== open the pedestal (17,6): the gate (pedestal_unsealed) has been open since the FIRST fight -- teleport to (17,5), north of the pedestal. ==", "action": "teleport", "map": "ruin_surface", "cell": [17, 5] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "ruin_surface" }, "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "anchor_stone", "source": "anchor_stone_pedestal" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "recovered_anchor_stone" }, "timeout_sec": 5 },
-  { "_comment": "#148: recovered_anchor_stone now completes its OWN beat (recover_stone, index 1) -> beat advances to buy_catalyst (index 2).", "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "door_that_goes_elsewhere", "beat": 2 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "inventory", "contains": "anchor_stone" },
-
-  { "_comment": "== buy Krshia's resonant_catalyst (street, 13,2). Teleport to (13,3), the crate_light-derived approach cell. ==", "action": "teleport", "map": "street", "cell": [13, 3] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Krshia" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_crate" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Visible hub options: [0 'I'll look into it.', 1 'What's on the stall today?', 2 'Just visiting.', 3 sell-nav (ALWAYS-visible, appended last)] -- move to index 1 (same visible shape door_chain_fight's own tail asserts, identical accomplishments).", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia" }, "timeout_sec": 5 },
-  { "_comment": "Visible shop options: [0 charm, 1 knife, 2 cloak, 3 jerkin, 4 'Show me the charms.', 5 'Nothing today.'] -- move to index 4.", "action": "move", "direction": "down", "steps": 4 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia" }, "timeout_sec": 5 },
-  { "_comment": "Visible charms options: [0 ring, 1 handline, 2 whetstone, 3 hedge ward, 4 fang talisman, 5 stonescale, 6 resonant_catalyst, 7 'Back to the regular stall.'] -- move to index 6.", "action": "move", "direction": "down", "steps": 6 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "resonant_catalyst" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "bought_catalyst" }, "timeout_sec": 5 },
-  { "_comment": "#148: bought_catalyst now completes buy_catalyst (index 2) -> beat advances to `attune` (index 3), NOT quest completion (the door awakening completes the quest, door_awakening.json's subject). quest_completed asserted ABSENT at the tail.", "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "door_that_goes_elsewhere", "beat": 3 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia" }, "timeout_sec": 5 },
-  { "_comment": "catalyst_sold options: [0 'Show me the stall again.', 1 'My thanks, Krshia.'] -- move to index 1, end.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "Final state proof: the sequence-break path reaches the exact same recovery-complete state door_chain_fight's canonical does. #148: quest_completed must be ABSENT -- the `attune` beat awaits door_awakened.", "action": "assert_event_absent", "type": "quest_completed", "payload_contains": { "id": "door_that_goes_elsewhere" } },
-  { "action": "assert_state", "path": "accomplishments.door_understood", "equals": 1 },
-  { "action": "assert_state", "path": "accomplishments.recovered_anchor_stone", "equals": 1 },
-  { "action": "assert_state", "path": "accomplishments.bought_catalyst", "equals": 1 },
-  { "action": "assert_state", "path": "inventory", "contains": "resonant_catalyst" },
-  { "action": "assert_state", "path": "gold", "equals": 22 }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Move down to the 'Continue' row, confirm loads the door_chain_sequence_break_start manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    6
+   ]
+  },
+  {
+   "_comment": "== FIGHT FIRST, NO CONSULT: clear rift_vermin_leak (inn, 9,7) -- the fixture already faces it, no teleport needed. ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "on_victory fires [cleared_the_leak, door_understood, pedestal_unsealed] in that order -- door_understood crossing completes quest beat 1 (consult), all WITHOUT Pisces ever having been spoken to.",
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "door_understood"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleared_the_leak"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "pedestal_unsealed"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "door_that_goes_elsewhere",
+    "beat": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "rift_vermin_leak"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "_comment": "== FIRST-EVER PISCES CONTACT: teleport to street beside Pisces (30,5) -- the door_chain_fight/talk/scout precedent cell -- move up1, interact. First talk this waking plays his rotating pool line (SOCIAL S4); a second interact opens the real graph. ==",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    30,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Pisces"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pisces_magic",
+    "entity": "pisces"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE RECAP SURFACES: greet's dialogue_node (emitted synchronously as the graph opens, BEFORE ui_dialogue_shown -- must be waited on first, or the ui_dialogue_shown wait's cursor-advance would pass right over it) with door_understood==1 (recap's own gate, banked by the fight above) and recovered_anchor_stone==0. The normal 3-path consult opener is hidden; the Wave-A necromancy study option is independently visible. Exact-array match proves the recap is reachable without duplicating the normal opener.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Pisces",
+    "options": [
+     {
+      "text": "You're a mage. Teach me to cast.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Never mind.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "About the pantry door — I understand what it is now. Where does that leave me?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The other art. The one you actually practice. Teach me.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_recap_option_visible"
+  },
+  {
+   "_comment": "Move to index 2 (the recap) and confirm.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "The recap node itself renders -- proof it's not just a hidden option but a real, reachable node.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Then attend, because I dislike repeating myself. The door remembers being elsewhere; it wants an anchor to remember BY. East across the floodplains, well past the gate road, there is a seam of old dressed stone in the open grass — a ruin, collapsed and rude, but its plinth still cradles an anchor stone. Retrieve it. Krshia's resonant catalyst will attune the pairing. And do try not to die somewhere so architecturally disappointing."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_pisces_recap"
+  },
+  {
+   "_comment": "'East past the gate road. Understood.' -- index 0, ends the conversation.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== the chain still completes: the ruin recovery run, same cells door_chain_fight uses. Teleport straight to the guardian alcove (16,8), west of ruin_guardian (17,8). ==",
+   "action": "teleport",
+   "map": "ruin_surface",
+   "cell": [
+    16,
+    8
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "ruin_surface"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleared_ruin_guardian"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "ruin_guardian"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "_comment": "== open the pedestal (17,6): the gate (pedestal_unsealed) has been open since the FIRST fight -- teleport to (17,5), north of the pedestal. ==",
+   "action": "teleport",
+   "map": "ruin_surface",
+   "cell": [
+    17,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "ruin_surface"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "_comment": "b10 #204: rune pair NEAR (16,6) then FAR (15,4); socket read names the order. Bumps set facing.",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "rune_near_pressed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "rune_sequence_done"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "anchor_stone",
+    "source": "anchor_stone_pedestal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "recovered_anchor_stone"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#148: recovered_anchor_stone now completes its OWN beat (recover_stone, index 1) -> beat advances to buy_catalyst (index 2).",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "door_that_goes_elsewhere",
+    "beat": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "anchor_stone"
+  },
+  {
+   "_comment": "== buy Krshia's resonant_catalyst (street, 13,2). Teleport to (13,3), the crate_light-derived approach cell. ==",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    13,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Krshia"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "krshia_crate"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Visible hub options: [0 'I'll look into it.', 1 'What's on the stall today?', 2 'Just visiting.', 3 sell-nav (ALWAYS-visible, appended last)] -- move to index 1 (same visible shape door_chain_fight's own tail asserts, identical accomplishments).",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Visible shop options: [0 charm, 1 knife, 2 cloak, 3 jerkin, 4 'Show me the charms.', 5 'Nothing today.'] -- move to index 4.",
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Visible charms options: [0 ring, 1 handline, 2 whetstone, 3 hedge ward, 4 fang talisman, 5 stonescale, 6 resonant_catalyst, 7 'Back to the regular stall.'] -- move to index 6.",
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "resonant_catalyst"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "bought_catalyst"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#148: bought_catalyst now completes buy_catalyst (index 2) -> beat advances to `attune` (index 3), NOT quest completion (the door awakening completes the quest, door_awakening.json's subject). quest_completed asserted ABSENT at the tail.",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "door_that_goes_elsewhere",
+    "beat": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "catalyst_sold options: [0 'Show me the stall again.', 1 'My thanks, Krshia.'] -- move to index 1, end.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Final state proof: the sequence-break path reaches the exact same recovery-complete state door_chain_fight's canonical does. #148: quest_completed must be ABSENT -- the `attune` beat awaits door_awakened.",
+   "action": "assert_event_absent",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "door_that_goes_elsewhere"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.door_understood",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.recovered_anchor_stone",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.bought_catalyst",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "resonant_catalyst"
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 22
+  }
  ]
 }

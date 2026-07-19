@@ -2,7 +2,15 @@
  "_comment": "Entered ONLY from floodplains' `ruin_door` (door_when-gated)",
  "biome": "cave",
  "arrival_toasts": [
-  { "requires": { "door_understood": 1 }, "hide_when": { "recovered_anchor_stone": 1 }, "text": "East past the gate road — this is the ruin. The pedestal Pisces described is deeper in." }
+  {
+   "requires": {
+    "door_understood": 1
+   },
+   "hide_when": {
+    "recovered_anchor_stone": 1
+   },
+   "text": "East past the gate road — this is the ruin. The pedestal Pisces described is deeper in."
+  }
  ],
  "grid": {
   "width": 20,
@@ -127,7 +135,7 @@
    "toast": "The sentinel's face is gone, but its posture survives: shield toward the court, warning anyone who follows its gaze."
   },
   {
-   "_comment": "OR convergence: guardian or Pisces TALK/SKILL banks pedestal_unsealed; door-chain FIGHT alone does not. Unmet contains_when falls through to locked toast. First open atomically grants anchor_stone + anchor_sliver + recovered_anchor_stone; repeat is idempotent.",
+   "_comment": "OR convergence: pedestal_unsealed banks via the guardian court, Pisces TALK/SKILL, or the cellar fight on_victory (see inn.json). Unmet contains_when falls through to locked toast. First open atomically grants anchor_stone + anchor_sliver + recovered_anchor_stone; repeat is idempotent. b10 #204: recovery beat now ALSO needs rune_sequence_done (the flanking plate pair, west then east; socket read names the order).",
    "id": "anchor_stone_pedestal",
    "kind": "prop",
    "cell": [
@@ -148,12 +156,21 @@
    ],
    "contains_when": {
     "requires": {
-     "pedestal_unsealed": 1
+     "pedestal_unsealed": 1,
+     "rune_sequence_done": 1
     }
    },
    "on_open_accomplishment": "recovered_anchor_stone",
    "on_interact_accomplishment": "found_the_pedestal",
-   "toast": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea."
+   "toast": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea.",
+   "variants": [
+    {
+     "when": {
+      "pedestal_unsealed": 1
+     },
+     "toast": "The seal is broken, but the warding still holds the stone fast. Two spiral plates flank the court — the carving beside the pedestal looks like a beginning."
+    }
+   ]
   },
   {
    "id": "anchor_socket",
@@ -165,11 +182,11 @@
    "display_name": "Anchor-Stone Socket",
    "sprite": "pedestal",
    "requires_skill": "detect_magic",
-   "skill_hint_toast": "The socket's empty, but empty like a held breath.",
+   "skill_hint_toast": "The socket's empty, but empty like a held breath. The warding reads near-first — the spiral beside the pedestal, then its far twin.",
    "locked_toast": "A carved socket in the ruin stone. Whatever sat here, someone carried it off.",
    "on_skill_use": {
     "accomplishment": "detected_wardwork",
-    "toast": "[Detect Magic] — The socket still remembers its stone: a slow pulse, counting toward a door that already left."
+    "toast": "[Detect Magic] — The socket still remembers its stone: a slow pulse, counting toward a door that already left. The warding reads near-first: the spiral beside the pedestal, then its far twin."
    }
   },
   {
@@ -208,7 +225,11 @@
     {
      "item": "remedy_draught",
      "chance": 1.0
-    }, { "item": "guardian_ward_fragment", "chance": 1.0 }
+    },
+    {
+     "item": "guardian_ward_fragment",
+     "chance": 1.0
+    }
    ]
   },
   {
@@ -226,6 +247,43 @@
     "taken_toast": "The bones rise and fall into step behind you."
    },
    "observe": "Old bones, settled where they fell. They are not going anywhere. Probably."
+  },
+  {
+   "id": "rune_plate_near",
+   "kind": "prop",
+   "cell": [
+    16,
+    6
+   ],
+   "display_name": "A Warded Rune Plate",
+   "sprite": "pressure_plate",
+   "observe": "A palm-sized plate set flush beside the pedestal, cut with a spiral that walks inward. Faint warmth, like a banked coal.",
+   "on_interact_accomplishment": "rune_near_pressed",
+   "toast": "The spiral takes the press and holds a dull red glow. Something in the pedestal shifts its weight.",
+   "_comment": "b10 #204 recovery-beat puzzle, NEAR plate = FIRST in sequence (beside the pedestal). Far plate banks the sequence only when this one is lit."
+  },
+  {
+   "id": "rune_plate_far",
+   "kind": "prop",
+   "cell": [
+    15,
+    4
+   ],
+   "display_name": "A Warded Rune Plate",
+   "sprite": "pressure_plate",
+   "observe": "The near plate's twin, set apart in the rubble, spiral running the other way. Cold, until its partner isn't.",
+   "on_interact_accomplishment": "rune_far_cold",
+   "toast": "Cold stone, unlit. The spiral wants something the press alone doesn't give.",
+   "variants": [
+    {
+     "when": {
+      "rune_near_pressed": 1
+     },
+     "accomplishment": "rune_sequence_done",
+     "toast": "Both spirals light — red, then a clean white. The pedestal's seam exhales dust."
+    }
+   ],
+   "_comment": "b10 #204 FAR plate = SECOND: banks rune_sequence_done ONLY via the variant (near lit); base = wrong-order cold feedback. Order enforced with zero new sim code. Cell (15,4) chosen in-bounds + off every canonical walked cell (the first two placements collided with the promenade column and the GRID EDGE)."
   }
  ]
 }
