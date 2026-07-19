@@ -62,7 +62,9 @@ canon cites · current sprite state.
 - Gnoll [Shopkeeper], tall, broad, dignified.
 - Brown fur, silver-fang necklace signifier, market stall context.
 - Voice: measured, proud of her stock, Silverfang pragmatism; "Hrr."
-  verbal tic used SPARINGLY.
+  verbal tic used SPARINGLY. For variation, Gnoll speech can end
+  sentences with ", yes?" (user note 2026-07-19) — prefer it over a
+  second Hrr in any block of lines; applies to Gnolls generally.
 - Sprite: stand-in (upgrade queued — Gnoll = tall hyena-folk).
 
 ## Selys Shivertail

@@ -375,3 +375,8 @@ needs a reachability trace before shipping, not after review:
 - GDScript unit-arm trap: lambdas capture locals BY VALUE — mutate
   the captured dict (clear() + assign), never rebind, or the callback
   reads the stale dict forever.
+
+## Gnoll voice palette (user note 2026-07-19)
+Gnoll lines (Krshia especially) can end sentences with ", yes?" for
+verbal variation — prefer it over stacking "Hrr." (which stays
+standalone, capitalized, SPARING — at most one per block of lines).

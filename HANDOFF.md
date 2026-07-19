@@ -78,6 +78,10 @@ merged`), not here.
 
 ## 📋 QUEUE (value order)
 
+0b. **#247 Friends of the Inn (user idea)**: met canon NPCs rotate
+   through the inn as servable guests — spec-first (context-aware
+   dialogue: inn-specific lines, home-hub options REMOVED in inn
+   context; home-row gating; per-NPC QA census), board row d1.
 0. **#246 Import/Export Save (user directive, v0.13)**: Settings rows —
    export dumps the save file, import validates through WISave.apply()
    and never clobbers on failure; web (JavaScriptBridge download/file
