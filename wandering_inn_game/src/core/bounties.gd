@@ -147,15 +147,42 @@ static func build_picker_graph(slate: Array) -> Dictionary:
 	return {"start": "hub", "nodes": nodes}
 
 
-static func build_turnin_graph(met: bool) -> Dictionary:
+## b4 #219 review fix: a desk only settles its OWN paper. Private
+## (board:false) rows belong to Grimalkin's desk; guild rows to Selys's.
+## `giver` is display prose corpus-wide, so the machine key is the board
+## flag itself. A mismatched desk must not consume the held posting.
+static func turnin_is_foreign(row: Dictionary, voice: String) -> bool:
+	var private := not bool(row.get("board", true))
+	return (voice == "grimalkin") != private
+
+
+static func build_turnin_graph(met: bool, voice: String = "selys", foreign: bool = false) -> Dictionary:
+	# b4 #219: optional voice key; the default is byte-identical Selys for
+	# every existing caller. "grimalkin" covers his private study contracts —
+	# his not-done copy is deliberately honest for FOREIGN postings too
+	# ("I did not assign you that errand"), so his foreign arm reuses it;
+	# Selys gets her own foreign line (a met foreign posting must never
+	# render her paid-out copy — review catch, met-foreign case).
+	if voice == "grimalkin":
+		var g_text := "Incomplete measurements are noise. I did not assign you that errand, or you have not finished mine. Either way: come back with data."
+		if met and not foreign:
+			g_text = "Adequate. The numbers hold, which puts you above most of my subjects. Payment as contracted — precision costs, and I pay for it."
+		return {"start": "hub", "nodes": {"hub": {"speaker": "Grimalkin", "text": g_text, "options": [{"text": "Continue.", "end": true}]}}}
+	if foreign:
+		var f_text := "That's not Guild paper. Whoever wrote that contract pays for it — take it back to them. My ledger stays clean."
+		return {"start": "hub", "nodes": {"hub": {"speaker": "Selys", "text": f_text, "options": [{"text": "Continue.", "end": true}]}}}
 	var text := "The notice says proof. Bring the proof, not the story. The story's free and so is my time apparently."
 	if met:
 		text = "Done? …So it is. Here. Counted twice, because the last adventurer counted once, loudly, and was wrong. The Guild thanks you. I'm the Guild. So: thanks."
 	return {"start": "hub", "nodes": {"hub": {"speaker": "Selys", "text": text, "options": [{"text": "Continue.", "end": true}]}}}
 
 
-static func build_abandon_graph() -> Dictionary:
+static func build_abandon_graph(private: bool = false) -> Dictionary:
 	var text := "Hand it back? Fine. I'll cross it off: no pay, no mark against you. It goes back on the board for someone with follow-through."
+	if private:
+		# b4 #219 review fix: "goes back on the board" is fiction-false for
+		# a board:false contract — it was never on her board.
+		text = "Hand it back? Fine. That one never touched my board; private paper. Dropped. If the Magus minds, that's between you and him."
 	return {"start": "hub", "nodes": {"hub": {"speaker": "Selys", "text": text, "options": [{"text": "Continue.", "end": true}]}}}
 
 

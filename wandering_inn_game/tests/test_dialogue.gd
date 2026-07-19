@@ -79,6 +79,55 @@ func test_ctx_refresh_regates_mid_conversation() -> void:
 	assert(not texts.has("do deed"), "hide_when now hides the consumed option")
 
 
+# --- b4 #219 review fixes, pinned on the SHIPPED graph (not a synthetic
+# one): the casting row's caster gate has a negative proof (dropping the
+# requires would flip this), enrollment survives an accept-then-abandon
+# (the accepted_bounty_* hide_when lockout must never return), and both
+# first-completion hub variants are executable (no canonical reaches them).
+func test_grimalkin_studies_gates_on_the_real_graph() -> void:
+	var graph: Dictionary = _load_json("res://data/dialogue/pallass_grimalkin.json")
+
+	var _texts := func(opts: Array) -> Array:
+		return opts.map(func(o: Dictionary) -> String: return String(o["text"]))
+
+	# Non-caster, nothing held: studies node hides the casting row.
+	var ctx := {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "board_accepted": false}
+	var d := WIDialogue.new(graph, ctx, Callable())
+	d.begin()
+	var hub_texts: Array = _texts.call(d.current_options())
+	assert(hub_texts.has("About the studies."), "fresh hub offers the studies entry")
+	d.choose(hub_texts.find("About the studies."))
+	d.advance("studies")
+	var study_texts: Array = _texts.call(d.current_options())
+	assert(study_texts.has("Sign me on as a field subject. Three engagements, logged."), "field row is unconditioned")
+	assert(not study_texts.has("Measure my casting. Eight witnessed, as posted."),
+		"casting row HIDES for a non-caster (the row gate's negative proof)")
+
+	# Caster who accepted then ABANDONED the field study: both rows offer again.
+	var ctx2 := {"skills": [], "classes": {}, "accomplishments": {"learned_magic_from_pisces": 1, "accepted_bounty_grimalkin_study_combat": 1}, "names": {}, "board_accepted": false}
+	var d2 := WIDialogue.new(graph, ctx2, Callable())
+	d2.begin()
+	var hub2: Array = _texts.call(d2.current_options())
+	d2.choose(hub2.find("About the studies."))
+	d2.advance("studies")
+	var study2: Array = _texts.call(d2.current_options())
+	assert(study2.has("Sign me on as a field subject. Three engagements, logged."),
+		"an abandoned study re-offers (accepted_bounty_* counters never reset — hiding on them was the review's lockout)")
+	assert(study2.has("Measure my casting. Eight witnessed, as posted."), "caster sees the casting row")
+
+	# First-completion hub variants, both arms verbatim.
+	_events.clear()
+	var d3 := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {"completed_bounty_grimalkin_study_combat": 1}, "names": {}, "board_accepted": false}, _sink)
+	d3.begin()
+	assert(String(_events[0]["payload"]["text"]) == "The field subject returns. Your engagement data survived review. It is in the literature now; that is the only compliment I issue.",
+		"combat-study completion variant verbatim")
+	_events.clear()
+	var d4 := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {"completed_bounty_grimalkin_study_casting": 1}, "names": {}, "board_accepted": false}, _sink)
+	d4.begin()
+	assert(String(_events[0]["payload"]["text"]) == "The casting subject. Your wind held past the eighth measure, which surprised exactly one of us. Speak.",
+		"casting-study completion variant verbatim")
+
+
 func test_node_text_variants_fall_back_to_base_text_when_unmet() -> void:
 	_events.clear()
 	var graph := {"start": "hub", "nodes": {"hub": {
@@ -665,6 +714,7 @@ func _init() -> void:
 	test_race_requires_on_option_stays_visible_locked()
 	test_phase_requires_gates_text_variants_both_ways()
 	test_phase_requires_on_option_stays_visible_locked()
+	test_grimalkin_studies_gates_on_the_real_graph()
 
 	print("PASS: dialogue graphs walk, gate, hide, and end correctly")
 	quit(0)

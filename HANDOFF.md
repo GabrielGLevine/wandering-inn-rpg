@@ -17,6 +17,23 @@ note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
 ## 🏃 RUNNING (2026-07-19, v0.13 wave day 1 — 7 PRs merged)
+- **b4 #219 IN FLIGHT (branch pending)**: Grimalkin study contracts —
+  board:false private rows ×2 (16/24/32 anchored), hub→`studies` node
+  (slot bool + caster gates as sanctioned singles), turnin VOICE param
+  (4 unit arms; Selys default byte-pinned), `grimalkin_study_loop`
+  canonical GREEN seed 6 (mutual-exclusion option-array pins = the
+  single-slot proof; his not-done voice verbatim), re-gates green
+  (board_loop/bounty_rank_loop/pallass_walkthrough; pallass_peek exit
+  index re-derived after the hub gained rows). Full bar + review + PR
+  next. Design-doc correction logged: board_accepted bool HIDES both
+  directions — no visible-locked tease exists. WHOLE-BRANCH REVIEW
+  DONE (workflow, 14/14 confirmed): abandon-lockout hide_when killed,
+  desk/paper matching added (met foreign postings were consumed+paid
+  at the wrong desk — both directions live-reproed), his variant
+  de-Selys'd, row copy re-cut to corpus signature convention, three
+  new unit blocks. NOTE for the #211 taste read: study conditions ride
+  the same challenge-weighted counters as every combat bounty — grinds
+  starve them by design (adjudicated, CHOICE-LOG).
 - **#194 CLOSED** (god-file pair fully dissected): #227/#228/#229
   (wi_game 2345→2020: WIInteractions/WISleepBeat/WICombatBanking) +
   #231/#232 (world 1624→1435: WIEntityVisualFactory/WICameraController).

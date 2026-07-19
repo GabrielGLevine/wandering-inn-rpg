@@ -16,6 +16,17 @@ everything, contempt for imprecision, pays for data).
    board posting BLOCKS enrollment, with his refusal line carrying the
    fiction: "One ledger at a time. Finish what the board holds first."
    No silent eviction.
+   **Implementation correction (2026-07-19, capture run 2):** the
+   board_accepted bool gate HIDES in both directions (same as Selys's
+   own hub — board_loop's comments say so; the doc's "visible-locked
+   tease" assumption was wrong, and no refusal line renders). The
+   single-slot proof became the PAIR of exact option-array pins
+   (fresh hub shows the accept entry and not the turn-in; enrolled hub
+   the inverse). Also: gate composition (slot bool + caster
+   accomplishment) is not expressible in one option dict — the hub
+   gained ONE slot-gated entry ("About the studies.") into a `studies`
+   node whose per-row options carry the accomplishment gates. All
+   sanctioned singles, no whitelist change.
 3. **Turn-in in HIS voice**: `WIBounties.build_turnin_graph` gains
    optional `speaker`/`copy` params (defaults preserve Selys verbatim —
    byte-identical for every existing caller; the board-picker precedent
@@ -34,6 +45,21 @@ everything, contempt for imprecision, pays for data).
    "measurements incomplete" copy, which is fiction-true even for a
    foreign posting ("I did not assign you that errand. Finish it
    elsewhere."). The not-done copy covers both honestly.
+   **Review correction (2026-07-19, whole-branch review + live repro):**
+   FALSE for the MET-foreign case — turn_in_bounty checks only the held
+   row's own condition, so a met guild posting was consumed and paid at
+   his desk under his "Adequate" copy (mirror leak at Selys for a met
+   study). Fix shipped in the same PR: `WIBounties.turnin_is_foreign`
+   (machine key = the `board` flag itself; `giver` is display prose
+   corpus-wide) — a foreign posting at either desk renders a refusal
+   arm and is NEVER consumed. His refusal reuses the not-done copy
+   (honest by design); Selys gets her own foreign line. Unit-pinned,
+   all cells. Same review killed the accept options' `hide_when` on
+   accepted_bounty_* (never-reset counters = accept-then-abandon
+   permanently retired a study; the hub's slot gate already prevents
+   double-accept) and gave build_abandon_graph a private-paper variant
+   (her "goes back on the board" was fiction-false for board:false
+   rows).
 
 ## 2. The two study rows (`bounties.json`, board:false)
 

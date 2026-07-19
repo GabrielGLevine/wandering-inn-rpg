@@ -2714,6 +2714,46 @@ func _init() -> void:
 	assert(not gB.turn_in_bounty(), "prior culls never pay twice")
 	gB.abandon_bounty()
 
+	# --- b4 #219: turnin-graph voice param, all four arms (the grimalkin
+	# MET arm has no canonical crossing -- QA's lean study loop only reaches
+	# not-done -- so this is that copy's only executable proof; the selys
+	# arms pin the default stays byte-identical for every existing caller) ---
+	var tg_s_no: Dictionary = WIBounties.build_turnin_graph(false)
+	var tg_s_yes: Dictionary = WIBounties.build_turnin_graph(true, "selys")
+	var tg_g_no: Dictionary = WIBounties.build_turnin_graph(false, "grimalkin")
+	var tg_g_yes: Dictionary = WIBounties.build_turnin_graph(true, "grimalkin")
+	assert(String((tg_s_no["nodes"]["hub"] as Dictionary)["speaker"]) == "Selys"
+		and String((tg_s_no["nodes"]["hub"] as Dictionary)["text"]) == "The notice says proof. Bring the proof, not the story. The story's free and so is my time apparently.",
+		"voice default (omitted) stays Selys not-done verbatim")
+	assert(String((tg_s_yes["nodes"]["hub"] as Dictionary)["text"]).begins_with("Done? "),
+		"explicit selys met arm matches the shipped copy")
+	assert(String((tg_g_no["nodes"]["hub"] as Dictionary)["speaker"]) == "Grimalkin"
+		and String((tg_g_no["nodes"]["hub"] as Dictionary)["text"]) == "Incomplete measurements are noise. I did not assign you that errand, or you have not finished mine. Either way: come back with data.",
+		"grimalkin not-done arm verbatim")
+	assert(String((tg_g_yes["nodes"]["hub"] as Dictionary)["text"]) == "Adequate. The numbers hold, which puts you above most of my subjects. Payment as contracted — precision costs, and I pay for it.",
+		"grimalkin met arm verbatim (no canonical reaches it)")
+
+	# --- b4 #219 review fix: desk/paper matching. A desk only settles its
+	# own paper; a MET foreign posting must never render a paid arm (the
+	# review's live repro: road_cull consumed at Grimalkin's desk). ---
+	var guild_row := {"id": "bounty_road_cull"}
+	var private_row := {"id": "grimalkin_study_combat", "board": false}
+	assert(not WIBounties.turnin_is_foreign(guild_row, "selys"), "guild paper at Selys's desk is hers")
+	assert(WIBounties.turnin_is_foreign(guild_row, "grimalkin"), "guild paper at Grimalkin's desk is foreign")
+	assert(WIBounties.turnin_is_foreign(private_row, "selys"), "private paper at Selys's desk is foreign")
+	assert(not WIBounties.turnin_is_foreign(private_row, "grimalkin"), "private paper at his desk is his")
+	var tg_g_foreign: Dictionary = WIBounties.build_turnin_graph(true, "grimalkin", true)
+	assert(String((tg_g_foreign["nodes"]["hub"] as Dictionary)["text"]).begins_with("Incomplete measurements are noise."),
+		"met+foreign at his desk renders his not-done copy, never the paid arm")
+	var tg_s_foreign: Dictionary = WIBounties.build_turnin_graph(true, "selys", true)
+	assert(String((tg_s_foreign["nodes"]["hub"] as Dictionary)["text"]) == "That's not Guild paper. Whoever wrote that contract pays for it — take it back to them. My ledger stays clean.",
+		"met+foreign at her desk renders her foreign line verbatim, never the Guild-thanks payout copy")
+	var ab_private: Dictionary = WIBounties.build_abandon_graph(true)
+	assert(String((ab_private["nodes"]["hub"] as Dictionary)["text"]).begins_with("Hand it back? Fine. That one never touched my board"),
+		"private abandon drops the fiction-false 'goes back on the board' line")
+	assert(String((WIBounties.build_abandon_graph()["nodes"]["hub"] as Dictionary)["text"]).ends_with("for someone with follow-through."),
+		"default abandon copy stays byte-identical")
+
 	# --- GH#163 review MEDIUM: the tier LOCK must survive a rank shift ---
 	var tier_cc: Dictionary = combat_config.duplicate(true)
 	tier_cc["classes"] = _load_json("res://data/classes.json")

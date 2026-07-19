@@ -161,3 +161,4 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `ratici_fence_loop` | 9 | full | `ratici_fence_start` | b2 #218: fence open (trust gate), EXACT day-0 slate, buy leg (gold/item/held-hides), sleep rotation to day-1 slate |
 | `ratici_fence_gate_check` | 9 | full | `ratici_fence_untrusted_start` | b2 #218: untrusted interact banks eyed_the_stash doorbell, NO fence dialogue (gate can-fail) |
 | `hedault_fragment_loop` | 7 | full | `hedault_fragment_start` | b6 #221: guardian-fragment trade BY CHOICE -- yield preview, fragment consumed, wardstone granted, oblique lore node, one-shot hide |
+| `grimalkin_study_loop` | 6 | full | `grimalkin_study_start` | b4 #219: Grimalkin's private study contracts -- accept-at-hub via the studies node, single-slot mutual-exclusion option pins, turnin-graph voice param (his not-done arm verbatim) |

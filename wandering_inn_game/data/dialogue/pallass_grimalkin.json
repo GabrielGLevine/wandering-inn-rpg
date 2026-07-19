@@ -26,8 +26,46 @@
      "goto": "exam"
     },
     {
+     "text": "About the studies.",
+     "requires": {
+      "board_accepted": false
+     },
+     "_comment": "b4 #219 slot gate: a held posting blocks enrollment. The board_accepted bool gate HIDES (both directions, same as Selys's hub) — no visible-locked render exists; the study-loop canonical's mutual-exclusion option pins are the proof.",
+     "goto": "studies"
+    },
+    {
+     "text": "Reporting in on the study.",
+     "requires": {
+      "board_accepted": true
+     },
+     "effects": [
+      {
+       "open_board_turnin": "grimalkin"
+      }
+     ],
+     "end": true
+    },
+    {
      "text": "Just passing through.",
      "end": true
+    }
+   ],
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "completed_bounty_grimalkin_study_combat": 1
+      }
+     },
+     "text": "The field subject returns. Your engagement data survived review. It is in the literature now; that is the only compliment I issue."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "completed_bounty_grimalkin_study_casting": 1
+      }
+     },
+     "text": "The casting subject. Your wind held past the eighth measure, which surprised exactly one of us. Speak."
     }
    ]
   },
@@ -42,6 +80,51 @@
        "accomplishment": "grimalkin_examination_passed"
       }
      ],
+     "end": true
+    }
+   ]
+  },
+  "study_enrolled": {
+   "speaker": "Grimalkin",
+   "text": "Enrolled. Fight as you would; I will know if you perform for the ledger. Return when the numbers exist.",
+   "_comment": "b4 #219 enrollment ack. board_accepted:false on the hub's studies entry blocks accept while ANY posting is held (hidden, not locked); studies are re-acceptable after completion or abandon — delta rows are repeatable.",
+   "options": [
+    {
+     "text": "Understood.",
+     "end": true
+    }
+   ]
+  },
+  "studies": {
+   "speaker": "Grimalkin",
+   "text": "Two open protocols. Field engagements, or witnessed casting. Both pay on data, neither pays for stories.",
+   "options": [
+    {
+     "text": "Sign me on as a field subject. Three engagements, logged.",
+     "_comment": "b4 review fix: NO hide_when — accepted_bounty_* counters never reset, so hiding on them permanently retired the study after one accept-then-abandon (the hub's board_accepted:false gate already prevents double-accept while a posting is held; delta rows are repeatable by design).",
+     "effects": [
+      {
+       "accept_bounty": "grimalkin_study_combat"
+      }
+     ],
+     "goto": "study_enrolled"
+    },
+    {
+     "text": "Measure my casting. Eight witnessed, as posted.",
+     "requires": {
+      "accomplishment": {
+       "learned_magic_from_pisces": 1
+      }
+     },
+     "effects": [
+      {
+       "accept_bounty": "grimalkin_study_casting"
+      }
+     ],
+     "goto": "study_enrolled"
+    },
+    {
+     "text": "Another time.",
      "end": true
     }
    ]

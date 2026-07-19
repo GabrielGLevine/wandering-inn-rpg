@@ -291,3 +291,46 @@ cross-release index of them.
   fiction fixed via toast variant; fixture monotone-chain rule for the
   new counters deferred (the coherence validator whitelists chains —
   #122 grandfather precedent; follow-up ledgered).
+- **b4 #219 adjudications (2026-07-19)**: Grimalkin's study contracts
+  are PRIVATE postings (`board: false` — they never ride Liscor's
+  rotation; slate purity proven by board_loop's unchanged pins) with
+  the SOCIAL pillar tag (participation pays, the kills themselves
+  already pay combat XP). Two "no new code" deviations, both
+  3-line-class: the board:false row flag, and an optional string value
+  on `open_board_turnin` = the turnin VOICE key (value-less keeps
+  Selys byte-identical — unit-pinned all four voice×met arms; his MET
+  arm has no canonical crossing, so the unit pin is its only
+  executable proof). Design-doc correction: the board_accepted bool
+  gate HIDES both directions (no visible-locked tease exists) — the
+  single-slot proof is the mutual-exclusion option-array pin pair, and
+  the slot+caster gate composition routes through a `studies` node
+  (one gate per option dict, no whitelist change). Payouts re-anchored
+  16/24/32 by the multiple-of-4 validator. Lean canonical scope:
+  delta-completion/payout/tiers are the shipped board machinery's own
+  proofs (board_loop/bounty_rank_loop re-run green) — the study loop
+  pins only the NEW surfaces (accept-at-hub, slot exclusion, voice).
+- **b4 #219 review-wave adjudications (2026-07-19, 14/14 confirmed
+  findings)**: (1) accept options' hide_when on accepted_bounty_*
+  KILLED — those counters never reset, so accept-then-abandon
+  permanently retired a study (live-reproed); the hub's
+  board_accepted:false slot gate already prevents double-accept, and
+  delta rows are repeatable by design. (2) Desk/paper matching added:
+  a MET foreign posting was consumed and paid at the wrong desk
+  (live-reproed both directions — road_cull paid under Grimalkin's
+  "Adequate", a met study paid under "I'm the Guild"). Machine key =
+  the board flag itself (giver is display prose corpus-wide);
+  foreign paper renders a refusal arm, never consumes. Selys foreign
+  + private-abandon lines added; all arms unit-pinned. (3)
+  Challenge-weighted counters vs "three engagements": ACCEPTED AS
+  DESIGN — #211's weighting applies to every combat bounty (road_cull
+  identically); fresh at-level fights deposit 1.0 each so the nominal
+  contract is honest, and starving on grinds/stomps IS Grimalkin's
+  fiction ("I will know if you perform for the ledger"). Flagged into
+  the #211 leveling-feel taste read. (4) Voice: his hub variant
+  cloned Selys's "I'm the Guild" cadence — rewritten in his register;
+  study-row copy/giver re-cut to the corpus signature convention
+  (prose giver with voice note, no em-dash signature). (5) Variant
+  shadowing (casting greeting wins for a both-studies completer)
+  ACCEPTED — one greeting slot, later-match-wins is the shipped rule.
+  Coverage: casting-row gate negative proof + lockout regression +
+  both completion variants now unit-pinned on the SHIPPED graph.

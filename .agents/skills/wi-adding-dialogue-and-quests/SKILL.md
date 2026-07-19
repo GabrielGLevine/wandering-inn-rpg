@@ -321,3 +321,32 @@ commerce/purchase surfaces get their OWN conversation on their own entity
 dialogue file). Window-gated options on existing hubs are acceptable ONLY
 when no pinned fixture state falls inside the window — check every
 fixture's counters against the gate before wiring.
+
+## Bool gates HIDE both directions; board/desk contracts (b4 #219, 2026-07-19)
+- `requires {"board_accepted": <bool>}` (and the other bool ctx gates)
+  HIDES when unmet — in BOTH directions, same as accomplishment gates.
+  There is no visible-locked render for them, so never write copy or
+  design text promising a "locked refusal tease"; the QA proof for a
+  slot-exclusive pair is the MUTUAL-EXCLUSION exact option-array pin
+  pair (fresh state shows A not B; flipped state shows B not A).
+- **Never `hide_when` on a monotone counter unless the hide is meant
+  to be PERMANENT.** `accepted_bounty_*`/`completed_bounty_*` never
+  reset — hiding an accept option on its accepted counter permanently
+  retired the study after one accept-then-abandon (review live-repro).
+  If the goal is "no double-accept", the slot gate already does it.
+- **A desk only settles its own paper.** Bounty turn-in/abandon are
+  giver-agnostic in the sim; the desk seam is
+  `WIBounties.turnin_is_foreign(row, voice)` keyed on the `board` flag
+  (private `board:false` rows belong to Grimalkin's desk). `giver` is
+  DISPLAY PROSE corpus-wide ("Selys Sharpear", voice-note parenthetical
+  allowed) — never a machine key; new posting copy signs inside `copy`
+  ("Selys, for the Guild." / "Grimalkin, for the record."), no em-dash
+  signature, no shouted caps. A new private-posting desk extends
+  turnin_is_foreign, and its foreign arms must render WITHOUT
+  consuming (unit-pin every voice×met×foreign cell — canonicals rarely
+  cross the met arms).
+- Adding a VISIBLE row to any shipped hub shifts every index-driven
+  crossing script (pallass_peek's exit confirm broke; the walkthrough
+  survived only because its row-0 stayed row 0). Before shipping a hub
+  row: grep qa/scripts for the conversation id and re-derive every
+  cursor path, not just the exact-pin ones.

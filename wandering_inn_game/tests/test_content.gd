@@ -139,6 +139,12 @@ func _init() -> void:
 	# present_when (GH#167). If a third one appears, import the whole
 	# STRUCTURAL_LITERALS set via the test_reachability preload pattern.
 	produced_accomplishments["garden_door_unlocked"] = true
+	# b4 #219: the combat action-tally trio is code-banked per fight
+	# (combat_banking's _bank_action_tally) — registered so bounty/quest
+	# conditions may key on them (the fought_* synthesis precedent).
+	produced_accomplishments["melee_hit"] = true
+	produced_accomplishments["spell_cast"] = true
+	produced_accomplishments["ranged_hit"] = true
 	_validate_conversations(scene, graphs)
 	_validate_enchant_pairs(graphs, items)
 	_validate_dialogue_graphs(graphs, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
