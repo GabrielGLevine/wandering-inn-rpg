@@ -416,6 +416,20 @@ for pair in "${LAUNCHED[@]}"; do
 		SCRIPT_FAIL=1
 	fi
 
+	# #256: a rc=0 run that never wrote a passing result.json proved NOTHING
+	# (a script that get_tree().quit()s mid-run exits clean, trips no grep,
+	# and used to be reported "ok"). Require the result to EXIST and passed.
+	if [ "$SCRIPT_FAIL" -eq 0 ]; then
+		RESULT_JSON="$HERE/../qa_output/$NAME/result.json"
+		if [ ! -f "$RESULT_JSON" ]; then
+			echo "FAIL  $NAME — no result.json (script quit/crashed before finishing?)"
+			SCRIPT_FAIL=1
+		elif ! python3 -c "import json,sys; sys.exit(0 if json.load(open('$RESULT_JSON')).get('passed') is True else 1)" 2>/dev/null; then
+			echo "FAIL  $NAME — result.json passed != true"
+			SCRIPT_FAIL=1
+		fi
+	fi
+
 	if [ "$SCRIPT_FAIL" -ne 0 ]; then
 		FAILURES=$((FAILURES + 1)); FAILED_NAMES+=("$NAME")
 	else
