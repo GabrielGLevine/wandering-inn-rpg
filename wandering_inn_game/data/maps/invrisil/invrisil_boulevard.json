@@ -971,6 +971,16 @@
    ],
    "talk_pool_stages": [
     {
+     "id": "coyle_delivery_letter",
+     "_comment": "b7 #207 ack (lowest priority — the #220 extorted/exposed pair keeps outranking per its order ruling).",
+     "requires_accomplishment": {
+      "delivered_delivery_boulevard_letter": 1
+     },
+     "lines": [
+      "The letter arrived. Its contents priced three conversations I'd been having at a guess. You were paid four gold; it was worth forty. I will not be correcting the ledger."
+     ]
+    },
+    {
      "id": "coyle_extorted",
      "_comment": "b5 #220: pool-day texture for the bought-and-oily register the shipped hub variant set ('your retainer is current'). Ordered before exposed; exposure outranks if both ever bank.",
      "requires_accomplishment": {

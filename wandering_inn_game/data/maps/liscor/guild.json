@@ -246,6 +246,16 @@
    "_comment": "stages are last-match-wins; keep story order — earliest gates first; relays outrank standing signposts",
    "talk_pool_stages": [
     {
+     "id": "selys_delivery_ledger",
+     "_comment": "b7 #207 ack (lowest priority — warm terminal and threads outrank).",
+     "requires_accomplishment": {
+      "delivered_delivery_guild_ledger": 1
+     },
+     "lines": [
+      "The ledger you brought balanced on the first pass. Do you know how rare that is? I nearly framed the page. Nearly."
+     ]
+    },
+    {
      "id": "selys_past_the_counter",
      "requires_accomplishment": {
       "errand_decided": 1,

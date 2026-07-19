@@ -1082,6 +1082,16 @@
    "_comment": "stages are last-match-wins; keep story order — earliest gates first; relays outrank standing signposts",
    "talk_pool_stages": [
     {
+     "id": "zevara_delivery_dispatch",
+     "_comment": "b7 #207 ack (lowest priority — trusted-irregular and the cisterns thread outrank).",
+     "requires_accomplishment": {
+      "delivered_delivery_gate_dispatch": 1
+     },
+     "lines": [
+      "That dispatch you ran made it up the chain. Somebody upstairs read it, which is more than dispatches usually get. Don't let it go to your head."
+     ]
+    },
+    {
      "id": "zevara_trusted_irregular",
      "requires_accomplishment": {
       "resolved_the_cisterns": 1,
@@ -1091,6 +1101,16 @@
       "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
       "The cistern file is closed. Do you know how few files CLOSE in this office? I keep it on top of the stack for morale.",
       "If you're between jobs, see me about bounty work. The Watch pays slow, but it pays. And I sign faster for people who don't invoice me for heroics."
+     ]
+    },
+    {
+     "id": "zevara_standing_dispatch",
+     "_comment": "b7 #207 standing-run familiarity — promoted ABOVE the trusted-irregular terminal (review fix: dispatch runs post-date the cisterns for most players; the courier familiarity is the more specific permanent register, and the cisterns thread below still outranks it while active).",
+     "requires_accomplishment": {
+      "delivered_delivery_standing_dispatch_run": 1
+     },
+     "lines": [
+      "Dispatch pouch's on the run again. You know the route better than my runners do. That stays between us."
      ]
     },
     {
@@ -1173,6 +1193,16 @@
    ],
    "_comment": "stages are last-match-wins; keep story order — earliest gates first; relays outrank standing signposts",
    "talk_pool_stages": [
+    {
+     "id": "olesm_delivery_brief",
+     "_comment": "b7 #207 ack (lowest priority — the cisterns/board stages outrank).",
+     "requires_accomplishment": {
+      "delivered_delivery_tactics_brief": 1
+     },
+     "lines": [
+      "Oh! The tactics brief came through — I mean, it came through days ago, but I only just finished annotating it. Three of the openings are WRONG, and I can prove it now, thanks to you."
+     ]
+    },
     {
      "id": "olesm_worth_interrupting_a_tally",
      "requires_accomplishment": {
@@ -1301,6 +1331,15 @@
    "display_name": "Krshia's Stall",
    "sprite": "food_basket",
    "observe": "Silverfang goods laid out with a trap's care: cheapest at the front, the good stock where a browsing hand drifts. A note warns that the seller remembers faces.",
+   "variants": [
+    {
+     "_comment": "b7 #207 delivery ack — the wool bolt the player carried is shelved and selling (prop recipient: no talk_pool, the interact toast IS the ack surface; a toast variant so every player sees it without a skill).",
+     "when": {
+      "delivered_delivery_krshia_wool": 1
+     },
+     "toast": "Silverfang goods, honest prices. The plains-wool bolt you carried up sits shelved at eye level, already half-sold by the yard. She moves what's good — and remembers who brought it."
+    }
+   ],
    "on_interact_accomplishment": "browsed_market",
    "toast": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling somebody UP, elsewhere — she does not haggle down. A sign says she remembers faces, and debts."
   },
@@ -1358,6 +1397,16 @@
    ],
    "_comment": "stages are last-match-wins; keep story order — earliest gates first; relays outrank standing signposts",
    "talk_pool_stages": [
+    {
+     "id": "pisces_delivery_parcel",
+     "_comment": "b7 #207 ack (lowest priority — the warm terminal and every thread outrank).",
+     "requires_accomplishment": {
+      "delivered_delivery_pisces_parcel": 1
+     },
+     "lines": [
+      "The parcel arrived intact, which I confess surprised me. Reagents, before you ask. The rest is none of your business, and the Runner fee was extortionate."
+     ]
+    },
     {
      "id": "pisces_tolerable_company",
      "requires_accomplishment": {
@@ -1469,6 +1518,16 @@
    "display_name": "Sewer Grate",
    "sprite": "sewer_grate",
    "observe": "Rust holds the bars, not a lock. The draft is steady — a tunnel, not a pit. The skittering keeps its distance. Something down there has learned to avoid shadows.",
+   "visual_states": [
+    {
+     "_comment": "b7 #207 delivery ack — the fragile phial crate the player lowered was collected intact (prop recipient: the observe IS the ack surface; door_when behavior untouched).",
+     "when": {
+      "counter": "delivered_delivery_grate_phials",
+      "at": 1
+     },
+     "observe": "Rust holds the bars, not a lock. The phial crate you eased down the rungs is gone from the ledge below. Collected, unbroken. Somewhere down there, someone's working glass got to keep being glass."
+    }
+   ],
    "on_interact_accomplishment": "heard_the_sewers",
    "toast": "A heavy iron grate, rusted shut. Cold air rises from below, and something in the dark skitters away from your shadow.",
    "_comment_door_when": "Until heard_about_cisterns, the unmet door gate falls through to the original grate toast; afterward it opens and transitions.",

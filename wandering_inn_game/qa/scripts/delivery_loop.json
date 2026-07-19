@@ -93,6 +93,17 @@
   { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "Delivered: Plains-Wool Bolt." }, "timeout_sec": 10 },
   { "action": "screenshot", "name": "04_handoff_at_the_stall" },
 
+  { "_comment": "== b7 #207 ACK TOAST == the delivery just banked -- the stall's toast VARIANT (the prop recipient's ack surface, a plain interact so every player sees it) must render the shelved-bolt text in place of the base browse toast. Step left to (14,3), bump up into the stall (14,2) to face it, interact, then step back right to (15,3) so every later relative move stays derived. Banks browsed_market as any browse does (no pin depends on its count).", "action": "move", "direction": "left", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [14, 3] },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [14, 3] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Silverfang goods, honest prices. The plains-wool bolt you carried up sits shelved at eye level, already half-sold by the yard. She moves what's good — and remembers who brought it." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "04a_stall_ack_toast" },
+  { "action": "move", "direction": "right", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [15, 3] },
+
   { "_comment": "== POSTINGS JOURNAL CHECK (fulfilled) == the arrival just banked delivered_delivery_krshia_wool 0->1 -- delta 1 >= 1: the SAME field flips to the OTHER binary literal, before the slip is ever turned in.", "action": "press", "name": "journal" },
   { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "delivery_title": "Wool Bolt to Silverfang Stall", "delivery_status": "Ready to turn in.", "delivery_gold": 1 }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "04b_journal_postings_ready" },
