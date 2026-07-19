@@ -231,10 +231,14 @@ func _journal_chronicle_contract_holds(source: String) -> bool:
 	]:
 		if open_body.find(clause) == -1:
 			return false
-	var builder := _function_body(source, "_build_body_text")
+	# Issue #209: the journal body split into three tabs; Chronicle facts now
+	# render in the History tab builder (still after Lore) and the FULL payload
+	# is emitted via `_emit_journal_shown()` from `_open`.
+	if open_body.find("_emit_journal_shown()") == -1:
+		return false
+	var builder := _function_body(source, "_build_history_tab")
 	var chronicle_heading := builder.find("[b]Chronicle[/b]")
-	return builder.find("chronicle_facts: Dictionary") != -1 \
-		and builder.find("chronicle_facts.is_empty()") != -1 \
+	return builder.find("_open_chronicle_facts.is_empty()") != -1 \
 		and chronicle_heading > builder.find("[b]Lore[/b]") \
 		and builder.find("quests_completed") != -1 \
 		and builder.find("victories") != -1 \

@@ -74,7 +74,7 @@ var _body_label: RichTextLabel
 var _scroll_hint: Label
 
 ## The assignment surface. `_flat_skill_ids` is every known skill id in the
-## SAME order `_build_body_text` renders its rows (Innate group first, then
+## SAME order `_build_skills_tab` renders its rows (Innate group first, then
 ## one entry per held class in catalog order, mirroring `skills_journal()`'s
 ## own grouping) -- rebuilt once per `_open()` (the group/skill SET can't
 ## change while the journal is open: movement/interact/sleep are all gated
@@ -98,6 +98,24 @@ var _open_delivery_pool: Array = []
 var _open_class_levels: Dictionary = {}
 var _open_class_aspirations: Dictionary = {}
 var _open_chronicle_facts: Dictionary = {}
+
+## Issue #209: the journal is split into three internal tabs. Only the ACTIVE
+## tab's slice renders into `_body_label`; the section-DATA payload emitted on
+## `UI_JOURNAL_SHOWN` stays FULL and tab-independent (every existing field is
+## present regardless of which tab shows), so the ~20 payload-only QA pins
+## survive the split untouched -- see the a8 plan's de-risking finding. Default
+## = Quests on every open; the skill cursor is LIVE only on the Skills tab.
+enum Tab { QUESTS, SKILLS, HISTORY }
+const _TAB_IDS: Array[String] = ["quests", "skills", "history"]
+const _TAB_TITLES: Array[String] = ["Quests", "Skills", "History"]
+var _active_tab: int = Tab.QUESTS
+var _tab_labels: Array[Label] = []
+## The full section-DATA payload, cached at open. The section SET/DATA can't
+## change while the journal is open (same modal-exclusivity guarantee
+## `_flat_skill_ids`' doc comment relies on), so a tab switch re-emits this
+## verbatim with only `active_tab` updated -- QA can assert the visible tab
+## without any section field drifting.
+var _journal_payload: Dictionary = {}
 
 
 func _ready() -> void:
@@ -141,6 +159,24 @@ func _ready() -> void:
 	_title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	UIChrome.full_rect(_title_label)
 	ribbon.add_child(_title_label)
+
+	# Issue #209: the three-tab switcher bar (Quests / Skills / History). Each
+	# label is tappable via its own STOP mouse_filter + gui_input hook (the
+	# SAME shape `_body_label`'s drag hook below uses); the driver's
+	# `click_journal_tab` action clicks a label's `tab_rect`. Keyboard
+	# `move_left`/`move_right` switch too (see `_unhandled_input`). The active
+	# tab is bracket-highlighted by `_refresh_tab_bar`.
+	var tab_bar := HBoxContainer.new()
+	tab_bar.add_theme_constant_override("separation", 22)
+	tab_bar.alignment = BoxContainer.ALIGNMENT_CENTER
+	for i in _TAB_TITLES.size():
+		var tab_label := UIChrome.make_label("", "Small")
+		tab_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		tab_label.mouse_filter = Control.MOUSE_FILTER_STOP
+		tab_label.gui_input.connect(_on_tab_label_gui_input.bind(i))
+		_tab_labels.append(tab_label)
+		tab_bar.add_child(tab_label)
+	stack.add_child(tab_bar)
 
 	_body_label = RichTextLabel.new()
 	_body_label.bbcode_enabled = true
@@ -223,13 +259,24 @@ func _unhandled_input(event: InputEvent) -> void:
 			_open()
 		get_viewport().set_input_as_handled()
 		return
-	if open and event.is_action_pressed("move_down"):
+	if not open:
+		return
+	# Issue #209: left/right switch tabs (world.gd gates its own move_left/
+	# move_right out while any modal is open -- `_movement_gated` -- so
+	# consuming them here is purely additive, never a lost player move).
+	if event.is_action_pressed("move_left"):
+		_switch_tab_relative(-1)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("move_right"):
+		_switch_tab_relative(1)
+		get_viewport().set_input_as_handled()
+	elif _active_tab == Tab.SKILLS and event.is_action_pressed("move_down"):
 		_move_cursor(1)
 		get_viewport().set_input_as_handled()
-	elif open and event.is_action_pressed("move_up"):
+	elif _active_tab == Tab.SKILLS and event.is_action_pressed("move_up"):
 		_move_cursor(-1)
 		get_viewport().set_input_as_handled()
-	elif open and event.is_action_pressed("confirm"):
+	elif _active_tab == Tab.SKILLS and event.is_action_pressed("confirm"):
 		_toggle_cursor_skill()
 		get_viewport().set_input_as_handled()
 
@@ -262,7 +309,7 @@ func _open() -> void:
 	var skill_groups: Array = Game.sim.skills_journal()
 	var seen_statuses: Array = Game.sim.seen_statuses.duplicate()
 	# Threaded through both call sites that need it below: the render loop
-	# (`_build_body_text` -> `_revealed_skill_line`) and the event-payload
+	# (`_build_skills_tab` -> `_revealed_skill_line`) and the event-payload
 	# loop further down, via the formatter's existing `combatants_catalog`
 	# override param.
 	var combatants_catalog := _load_combatants_catalog()
@@ -287,8 +334,11 @@ func _open() -> void:
 	_open_chronicle_facts = chronicle_facts
 	_flat_skill_ids = _flatten_skill_ids(skill_groups)
 	_cursor_index = 0 if not _flat_skill_ids.is_empty() else -1
-	var built := _build_body_text(act, quest_lines, completed_quest_lines, skill_groups, seen_statuses, combatants_catalog, _cursor_index, bounty_pool, delivery_pool, class_levels, class_aspirations, chronicle_facts)
-	_body_label.text = String(built["text"])
+	# Issue #209: every open lands on the Quests tab; the skill cursor is armed
+	# but inert until the player switches to the Skills tab.
+	_active_tab = Tab.QUESTS
+	_render_active_tab(false)
+	_refresh_tab_bar()
 	_root.show()
 	var vbar := _body_label.get_v_scroll_bar()
 	if vbar != null:
@@ -327,7 +377,11 @@ func _open() -> void:
 			act_beats_achieved += 1
 	var posting := _posting_slot_state(bounty_pool, Game.sim.accepted_bounty_id, Game.sim.accepted_bounty_baseline, Callable(self, "_posting_title"), "copy", Game.sim.accepted_bounty())
 	var delivery := _posting_slot_state(delivery_pool, Game.sim.accepted_delivery_id, Game.sim.accepted_delivery_baseline, Callable(self, "_delivery_title"), "slip_copy")
-	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_SHOWN, {
+	# Issue #209: the payload is cached FULL (every section's data, independent
+	# of the visible tab) and re-emitted verbatim on each tab switch with only
+	# `active_tab` updated -- see `_journal_payload`'s doc comment and
+	# `_emit_journal_shown`.
+	_journal_payload = {
 		"quest_lines": quest_lines.size(),
 		"completed_quest_lines": completed_quest_lines,
 		"skill_groups": headings,
@@ -350,7 +404,8 @@ func _open() -> void:
 		"delivery_detail": String(delivery.get("detail", "")),
 		"found_notes": _found_note_ids(),
 		"recent_count": _recent_message_count(),
-	})
+	}
+	_emit_journal_shown()
 	if not chronicle_facts.is_empty():
 		ObservableBus.emit_domain_event(WIEvents.UI_CHRONICLE_RENDERED, {
 			"surface": "journal",
@@ -376,7 +431,96 @@ func toggle_open() -> bool:
 	return true
 
 
-## Every known skill id, in the SAME order `_build_body_text` renders its
+## Issue #209: re-emit the cached full payload with the current tab id. Both
+## `_open()` (first show, Quests) and `_switch_tab()` route through here, so QA
+## reads one event type (`ui_journal_shown`) whose `active_tab` names the
+## visible tab while every section field stays present and unchanged.
+func _emit_journal_shown() -> void:
+	_journal_payload["active_tab"] = _TAB_IDS[_active_tab]
+	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_SHOWN, _journal_payload)
+
+
+## Bracket-highlight the active tab label (plain Labels, no bbcode -- brackets
+## are the visible active marker, matching the panel's terse chrome).
+func _refresh_tab_bar() -> void:
+	for i in _tab_labels.size():
+		_tab_labels[i].text = ("[ %s ]" % _TAB_TITLES[i]) if i == _active_tab else _TAB_TITLES[i]
+
+
+func _switch_tab_relative(delta: int) -> void:
+	var n := _TAB_IDS.size()
+	_switch_tab((_active_tab + delta + n) % n)
+
+
+func _switch_tab(new_tab: int) -> void:
+	if not open or new_tab == _active_tab:
+		return
+	_active_tab = new_tab
+	# Entering Skills re-arms the cursor at row 0 (or -1 when the PC knows zero
+	# skills); leaving it makes the cursor inert (guarded in `_unhandled_input`
+	# and the row handlers) -- the "cursor LIVE only on Skills" contract.
+	if _active_tab == Tab.SKILLS:
+		_cursor_index = 0 if not _flat_skill_ids.is_empty() else -1
+	_refresh_tab_bar()
+	_render_active_tab(_active_tab == Tab.SKILLS)
+	var vbar := _body_label.get_v_scroll_bar()
+	if vbar != null:
+		vbar.value = 0.0
+	_update_scroll_hint.call_deferred()
+	_emit_journal_shown()
+
+
+func _on_tab_label_gui_input(event: InputEvent, tab_index: int) -> void:
+	if not open:
+		return
+	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed \
+			and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+		_switch_tab(tab_index)
+		get_viewport().set_input_as_handled()
+
+
+## Issue #209 QA hook: the tab label's on-screen rect (empty when closed or the
+## id is unknown), mirroring `body_rect`/`playtest_page_rect` so the driver's
+## `click_journal_tab` can tap it. `tab_id` is one of `_TAB_IDS`.
+func tab_rect(tab_id: String) -> Rect2:
+	if not open:
+		return Rect2()
+	var idx := _TAB_IDS.find(tab_id)
+	if idx < 0 or idx >= _tab_labels.size():
+		return Rect2()
+	var lbl := _tab_labels[idx]
+	if lbl == null or not lbl.visible:
+		return Rect2()
+	return Rect2(lbl.global_position, lbl.size)
+
+
+## Issue #209 QA hook: the active tab's id (one of `_TAB_IDS`).
+func active_tab_id() -> String:
+	return _TAB_IDS[_active_tab] if open else ""
+
+
+## Render ONLY the active tab's body into `_body_label`. `follow_cursor` scrolls
+## the cursor row into view (Skills tab only); a plain re-render leaves scroll
+## where it is (Godot resets RichTextLabel scroll to top on `text` assignment,
+## which is the intended reset for a fresh open / tab switch).
+func _render_active_tab(follow_cursor: bool) -> void:
+	var built: Dictionary
+	match _active_tab:
+		Tab.SKILLS:
+			built = _build_skills_tab(_cursor_index)
+		Tab.HISTORY:
+			built = _build_history_tab()
+		_:
+			built = _build_quests_tab()
+	_body_label.text = String(built["text"])
+	if _active_tab == Tab.SKILLS and follow_cursor:
+		var cursor_line := int(built.get("cursor_line", -1))
+		if cursor_line >= 0:
+			_body_label.scroll_to_line.call_deferred(cursor_line)
+	_update_scroll_hint.call_deferred()
+
+
+## Every known skill id, in the SAME order `_build_skills_tab` renders its
 ## rows (Innate group first, then one group per held class in catalog
 ## order) -- see `_flat_skill_ids`' own doc comment.
 func _flatten_skill_ids(skill_groups: Array) -> Array[String]:
@@ -437,6 +581,10 @@ func _toggle_cursor_skill() -> void:
 
 
 func _on_skill_row_hover_started(meta: Variant) -> void:
+	# Skill rows exist only on the Skills tab; a stray hover/click elsewhere
+	# (the driver can call `click_skill_row` directly) is a no-op (issue #209).
+	if _active_tab != Tab.SKILLS:
+		return
 	var idx := String(meta).to_int()
 	if idx < 0 or idx >= _flat_skill_ids.size() or idx == _cursor_index:
 		return
@@ -445,6 +593,8 @@ func _on_skill_row_hover_started(meta: Variant) -> void:
 
 
 func _on_skill_row_meta_clicked(meta: Variant) -> void:
+	if _active_tab != Tab.SKILLS:
+		return
 	var idx := String(meta).to_int()
 	if idx < 0 or idx >= _flat_skill_ids.size():
 		return
@@ -456,21 +606,16 @@ func click_skill_row(flat_i: int) -> void:
 	_on_skill_row_meta_clicked(str(flat_i))
 
 
-## Same rebuild `_rebuild_body_follow_cursor` performs, minus the
-## scroll-to-cursor-line/scroll-hint follow-up -- see
+## Re-render the active tab WITHOUT following the cursor -- see
 ## `_on_skill_row_hover_started`'s doc comment for why hover must NOT scroll.
+## (Issue #209: both rebuild wrappers now route through `_render_active_tab`,
+## which no-ops the cursor-follow off the Skills tab.)
 func _rebuild_body_no_scroll() -> void:
-	var built := _build_body_text(_open_act, _open_quest_lines, _open_completed_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index, _open_bounty_pool, _open_delivery_pool, _open_class_levels, _open_class_aspirations, _open_chronicle_facts)
-	_body_label.text = String(built["text"])
+	_render_active_tab(false)
 
 
 func _rebuild_body_follow_cursor() -> void:
-	var built := _build_body_text(_open_act, _open_quest_lines, _open_completed_quest_lines, _open_skill_groups, _open_seen_statuses, _open_combatants_catalog, _cursor_index, _open_bounty_pool, _open_delivery_pool, _open_class_levels, _open_class_aspirations, _open_chronicle_facts)
-	_body_label.text = String(built["text"])
-	var cursor_line := int(built["cursor_line"])
-	if cursor_line >= 0:
-		_body_label.scroll_to_line.call_deferred(cursor_line)
-	_update_scroll_hint.call_deferred()
+	_render_active_tab(true)
 
 
 func _update_scroll_hint() -> void:
@@ -481,66 +626,73 @@ func _update_scroll_hint() -> void:
 	_scroll_hint.visible = open and more_below
 
 
-## Every skill row leads with a "✓ "/"  " assign marker (reading
-## `Game.sim.hotbar_loadout` directly — journal.gd already references
-## Game.sim freely, it isn't purity-constrained) and the `cursor_index`'th
-## row (in the SAME flattened order `_flatten_skill_ids` produces) is
-## wrapped in `[b]...[/b]` with a "▶ " lead glyph. A class group's heading
-## additionally gets " — Lv N" appended (`class_levels`, keyed by the SAME
-## display-name string the heading already is -- see `_class_levels_by_
-## heading`'s doc comment) -- "Innate" never matches an entry there, so it
-## stays bare, per the OPAQUE-UNTIL-SLEEP rule (class LEVEL is player-visible,
-## unlike raw stats). Returns a Dictionary `{text: String, cursor_line: int}`
-## instead of a bare String -- `cursor_line` is the 0-based BBCode line the
-## cursor row landed on (-1 if `cursor_index` didn't match any row), so the
-## caller can `scroll_to_line` it into view without a second, drift-prone
-## line-counting pass.
-func _build_body_text(act: Dictionary, quest_lines: Array, completed_quest_lines: Array, skill_groups: Array, seen_statuses: Array, combatants_catalog: Array = [], cursor_index: int = -1, bounty_pool: Array = [], delivery_pool: Array = [], class_levels: Dictionary = {}, class_aspirations: Dictionary = {}, chronicle_facts: Dictionary = {}) -> Dictionary:
+## Issue #209 — TAB 1 (Quests, the default): Act header/beats + Quests +
+## Completed + Postings. "What am I doing now." Reads the `_open_*` snapshot
+## fields (captured at `_open()`, immutable while the panel is open). Returns
+## `{text: String}`.
+func _build_quests_tab() -> Dictionary:
 	var parts: Array = []
-	var cursor_line := -1
-	if not act.is_empty():
-		parts.append("[b]%s[/b]" % UIChrome.bb_escape(String(act.get("header", ""))))
-		for raw_beat: Variant in act.get("beats", []):
+	if not _open_act.is_empty():
+		parts.append("[b]%s[/b]" % UIChrome.bb_escape(String(_open_act.get("header", ""))))
+		for raw_beat: Variant in _open_act.get("beats", []):
 			var beat := raw_beat as Dictionary
 			var marker := "✓ " if bool(beat.get("achieved", false)) else "· "
 			parts.append("%s%s" % [marker, UIChrome.bb_escape(String(beat.get("text", "")))])
 		parts.append("")
 	parts.append("[b]Quests[/b]")
-	if quest_lines.is_empty():
-		parts.append("No quests in progress." if not completed_quest_lines.is_empty() else "No quests yet.")
+	if _open_quest_lines.is_empty():
+		parts.append("No quests in progress." if not _open_completed_quest_lines.is_empty() else "No quests yet.")
 	else:
-		for line: Variant in quest_lines:
+		for line: Variant in _open_quest_lines:
 			parts.append(UIChrome.bb_escape(String(line)))
 	parts.append("")
-	if not completed_quest_lines.is_empty():
+	if not _open_completed_quest_lines.is_empty():
 		parts.append("[b]Completed[/b]")
-		for line: Variant in completed_quest_lines:
+		for line: Variant in _open_completed_quest_lines:
 			parts.append(UIChrome.bb_escape(String(line)))
 		parts.append("")
 	parts.append("[b]Postings[/b]")
-	var posting_lines := _build_postings_lines(bounty_pool, delivery_pool)
-	for line: String in posting_lines:
+	for line: String in _build_postings_lines(_open_bounty_pool, _open_delivery_pool):
 		parts.append(line)
-	parts.append("")
+	return {"text": "\n".join(parts)}
+
+
+## Issue #209 — TAB 2 (Skills, the ONLY interactive tab): the class/skill kit
+## with the loadout cursor, then the Effects glossary (combat-status reference,
+## adjacent to the kit). Every skill row leads with a "✓ "/"  " assign marker
+## (reading `Game.sim.hotbar_loadout` directly — journal.gd references Game.sim
+## freely, it isn't purity-constrained) and the `cursor_index`'th row (in the
+## SAME flattened order `_flatten_skill_ids` produces) is wrapped in `[b]...[/b]`
+## with a "▶ " lead glyph. A class group's heading additionally gets " — Lv N"
+## appended (`_open_class_levels`, keyed by the SAME display-name string the
+## heading already is) — "Innate" never matches, so it stays bare, per the
+## OPAQUE-UNTIL-SLEEP rule (class LEVEL is player-visible, unlike raw stats).
+## Returns `{text: String, cursor_line: int}` — `cursor_line` is the 0-based
+## BBCode line the cursor row landed on (-1 if `cursor_index` matched no row),
+## so `_render_active_tab` can `scroll_to_line` it without a drift-prone
+## second line-counting pass.
+func _build_skills_tab(cursor_index: int) -> Dictionary:
+	var parts: Array = []
+	var cursor_line := -1
 	parts.append("[b]Skills[/b]")
 	parts.append(COMBAT_KIT_NOTE)
 	parts.append("Slotted skills appear on your bars.  •  Up/Down to move  •  %s to toggle" % WIInputHints.label("confirm"))
-	var flat_i := 0
 	# GH#171: the checkmarks were unlabeled -- players could not tell
 	# selection = hotbar loadout.
 	parts.append("[i]Checked skills ride your hotbar — confirm on a row to swap it.[/i]")
-	for raw_group: Variant in skill_groups:
+	var flat_i := 0
+	for raw_group: Variant in _open_skill_groups:
 		var group := raw_group as Dictionary
 		var heading := String(group["heading"])
 		parts.append("")
-		parts.append("[b]%s[/b]" % UIChrome.bb_escape(_class_heading_text(heading, class_levels)))
-		if class_aspirations.has(heading):
-			parts.append("[i]%s[/i]" % UIChrome.bb_escape(String(class_aspirations[heading])))
+		parts.append("[b]%s[/b]" % UIChrome.bb_escape(_class_heading_text(heading, _open_class_levels)))
+		if _open_class_aspirations.has(heading):
+			parts.append("[i]%s[/i]" % UIChrome.bb_escape(String(_open_class_aspirations[heading])))
 		for raw_skill: Variant in (group["skills"] as Array):
 			var skill := raw_skill as Dictionary
 			var row_text: String
 			if bool(skill["revealed"]):
-				row_text = _revealed_skill_line(String(skill["id"]), String(skill["display_name"]), combatants_catalog)
+				row_text = _revealed_skill_line(String(skill["id"]), String(skill["display_name"]), _open_combatants_catalog)
 			else:
 				row_text = String(skill["text"])
 			var marker := "✓ " if Game.sim.hotbar_loadout.has(String(skill["id"])) else "  "
@@ -551,14 +703,21 @@ func _build_body_text(act: Dictionary, quest_lines: Array, completed_quest_lines
 			line = "[url=%d]%s[/url]" % [flat_i, line]
 			parts.append(line)
 			flat_i += 1
-	if not seen_statuses.is_empty():
+	if not _open_seen_statuses.is_empty():
 		parts.append("")
 		parts.append("[b]Effects[/b]")
-		for status_id: Variant in seen_statuses:
+		for status_id: Variant in _open_seen_statuses:
 			parts.append(UIChrome.bb_escape(WIEffectText.status_line(String(status_id), Game.sim.skills.values())))
+	return {"text": "\n".join(parts), "cursor_line": cursor_line}
+
+
+## Issue #209 — TAB 3 (History): Lore (found notes) + Chronicle facts + Recent
+## Messages. "What happened / what you found." An empty-state line keeps the
+## tab from rendering blank on an early run. Returns `{text: String}`.
+func _build_history_tab() -> Dictionary:
+	var parts: Array = []
 	var found_notes := _found_note_ids()
 	if not found_notes.is_empty():
-		parts.append("")
 		parts.append("[b]Lore[/b]")
 		for note_id: String in found_notes:
 			var note_record: Dictionary = Game.sim.item(note_id)
@@ -568,27 +727,28 @@ func _build_body_text(act: Dictionary, quest_lines: Array, completed_quest_lines
 				parts.append(UIChrome.bb_escape("%s — %s" % [note_name, note_lore]))
 			else:
 				parts.append(UIChrome.bb_escape(note_name))
-	if not chronicle_facts.is_empty():
 		parts.append("")
+	if not _open_chronicle_facts.is_empty():
 		parts.append("[b]Chronicle[/b]")
-		parts.append(UIChrome.bb_escape("%s — %s" % [String(chronicle_facts.get("name", "Traveler")), String(chronicle_facts.get("race", ""))]))
+		parts.append(UIChrome.bb_escape("%s — %s" % [String(_open_chronicle_facts.get("name", "Traveler")), String(_open_chronicle_facts.get("race", ""))]))
 		var chronicle_classes: Array[String] = []
-		for raw_class: Variant in chronicle_facts.get("classes", []):
+		for raw_class: Variant in _open_chronicle_facts.get("classes", []):
 			var class_facts := raw_class as Dictionary
 			chronicle_classes.append("%s Lv%d" % [String(class_facts.get("name", "")), int(class_facts.get("level", 0))])
 		parts.append(UIChrome.bb_escape("Classes: %s" % (", ".join(chronicle_classes) if not chronicle_classes.is_empty() else "—")))
-		parts.append(UIChrome.bb_escape("Quests completed: %d  •  Victories: %d  •  Sleeps: %d" % [int(chronicle_facts.get("quests_completed", 0)), int(chronicle_facts.get("victories", 0)), int(chronicle_facts.get("sleeps", 0))]))
-		parts.append(UIChrome.bb_escape(String(chronicle_facts.get("ending", ""))))
-	# GH#170: Recent Messages tail -- APPEND-ONLY position so every
-	# contains-style body pin above survives. Newest last (reading order).
+		parts.append(UIChrome.bb_escape("Quests completed: %d  •  Victories: %d  •  Sleeps: %d" % [int(_open_chronicle_facts.get("quests_completed", 0)), int(_open_chronicle_facts.get("victories", 0)), int(_open_chronicle_facts.get("sleeps", 0))]))
+		parts.append(UIChrome.bb_escape(String(_open_chronicle_facts.get("ending", ""))))
+		parts.append("")
+	# GH#170: Recent Messages tail. Newest last (reading order).
 	var layer_script := load("res://src/ui/message_layer.gd")
 	var recent: Array = layer_script.recent_messages if layer_script != null else []
 	if not recent.is_empty():
-		parts.append("")
 		parts.append("[b]Recent Messages[/b]")
 		for msg: Variant in recent:
 			parts.append("[i]%s[/i]" % UIChrome.bb_escape(String(msg)))
-	return {"text": "\n".join(parts), "cursor_line": cursor_line}
+	if parts.is_empty():
+		parts.append("Nothing recorded here yet. Your deeds and the day's news will gather here.")
+	return {"text": "\n".join(parts)}
 
 
 func _build_postings_lines(bounty_pool: Array, delivery_pool: Array) -> Array[String]:

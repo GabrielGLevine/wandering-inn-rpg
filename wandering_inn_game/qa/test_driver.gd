@@ -435,6 +435,21 @@ func _execute(step: Dictionary) -> void:
 				jn.call("click_skill_row", int(step["flat_index"]))
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"click_journal_tab":
+			# Issue #209: tap one of the journal's three tab labels
+			# (Quests/Skills/History) by its rendered rect, mirroring the
+			# credits/playtest label-tap pattern. `tab` is the tab id string.
+			var jt := get_tree().root.find_child("Journal", true, false)
+			if jt == null:
+				_fail("click_journal_tab: Journal node not found")
+			else:
+				var tab_rect: Rect2 = jt.call("tab_rect", String(step["tab"]))
+				if tab_rect.size == Vector2.ZERO:
+					_fail("click_journal_tab: tab '%s' has no rendered rect" % String(step["tab"]))
+				else:
+					_inject_mouse_click(tab_rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"click_inventory_row":
 			var inv_row_n := int(step["row"])
 			var inv := get_tree().root.find_child("Inventory", true, false)

@@ -2921,6 +2921,32 @@
    }
   },
   {
+   "script": "journal_tabs_loop",
+   "seed": 9,
+   "fixture": "journal_history_start",
+   "note": "Issue #209 (journal internal tabs): the three-tab switcher (Quests/Skills/History). Opens the journal (defaults to Quests), taps each tab label via the new click_journal_tab driver action asserting active_tab flips while the FULL section payload stays intact on every tab's ui_journal_shown emit (the tab-independent-payload contract that lets the ~20 payload-only journal canonicals survive the split), then proves keyboard move_left/move_right switch parity with wrap.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "journal_history_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "boards",
+     "exploration",
+     "input"
+    ]
+   }
+  },
+  {
    "script": "thread_lattice_loop",
    "seed": 9,
    "fixture": "thread_lattice_loop_start",
