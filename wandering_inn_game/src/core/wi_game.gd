@@ -905,7 +905,16 @@ const AUTO_SLOT_CAP := 9
 
 
 func _auto_slot_new_field_skills(known_before: Array) -> void:
-	if hotbar_loadout.is_empty():
+	# Review HIGH: AUTO is decided on the item-filtered SKILL list, exactly
+	# as field_hotbar_loadout() decides it — an item-only loadout is still
+	# an AUTO field bar (main pins that), and appending a skill to it would
+	# collapse the bar to that one skill. The cap likewise counts only
+	# skill entries: the field bar's number keys never render item pins.
+	var slotted := 0
+	for raw: Variant in hotbar_loadout:
+		if not String(raw).begins_with("item:"):
+			slotted += 1
+	if slotted == 0:
 		return
 	for raw: Variant in known_skills():
 		var id := String(raw)
@@ -913,9 +922,10 @@ func _auto_slot_new_field_skills(known_before: Array) -> void:
 			continue
 		if not bool((skills.get(id, {}) as Dictionary).get("field", false)):
 			continue
-		if hotbar_loadout.has(id) or hotbar_loadout.size() >= AUTO_SLOT_CAP:
+		if hotbar_loadout.has(id) or slotted >= AUTO_SLOT_CAP:
 			continue
 		hotbar_loadout.append(id)
+		slotted += 1
 		_emit(WIEvents.LOADOUT_CHANGED, {"skill": id, "assigned": true, "auto": true, "loadout": hotbar_loadout.duplicate()})
 
 
@@ -2048,8 +2058,15 @@ func decline_consolidation() -> void:
 		return
 	pending_consolidation = {}
 	_emit(WIEvents.CONSOLIDATION_DECLINED, {})
+	# Review MEDIUM-HIGH: a consolidation offer defers evolutions out of the
+	# sleep beat — the decline path resolves them HERE, after the sleep-end
+	# reconcile already ran, and the next sleep's snapshot would treat the
+	# evolved grants as old. Reconcile around this resolution or those field
+	# skills never auto-slot.
+	var known_before_evo: Array = known_skills().duplicate()
 	if not _resolve_evolutions():
 		_emit(WIEvents.TOAST, {"text": "You sleep soundly."})
+	_auto_slot_new_field_skills(known_before_evo)
 
 
 func _class_display_name(id: String) -> String:
