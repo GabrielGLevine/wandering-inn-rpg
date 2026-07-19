@@ -17,22 +17,21 @@ note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
 ## 🏃 RUNNING (2026-07-19, v0.13 wave EXECUTING per GOAL.md)
-- **#194a seam 1 (WIInteractions) DONE pending merge**: PR #227
-  [ci-full] — extraction verbatim, 26/26 units, local sweep 139/139
-  zero-grep, 11-canonical sim-stream byte-identity, review 0C/0I/1M
-  (Minor: npc fallback DIALOGUE_LINE arm uncovered by detector set —
-  address at seam 2). Awaiting CI full-sweep job, then squash-merge.
-- **NEW TRAP (fold into AGENTS gotchas at next housekeeping commit)**:
-  a lambda Callable stored in a long-lived RefCounted module leaks
-  ObjectDB instances at exit (stash-verified); bound methods don't —
-  module wiring must use bound methods, never lambdas.
-- **#111 rename SPEC AUTHORED** (docs/design/2026-07-19-111-safe-
-  project-rename-spec.md, engine-source-cited): recommends first-boot
-  copy-migration + rename in one release, desktop→Pages→itch order,
-  fixture QA + two rehearsal legs. ENDS WITH GO/NO-GO ASK — see Taste
-  queue. Implementation stays USER-GATED.
-- Next: seam 2 (sleep-beat orchestration + toast stream), seam 3
-  (combat banking), then #211 challenge-weighted leveling design+sim.
+- **#194a seams 1+2 MERGED** (PR #227 → a3801f9, PR #228 → be648b4;
+  each: byte-identity evidence + full bar + reviews clean). **Seam 3
+  (WICombatBanking) PR #229 open**, [ci-full] watching — merge = #194a
+  COMPLETE (wi_game.gd 2345→~2020 lines; interact routing, sleep beat,
+  combat banking all extracted behind Callables).
+- **#211 design doc on main** (d368d28,
+  docs/design/2026-07-19-211-challenge-weighted-leveling.md; issue
+  comment posted). Five §8 adjudications await user review via
+  CHOICE-LOG; execution is harness-first inside the seam-3 module.
+- **#111 rename SPEC on main** (79a5cc5) — go/no-go posted on the
+  issue; see Taste queue. Implementation USER-GATED.
+- Lambda-leak trap ledgered in AGENTS.md Gotchas (79a5cc5).
+- Next after #229: #211 harness + implementation (largest sim
+  package), then #194b world.gd seams; lanes b/c became dispatchable
+  when seam 1 merged (a1 dependency satisfied).
 
 
 - **v0.12.0 SHIPPED** (Release + Pages both green) (freeze 619 ids, ZERO new frozen ids -- polish/copy
