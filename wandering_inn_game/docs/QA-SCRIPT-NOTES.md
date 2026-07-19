@@ -160,3 +160,4 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `parley_gates_check` | 9 | full | `parley_gates_unmet_start` | GH#217: tease legs -- skill/gold arms render LOCKED, permit arm stays HIDDEN (exact-list pins are the can-fail) |
 | `ratici_fence_loop` | 9 | full | `ratici_fence_start` | b2 #218: fence open (trust gate), EXACT day-0 slate, buy leg (gold/item/held-hides), sleep rotation to day-1 slate |
 | `ratici_fence_gate_check` | 9 | full | `ratici_fence_untrusted_start` | b2 #218: untrusted interact banks eyed_the_stash doorbell, NO fence dialogue (gate can-fail) |
+| `hedault_fragment_loop` | 7 | full | `hedault_fragment_start` | b6 #221: guardian-fragment trade BY CHOICE -- yield preview, fragment consumed, wardstone granted, oblique lore node, one-shot hide |

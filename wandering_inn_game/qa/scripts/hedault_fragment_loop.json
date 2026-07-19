@@ -1,0 +1,197 @@
+{
+ "_comment": "b6 #221: the guardian-fragment trade BY CHOICE — hub shows the yield preview (effect_lines) on the unlocked slot-4 option; trade consumes the fragment, grants hedaults_wardstone, banks traded_guardian_fragment, reads the oblique door-chain lore node; re-open proves the one-shot hide.",
+ "fixture_save": "hedault_fragment_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hedault",
+    "options": [
+     {
+      "effect_lines": [
+       "+3 HP",
+       "Resonance 1",
+       "Grants [Dangersense] in combat"
+      ],
+      "locked": true,
+      "requirement": "costs 20 gold",
+      "text": "The traveler's charm. Improve it. (20 gold)"
+     },
+     {
+      "effect_lines": [
+       "+1 damage on melee hits",
+       "Resonance 1",
+       "Grants [Eagle Eyes] in combat"
+      ],
+      "locked": false,
+      "requirement": "",
+      "text": "The hunter's fang. Make it more than a trophy. (35 gold)"
+     },
+     {
+      "effect_lines": [
+       "+2 HP",
+       "Reduces every hit taken by 1",
+       "Resonance 1"
+      ],
+      "locked": true,
+      "requirement": "costs 40 gold",
+      "text": "The wardstone bead. Set it true. (40 gold)"
+     },
+     {
+      "effect_lines": [
+       "+2 HP",
+       "Reduces every hit taken by 1",
+       "Resonance 1"
+      ],
+      "locked": false,
+      "requirement": "",
+      "text": "The guardian's fragment. I'm told you'd want to see it."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Just looking."
+     }
+    ]
+   },
+   "timeout_sec": 5,
+   "_comment": "LOW-3: exact hub pin including effect_lines — the fragment option shows its yield preview (+2 HP / DR 1 / Res 1)."
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 4
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_lost",
+   "payload_contains": {
+    "item": "guardian_ward_fragment"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hedaults_warded_setting"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "traded_guardian_fragment"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hedault",
+    "text": "Hold. Turn it — there. Ruin warding, and not apprentice work. The same discipline set the frame you woke on your pantry door; one school, long dissolved, and I will not guess at names in a shop. The setting is yours. The fragment stays with someone who can read it properly."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "One-shot: re-open, the fragment option is HIDDEN (traded counter).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "hedault_enchanting"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hedault"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "traded_guardian_fragment"
+   },
+   "count": 1
+  },
+  {
+   "action": "type_text",
+   "text": "4"
+  },
+  {
+   "_comment": "Slot 4 is now Just looking. (fragment option hidden) — exits clean.",
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hedaults_warded_setting"
+   },
+   "count": 1
+  }
+ ]
+}

@@ -58,10 +58,33 @@
        "remove_item": "witch_wardstone_bead"
       },
       {
-       "item": "hedaults_wardstone"
+       "item": "hedaults_warded_setting"
       }
      ],
      "goto": "work_done"
+    },
+    {
+     "text": "The guardian's fragment. I'm told you'd want to see it.",
+     "requires": {
+      "item": "guardian_ward_fragment"
+     },
+     "hide_when": {
+      "accomplishment": {
+       "traded_guardian_fragment": 1
+      }
+     },
+     "effects": [
+      {
+       "remove_item": "guardian_ward_fragment"
+      },
+      {
+       "item": "hedaults_warded_setting"
+      },
+      {
+       "accomplishment": "traded_guardian_fragment"
+      }
+     ],
+     "goto": "fragment_study"
     },
     {
      "text": "Just looking.",
@@ -75,6 +98,17 @@
    "options": [
     {
      "text": "Understood.",
+     "end": true
+    }
+   ]
+  },
+  "fragment_study": {
+   "speaker": "Hedault",
+   "_comment": "b6 #221 the trade-by-CHOICE close + the door-chain lore line. SPOILER BAR: oblique — one school of warding, no names, no volumes. The player gives up guarding_ward (the fragment's combat skill) for the wardstone + the read; keeping the fragment is the equally valid choice.",
+   "text": "Hold. Turn it — there. Ruin warding, and not apprentice work. The same discipline set the frame you woke on your pantry door; one school, long dissolved, and I will not guess at names in a shop. The setting is yours. The fragment stays with someone who can read it properly.",
+   "options": [
+    {
+     "text": "Fair trade.",
      "end": true
     }
    ]

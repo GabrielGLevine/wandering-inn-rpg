@@ -4137,6 +4137,35 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "hedault_fragment_loop",
+   "seed": 7,
+   "fixture": "hedault_fragment_start",
+   "note": "b6 #221: guardian-fragment trade BY CHOICE -- yield preview, fragment consumed, wardstone granted, oblique lore node, one-shot hide",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "mercantile_alleys"
+    ],
+    "fixtures": [
+     "hedault_fragment_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "hedault_enchanting"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration",
+     "input"
+    ]
+   }
   }
  ]
 }
