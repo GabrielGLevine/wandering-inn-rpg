@@ -380,6 +380,40 @@ func _execute(step: Dictionary) -> void:
 					_inject_mouse_click(rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"click_playtest_page":
+			var tsp := get_tree().root.find_child("TitleScreen", true, false)
+			if tsp == null:
+				_fail("click_playtest_page: TitleScreen node not found")
+			else:
+				var rect: Rect2 = tsp.call("playtest_page_rect")
+				if rect.size == Vector2.ZERO:
+					_fail("click_playtest_page: page label has no rendered rect")
+				else:
+					_inject_mouse_click(rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"click_playtest_back":
+			var tsb := get_tree().root.find_child("TitleScreen", true, false)
+			if tsb == null:
+				_fail("click_playtest_back: TitleScreen node not found")
+			else:
+				var rect: Rect2 = tsb.call("playtest_back_rect")
+				if rect.size == Vector2.ZERO:
+					_fail("click_playtest_back: back label has no rendered rect")
+				else:
+					_inject_mouse_click(rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"assert_playtest_page":
+			var tsa := get_tree().root.find_child("TitleScreen", true, false)
+			if tsa == null:
+				_fail("assert_playtest_page: TitleScreen node not found")
+			else:
+				var got: int = tsa.call("playtest_cursor_page")
+				var want := int(step["equals"])
+				if got != want:
+					_fail("assert_playtest_page: page %d != %d" % [got, want])
+			await get_tree().process_frame
 		"click_title_row":
 			var title_row_n := int(step["row"])
 			var ts := get_tree().root.find_child("TitleScreen", true, false)

@@ -120,6 +120,23 @@ func select_at_cell(cell: Vector2i) -> bool:
 	return false
 
 
+## a4 #216 slice 3: a board TAP during targeting. In line mode it AIMS the
+## line toward the tapped cell (dominant axis from the caster) — a tap must
+## never cancel a line skill. In target mode it delegates to select_at_cell;
+## returns false only for an empty tap in target mode, which the caller reads
+## as cancel — preserving the shipped tap-empty-to-cancel behavior there.
+func tap_at_cell(cell: Vector2i) -> bool:
+	if _line_mode:
+		var origin: Vector2i = _view.cell(_view.active_id())
+		var d := cell - origin
+		if d == Vector2i.ZERO:
+			return true  # tap on the caster: no-op, but never cancels
+		var dir_token := ("right" if d.x > 0 else "left") if abs(d.x) >= abs(d.y) else ("down" if d.y > 0 else "up")
+		_line_dir_index = LINE_DIRS.find(dir_token)
+		return true
+	return select_at_cell(cell)
+
+
 func confirm() -> Dictionary:
 	if _targeting_skill_id == "":
 		return {"kind": "attack", "target_id": String(_targets[_target_index])}

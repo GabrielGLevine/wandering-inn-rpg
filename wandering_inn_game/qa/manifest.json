@@ -472,6 +472,7 @@
     "skills": [],
     "dialogue": [],
     "systems": [
+     "input",
      "save"
     ]
    }
