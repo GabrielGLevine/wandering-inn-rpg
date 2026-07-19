@@ -351,6 +351,10 @@ func _build_expected_counts() -> Dictionary:
 			"anchor_waystone_slate"]:
 		counts["%s/idle" % pallass_static] = 1
 
+	# GH#184 city gate set (PixelLab statics)
+	counts["city_gatehouse/idle"] = 1
+	counts["city_gate_arch/idle"] = 1
+
 	return counts
 
 

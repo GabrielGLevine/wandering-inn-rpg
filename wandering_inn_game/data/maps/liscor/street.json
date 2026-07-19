@@ -422,13 +422,15 @@
      0
     ],
     "cap": [
-     2,
-     11
+     0,
+     0
     ],
     "face": [
-     2,
-     13
-    ]
+     1,
+     0
+    ],
+    "sheet": "res://assets/tiles/city_wall/Tiles.png",
+    "tile_px": 32
    },
    {
     "from": [
@@ -440,9 +442,11 @@
      2
     ],
     "cap": [
-     2,
-     11
-    ]
+     1,
+     0
+    ],
+    "sheet": "res://assets/tiles/city_wall/Tiles.png",
+    "tile_px": 32
    },
    {
     "from": [
@@ -454,9 +458,11 @@
      19
     ],
     "cap": [
-     2,
-     11
-    ]
+     1,
+     0
+    ],
+    "sheet": "res://assets/tiles/city_wall/Tiles.png",
+    "tile_px": 32
    }
   ]
  },
@@ -1023,7 +1029,7 @@
     3
    ],
    "display_name": "To the Floodplains",
-   "sprite": "door",
+   "sprite": "city_gate_arch",
    "to_map": "floodplains",
    "to_cell": [
     31,
