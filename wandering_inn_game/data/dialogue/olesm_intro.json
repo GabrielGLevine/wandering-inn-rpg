@@ -674,7 +674,7 @@
      "end": true
     }
    ],
-   "_comment": "GH#152: the runner beat here is the PRODUCER of watch_runner_pointed (banked in the report options) -- the previously zero-producer gate on Zevara's summons, which dead-ended the whole Raskghar arc / Act III. GH#152-FOLLOWUP: the runner POINTER is code-banked at the sleep beat once Act II conditions hold (_maybe_fire_tremor_pointer, wi_game.gd -- STRUCTURAL_LITERALS means code-banked; both the #152 scout and controller missed this). Do NOT bank watch_runner_pointed here: dialogue banks bypassed the deliberate act pacing (shipped briefly in #153, reverted same day). Legibility of the pointer lives in the #148 lattice (Erin/Olesm/Krshia relay lines on watch_runner_pointed)."
+   "_comment": "GH#152: the runner beat here is the PRODUCER of watch_runner_pointed (banked in the report options) -- the previously zero-producer gate on Zevara's summons, which dead-ended the whole Raskghar arc / Act III. GH#152-FOLLOWUP: the runner POINTER is code-banked at the sleep beat once Act II conditions hold (_maybe_fire_tremor_pointer, sleep_beat.gd -- STRUCTURAL_LITERALS means code-banked; both the #152 scout and controller missed this). Do NOT bank watch_runner_pointed here: dialogue banks bypassed the deliberate act pacing (shipped briefly in #153, reverted same day). Legibility of the pointer lives in the #148 lattice (Erin/Olesm/Krshia relay lines on watch_runner_pointed)."
   },
   "cisterns_intel": {
    "speaker": "Olesm",
@@ -685,7 +685,7 @@
      "end": true
     }
    ],
-   "_comment": "GH#152: the runner beat here is the PRODUCER of watch_runner_pointed (banked in the report options) -- the previously zero-producer gate on Zevara's summons, which dead-ended the whole Raskghar arc / Act III. GH#152-FOLLOWUP: the runner POINTER is code-banked at the sleep beat once Act II conditions hold (_maybe_fire_tremor_pointer, wi_game.gd -- STRUCTURAL_LITERALS means code-banked; both the #152 scout and controller missed this). Do NOT bank watch_runner_pointed here: dialogue banks bypassed the deliberate act pacing (shipped briefly in #153, reverted same day). Legibility of the pointer lives in the #148 lattice (Erin/Olesm/Krshia relay lines on watch_runner_pointed)."
+   "_comment": "GH#152: the runner beat here is the PRODUCER of watch_runner_pointed (banked in the report options) -- the previously zero-producer gate on Zevara's summons, which dead-ended the whole Raskghar arc / Act III. GH#152-FOLLOWUP: the runner POINTER is code-banked at the sleep beat once Act II conditions hold (_maybe_fire_tremor_pointer, sleep_beat.gd -- STRUCTURAL_LITERALS means code-banked; both the #152 scout and controller missed this). Do NOT bank watch_runner_pointed here: dialogue banks bypassed the deliberate act pacing (shipped briefly in #153, reverted same day). Legibility of the pointer lives in the #148 lattice (Erin/Olesm/Krshia relay lines on watch_runner_pointed)."
   },
   "lism_errand": {
    "speaker": "Olesm",

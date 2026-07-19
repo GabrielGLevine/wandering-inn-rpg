@@ -63,6 +63,32 @@
   {
    "action": "screenshot",
    "name": "arch_street"
+  },
+  {
+   "_comment": "PR #227 review Minor closure: pin the npc PLAIN-dialogue fallback arm of WIInteractions.dispatch (no conversation, no talk_pool) so seam-time sim-stream byte-diffs exercise it. The conversation-refused fallback (start_dialogue false on a dangling id) stays uncovered -- data-error path.",
+   "action": "move",
+   "direction": "right",
+   "steps": 22
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Antinium Worker"
+   },
+   "timeout_sec": 5
   }
  ]
 }
