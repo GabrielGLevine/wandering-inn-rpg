@@ -11,6 +11,7 @@ var pause_menu_ref: Node = null
 ## visibility never relies on the veil's own higher-CanvasLayer ColorRect
 ## swallowing taps (the implicit cross-file layer-ordering invariant).
 var main_ref: Node = null
+var combat_ref: Node = null
 var journal_ref: Node = null
 var inventory_ref: Node = null
 
@@ -99,6 +100,7 @@ func chip_rect(chip_name: String) -> Rect2:
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
 	match type:
 		WIEvents.WORLD_READY, WIEvents.COMBAT_STARTED, WIEvents.UI_COMBAT_HIDDEN, \
+		WIEvents.TURN_STARTED, WIEvents.COMBAT_RESOLVED, \
 		WIEvents.DIALOGUE_STARTED, WIEvents.DIALOGUE_ENDED, \
 		WIEvents.UI_PAUSE_SHOWN, WIEvents.UI_PAUSE_HIDDEN, \
 		WIEvents.UI_JOURNAL_SHOWN, WIEvents.UI_JOURNAL_HIDDEN, \
@@ -108,11 +110,21 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 
 
 func _apply_visibility() -> void:
-	var hard_blocked := Game.sim.combat != null or Game.sim.dialogue != null \
+	# a3 #215: while combat is RESTING (the player's own turn, Mode.HOTBAR)
+	# the Pause chip stays reachable — a touch player could otherwise never
+	# open the combat pause (keyboard cancel was the only route). Only the
+	# pause chip shows; journal/inventory stay combat-blocked.
+	var combat_resting := Game.sim.combat != null and combat_ref != null and bool(combat_ref.is_resting())
+	var hard_blocked := (Game.sim.combat != null and not combat_resting) or Game.sim.dialogue != null \
 			or not Game.sim.pending_consolidation.is_empty() \
 			or (main_ref != null and bool(main_ref.veil_modal_active()))
 	visible = not hard_blocked
 	if hard_blocked:
+		return
+	if combat_resting:
+		_pause_chip.visible = true
+		_journal_chip.visible = false
+		_inventory_chip.visible = false
 		return
 	var pause_open := pause_menu_ref != null and bool(pause_menu_ref.get("open"))
 	var journal_open := journal_ref != null and bool(journal_ref.get("open"))

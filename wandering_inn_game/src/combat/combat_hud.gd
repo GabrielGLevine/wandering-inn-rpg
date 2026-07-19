@@ -101,6 +101,11 @@ var _screen: Node
 var _readout_label: RichTextLabel
 var _order_label: Label
 var _feed_label: Label
+## a3 #215: the banner is a centered Control that CONSUMES clicks — a board
+## tap under it never reaches main's router, so the tap-dismiss rides the
+## banner itself (the natural mobile gesture: tap the Victory ribbon).
+signal banner_tapped
+
 var _banner_label: Label
 var _readout_panel: Control
 var _banner_panel: Control
@@ -168,6 +173,8 @@ func build() -> void:
 	readout_margin.add_child(_readout_label)
 	_root.add_child(_readout_panel)
 	_banner_panel = _make_panel(UIChrome.BLUE_RIBBON, Control.PRESET_CENTER, Vector2(360.0, 76.0), Vector4(-180.0, -38.0, 180.0, 38.0))
+	_banner_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	_banner_panel.gui_input.connect(_on_banner_gui_input)
 	_banner_label = UIChrome.make_label("", "Header")
 	_banner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_banner_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -536,6 +543,12 @@ func _display_name(combat: WICombat, view: RefCounted, id: String) -> String:
 	if view != null:
 		return view.display_name(id)
 	return String(combat.combatants[id]["display_name"])
+
+
+func _on_banner_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed \
+			and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+		banner_tapped.emit()
 
 
 func show_banner(text: String) -> void:
