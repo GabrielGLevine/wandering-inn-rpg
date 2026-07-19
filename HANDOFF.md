@@ -70,10 +70,16 @@ merged`), not here.
   147-script sweep + 6/6 checks READ. Skill folds: desk/paper seam,
   bool-gate hides, facing vector, hub-row index shifts, pool-stage
   shadow-out audit.
-- **USAGE-GUARD CAUTION** (fable ~60% weekly at b7 close): no new
-  packages started; b9 audio (#195/#200) + a3-a8 (delegation-ready)
-  + c1-c6 art are the remaining board — next session (or an upshifted
-  tier) picks them up from the wave plan + wi-* skills directly.
+- **DAY-2 AFTERNOON RUN (guard re-banded 80/90/96 by user, tier OK)**:
+  #200 boss music (PR #244), a7 #208 auto-slot (PR #245, review HIGH:
+  item-pin AUTO collapse fixed), a9 #246 Import/Export Save (PR #248,
+  review F1: title-export data-loss fixed), a6 #206 day pacing ×2
+  (PR #249, 400/900 bands + the fixture/crossing pin wave; the
+  reviewer's lantern MEDIUM refuted by probe). Branch protection ON
+  (6 required checks; [ci-full] platform-enforced on PR heads). #247
+  Friends-of-the-Inn spec on main (4 asks gate implementation).
+  Remaining board: #195 listening queue (user), a3/a4/a5/a8 mobile-UI
+  lanes, b7-ack leftovers none, c1-c6 art, d1 post-read.
 - Spoiler bar reminders for b1: Rags early-volume-safe; "Magical Door".
 
 ## 📋 QUEUE (value order)
