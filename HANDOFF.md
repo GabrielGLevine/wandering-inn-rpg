@@ -16,23 +16,34 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🎯 NEXT SESSION FIRST ACTION (2026-07-19 close, 19 PRs merged this day)
-Tree is CLEAN, main green, nothing in flight. Pick in this order:
-1. **#253 Import Save mobile bug** (user asked to debug tomorrow) —
-   web file-input flashes refusal, no picker. Fix hypotheses + the fix
-   candidate are in the issue; repro needs the itch build / web-parity
-   Chromium. Start here.
-2. **a8 #209 journal tabs** — READY TO EXECUTE from
-   docs/design/2026-07-19-a8-journal-tabs-plan.md (the pin wave is ~3
-   scripts, not 40; the plan is mechanical). The heaviest remaining
-   code lane; do it with fresh runway.
-3. **c-lane art** (#198/#210/#222-225) — PixelLab pipeline; needs the
-   asset catalog→index→assembly-guide setup first (wi-art-and-sprites).
-USER-GATED (waiting on the user, don't self-start): class/skill spec GO
-+ [Eagle Eyes] ACK (docs/design/class-expansion-spec.md, ready); #195
-audio listen (~30 files); a5 #205 FEEL confirm (before/after sent);
-#247 Friends-of-Inn 4 asks; #111 rename go/no-go; #211 leveling feel;
-3 Rags reads. All in the taste queue below.
+## 🎯 NEXT SESSION FIRST ACTION (2026-07-19 second wave — 4 MORE merges + 1 branch pending FEEL)
+Second wave same day shipped: **#209 journal tabs (PR #260)**, **#247
+Friends of the Inn pilot pair (PR #261)**, **#225 floor differentiation
+(PR #262)**, **#111 safe rename + first-boot save carry-over (PR #263)**
+— all reviewed + fix-waved + 6/6. Class/skill expansion tracking
+corrected (ALREADY SHIPPED both waves, audit-verified). Skill folds on
+main (PixelLab MCP pipeline, json.dump churn, branch-switch class
+cache, legacy_seed hook). #253 Import Save mobile DEFERRED by user.
+1. **`issue/198-dusty-scroll-split` (pushed, tip 1562642) awaits the
+   USER FEEL VERDICT** — #198 core (3 bespoke inn props) + the FULL
+   #222 dusty_scroll placement sweep (9 repoints, acceptance met: only
+   the genuine inn scroll wears it) + the food_basket person-bug fix.
+   Two FEEL shots sent (inn props; barracks notes). On "ship": PR with
+   "Closes #198" (NOT #222 — its chessboard/stall/bench/tell items
+   remain), read 6/6, merge. Alternates for every prop are on the
+   PixelLab account (tags 198-*/222-*) if a regen is asked.
+2. **PixelLab via MCP now** (server `pixellab`): get_balance /
+   create_1_direction_object (16-candidate review, ~$0.09 overage) /
+   select_object_frames. ~$4.6 credits left. Remaining art: #222's
+   non-scroll items, #224 statue repoint, #210/#223 character rigs
+   (BIG: 8-dir animated — use create_character; budget-check first).
+3. **#111 release-cut rehearsals** (docs/design/2026-07-19-111-rename-
+   release-checklist.md) — the two manual round-trips gate the v0.13
+   tag, not any merge.
+4. **#123** (3 canonicals pre-holding their earned class) — mechanical,
+   ungated, good filler lane.
+USER-GATED: #198/#222 FEEL verdict (shots sent); #195 audio listen;
+#211 leveling feel; 3 Rags reads. #134/#141 Wave-D classes lore-gated.
 
 ## 🏃 RUNNING (2026-07-19, v0.13 wave day 1 — 7 PRs merged)
 - **b4 #219 Grimalkin studies SHIPPED** (PR #239 → 48b23da): two
