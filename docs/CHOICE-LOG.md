@@ -281,3 +281,13 @@ cross-release index of them.
   players to the chest (shelf dead-end retired). Fence pool gains
   bounty-style static validation (code-built graphs bypass the
   dialogue validators).
+- **b10 #204 adjudications (2026-07-19)**: the recovery-beat gate is
+  RITUAL, not difficulty — a cold press costs one toast and the 2-plate
+  order is trial-solvable in ≤3 presses; the real costs remain the
+  shipped unseal convergence (fight OR persuade). The issue's "too
+  easy" is answered with ceremony + readable feedback + a [Detect
+  Magic] payoff. Escalation if you want real teeth: a wrong press
+  wakes the guardian early — say the word. Also: dead-guardian pedestal
+  fiction fixed via toast variant; fixture monotone-chain rule for the
+  new counters deferred (the coherence validator whitelists chains —
+  #122 grandfather precedent; follow-up ledgered).
