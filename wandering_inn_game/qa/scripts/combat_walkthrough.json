@@ -77,7 +77,7 @@
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
   { "action": "wait_frames", "frames": 5 },
-  { "action": "assert_state", "path": "accomplishments.won_combat", "equals": 1 },
+  { "action": "assert_state", "path": "accomplishments.won_combat", "equals": 2, "_comment": "GH#211 challenge weighting: a low-power player beating this real fight banks capped adversity 2.0 -- the directive-intended payout, not a double-count." },
 
   { "_comment": "The gate opens onto the street (post-victory the ambush is dormant, no re-trigger).", "action": "move", "direction": "right", "steps": 1 },
   { "action": "move", "direction": "down", "steps": 3 },
