@@ -54,7 +54,7 @@
    "accessory_2": "hunters_fang_talisman"
   },
   "container_state": {},
-  "actions_since_sleep": 500,
+  "actions_since_sleep": 1000,
   "times_slept": 22,
   "board_last_seen_times_slept": 22,
   "gold": 40,

@@ -74,7 +74,7 @@
    "accessory_3": ""
   },
   "container_state": {},
-  "actions_since_sleep": 500,
+  "actions_since_sleep": 1000,
   "rng_state": "-1966449618399012673",
   "fractional_bank": {}
  }
