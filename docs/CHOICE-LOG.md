@@ -243,3 +243,12 @@ cross-release index of them.
   *_skill_used growth under the flag (milestone fixtures pre-qualify);
   the pace harness covers the deposit path — a dedicated at-par tally
   canonical is queued as a follow-up.
+- **b1 Rags design adjudications (2026-07-19, doc §refs)**: back-away
+  now banks goblins_spared too (outcome-based mercy — Erin's sign cares
+  that goblins LIVE; garden leg becomes pacifist-reachable, ruled
+  thematically correct); conduct bar v1 = goblins_spared>=1 AND never
+  hunted the camp (fought_chieftains_raid==0) — the sign-defense fight
+  stays forgivable (self-defense in canon terms); quest title/problem
+  ("The Chieftain's Price", medicine-after-Watch-sweep) are
+  invention-within-gap, flagged; FIGHT close pays a deliberately small
+  grant (ambushing a parley is not adversity).
