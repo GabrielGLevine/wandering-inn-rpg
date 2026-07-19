@@ -550,6 +550,7 @@
 			"contexts": ["exploration"],
 			"field": true,
 			"field_ambient": "[Open Doors] — You offer the easy, practiced warmth that opens rooms. There is no room here to open.",
+			"door_flavor": "[Open Doors] — The door was not locked. It opens anyway, with tremendous ceremony, and somewhere the Skill feels appreciated.",
 			"description": "Doors that would stay shut for anyone else swing open at your approach -- goodwill has its own kind of key."
 		},
 		{

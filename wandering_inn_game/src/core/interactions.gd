@@ -26,6 +26,7 @@ var _transition: Callable
 var _current_map: Callable
 var _resolve_skill_use_effect: Callable
 var _holds_weapon_family: Callable
+var _has_items: Callable
 var _known_skills: Callable
 var _apply_gold_effect: Callable
 var _use_skill: Callable
@@ -34,7 +35,7 @@ var _start_combat: Callable
 var _pickup: Callable
 
 
-func _init(event_sink: Callable, accomplishment_gate_met_cb: Callable, record_accomplishment_cb: Callable, break_sneak_cb: Callable, talk_pool_line_cb: Callable, start_dialogue_cb: Callable, sleep_cb: Callable, interact_board_cb: Callable, interact_delivery_board_cb: Callable, interact_portal_menu_cb: Callable, interact_fence_menu_cb: Callable, transition_cb: Callable, current_map_cb: Callable, resolve_skill_use_effect_cb: Callable, holds_weapon_family_cb: Callable, known_skills_cb: Callable, apply_gold_effect_cb: Callable, use_skill_cb: Callable, encounter_gate_met_cb: Callable, start_combat_cb: Callable, pickup_cb: Callable) -> void:
+func _init(event_sink: Callable, accomplishment_gate_met_cb: Callable, record_accomplishment_cb: Callable, break_sneak_cb: Callable, talk_pool_line_cb: Callable, start_dialogue_cb: Callable, sleep_cb: Callable, interact_board_cb: Callable, interact_delivery_board_cb: Callable, interact_portal_menu_cb: Callable, interact_fence_menu_cb: Callable, transition_cb: Callable, current_map_cb: Callable, resolve_skill_use_effect_cb: Callable, holds_weapon_family_cb: Callable, known_skills_cb: Callable, apply_gold_effect_cb: Callable, use_skill_cb: Callable, encounter_gate_met_cb: Callable, start_combat_cb: Callable, pickup_cb: Callable, has_items_cb: Callable = Callable()) -> void:
 	_event_sink = event_sink
 	_accomplishment_gate_met = accomplishment_gate_met_cb
 	_record_accomplishment = record_accomplishment_cb
@@ -50,6 +51,7 @@ func _init(event_sink: Callable, accomplishment_gate_met_cb: Callable, record_ac
 	_current_map = current_map_cb
 	_resolve_skill_use_effect = resolve_skill_use_effect_cb
 	_holds_weapon_family = holds_weapon_family_cb
+	_has_items = has_items_cb
 	_known_skills = known_skills_cb
 	_apply_gold_effect = apply_gold_effect_cb
 	_use_skill = use_skill_cb
@@ -112,6 +114,14 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 					var hint := String(target.get("item_hint_toast", "Empty hands won't do it. You'd need the right weapon in your pack."))
 					_emit(WIEvents.TOAST, {"text": hint})
 					return {"item_hint": req_family}
+				# b7 #214c: requires_item now gates the PLAIN interact arm too
+				# (it was a bench/skill-path key only) — same String|Array
+				# all-or-nothing contract, nothing consumed. Absent key = empty
+				# list = met, so every shipped prop is byte-identical.
+				if _has_items.is_valid() and not bool(_has_items.call(target.get("requires_item", ""))):
+					var item_hint := String(target.get("item_hint_toast", "Bare hands won't do it. Something in your pack might."))
+					_emit(WIEvents.TOAST, {"text": item_hint})
+					return {"item_hint": String(target.get(WIKeys.ID, ""))}
 				if bool(target.get("once_per_waking", false)):
 					var waking_key := "serve:%s" % String(target[WIKeys.ID])
 					if entity_first_use.has(waking_key):

@@ -1087,6 +1087,22 @@
    "observe": "The paint is newer than the post it hangs on. Somebody meant it, and means it still."
   },
   {
+   "_comment": "b7 #214c: the fishing affordance — an item-gated bank prop beside the freezable pond edge ((10,17) itself stays clear for the freeze mechanic). No catch item, no fishing system (CHOICE-LOG): the issue is affordance clarity; banks went_fishing, once per waking. The handline's own lore ('the water starts moving wrong') is the deliberate echo.",
+   "id": "pond_edge",
+   "kind": "prop",
+   "cell": [9, 17],
+   "display_name": "Rippled Shallows",
+   "sprite": "grass_tuft",
+   "tint": [0.7, 0.85, 0.9],
+   "observe": "The pond narrows here over a drop the light doesn't reach. Every so often the water moves wrong. Something under there is not a fish, or is a very large one.",
+   "requires_item": "fishers_handline",
+   "item_hint_toast": "Whatever's under there won't come to bare hands. Lism's shelf had a fisher's handline.",
+   "on_interact_accomplishment": "went_fishing",
+   "once_per_waking": true,
+   "once_per_waking_toast": "The water's gone still. Whatever considered you today is done considering.",
+   "toast": "You pay out the line into the dark water. Something mouths the hook, considers, and lets go. Heavier than any fish has a right to be."
+  },
+  {
    "_comment": "Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast.",
    "id": "frozen_cache",
    "kind": "prop",

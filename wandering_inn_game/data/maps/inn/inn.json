@@ -953,6 +953,7 @@
   {
    "id": "pantry_door",
    "kind": "prop",
+   "door_flavor_target": true,
    "cell": [
     14,
     6

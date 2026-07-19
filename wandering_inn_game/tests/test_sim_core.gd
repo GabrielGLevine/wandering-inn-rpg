@@ -2817,6 +2817,61 @@ func _init() -> void:
 	assert(ack_lines[-1].begins_with("Krshia's stone, market row"),
 		"an active story relay outranks the standing bond-path signpost")
 
+	# --- b7 #214: skill-flavor trio's sim arms. (b) door_flavor fires on a
+	# door-shaped target and only there; (c) the pond_edge item gate,
+	# bank, and once-per-waking serve — the prop sits ON the pond's
+	# water-wall cell (9,17), so the faced-cell interact from the bank is
+	# exactly what a player does. ---
+	var gFlav := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345)
+	gFlav.player_skills.append("open_doors")
+	gFlav.bind_map_silent("inn", Vector2i(14, 7))
+	gFlav.player_facing = Vector2i.UP  # faces pantry_door (14,6)
+	_events.clear()
+	var flav_res: Dictionary = gFlav.use_skill_field("open_doors")
+	assert(String(flav_res.get("door_flavored", "")) == "pantry_door", "open_doors on the pantry door takes the door_flavor arm")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "[Open Doors] — The door was not locked. It opens anyway, with tremendous ceremony, and somewhere the Skill feels appreciated."),
+		"the pantry joke renders verbatim")
+	gFlav.player_facing = Vector2i.DOWN  # (14,8): no door faced
+	_events.clear()
+	var flav_res2: Dictionary = gFlav.use_skill_field("open_doors")
+	assert(String(flav_res2.get("ambient", "")) == "open_doors", "no door faced falls through to the shipped field_ambient line")
+	gFlav.bind_map_silent("deep_tunnels", Vector2i(4, 4))
+	gFlav.player_facing = Vector2i.RIGHT  # faces cold_hearth (5,4): a prop, NOT a door
+	var flav_res3: Dictionary = gFlav.use_skill_field("open_doors")
+	assert(String(flav_res3.get("ambient", "")) == "open_doors",
+		"a non-door entity falls through to ambient (review M2: the door-shape predicate has teeth)")
+	gFlav.bind_map_silent("inn", Vector2i(3, 7))
+	gFlav.player_facing = Vector2i.DOWN  # faces garden_door (3,8): door_when gate UNMET, hidden pre-unlock
+	_events.clear()
+	var flav_res4: Dictionary = gFlav.use_skill_field("open_doors")
+	assert(String(flav_res4.get("ambient", "")) == "open_doors",
+		"a sealed/hidden door_when door never jokes or leaks (review M1: 'was not locked' must be true)")
+	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]).begins_with("[Open Doors] — The door was not locked.")),
+		"no joke toast on the hidden garden door")
+	gFlav.record_accomplishment("garden_door_unlocked")
+	var flav_res5: Dictionary = gFlav.use_skill_field("open_doors")
+	assert(String(flav_res5.get("door_flavored", "")) == "garden_door",
+		"the same door jokes once its gate is MET (openable = door)")
+
+	var gFish := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345)
+	gFish.bind_map_silent("floodplains", Vector2i(9, 16))
+	gFish.player_facing = Vector2i.DOWN  # faces pond_edge (9,17)
+	_events.clear()
+	gFish.interact()
+	assert(gFish.accomplishment_count("went_fishing") == 0, "bare hands bank nothing at the shallows")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "Whatever's under there won't come to bare hands. Lism's shelf had a fisher's handline."),
+		"the item hint points at the handline's one vendor")
+	gFish.inventory.append("fishers_handline")
+	_events.clear()
+	gFish.interact()
+	assert(gFish.accomplishment_count("went_fishing") == 1, "the handline banks the cast")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]).begins_with("You pay out the line into the dark water.")),
+		"the cast toast renders")
+	assert(gFish.inventory.has("fishers_handline"), "the handline is a tool, never consumed")
+	_events.clear()
+	gFish.interact()
+	assert(gFish.accomplishment_count("went_fishing") == 1, "once per waking: the second cast serves the spent toast, no re-bank")
+
 	# --- GH#163 review MEDIUM: the tier LOCK must survive a rank shift ---
 	var tier_cc: Dictionary = combat_config.duplicate(true)
 	tier_cc["classes"] = _load_json("res://data/classes.json")

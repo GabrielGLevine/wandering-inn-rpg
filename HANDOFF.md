@@ -56,8 +56,17 @@ merged`), not here.
   at the recovery beat, zero sim/combat changes, door-chain seeds all
   safe. CHOICE-LOG carries the ritual-vs-difficulty adjudication + the
   guardian-wake escalation offer (one word flips it).
-- Next: b4 Grimalkin, b7 ack wave, b9 audio; a3-a8; c1-c6
-  (delegation split per the directive).
+- **b7 ack wave ROLLING (day 2)**: #201/#203 SHIPPED (PR #240 — Relc
+  seated on the approach lane (11,4), leaves post-clear via absent
+  gate, departure sprite-count pin); #207 SHIPPED (PR #241 — all 13
+  delivery rows acknowledge: 10 pool stages + stall toast variant +
+  grate observe override; review fix promoted STANDING familiarity
+  stages above warm terminals so the ordinary path acks); #212/#213
+  PR #242 (Tamer signposts: Krshia pointer ×6 pools, dens' in-situ
+  telegraphs, Selys signpost above her terminal, corusdeer observe
+  extension). #214 (flavor trio) next; then b9 audio; a3-a8; c1-c6
+  (delegation split per the directive). Design authority:
+  docs/design/2026-07-19-b7-ack-wave-design.md.
 - Spoiler bar reminders for b1: Rags early-volume-safe; "Magical Door".
 
 ## 📋 QUEUE (value order)
