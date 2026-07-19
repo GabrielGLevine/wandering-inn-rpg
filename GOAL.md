@@ -28,6 +28,30 @@ except the items marked USER-GATED below.
    gate_visual_check / credits_visual_check / mobile_tap_check. Do not
    re-litigate; `git show v0.12.1` for the diff.
 
+## Model usage directive (user, 2026-07-19): PUSH FABLE HARD
+Fable access ENDS after tomorrow (~2026-07-20). Invert the usual
+throttle-the-top-model pacing for this window:
+- **Spend the Fable budget aggressively** on Fable-class work while it
+  exists: the #194 seam extractions, the #211 challenge-weighted
+  progression design + sim implementation, wave-package design briefs,
+  whole-branch reviews, and any canon/balance adjudication. Do NOT save
+  budget for later — there is no later.
+- Delegate mechanical/bounded work down the ladder (Codex gpt-5.6-sol per
+  wi-delegating-to-codex; cheaper Claude tiers for grunt sweeps) so Fable
+  hours go only where the reasoning ceiling matters.
+- Usage guard still runs, but at OK/CAUTION prefer UPSHIFTING Fable onto
+  the hardest queued package over idling; only WINDDOWN/QUIESCE curb it.
+- **Front-load durable artifacts**: every Fable session ends with its
+  learnings folded into `.claude/skills/wi-*` (the Fable-only edit rule
+  holds until access ends, then the rule converts to propose-via-HANDOFF),
+  design decisions written into issues/docs verbatim, and GOAL.md/HANDOFF
+  current — successor Opus/Sonnet sessions must be able to execute the
+  remainder of this charter from the artifacts alone.
+- Sequencing consequence: prioritize the packages where Fable's judgment
+  is least replaceable (#194a/b, #211, b1 Rags design, balance bars)
+  ahead of mechanical placements (c2/c5) and copy passes, even where the
+  plan doc's lane order would allow otherwise.
+
 ## Mission
 Ship v0.13.0 as a significant depth + polish release: textures, visual
 fixes, side quests, interiors/interactions, sprite & prop diversity,
