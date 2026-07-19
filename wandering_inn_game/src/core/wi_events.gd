@@ -6,6 +6,8 @@ extends RefCounted
 const SIM_INITIALIZED := &"sim_initialized"
 const GAME_RESET := &"game_reset"
 const GAME_LOADED := &"game_loaded"
+const SAVE_EXPORTED := &"save_exported"
+const SAVE_IMPORTED := &"save_imported"
 const GAME_OVER := &"game_over"
 const TOAST := &"toast"
 

@@ -161,9 +161,9 @@
    "frames": 2
   },
   {
-   "_comment": "== Back (MOUSE path): row 13 = 'Back' (index 12 -- shifted by 'Credits...' GH#147, same append-before-Back lineage as Combat Speed #87 / Quest Thread #148).",
+   "_comment": "== Back (MOUSE path): row 15 = 'Back' (index 14 -- shifted by 'Export Save'/'Import Save...' a9 #246, same append-before-Back lineage as Credits GH#147 / Combat Speed #87 / Quest Thread #148).",
    "action": "click_settings_row",
-   "row": 13
+   "row": 15
   },
   {
    "action": "wait_for_event",
@@ -363,10 +363,10 @@
    "equals": 2
   },
   {
-   "_comment": "== Close settings (KEYBOARD path): down x3 from 'Combat Speed' (index 9) -> 'Back' (index 12, shifted by 'Credits...' GH#147; previously 'Quest Thread' appended before it, issue #148). The cursor passes THROUGH 'Quest Thread' (index 10) without toggling it (move never activates -- only Confirm does), so the setting stays default-OFF here; the dedicated Quest Thread toggle + round-trip is appended at the very end. Confirm closes -- the pause menu resumes right where it was (cursor untouched, no re-open).",
+   "_comment": "== Close settings (KEYBOARD path): down x5 from 'Combat Speed' (index 9) -> 'Back' (index 14, shifted by 'Export Save'/'Import Save...' a9 #246 past the GH#147 Credits shift). The cursor passes THROUGH 'Quest Thread' (index 10) without toggling it (move never activates -- only Confirm does), so the setting stays default-OFF here; the dedicated Quest Thread toggle + round-trip is appended at the very end. Confirm closes -- the pause menu resumes right where it was (cursor untouched, no re-open).",
    "action": "move",
    "direction": "down",
-   "steps": 3
+   "steps": 5
   },
   {
    "action": "press",
@@ -504,10 +504,10 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Close settings: down x2 from 'Quest Thread' (index 10) -> 'Back' (index 12, past 'Credits...' GH#147), Confirm closes.",
+   "_comment": "Close settings: down x4 from 'Quest Thread' (index 10) -> 'Back' (index 14, past Credits GH#147 and the a9 #246 import/export pair), Confirm closes.",
    "action": "move",
    "direction": "down",
-   "steps": 2
+   "steps": 4
   },
   {
    "action": "press",

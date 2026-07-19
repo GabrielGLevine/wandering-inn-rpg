@@ -141,9 +141,9 @@
    "name": "03_pause_chip_to_settings"
   },
   {
-   "_comment": "row 13 = 'Back' (last settings row, shifted by 'Credits...' GH#147 -- matches settings_loop's own row-13 click).",
+   "_comment": "row 15 = 'Back' (last settings row, shifted by the a9 #246 import/export pair past Credits GH#147 -- matches settings_loop's own row-15 click).",
    "action": "click_settings_row",
-   "row": 13
+   "row": 15
   },
   {
    "action": "wait_for_event",

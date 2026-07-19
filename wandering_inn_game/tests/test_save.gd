@@ -708,5 +708,45 @@ func _init() -> void:
 	var carrier_in_state: Dictionary = carrier_data["state"]
 	assert(Array(carrier_in_state["generalist_classes"]) == ["fighter", "helper"], "_migrated leaves the input's generalist_classes untouched")
 
+	# --- a9 #246: the import/export TEXT seam. Export/import are thin
+	# game.gd wrappers over exactly these pieces; the text round-trip and
+	# every refusal class are pinned HERE (pure, no autoload). ---
+	var exp_game := _new_game()
+	exp_game.record_accomplishment("slept")
+	exp_game.gold = 17
+	var exported := JSON.stringify(WISave.serialize(exp_game))
+	var reparsed: Variant = JSON.parse_string(exported)
+	assert(reparsed is Dictionary, "exported text parses back")
+	var imported := _new_game()
+	assert(WISave.apply(imported, reparsed), "exported text imports through apply()")
+	assert(imported.gold == 17 and imported.accomplishment_count("slept") == 1,
+		"imported state is semantically identical (gold + counters survive the text hop)")
+	# JSON has no int: the FIRST parse converts ints to floats, so the first
+	# re-export differs textually (shipped slot loads already live at the
+	# float fixed point — same behavior). The honest byte contract is the
+	# FIXED POINT: one more text cycle is byte-stable.
+	var exported2 := JSON.stringify(WISave.serialize(imported))
+	var imported2 := _new_game()
+	assert(WISave.apply(imported2, JSON.parse_string(exported2)), "second-cycle text imports")
+	assert(JSON.stringify(WISave.serialize(imported2)) == exported2,
+		"the text round-trip reaches its byte fixed point in one cycle (export -> import -> export is stable thereafter)")
+	assert(JSON.parse_string(exported2) == JSON.parse_string(exported),
+		"deep equality modulo int/float: no field is dropped or mutated across the text hop (review F5 — Dictionary == is recursive and parse float-normalizes both sides)")
+	var trunc_parser := JSON.new()
+	assert(trunc_parser.parse(exported.substr(0, exported.length() / 2)) != OK,
+		"a truncated file fails at parse (import refuses before apply; JSON.new().parse is the SILENT contract — review F4)")
+	var wrong_ver: Dictionary = (JSON.parse_string(exported) as Dictionary).duplicate(true)
+	wrong_ver["version"] = 99
+	assert(not WISave.apply(_new_game(), wrong_ver), "an unknown version refuses")
+	var wrong_type: Dictionary = (JSON.parse_string(exported) as Dictionary).duplicate(true)
+	(wrong_type["state"] as Dictionary)["player_facing"] = "up"
+	assert(not WISave.apply(_new_game(), wrong_type), "a wrong-typed field refuses (the b4 facing trap, now a guarded import path)")
+	var victim := _new_game()
+	victim.gold = 5
+	var victim_before := JSON.stringify(WISave.serialize(victim))
+	assert(not WISave.apply(victim, wrong_type), "refused import returns false")
+	assert(JSON.stringify(WISave.serialize(victim)) == victim_before,
+		"a refused apply leaves the target sim byte-identical (the non-destructive contract's sim half; game.gd uses a TRIAL sim besides)")
+
 	print("PASS: save round-trips the full sim including rng state")
 	quit(0)

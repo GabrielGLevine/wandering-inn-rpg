@@ -104,6 +104,12 @@ merged`), not here.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 
+- **a9 #246 CROSS-DEVICE ROUND-TRIP ASK**: Export Save / Import Save
+  are live in Settings (PR pending). The web arms (itch html5 blob
+  download + file picker) are traced-only in CI — do one REAL round
+  trip when convenient: export on desktop, import in the browser (or
+  reverse). Title-screen Export dumps the Continue slot; in-world
+  Export dumps the live game.
 - **b9 #200 boss music EAR-GATE**: deep_warren now plays
   battle_for_despair (bundle-top energy; the old moody track moved to
   the snare fight). Load the deep-descent playtest state, pull the
