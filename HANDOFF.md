@@ -82,8 +82,11 @@ merged`), not here.
   line-skill tap-aim + playtest touch nav), a5 #205 dark-field
   legibility all SHIPPED. a5 is EYE-GATE: user FEEL confirm pending
   (before/after sent; VISUAL-LOG box open; one knob tunes, reversible).
-  Remaining board: #195 listening queue (user), a8 journal tabs, c1-c6
-  art, d1 post-read. In flight: #257 ci_sweep result.json hardening
+  Remaining board: #195 listening queue (user), **a8 journal tabs
+  (#209) — EXECUTION PLAN written docs/design/2026-07-19-a8-journal-tabs-
+  plan.md: the feared 40-script pin wave is really ~3 (payload stays
+  full/tab-independent so ~20 payload-only pins are untouched); execute
+  FRESH per the plan**, c1-c6 art, d1 post-read. In flight: #257 ci_sweep result.json hardening
   (closes #256 — the false-green class). Open follow-up: #256-adjacent
   grep-widen (bare ERROR: slips the SCRIPT ERROR|Parse Error|WARNING
   net). NEW BUGS filed: #253 Import Save mobile (web file-input flashes
