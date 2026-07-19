@@ -268,6 +268,16 @@
      ]
     },
     {
+     "id": "selys_signpost_wolf_pup",
+     "_comment": "b7 #212 bond-path signpost keyed on the Tamer chain's entry counter (meeting the dog banks nothing — CHOICE-LOG). Review reposition: ABOVE the warm terminal so a mid-game soother still hears it (unlock guidance, not flavor); story threads and their neutrals below still outrank. Goes stale once the pup is tamed — accepted, bounded (CHOICE-LOG).",
+     "requires_accomplishment": {
+      "soothed_a_beast": 1
+     },
+     "lines": [
+      "Word came up you looked in on that lame corusdeer. There's a wolf pup in the western dens nobody's had the hands for. Not Guild business. Just saying."
+     ]
+    },
+    {
      "id": "selys_thread_horns_gallery",
      "requires_accomplishment": {
       "horns_delve_started": 1

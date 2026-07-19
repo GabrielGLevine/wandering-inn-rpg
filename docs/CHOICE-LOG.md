@@ -348,3 +348,25 @@ cross-release index of them.
   stall = toast variant (observe is a Tactician grant — an
   observe-only ack would be class-gated); grate = observe override
   (its toast is door-blocked post-cisterns).
+- **b7 #212/#213 adjudication (2026-07-19)**: "after meeting the dog,
+  rumor toward the bond skill" — meeting the dog banks nothing, so the
+  Selys rumor keys on soothed_a_beast (the Tamer chain's own entry):
+  it fires exactly when the player IS a prospective Tamer. In-situ
+  telegraphs ride the dens' locked_toasts (unpinned copy) pointing
+  back at tending hurt beasts; the find-the-corusdeer pointer is a
+  Krshia base-pool line (rotation append, text-safe — pool pins are
+  speaker-only). The pinned corusdeer interact toasts are untouched.
+- **b7 #212/#213 review-wave adjudications (2026-07-19)**: signposts
+  are GUIDANCE, so shadow-out that was acceptable for #207's flavor
+  acks defeats these — fixes: the corusdeer pointer now ALSO rides
+  Krshia's five unpinned warm/neutral stage pools (the base-pool copy
+  was near-dead once any stage armed; fair_weight untouched, its idx
+  pin holds), the Selys signpost repositioned ABOVE her warm terminal
+  (mid-game soothers hear it; story threads still outrank), and the
+  trigger-site hint is the corusdeer's own observe extension (its
+  interact toasts stay verbatim-pinned). Accepted staleness, bounded:
+  the pup rumor persists briefly after taming (no taming-specific
+  counter exists and the PR bars new ones); the pointer persists
+  after the class is earned. Copy fixes: "Hrr." corpus form,
+  "looked in on" (soothed_a_beast attests the visit, not the splint),
+  signpost id prefix (thread_ implies a paired neutral retire).
