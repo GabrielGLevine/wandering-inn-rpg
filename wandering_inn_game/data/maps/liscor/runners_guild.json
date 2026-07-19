@@ -17,24 +17,17 @@
  ],
  "floor_layers": [
   {
+   "_pick": "#225 floor differentiation: the Runner's Guild reads as a patterned herringbone wood hall, distinct from the inn's straight tavern planks. Reuses the inn's OWN verified bedroom-corner herringbone swatch (Interior_Walls_01 [16,21]/[17,21], rgb~97,76,38) -- same sheet/family, no new license, footstep-wood stays honest.",
    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
    "tile_px": 16,
    "variants": [
     [
-     1,
+     16,
      21
     ],
     [
-     2,
+     17,
      21
-    ],
-    [
-     1,
-     22
-    ],
-    [
-     2,
-     22
     ]
    ],
    "cells": "all"
