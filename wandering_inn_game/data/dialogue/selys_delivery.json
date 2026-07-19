@@ -17,6 +17,14 @@
     {
      "requires": {
       "accomplishment": {
+       "errand_decided": 1
+      }
+     },
+     "text": "Back again. Erin's errand is filed and finished — which puts you one paperwork grade above most adventurers I deal with. What now?"
+    },
+    {
+     "requires": {
+      "accomplishment": {
        "cisterns_reported": 1
       }
      },
@@ -254,7 +262,7 @@
        "gold": 4
       }
      ],
-     "goto": "delivered"
+     "goto": "errand_kept"
     },
     {
      "text": "Send it back to Erin.",
@@ -274,7 +282,7 @@
        "gold": 3
       }
      ],
-     "goto": "delivered"
+     "goto": "errand_returned"
     },
     {
      "text": "Might as well ask.",
@@ -288,6 +296,16 @@
       }
      },
      "end": true
+    }
+   ],
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "errand_decided": 1
+      }
+     },
+     "text": "The Erin file is closed, believe it or not. If you're here for guild business, the board's behind you; if you're here for gossip, the line forms behind Lism."
     }
    ]
   },
@@ -313,7 +331,7 @@
        "gold": 4
       }
      ],
-     "goto": "delivered_smooth"
+     "goto": "errand_kept"
     },
     {
      "text": "Send it back to Erin.",
@@ -333,7 +351,7 @@
        "gold": 3
       }
      ],
-     "goto": "delivered_smooth"
+     "goto": "errand_returned"
     },
     {
      "text": "Might as well ask.",
@@ -347,6 +365,16 @@
       }
      },
      "end": true
+    }
+   ],
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "errand_decided": 1
+      }
+     },
+     "text": "The Erin file is closed, believe it or not. If you're here for guild business, the board's behind you; if you're here for gossip, the line forms behind Lism."
     }
    ]
   },
@@ -381,6 +409,34 @@
    "options": [
     {
      "text": "My thanks, Selys.",
+     "end": true
+    }
+   ]
+  },
+  "errand_kept": {
+   "speaker": "Selys",
+   "text": "Courier's fee it is. Erin won't miss it, and you look like someone who walked the Floodplains to earn it. We're square — tell her the package landed.",
+   "options": [
+    {
+     "text": "Might as well ask.",
+     "goto": "hub"
+    },
+    {
+     "text": "(Leave.)",
+     "end": true
+    }
+   ]
+  },
+  "errand_returned": {
+   "speaker": "Selys",
+   "text": "Sent back, then. She'll spend it on flour and act like she won an argument. You did the walking and took nothing for it — I'm noting that, even if the ledger doesn't.",
+   "options": [
+    {
+     "text": "Might as well ask.",
+     "goto": "hub"
+    },
+    {
+     "text": "(Leave.)",
      "end": true
     }
    ]

@@ -158,7 +158,7 @@
    "text": "Oldblood, yes. Fire, technically. Ten seconds of it, no air in my lungs the whole time, and a day of sounding like a gravel cart after. It's a weapon you pay for using, so I file it where I file all last resorts. You want fire that works, requisition a mage.",
    "options": [
     {
-     "text": "Back a step.",
+     "text": "(Back a step.)",
      "goto": "hub"
     },
     {
@@ -176,7 +176,7 @@
      "goto": "zevara_oath_two"
     },
     {
-     "text": "Back a step.",
+     "text": "(Back a step.)",
      "goto": "hub"
     },
     {
@@ -190,7 +190,7 @@
    "text": "Luck is what people call other people's overtime. But — thank you. File that under 'said once'. Now get out of my gatehouse before I find you a shift.",
    "options": [
     {
-     "text": "Back a step.",
+     "text": "(Back a step.)",
      "goto": "hub"
     },
     {
@@ -345,7 +345,7 @@
      "goto": "authority"
     },
     {
-     "text": "Back a step.",
+     "text": "(Back a step.)",
      "goto": "hub"
     },
     {
@@ -359,7 +359,7 @@
    "text": "He should. I signed his posting and I read his reports: both of them, the real one and the one where nothing happened. Liscor's Watch runs on people who'd rather stand a boring gate than let an interesting one through. Long may it bore us.",
    "options": [
     {
-     "text": "Back a step.",
+     "text": "(Back a step.)",
      "goto": "hub"
     },
     {
@@ -483,7 +483,7 @@
    ],
    "options": [
     {
-     "text": "Back a step.",
+     "text": "(Back a step.)",
      "goto": "hub"
     },
     {
