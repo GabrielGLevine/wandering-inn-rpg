@@ -105,13 +105,15 @@ merged`), not here.
 3. **#19 Steam:** HOLD — user-secret provisioning + #20 ruling.
 4. **#123 canonical redesigns** (social_loop/garden_walkthrough/
    class_evolution_loop pre-hold the class their script earns) — post-release.
-5. **Class/Skill expansion proposal — USER-GATED:**
-   `docs/design/class-skill-expansion-proposal.md` (2026-07-15). Four new
-   base classes ([Runner]→[Courier], [Hedge Witch]→[Witch], [Necromancer],
-   [Cook]→[Chef]) + [Scout] consolidation (rogue×archer) + mage L7
-   [Detect Magic]; three new overworld verbs (blink/ward/companion), all
-   wiki-verified vs the Book-17 bar (incl. [Flash Step] = Pisces' spell).
-   Five flagged decisions in §8 need rulings before any lane dispatches.
+5. **Class/Skill expansion — SPEC READY, awaits user GO + one ACK:**
+   `docs/design/class-expansion-spec.md` (Waves A+B, 445 lines) implements
+   the proposal with §8 decisions already RULED (witch no-gate, [Flash
+   Step] Necro L7 + Mage L11, Necro evo parked). Roster: [Runner]→
+   [Courier], [Hedge Witch]→[Witch], [Necromancer], [Cook]→[Chef],
+   [Scout] consolidation, mage [Detect Magic]/[Flash Step]. ONE pending:
+   ACK [Eagle Eyes]'s AMBIGUOUS-lean-PASS name (keep vs ORIGINAL). On go,
+   dispatch Wave A (data-only, zero engine risk) first. NOTE: user
+   expected this spec 2026-07-19 and hadn't seen it — surface it.
 
 ## 👀 TASTE QUEUE (new this wave, user review)
 
