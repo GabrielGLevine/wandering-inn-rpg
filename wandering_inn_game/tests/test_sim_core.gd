@@ -2562,6 +2562,32 @@ func _init() -> void:
 	assert(WIGame.apply_loadout(["a", "b", "c"], ["c", "a"]) == ["c", "a"], "non-empty loadout reorders to LOADOUT order and drops unlisted candidates")
 	assert(WIGame.apply_loadout(["a", "b"], ["nonexistent_skill", "b"]) == ["b"], "a loadout id absent from candidates (unknown/renamed) is silently dropped, never an error")
 
+	# --- a7 #208: auto-slot on grant, custom-loadout mode only. The two call
+	# sites (sleep() end, accept_consolidation() end) are one-line reconciles
+	# over this helper; arms exercise the helper's whole decision table. ---
+	var gAuto := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gAuto.classes = {"warrior": 1, "tactician": 1, "helper": 1}
+	gAuto.hotbar_loadout.assign(["basic_cleaning"])
+	_events.clear()
+	var before_no_observe: Array = gAuto.known_skills().filter(func(id: Variant) -> bool: return String(id) != "observe")
+	gAuto._auto_slot_new_field_skills(before_no_observe)
+	assert(gAuto.hotbar_loadout == ["basic_cleaning", "observe"], "a newly granted field skill auto-joins a CUSTOM loadout")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "loadout_changed" and bool(e["payload"].get("auto", false)) and String(e["payload"]["skill"]) == "observe"),
+		"auto-slot emits LOADOUT_CHANGED with auto:true")
+	gAuto._auto_slot_new_field_skills(before_no_observe)
+	assert(gAuto.hotbar_loadout == ["basic_cleaning", "observe"], "already-slotted: idempotent, no duplicate")
+	gAuto.hotbar_loadout.assign(["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9"])
+	gAuto._auto_slot_new_field_skills(before_no_observe)
+	assert(gAuto.hotbar_loadout.size() == 9, "a full bar (AUTO_SLOT_CAP 9) never grows — selection stays manual when there is no room")
+	gAuto.hotbar_loadout.clear()
+	_events.clear()
+	gAuto._auto_slot_new_field_skills(before_no_observe)
+	assert(gAuto.hotbar_loadout.is_empty() and _events.is_empty(), "AUTO mode (empty loadout) needs nothing — it already shows every field skill")
+	gAuto.hotbar_loadout.assign(["basic_cleaning"])
+	var before_no_appraise: Array = gAuto.known_skills().filter(func(id: Variant) -> bool: return String(id) != "battlefield_awareness")
+	gAuto._auto_slot_new_field_skills(before_no_appraise)
+	assert(gAuto.hotbar_loadout == ["basic_cleaning"], "a NON-field grant never auto-slots")
+
 	_events.clear()
 	gLoad.loadout_toggle("observe")
 	assert(gLoad.hotbar_loadout == ["observe"], "toggle on an unslotted skill assigns it (appends)")

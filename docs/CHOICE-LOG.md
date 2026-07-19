@@ -385,3 +385,11 @@ cross-release index of them.
   The interact arm gained the String|Array requires_item gate the
   bench path already had (absent key = met — every shipped prop
   byte-identical; unit-pinned both ways).
+- **a7 #208 adjudication (2026-07-19)**: hotbar capacity has never
+  been a constant — the bar renders whatever the loadout yields. The
+  auto-slot cap is set at 9: the number-key hints are the bar's honest
+  affordance, and slot 10+ has no key. AUTO mode (empty loadout)
+  already shows every field skill, so auto-slot only touches CUSTOM
+  loadouts; selection stays manual (a full bar never grows). Two call
+  sites (sleep end, consolidation accept) reconcile a known-before
+  snapshot — new field skills only, LOADOUT_CHANGED auto:true.
