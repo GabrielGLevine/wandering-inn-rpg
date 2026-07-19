@@ -1,0 +1,32 @@
+{
+ "_comment": "d1 #247 Friends of the Inn -- the pilot pair canonical. Fixture inn_guests_start (at the inn, chatted_with_selys=3 + chatted_with_krshia=4, so WIInnGuests seats BOTH pilots every waking; a hot_meal in the pack for the serve leg). Proves the three requirements: (1) PRESENCE-WHEN-MET -- both guest entities are reachable/interactable (absent-when-unmet is inn_walkthrough's fresh negative half, sprite pins unchanged); (2) CONTEXT AWARENESS -- interacting a guest opens its OWN inn conversation (selys_inn/krshia_inn) with an off-duty greeting, NOT the guild/stall hub (interactions.gd:76 opens the conversation directly, no home hub attached); (3) SERVABLE -- Selys's Serve option consumes the hot_meal and banks the shared served_customer counter (feeds Helper). Krshia proves her ', yes?' inn register (the Gnoll palette). Rotation windowing/dedup is unit-pinned in test_inn_guests. INTERACT IDIOM (horns_residence): a click on a non-adjacent entity only WALKS adjacent -- it does not interact -- so each guest is reached by clicking an empty adjacent cell, waiting for arrival, THEN clicking the guest's own cell (now cardinally adjacent -> face + interact). Both guest seats sit WEST of the armed rift_vermin_leak (9,7), so no visit routes through its trigger radius. Boot = fixture->manual slot, title Continue (down 1), same as horns_residence/save_port_loop.",
+ "fixture_save": "inn_guests_start",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "current_map", "equals": "inn" },
+
+  { "_comment": "== SELYS: present + inn register + serve == walk to (6,7) just below her seat, then click her cell (6,6) to interact. Her OWN conversation opens directly (single interact, no bark -- she carries no talk_pool).", "action": "click", "cell": [6, 7] },
+  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [6, 7] }, "timeout_sec": 10 },
+  { "action": "click", "cell": [6, 6] },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "selys_inn" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Selys", "text": "You actually work here? That explains why the stew smells like something worth queuing for." }, "timeout_sec": 5 },
+  { "_comment": "Serve is visible option 1 (hot_meal held + not yet served this waking, both gates met). Effects: bank serve key, served_customer++, gold+2, consume hot_meal -> goto served.", "action": "click_dialogue_option", "option": 1 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Selys", "text": "...that is a good bowl of stew. Do not tell anyone I said so. I have a reputation for being hard to please." }, "timeout_sec": 5 },
+  { "action": "click_dialogue_option", "option": 1 },
+  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
+
+  { "_comment": "== KRSHIA: present + ', yes?' inn register == her seat is (4,6), west of the hearth. Walk to (4,7) below it, then click (4,6). Her greet proves the Gnoll ', yes?' palette and the inn context (no market stall hub). The hot_meal is spent, so her Serve option is item-gated away this waking -- presence + register is the proof; the serve mechanic is already shown on Selys.", "action": "click", "cell": [4, 7] },
+  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [4, 7] }, "timeout_sec": 10 },
+  { "action": "click", "cell": [4, 6] },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_inn" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "A Human inn, and the food does not insult me. This is worth the walk from the stall, yes?" }, "timeout_sec": 5 }
+ ]
+}

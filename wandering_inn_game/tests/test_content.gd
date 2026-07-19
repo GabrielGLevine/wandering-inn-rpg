@@ -378,10 +378,23 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 				String(entity.get("kind", "")) != "encounter",
 				"entity %s: present_when is forbidden on kind:encounter -- _check_trigger_radius never consults presence, so a present_when encounter would be invisible/unblocked yet still ambush; use encounter_when" % entity_id
 			)
-			assert(when.has("requires") or when.has("phase") or when.has("absent"), "entity %s present_when has no recognized shape (only 'requires'/'phase'/'absent' are sanctioned)" % entity_id)
+			assert(when.has("requires") or when.has("phase") or when.has("absent") or when.has("guest"), "entity %s present_when has no recognized shape (only 'requires'/'phase'/'absent'/'guest' are sanctioned)" % entity_id)
 			if when.has("phase"):
 				for p: Variant in when["phase"]:
 					assert(VALID_PHASES.has(String(p)), "entity %s present_when references unknown phase: %s" % [entity_id, p])
+			if when.has("guest"):
+				# d1 #247 Friends of the Inn rotation arm. Roster members are
+				# met via their auto-banked chatted_with_<id> counter (registered
+				# produced for every talk_pool entity, above) -- a typo in the
+				# roster would silently never seat that guest, so pin production.
+				assert(when["guest"] is Dictionary, "entity %s present_when.guest must be a Dictionary" % entity_id)
+				var g: Dictionary = when["guest"]
+				assert(g.has("npc") and g.has("roster"), "entity %s present_when.guest needs npc + roster" % entity_id)
+				assert(g["roster"] is Array and not (g["roster"] as Array).is_empty(), "entity %s present_when.guest roster must be a non-empty Array" % entity_id)
+				assert((g["roster"] as Array).has(String(g["npc"])), "entity %s present_when.guest npc %s must be in its own roster" % [entity_id, String(g["npc"])])
+				for npc: Variant in (g["roster"] as Array):
+					var met_counter := "chatted_with_" + String(npc)
+					assert(produced_accomplishments.has(met_counter), "entity %s present_when.guest roster member %s: met counter %s is unproduced" % [entity_id, String(npc), met_counter])
 			if when.has("requires"):
 				assert(when["requires"] is Dictionary, "entity %s present_when.requires must be a Dictionary" % entity_id)
 				for acc_id: String in (when["requires"] as Dictionary):

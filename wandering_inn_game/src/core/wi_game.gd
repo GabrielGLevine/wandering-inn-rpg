@@ -823,6 +823,16 @@ func _present_gate_met(when: Dictionary) -> bool:
 		for key: String in absent:
 			if accomplishment_count(key) >= int(absent[key]):
 				return false
+	# d1 #247 Friends of the Inn: `guest` = the deterministic rotation arm.
+	# WIInnGuests windows `seats` distinct met roster members over times_slept;
+	# a guest entity is present only while its npc is on shift this waking.
+	# ANDs with requires/absent above (a guest can carry both, though the pilot
+	# rows rely on `guest` alone -- the roster's own met-check is the gate).
+	if when.has("guest"):
+		var g: Dictionary = when["guest"]
+		var is_met := func(npc: String) -> bool: return accomplishment_count("chatted_with_" + String(npc)) >= 1
+		if not WIInnGuests.guest_active(String(g["npc"]), g.get("roster", []) as Array, is_met, times_slept, int(g.get("seats", 2))):
+			return false
 	return true
 
 

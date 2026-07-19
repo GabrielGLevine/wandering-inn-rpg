@@ -1,0 +1,18 @@
+{
+	"_comment": "d1 #247 Friends of the Inn -- Selys's INN register. Attached ONLY to the selys_inn_guest entity; her guild hub (the delivery board, the 'over there' signpost) never rides along, so the context is off-duty-at-the-inn, not at-the-counter (the user's hard requirement). Serve mirrors patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter (feeds Helper/barmaid). Voice per docs/design/character-profiles.md: dry, competent, secretly soft-hearted.",
+	"start": "greet",
+	"nodes": {
+		"greet": { "speaker": "Selys", "text": "You actually work here? That explains why the stew smells like something worth queuing for.", "options": [
+			{ "text": "Bring her a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:selys_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:selys_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
+			{ "text": "\"Long day at the desk?\"", "goto": "offduty" },
+			{ "text": "\"Enjoy your evening, Selys.\"", "end": true }
+		] },
+		"offduty": { "speaker": "Selys", "text": "Every day is a long day at the desk. Tonight the desk can wait, the fire is warm, and nobody is asking me where anything is.", "options": [
+			{ "text": "Bring her a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:selys_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:selys_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
+			{ "text": "\"I'll leave you to it.\"", "end": true }
+		] },
+		"served": { "speaker": "Selys", "text": "...that is a good bowl of stew. Do not tell anyone I said so. I have a reputation for being hard to please.", "options": [
+			{ "text": "\"Your secret's safe.\"", "end": true }
+		] }
+	}
+}

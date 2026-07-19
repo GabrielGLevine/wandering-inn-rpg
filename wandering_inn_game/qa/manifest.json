@@ -4224,6 +4224,35 @@
      "settings"
     ]
    }
+  },
+  {
+   "script": "inn_guests_loop",
+   "seed": 3,
+   "fixture": "inn_guests_start",
+   "note": "d1 #247 Friends of the Inn pilot pair -- Selys + Krshia rotate through the inn as servable guests (WIInnGuests, present_when.guest arm). Proves present-when-met (both reachable), context awareness (their OWN inn conversations open, not the guild/stall hub), and servable (Selys's Serve banks served_customer + consumes the hot_meal). Krshia pins the ', yes?' Gnoll inn register. Rotation windowing/dedup is unit-pinned in test_inn_guests.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "inn_guests_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_inn",
+     "selys_inn"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "input"
+    ]
+   }
   }
  ]
 }
