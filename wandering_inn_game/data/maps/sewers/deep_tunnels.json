@@ -278,6 +278,8 @@
   },
   {
    "id": "warren_side_snare",
+   "once_per_waking": true,
+   "once_per_waking_toast": "You've picked this snare clean today. The warren restocks on its own schedule.",
    "kind": "prop",
    "cell": [
     9,

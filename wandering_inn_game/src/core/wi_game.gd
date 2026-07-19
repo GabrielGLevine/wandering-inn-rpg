@@ -567,7 +567,19 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	record_accomplishment(String(effect["accomplishment"]))
 	_emit(WIEvents.TOAST, {"text": String(effect["toast"])})
 	if effect.has("gold"):
-		_apply_gold_effect(int(effect["gold"]), target_id)
+		# GH#202-adjacent (infinite-gold report): `gold_once_per_waking` caps
+		# the PAYOUT without touching the counter/skill_used stream -- the
+		# Helper curve is BUILT on same-day repeat cleans (work_loop pins
+		# cleaned_the_inn 2 then 4), so gating the whole prop breaks a
+		# shipped progression. Chore fiction: the work repeats, the tip
+		# does not.
+		if bool(target.get("gold_once_per_waking", false)):
+			var gold_key := "gold:%s" % target_id
+			if not entity_first_use.has(gold_key):
+				entity_first_use[gold_key] = true
+				_apply_gold_effect(int(effect["gold"]), target_id)
+		else:
+			_apply_gold_effect(int(effect["gold"]), target_id)
 	if effect.has("item"):
 		pickup(String(effect["item"]), target_id)
 	if effect.has("remove_item"):

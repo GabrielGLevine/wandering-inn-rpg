@@ -661,6 +661,8 @@
   {
    "_comment": "R6 (#95) trap placement: a briar-snare east of briar_collectors' nest (9,6).",
    "id": "hollow_briar_snare",
+   "once_per_waking": true,
+   "once_per_waking_toast": "The briar holds nothing new today.",
    "kind": "prop",
    "cell": [
     10,

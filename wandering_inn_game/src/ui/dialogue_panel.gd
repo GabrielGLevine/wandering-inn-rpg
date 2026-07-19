@@ -105,6 +105,11 @@ func _ready() -> void:
 	stack.add_child(_options_box)
 	_options_box.mouse_filter = Control.MOUSE_FILTER_STOP
 	_options_box.gui_input.connect(_on_options_gui_input)
+	# GH#196 (mobile blocker): paged text advances by TAP anywhere on the
+	# panel. Routed through _root's gui_input, which only fires here when
+	# _on_options_gui_input declined the event (it early-returns off the
+	# last page / with no options), so option clicks never double-handle.
+	_root.gui_input.connect(_on_panel_gui_input)
 	ObservableBus.domain_event.connect(_on_domain_event)
 
 
@@ -197,6 +202,10 @@ func _render_page() -> void:
 	_more_hint.text = "▼  more — press %s" % WIInputHints.label("confirm")
 	_more_hint.visible = not on_last
 	_options_box.visible = on_last
+	# GH#196: paging was INVISIBLE to the event stream (the tap-advance QA
+	# gate could not fail without this) -- confirm which page renders.
+	ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_PAGE_RENDERED,
+		{"page": _page_idx + 1, "pages": _pages.size()})
 	if on_last:
 		_rebuild_options()
 	else:
@@ -226,7 +235,12 @@ func _fit_panel_height() -> void:
 
 
 func _is_qa() -> bool:
-	return (TestDriver != null and TestDriver.active()) or DisplayServer.get_name() == "headless"
+	if TestDriver != null and TestDriver.active():
+		# GH#196: a script that tests the paging surface itself opts back
+		# into REAL paging; every other script keeps the jump-to-last-page
+		# contract (their injected-key counts do not model pages).
+		return not bool(TestDriver.get("real_paging"))
+	return DisplayServer.get_name() == "headless"
 
 
 func _rebuild_options() -> void:
@@ -472,6 +486,22 @@ func _cancel_picker() -> void:
 	_confirm()
 
 
+func _on_panel_gui_input(event: InputEvent) -> void:
+	if Game.sim.dialogue == null or _picker_active:
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
+		return
+	# Advance paged text exactly like keyboard confirm; on the last page an
+	# option row's own handler owns the click, so only the no-options case
+	# (pure line nodes) confirms from here.
+	if not _on_last_page() or _options.is_empty():
+		_confirm()
+		_root.accept_event()
+
+
 func _on_options_gui_input(event: InputEvent) -> void:
 	if _options.is_empty() or not _on_last_page():
 		return
@@ -490,6 +520,13 @@ func _on_options_gui_input(event: InputEvent) -> void:
 	if idx >= 0:
 		_cursor = idx
 		_refresh_cursor()
+		# Defense-in-depth: _options_box's mouse_filter STOP already prevents
+		# this click reaching _on_panel_gui_input (mutation-tested -- removing
+		# this accept does NOT reproduce the reviewed first-page-skip theory),
+		# but accept documents intent and survives a future filter change.
+		# The no-skip contract itself is pinned by mobile_tap_check's
+		# tap-entry absence assert.
+		_options_box.accept_event()
 		_confirm()
 
 

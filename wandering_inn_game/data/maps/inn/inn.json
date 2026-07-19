@@ -675,6 +675,7 @@
   },
   {
    "id": "dirty_table",
+   "gold_once_per_waking": true,
    "kind": "prop",
    "cell": [
     5,

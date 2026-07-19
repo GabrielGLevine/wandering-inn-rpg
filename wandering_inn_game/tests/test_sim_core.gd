@@ -308,6 +308,15 @@ func _init() -> void:
 	assert(_count("skill_used") == 2, "second use still emits skill_used")
 	assert(_count("accomplishment_recorded") == 4, "counter records each increment")
 	assert(game.accomplishment_count("cleaned_the_inn") == 2, "count is 2 after two uses")
+	# GH#202-adjacent (infinite-gold report): the chore REPEATS (Helper curve
+	# rides the counter) but the tip is daily -- gold_once_per_waking on
+	# dirty_table means the second same-waking clean pays nothing, and a
+	# sleep re-arms exactly one more payout.
+	assert(_count("gold_changed") == 1, "second same-waking clean pays no second tip")
+	assert(game.gold == 1, "gold capped at the daily chore wage")
+	# Re-arm across a waking is covered by entity_first_use.clear() in
+	# sleep() + work_loop's Beat 6a second-day earn pins -- mutating this
+	# shared flow with a sleep here would shift every downstream count.
 	assert(game.accomplishment_count("never_done") == 0, "absent id counts 0")
 
 	var none := game.use_skill("fireball", "dirty_table")

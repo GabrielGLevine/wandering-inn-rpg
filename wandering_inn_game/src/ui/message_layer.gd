@@ -91,6 +91,9 @@ var _hint_label: Label
 ## order; `_toast_draining` gates a single in-flight drain coroutine so
 ## concurrent _queue_toast calls never start a second drain loop.
 var _toast_queue: Array[String] = []
+## Texts queued with record=false (GH#202 transient noise class) -- counted
+## so an identical REAL toast queued concurrently still records.
+var _transient_counts: Dictionary = {}
 var _toast_draining := false
 ## Issue #62 Lane U item 6: set by `dismiss_current_toast_early()`, consumed
 ## by `_show()`'s interruptible hold-wait (toast panel only -- the dialogue
@@ -263,7 +266,10 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 				_first_pickup_hint_shown = true
 				_queue_toast(_first_pickup_hint_text())
 		WIEvents.INTERACT_NOTHING:
-			_queue_toast(_interact_nothing_text())
+			# GH#202: empty-interact flavor is TRANSIENT -- render the toast
+			# but keep it out of Recent Messages, or idle wall-poking pushes
+			# real history past the cap.
+			_queue_toast(_interact_nothing_text(), false)
 		WIEvents.DIALOGUE_LINE:
 			# An empty speaker (ambient/narration lines, e.g. the Invrisil
 			# crowd extras) must not render a bare leading ": " -- prefix
@@ -315,6 +321,12 @@ func _show_dialogue_line(text: String, fitted: String) -> void:
 
 func _clear_toast() -> void:
 	_toast_panel.hide()
+	# Transient counts pair with QUEUED texts -- discarding the queue
+	# without decrementing would leave stale counts that swallow a future
+	# REAL toast with identical text (review yellow).
+	for queued: String in _toast_queue:
+		if int(_transient_counts.get(queued, 0)) > 0:
+			_transient_counts[queued] -= 1
 	_toast_queue.clear()
 	if _first_wake_hint_pending:
 		_toast_queue.append(_first_wake_hint_text())
@@ -373,7 +385,11 @@ func _resize_dialogue_panel() -> void:
 	UIChrome.set_offsets(_dialogue_panel, 36.0, DIALOGUE_BOTTOM - panel_height, 736.0, DIALOGUE_BOTTOM)
 
 
-func _queue_toast(text: String) -> void:
+func _queue_toast(text: String, record := true) -> void:
+	# Transient marking MUST precede the drain kick: _drain_toasts() runs
+	# synchronously up to its first await, popping this very toast.
+	if not record:
+		_transient_counts[text] = int(_transient_counts.get(text, 0)) + 1
 	_toast_queue.append(text)
 	if not _toast_draining:
 		_drain_toasts()
@@ -394,7 +410,10 @@ func _drain_toasts() -> void:
 		var text: String = _toast_queue.pop_front()
 		if _first_wake_hint_pending and text == _first_wake_hint_text():
 			_first_wake_hint_pending = false
-		record_message(text)
+		if int(_transient_counts.get(text, 0)) > 0:
+			_transient_counts[text] -= 1
+		else:
+			record_message(text)
 		await _show(_toast_panel, _toast_label, text, _toast_seconds(text), WIEvents.UI_TOAST_RENDERED, "", true, true)
 	_toast_draining = false
 

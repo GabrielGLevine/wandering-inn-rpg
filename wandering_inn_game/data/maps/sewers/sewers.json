@@ -396,6 +396,8 @@
   {
    "_comment": "R6 (#95) trap placement 1/2: sewer_vermin nest approach snag.",
    "id": "sewer_nest_snag",
+   "once_per_waking": true,
+   "once_per_waking_toast": "Nothing else glints in the nest today.",
    "kind": "prop",
    "cell": [
     7,
@@ -415,6 +417,8 @@
   {
    "_comment": "R6 (#95) trap placement 2/2: shield_spiders/nest_ledge approach snag, south flank away from the y11 walkway cisterns_scout/cisterns_fight both walk edge to edge.",
    "id": "sewer_drain_snare",
+   "once_per_waking": true,
+   "once_per_waking_toast": "The drain has given up all it's going to give today.",
    "kind": "prop",
    "cell": [
     13,

@@ -768,7 +768,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 5
+   "equals": 4
   },
   {
    "_comment": "Beat 6a (issue #59, was Beat 6's opening half): second chore burst -- clean x2 via hotbar_1 (cleaned_the_inn 3, 4 -- crosses L2 requires_any threshold of 3). Teleport to dirty_table's own approach cell (5,3); a blocked 'move down' onto it (5,4) re-faces down without displacing (same move_player precedent as Beat 5.5's patron approach).",
@@ -1103,7 +1103,7 @@
   {
    "action": "assert_state",
    "path": "gold",
-   "equals": 9
+   "equals": 7
   }
  ]
 }

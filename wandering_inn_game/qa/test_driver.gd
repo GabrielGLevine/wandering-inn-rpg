@@ -38,6 +38,10 @@ const SCREENSHOT_SETTLE_SECONDS := 0.15
 const CELL := 16
 
 var _script_path := ""
+## GH#196: scripts set "qa_real_paging": true to OPT OUT of the dialogue
+## panel's jump-to-last-page QA contract -- required by any script that
+## exercises the paging surface itself (mobile_tap_check).
+var real_paging := false
 var _out_dir := ""
 var _failures: PackedStringArray = []
 var _events_seen: Array = []
@@ -80,6 +84,7 @@ func _run() -> void:
 		_finish()
 		return
 	_wants_creation_ui = bool(parsed.get("creation_ui", false))
+	real_paging = bool(parsed.get("qa_real_paging", false))
 	_install_fixture_saves(parsed.get("fixture_save"))
 	if not bool(parsed.get("starts_at_title", false)):
 		await _skip_title()
