@@ -78,6 +78,11 @@ merged`), not here.
 
 ## 📋 QUEUE (value order)
 
+0. **#246 Import/Export Save (user directive, v0.13)**: Settings rows —
+   export dumps the save file, import validates through WISave.apply()
+   and never clobbers on failure; web (JavaScriptBridge download/file
+   input) is the seam to prototype first. Board row a9.
+
 1. **Human playtest of v0.8.0** — ear-gated audio pass (footstep families
    inn→street→sewers, music dip under dialogue) + taste queue below.
 2. **#111 safe project rename:** HOLD — keep `config/name="Wandering Inn RPG
