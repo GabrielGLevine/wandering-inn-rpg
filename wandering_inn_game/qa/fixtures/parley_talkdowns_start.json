@@ -1,0 +1,58 @@
+{
+ "_comment": "GH#217 all-gates-met fixture: player_skills carry the three gate skills directly (known_skills = player_skills + class grants) + forge_permit_filed banked + 10 gold. Starts on floodplains below the corusdeer; the script teleports between the four talk-down sites. Sibling parley_gates_unmet_start strips ALL of it (no skills, no permit, 3 gold) for the tease legs.",
+ "version": 7,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   36,
+   8
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 10
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "won_combat": 1,
+   "forge_permit_filed": 1,
+   "slept": 1,
+   "melee_hit": 57
+  },
+  "player_skills": [
+   "basic_swordwork",
+   "animals_basic_command",
+   "detect_magic",
+   "charming_smile"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": "",
+   "accessory_1": "",
+   "accessory_2": "",
+   "accessory_3": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "times_slept": 17,
+  "board_last_seen_times_slept": 17,
+  "gold": 10,
+  "rng_state": "-6393592048753323481",
+  "fractional_bank": {}
+ }
+}

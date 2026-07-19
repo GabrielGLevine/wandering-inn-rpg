@@ -942,6 +942,13 @@ func dialogue_choose(index: int) -> bool:
 			start_quest(String(effect["quest"]))
 		elif effect.has("remove_entity"):
 			remove_entity(String(effect["remove_entity"]))
+		elif effect.has("dormant_entity"):
+			# GH#217: a talk-down calms the encounter for TODAY - dormancy (clears
+			# at sleep, same as a fought respawns:true encounter) instead of
+			# permanent removal, so respawning cull-bounty producers stay alive.
+			var dormant_id := String(effect["dormant_entity"])
+			if not dormant_encounters.has(dormant_id):
+				dormant_encounters.append(dormant_id)
 		elif effect.has("item"):
 			pickup(String(effect["item"]), _dialogue_conversation_id)
 		elif effect.has("gold"):

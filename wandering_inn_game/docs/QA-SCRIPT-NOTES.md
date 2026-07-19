@@ -156,3 +156,5 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `mobile_tap_check` | 9 | full | `mobile_tap_start` | GH#196/#197/#202: title-art tap clears the gesture gate; real-paging dialogue advanced by panel taps (qa_real_paging opt-out, page events pinned 1..4); last-page tap defers to options; interact-nothing renders but stays OUT of Recent Messages (recent_count 1) |
 | `rags_meeting_loop` | 9 | full | `rags_gates_met_start` | b1 #199: gated Rags meeting -> SUPPLY close (draught consumed, pawn granted, quest completes, #211 grant banks) |
 | `rags_gate_check` | 9 | full | `rags_gate_unmet_start` | b1 #199: encounter_when absent-arm refusal (hunted-the-camp fixture) -- gate toast, no dialogue; the arm's can-fail proof |
+| `parley_talkdowns_loop` | 9 | full | `parley_talkdowns_start` | GH#217: all four talk-downs close non-violently (skills/permit fixture); staked formal bout fights by design |
+| `parley_gates_check` | 9 | full | `parley_gates_unmet_start` | GH#217: tease legs -- skill/gold arms render LOCKED, permit arm stays HIDDEN (exact-list pins are the can-fail) |

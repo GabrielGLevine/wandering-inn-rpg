@@ -1,24 +1,42 @@
 {
-	"start": "confront",
-	"nodes": {
-		"confront": {
-			"speaker": "Stray Corusdeer",
-			"text": "A shape lifts its head from the tall grass, antlers catching the light — oaken-brown fading to a glow at the tips, cherry-red and warm enough to see the air shimmer above them. It watches you, unhurried. It has not decided you are a threat yet.",
-			"options": [
-				{
-					"text": "[Strike first.]",
-					"effects": [
-						{
-							"start_combat": "corusdeer_range"
-						}
-					],
-					"end": true
-				},
-				{
-					"text": "[Back away.]",
-					"end": true
-				}
-			]
-		}
-	}
+ "start": "confront",
+ "nodes": {
+  "confront": {
+   "speaker": "Stray Corusdeer",
+   "text": "A shape lifts its head from the tall grass, antlers catching the light — oaken-brown fading to a glow at the tips, cherry-red and warm enough to see the air shimmer above them. It watches you, unhurried. It has not decided you are a threat yet.",
+   "options": [
+    {
+     "text": "[Strike first.]",
+     "effects": [
+      {
+       "start_combat": "corusdeer_range"
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "[Basic Command] Steady it. Slow words, open hands.",
+     "requires": {
+      "skill": "animals_basic_command"
+     },
+     "effects": [
+      {
+       "accomplishment": "corusdeer_calmed"
+      },
+      {
+       "accomplishment": "soothed_a_beast"
+      },
+      {
+       "dormant_entity": "corusdeer_range"
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "[Back away.]",
+     "end": true
+    }
+   ]
+  }
+ }
 }

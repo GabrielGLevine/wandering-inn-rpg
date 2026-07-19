@@ -1,24 +1,41 @@
 {
-	"start": "confront",
-	"nodes": {
-		"confront": {
-			"speaker": "Stone Golems",
-			"text": "Two grey shapes flank a stall of unclaimed crates, carved plating catching the tier's flat light. Neither has moved in the time you've watched. Both turn to face you at once.",
-			"options": [
-				{
-					"text": "[Strike first.]",
-					"effects": [
-						{
-							"start_combat": "market_watchgolems"
-						}
-					],
-					"end": true
-				},
-				{
-					"text": "[Back away.]",
-					"end": true
-				}
-			]
-		}
-	}
+ "start": "confront",
+ "nodes": {
+  "confront": {
+   "speaker": "Stone Golems",
+   "text": "Two grey shapes flank a stall of unclaimed crates, carved plating catching the tier's flat light. Neither has moved in the time you've watched. Both turn to face you at once.",
+   "options": [
+    {
+     "text": "[Strike first.]",
+     "effects": [
+      {
+       "start_combat": "market_watchgolems"
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "Show the filed forge permit. Let the carving read it.",
+     "requires": {
+      "accomplishment": {
+       "forge_permit_filed": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "watchgolems_stood_down"
+      },
+      {
+       "dormant_entity": "market_watchgolems"
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "[Back away.]",
+     "end": true
+    }
+   ]
+  }
+ }
 }
