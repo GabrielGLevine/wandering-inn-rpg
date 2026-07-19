@@ -1,3 +1,7 @@
+> **USER RULING 2026-07-19: GO — dispatch Wave A. [Eagle Eyes] name KEPT
+> (AMBIGUOUS-lean-PASS ACK granted). Wave A executes now (data-only, 3
+> classes); Wave B follows as its own milestone.**
+
 # Class & Skill Expansion — Implementation Spec (Waves A+B)
 
 **Authority chain:** this spec implements

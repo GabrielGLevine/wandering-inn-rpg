@@ -21,7 +21,7 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 Source: full 10-region windowed walkthrough tour (seed 9, all scripts
 `QA_RESULT: PASS`); screenshots ephemeral under `wandering_inn_game/qa_output/`.
 
-- [ ] FIELD/DARK-MAPS (a5 #205, 2026-07-19 — fix landed, PIXEL-DIFF VERIFIED, eye-gate FEEL pending) — enemies/interactables on field dark-mood maps read
+- [x] FIELD/DARK-MAPS (a5 #205, 2026-07-19 — SHIPPED + user FEEL CONFIRMED "ship as-is" 2026-07-19; pixel-diff verified) — enemies/interactables on field dark-mood maps read
   near-invisible before [Light]. FIXED via a per-entity legibility boost
   (`atmosphere.field_entity_boost()` mirroring the combat board's floor,
   gentler target 0.5 / cap 1.9): the mood grade/floor is untouched, only
