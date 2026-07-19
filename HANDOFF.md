@@ -13,21 +13,30 @@ wi-delegating-to-codex + PR-per-issue-close conventions. 511 ids frozen at
 note). Per-issue detail lives in the merged PR bodies (`gh pr list --state
 merged`), not here.
 
-## 🏃 RUNNING (2026-07-18, post-v0.11.0)
+## 🏃 RUNNING (2026-07-18, v0.12.0 tagged)
 
-- **v0.11.0 SHIPPED all three targets** (itch + desktop green; Pages
-  green after adding a v* tag rule to the github-pages environment --
-  the tag trigger's first firing). Freeze = 619 ids. Second release of
-  the day.
-- Contents: #165 Second Wind (16 pure lines to L16), #163 rank-scaled
-  bounties, #142 Hedault enchanting, #169/#173/#174/#177 web fixes,
-  #178 favicon, #171/#170/#172 slices. CHOICE-LOG.md carries every
-  adjudication (autonomy directive).
-- **v0.12.0 queue**: wi_game/world god-file dissection (user-prompted,
-  parked deliberately), #170 combat-log scrollback, #171 rest (hotbar
-  inspect, first-waking hint, Pisces repro), #172 rest (turn-in acks,
-  bracket style), rank-aware kingslayer/watchgolem fixtures, #147 music
-  (user acquisition).
+- **v0.12.0 TAGGED** (freeze 619 ids, ZERO new frozen ids -- polish/copy
+  cycle); release.yml + pages.yml watched at tag time (see git log for
+  the verified-table merges #190-#193). bundle-v7 is the assets Latest.
+- Contents: #184 city gates (PixelLab gatehouse + street arch + wall
+  tiles DERIVED from the gate art; per-segment sheet overrides), #172
+  close (Selys retirement acks + paren action-option styling), #171
+  close (first-waking controls hint with the pending-until-rendered
+  toast pattern, biome-voiced empty interacts, fountain-statue observe;
+  items 2/5 verified shipped/obsolete), #170 close (combat feed lines →
+  journal Recent Messages via combat_hud.feed_push, Victory/Defeat
+  line; mid-combat scrollback deferred), Settings About section
+  (unlicensed-fan-work disclaimer + wanderinginn.com + No Killing
+  Goblins pre-order numkey links -- user directive), ATTRIBUTION.md
+  synced with the #147 intake (verbatim Ove Melaa line).
+- **Re-sequenced with issues + CHOICE-LOG entries**: god-file pair →
+  #194 (FIRST task of v0.13, not last-before-freeze), Ove Melaa
+  selection pass → #195 (any-cycle content work).
+- Traps ledgered this window: gitignore regen must be IN the PR diff
+  (bundle-v7 near-miss, wi-shipping updated); `git checkout -- <file>`
+  wipes sibling uncommitted lanes in the same file (cost 3 bisect
+  cycles on #184); QA option-list pins are EXACT-list matches; driver
+  timeout failures now print subset + cursor.
 
 ## 📋 QUEUE (value order)
 
