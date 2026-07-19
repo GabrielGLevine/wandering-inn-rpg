@@ -21,8 +21,13 @@ func _read(path: String) -> String:
 
 
 func _cleanup() -> void:
+	# Guard the trash call: move_to_trash on an absent dir prints a bare
+	# `ERROR: trashItemAtURL` line, and ci_sweep's grep fails on bare ERROR:
+	# (#216 review hardening) -- don't reintroduce that noise (#111 review M-1).
 	for d: String in [LEGACY, TARGET]:
-		OS.move_to_trash(ProjectSettings.globalize_path(d))  # best-effort; harmless if absent
+		var abs := ProjectSettings.globalize_path(d)
+		if DirAccess.dir_exists_absolute(abs):
+			OS.move_to_trash(abs)
 
 
 func _init() -> void:
@@ -37,24 +42,36 @@ func _init() -> void:
 	_write("%s/settings.cfg" % LEGACY, "[audio]\nmaster=0.5\n")
 
 	# Copy into an EMPTY target: both saves + settings carry over (txt skipped).
-	var copied: int = WISaveMigration.migrate_userdir(legacy_abs, target_abs)
-	assert(copied == 3, "copies 2 json saves + settings.cfg (skips the .txt): got %d" % copied)
+	var result: Dictionary = WISaveMigration.migrate_userdir(legacy_abs, target_abs)
+	assert(int(result["copied"]) == 3, "copies 2 json saves + settings.cfg (skips the .txt): got %s" % [result])
+	assert(int(result["failed"]) == 0, "clean pass reports zero failures: got %s" % [result])
 	assert(_read("%s/saves/manual.json" % TARGET) == '{"version":5,"state":{"gold":42}}', "manual save carried byte-for-byte")
 	assert(_read("%s/saves/auto.json" % TARGET) == '{"version":5,"state":{"gold":7}}', "auto save carried")
 	assert(_read("%s/settings.cfg" % TARGET) == "[audio]\nmaster=0.5\n", "settings carried")
 	assert(not FileAccess.file_exists("%s/saves/notes.txt" % TARGET), "non-json is NOT copied")
 
-	# NO-CLOBBER: a target file that already exists is left untouched, and a
-	# fresh legacy file still copies -- the count reflects only new copies.
+	# NO-CLOBBER: a target file that already exists is left untouched (a SKIP,
+	# not a failure -- the retry-on-partial-copy design depends on that
+	# distinction), and a fresh legacy file still copies.
 	_write("%s/saves/manual.json" % TARGET, '{"MINE":true}')  # a newer target save
 	_write("%s/saves/fresh.json" % LEGACY, '{"version":5}')
-	var copied2: int = WISaveMigration.migrate_userdir(legacy_abs, target_abs)
-	assert(copied2 == 1, "only the one NEW legacy file copies; existing target files untouched: got %d" % copied2)
+	var result2: Dictionary = WISaveMigration.migrate_userdir(legacy_abs, target_abs)
+	assert(int(result2["copied"]) == 1, "only the one NEW legacy file copies; existing target files untouched: got %s" % [result2])
+	assert(int(result2["failed"]) == 0, "no-clobber skips are NOT failures (else the marker would never write on a re-run): got %s" % [result2])
 	assert(_read("%s/saves/manual.json" % TARGET) == '{"MINE":true}', "existing target save NOT clobbered")
 	assert(FileAccess.file_exists("%s/saves/fresh.json" % TARGET), "the fresh legacy save did copy")
 
-	# Empty/absent legacy -> zero copies, no crash.
-	assert(WISaveMigration.migrate_userdir(ProjectSettings.globalize_path("user://__nope"), target_abs) == 0, "absent legacy copies nothing")
+	# Empty/absent legacy -> zero copies, zero failures, no crash.
+	var result3: Dictionary = WISaveMigration.migrate_userdir(ProjectSettings.globalize_path("user://__nope"), target_abs)
+	assert(int(result3["copied"]) == 0 and int(result3["failed"]) == 0, "absent legacy copies nothing, fails nothing")
+
+	# PARTIAL-FAILURE reporting (#111 review I-1): an unwritable destination
+	# counts as failed, so the caller withholds the marker and retries next
+	# boot. A DIRECTORY squatting on the dst file path defeats FileAccess.WRITE.
+	_write("%s/saves/blocked.json/x" % TARGET, "squatter")  # dst becomes a dir
+	_write("%s/saves/blocked.json" % LEGACY, '{"version":5}')
+	var result4: Dictionary = WISaveMigration.migrate_userdir(legacy_abs, target_abs)
+	assert(int(result4["failed"]) == 1, "unwritable dst reports failed=1 (marker must NOT be written): got %s" % [result4])
 
 	# The sibling derivation names the pre-rename dir as a same-parent sibling.
 	var legacy_path: String = WISaveMigration.legacy_userdir_path()

@@ -35,21 +35,26 @@ func _ready() -> void:
 func _migrate_legacy_userdir() -> void:
 	if FileAccess.file_exists(MIGRATION_MARKER):
 		return
-	# An established player already has saves in the NEW dir (native new-build
-	# install, or a prior migration): never clobber them -- just mark and stop.
-	if not WISaveMigration.has_any_save(SAVE_DIR):
-		_run_userdir_migration()
-	_write_file_text(MIGRATION_MARKER, "1")
+	var result := _run_userdir_migration()
+	# Mark done ONLY on a fully-clean pass. A partial copy (disk full, IO
+	# error) leaves the marker UNWRITTEN so the next boot retries the un-copied
+	# slots; the copy is no-clobber, so the retry never overwrites a file
+	# already carried over. Gating on the marker (not "is user:// empty") is
+	# what makes the retry reachable -- a partially-filled user:// would
+	# otherwise look "established" and skip forever (#111 review I-1). The
+	# no-clobber guard also makes a re-run harmless for an established player.
+	if int(result.get("failed", 0)) == 0:
+		_write_file_text(MIGRATION_MARKER, "1")
 
 
-func _run_userdir_migration() -> int:
+func _run_userdir_migration() -> Dictionary:
 	var legacy := WISaveMigration.legacy_userdir_path()
 	if legacy == "" or not DirAccess.dir_exists_absolute(legacy):
-		return 0
-	var copied := WISaveMigration.migrate_userdir(legacy, ProjectSettings.globalize_path("user://").trim_suffix("/"))
-	if copied > 0:
-		ObservableBus.emit_domain_event(WIEvents.SAVE_MIGRATED, {"count": copied})
-	return copied
+		return {"copied": 0, "failed": 0}
+	var result := WISaveMigration.migrate_userdir(legacy, ProjectSettings.globalize_path("user://").trim_suffix("/"))
+	if int(result.get("copied", 0)) > 0:
+		ObservableBus.emit_domain_event(WIEvents.SAVE_MIGRATED, {"count": result["copied"]})
+	return result
 
 
 func _write_file_text(path: String, text: String) -> void:
@@ -57,19 +62,6 @@ func _write_file_text(path: String, text: String) -> void:
 	if out != null:
 		out.store_string(text)
 		out.close()
-
-
-## QA-only (#111): force the boot migration to re-run after a driver has
-## seeded a legacy dir post-launch -- clears the marker, re-scans, returns
-## the count. Never called in normal play (the marker + _ready ordering own
-## the real path); it exists so a canonical can prove the copy end to end.
-func qa_run_userdir_migration() -> int:
-	var abs_marker := ProjectSettings.globalize_path(MIGRATION_MARKER)
-	if FileAccess.file_exists(abs_marker):
-		DirAccess.remove_absolute(abs_marker)
-	var copied := _run_userdir_migration()
-	_write_file_text(MIGRATION_MARKER, "1")
-	return copied
 
 
 func reset(creation: Dictionary = {}) -> void:

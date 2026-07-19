@@ -25,25 +25,23 @@ static func legacy_userdir_path() -> String:
 	return "%s/%s" % [parent, LEGACY_USERDIR_NAME]
 
 
-## Does `dir` (a user:// or absolute path) hold at least one .json save?
-static func has_any_save(dir: String) -> bool:
-	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(dir)):
-		return false
-	for f: String in DirAccess.get_files_at(dir):
-		if f.ends_with(".json"):
-			return true
-	return false
-
-
 ## COPY settings.cfg + saves/*.json from `legacy_abs` into `target_abs`,
-## never overwriting an existing target file. Returns the count copied.
-static func migrate_userdir(legacy_abs: String, target_abs: String) -> int:
+## never overwriting an existing target file. Returns {copied, failed}:
+## `copied` = files newly written, `failed` = files that EXIST in the legacy
+## dir but could not be written (IO/permission/disk-full) -- an
+## already-present target file is a no-clobber SKIP, NOT a failure. The
+## caller uses `failed` to decide whether the migration is complete (#111
+## review I-1: a partial copy must not be marked done).
+static func migrate_userdir(legacy_abs: String, target_abs: String) -> Dictionary:
 	var copied := 0
+	var failed := 0
 	var legacy_settings := "%s/settings.cfg" % legacy_abs
 	var target_settings := "%s/settings.cfg" % target_abs
 	if FileAccess.file_exists(legacy_settings) and not FileAccess.file_exists(target_settings):
 		if _copy_file_abs(legacy_settings, target_settings):
 			copied += 1
+		else:
+			failed += 1
 	var legacy_saves := "%s/saves" % legacy_abs
 	if DirAccess.dir_exists_absolute(legacy_saves):
 		DirAccess.make_dir_recursive_absolute("%s/saves" % target_abs)
@@ -51,9 +49,13 @@ static func migrate_userdir(legacy_abs: String, target_abs: String) -> int:
 			if not f.ends_with(".json"):
 				continue
 			var dst := "%s/saves/%s" % [target_abs, f]
-			if not FileAccess.file_exists(dst) and _copy_file_abs("%s/%s" % [legacy_saves, f], dst):
+			if FileAccess.file_exists(dst):
+				continue  # no-clobber skip -- an existing target save is preserved
+			if _copy_file_abs("%s/%s" % [legacy_saves, f], dst):
 				copied += 1
-	return copied
+			else:
+				failed += 1
+	return {"copied": copied, "failed": failed}
 
 
 static func _copy_file_abs(src: String, dst: String) -> bool:
