@@ -82,10 +82,10 @@ merged`), not here.
    through the inn as servable guests — spec-first (context-aware
    dialogue: inn-specific lines, home-hub options REMOVED in inn
    context; home-row gating; per-NPC QA census), board row d1.
-0. **#246 Import/Export Save (user directive, v0.13)**: Settings rows —
-   export dumps the save file, import validates through WISave.apply()
-   and never clobbers on failure; web (JavaScriptBridge download/file
-   input) is the seam to prototype first. Board row a9.
+0. **#246 Import/Export Save — SHIPPED** (PR #248): Settings rows live,
+   three platform arms, title-export dumps the Continue slot (the
+   review's data-loss catch), non-destructive import. Web round-trip
+   ask in the taste queue.
 
 1. **Human playtest of v0.8.0** — ear-gated audio pass (footstep families
    inn→street→sewers, music dip under dialogue) + taste queue below.
