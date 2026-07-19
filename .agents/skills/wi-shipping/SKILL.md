@@ -29,6 +29,13 @@ labeled; scripts/fetch_private_assets.sh verifies coverage on every
 overlay). Adding a NEW licensed asset = manifest entry + gitignore
 block regen + `make_asset_bundle.sh` + new `bundle-vN` release, in that
 order, BEFORE the sprite/data commit that references it.
+TRAP (bundle-v7, 2026-07-18): the regen only protects main if the
+`.gitignore` diff is IN the PR diff — #147's regen sat uncommitted in
+the working tree, PR #188 merged without it, and 10 licensed oggs rode
+main unignored (leak_check stayed green because they were untracked; a
+later `git add -A` would have leaked them). At PR review, confirm
+`.gitignore` appears in `gh pr diff --name-only` whenever the manifest
+changed.
 
 ## Local dev setup (fresh machine)
 1. Clone the repo; `gh auth login`.
