@@ -291,7 +291,7 @@ func _build_pc(classes: Dictionary, ai: String, generalist_classes: Array, weapo
 
 ## Runs ONE fight for this waking and, on victory, banks won_combat + the
 ## real `action_tally` into `accomplishments` -- the SAME victory-only,
-## trivial-exempt bank `wi_game.gd::_bank_action_tally` performs (no trivial
+## trivial-exempt bank `combat_banking.gd::_bank_action_tally` performs (no trivial
 ## fights are modeled here, so the gate is always live).
 func _run_waking_fight(classes: Dictionary, accomplishments: Dictionary, generalist_classes: Array, ai: String, policy: Callable, comp_index: int, seed_v: int, weapon_range: int = 1) -> void:
 	var comp: Dictionary = COMPOSITIONS[comp_index % COMPOSITIONS.size()]

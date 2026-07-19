@@ -24,7 +24,7 @@ Per-fight accomplishment tallies are **not invented numbers** — each
 "waking" runs a real seeded fight (`goblin_ambush`/`chieftains_raid`
 compositions, the exact same ones `sim_combat_batch.gd` uses) via
 `WICombat`, and only a genuine victory banks `action_tally` into
-accomplishments (mirroring `wi_game.gd::_bank_action_tally`'s victory-only,
+accomplishments (mirroring `combat_banking.gd::_bank_action_tally`'s victory-only,
 trivial-exempt gate). A PC "policy" callable stands in for a human's skill
 choice, because the shipped `combat_ai.gd` profiles under-represent several
 playstyles this audit needed to test on purpose:
