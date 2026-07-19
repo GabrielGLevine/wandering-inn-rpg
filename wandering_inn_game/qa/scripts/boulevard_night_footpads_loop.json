@@ -86,9 +86,10 @@
    "action": "wait_for_event",
    "type": "accomplishment_recorded",
    "payload_contains": {
-    "id": "won_combat"
+    "id": "victories"
    },
-   "timeout_sec": 5
+   "timeout_sec": 5,
+   "_comment_gh211": "footpads are deep gray-band for the fixture build -- won_combat pays ~0 fractional by design; victories banks integer under both flag states"
   },
   {
    "action": "wait_for_event",

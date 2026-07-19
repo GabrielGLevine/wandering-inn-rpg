@@ -401,7 +401,7 @@
   {
    "action": "assert_state",
    "path": "accomplishments.won_combat",
-   "equals": 1
+   "equals": 2
   },
   {
    "_comment": "The gate opens onto the street (post-victory the ambush is dormant, no re-trigger).",

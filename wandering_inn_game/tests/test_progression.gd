@@ -332,5 +332,21 @@ func _init() -> void:
 	# floor -> gold (inclusive edge).
 	assert(WIProgression.power_rank({"warrior": 10, "mage": 10}, catalog) == "gold", "two L10 lines == gold (the consolidation-tier build IS the gold floor)")
 
+	# GH#211 challenge-weight math (WICombatBanking statics; behavioral
+	# integration = the pace harness + canonical byte-diffs).
+	var cw_cfg := {"weight_gamma": 1.6, "weight_floor": 0.0, "weight_cap": 2.0, "gray_ratio": 0.55, "gray_scale": 0.15, "decay_rate": 0.9}
+	assert(is_equal_approx(WICombatBanking.challenge_weight(cw_cfg, 10.0, 10.0), 1.0), "par ratio weighs 1.0")
+	assert(is_equal_approx(WICombatBanking.challenge_weight(cw_cfg, 10.0, 0.0), 1.0), "unknown enemy power (0) is NEUTRAL 1.0 — rollout-safe")
+	assert(WICombatBanking.challenge_weight(cw_cfg, 10.0, 20.0) == 2.0, "double-power enemy hits the 2.0 cap")
+	var gray := WICombatBanking.challenge_weight(cw_cfg, 20.0, 10.0)
+	assert(gray < 0.06, "half-power enemy grays out (pow(0.5,1.6)*0.15 ~= 0.05), got %f" % gray)
+	assert(WICombatBanking.challenge_weight(cw_cfg, 0.0, 5.0) >= 2.0 - 0.001, "classless player vs real enemy clamps at cap (player_power floors at 1)")
+	assert(is_equal_approx(WICombatBanking.repetition_decay(cw_cfg, 0), 1.0), "first win decays nothing")
+	var d10 := WICombatBanking.repetition_decay(cw_cfg, 10)
+	var d100 := WICombatBanking.repetition_decay(cw_cfg, 100)
+	assert(d10 < 0.35 and d10 > 0.25, "win #11 decays to ~0.32, got %f" % d10)
+	assert(d100 < 0.2, "win #101 is needle-immovable (<0.2), got %f" % d100)
+	assert(d100 < d10 and d10 < 1.0, "decay is monotone")
+
 	print("PASS: progression checks behave correctly")
 	quit(0)

@@ -451,9 +451,10 @@
   },
   {
    "action": "wait_for_event",
+   "_comment": "GH#211: the kitchen-path resolution grant (cooked_meal/served_customer) levels Helper at this sleep -- no longer a quiet one.",
    "type": "toast",
    "payload_contains": {
-    "text": "You sleep soundly."
+    "text": "[Helper Level 2] (+1 Max HP)"
    },
    "timeout_sec": 5
   },

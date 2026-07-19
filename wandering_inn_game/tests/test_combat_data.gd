@@ -123,6 +123,19 @@ func _init() -> void:
 
 	_check_boss_veto_roster(scene, skills, combatants, classes, arenas)
 
+	# GH#211 power_level tripwires: every non-pc combatant carries a POSITIVE
+	# power_level (a negative would NaN through pow(x, 1.55); a missing one
+	# silently neutralizes the challenge weight for its whole roster); pc must
+	# NOT carry one (live-derived from class levels). victory_toast carriers'
+	# FIRST on_victory id must not be the fractional won_combat counter or the
+	# first-win==1 toast check misfires under weighting.
+	for c: Dictionary in combatants["combatants"]:
+		var cid := String(c[WIKeys.ID])
+		if cid == "pc":
+			assert(not c.has("power_level"), "pc must not carry an authored power_level")
+		else:
+			assert(c.has("power_level"), "%s missing power_level (GH#211 authoring pass)" % cid)
+			assert(float(c["power_level"]) > 0.0, "%s power_level must be positive, got %s" % [cid, str(c["power_level"])])
 	print("PASS: combat data is well-formed and cross-referenced")
 
 

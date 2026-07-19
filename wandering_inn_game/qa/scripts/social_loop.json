@@ -116,12 +116,12 @@
   { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "rogue" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Rogue] class gained! — [Stealth]" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "class_level_up", "payload_contains": { "class": "warrior", "level": 2 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Warrior Level 2] — unlocked [Counter Strike], [Battle Momentum]" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "[Warrior Level 2] — unlocked [Counter Strike], [Battle Momentum]" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Warrior Level 1 → 3] — unlocked [Counter Strike], [Battle Momentum], [Quick Movement] (+1 Max HP, +1 damage)" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "[Warrior Level 1 → 3] — unlocked [Counter Strike], [Battle Momentum], [Quick Movement] (+1 Max HP, +1 damage)" }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "01_post_sleep" },
   { "action": "assert_state", "path": "classes.diplomat", "equals": 1 },
   { "action": "assert_state", "path": "classes.rogue", "equals": 1 },
-  { "action": "assert_state", "path": "classes.warrior", "equals": 2 },
+  { "_comment": "GH#211 weighting: the same route now banks capped-adversity tallies, grouping L2+L3 into one sleep.", "action": "assert_state", "path": "classes.warrior", "equals": 3 },
 
   { "_comment": "== PHASE C1: [Charming Smile] (Diplomat) already reached the field hotbar at BOOT (issue #50 -- see the slots:2 wait near the top of this script); this sleep's OWN [Stealth] grant (Rogue, also field-tagged) grows it live 2 -> 3, an unrelated but still-real growth proof.", "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3 } },
 

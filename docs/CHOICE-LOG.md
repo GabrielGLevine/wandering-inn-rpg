@@ -200,3 +200,46 @@ cross-release index of them.
   handlers read sim.combat); detector sets for seam byte-diffs must
   include work_loop/social_loop (only class-gain carriers) — the
   mutation lens proved level_up_loop alone is blind to that arm.
+- **#211 implementation refinement (2026-07-19)**: challenge weight
+  applies ONLY to combat action-tally counters + the literal
+  `won_combat`; `victories` (chronicle) and specific on_victory quest
+  ids stay integer-unconditional — fractional quest ids would break
+  their gates (design doc §1 updated in place). Also: enemies missing
+  `power_level` yield a NEUTRAL 1.0 weight (rollout-safe until the
+  authoring pass lands).
+- **#211 step-2 review fixes (2026-07-19, all landed pre-flag-flip)**:
+  (1) enemy power lookup keys on TEMPLATE_ID (duplicate roster members
+  get suffixed runtime ids — the review proved every multi-enemy fight
+  would have silently neutralized); (2) repetition decay keys on a new
+  integer `fought_<encounter_id>` counter, enabled-path only (the
+  first-on_victory key was global for won_combat-first encounters AND
+  stopped counting under gray grinds); (3) wrong-typed fractional_bank
+  now rejected pre-mutation like every sibling save field. ADJUDICATED
+  (review LOW-5): bounty "win N fights" conditions + erin_errand's
+  won_combat gate become adversity-scaled when the flag flips —
+  ACCEPTED as coherent (bounties reward real fighting; Act-I par
+  fights weigh ~1.0 so the errand gate is unaffected in practice);
+  flip = exempt those readers explicitly.
+- **#211 power_level authoring (2026-07-19)**: 53 fields spliced from
+  the delegated proposal (scratchpad/power-level-proposal.md reasoning
+  preserved in git history of this entry's commit); four flags
+  adjudicated — raskghar_awakened 9.0 MECHANICAL reading (canon-L20
+  flavor loses to harness placement), rift_vermin T2 anchor (T4 reuse
+  understates conservatively), golems base-stat values (rank-scaling
+  interplay = follow-up if Pallass pacing reads wrong), relc 14.0
+  directed. pc carries NO power_level (live-derived) — tripwired.
+- **#211 whole-branch review adjudications (2026-07-19)**: MEDIUM-1
+  FIXED — the cisterns scout grant deposited ranged_hit 4, minting
+  [Archer] from a bladeless close (exclusivity violation); now deposits
+  observed_things (the Tactician counter the ledge path actually
+  exercises). MEDIUM-2 FIXED — WI_PACE_WEIGHTED=0 force-off arm restores
+  the legacy-path regression proof post-flip. LOW-2 RECORDED: grant
+  chunks cross persuade-bounty absolute conditions + innkeeper/diplomat
+  requires_any in one close (coherent — the close IS persuasion; flip =
+  exempt bounty conditions from grant deposits). LOW-3 RECORDED:
+  adversity ratio is PC-power vs enemy-power, ally-blind (Relc-carried
+  fights pay full) — matches the authored formula; revisit = party-
+  adjusted ratio. LOW-1 RECORDED: no shipped canonical proves in-fight
+  *_skill_used growth under the flag (milestone fixtures pre-qualify);
+  the pace harness covers the deposit path — a dedicated at-par tally
+  canonical is queued as a follow-up.

@@ -20,9 +20,9 @@
 				{ "id": "report", "description": "Tell Krshia what became of her crate, at her market stall on Market Street.", "complete_when": { "crate_returned": 1 } }
 			],
 			"resolution_paths": [
-				{ "accomplishment": "recovered_crate_force", "text": "You cleared the scavengers by force." },
-				{ "accomplishment": "recovered_crate_watch", "text": "You sent the Watch after them." },
-				{ "accomplishment": "recovered_crate_guile", "text": "You found the truth of it yourself, no fight needed." }
+				{ "accomplishment": "recovered_crate_force", "text": "You cleared the scavengers by force.", "grant": {"melee_hit": 6, "won_combat": 1} },
+				{ "accomplishment": "recovered_crate_watch", "text": "You sent the Watch after them.", "grant": {"persuaded_someone": 2, "heard_gossip": 4} },
+				{ "accomplishment": "recovered_crate_guile", "text": "You found the truth of it yourself, no fight needed.", "grant": {"sneaked_past_danger": 2, "heard_gossip": 3} }
 			]
 		},
 		{
@@ -34,9 +34,9 @@
 				{ "id": "report", "description": "Report the outcome to Olesm at the Guild.", "complete_when": { "cisterns_reported": 1 } }
 			],
 			"resolution_paths": [
-				{ "accomplishment": "cleared_the_nest", "text": "You cleared the nest yourself." },
-				{ "accomplishment": "watch_swept_cisterns", "text": "You sent the Watch to sweep it." },
-				{ "accomplishment": "scouted_the_nest", "text": "You scouted it and reported the intelligence." }
+				{ "accomplishment": "cleared_the_nest", "text": "You cleared the nest yourself.", "grant": {"melee_hit": 10, "won_combat": 2} },
+				{ "accomplishment": "watch_swept_cisterns", "text": "You sent the Watch to sweep it.", "grant": {"persuaded_someone": 3, "heard_gossip": 6} },
+				{ "accomplishment": "scouted_the_nest", "text": "You scouted it and reported the intelligence.", "grant": {"sneaked_past_danger": 4, "observed_things": 4} }
 			]
 		},
 		{
@@ -48,9 +48,9 @@
 				{ "id": "report", "description": "Tell Lyonette it's handled, in the inn common room, before Erin hears of it.", "complete_when": { "wrong_order_reported": 1 } }
 			],
 			"resolution_paths": [
-				{ "accomplishment": "strongarmed_the_supplier", "text": "You strong-armed the supplier." },
-				{ "accomplishment": "smoothed_with_krshia", "text": "You smoothed it over with Krshia." },
-				{ "accomplishment": "stretched_the_order", "text": "You stretched the order yourself, in the kitchen." }
+				{ "accomplishment": "strongarmed_the_supplier", "text": "You strong-armed the supplier.", "grant": {"melee_hit": 6, "won_combat": 1} },
+				{ "accomplishment": "smoothed_with_krshia", "text": "You smoothed it over with Krshia.", "grant": {"persuaded_someone": 2, "befriended_moments": 3, "heard_gossip": 3} },
+				{ "accomplishment": "stretched_the_order", "text": "You stretched the order yourself, in the kitchen.", "grant": {"cooked_meal": 4, "served_customer": 4} }
 			]
 		},
 		{
@@ -74,9 +74,9 @@
 				{ "id": "attune", "description": "Bring the anchor stone and Krshia's catalyst back to Pisces, by the Guild steps on Market Street, and see the door awakened.", "complete_when": { "door_awakened": 1 } }
 			],
 			"resolution_paths": [
-				{ "accomplishment": "cleared_the_leak", "text": "You fought the rift vermin in the cellar." },
-				{ "accomplishment": "read_the_door_runes", "text": "You read the wardwork yourself." },
-				{ "accomplishment": "", "text": "You consulted Pisces about it." }
+				{ "accomplishment": "cleared_the_leak", "text": "You fought the rift vermin in the cellar.", "grant": {"melee_hit": 8, "won_combat": 2} },
+				{ "accomplishment": "read_the_door_runes", "text": "You read the wardwork yourself.", "grant": {"spell_cast": 8} },
+				{ "accomplishment": "", "text": "You consulted Pisces about it.", "grant": {"heard_gossip": 5, "befriended_moments": 3} }
 			]
 		},
 		{
@@ -106,8 +106,8 @@
 			"region": "Invrisil",
 			"_resolution_paths_comment": "The 3 info-gathering methods (STEALTH/TALK/FIGHT) feed the SAME resolve beat regardless of which fork is chosen, so they aren't separately surfaced here.",
 			"resolution_paths": [
-				{ "accomplishment": "merchant_exposed", "text": "You exposed Coyle publicly." },
-				{ "accomplishment": "merchant_extorted", "text": "You extorted Coyle for gold." }
+				{ "accomplishment": "merchant_exposed", "text": "You exposed Coyle publicly.", "grant": {"persuaded_someone": 5, "heard_gossip": 8} },
+				{ "accomplishment": "merchant_extorted", "text": "You extorted Coyle for gold.", "grant": {"persuaded_someone": 3, "sneaked_past_danger": 3, "heard_gossip": 4} }
 			]
 		},
 		{
@@ -122,8 +122,8 @@
 			],
 			"region": "Liscor",
 			"resolution_paths": [
-				{ "accomplishment": "guided_ksmvr_through_plates", "text": "You guided Ksmvr through the pressure plates." },
-				{ "accomplishment": "", "text": "You cleared the trapped halls yourself." }
+				{ "accomplishment": "guided_ksmvr_through_plates", "text": "You guided Ksmvr through the pressure plates.", "grant": {"persuaded_someone": 3, "befriended_moments": 5, "sneaked_past_danger": 3} },
+				{ "accomplishment": "", "text": "You cleared the trapped halls yourself.", "grant": {"melee_hit": 12, "won_combat": 2} }
 			]
 		},
 		{

@@ -330,7 +330,7 @@ func _init() -> void:
 	(bad_status_data["state"] as Dictionary)["seen_statuses"] = "slowed"
 	assert(not WISave.apply(_new_game(), bad_status_data), "wrong-typed seen_statuses rejected")
 
-	assert(WISave.VERSION == 6, "VERSION bumped to 6 for GH#130 slept backfill")
+	assert(WISave.VERSION == 7, "VERSION bumped to 7 for GH#211 fractional_bank")
 
 	# GH#130 v5->v6 arm: a pre-#130 save with sleeps behind it gains slept=1
 	# exactly once; a never-slept v5 save gains nothing.
@@ -350,6 +350,24 @@ func _init() -> void:
 	var v5_fresh_loaded := _new_game()
 	assert(WISave.apply(v5_fresh_loaded, v5_fresh_data), "never-slept v5 save applies")
 	assert(v5_fresh_loaded.accomplishment_count("slept") == 0, "never-slept v5 save gains no slept backfill")
+
+	# GH#211 v6->v7 arm: pre-#211 saves gain an EMPTY fractional_bank (no
+	# retroactive credit); a live fractional_bank round-trips exactly.
+	var v6_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
+	v6_data["version"] = 6
+	(v6_data["state"] as Dictionary).erase("fractional_bank")
+	var v6_loaded := _new_game()
+	v6_loaded.fractional_bank["stale"] = 0.5
+	assert(WISave.apply(v6_loaded, v6_data), "v6 save applies")
+	assert(v6_loaded.fractional_bank.is_empty(), "v6->v7 migration restores an EMPTY fractional_bank, not stale data")
+	var frac_original := _new_game()
+	frac_original.fractional_bank = {"melee_hit": 0.75, "won_combat": 0.25}
+	var frac_restored := _new_game()
+	assert(WISave.apply(frac_restored, JSON.parse_string(JSON.stringify(WISave.serialize(frac_original)))), "fractional save applies")
+	assert(is_equal_approx(float(frac_restored.fractional_bank.get("melee_hit", 0.0)), 0.75) and is_equal_approx(float(frac_restored.fractional_bank.get("won_combat", 0.0)), 0.25), "fractional_bank round-trips exactly")
+	var bad_frac_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_frac_data["state"] as Dictionary)["fractional_bank"] = "corrupt"
+	assert(not WISave.apply(_new_game(), bad_frac_data), "wrong-typed fractional_bank rejected before any mutation")
 
 	var street_v3_original := _new_game()
 	street_v3_original.transition("street", Vector2i(0, 0))

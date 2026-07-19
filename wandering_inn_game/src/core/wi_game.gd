@@ -15,6 +15,9 @@ var pc_race: String = "human"
 var pc_gender: String = "m"
 var player_skills: Array[String] = []
 var accomplishments: Dictionary = {}
+# GH#211: per-counter fractional accumulators (challenge-weighted banking);
+# save-serialized (VERSION 7). Empty until data/progression.json enables.
+var fractional_bank: Dictionary = {}
 var entities: Dictionary = {}
 var blocked_cells: Dictionary = {}
 var skills: Dictionary = {}
@@ -88,7 +91,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	_field_skills = WIFieldSkills.new(event_sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active, _blink_field, _ward_field, _animate_field)
 	_interactions = WIInteractions.new(event_sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup)
 	_sleep_beat = WISleepBeat.new(event_sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _enriched_offer, _set_pending_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
-	_banking = WICombatBanking.new(event_sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity)
+	_banking = WICombatBanking.new(event_sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity, (combat_config.get("progression", {}) as Dictionary).get("challenge", {}), combat_config.get("classes", {}), (combat_config.get("combatants", {}) as Dictionary).get("combatants", []))
 	rng.seed = rng_seed
 	for s: Dictionary in skill_config.get(WIKeys.SKILLS, []):
 		skills[String(s[WIKeys.ID])] = s
@@ -1289,6 +1292,7 @@ func _check_quests() -> void:
 	if catalog.is_empty() or started_quests.is_empty():
 		return
 	var now := WIQuests.evaluate(catalog, started_quests, accomplishments)
+	var newly_completed: Array[String] = []
 	for id: String in now:
 		var prev: Dictionary = _quest_progress.get(id, {"beat_index": 0, "completed": false})
 		if int(now[id]["beat_index"]) > int(prev["beat_index"]) and not bool(now[id]["completed"]):
@@ -1298,7 +1302,17 @@ func _check_quests() -> void:
 			_emit(WIEvents.QUEST_BEAT_COMPLETED, {"id": id, "beat": now[id]["beat_index"]})
 			_emit(WIEvents.QUEST_COMPLETED, {"id": id})
 			_emit(WIEvents.TOAST, {"text": "Quest complete: %s" % _quest_title(id)})
+			newly_completed.append(id)
 	_quest_progress = now
+	# GH#211 §5: grants apply AFTER the progress write — a grant's deposits can
+	# complete ANOTHER quest, whose nested _check_quests must see fresh state
+	# (applying inside the loop would double-fire that completion). Flag-gated
+	# no-op inside grant(); grants are decay-exempt by design.
+	for id: String in newly_completed:
+		var quest: Dictionary = WIQuests.quest_by_id(catalog, id)
+		var path := WIQuests.resolved_path(quest, accomplishments)
+		if path.has("grant"):
+			_banking.grant(path["grant"] as Dictionary, fractional_bank)
 
 
 func reprime_quests() -> void:
@@ -1759,7 +1773,7 @@ func unequip(slot: String) -> bool:
 func resolve_combat() -> void:
 	if combat == null or not combat.finished:
 		return
-	_banking.resolve(combat, _pending_encounter, dormant_encounters)
+	_banking.resolve(combat, _pending_encounter, dormant_encounters, classes, fractional_bank)
 	combat = null
 	_pending_encounter = ""
 

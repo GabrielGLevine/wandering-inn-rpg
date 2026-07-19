@@ -51,7 +51,7 @@
   {
    "action": "assert_state",
    "path": "accomplishments.sword_skill_used",
-   "equals": 11
+   "equals": 13
   },
   {
    "action": "move",
