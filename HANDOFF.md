@@ -39,8 +39,11 @@ merged`), not here.
 - **b6 #221 fragment trade SHIPPED** (PR #236): trade-by-choice with
   the reviewer-live-reproed duplicate-grant HIGH fixed via a distinct
   setting item; grant-duplicate validator = ledgered follow-up.
-- Next: b4 Grimalkin, b5 Invrisil aftermath, b7 ack wave, b9 audio,
-  b10 ruin stone; a3-a8; c1-c6 (delegation split per the directive).
+- **b5 #220 Invrisil aftermath SHIPPED** (PR #237): Coyle answers both
+  closes (pool stages harmonized to the shipped hub facts — the review
+  caught a near-retcon), 7 passersby de-cloned, 3 shopfront observes.
+- Next: b4 Grimalkin, b7 ack wave, b9 audio, b10 ruin stone; a3-a8;
+  c1-c6 (delegation split per the directive).
 - Spoiler bar reminders for b1: Rags early-volume-safe; "Magical Door".
 
 ## 📋 QUEUE (value order)
