@@ -55,6 +55,14 @@ for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skill
 	# pooled terminal entropy >= 2.0 bits and combat-lane [Spellsword] share
 	# <= 0.45. MIRROR CONTRACT with WIGame.sleep()'s progression order.
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_class_paths.gd
+	# Progression-pace harness (GH#211, harness-first) — Act I->III traces:
+	# REAL autoplay fights banked through the REAL WICombatBanking deposit
+	# path + mirrored WIProgression sleep order. Reports per-act total-level
+	# bands (report-only until ratified; determinism leg asserts). Baseline
+	# p50 bands 2026-07-19 (pre-weight): warrior 6/14/16, caster 7/15/16,
+	# helper 10/21/26 — the #211 problem quantified (Act-II overshoot +
+	# table-ceiling plateau + ungated chore pace).
+	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_progression_pace.gd
 	# Sharded (ARCH-1): partitions cells across N parallel godot processes and
 	# diffs each shard vs a baseline git ref (formalizes the manual git-stash
 	# byte-identity method). WI_CELL_RANGE=LO:HI / WI_CELL_COUNT_ONLY=1 are the
