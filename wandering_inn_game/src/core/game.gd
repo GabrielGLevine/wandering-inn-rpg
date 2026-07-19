@@ -3,6 +3,12 @@ extends Node
 const SAVE_DIR := "user://saves"
 const MANUAL_SLOTS: Array[String] = ["manual", "manual_2", "manual_3"]
 
+## #111 safe project rename: on first boot into a FRESH user:// we COPY (never
+## move) the pre-rename sibling dir across, then drop a permanent marker so it
+## is strictly one-time. Pure copy logic lives in WISaveMigration; this
+## autoload owns the trigger, the event, and the marker.
+const MIGRATION_MARKER := "user://migrated_from_v4"
+
 var sim: WIGame
 ## a9 #246 (review F1): true only while a world session is live (set by
 ## Main.swap_to_world, cleared by swap_to_title). Export at TITLE must dump
@@ -15,8 +21,55 @@ var _choice_snapshot_armed := false
 
 
 func _ready() -> void:
+	_migrate_legacy_userdir()
 	_build_sim()
 	ObservableBus.domain_event.connect(_on_domain_event)
+
+
+## #111: one-time first-boot carry-over of the pre-rename user:// dir. Runs
+## BEFORE anything enumerates slots (title/settings), so a migrated save is
+## visible to Continue on the very first launch of the renamed build. One
+## code path for native AND web: user:// globalizes to the real absolute
+## path on both, and the legacy dir is its same-parent sibling (so no
+## Godot/godot capitalization guesswork -- the sibling shares our casing).
+func _migrate_legacy_userdir() -> void:
+	if FileAccess.file_exists(MIGRATION_MARKER):
+		return
+	# An established player already has saves in the NEW dir (native new-build
+	# install, or a prior migration): never clobber them -- just mark and stop.
+	if not WISaveMigration.has_any_save(SAVE_DIR):
+		_run_userdir_migration()
+	_write_file_text(MIGRATION_MARKER, "1")
+
+
+func _run_userdir_migration() -> int:
+	var legacy := WISaveMigration.legacy_userdir_path()
+	if legacy == "" or not DirAccess.dir_exists_absolute(legacy):
+		return 0
+	var copied := WISaveMigration.migrate_userdir(legacy, ProjectSettings.globalize_path("user://").trim_suffix("/"))
+	if copied > 0:
+		ObservableBus.emit_domain_event(WIEvents.SAVE_MIGRATED, {"count": copied})
+	return copied
+
+
+func _write_file_text(path: String, text: String) -> void:
+	var out := FileAccess.open(path, FileAccess.WRITE)
+	if out != null:
+		out.store_string(text)
+		out.close()
+
+
+## QA-only (#111): force the boot migration to re-run after a driver has
+## seeded a legacy dir post-launch -- clears the marker, re-scans, returns
+## the count. Never called in normal play (the marker + _ready ordering own
+## the real path); it exists so a canonical can prove the copy end to end.
+func qa_run_userdir_migration() -> int:
+	var abs_marker := ProjectSettings.globalize_path(MIGRATION_MARKER)
+	if FileAccess.file_exists(abs_marker):
+		DirAccess.remove_absolute(abs_marker)
+	var copied := _run_userdir_migration()
+	_write_file_text(MIGRATION_MARKER, "1")
+	return copied
 
 
 func reset(creation: Dictionary = {}) -> void:

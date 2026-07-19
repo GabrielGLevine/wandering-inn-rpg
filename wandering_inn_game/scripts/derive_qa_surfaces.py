@@ -176,7 +176,9 @@ def derive_surfaces_for(entry: dict, known_maps: set, known_skills: set,
 	_collect_signals(script.get("steps", []), keys, values, path_equals)
 	signals = keys | values
 
-	fixture_name = script.get("fixture_save") or entry.get("fixture")
+	# #111: `legacy_seed` (a pre-rename user-dir fixture placed by run_qa.sh)
+	# is a real fixture dependency, same as fixture_save.
+	fixture_name = script.get("fixture_save") or script.get("legacy_seed") or entry.get("fixture")
 	maps = {v for v in values if v in known_maps}
 	skills = {v for v in values if v in known_skills}
 	dialogue = {v for v in values if v in known_dialogue}
