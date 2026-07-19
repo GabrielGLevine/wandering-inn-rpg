@@ -44,16 +44,19 @@ advertised; never the Vol-9 door name.
   `present_when` = the composed gate above. NOT a fight-first entity —
   interact opens dialogue; a combat CLOSE exists but is the failure-ish
   path (three-pillars: talk / help / fight all real).
-- Cast: Rags + two goblin warriors (existing goblin_raider sprites for
-  the escort; Rags sprite = c3 bespoke, INTERIM: ships with the goblin
+- Cast: Rags + ONE goblin_raider escort (3-on-1 measured 0.21 vs the
+  gate-era build; 2-on-1 = 0.89 GATED; Rags sprite = c3 bespoke, INTERIM: ships with the goblin
   chieftain sheet + distinct tint + display_name "Rags" — flagged in
   VISUAL-LOG for the c3 swap; wi-art-and-sprites placeholder rules).
 
 ## 4. The quest — "The Chieftain's Price" (working title, invention-flagged)
 
 Shape (mirror of shipped multi-path quests; all machinery exists):
-- START: the meeting banks `met_rags`; quest auto-starts (start_quest on
-  the dialogue close, erin_errand precedent).
+- START: the meeting banks `met_rags`; quest auto-starts. AMENDED AT THE
+  WHOLE-BRANCH REVIEW (MAJOR-1, the Invrisil one-visit class): visit 1
+  only NAMES the price; every settle lives behind a leave-and-return
+  (hub "About the medicine.") — the between-visits gap is the real
+  stage, and BROKER's Liscor fiction becomes literal.
 - PROBLEM (canon-fair, invention-within-gap): her tribe needs medicine/
   supplies for wounded goblins after a Watch sweep — she won't beg,
   offers trade: a carved chess piece (chess = the attested Erin link).
@@ -71,8 +74,9 @@ Shape (mirror of shipped multi-path quests; all machinery exists):
      Grant: {melee_hit: 8, won_combat: 1} (combat line paid, smaller —
      ambush of a parley is not adversity).
 - REWARD (peaceful closes): the carved chess piece = accessory item
-  (small CHA-flavored resonance piece, #92 economy band) + Rags's camp
-  becomes a repeatable talk-pool visit (rotation idiom); chess nod line.
+  (small CHA-flavored resonance piece, #92 economy band); the settled hub
+  quiets to a standing variant. The repeatable camp talk-pool visit is
+  DESCOPED to the c3 follow-up (CHOICE-LOG); chess nod line ships.
 - Journal/beat copy stays OBLIQUE per canon-reveal precedent.
 
 ## 5. QA + acceptance

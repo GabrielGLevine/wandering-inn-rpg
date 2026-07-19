@@ -1,0 +1,274 @@
+{
+ "_comment": "b1 #199 'The Chieftain's Price' meeting graph. NARRATIVE PURPOSE: first contact with Rags \u2014 the conduct-gated reward for goblin mercy; opens the quest and carries all three resolution paths (SUPPLY item / BROKER gold / FIGHT betrayal). TONE: wary, quiet, transactional warmth at the edges. LORE: early-volume Rags (profile: 1-4 word utterances, no articles; chess is the Erin link). Voice contract: docs/design/character-profiles.md#rags. Costs follow the witch pattern: SUPPLY consumes a 10g draught, BROKER charges 6g, FIGHT is the betrayal close (start_combat on end). Back-out exit stays free and ungated (softlock guard).",
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Rags",
+   "text": "You. The one who didn't kill.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "met_rags": 1
+      }
+     },
+     "text": "Back. Good."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "rags_meeting_settled": 1
+      }
+     },
+     "text": "Good trade. Plains quiet. Go safe."
+    }
+   ],
+   "options": [
+    {
+     "text": "Who are you?",
+     "hide_when": {
+      "accomplishment": {
+       "met_rags": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "met_rags"
+      },
+      {
+       "quest": "chieftains_price"
+      }
+     ],
+     "goto": "name"
+    },
+    {
+     "text": "(Say nothing. Wait.)",
+     "hide_when": {
+      "accomplishment": {
+       "met_rags": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "met_rags"
+      },
+      {
+       "quest": "chieftains_price"
+      }
+     ],
+     "goto": "name"
+    },
+    {
+     "text": "The trade. Still open?",
+     "requires": {
+      "accomplishment": {
+       "met_rags": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "rags_price_named": 1
+      }
+     },
+     "goto": "ask"
+    },
+    {
+     "text": "About the medicine.",
+     "requires": {
+      "accomplishment": {
+       "rags_price_named": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "rags_meeting_settled": 1
+      }
+     },
+     "goto": "settle"
+    },
+    {
+     "text": "(Draw steel.)",
+     "hide_when": {
+      "accomplishment": {
+       "rags_meeting_settled": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "met_rags"
+      },
+      {
+       "quest": "chieftains_price"
+      },
+      {
+       "accomplishment": "rags_price_named"
+      },
+      {
+       "start_combat": "rags_scouting_party"
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "(Leave them to their business.)",
+     "end": true
+    }
+   ]
+  },
+  "name": {
+   "speaker": "Rags",
+   "text": "Rags. Chieftain.",
+   "options": [
+    {
+     "text": "What do you want?",
+     "goto": "ask"
+    },
+    {
+     "text": "(Leave.)",
+     "end": true
+    }
+   ]
+  },
+  "ask": {
+   "speaker": "Rags",
+   "_comment": "The problem beat: wounded tribe, Watch sweep. She trades, never begs \u2014 offers the carved piece FIRST.",
+   "text": "Watch came. Goblins hurt. Not begging.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "rags_price_named": 1
+      }
+     },
+     "text": "Medicine. Trade. Still waiting."
+    }
+   ],
+   "options": [
+    {
+     "text": "What's the trade?",
+     "effects": [
+      {
+       "accomplishment": "rags_price_named"
+      }
+     ],
+     "goto": "price"
+    },
+    {
+     "text": "(Come back later.)",
+     "end": true
+    }
+   ]
+  },
+  "price": {
+   "speaker": "Rags",
+   "_comment": "She holds up a carved chess pawn \u2014 her own work. FIRST visit only names the price (multi-stage rule: the settle lives behind a leave-and-return through the hub's 'About the medicine.'; the Invrisil one-visit shape is the named mistake).",
+   "text": "This. Carved it. For medicine.",
+   "options": [
+    {
+     "text": "I'll come back with something.",
+     "goto": "ask_back"
+    },
+    {
+     "text": "(Draw steel.)",
+     "hide_when": {
+      "accomplishment": {
+       "rags_meeting_settled": 1
+      }
+     },
+     "effects": [
+      {
+       "start_combat": "rags_scouting_party"
+      }
+     ],
+     "end": true
+    }
+   ]
+  },
+  "ask_back": {
+   "speaker": "Rags",
+   "text": "Fine. Waiting.",
+   "options": [
+    {
+     "text": "(Leave.)",
+     "end": true
+    }
+   ]
+  },
+  "sealed": {
+   "speaker": "Rags",
+   "_comment": "Close beat. The Erin chess nod \u2014 smallest possible thaw, no fluency.",
+   "text": "Good trade. Inn Human plays chess. Tell her: Rags wins next one.",
+   "options": [
+    {
+     "text": "I'll pass it on.",
+     "end": true
+    }
+   ]
+  },
+  "settle": {
+   "speaker": "Rags",
+   "text": "Brought it?",
+   "_comment": "Second-visit settle node. BROKER's between-visits fiction is now literal: the player left, arranged goods with Liscor coin, returned. Draw-steel here carries no settle bank \u2014 the betrayal resolves via the encounter's on_victory (win-only; lose/flee leaves the quest open).",
+   "options": [
+    {
+     "text": "(Hand over a mending draught.)",
+     "requires": {
+      "item": "mending_draught"
+     },
+     "effects": [
+      {
+       "remove_item": "mending_draught"
+      },
+      {
+       "accomplishment": "helped_rags_tribe"
+      },
+      {
+       "accomplishment": "rags_meeting_settled"
+      },
+      {
+       "item": "carved_chess_pawn"
+      }
+     ],
+     "goto": "sealed"
+    },
+    {
+     "text": "(Hand over the trade goods \u2014 6 gold's worth, arranged in Liscor.)",
+     "requires": {
+      "gold": 6,
+      "accomplishment": {
+       "rags_price_named": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -6
+      },
+      {
+       "accomplishment": "brokered_goblin_trade"
+      },
+      {
+       "accomplishment": "rags_meeting_settled"
+      },
+      {
+       "item": "carved_chess_pawn"
+      }
+     ],
+     "goto": "sealed"
+    },
+    {
+     "text": "Not yet.",
+     "goto": "ask_back"
+    },
+    {
+     "text": "(Draw steel.)",
+     "effects": [
+      {
+       "start_combat": "rags_scouting_party"
+      }
+     ],
+     "end": true
+    }
+   ]
+  }
+ }
+}

@@ -459,6 +459,17 @@
      ]
     },
     {
+     "id": "erin_rags_betrayed",
+     "_comment": "b1 #199 MEDIUM-4a: the betrayal consequence. Positioned EARLY (H1 lesson: last-match-wins -- main-thread relays below must still outrank a standing consequence). drove_off_rags never unbanks; this is the permanent undertone when no thread is live.",
+     "requires_accomplishment": {
+      "drove_off_rags": 1
+     },
+     "lines": [
+      "You went south and drew steel on a parley. The sign out front isn't a suggestion.",
+      "I heard what happened on the floodplains. We're not talking about it. Yet."
+     ]
+    },
+    {
      "_comment": "CONSTRAINT: this stage deliberately repeats every waking until the residue stage below takes over; it is the game's only signpost toward the new door, so it must keep firing until the player has actually acted on it, never for a fixed number of hearings. H1: sits immediately BEFORE the thread-relay block so any ARMED main-thread relay (all later) wins over this signpost -- the garden only speaks when the thread is quiet.",
      "id": "erin_garden_open",
      "requires_accomplishment": {
@@ -931,11 +942,15 @@
    "observe": "A plain plank door, warped at the bottom from a hundred winters. Nothing about it looks like it goes anywhere but the pantry.",
    "variants": [
     {
-     "when": { "door_chain_started": 1 },
+     "when": {
+      "door_chain_started": 1
+     },
      "toast": "The pantry is just the pantry — until the light catches wrong and the shelves sit a fraction too far away for the wall they're on. Erin's right. Something is wrong with this door."
     },
     {
-     "when": { "door_understood": 1 },
+     "when": {
+      "door_understood": 1
+     },
      "toast": "You know what it is now, or enough of it: a door that goes elsewhere, sleeping badly. It needs the anchor stone and Krshia's catalyst before Pisces can wake it properly."
     }
    ],
@@ -954,7 +969,7 @@
      "when": {
       "counter": "door_chain_started",
       "at": 1,
-    "observe": "Looked at straight, a plain pantry door. Looked at sideways, the grain of the frame crawls and the dark under the door is deeper than the pantry it opens into. Pisces by the Guild steps might name it; the wardwork in the frame might tell you itself; whatever scratches in the cellar already knows."
+      "observe": "Looked at straight, a plain pantry door. Looked at sideways, the grain of the frame crawls and the dark under the door is deeper than the pantry it opens into. Pisces by the Guild steps might name it; the wardwork in the frame might tell you itself; whatever scratches in the cellar already knows."
      },
      "tint": [
       0.7,
@@ -1078,7 +1093,11 @@
    "_comment": "CONSTRAINT: the free approach cell is (3,7), facing down (same column as before, shifted onto the wall). GH#128: the vine door must be EARNED -- base sprite stays garden_door_inner but the at:0 visual_state (always satisfied) hides it, and the at:1 entry un-hides + swaps observe once garden_door_unlocked banks (order-sensitive later-satisfied-wins, world.gd _resolve_entity_render; hidden is render-only per wi_game.gd entity_present doc -- the bare-wall interact/observe/toast still work). door_when already gates traversal on the same counter, so sight and passage flip together at the sleep beat. visual_states re-render live on the counter change (_refresh_entity_visual), so no same-map staleness. GH#149: (3,8) joined the map's blocked set so the pre-unlock cell READS as wall (fallback-blocked tile) instead of an invisible bump -- the door only ever needs interact-from-(3,7), never entry, so permanent blocking serves both states.",
    "id": "garden_door",
    "_comment_gh167": "present_when (GH#167 user directive): pre-unlock the entity is ABSENT entirely -- no invisible bump, no wall-dressing; (3,8) left the static blocked set. The at:0 hidden visual_state is now redundant belt-and-braces.",
-   "present_when": { "requires": { "garden_door_unlocked": 1 } },
+   "present_when": {
+    "requires": {
+     "garden_door_unlocked": 1
+    }
+   },
    "kind": "prop",
    "cell": [
     3,
@@ -1246,7 +1265,10 @@
    "_comment": "GH#92 D3 purchase surface (own conversation -- see room_ledger.json header). kind:npc DELIBERATE on an object: only npc/encounter kinds route interact into start_dialogue; no talk_pool means the conversation opens on the FIRST interact.",
    "id": "inn_room_ledger",
    "kind": "npc",
-   "cell": [10, 5],
+   "cell": [
+    10,
+    5
+   ],
    "display_name": "Room Register",
    "sprite": "dusty_scroll",
    "conversation": "room_ledger",

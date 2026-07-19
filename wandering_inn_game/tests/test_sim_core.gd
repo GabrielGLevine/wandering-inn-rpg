@@ -216,6 +216,18 @@ func _init() -> void:
 	presence_game.record_accomplishment("reached_the_warren")
 	assert(presence_game.entity_present(live_cameo), "Relc's cameo must appear after reached_the_warren")
 
+	# GH#199 `absent` present_when arm (the Rags conduct gate's negative leg):
+	# count < threshold = present; reaching the threshold hides; ANDs with a
+	# requires leg in the same when-dict.
+	var absent_ent := {"id": "absent_probe", "present_when": {"absent": {"probe_kills": 1}}}
+	assert(presence_game.entity_present(absent_ent), "absent-gated entity present while the counter is zero")
+	presence_game.record_accomplishment("probe_kills")
+	assert(not presence_game.entity_present(absent_ent), "absent-gated entity hides once the counter reaches threshold")
+	var combo_ent := {"id": "combo_probe", "present_when": {"requires": {"reached_the_warren": 1}, "absent": {"probe_kills": 1}}}
+	assert(not presence_game.entity_present(combo_ent), "requires+absent ANDs: absent leg fails despite met requires")
+	var combo_ok := {"id": "combo_ok", "present_when": {"requires": {"reached_the_warren": 1}, "absent": {"other_counter": 1}}}
+	assert(presence_game.entity_present(combo_ok), "requires+absent ANDs: both legs met = present")
+
 	var street_map: Dictionary = scene_config["maps"]["street"]
 	var upstairs_map: Dictionary = scene_config["maps"]["inn_upstairs"]
 	assert(float(_entity_by_id(street_map["entities"], "bread_stall").get("field_y_sort_bias_px", 0.0)) == 20.0,
@@ -416,9 +428,13 @@ func _init() -> void:
 	assert(gsp3.start_dialogue("goblin_parley", "goblin_encounter_2"), "parley starts")
 	assert(gsp3.dialogue_choose(2), "Back away slowly chosen")
 	assert(gsp3.dialogue == null, "decline ends the conversation")
-	assert(gsp3.accomplishment_count("goblins_spared") == 0, "declining never banks goblins_spared")
-	assert(gsp3.accomplishment_count("street_cleared") == 0 and gsp3.accomplishment_count("persuaded_someone") == 0, "declining banks nothing at all")
-	assert(gsp3.entities.has("goblin_encounter_2"), "declining leaves the encounter in place")
+	# GH#199 outcome-based-mercy ruling (CHOICE-LOG 2026-07-19): backing away
+	# IS mercy — it banks goblins_spared + goblin_left_in_peace, but never the
+	# clear/persuade counters, and leaves the encounter standing.
+	assert(gsp3.accomplishment_count("goblins_spared") == 1, "backing away banks goblins_spared (outcome-based mercy)")
+	assert(gsp3.accomplishment_count("goblin_left_in_peace") == 1, "backing away banks the fine-grained conduct counter")
+	assert(gsp3.accomplishment_count("street_cleared") == 0 and gsp3.accomplishment_count("persuaded_someone") == 0, "backing away never banks the clear/persuade counters")
+	assert(gsp3.entities.has("goblin_encounter_2"), "backing away leaves the encounter in place")
 
 	var g2 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(g2.current_map == "inn", "starts on start_map")

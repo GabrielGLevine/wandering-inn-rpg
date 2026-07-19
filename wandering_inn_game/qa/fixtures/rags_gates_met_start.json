@@ -1,0 +1,57 @@
+{
+ "_comment": "b1 #199 fixture: ALL rags gates MET (reward_acknowledged+chatted_with_erin 3+goblins_spared, never hunted the camp), standing one cell north of rags_scouting_party (16,21) facing south, mending_draught in pack for the SUPPLY close. Sibling rags_gate_unmet_start flips ONE leg (fought_chieftains_raid=1) \u2014 the absent-arm can-fail pair.",
+ "version": 7,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   16,
+   19
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "warrior": 2
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "won_combat": 1,
+   "reward_acknowledged": 1,
+   "chatted_with_erin": 3,
+   "goblins_spared": 1,
+   "slept": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "mending_draught"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": "",
+   "accessory_1": "",
+   "accessory_2": "",
+   "accessory_3": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "times_slept": 17,
+  "board_last_seen_times_slept": 17,
+  "gold": 20,
+  "rng_state": "-6393592048753323481",
+  "fractional_bank": {}
+ }
+}

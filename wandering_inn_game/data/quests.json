@@ -161,6 +161,60 @@
 				{ "id": "examined", "description": "Pass Grimalkin's fitness examination at the permit office by the Grand Lift.", "complete_when": { "grimalkin_examination_passed": 1 } },
 				{ "id": "stamped", "description": "Collect your stamped lift pass at the permit office window, back beside the Grand Lift.", "complete_when": { "elevator_pass_stamped": 1 } }
 			]
+		},
+		{
+			"id": "chieftains_price",
+			"title": "The Chieftain's Price",
+			"region": "floodplains",
+			"beats": [
+				{
+					"id": "meet",
+					"description": "Someone on the southern floodplains has been watching you. Find out who.",
+					"complete_when": {
+						"met_rags": 1
+					}
+				},
+				{
+					"id": "price",
+					"description": "Rags named her trade: medicine for her wounded, a carved piece in return.",
+					"complete_when": {
+						"rags_price_named": 1
+					}
+				},
+				{
+					"id": "close",
+					"description": "Settle the trade — supplies from your pack, goods brokered in Liscor, or refuse it outright.",
+					"complete_when": {
+						"rags_meeting_settled": 1
+					}
+				}
+			],
+			"resolution_paths": [
+				{
+					"accomplishment": "helped_rags_tribe",
+					"text": "You handed over medicine from your own pack.",
+					"grant": {
+						"befriended_moments": 4,
+						"heard_gossip": 3
+					}
+				},
+				{
+					"accomplishment": "brokered_goblin_trade",
+					"text": "You stood the cost of quiet trade goods from Liscor.",
+					"grant": {
+						"persuaded_someone": 4,
+						"heard_gossip": 5
+					}
+				},
+				{
+					"accomplishment": "drove_off_rags",
+					"text": "You drew steel on a parley.",
+					"grant": {
+						"melee_hit": 8,
+						"won_combat": 1
+					}
+				}
+			]
 		}
 	]
 }

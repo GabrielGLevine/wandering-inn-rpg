@@ -374,3 +374,25 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   character sprite, hard black outline, 16-bit pixel art". Character
   id + measured anchor/scale: see
   `assets/LICENSES/pixellab-ai-generated-verdict.md` "8e Phase A" entry.
+
+## Rags (wiki-verified 2026-07-19; b1 #199; early-volume ONLY per spoiler bar)
+- Canon, OUR ERA (Vols 1-2 — well inside the Book-17 bar): a SMALL
+  Goblin — child-sized next to a Human — who killed her tribe's old
+  chieftain and took the position young. Sharp beyond her tribe;
+  learns by watching; plays chess with Erin at the inn (attested, fair
+  game). Named for the rags she wore. Wary of Humans and armed ones
+  especially; not hostile by default — calculating.
+- Silhouette contract (the 3 features a 64px sprite must hold):
+  (1) SMALL frame — clearly shorter than every Human/Drake sprite,
+  ~2/3 height; (2) goblin read — green skin, pointed ears, crimson
+  eyes (all goblins); (3) unruly black hair + a crude small blade.
+  Palette: goblin green (match goblin_raider family), near-black hair,
+  dull leather-and-rag browns. INTERIM SPRITE: goblin_chieftain sheet
+  at reduced render_scale + distinct tint until the c3 bespoke lands
+  (VISUAL-LOG row).
+- Voice: EARLY Rags barely speaks the common tongue — one to four
+  words, no articles, no fluency ("You. Why here."). Gestures and
+  silences carry the rest; she points, waits, watches. NEVER fluent
+  sentences, never exposition. Intelligence shows in WHAT she chooses
+  to say and when she says nothing — not in vocabulary. Chess is the
+  one shared language she meets Erin in.

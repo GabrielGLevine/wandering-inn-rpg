@@ -1,11 +1,11 @@
 {
-	"_comment": "Contract: Stand aside is the sole goblins_spared producer. Every future nonviolent goblin route must also bank it; Garden and memorial gates treat absence as zero.",
+	"_comment": "Contract (widened b1 #199, outcome-based-mercy ruling in CHOICE-LOG): Stand aside AND Back away both produce goblins_spared; goblin_left_in_peace is the fine-grained back-away signal. Every future nonviolent goblin route must also bank it; Garden and memorial gates treat absence as zero.",
 	"start": "hub",
 	"nodes": {
 		"hub": { "speaker": "Goblin Warband", "text": "The goblins fan out across the road, blades low. One eyes your gear, weighing something.", "options": [
 			{ "text": "Draw steel.", "effects": [ { "start_combat": "goblin_encounter_2" } ], "end": true },
 			{ "text": "Stand aside. I've killed things bigger than your whole warband. (Warrior)", "requires": { "class": { "warrior": 1 } }, "effects": [ { "accomplishment": "street_cleared" }, { "accomplishment": "persuaded_someone" }, { "accomplishment": "goblins_spared" }, { "remove_entity": "goblin_encounter_2" } ], "goto": "backdown" },
-			{ "text": "(Back away slowly.)", "end": true }
+			{ "text": "(Back away slowly.)", "effects": [ { "accomplishment": "goblin_left_in_peace" }, { "accomplishment": "goblins_spared" } ], "end": true }
 		] },
 		"backdown": { "speaker": "Goblin Warband", "text": "A long pause. The lead goblin sniffs, spits, and waves the others off the road. They keep their eyes on you until the corner.", "options": [ { "text": "Move on.", "end": true } ] }
 	}

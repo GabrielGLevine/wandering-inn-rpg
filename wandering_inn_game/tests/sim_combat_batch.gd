@@ -54,6 +54,9 @@ const ENCOUNTER_CELLS := [
 	{"name": "rock_crab_nest_t1_solo", "arena": "boulder_flats", "enemies": ["rock_crab"], "build": "warrior2", "solo": true},
 	{"name": "goblin_night_patrol_t1_relc", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "build": "warrior2", "solo": false},
 	{"name": "goblin_night_patrol_t1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "build": "warrior2", "solo": true},
+	# b1 #199: the betrayal close of rags_meeting — gate-era player (post-errand,
+	# conduct-clean ≈ warrior2) solo vs Rags (coward, flees low) + 2 raiders.
+	{"name": "rags_scouting_party_t1_solo", "arena": "goblin_ambush", "enemies": ["rags", "goblin_raider"], "build": "warrior2", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	# Necromancer dual-class cells (#131): measured 0.57 / 0.72 at authoring (100 seeds).
 	# Builds are matrix:false (dual-class is the in-model shape; solo pure necro is unreachable
 	# -- class requires holding [Mage]); "solo" here on the CELL strips Relc, deliberate.

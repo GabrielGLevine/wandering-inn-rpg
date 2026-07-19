@@ -252,3 +252,19 @@ cross-release index of them.
   ("The Chieftain's Price", medicine-after-Watch-sweep) are
   invention-within-gap, flagged; FIGHT close pays a deliberately small
   grant (ambushing a parley is not adversity).
+- **b1 whole-branch review wave (2026-07-19)**: MAJOR-1 FIXED — quest
+  restructured to a true two-visit shape (settle behind leave-and-return;
+  BROKER's Liscor fiction now literal); MEDIUM-2 FIXED — settled-state
+  hide_when everywhere + third-visit canonical guard (kills the net-zero
+  pawn/commerce pump); MEDIUM-3 FIXED — both when-validators sanction +
+  cross-ref `absent` (typo-mutation-proven); MEDIUM-4 split — Erin's
+  hardened lines SHIPPED (early-positioned so main-thread relays outrank,
+  H1 lesson), camp talk-pool DESCOPED to the c3 follow-up; LOW-5 SUPPLY
+  grant de-minted (handing medicine ≠ persuasion — kills the Diplomat
+  auto-mint; BROKER keeps persuaded 4, brokering IS persuasion); LOW-6
+  betrayal settles via on_victory (win-only; lose/flee leaves the quest
+  open — flip = settle on defeat too); LOW-7 sprite stays 0.09 with
+  corrected comments (0.08 failed the eye-read; c3 owns the true
+  silhouette). ALSO: the shared-file checkout trap fired live during the
+  validator mutation probe (wiped the uncommitted on_victory hunk,
+  caught same-minute by re-grep) — the ledger rule held.

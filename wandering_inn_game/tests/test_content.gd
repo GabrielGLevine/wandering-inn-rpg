@@ -260,6 +260,10 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):
+			if String(entity.get("kind", "")) == "encounter":
+				# GH#211: combat_banking banks fought_<encounter_id> on every
+				# weighted victory -- a real code-banked producer per encounter.
+				produced["fought_%s" % String(entity["id"])] = true
 			var victory: Variant = entity.get("on_victory", [])
 			if victory is Array:
 				for id: Variant in victory:
@@ -318,7 +322,7 @@ func _validate_encounter_when(scene: Dictionary, produced_accomplishments: Dicti
 			var entity_id: String = String(entity["id"])
 			assert(String(entity.get("kind", "")) == "encounter", "entity %s carries encounter_when but is not kind:encounter" % entity_id)
 			var when: Dictionary = entity["encounter_when"]
-			assert(when.has("phase") or when.has("requires"), "entity %s encounter_when has no recognized shape (only 'phase'/'requires' are sanctioned)" % entity_id)
+			assert(when.has("phase") or when.has("requires") or when.has("absent"), "entity %s encounter_when has no recognized shape (only 'phase'/'requires'/'absent' are sanctioned)" % entity_id)
 			if when.has("phase"):
 				for p: Variant in when["phase"]:
 					assert(VALID_PHASES.has(String(p)), "entity %s encounter_when references unknown phase: %s" % [entity_id, p])
@@ -329,7 +333,9 @@ func _validate_encounter_when(scene: Dictionary, produced_accomplishments: Dicti
 						produced_accomplishments.has(acc_id),
 						"entity %s encounter_when.requires waits on unproduced accomplishment: %s" % [entity_id, acc_id]
 					)
-
+			if when.has("absent"):
+				for counter_id: String in (when["absent"] as Dictionary):
+					assert(produced_accomplishments.has(counter_id), "entity %s encounter_when.absent references unproduced counter: %s (a typo here silently never gates -- GH#199 review MEDIUM-3)" % [entity_id, counter_id])
 
 func _validate_encounter_gate_counters(scene: Dictionary, produced_accomplishments: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
@@ -364,7 +370,7 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 				String(entity.get("kind", "")) != "encounter",
 				"entity %s: present_when is forbidden on kind:encounter -- _check_trigger_radius never consults presence, so a present_when encounter would be invisible/unblocked yet still ambush; use encounter_when" % entity_id
 			)
-			assert(when.has("requires") or when.has("phase"), "entity %s present_when has no recognized shape (only 'requires'/'phase' are sanctioned)" % entity_id)
+			assert(when.has("requires") or when.has("phase") or when.has("absent"), "entity %s present_when has no recognized shape (only 'requires'/'phase'/'absent' are sanctioned)" % entity_id)
 			if when.has("phase"):
 				for p: Variant in when["phase"]:
 					assert(VALID_PHASES.has(String(p)), "entity %s present_when references unknown phase: %s" % [entity_id, p])
@@ -375,7 +381,9 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 						produced_accomplishments.has(acc_id),
 						"entity %s present_when.requires waits on unproduced accomplishment: %s" % [entity_id, acc_id]
 					)
-
+			if when.has("absent"):
+				for counter_id: String in (when["absent"] as Dictionary):
+					assert(produced_accomplishments.has(counter_id), "entity %s encounter_when.absent references unproduced counter: %s (a typo here silently never gates -- GH#199 review MEDIUM-3)" % [entity_id, counter_id])
 
 func _validate_visual_states_phase(scene: Dictionary) -> void:
 	for map_id: String in scene["maps"]:

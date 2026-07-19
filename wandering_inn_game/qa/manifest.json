@@ -3956,6 +3956,60 @@
      "input"
     ]
    }
+  },
+  {
+   "script": "rags_meeting_loop",
+   "seed": 9,
+   "fixture": "rags_gates_met_start",
+   "note": "b1 #199: gated Rags meeting -> SUPPLY close (draught consumed, pawn granted, quest completes, #211 grant banks)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "rags_gates_met_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "rags_gate_check",
+   "seed": 9,
+   "fixture": "rags_gate_unmet_start",
+   "note": "b1 #199: encounter_when absent-arm refusal (hunted-the-camp fixture) -- gate toast, no dialogue; the arm's can-fail proof",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "rags_gate_unmet_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
   }
  ]
 }

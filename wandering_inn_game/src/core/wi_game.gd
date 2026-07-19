@@ -787,8 +787,16 @@ func _present_gate_met(when: Dictionary) -> bool:
 		return true
 	if when.has("phase"):
 		return (when["phase"] as Array).has(phase())
-	if when.has("requires"):
-		return _accomplishment_gate_met(when["requires"] as Dictionary)
+	# GH#199: `absent` = negative counter gate (count < threshold), ANDed with
+	# `requires` when both present — the Rags conduct gate's "never hunted the
+	# camp" leg. phase-form gates keep their early return (no combos there).
+	if when.has("requires") and not _accomplishment_gate_met(when["requires"] as Dictionary):
+		return false
+	if when.has("absent"):
+		var absent: Dictionary = when["absent"]
+		for key: String in absent:
+			if accomplishment_count(key) >= int(absent[key]):
+				return false
 	return true
 
 
@@ -798,8 +806,16 @@ func _encounter_gate_met(ent: Dictionary) -> bool:
 		return true
 	if when.has("phase"):
 		return (when["phase"] as Array).has(phase())
-	if when.has("requires"):
-		return _accomplishment_gate_met(when["requires"] as Dictionary)
+	# GH#199: `absent` mirrors _present_gate_met's arm (count < threshold),
+	# ANDed with `requires` — the Rags gate's never-hunted-the-camp leg on an
+	# encounter_when (present_when is forbidden on encounters by validator).
+	if when.has("requires") and not _accomplishment_gate_met(when["requires"] as Dictionary):
+		return false
+	if when.has("absent"):
+		var absent: Dictionary = when["absent"]
+		for key: String in absent:
+			if accomplishment_count(key) >= int(absent[key]):
+				return false
 	return true
 
 
