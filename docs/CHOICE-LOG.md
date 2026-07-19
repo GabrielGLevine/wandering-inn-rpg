@@ -334,3 +334,17 @@ cross-release index of them.
   ACCEPTED — one greeting slot, later-match-wins is the shipped rule.
   Coverage: casting-row gate negative proof + lockout regression +
   both completion variants now unit-pinned on the SHIPPED graph.
+- **b7 #207 adjudications (2026-07-19)**: recipient acks are pool
+  STAGES (permanent registers). Review found the one-shot acks
+  near-dead on the ordinary path (the board window forces deliveries
+  to times_slept>=1, when warm-terminal gates are usually met).
+  Resolution: STANDING-run familiarity stages promoted ABOVE the warm
+  terminals (permanent-vs-permanent — the courier familiarity is the
+  more specific register; active story threads still outrank), so the
+  ordinary path DOES acknowledge; one-shot acks stay lowest-priority
+  and render only in the pre-terminal window (accepted shadow-out —
+  a months-later "it arrived!" would be worse). Selys/Olesm one-shot
+  acks accept the same shadow (no standing rows there). Prop acks:
+  stall = toast variant (observe is a Tactician grant — an
+  observe-only ack would be class-gated); grate = observe override
+  (its toast is door-blocked post-cisterns).

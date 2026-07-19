@@ -435,6 +435,16 @@
      ]
     },
     {
+     "id": "erin_delivery_hamper",
+     "_comment": "b7 #207 ack — after the nudge block, before the warm terminals (terminals and threads outrank; the nudges sit earlier and are overridden as designed). Board-window caveat (review): the hamper slip can't be accepted before times_slept>=1, so this one-shot ack renders only while the terminal gates are still unmet — the promoted standing stage above the terminals carries the ordinary-path acknowledgment (CHOICE-LOG).",
+     "requires_accomplishment": {
+      "delivered_delivery_inn_hamper": 1
+     },
+     "lines": [
+      "The hamper made it! Lyonette counted everything twice and only found ONE thing missing, which — okay, that was me, I ate it. It was for quality! Checking!"
+     ]
+    },
+    {
      "id": "erin_regular",
      "requires_accomplishment": {
       "errand_decided": 1,
@@ -456,6 +466,16 @@
       "There you are! Sit down, I'm testing a recipe on you. That came out wrong. WITH you. Testing it with you.",
       "Lyonette hums when she scrubs now. She'd deny it under oath, so don't tell her I said anything. That was you, by the way.",
       "Some days this place is a lot. Then somebody walks in and it's less a lot. You're one of the less-a-lot ones."
+     ]
+    },
+    {
+     "id": "erin_standing_hamper",
+     "_comment": "b7 #207 standing-run familiarity — promoted ABOVE the warm terminals (review fix: the board window forces hamper runs to times_slept>=1, when the terminals' gates are usually met; a permanent familiarity register legitimately outranks the generic warm terminal, while story threads below still outrank it).",
+     "requires_accomplishment": {
+      "delivered_delivery_standing_inn_hamper": 1
+     },
+     "lines": [
+      "Hamper day again? You're basically part of the pantry now. That's a compliment! Pantries are load-bearing!"
      ]
     },
     {

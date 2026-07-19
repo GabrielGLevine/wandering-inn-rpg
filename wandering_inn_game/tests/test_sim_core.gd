@@ -2754,6 +2754,55 @@ func _init() -> void:
 	assert(String((WIBounties.build_abandon_graph()["nodes"]["hub"] as Dictionary)["text"]).ends_with("for someone with follow-through."),
 		"default abandon copy stays byte-identical")
 
+	# --- b7 #207: delivery acknowledgments — the surfaces no canonical
+	# renders live (no fixture banks a delivered_* counter). Stage precedence
+	# on the SHIPPED entity rows, and the grate's observe override (its
+	# interact toast is door-blocked once heard_about_cisterns banks). ---
+	var ack_street: Dictionary = _load_json("res://data/maps/liscor/street.json")
+	var zev_row: Dictionary = (ack_street["entities"] as Array).filter(func(e: Variant) -> bool: return String((e as Dictionary).get("id", "")) == "zevara")[0]
+	var ack_counts := {"delivered_delivery_gate_dispatch": 1}
+	var ack_lines: Array = []
+	var ack_soc := WISocial.new(
+		func(type: String, payload: Dictionary) -> void: if type == WIEvents.DIALOGUE_LINE: ack_lines.append(String(payload["text"])),
+		func(id: String) -> int: return int(ack_counts.get(id, 0)),
+		func(_id: String, _n: int) -> void: pass,
+		Callable())
+	ack_soc.talk_pool_line(zev_row, {})
+	assert(ack_lines[-1] == "That dispatch you ran made it up the chain. Somebody upstairs read it, which is more than dispatches usually get. Don't let it go to your head.",
+		"zevara one-shot delivery ack renders when only the dispatch is delivered")
+	ack_counts["delivered_delivery_standing_dispatch_run"] = 1
+	ack_soc.talk_pool_line(zev_row, {})
+	assert(ack_lines[-1].begins_with("Dispatch pouch's on the run again."),
+		"the standing-run familiarity stage outranks the one-shot ack (later in the array)")
+	ack_counts["resolved_the_cisterns"] = 1
+	ack_soc.talk_pool_line(zev_row, {})
+	assert(ack_lines[-1].begins_with("Word is the cistern thing's settled."),
+		"an active story thread outranks both delivery stages (acks sit first = lowest priority)")
+	var erin_row: Dictionary = (_load_json("res://data/maps/inn/inn.json")["entities"] as Array).filter(func(e: Variant) -> bool: return String((e as Dictionary).get("id", "")) == "erin")[0]
+	ack_counts.clear()
+	ack_counts["delivered_delivery_inn_hamper"] = 1
+	ack_soc.talk_pool_line(erin_row, {})
+	assert(ack_lines[-1].begins_with("The hamper made it!"),
+		"erin's hamper ack renders post-delivery (sits after the nudge block)")
+	ack_counts["errand_decided"] = 1
+	ack_counts["chatted_with_erin"] = 2
+	ack_soc.talk_pool_line(erin_row, {})
+	assert(ack_lines[-1].begins_with("Selys asked about you the other day."),
+		"erin's warm terminal outranks the one-shot hamper ack once its gates are met (positive pin: erin_regular line 2 = chatted 2 % 3)")
+	ack_counts["delivered_delivery_standing_inn_hamper"] = 1
+	ack_soc.talk_pool_line(erin_row, {})
+	assert(ack_lines[-1].begins_with("Hamper day again?"),
+		"the promoted standing-hamper familiarity outranks the warm terminal (the review fix: the ordinary-path acknowledgment surface)")
+	var gAck := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345)
+	gAck.player_skills.append("observe")
+	gAck.bind_map_silent("street", Vector2i(16, 10))
+	gAck.player_facing = Vector2i.DOWN  # faces sewer_grate (16,11)
+	gAck.record_accomplishment("delivered_delivery_grate_phials")
+	_events.clear()
+	gAck.use_skill_field("observe")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "Rust holds the bars, not a lock. The phial crate you eased down the rungs is gone from the ledge below. Collected, unbroken. Somewhere down there, someone's working glass got to keep being glass."),
+		"the grate's delivered observe override renders (the only ack surface its door_when leaves reachable)")
+
 	# --- GH#163 review MEDIUM: the tier LOCK must survive a rank shift ---
 	var tier_cc: Dictionary = combat_config.duplicate(true)
 	tier_cc["classes"] = _load_json("res://data/classes.json")

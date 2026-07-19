@@ -208,6 +208,28 @@
      "speaker": "Sergeant Ashgrave",
      "text": "Barracks is Watch business only. State yours."
     }
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "sergeant_delivery_gear",
+     "_comment": "b7 #207 ack (lowest priority — any later stage outranks). delivered_* counters never reset; ack register must read fine forever.",
+     "requires_accomplishment": {
+      "delivered_delivery_barracks_gear": 1
+     },
+     "lines": [
+      "Gear crate came in. Counted. Correct. That's rarer than you'd think."
+     ]
+    },
+    {
+     "id": "sergeant_standing_kit",
+     "_comment": "b7 #207 standing-run familiarity — the standing row re-banks every run, so this is a permanent register shift by design.",
+     "requires_accomplishment": {
+      "delivered_delivery_standing_barracks_kit": 1
+     },
+     "lines": [
+      "Kit run's yours when the board posts it. Quartermaster stopped double-checking your counts. Take that as the compliment it is."
+     ]
+    }
    ]
   },
   {

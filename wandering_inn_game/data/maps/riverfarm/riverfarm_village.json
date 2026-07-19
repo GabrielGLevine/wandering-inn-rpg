@@ -1296,6 +1296,16 @@
    ],
    "talk_pool_stages": [
     {
+     "id": "headman_delivery_seed",
+     "_comment": "b7 #207 ack (lowest priority — hollow thread and blight terminal outrank).",
+     "requires_accomplishment": {
+      "delivered_delivery_riverfarm_seed": 1
+     },
+     "lines": [
+      "Seed sacks came through clean. Fields'll tell come spring whether the coin was worth it. Around here that counts as gratitude."
+     ]
+    },
+    {
      "id": "riverfarm_headman_thread_hollow",
      "requires_accomplishment": {
       "heard_price_of_a_favor": 1
