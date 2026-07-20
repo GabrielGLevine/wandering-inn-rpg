@@ -113,6 +113,8 @@ func _build_expected_counts() -> Dictionary:
 	counts["citizen_f/walk"] = 6   ## 384 / 64
 
 	counts["dusty_scroll/idle"] = 1
+	counts["market_stall_pallass_b/idle"] = 1
+	counts["market_stall_pallass_c/idle"] = 1
 	## #222/#224 batch: stalls, alchemy stations, dormant-guardian marker
 	counts["market_stall_wood/idle"] = 1
 	counts["market_stall_silverfang/idle"] = 1

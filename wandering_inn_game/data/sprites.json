@@ -237,6 +237,32 @@
    }
   }
  },
+ "market_stall_pallass_b": {
+  "_comment": "#222 FEEL fix: Pallass stall variant B (sandstone + green scalework banner) -- de-clones market_stall_b. anchor bbox-measured.",
+  "render_scale": 0.62,
+  "anchor": [0.5, 0.938],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/market_stall_pallass_b/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "market_stall_pallass_c": {
+  "_comment": "#222 FEEL fix: Pallass stall variant C (dragon-crested amber wares) -- de-clones market_stall_c. anchor bbox-measured.",
+  "render_scale": 0.62,
+  "anchor": [0.4688, 0.984],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/market_stall_pallass_c/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
  "market_stall_wood": {
   "_comment": "#222: owned PixelLab art (potential_assets/license-notes/pixellab-ai-generated-verdict.md) -- green-awning wooden stall with bread loaves; the Liscor bread_stall's own sprite (was food_basket).",
   "render_scale": 0.4,

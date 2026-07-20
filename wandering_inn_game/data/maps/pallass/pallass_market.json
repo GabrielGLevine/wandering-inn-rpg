@@ -346,7 +346,7 @@
     6
    ],
    "display_name": "Market Stall",
-   "sprite": "market_stall_pallass",
+   "sprite": "market_stall_pallass_b",
    "observe": "A stall built to the same civic pattern as every other on this tier -- same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
    "on_interact_accomplishment": "browsed_posted_price_stall",
    "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
@@ -377,7 +377,7 @@
     6
    ],
    "display_name": "Market Stall",
-   "sprite": "market_stall_pallass",
+   "sprite": "market_stall_pallass_c",
    "observe": "A stall built to the same civic pattern as every other on this tier -- same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
    "on_interact_accomplishment": "browsed_posted_price_stall",
    "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
