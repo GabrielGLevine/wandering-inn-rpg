@@ -167,6 +167,7 @@ func _init() -> void:
 	_validate_encounter_when(scene, produced_accomplishments)
 	_validate_encounter_gate_counters(scene, produced_accomplishments)
 	_validate_present_when(scene, produced_accomplishments)
+	_validate_skill_uses(scene, skill_ids, produced_accomplishments)
 	_validate_visual_states_phase(scene)
 	_validate_talk_pool_echo_of(scene, entity_ids)
 	_validate_effect_text_opacity()
@@ -285,6 +286,10 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 				for variant: Dictionary in (skill_use.get("variants", []) as Array):
 					if variant.has("accomplishment"):
 						produced[String(variant["accomplishment"])] = true
+			for sid: String in (entity.get("skill_uses", {}) as Dictionary):
+				var arm: Dictionary = (entity["skill_uses"] as Dictionary)[sid]
+				if arm.has("accomplishment"):
+					produced[String(arm["accomplishment"])] = true
 			if entity.has("on_interact_accomplishment"):
 				produced[String(entity["on_interact_accomplishment"])] = true
 				for variant: Dictionary in (entity.get("variants", []) as Array):
@@ -364,6 +369,24 @@ func _validate_encounter_gate_counters(scene: Dictionary, produced_accomplishmen
 						produced_accomplishments.has(acc_id),
 						"entity %s ally_hp_penalty.%s.when waits on unproduced accomplishment: %s" % [entity_id, ally_id, acc_id]
 					)
+
+
+func _validate_skill_uses(scene: Dictionary, skill_ids: Dictionary, produced_accomplishments: Dictionary) -> void:
+	## Pantry-door consolidation: `skill_uses` = per-skill on_skill_use arms.
+	## Every key must be a real skill id; every arm needs accomplishment +
+	## toast; arm accomplishments register as produced (callers bank them).
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		for entity: Dictionary in map.get("entities", []):
+			if not entity.has("skill_uses"):
+				continue
+			var entity_id: String = String(entity["id"])
+			var uses: Dictionary = entity["skill_uses"]
+			assert(not uses.is_empty(), "entity %s: skill_uses must not be empty" % entity_id)
+			for sid: String in uses:
+				assert(skill_ids.has(sid), "entity %s skill_uses references unknown skill: %s" % [entity_id, sid])
+				var arm: Dictionary = uses[sid]
+				assert(arm.has("accomplishment") and arm.has("toast"), "entity %s skill_uses[%s] needs accomplishment + toast" % [entity_id, sid])
 
 
 func _validate_present_when(scene: Dictionary, produced_accomplishments: Dictionary) -> void:

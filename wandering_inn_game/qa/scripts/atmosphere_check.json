@@ -38,7 +38,7 @@
    "action": "assert_event_logged",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 20,
+    "sprites": 18,
     "fallbacks": 0
    }
   },
@@ -682,7 +682,7 @@
    "action": "wait_for_event",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 19,
+    "sprites": 17,
     "fallbacks": 0
    },
    "timeout_sec": 5
@@ -700,7 +700,7 @@
    "action": "wait_for_event",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 19,
+    "sprites": 17,
     "fallbacks": 0
    },
    "timeout_sec": 5
@@ -799,7 +799,7 @@
    "action": "wait_for_event",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 20,
+    "sprites": 18,
     "fallbacks": 0
    },
    "timeout_sec": 5

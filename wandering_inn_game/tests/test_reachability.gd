@@ -175,6 +175,9 @@ func _collect_scene_producers(scene: Dictionary, produced: Dictionary) -> void:
 					_mark_produced(String(counter), label + ".on_victory", produced)
 			var skill_use: Dictionary = entity.get("on_skill_use", {})
 			_collect_scalar_producer(skill_use.get("accomplishment", ""), label + ".on_skill_use.accomplishment", produced)
+			for sid: String in (entity.get("skill_uses", {}) as Dictionary):
+				var arm: Dictionary = (entity["skill_uses"] as Dictionary)[sid]
+				_collect_scalar_producer(arm.get("accomplishment", ""), "%s.skill_uses[%s].accomplishment" % [label, sid], produced)
 			for variant_index: int in (skill_use.get("variants", []) as Array).size():
 				var variant: Dictionary = skill_use["variants"][variant_index]
 				_collect_scalar_producer(variant.get("accomplishment", ""), "%s.on_skill_use.variants[%d].accomplishment" % [label, variant_index], produced)

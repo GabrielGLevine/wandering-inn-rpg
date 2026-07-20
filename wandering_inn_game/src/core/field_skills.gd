@@ -62,6 +62,14 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 	if not target.is_empty() and String(target.get("requires_skill", "")) == skill_id and target.has("on_skill_use"):
 		_break_sneak.call()
 		return _use_skill.call(skill_id, String(target[WIKeys.ID]))
+	# Pantry-door consolidation (user FEEL verdict 2026-07-19): `skill_uses`
+	# = a per-skill map of on_skill_use arms, so ONE entity can answer
+	# multiple Skills differently (the door: observe reads the runes,
+	# detect_magic reads the wardwork) instead of clustering sibling props.
+	# Routed BEFORE the generic observe arm so a mapped observe wins.
+	if not target.is_empty() and (target.get("skill_uses", {}) as Dictionary).has(skill_id):
+		_break_sneak.call()
+		return _use_skill.call(skill_id, String(target[WIKeys.ID]))
 	if skill_id == "observe" and not target.is_empty():
 		_break_sneak.call()
 		var observe_line := String(target.get("observe", "You watch. Details surface."))
