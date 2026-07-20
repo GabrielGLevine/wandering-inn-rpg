@@ -228,7 +228,7 @@
     7
    ],
    "display_name": "A Warded Seam",
-   "sprite": "illusory_floor_tell",
+   "sprite": "warded_seam",
    "requires_skill": "detect_magic",
    "skill_hint_toast": "Something under the stone hums off-key. Eyes that read mana could say what.",
    "locked_toast": "The stone here looks like all the other stone. It is not.",

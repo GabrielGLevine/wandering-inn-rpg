@@ -22,10 +22,15 @@ canon cites · current sprite state.
   124px frames; combat_scale 0.3875 containment). Upgraded 2026-07-06.
 
 ## Erin Solstice
-- Human [Innkeeper], early 20s, athletic-average.
-- Brown hair ponytail, apron over commoner clothes, expressive.
+- Human [Innkeeper], early 20s, athletic-average, 5'4".
+- Light-brown hair with a slight orange tint, tied back; hazel eyes.
+- WEARS HER EARTH CLOTHES (wiki-verified 2026-07-19, user-corrected):
+  a t-shirt and pants (jeans-style) under her ICONIC worker's apron —
+  never a local dress. (Vol-9 wardrobe/white-hair/undercut = past the
+  Book-17 bar, never depict.)
 - Voice: warm, chatty, runaway-optimist, chess-sharp under the babble.
-- Sprite: citizen_f family stand-in (Pixel Crawler; bundle-tier).
+- Sprite: bespoke PixelLab v3 rig (2026-07-19, #210) — t-shirt/jeans/
+  apron per the line above.
 
 ## Pisces Jealnv
 - Human [Necromancer], thin, pale, early 20s.

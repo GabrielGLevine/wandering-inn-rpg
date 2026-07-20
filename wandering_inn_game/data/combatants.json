@@ -380,7 +380,7 @@
    "id": "ruin_guardian",
    "power_level": 8.0,
    "display_name": "Ruin Warden",
-   "sprite": "training_dummy",
+   "sprite": "ruin_warden",
    "combat_scale": 1.15,
    "side": "enemy",
    "stats": {
@@ -402,7 +402,7 @@
    "id": "ruin_ward_a",
    "power_level": 5.0,
    "display_name": "Lesser Ward",
-   "sprite": "training_dummy",
+   "sprite": "ruin_warden",
    "combat_scale": 0.85,
    "side": "enemy",
    "stats": {
@@ -422,7 +422,7 @@
    "id": "ruin_ward_b",
    "power_level": 5.5,
    "display_name": "Lesser Ward",
-   "sprite": "training_dummy",
+   "sprite": "ruin_warden",
    "combat_scale": 0.85,
    "side": "enemy",
    "stats": {
@@ -444,7 +444,7 @@
    "id": "snare_ward_a",
    "power_level": 11.0,
    "display_name": "Lesser Ward",
-   "sprite": "training_dummy",
+   "sprite": "ruin_warden",
    "combat_scale": 0.85,
    "side": "enemy",
    "stats": {
