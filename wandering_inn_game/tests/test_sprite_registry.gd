@@ -113,6 +113,14 @@ func _build_expected_counts() -> Dictionary:
 	counts["citizen_f/walk"] = 6   ## 384 / 64
 
 	counts["dusty_scroll/idle"] = 1
+	## #222/#224 batch: stalls, alchemy stations, dormant-guardian marker
+	counts["market_stall_wood/idle"] = 1
+	counts["market_stall_silverfang/idle"] = 1
+	counts["alchemy_bench/idle"] = 1
+	counts["alchemy_still/idle"] = 1
+	counts["alchemy_bench_dark/idle"] = 1
+	counts["alchemy_bench_true/idle"] = 1
+	counts["dormant_guardian_statue/idle"] = 1
 	counts["dirty_table/idle"] = 1
 	counts["cauldron/idle"] = 1
 	counts["bed/idle"] = 1
