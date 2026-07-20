@@ -18,7 +18,13 @@ One key per file, raw string, no quotes/newline decoration.
 - `PRIVATE_ASSETS_TOKEN` — fine-grained PAT with read access to
   `GabrielGLevine/wandering-inn-rpg-assets`; user-minted (agents cannot
   create PATs). Used by release.yml's bundle fetch.
-- ci.yml uses NO secrets by design (fork-PR safe).
+- `PIXELLAB_API_KEY` / `SILICONFLOW_API_KEY` / `RETRODIFFUSION_API_KEY`
+  — mirrors of the local `docs/*_api_key.txt` files (added 2026-07-20)
+  so remote/cloud dev sessions can reach the same services; no workflow
+  consumes them yet. Rotate by re-running `gh secret set` from the
+  local file.
+- ci.yml uses NO secrets by design (fork-PR safe); fork PRs never see
+  Actions secrets regardless.
 
 ## Steam build account (release.yml's `steampipe-upload` job, issue #19)
 USER ACTION, full step-by-step (partner account, app fee, depots, the
