@@ -145,7 +145,7 @@
     1
    ],
    "display_name": "Ladder Up",
-   "sprite": "door",
+   "sprite": "shaft_ladder",
    "to_map": "street",
    "to_cell": [
     15,
@@ -190,7 +190,7 @@
     1
    ],
    "display_name": "Phosphor Moss",
-   "sprite": "mushroom_purple_m",
+   "sprite": "phosphor_moss",
    "observe": "Pale green moss crusts the old brick in patches, breathing a cold light that never quite reaches the water. Drakes farmed it once, they say, to see down here without lanterns.",
    "on_interact_accomplishment": "found_phosphor_moss",
    "toast": "Phosphor moss clings to the brick, glowing a sick, cold green. Cool to the touch, and it hisses faintly when your shadow crosses it.",
@@ -239,7 +239,7 @@
     10
    ],
    "display_name": "Webbed Passage",
-   "sprite": "mushroom",
+   "sprite": "spider_web",
    "observe": "Cable-thick silk, black-and-silver banded, stretched wall to wall. Not a house spider's work. Something with a shield on its back spun this, and recently.",
    "on_interact_accomplishment": "found_spider_silk",
    "toast": "Ropes of banded silk choke the side passage, strong as wire. Wrapped in it, drained pale: a rat, a boot, something that used to be a Watchman's lantern."

@@ -237,6 +237,58 @@
    }
   }
  },
+ "shaft_ladder": {
+  "_comment": "#224: owned PixelLab art -- wooden ladder on grey stone; the sewers/deep-tunnels UP transitions' own sprite (they wore the generic door).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/shaft_ladder/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "phosphor_moss": {
+  "_comment": "#224: owned PixelLab art -- teal bioluminescent moss on wet stone; sewers phosphor_moss's own sprite (wore mushroom_purple_m).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/phosphor_moss/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "spider_web": {
+  "_comment": "#224: owned PixelLab art -- corner web with hanging cocoons; sewers spider_silk's own sprite (wore mushroom -- semantic nonsense).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/spider_web/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "warded_seam": {
+  "_comment": "#224: owned PixelLab art -- violet-glinting seam through stone tiles; trapped_halls warded_seam's own tell (shared illusory_floor_tell before, muddying the two trap classes).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/warded_seam/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
  "dirty_table": {
   "render_scale": 0.46,
   "anchor": [

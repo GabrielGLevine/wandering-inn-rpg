@@ -113,6 +113,11 @@ func _build_expected_counts() -> Dictionary:
 	counts["citizen_f/walk"] = 6   ## 384 / 64
 
 	counts["dusty_scroll/idle"] = 1
+	## #224 batch B: transitions + sewers dressing + the warded-seam tell
+	counts["shaft_ladder/idle"] = 1
+	counts["phosphor_moss/idle"] = 1
+	counts["spider_web/idle"] = 1
+	counts["warded_seam/idle"] = 1
 	counts["dirty_table/idle"] = 1
 	counts["cauldron/idle"] = 1
 	counts["bed/idle"] = 1
