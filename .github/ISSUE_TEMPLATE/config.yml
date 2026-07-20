@@ -3,12 +3,12 @@
 # refs, full description). This keeps triage cheap and the queue signal-rich.
 blank_issues_enabled: false
 contact_links:
-  - name: Technical bug or code contribution
+  - name: Code contribution
     url: https://github.com/OWNER/REPO/blob/main/CONTRIBUTING.md
     about: >-
-      Found a bug, or want to open a code PR? Read CONTRIBUTING.md first — code
-      changes go through pull requests (which must pass the QA gate), not these
-      content forms.
+      Want to open a code PR? Read CONTRIBUTING.md first — code changes go
+      through pull requests (which must pass the QA gate), not these content
+      forms. Hit a bug while playing? Use the Playtest feedback form above.
   - name: Art or music contribution
     url: https://github.com/OWNER/REPO/blob/main/CONTRIBUTING-ASSETS.md
     about: >-

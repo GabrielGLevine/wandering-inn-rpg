@@ -1,0 +1,45 @@
+name: Something else
+description: Anything the other forms don't fit — questions, docs, accessibility, balance, meta suggestions.
+title: "[General] "
+labels: ["community-general"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is the catch-all form. Before using it, check whether a more specific form fits —
+        **Quest idea**, **Dialogue script**, **Map suggestion**, **Skill interaction**, or **Playtest feedback** —
+        those reach the right review path faster. If none of them fit, you're in the right place.
+
+        - **How review works:** a maintainer applies the `triage` label to run an automated Opus draft-pass. It drafts or asks for missing info as a comment — a human decides everything.
+        - **Spoilers:** the game only assumes knowledge through **Volume 7** of the books. Wrap anything later in a `<details>` block and say so.
+  - type: input
+    id: one-liner
+    attributes:
+      label: One-line summary
+      description: What this is about, in a sentence.
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Closest category
+      description: Best guess is fine — this just helps routing.
+      options:
+        - Question about the game or project
+        - Documentation / README / contributing guides
+        - Accessibility
+        - Balance or game-feel suggestion
+        - Website / itch.io page
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Full description
+      description: >-
+        Say as much as you can — what prompted this, what you'd like to see happen, and any links or
+        screenshots that help. If it touches book canon, link the relevant
+        [Wandering Inn Wiki](https://thewanderinginn.fandom.com/) pages.
+    validations:
+      required: true

@@ -1,0 +1,67 @@
+name: Playtest feedback
+description: You played the game — tell us what happened. Bugs, rough edges, confusion, pacing, things you loved.
+title: "[Playtest] "
+labels: ["playtest-feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for playing! A few notes before you fill this in:
+
+        - **Everything is welcome here** — a crash, a door that wouldn't open, a conversation that confused you, a fight that felt unfair, or a moment that landed well. If you're not sure it "counts", it counts.
+        - **One issue per report** keeps triage fast. Three small reports beat one long mixed one.
+        - **Spoilers:** the game only assumes knowledge through **Volume 7** of the books. If your feedback references later events, wrap it in a `<details>` block and say so.
+        - **How review works:** a maintainer applies the `triage` label to run an automated Opus draft-pass. It drafts or asks for missing info as a comment — a human decides everything.
+  - type: input
+    id: one-liner
+    attributes:
+      label: One-line summary
+      description: What happened, in a sentence.
+      placeholder: The door in <place> did nothing when I pressed interact.
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Where were you playing?
+      options:
+        - Web build — desktop browser
+        - Web build — phone or tablet
+        - Downloaded / local build
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Game version or date played
+      description: The release you played (e.g. v0.13.0) if you know it — otherwise roughly when you played, so we can match it to a release.
+      placeholder: v0.13.0, or "around July 19"
+    validations:
+      required: false
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened
+      description: >-
+        Walk through it — where you were in the game, what you did, what you expected, and what actually happened.
+        For non-bug feedback (pacing, difficulty, confusion, delight), just describe the moment and how it felt.
+      placeholder: |
+        Where I was: ...
+        What I did: ...
+        What I expected: ...
+        What actually happened: ...
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshot, save file, or steps to reproduce
+      description: >-
+        Optional but hugely helpful. Drag-and-drop a screenshot or an exported save here.
+        If the problem repeats, list the steps that make it happen again.
+      placeholder: |
+        1. Start a new game
+        2. ...
+    validations:
+      required: false
