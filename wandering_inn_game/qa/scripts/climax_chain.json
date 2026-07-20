@@ -81,16 +81,7 @@
    "timeout_sec": 5
   },
   {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "timeout_sec": 5
-  },
-  {
-   "action": "screenshot",
-   "name": "01_pointer"
-  },
-  {
-   "_comment": "== ZEVARA SUMMONS ==. Teleport to the gate; bump up into Zevara (2,6). First interact = her pool line, second opens zevara_intro.",
+   "_comment": "== ZEVARA SUMMONS ==. Teleport to the gate; bump up into Zevara (2,6). First interact = her pool line, second opens zevara_intro. GH#273: teleport FIRST, then the PINNED render wait -- proves the pointer toast survives the map_changed queue wipe (the old bare ui_toast_rendered wait false-passed on any stale render).",
    "action": "teleport",
    "map": "street",
    "cell": [
@@ -101,6 +92,18 @@
   {
    "action": "wait_frames",
    "frames": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "A Watch runner is looking for you."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_pointer"
   },
   {
    "action": "move",

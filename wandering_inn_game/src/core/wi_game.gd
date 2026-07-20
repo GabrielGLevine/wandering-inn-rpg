@@ -1417,7 +1417,7 @@ func start_quest(id: String) -> void:
 		var now := WIQuests.evaluate(catalog, started_quests, accomplishments)
 		if now.has(id):
 			_quest_progress[id] = now[id]
-	_emit(WIEvents.TOAST, {"text": "New quest: %s" % _quest_title(id)})
+	_emit(WIEvents.TOAST, {"text": "New quest: %s" % _quest_title(id), "sticky": true})
 
 
 func _check_quests() -> void:
@@ -1430,11 +1430,11 @@ func _check_quests() -> void:
 		var prev: Dictionary = _quest_progress.get(id, {"beat_index": 0, "completed": false})
 		if int(now[id]["beat_index"]) > int(prev["beat_index"]) and not bool(now[id]["completed"]):
 			_emit(WIEvents.QUEST_BEAT_COMPLETED, {"id": id, "beat": now[id]["beat_index"]})
-			_emit(WIEvents.TOAST, {"text": "Quest updated: %s" % String(now[id]["beat_description"])})
+			_emit(WIEvents.TOAST, {"text": "Quest updated: %s" % String(now[id]["beat_description"]), "sticky": true})
 		if bool(now[id]["completed"]) and not bool(prev["completed"]):
 			_emit(WIEvents.QUEST_BEAT_COMPLETED, {"id": id, "beat": now[id]["beat_index"]})
 			_emit(WIEvents.QUEST_COMPLETED, {"id": id})
-			_emit(WIEvents.TOAST, {"text": "Quest complete: %s" % _quest_title(id)})
+			_emit(WIEvents.TOAST, {"text": "Quest complete: %s" % _quest_title(id), "sticky": true})
 			newly_completed.append(id)
 	_quest_progress = now
 	# GH#211 §5: grants apply AFTER the progress write — a grant's deposits can

@@ -94,6 +94,15 @@ var _toast_queue: Array[String] = []
 ## Texts queued with record=false (GH#202 transient noise class) -- counted
 ## so an identical REAL toast queued concurrently still records.
 var _transient_counts: Dictionary = {}
+## GH#273: texts whose TOAST payload carried sticky=true -- narratively
+## load-bearing nudges (the Watch-runner pointer, quest lifecycle) that
+## queue at the tail of a busy wake beat. A transition's _clear_toast
+## re-queues these instead of dropping them (the _first_wake_hint_pending
+## re-queue contract, generalized to sim-flagged texts); an entry leaves
+## only when its text is popped for display. Invariant: every entry here
+## is also in _toast_queue, so a re-queue always has a live drain to
+## pick it up.
+var _pending_sticky: Array[String] = []
 var _toast_draining := false
 ## Issue #62 Lane U item 6: set by `dismiss_current_toast_early()`, consumed
 ## by `_show()`'s interruptible hold-wait (toast panel only -- the dialogue
@@ -260,7 +269,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			if not _first_pickup_hint_shown:
 				_first_pickup_hint_pending = true
 		WIEvents.TOAST:
-			_queue_toast(String(payload["text"]))
+			_queue_toast(String(payload["text"]), true, bool(payload.get("sticky", false)))
 			if _first_pickup_hint_pending:
 				_first_pickup_hint_pending = false
 				_first_pickup_hint_shown = true
@@ -328,6 +337,11 @@ func _clear_toast() -> void:
 		if int(_transient_counts.get(queued, 0)) > 0:
 			_transient_counts[queued] -= 1
 	_toast_queue.clear()
+	# GH#273: sticky toasts are DEFERRED by a transition, never dropped --
+	# they re-render on the far side (raised position handles dialogue).
+	# The visible panel still hid above, so the stale-toast fix holds.
+	for pending: String in _pending_sticky:
+		_toast_queue.append(pending)
 	if _first_wake_hint_pending:
 		_toast_queue.append(_first_wake_hint_text())
 
@@ -385,11 +399,13 @@ func _resize_dialogue_panel() -> void:
 	UIChrome.set_offsets(_dialogue_panel, 36.0, DIALOGUE_BOTTOM - panel_height, 736.0, DIALOGUE_BOTTOM)
 
 
-func _queue_toast(text: String, record := true) -> void:
+func _queue_toast(text: String, record := true, sticky := false) -> void:
 	# Transient marking MUST precede the drain kick: _drain_toasts() runs
 	# synchronously up to its first await, popping this very toast.
 	if not record:
 		_transient_counts[text] = int(_transient_counts.get(text, 0)) + 1
+	if sticky:
+		_pending_sticky.append(text)
 	_toast_queue.append(text)
 	if not _toast_draining:
 		_drain_toasts()
@@ -408,6 +424,7 @@ func _drain_toasts() -> void:
 	_toast_draining = true
 	while not _toast_queue.is_empty():
 		var text: String = _toast_queue.pop_front()
+		_pending_sticky.erase(text)
 		if _first_wake_hint_pending and text == _first_wake_hint_text():
 			_first_wake_hint_pending = false
 		if int(_transient_counts.get(text, 0)) > 0:

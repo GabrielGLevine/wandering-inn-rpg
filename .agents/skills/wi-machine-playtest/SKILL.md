@@ -22,6 +22,14 @@ is the loop-integration wrapper.
   feature.
 
 ## Iron rules
+- **Windowed verification ALWAYS runs on the real asset overlay (user
+  directive 2026-07-20):** `scripts/fetch_private_assets.sh` + `--import`
+  pass BEFORE any windowed read — placeholder art invalidates every FEEL
+  judgment (legibility, overlap, mood). In a remote session, `gh` is
+  absent: add the assets repo to the session (add_repo, needs user
+  approval once) and pull the newest `bundle-vN` tarball via the
+  authenticated proxy instead. Headless/event-level verification may
+  run on placeholders.
 - Dirty tree or mid-refactor session → detached worktree at a known-good
   commit (`git worktree add --detach /tmp/wi-playtest HEAD` + `--import`
   pass), never a mid-surgery tree. Remove the worktree when done.

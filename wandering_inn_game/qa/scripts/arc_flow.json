@@ -80,26 +80,29 @@
    }
   },
   {
-   "action": "wait_for_event",
-   "type": "ui_toast_rendered",
-   "timeout_sec": 5
-  },
-  {
-   "action": "screenshot",
-   "name": "01_tremor_pointer"
-  },
-  {
    "action": "teleport",
    "map": "street",
    "cell": [
     2,
     7
    ],
-   "_comment": "== ZEVARA SUMMONS =="
+   "_comment": "== ZEVARA SUMMONS ==. GH#273: the teleport fires map_changed BEFORE the pointer renders -- the exact wipe that ate the arc's route clue. The PINNED render wait below proves the sticky re-queue survives it; the old shape (bare ui_toast_rendered wait before the teleport) false-passed on the stale 'Your own bed.' render."
   },
   {
    "action": "wait_frames",
    "frames": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "A Watch runner is looking for you."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_tremor_pointer"
   },
   {
    "action": "move",
