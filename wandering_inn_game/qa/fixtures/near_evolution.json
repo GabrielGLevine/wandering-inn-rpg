@@ -1,7 +1,10 @@
 {
+	"_comment": "class_evolution_loop's fixture: warrior 10 at the inn, sword_skill_used 13 -- past evolution.min_uses (12) on the sword axis but deliberately NOT yet evolved (check_evolutions runs at sleep; the script's organic fights + sleep are what cross the beat live). ISSUE #123 REDESIGN: met_relc + sparred_with_relc are now banked -- warrior held without sparred_with_relc (its own gained_by) was a story-impossible position, grandfathered in test_fixture_coherence's CLASS_REQUIREMENTS_EXEMPT until this redesign removed it. Honest consequences the canonical now proves live: the Meet-Relc leg is gone (goblin_encounter_1/2's ally_requires{met_relc:1} is satisfied from the fixture, so Relc fields in fight1 with no fresh intro -- pinned), Relc's talk pool serves the relc_sleep_nudge stage instead of the fresh-meet pool, relc_intro's meet node shows the sparred-variant text with the spar at index 2 of 4 (the never-collected spear gift option is visible: sparred banked, given_spear_by_relc honestly absent -- this PC never went back for it, and carries no spare spear), spar_offer serves its 'Again? Fine.' re-spar variant, and the spar win re-banks sparred_with_relc -> 2. melee_hit 57 = warrior L10's exact threshold (L11 needs 68); won_combat 3 covers L2. rng_state properly derived (never hand-typed); the three fights replay deterministically off it.",
 	"state": {
 		"accomplishments": {
 			"melee_hit": 57,
+			"met_relc": 1,
+			"sparred_with_relc": 1,
 			"sword_skill_used": 13,
 			"won_combat": 3
 		},
