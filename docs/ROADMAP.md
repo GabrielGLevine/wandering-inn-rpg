@@ -1,47 +1,73 @@
 # Roadmap (living doc — controller-owned, updated at milestone boundaries)
 
-## v0.10.0 — shipping now (2026-07-17)
+## Shipped (compressed ledger; per-issue detail in merged PR bodies)
 
-| item | state |
-|---|---|
-| #152 Raskghar entry pacing (+#157 correction) | merged |
-| #154 reachability validator | merged |
-| #155 Wave D-1: [Mixer]→[Alchemist] + Pallass alchemists | merged (PR #159) |
-| #148 thread legibility (4 tiers per ruling) | merged (PR #161) |
-| #156 Wave D-2: [Beast Tamer]+[Druid], companion_source seam | merged (PR #162) |
-| #160 path-diversity harness + funnel gates in CI | merged (PR #164) |
-| #92 economy pass (delta-first, five slices) | lane in flight |
-| Release mechanics | full rotation → user gates → freeze cut → deploy |
+- **v0.13.0 — 2026-07-20, the Depth + Polish wave.** Project RENAMED
+  ("Wandering Inn RPG") with verified save carry-over (#111, both
+  rehearsals passed). #209 journal tabs, #247 Friends of the Inn
+  pilot (Selys+Krshia servable guests), #225 interior floors, #123
+  honest canonicals, and the complete art wave: #198 scroll split +
+  repo-wide placement sweep, #222 stalls/benches/statue, #224 batch B,
+  #210 bespoke Erin (canon Earth clothes), #223 rigs (Rags, Ceria with
+  real cast frames, Ruin Warden combat rig), pantry-door consolidation
+  (`skill_uses` multi-skill arms) + the dusty scroll's earned decipher.
+  647 ids frozen.
+- **v0.12.x — 2026-07-18/19.** God-file dissections (#194), #211
+  challenge-weighted leveling (flag-on), b-wave content (Grimalkin
+  studies, Rags meeting #199, parleys, Ratici's fence, fragment trade,
+  Invrisil aftermath, ruin stone, ack wave), a-wave UX (boss music,
+  auto-slot, Import/Export save, day pacing, dark-field legibility,
+  credits/volume, tap-aim), mobile hotfixes.
+- **v0.8.0–v0.11.x — 2026-07-15→18.** Chronicle, pickers, footsteps,
+  economy pass (#92), rank-tiered bounties (#163), Second Wind grants
+  (#165), Hedault enchanting (#142), class Waves A–D2, path-diversity
+  harness, release automation. Earlier: git history.
 
-## v0.11.0 — SHIPPED 2026-07-18 (all targets)
+## Now (2026-07-20): board fully user-gated
 
-- **#165 Second Wind wave** — extend every pure evolution line to ~L16
-  (the #160 funnel fix, option 1 per user ruling). One late grant per
-  line at the Book-17 bar; sim + path-harness re-gates.
-- **#163 level-scaled Guild bounties** — rank-tiered postings
-  (Bronze/Silver/Gold), scaled repeatable encounters, conditions AND
-  payouts scale; payout anchors derive from #92's price ladder
-  (hard dependency edge: #92 → #163). Story/boss fights never scale.
-- **#142 Hedault enchanting** (rides the #92 gear-ability shapes).
-- **#141 [Acolyte]/[Priest]** — lore-gated; needs canon adjudication
-  before implementation.
-- **#147 music sourcing** — user acquisition; integrate whatever lands.
+Nothing agent-actionable is open. User-held queue (HANDOFF taste
+queue is the authority): web/#195 audio listen → wiring pass; #211
+leveling FEEL; 3 Rags reads; windup-overlay + rock-crab visual/band
+verdicts; lore rulings #134 (Wave D classes) / #141 ([Priest]);
+user-deferred #253 (mobile import picker); flake #140; #19 Steam HOLD.
+
+## Next milestone candidates (v0.14 — pick on user word)
+
+1. **Three Pillars execution** (spec APPROVED 2026-07-04; the standing
+   next big rock). Social/Combat/Puzzle parity as first-class play:
+   non-combat class depth (Helper+Tactician flagship), overworld
+   hotbar, puzzle surfaces. Biggest single lever on game identity.
+2. **Friends of the Inn PR2+** (#247 follow-through): the remaining
+   four guests (Olesm/Pisces/Relc/Zevara), one pair per PR; consider
+   phase-gating guest serves to evening (the Helper-pace flag from
+   PR #261's review).
+3. **Audio wave** (#195 after the user listen + the deferred #76
+   remainder): boss/biome coverage from the Ove Melaa pack.
+4. **#253 mobile import fix** (fix candidates already in the issue) +
+   a mobile-polish slice if playtests surface more.
+5. **Door-chain continuation** (content): door_awakened → the next
+   story beat; the scroll_secret thread now points at it naturally.
+6. **Wave D classes** (#134, after lore rulings) + #141.
+
+Recommendation: 1 + 2 as the v0.14 core (identity + follow-through),
+3 riding whenever the listen lands.
 
 ## Parked / standing
 
-- Three Pillars spec (approved 2026-07-04) — executes after M7 items
-  above; social/combat/puzzle parity is a standing gate on every wave.
 - Necromancer evolution (user-parked at Wave A).
 - [Natural Allies: X] cross-class canon (parked at D-2).
-- Check-roll/DC system (out of #163 v1 scope — file separately if
-  skill-check scaling by thresholds proves insufficient).
-- PixelLab art passes (user-gated budget): D-1 five icons, D-2 eight
-  icons + pup/chick/wounded-corusdeer poses, Antinium/Drake walks.
-- Renderer survey #140.
+- Check-roll/DC system (file separately if threshold scaling proves
+  insufficient).
+- Renderer survey #140; Steam (#19, M-STEAM) on standing HOLD.
+- PixelLab budget: ~$2.7 overage credits; icon backfills (D-1/D-2
+  icons, [Flame Pillar] iconless) are cheap one-call items when wanted.
 
 ## Release discipline reminders
 
-Freeze cut step-0: grep new `record_accomplishment` literals against
-STRUCTURAL_LITERALS in BOTH lists (v0.8.0 `victories` trap; recurred at
-D-2, caught in review). `tended_beasts` is already listed. Bundle-latest
-check before tagging (`gh release list` on the assets repo).
+Freeze cut step-0: bump RELEASE in generate_shipped_ids.py, regen,
+commit BEFORE the tag; grep new `record_accomplishment` literals
+against STRUCTURAL_LITERALS in BOTH lists (the v0.8.0 `victories`
+trap). Bundle-latest check before tagging (`gh release list` on the
+assets repo — prereleases never win Latest). Rename-era note: any
+future config/name change repeats the #111 carry-over pattern
+(WISaveMigration + the legacy_seed canonical are the template).
