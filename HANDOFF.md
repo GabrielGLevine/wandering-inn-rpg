@@ -52,6 +52,16 @@ sprite stacking (evidence/owners in `docs/VISUAL-LOG.md`). User eyes
 wanted: a real-rig windowed read of arc_flow's `01_tremor_pointer` shot
 (container GL too slow to catch the 0.4s toast hold on camera).
 
+**Door-chain polish pair (filed 2026-07-20, small)**: #271
+`dungeon_attuned` banks silently in `sleep_beat.gd` — no toast, no
+quest beat; add one bank-site toast (nudge idiom, GH#167). #272 Selys
+`pallass_sponsored_reaction` copy says "give it a day or so" while the
+sponsor node says "same-day" and no wait exists — copy-only fix ruled
+in the issue (sleep-gate alternative rejected: re-pins
+pallass_walkthrough). Both are clean Codex-sized dispatches. Came out
+of a progression-map audit; cost-curve concern folded into the
+existing #65 economy-ledger taste item, not a new issue.
+
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)
 
 - **#195 Ove Melaa audio listen** (~30 files) → wiring pass after.
