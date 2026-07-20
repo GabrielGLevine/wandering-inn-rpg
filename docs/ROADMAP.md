@@ -33,24 +33,27 @@ user-deferred #253 (mobile import picker); flake #140; #19 Steam HOLD.
 
 ## Next milestone candidates (v0.14 — pick on user word)
 
-1. **Three Pillars execution** (spec APPROVED 2026-07-04; the standing
-   next big rock). Social/Combat/Puzzle parity as first-class play:
-   non-combat class depth (Helper+Tactician flagship), overworld
-   hotbar, puzzle surfaces. Biggest single lever on game identity.
-2. **Friends of the Inn PR2+** (#247 follow-through): the remaining
+Note (user-corrected 2026-07-20): **Three Pillars already EXECUTED** —
+not as a named milestone but distributed across the waves (38 field
+skills + the overworld hotbar, Helper/Tactician first-class curves,
+8 social canonicals, 46 puzzle-surface scripts; "talk/help/fight all
+real" is the shipped doctrine every wave is held to). It stays a
+STANDING GATE, not a future item.
+
+1. **Friends of the Inn PR2+** (#247 follow-through): the remaining
    four guests (Olesm/Pisces/Relc/Zevara), one pair per PR; consider
    phase-gating guest serves to evening (the Helper-pace flag from
    PR #261's review).
-3. **Audio wave** (#195 after the user listen + the deferred #76
+2. **Audio wave** (#195 after the user listen + the deferred #76
    remainder): boss/biome coverage from the Ove Melaa pack.
-4. **#253 mobile import fix** (fix candidates already in the issue) +
+3. **#253 mobile import fix** (fix candidates already in the issue) +
    a mobile-polish slice if playtests surface more.
-5. **Door-chain continuation** (content): door_awakened → the next
+4. **Door-chain continuation** (content): door_awakened → the next
    story beat; the scroll_secret thread now points at it naturally.
-6. **Wave D classes** (#134, after lore rulings) + #141.
+5. **Wave D classes** (#134, after lore rulings) + #141.
 
-Recommendation: 1 + 2 as the v0.14 core (identity + follow-through),
-3 riding whenever the listen lands.
+Recommendation: 1 + 4 as the v0.14 core (follow-through + the story
+spine), 2 riding whenever the listen lands.
 
 ## Parked / standing
 
