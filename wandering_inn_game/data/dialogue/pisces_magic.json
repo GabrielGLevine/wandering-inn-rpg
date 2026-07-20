@@ -122,6 +122,25 @@
      "goto": "consult_skill_report"
     },
     {
+     "text": "That dusty scroll at the inn — I can read it now. It's a warding treatise, and it keeps mentioning a door.",
+     "requires": {
+      "accomplishment": {
+       "deciphered_dusty_scroll": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "scroll_secret_shared": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "scroll_secret_shared"
+      }
+     ],
+     "goto": "scroll_secret"
+    },
+    {
      "text": "About the pantry door — I understand what it is now. Where does that leave me?",
      "requires": {
       "accomplishment": {
@@ -505,6 +524,20 @@
    "options": [
     {
      "text": "Understood.",
+     "end": true
+    }
+   ]
+  },
+  "scroll_secret": {
+   "speaker": "Pisces",
+   "text": "Let me see that. Hm. Hmm. Whoever wrote this treatise anchored their wards the way I would — which is to say, correctly — and they were writing ABOUT your pantry. Do you understand? Someone documented that door before your innkeeper was born. It has been bound, fed, and waiting a very long time. I would call that ominous, if I were the sort to alarm people. I am. Be alarmed.",
+   "options": [
+    {
+     "text": "Then we keep going.",
+     "goto": "greet"
+    },
+    {
+     "text": "That's enough dread for one day.",
      "end": true
     }
    ]
