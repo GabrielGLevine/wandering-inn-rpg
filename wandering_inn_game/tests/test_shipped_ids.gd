@@ -129,6 +129,10 @@ func _produced_accomplishments(scene: Dictionary, graphs: Dictionary, skills: Di
 				for variant: Dictionary in (skill_use.get("variants", []) as Array):
 					if variant.has("accomplishment"):
 						out[String(variant["accomplishment"])] = true
+			for sid: String in (entity.get("skill_uses", {}) as Dictionary):
+				var arm: Dictionary = (entity["skill_uses"] as Dictionary)[sid]
+				if arm.has("accomplishment"):
+					out[String(arm["accomplishment"])] = true
 			if entity.has("on_interact_accomplishment"):
 				out[String(entity["on_interact_accomplishment"])] = true
 				for variant: Dictionary in (entity.get("variants", []) as Array):
