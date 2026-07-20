@@ -116,6 +116,13 @@ func _build_expected_counts() -> Dictionary:
 	## #210/#223 character rigs
 	counts["erin/idle"] = 4
 	counts["erin/walk"] = 6
+	counts["rags/idle"] = 4
+	counts["rags/walk"] = 6
+	counts["ruin_warden/idle"] = 4
+	counts["ruin_warden/walk"] = 6
+	counts["ruin_warden/slice"] = 3
+	counts["ruin_warden/hit"] = 6
+	counts["ruin_warden/death"] = 7
 	## #224 batch B: transitions + sewers dressing + the warded-seam tell
 	counts["shaft_ladder/idle"] = 1
 	counts["phosphor_moss/idle"] = 1
@@ -225,6 +232,7 @@ func _build_expected_counts() -> Dictionary:
 
 	counts["ceria/idle"] = 4
 	counts["ceria/walk"] = 6
+	counts["ceria/cast"] = 6
 	counts["yvlon/idle"] = 4
 	counts["yvlon/walk"] = 6
 	counts["yvlon/slice"] = 3
@@ -298,10 +306,8 @@ func _build_expected_counts() -> Dictionary:
 	for goblin_id: String in ["goblin_base", "goblin_female", "goblin_sword"]:
 		counts["%s/idle" % goblin_id] = 6
 		counts["%s/walk" % goblin_id] = 6
-	# b1 #199 INTERIM: rags reuses the goblin_sword sheet reduced (c3 bespoke
-	# replaces the entry and these rows together).
-	counts["rags/idle"] = 6
-	counts["rags/walk"] = 6
+	# (b1 #199 interim rows removed 2026-07-19: the c3 bespoke rig landed --
+	# rags counts now live with the other #223 rig rows above.)
 	counts["bat/idle"] = 4
 	counts["bat/move"] = 8
 	counts["bat/hit"] = 4
