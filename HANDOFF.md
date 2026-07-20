@@ -40,10 +40,14 @@ cache, legacy_seed hook). #253 Import Save mobile DEFERRED by user.
 3. **#111 release-cut rehearsals** (docs/design/2026-07-19-111-rename-
    release-checklist.md) — the two manual round-trips gate the v0.13
    tag, not any merge.
-4. **#123** (3 canonicals pre-holding their earned class) — mechanical,
-   ungated, good filler lane.
-USER-GATED: #198/#222 FEEL verdict (shots sent); #195 audio listen;
-#211 leveling feel; 3 Rags reads. #134/#141 Wave-D classes lore-gated.
+4. **#123 SHIPPED** (PR #264): all three fixtures earn their class
+   live; CLASS_REQUIREMENTS_EXEMPT is EMPTY. New trap in its PR body:
+   dialogue options pins must include effect_lines when present.
+5. **SECOND art branch** `issue/222-stalls-benches-statue` (stalls,
+   5 alchemy stations, dormant-guardian statue; 3 more FEEL shots
+   sent) — same verdict flow as the dusty branch.
+USER-GATED: BOTH art-branch FEEL verdicts (5 shots sent); #195 audio
+listen; #211 leveling feel; 3 Rags reads. #134/#141 lore-gated.
 
 ## 🏃 RUNNING (2026-07-19, v0.13 wave day 1 — 7 PRs merged)
 - **b4 #219 Grimalkin studies SHIPPED** (PR #239 → 48b23da): two

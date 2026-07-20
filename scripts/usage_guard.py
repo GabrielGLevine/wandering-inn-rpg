@@ -22,7 +22,7 @@ except ImportError:  # pre-3.9: fall back to naive local time
 
 # --- Tunable thresholds ---
 SESSION_BANDS = (70, 85, 95)   # CAUTION / WINDDOWN / QUIESCE
-WEEK_BANDS = (80, 90, 96)      # user directive 2026-07-19: weekly CAUTION not before ~80% (final Fable window — spend it)
+WEEK_BANDS = (90, 94, 97)      # user override 2026-07-19 (2nd raise): weekly/fable CAUTION not before 90% — final Fable window, spend it
 SOFTEN_MINS = 15               # session reset this close -> cap session tier at CAUTION
 RATE_WINDOW_MINS = 30          # burn-rate lookback
 DYNAMIC_HORIZON_MINS = 60      # projected exhaustion within this -> +1 tier

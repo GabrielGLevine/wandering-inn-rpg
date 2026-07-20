@@ -257,13 +257,16 @@ func _check_combat_band(name: String, game: WIGame) -> void:
 # weeks because nothing enforced this. Consolidation targets are exempt
 # (SPARSE TABLE: their level is a MERGED sum, per-level requires don't apply).
 #
-# GRANDFATHERED (#122): these three canonicals DELIBERATELY pre-hold a class
+# GRANDFATHERED (#122): canonicals here DELIBERATELY pre-hold a class
 # while their script earns that class's own gained_by counters live — the
 # combination is story-impossible and needs a flow redesign, not a counter
 # fill (filling hides the scripts' one-time earn options; dropping the class
 # changes their sleep/hotbar beats). Enforced for every other fixture and all
 # new ones. Remove an entry ONLY with its canonical's redesign.
-const CLASS_REQUIREMENTS_EXEMPT := ["social_loop_start", "near_garden", "near_evolution"]
+# #123 emptied the list (social_loop_start / near_garden / near_evolution all
+# redesigned honest); it stays as the mechanism should a future canonical need
+# a documented grandfather window.
+const CLASS_REQUIREMENTS_EXEMPT: Array[String] = []
 
 
 func _check_class_requirements(name: String, game: WIGame, classes_cfg: Dictionary) -> void:

@@ -562,7 +562,7 @@
    "script": "class_evolution_loop",
    "seed": 9,
    "fixture": "near_evolution",
-   "note": "grind -> sleep -> class_evolved + evolved kit",
+   "note": "grind -> sleep -> class_evolved + evolved kit (#123: fixture honestly banks met/sparred_with_relc -- Relc allies straight off the fixture, fight3 runs the sleep-nudge pool stage + sparred-variant relc_intro with the spar at index 2 of 4, spar win re-banks sparred_with_relc -> 2)",
    "tiers": [
     "full"
    ],
@@ -1228,8 +1228,8 @@
   {
    "script": "social_loop",
    "seed": 9,
-   "fixture": "post_tutorial_street",
-   "note": "Social Pillar v1 proof; rotating talk pools -> [Diplomat]",
+   "fixture": "social_loop_start",
+   "note": "Social Pillar v1 proof; rotating talk pools + goblin_parley's Warrior-gated intimidate -> LIVE [Diplomat] earn at the sleep (#123: fixture no longer pre-holds the class); post-earn [Charming Smile]-gated Watch persuade fires as the issue #50 gate's live proof",
    "tiers": [
     "full"
    ],
@@ -1249,6 +1249,7 @@
      "charming_smile"
     ],
     "dialogue": [
+     "goblin_parley",
      "krshia_crate",
      "watch_crate"
     ],
@@ -2267,7 +2268,7 @@
    "script": "garden_walkthrough",
    "seed": 9,
    "fixture": "near_garden",
-   "note": "Issue #9 Task G1 (spec Sec5 RATIFIED): the Garden of Sanctuary unlock-to-rest loop -- the qualifying sleep silently banks garden_door_unlocked (act >= III AND K=2 of 4 ratified legs), Erin's talk_pool_stages acknowledgment, garden_door opens for real at the inn, day-bright identity + fountain + misted-rise clearing live on garden_sanctuary, rest-bed sleep parity at garden_bed, round-trip exit -- plus a whole-run no-violence sim-guard cross-check (combat_started never fires)",
+   "note": "Issue #9 Task G1 (spec Sec5 RATIFIED): the Garden of Sanctuary unlock-to-rest loop -- the qualifying sleep banks garden_door_unlocked silently (act >= III AND K=2 of 4 ratified legs) while resolving the LIVE [Helper] grant the script's own Kth-leg clean earned (#123: the fixture no longer pre-holds helper), Erin's talk_pool_stages acknowledgment, garden_door opens for real at the inn, day-bright identity + fountain + misted-rise clearing live on garden_sanctuary, rest-bed sleep parity at garden_bed, round-trip exit -- plus a whole-run no-violence sim-guard cross-check (combat_started never fires)",
    "tiers": [
     "full"
    ],
