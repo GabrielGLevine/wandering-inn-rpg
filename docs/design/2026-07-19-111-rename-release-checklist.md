@@ -1,6 +1,8 @@
 # #111 Safe project rename — release checklist (v0.13 window)
 
-Status: **CODE SHIPPED** (config/name → "Wandering Inn RPG"; boot-ordered
+Status: **FULLY VERIFIED 2026-07-20** — v0.13.0 shipped; rehearsal 1 (native) passed on the user machine with real data; rehearsal 2 (web) user-confirmed on the live deploy ("Rename migration successful"). This checklist is CLOSED.
+
+Original status: **CODE SHIPPED** (config/name → "Wandering Inn RPG"; boot-ordered
 `user://` carry-over in `WISaveMigration` + `Game._migrate_legacy_userdir`).
 The two REHEARSAL legs below are the spec's one-time manual gates — they run
 in the release-cut session, before the tagged build ships, and are NOT sweep

@@ -21,20 +21,16 @@ v0.10.0, v0.9.0, v0.8.0.
 
 ## 🎯 NEXT ACTIONS
 
-1. **USER: the 2-minute web rename check** (#111 rehearsal b): open
-   the itch page in the browser you've played in before — Continue
-   should light up with your old web save; load it. Same on Pages.
-   Fail = report; rollback = revert the rename PR + re-tag (browser
-   data is untouched either way; copy-only design). The NATIVE
-   rehearsal already passed on this machine with real data
-   (5 saves + settings migrated byte-true, marker set, v4 dir intact).
-2. Then the board is fully user-gated (see taste queue). Next
-   milestone planning is open — docs/ROADMAP.md; Three Pillars
-   (spec approved) is the standing next big rock.
+**#111 rename FULLY VERIFIED 2026-07-20**: native rehearsal passed on
+real data (5 saves + settings byte-true, marker, v4 dir intact) AND
+the user confirmed the web migration on the live deploy ("Rename
+migration successful"). Nothing in flight. The board is fully
+user-gated (taste queue below); next milestone planning is open —
+docs/ROADMAP.md; Three Pillars (spec approved) is the standing next
+big rock.
 
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)
 
-- **Web rename check** (above — gates calling #111 fully done).
 - **#195 Ove Melaa audio listen** (~30 files) → wiring pass after.
 - **#211 challenge-weighted leveling FEEL** (shipped flag-on; all
   knobs data).
