@@ -284,7 +284,7 @@
  "erin": {
   "_comment": "#210: bespoke PixelLab v3 rig (canon-corrected: t-shirt/jeans/apron, wiki-verified). anchor feet-plane 148/200.",
   "directional": true,
-  "render_scale": 0.44,
+  "render_scale": 0.34,
   "anchor": [0.5, 0.745],
   "shadow": true,
   "animations": {
@@ -4033,7 +4033,7 @@
  "ceria": {
   "_comment": "#223: NEW full PixelLab v3 rig (idle/walk/cast one identity -- fixes casts falling back to idle; replaces the 152px rig). anchor feet-plane 141/192.",
   "directional": true,
-  "render_scale": 0.47,
+  "render_scale": 0.42,
   "anchor": [0.5, 0.74],
   "shadow": true,
   "animations": {
