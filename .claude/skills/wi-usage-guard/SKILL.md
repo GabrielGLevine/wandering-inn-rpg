@@ -49,6 +49,15 @@ The query failed (exit 0, line starts `UNKNOWN`). Proceed, but re-check
 within the hour; if UNKNOWN persists >1h, note it in HANDOFF and treat
 long dispatches as CAUTION.
 
+## Fable-class sessions (user directive 2026-07-20)
+The WEEKLY guard is TRIAGE-ONLY for Fable: never block or wind down
+execution on the Fable weekly budget. Instead, spend Fable where its
+judgment is the product (adjudication, review gates, playtest reads,
+architecture/spec work) and push mechanical volume down the delegation
+ladder (wi-delegating-to-codex / cheaper lanes). Session-window tiers
+(CAUTION/WINDDOWN/QUIESCE on the SESSION column) still apply — those
+protect in-flight state, not budget.
+
 ## Wind-down invariants
 - Never merge to main just to "save work" — WIP lives on lane branches;
   main only takes gated merges.
