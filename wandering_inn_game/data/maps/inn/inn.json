@@ -1053,13 +1053,9 @@
    "toast": "Onions, a sack of soft potatoes, a shelf of jarred somethings gone dusty. The pantry door, same as it's always been.",
    "visual_states": [
     {
-     "at": 0,
-     "sprite": "door"
-    },
-    {
-     "at": 1,
      "when": {
-      "door_chain_started": 1
+      "counter": "door_chain_started",
+      "at": 1
      },
      "sprite": "pantry_door_runes"
     }
