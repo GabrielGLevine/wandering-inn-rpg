@@ -768,8 +768,8 @@
      "when": {
       "learned_magic_from_pisces": 1
      },
-     "on_interact_accomplishment": "deciphered_dusty_scroll",
-     "toast": "With what Pisces beat into you, the faded script stops being noise: it is a warding treatise, old and patient, and it keeps circling one subject. A door. Bound, sealed, and fed -- somewhere close. He would want to see this."
+     "toast": "With what Pisces beat into you, the faded script stops being noise: it is a warding treatise, old and patient, and it keeps circling one subject. A door. Bound, sealed, and fed -- somewhere close. He would want to see this.",
+     "accomplishment": "deciphered_dusty_scroll"
     }
    ]
   },

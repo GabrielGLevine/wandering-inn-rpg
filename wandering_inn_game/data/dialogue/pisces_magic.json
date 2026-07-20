@@ -122,7 +122,7 @@
      "goto": "consult_skill_report"
     },
     {
-     "text": "That dusty scroll at the inn — I can read it now. It's a warding treatise, and it keeps mentioning a door.",
+     "text": "I can read that dusty scroll now. A warding treatise — about a door.",
      "requires": {
       "accomplishment": {
        "deciphered_dusty_scroll": 1
