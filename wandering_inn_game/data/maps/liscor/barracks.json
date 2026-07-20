@@ -311,7 +311,7 @@
     6
    ],
    "display_name": "A Watch Veteran's Letter",
-   "sprite": "dusty_scroll",
+   "sprite": "note_pinned",
    "tint": [
     0.7,
     0.65,
@@ -331,7 +331,7 @@
     6
    ],
    "display_name": "A Ward-Charm Scrap",
-   "sprite": "dusty_scroll",
+   "sprite": "note_pinned",
    "tint": [
     0.55,
     0.5,
