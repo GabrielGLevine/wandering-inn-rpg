@@ -202,3 +202,17 @@ overshoot — the exact shape that quit playtest_boot mid-run.
   "Identifier not declared" compile errors repo-wide. Re-run
   `godot --headless --import` after EVERY branch switch that changes
   the .gd file set (bit twice in one session).
+
+### New producer-key rule (pantry consolidation, 2026-07-20)
+Adding a NEW way for content to bank a counter (e.g. `skill_uses`, the
+per-skill on_skill_use map) must extend EVERY catalog walk, not just the
+one that fails first: `test_content` (produced cross-ref),
+`test_reachability` (zero-producer gates), `test_shipped_ids` (the
+frozen-id live-catalog scan). Find them all by grepping tests/ for the
+SIBLING key (`on_skill_use`) and mirror each scan. Three sequential
+reds from one gap cost three fix cycles; one grep would have cost none.
+Also: `visual_states` entries are `{when:{counter:<id>, at:N}, sprite}`
+— a `{<counter>:1}`-shaped `when` is silently INERT (base look renders;
+windowed-verify every visual_states add), and entity `variants` override
+interact effects via the `accomplishment` key, never
+`on_interact_accomplishment` (the resolve contract).
