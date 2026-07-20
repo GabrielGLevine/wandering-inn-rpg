@@ -1,5 +1,5 @@
 {
- "_comment": "Social Pillar v1 proof's own start (issue #50 split off from post_tutorial_street, which crate_talk/crate_fight still share -- crate_fight's combat build stays untouched by this fork). Same post-tutorial STREET position (1,3), warrior L1, met/sparred/given_spear -- PLUS [Diplomat] L1 already held (a class the player earns elsewhere, per riverfarm_talk_start's own precedent, since the Watch Sergeant's persuade this script visits is now [Diplomat]-gated per issue #50's ratified rule). Consequence: the field hotbar starts at 2 slots ([Basic Cleaning], [Charming Smile]), not 1 -- social_loop.gd's boot assertion was updated to match, and the script's PHASE B/C purpose shifted from 'earn Diplomat live via this persuade' (no longer reachable -- the earn-persuade now requires the class it grants) to 'prove the Diplomat-gated free branch fires + the kit is usable'; see social_loop.json's own _comment for the full account. rng_state identical to post_tutorial_street's own (still wins the floodplains ambush this script fights).",
+ "_comment": "Social Pillar v1 proof's own start (issue #50 split off from post_tutorial_street, which crate_talk/crate_fight still share -- crate_fight's combat build stays untouched by this fork). Same post-tutorial STREET position (1,3), warrior L1 only, met/sparred/given_spear. ISSUE #123 REDESIGN: [Diplomat] is NO LONGER pre-held -- the old shape (diplomat:1 with persuaded_someone/heard_gossip at 0, its own gained_by counters banked live by the script) was a story-impossible position, grandfathered in test_fixture_coherence's CLASS_REQUIREMENTS_EXEMPT until this redesign removed it. social_loop is now the LIVE [Diplomat] earn canonical again: the gossip legs bank heard_gossip x3, goblin_parley's Warrior-gated 'Stand aside' intimidate banks persuaded_someone classlessly (the organic earn path, per riverfarm_talk_start's own precedent comment -- the Watch Sergeant's persuade stays [Charming Smile]-gated per issue #50 and is now visited AFTER the earn-sleep as the gate's live proof), and the inn sleep grants [Diplomat] in-script. Consequence: the field hotbar starts at 1 slot ([Basic Cleaning]) and grows live. warrior:1 stays honest (sparred_with_relc:1 banked = warrior's own gained_by). rng_state identical to post_tutorial_street's own (still wins the floodplains ambush this script fights).",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -12,8 +12,7 @@
    0
   ],
   "classes": {
-   "warrior": 1,
-   "diplomat": 1
+   "warrior": 1
   },
   "accomplishments": {
    "reached_liscor": 1,

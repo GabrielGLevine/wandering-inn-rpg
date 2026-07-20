@@ -51,7 +51,25 @@
    ]
   },
   {
-   "_comment": "== earn the Kth K-of-4 leg LIVE, not pre-baked. cleaned_the_inn is unbanked in the fixture (only resolved_wrong_order is pre-banked); a real [Basic Cleaning] use on dirty_table (5,4) here is the SAME chore work_loop.json proves, banking cleaned_the_inn:1 in-script -- Helper is already held directly (fixture classes), so this crossing fires no spurious class_gained. ==",
+   "_comment": "Issue #123 whole-dict pin: [Helper] must NOT exist at boot -- the fixture no longer pre-holds the class this script's own Kth-leg clean is the gained_by for. It lands LIVE at the qualifying sleep below.",
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "warrior": 5,
+    "tactician": 1
+   }
+  },
+  {
+   "_comment": "Boot hotbar: 2 slots -- innate [Basic Cleaning] + tactician's [Appraise Foe]. Helper's [Basic Cooking] joins at the sleep (catalog order slots it BETWEEN them, so [Appraise Foe] moves 2 -> 3 exactly when the class lands -- both hotbar_3 appraisal presses below happen post-sleep).",
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== earn the Kth K-of-4 leg LIVE, not pre-baked. cleaned_the_inn is unbanked in the fixture (only resolved_wrong_order is pre-banked); a real [Basic Cleaning] use on dirty_table (5,4) here is the SAME chore work_loop.json proves, banking cleaned_the_inn:1 in-script -- and cleaned_the_inn is [Helper]'s own gained_by (issue #123: the class is NOT pre-held anymore), so this crossing is ALSO the live Helper earn the qualifying sleep resolves. ==",
    "action": "move",
    "direction": "up",
    "steps": 1
@@ -125,7 +143,7 @@
    "steps": 1
   },
   {
-   "_comment": "== The qualifying sleep: act III + K=2 of 4 legs NOW met (cleaned_the_inn just landed live above, resolved_wrong_order pre-banked). garden_door_unlocked banks SILENTLY (no toast of its own) -- 'You sleep soundly.' still renders since nothing else fires this beat (watch_runner_pointed pre-banked, no pending level-ups/gains -- helper/tactician both pre-held directly). ==",
+   "_comment": "== The qualifying sleep: act III + K=2 of 4 legs NOW met (cleaned_the_inn just landed live above, resolved_wrong_order pre-banked). garden_door_unlocked still banks SILENTLY (no toast of its own) -- but issue #123's redesign means this sleep is no longer otherwise-empty: the live cleaned_the_inn crossing above is [Helper]'s own gained_by, so the REAL class grant resolves here (what an actual player at this position sees) and its class toast replaces the empty-beat 'You sleep soundly.'. warrior stays at 5 (fixture melee_hit 18 = L5's exact threshold, L6 needs 25) and no level-up rides the beat. ==",
    "action": "press",
    "name": "interact"
   },
@@ -138,26 +156,60 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "The live [Helper] grant -- the class lands AT the sleep, not at the counter-bank (the clean above happened while classes was still {warrior:5, tactician:1}).",
    "action": "wait_for_event",
-   "type": "accomplishment_recorded",
+   "type": "class_gained",
    "payload_contains": {
-    "id": "garden_door_unlocked"
+    "class": "helper"
    },
    "timeout_sec": 5
   },
   {
-   "_comment": "Wait (not assert_event_logged) for the sleep toast's UI confirmation -- the message_layer.gd toast queue always needs >=1 real process_frame to render even a single item (`_show`'s own unconditional `await tree.process_frame` before the emit), and this beat's own chore detour left less slack than the pre-G2 script had; polling here is robust to that regardless of exact frame timing.",
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Helper] class gained! — [Basic Cooking]"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Wait (not assert_event_logged) for the class toast's UI confirmation -- the message_layer.gd toast queue always needs >=1 real process_frame to render even a single item (`_show`'s own unconditional `await tree.process_frame` before the emit); polling here is robust to that regardless of exact frame timing. garden_door_unlocked's own bank is order-independent of the class grant inside the beat, so it is asserted cumulatively below rather than waited in sequence.",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "You sleep soundly."
+    "text": "[Helper] class gained! — [Basic Cooking]"
    },
    "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "garden_door_unlocked"
+   }
   },
   {
    "action": "assert_state",
    "path": "accomplishments.garden_door_unlocked",
    "equals": 1
+  },
+  {
+   "_comment": "Issue #123 whole-dict pin: [Helper] exists ONLY NOW.",
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "warrior": 5,
+    "tactician": 1,
+    "helper": 1
+   }
+  },
+  {
+   "_comment": "The grant reached the field hotbar: [Basic Cooking] is field-tagged, 2 -> 3 slots live at the sleep beat.",
+   "action": "assert_event_logged",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 3
+   }
   },
   {
    "_comment": "== H1 CONTRACT (was Erin's garden-reveal acknowledgment): near_garden pre-holds watch_runner_pointed, so at the garden-unlock talk an ARMED main-thread relay (erin_thread_gate_runner) now OUTRANKS the standing garden signpost (erin_garden_open sits BEFORE the thread-relay block -- last-match-wins, social.gd). The runner pointer is guaranteed armed at any garden unlock (sleep_beat.gd _maybe_fire_tremor_pointer fires it at the same quests>=3 gate the garden needs), so Erin serves the GATE-RUNNER relay line here, not the garden reveal. This beat now doubles as a live proof of the H1 priority contract. Teleport back down to (2,6) (the cell the old ground-floor route stood on), so the rest of this route (BFS-derived against the inn's real layout) resumes unchanged. ==",

@@ -167,11 +167,29 @@ create + review tools, per-object download. Prop pipeline:
 status (~$0.09/call at overage pricing; subscription generations bill
 first) → `get_object` shows inline previews → `select_object_frames`
 (keep primary + one alternate) → download `rotations/unknown.png`.
-Poll long queues via REST HEAD on the download URL, never blocking
-sleeps. Owned-art conventions unchanged: sheets commit at
+Poll long queues via MCP get_object ONLY — the REST /download URL
+404s FOREVER for review-status packs (and for deleted post-selection
+sources), so an until-curl-200 waiter never exits (3 zombie shells,
+2026-07-19). Bounded waits or get_object status, never open-ended
+download polls. Owned-art conventions unchanged: sheets commit at
 `assets/sprites/<id>/Idle-Sheet.png`, no manifest entry, verdict doc
 append (potential_assets/license-notes/pixellab-ai-generated-verdict.md
 — NOTE the assets/LICENSES path some sprites.json comments cite does
 not exist; license-notes is the real location). Scale check: 64px props
 at render_scale 0.5 read ~1.5 cells — 0.4 is the floor-prop default;
 windowed-read before calling size done (#198: 0.5 swallowed Lyonette).
+
+## One-shot scene generation (create_map_object, probed 2026-07-19)
+MCP `create_map_object` basic mode (≤400px canvas; Tier-1 web cap 320)
+one-shots a COHERENT whole scene (tavern probe: walls/hearth/bar/tables/
+stairs in one call, ~1 subscription generation). It is a single flat
+PNG — it CANNOT decompose into our map data model (grid/floor_layers/
+wall segments/entity rows), so never a map-authoring replacement. USE
+FOR: look-dev concepts before building a new map (generate 2-3, pick
+floors/decor to match), and flat-image deliverables (title screen, act
+cards, itch art, big multi-cell decor set-pieces). The style-match
+INPAINT mode (background_image = our real screenshot) probed WEAK: it
+matched palette but flattened our 3/4 sprite perspective into literal
+top-down (the oval mask erases perspective cues) — retry only with
+rectangle/custom masks + explicit perspective prompts. Map-object
+results AUTO-DELETE server-side after 8h — download immediately.
