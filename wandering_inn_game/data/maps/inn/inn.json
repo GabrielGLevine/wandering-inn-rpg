@@ -1137,7 +1137,7 @@
     5
    ],
    "display_name": "The Doorframe's Grain",
-   "sprite": "dusty_scroll",
+   "sprite": "pantry_door_runes",
    "tint": [
     0.8,
     0.8,
@@ -1159,7 +1159,7 @@
     5
    ],
    "display_name": "Old Wardwork",
-   "sprite": "dusty_scroll",
+   "sprite": "cellar_wardwork",
    "requires_skill": "detect_magic",
    "skill_hint_toast": "The old marks under the paint are almost gone. Almost.",
    "locked_toast": "Scratches under the doorframe paint. Could be anything. Could be nothing.",
@@ -1349,7 +1349,7 @@
     5
    ],
    "display_name": "Room Register",
-   "sprite": "dusty_scroll",
+   "sprite": "inn_room_ledger",
    "conversation": "room_ledger",
    "observe": "The inn's room register, open to today. Lyonette's handwriting could win awards; the prices underneath it could start fights."
   }

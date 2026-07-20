@@ -5,7 +5,7 @@ func _init() -> void:
 	WITestWatchdog.arm(self)
 	var catalog: Dictionary = _load_json("res://data/sprites.json")
 	var expected_counts: Dictionary = _build_expected_counts()
-	for required_prop: String in ["dusty_scroll", "dirty_table", "bed", "door"]:
+	for required_prop: String in ["dusty_scroll", "inn_room_ledger", "cellar_wardwork", "pantry_door_runes", "dirty_table", "bed", "door"]:
 		assert(catalog.has(required_prop), "sprites.json missing field prop sprite: " + required_prop)
 	for required_enemy: String in ["goblin_base", "goblin_female", "goblin_sword", "bat"]:
 		assert(catalog.has(required_enemy), "sprites.json missing enemy sprite: " + required_enemy)
@@ -113,6 +113,21 @@ func _build_expected_counts() -> Dictionary:
 	counts["citizen_f/walk"] = 6   ## 384 / 64
 
 	counts["dusty_scroll/idle"] = 1
+	## #198 dusty_scroll split: the three inn props' own PixelLab sprites
+	counts["inn_room_ledger/idle"] = 1
+	counts["cellar_wardwork/idle"] = 1
+	counts["pantry_door_runes/idle"] = 1
+	counts["note_pinned/idle"] = 1
+	## #222/#224 batch: stalls, alchemy stations, dormant-guardian marker
+	counts["market_stall_pallass_b/idle"] = 1
+	counts["market_stall_pallass_c/idle"] = 1
+	counts["market_stall_wood/idle"] = 1
+	counts["market_stall_silverfang/idle"] = 1
+	counts["alchemy_bench/idle"] = 1
+	counts["alchemy_still/idle"] = 1
+	counts["alchemy_bench_dark/idle"] = 1
+	counts["alchemy_bench_true/idle"] = 1
+	counts["dormant_guardian_statue/idle"] = 1
 	## #210/#223 character rigs
 	counts["erin/idle"] = 4
 	counts["erin/walk"] = 6

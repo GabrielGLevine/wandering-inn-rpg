@@ -1134,7 +1134,7 @@
     12
    ],
    "display_name": "The Counting-House Desk",
-   "sprite": "dusty_scroll",
+   "sprite": "inn_room_ledger",
    "requires_skill": "observe",
    "skill_hint_toast": "The clean ledger is the tell. Sizing up what is really here takes a practiced read.",
    "on_skill_use": {
@@ -1161,7 +1161,7 @@
     12
    ],
    "display_name": "A Shadowed Nook",
-   "sprite": "dusty_scroll",
+   "sprite": "crate",
    "tint": [
     0.5,
     0.5,
@@ -1184,7 +1184,7 @@
     11
    ],
    "display_name": "A Side Door, Watched",
-   "sprite": "food_basket",
+   "sprite": "door",
    "tint": [
     0.45,
     0.4,
@@ -1270,7 +1270,7 @@
     6
    ],
    "display_name": "Apothecary Corner",
-   "sprite": "cauldron",
+   "sprite": "alchemy_bench",
    "requires_skill": "low_grade_synthesis",
    "skill_hint_toast": "A cramped apothecary corner, its burner free for anyone who knows the working. Invrisil rents everything by the hour, including this.",
    "locked_toast": "A back-alley apothecary's bench, crowded with someone else's half-finished work. None of it means anything to you.",
