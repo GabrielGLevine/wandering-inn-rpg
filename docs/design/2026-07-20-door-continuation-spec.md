@@ -1,5 +1,7 @@
 # Door-chain continuation — "What the Seal Was Feeding" (2026-07-20, Fable)
 
+TRACKING ISSUE: #270 (the dispatch brief points here).
+
 The next story beat after `door_awakened`. Evidence-verified spine:
 every loose thread below is a shipped, unconsumed surface (paths read
 this session). Working title only — the quest NEVER names the door

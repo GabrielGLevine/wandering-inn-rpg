@@ -1,5 +1,7 @@
 # Friends of the Inn PR2 — implementation spec (2026-07-20, Fable)
 
+TRACKING ISSUE: #269 (the dispatch brief points here).
+
 Extends the shipped guest rotation (PR #261) to the remaining four
 roster NPCs. Two PRs: **PR2a = Olesm + Pisces**, **PR2b = Relc +
 Zevara**. Evidence-verified against the shipped mechanism; every file

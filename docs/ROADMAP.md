@@ -40,14 +40,14 @@ skills + the overworld hotbar, Helper/Tactician first-class curves,
 real" is the shipped doctrine every wave is held to). It stays a
 STANDING GATE, not a future item.
 
-1. **Friends of the Inn PR2+** — SPEC READY:
+1. **#269 Friends of the Inn PR2** — SPEC READY:
    docs/design/2026-07-20-foti-pr2-spec.md (PR2a Olesm+Pisces, PR2b
    Relc+Zevara; evidence-driven Helper-pace gate).
 2. **Audio wave** (#195 after the user listen + the deferred #76
    remainder): boss/biome coverage from the Ove Melaa pack.
 3. **#253 mobile import fix** (fix candidates already in the issue) +
    a mobile-polish slice if playtests surface more.
-4. **Door-chain continuation** — SPEC READY:
+4. **#270 Door-chain continuation** — SPEC READY:
    docs/design/2026-07-20-door-continuation-spec.md ("What the Seal
    Was Feeding": the treatise thread + the second door + Act V).
 5. **Wave D classes** (#134, after lore rulings) + #141.

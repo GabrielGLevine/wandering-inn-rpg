@@ -23,9 +23,9 @@ v0.10.0, v0.9.0, v0.8.0.
 
 **v0.14 SPECS READY (2026-07-20)**: the next-session implementation
 briefs are committed — docs/design/2026-07-20-foti-pr2-spec.md
-(Friends of the Inn PR2a/2b: Olesm+Pisces then Relc+Zevara, window
+(#269: Friends of the Inn PR2a/2b: Olesm+Pisces then Relc+Zevara, window
 math + seat cells + register-purity rules all pre-derived) and
-docs/design/2026-07-20-door-continuation-spec.md ("What the Seal Was
+docs/design/2026-07-20-door-continuation-spec.md (#270: "What the Seal Was
 Feeding": 3 beats, 3-path parity, Act V slot, the detected_wardwork
 quartet payoff; PR A data-only → PR B map+warden → PR C Pallass
 return anchor). Both evidence-verified this session (workflow
