@@ -240,7 +240,7 @@
  "erin": {
   "_comment": "#210: bespoke PixelLab v3 rig (canon-corrected: t-shirt/jeans/apron, wiki-verified). anchor feet-plane 148/200.",
   "directional": true,
-  "render_scale": 0.6,
+  "render_scale": 0.44,
   "anchor": [0.5, 0.745],
   "shadow": true,
   "animations": {
