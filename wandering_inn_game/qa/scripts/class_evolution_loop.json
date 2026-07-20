@@ -1,5 +1,5 @@
 {
- "_comment": "Fixture start (near_evolution: warrior 10, sword_skill_used 11 -- one short of min_uses 12) + ORGANIC finish via the repeatable floodplains encounter (goblin_encounter_1, respawns:true, content flag). Re-path: both goblin encounters live on the floodplains and goblin_encounter_2/goblin_encounter_1's ally_requires{met_relc:1} gate means Relc must be met (12,13) before the FIRST fight (fight1, goblin_encounter_2 via goblin_parley's default 'Draw steel' option) so his combat participation is consistent across this script's three fights. goblin_encounter_1 (no conversation gate, repeatable) is the organic-uses fight proper (fight2 here, fight3 after the sleep/evolve beat). The fixture itself deliberately does not evolve on its own -- the organic win is what actually crosses the evolution gate.",
+ "_comment": "Fixture start (near_evolution: warrior 10, sword_skill_used 13 -- past min_uses 12 on the sword axis, deliberately not yet evolved) + ORGANIC finish via the floodplains encounters. ISSUE #123 REDESIGN: the fixture now honestly banks met_relc + sparred_with_relc (warrior's own gained_by -- the old fixture held warrior:10 with sparred_with_relc:0, a story-impossible position grandfathered in CLASS_REQUIREMENTS_EXEMPT until this redesign). The old Meet-Relc leg is GONE: goblin_encounter_2/goblin_encounter_1's ally_requires{met_relc:1} is satisfied from the fixture, so Relc fields in fight1 with no fresh intro (pinned via combat.combatants.relc.side). fight1 = goblin_encounter_2 via goblin_parley's default 'Draw steel' option; fight2 = goblin_encounter_1 (proximity ambush, the organic-uses fight that crosses the evolution's sword-use gate); the sleep evolves warrior -> swordsman; fight3 re-pins relc_spar (persistent, trivial-flagged) to prove the evolved kit live -- and its whole approach now runs the HONEST post-spar position: Relc's pool serves the relc_sleep_nudge stage (sparred_with_relc:1 gates it; chatted_with_relc 0 -> line 0), relc_intro's meet node shows the sparred-variant text with FOUR options (the never-collected spear gift is visible: sparred banked, given_spear_by_relc honestly absent) and the spar at index 2, spar_offer serves its 'Again? Fine.' re-spar variant, and the spar win re-banks sparred_with_relc -> 2. All three fights replay off the fixture rng_state exactly as before (nothing removed from the route draws rng -- pool barks and dialogue are deterministic).",
  "fixture_save": "near_evolution",
  "starts_at_title": true,
  "steps": [
@@ -54,6 +54,12 @@
    "equals": 13
   },
   {
+   "_comment": "Issue #123: the fixture is honest now -- warrior's own gained_by is banked at boot.",
+   "action": "assert_state",
+   "path": "accomplishments.sparred_with_relc",
+   "equals": 1
+  },
+  {
    "action": "move",
    "direction": "right",
    "steps": 12
@@ -76,91 +82,23 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Meet Relc (12,13) before any ally_requires-gated fight.",
+   "_comment": "Issue #123: no Meet-Relc leg anymore -- met_relc is fixture-banked, so the ally gate is already satisfied. Straight east along the clear y6 lane to col 28, then down its column to the warband's approach cell (the same cells the old route crossed).",
    "action": "move",
    "direction": "right",
-   "steps": 5
-  },
-  {
-   "action": "move",
-   "direction": "down",
-   "steps": 6
-  },
-  {
-   "action": "press",
-   "name": "interact"
-  },
-  {
-   "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.",
-   "action": "wait_for_event",
-   "type": "dialogue_line",
-   "payload_contains": {
-    "speaker": "Relc"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "interact"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_started",
-   "payload_contains": {
-    "conversation": "relc_intro"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_shown",
-   "timeout_sec": 5
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "accomplishment_recorded",
-   "payload_contains": {
-    "id": "met_relc"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "move",
-   "direction": "down",
-   "steps": 1
-  },
-  {
-   "action": "press",
-   "name": "confirm"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_ended",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_hidden",
-   "timeout_sec": 5
-  },
-  {
-   "action": "move",
-   "direction": "up",
-   "steps": 6
-  },
-  {
-   "action": "move",
-   "direction": "right",
-   "steps": 16
+   "steps": 21
   },
   {
    "action": "move",
    "direction": "down",
    "steps": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    28,
+    17
+   ]
   },
   {
    "action": "press",
@@ -192,6 +130,12 @@
    "action": "wait_for_event",
    "type": "ui_combat_shown",
    "timeout_sec": 5
+  },
+  {
+   "_comment": "Issue #123: Relc fields as ally straight off the fixture's met_relc -- no intro conversation ever ran this run.",
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
   },
   {
    "action": "wait_for_event",
@@ -415,7 +359,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "fight3 -- issue #62 finding 8: goblin_encounter_1 is now a ONE-SHOT retirement (no more respawns:true), already spent by fight2 above, so it can't re-arm here. Re-pinned onto relc_spar (persistent:true, ALWAYS immediately re-fightable, trivial-flagged so it doesn't touch the accomplishment tally this beat never needed) -- proves the evolved Swordsman kit in a real live fight instead. From the floodplains door (7,6): right5->(12,6), down6->(12,12) (the same Meet-Relc approach fight1 already used), interact -- met_relc is already banked from fight1's own beat, so `meet`'s re-entry hides the fresh-intro option and shows ['What's out here worth guarding?'(0), 'Got time to show me how to fight? (Spar)'(1), 'Keep walking.'(2)]; move down 1 to the Spar option.",
+   "_comment": "fight3 -- issue #62 finding 8: goblin_encounter_1 is a ONE-SHOT retirement, already spent by fight2 above, so it can't re-arm here. Re-pinned onto relc_spar (persistent:true, ALWAYS immediately re-fightable, trivial-flagged so it doesn't touch the won_combat tally) -- proves the evolved Swordsman kit in a real live fight. From the floodplains door (7,6): right5->(12,6), down6->(12,12), interact.",
    "action": "move",
    "direction": "right",
    "steps": 5
@@ -438,7 +382,17 @@
    "name": "interact"
   },
   {
-   "_comment": "First interact this waking (a sleep just happened for the evolution beat) absorbs Relc's rotating pool bark -- a second interact opens the real relc_intro graph.",
+   "_comment": "Issue #123: first interact this waking absorbs Relc's rotating pool bark -- and the HONEST position serves the relc_sleep_nudge STAGE (gated on the fixture's sparred_with_relc:1), not the fresh-meet pool: chatted_with_relc is 0 this run (no Meet-Relc leg anymore), so line index 0.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "You spar like someone carrying something new. Go sleep at the inn -- upstairs, real bed. Classes settle at the pillow, not the podium."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Second interact opens the real relc_intro graph.",
    "action": "press",
    "name": "interact"
   },
@@ -456,15 +410,26 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "Issue #123: the meet node at the HONEST position -- met_relc hides the fresh-intro option, sparred_with_relc:1 (fixture) surfaces BOTH the sparred text variant AND the never-collected spear gift option (given_spear_by_relc honestly absent -- this PC never went back for it). FOUR visible options, spar at index 2.",
    "action": "assert_event_logged",
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
+    "text": "There's the dummy-slayer. Straw fears you. Come here. I owe you something for the show.",
     "options": [
      {
       "text": "What's out here worth guarding?",
       "locked": false,
       "requirement": ""
+     },
+     {
+      "text": "You said you had something for me?",
+      "locked": false,
+      "requirement": "",
+      "effect_lines": [
+       "+1 damage on melee hits",
+       "Spear kit replaces other weapon Skills in combat"
+      ]
      },
      {
       "text": "Got time to show me how to fight? (Spar)",
@@ -482,19 +447,19 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 1
+   "steps": 2
   },
   {
    "action": "press",
    "name": "confirm"
   },
   {
-   "_comment": "spar_offer node -- base text (sparred_with_relc not yet banked this run). Options ['Ready when you are.'(0), 'Another time.'(1)]; confirm at the default cursor (0) fires start_combat:relc_spar and ends the conversation in the same choose() call.",
+   "_comment": "spar_offer node -- issue #123: the HONEST position serves the re-spar text_variant (sparred_with_relc:1 at entry), not the first-time base text. Options ['Ready when you are.'(0), 'Another time.'(1)]; confirm at the default cursor (0) fires start_combat:relc_spar and ends the conversation in the same choose() call.",
    "action": "assert_event_logged",
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry."
+    "text": "Again? Fine. The dummies heal fast. Perk of being straw. Same rules: move, hit, no crying."
    }
   },
   {
@@ -552,9 +517,10 @@
    }
   },
   {
+   "_comment": "Issue #123: relc_spar's on_victory banks sparred_with_relc on EVERY win (persistent encounter) -- the fixture's honest 1 plus this live spar = 2.",
    "action": "assert_state",
    "path": "accomplishments.sparred_with_relc",
-   "equals": 1
+   "equals": 2
   }
  ]
 }
