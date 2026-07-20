@@ -21,13 +21,32 @@ v0.10.0, v0.9.0, v0.8.0.
 
 ## 🎯 NEXT ACTIONS
 
+**v0.14 SPECS READY (2026-07-20)**: the next-session implementation
+briefs are committed — docs/design/2026-07-20-foti-pr2-spec.md
+(Friends of the Inn PR2a/2b: Olesm+Pisces then Relc+Zevara, window
+math + seat cells + register-purity rules all pre-derived) and
+docs/design/2026-07-20-door-continuation-spec.md ("What the Seal Was
+Feeding": 3 beats, 3-path parity, Act V slot, the detected_wardwork
+quartet payoff; PR A data-only → PR B map+warden → PR C Pallass
+return anchor). Both evidence-verified this session (workflow
+research); START THERE.
+
 **#111 rename FULLY VERIFIED 2026-07-20**: native rehearsal passed on
 real data (5 saves + settings byte-true, marker, v4 dir intact) AND
 the user confirmed the web migration on the live deploy ("Rename
 migration successful"). Nothing in flight. The board is fully
-user-gated (taste queue below); next milestone planning is open —
-docs/ROADMAP.md; Three Pillars (spec approved) is the standing next
-big rock.
+user-gated (taste queue below), apart from the new machine-playtest
+follow-up below; next milestone planning is open — docs/ROADMAP.md;
+Three Pillars (spec approved) is the standing next big rock.
+
+**MACHINE-PLAYTEST P1 (detached `c33faac`, 2026-07-19):** the main-arc
+start emits `A Watch runner is looking for you.` as a domain `toast`
+with no matching `ui_toast_rendered`; the player sees only `New quest:
+Something Beneath`, losing the actionable route clue. Fix and add a
+rendered/screenshot pin before the next content wave. The same pass found
+dark-arena enemy visibility below the prior acceptance bar and deep-tunnel
+climax sprite stacking; full evidence and owners are in
+`docs/VISUAL-LOG.md`'s 2026-07-19 quest-thread section.
 
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)
 
