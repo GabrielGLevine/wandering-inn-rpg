@@ -1270,7 +1270,7 @@
     6
    ],
    "display_name": "Apothecary Corner",
-   "sprite": "cauldron",
+   "sprite": "alchemy_bench",
    "requires_skill": "low_grade_synthesis",
    "skill_hint_toast": "A cramped apothecary corner, its burner free for anyone who knows the working. Invrisil rents everything by the hour, including this.",
    "locked_toast": "A back-alley apothecary's bench, crowded with someone else's half-finished work. None of it means anything to you.",

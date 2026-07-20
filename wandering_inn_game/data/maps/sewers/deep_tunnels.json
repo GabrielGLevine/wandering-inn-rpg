@@ -97,7 +97,7 @@
     1
    ],
    "display_name": "Fissure Up",
-   "sprite": "door",
+   "sprite": "shaft_ladder",
    "to_map": "sewers",
    "to_cell": [
     8,

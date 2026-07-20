@@ -237,6 +237,242 @@
    }
   }
  },
+ "ruin_warden": {
+  "_comment": "#223: bespoke PixelLab v3 combat rig -- the awakened granite construct (guardian boss + lesser wards via combat_scale; replaces training_dummy in the fights and raskghar_awakened on the ruin_surface encounter). anchor feet-plane 158/216.",
+  "directional": true,
+  "render_scale": 0.48,
+  "anchor": [0.5, 0.736],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/ruin_warden/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/ruin_warden/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/ruin_warden/Idle_Up-Sheet.png",
+    "frame_size": [216, 216],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/ruin_warden/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/ruin_warden/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/ruin_warden/Walk_Up-Sheet.png",
+    "frame_size": [216, 216],
+    "fps": 8
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/ruin_warden/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/ruin_warden/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/ruin_warden/Slice_Up-Sheet.png",
+    "frame_size": [216, 216],
+    "fps": 10
+   },
+   "hit": {
+    "sheet_down": "res://assets/sprites/ruin_warden/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/ruin_warden/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/ruin_warden/Hit_Up-Sheet.png",
+    "frame_size": [216, 216],
+    "fps": 10
+   },
+   "death": {
+    "sheet_down": "res://assets/sprites/ruin_warden/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/ruin_warden/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/ruin_warden/Death_Up-Sheet.png",
+    "frame_size": [216, 216],
+    "fps": 10
+   }
+  }
+ },
+ "erin": {
+  "_comment": "#210: bespoke PixelLab v3 rig (canon-corrected: t-shirt/jeans/apron, wiki-verified). anchor feet-plane 148/200.",
+  "directional": true,
+  "render_scale": 0.34,
+  "anchor": [0.5, 0.745],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/erin/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/erin/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/erin/Idle_Up-Sheet.png",
+    "frame_size": [200, 200],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/erin/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/erin/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/erin/Walk_Up-Sheet.png",
+    "frame_size": [200, 200],
+    "fps": 8
+   }
+  }
+ },
+ "shaft_ladder": {
+  "_comment": "#224: owned PixelLab art -- wooden ladder on grey stone; the sewers/deep-tunnels UP transitions' own sprite (they wore the generic door).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/shaft_ladder/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "phosphor_moss": {
+  "_comment": "#224: owned PixelLab art -- teal bioluminescent moss on wet stone; sewers phosphor_moss's own sprite (wore mushroom_purple_m).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/phosphor_moss/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "spider_web": {
+  "_comment": "#224: owned PixelLab art -- corner web with hanging cocoons; sewers spider_silk's own sprite (wore mushroom -- semantic nonsense).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/spider_web/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "warded_seam": {
+  "_comment": "#224: owned PixelLab art -- violet-glinting seam through stone tiles; trapped_halls warded_seam's own tell (shared illusory_floor_tell before, muddying the two trap classes).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/warded_seam/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "market_stall_pallass_b": {
+  "_comment": "#222 FEEL fix: Pallass stall variant B (sandstone + green scalework banner) -- de-clones market_stall_b. anchor bbox-measured.",
+  "render_scale": 0.62,
+  "anchor": [0.5, 0.938],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/market_stall_pallass_b/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "market_stall_pallass_c": {
+  "_comment": "#222 FEEL fix: Pallass stall variant C (dragon-crested amber wares) -- de-clones market_stall_c. anchor bbox-measured.",
+  "render_scale": 0.62,
+  "anchor": [0.4688, 0.984],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/market_stall_pallass_c/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "market_stall_wood": {
+  "_comment": "#222: owned PixelLab art (potential_assets/license-notes/pixellab-ai-generated-verdict.md) -- green-awning wooden stall with bread loaves; the Liscor bread_stall's own sprite (was food_basket).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/market_stall_wood/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "market_stall_silverfang": {
+  "_comment": "#222: owned PixelLab art -- warm brown-awning goods stall for Krshia's Silverfang stall (was food_basket); earthy + dignified per her profile.",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/market_stall_silverfang/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "alchemy_bench": {
+  "_comment": "#222: owned PixelLab art -- alembic + flasks workbench; base alchemy station (synthesis + the Invrisil apothecary bench; was cauldron).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/alchemy_bench/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "alchemy_still": {
+  "_comment": "#222: owned PixelLab art -- copper distillation still; the distillation station's own sprite (was cauldron).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/alchemy_still/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "alchemy_bench_dark": {
+  "_comment": "#222: owned PixelLab art -- dark retort-and-jars bench; solvent/reduction stations (was cauldron).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/alchemy_bench_dark/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "alchemy_bench_true": {
+  "_comment": "#222: owned PixelLab art -- red-cloth premium potion bench; the true-alchemy station (was cauldron).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/alchemy_bench_true/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "dormant_guardian_statue": {
+  "_comment": "#224: owned PixelLab art -- curled dormant stone construct on a pedestal; the dungeon_approach guardian MARKER's own sprite (was vault_construct, the live BOSS rig -- misleading foreshadow).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/dormant_guardian_statue/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
  "inn_room_ledger": {
   "_comment": "#198: owned PixelLab art (potential_assets/license-notes/pixellab-ai-generated-verdict.md) -- open guest-register book on a lectern; replaces the dusty_scroll stand-in on the inn_room_ledger entity.",
   "render_scale": 0.4,
@@ -3964,36 +4200,34 @@
   "shadow": true
  },
  "ceria": {
-  "_comment": "anchor feet-plane 101/152.",
+  "_comment": "#223: NEW full PixelLab v3 rig (idle/walk/cast one identity -- fixes casts falling back to idle; replaces the 152px rig). anchor feet-plane 141/192.",
   "directional": true,
-  "render_scale": 0.51,
+  "render_scale": 0.42,
+  "anchor": [0.5, 0.74],
+  "shadow": true,
   "animations": {
    "idle": {
     "sheet_down": "res://assets/sprites/ceria/Idle_Down-Sheet.png",
     "sheet_side": "res://assets/sprites/ceria/Idle_Side-Sheet.png",
     "sheet_up": "res://assets/sprites/ceria/Idle_Up-Sheet.png",
-    "frame_size": [
-     152,
-     152
-    ],
+    "frame_size": [192, 192],
     "fps": 6
    },
    "walk": {
     "sheet_down": "res://assets/sprites/ceria/Walk_Down-Sheet.png",
     "sheet_side": "res://assets/sprites/ceria/Walk_Side-Sheet.png",
     "sheet_up": "res://assets/sprites/ceria/Walk_Up-Sheet.png",
-    "frame_size": [
-     152,
-     152
-    ],
+    "frame_size": [192, 192],
     "fps": 8
+   },
+   "cast": {
+    "sheet_down": "res://assets/sprites/ceria/Cast_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/ceria/Cast_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/ceria/Cast_Up-Sheet.png",
+    "frame_size": [192, 192],
+    "fps": 10
    }
-  },
-  "anchor": [
-   0.5,
-   0.664
-  ],
-  "shadow": true
+  }
  },
  "yvlon": {
   "_comment": "anchor 129/176.",
@@ -5084,66 +5318,26 @@
   }
  },
  "rags": {
+  "_comment": "#199/#223: bespoke PixelLab v3 rig (child-sized Goblin chieftain per profile; replaces the reduced goblin_chieftain interim). anchor feet-plane 115/156.",
   "directional": true,
-  "render_scale": 0.09,
+  "render_scale": 0.42,
+  "anchor": [0.5, 0.744],
+  "shadow": true,
   "animations": {
    "idle": {
-    "sheet_down": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
-    "sheet_side": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
-    "sheet_up": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
-    "frame_size": [
-     256,
-     256
-    ],
-    "region_down": [
-     0,
-     0,
-     1536,
-     256
-    ],
-    "region_side": [
-     0,
-     768,
-     1536,
-     256
-    ],
-    "region_up": [
-     0,
-     256,
-     1536,
-     256
-    ],
-    "fps": 3
+    "sheet_down": "res://assets/sprites/rags_rig/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/rags_rig/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/rags_rig/Idle_Up-Sheet.png",
+    "frame_size": [156, 156],
+    "fps": 6
    },
    "walk": {
-    "sheet_down": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
-    "sheet_side": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
-    "sheet_up": "res://assets/sprites/goblin_sword/goblin-sword-spritesheet.png",
-    "frame_size": [
-     256,
-     256
-    ],
-    "region_down": [
-     0,
-     0,
-     1536,
-     256
-    ],
-    "region_side": [
-     0,
-     768,
-     1536,
-     256
-    ],
-    "region_up": [
-     0,
-     256,
-     1536,
-     256
-    ],
+    "sheet_down": "res://assets/sprites/rags_rig/Walk_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/rags_rig/Walk_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/rags_rig/Walk_Up-Sheet.png",
+    "frame_size": [156, 156],
     "fps": 8
    }
-  },
-  "_comment": "b1 #199 INTERIM: goblin_chieftain sheet reduced (0.1->0.09; 0.08 failed the windowed eye-read as foliage) for Rags smaller silhouette; entity tint separates her; c3 bespoke replaces this entry wholesale (VISUAL-LOG row 2026-07-19)."
+  }
  }
 }

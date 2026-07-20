@@ -1291,7 +1291,7 @@
     2
    ],
    "display_name": "Bread Stall",
-   "sprite": "food_basket",
+   "sprite": "market_stall_wood",
    "field_y_sort_bias_px": 20.0,
    "tint": [
     0.9,
@@ -1329,7 +1329,7 @@
     2
    ],
    "display_name": "Krshia's Stall",
-   "sprite": "food_basket",
+   "sprite": "market_stall_silverfang",
    "observe": "Silverfang goods laid out with a trap's care: cheapest at the front, the good stock where a browsing hand drifts. A note warns that the seller remembers faces.",
    "variants": [
     {
