@@ -346,7 +346,7 @@
     6
    ],
    "display_name": "Market Stall",
-   "sprite": "market_stall_pallass",
+   "sprite": "market_stall_pallass_b",
    "observe": "A stall built to the same civic pattern as every other on this tier -- same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
    "on_interact_accomplishment": "browsed_posted_price_stall",
    "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
@@ -377,7 +377,7 @@
     6
    ],
    "display_name": "Market Stall",
-   "sprite": "market_stall_pallass",
+   "sprite": "market_stall_pallass_c",
    "observe": "A stall built to the same civic pattern as every other on this tier -- same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
    "on_interact_accomplishment": "browsed_posted_price_stall",
    "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
@@ -584,7 +584,7 @@
     7
    ],
    "display_name": "Reagent Bench",
-   "sprite": "cauldron",
+   "sprite": "alchemy_bench",
    "requires_skill": "low_grade_synthesis",
    "skill_hint_toast": "Xif's spare bench, scrubbed and stocked. A low flame and a steady hand would turn it into something.",
    "locked_toast": "A working alchemist's bench, burners cold. You would not know where to start.",
@@ -604,7 +604,7 @@
     7
    ],
    "display_name": "Solvent Still",
-   "sprite": "cauldron",
+   "sprite": "alchemy_bench_dark",
    "requires_skill": "magic_water_solvent",
    "skill_hint_toast": "A drip-still set for magic-water. Someone who knows the working could draw a clean solvent from it.",
    "locked_toast": "A glass drip-still, coiled and cold. The magic-water in it means nothing to you yet.",
@@ -624,7 +624,7 @@
     7
    ],
    "display_name": "Distilling Retort",
-   "sprite": "cauldron",
+   "sprite": "alchemy_still",
    "requires_skill": "mineral_distillation",
    "skill_hint_toast": "A retort over a banked fire, a mineral wash already loaded. A distiller could boil it down to salts.",
    "locked_toast": "A bulb of dark glass over cold coals, half full of something grey. Not your trade.",
@@ -644,7 +644,7 @@
     7
    ],
    "display_name": "Xif's Own Bench",
-   "sprite": "cauldron",
+   "sprite": "alchemy_bench_true",
    "requires_skill": "true_synthesis",
    "requires_item": [
     "solvent_phial",
@@ -670,7 +670,7 @@
    "kind": "prop",
    "cell": [4, 7],
    "display_name": "Reduction Bench",
-   "sprite": "cauldron",
+   "sprite": "alchemy_bench_dark",
    "requires_skill": "perfect_reduction",
    "requires_item": "crude_draught",
    "item_hint_toast": "The still wants a crude draught to work down. Your pack has nothing worth reducing.",

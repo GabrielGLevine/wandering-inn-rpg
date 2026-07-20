@@ -237,6 +237,123 @@
    }
   }
  },
+ "market_stall_pallass_b": {
+  "_comment": "#222 FEEL fix: Pallass stall variant B (sandstone + green scalework banner) -- de-clones market_stall_b. anchor bbox-measured.",
+  "render_scale": 0.62,
+  "anchor": [0.5, 0.938],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/market_stall_pallass_b/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "market_stall_pallass_c": {
+  "_comment": "#222 FEEL fix: Pallass stall variant C (dragon-crested amber wares) -- de-clones market_stall_c. anchor bbox-measured.",
+  "render_scale": 0.62,
+  "anchor": [0.4688, 0.984],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/market_stall_pallass_c/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "market_stall_wood": {
+  "_comment": "#222: owned PixelLab art (potential_assets/license-notes/pixellab-ai-generated-verdict.md) -- green-awning wooden stall with bread loaves; the Liscor bread_stall's own sprite (was food_basket).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/market_stall_wood/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "market_stall_silverfang": {
+  "_comment": "#222: owned PixelLab art -- warm brown-awning goods stall for Krshia's Silverfang stall (was food_basket); earthy + dignified per her profile.",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/market_stall_silverfang/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "alchemy_bench": {
+  "_comment": "#222: owned PixelLab art -- alembic + flasks workbench; base alchemy station (synthesis + the Invrisil apothecary bench; was cauldron).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/alchemy_bench/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "alchemy_still": {
+  "_comment": "#222: owned PixelLab art -- copper distillation still; the distillation station's own sprite (was cauldron).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/alchemy_still/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "alchemy_bench_dark": {
+  "_comment": "#222: owned PixelLab art -- dark retort-and-jars bench; solvent/reduction stations (was cauldron).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/alchemy_bench_dark/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "alchemy_bench_true": {
+  "_comment": "#222: owned PixelLab art -- red-cloth premium potion bench; the true-alchemy station (was cauldron).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/alchemy_bench_true/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
+ "dormant_guardian_statue": {
+  "_comment": "#224: owned PixelLab art -- curled dormant stone construct on a pedestal; the dungeon_approach guardian MARKER's own sprite (was vault_construct, the live BOSS rig -- misleading foreshadow).",
+  "render_scale": 0.4,
+  "anchor": [0.5, 0.95],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/dormant_guardian_statue/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
+ },
  "inn_room_ledger": {
   "_comment": "#198: owned PixelLab art (potential_assets/license-notes/pixellab-ai-generated-verdict.md) -- open guest-register book on a lectern; replaces the dusty_scroll stand-in on the inn_room_ledger entity.",
   "render_scale": 0.4,
