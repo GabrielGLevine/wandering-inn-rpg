@@ -278,7 +278,7 @@
  },
  "note_pinned": {
   "_comment": "#222 sweep: owned PixelLab art -- pinned crumpled handwritten page; the shared sprite for genuine small-paper props (barracks half-letter + ward-charm scrap, sewers surveyor page). Notes ARE paper, so sharing is semantic reuse, not the dusty_scroll mismatch class.",
-  "render_scale": 0.4,
+  "render_scale": 0.26,
   "anchor": [0.5, 0.95],
   "shadow": true,
   "animations": {
