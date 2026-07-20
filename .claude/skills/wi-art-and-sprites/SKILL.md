@@ -167,8 +167,11 @@ create + review tools, per-object download. Prop pipeline:
 status (~$0.09/call at overage pricing; subscription generations bill
 first) → `get_object` shows inline previews → `select_object_frames`
 (keep primary + one alternate) → download `rotations/unknown.png`.
-Poll long queues via REST HEAD on the download URL, never blocking
-sleeps. Owned-art conventions unchanged: sheets commit at
+Poll long queues via MCP get_object ONLY — the REST /download URL
+404s FOREVER for review-status packs (and for deleted post-selection
+sources), so an until-curl-200 waiter never exits (3 zombie shells,
+2026-07-19). Bounded waits or get_object status, never open-ended
+download polls. Owned-art conventions unchanged: sheets commit at
 `assets/sprites/<id>/Idle-Sheet.png`, no manifest entry, verdict doc
 append (potential_assets/license-notes/pixellab-ai-generated-verdict.md
 — NOTE the assets/LICENSES path some sprites.json comments cite does
