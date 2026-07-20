@@ -411,7 +411,16 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 			locked_toast = "It doesn't budge." if is_door_shaped else "You don't know how to do that yet."
 		_emit(WIEvents.TOAST, {"text": locked_toast})
 		return {}
-	if target.is_empty() or not target.has("on_skill_use"):
+	# skill_uses (pantry-door consolidation): the per-skill arm map wins over
+	# the single on_skill_use when it carries this skill; everything below
+	# (item gates, once_per_waking, effect resolution) is arm-shape agnostic.
+	var skill_arm: Variant = null
+	var skill_uses: Dictionary = target.get("skill_uses", {}) as Dictionary
+	if skill_uses.has(skill_id):
+		skill_arm = skill_uses[skill_id]
+	elif target.has("on_skill_use"):
+		skill_arm = target["on_skill_use"]
+	if target.is_empty() or skill_arm == null:
 		_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": target_id})
 		return {}
 	# STRING | ARRAY CONTRACT (Wave D-1, #155): a bench prop's `requires_item` gate
@@ -443,7 +452,7 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 			_emit(WIEvents.TOAST, {"text": String(target.get("once_per_waking_toast", "Nothing more to carry out right now. Come back another day."))})
 			return {"once_per_waking_spent": true}
 		entity_first_use[waking_key] = true
-	var effect: Dictionary = _resolve_skill_use_effect(target["on_skill_use"])
+	var effect: Dictionary = _resolve_skill_use_effect(skill_arm)
 	# TRAP (#155 review M1): a CONSUMING recipe (both `item` and `remove_item`)
 	# must refuse BEFORE any state changes when the output can't be picked up
 	# (inventory never stacks, so a held duplicate blocks pickup) -- otherwise

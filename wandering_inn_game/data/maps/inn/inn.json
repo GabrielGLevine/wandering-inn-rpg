@@ -760,9 +760,18 @@
    ],
    "display_name": "Dusty Scroll",
    "sprite": "dusty_scroll",
-   "_comment": "Kept as pure flavor: banks read_dusty_scroll (referenced nowhere as a gate) and toasts a hint that magic exists and is learnable from someone who knows it.",
+   "_comment": "Earned payoff (user directive 2026-07-19): before the [Mage] tutorial the scroll is unreadable flavor (read_dusty_scroll, consumed by nothing -- kept frozen). AFTER learned_magic_from_pisces the variant overrides the interact: the script resolves into a warding treatise and banks deciphered_dusty_scroll, which unlocks Pisces' scroll_secret dialogue beat (the discovery payoff). Later-satisfied-wins variant overrides toast + counter.",
    "on_interact_accomplishment": "read_dusty_scroll",
-   "toast": "Faded arcane script. You can't read a word of it. Whoever penned this knew magic you don't. Someone in the city must."
+   "toast": "Faded arcane script. You can't read a word of it. Whoever penned this knew magic you don't. Someone in the city must.",
+   "variants": [
+    {
+     "when": {
+      "learned_magic_from_pisces": 1
+     },
+     "on_interact_accomplishment": "deciphered_dusty_scroll",
+     "toast": "With what Pisces beat into you, the faded script stops being noise: it is a warding treatise, old and patient, and it keeps circling one subject. A door. Bound, sealed, and fed -- somewhere close. He would want to see this."
+    }
+   ]
   },
   {
    "id": "unlit_lantern",
@@ -1044,41 +1053,29 @@
    "toast": "Onions, a sack of soft potatoes, a shelf of jarred somethings gone dusty. The pantry door, same as it's always been.",
    "visual_states": [
     {
-     "_comment": "No `sprite` key here now: it stays the plain pantry door, only the cool-blue tint (the flicker tell) applied.",
-     "when": {
-      "counter": "door_chain_started",
-      "at": 1,
-      "observe": "Looked at straight, a plain pantry door. Looked at sideways, the grain of the frame crawls and the dark under the door is deeper than the pantry it opens into. Pisces by the Guild steps might name it; the wardwork in the frame might tell you itself; whatever scratches in the cellar already knows."
-     },
-     "tint": [
-      0.7,
-      0.85,
-      1.05
-     ]
+     "at": 0,
+     "sprite": "door"
     },
     {
+     "at": 1,
      "when": {
-      "counter": "door_awakened",
-      "at": 1
+      "door_chain_started": 1
      },
-     "sprite": "anchor_waystone",
-     "tint": [
-      1.15,
-      0.92,
-      0.55
-     ],
-     "light": {
-      "color": [
-       0.85,
-       0.7,
-       1.0
-      ],
-      "energy": 0.95,
-      "radius": 24,
-      "flicker": true
-     }
+     "sprite": "pantry_door_runes"
     }
-   ]
+   ],
+   "_comment_consolidation": "Pantry-door consolidation (user FEEL verdict 2026-07-19): the runes prop + wardwork prop FOLDED into the door itself. visual_states swaps the plain door for the runed-door sprite once door_chain_started banks (garden_door at-pattern, render-only). skill_uses carries BOTH reads: [Observe] banks read_the_door_runes (the door-chain SKILL leg, text verbatim from the removed prop), [Detect Magic] banks detected_wardwork. One prop, many eyes.",
+   "skill_uses": {
+    "observe": {
+     "accomplishment": "read_the_door_runes",
+     "toast": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away."
+    },
+    "detect_magic": {
+     "accomplishment": "detected_wardwork",
+     "toast": "[Detect Magic] — The old wardwork wakes just enough to be read: someone bound this cellar's door long before it learned to go elsewhere."
+    }
+   },
+   "skill_hint_toast": "The frame and the old marks under its paint both want a trained eye — and maybe more than one kind."
   },
   {
    "_comment": "`allies:[\"relc\"]`/`ally_requires:{met_relc:1}` mirrors D2's own harness gated cell (`rift_vermin_leak_w8_relc`, the 0.55-0.95 tuned band) rather than the harder ungated `_solo` variant. GH#150: encounter_when arms the FIGHT on door_chain_started (present_when is validator-forbidden on encounters -- trigger_radius never consults presence). Pre-quest the leak stays VISIBLE as inert foreshadowing with its own observe; hiding it would recreate #149's invisible-blocking-cell class mid-floor. Display/fight text unchanged post-arm.",
@@ -1127,46 +1124,6 @@
      "observe": "The scratching has become a chewing. Whatever leaks through back there has teeth, and Erin asked you to look."
     }
    ]
-  },
-  {
-   "_comment": "the field-skill first-use idiom (cellar_door/nest_ledge precedent), `requires_skill: observe` (the Tactician L1 grant, matching nest_ledge/cisterns_scout) + `on_skill_use` banks `read_the_door_runes` (an intermediate counter, zero rng) deterministically.",
-   "id": "pantry_door_runes",
-   "kind": "prop",
-   "cell": [
-    14,
-    5
-   ],
-   "display_name": "The Doorframe's Grain",
-   "sprite": "pantry_door_runes",
-   "tint": [
-    0.8,
-    0.8,
-    0.9
-   ],
-   "requires_skill": "observe",
-   "skill_hint_toast": "The grain of the frame almost makes a pattern, if the right eye looked at it properly.",
-   "on_skill_use": {
-    "accomplishment": "read_the_door_runes",
-    "toast": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away."
-   },
-   "locked_toast": "The doorframe's old wood is carved with something under the paint, faint and worn. Whatever it says isn't for an untrained eye."
-  },
-  {
-   "id": "cellar_wardwork",
-   "kind": "prop",
-   "cell": [
-    13,
-    5
-   ],
-   "display_name": "Old Wardwork",
-   "sprite": "cellar_wardwork",
-   "requires_skill": "detect_magic",
-   "skill_hint_toast": "The old marks under the paint are almost gone. Almost.",
-   "locked_toast": "Scratches under the doorframe paint. Could be anything. Could be nothing.",
-   "on_skill_use": {
-    "accomplishment": "detected_wardwork",
-    "toast": "[Detect Magic] — The old wardwork wakes just enough to be read: someone bound this cellar's door long before it learned to go elsewhere."
-   }
   },
   {
    "_comment": "CONSTRAINT: the free approach cell is (3,7), facing down (same column as before, shifted onto the wall). GH#128: the vine door must be EARNED -- base sprite stays garden_door_inner but the at:0 visual_state (always satisfied) hides it, and the at:1 entry un-hides + swaps observe once garden_door_unlocked banks (order-sensitive later-satisfied-wins, world.gd _resolve_entity_render; hidden is render-only per wi_game.gd entity_present doc -- the bare-wall interact/observe/toast still work). door_when already gates traversal on the same counter, so sight and passage flip together at the sleep beat. visual_states re-render live on the counter change (_refresh_entity_visual), so no same-map staleness. GH#149: (3,8) joined the map's blocked set so the pre-unlock cell READS as wall (fallback-blocked tile) instead of an invisible bump -- the door only ever needs interact-from-(3,7), never entry, so permanent blocking serves both states.",
