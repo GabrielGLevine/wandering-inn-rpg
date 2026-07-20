@@ -6,9 +6,9 @@ history in git. Read order for a fresh session: wi-start-here.
 
 ## Current release
 
-**v0.13.0 TAGGED 2026-07-20** (run in flight at write time — verify
-`gh run list` shows the Release + Pages runs green; itch html5 +
-Win/Linux desktop + Pages on the tag trigger). Contents: the Depth +
+**v0.13.0 SHIPPED 2026-07-20, all three targets green** (Release run
+29716161272: full QA on real assets, itch html5 deploy, Win/Linux
+desktop exports; Pages deploy green on the tag trigger). Contents: the Depth +
 Polish wave — #209 journal tabs, #247 Friends of the Inn (Selys+Krshia
 servable guests), #225 interior floors, **#111 project rename
 ("Wandering Inn RPG") + first-boot save carry-over**, #123 honest
@@ -21,16 +21,14 @@ v0.10.0, v0.9.0, v0.8.0.
 
 ## 🎯 NEXT ACTIONS
 
-1. **Verify the v0.13.0 release run went green** (`gh run watch`) and
-   the itch/Pages deploys landed.
-2. **USER: the 2-minute web rename check** (#111 rehearsal b): open
+1. **USER: the 2-minute web rename check** (#111 rehearsal b): open
    the itch page in the browser you've played in before — Continue
    should light up with your old web save; load it. Same on Pages.
    Fail = report; rollback = revert the rename PR + re-tag (browser
    data is untouched either way; copy-only design). The NATIVE
    rehearsal already passed on this machine with real data
    (5 saves + settings migrated byte-true, marker set, v4 dir intact).
-3. Then the board is fully user-gated (see taste queue). Next
+2. Then the board is fully user-gated (see taste queue). Next
    milestone planning is open — docs/ROADMAP.md; Three Pillars
    (spec approved) is the standing next big rock.
 
