@@ -1064,6 +1064,7 @@ func _init() -> void:
 	arc.sleep()
 	assert(arc.accomplishment_count("watch_runner_pointed") == 1, "AF I1: post-consolidation sleep fires the tremor pointer (gate reads the flag, not the live count)")
 	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A Watch runner is looking for you."), "AF I1: the Watch-runner pointer toast renders after consolidation")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A Watch runner is looking for you." and bool(e["payload"].get("sticky", false))), "GH#273: the pointer toast carries sticky=true -- it queues LAST at a busy wake beat and must survive message_layer's transition queue-wipe")
 
 	var cc_garden := combat_config.duplicate(true)
 	cc_garden["acts"] = _load_json("res://data/acts.json")

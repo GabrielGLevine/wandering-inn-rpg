@@ -164,7 +164,9 @@ func _maybe_fire_tremor_pointer() -> bool:
 	# GH#167: the toast is a NUDGE; the durable direction is the journal
 	# quest started here (the arc was the only thread without one).
 	_start_quest.call("something_beneath")
-	_emit(WIEvents.TOAST, {"text": "A Watch runner is looking for you."})
+	# GH#273: sticky -- this nudge is the arc's only route clue and queues
+	# LAST at a wake beat; without the flag, leaving the bedroom wiped it.
+	_emit(WIEvents.TOAST, {"text": "A Watch runner is looking for you.", "sticky": true})
 	return true
 
 

@@ -39,14 +39,18 @@ user-gated (taste queue below), apart from the new machine-playtest
 follow-up below; next milestone planning is open — docs/ROADMAP.md;
 Three Pillars (spec approved) is the standing next big rock.
 
-**MACHINE-PLAYTEST P1 (detached `c33faac`, 2026-07-19):** the main-arc
-start emits `A Watch runner is looking for you.` as a domain `toast`
-with no matching `ui_toast_rendered`; the player sees only `New quest:
-Something Beneath`, losing the actionable route clue. Fix and add a
-rendered/screenshot pin before the next content wave. The same pass found
-dark-arena enemy visibility below the prior acceptance bar and deep-tunnel
-climax sprite stacking; full evidence and owners are in
-`docs/VISUAL-LOG.md`'s 2026-07-19 quest-thread section.
+**MACHINE-PLAYTEST P1 → FIXED in v0.13.1 (GH#273, 2026-07-20):**
+independently re-verified, root cause REFINED — the render arm was never
+missing; the pointer (and the quest-start toast, worse than first
+reported) queued last at the wake beat and `_clear_toast()`'s transition
+wipe discarded the pending queue. Fixed via sticky-toast re-queue +
+PINNED render asserts in arc_flow/climax_chain/raskghar_entry_loop (the
+old bare `ui_toast_rendered` wait was the false-pass mechanism — sweep
+for that pattern is follow-up in #273). Still open from the same pass:
+dark-arena enemy visibility below the prior bar and deep-tunnel climax
+sprite stacking (evidence/owners in `docs/VISUAL-LOG.md`). User eyes
+wanted: a real-rig windowed read of arc_flow's `01_tremor_pointer` shot
+(container GL too slow to catch the 0.4s toast hold on camera).
 
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)
 

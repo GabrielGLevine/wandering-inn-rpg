@@ -840,6 +840,30 @@ events, and result files live in the gitignored
 
 ## Fixed
 
+- [x] UI/TOAST — FIXED (GH#273, v0.13.1 hotfix, 2026-07-20) — the arc-start
+  Watch-runner pointer (AND "New quest: Something Beneath") never rendered:
+  they queue LAST at the wake beat behind bed/autosave/class toasts, and
+  `_clear_toast()`'s transition wipe (MAP_CHANGED/DIALOGUE_STARTED/
+  COMBAT_STARTED) discarded the whole pending queue — leaving the bedroom
+  guaranteed the loss. REFINES the 2026-07-19 machine-playtest P1: the
+  render arm was never missing; the queue tail was unreachable. Same class
+  ate post-warren loot toasts (`Got: Mending Draught`/`Moonhide Fetish`) in
+  arc_flow's log. Fix: sim flags narratively load-bearing toasts
+  `sticky:true` (the pointer at sleep_beat.gd + all three quest lifecycle
+  emits in wi_game.gd); message_layer re-queues pending sticky texts on a
+  transition wipe instead of dropping (the `_first_wake_hint_pending`
+  re-queue contract, generalized — panel still hides, so the stale-toast
+  fix holds). QA: arc_flow/climax_chain/raskghar_entry_loop now assert the
+  PINNED `ui_toast_rendered {Watch runner}` AFTER the street teleport (the
+  old bare unpinned wait false-passed on the stale "Your own bed." render —
+  the shipped-green mechanism); sim-side sticky pinned in test_sim_core.
+  Event-order proof in all three canonicals: toast → map_changed → rendered-
+  on-street. Container windowed capture races the 0.4s hold under software
+  GL (screenshot catches the NEXT queued toast draining on-street — itself
+  proof the re-queue is live); a real-rig windowed read of
+  arc_flow/01_tremor_pointer will show the pointer text itself. Follow-up
+  (out of hotfix scope, in #273): sticky for `Got:` loot toasts, sweep for
+  other bare `ui_toast_rendered` waits.
 - [x] UI/TEXT — SUPERSEDED, no commit needed (GH#94 re-adjudication,
   2026-07-13) — tutor feed 4th line sat tight against the parchment fold
   (descenders grazing it), dated 2026-07-04, already self-adjudicated
