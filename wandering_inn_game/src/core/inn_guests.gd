@@ -14,19 +14,42 @@ class_name WIInnGuests
 ## `guest` present_when arm; validated by test_content._validate_present_when.
 
 
-## The ordered met-pool: roster members (fixed order) the player has met.
-static func met_pool(roster: Array, is_met: Callable) -> Array:
+## Quest-completion gates on pool membership (2026-07-26 FoTI extension):
+## a rostered npc joins the met-pool only when chatted AND its gate (if
+## any) is banked -- otherwise the window would seat an entity whose
+## present_when.requires hides it (a ghost-empty seat all waking).
+const GUEST_POOL_GATES := {
+	"rags": "rags_meeting_settled",
+	"wilovan": "brothers_job_done",
+	"grimalkin": "elevator_pass_stamped",
+}
+
+
+## The ordered met-pool: roster members (fixed order) the player has met,
+## minus any whose GUEST_POOL_GATES quest has not closed.
+##
+## `gate_met` takes an ACCOMPLISHMENT KEY (not an npc id) and answers
+## whether it is banked. It is optional and FAIL-CLOSED: a caller that
+## omits it seats no gated guest at all, which degrades to the same
+## nothing the row's own present_when.requires would render. Callers that
+## can read accomplishments (wi_game) always pass it.
+static func met_pool(roster: Array, is_met: Callable, gate_met := Callable()) -> Array:
 	var pool: Array = []
 	for npc: Variant in roster:
-		if bool(is_met.call(String(npc))):
-			pool.append(String(npc))
+		var id := String(npc)
+		if not bool(is_met.call(id)):
+			continue
+		if GUEST_POOL_GATES.has(id):
+			if not gate_met.is_valid() or not bool(gate_met.call(String(GUEST_POOL_GATES[id]))):
+				continue
+		pool.append(id)
 	return pool
 
 
 ## The NPCs on shift this waking: seats distinct people, windowed by
 ## times_slept over the met-pool. Empty when the pool is empty or seats<=0.
-static func active_guests(roster: Array, is_met: Callable, times_slept: int, seats: int) -> Array:
-	var pool := met_pool(roster, is_met)
+static func active_guests(roster: Array, is_met: Callable, times_slept: int, seats: int, gate_met := Callable()) -> Array:
+	var pool := met_pool(roster, is_met, gate_met)
 	var k := pool.size()
 	if k == 0 or seats <= 0:
 		return []
@@ -39,5 +62,5 @@ static func active_guests(roster: Array, is_met: Callable, times_slept: int, sea
 
 
 ## Is this specific NPC on shift this waking?
-static func guest_active(npc: String, roster: Array, is_met: Callable, times_slept: int, seats: int) -> bool:
-	return active_guests(roster, is_met, times_slept, seats).has(npc)
+static func guest_active(npc: String, roster: Array, is_met: Callable, times_slept: int, seats: int, gate_met := Callable()) -> bool:
+	return active_guests(roster, is_met, times_slept, seats, gate_met).has(npc)

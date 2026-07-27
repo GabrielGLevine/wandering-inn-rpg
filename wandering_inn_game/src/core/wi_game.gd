@@ -847,10 +847,15 @@ func _present_gate_met(when: Dictionary) -> bool:
 	if when.has("guest"):
 		var g: Dictionary = when["guest"]
 		var is_met := func(npc: String) -> bool: return accomplishment_count("chatted_with_" + String(npc)) >= 1
+		# 2026-07-26 FoTI extension: WIInnGuests.GUEST_POOL_GATES holds three
+		# roster members out of the POOL until their quest closes, so the
+		# window never spends a seat on someone the row's own `requires`
+		# hides. Same >= 1 banked test the requires arm uses.
+		var gate_met := func(key: String) -> bool: return accomplishment_count(key) >= 1
 		# get() defaults across the board (#247 review MINOR-4): a hand-authored
 		# malformed guest dict degrades to "absent" rather than spamming a
 		# missing-key SCRIPT ERROR on every entity-presence pass.
-		if not WIInnGuests.guest_active(String(g.get("npc", "")), g.get("roster", []) as Array, is_met, times_slept, int(g.get("seats", 2))):
+		if not WIInnGuests.guest_active(String(g.get("npc", "")), g.get("roster", []) as Array, is_met, times_slept, int(g.get("seats", 2)), gate_met):
 			return false
 	return true
 
