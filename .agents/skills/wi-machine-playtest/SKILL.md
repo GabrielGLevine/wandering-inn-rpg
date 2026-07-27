@@ -39,6 +39,20 @@ is the loop-integration wrapper.
 - Findings ranked player-visible-first; every claim cites its screenshot;
   visual findings → docs/VISUAL-LOG.md; blockers → HANDOFF next-steps.
 
+## Live data reload — the tuning loop (GH#278, 2026-07-26)
+Content tuning (dialogue copy, balance numbers, map props) no longer
+pays the relaunch tax. Every load rebuilds the sim from FRESH disk JSON
+(`WISceneCatalog` resets inside `_make_sim`; sprites/moods/audio caches
+reset on GAME_LOADED), so:
+- **Windowed human loop:** edit `data/*.json` → pause → Save → Load →
+  the surface re-renders with the new content, same state. No restart,
+  no renavigate.
+- **Scripted loop:** the `reload_data` TestDriver step (refuses in
+  combat/dialogue/consolidation with a toast; `expect: false` pins the
+  refusal). Canonical: `reload_loop`.
+- Limits: repainted PNGs still need a reimport (ResourceLoader cache);
+  id renames/removals are NOT migration-checked — value tuning only.
+
 ## Targeted playtest requests (user directive 2026-07-17)
 Any request for USER eyes/ears on a specific surface (an eye-gate, an
 ear-gate, a taste call) MUST ship with a **prepared Playtest State**: a

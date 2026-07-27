@@ -111,6 +111,12 @@ const LEGIBILITY_MAX_BOOST := 3.0
 
 static var _moods_cache: Dictionary = {}
 
+
+## GH#278: live-reload seam (see WISpriteRegistry.reset()).
+static func reset() -> void:
+	_moods_cache = {}
+
+
 var _board: Node2D
 var _squares: Dictionary = {}
 var _hp_bars: Dictionary = {}

@@ -603,6 +603,17 @@ func _execute(step: Dictionary) -> void:
 		"install_fixture":
 			_install_fixture_saves([{"fixture": String(step["fixture"]), "slot": String(step.get("slot", "auto"))}])
 			await get_tree().process_frame
+		"reload_data":
+			# GH#278: rebuild the sim from disk JSON via the save round-trip.
+			# expect:false proves the refusal leg (combat/dialogue/
+			# consolidation); the refusal must be observable, so scripts
+			# pair it with an assert on the refusal TOAST.
+			var reload_expect: bool = bool(step.get("expect", true))
+			var reload_ok: bool = Game.reload_data()
+			if reload_ok != reload_expect:
+				_fail("reload_data returned %s, expected %s" % [reload_ok, reload_expect])
+			await get_tree().process_frame
+			await get_tree().process_frame
 		_:
 			_fail("unknown action: " + String(step["action"]))
 
