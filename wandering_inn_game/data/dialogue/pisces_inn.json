@@ -1,0 +1,18 @@
+{
+	"_comment": "d1 #247 Friends of the Inn PR2a -- Pisces's INN register. Attached ONLY to the pisces_inn_guest entity; his street hub (pisces_magic) never rides along, so the magic tutoring, the necromancy defence and EVERY door consult stay home-only (REGISTER-PURE, spec 2026-07-20-foti-pr2-spec.md -- reinforced now that door_mounting.json exists on this same map: the guest row must never touch door mechanics). A magic question is DEFLECTED in the greet, never answered. Serve mirrors selys_inn/patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter. Voice per docs/design/character-profiles.md: haughty THAWING -- performatively above tavern food while visibly enjoying it.",
+	"start": "greet",
+	"nodes": {
+		"greet": { "speaker": "Pisces", "text": "You are the one with the trays. I am not here for the cuisine, you understand, nor to discuss my work over it. The fire is adequate. My rooms are not.", "options": [
+			{ "text": "Bring him a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:pisces_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:pisces_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
+			{ "text": "\"Not here for the food. Noted.\"", "goto": "offduty" },
+			{ "text": "\"Enjoy the adequate fire.\"", "end": true }
+		] },
+		"offduty": { "speaker": "Pisces", "text": "Tavern fare is a solved problem. Salt, fat, and enough of it that nobody asks a second question. I have eaten better in three cities. I have eaten considerably worse in nine. I decline to say where this kitchen falls between them.", "options": [
+			{ "text": "Bring him a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:pisces_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:pisces_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
+			{ "text": "\"I'll leave you to your standards.\"", "end": true }
+		] },
+		"served": { "speaker": "Pisces", "text": "...Hm. It is competent. Do not read anything into that; I have called far worse things competent. Though I observe that I have finished it, and I observe you observing.", "options": [
+			{ "text": "\"I saw nothing. Precisely nothing.\"", "end": true }
+		] }
+	}
+}

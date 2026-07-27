@@ -37,6 +37,13 @@ canon cites · current sprite state.
 - Shabby-genteel WHITE robes w/ faded trim, hood, smug posture.
 - Voice: haughty, precise, defensive about necromancy, brilliant
   teacher despite himself.
+- Inn register (d1 #247 PR2a, `pisces_inn`): haughty THAWING. He is
+  performatively above tavern food and visibly enjoying it anyway, and
+  the gap between the two is the joke he is not in on. Precision stays
+  (he grades the stew like an examiner); the disdain has gone thin.
+  NEVER the magic tutor, never the necromancy defence, never a word
+  about the Door — a magic question gets deflected, not answered. He is
+  a diner here, not a scholar.
 - Sprite: bespoke PixelLab v2 DIRECTIONAL + animated hooded white robe
   (idle/walk; 108px frames). Upgraded 2026-07-06.
 
@@ -52,6 +59,13 @@ canon cites · current sprite state.
 - Drake [Tactician], slight/slim, smaller than Relc.
 - Sky-blue scales, clerk's vest, carries a rolled map/ledger.
 - Voice: earnest, chess-obsessed, self-deprecating, quietly proud.
+- Inn register (d1 #247 PR2a, `olesm_inn`): earnest and off duty, badly.
+  Chess-ADJACENT but never the board itself — the wager, the puzzle and
+  the rematch are home-only, at his desk. Here he reads the ROOM like a
+  position: who sits where, which table opens onto which door. Openly
+  sheepish about having taken a night off, and unable to stop working
+  anyway. No briefings, no troop dispersal; he is a guest, not the
+  council clerk.
 - Sprite: bespoke PixelLab v2 DIRECTIONAL + animated (idle/walk; sky-blue
   Drake clerk holding a rolled map; 112px frames). Upgraded 2026-07-06.
 
