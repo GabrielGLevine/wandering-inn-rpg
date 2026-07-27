@@ -2537,6 +2537,42 @@
    }
   },
   {
+   "script": "spine_reach",
+   "seed": 9,
+   "fixture": "spine_reach_start",
+   "note": "2026-07-26 main-quest spec 4 (Phase 6): the pilgrimage spine `where_the_door_reaches` end to end. Pisces's spine-start arm (gated door_awakened, banks the quest + spine_started, speaks the foreshadow line), then ALL THREE capstone arms live off a save whose region chains are already CLOSED (the revisit-reachability position spec 8 requires): Eloise raising the feeding ward herself, Hedault cataloguing the residue unbidden, Grimalkin on the forge tier's rune-feeding ledger -- beats 1/2/3 complete on lattice_witch_lore / lattice_hedault_reading / lattice_forge_rune. Exact option-array pins for the Pisces, Eloise and Grimalkin hubs (presence, and the witch arm's hide_when retirement), and the greet is re-read after every bank to walk the ascending text_variant contract. NEGATIVE: the quest must NOT complete -- the `return` beat waits on Phase 7's seal_descent_agreed. No combat.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "mercantile_alleys",
+     "pallass_market",
+     "riverfarm_village",
+     "street",
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "spine_reach_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "hedault_enchanting",
+     "pallass_grimalkin",
+     "pisces_magic",
+     "riverfarm_witch"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
    "script": "olesm_chess_loop",
    "seed": 9,
    "fixture": "olesm_chess_pre",

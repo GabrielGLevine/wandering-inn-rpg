@@ -1,0 +1,1000 @@
+{
+ "_comment": "2026-07-26 main-quest spec 4, Phase 6: THE canonical for the pilgrimage spine `where_the_door_reaches`. Two subjects, both live. (1) THE START: Pisces's new hub arm, gated door_awakened / hide_when spine_started, banks the quest + spine_started and speaks the foreshadow line -- the plan assumed door_awakened banked on a pisces_magic surface, but its real producer is sleep_beat.gd's three study sleeps (door_awakening owns that chain), so the spine starts when the player REPORTS the awakening. (2) THE RIVERFARM CAPSTONE: Eloise raising the feeding ward herself off her own craft, banking lattice_witch_lore and completing the quest's first beat -- proving the arm is REVISIT-reachable (this fixture's price_of_a_favor is already reported and closed, exactly the old-save position spec 8 requires the arm to survive). Both hubs are pinned with EXACT option arrays: the new arm's presence at the start, and its ABSENCE after the bank (the hide_when retire proof, riverfarm_talk's own idiom). The tail returns to Pisces to prove the CONTEXTUALIZING half -- his greet swaps to the witch reaction text_variant under the last-match-wins contract, and the spine option is gone. Inter-map hops use `teleport` (the door_chain_fight/arc_flow precedent): riverfarm_walkthrough and riverfarm_talk already prove the portal route and the hollow path live, and this script's subject is the spine's dialogue wiring, not pathing -- the one route leg kept live is the village->hollow crossing, mirroring riverfarm_talk's exact approach. Every teleport lands one cell short of its target followed by a `move` INTO it (sets facing even when blocked). NO combat anywhere: combat_started asserted absent whole-run.",
+ "fixture_save": "spine_reach_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Move down to the 'Continue' row; confirm loads the spine_reach_start manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    30,
+    5
+   ]
+  },
+  {
+   "_comment": "== THE SPINE START == Pisces (30,4). Bump up to face him; first interact = talk_pool line, second opens pisces_magic (door_chain_talk's own approach).",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Pisces"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pisces_magic"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "EXACT greet pin: met_pisces hides the first-lesson option and reveals the repeat; chatted_with_pisces is absent so the fence topic stays hidden; door_understood/recovered_anchor_stone/door_awakened have retired all three door-chain arms; and the NEW spine arm is the last row. The greeting is the met_pisces variant -- last-match-wins picks it over the learned_magic one above it, and no lattice counter is banked yet.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Back again. Either you are braver than the Watch or you have reconsidered your ignorance. Which is it?",
+    "options": [
+     {
+      "text": "Walk me through it again.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Never mind.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The other art. The one you actually practice. Teach me.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The Door woke. It reaches past Liscor now.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Take the spine arm at visible index 3.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "where_the_door_reaches"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "spine_started"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "FORESHADOW, NEVER ASSIGN: he names an appetite and a direction, no list, no errand.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "The Door will show you how far it wants to go. And somewhere under this city is wardwork by the same hand, still fed, still waiting. I intend to understand both. Go — see where it reaches."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_spine_start_pisces"
+  },
+  {
+   "_comment": "spine_start: 0 'Then I'll go and look.' ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "contains": "where_the_door_reaches"
+  },
+  {
+   "_comment": "== THE JOURNAL == the spine is a real thread now, not a toast. Payload fields are counts, so the durable proof is started_quests above; this open is the player-eyes surface (and the windowed screenshot the machine playtest reads).",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_journal_spine_beat"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== TRAVEL: Riverfarm. Teleport to the village side of riverfarm_hollow_path (2,11) -- riverfarm_walkthrough/riverfarm_talk already prove the portal hop and the village walk -- then cross to the hollow LIVE, riverfarm_talk's exact approach.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    2,
+    11
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "witch_hollow"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    11
+   ]
+  },
+  {
+   "_comment": "== THE RIVERFARM CAPSTONE == Eloise (5,8). Teleport to (5,9), bump up to face her; first interact = pool line, second opens riverfarm_witch.",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    5,
+    9
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Eloise"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "riverfarm_witch"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "EXACT hub pin, THE REVISIT PROOF: this save's price_of_a_favor is already REPORTED and closed (spec 8's old-save position), and the capstone arm is still the last row -- it hangs on the hub, not on a chain tail. blight_lifted hides the mediation option and reveals both commerce rows; drove_off_collectors is 0 so the craft topic shows; lattice_witch_lore is 0 so the new arm shows. Greeting is the blight_lifted variant (witch_lessons unbanked).",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "text": "Paid, one way or another. I don't ask which. Sit if you like, or don't — I've got stock for coin now too, if that suits you better than favors.",
+    "options": [
+     {
+      "text": "What's this blight really about?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "What have you got, for coin instead of favors?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I've got a few things I don't need, myself. Buying?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Just tea, then.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The way you work — the craft. Could a person learn it?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "You've been sniffing at me since I came in. Go on.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Take the capstone arm at visible index 5.",
+   "action": "move",
+   "direction": "down",
+   "steps": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "SHE raises it. The player asked her to say what she was already noticing; no component was ever requested.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "text": "Your door smells of a feeding ward. I keep one myself — smaller. Sit. If you're going to live over one, you'll learn what it eats."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_witch_raises_the_ward"
+  },
+  {
+   "_comment": "witch_ward_lore: 0 'Then I'm sitting.' banks the lattice piece (goto, NOT end -- effects apply before the advance, so the counter lands ahead of the next node).",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "lattice_witch_lore"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "`beat` is the COUNT of completed beats (riverfarm_talk's own pins read 1 then 2 on a two-beat quest), so the spine's first beat -- riverfarm_reach -- reports 1.",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "where_the_door_reaches",
+    "beat": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "HER OWN PIECE ONLY: a hedge witch's feeding practice, scaled to her hollow. No seal, no lattice, no assembled picture.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "text": "Mine takes milk and a word, every seventh night. Small appetite, small keeping. Yours was built to hold something that argues back, and a ward like that gets fed on purpose, by someone who meant it to outlast them. Don't starve it in a hurry, child. A hungry ward goes looking."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE RETIRE PROOF == re-enter the same waking (pool already spent, so interact opens the conversation directly): the capstone row must be GONE, hide_when lattice_witch_lore, and the exact options array pins its absence.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "riverfarm_witch"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "options": [
+     {
+      "text": "What's this blight really about?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "What have you got, for coin instead of favors?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I've got a few things I don't need, myself. Buying?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Just tea, then.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The way you work — the craft. Could a person learn it?",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "hub: 'Just tea, then.' at index 3 ends.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE CONTEXTUALIZING HALF == back to Pisces. Same waking, his pool already spent, so interact opens pisces_magic directly. His greet must swap to the witch REACTION variant (last-match-wins: lattice_witch_lore sits below met_pisces), and the spine arm must be gone from the option list -- he foreshadowed, the region delivered, and he reacts without ever assembling the picture.",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    30,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pisces_magic"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's and she FED hers too. That word keeps recurring.",
+    "options": [
+     {
+      "text": "Walk me through it again.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Never mind.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The other art. The one you actually practice. Teach me.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_pisces_contextualizes"
+  },
+  {
+   "_comment": "greet: 'Never mind.' at index 1 ends.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE INVRISIL CAPSTONE == Hedault (mercantile_alleys 0,6). Teleport to (0,7), bump up to face him; he carries a talk_pool, so two interacts (hedault_enchant_loop's own approach). His three enchant rows and the fragment row are requires.item/gold gates -- VISIBLE-LOCKED, never hidden (dialogue.gd's _progress_gated hides only accomplishment/board/delivery/once_per_waking legs), so the hub shows six rows and the new arm is the last.",
+   "action": "teleport",
+   "map": "mercantile_alleys",
+   "cell": [
+    0,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Hedault"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "hedault_enchanting"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hedault",
+    "text": "State the item and keep your hands where I can see them. I appraise, I correct, I charge exactly what the work is worth. In that order."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Take the capstone arm at visible index 5 (three enchant rows locked on items we do not hold, the fragment row locked the same way, 'Just looking.', then the arm).",
+   "action": "move",
+   "direction": "down",
+   "steps": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "HE raises it, off his own counter work -- the player asked what he was staring at, not for a component.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hedault",
+    "text": "Hold still. There is a residue on your sleeve I have catalogued exactly once before, in this shop, on a fragment. Ruin warding, and it is FED. A live draw, not a set one. I do not invoice for looking."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "05_hedault_reads_the_frame"
+  },
+  {
+   "_comment": "door_reading: 0 'Go on, then.' banks the piece.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "lattice_hedault_reading"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "where_the_door_reaches",
+    "beat": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "HIS OWN PIECE ONLY: an enchanter's set-versus-fed read, stopping exactly where fragment_study stops ('I will not guess at names in a shop').",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hedault",
+    "text": "A set ward holds a shape. A fed ward holds an appetite, and an appetite has to be sourced. Whoever hung that frame did not hang it alone. A draw that size runs to something, and the something is not in your pantry. I will not speculate further in a shop. Bring me the setting when you know, and I will price the work correctly."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Pisces again: the greet must ADVANCE to the Hedault variant -- last-match-wins puts it below the witch line, so the most recent discovery is the one he opens with. The ascending-variants contract, proven by walking it rather than by reading the file.",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    30,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pisces_magic"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Hedault read your frame unbidden and charged you nothing, which from that man is appetite, not generosity. I know the feeling. He is better at settings than I will ever be. Deny I said it."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE PALLASS CAPSTONE == Grimalkin (pallass_market 18,3), the office's measuring mind rather than the clerk who says he only handles paper. Teleport to (18,5), step up to (18,4), then a blocked bump into his own cell to face up without moving (grimalkin_study_loop's idiom). No talk_pool on him -- one interact opens the conversation.",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    18,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_grimalkin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "EXACT hub pin: the exam row is hide_when grimalkin_examination_passed (already passed here), the turn-in row needs board_accepted true (no posting held), so the visible list is studies / passing through / the new arm. Base greeting -- neither study bounty is completed in this fixture.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Grimalkin",
+    "text": "Stand up straight when you address me. I measure everything that comes through this office, and most of it is found wanting. State your business.",
+    "options": [
+     {
+      "text": "About the studies.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Just passing through.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "You've been about to say something since the stamp.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Take the capstone arm at visible index 2. It carries chatted_with_grimalkin like every other option on this hub (d1 #247), which this run banks for the first time.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "chatted_with_grimalkin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "HE raises it, out of the forge tier's own maintenance practice.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Grimalkin",
+    "text": "I have. The forge tier runs on rune-fed work. Every ward up there eats on a schedule a smith keeps in a ledger. Feed it on time or it feeds itself. Your door has no ledger. Stand still."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "06_grimalkin_on_rune_feeding"
+  },
+  {
+   "_comment": "forge_runes: 0 'What does that cost me?' banks the last piece.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "lattice_forge_rune"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "where_the_door_reaches",
+    "beat": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "HIS OWN PIECE ONLY: rune-feeding as forge maintenance plus his standing objection to anything unmeasured. He does not know what sits at the far end of the draw and says so.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Grimalkin",
+    "text": "It costs whatever it is drawing on, and it has been drawing unsupervised since long before you owned it. I do not find that alarming. I find it UNMEASURED, which is worse. Find what sits at the far end of the draw and bring me the numbers. I will publish them and you will be a footnote. That is the highest offer I make."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE THIRD REACTION == the greet advances one last time, to the forge line. Three pieces collected, three reactions walked, and he has still never assembled them -- that is Act V's job (Phase 7).",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    30,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pisces_magic"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "A Drake forge taught you in an afternoon what my tuition has been circling for a month. They FEED their runes. Maintenance, they call it. I am revising my rates. Downward. Do not comment."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "07_pisces_third_reaction"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.lattice_witch_lore",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.lattice_hedault_reading",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.lattice_forge_rune",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.spine_started",
+   "equals": 1
+  },
+  {
+   "_comment": "THE PHASE-7 SEAM: three of four beats are done and the quest must NOT complete -- the `return` beat waits on seal_descent_agreed, whose producer arrives with Act V. This absence is the documented accepted red's live counterpart.",
+   "action": "assert_event_absent",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "where_the_door_reaches"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started",
+   "payload_contains": {}
+  }
+ ]
+}

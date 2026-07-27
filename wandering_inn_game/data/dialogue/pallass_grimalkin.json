@@ -124,7 +124,8 @@
   },
   "forge_runes": {
    "speaker": "Grimalkin",
-   "text": "I have. The forge tier runs on rune-fed work. Every ward up there eats on a schedule, and a smith keeps that schedule in a ledger. Feed it on time or it feeds itself. Your door has no ledger. Stand still.",
+   "_comment": "Held under the 200-char page budget ON PURPOSE: at 204 it split into a 191-char page plus a 12-char orphan reading only 'Stand still.', which the windowed read caught looking like a rendering fault. One page, one beat.",
+   "text": "I have. The forge tier runs on rune-fed work. Every ward up there eats on a schedule a smith keeps in a ledger. Feed it on time or it feeds itself. Your door has no ledger. Stand still.",
    "options": [
     {
      "text": "What does that cost me?",
