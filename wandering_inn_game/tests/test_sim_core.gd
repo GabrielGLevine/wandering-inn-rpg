@@ -1108,6 +1108,27 @@ func _init() -> void:
 	assert(gg.accomplishment_count("garden_door_unlocked") == 1, "garden gate: banking a 3rd leg post-qualification stays at 1, never bumps")
 	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "accomplishment_recorded" and String(e["payload"]["id"]) == "garden_door_unlocked"), "garden gate: banking sign_defended after qualification does not re-fire the unlock event")
 
+	# 2026-07-26 reframe: the SLEEP PASS owns post_game now -- it banks at the
+	# first sleep after the seal, with no epilogue anywhere in the picture (this
+	# is pure sim; sleep_veil.gd is UI). The epilogue's own bank stays as an
+	# idempotent twin until the finale phase retires it.
+	var seal := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	_events.clear()
+	seal.sleep()
+	assert(seal.accomplishment_count("post_game") == 0, "seal bank: a sleep with no seal banks nothing")
+
+	seal.accomplishments["raskghar_sealed"] = 1
+	_events.clear()
+	seal.sleep()
+	assert(seal.accomplishment_count("post_game") == 1, "seal bank: the first sleep after raskghar_sealed banks post_game, no epilogue required")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "accomplishment_recorded" and String(e["payload"]["id"]) == "post_game"), "seal bank: the bank fires accomplishment_recorded")
+	assert(_count("toast") == 1 and _events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You sleep soundly."), "seal bank: SILENT -- no toast of its own, and no anything_happened flip (the soundly-sleep fallback still fires)")
+
+	_events.clear()
+	seal.sleep()
+	assert(seal.accomplishment_count("post_game") == 1, "seal bank: idempotent past the first qualifying sleep")
+	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "accomplishment_recorded" and String(e["payload"]["id"]) == "post_game"), "seal bank: no re-bank on a later sleep")
+
 	var gGuard := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gGuard.bind_map_silent("garden_sanctuary", Vector2i(1, 1))
 	assert(not gGuard.start_combat("goblin_encounter_2"), "garden sim guard: start_combat refuses on the garden map")

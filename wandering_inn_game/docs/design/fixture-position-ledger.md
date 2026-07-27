@@ -10,8 +10,13 @@ then run the validator.
 
 ## The `post_game` backbone
 
-`post_game` is banked once, by `sleep_veil.gd`, on the first post-epilogue
-sleep — it is Act III's own `seal_holds` beat condition (`data/acts.json`).
+`post_game` is banked by the SLEEP PASS (`src/core/sleep_beat.gd`), silently,
+at the first sleep after `raskghar_sealed` — no epilogue required (2026-07-26
+reframe; the epilogue's own `_bank_post_game` in `sleep_veil.gd` stays on as an
+idempotent twin until the finale phase retires it, so whichever fires first
+wins and the second is a no-op). It is Act IV's own `counted_among` beat
+condition (`data/acts.json`; that beat lived on act_iii as `seal_holds` before
+the same reframe).
 Structurally, `post_game` can never be true without every one of these also
 being true (traced from `data/acts.json`'s act_i/act_ii/act_iii
 `advance_when` chain + the climax quest chain that banks `raskghar_sealed`):

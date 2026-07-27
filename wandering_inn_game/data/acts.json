@@ -1,5 +1,5 @@
 {
-	"_comment": "Acts are derived, never saved: select the highest act whose predecessor gates pass. Conditions support min_classes, quests_completed, and accomplishment counts; empty means true. reached_two_classes is monotonic across consolidation. Act IV advance_when is defined but unreachable until Act V exists.",
+	"_comment": "Acts are derived, never saved: select the highest act whose predecessor gates pass. Conditions support min_classes, quests_completed, and accomplishment counts; empty means true. reached_two_classes is monotonic across consolidation. Act IV advance_when is defined but unreachable until Act V exists (Phase 7 of the 2026-07-26 wave fills it).",
 	"acts": [
 		{
 			"id": "act_i",
@@ -27,19 +27,20 @@
 			"id": "act_iii",
 			"title": "What Stirs Beneath",
 			"header": "Act III -- What Stirs Beneath",
-			"advance_when": { "accomplishments": { "raskghar_sealed": 1, "door_awakened": 1 } },
+			"advance_when": { "accomplishments": { "raskghar_sealed": 1 } },
 			"beats": [
-				{ "id": "the_stirring", "text": "Something is moving in the dark beneath the city.", "when": { "accomplishments": { "raskghar_sealed": 1 } } },
-				{ "id": "seal_holds", "text": "The seal holds. Liscor counts you among its own.", "when": { "accomplishments": { "post_game": 1 } } }
+				{ "id": "the_stirring", "text": "Something is moving in the dark beneath the city.", "when": { "accomplishments": { "heard_the_deep_tremor": 1 } } },
+				{ "id": "warren_cleared", "text": "The warren below is cleared, and the thing in the dark is cut off from its congregation.", "when": { "accomplishments": { "cleared_the_warren": 1 } } }
 			]
 		},
 		{
-			"_comment": "Act IV advance_when mirrors its five postgame beats but is unreachable while Act IV is last.",
+			"_comment": "Act IV advance_when mirrors its five region-arc beats but is unreachable while Act IV is last. counted_among is deliberately NOT in the gate: it is the seal's own closing line, relocated here from act_iii by the 2026-07-26 reframe because post_game banks at the first sleep AFTER the seal (sleep_beat.gd), by which point the seal has already carried the player into this act.",
 			"id": "act_iv",
 			"title": "What the Door Opened",
 			"header": "Act IV -- What the Door Opened",
 			"advance_when": { "accomplishments": { "door_awakened": 1, "price_of_a_favor_reported": 1, "brothers_job_done": 1, "elevator_pass_stamped": 1, "seal_kept_reported": 1 } },
 			"beats": [
+				{ "id": "counted_among", "text": "The seal holds. Liscor counts you among its own.", "when": { "accomplishments": { "post_game": 1 } } },
 				{ "id": "the_door_opens", "text": "The pantry door remembers being elsewhere again, and somewhere else remembers it back.", "when": { "accomplishments": { "door_awakened": 1 } } },
 				{ "id": "riverfarm_owed", "text": "Riverfarm's fields breathe easier, and a witch in the hollow no longer collects on the village's fear.", "when": { "accomplishments": { "price_of_a_favor_reported": 1 } } },
 				{ "id": "invrisil_squared", "text": "A merchant's name is settled in Invrisil, one way or another, and the Brothers remember who settled it.", "when": { "accomplishments": { "brothers_job_done": 1 } } },

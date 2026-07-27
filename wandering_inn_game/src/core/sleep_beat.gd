@@ -128,6 +128,14 @@ func run(classes: Dictionary, accomplishments: Dictionary, combat_config: Dictio
 	if _maybe_fire_tremor_pointer():
 		anything_happened = true
 
+	# 2026-07-26 reframe: post_game means "Liscor counts you among its own",
+	# banked silently at the first sleep after the seal -- the epilogue no
+	# longer owns it (and is retired entirely in the finale phase). Deliberately
+	# does NOT set anything_happened: a bank the player never sees must not
+	# swallow the soundly-sleep fallback toast.
+	if _count("raskghar_sealed") >= 1 and _count("post_game") < 1:
+		_record_accomplishment.call("post_game", 1)
+
 	if _count("door_understood") >= 1 and _count("recovered_anchor_stone") >= 1 and _count("bought_catalyst") >= 1 and _count("door_awakened") < 1:
 		_record_accomplishment.call("door_study_sleeps", 1)
 		if _count("door_study_sleeps") >= 3:

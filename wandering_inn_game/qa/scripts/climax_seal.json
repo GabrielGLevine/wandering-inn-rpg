@@ -148,7 +148,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== JOURNAL: Act III ==. raskghar_sealed advances WIActs past Act II's gate to Act III (the fixture already satisfies Act I+II gates). The journal act-line header reads Act III.",
+   "_comment": "== JOURNAL: Act IV ==. raskghar_sealed clears Act III's whole gate on its own (2026-07-26 reframe: the door is no longer part of it), so WIActs walks the fixture -- which already satisfies Act I+II -- straight through to Act IV. The journal act-line header reads Act IV.",
    "action": "press",
    "name": "journal"
   },
@@ -156,13 +156,13 @@
    "action": "wait_for_event",
    "type": "ui_journal_shown",
    "payload_contains": {
-    "act_id": "act_iii"
+    "act_id": "act_iv"
    },
    "timeout_sec": 5
   },
   {
    "action": "screenshot",
-   "name": "02_journal_act3"
+   "name": "02_journal_act4"
   },
   {
    "action": "press",
