@@ -16,16 +16,8 @@
   "width": 20,
   "height": 14
  },
- "_comment_camp_blocking": "2026-07-26 (Task 2.3): the camp's fire (3,3) and supply crate (5,3) are decor that READS solid, so both join `blocked` per the blocking contract. With ceria_dig_camp on (4,3) that makes y=3 solid across x=3..5, but (2,3)/(6,3)/(3,2)/(4,2)/(5,2)/(3,4)/(4,4) all stay open -- no cell in the new blocked set is a cul-de-sac for a prior-version save that loads standing on it.",
+ "_comment_camp_blocking": "2026-07-26 (Task 2.7, controller-sanctioned fix): the camp's fire (3,3) and supply crate (5,3) were unconditional `decor` plus two permanent `blocked` cells. Both were WRONG in the same way the camp NPC was: they outlived the camp, so the fire went on burning with live coals over an empty corner after the Horns struck tents (machine playtest 2026-07-27, RUIN/CAMP-LEFTOVERS). They are now `prop` ENTITIES sharing the camp's exact window (requires horns_dig_started, absent door_mounted), which also fixes the blocking: an entity blocks its own cell only while it is PRESENT, so the two permanent `blocked` entries are gone from the list above -- keeping them would have left invisible blockers on an empty corner, the #149 class. Net blocking is strictly LOOSER than the shipped version (those cells are walkable once the camp strikes and were never walkable before), so no prior-version save can be trapped by this change. During the camp window y=3 is still solid across x=3..5 exactly as before, with (2,3)/(6,3)/(3,2)/(4,2)/(5,2)/(3,4)/(4,4) open. No canonical route walks row y=3.",
  "blocked": [
-  [
-   3,
-   3
-  ],
-  [
-   5,
-   3
-  ],
   [
    5,
    4
@@ -112,26 +104,6 @@
     10,
     4
    ]
-  },
-  {
-   "_pick": "The dig camp's dressing, pulled from two pack families (campfire + crate) so the corner reads as somebody's occupied camp rather than more cave. Both cells are in `blocked`.",
-   "sprite": "campfire",
-   "cell": [
-    3,
-    3
-   ]
-  },
-  {
-   "sprite": "crate",
-   "cell": [
-    5,
-    3
-   ],
-   "tint": [
-    0.82,
-    0.76,
-    0.66
-   ]
   }
  ],
  "entities": [
@@ -152,7 +124,53 @@
    ]
   },
   {
-   "_comment": "2026-07-26 main-quest restructure (Task 2.3): the Horns' dig camp, three steps off the landing cell (2,2) so the first thing the ruin says is 'someone is already here'. Present from the invitation (horns_dig_started) until the find leaves with the haul (door_retrieved) -- the camp strikes its tents with the wagon. Cell (4,3) is off every canonical walked route (ruin_walkthrough walks rows y=1/2/5/13 and columns x=2/17/19) and leaves (4,2)/(3,4)/(4,4)/(6,3) open, so the new blocker traps no prior-version save. No talk_pool: the invitation-follow-up must open on the FIRST interact, not the second.",
+   "_comment": "2026-07-26 Task 2.7 (controller-sanctioned fix): the dig camp's dressing, promoted from unconditional `decor` to a presence-gated prop so the coals die with the camp instead of burning over an empty corner. Shares ceria_dig_camp's exact window. Pulled from two pack families (campfire + crate) so the corner reads as somebody's occupied camp rather than more cave. Blocks its own cell only while present -- see _comment_camp_blocking.",
+   "id": "dig_camp_fire",
+   "kind": "prop",
+   "cell": [
+    3,
+    3
+   ],
+   "display_name": "The Horns' Campfire",
+   "sprite": "campfire",
+   "present_when": {
+    "requires": {
+     "horns_dig_started": 1
+    },
+    "absent": {
+     "door_mounted": 1
+    }
+   },
+   "observe": "Banked low and fed on whatever burns down here. Somebody turns it every few hours; the ash is raked, not spilled.",
+   "toast": "A cookfire kept small on purpose, ringed with stones somebody carried in. It has been burning longer than a day."
+  },
+  {
+   "id": "dig_camp_crate",
+   "kind": "prop",
+   "cell": [
+    5,
+    3
+   ],
+   "display_name": "Expedition Crate",
+   "sprite": "crate",
+   "tint": [
+    0.82,
+    0.76,
+    0.66
+   ],
+   "present_when": {
+    "requires": {
+     "horns_dig_started": 1
+    },
+    "absent": {
+     "door_mounted": 1
+    }
+   },
+   "observe": "Rope, spare stakes, a folded tarp, and three days of dried rations for four people. Packed by someone who has done this before.",
+   "toast": "The expedition's supply crate, lid roped shut against the damp."
+  },
+  {
+   "_comment": "2026-07-26 main-quest restructure (Task 2.3): the Horns' dig camp, three steps off the landing cell (2,2) so the first thing the ruin says is 'someone is already here'. Present from the invitation (horns_dig_started). Cell (4,3) is off every canonical walked route (ruin_walkthrough walks rows y=1/2/5/13 and columns x=2/17/19) and leaves (4,2)/(3,4)/(4,4)/(6,3) open, so the new blocker traps no prior-version save. No talk_pool: the invitation-follow-up must open on the FIRST interact, not the second. 2026-07-26 Task 2.7 (controller-sanctioned fix): the retirement counter moved door_retrieved -> door_mounted. It HAD to: door_retrieved banks on the pedestal open, one event BEFORE the reveal open_toast that quotes Ceria by name ('Ceria, finally: That's wardwork...'), and world.gd reconciles presence live on ACCOMPLISHMENT_RECORDED -- so she popped off-screen mid-sentence on both breach routes (machine playtest 2026-07-27, RUIN/REVEAL-DESPAWN). On door_mounted the camp instead strikes when the door is HUNG, which is also when the haul is genuinely over, so Ceria is standing at the plinth for her own line and the corner empties while the player is away at the inn. Migrated saves still see no camp: the Task 2.6 backfill banks door_mounted too.",
    "id": "ceria_dig_camp",
    "kind": "npc",
    "cell": [
@@ -167,7 +185,7 @@
      "horns_dig_started": 1
     },
     "absent": {
-     "door_retrieved": 1
+     "door_mounted": 1
     }
    },
    "conversation": "ceria_dig_camp",

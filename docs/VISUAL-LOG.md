@@ -26,37 +26,52 @@ seed 9, `QA_RESULT: PASS`) plus two throwaway probes for the migrated-save and
 pre-dig-hub reads. Durable evidence:
 `wandering_inn_game/qa_output/machine_playtest_2026-07-27_mq2_dig/`.
 
-- [ ] RUIN/CAMP-DOUBLE (P1) — **the Horns are in two places at once for the
-  whole of The Dig.** `ceria_inn` (inn.json, cell 8,6) gates only on
-  `seal_kept_reported`, while `ceria_dig_camp` (ruin_surface.json, cell 4,3)
-  runs `horns_dig_started` → `absent: door_retrieved`. Both are live across the
-  entire dig window, so the player can take the invitation from Ceria at the
-  inn, walk to the ruin and talk to Ceria at the camp, then walk back and talk
-  to Ceria at the inn again. `tmp_predig_hub_probe/02_guarding_a_door_hub.png`
-  (inn) and `horns_dig_flow/01_camp_hub.png` (camp) are the same character.
-  `yvlon_inn`/`ksmvr_inn` carry the same bare gate while the breach toast has
-  them "already down the gap — Yvlon bracing, Ksmvr counting rope". Fix wants
-  an `absent` arm on the three inn rows for the dig window (or a camp-side
-  re-gate); structural, deliberately not fixed at the 2.7 gate.
-- [ ] RUIN/REVEAL-DESPAWN (P1) — the reveal toast quotes an NPC who left the
-  screen one event earlier. `events.jsonl` order at the pedestal open is
-  `accomplishment_recorded door_retrieved` → `toast "Below the pedestal: not
-  treasure. A DOOR … Ceria, finally: 'That's wardwork. Old, fed wardwork.
-  We're taking it home.'"`, and `ceria_dig_camp`'s `absent: {door_retrieved: 1}`
-  fires on that first event. Both breach routes show it:
-  `horns_dig_flow/02_the_reveal.png` and
-  `horns_dig_plates/03_the_reveal_no_fight.png` are empty camp corners under a
-  toast in which Ceria is mid-sentence. Hold the despawn until the reveal toast
-  clears, or bank `door_retrieved` after it.
-- [ ] RUIN/CAMP-LEFTOVERS (P2) — the dig camp's fire is still burning after the
-  camp strikes. `campfire` (3,3) and `crate` (5,3) are entries in
-  `ruin_surface.json`'s `decor` array, which has no presence gate, so both
-  outlive `ceria_dig_camp` — the fire renders with live red coals and no one
-  around it in `horns_dig_flow/02_the_reveal.png` and
-  `tmp_migrated_ruin_probe/01_migrated_camp_corner.png`. Reads as "the Horns
-  teleported out", not "the Horns packed up". Wants either a doused-fire swap
-  or promotion of the two decor rows to gated props (their cells are already
-  in `blocked`, so the promotion is not free).
+- [x] RUIN/CAMP-DOUBLE (P1) — **FIXED 2026-07-27, controller-sanctioned,
+  evidence below.** Was: the Horns were in two places at once for the whole of
+  The Dig — `ceria_inn` (inn.json, 8,6) gated on `seal_kept_reported` ALONE
+  while `ceria_dig_camp` (ruin_surface.json, 4,3) ran a live camp, so the
+  player could take the invitation from Ceria at the inn, walk to the ruin and
+  talk to Ceria at the camp, walk back and talk to Ceria at the inn again;
+  `yvlon_inn`/`ksmvr_inn` carried the same bare gate while the breach toast had
+  them "already down the gap". FIXED by splitting each inn row's window: the
+  original retires at `horns_dig_joined` and a twin (`<id>_returned`, identical
+  cell/sprite/facing/pool/conversation) brings them home at `door_mounted`.
+  The retirement counter is `horns_dig_joined`, NOT `horns_dig_started` as
+  first specced: `horns_dig_started` banks mid-conversation with the player
+  standing in the inn, and world.gd reconciles presence live on
+  ACCOMPLISHMENT_RECORDED, so all three Horns popped out of the room in one
+  frame while the invitation panel still read "Ceria" — the ruled version
+  re-created the very defect below. `horns_dig_joined` banks at the CAMP, so
+  the swap happens with the inn off-screen. Evidence:
+  `AFTER_FIX/tmp_dig_inn_probe/01_MIDCONVO_after_bank.png` (all three still
+  present mid-invitation) and `04_inn_during_dig_horns_free.png` (Horns-free
+  inn once the dig is joined).
+- [x] RUIN/REVEAL-DESPAWN (P1) — **FIXED 2026-07-27, controller-sanctioned.**
+  Was: the reveal toast quoted an NPC who had left the screen one event
+  earlier — `accomplishment_recorded door_retrieved` fires before the
+  `toast "Below the pedestal: not treasure. A DOOR … Ceria, finally: 'That's
+  wardwork…'"`, and `ceria_dig_camp`'s `absent: {door_retrieved: 1}` fired on
+  that first event, emptying the camp corner on both breach routes. FIXED by
+  moving the camp's retirement counter `door_retrieved` → `door_mounted`: the
+  camp now lingers through the reveal and strikes its tents when the door is
+  hung, which is also when the haul is genuinely over. Evidence:
+  `AFTER_FIX/horns_dig_flow/02_the_reveal.png` and
+  `AFTER_FIX/horns_dig_plates/03_the_reveal_no_fight.png` — Ceria is standing
+  at the camp for her own line on both routes.
+- [x] RUIN/CAMP-LEFTOVERS (P2) — **FIXED 2026-07-27, controller-sanctioned.**
+  Was: `campfire` (3,3) and `crate` (5,3) were unconditional `decor` with two
+  permanent `blocked` cells, so the camp's fire went on burning with live red
+  coals over an empty corner after the Horns struck tents. FIXED by promoting
+  both to presence-gated `prop` ENTITIES sharing the camp's exact window
+  (`requires horns_dig_started`, `absent door_mounted`), and removing their two
+  permanent `blocked` entries — an entity blocks only while present, so the
+  cells free up with the camp instead of leaving invisible blockers (#149's
+  class). Net blocking is strictly looser than shipped, so no prior-version
+  save can be trapped. Evidence:
+  `AFTER_FIX/tmp_migrated_ruin_probe/00_camp_struck_post_mount.png` (corner
+  empty, no fire, no crate) vs `AFTER_FIX/tmp_dig_inn_probe/03_camp_present_with_fire.png`
+  (same corner during the dig); `01_camp_corner_walkable.png` walks the player
+  onto the old camp cell.
 - [ ] RUIN/MIGRATED-DIORAMA (P2) — a pre-restructure save migrated by
   `save.gd:339` loads with `door_retrieved` + `door_mounted` banked, and then
   the ruin it walks into still has `ruin_guardian` alive and on its feet over

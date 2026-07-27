@@ -1211,6 +1211,9 @@
    "present_when": {
     "requires": {
      "seal_kept_reported": 1
+    },
+    "absent": {
+     "horns_dig_joined": 1
     }
    },
    "conversation": "ceria_intro",
@@ -1253,6 +1256,9 @@
    "present_when": {
     "requires": {
      "seal_kept_reported": 1
+    },
+    "absent": {
+     "horns_dig_joined": 1
     }
    },
    "talk_pool": [
@@ -1294,6 +1300,9 @@
    "present_when": {
     "requires": {
      "seal_kept_reported": 1
+    },
+    "absent": {
+     "horns_dig_joined": 1
     }
    },
    "talk_pool": [
@@ -1307,6 +1316,133 @@
      "requires_accomplishment": {
       "chatted_with_ksmvr_inn": 3,
       "door_awakened": 1
+     },
+     "lines": [
+      "I was Prognugator, once. Command caste. I was exiled, is the word Klbkch uses. 'Reassigned' is the word I prefer. Neither changes what happened.",
+      "I have counted every safe path between here and the pantry door. If you ever need the fastest one, comrade, ask. I keep the count current.",
+      "Erin gave me a name for the corner I sit in. She calls it 'Ksmvr's Post.' I have accepted the designation. It is efficient."
+     ]
+    }
+   ],
+   "dialogue": [
+    {
+     "speaker": "Ksmvr",
+     "text": "I am still counting exits. There are still two."
+    }
+   ]
+  },
+  {
+   "_comment": "2026-07-26 Task 2.7 (controller-sanctioned fix, P1 RUIN/CAMP-DOUBLE): the Horns were bilocated for the whole of The Dig -- `ceria_inn` gated on seal_kept_reported ALONE while the ruin carried a live camp, so the player could speak to them at the inn and at the camp in the same breath (machine playtest 2026-07-27). The inn row's window is now SPLIT: the original retires at horns_dig_joined -- the counter the CAMP banks, so the swap happens at the ruin with the inn off-screen; retiring at horns_dig_started instead popped all three Horns out of the room mid-sentence while the invitation panel was still open (probe shot 01_MIDCONVO_after_bank.png), which is the very defect this wave is fixing at the plinth, and this twin brings them home at door_mounted -- they come back when the door does, which is what ceria_intro's own door_retrieved hub arm already says ('Still can't believe we carried that thing across the floodplains'). Identical cell/sprite/facing/pool/conversation; only `id` and `present_when` differ. The dig-window inn is Horns-free by construction. NOTE on the stage gate: talk-pool counters are id-derived (social.gd's `chatted_with_%s`), so this row banks `chatted_with_ceria_inn_returned` and its settled stage gates on THAT counter rather than the original's -- gating on the original would have locked the settled lines out forever for anyone who never chatted pre-dig.",
+   "id": "ceria_inn_returned",
+   "kind": "npc",
+   "cell": [
+    8,
+    6
+   ],
+   "display_name": "Ceria Springwalker",
+   "sprite": "ceria",
+   "facing": "left",
+   "present_when": {
+    "requires": {
+     "door_mounted": 1
+    }
+   },
+   "conversation": "ceria_intro",
+   "talk_pool": [
+    "The couch by the fire is Yvlon's now. Territorial, armswomen.",
+    "Pisces keeps asking about the vault door. I told him to bring his own rope this time.",
+    "Silver-rank pay, Gold-rank stonework down there. Somebody's math is off, and it isn't mine."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "ceria_inn_returned_settled",
+     "requires_accomplishment": {
+      "door_awakened": 1,
+      "chatted_with_ceria_inn_returned": 3
+     },
+     "lines": [
+      "I trained formal, once. Robes, theory, the whole overpriced show. Doesn't come up much anymore, and I like it that way.",
+      "You want a tip that's actually useful? Watch the ice before you stand on it. I learned that one the expensive way.",
+      "Yvlon says I've gone soft since the inn. I say I've gone SMART. There's a difference, and it involves not getting frostbite on purpose anymore."
+     ]
+    }
+   ],
+   "dialogue": [
+    {
+     "speaker": "Ceria Springwalker",
+     "text": "Ask me about the vault again and I'll start charging Pisces rent."
+    }
+   ]
+  },
+  {
+   "_comment": "2026-07-26 Task 2.7 (controller-sanctioned fix, P1 RUIN/CAMP-DOUBLE): the Horns were bilocated for the whole of The Dig -- `yvlon_inn` gated on seal_kept_reported ALONE while the ruin carried a live camp, so the player could speak to them at the inn and at the camp in the same breath (machine playtest 2026-07-27). The inn row's window is now SPLIT: the original retires at horns_dig_joined -- the counter the CAMP banks, so the swap happens at the ruin with the inn off-screen; retiring at horns_dig_started instead popped all three Horns out of the room mid-sentence while the invitation panel was still open (probe shot 01_MIDCONVO_after_bank.png), which is the very defect this wave is fixing at the plinth, and this twin brings them home at door_mounted -- they come back when the door does, which is what ceria_intro's own door_retrieved hub arm already says ('Still can't believe we carried that thing across the floodplains'). Identical cell/sprite/facing/pool/conversation; only `id` and `present_when` differ. The dig-window inn is Horns-free by construction. NOTE on the stage gate: talk-pool counters are id-derived (social.gd's `chatted_with_%s`), so this row banks `chatted_with_yvlon_inn_returned` and its settled stage gates on THAT counter rather than the original's -- gating on the original would have locked the settled lines out forever for anyone who never chatted pre-dig.",
+   "id": "yvlon_inn_returned",
+   "kind": "npc",
+   "cell": [
+    2,
+    3
+   ],
+   "display_name": "Yvlon Byres",
+   "sprite": "yvlon",
+   "facing": "up",
+   "present_when": {
+    "requires": {
+     "door_mounted": 1
+    }
+   },
+   "talk_pool": [
+    "The inn's quieter than the Guild hall. I'm starting to see why you like it.",
+    "My arm's fine. Stop looking.",
+    "If the door down there opens, I want to be standing in front of it. That's not bravery — it's just where I stand."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "yvlon_inn_returned_settled",
+     "requires_accomplishment": {
+      "door_awakened": 1,
+      "chatted_with_yvlon_inn_returned": 3
+     },
+     "lines": [
+      "Ask about the arms all you like, now. Silver-steel, shapeable, better grip than flesh ever gave me. I've stopped flinching from the question, so you don't have to either.",
+      "Keep your guard up on your off-hand side. Most people forget it exists until something reminds them, and I'd rather you learn it from me than the hard way.",
+      "The couch by the fire really is mine. Ceria just likes saying otherwise."
+     ]
+    }
+   ],
+   "dialogue": [
+    {
+     "speaker": "Yvlon Byres",
+     "text": "My arm's still fine."
+    }
+   ]
+  },
+  {
+   "_comment": "2026-07-26 Task 2.7 (controller-sanctioned fix, P1 RUIN/CAMP-DOUBLE): the Horns were bilocated for the whole of The Dig -- `ksmvr_inn` gated on seal_kept_reported ALONE while the ruin carried a live camp, so the player could speak to them at the inn and at the camp in the same breath (machine playtest 2026-07-27). The inn row's window is now SPLIT: the original retires at horns_dig_joined -- the counter the CAMP banks, so the swap happens at the ruin with the inn off-screen; retiring at horns_dig_started instead popped all three Horns out of the room mid-sentence while the invitation panel was still open (probe shot 01_MIDCONVO_after_bank.png), which is the very defect this wave is fixing at the plinth, and this twin brings them home at door_mounted -- they come back when the door does, which is what ceria_intro's own door_retrieved hub arm already says ('Still can't believe we carried that thing across the floodplains'). Identical cell/sprite/facing/pool/conversation; only `id` and `present_when` differ. The dig-window inn is Horns-free by construction. NOTE on the stage gate: talk-pool counters are id-derived (social.gd's `chatted_with_%s`), so this row banks `chatted_with_ksmvr_inn_returned` and its settled stage gates on THAT counter rather than the original's -- gating on the original would have locked the settled lines out forever for anyone who never chatted pre-dig.",
+   "id": "ksmvr_inn_returned",
+   "kind": "npc",
+   "cell": [
+    14,
+    7
+   ],
+   "display_name": "Ksmvr",
+   "sprite": "ksmvr",
+   "facing": "up",
+   "present_when": {
+    "requires": {
+     "door_mounted": 1
+    }
+   },
+   "talk_pool": [
+    "I have been given a mug of blue fruit juice. I did not ask for it. Erin says this is called 'hospitality.' I am recording it as an asset.",
+    "This inn does not have traps. I checked all the floors. Twice.",
+    "Captain Ceria says I may sit anywhere. I have chosen the corner with two exits."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "ksmvr_inn_returned_settled",
+     "requires_accomplishment": {
+      "door_awakened": 1,
+      "chatted_with_ksmvr_inn_returned": 3
      },
      "lines": [
       "I was Prognugator, once. Command caste. I was exiled, is the word Klbkch uses. 'Reassigned' is the word I prefer. Neither changes what happened.",
