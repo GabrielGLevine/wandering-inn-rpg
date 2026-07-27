@@ -15,6 +15,9 @@ var sim: WIGame
 ## the Continue slot's bytes, never the fresh boot sim — a fresh export
 ## labeled like a backup, imported later, would overwrite a real save.
 var world_live := false
+## GH#279: overlay-display bookkeeping only (autoload state, never sim).
+var last_save_slot := ""
+var last_autosave_trigger := ""
 var _autosave_announced := false
 var _rotate_auto_pending := false
 var _choice_snapshot_armed := false
@@ -87,6 +90,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		WIEvents.CONSOLIDATION_ACCEPTED,
 		WIEvents.PHASE_CHANGED,
 	]:
+		last_autosave_trigger = type  # GH#279: overlay display only (autoload state, not sim)
 		save_auto()
 
 
@@ -262,6 +266,7 @@ func _make_sim(creation: Dictionary = {}) -> WIGame:
 
 
 func _write_slot(slot: String) -> void:
+	last_save_slot = slot
 	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
 	var file := FileAccess.open("%s/%s.json" % [SAVE_DIR, slot], FileAccess.WRITE)
 	if file == null:

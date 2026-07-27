@@ -1,0 +1,22 @@
+{
+ "_comment": "GH#279 canonical: dev debug overlay. Pins (1) HIDDEN BY DEFAULT (D4: captures are full-window, so an overlay-on FEEL shot is contaminated evidence -- the absent-assert at boot is the contract), (2) toggle_overlay renders with a payload drawn from the same snapshot assert_state reads (map cross-checked), (3) toggle off emits hidden. Debug builds only -- the editor binary QA runs under is always a debug build; release exports never construct the overlay (OS.is_debug_build gate).",
+ "fixture_save": "inn_guests_start",
+ "starts_at_title": true,
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+  {"action": "assert_event_absent", "type": "ui_debug_overlay_rendered"},
+  {"action": "toggle_overlay"},
+  {"action": "wait_for_event", "type": "ui_debug_overlay_rendered", "payload_contains": {"map": "inn"}, "timeout_sec": 5},
+  {"action": "assert_state", "path": "current_map", "equals": "inn"},
+  {"action": "screenshot", "name": "01_overlay_on"},
+  {"action": "toggle_overlay"},
+  {"action": "wait_for_event", "type": "ui_debug_overlay_hidden", "timeout_sec": 5},
+  {"action": "screenshot", "name": "02_overlay_off"}
+ ]
+}

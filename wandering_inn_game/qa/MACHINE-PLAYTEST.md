@@ -76,6 +76,14 @@ Checklist (each item has caught a real shipped issue):
 - **Page starts**: does any dialogue page open mid-sentence with no
   continuation cue?
 
+**Debug-overlay discipline (GH#279):** FEEL captures run with the overlay
+OFF — it is hidden by default and only F3 / the `toggle_overlay` QA step
+shows it; a capture with the overlay visible is CONTAMINATED evidence
+(full-window screenshots) and must be retaken. Overlay-ON companion shots
+are welcome as *separate, clearly named* captures (e.g. `NN_debug_state`)
+when a finding needs the sim state pinned in-frame — never as the FEEL
+shot itself.
+
 ## Step 4 — Read the copy from the event log
 
 Rendered text can be truncated while the payload carries the full line — diff

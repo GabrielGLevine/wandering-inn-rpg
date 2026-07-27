@@ -33,6 +33,7 @@ TestDriver="*res://qa/test_driver.gd"
 WIAudio="*res://src/audio/wi_audio.gd"
 WIInputHints="*res://src/ui/input_hints.gd"
 WISettings="*res://src/ui/wi_settings.gd"
+WIDebugOverlay="*res://src/ui/debug_overlay.gd"
 
 [display]
 

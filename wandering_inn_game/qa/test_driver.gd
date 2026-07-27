@@ -603,6 +603,12 @@ func _execute(step: Dictionary) -> void:
 		"install_fixture":
 			_install_fixture_saves([{"fixture": String(step["fixture"]), "slot": String(step.get("slot", "auto"))}])
 			await get_tree().process_frame
+		"toggle_overlay":
+			# GH#279: node-call step (drag_journal_body precedent) -- no
+			# input-map change; the human keybind lives in the overlay.
+			WIDebugOverlay.toggle()
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"reload_data":
 			# GH#278: rebuild the sim from disk JSON via the save round-trip.
 			# expect:false proves the refusal leg (combat/dialogue/
