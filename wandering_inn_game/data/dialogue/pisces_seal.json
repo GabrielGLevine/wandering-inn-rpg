@@ -1,0 +1,83 @@
+{
+ "_comment": "2026-07-26 Act V (#270 beats 2-3): Pisces at the sealed rune-door, in the trapped halls. THE DOOR NEVER SPEAKS -- every option this beat needs lives on him. Beat 2's OR-parity is the `the_appetite` arm: #270 wants EITHER read to unlock beat 3, but only one counter can gate an option, so the rune-read player gets the ward fact from Pisces himself (he is the third producer of read_the_feeding_ward, alongside the door's own narration and the [Detect Magic] arm) and lands on the same choice. Beat 3's three forks are appended in Task 7.3.",
+ "start": "at_the_door",
+ "nodes": {
+  "at_the_door": {
+   "speaker": "Pisces",
+   "text": "Do not touch it yet. I have waited a month to stand in front of this. Grant me the courtesy of a first impression.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "read_the_seal_runes": 1
+      }
+     },
+     "text": "The same hand. I have now said so four times and it has not once stopped being remarkable. Ask me what it is for. Go on, ask."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "read_the_feeding_ward": 1
+      }
+     },
+     "text": "A feeding ward. Under a city. Cut by whoever cut the frame you eat breakfast beside. I need a moment, and then I need a decision, and I would rather it were yours."
+    }
+   ],
+   "options": [
+    {
+     "_comment": "The OR-bridge: a player who only matched the hand (bare interact or [Observe]) hears the appetite from the man himself. Hidden once the fact is held, by whichever route landed it.",
+     "text": "What is it for, then?",
+     "requires": {
+      "accomplishment": {
+       "read_the_seal_runes": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "read_the_feeding_ward": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "read_the_feeding_ward"
+      }
+     ],
+     "goto": "the_appetite"
+    },
+    {
+     "text": "Take your moment.",
+     "end": true
+    }
+   ]
+  },
+  "the_appetite": {
+   "_comment": "The MINIMUM read, deliberately plainer than the [Detect Magic] arm's quartet payoff -- the literate player gets the lattice, everyone gets the fact.",
+   "speaker": "Pisces",
+   "text": "It is not a lock. Nobody cuts a lock this generous. The lines run one way, they have run one way for a very long time, and that makes this a feeding ward. Something behind that stone has been drinking since before there were walls up there.",
+   "options": [
+    {
+     "text": "Feeding what?",
+     "goto": "the_appetite_unknown"
+    },
+    {
+     "text": "Back to you, then.",
+     "goto": "at_the_door"
+    }
+   ]
+  },
+  "the_appetite_unknown": {
+   "speaker": "Pisces",
+   "text": "I do not know. That is the entire problem and I want it written down that I said so first. A ward this careful was not built to imprison. It was built to KEEP something, the way you keep a fire, and someone chose to keep it fed rather than let it go out.",
+   "options": [
+    {
+     "text": "Then we decide what to do about it.",
+     "goto": "at_the_door"
+    },
+    {
+     "text": "I need to think.",
+     "end": true
+    }
+   ]
+  }
+ }
+}

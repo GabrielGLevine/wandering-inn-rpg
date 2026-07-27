@@ -350,6 +350,7 @@
    ],
    "on_interact_accomplishment": "sensed_something_deeper",
    "toast": "The passage doesn't end here -- it just goes quiet, past a bend the light doesn't reach. Whatever's back there, this isn't the moment.",
+   "_comment_reading": "2026-07-26 Act V beat 2, THE READING (#270 beat 2). Three eyes on one door, the pantry-door consolidation idiom. LATER-SATISFIED-WINS across `variants` is what makes the bare interact a two-stage narration: with the descent agreed Pisces matches the hand (read_the_seal_runes), and once that is held his next read names the appetite (read_the_feeding_ward). That staging is DELIBERATE and load-bearing -- no main-line beat may sit behind a Skill the player's build might not own (spec 6's no-hard-gates rule applied to Skills), so the escort is the guaranteed producer of both reads and [Observe]/[Detect Magic] are the richer, earlier routes to the same facts. The pre-descent arms bank `sensed_something_deeper` (this prop's own shipped flavour counter) rather than the real reads, which ORDER-GATES the quest's beats: nothing in Act V can bank from a curious Act IV visit. The [Detect Magic] base arm deliberately does NOT bank `detected_wardwork` -- the quartet is the four shipped sites (inn frame, ruin socket, the seam back in these halls, the witch's hollow) and this door is what they drain INTO, not a fifth site; a fifth producer would also cheapen the >= 3 threshold its own payoff variant reads.",
    "variants": [
     {
      "when": {
@@ -357,6 +358,91 @@
      },
      "accomplishment": "seal_kept_found",
      "toast": "The runes are the same. Not similar — the same hand, the same order, as the door in the inn's pantry."
+    },
+    {
+     "when": {
+      "seal_descent_agreed": 1
+     },
+     "accomplishment": "read_the_seal_runes",
+     "toast": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. Not a school, not a fashion. A HAND, and it cut this one first.\" He does not look away while he says it."
+    },
+    {
+     "when": {
+      "read_the_seal_runes": 1
+     },
+     "accomplishment": "read_the_feeding_ward",
+     "toast": "Pisces steps back at last. \"It is not a lock. The lines run one way, they have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
+    },
+    {
+     "when": {
+      "read_the_feeding_ward": 1
+     },
+     "accomplishment": "read_the_feeding_ward",
+     "toast": "The runes keep their slow one-way order. Pisces has stopped narrating and started counting under his breath, which is worse."
+    }
+   ],
+   "skill_uses": {
+    "observe": {
+     "accomplishment": "sensed_something_deeper",
+     "toast": "[Observe] — Worked stone, deliberate, and not one line of it reads like a lock. Whatever this door is for, it is not keeping people out. You would have to stand here longer, with someone who knows more than you do.",
+     "variants": [
+      {
+       "when": {
+        "seal_descent_agreed": 1
+       },
+       "accomplishment": "read_the_seal_runes",
+       "toast": "[Observe] — You take the runes in order, the way you would read a sentence. The turns repeat at a fixed interval. The pantry frame does exactly that, at exactly that interval, and this one is worn deeper: it has been doing it longer. Behind you, Pisces says nothing, which from him is applause."
+      }
+     ]
+    },
+    "detect_magic": {
+     "accomplishment": "sensed_something_deeper",
+     "toast": "[Detect Magic] — Wardwork, and awake. It does not flare and settle the way a bound ward should. It holds one low steady note, like a breath nobody has to let out, and you have felt that note somewhere else.",
+     "variants": [
+      {
+       "when": {
+        "seal_descent_agreed": 1,
+        "read_the_seal_runes": 1
+       },
+       "accomplishment": "read_the_feeding_ward",
+       "toast": "[Detect Magic] — The ward opens under your sight and does not stop opening. It is not holding anything shut. It is POURING: one direction, one slow measured rate, into whatever the stone is between. It has poured since before the city. Pisces, very quietly: \"Ah. So that is what the others were.\""
+      },
+      {
+       "when": {
+        "seal_descent_agreed": 1,
+        "read_the_seal_runes": 1,
+        "detected_wardwork": 3
+       },
+       "accomplishment": "read_the_feeding_ward",
+       "toast": "[Detect Magic] — Every reading you have taken lines up at once: the inn's frame, the ruin's socket, the seam back down the hall, the hollow west of Riverfarm. Not four wards. One lattice, and this door is where it drains to. Something behind this stone has been drinking Liscor's oldest work since before Liscor. Pisces uses a word you have never heard him use in public."
+      }
+     ]
+    }
+   },
+   "skill_hint_toast": "The runes want reading, and whatever is under them wants a different kind of eye entirely."
+  },
+  {
+   "_comment": "2026-07-26 Act V: THE ESCORT. Pisces is the voice at this door -- the prop never speaks (Global Constraint), so his narration rides the prop's toasts and everything that needs OPTIONS lives here. present_when brackets from the descent ask onward and never closes: after the resolution he is still the man standing in front of the thing he spent a month on, and a vanished escort would read as a bug. CELL (19,8): deliberately NOT (18,7), which is delve_fight's own standing cell for the seal_kept_found beat -- an entity there would strand a shipped canonical mid-route. Open neighbours (18,8)/(19,9), and no shipped save can hold seal_descent_agreed at all, so the new blocker can strand nothing. Bilocation with the Guild-steps Pisces is the shipped pisces_mounting precedent (Task 2.4): different maps, never on screen together.",
+   "id": "pisces_seal_escort",
+   "kind": "npc",
+   "cell": [
+    19,
+    8
+   ],
+   "present_when": {
+    "requires": {
+     "seal_descent_agreed": 1
+    }
+   },
+   "display_name": "Pisces",
+   "sprite": "pisces",
+   "facing": "up",
+   "conversation": "pisces_seal",
+   "observe": "He has not sat down since you got here. One hand hovers a finger's width off the stone, tracking something along it that nobody else in the hall can see, and his lips move without sound.",
+   "dialogue": [
+    {
+     "speaker": "Pisces",
+     "text": "Quietly, if you can manage it. I have lost the count twice already and blamed you both times."
     }
    ]
   },
