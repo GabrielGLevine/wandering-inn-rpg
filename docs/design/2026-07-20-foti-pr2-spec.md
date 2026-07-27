@@ -125,3 +125,14 @@ hold, keep all-day and note the measurement in the PR body.
 
 Est: M per PR. New frozen-at-next-cut counters: none beyond
 `serve:<id>` first-use keys (entity_first_use, not accomplishments).
+
+## Amendment (2026-07-26, user-directed wave expansion)
+
+Roster grows APPEND-ONLY past this spec's six:
+`[selys,krshia,olesm,pisces,relc,zevara,klbkch,rags,wilovan,grimalkin]`.
+Klbkch gates on met only (`chatted_with_klbkch`). Rags/Wilovan/Grimalkin
+gate on QUEST COMPLETION, not first-met: `rags_meeting_settled` /
+`brothers_job_done` / `elevator_pass_stamped` — enforced BOTH in pool
+membership (wi_inn_guests.gd GUEST_POOL_GATES) and on the guest row's
+present_when.requires. Detail: Phase 5 of
+docs/superpowers/plans/2026-07-26-main-quest-foti-wave.md.

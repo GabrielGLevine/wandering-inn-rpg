@@ -199,10 +199,18 @@ Ordering enforcement, two layers:
   Pallass opener requires `lattice_hedault_reading`). Gates are
   `requires` on the START options only — a started quest is never
   interrupted (§8 covers pre-restructure saves).
-- **Progressive portal rows:** inn↔Liscor at `door_mounted` (§3 —
-  day-one value), Riverfarm at `door_awakened` (the chain's payoff),
-  Invrisil at `lattice_witch_lore`, Pallass at
-  `lattice_hedault_reading`. Fiction: the door's reach grows as it
+- **Progressive portal rows:** REALITY CHECK (recon 2026-07-26): the
+  region rows ALREADY ship progressively — `riverfarm_attuned` (guild
+  board rumor), `invrisil_attuned` (banked in riverfarm_witch.json —
+  the witch already hands you Invrisil), `pallass_attuned` (Krshia's
+  attunement stone, gated `pallass_sponsored`). The shipped flow is
+  already an ordered Riverfarm → Invrisil → Pallass ladder. Work
+  remaining: re-gate the inn↔Liscor pair from `door_awakened` to
+  `door_mounted` (§3 — day-one value), keep Riverfarm's rumor beat
+  gated behind `door_awakened`, and hang the lattice capstone arms
+  NEXT TO the existing attunement banks (the witch's ward-lore arm
+  beside her `invrisil_attuned` bank, etc.) rather than inventing a
+  parallel unlock system. Fiction: the door's reach grows as it
   re-attunes (`resonance_grown` mechanism already ships this idea).
   WARNING (from the portals census): changing row visibility changes
   option order on every carrier — re-pin the portal_menu +
