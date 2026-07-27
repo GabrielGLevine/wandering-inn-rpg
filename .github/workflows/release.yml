@@ -186,6 +186,9 @@ jobs:
           exit "${rc:-0}"
 
       - name: (b) Full canonical sweep (qa/ci_sweep.sh)
+        # GH#287: same 4-way parallel opt-in as ci.yml's sweep jobs.
+        env:
+          WI_SWEEP_JOBS: 4
         run: |
           set -euo pipefail
           bash wandering_inn_game/qa/ci_sweep.sh
