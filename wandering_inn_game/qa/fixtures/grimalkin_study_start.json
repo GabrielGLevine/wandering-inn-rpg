@@ -1,5 +1,6 @@
 {
  "_comment": "b4 #219 grimalkin_study_loop start: delve_talk_start's validated caster identity (warrior5/mage5/tactician1, learned_magic_from_pisces held -> the casting study's row gate is MET and visible) relocated to pallass_market beside Grimalkin's exam hall (18,4), no posting held (board_accepted false -> both accept paths open). forge_permit_filed=0 keeps the exam option hidden, so the studies options are the hub's visible rows 0/1. Pallass reachability chain (door_awakened + pallass_sponsored/attuned, with the door-study monotone chain beneath) added for the coherence validator.",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined added alongside the door_chain_started this fixture already carried, because that id now means 'the Magical Door is hung'. The wave rule (and why recovered_anchor_stone is NOT swept in) lives in door_chain_fight_start.json's own _comment_task_2_4.",
  "version": 5,
  "state": {
   "current_map": "pallass_market",
@@ -48,7 +49,12 @@
    "pallass_sponsored": 1,
    "pallass_attuned": 1,
    "recovered_anchor_stone": 1,
-   "bought_catalyst": 1
+   "bought_catalyst": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
   },
   "player_skills": [
    "basic_cleaning"

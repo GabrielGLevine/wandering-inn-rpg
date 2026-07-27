@@ -1,5 +1,6 @@
 {
  "_comment": "b2 #218 untrusted sibling: neither counter banked \u2014 interact banks eyed_the_stash (the doorbell) and NO fence conversation opens.",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined added alongside the door_chain_started this fixture already carried, because that id now means 'the Magical Door is hung'. The wave rule (and why recovered_anchor_stone is NOT swept in) lives in door_chain_fight_start.json's own _comment_task_2_4.",
  "version": 7,
  "state": {
   "current_map": "brothers_parlor",
@@ -44,7 +45,12 @@
    "blight_lifted": 1,
    "invrisil_attuned": 1,
    "won_combat": 1,
-   "melee_hit": 57
+   "melee_hit": 57,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
   },
   "player_skills": [
    "basic_cleaning"

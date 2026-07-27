@@ -1,5 +1,6 @@
 {
  "_comment": "riverfarm_skill's start -- NO combat (the interact-only briar_collectors/briar_collectors_deep are never engaged). [Helper]/[Mage]/[Tactician] L1 held (basic_cooking/light/observe respectively -- the three field-skill seams the gauntlet chains through). met_relc/sparred_with_relc/given_spear_by_relc are banked as the tutorial history any classed PC necessarily has, and CONSTRAINT: riverfarm_attuned implies the portal network is already awake (data/portals.json's own requires_accomplishment contract), so the full awakening chain is banked alongside it (door_understood via the TALK/SKILL leg convention -- rift_vermin_leak/ruin_guardian stay unfought/live). riverfarm_attuned pre-banked. `hunter_will_come` pre-banked too (fixture-bank, not earned live -- this path never fights, so the ally never fields; banked purely for world-state parity with riverfarm_fight, which earns it live -- see combatants.json's riverfarm_hunter _comment for why the ally isn't Relc). Standing at (11,10) facing up, directly south of riverfarm_headman (11,9) -- SAME start cell as riverfarm_fight/riverfarm_talk (parity). heard_price_of_a_favor is NOT banked and the quest is NOT started -- the script proves the full give -> cook/light/observe -> witch report -> headman report -> completion loop honestly. TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined added alongside the door_chain_started this fixture already carried, because that id now means 'the Magical Door is hung'. The wave rule (and why recovered_anchor_stone is NOT swept in) lives in door_chain_fight_start.json's own _comment_task_2_4.",
  "version": 5,
  "state": {
   "current_map": "riverfarm_village",
@@ -30,7 +31,12 @@
    "hunter_will_come": 1,
    "chess_with_olesm": 1,
    "cleaned_the_inn": 1,
-   "learned_magic_from_pisces": 1
+   "learned_magic_from_pisces": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
   },
   "player_skills": [],
   "removed_entities": [],

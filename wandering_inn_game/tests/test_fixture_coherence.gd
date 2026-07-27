@@ -174,6 +174,28 @@ func _check_post_tutorial(name: String, game: WIGame, data: Dictionary) -> void:
 
 func _check_monotone_chains(name: String, game: WIGame) -> void:
 	var accs: Dictionary = game.accomplishments
+	# 2026-07-26 main-quest restructure (Task 2.4). `door_chain_started` is a
+	# LEGACY ALIAS: its only producer is now the mounting conversation, which
+	# banks door_mounted on the same option, so the old id means exactly "the
+	# Magical Door is hung at the inn". Everything upstream of the mounting is
+	# the dig that produced the door -- the pedestal's own on_open_accomplishment
+	# array banks pedestal_breached + door_retrieved together, and its
+	# contains_when gates on horns_dig_joined, which the camp gates on
+	# horns_dig_started. NOT enforced: door_retrieved -> recovered_anchor_stone.
+	# They bank atomically for a fresh player, but Task 2.6's backfill grants the
+	# dig counters to an old chain save that never went to the ruin, so the
+	# door_chain_* fixtures legitimately stand in that migrated position with the
+	# anchor stone still to fetch.
+	if int(accs.get("door_chain_started", 0)) >= 1 and int(accs.get("door_mounted", 0)) < 1:
+		_fail(name, "door_chain_started banked without door_mounted -- since the restructure that id IS the mounted door (the mounting conversation banks both on one option)")
+	if int(accs.get("door_mounted", 0)) >= 1:
+		for req: String in ["door_retrieved", "pedestal_breached"]:
+			if int(accs.get(req, 0)) < 1:
+				_fail(name, "door_mounted banked without %s -- nothing can be mounted that the dig never brought home" % req)
+	if int(accs.get("door_retrieved", 0)) >= 1 and int(accs.get("horns_dig_joined", 0)) < 1:
+		_fail(name, "door_retrieved banked without horns_dig_joined -- anchor_stone_pedestal's contains_when gates the reveal on joining the camp")
+	if int(accs.get("horns_dig_joined", 0)) >= 1 and int(accs.get("horns_dig_started", 0)) < 1:
+		_fail(name, "horns_dig_joined banked without horns_dig_started -- the camp NPC's present_when gates on the invitation")
 	if int(accs.get("door_awakened", 0)) >= 1:
 		for req: String in ["door_understood", "recovered_anchor_stone", "bought_catalyst"]:
 			if int(accs.get(req, 0)) < 1:

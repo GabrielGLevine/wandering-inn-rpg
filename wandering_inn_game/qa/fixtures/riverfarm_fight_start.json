@@ -1,5 +1,6 @@
 {
  "_comment": "riverfarm_fight's start. warrior5+mage5 (the harness-tuned 'warrior5_mage5' build, matching door_chain_fight_start's shape). `hunter_will_come` is NOT pre-banked here -- the script earns it LIVE (the come-along beat at the village hunter, before TRAVEL) so all three live fights field riverfarm_hunter as an ally (briar_collectors/briar_collectors_deep/river_wolf_pack all ship allies:[riverfarm_hunter]/ally_requires:{hunter_will_come:1}, matching sim_combat_batch.gd's own gated/measured _hunter cells rather than the much harder _solo siblings; NOT Relc -- Riverfarm is a solo Door arrival with no fictional basis for the Liscor Watch, see combatants.json's riverfarm_hunter _comment). met_relc/sparred_with_relc/given_spear_by_relc stay banked as genuine unrelated tutorial-arc history (harmless, no longer read by any Riverfarm gate). CONSTRAINT: riverfarm_attuned implies the portal network is already awake (data/portals.json's own requires_accomplishment contract -- there is no door to Riverfarm from the inn's pantry_door until it wakes), so the full awakening chain (door_chain_started/door_understood/recovered_anchor_stone/bought_catalyst/door_study_sleeps/door_awakened) is banked alongside it; door_understood's provenance is the TALK/SKILL leg convention shared with near_riverfarm/the door-chain family, so rift_vermin_leak/ruin_guardian correctly stay unfought/live, and none of these ids gate anything riverfarm_fight itself reads. Standing at (11,10) facing up, directly south of riverfarm_headman (11,9) -- first interact plays his talk_pool line, second opens riverfarm_headman. heard_price_of_a_favor is NOT banked and the quest is NOT started -- the script proves the full give -> ask the hunter along -> travel -> clear both waves -> report -> completion loop honestly. TRAP: rng_state is a properly-derived state (.seed=1, captured .state = -1966449618399012673), never hand-typed -- WISave restores .state directly, not .seed, so a hand-typed small int collapses the first randi() draw to the same degenerate output regardless of which small int is picked. All three live fights (briar_collectors/briar_collectors_deep/river_wolf_pack) land victories with riverfarm_hunter allied off this state. If a future roster/data change ever flips one of the three, re-search by seeding candidate N=1,2,3... through the derive-then-verify loop (tests/_derive_rng_state.gd prints the .state per seed; patch this field, re-run riverfarm_fight) until all three land victories at one shared starting state.",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined added alongside the door_chain_started this fixture already carried, because that id now means 'the Magical Door is hung'. The wave rule (and why recovered_anchor_stone is NOT swept in) lives in door_chain_fight_start.json's own _comment_task_2_4.",
  "version": 5,
  "state": {
   "current_map": "riverfarm_village",
@@ -29,7 +30,12 @@
    "won_combat": 3,
    "melee_hit": 18,
    "learned_magic_from_pisces": 1,
-   "spell_cast": 13
+   "spell_cast": 13,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
   },
   "player_skills": [
    "basic_cleaning"

@@ -1,5 +1,6 @@
 {
  "_comment": "Class-foundation pass R5 (2026-07-12), trader_earn_loop's own fixture -- near_pallass_drake.json's own base (SAME door-chain + riverfarm + invrisil + pallass attunement chain, human PC this time -- near_pallass_drake's own doc comment enumerates the full monotone-implication set test_fixture_coherence.gd enforces), positioned at the SAME Pallass arrival-anchor approach cell (4,7) so market_stallkeeper (15,5) and tier_clerk_market (7,5) are both reachable via teleport alone (the pallass_peek precedent), no re-walking the sponsor/attune/travel chain pallass_walkthrough already proves live. Extended for the Trader earn loop: `deliberate_commerce: 4` (one below [Trader]'s gained_by threshold, 5 -- the script's own first real action, a sale, banks the 5th) and `leather_jerkin` added to inventory (unequipped, sellable -- worth 24, sell_price floor(24*0.5)=12) as the item to sell. gold 10 (covers the [Bargain]-discounted warding_salt_pinch buy at Eloise's, floor(7*0.9)=6, with headroom) rather than near_pallass_drake's own 32 (that fixture's own leftover from its Pallass-sponsorship spend, irrelevant here -- this fixture skips the sponsorship chain's OWN gold spend since it starts already pallass_attuned). Same zero-combat route, same seed=9-derived rng_state literal.",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined added alongside the door_chain_started this fixture already carried, because that id now means 'the Magical Door is hung'. The wave rule (and why recovered_anchor_stone is NOT swept in) lives in door_chain_fight_start.json's own _comment_task_2_4.",
  "version": 5,
  "state": {
   "current_map": "pallass_market",
@@ -33,7 +34,12 @@
    "pallass_sponsored": 1,
    "pallass_attuned": 1,
    "deliberate_commerce": 4,
-   "won_combat": 1
+   "won_combat": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
   },
   "gold": 10,
   "player_skills": [
