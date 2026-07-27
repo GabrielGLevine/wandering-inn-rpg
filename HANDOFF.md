@@ -31,17 +31,26 @@ quartet payoff; PR A data-only → PR B map+warden → PR C Pallass
 return anchor). Both evidence-verified this session (workflow
 research); START THERE.
 
-**Dev-arch wave #275-280 ADJUDICATED (2026-07-26)**: 13-agent evidence
-workflow (eval + adversarial refute per issue + infra map) — five
-adopt-modified (#276 lint S → #277 ship-gate+audio-pending S ∥ #278
-four-cache reload S → #275 diff M → #279 overlay M), #280 FEEL bench
-DEFERRED with revival criteria. Full plan, adjudicated scopes, phase
-order, and the dispatch danger list (reset-ordering trap, no-guard
-load_slot, itch-job-only gate home, overlay evidence contamination):
-docs/design/2026-07-26-dev-arch-eval-275-280.md. Phase 0 prereqs =
-extract wi_data_lib from the 3 existing Python mirrors + fix
-`derive_qa_surfaces --touching` silent-empty on monolithic data files.
-All side-lane work — #269/#270 remain START THERE.
+**Dev-arch wave #275-280 EXECUTED (2026-07-26, same session as the
+adjudication)**: 7 PRs merged — #282 wi_data_lib + --touching fix
+(#281), #284 data_lint (#276, wired ci_sweep pre-flight + leak-check
+job; wi-verifying-changes now mandates it first on any data edit),
+#285 live reload (#278: FIVE stale caches — review found audio.json as
+the fifth; `reload_data` step + `reload_loop` canonical; edit→Save→Load
+tuning loop documented in wi-machine-playtest), #286 ship-asset release
+gate + audio `pending:true` slots (#277, itch job only, disk-only,
+lands green as a ratchet; #195 slots can now merge ahead of files),
+#288 4-way parallel CI sweeps (#287, user-reported bottleneck:
+**6m50s → 2m22s** on the PR gate), #289 data_diff advisory summarizer
+(#275 — use per wi-handling-prs on any data PR). #290 IN FLIGHT
+(#279 debug overlay: F3/`toggle_overlay`, read-only, debug builds
+only, `overlay_loop` canonical) — merge when its 6 checks green.
+#280 DEFERRED (revival criteria in the plan doc). NEW: #283 filed —
+the shipped vacuously-true `invrisil_anchor_stone` portal_menu_when
+(lint allowlists it; closing #283 = wrap it + drop the allowlist entry,
+needs canonical re-check). Plan/danger-list authority:
+docs/design/2026-07-26-dev-arch-eval-275-280.md. #269/#270 remain
+START THERE for content sessions.
 
 **#111 rename FULLY VERIFIED 2026-07-20**: native rehearsal passed on
 real data (5 saves + settings byte-true, marker, v4 dir intact) AND

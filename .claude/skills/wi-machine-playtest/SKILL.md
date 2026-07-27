@@ -53,6 +53,16 @@ reset on GAME_LOADED), so:
 - Limits: repainted PNGs still need a reimport (ResourceLoader cache);
   id renames/removals are NOT migration-checked — value tuning only.
 
+## Dev debug overlay (GH#279, 2026-07-26)
+F3 (windowed, debug builds) / `toggle_overlay` QA step: read-only
+sim-state panel — map/cell, live rng.state, counters (▲ = banked in the
+last 20 events), quest beats, event tail, save-slot status. **FEEL
+captures run overlay-OFF** (full-window screenshots; overlay-on = 
+contaminated evidence). Overlay-on companion shots: separate, clearly
+named captures when a finding needs the sim state pinned in-frame.
+Human eye/ear-gate asks: an overlay-on screenshot turns "nothing
+happens" reports into exact state snapshots.
+
 ## Targeted playtest requests (user directive 2026-07-17)
 Any request for USER eyes/ears on a specific surface (an eye-gate, an
 ear-gate, a taste call) MUST ship with a **prepared Playtest State**: a

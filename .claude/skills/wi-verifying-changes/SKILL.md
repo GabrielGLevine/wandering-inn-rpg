@@ -11,6 +11,15 @@ with ZERO warnings — any `SCRIPT ERROR`, `Parse Error`, or `WARNING` in any
 run is a regression (the project has no known-harmless warnings).
 
 ## Which gates for which change
+
+**FIRST GATE for ANY `data/*.json` edit (GH#276, 2026-07-26):**
+`python3 wandering_inn_game/scripts/data_lint.py` — engine-free, <1s,
+catches malformed JSON / out-of-grid cells / dangling gotos / vacuous
+`*_when` gate shapes before any Godot boot. It is a PRE-check, **never a
+substitute** for the Godot gates below (the verification-boundary rule).
+`ci_sweep.sh` also runs it in pre-flight, and ci.yml's leak-check job
+carries it as the only pre-Godot CI signal.
+
 | You changed… | Run (all from repo root) |
 |---|---|
 | Any `.gd` / any code | `load_gate` + smoke + the QA scripts touching that surface |

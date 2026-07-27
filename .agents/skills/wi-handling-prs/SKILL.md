@@ -28,7 +28,14 @@ for code/content PRs.
   CONTRIBUTING.md; undisclosed-but-obvious = ask.
 
 ## 2. Review (the project's bars, not just code quality)
-Read the diff (`gh pr diff <N>`). Review against, in order:
+For any PR touching `data/`, generate the semantic summary FIRST
+(GH#275, advisory — never a merge gate):
+`python3 wandering_inn_game/scripts/data_diff.py <base> <head>` —
+entity/gate/counter changes narrated, portal re-pin carriers named,
+NEW-counter first writes flagged; anything the renderers don't know
+lists raw ("unsummarized changes" — read those lines, they are the
+summary's honesty valve). Paste it into the review dispatch/PR body.
+Then read the raw diff (`gh pr diff <N>`). Review against, in order:
 1. **Identity rules (non-negotiable):** stats never player-visible;
    opaque-until-sleep (no progress-toward text); canon from the wiki
    (spot-check names/facts against wiki.wanderinginn.com);

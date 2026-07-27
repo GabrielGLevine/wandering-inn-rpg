@@ -29,6 +29,8 @@ Scripts are JSON in `qa/scripts/<name>.json`, run by `qa/test_driver.gd`
 | `combat_autoplay` | `max_turns` (200) | drives AI turns to `combat.finished` |
 | `teleport` | `map`, `cell:[x,y]` | debug-only, bypasses doors |
 | `install_fixture` | `fixture`, `slot` ("auto") | mid-run version of `fixture_save` |
+| `reload_data` | `expect` (true) | GH#278: rebuilds sim from disk JSON via the save round-trip; refuses (toast) in combat/dialogue/consolidation — `expect: false` pins the refusal leg. Canonical: `reload_loop` |
+| `toggle_overlay` | — | GH#279: toggles the dev debug overlay (debug builds only); emits `ui_debug_overlay_rendered`/`_hidden`. HIDDEN BY DEFAULT is a pinned contract — never leave it on across FEEL screenshots. Canonical: `overlay_loop` |
 | `wait_frames` | `frames` (1) | |
 | `assert_world_to_screen_camera_aware` | — | probes `Main.world_to_screen` |
 | `assert_world_labels_in_view` | `context` ("field") | probes `WorldLabels.panel_projections` |
