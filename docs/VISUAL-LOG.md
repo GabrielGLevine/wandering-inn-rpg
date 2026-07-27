@@ -16,6 +16,42 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### Machine playtest — wave/mq5-finale, the finale sequence (2026-07-27)
+
+Source: `wave/mq5-finale` at the Task 8.1 commit, full asset overlay in tree,
+all 29 unit suites green before the windowed pass. The GDI's paced sequences
+COLLAPSE to an instant emit under any QA run (`sleep_veil._is_qa()`), so the
+finale is structurally invisible to the normal windowed sweep — the four shots
+below were taken with a temporary env-gated lift of that collapse
+(`WI_PACED_GDI`), reverted before commit. All three path variants read at
+native 1280x720, plus the seal's new light transition.
+
+- [ ] FINALE/LONG-LINE (P3) — the Invrisil region recap line renders **1114 px
+  wide of a 1280 px viewport** (87%), roughly double every other line in the
+  block. It does NOT clip (canvas_items stretch keeps the logical viewport at
+  1280, and Labels here never wrap), but it visibly bursts the centered column
+  the rest of the sequence forms, and it is the only two-sentence line in a
+  block of one-thought lines. The copy is the wave plan's own verbatim text, so
+  it was NOT rewritten here — this is a taste call for the controller. A
+  shorter second sentence (or dropping "From him, that is a parade.") would put
+  it back in the column.
+- [ ] VEIL-COPY/UNMEASURED (P4, systemic) — `test_copy_fit` measures toasts,
+  dialogue pages, pickers and help, but **nothing measures `sleep_veil.gd`'s
+  own line tables** (opener / finale / region recap / path closes / the seal
+  transition), which now hold the widest single-line strings in the game. The
+  1114 px figure above was obtained with a throwaway measurement script, not a
+  gate. A `_check_veil_lines()` in test_copy_fit (font-size 24, 1280 budget)
+  would make the ceiling enforced instead of observed.
+- [ ] SEAL-SLEEP/TOAST-MISMATCH (P4) — the seal's light transition line rides
+  the `post_game` bank, which `sleep_beat.gd` deliberately does NOT count as
+  `anything_happened` (Task 1.2's silence contract, pinned in
+  `test_sim_core`). On a sleep where nothing else lands, the player therefore
+  sees the GDI say "[The warren is sealed. The record remains open.]" under the
+  black and then a "You sleep soundly." toast on top of it. Not observed in
+  `arc_flow` (its level-ups flip the flag), so it needs an otherwise-empty
+  post-seal sleep to reproduce. One-line fix if wanted: flip
+  `anything_happened` on that bank and re-pin the Task 1.2 silence leg.
+
 ### Machine playtest — wave/mq4-act5 Act V (2026-07-27)
 
 Source: `wave/mq4-act5` after Tasks 7.1-7.4, full asset overlay in tree, all 29
