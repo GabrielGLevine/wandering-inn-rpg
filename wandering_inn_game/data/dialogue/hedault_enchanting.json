@@ -89,6 +89,52 @@
     {
      "text": "Just looking.",
      "end": true
+    },
+    {
+     "_comment": "2026-07-26 spec 4 (Phase 6, Task 6.2) INVRISIL CAPSTONE. Gated on the Invrisil chain's terminal (brothers_job_done) + spine_started, hidden once read. Revisit arm on the hub, not a chain tail, so a save that already closed the Brothers' job reaches it (spec 8). HE raises it, off his OWN counter work: the player's enchanting business is what puts the residue in front of him, and he catalogues it unbidden the way he catalogued the guardian fragment. He knows CRAFT -- a fed draw versus a set one -- and refuses to speculate past his own trade, so the assembled picture is never spoken here.",
+     "text": "You've stopped mid-appraisal. What are you looking at?",
+     "requires": {
+      "accomplishment": {
+       "brothers_job_done": 1,
+       "spine_started": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "lattice_hedault_reading": 1
+      }
+     },
+     "goto": "door_reading"
+    }
+   ]
+  },
+  "door_reading": {
+   "speaker": "Hedault",
+   "text": "Hold still. There is a residue on your sleeve I have catalogued exactly once before, in this shop, on a fragment. Ruin warding, and it is FED. A live draw, not a set one. I do not invoice for looking.",
+   "options": [
+    {
+     "text": "Go on, then.",
+     "effects": [
+      {
+       "accomplishment": "lattice_hedault_reading"
+      }
+     ],
+     "goto": "door_reading_verdict"
+    },
+    {
+     "text": "Another time. Keep the reading.",
+     "end": true
+    }
+   ]
+  },
+  "door_reading_verdict": {
+   "_comment": "HIS OWN PIECE ONLY (spec 4): the set-versus-fed distinction is an enchanter's read, and he stops exactly where the fragment_study node stops -- 'I will not guess at names in a shop'. The source of the draw is named as unknown, not as a seal.",
+   "speaker": "Hedault",
+   "text": "A set ward holds a shape. A fed ward holds an appetite, and an appetite has to be sourced. Whoever hung that frame did not hang it alone. A draw that size runs to something, and the something is not in your pantry. I will not speculate further in a shop. Bring me the setting when you know, and I will price the work correctly.",
+   "options": [
+    {
+     "text": "Understood.",
+     "end": true
     }
    ]
   },

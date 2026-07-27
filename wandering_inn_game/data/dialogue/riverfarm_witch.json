@@ -96,6 +96,52 @@
       }
      },
      "goto": "witch_ask"
+    },
+    {
+     "_comment": "2026-07-26 spec 4 (Phase 6, Task 6.2) RIVERFARM CAPSTONE. Lives on the HUB, not on a chain tail, so a save whose price_of_a_favor is already reported still reaches it on any revisit (spec 8, old-save clause). Gated on the quest TERMINAL (price_of_a_favor_reported) rather than blight_lifted, matching Hedault's brothers_job_done and the forge arm's elevator_pass_stamped -- one rule for all three stops. Deliberately NOT excluded on drove_off_collectors: the force path banks the same terminal and Eloise is never removed from the hollow, so gating her out there would strand lattice_witch_lore and make the spine unfinishable for fight players. SHE raises it; the option is the player inviting an observation she was already making.",
+     "text": "You've been sniffing at me since I came in. Go on.",
+     "requires": {
+      "accomplishment": {
+       "price_of_a_favor_reported": 1,
+       "spine_started": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "lattice_witch_lore": 1
+      }
+     },
+     "goto": "witch_ward_lore"
+    }
+   ]
+  },
+  "witch_ward_lore": {
+   "speaker": "Eloise",
+   "text": "Your door smells of a feeding ward. I keep one myself — smaller. Sit. If you're going to live over one, you'll learn what it eats.",
+   "options": [
+    {
+     "text": "Then I'm sitting.",
+     "effects": [
+      {
+       "accomplishment": "lattice_witch_lore"
+      }
+     ],
+     "goto": "witch_ward_taught"
+    },
+    {
+     "text": "Another day, then.",
+     "goto": "hub"
+    }
+   ]
+  },
+  "witch_ward_taught": {
+   "_comment": "HER OWN PIECE ONLY (spec 4): a hedge witch's feeding practice, scaled to her hollow. No seal, no lattice, no assembled picture -- she has never been under Liscor and says nothing she could not know from her own kettle.",
+   "speaker": "Eloise",
+   "text": "Mine takes milk and a word, every seventh night. Small appetite, small keeping. Yours was built to hold something that argues back, and a ward like that gets fed on purpose, by someone who meant it to outlast them. Don't starve it in a hurry, child. A hungry ward goes looking.",
+   "options": [
+    {
+     "text": "I'll remember that.",
+     "end": true
     }
    ]
   },

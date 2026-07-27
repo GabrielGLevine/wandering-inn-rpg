@@ -65,6 +65,27 @@
       }
      ],
      "end": true
+    },
+    {
+     "_comment": "2026-07-26 spec 4 (Phase 6, Task 6.2) PALLASS CAPSTONE. Placed on GRIMALKIN, not pallass_forge_clerk: the clerk says 'I only handle paper' in three separate nodes, while Grimalkin is the office's measuring mind and forge-tier rune practice is his professional register. Gated on the forge chain's terminal (elevator_pass_stamped) + spine_started, hidden once heard; revisit arm on the hub he already sees the player at for studies (spec 8). Carries chatted_with_grimalkin like every other option on this hub, appended LAST in the effects array per the d1 #247 rule; the lattice bank rides the ACCEPT option one node down, so declining costs nothing. HE raises it -- the option is the player noticing him holding something back.",
+     "text": "You've been about to say something since the stamp.",
+     "requires": {
+      "accomplishment": {
+       "elevator_pass_stamped": 1,
+       "spine_started": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "lattice_forge_rune": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "chatted_with_grimalkin"
+      }
+     ],
+     "goto": "forge_runes"
     }
    ],
    "text_variants": [
@@ -97,6 +118,36 @@
        "accomplishment": "grimalkin_examination_passed"
       }
      ],
+     "end": true
+    }
+   ]
+  },
+  "forge_runes": {
+   "speaker": "Grimalkin",
+   "text": "I have. The forge tier runs on rune-fed work. Every ward up there eats on a schedule, and a smith keeps that schedule in a ledger. Feed it on time or it feeds itself. Your door has no ledger. Stand still.",
+   "options": [
+    {
+     "text": "What does that cost me?",
+     "effects": [
+      {
+       "accomplishment": "lattice_forge_rune"
+      }
+     ],
+     "goto": "forge_runes_verdict"
+    },
+    {
+     "text": "I'll take that reading another day.",
+     "end": true
+    }
+   ]
+  },
+  "forge_runes_verdict": {
+   "_comment": "HIS OWN PIECE ONLY (spec 4): rune-feeding as forge-tier maintenance practice, plus his standing objection to anything unmeasured. He does not know what is at the far end of the draw and says so; the assembled picture is Act V's.",
+   "speaker": "Grimalkin",
+   "text": "It costs whatever it is drawing on, and it has been drawing unsupervised since long before you owned it. I do not find that alarming. I find it UNMEASURED, which is worse. Find what sits at the far end of the draw and bring me the numbers. I will publish them and you will be a footnote. That is the highest offer I make.",
+   "options": [
+    {
+     "text": "Understood.",
      "end": true
     }
    ]
