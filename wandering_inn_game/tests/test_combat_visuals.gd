@@ -495,7 +495,7 @@ func _init() -> void:
 
 	var driver_source := FileAccess.get_file_as_string("res://qa/test_driver.gd").replace(
 		"extends Node",
-		"extends Node\n\nvar ObservableBus: Variant = null\nvar QAPaths: Variant = null\nvar Game: Variant = null\nvar WICombatAI: Variant = null\nvar WISettings: Variant = null",
+		"extends Node\n\nvar ObservableBus: Variant = null\nvar QAPaths: Variant = null\nvar Game: Variant = null\nvar WICombatAI: Variant = null\nvar WISettings: Variant = null\nvar WIDebugOverlay: Variant = null",
 	)
 	assert(driver_source.find("SCREENSHOT_SETTLE_SECONDS") != -1, "TestDriver must define screenshot settle wait")
 	var driver_script := GDScript.new()
