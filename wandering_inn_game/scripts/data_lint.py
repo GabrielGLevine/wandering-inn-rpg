@@ -64,41 +64,62 @@ def check_wellformed(errors: list, root: Path = DATA) -> dict:
 
 def _compose_maps(parsed: dict, errors: list) -> dict:
 	"""Stem-keyed map catalog from the already-parsed cache (the
-	wi_data_lib.load_maps contract, including the dup-stem rule)."""
+	wi_data_lib.load_maps contract, including the dup-stem rule).
+	Selects by .../maps/<region>/<map>.json position in the parsed keys so
+	tests can inject synthetic trees."""
 	maps = {}
-	for path in sorted((DATA / "maps").glob("*/*.json")):
-		if path not in parsed:
-			continue  # already reported as malformed
+	for path in sorted(parsed):
+		if path.parent.parent.name != "maps":
+			continue
 		if path.stem in maps:
-			errors.append(f"{_rel(path)}: duplicate map key '{path.stem}' across regions")
+			errors.append(f"maps/{path.parent.name}/{path.name}: duplicate map "
+				f"key '{path.stem}' across regions")
 			continue
 		maps[path.stem] = parsed[path]
 	return maps
 
 
-def _in_grid(cell, grid: dict) -> bool:
+def _int_like(v) -> bool:
+	# Godot's JSON parser yields floats for every number and the engine
+	# int()-casts cells/dims, so 7.0 is engine-legal; true/false is not.
+	return (isinstance(v, (int, float)) and not isinstance(v, bool)
+		and float(v).is_integer())
+
+
+def _cell_shape_ok(cell) -> bool:
 	return (isinstance(cell, list) and len(cell) == 2
-		and all(isinstance(v, int) for v in cell)
-		and 0 <= cell[0] < grid["width"] and 0 <= cell[1] < grid["height"])
+		and all(_int_like(v) for v in cell))
+
+
+def _in_grid(cell, grid: dict) -> bool:
+	"""Bounds only -- callers gate on _cell_shape_ok first."""
+	return (0 <= int(cell[0]) < int(grid["width"])
+		and 0 <= int(cell[1]) < int(grid["height"]))
 
 
 def check_maps(maps: dict, errors: list) -> None:
 	for map_id, m in sorted(maps.items()):
 		grid = m.get("grid")
 		if not (isinstance(grid, dict)
-				and isinstance(grid.get("width"), int) and grid["width"] > 0
-				and isinstance(grid.get("height"), int) and grid["height"] > 0):
+				and _int_like(grid.get("width")) and int(grid["width"]) > 0
+				and _int_like(grid.get("height")) and int(grid["height"]) > 0):
 			errors.append(f"maps/{map_id}: missing/invalid grid {{width,height}}")
 			continue
+		w, h = int(grid["width"]), int(grid["height"])
 		for cell in m.get("blocked", []):
-			if not _in_grid(cell, grid):
+			if not _cell_shape_ok(cell):
+				errors.append(f"maps/{map_id}: malformed blocked cell {cell!r}")
+			elif not _in_grid(cell, grid):
 				errors.append(f"maps/{map_id}: blocked cell {cell} out of grid "
-					f"{grid['width']}x{grid['height']} (x max {grid['width'] - 1})")
+					f"{w}x{h} (x max {w - 1})")
 		for entity in m.get("entities", []):
 			eid = entity.get("id", "<no id>")
-			if not _in_grid(entity.get("cell"), grid):
+			cell = entity.get("cell")
+			if not _cell_shape_ok(cell):
+				errors.append(f"maps/{map_id}: entity '{eid}' malformed cell {cell!r}")
+			elif not _in_grid(cell, grid):
 				errors.append(f"maps/{map_id}: entity '{eid}' cell "
-					f"{entity.get('cell')} out of grid {grid['width']}x{grid['height']}")
+					f"{cell} out of grid {w}x{h}")
 
 
 def check_portals(parsed: dict, maps: dict, errors: list) -> None:
@@ -112,9 +133,15 @@ def check_portals(parsed: dict, maps: dict, errors: list) -> None:
 			errors.append(f"portals.json: row '{rid}' destination map '{dest}' does not exist")
 			continue
 		grid = maps[dest].get("grid", {})
-		if isinstance(grid, dict) and "width" in grid and not _in_grid(row.get("cell"), grid):
-			errors.append(f"portals.json: row '{rid}' cell {row.get('cell')} "
-				f"out of '{dest}' grid {grid.get('width')}x{grid.get('height')}")
+		if not (isinstance(grid, dict) and _int_like(grid.get("width"))
+				and _int_like(grid.get("height"))):
+			continue  # already reported by check_maps
+		cell = row.get("cell")
+		if not _cell_shape_ok(cell):
+			errors.append(f"portals.json: row '{rid}' malformed cell {cell!r}")
+		elif not _in_grid(cell, grid):
+			errors.append(f"portals.json: row '{rid}' cell {cell} "
+				f"out of '{dest}' grid {int(grid['width'])}x{int(grid['height'])}")
 
 
 def check_dialogue(parsed: dict, errors: list) -> None:
@@ -135,8 +162,11 @@ def check_dialogue(parsed: dict, errors: list) -> None:
 				continue
 			if "speaker" not in node:
 				errors.append(f"{name}: node '{nid}' missing speaker")
-			if "text" not in node and "text_variants" not in node:
-				errors.append(f"{name}: node '{nid}' missing text/text_variants")
+			# text is UNCONDITIONAL: dialogue.gd's _resolved_text does
+			# String(node["text"]) even when text_variants override -- a
+			# variants-only node is a guaranteed SCRIPT ERROR (review M1).
+			if "text" not in node:
+				errors.append(f"{name}: node '{nid}' missing text")
 			for i, option in enumerate(node.get("options", [])):
 				goto = option.get("goto")
 				if goto is not None and goto not in nodes:

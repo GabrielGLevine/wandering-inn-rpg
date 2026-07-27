@@ -58,9 +58,44 @@ class TestBrokenFixtures(unittest.TestCase):
         errs = self._errs(data_lint.check_dialogue, parsed)
         joined = "\n".join(errs)
         self.assertIn("start 'gone' is not a node", joined)
-        self.assertIn("missing text/text_variants", joined)
+        self.assertIn("missing text", joined)
         self.assertIn("goto 'nope' targets no node", joined)
         self.assertEqual(len(errs), 3)
+
+    def test_variants_only_node_fails(self):
+        # dialogue.gd's _resolved_text reads node["text"] unconditionally
+        # (review M1) -- variants without a base text is a guaranteed crash.
+        parsed = {Path("/synthetic/dialogue/y.json"): {
+            "start": "a",
+            "nodes": {"a": {"speaker": "s", "text_variants": [
+                {"requires": {"x": 1}, "text": "hi"}]}}}}
+        errs = self._errs(data_lint.check_dialogue, parsed)
+        self.assertEqual(len(errs), 1)
+        self.assertIn("missing text", errs[0])
+
+    def test_integral_float_cells_accepted(self):
+        # Godot's JSON parser yields floats; 7.0 is engine-legal (review M2).
+        errs = self._errs(data_lint.check_maps,
+            {"m": {"grid": {"width": 4.0, "height": 3},
+                "blocked": [[3.0, 2.0]],
+                "entities": [{"id": "a", "cell": [0.0, 1]}]}})
+        self.assertEqual(errs, [])
+
+    def test_malformed_cell_gets_malformed_message(self):
+        errs = self._errs(data_lint.check_maps,
+            {"m": {**GRID, "blocked": [[3], [1.5, 2], [True, 0]], "entities": []}})
+        self.assertEqual(len(errs), 3)
+        for e in errs:
+            self.assertIn("malformed blocked cell", e)
+
+    def test_duplicate_map_stem_across_regions(self):
+        parsed = {
+            Path("/syn/maps/region_a/inn.json"): {**GRID},
+            Path("/syn/maps/region_b/inn.json"): {**GRID},
+        }
+        errs = self._errs(data_lint._compose_maps, parsed)
+        self.assertEqual(len(errs), 1)
+        self.assertIn("duplicate map key 'inn'", errs[0])
 
     def test_sprites_missing_animations(self):
         parsed = {data_lint.DATA / "sprites.json": {
