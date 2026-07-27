@@ -50,14 +50,14 @@
 			]
 		},
 		{
-			"_comment": "2026-07-26 Act V, filling the slot #270 reserved. Every beat here banks INSIDE the act (the act_iii lesson: a beat keyed to its own act's exit gate can never render) -- and because act_v is last, even the resolution beat renders, since the player never leaves. One resolution beat, not three: a per-path beat list would leave two entries permanently pending on the journal for every player.",
+			"_comment": "2026-07-26 Act V, filling the slot #270 reserved. Every beat here banks INSIDE the act (the act_iii lesson: a beat keyed to its own act's exit gate can never render) -- and because act_v is last, even the resolution beat renders, since the player never leaves. One resolution beat, not three: a per-path beat list would leave two entries permanently pending on the journal for every player. SPOILER DISCIPLINE (windowed read 2026-07-27): journal.gd renders PENDING act beats in full, marked '·' instead of '✓', so every line here is visible from the moment Act V opens. None of them may state more than the act's own user-ratified title already does -- the reading beat says only that it was never a lock, and nothing anywhere names what the vault actually holds.",
 			"id": "act_v",
 			"title": "What the Seal Was Feeding",
 			"header": "Act V -- What the Seal Was Feeding",
 			"advance_when": { "accomplishments": { "seal_resolved": 1 } },
 			"beats": [
 				{ "id": "the_descent", "text": "Pisces will not read it out of a treatise. You are taking him down to it.", "when": { "accomplishments": { "seal_descent_agreed": 1 } } },
-				{ "id": "the_reading", "text": "The seal under Liscor was never a lock. It is a mouth, and something has been feeding it since before the walls.", "when": { "accomplishments": { "read_the_feeding_ward": 1 } } },
+				{ "id": "the_reading", "text": "You read the seal under Liscor yourself, in the dark, and it was never a lock at all.", "when": { "accomplishments": { "read_the_feeding_ward": 1 } } },
 				{ "id": "the_answer", "text": "You settled what the seal was feeding, and the city goes on not knowing.", "when": { "accomplishments": { "seal_resolved": 1 } } }
 			]
 		}
