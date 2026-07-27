@@ -175,7 +175,13 @@
    "display_name": "Ceria Springwalker",
    "sprite": "ceria",
    "facing": "down",
-   "conversation": "ceria_intro"
+   "conversation": "ceria_intro",
+   "present_when": {
+    "absent": {
+     "horns_dig_joined": 1
+    }
+   },
+   "_comment_dig": "2026-07-27 Task 2.7 round 2 (controller-sanctioned): retires PERMANENTLY at horns_dig_joined. The delve-staging Horns had no present_when at all, so once round 1 fixed the inn-vs-camp bilocation the SAME bug relocated here -- during The Dig a player could meet camp-Ceria at the ruin and delve-hub-Ceria on the approach in one trip. No `_returned` twin on the delve maps, deliberately: the Horns moved on from the delve staging for good (the_horns_home already has them living at the inn; the dig and then the mounting is what brings them there). Safe for the seal beat -- this row is only gameplay-load-bearing during what_the_seal_kept, and seal_kept_reported gates the dig invitation, so horns_dig_joined cannot bank until that quest is done. Verified at QA level too: every script touching this map (delve_fight, delve_skill, delve_talk, dungeon_peek, dungeon_kingslayer_loop) runs on a fixture with horns_dig_joined absent, so no entity-count pin moves."
   },
   {
    "_comment": "Own graph (yvlon_intro.json): a hub whose default/text_variants carry the pool bark / halls-anticipating line / post-victory line, no gate of her own (Ceria owns the party-formed beat).",
@@ -188,7 +194,13 @@
    "display_name": "Yvlon Byres",
    "sprite": "yvlon",
    "facing": "down",
-   "conversation": "yvlon_intro"
+   "conversation": "yvlon_intro",
+   "present_when": {
+    "absent": {
+     "horns_dig_joined": 1
+    }
+   },
+   "_comment_dig": "2026-07-27 Task 2.7 round 2 (controller-sanctioned): retires PERMANENTLY at horns_dig_joined. The delve-staging Horns had no present_when at all, so once round 1 fixed the inn-vs-camp bilocation the SAME bug relocated here -- during The Dig a player could meet camp-Ceria at the ruin and delve-hub-Ceria on the approach in one trip. No `_returned` twin on the delve maps, deliberately: the Horns moved on from the delve staging for good (the_horns_home already has them living at the inn; the dig and then the mounting is what brings them there). Safe for the seal beat -- this row is only gameplay-load-bearing during what_the_seal_kept, and seal_kept_reported gates the dig invitation, so horns_dig_joined cannot bank until that quest is done. Verified at QA level too: every script touching this map (delve_fight, delve_skill, delve_talk, dungeon_peek, dungeon_kingslayer_loop) runs on a fixture with horns_dig_joined absent, so no entity-count pin moves."
   },
   {
    "_comment": "Own graph (ksmvr_intro.json) is pool + post-victory only",
@@ -201,7 +213,13 @@
    "display_name": "Ksmvr",
    "sprite": "ksmvr",
    "facing": "down",
-   "conversation": "ksmvr_intro"
+   "conversation": "ksmvr_intro",
+   "present_when": {
+    "absent": {
+     "horns_dig_joined": 1
+    }
+   },
+   "_comment_dig": "2026-07-27 Task 2.7 round 2 (controller-sanctioned): retires PERMANENTLY at horns_dig_joined. The delve-staging Horns had no present_when at all, so once round 1 fixed the inn-vs-camp bilocation the SAME bug relocated here -- during The Dig a player could meet camp-Ceria at the ruin and delve-hub-Ceria on the approach in one trip. No `_returned` twin on the delve maps, deliberately: the Horns moved on from the delve staging for good (the_horns_home already has them living at the inn; the dig and then the mounting is what brings them there). Safe for the seal beat -- this row is only gameplay-load-bearing during what_the_seal_kept, and seal_kept_reported gates the dig invitation, so horns_dig_joined cannot bank until that quest is done. Verified at QA level too: every script touching this map (delve_fight, delve_skill, delve_talk, dungeon_peek, dungeon_kingslayer_loop) runs on a fixture with horns_dig_joined absent, so no entity-count pin moves."
   },
   {
    "id": "dungeon_depths_door",
