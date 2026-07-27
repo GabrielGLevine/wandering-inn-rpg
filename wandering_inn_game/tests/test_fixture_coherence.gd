@@ -275,11 +275,15 @@ func _check_position_plausibility(name: String, game: WIGame) -> void:
 func _check_economy(name: String, game: WIGame) -> void:
 	if not GATE_FIXTURES.has(name):
 		return
-	# act_iv counts too: since the 2026-07-26 reframe the seal alone opens Act IV,
-	# so the sealed gate fixtures (door_chain_*, portal_menu_start, near_riverfarm)
-	# read act_iv and would otherwise skip their gold floor entirely.
-	var act_id := String(game.act_summary().get("id", ""))
-	if act_id != "act_iii" and act_id != "act_iv":
+	# Act III AND EVERYTHING AFTER IT: since the 2026-07-26 reframe the seal alone
+	# opens Act IV, so the sealed gate fixtures (door_chain_*, portal_menu_start,
+	# near_riverfarm) read act_iv and would otherwise skip their gold floor
+	# entirely. Index-based, not an act-id PAIR (T1.1 ledger minor, fixed with
+	# Act V in Task 7.4): a hardcoded {act_iii, act_iv} set goes silently dark for
+	# every fixture the moment a later act ships, which is the exact failure this
+	# floor exists to catch. Act III is index 2 in acts.json's order.
+	var act_index := int(game.act_summary().get("index", -1))
+	if act_index < 2:
 		return
 	var floor_g := _gate_gold_floor(name, game)
 	if game.gold < floor_g:
