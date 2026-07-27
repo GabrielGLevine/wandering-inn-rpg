@@ -353,11 +353,11 @@ Execute docs/design/2026-07-20-foti-pr2-spec.md exactly — it is task-grade alr
 
 ## Phase 4 — FoTI PR2b: Relc + Zevara (PR `wave/foti-2b`)
 
-- [ ] **Task 4.1:** Voice blocks (Relc, Zevara) per spec.
-- [ ] **Task 4.2:** `relc_inn.json`, `zevara_inn.json` (3-node contract).
-- [ ] **Task 4.3:** inn.json rows `relc_inn_guest` (2,5), `zevara_inn_guest` (3,6); roster `[selys,krshia,olesm,pisces,relc,zevara]` in ALL SIX entities. Screenshot-verify no crowding (spec flagged).
-- [ ] **Task 4.4:** Keep `inn_guests_start` fixture; RE-PIN its t=10 expectation (pool 5 with zevara unmet → start 0 → selys+krshia, per spec NOTE). Add `inn_guests_full_start` fixture (all six met, t=10 → relc+zevara). Derive from real runs.
-- [ ] **Task 4.5:** Tests + QA + screenshots; commit + PR.
+- [x] **Task 4.1:** Voice blocks (Relc, Zevara) per spec.
+- [x] **Task 4.2:** `relc_inn.json`, `zevara_inn.json` (3-node contract).
+- [x] **Task 4.3:** inn.json rows `relc_inn_guest` (2,5), `zevara_inn_guest` (3,6); roster `[selys,krshia,olesm,pisces,relc,zevara]` in ALL SEVEN guest entities (five shipped + the two new; the pisces bilocation split made it seven, not six).
+- [x] **Task 4.4:** Kept `inn_guests_start`; RE-DERIVED all three of `inn_guests_loop`'s wakings from real runs (pool 5 → t=10 selys+krshia, t=11 krshia+olesm, t=12 olesm+pisces). Added `inn_guests_full_start` + the new `inn_guests_full_loop` canonical (pool 6 → t=10 relc+zevara, t=11 zevara+selys). `reload_loop` re-targeted to Selys; `dialogue_walkthrough` re-routed off the seat lane.
+- [x] **Task 4.5:** Tests + QA + windowed screenshots; committed on `wave/foti-2b`. Helper p50 10/20/24 (vs the 10/21/26 baseline) — no Act-II overshoot, so the evening-presence lever stays holstered.
 
 ## Phase 5 — FoTI extension: Klbkch, Rags, Wilovan, Grimalkin (PR `wave/foti-ext`)
 

@@ -40,6 +40,22 @@ func _init() -> void:
 			seen[npc] = true
 		assert(active.size() == 3, "t=%d fills all 3 seats from a pool of 4" % t)
 
+	# PR2b: the SHIPPED roster completes at six, and the two shipped fixture
+	# positions window DIFFERENTLY off the same times_slept -- the exact math
+	# the canonicals pin live, mirrored here so a roster edit reds a unit test
+	# before it reds a 90-second QA run.
+	var six := ["selys", "krshia", "olesm", "pisces", "relc", "zevara"]
+	var pool5 := _met(["selys", "krshia", "olesm", "pisces", "relc"])  # inn_guests_start: zevara alone unmet
+	assert(WIInnGuests.active_guests(six, pool5, 10, 2) == ["selys", "krshia"], "inn_guests_start t=10: pool 5, start 10%%5=0 -> the pilot pair")
+	assert(WIInnGuests.active_guests(six, pool5, 11, 2) == ["krshia", "olesm"], "inn_guests_start t=11: krshia STAYS, olesm arrives (a slide, not a swap)")
+	assert(WIInnGuests.active_guests(six, pool5, 12, 2) == ["olesm", "pisces"], "inn_guests_start t=12: olesm stays, pisces arrives")
+	var pool6 := _met(six)  # inn_guests_full_start: all six met
+	assert(WIInnGuests.active_guests(six, pool6, 10, 2) == ["relc", "zevara"], "inn_guests_full_start t=10: pool 6, start 10%%6=4 -> the PR2b pair")
+	assert(WIInnGuests.active_guests(six, pool6, 11, 2) == ["zevara", "selys"], "inn_guests_full_start t=11: the window wraps the roster's tail onto its head")
+	assert(WIInnGuests.active_guests(six, pool6, 16, 2) == ["relc", "zevara"], "full pool period is 6 wakings deep")
+	# An unmet member never shifts the window: the pool, not the roster, is the modulus.
+	assert(WIInnGuests.active_guests(six, pool5, 10, 2) != WIInnGuests.active_guests(six, pool6, 10, 2), "an unmet roster member changes the modulus, so the same waking seats a different pair")
+
 	# Negative times_slept is guarded (never crashes / never out-of-range).
 	assert(WIInnGuests.active_guests(roster, big, -1, 2).size() == 2, "negative times_slept guarded")
 

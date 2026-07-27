@@ -1,5 +1,5 @@
 {
- "_comment": "GH#278 canonical: live data reload via the save round-trip. Proves (1) reload_data rebuilds sim+view with state coherent (same map/cell/counters), (2) the rebuilt world is interactable (Pisces dialogue opens post-reload, mirroring inn_guests_loop's proven route -- FoTI PR2a grew the guest roster to 4, so at this fixture's times_slept=10 the window seats olesm+pisces and Selys's (6,6) chair is empty floor the player simply walks across), (3) mid-dialogue reload REFUSES with the observable toast (domain event pinned; the toast RENDER path is shared infra pinned by the GH#273 canonicals), (4) reload works again after the dialogue closes. Data-actually-changed staleness is proven by tests/test_reload_caches.gd (in-process temp-map trick) -- a QA script cannot mutate res://data mid-run.",
+ "_comment": "GH#278 canonical: live data reload via the save round-trip. Proves (1) reload_data rebuilds sim+view with state coherent (same map/cell/counters), (2) the rebuilt world is interactable (Selys dialogue opens post-reload, mirroring inn_guests_loop's proven route -- FoTI PR2b completed the guest roster at 6, and this fixture leaves zevara unmet, so the modulus is the POOL of 5: start = 10%5 = 0 seats the pilot pair and Selys is back in her (6,6) chair, while Pisces's (6,5) chair is the empty floor now), (3) mid-dialogue reload REFUSES with the observable toast (domain event pinned; the toast RENDER path is shared infra pinned by the GH#273 canonicals), (4) reload works again after the dialogue closes. Data-actually-changed staleness is proven by tests/test_reload_caches.gd (in-process temp-map trick) -- a QA script cannot mutate res://data mid-run.",
  "fixture_save": "inn_guests_start",
  "starts_at_title": true,
  "steps": [
@@ -18,10 +18,10 @@
   {"action": "assert_state", "path": "current_map", "equals": "inn"},
   {"action": "assert_state", "path": "player_cell", "equals": [2, 6]},
   {"action": "assert_state", "path": "accomplishments.chatted_with_krshia", "equals": 4},
-  {"_comment": "Selys is off shift at times_slept=10 (pool 4, start 2 -> olesm+pisces), so (6,6) is plain floor and doubles as the approach cell for Pisces at (6,5).", "action": "click", "cell": [6, 6]},
-  {"action": "wait_for_event", "type": "player_moved", "payload_contains": {"cell": [6, 6]}, "timeout_sec": 10},
-  {"action": "click", "cell": [6, 5]},
-  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "pisces_inn"}, "timeout_sec": 5},
+  {"_comment": "RE-TARGETED for PR2b: at times_slept=10 the met pool is 5 (zevara unbanked here) and start = 10%5 = 0, so SELYS holds (6,6) and Pisces is the one off shift. hungry_patron (5,6) and the map's own (7,6) block the direct approaches, so the reachable adjacent cell is (6,7).", "action": "click", "cell": [6, 7]},
+  {"action": "wait_for_event", "type": "player_moved", "payload_contains": {"cell": [6, 7]}, "timeout_sec": 10},
+  {"action": "click", "cell": [6, 6]},
+  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "selys_inn"}, "timeout_sec": 5},
   {"action": "reload_data", "expect": false},
   {"action": "wait_for_event", "type": "toast", "payload_contains": {"text": "Cannot reload data right now."}, "timeout_sec": 5},
   {"_comment": "The fixture still holds its hot_meal and has banked no serve this waking, so Serve is visible+unlocked in slot 1: greet = [Serve, topic, exit] and the exit is option 3.", "action": "click_dialogue_option", "option": 3},
@@ -30,6 +30,6 @@
   {"action": "wait_for_event", "type": "game_loaded", "payload_contains": {"reason": "reload_data"}, "timeout_sec": 5},
   {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
   {"action": "assert_state", "path": "current_map", "equals": "inn"},
-  {"action": "assert_state", "path": "player_cell", "equals": [6, 6]}
+  {"action": "assert_state", "path": "player_cell", "equals": [6, 7]}
  ]
 }

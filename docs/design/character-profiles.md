@@ -18,6 +18,13 @@ canon cites · current sprite state.
   (combat_scale 0.4).
 - Voice: loud, cocky, friendly-menacing; bored by paperwork; genuinely
   kind under it. Wiki: Relc Grasstongue.
+- Inn register (d1 #247 PR2b, `relc_inn`): loud and entirely at ease. He
+  is off shift, he is hungry, and he has claimed the good chair by the
+  fire and worked out exactly why it is the good one. The kindness is
+  right on the surface here, because nothing is being guarded. NEVER the
+  spar, the wager, the spare spear or anything below the city — that all
+  stays out on his road (`relc_intro`) and down the tunnels
+  (`relc_descent`). He is a big Drake eating dinner, not a guardsman.
 - Sprite: bespoke PixelLab v2 DIRECTIONAL + animated (idle/walk/slice;
   124px frames; combat_scale 0.3875 containment). Upgraded 2026-07-06.
 
@@ -74,6 +81,14 @@ canon cites · current sprite state.
 - LIGHT-blue scales, Watch officer armor, stern set.
 - Voice: dry, overworked, duty-first; persuaded by risk/duty arguments,
   never flattery.
+- Inn register (d1 #247 PR2b, `zevara_inn`): off shift and never off
+  duty. This is a Watch Captain failing to relax and knowing it: she is
+  here because nobody has found her yet, and she is still drafting next
+  week's roster behind her own eyes. Nothing persuades her here; one
+  degree of thaw is bought by COMPETENCE, and a tray carried cleanly
+  across a full room counts. NEVER the cisterns sweep, the summons, the
+  seal report or any Watch authorization — the whole gate arc, including
+  what is under the city, stays at the gatehouse (`zevara_intro`).
 - Sprite: bespoke PixelLab v2 DIRECTIONAL + animated (idle/walk; light-blue
   Drake in Watch officer armor; 112px frames). Upgraded 2026-07-06.
 

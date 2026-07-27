@@ -838,7 +838,7 @@
    ]
   },
   {
-   "_comment": "d1 #247 Friends of the Inn. Selys rotates through as a servable guest once met (chatted_with_selys>=1). present_when.guest = the WIInnGuests rotation arm: roster [selys,krshia,olesm,pisces] (PR2a grew it APPEND-ONLY; the co-located validator forces every guest row on this map to carry the IDENTICAL roster/seats), 2 seats, so the window now SLIDES by times_slept -- Selys is on shift only when the start index lands on her, not every waking as in the pilot pair. Her OWN conversation (selys_inn) carries the inn register -- the guild hub never attaches, so no 'board's over there' here (the user's context-awareness requirement). ABSENT in every current sprite-count canonical (all boot fresh, chatted_with_selys=0), so inn_walkthrough/work_loop/upstairs pins are unaffected. sprite reuses her home stand-in (citizen_f) pending the c-lane upgrade.",
+   "_comment": "d1 #247 Friends of the Inn. Selys rotates through as a servable guest once met (chatted_with_selys>=1). present_when.guest = the WIInnGuests rotation arm: roster [selys,krshia,olesm,pisces,relc,zevara] (PR2a then PR2b grew it APPEND-ONLY to its spec-final six; the co-located validator forces every guest row on this map to carry the IDENTICAL roster/seats), 2 seats, so the window now SLIDES by times_slept -- Selys is on shift only when the start index lands on her, not every waking as in the pilot pair. Her OWN conversation (selys_inn) carries the inn register -- the guild hub never attaches, so no 'board's over there' here (the user's context-awareness requirement). ABSENT in every current sprite-count canonical (all boot fresh, chatted_with_selys=0), so inn_walkthrough/work_loop/upstairs pins are unaffected. sprite reuses her home stand-in (citizen_f) pending the c-lane upgrade.",
    "id": "selys_inn_guest",
    "kind": "npc",
    "cell": [
@@ -856,7 +856,9 @@
       "selys",
       "krshia",
       "olesm",
-      "pisces"
+      "pisces",
+      "relc",
+      "zevara"
      ],
      "seats": 2
     }
@@ -869,7 +871,7 @@
    ]
   },
   {
-   "_comment": "d1 #247 Friends of the Inn. Krshia rotates through once met (chatted_with_krshia>=1). Own conversation (krshia_inn) in the inn register -- her market stall never rides along. Same present_when.guest arm, sharing the PR2a 4-name roster/2 seats with every other guest row (co-located validator). Seated at (4,6): the WEST common-room table, deliberately clear of the armed rift_vermin_leak (9,7) so a met-state save never routes a guest visit through the leak's trigger radius. ABSENT in the fresh sprite-count canonicals. sprite reuses her home stand-in (pc_gnoll_f).",
+   "_comment": "d1 #247 Friends of the Inn. Krshia rotates through once met (chatted_with_krshia>=1). Own conversation (krshia_inn) in the inn register -- her market stall never rides along. Same present_when.guest arm, sharing the PR2b 6-name roster/2 seats with every other guest row (co-located validator). Seated at (4,6): the WEST common-room table, deliberately clear of the armed rift_vermin_leak (9,7) so a met-state save never routes a guest visit through the leak's trigger radius. ABSENT in the fresh sprite-count canonicals. sprite reuses her home stand-in (pc_gnoll_f).",
    "id": "krshia_inn_guest",
    "kind": "npc",
    "cell": [
@@ -887,7 +889,9 @@
       "selys",
       "krshia",
       "olesm",
-      "pisces"
+      "pisces",
+      "relc",
+      "zevara"
      ],
      "seats": 2
     }
@@ -900,7 +904,7 @@
    ]
   },
   {
-   "_comment": "d1 #247 Friends of the Inn PR2a. Olesm rotates through once met (chatted_with_olesm>=1). The roster grew to 4 in the SAME commit as this row (test_content's co-located validator requires every guest on the map to carry an IDENTICAL roster/seats), so seats stay 2 and the window now SLIDES: at times_slept=10 the pool-of-4 start is 2, seating olesm+pisces. Own conversation (olesm_inn) in the inn register -- his council desk, the chess wager and every briefing stay home-only (olesm_intro). Seated at (3,5): free floor on the west side, clear of the serve lane (4,7)/(5,7)/(6,7) + hungry_patron (5,6), the garden approach (3,7)->(3,8), the walkthrough diagonal, and the armed rift_vermin_leak (9,7). ABSENT in the fresh sprite-count canonicals. sprite reuses his registered home rig.",
+   "_comment": "d1 #247 Friends of the Inn PR2a. Olesm rotates through once met (chatted_with_olesm>=1). The roster grew to 4 in the SAME commit as this row and to its final 6 in PR2b's (test_content's co-located validator requires every guest on the map to carry an IDENTICAL roster/seats), so seats stay 2 and the window SLIDES over a period as deep as the met pool. At inn_guests_start's times_slept=10 that pool is 5 (zevara alone unmet there), start = 10%5 = 0, and Olesm's own seating waits for t=12. Own conversation (olesm_inn) in the inn register -- his council desk, the chess wager and every briefing stay home-only (olesm_intro). Seated at (3,5): free floor on the west side, clear of the serve lane (4,7)/(5,7)/(6,7) + hungry_patron (5,6), the garden approach (3,7)->(3,8), the walkthrough diagonal, and the armed rift_vermin_leak (9,7). ABSENT in the fresh sprite-count canonicals. sprite reuses his registered home rig.",
    "id": "olesm_inn_guest",
    "kind": "npc",
    "cell": [
@@ -918,7 +922,9 @@
       "selys",
       "krshia",
       "olesm",
-      "pisces"
+      "pisces",
+      "relc",
+      "zevara"
      ],
      "seats": 2
     }
@@ -931,7 +937,7 @@
    ]
   },
   {
-   "_comment": "d1 #247 Friends of the Inn PR2a. Pisces rotates through once met (chatted_with_pisces>=1). Shares the grown 4-name roster/2 seats with every other guest row (co-located validator). Own conversation (pisces_inn) in the inn register -- the magic tutoring, the necromancy defence and EVERY door consult stay home-only, which matters doubly on this map now that pisces_mounting (13,5) carries the Door beat: the guest row must never touch door mechanics. Seated at (6,5): free floor directly north of Selys's (6,6) seat, off the serve lane (4,7)/(5,7)/(6,7) + hungry_patron (5,6) and clear of the leak (9,7). ABSENT in the fresh sprite-count canonicals. sprite reuses his registered home rig. BILOCATION SPLIT (PR2a, against Phase 2's pisces_mounting): present_when has no OR, and Phase 2's mounting scene occupies exactly the door_retrieved -> door_mounted window -- a window every player reaches with chatted_with_pisces long since banked, so a single guest-arm row would have put a second Pisces in the same room (the defect the Horns _returned rows were just split to fix). This row is therefore the BEFORE arm (absent door_retrieved); pisces_inn_guest_returned is the AFTER arm (requires door_mounted). The two counter gates are mutually exclusive (door_mounted implies door_retrieved), so at most ONE ever renders, and through the haul window NEITHER does -- he is at the pantry hanging a door, which is where the room already shows him. He keeps his shift slot in the rotation across that window; the seat simply reads empty for the one scene it takes.",
+   "_comment": "d1 #247 Friends of the Inn PR2a. Pisces rotates through once met (chatted_with_pisces>=1). Shares the completed 6-name roster/2 seats with every other guest row (co-located validator). Own conversation (pisces_inn) in the inn register -- the magic tutoring, the necromancy defence and EVERY door consult stay home-only, which matters doubly on this map now that pisces_mounting (13,5) carries the Door beat: the guest row must never touch door mechanics. Seated at (6,5): free floor directly north of Selys's (6,6) seat, off the serve lane (4,7)/(5,7)/(6,7) + hungry_patron (5,6) and clear of the leak (9,7). ABSENT in the fresh sprite-count canonicals. sprite reuses his registered home rig. BILOCATION SPLIT (PR2a, against Phase 2's pisces_mounting): present_when has no OR, and Phase 2's mounting scene occupies exactly the door_retrieved -> door_mounted window -- a window every player reaches with chatted_with_pisces long since banked, so a single guest-arm row would have put a second Pisces in the same room (the defect the Horns _returned rows were just split to fix). This row is therefore the BEFORE arm (absent door_retrieved); pisces_inn_guest_returned is the AFTER arm (requires door_mounted). The two counter gates are mutually exclusive (door_mounted implies door_retrieved), so at most ONE ever renders, and through the haul window NEITHER does -- he is at the pantry hanging a door, which is where the room already shows him. He keeps his shift slot in the rotation across that window; the seat simply reads empty for the one scene it takes.",
    "id": "pisces_inn_guest",
    "kind": "npc",
    "cell": [
@@ -952,7 +958,9 @@
       "selys",
       "krshia",
       "olesm",
-      "pisces"
+      "pisces",
+      "relc",
+      "zevara"
      ],
      "seats": 2
     }
@@ -986,7 +994,9 @@
       "selys",
       "krshia",
       "olesm",
-      "pisces"
+      "pisces",
+      "relc",
+      "zevara"
      ],
      "seats": 2
     }
@@ -995,6 +1005,72 @@
     {
      "speaker": "Pisces",
      "text": "I am not queueing. I happen to be seated near where a queue would form."
+    }
+   ]
+  },
+  {
+   "_comment": "d1 #247 Friends of the Inn PR2b. Relc rotates through once met (chatted_with_relc>=1). The roster completed at 6 in the SAME commit as this row (test_content's co-located validator requires every guest on the map to carry an IDENTICAL roster/seats), so seats stay 2 and the period is now 6 wakings deep. Own conversation (relc_inn) in the inn register -- the spar, the wager, the spare-spear gift and every descent window stay home-only (relc_intro / relc_descent). Seated at (1,5), NOT the spec's (2,5): the windowed crowding check the spec demanded for this row failed there. Relc's rig is 124px, the biggest in the cast (~1.8 cells wide, ~2.6 rows tall with his head a row and a half above his own cell), and (2,5) sits exactly two rows under yvlon_inn (2,3) and one row over the (2,6) boot cell -- Yvlon's skirt ate his head, the player standing at (2,6) ate his legs, and what rendered was a green torso nobody could identify. (1,5) clears both: column 1 is out from under Yvlon, the cell below is the quiet bedroom corner rather than a boot cell, and only his spear grazes the west wall. Still off the serve lane (4,7)/(5,7)/(6,7) + hungry_patron (5,6), the garden approach (3,7)->(3,8), the walkthrough diagonal (2,3)/(3,3)/(4,4), the stairs lane ((2,7)->(1,7)->(1,8) is untouched) and the armed rift_vermin_leak (9,7). Floor connectivity was re-proved exhaustively for this cell: every met-subset x every window leaves the inn fully connected. PR2a's canonical reserved (2,5)/(3,6) by name, so inn_guests_loop needed nothing -- but that reservation only covered scripts naming cells EXPLICITLY. dialogue_walkthrough reached Lyonette by teleporting to (2,6) and walking UP through (2,5) in relative move steps, with a met pool of one that seats Relc every waking, so the sweep caught it and that leg was re-routed to approach her from (9,4). Any future inn route belongs on row 4 or row 7, never rows 5-6. ABSENT in the fresh sprite-count canonicals. sprite reuses his registered home rig.",
+   "id": "relc_inn_guest",
+   "kind": "npc",
+   "cell": [
+    1,
+    5
+   ],
+   "display_name": "Relc",
+   "sprite": "relc",
+   "facing": "down",
+   "conversation": "relc_inn",
+   "present_when": {
+    "guest": {
+     "npc": "relc",
+     "roster": [
+      "selys",
+      "krshia",
+      "olesm",
+      "pisces",
+      "relc",
+      "zevara"
+     ],
+     "seats": 2
+    }
+   },
+   "dialogue": [
+    {
+     "speaker": "Relc",
+     "text": "Off shift. Good chair, good fire. The wall can hold itself up for one night."
+    }
+   ]
+  },
+  {
+   "_comment": "d1 #247 Friends of the Inn PR2b. Zevara rotates through once met (chatted_with_zevara>=1) -- the ONLY roster member with no prior met-state QA coverage, which is why PR2b adds the inn_guests_full_start fixture (all six met) to give her leg a live script at all. Shares the completed 6-name roster/2 seats with every other guest row (co-located validator). Own conversation (zevara_inn) in the inn register -- the cisterns sweep, the runner's summons, the seal report and every Watch authorization stay home-only (zevara_intro), which matters doubly because the something-beneath arc routes BOTH its summons and its close through that gatehouse hub: this row must absorb none of it. Seated at (3,6): free floor directly SOUTH of Olesm's (3,5) chair and west of Krshia's (4,6), off the serve lane (4,7)/(5,7)/(6,7) + hungry_patron (5,6), clear of the garden approach (3,7)->(3,8) and the leak (9,7). Reserved by name in PR2a's canonical, so inn_guests_loop needed nothing; see relc_inn_guest's own _comment for the one route that DID have to move (dialogue_walkthrough's relative-move walk through the seat lane). ABSENT in the fresh sprite-count canonicals. sprite reuses her registered home rig.",
+   "id": "zevara_inn_guest",
+   "kind": "npc",
+   "cell": [
+    3,
+    6
+   ],
+   "display_name": "Zevara",
+   "sprite": "zevara",
+   "facing": "down",
+   "conversation": "zevara_inn",
+   "present_when": {
+    "guest": {
+     "npc": "zevara",
+     "roster": [
+      "selys",
+      "krshia",
+      "olesm",
+      "pisces",
+      "relc",
+      "zevara"
+     ],
+     "seats": 2
+    }
+   },
+   "dialogue": [
+    {
+     "speaker": "Zevara",
+     "text": "Nobody has found me yet. Do not be the one who does."
     }
    ]
   },
