@@ -16,6 +16,90 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### Machine playtest — wave/mq2-dig "The Dig" close-out (2026-07-27)
+
+Source: `wave/mq2-dig` at `dfc2ec3` + the Task 2.7 copy pass, full asset overlay
+restored (746/746 files vs main) and re-imported; full sweep green (155/155)
+before the windowed pass. Five windowed runs, 14 screenshots read at native
+resolution: `horns_dig_flow`, `horns_dig_plates`, `door_chain_fight` (all
+seed 9, `QA_RESULT: PASS`) plus two throwaway probes for the migrated-save and
+pre-dig-hub reads. Durable evidence:
+`wandering_inn_game/qa_output/machine_playtest_2026-07-27_mq2_dig/`.
+
+- [ ] RUIN/CAMP-DOUBLE (P1) — **the Horns are in two places at once for the
+  whole of The Dig.** `ceria_inn` (inn.json, cell 8,6) gates only on
+  `seal_kept_reported`, while `ceria_dig_camp` (ruin_surface.json, cell 4,3)
+  runs `horns_dig_started` → `absent: door_retrieved`. Both are live across the
+  entire dig window, so the player can take the invitation from Ceria at the
+  inn, walk to the ruin and talk to Ceria at the camp, then walk back and talk
+  to Ceria at the inn again. `tmp_predig_hub_probe/02_guarding_a_door_hub.png`
+  (inn) and `horns_dig_flow/01_camp_hub.png` (camp) are the same character.
+  `yvlon_inn`/`ksmvr_inn` carry the same bare gate while the breach toast has
+  them "already down the gap — Yvlon bracing, Ksmvr counting rope". Fix wants
+  an `absent` arm on the three inn rows for the dig window (or a camp-side
+  re-gate); structural, deliberately not fixed at the 2.7 gate.
+- [ ] RUIN/REVEAL-DESPAWN (P1) — the reveal toast quotes an NPC who left the
+  screen one event earlier. `events.jsonl` order at the pedestal open is
+  `accomplishment_recorded door_retrieved` → `toast "Below the pedestal: not
+  treasure. A DOOR … Ceria, finally: 'That's wardwork. Old, fed wardwork.
+  We're taking it home.'"`, and `ceria_dig_camp`'s `absent: {door_retrieved: 1}`
+  fires on that first event. Both breach routes show it:
+  `horns_dig_flow/02_the_reveal.png` and
+  `horns_dig_plates/03_the_reveal_no_fight.png` are empty camp corners under a
+  toast in which Ceria is mid-sentence. Hold the despawn until the reveal toast
+  clears, or bank `door_retrieved` after it.
+- [ ] RUIN/CAMP-LEFTOVERS (P2) — the dig camp's fire is still burning after the
+  camp strikes. `campfire` (3,3) and `crate` (5,3) are entries in
+  `ruin_surface.json`'s `decor` array, which has no presence gate, so both
+  outlive `ceria_dig_camp` — the fire renders with live red coals and no one
+  around it in `horns_dig_flow/02_the_reveal.png` and
+  `tmp_migrated_ruin_probe/01_migrated_camp_corner.png`. Reads as "the Horns
+  teleported out", not "the Horns packed up". Wants either a doused-fire swap
+  or promotion of the two decor rows to gated props (their cells are already
+  in `blocked`, so the promotion is not free).
+- [ ] RUIN/MIGRATED-DIORAMA (P2) — a pre-restructure save migrated by
+  `save.gd:339` loads with `door_retrieved` + `door_mounted` banked, and then
+  the ruin it walks into still has `ruin_guardian` alive and on its feet over
+  the pedestal the save says was already breached and looted
+  (`tmp_migrated_ruin_probe/00_migrated_deserted_ruin.png`). The deserted camp
+  on its own reads acceptably — a struck camp with leftovers is ordinary ruin
+  dressing, and the gated arrival toast correctly withholds "the Horns got here
+  first" — but the live guardian is a direct contradiction of the migrated
+  state. Consider adding `ruin_guardian` to the backfill's removed set.
+- [ ] COPY/DASH-MIX (P2) — two toasts on the same map one beat apart disagree
+  on dash glyph: `horns_dig_plates/02_the_plates_break_the_seal.png` renders a
+  real em dash ("it was never the plates — it was whoever hadn't walked them")
+  and `horns_dig_flow/02_the_reveal.png` renders ASCII double-hyphen ("A DOOR
+  -- unhung"). Not a wave regression — a census of rendered copy fields across
+  `data/**/*.json` finds 61 strings carrying `--` against 218 carrying `—`,
+  spread over 25 files including long-shipped ones (bounties.json,
+  trapped_halls.json, guild.json). Wants one normalization pass with the
+  affected canonicals re-pinned, not piecemeal edits.
+- [ ] TOAST/QUEUE-DROP (P2, re-observed) — `horns_dig_flow` emits 17 distinct
+  toast texts and renders 13; the pedestal's own flavor line ("The seam splits
+  wider at your touch, cold air breathing up…") never reaches
+  `ui_toast_rendered`, losing one of the two beats at the wave's biggest
+  reveal. Same family as the open UI/QUEST-START entry below (queued toasts
+  silently dropping payloads), now costing story copy rather than a pointer.
+- [ ] COMBAT/CELLAR-VERMIN (P2, pre-existing, re-observed on this wave's
+  surface) — on the re-gated leak board
+  (`door_chain_fight/00_rift_vermin_leak_board.png`) the Rift Vermin
+  combatants are visually indistinguishable from the cellar's barrel decor;
+  only the HP bars separate a monster from a barrel, so counting the enemy
+  roster means reading the turn-order strip instead of the board. The feed
+  panel's third line ("Rift Vermin B strikes Relc for 13!") is also clipped by
+  the parchment fold in the same shot.
+- WHAT LANDS (keep this, do not regress): the mounting scene stages correctly —
+  `pisces_mounting` (13,5) reads as standing at the pantry door (14,6), his
+  white robes are distinct against a crowded inn floor, and his two-line
+  opening renders with no fold (`horns_dig_flow/03_the_mounting.png`). The
+  day-one Liscor ride puts the player beside the gate-district arch in daylight
+  with the arrival legible (`04_liscor_by_the_door.png`). The plates breach is
+  the best copy in the wave and renders in full. Ceria's pre-dig hub line "It
+  was guarding a door." reads as a backward callback to the vault construct and
+  the `seal_kept_door` prop the player just walked past — not a leak of the
+  dig's reveal, and the invitation option beneath it names no door.
+
 ### Machine playtest — quest-thread legibility (2026-07-19)
 
 Source: detached `c33faac` build with the complete local asset overlay; clean

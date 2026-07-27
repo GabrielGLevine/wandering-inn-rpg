@@ -357,7 +357,7 @@
      "copy": "A LETTER, sealed in wax gone slightly soft from handling, addressed to no one by name. Inside: impeccable handwriting regrets to inform you of a small disagreement in Invrisil concerning a mutual acquaintance's good name, and would consider it a personal favor -- and a professional one -- if a stranger to the city might look into it. The witch at Riverfarm keeps the stones, should the distance prove an obstacle. Signed only with a small drawing of a hat. The Guildmistress's clerk says it arrived by very ordinary post, which is itself the strangest part."
     },
     {
-     "_comment": "Points the reader at Olesm by name (the stipend is HIS option, in olesm_intro.json, gated separately on post_game -- the counter that banks at the first sleep after the seal, mid-story, not an end-of-story flag) rather than naming a location a player could act on directly from the board itself.",
+     "_comment": "Points the reader at Olesm by name rather than naming a location a player could act on directly from the board itself. The stipend is HIS option, in olesm_intro.json, gated separately on post_game. That counter banks at the first sleep after the seal -- mid-story, not an end-of-story flag.",
      "id": "rumor_dungeon_survey",
      "banks_accomplishment": "heard_of_the_gallery_survey",
      "copy": "A WATCH NOTICE, freshly pinned. The reopened gallery under the old seal is to be surveyed properly before the Council calls it settled -- volunteers with Guild standing should see Olesm Swifttail at the frontage desk. Pay is Watch-scale. The notice does not say what 'properly' means, and nobody pinning notices ever does."
