@@ -1,8 +1,6 @@
 # Main Quest Line + Friends of the Inn Wave — Implementation Plan
 
-> Status: **ACTIVE**
-
-> Status: **ACTIVE** — in execution on `wave/mq2-dig` (Phase 2 of 9).
+> Status: **ACTIVE** — in execution (progress: SDD ledger at .superpowers/sdd/2026-07-26-main-quest-foti-wave/progress.md).
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
