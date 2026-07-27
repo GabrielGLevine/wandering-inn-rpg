@@ -1028,25 +1028,13 @@
    "display_name": "The Pantry Door",
    "sprite": "door",
    "observe": "A plain plank door, warped at the bottom from a hundred winters. Nothing about it looks like it goes anywhere but the pantry.",
-   "_comment_variants": "2026-07-26 main-quest restructure (Task 2.4). ORDER IS STORY ORDER (later satisfied variant wins, _resolve_skill_use_effect): the haul arrives (door_retrieved), it goes up (door_mounted), you learn what its reach costs (door_understood). The door_retrieved arm is the mounting scene's DISCOVERY BRIDGE -- a prop cannot open a conversation (interactions.gd routes `conversation` for kind:npc/encounter only), so the toast points at `pisces_mounting`, the NPC standing right beside it, which is what actually carries data/dialogue/door_mounting.json. The old pre-quest 'something is wrong with this door' arm is gone with the fiction it belonged to: under the restructure nothing is wrong with the pantry door until the Horns hang a different one in its frame.",
+   "_comment_variants": "2026-07-26 main-quest restructure (Task 2.4). ONE arm, and the window is exactly one beat wide BY CONSTRUCTION: `portal_menu_when` is checked BEFORE the flavor arm (interactions.gd's prop order) and now opens at door_mounted, so from the mounting onward this prop's interact is the PICKER and no toast of any kind can render. The two old arms (door_chain_started 'something is wrong with this door', door_understood 'it needs the anchor stone and Krshia's catalyst') were deleted rather than re-copied: both gate at or past door_mounted, so both became unreachable the moment the picker moved -- and both described a fiction the restructure retired anyway (nothing is wrong with the pantry door until the Horns hang a different one in its frame, and the anchor stone comes home WITH the door now). What survives is the one arm that fires in the door_retrieved -> door_mounted window, and it is the mounting scene's DISCOVERY BRIDGE: a prop cannot open a conversation (interactions.gd routes `conversation` for kind:npc/encounter only), so the toast points at `pisces_mounting`, the NPC beside it, who carries data/dialogue/door_mounting.json.",
    "variants": [
     {
      "when": {
       "door_retrieved": 1
      },
      "toast": "The find leans against the pantry frame, unhung, with the old plank door stacked out of the way behind the flour sacks. Pisces has not stopped circling it since the wagon. Ask him about it."
-    },
-    {
-     "when": {
-      "door_mounted": 1
-     },
-     "toast": "Hung where the plank door used to be, and the frame took it like it had been waiting. Step through and you are in the gate district; step back and you are in the pantry. It holds Liscor and no farther — yet."
-    },
-    {
-     "when": {
-      "door_understood": 1
-     },
-     "toast": "You know what it is now, or enough of it: a door that remembers being elsewhere, straining at anything past Liscor. Krshia's catalyst, and Pisces to work it, before it reaches farther."
     }
    ],
    "_comment_d4": "portal_menu_when is checked before the fallback interaction; once the gate is met, the picker replaces the flavor toast. 2026-07-26 Task 2.4: the gate moved door_awakened -> door_mounted, MANDATORY rather than cosmetic -- portals.json's liscor_street/the_wandering_inn rows now list at door_mounted (the day-one link), and leaving the inn-side CARRIER on door_awakened would have made those rows unreachable from the inn for the whole middle of the chain. street.json's `street_anchor_stone` (the pair's other end) moved with it. Region rows keep their own *_attuned gates and still need door_awakened upstream, so nothing else in the network opens early.",
@@ -1069,11 +1057,10 @@
       0.82,
       0.86,
       1.0
-     ],
-     "observe": "Not the plank door any more. The frame holds the thing the Horns carried out of the ruin, and the grain of it is worked all the way round the jamb — old marks, still fed, and cold to stand near."
+     ]
     }
    ],
-   "_comment_consolidation": "Pantry-door consolidation (user FEEL verdict 2026-07-19): the runes prop + wardwork prop FOLDED into the door itself. visual_states swaps the plain door for the runed-door sprite once the Magical Door is MOUNTED in its frame (garden_door at-pattern, render-only). 2026-07-26 Task 2.4: the counter moved door_chain_started -> door_mounted (the two now bank on the same option, and door_mounted is the one that says what the swap MEANS), and the entry gained a cold `tint` plus an `observe` override -- the tint/observe-swap idiom, NOT `hidden`, which is render-only and would leave an invisible blocker mid-floor (#149's class). Old saves reach door_mounted through Task 2.6's backfill. skill_uses carries BOTH reads: [Observe] banks read_the_door_runes (the door-chain SKILL leg, text verbatim from the removed prop), [Detect Magic] banks detected_wardwork. One prop, many eyes.",
+   "_comment_consolidation": "Pantry-door consolidation (user FEEL verdict 2026-07-19): the runes prop + wardwork prop FOLDED into the door itself. visual_states swaps the plain door for the runed-door sprite once the Magical Door is MOUNTED in its frame (garden_door at-pattern, render-only). 2026-07-26 Task 2.4: the counter moved door_chain_started -> door_mounted (the two bank on the same option, and door_mounted is the one that says what the swap MEANS), and the entry gained a cold `tint` -- the TINT/observe-swap idiom, NOT `hidden`, which is render-only and would leave an invisible blocker mid-floor (#149's class). Deliberately NO `observe` override on this prop, unlike rift_vermin_leak's: `skill_uses` is routed BEFORE the generic observe arm (field_skills.gd dispatch order), so for THIS prop the `observe` field is shadowed by the [Observe] arm below and an override here would be inert copy dressed as a live surface. The state read the player actually gets is that arm's own runed-frame text, which already describes worked, fed wardwork. Old saves reach door_mounted through Task 2.6's backfill. skill_uses carries BOTH reads: [Observe] banks read_the_door_runes (the door-chain SKILL leg, text verbatim from the removed prop), [Detect Magic] banks detected_wardwork. One prop, many eyes.",
    "skill_uses": {
     "observe": {
      "accomplishment": "read_the_door_runes",
