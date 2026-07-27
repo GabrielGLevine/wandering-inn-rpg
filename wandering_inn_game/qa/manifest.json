@@ -4282,6 +4282,34 @@
    }
   },
   {
+   "script": "reload_loop",
+   "seed": 3,
+   "fixture": "inn_guests_start",
+   "note": "GH#278 live data reload via the save round-trip -- reload_data rebuilds sim+view coherently (map/cell/counters pinned before+after), rebuilt world stays interactable (Selys dialogue via inn_guests_loop's proven route), mid-dialogue reload REFUSES with the observable toast, and reload works again after close. Data-changed staleness is unit-pinned in test_reload_caches (temp-map trick); res://data cannot be mutated mid-QA-run.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "inn_guests_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "selys_inn"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "input"
+    ]
+   }
+  },
+  {
    "script": "save_rename_migration",
    "seed": 1,
    "note": "#111 safe project rename: boot-ordered legacy user-dir migration. run_qa.sh's legacy_seed places a pre-rename save (near_pallass) + settings.cfg into the 'Wandering Inn RPG v4' app_userdata sibling BEFORE launch; Game._ready carries it over so Continue lights up on the first launch of the renamed build and the state loads byte-faithfully. Pure copy/no-clobber/sibling-derivation unit-pinned in test_save_rename; every OTHER canonical (no legacy_seed) proves the no-legacy no-op boot path.",

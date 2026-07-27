@@ -401,6 +401,13 @@ func _spawn_world() -> void:
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	if type == WIEvents.GAME_RESET or type == WIEvents.GAME_LOADED:
 		WIDataRegistry.reset()
+		# GH#278: view-side static caches join the reset so a live data
+		# reload (or any load) re-reads sprites/moods from disk. The SIM
+		# side (WISceneCatalog) resets in _make_sim instead -- resetting it
+		# here would be one load too late (D1 ordering).
+		WISpriteRegistry.reset()
+		WIAtmosphere.reset()
+		WICombatBoardRenderer.reset()
 		var is_defeat := String(payload.get("reason", "")) == "defeat"
 		swap_to_world.bind(type == WIEvents.GAME_RESET, is_defeat).call_deferred()
 	elif type == WIEvents.ACCOMPLISHMENT_RECORDED and String(payload.get("id", "")) == "post_game":

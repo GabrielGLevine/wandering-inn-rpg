@@ -358,6 +358,13 @@ func _load_settings() -> void:
 ## Consumes the shared WIDataRegistry cache (M5 arch finding 7) — a missing/
 ## invalid data/audio.json is an empty Dictionary there, preserving this
 ## file's original graceful no-audio-map behavior.
+func _reload_audio_map() -> void:
+	_entries.clear()
+	_music_entries.clear()
+	_ambience_entries.clear()
+	_load_audio_map()
+
+
 func _load_audio_map() -> void:
 	var parsed := WIDataRegistry.audio_config()
 	var raw_entries: Variant = parsed.get("events", [])
@@ -384,6 +391,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		return  # re-entrancy guard: never let our own emission trigger another lookup
 	if type == WIEvents.GAME_RESET or type == WIEvents.GAME_LOADED:
 		_reset_duck()
+		# GH#278 (review find): audio.json was a FIFTH stale cache -- these
+		# instance lists loaded once at _ready and never re-read. DEFERRED
+		# because this arm connects before Main's handler (autoloads ready
+		# first): a synchronous re-read would consume the registry cache
+		# Main has not reset yet -- the same one-load-stale class as D1.
+		_reload_audio_map.call_deferred()
 	elif type == WIEvents.DIALOGUE_STARTED:
 		# Message layer clears standalone bark on conversation open; release its timer edge first.
 		_clear_transient_ducks(TRANSIENT_DIALOGUE_BARK)

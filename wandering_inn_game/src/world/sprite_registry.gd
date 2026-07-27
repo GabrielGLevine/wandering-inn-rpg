@@ -16,6 +16,21 @@ static var _placeholder_cache: Dictionary = {}
 static var _missing_sheet_logged: Dictionary = {}
 
 
+## GH#278: live-reload seam -- clears every static cache so the next
+## lookup re-reads sprites.json (regions/anchors/frame math) from disk.
+## Sheet PIXELS still come through ResourceLoader's own resource cache --
+## a repainted PNG needs a reimport, not this. Called from Main's
+## GAME_LOADED/GAME_RESET handler beside WIDataRegistry.reset(); any NEW
+## static cache added to this class must join this list or reload shows a
+## mix of old and new content (the silent-staleness class).
+static func reset() -> void:
+	_catalog = {}
+	_cache = {}
+	_tile_sources = {}
+	_placeholder_cache = {}
+	_missing_sheet_logged = {}
+
+
 static func _load_catalog() -> void:
 	if _catalog.is_empty():
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/sprites.json"))

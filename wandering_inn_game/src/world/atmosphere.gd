@@ -15,6 +15,12 @@ const FIELD_LEGIBILITY_MAX_BOOST := 1.9
 
 static var _moods_cache: Dictionary = {}
 
+
+## GH#278: live-reload seam (see WISpriteRegistry.reset()).
+static func reset() -> void:
+	_moods_cache = {}
+
+
 var _lights: Array[Dictionary] = []
 var _flicker_lights: Array[Dictionary] = []
 var _flicker_time := 0.0

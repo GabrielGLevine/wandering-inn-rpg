@@ -158,6 +158,36 @@ func import_save_text(text: String) -> bool:
 	return true
 
 
+## GH#278: dev/QA live data reload -- rebuild the sim from the CURRENT
+## disk JSON through the save round-trip (serialize live sim -> fresh
+## _make_sim -> WISave.apply), then let the GAME_LOADED handler rebuild
+## the view + reset the view-side caches. Refuses in exactly the states
+## save_manual refuses (combat/dialogue/consolidation) -- save_auto and
+## load_slot carry NO guard, so this check must live here, not be
+## "composed" from them. Content-mismatch after id renames is out of
+## scope: WISave.apply carries stale ids unchecked -- value-tuning tool,
+## not a migration tool.
+func reload_data() -> bool:
+	if not world_live:
+		return false  # title-screen boot sim: reloading it would swap_to_world uninvited (export_save_text parity)
+	if sim.combat != null or sim.dialogue != null or not sim.pending_consolidation.is_empty():
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Cannot reload data right now."})
+		return false
+	# String round-trip so applied state has passed the same JSON typing a
+	# disk save would (ints arrive as floats etc.), keeping this path
+	# byte-equivalent to save->Load.
+	var parsed: Variant = JSON.parse_string(JSON.stringify(WISave.serialize(sim)))
+	if not (parsed is Dictionary):
+		return false
+	var trial := _make_sim()
+	if not WISave.apply(trial, parsed):
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Reload refused: state no longer applies to the edited data."})
+		return false
+	sim = trial
+	ObservableBus.emit_domain_event(WIEvents.GAME_LOADED, {"reason": "reload_data"})
+	return true
+
+
 func slot_metadata(slot: String) -> Dictionary:
 	var path := "%s/%s.json" % [SAVE_DIR, slot]
 	if not FileAccess.file_exists(path):
@@ -191,6 +221,11 @@ func _build_sim(creation: Dictionary = {}) -> void:
 
 
 func _make_sim(creation: Dictionary = {}) -> WIGame:
+	# GH#278 (D1 ordering): reset BEFORE compose, never in the GAME_LOADED
+	# handler -- the handler fires after this consumed the catalog, which
+	# would leave the sim one load stale on maps while the rebuilt view
+	# reads fresh (sim blocking diverging from rendered map).
+	WISceneCatalog.reset()
 	var scene_config: Dictionary = WISceneCatalog.compose()
 	var skill_config: Dictionary = _load_json("res://data/skills.json")
 	var combat_config := {
