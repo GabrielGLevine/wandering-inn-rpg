@@ -1,5 +1,5 @@
 {
- "_comment": "2026-07-26 main-quest restructure (Task 2.3): THE canonical for `horns_dig`, played live end-to-end from the horns_dig_start fixture -- Ceria's invitation AT THE INN (the new ceria_intro attachment on ceria_inn, reached through her talk_pool the erin/pisces/krshia way: first interact = a pool line, second = the graph), the ruin seam opening on its NEW gate (horns_dig_started, not the retired door_chain_started), the camp join at ruin_surface's ceria_dig_camp, the FIGHT leg of the breach (ruin_guardian, Relc fielded off met_relc), the shipped rune pair, and the reveal. Nothing is pre-banked: every counter this script asserts is earned in-run. Deliberately ends AT THE REVEAL -- mounting the find at the inn is Task 2.4's surface (pisces_magic's door_mounting node + the pantry prop), and this script gets its mounting/portal tail EXTENDED there, together with an assert that door_that_goes_elsewhere auto-starts; the assert_event_absent on door_mounted at the tail is the placeholder that must be deleted in the same edit. Teleports cover only stretches already proven live elsewhere (inn->floodplains by inn_walkthrough/gate_district_walkthrough, the ruin interior by ruin_walkthrough); the ruin_door transition itself is walked for real because its gate is what changed. Fixture rng_state governs the one fight.",
+ "_comment": "2026-07-26 main-quest restructure (Task 2.3, extended Task 2.4): THE canonical for `horns_dig` AND the door chain's start, played live end-to-end from the horns_dig_start fixture -- Ceria's invitation AT THE INN (the new ceria_intro attachment on ceria_inn, reached through her talk_pool the erin/pisces/krshia way: first interact = a pool line, second = the graph), the ruin seam opening on its NEW gate (horns_dig_started, not the retired door_chain_started), the camp join at ruin_surface's ceria_dig_camp, the FIGHT leg of the breach (ruin_guardian, Relc fielded off met_relc), the shipped rune pair, and the reveal. Nothing is pre-banked: every counter this script asserts is earned in-run. EXTENDED in Task 2.4 through the whole main-quest opening: the haul comes home, Pisces hangs it at the pantry (data/dialogue/door_mounting.json on inn.json's `pisces_mounting` NPC), door_mounted closes the haul beat and COMPLETES horns_dig, the same option auto-starts door_that_goes_elsewhere (the reshaped chain has no start option -- this conversation IS its start), and the run ends by riding the Magical Door to Liscor for real off the new day-one portal gate. That makes this THE canonical main-quest-start proof for the wave: from 'heard your team's digging' to a working Door, with nothing pre-banked. Teleports cover only stretches already proven live elsewhere (inn->floodplains by inn_walkthrough/gate_district_walkthrough, the ruin interior by ruin_walkthrough); the ruin_door transition itself is walked for real because its gate is what changed. Fixture rng_state governs the one fight.",
  "fixture_save": "horns_dig_start",
  "starts_at_title": true,
  "steps": [
@@ -597,12 +597,211 @@
    "equals": 1
   },
   {
-   "_comment": "SCOPE PIN + Task 2.4 EXTENSION POINT: the haul beat is still open here because nothing has mounted the find yet. When 2.4 lands the pantry mounting scene, delete this absence and continue the script through it (door_mounted banked, door_that_goes_elsewhere auto-started, the Liscor portal rows live).",
-   "action": "assert_event_absent",
+   "_comment": "== THE HAUL, AND THE MOUNTING (Task 2.4) ==. Teleport to the inn at (13,4): the ruin -> floodplains -> inn return is already proven live by ruin_walkthrough/gate_district_walkthrough/inn_walkthrough, and what this script still has to prove is the mounting SURFACE, not pathing. `pisces_mounting` (13,5) is present for exactly this window -- door_retrieved just banked live at the pedestal and door_mounted has not banked at all -- so the entity's own present_when is under test here too.",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    13,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Bump SOUTH into Pisces's own (blocked) cell -- sets facing without moving, the walkthroughs' robust-facing idiom. He has no talk_pool, so the FIRST interact opens door_mounting.json at its own start node.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "door_mounting"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Mounted, hinged, and -- observe -- already holding a hop to Liscor's gate district without so much as a rune of encouragement. It works. Now let us see how far it can go."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_the_mounting"
+  },
+  {
+   "_comment": "Options: [0 'How far CAN it go?', 1 'One thing at a time.']. Take 0 -- the branch that also renders the far-attunement setup, so this canonical covers BOTH nodes of the scene and banks off the deeper one.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Farther than Liscor. The wardwork wants distance the way a bowstring wants release -- but push it unattuned and things will leak through that we did not invite. Properly? We attune it. Krshia stocks catalysts; I stock expertise."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "'Then let's start.' is the node's only option: it banks door_mounted (closing horns_dig's haul beat and completing the quest), banks door_chain_started as the frozen legacy alias, and AUTO-STARTS door_that_goes_elsewhere -- the reshaped chain has no start option anywhere, this conversation IS its start.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5,
+   "_comment": "The panel closes BEFORE the sim resolves the choice (dialogue_ended -> dialogue_choice -> effects), so this wait sits ahead of the banks it precedes -- the since-marker would never find it afterwards."
+  },
+  {
+   "action": "wait_for_event",
    "type": "accomplishment_recorded",
    "payload_contains": {
     "id": "door_mounted"
-   }
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "horns_dig"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "door_chain_started"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "door_that_goes_elsewhere"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.door_mounted",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.door_chain_started",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "contains": "door_that_goes_elsewhere"
+  },
+  {
+   "_comment": "== THE DAY-ONE LISCOR LINK ==. Pisces's present_when closes on the very counter the conversation banked, and world.gd reconciles presence live off ACCOMPLISHMENT_RECORDED -- so (13,5) is walkable now. Walk down through the cell he occupied to (13,6), bump EAST into pantry_door (14,6), and interact: portal_menu_when moved door_awakened -> door_mounted this task, so the picker must open here, three qualifying sleeps before any awakening.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "portal_menu"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "From the inn the menu lists ONLY liscor_street + 'Let it be.' (the_wandering_inn is excluded, you are standing in it). Confirm on index 0 and ride the Door to Liscor for real -- the haul beat's whole promise, delivered in the same run that dug it up.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Cold light, gone as fast as it came. The gate district's noise rushes back in around you."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    10
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "04_liscor_by_the_door"
   }
  ]
 }

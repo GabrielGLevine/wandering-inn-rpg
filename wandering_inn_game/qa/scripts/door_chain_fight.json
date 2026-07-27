@@ -1,5 +1,5 @@
 {
- "_comment": "The FIGHT leg of the 3-path mage-consult parity (cisterns_fight/talk/scout precedent -- three SEPARATE scripts, not one combined 'door_chain_paths', matching that precedent exactly and justified the same way: each leg's route/assertions differ enough that a single script would need multiple fixture re-installs mid-run for no real coverage gain). This is the FLAGSHIP end-to-end script: it runs the FIGHT leg of the mage consult (Pisces sends the player to clear rift_vermin_leak in the inn), then the FULL ruin run (ruin trip -> ruin_guardian fight -> anchor_stone_pedestal opens -> Krshia's resonant_catalyst purchase), ending with the chain's `consult` and `buy_catalyst` beats complete and the quest sitting on its third and last beat, `attune` -- door_that_goes_elsewhere completes only at the door's awakening (door_awakened), door_awakening.json's subject, NOT at the catalyst purchase. The anchor stone still comes up at the pedestal here but no longer completes any beat of this quest: the 2026-07-26 main-quest restructure moved the retrieval into its own quest (`horns_dig`) and deleted the old `recover_stone` beat. Erin's old beat-1 flicker start is likewise gone from this script -- see the first step's own comment for why and for what replaces it. door_chain_talk/door_chain_scout (door_chain_started pre-banked in their fixtures, same as this one now) cover the other two consult legs plus a partial slice of the recovery beat each (talk proves the pedestal's OR-gate opens WITHOUT fighting the guardian; scout proves the catalyst purchase again from a different angle) -- together the three scripts cover door_understood parity, the pedestal's contains_when OR-gate from both a FIGHT and a non-FIGHT producer, and the full quest completion, without triple-deriving the whole chain three times. Uses `teleport` for every inter-map hop (real navigation across inn/street/floodplains/ruin_surface is ALREADY proven live by inn_walkthrough/gate_district_walkthrough/tutorial_flow/ruin_walkthrough -- this script's subject is the consult-path/combat/container/purchase wiring, not pathing; the arc_flow/deep_descent precedent for teleporting past an already-proven stretch). Every teleport lands one cell short of its target, followed by a `move` INTO the target (sets facing even when blocked, wi_game.gd move_player's unconditional `player_facing = dir` before the blocked check) before interact.",
+ "_comment": "The FIGHT leg of the 3-path mage-consult parity (cisterns_fight/talk/scout precedent -- three SEPARATE scripts, not one combined 'door_chain_paths', matching that precedent exactly and justified the same way: each leg's route/assertions differ enough that a single script would need multiple fixture re-installs mid-run for no real coverage gain). This is the FLAGSHIP end-to-end script: it runs the FIGHT leg of the mage consult (Pisces sends the player to clear rift_vermin_leak in the inn), then the FULL ruin run (ruin trip -> ruin_guardian fight -> anchor_stone_pedestal opens -> Krshia's resonant_catalyst purchase), ending with the chain's `consult` and `buy_catalyst` beats complete and the quest sitting on its third and last beat, `attune` -- door_that_goes_elsewhere completes only at the door's awakening (door_awakened), door_awakening.json's subject, NOT at the catalyst purchase. The anchor stone still comes up at the pedestal here but no longer completes any beat of this quest: the 2026-07-26 main-quest restructure moved the retrieval into its own quest (`horns_dig`) and deleted the old `recover_stone` beat. Erin's old beat-1 flicker start is gone from this script; Task 2.4 replaced it with the chain's REAL start, the pantry MOUNTING scene, played live from the first step -- see that step's own comment. door_chain_talk/door_chain_scout (door_chain_started pre-banked in their fixtures, same as this one now) cover the other two consult legs plus a partial slice of the recovery beat each (talk proves the pedestal's OR-gate opens WITHOUT fighting the guardian; scout proves the catalyst purchase again from a different angle) -- together the three scripts cover door_understood parity, the pedestal's contains_when OR-gate from both a FIGHT and a non-FIGHT producer, and the full quest completion, without triple-deriving the whole chain three times. Uses `teleport` for every inter-map hop (real navigation across inn/street/floodplains/ruin_surface is ALREADY proven live by inn_walkthrough/gate_district_walkthrough/tutorial_flow/ruin_walkthrough -- this script's subject is the consult-path/combat/container/purchase wiring, not pathing; the arc_flow/deep_descent precedent for teleporting past an already-proven stretch). Every teleport lands one cell short of its target, followed by a `move` INTO the target (sets facing even when blocked, wi_game.gd move_player's unconditional `player_facing = dir` before the blocked check) before interact.",
  "fixture_save": "door_chain_fight_start",
  "starts_at_title": true,
  "steps": [
@@ -46,12 +46,94 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    7,
-    3
+    13,
+    4
    ]
   },
   {
-   "_comment": "interim until 2.4 wires mounting scene; re-derive then. == BEAT 1 (Erin's flicker) DELETED, 2026-07-26 main-quest restructure Task 2.2 == Erin's hub option no longer starts the door chain -- it became a pointer at Ceria's dig (erin_errand.ceria_nudge, no effects), and the chain's new start is the pantry MOUNTING scene, which does not exist until Task 2.4. Per the controller's ruling for this phase the start leg is banked by fixture instead (door_chain_fight_start now pre-banks door_chain_started + started_quests door_that_goes_elsewhere, exactly like door_chain_talk_start/door_chain_scout_start), so this script keeps proving everything from the Pisces consult onward -- which is its real subject -- with no live start leg. Task 2.4 restores a played-through start here and un-banks the fixture. Deleted with the leg: the erin_errand hub option-index pin (index 3, now a different option), the quest_started/accomplishment_recorded waits, and the erin_door_flicker dialogue_node text pin (that node is orphaned in erin_errand.json, see its own _comment). No rng consequence: dialogue consumes no rng draws, so both live fights below still resolve off the fixture's unchanged rng_state. == BEAT 2 (FIGHT leg): teleport to street beside Pisces, choose FIGHT ==",
+   "_comment": "== BEAT 1, RESTORED LIVE (Task 2.4): THE MOUNTING ==. Task 2.2 retired Erin's flicker option (the chain's old start) and Task 2.2's interim banked the chain in the fixture instead; the chain's REAL start is this scene, so it is played for real again. The fixture stands at (13,4) with the haul home (door_retrieved) and unhung (door_mounted absent), which is exactly `pisces_mounting`'s present_when window. Bump SOUTH into his (blocked) cell for facing; no talk_pool, so the first interact opens door_mounting.json.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "door_mounting"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Mounted, hinged, and -- observe -- already holding a hop to Liscor's gate district without so much as a rune of encouragement. It works. Now let us see how far it can go."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Options: [0 'How far CAN it go?', 1 'One thing at a time.']. This canonical takes the SHORT exit (index 1) -- horns_dig_flow takes index 0 and the door_mounting_far branch, so the two scripts cover both of the scene's exits, and both exits must bank the identical set.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "The panel closes BEFORE the sim resolves the choice (dialogue_ended -> dialogue_choice -> effects), so this wait sits ahead of the banks it precedes.",
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "door_mounted"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "door_chain_started"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "door_that_goes_elsewhere"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "contains": "door_that_goes_elsewhere"
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.door_mounted",
+   "equals": 1
+  },
+  {
+   "_comment": "== BEAT 2 (FIGHT leg): teleport to street beside Pisces, choose FIGHT ==",
    "action": "teleport",
    "map": "street",
    "cell": [
