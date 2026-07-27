@@ -154,11 +154,16 @@ Full batch runs ONCE at the end as the gate, not per tuning iteration.
 
 
 ### Suites whose asserts DON'T stop the run (2026-07-19, cost two lied tail-reads)
-`test_content.gd`'s asserts print `SCRIPT ERROR: Assertion failed` and the
-suite CONTINUES to its final `PASS` line — a `tail -1` read shows green
-over a real red (same family as test_effect_text's quit(1)-prints-PASS).
-The zero-noise grep is the ONLY honest detector for these suites; never
-verdict any unit run from its last line alone.
+A bare `assert` does NOT stop a `--script` run: it prints `SCRIPT ERROR:
+Assertion failed` and the suite CONTINUES to its final `PASS` line — a
+`tail -1` read shows green over a real red (same family as
+test_effect_text's quit(1)-prints-PASS). The zero-noise grep is the ONLY
+honest detector for such a suite; never verdict any unit run from its last
+line alone. **`test_content.gd` was the named offender and was converted
+2026-07-27** (wave-close review): every check routes through its `_check`
+(collect) / `_require` (collect + report, for sites where continuing would
+crash) helpers, and `_init` prints `CONTENT_FAIL` lines, suppresses PASS and
+`quit(1)`s. Writing a NEW suite: take that shape, not a bare assert.
 
 ### The local unit bar must mirror CI's THREE checks (2026-07-17 incident)
 A validator that reports via `quit(1)` keeps EXECUTING to the end of _init --

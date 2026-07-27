@@ -2,6 +2,30 @@ extends SceneTree
 
 const DIALOGUE_DIR := "res://data/dialogue"
 
+## LOUD-FAIL CONTRACT (2026-07-27 wave-close review). A bare `assert` does NOT
+## stop a `--script` run: this suite used to print every failure as a SCRIPT
+## ERROR, keep going, print its trailing PASS line and exit 0 -- so a `tail -1`
+## read (and any exit-code gate) called a red run green. Every check now routes
+## through `_check`, which COLLECTS. `_init` prints the collected failures,
+## SUPPRESSES the PASS line and quits nonzero. Same shape as test_shipped_ids'
+## `_errors` pattern; `quit(1)` rather than a trailing assert so the run can
+## never hang waiting on the watchdog (see tests/watchdog.gd).
+var _errors: Array[String] = []
+
+
+func _check(ok: bool, message: String) -> void:
+	if not ok:
+		_errors.append(message)
+
+
+## `_check` that also reports its verdict, for the sites where walking PAST a
+## failure would be a hard runtime error (a null cast, a missing key) instead of
+## another reported failure -- collecting only helps if the run reaches its tally.
+func _require(ok: bool, message: String) -> bool:
+	_check(ok, message)
+	return ok
+
+
 const PLAYER_STRING_FILES := [
 	"res://data/items.json",
 	"res://data/skills.json",
@@ -29,7 +53,7 @@ func _validate_victory_toast_keys(maps: Dictionary) -> void:
 				continue
 			var victories: Variant = ent.get("on_victory", "won_combat")
 			var first := String((victories if victories is Array else [victories])[0])
-			assert(first != "won_combat", "%s/%s: victory_toast carrier's first on_victory id must not be won_combat (fractional under GH#211 weighting)" % [map_id, String(ent.get("id", "?"))])
+			_check(first != "won_combat", "%s/%s: victory_toast carrier's first on_victory id must not be won_combat (fractional under GH#211 weighting)" % [map_id, String(ent.get("id", "?"))])
 
 
 ## GH#155 review L2: on a skill-gated prop, every id in on_skill_use.remove_item
@@ -53,7 +77,7 @@ func _validate_consume_subset(maps: Dictionary) -> void:
 				var rems: Variant = payload["remove_item"]
 				var rem_list: Array = rems if rems is Array else [String(rems)]
 				for rem: String in rem_list:
-					assert(req.has(rem), "%s/%s: remove_item '%s' not in requires_item (silent free-craft)" % [map_id, ent.get("id","?"), rem])
+					_check(req.has(rem), "%s/%s: remove_item '%s' not in requires_item (silent free-craft)" % [map_id, ent.get("id","?"), rem])
 
 ## #92 D1: every CONSUMABLE (use_effect-bearing item) dispensed by a priced
 ## shop-buy option or an alchemist/kitchen craft bench must carry price>0 (a
@@ -80,7 +104,7 @@ func _validate_economy_prices(scene: Dictionary, graphs: Dictionary, items: Dict
 					var bought := String(effect["item"])
 					if not bool(is_consumable.get(bought, false)):
 						continue
-					assert(int(price.get(bought, 0)) > 0, "%s/%s: shop-buy option sells consumable '%s' but it has no price>0 (no sell margin) -- #92 D1" % [graph_id, node_id, bought])
+					_check(int(price.get(bought, 0)) > 0, "%s/%s: shop-buy option sells consumable '%s' but it has no price>0 (no sell margin) -- #92 D1" % [graph_id, node_id, bought])
 	# Crafts: a bench prop's on_skill_use output; consumable outputs must be
 	# priced, and any output that consumes components must beat their sum.
 	for map_id: String in scene["maps"]:
@@ -97,13 +121,13 @@ func _validate_economy_prices(scene: Dictionary, graphs: Dictionary, items: Dict
 				var rems: Variant = payload.get("remove_item", [])
 				var rem_list: Array = rems if rems is Array else ([String(rems)] if String(rems) != "" else [])
 				if bool(is_consumable.get(out_id, false)):
-					assert(int(price.get(out_id, 0)) > 0, "%s/%s: craft yields consumable '%s' but it has no price>0 -- #92 D1" % [map_id, ent.get("id", "?"), out_id])
+					_check(int(price.get(out_id, 0)) > 0, "%s/%s: craft yields consumable '%s' but it has no price>0 -- #92 D1" % [map_id, ent.get("id", "?"), out_id])
 				if rem_list.is_empty():
 					continue
 				var comp_sum := 0
 				for rem: String in rem_list:
 					comp_sum += int(price.get(String(rem), 0))
-				assert(int(price.get(out_id, 0)) > comp_sum, "%s/%s: craft output '%s' (price %d) is not worth more than its components (%d summed) -- infinite-gold craft loop, #92 D1" % [map_id, ent.get("id", "?"), out_id, int(price.get(out_id, 0)), comp_sum])
+				_check(int(price.get(out_id, 0)) > comp_sum, "%s/%s: craft output '%s' (price %d) is not worth more than its components (%d summed) -- infinite-gold craft loop, #92 D1" % [map_id, ent.get("id", "?"), out_id, int(price.get(out_id, 0)), comp_sum])
 
 
 func _init() -> void:
@@ -177,8 +201,14 @@ func _init() -> void:
 	_validate_place_naming_shape_cases()
 	_validate_tutor_line_help_consistency()
 
-	print("PASS: errand content is fully cross-referenced")
-	quit(0)
+	if _errors.is_empty():
+		print("PASS: errand content is fully cross-referenced")
+		quit(0)
+		return
+	print("test_content: %d content-validation failures:" % _errors.size())
+	for e: String in _errors:
+		print("  CONTENT_FAIL " + e)
+	quit(1)
 
 
 func _validate_effect_text_opacity() -> void:
@@ -197,8 +227,8 @@ func _validate_effect_text_opacity() -> void:
 	for status_id: String in status_ids:
 		lines.append(WIEffectText.status_line(status_id))
 	for line: String in lines:
-		assert(attr.search(line) == null, "effect_text emits a forbidden attribute token: " + line)
-		assert(not line.contains("%"), "effect_text emits a forbidden percent-toward token: " + line)
+		_check(attr.search(line) == null, "effect_text emits a forbidden attribute token: " + line)
+		_check(not line.contains("%"), "effect_text emits a forbidden percent-toward token: " + line)
 
 
 func _validate_player_string_vocab() -> void:
@@ -227,25 +257,32 @@ func _scan_player_strings(node: Variant, path: String, attr: RegEx, provenance: 
 			_scan_player_strings((node as Array)[i], "%s[%d]" % [path, i], attr, provenance)
 	elif node is String:
 		var s := node as String
-		assert(attr.search(s) == null, "%s carries a forbidden attribute token: %s" % [path, s])
-		assert(not s.contains("%"), "%s carries a forbidden percent-toward token: %s" % [path, s])
-		assert(provenance.search(s) == null, "%s carries a dev-provenance leak (Task/issue citation): %s" % [path, s])
+		_check(attr.search(s) == null, "%s carries a forbidden attribute token: %s" % [path, s])
+		_check(not s.contains("%"), "%s carries a forbidden percent-toward token: %s" % [path, s])
+		_check(provenance.search(s) == null, "%s carries a dev-provenance leak (Task/issue citation): %s" % [path, s])
 
 
 func _load_json(path: String) -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
-	assert(parsed is Dictionary, "invalid JSON at " + path)
+	if not (parsed is Dictionary):
+		# Collected like every other failure, but this one must also return a
+		# usable value: the run continues now, and a bare `return parsed` on a
+		# non-Dictionary is a hard runtime error.
+		_errors.append("invalid JSON at " + path)
+		return {}
 	return parsed
 
 
 func _load_dialogue_graphs() -> Dictionary:
 	var graphs: Dictionary = {}
 	var dir: DirAccess = DirAccess.open(DIALOGUE_DIR)
-	assert(dir != null, "missing dialogue directory")
+	if dir == null:
+		_errors.append("missing dialogue directory")
+		return {}
 	for file_name: String in dir.get_files():
 		if file_name.ends_with(".json"):
 			graphs[file_name.get_basename()] = _load_json(DIALOGUE_DIR.path_join(file_name))
-	assert(not graphs.is_empty(), "no dialogue graphs found")
+	_check(not graphs.is_empty(), "no dialogue graphs found")
 	return graphs
 
 
@@ -322,7 +359,7 @@ func _validate_talk_pool_stages_ascending(scene: Dictionary) -> void:
 				for key: String in req:
 					var threshold := int(req[key])
 					if seen.has(key):
-						assert(threshold >= int(seen[key]), "entity %s talk_pool_stages authored OUT OF ORDER: stage %s's %s threshold (%d) is lower than an earlier stage's (%d)" % [String(entity["id"]), String(stage.get("id", "?")), key, threshold, int(seen[key])])
+						_check(threshold >= int(seen[key]), "entity %s talk_pool_stages authored OUT OF ORDER: stage %s's %s threshold (%d) is lower than an earlier stage's (%d)" % [String(entity["id"]), String(stage.get("id", "?")), key, threshold, int(seen[key])])
 					seen[key] = threshold
 
 
@@ -336,22 +373,21 @@ func _validate_encounter_when(scene: Dictionary, produced_accomplishments: Dicti
 			if not entity.has("encounter_when"):
 				continue
 			var entity_id: String = String(entity["id"])
-			assert(String(entity.get("kind", "")) == "encounter", "entity %s carries encounter_when but is not kind:encounter" % entity_id)
+			_check(String(entity.get("kind", "")) == "encounter", "entity %s carries encounter_when but is not kind:encounter" % entity_id)
 			var when: Dictionary = entity["encounter_when"]
-			assert(when.has("phase") or when.has("requires") or when.has("absent"), "entity %s encounter_when has no recognized shape (only 'phase'/'requires'/'absent' are sanctioned)" % entity_id)
+			_check(when.has("phase") or when.has("requires") or when.has("absent"), "entity %s encounter_when has no recognized shape (only 'phase'/'requires'/'absent' are sanctioned)" % entity_id)
 			if when.has("phase"):
 				for p: Variant in when["phase"]:
-					assert(VALID_PHASES.has(String(p)), "entity %s encounter_when references unknown phase: %s" % [entity_id, p])
-			if when.has("requires"):
-				assert(when["requires"] is Dictionary, "entity %s encounter_when.requires must be a Dictionary" % entity_id)
+					_check(VALID_PHASES.has(String(p)), "entity %s encounter_when references unknown phase: %s" % [entity_id, p])
+			if when.has("requires") and _require(when["requires"] is Dictionary, "entity %s encounter_when.requires must be a Dictionary" % entity_id):
 				for acc_id: String in (when["requires"] as Dictionary):
-					assert(
+					_check(
 						produced_accomplishments.has(acc_id),
 						"entity %s encounter_when.requires waits on unproduced accomplishment: %s" % [entity_id, acc_id]
 					)
 			if when.has("absent"):
 				for counter_id: String in (when["absent"] as Dictionary):
-					assert(produced_accomplishments.has(counter_id), "entity %s encounter_when.absent references unproduced counter: %s (a typo here silently never gates -- GH#199 review MEDIUM-3)" % [entity_id, counter_id])
+					_check(produced_accomplishments.has(counter_id), "entity %s encounter_when.absent references unproduced counter: %s (a typo here silently never gates -- GH#199 review MEDIUM-3)" % [entity_id, counter_id])
 
 func _validate_encounter_gate_counters(scene: Dictionary, produced_accomplishments: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
@@ -359,16 +395,16 @@ func _validate_encounter_gate_counters(scene: Dictionary, produced_accomplishmen
 		for entity: Dictionary in map.get("entities", []):
 			var entity_id: String = String(entity.get("id", "?"))
 			for acc_id: String in (entity.get("ally_requires", {}) as Dictionary):
-				assert(
+				_check(
 					produced_accomplishments.has(acc_id),
 					"entity %s ally_requires waits on unproduced accomplishment: %s" % [entity_id, acc_id]
 				)
 			var penalties: Dictionary = entity.get("ally_hp_penalty", {})
 			for ally_id: String in penalties:
 				var arm: Dictionary = penalties[ally_id]
-				assert(arm.has("hp_mod"), "entity %s ally_hp_penalty.%s missing hp_mod" % [entity_id, ally_id])
+				_check(arm.has("hp_mod"), "entity %s ally_hp_penalty.%s missing hp_mod" % [entity_id, ally_id])
 				for acc_id: String in (arm.get("when", {}) as Dictionary):
-					assert(
+					_check(
 						produced_accomplishments.has(acc_id),
 						"entity %s ally_hp_penalty.%s.when waits on unproduced accomplishment: %s" % [entity_id, ally_id, acc_id]
 					)
@@ -385,11 +421,11 @@ func _validate_skill_uses(scene: Dictionary, skill_ids: Dictionary, produced_acc
 				continue
 			var entity_id: String = String(entity["id"])
 			var uses: Dictionary = entity["skill_uses"]
-			assert(not uses.is_empty(), "entity %s: skill_uses must not be empty" % entity_id)
+			_check(not uses.is_empty(), "entity %s: skill_uses must not be empty" % entity_id)
 			for sid: String in uses:
-				assert(skill_ids.has(sid), "entity %s skill_uses references unknown skill: %s" % [entity_id, sid])
+				_check(skill_ids.has(sid), "entity %s skill_uses references unknown skill: %s" % [entity_id, sid])
 				var arm: Dictionary = uses[sid]
-				assert(arm.has("accomplishment") and arm.has("toast"), "entity %s skill_uses[%s] needs accomplishment + toast" % [entity_id, sid])
+				_check(arm.has("accomplishment") and arm.has("toast"), "entity %s skill_uses[%s] needs accomplishment + toast" % [entity_id, sid])
 
 
 func _validate_present_when(scene: Dictionary, produced_accomplishments: Dictionary) -> void:
@@ -405,44 +441,46 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 				continue
 			var entity_id: String = String(entity["id"])
 			var when: Dictionary = entity["present_when"]
-			assert(
+			_check(
 				String(entity.get("kind", "")) != "encounter",
 				"entity %s: present_when is forbidden on kind:encounter -- _check_trigger_radius never consults presence, so a present_when encounter would be invisible/unblocked yet still ambush; use encounter_when" % entity_id
 			)
-			assert(when.has("requires") or when.has("phase") or when.has("absent") or when.has("guest"), "entity %s present_when has no recognized shape (only 'requires'/'phase'/'absent'/'guest' are sanctioned)" % entity_id)
+			_check(when.has("requires") or when.has("phase") or when.has("absent") or when.has("guest"), "entity %s present_when has no recognized shape (only 'requires'/'phase'/'absent'/'guest' are sanctioned)" % entity_id)
 			if when.has("phase"):
 				for p: Variant in when["phase"]:
-					assert(VALID_PHASES.has(String(p)), "entity %s present_when references unknown phase: %s" % [entity_id, p])
+					_check(VALID_PHASES.has(String(p)), "entity %s present_when references unknown phase: %s" % [entity_id, p])
 			if when.has("guest"):
 				# d1 #247 Friends of the Inn rotation arm. Roster members are
 				# met via their auto-banked chatted_with_<id> counter (registered
 				# produced for every talk_pool entity, above) -- a typo in the
 				# roster would silently never seat that guest, so pin production.
-				assert(when["guest"] is Dictionary, "entity %s present_when.guest must be a Dictionary" % entity_id)
+				if not _require(when["guest"] is Dictionary, "entity %s present_when.guest must be a Dictionary" % entity_id):
+					continue
 				var g: Dictionary = when["guest"]
-				assert(g.has("npc") and g.has("roster"), "entity %s present_when.guest needs npc + roster" % entity_id)
-				assert(g["roster"] is Array and not (g["roster"] as Array).is_empty(), "entity %s present_when.guest roster must be a non-empty Array" % entity_id)
-				assert((g["roster"] as Array).has(String(g["npc"])), "entity %s present_when.guest npc %s must be in its own roster" % [entity_id, String(g["npc"])])
+				if not _require(g.has("npc") and g.has("roster"), "entity %s present_when.guest needs npc + roster" % entity_id):
+					continue
+				if not _require(g["roster"] is Array and not (g["roster"] as Array).is_empty(), "entity %s present_when.guest roster must be a non-empty Array" % entity_id):
+					continue
+				_check((g["roster"] as Array).has(String(g["npc"])), "entity %s present_when.guest npc %s must be in its own roster" % [entity_id, String(g["npc"])])
 				for npc: Variant in (g["roster"] as Array):
 					var met_counter := "chatted_with_" + String(npc)
-					assert(produced_accomplishments.has(met_counter), "entity %s present_when.guest roster member %s: met counter %s is unproduced" % [entity_id, String(npc), met_counter])
+					_check(produced_accomplishments.has(met_counter), "entity %s present_when.guest roster member %s: met counter %s is unproduced" % [entity_id, String(npc), met_counter])
 				# All guests on a map must agree on roster + seats (MINOR-3).
 				var this_spec := {"roster": g["roster"], "seats": int(g.get("seats", 2))}
 				if map_guest_ref.is_empty():
 					map_guest_ref = this_spec
 					map_guest_ref_id = entity_id
 				else:
-					assert(this_spec == map_guest_ref, "entity %s present_when.guest roster/seats %s diverges from %s's %s on map %s -- co-located guests must share ONE rotation" % [entity_id, this_spec, map_guest_ref_id, map_guest_ref, map_id])
-			if when.has("requires"):
-				assert(when["requires"] is Dictionary, "entity %s present_when.requires must be a Dictionary" % entity_id)
+					_check(this_spec == map_guest_ref, "entity %s present_when.guest roster/seats %s diverges from %s's %s on map %s -- co-located guests must share ONE rotation" % [entity_id, this_spec, map_guest_ref_id, map_guest_ref, map_id])
+			if when.has("requires") and _require(when["requires"] is Dictionary, "entity %s present_when.requires must be a Dictionary" % entity_id):
 				for acc_id: String in (when["requires"] as Dictionary):
-					assert(
+					_check(
 						produced_accomplishments.has(acc_id),
 						"entity %s present_when.requires waits on unproduced accomplishment: %s" % [entity_id, acc_id]
 					)
 			if when.has("absent"):
 				for counter_id: String in (when["absent"] as Dictionary):
-					assert(produced_accomplishments.has(counter_id), "entity %s encounter_when.absent references unproduced counter: %s (a typo here silently never gates -- GH#199 review MEDIUM-3)" % [entity_id, counter_id])
+					_check(produced_accomplishments.has(counter_id), "entity %s encounter_when.absent references unproduced counter: %s (a typo here silently never gates -- GH#199 review MEDIUM-3)" % [entity_id, counter_id])
 
 func _validate_visual_states_phase(scene: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
@@ -455,7 +493,7 @@ func _validate_visual_states_phase(scene: Dictionary) -> void:
 				if not when.has("phase"):
 					continue
 				for p: Variant in when["phase"]:
-					assert(VALID_PHASES.has(String(p)), "entity %s visual_states references unknown phase: %s" % [String(entity["id"]), p])
+					_check(VALID_PHASES.has(String(p)), "entity %s visual_states references unknown phase: %s" % [String(entity["id"]), p])
 
 
 func _validate_talk_pool_echo_of(scene: Dictionary, entity_ids: Dictionary) -> void:
@@ -466,14 +504,15 @@ func _validate_talk_pool_echo_of(scene: Dictionary, entity_ids: Dictionary) -> v
 				if not (raw is Dictionary):
 					continue
 				var entry := raw as Dictionary
-				assert(entry.has("echo_of") and entry.size() == 1, "entity %s talk_pool carries a Dictionary entry with an unrecognized shape (only {echo_of: id} is sanctioned): %s" % [String(entity["id"]), entry])
+				if not _require(entry.has("echo_of") and entry.size() == 1, "entity %s talk_pool carries a Dictionary entry with an unrecognized shape (only {echo_of: id} is sanctioned): %s" % [String(entity["id"]), entry]):
+					continue
 				var echo_id: String = String(entry["echo_of"])
-				assert(entity_ids.has(echo_id), "entity %s echo_of references unknown entity: %s" % [String(entity["id"]), echo_id])
+				_check(entity_ids.has(echo_id), "entity %s echo_of references unknown entity: %s" % [String(entity["id"]), echo_id])
 				var echo_target: Dictionary = _find_entity_by_id(scene, echo_id)
 				var echo_pool: Array = echo_target.get("talk_pool", [])
-				assert(not echo_pool.is_empty(), "entity %s echo_of target %s has no talk_pool to echo" % [String(entity["id"]), echo_id])
+				_check(not echo_pool.is_empty(), "entity %s echo_of target %s has no talk_pool to echo" % [String(entity["id"]), echo_id])
 				for echo_line: Variant in echo_pool:
-					assert(echo_line is String, "entity %s echo_of target %s's talk_pool contains a non-string entry (echo_of does not chain -- social.gd resolves one level only)" % [String(entity["id"]), echo_id])
+					_check(echo_line is String, "entity %s echo_of target %s's talk_pool contains a non-string entry (echo_of does not chain -- social.gd resolves one level only)" % [String(entity["id"]), echo_id])
 
 
 func _find_entity_by_id(scene: Dictionary, id: String) -> Dictionary:
@@ -491,7 +530,7 @@ func _validate_conversations(scene: Dictionary, graphs: Dictionary) -> void:
 		for entity: Dictionary in map.get("entities", []):
 			if entity.has("conversation"):
 				var conversation_id: String = String(entity["conversation"])
-				assert(graphs.has(conversation_id), "entity %s conversation has no graph: %s" % [String(entity["id"]), conversation_id])
+				_check(graphs.has(conversation_id), "entity %s conversation has no graph: %s" % [String(entity["id"]), conversation_id])
 
 
 func _validate_dialogue_graphs(
@@ -506,7 +545,7 @@ func _validate_dialogue_graphs(
 	for graph_id: String in graphs:
 		var graph: Dictionary = graphs[graph_id]
 		var nodes: Dictionary = graph["nodes"]
-		assert(nodes.has(String(graph["start"])), "%s start node missing: %s" % [graph_id, String(graph["start"])])
+		_check(nodes.has(String(graph["start"])), "%s start node missing: %s" % [graph_id, String(graph["start"])])
 		for node_id: String in nodes:
 			var node: Dictionary = nodes[node_id]
 			_validate_node(graph_id, node_id, node, skill_ids, class_ids, item_ids)
@@ -517,16 +556,17 @@ func _validate_dialogue_graphs(
 
 func _validate_node(graph_id: String, node_id: String, node: Dictionary, skill_ids: Dictionary, class_ids: Dictionary, item_ids: Dictionary) -> void:
 	var label: String = "%s.%s" % [graph_id, node_id]
-	assert(node.has("speaker"), label + " missing speaker")
-	assert(node.has("text"), label + " missing text")
-	if node.has("text_variants"):
-		assert(node["text_variants"] is Array, label + " text_variants must be an array")
+	_check(node.has("speaker"), label + " missing speaker")
+	_check(node.has("text"), label + " missing text")
+	if node.has("text_variants") and _require(node["text_variants"] is Array, label + " text_variants must be an array"):
 		for variant_index: int in (node["text_variants"] as Array).size():
 			var variant: Dictionary = (node["text_variants"] as Array)[variant_index]
 			var variant_label: String = "%s text_variants[%d]" % [label, variant_index]
-			assert(variant.has("text"), variant_label + " missing text")
-			assert(variant.has("requires"), variant_label + " missing requires")
-			assert(variant["requires"] is Dictionary, variant_label + " requires must be a dictionary")
+			_check(variant.has("text"), variant_label + " missing text")
+			if not _require(variant.has("requires"), variant_label + " missing requires"):
+				continue
+			if not _require(variant["requires"] is Dictionary, variant_label + " requires must be a dictionary"):
+				continue
 			_validate_requires(variant_label, variant["requires"], skill_ids, class_ids, item_ids)
 
 
@@ -546,15 +586,15 @@ func _validate_option(
 	var label: String = "%s.%s[%d]" % [graph_id, node_id, option_index]
 	var has_goto: bool = option.has("goto")
 	var has_end: bool = option.has("end")
-	assert(has_goto != has_end, label + " must have exactly one of goto/end")
+	_check(has_goto != has_end, label + " must have exactly one of goto/end")
 	if has_goto:
-		assert(nodes.has(String(option["goto"])), label + " goto target missing: " + String(option["goto"]))
+		_check(nodes.has(String(option["goto"])), label + " goto target missing: " + String(option["goto"]))
 	if has_end:
-		assert(bool(option["end"]), label + " end must be true")
+		_check(bool(option["end"]), label + " end must be true")
 	if option.has("requires"):
 		_validate_requires(label, option["requires"], skill_ids, class_ids, item_ids)
 	if option.has("hide_when"):
-		assert(_hide_when_gate_keys_allowed(option["hide_when"]), label + " hide_when must not carry once_per_waking (requires-only gate, Issue #23)")
+		_check(_hide_when_gate_keys_allowed(option["hide_when"]), label + " hide_when must not carry once_per_waking (requires-only gate, Issue #23)")
 		_validate_requires(label + " hide_when", option["hide_when"], skill_ids, class_ids, item_ids)
 	for effect: Dictionary in option.get("effects", []):
 		_validate_effect(label, effect, quest_ids, class_ids, item_ids, entity_ids, produced_accomplishments)
@@ -562,10 +602,10 @@ func _validate_option(
 		var gold_requirement := int((option["requires"] as Dictionary)["gold"])
 		for effect: Dictionary in option.get("effects", []):
 			if effect.has("gold"):
-				assert(int(effect["gold"]) == -gold_requirement, "%s requires.gold (%d) has a mismatched effects.gold (%d) -- WIDialogue.choose()'s [Bargain] price_mod can only discount an effect matching -requires.gold exactly" % [label, gold_requirement, int(effect["gold"])])
+				_check(int(effect["gold"]) == -gold_requirement, "%s requires.gold (%d) has a mismatched effects.gold (%d) -- WIDialogue.choose()'s [Bargain] price_mod can only discount an effect matching -requires.gold exactly" % [label, gold_requirement, int(effect["gold"])])
 		var option_text := String(option.get("text", ""))
 		if option_text.contains("gold)"):
-			assert(option_text.contains("(%d gold)" % gold_requirement), "%s bakes a price into its text but not as '(%d gold)' (requires.gold) -- WIDialogue._priced_text's discount rewrite would miss it and the display could contradict the charge" % [label, gold_requirement])
+			_check(option_text.contains("(%d gold)" % gold_requirement), "%s bakes a price into its text but not as '(%d gold)' (requires.gold) -- WIDialogue._priced_text's discount rewrite would miss it and the display could contradict the charge" % [label, gold_requirement])
 
 
 func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictionary, class_ids: Dictionary, item_ids: Dictionary) -> void:
@@ -573,41 +613,41 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 	if requires.has("skill"):
 		gate_keys += 1
 		var skill_id: String = String(requires["skill"])
-		assert(skill_ids.has(skill_id), label + " requires unknown skill: " + skill_id)
+		_check(skill_ids.has(skill_id), label + " requires unknown skill: " + skill_id)
 	if requires.has("class"):
 		gate_keys += 1
 		var classes_required: Dictionary = requires["class"]
 		for class_id: String in classes_required:
-			assert(class_ids.has(class_id), label + " requires unknown class: " + class_id)
+			_check(class_ids.has(class_id), label + " requires unknown class: " + class_id)
 	if requires.has("accomplishment"):
 		gate_keys += 1
 	if requires.has("board_accepted"):
 		gate_keys += 1
-		assert(requires["board_accepted"] is bool, label + " board_accepted must be a bool")
+		_check(requires["board_accepted"] is bool, label + " board_accepted must be a bool")
 	if requires.has("delivery_accepted"):
 		gate_keys += 1
-		assert(requires["delivery_accepted"] is bool, label + " delivery_accepted must be a bool")
+		_check(requires["delivery_accepted"] is bool, label + " delivery_accepted must be a bool")
 	if requires.has("gold"):
 		gate_keys += 1
-		assert(int(requires["gold"]) > 0, label + " gold requirement must be a positive price")
+		_check(int(requires["gold"]) > 0, label + " gold requirement must be a positive price")
 	if requires.has("once_per_waking"):
 		gate_keys += 1
-		assert(_is_valid_verb_entity_key(requires["once_per_waking"]), label + " once_per_waking must be a \"<verb>:<entity>\" string with both segments non-empty")
+		_check(_is_valid_verb_entity_key(requires["once_per_waking"]), label + " once_per_waking must be a \"<verb>:<entity>\" string with both segments non-empty")
 	if requires.has("item"):
 		gate_keys += 1
 		var item_id: String = String(requires["item"])
-		assert(item_ids.has(item_id), label + " requires unknown item: " + item_id)
+		_check(item_ids.has(item_id), label + " requires unknown item: " + item_id)
 	if requires.has("race"):
 		gate_keys += 1
 		var race_id: String = String(requires["race"])
-		assert(["human", "drake", "gnoll"].has(race_id), label + " requires unknown race: " + race_id)
+		_check(["human", "drake", "gnoll"].has(race_id), label + " requires unknown race: " + race_id)
 	if requires.has("phase"):
 		gate_keys += 1
-		assert(requires["phase"] is Array, label + " requires.phase must be an array")
+		_check(requires["phase"] is Array, label + " requires.phase must be an array")
 		var phase_ids: Array = requires["phase"]
-		assert(not phase_ids.is_empty(), label + " requires.phase must not be empty")
+		_check(not phase_ids.is_empty(), label + " requires.phase must not be empty")
 		for phase_id: Variant in phase_ids:
-			assert(["day", "dusk", "night"].has(String(phase_id)), label + " requires unknown phase: " + String(phase_id))
+			_check(["day", "dusk", "night"].has(String(phase_id)), label + " requires unknown phase: " + String(phase_id))
 	if gate_keys == 2:
 		var sanctioned_gold_accomplishment := requires.has("gold") and requires.has("accomplishment")
 		var sanctioned_stage_once := requires.has("accomplishment") and requires.has("once_per_waking")
@@ -617,9 +657,9 @@ func _validate_requires(label: String, requires: Dictionary, skill_ids: Dictiona
 		# {gold, item}: priced item-services (GH#142 Hedault enchanting --
 		# hold the base item AND afford the fee; both gates show-locked).
 		var sanctioned_gold_item := requires.has("gold") and requires.has("item")
-		assert(sanctioned_gold_accomplishment or sanctioned_stage_once or sanctioned_stage_class or sanctioned_once_item or sanctioned_stage_skill or sanctioned_gold_item, label + " the only sanctioned compound requires are {gold, accomplishment}, {accomplishment, once_per_waking}, {accomplishment, class}, {once_per_waking, item}, {accomplishment, skill}, and {gold, item}")
+		_check(sanctioned_gold_accomplishment or sanctioned_stage_once or sanctioned_stage_class or sanctioned_once_item or sanctioned_stage_skill or sanctioned_gold_item, label + " the only sanctioned compound requires are {gold, accomplishment}, {accomplishment, once_per_waking}, {accomplishment, class}, {once_per_waking, item}, {accomplishment, skill}, and {gold, item}")
 		return
-	assert(gate_keys == 1, label + " requires must use exactly one gate type")
+	_check(gate_keys == 1, label + " requires must use exactly one gate type")
 
 
 func _is_valid_verb_entity_key(value: Variant) -> bool:
@@ -634,22 +674,22 @@ func _hide_when_gate_keys_allowed(hide_when: Dictionary) -> bool:
 
 
 func _validate_once_per_waking_shape_cases() -> void:
-	assert(_is_valid_verb_entity_key("meal:erin"), "verb:entity accepted (Erin's meal)")
-	assert(_is_valid_verb_entity_key("wager:relc"), "verb:entity accepted (Relc's wager)")
-	assert(_is_valid_verb_entity_key("observe:gossip_npc"), "verb:entity accepted (existing entity_first_use shape)")
-	assert(not _is_valid_verb_entity_key("meal"), "missing colon rejected")
-	assert(not _is_valid_verb_entity_key(":erin"), "empty verb segment rejected")
-	assert(not _is_valid_verb_entity_key("meal:"), "empty entity segment rejected")
-	assert(not _is_valid_verb_entity_key(""), "empty string rejected")
-	assert(not _is_valid_verb_entity_key(true), "non-string bool value rejected")
-	assert(not _is_valid_verb_entity_key(5), "non-string numeric value rejected")
-	assert(not _is_valid_verb_entity_key(["meal", "erin"]), "non-string array value rejected")
-	assert(_is_valid_verb_entity_key("meal:erin:extra"), "extra colon still splits into two non-empty segments")
-	assert(not _hide_when_gate_keys_allowed({"once_per_waking": "meal:erin"}), "hide_when carrying once_per_waking rejected (requires-only gate)")
-	assert(not _hide_when_gate_keys_allowed({"accomplishment": {"x": 1}, "once_per_waking": "meal:erin"}), "hide_when carrying once_per_waking alongside another key still rejected")
-	assert(_hide_when_gate_keys_allowed({"accomplishment": {"has_package": 1}}), "accomplishment hide_when still accepted")
-	assert(_hide_when_gate_keys_allowed({"board_accepted": true}), "board_accepted hide_when still accepted")
-	assert(_hide_when_gate_keys_allowed({}), "empty hide_when accepted (never authored, but not this rule's business)")
+	_check(_is_valid_verb_entity_key("meal:erin"), "verb:entity accepted (Erin's meal)")
+	_check(_is_valid_verb_entity_key("wager:relc"), "verb:entity accepted (Relc's wager)")
+	_check(_is_valid_verb_entity_key("observe:gossip_npc"), "verb:entity accepted (existing entity_first_use shape)")
+	_check(not _is_valid_verb_entity_key("meal"), "missing colon rejected")
+	_check(not _is_valid_verb_entity_key(":erin"), "empty verb segment rejected")
+	_check(not _is_valid_verb_entity_key("meal:"), "empty entity segment rejected")
+	_check(not _is_valid_verb_entity_key(""), "empty string rejected")
+	_check(not _is_valid_verb_entity_key(true), "non-string bool value rejected")
+	_check(not _is_valid_verb_entity_key(5), "non-string numeric value rejected")
+	_check(not _is_valid_verb_entity_key(["meal", "erin"]), "non-string array value rejected")
+	_check(_is_valid_verb_entity_key("meal:erin:extra"), "extra colon still splits into two non-empty segments")
+	_check(not _hide_when_gate_keys_allowed({"once_per_waking": "meal:erin"}), "hide_when carrying once_per_waking rejected (requires-only gate)")
+	_check(not _hide_when_gate_keys_allowed({"accomplishment": {"x": 1}, "once_per_waking": "meal:erin"}), "hide_when carrying once_per_waking alongside another key still rejected")
+	_check(_hide_when_gate_keys_allowed({"accomplishment": {"has_package": 1}}), "accomplishment hide_when still accepted")
+	_check(_hide_when_gate_keys_allowed({"board_accepted": true}), "board_accepted hide_when still accepted")
+	_check(_hide_when_gate_keys_allowed({}), "empty hide_when accepted (never authored, but not this rule's business)")
 
 
 const DIALOGUE_EFFECT_VERBS := [
@@ -674,31 +714,31 @@ func _validate_effect(
 	for key: String in effect:
 		if key == "_comment":
 			continue
-		assert(DIALOGUE_EFFECT_VERBS.has(key) or key == "class", label + " carries unrecognized effect key: " + key)
+		_check(DIALOGUE_EFFECT_VERBS.has(key) or key == "class", label + " carries unrecognized effect key: " + key)
 		verb_count += 1
-	assert(verb_count == 1, label + " effect dict must carry exactly ONE verb (got %d): %s" % [verb_count, str(effect.keys())])
+	_check(verb_count == 1, label + " effect dict must carry exactly ONE verb (got %d): %s" % [verb_count, str(effect.keys())])
 	if effect.has("accomplishment"):
 		produced_accomplishments[String(effect["accomplishment"])] = true
 	if effect.has("quest"):
 		var quest_id: String = String(effect["quest"])
-		assert(quest_ids.has(quest_id), label + " starts unknown quest: " + quest_id)
+		_check(quest_ids.has(quest_id), label + " starts unknown quest: " + quest_id)
 	if effect.has("remove_entity"):
 		var remove_id: String = String(effect["remove_entity"])
-		assert(entity_ids.has(remove_id), label + " removes unknown entity: " + remove_id)
+		_check(entity_ids.has(remove_id), label + " removes unknown entity: " + remove_id)
 	if effect.has("dormant_entity"):
 		var dormant_id: String = String(effect["dormant_entity"])
-		assert(entity_ids.has(dormant_id), label + " removes unknown entity: " + dormant_id)
+		_check(entity_ids.has(dormant_id), label + " removes unknown entity: " + dormant_id)
 	if effect.has("start_combat"):
 		var combat_id: String = String(effect["start_combat"])
-		assert(entity_ids.has(combat_id), label + " starts combat for unknown entity: " + combat_id)
+		_check(entity_ids.has(combat_id), label + " starts combat for unknown entity: " + combat_id)
 	if effect.has("class"):
 		var class_id: String = String(effect["class"])
-		assert(class_ids.has(class_id), label + " references unknown class: " + class_id)
+		_check(class_ids.has(class_id), label + " references unknown class: " + class_id)
 	if effect.has("item"):
 		var granted_item_id: String = String(effect["item"])
-		assert(item_ids.has(granted_item_id), label + " grants unknown item: " + granted_item_id)
+		_check(item_ids.has(granted_item_id), label + " grants unknown item: " + granted_item_id)
 	if effect.has("bank_first_use"):
-		assert(_is_valid_verb_entity_key(effect["bank_first_use"]), label + " bank_first_use must be a \"<verb>:<entity>\" string with both segments non-empty")
+		_check(_is_valid_verb_entity_key(effect["bank_first_use"]), label + " bank_first_use must be a \"<verb>:<entity>\" string with both segments non-empty")
 
 
 func _validate_hide_when_nodes_have_always_available_exit(graphs: Dictionary) -> void:
@@ -720,7 +760,7 @@ func _validate_hide_when_nodes_have_always_available_exit(graphs: Dictionary) ->
 				if not option.has("hide_when") and not option.has("requires"):
 					has_always_available = true
 					break
-			assert(has_always_available, "%s.%s has hide_when/progress-gated options but no always-available option -- risk of softlock" % [graph_id, node_id])
+			_check(has_always_available, "%s.%s has hide_when/progress-gated options but no always-available option -- risk of softlock" % [graph_id, node_id])
 
 
 func _validate_class_gains(classes: Dictionary, produced_accomplishments: Dictionary) -> void:
@@ -729,7 +769,7 @@ func _validate_class_gains(classes: Dictionary, produced_accomplishments: Dictio
 			continue
 		var condition: Dictionary = (cls["gained_by"] as Dictionary).get("accomplishment", {})
 		for accomplishment_id: String in condition:
-			assert(
+			_check(
 				produced_accomplishments.has(accomplishment_id),
 				"class %s gained_by waits on unproduced accomplishment: %s" % [String(cls["id"]), accomplishment_id]
 			)
@@ -769,7 +809,7 @@ func _validate_class_level_tables(classes: Dictionary) -> void:
 	for cls: Dictionary in catalog_list:
 		var id := String(cls["id"])
 		var levels: Array = cls.get("levels", [])
-		assert(not levels.is_empty(), "class %s has no levels entries" % id)
+		_check(not levels.is_empty(), "class %s has no levels entries" % id)
 
 		var level_set: Dictionary = {}
 		var max_level := 0
@@ -792,13 +832,13 @@ func _validate_class_level_tables(classes: Dictionary) -> void:
 			for f: Variant in (floor_candidates[id] as Array):
 				floor_level = mini(floor_level, int(f))
 
-		assert(min_level >= floor_level, "class %s has a levels entry (level %d) below its derived floor %d -- sub-floor entries are unreachable padding (GH#54 sparse-table convention)" % [id, min_level, floor_level])
+		_check(min_level >= floor_level, "class %s has a levels entry (level %d) below its derived floor %d -- sub-floor entries are unreachable padding (GH#54 sparse-table convention)" % [id, min_level, floor_level])
 
 		for l in range(floor_level, max_level + 1):
-			assert(level_set.has(l), "class %s is missing a levels entry at %d (floor %d, max %d) -- the level-up/evolution walk could arrive at an uncovered level" % [id, l, floor_level, max_level])
+			_check(level_set.has(l), "class %s is missing a levels entry at %d (floor %d, max %d) -- the level-up/evolution walk could arrive at an uncovered level" % [id, l, floor_level, max_level])
 
 		if is_evolution_only:
-			assert(min_level == floor_level, "class %s (evolution-only, reachable only via Replacement/consolidation) must start EXACTLY at its derived floor %d, found its lowest authored entry at %d" % [id, floor_level, min_level])
+			_check(min_level == floor_level, "class %s (evolution-only, reachable only via Replacement/consolidation) must start EXACTLY at its derived floor %d, found its lowest authored entry at %d" % [id, floor_level, min_level])
 
 	for entry: Dictionary in classes.get("consolidations", []):
 		var target_id := String(entry.get("target", ""))
@@ -813,7 +853,7 @@ func _validate_class_level_tables(classes: Dictionary) -> void:
 			line_ceilings.append(line_max)
 		var merged_ceiling := WIProgression._consolidation_merged_level(int(line_ceilings[0]), int(line_ceilings[1]))
 		var target_max := int(class_table_max.get(target_id, 0))
-		assert(
+		_check(
 			target_max >= merged_ceiling,
 			"consolidation target %s table max %d cannot hold the merge formula's top-end %d (parent lines' own table maxes: %d, %d) -- a player who levels both parent lines to their real ceiling before consolidating is assigned a held level with no levels entry (HP/MP growth and grants silently stop, GH#61)" % [target_id, target_max, merged_ceiling, line_ceilings[0], line_ceilings[1]]
 		)
@@ -839,7 +879,7 @@ func _missing_class_skill_grant_ids(classes: Dictionary, skill_ids: Dictionary) 
 
 func _validate_class_skill_grant_ids(classes: Dictionary, skill_ids: Dictionary) -> void:
 	var missing := _missing_class_skill_grant_ids(classes, skill_ids)
-	assert(missing.is_empty(), "class grant(s) reference unknown skill id(s) -- ghost grants (#96 hardening): " + ", ".join(missing))
+	_check(missing.is_empty(), "class grant(s) reference unknown skill id(s) -- ghost grants (#96 hardening): " + ", ".join(missing))
 
 
 func _validate_class_skill_grant_ids_shape_cases() -> void:
@@ -850,20 +890,20 @@ func _validate_class_skill_grant_ids_shape_cases() -> void:
 		"levels": [{"level": 1, "grants": ["real_skill"]}],
 		"evolution": {"balanced_grants": ["real_skill"]},
 	}]}
-	assert(_missing_class_skill_grant_ids(clean, skill_ids).is_empty(), "clean catalog should report no missing grant ids")
+	_check(_missing_class_skill_grant_ids(clean, skill_ids).is_empty(), "clean catalog should report no missing grant ids")
 
 	var bad_level: Dictionary = {"classes": [{
 		"id": "x",
 		"levels": [{"level": 1, "grants": ["ghost_skill"]}],
 	}]}
-	assert(not _missing_class_skill_grant_ids(bad_level, skill_ids).is_empty(), "NEGATIVE CONTROL: a typo'd levels[].grants id must be caught")
+	_check(not _missing_class_skill_grant_ids(bad_level, skill_ids).is_empty(), "NEGATIVE CONTROL: a typo'd levels[].grants id must be caught")
 
 	var bad_balanced: Dictionary = {"classes": [{
 		"id": "x",
 		"levels": [{"level": 1, "grants": []}],
 		"evolution": {"balanced_grants": ["ghost_skill"]},
 	}]}
-	assert(not _missing_class_skill_grant_ids(bad_balanced, skill_ids).is_empty(), "NEGATIVE CONTROL: a typo'd evolution.balanced_grants id must be caught")
+	_check(not _missing_class_skill_grant_ids(bad_balanced, skill_ids).is_empty(), "NEGATIVE CONTROL: a typo'd evolution.balanced_grants id must be caught")
 
 
 func _validate_quests(quests: Dictionary, produced_accomplishments: Dictionary) -> void:
@@ -871,7 +911,7 @@ func _validate_quests(quests: Dictionary, produced_accomplishments: Dictionary) 
 		for beat: Dictionary in quest.get("beats", []):
 			var complete_when: Dictionary = beat.get("complete_when", {})
 			for accomplishment_id: String in complete_when:
-				assert(
+				_check(
 					produced_accomplishments.has(accomplishment_id),
 					"quest %s beat %s waits on unproduced accomplishment: %s" % [String(quest["id"]), String(beat["id"]), accomplishment_id]
 				)
@@ -1021,21 +1061,21 @@ func _validate_travel_beat_place_naming(quests: Dictionary, scene: Dictionary, g
 				continue
 			var tokens: Array = []
 			for map_id: String in beat_maps:
-				assert(LANDMARK_TOKENS.has(map_id), "quest %s beat %s needs a travel landmark on map %s, which has no LANDMARK_TOKENS entry" % [quest_id, String(beat["id"]), map_id])
+				_check(LANDMARK_TOKENS.has(map_id), "quest %s beat %s needs a travel landmark on map %s, which has no LANDMARK_TOKENS entry" % [quest_id, String(beat["id"]), map_id])
 				tokens.append_array(LANDMARK_TOKENS[map_id])
 			var description := String(beat.get("description", ""))
-			assert(
+			_check(
 				_description_names_place(description, tokens),
 				"quest %s beat %s is a travel-only beat (giver map(s) %s, producer map(s) %s) but its description names no landmark from %s: %s" % [quest_id, String(beat["id"]), quest_giver_maps.keys(), beat_maps.keys(), tokens, description]
 			)
 
 
 func _validate_place_naming_shape_cases() -> void:
-	assert(not _beat_needs_place_name({"inn": true}, {"inn": true}), "same-map beat needs no landmark")
-	assert(_beat_needs_place_name({"guild": true}, {"inn": true}), "guild-only beat, inn-given quest, needs a landmark")
-	assert(not _beat_needs_place_name({"inn": true, "street": true}, {"inn": true}), "a beat with ANY same-map route needs no landmark, even with a foreign alternate route")
-	assert(not _beat_needs_place_name({}, {"inn": true}), "no known producer map -- nothing to cross-check, not this check's business")
-	assert(_beat_needs_place_name({"guild": true}, {}), "an unresolvable quest-giver map (empty set) can share no map with anything -- fails loud (requires naming) rather than silently skipping the beat")
+	_check(not _beat_needs_place_name({"inn": true}, {"inn": true}), "same-map beat needs no landmark")
+	_check(_beat_needs_place_name({"guild": true}, {"inn": true}), "guild-only beat, inn-given quest, needs a landmark")
+	_check(not _beat_needs_place_name({"inn": true, "street": true}, {"inn": true}), "a beat with ANY same-map route needs no landmark, even with a foreign alternate route")
+	_check(not _beat_needs_place_name({}, {"inn": true}), "no known producer map -- nothing to cross-check, not this check's business")
+	_check(_beat_needs_place_name({"guild": true}, {}), "an unresolvable quest-giver map (empty set) can share no map with anything -- fails loud (requires naming) rather than silently skipping the beat")
 
 	# 2026-07-26 (Task 2.3): "ruin" joined LANDMARK_TOKENS["ruin_surface"] --
 	# horns_dig's join_dig/breach beats are ruin-produced but inn/dungeon-given,
@@ -1044,19 +1084,19 @@ func _validate_place_naming_shape_cases() -> void:
 	# names the ruin, so it is no longer a no-landmark string; the control below
 	# is the same sentence with every landmark word removed, preserving intent.
 	var ruin_tokens: Array = LANDMARK_TOKENS["ruin_surface"] + LANDMARK_TOKENS["street"]
-	assert(_description_names_place("Recover the anchor stone from the ruin east past the gate road, on the floodplains, and buy Krshia's catalyst to attune it.", ruin_tokens), "fixed recover beat names the ruin/floodplains")
-	assert(_description_names_place("Get the Horns through the ruin's sealed pedestal level -- fight what guards it, walk the plates, or read the wardwork.", ruin_tokens), "horns_dig's breach beat names the ruin")
-	assert(not _description_names_place("Recover the anchor stone and buy Krshia's catalyst to attune it.", ruin_tokens), "NEGATIVE CONTROL: a recovery beat naming no landmark at all")
+	_check(_description_names_place("Recover the anchor stone from the ruin east past the gate road, on the floodplains, and buy Krshia's catalyst to attune it.", ruin_tokens), "fixed recover beat names the ruin/floodplains")
+	_check(_description_names_place("Get the Horns through the ruin's sealed pedestal level -- fight what guards it, walk the plates, or read the wardwork.", ruin_tokens), "horns_dig's breach beat names the ruin")
+	_check(not _description_names_place("Recover the anchor stone and buy Krshia's catalyst to attune it.", ruin_tokens), "NEGATIVE CONTROL: a recovery beat naming no landmark at all")
 
 	var guild_tokens: Array = LANDMARK_TOKENS["guild"]
-	assert(_description_names_place("Decide what to do with Selys's reward, there at the Guild.", guild_tokens), "fixed decide beat names the Guild")
-	assert(not _description_names_place("Decide what to do with Selys's reward.", guild_tokens), "NEGATIVE CONTROL: the pre-fix decide beat names no landmark")
+	_check(_description_names_place("Decide what to do with Selys's reward, there at the Guild.", guild_tokens), "fixed decide beat names the Guild")
+	_check(not _description_names_place("Decide what to do with Selys's reward.", guild_tokens), "NEGATIVE CONTROL: the pre-fix decide beat names no landmark")
 
 	var boulevard_tokens: Array = LANDMARK_TOKENS["invrisil_boulevard"]
-	assert(_description_names_place("Find out exactly where Coyle's operation actually runs, along the boulevard, before you make a move on him.", boulevard_tokens), "fixed scout beat names the boulevard")
-	assert(not _description_names_place("Find out exactly where Coyle's operation actually runs, before you make a move on him.", boulevard_tokens), "NEGATIVE CONTROL: the pre-fix scout beat names no landmark")
-	assert(_description_names_place("Clear Farley's name — corner Master Coyle, back on the boulevard, however you see fit.", boulevard_tokens), "fixed resolve beat names the boulevard")
-	assert(not _description_names_place("Clear Farley's name — corner Master Coyle however you see fit.", boulevard_tokens), "NEGATIVE CONTROL: the pre-fix resolve beat names no landmark")
+	_check(_description_names_place("Find out exactly where Coyle's operation actually runs, along the boulevard, before you make a move on him.", boulevard_tokens), "fixed scout beat names the boulevard")
+	_check(not _description_names_place("Find out exactly where Coyle's operation actually runs, before you make a move on him.", boulevard_tokens), "NEGATIVE CONTROL: the pre-fix scout beat names no landmark")
+	_check(_description_names_place("Clear Farley's name — corner Master Coyle, back on the boulevard, however you see fit.", boulevard_tokens), "fixed resolve beat names the boulevard")
+	_check(not _description_names_place("Clear Farley's name — corner Master Coyle however you see fit.", boulevard_tokens), "NEGATIVE CONTROL: the pre-fix resolve beat names no landmark")
 
 ## b2 #218: the fence pool is builder-consumed (code-built graph — never
 ## scanned by the dialogue validators), so its records get the bounty-style
@@ -1064,16 +1104,16 @@ func _validate_place_naming_shape_cases() -> void:
 func _validate_fence(fence: Dictionary, item_ids: Dictionary) -> void:
 	for rec: Dictionary in fence.get("stock", []):
 		var rid := String(rec.get("id", "?"))
-		assert(item_ids.has(String(rec.get("item", ""))), "fence record %s references unknown item: %s" % [rid, rec.get("item")])
-		assert(int(rec.get("price", 0)) > 0, "fence record %s needs a positive price" % rid)
-		assert(String(rec.get("patter", "")) != "", "fence record %s needs a patter line" % rid)
+		_check(item_ids.has(String(rec.get("item", ""))), "fence record %s references unknown item: %s" % [rid, rec.get("item")])
+		_check(int(rec.get("price", 0)) > 0, "fence record %s needs a positive price" % rid)
+		_check(String(rec.get("patter", "")) != "", "fence record %s needs a patter line" % rid)
 
 
 func _validate_bounties(bounties: Dictionary, produced_accomplishments: Dictionary) -> void:
 	for bounty: Dictionary in bounties.get("bounties", []):
 		var condition: Dictionary = bounty.get("condition", {})
 		for accomplishment_id: String in condition:
-			assert(
+			_check(
 				produced_accomplishments.has(accomplishment_id),
 				"bounty %s condition waits on unproduced accomplishment: %s" % [String(bounty["id"]), accomplishment_id]
 			)
@@ -1081,7 +1121,7 @@ func _validate_bounties(bounties: Dictionary, produced_accomplishments: Dictiona
 		for rank: String in (bounty.get("tiers", {}) as Dictionary):
 			var tier: Dictionary = (bounty["tiers"] as Dictionary)[rank]
 			for accomplishment_id: String in (tier.get("condition", {}) as Dictionary):
-				assert(
+				_check(
 					produced_accomplishments.has(accomplishment_id),
 					"bounty %s tier %s condition waits on unproduced accomplishment: %s" % [String(bounty["id"]), rank, accomplishment_id]
 				)
@@ -1100,7 +1140,11 @@ func _validate_bounty_payout_anchors(bounties: Dictionary, items: Dictionary) ->
 	var crude := int(price.get("crude_draught", 0))
 	var tonic := int(price.get("tonic_of_the_clear_eye", 0))
 	var mending := int(price.get("mending_draught", 0))
-	assert(crude > 0 and tonic > 0 and mending > 0, "#163 anchor items (crude_draught/tonic_of_the_clear_eye/mending_draught) must all carry price>0")
+	_check(crude > 0 and tonic > 0 and mending > 0, "#163 anchor items (crude_draught/tonic_of_the_clear_eye/mending_draught) must all carry price>0")
+	if crude <= 0 or tonic <= 0 or mending <= 0:
+		# The anchors divide below -- collecting the failure and continuing would
+		# be a modulo-by-zero runtime error, not a reported failure.
+		return
 	for bounty: Dictionary in bounties.get("bounties", []):
 		var tiers: Dictionary = bounty.get("tiers", {})
 		if tiers.is_empty():
@@ -1111,15 +1155,15 @@ func _validate_bounty_payout_anchors(bounties: Dictionary, items: Dictionary) ->
 			if not tiers.has(rank):
 				continue
 			var g := int((tiers[rank] as Dictionary).get("gold", 0))
-			assert(g > prev_gold, "%s tier %s gold %d must exceed the lower rank's %d (monotonicity, #163)" % [bid, rank, g, prev_gold])
+			_check(g > prev_gold, "%s tier %s gold %d must exceed the lower rank's %d (monotonicity, #163)" % [bid, rank, g, prev_gold])
 			prev_gold = g
 			if rank == "silver":
-				assert(g % crude == 0, "%s silver gold %d is not a multiple of crude_draught price %d (payout anchor, #163/#92)" % [bid, g, crude])
+				_check(g % crude == 0, "%s silver gold %d is not a multiple of crude_draught price %d (payout anchor, #163/#92)" % [bid, g, crude])
 			else:
-				assert(g % tonic == 0, "%s gold gold %d is not a multiple of tonic_of_the_clear_eye price %d (payout anchor, #163/#92)" % [bid, g, tonic])
+				_check(g % tonic == 0, "%s gold gold %d is not a multiple of tonic_of_the_clear_eye price %d (payout anchor, #163/#92)" % [bid, g, tonic])
 		if String(bounty.get("pillar", "")) == "fight" and tiers.has("gold"):
 			var top := int((tiers["gold"] as Dictionary).get("gold", 0))
-			assert(top >= 2 * mending, "%s top-tier combat gold %d below purchasing-power floor 2x mending_draught (%d) (#163)" % [bid, top, 2 * mending])
+			_check(top >= 2 * mending, "%s top-tier combat gold %d below purchasing-power floor 2x mending_draught (%d) (#163)" % [bid, top, 2 * mending])
 
 
 ## #163 engine-seam guard: `scales:true` (rank-stepped enemies at start_combat)
@@ -1138,8 +1182,8 @@ func _validate_encounter_scaling(scene: Dictionary, quests: Dictionary) -> void:
 			if not bool(ent.get("scales", false)):
 				continue
 			var eid := String(ent.get("id", "?"))
-			assert(String(ent.get("kind", "")) == "encounter", "%s has scales:true but is not an encounter (#163)" % eid)
-			assert(bool(ent.get("respawns", false)), "%s has scales:true but respawns:false -- only repeatable culls scale (#163)" % eid)
+			_check(String(ent.get("kind", "")) == "encounter", "%s has scales:true but is not an encounter (#163)" % eid)
+			_check(bool(ent.get("respawns", false)), "%s has scales:true but respawns:false -- only repeatable culls scale (#163)" % eid)
 			# on_victory is String-or-Array (wi_game accepts both) -- iterate
 			# the same way or the Array form crashes the String() ctor
 			# (review LOW: probe-proven on snare_nest_slot's list form).
@@ -1149,10 +1193,10 @@ func _validate_encounter_scaling(scene: Dictionary, quests: Dictionary) -> void:
 				victories = raw_ov
 			elif String(raw_ov) != "":
 				victories = [raw_ov]
-			assert(not victories.is_empty(), "%s has scales:true but no on_victory counter (#163)" % eid)
+			_check(not victories.is_empty(), "%s has scales:true but no on_victory counter (#163)" % eid)
 			for ov_raw: Variant in victories:
 				var ov := String(ov_raw)
-				assert(not quest_counters.has(ov), "%s has scales:true but its on_victory '%s' feeds a quest counter -- story/quest fights never scale (#163)" % [eid, ov])
+				_check(not quest_counters.has(ov), "%s has scales:true but its on_victory '%s' feeds a quest counter -- story/quest fights never scale (#163)" % [eid, ov])
 
 
 func _validate_deliveries(deliveries: Dictionary, produced_accomplishments: Dictionary) -> void:
@@ -1162,7 +1206,7 @@ func _validate_deliveries(deliveries: Dictionary, produced_accomplishments: Dict
 	for delivery: Dictionary in deliveries.get("deliveries", []):
 		var condition: Dictionary = delivery.get("condition", {})
 		for accomplishment_id: String in condition:
-			assert(
+			_check(
 				produced.has(accomplishment_id),
 				"delivery %s condition waits on unproduced accomplishment: %s" % [String(delivery["id"]), accomplishment_id]
 			)
@@ -1175,14 +1219,14 @@ func _validate_props(scene: Dictionary) -> void:
 			var entity_id: String = String(entity["id"])
 			if entity.has("on_interact_accomplishment"):
 				var toast: String = String(entity.get("toast", ""))
-				assert(
+				_check(
 					not toast.is_empty(),
 					"entity %s has on_interact_accomplishment but empty or missing toast" % entity_id
 				)
 			if String(entity.get("kind", "")) == "prop":
 				var has_sleep: bool = bool(entity.get("sleep", false))
 				var has_accomplishment: bool = entity.has("on_interact_accomplishment")
-				assert(
+				_check(
 					not (has_sleep and has_accomplishment),
 					"prop %s cannot combine sleep with on_interact_accomplishment" % entity_id
 				)
@@ -1195,7 +1239,7 @@ func _validate_tutor_line_help_consistency() -> void:
 	for section: Dictionary in (help.get("sections", []) as Array):
 		if String(section.get("heading", "")) == "Classes & Levels":
 			classes_body = String(section.get("body", ""))
-	assert(not classes_body.is_empty(), "help_content.json missing its 'Classes & Levels' section")
+	_check(not classes_body.is_empty(), "help_content.json missing its 'Classes & Levels' section")
 	var found := false
 	for arena: Dictionary in (arenas.get("arenas", []) as Array):
 		if String(arena.get("id", "")) != "goblin_ambush_tutorial":
@@ -1205,11 +1249,11 @@ func _validate_tutor_line_help_consistency() -> void:
 				continue
 			found = true
 			var solo_line := String(entry.get("solo_fallback_line", ""))
-			assert(
+			_check(
 				solo_line == classes_body,
 				"real_ones.solo_fallback_line has drifted from help_content.json's Classes & Levels wording"
 			)
-	assert(found, "goblin_ambush_tutorial's real_ones tutor line is missing (arenas.json)")
+	_check(found, "goblin_ambush_tutorial's real_ones tutor line is missing (arenas.json)")
 
 
 ## GH#142: enchant pairs are the dialogue-effect swap triple (negative gold
@@ -1238,9 +1282,9 @@ func _validate_enchant_pairs(graphs: Dictionary, items: Dictionary) -> void:
 					continue
 				var base: Dictionary = by_id.get(removed, {})
 				var variant: Dictionary = by_id.get(granted, {})
-				assert(not base.is_empty() and not variant.is_empty(), "%s/%s enchant references unknown items %s -> %s" % [conv_id, node_id, removed, granted])
-				assert(String(variant.get("kind", "")) == "accessory" and String(base.get("kind", "")) == "accessory", "%s enchant pair must be accessories" % conv_id)
-				assert(
+				_check(not base.is_empty() and not variant.is_empty(), "%s/%s enchant references unknown items %s -> %s" % [conv_id, node_id, removed, granted])
+				_check(String(variant.get("kind", "")) == "accessory" and String(base.get("kind", "")) == "accessory", "%s enchant pair must be accessories" % conv_id)
+				_check(
 					int(variant.get("price", 0)) * 2 > int(base.get("price", 0)) * 2 + fee,
 					"%s enchant %s->%s: variant price %d must exceed base %d + fee %d/2 (paid work must hold value)" % [conv_id, removed, granted, int(variant.get("price", 0)), int(base.get("price", 0)), fee]
 				)

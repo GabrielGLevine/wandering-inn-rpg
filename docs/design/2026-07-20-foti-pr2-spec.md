@@ -71,6 +71,12 @@ two adjacent-window members can co-render; assign FOUR distinct cells:
 olesm (3,5), pisces (6,5), relc (2,5), zevara (3,6) (all in the free
 set; screenshot-verify no crowding).
 
+**CORRECTION (2026-07-27, PR2b as shipped):** relc seats at **(1,5)**,
+not (2,5) — this line's own "screenshot-verify no crowding" gate
+rejected (2,5), where `yvlon_inn` (2,3) ate his head and a player on the
+(2,6) boot cell ate his legs. Adopted deviation, P4; zevara and every
+other cell shipped as written.
+
 ## Voice (profile blocks REQUIRED first, PR1 precedent)
 
 Add four "Inn register" blocks to character-profiles.md before writing

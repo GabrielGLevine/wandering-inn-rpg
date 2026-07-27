@@ -110,6 +110,22 @@ what those runs showed.
   probe the two blocked-cell clusters read as decorative brick patterning, not
   as obstacles you must path around. The combatants themselves are fine there —
   see WHAT LANDS.
+- [ ] SPRITE/GRIMALKIN-FIGURE-HEIGHT (P3, USER-GATED — root cause of the inn's
+  four-chair seat fight, ledgered by Phase 5 rather than fixed) — `sprites.json`
+  `grimalkin` (`render_scale` 0.463, 224px frames) puts his on-screen figure near
+  **98px**, about **2.3× Relc's** — and Relc's own catalog entry documents the
+  convention verbatim: "render_scale preserves the approved on-screen figure
+  height (43.4px)". Canon asks only for "bigger than Relc". He renders
+  IDENTICALLY at his shipped Pallass post and reads fine there (open plaza); the
+  inn is simply the first room tight enough to expose it — the first seat pass
+  buried Wilovan behind his arm, and the shipped cell (14,5) was forced, taking
+  two costs with it (his left arm crosses `pisces_mounting` at (13,5) in a state
+  no save can hold, and on his two wakings in ten the Magical Door runs on the
+  (13,6) approach alone). A `sprites.json` re-measure frees that seat choice
+  entirely. Evidence + the exhaustive cell re-check:
+  `.superpowers/sdd/2026-07-26-main-quest-foti-wave/task-5-report.md` and the
+  `grimalkin_inn_guest` `_comment` in `data/maps/inn/inn.json`. NOT an inn edit —
+  a shipped-character catalog change, so it waits on the user's eye.
 - CONFIRMED STILL OPEN: RUIN_WARDEN/RIG-SCALE (P3, logged in the mq4-act5 pass)
   — at `combat_scale` 1.15 the warden's crown is still cut by the turn banner
   on the vault arena's top row (`seal_open/06_the_warden.png`).
