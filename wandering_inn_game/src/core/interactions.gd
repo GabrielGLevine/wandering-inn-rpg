@@ -195,8 +195,21 @@ func _interact_container(target: Dictionary, container_state: Dictionary) -> Dic
 		if bool(_pickup.call(item_id, id)):
 			granted.append(item_id)
 	container_state[id] = true
-	if target.has("on_open_accomplishment"):
-		_record_accomplishment.call(String(target["on_open_accomplishment"]), 1)
+	# 2026-07-26 main-quest restructure (Task 2.3), both additive and both
+	# backwards-compatible (an absent key leaves every shipped container's
+	# event stream byte-identical):
+	#  * `on_open_accomplishment` now takes String|ARRAY, the same
+	#    String|Array contract `on_victory`/`requires_item`/`inherits` already
+	#    use, so one open can bank a convergent set atomically.
+	#  * `open_toast` (the key name `door_when` already uses) gives the open
+	#    its own narrative beat -- until now a container could only ever speak
+	#    through its pickups' "Got: <name>" lines.
+	var raw_open: Variant = target.get("on_open_accomplishment", [])
+	for counter: Variant in (raw_open as Array if raw_open is Array else [raw_open]):
+		_record_accomplishment.call(String(counter), 1)
+	var open_toast := String(target.get("open_toast", ""))
+	if open_toast != "":
+		_emit(WIEvents.TOAST, {"text": open_toast})
 	return {"container": id, "items": granted}
 
 

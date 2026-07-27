@@ -1,0 +1,74 @@
+{
+ "_comment": "2026-07-26 main-quest restructure (Task 2.3): horns_dig_flow's start. The `horns_residence_start` story position VERBATIM (What the Seal Kept fully complete -- same Act III backbone, spellsword 11 consolidation build, T4 gear, 60g stipend), moved from the common-room floor (10,6) to (8,4), two cells north of `ceria_inn` (8,6) with (8,5) open between them so the script walks the last step and bumps into her for facing. NOTHING from the dig is pre-banked: horns_dig_started/joined, pedestal_unsealed, rune_*, recovered_anchor_stone and door_retrieved are all EARNED live by the canonical -- this fixture's whole job is to stand at the moment before Ceria is asked about the dig. seal_kept_reported is what makes her present at the inn at all (present_when), and horns_party_formed is what hides ceria_intro's 'Go on.' option so the invitation sits at option index 0. door_chain_started is deliberately ABSENT: Task 2.2 retired its producer and Task 2.3 moved ruin_door's gate onto horns_dig_started, so a post-restructure save reaches the ruin through the dig invitation and no other way -- this fixture proves that gate live. rng_state governs the one live fight (ruin_guardian, with Relc fielded off met_relc); TRAP: it is a derived state (tests/_derive_rng_state.gd), never a hand-typed small value.",
+ "version": 5,
+ "state": {
+  "current_map": "inn",
+  "player_cell": [
+   8,
+   4
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "spellsword": 11
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "reached_two_classes": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1,
+   "raskghar_sealed": 1,
+   "post_game": 1,
+   "horns_delve_started": 1,
+   "horns_party_formed": 1,
+   "halls_cleared": 1,
+   "vault_construct_downed": 1,
+   "seal_kept_found": 1,
+   "seal_kept_reported": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns",
+   "what_the_seal_kept"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
+  "container_state": {},
+  "gold": 60,
+  "actions_since_sleep": 0,
+  "times_slept": 12,
+  "rng_state": "-1966449618399012673"
+ }
+}

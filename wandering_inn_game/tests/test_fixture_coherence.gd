@@ -34,7 +34,7 @@ const MAP_REQUIRES := {
 	"deep_tunnels": ["reached_liscor", "heard_about_cisterns", "heard_the_deep_tremor"],
 	"dungeon_approach": ["horns_delve_started"],
 	"trapped_halls": ["horns_delve_started"],
-	"ruin_surface": ["door_chain_started"],
+	"ruin_surface": ["horns_dig_started"],
 	"garden_sanctuary": ["garden_door_unlocked"],
 	"riverfarm_village": ["door_awakened", "riverfarm_attuned"],
 	"witch_hollow": ["door_awakened", "riverfarm_attuned"],

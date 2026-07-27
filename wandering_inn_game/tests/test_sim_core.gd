@@ -1700,6 +1700,42 @@ func _init() -> void:
 	assert(not gC2.inventory.has("leather_jerkin"), "a pre-marked-emptied container grants nothing")
 	assert(_count("item_gained") == 0, "a pre-marked-emptied container emits no item_gained on interact")
 
+	# 2026-07-26 (Task 2.3): the container arm's two additive keys, proven on the
+	# REAL ruin pedestal -- `on_open_accomplishment` as an ARRAY banks every id in
+	# one open (the horns_dig breach + reveal converge on this single interact),
+	# and `open_toast` speaks AFTER the pickups so the reveal is the last thing
+	# the player reads. The inn_chest assertions above are the String/no-toast
+	# control: both keys are additive, so shipped containers are unchanged.
+	var gP := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gP.transition("ruin_surface", Vector2i(17, 5))
+	_events.clear()
+	gP.player_facing = Vector2i.DOWN
+	var locked_result := gP.interact()
+	assert(locked_result.get("accomplishment", "") == "found_the_pedestal", "unmet contains_when still falls through to the locked flavor arm")
+	assert(gP.accomplishment_count("door_retrieved") == 0, "the locked arm banks nothing from the open set")
+	for counter: String in ["pedestal_unsealed", "rune_sequence_done", "horns_dig_joined"]:
+		gP.record_accomplishment(counter)
+	_events.clear()
+	var reveal_result := gP.interact()
+	assert(reveal_result.get("container", "") == "anchor_stone_pedestal", "all three contains_when counters met opens the pedestal")
+	assert(gP.inventory.has("anchor_stone") and gP.inventory.has("anchor_sliver"), "the open still grants both shipped items")
+	for counter: String in ["recovered_anchor_stone", "pedestal_breached", "door_retrieved"]:
+		assert(gP.accomplishment_count(counter) == 1, "the ARRAY on_open_accomplishment banks %s exactly once" % counter)
+	var reveal_toast := ""
+	for e: Dictionary in _events:
+		if e["type"] == "toast":
+			reveal_toast = String(e["payload"].get("text", ""))
+	assert(reveal_toast.begins_with("Below the pedestal: not treasure. A DOOR"), "open_toast is the LAST toast of the open, after the pickups' own")
+
+	var gP2 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	for counter: String in ["pedestal_unsealed", "rune_sequence_done"]:
+		gP2.record_accomplishment(counter)
+	gP2.transition("ruin_surface", Vector2i(17, 5))
+	gP2.player_facing = Vector2i.DOWN
+	_events.clear()
+	var skipped := gP2.interact()
+	assert(skipped.get("container", "") == "", "the camp is not skippable: unseal + plates WITHOUT horns_dig_joined leaves the pedestal shut")
+	assert(gP2.accomplishment_count("door_retrieved") == 0, "no reveal without joining the dig")
 
 	var gT1 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gT1.transition("floodplains", Vector2i(30, 20))
@@ -3228,20 +3264,23 @@ func _init() -> void:
 	var arrival_game := WIGame.new(scene_config, skill_config, _sink, 4242)
 	_events.clear()
 	arrival_game.transition("ruin_surface", Vector2i(17, 5))
+	# 2026-07-26 (Task 2.3): the ruin's arrival toast re-gated door_understood ->
+	# horns_dig_started and recovered_anchor_stone -> door_retrieved. The door
+	# chain no longer runs before the ruin at all; the dig invitation does.
 	assert(not _toast_texts().any(func(t: String) -> bool: return t.contains("this is the ruin")),
-		"ruin_surface arrival toast stays silent until door_understood is banked")
-	arrival_game.record_accomplishment("door_understood")
+		"ruin_surface arrival toast stays silent until horns_dig_started is banked")
+	arrival_game.record_accomplishment("horns_dig_started")
 	_events.clear()
 	arrival_game.transition("inn", Vector2i(2, 3))
 	arrival_game.transition("ruin_surface", Vector2i(17, 5))
-	assert(_toast_texts().any(func(t: String) -> bool: return t == "East past the gate road — this is the ruin. The pedestal Pisces described is deeper in."),
-		"ruin_surface arrival toast fires when door_understood met and recovered_anchor_stone unmet")
-	arrival_game.record_accomplishment("recovered_anchor_stone")
+	assert(_toast_texts().any(func(t: String) -> bool: return t == "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, and someone's washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court."),
+		"ruin_surface arrival toast fires when horns_dig_started met and door_retrieved unmet")
+	arrival_game.record_accomplishment("door_retrieved")
 	_events.clear()
 	arrival_game.transition("inn", Vector2i(2, 3))
 	arrival_game.transition("ruin_surface", Vector2i(17, 5))
 	assert(not _toast_texts().any(func(t: String) -> bool: return t.contains("this is the ruin")),
-		"ruin_surface arrival toast retires once recovered_anchor_stone is banked (hide_when)")
+		"ruin_surface arrival toast retires once door_retrieved is banked (hide_when)")
 	var dungeon_game := WIGame.new(scene_config, skill_config, _sink, 4243)
 	dungeon_game.record_accomplishment("heard_the_deep_tremor")
 	_events.clear()

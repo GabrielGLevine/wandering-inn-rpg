@@ -69,8 +69,8 @@
 			"title": "The Dig",
 			"region": "Liscor",
 			"beats": [
-				{ "id": "join_dig", "description": "Ceria's expedition hit something sealed under the ruin east past the gate road, and they're short-handed. Find the Horns' camp at the ruin.", "complete_when": { "horns_dig_joined": 1 } },
-				{ "id": "breach", "description": "Get the Horns through the sealed pedestal level -- fight what guards it, walk the plates, or read the wardwork.", "complete_when": { "pedestal_breached": 1 } },
+				{ "id": "join_dig", "description": "Ceria's expedition hit something sealed under the ruin east past the gate road, across the floodplains, and they're short-handed. Find the Horns' camp at the ruin.", "complete_when": { "horns_dig_joined": 1 } },
+				{ "id": "breach", "description": "Get the Horns through the ruin's sealed pedestal level -- fight what guards it, walk the plates, or read the wardwork.", "complete_when": { "pedestal_breached": 1 } },
 				{ "id": "haul", "description": "Help the Horns carry what the pedestal held back to the Wandering Inn, and see it mounted.", "complete_when": { "door_mounted": 1 } }
 			]
 		},

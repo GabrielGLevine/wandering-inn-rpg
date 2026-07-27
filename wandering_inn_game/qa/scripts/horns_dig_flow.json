@@ -1,0 +1,608 @@
+{
+ "_comment": "2026-07-26 main-quest restructure (Task 2.3): THE canonical for `horns_dig`, played live end-to-end from the horns_dig_start fixture -- Ceria's invitation AT THE INN (the new ceria_intro attachment on ceria_inn, reached through her talk_pool the erin/pisces/krshia way: first interact = a pool line, second = the graph), the ruin seam opening on its NEW gate (horns_dig_started, not the retired door_chain_started), the camp join at ruin_surface's ceria_dig_camp, the FIGHT leg of the breach (ruin_guardian, Relc fielded off met_relc), the shipped rune pair, and the reveal. Nothing is pre-banked: every counter this script asserts is earned in-run. Deliberately ends AT THE REVEAL -- mounting the find at the inn is Task 2.4's surface (pisces_magic's door_mounting node + the pantry prop), and this script gets its mounting/portal tail EXTENDED there, together with an assert that door_that_goes_elsewhere auto-starts; the assert_event_absent on door_mounted at the tail is the placeholder that must be deleted in the same edit. Teleports cover only stretches already proven live elsewhere (inn->floodplains by inn_walkthrough/gate_district_walkthrough, the ruin interior by ruin_walkthrough); the ruin_door transition itself is walked for real because its gate is what changed. Fixture rng_state governs the one fight.",
+ "fixture_save": "horns_dig_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Move down to the 'Continue' row, confirm loads the horns_dig_start manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    4
+   ]
+  },
+  {
+   "_comment": "== THE INVITATION ==. (8,4) -> (8,5), the open cell north of ceria_inn (8,6); the second `down` is a BUMP into her own cell (blocked) that sets facing without moving -- the walkthroughs' robust-facing idiom.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    5
+   ]
+  },
+  {
+   "_comment": "Ceria keeps her talk_pool AND now carries the ceria_intro graph, so the FIRST interact is a pool line (dialogue_line) and the second opens the graph -- the shipped pool-and-graph idiom (erin/pisces/krshia/selys).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Ceria Springwalker"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "ceria_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The hub's LAST satisfied text_variant wins, and vault_construct_downed is banked in the fixture (What the Seal Kept is complete), so this is the post-delve arm.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Ceria",
+    "text": "It was guarding a door. Wonderful. I hate doors that need guarding."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Visible options are ['Heard your team's digging east of the gate road.', 'Understood.'] -- 'Go on.' is hidden by horns_party_formed. The cursor starts on the invitation, so confirm takes it with no cursor move.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "horns_dig"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "horns_dig_started"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Ceria",
+    "text": "Word travels. Yes -- there's a ruin out past the floodplains, and under it a level nobody's opened since before Liscor had walls. We hit the seal three days ago. Yvlon can't cut it, Pisces won't shut up about it, and we are exactly one pair of hands short."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Take the SECOND branch first (What's down there? -> dig_unknown) so the pitch's other arm is covered, then rejoin dig_directions from it.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Ceria",
+    "text": "If I knew, I wouldn't need a dig. Whatever it is, someone sealed it on purpose and did a very good job. That usually means valuable, dangerous, or both."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Ceria",
+    "text": "East past the gate road, across the floodplains -- follow the survey stakes. Ask for me at the camp. And bring your own rope."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "contains": "horns_dig"
+  },
+  {
+   "_comment": "== TRAVEL: the ruin seam on its NEW gate ==. Teleport to (37,11) on the floodplains -- the ruin_walkthrough approach cell, one west of ruin_door (38,11) -- then bump east into the door's own (blocked) cell for facing and interact. door_chain_started is NOT banked in this fixture: if the gate had stayed on it, this interact would fall through to the inert 'It doesn't feel like it goes anywhere. Yet.' toast and the run would die here.",
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    37,
+    11
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The seam splits wider at your touch, cold air breathing out of the dark beneath. You step through, into somewhere else."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "ruin_surface"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "_comment": "The re-gated arrival toast: it now fires off horns_dig_started (was door_understood) and names the camp, so the ruin reads as occupied the moment you land.",
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, and someone's washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_ruin_camp_landing"
+  },
+  {
+   "_comment": "== THE CAMP ==. (2,2) -> (4,2) along the clear top row, then bump south into ceria_dig_camp (4,3). The camp has no talk_pool, so the FIRST interact opens its graph.",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "ceria_dig_camp"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Ceria",
+    "text": "You made it. Camp rules: nobody touches anything shiny, nobody wanders past the survey stakes alone. The sealed level's below the pedestal court. We found the site off an old expedition ledger -- half the pages were about what they DIDN'T bring out."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_camp_hub"
+  },
+  {
+   "_comment": "Option 0 = \"Let's open it up.\" (visible: horns_dig_joined still 0) banks the join and closes the join_dig beat -> beat_index 1 (breach). EMISSION ORDER TRAP: an `end: true` option tears the graph down BEFORE its effects resolve (dialogue_ended, then dialogue_choice, then the banks), so the ended-wait has to come first or its cursor lands past every later event.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "horns_dig_joined"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "horns_dig",
+    "beat": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE BREACH, fight leg ==. Teleport to the guardian alcove (16,8), west of ruin_guardian (17,8) -- the door_chain_fight precedent cell and comment; the ruin interior route is already walked live by ruin_walkthrough.",
+   "action": "teleport",
+   "map": "ruin_surface",
+   "cell": [
+    16,
+    8
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "ruin_surface"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "pedestal_unsealed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "ruin_guardian"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "_comment": "== THE PLATES ==. Teleport to (17,5), north of anchor_stone_pedestal (17,6), then bump south for facing. The first interact here proves the pedestal's RE-SKINNED locked variant: unsealed + joined puts the Horns in the toast, and it still banks nothing from the open set -- everything the pedestal has to give lands on the open itself.",
+   "action": "teleport",
+   "map": "ruin_surface",
+   "cell": [
+    17,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "ruin_surface"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The seal is broken and the Horns are already down the gap — Yvlon bracing, Ksmvr counting rope. The warding still holds the stone fast. Two spiral plates flank the court; Ceria points at the carving beside the pedestal and says that one's a beginning."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "b10 #204 rune pair, NEAR (16,6) first then FAR (15,4) -- the shipped order, reused untouched. Every move is a bump that only sets facing.",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "rune_near_pressed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "rune_sequence_done"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE REVEAL ==. Back to (17,5) and bump south into the pedestal. All three contains_when counters (pedestal_unsealed, rune_sequence_done, horns_dig_joined) are now met live, so the container opens and its ARRAY on_open_accomplishment banks the convergent set in order: recovered_anchor_stone, pedestal_breached (which closes the breach beat -> beat_index 2, haul), door_retrieved. open_toast speaks LAST, after both pickups' own 'Got:' lines -- so the reveal is the final thing on screen.",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "anchor_stone",
+    "source": "anchor_stone_pedestal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "recovered_anchor_stone"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "pedestal_breached"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "horns_dig",
+    "beat": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "door_retrieved"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_the_reveal"
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "anchor_stone"
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.door_retrieved",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.pedestal_breached",
+   "equals": 1
+  },
+  {
+   "_comment": "SCOPE PIN + Task 2.4 EXTENSION POINT: the haul beat is still open here because nothing has mounted the find yet. When 2.4 lands the pantry mounting scene, delete this absence and continue the script through it (door_mounted banked, door_that_goes_elsewhere auto-started, the Liscor portal rows live).",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "door_mounted"
+   }
+  }
+ ]
+}

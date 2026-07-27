@@ -1,5 +1,5 @@
 {
- "_comment": "`door_chain_started` pre-banked (simulates the beat-1 Erin dialogue, not yet wired) so `ruin_door`'s door_when gate is MET and interacting it descends into the new `ruin_surface` map. Positioned on floodplains at (36,11), two steps west of the door's own (38,11) cell, so ruin_walkthrough reaches it in a couple moves. Warrior L1 (met/sparred/given_spear) purely so the fixture matches the established post-tutorial baseline shape -- this script never fights (both new encounters are dormant PLACEMENTS with no combat data yet). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment": "2026-07-26 main-quest restructure (Task 2.3): the pre-banked gate counter is now `horns_dig_started` (was door_chain_started), because ruin_door's door_when moved onto it -- the dig invitation is the only way into the ruin for a post-restructure save. `horns_dig` is deliberately NOT in started_quests: this fixture is a bare gate-and-route probe, and horns_dig_flow is the canonical that plays the quest itself. ORIGINAL NOTE: pre-banked so `ruin_door`'s door_when gate is MET and interacting it descends into the new `ruin_surface` map. Positioned on floodplains at (36,11), two steps west of the door's own (38,11) cell, so ruin_walkthrough reaches it in a couple moves. Warrior L1 (met/sparred/given_spear) purely so the fixture matches the established post-tutorial baseline shape -- this script never fights (both new encounters are dormant PLACEMENTS with no combat data yet). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
  "version": 5,
  "state": {
   "current_map": "floodplains",
@@ -18,7 +18,7 @@
    "met_relc": 1,
    "sparred_with_relc": 1,
    "given_spear_by_relc": 1,
-   "door_chain_started": 1
+   "horns_dig_started": 1
   },
   "player_skills": [
    "basic_cleaning"

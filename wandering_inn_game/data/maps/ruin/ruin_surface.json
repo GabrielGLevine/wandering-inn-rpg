@@ -1,22 +1,31 @@
 {
- "_comment": "Entered ONLY from floodplains' `ruin_door` (door_when-gated)",
+ "_comment": "Entered ONLY from floodplains' `ruin_door` (door_when-gated). 2026-07-26 main-quest restructure (Task 2.3): that gate moved from door_chain_started to horns_dig_started -- the dig invitation is now the only way in, and the door chain no longer starts before the ruin at all. SPOILER RULE: nothing on this map names a door before the pedestal opens.",
  "biome": "cave",
  "arrival_toasts": [
   {
    "requires": {
-    "door_understood": 1
+    "horns_dig_started": 1
    },
    "hide_when": {
-    "recovered_anchor_stone": 1
+    "door_retrieved": 1
    },
-   "text": "East past the gate road — this is the ruin. The pedestal Pisces described is deeper in."
+   "text": "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, and someone's washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court."
   }
  ],
  "grid": {
   "width": 20,
   "height": 14
  },
+ "_comment_camp_blocking": "2026-07-26 (Task 2.3): the camp's fire (3,3) and supply crate (5,3) are decor that READS solid, so both join `blocked` per the blocking contract. With ceria_dig_camp on (4,3) that makes y=3 solid across x=3..5, but (2,3)/(6,3)/(3,2)/(4,2)/(5,2)/(3,4)/(4,4) all stay open -- no cell in the new blocked set is a cul-de-sac for a prior-version save that loads standing on it.",
  "blocked": [
+  [
+   3,
+   3
+  ],
+  [
+   5,
+   3
+  ],
   [
    5,
    4
@@ -103,6 +112,26 @@
     10,
     4
    ]
+  },
+  {
+   "_pick": "The dig camp's dressing, pulled from two pack families (campfire + crate) so the corner reads as somebody's occupied camp rather than more cave. Both cells are in `blocked`.",
+   "sprite": "campfire",
+   "cell": [
+    3,
+    3
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    5,
+    3
+   ],
+   "tint": [
+    0.82,
+    0.76,
+    0.66
+   ]
   }
  ],
  "entities": [
@@ -123,6 +152,33 @@
    ]
   },
   {
+   "_comment": "2026-07-26 main-quest restructure (Task 2.3): the Horns' dig camp, three steps off the landing cell (2,2) so the first thing the ruin says is 'someone is already here'. Present from the invitation (horns_dig_started) until the find leaves with the haul (door_retrieved) -- the camp strikes its tents with the wagon. Cell (4,3) is off every canonical walked route (ruin_walkthrough walks rows y=1/2/5/13 and columns x=2/17/19) and leaves (4,2)/(3,4)/(4,4)/(6,3) open, so the new blocker traps no prior-version save. No talk_pool: the invitation-follow-up must open on the FIRST interact, not the second.",
+   "id": "ceria_dig_camp",
+   "kind": "npc",
+   "cell": [
+    4,
+    3
+   ],
+   "display_name": "Ceria Springwalker",
+   "sprite": "ceria",
+   "facing": "up",
+   "present_when": {
+    "requires": {
+     "horns_dig_started": 1
+    },
+    "absent": {
+     "door_retrieved": 1
+    }
+   },
+   "conversation": "ceria_dig_camp",
+   "dialogue": [
+    {
+     "speaker": "Ceria",
+     "text": "Mind the survey stakes. We put them there for a reason."
+    }
+   ]
+  },
+  {
    "id": "ruin_court_statue",
    "kind": "prop",
    "cell": [
@@ -135,7 +191,7 @@
    "toast": "The sentinel's face is gone, but its posture survives: shield toward the court, warning anyone who follows its gaze."
   },
   {
-   "_comment": "OR convergence: pedestal_unsealed banks via the guardian court, Pisces TALK/SKILL, or the cellar fight on_victory (see inn.json). Unmet contains_when falls through to locked toast. First open atomically grants anchor_stone + anchor_sliver + recovered_anchor_stone; repeat is idempotent. b10 #204: recovery beat now ALSO needs rune_sequence_done (the flanking plate pair, west then east; socket read names the order).",
+   "_comment": "OR convergence: pedestal_unsealed banks via the guardian court, Pisces TALK/SKILL, or the cellar fight on_victory (see inn.json). Unmet contains_when falls through to locked toast. First open atomically grants anchor_stone + anchor_sliver; repeat is idempotent. b10 #204: recovery beat now ALSO needs rune_sequence_done (the flanking plate pair, west then east; socket read names the order). 2026-07-26 main-quest restructure (Task 2.3): this ONE open is now the whole payoff -- contains_when also gates on horns_dig_joined (quests.json horns_dig's 'pedestal on camp' order rule: no cosmetic skip past the camp), and on_open_accomplishment banks the convergent set [recovered_anchor_stone, pedestal_breached, door_retrieved] so the `breach` beat closes and the `haul` beat opens at the exact instant the reveal renders -- never a beat earlier, which would have put 'carry it home' in the journal before the player knew what 'it' was. SPOILER RULE: open_toast IS the reveal; nothing before it on this map names a door.",
    "id": "anchor_stone_pedestal",
    "kind": "prop",
    "cell": [
@@ -157,10 +213,16 @@
    "contains_when": {
     "requires": {
      "pedestal_unsealed": 1,
-     "rune_sequence_done": 1
+     "rune_sequence_done": 1,
+     "horns_dig_joined": 1
     }
    },
-   "on_open_accomplishment": "recovered_anchor_stone",
+   "on_open_accomplishment": [
+    "recovered_anchor_stone",
+    "pedestal_breached",
+    "door_retrieved"
+   ],
+   "open_toast": "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it.",
    "on_interact_accomplishment": "found_the_pedestal",
    "toast": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea.",
    "variants": [
@@ -169,6 +231,29 @@
       "pedestal_unsealed": 1
      },
      "toast": "The seal is broken, but the warding still holds the stone fast. Two spiral plates flank the court — the carving beside the pedestal looks like a beginning."
+    },
+    {
+     "_comment": "Task 2.3 presence re-skin: same locked beat, but with the dig around it. Later-satisfied-variant-wins, so this replaces the line above once the player has joined the camp. Toast only -- it banks nothing, because everything the pedestal has to give banks together at the open.",
+     "when": {
+      "pedestal_unsealed": 1,
+      "horns_dig_joined": 1
+     },
+     "toast": "The seal is broken and the Horns are already down the gap — Yvlon bracing, Ksmvr counting rope. The warding still holds the stone fast. Two spiral plates flank the court; Ceria points at the carving beside the pedestal and says that one's a beginning."
+    }
+   ],
+   "visual_states": [
+    {
+     "_comment": "Post-reveal the plinth is a spent, opened thing. Tint + observe swap rather than `hidden`: the plinth still blocks (17,6), and a hidden blocker is the GH#149 invisible-bump class.",
+     "when": {
+      "counter": "door_retrieved",
+      "at": 1
+     },
+     "tint": [
+      0.5,
+      0.5,
+      0.55
+     ],
+     "observe": "The cradle on top is empty and the seam beneath it stands open on nothing. Whatever the ruin was built around, the ruin isn't holding it any more."
     }
    ]
   },

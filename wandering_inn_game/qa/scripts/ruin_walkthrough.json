@@ -1,5 +1,5 @@
 {
- "_comment": "Loads the near_ruin FIXTURE (warrior L1 baseline + door_chain_started pre-banked, simulating D3's not-yet-wired beat-1 Erin dialogue) via title Continue, positioned two steps west of `ruin_door` on floodplains. Enters via the REAL door_when interact (the sewer_grate/deep_fissure precedent), walks the new ruin_surface map's bounds (top edge, down into the guardian alcove, back across mid, down to the south edge, across, up the east edge, back across the top), reads the anchor_stone_pedestal's locked-flavor toast (D1 ships this LOCKED-FLAVOR rather than the final `contains` shape -- see that entity's own _comment in skeleton_scene.json for the full rationale), and exits back to floodplains via ruin_exit. Proves: the ruin_door gate transition + its open_toast, the ruin_surface mood/map/entity render, the pedestal's locked toast + flavor accomplishment, and the round-trip exit -- all while NEVER interacting `ruin_guardian` (the route approaches only to (17,5), one cell north of the pedestal, and never faces (17,7) -- D2 hasn't landed combat data yet, so triggering that fight would crash start_combat on the missing arena/combatant lookup). Fixture rng_state (9) governs; no combat happens in this script at all, so no seed search was needed.",
+ "_comment": "2026-07-26 (Task 2.3): the fixture's gate counter is now horns_dig_started -- ruin_door's door_when moved onto it, so this script keeps proving the REAL seam transition, just off the dig invitation instead of the retired door-chain start. The camp NPC it lights up is why the entity count went 9 -> 10; the route is untouched (the camp and its two new blocked dressing cells all sit on row y=3, which this walk never uses). ORIGINAL NOTE: loads the near_ruin FIXTURE (warrior L1 baseline) via title Continue, positioned two steps west of `ruin_door` on floodplains. Enters via the REAL door_when interact (the sewer_grate/deep_fissure precedent), walks the new ruin_surface map's bounds (top edge, down into the guardian alcove, back across mid, down to the south edge, across, up the east edge, back across the top), reads the anchor_stone_pedestal's locked-flavor toast (D1 ships this LOCKED-FLAVOR rather than the final `contains` shape -- see that entity's own _comment in skeleton_scene.json for the full rationale), and exits back to floodplains via ruin_exit. Proves: the ruin_door gate transition + its open_toast, the ruin_surface mood/map/entity render, the pedestal's locked toast + flavor accomplishment, and the round-trip exit -- all while NEVER interacting `ruin_guardian` (the route approaches only to (17,5), one cell north of the pedestal, and never faces (17,7) -- D2 hasn't landed combat data yet, so triggering that fight would crash start_combat on the missing arena/combatant lookup). Fixture rng_state (9) governs; no combat happens in this script at all, so no seed search was needed.",
  "fixture_save": "near_ruin",
  "starts_at_title": true,
  "steps": [
@@ -52,7 +52,7 @@
   },
   {
    "action": "assert_state",
-   "path": "accomplishments.door_chain_started",
+   "path": "accomplishments.horns_dig_started",
    "equals": 1
   },
   {
@@ -123,10 +123,10 @@
    "action": "assert_event_logged",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 9,
+    "sprites": 10,
     "fallbacks": 0
    },
-   "_comment": "b10 #204: +2 rune plates."
+   "_comment": "b10 #204: +2 rune plates. 2026-07-26 (Task 2.3): +1 again -- ceria_dig_camp (4,3) is present here because near_ruin banks horns_dig_started, the same counter that now opens the seam."
   },
   {
    "action": "screenshot",

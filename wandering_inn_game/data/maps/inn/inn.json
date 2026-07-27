@@ -1170,7 +1170,7 @@
    ]
   },
   {
-   "_comment": "talk_pool + a static dialogue fallback (no conversation graph, the Renn/Ilvo/Yelra pool-presence idiom).",
+   "_comment": "2026-07-26 main-quest restructure (Task 2.3): no longer pool-only -- the `ceria_intro` graph attaches here so the horns_dig invitation is startable AT THE INN, where a post-seal player actually is (the dungeon_approach attachment stays; the graph is shared, not moved). talk_pool + talk_pool_stages + the static dialogue fallback all STAY: the erin/pisces/krshia/selys idiom is pool-and-graph together (first interact = a pool line, subsequent interacts = the graph), and talk_pool_stages' own gate reads chatted_with_ceria_inn, which only the pool produces.",
    "id": "ceria_inn",
    "kind": "npc",
    "cell": [
@@ -1185,6 +1185,7 @@
      "seal_kept_reported": 1
     }
    },
+   "conversation": "ceria_intro",
    "talk_pool": [
     "The couch by the fire is Yvlon's now. Territorial, armswomen.",
     "Pisces keeps asking about the vault door. I told him to bring his own rope this time.",
