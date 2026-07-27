@@ -1,13 +1,10 @@
 {
-	"_comment": "2026-07-26 main-quest restructure (Task 2.3): the Horns' camp at the ruin, attached to ruin_surface's `ceria_dig_camp` NPC. This is a SEPARATE graph file, not extra nodes inside ceria_intro.json, because a conversation graph is one file (game.gd keys dialogue_graphs by basename) and always opens at its own `start` -- there is no per-entity start-node override, so camp_hub could never be reached through ceria_intro's hub. The split is also what the place-naming validator wants: the horns_dig GIVER maps (ceria_intro: inn + dungeon_approach) stay disjoint from the join_dig PRODUCER map (ruin_surface), so quests.json's join_dig beat is held to naming the ruin. SPOILER RULE: no line here names a door; the reveal is the pedestal's open_toast. The door_retrieved text_variant is the past-tense arm migrated saves see (spec section 8).",
+	"_comment": "2026-07-26 main-quest restructure (Task 2.3): the Horns' camp at the ruin, attached to ruin_surface's `ceria_dig_camp` NPC. This is a SEPARATE graph file, not extra nodes inside ceria_intro.json, because a conversation graph is one file (game.gd keys dialogue_graphs by basename) and always opens at its own `start` -- there is no per-entity start-node override, so camp_hub could never be reached through ceria_intro's hub. The split is also what the place-naming validator wants: the horns_dig GIVER maps (ceria_intro: inn + dungeon_approach) stay disjoint from the join_dig PRODUCER map (ruin_surface), so quests.json's join_dig beat is held to naming the ruin. SPOILER RULE: no line here names a door; the reveal is the pedestal's open_toast. NO door_retrieved text_variant lives here: this graph's only carrier is the ruin_surface camp NPC, whose present_when carries `absent: {door_retrieved: 1}` -- the entity vanishes on the very interact that banks the counter (and Task 2.6 backfills it for migrated saves before their first render), so a past-tense arm here could never render. Spec section 8's past-tense arm lives on ceria_intro's hub instead, at the inn, where Ceria is still standing after the haul.",
 	"start": "camp_hub",
 	"nodes": {
 		"camp_hub": {
 			"speaker": "Ceria",
 			"text": "You made it. Camp rules: nobody touches anything shiny, nobody wanders past the survey stakes alone. The sealed level's below the pedestal court. We found the site off an old expedition ledger -- half the pages were about what they DIDN'T bring out.",
-			"text_variants": [
-				{ "requires": { "accomplishment": { "door_retrieved": 1 } }, "text": "Still can't believe we carried that thing across the floodplains. Erin's already put a tablecloth on it. A TABLECLOTH." }
-			],
 			"options": [
 				{ "text": "Let's open it up.", "hide_when": { "accomplishment": { "horns_dig_joined": 1 } }, "effects": [ { "accomplishment": "horns_dig_joined" } ], "end": true },
 				{ "text": "Just passing through.", "end": true }

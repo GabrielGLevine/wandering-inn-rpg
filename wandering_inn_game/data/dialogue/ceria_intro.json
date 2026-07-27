@@ -1,5 +1,5 @@
 {
-	"_comment": "Contract: text_variants are ascending; the last satisfied variant wins, so vault_construct_downed must follow horns_party_formed. Understood stays available after Go on hides. 2026-07-26 main-quest restructure (Task 2.2): this hub is also the `horns_dig` START surface -- the invitation option gates on seal_kept_reported (the delve is over, the Horns are between jobs) and retires itself on horns_dig_started, the counter it banks. SPOILER RULE: no dig_* line names a door; the reveal is on-screen at the pedestal, not in the pitch.",
+	"_comment": "Contract: text_variants are ascending; the last satisfied variant wins, so vault_construct_downed must follow horns_party_formed, and door_retrieved (2026-07-26 Task 2.3 review fix, spec section 8's past-tense arm) must follow vault_construct_downed -- it is the newest story state and has to win over both. It lives HERE, on the inn/dungeon hub, and NOT on the ruin camp's own graph: the camp NPC's present_when carries `absent: {door_retrieved: 1}`, so the entity is gone the instant that counter banks and a past-tense arm over there could never render. Understood stays available after Go on hides. 2026-07-26 main-quest restructure (Task 2.2): this hub is also the `horns_dig` START surface -- the invitation option gates on seal_kept_reported (the delve is over, the Horns are between jobs) and retires itself on horns_dig_started, the counter it banks. SPOILER RULE: no dig_* line names a door; the reveal is on-screen at the pedestal, not in the pitch.",
 	"start": "hub",
 	"nodes": {
 		"hub": {
@@ -7,7 +7,8 @@
 			"text": "You're the one Olesm's paying to poke the gallery? Good. We're the ones the Guild's paying to make sure you come back out. Ceria Springwalker — Horns of Hammerad.",
 			"text_variants": [
 				{ "requires": { "accomplishment": { "horns_party_formed": 1 } }, "text": "All right. Four of us, one of you. Try to keep up." },
-				{ "requires": { "accomplishment": { "vault_construct_downed": 1 } }, "text": "It was guarding a door. Wonderful. I hate doors that need guarding." }
+				{ "requires": { "accomplishment": { "vault_construct_downed": 1 } }, "text": "It was guarding a door. Wonderful. I hate doors that need guarding." },
+				{ "requires": { "accomplishment": { "door_retrieved": 1 } }, "text": "Still can't believe we carried that thing across the floodplains. Erin's already put a tablecloth on it. A TABLECLOTH." }
 			],
 			"options": [
 				{ "text": "Go on.", "hide_when": { "accomplishment": { "horns_party_formed": 1 } }, "goto": "rules" },
