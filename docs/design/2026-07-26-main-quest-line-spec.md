@@ -69,31 +69,45 @@ framing, dev-facing comments).
    start option re-gates from `post_game` to the same flag with
    mid-story copy. Its role: discover the sealed rune-door. This is
    where the player first works with the Horns.
-4. **NEW quest — door retrieval** (working id `door_in_the_ruin`,
-   working title "The Door in the Ruin"; title needs user ACK).
-   Detail in §3.
+4. **NEW quest — door retrieval** (working id `horns_dig`, working
+   title "The Dig"; title needs user ACK). Title and all pre-reveal
+   beat copy MUST NOT name or hint at a door — the journal is visible
+   from quest start, and what the pedestal holds is the quest's
+   reveal (user ruling 2026-07-26). Detail in §3.
 5. `door_that_goes_elsewhere` — RESHAPED. The anchor-stone beat
    (`recovered_anchor_stone`) is absorbed by the retrieval quest (§3).
-   Remaining beats: consult (`door_understood`, kept — re-fictioned:
-   the newly mounted door acts up before it is attuned; the shipped
-   cellar rift-vermin arm becomes "what leaks through the unattuned
-   door", the Pisces arm and the wardwork-reading arm read the
-   recovered door itself) → buy catalyst → attune with Pisces →
-   `door_awakened`. All copy re-fictioned: the player is awakening the
-   door they personally carried home, and attunement is what makes it
-   stop leaking. Counter ids (`door_understood`,
+   The door is NOT dead while this chain runs — the Liscor hop works
+   from the moment of mounting (§3 haul). The chain's job is the
+   first FAR attunement: `door_awakened` re-semantics to "the door
+   reaches beyond Liscor" (frozen id, new meaning), and its concrete
+   payoff is the Riverfarm link. Remaining beats: consult
+   (`door_understood`, kept — re-fictioned: the door manages the
+   short hop but STRAINS at anything farther; the shipped cellar
+   rift-vermin arm becomes "what leaks through when it strains", the
+   Pisces arm and the wardwork-reading arm read the recovered door
+   itself) → buy catalyst → attune with Pisces → `door_awakened`.
+   All copy re-fictioned: the player is extending the reach of the
+   door they personally carried home, and attunement is what makes
+   the straining stop. Counter ids (`door_understood`,
    `recovered_anchor_stone`, `bought_catalyst`, `door_awakened`) are
    frozen and keep their ids; only *which quest's beats consume them*
    and the copy change. The slimmed chain starts automatically at
-   `door_mounted` (Pisces, at the mounting: now we wake it) — no
-   separate start option remains.
+   `door_mounted` (Pisces, at the mounting: it works — now let us see
+   how far it can go) — no separate start option remains.
 6. **NEW quest — pilgrimage spine** (working id `where_the_door_reaches`,
    working title "Where the Door Reaches"; title needs user ACK).
    Detail in §4.
 7. **Act V** — #270 spec as amended in §7. Banks `seal_resolved`.
 8. **Finale sequence** at `seal_resolved` — §5.
 
-## 3. The retrieval quest (`door_in_the_ruin`) — the backport
+## 3. The retrieval quest (`horns_dig`, "The Dig") — the backport
+
+SPOILER RULE (binding): the quest title and the `join_dig`/`breach`
+beat descriptions never mention a door. They sell the dig itself — a
+sealed level, an expedition short-handed, an unknown prize. The door
+is named only from the `haul` beat onward, after the reveal has
+happened on screen. (Former working title "The Door in the Ruin"
+rejected for spoiling the reveal from the journal.)
 
 Fiction (user-corrected 2026-07-26: NO pantry-doorway resonance, no
 pre-linking the inn to the ruin — they find the door in the ruin, and
@@ -124,7 +138,11 @@ here — this is the main line):
 3. `haul` — the reveal + the trip home; banks `door_retrieved` (new)
    and `recovered_anchor_stone` (frozen id, kept — the stone comes
    home with the door). Door mounted at the inn: banks `door_mounted`
-   (new); the pantry-door prop swaps to the mounted state.
+   (new); the pantry-door prop swaps to the mounted state. **Mounting
+   grants the inn↔Liscor link immediately** (user ruling 2026-07-26):
+   a new portal row gated on `door_mounted`. This is WHY the door
+   stays at the inn — an inn outside the walls with a door straight
+   into the city proves its worth on day one. No dead-door period.
 
 Quest start: from Ceria at the inn, gated on `seal_kept_reported`.
 Erin's current door-chain start option in erin_errand.json is retired
@@ -181,8 +199,9 @@ Ordering enforcement, two layers:
   Pallass opener requires `lattice_hedault_reading`). Gates are
   `requires` on the START options only — a started quest is never
   interrupted (§8 covers pre-restructure saves).
-- **Progressive portal rows:** the Riverfarm row appears at
-  `door_awakened`, Invrisil at `lattice_witch_lore`, Pallass at
+- **Progressive portal rows:** inn↔Liscor at `door_mounted` (§3 —
+  day-one value), Riverfarm at `door_awakened` (the chain's payoff),
+  Invrisil at `lattice_witch_lore`, Pallass at
   `lattice_hedault_reading`. Fiction: the door's reach grows as it
   re-attunes (`resonance_grown` mechanism already ships this idea).
   WARNING (from the portals census): changing row visibility changes
@@ -248,7 +267,10 @@ never access. Enforcement is tuning + verification:
 
 save.gd backfill (the GH#167 template), applied at load:
 
-- Save has `door_awakened` but no `door_in_the_ruin` progress: backfill
+- Save has ANY old door-chain progress (`door_that_goes_elsewhere`
+  started, or any of `door_understood` / `recovered_anchor_stone` /
+  `bought_catalyst` / `door_awakened` banked) but no `horns_dig`
+  progress: backfill
   the retrieval quest complete (bank `horns_dig_joined`,
   `pedestal_breached`, `door_retrieved`, `door_mounted`); the Ceria
   dig-camp arm reads past-tense for these saves.
@@ -292,8 +314,8 @@ Suggested PR sequence (plan-time refinement expected):
 
 1. Acts/gating reframe: acts.json rework, `post_game` re-banking,
    copy pass, `what_the_seal_kept` re-gate. Smallest, unblocks all.
-2. Retrieval quest (`door_in_the_ruin`) + door-chain slimming + save
-   backfill.
+2. Retrieval quest (`horns_dig`) + door-chain reshape + inn↔Liscor
+   row + save backfill.
 3. Pilgrimage spine + region capstone arms + ordering gates +
    progressive portal rows (+ re-pins).
 4. Act V (#270 as amended) + seal-warden tuning cell.
@@ -302,8 +324,8 @@ Suggested PR sequence (plan-time refinement expected):
 
 ## Open items (user-gated)
 
-- Quest title ACKs: "The Door in the Ruin", "Where the Door Reaches"
-  (working titles; ids follow repo convention once ACKed).
+- Quest title ACKs: "The Dig", "Where the Door Reaches" (working
+  titles; ids follow repo convention once ACKed).
 - Act IV title: keeping "What the Door Opened" (it now describes the
   whole act better than before) — flag if a rename is wanted.
 - #270's B-side (Pallass return anchor) stays optional/separate; say
