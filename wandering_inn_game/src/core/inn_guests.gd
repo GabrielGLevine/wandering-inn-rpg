@@ -27,6 +27,23 @@ class_name WIInnGuests
 ## drove_off_rags, so the positive arm alone would pool the Chieftain the
 ## player drove off the plains while her row's own `absent` hid her.
 ## Pool membership and row presence must never disagree.
+## NOT LISTED, ON PURPOSE (fix round 2): `pisces`. His two rows leave one
+## uncovered state -- the HAUL WINDOW, door_retrieved banked and door_mounted
+## not -- where `pisces_inn_guest` (absent door_retrieved) and
+## `pisces_inn_guest_returned` (requires door_mounted) BOTH hide while the
+## pool still seats him, so his chair renders empty. That gap is deliberate:
+## `pisces_mounting` (13,5) is present in exactly that window, and a guest row
+## rendering at the same time would BILOCATE him (the fix 96f80d0 made for the
+## Horns). The pool condition that would close it is NOT (door_retrieved AND
+## NOT door_mounted) -- a DISJUNCTION, `absent door_retrieved` OR `requires
+## door_mounted` -- and one dict is an AND of its two arms, so it cannot say
+## it. Closing it would need a third value shape (an ANY-of Array of specs)
+## AND would make a previously gate-free shipped roster member gate-DEPENDENT,
+## so the fail-closed default would silently drop him for any caller that
+## forgets the predicate. Judged not worth it against the cost: at most two
+## wakings in ten, one chair empty, for the length of one errand. Measured and
+## inert either way -- of 114 shipped fixtures exactly one sits in the haul
+## window (door_chain_fight_start) and Pisces is unmet there.
 const GUEST_POOL_GATES := {
 	"rags": {"requires": ["rags_meeting_settled"], "absent": ["drove_off_rags"]},
 	"wilovan": "brothers_job_done",
@@ -34,19 +51,29 @@ const GUEST_POOL_GATES := {
 }
 
 
-## Is a GUEST_POOL_GATES value satisfied? FAIL-CLOSED in both shapes: with
-## no predicate to ask, a gated npc never pools -- including one whose gate
-## is nothing but an `absent` arm, because "we cannot read the counters" is
+## Is a GUEST_POOL_GATES value satisfied? FAIL-CLOSED everywhere: with no
+## predicate to ask, a gated npc never pools -- including one whose gate is
+## nothing but an `absent` arm, because "we cannot read the counters" is
 ## never evidence that a counter is unbanked.
+##
+## A dict that resolves to NO arms is fail-closed too (fix round 2). `{}`, or
+## a spec whose key is misspelled (`"require"`), would otherwise fall through
+## every loop to `return true` and silently re-open the ghost-seat class
+## through a typo -- the one failure mode this whole const exists to prevent.
+## An unrecognized shape has to read as "shut", never as "no conditions".
 static func _gate_open(gate: Variant, gate_met: Callable) -> bool:
 	if not gate_met.is_valid():
 		return false
 	if gate is Dictionary:
 		var spec: Dictionary = gate
-		for key: Variant in (spec.get("requires", []) as Array):
+		var requires: Array = spec.get("requires", []) as Array
+		var absent: Array = spec.get("absent", []) as Array
+		if requires.is_empty() and absent.is_empty():
+			return false
+		for key: Variant in requires:
 			if not bool(gate_met.call(String(key))):
 				return false
-		for key: Variant in (spec.get("absent", []) as Array):
+		for key: Variant in absent:
 			if bool(gate_met.call(String(key))):
 				return false
 		return true

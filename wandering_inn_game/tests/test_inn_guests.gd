@@ -139,6 +139,20 @@ func _test_quest_gates() -> void:
 	# is still shut when there is no predicate to ask (see _gate_open).
 	assert(not WIInnGuests.met_pool(ten, all_met).has("rags"), "no predicate -> the two-arm gate stays shut, same as the String one")
 
+	# A SPEC THAT RESOLVES TO NO ARMS IS SHUT, NOT OPEN (fix round 2). Before
+	# the guard these fell through every loop to `return true`, so one
+	# misspelled key would have re-opened the ghost-seat class the whole const
+	# exists to prevent -- and silently, since a typo'd key raises nothing.
+	var live := _banked(["rags_meeting_settled"])
+	assert(not WIInnGuests._gate_open({}, live), "an empty spec is shut, not unconditioned")
+	assert(not WIInnGuests._gate_open({"require": ["rags_meeting_settled"]}, live), "a misspelled `require` key is shut, not unconditioned")
+	assert(not WIInnGuests._gate_open({"requires": [], "absent": []}, live), "explicitly empty arms are shut too")
+	# Positive controls, so the guard cannot pass by shutting everything.
+	assert(WIInnGuests._gate_open({"requires": ["rags_meeting_settled"]}, live), "a real requires arm still opens")
+	assert(WIInnGuests._gate_open({"absent": ["drove_off_rags"]}, live), "a real absent arm still opens")
+	assert(WIInnGuests._gate_open("rags_meeting_settled", live), "the bare-String form still opens")
+	assert(not WIInnGuests._gate_open({}, Callable()), "no predicate, no opinion, still shut")
+
 	# FAIL-CLOSED default: a caller that forgets the gate predicate never seats
 	# a gated guest (the row's own present_when.requires would hide it anyway,
 	# so an ungated pool would only ever produce a ghost-empty seat).
