@@ -350,7 +350,7 @@
    ],
    "on_interact_accomplishment": "sensed_something_deeper",
    "toast": "The passage doesn't end here -- it just goes quiet, past a bend the light doesn't reach. Whatever's back there, this isn't the moment.",
-   "_comment_reading": "2026-07-26 Act V beat 2, THE READING (#270 beat 2). Three eyes on one door, the pantry-door consolidation idiom. LATER-SATISFIED-WINS across `variants` is what makes the bare interact a two-stage narration: with the descent agreed Pisces matches the hand (read_the_seal_runes), and once that is held his next read names the appetite (read_the_feeding_ward). That staging is DELIBERATE and load-bearing -- no main-line beat may sit behind a Skill the player's build might not own (spec 6's no-hard-gates rule applied to Skills), so the escort is the guaranteed producer of both reads and [Observe]/[Detect Magic] are the richer, earlier routes to the same facts. The pre-descent arms bank `sensed_something_deeper` (this prop's own shipped flavour counter) rather than the real reads, which ORDER-GATES the quest's beats: nothing in Act V can bank from a curious Act IV visit. The [Detect Magic] base arm deliberately does NOT bank `detected_wardwork` -- the quartet is the four shipped sites (inn frame, ruin socket, the seam back in these halls, the witch's hollow) and this door is what they drain INTO, not a fifth site; a fifth producer would also cheapen the >= 3 threshold its own payoff variant reads. SELF-REVIEW 2026-07-27: a `skill_hint_toast` authored here was DEAD COPY and is gone -- interactions.gd's prop branch reaches the requires_skill/hint arm only when there is no `on_interact_accomplishment`, and this prop has one. The pantry door's own comment names this class (inert copy dressed as a live surface); the hint a player actually gets is the bare interact's narration, which is the point of staging it.",
+   "_comment_reading": "2026-07-26 Act V beat 2, THE READING (#270 beat 2). Three eyes on one door, the pantry-door consolidation idiom. LATER-SATISFIED-WINS across `variants` is what makes the bare interact a two-stage narration: with the descent agreed Pisces matches the hand (read_the_seal_runes), and once that is held his next read names the appetite (read_the_feeding_ward). That staging is DELIBERATE and load-bearing -- no main-line beat may sit behind a Skill the player's build might not own (spec 6's no-hard-gates rule applied to Skills), so the escort is the guaranteed producer of both reads and [Observe]/[Detect Magic] are the richer, earlier routes to the same facts. The pre-descent arms bank `sensed_something_deeper` (this prop's own shipped flavour counter) rather than the real reads, which ORDER-GATES the quest's beats: nothing in Act V can bank from a curious Act IV visit. The [Detect Magic] base arm deliberately does NOT bank `detected_wardwork` -- the quartet is the four shipped sites (inn frame, ruin socket, the seam back in these halls, the witch's hollow) and this door is what they drain INTO, not a fifth site; a fifth producer would also cheapen the >= 3 threshold its own payoff variant reads. SELF-REVIEW 2026-07-27: a `skill_hint_toast` authored here was DEAD COPY and is gone -- interactions.gd's prop branch reaches the requires_skill/hint arm only when there is no `on_interact_accomplishment`, and this prop has one. The pantry door's own comment names this class (inert copy dressed as a live surface); the hint a player actually gets is the bare interact's narration, which is the point of staging it. FIX ROUND 1 (reviewer CRITICAL, 2026-07-27): variants[0] is the repo's SOLE producer of `seal_kept_found`, and later-satisfied-wins meant the descent arm SHADOWED it -- a save that downed the construct but never touched this door (a pre-restructure save the Task 2.6 dig backfill carries into the pilgrimage is the reachable case) could descend, read, and never bank the find, which strands what_the_seal_kept's vault beat, then seal_kept_reported, then act_iv's own gate. Both Act V read arms now compound `seal_kept_found` into their gate (the :404 idiom): the skipped-find player banks the find on the first interact and the rune-read on the second, and every downstream read gate (read_the_seal_runes, and through it both [Detect Magic] variants) inherits the guarantee transitively. The [Observe] arm needed the SAME compound for the same reason -- it banks read_the_seal_runes without ever touching seal_kept_found, so gating it on the descent alone reopened the identical hole through a different arm. Regression-pinned in test_sim_core (_test_seal_door_find_before_read).",
    "variants": [
     {
      "when": {
@@ -361,7 +361,8 @@
     },
     {
      "when": {
-      "seal_descent_agreed": 1
+      "seal_descent_agreed": 1,
+      "seal_kept_found": 1
      },
      "accomplishment": "read_the_seal_runes",
      "toast": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. Not a school, not a fashion. A HAND, and it cut this one first.\" He does not look away while he says it."
@@ -388,7 +389,8 @@
      "variants": [
       {
        "when": {
-        "seal_descent_agreed": 1
+        "seal_descent_agreed": 1,
+        "seal_kept_found": 1
        },
        "accomplishment": "read_the_seal_runes",
        "toast": "[Observe] — You take the runes in order, the way you would read a sentence. The turns repeat at a fixed interval. The pantry frame does exactly that, at exactly that interval, and this one is worn deeper: it has been doing it longer. Behind you, Pisces says nothing, which from him is applause."

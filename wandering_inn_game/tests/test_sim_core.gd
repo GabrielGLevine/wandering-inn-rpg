@@ -3366,6 +3366,45 @@ func _init() -> void:
 	assert(fsw_toasts.has("FIRST") and not fsw_toasts.has("SECOND"),
 		"arrival_toasts is first-satisfied-wins: only the earliest matching entry emits")
 
+	# 2026-07-27 Act V, fix round 1 (reviewer CRITICAL). seal_kept_door's
+	# variants[0] is the repo's SOLE producer of `seal_kept_found`, and Act V's
+	# read arms sit BELOW it under later-satisfied-wins. Gated on the descent
+	# alone they shadowed it: a save that downed the construct but never touched
+	# this door (the Task 2.6 dig backfill carries exactly that shape into the
+	# pilgrimage) would descend, read, and never bank the find -- stranding
+	# what_the_seal_kept's vault beat, then seal_kept_reported, then act_iv's own
+	# gate, and with it Act V. Both read arms now compound `seal_kept_found`, so
+	# the skipped-find player banks the find FIRST and reads SECOND.
+	var skip_find := WIGame.new(scene_config, skill_config, _sink, 4245)
+	skip_find.player_skills.append("observe")
+	skip_find.record_accomplishment("vault_construct_downed")
+	skip_find.record_accomplishment("seal_descent_agreed")
+	skip_find.transition("trapped_halls", Vector2i(18, 7))
+	skip_find.move_player(Vector2i.RIGHT)  # blocked by the door prop; sets facing
+	assert(skip_find.player_cell == Vector2i(18, 7) and skip_find.player_facing == Vector2i.RIGHT,
+		"the seal door's only approach cell faces it by bump")
+
+	# [Observe] must NOT reach past the unbanked find either -- it banks
+	# read_the_seal_runes without ever touching seal_kept_found, so gating it on
+	# the descent alone reopened the identical hole through a different arm.
+	skip_find.use_skill_field("observe")
+	assert(skip_find.accomplishment_count("read_the_seal_runes") == 0,
+		"[Observe] cannot bank the Act V read while the find is still unbanked")
+	assert(skip_find.accomplishment_count("sensed_something_deeper") >= 1,
+		"[Observe] falls back to the door's own flavour counter instead")
+
+	skip_find.interact()
+	assert(skip_find.accomplishment_count("seal_kept_found") == 1,
+		"first interact banks the FIND -- Act V's read arm must never shadow the repo's sole producer")
+	assert(skip_find.accomplishment_count("read_the_seal_runes") == 0,
+		"and it is the find alone: the read waits its turn")
+	skip_find.interact()
+	assert(skip_find.accomplishment_count("read_the_seal_runes") == 1,
+		"second interact banks the rune-read, now that the find is held")
+	skip_find.interact()
+	assert(skip_find.accomplishment_count("read_the_feeding_ward") == 1,
+		"third interact banks the ward-read, the staged narration intact behind the fix")
+
 	print("PASS: sim core behaves correctly")
 	quit(0)
 
