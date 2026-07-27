@@ -30,6 +30,15 @@ func _new_game() -> WIGame:
 	return WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, _combat_config())
 
 
+## Task 2.6: every counter the dig backfill owes a migrated door-chain save,
+## in the order test_fixture_coherence's monotone chain walks them.
+func _assert_dig_backfilled(game: WIGame, label: String) -> void:
+	for cid: String in ["horns_dig_started", "horns_dig_joined", "pedestal_breached",
+			"door_retrieved", "door_mounted"]:
+		assert(game.accomplishment_count(cid) >= 1, "%s: %s backfilled on load" % [label, cid])
+	assert(game.started_quests.has("horns_dig"), "%s: The Dig is in started_quests after load" % label)
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var original := _new_game()
@@ -647,6 +656,74 @@ func _init() -> void:
 		"consolidation-target ghosts stripped on load")
 	assert(int(ghost_game.classes.get("spellsword", 0)) == 11 and int(ghost_game.classes.get("helper", 0)) == 4,
 		"non-retired classes survive the sanitize untouched")
+
+	# --- 2026-07-26 main-quest restructure (Task 2.6): The Dig backfill. Old
+	# saves carry door-chain progress from before horns_dig existed, so a load
+	# must leave the sim in a position the fixture-coherence invariant accepts:
+	# door_chain_started -> door_mounted -> door_retrieved + pedestal_breached
+	# -> horns_dig_joined -> horns_dig_started. (recovered_anchor_stone is
+	# deliberately NOT part of the grant -- see save.gd's block.) ---
+	var chain_done_state: Dictionary = (WISave.serialize(_new_game())["state"] as Dictionary).duplicate(true)
+	chain_done_state["accomplishments"] = {
+		"door_chain_started": 1, "door_understood": 1, "recovered_anchor_stone": 1,
+		"bought_catalyst": 1, "door_awakened": 1,
+	}
+	chain_done_state["started_quests"] = ["door_that_goes_elsewhere"]
+	var chain_done := _new_game()
+	_events.clear()
+	assert(WISave.apply(chain_done, {"version": WISave.VERSION, "state": chain_done_state}),
+		"a pre-restructure save that finished the whole door chain still applies")
+	_assert_dig_backfilled(chain_done, "finished chain")
+	assert(_events.is_empty(),
+		"the backfill is SILENT -- a restore that re-fired quest completion would toast (and re-grant) the chain the old save already finished")
+	assert(chain_done.accomplishment_count("horns_dig_started") == 1,
+		"the backfill banks exactly 1 per counter, not one per door-chain flag it matched")
+	assert(chain_done.accomplishment_count("recovered_anchor_stone") == 1,
+		"a chain save that already fetched the anchor stone keeps its single count")
+
+	var reloaded := _new_game()
+	assert(WISave.apply(reloaded, WISave.serialize(chain_done)), "re-saving a migrated save and loading it again applies")
+	_assert_dig_backfilled(reloaded, "re-applied")
+	assert(reloaded.accomplishment_count("door_mounted") == 1,
+		"the backfill is idempotent -- saving a migrated save and reloading does not stack counts")
+	assert(reloaded.started_quests.count("horns_dig") == 1, "horns_dig is appended once, never duplicated")
+
+	# Mid-chain: the old flow banked door_chain_started + started the quest at
+	# Erin's hub, so the door was 'in play' long before door_awakened.
+	var mid_chain_state: Dictionary = (WISave.serialize(_new_game())["state"] as Dictionary).duplicate(true)
+	mid_chain_state["accomplishments"] = {"door_chain_started": 1, "door_understood": 1}
+	mid_chain_state["started_quests"] = ["door_that_goes_elsewhere"]
+	var mid_chain := _new_game()
+	assert(WISave.apply(mid_chain, {"version": WISave.VERSION, "state": mid_chain_state}),
+		"a pre-restructure save stopped mid-chain (no door_awakened) applies")
+	_assert_dig_backfilled(mid_chain, "mid chain")
+	assert(mid_chain.accomplishment_count("recovered_anchor_stone") == 0,
+		"the backfill does NOT hand out recovered_anchor_stone -- the migrated player still has an anchor stone to fetch (spec 8)")
+
+	# The bare chain start is enough on its own: door_chain_started now MEANS
+	# 'the Magical Door is hung at the inn', so it cannot stand without the dig.
+	var bare_start_state: Dictionary = (WISave.serialize(_new_game())["state"] as Dictionary).duplicate(true)
+	bare_start_state["accomplishments"] = {"door_chain_started": 1}
+	var bare_start := _new_game()
+	assert(WISave.apply(bare_start, {"version": WISave.VERSION, "state": bare_start_state}),
+		"a pre-restructure save that only started the chain applies")
+	_assert_dig_backfilled(bare_start, "bare chain start")
+
+	var no_chain := _new_game()
+	assert(WISave.apply(no_chain, WISave.serialize(_new_game())), "a save with no door-chain progress applies")
+	assert(no_chain.accomplishment_count("horns_dig_started") == 0 and not no_chain.started_quests.has("horns_dig"),
+		"a save that never touched the door chain is NOT handed The Dig")
+
+	# A post-restructure save mid-dig must keep its own position: the guard
+	# reads horns_dig_started, so nothing skips the player past the breach.
+	var mid_dig_state: Dictionary = (WISave.serialize(_new_game())["state"] as Dictionary).duplicate(true)
+	mid_dig_state["accomplishments"] = {"horns_dig_started": 1}
+	mid_dig_state["started_quests"] = ["horns_dig"]
+	var mid_dig := _new_game()
+	assert(WISave.apply(mid_dig, {"version": WISave.VERSION, "state": mid_dig_state}),
+		"a post-restructure save mid-dig applies")
+	assert(mid_dig.accomplishment_count("horns_dig_joined") == 0 and mid_dig.accomplishment_count("door_mounted") == 0,
+		"a player who is actually running The Dig is never fast-forwarded past it")
 
 	var meta_game := _new_game()
 	meta_game.classes["warrior"] = 2
