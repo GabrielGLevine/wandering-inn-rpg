@@ -1522,7 +1522,7 @@ func chronicle_facts() -> Dictionary:
 		"quests_completed": _quests_completed_count(),
 		"victories": accomplishment_count("victories"),
 		"sleeps": times_slept,
-		"ending": _act_beat_text("seal_holds"),
+		"ending": _act_beat_text("counted_among"),
 	}
 	return facts
 

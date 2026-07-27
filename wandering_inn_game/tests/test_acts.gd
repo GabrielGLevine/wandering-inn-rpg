@@ -52,6 +52,24 @@ func _init() -> void:
 
 	var into_iii := WIActs.evaluate(catalog, _ctx(1, 3, {"reached_liscor": 1, "reached_two_classes": 1}))
 	assert(into_iii["id"] == "act_iii" and into_iii["index"] == 2, "reached_two_classes + 3 quests => Act III (even at classes_count 1)")
+	for beat: Dictionary in into_iii["beats"]:
+		assert(not bool(beat["achieved"]), "both Act III beats pending on entry")
+
+	# Act III's beats must be reachable IN Act III: both key off counters banked
+	# before the seal, which is the act's own exit. (2026-07-26 reframe -- the old
+	# pair keyed off raskghar_sealed/post_game and could never render in-act.)
+	var mid_iii := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "reached_two_classes": 1, "heard_the_deep_tremor": 1}))
+	assert(mid_iii["id"] == "act_iii" and mid_iii["index"] == 2, "the tremor summons does not advance Act III -- only the seal does")
+	var mid_iii_achieved: Array = []
+	for beat: Dictionary in mid_iii["beats"]:
+		if bool(beat["achieved"]):
+			mid_iii_achieved.append(beat["id"])
+	assert(mid_iii_achieved == ["the_stirring"], "the tremor lights the_stirring while the player is still in Act III")
+
+	var warren_iii := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "reached_two_classes": 1, "heard_the_deep_tremor": 1, "cleared_the_warren": 1}))
+	assert(warren_iii["id"] == "act_iii" and warren_iii["index"] == 2, "victory below is still Act III -- the seal is a separate surface beat after the return")
+	for beat: Dictionary in warren_iii["beats"]:
+		assert(bool(beat["achieved"]), "both Act III beats read achieved on the pre-seal return, in-act")
 
 	var sealed_only := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1}))
 	assert(sealed_only["id"] == "act_iv" and sealed_only["index"] == 3, "the seal alone advances into Act IV (2026-07-26 reframe: the door is its own thread, not the gate)")
@@ -69,19 +87,28 @@ func _init() -> void:
 		if String(beat["id"]) == "the_door_opens":
 			assert(bool(beat["achieved"]), "the door beat reads achieved once door_awakened banks, mid-Act IV")
 		else:
-			assert(not bool(beat["achieved"]), "the four region beats all pending until their own counters land")
+			assert(not bool(beat["achieved"]), "counted_among and the four region beats all pending until their own counters land")
+
+	# counted_among carries the seal's closing line, and post_game banks only
+	# after the seal has already moved the player on -- so it must render HERE.
+	var counted := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1, "post_game": 1}))
+	var counted_achieved: Array = []
+	for beat: Dictionary in counted["beats"]:
+		if bool(beat["achieved"]):
+			counted_achieved.append(beat["id"])
+	assert(counted["id"] == "act_iv" and counted_achieved == ["counted_among"], "post_game lights counted_among in Act IV, where the player actually stands when it banks")
 
 	var maxed := WIActs.evaluate(catalog, _ctx(6, 4, {
 		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
-		"door_awakened": 1, "price_of_a_favor_reported": 1, "brothers_job_done": 1,
-		"elevator_pass_stamped": 1, "seal_kept_reported": 1,
+		"post_game": 1, "door_awakened": 1, "price_of_a_favor_reported": 1,
+		"brothers_job_done": 1, "elevator_pass_stamped": 1, "seal_kept_reported": 1,
 	}))
 	assert(maxed["id"] == "act_iv" and maxed["index"] == 3, "maxed save caps at the last act (Act IV)")
 	var maxed_achieved: Array = []
 	for beat: Dictionary in maxed["beats"]:
 		if bool(beat["achieved"]):
 			maxed_achieved.append(beat["id"])
-	assert(maxed_achieved.size() == 5, "every Act IV beat reads achieved on a fully maxed save")
+	assert(maxed_achieved.size() == 6, "every Act IV beat reads achieved on a fully maxed save")
 
 	var sparse := WIActs.evaluate(catalog, {"accomplishments": {"reached_liscor": 1}})
 	assert(sparse["index"] == 0, "sparse ctx (no class/quest keys) = Act I, no crash")

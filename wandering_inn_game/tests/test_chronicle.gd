@@ -14,12 +14,12 @@ func _init() -> void:
 	var custom_config: Dictionary = config.duplicate(true)
 	for act: Dictionary in custom_config["acts"]["acts"]:
 		for beat: Dictionary in act.get("beats", []):
-			if String(beat.get("id", "")) == "seal_holds":
+			if String(beat.get("id", "")) == "counted_among":
 				beat["text"] = "Catalog-owned ending."
 	var custom_game := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 9, custom_config)
 	assert(WISave.apply(custom_game, fixture), "near_riverfarm must load against a customized acts catalog")
 	assert(String(custom_game.chronicle_facts()["ending"]) == "Catalog-owned ending.",
-		"Chronicle ending must derive from acts.seal_holds")
+		"Chronicle ending must derive from acts.counted_among (act_iv since the 2026-07-26 reframe; was act_iii.seal_holds)")
 
 	var victory_game := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 9, config)
 	victory_game.classes = {"warrior": 5}
