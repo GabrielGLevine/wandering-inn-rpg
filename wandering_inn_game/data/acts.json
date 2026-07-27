@@ -34,7 +34,7 @@
 			]
 		},
 		{
-			"_comment": "Act V gate (revised in fix round 1 by controller ruling): the seal report plus the two region terminals the pilgrimage does not imply. Transitivity covers the rest -- lattice_forge_rune implies spine_started and elevator_pass_stamped, lattice_witch_lore requires price_of_a_favor_reported, lattice_hedault_reading requires brothers_job_done, and Act V's descent ask requires all three lattice counters. Naming them here is what keeps riverfarm_owed and invrisil_squared from being STRANDED: a beat whose counter can only bank in an act the player has already left can never render (the act_iii defect). counted_among is deliberately NOT in the gate -- it is the seal's own closing line, relocated here because post_game banks at the first sleep AFTER the seal (sleep_beat.gd).",
+			"_comment": "Act V gate (revised in fix round 1 by controller ruling): the seal report plus the two region terminals the pilgrimage does not imply. Transitivity covers the rest -- lattice_forge_rune implies spine_started and elevator_pass_stamped, lattice_witch_lore requires price_of_a_favor_reported, lattice_hedault_reading requires brothers_job_done, and Act V's descent ask requires all three lattice counters. Naming them here is what keeps riverfarm_owed and invrisil_squared from being STRANDED: a beat whose counter can only bank in an act the player has already left can never render (the act_iii defect). counted_among is deliberately NOT in the gate -- it is the seal's own closing line, relocated here because post_game banks at the first sleep AFTER the seal (sleep_beat.gd). SPOILER DISCIPLINE (act_v's rule, binding here since the reframe moved entry from post-game to the seal): journal.gd:639 renders PENDING beats in full, so every line below is visible mid-story and none may exceed the act title. the_reach_mapped re-copied 2026-07-27 -- it stated Act V's reveal. The five region beats are PRE-WAVE copy whose VISIBILITY, not text, this wave changed; each still names its chain's outcome while pending. That one is a render-policy call (hide unearned beats), not copy -- stripping specifics would gut the earned page. docs/VISUAL-LOG.md.",
 			"id": "act_iv",
 			"title": "What the Door Opened",
 			"header": "Act IV -- What the Door Opened",
@@ -46,7 +46,7 @@
 				{ "id": "invrisil_squared", "text": "A merchant's name is settled in Invrisil, one way or another, and the Brothers remember who settled it.", "when": { "accomplishments": { "brothers_job_done": 1 } } },
 				{ "id": "pallass_tiers", "text": "The forge tier of Pallass stands open above you now, papers stamped and the lift unlocked.", "when": { "accomplishments": { "elevator_pass_stamped": 1 } } },
 				{ "id": "the_horns_home", "text": "The Horns of Hammerad have taken a corner of the inn as their own, and the seal beneath Liscor holds quiet.", "when": { "accomplishments": { "seal_kept_reported": 1 } } },
-				{ "id": "the_reach_mapped", "text": "Three regions have handed you the same word without noticing they were doing it. The Door has been teaching you what it is made of.", "when": { "accomplishments": { "lattice_forge_rune": 1 } } }
+				{ "id": "the_reach_mapped", "text": "The Door's reach has outgrown the map you started with, and you have walked all of it.", "when": { "accomplishments": { "lattice_forge_rune": 1 } } }
 			]
 		},
 		{

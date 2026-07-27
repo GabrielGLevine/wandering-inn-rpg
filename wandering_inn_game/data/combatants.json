@@ -652,10 +652,10 @@
    "skills": []
   },
   {
-   "_comment": "The game's FIRST all-human combatant family, per spec sec.2: 'his hired blades = the first all-human combatant family (art: doublets + clubs/knives -- NOT Watch-alike; distinct palette)'. Phase 9 band sweep 2026-07-27: gained [Counter Strike] (SKILL, not stat inflation -- the knives are untouched, so boulevard_duel_ring's band is unmoved) to raise Invrisil one band over Riverfarm, matching its authored 11.0 vs the collectors' 9.5. power_level unchanged: the labels were right, the stats had drifted.",
+   "_comment": "The game's FIRST all-human combatant family, per spec sec.2: 'his hired blades = the first all-human combatant family (art: doublets + clubs/knives -- NOT Watch-alike; distinct palette)'. Phase 9 band sweep 2026-07-27: gained [Counter Strike] (SKILL, not stat inflation -- the knives are untouched, so boulevard_duel_ring's band is unmoved) to raise Invrisil one band over Riverfarm, matching its authored 11.0 vs the collectors' 9.5. power_level unchanged: the labels were right, the stats had drifted. display_name is DISTINCT from the two knives on purpose (fix round 1): the turn banner auto-suffixes duplicate names, so three 'Hired Blade' rows left the fight's only Skill-carrier unidentifiable -- a boss the player cannot point at.",
    "id": "hired_blade_leader",
    "power_level": 11.0,
-   "display_name": "Hired Blade",
+   "display_name": "Hired Blade Captain",
    "sprite": "hired_blade",
    "side": "enemy",
    "stats": {

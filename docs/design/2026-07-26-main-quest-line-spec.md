@@ -253,6 +253,65 @@ never access. Enforcement is tuning + verification:
 - Any combat retune re-derives pinned rng_state in door_chain_* and
   affected fixtures via tests/_derive_rng_state.gd.
 
+### §6 AMENDMENT — the shipped bands (Phase 9, 2026-07-27)
+
+This block is the authority the in-repo comments point at when they cite
+"spec §6" (`combatants.json:briar_collector_deep_a`,
+`sim_combat_batch.gd:RIVERFARM_CELLS` rung 1).
+
+**How "expected level" is derived — honestly.** `sim_progression_pace.gd`
+stops at Act III (wakings 10/22/36) and has no Act IV/V arm, so it cannot
+supply an expected level for any pilgrimage stop. **The shipped fixtures are
+the only source for Act IV/V**, and the bands below are tuned against each
+fixture's own asserted level (`test_fixture_coherence.gd`'s
+`COMBAT_BAND_FIXTURES` locks those totals exactly, both directions). The pace
+harness is recorded for Acts I–III only, as context for how a player arrives
+at Act IV — not as an input to any band.
+
+| Source | Covers | Numbers |
+|---|---|---|
+| `sim_progression_pace.gd` (challenge-weighted, flag-on) | Acts I–III **only** | p50 total level 6 / 9 / 13 (warrior), 6 / 10 / 15 (caster), 10 / 20 / 24 (helper) |
+| Fixture pins (`COMBAT_BAND_FIXTURES` + `classes` dicts) | **All** main-line milestones | warren 3 · door chain / Riverfarm / Invrisil 10 · The Dig / seal_kept halls / Pallass market 11 · Pallass forge tier / Act V warden 14 · finale 22 |
+
+**The band metric.** A stop's band is the win rate of its capstone fight **as
+shipped** (the map's own roster, allies included) against one shared yardstick
+build, `t4_spellsword14_party`. Ascending difficulty = descending win rate.
+Enemy-party power is NOT the metric: `_enemy_party_power`'s k-norm ignores
+allies and inverts here (Invrisil's 3-enemy roster aggregates to 17.8 against
+the solo forge golem's 15.0).
+
+| # | Stop | Capstone (as shipped) | authored `power_level` | yardstick win | gate window |
+|---|---|---|---|---|---|
+| 1 | Riverfarm | `briar_collectors_deep` + `riverfarm_hunter` | 9.5 | 0.93 | 0.88–0.98 |
+| 2 | Invrisil | `hired_blades` + `wilovan` | 11.0 | 0.82 | 0.77–0.87 |
+| 3 | Pallass | `forge_calibration_golem` solo | 15.0 | 0.71 | 0.65–0.76 |
+| 4 | Act V | `seal_warden` solo | 18.0 | 0.59 | 0.55–0.64 |
+
+The four gate windows are **strictly disjoint and ordered**, so the ladder's
+ordering is itself an assertion — a future retune that flattens or reverses a
+step fails the harness rather than passing quietly. The two per-stop cells at
+expected level 10 are disjoint the same way (Riverfarm 0.72–0.85 measuring
+0.79, Invrisil 0.57–0.71 measuring 0.64).
+
+Adjacent pairs are also compared at ONE shared build, because a yardstick
+ladder alone could be an artifact of roster shape:
+
+| Pair | Build | Lower | Upper |
+|---|---|---|---|
+| Riverfarm → Invrisil | `t3_warrior10` | 0.79 | 0.64 |
+| Invrisil → Pallass | `t4_spellsword11_party` | 0.72 | 0.49 |
+| Pallass → Act V | `t4_spellsword14_party` | 0.71 | 0.59 |
+
+The two `_t4_sw11_` rungs stay MEASURED on purpose: the forge cell reads 0.49
+there, and an under-band value IS the evidence that Pallass sits a tier up.
+
+**Retunes applied (two, `data/combatants.json`):** `briar_collector_deep_a/b`
+con 38/40 → 34/36; `hired_blade_leader` gains `[Counter Strike]` (a Skill, so
+the knives stay untouched and `boulevard_duel_ring`'s band is unmoved) and a
+distinct `display_name`. No `power_level` changed — the labels were already
+the ladder above; the stats had drifted off them. `seal_warden` unchanged: the
+three stops beneath it never pushed the top band out of range.
+
 ## 7. Amendments to #270 (door-continuation-spec)
 
 1. **All "second door" language is dead.** The rune-door under Liscor
