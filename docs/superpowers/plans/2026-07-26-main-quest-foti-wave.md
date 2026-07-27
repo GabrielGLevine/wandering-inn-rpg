@@ -492,10 +492,10 @@ Execute docs/design/2026-07-20-door-continuation-spec.md beats 1–3 + Act V, AS
 
 ## Phase 9 — Difficulty bands + harness (PR `wave/mq6-bands`)
 
-- [ ] **Task 9.1:** Derive current expected class-levels at each main-line milestone from `tests/sim_progression_pace.gd` runs (challenge-weighted #211 flag-on). Record the table in the PR body.
-- [ ] **Task 9.2:** Retune region encounter stats (combatants.json overrides per arena) so Riverfarm < Invrisil < Pallass < seal-warden, one band apart; load `wi-adding-an-encounter` for every stat touch.
-- [ ] **Task 9.3:** Add/refresh 0.55–0.95 winrate cells (sim_combat_batch) per stop at expected level; re-derive pinned rng_state in every touched fixture via `tests/_derive_rng_state.gd`.
-- [ ] **Task 9.4:** Full QA sweep + machine playtest of the whole main line start→finale; VISUAL-LOG drain; PR.
+- [x] **Task 9.1:** Derive current expected class-levels at each main-line milestone from `tests/sim_progression_pace.gd` runs (challenge-weighted #211 flag-on). Record the table in the PR body.
+- [x] **Task 9.2:** Retune region encounter stats (combatants.json overrides per arena) so Riverfarm < Invrisil < Pallass < seal-warden, one band apart; load `wi-adding-an-encounter` for every stat touch.
+- [x] **Task 9.3:** Add/refresh 0.55–0.95 winrate cells (sim_combat_batch) per stop at expected level; re-derive pinned rng_state in every touched fixture via `tests/_derive_rng_state.gd`.
+- [x] **Task 9.4:** Full QA sweep + machine playtest of the whole main line start→finale; VISUAL-LOG drain; PR.
 
 ---
 

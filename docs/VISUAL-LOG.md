@@ -16,6 +16,123 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### Machine playtest — wave/mq6-bands, MILESTONE CLOSE: the whole main line (2026-07-27)
+
+Source: `wave/mq6-bands` after Tasks 9.1–9.3, full asset overlay in tree, 29/29
+unit suites + the 163-script sweep green first. Thirteen windowed runs walking
+the line start→finale (`tutorial_flow`, `gate_district_walkthrough`,
+`sewers_walkthrough`, `climax_seal`, `horns_dig_flow`, `door_awakening`,
+`spine_reach`, `riverfarm_fight`, `invrisil_disagreement_fight`,
+`pallass_walkthrough`, `seal_open`, `finale_after_merge`, `journal_history`),
+all `passed: true`, 63 screenshots read at native 1280x720. The finale's own
+paced lines are structurally invisible to QA (`sleep_veil._is_qa()`) and were
+read in the wave/mq5-finale pass above — not re-litigated here.
+
+FIX ROUND 1 extended the pass to the **full MACHINE-PLAYTEST matrix** (the six
+rows the first pass skipped: `char_creation`, `atmosphere_check`, `gear_loop`,
+`social_loop`, `status_first_encounter`, `arc_flow` — all `passed: true`, 33
+more shots) plus a throwaway windowed **forge-golem fight** probe at the
+`t4_spellsword14_party` reference build, so Pallass's newly-gated band cell was
+actually PLAYED and not only measured (probe script + fixture deleted before
+commit; shots kept out-of-tree). Two entries below were corrected or closed by
+what those runs showed.
+
+- [x] JOURNAL/ACT-V-REVEAL-LEAK (P2, WAVE-AUTHORED at `14a8771`) — `acts.json`
+  act_iv's `the_reach_mapped` beat read "Three regions have handed you the same
+  word without noticing they were doing it. The Door has been teaching you what
+  it is made of." `journal.gd:639` renders PENDING beats in full at `·`, so
+  that stated Act V's entire lattice reveal from the moment Act IV opened
+  (`climax_seal/02_journal_act4.png`, a 3-level fixture standing at the seal).
+  It broke the rule act_v's own `_comment` states — "none may state more than
+  the act's own title". **FIXED fix round 1** → "The Door's reach has outgrown
+  the map you started with, and you have walked all of it." No region list, no
+  reveal, reads right in both `·` and `✓` states; verified in render at
+  `arc_flow/05_journal_sealed.png`. act_iv's `_comment` now carries the rule.
+- [ ] JOURNAL/ACT-IV-PENDING-ITINERARY (P3, PRE-WAVE copy, wave-changed
+  VISIBILITY) — the audit that came with the fix above. act_iv's five region
+  beats (`riverfarm_owed`, `invrisil_squared`, `pallass_tiers`,
+  `the_horns_home`, `the_door_opens`) are unchanged since `e98e23f`, but they
+  were authored when Act IV was the POST-GAME checklist act, where nothing was
+  ever pending. The 2026-07-26 reframe moved Act IV's entry to the seal, so
+  each now sits on the page in completed voice naming its own chain's outcome
+  before the player has heard of it. NOT re-copied: stripping their specifics
+  would gut the earned Act IV page, which this same playtest rates a strength.
+  The real fix is render policy — hide unearned derived beats, or mark them as
+  openings rather than outcomes. Controller call, `journal.gd:637-639`.
+- [ ] COMBAT/FEED-FOLD (P2, REGRESSION of the Fixed-section item "message panels
+  clipped the last wrapped line") — **the combat feed's viewport admits exactly
+  three full rows and a sliced fourth.** Corrected in fix round 1: the first
+  pass called this "whenever the 4th entry WRAPS", which the extra matrix rows
+  disproved. Wrapping is irrelevant — it is the ROW COUNT. Three surfaces, two
+  of them unwrapped: `riverfarm_fight/02_briar_deep_wave.png` (wrapped, "…for
+  13!" cut), `invrisil_disagreement_fight/01_warehouse_fight_wilovan_ally.png`
+  (unwrapped, "Wilovan strikes Hired Blade B for 7!"), and the forge-golem
+  probe's `04_forge_fight_mid` (unwrapped, "Traveler answers with [Battle
+  Momentum]!"). `status_first_encounter/01_first_encounter_feed.png` is the
+  control: two rows, no slice. So a kill line or a damage number is routinely
+  the thing that vanishes. The re-budget counts wrapped lines for the EVICT
+  decision, but the viewport height is not a whole multiple of the row height.
+  NOT fixed here — it is a shared message-panel budget touching every panel
+  class, which needs its own verification pass, not a drive-by in a balance PR.
+- [x] COMBAT/HIRED-BLADE-NAMES (P2, Phase 9 made it matter) — all three
+  warehouse enemies carried `display_name: "Hired Blade"`, so the turn banner
+  read "Hired Blade A | Hired Blade B | Hired Blade C" and the feed named them
+  the same way. Phase 9 gave `hired_blade_leader` `[Counter Strike]`: the fight
+  now HAS a boss with its own mechanic and nothing on screen said which of the
+  three it was. **FIXED fix round 1** — the leader is "Hired Blade Captain"
+  (a unique name takes no auto-suffix, so the two knives stay A/B and the
+  captain reads as their head). Zero churn: the literal appeared nowhere
+  outside `combatants.json`. `invrisil_disagreement_fight/01`.
+- [ ] COMBAT/GOLEM-NAME-SPLIT (P4) — the forge golem parleys as "Miscalibrated
+  Golem" (`data/dialogue/forge_calibration_golem.json` speaker) and then fights
+  as "Stone Golem" (`combatants.json:forge_golem` display_name, shared with both
+  market watchgolems). The line you just read names a different thing from the
+  one in the turn banner. Same shape as HIRED-BLADE-NAMES but one tier down: no
+  mechanic hangs on telling them apart. Found on the fix-round-1 forge-golem
+  probe (`03_forge_fight_open`).
+- [ ] JOURNAL/HALF-ROW (P3) — the journal's scroll viewport admits a partial
+  text row instead of clipping at a line boundary, so its bottom line renders
+  sliced ("The Missing Crate — Complete." on both
+  `climax_seal/02_journal_act4.png` and `spine_reach/02_journal_spine_beat.png`).
+  The `▼` continuation cue is present so it IS scrollable, but a half-height row
+  reads as a clipping bug, not as "more below".
+- [ ] COMBAT/BRIAR-CAMOUFLAGE (P3, same family as the open COMBAT/CELLAR-VERMIN
+  entry) — on `witch_hollow` the deep briar collectors are green foliage on a
+  green floor under a green canopy. In `riverfarm_fight/02_briar_deep_wave.png`
+  Collector A is findable only by its HP bar, and Collector B's foliage overlaps
+  the Hunter's cloak so ally and enemy read as one mass with two bars.
+- [ ] MAP/PALLASS-FORGE-FLOOR (P3, widened in fix round 1 to the ARENA) —
+  `pallass_forge`'s walkable floor and its walls share one purple-grey brick
+  texture with no floor/wall cue; the top rows are indistinguishable from the
+  walkable middle (`pallass_walkthrough/07_forge_tier_arrival.png`). In the same
+  shot the forge golem reads as machinery parked beside the lift rather than as
+  a combatant. The `forge_hall` ARENA inherits it: on the fix-round-1 fight
+  probe the two blocked-cell clusters read as decorative brick patterning, not
+  as obstacles you must path around. The combatants themselves are fine there —
+  see WHAT LANDS.
+- CONFIRMED STILL OPEN: RUIN_WARDEN/RIG-SCALE (P3, logged in the mq4-act5 pass)
+  — at `combat_scale` 1.15 the warden's crown is still cut by the turn banner
+  on the vault arena's top row (`seal_open/06_the_warden.png`).
+- TRANSIENT, NOT A FINDING: one windowed `journal_history` run exited with
+  "8 ObjectDB instances were leaked at exit"; not reproducible on re-run (0
+  noise), headless sweep clean. Windowed shutdown-order artifact.
+- WHAT LANDS (keep this, do not regress): the Act V journal page is the best
+  chronicle surface in the game — act header, three derived beats in the
+  player's own voice, the live spine objective, then ten completed quests with
+  region tags, all inside the panel (`seal_open/01_journal_act_v.png`). The
+  `seal_open` eleven-shot sequence reads as one escalating scene (descent ask →
+  the reading → the three-path choice → the warden → the vault → the anchor →
+  the tally). The finale's consolidation offer correctly HOLDS the curtain
+  rather than racing it (`finale_after_merge/00_merge_offer_holds_the_curtain.png`).
+  Wilovan's own `[Counter Strike]` already prints by name in the feed, so the
+  leader's new copy of it will read as a mirror, not as noise. **Pallass's band
+  cell plays as well as it measures** (fix round 1): the forge golem is the most
+  legible enemy in the region — dark metal with an orange forge-glow against the
+  cold brick, unmistakable at a glance, and its parley→"[Strike first.]"→fight
+  path is one clean beat. Its 0.71/median-4 reads as a real but fair wall at
+  spellsword14; `[Power Strike]` into `[Battle Momentum]` is the shape of the
+  win, which is exactly the T5 kit's own story.
+
 ### Machine playtest — wave/mq5-finale, the finale sequence (2026-07-27)
 
 Source: `wave/mq5-finale` at the Task 8.1 commit, full asset overlay in tree,

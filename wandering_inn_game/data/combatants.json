@@ -517,6 +517,7 @@
    "skills": []
   },
   {
+   "_comment": "Riverfarm's capstone (blight_lifted), FIRST pilgrimage stop = LOWEST band. Phase 9 band sweep 2026-07-27: con 38/40 -> 34/36 on the pair, moving the measured fight down to the 9.5 power_level it was always authored at (it was measuring level with Invrisil's 11.0). Bands table + method: docs/design/2026-07-26-main-quest-line-spec.md sec.6.",
    "id": "briar_collector_deep_a",
    "power_level": 9.5,
    "display_name": "Deep Briar Collector",
@@ -525,7 +526,7 @@
    "stats": {
     "str": 17,
     "dex": 9,
-    "con": 38,
+    "con": 34,
     "int": 3,
     "wis": 6,
     "cha": 2
@@ -546,7 +547,7 @@
    "stats": {
     "str": 16,
     "dex": 9,
-    "con": 40,
+    "con": 36,
     "int": 3,
     "wis": 6,
     "cha": 2
@@ -651,10 +652,10 @@
    "skills": []
   },
   {
-   "_comment": "The game's FIRST all-human combatant family, per spec sec.2: 'his hired blades = the first all-human combatant family (art: doublets + clubs/knives -- NOT Watch-alike; distinct palette)'.",
+   "_comment": "The game's FIRST all-human combatant family, per spec sec.2: 'his hired blades = the first all-human combatant family (art: doublets + clubs/knives -- NOT Watch-alike; distinct palette)'. Phase 9 band sweep 2026-07-27: gained [Counter Strike] (SKILL, not stat inflation -- the knives are untouched, so boulevard_duel_ring's band is unmoved) to raise Invrisil one band over Riverfarm, matching its authored 11.0 vs the collectors' 9.5. power_level unchanged: the labels were right, the stats had drifted. display_name is DISTINCT from the two knives on purpose (fix round 1): the turn banner auto-suffixes duplicate names, so three 'Hired Blade' rows left the fight's only Skill-carrier unidentifiable -- a boss the player cannot point at.",
    "id": "hired_blade_leader",
    "power_level": 11.0,
-   "display_name": "Hired Blade",
+   "display_name": "Hired Blade Captain",
    "sprite": "hired_blade",
    "side": "enemy",
    "stats": {
@@ -668,7 +669,8 @@
    "weapon_die": 6,
    "ai": "melee",
    "skills": [
-    "power_strike"
+    "power_strike",
+    "counter_strike"
    ]
   },
   {

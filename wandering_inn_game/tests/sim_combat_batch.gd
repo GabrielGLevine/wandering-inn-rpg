@@ -103,10 +103,26 @@ const RIVERFARM_CELLS := [
 	{"name": "briar_collectors_deep_w10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "warrior5_mage5", "solo": true},
 	{"name": "briar_collectors_deep_t3_spellsword9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_spellsword9", "solo": false},
 	{"name": "briar_collectors_deep_t3_warrior9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior9", "solo": false},
-	{"name": "briar_collectors_deep_t3_warrior10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.55, "win_hi": 0.85, "check_rounds": true},
+	# Riverfarm's STOP cell (its own expected level, 10). Floor raised 0.55 -> 0.72
+	# in fix round 1: paired with Invrisil's 0.57-0.71 the two windows are now
+	# DISJOINT AND ORDERED, so a Riverfarm-harder-than-Invrisil inversion can no
+	# longer pass both gates (at 0.55/0.60 overlap, Riverfarm 0.56 vs Invrisil
+	# 0.79 was green). Measured 0.79, margins 0.07/0.06.
+	{"name": "briar_collectors_deep_t3_warrior10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.72, "win_hi": 0.85, "check_rounds": true},
 	{"name": "river_wolf_pack_t3_hunter", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": false},
 	{"name": "river_wolf_pack_t3_solo", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": true},
 	{"name": "riverfarm_thicket_patch_t3_solo", "arena": "witch_hollow", "enemies": ["thicket_remnant_a", "thicket_remnant_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
+	# MAIN-LINE BAND LADDER rung 1 of 4 (Phase 9, 2026-07-27). The four rungs
+	# share ONE yardstick -- t4_spellsword14_party against the stop's AS-SHIPPED
+	# roster -- so their win rates read as a single descending ladder. Riverfarm
+	# is the FIRST stop and the LOWEST band. Ladder table + adjacent-pair proof:
+	# docs/design/2026-07-26-main-quest-line-spec.md sec.6.
+	# THE WINDOWS ARE STRICTLY DISJOINT AND ORDERED (fix round 1): .88-.98 /
+	# .77-.87 / .65-.76 / .55-.64. A measured-only ladder could invert without
+	# reddening; these four gates make ordering itself the assertion, so any
+	# future retune that flattens or reverses a step FAILS the harness. Each
+	# window keeps >=0.04 margin on both sides of its authored value.
+	{"name": "briar_collectors_deep_t5_sw14_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.88, "win_hi": 0.98, "check_rounds": true},
 ]
 
 const INVRISIL_CELLS := [
@@ -118,12 +134,24 @@ const INVRISIL_CELLS := [
 	{"name": "hired_blades_w10_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "warrior5_mage5", "solo": true},
 	{"name": "hired_blades_t3_spellsword9_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": false},
 	{"name": "hired_blades_t3_warrior9_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior9", "solo": false},
-	{"name": "hired_blades_t3_warrior10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.6, "win_hi": 0.8, "check_rounds": true},
+	# Invrisil's STOP cell (its own expected level, 10) -- the paired half of
+	# Riverfarm's disjoint window; see that cell's comment. Measured 0.64,
+	# margins 0.07/0.07.
+	{"name": "hired_blades_t3_warrior10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.57, "win_hi": 0.71, "check_rounds": true},
 	{"name": "hired_blades_t3_spellsword9_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": true},
 	{"name": "hired_blades_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": true},
 	{"name": "boulevard_night_footpads_t3_spellsword9_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_spellsword9", "solo": true},
 	{"name": "boulevard_night_footpads_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_warrior10", "solo": true},
 	{"name": "boulevard_duel_ring_t3_solo", "arena": "mercantile_alley", "enemies": ["hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
+	# MAIN-LINE BAND LADDER rung 2 of 4 (yardstick rung; see rung 1's comment for
+	# the disjoint-window contract). The sw11 rung below is the SHARED-LEVEL
+	# comparison against Pallass's own T4 cell (forge_calibration_golem_t4_solo)
+	# -- adjacent stops are only ever compared at one build. The sw11 pair stays
+	# MEASURED on purpose: the forge cell reads 0.49 there, and an under-band
+	# value IS the evidence that Pallass sits a tier up. Gating it would force it
+	# into 0.55-0.95 and destroy the thing it proves.
+	{"name": "hired_blades_t5_sw14_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.77, "win_hi": 0.87, "check_rounds": true},
+	{"name": "hired_blades_t4_sw11_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword11_party", "solo": false},
 ]
 
 const BUILDS := [
@@ -197,11 +225,15 @@ const PARTY_CELLS := [
 const DUNGEON_CELLS := [
 	{"name": "trapped_halls_snare_t4_solo", "arena": "trapped_halls_snare", "enemies": ["snare_ward_a", "snare_ward_b", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "gallery_vermin_nest_t4_solo", "arena": "trapped_halls_snare", "enemies": ["rift_vermin_a", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
-	# 2026-07-26 Act V: the seal's warden, the main line's top band. Gated at
-	# spellsword14 (the T5 build the Pallass forge/market cells already tune
-	# against) SOLO -- the fight is fought alone by design. Measured at
-	# authoring below; Phase 9 re-sweeps every band together.
-	{"name": "seal_warden_t5_sw14_solo", "arena": "vault", "enemies": ["seal_warden"], "build": "t4_spellsword14_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# 2026-07-26 Act V: the seal's warden, the main line's top band (LADDER rung
+	# 4 of 4; see RIVERFARM_CELLS' rung-1 comment). Gated at spellsword14 SOLO --
+	# the fight is fought alone by design. Phase 9 (2026-07-27) re-swept every
+	# band together and left the warden UNCHANGED: retuning the three stops
+	# beneath it never pushed it out of 0.55-0.95, so the top band held.
+	{"name": "seal_warden_t5_sw14_solo", "arena": "vault", "enemies": ["seal_warden"], "build": "t4_spellsword14_party", "solo": true, "win_lo": 0.55, "win_hi": 0.64, "check_rounds": true},
+	# The warden at Pallass's T4 build: the shared-level rung proving the warden
+	# sits a band ABOVE the forge golem, not merely later in the story.
+	{"name": "seal_warden_t4_sw11_solo", "arena": "vault", "enemies": ["seal_warden"], "build": "t4_spellsword11_party", "solo": true},
 ]
 
 const BESTIARY_CELLS := [
@@ -210,7 +242,13 @@ const BESTIARY_CELLS := [
 	{"name": "boulevard_mothbears_t3_solo", "arena": "mercantile_alley", "enemies": ["mothbear_a", "mothbear_b"], "build": "t3_warrior10", "solo": true},
 	{"name": "kingslayer_den_t4_solo", "arena": "spider_den", "enemies": ["kingslayer_spider"], "build": "t4_spellsword11_party", "solo": true},
 	{"name": "forge_calibration_golem_t4_solo", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword11_party", "solo": true},
-	{"name": "forge_calibration_golem_t5_sw14_solo", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword14_party", "solo": true},
+	# MAIN-LINE BAND LADDER rung 3 of 4 and Pallass's GATED stop cell (Phase 9,
+	# 2026-07-27). The forge tier is where `lattice_forge_rune` banks, so the
+	# forge golem -- not the market watchgolems -- is Pallass's band statement,
+	# and spellsword14 is its expected level (the T5 permit tier, one tier past
+	# pallass_watchgolem_loop_start's 11). The t4 cell ABOVE is the shared-level
+	# rung against Invrisil's hired_blades_t4_sw11_wilovan.
+	{"name": "forge_calibration_golem_t5_sw14_solo", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword14_party", "solo": true, "win_lo": 0.65, "win_hi": 0.76, "check_rounds": true},
 	{"name": "market_watchgolems_t4_solo", "arena": "market_watch", "enemies": ["watchgolem_a", "watchgolem_b"], "build": "t4_spellsword11_party", "solo": true},
 	{"name": "market_watchgolems_t5_sw14_solo", "arena": "market_watch", "enemies": ["watchgolem_a", "watchgolem_b"], "build": "t4_spellsword14_party", "solo": true},
 ]
