@@ -47,6 +47,17 @@ const MAP_REQUIRES := {
 
 const POST_TUTORIAL_FLAGS := ["given_spear_by_relc", "reached_liscor", "post_game", "door_chain_started"]
 
+# 2026-07-27 (Task 2.6 fix round 1). _check_monotone_chains reads the RAW
+# on-disk accomplishments so save.gd's dig backfill cannot migrate an
+# incoherent fixture into passing. These ids are the one exception: save.gd
+# DERIVES them on load from non-accomplishment state (reached_two_classes from
+# the classes dict, save.gd:276) rather than MIGRATING them from other
+# accomplishments. A derived id only restates something the fixture already
+# asserts on disk, so it can never mask an unreachable story position -- three
+# garden fixtures legitimately omit it. Anything that infers STORY PROGRESS
+# from other counters belongs nowhere near this list.
+const LOAD_DERIVED := ["reached_two_classes"]
+
 const POST_GAME_BACKBONE := [
 	"reached_liscor", "reached_two_classes", "met_relc", "sparred_with_relc", "given_spear_by_relc",
 	"watch_runner_pointed", "heard_the_deep_tremor", "heard_olesm_briefing", "cleared_the_warren", "raskghar_sealed",
@@ -81,7 +92,7 @@ func _init() -> void:
 			continue
 		_check_identity(name, game)
 		_check_post_tutorial(name, game, data as Dictionary)
-		_check_monotone_chains(name, game)
+		_check_monotone_chains(name, game, data as Dictionary)
 		_check_position_plausibility(name, game)
 		_check_economy(name, game)
 		_check_combat_band(name, game)
@@ -172,8 +183,19 @@ func _check_post_tutorial(name: String, game: WIGame, data: Dictionary) -> void:
 		_fail(name, "post-tutorial accomplishment present but met_relc absent -- the tutorial that grants classes cannot have run without it")
 
 
-func _check_monotone_chains(name: String, game: WIGame) -> void:
-	var accs: Dictionary = game.accomplishments
+func _check_monotone_chains(name: String, game: WIGame, data: Dictionary) -> void:
+	# 2026-07-27 (Task 2.6 fix round 1): read the RAW on-disk accomplishments,
+	# not game.accomplishments. save.gd's dig backfill REPAIRS an old-shape
+	# door-chain save in memory as it loads, so reading the live sim would let
+	# an incoherent fixture pass this check by being silently migrated. What
+	# ships in qa/fixtures is what this invariant is about. (Precedent: the raw
+	# met_relc read in _check_post_tutorial.) `game` is still the authority for
+	# non-accomplishment state -- inventory below.
+	var raw_state: Dictionary = data.get("state", {})
+	var accs: Dictionary = (raw_state.get("accomplishments", {}) as Dictionary).duplicate()
+	for derived: String in LOAD_DERIVED:
+		if int(game.accomplishments.get(derived, 0)) >= 1:
+			accs[derived] = int(game.accomplishments[derived])
 	# 2026-07-26 main-quest restructure (Task 2.4). `door_chain_started` is a
 	# LEGACY ALIAS: its only producer is now the mounting conversation, which
 	# banks door_mounted on the same option, so the old id means exactly "the
@@ -200,6 +222,13 @@ func _check_monotone_chains(name: String, game: WIGame) -> void:
 		for req: String in ["door_understood", "recovered_anchor_stone", "bought_catalyst"]:
 			if int(accs.get(req, 0)) < 1:
 				_fail(name, "door_awakened banked without %s -- the awakening chain skips a beat" % req)
+		# 2026-07-27 (Task 2.6 fix round 1): the arm that was missing. Three
+		# shipped fixtures held door_awakened with no door_mounted and no
+		# door_chain_started, so neither the chain's head nor its tail caught
+		# them. The far attunement is performed ON the door the dig brought
+		# home; it cannot precede the mounting.
+		if int(accs.get("door_mounted", 0)) < 1:
+			_fail(name, "door_awakened banked without door_mounted -- the far attunement is performed on the door the dig hauled home and Pisces hung; nothing awakens a door that was never mounted")
 		if int(accs.get("door_study_sleeps", 0)) != 3:
 			_fail(name, "door_awakened banked but door_study_sleeps != 3 (got %d)" % int(accs.get("door_study_sleeps", 0)))
 	for acc_id: String in accs:

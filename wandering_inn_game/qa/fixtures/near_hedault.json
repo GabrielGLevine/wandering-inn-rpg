@@ -1,5 +1,6 @@
 {
  "_comment": "GH#142 fixture: 40 gold + the hunters fang, standing ON the alleys_to_boulevard door cell (0,7) facing Hedault at (0,6) -- the only free adjacency (0,5 blocked, 1,6 is the bench); interact hits the FACED entity so the door never triggers. Cloned from invrisil_mothbear_loop_start + door-chain/riverfarm backbone per fixture-coherence prescriptions.",
+ "_comment_task_2_6": "2026-07-27 main-quest restructure (Task 2.6 fix round 1): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined. This fixture holds door_awakened WITHOUT door_chain_started, so neither end of the Task 2.4 chain arm caught it and the sweep missed it; test_fixture_coherence now enforces door_awakened -> door_mounted (the far attunement is performed on the door the dig hauled home) and reads the RAW on-disk counters, so save.gd's dig backfill can no longer migrate this shape into passing. recovered_anchor_stone was already banked here and stays -- the wave rule only says it is never REQUIRED. Full rule: door_chain_fight_start.json's _comment_task_2_4. No rng re-derivation: the loaded state is identical to what the backfill was already producing at load, and none of these counters gates anything this fixture's script touches.",
  "version": 6,
  "state": {
   "current_map": "mercantile_alleys",
@@ -29,7 +30,12 @@
    "bought_catalyst": 1,
    "door_study_sleeps": 3,
    "blight_lifted": 1,
-   "riverfarm_attuned": 1
+   "riverfarm_attuned": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
   },
   "player_skills": [
    "basic_cleaning"
