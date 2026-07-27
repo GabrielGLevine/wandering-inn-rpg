@@ -223,6 +223,15 @@
     "door_retrieved"
    ],
    "open_toast": "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it.",
+   "open_toast_variants": [
+    {
+     "_comment": "2026-07-27 (Task 2.6 fix round 1): the MIGRATED-SAVE arm. save.gd's dig backfill grants door_retrieved to a pre-restructure door-chain save without granting pedestal_unsealed/rune_sequence_done -- so that player still breaks the seal and walks the plates, and would otherwise be told he has just DISCOVERED the door already hanging in his inn. Gated on door_retrieved, which no fresh player can hold at this instant: this same open is its only producer, and interactions.gd resolves the variant BEFORE on_open_accomplishment banks it. He is here for the stone the backfill deliberately withheld, and that is what the line hands him.",
+     "when": {
+      "door_retrieved": 1
+     },
+     "open_toast": "Beneath where the door lay, still seated in its groove: the anchor stone. The Horns left nothing else behind."
+    }
+   ],
    "on_interact_accomplishment": "found_the_pedestal",
    "toast": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea.",
    "variants": [

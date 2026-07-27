@@ -1727,6 +1727,34 @@ func _init() -> void:
 			reveal_toast = String(e["payload"].get("text", ""))
 	assert(reveal_toast.begins_with("Below the pedestal: not treasure. A DOOR"), "open_toast is the LAST toast of the open, after the pickups' own")
 
+	# 2026-07-27 (Task 2.6 fix round 1): the MIGRATED-SAVE arm of that same open.
+	# save.gd's dig backfill hands an old door-chain save door_retrieved without
+	# pedestal_unsealed/rune_sequence_done, so that player still breaks the seal
+	# and walks the plates -- and must NOT be told he has just discovered the
+	# door already hanging in his inn. `open_toast_variants` is resolved BEFORE
+	# on_open_accomplishment banks door_retrieved, which is the whole trick: a
+	# fresh player cannot hold that counter at this instant (this open is its
+	# only producer), so the two arms can never collide.
+	var gMig := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	for counter: String in ["door_retrieved", "door_mounted", "pedestal_breached",
+			"horns_dig_started", "horns_dig_joined", "pedestal_unsealed", "rune_sequence_done"]:
+		gMig.record_accomplishment(counter)
+	gMig.transition("ruin_surface", Vector2i(17, 5))
+	gMig.player_facing = Vector2i.DOWN
+	_events.clear()
+	var mig_result := gMig.interact()
+	assert(mig_result.get("container", "") == "anchor_stone_pedestal", "a migrated save still opens the pedestal for the stone the backfill withheld")
+	assert(gMig.inventory.has("anchor_stone") and gMig.accomplishment_count("recovered_anchor_stone") == 1,
+		"the migrated open grants the anchor stone -- the errand the backfill left him")
+	var mig_toast := ""
+	for e: Dictionary in _events:
+		if e["type"] == "toast":
+			mig_toast = String(e["payload"].get("text", ""))
+	assert(mig_toast.begins_with("Beneath where the door lay"),
+		"open_toast_variants swaps the reveal for the migrated line -- the door is already hung at the inn, it cannot be discovered here")
+	assert(gMig.accomplishment_count("door_retrieved") == 2,
+		"the variant gate reads PRE-open state: door_retrieved was 1 going in and the open still banked its own")
+
 	var gP2 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	for counter: String in ["pedestal_unsealed", "rune_sequence_done"]:
 		gP2.record_accomplishment(counter)
