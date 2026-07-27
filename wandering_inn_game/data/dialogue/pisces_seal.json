@@ -155,18 +155,36 @@
    ]
   },
   "fork_reward": {
-   "_comment": "The item gate closes the fork. requires {item} HIDES when unmet, so the node text names the cost out loud -- guidance, not a progress leak. A player who traded the fragment to Hedault has spent this path, deliberately: the ruin drops exactly one, and the other two paths stay open.",
+   "_comment": "The item gate closes the fork. CORRECTED in fix round 1: `requires {item}` renders VISIBLE-LOCKED with its own reason string, NOT hidden -- dialogue.gd hides only accomplishment-shaped gates (_progress_gated). So a player holding neither piece sees both arms and exactly what each wants, which is why the node text can name the material class plainly instead of dancing around it. FIX ROUND 1 (reviewer IMPORTANT, 2026-07-27): TWO close arms, not one. guardian_ward_fragment drops only from ruin_guardian -- the FIGHT breach of the dig's pedestal -- and Hedault's trade consumes it, so a plates-or-wardwork player had no route to seal_rewarded at all and this node asserted a shared past ('the guardian we put down') to a player who never fought one. construct_core_shard is the MAIN-LINE drop (vault_boss_slot, chance 1.0, no other sink in the game), so the second arm is the universal one. The copy now names the MATERIAL CLASS and lets the player supply whichever piece they kept; each arm consumes its own item, so the real cost is preserved on both.",
    "speaker": "Pisces",
-   "text": "You would need warded stone to cut into, and not any warded stone. Something the same age, the same craft, and already carrying a working. The guardian we put down in the ruin was made of the stuff. If you kept the piece, this becomes a long afternoon and a permanent answer.",
+   "text": "You would need warded stone to cut into, and not any warded stone. Something the same age, the same craft, already carrying a working of its own. Ruin-stone: the pedestal guardian out at the ruin was made of it, and so is the core the vault construct was carrying when it came apart. If you kept either piece, this becomes a long afternoon and a permanent answer.",
    "options": [
     {
-     "text": "I have the fragment. Let's re-cut it.",
+     "text": "I kept the guardian's fragment. Cut it from that.",
      "requires": {
       "item": "guardian_ward_fragment"
      },
      "effects": [
       {
        "remove_item": "guardian_ward_fragment"
+      },
+      {
+       "accomplishment": "seal_rewarded"
+      },
+      {
+       "accomplishment": "seal_resolved"
+      }
+     ],
+     "goto": "fork_reward_done"
+    },
+    {
+     "text": "I kept the construct's core shard. Cut it from that.",
+     "requires": {
+      "item": "construct_core_shard"
+     },
+     "effects": [
+      {
+       "remove_item": "construct_core_shard"
       },
       {
        "accomplishment": "seal_rewarded"
@@ -194,6 +212,17 @@
     {
      "text": "Let's get back up into the light.",
      "end": true
+    }
+   ],
+   "_comment": "FIX ROUND 1 (reviewer minor, 2026-07-27): a seal_opened arm for the same hatch Olesm's posted node carries -- a player who broke the seal first and re-cut the ward after is describing a repair, not an untouched pour. hide_when is forbidden (it would close the hatch).",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_opened": 1
+      }
+     },
+     "text": "There. It runs again, through YOUR hand's work this time, which will outlast the city and annoy me for the rest of my life. It is a repair and not a rescue, and the door behind it stays open. I have decided that is the outcome I wanted, and I will be saying so as though I said it first."
     }
    ]
   },

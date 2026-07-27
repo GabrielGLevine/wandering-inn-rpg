@@ -1,5 +1,5 @@
 {
- "_comment": "seal_reward canonical's start (FIXTURE-FIRST). 2026-07-26 Act V, the SKILL path: descent ask -> the runes -> [Detect Magic]'s QUARTET read -> re-cut the ward, consuming the guardian's fragment. Same Act V position as seal_open_start (see that fixture), plus three load-bearing differences: classes carry {necromancer: 1} for detect_magic (gained_by {studied_necromancy: 1}, banked here alongside its own precursor asked_about_necromancy -- Pisces taught this player the dead art); detected_wardwork is 3, the three OTHER shipped wardwork sites read (inn frame, ruin socket, the seam back in these halls), so the [Detect Magic] arm's richest text_variant is the one this run gets; and the pack holds guardian_ward_fragment (cleared_ruin_guardian banked -- the ruin fight that drops it), which the re-ward fork CONSUMES. No fight is resolved on this route; rng_state is inert for outcomes.",
+ "_comment": "seal_reward canonical's start (FIXTURE-FIRST). 2026-07-26 Act V, the SKILL path: descent ask -> the runes -> [Detect Magic]'s QUARTET read -> re-cut the ward, consuming the guardian's fragment. Same Act V position as seal_open_start (see that fixture), plus three load-bearing differences: classes carry {necromancer: 1} for detect_magic (gained_by {studied_necromancy: 1}, banked here alongside its own precursor asked_about_necromancy -- Pisces taught this player the dead art); detected_wardwork is 3, the three OTHER shipped wardwork sites read (inn frame, ruin socket, the seam back in these halls), so the [Detect Magic] arm's richest text_variant is the one this run gets; and the pack holds construct_core_shard, NOT guardian_ward_fragment. FIX ROUND 1 (reviewer IMPORTANT): this is now deliberately a PLATES/WARDWORK-path save -- it never fought ruin_guardian (no cleared_ruin_guardian), so the only warded ruin-stone it owns is the vault construct's core, the main-line chance-1.0 drop every player carries. That is the exact state that had NO route to seal_rewarded before the second close arm landed, so this canonical proves the arm that matters: the fragment row renders VISIBLE-LOCKED here (item gates tease, they never hide -- only accomplishment gates hide), which the fork's option pin asserts, and the shard row is CONSUMED on the close. No fight is resolved on this route; rng_state is inert for outcomes.",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -24,7 +24,6 @@
    "brothers_marker": 1,
    "cisterns_reported": 1,
    "cleared_brothers_name": 1,
-   "cleared_ruin_guardian": 1,
    "cleared_the_warren": 1,
    "coyle_operation_found": 1,
    "crate_returned": 1,
@@ -116,7 +115,7 @@
    "relcs_spare_spear",
    "invrisil_attunement_stone",
    "pallass_attunement_stone",
-   "guardian_ward_fragment"
+   "construct_core_shard"
   ],
   "equipped": {
    "weapon": "relcs_spare_spear",

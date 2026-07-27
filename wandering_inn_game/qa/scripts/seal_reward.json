@@ -1,5 +1,5 @@
 {
- "_comment": "2026-07-26 Act V canonical, THE SKILL PATH. Loads seal_reward_start (warrior5/mage5 + necromancer1 for [Detect Magic], detected_wardwork 3, and the guardian's fragment in the pack) via title Continue. Flow: the descent ask -> the runes read by narration -> [Detect Magic]'s QUARTET payoff, the richest reading in the beat -> the re-ward fork, whose Skill gate opens the pitch and whose ITEM gate closes it, consuming the fragment. NEGATIVES: the door never opens, the Watch is never asked, and combat_started never fires.",
+ "_comment": "2026-07-26 Act V canonical, THE SKILL PATH. Loads seal_reward_start (warrior5/mage5 + necromancer1 for [Detect Magic], detected_wardwork 3, and the vault construct's core shard in the pack -- a PLATES-path save that never fought the ruin guardian) via title Continue. Flow: the descent ask -> the runes read by narration -> [Detect Magic]'s QUARTET payoff, the richest reading in the beat -> the re-ward fork, whose Skill gate opens the pitch and whose ITEM gate closes it, consuming the shard. The fork's option pin proves the fragment arm renders VISIBLE-LOCKED with its own reason for a player who never fought the ruin guardian, while the shard arm beside it opens -- the parity hole fix round 1 closed. NEGATIVES: the door never opens, the Watch is never asked, and combat_started never fires.",
  "fixture_save": "seal_reward_start",
  "starts_at_title": true,
  "steps": [
@@ -18,7 +18,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Down to Continue; confirm loads the seal_open_start manual slot.",
+   "_comment": "Down to Continue; confirm loads the seal_reward_start manual slot.",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -430,15 +430,38 @@
    "timeout_sec": 5,
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "You would need warded stone to cut into, and not any warded stone. Something the same age, the same craft, and already carrying a working. The guardian we put down in the ruin was made of the stuff. If you kept the piece, this becomes a long afternoon and a permanent answer."
-   }
+    "text": "You would need warded stone to cut into, and not any warded stone. Something the same age, the same craft, already carrying a working of its own. Ruin-stone: the pedestal guardian out at the ruin was made of it, and so is the core the vault construct was carrying when it came apart. If you kept either piece, this becomes a long afternoon and a permanent answer.",
+    "options": [
+     {
+      "text": "I kept the guardian's fragment. Cut it from that.",
+      "locked": true,
+      "requirement": "requires Guardian Ward Fragment"
+     },
+     {
+      "text": "I kept the construct's core shard. Cut it from that.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Then it'll have to be another way.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "_comment": "EXACT fork pin. `requires {item}` renders VISIBLE-LOCKED, not hidden -- only accomplishment-shaped gates hide (dialogue.gd's _progress_gated). So the fragment arm this plates-path save can never take still shows, carrying its own reason, and the shard arm beside it is the one that opens. That pair IS the parity fix, on screen."
   },
   {
    "action": "screenshot",
    "name": "06_the_reward_fork"
   },
   {
-   "_comment": "Row 0 is the item-gated close (the fragment is in the pack); row 1 is the always-available exit.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "_comment": "Row 1 is the SHARD close: row 0 is the fragment arm, visible but locked for a save that never fought the ruin guardian, and row 2 is the always-available exit.",
    "action": "press",
    "name": "confirm"
   },
@@ -447,7 +470,7 @@
    "type": "item_lost",
    "timeout_sec": 5,
    "payload_contains": {
-    "item": "guardian_ward_fragment"
+    "item": "construct_core_shard"
    }
   },
   {
