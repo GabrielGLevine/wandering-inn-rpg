@@ -37,6 +37,10 @@ const MAP_REQUIRES := {
 	"deep_tunnels": ["reached_liscor", "heard_about_cisterns", "heard_the_deep_tremor"],
 	"dungeon_approach": ["horns_delve_started"],
 	"trapped_halls": ["horns_delve_started"],
+	# 2026-07-27 Act V (fix round 1): the vault sits behind seal_kept_door's own
+	# door_when, whose only key is seal_opened -- a fixture standing in there
+	# without it is a position no player can occupy.
+	"seal_vault": ["horns_delve_started", "seal_opened"],
 	"ruin_surface": ["horns_dig_started"],
 	"garden_sanctuary": ["garden_door_unlocked"],
 	"riverfarm_village": ["door_awakened", "riverfarm_attuned"],

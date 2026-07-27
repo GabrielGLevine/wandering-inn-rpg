@@ -34,11 +34,11 @@
 			]
 		},
 		{
-			"_comment": "2026-07-26 Act V (Phase 7, Task 7.4): the gate is now the PILGRIMAGE's last piece plus the seal report -- lattice_forge_rune is the third lattice counter in the spine's own order, and it can only bank behind spine_started (so door_awakened) and elevator_pass_stamped (so Pallass), which is why naming those separately is redundant. The two region terminals it does NOT imply (price_of_a_favor_reported, brothers_job_done) stay in the BEAT list rather than the gate: Act V's own descent ask requires all three lattice counters, so nothing is skippable in practice, and a save that took the regions out of order is never stranded in Act IV. counted_among is deliberately not in the gate: it is the seal's own closing line, relocated here from act_iii by the reframe because post_game banks at the first sleep AFTER the seal (sleep_beat.gd), by which point the seal has already carried the player into this act.",
+			"_comment": "2026-07-26 Act V (Phase 7, Task 7.4, gate revised in fix round 1 by controller ruling over plan 7.4). The gate is the PILGRIMAGE's last piece, the seal report, and the two region terminals the pilgrimage does not imply. Transitivity does the rest and costs nothing: lattice_forge_rune already implies spine_started (so door_awakened) and elevator_pass_stamped, while lattice_witch_lore requires price_of_a_favor_reported and lattice_hedault_reading requires brothers_job_done -- and Act V's own descent ask requires all three lattice counters, so a player who reaches Act V has always banked all four gate keys anyway. Naming them here is what keeps riverfarm_owed and invrisil_squared from being STRANDED: a beat whose counter can only bank in an act the player has already left can never render, the exact act_iii defect the 2026-07-26 reframe fixed. counted_among is deliberately not in the gate: it is the seal's own closing line, relocated here from act_iii because post_game banks at the first sleep AFTER the seal (sleep_beat.gd), by which point the seal has already carried the player into this act.",
 			"id": "act_iv",
 			"title": "What the Door Opened",
 			"header": "Act IV -- What the Door Opened",
-			"advance_when": { "accomplishments": { "lattice_forge_rune": 1, "seal_kept_reported": 1 } },
+			"advance_when": { "accomplishments": { "lattice_forge_rune": 1, "seal_kept_reported": 1, "price_of_a_favor_reported": 1, "brothers_job_done": 1 } },
 			"beats": [
 				{ "id": "counted_among", "text": "The seal holds. Liscor counts you among its own.", "when": { "accomplishments": { "post_game": 1 } } },
 				{ "id": "the_door_opens", "text": "The pantry door remembers being elsewhere again, and somewhere else remembers it back.", "when": { "accomplishments": { "door_awakened": 1 } } },

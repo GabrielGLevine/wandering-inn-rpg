@@ -23,20 +23,6 @@ unit suites + the 162-script sweep green before the windowed pass. Three
 windowed runs (`seal_open` seed 1, `seal_fed` seed 9, `seal_reward` seed 9,
 all `passed: true`), 25 screenshots read at native resolution.
 
-- [x] SEAL_VAULT/GRADE (P2) — **FIXED in this task's own commit.** Was: the new
-  vault read as one more near-black dungeon cell; the castle floor chosen to
-  say "this room never fell in" never arrived on screen (first windowed pass at
-  mood 0.335). Fix: grade to 0.60/0.60/0.66 day-dusk, 0.50/0.50/0.58 night,
-  vignette 0.44 — a cool tilt (ward-light, not a window), still a full step
-  under the barracks' lived-in 0.68 and double the halls' 0.282. NOTE for the
-  eye-gate: it is still on the dim side of "lit". If the user wants it warmer,
-  the lever is this one mood row.
-- [x] SEAL_VAULT/FOCAL (P2) — **FIXED in this task's own commit.** Was: the two
-  `cellar_wardwork` rings sat on the anchor's own neighbour cells (8,3)/(8,5)
-  and read as the room's subject, with the plinth between them invisible. Fix:
-  rings moved to the aisle ends (8,2)/(8,6), each carrying a faint cool light,
-  and the anchor took the key light (energy 0.95, radius 40). The plinth now
-  reads as the focal object on approach.
 - [ ] MAP-LIGHTS/DAY (P3, systemic, NOT Act V's own) — `moods.meta
   .light_energy_by_phase.day` is `0.0`, so every authored map light renders at
   zero energy during the day phase. For a SEALED map (no sky, no windows) that
@@ -1013,6 +999,24 @@ events, and result files live in the gitignored
   `.superpowers/sdd/visual-log-113-after-wave2/ruin_walkthrough/`.
 
 ## Fixed
+
+
+### Act V vault (wave/mq4-act5, `e94037c`)
+
+- [x] SEAL_VAULT/GRADE (P2) — **FIXED `e94037c`.** Was: the new
+  vault read as one more near-black dungeon cell; the castle floor chosen to
+  say "this room never fell in" never arrived on screen (first windowed pass at
+  mood 0.335). Fix: grade to 0.60/0.60/0.66 day-dusk, 0.50/0.50/0.58 night,
+  vignette 0.44 — a cool tilt (ward-light, not a window), still a full step
+  under the barracks' lived-in 0.68 and double the halls' 0.282. NOTE for the
+  eye-gate: it is still on the dim side of "lit". If the user wants it warmer,
+  the lever is this one mood row.
+- [x] SEAL_VAULT/FOCAL (P2) — **FIXED `e94037c`.** Was: the two
+  `cellar_wardwork` rings sat on the anchor's own neighbour cells (8,3)/(8,5)
+  and read as the room's subject, with the plinth between them invisible. Fix:
+  rings moved to the aisle ends (8,2)/(8,6), each carrying a faint cool light,
+  and the anchor took the key light (energy 0.95, radius 40). The plinth now
+  reads as the focal object on approach.
 
 - [x] UI/TOAST — FIXED (GH#273, v0.13.1 hotfix, 2026-07-20) — the arc-start
   Watch-runner pointer (AND "New quest: Something Beneath") never rendered:

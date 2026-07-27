@@ -18,7 +18,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Down to Continue; confirm loads the seal_open_start manual slot.",
+   "_comment": "Down to Continue; confirm loads the seal_fed_start manual slot.",
    "action": "move",
    "direction": "down",
    "steps": 1

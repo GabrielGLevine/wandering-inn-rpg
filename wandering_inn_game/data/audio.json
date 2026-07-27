@@ -931,7 +931,7 @@
    "loop": true
   },
   {
-   "_comment": "2026-07-26 Act V: the vault behind the seal shares the halls' field track (same wing, one door deeper) -- a distinct id keyed to its own map so the seam swaps cleanly instead of falling through to silence.",
+   "_comment": "2026-07-26 Act V: the vault behind the seal gets its OWN field track (hydrogene_hidden_cavern, the quieter cue the deeper maps already use), NOT the halls' hydrogene_malicious_scheme -- crossing that threshold should sound like arriving somewhere, not like more corridor. A distinct id keyed to its own map so the seam swaps cleanly instead of falling through to silence.",
    "id": "music_seal_vault",
    "kind": "field",
    "context": "seal_vault",

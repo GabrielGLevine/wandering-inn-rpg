@@ -113,13 +113,30 @@ func _init() -> void:
 			region_arc_achieved.append(beat["id"])
 	assert(region_arc_achieved.size() == 6 and not region_arc_achieved.has("the_reach_mapped"), "six of Act IV's seven beats light; the pilgrimage beat waits on the forge rune")
 
+	# Fix round 1 (controller ruling over plan 7.4): the two region terminals the
+	# pilgrimage does not imply are back in the gate. Transitivity makes them
+	# free -- lattice_witch_lore requires price_of_a_favor_reported and
+	# lattice_hedault_reading requires brothers_job_done -- and naming them is
+	# what keeps riverfarm_owed/invrisil_squared from stranding in an act the
+	# player has already left.
 	var iv_gate: Dictionary = (_act_gate(catalog, "act_iv").get("accomplishments", {}) as Dictionary)
-	assert(iv_gate.has("lattice_forge_rune") and iv_gate.has("seal_kept_reported") and iv_gate.size() == 2, "Act IV's gate is exactly the pilgrimage's last piece plus the seal report")
+	for key: String in ["lattice_forge_rune", "seal_kept_reported", "price_of_a_favor_reported", "brothers_job_done"]:
+		assert(iv_gate.has(key), "Act IV's gate must name %s" % key)
+	assert(iv_gate.size() == 4, "Act IV's gate is exactly those four keys")
+
+	# The pilgrimage alone does NOT open Act V while a region beat is still
+	# pending -- the stranding case this gate exists to prevent.
+	var pilgrim_only := WIActs.evaluate(catalog, _ctx(6, 4, {
+		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
+		"seal_kept_reported": 1, "lattice_forge_rune": 1,
+	}))
+	assert(pilgrim_only["id"] == "act_iv", "the forge rune + the seal report alone leave a region beat pending, so Act IV holds")
 
 	var into_v := WIActs.evaluate(catalog, _ctx(6, 4, {
 		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
 		"post_game": 1, "door_awakened": 1, "elevator_pass_stamped": 1,
 		"seal_kept_reported": 1, "lattice_forge_rune": 1,
+		"price_of_a_favor_reported": 1, "brothers_job_done": 1,
 	}))
 	assert(into_v["id"] == "act_v" and into_v["index"] == 4, "the pilgrimage's last piece plus the seal report opens Act V")
 	for beat: Dictionary in into_v["beats"]:
@@ -130,6 +147,7 @@ func _init() -> void:
 	var mid_v := WIActs.evaluate(catalog, _ctx(6, 4, {
 		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
 		"seal_kept_reported": 1, "lattice_forge_rune": 1,
+		"price_of_a_favor_reported": 1, "brothers_job_done": 1,
 		"seal_descent_agreed": 1, "read_the_feeding_ward": 1,
 	}))
 	var mid_v_achieved: Array = []

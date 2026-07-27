@@ -293,6 +293,17 @@
      "text": "Get some sleep, Olesm.",
      "end": true
     }
+   ],
+   "_comment": "FIX ROUND 1 (reviewer minor, 2026-07-27): a seal_opened arm, because the FIGHT fork's no-dead-end hatch lets a player who broke the seal and could not finish the warden still fund the keeper. hide_when is FORBIDDEN here -- hiding the arm would close the hatch -- so the variant re-states the same civic outcome for a door that is already open.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_opened": 1
+      }
+     },
+     "text": "Right. Right. Standing notice, Guild board, renewed by the season: one keeper, one lantern of mana a month, and a door that is already open at the bottom of it. I'm putting my name on that too. If it was worth feeding shut, it is worth watching open. Thank you. I think."
+    }
    ]
   },
   "olesm_chess_invite": {
