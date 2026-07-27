@@ -4310,6 +4310,30 @@
    }
   },
   {
+   "script": "overlay_loop",
+   "seed": 3,
+   "fixture": "inn_guests_start",
+   "note": "GH#279 dev debug overlay -- HIDDEN BY DEFAULT pinned at boot (D4: full-window captures make an overlay-on FEEL shot contaminated evidence), toggle_overlay renders with payload map cross-checked against assert_state's snapshot, toggle off emits hidden. Debug builds only (OS.is_debug_build); inert in release exports (the gate returns before any UI/connection/input exists).",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "inn_guests_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "save_rename_migration",
    "seed": 1,
    "note": "#111 safe project rename: boot-ordered legacy user-dir migration. run_qa.sh's legacy_seed places a pre-rename save (near_pallass) + settings.cfg into the 'Wandering Inn RPG v4' app_userdata sibling BEFORE launch; Game._ready carries it over so Continue lights up on the first launch of the renamed build and the state loads byte-faithfully. Pure copy/no-clobber/sibling-derivation unit-pinned in test_save_rename; every OTHER canonical (no legacy_seed) proves the no-legacy no-op boot path.",
