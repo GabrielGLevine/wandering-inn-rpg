@@ -80,8 +80,11 @@ func _check_finale_is_owed_not_armed(src: String) -> void:
 	var ended_body := src.get_slice("WIEvents.DIALOGUE_ENDED:", 1).get_slice("func _begin_sleep", 0)
 	assert(ended_body.find("play_finale()") != -1, "DIALOGUE_ENDED must play the owed finale (TALK/SKILL paths resolve mid-dialogue)")
 
-	var run_sequence_body := src.get_slice("func _run_sequence() -> void:", 1).get_slice("func _add_line(", 0)
-	assert(run_sequence_body.split("play_finale()").size() - 1 == 2, "BOTH _run_sequence branches (QA-collapsed and real) must play an owed finale off the bed -- the FIGHT path banks seal_resolved at a container, never in a dialogue")
+	var run_sequence_body := src.get_slice("func _run_sequence() -> void:", 1).get_slice("func _play_finale_off_the_bed", 0)
+	assert(run_sequence_body.split("_play_finale_off_the_bed()").size() - 1 == 2, "BOTH _run_sequence branches (QA-collapsed and real) must play an owed finale off the bed -- the FIGHT path banks seal_resolved at a container, never in a dialogue")
+
+	var off_the_bed_body := src.get_slice("func _play_finale_off_the_bed() -> void:", 1).get_slice("func _add_line(", 0)
+	assert(off_the_bed_body.find("if _sleep_has_consolidation:") != -1, "the bed hook must yield to a consolidation offer -- the finale's black would otherwise fall over that modal, and it stays owed anyway")
 
 	var bank_body := src.get_slice("func _bank_finale_played() -> void:", 1).get_slice("func _emit_finale_rendered", 0)
 	assert(bank_body.find("record_accomplishment(\"finale_played\")") != -1, "the finale must bank finale_played")

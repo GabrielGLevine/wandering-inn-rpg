@@ -493,7 +493,7 @@ func _run_sequence() -> void:
 		_emit_rendered(lines.size())
 		_finish()
 		_emit_finished()
-		play_finale()
+		_play_finale_off_the_bed()
 		return
 
 	_black.show()
@@ -516,15 +516,27 @@ func _run_sequence() -> void:
 	await _fade(_black, 0.0)
 	_finish()
 	_emit_finished()
-	# THE FINALE'S SECOND DELIVERY HOOK, and the one that cannot be routed
-	# around. Act V's FIGHT path banks `seal_resolved` at the vault anchor -- a
-	# CONTAINER open, with no conversation behind it -- so DIALOGUE_ENDED alone
-	# would leave the ending waiting on an optional chat with Pisces, and a
-	# save/quit before that chat would strand it. The bed is where the Design
-	# already speaks; an owed finale rolls off the sleep it follows. Ordered
-	# AFTER _finish()/_emit_finished() so the sleep reveal's own contract
-	# (rendered -> finished -> consolidation prompt) is untouched, and so the
-	# `_running` guard below has already cleared.
+	_play_finale_off_the_bed()
+
+
+## THE FINALE'S SECOND DELIVERY HOOK, and the one that cannot be routed
+## around. Act V's FIGHT path banks `seal_resolved` at the vault anchor -- a
+## CONTAINER open, with no conversation behind it -- so DIALOGUE_ENDED alone
+## would leave the ending waiting on an optional chat with Pisces, and a
+## save/quit before that chat would strand it. The bed is where the Design
+## already speaks; an owed finale rolls off the sleep it follows. Called AFTER
+## _finish()/_emit_finished() so the sleep reveal's own contract
+## (rendered -> finished -> consolidation prompt) is untouched, and so
+## play_finale()'s `_running` guard has already cleared.
+##
+## YIELDS TO THE CONSOLIDATION PROMPT. UI_SLEEP_VEIL_FINISHED is what tells
+## consolidation_prompt.gd to show its modal, so a sleep that offered a merge
+## would have the finale's black fall straight over that choice. The finale
+## stays OWED instead -- it is sim state, not a flag, so the next dialogue end
+## or the next sleep still delivers it, with nothing lost.
+func _play_finale_off_the_bed() -> void:
+	if _sleep_has_consolidation:
+		return
 	play_finale()
 
 
