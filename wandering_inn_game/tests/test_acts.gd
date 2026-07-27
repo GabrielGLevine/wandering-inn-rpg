@@ -5,6 +5,14 @@ func _ctx(classes_count: int, quests_completed: int, accs: Dictionary) -> Dictio
 	return {"classes_count": classes_count, "quests_completed": quests_completed, "accomplishments": accs}
 
 
+func _act_gate(catalog: Dictionary, act_id: String) -> Dictionary:
+	var acts: Array = catalog.get("acts", [])
+	for act: Dictionary in acts:
+		if String(act["id"]) == act_id:
+			return act.get("advance_when", {})
+	return {}
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/acts.json"))
@@ -46,15 +54,22 @@ func _init() -> void:
 	assert(into_iii["id"] == "act_iii" and into_iii["index"] == 2, "reached_two_classes + 3 quests => Act III (even at classes_count 1)")
 
 	var sealed_only := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1}))
-	assert(sealed_only["id"] == "act_iii" and sealed_only["index"] == 2, "raskghar_sealed without door_awakened stays Act III (seal_holds must render)")
+	assert(sealed_only["id"] == "act_iv" and sealed_only["index"] == 3, "the seal alone advances into Act IV (2026-07-26 reframe: the door is its own thread, not the gate)")
+	for beat: Dictionary in sealed_only["beats"]:
+		assert(not bool(beat["achieved"]), "every Act IV beat pends on a seal-only entry -- the door has not woken yet")
+
+	# act_iv must not require door_awakened (2026-07-26 main-quest reframe)
+	var gates: Dictionary = _act_gate(catalog, "act_iii")
+	assert((gates.get("accomplishments", {}) as Dictionary).has("raskghar_sealed"), "the seal is what Act III's gate names")
+	assert(not (gates.get("accomplishments", {}) as Dictionary).has("door_awakened"), "Act III's gate no longer names door_awakened")
 
 	var into_iv := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1, "door_awakened": 1}))
-	assert(into_iv["id"] == "act_iv" and into_iv["index"] == 3, "raskghar_sealed + door_awakened advances into Act IV, the new last act")
+	assert(into_iv["id"] == "act_iv" and into_iv["index"] == 3, "seal + door_awakened is still Act IV, the last act")
 	for beat: Dictionary in into_iv["beats"]:
 		if String(beat["id"]) == "the_door_opens":
-			assert(bool(beat["achieved"]), "the door beat reads achieved on entry (door_awakened is part of the entry gate)")
+			assert(bool(beat["achieved"]), "the door beat reads achieved once door_awakened banks, mid-Act IV")
 		else:
-			assert(not bool(beat["achieved"]), "the four region beats all pending on Act IV entry")
+			assert(not bool(beat["achieved"]), "the four region beats all pending until their own counters land")
 
 	var maxed := WIActs.evaluate(catalog, _ctx(6, 4, {
 		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,

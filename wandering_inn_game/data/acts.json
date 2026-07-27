@@ -1,5 +1,5 @@
 {
-	"_comment": "Acts are derived, never saved: select the highest act whose predecessor gates pass. Conditions support min_classes, quests_completed, and accomplishment counts; empty means true. reached_two_classes is monotonic across consolidation. Act IV advance_when is defined but unreachable until Act V exists.",
+	"_comment": "Acts are derived, never saved: select the highest act whose predecessor gates pass. Conditions support min_classes, quests_completed, and accomplishment counts; empty means true. reached_two_classes is monotonic across consolidation. Act IV advance_when is defined but unreachable until Act V exists (Phase 7 of the 2026-07-26 wave fills it).",
 	"acts": [
 		{
 			"id": "act_i",
@@ -27,7 +27,7 @@
 			"id": "act_iii",
 			"title": "What Stirs Beneath",
 			"header": "Act III -- What Stirs Beneath",
-			"advance_when": { "accomplishments": { "raskghar_sealed": 1, "door_awakened": 1 } },
+			"advance_when": { "accomplishments": { "raskghar_sealed": 1 } },
 			"beats": [
 				{ "id": "the_stirring", "text": "Something is moving in the dark beneath the city.", "when": { "accomplishments": { "raskghar_sealed": 1 } } },
 				{ "id": "seal_holds", "text": "The seal holds. Liscor counts you among its own.", "when": { "accomplishments": { "post_game": 1 } } }

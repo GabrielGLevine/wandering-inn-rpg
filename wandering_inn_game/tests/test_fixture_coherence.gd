@@ -224,8 +224,11 @@ func _check_position_plausibility(name: String, game: WIGame) -> void:
 func _check_economy(name: String, game: WIGame) -> void:
 	if not GATE_FIXTURES.has(name):
 		return
+	# act_iv counts too: since the 2026-07-26 reframe the seal alone opens Act IV,
+	# so the sealed gate fixtures (door_chain_*, portal_menu_start, near_riverfarm)
+	# read act_iv and would otherwise skip their gold floor entirely.
 	var act_id := String(game.act_summary().get("id", ""))
-	if act_id != "act_iii":
+	if act_id != "act_iii" and act_id != "act_iv":
 		return
 	var floor_g := _gate_gold_floor(name, game)
 	if game.gold < floor_g:
