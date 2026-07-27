@@ -186,7 +186,14 @@ func _init() -> void:
 			_fail("audio stream outside assets/audio: %s" % stream)
 		if not (stream.ends_with(".wav") or stream.ends_with(".ogg")):
 			_fail("audio stream must be WAV or OGG: %s" % stream)
-		if not _stream_ok(stream):
+		# GH#277: `pending: true` marks a slot merged ahead of its file --
+		# existence is waived HERE only; ship_asset_scan.py FAILS the
+		# release cut on any pending row, so a pending slot can live on
+		# main but can never reach itch. Every other shape rule still
+		# applies (prefix, extension, bus).
+		if entry.has("pending") and typeof(entry["pending"]) != TYPE_BOOL:
+			_fail("pending must be a bool: %s" % id)
+		if not bool(entry.get("pending", false)) and not _stream_ok(stream):
 			_fail("missing audio stream for %s: %s" % [id, stream])
 		if event_type == "player_moved":
 			var payload: Dictionary = entry.get("payload", {})
@@ -289,7 +296,9 @@ func _init() -> void:
 			_fail("music stream outside assets/audio/music: %s" % stream)
 		if not stream.ends_with(".ogg"):
 			_fail("music stream must be OGG: %s" % stream)
-		if not _stream_ok(stream):
+		if entry.has("pending") and typeof(entry["pending"]) != TYPE_BOOL:
+			_fail("pending must be a bool: %s" % id)
+		if not bool(entry.get("pending", false)) and not _stream_ok(stream):
 			_fail("missing music stream for %s: %s" % [id, stream])
 
 		var volume_db := float(entry.get("volume_db", 0.0))
@@ -341,7 +350,9 @@ func _init() -> void:
 			_fail("ambience stream outside assets/audio/ambience: %s" % stream)
 		if not stream.ends_with(".ogg"):
 			_fail("ambience stream must be OGG: %s" % stream)
-		if not FileAccess.file_exists(stream):
+		if entry.has("pending") and typeof(entry["pending"]) != TYPE_BOOL:
+			_fail("pending must be a bool: %s" % id)
+		if not bool(entry.get("pending", false)) and not FileAccess.file_exists(stream):
 			_fail("missing ambience stream for %s: %s (CC0/public tier -- the manifest relaxation does NOT apply)" % [id, stream])
 
 		var ambience_volume_db := float(entry.get("volume_db", 0.0))

@@ -128,6 +128,14 @@ jobs:
           fi
           echo "Overlay complete."
 
+      # GH#277: the "placeholders never ship" gate — post-overlay, DISK-ONLY
+      # scan of every asset path sprites.json/audio.json reference, plus
+      # pending audio slots. This step belongs to the `release` itch job
+      # ONLY: desktop-exports/steampipe ship the committed fallback tree by
+      # design and must never gain this step.
+      - name: (a) Ship asset scan (placeholders/pending never reach itch)
+        run: python3 wandering_inn_game/scripts/ship_asset_scan.py
+
       # ------------------------------------------------------------------ (b) gate
       # Full QA gate re-run WITH the real assets — mirrors ci.yml's smoke + unit +
       # sweep jobs (release must be green with real art too, spec §4). Grep
