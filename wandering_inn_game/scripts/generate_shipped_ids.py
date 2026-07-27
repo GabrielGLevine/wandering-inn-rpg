@@ -78,11 +78,9 @@ _comment-documented content as of this cut.
 """
 
 import json
-from pathlib import Path
 
-GAME_ROOT = Path(__file__).resolve().parent.parent
-DATA = GAME_ROOT / "data"
-DIALOGUE_DIR = DATA / "dialogue"
+from wi_data_lib import DATA, GAME_ROOT, load_dialogue_graphs, load_json, load_scene
+
 OUT_PATH = DATA / "shipped_ids.json"
 
 RELEASE = "0.13.1"
@@ -105,23 +103,12 @@ STRUCTURAL_LITERALS = [
 ]
 
 
-def load_json(path: Path) -> dict:
-    return json.loads(path.read_text())
-
-
 def catalog_ids(catalog: dict, key: str) -> list:
     return sorted({str(entry["id"]) for entry in catalog.get(key, [])})
 
 
 def map_ids(scene: dict) -> list:
     return sorted(str(k) for k in scene.get("maps", {}))
-
-
-def load_dialogue_graphs() -> dict:
-    graphs = {}
-    for path in DIALOGUE_DIR.glob("*.json"):
-        graphs[path.stem] = load_json(path)
-    return graphs
 
 
 def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: dict, deliveries: dict) -> list:
@@ -178,22 +165,6 @@ def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: 
         out.add("completed_delivery_%s" % did)
 
     return sorted(out)
-
-
-def load_scene() -> dict:
-    """Composed scene catalog -- mirrors generate_postings.py's load_scene()
-    contract exactly (issue #100 split: data/maps/<region>/<map>.json, sorted
-    glob, map key = file stem, duplicate key = ValueError; start_map/player
-    from data/scene_root.json)."""
-    root = load_json(DATA / "scene_root.json")
-    maps = {}
-    for map_path in sorted((DATA / "maps").glob("*/*.json")):
-        map_id = map_path.stem
-        if map_id in maps:
-            raise ValueError(f"duplicate map key '{map_id}' ({map_path})")
-        maps[map_id] = load_json(map_path)
-    root["maps"] = maps
-    return root
 
 
 def build_payload() -> dict:

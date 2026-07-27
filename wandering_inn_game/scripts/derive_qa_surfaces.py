@@ -20,14 +20,22 @@ Usage:
   scripts/derive_qa_surfaces.py            regenerate qa/manifest.json in place
   scripts/derive_qa_surfaces.py --check     compute fresh, diff vs committed, FATAL on drift
   scripts/derive_qa_surfaces.py --touching a.json,b.json   print crossing script names (one per line)
+
+--touching path coverage (GH#281): qa/scripts, qa/fixtures, data/dialogue/,
+data/maps/, scene_root (= full sweep), skills/classes/progression (all-skill
+fallback), and the monolithic catalogs via MONOLITH_SYSTEMS (portals, quests,
+acts, bounties, deliveries, combatants, arenas, audio, items, fence_stock ->
+manifest "systems" tags). Anything else warns LOUDLY on stderr and derives
+nothing -- never treat empty output as "no re-gate needed".
 """
 from __future__ import annotations
 
-import glob
 import json
 import os
 import re
 import sys
+
+import wi_data_lib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 GAME_ROOT = os.path.dirname(HERE)
@@ -105,19 +113,11 @@ def _load(path: str) -> dict:
 		return json.load(f)
 
 
-# Issue #100: data/skeleton_scene.json was split into
-# data/maps/<region>/<map>.json + data/scene_root.json. Same sorted-glob
-# composition contract as generate_postings.py's load_scene() (the Python
-# mirror of src/core/scene_catalog.gd's WISceneCatalog.compose()): map key
-# = file stem, region dir is organizational only, dup key = ValueError.
+# Issue #100 split layout; the composition contract (sorted glob, stem
+# keys, dup = ValueError) lives in wi_data_lib -- the ONE Python mirror of
+# src/core/scene_catalog.gd's WISceneCatalog.compose() (GH#281).
 def _known_maps() -> set[str]:
-	maps: set[str] = set()
-	for map_path in sorted(glob.glob(os.path.join(MAPS_DIR, "*", "*.json"))):
-		map_id = os.path.splitext(os.path.basename(map_path))[0]
-		if map_id in maps:
-			raise ValueError(f"duplicate map key '{map_id}' ({map_path})")
-		maps.add(map_id)
-	return maps
+	return wi_data_lib.known_maps()
 
 
 def _known_skills() -> tuple[set[str], dict[str, list[str]]]:
@@ -269,11 +269,37 @@ def cmd_check() -> int:
 	return 1
 
 
+# GH#281: monolithic data catalogs used to fall through every branch below
+# and print NOTHING (exit 0) -- a silent-empty false-safe for lane re-gates.
+# Each one now maps to the manifest "systems" tag(s) its consumers carry
+# (qa/manifest.json surfaces are derived, so the tag set is trustworthy).
+# classes.json/progression.json instead join skills.json's conservative
+# all-skill-tags fallback below (classes/progression are skill-grant and
+# leveling carriers -- a changed line can't be attributed narrower from the
+# path alone). Anything STILL unmapped warns loudly on stderr.
+MONOLITH_SYSTEMS: dict[str, set[str]] = {
+	"portals.json": {"portals"},
+	"quests.json": {"quests"},
+	"acts.json": {"quests"},
+	"bounties.json": {"boards"},
+	"deliveries.json": {"boards"},
+	"combatants.json": {"combat"},
+	"arenas.json": {"combat"},
+	"audio.json": {"audio"},
+	"items.json": {"economy"},
+	"fence_stock.json": {"economy"},
+}
+ALL_SKILLS_FALLBACK = ("skills.json", "classes.json", "progression.json")
+
+
 def cmd_touching(paths_arg: str) -> int:
 	"""Maps a comma-separated list of changed paths to surface tags, then
 	to the canonical scripts whose OWN surfaces intersect those tags.
 	A script whose filename IS one of the touched paths is always
-	included (editing a QA script trivially "touches" itself)."""
+	included (editing a QA script trivially "touches" itself).
+	NEVER SILENT (GH#281): an input path yielding zero mappings warns on
+	stderr, and an empty final crossing set gets an explicit NOTE --
+	callers must not read empty output as "no re-gate needed"."""
 	surfaces_by_script = derive_all()
 	touched_tags: set = set()
 	touched_script_names: set = set()
@@ -282,6 +308,7 @@ def cmd_touching(paths_arg: str) -> int:
 	known_dialogue = _known_dialogue_ids()
 
 	all_scripts = False
+	unmapped: list = []
 	for raw in paths_arg.split(","):
 		p = raw.strip()
 		if not p:
@@ -293,11 +320,18 @@ def cmd_touching(paths_arg: str) -> int:
 			touched_script_names.add(stem)
 			continue
 		if "/qa/fixtures/" in norm or norm.startswith("qa/fixtures/"):
-			touched_tags.add(("fixtures", stem))
+			# Validate like the dialogue/maps branches (review GH#281): a
+			# typo'd/deleted fixture must warn, not vanish into the tag set.
+			if os.path.isfile(os.path.join(FIXTURES_DIR, f"{stem}.json")):
+				touched_tags.add(("fixtures", stem))
+			else:
+				unmapped.append(p)
 			continue
 		if "/data/dialogue/" in norm or norm.startswith("data/dialogue/"):
 			if stem in known_dialogue:
 				touched_tags.add(("dialogue", stem))
+			else:
+				unmapped.append(p)
 			continue
 		# data/maps/<region>/<map>.json (issue #100 split layout): the map
 		# key is the file STEM -- the region dir level is organizational
@@ -306,6 +340,8 @@ def cmd_touching(paths_arg: str) -> int:
 		if "/data/maps/" in norm or norm.startswith("data/maps/"):
 			if stem in known_maps:
 				touched_tags.add(("maps", stem))
+			else:
+				unmapped.append(p)
 			continue
 		# data/scene_root.json (start_map + the player template): consumed
 		# at EVERY world boot, before any map composes on top -- there is no
@@ -319,17 +355,37 @@ def cmd_touching(paths_arg: str) -> int:
 			print(f"derive_qa_surfaces: NOTE -- {base} affects every world boot; "
 				"crossing = ALL canonical scripts (full sweep).", file=sys.stderr)
 			continue
+		matched = False
 		if stem in known_maps:
 			touched_tags.add(("maps", stem))
+			matched = True
 		if stem in known_skills:
 			touched_tags.add(("skills", stem))
-		# data/skills.json (whole-catalog file, not split per-skill):
-		# conservative fallback -- touch EVERY skill surface tag that exists
-		# across the whole manifest, since the changed line inside a
-		# monolithic file can't be attributed to one skill from the path.
-		if base == "skills.json":
+			matched = True
+		# Monolithic catalogs (GH#281): route to the systems tag(s) their
+		# consumers carry -- e.g. portals.json crosses every script whose
+		# derived surfaces include the "portals" system.
+		if base in MONOLITH_SYSTEMS:
+			touched_tags.update(("systems", tag) for tag in MONOLITH_SYSTEMS[base])
+			matched = True
+		# Whole-catalog skill carriers (skills.json, classes.json,
+		# progression.json): conservative fallback -- touch EVERY skill
+		# surface tag that exists across the whole manifest, since the
+		# changed line inside a monolithic file can't be attributed to one
+		# skill from the path.
+		if base in ALL_SKILLS_FALLBACK:
 			for s in surfaces_by_script.values():
 				touched_tags.update(("skills", sk) for sk in s["skills"])
+			matched = True
+		if not matched:
+			unmapped.append(p)
+
+	if unmapped:
+		for p in unmapped:
+			print(f"derive_qa_surfaces: WARNING -- no surface mapping for '{p}'; "
+				"its crossing scripts are NOT derived here. src/** and unmapped "
+				"data files need `--tier smoke` minimum plus hand-picked "
+				"canonicals (see wi-verifying-changes).", file=sys.stderr)
 
 	if all_scripts:
 		for name in sorted(surfaces_by_script):
@@ -343,6 +399,9 @@ def cmd_touching(paths_arg: str) -> int:
 				crossing.add(name)
 				break
 
+	if not crossing:
+		print("derive_qa_surfaces: NOTE -- zero crossing scripts derived; do NOT "
+			"read this as 'no re-gate needed' (GH#281).", file=sys.stderr)
 	for name in sorted(crossing):
 		print(name)
 	return 0

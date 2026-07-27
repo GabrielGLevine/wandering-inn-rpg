@@ -69,41 +69,18 @@ invented names" rule, applied literally.
 
 import json
 import re
-from pathlib import Path
 
-GAME_ROOT = Path(__file__).resolve().parent.parent
+from wi_data_lib import DATA, GAME_ROOT, load_json, load_scene
+
 REPO_ROOT = GAME_ROOT.parent
-DATA = GAME_ROOT / "data"
 STAGING_DIR = REPO_ROOT / "docs" / "archive" / "staging" / "board-staging"
 STAGING_OUT = STAGING_DIR / "generated-candidates.json"
-
 
 # KILL-RULE HARDENING (review HIGH): a respawning encounter is still a
 # DEAD producer if any dialogue effect remove_entity-erases it (quest
 # closes do this). Scan data/dialogue/*.json for remove_entity targets
 # and either exclude those encounters from repeatable kill postings or
 # emit condition_mode="absolute".
-def load_json(path: Path) -> dict:
-    return json.loads(path.read_text())
-
-
-# Issue #100: data/skeleton_scene.json was split into
-# data/maps/<region>/<map>.json + data/scene_root.json. Python-side mirror
-# of src/core/scene_catalog.gd's WISceneCatalog.compose() -- same
-# sorted-path composition, same {start_map, player, maps} shape. Kept in
-# sync by hand (no shared source between GDScript and Python); the
-# GDScript loader is canonical (WIGame consumes it), this is a read-only
-# offline tool.
-def load_scene() -> dict:
-    root = load_json(DATA / "scene_root.json")
-    maps = {}
-    for map_path in sorted((DATA / "maps").glob("*/*.json")):
-        map_id = map_path.stem
-        if map_id in maps:
-            raise ValueError(f"duplicate map key '{map_id}' ({map_path})")
-        maps[map_id] = load_json(map_path)
-    root["maps"] = maps
-    return root
 
 
 # ---------------------------------------------------------------------------
