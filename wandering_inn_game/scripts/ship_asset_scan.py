@@ -28,7 +28,10 @@ from pathlib import Path
 
 from wi_data_lib import GAME_ROOT, load_json
 
-SCANNED_FILES = ("sprites.json", "audio.json")
+# sprites+audio are the adjudicated core; biomes/arenas/maps joined at
+# review (122 more res://assets/ refs, all currently resolving -- the
+# walker is schema-agnostic so wider coverage is free).
+SCANNED_FILES = ("sprites.json", "audio.json", "biomes.json", "arenas.json")
 
 
 def _collect_res_paths(node, out: list) -> None:
@@ -56,8 +59,13 @@ def _pending_rows(audio: dict) -> list:
 def scan(root: Path) -> list:
 	errors: list = []
 	all_paths: list = []
-	for name in SCANNED_FILES:
-		data = load_json(root / "data" / name)
+	targets = [(name, root / "data" / name) for name in SCANNED_FILES]
+	targets += [(f"maps/{p.parent.name}/{p.name}", p)
+		for p in sorted((root / "data" / "maps").glob("*/*.json"))]
+	for name, path in targets:
+		if not path.is_file():
+			continue  # synthetic test roots carry only the core files
+		data = load_json(path)
 		file_paths: list = []
 		_collect_res_paths(data, file_paths)
 		all_paths.extend(file_paths)
