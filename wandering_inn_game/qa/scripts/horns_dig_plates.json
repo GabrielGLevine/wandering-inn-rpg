@@ -1,0 +1,276 @@
+{
+ "_comment": "2026-07-26 main-quest restructure (Task 2.4 follow-up, controller ruling on the three-pillars gate): THE NON-FIGHT BREACH canonical. horns_dig's `breach` beat promises 'fight what guards it, walk the plates, or read the wardwork', but every non-fight producer of pedestal_unsealed used to sit behind the door chain -- which since the restructure does not start until AFTER this pedestal is open -- so the beat shipped FIGHT-ONLY. This script is the live proof that it no longer does: from horns_dig_plates_start (camp joined, nothing else banked, no [Detect Magic] in the build) it presses the plinth for its locked flavour arm, walks the shipped ordered plate pair (near then far), presses the plinth again -- which now BANKS pedestal_unsealed off the new dig-gated variant -- and opens the pedestal to the reveal. THE NEGATIVE PROOF is the whole-run combat_started absence: the guardian is standing at (17,8) the entire time (the fixture removes nothing) and is never fought. The FIGHT leg stays horns_dig_flow's own subject; the [Detect Magic] wardwork leg is proven at sim level in test_sim_core.gd (both legs cannot share one run -- whichever fires first banks pedestal_unsealed and the other stops being reachable). Cell route is door_chain_talk's own proven plate walk, minus its wrong-order leg (that can-fail is that script's subject, not this one's). Seed 9 for convention; the fixture resolves no combat, so rng governs nothing.",
+ "fixture_save": "horns_dig_plates_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Move down to the 'Continue' row, confirm loads the horns_dig_plates_start manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "ruin_surface"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    5
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.horns_dig_joined",
+   "equals": 1
+  },
+  {
+   "_comment": "== THE SEAL, STILL SHUT ==. Bump SOUTH into the plinth's own (blocked) cell (17,6) for facing. contains_when needs pedestal_unsealed + rune_sequence_done, both unbanked, so the interact falls through to the plinth's flavour arm -- and the NEW plates variant is unsatisfied too (no rune_sequence_done yet), which is what makes this step the can-fail sentinel for the ordering: if the variant fired here the seal would open before the puzzle was walked.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "found_the_pedestal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_the_seal_still_shut"
+  },
+  {
+   "_comment": "== THE PLATES ==. NEAR plate (16,6) first: west one cell to (16,5), then bump south into it.",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "rune_near_pressed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "FAR plate (15,4) second: west to (15,5), bump north into it. Its variant fires only because the near plate is lit -- the shipped b10 #204 ordering, unchanged by this task.",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "rune_sequence_done"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE BREACH, WITHOUT A FIGHT ==. Back east to (17,5) and bump south into the plinth again. Both spirals lit and the camp joined, so the new dig-gated variant resolves and BANKS pedestal_unsealed -- the beat's 'walk the plates' route, live.",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "pedestal_unsealed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Both spirals hold their light, and the seam under the plinth stops fighting your hand. Whatever the ward was keeping out, it was never the plates — it was whoever hadn't walked them. Ceria, already reaching for rope: 'Ksmvr. Down. Carefully.'"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_the_plates_break_the_seal"
+  },
+  {
+   "_comment": "== THE REVEAL ==. contains_when is met now, so the very next interact routes to the CONTAINER instead of any variant, and its ARRAY on_open_accomplishment banks the convergent set -- the identical reveal horns_dig_flow reaches through the guardian.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "anchor_stone",
+    "source": "anchor_stone_pedestal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "recovered_anchor_stone"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "pedestal_breached"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "horns_dig",
+    "beat": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "door_retrieved"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_the_reveal_no_fight"
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "anchor_stone"
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.pedestal_unsealed",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.door_retrieved",
+   "equals": 1
+  },
+  {
+   "_comment": "THE NEGATIVE PROOF, whole-run: the breach beat completed with the ruin_guardian still standing. Nothing in this script ever entered combat, and the guardian's own victory counter never banked -- the beat is no longer fight-only.",
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleared_ruin_guardian"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "skill_used"
+  }
+ ]
+}

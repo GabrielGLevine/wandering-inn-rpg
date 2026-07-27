@@ -1737,6 +1737,38 @@ func _init() -> void:
 	assert(skipped.get("container", "") == "", "the camp is not skippable: unseal + plates WITHOUT horns_dig_joined leaves the pedestal shut")
 	assert(gP2.accomplishment_count("door_retrieved") == 0, "no reveal without joining the dig")
 
+	# 2026-07-26 (Task 2.4 follow-up, controller ruling on the three-pillars
+	# gate): horns_dig's `breach` beat promises "fight what guards it, walk the
+	# plates, or read the wardwork", but every non-fight producer of
+	# pedestal_unsealed used to sit behind the door chain -- which since the
+	# restructure does not start until AFTER this pedestal is open. The beat
+	# shipped fight-only. Both non-fight producers now live on ruin_surface,
+	# gated on horns_dig_joined alone. NEGATIVE CONTROL FIRST: neither fires
+	# without the camp join.
+	var gPlate := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gPlate.record_accomplishment("rune_sequence_done")
+	gPlate.transition("ruin_surface", Vector2i(17, 5))
+	gPlate.player_facing = Vector2i.DOWN
+	assert(gPlate.interact().get("accomplishment", "") == "found_the_pedestal", "plates WITHOUT the camp join leave the plinth on its flavor arm")
+	assert(gPlate.accomplishment_count("pedestal_unsealed") == 0, "no unseal without horns_dig_joined -- the camp is not skippable")
+	gPlate.record_accomplishment("horns_dig_joined")
+	assert(gPlate.interact().get("accomplishment", "") == "pedestal_unsealed", "PLATES LEG: both spirals lit + the camp joined, a hand on the plinth breaks the seal -- no fight, no class Skill")
+	assert(gPlate.accomplishment_count("pedestal_unsealed") == 1, "the plates leg banks pedestal_unsealed exactly once")
+	assert(gPlate.interact().get("container", "") == "anchor_stone_pedestal", "and the NEXT interact opens the pedestal off that same non-fight unseal")
+	assert(gPlate.accomplishment_count("door_retrieved") == 1, "the plates-only route reaches the reveal")
+
+	var gSocket := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gSocket.player_skills.append("detect_magic")
+	gSocket.transition("ruin_surface", Vector2i(18, 5))
+	gSocket.player_facing = Vector2i.DOWN
+	gSocket.use_skill_field("detect_magic")
+	assert(gSocket.accomplishment_count("detected_wardwork") == 1, "pre-camp, the socket still banks its shipped flavour counter")
+	assert(gSocket.accomplishment_count("pedestal_unsealed") == 0, "pre-camp, the wardwork read unseals nothing")
+	gSocket.record_accomplishment("horns_dig_joined")
+	gSocket.use_skill_field("detect_magic")
+	assert(gSocket.accomplishment_count("pedestal_unsealed") == 1, "WARDWORK LEG: [Detect Magic] on the socket breaks the seal once the camp is joined")
+	assert(gSocket.accomplishment_count("cleared_ruin_guardian") == 0, "neither non-fight leg touches the guardian")
+
 	var gT1 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gT1.transition("floodplains", Vector2i(30, 20))
 	assert(gT1.combat == null, "fixture: starts outside the trigger zone (dist 3)")

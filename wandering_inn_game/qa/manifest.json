@@ -2111,6 +2111,33 @@
    }
   },
   {
+   "script": "horns_dig_plates",
+   "seed": 9,
+   "fixture": "horns_dig_plates_start",
+   "tiers": [
+    "full"
+   ],
+   "note": "2026-07-26 main-quest restructure (Task 2.4 follow-up, controller ruling on the three-pillars gate): the NON-FIGHT breach canonical. horns_dig's breach beat promises 'fight what guards it, walk the plates, or read the wardwork' but had shipped fight-only (every other pedestal_unsealed producer sits behind the door chain, which since the restructure starts AFTER this pedestal opens). From horns_dig_plates_start (camp joined, nothing else banked, no [Detect Magic] in the build) it presses the locked plinth, walks the shipped ordered plate pair, presses the plinth again -- which banks pedestal_unsealed off the new dig-gated variant -- and opens the pedestal to the same reveal horns_dig_flow reaches through the guardian. Whole-run combat_started/skill_used absence is the negative proof; the guardian is left standing. The [Detect Magic] wardwork leg is proven at sim level in test_sim_core.gd (the two legs cannot share one run)",
+   "surfaces": {
+    "maps": [
+     "ruin_surface"
+    ],
+    "fixtures": [
+     "horns_dig_plates_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
    "script": "door_chain_fight",
    "seed": 9,
    "fixture": "door_chain_fight_start",

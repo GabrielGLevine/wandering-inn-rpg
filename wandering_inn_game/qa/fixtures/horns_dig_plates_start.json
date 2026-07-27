@@ -1,0 +1,77 @@
+{
+ "_comment": "2026-07-26 main-quest restructure (Task 2.4 follow-up, controller ruling on the three-pillars gate): horns_dig_plates' start. The `horns_dig_start` story position VERBATIM (What the Seal Kept fully complete, the same Act III backbone / spellsword 11 build / T4 gear / 60g stipend) with exactly two counters added -- horns_dig_started and horns_dig_joined -- and the player moved to the ruin's pedestal approach cell (17,5), the same stance door_chain_talk and horns_dig_flow both take. THE POINT of this fixture is what it does NOT carry: no pedestal_unsealed, no rune counters, no door-chain counter of any kind, and NO CLASS SKILL that could substitute for the puzzle -- spellsword's kit holds no [Detect Magic], so the canonical cannot accidentally take the wardwork leg instead of the plates one. The invitation, the ruin seam and the camp join are all proven live by horns_dig_flow (FIXTURE-FIRST POLICY: this script's subject is the BREACH, not the route to it), and the guardian is left standing -- removed_entities/dormant_encounters stay empty, so the script's whole-run combat_started absence is a real negative proof rather than a fixture artefact. rng_state is horns_dig_start's own derived state (TRAP: derived via tests/_derive_rng_state.gd, never hand-typed); this canonical resolves no combat at all, so it governs nothing and is held for convention.",
+ "version": 5,
+ "state": {
+  "current_map": "ruin_surface",
+  "player_cell": [
+   17,
+   5
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "spellsword": 11
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "reached_two_classes": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1,
+   "raskghar_sealed": 1,
+   "post_game": 1,
+   "horns_delve_started": 1,
+   "horns_party_formed": 1,
+   "halls_cleared": 1,
+   "vault_construct_downed": 1,
+   "seal_kept_found": 1,
+   "seal_kept_reported": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns",
+   "what_the_seal_kept",
+   "horns_dig"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
+  "container_state": {},
+  "gold": 60,
+  "actions_since_sleep": 0,
+  "times_slept": 12,
+  "rng_state": "-1966449618399012673"
+ }
+}
