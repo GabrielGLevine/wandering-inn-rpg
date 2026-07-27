@@ -139,6 +139,13 @@ player-visible feature.
 - Authoring a fixture without ever loading it in a run.
 - Comparing JSON-parsed coordinate Arrays directly with int cell Arrays.
 - Using a cumulative event assertion to prove a repeated post-action emission.
+- **A new AUTOLOAD reference inside test_driver.gd breaks a unit test,
+  not the driver** — `test_combat_visuals.gd` compiles an
+  autoload-STUBBED copy of the driver source (its stub list injects
+  `var Game/ObservableBus/... = null`); an arm referencing a new
+  autoload (WIDebugOverlay, GH#279) fails THAT compile in CI's unit
+  job while every QA run stays green. Add the autoload to the stub
+  list in the same commit as the arm.
 - **Adding a driver action without grepping for the name first** — the
   driver's match takes the FIRST matching arm, so a duplicate arm SHADOWS
   the original silently (no parse error). A shadow with different
