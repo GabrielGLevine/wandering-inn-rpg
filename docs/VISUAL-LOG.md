@@ -16,6 +16,69 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### Machine playtest — wave/mq5-finale, the finale sequence (2026-07-27)
+
+Source: `wave/mq5-finale` at the Task 8.1 commit, full asset overlay in tree,
+all 29 unit suites green before the windowed pass. The GDI's paced sequences
+COLLAPSE to an instant emit under any QA run (`sleep_veil._is_qa()`), so the
+finale is structurally invisible to the normal windowed sweep — the four shots
+below were taken with a temporary env-gated lift of that collapse
+(`WI_PACED_GDI`), reverted before commit. All three path variants read at
+native 1280x720, plus the seal's new light transition.
+
+- [ ] FINALE/LONG-LINE (P3) — the Invrisil region recap line renders **1114 px
+  wide of a 1280 px viewport** (87%), roughly double every other line in the
+  block. It does NOT clip (canvas_items stretch keeps the logical viewport at
+  1280, and Labels here never wrap), but it visibly bursts the centered column
+  the rest of the sequence forms, and it is the only two-sentence line in a
+  block of one-thought lines. The copy is the wave plan's own verbatim text, so
+  it was NOT rewritten here — this is a taste call for the controller. A
+  shorter second sentence (or dropping "From him, that is a parade.") would put
+  it back in the column.
+- [ ] VEIL-COPY/UNMEASURED (P4, systemic) — `test_copy_fit` measures toasts,
+  dialogue pages, pickers and help, but **nothing measures `sleep_veil.gd`'s
+  own line tables** (opener / finale / region recap / path closes / the seal
+  transition), which now hold the widest single-line strings in the game. The
+  1114 px figure above was obtained with a throwaway measurement script, not a
+  gate. A `_check_veil_lines()` in test_copy_fit (font-size 24, 1280 budget)
+  would make the ceiling enforced instead of observed.
+- [ ] SEAL-SLEEP/TOAST-MISMATCH (P4) — the seal's light transition line rides
+  the `post_game` bank, which `sleep_beat.gd` deliberately does NOT count as
+  `anything_happened` (Task 1.2's silence contract, pinned in
+  `test_sim_core`). On a sleep where nothing else lands, the player therefore
+  sees the GDI say "[The warren is sealed. The record remains open.]" under the
+  black and then a "You sleep soundly." toast on top of it. Not observed in
+  `arc_flow` (its level-ups flip the flag), so it needs an otherwise-empty
+  post-seal sleep to reproduce. One-line fix if wanted: flip
+  `anything_happened` on that bank and re-pin the Task 1.2 silence leg.
+
+### Machine playtest — wave/mq4-act5 Act V (2026-07-27)
+
+Source: `wave/mq4-act5` after Tasks 7.1-7.4, full asset overlay in tree, all 29
+unit suites + the 162-script sweep green before the windowed pass. Three
+windowed runs (`seal_open` seed 1, `seal_fed` seed 9, `seal_reward` seed 9,
+all `passed: true`), 25 screenshots read at native resolution.
+
+- [ ] MAP-LIGHTS/DAY (P3, systemic, NOT Act V's own) — `moods.meta
+  .light_energy_by_phase.day` is `0.0`, so every authored map light renders at
+  zero energy during the day phase. For a SEALED map (no sky, no windows) that
+  is the wrong default: the vault's three lights only exist from dusk, and its
+  daytime read has to be carried by the grade alone. Worth a per-map opt-out
+  (`lights_ignore_phase: true`) rather than brightening every dungeon grade.
+  Same class affects pallass_market's crystal lamps by day.
+- [ ] RUIN_WARDEN/RIG-SCALE (P3, pre-existing) — at `combat_scale` 1.15 (the
+  shipped `ruin_guardian` value, which `seal_warden` now matches deliberately)
+  the rig's head clips under the combat HUD's turn banner on the vault arena's
+  top row. Not introduced here — the first pass shipped 1.35 and the windowed
+  read pulled it back to the shipped precedent. A rig-anchor question for the
+  art lane, not a data-value one.
+- [ ] TOAST/LENGTH (P4) — the `[Detect Magic]` quartet payoff is the longest
+  toast in the game (7 wrapped lines at 1280x720). It FITS (no clipping, top
+  edge well inside the screen) and it is the beat's climax, but it is the new
+  ceiling; `test_copy_fit` does not measure `skill_uses` variant toasts, so
+  nothing enforces that ceiling automatically.
+
+
 ### Machine playtest — wave/mq2-dig "The Dig" close-out (2026-07-27)
 
 Source: `wave/mq2-dig` at `dfc2ec3` + the Task 2.7 copy pass, full asset overlay
@@ -972,6 +1035,21 @@ events, and result files live in the gitignored
   `.superpowers/sdd/visual-log-113-after-wave2/ruin_walkthrough/`.
 
 ## Fixed
+
+- [x] SEAL_VAULT/GRADE (P2, Act V vault, `wave/mq4-act5`) — **FIXED
+  `e94037c`.** Was: the new vault read as one more near-black dungeon cell; the castle floor chosen to
+  say "this room never fell in" never arrived on screen (first windowed pass at
+  mood 0.335). Fix: grade to 0.60/0.60/0.66 day-dusk, 0.50/0.50/0.58 night,
+  vignette 0.44 — a cool tilt (ward-light, not a window), still a full step
+  under the barracks' lived-in 0.68 and double the halls' 0.282. NOTE for the
+  eye-gate: it is still on the dim side of "lit". If the user wants it warmer,
+  the lever is this one mood row.
+- [x] SEAL_VAULT/FOCAL (P2, Act V vault, `wave/mq4-act5`) — **FIXED
+  `e94037c`.** Was: the two `cellar_wardwork` rings sat on the anchor's own neighbour cells (8,3)/(8,5)
+  and read as the room's subject, with the plinth between them invisible. Fix:
+  rings moved to the aisle ends (8,2)/(8,6), each carrying a faint cool light,
+  and the anchor took the key light (energy 0.95, radius 40). The plinth now
+  reads as the focal object on approach.
 
 - [x] UI/TOAST — FIXED (GH#273, v0.13.1 hotfix, 2026-07-20) — the arc-start
   Watch-runner pointer (AND "New quest: Something Beneath") never rendered:

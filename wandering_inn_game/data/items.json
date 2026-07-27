@@ -922,6 +922,23 @@
 			"lore": "Drink it before the work begins and the world arrives a half-beat early: the feint you would have missed, the step you would have taken too late. It wears off by the second fight. Most people buy two."
 		},
 		{
+			"_comment": "Act V terminus reward, on the construct_core_shard curve (hp+3/dr1/res2, the shipped one-of-a-kind-find shape, no price). Its LORE is the reward #270 named: return-anchor rune knowledge, carried as knowledge and nothing else. The B-side (a carved Pallass return plinth) is deliberately NOT shipped, so this must not promise a mechanic -- the lore says you could cut one, not that you have.",
+			"id": "seal_anchor_rune",
+			"name": "Anchor-Rune Rubbing",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 3,
+			"damage_reduction": 1,
+			"resonance": 2,
+			"tier": "enchanted",
+			"abilities": [
+				"guarding_ward"
+			],
+			"description": "A wax-and-charcoal rubbing off the vault anchor, taken whole in one pull. The lines still pull faintly toward whatever they were copied from.",
+			"lore": "Three centuries of ward-work reduced to a sheet you can fold. Any competent enchanter could read the return-cut out of it and carve its twin, given a plinth, a season, and a reason -- Pisces has all three and the patience for none of them."
+		},
+		{
 			"_comment": "GH#92 D4 completion: ruin_guardian boss accessory. warded_coil_charm defensive curve (hp+2/res1) + guarding_ward -- the guardian WAS a ward; its fragment keeps warding.",
 			"id": "guardian_ward_fragment",
 			"name": "Guardian Ward Fragment",

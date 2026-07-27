@@ -348,6 +348,25 @@
    "vignette": 0.56,
    "_comment": "GH-VISUAL-LOG 2026-07-17: base grade lifted ~35% total (12% then a further 20% on user call) (user-ratified USER-EYES item -- vault shots read near-black)."
   },
+  "seal_vault": {
+   "_comment": "Act V. WARMER and markedly brighter than trapped_halls (0.282) on purpose: this chamber never fell in. Windowed read 2026-07-27 set the level -- at 0.335 the room still read as another near-black dungeon cell and the castle floor's warmth never arrived on screen. The anchor and its two ward rings carry real PointLight2Ds on top, which only ADD from dusk (moods.meta.light_energy_by_phase zeroes map lights by day), so the grade has to carry the daytime read alone. The tilt is COOL on purpose: what lights this room is ward-light, not a window.",
+   "day": [
+    0.6,
+    0.6,
+    0.66
+   ],
+   "dusk": [
+    0.6,
+    0.6,
+    0.66
+   ],
+   "night": [
+    0.5,
+    0.5,
+    0.58
+   ],
+   "vignette": 0.44
+  },
   "pallass_market": {
    "_comment": "Crystal lamps (steady white #E9EEF2 PointLight2D per-entity) carry the after-dark read; NEVER amber (the standing quarantine check every future screenshot of this map must pass).",
    "day": [

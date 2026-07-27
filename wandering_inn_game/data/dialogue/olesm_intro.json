@@ -219,6 +219,90 @@
       }
      ],
      "goto": "seal_kept_report"
+    },
+    {
+     "_comment": "Act V beat 3, THE TALK PATH (#270), paying off his own shipped seal_kept_report line. Gated on the ward fact alone -- by which route the player learned it is not Olesm's business -- and hidden once the seal is settled by any path. Appended LAST: the gate counter is Act V's own, so no shipped fixture sees this row.",
+     "text": "There's a ward under the city that has to go on being fed. The Watch needs to pay for it.",
+     "requires": {
+      "accomplishment": {
+       "read_the_feeding_ward": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "seal_resolved": 1
+      }
+     },
+     "goto": "seal_bounty_pitch"
+    }
+   ]
+  },
+  "seal_bounty_pitch": {
+   "_comment": "The witch pattern: a Skill leg (visible-LOCKED) and a priced alternate (grey-visible when broke), both landing on the same posted outcome, plus an always-available exit. The Skill does not skip the negotiation -- it IS the negotiation, and it lands on the quest's last beat, not past it. REWARD ADJUDICATION: the posting is FICTION, not a bounties.json row -- a real row would mint accepted_/completed_bounty counters outside this wave's frozen list and re-pin every board canonical; the mechanical payoff is the quest's own resolution_paths grant.",
+   "speaker": "Olesm",
+   "text": "Fed. On a schedule. Forever. Do you know what a standing posting with no end date does to a ledger? It sits there. Every quarter, somebody new asks why we're paying a Gnoll to walk down and feed a door, and every quarter somebody has to be brave enough to sign it again.",
+   "options": [
+    {
+     "text": "[Charming Smile] You've been dreading that door since the survey. Sign it and sleep.",
+     "requires": {
+      "skill": "charming_smile"
+     },
+     "effects": [
+      {
+       "accomplishment": "seal_kept_fed"
+      },
+      {
+       "accomplishment": "seal_resolved"
+      }
+     ],
+     "goto": "seal_bounty_posted"
+    },
+    {
+     "text": "Then I'll fund the first season myself, and you can explain the second. (12 gold)",
+     "requires": {
+      "gold": 12
+     },
+     "effects": [
+      {
+       "gold": -12
+      },
+      {
+       "accomplishment": "seal_kept_fed"
+      },
+      {
+       "accomplishment": "seal_resolved"
+      }
+     ],
+     "goto": "seal_bounty_posted"
+    },
+    {
+     "text": "I'll come back when I've thought it through.",
+     "end": true
+    }
+   ]
+  },
+  "seal_bounty_posted": {
+   "speaker": "Olesm",
+   "text": "Right. Right. Standing notice, Guild board, renewed by the season: one keeper, one lantern of mana a month, no questions logged about what it feeds. I'm putting my name on it, which means when it lapses it will be my fault. Somehow that IS better than not knowing. Thank you. I think.",
+   "options": [
+    {
+     "text": "Somebody has to hold the door.",
+     "end": true
+    },
+    {
+     "text": "Get some sleep, Olesm.",
+     "end": true
+    }
+   ],
+   "_comment": "A seal_opened arm, because the FIGHT fork's no-dead-end hatch lets a player who broke the seal and could not finish the warden still fund the keeper. hide_when is FORBIDDEN here -- hiding the arm would close the hatch.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_opened": 1
+      }
+     },
+     "text": "Right. Right. Standing notice, Guild board, renewed by the season: one keeper, one lantern of mana a month, and a door that is already open at the bottom of it. I'm putting my name on that too. If it was worth feeding shut, it is worth watching open. Thank you. I think."
     }
    ]
   },

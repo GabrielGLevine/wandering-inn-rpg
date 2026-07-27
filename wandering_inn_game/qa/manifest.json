@@ -1615,7 +1615,7 @@
    "script": "arc_flow",
    "seed": 9,
    "fixture": "near_act3",
-   "note": "THE WHOLE ACT III ARC PROOF, tremor through epilogue",
+   "note": "THE WHOLE ACT III ARC PROOF, tremor through the seal and the sleep that banks post_game (Phase 8: the seal rolls no closing sequence -- that moved to Act V's seal_resolved)",
    "tiers": [
     "full"
    ],
@@ -2533,6 +2533,169 @@
      "exploration",
      "night_phase",
      "portals"
+    ]
+   }
+  },
+  {
+   "script": "spine_reach",
+   "seed": 9,
+   "fixture": "spine_reach_start",
+   "note": "2026-07-26 main-quest spec 4 (Phase 6): the pilgrimage spine `where_the_door_reaches` end to end. Pisces's spine-start arm (gated door_awakened, banks the quest + spine_started, speaks the foreshadow line), then ALL THREE capstone arms live off a save whose region chains are already CLOSED (the revisit-reachability position spec 8 requires): Eloise raising the feeding ward herself, Hedault cataloguing the residue unbidden, Grimalkin on the forge tier's rune-feeding ledger -- beats 1/2/3 complete on lattice_witch_lore / lattice_hedault_reading / lattice_forge_rune. Exact option-array pins for the Pisces, Eloise and Grimalkin hubs (presence, and the witch arm's hide_when retirement), and the greet is re-read after every bank to walk the ascending text_variant contract. NEGATIVE: the quest must NOT complete -- the `return` beat waits on Phase 7's seal_descent_agreed. No combat.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "mercantile_alleys",
+     "pallass_market",
+     "riverfarm_village",
+     "street",
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "spine_reach_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "hedault_enchanting",
+     "pallass_grimalkin",
+     "pisces_magic",
+     "riverfarm_witch"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "seal_open",
+   "seed": 1,
+   "fixture": "seal_open_start",
+   "note": "2026-07-26 Act V (#270 as amended by main-quest spec 7), THE FIGHT PATH. Pisces' descent ask on Market Street (gated on all three lattice counters; banks seal_descent_agreed, starts what_the_seal_was_feeding, and COMPLETES the pilgrimage spine's `return` beat, the accepted red Phase 6 shipped) -> the SKILL-FREE reading at seal_kept_door: two bare interacts stage Pisces' narration into read_the_seal_runes then read_the_feeding_ward, the route every build can walk -> his three-path choice, taking WE OPEN IT (seal_opened) -> stepping onto the door's only approach cell wakes seal_warden through its trigger_radius (the tuned solo fight, 0.55-0.95 harness cell seal_warden_t5_sw14_solo) -> the door's door_when transitions into the new seal_vault map -> the anchor's open banks seal_resolved, grants seal_anchor_rune, completes the quest and fires its resolution_paths grant. Exact greet pin on the Pisces hub (the necromancy topic VISIBLE-LOCKED behind its class gate), the journal already reading act_v at load, and NEGATIVES on both other path counters.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs",
+     "seal_vault",
+     "street",
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "seal_open_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "peddler_stall",
+     "pisces_magic",
+     "pisces_seal"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "seal_fed",
+   "seed": 9,
+   "fixture": "seal_fed_start",
+   "note": "2026-07-26 Act V, THE TALK PATH. Same descent ask and skill-free reading as seal_open, then Pisces argues the ward is safer fed and points at Olesm -- and pointing banks NOTHING (asserted). At the Guild steps his Act V hub row opens the standing-posting pitch, where the witch pattern renders both legs: [Charming Smile] selectable off diplomat 1, the 12-gold alternate beside it. The Skill leg banks seal_kept_fed + seal_resolved and completes the quest. NEGATIVES: seal_opened and seal_rewarded never bank, and combat_started never fires in the whole run -- the door stays shut on this path.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs",
+     "street",
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "seal_fed_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "olesm_intro",
+     "pisces_magic",
+     "pisces_seal"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "night_phase",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "seal_reward",
+   "seed": 9,
+   "fixture": "seal_reward_start",
+   "note": "2026-07-26 Act V, THE SKILL PATH. The descent ask, then the reading's RICHEST arm: [Detect Magic] (necromancer 1) on seal_kept_door at detected_wardwork 3 lands the quartet payoff -- four readings, one warding lattice, and this door is where it drains to. Pisces' choice then shows [Hedge Remedy] VISIBLE-LOCKED beside the selectable [Detect Magic] fork (skill gates tease, never hide); the fork's pitch is Skill-gated and its close is ITEM-gated on EITHER piece of warded ruin-stone -- the guardian's fragment or the vault construct's core. This fixture is a PLATES-path save holding only the core, so the canonical consumes construct_core_shard (item_lost asserted) to bank seal_rewarded + seal_resolved, while the fragment arm renders visible-locked beside it with its own reason (item gates tease, only accomplishment gates hide). NEGATIVES: the door never opens, the Watch is never asked, no combat.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street",
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "seal_reward_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "detect_magic"
+    ],
+    "dialogue": [
+     "pisces_magic",
+     "pisces_seal"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "finale_after_merge",
+   "seed": 9,
+   "fixture": "finale_merge_start",
+   "note": "2026-07-27 Phase 8, THE FINALE vs A PENDING MERGE. The one collision the finale's bed hook has to survive: UI_SLEEP_VEIL_FINISHED is what opens consolidation_prompt's modal, so a sleep that both owes the ending and offers a consolidation would have dropped the finale's black over that choice. Loads a TALK-path-resolved save parked on the inn bed at exactly the [Spellsword] gate (warrior 10 + mage 11) and drives it live: sleep -> offer -> the veil voices it -> the prompt opens with the curtain PROVEN still down -> decline -> the finale rolls that same night at 10 lines. Also pins that a declined merge leaves both parent classes standing in the recount. No combat, no rng dependence.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "finale_merge_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "night_phase"
     ]
    }
   },
@@ -3615,6 +3778,7 @@
    "surfaces": {
     "maps": [
      "inn",
+     "inn_upstairs",
      "street"
     ],
     "fixtures": [
@@ -3630,6 +3794,7 @@
      "dialogue",
      "economy",
      "exploration",
+     "night_phase",
      "save"
     ]
    }

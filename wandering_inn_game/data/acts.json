@@ -1,5 +1,5 @@
 {
-	"_comment": "Acts are derived, never saved: select the highest act whose predecessor gates pass. Conditions support min_classes, quests_completed, and accomplishment counts; empty means true. reached_two_classes is monotonic across consolidation. Act IV advance_when is defined but unreachable until Act V exists (Phase 7 of the 2026-07-26 wave fills it).",
+	"_comment": "Acts are derived, never saved: select the highest act whose predecessor gates pass. Conditions support min_classes, quests_completed, and accomplishment counts; empty means true. reached_two_classes is monotonic across consolidation. Act V is last, so ITS advance_when is the defined-but-unreachable one -- it names seal_resolved so the finale sequence has a single gate to read, and so a maxed save still lights every beat it owns.",
 	"acts": [
 		{
 			"id": "act_i",
@@ -34,18 +34,31 @@
 			]
 		},
 		{
-			"_comment": "Act IV advance_when mirrors its five region-arc beats but is unreachable while Act IV is last. counted_among is deliberately NOT in the gate: it is the seal's own closing line, relocated here from act_iii by the 2026-07-26 reframe because post_game banks at the first sleep AFTER the seal (sleep_beat.gd), by which point the seal has already carried the player into this act.",
+			"_comment": "Act V gate (revised in fix round 1 by controller ruling): the seal report plus the two region terminals the pilgrimage does not imply. Transitivity covers the rest -- lattice_forge_rune implies spine_started and elevator_pass_stamped, lattice_witch_lore requires price_of_a_favor_reported, lattice_hedault_reading requires brothers_job_done, and Act V's descent ask requires all three lattice counters. Naming them here is what keeps riverfarm_owed and invrisil_squared from being STRANDED: a beat whose counter can only bank in an act the player has already left can never render (the act_iii defect). counted_among is deliberately NOT in the gate -- it is the seal's own closing line, relocated here because post_game banks at the first sleep AFTER the seal (sleep_beat.gd).",
 			"id": "act_iv",
 			"title": "What the Door Opened",
 			"header": "Act IV -- What the Door Opened",
-			"advance_when": { "accomplishments": { "door_awakened": 1, "price_of_a_favor_reported": 1, "brothers_job_done": 1, "elevator_pass_stamped": 1, "seal_kept_reported": 1 } },
+			"advance_when": { "accomplishments": { "lattice_forge_rune": 1, "seal_kept_reported": 1, "price_of_a_favor_reported": 1, "brothers_job_done": 1 } },
 			"beats": [
 				{ "id": "counted_among", "text": "The seal holds. Liscor counts you among its own.", "when": { "accomplishments": { "post_game": 1 } } },
 				{ "id": "the_door_opens", "text": "The pantry door remembers being elsewhere again, and somewhere else remembers it back.", "when": { "accomplishments": { "door_awakened": 1 } } },
 				{ "id": "riverfarm_owed", "text": "Riverfarm's fields breathe easier, and a witch in the hollow no longer collects on the village's fear.", "when": { "accomplishments": { "price_of_a_favor_reported": 1 } } },
 				{ "id": "invrisil_squared", "text": "A merchant's name is settled in Invrisil, one way or another, and the Brothers remember who settled it.", "when": { "accomplishments": { "brothers_job_done": 1 } } },
 				{ "id": "pallass_tiers", "text": "The forge tier of Pallass stands open above you now, papers stamped and the lift unlocked.", "when": { "accomplishments": { "elevator_pass_stamped": 1 } } },
-				{ "id": "the_horns_home", "text": "The Horns of Hammerad have taken a corner of the inn as their own, and the seal beneath Liscor holds quiet.", "when": { "accomplishments": { "seal_kept_reported": 1 } } }
+				{ "id": "the_horns_home", "text": "The Horns of Hammerad have taken a corner of the inn as their own, and the seal beneath Liscor holds quiet.", "when": { "accomplishments": { "seal_kept_reported": 1 } } },
+				{ "id": "the_reach_mapped", "text": "Three regions have handed you the same word without noticing they were doing it. The Door has been teaching you what it is made of.", "when": { "accomplishments": { "lattice_forge_rune": 1 } } }
+			]
+		},
+		{
+			"_comment": "Act V, the slot #270 reserved. Every beat here banks INSIDE the act (the act_iii lesson: a beat keyed to its own act's exit gate can never render), and because act_v is last even the resolution beat renders. ONE resolution beat, not three: a per-path beat list would leave two entries permanently pending for every player. SPOILER DISCIPLINE: journal.gd renders PENDING act beats in full, marked '·' instead of '✓', so every line here is visible from the moment Act V opens -- none may state more than the act's own title, and nothing names what the vault holds.",
+			"id": "act_v",
+			"title": "What the Seal Was Feeding",
+			"header": "Act V -- What the Seal Was Feeding",
+			"advance_when": { "accomplishments": { "seal_resolved": 1 } },
+			"beats": [
+				{ "id": "the_descent", "text": "Pisces will not read it out of a treatise. You are taking him down to it.", "when": { "accomplishments": { "seal_descent_agreed": 1 } } },
+				{ "id": "the_reading", "text": "You read the seal under Liscor yourself, in the dark, and it was never a lock at all.", "when": { "accomplishments": { "read_the_feeding_ward": 1 } } },
+				{ "id": "the_answer", "text": "You settled what the seal was feeding, and the city goes on not knowing.", "when": { "accomplishments": { "seal_resolved": 1 } } }
 			]
 		}
 	]

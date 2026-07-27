@@ -891,9 +891,18 @@ const LANDMARK_TOKENS := {
 	"garden_sanctuary": ["garden"],
 	"riverfarm_village": ["riverfarm"],
 	"riverfarm_longhouse": ["longhouse"],
-	"witch_hollow": ["hollow"],
+	# 2026-07-26 (Phase 6, the pilgrimage spine): a sub-map accepts its REGION's
+	# token as well as its own, the widening `ruin_surface` already carries for
+	# "floodplains". The spine's beats name each stop by region ("Riverfarm" /
+	# "Invrisil" / "Pallass"), which is the honest landmark for a beat whose whole
+	# subject is a region opening up; the region-hub maps already tokenize that
+	# word (riverfarm_village "riverfarm", invrisil_boulevard "invrisil",
+	# pallass_market "pallass") and only their SIDE maps lacked it, so a correctly
+	# aimed beat read as unlandmarked. Widening the table, not the copy -- every
+	# pre-existing token still satisfies every pre-existing beat.
+	"witch_hollow": ["hollow", "riverfarm"],
 	"invrisil_boulevard": ["boulevard", "invrisil"],
-	"mercantile_alleys": ["alleys", "counting house"],
+	"mercantile_alleys": ["alleys", "counting house", "invrisil"],
 	"brothers_parlor": ["parlor"],
 	"dungeon_approach": ["dungeon"],
 	"trapped_halls": ["trapped halls", "halls"],

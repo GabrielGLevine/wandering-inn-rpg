@@ -931,6 +931,20 @@
    "loop": true
   },
   {
+   "_comment": "2026-07-26 Act V: the vault behind the seal gets its OWN field track (hydrogene_hidden_cavern, the quieter cue the deeper maps already use), NOT the halls' hydrogene_malicious_scheme -- crossing that threshold should sound like arriving somewhere, not like more corridor. A distinct id keyed to its own map so the seam swaps cleanly instead of falling through to silence.",
+   "id": "music_seal_vault",
+   "kind": "field",
+   "context": "seal_vault",
+   "event": "map_changed",
+   "payload": {
+    "map": "seal_vault"
+   },
+   "stream": "res://assets/audio/music/hydrogene_hidden_cavern.ogg",
+   "bus": "Music",
+   "volume_db": -7.0,
+   "loop": true
+  },
+  {
    "id": "music_mercantile_alleys_v2",
    "kind": "field",
    "context": "mercantile_alleys",
@@ -1127,6 +1141,17 @@
    "context": "trapped_halls",
    "event": "map_changed",
    "payload": { "map": "trapped_halls" },
+   "stream": "res://assets/audio/ambience/dungeon_hum.ogg",
+   "bus": "Ambience",
+   "volume_db": -8.0,
+   "loop": true
+  },
+  {
+   "id": "ambience_seal_vault",
+   "kind": "ambience",
+   "context": "seal_vault",
+   "event": "map_changed",
+   "payload": { "map": "seal_vault" },
    "stream": "res://assets/audio/ambience/dungeon_hum.ogg",
    "bus": "Ambience",
    "volume_db": -8.0,

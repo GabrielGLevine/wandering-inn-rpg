@@ -1,5 +1,5 @@
 {
- "_comment": "(spec §5.5 the anchor-stone-per-region idiom -- the #10/#12/#16 contract) Each row is one fast-travel DESTINATION: {id, display_name, map, cell, requires_accomplishment, arrival_toast}.",
+ "_comment": "(spec 5.5, the anchor-stone-per-region idiom) Each row is one fast-travel DESTINATION: {id, display_name, map, cell, requires_accomplishment, arrival_toast}.",
  "portals": [
   {
    "id": "liscor_street",
@@ -11,7 +11,7 @@
    ],
    "requires_accomplishment": "door_mounted",
    "arrival_toast": "Cold light, gone as fast as it came. The gate district's noise rushes back in around you.",
-   "_comment": "2026-07-26 main-quest restructure (Task 2.4), the DAY-ONE LISCOR LINK: this row and `the_wandering_inn` re-gate door_awakened -> door_mounted. The Magical Door carries the inn<->Liscor hop from the moment it is hung (spec section 2.5 -- Pisces's mounting line is the in-fiction proof), and door_awakened now means 'reaches BEYOND Liscor', which is what the three region rows below still wait on. Old saves reach door_mounted through Task 2.6's backfill, so no shipped save loses a destination it already had."
+   "_comment": "Task 2.4, the DAY-ONE LISCOR LINK: this row and `the_wandering_inn` re-gate door_awakened -> door_mounted. The Magical Door carries the inn<->Liscor hop from the moment it is hung, and door_awakened now means 'reaches BEYOND Liscor', which is what the three region rows below still wait on. Old saves reach door_mounted through Task 2.6's backfill, so no shipped save loses a destination."
   },
   {
    "id": "the_wandering_inn",
@@ -23,7 +23,7 @@
    ],
    "requires_accomplishment": "door_mounted",
    "arrival_toast": "Warm air, woodsmoke, the creak of the pantry door settling shut behind you. You're back, and you didn't walk here.",
-   "_comment": "Day-one Liscor link (Task 2.4) -- see liscor_street's row. Arrival cell (13,6) is one WEST of pantry_door (14,6) and stays clear of `pisces_mounting` (13,5), whose own window closes at the very counter this row opens on."
+   "_comment": "Day-one Liscor link -- see liscor_street's row. Arrival cell (13,6) is one WEST of pantry_door (14,6) and clear of `pisces_mounting` (13,5), whose window closes at the very counter this row opens on."
   },
   {
    "id": "riverfarm",
@@ -35,7 +35,7 @@
    ],
    "requires_accomplishment": "riverfarm_attuned",
    "arrival_toast": "The light warms and the air smells of wheat and river water before you've taken a step. Riverfarm, same as the rumor said.",
-   "_comment": "Arrival cell (13,5) sits one cell east of riverfarm_anchor_stone (12,5) at the village's own end of the pair, open + off every blocked/decor/entity cell on that map (blast-radius checked)."
+   "_comment": "Arrival cell (13,5), one east of riverfarm_anchor_stone (12,5) at the village's own end of the pair; open and off every blocked/decor/entity cell (blast-radius checked)."
   },
   {
    "id": "invrisil",
@@ -47,7 +47,7 @@
    ],
    "requires_accomplishment": "invrisil_attuned",
    "arrival_toast": "The light turns pale and cool, and the noise of a much bigger city rushes in to fill the silence. Invrisil, same as the letter promised.",
-   "_comment": "Arrival cell (4,8) sits one cell east of invrisil_anchor_stone (3,8) at the boulevard's own end of the pair, open + off every blocked/decor/entity cell on that map (blast-radius checked)."
+   "_comment": "Arrival cell (4,8), one east of invrisil_anchor_stone (3,8) at the boulevard's own end of the pair; open and off every blocked/decor/entity cell (blast-radius checked)."
   },
   {
    "id": "pallass",

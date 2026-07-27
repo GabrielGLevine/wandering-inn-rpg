@@ -1,0 +1,259 @@
+{
+ "_comment": "Act V (#270 beats 2-3): Pisces at the sealed rune-door. THE DOOR NEVER SPEAKS -- every option this beat needs lives on him. Beat 2's OR-parity is the `the_appetite` arm: #270 wants EITHER read to unlock beat 3, but only one counter can gate an option, so the rune-read player gets the ward fact from Pisces himself (the third producer of read_the_feeding_ward) and lands on the same choice.",
+ "start": "at_the_door",
+ "nodes": {
+  "at_the_door": {
+   "speaker": "Pisces",
+   "text": "Do not touch it yet. I have waited a month to stand in front of this. Grant me the courtesy of a first impression.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "read_the_seal_runes": 1
+      }
+     },
+     "text": "The same hand. I have now said so four times and it has not once stopped being remarkable. Ask me what it is for. Go on, ask."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "read_the_feeding_ward": 1
+      }
+     },
+     "text": "A feeding ward. Under a city. Cut by whoever cut the frame you eat breakfast beside. I need a moment, and then I need a decision, and I would rather it were yours."
+    },
+    {
+     "_comment": "One arm per outcome, appended after the reading arms so last-match-wins leaves him standing in the ending the player chose. seal_kept_fed sits LAST on purpose: it is the only outcome another path can be layered on top of (a player who opened the seal and could not finish the warden can still fund the keeper), and the fed line is the true state in that case.",
+     "requires": {
+      "accomplishment": {
+       "seal_opened": 1
+      }
+     },
+     "text": "It is open, and it is quiet, and I have been standing in the doorway for an hour deciding whether that is a relief. Do not tell Ceria I said hour. Say minutes."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_rewarded": 1
+      }
+     },
+     "text": "Your cut is holding. I have checked it eleven times, which you may read as distrust or as admiration; I decline to clarify."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_kept_fed": 1
+      }
+     },
+     "text": "A Watch keeper, a ledger line, and a ward that goes on eating on somebody's schedule. Civilization, apparently. I shall write about it and be insufferable."
+    }
+   ],
+   "options": [
+    {
+     "_comment": "The OR-bridge: a player who only matched the hand (bare interact or [Observe]) hears the appetite from the man himself. Hidden once the fact is held, by whichever route landed it.",
+     "text": "What is it for, then?",
+     "requires": {
+      "accomplishment": {
+       "read_the_seal_runes": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "read_the_feeding_ward": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "read_the_feeding_ward"
+      }
+     ],
+     "goto": "the_appetite"
+    },
+    {
+     "_comment": "2026-07-26 Act V beat 3, THE CHOICE. One entry, three forks inside, so the decision is made in one place and reads as a decision. Gated on the ward fact (never on which Skill read it) and hidden once resolved.",
+     "text": "So what do we do about a door that eats?",
+     "requires": {
+      "accomplishment": {
+       "read_the_feeding_ward": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "seal_resolved": 1
+      }
+     },
+     "goto": "the_choice"
+    },
+    {
+     "text": "Take your moment.",
+     "end": true
+    }
+   ]
+  },
+  "the_choice": {
+   "_comment": "THREE REAL-COST PATHS (#270 beat 3), each with its own producer: FIGHT banks seal_opened here and resolves in the vault beyond the warden; TALK points at Olesm, whose arm carries the Skill-or-gold cost and banks seal_kept_fed + seal_resolved; SKILL closes it here, but only for a player holding BOTH a warding Skill and a piece of warded ruin-stone, whichever arm they take being CONSUMED.",
+   "speaker": "Pisces",
+   "text": "Three things, and I dislike two of them. We open it and see what three centuries of feeding produced. Or we leave it fed and make that somebody's paid duty, which is dull and correct. Or you re-cut the ward yourself, if you can, and it holds another age without anyone watching it.",
+   "options": [
+    {
+     "text": "We open it.",
+     "effects": [
+      {
+       "accomplishment": "seal_opened"
+      }
+     ],
+     "goto": "fork_open"
+    },
+    {
+     "text": "It stays fed. The Watch can pay for it.",
+     "goto": "fork_fed"
+    },
+    {
+     "_comment": "SKILL fork, visible-locked (the witch pattern). TWO entry arms because #270 names both a warding Skill and a reading one and `requires` cannot compound {skill, item} -- the Skill gate opens the pitch and the ITEM gate closes it one node down. That is the shipped multi-node persuade shape, not a gate stacked on a gate.",
+     "text": "[Hedge Remedy] I can re-cut it. Properly.",
+     "requires": {
+      "skill": "hedge_remedy"
+     },
+     "goto": "fork_reward"
+    },
+    {
+     "text": "[Detect Magic] I can re-cut it. I have read enough of these now.",
+     "requires": {
+      "skill": "detect_magic"
+     },
+     "goto": "fork_reward"
+    },
+    {
+     "text": "Not yet. Let me think.",
+     "end": true
+    }
+   ]
+  },
+  "fork_open": {
+   "_comment": "seal_opened is banked on the OPTION, not here, so the door and the warden arm the instant the decision is made. He does not come into the fight: the ward re-seals the moment nobody holds the reading open, which is also why the harness cell is SOLO.",
+   "speaker": "Pisces",
+   "text": "Then stand clear of it. The reading has to stay open while the seal comes apart, which means I am occupied and you are on your own for whatever objects to this. Something will. Wards this good are never the only precaution.",
+   "options": [
+    {
+     "text": "Understood.",
+     "end": true
+    }
+   ]
+  },
+  "fork_fed": {
+   "speaker": "Pisces",
+   "text": "Sensible. Deeply unsatisfying. It will need a real keeper, though, and a real ledger line, or it lapses in a decade and we are back here with worse knees. Olesm keeps the Watch's dread and the Watch's paperwork in the same drawer. Go and frighten him usefully.",
+   "options": [
+    {
+     "text": "I'll go and see him at the Guild.",
+     "end": true
+    },
+    {
+     "text": "Back up a moment.",
+     "goto": "at_the_door"
+    }
+   ]
+  },
+  "fork_reward": {
+   "_comment": "The item gate closes the fork. `requires {item}` renders VISIBLE-LOCKED with its own reason string, NOT hidden -- dialogue.gd hides only accomplishment-shaped gates (_progress_gated) -- so a player holding neither piece sees both arms and what each wants. TWO close arms, not one: guardian_ward_fragment drops only from ruin_guardian, the FIGHT breach of the dig's pedestal, and Hedault's trade consumes it, so a plates-or-wardwork player had no route to seal_rewarded at all. construct_core_shard is the MAIN-LINE drop (vault_boss_slot, chance 1.0, no other sink), so the second arm is the universal one. Each arm consumes its own item, so the real cost is preserved on both.",
+   "speaker": "Pisces",
+   "text": "You would need warded stone to cut into, and not any warded stone. Something the same age, the same craft, already carrying a working of its own. Ruin-stone: the pedestal guardian out at the ruin was made of it, and so is the core the vault construct was carrying when it came apart. If you kept either piece, this becomes a long afternoon and a permanent answer.",
+   "options": [
+    {
+     "text": "I kept the guardian's fragment. Cut it from that.",
+     "requires": {
+      "item": "guardian_ward_fragment"
+     },
+     "effects": [
+      {
+       "remove_item": "guardian_ward_fragment"
+      },
+      {
+       "accomplishment": "seal_rewarded"
+      },
+      {
+       "accomplishment": "seal_resolved"
+      }
+     ],
+     "goto": "fork_reward_done"
+    },
+    {
+     "text": "I kept the construct's core shard. Cut it from that.",
+     "requires": {
+      "item": "construct_core_shard"
+     },
+     "effects": [
+      {
+       "remove_item": "construct_core_shard"
+      },
+      {
+       "accomplishment": "seal_rewarded"
+      },
+      {
+       "accomplishment": "seal_resolved"
+      }
+     ],
+     "goto": "fork_reward_done"
+    },
+    {
+     "text": "Then it'll have to be another way.",
+     "goto": "at_the_door"
+    }
+   ]
+  },
+  "fork_reward_done": {
+   "speaker": "Pisces",
+   "text": "There. The pour runs the way it always did and now it runs through YOUR hand's work, which will outlast the city and annoy me for the rest of my life. Whatever is back there gets to keep sleeping. I have decided that is the outcome I wanted, and I will be saying so as though I said it first.",
+   "options": [
+    {
+     "text": "You did say it first.",
+     "end": true
+    },
+    {
+     "text": "Let's get back up into the light.",
+     "end": true
+    }
+   ],
+   "_comment": "A seal_opened arm for the same hatch Olesm's posted node carries: a player who broke the seal first and re-cut the ward after is describing a repair, not an untouched pour. hide_when is FORBIDDEN -- it would close the hatch.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_opened": 1
+      }
+     },
+     "text": "There. It runs again, through YOUR hand's work this time, which will outlast the city and annoy me for the rest of my life. It is a repair and not a rescue, and the door behind it stays open. I have decided that is the outcome I wanted, and I will be saying so as though I said it first."
+    }
+   ]
+  },
+  "the_appetite": {
+   "_comment": "The MINIMUM read, deliberately plainer than the [Detect Magic] arm's quartet payoff -- the literate player gets the lattice, everyone gets the fact.",
+   "speaker": "Pisces",
+   "text": "It is not a lock. Nobody cuts a lock this generous. The lines run one way, they have run one way for a very long time, and that makes this a feeding ward. Something behind that stone has been drinking since before there were walls up there.",
+   "options": [
+    {
+     "text": "Feeding what?",
+     "goto": "the_appetite_unknown"
+    },
+    {
+     "text": "Back to you, then.",
+     "goto": "at_the_door"
+    }
+   ]
+  },
+  "the_appetite_unknown": {
+   "speaker": "Pisces",
+   "text": "I do not know. That is the entire problem and I want it written down that I said so first. A ward this careful was not built to imprison. It was built to KEEP something, the way you keep a fire, and someone chose to keep it fed rather than let it go out.",
+   "options": [
+    {
+     "text": "Then we decide what to do about it.",
+     "goto": "at_the_door"
+    },
+    {
+     "text": "I need to think.",
+     "end": true
+    }
+   ]
+  }
+ }
+}

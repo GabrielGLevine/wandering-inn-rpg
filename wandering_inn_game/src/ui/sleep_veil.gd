@@ -54,18 +54,76 @@ const OPENER_HOLD_BEFORE_TEXT := 0.6
 const OPENER_LINE_HOLD := 1.7
 const OPENER_READ_HOLD := 2.2
 
-const EPILOGUE_LINES_OPEN: Array[String] = [
+## THE FINALE — the demo's one true ending, and the retirement of the old
+## post-seal epilogue (2026-07-26 main-quest wave, Phase 8). Sealing the
+## warren used to end the game; under the reframe it is a mid-story act
+## transition, and the curtain moved to `seal_resolved` — the settling of
+## "What the Seal Was Feeding", by whichever of its three paths. Same
+## gold-on-black device, same _black/_add_line renderer; only the trigger and
+## the copy changed. The open lines survive the move verbatim: they were
+## always about the record, not about the warren.
+const FINALE_LINES_OPEN: Array[String] = [
 	"[When you came to Liscor, there was nothing to record.]",
 	"[This is no longer true.]",
 ]
-const EPILOGUE_LINES_CLOSE: Array[String] = [
-	"[The warren is sealed.]",
-	"[The record remains open.]",
+## Region recap, one line per pilgrimage stop, each emitted ONLY if that
+## stop's counter banked. Ordered Riverfarm → Invrisil → Pallass, the spine's
+## own order, so the recap reads back as the road the player walked.
+const FINALE_REGION_LINES: Array[Array] = [
+	["lattice_witch_lore", "[Riverfarm keeps a witch who taught you what a ward eats.]"],
+	["lattice_hedault_reading", "[Invrisil keeps an enchanter who called your Door 'competent work'. From him, that is a parade.]"],
+	["lattice_forge_rune", "[Pallass stamped your name into a forge tier's ledger.]"],
 ]
-const EPILOGUE_LINK_LINE := "— The story continues at wanderinginn.com —"
-const EPILOGUE_HOLD_BEFORE_TEXT := 0.8
-const EPILOGUE_LINE_HOLD := 1.6
-const EPILOGUE_READ_HOLD := 2.6
+## ONE path close, LAST MATCH WINS — so this table's ORDER IS THE PRECEDENCE
+## RULE, and `seal_opened` sits first on purpose. Act V's deliberate
+## no-dead-end hatch lets a player break the seal, fail the warden, and still
+## resolve through Olesm or the re-ward, which leaves them holding
+## `seal_opened` AND a resolution counter; the resolution is the true state,
+## so it must overwrite. `seal_kept_fed` and `seal_rewarded` can never
+## co-occur (both their dialogue entries carry hide_when seal_resolved), so
+## their relative order is inert — it follows the plan's stated precedence.
+const FINALE_CLOSE_LINES: Array[Array] = [
+	["seal_opened", "[You opened what was fed. The record does not flinch.]"],
+	["seal_kept_fed", "[You chose to keep feeding it. Some seals are promises.]"],
+	["seal_rewarded", "[You re-cut the ward with your own hands. It will hold longer than the city.]"],
+]
+const FINALE_LINK_LINE := "— The story continues at wanderinginn.com —"
+const FINALE_HOLD_BEFORE_TEXT := 0.8
+const FINALE_LINE_HOLD := 1.6
+const FINALE_READ_HOLD := 2.6
+
+## WHICH conversations may draw the curtain. An owed finale must not roll off
+## the peddler saying "watch gear, mostly honest" — on the FIGHT path, whose
+## resolution is a container open rather than a conversation, ANY dialogue end
+## would otherwise credit-roll the next shopkeeper the player greets.
+##
+## `olesm_intro` and `pisces_seal` are the two graphs that actually BANK
+## `seal_resolved` (TALK's standing posting, SKILL's re-cut), so on those paths
+## the curtain still falls the instant the resolving conversation closes —
+## unchanged behaviour, exactly where the epilogue used to roll. `pisces_seal`
+## doubles as the FIGHT path's curtain: the escort at the door carries a
+## post-`seal_opened` variant, so a player who walks out of the vault and tells
+## Pisces gets the ending there. `pisces_magic` is the same voice on the inn
+## side, and the arc's only other Pisces surface — he is the story voice of
+## this whole quest, and no other graph in the game speaks for it.
+##
+## Nothing else qualifies, and nothing needs to: the bed hook below is the
+## unconditional catch-all, so a filtered-out conversation delays the ending to
+## the player's next sleep, never loses it.
+const FINALE_CURTAIN_CONVERSATIONS: Array[String] = [
+	"olesm_intro",
+	"pisces_seal",
+	"pisces_magic",
+]
+
+## The seal's own light transition, re-homed from the retired epilogue's close
+## pair (spec §2.2: "a light act-transition sleep beat (one GDI line)"). It
+## rides `post_game`, which sleep_beat.gd banks silently at the first sleep
+## AFTER `raskghar_sealed` — so the Design marks the seal on the bed, where it
+## marks every other slow change, instead of rolling credits at Zevara's desk.
+## Zero new copy: both retired sentences, and the second is precisely what
+## makes the beat read as mid-story rather than as an ending.
+const SEAL_TRANSITION_LINE := "[The warren is sealed. The record remains open.]"
 
 const _EVOLUTION_RESULT_FLAVOR := {
 	"swordsman": "Your hands have chosen the sword.",
@@ -97,8 +155,11 @@ var _sleep_has_consolidation := false
 var _opener_running := false
 var _opener_advance := false
 
-var _epilogue_running := false
-var _epilogue_armed := false
+var _finale_running := false
+## DIALOGUE_ENDED carries an EMPTY payload (dialogue.gd emits `{}` from both
+## its end paths), so the conversation id has to be remembered from the
+## DIALOGUE_STARTED that opened it — that one does carry `conversation`.
+var _open_conversation := ""
 
 var _defeat_running := false
 var _defeat_choice_pending := false
@@ -179,22 +240,54 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 						_class_name(String(parents[0])), _class_name(String(parents[1])),
 						_class_name(String(payload.get("target", "")))])
 		WIEvents.ACCOMPLISHMENT_RECORDED:
-			if String(payload.get("id", "")) == "raskghar_sealed":
-				_epilogue_armed = true
+			if _running and String(payload.get("id", "")) == "post_game":
+				_lines.append(SEAL_TRANSITION_LINE)
 			if _running and String(payload.get("id", "")) == "door_awakened":
 				_lines.append("[The inn has a Door. The Door has opinions.]")
 			if _running and String(payload.get("id", "")) == "garden_door_unlocked":
 				_lines.append("[A door opens that no one built. The Garden of Sanctuary remembers how to wait.]")
 			if _running and String(payload.get("id", "")) == "resonance_grown":
 				_lines.append("[The anchor stone gives up a sliver of itself. You have room for it now.]")
+		WIEvents.DIALOGUE_STARTED:
+			_open_conversation = String(payload.get("conversation", ""))
 		WIEvents.DIALOGUE_ENDED:
-			if _epilogue_armed:
-				_epilogue_armed = false
-				play_epilogue()
+			# The resolving conversation's own curtain, and ONLY a conversation
+			# that can carry one (see FINALE_CURTAIN_CONVERSATIONS). TALK
+			# (Olesm's posting) and SKILL (Pisces' re-cut) both bank
+			# `seal_resolved` mid-dialogue, so the finale rolls the instant that
+			# conversation closes — exactly where the epilogue used to roll.
+			# No arming flag: play_finale() re-derives whether it is owed.
+			var ended := _open_conversation
+			_open_conversation = ""
+			if FINALE_CURTAIN_CONVERSATIONS.has(ended):
+				play_finale()
+		WIEvents.CONSOLIDATION_ACCEPTED, WIEvents.CONSOLIDATION_DECLINED:
+			# THE BED HOOK'S RETRY. `_play_finale_off_the_bed()` stands down
+			# when a merge offer is queued behind the veil, so without this an
+			# owed finale would wait for a whole extra night. These two fire
+			# from wi_game AFTER the merge is applied (consolidation_prompt's
+			# `_choose` emits UI_CONSOLIDATION_PROMPT_HIDDEN *before* calling
+			# into the sim, which is the wrong edge for a sequence that
+			# recounts classes — the recount must show the class the player
+			# just chose, not the two it replaced).
+			#
+			# DEFERRED, and that is load-bearing for the same reason. Neither
+			# emit is the END of its sim call: `decline_consolidation()` fires
+			# CONSOLIDATION_DECLINED and only THEN runs `_resolve_evolutions()`
+			# (wi_game.gd — the decline path owns the evolutions the offer
+			# deferred out of the sleep beat). Calling straight through would
+			# recount classes mid-flight, and worse, differently in QA than in
+			# play: the QA collapse builds the line list synchronously inside
+			# `play_finale()` and would name the PRE-evolution class, while
+			# real play's own `_run_finale.call_deferred()` names the evolved
+			# one. Deferring here puts both on the far side of the whole
+			# synchronous chain, so the recount reads one settled snapshot.
+			# The emit sites stay untouched (consolidation_flow's pins hold).
+			play_finale.call_deferred()
 
 
 func _begin_sleep() -> void:
-	if _running or _opener_running or _epilogue_running:
+	if _running or _opener_running or _finale_running:
 		return
 	_running = true
 	_lines = []
@@ -205,7 +298,7 @@ func _begin_sleep() -> void:
 
 
 func play_opener() -> void:
-	if _running or _opener_running or _epilogue_running:
+	if _running or _opener_running or _finale_running:
 		return
 	if _is_qa():
 		_emit_opener_rendered(_opener_lines().size())
@@ -241,7 +334,7 @@ func _wait_or_advance(seconds: float) -> void:
 
 
 func modal_active() -> bool:
-	return _running or _opener_running or _epilogue_running or _defeat_running
+	return _running or _opener_running or _finale_running or _defeat_running
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -255,7 +348,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			_defeat_choice_pending = false
 			get_viewport().set_input_as_handled()
 		return
-	if not (_running or _opener_running or _epilogue_running or _defeat_running):
+	if not (_running or _opener_running or _finale_running or _defeat_running):
 		return
 	if event.is_action_pressed("confirm") or event.is_action_pressed("cancel"):
 		_opener_advance = true
@@ -270,60 +363,90 @@ func _emit_opener_rendered(count: int) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_GDI_OPENER_RENDERED, {"lines": count, "race": Game.sim.pc_race})
 
 
-func play_epilogue() -> void:
-	if _running or _opener_running or _epilogue_running:
+## Plays the finale IF it is owed. Callers never decide that themselves —
+## both delivery hooks just call this and let _finale_owed() rule, which is
+## why there is no arming flag anywhere in this file any more.
+func play_finale() -> void:
+	if _running or _opener_running or _finale_running:
 		return
-	if Game.sim.accomplishment_count("post_game") > 0:
+	if not _finale_owed():
 		return
 	if _is_qa():
-		_emit_epilogue_rendered(_epilogue_lines().size())
-		_bank_post_game()
+		_emit_finale_rendered(_finale_lines().size())
+		_bank_finale_played()
 		return
-	_epilogue_running = true
-	_run_epilogue.call_deferred()
+	_finale_running = true
+	_run_finale.call_deferred()
 
 
-func _epilogue_lines() -> Array[String]:
+## THE ONE-SHOT GATE, read from SIM STATE rather than a runtime flag. The old
+## epilogue armed on one event and fired on the next, and leaned on `post_game`
+## to never re-fire; `post_game` now banks MID-STORY at the seal sleep
+## (sleep_beat.gd, Task 1.2), so it would suppress the ending outright. Its
+## replacement is `finale_played`, a counter of its own — which also means a
+## save/quit between the resolution and the curtain can no longer strand the
+## game's one true ending, because nothing about the trigger lives in memory.
+func _finale_owed() -> bool:
+	if Game.sim == null:
+		return false
+	return Game.sim.accomplishment_count("seal_resolved") > 0 \
+		and Game.sim.accomplishment_count("finale_played") == 0
+
+
+func _finale_lines() -> Array[String]:
 	var lines: Array[String] = []
-	lines.append_array(EPILOGUE_LINES_OPEN)
+	lines.append_array(FINALE_LINES_OPEN)
 	# Recount straight from the sim snapshot: {class_id: level}, in the order the
 	# classes were earned (Dictionary insertion order). Names resolve through the
 	# same data-loaded map the sleep/opener lines use, so no raw id ever leaks.
 	var classes: Dictionary = Game.sim.snapshot().get("classes", {})
 	for cid: Variant in classes:
 		lines.append("[%s Level %d.]" % [_class_name(String(cid)), int(classes[cid])])
-	lines.append_array(EPILOGUE_LINES_CLOSE)
-	lines.append(EPILOGUE_LINK_LINE)
+	for row: Array in FINALE_REGION_LINES:
+		if Game.sim.accomplishment_count(String(row[0])) > 0:
+			lines.append(String(row[1]))
+	# LAST match wins (see FINALE_CLOSE_LINES): a resolution counter always
+	# overwrites the bare seal_opened line.
+	var close := ""
+	for row: Array in FINALE_CLOSE_LINES:
+		if Game.sim.accomplishment_count(String(row[0])) > 0:
+			close = String(row[1])
+	if close != "":
+		lines.append(close)
+	lines.append(FINALE_LINK_LINE)
 	return lines
 
 
-func _run_epilogue() -> void:
+func _run_finale() -> void:
 	_black.show()
 	await _fade(_black, 1.0)
-	await _wait(EPILOGUE_HOLD_BEFORE_TEXT)
-	var lines := _epilogue_lines()
+	await _wait(FINALE_HOLD_BEFORE_TEXT)
+	var lines := _finale_lines()
 	for i in lines.size():
 		_add_line(String(lines[i]))
 		var last := i == lines.size() - 1
-		await _wait_or_advance(EPILOGUE_READ_HOLD if last else EPILOGUE_LINE_HOLD)
-	_emit_epilogue_rendered(lines.size())
-	_bank_post_game()
+		await _wait_or_advance(FINALE_READ_HOLD if last else FINALE_LINE_HOLD)
+	_emit_finale_rendered(lines.size())
+	_bank_finale_played()
 	await _fade(_black, 0.0)
-	_epilogue_running = false
+	_finale_running = false
 	_finish()
 
 
-func _bank_post_game() -> void:
-	if Game.sim.accomplishment_count("post_game") == 0:
-		Game.sim.record_accomplishment("post_game")
+func _bank_finale_played() -> void:
+	if Game.sim.accomplishment_count("finale_played") == 0:
+		Game.sim.record_accomplishment("finale_played")
 
 
-func _emit_epilogue_rendered(count: int) -> void:
+## Event id unchanged on purpose: `ui_gdi_epilogue_rendered` is a shipped QA
+## contract (manifest surfaces + canonical pins). The sequence behind it moved;
+## the signal "the GDI's closing sequence rendered N lines" did not.
+func _emit_finale_rendered(count: int) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_GDI_EPILOGUE_RENDERED, {"lines": count})
 
 
 func play_defeat() -> void:
-	if _running or _opener_running or _epilogue_running or _defeat_running:
+	if _running or _opener_running or _finale_running or _defeat_running:
 		return
 	if _is_qa():
 		_emit_defeat_rendered(_defeat_lines().size())
@@ -427,6 +550,7 @@ func _run_sequence() -> void:
 		_emit_rendered(lines.size())
 		_finish()
 		_emit_finished()
+		_play_finale_off_the_bed()
 		return
 
 	_black.show()
@@ -449,6 +573,28 @@ func _run_sequence() -> void:
 	await _fade(_black, 0.0)
 	_finish()
 	_emit_finished()
+	_play_finale_off_the_bed()
+
+
+## THE FINALE'S SECOND DELIVERY HOOK, and the one that cannot be routed
+## around. Act V's FIGHT path banks `seal_resolved` at the vault anchor -- a
+## CONTAINER open, with no conversation behind it -- so DIALOGUE_ENDED alone
+## would leave the ending waiting on an optional chat with Pisces, and a
+## save/quit before that chat would strand it. The bed is where the Design
+## already speaks; an owed finale rolls off the sleep it follows. Called AFTER
+## _finish()/_emit_finished() so the sleep reveal's own contract
+## (rendered -> finished -> consolidation prompt) is untouched, and so
+## play_finale()'s `_running` guard has already cleared.
+##
+## YIELDS TO THE CONSOLIDATION PROMPT. UI_SLEEP_VEIL_FINISHED is what tells
+## consolidation_prompt.gd to show its modal, so a sleep that offered a merge
+## would have the finale's black fall straight over that choice. The finale
+## stays OWED instead -- it is sim state, not a flag, so the next dialogue end
+## or the next sleep still delivers it, with nothing lost.
+func _play_finale_off_the_bed() -> void:
+	if _sleep_has_consolidation:
+		return
+	play_finale()
 
 
 func _add_line(text: String) -> void:

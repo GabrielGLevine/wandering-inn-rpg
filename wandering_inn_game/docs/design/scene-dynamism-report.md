@@ -50,8 +50,8 @@ header comment (single source of truth -- not duplicated here).
 
 ## Repo-level asset catalog utilization (component 4's non-per-scene half)
 
-15/28 catalog packs (docs/asset-index.json) have a plausibly-matched family in
-use somewhere in the repo (54%). Fuzzy name-token match, not a structured
+21/43 catalog packs (docs/asset-index.json) have a plausibly-matched family in
+use somewhere in the repo (49%). Fuzzy name-token match, not a structured
 manifest -- packs with no match are very likely PixelLab-owned/bespoke rigs
 that were never meant to show up here (uncounted, not a gap).
 
@@ -59,25 +59,26 @@ that were never meant to show up here (uncounted, not a gap).
 
 | Scene | Region | Composite | c1 variety | c2 distinct | c3 composition | c4 utilization | c5 clutter | Verdict |
 |---|---|---|---|---|---|---|---|---|
-| pallass_market | pallass | 76.65 | 25.56 | 24.05 | 21.21 | 5.83 | 0.00 | dynamic |
-| pallass_forge | pallass | 73.09 | 24.44 | 24.05 | 21.74 | 2.86 | 0.00 | dynamic |
-| invrisil_boulevard | invrisil | 72.99 | 22.23 | 23.16 | 22.60 | 5.00 | 0.00 | dynamic |
-| street | liscor | 71.69 | 24.63 | 21.95 | 22.52 | 2.59 | 0.00 | dynamic |
-| mercantile_alleys | invrisil | 70.69 | 23.25 | 23.02 | 23.42 | 1.00 | 0.00 | dynamic |
-| riverfarm_village | riverfarm | 69.02 | 20.90 | 21.18 | 20.14 | 6.80 | 0.00 | dynamic |
-| inn | interiors | 68.96 | 23.11 | 22.54 | 21.93 | 1.38 | 0.00 | dynamic |
-| witch_hollow | riverfarm | 68.42 | 20.75 | 20.89 | 20.78 | 6.00 | 0.00 | dynamic |
-| floodplains | liscor | 68.06 | 23.26 | 22.03 | 18.32 | 4.44 | 0.00 | dynamic |
-| garden_sanctuary | sanctuary | 66.79 | 19.74 | 23.50 | 17.55 | 6.00 | 0.00 | dynamic |
-| deep_tunnels | liscor | 65.94 | 20.16 | 23.25 | 21.10 | 1.43 | 0.00 | dynamic |
-| barracks | interiors | 65.75 | 21.95 | 22.71 | 21.09 | 0.00 | 0.00 | dynamic |
-| inn_upstairs | interiors | 65.75 | 18.33 | 22.74 | 22.68 | 2.00 | 0.00 | dynamic |
-| runners_guild | interiors | 65.31 | 22.74 | 23.20 | 19.37 | 0.00 | 0.00 | dynamic |
-| guild | interiors | 64.89 | 22.50 | 23.39 | 18.29 | 0.71 | 0.00 | dynamic |
-| sewers | liscor | 64.68 | 19.44 | 22.99 | 21.25 | 1.00 | 0.00 | dynamic |
-| trapped_halls | dungeon | 63.52 | 20.22 | 25.00 | 16.08 | 2.22 | 0.00 | dynamic |
-| dungeon_approach | dungeon | 63.36 | 20.45 | 25.00 | 16.66 | 1.25 | 0.00 | dynamic |
-| riverfarm_longhouse | riverfarm | 61.41 | 21.08 | 20.79 | 19.53 | 0.00 | 0.00 | dynamic |
-| brothers_parlor | invrisil | 57.77 | 17.72 | 21.77 | 18.29 | 0.00 | 0.00 | dynamic |
-| ruin_surface | liscor | 50.50 | 12.01 | 22.43 | 13.56 | 2.50 | 0.00 | dynamic |
+| pallass_market | pallass | 73.76 | 26.66 | 22.83 | 19.27 | 5.00 | 0.00 | dynamic |
+| invrisil_boulevard | invrisil | 72.89 | 22.76 | 22.88 | 22.95 | 4.29 | 0.00 | dynamic |
+| pallass_forge | pallass | 71.86 | 24.44 | 22.83 | 21.74 | 2.86 | 0.00 | dynamic |
+| street | liscor | 71.58 | 24.97 | 21.75 | 22.52 | 2.33 | 0.00 | dynamic |
+| mercantile_alleys | invrisil | 71.48 | 24.75 | 22.99 | 22.74 | 1.00 | 0.00 | dynamic |
+| sewers | liscor | 70.62 | 23.40 | 21.97 | 21.25 | 4.00 | 0.00 | dynamic |
+| floodplains | liscor | 69.46 | 24.28 | 21.88 | 18.53 | 4.76 | 0.00 | dynamic |
+| deep_tunnels | liscor | 68.74 | 23.00 | 21.93 | 20.17 | 3.64 | 0.00 | dynamic |
+| riverfarm_village | riverfarm | 68.47 | 21.10 | 21.17 | 20.05 | 6.15 | 0.00 | dynamic |
+| witch_hollow | riverfarm | 68.23 | 21.07 | 20.89 | 20.56 | 5.71 | 0.00 | dynamic |
+| garden_sanctuary | sanctuary | 67.18 | 19.74 | 23.50 | 17.94 | 6.00 | 0.00 | dynamic |
+| brothers_parlor | invrisil | 67.16 | 22.21 | 22.09 | 21.43 | 1.43 | 0.00 | dynamic |
+| runners_guild | interiors | 66.51 | 22.74 | 22.97 | 19.37 | 1.43 | 0.00 | dynamic |
+| barracks | interiors | 66.26 | 22.78 | 22.38 | 21.09 | 0.00 | 0.00 | dynamic |
+| trapped_halls | dungeon | 65.91 | 21.86 | 23.96 | 17.94 | 2.14 | 0.00 | dynamic |
+| seal_vault | dungeon | 65.56 | 21.63 | 24.29 | 17.98 | 1.67 | 0.00 | dynamic |
+| guild | interiors | 65.52 | 22.50 | 23.30 | 18.29 | 1.43 | 0.00 | dynamic |
+| inn | interiors | 65.11 | 24.25 | 22.05 | 17.31 | 1.50 | 0.00 | dynamic |
+| inn_upstairs | interiors | 64.69 | 19.48 | 22.63 | 22.58 | 0.00 | 0.00 | dynamic |
+| dungeon_approach | dungeon | 63.80 | 20.45 | 24.20 | 16.66 | 2.50 | 0.00 | dynamic |
+| riverfarm_longhouse | riverfarm | 62.23 | 21.92 | 20.78 | 19.53 | 0.00 | 0.00 | dynamic |
+| ruin_surface | liscor | 55.47 | 18.15 | 21.74 | 15.58 | 0.00 | 0.00 | dynamic |
 

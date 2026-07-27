@@ -1396,7 +1396,7 @@
    }
   },
   {
-   "_comment": "LOCKED interface: entry door id `ruin_door` (this entity, floodplains side) pairs with `ruin_exit` (the `ruin_surface` map below, the inside half). 2026-07-26 main-quest restructure (Task 2.3): the door_when gate moved door_chain_started -> horns_dig_started. MANDATORY, not cosmetic: Task 2.2 retired door_chain_started's only producer and Task 2.4 re-banks it at the MOUNTING (which needs door_retrieved, which needs this door), so leaving the old gate here would have deadlocked the seam shut forever for every new save. Old saves reach horns_dig_started through Task 2.6's backfill.",
+   "_comment": "LOCKED interface: entry door id `ruin_door` (this entity) pairs with `ruin_exit` on ruin_surface. Task 2.3 moved the door_when gate door_chain_started -> horns_dig_started. MANDATORY, not cosmetic: Task 2.2 retired door_chain_started's only producer and Task 2.4 re-banks it at the MOUNTING (which needs door_retrieved, which needs this door), so the old gate would have deadlocked the seam shut forever for every new save. Old saves reach horns_dig_started through Task 2.6's backfill.",
    "id": "ruin_door",
    "kind": "prop",
    "cell": [

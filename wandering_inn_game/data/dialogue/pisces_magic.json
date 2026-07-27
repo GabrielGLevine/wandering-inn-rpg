@@ -45,6 +45,48 @@
       }
      },
      "text": "My other pupil. Say it quietly — the Watch counts my acquaintances. How fares the honest art?"
+    },
+    {
+     "_comment": "Spec 4 (Task 6.1): three CONTEXTUALIZING reactions, one per lattice counter, appended in pilgrimage order under last-match-wins so the most recent discovery opens. He never assigns and never assembles -- each line reacts to a piece the REGION handed the player, and the picture waits for Act V.",
+     "requires": {
+      "accomplishment": {
+       "lattice_witch_lore": 1
+      }
+     },
+     "text": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's and she FED hers too. That word keeps recurring."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "lattice_hedault_reading": 1
+      }
+     },
+     "text": "Hedault read your frame unbidden and charged you nothing, which from that man is appetite, not generosity. I know the feeling. He is better at settings than I will ever be. Deny I said it."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "lattice_forge_rune": 1
+      }
+     },
+     "text": "A Drake forge taught you in an afternoon what my tuition has been circling for a month. They FEED their runes. Maintenance, they call it. I am revising my rates. Downward. Do not comment."
+    },
+    {
+     "_comment": "Act V: two thread-current arms, appended after the lattice trio so last-match-wins keeps his greeting on the newest state. Neither can shadow a pinned canonical -- both counters are Act V's own, unheld by every shipped fixture.",
+     "requires": {
+      "accomplishment": {
+       "seal_descent_agreed": 1
+      }
+     },
+     "text": "I am ready when you are. Down past the halls, to that seal. Do not let me forget the rope; I will pretend I never needed reminding."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_resolved": 1
+      }
+     },
+     "text": "Settled, then. I intend to write it up at unbearable length, and you will appear in the footnotes. Generously. Twice."
     }
    ],
    "options": [
@@ -171,7 +213,8 @@
      "goto": "door_attune"
     },
     {
-     "text": "I found a second door down in that dungeon. Same runes as our pantry door.",
+     "_comment": "Spec 7 amendment 1 re-copy: the shipped id heard_pisces_second_door stays, the 'second door' fiction does not. What the player found under the city is a sealed rune-door full of wardwork by the same hand.",
+     "text": "There's wardwork sealed under the dungeon. Same hand as our pantry frame.",
      "requires": {
       "accomplishment": {
        "seal_kept_found": 1
@@ -224,12 +267,142 @@
       }
      },
      "goto": "necro_teach"
+    },
+    {
+     "_comment": "Spec 4 (Task 6.1) THE SPINE START. The shipped producer of door_awakened is sleep_beat.gd:142 (three study sleeps), so the attune-completion surface is this arm: the player reports the awakening the morning after. The spine 'starts from Pisces at door_awakened' and the foreshadow copy is a SPOKEN line, so a code-side bank could not have carried it. Appended LAST so every cursor-pinned canonical over this hub is byte-identical (no shipped fixture carries door_awakened AND opens this graph).",
+     "text": "The Door woke. It reaches past Liscor now.",
+     "requires": {
+      "accomplishment": {
+       "door_awakened": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "spine_started": 1
+      }
+     },
+     "effects": [
+      {
+       "quest": "where_the_door_reaches"
+      },
+      {
+       "accomplishment": "spine_started"
+      }
+     ],
+     "goto": "spine_start"
+    },
+    {
+     "_comment": "Act V (#270 beat 1, spec 7 amendment 2) THE DESCENT ASK. Gate is ALL THREE lattice counters, which is the amendment's 'fires when lattice_forge_rune banks' in data terms -- the forge rune is last in the spine's own order. NO bank on this option: seal_descent_agreed rides the ACCEPT below, so a player who opens the pitch and walks away can come back (hide_when is the accept's counter, not a read-flag). Appended LAST so every cursor-pinned canonical stays byte-identical.",
+     "text": "Riverfarm, Invrisil, Pallass. Three answers, and I still can't see the shape they make.",
+     "requires": {
+      "accomplishment": {
+       "lattice_witch_lore": 1,
+       "lattice_hedault_reading": 1,
+       "lattice_forge_rune": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "seal_descent_agreed": 1
+      }
+     },
+     "goto": "descent_ask"
+    }
+   ]
+  },
+  "spine_start": {
+   "_comment": "FORESHADOW, NEVER ASSIGN (spec 4 copy discipline): he names an appetite and a direction, no list, no errand. 'wardwork by the same hand' is the Act V seal, kept oblique.",
+   "speaker": "Pisces",
+   "text": "The Door will show you how far it wants to go. And somewhere under this city is wardwork by the same hand, still fed, still waiting. I intend to understand both. Go — see where it reaches.",
+   "options": [
+    {
+     "text": "Then I'll go and look.",
+     "end": true
+    },
+    {
+     "text": "Back to the top.",
+     "goto": "greet"
+    }
+   ]
+  },
+  "descent_ask": {
+   "_comment": "#270 beat 1. The scroll leg (scroll_secret_shared) is an OR-ENRICHMENT, never a requirement: with the treatise read he connects it explicitly, without it his own arithmetic carries the ask, so the [Mage] line stays optional. Spoiler bar: he names an appetite and a hand, never what is on the other end.",
+   "speaker": "Pisces",
+   "text": "Three regions taught you the same word in three accents and not one of them noticed doing it. A witch feeds hers. An enchanter reads the draw as craftsmanship. A forge calls it maintenance and bills by the hour. Under this city is wardwork by the hand that cut our frame, and it has been drawing since before Liscor had walls. I want to read it standing in front of it.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "scroll_secret_shared": 1
+      }
+     },
+     "text": "Your treatise said it in the third paragraph and I chose to admire the penmanship instead. Bound, fed, and waiting a very long time. Three regions have since handed me the same word in three accents, and the hand that cut our frame cut the seal under this city. I want to read it standing in front of it."
+    }
+   ],
+   "options": [
+    {
+     "text": "What do you expect to find?",
+     "goto": "descent_expect"
+    },
+    {
+     "text": "Then we go down. I'll walk you to it.",
+     "effects": [
+      {
+       "quest": "what_the_seal_was_feeding"
+      },
+      {
+       "accomplishment": "seal_descent_agreed"
+      }
+     ],
+     "goto": "descent_agreed"
+    },
+    {
+     "text": "Not today.",
+     "end": true
+    }
+   ]
+  },
+  "descent_expect": {
+   "speaker": "Pisces",
+   "text": "Something that was fed on purpose, by people who expected to be dead long before it stopped needing feeding. Past that I have guesses, and I do not perform guesses in public. That is the honest answer. I dislike it enormously.",
+   "options": [
+    {
+     "text": "Then we go down. I'll walk you to it.",
+     "effects": [
+      {
+       "quest": "what_the_seal_was_feeding"
+      },
+      {
+       "accomplishment": "seal_descent_agreed"
+      }
+     ],
+     "goto": "descent_agreed"
+    },
+    {
+     "text": "I'll think about it.",
+     "end": true
+    }
+   ]
+  },
+  "descent_agreed": {
+   "_comment": "Ceria's shipped 'bring his own rope' pool line, paid off. The safe-line claim is not new lore: pisces_second_door_study_2 (street.json talk_pool) already says he mapped the gauntlet during the study sleeps.",
+   "speaker": "Pisces",
+   "text": "Good. I have walked that gauntlet twice and marked the safe line myself, so we will not be dying of a flagstone. Bring your own rope. I am not carrying yours; I have a spine to preserve and a reputation that assumes I never lift anything.",
+   "options": [
+    {
+     "text": "Meet you at the door.",
+     "end": true
+    },
+    {
+     "text": "Back to the top.",
+     "goto": "greet"
     }
    ]
   },
   "second_door_bridge": {
+   "_comment": "Spec 7 amendment 1: the counter id heard_pisces_second_door is SHIPPED and frozen, so it keeps its id -- but the fiction is dead. Every surface it touches now reads 'the seal's wardwork', never a second door and never another portal. Node id kept for the same freeze reason.",
    "speaker": "Pisces",
-   "text": "You found a second door. With the same runes. That is not a coincidence; that is a pattern, and patterns are the only honest language the dead leave behind. I should very much like to see it — after you have slept. Some findings deserve a rested mind.",
+   "text": "The same hand, then, on both sides of the city. That is not a coincidence; that is a pattern, and patterns are the only honest language the dead leave behind. I should very much like to read that wardwork myself — after you have slept. Some findings deserve a rested mind.",
    "options": [
     {
      "text": "Back to the top.",

@@ -64,7 +64,7 @@
 			]
 		},
 		{
-			"_comment": "2026-07-26 main-quest spec 3: the backport. SPOILER RULE: title + join_dig/breach copy never mention a door; the reveal is the haul beat. Beats are ORDER-GATED by their counters' own gating (camp gates on horns_dig_joined, pedestal on camp, haul on pedestal) -- do not accept the catalyst-style cosmetic skip here.",
+			"_comment": "Spec 3, the backport. SPOILER RULE: title + join_dig/breach copy never mention a door; the reveal is the haul beat. Beats are ORDER-GATED by their counters' own gating (camp on horns_dig_joined, pedestal on camp, haul on pedestal) -- do not accept the catalyst-style cosmetic skip here.",
 			"id": "horns_dig",
 			"title": "The Dig",
 			"region": "Liscor",
@@ -75,7 +75,7 @@
 			]
 		},
 		{
-			"_comment": "2026-07-26 reshape (main-quest spec 2.5): the door works to Liscor from mounting (horns_dig haul); this chain is the first FAR attunement. door_awakened re-semantics to 'reaches beyond Liscor'; its payoff is the Riverfarm rumor surface. Auto-starts at door_mounted via the mounting conversation (no start option). Old cosmetic-skip note is moot: 3 beats, catalyst still ungated on consult by design.",
+			"_comment": "Reshape (spec 2.5): the door works to Liscor from mounting (horns_dig haul); this chain is the first FAR attunement. door_awakened re-semantics to 'reaches beyond Liscor'. Auto-starts at door_mounted via the mounting conversation (no start option). 3 beats, catalyst still ungated on consult by design.",
 			"id": "door_that_goes_elsewhere",
 			"title": "The Door That Goes Elsewhere",
 			"beats": [
@@ -224,6 +224,33 @@
 						"won_combat": 1
 					}
 				}
+			]
+		},
+		{
+			"_comment": "Spec 4: discovery-driven spine. Beats complete on lattice counters the REGIONS bank; journal copy points at reach, never objects. Starts from Pisces at door_awakened.",
+			"id": "where_the_door_reaches",
+			"title": "Where the Door Reaches",
+			"beats": [
+				{ "id": "riverfarm_reach", "description": "The Door reaches Riverfarm now. See what's out there.", "complete_when": { "lattice_witch_lore": 1 } },
+				{ "id": "invrisil_reach", "description": "The Door reaches Invrisil now. A city that size holds people worth knowing.", "complete_when": { "lattice_hedault_reading": 1 } },
+				{ "id": "pallass_reach", "description": "The Door reaches Pallass now. The Walled City does not open for just anyone.", "complete_when": { "lattice_forge_rune": 1 } },
+				{ "id": "return", "description": "Pisces has been collecting everything you've learned. Hear him out, by the Guild steps.", "complete_when": { "seal_descent_agreed": 1 } }
+			]
+		},
+		{
+			"_comment": "Act V (#270 beats 1-3, as amended by spec 7). BEATS ARE ORDER-GATED: no beat's counter can bank before its predecessor's, so the catalyst-style cosmetic skip is impossible. descend banks ONLY at seal_kept_door with seal_descent_agreed held; read banks only once the runes are read; resolve has three producers, each behind the reading. SPOILER DISCIPLINE: 'feeding' appears in no beat copy until beat 3, which the journal only shows once the reading has revealed it on screen (WIQuests surfaces the ACTIVE beat alone). Landmarks: every beat names the trapped halls.",
+			"id": "what_the_seal_was_feeding",
+			"title": "What the Seal Was Feeding",
+			"beats": [
+				{ "id": "descend", "description": "Take Pisces down past the trapped halls to the sealed rune-door, and let him read it in person.", "complete_when": { "read_the_seal_runes": 1 } },
+				{ "id": "read", "description": "The hand that cut it cut the inn's frame too. Find out what the seal is FOR, there at the door in the halls.", "complete_when": { "read_the_feeding_ward": 1 } },
+				{ "id": "resolve", "description": "Settle it at the door in the trapped halls: open it, keep it fed, or re-cut the ward yourself.", "complete_when": { "seal_resolved": 1 } }
+			],
+			"region": "Liscor",
+			"resolution_paths": [
+				{ "accomplishment": "seal_opened", "text": "You broke the seal and walked into what it was feeding.", "grant": { "melee_hit": 10, "won_combat": 2 } },
+				{ "accomplishment": "seal_kept_fed", "text": "You got the Watch to keep it fed.", "grant": { "persuaded_someone": 6, "heard_gossip": 8 } },
+				{ "accomplishment": "seal_rewarded", "text": "You re-cut the ward yourself, and paid for it in ruin-glass.", "grant": { "spell_cast": 10, "warded_danger": 3 } }
 			]
 		}
 	]

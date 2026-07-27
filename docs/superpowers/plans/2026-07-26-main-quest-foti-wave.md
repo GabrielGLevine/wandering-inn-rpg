@@ -1,6 +1,6 @@
 # Main Quest Line + Friends of the Inn Wave — Implementation Plan
 
-> Status: **ACTIVE** — in execution on `wave/mq2-dig` (Phase 2 of 9).
+> Status: **ACTIVE** — in execution (progress: SDD ledger at .superpowers/sdd/2026-07-26-main-quest-foti-wave/progress.md).
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -485,10 +485,10 @@ Execute docs/design/2026-07-20-door-continuation-spec.md beats 1–3 + Act V, AS
 - Modify: `src/ui/sleep_veil.gd` (:57-68 constants, :181-193 arming, :273-296 epilogue)
 - Test: `res://tests/test_sleep_veil.gd`
 
-- [ ] **Step 1:** Arm on `seal_resolved` (not `raskghar_sealed`); delete the raskghar arm; `play_epilogue` gate flips from `post_game` to a new one-shot counter `finale_played` (post_game banks mid-story now — Task 1.2 — and can no longer guard the finale).
-- [ ] **Step 2:** Replace `_epilogue_lines()`: open lines kept ("[When you came to Liscor, there was nothing to record.] [This is no longer true.]"), then class recount (existing loop), then region recap — three lines emitted only if their counter banked: `lattice_witch_lore` → "[Riverfarm keeps a witch who taught you what a ward eats.]"; `lattice_hedault_reading` → "[Invrisil keeps an enchanter who called your Door 'competent work'. From him, that is a parade.]"; `lattice_forge_rune` → "[Pallass stamped your name into a forge tier's ledger.]" — then ONE path close: `seal_opened` → "[You opened what was fed. The record does not flinch.]"; `seal_kept_fed` → "[You chose to keep feeding it. Some seals are promises.]"; `seal_rewarded` → "[You re-cut the ward with your own hands. It will hold longer than the city.]" — then EPILOGUE_LINK_LINE unchanged.
-- [ ] **Step 3:** `_bank_post_game()` → banks `finale_played` instead (post_game untouched here since Task 1.2 owns it). raskghar_sealed keeps its light transition via the normal sleep-beat toast (already shipped GDI seal line — verify, don't duplicate).
-- [ ] **Step 4:** Re-pin test_sleep_veil + QA canonicals to the new trigger; run; **commit + PR.** New counter: `finale_played`.
+- [x] **Step 1:** Arm on `seal_resolved` (not `raskghar_sealed`); delete the raskghar arm; `play_epilogue` gate flips from `post_game` to a new one-shot counter `finale_played` (post_game banks mid-story now — Task 1.2 — and can no longer guard the finale).
+- [x] **Step 2:** Replace `_epilogue_lines()`: open lines kept ("[When you came to Liscor, there was nothing to record.] [This is no longer true.]"), then class recount (existing loop), then region recap — three lines emitted only if their counter banked: `lattice_witch_lore` → "[Riverfarm keeps a witch who taught you what a ward eats.]"; `lattice_hedault_reading` → "[Invrisil keeps an enchanter who called your Door 'competent work'. From him, that is a parade.]"; `lattice_forge_rune` → "[Pallass stamped your name into a forge tier's ledger.]" — then ONE path close: `seal_opened` → "[You opened what was fed. The record does not flinch.]"; `seal_kept_fed` → "[You chose to keep feeding it. Some seals are promises.]"; `seal_rewarded` → "[You re-cut the ward with your own hands. It will hold longer than the city.]" — then EPILOGUE_LINK_LINE unchanged.
+- [x] **Step 3:** `_bank_post_game()` → banks `finale_played` instead (post_game untouched here since Task 1.2 owns it). raskghar_sealed keeps its light transition via the normal sleep-beat toast (already shipped GDI seal line — verify, don't duplicate).
+- [x] **Step 4:** Re-pin test_sleep_veil + QA canonicals to the new trigger; run; **commit + PR.** New counter: `finale_played`.
 
 ## Phase 9 — Difficulty bands + harness (PR `wave/mq6-bands`)
 

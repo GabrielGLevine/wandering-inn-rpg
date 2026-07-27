@@ -82,7 +82,7 @@ func _init() -> void:
 	assert(not (gates.get("accomplishments", {}) as Dictionary).has("door_awakened"), "Act III's gate no longer names door_awakened")
 
 	var into_iv := WIActs.evaluate(catalog, _ctx(6, 4, {"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1, "door_awakened": 1}))
-	assert(into_iv["id"] == "act_iv" and into_iv["index"] == 3, "seal + door_awakened is still Act IV, the last act")
+	assert(into_iv["id"] == "act_iv" and into_iv["index"] == 3, "seal + door_awakened is Act IV -- the door is mid-act work now, not the act's exit")
 	for beat: Dictionary in into_iv["beats"]:
 		if String(beat["id"]) == "the_door_opens":
 			assert(bool(beat["achieved"]), "the door beat reads achieved once door_awakened banks, mid-Act IV")
@@ -98,17 +98,79 @@ func _init() -> void:
 			counted_achieved.append(beat["id"])
 	assert(counted["id"] == "act_iv" and counted_achieved == ["counted_among"], "post_game lights counted_among in Act IV, where the player actually stands when it banks")
 
-	var maxed := WIActs.evaluate(catalog, _ctx(6, 4, {
+	# 2026-07-26 Act V (Phase 7): the whole region arc WITHOUT the pilgrimage's
+	# last piece still reads Act IV -- the gate is four keys (lattice_forge_rune,
+	# seal_kept_reported, price_of_a_favor_reported, brothers_job_done; asserted
+	# key-by-key below), and this context holds every one of them except the
+	# forge rune, so six of the act's seven beats light.
+	var region_arc := WIActs.evaluate(catalog, _ctx(6, 4, {
 		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
 		"post_game": 1, "door_awakened": 1, "price_of_a_favor_reported": 1,
 		"brothers_job_done": 1, "elevator_pass_stamped": 1, "seal_kept_reported": 1,
 	}))
-	assert(maxed["id"] == "act_iv" and maxed["index"] == 3, "maxed save caps at the last act (Act IV)")
+	assert(region_arc["id"] == "act_iv" and region_arc["index"] == 3, "the region arc without the third lattice piece stays in Act IV")
+	var region_arc_achieved: Array = []
+	for beat: Dictionary in region_arc["beats"]:
+		if bool(beat["achieved"]):
+			region_arc_achieved.append(beat["id"])
+	assert(region_arc_achieved.size() == 6 and not region_arc_achieved.has("the_reach_mapped"), "six of Act IV's seven beats light; the pilgrimage beat waits on the forge rune")
+
+	# Fix round 1 (controller ruling over plan 7.4): the two region terminals the
+	# pilgrimage does not imply are back in the gate. Transitivity makes them
+	# free -- lattice_witch_lore requires price_of_a_favor_reported and
+	# lattice_hedault_reading requires brothers_job_done -- and naming them is
+	# what keeps riverfarm_owed/invrisil_squared from stranding in an act the
+	# player has already left.
+	var iv_gate: Dictionary = (_act_gate(catalog, "act_iv").get("accomplishments", {}) as Dictionary)
+	for key: String in ["lattice_forge_rune", "seal_kept_reported", "price_of_a_favor_reported", "brothers_job_done"]:
+		assert(iv_gate.has(key), "Act IV's gate must name %s" % key)
+	assert(iv_gate.size() == 4, "Act IV's gate is exactly those four keys")
+
+	# The pilgrimage alone does NOT open Act V while a region beat is still
+	# pending -- the stranding case this gate exists to prevent.
+	var pilgrim_only := WIActs.evaluate(catalog, _ctx(6, 4, {
+		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
+		"seal_kept_reported": 1, "lattice_forge_rune": 1,
+	}))
+	assert(pilgrim_only["id"] == "act_iv", "the forge rune + the seal report alone leave a region beat pending, so Act IV holds")
+
+	var into_v := WIActs.evaluate(catalog, _ctx(6, 4, {
+		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
+		"post_game": 1, "door_awakened": 1, "elevator_pass_stamped": 1,
+		"seal_kept_reported": 1, "lattice_forge_rune": 1,
+		"price_of_a_favor_reported": 1, "brothers_job_done": 1,
+	}))
+	assert(into_v["id"] == "act_v" and into_v["index"] == 4, "the pilgrimage's last piece plus the seal report opens Act V")
+	for beat: Dictionary in into_v["beats"]:
+		assert(not bool(beat["achieved"]), "every Act V beat pends on entry -- the descent has not been agreed yet")
+
+	# Act V's own beats must render IN Act V (the act_iii lesson). Act V is
+	# last, so even the resolution beat renders: the player never leaves it.
+	var mid_v := WIActs.evaluate(catalog, _ctx(6, 4, {
+		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
+		"seal_kept_reported": 1, "lattice_forge_rune": 1,
+		"price_of_a_favor_reported": 1, "brothers_job_done": 1,
+		"seal_descent_agreed": 1, "read_the_feeding_ward": 1,
+	}))
+	var mid_v_achieved: Array = []
+	for beat: Dictionary in mid_v["beats"]:
+		if bool(beat["achieved"]):
+			mid_v_achieved.append(beat["id"])
+	assert(mid_v["id"] == "act_v" and mid_v_achieved == ["the_descent", "the_reading"], "the descent and the reading light mid-Act V, before any path resolves")
+
+	var maxed := WIActs.evaluate(catalog, _ctx(6, 4, {
+		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
+		"post_game": 1, "door_awakened": 1, "price_of_a_favor_reported": 1,
+		"brothers_job_done": 1, "elevator_pass_stamped": 1, "seal_kept_reported": 1,
+		"lattice_forge_rune": 1, "seal_descent_agreed": 1, "read_the_feeding_ward": 1,
+		"seal_resolved": 1, "seal_opened": 1,
+	}))
+	assert(maxed["id"] == "act_v" and maxed["index"] == 4, "maxed save caps at the last act (Act V)")
 	var maxed_achieved: Array = []
 	for beat: Dictionary in maxed["beats"]:
 		if bool(beat["achieved"]):
 			maxed_achieved.append(beat["id"])
-	assert(maxed_achieved.size() == 6, "every Act IV beat reads achieved on a fully maxed save")
+	assert(maxed_achieved.size() == 3, "every Act V beat reads achieved on a fully maxed save, resolution included")
 
 	var sparse := WIActs.evaluate(catalog, {"accomplishments": {"reached_liscor": 1}})
 	assert(sparse["index"] == 0, "sparse ctx (no class/quest keys) = Act I, no crash")

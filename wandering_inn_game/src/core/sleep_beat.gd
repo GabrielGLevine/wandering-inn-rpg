@@ -129,12 +129,18 @@ func run(classes: Dictionary, accomplishments: Dictionary, combat_config: Dictio
 		anything_happened = true
 
 	# 2026-07-26 reframe: post_game means "Liscor counts you among its own",
-	# banked silently at the first sleep after the seal -- the epilogue no
-	# longer owns it (and is retired entirely in the finale phase). Deliberately
-	# does NOT set anything_happened: a bank the player never sees must not
-	# swallow the soundly-sleep fallback toast.
+	# banked at the first sleep after the seal -- the epilogue no longer owns
+	# it (Phase 8 retired the epilogue entirely, moving the curtain to Act V's
+	# seal_resolved). This bank has NO toast of its own, and must not grow one:
+	# the beat is voiced ONCE, by the Grand Design, as sleep_veil.gd's
+	# SEAL_TRANSITION_LINE under the black. But it IS voiced, so it counts as
+	# something happening -- the "You sleep soundly." fallback would otherwise
+	# render on top of the GDI announcing that the warren is sealed. (Task 1.2
+	# left the flag alone because the bank was invisible then; Phase 8's line
+	# supersedes that rationale, not the no-toast half of it.)
 	if _count("raskghar_sealed") >= 1 and _count("post_game") < 1:
 		_record_accomplishment.call("post_game", 1)
+		anything_happened = true
 
 	if _count("door_understood") >= 1 and _count("recovered_anchor_stone") >= 1 and _count("bought_catalyst") >= 1 and _count("door_awakened") < 1:
 		_record_accomplishment.call("door_study_sleeps", 1)
