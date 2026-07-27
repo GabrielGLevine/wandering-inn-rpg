@@ -225,6 +225,17 @@
 					}
 				}
 			]
+		},
+		{
+			"_comment": "2026-07-26 spec 4: discovery-driven spine. Beats complete on lattice counters the REGIONS bank (witch/hedault/forge arms); journal copy points at reach, never objects. Starts from Pisces at door_awakened.",
+			"id": "where_the_door_reaches",
+			"title": "Where the Door Reaches",
+			"beats": [
+				{ "id": "riverfarm_reach", "description": "The Door reaches Riverfarm now. See what's out there.", "complete_when": { "lattice_witch_lore": 1 } },
+				{ "id": "invrisil_reach", "description": "The Door reaches Invrisil now. A city that size holds people worth knowing.", "complete_when": { "lattice_hedault_reading": 1 } },
+				{ "id": "pallass_reach", "description": "The Door reaches Pallass now. The Walled City does not open for just anyone.", "complete_when": { "lattice_forge_rune": 1 } },
+				{ "id": "return", "description": "Pisces has been collecting everything you've learned. Hear him out, by the Guild steps.", "complete_when": { "seal_descent_agreed": 1 } }
+			]
 		}
 	]
 }
