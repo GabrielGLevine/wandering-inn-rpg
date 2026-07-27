@@ -117,29 +117,49 @@
    ]
   },
   {
-   "_comment": "Non-blocking: the ward-lattice painted across the floor where the pour arrives. Walkable on purpose -- the player should be standing IN it at the anchor.",
+   "_comment": "Non-blocking: the ward-lattice painted across the floor where the pour arrives, one ring at each end of the plinth's aisle. Windowed read 2026-07-27 moved them OFF the anchor's own neighbours -- at (8,3)/(8,5) the two rings read as the room's subject and the plinth between them vanished. Each carries a faint cool light: the pour is the only thing lighting this room.",
    "sprite": "cellar_wardwork",
    "cell": [
     8,
-    5
+    6
    ],
    "tint": [
     0.62,
     0.78,
     0.95
-   ]
+   ],
+   "light": {
+    "color": [
+     0.55,
+     0.75,
+     1.0
+    ],
+    "energy": 0.45,
+    "radius": 18,
+    "flicker": false
+   }
   },
   {
    "sprite": "cellar_wardwork",
    "cell": [
     8,
-    3
+    2
    ],
    "tint": [
     0.62,
     0.78,
     0.95
-   ]
+   ],
+   "light": {
+    "color": [
+     0.55,
+     0.75,
+     1.0
+    ],
+    "energy": 0.45,
+    "radius": 18,
+    "flicker": false
+   }
   }
  ],
  "entities": [
@@ -166,7 +186,7 @@
    "observe": "The doorway you came through, seen from the inside: the runes run the same order on this face, which means they were cut to be read from in here. Somebody expected to be standing where you are."
   },
   {
-   "_comment": "THE TERMINUS. A container, not an interact-prop, so the open can bank AND grant AND speak in one beat (on_open_accomplishment String|Array + open_toast, the pedestal-breach engine keys from Task 2.3). seal_resolved banks HERE on the FIGHT path -- reaching what was fed is the resolution, not merely deciding to look. Oblique-Thresk: the wiki is silent on what a Warmage's anchor looks like, so the room states only what a resident could see and Pisces reads the rest.",
+   "_comment": "THE TERMINUS. A container, not an interact-prop, so the open can bank AND grant AND speak in one beat (on_open_accomplishment String|Array + open_toast, the pedestal-breach engine keys from Task 2.3). seal_resolved banks HERE on the FIGHT path -- reaching what was fed is the resolution, not merely deciding to look. Oblique-Thresk: the wiki is silent on what a Warmage's anchor looks like, so the room states only what a resident could see and Pisces reads the rest. Carries the room's key light (windowed read 2026-07-27): the anchor is AWAKE and drinking, and light is the only way the room says so before Pisces does. Three lights total on this map, inside world.gd's LIGHT_BUDGET of 8.",
    "id": "vault_anchor_stone",
    "kind": "prop",
    "cell": [
@@ -187,7 +207,17 @@
    "on_open_accomplishment": [
     "seal_resolved"
    ],
-   "open_toast": "Not a prisoner. An ANCHOR — a twin to the stone the Horns hauled out of the ruin, and it has been drinking the ward's slow pour for three centuries to stay awake. Pisces, hoarse: \"This is why the Door works at all. Somebody left it something to come home to, and then somebody sealed the room and let it drink.\""
+   "open_toast": "Not a prisoner. An ANCHOR — a twin to the stone the Horns hauled out of the ruin, and it has been drinking the ward's slow pour for three centuries to stay awake. Pisces, hoarse: \"This is why the Door works at all. Somebody left it something to come home to, and then somebody sealed the room and let it drink.\"",
+   "light": {
+    "color": [
+     0.62,
+     0.8,
+     1.0
+    ],
+    "energy": 0.95,
+    "radius": 40,
+    "flicker": false
+   }
   },
   {
    "_comment": "Flavour terminus, second read. Interact-only prop with its own bank (sensed_something_deeper, the dungeon's shipped flavour counter -- no new counter for a lore stone).",

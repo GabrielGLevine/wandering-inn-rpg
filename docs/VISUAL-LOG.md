@@ -16,6 +16,47 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### Machine playtest — wave/mq4-act5 Act V (2026-07-27)
+
+Source: `wave/mq4-act5` after Tasks 7.1-7.4, full asset overlay in tree, all 29
+unit suites + the 162-script sweep green before the windowed pass. Three
+windowed runs (`seal_open` seed 1, `seal_fed` seed 9, `seal_reward` seed 9,
+all `passed: true`), 25 screenshots read at native resolution.
+
+- [x] SEAL_VAULT/GRADE (P2) — **FIXED in this task's own commit.** Was: the new
+  vault read as one more near-black dungeon cell; the castle floor chosen to
+  say "this room never fell in" never arrived on screen (first windowed pass at
+  mood 0.335). Fix: grade to 0.60/0.60/0.66 day-dusk, 0.50/0.50/0.58 night,
+  vignette 0.44 — a cool tilt (ward-light, not a window), still a full step
+  under the barracks' lived-in 0.68 and double the halls' 0.282. NOTE for the
+  eye-gate: it is still on the dim side of "lit". If the user wants it warmer,
+  the lever is this one mood row.
+- [x] SEAL_VAULT/FOCAL (P2) — **FIXED in this task's own commit.** Was: the two
+  `cellar_wardwork` rings sat on the anchor's own neighbour cells (8,3)/(8,5)
+  and read as the room's subject, with the plinth between them invisible. Fix:
+  rings moved to the aisle ends (8,2)/(8,6), each carrying a faint cool light,
+  and the anchor took the key light (energy 0.95, radius 40). The plinth now
+  reads as the focal object on approach.
+- [ ] MAP-LIGHTS/DAY (P3, systemic, NOT Act V's own) — `moods.meta
+  .light_energy_by_phase.day` is `0.0`, so every authored map light renders at
+  zero energy during the day phase. For a SEALED map (no sky, no windows) that
+  is the wrong default: the vault's three lights only exist from dusk, and its
+  daytime read has to be carried by the grade alone. Worth a per-map opt-out
+  (`lights_ignore_phase: true`) rather than brightening every dungeon grade.
+  Same class affects pallass_market's crystal lamps by day.
+- [ ] RUIN_WARDEN/RIG-SCALE (P3, pre-existing) — at `combat_scale` 1.15 (the
+  shipped `ruin_guardian` value, which `seal_warden` now matches deliberately)
+  the rig's head clips under the combat HUD's turn banner on the vault arena's
+  top row. Not introduced here — the first pass shipped 1.35 and the windowed
+  read pulled it back to the shipped precedent. A rig-anchor question for the
+  art lane, not a data-value one.
+- [ ] TOAST/LENGTH (P4) — the `[Detect Magic]` quartet payoff is the longest
+  toast in the game (7 wrapped lines at 1280x720). It FITS (no clipping, top
+  edge well inside the screen) and it is the beat's climax, but it is the new
+  ceiling; `test_copy_fit` does not measure `skill_uses` variant toasts, so
+  nothing enforces that ceiling automatically.
+
+
 ### Machine playtest — wave/mq2-dig "The Dig" close-out (2026-07-27)
 
 Source: `wave/mq2-dig` at `dfc2ec3` + the Task 2.7 copy pass, full asset overlay

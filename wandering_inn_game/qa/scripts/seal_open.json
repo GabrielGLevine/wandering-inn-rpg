@@ -349,6 +349,15 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "The toast QUEUE drains in order: without waiting for this one's own ui_toast_rendered the shot catches the rune-read line still on screen (windowed read 2026-07-27).",
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Pisces steps back at last. \"It is not a lock. The lines run one way, they have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
+   },
+   "timeout_sec": 10
+  },
+  {
    "action": "screenshot",
    "name": "04_the_feeding_ward"
   },
@@ -415,7 +424,7 @@
    "name": "05_the_choice"
   },
   {
-   "_comment": "the_choice rows at THIS build (no hedge_remedy, no detect_magic -- both re-ward arms are requires-hidden... no: requires{skill} renders VISIBLE-LOCKED, so rows are 0 open, 1 fed, 2 [Hedge Remedy] locked, 3 [Detect Magic] locked, 4 not yet). Row 0 is the open.",
+   "_comment": "the_choice rows: 0 open, 1 fed, 2 [Hedge Remedy] VISIBLE-LOCKED, 3 [Detect Magic] (this line inherits the mage grant, so it renders unlocked -- confirmed in the windowed read), 4 not yet. Skill gates tease; they never hide. Row 0 is the open, which is the fork this canonical takes.",
    "action": "press",
    "name": "confirm"
   },

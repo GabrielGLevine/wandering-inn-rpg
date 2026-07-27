@@ -336,6 +336,15 @@
    }
   },
   {
+   "_comment": "The toast QUEUE drains in order: without waiting for this one's own ui_toast_rendered the shot catches the quest-updated line still on screen (windowed read 2026-07-27).",
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Detect Magic] — Every reading you have taken lines up at once: the inn's frame, the ruin's socket, the seam back down the hall, the hollow west of Riverfarm. Not four wards. One lattice, and this door is where it drains to. Something behind this stone has been drinking Liscor's oldest work since before Liscor. Pisces uses a word you have never heard him use in public."
+   },
+   "timeout_sec": 10
+  },
+  {
    "action": "screenshot",
    "name": "04_the_feeding_ward"
   },
