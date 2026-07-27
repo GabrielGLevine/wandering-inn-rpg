@@ -77,8 +77,22 @@ func _check_finale_is_owed_not_armed(src: String) -> void:
 	assert(owed_body.find("\"seal_resolved\"") != -1, "_finale_owed must read seal_resolved")
 	assert(owed_body.find("\"finale_played\"") != -1, "_finale_owed must read the finale_played one-shot counter")
 
-	var ended_body := src.get_slice("WIEvents.DIALOGUE_ENDED:", 1).get_slice("func _begin_sleep", 0)
+	var ended_body := src.get_slice("WIEvents.DIALOGUE_ENDED:", 1).get_slice("WIEvents.CONSOLIDATION_ACCEPTED", 0)
 	assert(ended_body.find("play_finale()") != -1, "DIALOGUE_ENDED must play the owed finale (TALK/SKILL paths resolve mid-dialogue)")
+	# FILTERED, not unconditional: on the FIGHT path (whose resolution is a
+	# container open) an unfiltered hook would credit-roll the next shopkeeper.
+	assert(ended_body.find("FINALE_CURTAIN_CONVERSATIONS.has(") != -1, "DIALOGUE_ENDED must gate on FINALE_CURTAIN_CONVERSATIONS -- an unrelated conversation must never draw the curtain")
+	assert(src.find("WIEvents.DIALOGUE_STARTED:") != -1, "the conversation id must be captured from DIALOGUE_STARTED (DIALOGUE_ENDED's payload is empty)")
+	# The slice must open at `= [`, not at the const name: `Array[String]`'s own
+	# bracket would otherwise close it before the first entry.
+	var curtain_body := src.get_slice("const FINALE_CURTAIN_CONVERSATIONS: Array[String] = [", 1).get_slice("]", 0)
+	for conv: String in ["olesm_intro", "pisces_seal"]:
+		assert(curtain_body.find(conv) != -1, "%s BANKS seal_resolved -- it must be able to draw the curtain" % conv)
+
+	# The bed hook stands down for a queued merge offer; these two are its
+	# retry, so an owed finale never waits an extra night.
+	var merge_body := src.get_slice("WIEvents.CONSOLIDATION_ACCEPTED, WIEvents.CONSOLIDATION_DECLINED:", 1).get_slice("func _begin_sleep", 0)
+	assert(merge_body.find("play_finale()") != -1, "resolving a consolidation offer must re-attempt an owed finale")
 
 	var run_sequence_body := src.get_slice("func _run_sequence() -> void:", 1).get_slice("func _play_finale_off_the_bed", 0)
 	assert(run_sequence_body.split("_play_finale_off_the_bed()").size() - 1 == 2, "BOTH _run_sequence branches (QA-collapsed and real) must play an owed finale off the bed -- the FIGHT path banks seal_resolved at a container, never in a dialogue")

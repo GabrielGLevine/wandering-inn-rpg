@@ -1122,7 +1122,12 @@ func _init() -> void:
 	seal.sleep()
 	assert(seal.accomplishment_count("post_game") == 1, "seal bank: the first sleep after raskghar_sealed banks post_game, no epilogue required")
 	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "accomplishment_recorded" and String(e["payload"]["id"]) == "post_game"), "seal bank: the bank fires accomplishment_recorded")
-	assert(_count("toast") == 1 and _events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You sleep soundly."), "seal bank: SILENT -- no toast of its own, and no anything_happened flip (the soundly-sleep fallback still fires)")
+	# PHASE 8 (2026-07-27, coordinator ruling): still no toast of its OWN -- the
+	# beat is voiced once, by the GDI's SEAL_TRANSITION_LINE under the veil --
+	# but the flag now flips, because "You sleep soundly." must not render on
+	# top of the Design announcing that the warren is sealed.
+	assert(_count("toast") == 0, "seal bank: no toast of its own -- sleep_veil.gd's GDI line is the beat's ONLY voice")
+	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "You sleep soundly."), "seal bank: anything_happened flips, so the soundly-sleep fallback must NOT co-render with the GDI's seal line")
 
 	_events.clear()
 	seal.sleep()

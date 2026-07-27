@@ -948,6 +948,45 @@
    "equals": 1
   },
   {
+   "_comment": "== ONCE-NESS OF THE SEAL LINE (coordinator fix round 1, minor) == sleep a SECOND time on the same bed. post_game is banked now, so the GDI's seal beat must not re-render and nothing else is pending: an EMPTY veil, and the 'You sleep soundly.' fallback returns (proving the anything_happened flip above belonged to the seal bank alone).",
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "lines": 0
+   }
+  },
+  {
+   "_comment": "assert_event_logged, not wait_for_event: sleep_beat emits the fallback toast DURING sleep(), which is before the deferred veil render the cursor just passed.",
+   "action": "assert_event_logged",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You sleep soundly."
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.post_game",
+   "equals": 1
+  },
+  {
    "_comment": "NO-CLOSING-SEQUENCE PROOF for the whole run: Act III's seal never rolls a curtain now, at the dialogue or at the bed (seal_resolved is unbanked here -- Act V is untouched by this script).",
    "action": "assert_event_count",
    "type": "ui_gdi_epilogue_rendered",

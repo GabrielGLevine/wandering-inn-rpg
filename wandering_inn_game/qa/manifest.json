@@ -2594,6 +2594,7 @@
      "basic_cleaning"
     ],
     "dialogue": [
+     "peddler_stall",
      "pisces_magic",
      "pisces_seal"
     ],
@@ -2670,6 +2671,31 @@
      "economy",
      "exploration",
      "quests"
+    ]
+   }
+  },
+  {
+   "script": "finale_after_merge",
+   "seed": 9,
+   "fixture": "finale_merge_start",
+   "note": "2026-07-27 Phase 8, THE FINALE vs A PENDING MERGE. The one collision the finale's bed hook has to survive: UI_SLEEP_VEIL_FINISHED is what opens consolidation_prompt's modal, so a sleep that both owes the ending and offers a consolidation would have dropped the finale's black over that choice. Loads a TALK-path-resolved save parked on the inn bed at exactly the [Spellsword] gate (warrior 10 + mage 11) and drives it live: sleep -> offer -> the veil voices it -> the prompt opens with the curtain PROVEN still down -> decline -> the finale rolls that same night at 10 lines. Also pins that a declined merge leaves both parent classes standing in the recount. No combat, no rng dependence.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "finale_merge_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "night_phase"
     ]
    }
   },

@@ -1,5 +1,5 @@
 {
- "_comment": "2026-07-26 Act V canonical, THE FIGHT PATH (one script per path, the door_chain_talk/fight/scout precedent). Loads seal_open_start (spellsword14 + the tuned gear, Act V already the derived act) via title Continue. Flow: the descent ask at Pisces' elbow on Market Street (banks seal_descent_agreed, starts what_the_seal_was_feeding, and CLOSES the pilgrimage spine's own `return` beat) -> teleport into trapped_halls (dungeon_peek's own teleport precedent; this route's subject is the seal, not the walk down) -> the SKILL-FREE reading, two bare interacts on seal_kept_door: Pisces matches the hand (read_the_seal_runes), then names the appetite (read_the_feeding_ward) -> his choice conversation -> WE OPEN IT (seal_opened) -> stepping to the door's only approach cell wakes the warden through its trigger_radius -> the tuned solo fight -> the door transitions for real (door_when) -> the vault: the anchor's open banks seal_resolved, grants the rubbing, and completes the quest. Fixture rng_state (seed 1) governs the warden fight and OVERRIDES --seed. FINALE LEG (Phase 8): this path's ending is delivered by the SLEEP hook, because its resolution banks at a container and never at a dialogue -- the run proves the curtain is silent on the walk out and rolls at the bed.",
+ "_comment": "2026-07-26 Act V canonical, THE FIGHT PATH (one script per path, the door_chain_talk/fight/scout precedent). Loads seal_open_start (spellsword14 + the tuned gear, Act V already the derived act) via title Continue. Flow: the descent ask at Pisces' elbow on Market Street (banks seal_descent_agreed, starts what_the_seal_was_feeding, and CLOSES the pilgrimage spine's own `return` beat) -> teleport into trapped_halls (dungeon_peek's own teleport precedent; this route's subject is the seal, not the walk down) -> the SKILL-FREE reading, two bare interacts on seal_kept_door: Pisces matches the hand (read_the_seal_runes), then names the appetite (read_the_feeding_ward) -> his choice conversation -> WE OPEN IT (seal_opened) -> stepping to the door's only approach cell wakes the warden through its trigger_radius -> the tuned solo fight -> the door transitions for real (door_when) -> the vault: the anchor's open banks seal_resolved, grants the rubbing, and completes the quest. Fixture rng_state (seed 1) governs the warden fight and OVERRIDES --seed. FINALE LEG (Phase 8): this path's ending is delivered by the SLEEP hook, because its resolution banks at a container and never at a dialogue -- the run proves the curtain is silent on the walk out and rolls at the bed. It also carries the dialogue-filter NEGATIVE: an unrelated conversation (the peddler) opens and closes with the finale owed and draws no curtain.",
  "fixture_save": "seal_open_start",
  "starts_at_title": true,
  "steps": [
@@ -757,6 +757,87 @@
    "_comment": "NEGATIVE, and the whole reason the sleep hook exists: walking out of the vault rolls no curtain by itself.",
    "action": "assert_event_absent",
    "type": "ui_gdi_epilogue_rendered"
+  },
+  {
+   "_comment": "== NEGATIVE: AN UNRELATED CONVERSATION IS NOT A CURTAIN == (coordinator fix round 1) the dialogue-end hook is FILTERED to FINALE_CURTAIN_CONVERSATIONS, because on THIS path seal_resolved banked at a container and an unfiltered hook would credit-roll the next shopkeeper the player greets. The peddler (18,2) carries no talk_pool, so one interact opens peddler_stall directly.",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    18,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "street"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "_comment": "Blocked by the peddler, so the PC stays at (18,3) and faces up into him.",
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "peddler_stall"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "_comment": "Row 1 of the hub is 'Just looking.' (end: true). Rows 0/2/3 are the priced arms, visible at 40 gold.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE PROOF: a full conversation opened and closed with the finale OWED, and the curtain stayed down.",
+   "action": "assert_event_absent",
+   "type": "ui_gdi_epilogue_rendered"
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.seal_resolved",
+   "equals": 1
   },
   {
    "action": "teleport",

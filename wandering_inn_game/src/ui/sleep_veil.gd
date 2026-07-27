@@ -92,6 +92,30 @@ const FINALE_HOLD_BEFORE_TEXT := 0.8
 const FINALE_LINE_HOLD := 1.6
 const FINALE_READ_HOLD := 2.6
 
+## WHICH conversations may draw the curtain. An owed finale must not roll off
+## the peddler saying "watch gear, mostly honest" — on the FIGHT path, whose
+## resolution is a container open rather than a conversation, ANY dialogue end
+## would otherwise credit-roll the next shopkeeper the player greets.
+##
+## `olesm_intro` and `pisces_seal` are the two graphs that actually BANK
+## `seal_resolved` (TALK's standing posting, SKILL's re-cut), so on those paths
+## the curtain still falls the instant the resolving conversation closes —
+## unchanged behaviour, exactly where the epilogue used to roll. `pisces_seal`
+## doubles as the FIGHT path's curtain: the escort at the door carries a
+## post-`seal_opened` variant, so a player who walks out of the vault and tells
+## Pisces gets the ending there. `pisces_magic` is the same voice on the inn
+## side, and the arc's only other Pisces surface — he is the story voice of
+## this whole quest, and no other graph in the game speaks for it.
+##
+## Nothing else qualifies, and nothing needs to: the bed hook below is the
+## unconditional catch-all, so a filtered-out conversation delays the ending to
+## the player's next sleep, never loses it.
+const FINALE_CURTAIN_CONVERSATIONS: Array[String] = [
+	"olesm_intro",
+	"pisces_seal",
+	"pisces_magic",
+]
+
 ## The seal's own light transition, re-homed from the retired epilogue's close
 ## pair (spec §2.2: "a light act-transition sleep beat (one GDI line)"). It
 ## rides `post_game`, which sleep_beat.gd banks silently at the first sleep
@@ -132,6 +156,10 @@ var _opener_running := false
 var _opener_advance := false
 
 var _finale_running := false
+## DIALOGUE_ENDED carries an EMPTY payload (dialogue.gd emits `{}` from both
+## its end paths), so the conversation id has to be remembered from the
+## DIALOGUE_STARTED that opened it — that one does carry `conversation`.
+var _open_conversation := ""
 
 var _defeat_running := false
 var _defeat_choice_pending := false
@@ -220,12 +248,28 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 				_lines.append("[A door opens that no one built. The Garden of Sanctuary remembers how to wait.]")
 			if _running and String(payload.get("id", "")) == "resonance_grown":
 				_lines.append("[The anchor stone gives up a sliver of itself. You have room for it now.]")
+		WIEvents.DIALOGUE_STARTED:
+			_open_conversation = String(payload.get("conversation", ""))
 		WIEvents.DIALOGUE_ENDED:
-			# The resolving conversation's own curtain. TALK (Olesm's posting)
-			# and SKILL (Pisces' re-cut) both bank `seal_resolved` mid-dialogue,
-			# so the finale rolls the instant that conversation closes —
-			# exactly where the epilogue used to roll off Zevara's seal report.
+			# The resolving conversation's own curtain, and ONLY a conversation
+			# that can carry one (see FINALE_CURTAIN_CONVERSATIONS). TALK
+			# (Olesm's posting) and SKILL (Pisces' re-cut) both bank
+			# `seal_resolved` mid-dialogue, so the finale rolls the instant that
+			# conversation closes — exactly where the epilogue used to roll.
 			# No arming flag: play_finale() re-derives whether it is owed.
+			var ended := _open_conversation
+			_open_conversation = ""
+			if FINALE_CURTAIN_CONVERSATIONS.has(ended):
+				play_finale()
+		WIEvents.CONSOLIDATION_ACCEPTED, WIEvents.CONSOLIDATION_DECLINED:
+			# THE BED HOOK'S RETRY. `_play_finale_off_the_bed()` stands down
+			# when a merge offer is queued behind the veil, so without this an
+			# owed finale would wait for a whole extra night. These two fire
+			# from wi_game AFTER the merge is applied (consolidation_prompt's
+			# `_choose` emits UI_CONSOLIDATION_PROMPT_HIDDEN *before* calling
+			# into the sim, which is the wrong edge for a sequence that
+			# recounts classes — the recount must show the class the player
+			# just chose, not the two it replaced).
 			play_finale()
 
 
