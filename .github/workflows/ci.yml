@@ -77,6 +77,12 @@ jobs:
       - name: Check comment economy
         run: python3 scripts/comment_census.py --check
 
+      # GH#276: engine-free structural lint over data/** — the only
+      # pre-Godot CI signal for data edits (ci.yml jobs are parallel, so
+      # ci_sweep's own pre-flight can't short-circuit the Godot jobs).
+      - name: Structural data lint
+        run: python3 wandering_inn_game/scripts/data_lint.py
+
   # ------------------------------------------------------------------ smoke
   smoke:
     name: Smoke (headless boot)

@@ -253,6 +253,14 @@ if ! python3 "$HERE/../scripts/derive_qa_surfaces.py" --check; then
 	exit 1
 fi
 
+# --- Structural data lint (GH#276): engine-free, <1s — malformed JSON or an
+# out-of-grid cell fails the sweep BEFORE any Godot boot. Pre-check only;
+# the Godot suites remain the semantic authority.
+if ! python3 "$HERE/../scripts/data_lint.py"; then
+	echo "ci_sweep: FATAL — data_lint failed (structural data/ error, see above)." >&2
+	exit 1
+fi
+
 ONLY=""
 TIER="full"
 TOUCHING=""
