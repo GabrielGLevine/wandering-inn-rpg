@@ -186,26 +186,19 @@
      "goto": "erin_meal"
     },
     {
-     "text": "Something wrong with the pantry door?",
+     "_comment": "2026-07-26 main-quest restructure (Task 2.2): this WAS the door chain's start (quest door_that_goes_elsewhere + door_chain_started, goto erin_door_flicker). The chain no longer starts here at all -- it auto-starts at the mounting scene (Task 2.4) once the Horns haul the thing home. Erin only POINTS at Ceria now: no quest effect, no accomplishment. Re-gated post_game -> seal_kept_reported so the nudge lands after the delve, alongside Ceria's own invitation option, and hides once the dig is under way.",
+     "text": "Anything odd around the inn lately?",
      "requires": {
       "accomplishment": {
-       "post_game": 1
+       "seal_kept_reported": 1
       }
      },
      "hide_when": {
       "accomplishment": {
-       "door_chain_started": 1
+       "horns_dig_started": 1
       }
      },
-     "effects": [
-      {
-       "quest": "door_that_goes_elsewhere"
-      },
-      {
-       "accomplishment": "door_chain_started"
-      }
-     ],
-     "goto": "erin_door_flicker"
+     "goto": "ceria_nudge"
     },
     {
      "text": "Remind me where Selys needs me?",
@@ -376,6 +369,7 @@
    ]
   },
   "erin_door_flicker": {
+   "_comment": "2026-07-26 main-quest restructure (Task 2.2): ORPHANED -- its only inbound goto was the retired door-chain start option above. Kept, not deleted: the pantry door has no flicker to report until it is mounted (Task 2.4), and no shipped save can be mid-conversation. Delete or re-point at the wave's close if nothing claims it.",
    "speaker": "Erin",
    "text": "It went somewhere COLD this morning. Doors shouldn't have moods. …Can you look? If it eats you, yell.",
    "options": [
@@ -386,6 +380,17 @@
     {
      "text": "Wait, one more thing!",
      "goto": "hub"
+    }
+   ]
+  },
+  "ceria_nudge": {
+   "_comment": "2026-07-26 main-quest restructure (Task 2.2): the pointer that replaced the chain start. SPOILER RULE: no door word here -- Erin knows only that the Horns left with shovels.",
+   "speaker": "Erin",
+   "text": "Odd? Besides Ceria's whole team leaving at dawn with shovels? She's been going on about some ruin east of here. If you're bored, she was muttering about being short-handed.",
+   "options": [
+    {
+     "text": "Maybe I'll ask her.",
+     "end": true
     }
    ]
   },

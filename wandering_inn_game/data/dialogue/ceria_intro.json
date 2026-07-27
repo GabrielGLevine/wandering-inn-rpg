@@ -1,5 +1,5 @@
 {
-	"_comment": "Contract: text_variants are ascending; the last satisfied variant wins, so vault_construct_downed must follow horns_party_formed. Understood stays available after Go on hides.",
+	"_comment": "Contract: text_variants are ascending; the last satisfied variant wins, so vault_construct_downed must follow horns_party_formed. Understood stays available after Go on hides. 2026-07-26 main-quest restructure (Task 2.2): this hub is also the `horns_dig` START surface -- the invitation option gates on seal_kept_reported (the delve is over, the Horns are between jobs) and retires itself on horns_dig_started, the counter it banks. SPOILER RULE: no dig_* line names a door; the reveal is on-screen at the pedestal, not in the pitch.",
 	"start": "hub",
 	"nodes": {
 		"hub": {
@@ -11,6 +11,7 @@
 			],
 			"options": [
 				{ "text": "Go on.", "hide_when": { "accomplishment": { "horns_party_formed": 1 } }, "goto": "rules" },
+				{ "text": "Heard your team's digging east of the gate road.", "requires": { "accomplishment": { "seal_kept_reported": 1 } }, "hide_when": { "accomplishment": { "horns_dig_started": 1 } }, "effects": [ { "quest": "horns_dig" }, { "accomplishment": "horns_dig_started" } ], "goto": "dig_pitch" },
 				{ "text": "Understood.", "end": true }
 			]
 		},
@@ -21,6 +22,25 @@
 				{ "text": "Let's go.", "effects": [ { "accomplishment": "horns_party_formed" } ], "goto": "hub" },
 				{ "text": "Give me a moment.", "end": true }
 			]
+		},
+		"dig_pitch": {
+			"_comment": "2026-07-26 main-quest restructure (Task 2.2): the horns_dig pitch. The quest + horns_dig_started already banked on the option that reached here, so both exits below are ungated -- the invitation cannot be re-taken (hub's hide_when) and cannot strand the player (dig_directions repeats the camp's location, and Task 2.3's camp NPC gates on horns_dig_started, not on hearing this node).",
+			"speaker": "Ceria",
+			"text": "Word travels. Yes -- there's a ruin out past the floodplains, and under it a level nobody's opened since before Liscor had walls. We hit the seal three days ago. Yvlon can't cut it, Pisces won't shut up about it, and we are exactly one pair of hands short.",
+			"options": [
+				{ "text": "I'm in. Where's the camp?", "goto": "dig_directions" },
+				{ "text": "What's down there?", "goto": "dig_unknown" }
+			]
+		},
+		"dig_unknown": {
+			"speaker": "Ceria",
+			"text": "If I knew, I wouldn't need a dig. Whatever it is, someone sealed it on purpose and did a very good job. That usually means valuable, dangerous, or both.",
+			"options": [ { "text": "I'm in. Where's the camp?", "goto": "dig_directions" } ]
+		},
+		"dig_directions": {
+			"speaker": "Ceria",
+			"text": "East past the gate road, across the floodplains -- follow the survey stakes. Ask for me at the camp. And bring your own rope.",
+			"options": [ { "text": "See you there.", "end": true } ]
 		}
 	}
 }
