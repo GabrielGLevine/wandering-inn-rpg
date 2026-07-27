@@ -278,7 +278,7 @@ banking `door_retrieved` and `recovered_anchor_stone` (both, one interact — re
 }
 ```
 
-Both exits bank + start — the quest auto-start IS this conversation (spec §2.5). Add pantry `visual_states` mounted-door state on `door_mounted >= 1`.
+Both exits bank + start — the quest auto-start IS this conversation (spec §2.5). BOTH exits' effects arrays additionally include `{ "accomplishment": "door_chain_started" }` — the id is FROZEN (shipped_ids :451) and test_shipped_ids validates live producers; Task 2.2 retires its old producer, so the mounting scene carries it as a legacy alias (comment it as such in the JSON). Add pantry `visual_states` mounted-door state on `door_mounted >= 1`.
 
 - [ ] **Step 2: Re-gate the leak.** inn.json:1109 `encounter_when` changes `{"door_chain_started": 1}` → `{"door_mounted": 1, ...}` preserving any other keys; update the :1078 `_comment` and the :1114 observe variant copy to strain fiction ("what leaks through when it strains").
 - [ ] **Step 3: portals.json:** rows `liscor_street` and `the_wandering_inn`: `"requires_accomplishment": "door_awakened"` → `"door_mounted"`. Region rows untouched.
