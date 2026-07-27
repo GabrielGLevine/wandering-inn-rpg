@@ -64,7 +64,7 @@
 			]
 		},
 		{
-			"_comment": "2026-07-26 main-quest spec 3: the backport. SPOILER RULE: title + join_dig/breach copy never mention a door; the reveal is the haul beat. Beats are ORDER-GATED by their counters' own gating (camp gates on horns_dig_joined, pedestal on camp, haul on pedestal) -- do not accept the catalyst-style cosmetic skip here.",
+			"_comment": "Spec 3, the backport. SPOILER RULE: title + join_dig/breach copy never mention a door; the reveal is the haul beat. Beats are ORDER-GATED by their counters' own gating (camp on horns_dig_joined, pedestal on camp, haul on pedestal) -- do not accept the catalyst-style cosmetic skip here.",
 			"id": "horns_dig",
 			"title": "The Dig",
 			"region": "Liscor",
@@ -75,7 +75,7 @@
 			]
 		},
 		{
-			"_comment": "2026-07-26 reshape (main-quest spec 2.5): the door works to Liscor from mounting (horns_dig haul); this chain is the first FAR attunement. door_awakened re-semantics to 'reaches beyond Liscor'; its payoff is the Riverfarm rumor surface. Auto-starts at door_mounted via the mounting conversation (no start option). Old cosmetic-skip note is moot: 3 beats, catalyst still ungated on consult by design.",
+			"_comment": "Reshape (spec 2.5): the door works to Liscor from mounting (horns_dig haul); this chain is the first FAR attunement. door_awakened re-semantics to 'reaches beyond Liscor'. Auto-starts at door_mounted via the mounting conversation (no start option). 3 beats, catalyst still ungated on consult by design.",
 			"id": "door_that_goes_elsewhere",
 			"title": "The Door That Goes Elsewhere",
 			"beats": [
@@ -227,7 +227,7 @@
 			]
 		},
 		{
-			"_comment": "2026-07-26 spec 4: discovery-driven spine. Beats complete on lattice counters the REGIONS bank (witch/hedault/forge arms); journal copy points at reach, never objects. Starts from Pisces at door_awakened.",
+			"_comment": "Spec 4: discovery-driven spine. Beats complete on lattice counters the REGIONS bank; journal copy points at reach, never objects. Starts from Pisces at door_awakened.",
 			"id": "where_the_door_reaches",
 			"title": "Where the Door Reaches",
 			"beats": [
@@ -238,7 +238,7 @@
 			]
 		},
 		{
-			"_comment": "2026-07-26 Act V (#270 beats 1-3, as amended by main-quest spec 7). BEATS ARE ORDER-GATED, the decision #270 asked to make explicitly: no beat's counter can bank before its predecessor's, so the catalyst-style cosmetic skip is impossible here. descend's counter banks ONLY at seal_kept_door with seal_descent_agreed held (the prop's own variant/skill arms are gated on it); read's counter banks only once the runes are read (its own arms gate on read_the_seal_runes, and Pisces' bridge option requires it); resolve's counter has three producers, each behind the reading. SPOILER DISCIPLINE: 'feeding' appears in no beat copy until beat 3, which the journal only shows once the reading has already revealed it on screen (WIQuests surfaces the ACTIVE beat alone). Landmarks: every beat names the trapped halls -- the quest is given on street (Pisces at the Guild steps) and produced under the dungeon.",
+			"_comment": "Act V (#270 beats 1-3, as amended by spec 7). BEATS ARE ORDER-GATED: no beat's counter can bank before its predecessor's, so the catalyst-style cosmetic skip is impossible. descend banks ONLY at seal_kept_door with seal_descent_agreed held; read banks only once the runes are read; resolve has three producers, each behind the reading. SPOILER DISCIPLINE: 'feeding' appears in no beat copy until beat 3, which the journal only shows once the reading has revealed it on screen (WIQuests surfaces the ACTIVE beat alone). Landmarks: every beat names the trapped halls.",
 			"id": "what_the_seal_was_feeding",
 			"title": "What the Seal Was Feeding",
 			"beats": [

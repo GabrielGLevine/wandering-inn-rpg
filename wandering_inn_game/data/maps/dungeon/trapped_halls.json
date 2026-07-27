@@ -169,7 +169,7 @@
      "horns_dig_joined": 1
     }
    },
-   "_comment_dig": "2026-07-27 Task 2.7 round 2 (controller-sanctioned): retires PERMANENTLY at horns_dig_joined. The delve-staging Horns had no present_when at all, so once round 1 fixed the inn-vs-camp bilocation the SAME bug relocated here -- during The Dig a player could meet camp-Ceria at the ruin and delve-hub-Ceria on the approach in one trip. No `_returned` twin on the delve maps, deliberately: the Horns moved on from the delve staging for good (the_horns_home already has them living at the inn; the dig and then the mounting is what brings them there). Safe for the seal beat -- this row is only gameplay-load-bearing during what_the_seal_kept, and seal_kept_reported gates the dig invitation, so horns_dig_joined cannot bank until that quest is done. Verified at QA level too: every script touching this map (delve_fight, delve_skill, delve_talk, dungeon_peek, dungeon_kingslayer_loop) runs on a fixture with horns_dig_joined absent, so no entity-count pin moves."
+   "_comment_dig": "Task 2.7 round 2: retires PERMANENTLY at horns_dig_joined, the same delve-staging split as the approach map's Horns rows -- see dungeon_approach.json's `ceria` row _comment_dig for the contract. Safe for the seal beat: seal_kept_reported gates the dig invitation, so horns_dig_joined cannot bank until what_the_seal_kept is done."
   },
   {
    "id": "dart_slit_a",
@@ -334,7 +334,7 @@
    ]
   },
   {
-   "_comment": "2026-07-26 main-quest spec 7 amendment 1: display name was 'A Second Door'. The entity id is shipped and frozen; the fiction is not. This is a sealed rune-door full of wardwork by the hand that cut the inn's frame -- never a second Magical Door, never another portal. No QA script pins the old label (checked qa/scripts + qa/manifest).",
+   "_comment": "FROZEN ID, dead fiction (spec 7 amendment 1): the display name was 'A Second Door'. The entity id is shipped and frozen; the fiction is not. This is a sealed rune-door full of wardwork by the hand that cut the inn's frame -- never a second Magical Door, never another portal. No QA script pins the old label.",
    "id": "seal_kept_door",
    "kind": "prop",
    "cell": [
@@ -350,7 +350,7 @@
    ],
    "on_interact_accomplishment": "sensed_something_deeper",
    "toast": "The passage doesn't end here -- it just goes quiet, past a bend the light doesn't reach. Whatever's back there, this isn't the moment.",
-   "_comment_reading": "2026-07-26 Act V beat 2, THE READING (#270 beat 2). Three eyes on one door, the pantry-door consolidation idiom. LATER-SATISFIED-WINS across `variants` is what makes the bare interact a two-stage narration: with the descent agreed Pisces matches the hand (read_the_seal_runes), and once that is held his next read names the appetite (read_the_feeding_ward). That staging is DELIBERATE and load-bearing -- no main-line beat may sit behind a Skill the player's build might not own (spec 6's no-hard-gates rule applied to Skills), so the escort is the guaranteed producer of both reads and [Observe]/[Detect Magic] are the richer, earlier routes to the same facts. The pre-descent arms bank `sensed_something_deeper` (this prop's own shipped flavour counter) rather than the real reads, which ORDER-GATES the quest's beats: nothing in Act V can bank from a curious Act IV visit. The [Detect Magic] base arm deliberately does NOT bank `detected_wardwork` -- the quartet is the four shipped sites (inn frame, ruin socket, the seam back in these halls, the witch's hollow) and this door is what they drain INTO, not a fifth site; a fifth producer would also cheapen the >= 3 threshold its own payoff variant reads. SELF-REVIEW 2026-07-27: a `skill_hint_toast` authored here was DEAD COPY and is gone -- interactions.gd's prop branch reaches the requires_skill/hint arm only when there is no `on_interact_accomplishment`, and this prop has one. The pantry door's own comment names this class (inert copy dressed as a live surface); the hint a player actually gets is the bare interact's narration, which is the point of staging it. FIX ROUND 1 (reviewer CRITICAL, 2026-07-27): variants[0] is the repo's SOLE producer of `seal_kept_found`, and later-satisfied-wins meant the descent arm SHADOWED it -- a save that downed the construct but never touched this door (a pre-restructure save the Task 2.6 dig backfill carries into the pilgrimage is the reachable case) could descend, read, and never bank the find, which strands what_the_seal_kept's vault beat, then seal_kept_reported, then act_iv's own gate. Both Act V read arms now compound `seal_kept_found` into their gate (the :404 idiom): the skipped-find player banks the find on the first interact and the rune-read on the second, and every downstream read gate (read_the_seal_runes, and through it both [Detect Magic] variants) inherits the guarantee transitively. The [Observe] arm needed the SAME compound for the same reason -- it banks read_the_seal_runes without ever touching seal_kept_found, so gating it on the descent alone reopened the identical hole through a different arm. Regression-pinned in test_sim_core (_test_seal_door_find_before_read).",
+   "_comment_reading": "Act V beat 2, THE READING (#270). Three eyes on one door, the pantry-door consolidation idiom. LATER-SATISFIED-WINS across `variants` makes the bare interact a two-stage narration: with the descent agreed Pisces matches the hand (read_the_seal_runes), and his next read names the appetite (read_the_feeding_ward). That staging is load-bearing -- no main-line beat may sit behind a Skill the player's build might not own (spec 6) -- so the escort is the guaranteed producer of both reads. Pre-descent arms bank `sensed_something_deeper`, never the real reads, which ORDER-GATES the quest: nothing in Act V can bank from a curious Act IV visit. The [Detect Magic] base arm deliberately does NOT bank `detected_wardwork` -- this door is what the four shipped sites drain INTO, and a fifth producer would cheapen the >=3 threshold its payoff variant reads. TRAP (reviewer CRITICAL): variants[0] is the repo's SOLE producer of `seal_kept_found`, and later-satisfied-wins meant the descent arm SHADOWED it -- a save that downed the construct but never touched this door could descend, read, and never bank the find, stranding what_the_seal_kept's vault beat, then seal_kept_reported, then act_iv's gate. BOTH Act V read arms AND the [Observe] arm must compound `seal_kept_found` into their gate (the :404 idiom); dropping it from any arm reopens the hole. Pinned in test_sim_core (_test_seal_door_find_before_read).",
    "variants": [
     {
      "when": {
@@ -421,7 +421,7 @@
      ]
     }
    },
-   "_comment_door": "2026-07-26 Act V beat 3, the FIGHT path. door_when is checked BEFORE the interact arm (interactions.gd prop branch order), so once seal_opened banks this stops being a thing to read and becomes a way through -- which is exactly the fiction. seal_opened banks ONLY on Pisces' open-it fork, so the TALK and SKILL paths leave this door shut forever, as #270 requires.",
+   "_comment_door": "Act V beat 3, the FIGHT path. door_when is checked BEFORE the interact arm (interactions.gd prop branch order), so once seal_opened banks this stops being a thing to read and becomes a way through. seal_opened banks ONLY on Pisces' open-it fork, so the TALK and SKILL paths leave this door shut forever, as #270 requires.",
    "door_when": {
     "requires": {
      "seal_opened": 1
@@ -435,7 +435,7 @@
    }
   },
   {
-   "_comment": "2026-07-26 Act V: THE SEAL'S WARDEN. present_when is validator-forbidden on encounters, so it stands here from first arrival, VISIBLE AND INERT (the rift_vermin_leak pattern) with its own observe + gate_closed_toast -- a shape in the alcove the player has walked past since the delve, which is the whole point when it finally moves. encounter_when arms it on seal_opened alone: it wakes because the seal broke, and only the FIGHT fork breaks it. trigger_radius 1 makes it UNSKIPPABLE on that fork without paying for it -- (18,7) is the only walkable approach to the door, and it sits one cell off. A sneaking player still slips by and banks sneaked_past_danger, the shipped stealth reward, which is a real build paying a real price rather than an oversight. CELL (19,6): the pocket north of the door, reachable only from (19,5), so it blocks no route -- and it is NOT (18,7), which delve_fight stands on. Roster: `seal_warden`, a distinct id per combatants.json:401.",
+   "_comment": "Act V: THE SEAL'S WARDEN. present_when is validator-forbidden on encounters, so it stands here from first arrival, VISIBLE AND INERT (the rift_vermin_leak pattern) with its own observe + gate_closed_toast. encounter_when arms it on seal_opened alone, which only the FIGHT fork banks. trigger_radius 1 makes it UNSKIPPABLE on that fork -- (18,7) is the only walkable approach to the door and sits one cell off; a sneaking player still slips by and banks sneaked_past_danger. CELL (19,6) is reachable only from (19,5), so it blocks no route, and it is NOT (18,7), which delve_fight stands on. Roster: `seal_warden`, a distinct id per combatants.json:401.",
    "id": "seal_warden_alcove",
    "kind": "encounter",
    "cell": [
@@ -455,7 +455,7 @@
    ],
    "allies": [],
    "trigger_radius": 1,
-   "_comment_victory": "on_victory is the ENGINE DEFAULT spelled out (test_combat_data requires the key present on every encounter): the warden banks no story counter of its own. Act V's resolution belongs to the room behind it -- vault_anchor_stone's open is what banks seal_resolved -- so a player who sneaks past the fight and one who flattens it reach the same beat by different costs.",
+   "_comment_victory": "on_victory is the ENGINE DEFAULT spelled out (test_combat_data requires the key on every encounter): the warden banks no story counter. Act V's resolution belongs to the room behind it -- vault_anchor_stone's open banks seal_resolved -- so sneaking past and flattening it reach the same beat at different cost.",
    "on_victory": [
     "won_combat"
    ],
@@ -466,10 +466,10 @@
    },
    "gate_closed_toast": "Dust lies on it in an unbroken sheet, the way dust lies on a thing that has not moved in centuries. Leave it that way.",
    "observe": "An alcove beside the sealed door, and something standing in it: ward-stone, shoulder-high, cut in the same hand as the runes. It is not a statue. Statues are not built facing the door they guard.",
-   "_comment_loot": "DELIBERATELY no `loot` array. Every enchanted accessory this fight could plausibly drop (warded_coil_charm, construct_core_shard, guardian_ward_fragment) is a chance-1.0 drop from a fight the player must already have won to be standing here, and `pickup` no-ops a duplicate id -- a guaranteed-dead drop reads worse than none. The reward for this fight is the room behind it (seal_anchor_rune) plus the quest's own resolution_paths grant."
+   "_comment_loot": "DELIBERATELY no `loot` array: every enchanted accessory this fight could plausibly drop (warded_coil_charm, construct_core_shard, guardian_ward_fragment) is a chance-1.0 drop from a fight the player must already have won to be standing here, and `pickup` no-ops a duplicate id. The reward is the room behind it (seal_anchor_rune) plus the quest's resolution_paths grant."
   },
   {
-   "_comment": "2026-07-26 Act V: THE ESCORT. Pisces is the voice at this door -- the prop never speaks (Global Constraint), so his narration rides the prop's toasts and everything that needs OPTIONS lives here. present_when brackets from the descent ask onward and never closes: after the resolution he is still the man standing in front of the thing he spent a month on, and a vanished escort would read as a bug. CELL (19,8): deliberately NOT (18,7), which is delve_fight's own standing cell for the seal_kept_found beat -- an entity there would strand a shipped canonical mid-route. Open neighbours (18,8)/(19,9), and no shipped save can hold seal_descent_agreed at all, so the new blocker can strand nothing. Bilocation with the Guild-steps Pisces is the shipped pisces_mounting precedent (Task 2.4): different maps, never on screen together.",
+   "_comment": "Act V: THE ESCORT. Pisces is the voice at this door -- the prop never speaks (Global Constraint), so everything that needs OPTIONS lives here. present_when brackets from the descent ask onward and never closes: a vanished escort would read as a bug. CELL (19,8) is deliberately NOT (18,7), delve_fight's own standing cell for the seal_kept_found beat -- an entity there would strand a shipped canonical mid-route. Open neighbours (18,8)/(19,9), and no shipped save can hold seal_descent_agreed, so the new blocker strands nothing. Bilocation with the Guild-steps Pisces is the shipped pisces_mounting precedent: different maps, never on screen together.",
    "id": "pisces_seal_escort",
    "kind": "npc",
    "cell": [

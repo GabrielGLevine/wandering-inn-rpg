@@ -67,7 +67,7 @@
      "end": true
     },
     {
-     "_comment": "2026-07-26 spec 4 (Phase 6, Task 6.2) PALLASS CAPSTONE. Placed on GRIMALKIN, not pallass_forge_clerk: the clerk says 'I only handle paper' in three separate nodes, while Grimalkin is the office's measuring mind and forge-tier rune practice is his professional register. Gated on the forge chain's terminal (elevator_pass_stamped) + spine_started, hidden once heard; revisit arm on the hub he already sees the player at for studies (spec 8). Carries chatted_with_grimalkin like every other option on this hub, appended LAST in the effects array per the d1 #247 rule; the lattice bank rides the ACCEPT option one node down, so declining costs nothing. HE raises it -- the option is the player noticing him holding something back.",
+     "_comment": "Spec 4 (Task 6.2) PALLASS CAPSTONE. Placed on GRIMALKIN, not pallass_forge_clerk: the clerk says 'I only handle paper' in three separate nodes, while forge-tier rune practice is Grimalkin's professional register. Gated on the forge chain's terminal (elevator_pass_stamped) + spine_started, hidden once heard; revisit arm on the hub he already sees the player at (spec 8). Carries chatted_with_grimalkin like every other option here; the lattice bank rides the ACCEPT one node down, so declining costs nothing.",
      "text": "You've been about to say something since the stamp.",
      "requires": {
       "accomplishment": {
@@ -124,7 +124,7 @@
   },
   "forge_runes": {
    "speaker": "Grimalkin",
-   "_comment": "Held under the 200-char page budget ON PURPOSE: at 204 it split into a 191-char page plus a 12-char orphan reading only 'Stand still.', which the windowed read caught looking like a rendering fault. One page, one beat.",
+   "_comment": "Held under the 200-char page budget ON PURPOSE: at 204 it split into a 191-char page plus a 12-char orphan reading only 'Stand still.', which the windowed read caught looking like a rendering fault.",
    "text": "I have. The forge tier runs on rune-fed work. Every ward up there eats on a schedule a smith keeps in a ledger. Feed it on time or it feeds itself. Your door has no ledger. Stand still.",
    "options": [
     {
@@ -143,7 +143,7 @@
    ]
   },
   "forge_runes_verdict": {
-   "_comment": "HIS OWN PIECE ONLY (spec 4): rune-feeding as forge-tier maintenance practice, plus his standing objection to anything unmeasured. He does not know what is at the far end of the draw and says so; the assembled picture is Act V's.",
+   "_comment": "HIS OWN PIECE ONLY (spec 4): rune-feeding as forge-tier maintenance practice, plus his standing objection to anything unmeasured. He does not know what is at the far end of the draw; the assembled picture is Act V's.",
    "speaker": "Grimalkin",
    "text": "It costs whatever it is drawing on, and it has been drawing unsupervised since long before you owned it. I do not find that alarming. I find it UNMEASURED, which is worse. Find what sits at the far end of the draw and bring me the numbers. I will publish them and you will be a footnote. That is the highest offer I make.",
    "options": [

@@ -1,5 +1,5 @@
 {
- "_comment": "2026-07-26 Act V: THE PAYOFF CHAMBER, behind seal_kept_door. Reachable ONLY through that door's own door_when (requires seal_opened) -- the FIGHT path's terminus, and the one room in the dungeon that was never ruined. Floor is deliberately the CASTLE stone the asset catalog casts for 'a still-intact inner chamber (Warmage Thresk's own room)', not the cemetery floor the halls outside use: the difference IS the storytelling. Small by design (11x9), one prop that matters, no fights inside -- the fight is the warden in the hall you had to get past. THE BLOCKING CONTRACT: every solid-reading decor cell is paired into `blocked`.",
+ "_comment": "Act V: THE PAYOFF CHAMBER, behind seal_kept_door and reachable ONLY through that door's own door_when (requires seal_opened) -- the FIGHT path's terminus. Floor is deliberately the CASTLE stone, not the cemetery floor the halls outside use: the difference IS the storytelling. Small by design (11x9), one prop that matters, no fights inside. THE BLOCKING CONTRACT: every solid-reading decor cell is paired into `blocked`.",
  "biome": "dungeon",
  "grid": {
   "width": 11,
@@ -117,7 +117,7 @@
    ]
   },
   {
-   "_comment": "Non-blocking: the ward-lattice painted across the floor where the pour arrives, one ring at each end of the plinth's aisle. Windowed read 2026-07-27 moved them OFF the anchor's own neighbours -- at (8,3)/(8,5) the two rings read as the room's subject and the plinth between them vanished. Each carries a faint cool light: the pour is the only thing lighting this room.",
+   "_comment": "Non-blocking ward-lattice rings where the pour arrives, one at each end of the plinth's aisle. Windowed read 2026-07-27 moved them OFF the anchor's own neighbours -- at (8,3)/(8,5) the rings read as the room's subject and the plinth between them vanished. Each carries a faint cool light.",
    "sprite": "cellar_wardwork",
    "cell": [
     8,
@@ -186,7 +186,7 @@
    "observe": "The doorway you came through, seen from the inside: the runes run the same order on this face, which means they were cut to be read from in here. Somebody expected to be standing where you are."
   },
   {
-   "_comment": "THE TERMINUS. A container, not an interact-prop, so the open can bank AND grant AND speak in one beat (on_open_accomplishment String|Array + open_toast, the pedestal-breach engine keys from Task 2.3). seal_resolved banks HERE on the FIGHT path -- reaching what was fed is the resolution, not merely deciding to look. Oblique-Thresk: the wiki is silent on what a Warmage's anchor looks like, so the room states only what a resident could see and Pisces reads the rest. Carries the room's key light (windowed read 2026-07-27): the anchor is AWAKE and drinking, and light is the only way the room says so before Pisces does. Three lights total on this map, inside world.gd's LIGHT_BUDGET of 8.",
+   "_comment": "THE TERMINUS. A container, not an interact-prop, so the open can bank AND grant AND speak in one beat (on_open_accomplishment String|Array + open_toast, the Task 2.3 pedestal keys). seal_resolved banks HERE on the FIGHT path -- reaching what was fed is the resolution, not merely deciding to look. Oblique-Thresk: the wiki is silent on a Warmage's anchor, so the room states only what a resident could see and Pisces reads the rest. Carries the room's key light; three lights on this map, inside world.gd's LIGHT_BUDGET of 8.",
    "id": "vault_anchor_stone",
    "kind": "prop",
    "cell": [

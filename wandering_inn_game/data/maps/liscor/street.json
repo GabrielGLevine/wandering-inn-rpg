@@ -1481,7 +1481,7 @@
      ]
     },
     {
-     "_comment": "Appended AFTER pisces_door_study_2 (later match wins) so an active seal-study period reads as the more current topic. 2026-07-26 main-quest spec 7 amendment 1: the stage ids and their second_door_study_sleeps counter are SHIPPED and frozen, so both keep their names -- the copy no longer calls the thing under the city a second door. It is the seal's wardwork, cut by the hand that cut the inn's frame.",
+     "_comment": "Appended AFTER pisces_door_study_2 (later match wins) so an active seal-study period reads as the more current topic. FROZEN IDS (spec 7 amendment 1): the stage ids and their second_door_study_sleeps counter are SHIPPED, so both keep their names -- only the copy changed, and it no longer calls the thing under the city a second door.",
      "id": "pisces_second_door_study_1",
      "requires_accomplishment": {
       "second_door_study_sleeps": 1
@@ -1831,7 +1831,7 @@
     0.62
    ],
    "observe": "A worn marker stone, older than the buildings that grew up around it. Nobody living remembers who set it, or why it sits exactly here.",
-   "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): portal_menu_when and the lit-waystone visual_state both moved door_awakened -> door_mounted, in lockstep with inn.json's `pantry_door` (the pair's other end) and portals.json's two Liscor rows. The Magical Door carries the inn<->gate-district hop from the day it is hung; this stone is the Liscor-side carrier, so gating it later would have stranded the return leg. Sight and passage still flip together, the garden_door contract. Old saves reach door_mounted through Task 2.6's backfill.",
+   "_comment_task_2_4": "Task 2.4: portal_menu_when and the lit-waystone visual_state both moved door_awakened -> door_mounted, in lockstep with inn.json's `pantry_door` (the pair's other end) and portals.json's two Liscor rows. This stone is the Liscor-side carrier, so gating it later would have stranded the return leg. Sight and passage still flip together, the garden_door contract. Old saves reach door_mounted through Task 2.6's backfill.",
    "portal_menu": true,
    "portal_menu_when": {
     "requires": {

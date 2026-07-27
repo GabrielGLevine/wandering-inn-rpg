@@ -1,5 +1,5 @@
 {
-	"_comment": "d1 #247 Friends of the Inn PR2b -- Relc's INN register. Attached ONLY to the relc_inn_guest entity; his road hub (relc_intro) never rides along, so the SPAR, the wager, the spare-spear gift and every descent window (relc_descent) stay home-only (REGISTER-PURE, spec 2026-07-20-foti-pr2-spec.md). What survives is a big off-shift Drake who is hungry and has worked out which chair is the good one. Serve mirrors selys_inn/patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter (feeds Helper/barmaid). Voice per docs/design/character-profiles.md: loud, at ease, kind right on the surface because nothing is being guarded.",
+	"_comment": "Relc's INN register. Attached ONLY to relc_inn_guest; his road hub (relc_intro) never rides along, so the SPAR, the wager, the spare-spear gift and every descent window (relc_descent) stay home-only (REGISTER-PURE). Serve mirrors selys_inn/patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter. Voice per docs/design/character-profiles.md: loud, at ease, kind right on the surface because nothing is being guarded.",
 	"start": "greet",
 	"nodes": {
 		"greet": { "speaker": "Relc", "text": "Hah! There you are. Good chair, good fire, no gate to stand at. Do not tell the Captain how comfortable I look.", "options": [

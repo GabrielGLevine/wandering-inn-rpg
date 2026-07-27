@@ -1,5 +1,5 @@
 {
-	"_comment": "Acts are derived, never saved: select the highest act whose predecessor gates pass. Conditions support min_classes, quests_completed, and accomplishment counts; empty means true. reached_two_classes is monotonic across consolidation. Act V is now the last act, so ITS advance_when is the defined-but-unreachable one -- it names seal_resolved so the finale sequence (Phase 8) has a single gate to read, and so a maxed save still lights every beat it owns.",
+	"_comment": "Acts are derived, never saved: select the highest act whose predecessor gates pass. Conditions support min_classes, quests_completed, and accomplishment counts; empty means true. reached_two_classes is monotonic across consolidation. Act V is last, so ITS advance_when is the defined-but-unreachable one -- it names seal_resolved so the finale sequence has a single gate to read, and so a maxed save still lights every beat it owns.",
 	"acts": [
 		{
 			"id": "act_i",
@@ -34,7 +34,7 @@
 			]
 		},
 		{
-			"_comment": "2026-07-26 Act V (Phase 7, Task 7.4, gate revised in fix round 1 by controller ruling over plan 7.4). The gate is the PILGRIMAGE's last piece, the seal report, and the two region terminals the pilgrimage does not imply. Transitivity does the rest and costs nothing: lattice_forge_rune already implies spine_started (so door_awakened) and elevator_pass_stamped, while lattice_witch_lore requires price_of_a_favor_reported and lattice_hedault_reading requires brothers_job_done -- and Act V's own descent ask requires all three lattice counters, so a player who reaches Act V has always banked all four gate keys anyway. Naming them here is what keeps riverfarm_owed and invrisil_squared from being STRANDED: a beat whose counter can only bank in an act the player has already left can never render, the exact act_iii defect the 2026-07-26 reframe fixed. counted_among is deliberately not in the gate: it is the seal's own closing line, relocated here from act_iii because post_game banks at the first sleep AFTER the seal (sleep_beat.gd), by which point the seal has already carried the player into this act.",
+			"_comment": "Act V gate (revised in fix round 1 by controller ruling): the seal report plus the two region terminals the pilgrimage does not imply. Transitivity covers the rest -- lattice_forge_rune implies spine_started and elevator_pass_stamped, lattice_witch_lore requires price_of_a_favor_reported, lattice_hedault_reading requires brothers_job_done, and Act V's descent ask requires all three lattice counters. Naming them here is what keeps riverfarm_owed and invrisil_squared from being STRANDED: a beat whose counter can only bank in an act the player has already left can never render (the act_iii defect). counted_among is deliberately NOT in the gate -- it is the seal's own closing line, relocated here because post_game banks at the first sleep AFTER the seal (sleep_beat.gd).",
 			"id": "act_iv",
 			"title": "What the Door Opened",
 			"header": "Act IV -- What the Door Opened",
@@ -50,7 +50,7 @@
 			]
 		},
 		{
-			"_comment": "2026-07-26 Act V, filling the slot #270 reserved. Every beat here banks INSIDE the act (the act_iii lesson: a beat keyed to its own act's exit gate can never render) -- and because act_v is last, even the resolution beat renders, since the player never leaves. One resolution beat, not three: a per-path beat list would leave two entries permanently pending on the journal for every player. SPOILER DISCIPLINE (windowed read 2026-07-27): journal.gd renders PENDING act beats in full, marked '·' instead of '✓', so every line here is visible from the moment Act V opens. None of them may state more than the act's own user-ratified title already does -- the reading beat says only that it was never a lock, and nothing anywhere names what the vault actually holds.",
+			"_comment": "Act V, the slot #270 reserved. Every beat here banks INSIDE the act (the act_iii lesson: a beat keyed to its own act's exit gate can never render), and because act_v is last even the resolution beat renders. ONE resolution beat, not three: a per-path beat list would leave two entries permanently pending for every player. SPOILER DISCIPLINE: journal.gd renders PENDING act beats in full, marked '·' instead of '✓', so every line here is visible from the moment Act V opens -- none may state more than the act's own title, and nothing names what the vault holds.",
 			"id": "act_v",
 			"title": "What the Seal Was Feeding",
 			"header": "Act V -- What the Seal Was Feeding",
