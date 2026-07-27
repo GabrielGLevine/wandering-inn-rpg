@@ -858,7 +858,11 @@
       "olesm",
       "pisces",
       "relc",
-      "zevara"
+      "zevara",
+      "klbkch",
+      "rags",
+      "wilovan",
+      "grimalkin"
      ],
      "seats": 2
     }
@@ -891,7 +895,11 @@
       "olesm",
       "pisces",
       "relc",
-      "zevara"
+      "zevara",
+      "klbkch",
+      "rags",
+      "wilovan",
+      "grimalkin"
      ],
      "seats": 2
     }
@@ -924,7 +932,11 @@
       "olesm",
       "pisces",
       "relc",
-      "zevara"
+      "zevara",
+      "klbkch",
+      "rags",
+      "wilovan",
+      "grimalkin"
      ],
      "seats": 2
     }
@@ -960,7 +972,11 @@
       "olesm",
       "pisces",
       "relc",
-      "zevara"
+      "zevara",
+      "klbkch",
+      "rags",
+      "wilovan",
+      "grimalkin"
      ],
      "seats": 2
     }
@@ -996,7 +1012,11 @@
       "olesm",
       "pisces",
       "relc",
-      "zevara"
+      "zevara",
+      "klbkch",
+      "rags",
+      "wilovan",
+      "grimalkin"
      ],
      "seats": 2
     }
@@ -1029,7 +1049,11 @@
       "olesm",
       "pisces",
       "relc",
-      "zevara"
+      "zevara",
+      "klbkch",
+      "rags",
+      "wilovan",
+      "grimalkin"
      ],
      "seats": 2
     }
@@ -1062,7 +1086,11 @@
       "olesm",
       "pisces",
       "relc",
-      "zevara"
+      "zevara",
+      "klbkch",
+      "rags",
+      "wilovan",
+      "grimalkin"
      ],
      "seats": 2
     }
@@ -1071,6 +1099,166 @@
     {
      "speaker": "Zevara",
      "text": "Nobody has found me yet. Do not be the one who does."
+    }
+   ]
+  },
+  {
+   "_comment": "d1 #247 FoTI extension (2026-07-26). Klbkch rotates through once met (chatted_with_klbkch>=1, banked by his plaza talk_pool on street.json) -- the ONLY one of the four new roster members with NO quest gate, so his row carries the `guest` arm alone exactly like the six before him. His conversation (klbkch_inn) is the inn register and the HIVE never rides along: no projects, no castes, no Queen, nothing below the city. Seat (11,5): the smallest rig of the four (92px frames), back row of the new block. The four new chairs sit EAST of the ledger, in the same rows 5-6 seat lanes: klbkch (11,5), rags (12,5), wilovan (12,6), grimalkin (14,5). Derived from the map's own free set at edit time -- clear of the blocked cells, the boot cell (2,6), the serve lane (4,7)/(5,7)/(6,7), hungry_patron (5,6), the garden approach (3,7)->(3,8), the walkthrough diagonal (2,3)/(3,3)/(4,4), Lyonette's (9,4) approach, the stew-pot approach (4,2), the (2,5) step inn_guests_full_loop uses to reach Relc, door_awakening's and portal_menu's (13,6) inn cell, and all six shipped chairs. SPACING IS DRIVEN BY GRIMALKIN'S RIG, which is by far the biggest shipped (224px frames): the first pass sat him at (12,6) beside Wilovan at (11,6) and the windowed check KILLED it -- he buried Wilovan almost entirely and the player standing two rows north at (12,4) ate his head, which is precisely Relc's (2,5) lesson repeating. He now holds the far-east corner (14,5), where the wall takes his right side, the nearest guest chair is two columns away and nothing but plain floor sits above him.",
+   "id": "klbkch_inn_guest",
+   "kind": "npc",
+   "cell": [
+    11,
+    5
+   ],
+   "display_name": "Klbkch",
+   "sprite": "klbkch",
+   "facing": "down",
+   "conversation": "klbkch_inn",
+   "present_when": {
+    "guest": {
+     "npc": "klbkch",
+     "roster": [
+      "selys",
+      "krshia",
+      "olesm",
+      "pisces",
+      "relc",
+      "zevara",
+      "klbkch",
+      "rags",
+      "wilovan",
+      "grimalkin"
+     ],
+     "seats": 2
+    }
+   },
+   "dialogue": [
+    {
+     "speaker": "Klbkch",
+     "text": "Off duty. I am told this is a thing a person can be."
+    }
+   ]
+  },
+  {
+   "_comment": "d1 #247 FoTI extension (2026-07-26). Rags appears only after chieftains_price SETTLES (rags_meeting_settled), not on first meeting -- belt-and-braces with WIInnGuests.GUEST_POOL_GATES, which holds her out of the met-POOL on the same counter so the window never spends a seat on a hidden row. The `absent` arm is the fiction guard the pool gate cannot express: the rags_scouting_party encounter banks rags_meeting_settled from its on_victory too, so without `absent {drove_off_rags}` a player who drew steel and won would seat the Chieftain they drove off the plains. Her met counter is banked ONLY on rags_meeting's two peaceful first-contact options for the same reason. Register-pure: no medicine trade, no carved pawn, no war planning. Seat (12,5), back row beside Klbkch. The four new chairs sit EAST of the ledger, in the same rows 5-6 seat lanes: klbkch (11,5), rags (12,5), wilovan (12,6), grimalkin (14,5). Derived from the map's own free set at edit time -- clear of the blocked cells, the boot cell (2,6), the serve lane (4,7)/(5,7)/(6,7), hungry_patron (5,6), the garden approach (3,7)->(3,8), the walkthrough diagonal (2,3)/(3,3)/(4,4), Lyonette's (9,4) approach, the stew-pot approach (4,2), the (2,5) step inn_guests_full_loop uses to reach Relc, door_awakening's and portal_menu's (13,6) inn cell, and all six shipped chairs. SPACING IS DRIVEN BY GRIMALKIN'S RIG, which is by far the biggest shipped (224px frames): the first pass sat him at (12,6) beside Wilovan at (11,6) and the windowed check KILLED it -- he buried Wilovan almost entirely and the player standing two rows north at (12,4) ate his head, which is precisely Relc's (2,5) lesson repeating. He now holds the far-east corner (14,5), where the wall takes his right side, the nearest guest chair is two columns away and nothing but plain floor sits above him.",
+   "id": "rags_inn_guest",
+   "kind": "npc",
+   "cell": [
+    12,
+    5
+   ],
+   "display_name": "Rags",
+   "sprite": "rags",
+   "facing": "down",
+   "conversation": "rags_inn",
+   "present_when": {
+    "requires": {
+     "rags_meeting_settled": 1
+    },
+    "absent": {
+     "drove_off_rags": 1
+    },
+    "guest": {
+     "npc": "rags",
+     "roster": [
+      "selys",
+      "krshia",
+      "olesm",
+      "pisces",
+      "relc",
+      "zevara",
+      "klbkch",
+      "rags",
+      "wilovan",
+      "grimalkin"
+     ],
+     "seats": 2
+    }
+   },
+   "dialogue": [
+    {
+     "speaker": "Rags",
+     "text": "Warm here. Two doors. I counted."
+    }
+   ]
+  },
+  {
+   "_comment": "d1 #247 FoTI extension (2026-07-26). Wilovan appears only after a_gentlemans_disagreement CLOSES (brothers_job_done), belt-and-braces with GUEST_POOL_GATES on the same counter. His conversation (wilovan_inn) is oblique by contract: the commission, the three doors, Coyle, Farley, the marker and the fence shelf all stay at the Invrisil parlor (invrisil_wilovan), and the trade is never named here. Seat (12,6), front row, directly under Rags's chair -- the same vertical stack the shipped pisces (6,5)/selys (6,6) pair already runs, and both rigs are about one tile wide. Moved off (11,6) when the windowed check found Grimalkin's arm covering him there. The four new chairs sit EAST of the ledger, in the same rows 5-6 seat lanes: klbkch (11,5), rags (12,5), wilovan (12,6), grimalkin (14,5). Derived from the map's own free set at edit time -- clear of the blocked cells, the boot cell (2,6), the serve lane (4,7)/(5,7)/(6,7), hungry_patron (5,6), the garden approach (3,7)->(3,8), the walkthrough diagonal (2,3)/(3,3)/(4,4), Lyonette's (9,4) approach, the stew-pot approach (4,2), the (2,5) step inn_guests_full_loop uses to reach Relc, door_awakening's and portal_menu's (13,6) inn cell, and all six shipped chairs. SPACING IS DRIVEN BY GRIMALKIN'S RIG, which is by far the biggest shipped (224px frames): the first pass sat him at (12,6) beside Wilovan at (11,6) and the windowed check KILLED it -- he buried Wilovan almost entirely and the player standing two rows north at (12,4) ate his head, which is precisely Relc's (2,5) lesson repeating. He now holds the far-east corner (14,5), where the wall takes his right side, the nearest guest chair is two columns away and nothing but plain floor sits above him.",
+   "id": "wilovan_inn_guest",
+   "kind": "npc",
+   "cell": [
+    12,
+    6
+   ],
+   "display_name": "Wilovan",
+   "sprite": "wilovan",
+   "facing": "down",
+   "conversation": "wilovan_inn",
+   "present_when": {
+    "requires": {
+     "brothers_job_done": 1
+    },
+    "guest": {
+     "npc": "wilovan",
+     "roster": [
+      "selys",
+      "krshia",
+      "olesm",
+      "pisces",
+      "relc",
+      "zevara",
+      "klbkch",
+      "rags",
+      "wilovan",
+      "grimalkin"
+     ],
+     "seats": 2
+    }
+   },
+   "dialogue": [
+    {
+     "speaker": "Wilovan",
+     "text": "Evening, sir. No business tonight, you'll be glad to hear."
+    }
+   ]
+  },
+  {
+   "_comment": "d1 #247 FoTI extension (2026-07-26). Grimalkin appears only after forge_tier_permit CLOSES (elevator_pass_stamped), belt-and-braces with GUEST_POOL_GATES on the same counter. His conversation (grimalkin_inn) never touches the permit office: no forms, no fitness read, no lift pass, no study enrollment or turn-in (pallass_grimalkin keeps all of it). Seat (14,5) is the far-east CORNER and it is his because his rig is the biggest shipped by a wide margin (224px frames): on screen he is roughly two tiles wide and nearly four tall. The first pass sat him at (12,6) with Wilovan next door at (11,6) and the windowed check killed it -- Wilovan vanished behind his arm and the player standing at (12,4) covered his head. In the corner the east wall takes his right side, (14,4) above him is plain floor and doubles as his approach, and the nearest guest chair is two columns west. entity render_scale comes from the sprite CATALOG only (entity_visual_factory.gd:54), so a per-row shrink was never an option; the fix had to be the cell. The four new chairs sit EAST of the ledger, in the same rows 5-6 seat lanes: klbkch (11,5), rags (12,5), wilovan (12,6), grimalkin (14,5). Derived from the map's own free set at edit time -- clear of the blocked cells, the boot cell (2,6), the serve lane (4,7)/(5,7)/(6,7), hungry_patron (5,6), the garden approach (3,7)->(3,8), the walkthrough diagonal (2,3)/(3,3)/(4,4), Lyonette's (9,4) approach, the stew-pot approach (4,2), the (2,5) step inn_guests_full_loop uses to reach Relc, door_awakening's and portal_menu's (13,6) inn cell, and all six shipped chairs. SPACING IS DRIVEN BY GRIMALKIN'S RIG, which is by far the biggest shipped (224px frames): the first pass sat him at (12,6) beside Wilovan at (11,6) and the windowed check KILLED it -- he buried Wilovan almost entirely and the player standing two rows north at (12,4) ate his head, which is precisely Relc's (2,5) lesson repeating. He now holds the far-east corner (14,5), where the wall takes his right side, the nearest guest chair is two columns away and nothing but plain floor sits above him.",
+   "id": "grimalkin_inn_guest",
+   "kind": "npc",
+   "cell": [
+    14,
+    5
+   ],
+   "display_name": "Grimalkin",
+   "sprite": "grimalkin",
+   "facing": "down",
+   "conversation": "grimalkin_inn",
+   "present_when": {
+    "requires": {
+     "elevator_pass_stamped": 1
+    },
+    "guest": {
+     "npc": "grimalkin",
+     "roster": [
+      "selys",
+      "krshia",
+      "olesm",
+      "pisces",
+      "relc",
+      "zevara",
+      "klbkch",
+      "rags",
+      "wilovan",
+      "grimalkin"
+     ],
+     "seats": 2
+    }
+   },
+   "dialogue": [
+    {
+     "speaker": "Grimalkin",
+     "text": "Sit down properly if you are going to sit."
     }
    ]
   },

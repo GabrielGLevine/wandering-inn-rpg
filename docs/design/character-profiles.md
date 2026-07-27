@@ -192,6 +192,15 @@ canon cites · current sprite state.
   his blades, not a uniform).
 - Voice: precise, courteous, unfailingly calm; dry understatement.
   Never jokey. He manages Relc; he has time for people.
+- Inn register (d1 #247 FoTI extension, `klbkch_inn`): courteous and
+  exact, and quietly wrong-footed by leisure. He came because he was
+  invited and he stays because leaving early would be rude, and he
+  would genuinely like to know what "resting" is supposed to
+  ACCOMPLISH. Not a joke and not self-pity: an honest question from
+  someone with no working model of an evening off. He reads the room
+  the way he reads a street, and reports his findings. NEVER Hive
+  business — no projects, no castes, no Queen, nothing below the city.
+  A guardsman is sitting down; the Hive stays out of this room.
 
 ## Raskghar (M-ARC A2, GENERATED + INTEGRATED 2026-07-06)
 - Canon (wiki.wanderinginn.com/Raskghar): "a cross between an upright
@@ -297,6 +306,15 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   apology-before-threat, "recover" never "steal", removes his hat
   plain-and-slow in respect. One dash per line (his `ways` node blew
   the budget — fix-lane item).
+- Inn register (d1 #247 FoTI extension, `wilovan_inn`): the same
+  hat-tipping courtesy with nothing to transact. Everything stays
+  OBLIQUE: he speaks of a colleague, of an errand, of a gentleman who
+  keeps early hours, and never once names the trade or what the
+  Brothers do for a living. He is a large well-mannered Gnoll enjoying
+  a room where nobody wants anything from him, and he says so in the
+  longest possible way. NEVER the commission, the fence shelf, the
+  marker, Coyle, Farley, or any follow-up to a gentleman's
+  disagreement — all of that stays at the parlor (`invrisil_wilovan`).
 - Partner Ratici: SHIP APPROVED (user ruling 2026-07-16, #133) —
   grandfathered-safe by name (mid-Vol-7, spoiler-cutoff.md item 3); his
   Vol 8+ arcs stay out. Profile needed before his lane (wiki-verify:
@@ -375,6 +393,15 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
 - Voice: fitness-empiricism — a drill-sergeant-on-steroids who
   genuinely cares; lectures in numbered points; respects effort,
   despises excuses.
+- Inn register (d1 #247 FoTI extension, `grimalkin_inn`): off duty
+  means a LIGHTER workout, not no workout, and he will tell you the
+  numbers. He is still measuring: he has assessed the squat depth of
+  everyone who has stood up from a chair since he arrived, and he
+  volunteers the results. The care is real and it arrives as data. He
+  eats enormously and unapologetically. NEVER the permit office —
+  no forms, no filing, no fitness read, no lift pass, no study
+  enrollment or turn-in; that whole desk stays in Pallass
+  (`pallass_grimalkin`).
 - v1 role: bureaucratic-quest examiner beat + a talk_pool presence
   (8e v1 scope — full academy content deferred).
 - **Generation prompt** (PixelLab v2 `create-character-pro`, derived
@@ -441,3 +468,13 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   sentences, never exposition. Intelligence shows in WHAT she chooses
   to say and when she says nothing — not in vocabulary. Chess is the
   one shared language she meets Erin in.
+- Inn register (d1 #247 FoTI extension, `rags_inn`): a chieftain
+  slumming it, and proud of it. She came for the food and stayed for
+  the tables, which are better than anything her tribe has, and she
+  resents admitting it. She counts the exits the moment she sits down
+  and never stops knowing where they are. Still one to four words, no
+  articles, no fluency: the register does not soften just because the
+  room is warm. Grudging respect for Erin, expressed as a complaint.
+  NEVER war, never the tribe's numbers, never a plan — and never the
+  medicine trade or the carved pawn, which stay out on the plains
+  (`rags_meeting`). Early-volume Rags ONLY, per the Book-17 bar.

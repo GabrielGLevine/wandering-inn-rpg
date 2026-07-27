@@ -4384,6 +4384,75 @@
    }
   },
   {
+   "script": "inn_guests_ext_loop",
+   "seed": 3,
+   "fixture": "inn_guests_ext_start",
+   "note": "d1 #247 FoTI EXTENSION -- the ONLY live coverage klbkch_inn, rags_inn, wilovan_inn and grimalkin_inn have. Off inn_guests_ext_start: all TEN rostered met AND the three quest terminals banked, so the pool is 10 and times_slept=16 puts the start at 16%10=6, seating KLBKCH (11,5) + RAGS (12,5). Two real sleeps walk the window through the whole new east block: 17 seats [rags, wilovan], 18 seats [wilovan, grimalkin], so all four new registers open live and each is proven to arrive AND to leave. Proves the four new seats render -- spacing set by Grimalkin, whose 224px rig is the biggest shipped and whose first cell (12,6, beside Wilovan) FAILED the windowed check outright; he holds the far-east corner (14,5) now. ANY two roster members can co-render (a partial met-pool re-bases the window's neighbours), so no seat pair relies on the full roster's ordering. Also proves REGISTER-PURITY (the Hive is never named at Klbkch's table; rags_inn never touches the medicine trade or the carved pawn; wilovan_inn never names the trade or a beat of a_gentlemans_disagreement; grimalkin_inn never mentions a form -- all three home hubs are assert_event_absent across the run), SERVE ON BOTH NODES (Klbkch from his GREET node on the fixture's bowl, Rags from her off-duty TOPIC node on a bowl cooked at the stew pot via hotbar_3, so served_customer banks twice; Wilovan and Grimalkin pin the visible-locked 'requires Hot Meal' render with an empty pack), and TWO SLIDES (Rags stays across 16->17, Wilovan across 17->18, while Klbkch's chair and then Rags's are WALKED ONTO -- present_when absence is structural).",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "inn_guests_ext_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking"
+    ],
+    "dialogue": [
+     "grimalkin_inn",
+     "invrisil_wilovan",
+     "klbkch_inn",
+     "pallass_grimalkin",
+     "rags_inn",
+     "rags_meeting",
+     "wilovan_inn"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "inn_guests_gate_proof",
+   "seed": 3,
+   "fixture": "inn_guests_gate_start",
+   "note": "d1 #247 FoTI extension -- the QUEST-GATE proof. Off inn_guests_gate_start, which is inn_guests_ext_start minus rags_meeting_settled and otherwise identical, INCLUDING chatted_with_rags: met is not enough for a quest-gated guest. WIInnGuests.GUEST_POOL_GATES holds her out of the met-POOL rather than merely out of her chair, so the modulus drops 10 -> 9 and the SAME times_slept=16 seats a different pair (16%9=7 -> WILOVAN (11,6) + GRIMALKIN (12,6)) while her chair (12,5) is plain floor the player walks onto. A sleep to 17 moves the start to 8 ([grimalkin, selys]): Wilovan leaves, Grimalkin stays, Rags is still nowhere, so the shorter cycle is proven to be a real cycle and not a frozen window. The exhaustive never-once-across-a-full-rotation leg is unit-pinned in test_inn_guests (t=0..19); a live script cannot afford ten sleeps and does not need to.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "inn_guests_gate_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "rags_inn",
+     "wilovan_inn"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "input",
+     "night_phase"
+    ]
+   }
+  },
+  {
    "script": "reload_loop",
    "seed": 3,
    "fixture": "inn_guests_start",
