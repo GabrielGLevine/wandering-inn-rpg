@@ -138,7 +138,12 @@ def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: 
                     if "accomplishment" in variant:
                         out.add(str(variant["accomplishment"]))
             if "on_open_accomplishment" in entity:
-                out.add(str(entity["on_open_accomplishment"]))
+                # Task 2.3: String|Array, the on_victory contract above. A bare
+                # str() over a list would freeze one garbage "['a', 'b']" id and
+                # silently drop the real ones.
+                opened = entity["on_open_accomplishment"]
+                opened_ids = opened if isinstance(opened, list) else [opened]
+                out.update(str(o) for o in opened_ids)
             if "on_enter_accomplishment" in entity:
                 out.add(str(entity["on_enter_accomplishment"]))
             if entity.get("talk_pool"):
