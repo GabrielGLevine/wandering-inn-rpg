@@ -16,6 +16,84 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### Machine playtest — wave/mq6-bands, MILESTONE CLOSE: the whole main line (2026-07-27)
+
+Source: `wave/mq6-bands` after Tasks 9.1–9.3, full asset overlay in tree, 29/29
+unit suites + the 163-script sweep green first. Thirteen windowed runs walking
+the line start→finale (`tutorial_flow`, `gate_district_walkthrough`,
+`sewers_walkthrough`, `climax_seal`, `horns_dig_flow`, `door_awakening`,
+`spine_reach`, `riverfarm_fight`, `invrisil_disagreement_fight`,
+`pallass_walkthrough`, `seal_open`, `finale_after_merge`, `journal_history`),
+all `passed: true`, 63 screenshots read at native 1280x720. The finale's own
+paced lines are structurally invisible to QA (`sleep_veil._is_qa()`) and were
+read in the wave/mq5-finale pass above — not re-litigated here.
+
+- [ ] JOURNAL/ACT-IV-SPOILER (P2, pre-existing shape, worst at Act IV) — the
+  journal lists EVERY beat of the current act, earned (`✓`) or not (`·`), in
+  completed voice. At the moment Act IV opens (`climax_seal/02_journal_act4.png`,
+  a 3-level fixture standing at the seal) all seven Act IV beats are already on
+  the page: Riverfarm's fields, a merchant's name in Invrisil, "the forge tier
+  of Pallass stands open above you now", the Horns' corner of the inn, and the
+  Act V reveal line "Three regions have handed you the same word... The Door
+  has been teaching you what it is made of." The player has not heard of any of
+  it. The QUEST line directly beneath obeys spec §4's no-fetch-list rule ("The
+  Door reaches Riverfarm now. See what's out there.") — the beat list above it
+  hands over the whole itinerary AND the reveal. Compare
+  `spine_reach/02_journal_spine_beat.png`, where the same seven lines carry
+  five `✓`. Fix shape is a taste call for the controller: hide unearned derived
+  beats, or gate the Act V reveal line on its own counter.
+- [ ] COMBAT/FEED-FOLD (P2, REGRESSION of the Fixed-section item "message panels
+  clipped the last wrapped line") — the combat feed's last row is sliced at
+  half glyph height by the parchment fold whenever the 4th entry WRAPS into it:
+  `riverfarm_fight/02_briar_deep_wave.png` ("The Hunter strikes Deep Briar
+  Collector A / for 13!" — the `for 13!` row is cut) and
+  `invrisil_disagreement_fight/01_warehouse_fight_wilovan_ally.png` ("Wilovan
+  strikes Hired Blade B for 7!"). The re-budget counts wrapped lines for the
+  EVICT decision but the viewport still admits a partial row, so a damage
+  number can be the thing that vanishes.
+- [ ] COMBAT/HIRED-BLADE-NAMES (P2, Phase 9 makes it matter) — all three
+  warehouse enemies carry `display_name: "Hired Blade"`, so the turn banner
+  reads "Hired Blade A | Hired Blade B | Hired Blade C" and the feed names them
+  the same way. Phase 9 gave `hired_blade_leader` `[Counter Strike]`: the fight
+  now HAS a boss with its own mechanic and nothing on screen says which of the
+  three it is. Data-only fix — a distinct `display_name` on the leader alone
+  (the knives already share a sprite with citizens, the leader has its own
+  `hired_blade` sprite). `invrisil_disagreement_fight/01`.
+- [ ] JOURNAL/HALF-ROW (P3) — the journal's scroll viewport admits a partial
+  text row instead of clipping at a line boundary, so its bottom line renders
+  sliced ("The Missing Crate — Complete." on both
+  `climax_seal/02_journal_act4.png` and `spine_reach/02_journal_spine_beat.png`).
+  The `▼` continuation cue is present so it IS scrollable, but a half-height row
+  reads as a clipping bug, not as "more below".
+- [ ] COMBAT/BRIAR-CAMOUFLAGE (P3, same family as the open COMBAT/CELLAR-VERMIN
+  entry) — on `witch_hollow` the deep briar collectors are green foliage on a
+  green floor under a green canopy. In `riverfarm_fight/02_briar_deep_wave.png`
+  Collector A is findable only by its HP bar, and Collector B's foliage overlaps
+  the Hunter's cloak so ally and enemy read as one mass with two bars.
+- [ ] MAP/PALLASS-FORGE-FLOOR (P3) — `pallass_forge`'s walkable floor and its
+  walls share one purple-grey brick texture with no floor/wall cue; the top rows
+  are indistinguishable from the walkable middle
+  (`pallass_walkthrough/07_forge_tier_arrival.png`). In the same shot the forge
+  golem reads as machinery parked beside the lift rather than as a combatant —
+  the enemy-vs-decor class again, on the map whose fight Phase 9 just promoted
+  to Pallass's gated band cell.
+- CONFIRMED STILL OPEN: RUIN_WARDEN/RIG-SCALE (P3, logged in the mq4-act5 pass)
+  — at `combat_scale` 1.15 the warden's crown is still cut by the turn banner
+  on the vault arena's top row (`seal_open/06_the_warden.png`).
+- TRANSIENT, NOT A FINDING: one windowed `journal_history` run exited with
+  "8 ObjectDB instances were leaked at exit"; not reproducible on re-run (0
+  noise), headless sweep clean. Windowed shutdown-order artifact.
+- WHAT LANDS (keep this, do not regress): the Act V journal page is the best
+  chronicle surface in the game — act header, three derived beats in the
+  player's own voice, the live spine objective, then ten completed quests with
+  region tags, all inside the panel (`seal_open/01_journal_act_v.png`). The
+  `seal_open` eleven-shot sequence reads as one escalating scene (descent ask →
+  the reading → the three-path choice → the warden → the vault → the anchor →
+  the tally). The finale's consolidation offer correctly HOLDS the curtain
+  rather than racing it (`finale_after_merge/00_merge_offer_holds_the_curtain.png`).
+  Wilovan's own `[Counter Strike]` already prints by name in the feed, so the
+  leader's new copy of it will read as a mirror, not as noise.
+
 ### Machine playtest — wave/mq5-finale, the finale sequence (2026-07-27)
 
 Source: `wave/mq5-finale` at the Task 8.1 commit, full asset overlay in tree,
