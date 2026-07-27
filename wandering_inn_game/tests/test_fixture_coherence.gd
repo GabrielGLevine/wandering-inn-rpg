@@ -23,6 +23,9 @@ const COMBAT_BAND_FIXTURES := {
 	"near_invrisil": 2,
 	"near_invrisil_fight": 10,
 	"delve_fight_start": 11,
+	# 2026-07-26 Act V: the seal warden's own tuned band (spellsword14, the
+	# t4_spellsword14_party reference build sim_combat_batch gates the fight at).
+	"seal_open_start": 14,
 }
 
 const MAP_REQUIRES := {

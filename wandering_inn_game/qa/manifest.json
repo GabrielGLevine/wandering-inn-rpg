@@ -2573,6 +2573,104 @@
    }
   },
   {
+   "script": "seal_open",
+   "seed": 1,
+   "fixture": "seal_open_start",
+   "note": "2026-07-26 Act V (#270 as amended by main-quest spec 7), THE FIGHT PATH. Pisces' descent ask on Market Street (gated on all three lattice counters; banks seal_descent_agreed, starts what_the_seal_was_feeding, and COMPLETES the pilgrimage spine's `return` beat, the accepted red Phase 6 shipped) -> the SKILL-FREE reading at seal_kept_door: two bare interacts stage Pisces' narration into read_the_seal_runes then read_the_feeding_ward, the route every build can walk -> his three-path choice, taking WE OPEN IT (seal_opened) -> stepping onto the door's only approach cell wakes seal_warden through its trigger_radius (the tuned solo fight, 0.55-0.95 harness cell seal_warden_t5_sw14_solo) -> the door's door_when transitions into the new seal_vault map -> the anchor's open banks seal_resolved, grants seal_anchor_rune, completes the quest and fires its resolution_paths grant. Exact greet pin on the Pisces hub (the necromancy topic VISIBLE-LOCKED behind its class gate), the journal already reading act_v at load, and NEGATIVES on both other path counters.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "seal_vault",
+     "street",
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "seal_open_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pisces_magic",
+     "pisces_seal"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "seal_fed",
+   "seed": 9,
+   "fixture": "seal_fed_start",
+   "note": "2026-07-26 Act V, THE TALK PATH. Same descent ask and skill-free reading as seal_open, then Pisces argues the ward is safer fed and points at Olesm -- and pointing banks NOTHING (asserted). At the Guild steps his Act V hub row opens the standing-posting pitch, where the witch pattern renders both legs: [Charming Smile] selectable off diplomat 1, the 12-gold alternate beside it. The Skill leg banks seal_kept_fed + seal_resolved and completes the quest. NEGATIVES: seal_opened and seal_rewarded never bank, and combat_started never fires in the whole run -- the door stays shut on this path.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street",
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "seal_fed_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "olesm_intro",
+     "pisces_magic",
+     "pisces_seal"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "seal_reward",
+   "seed": 9,
+   "fixture": "seal_reward_start",
+   "note": "2026-07-26 Act V, THE SKILL PATH. The descent ask, then the reading's RICHEST arm: [Detect Magic] (necromancer 1) on seal_kept_door at detected_wardwork 3 lands the quartet payoff -- four readings, one warding lattice, and this door is where it drains to. Pisces' choice then shows [Hedge Remedy] VISIBLE-LOCKED beside the selectable [Detect Magic] fork (skill gates tease, never hide); the fork's pitch is Skill-gated and its close is ITEM-gated, CONSUMING guardian_ward_fragment (item_lost asserted) to bank seal_rewarded + seal_resolved. NEGATIVES: the door never opens, the Watch is never asked, no combat.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street",
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "seal_reward_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "detect_magic"
+    ],
+    "dialogue": [
+     "pisces_magic",
+     "pisces_seal"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
    "script": "olesm_chess_loop",
    "seed": 9,
    "fixture": "olesm_chess_pre",
