@@ -16,6 +16,40 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### Machine playtest — quest-thread legibility (2026-07-19)
+
+Source: detached `c33faac` build with the complete local asset overlay; clean
+`load_gate`, then eight windowed seed-9 scripts, 50/50 screenshots read at
+native resolution. Durable evidence:
+`wandering_inn_game/qa_output/machine_playtest_2026-07-19_quest_legibility/`.
+
+- [ ] UI/QUEST-START (P1) — the main arc starts `something_beneath` and emits
+  two toast payloads in the same tick: `New quest: Something Beneath` and the
+  actionable `A Watch runner is looking for you.` Only the quest-title toast
+  ever produces `ui_toast_rendered`; the runner pointer never reaches the
+  screen. `arc_flow/01_tremor_pointer.png` therefore leaves a first-time
+  player with a title but no person or destination to pursue. Queue both lines
+  or combine them, then pin the directional copy in the screenshot/rendered
+  event rather than only the domain log.
+- [ ] COMBAT/DARK-ARENA (P1 acceptance drift) — the two Sewer Rats in
+  `sewers_walkthrough/01_vermin_encounter.png` are effectively invisible at
+  native scale; their HP numerals and orange bars reveal that enemies exist,
+  but the bodies read as tiny dark pixels. The still-dark mood lands, but the
+  closed GH#28 combatant-brightness treatment no longer clears its own
+  first-time-player visibility bar on this roster.
+- [ ] SPRITE/ARC-CLIMAX (P2) — deep-tunnel figures repeatedly occupy the same
+  visual footprint. Relc/player/warren art collapse into one stack in
+  `arc_flow/dd_03_warren_mouth.png` and `dd_04_awakened_field.png`; the boss and
+  both scouts overlap heavily in `dd_06_boss_fight.png`, making count, identity,
+  and threat hierarchy hard to parse. Restage field cameos and spread the
+  climax roster's initial combat cells.
+- NOTE: the existing board/picker and permanent field-readout concerns were
+  re-observed, not re-opened as duplicate boxes. The Missing Recruit lead is
+  one notice inside a 14-page Request Board read (`missing_recruit_loop`), and
+  the expanded field legend plus queued toasts obscure the lower playfield in
+  `sewers_walkthrough/00b_sewers_lit.png`; existing GH#114/GH#115 remain the
+  right owners.
+
 ### Windowed map-tour findings (2026-07-15)
 
 Source: full 10-region windowed walkthrough tour (seed 9, all scripts
