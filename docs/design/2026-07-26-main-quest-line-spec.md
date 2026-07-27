@@ -72,69 +72,96 @@ framing, dev-facing comments).
 4. **NEW quest — door retrieval** (working id `door_in_the_ruin`,
    working title "The Door in the Ruin"; title needs user ACK).
    Detail in §3.
-5. `door_that_goes_elsewhere` — SLIMMED. The consult beat
-   (`door_understood`) and the anchor-stone beat
-   (`recovered_anchor_stone`) move into / are absorbed by the
-   retrieval quest (§3). Remaining beats: buy catalyst → attune with
-   Pisces → `door_awakened`. All copy re-fictioned: the player is
-   awakening the door they personally carried home. Counter ids
-   (`door_understood`, `recovered_anchor_stone`, `bought_catalyst`,
-   `door_awakened`) are frozen and keep their ids; only *which quest's
-   beats consume them* and the copy change. The slimmed chain starts
-   automatically at `door_mounted` (Pisces, at the mounting: now we
-   wake it) — no separate start option remains.
-6. **NEW quest — pilgrimage spine** (working id `follow_the_lattice`,
-   working title "Following the Lattice"; title needs user ACK).
+5. `door_that_goes_elsewhere` — RESHAPED. The anchor-stone beat
+   (`recovered_anchor_stone`) is absorbed by the retrieval quest (§3).
+   Remaining beats: consult (`door_understood`, kept — re-fictioned:
+   the newly mounted door acts up before it is attuned; the shipped
+   cellar rift-vermin arm becomes "what leaks through the unattuned
+   door", the Pisces arm and the wardwork-reading arm read the
+   recovered door itself) → buy catalyst → attune with Pisces →
+   `door_awakened`. All copy re-fictioned: the player is awakening the
+   door they personally carried home, and attunement is what makes it
+   stop leaking. Counter ids (`door_understood`,
+   `recovered_anchor_stone`, `bought_catalyst`, `door_awakened`) are
+   frozen and keep their ids; only *which quest's beats consume them*
+   and the copy change. The slimmed chain starts automatically at
+   `door_mounted` (Pisces, at the mounting: now we wake it) — no
+   separate start option remains.
+6. **NEW quest — pilgrimage spine** (working id `where_the_door_reaches`,
+   working title "Where the Door Reaches"; title needs user ACK).
    Detail in §4.
 7. **Act V** — #270 spec as amended in §7. Banks `seal_resolved`.
 8. **Finale sequence** at `seal_resolved` — §5.
 
 ## 3. The retrieval quest (`door_in_the_ruin`) — the backport
 
-Fiction. Erin's pantry doorway leaks strangeness — the shipped cellar
-rift-vermin fights ARE this leak, re-explained. Pisces traces the
-resonance east to the ruin past the gate road, where Ceria's
-expedition is already digging (the canon Albez echo, never named —
-oblique per the Book-17 bar). The dig has hit a sealed level the Horns
-can't crack alone. The player joins the dig, gets through the sealed
-pedestal level, and what the pedestal held is **the door itself** —
-Thresk's door — plus its anchor stone. The Horns haul it back to the
-inn; it is mounted over the pantry doorway. Closing line of fiction:
-the doorway remembered its door.
+Fiction (user-corrected 2026-07-26: NO pantry-doorway resonance, no
+pre-linking the inn to the ruin — they find the door in the ruin, and
+it ends up at the Inn, that simple). Hook: the Horns of Hammerad have
+moved into the inn after the delve (`the_horns_home` is a shipped Act
+IV beat) and Ceria is planning a dig at the ruin east past the gate
+road (the canon Albez echo, never named — oblique per the Book-17
+bar). The dig has hit a sealed level the team can't crack short-handed;
+Ceria invites the player — they worked together in the trapped halls.
+What the pedestal level holds is **the door itself** — Thresk's door —
+plus its anchor stone. The Horns haul it back and it is mounted at the
+inn (a magic door is exactly the kind of thing Erin's inn absorbs; the
+Horns owe her room and board).
 
 Beats (order-gated; do NOT accept the catalyst-style cosmetic skip
 here — this is the main line):
 
-1. `trace` — fight what leaks through the cellar / ask Pisces / read
-   the pantry doorway's wardwork (the three-path consult moved from
-   the door chain; still banks `door_understood`).
-2. `join_dig` — reach the ruin, find the Horns' camp; banks
-   `horns_dig_joined` (new).
-3. `breach` — three-path the sealed pedestal level (fight the
+1. `join_dig` — take Ceria's invitation at the inn, reach the ruin,
+   find the Horns' camp; banks `horns_dig_joined` (new). The dig-camp
+   conversation carries the backstory: how the expedition found the
+   site, what they hope is down there. Past-tense variant of the same
+   arm serves migrated saves (§8).
+2. `breach` — three-path the sealed pedestal level (fight the
    pedestal's guardian arm / Ksmvr-style plate navigation for the
    stealth-social arm / a wardwork-reading skill arm — reuse the
    shipped ruin map with a dig-state variant, no new region).
    Banks `pedestal_breached` (new).
-4. `haul` — the reveal + the trip home; banks `door_retrieved` (new)
+3. `haul` — the reveal + the trip home; banks `door_retrieved` (new)
    and `recovered_anchor_stone` (frozen id, kept — the stone comes
-   home with the door). Door mounted: banks `door_mounted` (new);
-   the pantry-door prop swaps to the mounted state.
+   home with the door). Door mounted at the inn: banks `door_mounted`
+   (new); the pantry-door prop swaps to the mounted state.
 
-Quest start: from Erin (the current door-chain start option in
-erin_errand.json re-points here), gated on `seal_kept_reported`
-(pilgrimage prerequisite: the Horns delve is done and reported).
+Quest start: from Ceria at the inn, gated on `seal_kept_reported`.
+Erin's current door-chain start option in erin_errand.json is retired
+(the slimmed chain auto-starts, §2.5); if a pointer option is wanted,
+Erin can nudge toward Ceria's planning table instead.
 
-The Ceria backstory scene from approach B is folded in as the dig-camp
-conversation: how the expedition found the site, why the door matters.
-Past-tense variant of the same arm serves migrated saves (§8).
+## 4. The pilgrimage spine (`where_the_door_reaches`)
 
-## 4. The pilgrimage spine (`follow_the_lattice`)
+(Renamed from `follow_the_lattice` — "lattice" is Act V's REVEAL, the
+four shipped `detected_wardwork` sites reading as one warding system;
+a quest title cannot assume the player already knows it. Working title
+"Where the Door Reaches"; ACK gated.)
 
-Purpose-driven: Pisces cannot read the seal under Liscor without three
-things, and the door — reaching farther as it re-attunes — is how you
-get them. Each stop uses the EXISTING region chain as the
-"earn trust/access" body and adds one small capstone dialogue arm that
-banks a lattice piece:
+Discovery-driven, NOT a fetch list (user ruling 2026-07-26): the
+player is never told "get X from Riverfarm, Y from Invrisil, Z from
+Pallass". The door's growing reach IS the guidance — each newly
+reachable region is the next place to go because it is the only new
+place to go. The three things Pisces will eventually need for the
+descent are DISCOVERED in-region while living each chain, then
+contextualized after the fact.
+
+Copy discipline (binding on every surface this quest touches):
+
+- Spine journal beats point at reach, not objects: "The door reaches
+  Riverfarm now. See what's out there." — never an itemized ask.
+- Each lattice piece surfaces organically inside its region's story
+  (the witch's ward-lore emerges from her own chain; Hedault notices
+  the wardcraft of the door himself; the rune work comes out of the
+  forge-tier permit's own business). The capstone arm is the region
+  NPC raising it, not the player shopping for it.
+- Pisces foreshadows, never assigns: early line at spine start hints
+  the seal will take more than what Liscor knows; after each piece
+  banks, a Pisces reaction line contextualizes what it means. The
+  full picture assembles only at the Act V reading.
+
+Each stop uses the EXISTING region chain as the body and adds one
+small capstone dialogue arm that banks a lattice piece:
 
 | Stop | Existing chain (untouched body) | New capstone arm | Banks |
 |------|--------------------------------|------------------|-------|
@@ -248,6 +275,9 @@ accomplishments, zero save.gd plumbing beyond the §8 backfill.
 
 - test_content for every new/edited dialogue surface; new canonicals
   for the ruin dig-state map variant and the mounted-door pantry state.
+- Cellar rift-vermin encounter gating moves to `door_mounted`-based
+  (they are now "what leaks through the unattuned door" — cannot fire
+  before the door exists at the inn); re-derive affected fixtures.
 - Portal option-order re-pins (§4 warning) in the same PR as the row
   changes.
 - Epilogue/finale canonicals re-point; sleep-veil QA fixtures updated.
@@ -272,7 +302,7 @@ Suggested PR sequence (plan-time refinement expected):
 
 ## Open items (user-gated)
 
-- Quest title ACKs: "The Door in the Ruin", "Following the Lattice"
+- Quest title ACKs: "The Door in the Ruin", "Where the Door Reaches"
   (working titles; ids follow repo convention once ACKed).
 - Act IV title: keeping "What the Door Opened" (it now describes the
   whole act better than before) — flag if a rename is wanted.
