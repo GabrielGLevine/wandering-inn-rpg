@@ -1,5 +1,5 @@
 {
- "_comment": "d1 #247 Friends of the Inn -- RE-DERIVED for PR2a (roster grew APPEND-ONLY to [selys,krshia,olesm,pisces], seats still 2). The fixture banks all four met at times_slept=10, so WIInnGuests windows a pool of 4 from start = 10%4 = 2: OLESM (3,5) + PISCES (6,5) are on shift and the pilot pair is OFF. That makes this the first script where the rotation is proven LIVE rather than unit-only. Legs: (1) PRESENCE-WHEN-ON-SHIFT -- both new guests are reachable and interactable; (2) DISPLACEMENT -- Selys's seat (6,6) is walkable this waking (present_when absence is STRUCTURAL: is_cell_blocked/entity_at/_build_entities all skip an off-shift guest), which is also how the route reaches Pisces; (3) CONTEXT AWARENESS -- each opens its OWN inn conversation (olesm_inn/pisces_inn), never olesm_intro's chess/briefing desk or pisces_magic's tutoring, and Pisces's off-duty topic is walked to prove the register is food-and-fire only, no magic and no Door; (4) SERVABLE -- Olesm's Serve consumes the hot_meal and banks the shared served_customer counter (feeds Helper); (5) THE SLIDE -- a real sleep takes times_slept to 11, start = 11%4 = 3, seating PISCES + SELYS: Olesm's seat is now walkable, Pisces is STILL on shift (the window slid one, it did not swap), and Selys is back. INTERACT IDIOM (horns_residence): a click on a non-adjacent entity only WALKS adjacent -- it does not interact -- so each guest is reached by clicking an empty adjacent cell, waiting for arrival, THEN clicking the guest's own cell (now cardinally adjacent -> face + interact). Both new seats sit on row 5, WEST of the armed rift_vermin_leak (9,7) and clear of the serve lane (4,7)/(5,7)/(6,7) + hungry_patron (5,6). Boot = fixture->manual slot, title Continue (down 1), same as horns_residence/save_port_loop.",
+ "_comment": "d1 #247 Friends of the Inn -- RE-DERIVED for PR2a (roster grew APPEND-ONLY to [selys,krshia,olesm,pisces], seats still 2). The fixture banks all four met at times_slept=10, so WIInnGuests windows a pool of 4 from start = 10%4 = 2: OLESM (3,5) + PISCES (6,5) are on shift and the pilot pair is OFF. That makes this the first script where the rotation is proven LIVE rather than unit-only. Legs: (1) PRESENCE-WHEN-ON-SHIFT -- both new guests are reachable and interactable; (2) DISPLACEMENT -- Selys's seat (6,6) is walkable this waking (present_when absence is STRUCTURAL: is_cell_blocked/entity_at/_build_entities all skip an off-shift guest), which is also how the route reaches Pisces; (3) CONTEXT AWARENESS -- each opens its OWN inn conversation (olesm_inn/pisces_inn), never olesm_intro's chess/briefing desk or pisces_magic's tutoring, and Pisces's off-duty topic is walked to prove the register is food-and-fire only, no magic and no Door; (4) SERVABLE -- Olesm's Serve consumes the hot_meal and banks the shared served_customer counter (feeds Helper); (5) THE SLIDE -- a real sleep takes times_slept to 11, start = 11%4 = 3, seating PISCES + SELYS: Olesm's seat is now walkable, Pisces is STILL on shift (the window slid one, it did not swap), and Selys is back; (6) THE PERIOD CLOSES -- a second sleep to times_slept=12 puts start back to 0, seating the PILOT PAIR again, which is where krshia_inn keeps its live coverage now that PR2a moved her off the t=10 waking (review fix round 1). APPROACH-CELL RULE: no approach or teleport cell in this script uses (3,6) or (2,5) -- the PR2 spec assigns those to zevara_inn_guest and relc_inn_guest, so PR2b will block them and would otherwise silently re-path this run. INTERACT IDIOM (horns_residence): a click on a non-adjacent entity only WALKS adjacent -- it does not interact -- so each guest is reached by clicking an empty adjacent cell, waiting for arrival, THEN clicking the guest's own cell (now cardinally adjacent -> face + interact). Both new seats sit on row 5, WEST of the armed rift_vermin_leak (9,7) and clear of the serve lane (4,7)/(5,7)/(6,7) + hungry_patron (5,6). Boot = fixture->manual slot, title Continue (down 1), same as horns_residence/save_port_loop.",
  "fixture_save": "inn_guests_start",
  "starts_at_title": true,
  "steps": [
@@ -17,8 +17,8 @@
 
   { "action": "screenshot", "name": "00_new_pair_seated" },
 
-  { "_comment": "== OLESM: on shift + inn register + serve == his seat is (3,5). Walk to (3,6) just below it, then click (3,5) to interact. His OWN conversation opens directly (single interact, no bark -- the guest rows carry no talk_pool).", "action": "click", "cell": [3, 6] },
-  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [3, 6] }, "timeout_sec": 10 },
+  { "_comment": "== OLESM: on shift + inn register + serve == his seat is (3,5). Walk to (4,5), the free cell EAST of it, then click (3,5) to interact. His OWN conversation opens directly (single interact, no bark -- the guest rows carry no talk_pool). APPROACH-CELL RULE: (3,6) reads as the obvious approach and is deliberately NOT used -- the PR2 spec assigns it to zevara_inn_guest, and (2,5) to relc_inn_guest, so both would go blocked the moment PR2b lands and silently re-path this script. Every approach cell here is off the PR2b seat set.", "action": "click", "cell": [4, 5] },
+  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [4, 5] }, "timeout_sec": 10 },
   { "action": "click", "cell": [3, 5] },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_inn" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Oh, good, a friendly face. I promised myself one night off and I have spent it counting how many people can reach that door before I can." }, "timeout_sec": 5 },
@@ -56,10 +56,10 @@
   { "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
   { "action": "assert_state", "path": "times_slept", "equals": 11 },
 
-  { "action": "teleport", "map": "inn", "cell": [3, 6] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn", "cell": [3, 6] }, "timeout_sec": 5 },
+  { "action": "teleport", "map": "inn", "cell": [4, 5] },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn", "cell": [4, 5] }, "timeout_sec": 5 },
   { "_comment": "Still exactly two seats filled after the slide -- the same two seats, different people. 23 -> 24 is NOT a third guest: the sleep completed the resonant_catalyst attunement and banked garden_door_unlocked, so the always-authored garden_door (3,8) turns present in the same rebuild (event log: accomplishment_recorded garden_door_unlocked fires inside the sleep beat, before this render).", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 24, "fallbacks": 0 }, "timeout_sec": 5 },
-  { "_comment": "OLESM ROTATED OUT: the seat he occupied an hour ago is walkable now. A blocked move would have left the player at (3,6).", "action": "move", "direction": "up", "steps": 1 },
+  { "_comment": "OLESM ROTATED OUT: the seat he occupied an hour ago is walkable now. A blocked move would have left the player at (4,5), the same cell the approach used.", "action": "move", "direction": "left", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [3, 5] },
 
   { "_comment": "PISCES STAYED: he is in BOTH windows (start 2 -> [olesm,pisces], start 3 -> [pisces,selys]), which is what makes this a slide and not a swap. Approach from (5,5), the free cell west of his seat.", "action": "click", "cell": [5, 5] },
@@ -75,6 +75,40 @@
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "selys_inn" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Selys", "text": "You actually work here? That explains why the stew smells like something worth queuing for." }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "02_slid_window_selys_back" }
+  { "action": "screenshot", "name": "02_slid_window_selys_back" },
+
+  { "_comment": "Exit is visible option 3 (Serve visible-locked in slot 1, the desk topic in slot 2).", "action": "click_dialogue_option", "option": 3 },
+  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
+
+  { "_comment": "== THE SECOND SLIDE: BOTH PILOTS BACK == one more sleep takes times_slept to 12, start = 12%4 = 0, seating [selys, krshia] -- the full period is 4, so this is the window back at its origin. This leg exists to keep krshia_inn under LIVE coverage: PR1's canonical proved her register at t=10, and PR2a's re-derive moved that waking to olesm+pisces, so without this leg her inn conversation would have zero exercising script (review finding, fix round 1).", "action": "teleport", "map": "inn_upstairs", "cell": [9, 3] },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn_upstairs", "cell": [9, 3] }, "timeout_sec": 5 },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [9, 2] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
+  { "action": "assert_state", "path": "times_slept", "equals": 12 },
+
+  { "action": "teleport", "map": "inn", "cell": [4, 5] },
+  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn", "cell": [4, 5] }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 24, "fallbacks": 0 }, "timeout_sec": 5 },
+
+  { "_comment": "PISCES ROTATED OUT at last: he held a seat across t=10 and t=11 and finally leaves at t=12, so (6,5) is walkable floor. Path runs (4,5)->(5,5)->(6,5), all row 5, all clear of the PR2b seat set.", "action": "click", "cell": [6, 5] },
+  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [6, 5] }, "timeout_sec": 10 },
+
+  { "_comment": "== KRSHIA: back on shift, the ', yes?' Gnoll inn register == her seat is (4,6), unchanged since PR1. Approach from (4,5) directly above it.", "action": "click", "cell": [4, 5] },
+  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [4, 5] }, "timeout_sec": 10 },
+  { "action": "click", "cell": [4, 6] },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_inn" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "A Human inn, and the food does not insult me. This is worth the walk from the stall, yes?", "options": [
+   { "text": "Bring her a bowl from the kitchen. (Serve)", "locked": true, "requirement": "requires Hot Meal" },
+   { "text": "\"Closed the stall early?\"", "locked": false, "requirement": "" },
+   { "text": "\"Rest easy, Krshia.\"", "locked": false, "requirement": "" }
+  ] }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "_comment": "Her stall topic (visible option 2): off-duty, the market closed, never the wares hub -- the same register-purity half PR1 pinned, plus the second ', yes?' the Gnoll palette wants.", "action": "click_dialogue_option", "option": 2 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "A Gnoll knows when the market is done. Push past that and you sell nothing and smell of desperation, yes? Better to sit, and eat, and let the town come to me tomorrow." }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "03_pilots_back_krshia" },
+  { "_comment": "Serve stays visible-locked here too, so the exit is visible option 2.", "action": "click_dialogue_option", "option": 2 },
+  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 }
  ]
 }

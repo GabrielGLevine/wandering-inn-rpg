@@ -4319,7 +4319,7 @@
    "script": "inn_guests_loop",
    "seed": 3,
    "fixture": "inn_guests_start",
-   "note": "d1 #247 Friends of the Inn -- RE-DERIVED for PR2a. The roster grew APPEND-ONLY to [selys,krshia,olesm,pisces] over the same 2 seats, so at the fixture's times_slept=10 the window starts at 10%4=2 and seats OLESM + PISCES: this is the first script to prove the rotation LIVE rather than unit-only. Proves present-when-on-shift (both new guests reachable via the horns click-to-interact idiom), DISPLACEMENT (Selys's off-shift seat is walkable floor -- present_when absence is structural), context awareness (olesm_inn/pisces_inn open, never the chess desk or the magic tutor, and Pisces's off-duty topic is walked to prove the register carries no magic and no Door), servable (Olesm's Serve banks the shared served_customer + consumes the hot_meal, and Pisces's spent Serve renders visible-locked), and THE SLIDE (a real sleep to times_slept=11 moves the start to 3: Olesm's seat goes walkable, Pisces stays on shift, Selys returns).",
+   "note": "d1 #247 Friends of the Inn -- RE-DERIVED for PR2a. The roster grew APPEND-ONLY to [selys,krshia,olesm,pisces] over the same 2 seats, so at the fixture's times_slept=10 the window starts at 10%4=2 and seats OLESM + PISCES: this is the first script to prove the rotation LIVE rather than unit-only. Proves present-when-on-shift (both new guests reachable via the horns click-to-interact idiom), DISPLACEMENT (Selys's off-shift seat is walkable floor -- present_when absence is structural), context awareness (olesm_inn/pisces_inn open, never the chess desk or the magic tutor, and Pisces's off-duty topic is walked to prove the register carries no magic and no Door), servable (Olesm's Serve banks the shared served_customer + consumes the hot_meal, and Pisces's spent Serve renders visible-locked), and THE SLIDE (a real sleep to times_slept=11 moves the start to 3: Olesm's seat goes walkable, Pisces stays on shift, Selys returns). Third leg (review fix round 1): a SECOND sleep to times_slept=12 closes the period (12%4=0) and re-seats the PILOT PAIR -- Pisces finally rotates out and krshia_inn keeps its live coverage, which PR2a's re-derive would otherwise have dropped entirely. No approach or teleport cell uses (3,6) or (2,5): the spec assigns those to zevara/relc in PR2b.",
    "tiers": [
     "full"
    ],
@@ -4335,6 +4335,7 @@
      "basic_cleaning"
     ],
     "dialogue": [
+     "krshia_inn",
      "olesm_inn",
      "pisces_inn",
      "selys_inn"
