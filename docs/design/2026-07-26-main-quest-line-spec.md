@@ -191,14 +191,26 @@ Spine beats: one per stop (completes on that stop's lattice counter)
 plus a closing "return to Pisces" beat. Spine quest starts from Pisces
 at `door_awakened`.
 
-Ordering enforcement, two layers:
+Ordering enforcement, two layers as specified — the first was **DROPPED**
+in flight (see the amendment under it):
 
-- **Quest-start gates:** each region opener's dialogue option requires
+- ~~**Quest-start gates:** each region opener's dialogue option requires
   the previous leg's lattice counter (Riverfarm opener requires
   `door_awakened`; Invrisil opener requires `lattice_witch_lore`;
   Pallass opener requires `lattice_hedault_reading`). Gates are
   `requires` on the START options only — a started quest is never
-  interrupted (§8 covers pre-restructure saves).
+  interrupted (§8 covers pre-restructure saves).~~
+
+  **§4 AMENDMENT — opener gates DROPPED (wave close, 2026-07-27).** Not
+  shipped, and deliberately so: the attunement ladder below IS the
+  ordering mechanism (a region you cannot travel to cannot have its
+  opener taken), so the opener `requires` were belt-and-braces over a
+  gate that already holds. What they DID add was surface — a second
+  ordering authority to keep in sync with the portal rows, plus new
+  save-compat cases for every pre-restructure save standing mid-chain
+  (§8), for no behavioural gain. Recorded, not deleted: if a future
+  region ever becomes reachable ahead of its story leg, this is the
+  layer to revive, and the counters it names are the right ones.
 - **Progressive portal rows:** REALITY CHECK (recon 2026-07-26): the
   region rows ALREADY ship progressively — `riverfarm_attuned` (guild
   board rumor), `invrisil_attuned` (banked in riverfarm_witch.json —

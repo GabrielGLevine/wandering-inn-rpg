@@ -4,6 +4,31 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
+## Current state (2026-07-27)
+
+**THE MAIN QUEST WAVE IS MERGED TO MAIN — v0.14, UNTAGGED.** Nine phases,
+seven PRs, all `[ci-full]` green: #291 acts I–V reframed off "post-game"
+(Act IV opens on the seal), #297 "The Dig" (the Horns door-retrieval quest
+backported to day one + the Liscor link), #293 FotI PR2a (Olesm+Pisces),
+#294 PR2b (Relc+Zevara), #295 the roster to ten (Klbkch, Rags, Wilovan,
+Grimalkin — quest-gated), #299 the Riverfarm→Invrisil→Pallass pilgrimage
+spine + Act V's three-path conclusion + the finale sequence (epilogue
+retired), #300 the difficulty ladder (each stop one band above the last).
+The line plays start→finale; the whole-line machine playtest is drained
+into docs/VISUAL-LOG.md. Board bookkeeping still owed: **#269 and #270 are
+open issues whose work merged** — close #269, and either close #270 or
+re-scope it to its unshipped Pallass-return B-side (`pallass_return_carved`
+was never authored). Plan + freeze list:
+docs/superpowers/plans/2026-07-26-main-quest-foti-wave.md (Status: DONE).
+
+**Release-freeze step-0 (do this BEFORE the v0.14 tag):** bump `RELEASE` in
+`wandering_inn_game/scripts/generate_shipped_ids.py`, regen, commit ahead of
+the tag. 21 of the wave's new counters derive from data automatically; the
+ONE exception is **`finale_played`** (bare `record_accomplishment` literal in
+`src/ui/sleep_veil.gd`), which must be hand-added to `STRUCTURAL_LITERALS` in
+BOTH lists — `generate_shipped_ids.py:92` and `tests/test_shipped_ids.gd:6`.
+Tag-cut commits carry `[ci-full]`; bundle-latest check before tagging.
+
 ## Current release
 
 **v0.13.0 SHIPPED 2026-07-20, all three targets green** (Release run
@@ -21,57 +46,48 @@ v0.10.0, v0.9.0, v0.8.0.
 
 ## 🎯 NEXT ACTIONS
 
-**v0.14 SPECS READY (2026-07-20)**: the next-session implementation
-briefs are committed — docs/design/2026-07-20-foti-pr2-spec.md
-(#269: Friends of the Inn PR2a/2b: Olesm+Pisces then Relc+Zevara, window
-math + seat cells + register-purity rules all pre-derived) and
-docs/design/2026-07-20-door-continuation-spec.md (#270: "What the Seal Was
-Feeding": 3 beats, 3-path parity, Act V slot, the detected_wardwork
-quartet payoff; PR A data-only → PR B map+warden → PR C Pallass
-return anchor). Both evidence-verified this session (workflow
-research); START THERE.
+**USER-GATED, decide before the next content wave (2026-07-27):**
+1. **Guest-row arc windows** — design proposal, NOT implemented: let a
+   `GUEST_POOL_GATES` value be a `{requires, absent}` dict (or an ANY-of
+   Array) instead of today's single "this counter must be banked" String,
+   so pool membership and row presence derive from ONE source. Closes
+   Zevara's summons window, Pisces's haul window and Rags's betrayal
+   branch together (~10 lines). Full argument + the measured cost of NOT
+   doing it (one fixture in 114 sits in the affected window today):
+   `.superpowers/sdd/2026-07-26-main-quest-foti-wave/task-5-report.md`
+   §arc-window — the design note plus its fix-round-2 tail (that ledger
+   dir is gitignored; this bullet carries the decision either way).
+2. **Grimalkin sprite re-measure** — his figure renders ~98px, about 2.3×
+   Relc's documented 43.4px catalog convention. A `sprites.json`
+   `render_scale` re-measure frees the inn seat (14,5) and the
+   door-approach trade it forced. Ledgered in docs/VISUAL-LOG.md (P3).
+3. **The v0.14 tag cut** — release-freeze step-0 above, `[ci-full]` on
+   the cut commits, bundle-latest check before tagging.
 
-**Dev-arch wave #275-280 EXECUTED (2026-07-26, same session as the
-adjudication)**: 7 PRs merged — #282 wi_data_lib + --touching fix
-(#281), #284 data_lint (#276, wired ci_sweep pre-flight + leak-check
-job; wi-verifying-changes now mandates it first on any data edit),
-#285 live reload (#278: FIVE stale caches — review found audio.json as
-the fifth; `reload_data` step + `reload_loop` canonical; edit→Save→Load
-tuning loop documented in wi-machine-playtest), #286 ship-asset release
-gate + audio `pending:true` slots (#277, itch job only, disk-only,
-lands green as a ratchet; #195 slots can now merge ahead of files),
-#288 4-way parallel CI sweeps (#287, user-reported bottleneck:
-**6m50s → 2m22s** on the PR gate), #289 data_diff advisory summarizer
-(#275 — use per wi-handling-prs on any data PR). #290 IN FLIGHT
-(#279 debug overlay: F3/`toggle_overlay`, read-only, debug builds
-only, `overlay_loop` canonical) — merge when its 6 checks green.
-#280 DEFERRED (revival criteria in the plan doc). NEW: #283 filed —
-the shipped vacuously-true `invrisil_anchor_stone` portal_menu_when
-(lint allowlists it; closing #283 = wrap it + drop the allowlist entry,
-needs canonical re-check). Plan/danger-list authority:
-docs/design/2026-07-26-dev-arch-eval-275-280.md. #269/#270 remain
-START THERE for content sessions.
+**FOLLOW-UP BATCH (agent-actionable, from the wave's final whole-branch
+review, 2026-07-27)** — none blocking, all small:
+- Dead fixture keys ×2: two QA fixtures carry save keys no live code
+  reads; drop them so fixtures keep meaning what they say.
+- `interactions.gd` variant guard: entity `variants` override interact
+  effects via the `accomplishment` key, and a mis-shaped variant resolves
+  silently — needs a shape guard in the content tests.
+- `test_copy_fit` blind spots: no measured table for `sleep_veil.gd`'s
+  line tables (now the widest single-line strings in the game) or for
+  dialogue `text_variants` (VEIL-COPY/UNMEASURED, P4).
+- `hedault_enchanting.json` fragment node: wants a `text_variants` arm so
+  the post-trade state does not re-read as the pre-trade one.
+- COMBAT/FEED-FOLD (P2, docs/VISUAL-LOG.md): the combat feed's viewport
+  admits three rows and a sliced fourth — a shared message-panel budget
+  fix touching every panel class, so it needs its own verification pass.
 
-**#111 rename FULLY VERIFIED 2026-07-20**: native rehearsal passed on
-real data (5 saves + settings byte-true, marker, v4 dir intact) AND
-the user confirmed the web migration on the live deploy ("Rename
-migration successful"). Nothing in flight. The board is fully
-user-gated (taste queue below), apart from the new machine-playtest
-follow-up below; next milestone planning is open — docs/ROADMAP.md;
-Three Pillars (spec approved) is the standing next big rock.
-
-**MACHINE-PLAYTEST P1 → FIXED in v0.13.1 (GH#273, 2026-07-20):**
-independently re-verified, root cause REFINED — the render arm was never
-missing; the pointer (and the quest-start toast, worse than first
-reported) queued last at the wake beat and `_clear_toast()`'s transition
-wipe discarded the pending queue. Fixed via sticky-toast re-queue +
-PINNED render asserts in arc_flow/climax_chain/raskghar_entry_loop (the
-old bare `ui_toast_rendered` wait was the false-pass mechanism — sweep
-for that pattern is follow-up in #273). Still open from the same pass:
-dark-arena enemy visibility below the prior bar and deep-tunnel climax
-sprite stacking (evidence/owners in `docs/VISUAL-LOG.md`). User eyes
-wanted: a real-rig windowed read of arc_flow's `01_tremor_pointer` shot
-(container GL too slow to catch the 0.4s toast hold on camera).
+**Dev-arch wave #275-280 (2026-07-26) — residue only:** all seven PRs
+merged (#282 wi_data_lib, #284 data_lint, #285 live reload, #286
+ship-asset gate + pending audio slots, #288 4-way parallel CI sweeps,
+#289 data_diff, #290 debug overlay). Still live: **#283** (the shipped
+vacuously-true `invrisil_anchor_stone` portal_menu_when — lint allowlists
+it; closing it = wrap the gate + drop the allowlist entry, needs a
+canonical re-check) and **#280 DEFERRED** (revival criteria in
+docs/design/2026-07-26-dev-arch-eval-275-280.md).
 
 **Door-chain polish pair (filed 2026-07-20, small)**: #271
 `dungeon_attuned` banks silently in `sleep_beat.gd` — no toast, no
@@ -85,6 +101,11 @@ existing #65 economy-ledger taste item, not a new issue.
 
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)
 
+- **v0.14 wave asks** (detail in USER-GATED above): the tag cut; the
+  guest-row arc-window design call; Grimalkin's sprite re-measure. The
+  whole-line playtest's remaining visual items (Act IV pending-itinerary
+  render policy, journal half-row, briar camouflage, Pallass forge floor,
+  warden rig scale) are ledgered open in docs/VISUAL-LOG.md.
 - **#195 Ove Melaa audio listen** (~30 files) → wiring pass after.
 - **#211 challenge-weighted leveling FEEL** (shipped flag-on; all
   knobs data).

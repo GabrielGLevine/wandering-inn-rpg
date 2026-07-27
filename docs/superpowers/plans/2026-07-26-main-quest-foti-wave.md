@@ -1,6 +1,6 @@
 # Main Quest Line + Friends of the Inn Wave — Implementation Plan
 
-> Status: **ACTIVE** — in execution (progress: SDD ledger at .superpowers/sdd/2026-07-26-main-quest-foti-wave/progress.md).
+> Status: **DONE** — all nine phases merged to main 2026-07-27 (PRs #291, #297, #293, #294, #295, #299, #300); progress ledger at .superpowers/sdd/2026-07-26-main-quest-foti-wave/progress.md. Only the release-freeze step-0 below is outstanding, and it is user-gated with the tag cut.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -501,6 +501,7 @@ Execute docs/design/2026-07-20-door-continuation-spec.md beats 1–3 + Act V, AS
 
 ## Wave close
 
-- [ ] Release-freeze step-0 when tagging (ROADMAP discipline): bump RELEASE in generate_shipped_ids.py, regen, grep new `record_accomplishment` literals against STRUCTURAL_LITERALS in BOTH lists. All new counters this wave: `horns_dig_started, horns_dig_joined, pedestal_breached, door_retrieved, door_mounted, spine_started, lattice_witch_lore, lattice_hedault_reading, lattice_forge_rune, seal_descent_agreed, read_the_seal_runes, read_the_feeding_ward, seal_opened, seal_kept_fed, seal_rewarded, seal_resolved, chatted_with_rags, chatted_with_grimalkin, finale_played` (+ Phase 7's `pallass_return_carved` only if the B-side ships).
-- [ ] Update docs/ROADMAP.md (v0.14 = this wave) + HANDOFF.md continuously (user directive).
-- [ ] Title ACKs already given: "The Dig", "Where the Door Reaches".
+- [ ] Release-freeze step-0 when tagging (ROADMAP discipline): bump RELEASE in generate_shipped_ids.py, regen, grep new `record_accomplishment` literals against STRUCTURAL_LITERALS in BOTH lists. **Corrected freeze list, re-derived from the shipped tree 2026-07-27** (the generator's own producer walk, diffed against `data/shipped_ids.json`): 21 counters, all of them data-derived, so the regen picks them up with no hand-editing — `horns_dig_started, horns_dig_joined, pedestal_breached, door_retrieved, door_mounted, spine_started, lattice_witch_lore, lattice_hedault_reading, lattice_forge_rune, seal_descent_agreed, read_the_seal_runes, read_the_feeding_ward, seal_opened, seal_kept_fed, seal_rewarded, seal_resolved, chatted_with_rags, chatted_with_grimalkin, chatted_with_ceria_inn_returned, chatted_with_ksmvr_inn_returned, chatted_with_yvlon_inn_returned`. The last three are the Task 2.7 Horns twins: their counters are id-derived from the new rows' `talk_pool`s (`chatted_with_<entity_id>`), which the original list missed. `pallass_return_carved` is correctly ABSENT — Phase 7's B-side never shipped, so the counter does not exist.
+- [ ] **`finale_played` is the wave's ONLY bare code literal** — banked by `record_accomplishment("finale_played")` in `src/ui/sleep_veil.gd`, invisible to the data walk. It must be HAND-ADDED to `STRUCTURAL_LITERALS` in BOTH lists at tag time: `wandering_inn_game/scripts/generate_shipped_ids.py:92` and `wandering_inn_game/tests/test_shipped_ids.gd:6`. Missing it is the v0.8.0 `victories` trap exactly.
+- [x] Update docs/ROADMAP.md (v0.14 = this wave) + HANDOFF.md continuously (user directive).
+- [x] Title ACKs already given: "The Dig", "Where the Door Reaches".
