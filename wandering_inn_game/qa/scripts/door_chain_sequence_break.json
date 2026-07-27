@@ -448,18 +448,12 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "#148: recovered_anchor_stone now completes its OWN beat (recover_stone, index 1) -> beat advances to buy_catalyst (index 2).",
-   "action": "wait_for_event",
-   "type": "quest_beat_completed",
-   "payload_contains": {
-    "id": "door_that_goes_elsewhere",
-    "beat": 2
-   },
-   "timeout_sec": 5
-  },
-  {
+   "_comment": "2026-07-26 main-quest restructure (Task 2.1): `recover_stone` is GONE from door_that_goes_elsewhere (the retrieval moved to horns_dig), so recovered_anchor_stone completes no beat and NO quest_beat_completed fires here -- the old '#148 -> beat 2' wait was deleted, not re-pinned. The counter still banks (waited on above) and the ui_toast_rendered confirmation is re-pinned off the beat toast onto the pickup toast so it stays specific.",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Anchor Stone"
+   },
    "timeout_sec": 5
   },
   {
@@ -581,12 +575,12 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "#148: bought_catalyst now completes buy_catalyst (index 2) -> beat advances to `attune` (index 3), NOT quest completion (the door awakening completes the quest, door_awakening.json's subject). quest_completed asserted ABSENT at the tail.",
+   "_comment": "bought_catalyst completes buy_catalyst -> beat advances to `attune`, NOT quest completion (the door awakening completes the quest, door_awakening.json's subject). quest_completed asserted ABSENT at the tail. 2026-07-26 restructure (Task 2.1) RE-PIN: 3 -> 2 (dropping `recover_stone` shifted buy_catalyst to index 1, `attune` to index 2; re-derived from a real run).",
    "action": "wait_for_event",
    "type": "quest_beat_completed",
    "payload_contains": {
     "id": "door_that_goes_elsewhere",
-    "beat": 3
+    "beat": 2
    },
    "timeout_sec": 5
   },

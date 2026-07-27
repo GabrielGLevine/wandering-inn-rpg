@@ -527,18 +527,12 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "#148: recovered_anchor_stone now completes its OWN beat (recover_stone, index 1) -> beat advances to buy_catalyst (index 2). The dual fetch was split into two beats and an `attune` payoff beat was appended, so the quest no longer completes at the catalyst purchase below.",
-   "action": "wait_for_event",
-   "type": "quest_beat_completed",
-   "payload_contains": {
-    "id": "door_that_goes_elsewhere",
-    "beat": 2
-   },
-   "timeout_sec": 5
-  },
-  {
+   "_comment": "2026-07-26 main-quest restructure (Task 2.1): the `recover_stone` beat is GONE from door_that_goes_elsewhere -- the retrieval moved to its own quest (horns_dig) and recovered_anchor_stone is no longer any beat's complete_when, so NO quest_beat_completed fires here any more (the old '#148 -> beat 2' wait was deleted, not re-pinned). recovered_anchor_stone still banks (asserted at the tail) and the stone still enters inventory; the ui_toast_rendered confirmation below is re-pinned off the beat toast onto the pickup toast so the render proof stays specific instead of matching whatever toast happens to be queued.",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Anchor Stone"
+   },
    "timeout_sec": 5
   },
   {
@@ -660,12 +654,12 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "#148: bought_catalyst now completes its OWN beat (buy_catalyst, index 2) -> beat advances to `attune` (index 3), NOT quest completion. The quest completes only when the door awakens (door_awakened), covered by door_awakening.json's sleep chain. quest_completed is asserted ABSENT at the tail.",
+   "_comment": "bought_catalyst completes its OWN beat (buy_catalyst) -> beat advances to `attune`, NOT quest completion. The quest completes only when the door awakens (door_awakened), covered by door_awakening.json's sleep chain. quest_completed is asserted ABSENT at the tail. 2026-07-26 restructure (Task 2.1) RE-PIN: 3 -> 2, since dropping `recover_stone` shifted buy_catalyst to index 1 and `attune` to index 2 (beat_index = first-incomplete scan; re-derived from a real run's events.jsonl, not arithmetic).",
    "action": "wait_for_event",
    "type": "quest_beat_completed",
    "payload_contains": {
     "id": "door_that_goes_elsewhere",
-    "beat": 3
+    "beat": 2
    },
    "timeout_sec": 5
   },

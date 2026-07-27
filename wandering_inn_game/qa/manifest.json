@@ -2078,7 +2078,7 @@
    "script": "door_chain_fight",
    "seed": 9,
    "fixture": "door_chain_fight_start",
-   "note": "Magical Door plan Task D3 (issue #8): the FIGHT leg + full end-to-end chain -- Erin's beat-1 flicker line live, Pisces sends the player to clear rift_vermin_leak (inn), the ruin recovery run (ruin_guardian fight + anchor_stone_pedestal opens), Krshia's resonant_catalyst purchase -- both quest beats complete",
+   "note": "Magical Door plan Task D3 (issue #8): the FIGHT leg + full end-to-end chain -- Erin's beat-1 flicker line live, Pisces sends the player to clear rift_vermin_leak (inn), the ruin recovery run (ruin_guardian fight + anchor_stone_pedestal opens), Krshia's resonant_catalyst purchase -- consult + buy_catalyst complete (the 2026-07-26 restructure moved the retrieval to its own quest, so recovered_anchor_stone banks here without completing a door beat)",
    "tiers": [
     "full"
    ],

@@ -64,14 +64,24 @@
 			]
 		},
 		{
-			"_comment": "KNOWN COSMETIC SKIP (review NIT #6, NOT fixed by design): beats are authored stone-first (recover_stone idx 1, buy_catalyst idx 2), but buying the catalyst at Krshia's is not gated on the stone -- a player who buys catalyst-first completes idx 2 out of order, so beat_index (quests.gd, first-incomplete scan) leapfrogs recover_stone straight to attune when the stone lands and beat 2's text never surfaces as the current beat. Cosmetic only: both counters still bank and attune still gates on door_awakened.",
+			"_comment": "2026-07-26 main-quest spec 3: the backport. SPOILER RULE: title + join_dig/breach copy never mention a door; the reveal is the haul beat. Beats are ORDER-GATED by their counters' own gating (camp gates on horns_dig_joined, pedestal on camp, haul on pedestal) -- do not accept the catalyst-style cosmetic skip here.",
+			"id": "horns_dig",
+			"title": "The Dig",
+			"region": "Liscor",
+			"beats": [
+				{ "id": "join_dig", "description": "Ceria's expedition hit something sealed under the ruin east past the gate road, and they're short-handed. Find the Horns' camp at the ruin.", "complete_when": { "horns_dig_joined": 1 } },
+				{ "id": "breach", "description": "Get the Horns through the sealed pedestal level -- fight what guards it, walk the plates, or read the wardwork.", "complete_when": { "pedestal_breached": 1 } },
+				{ "id": "haul", "description": "Help the Horns carry what the pedestal held back to the Wandering Inn, and see it mounted.", "complete_when": { "door_mounted": 1 } }
+			]
+		},
+		{
+			"_comment": "2026-07-26 reshape (main-quest spec 2.5): the door works to Liscor from mounting (horns_dig haul); this chain is the first FAR attunement. door_awakened re-semantics to 'reaches beyond Liscor'; its payoff is the Riverfarm rumor surface. Auto-starts at door_mounted via the mounting conversation (no start option). Old cosmetic-skip note is moot: 3 beats, catalyst still ungated on consult by design.",
 			"id": "door_that_goes_elsewhere",
 			"title": "The Door That Goes Elsewhere",
 			"beats": [
-				{ "id": "consult", "description": "Find out what's happening with the pantry door -- fight what leaks through in the cellar, ask Pisces by the Guild steps, or read the wardwork on the pantry door yourself.", "complete_when": { "door_understood": 1 } },
-				{ "id": "recover_stone", "description": "Recover the anchor stone from the ruin east past the gate road — cross the floodplains and look for the sealed pedestal.", "complete_when": { "recovered_anchor_stone": 1 } },
+				{ "id": "consult", "description": "The Magical Door manages the hop to Liscor but strains at anything farther. Fight what leaks through in the cellar, ask Pisces by the Guild steps, or read the wardwork yourself.", "complete_when": { "door_understood": 1 } },
 				{ "id": "buy_catalyst", "description": "Buy the attunement catalyst from Krshia's stall on Market Street in Liscor.", "complete_when": { "bought_catalyst": 1 } },
-				{ "id": "attune", "description": "Bring the anchor stone and Krshia's catalyst back to Pisces, by the Guild steps on Market Street, and see the door awakened.", "complete_when": { "door_awakened": 1 } }
+				{ "id": "attune", "description": "Bring Krshia's catalyst to Pisces, by the Guild steps on Market Street, and see how far the Door can reach.", "complete_when": { "door_awakened": 1 } }
 			],
 			"resolution_paths": [
 				{ "accomplishment": "cleared_the_leak", "text": "You fought the rift vermin in the cellar.", "grant": {"melee_hit": 8, "won_combat": 2} },
