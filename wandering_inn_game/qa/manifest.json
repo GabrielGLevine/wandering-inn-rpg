@@ -1615,7 +1615,7 @@
    "script": "arc_flow",
    "seed": 9,
    "fixture": "near_act3",
-   "note": "THE WHOLE ACT III ARC PROOF, tremor through epilogue",
+   "note": "THE WHOLE ACT III ARC PROOF, tremor through the seal and the sleep that banks post_game (Phase 8: the seal rolls no closing sequence -- that moved to Act V's seal_resolved)",
    "tiers": [
     "full"
    ],
@@ -2582,6 +2582,7 @@
    ],
    "surfaces": {
     "maps": [
+     "inn_upstairs",
      "seal_vault",
      "street",
      "trapped_halls"
@@ -2615,6 +2616,7 @@
    ],
    "surfaces": {
     "maps": [
+     "inn_upstairs",
      "street",
      "trapped_halls"
     ],
@@ -2633,6 +2635,7 @@
      "combat",
      "dialogue",
      "exploration",
+     "night_phase",
      "quests"
     ]
    }
@@ -3749,6 +3752,7 @@
    "surfaces": {
     "maps": [
      "inn",
+     "inn_upstairs",
      "street"
     ],
     "fixtures": [
@@ -3764,6 +3768,7 @@
      "dialogue",
      "economy",
      "exploration",
+     "night_phase",
      "save"
     ]
    }

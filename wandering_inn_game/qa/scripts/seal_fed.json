@@ -1,5 +1,5 @@
 {
- "_comment": "2026-07-26 Act V canonical, THE TALK PATH. Loads seal_fed_start (warrior5/mage5 + diplomat1, so [Charming Smile] is KNOWN and the witch-pattern Skill leg is selectable rather than a locked tease) via title Continue. Flow: the descent ask -> the skill-free reading at the seal -> Pisces argues the ward is safer fed and points at Olesm -> the Guild steps, where the standing Watch posting is argued into existence. NEGATIVES throughout: agreeing at the door banks nothing, the door never opens (seal_opened absent), the re-ward counter never banks, and combat_started never fires in the whole run.",
+ "_comment": "2026-07-26 Act V canonical, THE TALK PATH. Loads seal_fed_start (warrior5/mage5 + diplomat1, so [Charming Smile] is KNOWN and the witch-pattern Skill leg is selectable rather than a locked tease) via title Continue. Flow: the descent ask -> the skill-free reading at the seal -> Pisces argues the ward is safer fed and points at Olesm -> the Guild steps, where the standing Watch posting is argued into existence. NEGATIVES throughout: agreeing at the door banks nothing, the door never opens (seal_opened absent), the re-ward counter never banks, and combat_started never fires in the whole run. FINALE LEG (Phase 8): this canonical carries the ending's proof -- the closing sequence fires off the resolving dialogue's end at 10 lines (fed close), banks the finale_played one-shot, and declines to re-fire at the following sleep.",
  "fixture_save": "seal_fed_start",
  "starts_at_title": true,
  "steps": [
@@ -569,6 +569,75 @@
    "action": "wait_for_event",
    "type": "dialogue_ended",
    "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE FINALE == Olesm's posting banked seal_resolved mid-dialogue, so the game's one true ending rolls the instant that conversation closes -- the same veil/dialogue-end delivery the retired epilogue used, re-pointed off raskghar_sealed and onto seal_resolved. 10 lines = 2 open + 3 class recount (Warrior 5, Mage 5, Diplomat 1, in the save's own insertion order) + 3 region recap (all three lattice counters are banked -- the descent ask is gated on holding all three) + 1 path close (the FED line) + 1 wanderinginn.com curtain. Under QA the paced reveal collapses to this instant emit, so no screenshot can catch it; the windowed machine-playtest owns the look.",
+   "action": "wait_for_event",
+   "type": "ui_gdi_epilogue_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "lines": 10
+   }
+  },
+  {
+   "_comment": "THE ONE-SHOT COUNTER. It is sim state, not a runtime flag, so a save/quit can never strand or replay the ending -- and post_game (banked mid-story at the seal sleep) is deliberately NOT what guards it.",
+   "action": "assert_state",
+   "path": "accomplishments.finale_played",
+   "equals": 1
+  },
+  {
+   "_comment": "== NO RE-FIRE, AND THE SECOND DELIVERY HOOK == sleep at the inn. The veil's sleep path also plays an owed finale (the FIGHT path banks seal_resolved at a container, with no dialogue behind it), so this sleep is the exact call site that must decline: finale_played is already 1.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "EXACTLY ONCE across the whole run.",
+   "action": "assert_event_count",
+   "type": "ui_gdi_epilogue_rendered",
+   "count": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.finale_played",
+   "equals": 1
   },
   {
    "_comment": "The door stays SHUT on this path: neither the fight's counter nor the re-ward's ever banks, and no combat happens in the whole run.",

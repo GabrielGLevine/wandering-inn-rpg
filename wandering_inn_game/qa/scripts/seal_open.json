@@ -1,5 +1,5 @@
 {
- "_comment": "2026-07-26 Act V canonical, THE FIGHT PATH (one script per path, the door_chain_talk/fight/scout precedent). Loads seal_open_start (spellsword14 + the tuned gear, Act V already the derived act) via title Continue. Flow: the descent ask at Pisces' elbow on Market Street (banks seal_descent_agreed, starts what_the_seal_was_feeding, and CLOSES the pilgrimage spine's own `return` beat) -> teleport into trapped_halls (dungeon_peek's own teleport precedent; this route's subject is the seal, not the walk down) -> the SKILL-FREE reading, two bare interacts on seal_kept_door: Pisces matches the hand (read_the_seal_runes), then names the appetite (read_the_feeding_ward) -> his choice conversation -> WE OPEN IT (seal_opened) -> stepping to the door's only approach cell wakes the warden through its trigger_radius -> the tuned solo fight -> the door transitions for real (door_when) -> the vault: the anchor's open banks seal_resolved, grants the rubbing, and completes the quest. Fixture rng_state (seed 1) governs the warden fight and OVERRIDES --seed.",
+ "_comment": "2026-07-26 Act V canonical, THE FIGHT PATH (one script per path, the door_chain_talk/fight/scout precedent). Loads seal_open_start (spellsword14 + the tuned gear, Act V already the derived act) via title Continue. Flow: the descent ask at Pisces' elbow on Market Street (banks seal_descent_agreed, starts what_the_seal_was_feeding, and CLOSES the pilgrimage spine's own `return` beat) -> teleport into trapped_halls (dungeon_peek's own teleport precedent; this route's subject is the seal, not the walk down) -> the SKILL-FREE reading, two bare interacts on seal_kept_door: Pisces matches the hand (read_the_seal_runes), then names the appetite (read_the_feeding_ward) -> his choice conversation -> WE OPEN IT (seal_opened) -> stepping to the door's only approach cell wakes the warden through its trigger_radius -> the tuned solo fight -> the door transitions for real (door_when) -> the vault: the anchor's open banks seal_resolved, grants the rubbing, and completes the quest. Fixture rng_state (seed 1) governs the warden fight and OVERRIDES --seed. FINALE LEG (Phase 8): this path's ending is delivered by the SLEEP hook, because its resolution banks at a container and never at a dialogue -- the run proves the curtain is silent on the walk out and rolls at the bed.",
  "fixture_save": "seal_open_start",
  "starts_at_title": true,
  "steps": [
@@ -746,6 +746,64 @@
   {
    "action": "screenshot",
    "name": "11_back_in_the_halls"
+  },
+  {
+   "_comment": "== THE FINALE, DELIVERED OFF THE BED == this path banked seal_resolved at the vault's anchor -- a CONTAINER open, with no conversation behind it -- so the dialogue-end hook the TALK/SKILL paths use never fires here. The veil's sleep path is the second delivery hook and the one that cannot be routed around: teleport to your_bed's approach (inn_upstairs 9,2), bump up into the bed, sleep.",
+   "action": "assert_state",
+   "path": "accomplishments.seal_resolved",
+   "equals": 1
+  },
+  {
+   "_comment": "NEGATIVE, and the whole reason the sleep hook exists: walking out of the vault rolls no curtain by itself.",
+   "action": "assert_event_absent",
+   "type": "ui_gdi_epilogue_rendered"
+  },
+  {
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "inn_upstairs"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_gdi_epilogue_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "lines": 8
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.finale_played",
+   "equals": 1
   }
  ]
 }

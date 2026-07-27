@@ -1,5 +1,5 @@
 {
- "_comment": "2026-07-26 Act V canonical, THE SKILL PATH. Loads seal_reward_start (warrior5/mage5 + necromancer1 for [Detect Magic], detected_wardwork 3, and the vault construct's core shard in the pack -- a PLATES-path save that never fought the ruin guardian) via title Continue. Flow: the descent ask -> the runes read by narration -> [Detect Magic]'s QUARTET payoff, the richest reading in the beat -> the re-ward fork, whose Skill gate opens the pitch and whose ITEM gate closes it, consuming the shard. The fork's option pin proves the fragment arm renders VISIBLE-LOCKED with its own reason for a player who never fought the ruin guardian, while the shard arm beside it opens -- the parity hole fix round 1 closed. NEGATIVES: the door never opens, the Watch is never asked, and combat_started never fires.",
+ "_comment": "2026-07-26 Act V canonical, THE SKILL PATH. Loads seal_reward_start (warrior5/mage5 + necromancer1 for [Detect Magic], detected_wardwork 3, and the vault construct's core shard in the pack -- a PLATES-path save that never fought the ruin guardian) via title Continue. Flow: the descent ask -> the runes read by narration -> [Detect Magic]'s QUARTET payoff, the richest reading in the beat -> the re-ward fork, whose Skill gate opens the pitch and whose ITEM gate closes it, consuming the shard. The fork's option pin proves the fragment arm renders VISIBLE-LOCKED with its own reason for a player who never fought the ruin guardian, while the shard arm beside it opens -- the parity hole fix round 1 closed. NEGATIVES: the door never opens, the Watch is never asked, and combat_started never fires. FINALE LEG (Phase 8): the ending rolls off this dialogue's own end, carrying the re-ward close line.",
  "fixture_save": "seal_reward_start",
  "starts_at_title": true,
  "steps": [
@@ -518,6 +518,20 @@
    "action": "wait_for_event",
    "type": "dialogue_ended",
    "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE FINALE == the re-cut banked seal_resolved mid-dialogue, so the curtain rolls when Pisces' conversation closes. 10 lines = 2 open + 3 class recount (Warrior 5, Mage 5, Necromancer 1) + 3 region recap + 1 path close (the RE-WARD line) + 1 wanderinginn.com curtain.",
+   "action": "wait_for_event",
+   "type": "ui_gdi_epilogue_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "lines": 10
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.finale_played",
+   "equals": 1
   },
   {
    "action": "assert_event_absent",

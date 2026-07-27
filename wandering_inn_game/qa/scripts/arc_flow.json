@@ -1,5 +1,5 @@
 {
- "_comment": "THE WHOLE-ARC PROOF, fixture-accelerated. Loads near_act3 (inn bed, Act II complete: Warrior 5 + Diplomat 1, 3 quests; no Act III keys) via title Continue and drives the ENTIRE Act III arc live: (1) tremor sleep pointer; (2) Zevara summons (banks heard_the_deep_tremor); (3) Olesm briefing; (4) THE DESCENT -- teleport to the deep_tunnels landing (the surface arc consumes ZERO rng, so the fights sit at the SAME deterministic rng deep_descent wins at; deep_descent still PASSES with warrior5+diplomat1, so this splice of its winning nav wins here too) -> Cold Hearth -> raskghar_scouts route-fight -> Gnawed Bones -> Warren Mouth -> the Relc JOIN veto -> boss VICTORY (Relc fielded) -> cleared_the_warren; (5) Zevara seal -> raskghar_sealed; (6) THE GDI EPILOGUE EVENT (ui_gdi_epilogue_rendered{lines:7}) fired by the seal dialogue_ended -> post_game banked; (7) the journal act line, which the seal ALONE advances into Act IV (2026-07-26 reframe -- the door is no longer part of Act III's gate); (8) post-game Zevara greeting variant (also proves no epilogue re-fire on re-entry); (9) free-play sanity (move + plain sleep + the epilogue rendered EXACTLY once). This is the arc's END-TO-END seam; the piecewise beats stay covered by climax_chain/deep_descent/climax_seal.",
+ "_comment": "THE WHOLE-ARC PROOF, fixture-accelerated. Loads near_act3 (inn bed, Act II complete: Warrior 5 + Diplomat 1, 3 quests; no Act III keys) via title Continue and drives the ENTIRE Act III arc live: (1) tremor sleep pointer; (2) Zevara summons (banks heard_the_deep_tremor); (3) Olesm briefing; (4) THE DESCENT -- teleport to the deep_tunnels landing (the surface arc consumes ZERO rng, so the fights sit at the SAME deterministic rng deep_descent wins at; deep_descent still PASSES with warrior5+diplomat1, so this splice of its winning nav wins here too) -> Cold Hearth -> raskghar_scouts route-fight -> Gnawed Bones -> Warren Mouth -> the Relc JOIN veto -> boss VICTORY (Relc fielded) -> cleared_the_warren; (5) Zevara seal -> raskghar_sealed; (6) PHASE 8 NEGATIVE: the seal dialogue_ended fires NO closing sequence (the epilogue retired to Act V's seal_resolved) and banks NO post_game; (7) the journal act line, which the seal ALONE advances into Act IV (2026-07-26 reframe -- the door is no longer part of Act III's gate); (8) post-game Zevara greeting variant (also proves no epilogue re-fire on re-entry); (9) free-play sanity (move + the plain sleep that DOES bank post_game, carrying the seal's one-line light transition under the veil, with ui_gdi_epilogue_rendered proven absent across the whole run). This is the arc's END-TO-END seam; the piecewise beats stay covered by climax_chain/deep_descent/climax_seal.",
  "fixture_save": "near_act3",
  "starts_at_title": true,
  "steps": [
@@ -771,7 +771,7 @@
    "action": "move",
    "direction": "down",
    "steps": 1,
-   "_comment": "Seal 1 'Captain.' end -> dialogue_ended ARMS+FIRES the epilogue"
+   "_comment": "Seal 1 'Captain.' end -> dialogue_ended. PHASE 8: NOTHING fires here any more -- the seal is a mid-story act transition, and the GDI's closing sequence moved to seal_resolved (Act V)."
   },
   {
    "action": "press",
@@ -783,23 +783,21 @@
    "timeout_sec": 5
   },
   {
-   "action": "wait_for_event",
-   "type": "ui_gdi_epilogue_rendered",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "lines": 7
-   },
-   "_comment": "== THE GDI EPILOGUE ==. 7 lines = 2 open + 2 recount (Warrior L5, Diplomat L1) + 2 close + 1 wanderinginn.com line."
+   "_comment": "== NO CLOSING SEQUENCE AT THE SEAL == the retired epilogue's exact former trigger, now proven silent.",
+   "action": "assert_event_absent",
+   "type": "ui_gdi_epilogue_rendered"
   },
   {
    "action": "screenshot",
-   "name": "04_epilogue"
+   "name": "04_after_the_seal"
   },
   {
-   "action": "assert_state",
-   "path": "accomplishments.post_game",
-   "equals": 1,
-   "_comment": "The epilogue banked post_game"
+   "_comment": "post_game does NOT bank here any more -- sleep_beat.gd banks it at the first sleep AFTER the seal (Task 1.2), which this run takes in free play below. Asserted as an ABSENT event, not a zero counter: an unbanked accomplishment has no key at all.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "post_game"
+   }
   },
   {
    "action": "assert_state",
@@ -833,7 +831,7 @@
   {
    "action": "press",
    "name": "interact",
-   "_comment": "Re-open Zevara (same waking) -> raskghar_sealed hub greeting; ALSO proves no epilogue re-fire."
+   "_comment": "Re-open Zevara (same waking) -> raskghar_sealed hub greeting."
   },
   {
    "action": "wait_for_event",
@@ -924,7 +922,7 @@
   {
    "action": "press",
    "name": "interact",
-   "_comment": "Free-play sleep -> ORDINARY sleep veil (mode 1), not the epilogue."
+   "_comment": "Free-play sleep -> ORDINARY sleep veil. This is the sleep that banks post_game."
   },
   {
    "action": "wait_for_event",
@@ -935,21 +933,25 @@
    }
   },
   {
+   "_comment": "THE SEAL'S LIGHT TRANSITION rides this sleep: 4 veil lines, re-derived from the run's own events.jsonl -- three progression lines the arc's fights earned (Warrior 6, Warrior 7, Diplomat 2) plus the GDI's seal beat, appended under the black when post_game banks. Before Phase 8 this sleep rendered 3.",
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "timeout_sec": 5,
-   "_comment": "Plain sleep veil, NOT the epilogue"
+   "payload_contains": {
+    "lines": 4
+   }
   },
   {
+   "_comment": "THE BANK, at the sleep and not before.",
    "action": "assert_state",
    "path": "accomplishments.post_game",
    "equals": 1
   },
   {
+   "_comment": "NO-CLOSING-SEQUENCE PROOF for the whole run: Act III's seal never rolls a curtain now, at the dialogue or at the bed (seal_resolved is unbanked here -- Act V is untouched by this script).",
    "action": "assert_event_count",
    "type": "ui_gdi_epilogue_rendered",
-   "count": 1,
-   "_comment": "NO-RE-FIRE PROOF: the epilogue rendered EXACTLY once across the whole run."
+   "count": 0
   }
  ]
 }
