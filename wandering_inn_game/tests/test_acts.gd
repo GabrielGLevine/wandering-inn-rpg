@@ -99,8 +99,10 @@ func _init() -> void:
 	assert(counted["id"] == "act_iv" and counted_achieved == ["counted_among"], "post_game lights counted_among in Act IV, where the player actually stands when it banks")
 
 	# 2026-07-26 Act V (Phase 7): the whole region arc WITHOUT the pilgrimage's
-	# last piece still reads Act IV -- the gate is lattice_forge_rune +
-	# seal_kept_reported now, and six of the act's seven beats light.
+	# last piece still reads Act IV -- the gate is four keys (lattice_forge_rune,
+	# seal_kept_reported, price_of_a_favor_reported, brothers_job_done; asserted
+	# key-by-key below), and this context holds every one of them except the
+	# forge rune, so six of the act's seven beats light.
 	var region_arc := WIActs.evaluate(catalog, _ctx(6, 4, {
 		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
 		"post_game": 1, "door_awakened": 1, "price_of_a_favor_reported": 1,

@@ -2641,7 +2641,7 @@
    "script": "seal_reward",
    "seed": 9,
    "fixture": "seal_reward_start",
-   "note": "2026-07-26 Act V, THE SKILL PATH. The descent ask, then the reading's RICHEST arm: [Detect Magic] (necromancer 1) on seal_kept_door at detected_wardwork 3 lands the quartet payoff -- four readings, one warding lattice, and this door is where it drains to. Pisces' choice then shows [Hedge Remedy] VISIBLE-LOCKED beside the selectable [Detect Magic] fork (skill gates tease, never hide); the fork's pitch is Skill-gated and its close is ITEM-gated, CONSUMING guardian_ward_fragment (item_lost asserted) to bank seal_rewarded + seal_resolved. NEGATIVES: the door never opens, the Watch is never asked, no combat.",
+   "note": "2026-07-26 Act V, THE SKILL PATH. The descent ask, then the reading's RICHEST arm: [Detect Magic] (necromancer 1) on seal_kept_door at detected_wardwork 3 lands the quartet payoff -- four readings, one warding lattice, and this door is where it drains to. Pisces' choice then shows [Hedge Remedy] VISIBLE-LOCKED beside the selectable [Detect Magic] fork (skill gates tease, never hide); the fork's pitch is Skill-gated and its close is ITEM-gated on EITHER piece of warded ruin-stone -- the guardian's fragment or the vault construct's core. This fixture is a PLATES-path save holding only the core, so the canonical consumes construct_core_shard (item_lost asserted) to bank seal_rewarded + seal_resolved, while the fragment arm renders visible-locked beside it with its own reason (item gates tease, only accomplishment gates hide). NEGATIVES: the door never opens, the Watch is never asked, no combat.",
    "tiers": [
     "full"
    ],

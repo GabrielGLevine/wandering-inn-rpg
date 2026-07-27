@@ -1000,19 +1000,16 @@ events, and result files live in the gitignored
 
 ## Fixed
 
-
-### Act V vault (wave/mq4-act5, `e94037c`)
-
-- [x] SEAL_VAULT/GRADE (P2) — **FIXED `e94037c`.** Was: the new
-  vault read as one more near-black dungeon cell; the castle floor chosen to
+- [x] SEAL_VAULT/GRADE (P2, Act V vault, `wave/mq4-act5`) — **FIXED
+  `e94037c`.** Was: the new vault read as one more near-black dungeon cell; the castle floor chosen to
   say "this room never fell in" never arrived on screen (first windowed pass at
   mood 0.335). Fix: grade to 0.60/0.60/0.66 day-dusk, 0.50/0.50/0.58 night,
   vignette 0.44 — a cool tilt (ward-light, not a window), still a full step
   under the barracks' lived-in 0.68 and double the halls' 0.282. NOTE for the
   eye-gate: it is still on the dim side of "lit". If the user wants it warmer,
   the lever is this one mood row.
-- [x] SEAL_VAULT/FOCAL (P2) — **FIXED `e94037c`.** Was: the two
-  `cellar_wardwork` rings sat on the anchor's own neighbour cells (8,3)/(8,5)
+- [x] SEAL_VAULT/FOCAL (P2, Act V vault, `wave/mq4-act5`) — **FIXED
+  `e94037c`.** Was: the two `cellar_wardwork` rings sat on the anchor's own neighbour cells (8,3)/(8,5)
   and read as the room's subject, with the plinth between them invisible. Fix:
   rings moved to the aisle ends (8,2)/(8,6), each carrying a faint cool light,
   and the anchor took the key light (energy 0.95, radius 40). The plinth now

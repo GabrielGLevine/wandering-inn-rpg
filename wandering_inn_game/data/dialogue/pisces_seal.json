@@ -91,7 +91,7 @@
    ]
   },
   "the_choice": {
-   "_comment": "THREE REAL-COST PATHS (#270 beat 3), each with its own producer and its own fiction: FIGHT banks seal_opened here and resolves in the vault beyond the warden; TALK points at Olesm, whose own arm carries the Skill-or-gold cost and banks seal_kept_fed + seal_resolved; SKILL closes it here but only for a player holding BOTH a warding Skill and the guardian's fragment, which the arm CONSUMES. He argues for the second one, because he would.",
+   "_comment": "THREE REAL-COST PATHS (#270 beat 3), each with its own producer and its own fiction: FIGHT banks seal_opened here and resolves in the vault beyond the warden; TALK points at Olesm, whose own arm carries the Skill-or-gold cost and banks seal_kept_fed + seal_resolved; SKILL closes it here, but only for a player holding BOTH a warding Skill and a piece of warded ruin-stone -- the guardian's fragment or the vault construct's core, whichever arm they take being CONSUMED. He argues for the second one, because he would.",
    "speaker": "Pisces",
    "text": "Three things, and I dislike two of them. We open it and see what three centuries of feeding produced. Or we leave it fed and make that somebody's paid duty, which is dull and correct. Or you re-cut the ward yourself, if you can, and it holds another age without anyone watching it.",
    "options": [
