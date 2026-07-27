@@ -31,6 +31,18 @@ quartet payoff; PR A data-only → PR B map+warden → PR C Pallass
 return anchor). Both evidence-verified this session (workflow
 research); START THERE.
 
+**Dev-arch wave #275-280 ADJUDICATED (2026-07-26)**: 13-agent evidence
+workflow (eval + adversarial refute per issue + infra map) — five
+adopt-modified (#276 lint S → #277 ship-gate+audio-pending S ∥ #278
+four-cache reload S → #275 diff M → #279 overlay M), #280 FEEL bench
+DEFERRED with revival criteria. Full plan, adjudicated scopes, phase
+order, and the dispatch danger list (reset-ordering trap, no-guard
+load_slot, itch-job-only gate home, overlay evidence contamination):
+docs/design/2026-07-26-dev-arch-eval-275-280.md. Phase 0 prereqs =
+extract wi_data_lib from the 3 existing Python mirrors + fix
+`derive_qa_surfaces --touching` silent-empty on monolithic data files.
+All side-lane work — #269/#270 remain START THERE.
+
 **#111 rename FULLY VERIFIED 2026-07-20**: native rehearsal passed on
 real data (5 saves + settings byte-true, marker, v4 dir intact) AND
 the user confirmed the web migration on the live deploy ("Rename
