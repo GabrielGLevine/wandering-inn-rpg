@@ -9,8 +9,9 @@
     29,
     10
    ],
-   "requires_accomplishment": "door_awakened",
-   "arrival_toast": "Cold light, gone as fast as it came. The gate district's noise rushes back in around you."
+   "requires_accomplishment": "door_mounted",
+   "arrival_toast": "Cold light, gone as fast as it came. The gate district's noise rushes back in around you.",
+   "_comment": "2026-07-26 main-quest restructure (Task 2.4), the DAY-ONE LISCOR LINK: this row and `the_wandering_inn` re-gate door_awakened -> door_mounted. The Magical Door carries the inn<->Liscor hop from the moment it is hung (spec section 2.5 -- Pisces's mounting line is the in-fiction proof), and door_awakened now means 'reaches BEYOND Liscor', which is what the three region rows below still wait on. Old saves reach door_mounted through Task 2.6's backfill, so no shipped save loses a destination it already had."
   },
   {
    "id": "the_wandering_inn",
@@ -20,8 +21,9 @@
     13,
     6
    ],
-   "requires_accomplishment": "door_awakened",
-   "arrival_toast": "Warm air, woodsmoke, the creak of the pantry door settling shut behind you. You're back, and you didn't walk here."
+   "requires_accomplishment": "door_mounted",
+   "arrival_toast": "Warm air, woodsmoke, the creak of the pantry door settling shut behind you. You're back, and you didn't walk here.",
+   "_comment": "Day-one Liscor link (Task 2.4) -- see liscor_street's row. Arrival cell (13,6) is one WEST of pantry_door (14,6) and stays clear of `pisces_mounting` (13,5), whose own window closes at the very counter this row opens on."
   },
   {
    "id": "riverfarm",

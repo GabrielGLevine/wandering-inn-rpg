@@ -1028,25 +1028,32 @@
    "display_name": "The Pantry Door",
    "sprite": "door",
    "observe": "A plain plank door, warped at the bottom from a hundred winters. Nothing about it looks like it goes anywhere but the pantry.",
+   "_comment_variants": "2026-07-26 main-quest restructure (Task 2.4). ORDER IS STORY ORDER (later satisfied variant wins, _resolve_skill_use_effect): the haul arrives (door_retrieved), it goes up (door_mounted), you learn what its reach costs (door_understood). The door_retrieved arm is the mounting scene's DISCOVERY BRIDGE -- a prop cannot open a conversation (interactions.gd routes `conversation` for kind:npc/encounter only), so the toast points at `pisces_mounting`, the NPC standing right beside it, which is what actually carries data/dialogue/door_mounting.json. The old pre-quest 'something is wrong with this door' arm is gone with the fiction it belonged to: under the restructure nothing is wrong with the pantry door until the Horns hang a different one in its frame.",
    "variants": [
     {
      "when": {
-      "door_chain_started": 1
+      "door_retrieved": 1
      },
-     "toast": "The pantry is just the pantry — until the light catches wrong and the shelves sit a fraction too far away for the wall they're on. Erin's right. Something is wrong with this door."
+     "toast": "The find leans against the pantry frame, unhung, with the old plank door stacked out of the way behind the flour sacks. Pisces has not stopped circling it since the wagon. Ask him about it."
+    },
+    {
+     "when": {
+      "door_mounted": 1
+     },
+     "toast": "Hung where the plank door used to be, and the frame took it like it had been waiting. Step through and you are in the gate district; step back and you are in the pantry. It holds Liscor and no farther — yet."
     },
     {
      "when": {
       "door_understood": 1
      },
-     "toast": "You know what it is now, or enough of it: a door that goes elsewhere, sleeping badly. It needs the anchor stone and Krshia's catalyst before Pisces can wake it properly."
+     "toast": "You know what it is now, or enough of it: a door that remembers being elsewhere, straining at anything past Liscor. Krshia's catalyst, and Pisces to work it, before it reaches farther."
     }
    ],
-   "_comment_d4": "portal_menu_when is checked before the fallback interaction; once door_awakened is met, the picker replaces the flavor toast.",
+   "_comment_d4": "portal_menu_when is checked before the fallback interaction; once the gate is met, the picker replaces the flavor toast. 2026-07-26 Task 2.4: the gate moved door_awakened -> door_mounted, MANDATORY rather than cosmetic -- portals.json's liscor_street/the_wandering_inn rows now list at door_mounted (the day-one link), and leaving the inn-side CARRIER on door_awakened would have made those rows unreachable from the inn for the whole middle of the chain. street.json's `street_anchor_stone` (the pair's other end) moved with it. Region rows keep their own *_attuned gates and still need door_awakened upstream, so nothing else in the network opens early.",
    "portal_menu": true,
    "portal_menu_when": {
     "requires": {
-     "door_awakened": 1
+     "door_mounted": 1
     }
    },
    "on_interact_accomplishment": "observed_the_pantry_door",
@@ -1054,13 +1061,19 @@
    "visual_states": [
     {
      "when": {
-      "counter": "door_chain_started",
+      "counter": "door_mounted",
       "at": 1
      },
-     "sprite": "pantry_door_runes"
+     "sprite": "pantry_door_runes",
+     "tint": [
+      0.82,
+      0.86,
+      1.0
+     ],
+     "observe": "Not the plank door any more. The frame holds the thing the Horns carried out of the ruin, and the grain of it is worked all the way round the jamb — old marks, still fed, and cold to stand near."
     }
    ],
-   "_comment_consolidation": "Pantry-door consolidation (user FEEL verdict 2026-07-19): the runes prop + wardwork prop FOLDED into the door itself. visual_states swaps the plain door for the runed-door sprite once door_chain_started banks (garden_door at-pattern, render-only). skill_uses carries BOTH reads: [Observe] banks read_the_door_runes (the door-chain SKILL leg, text verbatim from the removed prop), [Detect Magic] banks detected_wardwork. One prop, many eyes.",
+   "_comment_consolidation": "Pantry-door consolidation (user FEEL verdict 2026-07-19): the runes prop + wardwork prop FOLDED into the door itself. visual_states swaps the plain door for the runed-door sprite once the Magical Door is MOUNTED in its frame (garden_door at-pattern, render-only). 2026-07-26 Task 2.4: the counter moved door_chain_started -> door_mounted (the two now bank on the same option, and door_mounted is the one that says what the swap MEANS), and the entry gained a cold `tint` plus an `observe` override -- the tint/observe-swap idiom, NOT `hidden`, which is render-only and would leave an invisible blocker mid-floor (#149's class). Old saves reach door_mounted through Task 2.6's backfill. skill_uses carries BOTH reads: [Observe] banks read_the_door_runes (the door-chain SKILL leg, text verbatim from the removed prop), [Detect Magic] banks detected_wardwork. One prop, many eyes.",
    "skill_uses": {
     "observe": {
      "accomplishment": "read_the_door_runes",
@@ -1074,7 +1087,35 @@
    "skill_hint_toast": "The frame and the old marks under its paint both want a trained eye — and maybe more than one kind."
   },
   {
-   "_comment": "`allies:[\"relc\"]`/`ally_requires:{met_relc:1}` mirrors D2's own harness gated cell (`rift_vermin_leak_w8_relc`, the 0.55-0.95 tuned band) rather than the harder ungated `_solo` variant. GH#150: encounter_when arms the FIGHT on door_chain_started (present_when is validator-forbidden on encounters -- trigger_radius never consults presence). Pre-quest the leak stays VISIBLE as inert foreshadowing with its own observe; hiding it would recreate #149's invisible-blocking-cell class mid-floor. Display/fight text unchanged post-arm.",
+   "_comment": "2026-07-26 main-quest restructure (Task 2.4): THE MOUNTING SCENE's carrier. kind:npc is DELIBERATE and load-bearing (the inn_room_ledger precedent): interactions.gd routes `conversation` into start_dialogue for npc/encounter kinds ONLY, so the pantry PROP next door cannot open a graph -- its door_retrieved variant toast points here instead. No talk_pool, so door_mounting.json opens on the FIRST interact. present_when brackets exactly the haul window: from the moment the find comes home (door_retrieved) until it is hung (door_mounted), which is the very option the conversation banks -- so the scene can neither be missed nor replayed, and the quest auto-start it carries fires exactly once. Pisces is at the inn here rather than his Guild step because he is one of the Horns who carried it. THE DOOR NEVER SPEAKS; he is its voice. CELL (13,5): free in every shipped save, deliberately NOT (14,5) (door_chain_scout's [Observe] stance on the pantry door) and NOT (13,6) (portals.json's `the_wandering_inn` arrival cell, and portal_menu_start's own player position). Save-compat: open neighbours (12,5)/(13,4)/(13,6)/(14,5) -- and no pre-restructure save can hold door_retrieved at all, so the new blocker can strand nothing.",
+   "id": "pisces_mounting",
+   "kind": "npc",
+   "cell": [
+    13,
+    5
+   ],
+   "present_when": {
+    "requires": {
+     "door_retrieved": 1
+    },
+    "absent": {
+     "door_mounted": 1
+    }
+   },
+   "display_name": "Pisces",
+   "sprite": "pisces",
+   "facing": "right",
+   "conversation": "door_mounting",
+   "observe": "He has taken his coat off, which for Pisces is manual labour. One hand rests flat on the hauled door's face, the way a physician rests a hand on a patient, and he is listening to something no one else in the room can hear.",
+   "dialogue": [
+    {
+     "speaker": "Pisces",
+     "text": "A moment. I am counting the ward's repeats, and you are extremely countable."
+    }
+   ]
+  },
+  {
+   "_comment": "`allies:[\"relc\"]`/`ally_requires:{met_relc:1}` mirrors D2's own harness gated cell (`rift_vermin_leak_w8_relc`, the 0.55-0.95 tuned band) rather than the harder ungated `_solo` variant. GH#150: encounter_when arms the FIGHT on the door chain (present_when is validator-forbidden on encounters -- trigger_radius never consults presence). Pre-quest the leak stays VISIBLE as inert foreshadowing with its own observe; hiding it would recreate #149's invisible-blocking-cell class mid-floor. Display/fight text unchanged post-arm. 2026-07-26 main-quest restructure (Task 2.4): the arming counter moved door_chain_started -> door_mounted, and the fiction moved with it. Nothing leaked through the pantry wall while the pantry door was a pantry door; the leak is what the MOUNTED Magical Door lets through when it strains at a distance it cannot yet hold. Old saves reach door_mounted through Task 2.6's backfill.",
    "id": "rift_vermin_leak",
    "kind": "encounter",
    "cell": [
@@ -1108,16 +1149,16 @@
    ],
    "encounter_when": {
     "requires": {
-     "door_chain_started": 1
+     "door_mounted": 1
     }
    },
    "visual_states": [
     {
      "when": {
-      "counter": "door_chain_started",
+      "counter": "door_mounted",
       "at": 1
      },
-     "observe": "The scratching has become a chewing. Whatever leaks through back there has teeth, and Erin asked you to look."
+     "observe": "The scratching has become a chewing. The Door strains for somewhere it cannot reach yet, and something on the way there has found the gap and has teeth."
     }
    ]
   },
