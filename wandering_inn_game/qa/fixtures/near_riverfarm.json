@@ -1,5 +1,6 @@
 {
  "_comment": "riverfarm_walkthrough's start (FIXTURE-FIRST). CONTRACT: post_game + door_awakened imply the full Act II/III backbone and tutorial-complete warrior5+mage5 PC; gained_by and level counters remain satisfiable. Four victories = won_combat x3 + cleared_the_warren x1. Door-awakening chain is complete at the inn pantry door; read_the_board/riverfarm_attuned opens Riverfarm. gold 5 = 40g floor - 35g catalyst; relcs_spare_spear equipped. TRAP: rng_state is derived seed-9 state, never a hand-typed seed; this fixture resolves no combat.",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined added alongside the door_chain_started this fixture already carried, because that id now means 'the Magical Door is hung'. The wave rule (and why recovered_anchor_stone is NOT swept in) lives in door_chain_fight_start.json's own _comment_task_2_4.",
  "version": 5,
  "state": {
   "current_map": "inn",
@@ -45,7 +46,12 @@
    "door_study_sleeps": 3,
    "door_awakened": 1,
    "read_the_board": 1,
-   "riverfarm_attuned": 1
+   "riverfarm_attuned": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
   },
   "player_skills": [
    "basic_cleaning"

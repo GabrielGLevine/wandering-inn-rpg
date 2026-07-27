@@ -1,5 +1,6 @@
 {
  "_comment": "riverfarm_talk's start -- NO combat anywhere (its whole point). [Diplomat] L1 already held so the witch's mediation option shows visible-unlocked (a class the player earns elsewhere, per the goblin_parley warrior-intimidate precedent of a class-gated line that doesn't ALSO require quest-active state -- see riverfarm_witch.json's own _comment on why requires/hide_when split that way). met_relc/sparred_with_relc/given_spear_by_relc are banked as the tutorial history any classed PC necessarily has, and CONSTRAINT: riverfarm_attuned implies the portal network is already awake (data/portals.json's own requires_accomplishment contract), so the full awakening chain is banked alongside it (door_understood via the TALK/SKILL leg convention -- rift_vermin_leak/ruin_guardian stay unfought/live). riverfarm_attuned pre-banked (the door-chain arrival is R1's own proof); invrisil_attuned is deliberately ABSENT (this is the fixture the invrisil-attunement chain's own canonical exercises LIVE -- issue #65). `hunter_will_come` pre-banked too (fixture-bank, not earned live -- this path never fights, so the ally never fields; banked purely for world-state parity with riverfarm_fight, which earns it live -- see combatants.json's riverfarm_hunter _comment for why the ally isn't Relc). Standing at (11,10) facing up, directly south of riverfarm_headman (11,9) -- SAME start cell as riverfarm_fight/riverfarm_skill (parity: all three canonicals open from the identical vantage, only the resolution path differs). gold:22 covers the witch's 4g yarrow bundle AND the 18g Invrisil attunement stone (issue #65), exactly -- both real purchases land the run at 0 gold, no headroom past that. heard_price_of_a_favor is NOT banked and the quest is NOT started -- the script proves the full give -> mediate -> report -> completion loop honestly, PLUS the shared post-conditions (village brighten, vendor unlock, villager echo retirement) since this is the fastest (combat-free) path to prove them. TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state, so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined added alongside the door_chain_started this fixture already carried, because that id now means 'the Magical Door is hung'. The wave rule (and why recovered_anchor_stone is NOT swept in) lives in door_chain_fight_start.json's own _comment_task_2_4.",
  "version": 5,
  "state": {
   "current_map": "riverfarm_village",
@@ -27,7 +28,12 @@
    "riverfarm_attuned": 1,
    "hunter_will_come": 1,
    "persuaded_someone": 1,
-   "heard_gossip": 3
+   "heard_gossip": 3,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
   },
   "player_skills": [],
   "removed_entities": [],

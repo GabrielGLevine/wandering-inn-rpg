@@ -16,6 +16,105 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### Machine playtest — wave/mq2-dig "The Dig" close-out (2026-07-27)
+
+Source: `wave/mq2-dig` at `dfc2ec3` + the Task 2.7 copy pass, full asset overlay
+restored (746/746 files vs main) and re-imported; full sweep green (155/155)
+before the windowed pass. Five windowed runs, 14 screenshots read at native
+resolution: `horns_dig_flow`, `horns_dig_plates`, `door_chain_fight` (all
+seed 9, `QA_RESULT: PASS`) plus two throwaway probes for the migrated-save and
+pre-dig-hub reads. Durable evidence:
+`wandering_inn_game/qa_output/machine_playtest_2026-07-27_mq2_dig/`.
+
+- [x] RUIN/CAMP-DOUBLE (P1) — **FIXED 2026-07-27, controller-sanctioned,
+  evidence below.** Was: the Horns were in two places at once for the whole of
+  The Dig — `ceria_inn` (inn.json, 8,6) gated on `seal_kept_reported` ALONE
+  while `ceria_dig_camp` (ruin_surface.json, 4,3) ran a live camp, so the
+  player could take the invitation from Ceria at the inn, walk to the ruin and
+  talk to Ceria at the camp, walk back and talk to Ceria at the inn again;
+  `yvlon_inn`/`ksmvr_inn` carried the same bare gate while the breach toast had
+  them "already down the gap". FIXED by splitting each inn row's window: the
+  original retires at `horns_dig_joined` and a twin (`<id>_returned`, identical
+  cell/sprite/facing/pool/conversation) brings them home at `door_mounted`.
+  The retirement counter is `horns_dig_joined`, NOT `horns_dig_started` as
+  first specced: `horns_dig_started` banks mid-conversation with the player
+  standing in the inn, and world.gd reconciles presence live on
+  ACCOMPLISHMENT_RECORDED, so all three Horns popped out of the room in one
+  frame while the invitation panel still read "Ceria" — the ruled version
+  re-created the very defect below. `horns_dig_joined` banks at the CAMP, so
+  the swap happens with the inn off-screen. Evidence:
+  `AFTER_FIX/tmp_dig_inn_probe/01_MIDCONVO_after_bank.png` (all three still
+  present mid-invitation) and `04_inn_during_dig_horns_free.png` (Horns-free
+  inn once the dig is joined).
+- [x] RUIN/REVEAL-DESPAWN (P1) — **FIXED 2026-07-27, controller-sanctioned.**
+  Was: the reveal toast quoted an NPC who had left the screen one event
+  earlier — `accomplishment_recorded door_retrieved` fires before the
+  `toast "Below the pedestal: not treasure. A DOOR … Ceria, finally: 'That's
+  wardwork…'"`, and `ceria_dig_camp`'s `absent: {door_retrieved: 1}` fired on
+  that first event, emptying the camp corner on both breach routes. FIXED by
+  moving the camp's retirement counter `door_retrieved` → `door_mounted`: the
+  camp now lingers through the reveal and strikes its tents when the door is
+  hung, which is also when the haul is genuinely over. Evidence:
+  `AFTER_FIX/horns_dig_flow/02_the_reveal.png` and
+  `AFTER_FIX/horns_dig_plates/03_the_reveal_no_fight.png` — Ceria is standing
+  at the camp for her own line on both routes.
+- [x] RUIN/CAMP-LEFTOVERS (P2) — **FIXED 2026-07-27, controller-sanctioned.**
+  Was: `campfire` (3,3) and `crate` (5,3) were unconditional `decor` with two
+  permanent `blocked` cells, so the camp's fire went on burning with live red
+  coals over an empty corner after the Horns struck tents. FIXED by promoting
+  both to presence-gated `prop` ENTITIES sharing the camp's exact window
+  (`requires horns_dig_started`, `absent door_mounted`), and removing their two
+  permanent `blocked` entries — an entity blocks only while present, so the
+  cells free up with the camp instead of leaving invisible blockers (#149's
+  class). Net blocking is strictly looser than shipped, so no prior-version
+  save can be trapped. Evidence:
+  `AFTER_FIX/tmp_migrated_ruin_probe/00_camp_struck_post_mount.png` (corner
+  empty, no fire, no crate) vs `AFTER_FIX/tmp_dig_inn_probe/03_camp_present_with_fire.png`
+  (same corner during the dig); `01_camp_corner_walkable.png` walks the player
+  onto the old camp cell.
+- [ ] RUIN/MIGRATED-DIORAMA (P2) — a pre-restructure save migrated by
+  `save.gd:339` loads with `door_retrieved` + `door_mounted` banked, and then
+  the ruin it walks into still has `ruin_guardian` alive and on its feet over
+  the pedestal the save says was already breached and looted
+  (`tmp_migrated_ruin_probe/00_migrated_deserted_ruin.png`). The deserted camp
+  on its own reads acceptably — a struck camp with leftovers is ordinary ruin
+  dressing, and the gated arrival toast correctly withholds "the Horns got here
+  first" — but the live guardian is a direct contradiction of the migrated
+  state. Consider adding `ruin_guardian` to the backfill's removed set.
+- [ ] COPY/DASH-MIX (P2) — two toasts on the same map one beat apart disagree
+  on dash glyph: `horns_dig_plates/02_the_plates_break_the_seal.png` renders a
+  real em dash ("it was never the plates — it was whoever hadn't walked them")
+  and `horns_dig_flow/02_the_reveal.png` renders ASCII double-hyphen ("A DOOR
+  -- unhung"). Not a wave regression — a census of rendered copy fields across
+  `data/**/*.json` finds 61 strings carrying `--` against 218 carrying `—`,
+  spread over 25 files including long-shipped ones (bounties.json,
+  trapped_halls.json, guild.json). Wants one normalization pass with the
+  affected canonicals re-pinned, not piecemeal edits.
+- [ ] TOAST/QUEUE-DROP (P2, re-observed) — `horns_dig_flow` emits 17 distinct
+  toast texts and renders 13; the pedestal's own flavor line ("The seam splits
+  wider at your touch, cold air breathing up…") never reaches
+  `ui_toast_rendered`, losing one of the two beats at the wave's biggest
+  reveal. Same family as the open UI/QUEST-START entry below (queued toasts
+  silently dropping payloads), now costing story copy rather than a pointer.
+- [ ] COMBAT/CELLAR-VERMIN (P2, pre-existing, re-observed on this wave's
+  surface) — on the re-gated leak board
+  (`door_chain_fight/00_rift_vermin_leak_board.png`) the Rift Vermin
+  combatants are visually indistinguishable from the cellar's barrel decor;
+  only the HP bars separate a monster from a barrel, so counting the enemy
+  roster means reading the turn-order strip instead of the board. The feed
+  panel's third line ("Rift Vermin B strikes Relc for 13!") is also clipped by
+  the parchment fold in the same shot.
+- WHAT LANDS (keep this, do not regress): the mounting scene stages correctly —
+  `pisces_mounting` (13,5) reads as standing at the pantry door (14,6), his
+  white robes are distinct against a crowded inn floor, and his two-line
+  opening renders with no fold (`horns_dig_flow/03_the_mounting.png`). The
+  day-one Liscor ride puts the player beside the gate-district arch in daylight
+  with the arrival legible (`04_liscor_by_the_door.png`). The plates breach is
+  the best copy in the wave and renders in full. Ceria's pre-dig hub line "It
+  was guarding a door." reads as a backward callback to the vault construct and
+  the `seal_kept_door` prop the player just walked past — not a leak of the
+  dig's reveal, and the invitation option beneath it names no door.
+
 ### Machine playtest — quest-thread legibility (2026-07-19)
 
 Source: detached `c33faac` build with the complete local asset overlay; clean

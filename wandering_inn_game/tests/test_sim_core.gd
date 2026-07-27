@@ -1700,6 +1700,102 @@ func _init() -> void:
 	assert(not gC2.inventory.has("leather_jerkin"), "a pre-marked-emptied container grants nothing")
 	assert(_count("item_gained") == 0, "a pre-marked-emptied container emits no item_gained on interact")
 
+	# 2026-07-26 (Task 2.3): the container arm's two additive keys, proven on the
+	# REAL ruin pedestal -- `on_open_accomplishment` as an ARRAY banks every id in
+	# one open (the horns_dig breach + reveal converge on this single interact),
+	# and `open_toast` speaks AFTER the pickups so the reveal is the last thing
+	# the player reads. The inn_chest assertions above are the String/no-toast
+	# control: both keys are additive, so shipped containers are unchanged.
+	var gP := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gP.transition("ruin_surface", Vector2i(17, 5))
+	_events.clear()
+	gP.player_facing = Vector2i.DOWN
+	var locked_result := gP.interact()
+	assert(locked_result.get("accomplishment", "") == "found_the_pedestal", "unmet contains_when still falls through to the locked flavor arm")
+	assert(gP.accomplishment_count("door_retrieved") == 0, "the locked arm banks nothing from the open set")
+	for counter: String in ["pedestal_unsealed", "rune_sequence_done", "horns_dig_joined"]:
+		gP.record_accomplishment(counter)
+	_events.clear()
+	var reveal_result := gP.interact()
+	assert(reveal_result.get("container", "") == "anchor_stone_pedestal", "all three contains_when counters met opens the pedestal")
+	assert(gP.inventory.has("anchor_stone") and gP.inventory.has("anchor_sliver"), "the open still grants both shipped items")
+	for counter: String in ["recovered_anchor_stone", "pedestal_breached", "door_retrieved"]:
+		assert(gP.accomplishment_count(counter) == 1, "the ARRAY on_open_accomplishment banks %s exactly once" % counter)
+	var reveal_toast := ""
+	for e: Dictionary in _events:
+		if e["type"] == "toast":
+			reveal_toast = String(e["payload"].get("text", ""))
+	assert(reveal_toast.begins_with("Below the pedestal: not treasure. A DOOR"), "open_toast is the LAST toast of the open, after the pickups' own")
+
+	# 2026-07-27 (Task 2.6 fix round 1): the MIGRATED-SAVE arm of that same open.
+	# save.gd's dig backfill hands an old door-chain save door_retrieved without
+	# pedestal_unsealed/rune_sequence_done, so that player still breaks the seal
+	# and walks the plates -- and must NOT be told he has just discovered the
+	# door already hanging in his inn. `open_toast_variants` is resolved BEFORE
+	# on_open_accomplishment banks door_retrieved, which is the whole trick: a
+	# fresh player cannot hold that counter at this instant (this open is its
+	# only producer), so the two arms can never collide.
+	var gMig := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	for counter: String in ["door_retrieved", "door_mounted", "pedestal_breached",
+			"horns_dig_started", "horns_dig_joined", "pedestal_unsealed", "rune_sequence_done"]:
+		gMig.record_accomplishment(counter)
+	gMig.transition("ruin_surface", Vector2i(17, 5))
+	gMig.player_facing = Vector2i.DOWN
+	_events.clear()
+	var mig_result := gMig.interact()
+	assert(mig_result.get("container", "") == "anchor_stone_pedestal", "a migrated save still opens the pedestal for the stone the backfill withheld")
+	assert(gMig.inventory.has("anchor_stone") and gMig.accomplishment_count("recovered_anchor_stone") == 1,
+		"the migrated open grants the anchor stone -- the errand the backfill left him")
+	var mig_toast := ""
+	for e: Dictionary in _events:
+		if e["type"] == "toast":
+			mig_toast = String(e["payload"].get("text", ""))
+	assert(mig_toast.begins_with("Beneath where the door lay"),
+		"open_toast_variants swaps the reveal for the migrated line -- the door is already hung at the inn, it cannot be discovered here")
+	assert(gMig.accomplishment_count("door_retrieved") == 2,
+		"the variant gate reads PRE-open state: door_retrieved was 1 going in and the open still banked its own")
+
+	var gP2 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	for counter: String in ["pedestal_unsealed", "rune_sequence_done"]:
+		gP2.record_accomplishment(counter)
+	gP2.transition("ruin_surface", Vector2i(17, 5))
+	gP2.player_facing = Vector2i.DOWN
+	_events.clear()
+	var skipped := gP2.interact()
+	assert(skipped.get("container", "") == "", "the camp is not skippable: unseal + plates WITHOUT horns_dig_joined leaves the pedestal shut")
+	assert(gP2.accomplishment_count("door_retrieved") == 0, "no reveal without joining the dig")
+
+	# 2026-07-26 (Task 2.4 follow-up, controller ruling on the three-pillars
+	# gate): horns_dig's `breach` beat promises "fight what guards it, walk the
+	# plates, or read the wardwork", but every non-fight producer of
+	# pedestal_unsealed used to sit behind the door chain -- which since the
+	# restructure does not start until AFTER this pedestal is open. The beat
+	# shipped fight-only. Both non-fight producers now live on ruin_surface,
+	# gated on horns_dig_joined alone. NEGATIVE CONTROL FIRST: neither fires
+	# without the camp join.
+	var gPlate := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gPlate.record_accomplishment("rune_sequence_done")
+	gPlate.transition("ruin_surface", Vector2i(17, 5))
+	gPlate.player_facing = Vector2i.DOWN
+	assert(gPlate.interact().get("accomplishment", "") == "found_the_pedestal", "plates WITHOUT the camp join leave the plinth on its flavor arm")
+	assert(gPlate.accomplishment_count("pedestal_unsealed") == 0, "no unseal without horns_dig_joined -- the camp is not skippable")
+	gPlate.record_accomplishment("horns_dig_joined")
+	assert(gPlate.interact().get("accomplishment", "") == "pedestal_unsealed", "PLATES LEG: both spirals lit + the camp joined, a hand on the plinth breaks the seal -- no fight, no class Skill")
+	assert(gPlate.accomplishment_count("pedestal_unsealed") == 1, "the plates leg banks pedestal_unsealed exactly once")
+	assert(gPlate.interact().get("container", "") == "anchor_stone_pedestal", "and the NEXT interact opens the pedestal off that same non-fight unseal")
+	assert(gPlate.accomplishment_count("door_retrieved") == 1, "the plates-only route reaches the reveal")
+
+	var gSocket := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gSocket.player_skills.append("detect_magic")
+	gSocket.transition("ruin_surface", Vector2i(18, 5))
+	gSocket.player_facing = Vector2i.DOWN
+	gSocket.use_skill_field("detect_magic")
+	assert(gSocket.accomplishment_count("detected_wardwork") == 1, "pre-camp, the socket still banks its shipped flavour counter")
+	assert(gSocket.accomplishment_count("pedestal_unsealed") == 0, "pre-camp, the wardwork read unseals nothing")
+	gSocket.record_accomplishment("horns_dig_joined")
+	gSocket.use_skill_field("detect_magic")
+	assert(gSocket.accomplishment_count("pedestal_unsealed") == 1, "WARDWORK LEG: [Detect Magic] on the socket breaks the seal once the camp is joined")
+	assert(gSocket.accomplishment_count("cleared_ruin_guardian") == 0, "neither non-fight leg touches the guardian")
 
 	var gT1 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gT1.transition("floodplains", Vector2i(30, 20))
@@ -3228,20 +3324,23 @@ func _init() -> void:
 	var arrival_game := WIGame.new(scene_config, skill_config, _sink, 4242)
 	_events.clear()
 	arrival_game.transition("ruin_surface", Vector2i(17, 5))
+	# 2026-07-26 (Task 2.3): the ruin's arrival toast re-gated door_understood ->
+	# horns_dig_started and recovered_anchor_stone -> door_retrieved. The door
+	# chain no longer runs before the ruin at all; the dig invitation does.
 	assert(not _toast_texts().any(func(t: String) -> bool: return t.contains("this is the ruin")),
-		"ruin_surface arrival toast stays silent until door_understood is banked")
-	arrival_game.record_accomplishment("door_understood")
+		"ruin_surface arrival toast stays silent until horns_dig_started is banked")
+	arrival_game.record_accomplishment("horns_dig_started")
 	_events.clear()
 	arrival_game.transition("inn", Vector2i(2, 3))
 	arrival_game.transition("ruin_surface", Vector2i(17, 5))
-	assert(_toast_texts().any(func(t: String) -> bool: return t == "East past the gate road — this is the ruin. The pedestal Pisces described is deeper in."),
-		"ruin_surface arrival toast fires when door_understood met and recovered_anchor_stone unmet")
-	arrival_game.record_accomplishment("recovered_anchor_stone")
+	assert(_toast_texts().any(func(t: String) -> bool: return t == "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, and someone's washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court."),
+		"ruin_surface arrival toast fires when horns_dig_started met and door_retrieved unmet")
+	arrival_game.record_accomplishment("door_retrieved")
 	_events.clear()
 	arrival_game.transition("inn", Vector2i(2, 3))
 	arrival_game.transition("ruin_surface", Vector2i(17, 5))
 	assert(not _toast_texts().any(func(t: String) -> bool: return t.contains("this is the ruin")),
-		"ruin_surface arrival toast retires once recovered_anchor_stone is banked (hide_when)")
+		"ruin_surface arrival toast retires once door_retrieved is banked (hide_when)")
 	var dungeon_game := WIGame.new(scene_config, skill_config, _sink, 4243)
 	dungeon_game.record_accomplishment("heard_the_deep_tremor")
 	_events.clear()

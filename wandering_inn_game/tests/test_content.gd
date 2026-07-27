@@ -295,8 +295,11 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 				for variant: Dictionary in (entity.get("variants", []) as Array):
 					if variant.has("accomplishment"):
 						produced[String(variant["accomplishment"])] = true
-			if entity.has("on_open_accomplishment"):
-				produced[String(entity["on_open_accomplishment"])] = true
+			# Task 2.3: on_open_accomplishment is String|Array (the on_victory
+			# contract) -- a multi-bank open must register EVERY id it produces.
+			var open_banks: Variant = entity.get("on_open_accomplishment", [])
+			for counter: Variant in (open_banks if open_banks is Array else [open_banks]):
+				produced[String(counter)] = true
 			if entity.has("on_enter_accomplishment"):
 				produced[String(entity["on_enter_accomplishment"])] = true
 			if entity.has("talk_pool") and not (entity["talk_pool"] as Array).is_empty():
@@ -884,7 +887,7 @@ const LANDMARK_TOKENS := {
 	"guild": ["guild"],
 	"barracks": ["barracks"],
 	"runners_guild": ["runner"],
-	"ruin_surface": ["floodplains"],
+	"ruin_surface": ["ruin", "floodplains"],
 	"garden_sanctuary": ["garden"],
 	"riverfarm_village": ["riverfarm"],
 	"riverfarm_longhouse": ["longhouse"],
@@ -931,8 +934,9 @@ func _accomplishment_producer_maps(scene: Dictionary, graphs: Dictionary, conver
 			for variant: Dictionary in (entity.get("variants", []) as Array):
 				if variant.has("accomplishment"):
 					_mark_producer(out, String(variant["accomplishment"]), map_id)
-			if entity.has("on_open_accomplishment"):
-				_mark_producer(out, String(entity["on_open_accomplishment"]), map_id)
+			var open_banks: Variant = entity.get("on_open_accomplishment", [])
+			for counter: Variant in (open_banks if open_banks is Array else [open_banks]):
+				_mark_producer(out, String(counter), map_id)
 			for rumor: Dictionary in (entity.get("board_rumors", []) as Array):
 				_mark_producer(out, String(rumor["banks_accomplishment"]), map_id)
 	for graph_id: String in graphs:
@@ -1024,9 +1028,16 @@ func _validate_place_naming_shape_cases() -> void:
 	assert(not _beat_needs_place_name({}, {"inn": true}), "no known producer map -- nothing to cross-check, not this check's business")
 	assert(_beat_needs_place_name({"guild": true}, {}), "an unresolvable quest-giver map (empty set) can share no map with anything -- fails loud (requires naming) rather than silently skipping the beat")
 
+	# 2026-07-26 (Task 2.3): "ruin" joined LANDMARK_TOKENS["ruin_surface"] --
+	# horns_dig's join_dig/breach beats are ruin-produced but inn/dungeon-given,
+	# so they arm this check and the ruin is the landmark a player steers by.
+	# The old negative control ("...from the ruin and buy Krshia's catalyst")
+	# names the ruin, so it is no longer a no-landmark string; the control below
+	# is the same sentence with every landmark word removed, preserving intent.
 	var ruin_tokens: Array = LANDMARK_TOKENS["ruin_surface"] + LANDMARK_TOKENS["street"]
 	assert(_description_names_place("Recover the anchor stone from the ruin east past the gate road, on the floodplains, and buy Krshia's catalyst to attune it.", ruin_tokens), "fixed recover beat names the ruin/floodplains")
-	assert(not _description_names_place("Recover the anchor stone from the ruin and buy Krshia's catalyst to attune it.", ruin_tokens), "NEGATIVE CONTROL: the pre-fix recover beat names no landmark")
+	assert(_description_names_place("Get the Horns through the ruin's sealed pedestal level -- fight what guards it, walk the plates, or read the wardwork.", ruin_tokens), "horns_dig's breach beat names the ruin")
+	assert(not _description_names_place("Recover the anchor stone and buy Krshia's catalyst to attune it.", ruin_tokens), "NEGATIVE CONTROL: a recovery beat naming no landmark at all")
 
 	var guild_tokens: Array = LANDMARK_TOKENS["guild"]
 	assert(_description_names_place("Decide what to do with Selys's reward, there at the Guild.", guild_tokens), "fixed decide beat names the Guild")

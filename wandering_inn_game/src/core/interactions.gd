@@ -195,8 +195,34 @@ func _interact_container(target: Dictionary, container_state: Dictionary) -> Dic
 		if bool(_pickup.call(item_id, id)):
 			granted.append(item_id)
 	container_state[id] = true
-	if target.has("on_open_accomplishment"):
-		_record_accomplishment.call(String(target["on_open_accomplishment"]), 1)
+	# 2026-07-26 main-quest restructure (Task 2.3), both additive and both
+	# backwards-compatible (an absent key leaves every shipped container's
+	# event stream byte-identical):
+	#  * `on_open_accomplishment` now takes String|ARRAY, the same
+	#    String|Array contract `on_victory`/`requires_item`/`inherits` already
+	#    use, so one open can bank a convergent set atomically.
+	#  * `open_toast` (the key name `door_when` already uses) gives the open
+	#    its own narrative beat -- until now a container could only ever speak
+	#    through its pickups' "Got: <name>" lines.
+	# 2026-07-27 (Task 2.6 fix round 1), the third and last additive key:
+	#  * `open_toast_variants` -- [{"when": {counter: n}, "open_toast": "..."}],
+	#    LATER-SATISFIED WINS, the entity `variants` contract. Total: an absent
+	#    or all-unmet array leaves `open_toast` exactly as authored.
+	#    RESOLVED BEFORE the banks below ON PURPOSE. `on_open_accomplishment`
+	#    banks the very counters an open line needs to discriminate on (a
+	#    migrated save that already owns door_retrieved must not read the
+	#    first-discovery reveal), and after the bank every player looks alike.
+	#    The EMIT still happens last, so the toast order is unchanged.
+	var open_toast := String(target.get("open_toast", ""))
+	for raw_variant: Variant in target.get("open_toast_variants", []):
+		var variant: Dictionary = raw_variant
+		if bool(_accomplishment_gate_met.call(variant.get("when", {}) as Dictionary)):
+			open_toast = String(variant.get("open_toast", open_toast))
+	var raw_open: Variant = target.get("on_open_accomplishment", [])
+	for counter: Variant in (raw_open as Array if raw_open is Array else [raw_open]):
+		_record_accomplishment.call(String(counter), 1)
+	if open_toast != "":
+		_emit(WIEvents.TOAST, {"text": open_toast})
 	return {"container": id, "items": granted}
 
 

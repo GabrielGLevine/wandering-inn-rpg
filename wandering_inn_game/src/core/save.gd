@@ -318,6 +318,31 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	if int((s.get("accomplishments", {}) as Dictionary).get("watch_runner_pointed", 0)) >= 1 \
 			and not game.started_quests.has("something_beneath"):
 		game.started_quests.append("something_beneath")
+	# 2026-07-26 main-quest spec 8 backfill: the door chain was re-fictioned
+	# behind a retrieval quest (horns_dig) that old saves never played. Any old
+	# door-chain progress implies the dig happened -- door_chain_started now
+	# MEANS "the Magical Door is hung at the inn" -- so bank the dig whole: no
+	# journal, gate, or map state may point at a door nobody ever retrieved.
+	# NOT granted: recovered_anchor_stone. The migrated player still has that
+	# errand, and test_fixture_coherence pins this exact migrated shape.
+	# Written straight into the dict (the reached_two_classes idiom above)
+	# rather than through record_accomplishment ON PURPOSE: a restore must stay
+	# silent, and _check_quests() against a not-yet-primed _quest_progress would
+	# re-toast (and re-grant) every quest the old save had already finished.
+	var acc: Dictionary = game.accomplishments  # read alias; writes go through game
+	var old_chain := int(acc.get("door_chain_started", 0)) >= 1 \
+			or int(acc.get("door_understood", 0)) >= 1 \
+			or int(acc.get("recovered_anchor_stone", 0)) >= 1 \
+			or int(acc.get("bought_catalyst", 0)) >= 1 \
+			or int(acc.get("door_awakened", 0)) >= 1 \
+			or game.started_quests.has("door_that_goes_elsewhere")
+	if old_chain and int(acc.get("horns_dig_started", 0)) < 1:
+		for cid: String in ["horns_dig_started", "horns_dig_joined", "pedestal_breached",
+				"door_retrieved", "door_mounted"]:
+			if int(acc.get(cid, 0)) < 1:
+				game.accomplishments[cid] = 1
+		if not game.started_quests.has("horns_dig"):
+			game.started_quests.append("horns_dig")
 	game.pc_name = WIGame._sanitize_pc_name(String(s.get("pc_name", "Traveler")))
 	game.pc_race = WIGame._sanitize_pc_race(String(s.get("pc_race", "human")))
 	game.pc_gender = WIGame._sanitize_pc_gender(String(s.get("pc_gender", "m")))

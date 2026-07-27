@@ -1,5 +1,5 @@
 {
- "_comment": "The FIGHT leg of the 3-path mage-consult parity (cisterns_fight/talk/scout precedent -- three SEPARATE scripts, not one combined 'door_chain_paths', matching that precedent exactly and justified the same way: each leg's route/assertions differ enough that a single script would need multiple fixture re-installs mid-run for no real coverage gain). This is the FLAGSHIP end-to-end script: it proves Erin's beat-1 flicker line live (door_chain_fight_start stands the player facing her, post_game pre-banked), then the FIGHT leg of the mage consult (Pisces sends the player to clear rift_vermin_leak in the inn), then the FULL beat-3 recovery (ruin trip -> ruin_guardian fight -> anchor_stone_pedestal opens -> Krshia's resonant_catalyst purchase), ending with the recover_stone + buy_catalyst beats complete and the quest sitting on its `attune` beat (#148: the dual fetch was split into two beats + an `attune`/door_awakened payoff beat -- the quest completes at the door's awakening, door_awakening.json's subject, NOT at the catalyst purchase). door_chain_talk/door_chain_scout (fixture-started PAST beat 1, door_chain_started pre-banked) cover the other two consult legs plus a partial slice of the recovery beat each (talk proves the pedestal's OR-gate opens WITHOUT fighting the guardian; scout proves the catalyst purchase again from a different angle) -- together the three scripts cover door_understood parity, the pedestal's contains_when OR-gate from both a FIGHT and a non-FIGHT producer, and the full quest completion, without triple-deriving the whole chain three times. Uses `teleport` for every inter-map hop (real navigation across inn/street/floodplains/ruin_surface is ALREADY proven live by inn_walkthrough/gate_district_walkthrough/tutorial_flow/ruin_walkthrough -- this script's subject is the consult-path/combat/container/purchase wiring, not pathing; the arc_flow/deep_descent precedent for teleporting past an already-proven stretch). Every teleport lands one cell short of its target, followed by a `move` INTO the target (sets facing even when blocked, wi_game.gd move_player's unconditional `player_facing = dir` before the blocked check) before interact.",
+ "_comment": "The FIGHT leg of the 3-path mage-consult parity (cisterns_fight/talk/scout precedent -- three SEPARATE scripts, not one combined 'door_chain_paths', matching that precedent exactly and justified the same way: each leg's route/assertions differ enough that a single script would need multiple fixture re-installs mid-run for no real coverage gain). This is the FLAGSHIP end-to-end script: it runs the FIGHT leg of the mage consult (Pisces sends the player to clear rift_vermin_leak in the inn), then the FULL ruin run (ruin trip -> ruin_guardian fight -> anchor_stone_pedestal opens -> Krshia's resonant_catalyst purchase), ending with the chain's `consult` and `buy_catalyst` beats complete and the quest sitting on its third and last beat, `attune` -- door_that_goes_elsewhere completes only at the door's awakening (door_awakened), door_awakening.json's subject, NOT at the catalyst purchase. The anchor stone still comes up at the pedestal here but no longer completes any beat of this quest: the 2026-07-26 main-quest restructure moved the retrieval into its own quest (`horns_dig`) and deleted the old `recover_stone` beat. Erin's old beat-1 flicker start is gone from this script; Task 2.4 replaced it with the chain's REAL start, the pantry MOUNTING scene, played live from the first step -- see that step's own comment. door_chain_talk/door_chain_scout (door_chain_started pre-banked in their fixtures, same as this one now) cover the other two consult legs plus a partial slice of the recovery beat each (talk proves the pedestal's OR-gate opens WITHOUT fighting the guardian; scout proves the catalyst purchase again from a different angle) -- together the three scripts cover door_understood parity, the pedestal's contains_when OR-gate from both a FIGHT and a non-FIGHT producer, and the full quest completion, without triple-deriving the whole chain three times. Uses `teleport` for every inter-map hop (real navigation across inn/street/floodplains/ruin_surface is ALREADY proven live by inn_walkthrough/gate_district_walkthrough/tutorial_flow/ruin_walkthrough -- this script's subject is the consult-path/combat/container/purchase wiring, not pathing; the arc_flow/deep_descent precedent for teleporting past an already-proven stretch). Every teleport lands one cell short of its target, followed by a `move` INTO the target (sets facing even when blocked, wi_game.gd move_player's unconditional `player_facing = dir` before the blocked check) before interact.",
  "fixture_save": "door_chain_fight_start",
  "starts_at_title": true,
  "steps": [
@@ -46,22 +46,15 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    7,
-    3
+    13,
+    4
    ]
   },
   {
-   "_comment": "== BEAT 1: Erin's flicker (organic, no teleport -- fixture already faces her) ==",
-   "action": "press",
-   "name": "interact"
-  },
-  {
-   "action": "wait_for_event",
-   "type": "dialogue_line",
-   "payload_contains": {
-    "speaker": "Erin"
-   },
-   "timeout_sec": 5
+   "_comment": "== BEAT 1, RESTORED LIVE (Task 2.4): THE MOUNTING ==. Task 2.2 retired Erin's flicker option (the chain's old start) and Task 2.2's interim banked the chain in the fixture instead; the chain's REAL start is this scene, so it is played for real again. The fixture stands at (13,4) with the haul home (door_retrieved) and unhung (door_mounted absent), which is exactly `pisces_mounting`'s present_when window. Bump SOUTH into his (blocked) cell for facing; no talk_pool, so the first interact opens door_mounting.json.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
   },
   {
    "action": "press",
@@ -71,7 +64,16 @@
    "action": "wait_for_event",
    "type": "dialogue_started",
    "payload_contains": {
-    "conversation": "erin_errand"
+    "conversation": "door_mounting"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Mounted, hinged, and -- observe -- already holding a hop to Liscor's gate district without so much as a rune of encouragement. It works. Now let us see how far it can go."
    },
    "timeout_sec": 5
   },
@@ -81,21 +83,26 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Visible hub options at this state: [0 'take the package', 1 'deal with that table', 2 'Just passing through.', 3 'Something wrong with the pantry door?'] -- move to index 3.",
+   "_comment": "Options: [0 'How far CAN it go?', 1 'One thing at a time.']. This canonical takes the SHORT exit (index 1) -- horns_dig_flow takes index 0 and the door_mounting_far branch, so the two scripts cover both of the scene's exits, and both exits must bank the identical set.",
    "action": "move",
    "direction": "down",
-   "steps": 3
+   "steps": 1
   },
   {
    "action": "press",
    "name": "confirm"
   },
   {
-   "_comment": "Effects apply in array order: {quest} fires BEFORE {accomplishment} -- wait_for_event's since-marker is a forward-only cursor, so the waits must match that order.",
+   "_comment": "The panel closes BEFORE the sim resolves the choice (dialogue_ended -> dialogue_choice -> effects), so this wait sits ahead of the banks it precedes.",
    "action": "wait_for_event",
-   "type": "quest_started",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
    "payload_contains": {
-    "id": "door_that_goes_elsewhere"
+    "id": "door_mounted"
    },
    "timeout_sec": 5
   },
@@ -109,26 +116,21 @@
   },
   {
    "action": "wait_for_event",
-   "type": "dialogue_node",
+   "type": "quest_started",
    "payload_contains": {
-    "speaker": "Erin",
-    "text": "It went somewhere COLD this morning. Doors shouldn't have moods. …Can you look? If it eats you, yell."
+    "id": "door_that_goes_elsewhere"
    },
    "timeout_sec": 5
   },
   {
-   "action": "press",
-   "name": "confirm"
+   "action": "assert_state",
+   "path": "started_quests",
+   "contains": "door_that_goes_elsewhere"
   },
   {
-   "action": "wait_for_event",
-   "type": "dialogue_ended",
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "ui_dialogue_hidden",
-   "timeout_sec": 5
+   "action": "assert_state",
+   "path": "accomplishments.door_mounted",
+   "equals": 1
   },
   {
    "_comment": "== BEAT 2 (FIGHT leg): teleport to street beside Pisces, choose FIGHT ==",
@@ -527,18 +529,12 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "#148: recovered_anchor_stone now completes its OWN beat (recover_stone, index 1) -> beat advances to buy_catalyst (index 2). The dual fetch was split into two beats and an `attune` payoff beat was appended, so the quest no longer completes at the catalyst purchase below.",
-   "action": "wait_for_event",
-   "type": "quest_beat_completed",
-   "payload_contains": {
-    "id": "door_that_goes_elsewhere",
-    "beat": 2
-   },
-   "timeout_sec": 5
-  },
-  {
+   "_comment": "2026-07-26 main-quest restructure (Task 2.1): the `recover_stone` beat is GONE from door_that_goes_elsewhere -- the retrieval moved to its own quest (horns_dig) and recovered_anchor_stone is no longer any beat's complete_when, so NO quest_beat_completed fires here any more (the old '#148 -> beat 2' wait was deleted, not re-pinned). recovered_anchor_stone still banks (asserted at the tail) and the stone still enters inventory; the ui_toast_rendered confirmation below is re-pinned off the beat toast onto the pickup toast so the render proof stays specific instead of matching whatever toast happens to be queued.",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Got: Anchor Stone"
+   },
    "timeout_sec": 5
   },
   {
@@ -660,12 +656,12 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "#148: bought_catalyst now completes its OWN beat (buy_catalyst, index 2) -> beat advances to `attune` (index 3), NOT quest completion. The quest completes only when the door awakens (door_awakened), covered by door_awakening.json's sleep chain. quest_completed is asserted ABSENT at the tail.",
+   "_comment": "bought_catalyst completes its OWN beat (buy_catalyst) -> beat advances to `attune`, NOT quest completion. The quest completes only when the door awakens (door_awakened), covered by door_awakening.json's sleep chain. quest_completed is asserted ABSENT at the tail. 2026-07-26 restructure (Task 2.1) RE-PIN: 3 -> 2, since dropping `recover_stone` shifted buy_catalyst to index 1 and `attune` to index 2 (beat_index = first-incomplete scan; re-derived from a real run's events.jsonl, not arithmetic).",
    "action": "wait_for_event",
    "type": "quest_beat_completed",
    "payload_contains": {
     "id": "door_that_goes_elsewhere",
-    "beat": 3
+    "beat": 2
    },
    "timeout_sec": 5
   },

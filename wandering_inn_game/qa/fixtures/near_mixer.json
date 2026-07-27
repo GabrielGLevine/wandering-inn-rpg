@@ -1,5 +1,6 @@
 {
  "_comment": "Wave D-1 (#155): near-threshold [Mixer] evolution at the Pallass alchemy benches. Mixer 9, synthesized_draught 66 (L9=57 met, L10=68 not). player_skills EMPTY so the field hotbar is exactly the three mixer field grants (low_grade_synthesis 1, magic_water_solvent 2, mineral_distillation 3). Player stands at (5,8) facing up, on the low_grade bench (alchemy_bench_synthesis at 5,7). Reachability: pallass_market needs door_awakened + pallass_attuned, so the door-awakening chain (door_understood/recovered_anchor_stone/bought_catalyst/door_study_sleeps:3/door_awakened) and met_relc are banked to satisfy test_fixture_coherence -- a Mixer who reached Pallass has done this arc. Three real bench casts push the counter to 69; the inn sleep levels to 10 and evolves Mixer -> Alchemist ([True Synthesis]); the true bench (8,7) then consumes solvent_phial + mineral_salts. No combat -> rng_state inert (reuses a derived seed-9 value).",
+ "_comment_task_2_6": "2026-07-27 main-quest restructure (Task 2.6 fix round 1): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined. This fixture holds door_awakened WITHOUT door_chain_started, so neither end of the Task 2.4 chain arm caught it and the sweep missed it; test_fixture_coherence now enforces door_awakened -> door_mounted (the far attunement is performed on the door the dig hauled home) and reads the RAW on-disk counters, so save.gd's dig backfill can no longer migrate this shape into passing. recovered_anchor_stone was already banked here and stays -- the wave rule only says it is never REQUIRED. Full rule: door_chain_fight_start.json's _comment_task_2_4. No rng re-derivation: the loaded state is identical to what the backfill was already producing at load, and none of these counters gates anything this fixture's script touches.",
  "version": 6,
  "state": {
   "current_map": "pallass_market",
@@ -14,7 +15,12 @@
    "bought_catalyst": 1,
    "door_study_sleeps": 3,
    "door_awakened": 1,
-   "pallass_attuned": 1
+   "pallass_attuned": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
   },
   "player_skills": [],
   "removed_entities": [],

@@ -1446,7 +1446,7 @@
       "door_chain_started": 1
      },
      "lines": [
-      "Erin's door is doing the thing again. She's pretending it's fine."
+      "The door holds Liscor without effort. Ask it for farther and it strains, and straining lets things through. A solvable problem. Mine."
      ]
     },
     {
@@ -1831,10 +1831,11 @@
     0.62
    ],
    "observe": "A worn marker stone, older than the buildings that grew up around it. Nobody living remembers who set it, or why it sits exactly here.",
+   "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): portal_menu_when and the lit-waystone visual_state both moved door_awakened -> door_mounted, in lockstep with inn.json's `pantry_door` (the pair's other end) and portals.json's two Liscor rows. The Magical Door carries the inn<->gate-district hop from the day it is hung; this stone is the Liscor-side carrier, so gating it later would have stranded the return leg. Sight and passage still flip together, the garden_door contract. Old saves reach door_mounted through Task 2.6's backfill.",
    "portal_menu": true,
    "portal_menu_when": {
     "requires": {
-     "door_awakened": 1
+     "door_mounted": 1
     }
    },
    "on_interact_accomplishment": "observed_street_anchor_stone",
@@ -1842,7 +1843,7 @@
    "visual_states": [
     {
      "when": {
-      "counter": "door_awakened",
+      "counter": "door_mounted",
       "at": 1
      },
      "sprite": "anchor_waystone",

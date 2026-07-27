@@ -133,8 +133,36 @@ func _init() -> void:
 	assert(door2_game.current_map == "dungeon_approach", "travel to the dungeon anchor lands on dungeon_approach")
 	assert(door2_game.player_cell == Vector2i(2, 6), "travel lands on the portals.json-authored arrival cell")
 
+	# 2026-07-26 main-quest restructure (Task 2.4) -- THE DAY-ONE LISCOR LINK.
+	# liscor_street/the_wandering_inn re-gated door_awakened -> door_mounted:
+	# the Magical Door carries the inn<->gate-district hop from the moment the
+	# Horns hang it, three qualifying sleeps BEFORE door_awakened, which now
+	# only means "reaches beyond Liscor" and only opens the region rows.
+	var mounted_only := _new_game()
+	var pre_mount_ids: Array = mounted_only.attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"]))
+	assert(not pre_mount_ids.has("liscor_street") and not pre_mount_ids.has("the_wandering_inn"), "before door_mounted neither Liscor row lists")
+	mounted_only.record_accomplishment("door_mounted")
+	var mounted_ids: Array = mounted_only.attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"]))
+	assert(mounted_ids.has("liscor_street") and mounted_ids.has("the_wandering_inn"), "door_mounted ALONE lists both Liscor rows -- the day-one link needs no awakening")
+	assert(mounted_only.accomplishment_count("door_awakened") == 0, "sanity: the day-one link is proven with door_awakened still unbanked")
+	for region_id: String in ["riverfarm", "invrisil", "pallass", "dungeon_depths"]:
+		assert(not mounted_ids.has(region_id), "door_mounted opens Liscor only -- %s still waits on its own *_attuned gate" % region_id)
+	# The inn-side CARRIER moved with the rows: the picker must open at the
+	# mounted door, not three sleeps later (a row nothing can reach is dead).
+	mounted_only.bind_map_silent("inn", Vector2i(13, 6))
+	mounted_only.player_facing = Vector2i.RIGHT
+	assert(mounted_only.interact().get("dialogue", false), "pantry_door's portal picker opens at door_mounted, not door_awakened")
+	assert(mounted_only.dialogue.current_options().size() == 2, "from the inn the mounted door offers the street destination + 'Let it be.'")
+	# ...and so did Liscor's end of the pair.
+	mounted_only.dialogue_choose(1)
+	mounted_only.bind_map_silent("street", Vector2i(29, 10))
+	mounted_only.player_facing = Vector2i.RIGHT
+	assert(mounted_only.interact().get("dialogue", false), "street_anchor_stone's picker opens at door_mounted too -- the return leg is never stranded")
+	mounted_only.dialogue_choose(1)
+
+	game.record_accomplishment("door_mounted")
 	var attuned_ids2: Array = game.attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"]))
-	assert(attuned_ids2.has("liscor_street") and attuned_ids2.has("the_wandering_inn"), "both portals.json rows are attuned once door_awakened is banked")
+	assert(attuned_ids2.has("liscor_street") and attuned_ids2.has("the_wandering_inn"), "both portals.json rows stay attuned on a fully awakened save")
 
 	game.bind_map_silent("inn", Vector2i(13, 6))
 	game.player_facing = Vector2i.RIGHT
@@ -168,7 +196,7 @@ func _init() -> void:
 	fresh.bind_map_silent("inn", Vector2i(13, 6))
 	fresh.player_facing = Vector2i.RIGHT
 	var fresh_result := fresh.interact()
-	assert(fresh_result.get("accomplishment", "") == "observed_the_pantry_door", "before door_awakened, pantry_door still falls through to its plain flavor toast, not the portal menu")
+	assert(fresh_result.get("accomplishment", "") == "observed_the_pantry_door", "before door_mounted, pantry_door still falls through to its plain flavor toast, not the portal menu")
 
 	var partial := _new_game()
 	_bank_beat3(partial)

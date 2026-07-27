@@ -1,5 +1,7 @@
 # Main Quest Line + Friends of the Inn Wave — Implementation Plan
 
+> Status: **ACTIVE** — in execution on `wave/mq2-dig` (Phase 2 of 9).
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Kill the "post-game" framing, backport the Horns door-retrieval quest, thread an ordered Riverfarm→Invrisil→Pallass Main Quest to an Act V finale, and ship Friends of the Inn PR2 plus four new quest-gated inn guests (#269 extended).

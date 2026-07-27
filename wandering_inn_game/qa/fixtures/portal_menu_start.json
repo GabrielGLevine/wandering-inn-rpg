@@ -1,5 +1,6 @@
 {
  "_comment": "portal_menu's start (FIXTURE-FIRST -- the awakening chain itself is covered live by door_awakening, so this canonical starts PAST it, door_awakened already banked). CONSTRAINT: post_game structurally implies the FULL Act II/III backbone (acts.json's counted_among beat; test_fixture_coherence.gd enforces it), so this fixture carries the near_act3/climax_sealed_start Act III-complete shape (warrior5+mage5, matching door_chain_fight_start's own tuned build). No sleep beat occurs in this canonical (pure fast-travel round-trip via transition(), never move_player/interact-triggered), so the held classes carry zero sleep-beat risk. gold 5 (position ledger's Tier-B honest Act III income (docs/design/fixture-position-ledger.md): the 40g Tier-A floor minus the 35g resonant_catalyst this position has already spent). Equipped `relcs_spare_spear` instead of the starter rusty_sword. times_slept 12 (cosmetic). Standing at (13,6) facing right in the inn -- the free interior cell immediately west of pantry_door (14,6, against the east wall), the SAME cell data/portals.json's `the_wandering_inn` row uses as its own arrival point (so the return trip in this script lands the PC back on the exact cell they started at, a clean round-trip proof). TRAP: rng_state is a properly-derived state (.seed=9, captured .state), never hand-typed -- WISave restores .state directly, not .seed. This fixture's own canonical never resolves a fight to completion off this rng_state (portal travel is transition()-only, O2 rule), so its exact value is cosmetic/inert for outcome purposes.",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined added alongside the door_chain_started this fixture already carried, because that id now means 'the Magical Door is hung'. The wave rule (and why recovered_anchor_stone is NOT swept in) lives in door_chain_fight_start.json's own _comment_task_2_4.",
  "version": 5,
  "state": {
   "current_map": "inn",
@@ -42,7 +43,12 @@
    "won_combat": 3,
    "melee_hit": 18,
    "learned_magic_from_pisces": 1,
-   "spell_cast": 13
+   "spell_cast": 13,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
   },
   "player_skills": [
    "basic_cleaning"

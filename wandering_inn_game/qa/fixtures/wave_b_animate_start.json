@@ -1,13 +1,30 @@
 {
  "_comment": "Issue #132 animate fixture: [Animate Dead] is a QA-fixture affordance facing the authored ruin bone pile; its exact Necromancer L5 grant is pinned in test_progression. An honestly-earned Warrior L2 and Relc field in the road fight so the fragile skeleton has a stable survival proof before the subsequent real sleep clears companion state.",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): `door_chain_started` DROPPED. This fixture stands mid-dig ON the ruin surface (horns_dig_started banked, the find still under the pedestal), and that id now means 'the Magical Door is hung back at the inn' -- an impossible pairing. Nothing here ever needed it: the ruin seam's own gate moved to horns_dig_started in Task 2.3, no ruin_surface entity consults the door chain, and the post-tutorial posture test_fixture_coherence.gd checks is already carried by met_relc/sparred_with_relc. See door_chain_fight_start.json's _comment_task_2_4 for the wave rule.",
  "version": 6,
  "state": {
   "current_map": "ruin_surface",
-  "player_cell": [14, 10],
-  "player_facing": [1, 0],
-  "classes": {"warrior": 2},
-  "accomplishments": {"door_chain_started": 1, "met_relc": 1, "sparred_with_relc": 1, "won_combat": 1},
-  "player_skills": ["animate_dead"],
+  "player_cell": [
+   14,
+   10
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 2
+  },
+  "_comment_task_2_3": "2026-07-26 main-quest restructure (Task 2.3): horns_dig_started added -- this fixture STANDS on ruin_surface, and the only way onto that map is now ruin_door's re-gated door_when (was door_chain_started). door_chain_started stays for the moment as inert legacy state; Task 2.4 owns its re-banking.",
+  "accomplishments": {
+   "horns_dig_started": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1
+  },
+  "player_skills": [
+   "animate_dead"
+  ],
   "removed_entities": [],
   "dormant_encounters": [],
   "generalist_classes": [],
@@ -15,10 +32,15 @@
   "pending_consolidation": {},
   "used_skills": [],
   "inventory": [],
-  "equipped": {"weapon": "", "armor": ""},
+  "equipped": {
+   "weapon": "",
+   "armor": ""
+  },
   "container_state": {},
   "actions_since_sleep": 0,
   "rng_state": "-1966449618399012673",
-  "hotbar_loadout": ["animate_dead"]
+  "hotbar_loadout": [
+   "animate_dead"
+  ]
  }
 }

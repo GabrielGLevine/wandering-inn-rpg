@@ -680,7 +680,7 @@
       "door_chain_started": 1
      },
      "lines": [
-      "Erin's door is doing the thing again. She's pretending it's fine."
+      "There's a door to Liscor in my pantry frame, and it hums when it strains. Erin says that's fine. I have opinions about the humming."
      ]
     },
     {
@@ -1028,25 +1028,20 @@
    "display_name": "The Pantry Door",
    "sprite": "door",
    "observe": "A plain plank door, warped at the bottom from a hundred winters. Nothing about it looks like it goes anywhere but the pantry.",
+   "_comment_variants": "2026-07-26 main-quest restructure (Task 2.4). ONE arm, and the window is exactly one beat wide BY CONSTRUCTION: `portal_menu_when` is checked BEFORE the flavor arm (interactions.gd's prop order) and now opens at door_mounted, so from the mounting onward this prop's interact is the PICKER and no toast of any kind can render. The two old arms (door_chain_started 'something is wrong with this door', door_understood 'it needs the anchor stone and Krshia's catalyst') were deleted rather than re-copied: both gate at or past door_mounted, so both became unreachable the moment the picker moved -- and both described a fiction the restructure retired anyway (nothing is wrong with the pantry door until the Horns hang a different one in its frame, and the anchor stone comes home WITH the door now). What survives is the one arm that fires in the door_retrieved -> door_mounted window, and it is the mounting scene's DISCOVERY BRIDGE: a prop cannot open a conversation (interactions.gd routes `conversation` for kind:npc/encounter only), so the toast points at `pisces_mounting`, the NPC beside it, who carries data/dialogue/door_mounting.json.",
    "variants": [
     {
      "when": {
-      "door_chain_started": 1
+      "door_retrieved": 1
      },
-     "toast": "The pantry is just the pantry — until the light catches wrong and the shelves sit a fraction too far away for the wall they're on. Erin's right. Something is wrong with this door."
-    },
-    {
-     "when": {
-      "door_understood": 1
-     },
-     "toast": "You know what it is now, or enough of it: a door that goes elsewhere, sleeping badly. It needs the anchor stone and Krshia's catalyst before Pisces can wake it properly."
+     "toast": "The find leans against the pantry frame, unhung, with the old plank door stacked out of the way behind the flour sacks. Pisces has not stopped circling it since the wagon. Ask him about it."
     }
    ],
-   "_comment_d4": "portal_menu_when is checked before the fallback interaction; once door_awakened is met, the picker replaces the flavor toast.",
+   "_comment_d4": "portal_menu_when is checked before the fallback interaction; once the gate is met, the picker replaces the flavor toast. 2026-07-26 Task 2.4: the gate moved door_awakened -> door_mounted, MANDATORY rather than cosmetic -- portals.json's liscor_street/the_wandering_inn rows now list at door_mounted (the day-one link), and leaving the inn-side CARRIER on door_awakened would have made those rows unreachable from the inn for the whole middle of the chain. street.json's `street_anchor_stone` (the pair's other end) moved with it. Region rows keep their own *_attuned gates and still need door_awakened upstream, so nothing else in the network opens early.",
    "portal_menu": true,
    "portal_menu_when": {
     "requires": {
-     "door_awakened": 1
+     "door_mounted": 1
     }
    },
    "on_interact_accomplishment": "observed_the_pantry_door",
@@ -1054,13 +1049,18 @@
    "visual_states": [
     {
      "when": {
-      "counter": "door_chain_started",
+      "counter": "door_mounted",
       "at": 1
      },
-     "sprite": "pantry_door_runes"
+     "sprite": "pantry_door_runes",
+     "tint": [
+      0.82,
+      0.86,
+      1.0
+     ]
     }
    ],
-   "_comment_consolidation": "Pantry-door consolidation (user FEEL verdict 2026-07-19): the runes prop + wardwork prop FOLDED into the door itself. visual_states swaps the plain door for the runed-door sprite once door_chain_started banks (garden_door at-pattern, render-only). skill_uses carries BOTH reads: [Observe] banks read_the_door_runes (the door-chain SKILL leg, text verbatim from the removed prop), [Detect Magic] banks detected_wardwork. One prop, many eyes.",
+   "_comment_consolidation": "Pantry-door consolidation (user FEEL verdict 2026-07-19): the runes prop + wardwork prop FOLDED into the door itself. visual_states swaps the plain door for the runed-door sprite once the Magical Door is MOUNTED in its frame (garden_door at-pattern, render-only). 2026-07-26 Task 2.4: the counter moved door_chain_started -> door_mounted (the two bank on the same option, and door_mounted is the one that says what the swap MEANS), and the entry gained a cold `tint` -- the TINT/observe-swap idiom, NOT `hidden`, which is render-only and would leave an invisible blocker mid-floor (#149's class). Deliberately NO `observe` override on this prop, unlike rift_vermin_leak's: `skill_uses` is routed BEFORE the generic observe arm (field_skills.gd dispatch order), so for THIS prop the `observe` field is shadowed by the [Observe] arm below and an override here would be inert copy dressed as a live surface. The state read the player actually gets is that arm's own runed-frame text, which already describes worked, fed wardwork. Old saves reach door_mounted through Task 2.6's backfill. skill_uses carries BOTH reads: [Observe] banks read_the_door_runes (the door-chain SKILL leg, text verbatim from the removed prop), [Detect Magic] banks detected_wardwork. One prop, many eyes.",
    "skill_uses": {
     "observe": {
      "accomplishment": "read_the_door_runes",
@@ -1074,7 +1074,35 @@
    "skill_hint_toast": "The frame and the old marks under its paint both want a trained eye — and maybe more than one kind."
   },
   {
-   "_comment": "`allies:[\"relc\"]`/`ally_requires:{met_relc:1}` mirrors D2's own harness gated cell (`rift_vermin_leak_w8_relc`, the 0.55-0.95 tuned band) rather than the harder ungated `_solo` variant. GH#150: encounter_when arms the FIGHT on door_chain_started (present_when is validator-forbidden on encounters -- trigger_radius never consults presence). Pre-quest the leak stays VISIBLE as inert foreshadowing with its own observe; hiding it would recreate #149's invisible-blocking-cell class mid-floor. Display/fight text unchanged post-arm.",
+   "_comment": "2026-07-26 main-quest restructure (Task 2.4): THE MOUNTING SCENE's carrier. kind:npc is DELIBERATE and load-bearing (the inn_room_ledger precedent): interactions.gd routes `conversation` into start_dialogue for npc/encounter kinds ONLY, so the pantry PROP next door cannot open a graph -- its door_retrieved variant toast points here instead. No talk_pool, so door_mounting.json opens on the FIRST interact. present_when brackets exactly the haul window: from the moment the find comes home (door_retrieved) until it is hung (door_mounted), which is the very option the conversation banks -- so the scene can neither be missed nor replayed, and the quest auto-start it carries fires exactly once. Pisces is at the inn here rather than his Guild step because he is one of the Horns who carried it. THE DOOR NEVER SPEAKS; he is its voice. CELL (13,5): free in every shipped save, deliberately NOT (14,5) (door_chain_scout's [Observe] stance on the pantry door) and NOT (13,6) (portals.json's `the_wandering_inn` arrival cell, and portal_menu_start's own player position). Save-compat: open neighbours (12,5)/(13,4)/(13,6)/(14,5) -- and no pre-restructure save can hold door_retrieved at all, so the new blocker can strand nothing.",
+   "id": "pisces_mounting",
+   "kind": "npc",
+   "cell": [
+    13,
+    5
+   ],
+   "present_when": {
+    "requires": {
+     "door_retrieved": 1
+    },
+    "absent": {
+     "door_mounted": 1
+    }
+   },
+   "display_name": "Pisces",
+   "sprite": "pisces",
+   "facing": "right",
+   "conversation": "door_mounting",
+   "observe": "He has taken his coat off, which for Pisces is manual labour. One hand rests flat on the hauled door's face, the way a physician rests a hand on a patient, and he is listening to something no one else in the room can hear.",
+   "dialogue": [
+    {
+     "speaker": "Pisces",
+     "text": "A moment. I am counting the ward's repeats, and you are extremely countable."
+    }
+   ]
+  },
+  {
+   "_comment": "`allies:[\"relc\"]`/`ally_requires:{met_relc:1}` mirrors D2's own harness gated cell (`rift_vermin_leak_w8_relc`, the 0.55-0.95 tuned band) rather than the harder ungated `_solo` variant. GH#150: encounter_when arms the FIGHT on the door chain (present_when is validator-forbidden on encounters -- trigger_radius never consults presence). Pre-quest the leak stays VISIBLE as inert foreshadowing with its own observe; hiding it would recreate #149's invisible-blocking-cell class mid-floor. Display/fight text unchanged post-arm. 2026-07-26 main-quest restructure (Task 2.4): the arming counter moved door_chain_started -> door_mounted, and the fiction moved with it. Nothing leaked through the pantry wall while the pantry door was a pantry door; the leak is what the MOUNTED Magical Door lets through when it strains at a distance it cannot yet hold. Old saves reach door_mounted through Task 2.6's backfill.",
    "id": "rift_vermin_leak",
    "kind": "encounter",
    "cell": [
@@ -1108,16 +1136,16 @@
    ],
    "encounter_when": {
     "requires": {
-     "door_chain_started": 1
+     "door_mounted": 1
     }
    },
    "visual_states": [
     {
      "when": {
-      "counter": "door_chain_started",
+      "counter": "door_mounted",
       "at": 1
      },
-     "observe": "The scratching has become a chewing. Whatever leaks through back there has teeth, and Erin asked you to look."
+     "observe": "The scratching has become a chewing. The Door strains for somewhere it cannot reach yet, and something on the way there has found the gap and has teeth."
     }
    ]
   },
@@ -1170,7 +1198,7 @@
    ]
   },
   {
-   "_comment": "talk_pool + a static dialogue fallback (no conversation graph, the Renn/Ilvo/Yelra pool-presence idiom).",
+   "_comment": "2026-07-26 main-quest restructure (Task 2.3): no longer pool-only -- the `ceria_intro` graph attaches here so the horns_dig invitation is startable AT THE INN, where a post-seal player actually is (the dungeon_approach attachment stays; the graph is shared, not moved). talk_pool + talk_pool_stages + the static dialogue fallback all STAY: the erin/pisces/krshia/selys idiom is pool-and-graph together (first interact = a pool line, subsequent interacts = the graph), and talk_pool_stages' own gate reads chatted_with_ceria_inn, which only the pool produces.",
    "id": "ceria_inn",
    "kind": "npc",
    "cell": [
@@ -1183,8 +1211,12 @@
    "present_when": {
     "requires": {
      "seal_kept_reported": 1
+    },
+    "absent": {
+     "horns_dig_joined": 1
     }
    },
+   "conversation": "ceria_intro",
    "talk_pool": [
     "The couch by the fire is Yvlon's now. Territorial, armswomen.",
     "Pisces keeps asking about the vault door. I told him to bring his own rope this time.",
@@ -1224,6 +1256,9 @@
    "present_when": {
     "requires": {
      "seal_kept_reported": 1
+    },
+    "absent": {
+     "horns_dig_joined": 1
     }
    },
    "talk_pool": [
@@ -1265,6 +1300,9 @@
    "present_when": {
     "requires": {
      "seal_kept_reported": 1
+    },
+    "absent": {
+     "horns_dig_joined": 1
     }
    },
    "talk_pool": [
@@ -1278,6 +1316,133 @@
      "requires_accomplishment": {
       "chatted_with_ksmvr_inn": 3,
       "door_awakened": 1
+     },
+     "lines": [
+      "I was Prognugator, once. Command caste. I was exiled, is the word Klbkch uses. 'Reassigned' is the word I prefer. Neither changes what happened.",
+      "I have counted every safe path between here and the pantry door. If you ever need the fastest one, comrade, ask. I keep the count current.",
+      "Erin gave me a name for the corner I sit in. She calls it 'Ksmvr's Post.' I have accepted the designation. It is efficient."
+     ]
+    }
+   ],
+   "dialogue": [
+    {
+     "speaker": "Ksmvr",
+     "text": "I am still counting exits. There are still two."
+    }
+   ]
+  },
+  {
+   "_comment": "2026-07-26 Task 2.7 (controller-sanctioned fix, P1 RUIN/CAMP-DOUBLE): the Horns were bilocated for the whole of The Dig -- `ceria_inn` gated on seal_kept_reported ALONE while the ruin carried a live camp, so the player could speak to them at the inn and at the camp in the same breath (machine playtest 2026-07-27). The inn row's window is now SPLIT: the original retires at horns_dig_joined -- the counter the CAMP banks, so the swap happens at the ruin with the inn off-screen; retiring at horns_dig_started instead popped all three Horns out of the room mid-sentence while the invitation panel was still open (probe shot 01_MIDCONVO_after_bank.png), which is the very defect this wave is fixing at the plinth, and this twin brings them home at door_mounted -- they come back when the door does, which is what ceria_intro's own door_retrieved hub arm already says ('Still can't believe we carried that thing across the floodplains'). Identical cell/sprite/facing/pool/conversation; only `id` and `present_when` differ. The dig-window inn is Horns-free by construction. NOTE on the stage gate: talk-pool counters are id-derived (social.gd's `chatted_with_%s`), so this row banks `chatted_with_ceria_inn_returned` and its settled stage gates on THAT counter rather than the original's -- gating on the original would have locked the settled lines out forever for anyone who never chatted pre-dig.",
+   "id": "ceria_inn_returned",
+   "kind": "npc",
+   "cell": [
+    8,
+    6
+   ],
+   "display_name": "Ceria Springwalker",
+   "sprite": "ceria",
+   "facing": "left",
+   "present_when": {
+    "requires": {
+     "door_mounted": 1
+    }
+   },
+   "conversation": "ceria_intro",
+   "talk_pool": [
+    "The couch by the fire is Yvlon's now. Territorial, armswomen.",
+    "Pisces keeps asking about the vault door. I told him to bring his own rope this time.",
+    "Silver-rank pay, Gold-rank stonework down there. Somebody's math is off, and it isn't mine."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "ceria_inn_returned_settled",
+     "requires_accomplishment": {
+      "door_awakened": 1,
+      "chatted_with_ceria_inn_returned": 3
+     },
+     "lines": [
+      "I trained formal, once. Robes, theory, the whole overpriced show. Doesn't come up much anymore, and I like it that way.",
+      "You want a tip that's actually useful? Watch the ice before you stand on it. I learned that one the expensive way.",
+      "Yvlon says I've gone soft since the inn. I say I've gone SMART. There's a difference, and it involves not getting frostbite on purpose anymore."
+     ]
+    }
+   ],
+   "dialogue": [
+    {
+     "speaker": "Ceria Springwalker",
+     "text": "Ask me about the vault again and I'll start charging Pisces rent."
+    }
+   ]
+  },
+  {
+   "_comment": "2026-07-26 Task 2.7 (controller-sanctioned fix, P1 RUIN/CAMP-DOUBLE): the Horns were bilocated for the whole of The Dig -- `yvlon_inn` gated on seal_kept_reported ALONE while the ruin carried a live camp, so the player could speak to them at the inn and at the camp in the same breath (machine playtest 2026-07-27). The inn row's window is now SPLIT: the original retires at horns_dig_joined -- the counter the CAMP banks, so the swap happens at the ruin with the inn off-screen; retiring at horns_dig_started instead popped all three Horns out of the room mid-sentence while the invitation panel was still open (probe shot 01_MIDCONVO_after_bank.png), which is the very defect this wave is fixing at the plinth, and this twin brings them home at door_mounted -- they come back when the door does, which is what ceria_intro's own door_retrieved hub arm already says ('Still can't believe we carried that thing across the floodplains'). Identical cell/sprite/facing/pool/conversation; only `id` and `present_when` differ. The dig-window inn is Horns-free by construction. NOTE on the stage gate: talk-pool counters are id-derived (social.gd's `chatted_with_%s`), so this row banks `chatted_with_yvlon_inn_returned` and its settled stage gates on THAT counter rather than the original's -- gating on the original would have locked the settled lines out forever for anyone who never chatted pre-dig.",
+   "id": "yvlon_inn_returned",
+   "kind": "npc",
+   "cell": [
+    2,
+    3
+   ],
+   "display_name": "Yvlon Byres",
+   "sprite": "yvlon",
+   "facing": "up",
+   "present_when": {
+    "requires": {
+     "door_mounted": 1
+    }
+   },
+   "talk_pool": [
+    "The inn's quieter than the Guild hall. I'm starting to see why you like it.",
+    "My arm's fine. Stop looking.",
+    "If the door down there opens, I want to be standing in front of it. That's not bravery — it's just where I stand."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "yvlon_inn_returned_settled",
+     "requires_accomplishment": {
+      "door_awakened": 1,
+      "chatted_with_yvlon_inn_returned": 3
+     },
+     "lines": [
+      "Ask about the arms all you like, now. Silver-steel, shapeable, better grip than flesh ever gave me. I've stopped flinching from the question, so you don't have to either.",
+      "Keep your guard up on your off-hand side. Most people forget it exists until something reminds them, and I'd rather you learn it from me than the hard way.",
+      "The couch by the fire really is mine. Ceria just likes saying otherwise."
+     ]
+    }
+   ],
+   "dialogue": [
+    {
+     "speaker": "Yvlon Byres",
+     "text": "My arm's still fine."
+    }
+   ]
+  },
+  {
+   "_comment": "2026-07-26 Task 2.7 (controller-sanctioned fix, P1 RUIN/CAMP-DOUBLE): the Horns were bilocated for the whole of The Dig -- `ksmvr_inn` gated on seal_kept_reported ALONE while the ruin carried a live camp, so the player could speak to them at the inn and at the camp in the same breath (machine playtest 2026-07-27). The inn row's window is now SPLIT: the original retires at horns_dig_joined -- the counter the CAMP banks, so the swap happens at the ruin with the inn off-screen; retiring at horns_dig_started instead popped all three Horns out of the room mid-sentence while the invitation panel was still open (probe shot 01_MIDCONVO_after_bank.png), which is the very defect this wave is fixing at the plinth, and this twin brings them home at door_mounted -- they come back when the door does, which is what ceria_intro's own door_retrieved hub arm already says ('Still can't believe we carried that thing across the floodplains'). Identical cell/sprite/facing/pool/conversation; only `id` and `present_when` differ. The dig-window inn is Horns-free by construction. NOTE on the stage gate: talk-pool counters are id-derived (social.gd's `chatted_with_%s`), so this row banks `chatted_with_ksmvr_inn_returned` and its settled stage gates on THAT counter rather than the original's -- gating on the original would have locked the settled lines out forever for anyone who never chatted pre-dig.",
+   "id": "ksmvr_inn_returned",
+   "kind": "npc",
+   "cell": [
+    14,
+    7
+   ],
+   "display_name": "Ksmvr",
+   "sprite": "ksmvr",
+   "facing": "up",
+   "present_when": {
+    "requires": {
+     "door_mounted": 1
+    }
+   },
+   "talk_pool": [
+    "I have been given a mug of blue fruit juice. I did not ask for it. Erin says this is called 'hospitality.' I am recording it as an asset.",
+    "This inn does not have traps. I checked all the floors. Twice.",
+    "Captain Ceria says I may sit anywhere. I have chosen the corner with two exits."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "ksmvr_inn_returned_settled",
+     "requires_accomplishment": {
+      "door_awakened": 1,
+      "chatted_with_ksmvr_inn_returned": 3
      },
      "lines": [
       "I was Prognugator, once. Command caste. I was exiled, is the word Klbkch uses. 'Reassigned' is the word I prefer. Neither changes what happened.",

@@ -1,5 +1,6 @@
 {
  "_comment": "b2 #218 trust-met fixture: eyed_the_stash + brothers_job_done banked, 30 gold, standing below the stash chest (12,7) facing up. Warrior-10 invrisil-era base (boulevard fixture, ladder-coherent). Sibling ratici_fence_untrusted_start drops brothers_job_done.",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined added alongside the door_chain_started this fixture already carried, because that id now means 'the Magical Door is hung'. The wave rule (and why recovered_anchor_stone is NOT swept in) lives in door_chain_fight_start.json's own _comment_task_2_4.",
  "version": 7,
  "state": {
   "current_map": "brothers_parlor",
@@ -46,7 +47,12 @@
    "won_combat": 1,
    "melee_hit": 57,
    "eyed_the_stash": 1,
-   "brothers_job_done": 1
+   "brothers_job_done": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
   },
   "player_skills": [
    "basic_cleaning"

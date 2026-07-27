@@ -1,5 +1,6 @@
 {
  "_comment": "door_chain_scout's start (FIXTURE-FIRST -- beat 1 is already covered live by door_chain_fight, so this leg starts PAST it). CONSTRAINT: post_game structurally implies the FULL Act II/III backbone (acts.json's counted_among beat; test_fixture_coherence.gd enforces it), so this fixture carries the near_act3/climax_sealed_start Act III-complete shape (warrior5+mage5, matching door_chain_fight_start's own tuned build -- same PC across the whole door-chain arc) PLUS tactician:1 (grants [Observe] -- the field-tagged exploration skill this leg needs, cisterns_scout_start precedent) PLUS door_chain_started, standing in the inn facing pantry_door_runes (14,5, against the east wall) from (14,4) so the FIRST interact studies the doorframe directly. door_understood's provenance for this rebuilt door-chain family is the TALK/SKILL leg (this fixture's own leg) -- rift_vermin_leak/ruin_guardian stay unfought/live. gold 40 (position ledger's Tier-A honest Act III income (docs/design/fixture-position-ledger.md), pre-catalyst-spend) covers Krshia's 35g catalyst with headroom. Equipped `relcs_spare_spear` instead of the starter rusty_sword (warrior's own L1 grants both power_strike/piercing_strikes, so the kit is unaffected). times_slept 12 (cosmetic). No combat anywhere in this script -- rng_state kept at seed 9's derived state for convention, no live rng consumer.",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined added alongside the door_chain_started this fixture already carried, because that id now means 'the Magical Door is hung'. The wave rule (and why recovered_anchor_stone is NOT swept in) lives in door_chain_fight_start.json's own _comment_task_2_4.",
  "version": 5,
  "state": {
   "current_map": "inn",
@@ -39,7 +40,12 @@
    "won_combat": 3,
    "melee_hit": 18,
    "learned_magic_from_pisces": 1,
-   "spell_cast": 13
+   "spell_cast": 13,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
   },
   "player_skills": [
    "basic_cleaning"

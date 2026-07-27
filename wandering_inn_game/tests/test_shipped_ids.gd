@@ -138,8 +138,10 @@ func _produced_accomplishments(scene: Dictionary, graphs: Dictionary, skills: Di
 				for variant: Dictionary in (entity.get("variants", []) as Array):
 					if variant.has("accomplishment"):
 						out[String(variant["accomplishment"])] = true
-			if entity.has("on_open_accomplishment"):
-				out[String(entity["on_open_accomplishment"])] = true
+			# Task 2.3: String|Array, the on_victory contract.
+			var open_banks: Variant = entity.get("on_open_accomplishment", [])
+			for counter: Variant in (open_banks if open_banks is Array else [open_banks]):
+				out[String(counter)] = true
 			if entity.has("on_enter_accomplishment"):
 				out[String(entity["on_enter_accomplishment"])] = true
 			if entity.has("talk_pool") and not (entity["talk_pool"] as Array).is_empty():

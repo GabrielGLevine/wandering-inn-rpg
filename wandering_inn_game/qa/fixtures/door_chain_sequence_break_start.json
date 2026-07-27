@@ -1,5 +1,7 @@
 {
  "_comment": "door_chain_sequence_break's start -- the SEQUENCE-BREAK position: door_chain_started is ALREADY banked (Erin's beat-1 flicker has already happened, one step further than door_chain_fight_start's own pre-beat-1 moment) but door_understood/pedestal_unsealed/met_pisces/everything downstream stays UNBANKED -- the player has never yet talked to Pisces at all. door_chain_started requires post_game:1 (erin_errand.json's own gate), so this fixture carries the SAME full Act II/III backbone door_chain_fight_start does (test_fixture_coherence.gd's post_game monotone-chain check enforces the whole list) plus the same harness-tuned 'warrior5_mage5' build/rng_state -- this fixture's own canonical resolves the SAME two real fights (rift_vermin_leak, then ruin_guardian) at this exact rng_state, just in a DIFFERENT order relative to talking to Pisces (fight first, consult after) than door_chain_fight's canonical does (consult first, fight after). Positioned near the inn cellar (9,6, facing down into rift_vermin_leak at 9,7) instead of facing Erin -- the flicker beat is already behind this fixture, not its subject. gold 40 (Tier-A honest Act III income, pre-catalyst-spend) and relcs_spare_spear equipped, same as door_chain_fight_start. TRAP: rng_state is the SAME properly-derived state door_chain_fight_start uses (.seed=3, captured .state = -7684921244414978279) -- reusing it is deliberate: dialogue/teleports/purchases never consume `rng` (the sim's only rng.randi() call site is start_combat), so the extra Pisces-recap detour between the two fights cannot shift either fight's seed off the already-proven-winning draw. RE-DERIVED (issue #83): moved off the old .seed=1 state alongside door_chain_fight_start after ruin_ward_a/b's `guard` adoption flipped the OLD state's ruin_guardian outcome to a loss (see that fixture's own TRAP comment for the full re-derivation story) -- re-verified this fixture's OWN opposite-order run independently, not just assumed compatible.",
+ "_comment_task_2_3": "2026-07-26 main-quest restructure (Task 2.3): horns_dig_started + horns_dig_joined added. anchor_stone_pedestal's contains_when now also gates on horns_dig_joined (quests.json horns_dig's no-cosmetic-skip rule), so this legacy door-chain position only opens the pedestal as a POST-BACKFILL save does -- Task 2.6 banks exactly these two for any old chain save. The pedestal open here now also banks pedestal_breached + door_retrieved; that is the same one-event canon (you cannot hold the anchor stone without having breached and retrieved).",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined added alongside the door_chain_started this fixture already carried, because that id now means 'the Magical Door is hung'. The wave rule (and why recovered_anchor_stone is NOT swept in) lives in door_chain_fight_start.json's own _comment_task_2_4.",
  "version": 5,
  "state": {
   "current_map": "inn",
@@ -34,10 +36,15 @@
    "raskghar_sealed": 1,
    "post_game": 1,
    "door_chain_started": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
    "won_combat": 3,
    "melee_hit": 18,
    "learned_magic_from_pisces": 1,
-   "spell_cast": 13
+   "spell_cast": 13,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
   },
   "player_skills": [
    "basic_cleaning"
