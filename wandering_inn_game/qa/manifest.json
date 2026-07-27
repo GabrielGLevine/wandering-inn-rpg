@@ -4319,7 +4319,7 @@
    "script": "inn_guests_loop",
    "seed": 3,
    "fixture": "inn_guests_start",
-   "note": "d1 #247 Friends of the Inn -- RE-DERIVED for PR2a. The roster grew APPEND-ONLY to [selys,krshia,olesm,pisces] over the same 2 seats, so at the fixture's times_slept=10 the window starts at 10%4=2 and seats OLESM + PISCES: this is the first script to prove the rotation LIVE rather than unit-only. Proves present-when-on-shift (both new guests reachable via the horns click-to-interact idiom), DISPLACEMENT (Selys's off-shift seat is walkable floor -- present_when absence is structural), context awareness (olesm_inn/pisces_inn open, never the chess desk or the magic tutor, and Pisces's off-duty topic is walked to prove the register carries no magic and no Door), servable (Olesm's Serve banks the shared served_customer + consumes the hot_meal, and Pisces's spent Serve renders visible-locked), and THE SLIDE (a real sleep to times_slept=11 moves the start to 3: Olesm's seat goes walkable, Pisces stays on shift, Selys returns). Third leg (review fix round 1): a SECOND sleep to times_slept=12 closes the period (12%4=0) and re-seats the PILOT PAIR -- Pisces finally rotates out and krshia_inn keeps its live coverage, which PR2a's re-derive would otherwise have dropped entirely. No approach or teleport cell uses (3,6) or (2,5): the spec assigns those to zevara/relc in PR2b.",
+   "note": "d1 #247 Friends of the Inn -- RE-DERIVED for PR2b. The roster completed APPEND-ONLY at [selys,krshia,olesm,pisces,relc,zevara] over the same 2 seats, and because the modulus is the met POOL rather than the roster, this fixture's FIVE met (zevara alone unbanked) put start at 10%5=0 and re-seat all three of the script's wakings: t=10 selys+krshia, t=11 krshia+olesm, t=12 olesm+pisces. Proves DISPLACEMENT FIRST (the player walks clean over (3,5) and (6,5) at t=10, which is only proof because this same run seats Olesm on one at t=11 and Pisces on the other at t=12 -- present_when absence is structural), servable (Selys's Serve banks the shared served_customer + consumes the hot_meal; every later Serve renders visible-locked), context awareness (selys_inn/krshia_inn/olesm_inn/pisces_inn all open, never the guild board, the market stall, the chess desk or the magic tutor), and TWO SLIDES (t=11 Krshia stays while Olesm's chair goes blocked; t=12 Olesm holds while Krshia's chair goes walkable). All four PR1/PR2a inn registers keep live coverage. Relc's (1,5) and Zevara's (3,6) chairs exist on this map now but are never occupied across this run (zevara unmet here, relc's turn is t=13), so no cell in the route can silently block -- the PR2b pair is proven in inn_guests_full_loop instead.",
    "tiers": [
     "full"
    ],
@@ -4350,10 +4350,44 @@
    }
   },
   {
+   "script": "inn_guests_full_loop",
+   "seed": 3,
+   "fixture": "inn_guests_full_start",
+   "note": "d1 #247 Friends of the Inn PR2b -- the FULL-POOL twin, and the ONLY live coverage relc_inn and zevara_inn have (Zevara had zero met-state QA coverage anywhere in the suite before it). Off inn_guests_full_start: all six rostered met, so pool 6, start 10%6=4, seating RELC (1,5) + ZEVARA (3,6) -- the pair inn_guests_loop's fixture can never reach. Proves both new seats render and open from the boot cell, REGISTER-PURITY (relc_inn never relc_intro's spar/wager/spear/descent; zevara_inn never zevara_intro's cisterns sweep, summons or seal report, which the something-beneath arc routes through the gate), SERVE ON BOTH NODES (Relc served from his off-duty TOPIC node, Zevara from her GREET node, the second bowl COOKED at the stew pot via hotbar_3, so served_customer banks twice in one waking), and THE WRAP (a sleep to times_slept=11 moves start to 5, seating [zevara,selys]: Relc's chair goes walkable, Zevara stays, and the window wraps the roster's tail onto its head -- the one edge no smaller pool can exercise). Relc's chair is (1,5), not the spec's (2,5): the windowed crowding check the spec demanded for this pair FAILED at (2,5) -- his 124px rig sat two rows under yvlon_inn (2,3) and one row over the (2,6) boot cell, and rendered as an unidentifiable green torso with no head and no legs. Full reasoning in his row's _comment.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "inn_guests_full_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking"
+    ],
+    "dialogue": [
+     "relc_inn",
+     "selys_inn",
+     "zevara_inn"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "night_phase"
+    ]
+   }
+  },
+  {
    "script": "reload_loop",
    "seed": 3,
    "fixture": "inn_guests_start",
-   "note": "GH#278 live data reload via the save round-trip -- reload_data rebuilds sim+view coherently (map/cell/counters pinned before+after), rebuilt world stays interactable (Pisces dialogue via inn_guests_loop's proven route; FoTI PR2a's 4-name roster puts olesm+pisces on shift at this fixture's times_slept=10), mid-dialogue reload REFUSES with the observable toast, and reload works again after close. Data-changed staleness is unit-pinned in test_reload_caches (temp-map trick); res://data cannot be mutated mid-QA-run.",
+   "note": "GH#278 live data reload via the save round-trip -- reload_data rebuilds sim+view coherently (map/cell/counters pinned before+after), rebuilt world stays interactable (Selys dialogue via inn_guests_loop's proven route; FoTI PR2b's 6-name roster over a met pool of 5 puts selys+krshia on shift at this fixture's times_slept=10), mid-dialogue reload REFUSES with the observable toast, and reload works again after close. Data-changed staleness is unit-pinned in test_reload_caches (temp-map trick); res://data cannot be mutated mid-QA-run.",
    "tiers": [
     "full"
    ],
@@ -4368,7 +4402,7 @@
      "basic_cleaning"
     ],
     "dialogue": [
-     "pisces_inn"
+     "selys_inn"
     ],
     "systems": [
      "dialogue",
