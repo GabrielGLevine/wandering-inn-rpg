@@ -34,7 +34,7 @@
 			]
 		},
 		{
-			"_comment": "Act IV advance_when mirrors its five REACH beats but is unreachable while Act IV is last. counted_among is deliberately NOT in the gate: it is the seal's own closing line, relocated here from act_iii by the 2026-07-26 reframe because post_game banks only after the seal has already carried the player into this act.",
+			"_comment": "Act IV advance_when mirrors its five region-arc beats but is unreachable while Act IV is last. counted_among is deliberately NOT in the gate: it is the seal's own closing line, relocated here from act_iii by the 2026-07-26 reframe because post_game banks at the first sleep AFTER the seal (sleep_beat.gd), by which point the seal has already carried the player into this act.",
 			"id": "act_iv",
 			"title": "What the Door Opened",
 			"header": "Act IV -- What the Door Opened",
