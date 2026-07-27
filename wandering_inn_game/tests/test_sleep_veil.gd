@@ -92,7 +92,14 @@ func _check_finale_is_owed_not_armed(src: String) -> void:
 	# The bed hook stands down for a queued merge offer; these two are its
 	# retry, so an owed finale never waits an extra night.
 	var merge_body := src.get_slice("WIEvents.CONSOLIDATION_ACCEPTED, WIEvents.CONSOLIDATION_DECLINED:", 1).get_slice("func _begin_sleep", 0)
-	assert(merge_body.find("play_finale()") != -1, "resolving a consolidation offer must re-attempt an owed finale")
+	assert(merge_body.find("play_finale.call_deferred()") != -1, "resolving a consolidation offer must re-attempt an owed finale")
+	# DEFERRED, not a straight call: decline_consolidation() emits
+	# CONSOLIDATION_DECLINED and only THEN resolves evolutions, so calling
+	# through would recount classes mid-flight -- and would do it DIFFERENTLY
+	# in QA (which builds the line list synchronously inside play_finale) than
+	# in real play (which defers into _run_finale). Same divergence the
+	# UI_CONSOLIDATION_PROMPT_HIDDEN edge was rejected for.
+	assert(merge_body.find("\tplay_finale()") == -1, "the consolidation edge must NOT call play_finale() straight through -- evolutions resolve after the emit")
 
 	var run_sequence_body := src.get_slice("func _run_sequence() -> void:", 1).get_slice("func _play_finale_off_the_bed", 0)
 	assert(run_sequence_body.split("_play_finale_off_the_bed()").size() - 1 == 2, "BOTH _run_sequence branches (QA-collapsed and real) must play an owed finale off the bed -- the FIGHT path banks seal_resolved at a container, never in a dialogue")

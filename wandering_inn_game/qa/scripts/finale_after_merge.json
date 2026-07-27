@@ -120,7 +120,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "THE RETRY: resolving the offer re-attempts the owed finale THAT SAME NIGHT, rather than making the player sleep again. 10 lines = 2 open + 3 class recount (Warrior 10, Mage 11 -- the merge was declined, so BOTH parents survive -- plus Diplomat 1) + 3 region recap + 1 FED close + 1 wanderinginn.com curtain.",
+   "_comment": "THE RETRY: resolving the offer re-attempts the owed finale THAT SAME NIGHT, rather than making the player sleep again. The hook is DEFERRED, so this lands on the far side of decline_consolidation()'s whole synchronous chain -- CONSOLIDATION_DECLINED is emitted BEFORE _resolve_evolutions(), and the recount must read one settled snapshot (identically in QA and in play). 10 lines = 2 open + 3 class recount (Warrior 10, Mage 11 -- the merge was declined, so BOTH parents survive -- plus Diplomat 1) + 3 region recap + 1 FED close + 1 wanderinginn.com curtain.",
    "action": "wait_for_event",
    "type": "ui_gdi_epilogue_rendered",
    "timeout_sec": 5,

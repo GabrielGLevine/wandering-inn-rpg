@@ -270,7 +270,20 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			# into the sim, which is the wrong edge for a sequence that
 			# recounts classes — the recount must show the class the player
 			# just chose, not the two it replaced).
-			play_finale()
+			#
+			# DEFERRED, and that is load-bearing for the same reason. Neither
+			# emit is the END of its sim call: `decline_consolidation()` fires
+			# CONSOLIDATION_DECLINED and only THEN runs `_resolve_evolutions()`
+			# (wi_game.gd — the decline path owns the evolutions the offer
+			# deferred out of the sleep beat). Calling straight through would
+			# recount classes mid-flight, and worse, differently in QA than in
+			# play: the QA collapse builds the line list synchronously inside
+			# `play_finale()` and would name the PRE-evolution class, while
+			# real play's own `_run_finale.call_deferred()` names the evolved
+			# one. Deferring here puts both on the far side of the whole
+			# synchronous chain, so the recount reads one settled snapshot.
+			# The emit sites stay untouched (consolidation_flow's pins hold).
+			play_finale.call_deferred()
 
 
 func _begin_sleep() -> void:
