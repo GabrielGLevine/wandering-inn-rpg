@@ -189,7 +189,7 @@ func _collect_scene_producers(scene: Dictionary, produced: Dictionary) -> void:
 						_collect_scalar_producer((variant as Dictionary).get("accomplishment", ""), "%s.variants[%d].accomplishment" % [label, variant_index], produced)
 			_collect_scalar_producer(entity.get("on_enter_accomplishment", ""), label + ".on_enter_accomplishment", produced)
 			# Task 2.3: on_open_accomplishment is String|Array (on_victory contract).
-			var open_banks: Variant = entity.get("on_open_accomplishment", "")
+			var open_banks: Variant = entity.get("on_open_accomplishment", [])
 			for counter: Variant in (open_banks if open_banks is Array else [open_banks]):
 				_collect_scalar_producer(counter, label + ".on_open_accomplishment", produced)
 			if not (entity.get("talk_pool", []) as Array).is_empty():
