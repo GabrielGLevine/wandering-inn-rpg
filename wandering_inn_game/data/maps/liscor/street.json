@@ -1481,13 +1481,13 @@
      ]
     },
     {
-     "_comment": "Appended AFTER pisces_door_study_2 (later match wins) so an active second-door study period reads as the more current topic.",
+     "_comment": "Appended AFTER pisces_door_study_2 (later match wins) so an active seal-study period reads as the more current topic. 2026-07-26 main-quest spec 7 amendment 1: the stage ids and their second_door_study_sleeps counter are SHIPPED and frozen, so both keep their names -- the copy no longer calls the thing under the city a second door. It is the seal's wardwork, cut by the hand that cut the inn's frame.",
      "id": "pisces_second_door_study_1",
      "requires_accomplishment": {
       "second_door_study_sleeps": 1
      },
      "lines": [
-      "I made the walk down to your second door last night. Grim commute. Worth it — the wardwork answers exactly like the first, which tells me nothing new and confirms everything I suspected."
+      "I made the walk down to that seal of yours last night. Grim commute. Worth it — the wardwork answers exactly like the pantry frame, which tells me nothing new and confirms everything I suspected."
      ]
     },
     {

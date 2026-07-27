@@ -334,13 +334,14 @@
    ]
   },
   {
+   "_comment": "2026-07-26 main-quest spec 7 amendment 1: display name was 'A Second Door'. The entity id is shipped and frozen; the fiction is not. This is a sealed rune-door full of wardwork by the hand that cut the inn's frame -- never a second Magical Door, never another portal. No QA script pins the old label (checked qa/scripts + qa/manifest).",
    "id": "seal_kept_door",
    "kind": "prop",
    "cell": [
     19,
     7
    ],
-   "display_name": "A Second Door",
+   "display_name": "A Sealed Rune-Door",
    "sprite": "door",
    "tint": [
     0.45,

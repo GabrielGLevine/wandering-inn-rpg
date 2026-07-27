@@ -236,6 +236,22 @@
 				{ "id": "pallass_reach", "description": "The Door reaches Pallass now. The Walled City does not open for just anyone.", "complete_when": { "lattice_forge_rune": 1 } },
 				{ "id": "return", "description": "Pisces has been collecting everything you've learned. Hear him out, by the Guild steps.", "complete_when": { "seal_descent_agreed": 1 } }
 			]
+		},
+		{
+			"_comment": "2026-07-26 Act V (#270 beats 1-3, as amended by main-quest spec 7). BEATS ARE ORDER-GATED, the decision #270 asked to make explicitly: no beat's counter can bank before its predecessor's, so the catalyst-style cosmetic skip is impossible here. descend's counter banks ONLY at seal_kept_door with seal_descent_agreed held (the prop's own variant/skill arms are gated on it); read's counter banks only once the runes are read (its own arms gate on read_the_seal_runes, and Pisces' bridge option requires it); resolve's counter has three producers, each behind the reading. SPOILER DISCIPLINE: 'feeding' appears in no beat copy until beat 3, which the journal only shows once the reading has already revealed it on screen (WIQuests surfaces the ACTIVE beat alone). Landmarks: every beat names the trapped halls -- the quest is given on street (Pisces at the Guild steps) and produced under the dungeon.",
+			"id": "what_the_seal_was_feeding",
+			"title": "What the Seal Was Feeding",
+			"beats": [
+				{ "id": "descend", "description": "Take Pisces down past the trapped halls to the sealed rune-door, and let him read it in person.", "complete_when": { "read_the_seal_runes": 1 } },
+				{ "id": "read", "description": "The hand that cut it cut the inn's frame too. Find out what the seal is FOR, there at the door in the halls.", "complete_when": { "read_the_feeding_ward": 1 } },
+				{ "id": "resolve", "description": "Settle it at the door in the trapped halls: open it, keep it fed, or re-cut the ward yourself.", "complete_when": { "seal_resolved": 1 } }
+			],
+			"region": "Liscor",
+			"resolution_paths": [
+				{ "accomplishment": "seal_opened", "text": "You broke the seal and walked into what it was feeding.", "grant": { "melee_hit": 10, "won_combat": 2 } },
+				{ "accomplishment": "seal_kept_fed", "text": "You got the Watch to keep it fed.", "grant": { "persuaded_someone": 6, "heard_gossip": 8 } },
+				{ "accomplishment": "seal_rewarded", "text": "You re-cut the ward yourself, and paid for it in ruin-glass.", "grant": { "spell_cast": 10, "warded_danger": 3 } }
+			]
 		}
 	]
 }
