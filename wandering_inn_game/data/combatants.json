@@ -1076,6 +1076,30 @@
     "quick_slash"
    ],
    "_comment": "b1 #199. Early-volume Rags: small, fast, SMART — dex/int lead, low con (she is a survivor, not a boss; coward profile = flees at low HP, canon-true). power_level 5.5: T1-elite band, above the chieftain (4.5) on cunning, tuned vs the gate-era build in sim_combat_batch's rags cell. Fought ONLY via the betrayal close of rags_meeting."
+  },
+  {
+   "_comment": "2026-07-26 Act V. ROSTER-ONLY retint of the ruin_warden rig at seal scale (:401's distinct-id-per-context contract: there is no per-encounter stat or AI override, so a new context takes a NEW ID, never a shared one re-tuned). Same sprite, same melee profile, same tough_body spine as ruin_guardian -- this is that ward's older, better-fed sibling, so it reads as family on screen and fights a full band above it. Fought SOLO by design (Pisces holds the ward's line open; he is not a brawler), which is why the con/die curve sits under vault_construct's party-scaled 190/15. Tuned against sim_combat_batch's seal_warden_t5_sw14_solo gated cell; Phase 9 re-sweeps the whole band ladder. MEASURED at authoring (100 seeds, spellsword14 solo): win 0.59, median 5 rounds (3-7) -- the hardest solo cell in the game at that build, against the Pallass forge golem's 0.71 and the market watchgolems' 0.88, which is the 'one band above the last region' shape spec 6 asks for. The curve is deliberately HIGH-con/LOW-die: a ward does not burst you down, it outlasts you.",
+   "id": "seal_warden",
+   "power_level": 18.0,
+   "display_name": "The Seal's Warden",
+   "sprite": "ruin_warden",
+   "combat_scale": 1.35,
+   "side": "enemy",
+   "stats": {
+    "str": 17,
+    "dex": 10,
+    "con": 112,
+    "int": 8,
+    "wis": 10,
+    "cha": 2
+   },
+   "weapon_die": 8,
+   "ai": "melee",
+   "skills": [
+    "tough_body",
+    "power_strike",
+    "slam"
+   ]
   }
  ]
 }

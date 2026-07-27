@@ -419,7 +419,53 @@
      ]
     }
    },
-   "skill_hint_toast": "The runes want reading, and whatever is under them wants a different kind of eye entirely."
+   "skill_hint_toast": "The runes want reading, and whatever is under them wants a different kind of eye entirely.",
+   "_comment_door": "2026-07-26 Act V beat 3, the FIGHT path. door_when is checked BEFORE the interact arm (interactions.gd prop branch order), so once seal_opened banks this stops being a thing to read and becomes a way through -- which is exactly the fiction. seal_opened banks ONLY on Pisces' open-it fork, so the TALK and SKILL paths leave this door shut forever, as #270 requires.",
+   "door_when": {
+    "requires": {
+     "seal_opened": 1
+    },
+    "to_map": "seal_vault",
+    "to_cell": [
+     2,
+     4
+    ],
+    "open_toast": "The seal does not resist. It simply stops being a seal — the runes go quiet in order, one ring at a time, and the door swings in on three centuries of undisturbed air."
+   }
+  },
+  {
+   "_comment": "2026-07-26 Act V: THE SEAL'S WARDEN. present_when is validator-forbidden on encounters, so it stands here from first arrival, VISIBLE AND INERT (the rift_vermin_leak pattern) with its own observe + gate_closed_toast -- a shape in the alcove the player has walked past since the delve, which is the whole point when it finally moves. encounter_when arms it on seal_opened alone: it wakes because the seal broke, and only the FIGHT fork breaks it. trigger_radius 1 makes it UNSKIPPABLE on that fork without paying for it -- (18,7) is the only walkable approach to the door, and it sits one cell off. A sneaking player still slips by and banks sneaked_past_danger, the shipped stealth reward, which is a real build paying a real price rather than an oversight. CELL (19,6): the pocket north of the door, reachable only from (19,5), so it blocks no route -- and it is NOT (18,7), which delve_fight stands on. Roster: `seal_warden`, a distinct id per combatants.json:401.",
+   "id": "seal_warden_alcove",
+   "kind": "encounter",
+   "cell": [
+    19,
+    6
+   ],
+   "display_name": "A Shape in the Alcove",
+   "sprite": "ruin_warden",
+   "tint": [
+    0.42,
+    0.42,
+    0.46
+   ],
+   "arena": "vault",
+   "enemies": [
+    "seal_warden"
+   ],
+   "allies": [],
+   "trigger_radius": 1,
+   "_comment_victory": "on_victory is the ENGINE DEFAULT spelled out (test_combat_data requires the key present on every encounter): the warden banks no story counter of its own. Act V's resolution belongs to the room behind it -- vault_anchor_stone's open is what banks seal_resolved -- so a player who sneaks past the fight and one who flattens it reach the same beat by different costs.",
+   "on_victory": [
+    "won_combat"
+   ],
+   "encounter_when": {
+    "requires": {
+     "seal_opened": 1
+    }
+   },
+   "gate_closed_toast": "Dust lies on it in an unbroken sheet, the way dust lies on a thing that has not moved in centuries. Leave it that way.",
+   "observe": "An alcove beside the sealed door, and something standing in it: ward-stone, shoulder-high, cut in the same hand as the runes. It is not a statue. Statues are not built facing the door they guard.",
+   "_comment_loot": "DELIBERATELY no `loot` array. Every enchanted accessory this fight could plausibly drop (warded_coil_charm, construct_core_shard, guardian_ward_fragment) is a chance-1.0 drop from a fight the player must already have won to be standing here, and `pickup` no-ops a duplicate id -- a guaranteed-dead drop reads worse than none. The reward for this fight is the room behind it (seal_anchor_rune) plus the quest's own resolution_paths grant."
   },
   {
    "_comment": "2026-07-26 Act V: THE ESCORT. Pisces is the voice at this door -- the prop never speaks (Global Constraint), so his narration rides the prop's toasts and everything that needs OPTIONS lives here. present_when brackets from the descent ask onward and never closes: after the resolution he is still the man standing in front of the thing he spent a month on, and a vanished escort would read as a bug. CELL (19,8): deliberately NOT (18,7), which is delve_fight's own standing cell for the seal_kept_found beat -- an entity there would strand a shipped canonical mid-route. Open neighbours (18,8)/(19,9), and no shipped save can hold seal_descent_agreed at all, so the new blocker can strand nothing. Bilocation with the Guild-steps Pisces is the shipped pisces_mounting precedent (Task 2.4): different maps, never on screen together.",

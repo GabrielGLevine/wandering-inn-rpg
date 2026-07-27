@@ -1,0 +1,212 @@
+{
+ "_comment": "2026-07-26 Act V: THE PAYOFF CHAMBER, behind seal_kept_door. Reachable ONLY through that door's own door_when (requires seal_opened) -- the FIGHT path's terminus, and the one room in the dungeon that was never ruined. Floor is deliberately the CASTLE stone the asset catalog casts for 'a still-intact inner chamber (Warmage Thresk's own room)', not the cemetery floor the halls outside use: the difference IS the storytelling. Small by design (11x9), one prop that matters, no fights inside -- the fight is the warden in the hall you had to get past. THE BLOCKING CONTRACT: every solid-reading decor cell is paired into `blocked`.",
+ "biome": "dungeon",
+ "grid": {
+  "width": 11,
+  "height": 9
+ },
+ "blocked": [
+  [
+   3,
+   2
+  ],
+  [
+   3,
+   6
+  ],
+  [
+   7,
+   2
+  ],
+  [
+   7,
+   6
+  ],
+  [
+   9,
+   1
+  ]
+ ],
+ "floor_layers": [
+  {
+   "_pick": "Castle Environment stone-floor block ([4,11]/[5,11]/[6,11]/[4,12], flat warm-grey rgb~104,97,81) -- the barracks/pallass pick, already manifest-wired (bundle:true). Chosen over the dungeon biome's cemetery floor on purpose: this chamber never fell in, and the warmer, cleaner stone is the only thing that says so before Pisces does.",
+   "sheet": "res://assets/tiles/castle/Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     4,
+     11
+    ],
+    [
+     5,
+     11
+    ],
+    [
+     6,
+     11
+    ],
+    [
+     4,
+     12
+    ]
+   ],
+   "cells": "all"
+  }
+ ],
+ "decor": [
+  {
+   "_comment": "Two facing pairs of statues make an aisle to the anchor (composition: an off-center focal at (8,4) with a framed approach). Blocked-paired, the ruin_surface convention.",
+   "sprite": "dungeon_statue",
+   "cell": [
+    3,
+    2
+   ],
+   "tint": [
+    0.78,
+    0.78,
+    0.8
+   ]
+  },
+  {
+   "sprite": "dungeon_statue",
+   "cell": [
+    3,
+    6
+   ],
+   "tint": [
+    0.78,
+    0.78,
+    0.8
+   ]
+  },
+  {
+   "sprite": "dungeon_statue",
+   "cell": [
+    7,
+    2
+   ],
+   "tint": [
+    0.72,
+    0.72,
+    0.76
+   ]
+  },
+  {
+   "sprite": "dungeon_statue",
+   "cell": [
+    7,
+    6
+   ],
+   "tint": [
+    0.72,
+    0.72,
+    0.76
+   ]
+  },
+  {
+   "_comment": "The only ruin in the room, and it is recent: something came down off the ceiling when the seal broke.",
+   "sprite": "dungeon_rubble",
+   "cell": [
+    9,
+    1
+   ],
+   "tint": [
+    0.85,
+    0.82,
+    0.85
+   ]
+  },
+  {
+   "_comment": "Non-blocking: the ward-lattice painted across the floor where the pour arrives. Walkable on purpose -- the player should be standing IN it at the anchor.",
+   "sprite": "cellar_wardwork",
+   "cell": [
+    8,
+    5
+   ],
+   "tint": [
+    0.62,
+    0.78,
+    0.95
+   ]
+  },
+  {
+   "sprite": "cellar_wardwork",
+   "cell": [
+    8,
+    3
+   ],
+   "tint": [
+    0.62,
+    0.78,
+    0.95
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "_comment": "Return leg of the seal_kept_door -> seal_vault pair. Lands at trapped_halls (18,7), the approach cell delve_fight already proves walkable and unoccupied.",
+   "id": "seal_vault_return",
+   "kind": "door",
+   "cell": [
+    1,
+    4
+   ],
+   "display_name": "Back Through the Seal",
+   "sprite": "door",
+   "tint": [
+    0.45,
+    0.45,
+    0.5
+   ],
+   "to_map": "trapped_halls",
+   "to_cell": [
+    18,
+    7
+   ],
+   "observe": "The doorway you came through, seen from the inside: the runes run the same order on this face, which means they were cut to be read from in here. Somebody expected to be standing where you are."
+  },
+  {
+   "_comment": "THE TERMINUS. A container, not an interact-prop, so the open can bank AND grant AND speak in one beat (on_open_accomplishment String|Array + open_toast, the pedestal-breach engine keys from Task 2.3). seal_resolved banks HERE on the FIGHT path -- reaching what was fed is the resolution, not merely deciding to look. Oblique-Thresk: the wiki is silent on what a Warmage's anchor looks like, so the room states only what a resident could see and Pisces reads the rest.",
+   "id": "vault_anchor_stone",
+   "kind": "prop",
+   "cell": [
+    8,
+    4
+   ],
+   "display_name": "The Anchor",
+   "sprite": "pedestal",
+   "tint": [
+    0.78,
+    0.86,
+    1.0
+   ],
+   "observe": "A waist-high plinth of the same pale stone as the ruin's, and the same hand's runes wrapped twice around it. Every line points inward. Whatever it holds, it was built to keep holding it.",
+   "contains": [
+    "seal_anchor_rune"
+   ],
+   "on_open_accomplishment": [
+    "seal_resolved"
+   ],
+   "open_toast": "Not a prisoner. An ANCHOR — a twin to the stone the Horns hauled out of the ruin, and it has been drinking the ward's slow pour for three centuries to stay awake. Pisces, hoarse: \"This is why the Door works at all. Somebody left it something to come home to, and then somebody sealed the room and let it drink.\""
+  },
+  {
+   "_comment": "Flavour terminus, second read. Interact-only prop with its own bank (sensed_something_deeper, the dungeon's shipped flavour counter -- no new counter for a lore stone).",
+   "id": "vault_ledger_slab",
+   "kind": "prop",
+   "cell": [
+    5,
+    7
+   ],
+   "display_name": "A Cut Slab",
+   "sprite": "warded_seam",
+   "tint": [
+    0.8,
+    0.8,
+    0.84
+   ],
+   "on_interact_accomplishment": "sensed_something_deeper",
+   "toast": "Cut into the slab, in a hand that expected readers: a tally. Ninety-one marks, then a gap, then one more in a different chisel. Nobody came back to make the ninety-third.",
+   "observe": "Someone knelt here long enough to cut a tally into the floor slab, and long enough after that to stop."
+  }
+ ]
+}

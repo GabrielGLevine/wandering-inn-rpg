@@ -60,7 +60,7 @@
   { "action": "assert_state", "path": "current_map", "equals": "trapped_halls" },
   { "action": "assert_state", "path": "player_cell", "equals": [2, 7] },
   { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "trapped_halls", "floor_cells": 280, "blocked_cells": 6 } },
-  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 12, "fallbacks": 0 } },
+  { "_comment": "2026-07-26 Act V SHIFT, DISCLOSED: 12 -> 13. trapped_halls gained `seal_warden_alcove` (19,6), an ENCOUNTER -- present_when is validator-forbidden on encounters, so it stands visible and inert from first arrival (rift_vermin_leak's own pattern) and counts here even at this fixture's zero-progress state. Its encounter_when (seal_opened) is unmet, and its trigger_radius is consulted only through that same gate, so this route neither arms nor triggers it; the walk below is byte-identical. Act V's OTHER new entity, `pisces_seal_escort` (19,8), is present_when-gated on seal_descent_agreed and correctly absent here -- which is why the count moved by one, not two.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 13, "fallbacks": 0 } },
   { "action": "screenshot", "name": "04_trapped_halls_landing" },
 
   { "_comment": "== TRAP CLASS 1: pressure plate (6,7) -- a real [Appraise Foe] reveal, then a plain interact TRIGGER.", "action": "move", "direction": "right", "steps": 3 },

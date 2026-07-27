@@ -197,6 +197,11 @@ const PARTY_CELLS := [
 const DUNGEON_CELLS := [
 	{"name": "trapped_halls_snare_t4_solo", "arena": "trapped_halls_snare", "enemies": ["snare_ward_a", "snare_ward_b", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "gallery_vermin_nest_t4_solo", "arena": "trapped_halls_snare", "enemies": ["rift_vermin_a", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# 2026-07-26 Act V: the seal's warden, the main line's top band. Gated at
+	# spellsword14 (the T5 build the Pallass forge/market cells already tune
+	# against) SOLO -- the fight is fought alone by design. Measured at
+	# authoring below; Phase 9 re-sweeps every band together.
+	{"name": "seal_warden_t5_sw14_solo", "arena": "vault", "enemies": ["seal_warden"], "build": "t4_spellsword14_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 const BESTIARY_CELLS := [

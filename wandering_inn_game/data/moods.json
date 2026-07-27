@@ -348,6 +348,25 @@
    "vignette": 0.56,
    "_comment": "GH-VISUAL-LOG 2026-07-17: base grade lifted ~35% total (12% then a further 20% on user call) (user-ratified USER-EYES item -- vault shots read near-black)."
   },
+  "seal_vault": {
+   "_comment": "2026-07-26 Act V. One notch WARMER and brighter than trapped_halls on purpose: this chamber never fell in, and the anchor has been lit the whole time. Same night step and vignette as the halls outside so the transition reads as one wing, not one world.",
+   "day": [
+    0.335,
+    0.335,
+    0.3
+   ],
+   "dusk": [
+    0.335,
+    0.335,
+    0.3
+   ],
+   "night": [
+    0.28,
+    0.282,
+    0.245
+   ],
+   "vignette": 0.5
+  },
   "pallass_market": {
    "_comment": "Crystal lamps (steady white #E9EEF2 PointLight2D per-entity) carry the after-dark read; NEVER amber (the standing quarantine check every future screenshot of this map must pass).",
    "day": [

@@ -21,6 +21,31 @@
       }
      },
      "text": "A feeding ward. Under a city. Cut by whoever cut the frame you eat breakfast beside. I need a moment, and then I need a decision, and I would rather it were yours."
+    },
+    {
+     "_comment": "One arm per outcome, appended after the reading arms so last-match-wins leaves him standing in the ending the player chose. seal_kept_fed sits last on purpose: it is the only outcome another path can be layered on top of (a player who opened the seal and then could not finish the warden can still fund the keeper), and the fed line is the true state in that case.",
+     "requires": {
+      "accomplishment": {
+       "seal_opened": 1
+      }
+     },
+     "text": "It is open, and it is quiet, and I have been standing in the doorway for an hour deciding whether that is a relief. Do not tell Ceria I said hour. Say minutes."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_rewarded": 1
+      }
+     },
+     "text": "Your cut is holding. I have checked it eleven times, which you may read as distrust or as admiration; I decline to clarify."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_kept_fed": 1
+      }
+     },
+     "text": "A Watch keeper, a ledger line, and a ward that goes on eating on somebody's schedule. Civilization, apparently. I shall write about it and be insufferable."
     }
    ],
    "options": [
@@ -45,7 +70,129 @@
      "goto": "the_appetite"
     },
     {
+     "_comment": "2026-07-26 Act V beat 3, THE CHOICE. One entry, three forks inside, so the decision is made in one place and reads as a decision. Gated on the ward fact (never on which Skill read it) and hidden once resolved.",
+     "text": "So what do we do about a door that eats?",
+     "requires": {
+      "accomplishment": {
+       "read_the_feeding_ward": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "seal_resolved": 1
+      }
+     },
+     "goto": "the_choice"
+    },
+    {
      "text": "Take your moment.",
+     "end": true
+    }
+   ]
+  },
+  "the_choice": {
+   "_comment": "THREE REAL-COST PATHS (#270 beat 3), each with its own producer and its own fiction: FIGHT banks seal_opened here and resolves in the vault beyond the warden; TALK points at Olesm, whose own arm carries the Skill-or-gold cost and banks seal_kept_fed + seal_resolved; SKILL closes it here but only for a player holding BOTH a warding Skill and the guardian's fragment, which the arm CONSUMES. He argues for the second one, because he would.",
+   "speaker": "Pisces",
+   "text": "Three things, and I dislike two of them. We open it and see what three centuries of feeding produced. Or we leave it fed and make that somebody's paid duty, which is dull and correct. Or you re-cut the ward yourself, if you can, and it holds another age without anyone watching it.",
+   "options": [
+    {
+     "text": "We open it.",
+     "effects": [
+      {
+       "accomplishment": "seal_opened"
+      }
+     ],
+     "goto": "fork_open"
+    },
+    {
+     "text": "It stays fed. The Watch can pay for it.",
+     "goto": "fork_fed"
+    },
+    {
+     "_comment": "SKILL fork, visible-locked (the witch pattern). TWO entry arms because #270 names both a warding Skill and a reading one, and requires cannot compound {skill, item} -- so the Skill gate opens the pitch and the ITEM gate closes it, one node down. That is the shipped multi-node persuade shape, not a gate stacked on a gate.",
+     "text": "[Hedge Remedy] I can re-cut it. Properly.",
+     "requires": {
+      "skill": "hedge_remedy"
+     },
+     "goto": "fork_reward"
+    },
+    {
+     "text": "[Detect Magic] I can re-cut it. I have read enough of these now.",
+     "requires": {
+      "skill": "detect_magic"
+     },
+     "goto": "fork_reward"
+    },
+    {
+     "text": "Not yet. Let me think.",
+     "end": true
+    }
+   ]
+  },
+  "fork_open": {
+   "_comment": "seal_opened is banked on the OPTION, not here, so the door and the warden arm the instant the decision is made. He does not go with you into the fight: the ward re-seals the moment nobody is holding the reading open, and that is his job. It is also why the harness cell is SOLO.",
+   "speaker": "Pisces",
+   "text": "Then stand clear of it. The reading has to stay open while the seal comes apart, which means I am occupied and you are on your own for whatever objects to this. Something will. Wards this good are never the only precaution.",
+   "options": [
+    {
+     "text": "Understood.",
+     "end": true
+    }
+   ]
+  },
+  "fork_fed": {
+   "speaker": "Pisces",
+   "text": "Sensible. Deeply unsatisfying. It will need a real keeper, though, and a real ledger line, or it lapses in a decade and we are back here with worse knees. Olesm keeps the Watch's dread and the Watch's paperwork in the same drawer. Go and frighten him usefully.",
+   "options": [
+    {
+     "text": "I'll go and see him at the Guild.",
+     "end": true
+    },
+    {
+     "text": "Back up a moment.",
+     "goto": "at_the_door"
+    }
+   ]
+  },
+  "fork_reward": {
+   "_comment": "The item gate closes the fork. requires {item} HIDES when unmet, so the node text names the cost out loud -- guidance, not a progress leak. A player who traded the fragment to Hedault has spent this path, deliberately: the ruin drops exactly one, and the other two paths stay open.",
+   "speaker": "Pisces",
+   "text": "You would need warded stone to cut into, and not any warded stone. Something the same age, the same craft, and already carrying a working. The guardian we put down in the ruin was made of the stuff. If you kept the piece, this becomes a long afternoon and a permanent answer.",
+   "options": [
+    {
+     "text": "I have the fragment. Let's re-cut it.",
+     "requires": {
+      "item": "guardian_ward_fragment"
+     },
+     "effects": [
+      {
+       "remove_item": "guardian_ward_fragment"
+      },
+      {
+       "accomplishment": "seal_rewarded"
+      },
+      {
+       "accomplishment": "seal_resolved"
+      }
+     ],
+     "goto": "fork_reward_done"
+    },
+    {
+     "text": "Then it'll have to be another way.",
+     "goto": "at_the_door"
+    }
+   ]
+  },
+  "fork_reward_done": {
+   "speaker": "Pisces",
+   "text": "There. The pour runs the way it always did and now it runs through YOUR hand's work, which will outlast the city and annoy me for the rest of my life. Whatever is back there gets to keep sleeping. I have decided that is the outcome I wanted, and I will be saying so as though I said it first.",
+   "options": [
+    {
+     "text": "You did say it first.",
+     "end": true
+    },
+    {
+     "text": "Let's get back up into the light.",
      "end": true
     }
    ]

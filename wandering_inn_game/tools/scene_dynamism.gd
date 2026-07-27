@@ -56,7 +56,7 @@ extends SceneTree
 ##              (Liscor city + its exterior/tunnel environs)
 ##   riverfarm: riverfarm_village, riverfarm_longhouse, witch_hollow
 ##   invrisil:  invrisil_boulevard, mercantile_alleys, brothers_parlor
-##   dungeon:   dungeon_approach, trapped_halls
+##   dungeon:   dungeon_approach, trapped_halls, seal_vault
 ##   interiors: inn, inn_upstairs, guild, barracks, runners_guild
 ##              (every one of these shares the Free Pack Interior_Walls/
 ##              Furniture family -- the generic "indoor room" visual language)
@@ -163,7 +163,7 @@ const REGION_GROUPS := {
 	"deep_tunnels": "liscor", "ruin_surface": "liscor",
 	"riverfarm_village": "riverfarm", "riverfarm_longhouse": "riverfarm", "witch_hollow": "riverfarm",
 	"invrisil_boulevard": "invrisil", "mercantile_alleys": "invrisil", "brothers_parlor": "invrisil",
-	"dungeon_approach": "dungeon", "trapped_halls": "dungeon",
+	"dungeon_approach": "dungeon", "trapped_halls": "dungeon", "seal_vault": "dungeon",
 	"pallass_market": "pallass", "pallass_forge": "pallass",
 }
 
