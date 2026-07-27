@@ -224,6 +224,11 @@ jobs:
             godot --headless --path wandering_inn_game --import
 
       - name: Smoke canonical sweep (qa/ci_sweep.sh --tier smoke)
+        # GH#287: opt into ci_sweep's parallel launcher (per-PID HOME +
+        # per-script qa_output/logs make concurrent runs collision-safe;
+        # aggregation is serial either way). 4 = ubuntu-latest vCPUs.
+        env:
+          WI_SWEEP_JOBS: 4
         run: |
           set -euo pipefail
           bash wandering_inn_game/qa/ci_sweep.sh --tier smoke
@@ -254,6 +259,10 @@ jobs:
             godot --headless --path wandering_inn_game --import
 
       - name: Full canonical sweep (qa/ci_sweep.sh)
+        # GH#287: 4-way parallel (see sweep-smoke note) — this check was the
+        # PR-merge bottleneck at ~6m50s serial.
+        env:
+          WI_SWEEP_JOBS: 4
         run: |
           set -euo pipefail
           bash wandering_inn_game/qa/ci_sweep.sh
