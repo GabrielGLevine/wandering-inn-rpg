@@ -16,32 +16,59 @@ class_name WIInnGuests
 
 ## Quest-completion gates on pool membership (2026-07-26 FoTI extension):
 ## a rostered npc joins the met-pool only when chatted AND its gate (if
-## any) is banked -- otherwise the window would seat an entity whose
-## present_when.requires hides it (a ghost-empty seat all waking).
+## any) is open -- otherwise the window would seat an entity whose
+## present_when hides it (a ghost-empty seat all waking).
+##
+## A value is EITHER a bare accomplishment id (the common "this quest must
+## have closed" case) OR a `{"requires": [...], "absent": [...]}` dict that
+## mirrors present_when's two arms, so a row carrying a negative arm can
+## state the SAME condition here. Rags is why the dict shape exists: her
+## encounter's on_victory banks rags_meeting_settled alongside
+## drove_off_rags, so the positive arm alone would pool the Chieftain the
+## player drove off the plains while her row's own `absent` hid her.
+## Pool membership and row presence must never disagree.
 const GUEST_POOL_GATES := {
-	"rags": "rags_meeting_settled",
+	"rags": {"requires": ["rags_meeting_settled"], "absent": ["drove_off_rags"]},
 	"wilovan": "brothers_job_done",
 	"grimalkin": "elevator_pass_stamped",
 }
 
 
+## Is a GUEST_POOL_GATES value satisfied? FAIL-CLOSED in both shapes: with
+## no predicate to ask, a gated npc never pools -- including one whose gate
+## is nothing but an `absent` arm, because "we cannot read the counters" is
+## never evidence that a counter is unbanked.
+static func _gate_open(gate: Variant, gate_met: Callable) -> bool:
+	if not gate_met.is_valid():
+		return false
+	if gate is Dictionary:
+		var spec: Dictionary = gate
+		for key: Variant in (spec.get("requires", []) as Array):
+			if not bool(gate_met.call(String(key))):
+				return false
+		for key: Variant in (spec.get("absent", []) as Array):
+			if bool(gate_met.call(String(key))):
+				return false
+		return true
+	return bool(gate_met.call(String(gate)))
+
+
 ## The ordered met-pool: roster members (fixed order) the player has met,
-## minus any whose GUEST_POOL_GATES quest has not closed.
+## minus any whose GUEST_POOL_GATES gate is not open.
 ##
 ## `gate_met` takes an ACCOMPLISHMENT KEY (not an npc id) and answers
 ## whether it is banked. It is optional and FAIL-CLOSED: a caller that
 ## omits it seats no gated guest at all, which degrades to the same
-## nothing the row's own present_when.requires would render. Callers that
-## can read accomplishments (wi_game) always pass it.
+## nothing the row's own present_when would render. Callers that can read
+## accomplishments (wi_game) always pass it.
 static func met_pool(roster: Array, is_met: Callable, gate_met := Callable()) -> Array:
 	var pool: Array = []
 	for npc: Variant in roster:
 		var id := String(npc)
 		if not bool(is_met.call(id)):
 			continue
-		if GUEST_POOL_GATES.has(id):
-			if not gate_met.is_valid() or not bool(gate_met.call(String(GUEST_POOL_GATES[id]))):
-				continue
+		if GUEST_POOL_GATES.has(id) and not _gate_open(GUEST_POOL_GATES[id], gate_met):
+			continue
 		pool.append(id)
 	return pool
 
