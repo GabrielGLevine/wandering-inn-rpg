@@ -14,19 +14,96 @@ class_name WIInnGuests
 ## `guest` present_when arm; validated by test_content._validate_present_when.
 
 
-## The ordered met-pool: roster members (fixed order) the player has met.
-static func met_pool(roster: Array, is_met: Callable) -> Array:
+## Quest-completion gates on pool membership (2026-07-26 FoTI extension):
+## a rostered npc joins the met-pool only when chatted AND its gate (if
+## any) is open -- otherwise the window would seat an entity whose
+## present_when hides it (a ghost-empty seat all waking).
+##
+## A value is EITHER a bare accomplishment id (the common "this quest must
+## have closed" case) OR a `{"requires": [...], "absent": [...]}` dict that
+## mirrors present_when's two arms, so a row carrying a negative arm can
+## state the SAME condition here. Rags is why the dict shape exists: her
+## encounter's on_victory banks rags_meeting_settled alongside
+## drove_off_rags, so the positive arm alone would pool the Chieftain the
+## player drove off the plains while her row's own `absent` hid her.
+## Pool membership and row presence must never disagree.
+## NOT LISTED, ON PURPOSE (fix round 2): `pisces`. His two rows leave one
+## uncovered state -- the HAUL WINDOW, door_retrieved banked and door_mounted
+## not -- where `pisces_inn_guest` (absent door_retrieved) and
+## `pisces_inn_guest_returned` (requires door_mounted) BOTH hide while the
+## pool still seats him, so his chair renders empty. That gap is deliberate:
+## `pisces_mounting` (13,5) is present in exactly that window, and a guest row
+## rendering at the same time would BILOCATE him (the fix 96f80d0 made for the
+## Horns). The pool condition that would close it is NOT (door_retrieved AND
+## NOT door_mounted) -- a DISJUNCTION, `absent door_retrieved` OR `requires
+## door_mounted` -- and one dict is an AND of its two arms, so it cannot say
+## it. Closing it would need a third value shape (an ANY-of Array of specs)
+## AND would make a previously gate-free shipped roster member gate-DEPENDENT,
+## so the fail-closed default would silently drop him for any caller that
+## forgets the predicate. Judged not worth it against the cost: at most two
+## wakings in ten, one chair empty, for the length of one errand. Measured and
+## inert either way -- of 114 shipped fixtures exactly one sits in the haul
+## window (door_chain_fight_start) and Pisces is unmet there.
+const GUEST_POOL_GATES := {
+	"rags": {"requires": ["rags_meeting_settled"], "absent": ["drove_off_rags"]},
+	"wilovan": "brothers_job_done",
+	"grimalkin": "elevator_pass_stamped",
+}
+
+
+## Is a GUEST_POOL_GATES value satisfied? FAIL-CLOSED everywhere: with no
+## predicate to ask, a gated npc never pools -- including one whose gate is
+## nothing but an `absent` arm, because "we cannot read the counters" is
+## never evidence that a counter is unbanked.
+##
+## A dict that resolves to NO arms is fail-closed too (fix round 2). `{}`, or
+## a spec whose key is misspelled (`"require"`), would otherwise fall through
+## every loop to `return true` and silently re-open the ghost-seat class
+## through a typo -- the one failure mode this whole const exists to prevent.
+## An unrecognized shape has to read as "shut", never as "no conditions".
+static func _gate_open(gate: Variant, gate_met: Callable) -> bool:
+	if not gate_met.is_valid():
+		return false
+	if gate is Dictionary:
+		var spec: Dictionary = gate
+		var requires: Array = spec.get("requires", []) as Array
+		var absent: Array = spec.get("absent", []) as Array
+		if requires.is_empty() and absent.is_empty():
+			return false
+		for key: Variant in requires:
+			if not bool(gate_met.call(String(key))):
+				return false
+		for key: Variant in absent:
+			if bool(gate_met.call(String(key))):
+				return false
+		return true
+	return bool(gate_met.call(String(gate)))
+
+
+## The ordered met-pool: roster members (fixed order) the player has met,
+## minus any whose GUEST_POOL_GATES gate is not open.
+##
+## `gate_met` takes an ACCOMPLISHMENT KEY (not an npc id) and answers
+## whether it is banked. It is optional and FAIL-CLOSED: a caller that
+## omits it seats no gated guest at all, which degrades to the same
+## nothing the row's own present_when would render. Callers that can read
+## accomplishments (wi_game) always pass it.
+static func met_pool(roster: Array, is_met: Callable, gate_met := Callable()) -> Array:
 	var pool: Array = []
 	for npc: Variant in roster:
-		if bool(is_met.call(String(npc))):
-			pool.append(String(npc))
+		var id := String(npc)
+		if not bool(is_met.call(id)):
+			continue
+		if GUEST_POOL_GATES.has(id) and not _gate_open(GUEST_POOL_GATES[id], gate_met):
+			continue
+		pool.append(id)
 	return pool
 
 
 ## The NPCs on shift this waking: seats distinct people, windowed by
 ## times_slept over the met-pool. Empty when the pool is empty or seats<=0.
-static func active_guests(roster: Array, is_met: Callable, times_slept: int, seats: int) -> Array:
-	var pool := met_pool(roster, is_met)
+static func active_guests(roster: Array, is_met: Callable, times_slept: int, seats: int, gate_met := Callable()) -> Array:
+	var pool := met_pool(roster, is_met, gate_met)
 	var k := pool.size()
 	if k == 0 or seats <= 0:
 		return []
@@ -39,5 +116,5 @@ static func active_guests(roster: Array, is_met: Callable, times_slept: int, sea
 
 
 ## Is this specific NPC on shift this waking?
-static func guest_active(npc: String, roster: Array, is_met: Callable, times_slept: int, seats: int) -> bool:
-	return active_guests(roster, is_met, times_slept, seats).has(npc)
+static func guest_active(npc: String, roster: Array, is_met: Callable, times_slept: int, seats: int, gate_met := Callable()) -> bool:
+	return active_guests(roster, is_met, times_slept, seats, gate_met).has(npc)

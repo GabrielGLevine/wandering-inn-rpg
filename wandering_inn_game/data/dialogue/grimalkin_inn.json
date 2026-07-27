@@ -1,0 +1,18 @@
+{
+	"_comment": "Grimalkin's INN register, gated on elevator_pass_stamped (the close of forge_tier_permit). Attached ONLY to grimalkin_inn_guest; the Pallass permit office (pallass_grimalkin) never rides along, so the fitness read, the filing, the lift pass, the study enrollment and every board turn-in stay at that desk. REGISTER-PURE for a [Sinew Magus] off duty does not mean off: he is still measuring, and the care arrives as data. Serve mirrors selys_inn/zevara_inn: {once_per_waking, item} sanctioned compound, four one-verb effect dicts. Voice per docs/design/character-profiles.md: drill-sergeant empiricism, numbered points, respects effort and despises excuses. His rig is the biggest shipped, which is why he holds the far-east corner (14,5) -- see the row's _comment in inn.json.",
+	"start": "greet",
+	"nodes": {
+		"greet": { "speaker": "Grimalkin", "text": "Sit down properly if you are going to sit. Hips back, chest up, and stop hovering. I am off duty. Off duty means today's session was light. Two hours. You have the face of someone about to argue with the word light.", "options": [
+			{ "text": "Set a full bowl down in front of him. (Serve)", "requires": { "once_per_waking": "serve:grimalkin_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:grimalkin_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
+			{ "text": "\"Two hours is light?\"", "goto": "offduty" },
+			{ "text": "\"I'll leave you to your rest day.\"", "end": true }
+		] },
+		"offduty": { "speaker": "Grimalkin", "text": "Light is a ratio, not a number. Half the load, half the volume, all of the intent. And I am still working, since you ask. Fourteen people have stood up out of a chair since I sat down. Five did it correctly. The tall one clearing tables has better hip mobility than half my Pallass intake and has no idea. I intend to tell her before I leave. They never do thank me, and they always improve.", "options": [
+			{ "text": "Set a full bowl down in front of him. (Serve)", "requires": { "once_per_waking": "serve:grimalkin_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:grimalkin_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
+			{ "text": "\"Tell her gently, Magus.\"", "end": true }
+		] },
+		"served": { "speaker": "Grimalkin", "text": "Good. All of it, while it is hot. Recovery is the half of training people skip, and then they come to me baffled that the second set is worse than the first. You did not ask for that and I told you anyway. Sit. Eat something yourself.", "options": [
+			{ "text": "\"Yes, Magus.\"", "end": true }
+		] }
+	}
+}

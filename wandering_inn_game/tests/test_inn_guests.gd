@@ -64,5 +64,97 @@ func _init() -> void:
 	assert(not WIInnGuests.guest_active("pisces", roster, big, 0, 2), "pisces off-shift at t=0")
 	assert(not WIInnGuests.guest_active("olesm", roster, _met(["selys", "krshia"]), 0, 2), "unmet olesm never seats")
 
+	_test_quest_gates()
+
 	print("PASS: inn-guest rotation windows, dedups, and slides deterministically")
 	quit(0)
+
+
+## d1 #247 FoTI extension (2026-07-26): three of the four new roster members
+## join the met-pool only once their QUEST closes, not when first met, so the
+## pool now takes a SECOND predicate (banked-accomplishment lookup) alongside
+## the met one. Klbkch is the control: rostered, gate-free, met-only.
+func _banked(keys: Array) -> Callable:
+	return func(key: String) -> bool: return keys.has(key)
+
+
+func _test_quest_gates() -> void:
+	var ten := ["selys", "krshia", "olesm", "pisces", "relc", "zevara", "klbkch", "rags", "wilovan", "grimalkin"]
+	var all_met := _met(ten)
+
+	# Every roster member chatted, every gate banked EXCEPT Rags's.
+	var most := _banked(["brothers_job_done", "elevator_pass_stamped"])
+	for t in range(20):
+		var active := WIInnGuests.active_guests(ten, all_met, t, 2, most)
+		assert(not active.has("rags"), "t=%d seats rags with rags_meeting_settled unbanked: %s" % [t, active])
+	assert(WIInnGuests.met_pool(ten, all_met, most).size() == 9, "the ungated nine still pool")
+	assert(not WIInnGuests.guest_active("rags", ten, all_met, 7, 2, most), "guest_active agrees with the pool filter")
+	# The gate is Rags's alone: her two fellow quest-gates are banked and they seat.
+	var pool9 := WIInnGuests.met_pool(ten, all_met, most)
+	assert(pool9.has("wilovan") and pool9.has("grimalkin") and pool9.has("klbkch"), "only the unbanked gate is filtered: %s" % [pool9])
+
+	# Bank it and she rotates in on the very next full pool.
+	var all_banked := _banked(["rags_meeting_settled", "brothers_job_done", "elevator_pass_stamped"])
+	assert(WIInnGuests.met_pool(ten, all_met, all_banked).size() == 10, "all ten pool once every gate is banked")
+	var seen_rags := false
+	for t in range(20):
+		if WIInnGuests.active_guests(ten, all_met, t, 2, all_banked).has("rags"):
+			seen_rags = true
+	assert(seen_rags, "rags rotates in across a full cycle once rags_meeting_settled is banked")
+
+	# The extension fixture's pins, mirrored off the live math (pool 10, 2 seats):
+	# the three wakings that walk the four new registers through both seats.
+	assert(WIInnGuests.active_guests(ten, all_met, 16, 2, all_banked) == ["klbkch", "rags"], "t=16: start 16%%10=6 -> klbkch + rags")
+	assert(WIInnGuests.active_guests(ten, all_met, 17, 2, all_banked) == ["rags", "wilovan"], "t=17: rags STAYS, wilovan arrives")
+	assert(WIInnGuests.active_guests(ten, all_met, 18, 2, all_banked) == ["wilovan", "grimalkin"], "t=18: wilovan stays, grimalkin arrives")
+	assert(WIInnGuests.active_guests(ten, all_met, 10, 2, all_banked) == ["selys", "krshia"], "t=10: a pool of ten wraps the pilot pair back round")
+
+	# THE BETRAYAL BRANCH (ghost-empty-seat regression). rags_meeting_settled
+	# is ALSO banked by rags_scouting_party's on_victory, next to
+	# drove_off_rags -- so a positive-only gate would pool the Chieftain the
+	# player drove off the plains while her row's own `absent` arm hid her,
+	# and the window would spend a seat on nobody. The dict-shaped gate states
+	# the row's condition exactly, so the two can never disagree.
+	var betrayed := _banked(["rags_meeting_settled", "drove_off_rags", "brothers_job_done", "elevator_pass_stamped"])
+	var pool_after_betrayal := WIInnGuests.met_pool(ten, all_met, betrayed)
+	assert(not pool_after_betrayal.has("rags"), "a driven-off chieftain never pools, settled counter or not: %s" % [pool_after_betrayal])
+	assert(pool_after_betrayal.has("wilovan") and pool_after_betrayal.has("grimalkin"), "only Rags's gate closes on the betrayal: %s" % [pool_after_betrayal])
+	for t in range(20):
+		var seated := WIInnGuests.active_guests(ten, all_met, t, 2, betrayed)
+		assert(not seated.has("rags"), "t=%d seats a driven-off rags: %s" % [t, seated])
+		# The regression itself: an excluded guest RE-BASES the modulus, it
+		# never leaves a hole in the rotation.
+		assert(seated.size() == 2, "t=%d must still fill BOTH seats after the exclusion (ghost-empty chair): %s" % [t, seated])
+
+	# Both value shapes stay legal, and the bare-String form is untouched.
+	assert(WIInnGuests.GUEST_POOL_GATES["wilovan"] is String, "the bare-accomplishment form stays supported")
+	assert(WIInnGuests.GUEST_POOL_GATES["rags"] is Dictionary, "Rags's gate carries the two-arm form")
+	assert(WIInnGuests.met_pool(ten, all_met, _banked(["brothers_job_done"])).has("wilovan"), "String gate opens on its own counter")
+	assert(not WIInnGuests.met_pool(ten, all_met, _banked(["brothers_job_done"])).has("grimalkin"), "String gate stays shut without its counter")
+
+	# Klbkch carries NO gate: met alone seats him, with nothing banked at all.
+	var nothing := _banked([])
+	assert(WIInnGuests.met_pool(ten, all_met, nothing).has("klbkch"), "klbkch is gate-free -- met is the whole gate")
+	# FAIL-CLOSED holds for the dict shape too: an `absent`-only-looking gate
+	# is still shut when there is no predicate to ask (see _gate_open).
+	assert(not WIInnGuests.met_pool(ten, all_met).has("rags"), "no predicate -> the two-arm gate stays shut, same as the String one")
+
+	# A SPEC THAT RESOLVES TO NO ARMS IS SHUT, NOT OPEN (fix round 2). Before
+	# the guard these fell through every loop to `return true`, so one
+	# misspelled key would have re-opened the ghost-seat class the whole const
+	# exists to prevent -- and silently, since a typo'd key raises nothing.
+	var live := _banked(["rags_meeting_settled"])
+	assert(not WIInnGuests._gate_open({}, live), "an empty spec is shut, not unconditioned")
+	assert(not WIInnGuests._gate_open({"require": ["rags_meeting_settled"]}, live), "a misspelled `require` key is shut, not unconditioned")
+	assert(not WIInnGuests._gate_open({"requires": [], "absent": []}, live), "explicitly empty arms are shut too")
+	# Positive controls, so the guard cannot pass by shutting everything.
+	assert(WIInnGuests._gate_open({"requires": ["rags_meeting_settled"]}, live), "a real requires arm still opens")
+	assert(WIInnGuests._gate_open({"absent": ["drove_off_rags"]}, live), "a real absent arm still opens")
+	assert(WIInnGuests._gate_open("rags_meeting_settled", live), "the bare-String form still opens")
+	assert(not WIInnGuests._gate_open({}, Callable()), "no predicate, no opinion, still shut")
+
+	# FAIL-CLOSED default: a caller that forgets the gate predicate never seats
+	# a gated guest (the row's own present_when.requires would hide it anyway,
+	# so an ungated pool would only ever produce a ghost-empty seat).
+	assert(WIInnGuests.met_pool(ten, all_met).size() == 7, "no gate predicate -> the three quest-gated members stay out")
+	assert(not WIInnGuests.guest_active("wilovan", ten, all_met, 8, 2), "gated guest never seats without a gate predicate")

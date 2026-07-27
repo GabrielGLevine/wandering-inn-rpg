@@ -1,4 +1,5 @@
 {
+ "_comment": "Every hub option banks chatted_with_grimalkin, the met counter his inn-guest row needs. The repo's usual producer is a talk_pool on the entity, but this Grimalkin carries a conversation and NO talk_pool, and giving him one would change what his first interact of every waking does on a shipped entity -- so the bank rides the conversation, appended LAST in each effects array so no existing effect's event order moves. All four options carry it; effects never change the rendered option list, so every index-driven script over this hub is untouched.",
  "start": "hub",
  "nodes": {
   "hub": {
@@ -21,6 +22,9 @@
      "effects": [
       {
        "gold": -8
+      },
+      {
+       "accomplishment": "chatted_with_grimalkin"
       }
      ],
      "goto": "exam"
@@ -31,6 +35,11 @@
       "board_accepted": false
      },
      "_comment": "b4 #219 slot gate: a held posting blocks enrollment. The board_accepted bool gate HIDES (both directions, same as Selys's hub) — no visible-locked render exists; the study-loop canonical's mutual-exclusion option pins are the proof.",
+     "effects": [
+      {
+       "accomplishment": "chatted_with_grimalkin"
+      }
+     ],
      "goto": "studies"
     },
     {
@@ -41,12 +50,20 @@
      "effects": [
       {
        "open_board_turnin": "grimalkin"
+      },
+      {
+       "accomplishment": "chatted_with_grimalkin"
       }
      ],
      "end": true
     },
     {
      "text": "Just passing through.",
+     "effects": [
+      {
+       "accomplishment": "chatted_with_grimalkin"
+      }
+     ],
      "end": true
     }
    ],

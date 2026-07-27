@@ -1,0 +1,49 @@
+{
+	"_comment": "d1 #247 FoTI extension -- the QUEST-GATE proof. Off inn_guests_gate_start, which is inn_guests_ext_start minus rags_meeting_settled (chieftains_price is open, its price named, nothing handed over) and otherwise byte-identical, INCLUDING chatted_with_rags. That is the whole subject: met is not enough for a quest-gated guest. WIInnGuests.GUEST_POOL_GATES holds Rags out of the MET-POOL rather than merely out of her chair, so the modulus drops 10 -> 9 and the SAME times_slept=16 seats a different pair: 16%9 = 7 over [selys,krshia,olesm,pisces,relc,zevara,klbkch,wilovan,grimalkin] is WILOVAN (12,6) + GRIMALKIN (14,5), and her chair (12,5) is plain floor. A sleep to 17 moves the start to 8 and seats [grimalkin, selys]; she is still absent, and Wilovan leaves while Grimalkin stays, so the run also proves the SHORTER cycle is a real cycle and not a frozen window. The exhaustive 'never once across a full rotation' leg is unit-pinned in test_inn_guests (t=0..19, all ten chatted, rags_meeting_settled unbanked); a live script cannot afford ten sleeps and does not need to. Boot = fixture->manual slot, title Continue (down 1).",
+	"fixture_save": "inn_guests_gate_start",
+	"starts_at_title": true,
+	"steps": [
+		{ "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+		{ "action": "press", "name": "confirm" },
+		{ "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+		{ "action": "move", "direction": "down", "steps": 1 },
+		{ "action": "press", "name": "confirm" },
+		{ "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+		{ "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
+		{ "action": "assert_state", "path": "current_map", "equals": "inn" },
+		{ "action": "assert_state", "path": "times_slept", "equals": 16 },
+		{ "action": "assert_state", "path": "accomplishments.chatted_with_rags", "equals": 1 },
+		{ "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "rags_meeting_settled" } },
+
+		{ "_comment": "Same 23 as inn_guests_ext_loop's boot -- two seats, always two seats. The pair is DIFFERENT, though, and that is the proof: a met-but-ungated roster member does not just skip her turn, she leaves the pool, which re-bases the modulus for everybody.", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 23, "fallbacks": 0 }, "from_start": true, "timeout_sec": 5 },
+		{ "action": "screenshot", "name": "00_rags_gated_out" },
+
+		{ "_comment": "HER CHAIR IS FLOOR: (12,5) is directly south of the boot cell, and with the gate unbanked the walk lands ON it instead of opening a conversation. Structural absence, exactly like an off-shift guest.", "action": "click", "cell": [12, 5] },
+		{ "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [12, 5] }, "timeout_sec": 10 },
+		{ "action": "assert_event_absent", "type": "dialogue_started", "payload_contains": { "conversation": "rags_inn" } },
+
+		{ "_comment": "WILOVAN IS SEATED IN HER PLACE: start 7 over the nine-name pool seats him at (12,6). Approached from (11,6), plain floor west of his chair; Rags's empty (12,5) is directly above him.", "action": "click", "cell": [11, 6] },
+		{ "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [11, 6] }, "timeout_sec": 20 },
+		{ "action": "click", "cell": [12, 6] },
+		{ "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "wilovan_inn" }, "timeout_sec": 5 },
+		{ "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+		{ "action": "screenshot", "name": "01_wilovan_took_the_window" },
+		{ "action": "click_dialogue_option", "option": 3 },
+		{ "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
+
+		{ "_comment": "== THE SHORTER CYCLE STILL TURNS == a real sleep takes times_slept 16 -> 17 and the start 7 -> 8 over the same nine: [grimalkin, selys]. Wilovan leaves, Grimalkin stays, Rags is still nowhere.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 3] },
+		{ "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn_upstairs", "cell": [9, 3] }, "timeout_sec": 5 },
+		{ "action": "move", "direction": "up", "steps": 1 },
+		{ "action": "press", "name": "interact" },
+		{ "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
+		{ "action": "assert_state", "path": "times_slept", "equals": 17 },
+
+		{ "action": "teleport", "map": "inn", "cell": [12, 3] },
+		{ "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn", "cell": [12, 3] }, "timeout_sec": 5 },
+		{ "_comment": "24, not 23: the sleep banked garden_door_unlocked and the always-authored garden_door (3,8) turned present. Still exactly two guests.", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 24, "fallbacks": 0 }, "timeout_sec": 5 },
+		{ "_comment": "Her chair is STILL floor a whole waking later, which no window position can explain -- only the pool gate can.", "action": "click", "cell": [12, 5] },
+		{ "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [12, 5] }, "timeout_sec": 15 },
+		{ "action": "screenshot", "name": "02_still_gated_after_a_sleep" },
+		{ "action": "assert_event_absent", "type": "dialogue_started", "payload_contains": { "conversation": "rags_inn" } }
+	]
+}
