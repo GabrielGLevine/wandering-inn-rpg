@@ -717,6 +717,14 @@
     "text": "The Guild holds my charter now. You hold my attention. Neither of us profits."
    },
    "timeout_sec": 5
-  }
+  },
+  { "_comment": "== v0.15 T4.2 CROWD CONSEQUENCE, the second of the two reactive extras: invrisil_extra_3 (13,5), the porter, on the FIGHT fork. Same resolution-agnostic stage copy as the plum-silk lady on the talk fork -- brothers_job_done banks on both endings, so neither line may name which. Stage pool index 0 (chatted_with_invrisil_extra_3 never banked in this run). ==", "action": "teleport", "map": "invrisil_boulevard", "cell": [13, 6] },
+  { "action": "wait_frames", "frames": 5 },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [13, 5] } },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "A Porter at His Barrow", "text": "Something settled with Master Coyle's people. Nobody's saying what. My routes got easier, is all I know." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "90_crowd_reacts_porter" }
  ]
 }

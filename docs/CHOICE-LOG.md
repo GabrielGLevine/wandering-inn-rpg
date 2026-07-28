@@ -4,6 +4,30 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 T4.2 Invrisil crowd (three in-wave calls)
+
+- **The seven extras KEEP their static `dialogue` line under the new pools.**
+  Dropping it would have been tidier (the parlor's gentlemen carry pool +
+  observe and no `dialogue`), but that line is the only surface
+  `invrisil_walkthrough`'s BEAT 2 proved, and it is good narration. Shipped
+  shape: `observe` (a new look-line) + a 3-line `talk_pool` + the shipped
+  narration as the post-pool fallback. First interact of a waking is speech;
+  every later one is the look. The canonical now pins BOTH surfaces at the
+  same stop, where it used to pin one.
+- **b5 #220's "stationer" was never authored; the teahouse took the third
+  slot.** The issue is closed and shipped glazier + cordwainer + teahouse. Read
+  the plan's naming as a fourth shopfront rather than a rename: `boulevard_
+  stationer` (20,1) joins them, same observe-only `hide_sprite` shape on a
+  blocked row-1 cell. Nothing shipped was touched.
+- **Both `brothers_job_done` stage lines are resolution-AGNOSTIC.** That
+  counter banks on the report beat, which is common to BOTH the extorted and
+  the exposed ending — a street line naming Coyle's ruin would be a lie on the
+  extortion fork (and vice versa). The porter and the lady in plum silk each
+  say that something settled and decline to say what, which is also the most
+  Invrisil thing either of them could say. Proven live on both forks (the
+  porter on `invrisil_disagreement_fight`, the lady on `..._talk`), with the
+  base pool proven unarmed on `invrisil_walkthrough`.
+
 ## 2026-07-28 — v0.15 T4.1 Pallass population (five in-wave calls)
 
 - **The forge tier gets NO `elevator_pass_stamped` reactive stage.** The plan
