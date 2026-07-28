@@ -1019,7 +1019,7 @@ Register: hearth-warm, oblique, no witch-lore politics on screen — matching he
 
 `test_quests.gd:136-142` already enforces that every quest with ≥2 real rungs carries a `_resolution_order` — both blocks do. The pins below are the *co-bank* proofs the file keeps for `halls`, `door`, `crate`, `order` and `favor`; a new quest whose counters can co-bank owes its own.
 
-- [ ] **Step 1: Read `tests/test_quests.gd:85-132`** and match the existing pin idiom exactly. **INSERT immediately after the `var order` (`wrong_order`) block and BEFORE the `price_of_a_favor` comment block** — Pallass anchors its own pins after `price_of_a_favor`, so anchoring there too would put two lanes on the same line. **Locals carry this lane's `r_` prefix:** `:90-132` is ONE continuous function body at a single indent level, so `var ledger` here and Pallass's `var ledger` for `ledger_eats_first` would be a **duplicate declaration** — a parse failure that reds the entire suite on the second merge, not a shadow.
+- [x] **Step 1: Read `tests/test_quests.gd:85-132`** and match the existing pin idiom exactly. **INSERT immediately after the `var order` (`wrong_order`) block and BEFORE the `price_of_a_favor` comment block** — Pallass anchors its own pins after `price_of_a_favor`, so anchoring there too would put two lanes on the same line. **Locals carry this lane's `r_` prefix:** `:90-132` is ONE continuous function body at a single indent level, so `var ledger` here and Pallass's `var ledger` for `ledger_eats_first` would be a **duplicate declaration** — a parse failure that reds the entire suite on the second merge, not a shadow.
 
 ```gdscript
 	# v0.16 #305: both Riverfarm side quests co-bank freely (clear the granary,
@@ -1039,9 +1039,9 @@ Register: hearth-warm, oblique, no witch-lore politics on screen — matching he
 	assert(String(WIQuests.resolved_path(r_thicket, {"thicket_cleared": 1, "herd_rerouted": 1})["accomplishment"]) == "herd_rerouted", "killed then rerouted records the REROUTE")
 ```
 
-- [ ] **Step 2: Run** `res://tests/test_quests.gd` — expect PASS.
-- [ ] **Step 3: Confirm the three other shared-const rows from Tasks 3-4 are in the tree** (`LANDMARK_TOKENS` ×2, `MAP_REQUIRES` ×2) and that `POPULATION_FLOORS` is **untouched** — this lane only adds unconditional interactables (riverfarm_village 24 → 25, witch_hollow 23 → 25), and floors are minimums.
-- [ ] **Step 4: Commit** `test(quests): co-bank ladder pins for the two Riverfarm side quests`.
+- [x] **Step 2: Run** `res://tests/test_quests.gd` — expect PASS.
+- [x] **Step 3: Confirm the three other shared-const rows from Tasks 3-4 are in the tree** (`LANDMARK_TOKENS` ×2, `MAP_REQUIRES` ×2) and that `POPULATION_FLOORS` is **untouched** — this lane only adds unconditional interactables (riverfarm_village 24 → 25, witch_hollow 23 → 25), and floors are minimums.
+- [x] **Step 4: Commit** `test(quests): co-bank ladder pins for the two Riverfarm side quests`.
 
 ---
 

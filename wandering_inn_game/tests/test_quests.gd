@@ -125,6 +125,22 @@ func _init() -> void:
 	assert(String(order_both["accomplishment"]) == "strongarmed_the_supplier", "strong-armed THEN cooked records the STRONG-ARM ending -- the stronger claim wins")
 	assert(int((order_both["grant"] as Dictionary).get("won_combat", 0)) == 1 and not (order_both["grant"] as Dictionary).has("cooked_meal"), "...and pays the strong-arm grant, not the kitchen's")
 
+	# v0.16 #305: both Riverfarm side quests co-bank freely (clear the granary,
+	# then still walk the tally), so the ladder order is load-bearing the same
+	# way price_of_a_favor's is. Ladder: read > worked > cleared.
+	# Locals are r_-prefixed: this whole function is one scope and four lanes
+	# append pins into it this wave.
+	var r_ledger: Dictionary = WIQuests.quest_by_id(shipped, "flood_ledger")
+	assert(String(WIQuests.resolved_path(r_ledger, {"granary_cleared": 1})["accomplishment"]) == "granary_cleared", "a fight-only flood_ledger run still records the granary")
+	assert(String(WIQuests.resolved_path(r_ledger, {"granary_cleared": 1, "ledger_read_true": 1})["accomplishment"]) == "ledger_read_true", "cleared THEN read the tally records the READING -- the stronger claim wins")
+	assert(String(WIQuests.resolved_path(r_ledger, {"flood_prep_done": 1, "granary_cleared": 1})["accomplishment"]) == "flood_prep_done", "cleared then worked records the WORK")
+
+	# Ladder: read > rerouted > cleared.
+	var r_thicket: Dictionary = WIQuests.quest_by_id(shipped, "what_the_thicket_keeps")
+	assert(String(WIQuests.resolved_path(r_thicket, {"herd_rerouted": 1})["accomplishment"]) == "herd_rerouted", "a talk-only thicket run still records the reroute")
+	assert(String(WIQuests.resolved_path(r_thicket, {"thicket_cleared": 1, "ward_scrap_read": 1})["accomplishment"]) == "ward_scrap_read", "killed the den THEN read the ward records the READING")
+	assert(String(WIQuests.resolved_path(r_thicket, {"thicket_cleared": 1, "herd_rerouted": 1})["accomplishment"]) == "herd_rerouted", "killed then rerouted records the REROUTE")
+
 	# price_of_a_favor co-banks too, and its authored order already reads right:
 	# the renegotiated year is what lifts the blight, not clearing the field.
 	var favor: Dictionary = WIQuests.quest_by_id(shipped, "price_of_a_favor")
