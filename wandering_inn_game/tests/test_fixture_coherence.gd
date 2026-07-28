@@ -49,6 +49,10 @@ const MAP_REQUIRES := {
 	# without it is a position no player can occupy.
 	"seal_vault": ["horns_delve_started", "seal_opened"],
 	"ruin_surface": ["horns_dig_started"],
+	# 2026-07-28 (#308): the camp hollow sits behind rags_camp_mouth's own
+	# door_when, whose only key is rags_meeting_settled -- a fixture standing
+	# in there without it is a position no player can occupy.
+	"rags_camp": ["rags_meeting_settled"],
 	"garden_sanctuary": ["garden_door_unlocked"],
 	"riverfarm_village": ["door_awakened", "riverfarm_attuned"],
 	"witch_hollow": ["door_awakened", "riverfarm_attuned"],

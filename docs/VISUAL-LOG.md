@@ -2693,3 +2693,20 @@ in the same wave rather than logged as owed.
   godot child alive. Killing the child and re-running passed with all three
   shots. Headless is unaffected (green individually and in the full sweep).
   Logged as a harness flake to watch, not a script defect.
+## 2026-07-28 (#308, v0.16 Floodplains) — three new rigs ship UNMEASURED by the board-figure bar
+
+`goblin_spear_ally` reuses `goblin_base`, `rags_ally` reuses the bespoke `rags`
+rig, and `plains_scavenger_a/b/lead` reuse `human_laborer` — all with NO
+`combat_scale` key, so their board figures are byte-identical to what ships
+today. **None of these sprites is in `FIGURE_ROWS` and none of these ids is in
+the `audited` array**, so `test_combat_visuals` does not measure them; it passes
+by exclusion. No figure number is asserted or claimed here. Filed for the
+goblin-scale triage pass alongside `goblin_raider` / `goblin_shaman` /
+`goblin_chieftain`, each of which needs its own windowed read before its scale
+moves (HANDOFF.md:63-67). The FIRST evidence about these rigs' legibility is
+this PR's windowed machine-playtest shot of the `camp_ground_press` board —
+including whether the three `human_laborer` scavengers, which ship
+near-identical warm tints (0.86/0.78/0.62, 0.80/0.74/0.60, 0.90/0.70/0.55) on
+one board, separate by eye. Nothing in the suite checks that: the tint-uniqueness
+assert at `tests/test_combat_visuals.gd:544-556` covers only the hard-coded
+`camouflage` list.

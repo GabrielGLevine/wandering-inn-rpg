@@ -297,7 +297,7 @@
 		{
 			"id": "chieftains_price",
 			"title": "The Chieftain's Price",
-			"region": "floodplains",
+			"region": "Floodplains",
 			"beats": [
 				{
 					"id": "meet",
@@ -342,6 +342,57 @@
 				{
 					"accomplishment": "drove_off_rags",
 					"text": "You drew steel on a parley.",
+					"grant": {
+						"melee_hit": 8,
+						"won_combat": 1
+					}
+				}
+			]
+		},
+		{
+			"_comment": "v0.16 F1 (#308). TRAP: the offer's hide_when on drove_off_rags is SINGLE-KEY -- hide_when is AND across keys and the betrayal win banks both terminals.",
+			"id": "the_price_kept",
+			"title": "The Price Kept",
+			"region": "Floodplains",
+			"beats": [
+				{
+					"id": "resolve",
+					"description": "Winter stores for the camp: broker a quiet run through Krshia's stall on Market Street, fill the hollow's larder beside the hunters, or hold its ground when the scavengers press.",
+					"complete_when_any": {
+						"camp_trade_brokered": 1,
+						"camp_larder_filled": 1,
+						"camp_ground_held": 1
+					}
+				},
+				{
+					"id": "report",
+					"description": "Tell Rags it is done, out on the southern floodplains where she waits.",
+					"complete_when": {
+						"rags_price_kept": 1
+					}
+				}
+			],
+			"_resolution_order": "LAST-MATCH-WINS (WIQuests.resolved_path), so the array is ordered WEAKEST CLAIM FIRST and escalates: brokered (you paid Liscor to move it) -> larder (you carried and hunted for it) -> ground (you stood in the line beside them). A player who did all three keeps the strongest claim, matching missing_crate's guile/watch/force ladder.",
+			"resolution_paths": [
+				{
+					"accomplishment": "camp_trade_brokered",
+					"text": "You moved winter stores south on Silverfang carts, and nobody wrote down whose hands they went to.",
+					"grant": {
+						"persuaded_someone": 4,
+						"heard_gossip": 5
+					}
+				},
+				{
+					"accomplishment": "camp_larder_filled",
+					"text": "You hunted and hauled with the camp's own, and the racks were full before the frost.",
+					"grant": {
+						"befriended_moments": 4,
+						"heard_gossip": 3
+					}
+				},
+				{
+					"accomplishment": "camp_ground_held",
+					"text": "You stood in the line beside goblins, and the scavengers went elsewhere.",
 					"grant": {
 						"melee_hit": 8,
 						"won_combat": 1

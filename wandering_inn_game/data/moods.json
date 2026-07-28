@@ -66,6 +66,25 @@
    ],
    "vignette": 0.4
   },
+  "rags_camp": {
+   "_comment": "Sheltered hollow: rim-shaded warm-dim at noon, firelight only after dusk. Vignette 0.52 sits just above witch_hollow's 0.50.",
+   "day": [
+    0.86,
+    0.82,
+    0.72
+   ],
+   "dusk": [
+    0.58,
+    0.46,
+    0.36
+   ],
+   "night": [
+    0.34,
+    0.26,
+    0.22
+   ],
+   "vignette": 0.52
+  },
   "sewers": {
    "_comment": "Same day/dusk/night shape as before (night a further even step down), vignette nudged 0.45->0.48 (between the old sewers pin and deep_tunnels' 0.55).",
    "day": [

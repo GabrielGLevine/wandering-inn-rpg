@@ -1339,6 +1339,12 @@ const LANDMARK_TOKENS := {
 	"inn_upstairs": ["upstairs"],
 	"street": ["market", "square", "gate"],
 	"floodplains": ["floodplains"],
+	# 2026-07-28 (#308, F1): the camp hollow. `the_price_kept`'s resolve beat is
+	# produced on street + rags_camp while the giver sits on floodplains, so the
+	# beat arms _validate_travel_beat_place_naming and a missing row here is a
+	# HARD fail (test_content.gd:1475), not a soft one. Region token per the
+	# 2026-07-26 widening.
+	"rags_camp": ["hollow", "camp", "floodplains"],
 	"sewers": ["sewer", "cistern"],
 	"deep_tunnels": ["deep tunnels", "tunnels"],
 	"guild": ["guild"],
