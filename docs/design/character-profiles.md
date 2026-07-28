@@ -512,3 +512,16 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   (3) kindness arrives as practical information, never as sentiment —
   he will not say he is sorry, he will say which window is still open.
 - Never: gossip, sarcasm, a rule bent without saying it is being bent.
+
+## Forge Hall Apprentice (v0.16 #307 STUB — Pallass lane fills this section
+## in place at Task 0.1; scaffolded at plan commit to keep the file
+## conflict-free across the four-lane merge train)
+(placeholder — replaced by the Pallass lane)
+
+## Den-Shop Keeper (v0.16 #307 STUB — Pallass lane fills this section in
+## place at Task 0.1; scaffolded at plan commit)
+(placeholder — replaced by the Pallass lane)
+
+## Hedault (v0.16 #306 STUB — Invrisil lane fills this section in place;
+## scaffolded at plan commit)
+(placeholder — replaced by the Invrisil lane)

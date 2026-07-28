@@ -1269,3 +1269,57 @@ by controller ruling — the plan was the defect, not the implementation.
   seed-searched fight held (no-op interacts consume no rng). FEEL
   read queued: the doubling is data (moods.json) — one knob to
   re-tune on the word.
+- **v0.16 planning adjudications (2026-07-28, controller; pre-dispatch)**:
+  the wave planned via recon → 4 per-region plan docs → adversarial
+  verify (42 findings: 4 BLOCK, 11 HIGH) → fix pass, all BEFORE any lane
+  dispatched. ROUTING: granular per-lane forks live in each plan doc's
+  "Controller rulings applied" section and land in that lane's PR body;
+  this entry holds the wave-level calls. (1) R2 keeps the corusdeer herd
+  — deliberate species introduction to Riverfarm, canon-safe northern
+  range; hunter's shipped lamb/thorn lines woven, not retconned. (2) R1
+  FIGHT: the spec's "scavenger rig family" does not exist; new
+  granary_scavenger_a/_b ids at thicket_remnant's numbers. (3) Witch-hut
+  door is a NEW entity at [1,7] — witch_cottage_prop + its #117
+  canonical byte-untouched. (4) R2 SKILL banks ward_scrap_read ONLY;
+  the detected_wardwork >=3 payoff threshold stays un-cheapened
+  (trapped_halls:355 design note honored). (5) I1 starts at the
+  stationer client, not Hedault's hub — keeps hedault_fragment_loop's
+  exact 5-row pin and spine_reach's blind move-down-5 stable with zero
+  re-pins. (6) NOBILITY (user directive mid-wave): I1's client elevated
+  to "A Lady with a Ring Box" (unnamed-house archetype — no invented
+  house names), Reinhart-carriage + house-seal ambient lines at the
+  Adventurer's Rest/stationer; Reinhart is the only house named, ambient
+  speech only; the full Magnolia-adjacent thread is #318 (v0.17,
+  spec-first — her voice bar doesn't get bolted onto a verified lane).
+  (7) [Appraise] = appraise_goods, never observe. (8) Stationer opens
+  fully; THREE shopfront observes remain (spec said two — four ship
+  today). (9) Pallass interior stems pallass_forge_hall/pallass_den_shop
+  (bare forge_hall collides with the shipped arena id). (10) P1 FIGHT
+  banks golem_recalibrated only — bounty_forge_golem_cull is NOT
+  silently fed; the parley golem is interact-only (verify caught a
+  trigger_radius that would have ambushed the TALK/SKILL routes — the
+  wave's first BLOCK). (11) Grimalkin gains text_variants only; three
+  canonicals pin his hub. (12) F1 fields TWO allies (rags_ally +
+  goblin_spear_ally, new side:player records) — arena capacity is 4 and
+  a [Beast Tamer] companion must not be dropped from the marquee ally
+  fight; Relc excluded; betrayal-exclusion gate gets a REQUIRED
+  gate-proof canonical (that branch had zero live QA coverage). (13) F1
+  TALK's Krshia surface is CREATED — the spec's "shipped
+  brokered_goblin_trade thread" never existed at her stall. (14) ALL new
+  sim_combat_batch cells gate 0.55–0.95 (stop-cell precedent);
+  region-band ordering is proven by measured medians recorded in PR
+  bodies, not by narrow windows (RUNS_PER_CELL=100 → sigma ~0.04 makes
+  0.72–0.85 a 1-in-6 false red). (15) Census: the ~383-char whole-repo
+  slack splits to 112 + 0.1765x per lane; census re-runs on the MERGED
+  tree at every train merge; residue owned by the wave-close PR. (16)
+  Shared-file appends get per-lane named anchors; new test locals get
+  lane prefixes; character-profiles.md conflict dissolved by pre-landed
+  stub sections (filled in place, order-free). (17) leads.json rows
+  gate only on 0.15.0-frozen counters per lane; new-counter rows ride
+  the close PR after freeze step-0. (18) render_qa_notes.py must run
+  --write then bare-check (the bare call is check-only — the exact #312
+  red all four drafts were about to re-ship). (19) chieftains_price
+  region casing fixed to "Floodplains" in the F PR (journal grouping).
+  (20) Rags's new lines re-cut to clause-length pre-Vol-5 telegraphese
+  where the draft drifted ("Price kept. Goblins remember. Longer than
+  Humans.").
