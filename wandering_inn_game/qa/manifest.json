@@ -3365,6 +3365,237 @@
    }
   },
   {
+   "script": "pallass_depth_gates_check",
+   "seed": 9,
+   "fixture": "pallass_depth_gates_start",
+   "note": "v0.16 #307 THE GATE-PROOF LEG: stands on a save holding NONE of the Pallass depth lane's 22 counters and proves nothing new leaked into it -- the smith's hub and the attendant's hub still render exactly three rows (the lane's only two option-array pins), both clerk hubs unchanged, both requires_skill props (temper bench, consignee's file) render their locked_toast through the skill_unknown seam and bank nothing, the temper golem STANDS at (8,6) present and INERT -- encounter_when is an interact/trigger gate, never structural absence (present_when is validator-forbidden on encounters), so the rig blocks the cell and the gate is proved at the interact: player_blocked on (8,6), then the refusal's gate_closed_toast, with combat_started and the forge_temper_golem parley both asserted ABSENT -- and the run closes with assert_event_absent over all sixteen quest-shaped counters plus combat_started. Cheapest failure detector in the lane; registered in both tiers",
+   "tiers": [
+    "smoke",
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_den_shop",
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_depth_gates_start"
+    ],
+    "skills": [
+     "appraise_goods",
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "forge_temper_golem",
+     "pallass_forge_clerk",
+     "pallass_forge_smith",
+     "pallass_lift_attendant",
+     "pallass_market_clerk"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_standards_talk",
+   "seed": 9,
+   "fixture": "pallass_standards_talk_start",
+   "note": "v0.16 #307 P1 'Tempered Standards' TALK route: read the examination standard in pallass_forge_hall (it measures RECOVERY, not hardness), carry it back to the smith, broker the six-year argument (standards_brokered) and settle the commission on that arm alone (standards_tempered) -- temper_run and golem_recalibrated provably unbanked, zero combat -- then down to the market tier for Grimalkin's NEW standards_tempered hub text_variant, the lane's only edit to his graph (ruling 4: text_variants only, three scripts pin his option array)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_forge",
+     "pallass_forge_hall",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_standards_talk_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_forge_smith",
+     "pallass_grimalkin"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_standards_skill",
+   "seed": 9,
+   "fixture": "pallass_standards_skill_start",
+   "note": "v0.16 #307 P1 'Tempered Standards' SKILL route AND the lane's no-ambush proof (D27): runs the temper on the bench through the requires_skill/on_skill_use seam (temper_run), then walks pallass_forge_hall's y=7 lane end to end WITH the forge_temper_golem encounter present -- crossing (7,7)/(8,7)/(9,7), every cell a radius-1 trigger would fire on -- and asserts combat_started and the parley conversation both absent, which is what proves the encounter is interact-only. Closes by reporting to the smith on the billet arm",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_forge",
+     "pallass_forge_hall"
+    ],
+    "fixtures": [
+     "pallass_standards_skill_start"
+    ],
+    "skills": [
+     "appraise_goods",
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "forge_temper_golem",
+     "pallass_forge_smith"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_standards_fight",
+   "seed": 9,
+   "fixture": "pallass_standards_fight_start",
+   "note": "v0.16 #307 P1 'Tempered Standards' FIGHT route: the script that closes the standing 'no QA script fights forge-hall content' debt -- it fights the shipped forge_hall arena on the board for real and the windowed run screenshots it. spellsword:14 reference build; the parley node is asserted with combat_started pinned at ZERO at that step (the interact-only ordering proof), then start_combat -> autoplay -> victory -> golem_recalibrated with forge_golems_culled provably UNBANKED (ruling 2: a shared counter would have fed bounty_forge_golem_cull), and out to the smith to settle on the rig arm",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_forge",
+     "pallass_forge_hall"
+    ],
+    "fixtures": [
+     "pallass_standards_fight_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "forge_temper_golem",
+     "pallass_forge_smith"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_ledger_offices",
+   "seed": 9,
+   "fixture": "pallass_ledger_offices_start",
+   "note": "v0.16 #307 P2 'The Ledger Eats First' TALK route, the office loop that outranks itself: the Grand Lift down as a real door_when crossing, the market tier clerk ENDORSES the queue entry, the forge-tier permit clerk COUNTERSIGNS the release, the den-shop consignee signs last (loop_walked) -- each office's arm is requires-gated on the previous office's product, so the three-way cycle can only be walked in order -- then back up to the attendant (ledger_unstuck). shipment_carried and exemption_found provably unbanked",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_den_shop",
+     "pallass_forge",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_ledger_offices_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_den_keeper",
+     "pallass_forge_clerk",
+     "pallass_lift_attendant",
+     "pallass_market_clerk"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_ledger_carry",
+   "seed": 9,
+   "fixture": "pallass_ledger_offices_start",
+   "note": "v0.16 #307 P2 'The Ledger Eats First' HELP route and the ruling-7 proof: a staged lift carry composed ENTIRELY from shipped primitives (three once_per_waking props + variants counter thresholds + repeated door_when transitions), because the Grand Lift is one boolean-gated prop pair and no staged-transit affordance exists. Pins each leg's EXACT toast, which is what makes a dead variants threshold fail loud -- both staged toasts key on (leg index - 1), dray rank at 1 and dock at 2, since variants resolve BEFORE the interact banks. Three legs in ONE waking -> the keeper's carry arm -> the attendant",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_den_shop",
+     "pallass_forge",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_ledger_offices_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_den_keeper",
+     "pallass_lift_attendant"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "pallass_ledger_skill",
+   "seed": 9,
+   "fixture": "pallass_ledger_skill_start",
+   "note": "v0.16 #307 P2 'The Ledger Eats First' SKILL route: standing inside pallass_den_shop (the fixture that makes MAP_REQUIRES['pallass_den_shop'] bite), read the consignee's own file through the requires_skill/on_skill_use seam and find the exemption that was on the paper the whole time (exemption_found), out through the shopfront door, a real market walk, the lift up, and the attendant's report on that arm alone (ledger_unstuck)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "pallass_den_shop",
+     "pallass_forge",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "pallass_ledger_skill_start"
+    ],
+    "skills": [
+     "appraise_goods",
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "pallass_lift_attendant"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
    "script": "invrisil_round_trip",
    "seed": 9,
    "fixture": "spine_reach_start",

@@ -36,6 +36,35 @@
     {
      "text": "I'll wait for the bell.",
      "end": true
+    },
+    {
+     "_comment": "v0.16 P2 start. requires-hidden on read_the_lift_manifest (banked only by lift_manifest_slate, which near_pallass never interacts), so the 3-row pin and index navigation are untouched.",
+     "text": "Your manifest says one crate of tin, three cycles held.",
+     "requires": {
+      "accomplishment": {
+       "read_the_lift_manifest": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "ledger_loop_started": 1
+      }
+     },
+     "goto": "ledger_pitch"
+    },
+    {
+     "text": "About that crate.",
+     "requires": {
+      "accomplishment": {
+       "ledger_loop_started": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "ledger_unstuck": 1
+      }
+     },
+     "goto": "ledger_report"
     }
    ]
   },
@@ -77,6 +106,140 @@
     },
     {
      "text": "I'll wait for the bell.",
+     "end": true
+    }
+   ]
+  },
+  "ledger_pitch": {
+   "speaker": "Lift Attendant",
+   "text": "Four cycles, and it will be five. The permit office holds the queue and the office's own supplies are in it, so the office cannot clear the queue until the queue clears the office. Nobody may skip it. That includes the queue.",
+   "options": [
+    {
+     "text": "Somebody should unstick that.",
+     "effects": [
+      {
+       "quest": "ledger_eats_first"
+      },
+      {
+       "accomplishment": "ledger_loop_started"
+      }
+     ],
+     "goto": "ledger_brief"
+    },
+    {
+     "text": "Then it waits.",
+     "end": true
+    }
+   ]
+  },
+  "ledger_brief": {
+   "speaker": "Lift Attendant",
+   "text": "Three ways down, {addr}, and I will not tell you which. Walk the offices in order and get it in writing. Read the forms properly, if you read forms. Or put the crate on the cart yourself and carry it, which is not how it is done. The consignee is a den shop on the market tier.",
+   "options": [
+    {
+     "text": "Which office starts it?",
+     "goto": "ledger_brief_two"
+    },
+    {
+     "text": "I'll find out.",
+     "end": true
+    }
+   ]
+  },
+  "ledger_brief_two": {
+   "speaker": "Lift Attendant",
+   "text": "The stamp clerk on the market tier holds the entry side. The permit window holds the release side. The consignee signs last and cannot sign first. Down at the quarter bell.",
+   "options": [
+    {
+     "text": "Down at the quarter bell.",
+     "end": true
+    }
+   ]
+  },
+  "ledger_report": {
+   "speaker": "Lift Attendant",
+   "text": "Say it plainly. I have a cage to run in three minutes and I would like to run it happy.",
+   "options": [
+    {
+     "text": "[The offices countersigned each other. It's released.]",
+     "requires": {
+      "accomplishment": {
+       "loop_walked": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "ledger_unstuck"
+      }
+     ],
+     "goto": "ledger_settled"
+    },
+    {
+     "text": "[The exemption was in the forms the whole time.]",
+     "requires": {
+      "accomplishment": {
+       "exemption_found": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "ledger_unstuck"
+      }
+     ],
+     "goto": "ledger_settled"
+    },
+    {
+     "text": "[I carried it down myself. It's on her dock.]",
+     "requires": {
+      "accomplishment": {
+       "shipment_carried": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "ledger_unstuck"
+      }
+     ],
+     "goto": "ledger_settled"
+    },
+    {
+     "text": "Still working on it.",
+     "end": true
+    }
+   ]
+  },
+  "ledger_settled": {
+   "speaker": "Lift Attendant",
+   "text": "Then the manifest is clean and the cage runs happy. Down at the quarter bell.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "shipment_carried": 1
+      }
+     },
+     "text": "You carried it. Two tiers, on your own back, for a family that does not know your name. I have run this cage eleven years and watched a great many correct people wait. Ride free while I am on the gate, {addr}. That is the only thing I own to give."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "loop_walked": 1
+      }
+     },
+     "text": "You made the offices sign each other's paper. I am going to tell that story at every quarter bell for a month and it will be true every time."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "exemption_found": 1
+      }
+     },
+     "text": "It was in the forms. Four cycles, and it was in the forms. I am not angry, {addr}. I am going to be angry at the half bell, when I have time."
+    }
+   ],
+   "options": [
+    {
+     "text": "Down at the quarter bell.",
      "end": true
     }
    ]

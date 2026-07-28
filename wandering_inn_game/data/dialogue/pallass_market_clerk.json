@@ -77,6 +77,20 @@
     {
      "text": "Just looking.",
      "end": true
+    },
+    {
+     "text": "There's a crate of tin held in your own queue.",
+     "requires": {
+      "accomplishment": {
+       "ledger_loop_started": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "queue_notice_endorsed": 1
+      }
+     },
+     "goto": "queue_entry"
     }
    ]
   },
@@ -86,6 +100,35 @@
    "options": [
     {
      "text": "My thanks.",
+     "end": true
+    }
+   ]
+  },
+  "queue_entry": {
+   "speaker": "Tier Clerk",
+   "text": "Held correctly. The entry side is mine and the entry side is clear. What is not clear is the release side, and I cannot endorse a release I do not hold. I can endorse that the entry is clean. That is a real document and it is not nothing.",
+   "options": [
+    {
+     "text": "Then endorse the entry, and I'll take it up.",
+     "effects": [
+      {
+       "accomplishment": "queue_notice_endorsed"
+      }
+     ],
+     "goto": "queue_entry_done"
+    },
+    {
+     "text": "That is somehow worse than nothing.",
+     "end": true
+    }
+   ]
+  },
+  "queue_entry_done": {
+   "speaker": "Tier Clerk",
+   "text": "Stamped, dated, and correct. Take it to the permit window. And do not say I sent you, because I did not, I endorsed.",
+   "options": [
+    {
+     "text": "You endorsed.",
      "end": true
     }
    ]

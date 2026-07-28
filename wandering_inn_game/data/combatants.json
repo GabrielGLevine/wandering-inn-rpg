@@ -1115,6 +1115,30 @@
    ]
   },
   {
+   "_comment": "v0.16 P1 FIGHT. Roster-only retint of forge_golem; a new context takes a NEW ID (:426/:468, no per-encounter override). ai:caster is required: the melee profile never casts flame_bolt. Measured strictly below the shipped forge golem at the same build.",
+   "id": "forge_temper_golem",
+   "power_level": 16.0,
+   "display_name": "Calibration Rig",
+   "sprite": "forge_golem",
+   "combat_tint": [1.28, 0.74, 0.58],
+   "side": "enemy",
+   "stats": {
+    "str": 17,
+    "dex": 7,
+    "con": 50,
+    "int": 12,
+    "wis": 8,
+    "cha": 2
+   },
+   "weapon_die": 8,
+   "damage_reduction": 4,
+   "ai": "caster",
+   "skills": [
+    "flame_bolt",
+    "power_strike"
+   ]
+  },
+  {
    "id": "watchgolem_a",
    "power_level": 12.5,
    "display_name": "Stone Golem",

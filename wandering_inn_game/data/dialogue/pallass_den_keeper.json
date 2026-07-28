@@ -1,0 +1,142 @@
+{
+ "_comment": "v0.16 P2 (#307). Voice: character-profiles.md 'Den-Shop Keeper'. NEW graph on a NEW entity, so the loop and sign-off surfaces never ride a pinned hub.",
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Den-Shop Keeper",
+   "text": "Come in, mind the small ones. If you're buying, the shelf is the shelf. If you're official, the counter is the counter and I've had a long month of counters.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "ledger_unstuck": 1
+      }
+     },
+     "text": "The tin came up. Four cycles late and every stamp on it correct, which is the joke, {addr}. Sit down. You are eating something."
+    }
+   ],
+   "options": [
+    {
+     "text": "Long month how?",
+     "goto": "month"
+    },
+    {
+     "text": "I'm here about a crate of tin.",
+     "requires": {
+      "accomplishment": {
+       "ledger_loop_started": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "ledger_unstuck": 1
+      }
+     },
+     "goto": "consignee"
+    },
+    {
+     "text": "Just looking.",
+     "end": true
+    }
+   ]
+  },
+  "month": {
+   "speaker": "Den-Shop Keeper",
+   "text": "My tin is in a queue. I am in the queue behind my tin. The office that holds the queue is also waiting on the queue, for its own supplies, which are also tin. I have stopped finding it funny and started finding it restful.",
+   "options": [
+    {
+     "text": "That can't be how it works.",
+     "goto": "month_two"
+    },
+    {
+     "text": "Restful.",
+     "end": true
+    }
+   ]
+  },
+  "month_two": {
+   "speaker": "Den-Shop Keeper",
+   "text": "It is exactly how it works and every single person in that chain is doing their job correctly. That is what visitors never believe. Nobody up here is lazy, {addr}. They are all precisely as careful as the last person who got blamed.",
+   "options": [
+    {
+     "text": "Somebody has to be able to sign.",
+     "goto": "hub"
+    },
+    {
+     "text": "I'll leave you to it.",
+     "end": true
+    }
+   ]
+  },
+  "consignee": {
+   "speaker": "Den-Shop Keeper",
+   "text": "I am the consignee. I can release it the moment somebody hands me a notice I am allowed to act on. Not a promise, not a word from the landing. A notice.",
+   "options": [
+    {
+     "_comment": "TALK route terminal rung. Requires the countersigned notice, i.e. offices 1 and 2 walked in order.",
+     "text": "[Hand her the countersigned queue notice.]",
+     "requires": {
+      "accomplishment": {
+       "queue_notice_countersigned": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "loop_walked": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "loop_walked"
+      }
+     ],
+     "goto": "released"
+    },
+    {
+     "_comment": "HELP route terminal rung. Three legs = the two carry props plus this shop's own receiving dock.",
+     "text": "[Tell her the crate is already on her dock.]",
+     "requires": {
+      "accomplishment": {
+       "shipment_leg_carried": 3
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "shipment_carried": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "shipment_carried"
+      }
+     ],
+     "goto": "carried"
+    },
+    {
+     "text": "I'll come back with something you can act on.",
+     "end": true
+    }
+   ]
+  },
+  "released": {
+   "speaker": "Den-Shop Keeper",
+   "text": "Countersigned. By the office that was waiting on the queue, about the queue. I am going to have this framed and I am going to hang it where the hatchlings can see it.",
+   "options": [
+    {
+     "text": "Everyone in that chain was right.",
+     "end": true
+    }
+   ]
+  },
+  "carried": {
+   "speaker": "Den-Shop Keeper",
+   "text": "You carried it. Two tiers and three legs and no stamp on any of it. That is not how it is done and I am not going to say another word about it. Take the small jar. No, take it.",
+   "options": [
+    {
+     "text": "It's tin. It was always just tin.",
+     "end": true
+    }
+   ]
+  }
+ }
+}

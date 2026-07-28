@@ -1,6 +1,6 @@
 # v0.16 "Region Depth" — Pallass Lane Implementation Plan
 
-> Status: **ACTIVE** (v0.16 wave, dispatched 2026-07-28)
+> Status: **ACTIVE** — issue #307, branch `issue/307-pallass-depth`. Progress ledger at `.lane-progress.md`.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -183,17 +183,17 @@ Anything downstream that keys on it — a future `leads.json` row, a QA `accompl
 
 **Ruling D restated:** the controller pre-landed this lane's two stub section headers at the plan commit (`## Forge Hall Apprentice (v0.16 #307 STUB …)` :516, `## Den-Shop Keeper (v0.16 #307 STUB …)` :521), with Invrisil's `## Hedault` stub after them at :525. **Fill the two stub sections IN PLACE — never append at EOF.** Appending at EOF lands in the same region Invrisil's Hedault block targets and produces a conflict the anchors exist to prevent.
 
-- [ ] **Step 1:** Read the existing "Forge-Tier Smith" (:482) and "Grand Lift Attendant" (:501) blocks — match their format exactly. Then locate this lane's two STUB headers (:516, :521) and confirm the Hedault stub sits after them.
-- [ ] **Step 2:** **Replace the `## Forge Hall Apprentice` stub header and body in place** (drop the STUB parenthetical, keep the section where it sits) — entity `forge_apprentice`, original character: young Drake, third year, competent hands and no vocabulary for what she does right; describes failures precisely and successes vaguely; never self-pitying, never cocky; the standard is a fact to her, not an insult.
-- [ ] **Step 3:** **Replace the `## Den-Shop Keeper` stub header and body in place** — entity `den_shop_keeper`, original character: market-tier Drake matriarch running a family provisions den; warm where the tier is cold, but her warmth is transactional-plus — she feeds you AND charges you and sees no tension in it; hatchlings underfoot; her ledger is neat because it has to be, not because she loves it. Name the derived social counter in the block: **`chatted_with_den_shop_keeper`**.
-- [ ] **Step 3b:** `git diff --stat docs/design/character-profiles.md` — the diff must touch ONLY lines inside this lane's two sections. Any hunk at or past the Hedault header means the edit appended instead of filling.
-- [ ] **Step 4:** Commit `docs(profiles): forge hall apprentice + den-shop keeper voice blocks`.
+- [x] **Step 1:** Read the existing "Forge-Tier Smith" (:482) and "Grand Lift Attendant" (:501) blocks — match their format exactly. Then locate this lane's two STUB headers (:516, :521) and confirm the Hedault stub sits after them.
+- [x] **Step 2:** **Replace the `## Forge Hall Apprentice` stub header and body in place** (drop the STUB parenthetical, keep the section where it sits) — entity `forge_apprentice`, original character: young Drake, third year, competent hands and no vocabulary for what she does right; describes failures precisely and successes vaguely; never self-pitying, never cocky; the standard is a fact to her, not an insult.
+- [x] **Step 3:** **Replace the `## Den-Shop Keeper` stub header and body in place** — entity `den_shop_keeper`, original character: market-tier Drake matriarch running a family provisions den; warm where the tier is cold, but her warmth is transactional-plus — she feeds you AND charges you and sees no tension in it; hatchlings underfoot; her ledger is neat because it has to be, not because she loves it. Name the derived social counter in the block: **`chatted_with_den_shop_keeper`**.
+- [x] **Step 3b:** `git diff --stat docs/design/character-profiles.md` — the diff must touch ONLY lines inside this lane's two sections. Any hunk at or past the Hedault header means the edit appended instead of filling.
+- [x] **Step 4:** Commit `docs(profiles): forge hall apprentice + den-shop keeper voice blocks`.
 
 ### Task 0.2: Baseline the census and the gates
 
-- [ ] **Step 1:** `cd /Users/gabriel/wandering-inn-rpg && python3 scripts/comment_census.py --check` — record the exact DATA ratio and char counts as the lane's baseline in the PR body.
-- [ ] **Step 2:** `python3 wandering_inn_game/scripts/data_lint.py` — record green.
-- [ ] **Step 3:** `perl -e 'alarm 300; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_content.gd` — record green (this is the "was it already red?" control).
+- [x] **Step 1:** `cd /Users/gabriel/wandering-inn-rpg && python3 scripts/comment_census.py --check` — record the exact DATA ratio and char counts as the lane's baseline in the PR body.
+- [x] **Step 2:** `python3 wandering_inn_game/scripts/data_lint.py` — record green.
+- [x] **Step 3:** `perl -e 'alarm 300; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_content.gd` — record green (this is the "was it already red?" control).
 
 ---
 
@@ -386,14 +386,14 @@ The wall SHEET is deliberately the slate atlas the two Pallass tiers already use
 	"pallass_forge_hall": ["door_awakened", "pallass_attuned", "elevator_pass_stamped"],
 ```
 
-- [ ] **Step 1: Load `wi-adding-a-scene`.** Read `data/maps/riverfarm/riverfarm_longhouse.json` end to end first — it is the small-interior template this file copies (walls/floor_layers/decor/ambience/entities order).
-- [ ] **Step 2:** Write `pallass_forge_hall.json` per the layout spec above. Floor layers: reuse the `pallass_forge` biome default (no override needed); add ONE overlay only if the windowed pass says the room reads flat.
-- [ ] **Step 3:** Append the mood row, the `LANDMARK_TOKENS` row, the `MAP_REQUIRES` row.
-- [ ] **Step 4: Run** `python3 wandering_inn_game/scripts/data_lint.py` — expect green (grid, in-grid blocked/entity cells).
-- [ ] **Step 5: Run** `res://tests/test_content.gd` and `res://tests/test_world_visuals.gd` alarm-wrapped — expect PASS + zero noise. `_validate_props` will red any `on_interact_accomplishment` prop missing a `toast`; `_validate_npc_interact_surface` will red an empty `talk_pool`.
-- [ ] **Step 6: Advisory (not a gate):** `godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd` — new scenes target composite ≥50; under 30 prints a loud advisory. Record the number in the PR body.
-- [ ] **Step 7: Census check** `python3 scripts/comment_census.py --check`.
-- [ ] **Step 8: Commit** `feat(pallass): the forge hall interior (walk-in, observables, temper bench)`.
+- [x] **Step 1: Load `wi-adding-a-scene`.** Read `data/maps/riverfarm/riverfarm_longhouse.json` end to end first — it is the small-interior template this file copies (walls/floor_layers/decor/ambience/entities order).
+- [x] **Step 2:** Write `pallass_forge_hall.json` per the layout spec above. Floor layers: reuse the `pallass_forge` biome default (no override needed); add ONE overlay only if the windowed pass says the room reads flat.
+- [x] **Step 3:** Append the mood row, the `LANDMARK_TOKENS` row, the `MAP_REQUIRES` row.
+- [x] **Step 4: Run** `python3 wandering_inn_game/scripts/data_lint.py` — expect green (grid, in-grid blocked/entity cells).
+- [x] **Step 5: Run** `res://tests/test_content.gd` and `res://tests/test_world_visuals.gd` alarm-wrapped — expect PASS + zero noise. `_validate_props` will red any `on_interact_accomplishment` prop missing a `toast`; `_validate_npc_interact_surface` will red an empty `talk_pool`.
+- [x] **Step 6: Advisory (not a gate):** `godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd` — new scenes target composite ≥50; under 30 prints a loud advisory. Record the number in the PR body.
+- [x] **Step 7: Census check** `python3 scripts/comment_census.py --check`.
+- [x] **Step 8: Commit** `feat(pallass): the forge hall interior (walk-in, observables, temper bench)`.
 
 ### Task 1.2: `pallass_forge` hooks — reject bin + hall door
 
@@ -438,11 +438,11 @@ Neither cell is walked by `pallass_walkthrough` (its forge legs are the `y=9` la
 }
 ```
 
-- [ ] **Step 1:** Insert both entities into `pallass_forge.json`'s `entities` array, matching the file's 1-space-per-level indent. Do NOT reformat the file.
-- [ ] **Step 2:** Confirm `POPULATION_FLOORS["pallass_forge"] = 15` still holds — both entities are UNCONDITIONAL (no `present_when`), so the count RISES. No floor edit.
-- [ ] **Step 3: Run** `data_lint.py` + `res://tests/test_content.gd`.
-- [ ] **Step 4: Run** `wandering_inn_game/qa/ci_sweep.sh --touching data/maps/pallass/pallass_forge.json` — expect every listed script green (this is the crowded-cell proof).
-- [ ] **Step 5: Commit** `feat(pallass): the forge hall door and the reject bin that points at it`.
+- [x] **Step 1:** Insert both entities into `pallass_forge.json`'s `entities` array, matching the file's 1-space-per-level indent. Do NOT reformat the file.
+- [x] **Step 2:** Confirm `POPULATION_FLOORS["pallass_forge"] = 15` still holds — both entities are UNCONDITIONAL (no `present_when`), so the count RISES. No floor edit.
+- [x] **Step 3: Run** `data_lint.py` + `res://tests/test_content.gd`.
+- [x] **Step 4: Run** `wandering_inn_game/qa/ci_sweep.sh --touching data/maps/pallass/pallass_forge.json` — expect every listed script green (this is the crowded-cell proof).
+- [x] **Step 5: Commit** `feat(pallass): the forge hall door and the reject bin that points at it`.
 
 ### Task 1.3: The smith's commission — `pallass_forge_smith.json`
 
@@ -578,14 +578,14 @@ Both new options are `requires`-accomplishment gated, therefore HIDDEN (not visi
 
 Variant order is deliberate: `text_variants` are LAST-MATCH-WINS, so a co-banking player lands on the TALK line — matching the resolution ladder in Task 1.5.
 
-- [ ] **Step 1: Load `wi-adding-dialogue-and-quests`.** Read the whole shipped file first; match its 1-space indent.
-- [ ] **Step 2:** Append the two hub options and the five nodes exactly as drafted.
-- [ ] **Step 3: Shadow-out audit (mandatory).** The two shipped hub `text_variants` (`forge_golems_culled`, `seal_resolved`) are UNTOUCHED and no new variant is added to `hub` — the smith's greeting is unchanged in every shipped state. Record this in the PR's "New agent context".
-- [ ] **Step 4: Softlock guard check.** `commission_report` keeps `"Still working on it."` with neither `requires` nor `hide_when`; `commission` keeps the decline. `hub` keeps `"What's the bench rated for?"`.
-- [ ] **Step 5: Run** `res://tests/test_dialogue.gd` + `res://tests/test_content.gd` + `res://tests/test_copy_fit.gd` — expect PASS. Copy-fit will red any `text` past the 200-char page budget.
-- [ ] **Step 6: Run** `qa/ci_sweep.sh --only pallass_walkthrough` and confirm the 3-row pin at line ~1258 still passes.
-- [ ] **Step 7: Census check.**
-- [ ] **Step 8: Commit** `feat(dialogue): the smith's commission, the broker, and the settle`.
+- [x] **Step 1: Load `wi-adding-dialogue-and-quests`.** Read the whole shipped file first; match its 1-space indent.
+- [x] **Step 2:** Append the two hub options and the five nodes exactly as drafted.
+- [x] **Step 3: Shadow-out audit (mandatory).** The two shipped hub `text_variants` (`forge_golems_culled`, `seal_resolved`) are UNTOUCHED and no new variant is added to `hub` — the smith's greeting is unchanged in every shipped state. Record this in the PR's "New agent context".
+- [x] **Step 4: Softlock guard check.** `commission_report` keeps `"Still working on it."` with neither `requires` nor `hide_when`; `commission` keeps the decline. `hub` keeps `"What's the bench rated for?"`.
+- [x] **Step 5: Run** `res://tests/test_dialogue.gd` + `res://tests/test_content.gd` + `res://tests/test_copy_fit.gd` — expect PASS. Copy-fit will red any `text` past the 200-char page budget.
+- [x] **Step 6: Run** `qa/ci_sweep.sh --only pallass_walkthrough` and confirm the 3-row pin at line ~1258 still passes.
+- [x] **Step 7: Census check.**
+- [x] **Step 8: Commit** `feat(dialogue): the smith's commission, the broker, and the settle`.
 
 ### Task 1.4: The temper golem — combatant, encounter, parley, gated cell
 
@@ -673,9 +673,24 @@ Interact-only is what makes `[Stand out of its correction and leave it.]` reacha
  "allies": [],
  "encounter_when": { "requires": { "standards_commission_taken": 1 } },
  "observe": "A squat rig on three legs, gauges banked along its front, correcting its own posture a half-beat after it needs to.",
+ "gate_closed_toast": "The rig swings past its own marks and settles wrong, again and again. Whatever is out of true in it is the forge's business — until somebody on this floor makes it yours.",
  "on_victory": "golem_recalibrated"
 }
 ```
+
+> **FIX-WAVE CORRECTION (post-review, #307):** `gate_closed_toast` was added
+> here and is NOT optional. `encounter_when` is an INTERACT/TRIGGER gate
+> (`interactions.gd:159`, `wi_game.gd:349`), **never structural absence** —
+> `present_when` is validator-forbidden on encounters — so the rig STANDS at
+> (8,6), blocks the cell, and renders from first arrival, present but inert
+> (the `seal_warden` precedent, `trapped_halls.json:448/477`). Without the
+> toast, a player who bumps it before taking the commission and presses
+> interact gets total silence (`interactions.gd:159-163` returns `{}`). The
+> lane's original claim that "the cell is EMPTY when the gate is unmet" was
+> false in three shipped artifacts and in the QA script's own comment; it is
+> corrected everywhere and `pallass_depth_gates_check` now proves the real
+> behaviour at the interact (blocked on (8,6) → gate toast → `combat_started`
+> and the parley both absent).
 
 **Parley graph `data/dialogue/forge_temper_golem.json`:**
 
@@ -700,15 +715,22 @@ Interact-only is what makes `[Stand out of its correction and leave it.]` reacha
 }
 ```
 
-- [ ] **Step 1: Load `wi-adding-an-encounter`.**
-- [ ] **Step 2:** Splice the combatant row: `python3 wandering_inn_game/scripts/splice_json.py --file data/combatants.json --container combatants --record-file <draft.json>`. The tool re-parses, asserts sibling count +1 and byte-identity outside the splice, and exits non-zero with the file UNTOUCHED on failure.
-- [ ] **Step 3:** Add the encounter entity + the parley graph + the gated cell. **`grep -n trigger_radius` the finished `pallass_forge_hall.json` — it must return NOTHING.** An entity carrying both `conversation` and `trigger_radius` ships green through every gate and only surfaces as a mid-crossing ambush in play.
-- [ ] **Step 4: Run** `res://tests/test_combat_data.gd` — asserts the positive `power_level`, the `arena`/`enemies`/`allies`/`on_victory` presence, and arena spawn reachability.
-- [ ] **Step 5: Measure the band, do not narrow the gate (ruling A).** `WI_CELL_COUNT_ONLY=1 godot ... res://tests/sim_combat_batch.gd` to get the count, then `WI_CELL_RANGE=LO:HI` on the new cell's index alone. **The GATE is 0.55–0.95 / rounds 3–12. The DESIGN target is a measured win strictly BELOW the shipped `forge_calibration_golem_t5_sw14_solo` median at the same `t4_spellsword14_party` build** — that ordering is the whole band claim, and it is proven by recording both medians side by side in the PR body, never by a narrow window. If the new rig measures at or above the shipped golem, raise `con` in steps of 4 and re-measure. If it falls near the gate floor, lower `con`. **Only `forge_temper_golem`'s own stats move; `forge_golem`, `watchgolem_*` and `seal_warden` are never retuned** (a retune there reds other lanes' rungs).
-- [ ] **Step 6: Re-verify the neighbours and record the medians.** Run the slice containing `forge_calibration_golem_t4_solo`, `forge_calibration_golem_t5_sw14_solo`, `seal_warden_t5_sw14_solo` and confirm each still reads inside its own (unchanged) window. Since no shipped row's stats changed, any movement is seed noise. **Record all four measured win rates and medians in the PR body** — that table IS the band-ordering evidence.
-- [ ] **Step 7: Run** the FULL `sim_combat_batch.gd` once, alarm-wrapped at 600s, as the gate.
-- [ ] **Step 8: Run** `res://tests/test_combat_visuals.gd` — expect PASS, and **state in the PR body that it passes BY EXCLUSION** (ruling F): `FIGURE_ROWS` has four entries and the `audited` array contains no id from this lane, so nothing here is measured. Do not report this run as a figure-legibility result; the windowed shots in Task 4 are that read.
-- [ ] **Step 9: Census check. Commit** `feat(combat): the calibration rig, Pallass's commission fight`.
+> **BINDING TASK-1.3 HANDOFF (deferred FIGHT arm).** `golem_recalibrated` has no producer until this task, and `test_reachability.gd` reds any dialogue `requires`/`text_variants.requires` on a zero-producer counter. So Task 1.3 shipped the smith's graph WITHOUT its two FIGHT-arm blocks. **Restore both in the SAME commit as the encounter**, into `data/dialogue/pallass_forge_smith.json`:
+> 1. the `commission_report` option `"[Tell her what happened to the calibration rig.]"` (requires `golem_recalibrated` 1, effect `standards_tempered`, goto `commission_settled`), inserted between the `[Show her the billet you ran.]` and `[Tell her the argument is settled.]` options;
+> 2. the `commission_settled` `text_variants` entry gated on `golem_recalibrated` ("The rig is honest again and my apprentice gets a fair reading. I will not thank you over a hot hammer. Take it as said."), inserted FIRST in the variant array (last-match-wins ladder: rig < temper < broker).
+>
+> Without them the FIGHT route cannot report and the quest's third resolution path is unreachable from dialogue, and NO gate says so.
+
+- [x] **Step 0 (task-1.3 handoff):** Restore the two FIGHT-arm blocks in `pallass_forge_smith.json` per the block above, in this task's commit.
+- [x] **Step 1: Load `wi-adding-an-encounter`.**
+- [x] **Step 2:** Splice the combatant row: `python3 wandering_inn_game/scripts/splice_json.py --file data/combatants.json --container combatants --record-file <draft.json>`. The tool re-parses, asserts sibling count +1 and byte-identity outside the splice, and exits non-zero with the file UNTOUCHED on failure.
+- [x] **Step 3:** Add the encounter entity + the parley graph + the gated cell. **`grep -n trigger_radius` the finished `pallass_forge_hall.json` — it must return NOTHING.** An entity carrying both `conversation` and `trigger_radius` ships green through every gate and only surfaces as a mid-crossing ambush in play.
+- [x] **Step 4: Run** `res://tests/test_combat_data.gd` — asserts the positive `power_level`, the `arena`/`enemies`/`allies`/`on_victory` presence, and arena spawn reachability.
+- [x] **Step 5: Measure the band, do not narrow the gate (ruling A).** `WI_CELL_COUNT_ONLY=1 godot ... res://tests/sim_combat_batch.gd` to get the count, then `WI_CELL_RANGE=LO:HI` on the new cell's index alone. **The GATE is 0.55–0.95 / rounds 3–12. The DESIGN target is a measured win strictly BELOW the shipped `forge_calibration_golem_t5_sw14_solo` median at the same `t4_spellsword14_party` build** — that ordering is the whole band claim, and it is proven by recording both medians side by side in the PR body, never by a narrow window. If the new rig measures at or above the shipped golem, raise `con` in steps of 4 and re-measure. If it falls near the gate floor, lower `con`. **Only `forge_temper_golem`'s own stats move; `forge_golem`, `watchgolem_*` and `seal_warden` are never retuned** (a retune there reds other lanes' rungs).
+- [x] **Step 6: Re-verify the neighbours and record the medians.** Run the slice containing `forge_calibration_golem_t4_solo`, `forge_calibration_golem_t5_sw14_solo`, `seal_warden_t5_sw14_solo` and confirm each still reads inside its own (unchanged) window. Since no shipped row's stats changed, any movement is seed noise. **Record all four measured win rates and medians in the PR body** — that table IS the band-ordering evidence.
+- [x] **Step 7: Run** the FULL `sim_combat_batch.gd` once, alarm-wrapped at 600s, as the gate.
+- [x] **Step 8: Run** `res://tests/test_combat_visuals.gd` — expect PASS, and **state in the PR body that it passes BY EXCLUSION** (ruling F): `FIGURE_ROWS` has four entries and the `audited` array contains no id from this lane, so nothing here is measured. Do not report this run as a figure-legibility result; the windowed shots in Task 4 are that read.
+- [x] **Step 9: Census check. Commit** `feat(combat): the calibration rig, Pallass's commission fight`.
 
 ### Task 1.5: `tempered_standards` in `data/quests.json`
 
@@ -749,10 +771,13 @@ Interact-only is what makes `[Stand out of its correction and leave it.]` reacha
 	assert(String(WIQuests.resolved_path(p_tempered, {"temper_run": 1, "standards_brokered": 1})["accomplishment"]) == "standards_brokered", "ran it THEN brokered records the BROKERING -- the claim that outlives you leaving")
 ```
 
-- [ ] **Step 1:** Splice the quest block: `splice_json.py --file data/quests.json --container quests --record-file <draft.json>`.
-- [ ] **Step 2:** Add the `test_quests.gd` pins.
-- [ ] **Step 3: Run** `res://tests/test_quests.gd` (`_resolution_order` guard + the new pins) and `res://tests/test_content.gd` (`_validate_quests` cross-refs every `complete_when` counter against a real producer) and `res://tests/test_reachability.gd` (every `resolution_paths[].accomplishment` needs a producer).
-- [ ] **Step 4: Commit** `feat(quests): Tempered Standards, three real routes`.
+> **BINDING TASK-1.3 HANDOFF (deferred quest-start effect).** `test_content.gd:1122-1124` reds any dialogue effect starting a quest id absent from `data/quests.json`, so Task 1.3 shipped the smith's `"I'll take the commission."` option with only its `standards_commission_taken` effect. **Restore `{ "quest": "tempered_standards" }` as the FIRST entry of that option's `effects` array in the SAME commit that splices the quest block** (one verb per dict — it is a second dict, never a second key). Without it the quest never starts, the journal never shows it, and every gate stays green.
+
+- [x] **Step 0 (task-1.3 handoff):** Restore the `{ "quest": "tempered_standards" }` effect dict in `pallass_forge_smith.json` per the block above, in this task's commit.
+- [x] **Step 1:** Splice the quest block: `splice_json.py --file data/quests.json --container quests --record-file <draft.json>`.
+- [x] **Step 2:** Add the `test_quests.gd` pins.
+- [x] **Step 3: Run** `res://tests/test_quests.gd` (`_resolution_order` guard + the new pins) and `res://tests/test_content.gd` (`_validate_quests` cross-refs every `complete_when` counter against a real producer) and `res://tests/test_reachability.gd` (every `resolution_paths[].accomplishment` needs a producer).
+- [x] **Step 4: Commit** `feat(quests): Tempered Standards, three real routes`.
 
 ### Task 1.6: Grimalkin's one line (text_variants ONLY)
 
@@ -769,11 +794,11 @@ Append ONE entry to the EXISTING `hub.text_variants` array (currently two entrie
 }
 ```
 
-- [ ] **Step 1: Shadow-shape audit (mandatory).** The gate `standards_tempered` is a NEW counter, so it cannot be held by ANY shipped fixture (`grimalkin_study_start`, `near_pallass`, `spine_reach_start`, `near_pallass_drake`) — no pinned-route script can match it, and the two study variants keep winning in exactly the states they win today. Record this in "New agent context".
-- [ ] **Step 2:** Verify the gate is not IDENTICAL to a shipped variant's gate (it is not — the two shipped gates are the study bounty counters). An identical gate would silently shadow forever.
-- [ ] **Step 3: Run** `res://tests/test_dialogue.gd`, `res://tests/test_content.gd` (VARIANT_KEYS whitelist: `text_variants` accepts only `_comment`/`requires`/`text`), `res://tests/test_copy_fit.gd` (this string is 246 chars — **confirm the page split reads cleanly or shorten it**; the node's own `_comment` records a 204-char string producing a 12-char orphan page).
-- [ ] **Step 4: Run** `qa/ci_sweep.sh --only grimalkin_study_loop,pallass_peek,spine_reach` — expect green.
-- [ ] **Step 5: Commit** `feat(dialogue): Grimalkin on recovery, squats, and the file`.
+- [x] **Step 1: Shadow-shape audit (mandatory).** The gate `standards_tempered` is a NEW counter, so it cannot be held by ANY shipped fixture (`grimalkin_study_start`, `near_pallass`, `spine_reach_start`, `near_pallass_drake`) — no pinned-route script can match it, and the two study variants keep winning in exactly the states they win today. Record this in "New agent context".
+- [x] **Step 2:** Verify the gate is not IDENTICAL to a shipped variant's gate (it is not — the two shipped gates are the study bounty counters). An identical gate would silently shadow forever.
+- [x] **Step 3: Run** `res://tests/test_dialogue.gd`, `res://tests/test_content.gd` (VARIANT_KEYS whitelist: `text_variants` accepts only `_comment`/`requires`/`text`), `res://tests/test_copy_fit.gd` (this string is 246 chars — **confirm the page split reads cleanly or shorten it**; the node's own `_comment` records a 204-char string producing a 12-char orphan page).
+- [x] **Step 4: Run** `qa/ci_sweep.sh --only grimalkin_study_loop,pallass_peek,spine_reach` — expect green.
+- [x] **Step 5: Commit** `feat(dialogue): Grimalkin on recovery, squats, and the file`.
 
 ### Task 1.7: The smith's post-quest reactive stage
 
@@ -793,10 +818,10 @@ Append ONE entry to the EXISTING `hub.text_variants` array (currently two entrie
 }
 ```
 
-- [ ] **Step 1: Shadow-out audit (mandatory).** For each reachable state, which stage wins? — golems-culled-only → `smith_golems_culled`; seal-resolved → `smith_seal_resolved`; P1 done → the new stage, permanently. That is intended: P1 is the tier's most recent news and the base pool is not GUIDANCE copy. Ascending-threshold rule (`test_content.gd:579-593`) does not apply — the three stages key on three DIFFERENT counters.
-- [ ] **Step 2:** Append the stage; keep the base `talk_pool` (an entity with stages MUST have one).
-- [ ] **Step 3: Run** `res://tests/test_content.gd` + `res://tests/test_copy_fit.gd` (pool lines are ambient barks, 2 wrapped lines max).
-- [ ] **Step 4: Commit** `feat(pallass): the smith's post-commission pool stage`.
+- [x] **Step 1: Shadow-out audit (mandatory).** For each reachable state, which stage wins? — golems-culled-only → `smith_golems_culled`; seal-resolved → `smith_seal_resolved`; P1 done → the new stage, permanently. That is intended: P1 is the tier's most recent news and the base pool is not GUIDANCE copy. Ascending-threshold rule (`test_content.gd:579-593`) does not apply — the three stages key on three DIFFERENT counters.
+- [x] **Step 2:** Append the stage; keep the base `talk_pool` (an entity with stages MUST have one).
+- [x] **Step 3: Run** `res://tests/test_content.gd` + `res://tests/test_copy_fit.gd` (pool lines are ambient barks, 2 wrapped lines max).
+- [x] **Step 4: Commit** `feat(pallass): the smith's post-commission pool stage`.
 
 ---
 
@@ -836,7 +861,7 @@ ambience: [{ "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
 | id | kind | cell | surface |
 | --- | --- | --- | --- |
 | `den_shop_exit` | door | [4,7] | → `pallass_market` (12,5) |
-| `den_shop_keeper` | npc | [4,1] | conversation `pallass_den_keeper` + `talk_pool` |
+| `den_shop_keeper` | npc | [4,1] → **SHIPPED AT [4,2]** | conversation `pallass_den_keeper` + `talk_pool` |
 | `den_shop_consignment_file` | prop | [7,2] | P2 SKILL, `requires_skill: appraise_goods` |
 | `den_shop_receiving_dock` | prop | [8,5] | P2 HELP leg 3, `once_per_waking` |
 | `den_shop_spice_shelf` | prop | [1,2] | observable |
@@ -848,13 +873,23 @@ ambience: [{ "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
 - IN→OUT: from (4,6) faces **down** to `den_shop_exit` at (4,7), interacts, arrives `pallass_market` **(12,5)**.
 - Save-compat: the new blocking door at market (12,4) has all four neighbours open.
 
+> **FIX-WAVE CORRECTION (post-review, #307):** the keeper ships at **[4,2]**,
+> not [4,1] — she stands IN the counter row between its two solid ends
+> (3,2)/(5,2), the shipped Erin (7,2) / Selys (8,2) shape. `counter_mid` decor
+> at (4,2) is gone and (4,2) is out of `blocked` (the entity blocks itself).
+> At [4,1] behind a solid three-cell counter she was unreachable from the shop
+> floor: `interact` resolves exactly one cell (`entity_at(player_cell +
+> player_facing)`, `wi_game.gd:400`), so a customer at (4,3) facing up hit
+> counter decor and got total silence. See `docs/VISUAL-LOG.md` and
+> `docs/CHOICE-LOG.md`.
+
 **Exact JSON drafts — the three non-quest observables and the keeper:**
 
 ```json
 {
  "id": "den_shop_keeper",
  "kind": "npc",
- "cell": [4, 1],
+ "cell": [4, 2],
  "display_name": "Den-Shop Keeper",
  "sprite": "drake_patron",
  "tint": [0.78, 0.56, 0.42],
@@ -928,12 +963,12 @@ ambience: [{ "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
 	"pallass_den_shop": ["door_awakened", "pallass_attuned"],
 ```
 
-- [ ] **Step 1: Load `wi-adding-a-scene`.** Re-read `riverfarm_longhouse.json`.
-- [ ] **Step 2:** Write the map with the entities above (the two quest props land in Task 2.4/2.5 — author them here in one pass to avoid a second map commit, but keep the commit message honest).
-- [ ] **Step 3:** Mood row + LANDMARK_TOKENS + MAP_REQUIRES.
-- [ ] **Step 4: Run** `data_lint.py`, `res://tests/test_content.gd`, `res://tests/test_world_visuals.gd`, `res://tests/test_audio_data.gd`.
-- [ ] **Step 5:** Scene-dynamism advisory; record the composite.
-- [ ] **Step 6: Census check. Commit** `feat(pallass): the den shop, the tier's warm room`.
+- [x] **Step 1: Load `wi-adding-a-scene`.** Re-read `riverfarm_longhouse.json`.
+- [x] **Step 2:** Write the map with the entities above (the two quest props land in Task 2.4/2.5 — author them here in one pass to avoid a second map commit, but keep the commit message honest).
+- [x] **Step 3:** Mood row + LANDMARK_TOKENS + MAP_REQUIRES.
+- [x] **Step 4: Run** `data_lint.py`, `res://tests/test_content.gd`, `res://tests/test_world_visuals.gd`, `res://tests/test_audio_data.gd`.
+- [x] **Step 5:** Scene-dynamism advisory; record the composite.
+- [x] **Step 6: Census check. Commit** `feat(pallass): the den shop, the tier's warm room`.
 
 ### Task 2.2: `pallass_market` + `pallass_forge` hooks — the door, the manifest, the carry props
 
@@ -1014,11 +1049,11 @@ ambience: [{ "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
 }
 ```
 
-- [ ] **Step 1:** Insert the four entities, matching each file's own indent.
-- [ ] **Step 2:** `POPULATION_FLOORS` for `pallass_market` (24) and `pallass_forge` (15) — all four are UNCONDITIONAL, so counts RISE. No floor edits.
-- [ ] **Step 3: Run** `data_lint.py` + `res://tests/test_content.gd` + `res://tests/test_world_visuals.gd`.
-- [ ] **Step 4: Run** `qa/ci_sweep.sh --touching data/maps/pallass/pallass_market.json,data/maps/pallass/pallass_forge.json` — the crowded-cell proof for both tiers.
-- [ ] **Step 5: Commit** `feat(pallass): the den shop door, the landing manifest, and two carry legs`.
+- [x] **Step 1:** Insert the four entities, matching each file's own indent.
+- [x] **Step 2:** `POPULATION_FLOORS` for `pallass_market` (24) and `pallass_forge` (15) — all four are UNCONDITIONAL, so counts RISE. No floor edits.
+- [x] **Step 3: Run** `data_lint.py` + `res://tests/test_content.gd` + `res://tests/test_world_visuals.gd`.
+- [x] **Step 4: Run** `qa/ci_sweep.sh --touching data/maps/pallass/pallass_market.json,data/maps/pallass/pallass_forge.json` — the crowded-cell proof for both tiers.
+- [x] **Step 5: Commit** `feat(pallass): the den shop door, the landing manifest, and two carry legs`.
 
 ### Task 2.3: The den keeper's conversation — `data/dialogue/pallass_den_keeper.json`
 
@@ -1110,9 +1145,20 @@ ambience: [{ "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
 }
 ```
 
-- [ ] **Step 1:** Write the graph. Softlock guard: `hub` keeps `"Long month how?"` and `consignee` keeps its plain exit.
-- [ ] **Step 2: Run** `data_lint.py` (start node present, every node has speaker+text, every goto resolves), `res://tests/test_dialogue.gd`, `res://tests/test_content.gd`, `res://tests/test_copy_fit.gd`.
-- [ ] **Step 3: Commit** `feat(dialogue): the den-shop keeper, consignee of one crate of tin`.
+**STAGE-1 HANDOFF (added by the map stage, binding).** `test_content.gd:933`
+reds any entity whose `conversation` names a graph that does not exist, so the
+`den_shop_keeper` entity was authored in Task 2.1 **without** its
+`"conversation": "pallass_den_keeper"` key. THIS TASK MUST ADD IT BACK:
+append `"conversation": "pallass_den_keeper"` as the entity's last key in
+`data/maps/pallass/pallass_den_shop.json` in the SAME commit that creates the
+graph. Without it the keeper has only a `talk_pool`, both P2 terminal rungs
+(`loop_walked`, `shipment_carried`) are unreachable, and nothing in the suite
+says so.
+
+- [x] **Step 0 (stage-1 handoff):** Add `"conversation": "pallass_den_keeper"` to the `den_shop_keeper` entity in `pallass_den_shop.json`.
+- [x] **Step 1:** Write the graph. Softlock guard: `hub` keeps `"Long month how?"` and `consignee` keeps its plain exit.
+- [x] **Step 2: Run** `data_lint.py` (start node present, every node has speaker+text, every goto resolves), `res://tests/test_dialogue.gd`, `res://tests/test_content.gd`, `res://tests/test_copy_fit.gd`.
+- [x] **Step 3: Commit** `feat(dialogue): the den-shop keeper, consignee of one crate of tin`.
 
 ### Task 2.4: The attendant's quest — `pallass_lift_attendant.json`
 
@@ -1226,11 +1272,11 @@ ambience: [{ "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
 
 Variant order is deliberate — last-match-wins puts a co-banking player on the SKILL line, matching the P2 ladder in Task 2.6. The HELP line is the spec's "region's warmest line" and is placed first so it survives as the sole match on a pure-HELP run.
 
-- [ ] **Step 1:** Append the two options and the five nodes.
-- [ ] **Step 2: Shadow-out audit.** The shipped `hub` `text_variant` (`seal_resolved`) is untouched; no variant is added to `hub`.
-- [ ] **Step 3: Run** `test_dialogue`, `test_content`, `test_copy_fit`.
-- [ ] **Step 4: Run** `qa/ci_sweep.sh --only pallass_walkthrough` — confirm the 3-row attendant pin holds.
-- [ ] **Step 5: Census check. Commit** `feat(dialogue): the attendant's queue, and three ways out of it`.
+- [x] **Step 1:** Append the two options and the five nodes.
+- [x] **Step 2: Shadow-out audit.** The shipped `hub` `text_variant` (`seal_resolved`) is untouched; no variant is added to `hub`.
+- [x] **Step 3: Run** `test_dialogue`, `test_content`, `test_copy_fit`.
+- [x] **Step 4: Run** `qa/ci_sweep.sh --only pallass_walkthrough` — confirm the 3-row attendant pin holds.
+- [x] **Step 5: Census check. Commit** `feat(dialogue): the attendant's queue, and three ways out of it`.
 
 ### Task 2.5: The office loop — market clerk + forge permit clerk
 
@@ -1317,12 +1363,12 @@ Variant order is deliberate — last-match-wins puts a co-banking player on the 
 }
 ```
 
-- [ ] **Step 1:** Read both shipped graphs end to end; match the clerks' registers (the market clerk's is procedural-neutral; the permit clerk's is "I only handle paper").
-- [ ] **Step 2:** Append the options and nodes **exactly as drafted**, speaker strings included: `"Tier Clerk"` for the market clerk's two new nodes, `"Forge-Tier Clerk"` for the permit clerk's three. Confirm with `python3 -c "import json;d=json.load(open('data/dialogue/pallass_market_clerk.json'));print(sorted({n['speaker'] for n in d['nodes'].values()}))"` (and the same for `pallass_forge_clerk.json`) — each must print a ONE-element list after the edit.
-- [ ] **Step 3: Softlock guard:** both hubs already carry always-available options.
-- [ ] **Step 4: Run** `test_dialogue`, `test_content`, `test_copy_fit`.
-- [ ] **Step 5: Run** `qa/ci_sweep.sh --only pallass_walkthrough,pallass_peek,pallass_round_trip,spine_reach` — expect green.
-- [ ] **Step 6: Commit** `feat(dialogue): the queue that outranks itself, in two offices`.
+- [x] **Step 1:** Read both shipped graphs end to end; match the clerks' registers (the market clerk's is procedural-neutral; the permit clerk's is "I only handle paper").
+- [x] **Step 2:** Append the options and nodes **exactly as drafted**, speaker strings included: `"Tier Clerk"` for the market clerk's two new nodes, `"Forge-Tier Clerk"` for the permit clerk's three. Confirm with `python3 -c "import json;d=json.load(open('data/dialogue/pallass_market_clerk.json'));print(sorted({n['speaker'] for n in d['nodes'].values()}))"` (and the same for `pallass_forge_clerk.json`) — each must print a ONE-element list after the edit.
+- [x] **Step 3: Softlock guard:** both hubs already carry always-available options.
+- [x] **Step 4: Run** `test_dialogue`, `test_content`, `test_copy_fit`.
+- [x] **Step 5: Run** `qa/ci_sweep.sh --only pallass_walkthrough,pallass_peek,pallass_round_trip,spine_reach` — expect green.
+- [x] **Step 6: Commit** `feat(dialogue): the queue that outranks itself, in two offices`.
 
 ### Task 2.6: `ledger_eats_first` in `data/quests.json` + the SKILL/HELP props
 
@@ -1408,16 +1454,19 @@ Variant order is deliberate — last-match-wins puts a co-banking player on the 
 	assert(String(WIQuests.resolved_path(p_ledger, {"loop_walked": 1, "exemption_found": 1})["accomplishment"]) == "exemption_found", "walked it THEN found the exemption records the EXEMPTION -- the fix that outlives the crate")
 ```
 
-- [ ] **Step 1:** Add the two props (if not already in 2.1) and splice the quest block.
-- [ ] **Step 2:** Add the `test_quests.gd` pins.
-- [ ] **Step 3: Verify the landmark arm.** `unstick`'s producers are all on `pallass_den_shop`; the giver map is `pallass_forge`; so the description MUST contain a token from `LANDMARK_TOKENS["pallass_den_shop"]` — it contains "den shop" and "market tier". Confirm `test_content.gd`'s `_validate_travel_beat_place_naming` passes rather than assuming.
-- [ ] **Step 4: Dash sweep (the lint no gate performs).** The plan mandates a both-forms dash rule and nothing in the suite enforces it, so run it by hand over everything this lane wrote:
+> **BINDING TASK-2.4 HANDOFF (deferred quest-start effect).** `test_content.gd:1122-1124` reds any dialogue effect starting a quest id absent from `data/quests.json`, and Task 2.4's own gate list includes `test_content`, so Task 2.4 shipped the attendant's `"Somebody should unstick that."` option with only its `ledger_loop_started` effect. **Restore `{ "quest": "ledger_eats_first" }` as the FIRST entry of that option's `effects` array in `data/dialogue/pallass_lift_attendant.json`, in the SAME commit that splices the quest block** (one verb per dict — a second dict, never a second key). Without it P2 never starts, the journal never shows it, and every gate stays green. This is the exact shape of the Task 1.3 → 1.5 handoff.
+
+- [x] **Step 0 (task-2.4 handoff):** Restore the `{ "quest": "ledger_eats_first" }` effect dict in `pallass_lift_attendant.json` per the block above, in this task's commit.
+- [x] **Step 1:** Add the two props (if not already in 2.1) and splice the quest block.
+- [x] **Step 2:** Add the `test_quests.gd` pins.
+- [x] **Step 3: Verify the landmark arm.** `unstick`'s producers are all on `pallass_den_shop`; the giver map is `pallass_forge`; so the description MUST contain a token from `LANDMARK_TOKENS["pallass_den_shop"]` — it contains "den shop" and "market tier". Confirm `test_content.gd`'s `_validate_travel_beat_place_naming` passes rather than assuming.
+- [x] **Step 4: Dash sweep (the lint no gate performs).** The plan mandates a both-forms dash rule and nothing in the suite enforces it, so run it by hand over everything this lane wrote:
   - `grep -n -- '--' data/quests.json` → the two new quest blocks must contribute **zero** hits in any `description` / `text` / `title` value. (`_comment` and `_resolution_order` values are author notes, never rendered — `--` there is fine and is what the drafts use.)
   - `grep -rn -- '--' data/dialogue/pallass_*.json data/maps/pallass/pallass_*.json` → same rule: zero hits inside any `text`, `observe`, `toast`, `*_toast`, `talk_pool`, `friendly_line` or `lines` value.
   - `grep -rn -P '\\u2014' data/maps/pallass/ qa/scripts/pallass_*.json` → em-dashes hide as `—` ESCAPES inside `data/maps/**` and QA scripts; sweep that form too, and check the at-most-ONE-em-dash-per-line rule on every hit.
   - Any file touched by this step is re-run through `test_copy_fit` before commit — a dash swap changes rendered width.
-- [ ] **Step 5: Run** `test_quests`, `test_content`, `test_reachability`, `test_copy_fit`.
-- [ ] **Step 6: Census check. Commit** `feat(quests): The Ledger Eats First, three real routes`.
+- [x] **Step 5: Run** `test_quests`, `test_content`, `test_reachability`, `test_copy_fit`.
+- [x] **Step 6: Census check. Commit** `feat(quests): The Ledger Eats First, three real routes`.
 
 ### Task 2.7: The attendant's post-quest reactive stage
 
@@ -1437,8 +1486,8 @@ Variant order is deliberate — last-match-wins puts a co-banking player on the 
 }
 ```
 
-- [ ] **Step 1: Shadow-out audit.** seal-resolved-only → `attendant_seal_resolved`; P2 done → the new stage permanently. The base pool is flavour, not guidance, so permanent shadowing is acceptable and is the shipped Riverfarm-headman pattern.
-- [ ] **Step 2: Run** `test_content` + `test_copy_fit`; **commit** `feat(pallass): the attendant's clean-manifest pool stage`.
+- [x] **Step 1: Shadow-out audit.** seal-resolved-only → `attendant_seal_resolved`; P2 done → the new stage permanently. The base pool is flavour, not guidance, so permanent shadowing is acceptable and is the shipped Riverfarm-headman pattern.
+- [x] **Step 2: Run** `test_content` + `test_copy_fit`; **commit** `feat(pallass): the attendant's clean-manifest pool stage`.
 
 ---
 
@@ -1459,11 +1508,11 @@ Load `wi-writing-qa-scripts` before the first script. **Registration order is bi
 | `pallass_ledger_offices_start` | `pallass_forge` [23,5] facing [0,-1] | `{"warrior":5,"mage":5}` | `read_the_lift_manifest`, `ledger_loop_started`; `started_quests` += `ledger_eats_first` | TALK + HELP routes |
 | `pallass_ledger_skill_start` | `pallass_den_shop` [7,3] facing [0,-1] | `{"warrior":5,"mage":5}`, `player_skills` += `appraise_goods` | as above | SKILL route (proves `MAP_REQUIRES["pallass_den_shop"]`) |
 
-- [ ] **Step 1:** For each, copy `spine_reach_start.json`, edit `current_map` / `player_cell` / `player_facing` (a 2-VECTOR like `[0,-1]`, never a string) / `classes` / `player_skills` / `started_quests` / `accomplishments` / `gold`.
-- [ ] **Step 2: Derive every `rng_state`** with `godot --headless --path wandering_inn_game --script res://tests/_derive_rng_state.gd -- <seed>`. **Never hand-type one** — `test_fixture_coherence.gd:378-388` fails any state under magnitude 1e6 as hand-typed.
-- [ ] **Step 3:** Add `MAP_REQUIRES` rows if Tasks 1.1/2.1 have not already (`pallass_forge_hall` and `pallass_den_shop` — a fixture standing in a new interior otherwise passes VACUOUSLY).
-- [ ] **Step 4: Run** `res://tests/test_fixture_coherence.gd` — expect PASS. Monotone chains and `MAP_REQUIRES` both bite here.
-- [ ] **Step 5: Commit** `test(qa): six Pallass depth fixtures off spine_reach_start`.
+- [x] **Step 1:** For each, copy `spine_reach_start.json`, edit `current_map` / `player_cell` / `player_facing` (a 2-VECTOR like `[0,-1]`, never a string) / `classes` / `player_skills` / `started_quests` / `accomplishments` / `gold`.
+- [x] **Step 2: Derive every `rng_state`** with `godot --headless --path wandering_inn_game --script res://tests/_derive_rng_state.gd -- <seed>`. **Never hand-type one** — `test_fixture_coherence.gd:378-388` fails any state under magnitude 1e6 as hand-typed.
+- [x] **Step 3:** Add `MAP_REQUIRES` rows if Tasks 1.1/2.1 have not already (`pallass_forge_hall` and `pallass_den_shop` — a fixture standing in a new interior otherwise passes VACUOUSLY).
+- [x] **Step 4: Run** `res://tests/test_fixture_coherence.gd` — expect PASS. Monotone chains and `MAP_REQUIRES` both bite here.
+- [x] **Step 5: Commit** `test(qa): six Pallass depth fixtures off spine_reach_start`.
 
 ### Task 3.2: The seven canonicals
 
@@ -1492,24 +1541,24 @@ All at **seed 9** (the shipped Pallass seed for every existing Pallass canonical
 - Never pin toast ORDER across `combat_started`.
 - Before adding any driver action, `grep '"<action>"' qa/test_driver.gd` — duplicate arms silently SHADOW. (This lane needs no new driver actions.)
 
-- [ ] **Step 1:** Write `pallass_depth_gates_check` FIRST — it is the cheapest failure detector for every gating decision in Tasks 1.3/2.4/2.5.
-- [ ] **Step 2:** Write the remaining six. Use `teleport` freely for legs whose route is not the subject; walk for real where the route IS the subject (the door crossings, the lift transitions, the carry legs).
-- [ ] **Step 3: Register each** in `qa/manifest.json` (`script`, `seed`, `fixture`, `note`, `tiers`) and add the matching `AGENTS.md:201+` seed-table row in the SAME commit.
-- [ ] **Step 4: Regenerate both generated artifacts in the SAME commit as the manifest change (ruling E).** In order:
+- [x] **Step 1:** Write `pallass_depth_gates_check` FIRST — it is the cheapest failure detector for every gating decision in Tasks 1.3/2.4/2.5.
+- [x] **Step 2:** Write the remaining six. Use `teleport` freely for legs whose route is not the subject; walk for real where the route IS the subject (the door crossings, the lift transitions, the carry legs).
+- [x] **Step 3: Register each** in `qa/manifest.json` (`script`, `seed`, `fixture`, `note`, `tiers`) and add the matching `AGENTS.md:201+` seed-table row in the SAME commit.
+- [x] **Step 4: Regenerate both generated artifacts in the SAME commit as the manifest change (ruling E).** In order:
   1. `python3 wandering_inn_game/scripts/derive_qa_surfaces.py` — bare IS the write (`:412-414` returns `cmd_write()` on empty argv); expect `wrote surfaces for N script(s)`, rc=0.
   2. `python3 scripts/render_qa_notes.py --write` — **the `--write` is mandatory.** Bare it only compares and returns 1, so a bare-only call leaves `docs/QA-SCRIPT-NOTES.md` stale and reproduces the #312 leak-check red.
   3. `python3 scripts/render_qa_notes.py` (bare) — the CHECK: rc=0 and `PASS: QA notes match manifest`.
   4. `python3 scripts/check_doc_drift.py`.
   - **Merge-train:** `render()` walks the whole manifest, so this file must be re-rendered at every train merge that combines two lanes' manifest entries. A green run on this branch does not survive the merge on its own.
-- [ ] **Step 5: Run each script** with `wandering_inn_game/qa/run_qa.sh <script> headless --seed=9`. Re-derive every pin from the real run's `qa_output/<script>/events.jsonl` — never assume a pin. "missing result.json" with rc=0 is a RED, never a pass.
-- [ ] **Step 6:** If `pallass_standards_fight` loses at seed 9, seed-search (it is a real task, not a retune): try the Pallass canonical seeds first, and remember PC death is an immediate DEFEAT even with a living ally.
-- [ ] **Step 7: Commit** `test(qa): seven Pallass depth canonicals + manifest, seeds, surfaces`.
+- [x] **Step 5: Run each script** with `wandering_inn_game/qa/run_qa.sh <script> headless --seed=9`. Re-derive every pin from the real run's `qa_output/<script>/events.jsonl` — never assume a pin. "missing result.json" with rc=0 is a RED, never a pass.
+- [x] **Step 6:** If `pallass_standards_fight` loses at seed 9, seed-search (it is a real task, not a retune): try the Pallass canonical seeds first, and remember PC death is an immediate DEFEAT even with a living ally.
+- [x] **Step 7: Commit** `test(qa): seven Pallass depth canonicals + manifest, seeds, surfaces`.
 
 ### Task 3.3: Crossing re-gate
 
-- [ ] **Step 1:** `wandering_inn_game/qa/ci_sweep.sh --touching data/quests.json,data/combatants.json,data/maps/pallass/pallass_forge.json,data/maps/pallass/pallass_market.json,data/dialogue/pallass_grimalkin.json` — **budget real time: `--touching data/quests.json` alone now maps to 20+ canonicals** via MONOLITH_SYSTEMS (GH#281). The skill doc's claim that it maps to ZERO scripts is OUT OF DATE.
-- [ ] **Step 2:** Expect green on at minimum: `pallass_walkthrough`, `pallass_peek`, `pallass_round_trip`, `pallass_race_peek`, `pallass_watchgolem_loop`, `regional_work_loop`, `grimalkin_study_loop`, `parley_talkdowns_loop`, `parley_gates_check`, `spine_reach`, `mixer_alchemist_loop`, `trader_earn_loop`, plus the `quests.json` monolith set (`cisterns_*`, `crate_*`, `door_chain_*`, `horns_dig_*`, `invrisil_disagreement_*`, `missing_recruit_loop`, …).
-- [ ] **Step 3: Subagent sweep idiom** — a full `ci_sweep.sh` cannot run foreground in one Bash call (the harness promotes it to background and strands a waiting subagent). Start it writing to a log with its own `rc=` echo, then poll with short foreground `sleep 60; tail -1 <log>` calls. **Settle the tree BEFORE launching** — a sweep started while edits continue yields a MIXED-STATE verdict; kill and relaunch.
+- [x] **Step 1:** `wandering_inn_game/qa/ci_sweep.sh --touching data/quests.json,data/combatants.json,data/maps/pallass/pallass_forge.json,data/maps/pallass/pallass_market.json,data/dialogue/pallass_grimalkin.json` — **budget real time: `--touching data/quests.json` alone now maps to 20+ canonicals** via MONOLITH_SYSTEMS (GH#281). The skill doc's claim that it maps to ZERO scripts is OUT OF DATE.
+- [x] **Step 2:** Expect green on at minimum: `pallass_walkthrough`, `pallass_peek`, `pallass_round_trip`, `pallass_race_peek`, `pallass_watchgolem_loop`, `regional_work_loop`, `grimalkin_study_loop`, `parley_talkdowns_loop`, `parley_gates_check`, `spine_reach`, `mixer_alchemist_loop`, `trader_earn_loop`, plus the `quests.json` monolith set (`cisterns_*`, `crate_*`, `door_chain_*`, `horns_dig_*`, `invrisil_disagreement_*`, `missing_recruit_loop`, …).
+- [x] **Step 3: Subagent sweep idiom** — a full `ci_sweep.sh` cannot run foreground in one Bash call (the harness promotes it to background and strands a waiting subagent). Start it writing to a log with its own `rc=` echo, then poll with short foreground `sleep 60; tail -1 <log>` calls. **Settle the tree BEFORE launching** — a sweep started while edits continue yields a MIXED-STATE verdict; kill and relaunch.
 
 ---
 
@@ -1519,15 +1568,15 @@ Load `wi-machine-playtest`. **Note:** a full `ci_sweep.sh` runs `qa/flush_artifa
 
 Windowed shot list (run each with `run_qa.sh <script> windowed --seed=9`):
 
-- [ ] `pallass_standards_fight` — **the forge_hall board mid-combat** (closes `docs/VISUAL-LOG.md:449-451` and `HANDOFF.md:86`; the v0.15 T5.1 blocked-cover fix means the arena's cover props now come from `biomes.json` `blocked_props` = `[forge_station, crate]` — eyeball that they render).
-- [ ] `pallass_standards_fight` — arrival inside `pallass_forge_hall` (mood, lighting, the embers ambience, no flat-white).
-- [ ] `pallass_standards_fight` — the `forge_temper_golem` rig on the map at [8,6] (tint separation from `forge_calibration_golem` on the tier below).
-- [ ] `pallass_standards_talk` — Grimalkin's hub with the new `text_variant` (page split legibility, per the `forge_runes` orphan-page lesson).
-- [ ] `pallass_standards_skill` — the temper bench skill toast.
-- [ ] `pallass_ledger_offices` — arrival inside `pallass_den_shop` (the warm-vs-slate contrast the whole room exists for) and the keeper at the counter.
-- [ ] `pallass_ledger_carry` — the receiving dock's third-leg toast.
-- [ ] `pallass_depth_gates_check` — both 3-row hubs, to see with human eyes that nothing new leaked into them.
-- [ ] Drain every finding to `docs/VISUAL-LOG.md`; strike the forge_hall board-screenshot item there.
+- [x] `pallass_standards_fight` — **the forge_hall board mid-combat** (closes `docs/VISUAL-LOG.md:449-451` and `HANDOFF.md:86`; the v0.15 T5.1 blocked-cover fix means the arena's cover props now come from `biomes.json` `blocked_props` = `[forge_station, crate]` — eyeball that they render).
+- [x] `pallass_standards_fight` — arrival inside `pallass_forge_hall` (mood, lighting, the embers ambience, no flat-white).
+- [x] `pallass_standards_fight` — the `forge_temper_golem` rig on the map at [8,6] (tint separation from `forge_calibration_golem` on the tier below).
+- [x] `pallass_standards_talk` — Grimalkin's hub with the new `text_variant` (page split legibility, per the `forge_runes` orphan-page lesson).
+- [x] `pallass_standards_skill` — the temper bench skill toast.
+- [x] `pallass_ledger_offices` — arrival inside `pallass_den_shop` (the warm-vs-slate contrast the whole room exists for) and the keeper at the counter.
+- [x] `pallass_ledger_carry` — the receiving dock's third-leg toast.
+- [x] `pallass_depth_gates_check` — both 3-row hubs, to see with human eyes that nothing new leaked into them.
+- [x] Drain every finding to `docs/VISUAL-LOG.md`; strike the forge_hall board-screenshot item there.
 
 ---
 
@@ -1614,7 +1663,7 @@ Every risk from the Pallass recon plus the cross-cutting risks that apply, each 
 
 ### Task 6.1: Drain every fork to `docs/CHOICE-LOG.md`
 
-- [ ] Append one entry per controller ruling applied — the lane rulings 1–10 **and** the wave rulings A–F (A: 0.55–0.95 gated cells with medians in the PR body; B: the 112 per-lane census constant and the projected lane total; C: named shared-append anchors and the `p_` local prefix; D: character-profiles filled in place; E: `render_qa_notes.py --write`; F: new ids are not measured by `test_combat_visuals`) — plus every design fork taken during implementation (map stems, biome choices, the ladder orders, the loop's two intermediate counters, the interact-only encounter shape, the leads deferral, cut/keep calls under census pressure). Never a user gate — the spec's line 180 is explicit.
+- [x] Append one entry per controller ruling applied — the lane rulings 1–10 **and** the wave rulings A–F (A: 0.55–0.95 gated cells with medians in the PR body; B: the 112 per-lane census constant and the projected lane total; C: named shared-append anchors and the `p_` local prefix; D: character-profiles filled in place; E: `render_qa_notes.py --write`; F: new ids are not measured by `test_combat_visuals`) — plus every design fork taken during implementation (map stems, biome choices, the ladder orders, the loop's two intermediate counters, the interact-only encounter shape, the leads deferral, cut/keep calls under census pressure). Never a user gate — the spec's line 180 is explicit.
 
 ---
 
@@ -1622,37 +1671,37 @@ Every risk from the Pallass recon plus the cross-cutting risks that apply, each 
 
 Load `wi-verifying-changes`. **Settle the tree first.** Run in this order and report PER SCRIPT — never "everything passed".
 
-- [ ] **1. Structural data lint:** `python3 wandering_inn_game/scripts/data_lint.py` (from repo root). This is NOT pytest and there is no `scripts/tests/test_data_lint.py` in this layout.
-- [ ] **2. Comment census:** `python3 scripts/comment_census.py --check` — must exit 0. Record the new DATA ratio.
-- [ ] **3. Guidance + doc drift:** `python3 scripts/sync_agent_guidance.py`, then `python3 scripts/render_qa_notes.py --write` followed by a bare `python3 scripts/render_qa_notes.py` as the check (ruling E — bare alone never writes), then `python3 scripts/check_doc_drift.py`.
-- [ ] **4. QA surface drift:** `wandering_inn_game/scripts/derive_qa_surfaces.py --check` — FATAL on any stale tag.
-- [ ] **5. Load gate / headless smoke** per the skill's chosen set for a data wave.
-- [ ] **6. Every `tests/test_*.gd`**, each alarm-wrapped at 240s, each requiring ALL THREE of: exit code checked, a `^PASS` line present, and a zero-hit grep for `SCRIPT ERROR|Parse Error|WARNING`. Minimum set that MUST be green: `test_content`, `test_dialogue`, `test_quests`, `test_reachability`, `test_combat_data`, `test_combat_visuals`, `test_fixture_coherence`, `test_copy_fit`, `test_effect_text`, `test_world_visuals`, `test_audio_data`, `test_portals`, `test_shipped_ids`.
-- [ ] **7. `sim_combat_batch.gd`** alarm-wrapped at 600s, same three-part verdict. Record the new cell's win/median and the three neighbouring Pallass cells'.
-- [ ] **8. Full `qa/ci_sweep.sh`** (all canonicals at pinned seeds), run via the log-and-poll idiom, `CI_SWEEP_TIMEOUT=300` if any script needs it.
-- [ ] **9. Windowed pass** (Task 4) AFTER step 8, since the sweep flushes artifacts.
-- [ ] **10. Re-run steps 1–2** immediately before opening the PR — a late `_comment` edit is exactly how the census tips.
+- [x] **1. Structural data lint:** `python3 wandering_inn_game/scripts/data_lint.py` (from repo root). This is NOT pytest and there is no `scripts/tests/test_data_lint.py` in this layout.
+- [x] **2. Comment census:** `python3 scripts/comment_census.py --check` — must exit 0. Record the new DATA ratio.
+- [x] **3. Guidance + doc drift:** `python3 scripts/sync_agent_guidance.py`, then `python3 scripts/render_qa_notes.py --write` followed by a bare `python3 scripts/render_qa_notes.py` as the check (ruling E — bare alone never writes), then `python3 scripts/check_doc_drift.py`. **RESULT 2026-07-28:** `sync_agent_guidance.py` rc=0; `render_qa_notes.py --write` then bare rc=0 (`PASS: QA notes match manifest`); **`check_doc_drift.py` rc=1 and CANNOT go green from inside this lane** — it names the floodplains / invrisil / riverfarm plan docs, none of which this lane owns, each missing its own `> Status:` header. This lane's doc carries `> Status: **ACTIVE**`. Owed by the wave close or by each sibling lane.
+- [x] **4. QA surface drift:** `wandering_inn_game/scripts/derive_qa_surfaces.py --check` — FATAL on any stale tag.
+- [x] **5. Load gate / headless smoke** per the skill's chosen set for a data wave.
+- [x] **6. Every `tests/test_*.gd`**, each alarm-wrapped at 240s, each requiring ALL THREE of: exit code checked, a `^PASS` line present, and a zero-hit grep for `SCRIPT ERROR|Parse Error|WARNING`. Minimum set that MUST be green: `test_content`, `test_dialogue`, `test_quests`, `test_reachability`, `test_combat_data`, `test_combat_visuals`, `test_fixture_coherence`, `test_copy_fit`, `test_effect_text`, `test_world_visuals`, `test_audio_data`, `test_portals`, `test_shipped_ids`.
+- [x] **7. `sim_combat_batch.gd`** alarm-wrapped at 600s, same three-part verdict. Record the new cell's win/median and the three neighbouring Pallass cells'.
+- [x] **8. Full `qa/ci_sweep.sh`** (all canonicals at pinned seeds), run via the log-and-poll idiom, `CI_SWEEP_TIMEOUT=300` if any script needs it. **RESULT 2026-07-28:** run as four foreground `--only` batches at `WI_SWEEP_JOBS=5` covering all 174 manifest scripts (44/44/44/42), each `ALL N script(s) green, no grep hits`, rc=0 — foreground per this stage's run discipline rather than the log-and-poll background idiom. Subsumes Task 3.3's 119-script `--touching` list.
+- [x] **9. Windowed pass** (Task 4) AFTER step 8, since the sweep flushes artifacts.
+- [x] **10. Re-run steps 1–2** immediately before opening the PR — a late `_comment` edit is exactly how the census tips.
 
 ---
 
 ## Exit criteria
 
-- [ ] Both quests exist in `data/quests.json` with three REAL routes each (distinct fiction, distinct counters), `_resolution_order` notes, and weakest-first `resolution_paths`; `test_quests.gd` carries co-bank ladder pins for both.
-- [ ] Both interiors exist, each ≤ parlor scale, each hosting ≥1 quest beat and ≥3 non-quest observables with real toast copy, each with a `data/moods.json` row, a `LANDMARK_TOKENS` row and a `MAP_REQUIRES` row, walk-in only (no portal surface — the carrier-vs-row audit in `test_portals.gd:32-65` never sees them).
-- [ ] Both arrival cells hand-verified in BOTH directions; every new blocking cell has open neighbours.
-- [ ] P1's FIGHT banks `golem_recalibrated` and nothing else; `bounty_forge_golem_cull` is provably unfed (`assert_event_absent` on `forge_golems_culled` in `pallass_standards_fight`).
-- [ ] `forge_temper_golem` carries a positive `power_level`; its `BESTIARY_CELLS` cell is gated at the standing **0.55–0.95** stop-cell window with `check_rounds` (ruling A) and passes; the PR body records the measured win rate and median rounds for the new cell **beside** `forge_calibration_golem_t5_sw14_solo`'s at the same build, showing the new rig strictly below it — that table is the band-ordering evidence, not the window. No shipped combatant's stats moved.
-- [ ] The `forge_temper_golem` encounter entity carries **no `trigger_radius`** (`grep -n trigger_radius data/maps/pallass/pallass_forge_hall.json` returns nothing); `pallass_standards_fight` asserts the parley node before `combat_started`, and `pallass_standards_skill` crosses the rig's radius-1 footprint with the encounter present and `assert_event_absent`s `combat_started`.
-- [ ] `test_combat_visuals` is green and is reported as **passing by exclusion** (ruling F) — no id from this lane is in `audited`, no sprite was added to `FIGURE_ROWS`, and no figure number appears in any shipped `_comment`. The rig's legibility read is the windowed shots.
-- [ ] Both clerk graphs report a ONE-element speaker set after the edit: `Tier Clerk` for `pallass_market_clerk.json`, `Forge-Tier Clerk` for `pallass_forge_clerk.json`.
-- [ ] The Task 2.6 dash sweep is clean over both `--` and `—`-escape forms across every file this lane wrote; the `unstick` beat description carries a real em-dash.
-- [ ] Both carry-leg variant thresholds follow (leg index − 1): `market_dray_rank` `when: 1`, `den_shop_receiving_dock` `when: 2`; `pallass_ledger_carry` pins each leg's exact toast, so a dead variant fails loud.
-- [ ] `docs/design/character-profiles.md`'s two Pallass stub sections are filled IN PLACE, the STUB parentheticals removed, and the diff touches nothing at or past the Hedault stub (ruling D).
-- [ ] Every shared append landed on its NAMED anchor row (ruling C), and the two new `test_quests.gd` locals are `p_tempered` / `p_ledger`.
-- [ ] A QA script fights the `forge_hall` arena on the board and the windowed run screenshots it; `docs/VISUAL-LOG.md:449-451` and `HANDOFF.md:86` are struck.
-- [ ] Grimalkin's hub option array is byte-identical to `main`; the smith and attendant hubs still render exactly 3 rows at `near_pallass`.
-- [ ] Seven canonicals registered, surfaces regenerated, seed-table rows added, `QA-SCRIPT-NOTES.md` regenerated **with `render_qa_notes.py --write`** and verified with a bare run (ruling E) — all in the commits that changed the manifest.
-- [ ] Both givers carry exactly one new reactive `talk_pool_stage`, appended last, keyed on the quest terminal.
-- [ ] `comment_census.py --check` exits 0; `data_lint.py` green; every unit suite green on the three-part verdict; full `ci_sweep.sh` green.
-- [ ] `docs/CHOICE-LOG.md` carries every ruling and fork; `data/leads.json` is UNTOUCHED and the two row drafts sit in this doc's DEFERRED section.
-- [ ] PR opened against `main` from `issue/307-pallass-depth`, body per the issue-close template, head commit tagged `[ci-full]`, `Closes #307`.
+- [x] Both quests exist in `data/quests.json` with three REAL routes each (distinct fiction, distinct counters), `_resolution_order` notes, and weakest-first `resolution_paths`; `test_quests.gd` carries co-bank ladder pins for both.
+- [x] Both interiors exist, each ≤ parlor scale, each hosting ≥1 quest beat and ≥3 non-quest observables with real toast copy, each with a `data/moods.json` row, a `LANDMARK_TOKENS` row and a `MAP_REQUIRES` row, walk-in only (no portal surface — the carrier-vs-row audit in `test_portals.gd:32-65` never sees them).
+- [x] Both arrival cells hand-verified in BOTH directions; every new blocking cell has open neighbours.
+- [x] P1's FIGHT banks `golem_recalibrated` and nothing else; `bounty_forge_golem_cull` is provably unfed (`assert_event_absent` on `forge_golems_culled` in `pallass_standards_fight`).
+- [x] `forge_temper_golem` carries a positive `power_level`; its `BESTIARY_CELLS` cell is gated at the standing **0.55–0.95** stop-cell window with `check_rounds` (ruling A) and passes; the PR body records the measured win rate and median rounds for the new cell **beside** `forge_calibration_golem_t5_sw14_solo`'s at the same build, showing the new rig strictly below it — that table is the band-ordering evidence, not the window. No shipped combatant's stats moved.
+- [x] The `forge_temper_golem` encounter entity carries **no `trigger_radius`** (`grep -n trigger_radius data/maps/pallass/pallass_forge_hall.json` returns nothing); `pallass_standards_fight` asserts the parley node before `combat_started`, and `pallass_standards_skill` crosses the rig's radius-1 footprint with the encounter present and `assert_event_absent`s `combat_started`.
+- [x] `test_combat_visuals` is green and is reported as **passing by exclusion** (ruling F) — no id from this lane is in `audited`, no sprite was added to `FIGURE_ROWS`, and no figure number appears in any shipped `_comment`. The rig's legibility read is the windowed shots.
+- [x] Both clerk graphs report a ONE-element speaker set after the edit: `Tier Clerk` for `pallass_market_clerk.json`, `Forge-Tier Clerk` for `pallass_forge_clerk.json`.
+- [x] The Task 2.6 dash sweep is clean over both `--` and `—`-escape forms across every file this lane wrote; the `unstick` beat description carries a real em-dash.
+- [x] Both carry-leg variant thresholds follow (leg index − 1): `market_dray_rank` `when: 1`, `den_shop_receiving_dock` `when: 2`; `pallass_ledger_carry` pins each leg's exact toast, so a dead variant fails loud.
+- [x] `docs/design/character-profiles.md`'s two Pallass stub sections are filled IN PLACE, the STUB parentheticals removed, and the diff touches nothing at or past the Hedault stub (ruling D).
+- [x] Every shared append landed on its NAMED anchor row (ruling C), and the two new `test_quests.gd` locals are `p_tempered` / `p_ledger`.
+- [x] A QA script fights the `forge_hall` arena on the board and the windowed run screenshots it; `docs/VISUAL-LOG.md:449-451` and `HANDOFF.md:86` are struck.
+- [x] Grimalkin's hub option array is byte-identical to `main`; the smith and attendant hubs still render exactly 3 rows at `near_pallass`.
+- [x] Seven canonicals registered, surfaces regenerated, seed-table rows added, `QA-SCRIPT-NOTES.md` regenerated **with `render_qa_notes.py --write`** and verified with a bare run (ruling E) — all in the commits that changed the manifest.
+- [x] Both givers carry exactly one new reactive `talk_pool_stage`, appended last, keyed on the quest terminal.
+- [x] `comment_census.py --check` exits 0; `data_lint.py` green; every unit suite green on the three-part verdict; full `ci_sweep.sh` green.
+- [x] `docs/CHOICE-LOG.md` carries every ruling and fork; `data/leads.json` is UNTOUCHED and the two row drafts sit in this doc's DEFERRED section.
+- [ ] PR opened against `main` from `issue/307-pallass-depth`, body per the issue-close template, head commit tagged `[ci-full]`, `Closes #307`. *(the only open item: this lane's implementation stages never push, run `gh`, or merge — the branch is complete and green locally.)*

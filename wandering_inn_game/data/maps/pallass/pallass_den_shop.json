@@ -1,0 +1,302 @@
+{
+ "biome": "inn",
+ "grid": {
+  "width": 11,
+  "height": 8
+ },
+ "_comment": "COUNTER SHAPE: (3,2) and (5,2) are the counter's two solid ends; (4,2) is NOT in `blocked` and carries no decor because `den_shop_keeper` STANDS in it -- the shipped inn/guild shape (Erin at (7,2) between counter_mid (6,2)/(8,2); Selys at (8,2) between counter_mid (7,2)/(9,2)). `interact` resolves exactly one cell (`entity_at(player_cell + player_facing)`, wi_game.gd:400), so the keeper MUST occupy the cell a customer at (4,3) faces or she is unreachable from the shop floor.",
+ "blocked": [
+  [
+   3,
+   2
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   8,
+   1
+  ],
+  [
+   1,
+   5
+  ]
+ ],
+ "walls": {
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "from": [
+     0,
+     0
+    ],
+    "to": [
+     10,
+     0
+    ],
+    "cap": [
+     14,
+     6
+    ],
+    "face": [
+     14,
+     7
+    ]
+   },
+   {
+    "from": [
+     0,
+     1
+    ],
+    "to": [
+     0,
+     7
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     10,
+     1
+    ],
+    "to": [
+     10,
+     7
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     1,
+     7
+    ],
+    "to": [
+     3,
+     7
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     5,
+     7
+    ],
+    "to": [
+     9,
+     7
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   }
+  ]
+ },
+ "decor": [
+  {
+   "sprite": "counter_left",
+   "cell": [
+    3,
+    2
+   ]
+  },
+  {
+   "sprite": "counter_right",
+   "cell": [
+    5,
+    2
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    8,
+    1
+   ]
+  },
+  {
+   "sprite": "barrel",
+   "cell": [
+    1,
+    5
+   ]
+  },
+  {
+   "sprite": "rug_tan",
+   "cell": [
+    4,
+    4
+   ]
+  },
+  {
+   "sprite": "plant_pot",
+   "cell": [
+    9,
+    1
+   ]
+  },
+  {
+   "sprite": "crystal_lamp",
+   "cell": [
+    2,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.84,
+     0.62
+    ],
+    "energy": 0.7,
+    "radius": 26,
+    "flicker": false
+   }
+  }
+ ],
+ "ambience": [
+  {
+   "preset": "dust_motes",
+   "rect": "all",
+   "phase": [
+    "dusk",
+    "night"
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "id": "den_shop_exit",
+   "kind": "door",
+   "cell": [
+    4,
+    7
+   ],
+   "display_name": "Back to the Market",
+   "sprite": "door",
+   "to_map": "pallass_market",
+   "to_cell": [
+    12,
+    5
+   ],
+   "observe": "The shopfront door, hung so it swings shut on its own. Past it, the market tier goes back to being civic."
+  },
+  {
+   "id": "den_shop_keeper",
+   "kind": "npc",
+   "cell": [
+    4,
+    2
+   ],
+   "display_name": "Den-Shop Keeper",
+   "sprite": "drake_patron",
+   "tint": [
+    0.78,
+    0.56,
+    0.42
+   ],
+   "facing": "down",
+   "observe": "A broad Drake behind a counter worn pale in two places, one where the coins land and one where her elbow goes. Both are hers.",
+   "friendly_line": "She pushes a bowl of salted something across the counter at you without being asked, and takes the coin for it without apologising.",
+   "talk_pool": [
+    "Sit if you're sitting, {addr}. Standing customers make the hatchlings nervous.",
+    "Fourth generation on this tier. Same permit number, four different clerks who each swore it was wrong.",
+    "Everything on that shelf came up the lift. Everything. Including the shelf.",
+    "I feed this quarter and I charge this quarter. Nobody has ever found that strange but visitors."
+   ],
+   "conversation": "pallass_den_keeper"
+  },
+  {
+   "_comment": "P2 SKILL route. Visible-locked (requires_skill), so a player without the arm still sees the route exists.",
+   "id": "den_shop_consignment_file",
+   "kind": "prop",
+   "cell": [
+    7,
+    2
+   ],
+   "display_name": "The Consignee's File",
+   "sprite": "inn_room_ledger",
+   "observe": "The shop's own copy of every form the crate has generated, in a stack tall enough to stand a cup on.",
+   "requires_skill": "appraise_goods",
+   "skill_hint_toast": "Forms, in an order. There is a shape to the order. You cannot see the shape.",
+   "locked_toast": "Twelve forms about one crate. You get four pages in before the words stop meaning anything.",
+   "on_skill_use": {
+    "accomplishment": "exemption_found",
+    "toast": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. Tin is not perishable. The salt packed WITH it is, and it is on the same manifest line. Four cycles, and the exemption was on the paper the whole time."
+   }
+  },
+  {
+   "_comment": "P2 HELP leg 3 of 3. Variant `when` is (leg index - 1) = 2: variants resolve before this interact banks (interactions.gd:129-138).",
+   "id": "den_shop_receiving_dock",
+   "kind": "prop",
+   "cell": [
+    8,
+    5
+   ],
+   "display_name": "The Receiving Dock",
+   "sprite": "crate",
+   "observe": "A cleared square of floor by the back wall with a chalk outline on it, the size of one crate, waiting since the first cycle.",
+   "on_interact_accomplishment": "shipment_leg_carried",
+   "once_per_waking": true,
+   "once_per_waking_toast": "The dock is squared away for today. Whatever else moves, it moves tomorrow.",
+   "toast": "You square the load onto the chalk outline. It fits the way a thing fits when somebody measured it a month ago and has been looking at the empty space since.",
+   "variants": [
+    {
+     "when": {
+      "shipment_leg_carried": 2
+     },
+     "toast": "Third leg, last leg. The crate lands inside its own chalk outline and something in the back of the shop goes quiet, then very loud, then quiet again."
+    }
+   ]
+  },
+  {
+   "id": "den_shop_spice_shelf",
+   "kind": "prop",
+   "cell": [
+    1,
+    2
+   ],
+   "display_name": "The Spice Shelf",
+   "sprite": "shelf_bottles",
+   "observe": "Jars in a rank, labels in a hand that got neater partway along the shelf and then went back to how it was.",
+   "on_interact_accomplishment": "eyed_the_den_spice_shelf",
+   "toast": "Half the jars are from tiers you will never have a permit for. The keeper does not explain how, and you decide not to ask in a city this fond of paperwork."
+  },
+  {
+   "id": "den_shop_hatchling_bench",
+   "kind": "prop",
+   "cell": [
+    2,
+    5
+   ],
+   "display_name": "The Low Bench",
+   "sprite": "bench",
+   "observe": "A bench cut down to knee height, three sets of claw-marks along the front edge at three different heights.",
+   "on_interact_accomplishment": "heard_the_den_hatchlings",
+   "toast": "Something small goes very still behind the bench, decides you are not interesting, and resumes an argument you cannot follow about whose turn it is."
+  },
+  {
+   "id": "den_shop_family_slate",
+   "kind": "prop",
+   "cell": [
+    9,
+    3
+   ],
+   "display_name": "The House Slate",
+   "sprite": "inn_room_ledger",
+   "observe": "The family's own board: who eats here on credit, and for how long. Names in chalk, never in ink.",
+   "on_interact_accomplishment": "read_the_den_family_slate",
+   "toast": "Eleven names carried. One of them has been carried for two years and has no repayment column at all. In Pallass, that is a document nobody filed."
+  }
+ ]
+}

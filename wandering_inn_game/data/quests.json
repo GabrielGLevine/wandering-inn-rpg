@@ -149,6 +149,37 @@
 			]
 		},
 		{
+			"_comment": "v0.16 P1 (#307). complete_when_any is an OR beside complete_when (quests.gd:28-38). The FIGHT counter is golem_recalibrated, never forge_golems_culled, so this quest cannot feed bounty_forge_golem_cull.",
+			"id": "tempered_standards",
+			"title": "Tempered Standards",
+			"region": "Pallass",
+			"beats": [
+				{ "id": "commission", "description": "Take the smith's commission through to an answer, in the forge hall past her second bench.", "complete_when": { "golem_recalibrated": 1 }, "complete_when_any": { "temper_run": 1, "standards_brokered": 1 } },
+				{ "id": "report", "description": "Bring the smith the answer at her anvil, and let her file it.", "complete_when": { "standards_tempered": 1 } }
+			],
+			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). All three co-bank -- a player can fight the rig, run a billet AND read the notice in one visit -- so the STRONGER claim must be what the journal records. Ladder: brokered > temper > rig. Putting the rig down fixes an instrument; running one temper right proves the apprentice's work; brokering ends the six-year disagreement that made the work fail in the first place, which is the only outcome that survives the player leaving the tier.",
+			"resolution_paths": [
+				{ "accomplishment": "golem_recalibrated", "text": "You put the drifting calibration rig back inside its own tolerance.", "grant": { "melee_hit": 6, "won_combat": 1 } },
+				{ "accomplishment": "temper_run", "text": "You ran the temper yourself, and the billet came back.", "grant": { "observed_things": 4, "deliberate_commerce": 2 } },
+				{ "accomplishment": "standards_brokered", "text": "You proved the smith and the examiner had agreed all along, and got it in writing.", "grant": { "persuaded_someone": 3, "heard_gossip": 3 } }			]
+		},
+		{
+			"_comment": "v0.16 P2 (#307). Giver is on pallass_forge and every route resolves on pallass_den_shop, so the unstick beat must name the den shop (the travel-landmark check arms when no producer map is the giver map).",
+			"id": "ledger_eats_first",
+			"title": "The Ledger Eats First",
+			"region": "Pallass",
+			"beats": [
+				{ "id": "unstick", "description": "Get the held crate to its consignee at the den shop on the market tier — by the offices, by the forms, or on your own back.", "complete_when": { "loop_walked": 1 }, "complete_when_any": { "exemption_found": 1, "shipment_carried": 1 } },
+				{ "id": "report", "description": "Tell the lift attendant at the forge-tier landing that his manifest is clean.", "complete_when": { "ledger_unstuck": 1 } }
+			],
+			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). All three co-bank -- nothing stops a player carrying the crate AND walking the offices AND reading the forms. Ladder: exemption > loop > carry. Carrying it moves one crate and leaves the loop exactly as it was; walking the offices produces a countersignature that works ONCE; finding the exemption fixes the rule itself, so the next crate never enters the queue at all.",
+			"resolution_paths": [
+				{ "accomplishment": "shipment_carried", "text": "You carried the crate down two tiers yourself and put it on her dock.", "grant": { "observed_things": 3, "befriended_moments": 2 } },
+				{ "accomplishment": "loop_walked", "text": "You walked the offices in order and made the queue countersign itself.", "grant": { "persuaded_someone": 3, "heard_gossip": 4 } },
+				{ "accomplishment": "exemption_found", "text": "You found the exemption that had been on the paper the whole time.", "grant": { "observed_things": 5, "deliberate_commerce": 2 } }
+			]
+		},
+		{
 			"_comment": "Three-path parity mirroring the cisterns/wrong_order/price_of_a_favor two-beat shape.",
 			"id": "a_gentlemans_disagreement",
 			"title": "A Gentleman's Disagreement",

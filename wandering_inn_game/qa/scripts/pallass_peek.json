@@ -8,7 +8,7 @@
   { "action": "assert_state", "path": "current_map", "equals": "pallass_market" },
   { "action": "assert_event_logged", "type": "ui_mood_applied", "payload_contains": { "map": "pallass_market" } },
   { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "pallass_market", "floor_cells": 286, "blocked_cells": 80 } },
-  { "_comment": "v0.15 T4.1 re-derived: +2 market observables (ordinance wall, public scales). blocked_cells is unchanged on purpose -- entities block their own cell in the SIM but the payload counts `blocked` + wall segments only.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 25, "fallbacks": 0 } },
+  { "_comment": "v0.15 T4.1 re-derived: +2 market observables (ordinance wall, public scales). blocked_cells is unchanged on purpose -- entities block their own cell in the SIM but the payload counts `blocked` + wall segments only. v0.16 #307 re-derived AGAIN, 25 -> 27: the den shop door (12,4) and the dray rank (16,4), both UNCONDITIONAL.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 27, "fallbacks": 0 } },
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "00_pallass_market_arrival_corner" },
 
@@ -139,7 +139,7 @@
   { "action": "assert_state", "path": "current_map", "equals": "pallass_forge" },
   { "action": "assert_event_logged", "type": "ui_mood_applied", "payload_contains": { "map": "pallass_forge" } },
   { "action": "assert_event_logged", "type": "ui_map_rendered", "payload_contains": { "map": "pallass_forge", "floor_cells": 286, "blocked_cells": 85 } },
-  { "_comment": "v0.15 T4.1 re-derived: the tier went from 6 interactables and nobody to 15 (T4.4 adds the fetch slips) -- +2 NPCs (smith, lift attendant) and +6 observables.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 16, "fallbacks": 0 } },
+  { "_comment": "v0.15 T4.1 re-derived: the tier went from 6 interactables and nobody to 15 (T4.4 adds the fetch slips) -- +2 NPCs (smith, lift attendant) and +6 observables. v0.16 #307 re-derived AGAIN, 16 -> 20: the forge hall door (15,3), the reject bin (10,4), the landing manifest (23,4) and the held pallet (19,4), all UNCONDITIONAL, so the count moves in every state and this pin is the only place it is asserted. blocked_cells stays 85 for the reason above -- entities block in the SIM, not in this payload.", "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 20, "fallbacks": 0 } },
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "10_pallass_forge_arrival_corner" },
 

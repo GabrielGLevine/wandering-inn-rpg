@@ -93,6 +93,124 @@ deleted after reading) and the six new canonicals' own windowed runs
   abandoned hut, and the four observables are still findable by bumping, but
   if a later pass wants the room readable at night the fix is one `light`
   block on `hut_hearth_ash`, not a mood-row lift.
+### v0.16 Pallass depth (#307) — windowed pass, 2026-07-28
+
+Eight windowed runs at seed 9 (`pallass_standards_fight` / `_talk` /
+`_skill`, `pallass_ledger_offices` / `_carry` / `_skill`,
+`pallass_depth_gates_check`), every PNG read. Nothing here is a gate
+failure — all seven canonicals are green and the full sweep is green.
+Ranked player-visible first.
+
+- [x] MAP/DEN-KEEPER-UNREACHABLE-FROM-COUNTER (P2, v0.16 #307 windowed
+  pass) — **FIXED in the #307 fix wave**, adversarial-review finding. She
+  now stands **at (4,2)**, IN the counter row between its two solid ends
+  (3,2)/(5,2), which is the shipped Erin (7,2) / Selys (8,2) shape exactly:
+  `counter_mid` decor at (4,2) removed, (4,2) dropped from `blocked` (the
+  entity blocks on its own), and a top-level `_comment` on the map records
+  why the cell must stay open to decor and closed to nothing else. The
+  customer-side cell (4,3) is now the service point — walk straight up the
+  shop floor and bump her. `pallass_ledger_offices` and
+  `pallass_ledger_carry` were re-routed to the customer approach (up 3 from
+  (4,6), bump (4,2)) so the gate now walks the route a player walks; the
+  six-step trip round the counter's west end is gone from both. Original
+  report follows.
+  `den_shop_keeper` stood at (4,1) on `pallass_den_shop` behind
+  a counter that occupies (3,2)/(4,2)/(5,2) as solid `blocked` cells, and
+  `interact` resolves exactly ONE cell (`entity_at(player_cell +
+  player_facing)`, `wi_game.gd:400`). A player who walks up to the counter
+  face at (4,3) and presses interact therefore gets nothing at all — no
+  toast, no refusal, no feedback. Her only approach is round the counter's
+  west end (column 3 up to y=3, across to column 2, up to y=1, then (3,1)),
+  which puts the player *behind* her serving counter; see
+  `qa_output/pallass_ledger_offices/04_den_keeper_released.png`, where the
+  PC stands shoulder to shoulder with her on the shop's own side. Every
+  shipped NPC checked (Erin (7,2), Selys (8,2), Lyonette, Krshia…) has its
+  CUSTOMER-side cell open. She is P2's terminal for two of three routes,
+  so the failure mode is "I found the shop and could not hand anything
+  over". Both P2 canonicals walk the real approach, so the quest is
+  provably completable — this is an ergonomics defect, not a softlock.
+  Fix candidates, cheapest first: open (4,2) as a serving gap in `blocked`
+  (keeps the counter decor, gives a face-to-face cell); or move her to
+  (5,1) and shorten the counter; or move the counter to y=3 and leave her
+  at (4,2). Deliberately NOT changed inside the implementing lane: the
+  cells were hand-audited when the room was authored, and moving them
+  invalidates that audit, the `moods.json` row and the dynamism read.
+- [ ] PROP/TEMPER-BENCH-INDISTINGUISHABLE (P3, v0.16 #307 windowed pass) —
+  `forge_hall_temper_bench` (4,3) is P1's entire SKILL route and it uses
+  the `forge_station` sprite, which `pallass_forge_hall`'s decor also
+  places at (2,2) and (3,2) immediately beside it. In
+  `qa_output/pallass_standards_skill/01_temper_bench_skill_toast.png` the
+  three read as one bank of forges: nothing marks which one the quest
+  means. The room's own copy calls it "a billet clamped mid-process, the
+  quench beside it, a gauge nobody has reset" — none of that is on screen.
+  Cheapest fix: give the bench a distinct sprite (or a `tint`) so the
+  interactive one is the odd one out, the way `forge_temper_golem` already
+  separates itself from `forge_calibration_golem` with an ember tint.
+- [ ] PROP/CRATE-READS-AS-CLUTTER (P4, v0.16 #307 windowed pass) — the
+  `crate` sprite carries three lane props whose copy describes something
+  much more specific than it draws: `den_shop_receiving_dock` (8,5) is "a
+  cleared square of floor with a chalk outline on it, the size of one
+  crate" and renders as a small dark box with no outline
+  (`pallass_ledger_carry/03_leg_three_receiving_dock.png`);
+  `lift_cargo_pallet` (19,4) is "strapped and tagged, one hand's width
+  outside the loading square"; `forge_reject_bin` (10,4) is a civic bin of
+  tagged failures. All three read as generic background clutter at map
+  scale, and the dock in particular is the HELP route's target. Same sprite
+  is the board's cover in BOARD/CRATE-COVER-READ below. Not urgent; a
+  chalk-outline floor decal or a distinct dock sprite would earn the copy.
+- [ ] BOARD/CRATE-COVER-READ (P4, v0.16 #307 windowed pass) — carried out
+  of the closed MAP/FORGE-TIER-FLAT item above. On the `forge_hall` board
+  (`pallass_standards_fight/04_forge_hall_board_mid_combat.png`) the
+  data-driven cover renders as one legible `forge_station` plus four small
+  dark `crate` cells that read as low stools against the slate. They ARE
+  drawn and they ARE distinguishable from floor on a careful look, which
+  is what the v0.15 T5.1 fix promised — but a player reading the board for
+  cover at a glance will find only the forge. Same root as
+  PROP/CRATE-READS-AS-CLUTTER.
+- [ ] DECOR/DEN-SHOP-STREET-LAMP-INDOORS (P4, v0.16 #307 windowed pass) —
+  `pallass_den_shop`'s `crystal_lamp` at (2,1) draws as a tall municipal
+  street lamp on a post standing inside a family provisions den
+  (`pallass_ledger_offices/03_den_shop_arrival.png`). Its warm light is
+  doing the right job — the room's whole point is warm timber against the
+  tier's slate, and that contrast lands — but the fixture itself is
+  outdoor furniture. A hanging or counter-top lamp sprite would keep the
+  light and lose the street.
+- [ ] DECOR/DEN-SHOP-RUG-READS-AS-HOLE (P4, v0.16 #307 windowed pass) —
+  `rug_tan` at (4,4) renders as a pale plus-shaped patch in the middle of
+  the timber floor with no border or pattern; at a glance it reads as a
+  gap in the boards rather than a rug (same shot as above). Low priority,
+  but it is the room's visual centre.
+
+**Read and found CLEAN** (recorded so a later pass does not re-litigate
+them): the `forge_hall` interior's mood and embers ambience — warm forge
+light against slate, no flat-white
+(`pallass_standards_fight/01_forge_hall_arrival.png`); the
+`forge_temper_golem` rig's ember `tint` at (8,6), clearly separated from
+the shipped `forge_calibration_golem` a tier below
+(`.../02_forge_temper_golem_on_map.png`); the parley panel's two-line body
+and two options, no clipping (`.../03_calibration_rig_parley.png`); the
+den shop's warm-vs-slate contrast, which is the entire reason the room
+exists (`pallass_ledger_offices/03_den_shop_arrival.png`); the carry
+route's third-leg toast, three lines, no overflow
+(`pallass_ledger_carry/03_leg_three_receiving_dock.png`); the keeper's
+release node and its quest-updated toast side by side, neither occluding
+the other (`pallass_ledger_offices/04_den_keeper_released.png`); and both
+3-row hubs with human eyes — nothing this lane added leaked into either
+(`pallass_depth_gates_check/01_attendant_hub_three_rows.png`,
+`.../02_smith_hub_three_rows.png`).
+
+**On Grimalkin's new `text_variant` page split** (the `forge_runes`
+orphan-page lesson the plan asked to re-read): the windowed shot
+`pallass_standards_talk/02_grimalkin_standards_tempered_variant.png` shows
+page 2 of 2, not page 1 — `dialogue_panel.gd:154` deliberately jumps a QA
+run to the LAST page (`_page_idx = ... if _is_qa() else 0`), so a windowed
+capture structurally cannot show page 1 and a human player always sees it
+first. What the shot DOES answer is the question that matters: page 2 is
+"Depth, then recovery, then the file. State your business." — 56
+characters, two complete sentences, sitting cleanly above both options.
+That is the opposite of the 12-character fragment `forge_runes` produced.
+Page 1 (173 chars, ending at "Same measure as a squat.") is a real
+sentence boundary and is pinned verbatim in `pallass_standards_talk`.
 
 
 ### ⭐ v0.15 Playtest-State bundle — SIX taste asks for the user (2026-07-28)
@@ -525,9 +643,15 @@ what those runs showed.
   as fallback only, and blocked props take the GH#28 boost (dressing must never
   compete with the grid; a cell you must path around is not dressing). (3) The
   golem takes an ember field `tint` so it stops reading as parked machinery.
-  Re-shot: `pallass_walkthrough/07_forge_tier_arrival.png` (seed 9). NOTE: no QA
-  script fights `forge_hall`, so the ARENA half is unit-proven (the pool now
-  comes from data) but has no board screenshot — a pin is filed.
+  Re-shot: `pallass_walkthrough/07_forge_tier_arrival.png` (seed 9). ~~NOTE: no
+  QA script fights `forge_hall`, so the ARENA half is unit-proven (the pool now
+  comes from data) but has no board screenshot — a pin is filed.~~ **CLOSED
+  2026-07-28 (v0.16 #307):** `pallass_standards_fight` fights the arena on the
+  board for real; board screenshot read at
+  `qa_output/pallass_standards_fight/04_forge_hall_board_mid_combat.png` (seed
+  9, windowed). The data-driven cover DOES render — one `forge_station` mid-
+  board plus four `crate` cells — so the `blocked_props` half is now eye-proven,
+  not only unit-proven. One nit carried forward as BOARD/CRATE-COVER-READ below.
 - [x] SPRITE/KLBKCH-SILHOUETTE (v0.15 T5.2, VERIFIED then FILED) — read once
   against the silhouette contract in `docs/design/character-profiles.md`
   (wiki-verified 2026-07-10), the shipped rig fails **3 of its 4** points: TWO

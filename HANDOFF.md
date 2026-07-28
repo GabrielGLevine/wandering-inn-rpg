@@ -95,8 +95,10 @@ the ladder. Full numbers: docs/CHOICE-LOG.md v0.15 T4.4 entry.
   docs/VISUAL-LOG.md: HUD/LEGEND-OVERLAP (P2), BOARD/STACKED-HP-BARS (P3),
   BOARD/TINT-NUMERAL-CONTRAST (P3), HUD/HINT-BAR-BLEED (P4),
   MAP/FORGE-MOLTEN-BLOCK (P4).
-- From P5: **no QA script fights `forge_hall`** (v0.16 P1 FIGHT is the
-  natural closer); Klbkch rig rebuild (defect confirmed, ~$0.54–0.81,
+- From P5: ~~**no QA script fights `forge_hall`**~~ **CLOSED 2026-07-28 by
+  v0.16 #307** — `pallass_standards_fight` fights the arena on the board and
+  the windowed board shot is read in docs/VISUAL-LOG.md; Klbkch rig rebuild
+  (defect confirmed, ~$0.54–0.81,
   never gated); SPRITE/ARC-CLIMAX FIELD half (companion-offset rule
   needed — Relc's cell follows the player).
 

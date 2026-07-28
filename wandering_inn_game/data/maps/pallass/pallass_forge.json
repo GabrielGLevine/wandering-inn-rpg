@@ -554,6 +554,17 @@
       "Liscor settled the thing under its stone. Good. I'd still like the measurements.",
       "News comes up the shaft slower than heat does. Arrives just as true."
      ]
+    },
+    {
+     "id": "smith_standards_tempered",
+     "requires_accomplishment": {
+      "standards_tempered": 1
+     },
+     "lines": [
+      "She passed it this morning. Same hand, same steel, honest measure. Nothing else changed.",
+      "The examiner sent the file up himself. He has never once walked up a flight for me.",
+      "You did not make her better, {addr}. You made the reading true. That is the harder favor."
+     ]
     }
    ],
    "conversation": "pallass_forge_smith"
@@ -591,6 +602,17 @@
      "lines": [
       "Liscor's news rode up on the quarter-bell cage, same as the tin does.",
       "People asked me about it all morning. I told them what I knew, then I ran the cage."
+     ]
+    },
+    {
+     "id": "attendant_ledger_unstuck",
+     "requires_accomplishment": {
+      "ledger_unstuck": 1
+     },
+     "lines": [
+      "Manifest's clean. First clean manifest since the frost, and I have checked it twice for the pleasure.",
+      "Her boy rode up with a jar for me. I told him the cage takes twelve. He asked if it takes jars.",
+      "Down at the quarter bell, {addr}. Same as always. It just goes down lighter."
      ]
     }
    ],
@@ -724,6 +746,65 @@
      "toast": "The smith hands you the slip before the rack does. She says nothing about it. She wouldn't."
     }
    ]
+  },
+  {
+   "_comment": "v0.16 P1. Cell (15,3) is off every QA lap and assert set, and all four neighbours are open, so no prior save loading here is trapped by the new blocking entity. Full cell audit: the plan's Task 1.2 table.",
+   "id": "forge_hall_door",
+   "kind": "door",
+   "cell": [
+    15,
+    3
+   ],
+   "display_name": "The Forge Hall",
+   "sprite": "door",
+   "to_map": "pallass_forge_hall",
+   "to_cell": [
+    5,
+    7
+   ],
+   "observe": "A wide iron-strapped door standing open on its wedge. Past it: a working hall, and a heat that has its own weather."
+  },
+  {
+   "id": "forge_reject_bin",
+   "kind": "prop",
+   "cell": [
+    10,
+    4
+   ],
+   "display_name": "The Reject Bin",
+   "sprite": "crate",
+   "observe": "A civic bin beside the second bench, half full of work that never left the tier. Each piece has a tag, and every tag has the same examiner's seal on it.",
+   "on_interact_accomplishment": "saw_the_failed_temper",
+   "toast": "Nine blades in the bin, all from one hand, all failed on the same measure. Somebody up here is doing careful work and failing it the same way every time."
+  },
+  {
+   "id": "lift_manifest_slate",
+   "kind": "prop",
+   "cell": [
+    23,
+    4
+   ],
+   "display_name": "The Landing Manifest",
+   "sprite": "price_board",
+   "observe": "A slate of what the cage is carrying today, chalked by hour. Two lines have been rewritten so many times the slate has gone smooth under them.",
+   "on_interact_accomplishment": "read_the_lift_manifest",
+   "toast": "One crate of tin, den shop, market tier. Logged three cycles running and carried none of them. Beside it, in a tidier hand: HELD, QUEUE."
+  },
+  {
+   "_comment": "P2 HELP leg 1 of 3. once_per_waking books per ENTITY (`serve:<id>`), so three distinct props bank shipment_leg_carried three times in one waking. No lift affordance exists or is being added.",
+   "id": "lift_cargo_pallet",
+   "kind": "prop",
+   "cell": [
+    19,
+    4
+   ],
+   "display_name": "The Held Pallet",
+   "sprite": "crate",
+   "observe": "A pallet strapped and tagged and standing exactly where it has stood for three cycles, one hand's width outside the loading square.",
+   "on_interact_accomplishment": "shipment_leg_carried",
+   "once_per_waking": true,
+   "once_per_waking_toast": "The pallet is where you left it and the cage is where the bell says. Nothing moves again until the next shift.",
+   "toast": "You get the pallet onto the loading square and the strapping squared. The attendant looks at it, looks at the bell, and says nothing, which is the whole permission you are going to get."
   }
  ]
 }

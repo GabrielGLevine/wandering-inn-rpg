@@ -1374,6 +1374,8 @@ const LANDMARK_TOKENS := {
 	"trapped_halls": ["trapped halls", "halls"],
 	"pallass_market": ["pallass", "market tier"],
 	"pallass_forge": ["forge tier", "grand lift"],
+	"pallass_forge_hall": ["forge hall", "forge tier"],
+	"pallass_den_shop": ["den shop", "market tier", "pallass"],
 }
 
 
