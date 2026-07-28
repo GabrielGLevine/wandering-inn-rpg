@@ -87,6 +87,9 @@ var _scroll_hint: Label
 ## `hotbar_loadout`.
 var _flat_skill_ids: Array[String] = []
 var _cursor_index := -1
+## True once the in-flight body gesture has moved: a pan, not a tap. Reset on
+## every fresh press and consumed by `_on_skill_row_meta_clicked`.
+var _body_gesture_panned := false
 var _open_act: Dictionary = {}
 var _open_leads: Array = []
 var _open_quest_lines: Array = []
@@ -179,11 +182,27 @@ func _ready() -> void:
 		tab_bar.add_child(tab_label)
 	stack.add_child(tab_bar)
 
+	# JOURNAL/HALF-ROW (P3), v0.15 A4. The body used to be the VBox's own
+	# EXPAND_FILL child, so its height was "whatever is left after the ribbon and
+	# the tab bar" — a number with no relationship to the text pitch, which is
+	# why the last row rendered sliced ("The Missing Crate — Complete." on both
+	# climax_seal/02 and spine_reach/02) and read as a clipping bug rather than
+	# as "more below". The EXPAND_FILL now lives on a plain Control SLOT and the
+	# body is anchored full-rect INSIDE it, so `_clip_body_to_line_boundary` can
+	# shorten the body to a whole number of rows from the slot's own height. The
+	# dependency runs one way only (slot height -> body height; a Control parent
+	# never resizes to its children), so there is no layout feedback loop, and if
+	# the clip never runs the body still fills the slot exactly as before.
+	var body_slot := Control.new()
+	body_slot.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	body_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stack.add_child(body_slot)
+
 	_body_label = RichTextLabel.new()
 	_body_label.bbcode_enabled = true
 	_body_label.scroll_active = true
 	_body_label.fit_content = false
-	_body_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	UIChrome.full_rect(_body_label)
 	_body_label.meta_underlined = false
 	_body_label.mouse_filter = Control.MOUSE_FILTER_STOP
 	_body_label.meta_hover_started.connect(_on_skill_row_hover_started)
@@ -191,7 +210,8 @@ func _ready() -> void:
 	# a4 #216 slice 2: the body scrolls on touch/mouse DRAG (wheel-only
 	# before — a touch player had no way to read past the fold).
 	_body_label.gui_input.connect(_on_body_gui_input)
-	stack.add_child(_body_label)
+	body_slot.add_child(_body_label)
+	body_slot.resized.connect(_clip_body_to_line_boundary)
 
 	_scroll_hint = UIChrome.make_label("▼")
 	_scroll_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -201,6 +221,33 @@ func _ready() -> void:
 	_root.add_child(_scroll_hint)
 
 	ObservableBus.domain_event.connect(_on_domain_event)
+
+
+## Shortens the body viewport to a WHOLE number of text rows, so its bottom
+## edge is always a line boundary and the `▼` cue means "more below" instead of
+## "this row is cut in half". Measured from the RichTextLabel's own theme font
+## (`normal_font`/`normal_font_size`, the keys RichTextLabel actually draws
+## with) rather than from the panel constants, so a theme font-size change
+## re-quantizes itself. Never grows the body past the slot; a run where the
+## metrics are unavailable leaves the pre-existing full-fill behaviour intact.
+func _clip_body_to_line_boundary() -> void:
+	if _body_label == null:
+		return
+	var slot := _body_label.get_parent() as Control
+	if slot == null or slot.size.y <= 0.0:
+		return
+	var font := _body_label.get_theme_font("normal_font")
+	var font_size := _body_label.get_theme_font_size("normal_font_size")
+	if font == null or font_size <= 0:
+		return
+	var separation := float(_body_label.get_theme_constant("line_separation"))
+	var pitch := font.get_height(font_size) + separation
+	if pitch <= 0.0:
+		return
+	var rows := maxi(int((slot.size.y + separation) / pitch), 1)
+	var used := float(rows) * pitch - separation
+	_body_label.offset_bottom = -maxf(slot.size.y - used, 0.0)
+	_update_scroll_hint.call_deferred()
 
 
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
@@ -236,6 +283,18 @@ func body_rect() -> Rect2:
 func _on_body_gui_input(event: InputEvent) -> void:
 	if not open:
 		return
+	# A gesture that PANNED must not also count as a tap on whatever row it
+	# happens to let go over. RichTextLabel fires `meta_clicked` on button
+	# RELEASE over a meta region regardless of intervening motion, so before
+	# this flag a drag-to-scroll that ended on a skill row silently toggled that
+	# skill in and out of the field loadout -- the exact failure `field_skills_loop`
+	# hit the moment `_clip_body_to_line_boundary` moved the release point by a
+	# few px. The clip only EXPOSED it; any scroll position, panel size or font
+	# change could land the same accidental toggle on a player.
+	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+		_body_gesture_panned = false
+	elif event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed:
+		_body_gesture_panned = false
 	var dy := 0.0
 	if event is InputEventScreenDrag:
 		dy = (event as InputEventScreenDrag).relative.y
@@ -243,6 +302,8 @@ func _on_body_gui_input(event: InputEvent) -> void:
 		dy = (event as InputEventMouseMotion).relative.y
 	else:
 		return
+	if absf(dy) > 0.0:
+		_body_gesture_panned = true
 	var vbar := _body_label.get_v_scroll_bar()
 	if vbar != null and vbar.max_value > vbar.page:
 		vbar.value = clampf(vbar.value - dy, vbar.min_value, vbar.max_value - vbar.page)
@@ -602,6 +663,11 @@ func _on_skill_row_hover_started(meta: Variant) -> void:
 
 func _on_skill_row_meta_clicked(meta: Variant) -> void:
 	if _active_tab != Tab.SKILLS:
+		return
+	# See `_on_body_gui_input`: a release that ended a PAN is not a tap. Consumed
+	# here (not just read) so the next genuine stationary press still toggles.
+	if _body_gesture_panned:
+		_body_gesture_panned = false
 		return
 	var idx := String(meta).to_int()
 	if idx < 0 or idx >= _flat_skill_ids.size():

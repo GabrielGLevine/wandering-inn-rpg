@@ -34,6 +34,30 @@ const HELP_PANEL_WIDTH := 620.0
 const HELP_TEXT_WIDTH := HELP_PANEL_WIDTH - 52.0
 const HELP_SECTION_LINE_CAP := 3
 
+## v0.15 A4 — closes VISUAL-LOG VEIL-COPY/UNMEASURED (P4). sleep_veil.gd's own
+## line tables hold the widest single-line strings in the game and NOTHING
+## measured them: the 1114px Invrisil figure in that entry came from a
+## throwaway script, not a gate. Mirrored from sleep_veil.gd with the same
+## drift-tripwire idiom every other surface here uses.
+const VEIL_PATH := "res://src/ui/sleep_veil.gd"
+const VEIL_LINE_TEXT_WIDTH := 880.0
+const VEIL_BLOCK_MAX_HEIGHT := 672.0
+const VEIL_LINE_FONT_SIZE := 24
+const VEIL_LINE_SEPARATIONS := [18, 14, 10, 6]
+## A veil line may fold to a second row (that is the point of the wrap budget);
+## a third row means the copy is a paragraph, not a line, and belongs in a
+## dialogue panel.
+const VEIL_LINE_MAX_ROWS := 2
+## Every const table in sleep_veil.gd that holds player-facing copy. Counter ids
+## share these arrays with their lines and are filtered out by
+## `_looks_like_identifier` rather than by position, so a table gaining a third
+## column cannot silently drop out of the sweep.
+const VEIL_COPY_TABLES := [
+	"OPENER_LINES", "FINALE_LINES_OPEN", "FINALE_REGION_LINES",
+	"FINALE_CLOSE_LINES", "FINALE_LINK_LINE", "SEAL_TRANSITION_LINE",
+	"_EVOLUTION_RESULT_FLAVOR",
+]
+
 
 const TOAST_FIELDS := [
 	"observe", "toast", "open_toast", "locked_toast", "sleep_toast",
@@ -43,6 +67,10 @@ const TOAST_FIELDS := [
 
 var _label: Label
 var _font: Font
+## sleep_veil.gd draws through the "Header" type variation, which may carry its
+## own font resource -- measuring the veil with the default label font would be
+## a different typeface's metrics.
+var _veil_font: Font
 var _font_size: int
 var _line_spacing: float
 var _pitch: float
@@ -64,6 +92,7 @@ func _init() -> void:
 	_check_picker_layouts()
 	_check_board_rumors()
 	_check_help_content()
+	_check_veil_lines()
 
 	print("copy_fit: %d strings measured across all surfaces" % _measured_count)
 	if not _failures.is_empty():
@@ -85,6 +114,10 @@ func _check_drift_tripwires() -> void:
 	_assert_const_matches("res://src/combat/combat_hud.gd", "FEED_PANEL_MAX_HEIGHT", str(FEED_PANEL_MAX_HEIGHT))
 	_assert_const_matches("res://src/combat/combat_hud.gd", "FEED_CONTENT_MARGIN_TOP", str(FEED_CONTENT_MARGIN_TOP))
 	_assert_const_matches("res://src/combat/combat_hud.gd", "FEED_FOLD_DANGER_PX", str(FEED_FOLD_DANGER_PX))
+	_assert_const_matches(VEIL_PATH, "VEIL_LINE_TEXT_WIDTH", str(VEIL_LINE_TEXT_WIDTH))
+	_assert_const_matches(VEIL_PATH, "VEIL_BLOCK_MAX_HEIGHT", str(VEIL_BLOCK_MAX_HEIGHT))
+	_assert_const_matches(VEIL_PATH, "LINE_FONT_SIZE", str(VEIL_LINE_FONT_SIZE))
+	_assert_const_matches(VEIL_PATH, "VEIL_LINE_SEPARATIONS", str(VEIL_LINE_SEPARATIONS))
 	_assert_const_matches("res://src/ui/dialogue_panel.gd", "PAGE_CHAR_BUDGET", str(PAGE_CHAR_BUDGET))
 	_assert_const_matches("res://src/ui/dialogue_panel.gd", "SENTENCE_BOUNDARY_WINDOW_FRACTION", str(SENTENCE_BOUNDARY_WINDOW_FRACTION))
 	_assert_const_matches("res://src/ui/dialogue_panel.gd", "PICKER_MAX_HEIGHT", str(PICKER_MAX_HEIGHT))
@@ -112,8 +145,12 @@ func _setup_font_metrics() -> void:
 	UIChrome.apply_theme(root)
 	_label = UIChrome.make_label("x")
 	root.add_child(_label)
+	var veil_label := UIChrome.make_label("x", "Header")
+	root.add_child(veil_label)
 	await process_frame
 	_font = _label.get_theme_font("font")
+	_veil_font = veil_label.get_theme_font("font")
+	assert(_veil_font != null, "the Header type variation's font failed to load headless -- the veil measurement would silently use the wrong typeface")
 	_font_size = _label.get_theme_font_size("font_size")
 	assert(_font_size == 14, "theme font_size did not settle to wi_ui_theme's 14 (got %d) -- the one-frame settle regressed" % _font_size)
 	_line_spacing = float(_label.get_theme_constant("line_spacing"))
@@ -160,6 +197,18 @@ func _check_skeleton_scene() -> void:
 			for field: String in TOAST_FIELDS:
 				if entity.has(field):
 					_check_toast(loc + "." + field, String(entity[field]))
+				# v0.15 A4: `<field>_variants` (interactions.gd's
+				# LATER-SATISFIED-WINS entity contract) carries REPLACEMENT copy for
+				# the same panel and was never measured. A variant is exactly where
+				# an unmeasured overflow hides: it renders in one late game state
+				# only, so no ordinary playtest pass sees it.
+				for vi: int in (entity.get(field + "_variants", []) as Array).size():
+					var raw_variant: Variant = entity[field + "_variants"][vi]
+					if not (raw_variant is Dictionary):
+						continue
+					var variant: Dictionary = raw_variant
+					if variant.has(field):
+						_check_toast("%s.%s_variants[%d].%s" % [loc, field, vi, field], String(variant[field]))
 			if entity.has("talk_pool"):
 				for i: int in (entity["talk_pool"] as Array).size():
 					var raw: Variant = entity["talk_pool"][i]
@@ -347,6 +396,160 @@ func _check_help_content() -> void:
 		if lines > HELP_SECTION_LINE_CAP:
 			_fail("HELP", loc, line, "%d wrapped lines > %d-line fixed-panel budget (HELP_PANEL_SIZE has no ScrollContainer)" % [lines, HELP_SECTION_LINE_CAP])
 
+
+
+## VEIL-COPY/UNMEASURED (P4). Two arms: every authored veil string fits the
+## column (wrapping to at most VEIL_LINE_MAX_ROWS), and the WORST-CASE finale
+## block -- every region/act presence banked, the longest path close, and three
+## held classes -- fits the viewport at some rung of the separation ladder, so
+## `_apply_line_budget` never has to evict a line the player has not read.
+func _check_veil_lines() -> void:
+	var src := FileAccess.get_file_as_string(VEIL_PATH)
+	assert(src != "", "could not read " + VEIL_PATH)
+	for table: String in VEIL_COPY_TABLES:
+		for line: String in _veil_copy_in(src, table):
+			_check_veil_line("sleep_veil.gd[%s]" % table, line)
+	for line: String in _veil_composed_lines():
+		_check_veil_line("sleep_veil.gd[composed]", line)
+
+	var worst: Array[String] = []
+	worst.append_array(_veil_copy_in(src, "FINALE_LINES_OPEN"))
+	# Three classes is the shipped ceiling a player can carry into the finale
+	# (two starts plus one evolution/consolidation survivor); the recount prints
+	# one line each, so they are part of the block whether or not they are copy.
+	for i in 3:
+		worst.append("[%s Level %d.]" % [_longest_class_name(), 20])
+	worst.append_array(_veil_copy_in(src, "FINALE_REGION_LINES"))
+	worst.append(_longest_of(_veil_copy_in(src, "FINALE_CLOSE_LINES")))
+	worst.append_array(_veil_copy_in(src, "FINALE_LINK_LINE"))
+	var fitted := false
+	var tightest_height := 0.0
+	for raw_sep: Variant in VEIL_LINE_SEPARATIONS:
+		tightest_height = _veil_block_height(worst, float(raw_sep))
+		if tightest_height <= VEIL_BLOCK_MAX_HEIGHT:
+			fitted = true
+			break
+	if not fitted:
+		_fail("VEIL/BLOCK", "sleep_veil.gd[_finale_lines]", " / ".join(worst),
+			"worst-case finale is %d lines and needs %.0fpx at the tightest separation > %.0fpx viewport budget -- lines would evict unread" % [worst.size(), tightest_height, VEIL_BLOCK_MAX_HEIGHT])
+
+
+func _check_veil_line(loc: String, text: String) -> void:
+	if text == "":
+		return
+	_measured_count += 1
+	if _has_unsplittable_word_at(text, VEIL_LINE_TEXT_WIDTH, VEIL_LINE_FONT_SIZE):
+		_fail("VEIL/LINE", loc, text, "contains a single word wider than the %dpx veil column" % int(VEIL_LINE_TEXT_WIDTH))
+		return
+	var rows := _wrapped_line_count_at(text, VEIL_LINE_TEXT_WIDTH, VEIL_LINE_FONT_SIZE)
+	if rows > VEIL_LINE_MAX_ROWS:
+		_fail("VEIL/LINE", loc, text, "%d wrapped rows > %d-row veil budget (this is a paragraph, not a GDI line)" % [rows, VEIL_LINE_MAX_ROWS])
+
+
+## The runtime lines sleep_veil.gd composes from data rather than authoring:
+## the class/skill/evolution announcements and the consolidation offer, built
+## here with the LONGEST shipped display names so the widest real line is the
+## one measured.
+func _veil_composed_lines() -> Array[String]:
+	var cls := _longest_class_name()
+	var skill := _longest_skill_name()
+	return [
+		"[%s Class Obtained!]" % cls,
+		"[Skill – %s Obtained!]" % skill,
+		"[%s Level %d!]" % [cls, 20],
+		"[%s Class → %s Class!]" % [cls, cls],
+		"[%s and %s pull toward one another. The Design offers: %s.]" % [cls, cls, cls],
+	]
+
+
+func _longest_class_name() -> String:
+	var best := ""
+	for cls: Dictionary in _load_json("res://data/classes.json").get("classes", []):
+		var name := String(cls.get("display_name", ""))
+		if _single_line_width_at(name, VEIL_LINE_FONT_SIZE) > _single_line_width_at(best, VEIL_LINE_FONT_SIZE):
+			best = name
+	return best
+
+
+func _longest_skill_name() -> String:
+	var best := ""
+	for skill: Dictionary in _load_json("res://data/skills.json").get("skills", []):
+		var name := String(skill.get("display_name", ""))
+		if _single_line_width_at(name, VEIL_LINE_FONT_SIZE) > _single_line_width_at(best, VEIL_LINE_FONT_SIZE):
+			best = name
+	return best
+
+
+func _longest_of(lines: Array[String]) -> String:
+	var best := ""
+	for line: String in lines:
+		if _single_line_width_at(line, VEIL_LINE_FONT_SIZE) > _single_line_width_at(best, VEIL_LINE_FONT_SIZE):
+			best = line
+	return best
+
+
+func _veil_block_height(lines: Array[String], separation: float) -> float:
+	var rows := 0
+	for line: String in lines:
+		rows += _wrapped_line_count_at(line, VEIL_LINE_TEXT_WIDTH, VEIL_LINE_FONT_SIZE)
+	if rows == 0:
+		return 0.0
+	return float(rows) * _veil_font.get_height(VEIL_LINE_FONT_SIZE) + float(max(lines.size() - 1, 0)) * separation
+
+
+## Pulls every double-quoted string out of one const block of sleep_veil.gd and
+## drops the ones that are accomplishment ids rather than copy. Source-parsed on
+## purpose: a mirrored copy of these tables would rot the first time a line is
+## reworded, and the drift tripwires above already pin the numbers.
+func _veil_copy_in(src: String, const_name: String) -> Array[String]:
+	var after := src.get_slice("const %s" % const_name, 1)
+	assert(after != "", "sleep_veil.gd has no `const %s` -- this test's VEIL_COPY_TABLES drifted" % const_name)
+	var stop := after.length()
+	for terminator: String in ["\nconst ", "\nvar ", "\nfunc ", "\nsignal "]:
+		var at := after.find(terminator)
+		if at != -1:
+			stop = mini(stop, at)
+	var block := after.substr(0, stop)
+	var re := RegEx.new()
+	re.compile("\"([^\"]*)\"")
+	var out: Array[String] = []
+	for m: RegExMatch in re.search_all(block):
+		var text := m.get_string(1)
+		if text == "" or _looks_like_identifier(text):
+			continue
+		out.append(text)
+	return out
+
+
+func _looks_like_identifier(text: String) -> bool:
+	if text.contains(" "):
+		return false
+	for i in text.length():
+		var c := text[i]
+		if not ((c >= "a" and c <= "z") or (c >= "0" and c <= "9") or c == "_"):
+			return false
+	return true
+
+
+func _wrapped_line_count_at(text: String, width: float, font_size: int) -> int:
+	if text == "":
+		return 0
+	var size := _veil_font.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, width, font_size)
+	var line_height := _veil_font.get_height(font_size)
+	if line_height <= 0.0:
+		return 1
+	return max(int(round(size.y / line_height)), 1)
+
+
+func _single_line_width_at(text: String, font_size: int) -> float:
+	return _veil_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+
+
+func _has_unsplittable_word_at(text: String, width: float, font_size: int) -> bool:
+	for word: String in text.split(" ", false):
+		if _single_line_width_at(word, font_size) > width:
+			return true
+	return false
 
 
 func _check_ambient_bark(loc: String, text: String) -> void:

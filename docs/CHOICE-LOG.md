@@ -4,6 +4,67 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 A4 viewport correctness (four in-wave calls)
+
+- **The combat feed's fold fix is a LAYOUT fix, not a budget re-cut.** The
+  ledger's own diagnosis ("the viewport height is not a whole multiple of the row
+  height") turned out to be wrong, and measuring said so: the capacity math in
+  `_feed_text_capacity_height` already yields exactly four rows for the 122px
+  panel and four rows are 77px against an 84px allowance. What actually broke was
+  that the label was CENTRED in its MarginContainer — `size_flags_vertical` sits
+  at SHRINK_CENTER by default, so the label rect was its content height parked in
+  the middle of the inner area, and the block grew into the fold from both sides
+  at once. Fix is `SIZE_FILL` + `VERTICAL_ALIGNMENT_TOP`, which makes the label
+  agree with the doc comment that already claimed it was top-aligned.
+  Alternatives considered and rejected: (a) budget the fold deficit TWICE, the
+  toast panel's idiom — correct for a centred label, but it costs the fourth row
+  (a centred 4-row block cannot clear a 30px fold in a 122px panel), and losing a
+  row of feed is the same information loss the entry was filed about; (b) grow
+  the panel for ordinary feed content — the feed band is disjoint-by-contract
+  from the readout and the board above it, and growing it on every fourth line
+  puts that contract in play for a cosmetic gain. Revert path: drop the two
+  property assignments in `build()`.
+- **The journal's line-boundary clip is a WRAPPER, not a measured
+  `custom_minimum_size`.** The body needed to know its available height in order
+  to quantize it, and the available height was its own EXPAND_FILL result — a
+  cycle. Rather than measure-once-then-lock (which is order-dependent and rots if
+  the panel ever resizes), the EXPAND_FILL moved to a plain Control slot and the
+  body anchors full-rect inside it, so the dependency runs one way and the clip
+  is idempotent on every resize. It also fails SAFE: if the metrics are
+  unavailable the body fills the slot exactly as it did before. Revert path:
+  return `size_flags_vertical` to the body and delete the slot.
+- **The veil's line budget TIGHTENS before it evicts.** A wrap-aware budget has
+  to answer "and what if the whole block still does not fit" — a real question
+  now that the finale can carry three act presences, three region lines and a
+  line per held class. Options were: drop lines (loses a level-up the player
+  earned), shrink the font (breaks the one-typeface GDI device), or tighten the
+  gaps. The ladder 18/14/10/6 buys three more rows before anything is lost, and
+  eviction is last-resort and takes the OLDEST line — the one the player has
+  already read — never the one being shown. Revert path: delete
+  `_apply_line_budget` and restore the flat separation of 18.
+- **A drag that PANS is no longer also a tap.** The line-boundary clip moved the
+  journal body's release point by a few pixels and `field_skills_loop` went red:
+  its drag-to-scroll now let go over the `[Basic Cleaning]` row and toggled it
+  into the field loadout. RichTextLabel fires `meta_clicked` on button RELEASE
+  over a meta region regardless of intervening motion, so this was a live
+  player-facing bug the whole time — drag the Skills tab to read past the fold,
+  and whatever row you happen to release on silently goes in or out of your
+  hotbar. Fixed in the ENGINE side (a `_body_gesture_panned` flag set by motion,
+  reset on every fresh press, consumed by the meta handler), NOT by re-aiming the
+  QA script's drag: the script's pins encode the correct behaviour (a single
+  `loadout: ["observe"]`) and were right all along. Revert path: delete the flag
+  and its two guards.
+
+- **`test_copy_fit` SOURCE-PARSES sleep_veil.gd's tables rather than mirroring
+  them.** Every other surface in that suite reads data files; the veil's copy
+  lives in GDScript consts, and a mirrored copy of a copy table rots the first
+  time a line is reworded — silently, because a stale mirror still passes. The
+  parse is narrow (quoted strings inside a named const block, accomplishment ids
+  filtered by shape) and the NUMBERS are still pinned by drift tripwires, which
+  is where drift actually hurts. It also measures with the **Header** variation's
+  font, not the default label font: the veil draws through Header at 24 and
+  measuring the wrong typeface would have made the whole gate decorative.
+
 ## 2026-07-28 — v0.15 A3 toast survival + Lore capture (four in-wave calls)
 
 - **`_pending_sticky` and `_first_wake_hint_pending` DELETED from

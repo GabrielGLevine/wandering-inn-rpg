@@ -31,6 +31,32 @@ const READ_HOLD := 1.5
 const EMPTY_HOLD := 0.4
 const LINE_FONT_SIZE := 24
 
+## v0.15 A4, VISUAL-LOG FINALE/LONG-LINE (P3) + VEIL-COPY/UNMEASURED (P4).
+## Veil lines used to be bare SHRINK_CENTER Labels with no autowrap, so a line
+## drew at its natural width whatever the viewport was: the Invrisil region
+## recap measured 1114px of a 1280px viewport (87%) and burst the centred
+## column every other line forms. These three are the wrap-aware budget, and
+## `test_copy_fit._check_veil_lines` mirrors all three with the drift-tripwire
+## idiom so the ceiling is ENFORCED, never merely observed.
+##
+##  * VEIL_LINE_TEXT_WIDTH is THE COLUMN. Measured: the widest authored
+##    one-thought line in the tables below is 867px ("[You re-cut the ward with
+##    your own hands...]"), so 880 keeps every shipped one-thought line on ONE
+##    row and wraps only genuinely two-sentence copy. AUTHORED COPY IS NEVER
+##    REWRITTEN TO FIT -- that is the whole point of a wrap-aware budget.
+##  * VEIL_BLOCK_MAX_HEIGHT is the 720px viewport less a 24px band top and
+##    bottom. `_line_box` is FULL_RECT with ALIGNMENT_CENTER, so a block taller
+##    than the viewport loses its FIRST and LAST lines off both edges at once.
+##  * VEIL_LINE_SEPARATIONS is the ladder `_apply_line_budget` walks: the first
+##    separation whose measured block fits the budget wins, so a long finale
+##    (three act presences + three region lines + a class per held class)
+##    tightens instead of overflowing. Only when even the tightest rung
+##    overflows does the oldest line evict -- the combat feed's idiom, and the
+##    honest degradation for a paced sequence the player reads line by line.
+const VEIL_LINE_TEXT_WIDTH := 880.0
+const VEIL_BLOCK_MAX_HEIGHT := 672.0
+const VEIL_LINE_SEPARATIONS := [18, 14, 10, 6]
+
 ## The GDI new-game opener. A New Game opens on BLACK: the Grand Design's
 ## voice speaks a few arrival lines in this SAME gold-on-black device
 ## (reusing _black + _add_line + the layer-30 discipline above — one
@@ -190,7 +216,7 @@ func _ready() -> void:
 	_line_box = VBoxContainer.new()
 	UIChrome.apply_theme(_line_box)
 	_line_box.alignment = BoxContainer.ALIGNMENT_CENTER
-	_line_box.add_theme_constant_override("separation", 18)
+	_line_box.add_theme_constant_override("separation", int(VEIL_LINE_SEPARATIONS[0]))
 	_line_box.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_line_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_line_box)
@@ -602,10 +628,59 @@ func _add_line(text: String) -> void:
 	label.add_theme_font_size_override("font_size", LINE_FONT_SIZE)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	# The wrap half of the budget (see VEIL_LINE_TEXT_WIDTH): a fixed-width
+	# autowrapping label centred in the viewport, so a two-sentence line folds
+	# into the column instead of drawing 1114px wide out of it. Short lines are
+	# unchanged on screen -- the label is wider than its text, and the text is
+	# centre-aligned inside it.
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.custom_minimum_size.x = VEIL_LINE_TEXT_WIDTH
 	label.modulate.a = 0.0
 	_line_box.add_child(label)
+	_apply_line_budget()
 	var tween := create_tween()
 	tween.tween_property(label, "modulate:a", 1.0, LINE_FADE)
+
+
+## The height half of the budget. Walks VEIL_LINE_SEPARATIONS for the first
+## rung whose measured block fits VEIL_BLOCK_MAX_HEIGHT and applies it; if even
+## the tightest rung overflows, the OLDEST line evicts (never the newest -- the
+## line just added is the one the player is being shown right now).
+func _apply_line_budget() -> void:
+	if _line_box == null or _line_box.get_child_count() == 0:
+		return
+	for raw_separation: Variant in VEIL_LINE_SEPARATIONS:
+		var separation := int(raw_separation)
+		if _line_block_height(separation) <= VEIL_BLOCK_MAX_HEIGHT:
+			_line_box.add_theme_constant_override("separation", separation)
+			return
+	var tightest := int(VEIL_LINE_SEPARATIONS[VEIL_LINE_SEPARATIONS.size() - 1])
+	_line_box.add_theme_constant_override("separation", tightest)
+	while _line_box.get_child_count() > 1 and _line_block_height(tightest) > VEIL_BLOCK_MAX_HEIGHT:
+		var oldest := _line_box.get_child(0)
+		_line_box.remove_child(oldest)
+		oldest.queue_free()
+
+
+## Measured, not estimated: each row is the FONT's own height at
+## LINE_FONT_SIZE, and a wrapped line contributes every row it wraps to.
+func _line_block_height(separation: int) -> float:
+	var rows := 0
+	var row_height := 0.0
+	for child: Node in _line_box.get_children():
+		var label := child as Label
+		if label == null:
+			continue
+		var font := label.get_theme_font("font")
+		if font == null:
+			continue
+		row_height = font.get_height(LINE_FONT_SIZE)
+		var measured := font.get_multiline_string_size(
+			label.text, HORIZONTAL_ALIGNMENT_CENTER, VEIL_LINE_TEXT_WIDTH, LINE_FONT_SIZE)
+		rows += max(int(round(measured.y / row_height)), 1) if row_height > 0.0 else 1
+	if rows == 0:
+		return 0.0
+	return float(rows) * row_height + float(maxi(_line_box.get_child_count() - 1, 0)) * float(separation)
 
 
 func _finish() -> void:
