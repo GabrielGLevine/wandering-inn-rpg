@@ -779,11 +779,11 @@ Append ONE entry to the EXISTING `hub.text_variants` array (currently two entrie
 }
 ```
 
-- [ ] **Step 1: Shadow-shape audit (mandatory).** The gate `standards_tempered` is a NEW counter, so it cannot be held by ANY shipped fixture (`grimalkin_study_start`, `near_pallass`, `spine_reach_start`, `near_pallass_drake`) — no pinned-route script can match it, and the two study variants keep winning in exactly the states they win today. Record this in "New agent context".
-- [ ] **Step 2:** Verify the gate is not IDENTICAL to a shipped variant's gate (it is not — the two shipped gates are the study bounty counters). An identical gate would silently shadow forever.
-- [ ] **Step 3: Run** `res://tests/test_dialogue.gd`, `res://tests/test_content.gd` (VARIANT_KEYS whitelist: `text_variants` accepts only `_comment`/`requires`/`text`), `res://tests/test_copy_fit.gd` (this string is 246 chars — **confirm the page split reads cleanly or shorten it**; the node's own `_comment` records a 204-char string producing a 12-char orphan page).
-- [ ] **Step 4: Run** `qa/ci_sweep.sh --only grimalkin_study_loop,pallass_peek,spine_reach` — expect green.
-- [ ] **Step 5: Commit** `feat(dialogue): Grimalkin on recovery, squats, and the file`.
+- [x] **Step 1: Shadow-shape audit (mandatory).** The gate `standards_tempered` is a NEW counter, so it cannot be held by ANY shipped fixture (`grimalkin_study_start`, `near_pallass`, `spine_reach_start`, `near_pallass_drake`) — no pinned-route script can match it, and the two study variants keep winning in exactly the states they win today. Record this in "New agent context".
+- [x] **Step 2:** Verify the gate is not IDENTICAL to a shipped variant's gate (it is not — the two shipped gates are the study bounty counters). An identical gate would silently shadow forever.
+- [x] **Step 3: Run** `res://tests/test_dialogue.gd`, `res://tests/test_content.gd` (VARIANT_KEYS whitelist: `text_variants` accepts only `_comment`/`requires`/`text`), `res://tests/test_copy_fit.gd` (this string is 246 chars — **confirm the page split reads cleanly or shorten it**; the node's own `_comment` records a 204-char string producing a 12-char orphan page).
+- [x] **Step 4: Run** `qa/ci_sweep.sh --only grimalkin_study_loop,pallass_peek,spine_reach` — expect green.
+- [x] **Step 5: Commit** `feat(dialogue): Grimalkin on recovery, squats, and the file`.
 
 ### Task 1.7: The smith's post-quest reactive stage
 
