@@ -61,7 +61,16 @@ truncated).
   x≈910), so this worsens as leads accumulate. Cosmetic in the 1-line case,
   information-losing in the 3-line case. Implementer's proposed fix stands and
   is now measured: pause the drain while a modal is open, never re-drop.
-- [ ] QA/SEWERS-WINDOWED-TIMING (P2, WAVE-AUTHORED at `50cbf6b`) —
+- [x] QA/SEWERS-WINDOWED-TIMING (P2, WAVE-AUTHORED at `50cbf6b`) — **FIXED
+  2026-07-28 on `wave/v015-p1-delivery`.** The prediction below held and then
+  went red on CI too: PR #310's canonical sweep failed on exactly these two
+  waits (`cursor=189`), because a loaded 4-job runner burns the same wall-clock
+  holds the windowed run does. Both waits are now `from_start` scans at
+  `timeout_sec: 20`, placed unchanged after `ui_combat_hidden` — delivery is
+  asserted at that checkpoint regardless of which side of `combat_started` the
+  render landed on. Verified 3x green headless AND green windowed at seed 9
+  (windowed reproduces the ledgered 7-pre/1-post split exactly). See
+  docs/CHOICE-LOG.md 2026-07-28.
   `sewers_walkthrough` PASSES headless (what `ci_sweep`/CI run) and FAILS
   windowed at its pinned seed 9: the two post-combat `ui_toast_rendered`
   waits Task 1.3 added as the drain-kick's live proof time out (5.0s each,
