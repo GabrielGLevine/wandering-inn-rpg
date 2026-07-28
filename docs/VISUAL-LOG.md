@@ -16,6 +16,85 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### v0.16 #305 Riverfarm depth — windowed pass (2026-07-28)
+
+Shots: `qa_output/_vlog_{day,dusk,night,post}/` (temporary capture scripts,
+deleted after reading) and the six new canonicals' own windowed runs
+(`flood_ledger_{talk,help,fight}`, `thicket_keeps_{talk,skill,fight}`).
+
+- [x] **FIXED (fix wave, uncommitted at time of writing → see the fix-wave
+  commit on `issue/305-riverfarm-depth`) — BLOCKER-CLASS `witch_hut_door`
+  (witch_hollow 1,7) was INVISIBLE to a player.** `hollow_tree_8`
+  (`hollow_canopy_tree`, cell (0,9)) y-sorted ABOVE the door (144 > 112) and
+  its canopy covers rows 5-9 at x 0-2, so both the door AND the PC standing on
+  the approach cell (1,8) were swallowed by dark canopy
+  (`_vlog_day/17_hut_door_from_approach_day.png`).
+  **Tint was measured NOT to be the lever** — the frame was visually unchanged
+  at `[2.4, 2.4, 2.4]`, because the cause was occlusion, not contrast.
+  **The lever was Y-SORT.** None of the three logged candidates was taken:
+  (a) fails on geometry (the canopy is 5.1 cells tall drawn UP from a bottom
+  anchor, so every column-0 base cell from y 9 to y 12 still covers the
+  approach row, and moving south only raises the sort key); (b) is c-lane art;
+  (c) helps at dusk/night only. Applied instead: the shipped, sort-only
+  `field_y_sort_bias_px` key (`inn_roof`/`rug_green` mechanism; entity-level
+  override precedent `inn_upstairs.json:235`, `street.json:1295`) at **-80.0**
+  on `hollow_tree_6`/`_7`/`_8`, one cell clear of each canopy's own top edge.
+  Pixels do not move. The door, the PC on (1,8), `hollow_offering_pot` (2,7)
+  and `thicket_line_den` (2,2) now render IN FRONT; tree stacking survives
+  (-32 < 16 < 64). The door's tint was then warmed to sunlit timber
+  (`[1.18,1.02,0.78]`, inside `pallass_forge`'s shipped 1.18 precedent) — the
+  plan's named lever, applied second, once occlusion stopped masking it.
+  Re-shot windowed: the door reads as a standalone framed doorway at the
+  hollow's west edge with the tree trunk drawn behind it, and the PC stands
+  clear on the approach cell. Ruling 3 held — the door cell is untouched and
+  `witch_cottage_reachability` re-ran green at seed 9.
+- [ ] Same class, NOT fixed here (no interactive entity reported invisible, so
+  out of the fix wave's scope): the SOUTH treeline `hollow_tree_3`/`_4`/`_5`
+  ((2,13)/(5,13)/(8,13)) canopies cover rows 9-13 across x 1-10 and still
+  y-sort above everything under them, including `briar_collectors_deep` (4,11)
+  and `hollow_true_knot` (8,10). Same one-key fix if a later pass wants it.
+- [ ] `line_stalker_a`/`_b` OVERLAP each other on the `witch_hollow` arena
+  (`thicket_keeps_fight/01_line_stalkers_board.png`): the mothbear rig is
+  taller than one cell, so the north stalker's body covers the south one's
+  head and the pair reads as one two-headed creature until you find the two
+  `44/44` labels. Contrast against the green field is FINE (brown body, grey
+  wings). Same class as the FoTI Grimalkin crowding note — a spawn-cell
+  choice, not a tint one.
+- [ ] `granary_scavenger_a`/`_b` on `inn_cellar` have the same vertical
+  overlap, milder (the `bat` rig is compact)
+  (`flood_ledger_fight/01_granary_scavengers_board.png`). Their warm rust
+  tint separates them from the grey-brown cellar stone cleanly; this pair
+  reads well and only the stacking is worth revisiting.
+- [ ] **NPC `talk_pool` line panel is overdrawn by the expanded field-hotbar
+  readout** (`_vlog_post/32_hunter_post_quest_pool_line.png`): the line panel
+  spans x 40-725 and the readout x 285-1000, and the readout wins, so about
+  three quarters of "The Hunter: Herd's wintering at the north bend..." is
+  covered. PRE-EXISTING and GLOBAL (the readout ships expanded by default and
+  its width grows with the number of known field skills — a mid-game PC hides
+  more of the line than an early one); surfaced here because v0.16 adds three
+  reactive `talk_pool_stages` whose whole point is that line. Layering fix:
+  line panel above the hotbar readout, or shrink/anchor the readout clear of
+  the bottom-left line slot. Same family as the combat-HP-label-through-pause
+  entry below.
+- Confirmed GOOD, no action: both new mood rows LANDED — `riverfarm_mill`
+  and `witch_hut` each render three visibly distinct phase grades and neither
+  is identity white (`sheet_mill_phases`, `sheet_hut_phases`). The village
+  mill door reads clearly as an enterable framed door at the windmill's stone
+  foot from the WEST approach (18,5) (`_vlog_day/11_mill_door_west_day.png`);
+  from the south approach (19,6) the PC's own sprite covers it, which is true
+  of every door directly north of its approach. Ruling 6c holds on both
+  doors: exactly ONE windmill and exactly ONE cottage on screen, no
+  double-rendered building. `hut_ward_scrap`'s five-line [Detect Magic] lore
+  toast renders complete with no fold clipping, and the tallyman's
+  `tally_walk` node wraps to two lines well inside the panel.
+- Watch, not a defect: `witch_hut` carries no light source of any kind, so at
+  night the room is near-black except the ward scrap's own glow
+  (`_vlog_night/15_hut_interior_night.png`). Deliberate for a shuttered
+  abandoned hut, and the four observables are still findable by bumping, but
+  if a later pass wants the room readable at night the fix is one `light`
+  block on `hut_hearth_ash`, not a mood-row lift.
+
+
 ### ⭐ v0.15 Playtest-State bundle — SIX taste asks for the user (2026-07-28)
 
 Every taste/FEEL call v0.15 accumulated, collected once so they can be

@@ -1,0 +1,610 @@
+{
+ "_comment": "v0.16 #305 R1 'The Flood Ledger', the TALK route end to end -- the terminal path and the canonical that owns the riverfarm_mill ROUND TRIP (south approach (19,6) in, arrival (6,7); mill_exit (6,8) out, back to (19,6)). Headman start off the new price_of_a_favor_reported-gated hub row -> the mill by the river -> the tallyman's full tally walk through tally_count to ledger_read_true -> all THREE mill observables with their toasts pinned verbatim -> the READ report, completing beat 2. NO detect_magic in this fixture and no fight: mill_granary_scavengers is armed by heard_flood_ledger and deliberately left standing, so combat_started is asserted absent whole-run. Arrow counts are VISIBLE-option counts in this exact save state and are spelled out at every dialogue step -- price_of_a_favor_reported hides three shipped hub rows, which is what puts the new rows last.",
+ "fixture_save": "flood_ledger_talk_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    10
+   ]
+  },
+  {
+   "_comment": "== GIVE: the headman (11,9). First interact = talk_pool line; second opens riverfarm_headman. ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Former Headman"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_headman"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub at price_of_a_favor_reported (heard_flood_ledger unbanked): 0 'You said you don't truck with witches.', 1 'Just passing through.', 2 'Not much of a headman anymore, is there?', 3 'That ledger of yours. Still short?'. The blight/report/recap rows are all hidden by price_of_a_favor_reported. Take 3 -- the new LAST visible row.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "flood_ledger"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_flood_ledger"
+   }
+  },
+  {
+   "_comment": "flood_brief: 0 \"I'll see to it.\" ends, 1 'One more thing.' returns to hub. Take 0.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE MILL DOOR, SOUTH APPROACH == riverfarm_mill_door sits at (19,5) and is blocked, so 'move up' from (19,6) faces it without stepping. This canonical owns the south approach and the return cell it pairs with; flood_ledger_help owns the west one (18,5), which returns here too -- the deliberate one-cell asymmetry.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    19,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    19,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "riverfarm_mill"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "observed_riverfarm_mill"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_mill_interior_arrival"
+  },
+  {
+   "_comment": "== THE TALLY WALK: the tallyman (4,3). First interact = his talk_pool line, second opens riverfarm_tallyman. ==",
+   "action": "teleport",
+   "map": "riverfarm_mill",
+   "cell": [
+    4,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "The Tallyman"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_tallyman"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Tallyman hub: 0 'Walk the tally with me.' (requires heard_flood_ledger, just banked), 1 'Just looking.'. Take 0.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "tally_walk: 0 'Which household?', 1 'Could be the count, not the crop.'. Take 1 -- the longer leg, so tally_count is walked and not merely reachable.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "The Tallyman",
+    "text": "Four counts, and the last one with the headman's own stick alongside mine. It isn't the count. It's the crop."
+   }
+  },
+  {
+   "_comment": "tally_count: 0 'Then whose crop?' -> tally_name.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "tally_name: 0 'Their crop failed, and they let the village think worse.' banks ledger_read_true (goto tally_truth, not end -- effects on an ENDING option report after dialogue_ended).",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "ledger_read_true"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "flood_ledger",
+    "beat": 1
+   }
+  },
+  {
+   "_comment": "tally_truth: 0 'Gently, then.' ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE THREE MILL OBSERVABLES == each interacted from the cell directly south of it, each banking its own counter and rendering its own toast verbatim.",
+   "action": "teleport",
+   "map": "riverfarm_mill",
+   "cell": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "observed_mill_wheel_pit"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The pinned sluice carries three seasons of high-water scratches, and each one sits higher than the last."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The pinned sluice carries three seasons of high-water scratches, and each one sits higher than the last."
+   }
+  },
+  {
+   "action": "teleport",
+   "map": "riverfarm_mill",
+   "cell": [
+    10,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "observed_mill_high_shelf"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Somebody has cut a notch for every flood since before the village had a headman, and built the shelf a hand above the worst of them."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Somebody has cut a notch for every flood since before the village had a headman, and built the shelf a hand above the worst of them."
+   }
+  },
+  {
+   "action": "teleport",
+   "map": "riverfarm_mill",
+   "cell": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "observed_mill_tally_sticks"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Split tallies. One half stays with the mill, one half goes home with the household, and neither can be altered alone."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Split tallies. One half stays with the mill, one half goes home with the household, and neither can be altered alone."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "02_mill_observables_done"
+  },
+  {
+   "_comment": "The TALK route never fights: mill_granary_scavengers stands armed (heard_flood_ledger is banked) and is simply never approached.",
+   "action": "assert_event_absent",
+   "type": "combat_started",
+   "payload_contains": {}
+  },
+  {
+   "_comment": "== EXIT: mill_exit (6,8), directly south of the arrival cell. Returns to riverfarm_village (19,6) -- the south approach, not the door's own cell. ==",
+   "action": "teleport",
+   "map": "riverfarm_mill",
+   "cell": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "riverfarm_village"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    19,
+    6
+   ]
+  },
+  {
+   "_comment": "== REPORT == same waking, pool spent, so one interact opens riverfarm_headman directly. Teleport does not carry facing -- re-face up.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    11,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_headman"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub post-tally: heard_flood_ledger now hides the start row and ledger_read_true opens the READ report. 0 'You said you don't truck with witches.', 1 'Just passing through.', 2 'Not much of a headman anymore, is there?', 3 'The tally's honest. Somebody's crop failed and they were ashamed of it.'. Take 3.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "flood_ledger_settled"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "flood_ledger",
+    "beat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "flood_ledger"
+   }
+  },
+  {
+   "_comment": "flood_reported_read: 0 \"That's the right answer.\" ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.flood_ledger_settled",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.ledger_read_true",
+   "equals": 1
+  }
+ ]
+}

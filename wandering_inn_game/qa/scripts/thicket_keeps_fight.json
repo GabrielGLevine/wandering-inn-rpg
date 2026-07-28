@@ -1,0 +1,224 @@
+{
+ "_comment": "v0.16 #305 R2 'What the Thicket Keeps', the FIGHT route -- the only live coverage line_stalker_a/_b have. BAND FIXTURE: warrior 10, no mage, melee_hit 57 (COMBAT_BAND_FIXTURES pins the total at 10), matching the thicket_line_den_t3_warrior10_solo cell sim_combat_batch gates the roster at. Starts in witch_hollow one cell south of the den, takes the fight, autoplays the win pinned as thicket_cleared (on_victory) rather than won_combat, then the CLEARED report row at the hunter. Nothing here touches riverfarm_thicket_patch or the standing thicket-watch bounty -- different entity, different map, different roster ids.",
+ "fixture_save": "thicket_fight_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "witch_hollow"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "_comment": "== THE DEN ON THE LINE == thicket_line_den (2,2), directly north of the start cell; the bump faces it without stepping. encounter_when {requires:{heard_thicket_keeps:1}} is MET by the fixture, so the interact arms the fight instead of serving gate_closed_toast.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "arena": "witch_hollow"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_line_stalkers_board"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 40
+  },
+  {
+   "_comment": "Same derived-seed note as flood_ledger_fight: rng_state comes from seed 2, because seed 9's state loses this fight. Confirm/close the board BEFORE reading state -- on_victory banks inside the resolve, which lands after combat_autoplay returns.",
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 20,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "on_victory banks thicket_cleared. The win pin, NOT won_combat: a gray-band fight deposits fractionally and fires no whole-unit accomplishment event for it (GH#211).",
+   "action": "assert_state",
+   "path": "accomplishments.thicket_cleared",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "what_the_thicket_keeps",
+    "beat": 1
+   }
+  },
+  {
+   "_comment": "== REPORT == first interact = the hunter's talk_pool line, second opens riverfarm_hunter.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    12,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "The Hunter"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub: heard_thicket_keeps hides the start row and thicket_cleared opens the CLEARED report. 0 '[Ask him to come with you.]', 1 'Just passing through.', 2 \"Whatever was denning on the line isn't anymore.\". Take 2.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "thicket_answered"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "what_the_thicket_keeps",
+    "beat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "what_the_thicket_keeps"
+   }
+  },
+  {
+   "_comment": "thicket_reported_cleared: 0 \"One thing's a start.\" ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Distinct-counter proof, the fight side of it.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "ward_scrap_read"
+   }
+  }
+ ]
+}

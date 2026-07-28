@@ -349,12 +349,14 @@
    "observe": "A tree grown crooked, leaning in over the path like it's listening."
   },
   {
+   "_comment": "West treeline = BACKDROP, not lid. hollow_canopy_tree is 186x215 at 0.38 (~4.4 x 5.1 cells) drawn up from a bottom anchor, so each canopy covers x 0-2 across the FIVE rows above its base cell and plain y-sort drew it over everything under it. field_y_sort_bias_px -80 (the inn_roof key: sort-only, pixels unmoved) lifts the key clear of that footprint, so witch_hut_door [1,7], the PC on its only approach [1,8], hollow_offering_pot [2,7] and thicket_line_den [2,2] render IN FRONT; tree stacking survives (-32 < 16 < 64). Tint was MEASURED not to be the lever: the door read identically at [2.4,2.4,2.4] while occluded.",
    "id": "hollow_tree_6",
    "kind": "prop",
    "cell": [
     0,
     3
    ],
+   "field_y_sort_bias_px": -80.0,
    "display_name": "Bent Tree",
    "sprite": "hollow_canopy_tree",
    "observe": "A tree grown crooked, leaning in over the path like it's listening."
@@ -366,6 +368,7 @@
     0,
     6
    ],
+   "field_y_sort_bias_px": -80.0,
    "display_name": "Bent Tree",
    "sprite": "hollow_canopy_tree",
    "observe": "A tree grown crooked, leaning in over the path like it's listening."
@@ -377,6 +380,7 @@
     0,
     9
    ],
+   "field_y_sort_bias_px": -80.0,
    "display_name": "Bent Tree",
    "sprite": "hollow_canopy_tree",
    "observe": "A tree grown crooked, leaning in over the path like it's listening."
@@ -586,6 +590,16 @@
       "The fields breathe easier. So do I. Tea?",
       "You did the hollow a kindness. It remembers, and so do I."
      ]
+    },
+    {
+     "id": "riverfarm_witch_ward_scrap",
+     "requires_accomplishment": {
+      "ward_scrap_read": 1
+     },
+     "lines": [
+      "So you found the old hut. Somebody drew that boundary long before me, and drew it kindly.",
+      "A ward that asks is worth ten that shout. Mine ask. Sit, and I'll tell you why."
+     ]
     }
    ],
    "dialogue": [
@@ -704,6 +718,56 @@
     "accomplishment": "trap_disarmed",
     "toast": "You work the knot loose one bramble at a time, careful of the thorns. Snagged in the weave: a coin, tarnished green from the damp.",
     "gold": 1
+   }
+  },
+  {
+   "_comment": "v0.16 #305 ruling 3: a NEW door, leaving witch_cottage_prop [3,7] and witch_cottage_reachability.json byte-untouched (that canonical pins the cottage's single approach [3,8] and its toast twice). [1,7]'s only free cardinal neighbour is [1,8]. sprite `door`, NOT witch_cottage: that art is 5x5 cells and would redraw the cottage two cells away. No `light`: the cottage prop is this map's only one. Tint warmed to sunlit timber once hollow_tree_6's bias stopped the treeline drawing over this cell; [0.62,0.7,0.6] was hollow-green on hollow-green.",
+   "id": "witch_hut_door",
+   "kind": "door",
+   "cell": [
+    1,
+    7
+   ],
+   "display_name": "The Old Hut",
+   "sprite": "door",
+   "tint": [
+    1.18,
+    1.02,
+    0.78
+   ],
+   "observe": "A second, smaller house at the hollow's west edge, its roof half fallen in. The lintel is cut with a line of shallow marks, worn nearly smooth, and the door stands open on the dark.",
+   "to_map": "witch_hut",
+   "to_cell": [
+    4,
+    6
+   ],
+   "on_enter_accomplishment": "observed_witch_hut"
+  },
+  {
+   "id": "thicket_line_den",
+   "kind": "encounter",
+   "cell": [
+    2,
+    2
+   ],
+   "display_name": "The Den on the Line",
+   "sprite": "mothbear",
+   "beast": true,
+   "observe": "Bracken pressed flat in a hollow under the northern trees, and the smell of something that has been eating well.",
+   "gate_closed_toast": "The bracken is pressed flat and the smell of it is old. Nothing about this is your business until somebody tells you otherwise.",
+   "arena": "witch_hollow",
+   "enemies": [
+    "line_stalker_a",
+    "line_stalker_b"
+   ],
+   "allies": [],
+   "on_victory": [
+    "thicket_cleared"
+   ],
+   "encounter_when": {
+    "requires": {
+     "heard_thicket_keeps": 1
+    }
    }
   }
  ]

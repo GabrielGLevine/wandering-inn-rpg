@@ -1,0 +1,523 @@
+{
+ "_comment": "v0.16 #305 R2 'What the Thicket Keeps', the SKILL route -- the only live coverage hut_ward_scrap's positive arm and all four witch_hut observables have. POSITIVE-ONLY by ruling: the run casts [Detect Magic], so a windowed 'not banked yet' assertion would be needed for any locked-state negative and the driver has none (assert_event_absent scans the whole run) -- thicket_keeps_talk owns that negative instead. The mandatory assertion here is the whole-run ABSENCE of detected_wardwork: on_skill_use banks exactly one counter and the scrap must never become a fifth producer of the wardwork threshold. Fixture is mage 7 (which is where detect_magic comes from) + warrior 3, spell_cast raised to 24 for that level; total 10 levels but no combat, so it is deliberately NOT a COMBAT_BAND_FIXTURES row.",
+ "fixture_save": "thicket_skill_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    10
+   ]
+  },
+  {
+   "_comment": "== STRAIGHT TO THE HUT == the fixture pre-banks heard_thicket_keeps with the quest already started (the hunter's start row is therefore hidden and there is nothing to press there), so this run is exactly the SKILL route. Door at witch_hollow (1,7), approached from (1,8).",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    1,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "witch_hut"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "observed_witch_hut"
+   }
+  },
+  {
+   "_comment": "== THE SKILL ROUTE == field-cast [Detect Magic] on hut_ward_scrap (7,2) from (7,3). press_field_skill resolves the bar slot by skill id; the fixture's mage 7 grants detect_magic and its loadout is AUTO, so the skill is on the bar. POSITIVE-ONLY by ruling: this run casts the skill, so no 'not yet banked' negative is expressible here (assert_event_absent has no window). thicket_keeps_talk owns the locked-read negative.",
+   "action": "teleport",
+   "map": "witch_hut",
+   "cell": [
+    7,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    3
+   ]
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "detect_magic"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "skill": "detect_magic",
+    "context": "exploration",
+    "target": "hut_ward_scrap"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "ward_scrap_read"
+   }
+  },
+  {
+   "_comment": "ORDER: record_accomplishment re-evaluates quests INLINE (wi_game.gd:1467), so the beat lands BEFORE use_skill emits its toast -- waiting on the toast first would move the since-cursor past this event.",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "what_the_thicket_keeps",
+    "beat": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "[Detect Magic] — The shard is one link of a boundary that used to ring the whole thicket. It still pulls, faintly, along the exact line the deer refuse to cross. It was drawn to keep something in, and it has been failing at that for a very long time.",
+    "lore": true
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "[Detect Magic] — The shard is one link of a boundary that used to ring the whole thicket. It still pulls, faintly, along the exact line the deer refuse to cross. It was drawn to keep something in, and it has been failing at that for a very long time."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_ward_scrap_lore_toast"
+  },
+  {
+   "_comment": "MANDATORY, and correct as a whole-run assertion because this run must never bank it at any point: on_skill_use banks exactly ONE counter (wi_game.gd:480) and it is ward_scrap_read. detected_wardwork's >=3 threshold has four shipped producers and this scrap is not a fifth.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "detected_wardwork"
+   }
+  },
+  {
+   "_comment": "== THE FOUR HUT OBSERVABLES == each interacted from the cell directly south of it, each banking its own counter and rendering its own toast verbatim.",
+   "action": "teleport",
+   "map": "witch_hut",
+   "cell": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "observed_hut_stoppered_jars"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Every stopper is waxed and every jar is still full. Whoever kept this house left it ready and never came back for it."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Every stopper is waxed and every jar is still full. Whoever kept this house left it ready and never came back for it."
+   }
+  },
+  {
+   "action": "teleport",
+   "map": "witch_hut",
+   "cell": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "observed_hut_drying_rack"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Yarrow, mostly, and a great deal of it. Somebody kept this place stocked for a house they intended to come back to."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Yarrow, mostly, and a great deal of it. Somebody kept this place stocked for a house they intended to come back to."
+   }
+  },
+  {
+   "action": "teleport",
+   "map": "witch_hut",
+   "cell": [
+    1,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "observed_hut_hearth_ash"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The ash is banked the way you bank a fire you mean to wake in the morning. It has been cold for years."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "The ash is banked the way you bank a fire you mean to wake in the morning. It has been cold for years."
+   }
+  },
+  {
+   "action": "teleport",
+   "map": "witch_hut",
+   "cell": [
+    8,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "observed_hut_shuttered_window"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Latched from the inside, and the hut was shut when you found it. You decide not to work that through any further today."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Latched from the inside, and the hut was shut when you found it. You decide not to work that through any further today."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "02_hut_observables_done"
+  },
+  {
+   "_comment": "== BACK OUT == witch_hut_exit (4,7) -> witch_hollow (1,8).",
+   "action": "teleport",
+   "map": "witch_hut",
+   "cell": [
+    4,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "witch_hollow"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    8
+   ]
+  },
+  {
+   "_comment": "== REPORT == the hunter has not been talked to in this run, so first interact = talk_pool line, second opens riverfarm_hunter.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    12,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "The Hunter"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub: heard_thicket_keeps hides the start row and ward_scrap_read opens the READ report. 0 '[Ask him to come with you.]', 1 'Just passing through.', 2 \"The line's a ward. An old one, gone sour.\". Take 2.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "thicket_answered"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "what_the_thicket_keeps",
+    "beat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "what_the_thicket_keeps"
+   }
+  },
+  {
+   "_comment": "thicket_reported_read: 0 \"It's failing, whatever it was.\" ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started",
+   "payload_contains": {}
+  },
+  {
+   "_comment": "Distinct-counter proof: reading the ward must never bank the reroute.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "herd_rerouted"
+   }
+  }
+ ]
+}

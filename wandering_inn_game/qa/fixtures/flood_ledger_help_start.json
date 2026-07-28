@@ -1,0 +1,65 @@
+{
+ "_comment": "flood_ledger_help's start: identical to flood_ledger_talk_start except heard_flood_ledger is pre-banked and flood_ledger is already in started_quests (quest events only fire for started quests, wi_game.gd:1469). The HELP route is the one thing this canonical proves, so the give beat is skipped. player_skills holds basic_cleaning ONLY -- basic_cooking is deliberately absent, so mill_flood_stack's second skill arm is unexercised here and the plain-interact SKILL_UNKNOWN + locked_toast leg is this script's own (see its _comment). Built from riverfarm_fight_start (the region's shipped baseline: post-mounting, door_awakened + riverfarm_attuned, so riverfarm_village/riverfarm_mill/witch_hollow/witch_hut all satisfy test_fixture_coherence MAP_REQUIRES). Adds blight_lifted + heard_price_of_a_favor + price_of_a_favor_reported: both v0.16 side quests hang their start option off price_of_a_favor_reported, so a save that has not closed 'The Price of a Favor' cannot see them. TRAP: rng_state is DERIVED (tests/_derive_rng_state.gd), never hand-typed; WISave restores .state directly and RNG_STATE_MIN_MAGNITUDE rejects small ints.",
+ "version": 5,
+ "state": {
+  "current_map": "riverfarm_village",
+  "player_cell": [
+   11,
+   10
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 5,
+   "mage": 5
+  },
+  "accomplishments": {
+   "blight_lifted": 1,
+   "bought_catalyst": 1,
+   "door_awakened": 1,
+   "door_chain_started": 1,
+   "door_mounted": 1,
+   "door_retrieved": 1,
+   "door_study_sleeps": 3,
+   "door_understood": 1,
+   "given_spear_by_relc": 1,
+   "heard_flood_ledger": 1,
+   "heard_price_of_a_favor": 1,
+   "horns_dig_joined": 1,
+   "horns_dig_started": 1,
+   "learned_magic_from_pisces": 1,
+   "melee_hit": 18,
+   "met_relc": 1,
+   "pedestal_breached": 1,
+   "price_of_a_favor_reported": 1,
+   "recovered_anchor_stone": 1,
+   "riverfarm_attuned": 1,
+   "sparred_with_relc": 1,
+   "spell_cast": 13,
+   "won_combat": 3
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "flood_ledger"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

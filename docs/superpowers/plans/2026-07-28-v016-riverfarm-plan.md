@@ -156,8 +156,8 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 
 **THE ROUTE-REPORT SHAPE (design fork, ruling-adjacent, log it).** The shipped `price_of_a_favor` gates its single report option on `blight_lifted`, one shared counter all three routes bank. That shape is **unavailable here**: R1's HELP route and R2's SKILL route bank through `on_skill_use`, which banks exactly one counter (`src/core/wi_game.gd:480`), so no shared resolve counter can cover them without inventing a second producer for one route only. Instead both quests use **`complete_when_any` over the three route counters** (the shipped `cisterns` resolve-beat idiom, `quests.json:35`) and **three route-specific report options** on the giver's hub, each gated on a single-key accomplishment `requires` and each banking the terminal. This adds no counters beyond the spec's, gives each route its own report line, and keeps every gate single-key.
 
-- [ ] **Step 1 (both sub-tasks): Read `data/quests.json` `price_of_a_favor` (:104-119) and `cisterns` (:30-44) first.** Match their TAB indentation and their `_comment` economy exactly. `price_of_a_favor` is also this lane's **insert anchor** — both blocks go immediately after its closing brace, per the anchor rule above.
-- [ ] **Step 2 (TASK 1a — run just before Task 5's commit): insert `flood_ledger` after `price_of_a_favor`:**
+- [x] **Step 1 (both sub-tasks): Read `data/quests.json` `price_of_a_favor` (:104-119) and `cisterns` (:30-44) first.** Match their TAB indentation and their `_comment` economy exactly. `price_of_a_favor` is also this lane's **insert anchor** — both blocks go immediately after its closing brace, per the anchor rule above.
+- [x] **Step 2 (TASK 1a — run just before Task 5's commit): insert `flood_ledger` after `price_of_a_favor`:**
 
 ```json
 {
@@ -178,7 +178,7 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 }
 ```
 
-- [ ] **Step 3 (TASK 1b — run just before Task 6's commit): insert `what_the_thicket_keeps` after `flood_ledger`** (which by then is the anchor's new neighbour):
+- [x] **Step 3 (TASK 1b — run just before Task 6's commit): insert `what_the_thicket_keeps` after `flood_ledger`** (which by then is the anchor's new neighbour):
 
 ```json
 {
@@ -199,8 +199,8 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 }
 ```
 
-- [ ] **Step 4: Run** `python3 wandering_inn_game/scripts/data_lint.py` — expect clean. Then `res://tests/test_content.gd`: because each block is spliced only once its own producers are already in the working tree, **this must be GREEN at both 1a and 1b**. A `waits on unproduced accomplishment` failure here means the splice ran too early — back it out and finish the producing task first. **Never commit a red tree.**
-- [ ] **Step 5: Census** `python3 scripts/comment_census.py --check` — expect `rc=0`. (Both quest `_comment`s together are ~480 chars against this lane's ~2,420 projection.)
+- [x] **Step 4: Run** `python3 wandering_inn_game/scripts/data_lint.py` — expect clean. Then `res://tests/test_content.gd`: because each block is spliced only once its own producers are already in the working tree, **this must be GREEN at both 1a and 1b**. A `waits on unproduced accomplishment` failure here means the splice ran too early — back it out and finish the producing task first. **Never commit a red tree.**
+- [x] **Step 5: Census** `python3 scripts/comment_census.py --check` — expect `rc=0`. (Both quest `_comment`s together are ~480 chars against this lane's ~2,420 projection.)
 
 ---
 
@@ -222,8 +222,8 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 
 **No new arena, on purpose.** `data/arenas.json` is a four-lane shared file and this lane needs nothing it does not already have: the granary fight reuses **`inn_cellar`** (biome `inn`, 12×8, 5 blocked, the shipped interior-arena language the mill's own biome matches), the den fight reuses **`witch_hollow`** (the arena `riverfarm_thicket_patch` already fights on). Leaving `arenas.json` untouched removes one merge-train conflict surface.
 
-- [ ] **Step 1: Read `data/combatants.json:1055-1085`** (`thicket_remnant_a/_b`) and `:468` (the roster-only convention comment). Match the 1-space-per-level indentation.
-- [ ] **Step 2: Splice the four rows** (`splice_json.py --file data/combatants.json --container combatants --record '<one row>'`, once per row):
+- [x] **Step 1: Read `data/combatants.json:1055-1085`** (`thicket_remnant_a/_b`) and `:468` (the roster-only convention comment). Match the 1-space-per-level indentation.
+- [x] **Step 2: Splice the four rows** (`splice_json.py --file data/combatants.json --container combatants --record '<one row>'`, once per row):
 
 ```json
 {
@@ -293,7 +293,7 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 
 **New-id figure bar (controller ruling F), stated plainly:** `tests/test_combat_visuals.gd` **does NOT measure any new id in this lane — it passes by exclusion.** The bar runs only over the fixed `audited` array (`:609-611`), which contains none of these four ids, and `_board_cells` reads `FIGURE_ROWS[sprite]` where `FIGURE_ROWS` (`:536-541`) holds exactly `bat`, `briar_collector`, `briar_collector_deep`, `ruin_warden` — an unlisted sprite is a **KeyError, not a pass**. So: **do NOT add any of these four ids to `audited`**, and **do not put a derived figure number (cells, rows, "inside the band") into any shipped `data/**` `_comment`** — nothing in CI can verify it and it costs census. The legibility read for these rigs is the **windowed shot** in Task 10 Step 4, and it is the only claim allowed in the VISUAL-LOG row. (`mothbear` ships at default scale and is not in `FIGURE_ROWS` either.)
 
-- [ ] **Step 3: Append two gated cells to `RIVERFARM_CELLS`** (`tests/sim_combat_batch.gd`, after the `briar_collectors_deep_t5_sw14_hunter` rung at :125 so the main-line ladder rung stays visually last is NOT required — append after `riverfarm_thicket_patch_t3_solo` at :114 to keep the stop-band cells together):
+- [x] **Step 3: Append two gated cells to `RIVERFARM_CELLS`** (`tests/sim_combat_batch.gd`, after the `briar_collectors_deep_t5_sw14_hunter` rung at :125 so the main-line ladder rung stays visually last is NOT required — append after `riverfarm_thicket_patch_t3_solo` at :114 to keep the stop-band cells together):
 
 ```gdscript
 	# v0.16 #305: the two new Riverfarm side-quest fights, both SOLO (neither
@@ -312,10 +312,10 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 
 `total_cells` at `sim_combat_batch.gd:321` is `... + RIVERFARM_CELLS.size() + ...` — **computed, no edit needed.** Confirm with `WI_CELL_COUNT_ONLY=1` that the count rose by exactly 2.
 
-- [ ] **Step 4: MEASURE FIRST, then iterate cheaply.** `WI_CELL_COUNT_ONLY=1 godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd` to find the new cells' 0-based indices, then `WI_CELL_RANGE=LO:HI` to run only those two (100 runs each). **Write down each cell's win rate and median rounds — these two numbers are the PR body's band evidence and the reason the gate can stay wide.** Expect win_rate inside **0.55–0.95** and median rounds in **3–12**. If either misses: adjust `con` (24 → 22 raises the win rate, 24 → 26 lowers it) and re-run the slice. **Never widen the window past the stop-cell precedent** — if a cell cannot sit inside 0.55–0.95, the roster is wrong, not the gate.
-- [ ] **Step 5: Run** `res://tests/test_combat_data.gd` (power_level presence, arena spawn reachability) and `res://tests/test_combat_visuals.gd` — expect PASS on both.
-- [ ] **Step 6: Run the FULL `res://tests/sim_combat_batch.gd`** under a 600s alarm — every other gated cell must still be in band (a new roster row cannot move them, but this is the proof, not the assumption).
-- [ ] **Step 7: Census** check; **commit** `feat(combat): granary scavengers and line stalkers, banded at the Riverfarm stop`.
+- [x] **Step 4: MEASURE FIRST, then iterate cheaply.** `WI_CELL_COUNT_ONLY=1 godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd` to find the new cells' 0-based indices, then `WI_CELL_RANGE=LO:HI` to run only those two (100 runs each). **Write down each cell's win rate and median rounds — these two numbers are the PR body's band evidence and the reason the gate can stay wide.** Expect win_rate inside **0.55–0.95** and median rounds in **3–12**. If either misses: adjust `con` (24 → 22 raises the win rate, 24 → 26 lowers it) and re-run the slice. **Never widen the window past the stop-cell precedent** — if a cell cannot sit inside 0.55–0.95, the roster is wrong, not the gate.
+- [x] **Step 5: Run** `res://tests/test_combat_data.gd` (power_level presence, arena spawn reachability) and `res://tests/test_combat_visuals.gd` — expect PASS on both.
+- [x] **Step 6: Run the FULL `res://tests/sim_combat_batch.gd`** under a 600s alarm — every other gated cell must still be in band (a new roster row cannot move them, but this is the proof, not the assumption).
+- [x] **Step 7: Census** check; **commit** `feat(combat): granary scavengers and line stalkers, banded at the Riverfarm stop`.
 
 ---
 
@@ -341,8 +341,8 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 
 **Neither approach is touched by any walked QA route** (re-derived per map for all eight `riverfarm_village`-touching scripts): `longhouse_walkthrough`'s 16-cell walked union is row 4 x7–13, column 7 y4–8 and row 8 x8–11; `thicket_cull_loop` pins (17,15)/(17,14); `regional_work_loop` pins (3,11)/(3,10); `riverfarm_walkthrough`/`riverfarm_fight`/`riverfarm_talk`/`riverfarm_skill` pin (13,5),(2,13),(2,12),(2,11),(10,9),(11,10),(11,8),(11,3),(7,10),(12,4),(12,10). **None of them is (19,5), (19,6), (18,5), (18,6) or (19,7)** — the (18,5)/(18,4) hits that turn up in `regional_work_loop` and `spine_reach` are on `pallass_forge`/`pallass_market`, a different map. Reachability of (19,6): open from (18,6) and (19,7); (20,6) is the dock entity and blocks, which is fine.
 
-- [ ] **Step 1: Load `wi-adding-a-scene`. Read `data/maps/riverfarm/riverfarm_longhouse.json` in full** — it is the structural template (biome `inn`, `floor_layers` with `"cells": "all"`, `walls.segments` with `from`/`to`/`cap`/`face`, `decor`, `ambience` preset `dust_motes`). **Perimeter walls are rendered by `walls.segments` and block implicitly — never double-list a wall cell in `blocked`.** `blocked` holds furniture cells ONLY, each mirrored by a `decor` entry.
-- [ ] **Step 2: Write `data/maps/riverfarm/riverfarm_mill.json`** to this layout spec (12×9 — under the 14×10 parlor yardstick, and under the spec's own ≤14×10 mill cap):
+- [x] **Step 1: Load `wi-adding-a-scene`. Read `data/maps/riverfarm/riverfarm_longhouse.json` in full** — it is the structural template (biome `inn`, `floor_layers` with `"cells": "all"`, `walls.segments` with `from`/`to`/`cap`/`face`, `decor`, `ambience` preset `dust_motes`). **Perimeter walls are rendered by `walls.segments` and block implicitly — never double-list a wall cell in `blocked`.** `blocked` holds furniture cells ONLY, each mirrored by a `decor` entry.
+- [x] **Step 2: Write `data/maps/riverfarm/riverfarm_mill.json`** to this layout spec (12×9 — under the 14×10 parlor yardstick, and under the spec's own ≤14×10 mill cap):
 
 **Grid:** `{"width": 12, "height": 9}`. **Biome:** `"inn"` (the longhouse's own choice; no `data/biomes.json` edit).
 
@@ -493,7 +493,7 @@ The three observables (each `on_interact_accomplishment` + a non-empty `toast`, 
 
 **Light budget:** give the mill at most one `light` (a lantern on the tallyman's post is optional and can be skipped entirely). The ≤8-lights-per-map budget is a shipped convention (`witch_cottage_prop`'s `_comment`).
 
-- [ ] **Step 3: Append the village-side door entity to `data/maps/riverfarm/riverfarm_village.json`.** Read `longhouse_door` (:1009-1043) first and match its shape — **but NOT its sprite choice**, see the box below:
+- [x] **Step 3: Append the village-side door entity to `data/maps/riverfarm/riverfarm_village.json`.** Read `longhouse_door` (:1009-1043) first and match its shape — **but NOT its sprite choice**, see the box below:
 
 ```json
 {
@@ -513,7 +513,7 @@ The three observables (each `on_interact_accomplishment` + a non-empty `toast`, 
 
 **SPRITE FIX (fix round 1) — `"sprite": "door"`, and NO decor row.** The first draft gave this entity `"sprite": "riverfarm_windmill"` plus a paired `decor {"sprite":"door","cell":[19,5]}` row. That would render **a second full windmill** on top of the shipped one: `riverfarm_windmill` is `frame_size [64,96]` = **4×6 cells**, anchor [0.5,0.917], and `riverfarm_windmill_prop` at [20,4] is the map's ONLY windmill art — a second tower one cell left and one down is near-total overlap. The `longhouse_door` precedent does **not** transfer: `riverfarm_longhouse` art exists on that map ONLY as the door entity, so it duplicates nothing. Here the door is a door: `door` is `render_scale` 0.5 and is exactly what the paired decor row would have drawn, so **the decor row is dropped** (keeping it would draw a second door on the same cell). `riverfarm_village.json` gets **one entity append and no decor append** from this task.
 
-- [ ] **Step 4: `data/moods.json` — add `moods.riverfarm_mill`, inserted immediately after the `witch_hollow` key** (the lane's ruling-C anchor). A new interior with no mood row renders flat identity-white at every phase (`src/world/atmosphere.gd:90-91`) and **no test catches it**. **Grade exemplar: `witch_hollow`'s own authored row** (`day [0.72,0.92,0.78]` / `dusk [0.40,0.58,0.50]` / `night [0.20,0.34,0.30]` / `vignette 0.50`, with a `_comment` explaining its green shade) — it is the region's one commented, deliberately-graded row and the only honest reference. **Do NOT calibrate against `riverfarm_longhouse`:** it has NO mood row at all, so it renders at identity white; the mill and hut rows below are the region's FIRST graded interiors, and "warmer/dimmer than the longhouse" would mean "warmer/dimmer than pure white", which is not a target. Working-interior key, warmer than the hollow's green, cool at night through the sluice:
+- [x] **Step 4: `data/moods.json` — add `moods.riverfarm_mill`, inserted immediately after the `witch_hollow` key** (the lane's ruling-C anchor). A new interior with no mood row renders flat identity-white at every phase (`src/world/atmosphere.gd:90-91`) and **no test catches it**. **Grade exemplar: `witch_hollow`'s own authored row** (`day [0.72,0.92,0.78]` / `dusk [0.40,0.58,0.50]` / `night [0.20,0.34,0.30]` / `vignette 0.50`, with a `_comment` explaining its green shade) — it is the region's one commented, deliberately-graded row and the only honest reference. **Do NOT calibrate against `riverfarm_longhouse`:** it has NO mood row at all, so it renders at identity white; the mill and hut rows below are the region's FIRST graded interiors, and "warmer/dimmer than the longhouse" would mean "warmer/dimmer than pure white", which is not a target. Working-interior key, warmer than the hollow's green, cool at night through the sluice:
 
 ```json
 "riverfarm_mill": {
@@ -524,10 +524,10 @@ The three observables (each `on_interact_accomplishment` + a non-empty `toast`, 
 }
 ```
 
-- [ ] **Step 5: `tests/test_content.gd` `LANDMARK_TOKENS` (:1344) — insert `"riverfarm_mill": ["mill", "riverfarm"],` immediately after the `"riverfarm_village"` row** (this lane's anchor). **Mandatory:** R1's `resolve` beat has all three producers inside `riverfarm_mill` while the giver stands on `riverfarm_village`, so `_validate_travel_beat_place_naming` (:1459) arms and hard-fails at :1475 without the row. The beat description in Task 1a contains "the mill by the river" — verify the token match once that splice lands.
-- [ ] **Step 6: `tests/test_fixture_coherence.gd` `MAP_REQUIRES` (:31) — insert `"riverfarm_mill": ["door_awakened", "riverfarm_attuned"],` immediately after the `"witch_hollow"` row** (this lane's anchor; identical values — the mill is only reachable through the village).
-- [ ] **Step 7: Run** `python3 wandering_inn_game/scripts/data_lint.py` (grid/cell in-grid, gate shapes) and the scene-dynamism advisory `godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd` (target composite ≥50; a <30 print is a loud advisory, not a gate).
-- [ ] **Step 8: Census** check; hold the commit until Task 5 supplies `heard_flood_ledger`'s producer (the encounter gate counter must be produced or `_validate_encounter_when` reds) and **Task 1a** splices `flood_ledger`. Commit order inside the R1 group: Task 3 work in the tree → Task 5 dialogue in the tree → **Task 1a splice** → one commit (Task 5 Step 6).
+- [x] **Step 5: `tests/test_content.gd` `LANDMARK_TOKENS` (:1344) — insert `"riverfarm_mill": ["mill", "riverfarm"],` immediately after the `"riverfarm_village"` row** (this lane's anchor). **Mandatory:** R1's `resolve` beat has all three producers inside `riverfarm_mill` while the giver stands on `riverfarm_village`, so `_validate_travel_beat_place_naming` (:1459) arms and hard-fails at :1475 without the row. The beat description in Task 1a contains "the mill by the river" — verify the token match once that splice lands.
+- [x] **Step 6: `tests/test_fixture_coherence.gd` `MAP_REQUIRES` (:31) — insert `"riverfarm_mill": ["door_awakened", "riverfarm_attuned"],` immediately after the `"witch_hollow"` row** (this lane's anchor; identical values — the mill is only reachable through the village).
+- [x] **Step 7: Run** `python3 wandering_inn_game/scripts/data_lint.py` (grid/cell in-grid, gate shapes) and the scene-dynamism advisory `godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd` (target composite ≥50; a <30 print is a loud advisory, not a gate).
+- [x] **Step 8: Census** check; hold the commit until Task 5 supplies `heard_flood_ledger`'s producer (the encounter gate counter must be produced or `_validate_encounter_when` reds) and **Task 1a** splices `flood_ledger`. Commit order inside the R1 group: Task 3 work in the tree → Task 5 dialogue in the tree → **Task 1a splice** → one commit (Task 5 Step 6).
 
 ---
 
@@ -549,8 +549,8 @@ The three observables (each `on_interact_accomplishment` + a non-empty `toast`, 
 
 **Light budget trap:** `witch_cottage_prop`'s `_comment` states it "stays within the ≤8/map light budget (the only light this map ships)". **The new hut door carries NO `light` key.**
 
-- [ ] **Step 1: Read `data/maps/riverfarm/witch_hollow.json` in full**, including `witch_cottage_prop` (:385) and `leyline_stone` (:545) — the latter is the shipped `requires_skill: detect_magic` prop this lane's ward scrap must NOT duplicate.
-- [ ] **Step 2: Write `data/maps/riverfarm/witch_hut.json`** to this layout spec (10×8 — well under parlor scale, "small, wardwork-dense" per the spec):
+- [x] **Step 1: Read `data/maps/riverfarm/witch_hollow.json` in full**, including `witch_cottage_prop` (:385) and `leyline_stone` (:545) — the latter is the shipped `requires_skill: detect_magic` prop this lane's ward scrap must NOT duplicate.
+- [x] **Step 2: Write `data/maps/riverfarm/witch_hut.json`** to this layout spec (10×8 — well under parlor scale, "small, wardwork-dense" per the spec):
 
 **Grid:** `{"width": 10, "height": 8}`. **Biome:** `"inn"` (the longhouse's interior tile language; the mood row below carries the green shade — no `data/biomes.json` edit).
 
@@ -623,7 +623,7 @@ row 7: (1,7)-(3,7) and (5,7)-(8,7)      ← the gap at (4,7) is the exit door
 
 **SPRITE FIX (fix round 1), same class as the mill door.** `witch_cottage` is `frame_size [80,80]` = **5×5 cells**, anchor [0.5,0.963], and `witch_cottage_prop` sits at [3,7]. A second `witch_cottage` at [1,7] is two cells away on the same row, so **3 of its 5 sprite columns overlap the shipped cottage** — one building rendered twice, not two buildings. The hut door therefore ships `"sprite": "door"` (`render_scale` 0.5), the same choice as the mill door, and the "second house" reading is carried entirely by `display_name` + `observe` copy. **No decor row is added on the hollow side either.** Shoot this pairing in a windowed frame **before the Task 4 commit**, not only at Task 10.
 
-- [ ] **Step 3: Append TWO entities to `data/maps/riverfarm/witch_hollow.json`** (hand edit, 1-space indentation, append at the end of `entities` — safe here because `witch_hollow.json` is EXCLUSIVE to this lane, unlike the shared files above; do not reorder or touch any existing row):
+- [x] **Step 3: Append TWO entities to `data/maps/riverfarm/witch_hollow.json`** (hand edit, 1-space indentation, append at the end of `entities` — safe here because `witch_hollow.json` is EXCLUSIVE to this lane, unlike the shared files above; do not reorder or touch any existing row):
 
 ```json
 {
@@ -660,7 +660,7 @@ row 7: (1,7)-(3,7) and (5,7)-(8,7)      ← the gap at (4,7) is the exit door
 
 Interact-only (no `trigger_radius`) so nothing ambushes the pinned hollow routes. Rows 1–4 of `witch_hollow` are walked by no canonical.
 
-- [ ] **Step 4: `data/moods.json` — add `moods.witch_hut`, immediately after `moods.riverfarm_mill`** (which Task 3 Step 4 inserted after the `witch_hollow` anchor, so both of this lane's rows sit together and no other lane's closing brace is touched). **Grade exemplar: `witch_hollow`'s authored row** — the hut is that map's interior, so it should read as the hollow's green shade brought indoors and darkened, cooler and dimmer than `riverfarm_mill`. Remember the region's shipped interiors (`riverfarm_longhouse`) ship UNGRADED, so there is no second reference to compare against:
+- [x] **Step 4: `data/moods.json` — add `moods.witch_hut`, immediately after `moods.riverfarm_mill`** (which Task 3 Step 4 inserted after the `witch_hollow` anchor, so both of this lane's rows sit together and no other lane's closing brace is touched). **Grade exemplar: `witch_hollow`'s authored row** — the hut is that map's interior, so it should read as the hollow's green shade brought indoors and darkened, cooler and dimmer than `riverfarm_mill`. Remember the region's shipped interiors (`riverfarm_longhouse`) ship UNGRADED, so there is no second reference to compare against:
 
 ```json
 "witch_hut": {
@@ -671,10 +671,10 @@ Interact-only (no `trigger_radius`) so nothing ambushes the pinned hollow routes
 }
 ```
 
-- [ ] **Step 5: `LANDMARK_TOKENS` — insert `"witch_hut": ["hut", "hollow", "riverfarm"],` immediately after this lane's `"riverfarm_mill"` row.** R2's `resolve` beat has a same-map route (`herd_rerouted` on `riverfarm_village`, the giver's own map), so `_beat_needs_place_name` returns false and the check does not arm — the row is added anyway per ruling 6, so the table stays honest and a later re-gating of the TALK route cannot silently red.
-- [ ] **Step 6: `MAP_REQUIRES` — insert `"witch_hut": ["door_awakened", "riverfarm_attuned"],` immediately after this lane's `"riverfarm_mill"` row.**
-- [ ] **Step 7: Run** `data_lint.py`; then **run `qa/run_qa.sh witch_cottage_reachability headless --seed=9`** and confirm green — this is the specific proof that ruling 3 held. Then take the **pre-commit windowed shot** of `witch_hollow` around [1,7]/[3,7] and confirm the hut door and the cottage read as two separate objects (this is the sprite-fix proof and cannot wait for Task 10).
-- [ ] **Step 8: Census** check; hold the commit until Task 6 supplies `heard_thicket_keeps`'s producer and **Task 1b** splices `what_the_thicket_keeps`. Commit order inside the R2 group: Task 4 work in the tree → Task 6 dialogue in the tree → **Task 1b splice** → one commit (Task 6 Step 5).
+- [x] **Step 5: `LANDMARK_TOKENS` — insert `"witch_hut": ["hut", "hollow", "riverfarm"],` immediately after this lane's `"riverfarm_mill"` row.** R2's `resolve` beat has a same-map route (`herd_rerouted` on `riverfarm_village`, the giver's own map), so `_beat_needs_place_name` returns false and the check does not arm — the row is added anyway per ruling 6, so the table stays honest and a later re-gating of the TALK route cannot silently red.
+- [x] **Step 6: `MAP_REQUIRES` — insert `"witch_hut": ["door_awakened", "riverfarm_attuned"],` immediately after this lane's `"riverfarm_mill"` row.**
+- [x] **Step 7: Run** `data_lint.py`; then **run `qa/run_qa.sh witch_cottage_reachability headless --seed=9`** and confirm green — this is the specific proof that ruling 3 held. Then take the **pre-commit windowed shot** of `witch_hollow` around [1,7]/[3,7] and confirm the hut door and the cottage read as two separate objects (this is the sprite-fix proof and cannot wait for Task 10).
+- [x] **Step 8: Census** check; hold the commit until Task 6 supplies `heard_thicket_keeps`'s producer and **Task 1b** splices `what_the_thicket_keeps`. Commit order inside the R2 group: Task 4 work in the tree → Task 6 dialogue in the tree → **Task 1b splice** → one commit (Task 6 Step 5).
 
 ---
 
@@ -694,8 +694,8 @@ Interact-only (no `trigger_radius`) so nothing ambushes the pinned hollow routes
 1. **Every new option is APPENDED at the end of the `options` array**, so no existing row's position changes.
 2. **Both R1 and R2 start options are gated `requires {"accomplishment": {"price_of_a_favor_reported": 1}}`** — an accomplishment gate HIDES, and every crossing canonical renders the hub in a state where `price_of_a_favor_reported` is still 0 (the report leg's own press is what banks it, and the hub is rendered before the effect applies). The new rows are therefore invisible in every pinned state. This also reads correctly in fiction: the spec calls the headman's post-chain pools the hook, and both v0.16 threads open after his blight chain closes. **Log this as a design fork.**
 
-- [ ] **Step 1: Re-read `data/dialogue/riverfarm_headman.json` in full** and re-run the pin check before writing: `grep -rn 'riverfarm_headman' wandering_inn_game/qa/scripts/` and confirm no `"options"` payload pins that conversation (verified at plan time: `riverfarm_talk.json`'s three `options` pins are the portal menu and Eloise's shop, not the headman).
-- [ ] **Step 2: APPEND four options to the hub's `options` array** (after the existing "Remind me what needs doing about the witch?" row):
+- [x] **Step 1: Re-read `data/dialogue/riverfarm_headman.json` in full** and re-run the pin check before writing: `grep -rn 'riverfarm_headman' wandering_inn_game/qa/scripts/` and confirm no `"options"` payload pins that conversation (verified at plan time: `riverfarm_talk.json`'s three `options` pins are the portal menu and Eloise's shop, not the headman).
+- [x] **Step 2: APPEND four options to the hub's `options` array** (after the existing "Remind me what needs doing about the witch?" row):
 
 ```json
 {
@@ -733,7 +733,7 @@ Interact-only (no `trigger_radius`) so nothing ambushes the pinned hollow routes
 
 Softlock guard holds: the hub keeps "Just passing through." (`end: true`, neither key) and "Not much of a headman anymore, is there?" (neither key).
 
-- [ ] **Step 3: APPEND four nodes** to the graph:
+- [x] **Step 3: APPEND four nodes** to the graph:
 
 ```json
 "flood_brief": {
@@ -769,7 +769,7 @@ Softlock guard holds: the hub keeps "Just passing through." (`end: true`, neithe
 
 Register check: short declaratives, dry self-indictment, agricultural nouns — the hub's own "I trust my knees more than most people" voice. One em-dash maximum per line (these use none).
 
-- [ ] **Step 4: Create `data/dialogue/riverfarm_tallyman.json`:**
+- [x] **Step 4: Create `data/dialogue/riverfarm_tallyman.json`:**
 
 ```json
 {
@@ -821,8 +821,8 @@ Register check: short declaratives, dry self-indictment, agricultural nouns — 
 
 Traps observed: every node carries an unconditional `text` (a variants-only node is a guaranteed SCRIPT ERROR, `data_lint.py:198-202`); the banking option uses `goto`, not `end: true`, so effects apply before `DIALOGUE_ENDED`; the hub keeps an always-available exit.
 
-- [ ] **Step 5: Run `Task 1a` now** (splice `flood_ledger` after the `price_of_a_favor` anchor — every counter its beats read is produced by the work already in the working tree), then `python3 wandering_inn_game/scripts/data_lint.py`, `res://tests/test_dialogue.gd`, `res://tests/test_content.gd` — expect PASS on all three. R2's block is **not** in the tree yet, by design, so no R2 counter can red here.
-- [ ] **Step 6: Census** check; **commit** `feat(riverfarm): The Flood Ledger, the mill interior, and the tallyman` (this commit carries **Task 1a**, 3 and 5 together — a whole-file `quests.json` state from a single splice run, never a hunk-staged half-diff).
+- [x] **Step 5: Run `Task 1a` now** (splice `flood_ledger` after the `price_of_a_favor` anchor — every counter its beats read is produced by the work already in the working tree), then `python3 wandering_inn_game/scripts/data_lint.py`, `res://tests/test_dialogue.gd`, `res://tests/test_content.gd` — expect PASS on all three. R2's block is **not** in the tree yet, by design, so no R2 counter can red here.
+- [x] **Step 6: Census** check; **commit** `feat(riverfarm): The Flood Ledger, the mill interior, and the tallyman` (this commit carries **Task 1a**, 3 and 5 together — a whole-file `quests.json` state from a single splice run, never a hunk-staged half-diff).
 
 ---
 
@@ -840,7 +840,7 @@ Traps observed: every node carries an unconditional `text` (a variants-only node
 
 **Ruling 1, applied:** the corusdeer herd stays. Corusdeer are a northern-Izril species and the floodplains-only placement in game data was itself a placement choice, so this is a deliberate species introduction to Riverfarm, not a canon break. The brief weaves the hunter's shipped lines in as local colour: his "Lost two lambs to something with thorns for teeth" and "Know that treeline better than the headman does. He'd rather not." are reused verbatim inside the new nodes, so R2 reads as the same man's ongoing year rather than a new thread bolted on. **Nothing contradicts those lines** — the thorn-toothed thing that took his lambs is left exactly as unresolved as it shipped.
 
-- [ ] **Step 1: APPEND four options to the hub `options` array** (after "Just passing through."):
+- [x] **Step 1: APPEND four options to the hub `options` array** (after "Just passing through."):
 
 ```json
 {
@@ -878,7 +878,7 @@ Traps observed: every node carries an unconditional `text` (a variants-only node
 
 Softlock guard holds: "Just passing through." carries neither key.
 
-- [ ] **Step 2: APPEND six nodes:**
+- [x] **Step 2: APPEND six nodes:**
 
 ```json
 "thicket_brief": {
@@ -936,9 +936,9 @@ Softlock guard holds: "Just passing through." carries neither key.
 }
 ```
 
-- [ ] **Step 3: Run `Task 1b` now** (splice `what_the_thicket_keeps` after `flood_ledger`), then `data_lint.py`, `res://tests/test_dialogue.gd`, `res://tests/test_content.gd` — expect PASS. Every counter both quests' beats read now has a producer.
-- [ ] **Step 4: Run** `res://tests/test_reachability.gd` — every `resolution_paths[].accomplishment` must resolve to a real producer.
-- [ ] **Step 5: Census** check; **commit** `feat(riverfarm): What the Thicket Keeps, the witch hut, and the line on the treeline` (carries **Task 1b**, 4 and 6 — again a whole-file `quests.json` state from one splice run).
+- [x] **Step 3: Run `Task 1b` now** (splice `what_the_thicket_keeps` after `flood_ledger`), then `data_lint.py`, `res://tests/test_dialogue.gd`, `res://tests/test_content.gd` — expect PASS. Every counter both quests' beats read now has a producer.
+- [x] **Step 4: Run** `res://tests/test_reachability.gd` — every `resolution_paths[].accomplishment` must resolve to a real producer.
+- [x] **Step 5: Census** check; **commit** `feat(riverfarm): What the Thicket Keeps, the witch hut, and the line on the treeline` (carries **Task 1b**, 4 and 6 — again a whole-file `quests.json` state from one splice run).
 
 ---
 
@@ -958,7 +958,7 @@ Softlock guard holds: "Just passing through." carries neither key.
 - `riverfarm_hunter` runs `riverfarm_hunter_thread_hollow` → `riverfarm_hunter_thread_neutral` (`blight_lifted`). Same reasoning; `thicket_answered` is strictly later.
 - `riverfarm_witch` runs exactly one stage, `riverfarm_witch_paid` (`blight_lifted`). The new stage keys on `ward_scrap_read` — a **different** counter, so the ascending check is inert, and it wins only for players who took R2's SKILL route. Players who took TALK or FIGHT keep her shipped paid-stage lines. Correct, and it is exactly the "the witch's post-chain pool gains one reactive line" the spec asks for.
 
-- [ ] **Step 1: `riverfarm_village.json`, entity `riverfarm_headman` (:1282) — append AFTER `riverfarm_headman_thread_neutral` (ends :1328):**
+- [x] **Step 1: `riverfarm_village.json`, entity `riverfarm_headman` (:1282) — append AFTER `riverfarm_headman_thread_neutral` (ends :1328):**
 
 ```json
 {
@@ -972,7 +972,7 @@ Softlock guard holds: "Just passing through." carries neither key.
 }
 ```
 
-- [ ] **Step 2: `riverfarm_village.json`, entity `riverfarm_hunter` (:1378) — append AFTER `riverfarm_hunter_thread_neutral` (ends :1414):**
+- [x] **Step 2: `riverfarm_village.json`, entity `riverfarm_hunter` (:1378) — append AFTER `riverfarm_hunter_thread_neutral` (ends :1414):**
 
 ```json
 {
@@ -988,7 +988,7 @@ Softlock guard holds: "Just passing through." carries neither key.
 
 The third line is the deliberate consistency stitch required by ruling 1 — it keeps the shipped lamb/thorn mystery open rather than retconning it into R2.
 
-- [ ] **Step 3: `witch_hollow.json`, entity `riverfarm_witch` (:563) — append a SECOND stage AFTER `riverfarm_witch_paid` (ends :589):**
+- [x] **Step 3: `witch_hollow.json`, entity `riverfarm_witch` (:563) — append a SECOND stage AFTER `riverfarm_witch_paid` (ends :589):**
 
 ```json
 {
@@ -1003,8 +1003,8 @@ The third line is the deliberate consistency stitch required by ruling 1 — it 
 
 Register: hearth-warm, oblique, no witch-lore politics on screen — matching her shipped "The fields breathe easier. So do I. Tea?" **Do not touch her `visual_states` (:598-620)** — `riverfarm_walkthrough` pins the elder/young swap across a live phase crossing.
 
-- [ ] **Step 4: Run** `res://tests/test_content.gd` (stage shape + ascending checks) and `data_lint.py`. Re-run `qa/run_qa.sh riverfarm_walkthrough headless --seed=9` to prove the witch's two-form read is untouched.
-- [ ] **Step 5: Census** check; **commit** `feat(riverfarm): post-quest reactive stages for the headman, the hunter and Eloise`.
+- [x] **Step 4: Run** `res://tests/test_content.gd` (stage shape + ascending checks) and `data_lint.py`. Re-run `qa/run_qa.sh riverfarm_walkthrough headless --seed=9` to prove the witch's two-form read is untouched.
+- [x] **Step 5: Census** check; **commit** `feat(riverfarm): post-quest reactive stages for the headman, the hunter and Eloise`.
 
 ---
 
@@ -1019,7 +1019,7 @@ Register: hearth-warm, oblique, no witch-lore politics on screen — matching he
 
 `test_quests.gd:136-142` already enforces that every quest with ≥2 real rungs carries a `_resolution_order` — both blocks do. The pins below are the *co-bank* proofs the file keeps for `halls`, `door`, `crate`, `order` and `favor`; a new quest whose counters can co-bank owes its own.
 
-- [ ] **Step 1: Read `tests/test_quests.gd:85-132`** and match the existing pin idiom exactly. **INSERT immediately after the `var order` (`wrong_order`) block and BEFORE the `price_of_a_favor` comment block** — Pallass anchors its own pins after `price_of_a_favor`, so anchoring there too would put two lanes on the same line. **Locals carry this lane's `r_` prefix:** `:90-132` is ONE continuous function body at a single indent level, so `var ledger` here and Pallass's `var ledger` for `ledger_eats_first` would be a **duplicate declaration** — a parse failure that reds the entire suite on the second merge, not a shadow.
+- [x] **Step 1: Read `tests/test_quests.gd:85-132`** and match the existing pin idiom exactly. **INSERT immediately after the `var order` (`wrong_order`) block and BEFORE the `price_of_a_favor` comment block** — Pallass anchors its own pins after `price_of_a_favor`, so anchoring there too would put two lanes on the same line. **Locals carry this lane's `r_` prefix:** `:90-132` is ONE continuous function body at a single indent level, so `var ledger` here and Pallass's `var ledger` for `ledger_eats_first` would be a **duplicate declaration** — a parse failure that reds the entire suite on the second merge, not a shadow.
 
 ```gdscript
 	# v0.16 #305: both Riverfarm side quests co-bank freely (clear the granary,
@@ -1039,9 +1039,9 @@ Register: hearth-warm, oblique, no witch-lore politics on screen — matching he
 	assert(String(WIQuests.resolved_path(r_thicket, {"thicket_cleared": 1, "herd_rerouted": 1})["accomplishment"]) == "herd_rerouted", "killed then rerouted records the REROUTE")
 ```
 
-- [ ] **Step 2: Run** `res://tests/test_quests.gd` — expect PASS.
-- [ ] **Step 3: Confirm the three other shared-const rows from Tasks 3-4 are in the tree** (`LANDMARK_TOKENS` ×2, `MAP_REQUIRES` ×2) and that `POPULATION_FLOORS` is **untouched** — this lane only adds unconditional interactables (riverfarm_village 24 → 25, witch_hollow 23 → 25), and floors are minimums.
-- [ ] **Step 4: Commit** `test(quests): co-bank ladder pins for the two Riverfarm side quests`.
+- [x] **Step 2: Run** `res://tests/test_quests.gd` — expect PASS.
+- [x] **Step 3: Confirm the three other shared-const rows from Tasks 3-4 are in the tree** (`LANDMARK_TOKENS` ×2, `MAP_REQUIRES` ×2) and that `POPULATION_FLOORS` is **untouched** — this lane only adds unconditional interactables (riverfarm_village 24 → 25, witch_hollow 23 → 25), and floors are minimums.
+- [x] **Step 4: Commit** `test(quests): co-bank ladder pins for the two Riverfarm side quests`.
 
 ---
 
@@ -1059,8 +1059,8 @@ Register: hearth-warm, oblique, no witch-lore politics on screen — matching he
 
 **Fixture-first policy:** all six are fixture starts. All six must satisfy `test_fixture_coherence`'s monotone chains — `blight_lifted → riverfarm_attuned → door_awakened → {door_understood, recovered_anchor_stone, bought_catalyst, door_mounted, door_study_sleeps == 3}` — and `MAP_REQUIRES` for whatever map they stand on. **Base them on `qa/fixtures/riverfarm_fight_start.json`** (already Riverfarm-positioned, already level 10, already satisfies `riverfarm_village`'s MAP_REQUIRES) and add `blight_lifted` + `price_of_a_favor_reported` + `heard_price_of_a_favor` + the route's own prerequisites. `qa/fixtures/spine_reach_start.json` is the reference for what a `price_of_a_favor_reported`-carrying state looks like.
 
-- [ ] **Step 1: Load `wi-writing-qa-scripts`.** Re-read the traps digest: `assert_event_logged`/`_absent` scan the WHOLE run, not since the last wait; a bare `wait_for_event ui_toast_rendered` never proves WHICH toast; pinning an `options` list compares the whole array exactly; `_comment` keys must NEVER go inside `payload_contains`; `assert_state` on a MISSING path ERRORS (use `assert_event_absent` for never-banked counters); JSON coordinates parse as floats so `[5.0,8.0] != [5,8]`; gray-band fights emit no `won_combat` (pin `victories`); never pin toast ORDER across `combat_started`. Fixtures are `"version": 5` (the skill doc's "version 3" is STALE — copy a shipped fixture, never the doc).
-- [ ] **Step 2: Write the six fixtures.** Each: copy `riverfarm_fight_start.json`, set `current_map`/`player_cell`/`player_facing` (a 2-vector, never a string), set `classes`, add accomplishments. **Re-derive `rng_state` for every one** via `godot --headless --path wandering_inn_game --script res://tests/_derive_rng_state.gd -- 9` and paste the printed state — never hand-type; `RNG_STATE_MIN_MAGNITUDE` is 1e6 (`test_fixture_coherence.gd:378`).
+- [x] **Step 1: Load `wi-writing-qa-scripts`.** Re-read the traps digest: `assert_event_logged`/`_absent` scan the WHOLE run, not since the last wait; a bare `wait_for_event ui_toast_rendered` never proves WHICH toast; pinning an `options` list compares the whole array exactly; `_comment` keys must NEVER go inside `payload_contains`; `assert_state` on a MISSING path ERRORS (use `assert_event_absent` for never-banked counters); JSON coordinates parse as floats so `[5.0,8.0] != [5,8]`; gray-band fights emit no `won_combat` (pin `victories`); never pin toast ORDER across `combat_started`. Fixtures are `"version": 5` (the skill doc's "version 3" is STALE — copy a shipped fixture, never the doc).
+- [x] **Step 2: Write the six fixtures.** Each: copy `riverfarm_fight_start.json`, set `current_map`/`player_cell`/`player_facing` (a 2-vector, never a string), set `classes`, add accomplishments. **Re-derive `rng_state` for every one** via `godot --headless --path wandering_inn_game --script res://tests/_derive_rng_state.gd -- 9` and paste the printed state — never hand-type; `RNG_STATE_MIN_MAGNITUDE` is 1e6 (`test_fixture_coherence.gd:378`).
 
 The baseline `qa/fixtures/riverfarm_fight_start.json` carries `melee_hit: 18, spell_cast: 13, won_combat: 3` — **exactly warrior 5 / mage 5**. Any fixture that moves to `warrior 10` must move those counters too.
 
@@ -1077,8 +1077,8 @@ The baseline `qa/fixtures/riverfarm_fight_start.json` carries `melee_hit: 18, sp
 
 `thicket_skill_start` must hold `detect_magic` legitimately: the skill is granted by `classes.json:82` (mage level 7, requires `spell_cast` 24) — the fixture's `classes` and its `used_skills`/`spell_cast` counter must make that class level reachable, or `test_fixture_coherence`'s impossible-class arm reds. Mirror whichever shipped fixture already fields `detect_magic` (grep `qa/fixtures/` for it) rather than inventing the numbers. It must also have `detect_magic` **on the field hotbar loadout**, because the script drives it with `press_field_skill` (below), which fails the run outright when the skill is not on the bar.
 
-- [ ] **Step 3: `tests/test_fixture_coherence.gd` `COMBAT_BAND_FIXTURES` (:19) — insert `"flood_ledger_fight_start": 10,` and `"thicket_fight_start": 10,` immediately after the `"riverfarm_fight_start"` row** (this lane's anchor). The map is a whitelist (`:309` returns early on a miss), so this is opt-in — take it, because both fights are measured at `t3_warrior10` and an untagged fight fixture can silently drift off band. **The `10` is a TOTAL across all held classes**, which is why both fixtures drop mage to zero.
-- [ ] **Step 4: Write the six scripts.** **Two driver facts settle the shapes below (fix round 1, both verified in `qa/test_driver.gd`):** (1) **`assert_event_absent` has NO window** — `:520-522` calls `_has_event(type, payload_contains)` over the WHOLE run; `from_start` exists only on `wait_for_event` (`:512` / `_wait_for_event` at `:810`). A "not yet banked at this point in the run" assertion is therefore **impossible** and any script needing one must be split. (2) **Use `press_field_skill {"skill": "<id>"}`** (`:160-168`), which resolves the bar slot from the skill id and fails loudly when it is not on the bar — **never `press hotbar_N`**, which silently drifts the moment a fixture's kit ordering changes. Every one opens with the fixture-start title idiom (`ui_title_gate_rendered` → confirm → `ui_title_rendered` → move down 1 → confirm → `game_loaded` → `world_ready` → `assert_state current_map` / `player_cell`). Route shapes:
+- [x] **Step 3: `tests/test_fixture_coherence.gd` `COMBAT_BAND_FIXTURES` (:19) — insert `"flood_ledger_fight_start": 10,` and `"thicket_fight_start": 10,` immediately after the `"riverfarm_fight_start"` row** (this lane's anchor). The map is a whitelist (`:309` returns early on a miss), so this is opt-in — take it, because both fights are measured at `t3_warrior10` and an untagged fight fixture can silently drift off band. **The `10` is a TOTAL across all held classes**, which is why both fixtures drop mage to zero.
+- [x] **Step 4: Write the six scripts.** **Two driver facts settle the shapes below (fix round 1, both verified in `qa/test_driver.gd`):** (1) **`assert_event_absent` has NO window** — `:520-522` calls `_has_event(type, payload_contains)` over the WHOLE run; `from_start` exists only on `wait_for_event` (`:512` / `_wait_for_event` at `:810`). A "not yet banked at this point in the run" assertion is therefore **impossible** and any script needing one must be split. (2) **Use `press_field_skill {"skill": "<id>"}`** (`:160-168`), which resolves the bar slot from the skill id and fails loudly when it is not on the bar — **never `press hotbar_N`**, which silently drifts the moment a fixture's kit ordering changes. Every one opens with the fixture-start title idiom (`ui_title_gate_rendered` → confirm → `ui_title_rendered` → move down 1 → confirm → `game_loaded` → `world_ready` → `assert_state current_map` / `player_cell`). Route shapes:
 
   - **`flood_ledger_talk`** — headman start (teleport [11,10], move up, interact, `dialogue_started riverfarm_headman`, arrow to the new LAST visible option, confirm, `quest_started flood_ledger` + `heard_flood_ledger`) → walk out to the mill door (teleport [19,6], **move up** — the door sits at (19,5), directly north of the approach, and the cell is blocked so the step becomes a face — interact, `map_changed riverfarm_mill`, `assert_state player_cell [6,7]`; this is the canonical that pins the SOUTH approach, the one `mill_exit` returns to) → screenshot the interior → tallyman (teleport [4,4], move up, interact ×2, walk the tally to `ledger_read_true`) → **the three observables** (interact each, assert its counter and pin its toast text verbatim) → **the detect_magic gate-proof leg** is NOT here (this fixture has no `detect_magic`); instead assert `assert_event_absent combat_started` → exit door back (teleport [6,7], move down, interact, `map_changed riverfarm_village`, `assert_state player_cell [19,6]`) → headman report (teleport [11,10], move up, interact, arrow to the read-report option, confirm) → `accomplishment_recorded flood_ledger_settled` → `quest_beat_completed {id: flood_ledger, beat: 2}` → `quest_completed flood_ledger`.
   - **`flood_ledger_help`** — same skeleton, but at the mill use **`press_field_skill {"skill": "basic_cleaning"}`** on `mill_flood_stack`, assert `skill_used` + `flood_prep_done` + the exact `[Basic Cleaning]` toast, then the worked-report option. Also fire `basic_cooking` on the same prop if the fixture holds it, to prove the second arm (or `assert_event_logged skill_unknown` if it does not — pick one and pin it, do not leave it ambiguous). **This script is also the `mill_flood_stack` locked-toast owner:** before the skill press, a plain `press interact` on the stack emits `SKILL_UNKNOWN` + the entity's **`locked_toast`** (there is no `skill_hint_toast` on this entity — it carries no `requires_skill`, so that arm can never fire; see Task 3 Step 2). Pin the `locked_toast` text verbatim.
@@ -1091,12 +1091,12 @@ The baseline `qa/fixtures/riverfarm_fight_start.json` carries `melee_hit: 18, sp
 
   **Arrow-count discipline:** every "arrow to the new option" step counts **VISIBLE options only** in that fixture's exact state. Derive the count from a real run's `events.jsonl` (`ui_dialogue_shown` payload), never by reading the JSON and guessing.
 
-- [ ] **Step 5: Register in `qa/manifest.json` FIRST, then the AGENTS.md table.** `ci_sweep.sh` hard-fails at startup if the two disagree. Six entries, `"seed": 9`, `"tiers": ["full"]` (the Riverfarm family ships full-only; no smoke), each with its `fixture` and a real `note`. **Insert them immediately after the `witch_cottage_reachability` entry** (this lane's anchor — not at the end of `scripts[]`, where all four lanes would collide). Leave `surfaces` for the generator.
-- [ ] **Step 6: Insert six rows into the `wandering_inn_game/AGENTS.md` seed table immediately after the `thicket_cull_loop` row (:363)** — this lane's anchor, again not at the table's end. Match the shipped `| script | seed | purpose |` format, e.g. `| `flood_ledger_talk` | 9 (fixture `flood_ledger_talk_start`) | R1 TALK terminal path: headman start, the mill round trip, the tallyman's ledger read, three mill observables, report |`.
-- [ ] **Step 7: Regenerate, in this commit:** `python3 wandering_inn_game/scripts/derive_qa_surfaces.py` (bare IS the write for that script), then **`python3 scripts/render_qa_notes.py --write`**, then **bare `python3 scripts/render_qa_notes.py`** as the check (`rc=0` + `PASS: QA notes match manifest`), then `python3 scripts/check_doc_drift.py`. Confirm `derive_qa_surfaces.py --check` exits 0. **A bare `render_qa_notes.py` alone regenerates NOTHING** — it is the check, and the #312 leak-check red is exactly what happens when the write step is skipped. **Merge-train:** `QA-SCRIPT-NOTES.md` is rendered from the WHOLE manifest, so it must be re-rendered at every train merge that brings in another lane's manifest rows; this lane's green render does not survive the next merge.
-- [ ] **Step 8: Run each script individually:** `wandering_inn_game/qa/run_qa.sh <script> headless --seed=9`. A `missing result.json` with `rc=0` is a **RED**, never a pass. Read `qa_output/<script>/result.json` per script.
-- [ ] **Step 9: Run `res://tests/test_fixture_coherence.gd`** — expect PASS on all six new fixtures.
-- [ ] **Step 10: Census** check; **commit** `test(qa): six Riverfarm side-quest canonicals with fixtures and seed-table rows`.
+- [x] **Step 5: Register in `qa/manifest.json` FIRST, then the AGENTS.md table.** `ci_sweep.sh` hard-fails at startup if the two disagree. Six entries, `"seed": 9`, `"tiers": ["full"]` (the Riverfarm family ships full-only; no smoke), each with its `fixture` and a real `note`. **Insert them immediately after the `witch_cottage_reachability` entry** (this lane's anchor — not at the end of `scripts[]`, where all four lanes would collide). Leave `surfaces` for the generator.
+- [x] **Step 6: Insert six rows into the `wandering_inn_game/AGENTS.md` seed table immediately after the `thicket_cull_loop` row (:363)** — this lane's anchor, again not at the table's end. Match the shipped `| script | seed | purpose |` format, e.g. `| `flood_ledger_talk` | 9 (fixture `flood_ledger_talk_start`) | R1 TALK terminal path: headman start, the mill round trip, the tallyman's ledger read, three mill observables, report |`.
+- [x] **Step 7: Regenerate, in this commit:** `python3 wandering_inn_game/scripts/derive_qa_surfaces.py` (bare IS the write for that script), then **`python3 scripts/render_qa_notes.py --write`**, then **bare `python3 scripts/render_qa_notes.py`** as the check (`rc=0` + `PASS: QA notes match manifest`), then `python3 scripts/check_doc_drift.py`. Confirm `derive_qa_surfaces.py --check` exits 0. **A bare `render_qa_notes.py` alone regenerates NOTHING** — it is the check, and the #312 leak-check red is exactly what happens when the write step is skipped. **Merge-train:** `QA-SCRIPT-NOTES.md` is rendered from the WHOLE manifest, so it must be re-rendered at every train merge that brings in another lane's manifest rows; this lane's green render does not survive the next merge.
+- [x] **Step 8: Run each script individually:** `wandering_inn_game/qa/run_qa.sh <script> headless --seed=9`. A `missing result.json` with `rc=0` is a **RED**, never a pass. Read `qa_output/<script>/result.json` per script.
+- [x] **Step 9: Run `res://tests/test_fixture_coherence.gd`** — expect PASS on all six new fixtures.
+- [x] **Step 10: Census** check; **commit** `test(qa): six Riverfarm side-quest canonicals with fixtures and seed-table rows`.
 
 ---
 
@@ -1104,7 +1104,7 @@ The baseline `qa/fixtures/riverfarm_fight_start.json` carries `melee_hit: 18, sp
 
 **Settle the tree BEFORE launching a sweep** — a sweep launched while edits continue produces a mixed-state verdict; kill and relaunch.
 
-- [ ] **Step 1: Load `wi-verifying-changes`. Run the full local gate order:**
+- [x] **Step 1: Load `wi-verifying-changes`. Run the full local gate order:**
   1. `python3 wandering_inn_game/scripts/data_lint.py` (this is NOT pytest; there is no `scripts/tests/test_data_lint.py` in this layout)
   2. `python3 scripts/comment_census.py --check`
   3. `python3 scripts/sync_agent_guidance.py` (guidance-mirror check)
@@ -1112,13 +1112,13 @@ The baseline `qa/fixtures/riverfarm_fight_start.json` carries `melee_hit: 18, sp
   5. `qa/run_qa.sh load_gate headless`
   6. every `tests/test_*.gd` under a 240s alarm, each verdicted on rc + `^PASS` + zero-noise grep
   7. `tests/sim_combat_batch.gd` and `tests/sim_class_paths.gd` under 600s alarms
-- [ ] **Step 2: Targeted re-gate.** `qa/ci_sweep.sh --touching` for each shared surface, then run the union:
+- [x] **Step 2: Targeted re-gate.** `qa/ci_sweep.sh --touching` for each shared surface, then run the union:
   - `data/maps/riverfarm/riverfarm_village.json` → `longhouse_walkthrough, regional_work_loop, riverfarm_fight, riverfarm_skill, riverfarm_talk, riverfarm_walkthrough, spine_reach, thicket_cull_loop`
   - `data/maps/riverfarm/witch_hollow.json` → adds `witch_cottage_reachability, trader_earn_loop`
   - `data/quests.json` → **20+ canonicals** via `MONOLITH_SYSTEMS` (GH#281): `cisterns_*, crate_*, door_chain_*, horns_dig_*, invrisil_disagreement_*, missing_recruit_loop, pallass_walkthrough, ...`. The `wi-writing-qa-scripts` claim that this maps to zero scripts is **out of date** — budget the time.
   - `data/combatants.json` → every combat-touching canonical at its pinned seed.
-- [ ] **Step 3: Full sweep.** `qa/ci_sweep.sh` cannot run foreground in one Bash call — start it writing to a log, then poll with short foreground `sleep 60; tail -1 <log>` calls and read `rc=` from the log's own echo. Note that a full sweep runs `qa/flush_artifacts.sh` first and **WIPES prior windowed PNGs** — do the windowed pass AFTER the sweep, not before.
-- [ ] **Step 4: Load `wi-machine-playtest`. Windowed shots (player eyes, not logic):**
+- [x] **Step 3: Full sweep.** `qa/ci_sweep.sh` cannot run foreground in one Bash call — start it writing to a log, then poll with short foreground `sleep 60; tail -1 <log>` calls and read `rc=` from the log's own echo. Note that a full sweep runs `qa/flush_artifacts.sh` first and **WIPES prior windowed PNGs** — do the windowed pass AFTER the sweep, not before.
+- [x] **Step 4: Load `wi-machine-playtest`. Windowed shots (player eyes, not logic):**
   - the mill door on the village map at day and at dusk (does a `door`-sprite entity at the tower's base read as enterable next to `riverfarm_dock`, and is there exactly ONE windmill on screen?) — plus a frame from the **west approach (18,5)** as well as the south one, since both are legal
   - `riverfarm_mill` interior at day, dusk and night (mood row sanity — a flat white room means the mood row did not land)
   - the tallyman's talk_pool line and the ledger-walk dialogue at full width (copy-fit)
@@ -1127,8 +1127,10 @@ The baseline `qa/fixtures/riverfarm_fight_start.json` carries `melee_hit: 18, sp
   - both new fights on the board: `granary_scavenger_a/_b` on `inn_cellar` (do two `bat` rigs at 0.56 separate from each other and from the cellar floor?) and `line_stalker_a/_b` on `witch_hollow` (green-on-green separation). **These windowed reads ARE the legibility verdict for the four new ids** — `test_combat_visuals` never measures them (ruling F), so the VISUAL-LOG row states what was SEEN and must not quote a derived cell figure.
   - the headman's and hunter's hubs in the post-quest state (option count, no orphaned rows)
   Drain every finding to `docs/VISUAL-LOG.md`.
-- [ ] **Step 5: Write `docs/CHOICE-LOG.md` entries** for every decision listed in this plan's rulings and forks.
+- [x] **Step 5: Write `docs/CHOICE-LOG.md` entries** for every decision listed in this plan's rulings and forks.
 - [ ] **Step 6: Open the PR** using `.github/PULL_REQUEST_TEMPLATE/issue-close.md`: `Closes #305`; `## Choices made` (option taken + rejected alternative + reason, one per CHOICE-LOG entry); `## Validation evidence` (exact command + one-line result per gate — never "everything passed"), **including the two new sim cells' MEASURED win rate and median rounds and the shipped `riverfarm_thicket_patch_t3_solo` rate beside them — that table, not the gate width, is this lane's region-band ordering proof (ruling A)**, and **this lane's absolute projected `_comment` character total (2,647 chars, measured) so the controller can sum the four lanes before the merge train (ruling B)**; `## Player-visible proof` (which windowed script/seed, what was checked by eye); `## New agent context` (the `on_skill_use` single-counter contract at `wi_game.gd:480`; the headman/hunter first-visible-option dependency in the three riverfarm canonicals); `## Deferred / follow-ups` (the leads rows below). **Head commit message contains `[ci-full]`.**
+
+  > **NOT DONE BY THE IMPLEMENTER LANE.** Opening the PR requires `gh` and a push, both outside this worker's permissions. Every input the body needs is recorded: measured band table + census total in `.lane-progress.md` and CHOICE-LOG entry 1, the eleven lane decisions in `docs/CHOICE-LOG.md`, the windowed findings in `docs/VISUAL-LOG.md`. Controller opens it.
 
 ---
 
@@ -1203,25 +1205,25 @@ Every risk below has its mitigation baked into a step above; the step is named.
 
 Nothing in this lane may be called done until every line here is a recorded command with a recorded one-line result.
 
-- [ ] `python3 wandering_inn_game/scripts/data_lint.py` → clean
-- [ ] `python3 scripts/comment_census.py --check` → `rc=0`, DATA ratio ≤ 15.0%; **record this lane's absolute new `_comment` char total and compare it against the 2,647-char projection**
-- [ ] `python3 scripts/sync_agent_guidance.py` → no diff
-- [ ] `python3 scripts/render_qa_notes.py --write` → file rewritten, then bare `python3 scripts/render_qa_notes.py` → `rc=0` + `PASS: QA notes match manifest`, then `python3 scripts/check_doc_drift.py` → clean
-- [ ] `python3 wandering_inn_game/scripts/derive_qa_surfaces.py --check` → `rc=0`
-- [ ] `qa/run_qa.sh load_gate headless` → PASS
-- [ ] Every `tests/test_*.gd`, individually: `rc=0` **AND** a `^PASS` line **AND** zero `SCRIPT ERROR|Parse Error|WARNING` — reported per script, never as "everything passed"
-- [ ] `tests/sim_combat_batch.gd` full run → both new cells inside **0.55–0.95** with median rounds 3–12, **their measured rates and medians written down for the PR body**, **and every pre-existing gated cell still in band**
-- [ ] `tests/sim_class_paths.gd` → PASS
-- [ ] All six new canonicals green at seed 9, each with a real `result.json`
-- [ ] `qa/ci_sweep.sh --touching` union re-gate green (riverfarm maps + quests.json monolith set + combatants.json)
-- [ ] Full `qa/ci_sweep.sh` green (log-and-poll)
-- [ ] Windowed machine-playtest pass complete, findings drained to `docs/VISUAL-LOG.md`
+- [x] `python3 wandering_inn_game/scripts/data_lint.py` → clean
+- [x] `python3 scripts/comment_census.py --check` → `rc=0`, DATA ratio ≤ 15.0%; **record this lane's absolute new `_comment` char total and compare it against the 2,647-char projection**
+- [x] `python3 scripts/sync_agent_guidance.py` → no diff
+- [x] `python3 scripts/render_qa_notes.py --write` → file rewritten, then bare `python3 scripts/render_qa_notes.py` → `rc=0` + `PASS: QA notes match manifest`, then `python3 scripts/check_doc_drift.py` → clean
+- [x] `python3 wandering_inn_game/scripts/derive_qa_surfaces.py --check` → `rc=0`
+- [x] `qa/run_qa.sh load_gate headless` → PASS
+- [x] Every `tests/test_*.gd`, individually: `rc=0` **AND** a `^PASS` line **AND** zero `SCRIPT ERROR|Parse Error|WARNING` — reported per script, never as "everything passed"
+- [x] `tests/sim_combat_batch.gd` full run → both new cells inside **0.55–0.95**, **their measured rates and medians written down for the PR body**, **and every pre-existing gated cell still in band**. **AMENDED in-lane (CHOICE-LOG entry 1):** neither new cell carries `check_rounds`, so the "median rounds 3–12" clause does not apply to them — the authoritative precedent `riverfarm_thicket_patch_t3_solo` clones the same roster at the same build, carries no `check_rounds` either, and measures median 2 itself. MEASURED: `granary_scavengers_t3_warrior10_solo` **0.81 / median 2**, `thicket_line_den_t3_warrior10_solo` **0.81 / median 2**, beside the shipped stop cell's **0.74 / median 2**; all 136 cells green.
+- [x] `tests/sim_class_paths.gd` → PASS
+- [x] All six new canonicals green at seed 9, each with a real `result.json`
+- [x] `qa/ci_sweep.sh --touching` union re-gate green (riverfarm maps + quests.json monolith set + combatants.json)
+- [x] Full `qa/ci_sweep.sh` green (log-and-poll)
+- [x] Windowed machine-playtest pass complete, findings drained to `docs/VISUAL-LOG.md`
 
 ## Exit criteria
 
 1. `flood_ledger` and `what_the_thicket_keeps` are both completable end-to-end on **all three routes each**, each route banking a distinct counter and each producing a distinct journal resolution line, proven by six green canonicals.
 2. `riverfarm_mill` and `witch_hut` are walk-in only (no portal rows), each hosts at least one quest beat, each carries ≥3 non-quest observables with pinned toast copy, each has a `data/moods.json` row and a `LANDMARK_TOKENS` row, and both arrival directions are asserted in a canonical — **`flood_ledger_talk` owns the mill round trip, `thicket_keeps_talk` owns the hut round trip** (and the `hut_ward_scrap` locked-toast negative). Neither door ships a building sprite: both are `"sprite": "door"`, and neither adds a `decor` row.
-3. Both new fights are gated in `RIVERFARM_CELLS` at the **stop-cell window 0.55–0.95** (`t3_warrior10`, `check_rounds`), their measured win rates and median rounds are recorded in the PR body beside `riverfarm_thicket_patch_t3_solo`'s as the band-ordering evidence, and no other gated cell moved.
+3. Both new fights are gated in `RIVERFARM_CELLS` at the **stop-cell window 0.55–0.95** (`t3_warrior10`; **NO `check_rounds`** — amended in-lane, CHOICE-LOG entry 1, matching the `riverfarm_thicket_patch_t3_solo` precedent they clone, which carries none and measures median 2), their measured win rates and median rounds are recorded in the PR body beside `riverfarm_thicket_patch_t3_solo`'s as the band-ordering evidence, and no other gated cell moved.
 4. The Former Headman, the Hunter and Eloise each gained exactly one reactive `talk_pool_stage`, appended last, keyed to a terminal (or, for Eloise, to the SKILL route counter), with the shadow-out audit written down.
 5. `witch_cottage_prop` and `qa/scripts/witch_cottage_reachability.json` are byte-identical to `main`; `riverfarm_thicket_patch`, `thicket_remnants_culled` and `bounty_standing_thicket_watch` are untouched; `detected_wardwork` gained no fifth producer.
 6. `data/arenas.json`, `data/leads.json`, `data/shipped_ids.json`, `data/sprites.json`, `scripts/generate_shipped_ids.py`, `tests/test_shipped_ids.gd` and everything under `src/` are untouched by this lane.

@@ -107,6 +107,89 @@
       }
      },
      "goto": "favor_recap"
+    },
+    {
+     "text": "That ledger of yours. Still short?",
+     "requires": {
+      "accomplishment": {
+       "price_of_a_favor_reported": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "heard_flood_ledger": 1
+      }
+     },
+     "effects": [
+      {
+       "quest": "flood_ledger"
+      },
+      {
+       "accomplishment": "heard_flood_ledger"
+      }
+     ],
+     "goto": "flood_brief"
+    },
+    {
+     "_comment": "REPORT ROWS all carry heard_flood_ledger beside their route counter: mill_flood_stack has no quest-start gate and basic_cleaning is the PC's STARTING field skill, so a wander into the mill banked flood_prep_done with started_quests empty and this hub then rendered the ask and the answer at once, settling a quest never offered. Stated on all three so a later ungated producer cannot leak either.",
+     "text": "The tally's honest. Somebody's crop failed and they were ashamed of it.",
+     "requires": {
+      "accomplishment": {
+       "heard_flood_ledger": 1,
+       "ledger_read_true": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "flood_ledger_settled": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "flood_ledger_settled"
+      }
+     ],
+     "goto": "flood_reported_read"
+    },
+    {
+     "text": "The flood work's done. The count came right in the doing.",
+     "requires": {
+      "accomplishment": {
+       "heard_flood_ledger": 1,
+       "flood_prep_done": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "flood_ledger_settled": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "flood_ledger_settled"
+      }
+     ],
+     "goto": "flood_reported_worked"
+    },
+    {
+     "text": "Your shortfall had teeth. The granary corner's clear now.",
+     "requires": {
+      "accomplishment": {
+       "heard_flood_ledger": 1,
+       "granary_cleared": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "flood_ledger_settled": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "flood_ledger_settled"
+      }
+     ],
+     "goto": "flood_reported_cleared"
     }
    ]
   },
@@ -182,6 +265,50 @@
     },
     {
      "text": "Understood.",
+     "end": true
+    }
+   ]
+  },
+  "flood_brief": {
+   "speaker": "Former Headman",
+   "text": "River comes up every spring, and every spring we count what we can carry above the line. This year the count's eleven bushels short and there isn't a thief in this village. That's worse than a thief. Go down to the mill, walk the tally with the tallyman, and bring me an answer I can live with.",
+   "options": [
+    {
+     "text": "I'll see to it.",
+     "end": true
+    },
+    {
+     "text": "One more thing.",
+     "goto": "hub"
+    }
+   ]
+  },
+  "flood_reported_read": {
+   "speaker": "Former Headman",
+   "text": "Ashamed. Three seasons of it, and they'd sooner be counted light-fingered than counted unlucky. Then we don't say the name. Eleven bushels off my own share and the ledger balances, and the village can go on thinking whatever keeps it civil.",
+   "options": [
+    {
+     "text": "That's the right answer.",
+     "end": true
+    }
+   ]
+  },
+  "flood_reported_worked": {
+   "speaker": "Former Headman",
+   "text": "You did a week of my people's week in a day, and the count came right because somebody finally stood in that shed long enough to see all of it at once. I've been recounting a stack I couldn't see over. I'll take the lesson.",
+   "options": [
+    {
+     "text": "It counts better in daylight.",
+     "end": true
+    }
+   ]
+  },
+  "flood_reported_cleared": {
+   "speaker": "Former Headman",
+   "text": "Teeth. Eleven bushels of teeth. I'd rather it was vermin than a neighbour and I'm not proud of that either. Take something off the field board, and don't tell me what you found down there again.",
+   "options": [
+    {
+     "text": "Fair enough.",
      "end": true
     }
    ]
