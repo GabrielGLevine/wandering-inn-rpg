@@ -1525,7 +1525,7 @@ REGISTER PURITY CHECK on that line: no package, no venue, no Rest, no factor, no
 
 **Why (ruling D):** the first draft claimed this file outright and said "append at EOF". Pallass edits the same file in its very first task (Task 0.1, a preflight that lands *before* this lane), adding **Forge Hall Apprentice** and **Den-Shop Keeper** — and its own ownership table listed the file under neither Exclusive nor SHARED. Both lanes appending at the same EOF point is a designed-in conflict. The controller resolved it by **pre-landing three stub section headers at the plan commit**, so each lane edits only its own lines.
 
-- [ ] **Step 1: Confirm the stub, do not confirm a gap.** `grep -n -i "hedault" docs/design/character-profiles.md` returns the **pre-landed stub** at `:525-527`:
+- [x] **Step 1: Confirm the stub, do not confirm a gap.** `grep -n -i "hedault" docs/design/character-profiles.md` returns the **pre-landed stub** at `:525-527`:
 
 ```markdown
 ## Hedault (v0.16 #306 STUB — Invrisil lane fills this section in place;
@@ -1534,7 +1534,7 @@ REGISTER PURITY CHECK on that line: no package, no venue, no Rest, no factor, no
 ```
 
   If that stub is missing, **stop and report to the controller** — do not append at EOF and do not invent a header. Leave Pallass's two stubs (`## Forge Hall Apprentice` :516, `## Den-Shop Keeper` :521) untouched whether they are still placeholders or already filled.
-- [ ] **Step 2: Replace the two stub header lines and the placeholder line with the real section, in place** (short — this is a writing contract, not an essay):
+- [x] **Step 2: Replace the two stub header lines and the placeholder line with the real section, in place** (short — this is a writing contract, not an essay):
 
 ```markdown
 ## Hedault (profile added 2026-07-28; v0.16 I1 lane, #306)
@@ -1555,8 +1555,8 @@ REGISTER PURITY CHECK on that line: no package, no venue, no Rest, no factor, no
   most respectful thing anyone does for the client all quest.
 ```
 
-- [ ] **Step 3: Diff discipline.** `git diff docs/design/character-profiles.md` must show **only** the three stub lines replaced by this section — zero context lines touched at EOF, zero lines touched in the Pallass stubs. Anything else is a merge-train conflict waiting to happen.
-- [ ] **Step 4: Run** `python3 scripts/check_doc_drift.py` (doc structure) and `python3 scripts/sync_agent_guidance.py` (guidance-mirror check); **commit** `docs(profiles): Hedault's voice contract (#306)`.
+- [x] **Step 3: Diff discipline.** `git diff docs/design/character-profiles.md` must show **only** the three stub lines replaced by this section — zero context lines touched at EOF, zero lines touched in the Pallass stubs. Anything else is a merge-train conflict waiting to happen.
+- [x] **Step 4: Run** `python3 scripts/check_doc_drift.py` (doc structure) and `python3 scripts/sync_agent_guidance.py` (guidance-mirror check); **commit** `docs(profiles): Hedault's voice contract (#306)`.
 
 ---
 

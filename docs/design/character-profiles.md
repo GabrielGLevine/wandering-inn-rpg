@@ -522,6 +522,19 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
 ## place at Task 0.1; scaffolded at plan commit)
 (placeholder — replaced by the Pallass lane)
 
-## Hedault (v0.16 #306 STUB — Invrisil lane fills this section in place;
-## scaffolded at plan commit)
-(placeholder — replaced by the Invrisil lane)
+## Hedault (profile added 2026-07-28; v0.16 I1 lane, #306)
+- Canon (wiki + `docs/design/hedault-enchanting-spec.md:8-11`): human
+  [Enchanter] of Invrisil, ATTESTED canon-native. Exacting, humorless,
+  fair to a fault, **hates being touched**. Services priced formally;
+  **no haggling, ever** — a haggle is answered by restating the price.
+- Voice contract (as shipped, `data/dialogue/hedault_enchanting.json`):
+  imperatives, not pleasantries ("State the item", "Set it on the
+  cloth", "Stand where I put you"). Prices and facts stated flat. He
+  refuses to speculate outside his own trade and says so ("I will not
+  speculate further in a shop"). Praise is delivered as the absence of
+  correction. Never warm, never cruel, never charming and immune to it.
+- Register bar: Book-17, no Vol 8+ content, no seal content. He reads
+  CRAFT only — a fed draw versus a set one — and stops there.
+- v0.16 (I1, "A Setting for a Lady"): he will not cut a mount around a
+  lie. The comedy and the kindness are both in his refusal being the
+  most respectful thing anyone does for the client all quest.
