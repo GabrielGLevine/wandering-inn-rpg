@@ -1325,6 +1325,17 @@
       "Sorry, I don't mean to- never mind. Long nights lately.",
       "Wolves didn't used to come this close to the fences. Whatever's stirring up that hollow is pushing everything our way, wolves included."
      ]
+    },
+    {
+     "id": "riverfarm_headman_flood_ledger",
+     "requires_accomplishment": {
+      "flood_ledger_settled": 1
+     },
+     "lines": [
+      "Ledger balances. First time in three years it's balanced honest.",
+      "River's due in a fortnight and for once I know exactly what's above the line.",
+      "I've stopped recounting. Turns out that was most of the problem, {addr}."
+     ]
     }
    ],
    "observe": "A ledger under one arm, mud to the knee, the look of a man doing three jobs badly instead of one job well.",
@@ -1410,6 +1421,17 @@
       "Lost two lambs to something with thorns for teeth. Wasn't a wolf.",
       "Know that treeline better than the headman does. He'd rather not.",
       "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health."
+     ]
+    },
+    {
+     "id": "riverfarm_hunter_thicket_answered",
+     "requires_accomplishment": {
+      "thicket_answered": 1
+     },
+     "lines": [
+      "Herd's wintering at the north bend. First year I've known where they'd be.",
+      "Still don't walk that line after dark. Knowing what it is didn't make it friendly.",
+      "Two lambs I lost this spring. Whatever took them, it wasn't the thing on the line."
      ]
     }
    ],

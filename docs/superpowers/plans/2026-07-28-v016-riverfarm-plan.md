@@ -958,7 +958,7 @@ Softlock guard holds: "Just passing through." carries neither key.
 - `riverfarm_hunter` runs `riverfarm_hunter_thread_hollow` → `riverfarm_hunter_thread_neutral` (`blight_lifted`). Same reasoning; `thicket_answered` is strictly later.
 - `riverfarm_witch` runs exactly one stage, `riverfarm_witch_paid` (`blight_lifted`). The new stage keys on `ward_scrap_read` — a **different** counter, so the ascending check is inert, and it wins only for players who took R2's SKILL route. Players who took TALK or FIGHT keep her shipped paid-stage lines. Correct, and it is exactly the "the witch's post-chain pool gains one reactive line" the spec asks for.
 
-- [ ] **Step 1: `riverfarm_village.json`, entity `riverfarm_headman` (:1282) — append AFTER `riverfarm_headman_thread_neutral` (ends :1328):**
+- [x] **Step 1: `riverfarm_village.json`, entity `riverfarm_headman` (:1282) — append AFTER `riverfarm_headman_thread_neutral` (ends :1328):**
 
 ```json
 {
@@ -972,7 +972,7 @@ Softlock guard holds: "Just passing through." carries neither key.
 }
 ```
 
-- [ ] **Step 2: `riverfarm_village.json`, entity `riverfarm_hunter` (:1378) — append AFTER `riverfarm_hunter_thread_neutral` (ends :1414):**
+- [x] **Step 2: `riverfarm_village.json`, entity `riverfarm_hunter` (:1378) — append AFTER `riverfarm_hunter_thread_neutral` (ends :1414):**
 
 ```json
 {
@@ -988,7 +988,7 @@ Softlock guard holds: "Just passing through." carries neither key.
 
 The third line is the deliberate consistency stitch required by ruling 1 — it keeps the shipped lamb/thorn mystery open rather than retconning it into R2.
 
-- [ ] **Step 3: `witch_hollow.json`, entity `riverfarm_witch` (:563) — append a SECOND stage AFTER `riverfarm_witch_paid` (ends :589):**
+- [x] **Step 3: `witch_hollow.json`, entity `riverfarm_witch` (:563) — append a SECOND stage AFTER `riverfarm_witch_paid` (ends :589):**
 
 ```json
 {
@@ -1003,8 +1003,8 @@ The third line is the deliberate consistency stitch required by ruling 1 — it 
 
 Register: hearth-warm, oblique, no witch-lore politics on screen — matching her shipped "The fields breathe easier. So do I. Tea?" **Do not touch her `visual_states` (:598-620)** — `riverfarm_walkthrough` pins the elder/young swap across a live phase crossing.
 
-- [ ] **Step 4: Run** `res://tests/test_content.gd` (stage shape + ascending checks) and `data_lint.py`. Re-run `qa/run_qa.sh riverfarm_walkthrough headless --seed=9` to prove the witch's two-form read is untouched.
-- [ ] **Step 5: Census** check; **commit** `feat(riverfarm): post-quest reactive stages for the headman, the hunter and Eloise`.
+- [x] **Step 4: Run** `res://tests/test_content.gd` (stage shape + ascending checks) and `data_lint.py`. Re-run `qa/run_qa.sh riverfarm_walkthrough headless --seed=9` to prove the witch's two-form read is untouched.
+- [x] **Step 5: Census** check; **commit** `feat(riverfarm): post-quest reactive stages for the headman, the hunter and Eloise`.
 
 ---
 

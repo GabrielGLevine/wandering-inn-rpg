@@ -586,6 +586,16 @@
       "The fields breathe easier. So do I. Tea?",
       "You did the hollow a kindness. It remembers, and so do I."
      ]
+    },
+    {
+     "id": "riverfarm_witch_ward_scrap",
+     "requires_accomplishment": {
+      "ward_scrap_read": 1
+     },
+     "lines": [
+      "So you found the old hut. Somebody drew that boundary long before me, and drew it kindly.",
+      "A ward that asks is worth ten that shout. Mine ask. Sit, and I'll tell you why."
+     ]
     }
    ],
    "dialogue": [
