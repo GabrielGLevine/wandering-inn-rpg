@@ -1638,7 +1638,7 @@ Every risk from the Pallass recon plus the cross-cutting risks that apply, each 
 
 ### Task 6.1: Drain every fork to `docs/CHOICE-LOG.md`
 
-- [ ] Append one entry per controller ruling applied — the lane rulings 1–10 **and** the wave rulings A–F (A: 0.55–0.95 gated cells with medians in the PR body; B: the 112 per-lane census constant and the projected lane total; C: named shared-append anchors and the `p_` local prefix; D: character-profiles filled in place; E: `render_qa_notes.py --write`; F: new ids are not measured by `test_combat_visuals`) — plus every design fork taken during implementation (map stems, biome choices, the ladder orders, the loop's two intermediate counters, the interact-only encounter shape, the leads deferral, cut/keep calls under census pressure). Never a user gate — the spec's line 180 is explicit.
+- [x] Append one entry per controller ruling applied — the lane rulings 1–10 **and** the wave rulings A–F (A: 0.55–0.95 gated cells with medians in the PR body; B: the 112 per-lane census constant and the projected lane total; C: named shared-append anchors and the `p_` local prefix; D: character-profiles filled in place; E: `render_qa_notes.py --write`; F: new ids are not measured by `test_combat_visuals`) — plus every design fork taken during implementation (map stems, biome choices, the ladder orders, the loop's two intermediate counters, the interact-only encounter shape, the leads deferral, cut/keep calls under census pressure). Never a user gate — the spec's line 180 is explicit.
 
 ---
 

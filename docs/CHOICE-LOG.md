@@ -4,6 +4,219 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.16 REGION DEPTH, PALLASS LANE (#307)
+
+Two side quests with three real routes each ("Tempered Standards",
+"The Ledger Eats First"), two walk-in interiors, one new combatant,
+seven canonicals. Content only; zero engine work. Every ruling below
+was applied and is proven by a named gate — the ones that changed
+shape under contact are marked FORK.
+
+- **Interior map stems are `pallass_forge_hall` / `pallass_den_shop`,
+  not the spec's `pallass/forge_hall.json`** (ruling 1). A stem of
+  `forge_hall` gives map key `forge_hall`, which is already the ARENA
+  id at `data/arenas.json:2104`. The namespaces are separate, so
+  nothing breaks mechanically — but `board_renderer.gd:445-448`
+  resolves mood by arena id FIRST and only then falls back to
+  `moods[map_id]`, and `data_lint.py:73-80` keys maps by file stem
+  globally. Deviation from the spec filename, taken deliberately.
+- **P1's FIGHT banks `golem_recalibrated` and nothing else** (ruling
+  2). `bounty_forge_golem_cull` (`data/bounties.json:357`) completes on
+  `forge_golems_culled >= 2`; reusing that counter would have let a
+  side quest silently feed a repeatable Guild bounty. New encounter id,
+  new combatant id (`forge_temper_golem`), and
+  `pallass_standards_fight` asserts `forge_golems_culled` ABSENT for
+  the whole run — the claim is gated, not just written down.
+- **The encounter is INTERACT-ONLY, and that is now provable** (ruling
+  2 cont., danger D27). `wi_game.gd:341-366` fires `start_combat(id)`
+  directly on a proximity hit and never reads `conversation`; the
+  parley arm exists only on the interact path
+  (`interactions.gd:151-160`). An entity carrying BOTH `conversation`
+  and `trigger_radius` therefore ships green through every gate and
+  ambushes the player mid-crossing. Nothing in the suite rejects the
+  pair. Two live proofs instead: `pallass_standards_fight` pins
+  `combat_started` at ZERO at the step where the parley node has
+  already rendered, and `pallass_standards_skill` walks (7,7)/(8,7)/(9,7)
+  — the rig's entire radius-1 footprint — with the encounter present
+  and asserts `combat_started` absent for the whole run.
+- **P1's FIGHT closes the standing "no QA script fights forge-hall
+  content" debt** (ruling 3; `HANDOFF.md:86`,
+  `docs/VISUAL-LOG.md:449-451`). `pallass_standards_fight` fights the
+  shipped `forge_hall` arena on the board for real and the windowed run
+  screenshots it. `data/arenas.json` is UNTOUCHED by this lane.
+- **Grimalkin gets `text_variants` only — never a new hub option**
+  (ruling 4). `grimalkin_study_loop` pins his option array at three
+  separate lines and `pallass_peek` does index navigation on it. The
+  new `standards_tempered` variant and the UNCHANGED two-row option
+  array are pinned together in one assertion in
+  `pallass_standards_talk`.
+- **Every new hub option is gated on a counter its crossing fixtures
+  cannot hold** (ruling 5), and `pallass_depth_gates_check` is the
+  standing proof: the smith's hub and the attendant's hub both render
+  exactly three rows off a save holding none of the lane's counters,
+  with both clerk hubs pinned unchanged beside them. `_loosely_equal`
+  compares an options array element-wise WITH a size check, so one
+  leaked row reds that script before it can red `pallass_walkthrough`.
+- **Every fixture derives from `spine_reach_start`** (ruling 6) — the
+  only shipped save holding `door_awakened` + `pallass_attuned` +
+  `elevator_pass_stamped` together, which is what P2 needs because its
+  giver stands behind the permit wall while its offices are a tier
+  below. Both new interiors got `MAP_REQUIRES` rows, and the two
+  interior fixtures are what make those rows bite instead of passing
+  vacuously.
+- **P2's lift staging is composed ONLY from shipped primitives**
+  (ruling 7): three `once_per_waking` carry props + `variants` counter
+  thresholds + repeated `door_when` transitions. The Grand Lift is one
+  boolean-gated prop pair (`interactions.gd:94-100`); no staged or
+  partial transit exists and none was added. `pallass_ledger_carry`
+  pins each leg's exact toast, which is what makes a dead threshold
+  fail loud.
+- **Carry-leg `variants` thresholds are (leg index − 1)** (danger
+  D29). `variants` resolve at `interactions.gd:129-135` BEFORE the
+  interact banks at `:138`, so a threshold equal to the leg index can
+  never fire and the staged toast silently never renders. Dray rank
+  `when: 1` (leg 2), receiving dock `when: 2` (leg 3).
+- **Post-quest reactive stages key on the quest TERMINALS only**
+  (ruling 8) — `standards_tempered` for `forge_smith`,
+  `ledger_unstuck` for `lift_attendant`. Never `elevator_pass_stamped`
+  or anything implied by standing on the forge tier: that gate is
+  structurally always-met up there, so a stage keyed to it permanently
+  shadows the base pool (the b7 adjudication, CHOICE-LOG:349-361).
+- **Placement space is x1..x24 / y3..y8 on both 26×11 tiers** (ruling
+  9). `pallass_peek` walks full perimeter laps on both maps and
+  `pallass_walkthrough`/`pallass_round_trip` traverse the y=9 lane end
+  to end; nothing this lane added sits on any of it.
+- **AGENTS.md's stale (4,7) Pallass portal note stays stale here**
+  (ruling 10) — the live arrival is (4,8). Close-PR hygiene, not a
+  lane edit.
+- **Wave ruling A — gated sim cells take the standing 0.55–0.95 window
+  with `check_rounds`, and band ordering is proven by recorded
+  medians.** `forge_temper_golem_t5_sw14_solo` measured win 0.64 /
+  median 4 at 100 runs, strictly below the shipped
+  `forge_calibration_golem_t5_sw14_solo`'s 0.71 / 4 at the SAME build.
+  A narrow window encoding that ordering would red on seed noise; the
+  ordering claim lives in the PR body. Only the new row's own stats
+  moved (drafted `con: 54` measured 0.59, four points off the floor →
+  `con: 50` → 0.64).
+- **Wave ruling B — this lane's census constant is 112, not 450.** The
+  `450 + 0.1765x` the recon handed every lane is the WHOLE-WAVE slack
+  solved from `(166676 + C) / (1113728 + C + N) <= 0.15`; four lanes
+  each claiming it overspends the shared ~383-char slack and reds
+  leak-check on the third and fourth merge. Measured outcome: +2,977
+  `_comment` chars against +37,609 non-comment, budget 6,750 — landing
+  EXACTLY on the plan's projected absolute total, with the DATA ratio
+  FALLING 15.0% → 14.7%.
+- **Wave ruling C — every shared append lands on a NAMED anchor row,
+  and new test locals take a lane prefix.** Four lanes appending after
+  the same final row is a designed-in four-way one-line conflict; two
+  lanes declaring `var ledger` in `test_quests.gd`'s single continuous
+  function body is a duplicate DECLARATION that stops the file parsing
+  on the second merge. This lane: `price_of_a_favor` in quests,
+  `forge_golem` in combatants, `pallass_forge` in moods /
+  LANDMARK_TOKENS / MAP_REQUIRES, `pallass_walkthrough` in the manifest
+  and the seed table, `forge_calibration_golem_t5_sw14_solo` in
+  BESTIARY_CELLS; locals `p_tempered` / `p_ledger`.
+- **FORK (ruling C in contact): `splice_json.py` cannot honour an
+  anchor that is not the container's end.** The tool splices before the
+  closing bracket (`scripts/splice_json.py:151-160`); there is no
+  `--after`. `forge_golem` is index 47 of 56 and `price_of_a_favor` is
+  index 7 of 17, so using the tool would have violated the very anchor
+  that prevents the four-way conflict. Both rows were hand-spliced at
+  their anchors (explicitly permitted) and the tool's three proofs were
+  reproduced by hand: re-parse, sibling count +1, direct-successor
+  check, and byte-identity outside the splice via a prefix/suffix scan
+  against HEAD plus `git diff --numstat` showing zero deletions. Same
+  for the seven manifest entries after `pallass_walkthrough`.
+- **Wave ruling D — `character-profiles.md` stubs are FILLED IN PLACE,
+  never appended at EOF.** Pallass and Invrisil both write that file;
+  pre-landed stub headers make the two edits order-free. Proven by
+  diffing the file and requiring no hunk at or past the Hedault stub.
+- **Wave ruling E — `render_qa_notes.py --write`, then bare as the
+  check.** The bare invocation only compares and returns 1
+  (`scripts/render_qa_notes.py:55-66`); a "regen" written bare is a
+  silent no-op that leaves `QA-SCRIPT-NOTES.md` stale and reproduces
+  the #312 leak-check red. `derive_qa_surfaces.py` is the opposite —
+  bare IS the write. Both ran in the same commit as the manifest
+  change.
+- **Wave ruling F — `test_combat_visuals` passes BY EXCLUSION for this
+  lane.** `FIGURE_ROWS` has four entries and the bar runs only over a
+  fixed `audited` array holding no id from here, so its PASS measures
+  nothing about `forge_temper_golem`. Reading it as a legibility result
+  would be a false green; no figure number appears in any shipped
+  `_comment`, and the legibility read is the windowed shots.
+- **FORK — three tasks were mutually dependent at the gate level, so
+  forward references were DEFERRED and restored in the commit that
+  made each legal.** 1.3's graph starts a quest 1.5 creates and gates
+  on a counter 1.4 produces; 1.4 gates on a counter 1.3 produces; 1.5
+  cross-refs both. No ordering of the three is green as authored
+  (`test_content.gd:1122-1124` reds an unknown quest id;
+  `test_reachability.gd:50` reds a gate with no producer). Same shape
+  for the den keeper's `conversation` key and P2's quest effect.
+  Alternative considered and rejected: shipping one giant commit, which
+  would have made the whole quest un-bisectable. Every commit on this
+  branch is green.
+- **FORK — the P2 office loop's three-way cycle was NOT deferred.**
+  Each office's arm is gated on the previous office's product, so
+  Tasks 2.3/2.4/2.5 cannot be ordered green task-by-task either. But
+  deferring five separate gate blocks across three commits carries more
+  forgotten-restore risk than the transient debt does, so the plan's
+  own gate lists were followed (`test_reachability` reappears at 2.6)
+  and the debt — exactly three forward references, enumerated in the
+  lane log — was carried and closed one task EARLY, at 2.5.
+- **FORK — `pallass_peek`'s `ui_entities_rendered` sprite COUNT pins
+  were re-derived, twice.** The plan's crowded-cell audit covered
+  walked cells and assert sets but not the count pins: two
+  unconditional entities per map move market 25 → 27 and forge 18 → 20.
+  Re-derived with a recorded rationale (the file's own v0.15 T4.1
+  precedent). `POPULATION_FLOORS` was NOT edited — every addition is
+  unconditional, so those floors only rise.
+- **FORK — a `grep -n trigger_radius` step that can never pass was
+  replaced by a structural check.** The plan's own drafted `_comment`
+  for the encounter contains the words `trigger_radius` in its warning
+  prose, so a literal grep can never return nothing. Proven instead by
+  walking the map's JSON and requiring no entity to carry the KEY
+  (result: none; the single literal hit is inside that comment).
+- **FORK — the Task 2.6 dash sweep was run as a JSON-walking lint, not
+  as greps.** `json.load` decodes `—` escapes and literal
+  em-dashes to the same character, so one pass covers BOTH forms the
+  rule asks for, and it can tell a rendered key from a `_comment` /
+  `_resolution_order` author note, which a grep cannot. Thirteen files
+  swept, zero hits from anything this lane wrote. The one hit in the
+  whole sweep is pre-existing shipped copy — `the_missing_recruit`
+  beat 0 carries TWO em-dashes — flagged for the wave close, not fixed
+  here.
+- **FORK — `COMBAT_BAND_FIXTURES` was left alone.** Adding
+  `pallass_standards_fight_start: 14` would be a second append to a
+  const whose last row (`seal_open_start`) has no lane-specific anchor
+  — precisely the conflict ruling C exists to prevent. The build is
+  pinned instead by the fixture's own `_comment` and by the gated sim
+  cell. Worth adding at the wave close, when one hand owns the file.
+- **FORK — `tools/scene_dynamism.gd`'s report regeneration was
+  REVERTED, not committed.** The tool rewrites
+  `docs/design/scene-dynamism-report.md` as a side effect, and two new
+  maps shift every region's utilization column — whole-table churn in a
+  file this lane does not own, from a tool the plan calls advisory
+  only. The close PR should decide who regenerates it once. (The tool
+  also notes both new maps default to singleton region groups: a
+  one-line nicety, not a gate.)
+- **`data/leads.json` is UNTOUCHED, deliberately.** Both drafted rows
+  `hide_when` on counters this lane invents, and
+  `test_content.gd:78-101` checks every `requires` AND `hide_when`
+  counter against `data/shipped_ids.json`, which is release-cut-only at
+  `RELEASE = "0.15.0"`. Adding them now reds `test_content` until that
+  file is regenerated, which is off-policy mid-wave. Both rows sit
+  verbatim in the plan's DEFERRED section for the close PR.
+- **PLAYABILITY FINDING, logged rather than silently redesigned:** the
+  den-shop keeper sits at (4,1) behind a solid counter, and `interact`
+  resolves exactly one cell (`entity_at(player_cell + player_facing)`,
+  `wi_game.gd:400`) — so a player who walks up to the counter face and
+  presses interact gets nothing; her approach is round the counter's
+  west end. Both P2 canonicals walk that real approach, so the quest is
+  provably completable. Filed in `docs/VISUAL-LOG.md` for a design call
+  rather than moved here, because the cells were hand-audited when the
+  room was authored and moving her invalidates that audit, the mood row
+  and the dynamism read.
+
 ## 2026-07-28 — v0.15 WAVE CLOSE (records, playtest, freeze prep)
 
 - **The same measurement slip was still live, one layer out — found by
