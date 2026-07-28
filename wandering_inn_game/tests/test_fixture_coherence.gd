@@ -20,6 +20,8 @@ const COMBAT_BAND_FIXTURES := {
 	"door_chain_fight_start": 10,
 	"door_chain_sequence_break_start": 10,
 	"riverfarm_fight_start": 10,
+	"flood_ledger_fight_start": 10,
+	"thicket_fight_start": 10,
 	"near_invrisil": 2,
 	"near_invrisil_fight": 10,
 	"delve_fight_start": 11,

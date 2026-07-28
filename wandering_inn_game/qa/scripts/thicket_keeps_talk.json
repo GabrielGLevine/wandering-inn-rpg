@@ -1,0 +1,421 @@
+{
+ "_comment": "v0.16 #305 R2 'What the Thicket Keeps', the TALK route end to end -- and the owner of TWO things besides: the witch_hut ROUND TRIP (witch_hollow (1,8) -> hut (4,6) and back to (1,8)) and hut_ward_scrap's LOCKED read. Hunter start off the new price_of_a_favor_reported-gated hub row -> thicket_brief -> thicket_sign -> the reroute option banking herd_rerouted and completing beat 1 -> the hut and its refusal -> the REROUTED report, completing beat 2. The fixture holds NO detect_magic, which is what makes the locked read reachable and the whole-run ward_scrap_read/detected_wardwork absences sound. Zero combat: thicket_line_den is armed by heard_thicket_keeps and left standing.",
+ "fixture_save": "thicket_talk_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    10
+   ]
+  },
+  {
+   "_comment": "== GIVE: the hunter (13,10), directly east. First interact = his talk_pool line; second opens riverfarm_hunter. ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "The Hunter"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub with hunter_will_come unbanked and heard_thicket_keeps unbanked: 0 '[Ask him to come with you.]', 1 'Just passing through.', 2 'The deer stopped at the treeline. Why?'. The three report rows are all hidden by their own route counters. Take 2.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "what_the_thicket_keeps"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_thicket_keeps"
+   }
+  },
+  {
+   "_comment": "thicket_brief: 0 'Show me the sign.', 1 \"What's in there?\", 2 \"I'll look into it.\". Take 0.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "The Hunter",
+    "text": "Here. Hoof marks come up, stop, turn, and go back, all along one line you can't see from standing. Not one print past it in a mile of treeline. Whatever's holding them isn't teeth. Teeth leave a mess."
+   }
+  },
+  {
+   "_comment": "thicket_sign: 0 'Then we move the fences, not the deer.' banks herd_rerouted (goto thicket_rerouted, not end), 1 \"I'll walk the line myself.\". Take 0.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "herd_rerouted"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "what_the_thicket_keeps",
+    "beat": 1
+   }
+  },
+  {
+   "_comment": "thicket_rerouted: 0 'Good enough.' ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE HUT ROUND TRIP (this script owns it) == witch_hut_door sits at witch_hollow (1,7) and is blocked, so 'move up' from (1,8) faces it without stepping. [1,7]/[1,8] sit outside the pinned cottage cluster entirely, so witch_cottage_reachability's own cells are untouched.",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    1,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "witch_hut"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "observed_witch_hut"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_witch_hut_interior"
+  },
+  {
+   "_comment": "== THE WARD SCRAP, LOCKED (this script owns the negative) == hut_ward_scrap carries requires_skill detect_magic, and THIS fixture holds no detect_magic anywhere, so interactions.gd takes use_skill's unknown branch: SKILL_UNKNOWN + locked_toast. The skill_hint_toast arm is unreachable from here by construction -- it only fires when the required skill is already KNOWN, which is thicket_keeps_skill's case.",
+   "action": "teleport",
+   "map": "witch_hut",
+   "cell": [
+    7,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unknown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "skill": "detect_magic"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "A palm-sized shard of grey stone on the shelf, cut along one edge with marks you cannot read."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "A palm-sized shard of grey stone on the shelf, cut along one edge with marks you cannot read."
+   }
+  },
+  {
+   "_comment": "Whole-run, and sound as a whole-run assertion precisely because this run never casts the skill at all. assert_event_absent has no window (test_driver.gd:520-522 scans the entire run), so a 'not banked YET' assertion is impossible -- which is why the positive lives in a separate script.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "ward_scrap_read"
+   }
+  },
+  {
+   "_comment": "The scrap is not a fifth wardwork site; nothing on this map may bank that counter.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "detected_wardwork"
+   }
+  },
+  {
+   "_comment": "== BACK OUT == witch_hut_exit (4,7) -> witch_hollow (1,8), the same cell the entry approached from. Both arrival directions for witch_hut are now asserted.",
+   "action": "teleport",
+   "map": "witch_hut",
+   "cell": [
+    4,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "witch_hollow"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    8
+   ]
+  },
+  {
+   "_comment": "== REPORT == same waking, pool spent, so one interact opens riverfarm_hunter directly.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    12,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub post-reroute: heard_thicket_keeps hides the start row and herd_rerouted opens the REROUTED report. 0 '[Ask him to come with you.]', 1 'Just passing through.', 2 \"Fences are moved. The herd's got its road.\". Take 2.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "thicket_answered"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "what_the_thicket_keeps",
+    "beat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "what_the_thicket_keeps"
+   }
+  },
+  {
+   "_comment": "thicket_reported_rerouted: 0 'Sleep well.' ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started",
+   "payload_contains": {}
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.thicket_answered",
+   "equals": 1
+  }
+ ]
+}

@@ -3833,6 +3833,191 @@
    }
   },
   {
+   "script": "flood_ledger_talk",
+   "seed": 9,
+   "fixture": "flood_ledger_talk_start",
+   "note": "v0.16 #305 R1 'The Flood Ledger' TALK route (terminal path) -- the headman's new price_of_a_favor_reported-gated start row, the riverfarm_mill round trip (south approach (19,6) in, mill_exit back to (19,6)), the tallyman's full tally walk to ledger_read_true, all three mill observables with toasts pinned verbatim, and the READ report completing the quest; combat_started absent whole-run with mill_granary_scavengers armed and left standing",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_mill",
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "flood_ledger_talk_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "riverfarm_headman",
+     "riverfarm_tallyman"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "flood_ledger_help",
+   "seed": 9,
+   "fixture": "flood_ledger_help_start",
+   "note": "v0.16 #305 R1 HELP (Skill) route and the owner of mill_flood_stack's LOCKED read: the mill door's second legal approach (18,5) west, a plain interact proving the SKILL_UNKNOWN + locked_toast arm on a skill_uses prop that carries no requires_skill, then press_field_skill [Basic Cleaning] banking flood_prep_done, then the worked-report row; ledger_read_true asserted absent whole-run",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_mill",
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "flood_ledger_help_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "riverfarm_headman"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "flood_ledger_fight",
+   "seed": 9,
+   "fixture": "flood_ledger_fight_start",
+   "note": "v0.16 #305 R1 FIGHT route -- the only live coverage granary_scavenger_a/_b have. Band fixture (warrior 10, melee_hit 57, no mage) matching sim_combat_batch's granary_scavengers_t3_warrior10_solo cell; the win is pinned as granary_cleared (on_victory), never won_combat, which a gray-band fight never banks whole. rng_state derived at seed 2 -- seed 9's state genuinely loses",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_mill",
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "flood_ledger_fight_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "riverfarm_headman"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "thicket_keeps_talk",
+   "seed": 9,
+   "fixture": "thicket_talk_start",
+   "note": "v0.16 #305 R2 'What the Thicket Keeps' TALK route (terminal path) and the owner of the witch_hut round trip ((1,8) -> hut (4,6) -> (1,8)) plus hut_ward_scrap's LOCKED read: the fixture holds no detect_magic, so the refusal arm is reachable and the whole-run ward_scrap_read/detected_wardwork absences are sound; zero combat with thicket_line_den armed and left standing",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_village",
+     "witch_hollow",
+     "witch_hut"
+    ],
+    "fixtures": [
+     "thicket_talk_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "detect_magic"
+    ],
+    "dialogue": [
+     "riverfarm_hunter"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "thicket_keeps_skill",
+   "seed": 9,
+   "fixture": "thicket_skill_start",
+   "note": "v0.16 #305 R2 SKILL route -- the only live coverage hut_ward_scrap's positive arm and the four witch_hut observables have. POSITIVE-ONLY by ruling (assert_event_absent has no window, so no locked-state negative is expressible in a run that casts the skill); the mandatory assertion is the whole-run ABSENCE of detected_wardwork. mage 7 is where detect_magic comes from",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_village",
+     "witch_hollow",
+     "witch_hut"
+    ],
+    "fixtures": [
+     "thicket_skill_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "detect_magic"
+    ],
+    "dialogue": [
+     "riverfarm_hunter"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "thicket_keeps_fight",
+   "seed": 9,
+   "fixture": "thicket_fight_start",
+   "note": "v0.16 #305 R2 FIGHT route -- the only live coverage line_stalker_a/_b have. Band fixture (warrior 10, melee_hit 57, no mage) matching sim_combat_batch's thicket_line_den_t3_warrior10_solo cell; the win is pinned as thicket_cleared (on_victory). Touches neither riverfarm_thicket_patch nor the standing thicket-watch bounty. rng_state derived at seed 2",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_village",
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "thicket_fight_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "riverfarm_hunter"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
    "script": "field_chips_loop",
    "seed": 9,
    "fixture": "near_tactician",

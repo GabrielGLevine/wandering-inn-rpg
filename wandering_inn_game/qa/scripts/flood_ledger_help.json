@@ -1,0 +1,353 @@
+{
+ "_comment": "v0.16 #305 R1 'The Flood Ledger', the HELP (Skill) route -- and the owner of mill_flood_stack's LOCKED read. Fixture pre-banks heard_flood_ledger with the quest already in started_quests, so the run is exactly the route under test: the mill door's WEST approach (18,5), a plain interact on the flood stacks proving the SKILL_UNKNOWN + locked_toast arm, then press_field_skill [Basic Cleaning] on the same prop banking flood_prep_done and completing beat 1, then the worked-report row at the headman. Zero combat, and ledger_read_true asserted absent whole-run so the three routes are proven to bank distinct counters.",
+ "fixture_save": "flood_ledger_help_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    10
+   ]
+  },
+  {
+   "_comment": "== THE MILL DOOR, WEST APPROACH == the fixture pre-banks heard_flood_ledger (the give beat is flood_ledger_talk's job), so this run opens at the door. (18,5) is the second legal approach to riverfarm_mill_door (19,5): free of blocked/entity/decor, and 'move right' faces the door without stepping. The exit always returns to (19,6), so entering west and leaving south is a real one-cell asymmetry -- pinned here on purpose.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    18,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    5
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "riverfarm_mill"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "observed_riverfarm_mill"
+   }
+  },
+  {
+   "_comment": "== THE LOCKED READ (this script owns it) == mill_flood_stack carries skill_uses but NO requires_skill, so a plain interact falls through interactions.gd's requires_skill arm with an EMPTY skill id and takes use_skill's unknown branch: SKILL_UNKNOWN then the entity's locked_toast. There is no skill_hint_toast on this prop and there never can be -- that arm only fires from the requires_skill branch.",
+   "action": "teleport",
+   "map": "riverfarm_mill",
+   "cell": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unknown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Sacks stacked low and a season coming for them. Lifting them above the flood line is work, and work is a Skill you either have or you don't."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Sacks stacked low and a season coming for them. Lifting them above the flood line is work, and work is a Skill you either have or you don't."
+   }
+  },
+  {
+   "_comment": "== THE HELP ROUTE == field-cast [Basic Cleaning] on the same prop from the same cell. press_field_skill resolves the bar slot by skill id and fails loudly if the skill is not on the bar; the fixture's loadout is AUTO, so every known field skill is slotted. The fixture holds basic_cleaning and NOT basic_cooking, so mill_flood_stack's second skill arm is deliberately unexercised here -- the plain-interact refusal above is this script's negative, and no ambiguity is left about which arm ran.",
+   "action": "press_field_skill",
+   "skill": "basic_cleaning"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "context": "exploration",
+    "target": "mill_flood_stack"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "flood_prep_done"
+   }
+  },
+  {
+   "_comment": "ORDER: record_accomplishment re-evaluates quests INLINE (wi_game.gd:1467), so the beat lands BEFORE use_skill emits its toast -- waiting on the toast first would move the since-cursor past this event.",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "flood_ledger",
+    "beat": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "[Basic Cleaning] — You clear the shed floor and stack every sack up off the boards. The count comes right the moment anyone can see all of it at once."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "[Basic Cleaning] — You clear the shed floor and stack every sack up off the boards. The count comes right the moment anyone can see all of it at once."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_mill_flood_stack_worked"
+  },
+  {
+   "_comment": "The HELP route never fights either.",
+   "action": "assert_event_absent",
+   "type": "combat_started",
+   "payload_contains": {}
+  },
+  {
+   "_comment": "The three R1 routes bank DISTINCT counters: working the stacks must never bank the tally walk's.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "ledger_read_true"
+   }
+  },
+  {
+   "_comment": "== EXIT == mill_exit (6,8) -> riverfarm_village (19,6), one cell off the west approach this run entered by.",
+   "action": "teleport",
+   "map": "riverfarm_mill",
+   "cell": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "riverfarm_village"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    19,
+    6
+   ]
+  },
+  {
+   "_comment": "== REPORT == the headman has not been talked to in this run, so the first interact is his talk_pool line and the second opens riverfarm_headman.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    11,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Former Headman"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_headman"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub: heard_flood_ledger hides the start row, flood_prep_done opens the WORKED report. 0 'You said you don't truck with witches.', 1 'Just passing through.', 2 'Not much of a headman anymore, is there?', 3 \"The flood work's done. The count came right in the doing.\". Take 3.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "flood_ledger_settled"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "flood_ledger",
+    "beat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "flood_ledger"
+   }
+  },
+  {
+   "_comment": "flood_reported_worked: 0 'It counts better in daylight.' ends.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.flood_prep_done",
+   "equals": 1
+  }
+ ]
+}
