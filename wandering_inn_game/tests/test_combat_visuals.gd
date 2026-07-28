@@ -513,29 +513,47 @@ func _init() -> void:
 	quit(0)
 
 
-## v0.15 T5.1 — the READABILITY floor for the combat board, measured, not eyeballed.
+## v0.15 T5.1 — the READABILITY bounds for the combat board, measured, not eyeballed.
 ##
 ## The board is 12x8 cells of CELL=16, so a combatant's on-screen size is
-## `figure_native_rows * scale / 16` cells, where `combat_scale` REPLACES
-## `render_scale` (board_renderer.gd) and `figure_native_rows` is the sprite's
-## alpha bbox from the sheet. Two shipped defects came from nobody holding that
-## number: the `bat` roster at 0.55 cells (a 4x9px smudge — COMBAT/DARK-ARENA)
-## and the `ruin_warden` rig at 7.4 cells (RUIN_WARDEN/RIG-SCALE, the crown cut
-## by the turn banner). The rows below are the measured figure heights; the
-## floor and ceiling are the acceptance bar those two entries lacked.
+## `FIGURE_ROWS[sprite] * scale / 16` cells, where `combat_scale` REPLACES
+## `render_scale` (board_renderer.gd).
+##
+## THE MEASUREMENT RULE — one rule, stated, because round 1 got this wrong and
+## the bar then passed subjects that were failing it:
+##   * ANIMATION: the one `make_combatant_visual` actually plays — `idle_side`,
+##     else `idle_down`, else `idle` (board_renderer.gd). A directional entry
+##     always has `idle_side`, so the board-facing sheet is `sheet_side`; a
+##     non-directional entry resolves to `idle`/`sheet`.
+##   * SHEET: that animation's own facing sheet. NEVER `move`/`hit`/`death` —
+##     round 1 measured off a bigger non-resting sheet and inflated `bat` from
+##     36 rows to 52, which is how a 0.90-cell bat "passed" a 1.25-cell floor.
+##   * METRIC: alpha bbox HEIGHT (content top to content bottom), max over the
+##     animation's frames. NOT frame height (a rig frame is mostly transparent
+##     margin — the 2-3x error behind three misdiagnosed VISUAL-LOG entries)
+##     and NOT head-to-feet-plane (which reads the anchor, not the silhouette).
+## Facing recorded per row so a re-derivation can reproduce it exactly.
 const FIGURE_ROWS := {
-	"bat": 52.0, "briar_collector": 59.0, "briar_collector_deep": 58.0,
-	"ruin_warden": 103.0, "relc": 61.0, "raskghar_awakened": 52.0,
+	"bat": 36.0,                   # idle_side, 96px frame
+	"briar_collector": 60.0,       # idle (non-directional), 64px frame
+	"briar_collector_deep": 59.0,  # idle (non-directional), 64px frame
+	"ruin_warden": 106.0,          # idle_side, 216px frame
 }
-## Scoped to the rosters below, NOT the whole catalog: `river_wolf` (0.60) and
-## `shield_spider` (0.90) still ship under this line and have never been
-## reported, so a global floor would be a claim the windowed reads have not
-## made. 1.25 is the briar collector, the smallest figure any read HAS accepted
-## — earn the right to widen this by photographing the next offender.
+## 1.25 = the briar collector, the smallest figure any windowed read HAS
+## accepted. 3.55 = half a cell above `hired_blade_leader` (2.97); past ~3.5 a
+## rig eats the turn banner on the board's top row. These are the DESIGN bar:
+## when a subject misses them the data moves, not the bar.
 const BOARD_FIGURE_MIN_CELLS := 1.25
-## Nothing may out-tower `hired_blade_leader` (2.97 cells) by more than half a
-## cell: past ~3.5 the rig eats the turn banner on the board's top row.
 const BOARD_FIGURE_MAX_CELLS := 3.55
+## EXPLICITLY NOT EXHAUSTIVE. The bounds are asserted ONLY against the rosters
+## this wave audited and re-shot. Eight LEGACY ids still ship under the floor
+## and were never photographed as defects, so failing them here would assert a
+## verdict no windowed read has made:
+##   river_wolf_a/_b/_c + wolf_companion (0.62), shield_spider (0.75),
+##   goblin_raider (0.99), goblin_shaman (1.09), goblin_chieftain (1.13).
+## Nothing ships over the ceiling. Sweeping those eight is filed for wave-close
+## triage / v0.16 — each needs its own windowed read before its scale moves,
+## exactly as the audited rosters got one.
 
 
 func _board_cells(cfg: Dictionary, sprite_entry: Dictionary) -> float:
@@ -577,18 +595,24 @@ func _assert_board_legibility_contracts(combatants: Dictionary) -> void:
 		assert(not seen_tints.has(key),
 			"%s duplicates %s's tint — same sprite + same tint is the bug, not the fix" % [id, seen_tints.get(key, "")])
 		seen_tints[key] = id
+
+	# THE AUDITED SET — every roster this wave re-scaled and re-shot. BOTH
+	# bounds apply to all of them: round 1 checked only one side per group,
+	# which is a second way a failing subject slips through unseen.
+	# `cave_spider` rides here rather than in the camouflage list — same
+	# `bat` silhouette and the same scale defect, but it stands on its own
+	# arena, so it needs the size fix without a separation tint.
+	var audited := camouflage.duplicate()
+	audited.append_array(["cave_spider", "ruin_guardian", "seal_warden",
+		"ruin_ward_a", "ruin_ward_b", "snare_ward_a"])
+	for id: String in audited:
+		var cfg: Dictionary = _combatant_config(combatants, id)
+		assert(not cfg.is_empty(), "audited roster missing combatant: " + id)
 		var cells := _board_cells(cfg, sprites[String(cfg["sprite"])])
 		assert(cells >= BOARD_FIGURE_MIN_CELLS,
 			"%s reads at %.2f cells, under the %.2f legibility floor" % [id, cells, BOARD_FIGURE_MIN_CELLS])
-
-	# The oversize half of the same bar.
-	for id: String in ["ruin_guardian", "seal_warden", "ruin_ward_a", "ruin_ward_b", "snare_ward_a"]:
-		var cfg: Dictionary = _combatant_config(combatants, id)
-		assert(not cfg.is_empty(), "ruin_warden roster missing combatant: " + id)
-		var cells := _board_cells(cfg, sprites[String(cfg["sprite"])])
 		assert(cells <= BOARD_FIGURE_MAX_CELLS,
 			"%s reads at %.2f cells, over the %.2f board ceiling (turn-banner clip)" % [id, cells, BOARD_FIGURE_MAX_CELLS])
-		assert(cells >= BOARD_FIGURE_MIN_CELLS, "%s under the legibility floor at %.2f cells" % [id, cells])
 
 
 func _load_json(path: String) -> Dictionary:

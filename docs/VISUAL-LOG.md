@@ -297,13 +297,13 @@ what those runs showed.
   `grimalkin_inn_guest` `_comment` in `data/maps/inn/inn.json`. NOT an inn edit —
   a shipped-character catalog change, so it waits on the user's eye.
   **REFUTED v0.15 T5.2 (2026-07-28), no change shipped.** Measured from the
-  sheet's own alpha: his FIGURE is **49.5px** (107 rows head-to-feet x 0.463) =
-  **1.20x** Relc's 41.4px — exactly canon's "bigger than Relc". The "98px, about
+  sheet's own alpha on `idle_down` (the facing his inn seat renders), bbox
+  metric: his FIGURE is **49.1px** (106 rows x 0.463) = **1.25x** Relc's 39.3px — exactly canon's "bigger than Relc". The "98px, about
   2.3x Relc" above is FRAME height (224 x 0.463) compared against Relc's FIGURE
   height: apples to oranges, and the frame is mostly transparent margin. Setting
   him to the 43.4px convention would have made him the SAME height as Relc and
-  broken canon. What actually crowds the inn is his **2.9-cell arms-out WIDTH**
-  (Relc 1.8), intrinsic to the pose — no `render_scale` changes aspect. Re-shot
+  broken canon. What actually crowds the inn is his **2.89-cell arms-out WIDTH**
+  (Relc 1.82), intrinsic to the pose — no `render_scale` changes aspect. Re-shot
   at the shipped (14,5) seat: `inn_guests_ext_loop/05_wilovan_and_grimalkin_
   seated.png` (seed 3) — he is plainly the room's largest figure and buries
   nobody. The measurement now lives in his `sprites.json` `_comment` so the
@@ -312,13 +312,15 @@ what those runs showed.
   `combat_scale` 1.15 the warden's crown was cut by the turn banner on the vault
   arena's top row (`seal_open/06_the_warden.png`).
   **FIXED v0.15 T5.2 (2026-07-28) — and it was far worse than a crown.**
-  Measured, 1.15 put this 216px rig at **7.4 cells tall and 6.0 wide**: 2.5x the
-  next-largest boss (`hired_blade_leader`, 2.97) and half the board's entire
-  width. It was never "a rig-anchor question" — it was a scale nobody had
-  computed. `ruin_guardian`/`seal_warden` → **0.54** (3.48 cells, still the
-  biggest figure in the game); the three Lesser Wards → **0.42** (2.70). Visual
-  only, no stat moved. Re-shot: `seal_open/06_the_warden.png` (seed 1) — the
-  whole rig sits inside the board with its head well clear of the banner.
+  Measured (`idle_side`, alpha bbox: 106 rows), 1.15 put this 216px rig at
+  **7.6 cells tall**: 2.5x the next-largest boss (`hired_blade_leader`, 2.97)
+  and over half the board's width. It was never "a rig-anchor question" — it
+  was a scale nobody had computed. `ruin_guardian`/`seal_warden` → **0.53**
+  (3.51 cells, inside the 3.55 ceiling and still the biggest figure in the
+  game); the three Lesser Wards → **0.42** (2.78). Visual only, no stat moved.
+  **Fix round 1 correction:** the first pass used 103 rows off the wrong sheet
+  and shipped 0.54, which is 3.58 — **over the ceiling its own test asserted**.
+  Re-shot: `seal_open/06_the_warden.png` (seed 1).
 - TRANSIENT, NOT A FINDING: one windowed `journal_history` run exited with
   "8 ObjectDB instances were leaked at exit"; not reproducible on re-run (0
   noise), headless sweep clean. Windowed shutdown-order artifact.
@@ -436,9 +438,9 @@ all `passed: true`), 25 screenshots read at native resolution.
   read pulled it back to the shipped precedent. A rig-anchor question for the
   art lane, not a data-value one.
   **FIXED v0.15 T5.2 (2026-07-28) — and it WAS a data value.** Duplicate of the
-  entry in the seal-open section above; measurements there (1.15 = 7.4 cells
-  tall, 6.0 wide, 2.5x the next-largest boss). Guardian/seal_warden → 0.54,
-  Lesser Wards → 0.42, re-shot on `seal_open/06_the_warden.png`.
+  entry in the seal-open section above; measurements there (1.15 = 7.6 cells
+  tall, 2.5x the next-largest boss). Guardian/seal_warden → 0.53 (3.51 cells),
+  Lesser Wards → 0.42 (2.78), re-shot on `seal_open/06_the_warden.png`.
 - [x] TOAST/LENGTH (P4) — the `[Detect Magic]` quartet payoff is the longest
   toast in the game (7 wrapped lines at 1280x720). It FITS (no clipping, top
   edge well inside the screen) and it is the beat's climax, but it is the new
@@ -614,16 +616,19 @@ native resolution. Durable evidence:
   but the bodies read as tiny dark pixels. The still-dark mood lands, but the
   closed GH#28 combatant-brightness treatment no longer clears its own
   first-time-player visibility bar on this roster.
-  **FIXED v0.15 T5.1 (2026-07-28) — it was never a brightness bug.** Measured,
-  the `bat` roster rendered at **0.55 cells** (52 alpha rows x render_scale
-  0.17 / CELL 16) — a 4x9px smudge. Brightness could not have rescued it:
+  **FIXED v0.15 T5.1 (2026-07-28) — it was never a brightness bug.** Measured
+  on the sheet the board actually plays (`idle_side`, alpha bbox, max over
+  frames), the `bat` roster rendered at **0.90 cells** (36 rows x render_scale
+  0.17 / CELL 16) — a smudge. Brightness could not have rescued it:
   `sewers_nest`'s legibility boost already sits at 2.93 of a hard 3.0 cap, and
-  the boost lifts figure and floor together. `combat_scale 0.40` puts them at
-  **1.30 cells** (level with a briar collector) and a warm `combat_tint` carries
-  them off the blue-grey grade. Board-only — the field bat and every stat are
-  untouched. Re-shot: `sewers_walkthrough/01_vermin_encounter.png` (seed 9):
-  two brown bat bodies with HP numerals and bars, plainly separate from the
-  purple mushroom cover and the grey boulders.
+  the boost lifts figure and floor together. `combat_scale 0.56` puts them at
+  **1.26 cells**, just over the 1.25 floor a briar collector sets, and a warm
+  `combat_tint` carries them off the blue-grey grade. Board-only — the field
+  bat and every stat are untouched. **Fix round 1 correction:** the first pass
+  measured off a non-resting sheet, published 0.55 cells, and shipped
+  `combat_scale 0.40` — which is **0.90 cells, still under the floor its own
+  test asserted**. The bar was mis-measuring its own subject. Re-shot after the
+  correction: `sewers_walkthrough/01_vermin_encounter.png` (seed 9).
 - [~] SPRITE/ARC-CLIMAX (P2) — deep-tunnel figures repeatedly occupy the same
   visual footprint. Relc/player/warren art collapse into one stack in
   `arc_flow/dd_03_warren_mouth.png` and `dd_04_awakened_field.png`; the boss and

@@ -6,21 +6,42 @@ cross-release index of them.
 
 ## 2026-07-28 — v0.15 Phase 5 readability + rigs (eight in-wave calls)
 
-- **The combat board got a MEASURED acceptance bar, and it is what
-  found the bugs.** A figure's on-screen size is `figure_alpha_rows *
-  scale / 16` cells, where `combat_scale` REPLACES `render_scale`.
-  Nobody had ever computed it, so the shipped roster spanned 20x: the
-  `bat` family at 0.55 cells and the `ruin_warden` rig at 7.4. Both
-  VISUAL-LOG entries had misdiagnosed themselves from FRAME height
-  instead (the frame is mostly transparent margin). `test_combat_visuals`
-  now pins a floor of 1.25 cells (the smallest figure any windowed read
-  has accepted) and a ceiling of 3.55 (past ~3.5 a rig eats the turn
-  banner). Alternative — keep eyeballing — is exactly how three of these
-  shipped. Revert: delete the two consts and the roster loop.
+- **The combat board got a MEASURED acceptance bar — and fix round 1
+  proved a bar is only as good as its measurement rule.** A figure's
+  on-screen size is `FIGURE_ROWS[sprite] * scale / 16` cells, where
+  `combat_scale` REPLACES `render_scale`. Nobody had ever computed it,
+  so the shipped roster spanned 12x: the `bat` family at 0.90 cells and
+  the `ruin_warden` rig at 7.6. Both VISUAL-LOG entries had misdiagnosed
+  themselves from FRAME height (a rig frame is mostly transparent
+  margin). `test_combat_visuals` pins a floor of 1.25 cells (the
+  smallest figure any windowed read has accepted) and a ceiling of 3.55
+  (past ~3.5 a rig eats the turn banner).
+  **Round 1's table mis-measured its own subjects.** It read `idle_down`
+  on a head-to-feet-plane metric off whatever sheet came first, which
+  inflated `bat` 36 rows → 52 and shrank `ruin_warden` 106 → 103. The
+  bar then PASSED a bat at 0.90 cells and a warden at 3.58 — one under
+  its own floor, one over its own ceiling. Round 2 states ONE rule at
+  the table (the animation `board_renderer` actually plays: `idle_side`
+  → `idle_down` → `idle`; that animation's own sheet, never
+  `move`/`hit`/`death`; alpha bbox height, max over frames) and records
+  the facing per row. **The floor and ceiling are the DESIGN bar: when a
+  subject misses them, the DATA moves, not the bar.** So `bat` → 0.56
+  (1.26 cells) and `ruin_guardian`/`seal_warden` → 0.53 (3.51). Two dead
+  rows (`relc`, `raskghar_awakened`) were purged — nothing asserted maps
+  to them. Revert: delete the two consts and the audited loop.
+- **The bar is scoped to the audited rosters, and says so explicitly.**
+  Eight LEGACY ids still ship under the floor — `river_wolf_a/_b/_c` +
+  `wolf_companion` (0.62), `shield_spider` (0.75), `goblin_raider`
+  (0.99), `goblin_shaman` (1.09), `goblin_chieftain` (1.13) — and none
+  has ever been photographed as a defect. Asserting them would be a
+  verdict no windowed read has made, so the const comment names them and
+  files the sweep for wave-close / v0.16, each to earn its own windowed
+  read exactly as the audited rosters did. Nothing ships over the
+  ceiling. The framing is "audited", never "exhaustive".
 - **DARK-ARENA is a SCALE bug, not a brightness bug.** `sewers_nest`'s
   legibility boost already sits at 2.93 of a hard 3.0 cap, and the boost
   lifts figure and floor together, so more brightness was never
-  available. `combat_scale 0.40` on the `bat` roster (0.55 → 1.30 cells)
+  available. `combat_scale 0.56` on the `bat` roster (0.90 → 1.26 cells)
   is the fix; the tint is a second-order aid. Board-only — the field bat
   is untouched, and no sim value moved.
 - **Per-combatant `combat_tint`, on `modulate`, over a per-sprite
@@ -54,13 +75,13 @@ cross-release index of them.
   stays OPEN: Relc is a companion, so his cell is dynamic and no data
   edit fixes it — logged, not faked.
 - **GRIMALKIN-FIGURE-HEIGHT: REFUTED, no change.** Measured, his figure
-  is 49.5px (107 alpha rows head-to-feet x 0.463) = **1.20x** Relc's
-  41.4px — which is exactly canon's "bigger than Relc". The "98px, about
+  is 49.1px (`idle_down` alpha bbox, 106 rows x 0.463) = **1.25x**
+  Relc's 39.3px — which is exactly canon's "bigger than Relc". The "98px, about
   2.3x Relc" in the VISUAL-LOG was FRAME height (224 x 0.463) compared
   against Relc's FIGURE height: apples to oranges. Setting him to the
   43.4px convention would have made him the same height as Relc and
-  broken canon. What actually crowds the inn is his 2.9-cell arms-out
-  WIDTH (Relc 1.8), which is intrinsic to the pose — no `render_scale`
+  broken canon. What actually crowds the inn is his 2.89-cell arms-out
+  WIDTH (Relc 1.82), intrinsic to the pose — no `render_scale`
   changes aspect. Re-shot at the shipped (14,5) seat: he buries nobody.
   The measurement now lives in his catalog `_comment` so the frame-vs-
   figure error cannot recur.
