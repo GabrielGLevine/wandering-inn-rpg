@@ -349,7 +349,7 @@
    "_comment": "GH-VISUAL-LOG 2026-07-17: base grade lifted ~35% total (12% then a further 20% on user call) (user-ratified USER-EYES item -- vault shots read near-black)."
   },
   "seal_vault": {
-   "_comment": "Act V. WARMER and markedly brighter than trapped_halls (0.282) on purpose: this chamber never fell in. Windowed read 2026-07-27 set the level -- at 0.335 the room still read as another near-black dungeon cell and the castle floor's warmth never arrived on screen. The tilt is COOL on purpose: what lights this room is ward-light, not a window. v0.15 T5.3: `lights_by_day` now opts this map out of meta.light_energy_by_phase's day=0.0, so the anchor and its two ward rings burn at every hour instead of existing only from dusk -- a sealed chamber has no sky, so zeroing them deleted the room's ONLY light source and made the grade carry the daytime read alone. Grade values are unchanged (they were tuned for the unlit case and still hold; the lights now ADD to it).",
+   "_comment": "Act V. WARMER and markedly brighter than trapped_halls (0.282) on purpose: this chamber never fell in. Windowed read 2026-07-27 set the level -- at 0.335 the room still read as another near-black dungeon cell and the castle floor's warmth never arrived on screen. The tilt is COOL on purpose: what lights this room is ward-light, not a window. T5.3: `lights_by_day` opts this map out of meta.light_energy_by_phase's day=0.0 -- a sealed chamber has no sky, so zeroing its lights deleted the room's only source. Grade unchanged; the lights now ADD to it.",
    "lights_by_day": true,
    "day": [
     0.6,
