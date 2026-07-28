@@ -1,5 +1,7 @@
 # v0.16 Region Depth — Riverfarm Lane (#305) — Implementation Plan
 
+> Status: **ACTIVE** (v0.16 wave, dispatched 2026-07-28)
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Ship Riverfarm's two v0.16 side quests with full three-pillar parity — **R1 `flood_ledger` "The Flood Ledger"** (Former Headman) and **R2 `what_the_thicket_keeps` "What the Thicket Keeps"** (the Hunter) — plus two small walk-in interiors, **`riverfarm_mill`** and **`witch_hut`**, each hosting quest beats and staying open afterwards as observable-rich rooms.

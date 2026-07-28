@@ -1,5 +1,7 @@
 # v0.16 Floodplains Lane — F1 "The Price Kept" + the camp hollow
 
+> Status: **ACTIVE** (v0.16 wave, dispatched 2026-07-28)
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Ship the Floodplains slice of the v0.16 "Region Depth" wave: one three-pillar side quest (`the_price_kept`, giver Rags on the plains, offered ONLY on the peaceful terminal) and one small interior (`floodplains/rags_camp.json`, the camp hollow) that hosts two of its three route beats and stays open afterwards as an observable-rich room. Includes the game's FIRST goblin-ally fight.

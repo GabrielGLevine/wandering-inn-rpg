@@ -69,11 +69,6 @@ jobs:
       - name: Check model-neutral guidance mirrors
         run: python3 scripts/sync_agent_guidance.py
 
-      - name: Check documentation drift
-        run: |
-          python3 scripts/render_qa_notes.py
-          python3 scripts/check_doc_drift.py
-
       - name: Check comment economy
         run: python3 scripts/comment_census.py --check
 
@@ -82,6 +77,24 @@ jobs:
       # ci_sweep's own pre-flight can't short-circuit the Godot jobs).
       - name: Structural data lint
         run: python3 wandering_inn_game/scripts/data_lint.py
+
+  # ------------------------------------------------------- docs-drift (advisory)
+  # Demoted out of the required leak-check job 2026-07-28 (user directive:
+  # doc-structure drift is not merge-blocking). Deterministic prose/structure
+  # tripwires — the plan-Status header rule and the retired-doc reference
+  # scan — kept visible here and in the nightly run, but a red on this job
+  # never gates a PR. Real regen drift still lands at the merge train
+  # (controller re-runs render_qa_notes --write per merge) and nightly.
+  docs-drift:
+    name: Docs drift (advisory, non-blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check documentation drift
+        run: |
+          python3 scripts/render_qa_notes.py
+          python3 scripts/check_doc_drift.py
 
   # ------------------------------------------------------------------ smoke
   smoke:

@@ -1,5 +1,7 @@
 # v0.16 "Region Depth" — Pallass Lane Implementation Plan
 
+> Status: **ACTIVE** (v0.16 wave, dispatched 2026-07-28)
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Ship Pallass's two side quests — P1 "Tempered Standards" (forge commission, three real routes) and P2 "The Ledger Eats First" (bureaucracy comedy, three real routes) — plus two small walk-in interiors (`pallass_forge_hall`, `pallass_den_shop`) that host quest beats and pay off exploration after the quests close. Content-only: zero engine work.
