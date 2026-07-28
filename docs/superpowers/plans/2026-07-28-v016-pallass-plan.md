@@ -673,9 +673,24 @@ Interact-only is what makes `[Stand out of its correction and leave it.]` reacha
  "allies": [],
  "encounter_when": { "requires": { "standards_commission_taken": 1 } },
  "observe": "A squat rig on three legs, gauges banked along its front, correcting its own posture a half-beat after it needs to.",
+ "gate_closed_toast": "The rig swings past its own marks and settles wrong, again and again. Whatever is out of true in it is the forge's business — until somebody on this floor makes it yours.",
  "on_victory": "golem_recalibrated"
 }
 ```
+
+> **FIX-WAVE CORRECTION (post-review, #307):** `gate_closed_toast` was added
+> here and is NOT optional. `encounter_when` is an INTERACT/TRIGGER gate
+> (`interactions.gd:159`, `wi_game.gd:349`), **never structural absence** —
+> `present_when` is validator-forbidden on encounters — so the rig STANDS at
+> (8,6), blocks the cell, and renders from first arrival, present but inert
+> (the `seal_warden` precedent, `trapped_halls.json:448/477`). Without the
+> toast, a player who bumps it before taking the commission and presses
+> interact gets total silence (`interactions.gd:159-163` returns `{}`). The
+> lane's original claim that "the cell is EMPTY when the gate is unmet" was
+> false in three shipped artifacts and in the QA script's own comment; it is
+> corrected everywhere and `pallass_depth_gates_check` now proves the real
+> behaviour at the interact (blocked on (8,6) → gate toast → `combat_started`
+> and the parley both absent).
 
 **Parley graph `data/dialogue/forge_temper_golem.json`:**
 
@@ -846,7 +861,7 @@ ambience: [{ "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
 | id | kind | cell | surface |
 | --- | --- | --- | --- |
 | `den_shop_exit` | door | [4,7] | → `pallass_market` (12,5) |
-| `den_shop_keeper` | npc | [4,1] | conversation `pallass_den_keeper` + `talk_pool` |
+| `den_shop_keeper` | npc | [4,1] → **SHIPPED AT [4,2]** | conversation `pallass_den_keeper` + `talk_pool` |
 | `den_shop_consignment_file` | prop | [7,2] | P2 SKILL, `requires_skill: appraise_goods` |
 | `den_shop_receiving_dock` | prop | [8,5] | P2 HELP leg 3, `once_per_waking` |
 | `den_shop_spice_shelf` | prop | [1,2] | observable |
@@ -858,13 +873,23 @@ ambience: [{ "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
 - IN→OUT: from (4,6) faces **down** to `den_shop_exit` at (4,7), interacts, arrives `pallass_market` **(12,5)**.
 - Save-compat: the new blocking door at market (12,4) has all four neighbours open.
 
+> **FIX-WAVE CORRECTION (post-review, #307):** the keeper ships at **[4,2]**,
+> not [4,1] — she stands IN the counter row between its two solid ends
+> (3,2)/(5,2), the shipped Erin (7,2) / Selys (8,2) shape. `counter_mid` decor
+> at (4,2) is gone and (4,2) is out of `blocked` (the entity blocks itself).
+> At [4,1] behind a solid three-cell counter she was unreachable from the shop
+> floor: `interact` resolves exactly one cell (`entity_at(player_cell +
+> player_facing)`, `wi_game.gd:400`), so a customer at (4,3) facing up hit
+> counter decor and got total silence. See `docs/VISUAL-LOG.md` and
+> `docs/CHOICE-LOG.md`.
+
 **Exact JSON drafts — the three non-quest observables and the keeper:**
 
 ```json
 {
  "id": "den_shop_keeper",
  "kind": "npc",
- "cell": [4, 1],
+ "cell": [4, 2],
  "display_name": "Den-Shop Keeper",
  "sprite": "drake_patron",
  "tint": [0.78, 0.56, 0.42],

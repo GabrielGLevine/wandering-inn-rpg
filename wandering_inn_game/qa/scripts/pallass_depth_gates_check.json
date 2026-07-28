@@ -1,5 +1,5 @@
 {
- "_comment": "v0.16 #307 THE GATE-PROOF LEG, and the cheapest failure detector this lane owns. Stands on pallass_depth_gates_start -- spine_reach_start's story position with NONE of the lane's 22 counters -- and walks every surface the lane touched to prove nothing new leaked into a save that has not earned it: the attendant's hub and the smith's hub both still render exactly three rows (option-array pins, the only two in this lane, because _loosely_equal compares the WHOLE list and one leaked row would red pallass_walkthrough's own pins the same way), both clerk hubs are unchanged, both requires_skill props render their locked_toast through the skill_unknown seam rather than banking anything, the rig's cell is empty because encounter_when is unmet, and the run closes with assert_event_absent over all sixteen quest-shaped counters plus combat_started. Registered in BOTH tiers (smoke, full): it is fast, it has no combat, and it is what a merge-train breakage would show up in first.",
+ "_comment": "v0.16 #307 THE GATE-PROOF LEG, and the cheapest failure detector this lane owns. Stands on pallass_depth_gates_start -- spine_reach_start's story position with NONE of the lane's 22 counters -- and walks every surface the lane touched to prove nothing new leaked into a save that has not earned it: the attendant's hub and the smith's hub both still render exactly three rows (option-array pins, the only two in this lane, because _loosely_equal compares the WHOLE list and one leaked row would red pallass_walkthrough's own pins the same way), both clerk hubs are unchanged, both requires_skill props render their locked_toast through the skill_unknown seam rather than banking anything, the rig at (8,6) stands there PRESENT AND INERT (encounter_when is an interact gate, not structural absence) and refuses the interact with its gate_closed_toast while combat_started and its parley stay absent, and the run closes with assert_event_absent over all sixteen quest-shaped counters plus combat_started. Registered in BOTH tiers (smoke, full): it is fast, it has no combat, and it is what a merge-train breakage would show up in first.",
  "fixture_save": "pallass_depth_gates_start",
  "starts_at_title": true,
  "steps": [
@@ -394,21 +394,91 @@
    "name": "03_temper_bench_locked"
   },
   {
-   "_comment": "The rig at (8,6) is encounter_when-gated on standards_commission_taken, which this save does not hold -- so the cell is EMPTY here and walkable. That is the gate; the no-ambush proof is pallass_standards_skill's job.",
    "action": "assert_state",
    "path": "current_map",
    "equals": "pallass_forge_hall"
   },
   {
-   "_comment": "== Back out through the hall's own door at (5,8). ==",
+   "_comment": "== THE ENCOUNTER-GATE PROOF, and the correction of a false claim this script used to make in a comment. `encounter_when` is an INTERACT/TRIGGER gate (interactions.gd:159; wi_game.gd:349 for radius), NOT structural absence -- `present_when` is validator-forbidden on encounters -- so the rig at (8,6) STANDS THERE AND BLOCKS from first arrival, present but INERT, exactly like trapped_halls' seal_warden. Walk the y=7 lane, bump it, interact: the gate refuses, its gate_closed_toast speaks, and neither combat nor the parley opens. Delete the encounter_when block and the two absences below red. ==",
    "action": "move",
    "direction": "down",
    "steps": 3
   },
   {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    7
+   ]
+  },
+  {
    "action": "move",
    "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
    "steps": 1
+  },
+  {
+   "_comment": "PRESENT: the rig blocks (8,6). The symmetric counterpart is pallass_standards_fight step 21, which bumps the same cell WITH standards_commission_taken held -- same block, different consequence at interact.",
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     8,
+     6
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The rig swings past its own marks and settles wrong, again and again. Whatever is out of true in it is the forge's business — until somebody on this floor makes it yours."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "INERT: the refusal returns {} before `conversation` or start_combat is ever read (interactions.gd:159-171). These two absences are the whole gate -- without them a broken encounter_when arms the rig for a player who never took the commission.",
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "forge_temper_golem"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "03b_rig_inert_pre_commission"
+  },
+  {
+   "_comment": "== Back out through the hall's own door at (5,8). ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 3
   },
   {
    "action": "assert_state",

@@ -101,8 +101,20 @@ Eight windowed runs at seed 9 (`pallass_standards_fight` / `_talk` /
 failure — all seven canonicals are green and the full sweep is green.
 Ranked player-visible first.
 
-- [ ] MAP/DEN-KEEPER-UNREACHABLE-FROM-COUNTER (P2, v0.16 #307 windowed
-  pass) — `den_shop_keeper` stands at (4,1) on `pallass_den_shop` behind
+- [x] MAP/DEN-KEEPER-UNREACHABLE-FROM-COUNTER (P2, v0.16 #307 windowed
+  pass) — **FIXED in the #307 fix wave**, adversarial-review finding. She
+  now stands **at (4,2)**, IN the counter row between its two solid ends
+  (3,2)/(5,2), which is the shipped Erin (7,2) / Selys (8,2) shape exactly:
+  `counter_mid` decor at (4,2) removed, (4,2) dropped from `blocked` (the
+  entity blocks on its own), and a top-level `_comment` on the map records
+  why the cell must stay open to decor and closed to nothing else. The
+  customer-side cell (4,3) is now the service point — walk straight up the
+  shop floor and bump her. `pallass_ledger_offices` and
+  `pallass_ledger_carry` were re-routed to the customer approach (up 3 from
+  (4,6), bump (4,2)) so the gate now walks the route a player walks; the
+  six-step trip round the counter's west end is gone from both. Original
+  report follows.
+  `den_shop_keeper` stood at (4,1) on `pallass_den_shop` behind
   a counter that occupies (3,2)/(4,2)/(5,2) as solid `blocked` cells, and
   `interact` resolves exactly ONE cell (`entity_at(player_cell +
   player_facing)`, `wi_game.gd:400`). A player who walks up to the counter

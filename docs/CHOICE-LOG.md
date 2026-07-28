@@ -4,6 +4,60 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.16 PALLASS LANE (#307), FIX WAVE (post-adversarial-review)
+
+Two IMPORTANT findings applied. One of them turned out to rest on a false
+premise about the engine, and correcting that premise is the more valuable
+half of this wave.
+
+- **`encounter_when` is an INTERACT/TRIGGER gate, NOT structural absence —
+  and the lane shipped the opposite claim in four places.** The review's
+  process complaint was right (the "the rig's cell is empty" claim was
+  asserted only by a `_comment` plus an `assert_state current_map` that
+  cannot fail, then propagated as fact into `qa/manifest.json`,
+  `wandering_inn_game/AGENTS.md` and `docs/QA-SCRIPT-NOTES.md`). Its
+  substance was wrong, and only walking the cell showed it: the first
+  version of the fix — `assert_state player_cell == [8,6]` — went RED with
+  `got [8, 7]`. `entity_present`/`present_when` is the structural gate
+  (`wi_game.gd:823-833`) and is **validator-forbidden on encounters**;
+  `_encounter_gate_met` is consumed only by `interactions.gd:159` (the
+  interact) and `wi_game.gd:349` (trigger radius). The rig therefore stands
+  at (8,6), blocks, and renders from first arrival — present but INERT,
+  exactly as `trapped_halls.json:448` documents for `seal_warden`.
+  CONSEQUENCE (a real defect, not a documentation one): the rig had no
+  `gate_closed_toast`, so a pre-commission interact returned `{}` in
+  silence — the same silent-no-op class as the den keeper below. Added the
+  toast; rewrote the gate leg to prove what actually happens (`player_blocked`
+  on (8,6) → the gate toast → `combat_started` AND the `forge_temper_golem`
+  parley both `assert_event_absent`); corrected the claim in all four
+  artifacts plus the plan doc. MUTATION-PROVEN: deleting the `encounter_when`
+  block reds `pallass_depth_gates_check`; restored and re-run green. The
+  review's feared failure mode (a player who never took the commission
+  fighting the rig and banking `golem_recalibrated` early) was never
+  reachable — the gate always refused the interact — but nothing tested it.
+- **The den keeper moves (4,1) → (4,2)**, into the counter row between its
+  two solid ends, which is the shipped Erin (7,2) / Selys (8,2) shape.
+  `counter_mid` decor at (4,2) removed, (4,2) dropped from `blocked` (the
+  entity blocks on its own). ALTERNATIVES: open (4,2) as a walkable serving
+  gap and leave her at (4,1) — rejected, it leaves a hole in the counter and
+  a customer at (4,3) still gets nothing on the first press; move her to
+  (5,1) and shorten the counter — rejected, it keeps her off the customer
+  axis. WHY: `interact` resolves exactly ONE cell (`entity_at(player_cell +
+  player_facing)`, `wi_game.gd:400`), so the NPC must occupy the cell a
+  customer faces or the shop's whole service surface is silent. Both P2
+  canonicals were re-routed to the customer approach (up the shop floor from
+  (4,6), bump (4,2)); the six-step trip round the counter's west end that
+  parked the PC *behind* her serving counter is gone from both. The lane
+  deferred this on "the cells were hand-audited" grounds; the audit was
+  re-done here (walkable box x1..x9 / y1..y6 + the door cell, row 1 still
+  reachable via (2,2)/(6,2), no isolated pocket) and every gate re-run.
+- **The two MINOR findings on this branch (per-commit RED at 70b8488/fd5f826,
+  and the plan-doc line-3 merge conflict against `main`) are NOT fixed here**
+  — recorded to `.lane-progress.md` under "Deferred minors (milestone final
+  review)" per the wave's fix-wave contract. Two further MINORs (HANDOFF.md
+  anchorless edit; the near-tautological `pallass` landmark token) are logged
+  in the same place.
+
 ## 2026-07-28 — v0.16 REGION DEPTH, PALLASS LANE (#307)
 
 Two side quests with three real routes each ("Tempered Standards",

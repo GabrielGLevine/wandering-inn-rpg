@@ -3368,7 +3368,7 @@
    "script": "pallass_depth_gates_check",
    "seed": 9,
    "fixture": "pallass_depth_gates_start",
-   "note": "v0.16 #307 THE GATE-PROOF LEG: stands on a save holding NONE of the Pallass depth lane's 22 counters and proves nothing new leaked into it -- the smith's hub and the attendant's hub still render exactly three rows (the lane's only two option-array pins), both clerk hubs unchanged, both requires_skill props (temper bench, consignee's file) render their locked_toast through the skill_unknown seam and bank nothing, the temper golem's cell is empty because encounter_when is unmet, and the run closes with assert_event_absent over all sixteen quest-shaped counters plus combat_started. Cheapest failure detector in the lane; registered in both tiers",
+   "note": "v0.16 #307 THE GATE-PROOF LEG: stands on a save holding NONE of the Pallass depth lane's 22 counters and proves nothing new leaked into it -- the smith's hub and the attendant's hub still render exactly three rows (the lane's only two option-array pins), both clerk hubs unchanged, both requires_skill props (temper bench, consignee's file) render their locked_toast through the skill_unknown seam and bank nothing, the temper golem STANDS at (8,6) present and INERT -- encounter_when is an interact/trigger gate, never structural absence (present_when is validator-forbidden on encounters), so the rig blocks the cell and the gate is proved at the interact: player_blocked on (8,6), then the refusal's gate_closed_toast, with combat_started and the forge_temper_golem parley both asserted ABSENT -- and the run closes with assert_event_absent over all sixteen quest-shaped counters plus combat_started. Cheapest failure detector in the lane; registered in both tiers",
    "tiers": [
     "smoke",
     "full"
@@ -3388,6 +3388,7 @@
      "basic_cleaning"
     ],
     "dialogue": [
+     "forge_temper_golem",
      "pallass_forge_clerk",
      "pallass_forge_smith",
      "pallass_lift_attendant",

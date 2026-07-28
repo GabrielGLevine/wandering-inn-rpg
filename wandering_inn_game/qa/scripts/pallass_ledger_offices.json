@@ -400,20 +400,7 @@
    "name": "03_den_shop_arrival"
   },
   {
-   "_comment": "== The keeper stands at (4,1) BEHIND a solid counter (3,2)-(5,2). Her only approach is round the counter's west end: column 3 up to y=3, across to column 2, up to y=1. The hatchling bench at (2,5) and the barrel at (1,5) close every shorter lane. ==",
-   "action": "move",
-   "direction": "left",
-   "steps": 1
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    3,
-    6
-   ]
-  },
-  {
+   "_comment": "== The keeper stands AT her counter, (4,2), between its two solid ends (3,2)/(5,2) -- the shipped Erin (7,2) / Selys (8,2) shape. `interact` resolves exactly ONE cell (`entity_at(player_cell + player_facing)`, wi_game.gd:400), so the customer-side cell (4,3) IS the service point: walk straight up the shop floor and bump her. This route is the fix for the DEN-KEEPER-UNREACHABLE-FROM-COUNTER finding -- the old route went round the counter's west end and parked the PC behind her serving counter, which is exactly what a player would never do. ==",
    "action": "move",
    "direction": "up",
    "steps": 3
@@ -422,52 +409,13 @@
    "action": "assert_state",
    "path": "player_cell",
    "equals": [
-    3,
-    3
-   ]
-  },
-  {
-   "action": "move",
-   "direction": "left",
-   "steps": 1
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    2,
+    4,
     3
    ]
   },
   {
    "action": "move",
    "direction": "up",
-   "steps": 2
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    2,
-    1
-   ]
-  },
-  {
-   "action": "move",
-   "direction": "right",
-   "steps": 1
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    3,
-    1
-   ]
-  },
-  {
-   "action": "move",
-   "direction": "right",
    "steps": 1
   },
   {
@@ -476,7 +424,7 @@
    "payload_contains": {
     "cell": [
      4,
-     1
+     2
     ]
    }
   },
@@ -586,62 +534,10 @@
    }
   },
   {
-   "_comment": "== Back round the counter's west end the way we came in. ==",
-   "action": "move",
-   "direction": "left",
-   "steps": 1
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    2,
-    1
-   ]
-  },
-  {
-   "action": "move",
-   "direction": "down",
-   "steps": 2
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    2,
-    3
-   ]
-  },
-  {
-   "action": "move",
-   "direction": "right",
-   "steps": 1
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    3,
-    3
-   ]
-  },
-  {
+   "_comment": "== Straight back down the shop floor to the shopfront door at (4,7). ==",
    "action": "move",
    "direction": "down",
    "steps": 3
-  },
-  {
-   "action": "assert_state",
-   "path": "player_cell",
-   "equals": [
-    3,
-    6
-   ]
-  },
-  {
-   "action": "move",
-   "direction": "right",
-   "steps": 1
   },
   {
    "action": "assert_state",

@@ -4,13 +4,10 @@
   "width": 11,
   "height": 8
  },
+ "_comment": "COUNTER SHAPE: (3,2) and (5,2) are the counter's two solid ends; (4,2) is NOT in `blocked` and carries no decor because `den_shop_keeper` STANDS in it -- the shipped inn/guild shape (Erin at (7,2) between counter_mid (6,2)/(8,2); Selys at (8,2) between counter_mid (7,2)/(9,2)). `interact` resolves exactly one cell (`entity_at(player_cell + player_facing)`, wi_game.gd:400), so the keeper MUST occupy the cell a customer at (4,3) faces or she is unreachable from the shop floor.",
  "blocked": [
   [
    3,
-   2
-  ],
-  [
-   4,
    2
   ],
   [
@@ -115,13 +112,6 @@
    ]
   },
   {
-   "sprite": "counter_mid",
-   "cell": [
-    4,
-    2
-   ]
-  },
-  {
    "sprite": "counter_right",
    "cell": [
     5,
@@ -206,7 +196,7 @@
    "kind": "npc",
    "cell": [
     4,
-    1
+    2
    ],
    "display_name": "Den-Shop Keeper",
    "sprite": "drake_patron",
