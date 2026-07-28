@@ -126,6 +126,9 @@
      "text": "I'll take the commission.",
      "effects": [
       {
+       "quest": "tempered_standards"
+      },
+      {
        "accomplishment": "standards_commission_taken"
       }
      ],

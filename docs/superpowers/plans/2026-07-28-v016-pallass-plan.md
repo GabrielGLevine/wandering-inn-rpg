@@ -758,11 +758,11 @@ Interact-only is what makes `[Stand out of its correction and leave it.]` reacha
 
 > **BINDING TASK-1.3 HANDOFF (deferred quest-start effect).** `test_content.gd:1122-1124` reds any dialogue effect starting a quest id absent from `data/quests.json`, so Task 1.3 shipped the smith's `"I'll take the commission."` option with only its `standards_commission_taken` effect. **Restore `{ "quest": "tempered_standards" }` as the FIRST entry of that option's `effects` array in the SAME commit that splices the quest block** (one verb per dict — it is a second dict, never a second key). Without it the quest never starts, the journal never shows it, and every gate stays green.
 
-- [ ] **Step 0 (task-1.3 handoff):** Restore the `{ "quest": "tempered_standards" }` effect dict in `pallass_forge_smith.json` per the block above, in this task's commit.
-- [ ] **Step 1:** Splice the quest block: `splice_json.py --file data/quests.json --container quests --record-file <draft.json>`.
-- [ ] **Step 2:** Add the `test_quests.gd` pins.
-- [ ] **Step 3: Run** `res://tests/test_quests.gd` (`_resolution_order` guard + the new pins) and `res://tests/test_content.gd` (`_validate_quests` cross-refs every `complete_when` counter against a real producer) and `res://tests/test_reachability.gd` (every `resolution_paths[].accomplishment` needs a producer).
-- [ ] **Step 4: Commit** `feat(quests): Tempered Standards, three real routes`.
+- [x] **Step 0 (task-1.3 handoff):** Restore the `{ "quest": "tempered_standards" }` effect dict in `pallass_forge_smith.json` per the block above, in this task's commit.
+- [x] **Step 1:** Splice the quest block: `splice_json.py --file data/quests.json --container quests --record-file <draft.json>`.
+- [x] **Step 2:** Add the `test_quests.gd` pins.
+- [x] **Step 3: Run** `res://tests/test_quests.gd` (`_resolution_order` guard + the new pins) and `res://tests/test_content.gd` (`_validate_quests` cross-refs every `complete_when` counter against a real producer) and `res://tests/test_reachability.gd` (every `resolution_paths[].accomplishment` needs a producer).
+- [x] **Step 4: Commit** `feat(quests): Tempered Standards, three real routes`.
 
 ### Task 1.6: Grimalkin's one line (text_variants ONLY)
 

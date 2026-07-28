@@ -172,6 +172,12 @@ func _init() -> void:
 	assert(WIQuests.beat_index(i_hat, {"handoff_talked": 1}) == 1, "any one route counter closes the run beat and sends them back to the parlor")
 	assert(WIQuests.beat_index(i_hat, {"handoff_talked": 1, "hat_job_done": 1}) == 2, "...and Wilovan's report completes it")
 
+	# v0.16 P1: all three route counters co-bank in one visit to the hall.
+	var p_tempered: Dictionary = WIQuests.quest_by_id(shipped, "tempered_standards")
+	assert(String(WIQuests.resolved_path(p_tempered, {"golem_recalibrated": 1})["accomplishment"]) == "golem_recalibrated", "a fight-only commission still records the rig")
+	assert(String(WIQuests.resolved_path(p_tempered, {"golem_recalibrated": 1, "temper_run": 1})["accomplishment"]) == "temper_run", "fought THEN ran the temper records the TEMPER")
+	assert(String(WIQuests.resolved_path(p_tempered, {"temper_run": 1, "standards_brokered": 1})["accomplishment"]) == "standards_brokered", "ran it THEN brokered records the BROKERING -- the claim that outlives you leaving")
+
 	# EVERY shipped array with 2+ real rungs must carry its ladder in writing --
 	# the ordering is load-bearing now, and an unnoted array is an unreviewed one.
 	for quest: Dictionary in shipped.get("quests", []):
