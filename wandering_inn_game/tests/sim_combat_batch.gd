@@ -112,6 +112,25 @@ const RIVERFARM_CELLS := [
 	{"name": "river_wolf_pack_t3_hunter", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": false},
 	{"name": "river_wolf_pack_t3_solo", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": true},
 	{"name": "riverfarm_thicket_patch_t3_solo", "arena": "witch_hollow", "enemies": ["thicket_remnant_a", "thicket_remnant_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
+	# v0.16 #305: the two new Riverfarm side-quest fights, both SOLO (neither
+	# encounter fields the hunter -- the granary is inside the mill and the den
+	# is the FIGHT alternative to walking the line with him). Same stats as
+	# thicket_remnant and the SAME WINDOW as the stop cell above (0.55-0.95):
+	# these are stop-band cells, not ladder rungs, and the rungs' narrow
+	# windows exist only to keep four ordered rungs disjoint. At 100 runs per
+	# cell sigma is ~0.04, so a rung-width window here would false-red on noise.
+	# Region-band ORDERING is evidenced by the measured medians recorded in the
+	# PR body, not by the gate. If a run lands outside 0.55-0.95, move the DATA
+	# (con/weapon_die), never the window.
+	# NO check_rounds, for the same reason the stop cell above carries none:
+	# this roster/build/shape lands median 2 (measured on the shipped cell too,
+	# 100 runs), so the 3-12 rounds bar would red on the SHIPPED numbers these
+	# rigs clone verbatim. check_rounds in RIVERFARM_CELLS belongs to the
+	# HUNTER (party) cells, which run long enough to clear it. Adding it here
+	# would mean moving con off thicket_remnant's numbers, which ruling 2
+	# forbids.
+	{"name": "granary_scavengers_t3_warrior10_solo", "arena": "inn_cellar", "enemies": ["granary_scavenger_a", "granary_scavenger_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
+	{"name": "thicket_line_den_t3_warrior10_solo", "arena": "witch_hollow", "enemies": ["line_stalker_a", "line_stalker_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
 	# MAIN-LINE BAND LADDER rung 1 of 4 (Phase 9, 2026-07-27). The four rungs
 	# share ONE yardstick -- t4_spellsword14_party against the stop's AS-SHIPPED
 	# roster -- so their win rates read as a single descending ladder. Riverfarm

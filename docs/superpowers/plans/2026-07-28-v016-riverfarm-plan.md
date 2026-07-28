@@ -222,8 +222,8 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 
 **No new arena, on purpose.** `data/arenas.json` is a four-lane shared file and this lane needs nothing it does not already have: the granary fight reuses **`inn_cellar`** (biome `inn`, 12×8, 5 blocked, the shipped interior-arena language the mill's own biome matches), the den fight reuses **`witch_hollow`** (the arena `riverfarm_thicket_patch` already fights on). Leaving `arenas.json` untouched removes one merge-train conflict surface.
 
-- [ ] **Step 1: Read `data/combatants.json:1055-1085`** (`thicket_remnant_a/_b`) and `:468` (the roster-only convention comment). Match the 1-space-per-level indentation.
-- [ ] **Step 2: Splice the four rows** (`splice_json.py --file data/combatants.json --container combatants --record '<one row>'`, once per row):
+- [x] **Step 1: Read `data/combatants.json:1055-1085`** (`thicket_remnant_a/_b`) and `:468` (the roster-only convention comment). Match the 1-space-per-level indentation.
+- [x] **Step 2: Splice the four rows** (`splice_json.py --file data/combatants.json --container combatants --record '<one row>'`, once per row):
 
 ```json
 {
@@ -293,7 +293,7 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 
 **New-id figure bar (controller ruling F), stated plainly:** `tests/test_combat_visuals.gd` **does NOT measure any new id in this lane — it passes by exclusion.** The bar runs only over the fixed `audited` array (`:609-611`), which contains none of these four ids, and `_board_cells` reads `FIGURE_ROWS[sprite]` where `FIGURE_ROWS` (`:536-541`) holds exactly `bat`, `briar_collector`, `briar_collector_deep`, `ruin_warden` — an unlisted sprite is a **KeyError, not a pass**. So: **do NOT add any of these four ids to `audited`**, and **do not put a derived figure number (cells, rows, "inside the band") into any shipped `data/**` `_comment`** — nothing in CI can verify it and it costs census. The legibility read for these rigs is the **windowed shot** in Task 10 Step 4, and it is the only claim allowed in the VISUAL-LOG row. (`mothbear` ships at default scale and is not in `FIGURE_ROWS` either.)
 
-- [ ] **Step 3: Append two gated cells to `RIVERFARM_CELLS`** (`tests/sim_combat_batch.gd`, after the `briar_collectors_deep_t5_sw14_hunter` rung at :125 so the main-line ladder rung stays visually last is NOT required — append after `riverfarm_thicket_patch_t3_solo` at :114 to keep the stop-band cells together):
+- [x] **Step 3: Append two gated cells to `RIVERFARM_CELLS`** (`tests/sim_combat_batch.gd`, after the `briar_collectors_deep_t5_sw14_hunter` rung at :125 so the main-line ladder rung stays visually last is NOT required — append after `riverfarm_thicket_patch_t3_solo` at :114 to keep the stop-band cells together):
 
 ```gdscript
 	# v0.16 #305: the two new Riverfarm side-quest fights, both SOLO (neither
@@ -312,10 +312,10 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 
 `total_cells` at `sim_combat_batch.gd:321` is `... + RIVERFARM_CELLS.size() + ...` — **computed, no edit needed.** Confirm with `WI_CELL_COUNT_ONLY=1` that the count rose by exactly 2.
 
-- [ ] **Step 4: MEASURE FIRST, then iterate cheaply.** `WI_CELL_COUNT_ONLY=1 godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd` to find the new cells' 0-based indices, then `WI_CELL_RANGE=LO:HI` to run only those two (100 runs each). **Write down each cell's win rate and median rounds — these two numbers are the PR body's band evidence and the reason the gate can stay wide.** Expect win_rate inside **0.55–0.95** and median rounds in **3–12**. If either misses: adjust `con` (24 → 22 raises the win rate, 24 → 26 lowers it) and re-run the slice. **Never widen the window past the stop-cell precedent** — if a cell cannot sit inside 0.55–0.95, the roster is wrong, not the gate.
-- [ ] **Step 5: Run** `res://tests/test_combat_data.gd` (power_level presence, arena spawn reachability) and `res://tests/test_combat_visuals.gd` — expect PASS on both.
-- [ ] **Step 6: Run the FULL `res://tests/sim_combat_batch.gd`** under a 600s alarm — every other gated cell must still be in band (a new roster row cannot move them, but this is the proof, not the assumption).
-- [ ] **Step 7: Census** check; **commit** `feat(combat): granary scavengers and line stalkers, banded at the Riverfarm stop`.
+- [x] **Step 4: MEASURE FIRST, then iterate cheaply.** `WI_CELL_COUNT_ONLY=1 godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd` to find the new cells' 0-based indices, then `WI_CELL_RANGE=LO:HI` to run only those two (100 runs each). **Write down each cell's win rate and median rounds — these two numbers are the PR body's band evidence and the reason the gate can stay wide.** Expect win_rate inside **0.55–0.95** and median rounds in **3–12**. If either misses: adjust `con` (24 → 22 raises the win rate, 24 → 26 lowers it) and re-run the slice. **Never widen the window past the stop-cell precedent** — if a cell cannot sit inside 0.55–0.95, the roster is wrong, not the gate.
+- [x] **Step 5: Run** `res://tests/test_combat_data.gd` (power_level presence, arena spawn reachability) and `res://tests/test_combat_visuals.gd` — expect PASS on both.
+- [x] **Step 6: Run the FULL `res://tests/sim_combat_batch.gd`** under a 600s alarm — every other gated cell must still be in band (a new roster row cannot move them, but this is the proof, not the assumption).
+- [x] **Step 7: Census** check; **commit** `feat(combat): granary scavengers and line stalkers, banded at the Riverfarm stop`.
 
 ---
 
