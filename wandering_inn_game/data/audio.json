@@ -962,7 +962,8 @@
    "payload": {
     "map": "mercantile_alleys"
    },
-   "stream": "res://assets/audio/music/cynicmusic_town_theme.ogg",
+   "_comment": "v0.16.1 finding 14: this was cynicmusic's 'Town Theme RPG' -- a warm major-key village cue playing in a back-alley the design treats as a threat space (the map has its own ambush arena, music_combat_mercantile_alley). It came from commit 009b0f3's bulk coverage sweep, which picked by license tier and availability so that no map fell through to the previous map's bed; the `_v2` suffix shows it was re-picked once, still inside the same town register, and the alley never got an ear-gate the way brothers_parlor did. hydrogene_malicious_scheme (71.2s, CC0 HydroGene, in-repo) is the game's existing 'something is wrong here' timbre; sharing it with trapped_halls is precedented reuse (definitely_our_town serves inn + inn_upstairs, junkala_home_town serves riverfarm_village + riverfarm_longhouse, hydrogene_hidden_cavern serves dungeon_approach + seal_vault) and the two consumers -- a dungeon corridor and an urban alley -- sit far apart in the pilgrimage. It also fixes the neighbouring GRADIENT: invrisil_boulevard (junkala_bazaar, bright bustling market) -> mercantile_alleys (menacing) -> brothers_parlor (hushed) is now a real three-step descent instead of town-theme -> town-theme -> lullaby. The alley carries 100% of its own mood because it has no `ambience` row; adding one is a separate change (ambience streams are held to the public/CC0 tier with no manifest relaxation).",
+   "stream": "res://assets/audio/music/hydrogene_malicious_scheme.ogg",
    "bus": "Music",
    "volume_db": -7.0,
    "loop": true
