@@ -1285,10 +1285,17 @@
    "_comment": "GH#142: Hedault, Invrisil enchanter (user placement ruling 2026-07-15). CANON-NATIVE Vol 6-7. Sprite: human placeholder + tint, VISUAL-LOG. No shop -- his commerce is the enchant dialogue.",
    "id": "hedault",
    "kind": "npc",
-   "cell": [0, 6],
+   "cell": [
+    0,
+    6
+   ],
    "display_name": "Hedault",
    "sprite": "human_laborer",
-   "tint": [0.85, 0.85, 0.95],
+   "tint": [
+    0.85,
+    0.85,
+    0.95
+   ],
    "conversation": "hedault_enchanting",
    "talk_pool": [
     "Appraisal is free to watch and expensive to interrupt.",
@@ -1298,19 +1305,30 @@
    "observe": "A severe man at a spotless corner bench, tools laid out at right angles. Everything about him says the prices are exact and the opinions are free."
   },
   {
-   "_comment": "v0.16 I1 FIGHT (#306). INTERACT-ONLY (no trigger_radius) at (11,12): outside both shipped footpad trigger zones and off every pinned cell. Independent of the footpad rigs, so it is correct on a brothers_job_done save.",
+   "_comment": "v0.16 I1 FIGHT (#306). INTERACT-ONLY (no trigger_radius) at (11,12): outside both shipped footpad trigger zones and off every pinned cell. Independent of the footpad rigs, so it is correct on a brothers_job_done save. v0.16.1 #11: victory_toast added. Nothing rendered between the fight ending and the Lady's report row except a next-step nudge -- the player was asked to claim they had recovered the stone before the game had ever told them they had, which is why the FIGHT route did not read as a resolution. combat_banking's opt-in one-shot toast is contract-legal here: it requires the FIRST on_victory id be a quest-style counter and this entity's is `original_recovered`, a single String, so the toast fires exactly once, on the first win. No loot/item id was minted -- the shipped-id freeze stays untouched.",
    "id": "alley_fence_door",
    "kind": "encounter",
-   "cell": [11, 12],
+   "cell": [
+    11,
+    12
+   ],
    "display_name": "A Back Door with a Ledger Behind It",
    "sprite": "door",
    "observe": "A door with no handle on this side and a fresh scrape where somebody's boot goes when their hands are full. The ledger inside is worth more than the stock.",
    "arena": "mercantile_alley",
-   "enemies": ["heirloom_fence", "fence_doorman"],
+   "enemies": [
+    "heirloom_fence",
+    "fence_doorman"
+   ],
    "allies": [],
    "on_victory": "original_recovered",
-   "encounter_when": { "requires": { "heirloom_commission_started": 1 } },
-   "gate_closed_toast": "A back door with no handle on this side. Nothing about it is any of your business tonight."
+   "encounter_when": {
+    "requires": {
+     "heirloom_commission_started": 1
+    }
+   },
+   "gate_closed_toast": "A back door with no handle on this side. Nothing about it is any of your business tonight.",
+   "victory_toast": "The fence's strongbox gives up a lady's stone — forty years missing and still warm with someone else's guilt. It goes in your pack like it weighs more than it does."
   }
  ]
 }
