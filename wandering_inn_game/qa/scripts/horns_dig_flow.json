@@ -166,7 +166,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Ceria",
-    "text": "Word travels. Yes -- there's a ruin out past the floodplains, and under it a level nobody's opened since before Liscor had walls. We hit the seal three days ago. Yvlon can't cut it, Pisces won't shut up about it, and we are exactly one pair of hands short."
+    "text": "Word travels. Yes — there's a ruin out past the floodplains, and under it a level nobody's opened since before Liscor had walls. We hit the seal three days ago. Yvlon can't cut it, Pisces won't shut up about it, and we are exactly one pair of hands short."
    },
    "timeout_sec": 5
   },
@@ -198,7 +198,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Ceria",
-    "text": "East past the gate road, across the floodplains -- follow the survey stakes. Ask for me at the camp. And bring your own rope."
+    "text": "East past the gate road, across the floodplains — follow the survey stakes. Ask for me at the camp. And bring your own rope."
    },
    "timeout_sec": 5
   },
@@ -340,7 +340,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Ceria",
-    "text": "You made it. Camp rules: nobody touches anything shiny, nobody wanders past the survey stakes alone. The sealed level's below the pedestal court. We found the site off an old expedition ledger -- half the pages were about what they DIDN'T bring out."
+    "text": "You made it. Camp rules: nobody touches anything shiny, nobody wanders past the survey stakes alone. The sealed level's below the pedestal court. We found the site off an old expedition ledger — half the pages were about what they DIDN'T bring out."
    },
    "timeout_sec": 5
   },
@@ -605,7 +605,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
+    "text": "Below the pedestal: not treasure. A DOOR — unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
    },
    "timeout_sec": 5
   },
@@ -613,7 +613,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
+    "text": "Below the pedestal: not treasure. A DOOR — unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
    },
    "timeout_sec": 5
   },
@@ -640,7 +640,7 @@
    "_comment": "v0.15 A3 (GH#304), TOAST/QUEUE-DROP's own script. Measured on this run's events.jsonl: 19 toast payloads emitted, 14 reaching ui_toast_rendered before the fix (the transition wipe ate the two 'Got:' lines and the autosave), 0 unrendered after. The two below are the durable half -- the reveal and the arrival pointer are banked to lore_notes AT EMIT, so they answer 'what did that say' from the journal even on a run where the queue never gets a chance to drain them.",
    "action": "assert_state",
    "path": "lore_notes",
-   "contains": "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
+   "contains": "Below the pedestal: not treasure. A DOOR — unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
   },
   {
    "action": "assert_state",
@@ -695,7 +695,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Mounted, hinged, and -- observe -- already holding a hop to Liscor's gate district without so much as a rune of encouragement. It works. Now let us see how far it can go."
+    "text": "Mounted, hinged, and — observe — already holding a hop to Liscor's gate district without so much as a rune of encouragement. It works. Now let us see how far it can go."
    },
    "timeout_sec": 5
   },
@@ -718,7 +718,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Farther than Liscor. The wardwork wants distance the way a bowstring wants release -- but push it unattuned and things will leak through that we did not invite. Properly? We attune it. Krshia stocks catalysts; I stock expertise."
+    "text": "Farther than Liscor. The wardwork wants distance the way a bowstring wants release — but push it unattuned and things will leak through that we did not invite. Properly? We attune it. Krshia stocks catalysts; I stock expertise."
    },
    "timeout_sec": 5
   },

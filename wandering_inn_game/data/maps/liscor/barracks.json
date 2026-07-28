@@ -278,7 +278,7 @@
     0.75,
     0.45
    ],
-   "observe": "A straw-packed target lashed to a post, set against the wall where a stray shot won't find a person. Scored through in a tight cluster, more or less -- somebody here takes the drills seriously.",
+   "observe": "A straw-packed target lashed to a post, set against the wall where a stray shot won't find a person. Scored through in a tight cluster, more or less — somebody here takes the drills seriously.",
    "requires_weapon_family": "bow",
    "item_hint_toast": "Nothing to shoot with. A bow in hand would do it.",
    "on_interact_accomplishment": "ranged_hit",

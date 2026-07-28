@@ -233,7 +233,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
+    "text": "Below the pedestal: not treasure. A DOOR — unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
    },
    "timeout_sec": 5
   },

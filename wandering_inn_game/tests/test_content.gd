@@ -392,6 +392,11 @@ func _scan_player_strings(node: Variant, path: String, attr: RegEx, provenance: 
 		_check(attr.search(s) == null, "%s carries a forbidden attribute token: %s" % [path, s])
 		_check(not s.contains("%"), "%s carries a forbidden percent-toward token: %s" % [path, s])
 		_check(provenance.search(s) == null, "%s carries a dev-provenance leak (Task/issue citation): %s" % [path, s])
+		# v0.15 DASH POLICY: the em dash wins (it already held 283 player strings
+		# to 112). Two toasts one beat apart on the same map disagreeing on dash
+		# glyph is the kind of seam a reader feels without being able to name.
+		# `_comment` keys are exempt by the walk above -- dev text keeps its ASCII.
+		_check(not s.contains(" -- "), "%s carries an ASCII double-hyphen; player copy uses the em dash: %s" % [path, s])
 
 
 func _load_json(path: String) -> Dictionary:
@@ -1393,7 +1398,7 @@ func _validate_place_naming_shape_cases() -> void:
 	# is the same sentence with every landmark word removed, preserving intent.
 	var ruin_tokens: Array = LANDMARK_TOKENS["ruin_surface"] + LANDMARK_TOKENS["street"]
 	_check(_description_names_place("Recover the anchor stone from the ruin east past the gate road, on the floodplains, and buy Krshia's catalyst to attune it.", ruin_tokens), "fixed recover beat names the ruin/floodplains")
-	_check(_description_names_place("Get the Horns through the ruin's sealed pedestal level -- fight what guards it, walk the plates, or read the wardwork.", ruin_tokens), "horns_dig's breach beat names the ruin")
+	_check(_description_names_place("Get the Horns through the ruin's sealed pedestal level — fight what guards it, walk the plates, or read the wardwork.", ruin_tokens), "horns_dig's breach beat names the ruin")
 	_check(not _description_names_place("Recover the anchor stone and buy Krshia's catalyst to attune it.", ruin_tokens), "NEGATIVE CONTROL: a recovery beat naming no landmark at all")
 
 	var guild_tokens: Array = LANDMARK_TOKENS["guild"]

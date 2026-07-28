@@ -1304,7 +1304,7 @@
      "id": "relc_sleep_nudge",
      "requires_accomplishment": { "sparred_with_relc": 1 },
      "lines": [
-      "You spar like someone carrying something new. Go sleep at the inn -- upstairs, real bed. Classes settle at the pillow, not the podium.",
+      "You spar like someone carrying something new. Go sleep at the inn — upstairs, real bed. Classes settle at the pillow, not the podium.",
       "Still walking around unslept? The thing you earned today doesn't count until you dream on it. Inn. Bed. Go."
      ]
     },
@@ -1350,7 +1350,7 @@
    ],
    "display_name": "Training Dummies",
    "sprite": "training_dummy",
-   "victory_toast": "Relc whistles. \"Not bad for a start. Now go SLEEP on it -- Classes come at the pillow, not the podium. Bed's upstairs at the inn.\"",
+   "victory_toast": "Relc whistles. \"Not bad for a start. Now go SLEEP on it — Classes come at the pillow, not the podium. Bed's upstairs at the inn.\"",
    "observe": "Straw and burlap lashed to posts, hacked half to ribbons. Someone drills here often, and hard. The stitching tells you where a real guard would break.",
    "arena": "training_yard",
    "enemies": [
@@ -1410,7 +1410,7 @@
     0.6,
     0.68
    ],
-   "observe": "A hairline crack runs through old, dressed stone half-swallowed by turf -- not natural rock, something built. Cold air breathes up out of it, and it smells of somewhere else.",
+   "observe": "A hairline crack runs through old, dressed stone half-swallowed by turf — not natural rock, something built. Cold air breathes up out of it, and it smells of somewhere else.",
    "on_interact_accomplishment": "found_the_rift_seam",
    "toast": "A cold seam splits the earth here, sealed by old stone. It doesn't feel like it goes anywhere. Yet.",
    "door_when": {

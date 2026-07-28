@@ -296,7 +296,7 @@
      "pallass_attuned": 1
     }
    },
-   "observe": "A squared plinth of the same slab the whole tier is cut from. No rune, no seam, nothing carved into it at all -- and still the blankness has an outline, the way a mould does. Whatever door reaches this tier is already remembered here.",
+   "observe": "A squared plinth of the same slab the whole tier is cut from. No rune, no seam, nothing carved into it at all — and still the blankness has an outline, the way a mould does. Whatever door reaches this tier is already remembered here.",
    "on_interact_accomplishment": "eyed_the_market_arrival_stone",
    "toast": "Cold, precise stone, and not as blank as it looks. Something the shape of a door is being held in it, patiently, for later."
   },
@@ -341,9 +341,9 @@
    ],
    "display_name": "Market Stall",
    "sprite": "market_stall_pallass",
-   "observe": "A stall built to the same civic pattern as every other on this tier -- same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+   "observe": "A stall built to the same civic pattern as every other on this tier — same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
    "on_interact_accomplishment": "browsed_posted_price_stall",
-   "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
+   "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up — the price is the price."
   },
   {
    "id": "market_stall_b",
@@ -354,9 +354,9 @@
    ],
    "display_name": "Market Stall",
    "sprite": "market_stall_pallass_b",
-   "observe": "A stall built to the same civic pattern as every other on this tier -- same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+   "observe": "A stall built to the same civic pattern as every other on this tier — same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
    "on_interact_accomplishment": "browsed_posted_price_stall",
-   "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
+   "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up — the price is the price."
   },
   {
    "id": "pallass_stall_burner",
@@ -385,9 +385,9 @@
    ],
    "display_name": "Market Stall",
    "sprite": "market_stall_pallass_c",
-   "observe": "A stall built to the same civic pattern as every other on this tier -- same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+   "observe": "A stall built to the same civic pattern as every other on this tier — same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
    "on_interact_accomplishment": "browsed_posted_price_stall",
-   "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up -- the price is the price."
+   "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up — the price is the price."
   },
   {
    "_comment": "Static `dialogue` = no-graph fallback only.",

@@ -73,7 +73,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Mounted, hinged, and -- observe -- already holding a hop to Liscor's gate district without so much as a rune of encouragement. It works. Now let us see how far it can go."
+    "text": "Mounted, hinged, and — observe — already holding a hop to Liscor's gate district without so much as a rune of encouragement. It works. Now let us see how far it can go."
    },
    "timeout_sec": 5
   },

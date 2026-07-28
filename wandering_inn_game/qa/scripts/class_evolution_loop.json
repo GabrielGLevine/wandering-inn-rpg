@@ -387,7 +387,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "You spar like someone carrying something new. Go sleep at the inn -- upstairs, real bed. Classes settle at the pillow, not the podium."
+    "text": "You spar like someone carrying something new. Go sleep at the inn — upstairs, real bed. Classes settle at the pillow, not the podium."
    },
    "timeout_sec": 5
   },

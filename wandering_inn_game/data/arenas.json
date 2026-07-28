@@ -716,7 +716,7 @@
      "requires_any_class": true,
      "requires_ally": "relc",
      "line": "Relc: Real ones this time. Stay behind me if you have to. You slept, so check your numbers: 3 and up are your [Skills] now. Earned, not given.",
-     "fallback_line": "Relc: Real ones this time. Stay behind me if you have to. No numbers yet -- you haven't slept. Win this, then get back to the inn and sleep. That's when the real stuff shows up.",
+     "fallback_line": "Relc: Real ones this time. Stay behind me if you have to. No numbers yet — you haven't slept. Win this, then get back to the inn and sleep. That's when the real stuff shows up.",
      "solo_fallback_line": "The Design tallies what you do; it writes classes and levels while you sleep — keep doing what you want to become."
     },
     {

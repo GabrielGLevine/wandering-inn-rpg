@@ -380,7 +380,7 @@
   },
   "pallass_sponsor": {
    "speaker": "Selys",
-   "text": "Pallass. Guild's got the standing arrangement -- I file the sponsorship, you cover the clerk's fee, and it goes through same-day. Ten gold, paid to the Guild, not to me.",
+   "text": "Pallass. Guild's got the standing arrangement — I file the sponsorship, you cover the clerk's fee, and it goes through same-day. Ten gold, paid to the Guild, not to me.",
    "options": [
     {
      "text": "File it. (10 gold)",
@@ -405,7 +405,7 @@
   },
   "pallass_sponsored_reaction": {
    "speaker": "Selys",
-   "text": "Filed. Give it a day or so to clear the Guild's own desk before you go looking for the Door to answer for it -- paperwork moves at paperwork speed, even here.",
+   "text": "Filed. Give it a day or so to clear the Guild's own desk before you go looking for the Door to answer for it — paperwork moves at paperwork speed, even here.",
    "options": [
     {
      "text": "My thanks, Selys.",

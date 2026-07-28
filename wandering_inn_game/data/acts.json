@@ -4,7 +4,7 @@
 		{
 			"id": "act_i",
 			"title": "Arrival",
-			"header": "Act I -- Arrival",
+			"header": "Act I — Arrival",
 			"advance_when": { "min_classes": 1, "accomplishments": { "reached_liscor": 1 } },
 			"beats": [
 				{ "id": "first_class", "text": "You've grown into a class of your own.", "opening": "A class is waiting for the person you act like.", "when": { "min_classes": 1 } },
@@ -14,7 +14,7 @@
 		{
 			"id": "act_ii",
 			"title": "Make a Place for Yourself",
-			"header": "Act II -- Make a Place for Yourself",
+			"header": "Act II — Make a Place for Yourself",
 			"advance_when": { "accomplishments": { "reached_two_classes": 1 }, "quests_completed": 3 },
 			"beats": [
 				{ "id": "errands_around", "text": "Word of your errands is getting around town.", "opening": "Work finds hands that take it.", "when": { "accomplishments": { "package_delivered": 1 } } },
@@ -26,7 +26,7 @@
 		{
 			"id": "act_iii",
 			"title": "What Stirs Beneath",
-			"header": "Act III -- What Stirs Beneath",
+			"header": "Act III — What Stirs Beneath",
 			"advance_when": { "accomplishments": { "raskghar_sealed": 1 } },
 			"beats": [
 				{ "id": "the_stirring", "text": "Something is moving in the dark beneath the city.", "opening": "Something under the city has the Watch losing sleep.", "when": { "accomplishments": { "heard_the_deep_tremor": 1 } } },
@@ -37,7 +37,7 @@
 			"_comment": "Act V gate: the seal report plus the two region terminals the pilgrimage does not imply. Transitivity covers the rest -- lattice_forge_rune implies spine_started and elevator_pass_stamped, lattice_witch_lore requires price_of_a_favor_reported, lattice_hedault_reading requires brothers_job_done, and Act V's descent ask requires all three lattice counters. Naming them here is what keeps riverfarm_owed and invrisil_squared from being STRANDED: a beat whose counter can only bank in an act the player has already left can never render (the act_iii defect). counted_among is deliberately NOT in the gate -- it is the seal's own closing line, relocated here because post_game banks at the first sleep AFTER the seal (sleep_beat.gd). Each `opening` points at the FIRST step of its beat's chain, not the beat's outcome: the_door_opens opens on the dig east (dig -> mounted door -> catalyst -> attune -> door_awakened), the_reach_mapped on the Door's strain. SPOILER BAR (both keys): no beat line may exceed the act title. TRIPWIRE: the_reach_mapped was re-copied 2026-07-27 -- it stated Act V's reveal.",
 			"id": "act_iv",
 			"title": "What the Door Opened",
-			"header": "Act IV -- What the Door Opened",
+			"header": "Act IV — What the Door Opened",
 			"advance_when": { "accomplishments": { "lattice_forge_rune": 1, "seal_kept_reported": 1, "price_of_a_favor_reported": 1, "brothers_job_done": 1 } },
 			"beats": [
 				{ "id": "counted_among", "text": "The seal holds. Liscor counts you among its own.", "opening": "The city is deciding what you are to it.", "when": { "accomplishments": { "post_game": 1 } } },
@@ -53,7 +53,7 @@
 			"_comment": "Act V, the slot #270 reserved. Every beat here banks INSIDE the act (the act_iii lesson: a beat keyed to its own act's exit gate can never render), and because act_v is last even the resolution beat renders. ONE resolution beat, not three: a per-path beat list would leave two entries permanently pending for every player. The `opening` keys carry the spoiler load for this act -- they are what a mid-Act-V player reads, and none of them may name what the vault holds; the `text` lines are outcome copy and render only once their own counter banks.",
 			"id": "act_v",
 			"title": "What the Seal Was Feeding",
-			"header": "Act V -- What the Seal Was Feeding",
+			"header": "Act V — What the Seal Was Feeding",
 			"advance_when": { "accomplishments": { "seal_resolved": 1 } },
 			"beats": [
 				{ "id": "the_descent", "text": "Pisces will not read it out of a treatise. You are taking him down to it.", "opening": "Pisces wants to read the seal in person, not from a treatise.", "when": { "accomplishments": { "seal_descent_agreed": 1 } } },

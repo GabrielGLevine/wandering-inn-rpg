@@ -3,19 +3,19 @@
  "nodes": {
   "hub": {
    "speaker": "Market-Tier Local",
-   "text": "Busy morning for the stalls. Mind the queues -- they move faster than they look.",
+   "text": "Busy morning for the stalls. Mind the queues — they move faster than they look.",
    "text_variants": [
     {
      "requires": {
       "race": "human"
      },
-     "text": "Don't see many of you up this tier. Nothing personal in the look -- just not a common one."
+     "text": "Don't see many of you up this tier. Nothing personal in the look — just not a common one."
     },
     {
      "requires": {
       "race": "drake"
      },
-     "text": "You'll want the second queue -- the first one's for out-of-towners. You know how it is."
+     "text": "You'll want the second queue — the first one's for out-of-towners. You know how it is."
     }
    ],
    "options": [

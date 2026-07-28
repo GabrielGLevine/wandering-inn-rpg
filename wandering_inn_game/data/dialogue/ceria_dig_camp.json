@@ -4,7 +4,7 @@
 	"nodes": {
 		"camp_hub": {
 			"speaker": "Ceria",
-			"text": "You made it. Camp rules: nobody touches anything shiny, nobody wanders past the survey stakes alone. The sealed level's below the pedestal court. We found the site off an old expedition ledger -- half the pages were about what they DIDN'T bring out.",
+			"text": "You made it. Camp rules: nobody touches anything shiny, nobody wanders past the survey stakes alone. The sealed level's below the pedestal court. We found the site off an old expedition ledger — half the pages were about what they DIDN'T bring out.",
 			"options": [
 				{ "text": "Let's open it up.", "hide_when": { "accomplishment": { "horns_dig_joined": 1 } }, "effects": [ { "accomplishment": "horns_dig_joined" } ], "end": true },
 				{ "text": "Just passing through.", "end": true }

@@ -318,7 +318,7 @@
 			"display_name": "Strategist",
 			"stat_growth": { "int": 2 },
 			"inherits": "tactician",
-			"aspiration": { "display_name": "Grandmaster Strategist", "text": "Those who master the whole board -- every piece, every player, every war before it starts -- are in time named [Grandmaster Strategists]." },
+			"aspiration": { "display_name": "Grandmaster Strategist", "text": "Those who master the whole board — every piece, every player, every war before it starts — are in time named [Grandmaster Strategists]." },
 			"levels": [
 				{ "level": 10, "requires": { "observed_things": 55 }, "grants": ["read_the_field"] },
 				{ "level": 11, "requires": { "observed_things": 66 }, "grants": [] },
@@ -461,7 +461,7 @@
 			"display_name": "Ranger",
 			"stat_growth": { "str": 1, "dex": 1 },
 			"inherits": ["warrior", "archer"],
-			"aspiration": { "display_name": "Ranger of the Woods", "text": "Some who walk the wild longest are, in time, named [Ranger of the Woods] -- the wood answers them before it answers anyone else." },
+			"aspiration": { "display_name": "Ranger of the Woods", "text": "Some who walk the wild longest are, in time, named [Ranger of the Woods] — the wood answers them before it answers anyone else." },
 			"levels": [
 				{ "level": 14, "requires_any": { "melee_hit": 105, "ranged_hit": 80 }, "grants": ["dangersense", "steady_draw"] },
 				{ "level": 15, "requires_any": { "melee_hit": 119, "ranged_hit": 95 }, "grants": [] },

@@ -116,7 +116,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Selys",
-    "text": "Pallass. Guild's got the standing arrangement -- I file the sponsorship, you cover the clerk's fee, and it goes through same-day. Ten gold, paid to the Guild, not to me."
+    "text": "Pallass. Guild's got the standing arrangement — I file the sponsorship, you cover the clerk's fee, and it goes through same-day. Ten gold, paid to the Guild, not to me."
    },
    "timeout_sec": 5
   },
@@ -666,7 +666,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Tier Clerk",
-    "text": "A Human, this far in. State your business and your sponsor -- twice, if the first answer doesn't hold up."
+    "text": "A Human, this far in. State your business and your sponsor — twice, if the first answer doesn't hold up."
    },
    "timeout_sec": 5
   },
@@ -796,7 +796,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Forge-Tier Clerk",
-    "text": "Five gold, filed same-day, no exceptions and no discounts -- that's the posted price. Grimalkin reads your fitness after, at the exam floor on the far end of this office; I only handle paper."
+    "text": "Five gold, filed same-day, no exceptions and no discounts — that's the posted price. Grimalkin reads your fitness after, at the exam floor on the far end of this office; I only handle paper."
    },
    "timeout_sec": 5
   },
@@ -994,7 +994,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Forge-Tier Clerk",
-    "text": "Grimalkin's mark is on the file. Three gold for the stamp itself -- posted price, same as the filing."
+    "text": "Grimalkin's mark is on the file. Three gold for the stamp itself — posted price, same as the filing."
    },
    "timeout_sec": 5
   },

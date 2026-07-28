@@ -453,7 +453,7 @@
 			"ap_cost": 1,
 			"weapon": "bow",
 			"effect": { "type": "damage_mult", "mult": 0.7 },
-			"description": "Nock, draw, loose -- before the first arrow lands, the second is already gone."
+			"description": "Nock, draw, loose — before the first arrow lands, the second is already gone."
 		},
 		{
 			"_comment": "Reuses line_damage VERBATIM (flame_jet's own effect type/resolver, WISkillEffects._resolve_line_damage) -- an arrow that overpenetrates instead of a jet of fire, weapon-gated to bow instead of element-gated.",
@@ -511,7 +511,7 @@
 			"contexts": ["combat"],
 			"ap_cost": 0,
 			"effect": { "type": "hit_bonus", "amount": 10 },
-			"description": "The whole board resolves at once -- every gap in a guard, every foot planted wrong."
+			"description": "The whole board resolves at once — every gap in a guard, every foot planted wrong."
 		},
 		{
 			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked, no match.",
@@ -521,7 +521,7 @@
 			"contexts": ["exploration"],
 			"field": true,
 			"field_ambient": "[Measured Words] — You turn a careful phrase to no one in particular. It lands, as it always does, on empty air.",
-			"description": "Every word chosen and weighed before it leaves the mouth -- the kind of care that opens doors a blunt tongue never finds."
+			"description": "Every word chosen and weighed before it leaves the mouth — the kind of care that opens doors a blunt tongue never finds."
 		},
 		{
 			"_comment": "Costs MP unlike second_wind (a genuine resource tax distinguishing the two self/ally heals) and heals less (6 vs second_wind's 8) since it can reach a second body.",
@@ -532,7 +532,7 @@
 			"ap_cost": 2,
 			"mp_cost": 3,
 			"effect": { "type": "heal", "amount": 6, "ally_target": true },
-			"description": "A calm that isn't performed -- it settles over the room, and over a hurting friend, the same way."
+			"description": "A calm that isn't performed — it settles over the room, and over a hurting friend, the same way."
 		},
 		{
 			"_comment": "AP-only (no mp_cost, a construct's ward isn't a spell) -- a small mend plus a defensive ward is the direct read for an escort construct covering its hurt sibling/boss.",
@@ -541,7 +541,7 @@
 			"contexts": ["combat"],
 			"ap_cost": 2,
 			"effect": { "type": "heal", "amount": 4, "ally_target": true, "applies": { "guarded": { "duration_rounds": 1 } } },
-			"description": "A muttered ward and a steadying hand -- the hurt eases, and the next blow lands a little softer."
+			"description": "A muttered ward and a steadying hand — the hurt eases, and the next blow lands a little softer."
 		},
 		{
 			"id": "open_doors",
@@ -551,7 +551,7 @@
 			"field": true,
 			"field_ambient": "[Open Doors] — You offer the easy, practiced warmth that opens rooms. There is no room here to open.",
 			"door_flavor": "[Open Doors] — The door was not locked. It opens anyway, with tremendous ceremony, and somewhere the Skill feels appreciated.",
-			"description": "Doors that would stay shut for anyone else swing open at your approach -- goodwill has its own kind of key."
+			"description": "Doors that would stay shut for anyone else swing open at your approach — goodwill has its own kind of key."
 		},
 		{
 			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect index), no match for a bare trap-sense Skill.",
@@ -626,7 +626,7 @@
 			"contexts": ["exploration"],
 			"field": true,
 			"field_ambient": "[Perfect Hospitality] — You straighten a chair, smooth a cloth, ready the room out of habit. There's no one here to welcome yet.",
-			"description": "Every guest finds exactly the welcome they didn't know they needed -- a warm room, a full glass, a seat that was somehow already theirs."
+			"description": "Every guest finds exactly the welcome they didn't know they needed — a warm room, a full glass, a seat that was somehow already theirs."
 		},
 		{
 			"_comment": "`weapon: bow` gates it through the SAME `weapon_gated_kit` filter every other weapon-tagged skill already uses, so it only ever contributes with a bow equipped -- the 'bow passive' framing holds exactly.",
@@ -636,7 +636,7 @@
 			"ap_cost": 0,
 			"weapon": "bow",
 			"effect": { "type": "hit_bonus", "amount": 8 },
-			"description": "Breath out, string back, and the point of aim simply stops drifting -- a drawn bow held as still as a nail in a beam."
+			"description": "Breath out, string back, and the point of aim simply stops drifting — a drawn bow held as still as a nail in a beam."
 		},
 		{
 			"_comment": "Deliberately carries NEITHER `ap_cost`/`effect` NOR `field: true` -- a pure passive identity trait, the SAME shape lesser_stamina/lesser_strength already ship (flavor-only, never castable).",
@@ -661,7 +661,7 @@
 			"display_name": "[Bulk Terms]",
 			"contexts": ["exploration"],
 			"trade_bonus": 0.1,
-			"description": "Wholesale eyes on a retail world -- goods move through you in bulk, and the numbers favor the one who moves them."
+			"description": "Wholesale eyes on a retail world — goods move through you in bulk, and the numbers favor the one who moves them."
 		},
 		{
 			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- passive-identity shape matches bargain/lesser_stamina.",
@@ -1079,7 +1079,7 @@
 					}
 				}
 			},
-			"description": "A shaft loosed to burst bright at the eyes -- little force behind it, but the target fights half-blind for it."
+			"description": "A shaft loosed to burst bright at the eyes — little force behind it, but the target fights half-blind for it."
 		},
 		{
 			"_comment": "CANON-VERDICT: ATTESTED. Infiltrator L14 blink-flavored repositioning -- turn-start move_pool passive (0 AP), enhanced_movement shape at +2.",

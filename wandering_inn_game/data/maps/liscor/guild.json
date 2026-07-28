@@ -348,19 +348,19 @@
      "_comment": "_interact_board banks banks_accomplishment idempotently (record_accomplishment's own >=1 gate semantics, same as read_the_board's own every-visit bank).",
      "id": "rumor_riverfarm",
      "banks_accomplishment": "riverfarm_attuned",
-     "copy": "TRAVELER'S NOTE, pinned crooked. Village called Riverfarm, downriver a fair walk, farming folk, growing fast under some new lord. They've got witch trouble, or so the last one through here said -- crops going bad, nobody saying why out loud. No bounty on it, just word passed along. Ask the Guild about the road if you're curious."
+     "copy": "TRAVELER'S NOTE, pinned crooked. Village called Riverfarm, downriver a fair walk, farming folk, growing fast under some new lord. They've got witch trouble, or so the last one through here said — crops going bad, nobody saying why out loud. No bounty on it, just word passed along. Ask the Guild about the road if you're curious."
     },
     {
      "_comment": "Stays a SIGNPOST only: banks heard_of_invrisil idempotently on every board browse (_interact_board's existing >=1 semantics), a flavor-only counter no gate reads.",
      "id": "rumor_invrisil",
      "banks_accomplishment": "heard_of_invrisil",
-     "copy": "A LETTER, sealed in wax gone slightly soft from handling, addressed to no one by name. Inside: impeccable handwriting regrets to inform you of a small disagreement in Invrisil concerning a mutual acquaintance's good name, and would consider it a personal favor -- and a professional one -- if a stranger to the city might look into it. The witch at Riverfarm keeps the stones, should the distance prove an obstacle. Signed only with a small drawing of a hat. The Guildmistress's clerk says it arrived by very ordinary post, which is itself the strangest part."
+     "copy": "A LETTER, sealed in wax gone slightly soft from handling, addressed to no one by name. Inside: impeccable handwriting regrets to inform you of a small disagreement in Invrisil concerning a mutual acquaintance's good name, and would consider it a personal favor — and a professional one — if a stranger to the city might look into it. The witch at Riverfarm keeps the stones, should the distance prove an obstacle. Signed only with a small drawing of a hat. The Guildmistress's clerk says it arrived by very ordinary post, which is itself the strangest part."
     },
     {
      "_comment": "Points the reader at Olesm by name rather than naming a location a player could act on directly from the board itself. The stipend is HIS option, in olesm_intro.json, gated separately on post_game. That counter banks at the first sleep after the seal -- mid-story, not an end-of-story flag.",
      "id": "rumor_dungeon_survey",
      "banks_accomplishment": "heard_of_the_gallery_survey",
-     "copy": "A WATCH NOTICE, freshly pinned. The reopened gallery under the old seal is to be surveyed properly before the Council calls it settled -- volunteers with Guild standing should see Olesm Swifttail at the frontage desk. Pay is Watch-scale. The notice does not say what 'properly' means, and nobody pinning notices ever does."
+     "copy": "A WATCH NOTICE, freshly pinned. The reopened gallery under the old seal is to be surveyed properly before the Council calls it settled — volunteers with Guild standing should see Olesm Swifttail at the frontage desk. Pay is Watch-scale. The notice does not say what 'properly' means, and nobody pinning notices ever does."
     },
     {
      "_comment": "the real quest option lives on his own dresk_recruit.json conversation, gated on this same banked counter.",
