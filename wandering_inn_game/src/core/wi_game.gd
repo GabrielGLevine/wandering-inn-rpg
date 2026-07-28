@@ -1005,6 +1005,22 @@ func _build_dialogue_ctx() -> Dictionary:
 	return {WIKeys.SKILLS: known_skills(), "classes": classes.duplicate(true), "accomplishments": accomplishments.duplicate(true), "names": names, "gold": gold, "items": _items, "inventory": inventory.duplicate(), "board_accepted": accepted_bounty_id != "", "delivery_accepted": accepted_delivery_id != "", "entity_first_use": entity_first_use.duplicate(true), "pc_race": pc_race, "phase": phase()}
 
 
+## `dialogue_choose` nulls the walker only when `choose()` returns `ended: true`.
+## WIDialogue has a SECOND way to finish: `_enter`'s fail-safe trips on a node
+## whose options are all gated shut, from inside `begin()` or `advance()`, and
+## reports nothing back. It emits DIALOGUE_ENDED, so every UI listener closes --
+## but the sim's own handle stays set, and a finished walker parked there reads
+## as "a dialogue is open" to every `dialogue != null` gate in the game
+## (movement, interact, inventory, journal, pause, field chips, and the re-entry
+## guards below), with nothing left to clear it. That is a softlock CLASS, so it
+## is closed at the source: any self-finish clears the handle in the same tick.
+## No shipped graph reaches the fail-safe (every node keeps an ungated exit) and
+## world.gd's `_dialogue_is_open()` keeps its own `not finished` belt.
+func _clear_if_self_finished(walker: WIDialogue) -> void:
+	if dialogue == walker and walker.finished:
+		dialogue = null
+
+
 func start_dialogue(conversation_id: String, source_entity_id: String) -> bool:
 	if dialogue != null or combat != null:
 		return false
@@ -1015,6 +1031,7 @@ func start_dialogue(conversation_id: String, source_entity_id: String) -> bool:
 	_emit(WIEvents.DIALOGUE_STARTED, {"conversation": conversation_id, "entity": source_entity_id})
 	dialogue = WIDialogue.new(graphs[conversation_id], _build_dialogue_ctx(), _addressed_sink)
 	dialogue.begin()
+	_clear_if_self_finished(dialogue)
 	return true
 
 
@@ -1025,6 +1042,7 @@ func _begin_code_dialogue(graph: Dictionary, conversation_label: String, source_
 	_emit(WIEvents.DIALOGUE_STARTED, {"conversation": conversation_label, "entity": source_entity_id})
 	dialogue = WIDialogue.new(graph, _build_dialogue_ctx(), _addressed_sink)
 	dialogue.begin()
+	_clear_if_self_finished(dialogue)
 	return true
 
 
@@ -1112,6 +1130,7 @@ func dialogue_choose(index: int) -> bool:
 	if not bool(result["ended"]):
 		walker.set_ctx(_build_dialogue_ctx())
 		walker.advance(String(result["next"]))
+		_clear_if_self_finished(walker)
 	if pending_combat != "":
 		if not start_combat(pending_combat):
 			_emit(WIEvents.DIALOGUE_EFFECT_FAILED, {"effect": "start_combat", "id": pending_combat})
