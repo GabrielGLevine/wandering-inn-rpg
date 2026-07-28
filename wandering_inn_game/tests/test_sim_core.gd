@@ -2101,6 +2101,37 @@ func _init() -> void:
 	gGreaterWard.sleep()
 	assert(not gGreaterWard.warded_encounters.has("goblin_encounter_1"), "greater ward clears after its second sleep")
 
+	# v0.16.1 #6 ECONOMY: the [Hedge Remedy] brew arms are INGREDIENT-GATED, and
+	# the gate is what bounds the brew -> sell-to-Eloise loop (she stands on the
+	# cauldron's own map, so the cycle was zero-travel and free). Three legs on
+	# one game, against the real catalog:
+	#  (a) empty pack -- refused at requires_item; nothing produced, nothing banked
+	#  (b) yarrow held -- the arm resolves, EATS the bundle, banks the counter once
+	#  (c) yarrow held AND the output already in the pack -- the consuming-recipe
+	#      dup-output refusal fires BEFORE record_accomplishment, which is the fix
+	#      for the second, larger exploit: spamming a full pack used to bank free
+	#      witch_craft_used forever ([Hedge Witch] -> [Witch] needs 89 of them).
+	# Leg (c) is why this lives in a unit and not only in witch_brew_loop:
+	# inventory never stacks, so no save fixture can stage "holding both".
+	var gBrew := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gBrew.player_skills.append("hedge_remedy")
+	gBrew.transition("witch_hollow", Vector2i(6, 9))
+	gBrew.player_facing = Vector2i.UP
+	_events.clear()
+	assert(String(gBrew.use_skill_field("hedge_remedy").get("item_hint", "")) == "dried_yarrow_bundle", "an empty pack is refused at the brew's ingredient gate")
+	assert(_toast_texts() == ["The kettle wants yarrow before it gives anything back."], "the ingredient refusal uses the authored yarrow hint")
+	assert(gBrew.accomplishment_count("witch_craft_used") == 0 and not gBrew.inventory.has("remedy_draught"), "a gate-refused brew banks nothing and produces nothing")
+	gBrew.inventory.append("dried_yarrow_bundle")
+	_events.clear()
+	assert(String(gBrew.use_skill_field("hedge_remedy").get("accomplishment", "")) == "witch_craft_used", "a held yarrow bundle lets the brew resolve")
+	assert(gBrew.inventory.has("remedy_draught") and not gBrew.inventory.has("dried_yarrow_bundle"), "the resolved brew consumes the bundle and yields the draught")
+	assert(gBrew.accomplishment_count("witch_craft_used") == 1, "the resolved brew banks the craft counter exactly once")
+	gBrew.inventory.append("dried_yarrow_bundle")
+	_events.clear()
+	assert(String(gBrew.use_skill_field("hedge_remedy").get("blocked_duplicate", "")) == "remedy_draught", "a pack already holding the output refuses before any state changes")
+	assert(gBrew.accomplishment_count("witch_craft_used") == 1, "the dup-output refusal banks NO extra witch_craft_used -- the counter exploit is closed")
+	assert(gBrew.inventory.has("dried_yarrow_bundle"), "the dup-output refusal consumes no reagents")
+
 	var gAnimateCrowded := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
 	gAnimateCrowded.player_skills.append("test_animate")
 	gAnimateCrowded.accomplishments["horns_party_formed"] = 1

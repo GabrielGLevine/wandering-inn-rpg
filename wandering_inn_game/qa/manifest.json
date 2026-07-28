@@ -5626,6 +5626,32 @@
      "night_phase"
     ]
    }
+  },
+  {
+   "script": "witch_brew_loop",
+   "seed": 9,
+   "fixture": "witch_brew_start",
+   "note": "v0.16.1 #6 ECONOMY: the ingredient-bounded brew arm. Before this the [Hedge Remedy] bench props had ZERO live coverage, which is how an unbounded brew->sell loop shipped. One cast eats the held dried_yarrow_bundle and yields a remedy_draught; the next cast is refused at the requires_item gate with the authored hint and banks nothing (assert_event_count pins exactly one remedy per yarrow). The consuming-recipe dup-output refusal is unit-proven in test_sim_core",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "witch_brew_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "hedge_remedy"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
+    ]
+   }
   }
  ]
 }

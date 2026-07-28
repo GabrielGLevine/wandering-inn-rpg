@@ -1331,14 +1331,17 @@
    "display_name": "Hearth-Side Kettle",
    "sprite": "cauldron",
    "requires_skill": "hedge_remedy",
+   "requires_item": "dried_yarrow_bundle",
+   "item_hint_toast": "The kettle wants yarrow before it gives anything back.",
    "skill_hint_toast": "The kettle's on. The inn won't mind one more thing brewing, so long as it means well.",
    "locked_toast": "A kettle, singing low. It's just a kettle, unless you know otherwise.",
    "on_skill_use": {
     "accomplishment": "witch_craft_used",
     "item": "remedy_draught",
+    "remove_item": "dried_yarrow_bundle",
     "toast": "[Hedge Remedy] — The inn's kettle does in a pinch, just like she said. The steam settles into something kinder."
    },
-   "_comment": "GH#131 review-CI fix: moved off (2,2) -- test_sim_core walks it (open-cell move from the (2,3) start). (6,2) is a blocked kitchen-counter cell (the #116 dress-a-blocked-cell pattern); approach (6,3), facing up, which test_sim_core itself asserts open."
+   "_comment": "GH#131 review-CI fix: moved off (2,2) -- test_sim_core walks it (open-cell move from the (2,3) start). (6,2) is a blocked kitchen-counter cell (the #116 dress-a-blocked-cell pattern); approach (6,3), facing up, which test_sim_core itself asserts open. v0.16.1 #6 ECONOMY: same ingredient gate as eloise_cauldron (the other remedy_draught arm) -- requires_item + on_skill_use.remove_item, which both bounds the brew->sell arbitrage and arms wi_game.gd's consuming-recipe dup-output refusal so a held remedy no longer banks free witch_craft_used."
   },
   {
    "id": "inn_chef_counter",
