@@ -166,6 +166,22 @@
 			]
 		},
 		{
+			"_comment": "v0.16 I1 (#306). Giver is the stationer client (ruling 1). `resolve` is a travel beat (producers on mercantile_alleys, giver on stationer) so it names the alleys; `report` produces on the giver's own map.",
+			"id": "a_setting_for_a_lady",
+			"title": "A Setting for a Lady",
+			"region": "Invrisil",
+			"beats": [
+				{ "id": "resolve", "description": "Hedault keeps a bench in the alleys and will not set the stone until somebody says the true thing about it. Tell him, read the ward at his bench, or find out who took the original.", "complete_when_any": { "heirloom_truth_kept": 1, "setting_assisted": 1, "original_recovered": 1 } },
+				{ "id": "report", "description": "Go back to the Lady with the ring box and tell her how it ended.", "complete_when": { "setting_commissioned": 1 } }
+			],
+			"_resolution_order": "Weakest claim first (src/core/quests.gd:82-87); LAST MATCH WINS among real rungs, so a completionist reads as the strongest deed: setting_assisted (you helped) < heirloom_truth_kept (you brokered the truth) < original_recovered (you brought back the real stone). No \"\"-fallback rung -- the handover option is gated on holding at least one route counter, so setting_commissioned cannot bank without one.",
+			"resolution_paths": [
+				{ "accomplishment": "setting_assisted", "text": "You stood at Hedault's bench and read the ward-line with him. He did not correct you, which from him is a reference.", "grant": { "observed_things": 2, "heard_gossip": 2 } },
+				{ "accomplishment": "heirloom_truth_kept", "text": "You said the true thing about the stone out loud so she would never have to, and the setting was made honest around it.", "grant": { "persuaded_someone": 2, "heard_gossip": 3 } },
+				{ "accomplishment": "original_recovered", "text": "Forty years after somebody swapped it, you took the original back off a fence's shelf and put it in her hands.", "grant": { "melee_hit": 6, "won_combat": 1 } }
+			]
+		},
+		{
 			"_comment": "FOUR real stages, not the cisterns/wrong_order two-beat shape: this is a genuine dungeon, not a posting. Task 2.2 named cleared_halls_by_force on snare_nest_slot so the fight has an id of its own; four Act V fixtures carried halls_cleared with no route counter and gained it, keeping their recorded ending byte-identical.",
 			"id": "what_the_seal_kept",
 			"title": "What the Seal Kept",

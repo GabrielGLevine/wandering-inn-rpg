@@ -803,7 +803,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 **Interfaces:**
 - Produces: quest id `a_setting_for_a_lady`. Tasks 2.2–2.5 bank every counter it names.
 
-- [ ] **Step 1: Splice the block:**
+- [x] **Step 1: Splice the block:**
 
 ```json
 {
@@ -824,10 +824,10 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 }
 ```
 
-- [ ] **Step 2: Verify the travel-beat arithmetic by hand.** `_quest_giver_maps` resolves the giver from the map hosting the conversation that fires `{"quest": "a_setting_for_a_lady"}` → `stationer`. `resolve`'s three producers all live on `mercantile_alleys` (Hedault's conversation is hosted there; the fence encounter is placed there in Task 2.5), so the beat **needs** a landmark and `"alleys"` is in `LANDMARK_TOKENS["mercantile_alleys"]`. ✔ `report`'s producer is the giver's own map → no landmark required. ✔
-- [ ] **Step 3: `_comment` census discipline** — the one `_comment` string above is the whole quest-block charge. The ladder rationale lives in **`_resolution_order`**, which `comment_census.py` does **not** charge (it keys on `_`-prefixed keys containing `comment`), and `test_quests.gd:133-142` requires exactly that key for any array with ≥2 real rungs. Do **not** re-add `_resolution_paths_comment` — it is charged, and it is optional (one shipped quest carries it; ten do not). Anything longer goes to `docs/CHOICE-LOG.md`.
-- [ ] **Step 4: Run** `test_content.gd` (`_validate_quests` cross-refs every `complete_when`/`complete_when_any` counter against real producers — it will red until Tasks 2.2–2.5 land, which is expected; land those first if you prefer a green-at-every-commit ladder) and `test_quests.gd`.
-- [ ] **Step 5: Commit** `feat(quests): A Setting for a Lady (#306)`.
+- [x] **Step 2: Verify the travel-beat arithmetic by hand.** `_quest_giver_maps` resolves the giver from the map hosting the conversation that fires `{"quest": "a_setting_for_a_lady"}` → `stationer`. `resolve`'s three producers all live on `mercantile_alleys` (Hedault's conversation is hosted there; the fence encounter is placed there in Task 2.5), so the beat **needs** a landmark and `"alleys"` is in `LANDMARK_TOKENS["mercantile_alleys"]`. ✔ `report`'s producer is the giver's own map → no landmark required. ✔
+- [x] **Step 3: `_comment` census discipline** — the one `_comment` string above is the whole quest-block charge. The ladder rationale lives in **`_resolution_order`**, which `comment_census.py` does **not** charge (it keys on `_`-prefixed keys containing `comment`), and `test_quests.gd:133-142` requires exactly that key for any array with ≥2 real rungs. Do **not** re-add `_resolution_paths_comment` — it is charged, and it is optional (one shipped quest carries it; ten do not). Anything longer goes to `docs/CHOICE-LOG.md`.
+- [x] **Step 4: Run** `test_content.gd` (`_validate_quests` cross-refs every `complete_when`/`complete_when_any` counter against real producers — it will red until Tasks 2.2–2.5 land, which is expected; land those first if you prefer a green-at-every-commit ladder) and `test_quests.gd`.
+- [x] **Step 5: Commit** `feat(quests): A Setting for a Lady (#306)`.
 
 ### Task 2.2: `data/dialogue/invrisil_stationer_client.json` — the giver
 
