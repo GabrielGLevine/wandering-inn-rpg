@@ -1646,37 +1646,37 @@ Every risk from the Pallass recon plus the cross-cutting risks that apply, each 
 
 Load `wi-verifying-changes`. **Settle the tree first.** Run in this order and report PER SCRIPT — never "everything passed".
 
-- [ ] **1. Structural data lint:** `python3 wandering_inn_game/scripts/data_lint.py` (from repo root). This is NOT pytest and there is no `scripts/tests/test_data_lint.py` in this layout.
-- [ ] **2. Comment census:** `python3 scripts/comment_census.py --check` — must exit 0. Record the new DATA ratio.
-- [ ] **3. Guidance + doc drift:** `python3 scripts/sync_agent_guidance.py`, then `python3 scripts/render_qa_notes.py --write` followed by a bare `python3 scripts/render_qa_notes.py` as the check (ruling E — bare alone never writes), then `python3 scripts/check_doc_drift.py`.
-- [ ] **4. QA surface drift:** `wandering_inn_game/scripts/derive_qa_surfaces.py --check` — FATAL on any stale tag.
-- [ ] **5. Load gate / headless smoke** per the skill's chosen set for a data wave.
-- [ ] **6. Every `tests/test_*.gd`**, each alarm-wrapped at 240s, each requiring ALL THREE of: exit code checked, a `^PASS` line present, and a zero-hit grep for `SCRIPT ERROR|Parse Error|WARNING`. Minimum set that MUST be green: `test_content`, `test_dialogue`, `test_quests`, `test_reachability`, `test_combat_data`, `test_combat_visuals`, `test_fixture_coherence`, `test_copy_fit`, `test_effect_text`, `test_world_visuals`, `test_audio_data`, `test_portals`, `test_shipped_ids`.
-- [ ] **7. `sim_combat_batch.gd`** alarm-wrapped at 600s, same three-part verdict. Record the new cell's win/median and the three neighbouring Pallass cells'.
-- [ ] **8. Full `qa/ci_sweep.sh`** (all canonicals at pinned seeds), run via the log-and-poll idiom, `CI_SWEEP_TIMEOUT=300` if any script needs it.
-- [ ] **9. Windowed pass** (Task 4) AFTER step 8, since the sweep flushes artifacts.
-- [ ] **10. Re-run steps 1–2** immediately before opening the PR — a late `_comment` edit is exactly how the census tips.
+- [x] **1. Structural data lint:** `python3 wandering_inn_game/scripts/data_lint.py` (from repo root). This is NOT pytest and there is no `scripts/tests/test_data_lint.py` in this layout.
+- [x] **2. Comment census:** `python3 scripts/comment_census.py --check` — must exit 0. Record the new DATA ratio.
+- [x] **3. Guidance + doc drift:** `python3 scripts/sync_agent_guidance.py`, then `python3 scripts/render_qa_notes.py --write` followed by a bare `python3 scripts/render_qa_notes.py` as the check (ruling E — bare alone never writes), then `python3 scripts/check_doc_drift.py`. **RESULT 2026-07-28:** `sync_agent_guidance.py` rc=0; `render_qa_notes.py --write` then bare rc=0 (`PASS: QA notes match manifest`); **`check_doc_drift.py` rc=1 and CANNOT go green from inside this lane** — it names the floodplains / invrisil / riverfarm plan docs, none of which this lane owns, each missing its own `> Status:` header. This lane's doc carries `> Status: **ACTIVE**`. Owed by the wave close or by each sibling lane.
+- [x] **4. QA surface drift:** `wandering_inn_game/scripts/derive_qa_surfaces.py --check` — FATAL on any stale tag.
+- [x] **5. Load gate / headless smoke** per the skill's chosen set for a data wave.
+- [x] **6. Every `tests/test_*.gd`**, each alarm-wrapped at 240s, each requiring ALL THREE of: exit code checked, a `^PASS` line present, and a zero-hit grep for `SCRIPT ERROR|Parse Error|WARNING`. Minimum set that MUST be green: `test_content`, `test_dialogue`, `test_quests`, `test_reachability`, `test_combat_data`, `test_combat_visuals`, `test_fixture_coherence`, `test_copy_fit`, `test_effect_text`, `test_world_visuals`, `test_audio_data`, `test_portals`, `test_shipped_ids`.
+- [x] **7. `sim_combat_batch.gd`** alarm-wrapped at 600s, same three-part verdict. Record the new cell's win/median and the three neighbouring Pallass cells'.
+- [x] **8. Full `qa/ci_sweep.sh`** (all canonicals at pinned seeds), run via the log-and-poll idiom, `CI_SWEEP_TIMEOUT=300` if any script needs it. **RESULT 2026-07-28:** run as four foreground `--only` batches at `WI_SWEEP_JOBS=5` covering all 174 manifest scripts (44/44/44/42), each `ALL N script(s) green, no grep hits`, rc=0 — foreground per this stage's run discipline rather than the log-and-poll background idiom. Subsumes Task 3.3's 119-script `--touching` list.
+- [x] **9. Windowed pass** (Task 4) AFTER step 8, since the sweep flushes artifacts.
+- [x] **10. Re-run steps 1–2** immediately before opening the PR — a late `_comment` edit is exactly how the census tips.
 
 ---
 
 ## Exit criteria
 
-- [ ] Both quests exist in `data/quests.json` with three REAL routes each (distinct fiction, distinct counters), `_resolution_order` notes, and weakest-first `resolution_paths`; `test_quests.gd` carries co-bank ladder pins for both.
-- [ ] Both interiors exist, each ≤ parlor scale, each hosting ≥1 quest beat and ≥3 non-quest observables with real toast copy, each with a `data/moods.json` row, a `LANDMARK_TOKENS` row and a `MAP_REQUIRES` row, walk-in only (no portal surface — the carrier-vs-row audit in `test_portals.gd:32-65` never sees them).
-- [ ] Both arrival cells hand-verified in BOTH directions; every new blocking cell has open neighbours.
-- [ ] P1's FIGHT banks `golem_recalibrated` and nothing else; `bounty_forge_golem_cull` is provably unfed (`assert_event_absent` on `forge_golems_culled` in `pallass_standards_fight`).
-- [ ] `forge_temper_golem` carries a positive `power_level`; its `BESTIARY_CELLS` cell is gated at the standing **0.55–0.95** stop-cell window with `check_rounds` (ruling A) and passes; the PR body records the measured win rate and median rounds for the new cell **beside** `forge_calibration_golem_t5_sw14_solo`'s at the same build, showing the new rig strictly below it — that table is the band-ordering evidence, not the window. No shipped combatant's stats moved.
-- [ ] The `forge_temper_golem` encounter entity carries **no `trigger_radius`** (`grep -n trigger_radius data/maps/pallass/pallass_forge_hall.json` returns nothing); `pallass_standards_fight` asserts the parley node before `combat_started`, and `pallass_standards_skill` crosses the rig's radius-1 footprint with the encounter present and `assert_event_absent`s `combat_started`.
-- [ ] `test_combat_visuals` is green and is reported as **passing by exclusion** (ruling F) — no id from this lane is in `audited`, no sprite was added to `FIGURE_ROWS`, and no figure number appears in any shipped `_comment`. The rig's legibility read is the windowed shots.
-- [ ] Both clerk graphs report a ONE-element speaker set after the edit: `Tier Clerk` for `pallass_market_clerk.json`, `Forge-Tier Clerk` for `pallass_forge_clerk.json`.
-- [ ] The Task 2.6 dash sweep is clean over both `--` and `—`-escape forms across every file this lane wrote; the `unstick` beat description carries a real em-dash.
-- [ ] Both carry-leg variant thresholds follow (leg index − 1): `market_dray_rank` `when: 1`, `den_shop_receiving_dock` `when: 2`; `pallass_ledger_carry` pins each leg's exact toast, so a dead variant fails loud.
-- [ ] `docs/design/character-profiles.md`'s two Pallass stub sections are filled IN PLACE, the STUB parentheticals removed, and the diff touches nothing at or past the Hedault stub (ruling D).
-- [ ] Every shared append landed on its NAMED anchor row (ruling C), and the two new `test_quests.gd` locals are `p_tempered` / `p_ledger`.
-- [ ] A QA script fights the `forge_hall` arena on the board and the windowed run screenshots it; `docs/VISUAL-LOG.md:449-451` and `HANDOFF.md:86` are struck.
-- [ ] Grimalkin's hub option array is byte-identical to `main`; the smith and attendant hubs still render exactly 3 rows at `near_pallass`.
-- [ ] Seven canonicals registered, surfaces regenerated, seed-table rows added, `QA-SCRIPT-NOTES.md` regenerated **with `render_qa_notes.py --write`** and verified with a bare run (ruling E) — all in the commits that changed the manifest.
-- [ ] Both givers carry exactly one new reactive `talk_pool_stage`, appended last, keyed on the quest terminal.
-- [ ] `comment_census.py --check` exits 0; `data_lint.py` green; every unit suite green on the three-part verdict; full `ci_sweep.sh` green.
-- [ ] `docs/CHOICE-LOG.md` carries every ruling and fork; `data/leads.json` is UNTOUCHED and the two row drafts sit in this doc's DEFERRED section.
-- [ ] PR opened against `main` from `issue/307-pallass-depth`, body per the issue-close template, head commit tagged `[ci-full]`, `Closes #307`.
+- [x] Both quests exist in `data/quests.json` with three REAL routes each (distinct fiction, distinct counters), `_resolution_order` notes, and weakest-first `resolution_paths`; `test_quests.gd` carries co-bank ladder pins for both.
+- [x] Both interiors exist, each ≤ parlor scale, each hosting ≥1 quest beat and ≥3 non-quest observables with real toast copy, each with a `data/moods.json` row, a `LANDMARK_TOKENS` row and a `MAP_REQUIRES` row, walk-in only (no portal surface — the carrier-vs-row audit in `test_portals.gd:32-65` never sees them).
+- [x] Both arrival cells hand-verified in BOTH directions; every new blocking cell has open neighbours.
+- [x] P1's FIGHT banks `golem_recalibrated` and nothing else; `bounty_forge_golem_cull` is provably unfed (`assert_event_absent` on `forge_golems_culled` in `pallass_standards_fight`).
+- [x] `forge_temper_golem` carries a positive `power_level`; its `BESTIARY_CELLS` cell is gated at the standing **0.55–0.95** stop-cell window with `check_rounds` (ruling A) and passes; the PR body records the measured win rate and median rounds for the new cell **beside** `forge_calibration_golem_t5_sw14_solo`'s at the same build, showing the new rig strictly below it — that table is the band-ordering evidence, not the window. No shipped combatant's stats moved.
+- [x] The `forge_temper_golem` encounter entity carries **no `trigger_radius`** (`grep -n trigger_radius data/maps/pallass/pallass_forge_hall.json` returns nothing); `pallass_standards_fight` asserts the parley node before `combat_started`, and `pallass_standards_skill` crosses the rig's radius-1 footprint with the encounter present and `assert_event_absent`s `combat_started`.
+- [x] `test_combat_visuals` is green and is reported as **passing by exclusion** (ruling F) — no id from this lane is in `audited`, no sprite was added to `FIGURE_ROWS`, and no figure number appears in any shipped `_comment`. The rig's legibility read is the windowed shots.
+- [x] Both clerk graphs report a ONE-element speaker set after the edit: `Tier Clerk` for `pallass_market_clerk.json`, `Forge-Tier Clerk` for `pallass_forge_clerk.json`.
+- [x] The Task 2.6 dash sweep is clean over both `--` and `—`-escape forms across every file this lane wrote; the `unstick` beat description carries a real em-dash.
+- [x] Both carry-leg variant thresholds follow (leg index − 1): `market_dray_rank` `when: 1`, `den_shop_receiving_dock` `when: 2`; `pallass_ledger_carry` pins each leg's exact toast, so a dead variant fails loud.
+- [x] `docs/design/character-profiles.md`'s two Pallass stub sections are filled IN PLACE, the STUB parentheticals removed, and the diff touches nothing at or past the Hedault stub (ruling D).
+- [x] Every shared append landed on its NAMED anchor row (ruling C), and the two new `test_quests.gd` locals are `p_tempered` / `p_ledger`.
+- [x] A QA script fights the `forge_hall` arena on the board and the windowed run screenshots it; `docs/VISUAL-LOG.md:449-451` and `HANDOFF.md:86` are struck.
+- [x] Grimalkin's hub option array is byte-identical to `main`; the smith and attendant hubs still render exactly 3 rows at `near_pallass`.
+- [x] Seven canonicals registered, surfaces regenerated, seed-table rows added, `QA-SCRIPT-NOTES.md` regenerated **with `render_qa_notes.py --write`** and verified with a bare run (ruling E) — all in the commits that changed the manifest.
+- [x] Both givers carry exactly one new reactive `talk_pool_stage`, appended last, keyed on the quest terminal.
+- [x] `comment_census.py --check` exits 0; `data_lint.py` green; every unit suite green on the three-part verdict; full `ci_sweep.sh` green.
+- [x] `docs/CHOICE-LOG.md` carries every ruling and fork; `data/leads.json` is UNTOUCHED and the two row drafts sit in this doc's DEFERRED section.
+- [ ] PR opened against `main` from `issue/307-pallass-depth`, body per the issue-close template, head commit tagged `[ci-full]`, `Closes #307`. *(the only open item: this lane's implementation stages never push, run `gh`, or merge — the branch is complete and green locally.)*
