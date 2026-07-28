@@ -958,7 +958,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 
 **Voice contract** (ruling 8 — no profile exists yet; write against these two sources): `docs/design/hedault-enchanting-spec.md:8-11` — "exacting, humorless, hates being touched, fair to a fault. ATTESTED canon-native. His services are priced formally; no haggling." — plus the in-file contract at `hedault_enchanting.json:2`: "Canon voice: exacting, formal, no haggling, hates being touched. Book-17 bar: no Vol 8+ content." His shipped register: imperatives, no pleasantries, prices stated as facts, refuses to speculate outside his trade ("I will not speculate further in a shop").
 
-- [ ] **Step 1: Append the hub option LAST** (authored index 6, after the spine capstone):
+- [x] **Step 1: Append the hub option LAST** (authored index 6, after the spine capstone):
 
 ```json
     {
@@ -978,7 +978,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
     }
 ```
 
-- [ ] **Step 2: Add the four nodes** to `nodes`:
+- [x] **Step 2: Add the four nodes** to `nodes`:
 
 ```json
   "heirloom_bench": {
@@ -1038,12 +1038,12 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
   }
 ```
 
-- [ ] **Step 3: Pin-stability proof (ruling 1) — run it, do not assume.**
+- [x] **Step 3: Pin-stability proof (ruling 1) — run it, do not assume.**
   - `perl -e 'alarm 240; exec @ARGV' -- wandering_inn_game/qa/run_qa.sh hedault_fragment_loop headless --seed=<its manifest seed>` → the `options` array at `qa/scripts/hedault_fragment_loop.json:52` must still be exactly 5 rows (`payload_contains` compares arrays by SIZE FIRST, `qa/test_driver.gd:967-984`).
   - `wandering_inn_game/qa/run_qa.sh spine_reach headless --seed=<its manifest seed>` → the blind `move down 5` at `:365-370` must still land on the spine capstone.
   - Neither fixture can hold `heirloom_commission_started` (it is created in this PR), so both must be green **with zero edits**. If either reds, stop and report — the gate shape is wrong, not the pin.
-- [ ] **Step 4: Softlock guard** — `heirloom_bench` keeps `"I'll come back with an answer."` with neither `requires` nor `hide_when`. ✔
-- [ ] **Step 5: Run** `test_dialogue.gd` + `test_content.gd` + `data_lint.py`. **Commit** `feat(dialogue): Hedault will not set a lie (#306)`.
+- [x] **Step 4: Softlock guard** — `heirloom_bench` keeps `"I'll come back with an answer."` with neither `requires` nor `hide_when`. ✔
+- [x] **Step 5: Run** `test_dialogue.gd` + `test_content.gd` + `data_lint.py`. **Commit** `feat(dialogue): Hedault will not set a lie (#306)`.
 
 ### Task 2.4: The reward item
 
