@@ -1886,3 +1886,29 @@ by controller ruling — the plan was the defect, not the implementation.
   'Autosaved.', v0.16.1 hotfix candidate). (7) Dead *_inn_settled
   lines → #323 (v0.17, scoped pass). (8) .lane-progress.md untracked
   + gitignored (re-added by two lane squashes after 5213968).
+- **v0.16.1 playtest-wave adjudications (2026-07-28, from the user's
+  26-finding sitting)**: (1) ECONOMY AMENDMENT — the close ratification
+  missed the [Hedge Remedy] loop: brew was free (no ingredient, no
+  once_per_waking) and Eloise buys at 5g beside her own cauldron =
+  unbounded risk-free gold; triage also found a SECOND exploit
+  underneath (witch_craft_used banks before a refused duplicate
+  pickup). Fix per user directive: brew arms require + consume
+  dried_yarrow_bundle (4g → ~1g bounded margin; item prices untouched;
+  the counter banks only on a successful pickup). (2) The Hunter is a
+  LOCAL GAME HUNTER, not a Hunter of Noelictus — disambiguation is
+  copy-only (observe + one appended line waving off witch business);
+  the canon order stays unreferenced entirely. (3) Mothbears leave the
+  boulevard — Coyle's own copy calls it a road problem, so the kill
+  site moves outside the walls (Option A; art + bounty survive). (4)
+  ONE toast spec covers #8/#16/#25/GH#325: housekeeping toast class
+  that never outranks authored copy, the 1.6s queue cap raised,
+  transient hold ~1.5x per user directive, combat band exemption
+  closed, watch-runner gets a sleep-veil line. (5) MP is per-fight by
+  design (8+INT/2 rebuilt each combat) — communicated via a one-shot
+  first-combat feed line, no mechanic change. (6) The Lady's FIGHT
+  route gets its missing connective beat as a victory_toast (no new
+  item id — no freeze churn). (7) Cauldron-pot ambiguity: tint-only
+  differentiation now; bespoke kettle art deferred to the art PR. (8)
+  POLICY (art PR + skill fold): one sprite backs at most one NAMED
+  character; pc_* sprites are PC-ONLY with a registry gate; the worst
+  human_laborer collisions get bespoke/retint replacements.
