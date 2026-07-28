@@ -529,6 +529,15 @@ func _validate_npc_interact_surface(scene: Dictionary) -> void:
 const ADDRESS_TOKEN_KEYS := ["text", "talk_pool", "lines"]
 
 
+## v0.15 T3.2 coverage extension. The two surfaces the placement arm named as
+## gaps are read STRAIGHT by the journal and the item panels -- neither ever
+## reaches WIGame's event sink, so no key in either file can resolve a token.
+## They need their own scan precisely because `text` is a sanctioned holder
+## everywhere else: `items.json`'s `text` would have passed the placement arm
+## and still rendered `{addr}` raw in the inventory.
+const ADDRESS_TOKEN_UNRESOLVABLE_FILES := ["res://data/quests.json", "res://data/items.json"]
+
+
 func _validate_address_token_placement() -> void:
 	_scan_address_tokens(WISceneCatalog.compose(), "res://data/maps/** (composed)", "")
 	var dir: DirAccess = DirAccess.open(DIALOGUE_DIR)
@@ -536,6 +545,24 @@ func _validate_address_token_placement() -> void:
 		if file_name.ends_with(".json"):
 			var full_path := DIALOGUE_DIR.path_join(file_name)
 			_scan_address_tokens(_load_json(full_path), full_path, "")
+	for path: String in ADDRESS_TOKEN_UNRESOLVABLE_FILES:
+		_scan_unresolvable_address_tokens(_load_json(path), path)
+
+
+func _scan_unresolvable_address_tokens(node: Variant, path: String) -> void:
+	if node is Dictionary:
+		for key: String in (node as Dictionary):
+			if key.begins_with("_"):
+				continue
+			_scan_unresolvable_address_tokens((node as Dictionary)[key], "%s.%s" % [path, key])
+	elif node is Array:
+		for i: int in (node as Array).size():
+			_scan_unresolvable_address_tokens((node as Array)[i], "%s[%d]" % [path, i])
+	elif node is String:
+		_check(
+			not WIAddress.has_token(node as String),
+			"%s carries an address token, but nothing in this file passes through the event sink -- it would render RAW: %s" % [path, node]
+		)
 
 
 ## `holder` is the nearest ENCLOSING dict key (array indices don't reset it), so
@@ -758,6 +785,40 @@ func _find_entity_by_id(scene: Dictionary, id: String) -> Dictionary:
 			if String(entity["id"]) == id:
 				return entity
 	return {}
+
+
+## v0.15 T3.2. Both variant families are consumed by TYPED loops
+## (interactions.gd open_toast_variants, dialogue.gd text_variants), so a
+## non-Dictionary member is a runtime crash and a misspelled key is a silently
+## inert variant -- the authored fallback renders and nothing says why. The
+## runtime skips malformed members; the SHAPE is proven here instead.
+const VARIANT_KEYS := {
+	"open_toast_variants": ["_comment", "when", "open_toast", "open_lore"],
+	"text_variants": ["_comment", "requires", "text"],
+}
+
+
+func _validate_variant_entries(scene: Dictionary, graphs: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		for entity: Dictionary in (scene["maps"][map_id] as Dictionary).get("entities", []):
+			_check_variant_array(entity.get("open_toast_variants", []), "open_toast_variants", "entity " + String(entity.get("id", "?")))
+	for graph_id: String in graphs:
+		for node_id: String in (graphs[graph_id] as Dictionary).get("nodes", {}):
+			var node: Dictionary = graphs[graph_id]["nodes"][node_id]
+			_check_variant_array(node.get("text_variants", []), "text_variants", "%s.%s" % [graph_id, node_id])
+
+
+func _check_variant_array(raw: Variant, key: String, where: String) -> void:
+	if not _require(raw is Array, "%s %s must be an Array" % [where, key]):
+		return
+	for entry: Variant in (raw as Array):
+		if not _require(entry is Dictionary, "%s %s carries a non-Dictionary member (%s) -- the consumer's typed loop would crash on it" % [where, key, entry]):
+			continue
+		for entry_key: String in (entry as Dictionary):
+			_check(
+				(VARIANT_KEYS[key] as Array).has(entry_key),
+				"%s %s member carries unknown key '%s' (sanctioned: %s) -- a misspelling here renders the authored fallback and reports nothing" % [where, key, entry_key, VARIANT_KEYS[key]]
+			)
 
 
 func _validate_conversations(scene: Dictionary, graphs: Dictionary) -> void:
