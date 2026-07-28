@@ -152,6 +152,10 @@ const UI_SLEEP_VEIL_FINISHED := &"ui_sleep_veil_finished"
 const UI_GDI_OPENER_RENDERED := &"ui_gdi_opener_rendered"
 const UI_GDI_EPILOGUE_RENDERED := &"ui_gdi_epilogue_rendered"
 const UI_DEFEAT_VEIL_RENDERED := &"ui_defeat_veil_rendered"
+## The defeat presentation is OVER: black faded out, the player has chosen.
+## Carries `continue` (false == they picked Title). Audio owns the field bed's
+## resume off this rather than racing the reload -- see wi_audio's defeat latch.
+const UI_DEFEAT_VEIL_FINISHED := &"ui_defeat_veil_finished"
 const UI_CHAR_CREATION_RENDERED := &"ui_char_creation_rendered"
 const UI_CHAR_CREATION_CONFIRMED := &"ui_char_creation_confirmed"
 

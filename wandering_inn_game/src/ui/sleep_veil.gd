@@ -517,6 +517,10 @@ func play_defeat() -> void:
 		return
 	if _is_qa():
 		_emit_defeat_rendered(_defeat_lines().size())
+		# The collapsed QA path still closes the beat: audio's field-bed resume
+		# hangs off this event now (see _emit_defeat_finished), so swallowing it
+		# under QA would leave the defeat latch set for the rest of the run.
+		_emit_defeat_finished(true)
 		return
 	_defeat_running = true
 	_run_defeat.call_deferred()
@@ -554,6 +558,7 @@ func _run_defeat() -> void:
 	await _fade(_black, 0.0)
 	_defeat_running = false
 	_finish()
+	_emit_defeat_finished(continue_chosen)
 	if not continue_chosen:
 		var main := get_parent()
 		if main != null and main.has_method("swap_to_title"):
@@ -594,6 +599,19 @@ func _wait_for_defeat_choice() -> bool:
 
 func _emit_defeat_rendered(count: int) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_DEFEAT_VEIL_RENDERED, {"lines": count, "map": String(Game.sim.current_map)})
+
+
+## v0.16.1 finding 24: the defeat presentation now OWNS the moment the world's
+## music comes back, instead of the reload racing the veil. The reload fires
+## GAME_LOADED{reason:"defeat"} -> WORLD_READY, which used to crossfade the
+## restored map's cheery bed straight back in BEFORE the black even started --
+## and `_wait_for_defeat_choice` then holds that black indefinitely, so the
+## bazaar looped under "[Defeat.]". wi_audio latches on that reason, skips the
+## WORLD_READY sync, and resumes here. `continue` is false when the player picked
+## Title: the latch still clears (it must never strand), but there is no field
+## bed worth a half-second of playback before the title theme takes over.
+func _emit_defeat_finished(continue_chosen: bool) -> void:
+	ObservableBus.emit_domain_event(WIEvents.UI_DEFEAT_VEIL_FINISHED, {"continue": continue_chosen})
 
 
 ## Playtest hotfix #8: NO special case for a consolidation-offering sleep any

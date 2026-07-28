@@ -694,7 +694,7 @@
    "return_to_field": true
   },
   {
-   "_comment": "Mirrors music_victory's own sting shape exactly (kind/loop/return_to_field) -- swaps to the sting player fully rather than layering, so it structurally can't fight whatever field/combat bed was playing.",
+   "_comment": "Mirrors music_victory's sting shape (kind/loop) -- swaps to the sting player fully rather than layering, so it structurally can't fight whatever field/combat bed was playing. v0.16.1 finding 24: `return_to_field` is DELIBERATELY ABSENT here, unlike victory's. never_give_up.ogg is 7.88s, and a player who sits on the 'Defeat... — Enter' banner for eight seconds heard the sting self-terminate and the cheery field bed walk back in mid-banner (wi_audio's `finished` -> _on_music_sting_finished replay). The defeat presentation owns the resume now: wi_audio latches the defeat reload and re-syncs the bed on ui_defeat_veil_finished. Silence under the black is the correct sound.",
    "id": "music_defeat",
    "kind": "sting",
    "context": "defeat",
@@ -705,8 +705,7 @@
    "stream": "res://assets/audio/music/never_give_up.ogg",
    "bus": "Music",
    "volume_db": -5.0,
-   "loop": false,
-   "return_to_field": true
+   "loop": false
   },
   {
    "id": "music_sleep_beat",
