@@ -437,7 +437,7 @@
    "_comment": "b10 #204 FAR plate = SECOND: banks rune_sequence_done ONLY via the variant (near lit); base = wrong-order cold feedback. Order enforced with zero new sim code. Cell (15,4) chosen in-bounds + off every canonical walked cell (the first two placements collided with the promenade column and the GRID EDGE)."
   },
   {
-   "_comment": "v0.15 T4.3: the dig is a TEAM. Ceria shipped alone, so 'help the Horns' meant one half-Elf and a fire. Yvlon and Ksmvr share her exact window (present_when byte-identical) and sit on camp cells no canonical walks -- (6,3) leaves (6,2)/(6,4)/(7,3) open and (4,4) leaves (3,4)/(4,5) open, so neither can trap a prior-version save. Pool-only: the invitation follow-up must stay Ceria's first-interact, and a second conversation on the same beat would compete with it.",
+   "_comment": "v0.15 T4.3: the dig is a TEAM. Ceria shipped alone, so 'help the Horns' fielded one half-Elf and a fire. Yvlon and Ksmvr share her exact window (present_when byte-identical) on camp cells no canonical walks. SAVE-COMPAT, enumerated honestly after the observables landed: (6,3)'s only open neighbour is (6,2) -- (5,3) is the crate, (6,4) the rope, (7,3) the stakes -- and (4,4)'s only open neighbour is (4,5), since (4,3) is Ceria, (3,4) the spoil heap and (5,4) a blocked decor pair. One open neighbour each is enough to guarantee no prior-version save is trapped, and those two cells are exactly the approaches horns_dig_flow bumps from. Pool-only: the invitation follow-up must stay Ceria's first interact, and a second conversation on the same beat would compete with it.",
    "id": "yvlon_dig_camp",
    "kind": "npc",
    "cell": [
@@ -460,7 +460,7 @@
    "talk_pool": [
     "Ceria plans it, Ksmvr measures it, I hold the part that's about to fall. That's the arrangement.",
     "Don't stand under a load somebody else is holding. Doesn't matter how strong they are.",
-    "My arm's fine down here too. Before you ask."
+    "My arms are fine down here too. Before you ask."
    ]
   },
   {
@@ -484,9 +484,9 @@
    "observe": "Three coils of rope laid out in exact parallel, and an Antinium re-counting them, because the count is the point and the rope is only the rope.",
    "friendly_line": "\"You are a known quantity now,\" Ksmvr says. \"That is the highest category I have.\"",
    "talk_pool": [
-    "Sixty-one strides of rope. I have counted it four times. The number has not improved. I have.",
+    "Sixty-one strides of rope. I have counted it four times. The number has not improved. I am accounting for that.",
     "Captain Ceria says this ruin is safe. I have located two exits regardless. One of them is the way we came in.",
-    "You are standing on the survey line, {addr}. I will not move it. I am telling you so that you may."
+    "You are standing on the survey line, comrade. I will not move it. I am telling you so that you may."
    ]
   },
   {

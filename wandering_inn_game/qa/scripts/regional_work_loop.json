@@ -1,5 +1,5 @@
 {
- "_comment": "v0.15 T4.4: THE regional-work canonical. The adversarial playtest found zero repeatable work outside Liscor -- every pilgrimage region was a place you visited once. Each now carries one job prop on the serving_tray idiom (once_per_waking + gold, banked under interactions.gd's `serve:` key): riverfarm_field_board (3,10), parlor_errand_slate (5,1), forge_fetch_slips (18,4). This run proves all three PAY, all three REFUSE a second take in the same waking, the exact gold ledger across them (60 -> 62 -> 64 -> 66 -> 68), and that a sleep RE-ARMS the first of them -- which is the whole claim the word 'repeatable' makes. Teleport-based between regions on the pallass_peek precedent: the routes into all three are proven live by their own region walkthroughs, and the subject here is the job machinery, not the travel. near_pallass fixture: 60 gold, no brothers_marker (so the slate's marker-rate variant is provably unmatched -- the can-fail side), no perfect_hospitality (so no +1 wage rider on the once_per_waking arm).",
+ "_comment": "v0.15 T4.4: THE regional-work canonical. The adversarial playtest found zero repeatable work outside Liscor -- every pilgrimage region was a place you visited once. Each now carries one job prop on the serving_tray idiom (once_per_waking + gold, banked under interactions.gd's `serve:` key): riverfarm_field_board (3,10), parlor_errand_slate (5,1), forge_fetch_slips (18,4). This run proves all three PAY, all three REFUSE a second take in the same waking, the exact gold ledger across them (60 -> 62 -> 64 -> 66, then 68 on the re-armed board), and that a sleep RE-ARMS the first of them -- which is the whole claim the word 'repeatable' makes. Teleport-based between regions on the pallass_peek precedent: the routes into all three are proven live by their own region walkthroughs, and the subject here is the job machinery, not the travel. near_pallass fixture: 60 gold, no brothers_marker (so the slate's marker-rate variant is provably unmatched -- the can-fail side), no perfect_hospitality (so no +1 wage rider on the once_per_waking arm).",
  "starts_at_title": true,
  "fixture_save": "near_pallass",
  "steps": [
@@ -69,9 +69,12 @@
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "riverfarm_village" }, "timeout_sec": 5 },
   { "action": "wait_frames", "frames": 10 },
   { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [3, 10] } },
+  { "action": "assert_state", "path": "player_cell", "equals": [3, 11] },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "riverfarm_field_jobs", "count": 2 }, "timeout_sec": 5 },
   { "action": "assert_event_count", "type": "accomplishment_recorded", "payload_contains": { "id": "riverfarm_field_jobs" }, "count": 2 },
+  { "_comment": "The ledger's last rung: the second field-work wage really was PAID, not just banked. 60 -> 62 -> 64 -> 66 -> 68 across four jobs and one sleep.", "action": "assert_state", "path": "gold", "equals": 68 },
   { "action": "screenshot", "name": "03_field_board_rearmed" },
 
   { "action": "assert_state", "path": "accomplishments.riverfarm_field_jobs", "equals": 2 },

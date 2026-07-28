@@ -1656,6 +1656,7 @@
    ]
   },
   {
+   "_comment": "v0.15 T4.3 fix round 1, bilocation split (CHOICE-LOG): retires on `horns_dig_started`, not `horns_dig_joined`. The camp rows arm on horns_dig_started, so the old gate left this row and the camp's own co-present for the whole travel window. Safe HERE and not for Ceria: v0.14's evidenced fix (Task 2.7 RUIN/REVEAL-DESPAWN) protects the INTERLOCUTOR from vanishing mid-sentence, and this row hosts no graph that banks the counter -- `ceria_intro`'s invitation option does, and it goes on to three more nodes.",
    "id": "yvlon_inn",
    "kind": "npc",
    "cell": [
@@ -1670,7 +1671,7 @@
      "seal_kept_reported": 1
     },
     "absent": {
-     "horns_dig_joined": 1
+     "horns_dig_started": 1
     }
    },
    "talk_pool": [
@@ -1700,6 +1701,7 @@
    ]
   },
   {
+   "_comment": "v0.15 T4.3 fix round 1: same bilocation split as `yvlon_inn` above -- see its _comment.",
    "id": "ksmvr_inn",
    "kind": "npc",
    "cell": [
@@ -1714,7 +1716,7 @@
      "seal_kept_reported": 1
     },
     "absent": {
-     "horns_dig_joined": 1
+     "horns_dig_started": 1
     }
    },
    "talk_pool": [

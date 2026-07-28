@@ -407,7 +407,7 @@
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [4, 4] } },
   { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Ksmvr", "text": "Sixty-one strides of rope. I have counted it four times. The number has not improved. I have." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Ksmvr", "text": "Sixty-one strides of rope. I have counted it four times. The number has not improved. I am accounting for that." }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_ksmvr_dig_camp" }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "01c_camp_ksmvr" },
 

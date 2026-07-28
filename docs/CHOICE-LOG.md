@@ -19,17 +19,30 @@ cross-release index of them.
   a field, and flat because the bounty-scaling spec scales payouts by RANK, not
   by how many times you have done a thing. The one exception is Invrisil's
   marker-holder rate (3g), which is a fiction about trust, not a curve.
-- **KNOWN RIDER, accepted:** `[Perfect Hospitality]` adds +1 to any
-  `once_per_waking` wage (interactions.gd), so a hospitality specialist earns 3
-  on a forge fetch. Odd, harmless, and pre-existing machinery; the alternative
-  was to not use `once_per_waking`, which is the entire repeat control.
+- **THE WAGE-FLOOR AXIS (fix round 1 correction to the record — the wages
+  STAY).** Regions should pay; that is the whole finding this task answers. But
+  the review was right that the phase moved an economic number nothing in the
+  gate measures, and the honest figure belongs on the record next to the
+  gossip-ceiling caveat below. Exact, counted from the data: the interact
+  branch's `once_per_waking` + `gold` set went from ONE prop to FOUR
+  (`serving_tray` 1g, plus the three new ones at 2g), so the **risk-free wage
+  floor went 1g → 7g per waking** for a player who tours all three regions.
+  And `[Perfect Hospitality]`'s +1-per-prop rider (interactions.gd, one call
+  site, gated on `once_per_waking`) scales with that set: **+1g → +4g, a +3g
+  standing premium available only to a helper build.** Neither number is a
+  defect — 7g is under two crude draughts and the tour costs a real circuit of
+  the map — but no gate watches the wage floor, so it is logged rather than
+  measured, and a wave-close economy pass is noted in HANDOFF.
 - **HELPER-PACE GATE, Phase 4 verdict: EVENING LEVER STAYS HOLSTERED.**
   `sim_progression_pace` after Phase 4: helper_social p50 total-level 10 / 20 /
   24 against warrior 6 / 9 / 13 and caster 6 / 10 / 15 — the same ~2x Act II
   gap the harness has reported since #211, and Phase 4 could not have moved it:
   the harness models a FIXED per-waking chore budget per archetype, and Lane B
   touched only maps, dialogue, QA and tests. Act II did not worsen, so the
-  lever stays holstered per the plan's own condition.
+  lever stays holstered per the plan's own condition. The verdict stands on the
+  axis the harness actually measures -- TOTAL LEVEL -- and on nothing else; the
+  two unmeasured axes (the wage floor above, the gossip ceiling below) are
+  recorded rather than claimed.
 - **The honest caveat, ledgered as a follow-up.** Phase 4 took the world from
   33 talk_pool NPCs to 44, and every pool bank ticks `heard_gossip`, which is
   the Barmaid/Innkeeper line's `requires_any` alternate and half of
@@ -53,6 +66,31 @@ cross-release index of them.
   and the remnant's has `requires: door_mounted`, so they are provably never
   co-present, and the cold fire-ring lands where the camp actually was. Data
   lint, content validation and every ruin canonical are green on it.
+- **BILOCATION SPLIT (fix round 1), and the one row it does NOT cover.** The
+  camp rows arm on `horns_dig_started`, but the Horns' other presence rows
+  retired on `horns_dig_joined`, so for the whole travel window a player could
+  meet Yvlon at the inn and Yvlon at the camp. Blanket-reverting all of them to
+  `horns_dig_started` was rejected: v0.14 Task 2.7 (VISUAL-LOG
+  RUIN/REVEAL-DESPAWN) moved these gates onto the later counter ON EVIDENCE --
+  `world.gd` reconciles presence live on `ACCOMPLISHMENT_RECORDED`, so an NPC
+  gated on a counter her own graph banks pops off-screen mid-sentence. The rule
+  that fix established is about the INTERLOCUTOR, so the split follows it:
+  `yvlon_inn`, `ksmvr_inn` and `dungeon_approach`'s `yvlon`/`ksmvr` retire on
+  `horns_dig_started` (none hosts a graph that banks it -- `yvlon_intro` and
+  `ksmvr_intro` were both read to confirm), while `ceria_inn` keeps
+  `horns_dig_joined` because she IS the conversation.
+- **REFUTED, with evidence: `dungeon_approach`'s `ceria` keeps the joined gate
+  too.** The split as written named all three dungeon rows, on the reasoning
+  that none of them is the interlocutor and the dungeon map is not on screen.
+  That holds for two of them. `dungeon_approach.ceria` carries
+  `"conversation": "ceria_intro"` -- the SAME graph the inn row hosts -- and
+  `ceria_intro`'s hub option banks `horns_dig_started` and then `goto`s
+  `dig_pitch`, with two to three nodes still to play. Retiring her on that
+  counter reproduces the exact v0.14 defect on the dungeon route, and the map is
+  very much on screen for a player who takes the invitation there. Applied the
+  ruling's own principle rather than its enumeration: 4 of 5 rows tightened, the
+  interlocutor left alone, and both dungeon `_comment_dig` strings corrected
+  where they still claimed the old counter. Revert = one counter per row.
 - **RUIN/MIGRATED-DIORAMA: fixed by re-skinning the guardian, NOT by deleting
   it.** The ledger's own suggestion was to add `ruin_guardian` to the migration
   backfill's removed set. Traced the consequence first: the guardian is the only
@@ -87,7 +125,13 @@ cross-release index of them.
   say that something settled and decline to say what, which is also the most
   Invrisil thing either of them could say. Proven live on both forks (the
   porter on `invrisil_disagreement_fight`, the lady on `..._talk`), with the
-  base pool proven unarmed on `invrisil_walkthrough`.
+  base pool proven unarmed on `invrisil_walkthrough`. Shadow-out adjudication
+  (the b7 rule): both stages PERMANENTLY replace their base pools once
+  `brothers_job_done` banks, and that is correct here where it would not be for
+  a signpost -- these are FLAVOUR acks on a monotone quest-completion register,
+  the class the audit explicitly allows to shadow, and a boulevard that went
+  back to small talk about a matter it had just watched resolve would read
+  worse than one that keeps mentioning it.
 
 ## 2026-07-28 — v0.15 T4.1 Pallass population (five in-wave calls)
 

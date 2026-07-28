@@ -516,18 +516,25 @@ func _validate_talk_pool_stage_shape(scene: Dictionary) -> void:
 				_check(not (entity.get("talk_pool", []) as Array).is_empty(), "entity %s (%s) has talk_pool_stages but no base talk_pool" % [id, map_id])
 
 
-## v0.15 T4.1-4.4 population floors: the parlor/hollow/alleys standard is 13+
-## interactables with no dead region. These are FLOORS, not pins -- adding
-## content never reds them, deleting a populated surface does.
+## v0.15 T4.1-4.4 population floors. The Lane B design bar is the
+## parlor/hollow/alleys standard (13+ interactables, no dead region), but the
+## LINT counts only UNCONDITIONAL entities -- a `present_when` row is furniture
+## for exactly one story window and counting it would let a map claim
+## population it does not have in every state. So each floor is that map's
+## own unconditional count, and `ruin_surface` sits at 8 on purpose: it is a
+## story site whose richness is deliberately windowed (the dig camp's nine
+## entities live and die with `horns_dig_started`), and horns_dig_flow is what
+## proves that window, not this lint. FLOORS, not pins -- adding content never
+## reds them, deleting a shipped surface does.
 const POPULATION_FLOORS := {
-	"brothers_parlor": 13,
+	"brothers_parlor": 21,
 	"mercantile_alleys": 13,
-	"witch_hollow": 13,
-	"invrisil_boulevard": 13,
-	"riverfarm_village": 13,
-	"pallass_forge": 13,
-	"pallass_market": 13,
-	"ruin_surface": 13,
+	"witch_hollow": 23,
+	"invrisil_boulevard": 20,
+	"riverfarm_village": 24,
+	"pallass_forge": 15,
+	"pallass_market": 24,
+	"ruin_surface": 8,
 }
 
 ## Anything a player press can resolve to: a door/encounter, or a prop/npc
@@ -543,6 +550,10 @@ const INTERACTABLE_KEYS := [
 func _interactable_count(map: Dictionary) -> int:
 	var total := 0
 	for entity: Dictionary in map.get("entities", []):
+		# Window-gated rows are absent in some reachable state, so they can
+		# never be evidence of a map's standing population.
+		if entity.has("present_when"):
+			continue
 		var kind := String(entity.get(WIKeys.KIND, ""))
 		if kind == "door" or kind == "encounter":
 			total += 1

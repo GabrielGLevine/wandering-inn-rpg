@@ -46,6 +46,21 @@ v0.10.0, v0.9.0, v0.8.0.
 
 ## 🎯 NEXT ACTIONS
 
+**WAVE-CLOSE ECONOMY PASS (queued 2026-07-28, v0.15 Phase 4).** Lane B's
+regional-work props moved a number no gate watches. The risk-free wage floor
+went **1g → 7g per waking** (the interact branch's `once_per_waking` + `gold`
+set grew from `serving_tray` alone to four props), and `[Perfect Hospitality]`'s
++1-per-prop rider grew with it: **+1g → +4g, a helper-only standing premium**.
+Separately the world went 33 → 44 `talk_pool` NPCs, raising the per-waking
+`heard_gossip` ceiling that feeds the Barmaid/Innkeeper `requires_any` alternate
+and half of `[Diplomat]`'s entry. `sim_progression_pace` measures TOTAL LEVEL on
+a fixed chore budget and cannot see either axis, so its holstered verdict is
+correct and narrow. At the wave close: price both axes against the #92 ladder,
+and either scale the harness's social chore budget with the world's talkable
+census or scope the pace claim explicitly to a fixed routine. Wages are NOT the
+thing to cut if it reads rich — regions should pay; the lever is the ladder.
+Full numbers: docs/CHOICE-LOG.md, v0.15 T4.4 entry.
+
 **USER-GATED, decide before the next content wave (2026-07-27):**
 1. ~~**Guest-row arc windows**~~ — **RULED IN + SHIPPED** (v0.15 ruling 1,
    Phase 3): `GUEST_POOL_GATES` takes an ANY-of Array; zevara and pisces
