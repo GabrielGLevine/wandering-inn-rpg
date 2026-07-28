@@ -370,6 +370,19 @@
     "id": "rune_far_cold"
    },
    "count": 1
-  }
+  },
+  { "_comment": "== v0.15 T4.3, VISUAL-LOG RUIN/MIGRATED-DIORAMA: the post-mount camp corner. This fixture banks door_mounted, so ceria_dig_camp and its five camp-window siblings are gone and `dig_camp_remnant` stands on Ceria's exact cell instead -- the two windows are mutually exclusive by construction (hers `absent` on the counter this one `requires`). Approach (4,2), bump down. The struck camp now EXPLAINS itself instead of reading as a void. ==", "action": "teleport", "map": "ruin_surface", "cell": [4, 2] },
+  { "action": "wait_frames", "frames": 10 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [4, 3] } },
+  { "action": "assert_state", "path": "player_cell", "equals": [4, 2] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "found_the_cold_camp" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Cold days ago. They struck the camp properly, filled the pit, and took the rope with them. Whatever the Horns came down here for, they carried it home." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "90_cold_camp_remnant" },
+  { "_comment": "The guardian's own post-retrieval re-skin (door_retrieved is banked in this fixture) shares the shot: it stands greyed over an emptied cradle instead of contradicting the state.", "action": "teleport", "map": "ruin_surface", "cell": [16, 8] },
+  { "action": "wait_frames", "frames": 10 },
+  { "action": "screenshot", "name": "91_spent_guardian_over_empty_cradle" }
  ]
 }

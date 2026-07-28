@@ -59,16 +59,16 @@ that were never meant to show up here (uncounted, not a gap).
 
 | Scene | Region | Composite | c1 variety | c2 distinct | c3 composition | c4 utilization | c5 clutter | Verdict |
 |---|---|---|---|---|---|---|---|---|
-| pallass_market | pallass | 72.92 | 26.38 | 23.71 | 19.08 | 3.75 | 0.00 | dynamic |
-| invrisil_boulevard | invrisil | 72.89 | 22.76 | 22.88 | 22.95 | 4.29 | 0.00 | dynamic |
-| pallass_forge | pallass | 71.69 | 26.52 | 23.71 | 20.12 | 1.33 | 0.00 | dynamic |
-| street | liscor | 71.58 | 24.97 | 21.75 | 22.52 | 2.33 | 0.00 | dynamic |
+| invrisil_boulevard | invrisil | 72.84 | 22.76 | 22.88 | 22.90 | 4.29 | 0.00 | dynamic |
+| pallass_market | pallass | 72.83 | 26.38 | 23.62 | 19.08 | 3.75 | 0.00 | dynamic |
+| pallass_forge | pallass | 72.22 | 26.38 | 23.62 | 20.89 | 1.33 | 0.00 | dynamic |
+| street | liscor | 71.55 | 24.97 | 21.73 | 22.52 | 2.33 | 0.00 | dynamic |
 | mercantile_alleys | invrisil | 71.48 | 24.75 | 22.99 | 22.74 | 1.00 | 0.00 | dynamic |
-| sewers | liscor | 70.62 | 23.40 | 21.97 | 21.25 | 4.00 | 0.00 | dynamic |
-| floodplains | liscor | 69.46 | 24.28 | 21.88 | 18.53 | 4.76 | 0.00 | dynamic |
-| deep_tunnels | liscor | 68.74 | 23.00 | 21.93 | 20.17 | 3.64 | 0.00 | dynamic |
-| riverfarm_village | riverfarm | 68.47 | 21.10 | 21.17 | 20.05 | 6.15 | 0.00 | dynamic |
+| sewers | liscor | 70.76 | 23.40 | 22.11 | 21.25 | 4.00 | 0.00 | dynamic |
+| floodplains | liscor | 69.41 | 24.28 | 21.84 | 18.53 | 4.76 | 0.00 | dynamic |
 | witch_hollow | riverfarm | 68.23 | 21.07 | 20.89 | 20.56 | 5.71 | 0.00 | dynamic |
+| riverfarm_village | riverfarm | 68.09 | 21.10 | 21.17 | 20.05 | 5.77 | 0.00 | dynamic |
+| deep_tunnels | liscor | 67.98 | 23.00 | 22.08 | 20.17 | 2.73 | 0.00 | dynamic |
 | garden_sanctuary | sanctuary | 67.18 | 19.74 | 23.50 | 17.94 | 6.00 | 0.00 | dynamic |
 | brothers_parlor | invrisil | 67.16 | 22.21 | 22.09 | 21.43 | 1.43 | 0.00 | dynamic |
 | runners_guild | interiors | 66.51 | 22.74 | 22.97 | 19.37 | 1.43 | 0.00 | dynamic |
@@ -80,5 +80,5 @@ that were never meant to show up here (uncounted, not a gap).
 | inn_upstairs | interiors | 64.69 | 19.48 | 22.63 | 22.58 | 0.00 | 0.00 | dynamic |
 | dungeon_approach | dungeon | 63.30 | 20.45 | 23.69 | 16.66 | 2.50 | 0.00 | dynamic |
 | riverfarm_longhouse | riverfarm | 62.23 | 21.92 | 20.78 | 19.53 | 0.00 | 0.00 | dynamic |
-| ruin_surface | liscor | 55.47 | 18.15 | 21.74 | 15.58 | 0.00 | 0.00 | dynamic |
+| ruin_surface | liscor | 59.86 | 21.10 | 21.96 | 16.80 | 0.00 | 0.00 | dynamic |
 

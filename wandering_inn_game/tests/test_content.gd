@@ -527,6 +527,7 @@ const POPULATION_FLOORS := {
 	"riverfarm_village": 13,
 	"pallass_forge": 13,
 	"pallass_market": 13,
+	"ruin_surface": 13,
 }
 
 ## Anything a player press can resolve to: a door/encounter, or a prop/npc

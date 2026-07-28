@@ -380,6 +380,37 @@
    },
    "timeout_sec": 5
   },
+
+  { "_comment": "== v0.15 T4.3 THE REST OF THE TEAM. The camp shipped as Ceria alone, so 'help the Horns' fielded one half-Elf, a fire and a crate. Walk the camp for real from (4,2): right 2 to (6,2), bump south into Yvlon (6,3). Row 3 is solid x=2..7 during the window now, so Ksmvr (4,4) is approached from BELOW -- right 1 to (8,2) past the stakes, down 3 to (8,5) on the clear promenade row, left 4 to (4,5), bump north. ==", "action": "move", "direction": "right", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [6, 2] },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [6, 3] } },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Yvlon Byres", "text": "Ceria plans it, Ksmvr measures it, I hold the part that's about to fall. That's the arrangement." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_yvlon_dig_camp" }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "01b_camp_yvlon" },
+
+  { "action": "move", "direction": "right", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [7, 2] },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [7, 3] } },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "eyed_the_survey_stakes" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "The string is taut. Somebody re-tensions it each morning, which is not a thing four adventurers usually bother to do." }, "timeout_sec": 5 },
+
+  { "action": "move", "direction": "right", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [8, 2] },
+  { "action": "move", "direction": "down", "steps": 3 },
+  { "action": "assert_state", "path": "player_cell", "equals": [8, 5] },
+  { "action": "move", "direction": "left", "steps": 4 },
+  { "action": "assert_state", "path": "player_cell", "equals": [4, 5] },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [4, 4] } },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Ksmvr", "text": "Sixty-one strides of rope. I have counted it four times. The number has not improved. I have." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_ksmvr_dig_camp" }, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "01c_camp_ksmvr" },
+
   {
    "_comment": "== THE BREACH, fight leg ==. Teleport to the guardian alcove (16,8), west of ruin_guardian (17,8) -- the door_chain_fight precedent cell and comment; the ruin interior route is already walked live by ruin_walkthrough.",
    "action": "teleport",

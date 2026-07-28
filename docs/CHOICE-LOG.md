@@ -4,6 +4,30 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 T4.3 the dig camp + the migrated ruin (three in-wave calls)
+
+- **Yvlon and Ksmvr are POOL-ONLY, no conversations.** Ceria's first interact
+  at the camp has to stay the dig-invitation follow-up; two more graphs on the
+  same beat would compete with it for the player's first press. They share her
+  present_when byte-for-byte, so the whole team arrives and strikes together,
+  and the fiction that "the Horns are digging" stops fielding one half-Elf.
+- **The remnant shares Ceria's own cell (4,3).** Two entities on one cell is
+  unusual, and it is exactly right here: her window has `absent: door_mounted`
+  and the remnant's has `requires: door_mounted`, so they are provably never
+  co-present, and the cold fire-ring lands where the camp actually was. Data
+  lint, content validation and every ruin canonical are green on it.
+- **RUIN/MIGRATED-DIORAMA: fixed by re-skinning the guardian, NOT by deleting
+  it.** The ledger's own suggestion was to add `ruin_guardian` to the migration
+  backfill's removed set. Traced the consequence first: the guardian is the only
+  chance-1.0 source of `guardian_ward_fragment`, which Hedault's enchanting
+  chain consumes — deleting it would silently strip a quest input from every
+  migrated save, and the same contradiction (a guardian standing over an emptied
+  cradle) is reachable by any FRESH player who breaches through the plates or
+  the wardwork read, whom the backfill never touches. Shipped instead: a
+  `door_retrieved`-keyed `visual_states` re-skin plus an observe line that says
+  what a spent ward is, so every route reads the same and nobody loses a fight
+  or a drop. Revert = drop the visual_states block.
+
 ## 2026-07-28 — v0.15 T4.2 Invrisil crowd (three in-wave calls)
 
 - **The seven extras KEEP their static `dialogue` line under the new pools.**

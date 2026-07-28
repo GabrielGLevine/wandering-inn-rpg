@@ -366,6 +366,21 @@
      "item": "guardian_ward_fragment",
      "chance": 1.0
     }
+   ],
+   "visual_states": [
+    {
+     "_comment": "v0.15 T4.3, the other half of RUIN/MIGRATED-DIORAMA: the plates route, the wardwork route and every migrated save leave this thing standing over a cradle that is already empty. Re-skin, never remove -- deleting it from the migration backfill (the ledger's own first suggestion) would silently strip the chance-1.0 guardian_ward_fragment that Hedault's chain consumes.",
+     "when": {
+      "counter": "door_retrieved",
+      "at": 1
+     },
+     "tint": [
+      0.42,
+      0.42,
+      0.48
+     ],
+     "observe": "The stone soldier still stands, and the cradle it stands over is empty. Whatever it was set here to keep was carried out past it and it did not move. A ward outlasts the thing it warded. That is the whole nature of a ward."
+    }
    ]
   },
   {
@@ -420,6 +435,177 @@
     }
    ],
    "_comment": "b10 #204 FAR plate = SECOND: banks rune_sequence_done ONLY via the variant (near lit); base = wrong-order cold feedback. Order enforced with zero new sim code. Cell (15,4) chosen in-bounds + off every canonical walked cell (the first two placements collided with the promenade column and the GRID EDGE)."
+  },
+  {
+   "_comment": "v0.15 T4.3: the dig is a TEAM. Ceria shipped alone, so 'help the Horns' meant one half-Elf and a fire. Yvlon and Ksmvr share her exact window (present_when byte-identical) and sit on camp cells no canonical walks -- (6,3) leaves (6,2)/(6,4)/(7,3) open and (4,4) leaves (3,4)/(4,5) open, so neither can trap a prior-version save. Pool-only: the invitation follow-up must stay Ceria's first-interact, and a second conversation on the same beat would compete with it.",
+   "id": "yvlon_dig_camp",
+   "kind": "npc",
+   "cell": [
+    6,
+    3
+   ],
+   "display_name": "Yvlon Byres",
+   "sprite": "yvlon",
+   "facing": "left",
+   "present_when": {
+    "requires": {
+     "horns_dig_started": 1
+    },
+    "absent": {
+     "door_mounted": 1
+    }
+   },
+   "observe": "Armour half off and stacked in the order it goes back on. She has braced the gap's lip with two stakes and a plank, and she tests the plank every time she passes it.",
+   "friendly_line": "\"Good,\" she says, once, and goes back to the rope. From Yvlon that lands about like a hand on the shoulder.",
+   "talk_pool": [
+    "Ceria plans it, Ksmvr measures it, I hold the part that's about to fall. That's the arrangement.",
+    "Don't stand under a load somebody else is holding. Doesn't matter how strong they are.",
+    "My arm's fine down here too. Before you ask."
+   ]
+  },
+  {
+   "id": "ksmvr_dig_camp",
+   "kind": "npc",
+   "cell": [
+    4,
+    4
+   ],
+   "display_name": "Ksmvr",
+   "sprite": "ksmvr",
+   "facing": "up",
+   "present_when": {
+    "requires": {
+     "horns_dig_started": 1
+    },
+    "absent": {
+     "door_mounted": 1
+    }
+   },
+   "observe": "Three coils of rope laid out in exact parallel, and an Antinium re-counting them, because the count is the point and the rope is only the rope.",
+   "friendly_line": "\"You are a known quantity now,\" Ksmvr says. \"That is the highest category I have.\"",
+   "talk_pool": [
+    "Sixty-one strides of rope. I have counted it four times. The number has not improved. I have.",
+    "Captain Ceria says this ruin is safe. I have located two exits regardless. One of them is the way we came in.",
+    "You are standing on the survey line, {addr}. I will not move it. I am telling you so that you may."
+   ]
+  },
+  {
+   "id": "dig_camp_notes",
+   "kind": "prop",
+   "cell": [
+    2,
+    3
+   ],
+   "display_name": "The Pinned Sheets",
+   "sprite": "note_pinned",
+   "present_when": {
+    "requires": {
+     "horns_dig_started": 1
+    },
+    "absent": {
+     "door_mounted": 1
+    }
+   },
+   "observe": "A board of pinned sheets under a scrap of tarp: a plan of the court, a rope tally, and a list of four names with hours beside them. The hours are shared out even.",
+   "on_interact_accomplishment": "read_the_dig_notes",
+   "toast": "Ceria's hand, mostly. The court plan is drawn twice, and the second drawing corrects the first without comment."
+  },
+  {
+   "id": "dig_spoil_heap",
+   "kind": "prop",
+   "cell": [
+    3,
+    4
+   ],
+   "display_name": "The Spoil Heap",
+   "sprite": "dungeon_rubble",
+   "tint": [
+    0.66,
+    0.63,
+    0.58
+   ],
+   "present_when": {
+    "requires": {
+     "horns_dig_started": 1
+    },
+    "absent": {
+     "door_mounted": 1
+    }
+   },
+   "observe": "Spoil from the gap, sorted into two heaps: worked stone in one, plain rubble in the other. Somebody is keeping every piece a chisel ever touched.",
+   "on_interact_accomplishment": "eyed_the_dig_spoil",
+   "toast": "Broken stone, sorted by whether anyone shaped it. The carved heap is the smaller one and by a long way the tidier."
+  },
+  {
+   "id": "dig_rope_coil",
+   "kind": "prop",
+   "cell": [
+    6,
+    4
+   ],
+   "display_name": "Coiled Rope",
+   "sprite": "snare_coil",
+   "tint": [
+    0.85,
+    0.76,
+    0.58
+   ],
+   "present_when": {
+    "requires": {
+     "horns_dig_started": 1
+    },
+    "absent": {
+     "door_mounted": 1
+    }
+   },
+   "observe": "Three lengths of rope, whipped at the ends and hung off a driven stake so that none of it lies in the wet.",
+   "on_interact_accomplishment": "eyed_the_dig_rope",
+   "toast": "Good rope, dry, coiled by somebody who has watched bad rope let go."
+  },
+  {
+   "id": "dig_survey_stakes",
+   "kind": "prop",
+   "cell": [
+    7,
+    3
+   ],
+   "display_name": "Survey Stakes",
+   "sprite": "riverfarm_fence_ns",
+   "tint": [
+    0.8,
+    0.74,
+    0.6
+   ],
+   "present_when": {
+    "requires": {
+     "horns_dig_started": 1
+    },
+    "absent": {
+     "door_mounted": 1
+    }
+   },
+   "observe": "Stakes driven at intervals nobody eyeballed, string run between them, chalk numbers on every one. The line stops dead at the mouth of the pedestal court and does not go in.",
+   "on_interact_accomplishment": "eyed_the_survey_stakes",
+   "toast": "The string is taut. Somebody re-tensions it each morning, which is not a thing four adventurers usually bother to do."
+  },
+  {
+   "_comment": "v0.15 T4.3, VISUAL-LOG RUIN/MIGRATED-DIORAMA: a migrated save loads with door_mounted banked and walks into the camp's corner reading as a void. This is the SAME cell Ceria stands on and the windows are provably disjoint (hers requires absent door_mounted; this requires it), so exactly one of the two is ever present.",
+   "id": "dig_camp_remnant",
+   "kind": "prop",
+   "cell": [
+    4,
+    3
+   ],
+   "display_name": "A Cold Fire-Ring",
+   "sprite": "cold_hearth",
+   "present_when": {
+    "requires": {
+     "door_mounted": 1
+    }
+   },
+   "observe": "Ringed stones around a scatter of white ash, and four flattened squares of ground where bedrolls were. The stakes have been pulled and stacked, the string wound back onto its spool.",
+   "on_interact_accomplishment": "found_the_cold_camp",
+   "toast": "Cold days ago. They struck the camp properly, filled the pit, and took the rope with them. Whatever the Horns came down here for, they carried it home."
   }
  ]
 }

@@ -436,7 +436,7 @@ pre-dig-hub reads. Durable evidence:
   empty, no fire, no crate) vs `AFTER_FIX/tmp_dig_inn_probe/03_camp_present_with_fire.png`
   (same corner during the dig); `01_camp_corner_walkable.png` walks the player
   onto the old camp cell.
-- [ ] RUIN/MIGRATED-DIORAMA (P2) — a pre-restructure save migrated by
+- [x] RUIN/MIGRATED-DIORAMA (P2) — **FIXED v0.15 T4.3**: the struck camp now leaves a `dig_camp_remnant` cold fire-ring on Ceria's exact cell (inverse window, so never co-present), and `ruin_guardian` gained a `door_retrieved`-keyed re-skin + observe rather than being deleted from the backfill — deleting it would strip the chance-1.0 `guardian_ward_fragment` Hedault's chain consumes, and the same contradiction is reachable by a FRESH plates/wardwork breach the backfill never touches (CHOICE-LOG). Proof: `door_chain_talk/90_cold_camp_remnant.png`, `91_spent_guardian_over_empty_cradle.png`. Original report follows. — a pre-restructure save migrated by
   `save.gd:339` loads with `door_retrieved` + `door_mounted` banked, and then
   the ruin it walks into still has `ruin_guardian` alive and on its feet over
   the pedestal the save says was already breached and looted
