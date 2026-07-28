@@ -1385,7 +1385,7 @@
    ]
   },
   {
-   "_comment": "clear of every blocked cell and every other entity's cell, no trigger_radius so no blast-radius overlap with anything nearby.",
+   "_comment": "clear of every blocked cell and every other entity's cell, no trigger_radius so no blast-radius overlap with anything nearby. v0.16.1 #2 DISAMBIGUATION: \"The Hunter\" is a LOCAL GAME HUNTER, not a member of any order. His whole copy surface used to be the hollow -- a knife, a treeline, lambs lost to something with thorns for teeth -- with zero game, meat, pelts or larder in it, and he is mechanically the man who walks you to the witch and fights her briars. The observe line (the highest-leverage string, read before any dialogue) now carries the trade signal, and one line is APPENDED LAST to the base pool and to the thread_neutral stage (which duplicates it, and would otherwise restore the old voice post blight_lifted). Per the ruling the copy NEVER names or negates the order -- disambiguation is by positive trade signal only. NOT renamed: display_name stays \"The Hunter\" here and in combatants.json (no replacement name was authorised, and a rename re-pins five QA speaker payloads and must move both strings together).",
    "id": "riverfarm_hunter",
    "kind": "npc",
    "cell": [
@@ -1399,7 +1399,8 @@
     "Hollow's quieter than it should be. Doesn't sit right.",
     "Lost two lambs to something with thorns for teeth. Wasn't a wolf.",
     "Know that treeline better than the headman does. He'd rather not.",
-    "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health."
+    "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health.",
+    "The witch? Her business is hers and I keep to mine. Wolves took two lambs this spring — that's the whole of my trade."
    ],
    "talk_pool_stages": [
     {
@@ -1420,7 +1421,8 @@
       "Hollow's quieter than it should be. Doesn't sit right.",
       "Lost two lambs to something with thorns for teeth. Wasn't a wolf.",
       "Know that treeline better than the headman does. He'd rather not.",
-      "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health."
+      "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health.",
+      "The witch? Her business is hers and I keep to mine. Wolves took two lambs this spring — that's the whole of my trade."
      ]
     },
     {
@@ -1435,7 +1437,7 @@
      ]
     }
    ],
-   "observe": "Weathered hands, a hunting knife worn plain at the hip, eyes on the treeline more than on you.",
+   "observe": "Rope-burned hands, a game bag, and wolf sign on his boots. Whatever he hunts, it walks on four legs.",
    "conversation": "riverfarm_hunter",
    "dialogue": [
     {
