@@ -1341,7 +1341,7 @@
     "remove_item": "dried_yarrow_bundle",
     "toast": "[Hedge Remedy] — The inn's kettle does in a pinch, just like she said. The steam settles into something kinder."
    },
-   "_comment": "GH#131 review-CI fix: moved off (2,2) -- test_sim_core walks it (open-cell move from the (2,3) start). (6,2) is a blocked kitchen-counter cell (the #116 dress-a-blocked-cell pattern); approach (6,3), facing up, which test_sim_core itself asserts open. v0.16.1 #6 ECONOMY: same ingredient gate as eloise_cauldron (the other remedy_draught arm) -- requires_item + on_skill_use.remove_item, which both bounds the brew->sell arbitrage and arms wi_game.gd's consuming-recipe dup-output refusal so a held remedy no longer banks free witch_craft_used."
+   "_comment": "GH#131 review-CI fix: moved off (2,2) -- test_sim_core walks it (open-cell move from the (2,3) start). (6,2) is a blocked kitchen-counter cell (the #116 dress-a-blocked-cell pattern); approach (6,3), facing up, which test_sim_core itself asserts open. v0.16.1 #6: same ingredient gate as eloise_cauldron, the other remedy_draught arm (see its _comment)."
   },
   {
    "id": "inn_chef_counter",

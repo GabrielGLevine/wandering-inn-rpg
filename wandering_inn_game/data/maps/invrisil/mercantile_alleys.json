@@ -1305,7 +1305,7 @@
    "observe": "A severe man at a spotless corner bench, tools laid out at right angles. Everything about him says the prices are exact and the opinions are free."
   },
   {
-   "_comment": "v0.16 I1 FIGHT (#306). INTERACT-ONLY (no trigger_radius) at (11,12): outside both shipped footpad trigger zones and off every pinned cell. Independent of the footpad rigs, so it is correct on a brothers_job_done save. v0.16.1 #11: victory_toast added. Nothing rendered between the fight ending and the Lady's report row except a next-step nudge -- the player was asked to claim they had recovered the stone before the game had ever told them they had, which is why the FIGHT route did not read as a resolution. combat_banking's opt-in one-shot toast is contract-legal here: it requires the FIRST on_victory id be a quest-style counter and this entity's is `original_recovered`, a single String, so the toast fires exactly once, on the first win. No loot/item id was minted -- the shipped-id freeze stays untouched.",
+   "_comment": "v0.16 I1 FIGHT (#306). INTERACT-ONLY (no trigger_radius) at (11,12): outside both shipped footpad trigger zones and off every pinned cell. Independent of the footpad rigs, so it is correct on a brothers_job_done save. v0.16.1 #11: victory_toast added -- nothing rendered between the fight ending and the Lady's report row, so the player was asked to claim a recovery the game had never shown them. combat_banking's one-shot toast is contract-legal here (the first on_victory id is `original_recovered`, a quest-style String). No item id minted.",
    "id": "alley_fence_door",
    "kind": "encounter",
    "cell": [

@@ -1104,7 +1104,7 @@
    ]
   },
   {
-   "_comment": "Sails overhang above the blocked footprint. v0.16.1 #3: moved [20,4] -> [19,4] so the ramp/doorway drawn into the windmill art lands on COLUMN 19, directly above riverfarm_mill_door's own cell [19,5] and the pinned south approach [19,6]. Geometry, measured rather than guessed: the sheet is 64x96 at render_scale 1.0 with anchor [0.5,0.917], so the art draws from (cell.x*16 - 24) and its alpha content spans 40px = 2.5 cells; a pixel scan of sheet rows 72-88 puts the mill's own doorway at sheet x 30..37, i.e. one and a bit cells right of the holder. At [19,4] that doorway centres on column 19 and its threshold sits on the row-4/row-5 boundary. [19,4] was ALREADY blocked (the #116 dress-a-blocked-cell pattern), so this moves art only -- no walkable cell changes, no sim change, no canonical churn.",
+   "_comment": "Sails overhang above the blocked footprint. v0.16.1 #3: moved [20,4] -> [19,4] so the ramp/doorway drawn into the windmill art lands on COLUMN 19, over riverfarm_mill_door's cell [19,5] and the pinned south approach [19,6]. Measured, not guessed: 64x96 sheet, render_scale 1.0, anchor [0.5,0.917], so the art draws from (cell.x*16 - 24); a pixel scan of rows 72-88 puts the doorway at sheet x 30..37. [19,4] was ALREADY blocked, so this moves art only -- no sim change, no canonical churn.",
    "id": "riverfarm_windmill_prop",
    "kind": "prop",
    "cell": [
@@ -1385,7 +1385,7 @@
    ]
   },
   {
-   "_comment": "clear of every blocked cell and every other entity's cell, no trigger_radius so no blast-radius overlap with anything nearby. v0.16.1 #2 DISAMBIGUATION: \"The Hunter\" is a LOCAL GAME HUNTER, not a member of any order. His whole copy surface used to be the hollow -- a knife, a treeline, lambs lost to something with thorns for teeth -- with zero game, meat, pelts or larder in it, and he is mechanically the man who walks you to the witch and fights her briars. The observe line (the highest-leverage string, read before any dialogue) now carries the trade signal, and one line is APPENDED LAST to the base pool and to the thread_neutral stage (which duplicates it, and would otherwise restore the old voice post blight_lifted). Per the ruling the copy NEVER names or negates the order -- disambiguation is by positive trade signal only. NOT renamed: display_name stays \"The Hunter\" here and in combatants.json (no replacement name was authorised, and a rename re-pins five QA speaker payloads and must move both strings together).",
+   "_comment": "clear of every blocked cell and every other entity's cell, no trigger_radius so no blast-radius overlap with anything nearby. v0.16.1 #2 DISAMBIGUATION: \"The Hunter\" is a LOCAL GAME HUNTER, not a member of any order. His whole copy surface used to be the hollow, with zero game, meat or pelts in it, while he is mechanically the man who walks you to the witch and fights her briars. The observe line now carries the trade signal, and one line is APPENDED LAST to the base pool and to the thread_neutral stage (which duplicates it). The copy never names or negates the order -- positive trade signal only. NOT renamed: a rename must move combatants.json's display_name too and re-pins five QA speaker payloads.",
    "id": "riverfarm_hunter",
    "kind": "npc",
    "cell": [
@@ -1595,7 +1595,7 @@
    ]
   },
   {
-   "_comment": "v0.16 #305: the mill's ground-floor door. [19,5] is inside the windmill's blocked footprint (the longhouse_door precedent). TWO free approaches, [19,6] and [18,5], neither on any walked QA route. mill_exit returns to [19,6] only, so a west-side entry exits one cell over -- deliberate. v0.16.1 #3: hide_sprite. The `door` prop was a SECOND doorway pasted on the windmill's west stone corner (it y-sorts in front of the mill: holder y 80 vs 64), one column away from the ramp the windmill art already draws. The art now carries the entrance -- riverfarm_windmill_prop moved to [19,4] so its own doorway sits directly above this cell -- and the entity keeps blocking, observe, to_map and to_cell, so the interact is unchanged. `sprite` is retained deliberately: it is the fallback if the mill art is ever re-cut and the ramp moves.",
+   "_comment": "v0.16 #305: the mill's ground-floor door. [19,5] is inside the windmill's blocked footprint (the longhouse_door precedent). TWO free approaches, [19,6] and [18,5], neither on any walked QA route. mill_exit returns to [19,6] only. v0.16.1 #3: hide_sprite -- the `door` prop was a SECOND doorway pasted on the tower's west corner, y-sorting in front of the mill, one column from the ramp the art already draws. The art carries the entrance now; the entity keeps blocking, observe, to_map and to_cell. `sprite` is retained as the fallback if the mill art is re-cut.",
    "id": "riverfarm_mill_door",
    "kind": "door",
    "cell": [
