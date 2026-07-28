@@ -1,9 +1,25 @@
-# v0.16 Playtest-State Bundle — 2026-07-28 (seven asks, one sitting)
+# The Full Sitting — 2026-07-28 (v0.16 bundle + v0.15 carryover + one organic run)
 
-The v0.16 "Region Depth" taste-queue bundle. Six prepared states + one
-paper read. Each state loads into the **playtest** slot; judge lines are
-what no agent can rule on — everything below is FEEL, not correctness
-(the QA record for all of it is green).
+Fourteen states, one paper read, ~an hour. Everything the taste queue
+holds, in one place. Judge lines are what no agent can rule on — the QA
+record for all of it is green.
+
+**Suggested order:** `00` first (organic play, while your eyes are
+fresh and unspoiled by judge-point framing) → v0.16 states 01–06 →
+v0.15 carryover 07–13 (ends on the finale, which wants an unhurried
+watch) → the paper read whenever.
+
+## 0. `00-just-play-riverfarm.json` — the organic run (start here)
+Wake at the inn. Both Riverfarm quests unstarted, their leads armed.
+**Do:** play naturally — check the journal (two new leads point at the
+village square), take the Door to Riverfarm, follow whichever lead
+pulls you, pick whatever route feels right, see it through to the
+report. Take the second quest if you're enjoying it.
+**Judge:** everything the judge-point states can't show — do the hooks
+pull, does route CHOICE feel real (three genuinely different answers,
+not three buttons), does the mill/hut interior payoff after the quest,
+does the pacing of one full quest sit right? This is also the only
+state that reads #211's challenge-weighted leveling in the wild.
 
 ## Restore (per state, then launch and Continue → playtest slot)
 
@@ -74,7 +90,49 @@ raised an eye") queues BEHIND "Autosaved." and dies unread if you move.
 Ship the v0.16.1 hotfix now (authored toasts jump housekeeping), or
 bundle it into v0.17?
 
-## 7. The paper read — gossip-ladder scaling (no save)
+## The v0.15 carryover (never sat; six asks, states 07–13)
+
+Full context for each lives in docs/VISUAL-LOG.md §"v0.15 Playtest-State
+bundle" — short forms here.
+
+### 7–8. `07-cellar-vermin.json` / `08-briar-hollow.json` — camouflage tints
+**Do:** fight both boards. **Judge:** magic-touched, or the same animal
+in three colours? Watch the unnamed violet/cold-blue vermin especially —
+the ember one gets naming cover ("Ember-Touched Vermin"), its siblings
+don't; if any tint reads as a recolour it'll be there, and the cheap fix
+is a NAME, not a colour. The briar rust: unmistakable, but do the
+collectors still read as *plants*?
+
+### 9. `09-the-warden.json` — the Ruin Warden at 3.51 cells
+He fell from 7.62 (half the board's width). **Do:** take the vault
+fight. **Judge:** did the drop cost him boss presence? (Bonus, same
+board: the windup overlay was brightened ~2.5x without an in-fight
+windowed read — do the telegraphs read?)
+
+### 10. `10-toast-over-journal.json` — deliberate overlap
+**Do:** open the journal, let a sleep/level toast land. **Judge:** a
+1-line toast draws over the journal's blank corner (zero text hidden —
+the information-losing case is fixed). "World kept moving" charm, or
+broken? Lever is the toast's Y anchor if broken.
+
+### 11. `11-pallass-day.json` — walled-city lights at noon
+**Do:** walk both Pallass tiers at day. **Judge:** should the crystal
+lamps burn at noon (`lights_by_day` opt-out, one data key per map), or
+is the dead-lamp day grade right for a stone city?
+
+### 12. `12-grimalkin-seated.json` — Grimalkin in the inn
+Measurement refuted the "too big" claim (he's 1.25x Relc, exactly
+canon); what crowds the room is his 2.9-cell arms-out WIDTH. **Do:**
+look at the (14,5) seat. **Judge:** if he still FEELS too big, the
+lever is the seat or the art — never the scale.
+
+### 13. `13-the-finale.json` — the paced lines (save for last)
+**Do:** sleep into the finale; watch at real pace, uninterrupted.
+**Judge:** RHYTHM only (copy is measured + pinned). QA structurally
+skips the pacing — no agent has ever seen this at speed. The one ask on
+the whole list only you can answer.
+
+## The paper read — gossip-ladder scaling (no save)
 
 Balance-bound adjudication; numbers in docs/CHOICE-LOG.md (v0.16 close
 block). Short form: the world's talkable census grew 44 → 53 NPCs

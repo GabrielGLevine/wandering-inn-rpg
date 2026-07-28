@@ -1,0 +1,63 @@
+{
+ "_comment": "v0.16 sitting / v0.15 ask 4: walled-city lights by day, both tiers. Mirrors near_pallass; not a canonical fixture.",
+ "_comment_task_2_4": "2026-07-26 main-quest restructure (Task 2.4): swept to the mounted-door shape -- door_mounted + door_retrieved + pedestal_breached + horns_dig_started/joined added alongside the door_chain_started this fixture already carried, because that id now means 'the Magical Door is hung'. The wave rule (and why recovered_anchor_stone is NOT swept in) lives in door_chain_fight_start.json's own _comment_task_2_4.",
+ "version": 5,
+ "state": {
+  "current_map": "guild",
+  "player_cell": [
+   8,
+   3
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 2
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "door_chain_started": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
+   "riverfarm_attuned": 1,
+   "blight_lifted": 1,
+   "invrisil_attuned": 1,
+   "won_combat": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
+  },
+  "gold": 60,
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear",
+   "invrisil_attunement_stone"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

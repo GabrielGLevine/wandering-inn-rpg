@@ -1,0 +1,61 @@
+{
+ "_comment": "v0.16 sitting / v0.15 ask 3: 1-line toast over the open journal corner. Mirrors climax_sealed_start; not a canonical fixture.",
+ "version": 5,
+ "state": {
+  "current_map": "street",
+  "player_cell": [
+   2,
+   7
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 2,
+   "diplomat": 1
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "persuaded_someone": 1,
+   "heard_gossip": 3,
+   "won_combat": 1,
+   "victories": 2,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}
