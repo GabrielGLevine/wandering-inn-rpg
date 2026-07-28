@@ -16,6 +16,181 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### ⭐ v0.15 Playtest-State bundle — SIX taste asks for the user (2026-07-28)
+
+Every taste/FEEL call v0.15 accumulated, collected once so they can be
+answered in a single sitting instead of six. **Review-after, never
+block-before** — all six shipped; none is a defect claim. Each names the QA
+fixture that already stands at the spot, so the state costs a copy, not a
+navigation: cut it as `playtest_saves/2026-07-28-<name>.json` from that
+fixture at tag time and hand the user the load line. Ordered by how much the
+answer would change.
+
+1. **The camouflage tints — do they read "magic-touched" or "recoloured"?**
+   (P5 T5.1, the wave's biggest look call.) Three rosters got a real hue
+   push because the subtle version demonstrably failed.
+   *State* `2026-07-28-cellar-vermin` ← `door_chain_fight_start.json`; and
+   `2026-07-28-briar-hollow` ← `riverfarm_fight_start.json`.
+   *Do* fight both boards. *Judge* whether the creatures read as touched by
+   what's leaking into the room, or as the same animal in three colours.
+   **My close read, offered as input, not as the answer:** the vermin land —
+   and one of them lands for a reason worth keeping, because the ember one is
+   NAMED "Ember-Touched Vermin" in the turn banner
+   (`door_chain_fight/00_rift_vermin_leak_board.png`), so the copy carries the
+   hue. Its violet and cold-blue siblings are just "Rift Vermin A/B" and have
+   no such cover. If the tints read as recolours anywhere, it will be there,
+   and the cheap fix is a name, not a colour. The briar rust
+   (`riverfarm_fight/01`) is the strongest push of the three: unmistakable
+   against the green, but the collectors no longer read as *plants*.
+2. **Does the Ruin Warden still land as a boss at 3.51 cells?** (P5 T5.2.)
+   He fell from 7.62 — half the board's width — to a third of its height.
+   *State* `2026-07-28-the-warden` ← `seal_open_start.json`. *Do* take the
+   vault fight. *Judge* whether the drop cost him presence.
+   Close read: `seal_open/06_the_warden.png` — still plainly the largest
+   figure in the game, whole rig on the board, head clear of the turn banner.
+   Reads as a boss to me; your eyes are the bar.
+3. **Toast over an open journal — lively, or broken?** (P2 A3.) The
+   information-losing TALL case is fixed (the queue now pauses while a modal
+   is open). What remains is deliberate: a 1-line toast still draws over the
+   journal's bottom-right corner, covering blank parchment and an ornament,
+   zero text. *State* `2026-07-28-toast-over-journal` ←
+   `climax_sealed_start.json`. *Do* open the journal and let a level-up or
+   sleep toast land. *Judge* whether "the world kept moving" beats the
+   ornament it hides. If it reads as broken, the lever is the toast's Y
+   anchor, not the queue.
+4. **`pallass_market` / `pallass_forge` lights by day.** (P5 T5.3.) The
+   `lights_by_day` opt-out shipped and was applied to `seal_vault` only.
+   These two are the same class — walled-city interiors whose day grades are
+   near identity — but brightening them is a look call, not a defect fix, so
+   they were deliberately NOT changed blind. *State* `2026-07-28-pallass-day`
+   ← `near_pallass.json`. *Do* walk both tiers at day phase. *Judge* whether
+   the crystal lamps should burn at noon. One data key per map if yes.
+5. **Grimalkin in the inn.** (P5 T5.2 — REFUTED on measurement, nothing
+   shipped.) He is 1.25x Relc, exactly as canon says; the logged "2.3x" was a
+   frame-height error. What crowds the room is his 2.9-cell arms-out WIDTH,
+   which no `render_scale` can change. *State* `2026-07-28-grimalkin-seated`
+   ← `inn_guests_ext_start.json`. *Do* look at the (14,5) seat. *Judge* if he
+   still FEELS too big — the lever is the seat or the art, never the scale.
+   Close read: `inn_guests_ext_loop/05_wilovan_and_grimalkin_seated.png` — he
+   buries nobody, though he is the most saturated figure in a warm-wood room.
+6. **The finale's paced lines.** (Carried forward — structurally invisible to
+   QA: `sleep_veil._is_qa()` skips the pacing, so no machine pass has ever
+   seen them at speed.) *State* `2026-07-28-the-finale` ←
+   `finale_merge_start.json`. *Do* sleep into the finale and watch it at real
+   pace. *Judge* the RHYTHM only — the copy itself is measured and pinned by
+   `test_copy_fit`. This is the one ask on this list no agent can answer.
+
+### Machine playtest — v0.15 MILESTONE CLOSE: the full rotation (2026-07-28)
+
+Source: `close/v015` at `ed24c4f` + this branch's record fixes, full asset
+overlay in tree (654 PNGs, real art). Gates first: 30/30 unit suites green on
+the three-check bar, `data_lint` clean, **full `ci_sweep.sh` 167/167 green
+with zero grep hits**. Then the MILESTONE-CLOSE full rotation — **16 windowed
+runs, every one `passed: true`**, read at native 1280x720:
+`arc_flow`, `journal_history`, `board_loop`, `raskghar_entry_loop`,
+`seal_fed`, `seal_open`, `door_awakening`, `status_first_encounter`,
+`sewers_walkthrough`, `door_chain_fight`, `riverfarm_fight`,
+`pallass_walkthrough`, `invrisil_walkthrough`, `horns_dig_flow`,
+`inn_guests_ext_loop`, `inn_guests_full_loop`. Evidence collected under
+`wandering_inn_game/qa_output/machine_playtest_2026-07-28_v015_close/`
+(16 MB, 130 shots) — **and that path is GITIGNORED**, so it survives only in
+this tree. Naming that rather than calling it "durable", because citing
+gitignored evidence paths is itself a carried follow-up item (see HANDOFF):
+every claim below is reproducible instead — each names its script, its seed
+and its shot, and re-running that script windowed regenerates the frame.
+
+**Commit key for every "FIXED v0.15 …" entry in this file.** The phase
+reports cite BRANCH commits (`04b3e94`, `50cbf6b`, `3d49494`, `c9c6a37`,
+`227292d`, `fef30e6`, …) and all five phases landed as SQUASH merges, so not
+one of those hashes is an ancestor of `main` — they resolve only in a tree
+that still has the wave branches. Cite these instead:
+`a085cfb` P1 delivery (#310) · `63a431b` P2 viewports (#311) ·
+`4a95a9c` P3 guest windows + hygiene (#312) · `60f1887` P4 population (#313) ·
+`ed24c4f` P5 readability/rigs/lights (#314).
+
+**`sewers_walkthrough` ran WINDOWED green** — the designated dark-map row of
+the rotation was red windowed for the whole of Phase 1; P1's `from_start`
+re-gate holds under real frame pacing. The rotation has no unrunnable row.
+
+**Every v0.15 visual claim re-verified on my own shots, not on the phase
+reports' word** (details in each entry below): warden rig whole and clear of
+the banner (`seal_open/06`), bats readable as winged bodies
+(`sewers_walkthrough/01`), three countable vermin (`door_chain_fight/00`),
+rust-on-green collectors and two separable collector families
+(`riverfarm_fight/01`,`02`), three separate silhouettes at the climax
+(`arc_flow/dd_06`), forge wall/floor distinct with props reading as props
+(`pallass_walkthrough/08`), the vault lit at day (`seal_open/08`), Grimalkin
+burying nobody (`inn_guests_ext_loop/05`), the Lore tab newest-first with no
+toast over it (`seal_fed/04b`), the combat feed at four full rows with the
+wrapped "for 13!" whole (`riverfarm_fight/02`), and Act IV's beats all in
+opening voice (`arc_flow/07`).
+
+- [ ] HUD/LEGEND-OVERLAP (P2, NEW — the headline finding, and it LOSES COPY) —
+  **the field-skill legend panel draws over the flavor/observe toast and eats
+  the middle of the line.** Both live in the same bottom band; the legend
+  (x 283–1000) is opaque and wins. `invrisil_walkthrough/01_extras_density.png`
+  is the proof: the payload line in `events.jsonl` is *"A woman in a rose-dyed
+  cloak checks a folded slip of paper against a shopfront number, unimpressed
+  by both."*, and what a player actually reads is **"A woman in a rose-dyed
+  cloak ch"** … **"unimpressed by both."** Fifty-two characters — the entire
+  setup — sit behind an opaque panel; the punchline survives with nothing to
+  land on. This is the MACHINE-PLAYTEST protocol's own named failure class
+  (payload vs render) and the only NEW defect this rotation found that
+  destroys authored content. **It worsens with progression**: the legend grows
+  a row per field skill (one row on `pallass_walkthrough/08`, three here), so
+  the overlap band deepens as the player levels. Distinct from UI/FIELD-READOUT
+  (#115), which is about accumulation/clutter — this is text LOSS. The two
+  share a cause and should probably share a fix: the legend needs to be either
+  collapsible, bottom-anchored below the toast band, or mutually exclusive with
+  a live toast.
+- [ ] BOARD/STACKED-HP-BARS (P3, NEW — partly CAUSED by this wave) — a
+  combatant standing one cell above another has its **HP bar** hidden behind
+  the lower figure's sprite, and a combatant on the board's lower rows has its
+  bar hidden behind the combat feed panel. The NUMERALS stay readable in every
+  case, so nobody is blind — but the bar is the at-a-glance signal and it is
+  the half that vanishes. Four instances in one rotation, which is what makes
+  it systemic rather than a staging accident:
+  `arc_flow/dd_06_boss_fight.png` (the scout P5 moved to (10,6) — its bar is
+  behind the feed panel, so the restaging that fixed the silhouette overlap
+  bought a bar occlusion), `sewers_walkthrough/01_vermin_encounter.png` (upper
+  bat), `riverfarm_fight/01_briar_collectors_with_hunter.png` (upper
+  collector), `status_first_encounter/01_first_encounter_feed.png` (upper
+  dummy). **v0.15 made this more likely, honestly stated:** every figure the
+  wave scaled UP (bats 0.38→1.26, wards, guardians) occludes more of the row
+  above it than it used to. Candidate: draw the bar strip above the numerals
+  at the cell's top edge, or give bars their own z-layer above combatants.
+- [ ] HUD/HINT-BAR-BLEED (P4, NEW, pre-existing but never logged) — the
+  bottom-left "Esc — menu (save/load)  J — journal  I — inventory" panel is
+  positioned so its **left parchment ornament renders off-screen at x < 0**
+  and "Esc" starts ~4px from the window edge, while the right end keeps its
+  full ornament and padding. Visibly asymmetric in every field and journal
+  shot (`seal_open/08_the_vault.png`, `arc_flow/07_journal_lead_survey.png`).
+  It is also the thing every other bottom panel overdraws — the dialogue panel
+  clips it at `horns_dig_flow/01_camp_hub.png`. Cosmetic; a margin fix.
+- [ ] BOARD/TINT-NUMERAL-CONTRAST (P3, NEW, a cost of the T5.1 tints) — HP
+  numerals draw ON the combatant's tinted body, so the DARK tints cost
+  contrast the warm ones don't: on `door_chain_fight/00_rift_vermin_leak_board.png`
+  the ember vermin's "34/34" reads cleanly against its red, while the violet
+  and cold-blue siblings' numerals sit dark-on-dark and have to be hunted for.
+  The tint fix is still plainly worth it (the roster went from uncountable to
+  countable); this is the invoice, not a reason to revert. Candidate: the
+  numeral's own outline/shadow should key off the resting modulate's luminance.
+- [ ] MAP/FORGE-MOLTEN-BLOCK (P4, NEW, common-sense fidelity pass) — on
+  `pallass_walkthrough/08_grimalkin_station_forge_tier.png` the molten trough
+  is the **largest single object on the map and the least detailed**: a
+  near-uniform saturated orange rectangle (~320x70px) beside forge stations,
+  anvils and ember particles that are all pixel-detailed. It out-shouts every
+  actual interactable on the tier. The T5.1 floor fix around it landed; this is
+  the one element that did not come with it. Wants a real molten-metal
+  treatment (banding, glow falloff, a lip) at the fidelity of its neighbours.
+- NOTE, NOT A FINDING — the windowed ObjectDB-leak notice is **reproducible,
+  contrary to the older TRANSIENT entry below**: it fired on 2 of 16 runs here
+  (`journal_history`, `board_loop`), always AFTER `QA_RESULT: PASS`, never
+  headless (the 167-script sweep was clean). That matches HANDOFF's
+  windowed-exit flake note (~1/3 of runs, audio teardown race, results
+  unaffected). Correcting the record: it is a known flake with a rate, not an
+  unreproducible one-off. Do not re-diagnose.
+
 ### Machine playtest — wave/v015-p1-delivery, PHASE-1 CLOSE: the delivery layer (2026-07-28)
 
 Source: `wave/v015-p1-delivery` at `70c002f` + this task's fixes, full asset
@@ -41,7 +216,6 @@ later Pisces line sits above the earlier one, full authored prose, not
 truncated).
 
 - [x] TOAST/MODAL-OVERLAP (P2, pre-existing layer order, MADE MORE FREQUENT by
-- [ ] TOAST/MODAL-OVERLAP (P2, pre-existing layer order, MADE MORE FREQUENT by
   the v0.15 lossless queue) — **the FEEL call, answered both ways.** Toasts
   draw at layer 12 over the journal's 10 (deliberate, `message_layer.gd`).
   In the COMMON case this reads as *lively*, not broken: a 1-line toast
@@ -79,7 +253,6 @@ truncated).
   carries NO toast over the panel and Recent Messages reads to the end ("…cut
   the inn's frame too. Find out what the seal is FOR, there at the door in the
   halls."), where it previously clipped mid-word at "Find ou|".
-- [ ] QA/SEWERS-WINDOWED-TIMING (P2, WAVE-AUTHORED at `50cbf6b`) —
 - [x] QA/SEWERS-WINDOWED-TIMING (P2, WAVE-AUTHORED at `50cbf6b`) — **FIXED
   2026-07-28 on `wave/v015-p1-delivery`.** The prediction below held and then
   went red on CI too: PR #310's canonical sweep failed on exactly these two
@@ -137,7 +310,7 @@ what those runs showed.
   the map you started with, and you have walked all of it." No region list, no
   reveal, reads right in both `·` and `✓` states; verified in render at
   `arc_flow/05_journal_sealed.png`. act_iv's `_comment` now carries the rule.
-- [ ] JOURNAL/ACT-IV-PENDING-ITINERARY (P3, PRE-WAVE copy, wave-changed
+- [x] JOURNAL/ACT-IV-PENDING-ITINERARY (P3, PRE-WAVE copy, wave-changed
   VISIBILITY) — the audit that came with the fix above. act_iv's five region
   beats (`riverfarm_owed`, `invrisil_squared`, `pallass_tiers`,
   `the_horns_home`, `the_door_opens`) are unchanged since `e98e23f`, but they
@@ -148,6 +321,18 @@ what those runs showed.
   would gut the earned Act IV page, which this same playtest rates a strength.
   The real fix is render policy — hide unearned derived beats, or mark them as
   openings rather than outcomes. Controller call, `journal.gd:637-639`.
+  **FIXED v0.15 P1 (`a085cfb`, #310) — verified at the wave close, not on the
+  phase's word.** The fix was the opening pass itself: act_iv's five region
+  beats no longer state outcomes, so the render-policy question the entry
+  raised is moot. Read on my own re-shot, `arc_flow/07_journal_lead_survey.png`
+  (seed 9): the earned beat carries `✓` ("The seal holds. Liscor counts you
+  among its own."); every pending beat carries `·` and is a forward ASK —
+  "The Horns are digging east, and they are short a pair of hands.",
+  "Riverfarm's fields hold more trouble than wheat.", "The Walled City opens
+  for paperwork, not heroics." Not one names its own chain's outcome, so the
+  page reads as an itinerary rather than a spoiler, and the specifics that
+  make the earned Act IV page good were kept. No render policy shipped and
+  none is needed.
 - [x] COMBAT/FEED-FOLD (P2, REGRESSION of the Fixed-section item "message panels
   clipped the last wrapped line") — **the combat feed's viewport admits exactly
   three full rows and a sliced fourth.** Corrected in fix round 1: the first
@@ -313,7 +498,7 @@ what those runs showed.
   arena's top row (`seal_open/06_the_warden.png`).
   **FIXED v0.15 T5.2 (2026-07-28) — and it was far worse than a crown.**
   Measured (`idle_side`, alpha bbox: 106 rows), 1.15 put this 216px rig at
-  **7.6 cells tall**: 2.5x the next-largest boss (`hired_blade_leader`, 2.97)
+  **7.62 cells tall**: 2.5x the next-largest boss (`hired_blade_leader`, 3.05)
   and over half the board's width. It was never "a rig-anchor question" — it
   was a scale nobody had computed. `ruin_guardian`/`seal_warden` → **0.53**
   (3.51 cells, inside the 3.55 ceiling and still the biggest figure in the
@@ -324,6 +509,10 @@ what those runs showed.
 - TRANSIENT, NOT A FINDING: one windowed `journal_history` run exited with
   "8 ObjectDB instances were leaked at exit"; not reproducible on re-run (0
   noise), headless sweep clean. Windowed shutdown-order artifact.
+  **CORRECTED at the v0.15 close:** it IS reproducible — 2 of 16 windowed runs
+  (`journal_history` again, plus `board_loop`), always after `QA_RESULT: PASS`,
+  never headless. Known flake with a rate, not a one-off; see the milestone-close
+  section's note and HANDOFF's windowed-exit entry. Do not re-diagnose.
 - WHAT LANDS (keep this, do not regress): the Act V journal page is the best
   chronicle surface in the game — act header, three derived beats in the
   player's own voice, the live spine objective, then ten completed quests with
@@ -574,7 +763,7 @@ pre-dig-hub reads. Durable evidence:
   no-op there — brightness was never the lever. New per-combatant `combat_tint`
   (a `combatants.json` key applied to `spr.modulate`, while the boost keeps
   `self_modulate`, so the two multiply) gives a/b/c cold-blue, violet and ember,
-  plus `combat_scale 0.40`. Round 1 shipped ~20% channel nudges and the windowed
+  plus `combat_scale 0.56`. Round 1 shipped ~20% channel nudges and the windowed
   read REFUTED them (a hue nudge into a dark-brown sprite is still dark brown at
   1.3 cells); round 2 is a real hue shift. Re-shot:
   `door_chain_fight/00_rift_vermin_leak_board.png` (seed 9) — three coloured,
@@ -618,8 +807,9 @@ native resolution. Durable evidence:
   first-time-player visibility bar on this roster.
   **FIXED v0.15 T5.1 (2026-07-28) — it was never a brightness bug.** Measured
   on the sheet the board actually plays (`idle_side`, alpha bbox, max over
-  frames), the `bat` roster rendered at **0.90 cells** (36 rows x render_scale
-  0.17 / CELL 16) — a smudge. Brightness could not have rescued it:
+  frames), the `bat` roster rendered at **0.38 cells** (36 rows x render_scale
+  0.17 / CELL 16 = 0.3825; no `combat_scale` existed pre-wave) — a smudge, and
+  the smallest figure the game shipped. Brightness could not have rescued it:
   `sewers_nest`'s legibility boost already sits at 2.93 of a hard 3.0 cap, and
   the boost lifts figure and floor together. `combat_scale 0.56` puts them at
   **1.26 cells**, just over the 1.25 floor a briar collector sets, and a warm
@@ -666,7 +856,9 @@ Source: full 10-region windowed walkthrough tour (seed 9, all scripts
   separable; `invrisil_walkthrough/07` — the shadowed alley NPCs legible;
   both keep their dark atmosphere (floors still shadowed, no wash-out).
   Bright maps render byte-identical (boost 1.0 no-op). Original box:
-- [ ] (superseded) FIELD/DARK-MAPS — enemies/interactables on **field** (exploration, not
+  > (SUPERSEDED, kept for provenance — NOT an open item; the checkbox was
+  > removed at the v0.15 close because it scanned as unfixed.)
+  FIELD/DARK-MAPS — enemies/interactables on **field** (exploration, not
   combat) dark-mood maps read near-invisible before the player casts [Light].
   Distinct from the CLOSED COMBAT/DARK-ARENAS entry (GH#28 fixed combatant
   chips/HP legibility on the combat board) and the sewers-arena-silhouette

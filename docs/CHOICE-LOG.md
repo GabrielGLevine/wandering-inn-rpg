@@ -4,14 +4,85 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 WAVE CLOSE (records, playtest, freeze prep)
+
+- **The same measurement slip was still live, one layer out — found by
+  re-deriving instead of trusting.** P5's fix round 1 caught the bar
+  measuring `idle_down` where the board plays `idle_side`, and moved the
+  DATA to meet the rule. But the const comment's own scoping list — the
+  eight LEGACY ids named as under-floor — had never been re-derived under
+  that rule. It hadn't: `goblin_raider` 0.99, `goblin_shaman` 1.09,
+  `goblin_chieftain` 1.13 are EXACTLY those sprites' `idle_down` rows
+  (176/194/181). The board plays `idle_side` (170/178/171), giving
+  **0.96 / 1.00 / 1.07**. Nothing asserted against those numbers, so
+  nothing was red — which is precisely why it survived a phase review and a
+  fix round. Corrected in the const comment and in the entry above, with
+  the drift SOURCE named so the next reader can tell a re-derivation from a
+  typo. Lesson, stronger than P5's: stating a measurement rule does not
+  retroactively re-measure the numbers written before it.
+- **The anchor moved to make both derivations land exact.**
+  `hired_blade_leader` was logged 2.97 and is **3.05**. It carries two
+  claims: the ceiling is "half a cell above the next-largest boss"
+  (3.05 + 0.5 = **3.55**, the shipped ceiling, now exact rather than
+  approximately-right) and VISUAL-LOG's "the warden was 2.5x the next
+  boss" (7.62 / 3.05 = **2.50**). Both were true-ish at 2.97 and are true
+  at 3.05. Alternative — round the ceiling to 3.5 — rejected: it would have
+  moved a shipped bound to fit a corrected input, and `ruin_guardian` sits
+  at 3.51.
+- **DARK-ARENA's pre-wave figure is 0.38, not 0.90 — the entry's own
+  arithmetic said so.** It read "**0.90 cells** (36 rows x render_scale
+  0.17 / CELL 16)", and 36 × 0.17 / 16 = 0.3825. The 0.90 is real but
+  belongs to a DIFFERENT state: round 1's shipped `combat_scale 0.40`.
+  Both numbers now appear in the entry, each labelled with the scale it
+  came from. `combatants.json`'s copy said 0.90 with the 0.40 factor —
+  correct arithmetic about the wrong moment — and now states the pre-wave
+  0.38 instead, because the catalog comment should describe the DEFECT the
+  scale key exists to fix, not an intermediate the wave passed through.
+  Consequence: the roster's span is **20x** (0.38 → 7.62), not the logged
+  12x — and I verified 0.38 IS the pre-wave minimum by walking the whole
+  pre-wave roster, not by assuming the bats were smallest.
+- **`relc_descent_rewind` is warrior:1 and its notes now open by saying
+  so.** The fixture's `_comment` still opened "the PC stripped CLASSLESS
+  (classes {}, base kit only)" while the file itself ships
+  `classes: {warrior: 1}` — the coherence fix was appended at the bottom
+  and the lede never updated, so the first sentence a reader trusts was
+  the wrong one. Fixed in the fixture AND in the QA script, which carried
+  the same stale word twice ("the classless fixture", "classless PC
+  dies"). All JSON comment edits net **−26 chars** (census DATA holds at
+  15.0% against a ≤15.0% target with ~0 headroom).
+- **The wave's own claims were re-verified on fresh screenshots, not
+  accepted from the phase reports.** Every "FIXED v0.15" visual entry was
+  re-shot in the 16-run close rotation and read again. All held. This is
+  the point of a milestone playtest — the alternative (tick the boxes the
+  reports asked for) is how the figure bar shipped a laundered pass in the
+  first place.
+- **Five NEW findings were logged rather than fixed here.** The close is a
+  verification pass; shipping fixes inside it would leave them unverified
+  by the very gates the close just ran. The one that hurts —
+  HUD/LEGEND-OVERLAP, which hides 52 characters of a good line behind the
+  field-skill legend — is P2 and named as the batch's first candidate.
+  Two of the five (BOARD/STACKED-HP-BARS, BOARD/TINT-NUMERAL-CONTRAST) are
+  honest INVOICES for v0.15's own wins: bigger figures occlude more, and
+  numerals on a dark tint lose contrast. Logged as costs of a good trade,
+  not as reasons to revert.
+- **The six taste asks were bundled instead of dripped.** Three came from
+  P5, three from earlier ledger entries. Six separate "please look at
+  this" asks across five phase reports is a worse deal for the user than
+  one section with a prepared state and a load/do/judge line each, so they
+  are collected at the TOP of the VISUAL-LOG Open list. Each names the QA
+  fixture that already stands at the spot, so staging costs a copy rather
+  than a navigation — the Playtest-States directive's intent, at the
+  cheapest honest price. The saves are named, not cut: authoring six
+  fixtures at a close would ship six unverified files.
+
 ## 2026-07-28 — v0.15 Phase 5 readability + rigs (eight in-wave calls)
 
 - **The combat board got a MEASURED acceptance bar — and fix round 1
   proved a bar is only as good as its measurement rule.** A figure's
   on-screen size is `FIGURE_ROWS[sprite] * scale / 16` cells, where
   `combat_scale` REPLACES `render_scale`. Nobody had ever computed it,
-  so the shipped roster spanned 12x: the `bat` family at 0.90 cells and
-  the `ruin_warden` rig at 7.6. Both VISUAL-LOG entries had misdiagnosed
+  so the shipped roster spanned 20x: the `bat` family at 0.38 cells and
+  the `ruin_warden` rig at 7.62. Both VISUAL-LOG entries had misdiagnosed
   themselves from FRAME height (a rig frame is mostly transparent
   margin). `test_combat_visuals` pins a floor of 1.25 cells (the
   smallest figure any windowed read has accepted) and a ceiling of 3.55
@@ -32,8 +103,12 @@ cross-release index of them.
 - **The bar is scoped to the audited rosters, and says so explicitly.**
   Eight LEGACY ids still ship under the floor — `river_wolf_a/_b/_c` +
   `wolf_companion` (0.62), `shield_spider` (0.75), `goblin_raider`
-  (0.99), `goblin_shaman` (1.09), `goblin_chieftain` (1.13) — and none
-  has ever been photographed as a defect. Asserting them would be a
+  (0.96), `goblin_shaman` (1.00), `goblin_chieftain` (1.07) — and none
+  has ever been photographed as a defect. (The three goblins were
+  logged 0.99/1.09/1.13 in the wave itself; those are `idle_down` rows,
+  and the board plays `idle_side` — the same measurement slip one layer
+  out, caught at wave close in a comment nothing asserted against.)
+  Asserting them would be a
   verdict no windowed read has made, so the const comment names them and
   files the sweep for wave-close / v0.16, each to earn its own windowed
   read exactly as the audited rosters did. Nothing ships over the
@@ -41,7 +116,7 @@ cross-release index of them.
 - **DARK-ARENA is a SCALE bug, not a brightness bug.** `sewers_nest`'s
   legibility boost already sits at 2.93 of a hard 3.0 cap, and the boost
   lifts figure and floor together, so more brightness was never
-  available. `combat_scale 0.56` on the `bat` roster (0.90 → 1.26 cells)
+  available. `combat_scale 0.56` on the `bat` roster (0.38 → 1.26 cells)
   is the fix; the tint is a second-order aid. Board-only — the field bat
   is untouched, and no sim value moved.
 - **Per-combatant `combat_tint`, on `modulate`, over a per-sprite
