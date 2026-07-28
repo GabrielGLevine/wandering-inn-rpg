@@ -928,12 +928,12 @@ ambience: [{ "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
 	"pallass_den_shop": ["door_awakened", "pallass_attuned"],
 ```
 
-- [ ] **Step 1: Load `wi-adding-a-scene`.** Re-read `riverfarm_longhouse.json`.
-- [ ] **Step 2:** Write the map with the entities above (the two quest props land in Task 2.4/2.5 — author them here in one pass to avoid a second map commit, but keep the commit message honest).
-- [ ] **Step 3:** Mood row + LANDMARK_TOKENS + MAP_REQUIRES.
-- [ ] **Step 4: Run** `data_lint.py`, `res://tests/test_content.gd`, `res://tests/test_world_visuals.gd`, `res://tests/test_audio_data.gd`.
-- [ ] **Step 5:** Scene-dynamism advisory; record the composite.
-- [ ] **Step 6: Census check. Commit** `feat(pallass): the den shop, the tier's warm room`.
+- [x] **Step 1: Load `wi-adding-a-scene`.** Re-read `riverfarm_longhouse.json`.
+- [x] **Step 2:** Write the map with the entities above (the two quest props land in Task 2.4/2.5 — author them here in one pass to avoid a second map commit, but keep the commit message honest).
+- [x] **Step 3:** Mood row + LANDMARK_TOKENS + MAP_REQUIRES.
+- [x] **Step 4: Run** `data_lint.py`, `res://tests/test_content.gd`, `res://tests/test_world_visuals.gd`, `res://tests/test_audio_data.gd`.
+- [x] **Step 5:** Scene-dynamism advisory; record the composite.
+- [x] **Step 6: Census check. Commit** `feat(pallass): the den shop, the tier's warm room`.
 
 ### Task 2.2: `pallass_market` + `pallass_forge` hooks — the door, the manifest, the carry props
 
@@ -1110,6 +1110,17 @@ ambience: [{ "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
 }
 ```
 
+**STAGE-1 HANDOFF (added by the map stage, binding).** `test_content.gd:933`
+reds any entity whose `conversation` names a graph that does not exist, so the
+`den_shop_keeper` entity was authored in Task 2.1 **without** its
+`"conversation": "pallass_den_keeper"` key. THIS TASK MUST ADD IT BACK:
+append `"conversation": "pallass_den_keeper"` as the entity's last key in
+`data/maps/pallass/pallass_den_shop.json` in the SAME commit that creates the
+graph. Without it the keeper has only a `talk_pool`, both P2 terminal rungs
+(`loop_walked`, `shipment_carried`) are unreachable, and nothing in the suite
+says so.
+
+- [ ] **Step 0 (stage-1 handoff):** Add `"conversation": "pallass_den_keeper"` to the `den_shop_keeper` entity in `pallass_den_shop.json`.
 - [ ] **Step 1:** Write the graph. Softlock guard: `hub` keeps `"Long month how?"` and `consignee` keeps its plain exit.
 - [ ] **Step 2: Run** `data_lint.py` (start node present, every node has speaker+text, every goto resolves), `res://tests/test_dialogue.gd`, `res://tests/test_content.gd`, `res://tests/test_copy_fit.gd`.
 - [ ] **Step 3: Commit** `feat(dialogue): the den-shop keeper, consignee of one crate of tin`.
