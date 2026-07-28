@@ -1,0 +1,245 @@
+{
+ "biome": "inn",
+ "grid": {
+  "width": 10,
+  "height": 8
+ },
+ "blocked": [
+  [
+   3,
+   4
+  ],
+  [
+   4,
+   4
+  ],
+  [
+   6,
+   5
+  ]
+ ],
+ "floor_layers": [
+  {
+   "_pick": "The region's interior plank swatch out of Interior_Walls_01 ([12,21]/[13,21]/[12,22]/[13,22], rgb~87,64,49), same as the longhouse and the mill -- one region, one floor language. The hollow's green is carried by the moods.json row, not by a second floor sheet.",
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     12,
+     21
+    ],
+    [
+     13,
+     21
+    ],
+    [
+     12,
+     22
+    ],
+    [
+     13,
+     22
+    ]
+   ],
+   "cells": "all"
+  }
+ ],
+ "walls": {
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "from": [
+     0,
+     0
+    ],
+    "to": [
+     9,
+     0
+    ],
+    "cap": [
+     14,
+     6
+    ],
+    "face": [
+     14,
+     7
+    ]
+   },
+   {
+    "from": [
+     0,
+     1
+    ],
+    "to": [
+     0,
+     7
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     9,
+     1
+    ],
+    "to": [
+     9,
+     7
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     1,
+     7
+    ],
+    "to": [
+     3,
+     7
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     5,
+     7
+    ],
+    "to": [
+     8,
+     7
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   }
+  ]
+ },
+ "decor": [
+  {
+   "sprite": "alchemy_bench",
+   "cell": [
+    3,
+    4
+   ]
+  },
+  {
+   "sprite": "alchemy_bench_dark",
+   "cell": [
+    4,
+    4
+   ]
+  },
+  {
+   "sprite": "food_basket",
+   "cell": [
+    6,
+    5
+   ]
+  }
+ ],
+ "ambience": [
+  {
+   "preset": "dust_motes",
+   "rect": "all"
+  }
+ ],
+ "entities": [
+  {
+   "id": "witch_hut_exit",
+   "kind": "door",
+   "cell": [
+    4,
+    7
+   ],
+   "display_name": "Outside",
+   "sprite": "door",
+   "to_map": "witch_hollow",
+   "to_cell": [
+    1,
+    8
+   ]
+  },
+  {
+   "_comment": "R2 SKILL route. detect_magic is the requires_skill GATE and the arm banks ward_scrap_read ONLY -- it must never bank detected_wardwork. trapped_halls.json:355 states the Act V door deliberately withholds a fifth producer because it would cheapen the >=3 threshold its payoff variant reads (qa/fixtures/seal_reward_start.json:31 pins the value at 3). Reading this scrap teaches the same literacy without spending that budget.",
+   "id": "hut_ward_scrap",
+   "kind": "prop",
+   "cell": [
+    7,
+    2
+   ],
+   "display_name": "The Boundary Scrap",
+   "sprite": "hollow_glow_stone",
+   "requires_skill": "detect_magic",
+   "skill_hint_toast": "The scrap hums under the dust, and not the way dust hums.",
+   "locked_toast": "A palm-sized shard of grey stone on the shelf, cut along one edge with marks you cannot read.",
+   "on_skill_use": {
+    "accomplishment": "ward_scrap_read",
+    "lore": true,
+    "toast": "[Detect Magic] — The shard is one link of a boundary that used to ring the whole thicket. It still pulls, faintly, along the exact line the deer refuse to cross. It was drawn to keep something in, and it has been failing at that for a very long time."
+   },
+   "observe": "A shard of grey stone on the shelf, set down carefully by someone who meant to come back for it."
+  },
+  {
+   "id": "hut_stoppered_jars",
+   "kind": "prop",
+   "cell": [
+    4,
+    1
+   ],
+   "display_name": "The Stoppered Jars",
+   "sprite": "shelf_bottles",
+   "observe": "A row of stoppered jars along the top shelf, their labels faded to a suggestion.",
+   "on_interact_accomplishment": "observed_hut_stoppered_jars",
+   "toast": "Every stopper is waxed and every jar is still full. Whoever kept this house left it ready and never came back for it."
+  },
+  {
+   "id": "hut_drying_rack",
+   "kind": "prop",
+   "cell": [
+    2,
+    2
+   ],
+   "display_name": "The Drying Rack",
+   "sprite": "library_shelf",
+   "observe": "A rack of bundled stems, dried long past any use.",
+   "on_interact_accomplishment": "observed_hut_drying_rack",
+   "toast": "Yarrow, mostly, and a great deal of it. Somebody kept this place stocked for a house they intended to come back to."
+  },
+  {
+   "id": "hut_hearth_ash",
+   "kind": "prop",
+   "cell": [
+    1,
+    5
+   ],
+   "display_name": "The Cold Hearth",
+   "sprite": "hearth",
+   "observe": "Cold ash banked neatly against the back of the hearth.",
+   "on_interact_accomplishment": "observed_hut_hearth_ash",
+   "toast": "The ash is banked the way you bank a fire you mean to wake in the morning. It has been cold for years."
+  },
+  {
+   "id": "hut_shuttered_window",
+   "kind": "prop",
+   "cell": [
+    8,
+    5
+   ],
+   "display_name": "The Shutter",
+   "sprite": "window_blue",
+   "observe": "One shutter, latched, with daylight coming through the slats in bars.",
+   "on_interact_accomplishment": "observed_hut_shuttered_window",
+   "toast": "Latched from the inside, and the hut was shut when you found it. You decide not to work that through any further today."
+  }
+ ]
+}

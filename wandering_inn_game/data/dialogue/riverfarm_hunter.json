@@ -10,7 +10,11 @@
 			],
 			"options": [
 				{ "text": "[Ask him to come with you.]", "hide_when": { "accomplishment": { "hunter_will_come": 1 } }, "goto": "agreed" },
-				{ "text": "Just passing through.", "end": true }
+				{ "text": "Just passing through.", "end": true },
+				{ "text": "The deer stopped at the treeline. Why?", "requires": { "accomplishment": { "price_of_a_favor_reported": 1 } }, "hide_when": { "accomplishment": { "heard_thicket_keeps": 1 } }, "effects": [ { "quest": "what_the_thicket_keeps" }, { "accomplishment": "heard_thicket_keeps" } ], "goto": "thicket_brief" },
+				{ "text": "The line's a ward. An old one, gone sour.", "requires": { "accomplishment": { "ward_scrap_read": 1 } }, "hide_when": { "accomplishment": { "thicket_answered": 1 } }, "effects": [ { "accomplishment": "thicket_answered" } ], "goto": "thicket_reported_read" },
+				{ "text": "Fences are moved. The herd's got its road.", "requires": { "accomplishment": { "herd_rerouted": 1 } }, "hide_when": { "accomplishment": { "thicket_answered": 1 } }, "effects": [ { "accomplishment": "thicket_answered" } ], "goto": "thicket_reported_rerouted" },
+				{ "text": "Whatever was denning on the line isn't anymore.", "requires": { "accomplishment": { "thicket_cleared": 1 } }, "hide_when": { "accomplishment": { "thicket_answered": 1 } }, "effects": [ { "accomplishment": "thicket_answered" } ], "goto": "thicket_reported_cleared" }
 			]
 		},
 		"agreed": {
@@ -18,6 +22,59 @@
 			"text": "Figured. Bring your own bandages — I've got enough of my own to worry about.",
 			"options": [
 				{ "text": "Deal.", "effects": [ { "accomplishment": "hunter_will_come" } ], "end": true }
+			]
+		},
+		"thicket_brief": {
+			"speaker": "The Hunter",
+			"text": "Corusdeer. Whole herd came down off the north road and stopped dead at the old line in the thicket. Wouldn't cross it, wouldn't spook, just turned and walked back the way they came. Deer don't hold a line unless something taught them to. I lost two lambs to something with thorns for teeth this spring, so you'll forgive me for not walking in there on my own.",
+			"options": [
+				{ "text": "Show me the sign.", "goto": "thicket_sign" },
+				{ "text": "What's in there?", "goto": "thicket_topic" },
+				{ "text": "I'll look into it.", "end": true }
+			]
+		},
+		"thicket_sign": {
+			"speaker": "The Hunter",
+			"text": "Here. Hoof marks come up, stop, turn, and go back, all along one line you can't see from standing. Not one print past it in a mile of treeline. Whatever's holding them isn't teeth. Teeth leave a mess.",
+			"options": [
+				{ "text": "Then we move the fences, not the deer.", "effects": [ { "accomplishment": "herd_rerouted" } ], "goto": "thicket_rerouted" },
+				{ "text": "I'll walk the line myself.", "end": true }
+			]
+		},
+		"thicket_rerouted": {
+			"speaker": "The Hunter",
+			"text": "Warn the fields, shift two fences, and the herd keeps its road for the winter. That's the whole of it. Nobody thanks you for work they can't see afterward. The deer will, in their way.",
+			"options": [
+				{ "text": "Good enough.", "end": true }
+			]
+		},
+		"thicket_topic": {
+			"speaker": "The Hunter",
+			"text": "Know that treeline better than the headman does. He'd rather not. There's a hut the far side of the hollow nobody's opened in years, and whatever's drawn on that line was drawn by whoever kept it. Start there if you're the reading sort.",
+			"options": [
+				{ "text": "Back up a step.", "goto": "thicket_brief" },
+				{ "text": "Noted.", "end": true }
+			]
+		},
+		"thicket_reported_read": {
+			"speaker": "The Hunter",
+			"text": "A ward. Somebody scratched a line in the dirt a hundred years back and the deer still read it better than I do. That's the first thing anyone's told me about that thicket that wasn't a guess.",
+			"options": [
+				{ "text": "It's failing, whatever it was.", "end": true }
+			]
+		},
+		"thicket_reported_rerouted": {
+			"speaker": "The Hunter",
+			"text": "Fences before deer. My father would have said the same and then done the opposite. Herd's watering at the north bend now, where I can see them. I'll sleep better for it, which is more than the hollow's given me lately.",
+			"options": [
+				{ "text": "Sleep well.", "end": true }
+			]
+		},
+		"thicket_reported_cleared": {
+			"speaker": "The Hunter",
+			"text": "Denning right on the line, of course it was. Line's still there and the deer still won't cross it, so we've learned exactly one thing and killed the other. I'll take one thing.",
+			"options": [
+				{ "text": "One thing's a start.", "end": true }
 			]
 		}
 	}

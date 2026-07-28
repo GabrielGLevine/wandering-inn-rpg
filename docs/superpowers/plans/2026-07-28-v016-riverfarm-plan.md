@@ -178,7 +178,7 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 }
 ```
 
-- [ ] **Step 3 (TASK 1b — run just before Task 6's commit): insert `what_the_thicket_keeps` after `flood_ledger`** (which by then is the anchor's new neighbour):
+- [x] **Step 3 (TASK 1b — run just before Task 6's commit): insert `what_the_thicket_keeps` after `flood_ledger`** (which by then is the anchor's new neighbour):
 
 ```json
 {
@@ -549,8 +549,8 @@ The three observables (each `on_interact_accomplishment` + a non-empty `toast`, 
 
 **Light budget trap:** `witch_cottage_prop`'s `_comment` states it "stays within the ≤8/map light budget (the only light this map ships)". **The new hut door carries NO `light` key.**
 
-- [ ] **Step 1: Read `data/maps/riverfarm/witch_hollow.json` in full**, including `witch_cottage_prop` (:385) and `leyline_stone` (:545) — the latter is the shipped `requires_skill: detect_magic` prop this lane's ward scrap must NOT duplicate.
-- [ ] **Step 2: Write `data/maps/riverfarm/witch_hut.json`** to this layout spec (10×8 — well under parlor scale, "small, wardwork-dense" per the spec):
+- [x] **Step 1: Read `data/maps/riverfarm/witch_hollow.json` in full**, including `witch_cottage_prop` (:385) and `leyline_stone` (:545) — the latter is the shipped `requires_skill: detect_magic` prop this lane's ward scrap must NOT duplicate.
+- [x] **Step 2: Write `data/maps/riverfarm/witch_hut.json`** to this layout spec (10×8 — well under parlor scale, "small, wardwork-dense" per the spec):
 
 **Grid:** `{"width": 10, "height": 8}`. **Biome:** `"inn"` (the longhouse's interior tile language; the mood row below carries the green shade — no `data/biomes.json` edit).
 
@@ -623,7 +623,7 @@ row 7: (1,7)-(3,7) and (5,7)-(8,7)      ← the gap at (4,7) is the exit door
 
 **SPRITE FIX (fix round 1), same class as the mill door.** `witch_cottage` is `frame_size [80,80]` = **5×5 cells**, anchor [0.5,0.963], and `witch_cottage_prop` sits at [3,7]. A second `witch_cottage` at [1,7] is two cells away on the same row, so **3 of its 5 sprite columns overlap the shipped cottage** — one building rendered twice, not two buildings. The hut door therefore ships `"sprite": "door"` (`render_scale` 0.5), the same choice as the mill door, and the "second house" reading is carried entirely by `display_name` + `observe` copy. **No decor row is added on the hollow side either.** Shoot this pairing in a windowed frame **before the Task 4 commit**, not only at Task 10.
 
-- [ ] **Step 3: Append TWO entities to `data/maps/riverfarm/witch_hollow.json`** (hand edit, 1-space indentation, append at the end of `entities` — safe here because `witch_hollow.json` is EXCLUSIVE to this lane, unlike the shared files above; do not reorder or touch any existing row):
+- [x] **Step 3: Append TWO entities to `data/maps/riverfarm/witch_hollow.json`** (hand edit, 1-space indentation, append at the end of `entities` — safe here because `witch_hollow.json` is EXCLUSIVE to this lane, unlike the shared files above; do not reorder or touch any existing row):
 
 ```json
 {
@@ -660,7 +660,7 @@ row 7: (1,7)-(3,7) and (5,7)-(8,7)      ← the gap at (4,7) is the exit door
 
 Interact-only (no `trigger_radius`) so nothing ambushes the pinned hollow routes. Rows 1–4 of `witch_hollow` are walked by no canonical.
 
-- [ ] **Step 4: `data/moods.json` — add `moods.witch_hut`, immediately after `moods.riverfarm_mill`** (which Task 3 Step 4 inserted after the `witch_hollow` anchor, so both of this lane's rows sit together and no other lane's closing brace is touched). **Grade exemplar: `witch_hollow`'s authored row** — the hut is that map's interior, so it should read as the hollow's green shade brought indoors and darkened, cooler and dimmer than `riverfarm_mill`. Remember the region's shipped interiors (`riverfarm_longhouse`) ship UNGRADED, so there is no second reference to compare against:
+- [x] **Step 4: `data/moods.json` — add `moods.witch_hut`, immediately after `moods.riverfarm_mill`** (which Task 3 Step 4 inserted after the `witch_hollow` anchor, so both of this lane's rows sit together and no other lane's closing brace is touched). **Grade exemplar: `witch_hollow`'s authored row** — the hut is that map's interior, so it should read as the hollow's green shade brought indoors and darkened, cooler and dimmer than `riverfarm_mill`. Remember the region's shipped interiors (`riverfarm_longhouse`) ship UNGRADED, so there is no second reference to compare against:
 
 ```json
 "witch_hut": {
@@ -671,10 +671,10 @@ Interact-only (no `trigger_radius`) so nothing ambushes the pinned hollow routes
 }
 ```
 
-- [ ] **Step 5: `LANDMARK_TOKENS` — insert `"witch_hut": ["hut", "hollow", "riverfarm"],` immediately after this lane's `"riverfarm_mill"` row.** R2's `resolve` beat has a same-map route (`herd_rerouted` on `riverfarm_village`, the giver's own map), so `_beat_needs_place_name` returns false and the check does not arm — the row is added anyway per ruling 6, so the table stays honest and a later re-gating of the TALK route cannot silently red.
-- [ ] **Step 6: `MAP_REQUIRES` — insert `"witch_hut": ["door_awakened", "riverfarm_attuned"],` immediately after this lane's `"riverfarm_mill"` row.**
-- [ ] **Step 7: Run** `data_lint.py`; then **run `qa/run_qa.sh witch_cottage_reachability headless --seed=9`** and confirm green — this is the specific proof that ruling 3 held. Then take the **pre-commit windowed shot** of `witch_hollow` around [1,7]/[3,7] and confirm the hut door and the cottage read as two separate objects (this is the sprite-fix proof and cannot wait for Task 10).
-- [ ] **Step 8: Census** check; hold the commit until Task 6 supplies `heard_thicket_keeps`'s producer and **Task 1b** splices `what_the_thicket_keeps`. Commit order inside the R2 group: Task 4 work in the tree → Task 6 dialogue in the tree → **Task 1b splice** → one commit (Task 6 Step 5).
+- [x] **Step 5: `LANDMARK_TOKENS` — insert `"witch_hut": ["hut", "hollow", "riverfarm"],` immediately after this lane's `"riverfarm_mill"` row.** R2's `resolve` beat has a same-map route (`herd_rerouted` on `riverfarm_village`, the giver's own map), so `_beat_needs_place_name` returns false and the check does not arm — the row is added anyway per ruling 6, so the table stays honest and a later re-gating of the TALK route cannot silently red.
+- [x] **Step 6: `MAP_REQUIRES` — insert `"witch_hut": ["door_awakened", "riverfarm_attuned"],` immediately after this lane's `"riverfarm_mill"` row.**
+- [x] **Step 7: Run** `data_lint.py`; then **run `qa/run_qa.sh witch_cottage_reachability headless --seed=9`** and confirm green — this is the specific proof that ruling 3 held. Then take the **pre-commit windowed shot** of `witch_hollow` around [1,7]/[3,7] and confirm the hut door and the cottage read as two separate objects (this is the sprite-fix proof and cannot wait for Task 10).
+- [x] **Step 8: Census** check; hold the commit until Task 6 supplies `heard_thicket_keeps`'s producer and **Task 1b** splices `what_the_thicket_keeps`. Commit order inside the R2 group: Task 4 work in the tree → Task 6 dialogue in the tree → **Task 1b splice** → one commit (Task 6 Step 5).
 
 ---
 
@@ -840,7 +840,7 @@ Traps observed: every node carries an unconditional `text` (a variants-only node
 
 **Ruling 1, applied:** the corusdeer herd stays. Corusdeer are a northern-Izril species and the floodplains-only placement in game data was itself a placement choice, so this is a deliberate species introduction to Riverfarm, not a canon break. The brief weaves the hunter's shipped lines in as local colour: his "Lost two lambs to something with thorns for teeth" and "Know that treeline better than the headman does. He'd rather not." are reused verbatim inside the new nodes, so R2 reads as the same man's ongoing year rather than a new thread bolted on. **Nothing contradicts those lines** — the thorn-toothed thing that took his lambs is left exactly as unresolved as it shipped.
 
-- [ ] **Step 1: APPEND four options to the hub `options` array** (after "Just passing through."):
+- [x] **Step 1: APPEND four options to the hub `options` array** (after "Just passing through."):
 
 ```json
 {
@@ -878,7 +878,7 @@ Traps observed: every node carries an unconditional `text` (a variants-only node
 
 Softlock guard holds: "Just passing through." carries neither key.
 
-- [ ] **Step 2: APPEND six nodes:**
+- [x] **Step 2: APPEND six nodes:**
 
 ```json
 "thicket_brief": {
@@ -936,9 +936,9 @@ Softlock guard holds: "Just passing through." carries neither key.
 }
 ```
 
-- [ ] **Step 3: Run `Task 1b` now** (splice `what_the_thicket_keeps` after `flood_ledger`), then `data_lint.py`, `res://tests/test_dialogue.gd`, `res://tests/test_content.gd` — expect PASS. Every counter both quests' beats read now has a producer.
-- [ ] **Step 4: Run** `res://tests/test_reachability.gd` — every `resolution_paths[].accomplishment` must resolve to a real producer.
-- [ ] **Step 5: Census** check; **commit** `feat(riverfarm): What the Thicket Keeps, the witch hut, and the line on the treeline` (carries **Task 1b**, 4 and 6 — again a whole-file `quests.json` state from one splice run).
+- [x] **Step 3: Run `Task 1b` now** (splice `what_the_thicket_keeps` after `flood_ledger`), then `data_lint.py`, `res://tests/test_dialogue.gd`, `res://tests/test_content.gd` — expect PASS. Every counter both quests' beats read now has a producer.
+- [x] **Step 4: Run** `res://tests/test_reachability.gd` — every `resolution_paths[].accomplishment` must resolve to a real producer.
+- [x] **Step 5: Census** check; **commit** `feat(riverfarm): What the Thicket Keeps, the witch hut, and the line on the treeline` (carries **Task 1b**, 4 and 6 — again a whole-file `quests.json` state from one splice run).
 
 ---
 

@@ -133,6 +133,22 @@
 			]
 		},
 		{
+			"_comment": "v0.16 #305 R2. Same route-report shape as flood_ledger. The SKILL route reads the ward and banks ward_scrap_read ONLY -- it must never bank detected_wardwork (trapped_halls.json:355 protects that counter's >=3 threshold).",
+			"id": "what_the_thicket_keeps",
+			"title": "What the Thicket Keeps",
+			"region": "Riverfarm",
+			"beats": [
+				{ "id": "resolve", "description": "The corusdeer herd stops dead at a line in the thicket it will not cross. Read the sign with the hunter, read the old boundary work in the hut at the hollow, or clear whatever has denned on the line.", "complete_when_any": { "herd_rerouted": 1, "ward_scrap_read": 1, "thicket_cleared": 1 } },
+				{ "id": "report", "description": "Tell the hunter what the thicket is keeping, back at his post in the village.", "complete_when": { "thicket_answered": 1 } }
+			],
+			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins) and all three co-bank -- kill the den, then still read the ward. Ladder: read > rerouted > cleared. Killing the predator moves one animal off a line that was never about the predator; moving the fences is the humble, correct answer; reading the boundary is the only one that explains why the line is there at all.",
+			"resolution_paths": [
+				{ "accomplishment": "thicket_cleared", "text": "You cleared the den off the line and let the herd try again." },
+				{ "accomplishment": "herd_rerouted", "text": "You moved the fences instead of the deer, and the herd kept its road." },
+				{ "accomplishment": "ward_scrap_read", "text": "You read the old boundary work and learned what the thicket has been keeping out." }
+			]
+		},
+		{
 			"_comment": "Three-path parity mirroring the cisterns/wrong_order/price_of_a_favor two-beat shape.",
 			"id": "a_gentlemans_disagreement",
 			"title": "A Gentleman's Disagreement",

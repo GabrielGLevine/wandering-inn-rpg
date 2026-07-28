@@ -273,6 +273,24 @@
    ],
    "vignette": 0.42
   },
+  "witch_hut": {
+   "day": [
+    0.6,
+    0.7,
+    0.62
+   ],
+   "dusk": [
+    0.4,
+    0.48,
+    0.44
+   ],
+   "night": [
+    0.24,
+    0.3,
+    0.28
+   ],
+   "vignette": 0.5
+  },
   "invrisil_boulevard": {
    "day": [
     1.0,

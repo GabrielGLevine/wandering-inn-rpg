@@ -1343,6 +1343,7 @@ const LANDMARK_TOKENS := {
 	"garden_sanctuary": ["garden"],
 	"riverfarm_village": ["riverfarm"],
 	"riverfarm_mill": ["mill", "riverfarm"],
+	"witch_hut": ["hut", "hollow", "riverfarm"],
 	"riverfarm_longhouse": ["longhouse"],
 	# 2026-07-26 (Phase 6, the pilgrimage spine): a sub-map accepts its REGION's
 	# token as well as its own, the widening `ruin_surface` already carries for

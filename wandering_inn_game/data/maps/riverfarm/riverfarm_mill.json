@@ -249,7 +249,7 @@
    }
   },
   {
-   "_comment": "encounter_when gates on the quest start so the corner is empty until the shortfall is a question. Interact-only (no trigger_radius) -- the mill is a working interior and an ambush on the way to the tallyman would cross every TALK/HELP canonical. on_victory is an Array so the route counter is the only thing banked.",
+   "_comment": "encounter_when ARMS the fight on the quest start; present_when is validator-forbidden on encounters, so the corner stands visible and inert until then (the seal_warden_alcove pattern) and answers a plain interact with gate_closed_toast. Interact-only (no trigger_radius) -- the mill is a working interior and an ambush on the way to the tallyman would cross every TALK/HELP canonical. on_victory is an Array so the route counter is the only thing banked.",
    "id": "mill_granary_scavengers",
    "kind": "encounter",
    "cell": [
@@ -260,6 +260,7 @@
    "sprite": "bat",
    "beast": true,
    "observe": "Chaff scattered wide, sacks opened low down, and something breathing behind the last row.",
+   "gate_closed_toast": "Something has been at the sacks in that corner. Nobody here has called it a problem yet, and it is not your count to go digging in.",
    "arena": "inn_cellar",
    "enemies": [
     "granary_scavenger_a",
