@@ -27,9 +27,9 @@ Checks:
   6. gate shape       -- the *_when family (door_when / contains_when /
      portal_menu_when / fence_menu_when) must wrap "requires":
      _door_gate_met (src/core/interactions.gd) reads .get("requires", {}),
-     so a bare counter dict is VACUOUSLY TRUE (masked gate). One shipped
-     instance is allowlisted pending its own behavior adjudication (GH#283)
-     -- closing that issue removes the entry.
+     so a bare counter dict is VACUOUSLY TRUE (masked gate). The one shipped
+     instance (invrisil_anchor_stone) was wrapped for real, so the arm now
+     has zero exemptions -- keep it that way.
 
 Wiring: ci_sweep.sh pre-flight (fails the sweep before any Godot boot) and
 ci.yml's leak-check job (the no-Godot CI lane). Run standalone after any
@@ -46,9 +46,8 @@ from wi_data_lib import DATA
 
 GATE_KEYS = ("door_when", "contains_when", "portal_menu_when", "fence_menu_when")
 # (map_id, entity_id, gate_key) -> the follow-up issue that owns the fix.
-VACUOUS_GATE_ALLOWLIST = {
-	("invrisil_boulevard", "invrisil_anchor_stone", "portal_menu_when"): "GH#283",
-}
+# EMPTY BY DESIGN: a masked always-true gate is a shipped bug, never a waiver.
+VACUOUS_GATE_ALLOWLIST: dict = {}
 
 
 def check_wellformed(errors: list, root: Path = DATA) -> dict:
@@ -193,7 +192,7 @@ def _walk_gates(node, map_id: str, entity_id: str, errors: list) -> None:
 					continue
 				errors.append(f"maps/{map_id}: entity '{entity_id}' {k} lacks a "
 					"'requires' wrap -- _door_gate_met reads .get('requires', {}), "
-					"so this gate is VACUOUSLY TRUE (see GH#283 for the shape)")
+					"so this gate is VACUOUSLY TRUE")
 			_walk_gates(v, map_id, entity_id, errors)
 	elif isinstance(node, list):
 		for item in node:

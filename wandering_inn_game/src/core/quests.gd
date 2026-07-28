@@ -41,12 +41,26 @@ static func resolution_path_text(quest: Dictionary, accomplishments: Dictionary)
 	return String(resolved_path(quest, accomplishments).get("text", ""))
 
 
-## GH#211: the full resolved-path ENTRY (first entry whose accomplishment
-## banked; ""-req entries are the authored fallback) — the grant hook reads
-## `grant` off this. Same first-match contract as the journal text above.
+## The full resolved-path ENTRY — the journal's history line and the grant hook
+## both read off this. LAST MATCH WINS among entries carrying a real
+## accomplishment, the same convention sleep_veil.gd's FINALE_CLOSE_LINES uses,
+## so the ending text and the ending grant can never disagree. It was
+## first-match, and a bounce-hatch state (what_the_seal_was_feeding: seal_opened
+## banked, then seal_kept_fed or seal_rewarded) recorded the FIGHT ending and
+## paid the FIGHT grant while the finale's own last-match close line called it
+## the resolution the player actually chose. An ""-req entry is the authored
+## FALLBACK, not a match: it wins only when no real counter banked, wherever it
+## sits in the array.
 static func resolved_path(quest: Dictionary, accomplishments: Dictionary) -> Dictionary:
+	var fallback: Dictionary = {}
+	var matched: Dictionary = {}
 	for entry: Variant in quest.get("resolution_paths", []):
-		var req := String((entry as Dictionary).get("accomplishment", ""))
-		if req == "" or int(accomplishments.get(req, 0)) >= 1:
-			return entry as Dictionary
-	return {}
+		var row: Dictionary = entry
+		var req := String(row.get("accomplishment", ""))
+		if req == "":
+			if fallback.is_empty():
+				fallback = row
+			continue
+		if int(accomplishments.get(req, 0)) >= 1:
+			matched = row
+	return matched if not matched.is_empty() else fallback

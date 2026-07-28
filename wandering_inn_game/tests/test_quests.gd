@@ -34,5 +34,36 @@ func _init() -> void:
 	assert(regions["far_quest"]["region"] == "Riverfarm", "region field threads through when authored")
 	assert(regions["local_quest"]["region"] == "", "region defaults to empty string, never missing/null, when unauthored")
 
+	# resolved_path is LAST-MATCH-WINS among real counters (sleep_veil.gd's own
+	# FINALE_CLOSE_LINES convention); an ""-req entry is the fallback, never a
+	# match. THE BOUNCE HATCH: seal_opened stays banked when a later resolution
+	# lands, and first-match used to record the FIGHT ending and pay the FIGHT
+	# grant over the finale's own last-match close line.
+	var shipped: Dictionary = _load_json("res://data/quests.json")
+	var seal: Dictionary = WIQuests.quest_by_id(shipped, "what_the_seal_was_feeding")
+	assert(not seal.is_empty(), "sanity: the Act V quest is in the shipped catalog")
+	var fight: Dictionary = WIQuests.resolved_path(seal, {"seal_opened": 1})
+	assert(String(fight["accomplishment"]) == "seal_opened", "a lone seal_opened still resolves as the fight")
+	var hatch: Dictionary = WIQuests.resolved_path(seal, {"seal_opened": 1, "seal_kept_fed": 1})
+	assert(String(hatch["accomplishment"]) == "seal_kept_fed", "seal_opened + seal_kept_fed records the FED ending, not the fight")
+	assert(int((hatch["grant"] as Dictionary).get("persuaded_someone", 0)) == 6 and not (hatch["grant"] as Dictionary).has("melee_hit"), "...and pays the FED grant, never the fight's melee bank")
+	assert(String(WIQuests.resolution_path_text(seal, {"seal_opened": 1, "seal_kept_fed": 1})) == String(hatch["text"]), "the journal history line follows the same entry the grant did")
+	var rewarded: Dictionary = WIQuests.resolved_path(seal, {"seal_opened": 1, "seal_rewarded": 1})
+	assert(String(rewarded["accomplishment"]) == "seal_rewarded", "seal_opened + seal_rewarded records the RE-WARD ending")
+	# The ""-req fallback keeps losing to any real match, wherever it sits.
+	var fallback_first := {"resolution_paths": [
+		{"accomplishment": "", "text": "fallback"},
+		{"accomplishment": "did_a", "text": "a"},
+	]}
+	assert(String(WIQuests.resolved_path(fallback_first, {"did_a": 1})["text"]) == "a", "a real match beats an EARLIER authored fallback")
+	assert(String(WIQuests.resolved_path(fallback_first, {})["text"]) == "fallback", "...and the fallback still answers when nothing banked")
+	assert(WIQuests.resolved_path({"resolution_paths": [{"accomplishment": "nope", "text": "x"}]}, {}).is_empty(), "no match and no fallback = no entry")
+
 	print("PASS: quest progress derives purely from accomplishment counters")
 	quit(0)
+
+
+func _load_json(path: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	assert(parsed is Dictionary, "invalid JSON at " + path)
+	return parsed
