@@ -83,7 +83,7 @@ from wi_data_lib import DATA, GAME_ROOT, load_dialogue_graphs, load_json, load_s
 
 OUT_PATH = DATA / "shipped_ids.json"
 
-RELEASE = "0.13.1"
+RELEASE = "0.14.0"
 
 # ---------------------------------------------------------------------------
 # STRUCTURAL_LITERALS -- KEEP IN SYNC with tests/test_shipped_ids.gd's own
@@ -99,7 +99,7 @@ STRUCTURAL_LITERALS = [
     "completed_delivery", "blinked_past_danger",
     "warded_danger", "witch_craft_used", "second_door_study_sleeps",
     "dungeon_attuned", "catalyst_attunement_sleeps", "resonance_grown",
-    "tended_beasts",
+    "tended_beasts", "finale_played",
 ]
 
 
