@@ -527,8 +527,11 @@ const FIGURE_ROWS := {
 	"bat": 52.0, "briar_collector": 59.0, "briar_collector_deep": 58.0,
 	"ruin_warden": 103.0, "relc": 61.0, "raskghar_awakened": 52.0,
 }
-## No combatant may read smaller than a briar collector (1.29 cells) — the
-## smallest figure the windowed reads have ever accepted.
+## Scoped to the rosters below, NOT the whole catalog: `river_wolf` (0.60) and
+## `shield_spider` (0.90) still ship under this line and have never been
+## reported, so a global floor would be a claim the windowed reads have not
+## made. 1.25 is the briar collector, the smallest figure any read HAS accepted
+## — earn the right to widen this by photographing the next offender.
 const BOARD_FIGURE_MIN_CELLS := 1.25
 ## Nothing may out-tower `hired_blade_leader` (2.97 cells) by more than half a
 ## cell: past ~3.5 the rig eats the turn banner on the board's top row.
