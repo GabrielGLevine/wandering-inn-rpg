@@ -205,3 +205,21 @@ runs against real state and the title's Continue proves it. The seeded
 path derivation mirrors Godot's own (Darwin vs XDG branch in
 run_qa.sh). derive_qa_surfaces treats legacy_seed as a fixture
 dependency. Canonical: save_rename_migration.
+
+## v0.15 wave lessons (2026-07-28)
+
+- **Never pin toast ORDER across `combat_started`** — toast holds are
+  wall-clock while driver steps are frame-paced, so pre-combat queue
+  depth (and therefore post-combat delivery order) varies with host
+  frame rate. Pin delivery ("rendered by the time the board closes",
+  `from_start` + generous timeout), never sequence. The sewers CI
+  flake (v0.15 P1) is the reference failure.
+- **Fresh worktrees need `godot --headless --import` before any QA**
+  — a warm `.godot` copied from another branch is NOT sufficient;
+  `class_name` registration fails silently otherwise.
+- **A numeric acceptance gate must state its measurement RULE at the
+  table and name a subject it currently fails.** The v0.15 figure-
+  height bar shipped green while its own subject failed it, because
+  an unstated rule drifted toward whatever passed (FIGURE_ROWS,
+  test_combat_visuals — see the P5 fix round). Rule-at-the-table +
+  a known-failing control is the antidote.

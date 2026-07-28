@@ -230,3 +230,15 @@ Also: `visual_states` entries are `{when:{counter:<id>, at:N}, sprite}`
 windowed-verify every visual_states add), and entity `variants` override
 interact effects via the `accomplishment` key, never
 `on_interact_accomplishment` (the resolve contract).
+
+## v0.15 addendum (2026-07-28)
+
+- **Comment-only commits still owe the doc gates**: `render_qa_notes`
+  + `check_doc_drift` before push — a `_comment` edit in a QA script
+  can drift the rendered notes table (the #312 CI red).
+- **Presence/window edits owe a whole-screen read**: the v0.14/v0.15
+  despawn class (entities popping mid-conversation) is now retired by
+  the reconciler's dialogue defer — but any NEW presence mechanism
+  must be judged on-screen, not per-row: the evidence bar is "who
+  vanishes while the player watches", never "is each row's gate
+  locally sensible".
