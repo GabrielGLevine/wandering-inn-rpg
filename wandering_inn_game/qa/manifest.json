@@ -3362,6 +3362,35 @@
    }
   },
   {
+   "script": "wilovan_address_f",
+   "seed": 9,
+   "fixture": "wilovan_parlor_f_start",
+   "note": "TWO blockers in the Brothers' parlor: (1) the {addr}/{Addr} address token resolving at WIGame's own event sink -- the corpus's only pc_gender 'f' fixture pins the SHIPPED Wilovan talk_pool line and hub text_variant rendering 'miss', with the 'sir' spellings asserted absent whole-run; (2) the re-interact guard -- ratici + the three parlor gentlemen + street klbkch are each interacted TWICE on a spent talk_pool with no conversation/dialogue fallback (the old `Invalid access to property or key 'dialogue'` crash), re-serving the same line and banking nothing on the repeat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "brothers_parlor",
+     "street"
+    ],
+    "fixtures": [
+     "wilovan_parlor_f_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "invrisil_wilovan"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "pallass_round_trip",
    "seed": 9,
    "fixture": "spine_reach_start",

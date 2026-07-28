@@ -188,6 +188,7 @@ func _init() -> void:
 	_validate_class_skill_grant_ids_shape_cases()
 	_validate_props(scene)
 	_validate_talk_pool_stages_ascending(scene)
+	_validate_npc_interact_surface(scene)
 	_validate_encounter_when(scene, produced_accomplishments)
 	_validate_encounter_gate_counters(scene, produced_accomplishments)
 	_validate_present_when(scene, produced_accomplishments)
@@ -361,6 +362,29 @@ func _validate_talk_pool_stages_ascending(scene: Dictionary) -> void:
 					if seen.has(key):
 						_check(threshold >= int(seen[key]), "entity %s talk_pool_stages authored OUT OF ORDER: stage %s's %s threshold (%d) is lower than an earlier stage's (%d)" % [String(entity["id"]), String(stage.get("id", "?")), key, threshold, int(seen[key])])
 					seen[key] = threshold
+
+
+## Every npc must carry a surface `interact` can still speak from
+## AFTER its talk_pool is spent for the waking: a `conversation`, a non-empty
+## static `dialogue`, or a non-empty `talk_pool` (interactions.gd's
+## `_npc_post_pool` re-serves the current pool line for the last case). An
+## npc with none of the three, or with an EMPTY talk_pool/dialogue array, used
+## to crash the second interact -- klbkch + the four brothers_parlor gentlemen
+## shipped that way. `encounter` is exempt: its own branch starts the fight.
+func _validate_npc_interact_surface(scene: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		for entity: Dictionary in map.get("entities", []):
+			if String(entity.get(WIKeys.KIND, "")) != "npc":
+				continue
+			var id := String(entity.get(WIKeys.ID, "?"))
+			for key: String in ["talk_pool", "dialogue"]:
+				if entity.has(key):
+					_check(not (entity[key] as Array).is_empty(), "entity %s (%s) carries an EMPTY %s -- drop the key or author a line" % [id, map_id, key])
+			var has_surface := entity.has(WIKeys.CONVERSATION) \
+					or not (entity.get("dialogue", []) as Array).is_empty() \
+					or not (entity.get("talk_pool", []) as Array).is_empty()
+			_check(has_surface, "npc %s (%s) has no post-pool surface: needs conversation, dialogue, or talk_pool" % [id, map_id])
 
 
 const VALID_PHASES := ["day", "dusk", "night"]
