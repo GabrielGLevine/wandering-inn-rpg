@@ -47,16 +47,14 @@ v0.10.0, v0.9.0, v0.8.0.
 ## 🎯 NEXT ACTIONS
 
 **USER-GATED, decide before the next content wave (2026-07-27):**
-1. **Guest-row arc windows** — design proposal, NOT implemented: let a
-   `GUEST_POOL_GATES` value be a `{requires, absent}` dict (or an ANY-of
-   Array) instead of today's single "this counter must be banked" String,
-   so pool membership and row presence derive from ONE source. Closes
-   Zevara's summons window, Pisces's haul window and Rags's betrayal
-   branch together (~10 lines). Full argument + the measured cost of NOT
-   doing it (one fixture in 114 sits in the affected window today):
-   `.superpowers/sdd/2026-07-26-main-quest-foti-wave/task-5-report.md`
-   §arc-window — the design note plus its fix-round-2 tail (that ledger
-   dir is gitignored; this bullet carries the decision either way).
+1. ~~**Guest-row arc windows**~~ — **RULED IN + SHIPPED** (v0.15 ruling 1,
+   Phase 3): `GUEST_POOL_GATES` takes an ANY-of Array; zevara and pisces
+   carry arc windows, relc audited and deliberately not gated, and
+   `test_content._validate_guest_gate_windows` now derives the window from
+   pool gate AND rows so the two can never disagree. Residual: zevara's
+   window opens at `heard_the_deep_tremor`, not at the earlier
+   `watch_runner_pointed` — cost of the wider edge logged in
+   docs/CHOICE-LOG.md; a Playtest-State ask if the user wants it.
 2. **Grimalkin sprite re-measure** — his figure renders ~98px, about 2.3×
    Relc's documented 43.4px catalog convention. A `sprites.json`
    `render_scale` re-measure frees the inn seat (14,5) and the
@@ -65,17 +63,14 @@ v0.10.0, v0.9.0, v0.8.0.
    the cut commits, bundle-latest check before tagging.
 
 **FOLLOW-UP BATCH (agent-actionable, from the wave's final whole-branch
-review, 2026-07-27)** — none blocking, all small:
-- Dead fixture keys ×2: two QA fixtures carry save keys no live code
-  reads; drop them so fixtures keep meaning what they say.
-- `interactions.gd` variant guard: entity `variants` override interact
-  effects via the `accomplishment` key, and a mis-shaped variant resolves
-  silently — needs a shape guard in the content tests.
-- `test_copy_fit` blind spots: no measured table for `sleep_veil.gd`'s
-  line tables (now the widest single-line strings in the game) or for
-  dialogue `text_variants` (VEIL-COPY/UNMEASURED, P4).
-- `hedault_enchanting.json` fragment node: wants a `text_variants` arm so
-  the post-trade state does not re-read as the pre-trade one.
+review, 2026-07-27)** — dead fixture keys, the `interactions.gd` variant
+guard and the `hedault_enchanting.json` fragment arm all SHIPPED in v0.15
+Phase 3 (hygiene batch), alongside the Pallass arrival cell, the em-dash
+sweep, the golem name split and the `{addr}`/variant/arrival lint arms.
+Still open from that batch:
+- `test_copy_fit` blind spots: the `sleep_veil.gd` line tables and dialogue
+  `text_variants` are still unmeasured (VEIL-COPY/UNMEASURED, P4). Phase 3
+  closed the `skill_uses` toast blind spot only.
 - COMBAT/FEED-FOLD (P2, docs/VISUAL-LOG.md): the combat feed's viewport
   admits three rows and a sliced fourth — a shared message-panel budget
   fix touching every panel class, so it needs its own verification pass.
