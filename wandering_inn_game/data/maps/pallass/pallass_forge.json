@@ -554,6 +554,17 @@
       "Liscor settled the thing under its stone. Good. I'd still like the measurements.",
       "News comes up the shaft slower than heat does. Arrives just as true."
      ]
+    },
+    {
+     "id": "smith_standards_tempered",
+     "requires_accomplishment": {
+      "standards_tempered": 1
+     },
+     "lines": [
+      "She passed it this morning. Same hand, same steel, honest measure. Nothing else changed.",
+      "The examiner sent the file up himself. He has never once walked up a flight for me.",
+      "You did not make her better, {addr}. You made the reading true. That is the harder favor."
+     ]
     }
    ],
    "conversation": "pallass_forge_smith"

@@ -803,10 +803,10 @@ Append ONE entry to the EXISTING `hub.text_variants` array (currently two entrie
 }
 ```
 
-- [ ] **Step 1: Shadow-out audit (mandatory).** For each reachable state, which stage wins? — golems-culled-only → `smith_golems_culled`; seal-resolved → `smith_seal_resolved`; P1 done → the new stage, permanently. That is intended: P1 is the tier's most recent news and the base pool is not GUIDANCE copy. Ascending-threshold rule (`test_content.gd:579-593`) does not apply — the three stages key on three DIFFERENT counters.
-- [ ] **Step 2:** Append the stage; keep the base `talk_pool` (an entity with stages MUST have one).
-- [ ] **Step 3: Run** `res://tests/test_content.gd` + `res://tests/test_copy_fit.gd` (pool lines are ambient barks, 2 wrapped lines max).
-- [ ] **Step 4: Commit** `feat(pallass): the smith's post-commission pool stage`.
+- [x] **Step 1: Shadow-out audit (mandatory).** For each reachable state, which stage wins? — golems-culled-only → `smith_golems_culled`; seal-resolved → `smith_seal_resolved`; P1 done → the new stage, permanently. That is intended: P1 is the tier's most recent news and the base pool is not GUIDANCE copy. Ascending-threshold rule (`test_content.gd:579-593`) does not apply — the three stages key on three DIFFERENT counters.
+- [x] **Step 2:** Append the stage; keep the base `talk_pool` (an entity with stages MUST have one).
+- [x] **Step 3: Run** `res://tests/test_content.gd` + `res://tests/test_copy_fit.gd` (pool lines are ambient barks, 2 wrapped lines max).
+- [x] **Step 4: Commit** `feat(pallass): the smith's post-commission pool stage`.
 
 ---
 
