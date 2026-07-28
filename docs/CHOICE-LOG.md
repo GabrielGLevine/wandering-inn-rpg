@@ -1445,3 +1445,35 @@ by controller ruling — the plan was the defect, not the implementation.
   a later ungated producer cannot re-open the hole. Rejected: a new engine
   gate key on `skill_uses` — `src/` is outside this lane (exit criterion 6)
   and the dialogue gate closes the defect completely.
+- **v0.16 Invrisil lane (#306) — implementation forks (2026-07-28)**: the
+  granular calls this lane made while executing its plan doc; the wave-level
+  adjudications remain in the entry above. (1) FIXTURE BASE: the plan said
+  copy `near_invrisil`; its POST_GAME_BACKBONE pass is a NAME-KEYED exemption,
+  so a copy under a new name fails ten backbone arms plus the three-quest
+  floor. All eight fixtures ride `boulevard_night_footpads_start` instead —
+  same region, same monotone chain, plus the full backbone, warrior 10 with
+  the `melee_hit` 57 that warrior L10's own `requires` demands, and the geared
+  boulevard kit rather than a rusty sword (an un-geared L10 Invrisil fixture
+  measures roughly half the harness's tuned win rate). (2) FIXTURE PHASE, both
+  directions, measured not assumed: the two interiors ship at NIGHT because
+  they are mood-invariant across phases by the `brothers_parlor` convention,
+  so their hearth/sconce lights and `dust_motes` are invisible at dusk and
+  read only at night; the fence fight ships at DAY because `mercantile_alley`
+  renders its board figures near-black at night and cleanly by day, and per
+  ruling F that board shot is the only legibility read the two new rigs get.
+  Both measurements are in docs/VISUAL-LOG.md. (3) The visible-lock contract
+  is proven by a real options array copied out of each script's own
+  `events.jsonl` — `invrisil_setting_talk` pins the [Appraise Goods] row
+  locked with `requires [Appraise Goods]`, `invrisil_setting_skill` pins the
+  same row unlocked with an empty requirement. (4) `invrisil_v016_gate_check`
+  pins Hedault's hub at exactly five rows from a real run, which converts the
+  ruling-1 pin-stability adjudication from a one-time PR claim into a
+  permanent regression guard. (5) `derive_qa_surfaces.py --write` does not
+  exist — the script rejects the flag and bare IS the write; ran bare, and
+  `render_qa_notes.py --write` (which is mandatory there) in ruling-E order.
+  (6) `tests/test_effect_text.gd` gained one pinned row for the new item at
+  the `hedaults_wardstone` anchor: its EXPECTED_ITEMS is exhaustive in both
+  directions and the plan's FILE OWNERSHIP did not name the file.
+  (7) `scripts/check_doc_drift.py` is red on this branch for four missing plan
+  Status headers — already fixed on main (09ebdbe) and demoted to an advisory
+  job the same hour; the branch predates both and the fix is out of lane.

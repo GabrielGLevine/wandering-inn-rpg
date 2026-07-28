@@ -1791,10 +1791,10 @@ Every risk below has its mitigation baked into a numbered step above.
 
 ### Task 6.1: The `wi-verifying-changes` bar
 
-- [ ] **Step 0:** If working in a fresh worktree, run `/usr/local/bin/godot --headless --path wandering_inn_game --import` **before any QA**.
-- [ ] **Step 1: Structural lint** — `python3 wandering_inn_game/scripts/data_lint.py` from repo root (**this is not pytest**; there is no `scripts/tests/test_data_lint.py` in this layout). Expect clean exit.
-- [ ] **Step 2: Load gate** — the headless boot/smoke check, alarm-wrapped.
-- [ ] **Step 3: Census** — `python3 scripts/comment_census.py --check` from repo root. Must return 0. **Also measure this lane's absolute new-`_comment` total** and compare it against the ≈ 4,400-char projection (budget ≈ 6,175) in the Census section; report the real number in the PR body so the controller can sum the four lanes:
+- [x] **Step 0:** If working in a fresh worktree, run `/usr/local/bin/godot --headless --path wandering_inn_game --import` **before any QA**.
+- [x] **Step 1: Structural lint** — `python3 wandering_inn_game/scripts/data_lint.py` from repo root (**this is not pytest**; there is no `scripts/tests/test_data_lint.py` in this layout). Expect clean exit.
+- [x] **Step 2: Load gate** — the headless boot/smoke check, alarm-wrapped.
+- [x] **Step 3: Census** — `python3 scripts/comment_census.py --check` from repo root. Must return 0. **Also measure this lane's absolute new-`_comment` total** and compare it against the ≈ 4,400-char projection (budget ≈ 6,175) in the Census section; report the real number in the PR body so the controller can sum the four lanes:
 
 ```
 git diff --stat main -- 'wandering_inn_game/data/**'
@@ -1822,15 +1822,15 @@ PY
 ```
 
   If it returns 1, cut `_comment` prose from `data/**` (move it to a QA-script `_comment`, a census-free `_pick`/`_resolution_order` key, or `docs/CHOICE-LOG.md`) until it does — **never** by deleting content JSON. Remember the merge-train rule: the binding check is on the **merged** tree, and final overshoot is the wave-close PR's to own.
-- [ ] **Step 4: Every unit suite** — loop every `tests/test_*.gd` under a 240s alarm. For **each** script the bar is all three of: **nonzero-exit absent (rc 0)**, a **`^PASS` line present**, and a **zero-hit grep** for `SCRIPT ERROR|Parse Error|WARNING`. Any one missing is a RED.
-- [ ] **Step 5: Balance harness** — `sim_combat_batch.gd` in full under a 600s alarm, same three-part bar. Both new gated cells inside **0.55–0.95** (ruling A), all four shipped Invrisil cells still in window, medians 3–12. **Copy every measured `win_rate` and `median_rounds` into the PR body** — that table, not the window, is the region-ordering evidence.
-- [ ] **Step 6: Full canonical sweep** — `wandering_inn_game/qa/ci_sweep.sh` (the background-log-and-poll idiom from Task 5.4 Step 3). Every script green; report per script.
-- [ ] **Step 7: Generated-doc drift** — `derive_qa_surfaces.py --check`, **`render_qa_notes.py --write` then bare `render_qa_notes.py`** (ruling E — bare-only does not write and returns 1), `check_doc_drift.py`, `sync_agent_guidance.py`, `scripts/leak_check.sh` — the full `leak-check` job locally. If the bare run prints `QA NOTES DRIFT`, the `--write` did not land in the commit; fix the commit, do not hand-edit the file.
-- [ ] **Step 8: Windowed playtest** — Task 5.5, VISUAL-LOG drained.
+- [x] **Step 4: Every unit suite** — loop every `tests/test_*.gd` under a 240s alarm. For **each** script the bar is all three of: **nonzero-exit absent (rc 0)**, a **`^PASS` line present**, and a **zero-hit grep** for `SCRIPT ERROR|Parse Error|WARNING`. Any one missing is a RED.
+- [x] **Step 5: Balance harness** — `sim_combat_batch.gd` in full under a 600s alarm, same three-part bar. Both new gated cells inside **0.55–0.95** (ruling A), all four shipped Invrisil cells still in window, medians 3–12. **Copy every measured `win_rate` and `median_rounds` into the PR body** — that table, not the window, is the region-ordering evidence.
+- [x] **Step 6: Full canonical sweep** — `wandering_inn_game/qa/ci_sweep.sh` (the background-log-and-poll idiom from Task 5.4 Step 3). Every script green; report per script.
+- [x] **Step 7: Generated-doc drift** — `derive_qa_surfaces.py --check`, **`render_qa_notes.py --write` then bare `render_qa_notes.py`** (ruling E — bare-only does not write and returns 1), `check_doc_drift.py`, `sync_agent_guidance.py`, `scripts/leak_check.sh` — the full `leak-check` job locally. If the bare run prints `QA NOTES DRIFT`, the `--write` did not land in the commit; fix the commit, do not hand-edit the file.
+- [x] **Step 8: Windowed playtest** — Task 5.5, VISUAL-LOG drained.
 
 ### Task 6.2: CHOICE-LOG and PR
 
-- [ ] **Step 1: Append this lane's entries to `docs/CHOICE-LOG.md`** — every controller ruling applied and every design fork taken (the list is in the plan-return `choice_log_entries`; do not re-derive, copy it).
+- [x] **Step 1: Append this lane's entries to `docs/CHOICE-LOG.md`** — every controller ruling applied and every design fork taken (the list is in the plan-return `choice_log_entries`; do not re-derive, copy it).
 - [ ] **Step 2: Open the PR** with title `v0.16 Invrisil depth: A Setting for a Lady + The Hat Stays On, stationer's + Adventurer's Rest (#306)`, using `.github/PULL_REQUEST_TEMPLATE/issue-close.md`:
   - `Closes #306`
   - **Choices made** — the ten lane rulings plus wave rulings A–F plus the forks, each with the rejected alternative and why.
