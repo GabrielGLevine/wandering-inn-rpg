@@ -177,5 +177,42 @@ func _init() -> void:
 
 	assert(WIActs.evaluate({}, _ctx(2, 3, {})).is_empty(), "empty catalog => {}")
 
-	print("PASS: act line derives purely from counters (fresh=Act I; gates advance; maxed caps)")
+	# Openings (v0.15 A1): evaluate() carries `opening` beside `text`;
+	# render_beats() owns the POLICY -- banked => text, pending => opening,
+	# pending with no opening => DROPPED (never falls back to outcome text).
+	for beat: Dictionary in fresh["beats"]:
+		assert(beat.has("opening"), "derived beats carry `opening` beside `text`")
+		assert(String(beat["opening"]) != "", "shipped beats author an opening")
+		assert(String(beat["opening"]) != String(beat["text"]), "opening is not the outcome line")
+
+	var synth := {"acts": [{"id": "synth", "title": "T", "header": "T", "beats": [
+		{"id": "banked", "text": "OUT-A", "opening": "OPEN-A", "when": {}},
+		{"id": "pending_with", "text": "OUT-B", "opening": "OPEN-B", "when": {"min_classes": 1}},
+		{"id": "pending_without", "text": "OUT-C", "when": {"min_classes": 1}},
+	]}]}
+	var rows: Array = WIActs.render_beats(WIActs.evaluate(synth, {}))
+	var row_ids: Array = []
+	var row_lines: Array = []
+	for raw_row: Variant in rows:
+		var row := raw_row as Dictionary
+		row_ids.append(String(row["id"]))
+		row_lines.append(String(row["line"]))
+	assert(row_ids == ["banked", "pending_with"], "an opening-less PENDING beat is dropped from the render list, never shown as outcome text")
+	assert(row_lines == ["OUT-A", "OPEN-B"], "banked renders `text`, pending renders `opening`")
+	assert(bool((rows[0] as Dictionary)["achieved"]) and not bool((rows[1] as Dictionary)["achieved"]), "render rows carry `achieved` for the journal marker")
+
+	var synth_banked: Array = WIActs.render_beats(WIActs.evaluate(synth, _ctx(1, 0, {})))
+	var banked_lines: Array = []
+	for raw_row: Variant in synth_banked:
+		banked_lines.append(String((raw_row as Dictionary)["line"]))
+	assert(banked_lines == ["OUT-A", "OUT-B", "OUT-C"], "once banked, every beat renders its outcome text -- including the opening-less one")
+
+	assert(WIActs.render_beats({}).is_empty(), "empty act => no render rows")
+
+	# Every SHIPPED pending beat has a line to show: nothing vanishes in-game.
+	for act: Dictionary in catalog["acts"]:
+		var pending := WIActs.render_beats(WIActs.evaluate({"acts": [act]}, {}))
+		assert(pending.size() == (act["beats"] as Array).size(), "%s renders every beat while pending (all openings authored)" % String(act["id"]))
+
+	print("PASS: act line derives purely from counters (fresh=Act I; gates advance; maxed caps; pending beats render openings)")
 	quit(0)

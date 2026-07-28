@@ -4,6 +4,54 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 A1 pending-beat openings (task 1.1)
+
+- **Render policy lives in `WIActs.render_beats`, not in journal.gd.** The
+  journal's pending branch could have chosen `opening`/`text` inline (2 lines,
+  no new API). Chose a derivation-side helper returning `[{id, achieved,
+  line}]` because the "outcome text never renders unearned" rule is a CONTENT
+  contract that must be unit-testable without a UI: test_acts now proves the
+  drop-vs-fallback behaviour directly, and any future beat surface (leads
+  strip, finale recap) reads the same policy. Revert = inline the three lines
+  at journal.gd's beat loop and delete the static.
+- **An opening-less PENDING beat is dropped; an opening-less BANKED beat
+  keeps rendering its text.** Alternative (render an empty `· ` row) leaks
+  "there is a beat here you haven't earned" without saying anything; hiding
+  is the spec's own fallback and the only choice that cannot leak. All 18
+  shipped beats author an opening, so the drop path is defense-in-depth —
+  test_content now REQUIRES an opening on every beat rather than treating it
+  as optional, so no future beat can ship invisible.
+- **All 18 draft openings shipped verbatim.** Audited each against its beat's
+  `when` counter and that counter's quest chain before accepting. The two
+  that looked mis-assigned are correct: `the_door_opens` (door_awakened)
+  opens on the DIG east because horns_dig -> door_mounted -> catalyst ->
+  attune is that counter's chain, and horns_dig's own spoiler rule forbids
+  naming the door before the haul beat — so the opening literally cannot
+  mention the Door. `the_horns_home`'s "somewhere to put their feet up" was
+  the one line considered for a rewrite (it poses the question but points at
+  no place); kept, because pointing is the Leads strip's job (A2) and a
+  rewrite would have invented delve fiction to do A2's work in A1's voice.
+- **Outcome-marker list normalized to 4 lowercase entries** matched
+  case-insensitively: `settled`, `you read`, `you took`, `you walked`. The
+  brief's 5-entry list carried "You settled" (subsumed by `settled`) and
+  mixed case (defeated by any recasing). No draft trips the list; "settling"
+  and "Settle it" pass by design — the ban is on past-tense BANK verbs, not
+  the verb stem.
+- **New journal payload key `act_beat_lines`** (the exact rendered rows,
+  marker included) so the spoiler rule is machine-checkable end-to-end, not
+  only by screenshot. `act_beats`/`act_beats_achieved` keep their old
+  count semantics, so no existing pin moved. Pinned in 4 canonicals:
+  climax_seal (Act IV, 7 pending — the VISUAL-LOG itinerary leak),
+  seal_open (Act V, 3 pending), spine_reach (Act IV, 5 banked + 2 pending),
+  raskghar_entry_loop (Act III, 2 pending). Cost accepted: polishing a
+  shipped opening now reds those 4 scripts (whole-list match) — that is the
+  copy freeze working, re-pin from a run.
+- **raskghar_entry_loop gains a read-only journal open.** No canonical
+  opened the journal anywhere in Act III, so the wave's own act-page
+  re-shots had a hole; that fixture is the only one standing in Act III with
+  both beats pending. Alternative (a new canonical) costs a manifest entry
+  and a seed row for one screenshot.
+
 ## 2026-07-18 — #147 music intake calls
 
 - Listening pass = inline signal analysis (tempo/RMS/brightness/mode vs

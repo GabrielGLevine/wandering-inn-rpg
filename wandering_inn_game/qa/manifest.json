@@ -4002,7 +4002,7 @@
    "script": "raskghar_entry_loop",
    "seed": 9,
    "fixture": "raskghar_entry_start",
-   "note": "GH#152-followup: the REAL act-paced Act III entry (Act II conditions -> sleep fires the tremor pointer -> Zevara summons -> heard_the_deep_tremor), no chain hand-banks",
+   "note": "GH#152-followup: the REAL act-paced Act III entry (Act II conditions -> sleep fires the tremor pointer -> Zevara summons -> heard_the_deep_tremor), no chain hand-banks; also the only canonical that opens the journal INSIDE Act III with both beats pending (v0.15 A1 opening copy, act_beat_lines pin)",
    "tiers": [
     "full"
    ],

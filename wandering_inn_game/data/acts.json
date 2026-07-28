@@ -1,5 +1,5 @@
 {
-	"_comment": "Acts are derived, never saved: select the highest act whose predecessor gates pass. Conditions support min_classes, quests_completed, and accomplishment counts; empty means true. reached_two_classes is monotonic across consolidation. Act V is last, so ITS advance_when is the defined-but-unreachable one -- it names seal_resolved so the finale sequence has a single gate to read, and so a maxed save still lights every beat it owns.",
+	"_comment": "Acts are derived, never saved: select the highest act whose predecessor gates pass. Conditions support min_classes, quests_completed, and accomplishment counts; empty means true. reached_two_classes is monotonic across consolidation. Act V is last, so ITS advance_when is the defined-but-unreachable one -- it names seal_resolved so the finale sequence has a single gate to read, and so a maxed save still lights every beat it owns. BEAT COPY (two keys, one render rule, WIActs.render_beats): `text` is the BANKED outcome, `opening` the forward line shown while the beat is PENDING. Outcome text never renders unearned -- a pending beat with no opening is DROPPED from the journal rather than falling back to text. An opening poses its chain's question and never answers it (test_content.gd lints: authored, distinct from text, no past-tense bank markers).",
 	"acts": [
 		{
 			"id": "act_i",
@@ -7,8 +7,8 @@
 			"header": "Act I -- Arrival",
 			"advance_when": { "min_classes": 1, "accomplishments": { "reached_liscor": 1 } },
 			"beats": [
-				{ "id": "first_class", "text": "You've grown into a class of your own.", "when": { "min_classes": 1 } },
-				{ "id": "reached_city", "text": "Liscor's gates opened for you at last.", "when": { "accomplishments": { "reached_liscor": 1 } } }
+				{ "id": "first_class", "text": "You've grown into a class of your own.", "opening": "A class is waiting for the person you act like.", "when": { "min_classes": 1 } },
+				{ "id": "reached_city", "text": "Liscor's gates opened for you at last.", "opening": "Liscor is a walk east, and it doesn't know you yet.", "when": { "accomplishments": { "reached_liscor": 1 } } }
 			]
 		},
 		{
@@ -17,10 +17,10 @@
 			"header": "Act II -- Make a Place for Yourself",
 			"advance_when": { "accomplishments": { "reached_two_classes": 1 }, "quests_completed": 3 },
 			"beats": [
-				{ "id": "errands_around", "text": "Word of your errands is getting around town.", "when": { "accomplishments": { "package_delivered": 1 } } },
-				{ "id": "krshia_trust", "text": "Krshia trusts you with more than gossip now.", "when": { "accomplishments": { "crate_returned": 1 } } },
-				{ "id": "watch_calls", "text": "The Watch knows to call on you when something's wrong.", "when": { "accomplishments": { "cisterns_reported": 1 } } },
-				{ "id": "known_face", "text": "Liscor is starting to know your face.", "when": { "accomplishments": { "reached_two_classes": 1 }, "quests_completed": 3 } }
+				{ "id": "errands_around", "text": "Word of your errands is getting around town.", "opening": "Work finds hands that take it.", "when": { "accomplishments": { "package_delivered": 1 } } },
+				{ "id": "krshia_trust", "text": "Krshia trusts you with more than gossip now.", "opening": "Krshia's counter sees everything. Earn a look behind it.", "when": { "accomplishments": { "crate_returned": 1 } } },
+				{ "id": "watch_calls", "text": "The Watch knows to call on you when something's wrong.", "opening": "The Watch notices people who fix things.", "when": { "accomplishments": { "cisterns_reported": 1 } } },
+				{ "id": "known_face", "text": "Liscor is starting to know your face.", "opening": "Keep showing up, and the city will remember your face.", "when": { "accomplishments": { "reached_two_classes": 1 }, "quests_completed": 3 } }
 			]
 		},
 		{
@@ -29,36 +29,36 @@
 			"header": "Act III -- What Stirs Beneath",
 			"advance_when": { "accomplishments": { "raskghar_sealed": 1 } },
 			"beats": [
-				{ "id": "the_stirring", "text": "Something is moving in the dark beneath the city.", "when": { "accomplishments": { "heard_the_deep_tremor": 1 } } },
-				{ "id": "warren_cleared", "text": "The warren below is cleared, and the thing in the dark is cut off from its congregation.", "when": { "accomplishments": { "cleared_the_warren": 1 } } }
+				{ "id": "the_stirring", "text": "Something is moving in the dark beneath the city.", "opening": "Something under the city has the Watch losing sleep.", "when": { "accomplishments": { "heard_the_deep_tremor": 1 } } },
+				{ "id": "warren_cleared", "text": "The warren below is cleared, and the thing in the dark is cut off from its congregation.", "opening": "Whatever moves down there has a den, and dens have doors.", "when": { "accomplishments": { "cleared_the_warren": 1 } } }
 			]
 		},
 		{
-			"_comment": "Act V gate (revised in fix round 1 by controller ruling): the seal report plus the two region terminals the pilgrimage does not imply. Transitivity covers the rest -- lattice_forge_rune implies spine_started and elevator_pass_stamped, lattice_witch_lore requires price_of_a_favor_reported, lattice_hedault_reading requires brothers_job_done, and Act V's descent ask requires all three lattice counters. Naming them here is what keeps riverfarm_owed and invrisil_squared from being STRANDED: a beat whose counter can only bank in an act the player has already left can never render (the act_iii defect). counted_among is deliberately NOT in the gate -- it is the seal's own closing line, relocated here because post_game banks at the first sleep AFTER the seal (sleep_beat.gd). SPOILER DISCIPLINE (act_v's rule, binding here since the reframe moved entry from post-game to the seal): journal.gd:639 renders PENDING beats in full, so every line below is visible mid-story and none may exceed the act title. the_reach_mapped re-copied 2026-07-27 -- it stated Act V's reveal. The five region beats are PRE-WAVE copy whose VISIBILITY, not text, this wave changed; each still names its chain's outcome while pending. That one is a render-policy call (hide unearned beats), not copy -- stripping specifics would gut the earned page. docs/VISUAL-LOG.md.",
+			"_comment": "Act V gate: the seal report plus the two region terminals the pilgrimage does not imply. Transitivity covers the rest -- lattice_forge_rune implies spine_started and elevator_pass_stamped, lattice_witch_lore requires price_of_a_favor_reported, lattice_hedault_reading requires brothers_job_done, and Act V's descent ask requires all three lattice counters. Naming them here is what keeps riverfarm_owed and invrisil_squared from being STRANDED: a beat whose counter can only bank in an act the player has already left can never render (the act_iii defect). counted_among is deliberately NOT in the gate -- it is the seal's own closing line, relocated here because post_game banks at the first sleep AFTER the seal (sleep_beat.gd). Each `opening` points at the FIRST step of its beat's chain, not the beat's outcome: the_door_opens opens on the dig east (dig -> mounted door -> catalyst -> attune -> door_awakened), the_reach_mapped on the Door's strain.",
 			"id": "act_iv",
 			"title": "What the Door Opened",
 			"header": "Act IV -- What the Door Opened",
 			"advance_when": { "accomplishments": { "lattice_forge_rune": 1, "seal_kept_reported": 1, "price_of_a_favor_reported": 1, "brothers_job_done": 1 } },
 			"beats": [
-				{ "id": "counted_among", "text": "The seal holds. Liscor counts you among its own.", "when": { "accomplishments": { "post_game": 1 } } },
-				{ "id": "the_door_opens", "text": "The pantry door remembers being elsewhere again, and somewhere else remembers it back.", "when": { "accomplishments": { "door_awakened": 1 } } },
-				{ "id": "riverfarm_owed", "text": "Riverfarm's fields breathe easier, and a witch in the hollow no longer collects on the village's fear.", "when": { "accomplishments": { "price_of_a_favor_reported": 1 } } },
-				{ "id": "invrisil_squared", "text": "A merchant's name is settled in Invrisil, one way or another, and the Brothers remember who settled it.", "when": { "accomplishments": { "brothers_job_done": 1 } } },
-				{ "id": "pallass_tiers", "text": "The forge tier of Pallass stands open above you now, papers stamped and the lift unlocked.", "when": { "accomplishments": { "elevator_pass_stamped": 1 } } },
-				{ "id": "the_horns_home", "text": "The Horns of Hammerad have taken a corner of the inn as their own, and the seal beneath Liscor holds quiet.", "when": { "accomplishments": { "seal_kept_reported": 1 } } },
-				{ "id": "the_reach_mapped", "text": "The Door's reach has outgrown the map you started with, and you have walked all of it.", "when": { "accomplishments": { "lattice_forge_rune": 1 } } }
+				{ "id": "counted_among", "text": "The seal holds. Liscor counts you among its own.", "opening": "The city is deciding what you are to it.", "when": { "accomplishments": { "post_game": 1 } } },
+				{ "id": "the_door_opens", "text": "The pantry door remembers being elsewhere again, and somewhere else remembers it back.", "opening": "The Horns are digging east, and they are short a pair of hands.", "when": { "accomplishments": { "door_awakened": 1 } } },
+				{ "id": "riverfarm_owed", "text": "Riverfarm's fields breathe easier, and a witch in the hollow no longer collects on the village's fear.", "opening": "Riverfarm's fields hold more trouble than wheat.", "when": { "accomplishments": { "price_of_a_favor_reported": 1 } } },
+				{ "id": "invrisil_squared", "text": "A merchant's name is settled in Invrisil, one way or another, and the Brothers remember who settled it.", "opening": "A name needs settling in the City of Adventurers.", "when": { "accomplishments": { "brothers_job_done": 1 } } },
+				{ "id": "pallass_tiers", "text": "The forge tier of Pallass stands open above you now, papers stamped and the lift unlocked.", "opening": "The Walled City opens for paperwork, not heroics.", "when": { "accomplishments": { "elevator_pass_stamped": 1 } } },
+				{ "id": "the_horns_home", "text": "The Horns of Hammerad have taken a corner of the inn as their own, and the seal beneath Liscor holds quiet.", "opening": "Four adventurers need somewhere to put their feet up.", "when": { "accomplishments": { "seal_kept_reported": 1 } } },
+				{ "id": "the_reach_mapped", "text": "The Door's reach has outgrown the map you started with, and you have walked all of it.", "opening": "The Door strains for somewhere it cannot reach yet.", "when": { "accomplishments": { "lattice_forge_rune": 1 } } }
 			]
 		},
 		{
-			"_comment": "Act V, the slot #270 reserved. Every beat here banks INSIDE the act (the act_iii lesson: a beat keyed to its own act's exit gate can never render), and because act_v is last even the resolution beat renders. ONE resolution beat, not three: a per-path beat list would leave two entries permanently pending for every player. SPOILER DISCIPLINE: journal.gd renders PENDING act beats in full, marked '·' instead of '✓', so every line here is visible from the moment Act V opens -- none may state more than the act's own title, and nothing names what the vault holds.",
+			"_comment": "Act V, the slot #270 reserved. Every beat here banks INSIDE the act (the act_iii lesson: a beat keyed to its own act's exit gate can never render), and because act_v is last even the resolution beat renders. ONE resolution beat, not three: a per-path beat list would leave two entries permanently pending for every player. The `opening` keys carry the spoiler load for this act -- they are what a mid-Act-V player reads, and none of them may name what the vault holds; the `text` lines are outcome copy and render only once their own counter banks.",
 			"id": "act_v",
 			"title": "What the Seal Was Feeding",
 			"header": "Act V -- What the Seal Was Feeding",
 			"advance_when": { "accomplishments": { "seal_resolved": 1 } },
 			"beats": [
-				{ "id": "the_descent", "text": "Pisces will not read it out of a treatise. You are taking him down to it.", "when": { "accomplishments": { "seal_descent_agreed": 1 } } },
-				{ "id": "the_reading", "text": "You read the seal under Liscor yourself, in the dark, and it was never a lock at all.", "when": { "accomplishments": { "read_the_feeding_ward": 1 } } },
-				{ "id": "the_answer", "text": "You settled what the seal was feeding, and the city goes on not knowing.", "when": { "accomplishments": { "seal_resolved": 1 } } }
+				{ "id": "the_descent", "text": "Pisces will not read it out of a treatise. You are taking him down to it.", "opening": "Pisces wants to read the seal in person, not from a treatise.", "when": { "accomplishments": { "seal_descent_agreed": 1 } } },
+				{ "id": "the_reading", "text": "You read the seal under Liscor yourself, in the dark, and it was never a lock at all.", "opening": "The wardwork under Liscor is waiting to be read.", "when": { "accomplishments": { "read_the_feeding_ward": 1 } } },
+				{ "id": "the_answer", "text": "You settled what the seal was feeding, and the city goes on not knowing.", "opening": "What the seal keeps is still the seal's secret. Settle it.", "when": { "accomplishments": { "seal_resolved": 1 } } }
 			]
 		}
 	]

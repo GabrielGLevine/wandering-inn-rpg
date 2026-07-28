@@ -42,6 +42,26 @@ const PLAYER_STRING_FILES := [
 
 
 
+## Journal act beats show `opening` while PENDING and `text` once banked, so an
+## opening may pose the act's question and must never answer it. Greppable
+## floor: authored + distinct from `text` + free of these past-tense bank
+## markers (matched case-insensitively).
+const ACT_OPENING_OUTCOME_MARKERS := ["settled", "you read", "you took", "you walked"]
+
+
+func _validate_act_openings(acts: Dictionary) -> void:
+	for act: Dictionary in acts.get("acts", []):
+		for raw_beat: Variant in act.get("beats", []):
+			var beat := raw_beat as Dictionary
+			var label := "acts.json %s/%s" % [String(act.get("id", "?")), String(beat.get("id", "?"))]
+			var opening := String(beat.get("opening", ""))
+			if not _require(opening != "", "%s: beat must author an `opening` -- a pending beat without one never renders" % label):
+				continue
+			_check(opening != String(beat.get("text", "")), "%s: `opening` must not restate the outcome `text`" % label)
+			for marker: String in ACT_OPENING_OUTCOME_MARKERS:
+				_check(not opening.to_lower().contains(marker), "%s: `opening` carries outcome marker '%s' -- pose the question, never the answer" % [label, marker])
+
+
 ## GH#211 review LOW-4: a victory_toast carrier's FIRST on_victory id keys the
 ## first-win==1 toast check; under challenge weighting the literal won_combat
 ## counter is fractional, so a won_combat-first carrier would toast on the
@@ -202,6 +222,7 @@ func _init() -> void:
 	_validate_travel_beat_place_naming(quests, scene, graphs)
 	_validate_place_naming_shape_cases()
 	_validate_tutor_line_help_consistency()
+	_validate_act_openings(_load_json("res://data/acts.json"))
 
 	if _errors.is_empty():
 		print("PASS: errand content is fully cross-referenced")

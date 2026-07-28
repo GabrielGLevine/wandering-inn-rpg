@@ -393,6 +393,7 @@ func _open() -> void:
 		"act_id": String(act.get("id", "")),
 		"act_beats": act_beats.size(),
 		"act_beats_achieved": act_beats_achieved,
+		"act_beat_lines": _act_beat_lines(),
 		"seen_statuses": seen_statuses,
 		"posting_title": String(posting.get("title", "")),
 		"posting_status": String(posting.get("status", "")),
@@ -626,6 +627,19 @@ func _update_scroll_hint() -> void:
 	_scroll_hint.visible = open and more_below
 
 
+## The act-beat rows exactly as the player reads them: "✓ " banked / "· "
+## pending, over WIActs.render_beats' copy policy (pending beat shows its
+## authored `opening`, never its outcome `text`; an opening-less pending beat
+## is dropped). ONE source for both the rendered tab and `act_beat_lines` in
+## the shown payload -- QA pins the strings the panel actually drew.
+func _act_beat_lines() -> Array:
+	var lines: Array = []
+	for raw_row: Variant in WIActs.render_beats(_open_act):
+		var row := raw_row as Dictionary
+		lines.append("%s%s" % ["✓ " if bool(row["achieved"]) else "· ", String(row["line"])])
+	return lines
+
+
 ## Issue #209 — TAB 1 (Quests, the default): Act header/beats + Quests +
 ## Completed + Postings. "What am I doing now." Reads the `_open_*` snapshot
 ## fields (captured at `_open()`, immutable while the panel is open). Returns
@@ -634,10 +648,8 @@ func _build_quests_tab() -> Dictionary:
 	var parts: Array = []
 	if not _open_act.is_empty():
 		parts.append("[b]%s[/b]" % UIChrome.bb_escape(String(_open_act.get("header", ""))))
-		for raw_beat: Variant in _open_act.get("beats", []):
-			var beat := raw_beat as Dictionary
-			var marker := "✓ " if bool(beat.get("achieved", false)) else "· "
-			parts.append("%s%s" % [marker, UIChrome.bb_escape(String(beat.get("text", "")))])
+		for line: String in _act_beat_lines():
+			parts.append(UIChrome.bb_escape(line))
 		parts.append("")
 	parts.append("[b]Quests[/b]")
 	if _open_quest_lines.is_empty():

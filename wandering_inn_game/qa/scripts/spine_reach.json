@@ -182,13 +182,26 @@
    "contains": "where_the_door_reaches"
   },
   {
-   "_comment": "== THE JOURNAL == the spine is a real thread now, not a toast. Payload fields are counts, so the durable proof is started_quests above; this open is the player-eyes surface (and the windowed screenshot the machine playtest reads).",
+   "_comment": "== THE JOURNAL == the spine is a real thread now, not a toast. This open is the player-eyes surface (and the windowed screenshot the machine playtest reads). act_beat_lines is the MIXED-PAGE PIN (v0.15 A1): five banked '✓' outcome lines above two '·' openings, so the flip is proven per beat off its own counter -- not act-wide.",
    "action": "press",
    "name": "journal"
   },
   {
    "action": "wait_for_event",
    "type": "ui_journal_shown",
+   "payload_contains": {
+    "act_id": "act_iv",
+    "act_beats_achieved": 5,
+    "act_beat_lines": [
+     "✓ The seal holds. Liscor counts you among its own.",
+     "✓ The pantry door remembers being elsewhere again, and somewhere else remembers it back.",
+     "✓ Riverfarm's fields breathe easier, and a witch in the hollow no longer collects on the village's fear.",
+     "✓ A merchant's name is settled in Invrisil, one way or another, and the Brothers remember who settled it.",
+     "✓ The forge tier of Pallass stands open above you now, papers stamped and the lift unlocked.",
+     "· Four adventurers need somewhere to put their feet up.",
+     "· The Door strains for somewhere it cannot reach yet."
+    ]
+   },
    "timeout_sec": 5
   },
   {
