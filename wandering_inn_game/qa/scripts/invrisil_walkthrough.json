@@ -438,6 +438,47 @@
    ]
   },
   {
+   "_comment": "v0.16.1 #17: COYLE AND SONS is named in two prose surfaces (the vantage toast, Wilovan's commission) and, until now, existed nowhere on screen -- the nearest art was an anonymous coin_shop_sign DECOR row with no id, name or observe. boulevard_coyle_front is a real prop on the blocked facade row [23,1]; this leg proves it is there, hoverable, and named.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     23,
+     1
+    ]
+   }
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "observe"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "observe",
+    "target": "boulevard_coyle_front"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. The frontage behind it is one narrow door and a clean window. Everything that actually moves through this firm goes round the side, on wagons, after dark."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01e_coyle_and_sons_sign"
+  },
+  {
    "action": "move",
    "direction": "down",
    "steps": 4

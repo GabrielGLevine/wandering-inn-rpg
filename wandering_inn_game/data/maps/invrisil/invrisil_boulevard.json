@@ -982,13 +982,6 @@
    ]
   },
   {
-   "sprite": "coin_shop_sign",
-   "cell": [
-    22,
-    1
-   ]
-  },
-  {
    "sprite": "guild_banner",
    "cell": [
     13,
@@ -1532,6 +1525,23 @@
    "display_name": "A Narrow Teahouse",
    "observe": "Three tables, steam on the glass, and a chalk line of prices that assumes you already know what smoke-leaf costs in Invrisil.",
    "hide_sprite": true
+  },
+  {
+   "_comment": "v0.16.1 #17: the sign the game TALKS about now exists. coyle_operation_lookout's toast tells the player 'the modest COYLE AND SONS sign out front doesn't match the two wagons idling round the side', and Wilovan names the firm too -- but a grep for 'Coyle and Sons' across data/, src/ and assets/ returned those two prose hits and nothing else. Coyle had no shopfront at all; the nearest art was an anonymous `coin_shop_sign` DECOR row at [22,1] (decor rows carry no id, display_name or observe, so it could not even be hovered). That row is DELETED and re-expressed here as a real, named, hoverable prop two cells along, on the blocked facade row (the boulevard_stationer / boulevard_to_adventurers_rest pattern -- row 1 is blocked x0..27, so no walkable cell is lost). INTERIM ART by directive: the existing coin_shop_sign sprite with a burgundy-and-brass tint, matching the livery Coyle's own copy and warehouse_approach's observe both name. Bespoke art (a hanging board with a crate-and-wagon device, silhouette distinct from the coin) rides the art PR. NO on_interact_accomplishment: that would mint a new shipped id for a read the vantage prop already banks.",
+   "id": "boulevard_coyle_front",
+   "kind": "prop",
+   "cell": [
+    23,
+    1
+   ],
+   "display_name": "Coyle and Sons",
+   "sprite": "coin_shop_sign",
+   "tint": [
+    0.72,
+    0.42,
+    0.38
+   ],
+   "observe": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. The frontage behind it is one narrow door and a clean window. Everything that actually moves through this firm goes round the side, on wagons, after dark."
   },
   {
    "_comment": "v0.16 I1 (#306): kind flips prop -> door in place on the SAME already-blocked cell (20,1), id and `observe` byte-identical, so invrisil_walkthrough's player_blocked + [Observe] + toast pins stay exact. hide_sprite dropped so the facade reads enterable.",
