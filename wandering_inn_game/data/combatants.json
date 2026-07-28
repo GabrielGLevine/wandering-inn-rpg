@@ -264,9 +264,9 @@
    "sprite": "bat",
    "combat_scale": 0.4,
    "combat_tint": [
-     1.14,
-     1.02,
-     0.82
+     1.3,
+     1.05,
+     0.72
     ],
    "side": "enemy",
    "stats": {
@@ -331,9 +331,9 @@
    "sprite": "bat",
    "combat_scale": 0.4,
    "combat_tint": [
-     0.72,
-     0.88,
-     1.16
+     0.55,
+     0.85,
+     1.5
     ],
    "side": "enemy",
    "stats": {
@@ -355,9 +355,9 @@
    "sprite": "bat",
    "combat_scale": 0.4,
    "combat_tint": [
-     0.88,
-     0.74,
-     1.14
+     0.8,
+     0.52,
+     1.5
     ],
    "side": "enemy",
    "stats": {
@@ -380,9 +380,9 @@
    "sprite": "bat",
    "combat_scale": 0.4,
    "combat_tint": [
-     1.18,
-     0.76,
-     0.58
+     1.5,
+     0.62,
+     0.38
     ],
    "side": "enemy",
    "stats": {
@@ -510,9 +510,9 @@
    "display_name": "Briar Collector",
    "sprite": "briar_collector",
    "combat_tint": [
-     1.16,
-     0.88,
-     0.8
+     1.4,
+     0.82,
+     0.62
     ],
    "side": "enemy",
    "stats": {
@@ -535,8 +535,8 @@
    "sprite": "briar_collector",
    "combat_tint": [
      1.1,
-     0.82,
-     0.94
+     0.7,
+     1.0
     ],
    "side": "enemy",
    "stats": {
@@ -558,9 +558,9 @@
    "display_name": "Deep Briar Collector",
    "sprite": "briar_collector_deep",
    "combat_tint": [
-     1.22,
-     0.84,
-     0.66
+     1.45,
+     0.78,
+     0.55
     ],
    "side": "enemy",
    "stats": {

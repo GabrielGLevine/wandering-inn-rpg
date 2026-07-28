@@ -4600,7 +4600,7 @@
   }
  },
  "grimalkin": {
-  "_comment": "PixelLab v2 create-character-pro (char 82cb307c-2a38-42df-8a7e-f35f352fd182, mannequin, low top-down, 132x132) -> animate-character breathing-idle(4)+walking(6), south/east/north only (side mirrors west, diagonals parked).",
+  "_comment": "PixelLab v2 create-character-pro (char 82cb307c-2a38-42df-8a7e-f35f352fd182, mannequin, low top-down, 132x132) -> animate-character breathing-idle(4)+walking(6), south/east/north only (side mirrors west, diagonals parked). T5.2 RE-MEASURE: the on-screen FIGURE is 49.5px (107 alpha rows head-to-feet x 0.463) = 1.20x Relc's 41.4px, i.e. canon's 'bigger than Relc' -- render_scale UNCHANGED. The 98px/2.3x in VISUAL-LOG was FRAME height (224 x 0.463), not figure height. What crowds the inn is his 2.9-cell arms-out WIDTH (Relc 1.8); no scale fixes aspect.",
   "directional": true,
   "render_scale": 0.463,
   "animations": {
