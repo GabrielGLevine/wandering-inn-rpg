@@ -288,6 +288,11 @@ const BESTIARY_CELLS := [
 	# pallass_watchgolem_loop_start's 11). The t4 cell ABOVE is the shared-level
 	# rung against Invrisil's hired_blades_t4_sw11_wilovan.
 	{"name": "forge_calibration_golem_t5_sw14_solo", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword14_party", "solo": true, "win_lo": 0.65, "win_hi": 0.76, "check_rounds": true},
+	# v0.16 P1 (issue #307). Pallass's commission fight. Gated at the standing
+	# 0.55-0.95 stop-cell window; the band claim -- measured strictly below the
+	# shipped forge golem at the same build -- is carried by the medians
+	# recorded in the PR body, not by the window.
+	{"name": "forge_temper_golem_t5_sw14_solo", "arena": "forge_hall", "enemies": ["forge_temper_golem"], "build": "t4_spellsword14_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "market_watchgolems_t4_solo", "arena": "market_watch", "enemies": ["watchgolem_a", "watchgolem_b"], "build": "t4_spellsword11_party", "solo": true},
 	{"name": "market_watchgolems_t5_sw14_solo", "arena": "market_watch", "enemies": ["watchgolem_a", "watchgolem_b"], "build": "t4_spellsword14_party", "solo": true},
 ]

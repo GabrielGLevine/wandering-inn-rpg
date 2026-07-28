@@ -1,0 +1,25 @@
+{
+ "_comment": "P1 FIGHT entry. forge_calibration_golem.json's decline-or-strike shape minus the talk-down arm: P1's non-violent answers are the bench and the broker, so a third bypass here collapses route parity.",
+ "start": "confront",
+ "nodes": {
+  "confront": {
+   "speaker": "Calibration Rig",
+   "text": "The rig registers you, corrects a half-beat late, and registers you again. Its gauges swing past their own marks and settle wrong. Whatever schedule it keeps, it stopped keeping it a while ago.",
+   "options": [
+    {
+     "text": "[Bring it back into tolerance the hard way.]",
+     "effects": [
+      {
+       "start_combat": "forge_temper_golem"
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "[Stand out of its correction and leave it.]",
+     "end": true
+    }
+   ]
+  }
+ }
+}

@@ -200,6 +200,20 @@
      "goto": "commission_settled"
     },
     {
+     "text": "[Tell her what happened to the calibration rig.]",
+     "requires": {
+      "accomplishment": {
+       "golem_recalibrated": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "standards_tempered"
+      }
+     ],
+     "goto": "commission_settled"
+    },
+    {
      "text": "[Tell her the argument is settled.]",
      "requires": {
       "accomplishment": {
@@ -237,6 +251,14 @@
    "speaker": "Forge-Tier Smith",
    "text": "Then it is filed and it is finished. The bench is mine again until second bell.",
    "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "golem_recalibrated": 1
+      }
+     },
+     "text": "The rig is honest again and my apprentice gets a fair reading. I will not thank you over a hot hammer. Take it as said."
+    },
     {
      "requires": {
       "accomplishment": {

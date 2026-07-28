@@ -261,6 +261,35 @@
    "observe": "Finished pieces racked in a grid, each with a civic tag wired to it. They are not for sale. They are the argument.",
    "on_interact_accomplishment": "eyed_the_pattern_wall",
    "toast": "Every piece on the wall passed. You count the tags: four different smiths, four different answers, one standard. Pallass framed the disagreement and hung it up."
+  },
+  {
+   "_comment": "P1 FIGHT. INTERACT-ONLY: never add trigger_radius here -- wi_game.gd:365 calls start_combat directly and never reads `conversation`, so the parley dies and the SKILL/TALK routes get ambushed. on_victory is golem_recalibrated ALONE, never forge_golems_culled (that feeds a repeatable bounty). respawns/scales absent: a story fight is one-shot.",
+   "id": "forge_temper_golem",
+   "kind": "encounter",
+   "cell": [
+    8,
+    6
+   ],
+   "display_name": "Calibration Rig",
+   "sprite": "forge_golem",
+   "tint": [
+    1.22,
+    0.82,
+    0.68
+   ],
+   "arena": "forge_hall",
+   "conversation": "forge_temper_golem",
+   "enemies": [
+    "forge_temper_golem"
+   ],
+   "allies": [],
+   "encounter_when": {
+    "requires": {
+     "standards_commission_taken": 1
+    }
+   },
+   "observe": "A squat rig on three legs, gauges banked along its front, correcting its own posture a half-beat after it needs to.",
+   "on_victory": "golem_recalibrated"
   }
  ]
 }
