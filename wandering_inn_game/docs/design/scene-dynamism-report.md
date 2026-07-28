@@ -59,12 +59,12 @@ that were never meant to show up here (uncounted, not a gap).
 
 | Scene | Region | Composite | c1 variety | c2 distinct | c3 composition | c4 utilization | c5 clutter | Verdict |
 |---|---|---|---|---|---|---|---|---|
-| pallass_forge | pallass | 71.93 | 26.49 | 23.54 | 20.65 | 1.25 | 0.00 | dynamic |
-| pallass_market | pallass | 71.91 | 26.38 | 23.54 | 19.08 | 2.92 | 0.00 | dynamic |
-| street | liscor | 71.55 | 24.97 | 21.73 | 22.52 | 2.33 | 0.00 | dynamic |
+| pallass_market | pallass | 71.45 | 26.13 | 23.67 | 18.95 | 2.69 | 0.00 | dynamic |
 | invrisil_boulevard | invrisil | 71.39 | 22.76 | 22.86 | 22.90 | 2.86 | 0.00 | dynamic |
+| street | liscor | 71.21 | 24.97 | 21.73 | 22.52 | 2.00 | 0.00 | dynamic |
 | sewers | liscor | 70.76 | 23.40 | 22.11 | 21.25 | 4.00 | 0.00 | dynamic |
 | mercantile_alleys | invrisil | 70.04 | 24.75 | 22.97 | 22.32 | 0.00 | 0.00 | dynamic |
+| pallass_forge | pallass | 69.79 | 26.17 | 23.67 | 19.95 | 0.00 | 0.00 | dynamic |
 | floodplains | liscor | 69.41 | 24.28 | 21.84 | 18.53 | 4.76 | 0.00 | dynamic |
 | adventurers_rest | adventurers_rest | 69.31 | 24.22 | 23.50 | 21.59 | 0.00 | 0.00 | dynamic |
 | riverfarm_village | riverfarm | 68.03 | 21.28 | 21.27 | 19.92 | 5.56 | 0.00 | dynamic |
@@ -74,6 +74,7 @@ that were never meant to show up here (uncounted, not a gap).
 | stationer | stationer | 66.52 | 21.25 | 23.50 | 21.77 | 0.00 | 0.00 | dynamic |
 | brothers_parlor | invrisil | 66.35 | 22.41 | 22.05 | 21.44 | 0.45 | 0.00 | dynamic |
 | barracks | interiors | 66.26 | 22.78 | 22.38 | 21.09 | 0.00 | 0.00 | dynamic |
+| pallass_den_shop | pallass_den_shop | 66.18 | 22.38 | 23.50 | 20.30 | 0.00 | 0.00 | dynamic |
 | riverfarm_mill | riverfarm_mill | 65.98 | 23.00 | 23.50 | 19.48 | 0.00 | 0.00 | dynamic |
 | witch_hut | witch_hut | 65.86 | 22.92 | 23.50 | 19.44 | 0.00 | 0.00 | dynamic |
 | seal_vault | dungeon | 65.80 | 23.13 | 23.41 | 17.60 | 1.67 | 0.00 | dynamic |
@@ -82,10 +83,11 @@ that were never meant to show up here (uncounted, not a gap).
 | inn_upstairs | interiors | 64.69 | 19.48 | 22.63 | 22.58 | 0.00 | 0.00 | dynamic |
 | inn | interiors | 64.59 | 24.25 | 22.05 | 17.04 | 1.25 | 0.00 | dynamic |
 | guild | interiors | 64.10 | 22.50 | 23.30 | 18.29 | 0.00 | 0.00 | dynamic |
+| pallass_forge_hall | pallass_forge_hall | 63.39 | 22.33 | 23.50 | 17.56 | 0.00 | 0.00 | dynamic |
 | dungeon_approach | dungeon | 63.30 | 20.45 | 23.69 | 16.66 | 2.50 | 0.00 | dynamic |
 | riverfarm_longhouse | riverfarm | 62.42 | 21.92 | 20.97 | 19.53 | 0.00 | 0.00 | dynamic |
 | ruin_surface | liscor | 59.86 | 21.10 | 21.96 | 16.80 | 0.00 | 0.00 | dynamic |
 
 NOTE: map(s) with no region-group table entry (defaulted to their own
-singleton group, not a crash): ["adventurers_rest", "stationer", "riverfarm_mill", "witch_hut"]
+singleton group, not a crash): ["adventurers_rest", "stationer", "pallass_den_shop", "pallass_forge_hall", "riverfarm_mill", "witch_hut"]
 
