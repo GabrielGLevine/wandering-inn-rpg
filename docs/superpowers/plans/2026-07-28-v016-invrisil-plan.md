@@ -314,7 +314,7 @@ Perimeter segments (12 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[11,
 - boulevard (20,1) → stationer **(6,7)**: (6,7) is interior floor, not in `blocked`, and carries no entity. ✔
 - stationer (6,8) → boulevard **(20,2)**: (20,2) is open boulevard floor and is the exact cell `invrisil_walkthrough` stands on at step 60. ✔
 
-- [ ] **Step 1: Author the file** (match `brothers_parlor.json`'s 1-space-per-level exploded style; if you generate it, `ensure_ascii=False` and grep the result for a literal `—`):
+- [x] **Step 1: Author the file** (match `brothers_parlor.json`'s 1-space-per-level exploded style; if you generate it, `ensure_ascii=False` and grep the result for a literal `—`):
 
 ```json
 {
@@ -465,8 +465,8 @@ Perimeter segments (12 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[11,
 }
 ```
 
-- [ ] **Step 2: Non-quest observables audit.** Eight `observe`-carrying props plus a second talk-pool NPC (`stationer_clerk`) all stay live after `setting_commissioned` banks — comfortably over the spec's ≥3 bar (spec:172-174).
-- [ ] **Step 3: Sprite check — the ids above are already corrected; re-prove them, do not re-pick them.** The first draft shipped `"sprite": "table"` and `"sprite": "bookshelf"`, **neither of which is registered** — `data/sprites.json` has 278 entries and neither name is among them, and **nothing in the suite validates a map entity's sprite id** (`tests/test_combat_visuals.gd:21` checks *arena* decor only; `scripts/data_lint.py` check 5 only asserts each `sprites.json` entry has non-empty `animations`). It would have shipped GREEN and rendered as missing art. The corrected picks, all verified registered:
+- [x] **Step 2: Non-quest observables audit.** Eight `observe`-carrying props plus a second talk-pool NPC (`stationer_clerk`) all stay live after `setting_commissioned` banks — comfortably over the spec's ≥3 bar (spec:172-174).
+- [x] **Step 3: Sprite check — the ids above are already corrected; re-prove them, do not re-pick them.** The first draft shipped `"sprite": "table"` and `"sprite": "bookshelf"`, **neither of which is registered** — `data/sprites.json` has 278 entries and neither name is among them, and **nothing in the suite validates a map entity's sprite id** (`tests/test_combat_visuals.gd:21` checks *arena* decor only; `scripts/data_lint.py` check 5 only asserts each `sprites.json` entry has non-empty `animations`). It would have shipped GREEN and rendered as missing art. The corrected picks, all verified registered:
 
   | Entity | First draft | **Ships** | Why |
   |---|---|---|---|
@@ -476,16 +476,16 @@ Perimeter segments (12 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[11,
   | `stationer_contract_shelf` | `bookshelf` ✗ | `library_shelf` | literally a shelf of forms |
 
   Re-verify each with `python3 -c "import json,sys; d=json.load(open('wandering_inn_game/data/sprites.json')); s=d.get('sprites',d); print([k for k in sys.argv[1:] if k not in s])" door pc_human_f human_laborer crate barrel counter_left counter_right library_desk library_shelf table_brown stool rug_tan window_blue sconce plant_pot` — expect `[]`. **Substitute a registered sibling rather than adding a sprite row** (the `seal_vault` precedent added zero sprite entries); if a stand-in compromises legibility, say so in that **entity's** `_comment` in one line. None of the four above is a compromise, so none carries a note.
-- [ ] **Step 4: Wall/blocked double-listing check.** `blocked` must contain **only** `[4,5]` (the writing table, which has its own `decor` row). If any perimeter cell appears in `blocked`, delete it — `wi_game.gd:140-143` already blocks every wall segment cell, and a double-listed cell is exactly what makes the biome prop pool fire on a wall.
-- [ ] **Step 5: Run** `python3 wandering_inn_game/scripts/data_lint.py` (grid + in-grid cells) and `perl -e 'alarm 240; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_content.gd` — expect PASS. `_validate_npc_interact_surface` will red an empty `talk_pool`; both NPCs carry real ones.
-- [ ] **Step 6: Scene-dynamism advisory** (the other three lanes each carry this step; the first draft of this one did not):
+- [x] **Step 4: Wall/blocked double-listing check.** `blocked` must contain **only** `[4,5]` (the writing table, which has its own `decor` row). If any perimeter cell appears in `blocked`, delete it — `wi_game.gd:140-143` already blocks every wall segment cell, and a double-listed cell is exactly what makes the biome prop pool fire on a wall.
+- [x] **Step 5: Run** `python3 wandering_inn_game/scripts/data_lint.py` (grid + in-grid cells) and `perl -e 'alarm 240; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_content.gd` — expect PASS. `_validate_npc_interact_surface` will red an empty `talk_pool`; both NPCs carry real ones.
+- [x] **Step 6: Scene-dynamism advisory** (the other three lanes each carry this step; the first draft of this one did not):
 
 ```
 perl -e 'alarm 300; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd
 ```
 
   Read the scorecard row for `stationer`. **Target composite ≥ 50**; a score under 30 prints a loud advisory and means "brown box — fix before spending a windowed screenshot on it." The component breakdown says what to add: low internal variety → pull decor from a second pack family (the drafted decor deliberately mixes `props/free_pack` furniture with the Library-pack desk/shelf sprites), low composition → dress the border band and add an off-centre focal light (the `sconce` at (4,1)), low cross-scene distinctiveness → the `floor_layers` pick is the lever. The tool regenerates `docs/design/scene-dynamism-report.md` deterministically; commit the regenerated report with the map.
-- [ ] **Step 7: Commit** `feat(invrisil): the stationer's, a small working interior (#306)`.
+- [x] **Step 7: Commit** `feat(invrisil): the stationer's, a small working interior (#306)`.
 
 ### Task 1.4: `data/maps/invrisil/adventurers_rest.json`
 
