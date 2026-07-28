@@ -83,7 +83,7 @@ from wi_data_lib import DATA, GAME_ROOT, load_dialogue_graphs, load_json, load_s
 
 OUT_PATH = DATA / "shipped_ids.json"
 
-RELEASE = "0.15.0"
+RELEASE = "0.16.0"
 
 # ---------------------------------------------------------------------------
 # STRUCTURAL_LITERALS -- KEEP IN SYNC with tests/test_shipped_ids.gd's own
@@ -132,6 +132,18 @@ def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: 
             for variant in skill_use.get("variants", []):
                 if "accomplishment" in variant:
                     out.add(str(variant["accomplishment"]))
+            # v0.16 close: the per-skill arm map (`skill_uses`) wins over
+            # `on_skill_use` at runtime (wi_game.gd:427-433) and test_content
+            # already counts its arms as producers (:466-469); omitting it
+            # here shipped-froze around two live counters (flood_prep_done).
+            for arm in entity.get("skill_uses", {}).values():
+                if not isinstance(arm, dict):
+                    continue
+                if "accomplishment" in arm:
+                    out.add(str(arm["accomplishment"]))
+                for variant in arm.get("variants", []):
+                    if "accomplishment" in variant:
+                        out.add(str(variant["accomplishment"]))
             if "on_interact_accomplishment" in entity:
                 out.add(str(entity["on_interact_accomplishment"]))
                 for variant in entity.get("variants", []):

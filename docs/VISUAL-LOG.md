@@ -16,6 +16,199 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### v0.16 MILESTONE CLOSE — composed cross-region machine playtest (2026-07-28)
+
+Post-merge-train read on `main` (#319/#320/#321/#322 all landed), real asset
+overlay, seed 9, windowed, every PNG opened. Evidence root:
+`wandering_inn_game/qa_output/machine_playtest_2026-07-28_v016_close/`.
+Runs: the eight named route canonicals (`flood_ledger_help`,
+`thicket_keeps_skill`, `invrisil_setting_talk`, `invrisil_hat_quiet`,
+`pallass_standards_fight`, `pallass_ledger_carry`, `floodplains_price_fight`,
+`floodplains_price_talk`), six interior/gate loops (`stationer_room_loop`,
+`adventurers_rest_loop`, `pallass_depth_gates_check`, `thicket_keeps_talk`,
+`flood_ledger_talk`, `floodplains_price_help`), `thicket_keeps_fight`,
+`witch_cottage_reachability`, plus six throwaway capture scripts (witch-hut
+door phase ladder, nobility deep-pool reads, a line-panel A/B) that were
+DELETED after capture — their PNGs live under the same evidence root
+(`_vlog_hutdoor_{day,dusk,night}/`, `_vlog_nobility_{rest,stationer}/`,
+`_vlog_line_timing/`, `_vlog_line_control/`). Every run green, zero
+`SCRIPT ERROR`. Ranked player-visible first.
+
+- [ ] **UI/AMBIENT-LINE-INVISIBLE-AFTER-LOAD (P2, NEW, cross-region, and it
+  corrects the #305 `talk_pool` row below).** An NPC `talk_pool` line served
+  within roughly the first 1.5 s after `world_ready` renders **nothing at
+  all** — no panel, no text — while `ui_dialogue_rendered` fires carrying the
+  full composed string. This is NOT the readout overdraw the #305 pass logged:
+  the line panel's rect (`message_layer.gd:443`, x 36–736, y 461–556 at
+  1280×720) is EMPTY MAP in the failing frames, including the quarter of it
+  the readout never covers. Proven as a same-NPC, same-room, same-seed A/B:
+  `_vlog_line_timing/01_interact_at_world_ready.png` (nothing) vs
+  `_vlog_line_timing/02_interact_90_frames_later_no_move.png` (the same
+  Scribe line renders perfectly), the only delta being 90 idle frames — no
+  move, no state change. Reproduced on three separate maps and three
+  timings (`_vlog_nobility_rest/01_…_expanded_readout.png`,
+  `_vlog_nobility_stationer/01_…_expanded_readout.png`,
+  `_vlog_line_control/01_hunter_pool_line_expanded.png` on the pre-v0.16
+  `riverfarm_village` — so this is GLOBAL and PRE-EXISTING, not a v0.16
+  regression). Player reach: any NPC standing adjacent to the cell you load
+  or arrive on. **Verification-boundary lesson, which is the bigger half:**
+  `ui_dialogue_rendered` is NOT proof a player saw the line, and every QA
+  script that interacts immediately after its fixture loads has been
+  screenshotting an empty line slot without anyone noticing.
+- [ ] **TOAST/PAYOFF-QUEUED-BEHIND-AUTOSAVE (P2, NEW).** On `handoff_quiet`
+  the beat emits three toasts in this order — `Autosaved. (Esc — save/load
+  anytime)`, `Quest updated: …`, and only THEN the authored payoff prose
+  ("The coat is already over the chair back. You lay yours beside it, take
+  the wrong one on the way past, and nobody in this room has raised a voice
+  or an eye."). The shot named for that payoff shows the housekeeping toast
+  instead: `invrisil_hat_quiet/03_the_wrong_coat_on_the_way_out.png` renders
+  "Autosaved." and nothing else, with the good line still queued
+  (`qa_output/invrisil_hat_quiet/events.jsonl` t=3511/3514/3514 — only
+  `Autosaved.` ever reached `ui_toast_rendered`). Since `PLAYER_MOVED`
+  dismisses the current toast early, a player who walks on never reads the
+  line the route exists to deliver. Fix direction: autosave/quest-updated
+  toasts should yield to authored prose in the queue, or the save toast
+  should not occupy the strip at all.
+- [ ] **UI/READOUT-EATS-THE-NEW-INTERIORS (P3, NEW; supersedes the #305
+  "overdrawn by the expanded field-hotbar readout" row below).** The
+  field-skill readout ships EXPANDED until the first sleep
+  (`field_hotbar.gd:220-222` only auto-collapses once `times_slept > 0`),
+  and expanded it covers y≈480–600 across x 285–1000. In the seven new
+  interiors — all of them 8–9 rows tall — that is the room's bottom two
+  rows: `adventurers_rest_loop/02_the_common_hall.png` has the PC himself
+  half-buried under the panel; `flood_ledger_talk/01_mill_interior_arrival.png`
+  and `thicket_keeps_talk/01_witch_hut_interior.png` both hide the exit door.
+  It also gets WORSE with skill count, and toasts land on top of it: in
+  `thicket_keeps_skill/01_ward_scrap_lore_toast.png` the readout is four
+  entries / five lines and the [Detect Magic] toast slices lines 3 and 4
+  mid-word ("…breaks if you d", "You have learned h"). Every QA fixture ships
+  `times_slept` unset, so every windowed shot in this log is taken in the
+  expanded configuration.
+- [ ] **MAP/OLD-HUT-HAS-NO-HUT (P3, NEW).** The y-sort fix works (see the
+  confirmations below), and now that the door is visible the next question
+  lands: `witch_hut_door` (`witch_hollow` 1,7, display name "The Old Hut")
+  renders as a **freestanding door frame standing in the treeline** at the
+  west corner of Eloise's cottage, with a tree trunk behind it and no
+  structure attached — while the cottage sprite two cells east carries a
+  large arched entrance that is pure decor and does nothing on interact
+  (`_vlog_hutdoor_day/02_hollow_wide.png`). A first-time player reads the
+  arch as the way in and the lone frame as scenery or a portal. Cheapest
+  fixes: a hut/lean-to sprite behind the door, or move the door onto a
+  visible wall face.
+- [ ] **SPRITE/CAMP-WATCH-GOBLIN-INVISIBLE (P3, NEW).** `camp_watch_goblin`
+  (`rags_camp` 2,6, `goblin_base`) is a small green-tinted goblin on the
+  camp's bright green field and is genuinely unfindable at 1×
+  (`floodplains_price_help/02_rags_camp_rack_hung.png` — the tangle at
+  screen ≈(415,470); at 4× it resolves into a goblin, at 1× it reads as
+  grass litter). Same root as the already-logged "`goblin_spear_ally` is the
+  least legible unit on the board": the `goblin_base` green sits on top of
+  green everywhere the goblins actually live. One value-axis re-tint (darker,
+  not a hue nudge) would fix both at once.
+- [ ] **DECOR/REST-RUG-READS-AS-HOLE (P4, NEW — second instance of the
+  den-shop row below).** `rug_green` at `adventurers_rest` (6,5) ships with
+  `tint [0.42, 0.35, 0.3]`, which darkens it BELOW the floor value and kills
+  what pattern the sprite had: it renders as a flat dark-olive square in the
+  middle of the common hall and reads as a hole in the boards
+  (`adventurers_rest_loop/02_the_common_hall.png`, `…/04_the_room_at_night.png`,
+  `invrisil_hat_quiet/01_a_table_nobody_has_claimed.png`). The den shop's
+  `rug_tan` has the same failure at the opposite end of the value scale
+  (`pallass_ledger_carry/04_den_keeper_carried.png`) — a rug wants a border
+  or a pattern, not a tint.
+- [ ] **PROP/WAX-TRAY-IS-A-CRATE (P4, NEW).** `stationer_wax_tray` (10,5) is
+  "Nine colours of wax and one blank seal for hire" and draws as the `crate`
+  sprite — a thin dark sliver against the stationer's floor
+  (`stationer_room_loop/01_the_stationers.png`, screen ≈(955,425)). Third
+  member of the already-open PROP/CRATE-READS-AS-CLUTTER family (den-shop
+  receiving dock, lift cargo pallet, forge reject bin); the shop's most
+  characterful prop is its least legible one.
+- [ ] **PROP/HUT-HERB-BUNDLE-OVER-THE-PC (P4, NEW).** The hanging herb bundle
+  on `witch_hut` y-sorts above the player and completely covers the PC's head
+  when he stands on the cell below it
+  (`thicket_keeps_skill/01_ward_scrap_lore_toast.png`, screen ≈(800,230)).
+  Defensible for a ceiling-hung prop, but it is the room's only tall sprite
+  and it eats the player's silhouette; a small `field_y_sort_bias_px` would
+  settle it either way.
+- [ ] **DECOR/FORGE-MOLTEN-SEAM-HARD-RECT (P4, NEW, pre-existing surface).**
+  `pallass_forge`'s molten seam band renders as a perfectly rectangular flat
+  orange block on the slate with no edge treatment and no light bleed onto
+  the surrounding floor (`pallass_depth_gates_check/01_attendant_hub_three_rows.png`,
+  screen x 450–770 / y 330–390). Same read as the closed ART/WATER
+  hard-edged-rectangle entry — the tile is doing its job, the boundary is
+  not.
+
+**Existing rows RE-CONFIRMED still open by this pass** (evidence refreshed,
+nothing changed): `line_stalker_a`/`_b` still merge into one two-headed
+creature on `witch_hollow` — and the new shot adds that the north stalker's
+HP BAR is occluded too, so the pair shows two `44/44` numerals over a single
+visible bar (`thicket_keeps_fight/01_line_stalkers_board.png`); the three
+`plains_scavenger_*` still read as one mass, separable only by their HP
+numbers, and `goblin_spear_ally` is still the hardest unit on the board to
+find (`floodplains_price_fight/02_camp_ground_press_board.png`); the
+`forge_hall` board's `crate` cover still reads as small dark posts rather
+than crates (`pallass_standards_fight/04_forge_hall_board_mid_combat.png`);
+`forge_hall_temper_bench` is still one of three identical forge sprites in a
+row (`pallass_depth_gates_check/03_temper_bench_locked.png`); the den shop's
+`crystal_lamp` is still a municipal street lamp indoors and `rug_tan` still a
+pale hole (`pallass_ledger_carry/04_den_keeper_carried.png`); the two
+Invrisil facade doors are still lost in a band of identical windows
+(`adventurers_rest_loop/01_two_doors_on_one_facade.png`,
+`stationer_room_loop/04_back_on_the_boulevard.png`); `hearth` is still a cold
+unlit oven (`adventurers_rest_loop/03_the_hearth.png`); Krshia's hub still
+shows six rows over ~45% of the window with the last option ~26 px above the
+fold (`floodplains_price_talk/01_krshia_hub_goblin_run.png`); and the
+ally-announce still renders "Rags and **A** Goblin with a Spear wade in
+beside you." with the raw display name mid-sentence
+(`floodplains_price_fight/02_camp_ground_press_board.png`). The
+`mercantile_alley` night row is WIDENED by this pass: it is not only the
+arena — the `mercantile_alleys` OVERWORLD at night is near-black, with the
+PC findable only because Hedault's shopfront lights him
+(`invrisil_setting_talk/03_he_will_not_cut_a_mount_around_a_lie.png`).
+
+**Read and found CLEAN — do not re-litigate:**
+- **The `witch_hut_door` y-sort fix HOLDS at all three phases.** Shot from
+  the (1,8) approach and from a clear cell at day / dusk / night
+  (`_vlog_hutdoor_{day,dusk,night}/01_hut_door_from_approach.png` and
+  `…/02_hollow_wide.png`): the door draws IN FRONT of `hollow_tree_7`'s trunk
+  in every frame, the PC on the approach cell is never swallowed by canopy,
+  and the warmed timber tint keeps the door separable from the treeline even
+  at night. `witch_cottage_reachability` re-ran green windowed.
+- **`witch_hollow`'s three-phase mood ladder is genuinely distinct** (bright
+  green shade → deep green dusk → near-black night) and Eloise's own rig
+  swaps to her hooded night presentation — the hollow reads different at each
+  phase without any of them going flat.
+- **The nobility layer renders and reads.** The Lady's pale gold silhouette
+  separates instantly from the drab PC and the slate-tinted clerk
+  (`invrisil_setting_talk/01_a_lady_with_a_ring_box.png`), her title is
+  spoiler-safe, and her long nodes wrap without clipping. The two deep-pool
+  nobility lines both render once the load-timing bug above is out of the way:
+  "The Reinhart carriage went up the boulevard twice last month…"
+  (`_vlog_nobility_rest/02_…_readout_collapsed.png` — via the Factor's
+  conversation node) and "House paper is a third of the trade and all of the
+  discretion. A crest on the envelope changes what the words inside are
+  allowed to mean." (`_vlog_nobility_stationer/02_…_readout_collapsed.png`).
+  NOTE for the content owner: both sit at pool indices 2 and 3, and a pool
+  advances ONE line per waking, so the house/Reinhart texture is three and
+  four wakings deep at the Rest and the stationer respectively.
+- **`pallass_standards_fight` closes the v0.15 forge-hall debt cleanly.** The
+  arrival frame reads warm-forge-against-slate with no flat white
+  (`pallass_standards_fight/01_forge_hall_arrival.png`), the parley panel is
+  clean, and mid-combat both combatants' bars and numerals (48/48 green,
+  70/70 orange) are unambiguous on the slate board.
+- **Ally-vs-enemy separation on the first goblin-ally fight is GOOD.** Green
+  vs orange HP bars carry it at a glance and the turn banner names all six in
+  initiative order; the legibility problem is scavenger-vs-scavenger and the
+  green goblin, never ally-vs-enemy.
+- **The den-shop keeper fix took.** She stands in the counter row and the
+  route now walks the customer approach — bump her from (4,3) and the release
+  node opens face to face (`pallass_ledger_carry/04_den_keeper_carried.png`).
+- **The #308 rack fix took.** Bare poles become a hung rack in place and the
+  meat reads as meat at 1× (`floodplains_price_help/01_rags_camp_arrival.png`
+  → `…/02_rags_camp_rack_hung.png`).
+- **All seven new interiors are dressed, not empty**, and every observe/toast
+  in this pass rendered complete with no fold clipping — the copy is the
+  strongest thing in the wave and it survives rendering everywhere except the
+  two queue/timing bugs at the top of this section.
+
 ### v0.16 #305 Riverfarm depth — windowed pass (2026-07-28)
 
 Shots: `qa_output/_vlog_{day,dusk,night,post}/` (temporary capture scripts,
@@ -76,6 +269,14 @@ deleted after reading) and the six new canonicals' own windowed runs
   line panel above the hotbar readout, or shrink/anchor the readout clear of
   the bottom-left line slot. Same family as the combat-HP-label-through-pause
   entry below.
+  **PARTLY SUPERSEDED (v0.16 milestone-close pass, 2026-07-28):** the
+  occlusion half is real and is now tracked as UI/READOUT-EATS-THE-NEW-
+  INTERIORS at the top of this file, but the "line is three quarters
+  covered" diagnosis is incomplete — a line served within ~1.5 s of
+  `world_ready` renders NOTHING AT ALL, readout or no readout, in the
+  quarter of the slot the readout never touches. See
+  UI/AMBIENT-LINE-INVISIBLE-AFTER-LOAD for the A/B proof; fix that first,
+  then re-measure this one.
 - Confirmed GOOD, no action: both new mood rows LANDED — `riverfarm_mill`
   and `witch_hut` each render three visibly distinct phase grades and neither
   is identity white (`sheet_mill_phases`, `sheet_hut_phases`). The village
