@@ -1050,7 +1050,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 **Files:**
 - Modify: `wandering_inn_game/data/items.json` (TAB-indented; insert **immediately after the `hedaults_wardstone` row** per ruling C — `splice_json.py --container items` appends, so splice then move it to the anchor)
 
-- [ ] **Step 1: Splice the row.** Deliberately weaker than `hedaults_warded_setting` (hp 2 / dr 1 / res 1 / price 45) so the quest reward never outclasses the shipped enchanting swap:
+- [x] **Step 1: Splice the row.** Deliberately weaker than `hedaults_warded_setting` (hp 2 / dr 1 / res 1 / price 45) so the quest reward never outclasses the shipped enchanting swap:
 
 ```json
 		{
@@ -1070,8 +1070,8 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 		}
 ```
 
-- [ ] **Step 2: NO `{addr}` in this file** — `data/items.json` is in `ADDRESS_TOKEN_UNRESOLVABLE_FILES`; a token here renders raw and fails loud.
-- [ ] **Step 3: Run** `test_content.gd` + `test_items.gd` if present (`ls wandering_inn_game/tests/ | grep -i item`). **Commit** `feat(items): a plum-silk locket (#306)`.
+- [x] **Step 2: NO `{addr}` in this file** — `data/items.json` is in `ADDRESS_TOKEN_UNRESOLVABLE_FILES`; a token here renders raw and fails loud.
+- [x] **Step 3: Run** `test_content.gd` + `test_items.gd` if present (`ls wandering_inn_game/tests/ | grep -i item`). **Commit** `feat(items): a plum-silk locket (#306)`.
 
 ### Task 2.5: The fence — combatants, encounter, harness cell
 

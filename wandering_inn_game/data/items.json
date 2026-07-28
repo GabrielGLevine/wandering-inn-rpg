@@ -1048,6 +1048,21 @@
 			"lore": "Riverfarm work finished Invrisil-style. Neither place would admit the pairing improves them both."
 		},
 		{
+			"id": "plum_silk_locket",
+			"name": "A Plum-Silk Locket",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 1,
+			"damage_reduction": 0,
+			"resonance": 1,
+			"tier": "enchanted",
+			"price": 30,
+			"abilities": [],
+			"description": "Plain silver on a plum ribbon, worn thin at the clasp by somebody who put it on every morning without thinking about it.",
+			"lore": "The second piece, the honest one. It was never appraised, never insured and never once taken off for company, which in Invrisil makes it the rarer of the two."
+		},
+		{
 			"id": "carved_chess_pawn",
 			"name": "Carved Chess Pawn",
 			"kind": "accessory",
