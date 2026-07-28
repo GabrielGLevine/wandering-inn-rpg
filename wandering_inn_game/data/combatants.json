@@ -757,6 +757,56 @@
    "skills": []
   },
   {
+   "_comment": "v0.16 I1 FIGHT (#306). NEW ids, never a retune of footpad_*/hired_blade_* -- those feed boulevard_duel_ring, both night loops and Invrisil's two ladder rungs. A distinct id IS the per-encounter override. Sprite reused from hired_blade; no combat_scale.",
+   "id": "heirloom_fence",
+   "power_level": 8.0,
+   "display_name": "The Fence",
+   "sprite": "hired_blade",
+   "side": "enemy",
+   "combat_tint": [
+    0.62,
+    0.58,
+    0.42
+   ],
+   "stats": {
+    "str": 6,
+    "dex": 12,
+    "con": 40,
+    "int": 8,
+    "wis": 8,
+    "cha": 12
+   },
+   "weapon_die": 3,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "Sprite human_laborer, the hired_blade_knife_b precedent -- registered and distinct at a glance from the fence.",
+   "id": "fence_doorman",
+   "power_level": 9.5,
+   "display_name": "The Back Door",
+   "sprite": "human_laborer",
+   "side": "enemy",
+   "combat_tint": [
+    0.45,
+    0.45,
+    0.52
+   ],
+   "stats": {
+    "str": 10,
+    "dex": 10,
+    "con": 48,
+    "int": 5,
+    "wis": 6,
+    "cha": 5
+   },
+   "weapon_die": 4,
+   "ai": "melee",
+   "skills": [
+    "power_strike"
+   ]
+  },
+  {
    "_comment": "con17 reflects his canon 'brick-like physique' AND is a harness-derived ceiling, not an arbitrary pick: below ~14 he goes down in 90%+ of hired_blades fights (too fragile for a come-along ally to feel like a real participant).",
    "id": "wilovan",
    "power_level": 11.5,

@@ -171,6 +171,17 @@ const INVRISIL_CELLS := [
 	# into 0.55-0.95 and destroy the thing it proves.
 	{"name": "hired_blades_t5_sw14_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.77, "win_hi": 0.87, "check_rounds": true},
 	{"name": "hired_blades_t4_sw11_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword11_party", "solo": false},
+	# v0.16 I1 (#306). Side-quest fight at Invrisil's own expected level, SOLO
+	# (Wilovan has no part in a stranger's commission). Window is the shipped
+	# stop-cell precedent 0.55/0.95 (controller ruling A) -- a NARROW window is a
+	# flaky gate, not a proof, so region-band ordering is evidenced by the
+	# MEASURED median recorded in the PR body, not by the ceiling authored here.
+	# New ids only: no shared combatant is retuned, so both hired_blades_* gates
+	# and boulevard_duel_ring are untouched. Measured 0.67, median 3 (margins
+	# 0.12/0.28). The pair was tuned to that number from the drafted stats: as
+	# drafted they read 0.48 / median 2, so the fence trades damage for bulk
+	# (str 6, weapon_die 3, con 40) and the doorman keeps the only real punch.
+	{"name": "alley_fence_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["heirloom_fence", "fence_doorman"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 const BUILDS := [

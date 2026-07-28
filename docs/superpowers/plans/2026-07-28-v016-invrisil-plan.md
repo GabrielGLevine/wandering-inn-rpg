@@ -1088,7 +1088,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 
 **(11,12)** is free, is outside **both** trigger zones (y=12 is past a's y-ceiling of 11; x=11 is short of b's x-floor of 12), and is on **no** pinned cell. Its approach (11,11) is free. The encounter is **interact-only** (no `trigger_radius`, the `hired_blades` idiom) so it cannot spring on any route, sneaking or not.
 
-- [ ] **Step 1: Insert two combatant rows after the `hired_blade_knife_b` row** (ruling C anchor; 1-space-per-level; `splice_json.py --container combatants` appends, so splice then move to the anchor). **Ruling 5: brand-new ids — `alley_footpads_a/b` are removed by `invrisil_wilovan.json:100-104` on `brothers_job_done`, so they can be absent from any real save.**
+- [x] **Step 1: Insert two combatant rows after the `hired_blade_knife_b` row** (ruling C anchor; 1-space-per-level; `splice_json.py --container combatants` appends, so splice then move to the anchor). **Ruling 5: brand-new ids — `alley_footpads_a/b` are removed by `invrisil_wilovan.json:100-104` on `brothers_job_done`, so they can be absent from any real save.**
 
 ```json
  {
@@ -1119,7 +1119,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
  }
 ```
 
-- [ ] **Step 2: Append the encounter entity** to `mercantile_alleys.json`:
+- [x] **Step 2: Append the encounter entity** to `mercantile_alleys.json`:
 
 ```json
   {
@@ -1141,7 +1141,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 
 `arena`, `enemies`, `allies`, `on_victory` are **all four** present (`test_combat_data.gd:116-117` asserts presence; `"allies": []` is mandatory). No `respawns`, so the fence is removed permanently on victory — correct for a one-shot recovery. No `scales` (a quest-counter `on_victory` may never scale).
 
-- [ ] **Step 3: Append the harness cell** to `INVRISIL_CELLS` (`solo: true` = no Wilovan; the loop hardcodes him as the ally when `solo` is false, `sim_combat_batch.gd:705-711`):
+- [x] **Step 3: Append the harness cell** to `INVRISIL_CELLS` (`solo: true` = no Wilovan; the loop hardcodes him as the ally when `solo` is false, `sim_combat_batch.gd:705-711`):
 
 ```gdscript
 	# v0.16 I1 (#306). Side-quest fight at Invrisil's own expected level, SOLO
@@ -1154,7 +1154,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 	{"name": "alley_fence_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["heirloom_fence", "fence_doorman"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ```
 
-- [ ] **Step 4: MEASURE FIRST, then keep or tune.** Get the cell index with `WI_CELL_COUNT_ONLY=1` and locate the new cell, then run just it:
+- [x] **Step 4: MEASURE FIRST, then keep or tune.** Get the cell index with `WI_CELL_COUNT_ONLY=1` and locate the new cell, then run just it:
 
 ```
 WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
@@ -1162,9 +1162,9 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 
 **Gate acceptance (ruling A):** `win_rate` inside **0.55–0.95** and `median_rounds` inside **3–12**.
 **Design target, NOT a gate:** aim the measured `win_rate` at ≈ **0.62–0.70** so Invrisil still reads harder than Riverfarm. If it lands outside that band but inside the gate, tune **only the two new ids**, in this order: `+1 weapon_die` on `fence_doorman` → `+4 con` on both → `+1 str` (reverse if it lands low). After tuning, set each `power_level` so the pair stays monotone against the shipped roster (above `hired_blade_knife_*` 7.5, below `hired_blade_leader` 11.0). Record the final **measured** `win_rate` and `median_rounds` in the cell's comment, matching the shipped idiom ("Measured 0.64, median 7").
-- [ ] **Step 5: Re-gate the shared cells.** Run the **full** `INVRISIL_CELLS` range and confirm `hired_blades_t3_warrior10_wilovan` (0.57–0.71), `hired_blades_t5_sw14_wilovan` (0.77–0.87), `alley_footpads_w2_solo` (0.75–0.98) and `boulevard_duel_ring_t3_solo` (0.55–0.95) are all still in window. They must be untouched by construction — prove it anyway. **Record every measured median in the PR body**: per ruling A, the region-band ordering claim is carried by those numbers, not by a narrow window.
-- [ ] **Step 6: Board-figure bar — it does NOT measure these ids (ruling F).** `tests/test_combat_visuals.gd`'s `FIGURE_ROWS` (`:536-541`) holds exactly four sprites (`bat`, `briar_collector`, `briar_collector_deep`, `ruin_warden`); `_board_cells` (`:563-566`) indexes `FIGURE_ROWS[cfg["sprite"]]` and would **KeyError** on anything else, and the bar's only caller (`:609-620`) iterates a hardcoded `audited` array containing none of these ids. `hired_blade` and `human_laborer` are in neither structure. So: **no new sprite id and no `combat_scale`, therefore the bar is unchanged by construction and the suite passes by EXCLUSION — running it proves nothing about these four rows.** Run it anyway as a regression guard on the ids it *does* cover. The **windowed shots (Task 5.5 shot 7) are the legibility read** for the new rigs. The first draft's "3.05 cells" figure is **struck from the shipped `_comment`** — it exists only as prose in the bar's own doc comment (`:543`) and no run can confirm it. No id joins `audited` without first adding its sprite to `FIGURE_ROWS` with a re-derived row count.
-- [ ] **Step 7: Run** `test_combat_data.gd` (power_level presence, arena spawn reachability, encounter key presence), `test_content.gd`, `test_combat_visuals.gd`, `data_lint.py`. **Commit** `feat(invrisil): the fence's back door (#306)`.
+- [x] **Step 5: Re-gate the shared cells.** Run the **full** `INVRISIL_CELLS` range and confirm `hired_blades_t3_warrior10_wilovan` (0.57–0.71), `hired_blades_t5_sw14_wilovan` (0.77–0.87), `alley_footpads_w2_solo` (0.75–0.98) and `boulevard_duel_ring_t3_solo` (0.55–0.95) are all still in window. They must be untouched by construction — prove it anyway. **Record every measured median in the PR body**: per ruling A, the region-band ordering claim is carried by those numbers, not by a narrow window.
+- [x] **Step 6: Board-figure bar — it does NOT measure these ids (ruling F).** `tests/test_combat_visuals.gd`'s `FIGURE_ROWS` (`:536-541`) holds exactly four sprites (`bat`, `briar_collector`, `briar_collector_deep`, `ruin_warden`); `_board_cells` (`:563-566`) indexes `FIGURE_ROWS[cfg["sprite"]]` and would **KeyError** on anything else, and the bar's only caller (`:609-620`) iterates a hardcoded `audited` array containing none of these ids. `hired_blade` and `human_laborer` are in neither structure. So: **no new sprite id and no `combat_scale`, therefore the bar is unchanged by construction and the suite passes by EXCLUSION — running it proves nothing about these four rows.** Run it anyway as a regression guard on the ids it *does* cover. The **windowed shots (Task 5.5 shot 7) are the legibility read** for the new rigs. The first draft's "3.05 cells" figure is **struck from the shipped `_comment`** — it exists only as prose in the bar's own doc comment (`:543`) and no run can confirm it. No id joins `audited` without first adding its sprite to `FIGURE_ROWS` with a re-derived row count.
+- [x] **Step 7: Run** `test_combat_data.gd` (power_level presence, arena spawn reachability, encounter key presence), `test_content.gd`, `test_combat_visuals.gd`, `data_lint.py`. **Commit** `feat(invrisil): the fence's back door (#306)`.
 
 ### Task 2.6: I1 post-quest life — the client's reactive stage
 
