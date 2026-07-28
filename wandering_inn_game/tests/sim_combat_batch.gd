@@ -182,6 +182,15 @@ const INVRISIL_CELLS := [
 	# drafted they read 0.48 / median 2, so the fence trades damage for bulk
 	# (str 6, weapon_die 3, con 40) and the doorman keeps the only real punch.
 	{"name": "alley_fence_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["heirloom_fence", "fence_doorman"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# v0.16 I2 (#306). Interior brawl at Invrisil's expected level, SOLO. Same
+	# window contract as the fence cell: the shipped stop-cell precedent
+	# 0.55/0.95 (controller ruling A). Region-band ordering is evidenced by the
+	# MEASURED median recorded in the PR body, not by a narrow authored ceiling.
+	# Arena merchant_warehouse (biome inn) reused -- zero arenas.json edits.
+	# Measured 0.78, median 3, as drafted -- no tuning needed. That sits ABOVE
+	# the fence cell's 0.67 by construction: the brawl is a failure state, not a
+	# target, so it is the softer of the two v0.16 Invrisil fights.
+	{"name": "rest_bravos_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["rest_bravo_a", "rest_bravo_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 const BUILDS := [

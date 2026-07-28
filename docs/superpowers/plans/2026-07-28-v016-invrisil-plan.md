@@ -1434,7 +1434,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 
 (The encounter entity itself already shipped in Task 1.4's map file.)
 
-- [ ] **Step 1: Insert two rows:**
+- [x] **Step 1: Insert two rows:**
 
 ```json
  {
@@ -1465,7 +1465,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
  }
 ```
 
-- [ ] **Step 2: Append the harness cell:**
+- [x] **Step 2: Append the harness cell:**
 
 ```gdscript
 	# v0.16 I2 (#306). Interior brawl at Invrisil's expected level, SOLO. Same
@@ -1476,8 +1476,8 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 	{"name": "rest_bravos_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["rest_bravo_a", "rest_bravo_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ```
 
-- [ ] **Step 3: Measure-first / tune / re-gate** — identical procedure and acceptance to Task 2.5 Steps 4–6, including the 0.55–0.95 gate, the 3–12 median band, and the **measured** median going into the PR body. The bravos are authored one notch softer than the fence pair (16.0 vs 17.5 total power) because the brawl is a failure state, not a target, so their measured `win_rate` should land **above** the fence cell's — that relationship is a number to report, not a window to author.
-- [ ] **Step 4: Run** `test_combat_data.gd`, `test_content.gd`, and `test_combat_visuals.gd` — noting per **ruling F** that the visuals suite does **not** measure `citizen_f` or `human_laborer` board figures for these ids and passes by exclusion; the Task 5.5 shot-7 windowed read is the actual legibility gate. **Commit** `feat(invrisil): it goes loud at the Rest (#306)`.
+- [x] **Step 3: Measure-first / tune / re-gate** — identical procedure and acceptance to Task 2.5 Steps 4–6, including the 0.55–0.95 gate, the 3–12 median band, and the **measured** median going into the PR body. The bravos are authored one notch softer than the fence pair (16.0 vs 17.5 total power) because the brawl is a failure state, not a target, so their measured `win_rate` should land **above** the fence cell's — that relationship is a number to report, not a window to author.
+- [x] **Step 4: Run** `test_combat_data.gd`, `test_content.gd`, and `test_combat_visuals.gd` — noting per **ruling F** that the visuals suite does **not** measure `citizen_f` or `human_laborer` board figures for these ids and passes by exclusion; the Task 5.5 shot-7 windowed read is the actual legibility gate. **Commit** `feat(invrisil): it goes loud at the Rest (#306)`.
 
 ### Task 3.5: I2 post-quest life — parlor stage + inn register variant
 
