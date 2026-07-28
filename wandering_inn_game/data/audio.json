@@ -765,8 +765,8 @@
    "payload": {
     "map": "brothers_parlor"
    },
-   "_comment": "GH#133 ear-gate iteration 2: definitely_our_town EARED as upbeat/cozy (title misled) -- peaceful_night = low-key nocturne for a courteous den. Iteration 1 was junkala_childhood_friends (wholesome, rejected).",
-   "stream": "res://assets/audio/music/peaceful_night.ogg",
+   "_comment": "GH#133 ear-gate iteration 3 (v0.16.1 finding 13): LENGTH IS NOW A SELECTION CRITERION. Iteration 1 was junkala_childhood_friends (102.9s, wholesome, rejected); iteration 2 picked peaceful_night on mood alone -- but that file is 11.15s, curated as the SLEEP STING (music_sleep_beat, kind sting, loop false), where an 11s nocturne is right. As a looping FIELD bed it restarted ~5x a minute, and because it has a composed intro/decay shape every wrap read as a restart rather than a bar line. Every other field track in the game is 46-110s. junkala_encounter_witches (113.5s, CC0 Juhani Junkala) keeps #133's intent -- low-key, courteous, not wholesome -- at 10x the loop length, and reads as a clandestine den rather than a bedroom. It also fixes a LATENT SECOND BUG in the same row: peaceful_night is private-overlay-only (gitignored, synced from the purchased xDeviruchi pack), and test_audio_data's _stream_ok deliberately accepts manifest-only paths, so the public/community build had NO music in this room at all and QA was green on it. junkala_encounter_witches is in-repo and committed. peaceful_night stays the sleep sting -- that use is correct and is untouched.",
+   "stream": "res://assets/audio/music/junkala_encounter_witches.ogg",
    "bus": "Music",
    "volume_db": -8.0,
    "loop": true
