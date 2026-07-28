@@ -154,6 +154,41 @@ cross-release index of them.
   is where drift actually hurts. It also measures with the **Header** variation's
   font, not the default label font: the veil draws through Header at 24 and
   measuring the wrong typeface would have made the whole gate decorative.
+## 2026-07-28 — sewers_walkthrough toast timing: the SCRIPT gave, not the engine
+
+- **The two post-combat `ui_toast_rendered` waits became `from_start` scans at
+  `timeout_sec: 20`; message_layer was not touched.** PR #310's canonical sweep
+  went red on `sewers_walkthrough` alone — both waits timing out at
+  `cursor=189` — and the same failure was already ledgered as
+  QA/SEWERS-WINDOWED-TIMING (P2, `50cbf6b`) for windowed runs. The engine is
+  correct: `_restore_banked_toasts` kicks a drain and the queue is lossless.
+  What is machine-dependent is WHICH SIDE of `combat_started` a given
+  narration renders on. Toast holds are wall-clock
+  (`QA_TOAST_HOLD_HEADLESS_SECONDS` 0.05s) while the driver's steps are
+  frame-paced, so faster frames burn less wall time between the cast and the
+  fight and leave MORE of the queue pending for `_bank_toasts` to catch.
+  Measured at seed 9: this laptop headless renders 3 pre-combat and banks 4;
+  windowed (and a loaded 4-job CI runner) renders 7 pre and 1 post. A
+  cursor-ordered forward wait can only see the banked half, so it reds the
+  healthy regime. `from_start` scans the whole log with the cursor untouched,
+  placed unchanged AFTER `ui_combat_hidden`: the assertion is now "by the time
+  the board has closed, both narrations have rendered", which is exactly the
+  GH#304 regression (4 of 7 payloads NEVER delivered at 23aca0b) and holds in
+  every pacing regime.
+- **Alternatives rejected.** (a) Just raise `timeout_sec` — does nothing: on a
+  slow runner the toasts already rendered BEHIND the cursor, so a forward scan
+  never finds them however long it waits. (b) `assert_event_absent` /
+  dropping the render proof — deletes the only end-to-end evidence for the
+  fix. (c) Emit a `toasts_banked` event so the script could gate on the bank
+  count (the ledger's own suggestion) — that is an engine change to a god-file
+  another branch owns, for a property that is an artifact of frame speed
+  rather than behavior. The bank/restore branch that genuinely needs pinning
+  (`_restore_banked_toasts` kicking a drain when `_toast_draining` is false)
+  already has deterministic, frame-rate-free coverage in
+  `tests/test_message_layer.gd`, which is the right home for it.
+- **Revert path:** drop `"from_start": true` from the two waits in
+  `qa/scripts/sewers_walkthrough.json` and restore `timeout_sec: 5`. That
+  re-pins post-combat ordering and re-breaks CI + windowed.
 
 ## 2026-07-28 — v0.15 A3 toast survival + Lore capture (four in-wave calls)
 

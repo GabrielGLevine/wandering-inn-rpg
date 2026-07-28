@@ -566,10 +566,11 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "v0.15 A3 (GH#304): THE COMBAT BANK, and the only live proof of _restore_banked_toasts' own drain kick. Both [Skill] payoff narrations were emitted before the fight and were still QUEUED when combat_started banked them; by ui_combat_hidden the drain coroutine has long exited (headless holds are frame-bounded), so _toast_draining is false and nothing but the restore's kick can deliver them. Measured at seed 9 on this script's events.jsonl: 7 pre-combat toast payloads, 4 NEVER delivered at 23aca0b (these two, the moss observe, and the autosave) vs 0 lost after. Ordered waits, not cumulative asserts -- these must land AFTER the board closes.",
+   "_comment": "v0.15 A3 (GH#304): THE LOSSLESS-DELIVERY CHECKPOINT for the two [Skill] payoff narrations. Both were emitted (sim `toast`, pinned at their cast sites above) long before the fight; by the time the combat board has CLOSED, both must have RENDERED. That is the whole GH#304 regression: at 23aca0b 4 of this run's 7 pre-combat toast payloads were NEVER delivered (these two, the moss observe, and the autosave) vs 0 lost after. PACING-INDEPENDENT BY CONSTRUCTION (QA/SEWERS-WINDOWED-TIMING, and the CI red on PR #310): WHICH side of combat_started they render on is pure frame pacing, not behavior. Toast holds are wall-clock (QA_TOAST_HOLD_HEADLESS_SECONDS 0.05s), so the faster the frames, the LESS wall time the driver's moves burn and the more of the queue is still pending when combat_started banks it. On this laptop's headless frames 3 render pre-combat and 4 bank and drain after ui_combat_hidden (the restore's own kick); on CI's loaded runners -- and windowed at real-time frames -- the queue drains naturally pre-combat and nothing is left to bank. Both are correct engine behavior; only a cursor-ordered wait could tell them apart, and it red-flags the healthy half. So these are `from_start` scans (whole log, cursor untouched) placed AFTER the board closes: they hold in every pacing regime and still fail flat in the 23aca0b world where the payloads never render at all. The bank/restore branch itself -- `_restore_banked_toasts` kicking a drain when `_toast_draining` is false -- is pinned deterministically in tests/test_message_layer.gd, which is where a frame-rate-free proof belongs.",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
-   "timeout_sec": 5,
+   "from_start": true,
+   "timeout_sec": 20,
    "payload_contains": {
     "text": "[Firefly] — Fire catches the tarred rope and runs greedily through the pile. In moments it is ash and the nook stands open, breathing cold sewer air."
    }
@@ -577,7 +578,8 @@
   {
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
-   "timeout_sec": 5,
+   "from_start": true,
+   "timeout_sec": 20,
    "payload_contains": {
     "text": "[Snap Freeze] — You lay your palm to the water and cold spiders out from it. In a breath the channel locks to grey-white ice, thick enough to bear your weight. It will not last past your next rest."
    }
