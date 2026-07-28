@@ -1,0 +1,304 @@
+{
+ "_comment": "v0.16 F1 (#308) TALK route of 'The Price Kept': Krshia's stall brokers a quiet run south (the 8-gold alternate, so the free [Charming Smile] arm renders visible-locked beside it), banking camp_trade_brokered; then the report to Rags on the southern rise closes the quest. NO options-array pin anywhere in this script by design -- four region lanes append rows to Krshia's hub and to Rags's, and a pinned list reds every one of them at the merge train; the cursor indices below are derived from a REAL run's events.jsonl (the visible list, never the authored order). Route purity is proved by payload-filtered absent-asserts on the other two route counters. No combat: the fixture's rng_state is inert here.",
+ "fixture_save": "floodplains_price_talk_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 12
+  },
+  {
+   "_comment": "Bump north into Krshia's cell (13,2): a blocked move sets facing without moving, the walkthroughs' own robust-facing idiom (player_facing is never trusted).",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "First talk this waking plays her rotating pool line; the second interact opens the crate graph (crate_talk's documented two-step).",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Krshia"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "krshia_crate"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_krshia_hub_goblin_run"
+  },
+  {
+   "_comment": "VISIBLE list at this fixture: 1 'I'll look into it.', 2 'What's on the stall today?', 3 'Just visiting.', 4 'I've a few things I don't need. Buying?', 5 the [Charming Smile] quiet-run row (visible-LOCKED, no skill), 6 the 8-gold alternate. Every crate/wrong-order row is progress-gated and hidden.",
+   "action": "click_dialogue_option",
+   "option": 6
+  },
+  {
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "payload_contains": {
+    "delta": -8,
+    "total": 4
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "camp_trade_brokered"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia",
+    "text": "Hrr. South. Grain, salt, hide-thread, and a cart that does not stop where anyone is counting. You will not say whose hands take it, and I will not ask, yes? I will price it as wool."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The exact ledger: 12 -> 4. Paying is not persuading -- the gold arm banks no persuaded_someone of its own, so the 4 asserted at the end is the quest grant alone.",
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 4
+  },
+  {
+   "_comment": "Cross-map hop the route does not need to re-prove; lands one cell north of the shipped approach cell so the last step south is walked for real (rags_meeting_loop's own idiom).",
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    16,
+    19
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains",
+    "cell": [
+     16,
+     19
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    20
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "rags_meeting"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Good trade. Plains quiet. Go safe."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Settled hub, VISIBLE list: 1 '(Leave them to their business.)', 2 the F1 offer. Every earlier row is hidden by met_rags / rags_price_named / rags_meeting_settled.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Carts came. Gnoll kept quiet. Good."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_rags_winter_trade_rung"
+  },
+  {
+   "_comment": "winter VISIBLE list on the TALK route: 1 'How do I help?', 2 the trade rung, 3 '(Leave her to it.)'. The larder and ground rungs are progress-gated on counters this route never banks.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "rags_price_kept"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "the_price_kept"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Price kept. Goblins remember. Longer than Humans."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "ROUTE PURITY, payload-filtered (a bare-type absent-assert on accomplishment_recorded would scan the run's own banks and red).",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "camp_ground_held"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "camp_larder_filled"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "_comment": "The brokered path's own grant: persuaded_someone 4 (quest resolution) + 0 from the gold arm.",
+   "action": "assert_state",
+   "path": "accomplishments.persuaded_someone",
+   "equals": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.rags_price_kept",
+   "equals": 1
+  }
+ ]
+}

@@ -1,0 +1,65 @@
+{
+ "_comment": "v0.16 F1 (#308) TALK-route start for floodplains_price_talk. COPIED from rags_gates_met_start (version 7) and advanced to the peaceful terminal: the SUPPLY close consumed the mending_draught and granted the carved pawn, so met_rags / chatted_with_rags / rags_price_named / helped_rags_tribe / rags_meeting_settled are all held and both the F1 hub offer and Krshia's two quiet-run rows render. Stands on street at (13,3), one south of Krshia's stall cell (13,2) -- crate_talk's own approach idiom (bump north to face her, never trust player_facing). gold 12 so the 8-gold alternate is affordable and the ledger reads 12 -> 4. rng_state derived from seed 9 (tests/_derive_rng_state.gd); this route reaches NO combat, so the derive-then-run-until-win loop does not apply.",
+ "version": 7,
+ "state": {
+  "current_map": "street",
+  "player_cell": [
+   13,
+   3
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 2
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "won_combat": 1,
+   "reward_acknowledged": 1,
+   "chatted_with_erin": 3,
+   "goblins_spared": 1,
+   "slept": 1,
+   "met_rags": 1,
+   "chatted_with_rags": 1,
+   "rags_price_named": 1,
+   "helped_rags_tribe": 1,
+   "rags_meeting_settled": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "chieftains_price",
+   "the_price_kept"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "carved_chess_pawn"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": "",
+   "accessory_1": "",
+   "accessory_2": "",
+   "accessory_3": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "times_slept": 17,
+  "board_last_seen_times_slept": 17,
+  "gold": 12,
+  "rng_state": "-6393592048753323481",
+  "fractional_bank": {}
+ }
+}

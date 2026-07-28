@@ -17,6 +17,11 @@ const GATE_FIXTURES := [
 ]
 
 const COMBAT_BAND_FIXTURES := {
+	# 2026-07-28 (#308): the camp-ground press was tuned at warrior2, the build
+	# the Floodplains gates open at and the build its sim_combat_batch cells use.
+	# Inserted at the HEAD of the dict, not the tail: three sibling region lanes
+	# append rows to this same const in the same wave (RULING C).
+	"floodplains_price_fight_start": 2,
 	"door_chain_fight_start": 10,
 	"door_chain_sequence_break_start": 10,
 	"riverfarm_fight_start": 10,

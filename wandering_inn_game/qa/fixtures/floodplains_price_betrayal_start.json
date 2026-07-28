@@ -1,0 +1,57 @@
+{
+ "_comment": "v0.16 F1 (#308) BETRAYAL-branch start for floodplains_price_gate_proof. Accomplishments are byte-identical to rags_gates_met_start -- PRE-settle, every encounter gate met, no F1 counter held -- because the whole point is to bank drove_off_rags LIVE and then prove the offer never renders and the camp mouth never opens. Standing at (16,19) facing south, one cell north of the rags_scouting_party approach cell (16,20). rng_state derived from seed 9 (tests/_derive_rng_state.gd) and VERIFIED by running the script end to end: the rags_scouting_party fight WON at this rng_state (2026-07-28), which is required -- a loss banks no drove_off_rags and the script times out. A re-derivation must re-verify the win.",
+ "version": 7,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   16,
+   19
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "warrior": 2
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "won_combat": 1,
+   "reward_acknowledged": 1,
+   "chatted_with_erin": 3,
+   "goblins_spared": 1,
+   "slept": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "mending_draught"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": "",
+   "accessory_1": "",
+   "accessory_2": "",
+   "accessory_3": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "times_slept": 17,
+  "board_last_seen_times_slept": 17,
+  "gold": 20,
+  "rng_state": "-6393592048753323481",
+  "fractional_bank": {}
+ }
+}

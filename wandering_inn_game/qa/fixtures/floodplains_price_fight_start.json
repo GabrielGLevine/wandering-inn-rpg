@@ -1,0 +1,65 @@
+{
+ "_comment": "v0.16 F1 (#308) FIGHT-route start for floodplains_price_fight. Same settled-terminal state as its two siblings, standing INSIDE rags_camp at (5,7) -- the cell rags_camp_mouth's door_when lands on, which is why test_fixture_coherence's MAP_REQUIRES row for rags_camp names rags_meeting_settled (held here). warrior2 is the tuned build camp_ground_press was measured at, pinned in both directions by COMBAT_BAND_FIXTURES. rng_state derived from seed 9 (tests/_derive_rng_state.gd) and VERIFIED by running the script end to end: camp_ground_press WON at this rng_state (2026-07-28). A re-derivation, or any retune of the five new combatant rows, must re-verify that win or the script times out on accomplishment_recorded camp_ground_held.",
+ "version": 7,
+ "state": {
+  "current_map": "rags_camp",
+  "player_cell": [
+   5,
+   7
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 2
+  },
+  "accomplishments": {
+   "reached_liscor": 1,
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "visited_guild": 1,
+   "won_combat": 1,
+   "reward_acknowledged": 1,
+   "chatted_with_erin": 3,
+   "goblins_spared": 1,
+   "slept": 1,
+   "met_rags": 1,
+   "chatted_with_rags": 1,
+   "rags_price_named": 1,
+   "helped_rags_tribe": 1,
+   "rags_meeting_settled": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "chieftains_price",
+   "the_price_kept"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "carved_chess_pawn"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": "",
+   "accessory_1": "",
+   "accessory_2": "",
+   "accessory_3": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "times_slept": 17,
+  "board_last_seen_times_slept": 17,
+  "gold": 20,
+  "rng_state": "-6393592048753323481",
+  "fractional_bank": {}
+ }
+}

@@ -1,0 +1,269 @@
+{
+ "_comment": "v0.16 F1 (#308) the BETRAYAL branch, which had zero live QA coverage before this script: draw steel on Rags, win, and prove the exclusion holds in all three places. The branch banks drove_off_rags AND rags_meeting_settled from one on_victory array -- which is exactly why the F1 offer's hide_when and the camp mouth's present_when.absent both have to name drove_off_rags, and why proving BOTH banks is the point. Every absent-assert here is payload-filtered or a count: assert_event_absent is a WHOLE-RUN scan with no cursor, so a bare-type absent on dialogue_started / combat_started / accomplishment_recorded / map_changed would find this run's own event and red.",
+ "fixture_save": "floodplains_price_betrayal_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    19
+   ]
+  },
+  {
+   "_comment": "One step south lands on the shipped approach cell (16,20), facing the watcher at (16,21).",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    20
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "rags_meeting"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "You. The one who didn't kill."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "First-contact VISIBLE list: 1 'Who are you?', 2 '(Say nothing. Wait.)', 3 '(Draw steel.)', 4 '(Leave them to their business.)'. The F1 offer is progress-gated on rags_meeting_settled and does not render at all here.",
+   "action": "click_dialogue_option",
+   "option": 3
+  },
+  {
+   "_comment": "EVENT-ORDER TRAP: the option's effects run and `end: true` closes the graph BEFORE start_combat, so dialogue_ended precedes combat_started.",
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "BOTH terminals bank off one on_victory array -- the whole reason the offer's gate has to be two-armed.",
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "drove_off_rags"
+   },
+   "from_start": true,
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "rags_meeting_settled"
+   },
+   "from_start": true,
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.drove_off_rags",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.rags_meeting_settled",
+   "equals": 1
+  },
+  {
+   "_comment": "== PROOF 1: NO OFFER == the encounter entity is removed permanently on victory, so a second interact on the same cell opens nothing. This CANNOT be an assert_event_absent on dialogue_started -- the run opened her graph itself three steps ago -- so the proof is the COUNT: one open in the whole run.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "assert_event_count",
+   "type": "dialogue_started",
+   "count": 1
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Good trade. Plains quiet. Go safe."
+   }
+  },
+  {
+   "_comment": "Payload-filtered: chieftains_price DOES start on this run (the draw-steel option carries it), so only the F1 quest id can be proved absent.",
+   "action": "assert_event_absent",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "the_price_kept"
+   }
+  },
+  {
+   "_comment": "== PROOF 2: THE CAMP STAYS SHUT == east one to (17,20), then south one to (17,21) facing (17,22). rags_camp_mouth's present_when.absent arm fails on drove_off_rags, so the prop is not there to block, not there to open, and not there to render.",
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    21
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "rags_camp"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You go down between the stones sideways, the way the flattened grass says to, and the plains close over the top of you."
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "_comment": "== PROOF 3: THE QUEST NEVER RUNS == no route counter, no terminal.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "rags_price_kept"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "camp_trade_brokered"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "camp_larder_filled"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "camp_ground_held"
+   }
+  }
+ ]
+}

@@ -1,0 +1,347 @@
+{
+ "_comment": "v0.16 F1 (#308) FIGHT route of 'The Price Kept', and the game's FIRST goblin-ALLY board. The roster proof is POSITIVE ONLY: a bare-type assert_event_absent on combat_started would scan this run's own combat_started, and a missing-key assert_state (combat.combatants.relc) fails on path-not-found, i.e. it fails exactly when it should pass. So the guard is an exact equals-pin of the whole six-id combat.order, derived from a real run -- if allies: [\"relc\"] is ever copy-pasted in, or a tamed companion is appended, the array stops being those six ids in that order and this reds loud. The victory counter is accomplishments.victories (never a bare 'victories': WIGame.snapshot has no top-level key, and won_combat deposits FRACTIONALLY under challenge weighting while victories banks integer under both flag states).",
+ "fixture_save": "floodplains_price_fight_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "rags_camp"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    7
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "01_camp_ground_press_approach"
+  },
+  {
+   "_comment": "East two along the bottom of the hollow, then north three to (7,4); the fourth north bumps the scavengers at (7,3) and only sets facing.",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_camp_ground_press_board"
+  },
+  {
+   "_comment": "POSITIVE ROSTER PROOF, half one: both goblins are fielded on the PLAYER side (a combatant id holds exactly one side, so these are distinct ids from the enemy `rags` row).",
+   "action": "assert_state",
+   "path": "combat.combatants.rags_ally.side",
+   "equals": "player"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.goblin_spear_ally.side",
+   "equals": "player"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.order",
+   "contains": [
+    "rags_ally",
+    "goblin_spear_ally"
+   ]
+  },
+  {
+   "_comment": "POSITIVE ROSTER PROOF, half two -- THE RELC GUARD. Exact initiative order derived from a real run's combat snapshot, never from the authored arrays; equals goes through _loosely_equal, so element order matters.",
+   "action": "assert_state",
+   "path": "combat.order",
+   "equals": [
+    "rags_ally",
+    "pc",
+    "plains_scavenger_b",
+    "plains_scavenger_lead",
+    "goblin_spear_ally",
+    "plains_scavenger_a"
+   ]
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "camp_ground_held"
+   },
+   "from_start": true,
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.camp_ground_held",
+   "equals": 1
+  },
+  {
+   "_comment": "victories banks integer under BOTH challenge-weighting flag states; won_combat can deposit fractionally, so it is not the counter to pin.",
+   "action": "assert_state",
+   "path": "accomplishments.victories",
+   "equals": 1
+  },
+  {
+   "_comment": "== BACK UP == south three, west two, then bump south into the exit door at (5,8).",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    21
+   ]
+  },
+  {
+   "_comment": "== THE REPORT == north one, west one, then bump south into the watcher at (16,21).",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    20
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "rags_meeting"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Good trade. Plains quiet. Go safe."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Settled hub VISIBLE list: 1 '(Leave them to their business.)', 2 the F1 offer.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Ground held. They ran. Good."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "winter VISIBLE list on the FIGHT route: 1 'How do I help?', 2 the ground rung, 3 '(Leave her to it.)'.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "rags_price_kept"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "the_price_kept"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Price kept. Goblins remember. Longer than Humans."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "ROUTE PURITY, payload-filtered.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "camp_trade_brokered"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "camp_larder_filled"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.rags_price_kept",
+   "equals": 1
+  }
+ ]
+}
