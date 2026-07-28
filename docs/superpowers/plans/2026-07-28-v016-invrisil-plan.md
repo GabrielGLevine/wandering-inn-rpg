@@ -1656,9 +1656,9 @@ Output at `wandering_inn_game/qa_output/<script>/{result.json,events.jsonl,*.png
 - Modify: `wandering_inn_game/AGENTS.md` (9 seed-table rows, inserted **after the `hedault_fragment_loop` row**, same relative order as the manifest)
 - Regenerate: `wandering_inn_game/qa/manifest.json` `surfaces`, `wandering_inn_game/docs/QA-SCRIPT-NOTES.md`
 
-- [ ] **Step 1: Insert nine manifest entries** at the anchor, each with `script`, `seed`, `fixture`, a real `note`, and `"tiers": ["full"]`. Leave `surfaces` **absent** — it is generated. (No new entry joins `smoke`: smoke must stay a subset of full and the smoke sweep is a latency budget.)
-- [ ] **Step 2: Insert the nine AGENTS.md seed-table rows** at the matching anchor. `qa/ci_sweep.sh` **hard-fails at startup** if the manifest and the table disagree — they must land in the same commit.
-- [ ] **Step 3: Regenerate, in this exact order (controller ruling E):**
+- [x] **Step 1: Insert nine manifest entries** at the anchor, each with `script`, `seed`, `fixture`, a real `note`, and `"tiers": ["full"]`. Leave `surfaces` **absent** — it is generated. (No new entry joins `smoke`: smoke must stay a subset of full and the smoke sweep is a latency budget.)
+- [x] **Step 2: Insert the nine AGENTS.md seed-table rows** at the matching anchor. `qa/ci_sweep.sh` **hard-fails at startup** if the manifest and the table disagree — they must land in the same commit.
+- [x] **Step 3: Regenerate, in this exact order (controller ruling E):**
 
 ```
 python3 wandering_inn_game/scripts/derive_qa_surfaces.py --write
@@ -1671,7 +1671,7 @@ python3 scripts/check_doc_drift.py
 **`--write` is mandatory on `render_qa_notes.py` and the first draft omitted it.** `scripts/render_qa_notes.py:55-66` writes **only** under `--write`; a bare run compares, prints `QA NOTES DRIFT` + `Run: python3 scripts/render_qa_notes.py --write`, and returns **1**. A bare-only invocation is a no-op that leaves `docs/QA-SCRIPT-NOTES.md` stale and reds `leak-check` — precisely the #312 CI red this plan cites as the lesson. The **bare** run is the *verification* step: expect rc 0 and `PASS: QA notes match manifest`. (`derive_qa_surfaces.py` is the opposite — bare **is** a write, `scripts/derive_qa_surfaces.py:412-414` — but pass `--write` explicitly anyway.)
 
 **Merge-train note:** `render_qa_notes.py` renders the file whole from the **entire** manifest, so the pair must be re-run on **every train merge that combines two lanes' manifest entries**, not just inside this lane's commit. Same for `derive_qa_surfaces.py --write`. Never hand-edit `surfaces` or `QA-SCRIPT-NOTES.md`.
-- [ ] **Step 4: Commit** `test(qa): register the Invrisil v0.16 canonicals (#306)` — manifest + seed table + both generated artifacts in **one** commit.
+- [x] **Step 4: Commit** `test(qa): register the Invrisil v0.16 canonicals (#306)` — manifest + seed table + both generated artifacts in **one** commit.
 
 ### Task 5.4: Re-gate sweep
 
