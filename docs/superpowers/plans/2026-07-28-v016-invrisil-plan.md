@@ -1237,7 +1237,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 
 **Voice contract:** `character-profiles.md:300-307` — Gnoll, `{addr}` address (never a literal honorific at the PC), apology-before-threat, **"recover" never "steal"**, removes his hat plain-and-slow, **one dash per line maximum**. The file's own binding contract at `:2`: "append new hub options last to preserve QA-visible indexes."
 
-- [ ] **Step 1: Append option 7** (the giver):
+- [x] **Step 1: Append option 7** (the giver):
 
 ```json
     {
@@ -1257,7 +1257,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
     },
 ```
 
-- [ ] **Step 2: Append option 8** (the report):
+- [x] **Step 2: Append option 8** (the report):
 
 ```json
     {
@@ -1276,7 +1276,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
     }
 ```
 
-- [ ] **Step 3: Add the four nodes:**
+- [x] **Step 3: Add the four nodes:**
 
 ```json
   "hat_errand": {
@@ -1350,11 +1350,11 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
   }
 ```
 
-- [ ] **Step 4: Index-stability proof — run it, do not assume.** After banking `brothers_job_done`, the hub's visible rows become `["Evening.", "Cups asked me to see something back to you." (item-gated, VISIBLE-LOCKED), "Anything come through lately? (Show the marker.)"]` plus the two new rows **at the end**. Verify against every script that touches this graph:
+- [x] **Step 4: Index-stability proof — run it, do not assume.** After banking `brothers_job_done`, the hub's visible rows become `["Evening.", "Cups asked me to see something back to you." (item-gated, VISIBLE-LOCKED), "Anything come through lately? (Show the marker.)"]` plus the two new rows **at the end**. Verify against every script that touches this graph:
   - `qa/scripts/invrisil_disagreement_talk.json`, `..._stealth.json`, `..._fight.json`, `qa/scripts/wilovan_address_f.json` — none of these pins an `options` array (verified: zero `"options"` keys in all four), but all four navigate by `move down N`. Re-run **all four** at their manifest seeds and require green with **zero** script edits.
   - `invrisil_disagreement_fight.json` is the sharp one: it banks `brothers_job_done` mid-conversation at step ~91 and then does `move down 1` + `confirm` at steps 99–100. Read steps 84–102 in full and confirm those steps sit inside the `marker`/`marker_terms` nodes, **not** a re-rendered hub. If the hub is re-entered, the fix is a re-pin **in this PR**, not a gate change.
-- [ ] **Step 5: Dash budget.** Grep the four new nodes for `—` and for `--`: at most one em-dash per line, zero ASCII double-hyphens. Wilovan's `ways` node already blows the budget — do not add to it.
-- [ ] **Step 6: Run** `test_dialogue.gd` + `test_content.gd` + `data_lint.py`; **commit** `feat(dialogue): Wilovan's quiet errand (#306)`.
+- [x] **Step 5: Dash budget.** Grep the four new nodes for `—` and for `--`: at most one em-dash per line, zero ASCII double-hyphens. Wilovan's `ways` node already blows the budget — do not add to it.
+- [x] **Step 6: Run** `test_dialogue.gd` + `test_content.gd` + `data_lint.py`; **commit** `feat(dialogue): Wilovan's quiet errand (#306)`.
 
 ### Task 3.3: `data/dialogue/invrisil_rest_factor.json` — the TALK route
 
