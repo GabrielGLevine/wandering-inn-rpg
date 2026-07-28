@@ -182,6 +182,22 @@
 			]
 		},
 		{
+			"_comment": "v0.16 I2 (#306). Giver is Wilovan in the parlor; all three route counters produce on adventurers_rest, so `run` is a travel beat naming the Rest (LANDMARK_TOKENS `adventurer`). `{addr}` is FORBIDDEN here -- quests.json is scanned as unresolvable.",
+			"id": "the_hat_stays_on",
+			"title": "The Hat Stays On",
+			"region": "Invrisil",
+			"beats": [
+				{ "id": "run", "description": "The handover happens at the Adventurer's Rest, where nobody raises a voice. Talk it round, move it without a word, or find out what happens when it goes loud.", "complete_when_any": { "handoff_talked": 1, "handoff_quiet": 1, "handoff_loud": 1 } },
+				{ "id": "report", "description": "Go back to the parlor and tell Wilovan how the evening went.", "complete_when": { "hat_job_done": 1 } }
+			],
+			"_resolution_order": "Weakest claim first, LAST MATCH WINS: handoff_loud (it went wrong, you finished it) < handoff_talked (you talked it round) < handoff_quiet (nobody in the room ever knew). The loud ending is the job done badly and finished anyway; the quiet one is the gentleman's ideal, so it wins a completionist's read.",
+			"resolution_paths": [
+				{ "accomplishment": "handoff_loud", "text": "The hat came off. The package still changed hands, and the house has agreed to remember it as a misunderstanding about a chair.", "grant": { "melee_hit": 5, "won_combat": 1 } },
+				{ "accomplishment": "handoff_talked", "text": "Three exchanges, no names, and a package that was never once mentioned by anybody at the table.", "grant": { "persuaded_someone": 2, "heard_gossip": 3 } },
+				{ "accomplishment": "handoff_quiet", "text": "Hat on the third peg, coat over the chair, the wrong one taken on the way out. Nobody raised a voice and nobody raised an eye.", "grant": { "sneaked_past_danger": 2, "observed_things": 2 } }
+			]
+		},
+		{
 			"_comment": "FOUR real stages, not the cisterns/wrong_order two-beat shape: this is a genuine dungeon, not a posting. Task 2.2 named cleared_halls_by_force on snare_nest_slot so the fight has an id of its own; four Act V fixtures carried halls_cleared with no route counter and gained it, keeping their recorded ending byte-identical.",
 			"id": "what_the_seal_kept",
 			"title": "What the Seal Kept",

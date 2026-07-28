@@ -1198,7 +1198,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 **Files:**
 - Modify: `wandering_inn_game/data/quests.json` (insert **immediately after the `a_setting_for_a_lady` block landed in Task 2.1**, which sits after the `a_gentlemans_disagreement` anchor — ruling C)
 
-- [ ] **Step 1: Splice the block:**
+- [x] **Step 1: Splice the block:**
 
 ```json
 {
@@ -1219,12 +1219,12 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 }
 ```
 
-- [ ] **Step 2: Landmark arithmetic.** Giver map = `brothers_parlor` (Wilovan's conversation is hosted there). `run`'s producers are all on `adventurers_rest` → landmark required → `"the Adventurer's Rest"` contains `"adventurer"`. ✔ `report`'s producer (`invrisil_wilovan.json`) is the giver's own map → no landmark. ✔
-- [ ] **Step 3: Author both quests' co-bank ladder pins in `tests/test_quests.gd`** — insert after the `price_of_a_favor` block (ruling C anchor), in the same style as the shipped arms: for each quest, assert the single-counter resolution, then the co-bank case that proves last-match-wins, then that the grant is the winner's.
+- [x] **Step 2: Landmark arithmetic.** Giver map = `brothers_parlor` (Wilovan's conversation is hosted there). `run`'s producers are all on `adventurers_rest` → landmark required → `"the Adventurer's Rest"` contains `"adventurer"`. ✔ `report`'s producer (`invrisil_wilovan.json`) is the giver's own map → no landmark. ✔
+- [x] **Step 3: Author both quests' co-bank ladder pins in `tests/test_quests.gd`** — insert after the `price_of_a_favor` block (ruling C anchor), in the same style as the shipped arms: for each quest, assert the single-counter resolution, then the co-bank case that proves last-match-wins, then that the grant is the winner's.
 
   **EVERY new local in this file takes the `i_` lane prefix** (ruling C): `i_setting`, `i_setting_both`, `i_hat`, `i_hat_both`, … `tests/test_quests.gd:90-132` is **one continuous function body at a single indent level** — `halls`, `door`, `crate`, `order`, `favor` all share one scope — so a duplicate `var` from a sibling lane is a **GDScript parse error that reds the whole suite the moment the second lane merges**, not a shadow. Riverfarm and Pallass both drafted a bare `var ledger` here. Never use a bare `ledger`, `thicket`, `tempered`, `quest`, `setting` or `hat` local from this lane.
 
-- [ ] **Step 4: Run** `test_content.gd` + `test_quests.gd`; **commit** `feat(quests): The Hat Stays On (#306)`.
+- [x] **Step 4: Run** `test_content.gd` + `test_quests.gd`; **commit** `feat(quests): The Hat Stays On (#306)`.
 
 ### Task 3.2: Wilovan's parlor surfaces
 

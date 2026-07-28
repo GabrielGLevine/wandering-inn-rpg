@@ -147,6 +147,31 @@ func _init() -> void:
 	assert(String(WIQuests.resolved_path(favor, {"drove_off_collectors": 1, "mediated_the_debt": 1})["accomplishment"]) == "mediated_the_debt", "drove off THEN brokered records the MEDIATION")
 	assert(String(WIQuests.resolved_path(favor, {})["text"]) == "You paid the debt yourself, at the standing stones.", "neither counter banked falls through to the stones fallback")
 
+	# v0.16 Invrisil (#306). Both new side quests co-bank: I1's three routes are
+	# independent surfaces (Hedault's truth arm, either SKILL arm at his bench,
+	# the fence fight), and I2's three are the factor, the plate pair and the
+	# brawl. Neither array carries a ""-fallback rung, so the terminal cannot
+	# bank without a route counter. Locals take the `i_` lane prefix: this
+	# function body is one continuous scope and a duplicate `var` from a sibling
+	# v0.16 lane would be a parse error, not a shadow.
+	var i_setting: Dictionary = WIQuests.quest_by_id(shipped, "a_setting_for_a_lady")
+	assert(String(WIQuests.resolved_path(i_setting, {"setting_assisted": 1})["accomplishment"]) == "setting_assisted", "a bench-assist-only run still records the assist")
+	var i_setting_both: Dictionary = WIQuests.resolved_path(i_setting, {"setting_assisted": 1, "original_recovered": 1})
+	assert(String(i_setting_both["accomplishment"]) == "original_recovered", "assisted THEN recovered the original records the RECOVERY -- weakest-claim-first, last match wins")
+	assert(int((i_setting_both["grant"] as Dictionary).get("won_combat", 0)) == 1 and not (i_setting_both["grant"] as Dictionary).has("observed_things"), "...and pays the recovery grant, not the assist's")
+	assert(String(WIQuests.resolved_path(i_setting, {"heirloom_truth_kept": 1, "setting_assisted": 1})["accomplishment"]) == "heirloom_truth_kept", "assisted at the bench THEN told him the truth records the TRUTH -- brokering outranks helping")
+	assert(WIQuests.beat_index(i_setting, {"setting_assisted": 1}) == 1, "any one route counter closes the resolve beat and moves her to the report")
+	assert(WIQuests.beat_index(i_setting, {"setting_assisted": 1, "setting_commissioned": 1}) == 2, "...and the handover completes it")
+
+	var i_hat: Dictionary = WIQuests.quest_by_id(shipped, "the_hat_stays_on")
+	assert(String(WIQuests.resolved_path(i_hat, {"handoff_loud": 1})["accomplishment"]) == "handoff_loud", "a brawl-only evening still records the loud ending")
+	var i_hat_both: Dictionary = WIQuests.resolved_path(i_hat, {"handoff_loud": 1, "handoff_quiet": 1})
+	assert(String(i_hat_both["accomplishment"]) == "handoff_quiet", "loud THEN quiet records the QUIET handoff -- the gentleman's ideal is the strongest claim")
+	assert(int((i_hat_both["grant"] as Dictionary).get("sneaked_past_danger", 0)) == 2 and not (i_hat_both["grant"] as Dictionary).has("melee_hit"), "...and pays the quiet grant, not the brawl's")
+	assert(String(WIQuests.resolved_path(i_hat, {"handoff_loud": 1, "handoff_talked": 1})["accomplishment"]) == "handoff_talked", "loud THEN talked records the TALK -- talking it round outranks finishing a fight")
+	assert(WIQuests.beat_index(i_hat, {"handoff_talked": 1}) == 1, "any one route counter closes the run beat and sends them back to the parlor")
+	assert(WIQuests.beat_index(i_hat, {"handoff_talked": 1, "hat_job_done": 1}) == 2, "...and Wilovan's report completes it")
+
 	# EVERY shipped array with 2+ real rungs must carry its ladder in writing --
 	# the ordering is load-bearing now, and an unnoted array is an unreviewed one.
 	for quest: Dictionary in shipped.get("quests", []):
