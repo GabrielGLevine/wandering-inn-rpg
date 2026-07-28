@@ -45,8 +45,14 @@ const PLAYER_STRING_FILES := [
 ## Journal act beats show `opening` while PENDING and `text` once banked, so an
 ## opening may pose the act's question and must never answer it. Greppable
 ## floor: authored + distinct from `text` + free of these past-tense bank
-## markers (matched case-insensitively).
-const ACT_OPENING_OUTCOME_MARKERS := ["settled", "you read", "you took", "you walked"]
+## markers (matched case-insensitively). The `you have <verb>` forms are the
+## same ban -- an auxiliary between the pronoun and the verb evaded the bare
+## pair (the_reach_mapped's own `text` reads "you have walked all of it").
+const ACT_OPENING_OUTCOME_MARKERS := [
+	"settled",
+	"you read", "you took", "you walked",
+	"you have read", "you have taken", "you have walked",
+]
 
 
 func _validate_act_openings(acts: Dictionary) -> void:
@@ -60,6 +66,37 @@ func _validate_act_openings(acts: Dictionary) -> void:
 			_check(opening != String(beat.get("text", "")), "%s: `opening` must not restate the outcome `text`" % label)
 			for marker: String in ACT_OPENING_OUTCOME_MARKERS:
 				_check(not opening.to_lower().contains(marker), "%s: `opening` carries outcome marker '%s' -- pose the question, never the answer" % [label, marker])
+
+
+## v0.15 A2 — leads.json is a DERIVED journal strip, so a malformed row is
+## silent (never shown, or shown forever) rather than loud. Lints the whole
+## shape: both gates authored and non-empty (no gateless lead, no lead that can
+## never vanish), every gate counter a SHIPPED id (leads add no counters of
+## their own), copy authored, and `place` naming a real landmark the player can
+## walk to -- the pointer is the whole point.
+func _validate_leads(leads: Dictionary, shipped_accomplishments: Dictionary) -> void:
+	var landmark_tokens: Array = []
+	for map_id: String in LANDMARK_TOKENS:
+		landmark_tokens.append_array(LANDMARK_TOKENS[map_id] as Array)
+	var seen_ids: Dictionary = {}
+	for raw_lead: Variant in leads.get("leads", []):
+		var lead := raw_lead as Dictionary
+		var id := String(lead.get("id", ""))
+		if not _require(id != "", "leads.json: every lead needs an `id`"):
+			continue
+		_check(not seen_ids.has(id), "leads.json: duplicate lead id %s" % id)
+		seen_ids[id] = true
+		for gate_key: String in ["requires", "hide_when"]:
+			var gate: Dictionary = lead.get(gate_key, {})
+			if not _require(not gate.is_empty(), "lead %s: `%s` must name at least one counter -- an empty `requires` shows the lead from turn 0, an empty `hide_when` never lets it go" % [id, gate_key]):
+				continue
+			for counter: String in gate:
+				_check(shipped_accomplishments.has(counter), "lead %s: `%s` counter %s is not a shipped accomplishment id" % [id, gate_key, counter])
+				_check(int(gate[counter]) >= 1, "lead %s: `%s` threshold for %s must be >= 1" % [id, gate_key, counter])
+		_check(String(lead.get("lead_text", "")) != "", "lead %s: `lead_text` must be authored" % id)
+		var place := String(lead.get("place", ""))
+		if _require(place != "", "lead %s: `place` must be authored -- a lead without a where is not a pointer" % id):
+			_check(_description_names_place(place, landmark_tokens), "lead %s: `place` names no known landmark: %s" % [id, place])
 
 
 ## GH#211 review LOW-4: a victory_toast carrier's FIRST on_victory id keys the
@@ -223,6 +260,10 @@ func _init() -> void:
 	_validate_place_naming_shape_cases()
 	_validate_tutor_line_help_consistency()
 	_validate_act_openings(_load_json("res://data/acts.json"))
+	var shipped_accomplishments: Dictionary = {}
+	for raw_id: Variant in _load_json("res://data/shipped_ids.json").get("accomplishments", []):
+		shipped_accomplishments[String(raw_id)] = true
+	_validate_leads(_load_json("res://data/leads.json"), shipped_accomplishments)
 
 	if _errors.is_empty():
 		print("PASS: errand content is fully cross-referenced")

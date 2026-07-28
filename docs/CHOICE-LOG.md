@@ -4,6 +4,60 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 A2 Leads strip (task 1.2) + T1.1 carried items
+
+- **`active_leads()` is a pure derivation on `_combat_config["leads"]`, nothing
+  persisted.** A `seen_leads`/`dismissed_leads` save field was the alternative
+  (it would allow "hide this pointer"), and it was rejected: a lead is defined
+  by two counters, so a saved copy can only ever DRIFT from them (the leads
+  vanish on their own quest-start counter, which is exactly the state a save
+  would duplicate). No save VERSION bump, no migration arm, and a migrated
+  v0.14 save shows the correct strip the first time it opens the journal.
+  Revert = delete the method, the catalog load, and the journal's section.
+- **`hide_when` is the ABSENT gate, not a second `requires`.** Extracted
+  `WIGame._absent_gate_met` and pointed the two pre-existing copies
+  (`_present_gate_met`, `_encounter_gate_met`) at it rather than writing a
+  fourth inline loop — same 4 lines, three sites, one seam to state the
+  ">= threshold shuts it" trap at. Behavior-preserving (full suite + the
+  touched canonicals green, presence/encounter gates included).
+- **The strip publishes RENDERED rows (`lead_lines`), matching
+  `act_beat_lines`.** Pinning ids would have been more stable across copy
+  edits, but the whole finding is that the player had no words to read — so
+  the QA pin is the words, place included. Cost accepted: polishing a lead
+  reds three canonicals (whole-list match); re-pin from a run.
+- **Marker glyph `· ` shared with pending act beats.** Deliberate: both mean
+  "not yet yours". A distinct glyph would imply a distinct mechanism the
+  player has no way to learn.
+- **The brief's "extend arc_flow at the three seams" read as "extend the
+  canonical AT each of the three seams".** arc_flow physically reaches only
+  seam 1 (it ends at the seal), so seams 2 and 3 landed on the canonicals
+  that already stand there: `horns_dig_flow` (journal open BEFORE the
+  invitation shows the dig lead, a second open after `horns_dig_started`
+  banks pins `lead_lines: []` — the appear/vanish pair proven in one live
+  run) and `door_awakening` (the awakening sleep completes the door quest,
+  and the same page now carries the spine lead). Alternative — a new
+  fixture-start canonical per seam — buys the same proof for three manifest
+  rows and three seeds. All three are read-only journal detours.
+- **T1.1 CARRIED-1 closed: `arc_flow` gets the `act_beat_lines` pin + windowed
+  journal shot the T1.1 brief named for it.** T1.1 swapped that pin to
+  `raskghar_entry_loop` unlogged (an Act III page for an Act IV pin — the
+  Act III fixture was standing in the more interesting spot, but the swap was
+  a substitution, not a superset). Both now exist: raskghar_entry_loop keeps
+  the Act III opening pin, arc_flow gains Act IV's 7-pending list on the seam
+  page, and its `05_journal_sealed` shot was read windowed.
+- **T1.1 CARRIED-3, outcome markers: added the `you have <verb>` FORMS, not a
+  bare "walked".** The gap the review found is an auxiliary between pronoun
+  and verb (`the_reach_mapped`'s own text reads "you have walked all of it",
+  which the shipped `you walked` entry misses); the same evasion exists for
+  read/took, so all three have-forms ship together. Bare "walked" was
+  rejected — it would red an honest forward line ("nobody has walked it
+  since"), and the ban is on second-person BANK verbs, not the verb stem.
+  No shipped opening trips any of the 7 entries (arm proven can-fail).
+- **T1.1 CARRIED-4, `render_beats` emptiness is now tested STRIPPED.** A
+  whitespace-only `opening` used to render a bare "· " row — a marker
+  pointing at nothing, which is worse than the hidden beat the policy
+  promises. Unit case pins it (proven can-fail).
+
 ## 2026-07-28 — v0.15 A1 pending-beat openings (task 1.1)
 
 - **Render policy lives in `WIActs.render_beats`, not in journal.gd.** The

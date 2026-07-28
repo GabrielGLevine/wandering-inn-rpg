@@ -1,0 +1,9 @@
+{
+	"_comment": "Derived journal Leads: un-started mainline hooks whose prerequisites are met. Pure counter reads; a lead vanishes when its hide_when (the quest-start counter) banks. v0.15 spec A2.",
+	"leads": [
+		{ "id": "lead_survey", "requires": { "raskghar_sealed": 1 }, "hide_when": { "horns_delve_started": 1 }, "lead_text": "The Guild posted a Watch notice about the reopened gallery.", "place": "Adventurer's Guild" },
+		{ "id": "lead_dig", "requires": { "seal_kept_reported": 1 }, "hide_when": { "horns_dig_started": 1 }, "lead_text": "Ceria's been planning a dig east past the floodplains.", "place": "The Wandering Inn" },
+		{ "id": "lead_spine", "requires": { "door_awakened": 1 }, "hide_when": { "spine_started": 1 }, "lead_text": "Pisces keeps looking at the Door like it owes him a letter.", "place": "Guild steps, Market Street" },
+		{ "id": "lead_capstone", "requires": { "lattice_witch_lore": 1 }, "hide_when": { "seal_descent_agreed": 1 }, "lead_text": "Pisces is collecting what you learn out there.", "place": "Guild steps, Market Street" }
+	]
+}

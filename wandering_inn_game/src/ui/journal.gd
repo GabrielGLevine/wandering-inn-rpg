@@ -88,6 +88,7 @@ var _scroll_hint: Label
 var _flat_skill_ids: Array[String] = []
 var _cursor_index := -1
 var _open_act: Dictionary = {}
+var _open_leads: Array = []
 var _open_quest_lines: Array = []
 var _open_completed_quest_lines: Array = []
 var _open_skill_groups: Array = []
@@ -304,6 +305,7 @@ func _can_open() -> bool:
 func _open() -> void:
 	open = true
 	var act: Dictionary = Game.sim.act_summary()
+	var leads: Array = Game.sim.active_leads()
 	var quest_lines: Array = Game.sim.quest_summary()
 	var completed_quest_lines: Array = Game.sim.completed_quest_summary()
 	var skill_groups: Array = Game.sim.skills_journal()
@@ -322,6 +324,7 @@ func _open() -> void:
 	if Game.sim.accomplishment_count("post_game") > 0:
 		chronicle_facts = Game.sim.chronicle_facts()
 	_open_act = act
+	_open_leads = leads
 	_open_quest_lines = quest_lines
 	_open_completed_quest_lines = completed_quest_lines
 	_open_skill_groups = skill_groups
@@ -394,6 +397,7 @@ func _open() -> void:
 		"act_beats": act_beats.size(),
 		"act_beats_achieved": act_beats_achieved,
 		"act_beat_lines": _act_beat_lines(),
+		"lead_lines": _lead_lines(),
 		"seen_statuses": seen_statuses,
 		"posting_title": String(posting.get("title", "")),
 		"posting_status": String(posting.get("status", "")),
@@ -640,6 +644,17 @@ func _act_beat_lines() -> Array:
 	return lines
 
 
+## v0.15 A2 — the Leads rows as the player reads them: "· <lead_text> (<place>)"
+## over `WIGame.active_leads()`. Same ONE-source rule as `_act_beat_lines`: the
+## rendered strip and the `lead_lines` payload key are this list.
+func _lead_lines() -> Array:
+	var lines: Array = []
+	for raw_lead: Variant in _open_leads:
+		var lead := raw_lead as Dictionary
+		lines.append("· %s (%s)" % [String(lead["lead_text"]), String(lead["place"])])
+	return lines
+
+
 ## Issue #209 — TAB 1 (Quests, the default): Act header/beats + Quests +
 ## Completed + Postings. "What am I doing now." Reads the `_open_*` snapshot
 ## fields (captured at `_open()`, immutable while the panel is open). Returns
@@ -649,6 +664,14 @@ func _build_quests_tab() -> Dictionary:
 	if not _open_act.is_empty():
 		parts.append("[b]%s[/b]" % UIChrome.bb_escape(String(_open_act.get("header", ""))))
 		for line: String in _act_beat_lines():
+			parts.append(UIChrome.bb_escape(line))
+		parts.append("")
+	# v0.15 A2: above Quests, and only when non-empty -- the three mainline
+	# seams used to land the player on "No quests in progress." with no pointer.
+	var lead_lines := _lead_lines()
+	if not lead_lines.is_empty():
+		parts.append("[b]Leads[/b]")
+		for line: String in lead_lines:
 			parts.append(UIChrome.bb_escape(line))
 		parts.append("")
 	parts.append("[b]Quests[/b]")

@@ -51,6 +51,29 @@
    ]
   },
   {
+   "_comment": "== SEAM 2, BEFORE ==. Read-only journal detour (does not move the player). seal_kept_reported banked + horns_dig_started absent => the dig lead points at Ceria at the inn, which is the very conversation the next steps walk into. Paired with the AFTER open past the invitation below.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "lead_lines": [
+     "· Ceria's been planning a dig east past the floodplains. (The Wandering Inn)"
+    ]
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "00_journal_lead_dig"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
    "_comment": "== THE INVITATION ==. (8,4) -> (8,5), the open cell north of ceria_inn (8,6); the second `down` is a BUMP into her own cell (blocked) that sets facing without moving -- the walkthroughs' robust-facing idiom.",
    "action": "move",
    "direction": "down",
@@ -192,6 +215,23 @@
    "action": "assert_state",
    "path": "started_quests",
    "contains": "horns_dig"
+  },
+  {
+   "_comment": "== SEAM 2, AFTER ==. horns_dig_started is the dig lead's own hide_when, so the strip is EMPTY the moment the thread it pointed at begins -- the Quests list is carrying it now. Exact-list match on []: a leftover pointer to a started quest is the failure this pins.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "lead_lines": []
+   }
+  },
+  {
+   "action": "press",
+   "name": "journal"
   },
   {
    "_comment": "== TRAVEL: the ruin seam on its NEW gate ==. Teleport to (37,11) on the floodplains -- the ruin_walkthrough approach cell, one west of ruin_door (38,11) -- then bump east into the door's own (blocked) cell for facing and interact. door_chain_started is NOT banked in this fixture: if the gate had stayed on it, this interact would fall through to the inert 'It doesn't feel like it goes anywhere. Yet.' toast and the run would die here.",

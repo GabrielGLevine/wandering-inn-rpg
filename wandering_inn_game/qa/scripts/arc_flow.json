@@ -805,6 +805,7 @@
    "equals": 1
   },
   {
+   "_comment": "== THE SEAM ==. The seal ends Act III's only quest thread, so this page carried a header, four Completed lines and 'No quests in progress.' -- nothing telling the player where the story goes next. TWO pins on one open. act_beat_lines (v0.15 A1): the player is standing at Act IV's door having earned none of its seven beats, so every row is a '·' OPENING -- an outcome line here is the itinerary leak. lead_lines (v0.15 A2): raskghar_sealed banked + horns_delve_started absent => the survey lead, WITH its place. Both are whole-list matches -- re-pin from a run if the copy is polished.",
    "action": "press",
    "name": "journal"
   },
@@ -813,10 +814,25 @@
    "type": "ui_journal_shown",
    "timeout_sec": 5,
    "payload_contains": {
-    "act_id": "act_iv"
+    "act_id": "act_iv",
+    "act_beats_achieved": 0,
+    "act_beat_lines": [
+     "· The city is deciding what you are to it.",
+     "· The Horns are digging east, and they are short a pair of hands.",
+     "· Riverfarm's fields hold more trouble than wheat.",
+     "· A name needs settling in the City of Adventurers.",
+     "· The Walled City opens for paperwork, not heroics.",
+     "· Four adventurers need somewhere to put their feet up.",
+     "· The Door strains for somewhere it cannot reach yet."
+    ],
+    "quest_lines": 0,
+    "lead_lines": [
+     "· The Guild posted a Watch notice about the reopened gallery. (Adventurer's Guild)"
+    ]
    }
   },
   {
+   "_comment": "The windowed read of the seam page: Act IV openings above a Leads strip above an empty Quests list.",
    "action": "screenshot",
    "name": "05_journal_sealed"
   },

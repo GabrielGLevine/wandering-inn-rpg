@@ -189,6 +189,7 @@ func _init() -> void:
 		{"id": "banked", "text": "OUT-A", "opening": "OPEN-A", "when": {}},
 		{"id": "pending_with", "text": "OUT-B", "opening": "OPEN-B", "when": {"min_classes": 1}},
 		{"id": "pending_without", "text": "OUT-C", "when": {"min_classes": 1}},
+		{"id": "pending_blank", "text": "OUT-D", "opening": "  \t ", "when": {"min_classes": 1}},
 	]}]}
 	var rows: Array = WIActs.render_beats(WIActs.evaluate(synth, {}))
 	var row_ids: Array = []
@@ -197,7 +198,7 @@ func _init() -> void:
 		var row := raw_row as Dictionary
 		row_ids.append(String(row["id"]))
 		row_lines.append(String(row["line"]))
-	assert(row_ids == ["banked", "pending_with"], "an opening-less PENDING beat is dropped from the render list, never shown as outcome text")
+	assert(row_ids == ["banked", "pending_with"], "an opening-less PENDING beat is dropped from the render list, never shown as outcome text -- a WHITESPACE-ONLY opening drops the same way, never a bare marker row")
 	assert(row_lines == ["OUT-A", "OPEN-B"], "banked renders `text`, pending renders `opening`")
 	assert(bool((rows[0] as Dictionary)["achieved"]) and not bool((rows[1] as Dictionary)["achieved"]), "render rows carry `achieved` for the journal marker")
 
@@ -205,7 +206,7 @@ func _init() -> void:
 	var banked_lines: Array = []
 	for raw_row: Variant in synth_banked:
 		banked_lines.append(String((raw_row as Dictionary)["line"]))
-	assert(banked_lines == ["OUT-A", "OUT-B", "OUT-C"], "once banked, every beat renders its outcome text -- including the opening-less one")
+	assert(banked_lines == ["OUT-A", "OUT-B", "OUT-C", "OUT-D"], "once banked, every beat renders its outcome text -- including the opening-less and blank-opening ones")
 
 	assert(WIActs.render_beats({}).is_empty(), "empty act => no render rows")
 

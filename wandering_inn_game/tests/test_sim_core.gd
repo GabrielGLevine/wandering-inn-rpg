@@ -1189,6 +1189,38 @@ func _init() -> void:
 	assert(seal.accomplishment_count("post_game") == 1, "seal bank: idempotent past the first qualifying sleep")
 	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "accomplishment_recorded" and String(e["payload"]["id"]) == "post_game"), "seal bank: no re-bank on a later sleep")
 
+	# v0.15 A2 -- the journal Leads strip. Pure counter read off the shipped
+	# catalog: `requires` banked AND `hide_when` still absent. The seal seam
+	# below is the exact moment the arc used to land on "No quests in progress."
+	var cc_leads: Dictionary = combat_config.duplicate(true)
+	cc_leads["leads"] = _load_json("res://data/leads.json")
+	var leads := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_leads)
+	assert(leads.active_leads().is_empty(), "leads: a fresh sim has earned no pointer yet")
+
+	leads.accomplishments["raskghar_sealed"] = 1
+	var survey: Array = leads.active_leads()
+	assert(survey.size() == 1 and String((survey[0] as Dictionary)["id"]) == "lead_survey", "leads: the seal opens the survey lead")
+	assert(String((survey[0] as Dictionary)["lead_text"]) == "The Guild posted a Watch notice about the reopened gallery.", "leads: the row carries its authored copy")
+	assert(String((survey[0] as Dictionary)["place"]) == "Adventurer's Guild", "leads: the row carries its place -- a lead without a where is not a pointer")
+
+	leads.accomplishments["horns_delve_started"] = 1
+	assert(leads.active_leads().is_empty(), "leads: a lead vanishes the moment its own quest starts (hide_when)")
+
+	leads.accomplishments["seal_kept_reported"] = 1
+	leads.accomplishments["door_awakened"] = 1
+	var lead_ids: Array = []
+	for raw_lead: Variant in leads.active_leads():
+		lead_ids.append(String((raw_lead as Dictionary)["id"]))
+	assert(lead_ids == ["lead_dig", "lead_spine"], "leads: concurrent seams both list, in catalog order")
+
+	_events.clear()
+	leads.active_leads()
+	assert(_events.is_empty(), "leads: a derived read banks nothing and emits nothing")
+
+	var no_leads := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	no_leads.accomplishments["raskghar_sealed"] = 1
+	assert(no_leads.active_leads().is_empty(), "leads: no catalog => empty strip, never a crash")
+
 	var gGuard := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gGuard.bind_map_silent("garden_sanctuary", Vector2i(1, 1))
 	assert(not gGuard.start_combat("goblin_encounter_2"), "garden sim guard: start_combat refuses on the garden map")

@@ -1615,7 +1615,7 @@
    "script": "arc_flow",
    "seed": 9,
    "fixture": "near_act3",
-   "note": "THE WHOLE ACT III ARC PROOF, tremor through the seal and the sleep that banks post_game (Phase 8: the seal rolls no closing sequence -- that moved to Act V's seal_resolved)",
+   "note": "THE WHOLE ACT III ARC PROOF, tremor through the seal and the sleep that banks post_game (Phase 8: the seal rolls no closing sequence -- that moved to Act V's seal_resolved); v0.15 A2 seam 1: the post-seal journal open pins act_beat_lines (Act IV, 7 pending openings) AND lead_lines (the survey lead) on the page that used to read 'No quests in progress.' with no pointer",
    "tiers": [
     "full"
    ],
@@ -2078,7 +2078,7 @@
    "script": "horns_dig_flow",
    "seed": 9,
    "fixture": "horns_dig_start",
-   "note": "2026-07-26 main-quest restructure (Task 2.3): THE horns_dig canonical -- Ceria's dig invitation played live at the inn (ceria_intro on ceria_inn, through her talk_pool), the ruin seam on its new horns_dig_started gate, the camp join (ceria_dig_camp), the ruin_guardian fight + shipped rune pair, and the pedestal reveal (recovered_anchor_stone + pedestal_breached + door_retrieved on one open). EXTENDED in Task 2.4 through the mounting scene and out the other side: the haul home, Pisces hanging it at the pantry (door_mounting), door_mounted completing horns_dig and auto-starting door_that_goes_elsewhere, and a live ride through the Magical Door to Liscor off the new day-one portal gate -- THE canonical main-quest-start proof for the wave",
+   "note": "2026-07-26 main-quest restructure (Task 2.3): THE horns_dig canonical -- Ceria's dig invitation played live at the inn (ceria_intro on ceria_inn, through her talk_pool), the ruin seam on its new horns_dig_started gate, the camp join (ceria_dig_camp), the ruin_guardian fight + shipped rune pair, and the pedestal reveal (recovered_anchor_stone + pedestal_breached + door_retrieved on one open). EXTENDED in Task 2.4 through the mounting scene and out the other side: the haul home, Pisces hanging it at the pantry (door_mounting), door_mounted completing horns_dig and auto-starting door_that_goes_elsewhere, and a live ride through the Magical Door to Liscor off the new day-one portal gate -- THE canonical main-quest-start proof for the wave; v0.15 A2 seam 2: journal opens BEFORE the invitation (the dig lead points at Ceria here) and AFTER horns_dig_started banks (lead_lines empty) -- the appear/vanish pair in one run",
    "tiers": [
     "full"
    ],
@@ -2272,7 +2272,7 @@
    "script": "door_awakening",
    "seed": 9,
    "fixture": "door_awakening_start",
-   "note": "Magical Door plan Task D4 (issue #8): the full awakening chain from a beat-3-ready fixture through 3 real sleeps -- 2 silent study beats then door_awakened banks + the GDI line queues under the sleep veil -- to the awakened pantry_door's interact rewire (opens the portal menu, not the flavor toast)",
+   "note": "Magical Door plan Task D4 (issue #8): the full awakening chain from a beat-3-ready fixture through 3 real sleeps -- 2 silent study beats then door_awakened banks + the GDI line queues under the sleep veil -- to the awakened pantry_door's interact rewire (opens the portal menu, not the flavor toast); v0.15 A2 seam 3: the journal open on the awakening sleep pins the spine lead (2 rows, catalog order -- this fixture never started the delve either)",
    "tiers": [
     "full"
    ],

@@ -281,6 +281,7 @@ MONOLITH_SYSTEMS: dict[str, set[str]] = {
 	"portals.json": {"portals"},
 	"quests.json": {"quests"},
 	"acts.json": {"quests"},
+	"leads.json": {"quests"},
 	"bounties.json": {"boards"},
 	"deliveries.json": {"boards"},
 	"combatants.json": {"combat"},

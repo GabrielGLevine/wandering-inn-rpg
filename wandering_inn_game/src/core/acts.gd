@@ -52,14 +52,15 @@ static func evaluate(acts_catalog: Dictionary, ctx: Dictionary) -> Dictionary:
 ## `[{id, achieved, line}]`. Banked beat => its `text`; PENDING beat => its
 ## `opening`. A pending beat with no authored opening is DROPPED -- outcome
 ## text must never render unearned (v0.15 ruling 2), so hiding is the only
-## fallback. Callers own the marker glyph and escaping.
+## fallback. Callers own the marker glyph and escaping. Emptiness is tested
+## STRIPPED: a whitespace-only opening drops too, never a bare "· " row.
 static func render_beats(act: Dictionary) -> Array:
 	var rows: Array = []
 	for raw_beat: Variant in act.get("beats", []):
 		var beat := raw_beat as Dictionary
 		var achieved := bool(beat.get("achieved", false))
 		var line := String(beat.get("text", "")) if achieved else String(beat.get("opening", ""))
-		if line == "":
+		if line.strip_edges() == "":
 			continue
 		rows.append({"id": String(beat.get("id", "")), "achieved": achieved, "line": line})
 	return rows

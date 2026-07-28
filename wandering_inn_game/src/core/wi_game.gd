@@ -838,11 +838,8 @@ func _present_gate_met(when: Dictionary) -> bool:
 	# camp" leg. phase now ANDs here too (see the fall-through above).
 	if when.has("requires") and not _accomplishment_gate_met(when["requires"] as Dictionary):
 		return false
-	if when.has("absent"):
-		var absent: Dictionary = when["absent"]
-		for key: String in absent:
-			if accomplishment_count(key) >= int(absent[key]):
-				return false
+	if when.has("absent") and not _absent_gate_met(when["absent"] as Dictionary):
+		return false
 	# d1 #247 Friends of the Inn: `guest` = the deterministic rotation arm.
 	# WIInnGuests windows `seats` distinct met roster members over times_slept;
 	# a guest entity is present only while its npc is on shift this waking.
@@ -875,17 +872,24 @@ func _encounter_gate_met(ent: Dictionary) -> bool:
 	# encounter_when (present_when is forbidden on encounters by validator).
 	if when.has("requires") and not _accomplishment_gate_met(when["requires"] as Dictionary):
 		return false
-	if when.has("absent"):
-		var absent: Dictionary = when["absent"]
-		for key: String in absent:
-			if accomplishment_count(key) >= int(absent[key]):
-				return false
+	if when.has("absent") and not _absent_gate_met(when["absent"] as Dictionary):
+		return false
 	return true
 
 
 func _accomplishment_gate_met(req: Dictionary) -> bool:
 	for key: String in req:
 		if accomplishment_count(key) < int(req[key]):
+			return false
+	return true
+
+
+## The `absent` half of a counter gate (GH#199): true while EVERY named counter
+## is still below its threshold. Inverse of `_accomplishment_gate_met`, not its
+## negation -- one banked key shuts the gate, an empty dict passes.
+func _absent_gate_met(absent: Dictionary) -> bool:
+	for key: String in absent:
+		if accomplishment_count(key) >= int(absent[key]):
 			return false
 	return true
 
@@ -1555,6 +1559,27 @@ func act_summary() -> Dictionary:
 		"accomplishments": accomplishments,
 	}
 	return WIActs.evaluate(catalog, ctx)
+
+
+## v0.15 A2: the journal's Leads strip -- mainline hooks the player has EARNED
+## the way to but not started, `[{id, lead_text, place}]` in catalog order.
+## Derived, never saved: `requires` is the ordinary counter gate, `hide_when`
+## the absent gate holding the lead's own quest-start counter, so a lead
+## vanishes the moment its thread begins and can never desync from the save.
+func active_leads() -> Array:
+	var out: Array = []
+	for raw_lead: Variant in (_combat_config.get("leads", {}) as Dictionary).get("leads", []):
+		var lead := raw_lead as Dictionary
+		if not _accomplishment_gate_met(lead.get("requires", {}) as Dictionary):
+			continue
+		if not _absent_gate_met(lead.get("hide_when", {}) as Dictionary):
+			continue
+		out.append({
+			"id": String(lead.get(WIKeys.ID, "")),
+			"lead_text": String(lead.get("lead_text", "")),
+			"place": String(lead.get("place", "")),
+		})
+	return out
 
 
 func _quest_title(id: String) -> String:
