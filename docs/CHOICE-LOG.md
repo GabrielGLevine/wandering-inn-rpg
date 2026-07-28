@@ -85,11 +85,29 @@ cross-release index of them.
   `ceria_inn`, `yvlon_inn`, `ksmvr_inn`, `dungeon_approach`'s
   `ceria`/`yvlon`/`ksmvr`, and `trapped_halls.ksmvr_plates` — and the
   three-copies window is gone: post-invitation the Horns are at the camp and
-  nowhere else. v0.14's gate choice was a workaround for a renderer bug and is
+  nowhere else. SCOPED HONESTLY: that is a POST-invitation claim. Before it, a
+  post-seal player still finds Ceria and Yvlon in two places (inn + delve
+  staging) and Ksmvr in three (inn + staging + trapped_halls) — multiplicity
+  this collapse neither created nor changed, since every one of those rows was
+  equally present under v0.14's `horns_dig_joined` gate. Carried, not
+  introduced; the pre-invitation duplication wants presence windows the delve
+  arc does not currently have, so it is a v0.16 candidate, not a fix to bolt on
+  here. v0.14's gate choice was a workaround for a renderer bug and is
   now recorded as such at its owning site (inn.json's `ceria_inn_returned`).
   Alternatives rejected: keep the joined gate (leaves the three-copies window
   the re-review found); defer per-bank rather than latching (a six-bank
   conversation would cost six rebuilds). Revert = one call site plus six rows.
+- **Two guards the mechanism review named, both reachable, both one line.**
+  (a) `_dialogue_is_open()` reads `not dialogue.finished`, not just non-null:
+  `WIGame.dialogue_choose` nulls the walker ONLY on an `end: true` option, while
+  `WIDialogue._enter`'s softlock fail-safe finishes it from inside `advance()`
+  when a goto lands on a node whose every option is gated shut. That leaves a
+  live finished walker on the sim, and a bare null check would then defer every
+  later reconcile forever. The path is real, not theoretical, and is now pinned
+  in `test_dialogue`. (b) `_flush_deferred_presence_reconcile` carries the #119
+  stale-cover guard the ACCOMPLISHMENT_RECORDED arm already had, and leaves the
+  latch UP when it bails, because `_rebuild_field` is what clears it after
+  reconstructing from live sim.
 - **Scope held at ACCOMPLISHMENT_RECORDED.** PHASE_CHANGED's own reconcile is
   deliberately NOT deferred: `_tick_action` fires only from
   move/interact/use_skill_field, never from `dialogue_choose`, so a phase

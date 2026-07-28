@@ -624,6 +624,37 @@ const GRAPH := {
 }
 
 
+
+## v0.15 T4.3 round 3: THE FINISHED-BUT-NOT-NULLED WALKER, the case world.gd's
+## `_dialogue_is_open()` guards. `WIGame.dialogue_choose` nulls `Game.sim.dialogue`
+## only when `choose()` returns `ended: true`; `_enter`'s softlock fail-safe sets
+## `finished` from INSIDE `advance()` instead, on a goto whose target node has
+## every option gated shut. That leaves a live, finished walker parked on the sim
+## -- so a bare `dialogue != null` check would defer presence reconciles forever.
+func test_finished_walker_survives_a_goto_into_an_all_hidden_node() -> void:
+	_events.clear()
+	var graph := {
+		"start": "hub",
+		"nodes": {
+			"hub": {"speaker": "A", "text": "hub", "options": [{"text": "on", "goto": "shut"}]},
+			# Every option requires a counter the ctx does not carry, so
+			# `_visible_options()` comes back empty on a node that HAS options.
+			"shut": {"speaker": "A", "text": "shut", "options": [
+				{"text": "locked", "requires": {"accomplishment": {"never_banked": 1}}, "end": true},
+			]},
+		},
+	}
+	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}}, _sink)
+	d.begin()
+	var r := d.choose(0)
+	assert(r["ended"] == false, "a goto option reports ended:false -- which is what leaves the walker non-null in WIGame")
+	d.advance(String(r["next"]))
+	assert(d.current_id == "shut", "advanced into the all-hidden node")
+	assert(d.current_options().is_empty(), "the node's only option is requires-hidden")
+	assert(d.finished, "_enter's softlock fail-safe finished the walker without choose() ever returning ended:true")
+	assert(_count("dialogue_ended") == 1, "DIALOGUE_ENDED still fires exactly once from the fail-safe")
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var ctx := {
@@ -715,6 +746,7 @@ func _init() -> void:
 	test_phase_requires_gates_text_variants_both_ways()
 	test_phase_requires_on_option_stays_visible_locked()
 	test_grimalkin_studies_gates_on_the_real_graph()
+	test_finished_walker_survives_a_goto_into_an_all_hidden_node()
 
 	print("PASS: dialogue graphs walk, gate, hide, and end correctly")
 	quit(0)

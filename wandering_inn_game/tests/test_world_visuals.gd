@@ -29,7 +29,7 @@ func _y_sort_contract_holds(source: String, factory_source: String) -> bool:
 		var function_body := source.get_slice("func %s(" % function_name, 1).get_slice("\nfunc ", 0)
 		if function_body.find(override_read) == -1:
 			return false
-	var rebuild_body := source.get_slice("func _rebuild_field", 1).get_slice("\nfunc ", 0)
+	var rebuild_body := source.get_slice("func _rebuild_field(", 1).get_slice("\nfunc ", 0)
 	return rebuild_body.find(override_read) == -1
 
 
@@ -496,6 +496,9 @@ func _dialogue_defer_contract_holds(source: String) -> bool:
 	var open_body := _function_body(source, "_dialogue_is_open")
 	if open_body.find("Game.sim.dialogue != null") == -1:
 		return false
+	# A finished-but-not-nulled walker must not latch the defer forever.
+	if open_body.find("not Game.sim.dialogue.finished") == -1:
+		return false
 	# Queue-not-run, and the queue is a latch (assignment, never an increment).
 	var defer_body := _function_body(source, "_reconcile_entity_presence_or_defer")
 	if defer_body.find("_dialogue_is_open()") == -1 or defer_body.find("_presence_reconcile_deferred = true") == -1:
@@ -505,6 +508,9 @@ func _dialogue_defer_contract_holds(source: String) -> bool:
 	# Flush exactly once: clear BEFORE reconciling, and no-op when nothing queued.
 	var flush_body := _function_body(source, "_flush_deferred_presence_reconcile")
 	if flush_body.find("if not _presence_reconcile_deferred:") == -1:
+		return false
+	# #119: never reconcile against geometry the transition cover is replacing.
+	if flush_body.find("_map_transition_stale_cover()") == -1:
 		return false
 	if flush_body.find("_presence_reconcile_deferred = false") == -1 or flush_body.find("_reconcile_entity_presence()") == -1:
 		return false
@@ -562,6 +568,8 @@ func _init() -> void:
 		"if not _presence_reconcile_deferred:",
 		"elif type == WIEvents.DIALOGUE_ENDED:",
 		"_flush_deferred_presence_reconcile()",
+		"not Game.sim.dialogue.finished",
+		"_map_transition_stale_cover()",
 	]:
 		assert(not _dialogue_defer_contract_holds(source.replace(deleted_defer_clause, "")),
 			"dialogue-defer contract must reject deletion of: %s" % deleted_defer_clause)

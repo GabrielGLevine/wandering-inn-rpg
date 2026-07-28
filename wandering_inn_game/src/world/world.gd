@@ -863,8 +863,13 @@ func _refresh_entities_watching_phase() -> void:
 var _presence_reconcile_deferred := false
 
 
+## `finished` is load-bearing, not belt-and-braces: WIDialogue sets it on the
+## terminal node and `dialogue_choose` only NULLS the walker on an `end: true`
+## option. A graph that runs out of options any other way leaves a finished
+## walker parked on `Game.sim.dialogue`, and a bare null check would defer every
+## reconcile after it FOREVER (nothing else flushes the latch until a rebuild).
 func _dialogue_is_open() -> bool:
-	return Game.sim != null and Game.sim.dialogue != null
+	return Game.sim != null and Game.sim.dialogue != null and not Game.sim.dialogue.finished
 
 
 func _reconcile_entity_presence_or_defer() -> void:
@@ -876,6 +881,14 @@ func _reconcile_entity_presence_or_defer() -> void:
 
 func _flush_deferred_presence_reconcile() -> void:
 	if not _presence_reconcile_deferred:
+		return
+	# The #119 stale-cover contract the ACCOMPLISHMENT_RECORDED arm already
+	# carries: reconciling against geometry the cover is about to replace is
+	# pointless. Leave the latch UP -- `_rebuild_field` drops it after
+	# reconstructing every visual from live sim, so nothing is lost. Reachable
+	# once a dialogue option can travel (a `travel_to` close would end the
+	# conversation and start a transition in the same frame).
+	if _map_transition_stale_cover():
 		return
 	_presence_reconcile_deferred = false
 	_reconcile_entity_presence()
