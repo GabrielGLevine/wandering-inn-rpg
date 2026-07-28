@@ -1104,11 +1104,11 @@
    ]
   },
   {
-   "_comment": "sails overhang above the blocked footprint.",
+   "_comment": "Sails overhang above the blocked footprint. v0.16.1 #3: moved [20,4] -> [19,4] so the ramp/doorway drawn into the windmill art lands on COLUMN 19, directly above riverfarm_mill_door's own cell [19,5] and the pinned south approach [19,6]. Geometry, measured rather than guessed: the sheet is 64x96 at render_scale 1.0 with anchor [0.5,0.917], so the art draws from (cell.x*16 - 24) and its alpha content spans 40px = 2.5 cells; a pixel scan of sheet rows 72-88 puts the mill's own doorway at sheet x 30..37, i.e. one and a bit cells right of the holder. At [19,4] that doorway centres on column 19 and its threshold sits on the row-4/row-5 boundary. [19,4] was ALREADY blocked (the #116 dress-a-blocked-cell pattern), so this moves art only -- no walkable cell changes, no sim change, no canonical churn.",
    "id": "riverfarm_windmill_prop",
    "kind": "prop",
    "cell": [
-    20,
+    19,
     4
    ],
    "display_name": "The Windmill",
@@ -1593,7 +1593,7 @@
    ]
   },
   {
-   "_comment": "v0.16 #305: the mill's ground-floor door. [19,5] is inside the windmill's blocked footprint (the longhouse_door precedent). TWO free approaches, [19,6] and [18,5], neither on any walked QA route. mill_exit returns to [19,6] only, so a west-side entry exits one cell over -- deliberate. sprite `door`, never riverfarm_windmill: that art is 4x6 cells and is already drawn at [20,4].",
+   "_comment": "v0.16 #305: the mill's ground-floor door. [19,5] is inside the windmill's blocked footprint (the longhouse_door precedent). TWO free approaches, [19,6] and [18,5], neither on any walked QA route. mill_exit returns to [19,6] only, so a west-side entry exits one cell over -- deliberate. v0.16.1 #3: hide_sprite. The `door` prop was a SECOND doorway pasted on the windmill's west stone corner (it y-sorts in front of the mill: holder y 80 vs 64), one column away from the ramp the windmill art already draws. The art now carries the entrance -- riverfarm_windmill_prop moved to [19,4] so its own doorway sits directly above this cell -- and the entity keeps blocking, observe, to_map and to_cell, so the interact is unchanged. `sprite` is retained deliberately: it is the fallback if the mill art is ever re-cut and the ramp moves.",
    "id": "riverfarm_mill_door",
    "kind": "door",
    "cell": [
@@ -1602,6 +1602,7 @@
    ],
    "display_name": "The Mill",
    "sprite": "door",
+   "hide_sprite": true,
    "tint": [
     0.74,
     0.7,
