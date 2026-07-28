@@ -1431,17 +1431,17 @@ Variant order is deliberate — last-match-wins puts a co-banking player on the 
 
 > **BINDING TASK-2.4 HANDOFF (deferred quest-start effect).** `test_content.gd:1122-1124` reds any dialogue effect starting a quest id absent from `data/quests.json`, and Task 2.4's own gate list includes `test_content`, so Task 2.4 shipped the attendant's `"Somebody should unstick that."` option with only its `ledger_loop_started` effect. **Restore `{ "quest": "ledger_eats_first" }` as the FIRST entry of that option's `effects` array in `data/dialogue/pallass_lift_attendant.json`, in the SAME commit that splices the quest block** (one verb per dict — a second dict, never a second key). Without it P2 never starts, the journal never shows it, and every gate stays green. This is the exact shape of the Task 1.3 → 1.5 handoff.
 
-- [ ] **Step 0 (task-2.4 handoff):** Restore the `{ "quest": "ledger_eats_first" }` effect dict in `pallass_lift_attendant.json` per the block above, in this task's commit.
-- [ ] **Step 1:** Add the two props (if not already in 2.1) and splice the quest block.
-- [ ] **Step 2:** Add the `test_quests.gd` pins.
-- [ ] **Step 3: Verify the landmark arm.** `unstick`'s producers are all on `pallass_den_shop`; the giver map is `pallass_forge`; so the description MUST contain a token from `LANDMARK_TOKENS["pallass_den_shop"]` — it contains "den shop" and "market tier". Confirm `test_content.gd`'s `_validate_travel_beat_place_naming` passes rather than assuming.
-- [ ] **Step 4: Dash sweep (the lint no gate performs).** The plan mandates a both-forms dash rule and nothing in the suite enforces it, so run it by hand over everything this lane wrote:
+- [x] **Step 0 (task-2.4 handoff):** Restore the `{ "quest": "ledger_eats_first" }` effect dict in `pallass_lift_attendant.json` per the block above, in this task's commit.
+- [x] **Step 1:** Add the two props (if not already in 2.1) and splice the quest block.
+- [x] **Step 2:** Add the `test_quests.gd` pins.
+- [x] **Step 3: Verify the landmark arm.** `unstick`'s producers are all on `pallass_den_shop`; the giver map is `pallass_forge`; so the description MUST contain a token from `LANDMARK_TOKENS["pallass_den_shop"]` — it contains "den shop" and "market tier". Confirm `test_content.gd`'s `_validate_travel_beat_place_naming` passes rather than assuming.
+- [x] **Step 4: Dash sweep (the lint no gate performs).** The plan mandates a both-forms dash rule and nothing in the suite enforces it, so run it by hand over everything this lane wrote:
   - `grep -n -- '--' data/quests.json` → the two new quest blocks must contribute **zero** hits in any `description` / `text` / `title` value. (`_comment` and `_resolution_order` values are author notes, never rendered — `--` there is fine and is what the drafts use.)
   - `grep -rn -- '--' data/dialogue/pallass_*.json data/maps/pallass/pallass_*.json` → same rule: zero hits inside any `text`, `observe`, `toast`, `*_toast`, `talk_pool`, `friendly_line` or `lines` value.
   - `grep -rn -P '\\u2014' data/maps/pallass/ qa/scripts/pallass_*.json` → em-dashes hide as `—` ESCAPES inside `data/maps/**` and QA scripts; sweep that form too, and check the at-most-ONE-em-dash-per-line rule on every hit.
   - Any file touched by this step is re-run through `test_copy_fit` before commit — a dash swap changes rendered width.
-- [ ] **Step 5: Run** `test_quests`, `test_content`, `test_reachability`, `test_copy_fit`.
-- [ ] **Step 6: Census check. Commit** `feat(quests): The Ledger Eats First, three real routes`.
+- [x] **Step 5: Run** `test_quests`, `test_content`, `test_reachability`, `test_copy_fit`.
+- [x] **Step 6: Census check. Commit** `feat(quests): The Ledger Eats First, three real routes`.
 
 ### Task 2.7: The attendant's post-quest reactive stage
 

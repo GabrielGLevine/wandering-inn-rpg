@@ -164,6 +164,22 @@
 				{ "accomplishment": "standards_brokered", "text": "You proved the smith and the examiner had agreed all along, and got it in writing.", "grant": { "persuaded_someone": 3, "heard_gossip": 3 } }			]
 		},
 		{
+			"_comment": "v0.16 P2 (#307). Giver is on pallass_forge and every route resolves on pallass_den_shop, so the unstick beat must name the den shop (the travel-landmark check arms when no producer map is the giver map).",
+			"id": "ledger_eats_first",
+			"title": "The Ledger Eats First",
+			"region": "Pallass",
+			"beats": [
+				{ "id": "unstick", "description": "Get the held crate to its consignee at the den shop on the market tier — by the offices, by the forms, or on your own back.", "complete_when": { "loop_walked": 1 }, "complete_when_any": { "exemption_found": 1, "shipment_carried": 1 } },
+				{ "id": "report", "description": "Tell the lift attendant at the forge-tier landing that his manifest is clean.", "complete_when": { "ledger_unstuck": 1 } }
+			],
+			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). All three co-bank -- nothing stops a player carrying the crate AND walking the offices AND reading the forms. Ladder: exemption > loop > carry. Carrying it moves one crate and leaves the loop exactly as it was; walking the offices produces a countersignature that works ONCE; finding the exemption fixes the rule itself, so the next crate never enters the queue at all.",
+			"resolution_paths": [
+				{ "accomplishment": "shipment_carried", "text": "You carried the crate down two tiers yourself and put it on her dock.", "grant": { "observed_things": 3, "befriended_moments": 2 } },
+				{ "accomplishment": "loop_walked", "text": "You walked the offices in order and made the queue countersign itself.", "grant": { "persuaded_someone": 3, "heard_gossip": 4 } },
+				{ "accomplishment": "exemption_found", "text": "You found the exemption that had been on the paper the whole time.", "grant": { "observed_things": 5, "deliberate_commerce": 2 } }
+			]
+		},
+		{
 			"_comment": "Three-path parity mirroring the cisterns/wrong_order/price_of_a_favor two-beat shape.",
 			"id": "a_gentlemans_disagreement",
 			"title": "A Gentleman's Disagreement",

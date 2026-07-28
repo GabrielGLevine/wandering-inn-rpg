@@ -118,6 +118,9 @@
      "text": "Somebody should unstick that.",
      "effects": [
       {
+       "quest": "ledger_eats_first"
+      },
+      {
        "accomplishment": "ledger_loop_started"
       }
      ],

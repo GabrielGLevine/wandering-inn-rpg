@@ -178,6 +178,12 @@ func _init() -> void:
 	assert(String(WIQuests.resolved_path(p_tempered, {"golem_recalibrated": 1, "temper_run": 1})["accomplishment"]) == "temper_run", "fought THEN ran the temper records the TEMPER")
 	assert(String(WIQuests.resolved_path(p_tempered, {"temper_run": 1, "standards_brokered": 1})["accomplishment"]) == "standards_brokered", "ran it THEN brokered records the BROKERING -- the claim that outlives you leaving")
 
+	# v0.16 P2: all three co-bank; the rule-level fix must outrank the one-off.
+	var p_ledger: Dictionary = WIQuests.quest_by_id(shipped, "ledger_eats_first")
+	assert(String(WIQuests.resolved_path(p_ledger, {"shipment_carried": 1})["accomplishment"]) == "shipment_carried", "a carry-only run still records the carry")
+	assert(String(WIQuests.resolved_path(p_ledger, {"shipment_carried": 1, "loop_walked": 1})["accomplishment"]) == "loop_walked", "carried THEN walked the offices records the LOOP")
+	assert(String(WIQuests.resolved_path(p_ledger, {"loop_walked": 1, "exemption_found": 1})["accomplishment"]) == "exemption_found", "walked it THEN found the exemption records the EXEMPTION -- the fix that outlives the crate")
+
 	# EVERY shipped array with 2+ real rungs must carry its ladder in writing --
 	# the ordering is load-bearing now, and an unnoted array is an unreviewed one.
 	for quest: Dictionary in shipped.get("quests", []):
