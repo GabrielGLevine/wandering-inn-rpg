@@ -293,6 +293,7 @@ func _init() -> void:
 	produced_accomplishments["spell_cast"] = true
 	produced_accomplishments["ranged_hit"] = true
 	_validate_conversations(scene, graphs)
+	_validate_variant_entries(scene, graphs)
 	_validate_enchant_pairs(graphs, items)
 	_validate_dialogue_graphs(graphs, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
 	_validate_quests(quests, produced_accomplishments)
