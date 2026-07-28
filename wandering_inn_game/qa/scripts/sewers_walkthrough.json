@@ -566,6 +566,23 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "v0.15 A3 (GH#304): THE COMBAT BANK, and the only live proof of _restore_banked_toasts' own drain kick. Both [Skill] payoff narrations were emitted before the fight and were still QUEUED when combat_started banked them; by ui_combat_hidden the drain coroutine has long exited (headless holds are frame-bounded), so _toast_draining is false and nothing but the restore's kick can deliver them. Measured at seed 9 on this script's events.jsonl: 7 pre-combat toast payloads, 4 NEVER delivered at 23aca0b (these two, the moss observe, and the autosave) vs 0 lost after. Ordered waits, not cumulative asserts -- these must land AFTER the board closes.",
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "[Firefly] — Fire catches the tarred rope and runs greedily through the pile. In moments it is ash and the nook stands open, breathing cold sewer air."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "[Snap Freeze] — You lay your palm to the water and cold spiders out from it. In a breath the channel locks to grey-white ice, thick enough to bear your weight. It will not last past your next rest."
+   }
+  },
+  {
    "action": "wait_frames",
    "frames": 5
   },

@@ -209,13 +209,18 @@ func _interact_container(target: Dictionary, container_state: Dictionary) -> Dic
 	#    migrated save that already owns door_retrieved must not read the
 	#    first-discovery reveal), and after the bank every player looks alike.
 	#    The EMIT still happens last, so the toast order is unchanged.
+	# `open_lore` pairs with `open_toast` exactly as `lore` pairs with `toast`.
+	# The two must NOT share one entity-level key: a container that is also a
+	# plain interact target (anchor_stone_pedestal is both -- it serves locked
+	# flavour until contains_when opens) would otherwise tag its interact
+	# flavour with the flag meant for the open's reveal.
 	var open_toast := String(target.get("open_toast", ""))
-	var open_lore := bool(target.get("lore", false))
+	var open_lore := bool(target.get("open_lore", false))
 	for raw_variant: Variant in target.get("open_toast_variants", []):
 		var variant: Dictionary = raw_variant
 		if bool(_accomplishment_gate_met.call(variant.get("when", {}) as Dictionary)):
 			open_toast = String(variant.get("open_toast", open_toast))
-			open_lore = bool(variant.get("lore", open_lore))
+			open_lore = bool(variant.get("open_lore", open_lore))
 	var raw_open: Variant = target.get("on_open_accomplishment", [])
 	for counter: Variant in (raw_open as Array if raw_open is Array else [raw_open]):
 		_record_accomplishment.call(String(counter), 1)

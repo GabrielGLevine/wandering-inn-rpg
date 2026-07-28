@@ -241,7 +241,7 @@
     "pedestal_breached",
     "door_retrieved"
    ],
-   "lore": true,
+   "open_lore": true,
    "open_toast": "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it.",
    "open_toast_variants": [
     {
@@ -249,7 +249,8 @@
      "when": {
       "door_retrieved": 1
      },
-     "open_toast": "Beneath where the door lay, still seated in its groove: the anchor stone. The Horns left nothing else behind."
+     "open_lore": false,
+    "open_toast": "Beneath where the door lay, still seated in its groove: the anchor stone. The Horns left nothing else behind."
     }
    ],
    "on_interact_accomplishment": "found_the_pedestal",
@@ -318,6 +319,7 @@
        "horns_dig_joined": 1
       },
       "accomplishment": "pedestal_unsealed",
+      "lore": false,
       "toast": "[Detect Magic] — You read the binding the way Pisces reads a page, and the reading is the undoing: the ward was keyed to whatever stood guard here, and a keyed ward answers anyone who can say the key back. The seal lets go. Ceria, from the gap: 'Do that again and I'm putting you on the ledger.'"
      }
     ]

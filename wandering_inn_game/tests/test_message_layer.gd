@@ -60,6 +60,17 @@ func _check_combat_bank(raw: String) -> void:
 	assert((layer.get("_toast_queue") as Array) == ["first", "second", "third"],
 		"restoring an empty bank is a no-op")
 	layer.free()
+	# The OTHER branch -- _toast_draining false, so the restore must kick a
+	# drain itself -- cannot run here: _drain_toasts() reaches _show(), which
+	# measures the real toast panel/label, and this instance has neither (it is
+	# never added to a tree, which is exactly what keeps the suite node-free).
+	# It is pinned two ways instead: the source tripwire below, and a LIVE
+	# proof in qa/scripts/sewers_walkthrough.json -- two [Skill] narrations
+	# banked at combat_started and delivered after ui_combat_hidden, by which
+	# point the drain coroutine has exited and only the kick can move them.
+	var restore := raw.get_slice("func _restore_banked_toasts", 1).get_slice("\nfunc ", 0)
+	assert(restore.find("if not _toast_draining:") != -1 and restore.find("_drain_toasts()") != -1,
+		"_restore_banked_toasts must kick a drain when none is in flight -- the queue can otherwise sit full and idle after a fight")
 
 
 func _stubbed_instance(raw: String) -> Object:

@@ -31,6 +31,28 @@ cross-release index of them.
   unhung" reveal; the Watch-runner pointer. Deliberately UNTAGGED: the
   anchor_socket `pedestal_unsealed` variant (an action, not a reading — its
   outcome is already a quest beat) and the seal door's repeat-read filler line.
+- **FIX ROUND 1 — the tag was inheritable, and leaked across surfaces.** Review
+  caught that BOTH resolvers accumulate (`_resolve_skill_use_effect` copies
+  every non-`when` key off each satisfied variant; `_interact_container`
+  defaults each variant to the running value), so an untagged variant under a
+  tagged arm silently inherited `lore: true`. Three arms the log had already
+  ruled untagged were in fact tagged in the shipped build, plus a fourth the
+  new lint found: anchor_socket's `pedestal_unsealed` unseal, seal_kept_door's
+  repeat-read filler, and anchor_stone_pedestal's migrated-save open arm. All
+  three now declare `"lore": false` explicitly, and `_validate_lore_flags`
+  makes the drift impossible: **if any arm on a surface is lore-tagged, every
+  variant on that surface must declare the key** — absent is a content failure.
+  The migrated-save arm ("the anchor stone. The Horns left nothing else
+  behind") is ruled NOT lore on its merits too: it is a pickup confirmation
+  for a player who already has the Door hanging in his inn, not a revelation.
+- **Containers get their own `open_lore` key, not the entity's `lore`.** A prop
+  can be a container AND a plain interact target — anchor_stone_pedestal serves
+  locked-plinth flavour until `contains_when` opens — and round 0 read one
+  entity-level `lore` for both, which measurably tagged the locked flavour line
+  ("The seal is broken and the Horns are already down the gap…") as durable
+  lore in a real horns_dig_flow run. `open_lore` pairs with `open_toast`
+  exactly as `lore` pairs with `toast`, so the two beats can never share a
+  flag. The event PAYLOAD key stays `lore` either way.
 - **No cap on `lore_notes`.** The set is bounded by authored copy and deduped
   by exact text, so a cap would only ever silently drop the OLDEST fact — the
   exact failure the feature exists to fix. Revisit if a future data pass tags

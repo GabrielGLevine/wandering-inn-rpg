@@ -383,6 +383,7 @@
       "read_the_feeding_ward": 1
      },
      "accomplishment": "read_the_feeding_ward",
+     "lore": false,
      "toast": "The runes keep their slow one-way order. Pisces has stopped narrating and started counting under his breath, which is worse."
     }
    ],

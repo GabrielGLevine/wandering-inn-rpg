@@ -104,6 +104,13 @@ var _toast_queue: Array[String] = []
 ## Combat is the one deliberate exception: it has its own feed, so
 ## COMBAT_STARTED BANKS the pending queue (below) and UI_COMBAT_HIDDEN
 ## re-queues it.
+## HAZARD for QA authors: `_defer_toast_display` also calls
+## `dismiss_current_toast_early()`, so a transition CUTS SHORT the showing
+## toast's hold -- including the windowed QA_TOAST_HOLD_SECONDS 0.4s
+## legibility floor that the screenshot discipline leans on. A script that
+## needs a specific toast ON SCREEN across a map change must wait on that
+## toast's OWN `ui_toast_rendered` after the transition (it re-renders on the
+## far side); a bare wait plus a screenshot can catch the panel already hidden.
 ## Texts queued with record=false (GH#202 transient noise class) -- counted
 ## so an identical REAL toast queued concurrently still records.
 var _transient_counts: Dictionary = {}

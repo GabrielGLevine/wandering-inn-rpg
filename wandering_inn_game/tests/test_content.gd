@@ -114,45 +114,69 @@ func _validate_victory_toast_keys(maps: Dictionary) -> void:
 			_check(first != "won_combat", "%s/%s: victory_toast carrier's first on_victory id must not be won_combat (fractional under GH#211 weighting)" % [map_id, String(ent.get("id", "?"))])
 
 
-## v0.15 A3 (GH#304): `lore` is a RESERVED BOOL on every toast-bearing arm
-## (entity, `variants`, `open_toast_variants`, `skill_uses`, `arrival_toasts`).
-## The sim reads it through `bool(...)`, so a stray String would silently tag a
-## line as durable lore -- items.json already uses `lore` for prose, which is
-## exactly the confusion this guards. A tagged arm must also carry text to bank.
+## v0.15 A3 (GH#304), fix round 1. `lore`/`open_lore` are RESERVED BOOLS on the
+## toast-bearing arms, and this guards the two ways the flag drifts:
+##
+## 1. TYPE. The sim reads it through `bool(...)`, so a stray String silently
+##    tags a line as durable lore -- items.json already uses `lore` for prose,
+##    which is exactly the confusion this catches. Tagged arms need text too.
+## 2. INHERITANCE. `_resolve_skill_use_effect` ACCUMULATES non-`when` keys from
+##    every satisfied variant, so an untagged variant sitting under a tagged
+##    arm silently inherits `lore: true` (shipped twice in round 0: the
+##    anchor_socket unseal and the seal door's repeat-read filler). Rule: if
+##    ANY arm on a surface carries `lore: true`, EVERY variant on that surface
+##    must declare the key explicitly -- true or false, never absent.
+##
+## Surfaces are kept separate on purpose: an entity's interact arm
+## (`toast`/`lore` + `variants`) and its container arm (`open_toast`/
+## `open_lore` + `open_toast_variants`) are two different players' beats on the
+## same prop, and anchor_stone_pedestal is both.
 func _validate_lore_flags(maps: Dictionary) -> void:
 	for map_id: String in maps:
 		var map_cfg: Dictionary = maps[map_id]
 		for raw_arrival: Variant in map_cfg.get("arrival_toasts", []):
-			_check_lore_arm("%s/arrival_toasts" % map_id, raw_arrival, "text")
+			_check_lore_surface("%s/arrival_toasts" % map_id, raw_arrival, [], "lore", "text")
 		for ent: Dictionary in map_cfg.get("entities", []):
 			var label := "%s/%s" % [map_id, String(ent.get("id", "?"))]
-			_check_lore_arm(label, ent, "toast")
-			for raw: Variant in ent.get("variants", []):
-				_check_lore_arm(label + " variant", raw, "toast")
-			for raw: Variant in ent.get("open_toast_variants", []):
-				_check_lore_arm(label + " open_toast_variant", raw, "open_toast")
+			_check_lore_surface(label, ent, ent.get("variants", []), "lore", "toast")
+			_check_lore_surface(label + " open", ent, ent.get("open_toast_variants", []), "open_lore", "open_toast")
 			for skill_id: String in (ent.get("skill_uses", {}) as Dictionary):
 				var arm: Variant = (ent["skill_uses"] as Dictionary)[skill_id]
-				_check_lore_arm("%s skill_uses.%s" % [label, skill_id], arm, "toast")
-				if arm is Dictionary:
-					for raw: Variant in (arm as Dictionary).get("variants", []):
-						_check_lore_arm("%s skill_uses.%s variant" % [label, skill_id], raw, "toast")
+				var arm_variants: Array = (arm as Dictionary).get("variants", []) if arm is Dictionary else []
+				_check_lore_surface("%s skill_uses.%s" % [label, skill_id], arm, arm_variants, "lore", "toast")
 			if ent.has("on_skill_use"):
-				_check_lore_arm(label + " on_skill_use", ent["on_skill_use"], "toast")
-				for raw: Variant in (ent["on_skill_use"] as Dictionary).get("variants", []):
-					_check_lore_arm(label + " on_skill_use variant", raw, "toast")
+				var use_arm: Dictionary = ent["on_skill_use"]
+				_check_lore_surface(label + " on_skill_use", use_arm, use_arm.get("variants", []), "lore", "toast")
 
 
-func _check_lore_arm(label: String, arm: Variant, text_key: String) -> void:
-	if not (arm is Dictionary) or not (arm as Dictionary).has("lore"):
+func _check_lore_surface(label: String, base: Variant, variants: Array, flag: String, text_key: String) -> void:
+	var arms: Array = [base]
+	arms.append_array(variants)
+	var tagged := false
+	for arm: Variant in arms:
+		if _check_lore_arm(label, arm, flag, text_key):
+			tagged = true
+	if not tagged:
 		return
-	var value: Variant = (arm as Dictionary)["lore"]
-	_check(value is bool, "%s: `lore` must be a bool (reserved toast-capture flag), got %s" % [label, type_string(typeof(value))])
-	if value is bool and bool(value):
-		var carrier := arm as Dictionary
-		var has_text := String(carrier.get(text_key, "")) != "" \
-				or String(carrier.get("open_toast", "")) != "" or String(carrier.get("toast", "")) != ""
-		_check(has_text, "%s: lore:true with no toast text banks an empty note" % label)
+	for raw: Variant in variants:
+		_check(raw is Dictionary and (raw as Dictionary).has(flag),
+			"%s: a variant under a lore-tagged arm must declare `%s` explicitly -- an absent key INHERITS the tag (both resolvers ACCUMULATE: _resolve_skill_use_effect copies every non-`when` key, _interact_container defaults each variant to the running value)" % [label, flag])
+
+
+## Returns true iff this arm is tagged lore-true (so the surface needs the
+## explicit-declaration rule above).
+func _check_lore_arm(label: String, arm: Variant, flag: String, text_key: String) -> bool:
+	if not (arm is Dictionary) or not (arm as Dictionary).has(flag):
+		return false
+	var carrier := arm as Dictionary
+	var value: Variant = carrier[flag]
+	if not (value is bool):
+		_check(false, "%s: `%s` must be a bool (reserved toast-capture flag), got %s" % [label, flag, type_string(typeof(value))])
+		return false
+	if not bool(value):
+		return false
+	_check(String(carrier.get(text_key, "")) != "", "%s: %s:true with no `%s` text banks an empty note" % [label, flag, text_key])
+	return true
 
 
 ## GH#155 review L2: on a skill-gated prop, every id in on_skill_use.remove_item
