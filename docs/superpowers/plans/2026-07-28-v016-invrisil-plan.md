@@ -1623,7 +1623,7 @@ Nine canonicals: **one per route for both terminal paths** (six), **both interio
 | `invrisil_hat_loud` | `invrisil_hat_loud_start` | bravos interact → combat → `handoff_loud` → report |
 | `invrisil_v016_gate_check` | `invrisil_stationer_start` | **gate-proof:** Hedault's hub still renders exactly 5 rows without `heirloom_commission_started` (the ruling-1 pin-stability assertion, as a permanent regression guard); and the Rest's bravos emit `gate_closed_toast` without `hat_job_taken` |
 
-- [ ] **Step 1: Author each script** on the shipped idioms:
+- [x] **Step 1: Author each script** on the shipped idioms:
   - Fixture-start title sequence: `ui_title_gate_rendered` → `confirm` → `ui_title_rendered` → `move down 1` (Continue) → `confirm` → `game_loaded` → `world_ready` → `assert_state current_map` / `player_cell`.
   - Dialogue option selection: `ui_dialogue_shown` → `move down N` → `press confirm`, counting **visible** options only. (`click_dialogue_option` takes `"option"` and is **1-based**; a wrong key silently no-ops.)
   - Every toast assertion pins the **exact text** via `payload_contains` — a bare `wait_for_event ui_toast_rendered` proves nothing about which toast.
@@ -1633,21 +1633,21 @@ Nine canonicals: **one per route for both terminal paths** (six), **both interio
   - JSON coordinates parse as floats: `[5.0,8.0] != [5,8]` in GDScript. Copy the cell literal shape from a shipped Invrisil script.
   - Effects-plus-`end` options: wait `dialogue_ended` **then** `accomplishment_recorded`.
   - Gray-band fights emit no `won_combat` — for the two combat scripts pin `victories` (or the encounter's own `on_victory` counter, which is the reliable one here) rather than `won_combat`.
-- [ ] **Step 2: The visible-lock contract — split across TWO scripts, because one script starts from one fixture.** The first draft assigned the locked-arm assertion to `invrisil_setting_skill`, whose only fixture **grants** `appraise_goods`; a skill cannot be unlearned mid-run, so as drafted the contract could not be proven by its assigned script at all. Corrected ownership, stated explicitly so neither script drifts:
+- [x] **Step 2: The visible-lock contract — split across TWO scripts, because one script starts from one fixture.** The first draft assigned the locked-arm assertion to `invrisil_setting_skill`, whose only fixture **grants** `appraise_goods`; a skill cannot be unlearned mid-run, so as drafted the contract could not be proven by its assigned script at all. Corrected ownership, stated explicitly so neither script drifts:
   - **`invrisil_setting_talk` owns the LOCKED pin.** Its fixture `invrisil_setting_start` carries **no** `appraise_goods`, and the script already opens `heirloom_bench` on its way to the TALK arm. On that node, pin the `[Appraise Goods]` row as **present and `locked`** with its `requirement` string, from a real `events.jsonl` — `src/core/dialogue.gd:29-32` marks a `{skill}`-requires option `locked` and fills `requirement` from `_requirement_text` (`:241-244`, `"requires <skill name>"`), and `_visible_options` (`:113-122`) hides only `_progress_gated` requires (accomplishment / board_accepted / delivery_accepted / once_per_waking), so a skill arm is **visible-locked, never hidden**. This is the `parley_gates_check` idiom.
   - **`invrisil_setting_skill` owns the SELECTABLE pin.** Same node, fixture **with** the skill: the row is unlocked, is selected, and banks `setting_assisted` through to the terminal.
   - **Do not** try to prove both legs in one script and **do not** give `invrisil_setting_skill` a second fixture — one canonical, one fixture is the shipped idiom, and the pair above already covers both states.
   - The same locked-vs-hidden distinction is the reason `invrisil_v016_gate_check` (Step 3) pins Hedault's hub at exactly 5 rows: the **accomplishment**-gated commission option is HIDDEN, not locked.
-- [ ] **Step 3: `invrisil_v016_gate_check` is the ruling-1 regression guard.** Pin Hedault's hub `options` array at exactly 5 rows with their exact `text`/`locked`/`requirement` fields, copied **from a real run's `events.jsonl`**, never assumed. This makes the pin-stability adjudication permanent rather than a one-time PR claim.
-- [ ] **Step 4: Seeds.** Start every script at **seed 9** (the Invrisil canonical seed). For the two combat scripts, if seed 9 does not produce a deterministic win, search seeds 1–40, pin the first clean win, and record the search in the script's `_comment` (census-exempt).
-- [ ] **Step 5: Run each script individually** and re-derive every pin from its own `events.jsonl`:
+- [x] **Step 3: `invrisil_v016_gate_check` is the ruling-1 regression guard.** Pin Hedault's hub `options` array at exactly 5 rows with their exact `text`/`locked`/`requirement` fields, copied **from a real run's `events.jsonl`**, never assumed. This makes the pin-stability adjudication permanent rather than a one-time PR claim.
+- [x] **Step 4: Seeds.** Start every script at **seed 9** (the Invrisil canonical seed). For the two combat scripts, if seed 9 does not produce a deterministic win, search seeds 1–40, pin the first clean win, and record the search in the script's `_comment` (census-exempt).
+- [x] **Step 5: Run each script individually** and re-derive every pin from its own `events.jsonl`:
 
 ```
 perl -e 'alarm 300; exec @ARGV' -- wandering_inn_game/qa/run_qa.sh <script> headless --seed=9
 ```
 
 Output at `wandering_inn_game/qa_output/<script>/{result.json,events.jsonl,*.png}` — **the dir is clobbered by any re-run**, so read before re-running. A missing `result.json` with `rc=0` is a RED, never a pass.
-- [ ] **Step 6: Commit** `test(qa): nine Invrisil v0.16 canonicals (#306)`.
+- [x] **Step 6: Commit** `test(qa): nine Invrisil v0.16 canonicals (#306)`.
 
 ### Task 5.3: Manifest, seed table, generated docs — one commit
 
