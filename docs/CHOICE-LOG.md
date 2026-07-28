@@ -1323,3 +1323,18 @@ by controller ruling — the plan was the defect, not the implementation.
   (20) Rags's new lines re-cut to clause-length pre-Vol-5 telegraphese
   where the draft drifted ("Price kept. Goblins remember. Longer than
   Humans.").
+- **CI doc-drift demoted to advisory (2026-07-28, user directive)**: the
+  required "Leak check" job bundled five gates; its doc-drift step
+  (render_qa_notes bare-check + check_doc_drift.py) was the most common
+  required-check failure and is prose/structure tripwires, not ship
+  safety. Diagnosis: not true flake — deterministic rules that trip on
+  composition (plan-Status headers, retired-doc name mentions in living
+  prose, regen drift that goes red on MERGED trees even when both
+  branches were green). Moved to a non-required "Docs drift (advisory)"
+  job (same commands, every PR + nightly, visible red, never gates).
+  Leak scan, mirror sync, comment census, data lint stay required.
+  Proof of class: the rule went red on main the same hour via the four
+  v0.16 plan docs' missing Status headers (fixed in the same commit,
+  09ebdbe). Regen drift keeps its real net: the merge train re-runs
+  derive_qa_surfaces + render_qa_notes --write per merge, and nightly
+  still reports.
