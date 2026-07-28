@@ -1395,16 +1395,21 @@
    "hide_sprite": true
   },
   {
-   "_comment": "v0.15 T4.2 closes the b5 #220 shopfront set: glazier + cordwainer shipped in b5, the teahouse took the third slot, and the plan's named stationer was never authored. Observe-only on a blocked row-1 cell, `hide_sprite` like its three siblings -- the facade art is the wall band itself.",
+   "_comment": "v0.16 I1 (#306): kind flips prop -> door in place on the SAME already-blocked cell (20,1), id and `observe` byte-identical, so invrisil_walkthrough's player_blocked + [Observe] + toast pins stay exact. hide_sprite dropped so the facade reads enterable.",
    "id": "boulevard_stationer",
-   "kind": "prop",
+   "kind": "door",
    "cell": [
     20,
     1
    ],
    "display_name": "A Stationer's Window",
+   "sprite": "door",
    "observe": "Ruled paper in three weights, ink in four, and a card offering a scribe by the hour in a hand that is itself the advertisement. Half the contracts argued about on this street were bought here first, quietly, by both sides.",
-   "hide_sprite": true
+   "to_map": "stationer",
+   "to_cell": [
+    6,
+    7
+   ]
   }
  ],
  "cover_skip": [

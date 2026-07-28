@@ -223,8 +223,8 @@ Regenerate both in the **same commit** as any manifest or QA-script change.
 **Interfaces:**
 - Produces: a walk-in door from `invrisil_boulevard` (20,1) → `stationer` (6,7). Task 1.3 owns the far side.
 
-- [ ] **Step 1: Load `wi-adding-a-scene`. Read the four shopfront props** (`boulevard_glazier` :1365, `boulevard_teahouse` :1387, `boulevard_cordwainer` :1376, `boulevard_stationer` :1394) and the two shipped door pairs (`boulevard_to_alleys` [26,8]→[1,7] at :931; `alleys_to_parlor` [19,12]→[1,4]). **Ruling 9:** four shopfronts ship, so this leaves three observes.
-- [ ] **Step 2: Rewrite the entity in place.** Keep `id`, keep `observe` **byte-identical**, keep the cell, drop `hide_sprite`, add the door keys:
+- [x] **Step 1: Load `wi-adding-a-scene`. Read the four shopfront props** (`boulevard_glazier` :1365, `boulevard_teahouse` :1387, `boulevard_cordwainer` :1376, `boulevard_stationer` :1394) and the two shipped door pairs (`boulevard_to_alleys` [26,8]→[1,7] at :931; `alleys_to_parlor` [19,12]→[1,4]). **Ruling 9:** four shopfronts ship, so this leaves three observes.
+- [x] **Step 2: Rewrite the entity in place.** Keep `id`, keep `observe` **byte-identical**, keep the cell, drop `hide_sprite`, add the door keys:
 
 ```json
   {
@@ -246,10 +246,10 @@ Regenerate both in the **same commit** as any manifest or QA-script change.
   }
 ```
 
-- [ ] **Step 3: Prove the three pins by hand before running anything.** `qa/scripts/invrisil_walkthrough.json` steps 61–67 are: `move up 1` from (20,2) → `assert_event_logged player_blocked {cell:[20,1]}` → `press_field_skill observe` → `skill_used {target: "boulevard_stationer"}` → the full observe toast → `screenshot 01c_boulevard_stationer`. **There is no `press interact` at (20,2)** (verified: the walkthrough presses `interact` only at (25,8), (3,6), (18,12) and in the parlor), so no step becomes a map transition. (20,1) stays in `blocked`, so `player_blocked` still fires. **No canonical needs a re-pin.** Record that sentence in the PR body.
-- [ ] **Step 4: POPULATION_FLOORS check.** `invrisil_boulevard`'s floor is 20. `INTERACTABLE_KEYS` counts `observe`-carrying props **and** every `kind: "door"`, and this entity gains no `present_when`, so the count is unchanged by the conversion and **+1** from Task 1.2's new door. Floors are minimums — **no re-derive needed.** (Ruling 3's re-derive trigger does not fire.) State this in the PR body.
-- [ ] **Step 5: Run** `python3 wandering_inn_game/scripts/data_lint.py` — expect clean.
-- [ ] **Step 6: Commit** `feat(invrisil): the stationer's window becomes a door (#306)`.
+- [x] **Step 3: Prove the three pins by hand before running anything.** `qa/scripts/invrisil_walkthrough.json` steps 61–67 are: `move up 1` from (20,2) → `assert_event_logged player_blocked {cell:[20,1]}` → `press_field_skill observe` → `skill_used {target: "boulevard_stationer"}` → the full observe toast → `screenshot 01c_boulevard_stationer`. **There is no `press interact` at (20,2)** (verified: the walkthrough presses `interact` only at (25,8), (3,6), (18,12) and in the parlor), so no step becomes a map transition. (20,1) stays in `blocked`, so `player_blocked` still fires. **No canonical needs a re-pin.** Record that sentence in the PR body.
+- [x] **Step 4: POPULATION_FLOORS check.** `invrisil_boulevard`'s floor is 20. `INTERACTABLE_KEYS` counts `observe`-carrying props **and** every `kind: "door"`, and this entity gains no `present_when`, so the count is unchanged by the conversion and **+1** from Task 1.2's new door. Floors are minimums — **no re-derive needed.** (Ruling 3's re-derive trigger does not fire.) State this in the PR body.
+- [x] **Step 5: Run** `python3 wandering_inn_game/scripts/data_lint.py` — expect clean.
+- [x] **Step 6: Commit** `feat(invrisil): the stationer's window becomes a door (#306)`.
 
 ### Task 1.2: Promote the (18,1) decor door into the Adventurer's Rest door
 
