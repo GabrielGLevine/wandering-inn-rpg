@@ -138,6 +138,35 @@
       }
      },
      "goto": "fence"
+    },
+    {
+     "_comment": "v0.16 I2 giver (#306). Appended LAST per this file's index contract; accomplishment-gated so it is HIDDEN in every shipped disagreement fixture and in wilovan_parlor_f_start.",
+     "text": "\"Anything wanting a quiet pair of hands?\"",
+     "requires": {
+      "accomplishment": {
+       "brothers_job_done": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "hat_job_taken": 1
+      }
+     },
+     "goto": "hat_errand"
+    },
+    {
+     "text": "\"The package is where it ought to be.\"",
+     "requires": {
+      "accomplishment": {
+       "hat_job_taken": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "hat_job_done": 1
+      }
+     },
+     "goto": "hat_report"
     }
    ]
   },
@@ -368,6 +397,134 @@
    "options": [
     {
      "text": "A pleasure doing business, Wilovan.",
+     "end": true
+    }
+   ]
+  },
+  "hat_errand": {
+   "speaker": "Wilovan",
+   "text": "There is, {addr}, and I'll ask your pardon before I describe it, because describing it is most of the offence. A small parcel wants to be somewhere else by morning, and the somewhere else drinks at the Adventurer's Rest. House rule there is that nobody raises a voice. We hold to it. So does everybody who owes them a table.",
+   "options": [
+    {
+     "text": "\"I'll carry it.\"",
+     "hide_when": {
+      "accomplishment": {
+       "hat_job_taken": 1
+      }
+     },
+     "effects": [
+      {
+       "quest": "the_hat_stays_on"
+      },
+      {
+       "accomplishment": "hat_job_taken"
+      }
+     ],
+     "goto": "hat_terms"
+    },
+    {
+     "text": "\"And if it goes wrong?\"",
+     "goto": "hat_terms_loud"
+    },
+    {
+     "text": "\"Another evening.\"",
+     "end": true
+    }
+   ]
+  },
+  "hat_terms": {
+   "speaker": "Wilovan",
+   "text": "Then here are the manners of it. You don't name the thing, you don't name the man, and you don't hurry. A gentleman who hurries is a gentleman explaining himself later. Hat stays on the whole while, {addr}. That's not superstition. That's the whole of the etiquette.",
+   "options": [
+    {
+     "text": "\"Understood.\"",
+     "end": true
+    }
+   ]
+  },
+  "hat_terms_loud": {
+   "speaker": "Wilovan",
+   "text": "Then the hat comes off, {addr}, plain and slow, and everybody in the room reads it correctly and steps back a pace. I'd rather it didn't. My colleague would rather it did, which is why he isn't going.",
+   "options": [
+    {
+     "text": "\"Let's hope not.\"",
+     "goto": "hat_terms"
+    }
+   ]
+  },
+  "hat_report": {
+   "speaker": "Wilovan",
+   "_comment": "Three route arms, one close. Ungated exit keeps the softlock guard satisfied.",
+   "text": "It is, and I've had it confirmed by a man who does not confirm things. Tell me how the room took it, {addr}, and I'll know what I owe you.",
+   "options": [
+    {
+     "text": "\"Three exchanges. Nobody said a word that mattered.\"",
+     "requires": {
+      "accomplishment": {
+       "handoff_talked": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "hat_job_done": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "hat_job_done"
+      },
+      {
+       "gold": 25
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "\"Hat on the peg, coat on the chair. Nobody looked up.\"",
+     "requires": {
+      "accomplishment": {
+       "handoff_quiet": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "hat_job_done": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "hat_job_done"
+      },
+      {
+       "gold": 25
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "\"It went loud. The hat came off. It's still done.\"",
+     "requires": {
+      "accomplishment": {
+       "handoff_loud": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "hat_job_done": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "hat_job_done"
+      },
+      {
+       "gold": 25
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "\"Not yet.\"",
      "end": true
     }
    ]

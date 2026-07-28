@@ -1,0 +1,83 @@
+{
+ "_comment": "v0.16 I2 TALK (#306): three exchanges, nothing named. The job arm is accomplishment-gated so the node reads as plain house talk before the errand exists; the ungated `house` arm keeps the softlock guard satisfied and gives the room a permanent surface after hat_job_done.",
+ "start": "table",
+ "nodes": {
+  "table": {
+   "speaker": "The House Factor",
+   "text": "You'll want the long table, {addr}, not this one. Long table's for people waiting on somebody. This one's for people who have already arrived.",
+   "options": [
+    {
+     "text": "\"I was told to wait on somebody.\"",
+     "requires": {
+      "accomplishment": {
+       "hat_job_taken": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "handoff_talked": 1
+      }
+     },
+     "goto": "exchange_one"
+    },
+    {
+     "text": "\"Busy house.\"",
+     "goto": "house"
+    },
+    {
+     "text": "\"I'll leave you to it.\"",
+     "end": true
+    }
+   ]
+  },
+  "exchange_one": {
+   "speaker": "The House Factor",
+   "text": "Then you're early, which is a manner, or you're late, which is a message. Which would you like it to have been?",
+   "options": [
+    {
+     "text": "\"Early. I can wait.\"",
+     "goto": "exchange_two"
+    },
+    {
+     "text": "\"Neither. I'm only warm.\"",
+     "goto": "exchange_two"
+    }
+   ]
+  },
+  "exchange_two": {
+   "speaker": "The House Factor",
+   "text": "Warm is a good answer. The gentleman who left that coat was warm too, and he'll be back for it or he won't, and either way the coat is paid for through the season.",
+   "options": [
+    {
+     "text": "\"Then I'll mind it until he is.\"",
+     "goto": "exchange_three"
+    }
+   ]
+  },
+  "exchange_three": {
+   "speaker": "The House Factor",
+   "text": "Mind it well, {addr}. Nobody in this room raises their voice and nobody in this room has ever seen a thing. That isn't a rule of the house. That's the rent.",
+   "options": [
+    {
+     "text": "\"Understood.\"",
+     "effects": [
+      {
+       "accomplishment": "handoff_talked"
+      }
+     ],
+     "end": true
+    }
+   ]
+  },
+  "house": {
+   "speaker": "The House Factor",
+   "text": "Busy enough. Silver rank drinks free the night they make it, once, and we have never once had to say it twice. The rest pay, and the rest are grateful for a room where the price is the only thing anybody asks them for.",
+   "options": [
+    {
+     "text": "\"Fair terms.\"",
+     "end": true
+    }
+   ]
+  }
+ }
+}

@@ -1296,6 +1296,21 @@
     "Half this city's 'enchantments' are paint. The other half are apologies. I sell neither."
    ],
    "observe": "A severe man at a spotless corner bench, tools laid out at right angles. Everything about him says the prices are exact and the opinions are free."
+  },
+  {
+   "_comment": "v0.16 I1 FIGHT (#306). INTERACT-ONLY (no trigger_radius) at (11,12): outside both shipped footpad trigger zones and off every pinned cell. Independent of the footpad rigs, so it is correct on a brothers_job_done save.",
+   "id": "alley_fence_door",
+   "kind": "encounter",
+   "cell": [11, 12],
+   "display_name": "A Back Door with a Ledger Behind It",
+   "sprite": "door",
+   "observe": "A door with no handle on this side and a fresh scrape where somebody's boot goes when their hands are full. The ledger inside is worth more than the stock.",
+   "arena": "mercantile_alley",
+   "enemies": ["heirloom_fence", "fence_doorman"],
+   "allies": [],
+   "on_victory": "original_recovered",
+   "encounter_when": { "requires": { "heirloom_commission_started": 1 } },
+   "gate_closed_toast": "A back door with no handle on this side. Nothing about it is any of your business tonight."
   }
  ]
 }

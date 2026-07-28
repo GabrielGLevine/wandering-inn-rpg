@@ -76,6 +76,12 @@ const EXPECTED_ITEMS := {
 	"hedaults_traveler_charm": ["+3 HP", "Resonance 1", "Grants [Dangersense] in combat", "Worth 18 gold"],
 	"hedaults_hunters_fang": ["+1 damage on melee hits", "Resonance 1", "Grants [Eagle Eyes] in combat", "Worth 45 gold"],
 	"hedaults_wardstone": ["+2 HP", "Resonance 2", "Grants [Mana Shield] in combat", "Worth 50 gold"],
+	# v0.16 I1 (#306), inserted at the `hedaults_wardstone` anchor this lane also
+	# uses in items.json (ruling C). EXPECTED_ITEMS is exhaustive both ways, so a
+	# new item id with no row here reds this suite -- and it reds it QUIETLY: the
+	# _check quit(1) is overridden by the trailing quit(0), so the run still
+	# exits 0 and still prints PASS. The zero-noise grep is the only detector.
+	"plum_silk_locket": ["+1 HP", "Resonance 1", "Worth 30 gold"],
 	"moonhide_fetish": ["+1 damage on melee hits", "+1 HP", "Resonance 1", "Grants [Second Wind] in combat"],
 	"anchor_sliver": ["+4 HP", "Reduces every hit taken by 1", "Resonance 3"],
 }

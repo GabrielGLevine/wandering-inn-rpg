@@ -1,0 +1,172 @@
+{
+ "_comment": "v0.16 I1 giver (#306, ruling 1). Three route arms converge on `handover`, which carries the only grant, so the reward cannot double-fire. Every gated node keeps an ungated exit.",
+ "start": "commission",
+ "nodes": {
+  "commission": {
+   "speaker": "A Lady with a Ring Box",
+   "text": "I have been sitting in a paper shop for an hour, because a paper shop is the only room on this street where a woman may hold something closed and nobody asks her to open it.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "heirloom_commission_started": 1
+      }
+     },
+     "text": "You went, then. Sit down and tell me what he said, and please tell me the whole of it. I have had forty years of the polite half."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "setting_commissioned": 1
+      }
+     },
+     "text": "It sits differently on the chain. I noticed before I looked. Thank you for the part of that which was not the silver."
+    }
+   ],
+   "options": [
+    {
+     "text": "\"What is it you're holding?\"",
+     "hide_when": {
+      "accomplishment": {
+       "heirloom_commission_started": 1
+      }
+     },
+     "effects": [
+      {
+       "quest": "a_setting_for_a_lady"
+      },
+      {
+       "accomplishment": "heirloom_commission_started"
+      }
+     ],
+     "goto": "the_stone"
+    },
+    {
+     "text": "\"He'll set it. He wanted the true thing said first, and it's said.\"",
+     "requires": {
+      "accomplishment": {
+       "heirloom_truth_kept": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "setting_commissioned": 1
+      }
+     },
+     "goto": "handover"
+    },
+    {
+     "text": "\"I stood at his bench while he laid the ward. It's set properly.\"",
+     "requires": {
+      "accomplishment": {
+       "setting_assisted": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "setting_commissioned": 1
+      }
+     },
+     "goto": "handover"
+    },
+    {
+     "text": "\"Your mother's stone was real. I have it back.\"",
+     "requires": {
+      "accomplishment": {
+       "original_recovered": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "setting_commissioned": 1
+      }
+     },
+     "goto": "handover"
+    },
+    {
+     "text": "\"Another time.\"",
+     "end": true
+    }
+   ]
+  },
+  "the_stone": {
+   "speaker": "A Lady with a Ring Box",
+   "_comment": "Nobility layer (controller amendment A1): her only acknowledgment of who really owns this city, oblique and Vol-1-safe. Never name her own house.",
+   "text": "My mother's. The stone in it is glass. I have known since I was nineteen and I have never once said so out loud, and I am not going to begin by saying it to a jeweller who will write it on an order. This city is run from a house you cannot see from any street in it, by a woman who notices everything worth noticing. A glass stone is exactly the right size to stay beneath that notice. I intend to keep it there.",
+   "options": [
+    {
+     "text": "\"Then why have it set at all?\"",
+     "goto": "why_keep"
+    },
+    {
+     "text": "\"Who's refusing the work?\"",
+     "goto": "terms"
+    }
+   ]
+  },
+  "why_keep": {
+   "speaker": "A Lady with a Ring Box",
+   "text": "Because she wore it to every hard thing she ever did and it never once let her down. That part was never glass. That is the only part of it that was ever real, and it lives in the setting, not the stone.",
+   "options": [
+    {
+     "text": "\"Who's refusing the work?\"",
+     "goto": "terms"
+    }
+   ]
+  },
+  "terms": {
+   "speaker": "A Lady with a Ring Box",
+   "text": "There is an enchanter with a bench in the alleys who will not touch a piece until somebody in the transaction tells him the truth about it. He is right to insist and I cannot be the one who does it. Twenty five gold when it is set. Do not be charming at him. My house has exactly two assets left: its name, and the habit people have of not looking past it. The enchanter may have the truth. He may not have the name.",
+   "options": [
+    {
+     "text": "\"I'll tell him.\"",
+     "end": true
+    }
+   ]
+  },
+  "handover": {
+   "speaker": "A Lady with a Ring Box",
+   "text": "Then it is done, and done in the open, which I did not expect and did not know I wanted. Here. My mother had a second piece, plain, honest, worth a tenth of the first and worn twice as often. I would rather it went to somebody who earned it than sat in a box being important.",
+   "options": [
+    {
+     "text": "\"I'll take it.\"",
+     "hide_when": {
+      "accomplishment": {
+       "setting_commissioned": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "setting_commissioned"
+      },
+      {
+       "item": "plum_silk_locket"
+      },
+      {
+       "gold": 25
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "\"Keep it. The work was the payment.\"",
+     "hide_when": {
+      "accomplishment": {
+       "setting_commissioned": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "setting_commissioned"
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "\"In a moment.\"",
+     "end": true
+    }
+   ]
+  }
+ }
+}

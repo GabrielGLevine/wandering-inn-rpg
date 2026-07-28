@@ -4705,6 +4705,274 @@
    }
   },
   {
+   "script": "stationer_room_loop",
+   "seed": 9,
+   "fixture": "invrisil_stationer_start",
+   "note": "v0.16 #306: the stationer's interior loop -- new boulevard door both ways off (20,2), three non-quest observes, the clerk's pool, return landing",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "invrisil_boulevard",
+     "stationer"
+    ],
+    "fixtures": [
+     "invrisil_stationer_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "adventurers_rest_loop",
+   "seed": 9,
+   "fixture": "invrisil_rest_start",
+   "note": "v0.16 #306: the Adventurer's Rest interior loop -- the (18,1) door both ways, three observes, two ambient pool NPCs, room read UNARMED",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "invrisil_boulevard"
+    ],
+    "fixtures": [
+     "invrisil_rest_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "invrisil_setting_talk",
+   "seed": 9,
+   "fixture": "invrisil_setting_start",
+   "note": "v0.16 #306 I1 TALK terminal -- commission to Hedault's bench to handover; OWNS the [Appraise Goods] VISIBLE-LOCKED pin (fixture lacks the skill)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "mercantile_alleys",
+     "stationer"
+    ],
+    "fixtures": [
+     "invrisil_setting_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "hedault_enchanting",
+     "invrisil_stationer_client"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "invrisil_setting_skill",
+   "seed": 9,
+   "fixture": "invrisil_setting_skill_start",
+   "note": "v0.16 #306 I1 [Appraise Goods] arm -- OWNS the SELECTABLE pin (fixture holds the skill), run through to the same terminal",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "mercantile_alleys",
+     "stationer"
+    ],
+    "fixtures": [
+     "invrisil_setting_skill_start"
+    ],
+    "skills": [
+     "appraise_goods",
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "hedault_enchanting",
+     "invrisil_stationer_client"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "invrisil_setting_fight",
+   "seed": 9,
+   "fixture": "invrisil_setting_fight_start",
+   "note": "v0.16 #306 I1 FIGHT route -- the fence's back door, on_victory original_recovered, terminal on ruling 5's already-cleared save",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "mercantile_alleys",
+     "stationer"
+    ],
+    "fixtures": [
+     "invrisil_setting_fight_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "invrisil_stationer_client"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "invrisil_hat_talk",
+   "seed": 9,
+   "fixture": "invrisil_hat_start",
+   "note": "v0.16 #306 I2 TALK route -- Wilovan's errand, three exchanges with the house factor, report for hat_job_done + 25 gold",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "brothers_parlor"
+    ],
+    "fixtures": [
+     "invrisil_hat_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "invrisil_rest_factor",
+     "invrisil_wilovan"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "invrisil_hat_quiet",
+   "seed": 9,
+   "fixture": "invrisil_hat_quiet_start",
+   "note": "v0.16 #306 I2 QUIET route AND its can-fail -- table first banks handoff_mistimed, then peg rail, then table banks handoff_quiet off its variant",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "adventurers_rest"
+    ],
+    "fixtures": [
+     "invrisil_hat_quiet_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "invrisil_hat_loud",
+   "seed": 9,
+   "fixture": "invrisil_hat_loud_start",
+   "note": "v0.16 #306 I2 LOUD route -- the bravos fought, handoff_loud banked off on_victory, reported as a live third ending",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "brothers_parlor"
+    ],
+    "fixtures": [
+     "invrisil_hat_loud_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "invrisil_wilovan"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "invrisil_v016_gate_check",
+   "seed": 9,
+   "fixture": "invrisil_stationer_start",
+   "note": "v0.16 #306 gate proof -- Hedault's hub pinned at exactly 5 rows (ruling 1 regression guard), fence + bravos gate toasts, both plates UNSPAWNED",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "invrisil_boulevard",
+     "mercantile_alleys"
+    ],
+    "fixtures": [
+     "invrisil_stationer_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [
+     "hedault_enchanting"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "grimalkin_study_loop",
    "seed": 6,
    "fixture": "grimalkin_study_start",

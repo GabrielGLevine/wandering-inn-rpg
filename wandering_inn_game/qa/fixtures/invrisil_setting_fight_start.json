@@ -1,0 +1,101 @@
+{
+ "_comment": "invrisil_setting_fight's start (FIXTURE-FIRST) -- the I1 FIGHT route at the fence's back door. Stands in `mercantile_alleys` at (11,11) facing down into alley_fence_door (11,12); the encounter carries no trigger_radius, so it opens on interact, not on approach. removed_entities clears alley_footpads_a AND alley_footpads_b: this is RULING 5's already-cleared save -- (11,11) sits exactly 2 cells from footpad_a's (9,9), inside its trigger_radius 2, and the Brothers' report option (invrisil_wilovan.json's hub) removes both rigs on brothers_job_done, so a save holding that counter with the rigs still standing is a position no player occupies. The Brothers' chain is banked whole (took_brothers_job -> coyle_operation_found -> merchant_fate_decided/merchant_exposed -> brothers_job_done + cleared_brothers_name + brothers_marker) with its quest in started_quests and its marker in inventory. COMBAT_BAND_FIXTURES names this fixture at 10 and warrior 10 is exactly that; the gear is the boulevard/alleys reference kit (gnollish_hunting_knife + leather_jerkin + two accessories), NOT a rusty sword -- an un-geared level-10 Invrisil fixture measures roughly half the win rate the harness cell was tuned at (near_invrisil_fight's own _comment records that trap). rng_state IS load-bearing here: a real fight resolves off it. PHASE IS DELIBERATE AND MEASURED: actions_since_sleep 0 (DAY), against the base's night. The `mercantile_alley` arena renders its figures near-BLACK at night -- the same board, same rigs, same seed, shot at both phases: at night the fence and the doorman are barely separable from the floor, at day all three silhouettes and every HP numeral read cleanly. Per ruling F this script's board shot is the ONLY legibility read the two new rigs get, so the phase that can actually be read wins. Every shipped alley fight already runs at day (near_invrisil is actions_since_sleep 0); this fixture was the first to stage that arena at night, so the darkness is an arena finding (logged to docs/VISUAL-LOG.md), not a rig one.",
+ "version": 5,
+ "state": {
+  "current_map": "mercantile_alleys",
+  "player_cell": [
+   11,
+   11
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "warrior": 10
+  },
+  "gold": 0,
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "reached_two_classes": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1,
+   "raskghar_sealed": 1,
+   "post_game": 1,
+   "door_chain_started": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
+   "read_the_board": 1,
+   "riverfarm_attuned": 1,
+   "blight_lifted": 1,
+   "invrisil_attuned": 1,
+   "won_combat": 1,
+   "melee_hit": 57,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1,
+   "took_brothers_job": 1,
+   "coyle_operation_found": 1,
+   "spotted_the_runner": 1,
+   "warehouse_located": 1,
+   "merchant_fate_decided": 1,
+   "merchant_exposed": 1,
+   "brothers_job_done": 1,
+   "cleared_brothers_name": 1,
+   "brothers_marker": 1,
+   "heirloom_commission_started": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [
+   "alley_footpads_a",
+   "alley_footpads_b"
+  ],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns",
+   "door_that_goes_elsewhere",
+   "a_gentlemans_disagreement",
+   "a_setting_for_a_lady"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "invrisil_attunement_stone",
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman",
+   "brothers_marker"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

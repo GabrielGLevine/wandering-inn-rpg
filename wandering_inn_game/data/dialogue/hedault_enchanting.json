@@ -105,6 +105,21 @@
       }
      },
      "goto": "door_reading"
+    },
+    {
+     "_comment": "v0.16 I1 (#306, ruling 1). Appended LAST and accomplishment-gated, so it is HIDDEN in hedault_fragment_start and spine_reach_start -- the 5-row options pin and spine_reach's blind `move down 5` both stay exact, zero re-pins.",
+     "text": "A lady's heirloom. She was told you'd refuse it.",
+     "requires": {
+      "accomplishment": {
+       "heirloom_commission_started": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "setting_commissioned": 1
+      }
+     },
+     "goto": "heirloom_bench"
     }
    ]
   },
@@ -166,6 +181,105 @@
    "options": [
     {
      "text": "Fair trade.",
+     "end": true
+    }
+   ]
+  },
+  "heirloom_bench": {
+   "speaker": "Hedault",
+   "_comment": "He will not work until the lie is named. The two SKILL arms are SEPARATE single-key options (test_content rejects {skill, item} -- pisces_seal.json:112).",
+   "text": "Set it on the cloth. Do not hand it to me. I have looked at it twice already and I will not cut a mount until somebody in this transaction says the true thing out loud: that stone is glass, cut well, sold badly, and about forty years old. I do not work around a lie. I work around a fact, and I invoice for the work.",
+   "options": [
+    {
+     "text": "\"She knows. She's known since she was nineteen. It's the setting she wants honest.\"",
+     "hide_when": {
+      "accomplishment": {
+       "heirloom_truth_kept": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "heirloom_truth_kept"
+      }
+     ],
+     "goto": "heirloom_truth"
+    },
+    {
+     "text": "[Appraise Goods] Read it out with him, weight by weight.",
+     "requires": {
+      "skill": "appraise_goods"
+     },
+     "hide_when": {
+      "accomplishment": {
+       "setting_assisted": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "setting_assisted"
+      }
+     ],
+     "goto": "bench_assist"
+    },
+    {
+     "text": "[Detect Magic] Follow the ward-line to where it wants to sit.",
+     "requires": {
+      "skill": "detect_magic"
+     },
+     "hide_when": {
+      "accomplishment": {
+       "setting_assisted": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "setting_assisted"
+      }
+     ],
+     "goto": "bench_assist"
+    },
+    {
+     "text": "\"Somebody swapped it. Who buys a stone like that?\"",
+     "hide_when": {
+      "accomplishment": {
+       "original_recovered": 1
+      }
+     },
+     "goto": "fence_pointer"
+    },
+    {
+     "text": "\"I'll come back with an answer.\"",
+     "end": true
+    }
+   ]
+  },
+  "heirloom_truth": {
+   "speaker": "Hedault",
+   "text": "Good. Then it goes on the order in those words and the price changes, downward, because glass takes less holding than a stone does. A mount for glass is not a lesser commission. It is a different one, and I would rather be told than discover it at the bench.",
+   "options": [
+    {
+     "text": "\"She'll be glad of the price.\"",
+     "end": true
+    }
+   ]
+  },
+  "bench_assist": {
+   "speaker": "Hedault",
+   "text": "Stand where I put you and keep your hands flat on the cloth. Now read it back to me. If you are right I will not say so; I will simply not correct you, and you may take that as the same thing. There. The ward wants to sit under the setting, not around the stone. It always did.",
+   "options": [
+    {
+     "text": "\"Understood.\"",
+     "end": true
+    }
+   ]
+  },
+  "fence_pointer": {
+   "speaker": "Hedault",
+   "_comment": "Pointer only -- banks nothing; the FIGHT counter comes off the alley encounter's on_victory.",
+   "text": "Forty years ago somebody took the stone and left the glass, and did it well enough that the family never thought to ask. A stone like that is sold twice in this city and kept once. There is a man with a back door off the alleys and a ledger he would not show the Watch. I do not go there. I am telling you where it is, and that is the entire extent of my involvement.",
+   "options": [
+    {
+     "text": "\"That's enough.\"",
      "end": true
     }
    ]

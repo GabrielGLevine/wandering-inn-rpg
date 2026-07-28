@@ -2503,3 +2503,69 @@ events, and result files live in the gitignored
   keyboard): the 32/32 / 21/21 combatant labels render OVER the pause
   parchment. Layering fix: pause layer above the board's label layer,
   or hide combat labels while paused.
+
+### v0.16 Invrisil depth (#306) — windowed pass 2026-07-28
+
+Nine new canonicals shot windowed on the real asset overlay (md5-censused
+against main first, 370 files, spot-check identical). Every finding below
+cites the shot it came from; the two that were CHEAP AND IN-LANE were fixed
+in the same wave rather than logged as owed.
+
+- [x] **`mercantile_alley` renders its board figures near-BLACK at night**
+  (`invrisil_setting_fight/02_the_fence_pair_on_the_board.png`). Measured as
+  a real before/after pair, same seed, same rigs, only the fixture's
+  `actions_since_sleep` changed: at night the fence and the doorman are
+  barely separable from the floor and from each other; at day all three
+  silhouettes and every HP numeral read cleanly. **Fixed in-lane** by
+  shipping `invrisil_setting_fight_start` at day — per ruling F that board
+  shot is the ONLY legibility read the two new rigs get, so the phase that
+  can be read wins. NOTE FOR THE ARENA OWNER: this is an ARENA finding, not
+  a rig one. Every shipped alley fight runs at day (`near_invrisil` is
+  `actions_since_sleep` 0), so this lane's fixture was the first to stage
+  that arena at night and nothing else has hit it yet. The next night fight
+  staged in the alleys will. `merchant_warehouse` at night is fine
+  (`invrisil_hat_loud/02_the_bravos_on_the_board.png` — warm brick, both
+  bravo rigs separable at a glance).
+- [x] **The Rest's fight said THREE and the board showed TWO** — caught by
+  adversarial review, not by the Task 5.5 windowed read, and that is the
+  lesson: the shot above was read for tint/silhouette separation and passed,
+  while nobody counted the figures against the copy. `rest_bravos` shipped
+  `display_name` "Three at the Far Table", an `observe` and a
+  `gate_closed_toast` all saying three men, against an `enemies` pair. Per
+  ruling F this pair of rigs gets no `test_combat_visuals` measurement, so
+  the windowed shot was the only gate and it was the wrong question.
+  **Fixed in-lane** by re-wording all three strings to "two" (a third rig
+  would have re-opened the measured 0.78 harness cell and the derived
+  `rng_state`). **Standing check for every future board read: count the
+  figures against the encounter's own copy**, not just their legibility.
+- [x] **Both new interiors render FLAT at dusk** — the hearth pool, both
+  sconce pools, the wall-band bounce and the `dust_motes` ambience were all
+  invisible in the first dusk pass, and all four read at night. Cause: these
+  interiors are mood-INVARIANT across phases by regional convention
+  (`brothers_parlor` ships the same single tuple for day/dusk/night), so a
+  1.1-energy radius-40 light has nothing to show against a flat 0.86 tint;
+  `ui_lights_rendered` confirmed the lights were REGISTERED (count 3 in
+  `adventurers_rest`) the whole time, just invisible. **Fixed in-lane** by
+  shipping both loop fixtures at night. Left OPEN as a design question for
+  the mood owner: a windowless interior that is phase-flat can never show
+  its own lamps at dusk — either those interiors want a dusk tint a notch
+  under their day one, or entity lights in flat-mood rooms want more energy.
+- [ ] **The two new facade doors are easy to miss on the boulevard band**
+  (`adventurers_rest_loop/01_two_doors_on_one_facade.png`): both use the
+  generic `door` sprite and sit in a shopfront band of similarly sized
+  window props, and the door the player is standing under is largely
+  occluded by the player sprite itself. Not a blocker (bump + interact +
+  the display_name), but a distinct shopfront-door sprite or a hanging sign
+  would make the facade read "you can go in here" without standing on it.
+  Same family as the open b5 #220 shopfront-observe entry above.
+- [ ] **`hearth` is a cold-grey iron sprite with no fire frame**
+  (`adventurers_rest_loop/03_the_hearth.png`): at night the entity light
+  sells it, but the sprite itself reads as an unlit oven against copy that
+  says "kept fed accordingly". A lit-hearth frame (or a fire overlay prop)
+  would close the gap between the art and the line.
+- [ ] **Windowed capture stalled once mid-run** (`invrisil_hat_quiet`, first
+  windowed attempt): the run reached its last banked counter and then hung
+  before the final screenshot; the alarm killed `run_qa.sh` but left the
+  godot child alive. Killing the child and re-running passed with all three
+  shots. Headless is unaffected (green individually and in the full sweep).
+  Logged as a harness flake to watch, not a script defect.

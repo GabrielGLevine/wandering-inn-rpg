@@ -166,6 +166,38 @@
 			]
 		},
 		{
+			"_comment": "v0.16 I1 (#306). Giver is the stationer client (ruling 1). `resolve` is a travel beat (producers on mercantile_alleys, giver on stationer) so it names the alleys; `report` produces on the giver's own map.",
+			"id": "a_setting_for_a_lady",
+			"title": "A Setting for a Lady",
+			"region": "Invrisil",
+			"beats": [
+				{ "id": "resolve", "description": "Hedault keeps a bench in the alleys and will not set the stone until somebody says the true thing about it. Tell him, read the ward at his bench, or find out who took the original.", "complete_when_any": { "heirloom_truth_kept": 1, "setting_assisted": 1, "original_recovered": 1 } },
+				{ "id": "report", "description": "Go back to the Lady with the ring box and tell her how it ended.", "complete_when": { "setting_commissioned": 1 } }
+			],
+			"_resolution_order": "Weakest claim first (src/core/quests.gd:82-87); LAST MATCH WINS among real rungs, so a completionist reads as the strongest deed: setting_assisted (you helped) < heirloom_truth_kept (you brokered the truth) < original_recovered (you brought back the real stone). No \"\"-fallback rung -- the handover option is gated on holding at least one route counter, so setting_commissioned cannot bank without one.",
+			"resolution_paths": [
+				{ "accomplishment": "setting_assisted", "text": "You stood at Hedault's bench and read the ward-line with him. He did not correct you, which from him is a reference.", "grant": { "observed_things": 2, "heard_gossip": 2 } },
+				{ "accomplishment": "heirloom_truth_kept", "text": "You said the true thing about the stone out loud so she would never have to, and the setting was made honest around it.", "grant": { "persuaded_someone": 2, "heard_gossip": 3 } },
+				{ "accomplishment": "original_recovered", "text": "Forty years after somebody swapped it, you took the original back off a fence's shelf and put it in her hands.", "grant": { "melee_hit": 6, "won_combat": 1 } }
+			]
+		},
+		{
+			"_comment": "v0.16 I2 (#306). Giver is Wilovan in the parlor; all three route counters produce on adventurers_rest, so `run` is a travel beat naming the Rest (LANDMARK_TOKENS `adventurer`). `{addr}` is FORBIDDEN here -- quests.json is scanned as unresolvable.",
+			"id": "the_hat_stays_on",
+			"title": "The Hat Stays On",
+			"region": "Invrisil",
+			"beats": [
+				{ "id": "run", "description": "The handover happens at the Adventurer's Rest, where nobody raises a voice. Talk it round, move it without a word, or find out what happens when it goes loud.", "complete_when_any": { "handoff_talked": 1, "handoff_quiet": 1, "handoff_loud": 1 } },
+				{ "id": "report", "description": "Go back to the parlor and tell Wilovan how the evening went.", "complete_when": { "hat_job_done": 1 } }
+			],
+			"_resolution_order": "Weakest claim first, LAST MATCH WINS: handoff_loud (it went wrong, you finished it) < handoff_talked (you talked it round) < handoff_quiet (nobody in the room ever knew). The loud ending is the job done badly and finished anyway; the quiet one is the gentleman's ideal, so it wins a completionist's read.",
+			"resolution_paths": [
+				{ "accomplishment": "handoff_loud", "text": "The hat came off. The package still changed hands, and the house has agreed to remember it as a misunderstanding about a chair.", "grant": { "melee_hit": 5, "won_combat": 1 } },
+				{ "accomplishment": "handoff_talked", "text": "Three exchanges, no names, and a package that was never once mentioned by anybody at the table.", "grant": { "persuaded_someone": 2, "heard_gossip": 3 } },
+				{ "accomplishment": "handoff_quiet", "text": "Hat on the third peg, coat over the chair, the wrong one taken on the way out. Nobody raised a voice and nobody raised an eye.", "grant": { "sneaked_past_danger": 2, "observed_things": 2 } }
+			]
+		},
+		{
 			"_comment": "FOUR real stages, not the cisterns/wrong_order two-beat shape: this is a genuine dungeon, not a posting. Task 2.2 named cleared_halls_by_force on snare_nest_slot so the fight has an id of its own; four Act V fixtures carried halls_cleared with no route counter and gained it, keeping their recorded ending byte-identical.",
 			"id": "what_the_seal_kept",
 			"title": "What the Seal Kept",

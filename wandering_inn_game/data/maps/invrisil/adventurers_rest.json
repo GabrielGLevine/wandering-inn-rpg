@@ -1,0 +1,431 @@
+{
+ "_comment": "v0.16 I2 (#306). Walk-in only. Biome `inn` + every sprite reused. Perimeter is walls.segments (NEVER also in `blocked`) -- a raw blocked ring in this biome renders 39 crates. `blocked` is furniture only, each cell with a decor row. Plates + bravos gate on hat_job_taken.",
+ "biome": "inn",
+ "grid": {
+  "width": 13,
+  "height": 9
+ },
+ "blocked": [
+  [
+   8,
+   1
+  ]
+ ],
+ "floor_layers": [
+  {
+   "_pick": "#225 floor differentiation (census-FREE key). The `inn` biome default is Erin's own light tavern plank [1,21] -- shipping it here would make the Rest read as a second Wandering Inn, which is the exact `brothers_parlor` pre-#49 smell. Reuses riverfarm_longhouse's darker, rougher timber swatch off the SAME Interior_Walls_01 sheet ([12,21]/[13,21]/[12,22]/[13,22], rgb~87,64,49): same wood family, same license, footstep-wood stays honest, and the hall reads as one that has been walked on harder than Erin's. Different city from the longhouse, same board -- an acceptable reuse for a working common hall.",
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     12,
+     21
+    ],
+    [
+     13,
+     21
+    ],
+    [
+     12,
+     22
+    ],
+    [
+     13,
+     22
+    ]
+   ],
+   "cells": "all"
+  }
+ ],
+ "walls": {
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "from": [
+     0,
+     0
+    ],
+    "to": [
+     12,
+     0
+    ],
+    "cap": [
+     14,
+     6
+    ],
+    "face": [
+     14,
+     7
+    ]
+   },
+   {
+    "from": [
+     0,
+     1
+    ],
+    "to": [
+     0,
+     8
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     12,
+     1
+    ],
+    "to": [
+     12,
+     8
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     1,
+     8
+    ],
+    "to": [
+     5,
+     8
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     7,
+     8
+    ],
+    "to": [
+     11,
+     8
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   }
+  ]
+ },
+ "decor": [
+  {
+   "sprite": "barrel",
+   "cell": [
+    8,
+    1
+   ]
+  },
+  {
+   "sprite": "bench",
+   "cell": [
+    3,
+    5
+   ]
+  },
+  {
+   "sprite": "bench",
+   "cell": [
+    4,
+    5
+   ]
+  },
+  {
+   "sprite": "stool",
+   "cell": [
+    8,
+    4
+   ]
+  },
+  {
+   "sprite": "rug_green",
+   "cell": [
+    6,
+    5
+   ],
+   "tint": [
+    0.42,
+    0.35,
+    0.3
+   ]
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    4,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.75,
+     0.4
+    ],
+    "energy": 0.7,
+    "radius": 26,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    9,
+    7
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.75,
+     0.4
+    ],
+    "energy": 0.7,
+    "radius": 26,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "unlit_lantern",
+   "cell": [
+    11,
+    4
+   ]
+  }
+ ],
+ "ambience": [
+  {
+   "preset": "dust_motes",
+   "rect": "all",
+   "phase": [
+    "dusk",
+    "night"
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "id": "adventurers_rest_to_boulevard",
+   "kind": "door",
+   "cell": [
+    6,
+    8
+   ],
+   "display_name": "Out to the Boulevard",
+   "sprite": "door",
+   "to_map": "invrisil_boulevard",
+   "to_cell": [
+    18,
+    2
+   ]
+  },
+  {
+   "_comment": "I2 TALK route surface (three exchanges, the trade never named).",
+   "id": "rest_house_factor",
+   "kind": "npc",
+   "cell": [
+    6,
+    1
+   ],
+   "display_name": "The House Factor",
+   "sprite": "human_laborer",
+   "tint": [
+    0.44,
+    0.42,
+    0.5
+   ],
+   "facing": "down",
+   "observe": "He keeps the ledger of who is owed a table rather than who is owed money, which in this house is the more delicate book. He has not written anything down since you came in.",
+   "talk_pool": [
+    "Long table's for people waiting on somebody. This one's for people who've already arrived.",
+    "Silver rank drinks free on the night they make it. Once. We've never had to say it twice.",
+    "The Reinhart carriage went up the boulevard twice last month. Both times, four adventurers in this room suddenly remembered appointments."
+   ],
+   "conversation": "invrisil_rest_factor"
+  },
+  {
+   "id": "rest_gnoll_ranger",
+   "kind": "npc",
+   "cell": [
+    3,
+    6
+   ],
+   "display_name": "A Gnoll with a Bad Ankle",
+   "sprite": "gnoll_traveler",
+   "facing": "right",
+   "observe": "Boot off, ankle up on the bench, and a bowl of something going cold while she tells the story properly rather than quickly.",
+   "talk_pool": [
+    "Two seasons out of Liscor and every job north of it wanted a Gnoll who could track. None of them wanted to pay one.",
+    "Ankle's fine. Ankle's been fine for a month. The bench is the good part.",
+    "Nobody in here asks what you're carrying. That's not manners, it's arithmetic.",
+    "Half the good contracts north of Liscor have a house seal on them somewhere near the bottom. Read that far before you sign, yes?"
+   ]
+  },
+  {
+   "id": "rest_quiet_drinker",
+   "kind": "npc",
+   "cell": [
+    10,
+    4
+   ],
+   "display_name": "A Man Not Drinking",
+   "sprite": "pc_human_m",
+   "tint": [
+    0.4,
+    0.4,
+    0.44
+   ],
+   "facing": "left",
+   "observe": "A full cup, untouched, at his right hand, and his chair turned three degrees off the table so he can see both doors without turning his head.",
+   "talk_pool": [
+    "I'll finish it before I go. I always do.",
+    "You get the corner or you get the door. Corner's better. Door's honest."
+   ]
+  },
+  {
+   "id": "rest_hearth",
+   "kind": "prop",
+   "cell": [
+    2,
+    1
+   ],
+   "display_name": "The Hearth",
+   "sprite": "hearth",
+   "light": {
+    "color": [
+     1.0,
+     0.62,
+     0.32
+    ],
+    "energy": 1.1,
+    "radius": 40,
+    "flicker": true
+   },
+   "observe": "Built for a bigger room than this one, and kept fed accordingly. The chairs nearest it are the worst chairs in the house and they are always taken."
+  },
+  {
+   "_comment": "Stand-in: library_shelf is the only registered rack; the kit reads from display_name + observe, not the silhouette.",
+   "id": "rest_trophy_rack",
+   "kind": "prop",
+   "cell": [
+    10,
+    1
+   ],
+   "display_name": "A Rack of Retired Kit",
+   "sprite": "library_shelf",
+   "observe": "Bows, a cracked buckler, one very good spear. Nothing here was donated. Every piece was left behind by somebody who did not come back for it, and the house does not say which."
+  },
+  {
+   "id": "rest_bar_counter_l",
+   "kind": "prop",
+   "cell": [
+    7,
+    1
+   ],
+   "display_name": "The Counter",
+   "sprite": "bar_counter",
+   "observe": "Elbow-polished to a shine along its whole length except one arm's width at the far end, which is somebody's, permanently."
+  },
+  {
+   "id": "rest_long_bench",
+   "kind": "prop",
+   "cell": [
+    4,
+    4
+   ],
+   "display_name": "The Long Table",
+   "sprite": "table_brown",
+   "observe": "Long enough for a full company and set for four. The house leaves it that way on purpose, and everybody in the room has noticed and nobody mentions it."
+  },
+  {
+   "id": "rest_rank_notice",
+   "kind": "prop",
+   "cell": [
+    11,
+    6
+   ],
+   "display_name": "The Rank Board",
+   "sprite": "request_board",
+   "observe": "Names in three columns, and a fourth column with no heading. The fourth column is shorter than it was last season and nobody has rubbed it out."
+  },
+  {
+   "_comment": "#204 plate NEAR: hanging the hat is the signal. Gated with the FAR plate so the pair cannot bank out of order. Stand-in sprite hat_stand -- no peg rail is registered; a stand reads close and the toast carries the beat.",
+   "id": "rest_hat_hook",
+   "kind": "prop",
+   "cell": [
+    1,
+    7
+   ],
+   "display_name": "The Peg Rail",
+   "sprite": "hat_stand",
+   "present_when": {
+    "requires": {
+     "hat_job_taken": 1
+    }
+   },
+   "observe": "Nine pegs. Eight have hats. The third from the left is empty and has been wiped, which is not the same as being unused.",
+   "on_interact_accomplishment": "hat_hook_set",
+   "toast": "You hang your hat on the third peg, brim out, the way the house does it. Across the room a man you have not looked at stops not looking at you."
+  },
+  {
+   "_comment": "#204 plate FAR = SECOND: banks handoff_quiet ONLY via the variant (hook first); base is wrong-order cold feedback. Zero new sim code.",
+   "id": "rest_corner_table",
+   "kind": "prop",
+   "cell": [
+    11,
+    2
+   ],
+   "display_name": "The Corner Table",
+   "sprite": "table_brown",
+   "present_when": {
+    "requires": {
+     "hat_job_taken": 1
+    }
+   },
+   "observe": "A coat over the chair back, good cloth, nobody in it. The table has two cups and one of them has been sitting there since before you arrived.",
+   "on_interact_accomplishment": "handoff_mistimed",
+   "toast": "You set it down on a table nobody has claimed and it sits there being a package. Behind you a chair turns a quarter inch, so you pick it back up.",
+   "variants": [
+    {
+     "when": {
+      "hat_hook_set": 1
+     },
+     "accomplishment": "handoff_quiet",
+     "toast": "The coat is already over the chair back. You lay yours beside it, take the wrong one on the way past, and nobody in this room has raised a voice or an eye."
+    }
+   ]
+  },
+  {
+   "_comment": "I2 FIGHT: INTERACT-ONLY (no trigger_radius) so it cannot spring on a pinned route. New ids only -- no shared combatant is retuned. COUNT IS LOAD-BEARING: `enemies` is a PAIR, so all three player-facing strings here say two. Drafted as 'three' and corrected -- if a third rig is ever added, these strings and the sim_combat_batch cell move together.",
+   "id": "rest_bravos",
+   "kind": "encounter",
+   "cell": [
+    9,
+    6
+   ],
+   "display_name": "Two at the Far Table",
+   "sprite": "hired_blade",
+   "observe": "Two men at the far table who arrived together, ordered separately, and have been agreeing with each other about nothing for an hour.",
+   "arena": "merchant_warehouse",
+   "enemies": [
+    "rest_bravo_a",
+    "rest_bravo_b"
+   ],
+   "allies": [],
+   "on_victory": "handoff_loud",
+   "encounter_when": {
+    "requires": {
+     "hat_job_taken": 1
+    }
+   },
+   "gate_closed_toast": "Two men at the far table are having a conversation you are not in. Tonight, that is all they are."
+  }
+ ]
+}

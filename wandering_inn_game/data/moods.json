@@ -346,6 +346,44 @@
    ],
    "vignette": 0.34
   },
+  "stationer": {
+   "_comment": "Paper-warm and a shade cooler than the parlor: lamplight on rag paper, not on brandy.",
+   "day": [
+    0.86,
+    0.82,
+    0.72
+   ],
+   "dusk": [
+    0.86,
+    0.82,
+    0.72
+   ],
+   "night": [
+    0.86,
+    0.82,
+    0.72
+   ],
+   "vignette": 0.30
+  },
+  "adventurers_rest": {
+   "_comment": "Common-hall amber, one notch under the inn's: a bigger hearth in a smaller room.",
+   "day": [
+    0.88,
+    0.76,
+    0.60
+   ],
+   "dusk": [
+    0.88,
+    0.76,
+    0.60
+   ],
+   "night": [
+    0.88,
+    0.76,
+    0.60
+   ],
+   "vignette": 0.36
+  },
   "dungeon_approach": {
    "_comment": "Per-prop accent variation (the 4 trap tells' post-reveal warning tints, the statue/rubble dressing) rides the live decor `tint` field (GH#55) on top of this base grade, not a second mood card. GH-VISUAL-LOG 2026-07-17: base grade lifted ~35% total (12% then a further 20% on user call) (user-ratified USER-EYES item -- vault shots read near-black).",
    "day": [

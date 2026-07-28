@@ -223,8 +223,8 @@ Regenerate both in the **same commit** as any manifest or QA-script change.
 **Interfaces:**
 - Produces: a walk-in door from `invrisil_boulevard` (20,1) → `stationer` (6,7). Task 1.3 owns the far side.
 
-- [ ] **Step 1: Load `wi-adding-a-scene`. Read the four shopfront props** (`boulevard_glazier` :1365, `boulevard_teahouse` :1387, `boulevard_cordwainer` :1376, `boulevard_stationer` :1394) and the two shipped door pairs (`boulevard_to_alleys` [26,8]→[1,7] at :931; `alleys_to_parlor` [19,12]→[1,4]). **Ruling 9:** four shopfronts ship, so this leaves three observes.
-- [ ] **Step 2: Rewrite the entity in place.** Keep `id`, keep `observe` **byte-identical**, keep the cell, drop `hide_sprite`, add the door keys:
+- [x] **Step 1: Load `wi-adding-a-scene`. Read the four shopfront props** (`boulevard_glazier` :1365, `boulevard_teahouse` :1387, `boulevard_cordwainer` :1376, `boulevard_stationer` :1394) and the two shipped door pairs (`boulevard_to_alleys` [26,8]→[1,7] at :931; `alleys_to_parlor` [19,12]→[1,4]). **Ruling 9:** four shopfronts ship, so this leaves three observes.
+- [x] **Step 2: Rewrite the entity in place.** Keep `id`, keep `observe` **byte-identical**, keep the cell, drop `hide_sprite`, add the door keys:
 
 ```json
   {
@@ -246,10 +246,10 @@ Regenerate both in the **same commit** as any manifest or QA-script change.
   }
 ```
 
-- [ ] **Step 3: Prove the three pins by hand before running anything.** `qa/scripts/invrisil_walkthrough.json` steps 61–67 are: `move up 1` from (20,2) → `assert_event_logged player_blocked {cell:[20,1]}` → `press_field_skill observe` → `skill_used {target: "boulevard_stationer"}` → the full observe toast → `screenshot 01c_boulevard_stationer`. **There is no `press interact` at (20,2)** (verified: the walkthrough presses `interact` only at (25,8), (3,6), (18,12) and in the parlor), so no step becomes a map transition. (20,1) stays in `blocked`, so `player_blocked` still fires. **No canonical needs a re-pin.** Record that sentence in the PR body.
-- [ ] **Step 4: POPULATION_FLOORS check.** `invrisil_boulevard`'s floor is 20. `INTERACTABLE_KEYS` counts `observe`-carrying props **and** every `kind: "door"`, and this entity gains no `present_when`, so the count is unchanged by the conversion and **+1** from Task 1.2's new door. Floors are minimums — **no re-derive needed.** (Ruling 3's re-derive trigger does not fire.) State this in the PR body.
-- [ ] **Step 5: Run** `python3 wandering_inn_game/scripts/data_lint.py` — expect clean.
-- [ ] **Step 6: Commit** `feat(invrisil): the stationer's window becomes a door (#306)`.
+- [x] **Step 3: Prove the three pins by hand before running anything.** `qa/scripts/invrisil_walkthrough.json` steps 61–67 are: `move up 1` from (20,2) → `assert_event_logged player_blocked {cell:[20,1]}` → `press_field_skill observe` → `skill_used {target: "boulevard_stationer"}` → the full observe toast → `screenshot 01c_boulevard_stationer`. **There is no `press interact` at (20,2)** (verified: the walkthrough presses `interact` only at (25,8), (3,6), (18,12) and in the parlor), so no step becomes a map transition. (20,1) stays in `blocked`, so `player_blocked` still fires. **No canonical needs a re-pin.** Record that sentence in the PR body.
+- [x] **Step 4: POPULATION_FLOORS check.** `invrisil_boulevard`'s floor is 20. `INTERACTABLE_KEYS` counts `observe`-carrying props **and** every `kind: "door"`, and this entity gains no `present_when`, so the count is unchanged by the conversion and **+1** from Task 1.2's new door. Floors are minimums — **no re-derive needed.** (Ruling 3's re-derive trigger does not fire.) State this in the PR body.
+- [x] **Step 5: Run** `python3 wandering_inn_game/scripts/data_lint.py` — expect clean.
+- [x] **Step 6: Commit** `feat(invrisil): the stationer's window becomes a door (#306)`.
 
 ### Task 1.2: Promote the (18,1) decor door into the Adventurer's Rest door
 
@@ -259,8 +259,8 @@ Regenerate both in the **same commit** as any manifest or QA-script change.
 **Interfaces:**
 - Produces: a walk-in door from `invrisil_boulevard` (18,1) → `adventurers_rest` (6,7). Task 1.4 owns the far side.
 
-- [ ] **Step 1: Delete the decor row** `{"sprite": "door", "cell": [18, 1]}` at `:878-884`. Leave the `[4,1]` decor door alone — it stays dressing.
-- [ ] **Step 2: Append the entity** (place it adjacent to `boulevard_to_alleys` in the entities array so the two doors read together in diff):
+- [x] **Step 1: Delete the decor row** `{"sprite": "door", "cell": [18, 1]}` at `:878-884`. Leave the `[4,1]` decor door alone — it stays dressing.
+- [x] **Step 2: Append the entity** (place it adjacent to `boulevard_to_alleys` in the entities array so the two doors read together in diff):
 
 ```json
   {
@@ -282,13 +282,13 @@ Regenerate both in the **same commit** as any manifest or QA-script change.
   }
 ```
 
-- [ ] **Step 3: Cell justification, hand-verified against the live scripts (the first draft's evidence sentence was WRONG — this is the corrected one).**
+- [x] **Step 3: Cell justification, hand-verified against the live scripts (the first draft's evidence sentence was WRONG — this is the corrected one).**
   - **(18,1) is on the fully blocked row 1** (`invrisil_boulevard.json` blocks x=0…27 at y=1 — all 28 cells), so no previously-walkable cell gains a blocker and the save-compat hazard in `wi-adding-a-scene:114-120` cannot fire. Both new doors (18,1) and (20,1) are on that row.
   - **Row 2 is NOT "x 20-23 only".** `invrisil_walkthrough` walks row 2 **end-to-end, x=1…27, thirty-six times**: steps 167–203 are an eighteen-fold `move right 26` / `move left 26` pacing loop used to grind the clock to night, with a hard `player_cell [27,2]` pin at step 185 and `phase night` at steps 204–206. Row 2 carries **zero** blocked cells today. The new door is harmless **only** because it sits on row 1, not because row 2 is unwalked.
   - **RULE — never occupy a row-2 boulevard cell.** Nothing in this lane may place an entity, an encounter or a blocked cell anywhere on `invrisil_boulevard` row 2. `WIGame.move_player` (`src/core/wi_game.gd:310-325`) **skips `_tick_action()` on a blocked step**, so a single new row-2 blocker would both break the `[27,2]` pin *and* stall the day→night pacing the shot-07 night read depends on. This rule is restated in the Danger list.
   - **(18,2) is open floor and clear of every pinned assert:** `invrisil_walkthrough` pins (20,2)/(23,2)/(14,2)/(27,2)/(1,2)/(23,6)/(25,8)/(18,9)/(18,12); `invrisil_round_trip` pins (4,8)/(13,8)/(15,8)/(25,8); `invrisil_disagreement_stealth|talk` pin (23,6); `parley_*` teleport to (24,14). (18,2) is walked **through** by the pacing loop but never pinned, and a walkable cell staying walkable changes nothing.
   - The walkthrough's `move right 5` from (18,9) and `move down 3` to (18,12) both stay on the x=18 column at y≥9 — untouched.
-- [ ] **Step 4: Run** `data_lint.py`; **commit** `feat(invrisil): the Adventurer's Rest opens off the boulevard (#306)`.
+- [x] **Step 4: Run** `data_lint.py`; **commit** `feat(invrisil): the Adventurer's Rest opens off the boulevard (#306)`.
 
 ### Task 1.3: `data/maps/invrisil/stationer.json`
 
@@ -314,7 +314,7 @@ Perimeter segments (12 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[11,
 - boulevard (20,1) → stationer **(6,7)**: (6,7) is interior floor, not in `blocked`, and carries no entity. ✔
 - stationer (6,8) → boulevard **(20,2)**: (20,2) is open boulevard floor and is the exact cell `invrisil_walkthrough` stands on at step 60. ✔
 
-- [ ] **Step 1: Author the file** (match `brothers_parlor.json`'s 1-space-per-level exploded style; if you generate it, `ensure_ascii=False` and grep the result for a literal `—`):
+- [x] **Step 1: Author the file** (match `brothers_parlor.json`'s 1-space-per-level exploded style; if you generate it, `ensure_ascii=False` and grep the result for a literal `—`):
 
 ```json
 {
@@ -465,8 +465,8 @@ Perimeter segments (12 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[11,
 }
 ```
 
-- [ ] **Step 2: Non-quest observables audit.** Eight `observe`-carrying props plus a second talk-pool NPC (`stationer_clerk`) all stay live after `setting_commissioned` banks — comfortably over the spec's ≥3 bar (spec:172-174).
-- [ ] **Step 3: Sprite check — the ids above are already corrected; re-prove them, do not re-pick them.** The first draft shipped `"sprite": "table"` and `"sprite": "bookshelf"`, **neither of which is registered** — `data/sprites.json` has 278 entries and neither name is among them, and **nothing in the suite validates a map entity's sprite id** (`tests/test_combat_visuals.gd:21` checks *arena* decor only; `scripts/data_lint.py` check 5 only asserts each `sprites.json` entry has non-empty `animations`). It would have shipped GREEN and rendered as missing art. The corrected picks, all verified registered:
+- [x] **Step 2: Non-quest observables audit.** Eight `observe`-carrying props plus a second talk-pool NPC (`stationer_clerk`) all stay live after `setting_commissioned` banks — comfortably over the spec's ≥3 bar (spec:172-174).
+- [x] **Step 3: Sprite check — the ids above are already corrected; re-prove them, do not re-pick them.** The first draft shipped `"sprite": "table"` and `"sprite": "bookshelf"`, **neither of which is registered** — `data/sprites.json` has 278 entries and neither name is among them, and **nothing in the suite validates a map entity's sprite id** (`tests/test_combat_visuals.gd:21` checks *arena* decor only; `scripts/data_lint.py` check 5 only asserts each `sprites.json` entry has non-empty `animations`). It would have shipped GREEN and rendered as missing art. The corrected picks, all verified registered:
 
   | Entity | First draft | **Ships** | Why |
   |---|---|---|---|
@@ -476,16 +476,16 @@ Perimeter segments (12 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[11,
   | `stationer_contract_shelf` | `bookshelf` ✗ | `library_shelf` | literally a shelf of forms |
 
   Re-verify each with `python3 -c "import json,sys; d=json.load(open('wandering_inn_game/data/sprites.json')); s=d.get('sprites',d); print([k for k in sys.argv[1:] if k not in s])" door pc_human_f human_laborer crate barrel counter_left counter_right library_desk library_shelf table_brown stool rug_tan window_blue sconce plant_pot` — expect `[]`. **Substitute a registered sibling rather than adding a sprite row** (the `seal_vault` precedent added zero sprite entries); if a stand-in compromises legibility, say so in that **entity's** `_comment` in one line. None of the four above is a compromise, so none carries a note.
-- [ ] **Step 4: Wall/blocked double-listing check.** `blocked` must contain **only** `[4,5]` (the writing table, which has its own `decor` row). If any perimeter cell appears in `blocked`, delete it — `wi_game.gd:140-143` already blocks every wall segment cell, and a double-listed cell is exactly what makes the biome prop pool fire on a wall.
-- [ ] **Step 5: Run** `python3 wandering_inn_game/scripts/data_lint.py` (grid + in-grid cells) and `perl -e 'alarm 240; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_content.gd` — expect PASS. `_validate_npc_interact_surface` will red an empty `talk_pool`; both NPCs carry real ones.
-- [ ] **Step 6: Scene-dynamism advisory** (the other three lanes each carry this step; the first draft of this one did not):
+- [x] **Step 4: Wall/blocked double-listing check.** `blocked` must contain **only** `[4,5]` (the writing table, which has its own `decor` row). If any perimeter cell appears in `blocked`, delete it — `wi_game.gd:140-143` already blocks every wall segment cell, and a double-listed cell is exactly what makes the biome prop pool fire on a wall.
+- [x] **Step 5: Run** `python3 wandering_inn_game/scripts/data_lint.py` (grid + in-grid cells) and `perl -e 'alarm 240; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_content.gd` — expect PASS. `_validate_npc_interact_surface` will red an empty `talk_pool`; both NPCs carry real ones.
+- [x] **Step 6: Scene-dynamism advisory** (the other three lanes each carry this step; the first draft of this one did not):
 
 ```
 perl -e 'alarm 300; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd
 ```
 
   Read the scorecard row for `stationer`. **Target composite ≥ 50**; a score under 30 prints a loud advisory and means "brown box — fix before spending a windowed screenshot on it." The component breakdown says what to add: low internal variety → pull decor from a second pack family (the drafted decor deliberately mixes `props/free_pack` furniture with the Library-pack desk/shelf sprites), low composition → dress the border band and add an off-centre focal light (the `sconce` at (4,1)), low cross-scene distinctiveness → the `floor_layers` pick is the lever. The tool regenerates `docs/design/scene-dynamism-report.md` deterministically; commit the regenerated report with the map.
-- [ ] **Step 7: Commit** `feat(invrisil): the stationer's, a small working interior (#306)`.
+- [x] **Step 7: Commit** `feat(invrisil): the stationer's, a small working interior (#306)`.
 
 ### Task 1.4: `data/maps/invrisil/adventurers_rest.json`
 
@@ -508,7 +508,7 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
 - boulevard (18,1) → rest **(6,7)**: interior floor, unblocked, no entity. ✔
 - rest (6,8) → boulevard **(18,2)**: open boulevard floor (row 2 is otherwise clear; the row-3 pillars are at x 4/10/16/22, so nothing crowds the landing). ✔
 
-- [ ] **Step 1: Author the file:**
+- [x] **Step 1: Author the file:**
 
 ```json
 {
@@ -683,22 +683,34 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
    "id": "rest_bravos",
    "kind": "encounter",
    "cell": [9, 6],
-   "display_name": "Three at the Far Table",
+   "display_name": "Two at the Far Table",
    "sprite": "hired_blade",
-   "observe": "Three men at the far table who arrived together, ordered separately, and have been agreeing with each other about nothing for an hour.",
+   "observe": "Two men at the far table who arrived together, ordered separately, and have been agreeing with each other about nothing for an hour.",
    "arena": "merchant_warehouse",
    "enemies": ["rest_bravo_a", "rest_bravo_b"],
    "allies": [],
    "on_victory": "handoff_loud",
    "encounter_when": { "requires": { "hat_job_taken": 1 } },
-   "gate_closed_toast": "Three men at the far table are having a conversation you are not in. Tonight, that is all they are."
+   "gate_closed_toast": "Two men at the far table are having a conversation you are not in. Tonight, that is all they are."
   }
  ]
 }
 ```
 
-- [ ] **Step 2: Non-quest observables audit.** `rest_hearth`, `rest_trophy_rack`, `rest_bar_counter_l`, `rest_long_bench`, `rest_rank_notice` (five) plus three talk-pool NPCs are ungated and survive `hat_job_done` — the room is a real ambient interior afterwards, per spec:98-100.
-- [ ] **Step 3: Sprite check — corrected picks, re-prove them.** Same failure mode as Task 1.3 Step 3 (`table`/`bookshelf` are not registered and nothing gates it). The corrected picks:
+> **FIX-WAVE CORRECTION (adversarial review, IMPORTANT).** The block above is
+> the corrected copy. As originally drafted it said **three** in all three
+> player-facing strings (`display_name`, `observe`, `gate_closed_toast`) while
+> `enemies` was and remains a **pair**, so every player who took the fight read
+> the copy contradicted by a two-figure board. Corrected to "two" rather than by
+> adding a third rig, because a third rig re-opens the measured
+> `rest_bravos_t3_warrior10_solo` cell (0.78/3), the `power_level` banking sum,
+> and the DERIVED `rng_state` in `invrisil_hat_loud_start`. The count is now
+> pinned by the entity's own `_comment` and by `invrisil_v016_gate_check`'s
+> toast assertion. Shipped precedent for the convention: `hired_blades` in
+> `mercantile_alleys.json:1220` says "Three men" and ships three enemies.
+
+- [x] **Step 2: Non-quest observables audit.** `rest_hearth`, `rest_trophy_rack`, `rest_bar_counter_l`, `rest_long_bench`, `rest_rank_notice` (five) plus three talk-pool NPCs are ungated and survive `hat_job_done` — the room is a real ambient interior afterwards, per spec:98-100.
+- [x] **Step 3: Sprite check — corrected picks, re-prove them.** Same failure mode as Task 1.3 Step 3 (`table`/`bookshelf` are not registered and nothing gates it). The corrected picks:
 
   | Entity | First draft | **Ships** | Note |
   |---|---|---|---|
@@ -711,10 +723,10 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
   | `rest_hat_hook` | `bookshelf` ✗ | `hat_stand` | **stand-in — carries a one-line entity `_comment`.** A peg rail reading as a library shelf was the legibility bounce the windowed pass would have caught; `hat_stand` is the registered near-miss and the toast carries the beat. |
 
   Re-verify with the same one-liner as Task 1.3 Step 3 over: `door gnoll_traveler pc_human_m human_laborer hired_blade hearth bar_counter table_brown library_shelf request_board hat_stand barrel bench stool rug_green sconce unlit_lantern` — expect `[]`.
-- [ ] **Step 4: Wall/blocked double-listing check.** `blocked` must contain **only** `[8,1]` (the barrel behind the counter, which has its own `decor` row). No perimeter cell may appear in `blocked`. Confirm no `decor` cell collides with an `entities` cell (double-draw): decor sits at (8,1)/(3,5)/(4,5)/(8,4)/(6,5)/(4,1)/(9,7)/(11,4); entities at (6,8)/(6,1)/(3,6)/(10,4)/(2,1)/(10,1)/(7,1)/(4,4)/(11,6)/(1,7)/(11,2)/(9,6) — disjoint. ✔
-- [ ] **Step 5: `present_when` shape check.** `_validate_present_when` (`test_content.gd:749-801`) allows `requires`/`phase`/`absent`/`guest` and **forbids `present_when` on `kind: "encounter"`** — the bravos correctly use `encounter_when` instead.
-- [ ] **Step 6: Fixture-cell sanity.** `invrisil_hat_quiet_start` stands at (2,7) facing (1,7) — the hat stand — and `invrisil_hat_loud_start` at (9,5) facing (9,6) — the bravos. Both facing cells are interior floor and neither is in `blocked` or on a wall segment. ✔
-- [ ] **Step 7: Run** `data_lint.py` + `test_content.gd`, then the **scene-dynamism advisory** from Task 1.3 Step 6 and read the `adventurers_rest` row (target composite ≥ 50). **Commit** `feat(invrisil): the Adventurer's Rest common hall (#306)`.
+- [x] **Step 4: Wall/blocked double-listing check.** `blocked` must contain **only** `[8,1]` (the barrel behind the counter, which has its own `decor` row). No perimeter cell may appear in `blocked`. Confirm no `decor` cell collides with an `entities` cell (double-draw): decor sits at (8,1)/(3,5)/(4,5)/(8,4)/(6,5)/(4,1)/(9,7)/(11,4); entities at (6,8)/(6,1)/(3,6)/(10,4)/(2,1)/(10,1)/(7,1)/(4,4)/(11,6)/(1,7)/(11,2)/(9,6) — disjoint. ✔
+- [x] **Step 5: `present_when` shape check.** `_validate_present_when` (`test_content.gd:749-801`) allows `requires`/`phase`/`absent`/`guest` and **forbids `present_when` on `kind: "encounter"`** — the bravos correctly use `encounter_when` instead.
+- [x] **Step 6: Fixture-cell sanity.** `invrisil_hat_quiet_start` stands at (2,7) facing (1,7) — the hat stand — and `invrisil_hat_loud_start` at (9,5) facing (9,6) — the bravos. Both facing cells are interior floor and neither is in `blocked` or on a wall segment. ✔
+- [x] **Step 7: Run** `data_lint.py` + `test_content.gd`, then the **scene-dynamism advisory** from Task 1.3 Step 6 and read the `adventurers_rest` row (target composite ≥ 50). **Commit** `feat(invrisil): the Adventurer's Rest common hall (#306)`.
 
 ### Task 1.5: Mood rows, landmarks, map gates, population floors
 
@@ -726,7 +738,7 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
 **Interfaces:**
 - Produces: the map-side consts every later task's beats and fixtures depend on.
 
-- [ ] **Step 1: `data/moods.json`** — insert **immediately after the `brothers_parlor` key**, per controller ruling C (`pallass_forge` is the file's LAST key and all four lanes would otherwise add a comma to the same closing brace; the four anchors are `floodplains` / `witch_hollow` / `brothers_parlor` / `pallass_forge`). No test enforces mood rows; a missing row renders flat identity-white at every phase and ships green, so it is a real visual defect:
+- [x] **Step 1: `data/moods.json`** — insert **immediately after the `brothers_parlor` key**, per controller ruling C (`pallass_forge` is the file's LAST key and all four lanes would otherwise add a comma to the same closing brace; the four anchors are `floodplains` / `witch_hollow` / `brothers_parlor` / `pallass_forge`). No test enforces mood rows; a missing row renders flat identity-white at every phase and ships green, so it is a real visual defect:
 
 ```json
   "stationer": {
@@ -745,7 +757,7 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
   },
 ```
 
-- [ ] **Step 2: `LANDMARK_TOKENS`** — insert **after the `"mercantile_alleys"` row** (ruling C anchor; a beat whose producer map has no row **hard-fails** at `test_content.gd:1475`):
+- [x] **Step 2: `LANDMARK_TOKENS`** — insert **after the `"mercantile_alleys"` row** (ruling C anchor; a beat whose producer map has no row **hard-fails** at `test_content.gd:1475`):
 
 ```gdscript
 	# v0.16 Invrisil (#306): both new interiors take their own token plus the
@@ -757,7 +769,7 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
 
 `"adventurer"` (not `"rest"`) is the token deliberately: `_description_names_place` is a lowercase substring test, and `"rest"` matches *interest*, *restore*, *arrested*. `"adventurer"` matches "the Adventurer's Rest" and nothing accidental.
 
-- [ ] **Step 3: `MAP_REQUIRES`** in `test_fixture_coherence.gd` — insert **after the `"mercantile_alleys"` row** (ruling C anchor):
+- [x] **Step 3: `MAP_REQUIRES`** in `test_fixture_coherence.gd` — insert **after the `"mercantile_alleys"` row** (ruling C anchor):
 
 ```gdscript
 	"stationer": ["door_awakened", "invrisil_attuned"],
@@ -766,7 +778,7 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
 
 Both interiors are reachable only off `invrisil_boulevard`, which already carries exactly that pair — a fixture standing inside without it is a position no player can occupy.
 
-- [ ] **Step 4: `POPULATION_FLOORS`** — insert **after the `"invrisil_boulevard"` row** (ruling C anchor). The first draft wrote `11` for both and said "derive it from a real run"; **both halves of that were wrong.** `adventurers_rest` is **10**, and a run prints no number to read — `_validate_population_floors` (`test_content.gd:571-576`) only fires `_check` on **failure**, so a green run is silent and an over-high floor is a `CONTENT_FAIL`, not a printout.
+- [x] **Step 4: `POPULATION_FLOORS`** — insert **after the `"invrisil_boulevard"` row** (ruling C anchor). The first draft wrote `11` for both and said "derive it from a real run"; **both halves of that were wrong.** `adventurers_rest` is **10**, and a run prints no number to read — `_validate_population_floors` (`test_content.gd:571-576`) only fires `_check` on **failure**, so a green run is silent and an over-high floor is a `CONTENT_FAIL`, not a printout.
 
   **Count it deterministically instead** (`test_content.gd:546-568`, transcribed as a rule):
   1. Skip **every** entity that has a `present_when` key. Nothing else exempts a row.
@@ -789,7 +801,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 
   Floors are **minimums**, so under-stating one is safe and over-stating one reds `test_content.gd` on the first run. If a later step adds or window-gates an entity in either room, re-run this count **in the same commit**.
 
-- [ ] **Step 5: Run** `test_content.gd` + `test_fixture_coherence.gd` — expect PASS on both. **Commit** `feat(invrisil): mood, landmark, gate and floor rows for the two new interiors (#306)`.
+- [x] **Step 5: Run** `test_content.gd` + `test_fixture_coherence.gd` — expect PASS on both. **Commit** `feat(invrisil): mood, landmark, gate and floor rows for the two new interiors (#306)`.
 
 ---
 
@@ -803,7 +815,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 **Interfaces:**
 - Produces: quest id `a_setting_for_a_lady`. Tasks 2.2–2.5 bank every counter it names.
 
-- [ ] **Step 1: Splice the block:**
+- [x] **Step 1: Splice the block:**
 
 ```json
 {
@@ -824,10 +836,10 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 }
 ```
 
-- [ ] **Step 2: Verify the travel-beat arithmetic by hand.** `_quest_giver_maps` resolves the giver from the map hosting the conversation that fires `{"quest": "a_setting_for_a_lady"}` → `stationer`. `resolve`'s three producers all live on `mercantile_alleys` (Hedault's conversation is hosted there; the fence encounter is placed there in Task 2.5), so the beat **needs** a landmark and `"alleys"` is in `LANDMARK_TOKENS["mercantile_alleys"]`. ✔ `report`'s producer is the giver's own map → no landmark required. ✔
-- [ ] **Step 3: `_comment` census discipline** — the one `_comment` string above is the whole quest-block charge. The ladder rationale lives in **`_resolution_order`**, which `comment_census.py` does **not** charge (it keys on `_`-prefixed keys containing `comment`), and `test_quests.gd:133-142` requires exactly that key for any array with ≥2 real rungs. Do **not** re-add `_resolution_paths_comment` — it is charged, and it is optional (one shipped quest carries it; ten do not). Anything longer goes to `docs/CHOICE-LOG.md`.
-- [ ] **Step 4: Run** `test_content.gd` (`_validate_quests` cross-refs every `complete_when`/`complete_when_any` counter against real producers — it will red until Tasks 2.2–2.5 land, which is expected; land those first if you prefer a green-at-every-commit ladder) and `test_quests.gd`.
-- [ ] **Step 5: Commit** `feat(quests): A Setting for a Lady (#306)`.
+- [x] **Step 2: Verify the travel-beat arithmetic by hand.** `_quest_giver_maps` resolves the giver from the map hosting the conversation that fires `{"quest": "a_setting_for_a_lady"}` → `stationer`. `resolve`'s three producers all live on `mercantile_alleys` (Hedault's conversation is hosted there; the fence encounter is placed there in Task 2.5), so the beat **needs** a landmark and `"alleys"` is in `LANDMARK_TOKENS["mercantile_alleys"]`. ✔ `report`'s producer is the giver's own map → no landmark required. ✔
+- [x] **Step 3: `_comment` census discipline** — the one `_comment` string above is the whole quest-block charge. The ladder rationale lives in **`_resolution_order`**, which `comment_census.py` does **not** charge (it keys on `_`-prefixed keys containing `comment`), and `test_quests.gd:133-142` requires exactly that key for any array with ≥2 real rungs. Do **not** re-add `_resolution_paths_comment` — it is charged, and it is optional (one shipped quest carries it; ten do not). Anything longer goes to `docs/CHOICE-LOG.md`.
+- [x] **Step 4: Run** `test_content.gd` (`_validate_quests` cross-refs every `complete_when`/`complete_when_any` counter against real producers — it will red until Tasks 2.2–2.5 land, which is expected; land those first if you prefer a green-at-every-commit ladder) and `test_quests.gd`.
+- [x] **Step 5: Commit** `feat(quests): A Setting for a Lady (#306)`.
 
 ### Task 2.2: `data/dialogue/invrisil_stationer_client.json` — the giver
 
@@ -840,7 +852,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 
 **Voice:** composed, exact about money, unsentimental about the stone and completely sentimental about the setting. Her register is transactional-Invrisil (`city-identity-bible.md:15` — the city's word is DEAL) but she is the one person on the street who is buying something that cannot be priced.
 
-- [ ] **Step 1: Author the graph:**
+- [x] **Step 1: Author the graph:**
 
 ```json
 {
@@ -942,10 +954,10 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 }
 ```
 
-- [ ] **Step 2: Grant-duplicate audit (ruling 6).** `plum_silk_locket` is a brand-new id with exactly one producer — this option — and the option is `hide_when`-guarded on the terminal it banks in the same array. Nothing force-consumes; nothing else in the game grants it.
-- [ ] **Step 3: Effect-verb audit.** Every effect dict above carries exactly one verb. Every gated node keeps an ungated option (`"Another time."`, `"In a moment."`). No `{skill, item}` compound anywhere.
-- [ ] **Step 4: Event-order note for QA (Task 5.x):** the two handover options carry **`effects` AND `end: true`** — `DIALOGUE_ENDED` fires synchronously **before** effects apply. QA scripts must wait `dialogue_ended` first, then `accomplishment_recorded`.
-- [ ] **Step 5: Run** `data_lint.py` (start/nodes/speaker/text/goto targets) + `test_dialogue.gd` + `test_content.gd`. **Commit** `feat(dialogue): the woman with the ring box (#306)`.
+- [x] **Step 2: Grant-duplicate audit (ruling 6).** `plum_silk_locket` is a brand-new id with exactly one producer — this option — and the option is `hide_when`-guarded on the terminal it banks in the same array. Nothing force-consumes; nothing else in the game grants it.
+- [x] **Step 3: Effect-verb audit.** Every effect dict above carries exactly one verb. Every gated node keeps an ungated option (`"Another time."`, `"In a moment."`). No `{skill, item}` compound anywhere.
+- [x] **Step 4: Event-order note for QA (Task 5.x):** the two handover options carry **`effects` AND `end: true`** — `DIALOGUE_ENDED` fires synchronously **before** effects apply. QA scripts must wait `dialogue_ended` first, then `accomplishment_recorded`.
+- [x] **Step 5: Run** `data_lint.py` (start/nodes/speaker/text/goto targets) + `test_dialogue.gd` + `test_content.gd`. **Commit** `feat(dialogue): the woman with the ring box (#306)`.
 
 ### Task 2.3: Hedault's commission surfaces
 
@@ -958,7 +970,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 
 **Voice contract** (ruling 8 — no profile exists yet; write against these two sources): `docs/design/hedault-enchanting-spec.md:8-11` — "exacting, humorless, hates being touched, fair to a fault. ATTESTED canon-native. His services are priced formally; no haggling." — plus the in-file contract at `hedault_enchanting.json:2`: "Canon voice: exacting, formal, no haggling, hates being touched. Book-17 bar: no Vol 8+ content." His shipped register: imperatives, no pleasantries, prices stated as facts, refuses to speculate outside his trade ("I will not speculate further in a shop").
 
-- [ ] **Step 1: Append the hub option LAST** (authored index 6, after the spine capstone):
+- [x] **Step 1: Append the hub option LAST** (authored index 6, after the spine capstone):
 
 ```json
     {
@@ -978,7 +990,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
     }
 ```
 
-- [ ] **Step 2: Add the four nodes** to `nodes`:
+- [x] **Step 2: Add the four nodes** to `nodes`:
 
 ```json
   "heirloom_bench": {
@@ -1038,19 +1050,19 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
   }
 ```
 
-- [ ] **Step 3: Pin-stability proof (ruling 1) — run it, do not assume.**
+- [x] **Step 3: Pin-stability proof (ruling 1) — run it, do not assume.**
   - `perl -e 'alarm 240; exec @ARGV' -- wandering_inn_game/qa/run_qa.sh hedault_fragment_loop headless --seed=<its manifest seed>` → the `options` array at `qa/scripts/hedault_fragment_loop.json:52` must still be exactly 5 rows (`payload_contains` compares arrays by SIZE FIRST, `qa/test_driver.gd:967-984`).
   - `wandering_inn_game/qa/run_qa.sh spine_reach headless --seed=<its manifest seed>` → the blind `move down 5` at `:365-370` must still land on the spine capstone.
   - Neither fixture can hold `heirloom_commission_started` (it is created in this PR), so both must be green **with zero edits**. If either reds, stop and report — the gate shape is wrong, not the pin.
-- [ ] **Step 4: Softlock guard** — `heirloom_bench` keeps `"I'll come back with an answer."` with neither `requires` nor `hide_when`. ✔
-- [ ] **Step 5: Run** `test_dialogue.gd` + `test_content.gd` + `data_lint.py`. **Commit** `feat(dialogue): Hedault will not set a lie (#306)`.
+- [x] **Step 4: Softlock guard** — `heirloom_bench` keeps `"I'll come back with an answer."` with neither `requires` nor `hide_when`. ✔
+- [x] **Step 5: Run** `test_dialogue.gd` + `test_content.gd` + `data_lint.py`. **Commit** `feat(dialogue): Hedault will not set a lie (#306)`.
 
 ### Task 2.4: The reward item
 
 **Files:**
 - Modify: `wandering_inn_game/data/items.json` (TAB-indented; insert **immediately after the `hedaults_wardstone` row** per ruling C — `splice_json.py --container items` appends, so splice then move it to the anchor)
 
-- [ ] **Step 1: Splice the row.** Deliberately weaker than `hedaults_warded_setting` (hp 2 / dr 1 / res 1 / price 45) so the quest reward never outclasses the shipped enchanting swap:
+- [x] **Step 1: Splice the row.** Deliberately weaker than `hedaults_warded_setting` (hp 2 / dr 1 / res 1 / price 45) so the quest reward never outclasses the shipped enchanting swap:
 
 ```json
 		{
@@ -1070,8 +1082,8 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 		}
 ```
 
-- [ ] **Step 2: NO `{addr}` in this file** — `data/items.json` is in `ADDRESS_TOKEN_UNRESOLVABLE_FILES`; a token here renders raw and fails loud.
-- [ ] **Step 3: Run** `test_content.gd` + `test_items.gd` if present (`ls wandering_inn_game/tests/ | grep -i item`). **Commit** `feat(items): a plum-silk locket (#306)`.
+- [x] **Step 2: NO `{addr}` in this file** — `data/items.json` is in `ADDRESS_TOKEN_UNRESOLVABLE_FILES`; a token here renders raw and fails loud.
+- [x] **Step 3: Run** `test_content.gd` + `test_items.gd` if present (`ls wandering_inn_game/tests/ | grep -i item`). **Commit** `feat(items): a plum-silk locket (#306)`.
 
 ### Task 2.5: The fence — combatants, encounter, harness cell
 
@@ -1088,7 +1100,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 
 **(11,12)** is free, is outside **both** trigger zones (y=12 is past a's y-ceiling of 11; x=11 is short of b's x-floor of 12), and is on **no** pinned cell. Its approach (11,11) is free. The encounter is **interact-only** (no `trigger_radius`, the `hired_blades` idiom) so it cannot spring on any route, sneaking or not.
 
-- [ ] **Step 1: Insert two combatant rows after the `hired_blade_knife_b` row** (ruling C anchor; 1-space-per-level; `splice_json.py --container combatants` appends, so splice then move to the anchor). **Ruling 5: brand-new ids — `alley_footpads_a/b` are removed by `invrisil_wilovan.json:100-104` on `brothers_job_done`, so they can be absent from any real save.**
+- [x] **Step 1: Insert two combatant rows after the `hired_blade_knife_b` row** (ruling C anchor; 1-space-per-level; `splice_json.py --container combatants` appends, so splice then move to the anchor). **Ruling 5: brand-new ids — `alley_footpads_a/b` are removed by `invrisil_wilovan.json:100-104` on `brothers_job_done`, so they can be absent from any real save.**
 
 ```json
  {
@@ -1119,7 +1131,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
  }
 ```
 
-- [ ] **Step 2: Append the encounter entity** to `mercantile_alleys.json`:
+- [x] **Step 2: Append the encounter entity** to `mercantile_alleys.json`:
 
 ```json
   {
@@ -1141,7 +1153,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 
 `arena`, `enemies`, `allies`, `on_victory` are **all four** present (`test_combat_data.gd:116-117` asserts presence; `"allies": []` is mandatory). No `respawns`, so the fence is removed permanently on victory — correct for a one-shot recovery. No `scales` (a quest-counter `on_victory` may never scale).
 
-- [ ] **Step 3: Append the harness cell** to `INVRISIL_CELLS` (`solo: true` = no Wilovan; the loop hardcodes him as the ally when `solo` is false, `sim_combat_batch.gd:705-711`):
+- [x] **Step 3: Append the harness cell** to `INVRISIL_CELLS` (`solo: true` = no Wilovan; the loop hardcodes him as the ally when `solo` is false, `sim_combat_batch.gd:705-711`):
 
 ```gdscript
 	# v0.16 I1 (#306). Side-quest fight at Invrisil's own expected level, SOLO
@@ -1154,7 +1166,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 	{"name": "alley_fence_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["heirloom_fence", "fence_doorman"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ```
 
-- [ ] **Step 4: MEASURE FIRST, then keep or tune.** Get the cell index with `WI_CELL_COUNT_ONLY=1` and locate the new cell, then run just it:
+- [x] **Step 4: MEASURE FIRST, then keep or tune.** Get the cell index with `WI_CELL_COUNT_ONLY=1` and locate the new cell, then run just it:
 
 ```
 WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
@@ -1162,16 +1174,16 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 
 **Gate acceptance (ruling A):** `win_rate` inside **0.55–0.95** and `median_rounds` inside **3–12**.
 **Design target, NOT a gate:** aim the measured `win_rate` at ≈ **0.62–0.70** so Invrisil still reads harder than Riverfarm. If it lands outside that band but inside the gate, tune **only the two new ids**, in this order: `+1 weapon_die` on `fence_doorman` → `+4 con` on both → `+1 str` (reverse if it lands low). After tuning, set each `power_level` so the pair stays monotone against the shipped roster (above `hired_blade_knife_*` 7.5, below `hired_blade_leader` 11.0). Record the final **measured** `win_rate` and `median_rounds` in the cell's comment, matching the shipped idiom ("Measured 0.64, median 7").
-- [ ] **Step 5: Re-gate the shared cells.** Run the **full** `INVRISIL_CELLS` range and confirm `hired_blades_t3_warrior10_wilovan` (0.57–0.71), `hired_blades_t5_sw14_wilovan` (0.77–0.87), `alley_footpads_w2_solo` (0.75–0.98) and `boulevard_duel_ring_t3_solo` (0.55–0.95) are all still in window. They must be untouched by construction — prove it anyway. **Record every measured median in the PR body**: per ruling A, the region-band ordering claim is carried by those numbers, not by a narrow window.
-- [ ] **Step 6: Board-figure bar — it does NOT measure these ids (ruling F).** `tests/test_combat_visuals.gd`'s `FIGURE_ROWS` (`:536-541`) holds exactly four sprites (`bat`, `briar_collector`, `briar_collector_deep`, `ruin_warden`); `_board_cells` (`:563-566`) indexes `FIGURE_ROWS[cfg["sprite"]]` and would **KeyError** on anything else, and the bar's only caller (`:609-620`) iterates a hardcoded `audited` array containing none of these ids. `hired_blade` and `human_laborer` are in neither structure. So: **no new sprite id and no `combat_scale`, therefore the bar is unchanged by construction and the suite passes by EXCLUSION — running it proves nothing about these four rows.** Run it anyway as a regression guard on the ids it *does* cover. The **windowed shots (Task 5.5 shot 7) are the legibility read** for the new rigs. The first draft's "3.05 cells" figure is **struck from the shipped `_comment`** — it exists only as prose in the bar's own doc comment (`:543`) and no run can confirm it. No id joins `audited` without first adding its sprite to `FIGURE_ROWS` with a re-derived row count.
-- [ ] **Step 7: Run** `test_combat_data.gd` (power_level presence, arena spawn reachability, encounter key presence), `test_content.gd`, `test_combat_visuals.gd`, `data_lint.py`. **Commit** `feat(invrisil): the fence's back door (#306)`.
+- [x] **Step 5: Re-gate the shared cells.** Run the **full** `INVRISIL_CELLS` range and confirm `hired_blades_t3_warrior10_wilovan` (0.57–0.71), `hired_blades_t5_sw14_wilovan` (0.77–0.87), `alley_footpads_w2_solo` (0.75–0.98) and `boulevard_duel_ring_t3_solo` (0.55–0.95) are all still in window. They must be untouched by construction — prove it anyway. **Record every measured median in the PR body**: per ruling A, the region-band ordering claim is carried by those numbers, not by a narrow window.
+- [x] **Step 6: Board-figure bar — it does NOT measure these ids (ruling F).** `tests/test_combat_visuals.gd`'s `FIGURE_ROWS` (`:536-541`) holds exactly four sprites (`bat`, `briar_collector`, `briar_collector_deep`, `ruin_warden`); `_board_cells` (`:563-566`) indexes `FIGURE_ROWS[cfg["sprite"]]` and would **KeyError** on anything else, and the bar's only caller (`:609-620`) iterates a hardcoded `audited` array containing none of these ids. `hired_blade` and `human_laborer` are in neither structure. So: **no new sprite id and no `combat_scale`, therefore the bar is unchanged by construction and the suite passes by EXCLUSION — running it proves nothing about these four rows.** Run it anyway as a regression guard on the ids it *does* cover. The **windowed shots (Task 5.5 shot 7) are the legibility read** for the new rigs. The first draft's "3.05 cells" figure is **struck from the shipped `_comment`** — it exists only as prose in the bar's own doc comment (`:543`) and no run can confirm it. No id joins `audited` without first adding its sprite to `FIGURE_ROWS` with a re-derived row count.
+- [x] **Step 7: Run** `test_combat_data.gd` (power_level presence, arena spawn reachability, encounter key presence), `test_content.gd`, `test_combat_visuals.gd`, `data_lint.py`. **Commit** `feat(invrisil): the fence's back door (#306)`.
 
 ### Task 2.6: I1 post-quest life — the client's reactive stage
 
 **Files:**
 - Modify: `wandering_inn_game/data/maps/invrisil/stationer.json` (`stationer_client`)
 
-- [ ] **Step 1: Append `talk_pool_stages` to the entity** — it has no stages today, so this is trivially "after the last existing stage". Key it on the **terminal**, `setting_commissioned`:
+- [x] **Step 1: Append `talk_pool_stages` to the entity** — it has no stages today, so this is trivially "after the last existing stage". Key it on the **terminal**, `setting_commissioned`:
 
 ```json
    "talk_pool_stages": [
@@ -1186,8 +1198,8 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
    ]
 ```
 
-- [ ] **Step 2: Shadow-out audit** (mandatory before shipping any stage). One stage over a two-line base pool: pre-terminal the base pool serves; post-terminal the stage wins permanently. Both states are reachable and both read correctly. Ascending-threshold check is vacuous with one stage. The entity keeps its base `talk_pool` (required when stages exist).
-- [ ] **Step 3: Run** `test_content.gd`; **commit** `feat(invrisil): the client remembers (#306)`.
+- [x] **Step 2: Shadow-out audit** (mandatory before shipping any stage). One stage over a two-line base pool: pre-terminal the base pool serves; post-terminal the stage wins permanently. Both states are reachable and both read correctly. Ascending-threshold check is vacuous with one stage. The entity keeps its base `talk_pool` (required when stages exist).
+- [x] **Step 3: Run** `test_content.gd`; **commit** `feat(invrisil): the client remembers (#306)`.
 
 ---
 
@@ -1198,7 +1210,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 **Files:**
 - Modify: `wandering_inn_game/data/quests.json` (insert **immediately after the `a_setting_for_a_lady` block landed in Task 2.1**, which sits after the `a_gentlemans_disagreement` anchor — ruling C)
 
-- [ ] **Step 1: Splice the block:**
+- [x] **Step 1: Splice the block:**
 
 ```json
 {
@@ -1219,12 +1231,12 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 }
 ```
 
-- [ ] **Step 2: Landmark arithmetic.** Giver map = `brothers_parlor` (Wilovan's conversation is hosted there). `run`'s producers are all on `adventurers_rest` → landmark required → `"the Adventurer's Rest"` contains `"adventurer"`. ✔ `report`'s producer (`invrisil_wilovan.json`) is the giver's own map → no landmark. ✔
-- [ ] **Step 3: Author both quests' co-bank ladder pins in `tests/test_quests.gd`** — insert after the `price_of_a_favor` block (ruling C anchor), in the same style as the shipped arms: for each quest, assert the single-counter resolution, then the co-bank case that proves last-match-wins, then that the grant is the winner's.
+- [x] **Step 2: Landmark arithmetic.** Giver map = `brothers_parlor` (Wilovan's conversation is hosted there). `run`'s producers are all on `adventurers_rest` → landmark required → `"the Adventurer's Rest"` contains `"adventurer"`. ✔ `report`'s producer (`invrisil_wilovan.json`) is the giver's own map → no landmark. ✔
+- [x] **Step 3: Author both quests' co-bank ladder pins in `tests/test_quests.gd`** — insert after the `price_of_a_favor` block (ruling C anchor), in the same style as the shipped arms: for each quest, assert the single-counter resolution, then the co-bank case that proves last-match-wins, then that the grant is the winner's.
 
   **EVERY new local in this file takes the `i_` lane prefix** (ruling C): `i_setting`, `i_setting_both`, `i_hat`, `i_hat_both`, … `tests/test_quests.gd:90-132` is **one continuous function body at a single indent level** — `halls`, `door`, `crate`, `order`, `favor` all share one scope — so a duplicate `var` from a sibling lane is a **GDScript parse error that reds the whole suite the moment the second lane merges**, not a shadow. Riverfarm and Pallass both drafted a bare `var ledger` here. Never use a bare `ledger`, `thicket`, `tempered`, `quest`, `setting` or `hat` local from this lane.
 
-- [ ] **Step 4: Run** `test_content.gd` + `test_quests.gd`; **commit** `feat(quests): The Hat Stays On (#306)`.
+- [x] **Step 4: Run** `test_content.gd` + `test_quests.gd`; **commit** `feat(quests): The Hat Stays On (#306)`.
 
 ### Task 3.2: Wilovan's parlor surfaces
 
@@ -1237,7 +1249,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 
 **Voice contract:** `character-profiles.md:300-307` — Gnoll, `{addr}` address (never a literal honorific at the PC), apology-before-threat, **"recover" never "steal"**, removes his hat plain-and-slow, **one dash per line maximum**. The file's own binding contract at `:2`: "append new hub options last to preserve QA-visible indexes."
 
-- [ ] **Step 1: Append option 7** (the giver):
+- [x] **Step 1: Append option 7** (the giver):
 
 ```json
     {
@@ -1257,7 +1269,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
     },
 ```
 
-- [ ] **Step 2: Append option 8** (the report):
+- [x] **Step 2: Append option 8** (the report):
 
 ```json
     {
@@ -1276,7 +1288,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
     }
 ```
 
-- [ ] **Step 3: Add the four nodes:**
+- [x] **Step 3: Add the four nodes:**
 
 ```json
   "hat_errand": {
@@ -1350,11 +1362,11 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
   }
 ```
 
-- [ ] **Step 4: Index-stability proof — run it, do not assume.** After banking `brothers_job_done`, the hub's visible rows become `["Evening.", "Cups asked me to see something back to you." (item-gated, VISIBLE-LOCKED), "Anything come through lately? (Show the marker.)"]` plus the two new rows **at the end**. Verify against every script that touches this graph:
+- [x] **Step 4: Index-stability proof — run it, do not assume.** After banking `brothers_job_done`, the hub's visible rows become `["Evening.", "Cups asked me to see something back to you." (item-gated, VISIBLE-LOCKED), "Anything come through lately? (Show the marker.)"]` plus the two new rows **at the end**. Verify against every script that touches this graph:
   - `qa/scripts/invrisil_disagreement_talk.json`, `..._stealth.json`, `..._fight.json`, `qa/scripts/wilovan_address_f.json` — none of these pins an `options` array (verified: zero `"options"` keys in all four), but all four navigate by `move down N`. Re-run **all four** at their manifest seeds and require green with **zero** script edits.
   - `invrisil_disagreement_fight.json` is the sharp one: it banks `brothers_job_done` mid-conversation at step ~91 and then does `move down 1` + `confirm` at steps 99–100. Read steps 84–102 in full and confirm those steps sit inside the `marker`/`marker_terms` nodes, **not** a re-rendered hub. If the hub is re-entered, the fix is a re-pin **in this PR**, not a gate change.
-- [ ] **Step 5: Dash budget.** Grep the four new nodes for `—` and for `--`: at most one em-dash per line, zero ASCII double-hyphens. Wilovan's `ways` node already blows the budget — do not add to it.
-- [ ] **Step 6: Run** `test_dialogue.gd` + `test_content.gd` + `data_lint.py`; **commit** `feat(dialogue): Wilovan's quiet errand (#306)`.
+- [x] **Step 5: Dash budget.** Grep the four new nodes for `—` and for `--`: at most one em-dash per line, zero ASCII double-hyphens. Wilovan's `ways` node already blows the budget — do not add to it.
+- [x] **Step 6: Run** `test_dialogue.gd` + `test_content.gd` + `data_lint.py`; **commit** `feat(dialogue): Wilovan's quiet errand (#306)`.
 
 ### Task 3.3: `data/dialogue/invrisil_rest_factor.json` — the TALK route
 
@@ -1365,7 +1377,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 - Consumes: `hat_job_taken`.
 - Produces: `handoff_talked`.
 
-- [ ] **Step 1: Author the graph.** Three exchanges, the trade never named, `{addr}` where he addresses the player:
+- [x] **Step 1: Author the graph.** Three exchanges, the trade never named, `{addr}` where he addresses the player:
 
 ```json
 {
@@ -1423,8 +1435,8 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 }
 ```
 
-- [ ] **Step 2: Event-order note for QA:** `exchange_three`'s close carries `effects` + `end: true` — wait `dialogue_ended`, **then** `accomplishment_recorded {id: handoff_talked}`.
-- [ ] **Step 3: Run** `data_lint.py` + `test_dialogue.gd` + `test_content.gd`; **commit** `feat(dialogue): the house factor (#306)`.
+- [x] **Step 2: Event-order note for QA:** `exchange_three`'s close carries `effects` + `end: true` — wait `dialogue_ended`, **then** `accomplishment_recorded {id: handoff_talked}`.
+- [x] **Step 3: Run** `data_lint.py` + `test_dialogue.gd` + `test_content.gd`; **commit** `feat(dialogue): the house factor (#306)`.
 
 ### Task 3.4: I2 combatants + harness cell
 
@@ -1434,7 +1446,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 
 (The encounter entity itself already shipped in Task 1.4's map file.)
 
-- [ ] **Step 1: Insert two rows:**
+- [x] **Step 1: Insert two rows:**
 
 ```json
  {
@@ -1465,7 +1477,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
  }
 ```
 
-- [ ] **Step 2: Append the harness cell:**
+- [x] **Step 2: Append the harness cell:**
 
 ```gdscript
 	# v0.16 I2 (#306). Interior brawl at Invrisil's expected level, SOLO. Same
@@ -1476,8 +1488,8 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 	{"name": "rest_bravos_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["rest_bravo_a", "rest_bravo_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ```
 
-- [ ] **Step 3: Measure-first / tune / re-gate** — identical procedure and acceptance to Task 2.5 Steps 4–6, including the 0.55–0.95 gate, the 3–12 median band, and the **measured** median going into the PR body. The bravos are authored one notch softer than the fence pair (16.0 vs 17.5 total power) because the brawl is a failure state, not a target, so their measured `win_rate` should land **above** the fence cell's — that relationship is a number to report, not a window to author.
-- [ ] **Step 4: Run** `test_combat_data.gd`, `test_content.gd`, and `test_combat_visuals.gd` — noting per **ruling F** that the visuals suite does **not** measure `citizen_f` or `human_laborer` board figures for these ids and passes by exclusion; the Task 5.5 shot-7 windowed read is the actual legibility gate. **Commit** `feat(invrisil): it goes loud at the Rest (#306)`.
+- [x] **Step 3: Measure-first / tune / re-gate** — identical procedure and acceptance to Task 2.5 Steps 4–6, including the 0.55–0.95 gate, the 3–12 median band, and the **measured** median going into the PR body. The bravos are authored one notch softer than the fence pair (16.0 vs 17.5 total power) because the brawl is a failure state, not a target, so their measured `win_rate` should land **above** the fence cell's — that relationship is a number to report, not a window to author.
+- [x] **Step 4: Run** `test_combat_data.gd`, `test_content.gd`, and `test_combat_visuals.gd` — noting per **ruling F** that the visuals suite does **not** measure `citizen_f` or `human_laborer` board figures for these ids and passes by exclusion; the Task 5.5 shot-7 windowed read is the actual legibility gate. **Commit** `feat(invrisil): it goes loud at the Rest (#306)`.
 
 ### Task 3.5: I2 post-quest life — parlor stage + inn register variant
 
@@ -1485,7 +1497,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 - Modify: `wandering_inn_game/data/maps/invrisil/brothers_parlor.json` (`wilovan` entity)
 - Modify: `wandering_inn_game/data/dialogue/wilovan_inn.json` (`greet` node **only**)
 
-- [ ] **Step 1: Append `talk_pool_stages` to the parlor `wilovan` entity.** It carries `talk_pool` but **no** stages today (entity keys: `_comment, id, kind, cell, display_name, sprite, tint, facing, observe, friendly_line, talk_pool, conversation, dialogue`), so this stage is trivially last and last-match-wins is safe:
+- [x] **Step 1: Append `talk_pool_stages` to the parlor `wilovan` entity.** It carries `talk_pool` but **no** stages today (entity keys: `_comment, id, kind, cell, display_name, sprite, tint, facing, observe, friendly_line, talk_pool, conversation, dialogue`), so this stage is trivially last and last-match-wins is safe:
 
 ```json
    "talk_pool_stages": [
@@ -1500,8 +1512,8 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
    ]
 ```
 
-- [ ] **Step 2: Shadow-out audit.** Pre-terminal the base pool serves; post-terminal this stage wins permanently on the parlor entity. Wilovan's `conversation` (`invrisil_wilovan`) is unaffected — pool lines serve **before** the conversation opens (`src/core/interactions.gd:73-81`), which is exactly why every Invrisil QA script interacts with him twice. Confirm `wilovan_address_f.json` still reaches his hub on the second interact in a fixture that lacks `hat_job_done` (it will — the stage cannot arm).
-- [ ] **Step 3: `wilovan_inn.json` — ruling 7 shape ONLY.** The `greet` node has **no** `text_variants` today, so create the array with exactly one entry. **Do not touch the base `text`. Do not add an option.** `qa/scripts/inn_guests_ext_loop.json:100` pins `greet`'s exact text **and** an exact 3-option array; its fixture cannot hold `hat_job_done`, so both pins stay green:
+- [x] **Step 2: Shadow-out audit.** Pre-terminal the base pool serves; post-terminal this stage wins permanently on the parlor entity. Wilovan's `conversation` (`invrisil_wilovan`) is unaffected — pool lines serve **before** the conversation opens (`src/core/interactions.gd:73-81`), which is exactly why every Invrisil QA script interacts with him twice. Confirm `wilovan_address_f.json` still reaches his hub on the second interact in a fixture that lacks `hat_job_done` (it will — the stage cannot arm).
+- [x] **Step 3: `wilovan_inn.json` — ruling 7 shape ONLY.** The `greet` node has **no** `text_variants` today, so create the array with exactly one entry. **Do not touch the base `text`. Do not add an option.** `qa/scripts/inn_guests_ext_loop.json:100` pins `greet`'s exact text **and** an exact 3-option array; its fixture cannot hold `hat_job_done`, so both pins stay green:
 
 ```json
 		"greet": { "speaker": "Wilovan", "text": "{Addr}. A good evening to you, and a very good room to have it in. No business tonight, you'll be relieved to hear. A gentleman does occasionally sit somewhere nobody owes anybody anything.", "text_variants": [
@@ -1511,8 +1523,8 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 
 REGISTER PURITY CHECK on that line: no package, no venue, no Rest, no factor, no fee, no colleague's errand, no Coyle, no marker. It is a Gentleman Caller declining to discuss his evening at length, which is his register exactly.
 
-- [ ] **Step 4: Variant-shadow audit.** `text_variants` are last-match-wins and **any** match beats the base text. This is the only variant on the node and its gate (`hat_job_done`) is unreachable in `inn_guests_ext_loop`'s fixture, so the pinned base text can never be shadowed. `VARIANT_KEYS` allows only `_comment`, `requires`, `text` — the entry above carries exactly `requires` + `text`.
-- [ ] **Step 5: Run** `test_dialogue.gd`, `test_content.gd`, and `wandering_inn_game/qa/run_qa.sh inn_guests_ext_loop headless --seed=<manifest seed>` — expect green with zero script edits. **Commit** `feat(invrisil): Wilovan remembers a quiet evening (#306)`.
+- [x] **Step 4: Variant-shadow audit.** `text_variants` are last-match-wins and **any** match beats the base text. This is the only variant on the node and its gate (`hat_job_done`) is unreachable in `inn_guests_ext_loop`'s fixture, so the pinned base text can never be shadowed. `VARIANT_KEYS` allows only `_comment`, `requires`, `text` — the entry above carries exactly `requires` + `text`.
+- [x] **Step 5: Run** `test_dialogue.gd`, `test_content.gd`, and `wandering_inn_game/qa/run_qa.sh inn_guests_ext_loop headless --seed=<manifest seed>` — expect green with zero script edits. **Commit** `feat(invrisil): Wilovan remembers a quiet evening (#306)`.
 
 ---
 
@@ -1525,7 +1537,7 @@ REGISTER PURITY CHECK on that line: no package, no venue, no Rest, no factor, no
 
 **Why (ruling D):** the first draft claimed this file outright and said "append at EOF". Pallass edits the same file in its very first task (Task 0.1, a preflight that lands *before* this lane), adding **Forge Hall Apprentice** and **Den-Shop Keeper** — and its own ownership table listed the file under neither Exclusive nor SHARED. Both lanes appending at the same EOF point is a designed-in conflict. The controller resolved it by **pre-landing three stub section headers at the plan commit**, so each lane edits only its own lines.
 
-- [ ] **Step 1: Confirm the stub, do not confirm a gap.** `grep -n -i "hedault" docs/design/character-profiles.md` returns the **pre-landed stub** at `:525-527`:
+- [x] **Step 1: Confirm the stub, do not confirm a gap.** `grep -n -i "hedault" docs/design/character-profiles.md` returns the **pre-landed stub** at `:525-527`:
 
 ```markdown
 ## Hedault (v0.16 #306 STUB — Invrisil lane fills this section in place;
@@ -1534,7 +1546,7 @@ REGISTER PURITY CHECK on that line: no package, no venue, no Rest, no factor, no
 ```
 
   If that stub is missing, **stop and report to the controller** — do not append at EOF and do not invent a header. Leave Pallass's two stubs (`## Forge Hall Apprentice` :516, `## Den-Shop Keeper` :521) untouched whether they are still placeholders or already filled.
-- [ ] **Step 2: Replace the two stub header lines and the placeholder line with the real section, in place** (short — this is a writing contract, not an essay):
+- [x] **Step 2: Replace the two stub header lines and the placeholder line with the real section, in place** (short — this is a writing contract, not an essay):
 
 ```markdown
 ## Hedault (profile added 2026-07-28; v0.16 I1 lane, #306)
@@ -1555,8 +1567,8 @@ REGISTER PURITY CHECK on that line: no package, no venue, no Rest, no factor, no
   most respectful thing anyone does for the client all quest.
 ```
 
-- [ ] **Step 3: Diff discipline.** `git diff docs/design/character-profiles.md` must show **only** the three stub lines replaced by this section — zero context lines touched at EOF, zero lines touched in the Pallass stubs. Anything else is a merge-train conflict waiting to happen.
-- [ ] **Step 4: Run** `python3 scripts/check_doc_drift.py` (doc structure) and `python3 scripts/sync_agent_guidance.py` (guidance-mirror check); **commit** `docs(profiles): Hedault's voice contract (#306)`.
+- [x] **Step 3: Diff discipline.** `git diff docs/design/character-profiles.md` must show **only** the three stub lines replaced by this section — zero context lines touched at EOF, zero lines touched in the Pallass stubs. Anything else is a merge-train conflict waiting to happen.
+- [x] **Step 4: Run** `python3 scripts/check_doc_drift.py` (doc structure) and `python3 scripts/sync_agent_guidance.py` (guidance-mirror check); **commit** `docs(profiles): Hedault's voice contract (#306)`.
 
 ---
 
@@ -1583,8 +1595,8 @@ Load `wi-writing-qa-scripts` before this phase. **Fixture-first policy:** every 
 | `invrisil_hat_quiet_start` | `adventurers_rest` / `[2,7]`, facing `[-1,0]` | `brothers_job_done` 1, `hat_job_taken` 1; `started_quests` += `the_hat_stays_on` | plates armed, hook adjacent |
 | `invrisil_hat_loud_start` | `adventurers_rest` / `[9,5]`, facing `[0,1]` | `brothers_job_done` 1, `hat_job_taken` 1; `started_quests` += `the_hat_stays_on` | level-10 build, faces the bravos |
 
-- [ ] **Step 1: Author all eight from the `near_invrisil` base**, editing only `current_map`, `player_cell`, `player_facing`, `accomplishments`, `started_quests`, `player_skills`, `removed_entities`, `inventory` and `rng_state`.
-- [ ] **Step 2: Derive every `rng_state`** — never hand-type one:
+- [x] **Step 1: Author all eight from the `near_invrisil` base**, editing only `current_map`, `player_cell`, `player_facing`, `accomplishments`, `started_quests`, `player_skills`, `removed_entities`, `inventory` and `rng_state`.
+- [x] **Step 2: Derive every `rng_state`** — never hand-type one:
 
 ```
 /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/_derive_rng_state.gd -- <seed>
@@ -1592,8 +1604,8 @@ Load `wi-writing-qa-scripts` before this phase. **Fixture-first policy:** every 
 
 `RNG_STATE_MIN_MAGNITUDE = 1_000_000` (`test_fixture_coherence.gd:378-388`) fails any value below 1e6 as hand-typed.
 
-- [ ] **Step 3: `MAP_REQUIRES` compliance.** The three fixtures standing inside `stationer`/`adventurers_rest` inherit Task 1.5's rows — `door_awakened` + `invrisil_attuned` are already in the base fixture. Confirm, do not assume.
-- [ ] **Step 4: `COMBAT_BAND_FIXTURES`.** Read the const's semantics at `test_fixture_coherence.gd:19-29` (fixture → expected class level; `near_invrisil_fight` is 10), then append:
+- [x] **Step 3: `MAP_REQUIRES` compliance.** The three fixtures standing inside `stationer`/`adventurers_rest` inherit Task 1.5's rows — `door_awakened` + `invrisil_attuned` are already in the base fixture. Confirm, do not assume.
+- [x] **Step 4: `COMBAT_BAND_FIXTURES`.** Read the const's semantics at `test_fixture_coherence.gd:19-29` (fixture → expected class level; `near_invrisil_fight` is 10), then append:
 
 ```gdscript
 	"invrisil_setting_fight_start": 10,
@@ -1602,7 +1614,7 @@ Load `wi-writing-qa-scripts` before this phase. **Fixture-first policy:** every 
 
 and make both fixtures' `classes` match the level the const declares.
 
-- [ ] **Step 5: Run** `test_fixture_coherence.gd` — expect PASS. **Commit** `test(qa): Invrisil v0.16 fixtures (#306)`.
+- [x] **Step 5: Run** `test_fixture_coherence.gd` — expect PASS. **Commit** `test(qa): Invrisil v0.16 fixtures (#306)`.
 
 ### Task 5.2: Canonical scripts
 
@@ -1623,7 +1635,7 @@ Nine canonicals: **one per route for both terminal paths** (six), **both interio
 | `invrisil_hat_loud` | `invrisil_hat_loud_start` | bravos interact → combat → `handoff_loud` → report |
 | `invrisil_v016_gate_check` | `invrisil_stationer_start` | **gate-proof:** Hedault's hub still renders exactly 5 rows without `heirloom_commission_started` (the ruling-1 pin-stability assertion, as a permanent regression guard); and the Rest's bravos emit `gate_closed_toast` without `hat_job_taken` |
 
-- [ ] **Step 1: Author each script** on the shipped idioms:
+- [x] **Step 1: Author each script** on the shipped idioms:
   - Fixture-start title sequence: `ui_title_gate_rendered` → `confirm` → `ui_title_rendered` → `move down 1` (Continue) → `confirm` → `game_loaded` → `world_ready` → `assert_state current_map` / `player_cell`.
   - Dialogue option selection: `ui_dialogue_shown` → `move down N` → `press confirm`, counting **visible** options only. (`click_dialogue_option` takes `"option"` and is **1-based**; a wrong key silently no-ops.)
   - Every toast assertion pins the **exact text** via `payload_contains` — a bare `wait_for_event ui_toast_rendered` proves nothing about which toast.
@@ -1633,21 +1645,21 @@ Nine canonicals: **one per route for both terminal paths** (six), **both interio
   - JSON coordinates parse as floats: `[5.0,8.0] != [5,8]` in GDScript. Copy the cell literal shape from a shipped Invrisil script.
   - Effects-plus-`end` options: wait `dialogue_ended` **then** `accomplishment_recorded`.
   - Gray-band fights emit no `won_combat` — for the two combat scripts pin `victories` (or the encounter's own `on_victory` counter, which is the reliable one here) rather than `won_combat`.
-- [ ] **Step 2: The visible-lock contract — split across TWO scripts, because one script starts from one fixture.** The first draft assigned the locked-arm assertion to `invrisil_setting_skill`, whose only fixture **grants** `appraise_goods`; a skill cannot be unlearned mid-run, so as drafted the contract could not be proven by its assigned script at all. Corrected ownership, stated explicitly so neither script drifts:
+- [x] **Step 2: The visible-lock contract — split across TWO scripts, because one script starts from one fixture.** The first draft assigned the locked-arm assertion to `invrisil_setting_skill`, whose only fixture **grants** `appraise_goods`; a skill cannot be unlearned mid-run, so as drafted the contract could not be proven by its assigned script at all. Corrected ownership, stated explicitly so neither script drifts:
   - **`invrisil_setting_talk` owns the LOCKED pin.** Its fixture `invrisil_setting_start` carries **no** `appraise_goods`, and the script already opens `heirloom_bench` on its way to the TALK arm. On that node, pin the `[Appraise Goods]` row as **present and `locked`** with its `requirement` string, from a real `events.jsonl` — `src/core/dialogue.gd:29-32` marks a `{skill}`-requires option `locked` and fills `requirement` from `_requirement_text` (`:241-244`, `"requires <skill name>"`), and `_visible_options` (`:113-122`) hides only `_progress_gated` requires (accomplishment / board_accepted / delivery_accepted / once_per_waking), so a skill arm is **visible-locked, never hidden**. This is the `parley_gates_check` idiom.
   - **`invrisil_setting_skill` owns the SELECTABLE pin.** Same node, fixture **with** the skill: the row is unlocked, is selected, and banks `setting_assisted` through to the terminal.
   - **Do not** try to prove both legs in one script and **do not** give `invrisil_setting_skill` a second fixture — one canonical, one fixture is the shipped idiom, and the pair above already covers both states.
   - The same locked-vs-hidden distinction is the reason `invrisil_v016_gate_check` (Step 3) pins Hedault's hub at exactly 5 rows: the **accomplishment**-gated commission option is HIDDEN, not locked.
-- [ ] **Step 3: `invrisil_v016_gate_check` is the ruling-1 regression guard.** Pin Hedault's hub `options` array at exactly 5 rows with their exact `text`/`locked`/`requirement` fields, copied **from a real run's `events.jsonl`**, never assumed. This makes the pin-stability adjudication permanent rather than a one-time PR claim.
-- [ ] **Step 4: Seeds.** Start every script at **seed 9** (the Invrisil canonical seed). For the two combat scripts, if seed 9 does not produce a deterministic win, search seeds 1–40, pin the first clean win, and record the search in the script's `_comment` (census-exempt).
-- [ ] **Step 5: Run each script individually** and re-derive every pin from its own `events.jsonl`:
+- [x] **Step 3: `invrisil_v016_gate_check` is the ruling-1 regression guard.** Pin Hedault's hub `options` array at exactly 5 rows with their exact `text`/`locked`/`requirement` fields, copied **from a real run's `events.jsonl`**, never assumed. This makes the pin-stability adjudication permanent rather than a one-time PR claim.
+- [x] **Step 4: Seeds.** Start every script at **seed 9** (the Invrisil canonical seed). For the two combat scripts, if seed 9 does not produce a deterministic win, search seeds 1–40, pin the first clean win, and record the search in the script's `_comment` (census-exempt).
+- [x] **Step 5: Run each script individually** and re-derive every pin from its own `events.jsonl`:
 
 ```
 perl -e 'alarm 300; exec @ARGV' -- wandering_inn_game/qa/run_qa.sh <script> headless --seed=9
 ```
 
 Output at `wandering_inn_game/qa_output/<script>/{result.json,events.jsonl,*.png}` — **the dir is clobbered by any re-run**, so read before re-running. A missing `result.json` with `rc=0` is a RED, never a pass.
-- [ ] **Step 6: Commit** `test(qa): nine Invrisil v0.16 canonicals (#306)`.
+- [x] **Step 6: Commit** `test(qa): nine Invrisil v0.16 canonicals (#306)`.
 
 ### Task 5.3: Manifest, seed table, generated docs — one commit
 
@@ -1656,9 +1668,9 @@ Output at `wandering_inn_game/qa_output/<script>/{result.json,events.jsonl,*.png
 - Modify: `wandering_inn_game/AGENTS.md` (9 seed-table rows, inserted **after the `hedault_fragment_loop` row**, same relative order as the manifest)
 - Regenerate: `wandering_inn_game/qa/manifest.json` `surfaces`, `wandering_inn_game/docs/QA-SCRIPT-NOTES.md`
 
-- [ ] **Step 1: Insert nine manifest entries** at the anchor, each with `script`, `seed`, `fixture`, a real `note`, and `"tiers": ["full"]`. Leave `surfaces` **absent** — it is generated. (No new entry joins `smoke`: smoke must stay a subset of full and the smoke sweep is a latency budget.)
-- [ ] **Step 2: Insert the nine AGENTS.md seed-table rows** at the matching anchor. `qa/ci_sweep.sh` **hard-fails at startup** if the manifest and the table disagree — they must land in the same commit.
-- [ ] **Step 3: Regenerate, in this exact order (controller ruling E):**
+- [x] **Step 1: Insert nine manifest entries** at the anchor, each with `script`, `seed`, `fixture`, a real `note`, and `"tiers": ["full"]`. Leave `surfaces` **absent** — it is generated. (No new entry joins `smoke`: smoke must stay a subset of full and the smoke sweep is a latency budget.)
+- [x] **Step 2: Insert the nine AGENTS.md seed-table rows** at the matching anchor. `qa/ci_sweep.sh` **hard-fails at startup** if the manifest and the table disagree — they must land in the same commit.
+- [x] **Step 3: Regenerate, in this exact order (controller ruling E):**
 
 ```
 python3 wandering_inn_game/scripts/derive_qa_surfaces.py --write
@@ -1671,12 +1683,12 @@ python3 scripts/check_doc_drift.py
 **`--write` is mandatory on `render_qa_notes.py` and the first draft omitted it.** `scripts/render_qa_notes.py:55-66` writes **only** under `--write`; a bare run compares, prints `QA NOTES DRIFT` + `Run: python3 scripts/render_qa_notes.py --write`, and returns **1**. A bare-only invocation is a no-op that leaves `docs/QA-SCRIPT-NOTES.md` stale and reds `leak-check` — precisely the #312 CI red this plan cites as the lesson. The **bare** run is the *verification* step: expect rc 0 and `PASS: QA notes match manifest`. (`derive_qa_surfaces.py` is the opposite — bare **is** a write, `scripts/derive_qa_surfaces.py:412-414` — but pass `--write` explicitly anyway.)
 
 **Merge-train note:** `render_qa_notes.py` renders the file whole from the **entire** manifest, so the pair must be re-run on **every train merge that combines two lanes' manifest entries**, not just inside this lane's commit. Same for `derive_qa_surfaces.py --write`. Never hand-edit `surfaces` or `QA-SCRIPT-NOTES.md`.
-- [ ] **Step 4: Commit** `test(qa): register the Invrisil v0.16 canonicals (#306)` — manifest + seed table + both generated artifacts in **one** commit.
+- [x] **Step 4: Commit** `test(qa): register the Invrisil v0.16 canonicals (#306)` — manifest + seed table + both generated artifacts in **one** commit.
 
 ### Task 5.4: Re-gate sweep
 
-- [ ] **Step 1: Settle the tree first** — no edits in flight. A sweep launched mid-edit produces a mixed-state verdict; kill and relaunch.
-- [ ] **Step 2: Compute the touched-surface re-gate list.** Run `--touching` for each shared/edited path and take the **union**:
+- [x] **Step 1: Settle the tree first** — no edits in flight. A sweep launched mid-edit produces a mixed-state verdict; kill and relaunch.
+- [x] **Step 2: Compute the touched-surface re-gate list.** Run `--touching` for each shared/edited path and take the **union**:
 
 ```
 wandering_inn_game/qa/ci_sweep.sh --touching data/quests.json
@@ -1689,12 +1701,12 @@ wandering_inn_game/qa/ci_sweep.sh --touching data/combatants.json
 
 The must-be-green named set, at minimum: `invrisil_walkthrough`, `invrisil_round_trip`, `invrisil_disagreement_talk|_stealth|_fight`, `wilovan_address_f`, `hedault_enchant_loop`, `hedault_fragment_loop`, `spine_reach`, `ratici_fence_loop`, `ratici_fence_gate_check`, `boulevard_night_footpads_loop`, `invrisil_mothbear_loop`, `parley_gates_check`, `parley_talkdowns_loop`, `regional_work_loop`, `inn_guests_ext_loop`, `inn_guests_gate_proof`.
 
-- [ ] **Step 3: Subagent-safe sweep idiom.** A full `ci_sweep.sh` cannot run foreground in one Bash call — the harness promotes it to background and strands the waiter. Start it writing to a log with its own `rc=` echo, then poll with short foreground `sleep 60; tail -1 <log>` calls and read `rc` from the log.
-- [ ] **Step 4: Report per script, never "everything passed."**
+- [x] **Step 3: Subagent-safe sweep idiom.** A full `ci_sweep.sh` cannot run foreground in one Bash call — the harness promotes it to background and strands the waiter. Start it writing to a log with its own `rc=` echo, then poll with short foreground `sleep 60; tail -1 <log>` calls and read `rc` from the log.
+- [x] **Step 4: Report per script, never "everything passed."**
 
 ### Task 5.5: Windowed machine playtest
 
-- [ ] **Step 1: Load `wi-machine-playtest`.** Run windowed passes and capture these shots:
+- [x] **Step 1: Load `wi-machine-playtest`.** Run windowed passes and capture these shots:
   1. `invrisil_walkthrough` at (20,2) — the stationer facade now rendering as a **door**, not `hide_sprite` wall band (this changes the shipped `01c_boulevard_stationer` image; it is a capture, not an assert).
   2. The (18,1) Adventurer's Rest door on the facade band, and the two doors read together at x=18–20.
   3. `stationer.json` interior — full room, the client at (3,2), the clerk at (8,1), mood/vignette, **and the room's dressing**: the `walls.segments` perimeter reading as walls (not a crate ring), the `[16,21]/[17,21]` shop-board floor reading apart from the parlor's parquet, the writing table + stools at (3–5,5), the sconce pool at (4,1), and the `counter_left`/`counter_right` run at (5–6,1) reading as one counter.
@@ -1703,7 +1715,7 @@ The must-be-green named set, at minimum: `invrisil_walkthrough`, `invrisil_round
   6. `alley_fence_door` at (11,12) in the alleys, and its `gate_closed_toast`.
   7. Both new fight boards (`mercantile_alley` with the fence pair; `merchant_warehouse` with the bravos) — figure sizes, tints, hit-flash settling back to the resting modulate. **This is the ONLY figure read the four new rigs get** — per ruling F, `test_combat_visuals.gd` does not measure `hired_blade`, `human_laborer` or `citizen_f` board figures and passes by exclusion. Check by eye that each pair reads apart at a glance and that neither figure crowds its cell.
   8. The handover node and the locket grant toast; Wilovan's errand node with `{addr}` resolved.
-- [ ] **Step 2: Drain findings to `docs/VISUAL-LOG.md`** (repo-root docs/, the wave's log — note that `wandering_inn_game/docs/VISUAL-LOG.md` is a **second, distinct** file).
+- [x] **Step 2: Drain findings to `docs/VISUAL-LOG.md`** (repo-root docs/, the wave's log — note that `wandering_inn_game/docs/VISUAL-LOG.md` is a **second, distinct** file).
 
 ---
 
@@ -1791,10 +1803,10 @@ Every risk below has its mitigation baked into a numbered step above.
 
 ### Task 6.1: The `wi-verifying-changes` bar
 
-- [ ] **Step 0:** If working in a fresh worktree, run `/usr/local/bin/godot --headless --path wandering_inn_game --import` **before any QA**.
-- [ ] **Step 1: Structural lint** — `python3 wandering_inn_game/scripts/data_lint.py` from repo root (**this is not pytest**; there is no `scripts/tests/test_data_lint.py` in this layout). Expect clean exit.
-- [ ] **Step 2: Load gate** — the headless boot/smoke check, alarm-wrapped.
-- [ ] **Step 3: Census** — `python3 scripts/comment_census.py --check` from repo root. Must return 0. **Also measure this lane's absolute new-`_comment` total** and compare it against the ≈ 4,400-char projection (budget ≈ 6,175) in the Census section; report the real number in the PR body so the controller can sum the four lanes:
+- [x] **Step 0:** If working in a fresh worktree, run `/usr/local/bin/godot --headless --path wandering_inn_game --import` **before any QA**.
+- [x] **Step 1: Structural lint** — `python3 wandering_inn_game/scripts/data_lint.py` from repo root (**this is not pytest**; there is no `scripts/tests/test_data_lint.py` in this layout). Expect clean exit.
+- [x] **Step 2: Load gate** — the headless boot/smoke check, alarm-wrapped.
+- [x] **Step 3: Census** — `python3 scripts/comment_census.py --check` from repo root. Must return 0. **Also measure this lane's absolute new-`_comment` total** and compare it against the ≈ 4,400-char projection (budget ≈ 6,175) in the Census section; report the real number in the PR body so the controller can sum the four lanes:
 
 ```
 git diff --stat main -- 'wandering_inn_game/data/**'
@@ -1822,15 +1834,15 @@ PY
 ```
 
   If it returns 1, cut `_comment` prose from `data/**` (move it to a QA-script `_comment`, a census-free `_pick`/`_resolution_order` key, or `docs/CHOICE-LOG.md`) until it does — **never** by deleting content JSON. Remember the merge-train rule: the binding check is on the **merged** tree, and final overshoot is the wave-close PR's to own.
-- [ ] **Step 4: Every unit suite** — loop every `tests/test_*.gd` under a 240s alarm. For **each** script the bar is all three of: **nonzero-exit absent (rc 0)**, a **`^PASS` line present**, and a **zero-hit grep** for `SCRIPT ERROR|Parse Error|WARNING`. Any one missing is a RED.
-- [ ] **Step 5: Balance harness** — `sim_combat_batch.gd` in full under a 600s alarm, same three-part bar. Both new gated cells inside **0.55–0.95** (ruling A), all four shipped Invrisil cells still in window, medians 3–12. **Copy every measured `win_rate` and `median_rounds` into the PR body** — that table, not the window, is the region-ordering evidence.
-- [ ] **Step 6: Full canonical sweep** — `wandering_inn_game/qa/ci_sweep.sh` (the background-log-and-poll idiom from Task 5.4 Step 3). Every script green; report per script.
-- [ ] **Step 7: Generated-doc drift** — `derive_qa_surfaces.py --check`, **`render_qa_notes.py --write` then bare `render_qa_notes.py`** (ruling E — bare-only does not write and returns 1), `check_doc_drift.py`, `sync_agent_guidance.py`, `scripts/leak_check.sh` — the full `leak-check` job locally. If the bare run prints `QA NOTES DRIFT`, the `--write` did not land in the commit; fix the commit, do not hand-edit the file.
-- [ ] **Step 8: Windowed playtest** — Task 5.5, VISUAL-LOG drained.
+- [x] **Step 4: Every unit suite** — loop every `tests/test_*.gd` under a 240s alarm. For **each** script the bar is all three of: **nonzero-exit absent (rc 0)**, a **`^PASS` line present**, and a **zero-hit grep** for `SCRIPT ERROR|Parse Error|WARNING`. Any one missing is a RED.
+- [x] **Step 5: Balance harness** — `sim_combat_batch.gd` in full under a 600s alarm, same three-part bar. Both new gated cells inside **0.55–0.95** (ruling A), all four shipped Invrisil cells still in window, medians 3–12. **Copy every measured `win_rate` and `median_rounds` into the PR body** — that table, not the window, is the region-ordering evidence.
+- [x] **Step 6: Full canonical sweep** — `wandering_inn_game/qa/ci_sweep.sh` (the background-log-and-poll idiom from Task 5.4 Step 3). Every script green; report per script.
+- [x] **Step 7: Generated-doc drift** — `derive_qa_surfaces.py --check`, **`render_qa_notes.py --write` then bare `render_qa_notes.py`** (ruling E — bare-only does not write and returns 1), `check_doc_drift.py`, `sync_agent_guidance.py`, `scripts/leak_check.sh` — the full `leak-check` job locally. If the bare run prints `QA NOTES DRIFT`, the `--write` did not land in the commit; fix the commit, do not hand-edit the file.
+- [x] **Step 8: Windowed playtest** — Task 5.5, VISUAL-LOG drained.
 
 ### Task 6.2: CHOICE-LOG and PR
 
-- [ ] **Step 1: Append this lane's entries to `docs/CHOICE-LOG.md`** — every controller ruling applied and every design fork taken (the list is in the plan-return `choice_log_entries`; do not re-derive, copy it).
+- [x] **Step 1: Append this lane's entries to `docs/CHOICE-LOG.md`** — every controller ruling applied and every design fork taken (the list is in the plan-return `choice_log_entries`; do not re-derive, copy it).
 - [ ] **Step 2: Open the PR** with title `v0.16 Invrisil depth: A Setting for a Lady + The Hat Stays On, stationer's + Adventurer's Rest (#306)`, using `.github/PULL_REQUEST_TEMPLATE/issue-close.md`:
   - `Closes #306`
   - **Choices made** — the ten lane rulings plus wave rulings A–F plus the forks, each with the rejected alternative and why.
