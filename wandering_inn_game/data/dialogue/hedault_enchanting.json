@@ -110,7 +110,18 @@
   },
   "door_reading": {
    "speaker": "Hedault",
-   "text": "Hold still. There is a residue on your sleeve I have catalogued exactly once before, in this shop, on a fragment. Ruin warding, and it is FED. A live draw, not a set one. I do not invoice for looking.",
+   "_comment": "The 'catalogued exactly once before' callback is a TRADER's line: it names the fragment this player handed him, so it may only render if they did. Base is the same read without the claim.",
+   "text": "Hold still. There is a residue on your sleeve I do not see twice in a decade. Ruin warding, and it is FED. A live draw, not a set one. I do not invoice for looking.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "traded_guardian_fragment": 1
+      }
+     },
+     "text": "Hold still. There is a residue on your sleeve I have catalogued exactly once before — in this shop, on the fragment you handed me. Ruin warding, and it is FED. A live draw, not a set one. I do not invoice for looking."
+    }
+   ],
    "options": [
     {
      "text": "Go on, then.",
