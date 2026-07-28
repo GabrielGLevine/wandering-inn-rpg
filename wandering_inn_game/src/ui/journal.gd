@@ -87,6 +87,22 @@ var _scroll_hint: Label
 ## `hotbar_loadout`.
 var _flat_skill_ids: Array[String] = []
 var _cursor_index := -1
+## Total travel, in px, before an in-flight body gesture stops counting as a tap.
+## NO REPO PRECEDENT EXISTED -- this sets one, so the number is argued rather
+## than picked: (a) it must exceed the drift a resting finger produces between
+## press and release on a touch screen, which is a px or two, or the latch eats
+## real taps; (b) it must sit well under the 20px body row pitch, or a pan can
+## cross a whole row and still be read as a tap on the row it lands in. 4px is
+## the middle of that window and a quarter of a row. Mouse taps drift 0px and are
+## unaffected either way. CHOICE-LOG 2026-07-28 carries the call and its revert.
+const BODY_PAN_SLOP_PX := 4.0
+
+## True once the in-flight body gesture has travelled past the slop: a pan, not a
+## tap. `_body_gesture_drift` is its accumulator. Both reset on every fresh press
+## AND on every open/close/tab-switch (see `_reset_body_gesture`), so a latched
+## flag can never outlive the gesture that set it and swallow a later tap.
+var _body_gesture_panned := false
+var _body_gesture_drift := 0.0
 var _open_act: Dictionary = {}
 var _open_leads: Array = []
 var _open_quest_lines: Array = []
@@ -179,11 +195,27 @@ func _ready() -> void:
 		tab_bar.add_child(tab_label)
 	stack.add_child(tab_bar)
 
+	# JOURNAL/HALF-ROW (P3), v0.15 A4. The body used to be the VBox's own
+	# EXPAND_FILL child, so its height was "whatever is left after the ribbon and
+	# the tab bar" — a number with no relationship to the text pitch, which is
+	# why the last row rendered sliced ("The Missing Crate — Complete." on both
+	# climax_seal/02 and spine_reach/02) and read as a clipping bug rather than
+	# as "more below". The EXPAND_FILL now lives on a plain Control SLOT and the
+	# body is anchored full-rect INSIDE it, so `_clip_body_to_line_boundary` can
+	# shorten the body to a whole number of rows from the slot's own height. The
+	# dependency runs one way only (slot height -> body height; a Control parent
+	# never resizes to its children), so there is no layout feedback loop, and if
+	# the clip never runs the body still fills the slot exactly as before.
+	var body_slot := Control.new()
+	body_slot.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	body_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stack.add_child(body_slot)
+
 	_body_label = RichTextLabel.new()
 	_body_label.bbcode_enabled = true
 	_body_label.scroll_active = true
 	_body_label.fit_content = false
-	_body_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	UIChrome.full_rect(_body_label)
 	_body_label.meta_underlined = false
 	_body_label.mouse_filter = Control.MOUSE_FILTER_STOP
 	_body_label.meta_hover_started.connect(_on_skill_row_hover_started)
@@ -191,7 +223,8 @@ func _ready() -> void:
 	# a4 #216 slice 2: the body scrolls on touch/mouse DRAG (wheel-only
 	# before — a touch player had no way to read past the fold).
 	_body_label.gui_input.connect(_on_body_gui_input)
-	stack.add_child(_body_label)
+	body_slot.add_child(_body_label)
+	body_slot.resized.connect(_clip_body_to_line_boundary)
 
 	_scroll_hint = UIChrome.make_label("▼")
 	_scroll_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -201,6 +234,33 @@ func _ready() -> void:
 	_root.add_child(_scroll_hint)
 
 	ObservableBus.domain_event.connect(_on_domain_event)
+
+
+## Shortens the body viewport to a WHOLE number of text rows, so its bottom
+## edge is always a line boundary and the `▼` cue means "more below" instead of
+## "this row is cut in half". Measured from the RichTextLabel's own theme font
+## (`normal_font`/`normal_font_size`, the keys RichTextLabel actually draws
+## with) rather than from the panel constants, so a theme font-size change
+## re-quantizes itself. Never grows the body past the slot; a run where the
+## metrics are unavailable leaves the pre-existing full-fill behaviour intact.
+func _clip_body_to_line_boundary() -> void:
+	if _body_label == null:
+		return
+	var slot := _body_label.get_parent() as Control
+	if slot == null or slot.size.y <= 0.0:
+		return
+	var font := _body_label.get_theme_font("normal_font")
+	var font_size := _body_label.get_theme_font_size("normal_font_size")
+	if font == null or font_size <= 0:
+		return
+	var separation := float(_body_label.get_theme_constant("line_separation"))
+	var pitch := font.get_height(font_size) + separation
+	if pitch <= 0.0:
+		return
+	var rows := maxi(int((slot.size.y + separation) / pitch), 1)
+	var used := float(rows) * pitch - separation
+	_body_label.offset_bottom = -maxf(slot.size.y - used, 0.0)
+	_update_scroll_hint.call_deferred()
 
 
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
@@ -233,9 +293,38 @@ func body_rect() -> Rect2:
 	return Rect2(_body_label.global_position, _body_label.size)
 
 
+## Clears the in-flight gesture. Called on every fresh press, on the meta
+## handler's consume, and on every open/close/tab-switch: a flag latched by a pan
+## that ended outside the body (or on a tab the player then left) would otherwise
+## sit armed and swallow the NEXT tap -- and a programmatic `meta_clicked` with
+## no press behind it, which is how QA and any future scripted click arrive,
+## would hit that stale flag with no gesture to blame.
+func _reset_body_gesture() -> void:
+	_body_gesture_panned = false
+	_body_gesture_drift = 0.0
+
+
 func _on_body_gui_input(event: InputEvent) -> void:
 	if not open:
 		return
+	# A gesture that PANNED must not also count as a tap on whatever row it
+	# happens to let go over. RichTextLabel fires `meta_clicked` on button
+	# RELEASE over a meta region regardless of intervening motion, so before
+	# this latch a drag-to-scroll that ended on a skill row silently toggled that
+	# skill in and out of the field loadout -- the exact failure `field_skills_loop`
+	# hit the moment `_clip_body_to_line_boundary` moved the release point by a
+	# few px. The clip only EXPOSED it; any scroll position, panel size or font
+	# change could land the same accidental toggle on a player.
+	#
+	# ACCUMULATED, with slop -- see BODY_PAN_SLOP_PX. Latching on the first
+	# motion event of ANY magnitude would have been worse than the bug on touch,
+	# where a finger never holds still: a 1px drift between press and release
+	# would have eaten a legitimate tap, and the player would have got nothing at
+	# all instead of the wrong thing.
+	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+		_reset_body_gesture()
+	elif event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed:
+		_reset_body_gesture()
 	var dy := 0.0
 	if event is InputEventScreenDrag:
 		dy = (event as InputEventScreenDrag).relative.y
@@ -243,6 +332,14 @@ func _on_body_gui_input(event: InputEvent) -> void:
 		dy = (event as InputEventMouseMotion).relative.y
 	else:
 		return
+	# Total travel, not per-event travel: a slow pan arrives as many small deltas
+	# and must still latch, while a jittery tap's deltas cancel out in position
+	# but NOT in magnitude -- so this sums absolute values and never resets
+	# mid-gesture. Scrolling itself stays unconditional below: a sub-slop wobble
+	# pans by those same few px, which is invisible, and still counts as a tap.
+	_body_gesture_drift += absf(dy)
+	if _body_gesture_drift > BODY_PAN_SLOP_PX:
+		_body_gesture_panned = true
 	var vbar := _body_label.get_v_scroll_bar()
 	if vbar != null and vbar.max_value > vbar.page:
 		vbar.value = clampf(vbar.value - dy, vbar.min_value, vbar.max_value - vbar.page)
@@ -304,6 +401,7 @@ func _can_open() -> bool:
 
 func _open() -> void:
 	open = true
+	_reset_body_gesture()
 	var act: Dictionary = Game.sim.act_summary()
 	var leads: Array = Game.sim.active_leads()
 	var quest_lines: Array = Game.sim.quest_summary()
@@ -423,6 +521,7 @@ func _open() -> void:
 
 func _close() -> void:
 	open = false
+	_reset_body_gesture()
 	_root.hide()
 	if _scroll_hint != null:
 		_scroll_hint.hide()
@@ -463,6 +562,7 @@ func _switch_tab_relative(delta: int) -> void:
 func _switch_tab(new_tab: int) -> void:
 	if not open or new_tab == _active_tab:
 		return
+	_reset_body_gesture()
 	_active_tab = new_tab
 	# Entering Skills re-arms the cursor at row 0 (or -1 when the PC knows zero
 	# skills); leaving it makes the cursor inert (guarded in `_unhandled_input`
@@ -602,6 +702,11 @@ func _on_skill_row_hover_started(meta: Variant) -> void:
 
 func _on_skill_row_meta_clicked(meta: Variant) -> void:
 	if _active_tab != Tab.SKILLS:
+		return
+	# See `_on_body_gui_input`: a release that ended a PAN is not a tap. Consumed
+	# here (not just read) so the next genuine stationary press still toggles.
+	if _body_gesture_panned:
+		_reset_body_gesture()
 		return
 	var idx := String(meta).to_int()
 	if idx < 0 or idx >= _flat_skill_ids.size():

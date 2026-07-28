@@ -119,6 +119,10 @@ var _transient_counts: Dictionary = {}
 ## direction, so `_transient_counts` needs no reconciliation.
 var _banked_toasts: Array[String] = []
 var _toast_draining := false
+## Open full-screen modals, keyed by their own SHOWN event id. A SET rather than
+## a counter so a doubled show/hide pair cannot strand the drain paused forever
+## -- the drain resumes the moment this is empty. See `_drain_toasts`.
+var _open_modals: Dictionary = {}
 ## Issue #62 Lane U item 6: set by `dismiss_current_toast_early()`, consumed
 ## by `_show()`'s interruptible hold-wait (toast panel only -- the dialogue
 ## bark never sets or checks this). Does NOT drop or reorder anything in
@@ -329,6 +333,22 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_defer_toast_display()
 		WIEvents.PLAYER_MOVED:
 			dismiss_current_toast_early()
+		WIEvents.UI_JOURNAL_SHOWN, WIEvents.UI_INVENTORY_SHOWN, \
+		WIEvents.UI_PAUSE_SHOWN, WIEvents.UI_SETTINGS_SHOWN:
+			_open_modals[type] = true
+			_defer_toast_display()
+		WIEvents.UI_JOURNAL_HIDDEN, WIEvents.UI_INVENTORY_HIDDEN, \
+		WIEvents.UI_PAUSE_HIDDEN, WIEvents.UI_SETTINGS_HIDDEN:
+			_open_modals.erase(_shown_event_for(type))
+			if not _toast_draining and not _toast_queue.is_empty() and _open_modals.is_empty():
+				_drain_toasts()
+
+
+## `_open_modals` is keyed by SHOWN id; the HIDDEN handler has only its own id.
+## Derived by suffix swap rather than by a second const table, so a new modal
+## pair needs one match arm, not two lookups.
+func _shown_event_for(hidden_event: String) -> String:
+	return hidden_event.trim_suffix("_hidden") + "_shown"
 
 
 func _clear_dialogue_line() -> void:
@@ -445,6 +465,18 @@ func dismiss_current_toast_early() -> void:
 func _drain_toasts() -> void:
 	_toast_draining = true
 	while not _toast_queue.is_empty():
+		# VISUAL-LOG TOAST/MODAL-OVERLAP (P2), v0.15 A4. Toasts draw at layer 12,
+		# above the journal's 10 (deliberate: feedback clears modals, never the
+		# sleep veil). Measured in the Phase-1 close-out: a 1-line toast overlaps
+		# only blank parchment margin, but a 3-line toast is 122px tall, tops out
+		# at y~564, and reaches the journal's last body rows -- seal_fed/04b clips
+		# Recent Messages mid-word ("...Find ou|"). The Leads rows are the longest
+		# lines the panel draws, so it worsens as leads accumulate. PAUSE, never
+		# drop: `break` leaves the queue untouched (the lossless-queue contract) and
+		# the modal's own HIDDEN event kicks the drain again, so the player reads
+		# the toast the moment the panel closes.
+		if not _open_modals.is_empty():
+			break
 		var text: String = _toast_queue.pop_front()
 		if int(_transient_counts.get(text, 0)) > 0:
 			_transient_counts[text] -= 1

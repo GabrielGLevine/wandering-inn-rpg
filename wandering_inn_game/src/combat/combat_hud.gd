@@ -163,6 +163,27 @@ func build() -> void:
 		UIChrome.PARCHMENT_STRIP, Control.PRESET_BOTTOM_LEFT,
 		Vector2(292.0, 122.0), Vector4(28.0, -206.0, 320.0, -84.0), false, "Small"
 	)
+	# COMBAT/FEED-FOLD (P2), v0.15 A4 — THE FIX. The budget model in
+	# `_feed_text_capacity_height` was always right; the LABEL silently
+	# disagreed with it. That doc comment asserts this label is TOP-aligned ("a
+	# single measured deficit, unlike the vertically-centered toast label which
+	# budgets it twice") -- but the label was CENTRED in its MarginContainer, so
+	# the deficit was doubled and the block grew into the fold from the middle
+	# instead of down from the top. TWO defaults conspired: `UIChrome.make_label`
+	# leaves `vertical_alignment` at CENTER, and the label's `size_flags_vertical`
+	# is SHRINK_CENTER, which is the one that actually bit -- the label rect was
+	# its CONTENT height (77px for four rows), parked in the middle of the 106px
+	# inner area, so text alignment had nothing to align inside.
+	#
+	# Measured headless at the 122px base panel (17px rows, 3px line_spacing,
+	# 20px pitch, fold band measured on-screen at y=607..636 of the 514..636
+	# panel): centred put the four-row block at y=536..613, five px INTO the
+	# fold; on `riverfarm_fight/02` that sliced "for 13!" exactly as the ledger
+	# recorded. FILL + TOP puts the same block at y=522..599, clear by 8px. Three
+	# rows always fit either way, which is why the repro read as "three full rows
+	# and a sliced fourth" and why wrapping was irrelevant to it.
+	_feed_label.size_flags_vertical = Control.SIZE_FILL
+	_feed_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	(_feed_label.get_parent().get_parent().get_child(0) as NinePatchRect).patch_margin_bottom = FEED_STRIP_FOLD_PATCH_BOTTOM
 	_readout_panel = _make_panel(UIChrome.PARCHMENT_STRIP, Control.PRESET_CENTER_BOTTOM, Vector2(620.0, 104.0), Vector4(-310.0, -190.0, 310.0, -78.0))
 	_readout_label = UIChrome.make_rich_label("CombatReadout")

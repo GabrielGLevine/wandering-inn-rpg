@@ -884,7 +884,7 @@
    "type": "ui_gdi_epilogue_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "lines": 8
+    "lines": 11
    }
   },
   {

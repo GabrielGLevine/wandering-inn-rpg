@@ -1098,11 +1098,23 @@ func _validate_class_skill_grant_ids_shape_cases() -> void:
 	_check(not _missing_class_skill_grant_ids(bad_balanced, skill_ids).is_empty(), "NEGATIVE CONTROL: a typo'd evolution.balanced_grants id must be caught")
 
 
+## v0.15 A5: a beat's gate is `complete_when` (AND) OR `complete_when_any`
+## (alternatives). Every arm below reads BOTH through `_beat_gate_counters` --
+## an alternative that named an unproduced counter, or one whose producer sat on
+## a map the description never points at, would otherwise ship unchecked.
+func _beat_gate_counters(beat: Dictionary) -> Dictionary:
+	var out: Dictionary = {}
+	for key: String in (beat.get("complete_when", {}) as Dictionary):
+		out[key] = true
+	for key: String in (beat.get("complete_when_any", {}) as Dictionary):
+		out[key] = true
+	return out
+
+
 func _validate_quests(quests: Dictionary, produced_accomplishments: Dictionary) -> void:
 	for quest: Dictionary in quests.get("quests", []):
 		for beat: Dictionary in quest.get("beats", []):
-			var complete_when: Dictionary = beat.get("complete_when", {})
-			for accomplishment_id: String in complete_when:
+			for accomplishment_id: String in _beat_gate_counters(beat):
 				_check(
 					produced_accomplishments.has(accomplishment_id),
 					"quest %s beat %s waits on unproduced accomplishment: %s" % [String(quest["id"]), String(beat["id"]), accomplishment_id]
@@ -1244,9 +1256,8 @@ func _validate_travel_beat_place_naming(quests: Dictionary, scene: Dictionary, g
 		var quest_id := String(quest["id"])
 		var quest_giver_maps: Dictionary = giver_maps.get(quest_id, {})
 		for beat: Dictionary in quest.get("beats", []):
-			var complete_when: Dictionary = beat.get("complete_when", {})
 			var beat_maps: Dictionary = {}
-			for accomplishment_id: String in complete_when:
+			for accomplishment_id: String in _beat_gate_counters(beat):
 				for map_id: String in (producer_maps.get(accomplishment_id, {}) as Dictionary):
 					beat_maps[map_id] = true
 			if not _beat_needs_place_name(beat_maps, quest_giver_maps):
@@ -1367,7 +1378,7 @@ func _validate_encounter_scaling(scene: Dictionary, quests: Dictionary) -> void:
 	var quest_counters: Dictionary = {}
 	for quest: Dictionary in quests.get("quests", []):
 		for beat: Dictionary in quest.get("beats", []):
-			for key: String in (beat.get("complete_when", {}) as Dictionary):
+			for key: String in _beat_gate_counters(beat):
 				quest_counters[key] = true
 	for map_id: String in scene["maps"]:
 		for ent: Dictionary in scene["maps"][map_id].get("entities", []):

@@ -362,9 +362,37 @@
    "action": "wait_for_event",
    "type": "ui_journal_shown",
    "payload_contains": {
-    "active_tab": "history"
+    "active_tab": "history",
+    "lore_notes": [
+     "Pisces steps back at last. \"It is not a lock. The lines run one way, they have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\"",
+     "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. Not a school, not a fashion. A HAND, and it cut this one first.\" He does not look away while he says it.",
+     "[Detect Magic] — Light runs under the turf in one long seam, straight through the stone and away west. The hollow is built on a current.",
+     "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away.",
+     "[Detect Magic] — The socket still remembers its stone: a slow pulse, counting toward a door that already left. The warding reads near-first: the spiral beside the pedestal, then its far twin.",
+     "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it.",
+     "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, and someone's washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court.",
+     "The fissure Zevara spoke of is down past the gallery. The dark has a direction today."
+    ]
    },
-   "timeout_sec": 5
+   "timeout_sec": 5,
+   "_comment": "v0.15 Task 2.2, THE LONG-FORM LORE READ (Phase-1 caveat closure). No shipped script had ever banked more than TWO lore lines, so the tab's actual job -- a record you scroll and re-read -- went unproven. The fixture pre-banks six lines this Act V state implies the player already saw; the run adds its own two, and this pins the WHOLE rendered list, exactly ordered. payload_contains compares an array key as a complete list, which is what makes this a real ordering pin: NEWEST FIRST, so the two reads the player just took lead, and the arrival narration they got in Act III is last."
+  },
+  {
+   "_comment": "v0.15 A5: this Act V state reached the vault through the snare fight, and the fixture now SAYS so. Without cleared_halls_by_force it would fall through to the disarmer's ending and the journal would credit a fighter with taking the halls apart trap by trap.",
+   "action": "assert_state",
+   "path": "accomplishments.cleared_halls_by_force",
+   "equals": 1
+  },
+  {
+   "_comment": "Capture order is the sim's own, and it is the REVERSE of the render: index 0 is the oldest line (carried in by the fixture, proving a pre-populated record survives WISave.apply at version 8), the last index is the read the player took a moment ago.",
+   "action": "assert_state",
+   "path": "lore_notes.0",
+   "equals": "The fissure Zevara spoke of is down past the gallery. The dark has a direction today."
+  },
+  {
+   "action": "assert_state",
+   "path": "lore_notes.7",
+   "equals": "Pisces steps back at last. \"It is not a lock. The lines run one way, they have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
   },
   {
    "action": "screenshot",
@@ -625,7 +653,7 @@
    "type": "ui_gdi_epilogue_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "lines": 10
+    "lines": 13
    }
   },
   {

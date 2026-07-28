@@ -31,6 +31,32 @@ const READ_HOLD := 1.5
 const EMPTY_HOLD := 0.4
 const LINE_FONT_SIZE := 24
 
+## v0.15 A4, VISUAL-LOG FINALE/LONG-LINE (P3) + VEIL-COPY/UNMEASURED (P4).
+## Veil lines used to be bare SHRINK_CENTER Labels with no autowrap, so a line
+## drew at its natural width whatever the viewport was: the Invrisil region
+## recap measured 1114px of a 1280px viewport (87%) and burst the centred
+## column every other line forms. These three are the wrap-aware budget, and
+## `test_copy_fit._check_veil_lines` mirrors all three with the drift-tripwire
+## idiom so the ceiling is ENFORCED, never merely observed.
+##
+##  * VEIL_LINE_TEXT_WIDTH is THE COLUMN. Measured: the widest authored
+##    one-thought line in the tables below is 867px ("[You re-cut the ward with
+##    your own hands...]"), so 880 keeps every shipped one-thought line on ONE
+##    row and wraps only genuinely two-sentence copy. AUTHORED COPY IS NEVER
+##    REWRITTEN TO FIT -- that is the whole point of a wrap-aware budget.
+##  * VEIL_BLOCK_MAX_HEIGHT is the 720px viewport less a 24px band top and
+##    bottom. `_line_box` is FULL_RECT with ALIGNMENT_CENTER, so a block taller
+##    than the viewport loses its FIRST and LAST lines off both edges at once.
+##  * VEIL_LINE_SEPARATIONS is the ladder `_apply_line_budget` walks: the first
+##    separation whose measured block fits the budget wins, so a long finale
+##    (three act presences + three region lines + a class per held class)
+##    tightens instead of overflowing. Only when even the tightest rung
+##    overflows does the oldest line evict -- the combat feed's idiom, and the
+##    honest degradation for a paced sequence the player reads line by line.
+const VEIL_LINE_TEXT_WIDTH := 880.0
+const VEIL_BLOCK_MAX_HEIGHT := 672.0
+const VEIL_LINE_SEPARATIONS := [18, 14, 10, 6]
+
 ## The GDI new-game opener. A New Game opens on BLACK: the Grand Design's
 ## voice speaks a few arrival lines in this SAME gold-on-black device
 ## (reusing _black + _add_line + the layer-30 discipline above — one
@@ -65,6 +91,32 @@ const OPENER_READ_HOLD := 2.2
 const FINALE_LINES_OPEN: Array[String] = [
 	"[When you came to Liscor, there was nothing to record.]",
 	"[This is no longer true.]",
+]
+## v0.15 A5. ACT PRESENCES, one line per act, each emitted ONLY if that act's
+## own counter banked — the same per-counter shape as the region recap below,
+## and deliberately NOT a last-match-wins ladder: a finale player holds all
+## three, and the point is that the recap walks the whole story, not just its
+## end. Before this, Acts I–III had no presence in the ending at all: the recap
+## opened on "there was nothing to record", jumped straight to the pilgrimage,
+## and the arrival, the city learning your face, and the warren under it went
+## unmentioned. Placed between the class recount and the region recap so the
+## sequence reads chronologically — who you became, what the city did about it,
+## then where the Door took you. SHORT by contract (spec A5: "seasoning, not a
+## second epilogue"): all three measure under the 880px column at 773/667/706px,
+## so each draws on ONE row and the three presences cost the block three rows,
+## not six. The first drafts ran 879/915/894px -- two of them wrapped, and the
+## worst-case block needed the separation ladder's third rung to fit. Measured,
+## not eyeballed; `test_copy_fit._check_veil_lines` holds the ceiling.
+##
+## `post_game` carries Act II rather than a "known face" counter of its own:
+## that beat's own gate is `reached_two_classes` + `quests_completed >= 3`, a
+## compound with no single id, and `post_game` banks at the first sleep after
+## the seal — by which point the city HAS decided, which is the thing the line
+## says.
+const FINALE_ACT_LINES: Array[Array] = [
+	["reached_liscor", "[You arrived with no class and no name here. Liscor has both now.]"],
+	["post_game", "[The city learned your face, and never once mentioned it.]"],
+	["raskghar_sealed", "[The warren under Liscor is sealed, and what it fed is cut off.]"],
 ]
 ## Region recap, one line per pilgrimage stop, each emitted ONLY if that
 ## stop's counter banked. Ordered Riverfarm → Invrisil → Pallass, the spine's
@@ -190,7 +242,7 @@ func _ready() -> void:
 	_line_box = VBoxContainer.new()
 	UIChrome.apply_theme(_line_box)
 	_line_box.alignment = BoxContainer.ALIGNMENT_CENTER
-	_line_box.add_theme_constant_override("separation", 18)
+	_line_box.add_theme_constant_override("separation", int(VEIL_LINE_SEPARATIONS[0]))
 	_line_box.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_line_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_line_box)
@@ -402,6 +454,9 @@ func _finale_lines() -> Array[String]:
 	var classes: Dictionary = Game.sim.snapshot().get("classes", {})
 	for cid: Variant in classes:
 		lines.append("[%s Level %d.]" % [_class_name(String(cid)), int(classes[cid])])
+	for row: Array in FINALE_ACT_LINES:
+		if Game.sim.accomplishment_count(String(row[0])) > 0:
+			lines.append(String(row[1]))
 	for row: Array in FINALE_REGION_LINES:
 		if Game.sim.accomplishment_count(String(row[0])) > 0:
 			lines.append(String(row[1]))
@@ -602,10 +657,73 @@ func _add_line(text: String) -> void:
 	label.add_theme_font_size_override("font_size", LINE_FONT_SIZE)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	# The wrap half of the budget (see VEIL_LINE_TEXT_WIDTH): a fixed-width
+	# autowrapping label centred in the viewport, so a two-sentence line folds
+	# into the column instead of drawing 1114px wide out of it. Short lines are
+	# unchanged on screen -- the label is wider than its text, and the text is
+	# centre-aligned inside it.
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.custom_minimum_size.x = VEIL_LINE_TEXT_WIDTH
 	label.modulate.a = 0.0
 	_line_box.add_child(label)
+	_apply_line_budget()
 	var tween := create_tween()
 	tween.tween_property(label, "modulate:a", 1.0, LINE_FADE)
+
+
+## The height half of the budget. Walks VEIL_LINE_SEPARATIONS for the first
+## rung whose measured block fits VEIL_BLOCK_MAX_HEIGHT and applies it; if even
+## the tightest rung overflows, the OLDEST line evicts (never the newest -- the
+## line just added is the one the player is being shown right now).
+func _apply_line_budget() -> void:
+	if _line_box == null or _line_box.get_child_count() == 0:
+		return
+	for raw_separation: Variant in VEIL_LINE_SEPARATIONS:
+		var separation := int(raw_separation)
+		if _line_block_height(separation) <= VEIL_BLOCK_MAX_HEIGHT:
+			_line_box.add_theme_constant_override("separation", separation)
+			return
+	var tightest := int(VEIL_LINE_SEPARATIONS[VEIL_LINE_SEPARATIONS.size() - 1])
+	_line_box.add_theme_constant_override("separation", tightest)
+	while _line_box.get_child_count() > 1 and _line_block_height(tightest) > VEIL_BLOCK_MAX_HEIGHT:
+		var oldest := _line_box.get_child(0)
+		_line_box.remove_child(oldest)
+		oldest.queue_free()
+
+
+## Measured, not estimated: each row is the FONT's own height at
+## LINE_FONT_SIZE, and a wrapped line contributes every row it wraps to.
+##
+## TWO KNOWN IMPRECISIONS, both inert today, both recorded so a future edit that
+## makes them matter is recognisable rather than mysterious:
+##  * ALIGNMENT ARG MIRROR. This passes HORIZONTAL_ALIGNMENT_CENTER (what the
+##    labels actually draw with) while `test_copy_fit._check_veil_lines` mirrors
+##    the same measurement with HORIZONTAL_ALIGNMENT_LEFT. Alignment does not
+##    change where TextServer breaks a line, so the two agree on the row COUNT --
+##    which is the only thing either uses the result for. If a future budget ever
+##    reads the measured WIDTH, make the two calls identical first.
+##  * `row_height` CARRIES the last measured label's value out of the loop. Every
+##    veil label is the same Header variation at the same LINE_FONT_SIZE, so every
+##    iteration writes the same number and the sum is exact. A veil line drawn at
+##    a different size would silently multiply the whole row count by the LAST
+##    label's height; if that day comes, accumulate per-label height instead.
+func _line_block_height(separation: int) -> float:
+	var rows := 0
+	var row_height := 0.0
+	for child: Node in _line_box.get_children():
+		var label := child as Label
+		if label == null:
+			continue
+		var font := label.get_theme_font("font")
+		if font == null:
+			continue
+		row_height = font.get_height(LINE_FONT_SIZE)
+		var measured := font.get_multiline_string_size(
+			label.text, HORIZONTAL_ALIGNMENT_CENTER, VEIL_LINE_TEXT_WIDTH, LINE_FONT_SIZE)
+		rows += max(int(round(measured.y / row_height)), 1) if row_height > 0.0 else 1
+	if rows == 0:
+		return 0.0
+	return float(rows) * row_height + float(maxi(_line_box.get_child_count() - 1, 0)) * float(separation)
 
 
 func _finish() -> void:

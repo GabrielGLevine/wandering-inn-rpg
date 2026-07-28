@@ -1,6 +1,6 @@
 {
- "_comment": "seal_fed canonical's start (FIXTURE-FIRST). 2026-07-26 Act V, the TALK path: descent ask -> both reads -> leave it fed -> Olesm posts the standing Watch bounty. Same Act V position as seal_open_start (see that fixture for the shared derivation), with two differences, both load-bearing: classes carry {diplomat: 1} so [Charming Smile] is KNOWN and the witch-pattern Skill leg is selectable rather than a locked tease (diplomat's gained_by is {persuaded_someone: 1, heard_gossip: 3}, both banked here -- the mediation and the market gossip this save already did), and gold 20 keeps the priced alternate grey-visible beside it so the canonical can pin BOTH legs rendering before it takes one. No fight is resolved on this route; rng_state is inert for outcomes and kept at the spine fixture's own derived value.",
- "version": 5,
+ "_comment": "seal_fed canonical's start (FIXTURE-FIRST). 2026-07-26 Act V, the TALK path: descent ask -> both reads -> leave it fed -> Olesm posts the standing Watch bounty. Same Act V position as seal_open_start (see that fixture for the shared derivation), with two differences, both load-bearing: classes carry {diplomat: 1} so [Charming Smile] is KNOWN and the witch-pattern Skill leg is selectable rather than a locked tease (diplomat's gained_by is {persuaded_someone: 1, heard_gossip: 3}, both banked here -- the mediation and the market gossip this save already did), and gold 20 keeps the priced alternate grey-visible beside it so the canonical can pin BOTH legs rendering before it takes one. No fight is resolved on this route; rng_state is inert for outcomes and kept at the spine fixture's own derived value. v0.15 Task 2.2: version 5 -> 8 and lore_notes PRE-POPULATED with six shipped lore-tagged lines this state implies the player already read (the approach's arrival narration, the ruin arrival, the pedestal reveal, the anchor socket's [Detect Magic], the inn frame's [Observe], the witch hollow's leyline seam). save.gd's v7->v8 arm sets lore_notes = [] on migration, so a version-5 fixture CANNOT carry a record -- the bump is what makes the pre-population survive apply(). Closes the Phase-1 caveat: no shipped script banked more than 2 lore lines, so the Lore tab's long-form render (ordering, full prose, a list worth scrolling) had never been read at length.",
+ "version": 8,
  "state": {
   "current_map": "street",
   "player_cell": [
@@ -23,6 +23,7 @@
    "brothers_marker": 1,
    "cisterns_reported": 1,
    "cleared_brothers_name": 1,
+   "cleared_halls_by_force": 1,
    "cleared_the_warren": 1,
    "coyle_operation_found": 1,
    "crate_returned": 1,
@@ -88,6 +89,14 @@
    "watch_runner_pointed": 1,
    "won_combat": 3
   },
+  "lore_notes": [
+   "The fissure Zevara spoke of is down past the gallery. The dark has a direction today.",
+   "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, and someone's washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court.",
+   "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it.",
+   "[Detect Magic] — The socket still remembers its stone: a slow pulse, counting toward a door that already left. The warding reads near-first: the spiral beside the pedestal, then its far twin.",
+   "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away.",
+   "[Detect Magic] — Light runs under the turf in one long seam, straight through the stone and away west. The hollow is built on a current."
+  ],
   "player_skills": [
    "basic_cleaning"
   ],

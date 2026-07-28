@@ -14,6 +14,7 @@ func _init() -> void:
 	_check_finale_retired_the_epilogue(src)
 	_check_finale_is_owed_not_armed(src)
 	_check_finale_line_tables(src)
+	_check_finale_act_presences(src)
 
 	print("PASS: sleep_veil.gd's plain-sleep skip, consolidation guard, and seal_resolved finale are wired")
 	quit(0)
@@ -109,6 +110,25 @@ func _check_finale_is_owed_not_armed(src: String) -> void:
 
 	var bank_body := src.get_slice("func _bank_finale_played() -> void:", 1).get_slice("func _emit_finale_rendered", 0)
 	assert(bank_body.find("record_accomplishment(\"finale_played\")") != -1, "the finale must bank finale_played")
+
+
+## v0.15 A5: Acts I-III get a presence in the ending. Per-counter like the
+## region recap (NOT last-match-wins -- a finale player holds all three and the
+## recap is supposed to walk the whole story), and emitted between the class
+## recount and the region recap so the sequence reads chronologically.
+func _check_finale_act_presences(src: String) -> void:
+	var act_body := src.get_slice("const FINALE_ACT_LINES", 1).get_slice("const FINALE_REGION_LINES", 0)
+	for counter: String in ["reached_liscor", "post_game", "raskghar_sealed"]:
+		assert(act_body.find(counter) != -1, "the act recap must carry a %s presence line" % counter)
+	assert(act_body.find("last-match") == -1 and act_body.find("LAST MATCH") == -1, "the act table is per-counter, not a precedence ladder -- all three render together")
+
+	var lines_body := src.get_slice("func _finale_lines() -> Array[String]:", 1).get_slice("func _run_finale", 0)
+	var recount_at := lines_body.find("Game.sim.snapshot()")
+	var act_at := lines_body.find("FINALE_ACT_LINES")
+	var region_at := lines_body.find("FINALE_REGION_LINES")
+	assert(act_at != -1, "_finale_lines must emit the act presences")
+	assert(recount_at < act_at and act_at < region_at,
+		"act presences sit between the class recount and the region recap -- who you became, what the city did about it, then where the Door took you")
 
 
 ## Region recap is per-counter; the path close is LAST-MATCH-WINS, so the

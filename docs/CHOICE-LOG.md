@@ -4,6 +4,156 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 A5 endings acknowledgment (five in-wave calls)
+
+- **The seven completion lines ship as `""`-req resolution FALLBACKS, not as a
+  new `complete_text` key.** `completed_quest_summary` already renders
+  `"<title> — <path text>"` and falls back to `"— Complete."` only when
+  `resolved_path` answers empty; a one-entry `resolution_paths` array with no
+  `accomplishment` and no `grant` is exactly "this quest has one ending, here is
+  how it reads". Zero engine change, zero new schema, and `test_quests`'
+  `_resolution_order` guard stays quiet because it counts REAL rungs. Alternative
+  rejected: a `complete_text` key — a second mechanism for the same sentence,
+  and the first thing to rot when someone later gives one of these quests a
+  branch. Revert path: delete the seven arrays.
+- **The trapped-halls pacifist relabel SPLIT the fallback instead of swapping its
+  grant.** The spec's finding is exact — the pacifist route pays
+  `melee_hit`/`won_combat` — but the row carrying that grant was the `""`
+  fallback, which caught the DISARM route ([Observe] + trap kit on the dart
+  slit, which banks only `halls_cleared`) AND the fight, because the snare
+  encounter banked only `halls_cleared` too. Swapping that one grant to
+  `{sneaked_past_danger: 6, persuaded_someone: 2}` as written would have fixed
+  the pacifist by mislabelling the fighter in the opposite direction, under a
+  line still reading "You cleared the trapped halls yourself." So the fight got
+  an id of its own (`cleared_halls_by_force`, named now, freezes at the tag) on
+  `snare_nest_slot`'s `on_victory`, the fight keeps its old line and grant
+  VERBATIM as a real rung, and the fallback becomes what it always actually
+  described: the disarmer, with the spec's grant and a line that says what they
+  did. Revert path: drop the new rung and the counter, restore the old two-row
+  array.
+- **Four Act V fixtures gained `cleared_halls_by_force`; three horns_dig ones
+  deliberately did NOT.** Seven fixtures carried `halls_cleared` with no route
+  counter. **`vault_construct_downed` is NOT the discriminator** — all seven carry
+  it, because the vault boss sits BEHIND the halls and is reachable however you
+  got through them, so it says nothing about which route did. The discriminator is
+  evidence of the SNARE fight specifically, and the only such evidence these
+  fixtures carry is `won_combat`/`melee_hit`/`victories`: `finale_merge` (6/57/7)
+  and the three seal fixtures (3/18/4) have it, so naming the fight keeps their
+  recorded ending byte-identical to what shipped. `horns_dig_start`,
+  `horns_dig_plates_start` and `horns_residence_start` carry NONE of the three —
+  zero recorded combat of any kind — so under the old data they were being told
+  "You cleared the trapped halls yourself" and paid 12 melee hits and 2 wins they
+  had never landed, which is precisely the unearned-outcome-text rule A1 exists to
+  forbid. They now read the disarm line honestly. That asymmetry is the point, not
+  an oversight.
+- **The OR-producer beats are `complete_when_any`, a sibling key — not an
+  ANY-of-Array `complete_when`.** Phase 3's ruling-1 guest gates take the
+  Array-means-ANY shape, and reusing it here would have made one key mean two
+  structurally different things in two files. A named sibling reads at the call
+  site (`complete_when` AND, `complete_when_any` OR) and is purely additive: a
+  beat without it evaluates exactly as before. `test_content`'s three quest arms
+  now read BOTH keys through one `_beat_gate_counters` helper, so an alternative
+  naming an unproduced counter, or one whose producer map the description never
+  points at, still fails loud. Revert path: delete `_beat_met`'s `any` block and
+  the two data keys.
+- **The two postings wired were `cisterns` and `wrong_order` — the file's own
+  vocabulary picked them.** `quests.json` calls these two "the cisterns/wrong_order
+  two-beat shape ... a posting" in `what_the_seal_kept`'s comment, and they are
+  the only two whose non-combat route banks its own counter and then waits for a
+  REPORT to close the resolve beat: scouting the nest ([Appraise Foe] at the
+  overlook ledge) and stretching the order in the inn kitchen. Both already had
+  the route counter — `scouted_the_nest`, `stretched_the_order` — so this wired
+  what exists and produced nothing new. Audited the other eight resolution-path
+  quests the same way; every other route already reaches its beat directly.
+
+## 2026-07-28 — v0.15 A4 fix round 1: the pan/tap slop threshold
+
+- **`BODY_PAN_SLOP_PX := 4.0`, and the latch ACCUMULATES.** Fix round 1 caught
+  that the first cut latched on the first motion event of ANY magnitude, which
+  is fine for a mouse (a tap drifts 0px) and wrong for touch, where a finger
+  never holds still: a 1px wobble between press and release would have eaten a
+  legitimate tap, and the player would get NOTHING instead of the wrong thing —
+  strictly worse than the bug being fixed. So the gesture now sums |dy| across
+  its whole life and latches once the total passes a slop threshold. **No repo
+  precedent existed for that number**, so it is argued rather than picked: it
+  must clear the couple of px a resting finger produces, and sit well under the
+  body's 20px row pitch so a pan cannot cross a whole row and still read as a tap
+  on the row it lands in. 4px is the middle of that window and a quarter of a
+  row. Probed at the four magnitudes that matter: a 1px-out-1px-back tap (2px)
+  and a 3×1px jitter (3px) both still TAP; a 6×1px slow pan and a 40px flick both
+  latch. Alternatives rejected: (a) a per-event threshold — a slow pan arrives as
+  many small deltas and would never latch; (b) net displacement rather than
+  absolute travel — an out-and-back pan nets ~0 and would toggle. Scrolling stays
+  unconditional: a sub-slop wobble pans by those same few px, which is invisible,
+  and still counts as a tap. Revert path: drop the const and the accumulator, and
+  latch on `absf(dy) > 0.0` again.
+- **The latch resets on open/close/tab-switch, not only on press.** A pan that
+  ended outside the body, or on a tab the player then left, would otherwise sit
+  armed and swallow the next tap — and a programmatic `meta_clicked` with no
+  press behind it (how QA and any future scripted click arrive) would hit that
+  stale flag with no gesture to blame. One `_reset_body_gesture()` helper, five
+  call sites.
+
+## 2026-07-28 — v0.15 A4 viewport correctness (four in-wave calls)
+
+- **The combat feed's fold fix is a LAYOUT fix, not a budget re-cut.** The
+  ledger's own diagnosis ("the viewport height is not a whole multiple of the row
+  height") turned out to be wrong, and measuring said so: the capacity math in
+  `_feed_text_capacity_height` already yields exactly four rows for the 122px
+  panel and four rows are 77px against an 84px allowance. What actually broke was
+  that the label was CENTRED in its MarginContainer — `size_flags_vertical` sits
+  at SHRINK_CENTER by default, so the label rect was its content height parked in
+  the middle of the inner area, and the block grew into the fold from both sides
+  at once. Fix is `SIZE_FILL` + `VERTICAL_ALIGNMENT_TOP`, which makes the label
+  agree with the doc comment that already claimed it was top-aligned.
+  Alternatives considered and rejected: (a) budget the fold deficit TWICE, the
+  toast panel's idiom — correct for a centred label, but it costs the fourth row
+  (a centred 4-row block cannot clear a 30px fold in a 122px panel), and losing a
+  row of feed is the same information loss the entry was filed about; (b) grow
+  the panel for ordinary feed content — the feed band is disjoint-by-contract
+  from the readout and the board above it, and growing it on every fourth line
+  puts that contract in play for a cosmetic gain. Revert path: drop the two
+  property assignments in `build()`.
+- **The journal's line-boundary clip is a WRAPPER, not a measured
+  `custom_minimum_size`.** The body needed to know its available height in order
+  to quantize it, and the available height was its own EXPAND_FILL result — a
+  cycle. Rather than measure-once-then-lock (which is order-dependent and rots if
+  the panel ever resizes), the EXPAND_FILL moved to a plain Control slot and the
+  body anchors full-rect inside it, so the dependency runs one way and the clip
+  is idempotent on every resize. It also fails SAFE: if the metrics are
+  unavailable the body fills the slot exactly as it did before. Revert path:
+  return `size_flags_vertical` to the body and delete the slot.
+- **The veil's line budget TIGHTENS before it evicts.** A wrap-aware budget has
+  to answer "and what if the whole block still does not fit" — a real question
+  now that the finale can carry three act presences, three region lines and a
+  line per held class. Options were: drop lines (loses a level-up the player
+  earned), shrink the font (breaks the one-typeface GDI device), or tighten the
+  gaps. The ladder 18/14/10/6 buys three more rows before anything is lost, and
+  eviction is last-resort and takes the OLDEST line — the one the player has
+  already read — never the one being shown. Revert path: delete
+  `_apply_line_budget` and restore the flat separation of 18.
+- **A drag that PANS is no longer also a tap.** The line-boundary clip moved the
+  journal body's release point by a few pixels and `field_skills_loop` went red:
+  its drag-to-scroll now let go over the `[Basic Cleaning]` row and toggled it
+  into the field loadout. RichTextLabel fires `meta_clicked` on button RELEASE
+  over a meta region regardless of intervening motion, so this was a live
+  player-facing bug the whole time — drag the Skills tab to read past the fold,
+  and whatever row you happen to release on silently goes in or out of your
+  hotbar. Fixed in the ENGINE side (a `_body_gesture_panned` flag set by motion,
+  reset on every fresh press, consumed by the meta handler), NOT by re-aiming the
+  QA script's drag: the script's pins encode the correct behaviour (a single
+  `loadout: ["observe"]`) and were right all along. Revert path: delete the flag
+  and its two guards.
+
+- **`test_copy_fit` SOURCE-PARSES sleep_veil.gd's tables rather than mirroring
+  them.** Every other surface in that suite reads data files; the veil's copy
+  lives in GDScript consts, and a mirrored copy of a copy table rots the first
+  time a line is reworded — silently, because a stale mirror still passes. The
+  parse is narrow (quoted strings inside a named const block, accomplishment ids
+  filtered by shape) and the NUMBERS are still pinned by drift tripwires, which
+  is where drift actually hurts. It also measures with the **Header** variation's
+  font, not the default label font: the veil draws through Header at 24 and
+  measuring the wrong typeface would have made the whole gate decorative.
 ## 2026-07-28 — sewers_walkthrough toast timing: the SCRIPT gave, not the engine
 
 - **The two post-combat `ui_toast_rendered` waits became `from_start` scans at

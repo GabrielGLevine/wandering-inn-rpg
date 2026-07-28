@@ -211,7 +211,10 @@
    "_comment": "== EARN [Helper] ==. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject -- interact -> sleep -> class_gained{helper} (cleaned_the_inn:1), which unlocks basic_cooking.",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -247,7 +250,10 @@
    "_comment": "== SKILL POSITIVE ==. Back to the short_order pot: teleport down to (2,6) (the cell the old ground-floor route reached), left to (1,6), up to (1,2) facing it. basic_cooking now known -> skill_used + stretched_the_order + the stretch toast (the cauldron skill-save).",
    "action": "teleport",
    "map": "inn",
-   "cell": [2, 6]
+   "cell": [
+    2,
+    6
+   ]
   },
   {
    "action": "move",
@@ -286,6 +292,16 @@
    "payload_contains": {
     "id": "stretched_the_order",
     "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "v0.15 A5 (OR-producer complete_when): the resolve beat closes HERE now, at the pot, on stretched_the_order -- not later at Lyonette. Same lag the cisterns scout had.",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "wrong_order",
+    "beat": 1
    },
    "timeout_sec": 5
   },
@@ -389,15 +405,6 @@
   },
   {
    "action": "wait_for_event",
-   "type": "quest_beat_completed",
-   "payload_contains": {
-    "id": "wrong_order",
-    "beat": 1
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
    "type": "quest_completed",
    "payload_contains": {
     "id": "wrong_order"
@@ -433,7 +440,10 @@
    "_comment": "== POOL-GROWTH ==. Sleep once to re-arm the pools (no new class/level -> 'You sleep soundly.'), then talk Lyonette again. resolved_wrong_order is now banked, so her first-talk line is drawn from talk_pool_post; chatted_with_lyonette is 2, so idx 2 % 3 = the third grown line. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now).",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -462,7 +472,10 @@
    "_comment": "Back to Lyonette for the grown pool line. Teleport down to (2,6) (the cell the old ground-floor route reached); route: left to (1,6), up to (1,5), east to (8,5).",
    "action": "teleport",
    "map": "inn",
-   "cell": [2, 6]
+   "cell": [
+    2,
+    6
+   ]
   },
   {
    "action": "move",

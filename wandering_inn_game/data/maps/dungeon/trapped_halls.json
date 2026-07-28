@@ -268,7 +268,8 @@
    },
    "gate_closed_toast": "You give the wire a wide berth. Something in the dark past it has not noticed you yet.",
    "on_victory": [
-    "halls_cleared"
+    "halls_cleared",
+    "cleared_halls_by_force"
    ],
    "loot": [
     {

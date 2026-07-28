@@ -5,10 +5,37 @@ extends RefCounted
 static func beat_index(quest: Dictionary, accomplishments: Dictionary) -> int:
 	var beats: Array = quest.get("beats", [])
 	for i in beats.size():
-		for req_id: String in beats[i].get("complete_when", {}):
-			if int(accomplishments.get(req_id, 0)) < int(beats[i]["complete_when"][req_id]):
-				return i
+		if not _beat_met(beats[i] as Dictionary, accomplishments):
+			return i
 	return beats.size()
+
+
+## `complete_when` is an AND of counters; `complete_when_any` is an OR beside
+## it, and the beat closes when EITHER side is satisfied. Additive: a beat with
+## no `complete_when_any` behaves exactly as before.
+##
+## v0.15 A5, THE OR-PRODUCER IDIOM. Two shipped postings advertised routes their
+## beats could not see. `cisterns`' resolve beat waits on `resolved_the_cisterns`,
+## which the nest fight and the Watch sweep bank at the moment of resolution --
+## but the SCOUT route ([Appraise Foe] on the overlook ledge) banks only
+## `scouted_the_nest`, and picks up `resolved_the_cisterns` later, from Olesm's
+## report option. Same shape in `wrong_order`: the kitchen route banks
+## `stretched_the_order` at the pot and `resolved_wrong_order` only when
+## Lyonette is told. So the non-combat player did the thing, and the journal
+## went on telling them to go do it. The alternatives name the route counters
+## that ALREADY EXIST -- no new producers, no re-semanticised ids.
+static func _beat_met(beat: Dictionary, accomplishments: Dictionary) -> bool:
+	var any: Dictionary = beat.get("complete_when_any", {})
+	for req_id: String in any:
+		if int(accomplishments.get(req_id, 0)) >= int(any[req_id]):
+			return true
+	var all: Dictionary = beat.get("complete_when", {})
+	if all.is_empty():
+		return any.is_empty()
+	for req_id: String in all:
+		if int(accomplishments.get(req_id, 0)) < int(all[req_id]):
+			return false
+	return true
 
 
 static func quest_by_id(quest_catalog: Dictionary, id: String) -> Dictionary:

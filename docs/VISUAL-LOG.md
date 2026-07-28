@@ -40,6 +40,7 @@ tab is newest-first and reads as a record worth keeping (`seal_fed/04b` — the
 later Pisces line sits above the earlier one, full authored prose, not
 truncated).
 
+- [x] TOAST/MODAL-OVERLAP (P2, pre-existing layer order, MADE MORE FREQUENT by
 - [ ] TOAST/MODAL-OVERLAP (P2, pre-existing layer order, MADE MORE FREQUENT by
   the v0.15 lossless queue) — **the FEEL call, answered both ways.** Toasts
   draw at layer 12 over the journal's 10 (deliberate, `message_layer.gd`).
@@ -61,6 +62,24 @@ truncated).
   x≈910), so this worsens as leads accumulate. Cosmetic in the 1-line case,
   information-losing in the 3-line case. Implementer's proposed fix stands and
   is now measured: pause the drain while a modal is open, never re-drop.
+  **FIXED v0.15 Task 2.1** (`message_layer.gd`): `_drain_toasts` breaks on a
+  non-empty `_open_modals` set (journal/inventory/pause/settings, keyed by their
+  own SHOWN event) and the matching HIDDEN event kicks the drain again. The
+  QUEUE pauses, never drops — the lossless-queue contract is untouched, so every
+  pending toast lands the instant the panel closes. **Precise about the
+  in-flight one:** a toast already ON SCREEN when the modal opens is still CUT,
+  because opening routes through `_defer_toast_display()`, which shortens the
+  current hold and hides the panel. That is pre-existing semantics, shared
+  verbatim with dialogue open, map change and combat start, and it is what keeps
+  the overlap from being visible for the first few frames; it is NOT new here and
+  it is not lossless — the cut toast has already rendered, so it is spent, and
+  only its remaining reading time is lost. Fixing the cut is a separate call
+  about `sticky` re-queueing, deliberately out of scope (see the A3 entry's own
+  rejected alternative). Windowed re-shot: `seal_fed/04b_journal_lore` now
+  carries NO toast over the panel and Recent Messages reads to the end ("…cut
+  the inn's frame too. Find out what the seal is FOR, there at the door in the
+  halls."), where it previously clipped mid-word at "Find ou|".
+- [ ] QA/SEWERS-WINDOWED-TIMING (P2, WAVE-AUTHORED at `50cbf6b`) —
 - [x] QA/SEWERS-WINDOWED-TIMING (P2, WAVE-AUTHORED at `50cbf6b`) — **FIXED
   2026-07-28 on `wave/v015-p1-delivery`.** The prediction below held and then
   went red on CI too: PR #310's canonical sweep failed on exactly these two
@@ -129,7 +148,7 @@ what those runs showed.
   would gut the earned Act IV page, which this same playtest rates a strength.
   The real fix is render policy — hide unearned derived beats, or mark them as
   openings rather than outcomes. Controller call, `journal.gd:637-639`.
-- [ ] COMBAT/FEED-FOLD (P2, REGRESSION of the Fixed-section item "message panels
+- [x] COMBAT/FEED-FOLD (P2, REGRESSION of the Fixed-section item "message panels
   clipped the last wrapped line") — **the combat feed's viewport admits exactly
   three full rows and a sliced fourth.** Corrected in fix round 1: the first
   pass called this "whenever the 4th entry WRAPS", which the extra matrix rows
@@ -144,6 +163,19 @@ what those runs showed.
   decision, but the viewport height is not a whole multiple of the row height.
   NOT fixed here — it is a shared message-panel budget touching every panel
   class, which needs its own verification pass, not a drive-by in a balance PR.
+  **FIXED v0.15 Task 2.1** (`combat_hud.gd`): the budget model was always right;
+  the LABEL disagreed with it. Two defaults conspired — `UIChrome.make_label`
+  leaves `vertical_alignment` at CENTER, and the label's `size_flags_vertical` is
+  SHRINK_CENTER, which is the one that bit: the label rect was its CONTENT height
+  (77px for four rows) parked in the middle of the 106px inner area, so text
+  alignment had nothing to align inside. Measured on-screen: panel y514..636,
+  fold band y607..636; centred put the four-row block at 536..613, five px INTO
+  the fold. `SIZE_FILL` + `VERTICAL_ALIGNMENT_TOP` puts it at 522..599, clear by
+  8px. Re-shot windowed, all three repros clean with four full rows each:
+  `riverfarm_fight/02_briar_deep_wave` (wrapped — "for 13!" now whole),
+  `invrisil_disagreement_fight/01_warehouse_fight_wilovan_ally` (unwrapped —
+  "Wilovan strikes Hired Blade B for 7!" now whole), and the control
+  `status_first_encounter/01_first_encounter_feed` still two clean rows.
 - [x] COMBAT/HIRED-BLADE-NAMES (P2, Phase 9 made it matter) — all three
   warehouse enemies carried `display_name: "Hired Blade"`, so the turn banner
   read "Hired Blade A | Hired Blade B | Hired Blade C" and the feed named them
@@ -160,12 +192,40 @@ what those runs showed.
   one in the turn banner. Same shape as HIRED-BLADE-NAMES but one tier down: no
   mechanic hangs on telling them apart. Found on the fix-round-1 forge-golem
   probe (`03_forge_fight_open`).
-- [ ] JOURNAL/HALF-ROW (P3) — the journal's scroll viewport admits a partial
+- [x] JOURNAL/HALF-ROW (P3) — the journal's scroll viewport admits a partial
   text row instead of clipping at a line boundary, so its bottom line renders
   sliced ("The Missing Crate — Complete." on both
   `climax_seal/02_journal_act4.png` and `spine_reach/02_journal_spine_beat.png`).
   The `▼` continuation cue is present so it IS scrollable, but a half-height row
   reads as a clipping bug, not as "more below".
+  **FIXED v0.15 Task 2.1** (`journal.gd`): the body's EXPAND_FILL moved to a
+  plain Control SLOT and the body is anchored full-rect inside it, so
+  `_clip_body_to_line_boundary` can shorten it to a whole number of rows off the
+  slot's own height (measured from the RichTextLabel's `normal_font` — 20px
+  pitch). One-way dependency, no layout feedback; if the clip never runs the body
+  fills the slot exactly as before. Re-shot windowed:
+  `spine_reach/02_journal_spine_beat` — which is also the Leads worst case, four
+  concurrent leads over six rendered lead rows — ends on a full 14px glyph band
+  at y579..592 with the ▼ below it, and `seal_fed/04b_journal_lore` ends on a
+  whole row too. Row bands measured at an exact 20px pitch, no partial band
+  anywhere in the viewport.
+  **AND one live bug it flushed out**: the clip moved the body's drag release
+  point a few px and `field_skills_loop` went red — its drag-to-scroll let go
+  over the `[Basic Cleaning]` row and TOGGLED it into the field loadout.
+  RichTextLabel fires `meta_clicked` on button release over a meta region
+  whatever the gesture did in between, so drag-reading the Skills tab has always
+  been able to silently add or drop a hotbar skill. Fixed with a
+  `_body_gesture_panned` latch; the canonical's own pins were right and were not
+  touched. **Fix round 1** made the latch honest on touch: it ACCUMULATES |dy|
+  across the gesture and trips past `BODY_PAN_SLOP_PX` (4.0), because latching on
+  the first motion event of any magnitude would have eaten legitimate taps from a
+  finger that never holds still — worse than the bug. It also resets on
+  open/close/tab-switch, not only on press, so a latch set by a pan that ended
+  elsewhere cannot swallow the next tap. `field_skills_loop` now carries BOTH
+  halves: the drag's negative (`loadout: ["observe"]`, a single-element list any
+  stray toggle breaks) and a positive control — two `tap_journal_body` taps at the
+  drag's own release point, toggling `[Basic Cleaning]` on and back off, domain
+  event and `ui_journal_loadout_rendered` both pinned.
 - [ ] COMBAT/BRIAR-CAMOUFLAGE (P3, same family as the open COMBAT/CELLAR-VERMIN
   entry) — on `witch_hollow` the deep briar collectors are green foliage on a
   green floor under a green canopy. In `riverfarm_fight/02_briar_deep_wave.png`
@@ -229,7 +289,7 @@ below were taken with a temporary env-gated lift of that collapse
 (`WI_PACED_GDI`), reverted before commit. All three path variants read at
 native 1280x720, plus the seal's new light transition.
 
-- [ ] FINALE/LONG-LINE (P3) — the Invrisil region recap line renders **1114 px
+- [x] FINALE/LONG-LINE (P3) — the Invrisil region recap line renders **1114 px
   wide of a 1280 px viewport** (87%), roughly double every other line in the
   block. It does NOT clip (canvas_items stretch keeps the logical viewport at
   1280, and Labels here never wrap), but it visibly bursts the centered column
@@ -238,13 +298,33 @@ native 1280x720, plus the seal's new light transition.
   it was NOT rewritten here — this is a taste call for the controller. A
   shorter second sentence (or dropping "From him, that is a parade.") would put
   it back in the column.
-- [ ] VEIL-COPY/UNMEASURED (P4, systemic) — `test_copy_fit` measures toasts,
+  **FIXED v0.15 Task 2.1 WITHOUT touching the copy** (`sleep_veil.gd`): veil
+  lines gain `AUTOWRAP_WORD_SMART` and a fixed `VEIL_LINE_TEXT_WIDTH` (880px —
+  the widest authored one-thought line measures 867px, so every shipped
+  one-thought line still draws on ONE row and only genuinely two-sentence copy
+  folds). The 1114px line is now a measured, wrapped, two-row case inside the
+  column. Its companion `_apply_line_budget` walks a separation ladder
+  (18/14/10/6) so a long finale tightens instead of overflowing the 720px
+  viewport, and evicts only if even the tightest rung overflows. The taste call
+  this entry raised is therefore moot — the column holds either way.
+- [x] VEIL-COPY/UNMEASURED (P4, systemic) — `test_copy_fit` measures toasts,
   dialogue pages, pickers and help, but **nothing measures `sleep_veil.gd`'s
   own line tables** (opener / finale / region recap / path closes / the seal
   transition), which now hold the widest single-line strings in the game. The
   1114 px figure above was obtained with a throwaway measurement script, not a
   gate. A `_check_veil_lines()` in test_copy_fit (font-size 24, 1280 budget)
   would make the ceiling enforced instead of observed.
+  **FIXED v0.15 Task 2.1**: `_check_veil_lines()` exists. It source-parses
+  sleep_veil.gd's own const tables (so a reworded line cannot rot a mirrored
+  copy), measures with the **Header** variation's font at 24 — not the default
+  label font — and carries two arms: every authored veil string wraps to at most
+  two rows in the column, and the worst-case finale block fits the viewport at
+  some rung of the separation ladder. Four drift tripwires pin
+  VEIL_LINE_TEXT_WIDTH / VEIL_BLOCK_MAX_HEIGHT / LINE_FONT_SIZE /
+  VEIL_LINE_SEPARATIONS. Proven live by temporarily dropping the row budget to 1:
+  the Invrisil recap and the composed consolidation line were the two strings it
+  named. The same commit also measures `<field>_variants` toast copy, which
+  nothing had ever measured.
 - [ ] SEAL-SLEEP/TOAST-MISMATCH (P4) — the seal's light transition line rides
   the `post_game` bank, which `sleep_beat.gd` deliberately does NOT count as
   `anything_happened` (Task 1.2's silence contract, pinned in
