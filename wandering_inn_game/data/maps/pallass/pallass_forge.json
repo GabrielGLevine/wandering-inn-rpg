@@ -724,6 +724,36 @@
      "toast": "The smith hands you the slip before the rack does. She says nothing about it. She wouldn't."
     }
    ]
+  },
+  {
+   "_comment": "v0.16 P1. Cell (15,3) is off every QA lap and assert set, and all four neighbours are open, so no prior save loading here is trapped by the new blocking entity. Full cell audit: the plan's Task 1.2 table.",
+   "id": "forge_hall_door",
+   "kind": "door",
+   "cell": [
+    15,
+    3
+   ],
+   "display_name": "The Forge Hall",
+   "sprite": "door",
+   "to_map": "pallass_forge_hall",
+   "to_cell": [
+    5,
+    7
+   ],
+   "observe": "A wide iron-strapped door standing open on its wedge. Past it: a working hall, and a heat that has its own weather."
+  },
+  {
+   "id": "forge_reject_bin",
+   "kind": "prop",
+   "cell": [
+    10,
+    4
+   ],
+   "display_name": "The Reject Bin",
+   "sprite": "crate",
+   "observe": "A civic bin beside the second bench, half full of work that never left the tier. Each piece has a tag, and every tag has the same examiner's seal on it.",
+   "on_interact_accomplishment": "saw_the_failed_temper",
+   "toast": "Nine blades in the bin, all from one hand, all failed on the same measure. Somebody up here is doing careful work and failing it the same way every time."
   }
  ]
 }

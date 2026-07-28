@@ -438,11 +438,11 @@ Neither cell is walked by `pallass_walkthrough` (its forge legs are the `y=9` la
 }
 ```
 
-- [ ] **Step 1:** Insert both entities into `pallass_forge.json`'s `entities` array, matching the file's 1-space-per-level indent. Do NOT reformat the file.
-- [ ] **Step 2:** Confirm `POPULATION_FLOORS["pallass_forge"] = 15` still holds — both entities are UNCONDITIONAL (no `present_when`), so the count RISES. No floor edit.
-- [ ] **Step 3: Run** `data_lint.py` + `res://tests/test_content.gd`.
-- [ ] **Step 4: Run** `wandering_inn_game/qa/ci_sweep.sh --touching data/maps/pallass/pallass_forge.json` — expect every listed script green (this is the crowded-cell proof).
-- [ ] **Step 5: Commit** `feat(pallass): the forge hall door and the reject bin that points at it`.
+- [x] **Step 1:** Insert both entities into `pallass_forge.json`'s `entities` array, matching the file's 1-space-per-level indent. Do NOT reformat the file.
+- [x] **Step 2:** Confirm `POPULATION_FLOORS["pallass_forge"] = 15` still holds — both entities are UNCONDITIONAL (no `present_when`), so the count RISES. No floor edit.
+- [x] **Step 3: Run** `data_lint.py` + `res://tests/test_content.gd`.
+- [x] **Step 4: Run** `wandering_inn_game/qa/ci_sweep.sh --touching data/maps/pallass/pallass_forge.json` — expect every listed script green (this is the crowded-cell proof).
+- [x] **Step 5: Commit** `feat(pallass): the forge hall door and the reject bin that points at it`.
 
 ### Task 1.3: The smith's commission — `pallass_forge_smith.json`
 
