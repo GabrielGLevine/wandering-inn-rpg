@@ -513,14 +513,42 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   he will not say he is sorry, he will say which window is still open.
 - Never: gossip, sarcasm, a rule bent without saying it is being bent.
 
-## Forge Hall Apprentice (v0.16 #307 STUB — Pallass lane fills this section
-## in place at Task 0.1; scaffolded at plan commit to keep the file
-## conflict-free across the four-lane merge train)
-(placeholder — replaced by the Pallass lane)
+## Forge Hall Apprentice (profile added 2026-07-28; v0.16 #307 Pallass depth)
+- OUR INVENTION (no canon figure) — entity `forge_apprentice`, a young
+  Drake in her third year on the Pallass forge tier, working the hall
+  behind the smith's public bench. Same civic-role convention as the
+  smith and the tier clerk: a post, not a named citizen. Book-17-safe
+  by construction.
+- Silhouette: `drake_patron` under a cool grey-slate tint, one step
+  paler and colder than the smith's soot-and-ember read, so the two
+  Drakes in the same hall never blur into one shape.
+- Voice, competent/unlyrical (the 3 notes): (1) she has steady hands
+  and no vocabulary for what they do right, so she describes her
+  FAILURES precisely and her successes vaguely; (2) never
+  self-pitying and never cocky — the examiner's standard is a fact to
+  her, the way heat is a fact, not an insult aimed at her; (3) she
+  speaks in counts and intervals because that is how the work is
+  measured, and she keeps working while she answers.
+- Never: complaint about the examiner, praise for herself, a sentence
+  about anything off this tier. At most one dash per line.
 
-## Den-Shop Keeper (v0.16 #307 STUB — Pallass lane fills this section in
-## place at Task 0.1; scaffolded at plan commit)
-(placeholder — replaced by the Pallass lane)
+## Den-Shop Keeper (profile added 2026-07-28; v0.16 #307 Pallass depth)
+- OUR INVENTION (no canon figure) — entity `den_shop_keeper`, a Drake
+  matriarch running a fourth-generation family provisions den on the
+  Pallass market tier. Attested setting, invented household. Her
+  derived social counter is `chatted_with_den_shop_keeper` (the engine
+  builds it from the ENTITY id, never from the graph filename).
+- Silhouette: `drake_patron` under a warm clay tint, the only warm
+  Drake on a tier of slate and civic grey.
+- Voice, warm/transactional (the 3 notes): (1) her warmth is
+  transactional-plus — she feeds you AND charges you for it and sees
+  no tension in either half; (2) she talks in generations and permit
+  numbers because the shop is both a family and a filing, and
+  hatchlings are underfoot in every scene; (3) her ledger is neat
+  because it has to be, not because she loves it, and she is fluent
+  in the bureaucracy she resents.
+- Never: sentimentality about the family, an apology for charging, a
+  word about the forge tier's business. At most one dash per line.
 
 ## Hedault (profile added 2026-07-28; v0.16 I1 lane, #306)
 - Canon (wiki + `docs/design/hedault-enchanting-spec.md:8-11`): human
