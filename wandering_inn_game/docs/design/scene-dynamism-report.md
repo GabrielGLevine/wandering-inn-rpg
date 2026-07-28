@@ -59,19 +59,20 @@ that were never meant to show up here (uncounted, not a gap).
 
 | Scene | Region | Composite | c1 variety | c2 distinct | c3 composition | c4 utilization | c5 clutter | Verdict |
 |---|---|---|---|---|---|---|---|---|
-| pallass_market | pallass | 72.75 | 26.38 | 23.54 | 19.08 | 3.75 | 0.00 | dynamic |
+| pallass_market | pallass | 72.33 | 26.38 | 23.54 | 19.08 | 3.33 | 0.00 | dynamic |
 | invrisil_boulevard | invrisil | 72.10 | 22.76 | 22.86 | 22.90 | 3.57 | 0.00 | dynamic |
 | pallass_forge | pallass | 71.93 | 26.49 | 23.54 | 20.65 | 1.25 | 0.00 | dynamic |
 | street | liscor | 71.55 | 24.97 | 21.73 | 22.52 | 2.33 | 0.00 | dynamic |
-| mercantile_alleys | invrisil | 71.45 | 24.75 | 22.97 | 22.74 | 1.00 | 0.00 | dynamic |
 | sewers | liscor | 70.76 | 23.40 | 22.11 | 21.25 | 4.00 | 0.00 | dynamic |
+| adventurers_rest | adventurers_rest | 70.56 | 24.22 | 23.50 | 22.84 | 0.00 | 0.00 | dynamic |
+| mercantile_alleys | invrisil | 70.45 | 24.75 | 22.97 | 22.74 | 0.00 | 0.00 | dynamic |
 | floodplains | liscor | 69.41 | 24.28 | 21.84 | 18.53 | 4.76 | 0.00 | dynamic |
 | witch_hollow | riverfarm | 68.23 | 21.07 | 20.88 | 20.56 | 5.71 | 0.00 | dynamic |
 | deep_tunnels | liscor | 67.98 | 23.00 | 22.08 | 20.17 | 2.73 | 0.00 | dynamic |
 | riverfarm_village | riverfarm | 67.90 | 21.28 | 21.16 | 19.91 | 5.56 | 0.00 | dynamic |
 | stationer | stationer | 67.77 | 21.25 | 23.50 | 23.02 | 0.00 | 0.00 | dynamic |
-| brothers_parlor | invrisil | 67.26 | 22.41 | 22.05 | 21.44 | 1.36 | 0.00 | dynamic |
 | garden_sanctuary | sanctuary | 67.18 | 19.74 | 23.50 | 17.94 | 6.00 | 0.00 | dynamic |
+| brothers_parlor | invrisil | 66.35 | 22.41 | 22.05 | 21.44 | 0.45 | 0.00 | dynamic |
 | barracks | interiors | 66.26 | 22.78 | 22.38 | 21.09 | 0.00 | 0.00 | dynamic |
 | seal_vault | dungeon | 65.80 | 23.13 | 23.41 | 17.60 | 1.67 | 0.00 | dynamic |
 | trapped_halls | dungeon | 65.54 | 21.86 | 23.59 | 17.94 | 2.14 | 0.00 | dynamic |
@@ -84,5 +85,5 @@ that were never meant to show up here (uncounted, not a gap).
 | ruin_surface | liscor | 59.86 | 21.10 | 21.96 | 16.80 | 0.00 | 0.00 | dynamic |
 
 NOTE: map(s) with no region-group table entry (defaulted to their own
-singleton group, not a crash): ["stationer"]
+singleton group, not a crash): ["adventurers_rest", "stationer"]
 

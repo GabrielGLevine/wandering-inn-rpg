@@ -508,7 +508,7 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
 - boulevard (18,1) → rest **(6,7)**: interior floor, unblocked, no entity. ✔
 - rest (6,8) → boulevard **(18,2)**: open boulevard floor (row 2 is otherwise clear; the row-3 pillars are at x 4/10/16/22, so nothing crowds the landing). ✔
 
-- [ ] **Step 1: Author the file:**
+- [x] **Step 1: Author the file:**
 
 ```json
 {
@@ -697,8 +697,8 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
 }
 ```
 
-- [ ] **Step 2: Non-quest observables audit.** `rest_hearth`, `rest_trophy_rack`, `rest_bar_counter_l`, `rest_long_bench`, `rest_rank_notice` (five) plus three talk-pool NPCs are ungated and survive `hat_job_done` — the room is a real ambient interior afterwards, per spec:98-100.
-- [ ] **Step 3: Sprite check — corrected picks, re-prove them.** Same failure mode as Task 1.3 Step 3 (`table`/`bookshelf` are not registered and nothing gates it). The corrected picks:
+- [x] **Step 2: Non-quest observables audit.** `rest_hearth`, `rest_trophy_rack`, `rest_bar_counter_l`, `rest_long_bench`, `rest_rank_notice` (five) plus three talk-pool NPCs are ungated and survive `hat_job_done` — the room is a real ambient interior afterwards, per spec:98-100.
+- [x] **Step 3: Sprite check — corrected picks, re-prove them.** Same failure mode as Task 1.3 Step 3 (`table`/`bookshelf` are not registered and nothing gates it). The corrected picks:
 
   | Entity | First draft | **Ships** | Note |
   |---|---|---|---|
@@ -711,10 +711,10 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
   | `rest_hat_hook` | `bookshelf` ✗ | `hat_stand` | **stand-in — carries a one-line entity `_comment`.** A peg rail reading as a library shelf was the legibility bounce the windowed pass would have caught; `hat_stand` is the registered near-miss and the toast carries the beat. |
 
   Re-verify with the same one-liner as Task 1.3 Step 3 over: `door gnoll_traveler pc_human_m human_laborer hired_blade hearth bar_counter table_brown library_shelf request_board hat_stand barrel bench stool rug_green sconce unlit_lantern` — expect `[]`.
-- [ ] **Step 4: Wall/blocked double-listing check.** `blocked` must contain **only** `[8,1]` (the barrel behind the counter, which has its own `decor` row). No perimeter cell may appear in `blocked`. Confirm no `decor` cell collides with an `entities` cell (double-draw): decor sits at (8,1)/(3,5)/(4,5)/(8,4)/(6,5)/(4,1)/(9,7)/(11,4); entities at (6,8)/(6,1)/(3,6)/(10,4)/(2,1)/(10,1)/(7,1)/(4,4)/(11,6)/(1,7)/(11,2)/(9,6) — disjoint. ✔
-- [ ] **Step 5: `present_when` shape check.** `_validate_present_when` (`test_content.gd:749-801`) allows `requires`/`phase`/`absent`/`guest` and **forbids `present_when` on `kind: "encounter"`** — the bravos correctly use `encounter_when` instead.
-- [ ] **Step 6: Fixture-cell sanity.** `invrisil_hat_quiet_start` stands at (2,7) facing (1,7) — the hat stand — and `invrisil_hat_loud_start` at (9,5) facing (9,6) — the bravos. Both facing cells are interior floor and neither is in `blocked` or on a wall segment. ✔
-- [ ] **Step 7: Run** `data_lint.py` + `test_content.gd`, then the **scene-dynamism advisory** from Task 1.3 Step 6 and read the `adventurers_rest` row (target composite ≥ 50). **Commit** `feat(invrisil): the Adventurer's Rest common hall (#306)`.
+- [x] **Step 4: Wall/blocked double-listing check.** `blocked` must contain **only** `[8,1]` (the barrel behind the counter, which has its own `decor` row). No perimeter cell may appear in `blocked`. Confirm no `decor` cell collides with an `entities` cell (double-draw): decor sits at (8,1)/(3,5)/(4,5)/(8,4)/(6,5)/(4,1)/(9,7)/(11,4); entities at (6,8)/(6,1)/(3,6)/(10,4)/(2,1)/(10,1)/(7,1)/(4,4)/(11,6)/(1,7)/(11,2)/(9,6) — disjoint. ✔
+- [x] **Step 5: `present_when` shape check.** `_validate_present_when` (`test_content.gd:749-801`) allows `requires`/`phase`/`absent`/`guest` and **forbids `present_when` on `kind: "encounter"`** — the bravos correctly use `encounter_when` instead.
+- [x] **Step 6: Fixture-cell sanity.** `invrisil_hat_quiet_start` stands at (2,7) facing (1,7) — the hat stand — and `invrisil_hat_loud_start` at (9,5) facing (9,6) — the bravos. Both facing cells are interior floor and neither is in `blocked` or on a wall segment. ✔
+- [x] **Step 7: Run** `data_lint.py` + `test_content.gd`, then the **scene-dynamism advisory** from Task 1.3 Step 6 and read the `adventurers_rest` row (target composite ≥ 50). **Commit** `feat(invrisil): the Adventurer's Rest common hall (#306)`.
 
 ### Task 1.5: Mood rows, landmarks, map gates, population floors
 
