@@ -58,7 +58,7 @@
      "silver": {
       "condition": {"heard_gossip": 5},
       "gold": 8,
-      "copy": "SILVER-RANK request, for one with good ears. Five things heard freely -- the gate, the Guild, the stalls -- and told to me over tea. Not spying. Listening. Hrr. 8 gold, and the tea is mine to pour. Krshia Silverfang."
+      "copy": "SILVER-RANK request, for one with good ears. Five things heard freely — the gate, the Guild, the stalls — and told to me over tea. Not spying. Listening. Hrr. 8 gold, and the tea is mine to pour. Krshia Silverfang."
      },
      "gold": {
       "condition": {"heard_gossip": 8},
@@ -85,7 +85,7 @@
      "gold": {
       "condition": {"observed_things": 8},
       "gold": 16,
-      "copy": "GOLD-RANK request, Guild-posted. Eight observations of genuine tactical worth -- the kind a Silver would miss. Reported to the desk, logged, filed. 16 gold from the tactics budget. This is real work. Olesm Swifttail, [Tactician]."
+      "copy": "GOLD-RANK request, Guild-posted. Eight observations of genuine tactical worth — the kind a Silver would miss. Reported to the desk, logged, filed. 16 gold from the tactics budget. This is real work. Olesm Swifttail, [Tactician]."
      }
    }
   },
@@ -175,7 +175,7 @@
     "lit_the_common_room": 2
    },
    "gold": 2,
-   "copy": "The common room's light gutters some evenings when nobody's minded it -- the Inn would rather not sit dark while custom's in. Relight it properly, twice over, and the Guild holds 2 gold for the trouble. Not a complicated request. L."
+   "copy": "The common room's light gutters some evenings when nobody's minded it — the Inn would rather not sit dark while custom's in. Relight it properly, twice over, and the Guild holds 2 gold for the trouble. Not a complicated request. L."
   },
   {
    "id": "bounty_tavern_tables",
@@ -190,18 +190,18 @@
   {
    "id": "bounty_market_watch",
    "pillar": "work",
-   "giver": "Watch Guard (gate detail, brief -- even more clipped than the sergeant's own hand)",
+   "giver": "Watch Guard (gate detail, brief — even more clipped than the sergeant's own hand)",
    "condition": {
     "browsed_market": 2,
     "browsed_bread_stall": 1
    },
    "gold": 2,
-   "copy": "WATCH NOTICE, gate detail. Two passes of the Silverfang stall, one of the bread stall, same shift. Eyes open, nothing more -- pickpockets work a crowd, not an empty street. 2 gold on a guardsman's word. Post standing."
+   "copy": "WATCH NOTICE, gate detail. Two passes of the Silverfang stall, one of the bread stall, same shift. Eyes open, nothing more — pickpockets work a crowd, not an empty street. 2 gold on a guardsman's word. Post standing."
   },
   {
    "id": "bounty_barracks_checkin",
    "pillar": "social",
-   "giver": "Duty Sergeant Dresk Ashgrave (the road-cull sergeant's same hand -- terse, no wasted ink)",
+   "giver": "Duty Sergeant Dresk Ashgrave (the road-cull sergeant's same hand — terse, no wasted ink)",
    "condition": {
     "chatted_with_duty_sergeant": 2
    },
@@ -247,7 +247,7 @@
     "cleared_footpads_b": 1
    },
    "gold": 8,
-   "copy": "Two nests of small-time opportunists work the alleys off my street -- the Turn, and the door with the cheese wedged under it. Amateurs, cutting into trade that isn't theirs to cut into. Clear both and there's 8 gold in it, paid quietly, no questions asked either direction. Master Coyle.",
+   "copy": "Two nests of small-time opportunists work the alleys off my street — the Turn, and the door with the cheese wedged under it. Amateurs, cutting into trade that isn't theirs to cut into. Clear both and there's 8 gold in it, paid quietly, no questions asked either direction. Master Coyle.",
    "condition_mode": "absolute",
    "_trace": " MODE FIX (review HIGH): absolute -- Wilovan's quest close remove_entity-erases both footpad encounters permanently, so a delta posting dead-ends forever; absolute retires on first completion via the existing one-shot filter (the sewer-trio convention)."
   },
@@ -259,7 +259,7 @@
     "persuaded_someone": 2
    },
    "gold": 9,
-   "copy": "A second standing order, same reasoning as the first: I would rather this city talked its way out of two more fights than swung its way through them. Two settled disputes, words only, both parties upright after. 9 gold -- more than the first, because it is harder work than it sounds, and I know exactly how hard. Z. Sunderscale.",
+   "copy": "A second standing order, same reasoning as the first: I would rather this city talked its way out of two more fights than swung its way through them. Two settled disputes, words only, both parties upright after. 9 gold — more than the first, because it is harder work than it sounds, and I know exactly how hard. Z. Sunderscale.",
    "condition_mode": "absolute",
    "_trace": " MODE FIX (review MEDIUM): absolute -- persuaded_someone producers are all one-shot dialogue resolutions (~7 lifetime); a delta-2 posting can strand a player who spent all but one before accepting. One honest payout, then retired."
   },
@@ -305,7 +305,7 @@
     "corusdeer_culled": 2
    },
    "gold": 4,
-   "copy": "Hunt notice. A stray buck's broken from the herd, east hills, antlers hot enough to start a grass fire if you let it stand too long. Two culled, shown by an antler each. 4 gold, pooled by the hunt families. The HERD stays off this notice -- one stray only. Beshta, for the camp.",
+   "copy": "Hunt notice. A stray buck's broken from the herd, east hills, antlers hot enough to start a grass fire if you let it stand too long. Two culled, shown by an antler each. 4 gold, pooled by the hunt families. The HERD stays off this notice — one stray only. Beshta, for the camp.",
    "tiers": {
      "silver": {
       "condition": {"corusdeer_culled": 3},
@@ -339,7 +339,7 @@
     "mothbears_culled": 1
    },
    "gold": 4,
-   "copy": "The lantern-line draws them after dark -- moth-winged bears, heavy enough to crack a cart axle. One culled, after dark, shown by Guild attestation. 4 gold on turn-in. Coyle."
+   "copy": "The lantern-line draws them after dark — moth-winged bears, heavy enough to crack a cart axle. One culled, after dark, shown by Guild attestation. 4 gold on turn-in. Coyle."
   },
   {
    "_comment": "Pay: 2.0g/unit * 1 unit * T4 2.5 = 5g.",
@@ -350,7 +350,7 @@
     "kingslayer_spiders_culled": 1
    },
    "gold": 5,
-   "copy": "Guild notice, Silver-rank and up. Something's nesting in the approach galleries again -- black-and-silver, big, not shy about it. One confirmed kill, shell-plate as proof. 5 gold. Ask twice before you go alone. Selys, for the Guild."
+   "copy": "Guild notice, Silver-rank and up. Something's nesting in the approach galleries again — black-and-silver, big, not shy about it. One confirmed kill, shell-plate as proof. 5 gold. Ask twice before you go alone. Selys, for the Guild."
   },
   {
    "_comment": "Pay: 2.0g/unit * 2 units * T5 3.0 = 12g.",
@@ -397,7 +397,7 @@
     "kingslayer_spiders_culled": 2
    },
    "gold": 10,
-   "copy": "Guild standing order, Silver-rank and up. The approach galleries do not stay swept -- whatever nests in that seam nests DEEP, and it recruits. Two confirmed kills per rotation, shell-plate as proof, 10 gold. This notice does not come down. Selys, for the Guild."
+   "copy": "Guild standing order, Silver-rank and up. The approach galleries do not stay swept — whatever nests in that seam nests DEEP, and it recruits. Two confirmed kills per rotation, shell-plate as proof, 10 gold. This notice does not come down. Selys, for the Guild."
   },
   {
    "id": "bounty_standing_lantern_line",
@@ -449,7 +449,7 @@
     "gallery_vermin_culled": 2
    },
    "gold": 10,
-   "copy": "Guild standing order, Silver-rank and up. The reopened side-galleries past the trap gauntlet never stay swept either -- the same leak that fed the vermin nest the first time still feeds it. Two confirmed kills per rotation, shell-plate as proof, 10 gold. This notice does not come down. Selys, for the Guild.",
+   "copy": "Guild standing order, Silver-rank and up. The reopened side-galleries past the trap gauntlet never stay swept either — the same leak that fed the vermin nest the first time still feeds it. Two confirmed kills per rotation, shell-plate as proof, 10 gold. This notice does not come down. Selys, for the Guild.",
    "tiers": {
      "silver": {
       "condition": {"gallery_vermin_culled": 3},
@@ -487,7 +487,7 @@
     "boulevard_duels_won": 2
    },
    "gold": 8,
-   "copy": "Standing arrangement, for regulars. My ring pays out same as always -- two rounds won against whoever's leaning on the wall that day, Guild-attested, 8 gold per settlement. Coyle."
+   "copy": "Standing arrangement, for regulars. My ring pays out same as always — two rounds won against whoever's leaning on the wall that day, Guild-attested, 8 gold per settlement. Coyle."
   },
   {
    "id": "grimalkin_study_combat",

@@ -951,7 +951,7 @@
    "_comment": "`ai:caster` (EXISTING `flame_bolt` skill reflavored as a superheated forge-bolt, no new skills.json entry) is REQUIRED, not decorative -- the melee profile never casts (the documented autoplay gotcha).",
    "id": "forge_golem",
    "power_level": 15.0,
-   "display_name": "Stone Golem",
+   "display_name": "Miscalibrated Golem",
    "sprite": "forge_golem",
    "side": "enemy",
    "stats": {

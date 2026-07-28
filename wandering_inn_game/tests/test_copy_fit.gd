@@ -209,6 +209,22 @@ func _check_skeleton_scene() -> void:
 					var variant: Dictionary = raw_variant
 					if variant.has(field):
 						_check_toast("%s.%s_variants[%d].%s" % [loc, field, vi, field], String(variant[field]))
+			# v0.15 T3.2 (VISUAL-LOG TOAST/LENGTH). `skill_uses` toasts reach the
+			# SAME panel through field_skills.gd's dispatch, and the longest toast
+			# in the game is one of their variants (the [Detect Magic] quartet
+			# payoff) -- measured by nothing until now, so the ceiling it set was
+			# a claim rather than a gate.
+			for skill_id: String in (entity.get("skill_uses", {}) as Dictionary):
+				var use: Dictionary = entity["skill_uses"][skill_id]
+				var use_loc := "%s.skill_uses.%s" % [loc, skill_id]
+				if use.has("toast"):
+					_check_toast(use_loc + ".toast", String(use["toast"]))
+				for vi: int in (use.get("variants", []) as Array).size():
+					var raw_use: Variant = use["variants"][vi]
+					if not (raw_use is Dictionary):
+						continue
+					if (raw_use as Dictionary).has("toast"):
+						_check_toast("%s.variants[%d].toast" % [use_loc, vi], String((raw_use as Dictionary)["toast"]))
 			if entity.has("talk_pool"):
 				for i: int in (entity["talk_pool"] as Array).size():
 					var raw: Variant = entity["talk_pool"][i]

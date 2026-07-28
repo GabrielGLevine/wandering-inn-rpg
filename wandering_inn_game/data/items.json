@@ -25,7 +25,7 @@
 			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
-			"description": "A castoff from the Watch armory, spear-length and Gnoll-sized in the grip. Relc calls it 'barely used' -- for a given value of barely.",
+			"description": "A castoff from the Watch armory, spear-length and Gnoll-sized in the grip. Relc calls it 'barely used' — for a given value of barely.",
 			"lore": "The Watch quartermaster budgets for Relc the way innkeepers budget for breakage. This one survived him, which means the haft is good and the week was quiet."
 		},
 		{
@@ -101,7 +101,7 @@
 			"abilities": [],
 			"price": 18,
 			"description": "A proper hunting bow, seasoned and well-strung, built for a hand that already knows which end the arrow goes on.",
-			"lore": "Krshia keeps a few behind the counter for the Gnoll caravans that still hunt the plains the old way. She'll sell one to anyone -- adventurer or otherwise -- who can prove they won't put an eye out."
+			"lore": "Krshia keeps a few behind the counter for the Gnoll caravans that still hunt the plains the old way. She'll sell one to anyone — adventurer or otherwise — who can prove they won't put an eye out."
 		},
 		{
 			"id": "leather_jerkin",
@@ -176,7 +176,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"price": 18,
-			"description": "Heavy travel-weave lined with carded wool, cut for the Floodplains' wet cold. Market goods, honestly priced -- Krshia will remind you of that.",
+			"description": "Heavy travel-weave lined with carded wool, cut for the Floodplains' wet cold. Market goods, honestly priced — Krshia will remind you of that.",
 			"lore": "Plains wool, city loom: Gnoll caravans sell the fleece and Drake weavers argue the price, and the cloak comes out warmer than the bargaining. The Floodplains rain finds every cheaper seam."
 		},
 		{
@@ -339,7 +339,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "A bowl of stew and a heel of bread, still steaming from the pot. Someone's waiting on this.",
-			"lore": "The stew pot doesn't care who it's for -- Watch, patron, or the cook themselves. It only cares that it's stirred."
+			"lore": "The stew pot doesn't care who it's for — Watch, patron, or the cook themselves. It only cares that it's stirred."
 		},
 		{
 			"_comment": "kind:\"parcel\" reused verbatim from the delivery precedent below -- inert carried flavor, no price (never sold), no weapon/armor/accessory kind so equip() structurally refuses it.",
@@ -369,7 +369,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "A bolt of plains-wool, paper-wrapped, smelling of lanolin and a long walk.",
-			"lore": "Runner's Guild delivery parcel (delivery_krshia_wool) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+			"lore": "Runner's Guild delivery parcel (delivery_krshia_wool) — carried, never worn or sold; removed from the pack on handoff or on a failed run."
 		},
 		{
 			"id": "parcel_that_ticks",
@@ -383,7 +383,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "A parcel that ticks. Do not shake. The sender says it is a metronome. The sender laughed.",
-			"lore": "Runner's Guild delivery parcel (delivery_pisces_parcel) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+			"lore": "Runner's Guild delivery parcel (delivery_pisces_parcel) — carried, never worn or sold; removed from the pack on handoff or on a failed run."
 		},
 		{
 			"id": "parcel_watch_dispatch",
@@ -397,7 +397,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "Watch dispatches, string-tied, sealed thrice. The third seal is the Captain's habit, not protocol.",
-			"lore": "Runner's Guild delivery parcel (delivery_gate_dispatch) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+			"lore": "Runner's Guild delivery parcel (delivery_gate_dispatch) — carried, never worn or sold; removed from the pack on handoff or on a failed run."
 		},
 		{
 			"id": "parcel_lamp_phials",
@@ -411,7 +411,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "Six glass phials of lamp-spirit for the grate crew, cotton-chocked. If it clinks when you set it down, it is already broken.",
-			"lore": "Runner's Guild delivery parcel (delivery_grate_phials, the FRAGILE variant) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+			"lore": "Runner's Guild delivery parcel (delivery_grate_phials, the FRAGILE variant) — carried, never worn or sold; removed from the pack on handoff or on a failed run."
 		},
 		{
 			"id": "parcel_bluefruit_hamper",
@@ -425,7 +425,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "A hamper of Amentus blue fruit, straw-packed, the poison cores already cut out. You were told twice.",
-			"lore": "Runner's Guild delivery parcel (delivery_inn_hamper) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+			"lore": "Runner's Guild delivery parcel (delivery_inn_hamper) — carried, never worn or sold; removed from the pack on handoff or on a failed run."
 		},
 		{
 			"id": "parcel_gambeson_bundle",
@@ -439,7 +439,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "Watch-issue gambesons, three of them, bundled tight and none too soft.",
-			"lore": "Runner's Guild delivery parcel (delivery_barracks_gear) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+			"lore": "Runner's Guild delivery parcel (delivery_barracks_gear) — carried, never worn or sold; removed from the pack on handoff or on a failed run."
 		},
 		{
 			"id": "parcel_ledger_transfer",
@@ -453,7 +453,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "A ledger, sealed, Guild business written on the outside and nothing else.",
-			"lore": "Runner's Guild delivery parcel (delivery_guild_ledger) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+			"lore": "Runner's Guild delivery parcel (delivery_guild_ledger) — carried, never worn or sold; removed from the pack on handoff or on a failed run."
 		},
 		{
 			"id": "parcel_tactics_brief",
@@ -467,7 +467,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "A brief, rolled and string-tied, the ink still faintly damp at the edges.",
-			"lore": "Runner's Guild delivery parcel (delivery_tactics_brief) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+			"lore": "Runner's Guild delivery parcel (delivery_tactics_brief) — carried, never worn or sold; removed from the pack on handoff or on a failed run."
 		},
 		{
 			"id": "parcel_sealed_letter",
@@ -481,7 +481,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "A letter, wax-sealed, no return address, the kind that pays for its own silence.",
-			"lore": "Runner's Guild delivery parcel (delivery_boulevard_letter) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+			"lore": "Runner's Guild delivery parcel (delivery_boulevard_letter) — carried, never worn or sold; removed from the pack on handoff or on a failed run."
 		},
 		{
 			"id": "parcel_seed_grain",
@@ -495,7 +495,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "A sack of seed grain, dense and dry, tied at the neck against damp roads.",
-			"lore": "Runner's Guild delivery parcel (delivery_riverfarm_seed) -- carried, never worn or sold; removed from the pack on handoff or on a failed run."
+			"lore": "Runner's Guild delivery parcel (delivery_riverfarm_seed) — carried, never worn or sold; removed from the pack on handoff or on a failed run."
 		},
 		{
 			"id": "anchor_stone",
@@ -509,7 +509,7 @@
 			"tier": "mundane",
 			"abilities": [],
 			"description": "A fist-sized stone, warm despite the ruin's cold air, its surface veined with a pattern that never quite resolves into a shape.",
-			"lore": "Warmage Thresk built more than doors, in the end. This one remembers being elsewhere, the same crude trick that woke somewhere it shouldn't have, once, in an inn far from here. Carried, never worn or sold -- it feels like it's waiting to be given back to something."
+			"lore": "Warmage Thresk built more than doors, in the end. This one remembers being elsewhere, the same crude trick that woke somewhere it shouldn't have, once, in an inn far from here. Carried, never worn or sold — it feels like it's waiting to be given back to something."
 		},
 		{
 			"_comment_unsellable": "Krshia sell mechanic: the only item in this catalog that needs the explicit flag -- it carries a `price` (so it WOULD otherwise leak into WIGame.sellable_items()'s priced-item filter) but its own lore line above already says 'never sold onward'.",
@@ -571,7 +571,7 @@
 			"abilities": ["witchs_warding"],
 			"price": 6,
 			"description": "Dried herbs sewn into cloth, tied off with a loop of red thread.",
-			"lore": "The same knot the witch wears at her own wrist, sold plain rather than worked -- she says the thread is decoration and the herbs do the settling. Neither claim sounds entirely honest."
+			"lore": "The same knot the witch wears at her own wrist, sold plain rather than worked — she says the thread is decoration and the herbs do the settling. Neither claim sounds entirely honest."
 		},
 		{
 			"id": "witch_wardstone_bead",
@@ -618,7 +618,7 @@
 			"price": 10,
 			"use_effect": { "heal": 8 },
 			"description": "A corked vial of something dark red, thick as syrup, that smells faintly of yarrow and copper.",
-			"lore": "The witch keeps a shelf of these behind the tea things -- not magic, she says, just knowing which roots do what. Drink it mid-fight and the wound closes slower than a real healer's work, but it closes."
+			"lore": "The witch keeps a shelf of these behind the tea things — not magic, she says, just knowing which roots do what. Drink it mid-fight and the wound closes slower than a real healer's work, but it closes."
 		},
 		{
 			"_comment": "Priced above mending_draught's 10g (a permanent-fight-prep edge reads as worth slightly more than a single heal) but well under the T2 weapons (15-18g).",
@@ -635,7 +635,7 @@
 			"price": 12,
 			"use_effect": { "next_fight": { "damage_mod": 1 } },
 			"description": "A small stoppered flask of dark oil, faintly warm, smelling of quenched iron.",
-			"lore": "Forge-tier stock, sold to anyone bound for the floor below -- work an edge with it the night before and the steel bites truer the first time it matters. One coat, one fight; the tier doesn't sell the recipe, only the flask."
+			"lore": "Forge-tier stock, sold to anyone bound for the floor below — work an edge with it the night before and the steel bites truer the first time it matters. One coat, one fight; the tier doesn't sell the recipe, only the flask."
 		},
 		{
 			"id": "invrisil_attunement_stone",
@@ -682,7 +682,7 @@
 			"abilities": [],
 			"price": 3,
 			"description": "Wax, wire, and a folding pick, wrapped in oilcloth. Cheap enough that adventurers buy three and lose two.",
-			"lore": "Every peddler within a day of Liscor stocks these now -- the Watch started recommending them after the gallery reopened, and word travels fast when word means coin."
+			"lore": "Every peddler within a day of Liscor stocks these now — the Watch started recommending them after the gallery reopened, and word travels fast when word means coin."
 		},
 		{
 			"_comment": "kind:\"parcel\" reused verbatim (cups_debt_chit precedent): inert carried flavor, no price (never sold), no weapon_family so equip() structurally refuses it -- it is Renn's hammer, never the player's to wield.",
@@ -770,7 +770,7 @@
 			"tier": "enchanted",
 			"abilities": [],
 			"description": "A twist of warding-wire salvaged from the snare itself, the working still humming faint and wrongly patient.",
-			"lore": "The wards down here were never meant to be worn -- somebody unwound one anyway and found the working held. It still expects a trespasser. It will have to make do with you."
+			"lore": "The wards down here were never meant to be worn — somebody unwound one anyway and found the working held. It still expects a trespasser. It will have to make do with you."
 		},
 		{
 			"_comment": "Existing accessory shape, hunters_fang_talisman's own dmg+resonance-1 curve widened by +1 hp_mod (apex-tier differentiation from that mundane-region trophy).",
@@ -800,7 +800,7 @@
 			"tier": "enchanted",
 			"abilities": [],
 			"description": "A sliver worked loose from the anchor stone once it finally settled, warm as the whole and small enough to wear.",
-			"lore": "Warmage Thresk's stonework doesn't split so much as it agrees to share the load. What's left fits a chain, a wrist, a coat lining -- wherever you decide it belongs, it decides too."
+			"lore": "Warmage Thresk's stonework doesn't split so much as it agrees to share the load. What's left fits a chain, a wrist, a coat lining — wherever you decide it belongs, it decides too."
 		},
 		{
 			"_comment": "Heal shape and 8-HP band mirror mending_draught verbatim; 10g placeholder price mirrors that precedent, with final pricing deferred to open issue #92.",
@@ -936,7 +936,7 @@
 				"guarding_ward"
 			],
 			"description": "A wax-and-charcoal rubbing off the vault anchor, taken whole in one pull. The lines still pull faintly toward whatever they were copied from.",
-			"lore": "Three centuries of ward-work reduced to a sheet you can fold. Any competent enchanter could read the return-cut out of it and carve its twin, given a plinth, a season, and a reason -- Pisces has all three and the patience for none of them."
+			"lore": "Three centuries of ward-work reduced to a sheet you can fold. Any competent enchanter could read the return-cut out of it and carve its twin, given a plinth, a season, and a reason — Pisces has all three and the patience for none of them."
 		},
 		{
 			"_comment": "GH#92 D4 completion: ruin_guardian boss accessory. warded_coil_charm defensive curve (hp+2/res1) + guarding_ward -- the guardian WAS a ward; its fragment keeps warding.",

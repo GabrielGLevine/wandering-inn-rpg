@@ -103,7 +103,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "You fall in a comfortable distance behind. The runner doesn't loop, doesn't double back -- just walks like a man with somewhere specific to be, heading for the alleys off the boulevard's east end."
+    "text": "You fall in a comfortable distance behind. The runner doesn't loop, doesn't double back — just walks like a man with somewhere specific to be, heading for the alleys off the boulevard's east end."
    },
    "timeout_sec": 5
   },

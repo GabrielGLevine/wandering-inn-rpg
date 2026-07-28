@@ -1,5 +1,5 @@
 {
- "_comment": "8e E1 (issue #16, the milestone's exit-criteria canonical) THE pallass_walkthrough proof: the LIVE end-to-end 'Papers for Pallass' + 'Clearance for the Forge Tier' route from a near_pallass fixture (invrisil_attuned-era, quest NOT started). Selys sponsors (10g, pallass_sponsored) -> the #65 exclude/include portal-menu pin pair bracketing Krshia's attunement stone (18g, pallass_attuned + the item) -> real travel through the Magical Door to pallass_market's reconciled arrival cell (4,7) -- the FIRST live proof of the has_map-guarded portals row -- the NEGATIVE lift-locked read BEFORE any permit progress -- the market-tier checkpoint clerk's 2g stamp AND the race-variant read (pc_race defaults 'human', the QA everyman, so the HUMAN FRICTION line is the live pin), completing papers_for_pallass -- THE PERMIT OFFICE chain (5g file -> Grimalkin's 8g exam, his voiced register pinned verbatim -> the 3g stamp), completing forge_tier_permit and producing elevator_pass_stamped -- THE LIFT now open, a REAL continuous walk (not a re-teleport) across the forge tier's own floor to Grimalkin's old bench (eyed_grimalkins_bench) -- the round trip back down. Gold ledger exact at every spend (60 -> 50 -> 32 -> 30 -> 25 -> 17 -> 14, matching the documented 10+18+2+5+8+3=46g chain with a 14g margin). Zero combat anywhere (assert_event_absent, whole run) -- the route is bureaucratic/travel only, so seed stability is trivial; rng_state is the repo's own canonical seed=9 derived value, inert for outcome purposes here. LIVE-SEAM FINDING (disclosed, no fix needed): the portals.json `pallass` row's arrival cell is (4,7), NOT the (5,6)/(10,10) guesses floated pre-reconciliation -- this canonical is the first LIVE (non-teleport) proof that (4,7) is correct (open, off every blocked/decor/entity cell, exactly south of pallass_market_arrival_anchor).",
+ "_comment": "8e E1 (issue #16, the milestone's exit-criteria canonical) THE pallass_walkthrough proof: the LIVE end-to-end 'Papers for Pallass' + 'Clearance for the Forge Tier' route from a near_pallass fixture (invrisil_attuned-era, quest NOT started). Selys sponsors (10g, pallass_sponsored) -> the #65 exclude/include portal-menu pin pair bracketing Krshia's attunement stone (18g, pallass_attuned + the item) -> real travel through the Magical Door to pallass_market's arrival cell (4,8) -- the FIRST live proof of the has_map-guarded portals row -- the NEGATIVE lift-locked read BEFORE any permit progress -- the market-tier checkpoint clerk's 2g stamp AND the race-variant read (pc_race defaults 'human', the QA everyman, so the HUMAN FRICTION line is the live pin), completing papers_for_pallass -- THE PERMIT OFFICE chain (5g file -> Grimalkin's 8g exam, his voiced register pinned verbatim -> the 3g stamp), completing forge_tier_permit and producing elevator_pass_stamped -- THE LIFT now open, a REAL continuous walk (not a re-teleport) across the forge tier's own floor to Grimalkin's old bench (eyed_grimalkins_bench) -- the round trip back down. Gold ledger exact at every spend (60 -> 50 -> 32 -> 30 -> 25 -> 17 -> 14, matching the documented 10+18+2+5+8+3=46g chain with a 14g margin). Zero combat anywhere (assert_event_absent, whole run) -- the route is bureaucratic/travel only, so seed stability is trivial; rng_state is the repo's own canonical seed=9 derived value, inert for outcome purposes here. This canonical is the first LIVE (non-teleport) proof of the portals.json `pallass` arrival cell, now (4,8): the reconciled (4,7) was alchemy_bench_reduction's own cell, so travel landed the player inside a solid prop (v0.15 hygiene; data_lint's arrival-vs-blocking arm refuses the class).",
  "starts_at_title": true,
  "fixture_save": "near_pallass",
  "steps": [
@@ -116,7 +116,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Selys",
-    "text": "Pallass. Guild's got the standing arrangement -- I file the sponsorship, you cover the clerk's fee, and it goes through same-day. Ten gold, paid to the Guild, not to me."
+    "text": "Pallass. Guild's got the standing arrangement — I file the sponsorship, you cover the clerk's fee, and it goes through same-day. Ten gold, paid to the Guild, not to me."
    },
    "timeout_sec": 5
   },
@@ -415,7 +415,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== BEAT 4: the #65 idiom's INCLUDE half + the actual travel. Back to the pantry_door -- the SAME anchor now offers Pallass, index 3 (Liscor/Riverfarm/Invrisil/Pallass/'Let it be.'). Select it: map_changed to pallass_market, the arrival toast, landing at (4,7) -- the B-lane-reconciled cell (the portals.json row's own _comment discloses this replaced a stale (10,10) forward-reference; VERIFIED live here). ==",
+   "_comment": "== BEAT 4: the #65 idiom's INCLUDE half + the actual travel. Back to the pantry_door -- the SAME anchor now offers Pallass, index 3 (Liscor/Riverfarm/Invrisil/Pallass/'Let it be.'). Select it: map_changed to pallass_market, the arrival toast, landing at (4,8) -- the portals.json row's own cell, VERIFIED live here. ==",
    "action": "teleport",
    "map": "inn",
    "cell": [
@@ -540,7 +540,7 @@
    "path": "player_cell",
    "equals": [
     4,
-    7
+    8
    ]
   },
   {
@@ -666,7 +666,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Tier Clerk",
-    "text": "A Human, this far in. State your business and your sponsor -- twice, if the first answer doesn't hold up."
+    "text": "A Human, this far in. State your business and your sponsor — twice, if the first answer doesn't hold up."
    },
    "timeout_sec": 5
   },
@@ -796,7 +796,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Forge-Tier Clerk",
-    "text": "Five gold, filed same-day, no exceptions and no discounts -- that's the posted price. Grimalkin reads your fitness after, at the exam floor on the far end of this office; I only handle paper."
+    "text": "Five gold, filed same-day, no exceptions and no discounts — that's the posted price. Grimalkin reads your fitness after, at the exam floor on the far end of this office; I only handle paper."
    },
    "timeout_sec": 5
   },
@@ -994,7 +994,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Forge-Tier Clerk",
-    "text": "Grimalkin's mark is on the file. Three gold for the stamp itself -- posted price, same as the filing."
+    "text": "Grimalkin's mark is on the file. Three gold for the stamp itself — posted price, same as the filing."
    },
    "timeout_sec": 5
   },

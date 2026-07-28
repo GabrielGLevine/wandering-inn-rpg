@@ -185,13 +185,19 @@ what those runs showed.
   (a unique name takes no auto-suffix, so the two knives stay A/B and the
   captain reads as their head). Zero churn: the literal appeared nowhere
   outside `combatants.json`. `invrisil_disagreement_fight/01`.
-- [ ] COMBAT/GOLEM-NAME-SPLIT (P4) — the forge golem parleys as "Miscalibrated
+- [x] COMBAT/GOLEM-NAME-SPLIT (P4) — the forge golem parleys as "Miscalibrated
   Golem" (`data/dialogue/forge_calibration_golem.json` speaker) and then fights
   as "Stone Golem" (`combatants.json:forge_golem` display_name, shared with both
   market watchgolems). The line you just read names a different thing from the
   one in the turn banner. Same shape as HIRED-BLADE-NAMES but one tier down: no
   mechanic hangs on telling them apart. Found on the fix-round-1 forge-golem
-  probe (`03_forge_fight_open`).
+  probe (`03_forge_fight_open`). **FIXED v0.15 T3.2** — `combatants.json`
+  `forge_golem` takes the entity's name ("Miscalibrated Golem"). The market
+  pair is untouched: both watchgolems keep "Stone Golem" under a "Stone Golems"
+  parley, which already agreed. Zero churn outside that one literal; the six
+  crossing canonicals (parley_gates_check, parley_talkdowns_loop,
+  pallass_watchgolem_loop, bestiary_peek, dungeon_kingslayer_loop,
+  invrisil_mothbear_loop) are green unchanged.
 - [x] JOURNAL/HALF-ROW (P3) — the journal's scroll viewport admits a partial
   text row instead of clipping at a line boundary, so its bottom line renders
   sliced ("The Missing Crate — Complete." on both
@@ -325,7 +331,13 @@ native 1280x720, plus the seal's new light transition.
   the Invrisil recap and the composed consolidation line were the two strings it
   named. The same commit also measures `<field>_variants` toast copy, which
   nothing had ever measured.
-- [ ] SEAL-SLEEP/TOAST-MISMATCH (P4) — the seal's light transition line rides
+- [x] SEAL-SLEEP/TOAST-MISMATCH (P4) — **ALREADY FIXED, checkbox never
+  flipped** (v0.15 T3.2 audit): `sleep_beat.gd:141-143` sets
+  `anything_happened = true` on the `post_game` bank, and `test_sim_core`'s
+  Phase 8 leg pins BOTH halves — no toast of the bank's own, and no
+  "You sleep soundly." fallback co-rendering under the GDI's seal line. The fix
+  landed with the Phase 8 line itself; only the ledger lagged. Original report
+  follows. — the seal's light transition line rides
   the `post_game` bank, which `sleep_beat.gd` deliberately does NOT count as
   `anything_happened` (Task 1.2's silence contract, pinned in
   `test_sim_core`). On a sleep where nothing else lands, the player therefore
@@ -355,11 +367,17 @@ all `passed: true`), 25 screenshots read at native resolution.
   top row. Not introduced here — the first pass shipped 1.35 and the windowed
   read pulled it back to the shipped precedent. A rig-anchor question for the
   art lane, not a data-value one.
-- [ ] TOAST/LENGTH (P4) — the `[Detect Magic]` quartet payoff is the longest
+- [x] TOAST/LENGTH (P4) — the `[Detect Magic]` quartet payoff is the longest
   toast in the game (7 wrapped lines at 1280x720). It FITS (no clipping, top
   edge well inside the screen) and it is the beat's climax, but it is the new
   ceiling; `test_copy_fit` does not measure `skill_uses` variant toasts, so
-  nothing enforces that ceiling automatically.
+  nothing enforces that ceiling automatically. **CLOSED v0.15 T3.2, no re-cut**
+  — the copy was re-verified against the P2 budgets and still fits with room to
+  spare, so the payoff ships whole. What changed is the enforcement: the
+  skeleton-scene walk now measures `skill_uses.<skill>.toast` and its
+  `variants[].toast`, proven live by ballooning that exact string until the arm
+  named it ("66 wrapped lines … pushing its top 1119px off-screen"). The
+  ceiling is a gate now, not a claim.
 
 
 ### Machine playtest — wave/mq2-dig "The Dig" close-out (2026-07-27)
@@ -427,7 +445,12 @@ pre-dig-hub reads. Durable evidence:
   dressing, and the gated arrival toast correctly withholds "the Horns got here
   first" — but the live guardian is a direct contradiction of the migrated
   state. Consider adding `ruin_guardian` to the backfill's removed set.
-- [ ] COPY/DASH-MIX (P2) — two toasts on the same map one beat apart disagree
+- [x] COPY/DASH-MIX (P2) — **FIXED v0.15 T3.2**: the em dash won on the count
+  (283 player strings to 112), the 112 were swept across 32 data files, 21
+  verbatim pins were re-cut in 12 canonicals, and
+  `test_content._scan_player_strings` now forbids the ASCII form in player copy
+  (`_comment` keys stay exempt — dev text keeps its dashes). Original report
+  follows. — two toasts on the same map one beat apart disagree
   on dash glyph: `horns_dig_plates/02_the_plates_break_the_seal.png` renders a
   real em dash ("it was never the plates — it was whoever hadn't walked them")
   and `horns_dig_flow/02_the_reveal.png` renders ASCII double-hyphen ("A DOOR

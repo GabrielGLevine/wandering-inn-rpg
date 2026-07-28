@@ -60,7 +60,7 @@
 			"gold": 2,
 			"band": "cross-map, short",
 			"condition": { "delivered_delivery_barracks_gear": 1 },
-			"slip_copy": "TO: the barracks, Duty Sergeant Ashgrave. Bundled gambesons, watch-issue, itchy even folded. Same waking, and count them before you hand them over -- he will."
+			"slip_copy": "TO: the barracks, Duty Sergeant Ashgrave. Bundled gambesons, watch-issue, itchy even folded. Same waking, and count them before you hand them over — he will."
 		},
 		{
 			"id": "delivery_guild_ledger",
@@ -80,7 +80,7 @@
 			"gold": 2,
 			"band": "same-map long",
 			"condition": { "delivered_delivery_tactics_brief": 1 },
-			"slip_copy": "TO: the [Tactician] by the Guild steps. A rolled brief, string-tied, corners bent from travel -- don't bend them worse. He'll want it before the ink he's already using dries."
+			"slip_copy": "TO: the [Tactician] by the Guild steps. A rolled brief, string-tied, corners bent from travel — don't bend them worse. He'll want it before the ink he's already using dries."
 		},
 		{
 			"id": "delivery_boulevard_letter",
@@ -90,7 +90,7 @@
 			"gold": 4,
 			"band": "cross-region",
 			"condition": { "delivered_delivery_boulevard_letter": 1 },
-			"slip_copy": "TO: Master Coyle, the Invrisil boulevard. One letter, wax sealed, no return address. Long leg -- mind the door before you knock. Four gold reflects the distance, not the danger."
+			"slip_copy": "TO: Master Coyle, the Invrisil boulevard. One letter, wax sealed, no return address. Long leg — mind the door before you knock. Four gold reflects the distance, not the danger."
 		},
 		{
 			"id": "delivery_riverfarm_seed",
@@ -100,7 +100,7 @@
 			"gold": 4,
 			"band": "cross-region",
 			"condition": { "delivered_delivery_riverfarm_seed": 1 },
-			"slip_copy": "TO: the Headman, Riverfarm village. One sack, seed grain, keep it dry and keep it whole -- a torn sack halfway there pays nobody. Four gold, long leg."
+			"slip_copy": "TO: the Headman, Riverfarm village. One sack, seed grain, keep it dry and keep it whole — a torn sack halfway there pays nobody. Four gold, long leg."
 		},
 		{
 			"id": "delivery_standing_dispatch_run",

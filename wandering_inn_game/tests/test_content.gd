@@ -293,6 +293,7 @@ func _init() -> void:
 	produced_accomplishments["spell_cast"] = true
 	produced_accomplishments["ranged_hit"] = true
 	_validate_conversations(scene, graphs)
+	_validate_variant_entries(scene, graphs)
 	_validate_enchant_pairs(graphs, items)
 	_validate_dialogue_graphs(graphs, skill_ids, class_ids, item_ids, quest_ids, entity_ids, produced_accomplishments)
 	_validate_quests(quests, produced_accomplishments)
@@ -317,6 +318,7 @@ func _init() -> void:
 	_validate_encounter_when(scene, produced_accomplishments)
 	_validate_encounter_gate_counters(scene, produced_accomplishments)
 	_validate_present_when(scene, produced_accomplishments)
+	_validate_guest_gate_windows(scene)
 	_validate_skill_uses(scene, skill_ids, produced_accomplishments)
 	_validate_visual_states_phase(scene)
 	_validate_talk_pool_echo_of(scene, entity_ids)
@@ -391,6 +393,11 @@ func _scan_player_strings(node: Variant, path: String, attr: RegEx, provenance: 
 		_check(attr.search(s) == null, "%s carries a forbidden attribute token: %s" % [path, s])
 		_check(not s.contains("%"), "%s carries a forbidden percent-toward token: %s" % [path, s])
 		_check(provenance.search(s) == null, "%s carries a dev-provenance leak (Task/issue citation): %s" % [path, s])
+		# v0.15 DASH POLICY: the em dash wins (it already held 283 player strings
+		# to 112). Two toasts one beat apart on the same map disagreeing on dash
+		# glyph is the kind of seam a reader feels without being able to name.
+		# `_comment` keys are exempt by the walk above -- dev text keeps its ASCII.
+		_check(not s.contains(" -- "), "%s carries an ASCII double-hyphen; player copy uses the em dash: %s" % [path, s])
 
 
 func _load_json(path: String) -> Dictionary:
@@ -528,6 +535,15 @@ func _validate_npc_interact_surface(scene: Dictionary) -> void:
 const ADDRESS_TOKEN_KEYS := ["text", "talk_pool", "lines"]
 
 
+## v0.15 T3.2 coverage extension. The two surfaces the placement arm named as
+## gaps are read STRAIGHT by the journal and the item panels -- neither ever
+## reaches WIGame's event sink, so no key in either file can resolve a token.
+## They need their own scan precisely because `text` is a sanctioned holder
+## everywhere else: `items.json`'s `text` would have passed the placement arm
+## and still rendered `{addr}` raw in the inventory.
+const ADDRESS_TOKEN_UNRESOLVABLE_FILES := ["res://data/quests.json", "res://data/items.json"]
+
+
 func _validate_address_token_placement() -> void:
 	_scan_address_tokens(WISceneCatalog.compose(), "res://data/maps/** (composed)", "")
 	var dir: DirAccess = DirAccess.open(DIALOGUE_DIR)
@@ -535,6 +551,24 @@ func _validate_address_token_placement() -> void:
 		if file_name.ends_with(".json"):
 			var full_path := DIALOGUE_DIR.path_join(file_name)
 			_scan_address_tokens(_load_json(full_path), full_path, "")
+	for path: String in ADDRESS_TOKEN_UNRESOLVABLE_FILES:
+		_scan_unresolvable_address_tokens(_load_json(path), path)
+
+
+func _scan_unresolvable_address_tokens(node: Variant, path: String) -> void:
+	if node is Dictionary:
+		for key: String in (node as Dictionary):
+			if key.begins_with("_"):
+				continue
+			_scan_unresolvable_address_tokens((node as Dictionary)[key], "%s.%s" % [path, key])
+	elif node is Array:
+		for i: int in (node as Array).size():
+			_scan_unresolvable_address_tokens((node as Array)[i], "%s[%d]" % [path, i])
+	elif node is String:
+		_check(
+			not WIAddress.has_token(node as String),
+			"%s carries an address token, but nothing in this file passes through the event sink -- it would render RAW: %s" % [path, node]
+		)
 
 
 ## `holder` is the nearest ENCLOSING dict key (array indices don't reset it), so
@@ -674,6 +708,54 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 				for counter_id: String in (when["absent"] as Dictionary):
 					_check(produced_accomplishments.has(counter_id), "entity %s encounter_when.absent references unproduced counter: %s (a typo here silently never gates -- GH#199 review MEDIUM-3)" % [entity_id, counter_id])
 
+## v0.15 T3.1. A guest's pool gate and their row's counter arms are two
+## independent statements of ONE window, and they may never disagree: pooled
+## with every row hidden is a ghost-empty seat, rowed without the pool is a
+## person the rotation refuses to seat. Derived from both sides here so the
+## belt-and-braces stays belted -- an Array gate needs one row per spec (the
+## twin-row idiom: pisces before/returned, zevara before/returned).
+func _validate_guest_gate_windows(scene: Dictionary) -> void:
+	var rows: Dictionary = {}
+	for map_id: String in scene["maps"]:
+		for entity: Dictionary in (scene["maps"][map_id] as Dictionary).get("entities", []):
+			var when: Dictionary = entity.get("present_when", {})
+			if not when.has("guest") or not (when["guest"] is Dictionary):
+				continue
+			var npc := String((when["guest"] as Dictionary).get("npc", ""))
+			if not rows.has(npc):
+				rows[npc] = []
+			(rows[npc] as Array).append(_window_key(
+				(when.get("requires", {}) as Dictionary).keys(),
+				(when.get("absent", {}) as Dictionary).keys()
+			))
+	# A gate keyed on an npc with no guest row is never consulted at all, so the
+	# guest it meant to hold pools UNGATED -- silent, and the exact failure the
+	# const exists to prevent. Check the direction the row walk cannot see.
+	for npc: String in WIInnGuests.GUEST_POOL_GATES:
+		_check(rows.has(npc), "GUEST_POOL_GATES holds a gate for '%s', which has no guest row on any map -- the gate would never be consulted" % npc)
+	for npc: String in rows:
+		var gate: Variant = WIInnGuests.GUEST_POOL_GATES.get(npc, {})
+		var specs: Array = gate if gate is Array else [gate]
+		var want: Array = []
+		for spec: Variant in specs:
+			if spec is Dictionary:
+				want.append(_window_key((spec as Dictionary).get("requires", []), (spec as Dictionary).get("absent", [])))
+			else:
+				want.append(_window_key([String(spec)], []))
+		var got: Array = (rows[npc] as Array).duplicate()
+		want.sort()
+		got.sort()
+		_check(want == got, "guest %s: pool gate window %s does not match its row window(s) %s -- pool membership and row presence must state the SAME condition, or the rotation seats a chair nobody renders in" % [npc, want, got])
+
+
+func _window_key(requires: Array, absent: Array) -> String:
+	var req := requires.duplicate()
+	var ab := absent.duplicate()
+	req.sort()
+	ab.sort()
+	return "requires=%s absent=%s" % [req, ab]
+
+
 func _validate_visual_states_phase(scene: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
@@ -714,6 +796,40 @@ func _find_entity_by_id(scene: Dictionary, id: String) -> Dictionary:
 			if String(entity["id"]) == id:
 				return entity
 	return {}
+
+
+## v0.15 T3.2. Both variant families are consumed by TYPED loops
+## (interactions.gd open_toast_variants, dialogue.gd text_variants), so a
+## non-Dictionary member is a runtime crash and a misspelled key is a silently
+## inert variant -- the authored fallback renders and nothing says why. The
+## runtime skips malformed members; the SHAPE is proven here instead.
+const VARIANT_KEYS := {
+	"open_toast_variants": ["_comment", "when", "open_toast", "open_lore"],
+	"text_variants": ["_comment", "requires", "text"],
+}
+
+
+func _validate_variant_entries(scene: Dictionary, graphs: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		for entity: Dictionary in (scene["maps"][map_id] as Dictionary).get("entities", []):
+			_check_variant_array(entity.get("open_toast_variants", []), "open_toast_variants", "entity " + String(entity.get("id", "?")))
+	for graph_id: String in graphs:
+		for node_id: String in (graphs[graph_id] as Dictionary).get("nodes", {}):
+			var node: Dictionary = graphs[graph_id]["nodes"][node_id]
+			_check_variant_array(node.get("text_variants", []), "text_variants", "%s.%s" % [graph_id, node_id])
+
+
+func _check_variant_array(raw: Variant, key: String, where: String) -> void:
+	if not _require(raw is Array, "%s %s must be an Array" % [where, key]):
+		return
+	for entry: Variant in (raw as Array):
+		if not _require(entry is Dictionary, "%s %s carries a non-Dictionary member (%s) -- the consumer's typed loop would crash on it" % [where, key, entry]):
+			continue
+		for entry_key: String in (entry as Dictionary):
+			_check(
+				(VARIANT_KEYS[key] as Array).has(entry_key),
+				"%s %s member carries unknown key '%s' (sanctioned: %s) -- a misspelling here renders the authored fallback and reports nothing" % [where, key, entry_key, VARIANT_KEYS[key]]
+			)
 
 
 func _validate_conversations(scene: Dictionary, graphs: Dictionary) -> void:
@@ -1288,7 +1404,7 @@ func _validate_place_naming_shape_cases() -> void:
 	# is the same sentence with every landmark word removed, preserving intent.
 	var ruin_tokens: Array = LANDMARK_TOKENS["ruin_surface"] + LANDMARK_TOKENS["street"]
 	_check(_description_names_place("Recover the anchor stone from the ruin east past the gate road, on the floodplains, and buy Krshia's catalyst to attune it.", ruin_tokens), "fixed recover beat names the ruin/floodplains")
-	_check(_description_names_place("Get the Horns through the ruin's sealed pedestal level -- fight what guards it, walk the plates, or read the wardwork.", ruin_tokens), "horns_dig's breach beat names the ruin")
+	_check(_description_names_place("Get the Horns through the ruin's sealed pedestal level — fight what guards it, walk the plates, or read the wardwork.", ruin_tokens), "horns_dig's breach beat names the ruin")
 	_check(not _description_names_place("Recover the anchor stone and buy Krshia's catalyst to attune it.", ruin_tokens), "NEGATIVE CONTROL: a recovery beat naming no landmark at all")
 
 	var guild_tokens: Array = LANDMARK_TOKENS["guild"]

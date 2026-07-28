@@ -19,35 +19,37 @@ class_name WIInnGuests
 ## any) is open -- otherwise the window would seat an entity whose
 ## present_when hides it (a ghost-empty seat all waking).
 ##
-## A value is EITHER a bare accomplishment id (the common "this quest must
-## have closed" case) OR a `{"requires": [...], "absent": [...]}` dict that
-## mirrors present_when's two arms, so a row carrying a negative arm can
-## state the SAME condition here. Rags is why the dict shape exists: her
-## encounter's on_victory banks rags_meeting_settled alongside
-## drove_off_rags, so the positive arm alone would pool the Chieftain the
-## player drove off the plains while her row's own `absent` hid her.
-## Pool membership and row presence must never disagree.
-## NOT LISTED, ON PURPOSE (fix round 2): `pisces`. His two rows leave one
-## uncovered state -- the HAUL WINDOW, door_retrieved banked and door_mounted
-## not -- where `pisces_inn_guest` (absent door_retrieved) and
-## `pisces_inn_guest_returned` (requires door_mounted) BOTH hide while the
-## pool still seats him, so his chair renders empty. That gap is deliberate:
-## `pisces_mounting` (13,5) is present in exactly that window, and a guest row
-## rendering at the same time would BILOCATE him (the fix 96f80d0 made for the
-## Horns). The pool condition that would close it is NOT (door_retrieved AND
-## NOT door_mounted) -- a DISJUNCTION, `absent door_retrieved` OR `requires
-## door_mounted` -- and one dict is an AND of its two arms, so it cannot say
-## it. Closing it would need a third value shape (an ANY-of Array of specs)
-## AND would make a previously gate-free shipped roster member gate-DEPENDENT,
-## so the fail-closed default would silently drop him for any caller that
-## forgets the predicate. Judged not worth it against the cost: at most two
-## wakings in ten, one chair empty, for the length of one errand. Measured and
-## inert either way -- of 114 shipped fixtures exactly one sits in the haul
-## window (door_chain_fight_start) and Pisces is unmet there.
+## THREE value shapes, and the same condition must appear on the npc's guest
+## ROW(s) -- pool membership and row presence may never disagree, or the window
+## spends a seat on nobody (test_content._validate_guest_gate_windows pins it):
+##   String  -- a bare accomplishment id ("this quest must have closed").
+##   Dict    -- {"requires": [...], "absent": [...]}, an AND of present_when's
+##              two arms. Rags is why it exists: rags_scouting_party's
+##              on_victory banks rags_meeting_settled next to drove_off_rags,
+##              so a positive-only gate would pool the Chieftain the player
+##              drove off the plains while her row's own `absent` hid her.
+##   Array   -- ANY-of specs (v0.15 ruling 1). The ARC WINDOW: a guest vacates
+##              the inn for the span of their own live story, which is a
+##              DISJUNCTION (before it opens OR after it closes) that one dict
+##              cannot state. Zevara is at her gate from the summons she gives
+##              until she writes the warren down as closed; Pisces is at the
+##              pantry hanging the Door through the haul window, where
+##              pisces_mounting (13,5) holds him and BOTH his guest rows hide
+##              (his chair used to render empty there).
+## Every entry makes its npc gate-DEPENDENT: the fail-closed default drops them
+## for any caller that omits the predicate. wi_game always passes it.
+## RELC, AUDITED AND NOT LISTED (v0.15 T3.1): relc_descent_cameo occupies
+## [reached_the_warren, cleared_the_warren) on deep_tunnels, but a cross-MAP
+## double is the shipped idiom, not a defect -- every guest also stands at a
+## permanent home post (relc on floodplains, zevara at the gate). His inn row
+## is ungated, so no ghost seat exists to close, and no inn-map line contradicts
+## a seated Relc. Gating him would buy nothing and cost a shipped ungated row.
 const GUEST_POOL_GATES := {
 	"rags": {"requires": ["rags_meeting_settled"], "absent": ["drove_off_rags"]},
 	"wilovan": "brothers_job_done",
 	"grimalkin": "elevator_pass_stamped",
+	"zevara": [{"absent": ["heard_the_deep_tremor"]}, {"requires": ["raskghar_sealed"]}],
+	"pisces": [{"absent": ["door_retrieved"]}, {"requires": ["door_mounted"]}],
 }
 
 
@@ -61,9 +63,25 @@ const GUEST_POOL_GATES := {
 ## every loop to `return true` and silently re-open the ghost-seat class
 ## through a typo -- the one failure mode this whole const exists to prevent.
 ## An unrecognized shape has to read as "shut", never as "no conditions".
+##
+## The ANY-of Array inherits that discipline WHOLE: an empty Array opens
+## nothing, and ONE malformed member shuts the whole disjunction rather than
+## being skipped past -- a typo'd member must not leave a narrower window
+## silently passing as if it were the authored one.
 static func _gate_open(gate: Variant, gate_met: Callable) -> bool:
 	if not gate_met.is_valid():
 		return false
+	if gate is Array:
+		var specs: Array = gate
+		if specs.is_empty():
+			return false
+		var any_open := false
+		for spec: Variant in specs:
+			if not (spec is Dictionary):
+				return false
+			if _gate_open(spec, gate_met):
+				any_open = true
+		return any_open
 	if gate is Dictionary:
 		var spec: Dictionary = gate
 		var requires: Array = spec.get("requires", []) as Array

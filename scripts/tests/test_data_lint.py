@@ -49,6 +49,24 @@ class TestBrokenFixtures(unittest.TestCase):
         self.assertIn("'nowhere' does not exist", errs[0])
         self.assertIn("out of 'm' grid", errs[1])
 
+    def test_portal_arrival_on_blocked_or_occupied_cell(self):
+        # The shipped pallass class: travel assigns player_cell raw, so an
+        # arrival cell holding a solid thing strands the player inside it.
+        dest = {**GRID, "blocked": [[1, 1]], "entities": [
+            {"id": "bench", "cell": [2, 2]},
+            {"id": "ghost", "cell": [3, 2], "present_when": {"requires": {"x": 1}}},
+        ]}
+        parsed = {data_lint.DATA / "portals.json": {"portals": [
+            {"id": "onblocked", "map": "m", "cell": [1, 1]},
+            {"id": "onprop", "map": "m", "cell": [2, 2]},
+            {"id": "onconditional", "map": "m", "cell": [3, 2]},
+            {"id": "clear", "map": "m", "cell": [0, 0]},
+        ]}}
+        errs = self._errs(data_lint.check_portals, parsed, {"m": dest})
+        self.assertEqual(len(errs), 2, errs)
+        self.assertIn("'onblocked' arrival cell [1, 1] is a blocked cell", errs[0])
+        self.assertIn("'onprop' arrival cell [2, 2] is occupied by entity 'bench'", errs[1])
+
     def test_dialogue_dangling_goto_and_missing_fields(self):
         parsed = {Path("/synthetic/dialogue/x.json"): {
             "start": "gone",

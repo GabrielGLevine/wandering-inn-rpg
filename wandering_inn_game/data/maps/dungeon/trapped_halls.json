@@ -184,7 +184,7 @@
    "skill_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. This wants a careful, deliberate touch, not a shove.",
    "locked_toast": "A narrow slit runs along the wall at knee height. Whatever is loaded behind it, you have no idea how to disable it.",
    "requires_item": "trap_kit",
-   "item_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. Bare hands won't do it -- you'd want a proper kit for this.",
+   "item_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. Bare hands won't do it — you'd want a proper kit for this.",
    "on_skill_use": {
     "accomplishment": "halls_cleared",
     "toast": "You trace the mechanism with a careful eye, find the catch, and wedge it still with a wax-and-wire pick from the kit. The slit stays dark.",
@@ -293,7 +293,7 @@
     0.4,
     0.42
    ],
-   "observe": "The hall ends in a sealed archway, and beyond it something vast fills the dark almost completely -- the same shape you glimpsed crouched near the entrance, closer now, utterly still. It is not still the way a statue is still.",
+   "observe": "The hall ends in a sealed archway, and beyond it something vast fills the dark almost completely — the same shape you glimpsed crouched near the entrance, closer now, utterly still. It is not still the way a statue is still.",
    "arena": "vault",
    "enemies": [
     "vault_construct"
@@ -351,7 +351,7 @@
     0.5
    ],
    "on_interact_accomplishment": "sensed_something_deeper",
-   "toast": "The passage doesn't end here -- it just goes quiet, past a bend the light doesn't reach. Whatever's back there, this isn't the moment.",
+   "toast": "The passage doesn't end here — it just goes quiet, past a bend the light doesn't reach. Whatever's back there, this isn't the moment.",
    "_comment_reading": "Act V beat 2, THE READING (#270). Three eyes on one door, the pantry-door consolidation idiom. LATER-SATISFIED-WINS across `variants` makes the bare interact a two-stage narration: with the descent agreed Pisces matches the hand (read_the_seal_runes), and his next read names the appetite (read_the_feeding_ward). That staging is load-bearing -- no main-line beat may sit behind a Skill the player's build might not own (spec 6) -- so the escort is the guaranteed producer of both reads. Pre-descent arms bank `sensed_something_deeper`, never the real reads, which ORDER-GATES the quest: nothing in Act V can bank from a curious Act IV visit. The [Detect Magic] base arm deliberately does NOT bank `detected_wardwork` -- this door is what the four shipped sites drain INTO, and a fifth producer would cheapen the >=3 threshold its payoff variant reads. TRAP (reviewer CRITICAL): variants[0] is the repo's SOLE producer of `seal_kept_found`, and later-satisfied-wins meant the descent arm SHADOWED it -- a save that downed the construct but never touched this door could descend, read, and never bank the find, stranding what_the_seal_kept's vault beat, then seal_kept_reported, then act_iv's gate. BOTH Act V read arms AND the [Observe] arm must compound `seal_kept_found` into their gate (the :404 idiom); dropping it from any arm reopens the hole. Pinned in test_sim_core (_test_seal_door_find_before_read).",
    "variants": [
     {
@@ -527,7 +527,7 @@
     }
    },
    "gate_closed_toast": "Rubble and old wardwork still choke this side passage. Whatever's back there can wait until the main halls are actually safe.",
-   "observe": "A narrower passage breaks off from the gauntlet proper, half-choked with fallen stone. Small shapes move in the dark past the rubble -- more than one.",
+   "observe": "A narrower passage breaks off from the gauntlet proper, half-choked with fallen stone. Small shapes move in the dark past the rubble — more than one.",
    "scales": true,
    "on_victory": "gallery_vermin_culled"
   },

@@ -83,17 +83,5 @@
   "container_state": {},
   "actions_since_sleep": 0,
   "rng_state": "4397686605447780332"
- },
- "inventory": [
-  "gnollish_hunting_knife",
-  "leather_jerkin",
-  "hedge_ward_charm",
-  "hunters_fang_talisman"
- ],
- "equipped": {
-  "weapon": "gnollish_hunting_knife",
-  "armor": "leather_jerkin",
-  "accessory_1": "hedge_ward_charm",
-  "accessory_2": "hunters_fang_talisman"
  }
 }

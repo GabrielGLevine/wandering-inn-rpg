@@ -1,5 +1,5 @@
 {
- "_comment": "THE PALLASS RETURN PROOF. pallass_market/pallass_forge share one lift and have no other map exit, so before this wave a pilgrim who travelled in could never leave -- a main-line softlock. Rides the shipped spine_reach_start (street, pallass_attuned + elevator_pass_stamped already held; no new fixture). Departs Liscor through street_anchor_stone, lands on the portals `pallass` row's own arrival cell (4,7), walks BOTH tiers for real (market row 9 -> the lift -> forge row 9 to Grimalkin's bench and back), then opens the picker at pallass_market_arrival_anchor (4,6) and rides it home to the inn, asserting the `the_wandering_inn` row's arrival cell. Exact options pins on both ends are the carrier proof (the plinth's menu must exclude Pallass itself and offer every other attuned row). Zero combat: market_watchgolems is interact-only (no trigger_radius) and nothing on the route touches it. Seed inert -- no fight resolves.",
+ "_comment": "THE PALLASS RETURN PROOF. pallass_market/pallass_forge share one lift and have no other map exit, so before this wave a pilgrim who travelled in could never leave -- a main-line softlock. Rides the shipped spine_reach_start (street, pallass_attuned + elevator_pass_stamped already held; no new fixture). Departs Liscor through street_anchor_stone, lands on the portals `pallass` row's own arrival cell (4,8), walks BOTH tiers for real (market row 9 -> the lift -> forge row 9 to Grimalkin's bench and back), then opens the picker at pallass_market_arrival_anchor (4,6) and rides it home to the inn, asserting the `the_wandering_inn` row's arrival cell. Exact options pins on both ends are the carrier proof (the plinth's menu must exclude Pallass itself and offer every other attuned row). Zero combat: market_watchgolems is interact-only (no trigger_radius) and nothing on the route touches it. Seed inert -- no fight resolves.",
  "fixture_save": "spine_reach_start",
  "starts_at_title": true,
  "steps": [
@@ -25,11 +25,11 @@
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "pallass_market" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "The light sharpens and the air turns to hot metal and stone dust. Pallass, tier on tier, rising past where you can see the top." }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [4, 7] },
+  { "action": "assert_state", "path": "player_cell", "equals": [4, 8] },
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "01_market_tier_arrival" },
 
-  { "_comment": "== WALK THE MARKET TIER: drop to the clear row 9 corridor (pallass_peek's own bounds lap proves y2-y9 walkable at both ends), run east to the lift approach (23,7), bump the gate cell (22,7). elevator_pass_stamped is held by the fixture, so the interact transitions instead of refusing. ==", "action": "move", "direction": "down", "steps": 2 },
+  { "_comment": "== WALK THE MARKET TIER: drop to the clear row 9 corridor (pallass_peek's own bounds lap proves y2-y9 walkable at both ends), run east to the lift approach (23,7), bump the gate cell (22,7). elevator_pass_stamped is held by the fixture, so the interact transitions instead of refusing. ==", "action": "move", "direction": "down", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [4, 9] },
   { "action": "move", "direction": "right", "steps": 19 },
   { "action": "assert_state", "path": "player_cell", "equals": [23, 9] },
@@ -61,7 +61,7 @@
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "pallass_market" }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "player_cell", "equals": [23, 7] },
 
-  { "_comment": "== THE WAY HOME: retrace west and take the plinth's WEST approach (3,6), not the south one -- (4,7) is the portals `pallass` row's arrival cell AND alchemy_bench_reduction's cell, so travel drops you on it but you can never walk back onto it (disclosed seam, no fix here: moving either would re-pin pallass_walkthrough/near_trader/near_pallass_drake/mixer_alchemist_loop). Bump east into the plinth's blocked cell to face it; the picker opens (pallass_attuned held) INSTEAD of the flavor toast -- interactions.gd checks portal_menu before on_interact_accomplishment -- and the menu excludes Pallass itself (current map). ==", "action": "move", "direction": "down", "steps": 2 },
+  { "_comment": "== THE WAY HOME: retrace west and take the plinth's WEST approach (3,6): the south one is alchemy_bench_reduction (4,7), solid, which is why v0.15 moved the arrival cell one further south to (4,8) -- travel used to land ON the bench. Bump east into the plinth's blocked cell to face it; the picker opens (pallass_attuned held) INSTEAD of the flavor toast -- interactions.gd checks portal_menu before on_interact_accomplishment -- and the menu excludes Pallass itself (current map). ==", "action": "move", "direction": "down", "steps": 2 },
   { "action": "assert_state", "path": "player_cell", "equals": [23, 9] },
   { "action": "move", "direction": "left", "steps": 20 },
   { "action": "assert_state", "path": "player_cell", "equals": [3, 9] },

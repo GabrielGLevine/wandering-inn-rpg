@@ -37,7 +37,7 @@
   { "_comment": "THE tier lock: accepted at silver rank -> tier 'silver', turn-in will pay the silver payout even if rank later shifts.", "action": "assert_state", "path": "accepted_bounty_tier", "equals": "silver" },
 
   { "_comment": "== JOURNAL: board shows SILVER copy == the Postings detail reads the LOCKED silver tier's copy verbatim + its 8-gold payout (contrast board_loop's bronze 2). baseline heard_gossip=1 at accept, silver needs +5 delta: unmet, opaque 'In hand.'.", "action": "press", "name": "journal" },
-  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "posting_title": "Gather Gossip for Krshia", "posting_status": "In hand.", "posting_gold": 8, "posting_detail": "SILVER-RANK request, for one with good ears. Five things heard freely -- the gate, the Guild, the stalls -- and told to me over tea. Not spying. Listening. Hrr. 8 gold, and the tea is mine to pour. Krshia Silverfang." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "posting_title": "Gather Gossip for Krshia", "posting_status": "In hand.", "posting_gold": 8, "posting_detail": "SILVER-RANK request, for one with good ears. Five things heard freely — the gate, the Guild, the stalls — and told to me over tea. Not spying. Listening. Hrr. 8 gold, and the tea is mine to pour. Krshia Silverfang." }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "01_journal_silver_posting" },
   { "action": "press", "name": "journal" },
   { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },

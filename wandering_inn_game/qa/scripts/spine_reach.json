@@ -658,7 +658,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Hedault",
-    "text": "Hold still. There is a residue on your sleeve I have catalogued exactly once before, in this shop, on a fragment. Ruin warding, and it is FED. A live draw, not a set one. I do not invoice for looking."
+    "text": "Hold still. There is a residue on your sleeve I do not see twice in a decade. Ruin warding, and it is FED. A live draw, not a set one. I do not invoice for looking."
    },
    "timeout_sec": 5
   },

@@ -906,7 +906,7 @@
      "door_mounted": 1
     }
    },
-   "toast": "A plain grey stone, out of place against the marble -- until you notice the coin-gold vein running through it, and the frame of light waiting just under the surface.",
+   "toast": "A plain grey stone, out of place against the marble — until you notice the coin-gold vein running through it, and the frame of light waiting just under the surface.",
    "observe": "The Liscor stones were rougher. This one has been handled by people with better manners; it barely shows the wear."
   },
   {
@@ -1195,7 +1195,7 @@
    ],
    "observe": "A runner ducks out Coyle's side door with a ledger under one arm, moving with the particular haste of someone who'd rather not be noticed leaving.",
    "on_interact_accomplishment": "spotted_the_runner",
-   "toast": "You fall in a comfortable distance behind. The runner doesn't loop, doesn't double back -- just walks like a man with somewhere specific to be, heading for the alleys off the boulevard's east end."
+   "toast": "You fall in a comfortable distance behind. The runner doesn't loop, doesn't double back — just walks like a man with somewhere specific to be, heading for the alleys off the boulevard's east end."
   },
   {
    "id": "boulevard_night_footpads",

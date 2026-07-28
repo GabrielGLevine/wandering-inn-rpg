@@ -217,6 +217,12 @@ func _interact_container(target: Dictionary, container_state: Dictionary) -> Dic
 	var open_toast := String(target.get("open_toast", ""))
 	var open_lore := bool(target.get("open_lore", false))
 	for raw_variant: Variant in target.get("open_toast_variants", []):
+		# A non-Dictionary member would hard-crash the typed assignment below on
+		# the ONE interact that opens this container. Skipping leaves the
+		# authored open_toast standing; the shape itself is a test_content
+		# failure (_validate_variant_entries), never a runtime one.
+		if not (raw_variant is Dictionary):
+			continue
 		var variant: Dictionary = raw_variant
 		if bool(_accomplishment_gate_met.call(variant.get("when", {}) as Dictionary)):
 			open_toast = String(variant.get("open_toast", open_toast))

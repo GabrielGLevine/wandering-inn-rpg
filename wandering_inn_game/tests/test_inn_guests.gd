@@ -11,29 +11,37 @@ func _met(present: Array) -> Callable:
 
 func _init() -> void:
 	var roster := ["selys", "krshia", "olesm", "pisces"]
+	# v0.15 T3.1: two members of these synthetic rosters (pisces, zevara) now
+	# carry ARC WINDOWS, and the pool filter is FAIL-CLOSED -- so the pure
+	# rotation math has to be asked with a predicate or it would measure the
+	# gate instead of the window. `unbanked` banks nothing, which opens both
+	# `absent`-headed windows; `fixture` reproduces the guest fixtures' own
+	# counters (door hauled AND mounted, tremor unheard), i.e. everyone pools.
+	var unbanked := _banked([])
+	var fixture := _banked(["door_retrieved", "door_mounted"])
 
 	# Empty pool / no seats -> nobody on shift.
-	assert(WIInnGuests.active_guests(roster, _met([]), 0, 2).is_empty(), "no met guests -> empty")
-	assert(WIInnGuests.active_guests(roster, _met(["selys"]), 0, 0).is_empty(), "zero seats -> empty")
+	assert(WIInnGuests.active_guests(roster, _met([]), 0, 2, unbanked).is_empty(), "no met guests -> empty")
+	assert(WIInnGuests.active_guests(roster, _met(["selys"]), 0, 0, unbanked).is_empty(), "zero seats -> empty")
 
 	# Pool smaller than seats: the trailing seat stays EMPTY, never duplicates.
-	var one := WIInnGuests.active_guests(roster, _met(["selys"]), 0, 2)
+	var one := WIInnGuests.active_guests(roster, _met(["selys"]), 0, 2, unbanked)
 	assert(one == ["selys"], "pool of 1 fills only 1 of 2 seats (no duplicate): got %s" % [one])
 
 	# Pilot case (roster order preserved): both met, 2 seats -> both, every waking.
-	assert(WIInnGuests.active_guests(roster, _met(["selys", "krshia"]), 0, 2) == ["selys", "krshia"], "both met -> both, t=0")
-	assert(WIInnGuests.active_guests(roster, _met(["selys", "krshia"]), 7, 2) == ["krshia", "selys"], "both met, odd waking -> window slides but same two present")
+	assert(WIInnGuests.active_guests(roster, _met(["selys", "krshia"]), 0, 2, unbanked) == ["selys", "krshia"], "both met -> both, t=0")
+	assert(WIInnGuests.active_guests(roster, _met(["selys", "krshia"]), 7, 2, unbanked) == ["krshia", "selys"], "both met, odd waking -> window slides but same two present")
 
 	# Pool larger than seats: the window of `seats` DISTINCT people slides by times_slept.
 	var big := _met(["selys", "krshia", "olesm", "pisces"])  # pool size 4
-	assert(WIInnGuests.active_guests(roster, big, 0, 2) == ["selys", "krshia"], "t=0 -> [selys,krshia]")
-	assert(WIInnGuests.active_guests(roster, big, 1, 2) == ["krshia", "olesm"], "t=1 slides one")
-	assert(WIInnGuests.active_guests(roster, big, 3, 2) == ["pisces", "selys"], "t=3 wraps the window")
-	assert(WIInnGuests.active_guests(roster, big, 4, 2) == ["selys", "krshia"], "t=4 == t=0 (period = pool size)")
+	assert(WIInnGuests.active_guests(roster, big, 0, 2, unbanked) == ["selys", "krshia"], "t=0 -> [selys,krshia]")
+	assert(WIInnGuests.active_guests(roster, big, 1, 2, unbanked) == ["krshia", "olesm"], "t=1 slides one")
+	assert(WIInnGuests.active_guests(roster, big, 3, 2, unbanked) == ["pisces", "selys"], "t=3 wraps the window")
+	assert(WIInnGuests.active_guests(roster, big, 4, 2, unbanked) == ["selys", "krshia"], "t=4 == t=0 (period = pool size)")
 
 	# No seat ever holds a duplicate person, for every waking across a full period.
 	for t in range(12):
-		var active := WIInnGuests.active_guests(roster, big, t, 3)
+		var active := WIInnGuests.active_guests(roster, big, t, 3, unbanked)
 		var seen := {}
 		for npc: String in active:
 			assert(not seen.has(npc), "t=%d seats a duplicate: %s" % [t, active])
@@ -46,25 +54,26 @@ func _init() -> void:
 	# before it reds a 90-second QA run.
 	var six := ["selys", "krshia", "olesm", "pisces", "relc", "zevara"]
 	var pool5 := _met(["selys", "krshia", "olesm", "pisces", "relc"])  # inn_guests_start: zevara alone unmet
-	assert(WIInnGuests.active_guests(six, pool5, 10, 2) == ["selys", "krshia"], "inn_guests_start t=10: pool 5, start 10%%5=0 -> the pilot pair")
-	assert(WIInnGuests.active_guests(six, pool5, 11, 2) == ["krshia", "olesm"], "inn_guests_start t=11: krshia STAYS, olesm arrives (a slide, not a swap)")
-	assert(WIInnGuests.active_guests(six, pool5, 12, 2) == ["olesm", "pisces"], "inn_guests_start t=12: olesm stays, pisces arrives")
+	assert(WIInnGuests.active_guests(six, pool5, 10, 2, fixture) == ["selys", "krshia"], "inn_guests_start t=10: pool 5, start 10%%5=0 -> the pilot pair")
+	assert(WIInnGuests.active_guests(six, pool5, 11, 2, fixture) == ["krshia", "olesm"], "inn_guests_start t=11: krshia STAYS, olesm arrives (a slide, not a swap)")
+	assert(WIInnGuests.active_guests(six, pool5, 12, 2, fixture) == ["olesm", "pisces"], "inn_guests_start t=12: olesm stays, pisces arrives")
 	var pool6 := _met(six)  # inn_guests_full_start: all six met
-	assert(WIInnGuests.active_guests(six, pool6, 10, 2) == ["relc", "zevara"], "inn_guests_full_start t=10: pool 6, start 10%%6=4 -> the PR2b pair")
-	assert(WIInnGuests.active_guests(six, pool6, 11, 2) == ["zevara", "selys"], "inn_guests_full_start t=11: the window wraps the roster's tail onto its head")
-	assert(WIInnGuests.active_guests(six, pool6, 16, 2) == ["relc", "zevara"], "full pool period is 6 wakings deep")
+	assert(WIInnGuests.active_guests(six, pool6, 10, 2, fixture) == ["relc", "zevara"], "inn_guests_full_start t=10: pool 6, start 10%%6=4 -> the PR2b pair")
+	assert(WIInnGuests.active_guests(six, pool6, 11, 2, fixture) == ["zevara", "selys"], "inn_guests_full_start t=11: the window wraps the roster's tail onto its head")
+	assert(WIInnGuests.active_guests(six, pool6, 16, 2, fixture) == ["relc", "zevara"], "full pool period is 6 wakings deep")
 	# An unmet member never shifts the window: the pool, not the roster, is the modulus.
-	assert(WIInnGuests.active_guests(six, pool5, 10, 2) != WIInnGuests.active_guests(six, pool6, 10, 2), "an unmet roster member changes the modulus, so the same waking seats a different pair")
+	assert(WIInnGuests.active_guests(six, pool5, 10, 2, fixture) != WIInnGuests.active_guests(six, pool6, 10, 2, fixture), "an unmet roster member changes the modulus, so the same waking seats a different pair")
 
 	# Negative times_slept is guarded (never crashes / never out-of-range).
-	assert(WIInnGuests.active_guests(roster, big, -1, 2).size() == 2, "negative times_slept guarded")
+	assert(WIInnGuests.active_guests(roster, big, -1, 2, unbanked).size() == 2, "negative times_slept guarded")
 
 	# guest_active mirrors membership in the active set.
-	assert(WIInnGuests.guest_active("selys", roster, big, 0, 2), "selys active at t=0")
-	assert(not WIInnGuests.guest_active("pisces", roster, big, 0, 2), "pisces off-shift at t=0")
-	assert(not WIInnGuests.guest_active("olesm", roster, _met(["selys", "krshia"]), 0, 2), "unmet olesm never seats")
+	assert(WIInnGuests.guest_active("selys", roster, big, 0, 2, unbanked), "selys active at t=0")
+	assert(not WIInnGuests.guest_active("pisces", roster, big, 0, 2, unbanked), "pisces off-shift at t=0")
+	assert(not WIInnGuests.guest_active("olesm", roster, _met(["selys", "krshia"]), 0, 2, unbanked), "unmet olesm never seats")
 
 	_test_quest_gates()
+	_test_arc_windows()
 
 	print("PASS: inn-guest rotation windows, dedups, and slides deterministically")
 	quit(0)
@@ -156,5 +165,73 @@ func _test_quest_gates() -> void:
 	# FAIL-CLOSED default: a caller that forgets the gate predicate never seats
 	# a gated guest (the row's own present_when.requires would hide it anyway,
 	# so an ungated pool would only ever produce a ghost-empty seat).
-	assert(WIInnGuests.met_pool(ten, all_met).size() == 7, "no gate predicate -> the three quest-gated members stay out")
+	assert(WIInnGuests.met_pool(ten, all_met).size() == 5, "no gate predicate -> all five gated members stay out (three quest gates + two arc windows)")
 	assert(not WIInnGuests.guest_active("wilovan", ten, all_met, 8, 2), "gated guest never seats without a gate predicate")
+
+
+## v0.15 T3.1 ARC WINDOWS. A guest vacates the inn for the span of their own
+## live story window -- a DISJUNCTION (before it opens OR after it closes) that
+## one dict, being an AND of its two arms, cannot state. Hence the third value
+## shape: an Array of specs, ANY passing. Fail-closed discipline is unchanged
+## and extended: an empty Array, a member that is not a Dictionary, and a member
+## that resolves to no arms all read as SHUT, never as "no conditions".
+func _test_arc_windows() -> void:
+	var ten := ["selys", "krshia", "olesm", "pisces", "relc", "zevara", "klbkch", "rags", "wilovan", "grimalkin"]
+	var all_met := _met(ten)
+	var base := ["rags_meeting_settled", "brothers_job_done", "elevator_pass_stamped"]
+
+	assert(WIInnGuests.GUEST_POOL_GATES["zevara"] is Array, "zevara's window is the ANY-of Array shape")
+	assert(WIInnGuests.GUEST_POOL_GATES["pisces"] is Array, "pisces's haul window is the ANY-of Array shape")
+
+	# ZEVARA: seated until her summons is taken, gone for the arc, back once sealed.
+	var before := _banked(base)
+	var summoned := _banked(base + ["heard_the_deep_tremor"])
+	var delved := _banked(base + ["heard_the_deep_tremor", "cleared_the_warren"])
+	var sealed := _banked(base + ["heard_the_deep_tremor", "cleared_the_warren", "raskghar_sealed"])
+	assert(WIInnGuests.met_pool(ten, all_met, before).has("zevara"), "pre-summons: the Captain is off shift at the inn")
+	assert(not WIInnGuests.met_pool(ten, all_met, summoned).has("zevara"), "summons taken: she is at her gate, not in a chair")
+	assert(not WIInnGuests.met_pool(ten, all_met, delved).has("zevara"), "warren cleared, unreported: still her arc, still out")
+	assert(WIInnGuests.met_pool(ten, all_met, sealed).has("zevara"), "arc closed: she comes back to the room")
+
+	# PISCES: the ghost seat dies. Through the haul window pisces_mounting (13,5)
+	# holds him, and BOTH guest rows hide -- so the pool must not seat him either.
+	var pre_haul := _banked(base)
+	var hauling := _banked(base + ["door_retrieved"])
+	var mounted := _banked(base + ["door_retrieved", "door_mounted"])
+	assert(WIInnGuests.met_pool(ten, all_met, pre_haul).has("pisces"), "before the haul: the before-arm row seats him")
+	assert(not WIInnGuests.met_pool(ten, all_met, hauling).has("pisces"), "haul window: he is hanging a door, and no chair pretends otherwise")
+	assert(WIInnGuests.met_pool(ten, all_met, mounted).has("pisces"), "door mounted: the after-arm row takes him back")
+
+	# THE INVARIANT, EXTENDED: every waking of every window still seats TWO
+	# distinct people. An arc-window exclusion re-bases the modulus; it never
+	# leaves a hole (the ghost-empty-chair regression, in its rotation form).
+	for gate_met: Callable in [before, summoned, delved, sealed, hauling, mounted]:
+		var pool: Array = WIInnGuests.met_pool(ten, all_met, gate_met)
+		assert(pool.size() >= 2, "every window keeps a pool of at least two: %s" % [pool])
+		for t in range(24):
+			var seated := WIInnGuests.active_guests(ten, all_met, t, 2, gate_met)
+			assert(seated.size() == 2, "t=%d must fill both seats: %s" % [t, seated])
+			assert(seated[0] != seated[1], "t=%d seats a duplicate: %s" % [t, seated])
+
+	# And the excluded guest is out for EVERY waking of the window, not merely some.
+	for t in range(24):
+		assert(not WIInnGuests.active_guests(ten, all_met, t, 2, summoned).has("zevara"), "t=%d seats a summoned Captain" % t)
+		assert(not WIInnGuests.active_guests(ten, all_met, t, 2, hauling).has("pisces"), "t=%d seats a Pisces who is at the pantry" % t)
+
+	# FAIL-CLOSED shapes for the new Array form.
+	var live := _banked(["raskghar_sealed"])
+	assert(not WIInnGuests._gate_open([], live), "an empty Array of specs is shut, not unconditioned")
+	assert(not WIInnGuests._gate_open([{}], live), "an Array whose only spec resolves to no arms is shut")
+	assert(not WIInnGuests._gate_open([{}, {}], live), "no member of an ANY-of can open on nothing")
+	assert(not WIInnGuests._gate_open(["raskghar_sealed"], live), "a bare-String member is not a spec -- unrecognized shape reads as shut")
+	assert(not WIInnGuests._gate_open([{"require": ["raskghar_sealed"]}], live), "a misspelled key inside a member is shut, same as at top level")
+	assert(not WIInnGuests._gate_open([{"requires": ["raskghar_sealed"]}, 7], live), "one junk member shuts the whole ANY-of, even beside a passing spec")
+	assert(not WIInnGuests._gate_open([{"requires": ["raskghar_sealed"]}], Callable()), "no predicate, no opinion, still shut")
+	# Positive controls, so the guard cannot pass by shutting everything.
+	assert(WIInnGuests._gate_open([{"requires": ["raskghar_sealed"]}, {"absent": ["door_mounted"]}], live), "ANY-of opens on its first passing spec")
+	assert(WIInnGuests._gate_open([{"absent": ["door_mounted"]}, {"requires": ["nothing_banked"]}], live), "ANY-of opens on a later passing spec too")
+	assert(not WIInnGuests._gate_open([{"requires": ["nothing_banked"]}, {"absent": ["raskghar_sealed"]}], live), "ANY-of stays shut when no member passes")
+
+	# The fail-closed default still holds for the new entries: no predicate, no seat.
+	var ungated: Array = WIInnGuests.met_pool(ten, all_met)
+	assert(not ungated.has("zevara") and not ungated.has("pisces"), "no gate predicate -> the arc-windowed guests stay out: %s" % [ungated])

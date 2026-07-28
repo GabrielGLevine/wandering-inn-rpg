@@ -422,7 +422,7 @@
       "at": 1
      },
      "sprite": "memorial_statue_drake",
-     "observe": "A drake in stone, spear planted, watching over ground that used to worry the whole city. Liscor sealed the dark for good, once the warren was cleared -- masonry over memory, and no one asked for thanks. This is as close as the hill gets to giving one anyway."
+     "observe": "A drake in stone, spear planted, watching over ground that used to worry the whole city. Liscor sealed the dark for good, once the warren was cleared — masonry over memory, and no one asked for thanks. This is as close as the hill gets to giving one anyway."
     }
    ]
   },
@@ -458,7 +458,7 @@
    ],
    "display_name": "A Weathered Plinth",
    "sprite": "memorial_plinth",
-   "observe": "A bare stone plinth at the end of the row, angled slightly wide of the others -- room left on purpose. Nothing stands on it yet. The mist doesn't seem to mind waiting.",
+   "observe": "A bare stone plinth at the end of the row, angled slightly wide of the others — room left on purpose. Nothing stands on it yet. The mist doesn't seem to mind waiting.",
    "visual_states": [
     {
      "when": {

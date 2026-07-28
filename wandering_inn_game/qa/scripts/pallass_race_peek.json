@@ -49,7 +49,7 @@
   {
    "action": "assert_state",
    "path": "player_cell",
-   "equals": [4, 7]
+   "equals": [4, 8]
   },
   {
    "action": "assert_state",
@@ -169,7 +169,7 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "text": "You'll want the second queue -- the first one's for out-of-towners. You know how it is."
+    "text": "You'll want the second queue — the first one's for out-of-towners. You know how it is."
    },
    "timeout_sec": 5
   },

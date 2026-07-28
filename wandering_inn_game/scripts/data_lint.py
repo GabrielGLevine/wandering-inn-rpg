@@ -19,7 +19,10 @@ Checks:
      out-of-grid cell as a plain player_blocked, invisible until a
      canonical happens to pin it).
   3. portals          -- every row's destination map exists in the composed
-     catalog and its cell is in that map's grid.
+     catalog, its cell is in that map's grid, AND that cell is not statically
+     blocked or held by an unconditional entity (transition() assigns
+     player_cell raw, so an occupied arrival strands the player inside a prop
+     -- the shipped pallass (4,7)-on-a-bench class).
   4. dialogue         -- graph has start; start is a node; nodes carry
      speaker and text-or-text_variants; every present goto targets a node
      in the same graph (goto is OPTIONAL -- absent = end conversation).
@@ -141,6 +144,37 @@ def check_portals(parsed: dict, maps: dict, errors: list) -> None:
 		elif not _in_grid(cell, grid):
 			errors.append(f"portals.json: row '{rid}' cell {cell} "
 				f"out of '{dest}' grid {int(grid['width'])}x{int(grid['height'])}")
+		else:
+			_check_arrival_free(rid, cell, maps[dest], errors)
+
+
+def _check_arrival_free(rid: str, cell: list, dest_map: dict, errors: list) -> None:
+	"""Travel must not land the player inside something solid.
+
+	_travel_to_portal -> transition() ASSIGNS player_cell raw (wi_game.gd); there
+	is no nudge and no nearest-free search, while is_cell_blocked() blocks on any
+	present entity regardless of kind. So an arrival cell that is statically
+	blocked or holds an unconditional entity strands the player inside a prop:
+	they can walk off it and never back on. Shipped that way for the whole life
+	of the pallass row (4,7) == alchemy_bench_reduction.
+
+	UNCONDITIONAL blockers only -- an entity carrying present_when may be absent
+	in the arriving state, and this tier cannot read counters. That case belongs
+	to the Godot reachability gate, not here.
+	"""
+	target = [int(cell[0]), int(cell[1])]
+	if any(_cell_shape_ok(b) and [int(b[0]), int(b[1])] == target
+			for b in dest_map.get("blocked", [])):
+		errors.append(f"portals.json: row '{rid}' arrival cell {cell} is a blocked cell")
+		return
+	for entity in dest_map.get("entities", []):
+		ecell = entity.get("cell")
+		if not _cell_shape_ok(ecell) or [int(ecell[0]), int(ecell[1])] != target:
+			continue
+		if entity.get("present_when") is None:
+			errors.append(f"portals.json: row '{rid}' arrival cell {cell} is occupied by "
+				f"entity '{entity.get('id', '<no id>')}' -- travel would strand the player inside it")
+			return
 
 
 def check_dialogue(parsed: dict, errors: list) -> None:

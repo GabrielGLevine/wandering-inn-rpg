@@ -392,7 +392,7 @@
    ],
    "display_name": "Forge Station",
    "sprite": "forge_station",
-   "observe": "An anvil bolted to its own slab, a furnace mouth banked low beside it -- cold for now, but built to run hot for a working day at a time.",
+   "observe": "An anvil bolted to its own slab, a furnace mouth banked low beside it — cold for now, but built to run hot for a working day at a time.",
    "on_interact_accomplishment": "eyed_the_forge_station",
    "toast": "The metal underfoot still holds the day's heat, hours after the last hammer fell.",
    "light": {
@@ -415,7 +415,7 @@
    ],
    "display_name": "Forge Station",
    "sprite": "forge_station",
-   "observe": "A second bench, same pattern as the first -- built to the same civic spec as the market tier's stalls, just built for heat instead of trade.",
+   "observe": "A second bench, same pattern as the first — built to the same civic spec as the market tier's stalls, just built for heat instead of trade.",
    "on_interact_accomplishment": "eyed_the_forge_station",
    "toast": "Tool racks, empty for the moment. Whoever works this bench keeps it orderly."
   },

@@ -55,11 +55,11 @@
    "map": "pallass_market",
    "cell": [
     4,
-    7
+    8
    ],
    "requires_accomplishment": "pallass_attuned",
    "arrival_toast": "The light sharpens and the air turns to hot metal and stone dust. Pallass, tier on tier, rising past where you can see the top.",
-   "_comment": "pallass_attuned banks from Krshia's attunement-stone purchase (data/dialogue/krshia_crate.json's 'charms' node, gated on pallass_sponsored), the SAME late-attuning shape as invrisil_attuned."
+   "_comment": "pallass_attuned banks from Krshia's attunement-stone purchase (data/dialogue/krshia_crate.json's 'charms' node, gated on pallass_sponsored), the SAME late-attuning shape as invrisil_attuned. Arrival cell (4,8), open floor one south of alchemy_bench_reduction (4,7) -- travel used to land ON that bench, so the player stood inside a solid prop and could never walk back onto the cell. data_lint's arrival-vs-blocking arm now refuses the whole class."
   },
   {
    "id": "dungeon_depths",

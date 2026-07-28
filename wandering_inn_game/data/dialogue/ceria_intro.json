@@ -27,7 +27,7 @@
 		"dig_pitch": {
 			"_comment": "2026-07-26 main-quest restructure (Task 2.2): the horns_dig pitch. The quest + horns_dig_started already banked on the option that reached here, so both exits below are ungated -- the invitation cannot be re-taken (hub's hide_when) and cannot strand the player (dig_directions repeats the camp's location, and Task 2.3's camp NPC gates on horns_dig_started, not on hearing this node).",
 			"speaker": "Ceria",
-			"text": "Word travels. Yes -- there's a ruin out past the floodplains, and under it a level nobody's opened since before Liscor had walls. We hit the seal three days ago. Yvlon can't cut it, Pisces won't shut up about it, and we are exactly one pair of hands short.",
+			"text": "Word travels. Yes — there's a ruin out past the floodplains, and under it a level nobody's opened since before Liscor had walls. We hit the seal three days ago. Yvlon can't cut it, Pisces won't shut up about it, and we are exactly one pair of hands short.",
 			"options": [
 				{ "text": "I'm in. Where's the camp?", "goto": "dig_directions" },
 				{ "text": "What's down there?", "goto": "dig_unknown" }
@@ -40,7 +40,7 @@
 		},
 		"dig_directions": {
 			"speaker": "Ceria",
-			"text": "East past the gate road, across the floodplains -- follow the survey stakes. Ask for me at the camp. And bring your own rope.",
+			"text": "East past the gate road, across the floodplains — follow the survey stakes. Ask for me at the camp. And bring your own rope.",
 			"options": [ { "text": "See you there.", "end": true } ]
 		}
 	}
