@@ -232,12 +232,17 @@ what those runs showed.
   stray toggle breaks) and a positive control — two `tap_journal_body` taps at the
   drag's own release point, toggling `[Basic Cleaning]` on and back off, domain
   event and `ui_journal_loadout_rendered` both pinned.
-- [ ] COMBAT/BRIAR-CAMOUFLAGE (P3, same family as the open COMBAT/CELLAR-VERMIN
+- [x] COMBAT/BRIAR-CAMOUFLAGE (P3, same family as the open COMBAT/CELLAR-VERMIN
   entry) — on `witch_hollow` the deep briar collectors are green foliage on a
   green floor under a green canopy. In `riverfarm_fight/02_briar_deep_wave.png`
   Collector A is findable only by its HP bar, and Collector B's foliage overlaps
   the Hunter's cloak so ally and enemy read as one mass with two bars.
-- [ ] MAP/PALLASS-FORGE-FLOOR (P3, widened in fix round 1 to the ARENA) —
+  **FIXED v0.15 T5.1 (2026-07-28):** the same `combat_tint` seam, pulled
+  thorn-rust across all four collector ids. Re-shot:
+  `riverfarm_fight/02_briar_deep_wave.png` (seed 9), read at a native crop —
+  both collectors are rust-and-red against the flat green floor and the Hunter's
+  dark-grey cloak is unmistakably a third mass. Zero stat edits.
+- [x] MAP/PALLASS-FORGE-FLOOR (P3, widened in fix round 1 to the ARENA) —
   `pallass_forge`'s walkable floor and its walls share one purple-grey brick
   texture with no floor/wall cue; the top rows are indistinguishable from the
   walkable middle (`pallass_walkthrough/07_forge_tier_arrival.png`). In the same
@@ -246,7 +251,36 @@ what those runs showed.
   probe the two blocked-cell clusters read as decorative brick patterning, not
   as obstacles you must path around. The combatants themselves are fine there —
   see WHAT LANDS.
-- [ ] SPRITE/GRIMALKIN-FIGURE-HEIGHT (P3, USER-GATED — root cause of the inn's
+  **FIXED v0.15 T5.1 (2026-07-28), all three halves.** (1) MAP: row 2 now takes
+  the slate band row 9 already used, so the tier wall and the walkable brick stop
+  being one texture — the floor is framed dark top and bottom, no blocking moved.
+  (2) ARENA: the board used a HARDCODED biome->prop table that had never heard of
+  `pallass_forge`, so its cover fell through to a flat recoloured tile (also a
+  props-over-tiles violation). The board now reads `biomes.json`'s
+  `blocked_props` — the key the FIELD renderer already consumed — with the const
+  as fallback only, and blocked props take the GH#28 boost (dressing must never
+  compete with the grid; a cell you must path around is not dressing). (3) The
+  golem takes an ember field `tint` so it stops reading as parked machinery.
+  Re-shot: `pallass_walkthrough/07_forge_tier_arrival.png` (seed 9). NOTE: no QA
+  script fights `forge_hall`, so the ARENA half is unit-proven (the pool now
+  comes from data) but has no board screenshot — a pin is filed.
+- [x] SPRITE/KLBKCH-SILHOUETTE (v0.15 T5.2, VERIFIED then FILED) — read once
+  against the silhouette contract in `docs/design/character-profiles.md`
+  (wiki-verified 2026-07-10), the shipped rig fails **3 of its 4** points: TWO
+  arms where canon's Vol-1-7 body needs FOUR, an orange/amber body where the
+  contract says dark brown chitin, and one thin blade where it calls for twin
+  sword hilts ("the one visual that separates him from every other Worker").
+  Only the antennae hold. One bounded PixelLab v3 probe (2 generations, ~$0.18)
+  came back HOLDING the four-arm read, the antennae and a dark rust chitin — the
+  silhouette IS reachable at this scale, which was the open question. NOT
+  shipped: the probe wears heavy armour the contract explicitly forbids ("he
+  wears his blades, not a uniform"), carries one sword, and has no animations; a
+  registry swap needs idle/walk/slice x 3 facings (~6-9 more generations,
+  $0.54-0.81 — 3-4x the sanctioned budget), and a static rig would REGRESS a
+  character who currently animates. Frames parked in
+  `potential_assets/pixellab_2026-07-28_klbkch_probe/`. Decided in-wave, not
+  gated (CHOICE-LOG 2026-07-28).
+- [x] SPRITE/GRIMALKIN-FIGURE-HEIGHT (P3, USER-GATED — root cause of the inn's
   four-chair seat fight, ledgered by Phase 5 rather than fixed) — `sprites.json`
   `grimalkin` (`render_scale` 0.463, 224px frames) puts his on-screen figure near
   **98px**, about **2.3× Relc's** — and Relc's own catalog entry documents the
@@ -262,9 +296,29 @@ what those runs showed.
   `.superpowers/sdd/2026-07-26-main-quest-foti-wave/task-5-report.md` and the
   `grimalkin_inn_guest` `_comment` in `data/maps/inn/inn.json`. NOT an inn edit —
   a shipped-character catalog change, so it waits on the user's eye.
-- CONFIRMED STILL OPEN: RUIN_WARDEN/RIG-SCALE (P3, logged in the mq4-act5 pass)
-  — at `combat_scale` 1.15 the warden's crown is still cut by the turn banner
-  on the vault arena's top row (`seal_open/06_the_warden.png`).
+  **REFUTED v0.15 T5.2 (2026-07-28), no change shipped.** Measured from the
+  sheet's own alpha: his FIGURE is **49.5px** (107 rows head-to-feet x 0.463) =
+  **1.20x** Relc's 41.4px — exactly canon's "bigger than Relc". The "98px, about
+  2.3x Relc" above is FRAME height (224 x 0.463) compared against Relc's FIGURE
+  height: apples to oranges, and the frame is mostly transparent margin. Setting
+  him to the 43.4px convention would have made him the SAME height as Relc and
+  broken canon. What actually crowds the inn is his **2.9-cell arms-out WIDTH**
+  (Relc 1.8), intrinsic to the pose — no `render_scale` changes aspect. Re-shot
+  at the shipped (14,5) seat: `inn_guests_ext_loop/05_wilovan_and_grimalkin_
+  seated.png` (seed 3) — he is plainly the room's largest figure and buries
+  nobody. The measurement now lives in his `sprites.json` `_comment` so the
+  frame-vs-figure error cannot recur.
+- [x] RUIN_WARDEN/RIG-SCALE (P3, logged in the mq4-act5 pass) — at
+  `combat_scale` 1.15 the warden's crown was cut by the turn banner on the vault
+  arena's top row (`seal_open/06_the_warden.png`).
+  **FIXED v0.15 T5.2 (2026-07-28) — and it was far worse than a crown.**
+  Measured, 1.15 put this 216px rig at **7.4 cells tall and 6.0 wide**: 2.5x the
+  next-largest boss (`hired_blade_leader`, 2.97) and half the board's entire
+  width. It was never "a rig-anchor question" — it was a scale nobody had
+  computed. `ruin_guardian`/`seal_warden` → **0.54** (3.48 cells, still the
+  biggest figure in the game); the three Lesser Wards → **0.42** (2.70). Visual
+  only, no stat moved. Re-shot: `seal_open/06_the_warden.png` (seed 1) — the
+  whole rig sits inside the board with its head well clear of the banner.
 - TRANSIENT, NOT A FINDING: one windowed `journal_history` run exited with
   "8 ObjectDB instances were leaked at exit"; not reproducible on re-run (0
   noise), headless sweep clean. Windowed shutdown-order artifact.
@@ -354,19 +408,37 @@ unit suites + the 162-script sweep green before the windowed pass. Three
 windowed runs (`seal_open` seed 1, `seal_fed` seed 9, `seal_reward` seed 9,
 all `passed: true`), 25 screenshots read at native resolution.
 
-- [ ] MAP-LIGHTS/DAY (P3, systemic, NOT Act V's own) — `moods.meta
+- [x] MAP-LIGHTS/DAY (P3, systemic, NOT Act V's own) — `moods.meta
   .light_energy_by_phase.day` is `0.0`, so every authored map light renders at
   zero energy during the day phase. For a SEALED map (no sky, no windows) that
   is the wrong default: the vault's three lights only exist from dusk, and its
   daytime read has to be carried by the grade alone. Worth a per-map opt-out
   (`lights_ignore_phase: true`) rather than brightening every dungeon grade.
   Same class affects pallass_market's crystal lamps by day.
-- [ ] RUIN_WARDEN/RIG-SCALE (P3, pre-existing) — at `combat_scale` 1.15 (the
+  **FIXED v0.15 T5.3 (2026-07-28)** as `moods.moods.<map>.lights_by_day: true`
+  (not `lights_ignore_phase` — the shipped name says what it opts out of),
+  honored by `WIAtmosphere`. Latched in `apply()` off the MAP grade before the
+  refresh that consumes it; `apply_arena()` never touches it (an arena id is not
+  a map id, and the lights on screen still belong to the map underneath).
+  Implemented as a FLOOR, not an override, so a future phase that BRIGHTENS
+  lights still reaches an opted-out map. Applied to `seal_vault`; re-shot at DAY
+  phase: `seal_open/09_the_anchor.png` (seed 1) — the anchor plinth and both
+  ward rings now cast visible cool pools instead of rendering at zero energy.
+  NOT applied to `trapped_halls`: it authors ZERO lights, so the key would be
+  dead config, and the PC's own [Light] lamp is not phase-gated at all.
+  `pallass_market`/`pallass_forge` are the same class and stay OPEN for a taste
+  read — they are walled-city interiors, but their day grades are near
+  identity, so brightening them is a look call, not a defect fix.
+- [x] RUIN_WARDEN/RIG-SCALE (P3, pre-existing) — at `combat_scale` 1.15 (the
   shipped `ruin_guardian` value, which `seal_warden` now matches deliberately)
   the rig's head clips under the combat HUD's turn banner on the vault arena's
   top row. Not introduced here — the first pass shipped 1.35 and the windowed
   read pulled it back to the shipped precedent. A rig-anchor question for the
   art lane, not a data-value one.
+  **FIXED v0.15 T5.2 (2026-07-28) — and it WAS a data value.** Duplicate of the
+  entry in the seal-open section above; measurements there (1.15 = 7.4 cells
+  tall, 6.0 wide, 2.5x the next-largest boss). Guardian/seal_warden → 0.54,
+  Lesser Wards → 0.42, re-shot on `seal_open/06_the_warden.png`.
 - [x] TOAST/LENGTH (P4) — the `[Detect Magic]` quartet payoff is the longest
   toast in the game (7 wrapped lines at 1280x720). It FITS (no clipping, top
   edge well inside the screen) and it is the beat's climax, but it is the new
@@ -487,7 +559,7 @@ pre-dig-hub reads. Durable evidence:
   0 unrendered after**. The pedestal reveal is additionally `lore: true`, so it
   is banked to `Game.sim.lore_notes` at emit and readable in the journal even
   on a run that never renders it.
-- [ ] COMBAT/CELLAR-VERMIN (P2, pre-existing, re-observed on this wave's
+- [x] COMBAT/CELLAR-VERMIN (P2, pre-existing, re-observed on this wave's
   surface) — on the re-gated leak board
   (`door_chain_fight/00_rift_vermin_leak_board.png`) the Rift Vermin
   combatants are visually indistinguishable from the cellar's barrel decor;
@@ -495,6 +567,16 @@ pre-dig-hub reads. Durable evidence:
   roster means reading the turn-order strip instead of the board. The feed
   panel's third line ("Rift Vermin B strikes Relc for 13!") is also clipped by
   the parchment fold in the same shot.
+  **FIXED v0.15 T5.1 (2026-07-28):** `inn_cellar` has no `arena_moods` entry, so
+  it falls back to the inn's identity grade and the GH#28 boost is a literal
+  no-op there — brightness was never the lever. New per-combatant `combat_tint`
+  (a `combatants.json` key applied to `spr.modulate`, while the boost keeps
+  `self_modulate`, so the two multiply) gives a/b/c cold-blue, violet and ember,
+  plus `combat_scale 0.40`. Round 1 shipped ~20% channel nudges and the windowed
+  read REFUTED them (a hue nudge into a dark-brown sprite is still dark brown at
+  1.3 cells); round 2 is a real hue shift. Re-shot:
+  `door_chain_fight/00_rift_vermin_leak_board.png` (seed 9) — three coloured,
+  countable creatures against plainly-duller brown barrels.
 - WHAT LANDS (keep this, do not regress): the mounting scene stages correctly —
   `pisces_mounting` (13,5) reads as standing at the pantry door (14,6), his
   white robes are distinct against a crowded inn floor, and his two-line
@@ -526,18 +608,37 @@ native resolution. Durable evidence:
   `01_tremor_pointer.png` and additionally asserts it landed in `lore_notes`,
   so the destination survives a player who walks off mid-toast. See the
   TOAST/QUEUE-DROP entry above for the queue mechanism.
-- [ ] COMBAT/DARK-ARENA (P1 acceptance drift) — the two Sewer Rats in
+- [x] COMBAT/DARK-ARENA (P1 acceptance drift) — the two Sewer Rats in
   `sewers_walkthrough/01_vermin_encounter.png` are effectively invisible at
   native scale; their HP numerals and orange bars reveal that enemies exist,
   but the bodies read as tiny dark pixels. The still-dark mood lands, but the
   closed GH#28 combatant-brightness treatment no longer clears its own
   first-time-player visibility bar on this roster.
-- [ ] SPRITE/ARC-CLIMAX (P2) — deep-tunnel figures repeatedly occupy the same
+  **FIXED v0.15 T5.1 (2026-07-28) — it was never a brightness bug.** Measured,
+  the `bat` roster rendered at **0.55 cells** (52 alpha rows x render_scale
+  0.17 / CELL 16) — a 4x9px smudge. Brightness could not have rescued it:
+  `sewers_nest`'s legibility boost already sits at 2.93 of a hard 3.0 cap, and
+  the boost lifts figure and floor together. `combat_scale 0.40` puts them at
+  **1.30 cells** (level with a briar collector) and a warm `combat_tint` carries
+  them off the blue-grey grade. Board-only — the field bat and every stat are
+  untouched. Re-shot: `sewers_walkthrough/01_vermin_encounter.png` (seed 9):
+  two brown bat bodies with HP numerals and bars, plainly separate from the
+  purple mushroom cover and the grey boulders.
+- [~] SPRITE/ARC-CLIMAX (P2) — deep-tunnel figures repeatedly occupy the same
   visual footprint. Relc/player/warren art collapse into one stack in
   `arc_flow/dd_03_warren_mouth.png` and `dd_04_awakened_field.png`; the boss and
   both scouts overlap heavily in `dd_06_boss_fight.png`, making count, identity,
   and threat hierarchy hard to parse. Restage field cameos and spread the
   climax roster's initial combat cells.
+  **ARENA HALF FIXED v0.15 T5.1 (2026-07-28):** `deep_warren`'s three enemies
+  shared adjacent cells while being 2.2-2.6 cells WIDE. The boss KEEPS (10,3)
+  (engagement distance unchanged, so the canonical fight is not re-rolled); the
+  scouts move to (10,6)/(8,4). Re-shot: `arc_flow/dd_06_boss_fight.png` (seed
+  9) — three separate silhouettes with clear gaps; count, identity and
+  hierarchy all legible. **FIELD HALF STILL OPEN:** the `dd_03`/`dd_04` cameo
+  stacking cannot be fixed in data — Relc is a COMPANION, so his cell follows
+  the player and no map edit separates him from the awakened field piece. Needs
+  a presentation-side companion-offset rule, not a cell.
 - NOTE: the existing board/picker and permanent field-readout concerns were
   re-observed, not re-opened as duplicate boxes. The Missing Recruit lead is
   one notice inside a 14-page Request Board read (`missing_recruit_loop`), and

@@ -4,6 +4,91 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 Phase 5 readability + rigs (eight in-wave calls)
+
+- **The combat board got a MEASURED acceptance bar, and it is what
+  found the bugs.** A figure's on-screen size is `figure_alpha_rows *
+  scale / 16` cells, where `combat_scale` REPLACES `render_scale`.
+  Nobody had ever computed it, so the shipped roster spanned 20x: the
+  `bat` family at 0.55 cells and the `ruin_warden` rig at 7.4. Both
+  VISUAL-LOG entries had misdiagnosed themselves from FRAME height
+  instead (the frame is mostly transparent margin). `test_combat_visuals`
+  now pins a floor of 1.25 cells (the smallest figure any windowed read
+  has accepted) and a ceiling of 3.55 (past ~3.5 a rig eats the turn
+  banner). Alternative — keep eyeballing — is exactly how three of these
+  shipped. Revert: delete the two consts and the roster loop.
+- **DARK-ARENA is a SCALE bug, not a brightness bug.** `sewers_nest`'s
+  legibility boost already sits at 2.93 of a hard 3.0 cap, and the boost
+  lifts figure and floor together, so more brightness was never
+  available. `combat_scale 0.40` on the `bat` roster (0.55 → 1.30 cells)
+  is the fix; the tint is a second-order aid. Board-only — the field bat
+  is untouched, and no sim value moved.
+- **Per-combatant `combat_tint`, on `modulate`, over a per-sprite
+  variant.** Three rosters share one silhouette each and two of their
+  boards are the creature's own colour. The alternatives were new sprite
+  entries per creature (real art cost, and `sprites.json` has no tint
+  key) or recoloured sheets (a redistribution question). A data tint on
+  `modulate` composes with the GH#28 boost on `self_modulate` and cost
+  nothing. It forced one real fix: `impact_flash` tweened back to bare
+  WHITE, so the first hit would have stripped the tint permanently — it
+  now settles to a stored resting modulate.
+- **The tints were re-tuned ONCE, on the windowed evidence.** The first
+  pass shipped ~20% channel nudges and the screenshots refuted them (a
+  hue nudge into a dark-brown sprite is still dark brown at 1.3 cells).
+  Second pass is a real hue shift. This is the whole reason the bar is
+  windowed and not arithmetic.
+- **`blocked_props` is read from `biomes.json` first, the renderer const
+  second.** The FIELD renderer already consumed that data key; the board
+  ignored it and used its own hardcoded table, so `pallass_forge` — a
+  biome the table had never heard of — silently fell through to a flat
+  recoloured tile, which is what made its cover read as brick patterning
+  (and violated the repo-wide props-over-tiles mandate). Blocked props
+  also take the legibility boost now: off-grid DRESSING must never
+  compete with the grid, but a cell you must path around is not
+  dressing. Revert: drop `_blocked_prop_pool` back to the const.
+- **ARC-CLIMAX: the boss KEEPS its cell; only the scouts move.** Moving
+  the boss would have changed its engagement distance from the player
+  half and re-rolled a canonical fight. Scouts to (10,6)/(8,4) buys the
+  separation for one scout arriving a turn earlier. The FIELD half of
+  that entry (Relc/player/warren cameos stacking on `dd_03`/`dd_04`)
+  stays OPEN: Relc is a companion, so his cell is dynamic and no data
+  edit fixes it — logged, not faked.
+- **GRIMALKIN-FIGURE-HEIGHT: REFUTED, no change.** Measured, his figure
+  is 49.5px (107 alpha rows head-to-feet x 0.463) = **1.20x** Relc's
+  41.4px — which is exactly canon's "bigger than Relc". The "98px, about
+  2.3x Relc" in the VISUAL-LOG was FRAME height (224 x 0.463) compared
+  against Relc's FIGURE height: apples to oranges. Setting him to the
+  43.4px convention would have made him the same height as Relc and
+  broken canon. What actually crowds the inn is his 2.9-cell arms-out
+  WIDTH (Relc 1.8), which is intrinsic to the pose — no `render_scale`
+  changes aspect. Re-shot at the shipped (14,5) seat: he buries nobody.
+  The measurement now lives in his catalog `_comment` so the frame-vs-
+  figure error cannot recur.
+- **KLBKCH: defect CONFIRMED, rebuild PROVEN FEASIBLE, not shipped.**
+  Read against the silhouette contract the rig fails 3 of 4 points —
+  TWO arms (contract demands four), orange/amber body (contract demands
+  dark brown chitin), one thin blade (contract demands twin sword
+  hilts); only the antennae hold. One bounded PixelLab v3 probe (2
+  generations, ~$0.18, inside the sanctioned window) came back holding
+  the four-arm read, the antennae and a dark rust chitin — so the
+  silhouette IS reachable at this scale, which was the open question.
+  It is NOT shippable as generated: it wears heavy armour the contract
+  explicitly forbids ("he wears his blades, not a uniform"), carries one
+  sword, and has no animations. A registry swap needs idle/walk/slice x
+  3 facings ≈ 6-9 more generations (~$0.54-0.81), 3-4x the sanctioned
+  budget, and shipping a static rig would REGRESS a character who
+  currently animates. Frames parked in
+  `potential_assets/pixellab_2026-07-28_klbkch_probe/`. Filed with its
+  cost, never gated.
+- **MAP-LIGHTS/DAY ships on seal_vault only.** `trapped_halls`, which
+  the plan also named, authors ZERO lights — the key would have been
+  dead config asserting a fix that does nothing. Its darkness is
+  grade-only by design and the PC's own [Light] lamp is not phase-gated
+  at all. `pallass_market`/`pallass_forge` are the same class and are
+  flagged for the wave-close read rather than changed blind. The opt-out
+  is a FLOOR, not an override, so a future phase that brightens lights
+  still reaches an opted-out map.
+
 ## 2026-07-28 — v0.15 T4.4 regional work + the Phase 4 helper-pace verdict
 
 - **The job props reuse the `serving_tray` idiom, not the bounty machinery.**
