@@ -16,6 +16,67 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### Machine playtest — wave/v015-p1-delivery, PHASE-1 CLOSE: the delivery layer (2026-07-28)
+
+Source: `wave/v015-p1-delivery` at `70c002f` + this task's fixes, full asset
+overlay in tree (654 PNGs, real art), 30/30 unit suites + the 166-script sweep
+green first. Seven windowed runs read at native 1280x720 (`arc_flow`,
+`seal_fed`, `door_awakening`, `raskghar_entry_loop`, `journal_history`,
+`board_loop`, `sewers_walkthrough`). Targets: all five act pages, the Leads
+strip at the mainline seams, the Lore tab, and the toast-over-journal FEEL
+call the implementer flagged at T1.3.
+
+**What reads correctly** (no entry needed, recorded so the next pass doesn't
+re-litigate): all five act pages render their pending beats as authored
+openings — Act I `journal_history/01`, Act II `board_loop/03b`, Act III
+`raskghar_entry_loop/00`, Act IV `arc_flow/05`+`07`, Act V `seal_fed/01`.
+18/18 beats carry an `opening`, so `WIActs.render_beats`' drop-arm never
+fires in shipped content, and no opening states an outcome. Every one reads
+forward ("Krshia's counter sees everything. Earn a look behind it."), not as
+a summary. The Leads strip does its job at the seam: `door_awakening/00`
+shows "Quests — No quests in progress." carrying **two** leads plus five
+pending openings above it, where the pre-phase page was a dead end. The Lore
+tab is newest-first and reads as a record worth keeping (`seal_fed/04b` — the
+later Pisces line sits above the earlier one, full authored prose, not
+truncated).
+
+- [ ] TOAST/MODAL-OVERLAP (P2, pre-existing layer order, MADE MORE FREQUENT by
+  the v0.15 lossless queue) — **the FEEL call, answered both ways.** Toasts
+  draw at layer 12 over the journal's 10 (deliberate, `message_layer.gd`).
+  In the COMMON case this reads as *lively*, not broken: a 1-line toast
+  (96px) occupies x 808–1256 / y 590–686 and the journal is 640x560 centred
+  (x 320–960 / y 80–640), so the overlap is a 152x50 corner that covers only
+  blank parchment margin and the panel's bottom-right ornament — zero text,
+  zero controls, the scroll hint (`▼`, centred at x 640) and the scrollbar
+  (x≈945) both clear. `arc_flow/07` ("[Diplomat Level 2]" arriving over an
+  open journal) and `door_awakening/00` ("You sleep soundly.") are the
+  evidence, and in both the world-kept-moving signal is worth more than the
+  ornament it hides. The TALL case is a real defect: a 3-line toast is 122px
+  (`_toast_panel_height_for`: `3*pitch - spacing + 2*TOAST_FOLD_DANGER_PX`),
+  topping out at y≈564, which reaches the journal's last body rows — on the
+  History tab `seal_fed/04b` clips Recent Messages mid-word ("…cut the inn's
+  frame too. Find ou|") and truncates the line below it. Any journal row
+  extending past x≈808 in the y 564–640 band is exposed; the Leads rows are
+  the longest lines the panel draws (`door_awakening/00`'s Guild lead ends at
+  x≈910), so this worsens as leads accumulate. Cosmetic in the 1-line case,
+  information-losing in the 3-line case. Implementer's proposed fix stands and
+  is now measured: pause the drain while a modal is open, never re-drop.
+- [ ] QA/SEWERS-WINDOWED-TIMING (P2, WAVE-AUTHORED at `50cbf6b`) —
+  `sewers_walkthrough` PASSES headless (what `ci_sweep`/CI run) and FAILS
+  windowed at its pinned seed 9: the two post-combat `ui_toast_rendered`
+  waits Task 1.3 added as the drain-kick's live proof time out (5.0s each,
+  cursor=190). Cause is frame pacing, not the feature — windowed real-time
+  frames let the queue drain BEFORE `combat_started`, so [Firefly] and
+  [Snap Freeze] render pre-combat (7 rendered pre / 1 post) and there is
+  nothing banked for the post-combat waits to catch; headless collapses the
+  holds, so 3 render pre and 4 are banked and delivered after
+  `ui_combat_hidden`. The assertions are therefore headless-only. This
+  matters because `sewers_walkthrough` is the designated dark-map script in
+  the MACHINE-PLAYTEST rotation — the rotation now has a script that cannot
+  be run windowed without a red result.json. Wants the two waits made
+  pacing-independent (assert the queue's delivery via state, or gate the
+  waits on the banked-count) rather than deleted.
+
 ### Machine playtest — wave/mq6-bands, MILESTONE CLOSE: the whole main line (2026-07-27)
 
 Source: `wave/mq6-bands` after Tasks 9.1–9.3, full asset overlay in tree, 29/29

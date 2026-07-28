@@ -250,7 +250,7 @@
       "door_retrieved": 1
      },
      "open_lore": false,
-    "open_toast": "Beneath where the door lay, still seated in its groove: the anchor stone. The Horns left nothing else behind."
+     "open_toast": "Beneath where the door lay, still seated in its groove: the anchor stone. The Horns left nothing else behind."
     }
    ],
    "on_interact_accomplishment": "found_the_pedestal",
