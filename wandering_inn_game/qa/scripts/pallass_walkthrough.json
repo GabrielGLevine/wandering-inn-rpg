@@ -1137,6 +1137,28 @@
    "action": "screenshot",
    "name": "07_forge_tier_arrival"
   },
+
+  { "_comment": "== v0.15 T4.1 BEAT 10b: THE LANDING IS STAFFED. The attendant stands at (22,6), north of the cage bulk -- step up to (23,6) and bump-face him. First interact of the waking serves talk_pool index 0 (chatted_with_lift_attendant unbanked at this fixture); the second opens pallass_lift_attendant, whose seal arm is requires-hidden here (seal_resolved 0), so the hub renders exactly three rows. Steps below are authored COMPACT on purpose -- an expanded insert costs ~140 unreviewable lines in this file's diff. ==", "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [23, 6] },
+  { "action": "move", "direction": "left", "steps": 1 },
+  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [22, 6] } },
+  { "action": "assert_state", "path": "player_cell", "equals": [23, 6] },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Lift Attendant", "text": "Down at the quarter bell, up at the half. If you aren't sure which, wait. The bell is sure." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_lift_attendant" }, "timeout_sec": 5 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "pallass_lift_attendant", "entity": "lift_attendant" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "action": "assert_event_logged", "type": "dialogue_node", "payload_contains": { "options": [ { "text": "Does the lift ever stop?", "locked": false, "requirement": "" }, { "text": "Who rides it?", "locked": false, "requirement": "" }, { "text": "I'll wait for the bell.", "locked": false, "requirement": "" } ] } },
+  { "action": "screenshot", "name": "07b_lift_attendant" },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Lift Attendant", "text": "Once a quarter, for inspection, and the notice goes up two days ahead so nobody is stranded. If the day catches you up here anyway, the service stair at the west end stays open. Nine flights. Honest work, and open." }, "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [23, 7] },
+
   {
    "_comment": "== BEAT 11: THE FIRST LIVE CROSSING of the forge tier's own floor -- a real continuous walk from the lift landing to Grimalkin's old bench (7,5), NOT a re-teleport (pallass_peek only ever teleported to each beat separately). The lift's cage bulk blocks (21,6)/(21,7)/(22,7) on THIS map too (mirrors pallass_market's own blocked list), so a straight left walk along y=7 would just re-bump the gate -- detour down to the open parapet-rim row y=9 first: down 2 to (23,9), left 16 to (7,9) [clear of the molten seam at y=5 x13-17 entirely, clear of every entity on this row], up 3 to (7,6), bump-facing the bench. Interact reads eyed_grimalkins_bench, the exact pointer toast. ==",
    "action": "move",
@@ -1207,7 +1229,7 @@
    "name": "08_grimalkin_station_forge_tier"
   },
   {
-   "_comment": "== BEAT 12: THE ROUND TRIP -- walk back to the lift (retracing the SAME detour: down 3, right 16, up 2) and take it back down. elevator_pass_stamped is still banked (never unset), so this side's gate is open too -- open_toast fires before map_changed, landing back at pallass_market's own (23,7). ==",
+   "_comment": "== BEAT 12: THE ROUND TRIP -- back down to the parapet row and east to the lift, now BY WAY OF the tier's working half (v0.15 T4.1): the smith at her anvil (11,6) and the quench barrel (12,6). Same y=9 lane as the outbound leg, split into 4 + 11 around the detour up column 11. ==",
    "action": "move",
    "direction": "down",
    "steps": 3
@@ -1220,10 +1242,46 @@
     9
    ]
   },
+
+  { "action": "move", "direction": "right", "steps": 4 },
+  { "action": "assert_state", "path": "player_cell", "equals": [11, 9] },
+  { "action": "move", "direction": "up", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [11, 7] },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [11, 6] } },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Forge-Tier Smith", "text": "Bench is rated for a working day at a time. It gets one, and not a bell more." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_forge_smith" }, "timeout_sec": 5 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "pallass_forge_smith", "entity": "forge_smith" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
+  { "_comment": "Her seal arm is requires-hidden at this fixture too -- three rows, and the golem-culled greeting variant cannot match (this run never fights).", "action": "assert_event_logged", "type": "dialogue_node", "payload_contains": { "speaker": "Forge-Tier Smith", "text": "Bench is mine until the second bell. Say it quick.", "options": [ { "text": "What's the bench rated for?", "locked": false, "requirement": "" }, { "text": "Who decides how a thing gets built up here?", "locked": false, "requirement": "" }, { "text": "I'll let you work.", "locked": false, "requirement": "" } ] } },
+  { "action": "screenshot", "name": "08b_forge_smith" },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Forge-Tier Smith", "text": "A full working day at heat, then it stands down cold. Push it past that and the slab cracks. A cracked slab is a season of paperwork and a smith who doesn't work that season." }, "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Forge-Tier Smith", "text": "Bench is mine until the second bell. Say it quick." }, "timeout_sec": 5 },
+  { "action": "move", "direction": "down", "steps": 2 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
+
+  { "action": "move", "direction": "right", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [12, 7] },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [12, 6] } },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "eyed_the_quench_barrel" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "The water is warmer than the room around it. Something went in here not long ago." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "08c_forge_quench_barrel" },
+  { "action": "move", "direction": "down", "steps": 2 },
+  { "action": "assert_state", "path": "player_cell", "equals": [12, 9] },
+
   {
    "action": "move",
    "direction": "right",
-   "steps": 16
+   "steps": 11
   },
   {
    "action": "assert_state",

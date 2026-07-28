@@ -4,6 +4,49 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 T4.1 Pallass population (five in-wave calls)
+
+- **The forge tier gets NO `elevator_pass_stamped` reactive stage.** The plan
+  asked for stages keyed on that counter AND `seal_resolved` on both new forge
+  NPCs. Traced the routes first: `pallass_forge` has exactly one live entrance,
+  the Grand Lift, and its `door_when` gates on `elevator_pass_stamped` (portals
+  .json's `pallass` row lands on the MARKET tier; nothing else reaches the
+  forge). A permit stage up there is therefore always-met, which under
+  last-match-wins would permanently replace the base pool and kill it — the b7
+  shadow-out finding exactly. Call: the forge NPCs' BASE pool is written as the
+  post-permit voice, they carry a `seal_resolved` stage (plus the smith's
+  `forge_golems_culled` stage, region-local), and the permit-chain
+  acknowledgment lives where it can actually toggle — the market tier.
+  Alternative considered and rejected: ship the dead stage for literal plan
+  compliance. Revert = add the stage back to both entities.
+- **Market reactivity ships as hub `text_variants`, not `talk_pool_stages`.**
+  Both market NPCs currently open a conversation on FIRST interact; giving them
+  a `talk_pool` would insert a pool line ahead of that graph and shift four
+  pinned canonicals' first-interact expectations (pallass_peek,
+  pallass_walkthrough, pallass_race_peek, trader_earn_loop). `text_variants`
+  gets the same reactive read with no index or routing shift. Placed AFTER the
+  race/phase variants on purpose (last match wins): once the tier's own chain
+  has moved, the region acknowledging it beats a first-meeting read. Verified
+  no shipped Pallass fixture banks either counter, so every pinned run still
+  lands on the base or race text.
+- **Both new NPCs are ROLES, not individuals** (no names) — the shipped tier
+  clerk's precedent, and it keeps the pair inside the Book-17 bar without
+  inventing named Pallass citizens. The lift attendant reuses the `tier_clerk`
+  rig under a brass tint: the uniformity IS the city's tell, the tint is what
+  keeps three uniformed Drakes readable apart.
+- **Three sprite picks reversed off the first windowed pass.** `cauldron` for a
+  quench trough rendered a LIT FIRE beside the anvil; `riverfarm_fence_ew` put
+  a wooden rail against the molten seam; a second `barrel` cloned the quench
+  seven cells away. Shipped instead: quench = `barrel` (a slack tub, which is
+  what a smith actually keeps), slag = `boulder` heap, and the rail moved to
+  the tier's open parapet edge (24,6) where the lift_overlook precedent's own
+  object class fits it. Names/counters renamed to match before any tag.
+- **Dead-space cure is `scatter`, not more props.** The tier reads swept-empty
+  between stations; a `pebble` scatter (the street/floodplains idiom, presentation
+  -only, seed 47) puts mill scale on a working floor without adding blocking
+  entities to a map three canonicals walk edge to edge. The floor/wall texture
+  cue itself stays Lane C's MAP/PALLASS-FORGE-FLOOR item.
+
 ## 2026-07-28 — v0.15 T3.2 hygiene batch (six in-wave calls)
 
 - **TOAST/LENGTH: verdict is NO RE-CUT.** The ledger entry itself says the

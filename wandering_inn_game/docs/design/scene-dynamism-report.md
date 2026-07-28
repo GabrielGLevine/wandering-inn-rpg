@@ -59,9 +59,9 @@ that were never meant to show up here (uncounted, not a gap).
 
 | Scene | Region | Composite | c1 variety | c2 distinct | c3 composition | c4 utilization | c5 clutter | Verdict |
 |---|---|---|---|---|---|---|---|---|
-| pallass_market | pallass | 73.76 | 26.66 | 22.83 | 19.27 | 5.00 | 0.00 | dynamic |
+| pallass_market | pallass | 72.92 | 26.38 | 23.71 | 19.08 | 3.75 | 0.00 | dynamic |
 | invrisil_boulevard | invrisil | 72.89 | 22.76 | 22.88 | 22.95 | 4.29 | 0.00 | dynamic |
-| pallass_forge | pallass | 71.86 | 24.44 | 22.83 | 21.74 | 2.86 | 0.00 | dynamic |
+| pallass_forge | pallass | 71.69 | 26.52 | 23.71 | 20.12 | 1.33 | 0.00 | dynamic |
 | street | liscor | 71.58 | 24.97 | 21.75 | 22.52 | 2.33 | 0.00 | dynamic |
 | mercantile_alleys | invrisil | 71.48 | 24.75 | 22.99 | 22.74 | 1.00 | 0.00 | dynamic |
 | sewers | liscor | 70.62 | 23.40 | 21.97 | 21.25 | 4.00 | 0.00 | dynamic |
@@ -73,12 +73,12 @@ that were never meant to show up here (uncounted, not a gap).
 | brothers_parlor | invrisil | 67.16 | 22.21 | 22.09 | 21.43 | 1.43 | 0.00 | dynamic |
 | runners_guild | interiors | 66.51 | 22.74 | 22.97 | 19.37 | 1.43 | 0.00 | dynamic |
 | barracks | interiors | 66.26 | 22.78 | 22.38 | 21.09 | 0.00 | 0.00 | dynamic |
-| trapped_halls | dungeon | 65.91 | 21.86 | 23.96 | 17.94 | 2.14 | 0.00 | dynamic |
-| seal_vault | dungeon | 65.56 | 21.63 | 24.29 | 17.98 | 1.67 | 0.00 | dynamic |
-| guild | interiors | 65.52 | 22.50 | 23.30 | 18.29 | 1.43 | 0.00 | dynamic |
-| inn | interiors | 65.11 | 24.25 | 22.05 | 17.31 | 1.50 | 0.00 | dynamic |
+| seal_vault | dungeon | 65.80 | 23.13 | 23.41 | 17.60 | 1.67 | 0.00 | dynamic |
+| trapped_halls | dungeon | 65.54 | 21.86 | 23.59 | 17.94 | 2.14 | 0.00 | dynamic |
+| inn | interiors | 64.84 | 24.25 | 22.05 | 17.04 | 1.50 | 0.00 | dynamic |
+| guild | interiors | 64.81 | 22.50 | 23.30 | 18.29 | 0.71 | 0.00 | dynamic |
 | inn_upstairs | interiors | 64.69 | 19.48 | 22.63 | 22.58 | 0.00 | 0.00 | dynamic |
-| dungeon_approach | dungeon | 63.80 | 20.45 | 24.20 | 16.66 | 2.50 | 0.00 | dynamic |
+| dungeon_approach | dungeon | 63.30 | 20.45 | 23.69 | 16.66 | 2.50 | 0.00 | dynamic |
 | riverfarm_longhouse | riverfarm | 62.23 | 21.92 | 20.78 | 19.53 | 0.00 | 0.00 | dynamic |
 | ruin_surface | liscor | 55.47 | 18.15 | 21.74 | 15.58 | 0.00 | 0.00 | dynamic |
 

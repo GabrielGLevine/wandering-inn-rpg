@@ -357,6 +357,17 @@
    }
   }
  ],
+ "_comment_scatter": "v0.15 T4.1: the tier's floor read as swept-empty slate between stations. Mill scale and scrap, drifted the way a working floor drifts (the street/floodplains scatter idiom, presentation-only).",
+ "scatter": [
+  {
+   "pool": [
+    "pebble"
+   ],
+   "density": 0.05,
+   "cluster": 0.6,
+   "seed": 47
+  }
+ ],
  "ambience": [
   {
    "preset": "embers",
@@ -475,6 +486,196 @@
    "observe": "A stone shape stands too near the tier's own edge, cracks along its arms glowing a shade too bright for the forge-heat alone.",
    "scales": true,
    "on_victory": "forge_golems_culled"
+  },
+  {
+   "_comment": "v0.15 T4.1. Pool = first-talk-of-a-waking flavor, `conversation` carries every later talk (brothers_parlor precedent). NO elevator_pass_stamped stage: the lift is the only live route onto this tier, so the gate is structurally met and the base pool IS the post-permit voice (CHOICE-LOG).",
+   "id": "forge_smith",
+   "kind": "npc",
+   "cell": [
+    11,
+    6
+   ],
+   "display_name": "Forge-Tier Smith",
+   "sprite": "drake_patron",
+   "tint": [
+    0.62,
+    0.44,
+    0.38
+   ],
+   "facing": "left",
+   "observe": "A Drake in a scarred leather apron, forearms banded with old burn-marks she stopped covering years ago. She works without looking up, and the work doesn't suffer for it.",
+   "friendly_line": "She sets the hammer down long enough to look at you properly. From her, that reads as a whole conversation.",
+   "talk_pool": [
+    "Bench is rated for a working day at a time. It gets one, and not a bell more.",
+    "Stand clear of the quench, {addr}. Steam doesn't care whose day it is.",
+    "Everything on this tier is built to the civic spec. That includes the tier.",
+    "You want a thing made, you file for it downstairs. You want to watch, stand where you are."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "smith_golems_culled",
+     "requires_accomplishment": {
+      "forge_golems_culled": 1
+     },
+     "lines": [
+      "The miscalibrated one used to drift past my slab at the third bell. It doesn't now.",
+      "I don't say thanks over a hot hammer. Take it as said."
+     ]
+    },
+    {
+     "id": "smith_seal_resolved",
+     "requires_accomplishment": {
+      "seal_resolved": 1
+     },
+     "lines": [
+      "Liscor settled the thing under its stone. Good. I'd still like the measurements.",
+      "News comes up the shaft slower than heat does. Arrives just as true."
+     ]
+    }
+   ],
+   "conversation": "pallass_forge_smith"
+  },
+  {
+   "_comment": "v0.15 T4.1. Brass tint on the shared `tier_clerk` rig: the uniformity IS the Pallass tell, the tint is what keeps three uniformed Drakes apart at a glance (docs/design/character-profiles.md).",
+   "id": "lift_attendant",
+   "kind": "npc",
+   "cell": [
+    22,
+    6
+   ],
+   "display_name": "Lift Attendant",
+   "sprite": "tier_clerk",
+   "tint": [
+    0.86,
+    0.72,
+    0.44
+   ],
+   "facing": "down",
+   "observe": "A Drake in a brass-buttoned lift coat, one hand resting on the gate lever without gripping it. He watches the counterweights instead of the passengers, and knows where both are.",
+   "friendly_line": "He tips two fingers off the gate lever. \"Quarter bell,\" he says, which from him is a kindness and a schedule at once.",
+   "talk_pool": [
+    "Down at the quarter bell, up at the half. If you aren't sure which, wait. The bell is sure.",
+    "Mind the gate track, {addr}. It shuts on a count, not on a look.",
+    "Nine tiers under us and every one of them wants something carried. That's the whole job.",
+    "The cage takes twelve, or eight and a wagon. It has never once taken thirteen."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "attendant_seal_resolved",
+     "requires_accomplishment": {
+      "seal_resolved": 1
+     },
+     "lines": [
+      "Liscor's news rode up on the quarter-bell cage, same as the tin does.",
+      "People asked me about it all morning. I told them what I knew, then I ran the cage."
+     ]
+    }
+   ],
+   "conversation": "pallass_lift_attendant"
+  },
+  {
+   "id": "forge_tool_wall",
+   "kind": "prop",
+   "cell": [
+    2,
+    3
+   ],
+   "display_name": "The Tool Wall",
+   "sprite": "library_shelf",
+   "tint": [
+    0.55,
+    0.58,
+    0.62
+   ],
+   "observe": "Tongs, swages and fullers hung in size order along a painted rack, every one of them chalk-outlined on the boards behind it. An empty outline is a tool somebody still has.",
+   "on_interact_accomplishment": "eyed_the_forge_tools",
+   "toast": "You lift a set of tongs off its outline and set it back. Heavier than it looks, and it goes back exactly straight."
+  },
+  {
+   "id": "forge_shift_slate",
+   "kind": "prop",
+   "cell": [
+    4,
+    8
+   ],
+   "display_name": "The Shift Slate",
+   "sprite": "price_board",
+   "observe": "Every bench on the tier chalked in a column, the smith's mark beside it and the hours they're owed. Two marks have been rubbed out and rewritten in a different hand.",
+   "on_interact_accomplishment": "read_the_shift_slate",
+   "toast": "Bench hours, to the quarter. Nobody up here works a minute they can't account for."
+  },
+  {
+   "id": "forge_billet_rack",
+   "kind": "prop",
+   "cell": [
+    9,
+    4
+   ],
+   "display_name": "Billet Rack",
+   "sprite": "crate",
+   "tint": [
+    0.72,
+    0.76,
+    0.82
+   ],
+   "observe": "Bar stock stacked by gauge, each bundle strapped and tagged. The tags carry a tier number, a bench number, and nothing else. No names anywhere on them.",
+   "on_interact_accomplishment": "eyed_the_billet_rack",
+   "toast": "Cold iron, cut to length by somebody who measured twice. The strapping doesn't give under your hand."
+  },
+  {
+   "_comment": "Sprite reads picked off the first windowed pass, not off the name: `cauldron` put a FIRE in the quench (a lit pot beside the anvil), `riverfarm_fence_ew` put WOOD against the molten seam, and a second `barrel` cloned the quench 7 cells away. Barrel/boulder/rail-at-the-parapet is what the tier actually reads as.",
+   "id": "forge_quench_barrel",
+   "kind": "prop",
+   "cell": [
+    12,
+    6
+   ],
+   "display_name": "The Quench Barrel",
+   "sprite": "barrel",
+   "tint": [
+    0.46,
+    0.56,
+    0.64
+   ],
+   "observe": "A standing barrel of water beside the anvil, skinned over with scale and grey all the way down. The rim is worn smooth in the two places a smith's hands go.",
+   "on_interact_accomplishment": "eyed_the_quench_barrel",
+   "toast": "The water is warmer than the room around it. Something went in here not long ago."
+  },
+  {
+   "id": "forge_slag_heap",
+   "kind": "prop",
+   "cell": [
+    19,
+    6
+   ],
+   "display_name": "Slag Heap",
+   "sprite": "boulder",
+   "tint": [
+    0.3,
+    0.28,
+    0.29
+   ],
+   "observe": "Cooled slag and cracked crucible shards, heaped no higher than a line painted on the flagstones around it. The line has been repainted recently, and brightly.",
+   "on_interact_accomplishment": "eyed_the_slag_heap",
+   "toast": "Glassy black waste, still holding a little of the day's heat. Even the refuse up here has a level marked on it."
+  },
+  {
+   "id": "forge_parapet_rail",
+   "kind": "prop",
+   "cell": [
+    24,
+    6
+   ],
+   "display_name": "The Parapet Rail",
+   "sprite": "riverfarm_fence_ew",
+   "tint": [
+    0.74,
+    0.62,
+    0.42
+   ],
+   "observe": "A bronze rail along the tier's open edge, polished bright by a hundred people leaning on the same stretch of it while they waited on the cage. Below it the shaft goes down past where the light gives up.",
+   "on_interact_accomplishment": "leaned_on_the_parapet_rail",
+   "toast": "You put a hand on the rail. Warm from the tier, not from the drop. Whoever set it worked out exactly how close a person could stand."
   }
  ]
 }

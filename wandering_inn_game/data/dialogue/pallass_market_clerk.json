@@ -31,6 +31,23 @@
       "skill": "bargain"
      },
      "text": "Posted rate, same as everyone. I don't set the price and I don't move it, whatever they taught you to say back home."
+    },
+    {
+     "_comment": "v0.15 T4.1 market ambient reactivity — same ordering rule as pallass_market_local.json's pair.",
+     "requires": {
+      "accomplishment": {
+       "elevator_pass_stamped": 1
+      }
+     },
+     "text": "You're carrying a forge-tier stamp. That's the permit office's business and not this window's. State whatever this window is for."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_resolved": 1
+      }
+     },
+     "text": "Liscor sends word that its seal is settled. Here that is one line in one dispatch, filed. State your business."
     }
    ],
    "options": [

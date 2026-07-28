@@ -3348,7 +3348,9 @@
     "dialogue": [
      "krshia_crate",
      "pallass_forge_clerk",
+     "pallass_forge_smith",
      "pallass_grimalkin",
+     "pallass_lift_attendant",
      "pallass_market_clerk",
      "selys_delivery"
     ],

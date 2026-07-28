@@ -16,6 +16,23 @@
       "race": "drake"
      },
      "text": "You'll want the second queue — the first one's for out-of-towners. You know how it is."
+    },
+    {
+     "_comment": "v0.15 T4.1 market ambient reactivity. Ordered AFTER the race reads on purpose (last match wins): once the tier's own chain has moved, the region acknowledging it beats a first-meeting read. No shipped pallass fixture banks either counter, so every pinned canonical still lands on the base or race text.",
+     "requires": {
+      "accomplishment": {
+       "elevator_pass_stamped": 1
+      }
+     },
+     "text": "Forge-tier stamp on you. Then you've met our queues properly. The second window's the slow one, whatever the sign claims."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_resolved": 1
+      }
+     },
+     "text": "Word came up the shaft about Liscor and whatever sat under it. I sold three lamps off the strength of that story this morning, so I'll not complain."
     }
    ],
    "options": [

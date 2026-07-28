@@ -478,3 +478,37 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
   NEVER war, never the tribe's numbers, never a plan — and never the
   medicine trade or the carved pawn, which stay out on the plains
   (`rags_meeting`). Early-volume Rags ONLY, per the Book-17 bar.
+
+## Forge-Tier Smith (profile added 2026-07-28; v0.15 Lane B population)
+- OUR INVENTION (no canon figure) — a Drake [Smith] who works the
+  Pallass forge tier's public stations. A ROLE, not an individual, on
+  the tier-clerk precedent (no name; the city is uniformed): she is
+  whichever smith has the bench that shift. Book-17-safe by
+  construction — Pallass's smithing quarter is attested, this figure
+  is not.
+- Silhouette: reuses `drake_patron` under a soot-and-ember tint —
+  darker and warmer than every other shipped Drake (Zevara light-blue,
+  Olesm slight scholar, Grimalkin green mass). The tint IS the read: a
+  worker the forge has stained.
+- Voice, proud/laconic (the 3 notes): (1) SHORT declaratives — she
+  answers with the work, not about it, and lets silence do the rest;
+  (2) her pride lives in the SPEC, so she names tolerances, hours, and
+  what a thing costs to make, never her own skill; (3) she warms only
+  to someone who shows they know what a thing costs — courtesy earns
+  nothing, competence earns everything.
+- Never: banter, apology, exclamation. At most one dash per line.
+
+## Grand Lift Attendant (profile added 2026-07-28; v0.15 Lane B population)
+- OUR INVENTION (no canon figure) — the Drake who works the forge-tier
+  landing of Pallass's Grand Lift. Same civic-role convention as the
+  tier clerk; the Lift itself is attested, the post is ours.
+- Silhouette: the `tier_clerk` rig under a BRASS tint — the shared rig
+  is the civic-uniformity tell the Pallass bible asks for, the tint is
+  what keeps three uniformed Drakes readable apart at a glance.
+- Voice, precise/kind (the 3 notes): (1) he recites the rule exactly
+  first, then tells you the human way through it — the order never
+  reverses; (2) he knows the tier by its traffic (who rides down at
+  which bell, whose crate is late) and offers it as orientation;
+  (3) kindness arrives as practical information, never as sentiment —
+  he will not say he is sorry, he will say which window is still open.
+- Never: gossip, sarcasm, a rule bent without saying it is being bent.
