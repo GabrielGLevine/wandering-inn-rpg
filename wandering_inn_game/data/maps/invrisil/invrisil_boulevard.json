@@ -493,6 +493,46 @@
   [
    27,
    17
+  ],
+  [
+   26,
+   3
+  ],
+  [
+   26,
+   4
+  ],
+  [
+   26,
+   5
+  ],
+  [
+   26,
+   6
+  ],
+  [
+   26,
+   10
+  ],
+  [
+   26,
+   11
+  ],
+  [
+   26,
+   12
+  ],
+  [
+   26,
+   13
+  ],
+  [
+   26,
+   14
+  ],
+  [
+   26,
+   15
   ]
  ],
  "floor_layers": [
@@ -699,6 +739,93 @@
      16,
      28,
      2
+    ]
+   }
+  },
+  {
+   "_pick": "v0.16.1 #9, layer 6/6: the ALLEY GROUND, on the far side of the new east wall AND in the break itself. Reuses mercantile_alleys' own first floor layer verbatim -- Floors_Tiles (16,2)/(17,2)/(18,2), the back-alley pick already MOCKUP-PROVEN on the sibling map -- across x=27 (y 3..15) plus the three mouth cells [26,7]/[26,8]/[26,9]. Presentation only (floor_layers never touch the sim); its whole job is that the gap reads as a way INTO somewhere: boulevard marble up to the wall line, alley paving from the threshold in. The wall itself is `blocked` and takes the invrisil_street biome's own blocked tile (Wall_Tiles (8,2), the same cool blue-grey stone as the facade cornice), so it needs no plaster layer of its own.",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     16,
+     2
+    ],
+    [
+     17,
+     2
+    ],
+    [
+     18,
+     2
+    ]
+   ],
+   "cells": {
+    "list": [
+     [
+      27,
+      3
+     ],
+     [
+      27,
+      4
+     ],
+     [
+      27,
+      5
+     ],
+     [
+      27,
+      6
+     ],
+     [
+      27,
+      7
+     ],
+     [
+      27,
+      8
+     ],
+     [
+      27,
+      9
+     ],
+     [
+      27,
+      10
+     ],
+     [
+      27,
+      11
+     ],
+     [
+      27,
+      12
+     ],
+     [
+      27,
+      13
+     ],
+     [
+      27,
+      14
+     ],
+     [
+      27,
+      15
+     ],
+     [
+      26,
+      7
+     ],
+     [
+      26,
+      8
+     ],
+     [
+      26,
+      9
+     ]
     ]
    }
   }
@@ -920,7 +1047,7 @@
    }
   },
   {
-   "_comment": "Landing (1,7) on the alleys side sits inside that map's own west corridor, open + off every blocked/entity cell there.",
+   "_comment": "Landing (1,7) on the alleys side sits inside that map's own west corridor, open + off every blocked/entity cell there. v0.16.1 #9: this was a free-standing `door` prop on open paving -- rows 2..15 had no wall, no facade layer and no blocked cell east of x=24, so the only alley entrance in the city was a door with plaza on all four sides. There is a building there now (the x=26 masonry runs y3..6 and y10..15, floor_layer 6 dressing the ground behind it), and this entity is the BREAK in it: hide_sprite, so the three-cell gap at y7..9 is what the player reads, with the transition still on this cell. `sprite` is kept as the fallback if the masonry is ever re-cut. An `observe` line was added because it had none -- with the sprite gone, the hover/observe name is the entity's only label.",
    "id": "boulevard_to_alleys",
    "kind": "door",
    "cell": [
@@ -929,6 +1056,8 @@
    ],
    "display_name": "Into the Alleys",
    "sprite": "door",
+   "hide_sprite": true,
+   "observe": "A gap in the row of shopfronts, three strides wide and going darker the further in it goes. A stride past the wall line the paving changes underfoot, boulevard marble to whatever the alleys were laid with.",
    "to_map": "mercantile_alleys",
    "to_cell": [
     1,
