@@ -676,6 +676,31 @@
    "observe": "A bronze rail along the tier's open edge, polished bright by a hundred people leaning on the same stretch of it while they waited on the cage. Below it the shaft goes down past where the light gives up.",
    "on_interact_accomplishment": "leaned_on_the_parapet_rail",
    "toast": "You put a hand on the rail. Warm from the tier, not from the drop. Whoever set it worked out exactly how close a person could stand."
+  },
+  {
+   "_comment": "v0.15 T4.4 regional repeatable work, 3 of 3. NEW COUNTER pallass_fetches_run, frozen at the next tag. Cell (18,4) sits east of forge_station_b, off the bounds lap (rows 2/9, columns 0/25) and off the y=9 lane pallass_walkthrough and pallass_round_trip both use.",
+   "id": "forge_fetch_slips",
+   "kind": "prop",
+   "cell": [
+    18,
+    4
+   ],
+   "display_name": "The Fetch Slips",
+   "sprite": "delivery_board",
+   "observe": "A rack of numbered slips beside the second bench: a stock number, a bench number, an hour. No names on any of them. Any pair of hands that can read a gauge can take one down.",
+   "on_interact_accomplishment": "pallass_fetches_run",
+   "once_per_waking": true,
+   "once_per_waking_toast": "The rack is empty until the next shift files its slips. Pallass does not run two shifts at once.",
+   "gold": 2,
+   "toast": "You take a slip, walk its stock number down to the racks and the finished piece back up. The clerk who pays you writes down the hour you took, to the quarter.",
+   "variants": [
+    {
+     "when": {
+      "pallass_fetches_run": 5
+     },
+     "toast": "The smith hands you the slip before the rack does. She says nothing about it. She wouldn't."
+    }
+   ]
   }
  ]
 }

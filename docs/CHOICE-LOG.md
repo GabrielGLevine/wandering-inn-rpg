@@ -4,6 +4,43 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 T4.4 regional work + the Phase 4 helper-pace verdict
+
+- **The job props reuse the `serving_tray` idiom, not the bounty machinery.**
+  Read `deliveries.json` and `WIBounties` first: deliveries are a single
+  accepted slip with a parcel item and a destination (one at a time, tracked in
+  save state), and bounties are a rotating slate with rank tiers and a turn-in
+  desk. A regional odd job is neither — it is one prop, one press, once a
+  waking, forever. `once_per_waking` + `gold` + `on_interact_accomplishment`
+  (interactions.gd's `serve:` key, the inn's laden tray) is exactly that shape
+  and cost no new sim code. `variants` carry the escalation instead of tiers.
+- **2 gold flat, no repetition scaling.** Half the `crude_draught` bronze
+  anchor (4g), below a Guild bounty's 3-4g because there is no risk in ditching
+  a field, and flat because the bounty-scaling spec scales payouts by RANK, not
+  by how many times you have done a thing. The one exception is Invrisil's
+  marker-holder rate (3g), which is a fiction about trust, not a curve.
+- **KNOWN RIDER, accepted:** `[Perfect Hospitality]` adds +1 to any
+  `once_per_waking` wage (interactions.gd), so a hospitality specialist earns 3
+  on a forge fetch. Odd, harmless, and pre-existing machinery; the alternative
+  was to not use `once_per_waking`, which is the entire repeat control.
+- **HELPER-PACE GATE, Phase 4 verdict: EVENING LEVER STAYS HOLSTERED.**
+  `sim_progression_pace` after Phase 4: helper_social p50 total-level 10 / 20 /
+  24 against warrior 6 / 9 / 13 and caster 6 / 10 / 15 — the same ~2x Act II
+  gap the harness has reported since #211, and Phase 4 could not have moved it:
+  the harness models a FIXED per-waking chore budget per archetype, and Lane B
+  touched only maps, dialogue, QA and tests. Act II did not worsen, so the
+  lever stays holstered per the plan's own condition.
+- **The honest caveat, ledgered as a follow-up.** Phase 4 took the world from
+  33 talk_pool NPCs to 44, and every pool bank ticks `heard_gossip`, which is
+  the Barmaid/Innkeeper line's `requires_any` alternate and half of
+  `[Diplomat]`'s entry. A player who tours every region each waking now has a
+  higher gossip CEILING than before, and the harness cannot see that because
+  its chore budget is a fixed routine rather than a function of the world's
+  talkable census. Nothing measured worsened; the model just does not measure
+  this axis. Follow-up for the wave close: either scale the harness's social
+  chore budget with the census, or state explicitly that the pace claim covers
+  a fixed routine and not a completionist one.
+
 ## 2026-07-28 — v0.15 T4.3 the dig camp + the migrated ruin (three in-wave calls)
 
 - **Yvlon and Ksmvr are POOL-ONLY, no conversations.** Ceria's first interact
