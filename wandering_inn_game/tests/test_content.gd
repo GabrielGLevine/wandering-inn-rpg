@@ -534,6 +534,11 @@ const POPULATION_FLOORS := {
 	"mercantile_alleys": 13,
 	"witch_hollow": 23,
 	"invrisil_boulevard": 20,
+	# v0.16 Invrisil (#306). Counted by the test's own rule, not guessed: skip
+	# present_when rows only (hat hook + corner table), +1 per door/encounter,
+	# +1 per INTERACTABLE_KEYS carrier. encounter_when does NOT exempt a row.
+	"stationer": 11,
+	"adventurers_rest": 10,
 	"riverfarm_village": 24,
 	"pallass_forge": 15,
 	"pallass_market": 24,
@@ -1357,6 +1362,13 @@ const LANDMARK_TOKENS := {
 	"witch_hollow": ["hollow", "riverfarm"],
 	"invrisil_boulevard": ["boulevard", "invrisil"],
 	"mercantile_alleys": ["alleys", "counting house", "invrisil"],
+	# v0.16 Invrisil (#306): both new interiors take their own token plus the
+	# region token -- the 2026-07-26 widening that gave invrisil_boulevard and
+	# mercantile_alleys "invrisil" (brothers_parlor still carries only "parlor").
+	# "adventurer" (not "rest") is deliberate: _description_names_place is a
+	# lowercase substring test, and "rest" matches interest/restore/arrested.
+	"stationer": ["stationer", "invrisil"],
+	"adventurers_rest": ["adventurer", "invrisil"],
 	"brothers_parlor": ["parlor"],
 	"dungeon_approach": ["dungeon"],
 	"trapped_halls": ["trapped halls", "halls"],

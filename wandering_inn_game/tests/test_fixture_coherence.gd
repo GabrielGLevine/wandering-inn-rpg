@@ -51,6 +51,10 @@ const MAP_REQUIRES := {
 	"witch_hut": ["door_awakened", "riverfarm_attuned"],
 	"invrisil_boulevard": ["door_awakened", "invrisil_attuned"],
 	"mercantile_alleys": ["door_awakened", "invrisil_attuned"],
+	# v0.16 Invrisil (#306): both interiors are reachable only off
+	# invrisil_boulevard, which already carries exactly this pair.
+	"stationer": ["door_awakened", "invrisil_attuned"],
+	"adventurers_rest": ["door_awakened", "invrisil_attuned"],
 	"brothers_parlor": ["door_awakened", "invrisil_attuned"],
 	"pallass_market": ["door_awakened", "pallass_attuned"],
 	"pallass_forge": ["door_awakened", "pallass_attuned", "elevator_pass_stamped"],

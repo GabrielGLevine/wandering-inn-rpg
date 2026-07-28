@@ -726,7 +726,7 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
 **Interfaces:**
 - Produces: the map-side consts every later task's beats and fixtures depend on.
 
-- [ ] **Step 1: `data/moods.json`** — insert **immediately after the `brothers_parlor` key**, per controller ruling C (`pallass_forge` is the file's LAST key and all four lanes would otherwise add a comma to the same closing brace; the four anchors are `floodplains` / `witch_hollow` / `brothers_parlor` / `pallass_forge`). No test enforces mood rows; a missing row renders flat identity-white at every phase and ships green, so it is a real visual defect:
+- [x] **Step 1: `data/moods.json`** — insert **immediately after the `brothers_parlor` key**, per controller ruling C (`pallass_forge` is the file's LAST key and all four lanes would otherwise add a comma to the same closing brace; the four anchors are `floodplains` / `witch_hollow` / `brothers_parlor` / `pallass_forge`). No test enforces mood rows; a missing row renders flat identity-white at every phase and ships green, so it is a real visual defect:
 
 ```json
   "stationer": {
@@ -745,7 +745,7 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
   },
 ```
 
-- [ ] **Step 2: `LANDMARK_TOKENS`** — insert **after the `"mercantile_alleys"` row** (ruling C anchor; a beat whose producer map has no row **hard-fails** at `test_content.gd:1475`):
+- [x] **Step 2: `LANDMARK_TOKENS`** — insert **after the `"mercantile_alleys"` row** (ruling C anchor; a beat whose producer map has no row **hard-fails** at `test_content.gd:1475`):
 
 ```gdscript
 	# v0.16 Invrisil (#306): both new interiors take their own token plus the
@@ -757,7 +757,7 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
 
 `"adventurer"` (not `"rest"`) is the token deliberately: `_description_names_place` is a lowercase substring test, and `"rest"` matches *interest*, *restore*, *arrested*. `"adventurer"` matches "the Adventurer's Rest" and nothing accidental.
 
-- [ ] **Step 3: `MAP_REQUIRES`** in `test_fixture_coherence.gd` — insert **after the `"mercantile_alleys"` row** (ruling C anchor):
+- [x] **Step 3: `MAP_REQUIRES`** in `test_fixture_coherence.gd` — insert **after the `"mercantile_alleys"` row** (ruling C anchor):
 
 ```gdscript
 	"stationer": ["door_awakened", "invrisil_attuned"],
@@ -766,7 +766,7 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
 
 Both interiors are reachable only off `invrisil_boulevard`, which already carries exactly that pair — a fixture standing inside without it is a position no player can occupy.
 
-- [ ] **Step 4: `POPULATION_FLOORS`** — insert **after the `"invrisil_boulevard"` row** (ruling C anchor). The first draft wrote `11` for both and said "derive it from a real run"; **both halves of that were wrong.** `adventurers_rest` is **10**, and a run prints no number to read — `_validate_population_floors` (`test_content.gd:571-576`) only fires `_check` on **failure**, so a green run is silent and an over-high floor is a `CONTENT_FAIL`, not a printout.
+- [x] **Step 4: `POPULATION_FLOORS`** — insert **after the `"invrisil_boulevard"` row** (ruling C anchor). The first draft wrote `11` for both and said "derive it from a real run"; **both halves of that were wrong.** `adventurers_rest` is **10**, and a run prints no number to read — `_validate_population_floors` (`test_content.gd:571-576`) only fires `_check` on **failure**, so a green run is silent and an over-high floor is a `CONTENT_FAIL`, not a printout.
 
   **Count it deterministically instead** (`test_content.gd:546-568`, transcribed as a rule):
   1. Skip **every** entity that has a `present_when` key. Nothing else exempts a row.
@@ -789,7 +789,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 
   Floors are **minimums**, so under-stating one is safe and over-stating one reds `test_content.gd` on the first run. If a later step adds or window-gates an entity in either room, re-run this count **in the same commit**.
 
-- [ ] **Step 5: Run** `test_content.gd` + `test_fixture_coherence.gd` — expect PASS on both. **Commit** `feat(invrisil): mood, landmark, gate and floor rows for the two new interiors (#306)`.
+- [x] **Step 5: Run** `test_content.gd` + `test_fixture_coherence.gd` — expect PASS on both. **Commit** `feat(invrisil): mood, landmark, gate and floor rows for the two new interiors (#306)`.
 
 ---
 
