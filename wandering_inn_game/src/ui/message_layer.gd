@@ -156,15 +156,41 @@ func _first_pickup_hint_text() -> String:
 	return "Press %s — your pack." % WIInputHints.label("inventory")
 
 
-## GH#171 item 7: empty interacts answer in the current biome's voice
-## (biomes.json `interact_nothing`, presentation-only) instead of a flat
-## "Nothing there." -- which stays as the fallback for biomes without a line.
+## GH#171 item 7: empty interacts answer in the room's voice instead of a flat
+## "Nothing there." (presentation-only; the flat line stays as the floor).
+##
+## v0.16.1 finding 4 -- WHICH TILESET IS NOT WHOSE VOICE. This used to read the
+## line straight off the biome, and `biome: inn` is declared by TEN maps: the two
+## real inn maps plus the Riverfarm mill and longhouse, the witch's hut, the
+## Liscor barracks/guild/runners' guild, the Invrisil adventurers' rest and a
+## Pallass shop. So poking empty air in a Riverfarm mill answered in Erin's
+## voice, three regions away. The biome legitimately owns floor sheet, blocked
+## props, skirt and footstep family -- it does not own a venue's personality.
+## Resolution order, most specific first:
+##   1. the MAP's own `interior_flavor` (scene_catalog._compose copies each map
+##      JSON wholesale into maps[map_id], so a top-level key is visible here
+##      with no plumbing at all) -- the intended home for a per-venue line;
+##   2. the biome's `interior_flavor_by_map[map_id]`, which is how the inn keeps
+##      its own joke while nine other rooms stop telling it;
+##   3. the biome's venue-neutral `interior_flavor`;
+##   4. "Nothing there."
+## The biome default is "" rather than "inn": a map that forgets to declare a
+## biome must fall through to the flat line, not silently inherit Erin's voice.
 func _interact_nothing_text() -> String:
 	if Game.sim != null:
 		var maps: Dictionary = WIDataRegistry.scene_config().get("maps", {})
-		var map_cfg: Dictionary = maps.get(Game.sim.current_map, {})
-		var biome_id := String(map_cfg.get("biome", "inn"))
-		var line := String((WIDataRegistry.biomes().get(biome_id, {}) as Dictionary).get("interact_nothing", ""))
+		var map_id := String(Game.sim.current_map)
+		var map_cfg: Dictionary = maps.get(map_id, {})
+		var map_line := String(map_cfg.get("interior_flavor", ""))
+		if map_line != "":
+			return map_line
+		var biome_id := String(map_cfg.get("biome", ""))
+		var biome: Dictionary = WIDataRegistry.biomes().get(biome_id, {})
+		var by_map: Dictionary = biome.get("interior_flavor_by_map", {})
+		var venue_line := String(by_map.get(map_id, ""))
+		if venue_line != "":
+			return venue_line
+		var line := String(biome.get("interior_flavor", ""))
 		if line != "":
 			return line
 	return "Nothing there."

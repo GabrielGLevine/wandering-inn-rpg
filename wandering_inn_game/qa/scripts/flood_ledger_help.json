@@ -214,6 +214,45 @@
    }
   },
   {
+   "_comment": "== v0.16.1 finding 4: WHOSE VOICE ANSWERS AN EMPTY INTERACT == riverfarm_mill declares `biome: inn` -- correct for what a biome actually controls (plank floor, blocked prop set, skirt, footstep_family wood) -- and the biome's empty-interact line used to be Erin's joke about the inn's old boards. So poking empty air in a Riverfarm mill, three regions from Liscor, answered in Erin's voice. Ten maps declare that biome and only two are her inn. This is the first canonical anywhere to poke empty air in a non-inn `inn`-biome map: it must now get the venue-neutral biome line. (settings_loop pokes air IN the inn and still pins Erin's line, via the biome's interior_flavor_by_map -- that is the other half of the same proof.) Stand at (5,7) facing west; (4,7) is open floor with no entity, so interact falls through to INTERACT_NOTHING.",
+   "action": "teleport",
+   "map": "riverfarm_mill",
+   "cell": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "interact_nothing",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "Nothing there — just old boards, and the particular silence of a room with a roof on it."
+   }
+  },
+  {
    "_comment": "== EXIT == mill_exit (6,8) -> riverfarm_village (19,6), one cell off the west approach this run entered by.",
    "action": "teleport",
    "map": "riverfarm_mill",
