@@ -259,8 +259,8 @@ Regenerate both in the **same commit** as any manifest or QA-script change.
 **Interfaces:**
 - Produces: a walk-in door from `invrisil_boulevard` (18,1) → `adventurers_rest` (6,7). Task 1.4 owns the far side.
 
-- [ ] **Step 1: Delete the decor row** `{"sprite": "door", "cell": [18, 1]}` at `:878-884`. Leave the `[4,1]` decor door alone — it stays dressing.
-- [ ] **Step 2: Append the entity** (place it adjacent to `boulevard_to_alleys` in the entities array so the two doors read together in diff):
+- [x] **Step 1: Delete the decor row** `{"sprite": "door", "cell": [18, 1]}` at `:878-884`. Leave the `[4,1]` decor door alone — it stays dressing.
+- [x] **Step 2: Append the entity** (place it adjacent to `boulevard_to_alleys` in the entities array so the two doors read together in diff):
 
 ```json
   {
@@ -282,13 +282,13 @@ Regenerate both in the **same commit** as any manifest or QA-script change.
   }
 ```
 
-- [ ] **Step 3: Cell justification, hand-verified against the live scripts (the first draft's evidence sentence was WRONG — this is the corrected one).**
+- [x] **Step 3: Cell justification, hand-verified against the live scripts (the first draft's evidence sentence was WRONG — this is the corrected one).**
   - **(18,1) is on the fully blocked row 1** (`invrisil_boulevard.json` blocks x=0…27 at y=1 — all 28 cells), so no previously-walkable cell gains a blocker and the save-compat hazard in `wi-adding-a-scene:114-120` cannot fire. Both new doors (18,1) and (20,1) are on that row.
   - **Row 2 is NOT "x 20-23 only".** `invrisil_walkthrough` walks row 2 **end-to-end, x=1…27, thirty-six times**: steps 167–203 are an eighteen-fold `move right 26` / `move left 26` pacing loop used to grind the clock to night, with a hard `player_cell [27,2]` pin at step 185 and `phase night` at steps 204–206. Row 2 carries **zero** blocked cells today. The new door is harmless **only** because it sits on row 1, not because row 2 is unwalked.
   - **RULE — never occupy a row-2 boulevard cell.** Nothing in this lane may place an entity, an encounter or a blocked cell anywhere on `invrisil_boulevard` row 2. `WIGame.move_player` (`src/core/wi_game.gd:310-325`) **skips `_tick_action()` on a blocked step**, so a single new row-2 blocker would both break the `[27,2]` pin *and* stall the day→night pacing the shot-07 night read depends on. This rule is restated in the Danger list.
   - **(18,2) is open floor and clear of every pinned assert:** `invrisil_walkthrough` pins (20,2)/(23,2)/(14,2)/(27,2)/(1,2)/(23,6)/(25,8)/(18,9)/(18,12); `invrisil_round_trip` pins (4,8)/(13,8)/(15,8)/(25,8); `invrisil_disagreement_stealth|talk` pin (23,6); `parley_*` teleport to (24,14). (18,2) is walked **through** by the pacing loop but never pinned, and a walkable cell staying walkable changes nothing.
   - The walkthrough's `move right 5` from (18,9) and `move down 3` to (18,12) both stay on the x=18 column at y≥9 — untouched.
-- [ ] **Step 4: Run** `data_lint.py`; **commit** `feat(invrisil): the Adventurer's Rest opens off the boulevard (#306)`.
+- [x] **Step 4: Run** `data_lint.py`; **commit** `feat(invrisil): the Adventurer's Rest opens off the boulevard (#306)`.
 
 ### Task 1.3: `data/maps/invrisil/stationer.json`
 
