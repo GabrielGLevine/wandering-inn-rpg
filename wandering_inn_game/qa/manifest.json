@@ -1615,7 +1615,7 @@
    "script": "arc_flow",
    "seed": 9,
    "fixture": "near_act3",
-   "note": "THE WHOLE ACT III ARC PROOF, tremor through the seal and the sleep that banks post_game (Phase 8: the seal rolls no closing sequence -- that moved to Act V's seal_resolved); v0.15 A2 seam 1: the post-seal journal open pins act_beat_lines (Act IV, 7 pending openings) AND lead_lines (the survey lead) on the page that used to read 'No quests in progress.' with no pointer",
+   "note": "THE WHOLE ACT III ARC PROOF, tremor through the seal and the sleep that banks post_game (Phase 8: the seal rolls no closing sequence -- that moved to Act V's seal_resolved); v0.15 A2 seam 1: TWO journal opens across the post_game sleep -- at the seal, act_beat_lines (Act IV, 7 pending openings) + lead_lines EMPTY (Olesm's survey option is still hidden, the refusal window); after the sleep, the survey lead and counted_among's flip on the same page",
    "tiers": [
     "full"
    ],
@@ -2540,7 +2540,7 @@
    "script": "spine_reach",
    "seed": 9,
    "fixture": "spine_reach_start",
-   "note": "2026-07-26 main-quest spec 4 (Phase 6): the pilgrimage spine `where_the_door_reaches` end to end. Pisces's spine-start arm (gated door_awakened, banks the quest + spine_started, speaks the foreshadow line), then ALL THREE capstone arms live off a save whose region chains are already CLOSED (the revisit-reachability position spec 8 requires): Eloise raising the feeding ward herself, Hedault cataloguing the residue unbidden, Grimalkin on the forge tier's rune-feeding ledger -- beats 1/2/3 complete on lattice_witch_lore / lattice_hedault_reading / lattice_forge_rune. Exact option-array pins for the Pisces, Eloise and Grimalkin hubs (presence, and the witch arm's hide_when retirement), and the greet is re-read after every bank to walk the ascending text_variant contract. NEGATIVE: the quest must NOT complete -- the `return` beat waits on Phase 7's seal_descent_agreed. No combat.",
+   "note": "2026-07-26 main-quest spec 4 (Phase 6): the pilgrimage spine `where_the_door_reaches` end to end. Pisces's spine-start arm (gated door_awakened, banks the quest + spine_started, speaks the foreshadow line), then ALL THREE capstone arms live off a save whose region chains are already CLOSED (the revisit-reachability position spec 8 requires): Eloise raising the feeding ward herself, Hedault cataloguing the residue unbidden, Grimalkin on the forge tier's rune-feeding ledger -- beats 1/2/3 complete on lattice_witch_lore / lattice_hedault_reading / lattice_forge_rune. Exact option-array pins for the Pisces, Eloise and Grimalkin hubs (presence, and the witch arm's hide_when retirement), and the greet is re-read after every bank to walk the ascending text_variant contract. NEGATIVE: the quest must NOT complete -- the `return` beat waits on Phase 7's seal_descent_agreed. No combat.; v0.15 A2 seam 3 vanish + CAPSTONE-ARM pin: a 4-step read-only leg before Pisces shows the spine lead, and the existing post-bank journal open now pins lead_lines -- spine_started retires the spine lead and arms all three region capstones at once (4 concurrent leads, the observed worst case for the journal scroll budget)",
    "tiers": [
     "full"
    ],

@@ -1,9 +1,11 @@
 {
-	"_comment": "Derived journal Leads: un-started mainline hooks whose prerequisites are met. Pure counter reads; a lead vanishes when its hide_when (the quest-start counter) banks. v0.15 spec A2.",
+	"_comment": "Derived journal Leads: un-started mainline hooks whose prerequisites are met. Pure counter reads; a lead vanishes when its hide_when (the quest-start counter) banks. Every row MIRRORS its target dialogue option's own requires/hide_when exactly -- a lead that fires one waking early points at a refusal. v0.15 spec A2.",
 	"leads": [
-		{ "id": "lead_survey", "requires": { "raskghar_sealed": 1 }, "hide_when": { "horns_delve_started": 1 }, "lead_text": "The Guild posted a Watch notice about the reopened gallery.", "place": "Adventurer's Guild" },
+		{ "id": "lead_survey", "requires": { "post_game": 1 }, "hide_when": { "horns_delve_started": 1 }, "lead_text": "The Guild posted a Watch notice about the reopened gallery.", "place": "Adventurer's Guild" },
 		{ "id": "lead_dig", "requires": { "seal_kept_reported": 1 }, "hide_when": { "horns_dig_started": 1 }, "lead_text": "Ceria's been planning a dig east past the floodplains.", "place": "The Wandering Inn" },
 		{ "id": "lead_spine", "requires": { "door_awakened": 1 }, "hide_when": { "spine_started": 1 }, "lead_text": "Pisces keeps looking at the Door like it owes him a letter.", "place": "Guild steps, Market Street" },
-		{ "id": "lead_capstone", "requires": { "lattice_witch_lore": 1 }, "hide_when": { "seal_descent_agreed": 1 }, "lead_text": "Pisces is collecting what you learn out there.", "place": "Guild steps, Market Street" }
+		{ "id": "lead_witch_ear", "requires": { "price_of_a_favor_reported": 1, "spine_started": 1 }, "hide_when": { "lattice_witch_lore": 1 }, "lead_text": "Eloise has been eyeing the way you arrived.", "place": "The witch's hollow, Riverfarm" },
+		{ "id": "lead_hedault_eye", "requires": { "brothers_job_done": 1, "spine_started": 1 }, "hide_when": { "lattice_hedault_reading": 1 }, "lead_text": "Hedault keeps stopping mid-appraisal when your Door comes up.", "place": "Hedault's shop, Invrisil" },
+		{ "id": "lead_forge_ledger", "requires": { "elevator_pass_stamped": 1, "spine_started": 1 }, "hide_when": { "lattice_forge_rune": 1 }, "lead_text": "Grimalkin has been about to say something since your papers were stamped.", "place": "The forge tier, Pallass" }
 	]
 }

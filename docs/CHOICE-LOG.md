@@ -4,6 +4,56 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 A2 leads: two PLAN-DATA corrections (controller rulings)
+
+The brief's leads.json block was verbatim plan data and shipped verbatim; review
+found two of its four rows wrong against the shipped dialogue. Both corrected
+by controller ruling — the plan was the defect, not the implementation.
+
+- **`lead_survey` gates on `post_game`, not `raskghar_sealed`.** Olesm's survey
+  option (`olesm_intro.json`) requires `post_game: 1` and hides on
+  `horns_delve_started: 1`; `post_game` banks at the first sleep AFTER the seal
+  (sleep_beat.gd). A lead on `raskghar_sealed` therefore lit one whole waking
+  early and pointed at an option the player could not see — a pointer to a
+  refusal, which is worse than the empty page A2 exists to fix. General rule
+  adopted and written into leads.json's own `_comment`: **a lead row mirrors
+  its target option's `requires`/`hide_when` exactly.** All six shipped rows
+  were audited against their options; the other five already matched. arc_flow
+  now pins BOTH sides of that window (`lead_lines: []` at the seal,
+  `[survey]` after the sleep) so the refusal window cannot reopen.
+- **`lead_capstone` deleted; three capstone-ARM rows in its place.** It gated
+  on one lattice piece (`lattice_witch_lore`) while pointing at Pisces's
+  descent ask, which needs all three — so it fired two pieces early, and what
+  it pointed at (return to Pisces) is the spine quest's own final beat, already
+  in the Quests list. The real playtest gap is upstream: closing a region
+  chain while the spine runs ARMS that stop's capstone conversation, and
+  nothing anywhere said so. `lead_witch_ear` / `lead_hedault_eye` /
+  `lead_forge_ledger` each mirror their stop's option gate exactly
+  (region terminal AND `spine_started`, hidden by that stop's lattice
+  counter). Net: 4 rows -> 6, no new counters, no new quests.
+- **One copy polish on the ruling's draft.** `lead_forge_ledger` shipped as
+  "Grimalkin has been about to say something since your papers were stamped."
+  rather than the draft's "The forge tier keeps its wards fed on a schedule.
+  Someone up there will say why." Two reasons: "wards fed" is Act V's reveal
+  vocabulary (`read_the_feeding_ward`, "What the Seal Was Feeding") and this
+  line is read mid-Act-IV — the same class as `the_reach_mapped`'s logged
+  leak; and the other two rows name their NPC (Eloise, Hedault), so naming
+  Grimalkin keeps the strip's grammar uniform. Question-not-answer holds, no
+  component named (the spine's no-fetch rule).
+- **`leads.json` joins `PLAYER_STRING_FILES`** so the house copy lints
+  (attribute tokens, percent-toward, dev-provenance citations) scan
+  `lead_text`/`place`. Proven can-fail with a planted `(Task 2.3)` and a
+  planted `CON` — both flagged, one per arm.
+- **spine_reach carries the capstone-arm proof.** Its existing post-bank
+  journal open now pins `lead_lines` too, and a 4-step read-only leg ahead of
+  Pisces pins the spine lead present — so the vanish crosses a real bank in
+  one run. That page is also the observed WORST CASE for the A4 scroll budget:
+  **4 concurrent leads** (survey + all three capstones), 8 rendered lines with
+  wrapping, which pushes Quests and Completed entirely below the fold. The
+  ledger estimate of 8 lines was right; the concurrency was 3, actual is 4
+  (a player who never took the survey keeps that row while all three
+  capstones arm).
+
 ## 2026-07-28 — v0.15 A2 Leads strip (task 1.2) + T1.1 carried items
 
 - **`active_leads()` is a pure derivation on `_combat_config["leads"]`, nothing

@@ -31,6 +31,7 @@ const PLAYER_STRING_FILES := [
 	"res://data/skills.json",
 	"res://data/quests.json",
 	"res://data/acts.json",
+	"res://data/leads.json",
 	"res://data/classes.json",
 	"res://data/combatants.json",
 	"res://data/arenas.json",

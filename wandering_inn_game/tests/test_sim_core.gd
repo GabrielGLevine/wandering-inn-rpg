@@ -1190,16 +1190,22 @@ func _init() -> void:
 	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "accomplishment_recorded" and String(e["payload"]["id"]) == "post_game"), "seal bank: no re-bank on a later sleep")
 
 	# v0.15 A2 -- the journal Leads strip. Pure counter read off the shipped
-	# catalog: `requires` banked AND `hide_when` still absent. The seal seam
-	# below is the exact moment the arc used to land on "No quests in progress."
+	# catalog: `requires` banked AND `hide_when` still absent, both MIRRORING
+	# the target option's own gate (a lead that fires early points at a refusal).
 	var cc_leads: Dictionary = combat_config.duplicate(true)
 	cc_leads["leads"] = _load_json("res://data/leads.json")
 	var leads := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_leads)
 	assert(leads.active_leads().is_empty(), "leads: a fresh sim has earned no pointer yet")
 
+	# THE REFUSAL WINDOW: the seal alone is NOT the survey lead's gate. Olesm's
+	# option unlocks on post_game (the first sleep AFTER the seal), so a lead on
+	# raskghar_sealed would point at a hidden option for one whole waking.
 	leads.accomplishments["raskghar_sealed"] = 1
+	assert(leads.active_leads().is_empty(), "leads: the seal alone shows nothing -- the survey option is still hidden")
+
+	leads.accomplishments["post_game"] = 1
 	var survey: Array = leads.active_leads()
-	assert(survey.size() == 1 and String((survey[0] as Dictionary)["id"]) == "lead_survey", "leads: the seal opens the survey lead")
+	assert(survey.size() == 1 and String((survey[0] as Dictionary)["id"]) == "lead_survey", "leads: post_game opens the survey lead, the waking its option does")
 	assert(String((survey[0] as Dictionary)["lead_text"]) == "The Guild posted a Watch notice about the reopened gallery.", "leads: the row carries its authored copy")
 	assert(String((survey[0] as Dictionary)["place"]) == "Adventurer's Guild", "leads: the row carries its place -- a lead without a where is not a pointer")
 
@@ -1213,12 +1219,33 @@ func _init() -> void:
 		lead_ids.append(String((raw_lead as Dictionary)["id"]))
 	assert(lead_ids == ["lead_dig", "lead_spine"], "leads: concurrent seams both list, in catalog order")
 
+	# THE CAPSTONE ARMS: a region chain closed while the spine runs arms that
+	# stop's own capstone option, and nothing else in the game says so. Both
+	# legs of the AND gate are required -- the region terminal alone is not it.
+	leads.accomplishments["price_of_a_favor_reported"] = 1
+	var pre_spine_ids: Array = []
+	for raw_lead: Variant in leads.active_leads():
+		pre_spine_ids.append(String((raw_lead as Dictionary)["id"]))
+	assert(not pre_spine_ids.has("lead_witch_ear"), "leads: the region terminal alone does not arm the capstone -- Eloise has nothing to say before the spine starts")
+
+	leads.accomplishments["spine_started"] = 1
+	var armed: Array = []
+	for raw_lead: Variant in leads.active_leads():
+		armed.append(String((raw_lead as Dictionary)["id"]))
+	assert(armed == ["lead_dig", "lead_witch_ear"], "leads: spine_started arms the witch capstone (and retires lead_spine, its own hide_when)")
+
+	leads.accomplishments["lattice_witch_lore"] = 1
+	var spent: Array = []
+	for raw_lead: Variant in leads.active_leads():
+		spent.append(String((raw_lead as Dictionary)["id"]))
+	assert(spent == ["lead_dig"], "leads: taking the capstone conversation retires its lead")
+
 	_events.clear()
 	leads.active_leads()
 	assert(_events.is_empty(), "leads: a derived read banks nothing and emits nothing")
 
 	var no_leads := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
-	no_leads.accomplishments["raskghar_sealed"] = 1
+	no_leads.accomplishments["post_game"] = 1
 	assert(no_leads.active_leads().is_empty(), "leads: no catalog => empty strip, never a crash")
 
 	var gGuard := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)

@@ -24,8 +24,9 @@ Usage:
 --touching path coverage (GH#281): qa/scripts, qa/fixtures, data/dialogue/,
 data/maps/, scene_root (= full sweep), skills/classes/progression (all-skill
 fallback), and the monolithic catalogs via MONOLITH_SYSTEMS (portals, quests,
-acts, bounties, deliveries, combatants, arenas, audio, items, fence_stock ->
-manifest "systems" tags). Anything else warns LOUDLY on stderr and derives
+acts, leads, bounties, deliveries, combatants, arenas, audio, items,
+fence_stock -> manifest "systems" tags). Anything else warns LOUDLY on
+stderr and derives
 nothing -- never treat empty output as "no re-gate needed".
 """
 from __future__ import annotations
