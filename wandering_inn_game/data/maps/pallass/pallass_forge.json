@@ -603,6 +603,17 @@
       "Liscor's news rode up on the quarter-bell cage, same as the tin does.",
       "People asked me about it all morning. I told them what I knew, then I ran the cage."
      ]
+    },
+    {
+     "id": "attendant_ledger_unstuck",
+     "requires_accomplishment": {
+      "ledger_unstuck": 1
+     },
+     "lines": [
+      "Manifest's clean. First clean manifest since the frost, and I have checked it twice for the pleasure.",
+      "Her boy rode up with a jar for me. I told him the cage takes twelve. He asked if it takes jars.",
+      "Down at the quarter bell, {addr}. Same as always. It just goes down lighter."
+     ]
     }
    ],
    "conversation": "pallass_lift_attendant"

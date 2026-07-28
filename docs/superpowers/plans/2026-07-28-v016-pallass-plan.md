@@ -1461,8 +1461,8 @@ Variant order is deliberate — last-match-wins puts a co-banking player on the 
 }
 ```
 
-- [ ] **Step 1: Shadow-out audit.** seal-resolved-only → `attendant_seal_resolved`; P2 done → the new stage permanently. The base pool is flavour, not guidance, so permanent shadowing is acceptable and is the shipped Riverfarm-headman pattern.
-- [ ] **Step 2: Run** `test_content` + `test_copy_fit`; **commit** `feat(pallass): the attendant's clean-manifest pool stage`.
+- [x] **Step 1: Shadow-out audit.** seal-resolved-only → `attendant_seal_resolved`; P2 done → the new stage permanently. The base pool is flavour, not guidance, so permanent shadowing is acceptable and is the shipped Riverfarm-headman pattern.
+- [x] **Step 2: Run** `test_content` + `test_copy_fit`; **commit** `feat(pallass): the attendant's clean-manifest pool stage`.
 
 ---
 
