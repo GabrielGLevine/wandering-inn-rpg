@@ -1485,7 +1485,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 - Modify: `wandering_inn_game/data/maps/invrisil/brothers_parlor.json` (`wilovan` entity)
 - Modify: `wandering_inn_game/data/dialogue/wilovan_inn.json` (`greet` node **only**)
 
-- [ ] **Step 1: Append `talk_pool_stages` to the parlor `wilovan` entity.** It carries `talk_pool` but **no** stages today (entity keys: `_comment, id, kind, cell, display_name, sprite, tint, facing, observe, friendly_line, talk_pool, conversation, dialogue`), so this stage is trivially last and last-match-wins is safe:
+- [x] **Step 1: Append `talk_pool_stages` to the parlor `wilovan` entity.** It carries `talk_pool` but **no** stages today (entity keys: `_comment, id, kind, cell, display_name, sprite, tint, facing, observe, friendly_line, talk_pool, conversation, dialogue`), so this stage is trivially last and last-match-wins is safe:
 
 ```json
    "talk_pool_stages": [
@@ -1500,8 +1500,8 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
    ]
 ```
 
-- [ ] **Step 2: Shadow-out audit.** Pre-terminal the base pool serves; post-terminal this stage wins permanently on the parlor entity. Wilovan's `conversation` (`invrisil_wilovan`) is unaffected — pool lines serve **before** the conversation opens (`src/core/interactions.gd:73-81`), which is exactly why every Invrisil QA script interacts with him twice. Confirm `wilovan_address_f.json` still reaches his hub on the second interact in a fixture that lacks `hat_job_done` (it will — the stage cannot arm).
-- [ ] **Step 3: `wilovan_inn.json` — ruling 7 shape ONLY.** The `greet` node has **no** `text_variants` today, so create the array with exactly one entry. **Do not touch the base `text`. Do not add an option.** `qa/scripts/inn_guests_ext_loop.json:100` pins `greet`'s exact text **and** an exact 3-option array; its fixture cannot hold `hat_job_done`, so both pins stay green:
+- [x] **Step 2: Shadow-out audit.** Pre-terminal the base pool serves; post-terminal this stage wins permanently on the parlor entity. Wilovan's `conversation` (`invrisil_wilovan`) is unaffected — pool lines serve **before** the conversation opens (`src/core/interactions.gd:73-81`), which is exactly why every Invrisil QA script interacts with him twice. Confirm `wilovan_address_f.json` still reaches his hub on the second interact in a fixture that lacks `hat_job_done` (it will — the stage cannot arm).
+- [x] **Step 3: `wilovan_inn.json` — ruling 7 shape ONLY.** The `greet` node has **no** `text_variants` today, so create the array with exactly one entry. **Do not touch the base `text`. Do not add an option.** `qa/scripts/inn_guests_ext_loop.json:100` pins `greet`'s exact text **and** an exact 3-option array; its fixture cannot hold `hat_job_done`, so both pins stay green:
 
 ```json
 		"greet": { "speaker": "Wilovan", "text": "{Addr}. A good evening to you, and a very good room to have it in. No business tonight, you'll be relieved to hear. A gentleman does occasionally sit somewhere nobody owes anybody anything.", "text_variants": [
@@ -1511,8 +1511,8 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 
 REGISTER PURITY CHECK on that line: no package, no venue, no Rest, no factor, no fee, no colleague's errand, no Coyle, no marker. It is a Gentleman Caller declining to discuss his evening at length, which is his register exactly.
 
-- [ ] **Step 4: Variant-shadow audit.** `text_variants` are last-match-wins and **any** match beats the base text. This is the only variant on the node and its gate (`hat_job_done`) is unreachable in `inn_guests_ext_loop`'s fixture, so the pinned base text can never be shadowed. `VARIANT_KEYS` allows only `_comment`, `requires`, `text` — the entry above carries exactly `requires` + `text`.
-- [ ] **Step 5: Run** `test_dialogue.gd`, `test_content.gd`, and `wandering_inn_game/qa/run_qa.sh inn_guests_ext_loop headless --seed=<manifest seed>` — expect green with zero script edits. **Commit** `feat(invrisil): Wilovan remembers a quiet evening (#306)`.
+- [x] **Step 4: Variant-shadow audit.** `text_variants` are last-match-wins and **any** match beats the base text. This is the only variant on the node and its gate (`hat_job_done`) is unreachable in `inn_guests_ext_loop`'s fixture, so the pinned base text can never be shadowed. `VARIANT_KEYS` allows only `_comment`, `requires`, `text` — the entry above carries exactly `requires` + `text`.
+- [x] **Step 5: Run** `test_dialogue.gd`, `test_content.gd`, and `wandering_inn_game/qa/run_qa.sh inn_guests_ext_loop headless --seed=<manifest seed>` — expect green with zero script edits. **Commit** `feat(invrisil): Wilovan remembers a quiet evening (#306)`.
 
 ---
 

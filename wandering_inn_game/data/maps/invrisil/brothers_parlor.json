@@ -318,6 +318,18 @@
     "You'll notice the hat stays on. Best we keep it that way, between friends.",
     "We don't steal, whatever you've heard. We RECOVER. It's a finer distinction than it sounds, and it's the whole of our business."
    ],
+   "talk_pool_stages": [
+    {
+     "id": "wilovan_hat_job_done",
+     "requires_accomplishment": {
+      "hat_job_done": 1
+     },
+     "lines": [
+      "The Rest sends its regards, {addr}, which from that house is a standing ovation.",
+      "A quiet evening, well kept. There's no higher compliment in my line and no lower fee."
+     ]
+    }
+   ],
    "conversation": "invrisil_wilovan",
    "dialogue": [
     {
