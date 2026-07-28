@@ -223,3 +223,19 @@ dependency. Canonical: save_rename_migration.
   an unstated rule drifted toward whatever passed (FIGURE_ROWS,
   test_combat_visuals — see the P5 fix round). Rule-at-the-table +
   a known-failing control is the antidote.
+
+## Leads rows re-pin lead_lines canonicals (v0.16 close)
+Adding `data/leads.json` rows changes the journal's rendered strip in
+every fixture state whose counters satisfy the new rows —
+`spine_reach` exact-pins `lead_lines` at two opens and went red on the
+seven v0.16 rows. Before landing leads rows, grep `qa/scripts` for
+`lead_lines` and re-derive each pin from a real run (the growth is the
+feature; the payloads double as gating proof for the new rows).
+
+## Rendered-event ≠ seen (GH#324, until fixed)
+A talk_pool line served within ~1.5s of `world_ready` draws NOTHING
+while `ui_dialogue_rendered` fires with the full string (global,
+pre-existing). Scripts that interact immediately after fixture load are
+screenshotting an empty line slot — wait ~90 frames (or one move)
+before the first ambient-line capture, and never cite
+`ui_dialogue_rendered` alone as display proof.

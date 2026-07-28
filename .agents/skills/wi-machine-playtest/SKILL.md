@@ -73,3 +73,9 @@ navigate there themselves — staging cost belongs to the agent. Fixture
 authoring per wi-writing-qa-scripts; park the save under
 playtest_saves/ with a dated name.
 
+
+## First-interact captures lie near world_ready (GH#324)
+Ambient/talk_pool lines render nothing for ~1.5s after `world_ready`
+even as the rendered event fires. For any shot whose subject is an
+NPC line, idle ~90 frames (or take one move) first; an empty line
+panel in an immediate-interact frame is THIS bug, not missing content.

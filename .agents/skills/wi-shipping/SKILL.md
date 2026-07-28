@@ -54,6 +54,14 @@ changed.
    permanent API at this moment; `tests/test_shipped_ids.gd` only
    protects what's in the list. Skipping this step = new ids ship
    unfrozen and a later rename escapes the validator silently.
+   **PRODUCER-SCHEMA PARITY (v0.16 close, near-miss):** the generator's
+   `produced_accomplishments()` and `test_content.gd`'s produced-scan
+   must agree on what counts as a producer — they diverged on
+   `skill_uses` and the 0.16.0 freeze would have silently omitted two
+   live counters (one a quest `complete_when_any` key). Before EVERY
+   regen: dry-run the walk and reconcile its ADD list against the
+   wave's planned counter tables; any new producer schema gets added
+   to BOTH files in one commit.
    TRAP (caught at the v0.8.0 cut): the generator's data scan CANNOT
    see code-banked ids — a new bare `record_accomplishment("literal")`
    call site needs the literal added to STRUCTURAL_LITERALS in BOTH

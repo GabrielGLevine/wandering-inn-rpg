@@ -241,3 +241,17 @@ platform-enforced, not convention. Force-pushes and deletion of main
 are blocked. enforce_admins is OFF deliberately: the owner-auth
 direct-to-main housekeeping flow (HANDOFF/ledger/skill commits) still
 works; do not "fix" that by enabling it without a user ruling.
+
+## Anchored-append merge trains (v0.16, four content lanes)
+When multiple lanes append to the same shipped arrays/consts, assign
+each lane a NAMED anchor row it does not share (quests[], combatants[],
+manifest scripts[], moods keys, LANDMARK_TOKENS, seed table, test-file
+locals get lane prefixes) — the v0.16 train composed four lanes with
+only TWO content seams, both at the one unanchored boundary. Union
+conflicts (CHOICE-LOG/VISUAL-LOG/HANDOFF appends) resolve
+ours-then-theirs mechanically; generated files (scene-dynamism report,
+QA notes) are never hand-merged — take either side, REGENERATE on the
+composed tree, commit the regen. Squash-merges resurrect
+convention-untracked files silently (two lanes re-added the lane
+ledger after it was deliberately untracked) — enforce local-only
+conventions with .gitignore, not convention.
