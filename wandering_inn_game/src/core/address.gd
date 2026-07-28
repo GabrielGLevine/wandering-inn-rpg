@@ -22,6 +22,10 @@ static func has_token(text: String) -> bool:
 	return text.contains(TOKEN) or text.contains(TOKEN_CAP)
 
 
+## TRAP: String.capitalize() title-cases EVERY word and eats separators, so a
+## multi-word or hyphenated term ("good sir", "ma'am") would come back mangled.
+## Keep TERMS single-word, or switch the cap arm to `word[0].to_upper() +
+## word.substr(1)` in the same edit that adds one.
 static func resolve(text: String, gender: String) -> String:
 	if not has_token(text):
 		return text

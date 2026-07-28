@@ -51,6 +51,13 @@ static func resolution_path_text(quest: Dictionary, accomplishments: Dictionary)
 ## the resolution the player actually chose. An ""-req entry is the authored
 ## FALLBACK, not a match: it wins only when no real counter banked, wherever it
 ## sits in the array.
+##
+## AUTHORING CONVENTION, binding on every `resolution_paths` array: order the
+## real entries WEAKEST CLAIM FIRST, so the strongest thing the player actually
+## did is what last-match records (cleared beats scouted; fought beats read;
+## a later resolution beats the door merely being opened). Any quest whose
+## counters can co-bank must carry a `_resolution_order` note saying which way
+## its ladder runs — test_quests pins the co-banked states for all three.
 static func resolved_path(quest: Dictionary, accomplishments: Dictionary) -> Dictionary:
 	var fallback: Dictionary = {}
 	var matched: Dictionary = {}

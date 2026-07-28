@@ -1,5 +1,5 @@
 {
- "_comment": "wilovan_address_f's start: near_invrisil_fight's exact position and backbone (brothers_parlor (5,3) facing Wilovan at (6,3), took_brothers_job banked, quest started) with ONE change that is the whole point -- pc_gender 'f'. The corpus's only female-PC fixture; near_pallass_drake is its race-side twin. Proves WIAddress resolves %ADDR% at the sink on the SHIPPED Wilovan/Ratici/Gentlemen copy, and carries the re-interact regression for the four pool-only parlor NPCs. No combat resolves, so the inherited rng_state is inert here (the tuned warrior5+mage5 build rides along unused).",
+ "_comment": "wilovan_address_f's start: near_invrisil_fight's exact position and backbone (brothers_parlor (5,3) facing Wilovan at (6,3), took_brothers_job banked, quest started) with ONE change that is the whole point -- pc_gender 'f'. The corpus's only female-PC fixture; near_pallass_drake is its race-side twin. Proves WIAddress resolves {addr}/{Addr} at the sink on the SHIPPED Wilovan/Ratici/Gentlemen copy, and carries the re-interact regression for the four pool-only parlor NPCs. No combat resolves, so the inherited rng_state is inert here (the tuned warrior5+mage5 build rides along unused).",
  "version": 5,
  "state": {
   "current_map": "brothers_parlor",

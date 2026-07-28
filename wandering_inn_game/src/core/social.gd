@@ -26,7 +26,10 @@ func talk_pool_line(target: Dictionary, social_talked: Dictionary, repeat: bool 
 	var counter_key := "chatted_with_%s" % id
 	var idx := int(_accomplishment_count.call(counter_key)) % pool.size()
 	if repeat:
-		idx = int(max(0, idx - 1)) % pool.size()
+		# Step BACK one, wrapping: the first talk already banked, so `idx` points
+		# at the NEXT line. A bare `idx - 1` re-served index 0 on every size-th
+		# chat (idx == 0 wraps to size - 1, not to itself).
+		idx = (idx + pool.size() - 1) % pool.size()
 	var speaker := String(target.get(WIKeys.DISPLAY_NAME, id))
 	_emit(WIEvents.DIALOGUE_LINE, {"speaker": speaker, "text": _resolve_pool_line(pool[idx])})
 	if repeat:

@@ -50,6 +50,22 @@ func _init() -> void:
 	assert(String(WIQuests.resolution_path_text(seal, {"seal_opened": 1, "seal_kept_fed": 1})) == String(hatch["text"]), "the journal history line follows the same entry the grant did")
 	var rewarded: Dictionary = WIQuests.resolved_path(seal, {"seal_opened": 1, "seal_rewarded": 1})
 	assert(String(rewarded["accomplishment"]) == "seal_rewarded", "seal_opened + seal_rewarded records the RE-WARD ending")
+
+	# THE OTHER TWO CO-BANKABLE QUESTS. Both arrays are ordered weakest-claim-
+	# first so last-match lands on the strongest thing the player actually did.
+	var cist: Dictionary = WIQuests.quest_by_id(shipped, "cisterns")
+	assert(String(WIQuests.resolved_path(cist, {"scouted_the_nest": 1})["accomplishment"]) == "scouted_the_nest", "a scout-only cisterns run still records the scout")
+	var cist_both: Dictionary = WIQuests.resolved_path(cist, {"scouted_the_nest": 1, "cleared_the_nest": 1})
+	assert(String(cist_both["accomplishment"]) == "cleared_the_nest", "scouted THEN cleared records the CLEAR -- the stronger claim wins")
+	assert(int((cist_both["grant"] as Dictionary).get("won_combat", 0)) == 2 and not (cist_both["grant"] as Dictionary).has("sneaked_past_danger"), "...and pays the clear grant, not the scout's")
+	assert(String(WIQuests.resolved_path(cist, {"scouted_the_nest": 1, "watch_swept_cisterns": 1})["accomplishment"]) == "watch_swept_cisterns", "scouted THEN sent the Watch records the sweep")
+
+	var door: Dictionary = WIQuests.quest_by_id(shipped, "door_that_goes_elsewhere")
+	assert(String(WIQuests.resolved_path(door, {"read_the_door_runes": 1})["accomplishment"]) == "read_the_door_runes", "a read-only door run still records the reading")
+	var door_both: Dictionary = WIQuests.resolved_path(door, {"read_the_door_runes": 1, "cleared_the_leak": 1})
+	assert(String(door_both["accomplishment"]) == "cleared_the_leak", "read THEN fought records the FIGHT -- the stronger claim wins")
+	assert(int((door_both["grant"] as Dictionary).get("won_combat", 0)) == 2 and not (door_both["grant"] as Dictionary).has("spell_cast"), "...and pays the fight grant, not the reading's")
+	assert(String(WIQuests.resolved_path(door, {})["text"]) == "You consulted Pisces about it.", "neither counter banked falls through to the consult fallback")
 	# The ""-req fallback keeps losing to any real match, wherever it sits.
 	var fallback_first := {"resolution_paths": [
 		{"accomplishment": "", "text": "fallback"},

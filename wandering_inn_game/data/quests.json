@@ -33,10 +33,11 @@
 				{ "id": "resolve", "description": "Settle the nest Olesm marked in the cisterns beneath the market -- however you see fit.", "complete_when": { "resolved_the_cisterns": 1 } },
 				{ "id": "report", "description": "Report the outcome to Olesm at the Guild.", "complete_when": { "cisterns_reported": 1 } }
 			],
+			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). All three counters can co-bank -- scout the ledge, then still clear the nest -- and the STRONGER claim must be what the journal records: cleared > swept > scouted.",
 			"resolution_paths": [
-				{ "accomplishment": "cleared_the_nest", "text": "You cleared the nest yourself.", "grant": {"melee_hit": 10, "won_combat": 2} },
+				{ "accomplishment": "scouted_the_nest", "text": "You scouted it and reported the intelligence.", "grant": {"sneaked_past_danger": 4, "observed_things": 4} },
 				{ "accomplishment": "watch_swept_cisterns", "text": "You sent the Watch to sweep it.", "grant": {"persuaded_someone": 3, "heard_gossip": 6} },
-				{ "accomplishment": "scouted_the_nest", "text": "You scouted it and reported the intelligence.", "grant": {"sneaked_past_danger": 4, "observed_things": 4} }
+				{ "accomplishment": "cleared_the_nest", "text": "You cleared the nest yourself.", "grant": {"melee_hit": 10, "won_combat": 2} }
 			]
 		},
 		{
@@ -83,9 +84,10 @@
 				{ "id": "buy_catalyst", "description": "Buy the attunement catalyst from Krshia's stall on Market Street in Liscor.", "complete_when": { "bought_catalyst": 1 } },
 				{ "id": "attune", "description": "Bring Krshia's catalyst to Pisces, by the Guild steps on Market Street, and see how far the Door can reach.", "complete_when": { "door_awakened": 1 } }
 			],
+			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). Reading the wardwork and fighting the leak co-bank freely, and the STRONGER claim must win: fought > read. The \"\"-req consult entry is the FALLBACK, not a path -- it answers only when neither counter banked, and its trailing position is convention, not mechanism.",
 			"resolution_paths": [
-				{ "accomplishment": "cleared_the_leak", "text": "You fought the rift vermin in the cellar.", "grant": {"melee_hit": 8, "won_combat": 2} },
 				{ "accomplishment": "read_the_door_runes", "text": "You read the wardwork yourself.", "grant": {"spell_cast": 8} },
+				{ "accomplishment": "cleared_the_leak", "text": "You fought the rift vermin in the cellar.", "grant": {"melee_hit": 8, "won_combat": 2} },
 				{ "accomplishment": "", "text": "You consulted Pisces about it.", "grant": {"heard_gossip": 5, "befriended_moments": 3} }
 			]
 		},

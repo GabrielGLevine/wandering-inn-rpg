@@ -885,7 +885,7 @@
  ],
  "entities": [
   {
-   "_comment": "Every other anchor site got a stronger/steady light; this one gets the sprite-only fix. portal_menu_when SHIPPED WITHOUT its `requires` wrapper -- _door_gate_met reads door_when.requires, so a bare {door_awakened:1} was an empty dict: vacuously true, the picker open from a fresh game. Masked because invrisil_boulevard is portal-only and the row gates on invrisil_attuned, which implies door_awakened. Never author a *_when without the wrapper (data_lint's vacuous-gate arm).",
+   "_comment": "THE INVRISIL RETURN CARRIER, and the boulevard cluster's only way out. portal_menu_when SHIPPED WITHOUT its `requires` wrapper -- _door_gate_met reads .requires, so a bare {door_awakened:1} was an empty dict: vacuously true, the picker open from a fresh game. Wrapping it at door_awakened would have STRANDED the cohort that buys Eloise's 18g stone without ever awakening the Door, so the gate is door_mounted: the CARRIER-VS-ROW rule (test_portals' own audit) says a carrier may gate only on door_mounted or its own map's portals row counter, never tighter. Never author a *_when without the wrapper (data_lint's vacuous-gate arm).",
    "id": "invrisil_anchor_stone",
    "kind": "prop",
    "cell": [
@@ -903,7 +903,7 @@
    "portal_menu": true,
    "portal_menu_when": {
     "requires": {
-     "door_awakened": 1
+     "door_mounted": 1
     }
    },
    "toast": "A plain grey stone, out of place against the marble -- until you notice the coin-gold vein running through it, and the frame of light waiting just under the surface.",

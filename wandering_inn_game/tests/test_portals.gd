@@ -29,6 +29,38 @@ func _new_game() -> WIGame:
 	return WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, _combat_config())
 
 
+## THE CARRIER-VS-ROW AUDIT. A portal-only region's carrier IS its only exit, so
+## a carrier gated tighter than its own map's arrival implication is a softlock
+## by construction -- the Pallass trap, the Riverfarm strand and the Invrisil
+## near-miss were all this one shape. Permitted gate counters, per carrier:
+##   * `door_mounted` -- every arrival anywhere passed a door_mounted carrier to
+##     get there, so it can never be unmet by someone standing on the map.
+##   * the map's OWN portals.json `requires_accomplishment` -- true by
+##     construction for anyone who took that row.
+## Anything else (another region's counter, a quest flag, a later beat) can be
+## unmet on arrival. Widen this list only with an implication proof.
+func _audit_carrier_gates() -> void:
+	var rows: Dictionary = {}
+	for row: Dictionary in (_load_json("res://data/portals.json").get("portals", []) as Array):
+		rows[String(row.get("map", ""))] = String(row.get("requires_accomplishment", ""))
+	var maps: Dictionary = WISceneCatalog.compose()["maps"]
+	var carriers := 0
+	for map_id: String in maps:
+		for entity: Dictionary in (maps[map_id] as Dictionary).get("entities", []):
+			if not bool(entity.get("portal_menu", false)):
+				continue
+			carriers += 1
+			var allowed: Array = ["door_mounted"]
+			assert(rows.has(map_id), "portal carrier %s sits on %s, which has no portals.json row -- nothing can arrive there, so nothing should offer to leave" % [String(entity["id"]), map_id])
+			if String(rows[map_id]) != "":
+				allowed.append(String(rows[map_id]))
+			var gate: Dictionary = (entity.get("portal_menu_when", {}) as Dictionary).get("requires", {})
+			assert(not gate.is_empty(), "portal carrier %s (%s) has no requires-wrapped gate -- a bare or missing dict is vacuously true (data_lint's own arm)" % [String(entity["id"]), map_id])
+			for counter: String in gate:
+				assert(allowed.has(counter), "portal carrier %s (%s) gates on '%s', which its map's arrival (%s) does not imply -- a carrier may only gate on door_mounted or its own row's counter, else the region is a one-way trap" % [String(entity["id"]), map_id, counter, String(rows[map_id]) if String(rows[map_id]) != "" else "ungated"])
+	assert(carriers >= 5, "the audit found only %d portal carriers -- it must walk every shipped one" % carriers)
+
+
 func _option_texts(game: WIGame) -> Array:
 	return (game.dialogue.current_options() as Array).map(func(o: Dictionary) -> String: return String(o["text"]))
 
@@ -41,6 +73,7 @@ func _bank_beat3(game: WIGame) -> void:
 
 func _init() -> void:
 	WITestWatchdog.arm(self)
+	_audit_carrier_gates()
 
 	var rows: Array = [
 		{"id": "a", "display_name": "Destination A", "map": "inn", "cell": [1, 1], "requires_accomplishment": "flag_a"},
