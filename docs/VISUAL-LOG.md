@@ -400,16 +400,30 @@ pre-dig-hub reads. Durable evidence:
   them "already down the gap". FIXED by splitting each inn row's window: the
   original retires at `horns_dig_joined` and a twin (`<id>_returned`, identical
   cell/sprite/facing/pool/conversation) brings them home at `door_mounted`.
-  The retirement counter is `horns_dig_joined`, NOT `horns_dig_started` as
-  first specced: `horns_dig_started` banks mid-conversation with the player
-  standing in the inn, and world.gd reconciles presence live on
-  ACCOMPLISHMENT_RECORDED, so all three Horns popped out of the room in one
-  frame while the invitation panel still read "Ceria" — the ruled version
-  re-created the very defect below. `horns_dig_joined` banks at the CAMP, so
-  the swap happens with the inn off-screen. Evidence:
-  `AFTER_FIX/tmp_dig_inn_probe/01_MIDCONVO_after_bank.png` (all three still
-  present mid-invitation) and `04_inn_during_dig_horns_free.png` (Horns-free
-  inn once the dig is joined).
+  **SUPERSEDED 2026-07-28 (v0.15 T4.3 round 2) — the workaround became a real
+  fix.** v0.14 chose `horns_dig_joined` over `horns_dig_started` because the
+  started counter banks mid-conversation with the player standing in the inn
+  and world.gd reconciled presence live on ACCOMPLISHMENT_RECORDED, so all
+  three Horns popped out of the room in one frame while the invitation panel
+  still read "Ceria" (evidence of the era:
+  `AFTER_FIX/tmp_dig_inn_probe/01_MIDCONVO_after_bank.png`,
+  `04_inn_during_dig_horns_free.png`). That bought the pop off at the price of
+  a THREE-COPIES window: between the invitation and the camp join the Horns
+  stood at the inn, at dungeon_approach, in trapped_halls AND at the camp.
+  v0.15 fixed the renderer instead — `world.gd` now DEFERS a presence reconcile
+  while a dialogue is open and flushes it exactly once at DIALOGUE_ENDED
+  (`_presence_reconcile_deferred`, source-contract-pinned in
+  `test_world_visuals` with a six-clause deletion battery). With the pop
+  impossible, all six Horns presence rows moved to `absent horns_dig_started`
+  (3 inn, 3 dungeon_approach, 1 trapped_halls) and the window collapsed:
+  post-invitation the Horns are at the camp and nowhere else. New evidence,
+  both live in `horns_dig_flow`:
+  `qa_output/horns_dig_flow/00b_invitation_all_three_still_present.png` (the
+  quest toast has fired, the panel is open, Yvlon/Ceria/Ksmvr all on screen)
+  and `00c_after_dialogue_horns_gone_to_camp.png` (one clean frame later, all
+  three gone). Behaviourally pinned in the same script: exactly ONE
+  `ui_entities_rendered` before the panel closes and exactly two after
+  (21 -> 18 sprites), and reverting the defer reds both assertions.
 - [x] RUIN/REVEAL-DESPAWN (P1) — **FIXED 2026-07-27, controller-sanctioned.**
   Was: the reveal toast quoted an NPC who had left the screen one event
   earlier — `accomplishment_recorded door_retrieved` fires before the

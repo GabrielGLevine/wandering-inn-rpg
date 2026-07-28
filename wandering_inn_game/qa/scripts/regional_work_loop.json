@@ -69,7 +69,7 @@
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "riverfarm_village" }, "timeout_sec": 5 },
   { "action": "wait_frames", "frames": 10 },
   { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [3, 10] } },
+  { "_comment": "assert_event_count, not assert_event_logged: the outbound leg already logged a bump on this cell, so a bare `logged` here would pass on the FIRST one and prove nothing about this walk. Two bumps = both legs really faced the board.", "action": "assert_event_count", "type": "player_blocked", "payload_contains": { "cell": [3, 10] }, "count": 2 },
   { "action": "assert_state", "path": "player_cell", "equals": [3, 11] },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "riverfarm_field_jobs", "count": 2 }, "timeout_sec": 5 },

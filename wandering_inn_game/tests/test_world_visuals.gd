@@ -22,16 +22,22 @@ func _y_sort_contract_holds(source: String, factory_source: String) -> bool:
 	var override_read := "ent.get(\"field_y_sort_bias_px\", null)"
 	if _occurrence_count(source, override_read) != 3:
 		return false
+	# Trailing "(" so a name can never prefix-match a LONGER one
+	# (_reconcile_entity_presence vs _reconcile_entity_presence_or_defer, added
+	# by v0.15 T4.3 round 2's dialogue defer).
 	for function_name: String in ["_build_entities", "_refresh_entity_visual", "_reconcile_entity_presence"]:
-		var function_body := source.get_slice("func %s" % function_name, 1).get_slice("\nfunc ", 0)
+		var function_body := source.get_slice("func %s(" % function_name, 1).get_slice("\nfunc ", 0)
 		if function_body.find(override_read) == -1:
 			return false
 	var rebuild_body := source.get_slice("func _rebuild_field", 1).get_slice("\nfunc ", 0)
 	return rebuild_body.find(override_read) == -1
 
 
+## Trailing "(" is load-bearing: without it a short name prefix-matches a longer
+## sibling and silently slices the wrong body (_rebuild_field vs
+## _rebuild_field_after_transition; _reconcile_entity_presence vs its _or_defer).
 func _function_body(source: String, function_name: String) -> String:
-	return source.get_slice("func %s" % function_name, 1).get_slice("\nfunc ", 0)
+	return source.get_slice("func %s(" % function_name, 1).get_slice("\nfunc ", 0)
 
 
 func _blocked_prop_pool_contract_holds() -> bool:
@@ -469,6 +475,51 @@ func _wave_b_field_visual_contract_holds(source: String) -> bool:
 		and source.find("WIEvents.UI_COMPANION_RENDERED") != -1
 
 
+
+## v0.15 T4.3 round 2: the dialogue defer's source contract. world.gd cannot be
+## instantiated under a bare `--script` SceneTree (it reads the Game/ObservableBus
+## autoloads, which do not exist there), so the BEHAVIOUR is pinned live in
+## horns_dig_flow -- no rebuild between the invitation's bank and DIALOGUE_ENDED,
+## then exactly one. This arm pins the wiring that behaviour rests on, and every
+## clause is proven load-bearing by the deletion battery in _init.
+func _dialogue_defer_contract_holds(source: String) -> bool:
+	if source.find("var _presence_reconcile_deferred := false") == -1:
+		return false
+	# The ACCOMPLISHMENT_RECORDED arm must route through the defer, never call
+	# the reconciler straight -- that call site IS the photographed defect.
+	var acc_arm := source.get_slice("elif type == WIEvents.ACCOMPLISHMENT_RECORDED:", 1).get_slice("\n\telif type ==", 0)
+	if acc_arm.find("_reconcile_entity_presence_or_defer()") == -1:
+		return false
+	if acc_arm.find("\t_reconcile_entity_presence()") != -1:
+		return false
+	# The latch is read off the sim, never mirrored locally.
+	var open_body := _function_body(source, "_dialogue_is_open")
+	if open_body.find("Game.sim.dialogue != null") == -1:
+		return false
+	# Queue-not-run, and the queue is a latch (assignment, never an increment).
+	var defer_body := _function_body(source, "_reconcile_entity_presence_or_defer")
+	if defer_body.find("_dialogue_is_open()") == -1 or defer_body.find("_presence_reconcile_deferred = true") == -1:
+		return false
+	if defer_body.find("return") == -1:
+		return false
+	# Flush exactly once: clear BEFORE reconciling, and no-op when nothing queued.
+	var flush_body := _function_body(source, "_flush_deferred_presence_reconcile")
+	if flush_body.find("if not _presence_reconcile_deferred:") == -1:
+		return false
+	if flush_body.find("_presence_reconcile_deferred = false") == -1 or flush_body.find("_reconcile_entity_presence()") == -1:
+		return false
+	if flush_body.find("_presence_reconcile_deferred = false") > flush_body.find("_reconcile_entity_presence()"):
+		return false
+	# DIALOGUE_ENDED is the flush point.
+	if source.find("elif type == WIEvents.DIALOGUE_ENDED:") == -1:
+		return false
+	var ended_arm := source.get_slice("elif type == WIEvents.DIALOGUE_ENDED:", 1).get_slice("\n\telif type ==", 0)
+	if ended_arm.find("_flush_deferred_presence_reconcile()") == -1:
+		return false
+	# A full rebuild supersedes a queued reconcile.
+	return _function_body(source, "_rebuild_field").find("_presence_reconcile_deferred = false") != -1
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var source := FileAccess.get_file_as_string("res://src/world/world.gd")
@@ -488,7 +539,10 @@ func _init() -> void:
 	assert(_field_blocked_render_wiring_holds(source, factory_source),
 		"world must render budgeted static blocked props in the Y-sorted field layer")
 
-	var body := source.get_slice("func _reconcile_entity_presence", 1).get_slice("\nfunc ", 0)
+	# EXACT signature, not the bare name: v0.15 T4.3 round 2 added
+	# `_reconcile_entity_presence_or_defer`, which a prefix slice matches FIRST
+	# and which carries none of the light bookkeeping asserted below.
+	var body := source.get_slice("func _reconcile_entity_presence() -> void:", 1).get_slice("\nfunc ", 0)
 	assert(not body.is_empty(), "world.gd must define _reconcile_entity_presence (the GH#104 PHASE_CHANGED presence reconciler)")
 	assert(body.find("unregister_light") != -1,
 		"_reconcile_entity_presence's free arm must unregister PointLight2D children from _atmosphere before queue_free (the _refresh_entity_visual discipline)")
@@ -498,6 +552,21 @@ func _init() -> void:
 		"_reconcile_entity_presence must re-check the LIGHT_BUDGET assert after a reconcile (the _refresh_entity_visual discipline)")
 	assert(body.find("hide_sprite") != -1,
 		"_reconcile_entity_presence must skip hide_sprite entities (matches _build_entities' guard)")
+
+	assert(_dialogue_defer_contract_holds(source),
+		"world.gd must defer presence reconciles while a dialogue is open and flush exactly once at DIALOGUE_ENDED (v0.15 T4.3 round 2)")
+	for deleted_defer_clause: String in [
+		"var _presence_reconcile_deferred := false",
+		"_reconcile_entity_presence_or_defer()",
+		"Game.sim.dialogue != null",
+		"if not _presence_reconcile_deferred:",
+		"elif type == WIEvents.DIALOGUE_ENDED:",
+		"_flush_deferred_presence_reconcile()",
+	]:
+		assert(not _dialogue_defer_contract_holds(source.replace(deleted_defer_clause, "")),
+			"dialogue-defer contract must reject deletion of: %s" % deleted_defer_clause)
+	assert(not _dialogue_defer_contract_holds(source.replace("_reconcile_entity_presence_or_defer()", "_reconcile_entity_presence()")),
+		"dialogue-defer contract must reject the ACCOMPLISHMENT_RECORDED arm calling the reconciler directly (the photographed defect)")
 
 	assert(_y_sort_contract_holds(source, factory_source),
 		"entity Y-sort overrides need numeric catalog fallback, holder bias, zero-shift sprite/shadow cancellation, and entity-only plumbing")

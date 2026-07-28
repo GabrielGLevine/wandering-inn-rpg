@@ -524,8 +524,11 @@ func _validate_talk_pool_stage_shape(scene: Dictionary) -> void:
 ## own unconditional count, and `ruin_surface` sits at 8 on purpose: it is a
 ## story site whose richness is deliberately windowed (the dig camp's nine
 ## entities live and die with `horns_dig_started`), and horns_dig_flow is what
-## proves that window, not this lint. FLOORS, not pins -- adding content never
-## reds them, deleting a shipped surface does.
+## proves that window, not this lint. FLOORS, not pins: adding an UNCONDITIONAL
+## interactable never reds them. Deleting one does -- and so does window-gating
+## one that used to stand unconditionally, which is the point, because that IS a
+## real reduction in what the map holds in most states. Re-derive the number in
+## the same commit that makes such a move deliberately.
 const POPULATION_FLOORS := {
 	"brothers_parlor": 21,
 	"mercantile_alleys": 13,

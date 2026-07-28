@@ -1610,7 +1610,7 @@
    ]
   },
   {
-   "_comment": "Task 2.3: no longer pool-only -- the `ceria_intro` graph attaches here so the horns_dig invitation is startable AT THE INN, where a post-seal player actually is (the dungeon_approach attachment stays; the graph is shared, not moved). talk_pool + talk_pool_stages + the static dialogue fallback all STAY: the erin/pisces/krshia/selys idiom is pool-and-graph together (first interact = a pool line, subsequent interacts = the graph), and talk_pool_stages' own gate reads chatted_with_ceria_inn, which only the pool produces.",
+   "_comment": "Task 2.3: no longer pool-only -- the `ceria_intro` graph attaches here so the horns_dig invitation is startable AT THE INN, where a post-seal player actually is (the dungeon_approach attachment stays; the graph is shared, not moved). talk_pool + talk_pool_stages + the static dialogue fallback all STAY: the erin/pisces/krshia/selys idiom is pool-and-graph together (first interact = a pool line, subsequent interacts = the graph), and talk_pool_stages' own gate reads chatted_with_ceria_inn, which only the pool produces. v0.15 T4.3 round 2: retires on horns_dig_started with her teammates; the world.gd dialogue defer is what made her own graph's counter usable as her gate. Contract: `ceria_inn_returned` below.",
    "id": "ceria_inn",
    "kind": "npc",
    "cell": [
@@ -1625,7 +1625,7 @@
      "seal_kept_reported": 1
     },
     "absent": {
-     "horns_dig_joined": 1
+     "horns_dig_started": 1
     }
    },
    "conversation": "ceria_intro",
@@ -1656,7 +1656,7 @@
    ]
   },
   {
-   "_comment": "v0.15 T4.3 fix round 1, bilocation split (CHOICE-LOG): retires on `horns_dig_started`, not `horns_dig_joined`. The camp rows arm on horns_dig_started, so the old gate left this row and the camp's own co-present for the whole travel window. Safe HERE and not for Ceria: v0.14's evidenced fix (Task 2.7 RUIN/REVEAL-DESPAWN) protects the INTERLOCUTOR from vanishing mid-sentence, and this row hosts no graph that banks the counter -- `ceria_intro`'s invitation option does, and it goes on to three more nodes.",
+   "_comment": "v0.15 T4.3 round 2, bilocation collapse: retires on horns_dig_started, the counter the camp rows arm on. Full contract + the v0.14 provenance: `ceria_inn_returned` below.",
    "id": "yvlon_inn",
    "kind": "npc",
    "cell": [
@@ -1701,7 +1701,7 @@
    ]
   },
   {
-   "_comment": "v0.15 T4.3 fix round 1: same bilocation split as `yvlon_inn` above -- see its _comment.",
+   "_comment": "v0.15 T4.3 round 2, bilocation collapse -- see `ceria_inn_returned` below.",
    "id": "ksmvr_inn",
    "kind": "npc",
    "cell": [
@@ -1746,7 +1746,7 @@
    ]
   },
   {
-   "_comment": "Task 2.7 (P1 RUIN/CAMP-DOUBLE) -- OWNING SITE for all three Horns inn twins. `ceria_inn`/`yvlon_inn`/`ksmvr_inn` gated on seal_kept_reported ALONE while the ruin carried a live camp, so the player could speak to them at the inn and at the camp in the same breath. Each inn row's window is now SPLIT: the original retires at horns_dig_joined -- the counter the CAMP banks, so the swap happens at the ruin with the inn off-screen (retiring at horns_dig_started instead popped all three out of the room mid-sentence with the invitation panel open) -- and this twin brings them home at door_mounted. Identical cell/sprite/facing/pool/conversation; only `id` and `present_when` differ. GATE TRAP: talk-pool counters are id-derived (social.gd's `chatted_with_%s`), so each twin banks `chatted_with_<twin id>` and its settled stage must gate on THAT counter -- gating on the original's would lock the settled lines out forever for anyone who never chatted pre-dig.",
+   "_comment": "Task 2.7 (P1 RUIN/CAMP-DOUBLE) -- OWNING SITE for all three Horns inn twins. `ceria_inn`/`yvlon_inn`/`ksmvr_inn` gated on seal_kept_reported ALONE while the ruin carried a live camp, so the player could speak to them at the inn and at the camp in the same breath. Each inn row's window is SPLIT: the original retires, this twin brings them home at door_mounted. CURRENT CONTRACT (v0.15 T4.3 round 2, supersedes Task 2.7's): all three originals retire at horns_dig_STARTED, the counter the camp rows arm on, so the three-copies window is gone entirely -- post-invitation the Horns are at the camp and nowhere else. Task 2.7 had to use horns_dig_joined instead because retiring on the started counter popped all three out of the room mid-sentence with the invitation panel still open; that is now fixed AT THE RENDERER (world.gd defers presence reconciles while a dialogue is open and flushes once at DIALOGUE_ENDED), not by moving gates. Identical cell/sprite/facing/pool/conversation; only `id` and `present_when` differ. GATE TRAP: talk-pool counters are id-derived (social.gd's `chatted_with_%s`), so each twin banks `chatted_with_<twin id>` and its settled stage must gate on THAT counter -- gating on the original's would lock the settled lines out forever for anyone who never chatted pre-dig. KNOWN DEAD, PRE-EXISTING, do not resurrect here: the three ORIGINALS' `*_inn_settled` stages also gate on `door_awakened`, which no player can hold while the original's window is still open (it is banked long after the door is mounted) -- nine lines that were already unreachable under Task 2.7's own gate. Flagged for the v0.16 content pass.",
    "id": "ceria_inn_returned",
    "kind": "npc",
    "cell": [

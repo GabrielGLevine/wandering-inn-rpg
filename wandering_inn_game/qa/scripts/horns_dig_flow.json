@@ -170,6 +170,10 @@
    },
    "timeout_sec": 5
   },
+  { "_comment": "== v0.15 T4.3 round 2: THE DIALOGUE DEFER, proven at the seam it was built for. The option just taken banked horns_dig_started and went on to dig_pitch, and that counter retires ceria_inn/yvlon_inn/ksmvr_inn (all three on screen, the speaker among them). Before the defer, world.gd reconciled presence on the bank and popped them mid-sentence -- VISUAL-LOG RUIN/CAMP-DOUBLE. Exactly ONE ui_entities_rendered has fired this run (the inn's own boot build, 21 sprites): the bank added none. ==", "action": "assert_event_count", "type": "ui_entities_rendered", "count": 1 },
+  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 21, "fallbacks": 0 } },
+  { "action": "screenshot", "name": "00b_invitation_all_three_still_present" },
+
   {
    "_comment": "Take the SECOND branch first (What's down there? -> dig_unknown) so the pitch's other arm is covered, then rejoin dig_directions from it.",
    "action": "move",
@@ -211,6 +215,10 @@
    "type": "dialogue_ended",
    "timeout_sec": 5
   },
+  { "_comment": "== THE FLUSH, exactly once. DIALOGUE_ENDED drains the queued reconcile in a single rebuild: 21 -> 18, the three Horns gone together, and the whole-run count is now 2 (boot + flush), not 2-per-bank. ==", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 18, "fallbacks": 0 }, "timeout_sec": 5 },
+  { "action": "assert_event_count", "type": "ui_entities_rendered", "count": 2 },
+  { "action": "screenshot", "name": "00c_after_dialogue_horns_gone_to_camp" },
+
   {
    "action": "assert_state",
    "path": "started_quests",

@@ -165,7 +165,7 @@
    "toast": "You keep your distance. Whatever wakes it, you would rather not be the one who finds out."
   },
   {
-   "_comment": "Grouped with Yvlon/Ksmvr at (7,5)-(9,5), open floor clear of every blocked/decor/entity cell on this map. v0.15 T4.3 fix round 1 REFUTED the blanket split for THIS row and only this row: `ceria_intro`'s invitation option banks horns_dig_started and then `goto`s dig_pitch, with two to three nodes still to play, so retiring her on that counter reproduces v0.14's evidenced mid-conversation despawn (Task 2.7 RUIN/REVEAL-DESPAWN) on the dungeon route exactly as it once did at the camp. She keeps horns_dig_joined; her teammates, who bank nothing, took the tighter gate. CHOICE-LOG.",
+   "_comment": "Grouped with Yvlon/Ksmvr at (7,5)-(9,5), open floor clear of every blocked/decor/entity cell on this map. v0.15 T4.3 round 2: retires on horns_dig_started with the rest of the party. Her own `ceria_intro` banks that counter mid-conversation, which is why this gate needed world.gd's dialogue defer first. Contract: inn.json's `ceria_inn_returned`.",
    "id": "ceria",
    "kind": "npc",
    "cell": [
@@ -178,7 +178,7 @@
    "conversation": "ceria_intro",
    "present_when": {
     "absent": {
-     "horns_dig_joined": 1
+     "horns_dig_started": 1
     }
    },
    "_comment_dig": "Task 2.7 round 2 -- OWNING SITE for all three delve-staging Horns rows. They had no present_when at all, so once round 1 fixed the inn-vs-camp bilocation the SAME bug relocated here: during The Dig a player could meet camp-Ceria at the ruin and delve-hub-Ceria on the approach in one trip. Each row now retires PERMANENTLY at horns_dig_joined, with no `_returned` twin on the delve maps -- deliberately: the Horns left the delve staging for good. Safe for the seal beat: these rows are only load-bearing during what_the_seal_kept, and seal_kept_reported gates the dig invitation, so horns_dig_joined cannot bank until that quest is done. Every script touching this map runs on a fixture with horns_dig_joined absent, so no entity-count pin moves."
@@ -194,14 +194,14 @@
    "display_name": "Yvlon Byres",
    "sprite": "yvlon",
    "facing": "down",
-   "_comment_v015_split": "v0.15 T4.3 fix round 1, bilocation split (CHOICE-LOG): retires on `horns_dig_started`, the counter the CAMP rows arm on, so this row and `yvlon_dig_camp` can never be co-present. `yvlon_intro` banks nothing that gates this row, so v0.14's evidenced mid-conversation-despawn fix does not apply -- unlike `ceria` above, whose `ceria_intro` IS the horns_dig_started producer and therefore keeps the joined gate.",
+   "_comment_v015_split": "v0.15 T4.3 round 2, bilocation collapse: retires on `horns_dig_started` so this row and `yvlon_dig_camp` can never be co-present.",
    "conversation": "yvlon_intro",
    "present_when": {
     "absent": {
      "horns_dig_started": 1
     }
    },
-   "_comment_dig": "Task 2.7 round 2 shipped this as a permanent retirement at horns_dig_joined; v0.15 T4.3 fix round 1 tightened the counter to horns_dig_started (see _comment_v015_split above). Still permanent, still no `_returned` twin -- the Horns leave the delve staging for good. The `ceria` row on this map carries the full Task 2.7 contract."
+   "_comment_dig": "Permanent retirement, no `_returned` twin -- the Horns leave the delve staging for good. Counter tightened to horns_dig_started in v0.15 T4.3 round 2 (see above)."
   },
   {
    "_comment": "Own graph (ksmvr_intro.json) is pool + post-victory only",
@@ -214,14 +214,14 @@
    "display_name": "Ksmvr",
    "sprite": "ksmvr",
    "facing": "down",
-   "_comment_v015_split": "v0.15 T4.3 fix round 1: same bilocation split as `yvlon` above (`ksmvr_intro` banks no gating counter either).",
+   "_comment_v015_split": "v0.15 T4.3 round 2: same bilocation collapse as `yvlon` above.",
    "conversation": "ksmvr_intro",
    "present_when": {
     "absent": {
      "horns_dig_started": 1
     }
    },
-   "_comment_dig": "Task 2.7 round 2 shipped this as a permanent retirement at horns_dig_joined; v0.15 T4.3 fix round 1 tightened the counter to horns_dig_started (see _comment_v015_split above). Still permanent, still no `_returned` twin -- the Horns leave the delve staging for good. The `ceria` row on this map carries the full Task 2.7 contract."
+   "_comment_dig": "Permanent retirement, no `_returned` twin -- the Horns leave the delve staging for good. Counter tightened to horns_dig_started in v0.15 T4.3 round 2 (see above)."
   },
   {
    "id": "dungeon_depths_door",

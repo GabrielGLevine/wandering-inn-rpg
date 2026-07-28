@@ -29,9 +29,12 @@ cross-release index of them.
   floor went 1g → 7g per waking** for a player who tours all three regions.
   And `[Perfect Hospitality]`'s +1-per-prop rider (interactions.gd, one call
   site, gated on `once_per_waking`) scales with that set: **+1g → +4g, a +3g
-  standing premium available only to a helper build.** Neither number is a
-  defect — 7g is under two crude draughts and the tour costs a real circuit of
-  the map — but no gate watches the wage floor, so it is logged rather than
+  standing premium available only to a helper build.** The full ceiling, since
+  the floor is not the whole story: a marker-holder earns 3g on the Invrisil
+  slate instead of 2, so **8g per waking**, and a marker-holding helper carrying
+  `[Perfect Hospitality]` tops out at **12g** (11g without the marker). None of
+  these is a defect — 12g is three crude draughts for a full circuit of four
+  regions — but no gate watches any of them, so they are logged rather than
   measured, and a wave-close economy pass is noted in HANDOFF.
 - **HELPER-PACE GATE, Phase 4 verdict: EVENING LEVER STAYS HOLSTERED.**
   `sim_progression_pace` after Phase 4: helper_social p50 total-level 10 / 20 /
@@ -66,31 +69,41 @@ cross-release index of them.
   and the remnant's has `requires: door_mounted`, so they are provably never
   co-present, and the cold fire-ring lands where the camp actually was. Data
   lint, content validation and every ruin canonical are green on it.
-- **BILOCATION SPLIT (fix round 1), and the one row it does NOT cover.** The
-  camp rows arm on `horns_dig_started`, but the Horns' other presence rows
-  retired on `horns_dig_joined`, so for the whole travel window a player could
-  meet Yvlon at the inn and Yvlon at the camp. Blanket-reverting all of them to
-  `horns_dig_started` was rejected: v0.14 Task 2.7 (VISUAL-LOG
-  RUIN/REVEAL-DESPAWN) moved these gates onto the later counter ON EVIDENCE --
-  `world.gd` reconciles presence live on `ACCOMPLISHMENT_RECORDED`, so an NPC
-  gated on a counter her own graph banks pops off-screen mid-sentence. The rule
-  that fix established is about the INTERLOCUTOR, so the split follows it:
-  `yvlon_inn`, `ksmvr_inn` and `dungeon_approach`'s `yvlon`/`ksmvr` retire on
-  `horns_dig_started` (none hosts a graph that banks it -- `yvlon_intro` and
-  `ksmvr_intro` were both read to confirm), while `ceria_inn` keeps
-  `horns_dig_joined` because she IS the conversation.
-- **REFUTED, with evidence: `dungeon_approach`'s `ceria` keeps the joined gate
-  too.** The split as written named all three dungeon rows, on the reasoning
-  that none of them is the interlocutor and the dungeon map is not on screen.
-  That holds for two of them. `dungeon_approach.ceria` carries
-  `"conversation": "ceria_intro"` -- the SAME graph the inn row hosts -- and
-  `ceria_intro`'s hub option banks `horns_dig_started` and then `goto`s
-  `dig_pitch`, with two to three nodes still to play. Retiring her on that
-  counter reproduces the exact v0.14 defect on the dungeon route, and the map is
-  very much on screen for a player who takes the invitation there. Applied the
-  ruling's own principle rather than its enumeration: 4 of 5 rows tightened, the
-  interlocutor left alone, and both dungeon `_comment_dig` strings corrected
-  where they still claimed the old counter. Revert = one counter per row.
+- **BILOCATION COLLAPSE, round 2: fix the RENDERER, then let every gate follow
+  the fiction.** Round 1 tightened four of the Horns' presence rows onto
+  `horns_dig_started` and held two back (the two interlocutors), on the reading
+  that v0.14's evidenced fix protects the SPEAKER. Re-review refuted that
+  reading and it was right: the photographed P1 (VISUAL-LOG RUIN/CAMP-DOUBLE,
+  not REVEAL-DESPAWN — round 1 mis-cited it) shows ALL THREE Horns popping out
+  of the inn in one frame with the panel still open. Protecting only the
+  speaker re-creates the defect for everyone standing beside her. So the fix
+  moved into the engine: `world.gd`'s presence reconcile is QUEUED while a
+  dialogue is open and flushed exactly once at DIALOGUE_ENDED
+  (`_presence_reconcile_deferred`; "is a dialogue open" is read off
+  `Game.sim.dialogue`, never mirrored, so the two cannot drift). With the pop
+  structurally impossible, ALL SIX presence rows took the tight gate —
+  `ceria_inn`, `yvlon_inn`, `ksmvr_inn`, `dungeon_approach`'s
+  `ceria`/`yvlon`/`ksmvr`, and `trapped_halls.ksmvr_plates` — and the
+  three-copies window is gone: post-invitation the Horns are at the camp and
+  nowhere else. v0.14's gate choice was a workaround for a renderer bug and is
+  now recorded as such at its owning site (inn.json's `ceria_inn_returned`).
+  Alternatives rejected: keep the joined gate (leaves the three-copies window
+  the re-review found); defer per-bank rather than latching (a six-bank
+  conversation would cost six rebuilds). Revert = one call site plus six rows.
+- **Scope held at ACCOMPLISHMENT_RECORDED.** PHASE_CHANGED's own reconcile is
+  deliberately NOT deferred: `_tick_action` fires only from
+  move/interact/use_skill_field, never from `dialogue_choose`, so a phase
+  crossing cannot happen inside a conversation. A full `_rebuild_field` drops
+  the latch, so a map crossing mid-conversation cannot emit a stray second
+  `ui_entities_rendered` afterwards.
+- **The nine dead `*_inn_settled` lines stay dead.** All three ORIGINAL inn
+  rows carry a settled stage gated on `door_awakened`, which no player can hold
+  while the original's window is open — it banks long after the door is
+  mounted. That was already true under v0.14's own gate, so this is a
+  PRE-EXISTING dead surface, not a regression of the collapse; the `_returned`
+  twins' equivalents are reachable and untouched. Flagged in-file and queued
+  for the v0.16 content pass rather than resurrected here, because reviving
+  them means re-gating, not re-wording.
 - **RUIN/MIGRATED-DIORAMA: fixed by re-skinning the guardian, NOT by deleting
   it.** The ledger's own suggestion was to add `ruin_guardian` to the migration
   backfill's removed set. Traced the consequence first: the guardian is the only
