@@ -1483,11 +1483,11 @@ Load `wi-writing-qa-scripts` before the first script. **Registration order is bi
 | `pallass_ledger_offices_start` | `pallass_forge` [23,5] facing [0,-1] | `{"warrior":5,"mage":5}` | `read_the_lift_manifest`, `ledger_loop_started`; `started_quests` += `ledger_eats_first` | TALK + HELP routes |
 | `pallass_ledger_skill_start` | `pallass_den_shop` [7,3] facing [0,-1] | `{"warrior":5,"mage":5}`, `player_skills` += `appraise_goods` | as above | SKILL route (proves `MAP_REQUIRES["pallass_den_shop"]`) |
 
-- [ ] **Step 1:** For each, copy `spine_reach_start.json`, edit `current_map` / `player_cell` / `player_facing` (a 2-VECTOR like `[0,-1]`, never a string) / `classes` / `player_skills` / `started_quests` / `accomplishments` / `gold`.
-- [ ] **Step 2: Derive every `rng_state`** with `godot --headless --path wandering_inn_game --script res://tests/_derive_rng_state.gd -- <seed>`. **Never hand-type one** — `test_fixture_coherence.gd:378-388` fails any state under magnitude 1e6 as hand-typed.
-- [ ] **Step 3:** Add `MAP_REQUIRES` rows if Tasks 1.1/2.1 have not already (`pallass_forge_hall` and `pallass_den_shop` — a fixture standing in a new interior otherwise passes VACUOUSLY).
-- [ ] **Step 4: Run** `res://tests/test_fixture_coherence.gd` — expect PASS. Monotone chains and `MAP_REQUIRES` both bite here.
-- [ ] **Step 5: Commit** `test(qa): six Pallass depth fixtures off spine_reach_start`.
+- [x] **Step 1:** For each, copy `spine_reach_start.json`, edit `current_map` / `player_cell` / `player_facing` (a 2-VECTOR like `[0,-1]`, never a string) / `classes` / `player_skills` / `started_quests` / `accomplishments` / `gold`.
+- [x] **Step 2: Derive every `rng_state`** with `godot --headless --path wandering_inn_game --script res://tests/_derive_rng_state.gd -- <seed>`. **Never hand-type one** — `test_fixture_coherence.gd:378-388` fails any state under magnitude 1e6 as hand-typed.
+- [x] **Step 3:** Add `MAP_REQUIRES` rows if Tasks 1.1/2.1 have not already (`pallass_forge_hall` and `pallass_den_shop` — a fixture standing in a new interior otherwise passes VACUOUSLY).
+- [x] **Step 4: Run** `res://tests/test_fixture_coherence.gd` — expect PASS. Monotone chains and `MAP_REQUIRES` both bite here.
+- [x] **Step 5: Commit** `test(qa): six Pallass depth fixtures off spine_reach_start`.
 
 ### Task 3.2: The seven canonicals
 
