@@ -1146,8 +1146,8 @@ feat(floodplains): "The Price Kept" -- three routes, the camp hollow, the first 
 Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
 ```
 
-- [ ] **Step 2: Read `data/dialogue/rags_inn.json` in full** (18 lines, TAB-indented, one-line node style). Note the `greet` node's shipped text and that the file's `_comment` is the register contract.
-- [ ] **Step 3: Add `text_variants` to the `greet` node ONLY**, keyed on the terminal:
+- [x] **Step 2: Read `data/dialogue/rags_inn.json` in full** (18 lines, TAB-indented, one-line node style). Note the `greet` node's shipped text and that the file's `_comment` is the register contract.
+- [x] **Step 3: Add `text_variants` to the `greet` node ONLY**, keyed on the terminal:
 
 ```json
 "text_variants": [ { "requires": { "accomplishment": { "rags_price_kept": 1 } }, "text": "You again. Camp ate. ...Still count doors. Habit, not you." } ]
@@ -1163,10 +1163,10 @@ grep -c rags_price_kept wandering_inn_game/qa/fixtures/inn_guests_ext_start.json
 
 Expect 0 for both. If either is nonzero, the pinned base line is dead and the script must be re-derived.
 
-- [ ] **Step 4: Do NOT touch `data/maps/inn/inn.json`.** Her guest row's two-arm window (`requires rags_meeting_settled` / `absent drove_off_rags`, `:1199`/`:1202`) and its code twin `src/core/inn_guests.gd:48` are unchanged and must never disagree. The inn guest roster array is byte-identical across twelve rows and is not this lane's to move.
-- [ ] **Step 5: Run** `res://tests/test_inn_guests.gd` + `res://tests/test_dialogue.gd` + `res://tests/test_copy_fit.gd` — expect PASS.
-- [ ] **Step 6: Run the counter-integrity trio** — `res://tests/test_content.gd`, `res://tests/test_reachability.gd`, `res://tests/test_quests.gd`. All three must now be green (all producers landed in Step 1). Verify each on the three-part bar: exit 0, `^PASS` present, zero `SCRIPT ERROR|Parse Error|WARNING`.
-- [ ] **Step 7: Commit**
+- [x] **Step 4: Do NOT touch `data/maps/inn/inn.json`.** Her guest row's two-arm window (`requires rags_meeting_settled` / `absent drove_off_rags`, `:1199`/`:1202`) and its code twin `src/core/inn_guests.gd:48` are unchanged and must never disagree. The inn guest roster array is byte-identical across twelve rows and is not this lane's to move.
+- [x] **Step 5: Run** `res://tests/test_inn_guests.gd` + `res://tests/test_dialogue.gd` + `res://tests/test_copy_fit.gd` — expect PASS.
+- [x] **Step 6: Run the counter-integrity trio** — `res://tests/test_content.gd`, `res://tests/test_reachability.gd`, `res://tests/test_quests.gd`. All three must now be green (all producers landed in Step 1). Verify each on the three-part bar: exit 0, `^PASS` present, zero `SCRIPT ERROR|Parse Error|WARNING`.
+- [x] **Step 7: Commit**
 
 ```
 feat(dialogue): Rags's inn register answers the kept price (#308)
