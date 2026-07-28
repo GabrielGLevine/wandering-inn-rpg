@@ -223,7 +223,32 @@
    "name": "00b_sewers_lit"
   },
   {
-   "_comment": "Re-cast while already lit: the ambient toast fires again but NO second light attaches (world reconcile is idempotent) and the flag stays true.",
+   "_comment": "== v0.16.1 finding 5: [Light] IS A TOGGLE. Re-casting while lit used to be a silent no-op (the orb burned until you slept); it now puts the orb out, speaks its own OFF copy, and the want/have reconcile detaches the PointLight2D -> ui_pc_light_rendered{active:false}. This is the OFF half of the proof. ==",
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Light] — You let the orb thin out. The dark closes back in, patient as ever."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_pc_light_rendered",
+   "payload_contains": {
+    "active": false
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "light_active",
+   "equals": false
+  },
+  {
+   "_comment": "Third cast re-lights it -- the toggle is symmetric, and the rest of this walkthrough runs lit exactly as it did before.",
    "action": "press",
    "name": "hotbar_2"
   },

@@ -2437,13 +2437,25 @@ func _init() -> void:
 	g_glow.player_cell = Vector2i(2, 3)
 	g_glow.player_facing = Vector2i.DOWN  # proven-empty faced cell (the ambient case above)
 	assert(not g_glow.light_active, "light_active defaults false")
+	# v0.16.1 finding 5: [Light] is a TOGGLE now, on the `sneaks` idiom -- it used
+	# to be a hardcoded id check inside the field_ambient arm that only ever SET
+	# the flag, so the orb burned until you slept. Re-cast puts it out.
 	_events.clear()
 	var glow_res := g_glow.use_skill_field("light")
-	assert(glow_res.get("ambient", "") == "light", "ambient [Light] cast returns {ambient:light}")
-	assert(g_glow.light_active, "ambient [Light] cast flips light_active true")
+	assert(glow_res.get("light_active", false) == true, "[Light] cast returns {light_active:true}")
+	assert(g_glow.light_active, "[Light] cast flips light_active true")
+	assert(_count("skill_used") == 1, "the ON cast emits skill_used, same as the ambient arm did")
+	assert(g_glow.used_skills.has("light"), "the ON cast reveals the skill in the journal")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "[Light] — A steady white orb rises to follow you, throwing back the dark."), "the ON cast speaks the field_ambient line")
 	assert(_count("ui_pc_light_rendered") == 0, "the SIM emits no ui_pc_light_rendered (that is the presentation's confirmation)")
+	_events.clear()
+	var unglow_res := g_glow.use_skill_field("light")
+	assert(unglow_res.get("light_active", true) == false, "re-casting [Light] while lit returns {light_active:false}")
+	assert(not g_glow.light_active, "re-casting [Light] while lit puts the orb OUT")
+	assert(_count("skill_used") == 1, "the OFF cast emits skill_used too")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "[Light] — You let the orb thin out. The dark closes back in, patient as ever."), "the OFF cast speaks the field_ambient_off line")
 	g_glow.use_skill_field("light")
-	assert(g_glow.light_active, "re-casting [Light] while lit leaves light_active true")
+	assert(g_glow.light_active, "a third cast lights it again -- the toggle is symmetric")
 	var g_noglow := WIGame.new(scene_p1, skills_p1, _sink, 12345)
 	g_noglow.player_cell = Vector2i(2, 3)
 	g_noglow.player_facing = Vector2i.DOWN

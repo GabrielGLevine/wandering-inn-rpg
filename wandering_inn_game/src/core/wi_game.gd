@@ -98,7 +98,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	_run_seed = rng_seed
 	_economy = WIEconomy.new(sink, pickup, _set_gold)
 	_social = WISocial.new(sink, accomplishment_count, record_accomplishment, find_entity)
-	_field_skills = WIFieldSkills.new(sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active, _blink_field, _ward_field, _animate_field, _door_openable)
+	_field_skills = WIFieldSkills.new(sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _toggle_light, _blink_field, _ward_field, _animate_field, _door_openable)
 	_interactions = WIInteractions.new(sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup, _has_required_items)
 	_sleep_beat = WISleepBeat.new(sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _enriched_offer, _set_pending_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
 	_banking = WICombatBanking.new(sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity, (combat_config.get("progression", {}) as Dictionary).get("challenge", {}), combat_config.get("classes", {}), (combat_config.get("combatants", {}) as Dictionary).get("combatants", []))
@@ -755,8 +755,23 @@ func _resolve_observe_text(ent: Dictionary) -> String:
 	return text
 
 
-func _set_light_active(active: bool) -> void:
-	light_active = active
+## [Light]'s on/off arm, deliberately shaped like `_toggle_sneak` below: flip the
+## flag, emit SKILL_USED, mark the Skill used, then speak the side you landed on.
+## The orb used to have no off path anywhere -- field_skills hard-SET the flag and
+## only sleep() ever cleared it, so casting again while lit silently did nothing.
+## Copy comes from the Skill row (`field_ambient` on, `field_ambient_off` off) so
+## the two lines live beside each other in data. Presentation needs no change:
+## world._reconcile_pc_light() is already a want/have reconcile and detaches the
+## PointLight2D the moment this flag goes false.
+func _toggle_light(skill_id: String) -> Dictionary:
+	var skill: Dictionary = skills.get(skill_id, {})
+	light_active = not light_active
+	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
+	_mark_skill_used(skill_id)
+	var on_text := String(skill.get("field_ambient", ""))
+	var off_text := String(skill.get("field_ambient_off", on_text))
+	_emit(WIEvents.TOAST, {"text": on_text if light_active else off_text})
+	return {"light_active": light_active}
 
 
 func _set_gold(new_gold: int) -> void:
