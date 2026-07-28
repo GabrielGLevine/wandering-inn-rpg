@@ -697,11 +697,12 @@
    "skills": []
   },
   {
-   "_comment": "The game's FIRST all-human combatant family, per spec sec.2: 'his hired blades = the first all-human combatant family (art: doublets + clubs/knives -- NOT Watch-alike; distinct palette)'. Phase 9 band sweep 2026-07-27: gained [Counter Strike] (SKILL, not stat inflation -- the knives are untouched, so boulevard_duel_ring's band is unmoved) to raise Invrisil one band over Riverfarm, matching its authored 11.0 vs the collectors' 9.5. power_level unchanged: the labels were right, the stats had drifted. display_name is DISTINCT from the two knives on purpose (fix round 1): the turn banner auto-suffixes duplicate names, so three 'Hired Blade' rows left the fight's only Skill-carrier unidentifiable -- a boss the player cannot point at.",
+   "_comment": "The game's FIRST all-human combatant family, per spec sec.2: 'his hired blades = the first all-human combatant family (art: doublets + clubs/knives -- NOT Watch-alike; distinct palette)'. Phase 9 band sweep 2026-07-27: gained [Counter Strike] (SKILL, not stat inflation -- the knives are untouched, so boulevard_duel_ring's band is unmoved) to raise Invrisil one band over Riverfarm, matching its authored 11.0 vs the collectors' 9.5. power_level unchanged: the labels were right, the stats had drifted. display_name is DISTINCT from the two knives on purpose (fix round 1): the turn banner auto-suffixes duplicate names, so three 'Hired Blade' rows left the fight's only Skill-carrier unidentifiable -- a boss the player cannot point at. v0.16.1 #20 BOARD BANDING: combat_scale 0.28 added (presentation-only -- board_renderer's per-combatant override REPLACES render_scale; no stat, no band, no seed touched). Measured with test_combat_visuals' own rule (alpha-bbox height of the animation the board actually plays, idle_side, times scale, over 16): the `hired_blade` rig is 113 rows, so the shipped render_scale 0.4324 put this figure at 3.05 cells against knives at 1.88 (citizen_f, 30 rows) and 1.92 (human_laborer, 50) -- three men in one livery, one of them 1.6x taller, stacking on vertically adjacent enemy_spawns. 113 * 0.28 / 16 = 1.98 cells, in band with both knives.",
    "id": "hired_blade_leader",
    "power_level": 11.0,
    "display_name": "Hired Blade Captain",
    "sprite": "hired_blade",
+   "combat_scale": 0.28,
    "side": "enemy",
    "stats": {
     "str": 14,
@@ -757,11 +758,12 @@
    "skills": []
   },
   {
-   "_comment": "v0.16 I1 FIGHT (#306). NEW ids, never a retune of footpad_*/hired_blade_* -- those feed boulevard_duel_ring, both night loops and Invrisil's two ladder rungs. A distinct id IS the per-encounter override. Sprite reused from hired_blade; no combat_scale.",
+   "_comment": "v0.16 I1 FIGHT (#306). NEW ids, never a retune of footpad_*/hired_blade_* -- those feed boulevard_duel_ring, both night loops and Invrisil's two ladder rungs. A distinct id IS the per-encounter override. Sprite reused from hired_blade. v0.16.1 #20: combat_scale 0.28, the same banding as hired_blade_leader (see its _comment for the measurement).",
    "id": "heirloom_fence",
    "power_level": 8.0,
    "display_name": "The Fence",
    "sprite": "hired_blade",
+   "combat_scale": 0.28,
    "side": "enemy",
    "combat_tint": [
     0.62,

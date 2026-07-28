@@ -538,13 +538,42 @@ const FIGURE_ROWS := {
 	"briar_collector": 60.0,       # idle (non-directional), 64px frame
 	"briar_collector_deep": 59.0,  # idle (non-directional), 64px frame
 	"ruin_warden": 106.0,          # idle_side, 216px frame
+	# v0.16.1 #20: the four rigs the `hired_blades` finding exposed. All four
+	# were re-measured from the sheets by the rule above (max alpha-bbox height
+	# over the animation's frames), and the measurement was validated by
+	# reproducing `bat` (36) and `ruin_warden` (106) exactly. They used to pass
+	# BY EXCLUSION -- absent from this table, so no bound applied to them at all,
+	# which is half of why a 3.05-cell captain shipped beside 1.88-cell knives.
+	"hired_blade": 113.0,          # idle_side, 148px frame
+	"citizen_f": 30.0,             # idle_side, 64px frame
+	"human_laborer": 50.0,         # idle_side, 104px frame
+	"mothbear": 52.0,              # idle (non-directional), 64px frame
 }
 ## 1.25 = the briar collector, the smallest figure any windowed read HAS
-## accepted. 3.55 = half a cell above `hired_blade_leader` (3.05); past ~3.5 a
-## rig eats the turn banner on the board's top row. These are the DESIGN bar:
-## when a subject misses them the data moves, not the bar.
+## accepted. 3.55 = the TURN-BANNER CLIP bar: past ~3.5 cells a rig standing on
+## the board's top row eats the banner (label_top is -18px above the figure).
+## v0.16.1 #20 re-derives that rationale. It used to read "half a cell above
+## hired_blade_leader (3.05)" -- a ceiling derived FROM the tallest shipped rig,
+## which by construction can never fail it; that is exactly how the captain
+## passed. The bar is now the board geometry, and the tallest AUDITED rig
+## (ruin_guardian / seal_warden, 3.51) sits under it on its own merits.
+## These are the DESIGN bar: when a subject misses them the data moves,
+## not the bar.
 const BOARD_FIGURE_MIN_CELLS := 1.25
 const BOARD_FIGURE_MAX_CELLS := 3.55
+## v0.16.1 #20: per-encounter SPREAD. An absolute ceiling cannot see "three men
+## in one livery rendered at 3.05 / 1.88 / 1.92", which is what the player
+## actually reads as broken -- so this asserts that one roster's figures stay
+## within 1.4x of each other. EXPLICITLY NOT EXHAUSTIVE, exactly like the
+## `audited` list below: only the encounters this wave re-scaled and re-shot.
+## KNOWN OUT-OF-SCOPE OFFENDER, filed rather than silently gated: `snare_nest_slot`
+## (trapped_halls) fields snare_ward_a at 2.78 beside rift_vermin_c at 1.26 --
+## spread 2.21. It is a ward-plus-vermin mixed roster, not a one-livery crew,
+## and it needs its own windowed read before its scales move.
+const BOARD_SPREAD_MAX := 1.4
+const SPREAD_AUDITED_ENCOUNTERS := [
+	"hired_blades", "alley_fence_door", "boulevard_duel_ring", "rest_bravos",
+]
 ## EXPLICITLY NOT EXHAUSTIVE. The bounds are asserted ONLY against the rosters
 ## this wave audited and re-shot. Eight LEGACY ids still ship under the floor
 ## and were never photographed as defects, so failing them here would assert a
@@ -609,6 +638,12 @@ func _assert_board_legibility_contracts(combatants: Dictionary) -> void:
 	var audited := camouflage.duplicate()
 	audited.append_array(["cave_spider", "ruin_guardian", "seal_warden",
 		"ruin_ward_a", "ruin_ward_b", "snare_ward_a"])
+	# v0.16.1 #20: the hired-blade family and the mothbear rig join the audited
+	# set. Every one of these used to pass by EXCLUSION (no FIGURE_ROWS entry).
+	audited.append_array(["hired_blade_leader", "heirloom_fence",
+		"hired_blade_knife_a", "hired_blade_knife_b", "fence_doorman",
+		"footpad_lookout", "footpad_bruiser",
+		"mothbear_a", "mothbear_b", "line_stalker_a", "line_stalker_b"])
 	for id: String in audited:
 		var cfg: Dictionary = _combatant_config(combatants, id)
 		assert(not cfg.is_empty(), "audited roster missing combatant: " + id)
@@ -617,6 +652,42 @@ func _assert_board_legibility_contracts(combatants: Dictionary) -> void:
 			"%s reads at %.2f cells, under the %.2f legibility floor" % [id, cells, BOARD_FIGURE_MIN_CELLS])
 		assert(cells <= BOARD_FIGURE_MAX_CELLS,
 			"%s reads at %.2f cells, over the %.2f board ceiling (turn-banner clip)" % [id, cells, BOARD_FIGURE_MAX_CELLS])
+
+	# v0.16.1 #20: the CONSISTENCY rule the absolute bounds could not see. One
+	# encounter's roster must not mix silhouette heights past BOARD_SPREAD_MAX.
+	# The rosters are read out of the live map catalog, not restated here, so a
+	# roster edit can never drift away from the assertion.
+	var scene: Dictionary = WISceneCatalog.compose()
+	var seen_encounters: Dictionary = {}
+	for map_id: String in (scene["maps"] as Dictionary):
+		for raw_ent: Variant in ((scene["maps"] as Dictionary)[map_id] as Dictionary).get("entities", []):
+			var ent := raw_ent as Dictionary
+			if String(ent.get("kind", "")) != "encounter":
+				continue
+			var enc_id := String(ent.get("id", ""))
+			if not SPREAD_AUDITED_ENCOUNTERS.has(enc_id):
+				continue
+			seen_encounters[enc_id] = true
+			var lo := INF
+			var hi := 0.0
+			var measured := 0
+			for raw_eid: Variant in ent.get("enemies", []):
+				var cfg: Dictionary = _combatant_config(combatants, String(raw_eid))
+				assert(not cfg.is_empty(), "%s fields an unknown combatant %s" % [enc_id, str(raw_eid)])
+				if not FIGURE_ROWS.has(String(cfg["sprite"])):
+					continue
+				var c := _board_cells(cfg, sprites[String(cfg["sprite"])])
+				measured += 1
+				lo = min(lo, c)
+				hi = max(hi, c)
+			assert(measured >= 2,
+				"%s is in SPREAD_AUDITED_ENCOUNTERS but fewer than two of its enemies have a FIGURE_ROWS entry -- the rule would be vacuous" % enc_id)
+			assert(hi / lo <= BOARD_SPREAD_MAX,
+				"%s fields figures %.2f..%.2f cells (spread %.2fx, over %.2f) -- one roster, one silhouette band"
+					% [enc_id, lo, hi, hi / lo, BOARD_SPREAD_MAX])
+	for enc_id: String in SPREAD_AUDITED_ENCOUNTERS:
+		assert(seen_encounters.has(enc_id),
+			"SPREAD_AUDITED_ENCOUNTERS names %s, which no map fields -- a stale entry silently gates nothing" % enc_id)
 
 
 func _load_json(path: String) -> Dictionary:
