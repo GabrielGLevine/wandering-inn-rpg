@@ -1,0 +1,112 @@
+{
+ "_comment": "v0.16 playtest bundle 4/6: den-shop warmth. Base pallass_ledger_offices_start repositioned inside pallass_den_shop at the customer cell.",
+ "version": 5,
+ "state": {
+  "current_map": "pallass_den_shop",
+  "player_cell": [
+   4,
+   6
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 5,
+   "mage": 5
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "met_pisces": 1,
+   "learned_magic_from_pisces": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "reached_two_classes": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1,
+   "won_combat": 3,
+   "melee_hit": 18,
+   "spell_cast": 13,
+   "victories": 4,
+   "raskghar_sealed": 1,
+   "post_game": 1,
+   "door_chain_started": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
+   "read_the_board": 1,
+   "riverfarm_attuned": 1,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1,
+   "heard_price_of_a_favor": 1,
+   "blight_lifted": 1,
+   "mediated_the_debt": 1,
+   "persuaded_someone": 1,
+   "price_of_a_favor_reported": 1,
+   "invrisil_attuned": 1,
+   "took_brothers_job": 1,
+   "coyle_operation_found": 1,
+   "merchant_fate_decided": 1,
+   "merchant_exposed": 1,
+   "cleared_brothers_name": 1,
+   "brothers_marker": 1,
+   "brothers_job_done": 1,
+   "pallass_sponsored": 1,
+   "pallass_attuned": 1,
+   "pallass_entry_stamped": 1,
+   "forge_permit_filed": 1,
+   "grimalkin_examination_passed": 1,
+   "elevator_pass_stamped": 1,
+   "read_the_lift_manifest": 1,
+   "ledger_loop_started": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns",
+   "door_that_goes_elsewhere",
+   "price_of_a_favor",
+   "a_gentlemans_disagreement",
+   "papers_for_pallass",
+   "forge_tier_permit",
+   "ledger_eats_first"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword",
+   "relcs_spare_spear",
+   "invrisil_attunement_stone",
+   "pallass_attunement_stone"
+  ],
+  "equipped": {
+   "weapon": "relcs_spare_spear",
+   "armor": ""
+  },
+  "container_state": {},
+  "gold": 11,
+  "actions_since_sleep": 0,
+  "times_slept": 12,
+  "rng_state": "-6393592048753323481"
+ }
+}
