@@ -1,0 +1,509 @@
+{
+ "_comment": "v0.16 #307 P1 'Tempered Standards' TALK route, end to end and live. Off pallass_standards_talk_start (the commission already taken, nothing past it). Reads the examination standard in the forge hall -- the beat the whole route turns on, because the standard measures RECOVERY and the apprentice has been failing hardness -- carries it back to the smith, brokers the six-year argument (standards_brokered), and settles the commission on that arm alone (standards_tempered) with temper_run and golem_recalibrated provably unbanked and zero combat all run. Then walks down to the market tier and renders Grimalkin's NEW standards_tempered hub text_variant, which is the only thing this lane adds to his graph: ruling 4 forbids a new option there because grimalkin_study_loop pins his option array three times and pallass_peek does index navigation on it.",
+ "fixture_save": "pallass_standards_talk_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Down to 'Continue'; confirm loads the pallass_standards_talk_start manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "pallass_forge"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    15,
+    4
+   ]
+  },
+  {
+   "_comment": "== The forge hall door at (15,3). Walked, never teleported: the crossing IS the subject. ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     15,
+     3
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge_hall",
+    "cell": [
+     5,
+     7
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    7
+   ]
+  },
+  {
+   "_comment": "== The examination standard at (7,2), pinned at the hall's north wall. ==",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     7,
+     2
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "read_the_examination_standard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The standard does not measure how hard a blade comes out. It measures how it RECOVERS. Somebody up here has been failing the wrong test perfectly."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_examination_standard"
+  },
+  {
+   "_comment": "== Back out through the hall's own door at (5,8). ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     5,
+     8
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge",
+    "cell": [
+     15,
+     4
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "_comment": "== The smith at her anvil (11,6). ==",
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    11,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     11,
+     6
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Forge-Tier Smith"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_forge_smith",
+    "entity": "forge_smith"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub renders 4 rows with standards_commission_taken held: spec / standard / exit / 'About your commission.' -- the reject-bin arm is hidden by the same counter. Row 3.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Smith"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "commission_report renders 2 rows: the standard's own reading (requires read_the_examination_standard) and the always-available 'Still working on it.'. Row 0.",
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "standards_brokered"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Smith"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "broker's two closing lines both go back to commission_report. Row 0.",
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Smith"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The broker arm is spent now (hide_when standards_brokered), so commission_report renders 'Tell her the argument is settled.' at row 0.",
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "standards_tempered"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "tempered_standards"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Smith"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.standards_tempered",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "temper_run"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "golem_recalibrated"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "forge_golems_culled"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "_comment": "== GRIMALKIN. The examiner's name is in the file twice now; his hub takes a NEW text_variant and no new option (three shipped scripts pin his option array). ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    18,
+    4
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     18,
+     3
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_grimalkin",
+    "entity": "grimalkin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE VARIANT ITSELF, plus the proof it cost him no option: the array is exactly what the three shipped scripts pin (the exam row is spent, the spine row requires-hidden). Ruling 4 in one assertion.",
+   "action": "assert_event_logged",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Grimalkin",
+    "text": "The forge tier settled its temper argument and my name is in the file twice. Understand: a blade that will not come back is a blade that never bent. Same measure as a squat. Depth, then recovery, then the file. State your business.",
+    "options": [
+     {
+      "text": "About the studies.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Just passing through.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "02_grimalkin_standards_tempered_variant"
+  },
+  {
+   "_comment": "'Just passing through.' -- the studies row is above it, the exam row is spent and the spine row is requires-hidden.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  }
+ ]
+}

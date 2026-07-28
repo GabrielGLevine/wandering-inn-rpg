@@ -1516,18 +1516,18 @@ All at **seed 9** (the shipped Pallass seed for every existing Pallass canonical
 - Never pin toast ORDER across `combat_started`.
 - Before adding any driver action, `grep '"<action>"' qa/test_driver.gd` — duplicate arms silently SHADOW. (This lane needs no new driver actions.)
 
-- [ ] **Step 1:** Write `pallass_depth_gates_check` FIRST — it is the cheapest failure detector for every gating decision in Tasks 1.3/2.4/2.5.
-- [ ] **Step 2:** Write the remaining six. Use `teleport` freely for legs whose route is not the subject; walk for real where the route IS the subject (the door crossings, the lift transitions, the carry legs).
-- [ ] **Step 3: Register each** in `qa/manifest.json` (`script`, `seed`, `fixture`, `note`, `tiers`) and add the matching `AGENTS.md:201+` seed-table row in the SAME commit.
-- [ ] **Step 4: Regenerate both generated artifacts in the SAME commit as the manifest change (ruling E).** In order:
+- [x] **Step 1:** Write `pallass_depth_gates_check` FIRST — it is the cheapest failure detector for every gating decision in Tasks 1.3/2.4/2.5.
+- [x] **Step 2:** Write the remaining six. Use `teleport` freely for legs whose route is not the subject; walk for real where the route IS the subject (the door crossings, the lift transitions, the carry legs).
+- [x] **Step 3: Register each** in `qa/manifest.json` (`script`, `seed`, `fixture`, `note`, `tiers`) and add the matching `AGENTS.md:201+` seed-table row in the SAME commit.
+- [x] **Step 4: Regenerate both generated artifacts in the SAME commit as the manifest change (ruling E).** In order:
   1. `python3 wandering_inn_game/scripts/derive_qa_surfaces.py` — bare IS the write (`:412-414` returns `cmd_write()` on empty argv); expect `wrote surfaces for N script(s)`, rc=0.
   2. `python3 scripts/render_qa_notes.py --write` — **the `--write` is mandatory.** Bare it only compares and returns 1, so a bare-only call leaves `docs/QA-SCRIPT-NOTES.md` stale and reproduces the #312 leak-check red.
   3. `python3 scripts/render_qa_notes.py` (bare) — the CHECK: rc=0 and `PASS: QA notes match manifest`.
   4. `python3 scripts/check_doc_drift.py`.
   - **Merge-train:** `render()` walks the whole manifest, so this file must be re-rendered at every train merge that combines two lanes' manifest entries. A green run on this branch does not survive the merge on its own.
-- [ ] **Step 5: Run each script** with `wandering_inn_game/qa/run_qa.sh <script> headless --seed=9`. Re-derive every pin from the real run's `qa_output/<script>/events.jsonl` — never assume a pin. "missing result.json" with rc=0 is a RED, never a pass.
-- [ ] **Step 6:** If `pallass_standards_fight` loses at seed 9, seed-search (it is a real task, not a retune): try the Pallass canonical seeds first, and remember PC death is an immediate DEFEAT even with a living ally.
-- [ ] **Step 7: Commit** `test(qa): seven Pallass depth canonicals + manifest, seeds, surfaces`.
+- [x] **Step 5: Run each script** with `wandering_inn_game/qa/run_qa.sh <script> headless --seed=9`. Re-derive every pin from the real run's `qa_output/<script>/events.jsonl` — never assume a pin. "missing result.json" with rc=0 is a RED, never a pass.
+- [x] **Step 6:** If `pallass_standards_fight` loses at seed 9, seed-search (it is a real task, not a retune): try the Pallass canonical seeds first, and remember PC death is an immediate DEFEAT even with a living ally.
+- [x] **Step 7: Commit** `test(qa): seven Pallass depth canonicals + manifest, seeds, surfaces`.
 
 ### Task 3.3: Crossing re-gate
 

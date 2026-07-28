@@ -1,0 +1,948 @@
+{
+ "_comment": "v0.16 #307 THE GATE-PROOF LEG, and the cheapest failure detector this lane owns. Stands on pallass_depth_gates_start -- spine_reach_start's story position with NONE of the lane's 22 counters -- and walks every surface the lane touched to prove nothing new leaked into a save that has not earned it: the attendant's hub and the smith's hub both still render exactly three rows (option-array pins, the only two in this lane, because _loosely_equal compares the WHOLE list and one leaked row would red pallass_walkthrough's own pins the same way), both clerk hubs are unchanged, both requires_skill props render their locked_toast through the skill_unknown seam rather than banking anything, the rig's cell is empty because encounter_when is unmet, and the run closes with assert_event_absent over all sixteen quest-shaped counters plus combat_started. Registered in BOTH tiers (smoke, full): it is fast, it has no combat, and it is what a merge-train breakage would show up in first.",
+ "fixture_save": "pallass_depth_gates_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Down to 'Continue'; confirm loads the pallass_depth_gates_start manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "pallass_forge"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    5
+   ]
+  },
+  {
+   "_comment": "== GATE 1/6: the attendant's hub. Nothing this lane added may be visible at a save holding none of its counters. ==",
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    23,
+    6
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     22,
+     6
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Lift Attendant"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_lift_attendant",
+    "entity": "lift_attendant"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "PIN 1 of 2 (D1). _loosely_equal compares this array element-wise WITH a size check, so a single leaked row reds this line -- which is the whole point: pallass_walkthrough pins the same hub at 3 rows off a different fixture, and this lane's two new arms are requires-hidden on counters no shipped fixture holds.",
+   "action": "assert_event_logged",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lift Attendant",
+    "text": "The cage runs on the counterweight cycle. Down at the quarter bell, up at the half. You have four minutes, and I'll say so again at three.",
+    "options": [
+     {
+      "text": "Does the lift ever stop?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Who rides it?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I'll wait for the bell.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_attendant_hub_three_rows"
+  },
+  {
+   "_comment": "Exit row. Visible rows here are cycle / traffic / exit -- the seal arm is requires-hidden and BOTH lane arms are too.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== GATE 2/6: the smith's hub, same proof. ==",
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    11,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     11,
+     6
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Forge-Tier Smith"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_forge_smith",
+    "entity": "forge_smith"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "PIN 2 of 2 (D1). Same contract as the attendant's, and the same 3 rows pallass_walkthrough pins at line ~1258 off near_pallass. Neither of the lane's two new arms (the reject-bin opener, the commission report) may be visible here.",
+   "action": "assert_event_logged",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Smith",
+    "text": "Bench is mine until the second bell. Say it quick.",
+    "options": [
+     {
+      "text": "What's the bench rated for?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Who decides how a thing gets built up here?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I'll let you work.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "02_smith_hub_three_rows"
+  },
+  {
+   "_comment": "Exit row: spec / standard / exit.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== GATE 3/6: the forge hall. The temper bench is requires_skill and this save knows no [Appraise Goods], so it must render its locked_toast and bank NOTHING. ==",
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    15,
+    4
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "_comment": "== The forge hall door at (15,3). Walked, never teleported: the crossing IS the subject. ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     15,
+     3
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge_hall",
+    "cell": [
+     5,
+     7
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     4,
+     3
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unknown",
+   "payload_contains": {
+    "skill": "appraise_goods"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Heat, metal, and a gauge you cannot read. Guessing here costs somebody a week."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_temper_bench_locked"
+  },
+  {
+   "_comment": "The rig at (8,6) is encounter_when-gated on standards_commission_taken, which this save does not hold -- so the cell is EMPTY here and walkable. That is the gate; the no-ambush proof is pallass_standards_skill's job.",
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "pallass_forge_hall"
+  },
+  {
+   "_comment": "== Back out through the hall's own door at (5,8). ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     5,
+     8
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge",
+    "cell": [
+     15,
+     4
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "_comment": "== GATE 4/6: the market clerk. Her queue arm is requires-gated on ledger_loop_started. ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     7,
+     5
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_market_clerk",
+    "entity": "tier_clerk_market"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Her hub is UNCHANGED by this lane at this position: one row. The queue arm is requires-hidden on ledger_loop_started; the elevator_pass_stamped greeting variant is shipped, not new.",
+   "action": "assert_event_logged",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Tier Clerk",
+    "text": "You're carrying a forge-tier stamp. That's the permit office's business and not this window's. State whatever this window is for.",
+    "options": [
+     {
+      "text": "Just looking.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "04_market_clerk_hub"
+  },
+  {
+   "_comment": "Only 'Just looking.' is visible: the stamp arm is spent (hide_when pallass_entry_stamped) and the queue arm is requires-hidden.",
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== GATE 5/6: the forge permit clerk. His countersign arm is requires-gated on queue_notice_endorsed. ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    20,
+    5
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     20,
+     4
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_forge_clerk",
+    "entity": "forge_permit_clerk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "His hub is UNCHANGED by this lane at this position: two rows, the oil row visible-LOCKED on its gold gate (11 held, 12 asked) because a gold `requires` is not progress-gated. The countersign arm is requires-hidden on queue_notice_endorsed.",
+   "action": "assert_event_logged",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Clerk",
+    "text": "State your business and your sponsor, or stand aside for the next in line.",
+    "options": [
+     {
+      "text": "A vial of tempering oil, if you're headed to the floor. (12 gold)",
+      "locked": true,
+      "requirement": "costs 12 gold",
+      "effect_lines": [
+       "Next fight: +1 damage (single use)"
+      ]
+     },
+     {
+      "text": "Not now.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "05_permit_clerk_hub"
+  },
+  {
+   "_comment": "Exit row 'Not now.'. The oil row above it is visible-LOCKED (gold gate, 11 held vs 12 asked) -- a gold requires is not progress-gated, so it shows locked instead of hiding.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== GATE 6/6: the den shop's own requires_skill prop, same locked read as the temper bench. ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    12,
+    5
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "_comment": "== The den shop door at (12,4) on the market tier. Walked for real. ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     12,
+     4
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_den_shop",
+    "cell": [
+     4,
+     6
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     7,
+     2
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unknown",
+   "payload_contains": {
+    "skill": "appraise_goods"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Twelve forms about one crate. You get four pages in before the words stop meaning anything."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "06_consignment_file_locked"
+  },
+  {
+   "_comment": "== Back to the shopfront door at (4,7). ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     4,
+     7
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_market",
+    "cell": [
+     12,
+     5
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "_comment": "== THE WHOLE POINT: a save at this position must end the run holding not one of the lane's 16 quest-shaped counters, and must never have been dragged into a fight. ==",
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "saw_the_failed_temper"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "standards_commission_taken"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "read_the_examination_standard"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "temper_run"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "standards_brokered"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "golem_recalibrated"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "standards_tempered"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "read_the_lift_manifest"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "ledger_loop_started"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "queue_notice_endorsed"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "queue_notice_countersigned"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "loop_walked"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "exemption_found"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "shipment_leg_carried"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "shipment_carried"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "ledger_unstuck"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "tempered_standards"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "ledger_eats_first"
+   }
+  }
+ ]
+}

@@ -1,0 +1,336 @@
+{
+ "_comment": "v0.16 #307 P1 'Tempered Standards' SKILL route -- AND the lane's no-ambush proof (danger D27). Off pallass_standards_skill_start, standing inside pallass_forge_hall with [Appraise Goods] known. Runs the temper on the bench through the requires_skill/on_skill_use seam (temper_run), then deliberately walks the hall's y=7 lane end to end: standards_commission_taken is held, so the forge_temper_golem encounter at (8,6) is PRESENT, and the walk crosses (7,7)/(8,7)/(9,7) -- every cell a radius-1 trigger would fire on. assert_event_absent on combat_started AND on the parley conversation is what proves the encounter is interact-only. Closes by reporting to the smith on the billet arm alone (standards_tempered), with standards_brokered and golem_recalibrated provably unbanked.",
+ "fixture_save": "pallass_standards_skill_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Down to 'Continue'; confirm loads the pallass_standards_skill_start manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "pallass_forge_hall"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    4
+   ]
+  },
+  {
+   "_comment": "== The temper bench at (4,3). requires_skill/visible-locked; [Appraise Goods] is on the field bar (AUTO loadout). ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     4,
+     3
+    ]
+   }
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "appraise_goods"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "appraise_goods",
+    "target": "forge_hall_temper_bench"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "temper_run"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Appraise Goods] — You read the grain off the colour, hold the count two beats longer than the slate says, and quench. The billet comes out with the standard's own answer in it."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_temper_bench_skill_toast"
+  },
+  {
+   "_comment": "== THE NO-AMBUSH PROOF. standards_commission_taken is held, so the rig at (8,6) IS present. Walk the whole y=7 lane under it -- (7,7), (8,7) and (9,7) are every cell inside a radius-1 footprint -- and the run must reach the far end with combat_started never fired. The encounter carries `conversation` and NO `trigger_radius`; nothing in the suite rejects that pair, so this walk is the only thing that proves it. ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     5,
+     8
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge",
+    "cell": [
+     15,
+     4
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "forge_temper_golem"
+   }
+  },
+  {
+   "_comment": "== The smith at her anvil (11,6). ==",
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    11,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     11,
+     6
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Forge-Tier Smith"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_forge_smith",
+    "entity": "forge_smith"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub renders 4 rows with standards_commission_taken held. Row 3 is 'About your commission.'",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Smith"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "commission_report renders 2 rows on this route: '[Show her the billet you ran.]' (requires temper_run) at row 0, then 'Still working on it.'. The notice arm and both fight arms are requires-hidden.",
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "standards_tempered"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "tempered_standards"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Smith"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.standards_tempered",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "standards_brokered"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "golem_recalibrated"
+   }
+  }
+ ]
+}

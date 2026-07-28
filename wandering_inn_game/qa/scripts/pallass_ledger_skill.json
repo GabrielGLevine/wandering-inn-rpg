@@ -1,0 +1,391 @@
+{
+ "_comment": "v0.16 #307 P2 'The Ledger Eats First' SKILL route. Off pallass_ledger_skill_start, standing inside pallass_den_shop with [Appraise Goods] known -- the fixture that makes MAP_REQUIRES['pallass_den_shop'] bite. Reads the consignee's own file through the requires_skill/on_skill_use seam and finds the exemption that was on the paper the whole time (exemption_found), walks back out through the shopfront door onto the market tier, rides the lift up and reports to the attendant on that arm alone (ledger_unstuck), with loop_walked and shipment_carried provably unbanked.",
+ "fixture_save": "pallass_ledger_skill_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Down to 'Continue'; confirm loads the pallass_ledger_skill_start manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "pallass_den_shop"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    3
+   ]
+  },
+  {
+   "_comment": "== The consignee's file at (7,2). requires_skill/visible-locked; [Appraise Goods] is on the field bar. ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     7,
+     2
+    ]
+   }
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "appraise_goods"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "appraise_goods",
+    "target": "den_shop_consignment_file"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "exemption_found"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. Tin is not perishable. The salt packed WITH it is, and it is on the same manifest line. Four cycles, and the exemption was on the paper the whole time."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_consignment_file_exemption"
+  },
+  {
+   "_comment": "== Back to the shopfront door at (4,7). ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     4,
+     7
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_market",
+    "cell": [
+     12,
+     5
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "_comment": "== A short real walk on the market tier before the lift, so the route is not pure teleport. ==",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    5
+   ]
+  },
+  {
+   "_comment": "== The Grand Lift at (22,7): a real door_when crossing, up to the forge tier. ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     22,
+     7
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge",
+    "cell": [
+     23,
+     7
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    6
+   ]
+  },
+  {
+   "_comment": "== The attendant at (22,6). ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     22,
+     6
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Lift Attendant"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_lift_attendant",
+    "entity": "lift_attendant"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub renders 4 rows with ledger_loop_started held (the manifest arm is hidden by it, 'About that crate.' takes its place): row 3.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lift Attendant"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "ledger_report renders 2 rows on this route: '[The exemption was in the forms the whole time.]' (requires exemption_found) at row 0, then 'Still working on it.'",
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "ledger_unstuck"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "ledger_eats_first"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lift Attendant"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.ledger_unstuck",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "loop_walked"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "shipment_carried"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  }
+ ]
+}

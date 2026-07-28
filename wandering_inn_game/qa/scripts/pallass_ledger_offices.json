@@ -1,0 +1,887 @@
+{
+ "_comment": "v0.16 #307 P2 'The Ledger Eats First' TALK route: the office loop that outranks itself. Off pallass_ledger_offices_start (the attendant's pitch already taken). Rides the Grand Lift down as a real door_when crossing, gets the market tier clerk to ENDORSE the queue entry, carries that to the forge-tier permit clerk who COUNTERSIGNS the release, walks it through the den shop door to the consignee who signs last (loop_walked) -- each office's arm is requires-gated on the previous office's product, so the three-way cycle can only be walked in order -- then rides back up and reports to the attendant (ledger_unstuck). shipment_carried and exemption_found are provably unbanked: this is the offices route and nothing else.",
+ "fixture_save": "pallass_ledger_offices_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Down to 'Continue'; confirm loads the pallass_ledger_offices_start manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "pallass_forge"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    5
+   ]
+  },
+  {
+   "_comment": "== The Grand Lift at (22,7): a real door_when crossing, down to the market tier. ==",
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     22,
+     7
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_market",
+    "cell": [
+     23,
+     7
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    7
+   ]
+  },
+  {
+   "_comment": "== OFFICE 1: the tier clerk at (7,5). Her queue arm opened the moment ledger_loop_started banked. ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     7,
+     5
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_market_clerk",
+    "entity": "tier_clerk_market"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub renders 2 rows here: 'Just looking.' then the crate arm (the stamp arm is spent). Row 1.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Tier Clerk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "'Then endorse the entry, and I'll take it up.'",
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "queue_notice_endorsed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Tier Clerk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_market_clerk_endorsed"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== OFFICE 2: the forge-tier permit clerk at (20,4). His countersign arm needed office 1's endorsement. ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    20,
+    5
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     20,
+     4
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_forge_clerk",
+    "entity": "forge_permit_clerk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub renders 3 rows: the visible-LOCKED oil row (gold gate), 'Not now.', then the countersign arm. Row 2.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Clerk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Take the 'Why has nobody used it?' branch first -- it is the joke's whole payload and it lands on the same countersign.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Clerk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "'Then countersign it.'",
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "queue_notice_countersigned"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Forge-Tier Clerk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_permit_clerk_countersigned"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== OFFICE 3: the consignee herself, who signs last. ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    12,
+    5
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "_comment": "== The den shop door at (12,4) on the market tier. Walked for real. ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     12,
+     4
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_den_shop",
+    "cell": [
+     4,
+     6
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    6
+   ]
+  },
+  {
+   "_comment": "== The keeper stands at (4,1) BEHIND a solid counter (3,2)-(5,2). Her only approach is round the counter's west end: column 3 up to y=3, across to column 2, up to y=1. The hatchling bench at (2,5) and the barrel at (1,5) close every shorter lane. ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     4,
+     1
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Den-Shop Keeper"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_den_keeper",
+    "entity": "den_shop_keeper"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub renders 3 rows here (the crate arm is requires-gated on ledger_loop_started, which this fixture holds): row 1 is 'I'm here about a crate of tin.'",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Den-Shop Keeper"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "consignee renders 2 rows here: '[Hand her the countersigned queue notice.]' at row 0 (the carry arm needs three legs and this run walked none), then the plain exit.",
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "loop_walked"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Den-Shop Keeper"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_den_keeper_released"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "shipment_carried"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "exemption_found"
+   }
+  },
+  {
+   "_comment": "== Back round the counter's west end the way we came in. ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     4,
+     7
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_market",
+    "cell": [
+     12,
+     5
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "_comment": "== The Grand Lift at (22,7): a real door_when crossing, up to the forge tier. ==",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     22,
+     7
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge",
+    "cell": [
+     23,
+     7
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    23,
+    7
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 8
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    6
+   ]
+  },
+  {
+   "_comment": "== The attendant at (22,6). ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     22,
+     6
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Lift Attendant"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_lift_attendant",
+    "entity": "lift_attendant"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Hub renders 4 rows with ledger_loop_started held (the manifest arm is hidden by it, 'About that crate.' takes its place): row 3.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lift Attendant"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "ledger_report renders 2 rows on this route: '[The offices countersigned each other. It's released.]' (requires loop_walked) at row 0, then 'Still working on it.'",
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "ledger_unstuck"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "ledger_eats_first"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lift Attendant"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.ledger_unstuck",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  }
+ ]
+}
