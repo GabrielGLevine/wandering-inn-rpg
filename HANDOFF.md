@@ -4,47 +4,39 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
-## Current state (2026-07-28, late)
+## Current state (2026-07-28, session close)
 
-**v0.16 "REGION DEPTH" IS MERGED TO MAIN — close PR + tag imminent (this
-session).** Four region PRs (#319 Riverfarm, #320 Invrisil, #321 Pallass,
-#322 Floodplains) all merged with `[ci-full]` 6-check green heads, one
-session end-to-end: recon (5 readers) → 4 per-region task-grade plans →
-adversarial plan-verify (42 findings, 4 BLOCK — all fixed pre-dispatch) →
-4-lane worktree fleet (20 agents: 3 implement stages + traced review + fix
-wave per lane) → anchored merge-train with composed-tree re-gates.
-Content: 7 quests with three-pillar parity (R1 flood_ledger, R2
-what_the_thicket_keeps, I1 a_setting_for_a_lady, I2 the_hat_stays_on, P1
-tempered_standards, P2 ledger_eats_first, F1 the_price_kept), 7 walk-in
-interiors (riverfarm_mill, witch_hut, stationer, adventurers_rest,
-pallass_forge_hall, pallass_den_shop, rags_camp), the game's FIRST
-goblin-ally fight (rags_ally + goblin_spear_ally; betrayal branch got its
-first live QA coverage), the NOBILITY layer (user directive mid-wave: "A
-Lady with a Ring Box" + Reinhart/house-seal ambients; full thread = #318
-v0.17), 4 bespoke PixelLab camp sprites, and the forge-hall board-fight
-debt closed. Per-issue narrative: the four PR bodies. Adjudications:
-CHOICE-LOG (planning block + close block).
+**v0.16.0 "REGION DEPTH" SHIPPED — tag at 1c1756b, Release run
+30398347500 + Pages run 30398347409 green (full QA on real assets, itch
+html5, Win/Linux desktops).** Third tag cut this day (v0.14.0, v0.15.0,
+v0.16.0). One session end-to-end: recon → 4 per-region plans →
+adversarial verify (42 findings, 4 BLOCK, all fixed pre-dispatch) →
+4-lane worktree fleet (20 agents) → anchored merge-train (#319 Riverfarm,
+#320 Invrisil, #321 Pallass, #322 Floodplains) → close PR #326 (freeze
+step-0 with the skill_uses generator gap patched; 778 ids, zero
+removals; 7 leads rows) → tag. Issues #305-#308 closed.
 
-**CLOSE EVIDENCE (all on main 7b43de5):** milestone machine playtest — 22
-windowed runs, all passed, every route/interior/nobility surface READ
-(evidence: qa_output/machine_playtest_2026-07-28_v016_close/, gitignored).
-Economy axes measured + ratified (CHOICE-LOG): wage floor 9g, ceiling 22g,
-gossip census 53, thresholds unmoved, pace harness byte-identical to v0.15
-bands. Freeze walked: 778 ids at 0.16.0, zero removals, zero hand-adds —
-after patching generate_shipped_ids.py's missed `skill_uses` walk (the
-close's blocker catch). Seven deferred leads rows landed post-regen;
-spine_reach lead pins re-derived.
+Content: 7 quests with three-pillar parity, 7 walk-in interiors, the
+first goblin-ally fight (betrayal branch got its first live QA
+coverage), the nobility layer (user directive; #318 = v0.17 Magnolia
+thread), 4 bespoke PixelLab camp sprites, forge-hall board-fight debt
+closed. Close evidence: 22-run windowed machine playtest (all pass);
+economy axes ratified (CHOICE-LOG close block). Per-issue narrative:
+the five PR bodies. INCIDENT (ledgered + skill-folded): the close PR
+was merged past a red Unit suites via owner-auth bypass — main red ~5
+min, fixed forward (test_sim_core active_leads pins re-derived), full
+30-suite bar green before the tag.
 
-**Session infra shipped on main (user directives):** CI doc-drift demoted
-to an advisory non-required job (09ebdbe — was the top required-check
-failure; leak/census/lint/mirror stay required); tracked pre-commit hook,
-path-scoped fast gates, worktree-scoped install (68fa336 — leak scan on
-adds ~4s, data gates <0.4s; lanes opt in via scripts/install_git_hooks.sh).
+**Session infra (user directives):** CI doc-drift → advisory
+non-required job (09ebdbe); tracked pre-commit hooks, path-scoped,
+worktree-scoped install (68fa336). Wave-lesson skill folds: producer-
+schema parity (wi-shipping), leads re-pin + rendered-vs-seen
+(wi-writing-qa-scripts, wi-machine-playtest), anchored merge trains +
+owner-auth merge-bypass discipline (wi-running-the-machine).
 
 ## 🎯 NEXT ACTIONS
 
-1. **Tag v0.16.0** once the close PR merges (freeze step-0 rides it);
-   verify the Release + Pages runs go green (three targets).
+1. ~~Tag v0.16.0~~ — DONE (runs 30398347500/30398347409 green).
 2. **#325 payoff-toast-behind-Autosaved** — v0.16.1 HOTFIX CANDIDATE: all
    seven new quests' payoff prose currently dies unread behind the
    housekeeping toast if the player moves. Small presentation fix +
