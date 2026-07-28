@@ -3362,6 +3362,36 @@
    }
   },
   {
+   "script": "pallass_round_trip",
+   "seed": 9,
+   "fixture": "spine_reach_start",
+   "note": "THE PALLASS RETURN PROOF: the market/forge cluster has no map exit but its own lift, so the arrival plinth (pallass_market_arrival_anchor) is now a portal CARRIER and this canonical is the anti-softlock gate -- depart Liscor at street_anchor_stone, land on the portals `pallass` row's arrival cell (4,7), walk BOTH tiers for real (market row 9 -> lift -> forge bench and back), open the plinth's picker (exact options pin, Pallass itself excluded) and ride it home to the inn's authored arrival cell (13,6); zero combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "pallass_forge",
+     "pallass_market",
+     "street"
+    ],
+    "fixtures": [
+     "spine_reach_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "portals"
+    ]
+   }
+  },
+  {
    "script": "pallass_race_peek",
    "seed": 9,
    "fixture": "near_pallass_drake",
