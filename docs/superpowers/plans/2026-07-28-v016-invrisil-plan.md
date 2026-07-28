@@ -683,19 +683,31 @@ Perimeter segments (13 wide, 9 tall, door gap at **[6,8]**): row 0 `[0,0]→[12,
    "id": "rest_bravos",
    "kind": "encounter",
    "cell": [9, 6],
-   "display_name": "Three at the Far Table",
+   "display_name": "Two at the Far Table",
    "sprite": "hired_blade",
-   "observe": "Three men at the far table who arrived together, ordered separately, and have been agreeing with each other about nothing for an hour.",
+   "observe": "Two men at the far table who arrived together, ordered separately, and have been agreeing with each other about nothing for an hour.",
    "arena": "merchant_warehouse",
    "enemies": ["rest_bravo_a", "rest_bravo_b"],
    "allies": [],
    "on_victory": "handoff_loud",
    "encounter_when": { "requires": { "hat_job_taken": 1 } },
-   "gate_closed_toast": "Three men at the far table are having a conversation you are not in. Tonight, that is all they are."
+   "gate_closed_toast": "Two men at the far table are having a conversation you are not in. Tonight, that is all they are."
   }
  ]
 }
 ```
+
+> **FIX-WAVE CORRECTION (adversarial review, IMPORTANT).** The block above is
+> the corrected copy. As originally drafted it said **three** in all three
+> player-facing strings (`display_name`, `observe`, `gate_closed_toast`) while
+> `enemies` was and remains a **pair**, so every player who took the fight read
+> the copy contradicted by a two-figure board. Corrected to "two" rather than by
+> adding a third rig, because a third rig re-opens the measured
+> `rest_bravos_t3_warrior10_solo` cell (0.78/3), the `power_level` banking sum,
+> and the DERIVED `rng_state` in `invrisil_hat_loud_start`. The count is now
+> pinned by the entity's own `_comment` and by `invrisil_v016_gate_check`'s
+> toast assertion. Shipped precedent for the convention: `hired_blades` in
+> `mercantile_alleys.json:1220` says "Three men" and ships three enemies.
 
 - [x] **Step 2: Non-quest observables audit.** `rest_hearth`, `rest_trophy_rack`, `rest_bar_counter_l`, `rest_long_bench`, `rest_rank_notice` (five) plus three talk-pool NPCs are ungated and survive `hat_job_done` — the room is a real ambient interior afterwards, per spec:98-100.
 - [x] **Step 3: Sprite check — corrected picks, re-prove them.** Same failure mode as Task 1.3 Step 3 (`table`/`bookshelf` are not registered and nothing gates it). The corrected picks:

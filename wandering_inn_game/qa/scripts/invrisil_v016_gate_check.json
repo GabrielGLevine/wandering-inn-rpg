@@ -46,7 +46,7 @@
   { "action": "move", "direction": "down", "steps": 1 },
   { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [9, 6]} },
   { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": {"text": "Three men at the far table are having a conversation you are not in. Tonight, that is all they are."}, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": {"text": "Two men at the far table are having a conversation you are not in. Tonight, that is all they are."}, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "03_a_conversation_you_are_not_in" },

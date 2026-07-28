@@ -2526,6 +2526,18 @@ in the same wave rather than logged as owed.
   staged in the alleys will. `merchant_warehouse` at night is fine
   (`invrisil_hat_loud/02_the_bravos_on_the_board.png` — warm brick, both
   bravo rigs separable at a glance).
+- [x] **The Rest's fight said THREE and the board showed TWO** — caught by
+  adversarial review, not by the Task 5.5 windowed read, and that is the
+  lesson: the shot above was read for tint/silhouette separation and passed,
+  while nobody counted the figures against the copy. `rest_bravos` shipped
+  `display_name` "Three at the Far Table", an `observe` and a
+  `gate_closed_toast` all saying three men, against an `enemies` pair. Per
+  ruling F this pair of rigs gets no `test_combat_visuals` measurement, so
+  the windowed shot was the only gate and it was the wrong question.
+  **Fixed in-lane** by re-wording all three strings to "two" (a third rig
+  would have re-opened the measured 0.78 harness cell and the derived
+  `rng_state`). **Standing check for every future board read: count the
+  figures against the encounter's own copy**, not just their legibility.
 - [x] **Both new interiors render FLAT at dusk** — the hearth pool, both
   sconce pools, the wall-band bounce and the `dust_motes` ambience were all
   invisible in the first dusk pass, and all four read at night. Cause: these

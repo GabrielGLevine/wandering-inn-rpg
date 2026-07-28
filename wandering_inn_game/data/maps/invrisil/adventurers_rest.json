@@ -403,16 +403,16 @@
    ]
   },
   {
-   "_comment": "I2 FIGHT: INTERACT-ONLY (no trigger_radius) so it cannot spring on a pinned route. New ids only -- no shared combatant is retuned.",
+   "_comment": "I2 FIGHT: INTERACT-ONLY (no trigger_radius) so it cannot spring on a pinned route. New ids only -- no shared combatant is retuned. COUNT IS LOAD-BEARING: `enemies` is a PAIR, so all three player-facing strings here say two. Drafted as 'three' and corrected -- if a third rig is ever added, these strings and the sim_combat_batch cell move together.",
    "id": "rest_bravos",
    "kind": "encounter",
    "cell": [
     9,
     6
    ],
-   "display_name": "Three at the Far Table",
+   "display_name": "Two at the Far Table",
    "sprite": "hired_blade",
-   "observe": "Three men at the far table who arrived together, ordered separately, and have been agreeing with each other about nothing for an hour.",
+   "observe": "Two men at the far table who arrived together, ordered separately, and have been agreeing with each other about nothing for an hour.",
    "arena": "merchant_warehouse",
    "enemies": [
     "rest_bravo_a",
@@ -425,7 +425,7 @@
      "hat_job_taken": 1
     }
    },
-   "gate_closed_toast": "Three men at the far table are having a conversation you are not in. Tonight, that is all they are."
+   "gate_closed_toast": "Two men at the far table are having a conversation you are not in. Tonight, that is all they are."
   }
  ]
 }

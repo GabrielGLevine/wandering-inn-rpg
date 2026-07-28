@@ -64,14 +64,14 @@ that were never meant to show up here (uncounted, not a gap).
 | pallass_forge | pallass | 71.93 | 26.49 | 23.54 | 20.65 | 1.25 | 0.00 | dynamic |
 | street | liscor | 71.55 | 24.97 | 21.73 | 22.52 | 2.33 | 0.00 | dynamic |
 | sewers | liscor | 70.76 | 23.40 | 22.11 | 21.25 | 4.00 | 0.00 | dynamic |
-| adventurers_rest | adventurers_rest | 70.56 | 24.22 | 23.50 | 22.84 | 0.00 | 0.00 | dynamic |
-| mercantile_alleys | invrisil | 70.45 | 24.75 | 22.97 | 22.74 | 0.00 | 0.00 | dynamic |
+| mercantile_alleys | invrisil | 70.04 | 24.75 | 22.97 | 22.32 | 0.00 | 0.00 | dynamic |
 | floodplains | liscor | 69.41 | 24.28 | 21.84 | 18.53 | 4.76 | 0.00 | dynamic |
+| adventurers_rest | adventurers_rest | 69.31 | 24.22 | 23.50 | 21.59 | 0.00 | 0.00 | dynamic |
 | witch_hollow | riverfarm | 68.23 | 21.07 | 20.88 | 20.56 | 5.71 | 0.00 | dynamic |
 | deep_tunnels | liscor | 67.98 | 23.00 | 22.08 | 20.17 | 2.73 | 0.00 | dynamic |
 | riverfarm_village | riverfarm | 67.90 | 21.28 | 21.16 | 19.91 | 5.56 | 0.00 | dynamic |
-| stationer | stationer | 67.77 | 21.25 | 23.50 | 23.02 | 0.00 | 0.00 | dynamic |
 | garden_sanctuary | sanctuary | 67.18 | 19.74 | 23.50 | 17.94 | 6.00 | 0.00 | dynamic |
+| stationer | stationer | 66.52 | 21.25 | 23.50 | 21.77 | 0.00 | 0.00 | dynamic |
 | brothers_parlor | invrisil | 66.35 | 22.41 | 22.05 | 21.44 | 0.45 | 0.00 | dynamic |
 | barracks | interiors | 66.26 | 22.78 | 22.38 | 21.09 | 0.00 | 0.00 | dynamic |
 | seal_vault | dungeon | 65.80 | 23.13 | 23.41 | 17.60 | 1.67 | 0.00 | dynamic |
