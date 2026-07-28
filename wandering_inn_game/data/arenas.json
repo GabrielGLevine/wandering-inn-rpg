@@ -929,17 +929,18 @@
     ],
     [
      10,
+     6
+    ],
+    [
+     8,
      4
     ],
     [
      9,
-     3
-    ],
-    [
-     9,
-     4
+     6
     ]
    ],
+   "_comment_spawns": "SPRITE/ARC-CLIMAX: boss+2 scouts on (10,3)/(10,4)/(9,3) stacked three 2.2-2.6-cell-wide figures. Boss KEEPS (10,3) (engagement distance unchanged); scouts move. Roster order = staging.",
    "_comment_dressing": "Decor sits just outside the 12x8 grid, same standing rule as goblin_ambush/cave_mouth/sewers_nest.",
    "floor_layers": [
     {

@@ -507,8 +507,112 @@ func _init() -> void:
 	assert(driver.active() == false, "TestDriver.active() should be false before a QA script is loaded")
 	driver.free()
 
+	_assert_board_legibility_contracts(combatants)
+
 	print("PASS: combat visual contracts are wired")
 	quit(0)
+
+
+## v0.15 T5.1 — the READABILITY bounds for the combat board, measured, not eyeballed.
+##
+## The board is 12x8 cells of CELL=16, so a combatant's on-screen size is
+## `FIGURE_ROWS[sprite] * scale / 16` cells, where `combat_scale` REPLACES
+## `render_scale` (board_renderer.gd).
+##
+## THE MEASUREMENT RULE — one rule, stated, because round 1 got this wrong and
+## the bar then passed subjects that were failing it:
+##   * ANIMATION: the one `make_combatant_visual` actually plays — `idle_side`,
+##     else `idle_down`, else `idle` (board_renderer.gd). A directional entry
+##     always has `idle_side`, so the board-facing sheet is `sheet_side`; a
+##     non-directional entry resolves to `idle`/`sheet`.
+##   * SHEET: that animation's own facing sheet. NEVER `move`/`hit`/`death` —
+##     round 1 measured off a bigger non-resting sheet and inflated `bat` from
+##     36 rows to 52, which is how a 0.90-cell bat "passed" a 1.25-cell floor.
+##   * METRIC: alpha bbox HEIGHT (content top to content bottom), max over the
+##     animation's frames. NOT frame height (a rig frame is mostly transparent
+##     margin — the 2-3x error behind three misdiagnosed VISUAL-LOG entries)
+##     and NOT head-to-feet-plane (which reads the anchor, not the silhouette).
+## Facing recorded per row so a re-derivation can reproduce it exactly.
+const FIGURE_ROWS := {
+	"bat": 36.0,                   # idle_side, 96px frame
+	"briar_collector": 60.0,       # idle (non-directional), 64px frame
+	"briar_collector_deep": 59.0,  # idle (non-directional), 64px frame
+	"ruin_warden": 106.0,          # idle_side, 216px frame
+}
+## 1.25 = the briar collector, the smallest figure any windowed read HAS
+## accepted. 3.55 = half a cell above `hired_blade_leader` (2.97); past ~3.5 a
+## rig eats the turn banner on the board's top row. These are the DESIGN bar:
+## when a subject misses them the data moves, not the bar.
+const BOARD_FIGURE_MIN_CELLS := 1.25
+const BOARD_FIGURE_MAX_CELLS := 3.55
+## EXPLICITLY NOT EXHAUSTIVE. The bounds are asserted ONLY against the rosters
+## this wave audited and re-shot. Eight LEGACY ids still ship under the floor
+## and were never photographed as defects, so failing them here would assert a
+## verdict no windowed read has made:
+##   river_wolf_a/_b/_c + wolf_companion (0.62), shield_spider (0.75),
+##   goblin_raider (0.99), goblin_shaman (1.09), goblin_chieftain (1.13).
+## Nothing ships over the ceiling. Sweeping those eight is filed for wave-close
+## triage / v0.16 — each needs its own windowed read before its scale moves,
+## exactly as the audited rosters got one.
+
+
+func _board_cells(cfg: Dictionary, sprite_entry: Dictionary) -> float:
+	var scale: float = float(cfg["combat_scale"]) if cfg.has("combat_scale") \
+		else float(sprite_entry.get("render_scale", 1.0))
+	return FIGURE_ROWS[String(cfg["sprite"])] * scale / 16.0
+
+
+func _assert_board_legibility_contracts(combatants: Dictionary) -> void:
+	var sprites: Dictionary = _load_json("res://data/sprites.json")
+	# The board applies the tint on `modulate`; `self_modulate` is the GH#28
+	# legibility boost's and must stay untouched, or the tint would wipe the
+	# dark-arena brightening it composes with.
+	var board_source := FileAccess.get_file_as_string("res://src/combat/board_renderer.gd")
+	var visual_body := board_source.get_slice("func make_combatant_visual(", 1).get_slice("\nfunc ", 0)
+	assert(visual_body.find("combat_tint") != -1 and visual_body.find("spr.modulate = ") != -1,
+		"board must read a per-combatant combat_tint and apply it to spr.modulate")
+	assert(visual_body.find("spr.self_modulate = _legibility_boost") != -1,
+		"the GH#28 legibility boost keeps self_modulate — tint and boost compose, never replace")
+	var flash_body := board_source.get_slice("func impact_flash(", 1).get_slice("\nfunc ", 0)
+	assert(flash_body.find("Color.WHITE, HIT_FLASH_SECONDS") == -1
+		and flash_body.find("\"modulate\", rest, HIT_FLASH_SECONDS") != -1,
+		"the hit flash must settle back to the RESTING modulate, or the first hit strips the tint forever")
+
+	# Every roster that shares one silhouette on one arena must be separable.
+	# rift_vermin a/b/c stand on the SAME cellar board wearing the same `bat`;
+	# the briar collectors are green-on-green foliage on witch_hollow.
+	var camouflage := ["sewer_vermin", "rift_vermin_a", "rift_vermin_b", "rift_vermin_c",
+		"briar_collector_a", "briar_collector_b", "briar_collector_deep_a", "briar_collector_deep_b"]
+	var seen_tints: Dictionary = {}
+	for id: String in camouflage:
+		var cfg: Dictionary = _combatant_config(combatants, id)
+		assert(not cfg.is_empty(), "camouflage roster missing combatant: " + id)
+		var tint: Array = cfg.get("combat_tint", [])
+		assert(tint.size() == 3, "%s needs a 3-float combat_tint to separate it from its floor" % id)
+		assert(not (is_equal_approx(float(tint[0]), 1.0) and is_equal_approx(float(tint[1]), 1.0)
+			and is_equal_approx(float(tint[2]), 1.0)), "%s ships a no-op white tint" % id)
+		var key := "%.3f/%.3f/%.3f" % [float(tint[0]), float(tint[1]), float(tint[2])]
+		assert(not seen_tints.has(key),
+			"%s duplicates %s's tint — same sprite + same tint is the bug, not the fix" % [id, seen_tints.get(key, "")])
+		seen_tints[key] = id
+
+	# THE AUDITED SET — every roster this wave re-scaled and re-shot. BOTH
+	# bounds apply to all of them: round 1 checked only one side per group,
+	# which is a second way a failing subject slips through unseen.
+	# `cave_spider` rides here rather than in the camouflage list — same
+	# `bat` silhouette and the same scale defect, but it stands on its own
+	# arena, so it needs the size fix without a separation tint.
+	var audited := camouflage.duplicate()
+	audited.append_array(["cave_spider", "ruin_guardian", "seal_warden",
+		"ruin_ward_a", "ruin_ward_b", "snare_ward_a"])
+	for id: String in audited:
+		var cfg: Dictionary = _combatant_config(combatants, id)
+		assert(not cfg.is_empty(), "audited roster missing combatant: " + id)
+		var cells := _board_cells(cfg, sprites[String(cfg["sprite"])])
+		assert(cells >= BOARD_FIGURE_MIN_CELLS,
+			"%s reads at %.2f cells, under the %.2f legibility floor" % [id, cells, BOARD_FIGURE_MIN_CELLS])
+		assert(cells <= BOARD_FIGURE_MAX_CELLS,
+			"%s reads at %.2f cells, over the %.2f board ceiling (turn-banner clip)" % [id, cells, BOARD_FIGURE_MAX_CELLS])
 
 
 func _load_json(path: String) -> Dictionary:

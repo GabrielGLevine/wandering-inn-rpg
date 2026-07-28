@@ -184,6 +184,23 @@
  },
  "floor_layers": [
   {
+   "_comment": "MAP/PALLASS-FORGE-FLOOR: wall rows 0-1 and the walkable brick were one texture. Row 2 takes the slate band row 9 uses, framing the floor dark top and bottom. No blocking moves.",
+   "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
+   "tile_px": 16,
+   "coords": [
+    0,
+    3
+   ],
+   "cells": {
+    "rect": [
+     0,
+     2,
+     26,
+     1
+    ]
+   }
+  },
+  {
    "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
    "tile_px": 16,
    "coords": [
@@ -476,6 +493,12 @@
    ],
    "display_name": "Miscalibrated Golem",
    "sprite": "forge_golem",
+   "tint": [
+    1.18,
+    0.88,
+    0.74
+   ],
+   "_comment_tint": "MAP/PALLASS-FORGE-FLOOR: the golem read as parked machinery, same purple-grey as its tier. Ember cast separates it from the brick; rig and stats untouched.",
    "arena": "forge_hall",
    "conversation": "forge_calibration_golem",
    "enemies": [

@@ -439,6 +439,21 @@ func _atmosphere_map_transition_contract_holds(source: String) -> bool:
 	return event_handler.find("WIEvents.MAP_CHANGED") == -1
 
 
+## v0.15 T5.3 MAP-LIGHTS/DAY. The opt-out is latched off the MAP grade inside
+## `apply()`, BEFORE the refresh that consumes it, and `apply_arena()` must
+## never rewrite it — the lights on screen belong to the map underneath the
+## arena, so an arena id (which is not a map id) would silently clear it.
+func _atmosphere_lights_by_day_contract_holds(source: String) -> bool:
+	var apply_body := _function_body(source, "apply")
+	var latch := apply_body.find("_map_lights_by_day = map_lights_by_day(map_id)")
+	var refresh := apply_body.find("_refresh_lights()")
+	if latch == -1 or refresh == -1 or latch > refresh:
+		return false
+	if _function_body(source, "apply_arena").find("_map_lights_by_day") != -1:
+		return false
+	return _function_body(source, "light_multiplier").find("phase_light_energy(phase, _map_lights_by_day)") != -1
+
+
 func _wave_b_field_visual_contract_holds(source: String) -> bool:
 	var handler := _function_body(source, "_on_domain_event")
 	for clause: String in [
@@ -623,6 +638,36 @@ func _init() -> void:
 		"World must defer destination mood/entity presentation until the covered MAP_CHANGED rebuild")
 	assert(_atmosphere_map_transition_contract_holds(atmosphere_source),
 		"Atmosphere must not apply destination mood to still-visible source geometry")
+	# v0.15 T5.3 MAP-LIGHTS/DAY -- REAL calls, not source text. Referencing the
+	# `WIAtmosphere` class_name directly would pull in the ObservableBus/Game
+	# autoloads a `--script` run does not have, so this reuses the same
+	# stub-and-recompile trick the TestDriver block below already uses. The two
+	# functions under test are pure (moods.json in, float/bool out).
+	var atmo_script := GDScript.new()
+	atmo_script.source_code = atmosphere_source.replace(
+		"class_name WIAtmosphere\n", "",
+	).replace(
+		"extends CanvasModulate",
+		"extends CanvasModulate\n\nvar ObservableBus: Variant = null\nvar Game: Variant = null",
+	)
+	assert(atmo_script.reload() == OK, "atmosphere.gd (autoload-stubbed copy) failed to compile")
+	var atmo: Node = atmo_script.new()
+	assert(atmo.phase_light_energy("day", false) == 0.0,
+		"a map with a sky still zeroes its lights by day (the shipped default is untouched)")
+	assert(atmo.phase_light_energy("day", true) == 1.0,
+		"an opted-out map keeps full light energy by day -- the whole point of the key")
+	assert(atmo.phase_light_energy("night", false) == 1.0
+		and atmo.phase_light_energy("night", true) == 1.0,
+		"dusk/night are unchanged either way -- the opt-out is a FLOOR, never an override")
+	assert(atmo.map_lights_by_day("seal_vault"),
+		"seal_vault is sealed -- no sky, so its ward light is the room's only source at any hour")
+	assert(not atmo.map_lights_by_day("inn") and not atmo.map_lights_by_day("street"),
+		"skied maps must NOT opt in (a lantern adds nothing at noon)")
+	assert(not atmo.map_lights_by_day("no_such_map"),
+		"an unknown map id falls back to the shipped phase behaviour, never to lit")
+	atmo.free()
+	assert(_atmosphere_lights_by_day_contract_holds(atmosphere_source),
+		"Atmosphere must latch the map opt-out in apply() before the refresh, and never from an arena")
 	# a5 #205: the field legibility boost must exist AND be re-applied when
 	# the mood lands, or dark-map interactables silently regress to invisible.
 	assert(atmosphere_source.find("func field_entity_boost() -> float:") != -1

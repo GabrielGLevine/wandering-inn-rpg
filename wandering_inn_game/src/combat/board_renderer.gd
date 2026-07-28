@@ -228,8 +228,20 @@ func clear() -> void:
 	_active_marker_id = ""
 
 
+## v0.15 T5.1 MAP/PALLASS-FORGE-FLOOR. `biomes.json` already carries a
+## `blocked_props` pool that the FIELD renderer consumes (world.gd) — the board
+## used to ignore it and read only the const below, so a biome the const had
+## never heard of (`pallass_forge`) silently fell through to a flat recolored
+## tile, and its two obstacle clusters read as brick patterning instead of cover
+## you must path around. Data first, const as the legacy fallback: one pool per
+## biome, one renderer contract, no third place to forget.
+func _blocked_prop_pool(biome_id: String, biome: Dictionary) -> Array:
+	var pool: Array = biome.get("blocked_props", [])
+	return pool if not pool.is_empty() else BLOCKED_PROPS_BY_BIOME.get(biome_id, [])
+
+
 func _build_arena_blocked_cover(biome_id: String, biome: Dictionary, floor_tile_px: int, blocked: Dictionary) -> void:
-	var pool: Array = BLOCKED_PROPS_BY_BIOME.get(biome_id, [])
+	var pool: Array = _blocked_prop_pool(biome_id, biome)
 	if pool.is_empty():
 		_build_arena_blocked_fallback_tile(biome, floor_tile_px, blocked.keys())
 		return
@@ -237,7 +249,11 @@ func _build_arena_blocked_cover(biome_id: String, biome: Dictionary, floor_tile_
 		var idx := _blocked_prop_index(cell, pool.size())
 		var sprite_id := String(pool[idx])
 		if WISpriteRegistry.has_sprite(sprite_id):
-			_board.add_child(_make_decor_visual(cell, sprite_id))
+			# Obstacles carry the GH#28 boost too. Off-grid DRESSING deliberately
+			# does not (it must never compete with the tactical grid), but a
+			# blocked cell is something the player has to path around, so it
+			# belongs on the legible side of the same line.
+			_board.add_child(_make_decor_visual(cell, sprite_id, [], true))
 		else:
 			_build_arena_blocked_fallback_tile(biome, floor_tile_px, [cell])
 
@@ -278,7 +294,7 @@ func _build_arena_decor(decor_list: Array) -> void:
 		_board.add_child(_make_decor_visual(cell, sprite_id, entry.get("tint", [])))
 
 
-func _make_decor_visual(cell: Vector2i, sprite_id: String, tint: Variant = []) -> Node2D:
+func _make_decor_visual(cell: Vector2i, sprite_id: String, tint: Variant = [], legible: bool = false) -> Node2D:
 	var holder := Node2D.new()
 	holder.position = Vector2(cell) * CELL
 	var spr := AnimatedSprite2D.new()
@@ -292,6 +308,8 @@ func _make_decor_visual(cell: Vector2i, sprite_id: String, tint: Variant = []) -
 	if tint is Array and (tint as Array).size() == 3:
 		var tint_values := tint as Array
 		spr.modulate = Color(float(tint_values[0]), float(tint_values[1]), float(tint_values[2]))
+	if legible:
+		spr.self_modulate = _legibility_boost
 	var catalog_entry: Dictionary = WISpriteRegistry.entry_for(sprite_id)
 	if catalog_entry.has("render_scale"):
 		var s := float(catalog_entry["render_scale"])
@@ -360,6 +378,23 @@ func make_combatant_visual(id: String, c: Dictionary) -> Node2D:
 				CELL - anchor.y * frame_size.y * spr.scale.y
 			)
 			label_top = spr.position.y - 18.0
+		# v0.15 T5.1 camouflage family. Three rosters ship one silhouette each
+		# (`bat` for every sewer/rift vermin, `briar_collector` for collectors
+		# AND thicket remnants), and two of the boards they stand on are the
+		# creature's own colour: rift vermin against cellar barrels, briar
+		# collectors against green foliage under a green canopy. Brightness
+		# cannot fix that — GH#28's boost lifts figure and floor together — so
+		# `combatants.json` gains an optional `combat_tint` that shifts the
+		# figure's HUE off its background. It rides `modulate` while the boost
+		# keeps `self_modulate`, so the two multiply instead of clobbering, and
+		# the hit-flash tweens (which also use `modulate`) still restore white.
+		var tint: Array = WIDataRegistry.combatant_config(template_id).get("combat_tint", [])
+		if tint.size() == 3:
+			spr.modulate = Color(float(tint[0]), float(tint[1]), float(tint[2]))
+		# `impact_flash` drives this same channel, so the resting value travels
+		# with the node -- restoring to a bare white would silently strip the
+		# tint off the first creature anything hit.
+		spr.set_meta("rest_modulate", spr.modulate)
 		spr.self_modulate = _legibility_boost
 		holder.add_child(spr)
 	else:
@@ -954,9 +989,10 @@ func impact_flash(id: String) -> void:
 	var spr := _sprite_for(id)
 	if spr == null:
 		return
-	spr.modulate = HIT_FLASH_COLOR
+	var rest: Color = spr.get_meta("rest_modulate", Color.WHITE)
+	spr.modulate = HIT_FLASH_COLOR * rest
 	var tw := create_tween()
-	tw.tween_property(spr, "modulate", Color.WHITE, HIT_FLASH_SECONDS)
+	tw.tween_property(spr, "modulate", rest, HIT_FLASH_SECONDS)
 
 
 ## Brief screenshake on the combat BOARD ROOT (`_board.position`) --

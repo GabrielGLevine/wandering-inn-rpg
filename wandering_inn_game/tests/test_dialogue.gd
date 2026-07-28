@@ -655,6 +655,57 @@ func test_finished_walker_survives_a_goto_into_an_all_hidden_node() -> void:
 	assert(_count("dialogue_ended") == 1, "DIALOGUE_ENDED still fires exactly once from the fail-safe")
 
 
+## v0.15 T5 (folded engine fix, filed off P4's re-review): the arm above proves
+## WIDialogue finishes ITSELF; this one proves WIGame does not leave the corpse
+## parked. Every consumer gate in the game is a bare `Game.sim.dialogue != null`
+## (movement/interact in wi_game, inventory, journal, pause, field chips, and
+## `start_dialogue`'s own re-entry guard), so a finished-but-live walker is a
+## whole SOFTLOCK CLASS, not one bug: nothing would ever clear it. world.gd's
+## `_dialogue_is_open()` defends one gate with `not finished`; the sim clears the
+## walker for all of them. No shipped graph reaches the fail-safe (every node
+## keeps an ungated exit) -- the class dies here anyway.
+func _all_hidden_after_goto_graph() -> Dictionary:
+	return {
+		"start": "hub",
+		"nodes": {
+			"hub": {"speaker": "A", "text": "hub", "options": [{"text": "on", "goto": "shut"}]},
+			"shut": {"speaker": "A", "text": "shut", "options": [
+				{"text": "locked", "requires": {"accomplishment": {"never_banked": 1}}, "end": true},
+			]},
+		},
+	}
+
+
+func test_wigame_nulls_the_walker_the_fail_safe_finished() -> void:
+	_events.clear()
+	var game := _make_game_with_dialogue(_all_hidden_after_goto_graph())
+	assert(game.start_dialogue("test_conv", "npc_x"), "conversation opens on the hub")
+	assert(game.dialogue != null, "walker parked while the hub is live")
+	assert(game.dialogue_choose(0), "the goto option resolves (choose() reports ended:false)")
+	assert(game.dialogue == null, "the fail-safe's finish NULLS the sim walker -- the softlock class")
+	assert(_count("dialogue_ended") == 1, "DIALOGUE_ENDED still fires exactly once, from the fail-safe")
+
+	# The gate that proves it: a second conversation must be able to open.
+	# `start_dialogue` refuses while `dialogue != null`, so this is the whole
+	# softlock in one assert.
+	assert(game.start_dialogue("test_conv", "npc_x"), "a NEW dialogue starts after the fail-safe close")
+	assert(game.dialogue != null and not game.dialogue.finished, "the new walker is live, not the old corpse")
+
+
+## Same class through `begin()`: a graph whose START node has every option gated
+## shut finishes inside `start_dialogue` itself, before any choose() runs.
+func test_wigame_nulls_a_walker_the_fail_safe_finished_at_begin() -> void:
+	_events.clear()
+	var graph := {"start": "shut", "nodes": {"shut": {"speaker": "A", "text": "shut", "options": [
+		{"text": "locked", "requires": {"accomplishment": {"never_banked": 1}}, "end": true},
+	]}}}
+	var game := _make_game_with_dialogue(graph)
+	assert(game.start_dialogue("test_conv", "npc_x"), "the line still renders (DIALOGUE_NODE emitted) before it closes")
+	assert(_count("dialogue_started") == 1 and _count("dialogue_ended") == 1, "open/close pair stays balanced for the UI listeners")
+	assert(game.dialogue == null, "a walker the fail-safe finished at begin() is never parked either")
+	assert(game.start_dialogue("test_conv", "npc_x"), "and the next conversation still opens")
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var ctx := {
@@ -747,6 +798,8 @@ func _init() -> void:
 	test_phase_requires_on_option_stays_visible_locked()
 	test_grimalkin_studies_gates_on_the_real_graph()
 	test_finished_walker_survives_a_goto_into_an_all_hidden_node()
+	test_wigame_nulls_the_walker_the_fail_safe_finished()
+	test_wigame_nulls_a_walker_the_fail_safe_finished_at_begin()
 
 	print("PASS: dialogue graphs walk, gate, hide, and end correctly")
 	quit(0)
