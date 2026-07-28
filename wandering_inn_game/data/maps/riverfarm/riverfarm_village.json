@@ -1423,7 +1423,7 @@
    ]
   },
   {
-   "_comment": "Gated on door_awakened (the SAME base network every anchor shares)",
+   "_comment": "THE VILLAGE'S ONLY EXIT (witch_hollow is a dead end off it), so the gate must be met by EVERY arrival, past and present. door_mounted is the one counter both satisfy: the pre-fix path (riverfarm_attuned rumor + a door_mounted-gated carrier at inn/street) and the post-fix one (portals.json's door_awakened row). Gating on either attunement alone re-strands the other cohort -- ruling was riverfarm_attuned, widened because the row moved to door_awakened in the same wave. Never tighten past the row's own gate.",
    "id": "riverfarm_anchor_stone",
    "kind": "prop",
    "cell": [
@@ -1441,11 +1441,11 @@
    "portal_menu": true,
    "portal_menu_when": {
     "requires": {
-     "door_awakened": 1
+     "door_mounted": 1
     }
    },
    "on_interact_accomplishment": "observed_riverfarm_anchor_stone",
-   "toast": "Cold, plain stone. Whatever it was for, it isn't for anything now.",
+   "toast": "Cold, plain stone, and it stays cold for you. Whatever hung a door somewhere else hasn't hung one yet.",
    "light": {
     "color": [
      0.85,

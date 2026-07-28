@@ -3,6 +3,26 @@ extends SceneTree
 var _events: Array = []
 
 
+var _pool_lines: Array = []
+var _pool_counts: Dictionary = {}
+
+
+func _pool_sink(_type: String, payload: Dictionary) -> void:
+	_pool_lines.append(String(payload.get("text", "")))
+
+
+func _pool_count(id: String) -> int:
+	return int(_pool_counts.get(id, 0))
+
+
+func _pool_bank(id: String, amount: int) -> void:
+	_pool_counts[id] = int(_pool_counts.get(id, 0)) + amount
+
+
+func _pool_find(_id: String) -> Dictionary:
+	return {}
+
+
 func _sink(type: String, payload: Dictionary) -> void:
 	_events.append({"type": type, "payload": payload})
 
@@ -274,6 +294,41 @@ func _init() -> void:
 	assert(dirty.pc_name.length() <= WIGame.PC_NAME_MAX and dirty.pc_name.strip_edges() == dirty.pc_name, "name trimmed + length-capped")
 	var blank := WIGame.new(scene_config, skill_config, _sink, 1, {}, {}, {"pc_name": "   "})
 	assert(blank.pc_name == "Traveler", "blank name falls back to Traveler")
+
+	# {addr} resolves at the SINK, so one authored line addresses both PCs.
+	assert(WIAddress.resolve("{Addr}. Evening, {addr}.", "m") == "Sir. Evening, sir.", "male terms, both cases")
+	assert(WIAddress.resolve("{Addr}. Evening, {addr}.", "f") == "Miss. Evening, miss.", "female terms, both cases")
+	assert(WIAddress.resolve("no token here", "f") == "no token here", "a token-free line is returned untouched")
+	assert(WIAddress.resolve("{addr}", "x") == "sir", "an unknown gender falls back to the sanitizer's own default")
+	var catalog_row := {"speaker": "Wilovan", "text": "Evening, {addr}."}
+	var resolved_row := WIAddress.resolve_payload(catalog_row, "f")
+	assert(String(resolved_row["text"]) == "Evening, miss.", "payload resolution reaches the text key")
+	assert(String(catalog_row["text"]) == "Evening, {addr}.", "and NEVER writes through to the caller's dict (it is often the shipped catalog's own row)")
+	var opt_payload := {"text": "{Addr}?", "options": [{"text": "Yes, {addr}.", "locked": false}]}
+	var opt_resolved := WIAddress.resolve_payload(opt_payload, "f")
+	assert(String((opt_resolved["options"] as Array)[0]["text"]) == "Yes, miss.", "option rows resolve too")
+	assert(String((opt_payload["options"] as Array)[0]["text"]) == "Yes, {addr}.", "and the caller's option rows stay authored")
+	assert(WIAddress.resolve_payload({"id": "x"}, "f").has("text") == false, "a text-less payload never grows a text key")
+
+	# The post-pool REPEAT arm re-serves the line the player just heard, banking
+	# nothing. Walked across a FULL WRAP: at chat counts that are multiples of
+	# the pool size the next index is 0, and the repeat must step back to the
+	# LAST line, not re-serve index 0. Bound methods, never lambdas, in a
+	# long-lived RefCounted (the #194a ObjectDB-leak seam).
+	var pool_social := WISocial.new(_pool_sink, _pool_count, _pool_bank, _pool_find)
+	var pool_target := {"id": "gossip", "display_name": "A Gossip", "talk_pool": ["one", "two", "three"]}
+	for expected: String in ["one", "two", "three", "one"]:
+		var talked: Dictionary = {}
+		var before := int(_pool_counts.get("chatted_with_gossip", 0))
+		_pool_lines.clear()
+		pool_social.talk_pool_line(pool_target, talked)
+		assert(_pool_lines == [expected], "the fresh chat serves the rotating line, expected %s got %s" % [expected, str(_pool_lines)])
+		assert(int(_pool_counts["chatted_with_gossip"]) == before + 1 and bool(talked.get("gossip", false)), "a fresh chat banks and marks the NPC talked-to")
+		_pool_lines.clear()
+		var repeat_result: Dictionary = pool_social.talk_pool_line(pool_target, talked, true)
+		assert(_pool_lines == [expected], "the REPEAT re-serves the SAME line just heard (wrap included), expected %s got %s" % [expected, str(_pool_lines)])
+		assert(bool(repeat_result.get("repeat", false)), "the repeat arm flags itself")
+		assert(int(_pool_counts["chatted_with_gossip"]) == before + 1, "a repeat banks NOTHING -- no rotation, no heard_gossip inflation")
 
 	assert(game.move_player(Vector2i.UP), "open-cell move succeeds")
 	assert(game.player_cell == Vector2i(2, 2), "player moved up")

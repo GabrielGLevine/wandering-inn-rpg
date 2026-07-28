@@ -3362,6 +3362,95 @@
    }
   },
   {
+   "script": "invrisil_round_trip",
+   "seed": 9,
+   "fixture": "spine_reach_start",
+   "note": "THE INVRISIL RETURN PROOF, pallass_round_trip's twin: the boulevard/alleys/parlor cluster's only way home is invrisil_anchor_stone, whose gate is door_mounted (NOT door_awakened -- the 18g-stone cohort never awakens the Door). Departs Liscor at street_anchor_stone, lands on the `invrisil` row's own arrival cell (4,8), walks the boulevard end to end and crosses into mercantile_alleys and back through the real door pair, then rides the anchor's picker home to the inn's authored (13,6); exact options pins both ends, zero combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "invrisil_boulevard",
+     "mercantile_alleys",
+     "street"
+    ],
+    "fixtures": [
+     "spine_reach_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "portals"
+    ]
+   }
+  },
+  {
+   "script": "wilovan_address_f",
+   "seed": 9,
+   "fixture": "wilovan_parlor_f_start",
+   "note": "TWO blockers in the Brothers' parlor: (1) the {addr}/{Addr} address token resolving at WIGame's own event sink -- the corpus's only pc_gender 'f' fixture pins the SHIPPED Wilovan talk_pool line and hub text_variant rendering 'miss', with the 'sir' spellings asserted absent whole-run; (2) the re-interact guard -- ratici + the three parlor gentlemen + street klbkch are each interacted TWICE on a spent talk_pool with no conversation/dialogue fallback (the old `Invalid access to property or key 'dialogue'` crash), re-serving the same line and banking nothing on the repeat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "brothers_parlor",
+     "street"
+    ],
+    "fixtures": [
+     "wilovan_parlor_f_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "invrisil_wilovan"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "pallass_round_trip",
+   "seed": 9,
+   "fixture": "spine_reach_start",
+   "note": "THE PALLASS RETURN PROOF: the market/forge cluster has no map exit but its own lift, so the arrival plinth (pallass_market_arrival_anchor) is now a portal CARRIER and this canonical is the anti-softlock gate -- depart Liscor at street_anchor_stone, land on the portals `pallass` row's arrival cell (4,7), walk BOTH tiers for real (market row 9 -> lift -> forge bench and back), open the plinth's picker (exact options pin, Pallass itself excluded) and ride it home to the inn's authored arrival cell (13,6); zero combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "pallass_forge",
+     "pallass_market",
+     "street"
+    ],
+    "fixtures": [
+     "spine_reach_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "portals"
+    ]
+   }
+  },
+  {
    "script": "pallass_race_peek",
    "seed": 9,
    "fixture": "near_pallass_drake",

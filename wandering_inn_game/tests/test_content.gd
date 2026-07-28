@@ -188,6 +188,8 @@ func _init() -> void:
 	_validate_class_skill_grant_ids_shape_cases()
 	_validate_props(scene)
 	_validate_talk_pool_stages_ascending(scene)
+	_validate_npc_interact_surface(scene)
+	_validate_address_token_placement()
 	_validate_encounter_when(scene, produced_accomplishments)
 	_validate_encounter_gate_counters(scene, produced_accomplishments)
 	_validate_present_when(scene, produced_accomplishments)
@@ -361,6 +363,67 @@ func _validate_talk_pool_stages_ascending(scene: Dictionary) -> void:
 					if seen.has(key):
 						_check(threshold >= int(seen[key]), "entity %s talk_pool_stages authored OUT OF ORDER: stage %s's %s threshold (%d) is lower than an earlier stage's (%d)" % [String(entity["id"]), String(stage.get("id", "?")), key, threshold, int(seen[key])])
 					seen[key] = threshold
+
+
+## Every npc must carry a surface `interact` can still speak from
+## AFTER its talk_pool is spent for the waking: a `conversation`, a non-empty
+## static `dialogue`, or a non-empty `talk_pool` (interactions.gd's
+## `_npc_post_pool` re-serves the current pool line for the last case). An
+## npc with none of the three, or with an EMPTY talk_pool/dialogue array, used
+## to crash the second interact -- klbkch + the four brothers_parlor gentlemen
+## shipped that way. `encounter` is exempt: its own branch starts the fight.
+func _validate_npc_interact_surface(scene: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		for entity: Dictionary in map.get("entities", []):
+			if String(entity.get(WIKeys.KIND, "")) != "npc":
+				continue
+			var id := String(entity.get(WIKeys.ID, "?"))
+			for key: String in ["talk_pool", "dialogue"]:
+				if entity.has(key):
+					_check(not (entity[key] as Array).is_empty(), "entity %s (%s) carries an EMPTY %s -- drop the key or author a line" % [id, map_id, key])
+			var has_surface := entity.has(WIKeys.CONVERSATION) \
+					or not (entity.get("dialogue", []) as Array).is_empty() \
+					or not (entity.get("talk_pool", []) as Array).is_empty()
+			_check(has_surface, "npc %s (%s) has no post-pool surface: needs conversation, dialogue, or talk_pool" % [id, map_id])
+
+
+## WIAddress resolves at WIGame's event sink, and the sink only rewrites a
+## payload's own `text` and its `options[].text`. So `{addr}`/`{Addr}` is
+## meaningful ONLY where the authored string becomes one of those: a `text` key
+## (node text, text_variants, option rows, an entity's static `dialogue`), a
+## `talk_pool` entry, a `talk_pool_stages` `lines` entry, or any *toast key
+## (every toast emits `{"text": ...}`). Anywhere else -- board rumor copy, beat
+## descriptions, item text, display names -- the token would render RAW to the
+## player. Widen ADDRESS_TOKEN_KEYS only alongside a new resolver seam.
+const ADDRESS_TOKEN_KEYS := ["text", "talk_pool", "lines"]
+
+
+func _validate_address_token_placement() -> void:
+	_scan_address_tokens(WISceneCatalog.compose(), "res://data/maps/** (composed)", "")
+	var dir: DirAccess = DirAccess.open(DIALOGUE_DIR)
+	for file_name: String in dir.get_files():
+		if file_name.ends_with(".json"):
+			var full_path := DIALOGUE_DIR.path_join(file_name)
+			_scan_address_tokens(_load_json(full_path), full_path, "")
+
+
+## `holder` is the nearest ENCLOSING dict key (array indices don't reset it), so
+## a bare `talk_pool[2]` string is judged by "talk_pool".
+func _scan_address_tokens(node: Variant, path: String, holder: String) -> void:
+	if node is Dictionary:
+		for key: String in (node as Dictionary):
+			if key.begins_with("_"):
+				continue
+			_scan_address_tokens((node as Dictionary)[key], "%s.%s" % [path, key], key)
+	elif node is Array:
+		for i: int in (node as Array).size():
+			_scan_address_tokens((node as Array)[i], "%s[%d]" % [path, i], holder)
+	elif node is String:
+		if not WIAddress.has_token(node as String):
+			return
+		var ok := ADDRESS_TOKEN_KEYS.has(holder) or holder.ends_with("toast")
+		_check(ok, "%s carries an address token under the unresolvable key '%s' -- WIAddress only rewrites payload text/option text, so it would render RAW: %s" % [path, holder, node])
 
 
 const VALID_PHASES := ["day", "dusk", "night"]

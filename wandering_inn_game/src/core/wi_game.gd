@@ -85,13 +85,17 @@ var _banking: WICombatBanking
 
 func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Callable, rng_seed: int = 0, combat_config: Dictionary = {}, phase_config: Dictionary = {}, creation_config: Dictionary = {}) -> void:
 	_event_sink = event_sink
+	# Every submodule emits through the ADDRESS-RESOLVING sink, never the raw
+	# one: WIAddress.resolve_payload is the single place {addr}/{Addr} turns
+	# into the PC's honorific. Bound method, not a lambda (leak seam, #194a).
+	var sink := _addressed_sink
 	_run_seed = rng_seed
-	_economy = WIEconomy.new(event_sink, pickup, _set_gold)
-	_social = WISocial.new(event_sink, accomplishment_count, record_accomplishment, find_entity)
-	_field_skills = WIFieldSkills.new(event_sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active, _blink_field, _ward_field, _animate_field, _door_openable)
-	_interactions = WIInteractions.new(event_sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup, _has_required_items)
-	_sleep_beat = WISleepBeat.new(event_sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _enriched_offer, _set_pending_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
-	_banking = WICombatBanking.new(event_sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity, (combat_config.get("progression", {}) as Dictionary).get("challenge", {}), combat_config.get("classes", {}), (combat_config.get("combatants", {}) as Dictionary).get("combatants", []))
+	_economy = WIEconomy.new(sink, pickup, _set_gold)
+	_social = WISocial.new(sink, accomplishment_count, record_accomplishment, find_entity)
+	_field_skills = WIFieldSkills.new(sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _set_light_active, _blink_field, _ward_field, _animate_field, _door_openable)
+	_interactions = WIInteractions.new(sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup, _has_required_items)
+	_sleep_beat = WISleepBeat.new(sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _enriched_offer, _set_pending_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
+	_banking = WICombatBanking.new(sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity, (combat_config.get("progression", {}) as Dictionary).get("challenge", {}), combat_config.get("classes", {}), (combat_config.get("combatants", {}) as Dictionary).get("combatants", []))
 	rng.seed = rng_seed
 	for s: Dictionary in skill_config.get(WIKeys.SKILLS, []):
 		skills[String(s[WIKeys.ID])] = s
@@ -768,8 +772,8 @@ func _break_sneak() -> void:
 	_emit(WIEvents.TOAST, {"text": "You straighten up."})
 
 
-func _talk_pool_line(target: Dictionary) -> Dictionary:
-	return _social.talk_pool_line(target, social_talked)
+func _talk_pool_line(target: Dictionary, repeat: bool = false) -> Dictionary:
+	return _social.talk_pool_line(target, social_talked, repeat)
 
 
 func _mark_skill_used(skill_id: String) -> void:
@@ -993,7 +997,7 @@ func start_dialogue(conversation_id: String, source_entity_id: String) -> bool:
 		return false
 	_dialogue_conversation_id = conversation_id
 	_emit(WIEvents.DIALOGUE_STARTED, {"conversation": conversation_id, "entity": source_entity_id})
-	dialogue = WIDialogue.new(graphs[conversation_id], _build_dialogue_ctx(), _event_sink)
+	dialogue = WIDialogue.new(graphs[conversation_id], _build_dialogue_ctx(), _addressed_sink)
 	dialogue.begin()
 	return true
 
@@ -1003,7 +1007,7 @@ func _begin_code_dialogue(graph: Dictionary, conversation_label: String, source_
 		return false
 	_dialogue_conversation_id = conversation_label
 	_emit(WIEvents.DIALOGUE_STARTED, {"conversation": conversation_label, "entity": source_entity_id})
-	dialogue = WIDialogue.new(graph, _build_dialogue_ctx(), _event_sink)
+	dialogue = WIDialogue.new(graph, _build_dialogue_ctx(), _addressed_sink)
 	dialogue.begin()
 	return true
 
@@ -2205,5 +2209,9 @@ func _enrich_status_applied(payload: Dictionary) -> Dictionary:
 
 
 func _emit(type: String, payload: Dictionary) -> void:
+	_addressed_sink(type, payload)
+
+
+func _addressed_sink(type: String, payload: Dictionary) -> void:
 	if _event_sink.is_valid():
-		_event_sink.call(type, payload)
+		_event_sink.call(type, WIAddress.resolve_payload(payload, pc_gender))

@@ -104,16 +104,19 @@ class TestBrokenFixtures(unittest.TestCase):
         self.assertEqual(len(errs), 1)
         self.assertIn("'bad'", errs[0])
 
-    def test_vacuous_gate_caught_and_allowlist_honored(self):
+    def test_vacuous_gate_caught_with_no_exemptions(self):
         maps = {"m": {**GRID, "entities": [
             {"id": "door1", "door_when": {"door_awakened": 1}}]}}
         errs = self._errs(data_lint.check_gate_shapes, maps)
         self.assertEqual(len(errs), 1)
         self.assertIn("VACUOUSLY TRUE", errs[0])
-        allowed = {"invrisil_boulevard": {**GRID, "entities": [
+        # The last shipped exemption (invrisil_anchor_stone) was wrapped for
+        # real; the allowlist is empty by design and the arm now catches it too.
+        self.assertEqual(data_lint.VACUOUS_GATE_ALLOWLIST, {})
+        formerly = {"invrisil_boulevard": {**GRID, "entities": [
             {"id": "invrisil_anchor_stone",
              "portal_menu_when": {"door_awakened": 1}}]}}
-        self.assertEqual(self._errs(data_lint.check_gate_shapes, allowed), [])
+        self.assertEqual(len(self._errs(data_lint.check_gate_shapes, formerly)), 1)
 
     def test_wrapped_gate_passes(self):
         maps = {"m": {**GRID, "entities": [

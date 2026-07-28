@@ -313,7 +313,7 @@
    "observe": "A Gnoll in a vest cut sharper than his manners need to be, tall hat squared like it's holding a rank. He watches the room's exits before he watches you.",
    "friendly_line": "He inclines the hat half an inch — a genuine courtesy, not a performance of one. \"A pleasure,\" he says, and seems to mean it.",
    "talk_pool": [
-    "Evening. Might I say, sir, you carry yourself like a person things happen to. We collect a few of those.",
+    "Evening. Might I say, {addr}, you carry yourself like a person things happen to. We collect a few of those.",
     "Manners cost nothing and buy everything, in my experience. Mind the rug — Normen fusses over it more than he'll admit.",
     "You'll notice the hat stays on. Best we keep it that way, between friends.",
     "We don't steal, whatever you've heard. We RECOVER. It's a finer distinction than it sounds, and it's the whole of our business."
@@ -322,7 +322,7 @@
    "dialogue": [
     {
      "speaker": "Wilovan",
-     "text": "Evening, sir. Fine weather for good behavior."
+     "text": "Evening, {addr}. Fine weather for good behavior."
     }
    ]
   },

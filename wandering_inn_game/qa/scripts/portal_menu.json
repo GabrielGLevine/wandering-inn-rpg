@@ -13,8 +13,9 @@
   { "action": "assert_state", "path": "current_map", "equals": "inn" },
   { "action": "assert_state", "path": "player_cell", "equals": [13, 6] },
 
-  { "_comment": "== Open the menu at the inn anchor: only the street destination + 'Let it be.' (the_wandering_inn is excluded -- you're already there) ==", "action": "press", "name": "interact" },
+  { "_comment": "== Open the menu at the inn anchor: the_wandering_inn is excluded (you're already there), and Riverfarm rides along on door_awakened ALONE -- the INCLUDE half of the re-gate (this fixture never banks riverfarm_attuned; horns_dig_flow pins the door_mounted-only EXCLUDE half). ==", "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "portal_menu" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "options": [ { "text": "Liscor \u2014 the Gate District", "locked": false, "requirement": "" }, { "text": "Riverfarm", "locked": false, "requirement": "" }, { "text": "Let it be.", "locked": false, "requirement": "" } ] }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
   { "action": "screenshot", "name": "01_portal_menu_at_the_inn" },
 
@@ -26,8 +27,9 @@
   { "action": "assert_state", "path": "player_cell", "equals": [29, 10] },
   { "action": "screenshot", "name": "02_arrived_at_the_street_anchor" },
 
-  { "_comment": "== Return trip: same anchor network, the street stone's own menu excludes liscor_street (current map), offers only the_wandering_inn ==", "action": "press", "name": "interact" },
+  { "_comment": "== Return trip: same anchor network, the street stone's own menu excludes liscor_street (current map); the_wandering_inn is row 0 and Riverfarm rides behind it ==", "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "portal_menu" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "options": [ { "text": "The Wandering Inn", "locked": false, "requirement": "" }, { "text": "Riverfarm", "locked": false, "requirement": "" }, { "text": "Let it be.", "locked": false, "requirement": "" } ] }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },

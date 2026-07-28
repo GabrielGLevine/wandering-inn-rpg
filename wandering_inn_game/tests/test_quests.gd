@@ -34,5 +34,86 @@ func _init() -> void:
 	assert(regions["far_quest"]["region"] == "Riverfarm", "region field threads through when authored")
 	assert(regions["local_quest"]["region"] == "", "region defaults to empty string, never missing/null, when unauthored")
 
+	# resolved_path is LAST-MATCH-WINS among real counters (sleep_veil.gd's own
+	# FINALE_CLOSE_LINES convention); an ""-req entry is the fallback, never a
+	# match. THE BOUNCE HATCH: seal_opened stays banked when a later resolution
+	# lands, and first-match used to record the FIGHT ending and pay the FIGHT
+	# grant over the finale's own last-match close line.
+	var shipped: Dictionary = _load_json("res://data/quests.json")
+	var seal: Dictionary = WIQuests.quest_by_id(shipped, "what_the_seal_was_feeding")
+	assert(not seal.is_empty(), "sanity: the Act V quest is in the shipped catalog")
+	var fight: Dictionary = WIQuests.resolved_path(seal, {"seal_opened": 1})
+	assert(String(fight["accomplishment"]) == "seal_opened", "a lone seal_opened still resolves as the fight")
+	var hatch: Dictionary = WIQuests.resolved_path(seal, {"seal_opened": 1, "seal_kept_fed": 1})
+	assert(String(hatch["accomplishment"]) == "seal_kept_fed", "seal_opened + seal_kept_fed records the FED ending, not the fight")
+	assert(int((hatch["grant"] as Dictionary).get("persuaded_someone", 0)) == 6 and not (hatch["grant"] as Dictionary).has("melee_hit"), "...and pays the FED grant, never the fight's melee bank")
+	assert(String(WIQuests.resolution_path_text(seal, {"seal_opened": 1, "seal_kept_fed": 1})) == String(hatch["text"]), "the journal history line follows the same entry the grant did")
+	var rewarded: Dictionary = WIQuests.resolved_path(seal, {"seal_opened": 1, "seal_rewarded": 1})
+	assert(String(rewarded["accomplishment"]) == "seal_rewarded", "seal_opened + seal_rewarded records the RE-WARD ending")
+
+	# THE OTHER TWO CO-BANKABLE QUESTS. Both arrays are ordered weakest-claim-
+	# first so last-match lands on the strongest thing the player actually did.
+	var cist: Dictionary = WIQuests.quest_by_id(shipped, "cisterns")
+	assert(String(WIQuests.resolved_path(cist, {"scouted_the_nest": 1})["accomplishment"]) == "scouted_the_nest", "a scout-only cisterns run still records the scout")
+	var cist_both: Dictionary = WIQuests.resolved_path(cist, {"scouted_the_nest": 1, "cleared_the_nest": 1})
+	assert(String(cist_both["accomplishment"]) == "cleared_the_nest", "scouted THEN cleared records the CLEAR -- the stronger claim wins")
+	assert(int((cist_both["grant"] as Dictionary).get("won_combat", 0)) == 2 and not (cist_both["grant"] as Dictionary).has("sneaked_past_danger"), "...and pays the clear grant, not the scout's")
+	assert(String(WIQuests.resolved_path(cist, {"scouted_the_nest": 1, "watch_swept_cisterns": 1})["accomplishment"]) == "watch_swept_cisterns", "scouted THEN sent the Watch records the sweep")
+
+	var door: Dictionary = WIQuests.quest_by_id(shipped, "door_that_goes_elsewhere")
+	assert(String(WIQuests.resolved_path(door, {"read_the_door_runes": 1})["accomplishment"]) == "read_the_door_runes", "a read-only door run still records the reading")
+	var door_both: Dictionary = WIQuests.resolved_path(door, {"read_the_door_runes": 1, "cleared_the_leak": 1})
+	assert(String(door_both["accomplishment"]) == "cleared_the_leak", "read THEN fought records the FIGHT -- the stronger claim wins")
+	assert(int((door_both["grant"] as Dictionary).get("won_combat", 0)) == 2 and not (door_both["grant"] as Dictionary).has("spell_cast"), "...and pays the fight grant, not the reading's")
+	assert(String(WIQuests.resolved_path(door, {})["text"]) == "You consulted Pisces about it.", "neither counter banked falls through to the consult fallback")
+
+	# missing_crate: three INDEPENDENT surfaces (street fight / watch_crate /
+	# Krshia's guile read, which hides only on crate_returned), so a player who
+	# fights and then still reads the truth holds two. Ladder: force > watch > guile.
+	var crate: Dictionary = WIQuests.quest_by_id(shipped, "missing_crate")
+	assert(String(WIQuests.resolved_path(crate, {"recovered_crate_guile": 1})["accomplishment"]) == "recovered_crate_guile", "a guile-only crate run still records the guile")
+	var crate_both: Dictionary = WIQuests.resolved_path(crate, {"recovered_crate_force": 1, "recovered_crate_guile": 1})
+	assert(String(crate_both["accomplishment"]) == "recovered_crate_force", "fought THEN read the truth records the FORCE ending -- the stronger claim wins")
+	assert(int((crate_both["grant"] as Dictionary).get("won_combat", 0)) == 1 and not (crate_both["grant"] as Dictionary).has("sneaked_past_danger"), "...and pays the force grant, not the guile's")
+	assert(String(WIQuests.resolved_path(crate, {"recovered_crate_guile": 1, "recovered_crate_watch": 1})["accomplishment"]) == "recovered_crate_watch", "guile then the Watch records the Watch")
+
+	# wrong_order: the short_order pot is ungated and supplier_scavengers carries
+	# no encounter_when, so cooking and fighting stay available after either.
+	var order: Dictionary = WIQuests.quest_by_id(shipped, "wrong_order")
+	assert(String(WIQuests.resolved_path(order, {"stretched_the_order": 1})["accomplishment"]) == "stretched_the_order", "a kitchen-only run still records the stretch")
+	var order_both: Dictionary = WIQuests.resolved_path(order, {"strongarmed_the_supplier": 1, "stretched_the_order": 1})
+	assert(String(order_both["accomplishment"]) == "strongarmed_the_supplier", "strong-armed THEN cooked records the STRONG-ARM ending -- the stronger claim wins")
+	assert(int((order_both["grant"] as Dictionary).get("won_combat", 0)) == 1 and not (order_both["grant"] as Dictionary).has("cooked_meal"), "...and pays the strong-arm grant, not the kitchen's")
+
+	# price_of_a_favor co-banks too, and its authored order already reads right:
+	# the renegotiated year is what lifts the blight, not clearing the field.
+	var favor: Dictionary = WIQuests.quest_by_id(shipped, "price_of_a_favor")
+	assert(String(WIQuests.resolved_path(favor, {"drove_off_collectors": 1, "mediated_the_debt": 1})["accomplishment"]) == "mediated_the_debt", "drove off THEN brokered records the MEDIATION")
+	assert(String(WIQuests.resolved_path(favor, {})["text"]) == "You paid the debt yourself, at the standing stones.", "neither counter banked falls through to the stones fallback")
+
+	# EVERY shipped array with 2+ real rungs must carry its ladder in writing --
+	# the ordering is load-bearing now, and an unnoted array is an unreviewed one.
+	for quest: Dictionary in shipped.get("quests", []):
+		var real_rungs := 0
+		for entry: Variant in quest.get("resolution_paths", []):
+			if String((entry as Dictionary).get("accomplishment", "")) != "":
+				real_rungs += 1
+		if real_rungs >= 2:
+			assert(quest.has("_resolution_order"), "quest %s has %d real resolution rungs but no _resolution_order note -- last-match makes the array order load-bearing" % [String(quest["id"]), real_rungs])
+	# The ""-req fallback keeps losing to any real match, wherever it sits.
+	var fallback_first := {"resolution_paths": [
+		{"accomplishment": "", "text": "fallback"},
+		{"accomplishment": "did_a", "text": "a"},
+	]}
+	assert(String(WIQuests.resolved_path(fallback_first, {"did_a": 1})["text"]) == "a", "a real match beats an EARLIER authored fallback")
+	assert(String(WIQuests.resolved_path(fallback_first, {})["text"]) == "fallback", "...and the fallback still answers when nothing banked")
+	assert(WIQuests.resolved_path({"resolution_paths": [{"accomplishment": "nope", "text": "x"}]}, {}).is_empty(), "no match and no fallback = no entry")
+
 	print("PASS: quest progress derives purely from accomplishment counters")
 	quit(0)
+
+
+func _load_json(path: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	assert(parsed is Dictionary, "invalid JSON at " + path)
+	return parsed

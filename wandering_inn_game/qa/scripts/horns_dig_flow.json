@@ -761,6 +761,18 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "EXCLUDE half of the Riverfarm re-gate: the day-one link is door_mounted, the far rows are not. Exact array -- Riverfarm must be ABSENT until door_awakened.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "options": [
+     { "text": "Liscor \u2014 the Gate District", "locked": false, "requirement": "" },
+     { "text": "Let it be.", "locked": false, "requirement": "" }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
    "action": "wait_for_event",
    "type": "ui_dialogue_shown",
    "timeout_sec": 5

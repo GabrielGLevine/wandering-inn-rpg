@@ -281,6 +281,7 @@
  ],
  "entities": [
   {
+   "_comment": "THE PALLASS RETURN CARRIER. pallass_market/pallass_forge have no map exit but each other, so this plinth is the cluster's ONLY way home -- gate it tighter than the portals.json `pallass` row (pallass_attuned) and the tier becomes a one-way trap. Same gate = always met by anyone standing here; the row is the arrival, this is the departure. Unshipped upgrade: an earned carve (`pallass_return_carved`) may re-gate FLAVOR later, never access. on_interact_accomplishment/toast are the unmet-gate arm only (interactions.gd checks portal_menu first), reachable via teleport in pallass_peek.",
    "id": "pallass_market_arrival_anchor",
    "kind": "prop",
    "cell": [
@@ -289,9 +290,15 @@
    ],
    "display_name": "A Squared Plinth",
    "sprite": "anchor_waystone_slate",
-   "observe": "A squared plinth of the same slab the whole tier is cut from, waiting on a rune nobody has carved yet. Whatever comes through here someday, it isn't ready for it now.",
+   "portal_menu": true,
+   "portal_menu_when": {
+    "requires": {
+     "pallass_attuned": 1
+    }
+   },
+   "observe": "A squared plinth of the same slab the whole tier is cut from. No rune, no seam, nothing carved into it at all -- and still the blankness has an outline, the way a mould does. Whatever door reaches this tier is already remembered here.",
    "on_interact_accomplishment": "eyed_the_market_arrival_stone",
-   "toast": "Cold, precise stone. A blank waiting for its purpose."
+   "toast": "Cold, precise stone, and not as blank as it looks. Something the shape of a door is being held in it, patiently, for later."
   },
   {
    "_comment": "The static `dialogue` line below is the no-graph FALLBACK only (interact()'s npc branch falls through to it if start_dialogue ever misses).",

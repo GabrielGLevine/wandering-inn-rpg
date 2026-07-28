@@ -76,12 +76,7 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 			if target.has(WIKeys.CONVERSATION):
 				if bool(_start_dialogue.call(String(target[WIKeys.CONVERSATION]), String(target[WIKeys.ID]))):
 					return {"dialogue": true}
-				var line: Dictionary = target["dialogue"][0]
-				_emit(WIEvents.DIALOGUE_LINE, line)
-				return line
-			var line: Dictionary = target["dialogue"][0]
-			_emit(WIEvents.DIALOGUE_LINE, line)
-			return line
+			return _npc_post_pool(target)
 		"prop":
 			if bool(target.get("sleep", false)):
 				var sleep_toast := String(target.get("sleep_toast", ""))
@@ -224,6 +219,25 @@ func _interact_container(target: Dictionary, container_state: Dictionary) -> Dic
 	if open_toast != "":
 		_emit(WIEvents.TOAST, {"text": open_toast})
 	return {"container": id, "items": granted}
+
+
+## THE POST-POOL SURFACE. Reached once the pool is spent for this waking (or a
+## conversation refuses to open). An NPC carrying `dialogue` re-serves that same
+## static line on every repeat, so a pool-only NPC matches that player-facing
+## result by re-serving its CURRENT pool line UNBANKED -- reading `dialogue[0]`
+## unguarded is what crashed klbkch and the four brothers_parlor pool NPCs on a
+## second interact. test_content's own arm keeps every npc/encounter carrying at
+## least one of the three surfaces.
+func _npc_post_pool(target: Dictionary) -> Dictionary:
+	var authored: Array = target.get("dialogue", [])
+	if not authored.is_empty():
+		var line: Dictionary = authored[0]
+		_emit(WIEvents.DIALOGUE_LINE, line)
+		return line
+	if not (target.get("talk_pool", []) as Array).is_empty():
+		return _talk_pool_line.call(target, true)
+	_emit(WIEvents.INTERACT_NOTHING, {})
+	return {}
 
 
 func _door_gate_met(door_when: Dictionary) -> bool:
