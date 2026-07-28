@@ -65,7 +65,11 @@ owner-auth merge-bypass discipline (wi-running-the-machine).
 
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)
 
-- **⭐ THE v0.16 PLAYTEST-STATE BUNDLE — seven asks, one sitting** (states
+- **⭐ THE FULL SITTING — 14 states + 1 paper read, ~1hr** (v0.16 bundle +
+  v0.15 carryover + organic Riverfarm run, ALL in
+  qa/playtest_saves/2026-07-28-v016-bundle/README.md — one doc, load
+  lines included). Supersedes the separate v0.15 bundle entry below.
+  Original v0.16 detail: (states
   named in docs/VISUAL-LOG.md close section): (1) the goblin-ally fight —
   the wave's marquee moment; does fighting BESIDE Rags land? (2) the
   witch-hut door post-fix at dusk — readable enough, or does the hut want
