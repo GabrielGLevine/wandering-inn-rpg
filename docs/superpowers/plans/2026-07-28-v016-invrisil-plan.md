@@ -1675,8 +1675,8 @@ python3 scripts/check_doc_drift.py
 
 ### Task 5.4: Re-gate sweep
 
-- [ ] **Step 1: Settle the tree first** — no edits in flight. A sweep launched mid-edit produces a mixed-state verdict; kill and relaunch.
-- [ ] **Step 2: Compute the touched-surface re-gate list.** Run `--touching` for each shared/edited path and take the **union**:
+- [x] **Step 1: Settle the tree first** — no edits in flight. A sweep launched mid-edit produces a mixed-state verdict; kill and relaunch.
+- [x] **Step 2: Compute the touched-surface re-gate list.** Run `--touching` for each shared/edited path and take the **union**:
 
 ```
 wandering_inn_game/qa/ci_sweep.sh --touching data/quests.json
@@ -1689,8 +1689,8 @@ wandering_inn_game/qa/ci_sweep.sh --touching data/combatants.json
 
 The must-be-green named set, at minimum: `invrisil_walkthrough`, `invrisil_round_trip`, `invrisil_disagreement_talk|_stealth|_fight`, `wilovan_address_f`, `hedault_enchant_loop`, `hedault_fragment_loop`, `spine_reach`, `ratici_fence_loop`, `ratici_fence_gate_check`, `boulevard_night_footpads_loop`, `invrisil_mothbear_loop`, `parley_gates_check`, `parley_talkdowns_loop`, `regional_work_loop`, `inn_guests_ext_loop`, `inn_guests_gate_proof`.
 
-- [ ] **Step 3: Subagent-safe sweep idiom.** A full `ci_sweep.sh` cannot run foreground in one Bash call — the harness promotes it to background and strands the waiter. Start it writing to a log with its own `rc=` echo, then poll with short foreground `sleep 60; tail -1 <log>` calls and read `rc` from the log.
-- [ ] **Step 4: Report per script, never "everything passed."**
+- [x] **Step 3: Subagent-safe sweep idiom.** A full `ci_sweep.sh` cannot run foreground in one Bash call — the harness promotes it to background and strands the waiter. Start it writing to a log with its own `rc=` echo, then poll with short foreground `sleep 60; tail -1 <log>` calls and read `rc` from the log.
+- [x] **Step 4: Report per script, never "everything passed."**
 
 ### Task 5.5: Windowed machine playtest
 
