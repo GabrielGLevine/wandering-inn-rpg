@@ -34,17 +34,29 @@ taste items surface at close as Playtest-State asks).
 
 ## 🎯 RUNNING (v0.16 wave state — keep current)
 
-1. ✅ Recon workflow (5 parallel readers: R/I/P/F hook surfaces +
-   cross-cutting conventions).
-2. ⏳ Per-region plan docs → docs/superpowers/plans/2026-07-28-v016-*.md,
-   committed to main BEFORE lane dispatch (plan-doc-commit rule).
-3. ⏳ Four lanes in worktrees (R/I/P/F independent; Opus 5 implementers +
-   adversarial reviewers; asset overlay copied per lane at spawn). One PR
-   per region, `[ci-full]` heads, merge-train with composed-tree re-gates.
-   Shared-file appends (quests.json, combatants.json, qa/manifest.json)
-   resolve at the train, per-lane ownership listed in each plan doc.
-4. ⏳ Wave close: cross-region machine playtest + VISUAL-LOG drain +
-   helper-pace re-run + economy-axes pass (below) + freeze step-0 + tag.
+1. ✅ Recon (5 readers) → 4 per-region plan docs → adversarial verify
+   (42 findings: 4 BLOCK, 11 HIGH) → fix wave → **plans committed
+   c087559** (docs/superpowers/plans/2026-07-28-v016-*.md) + CHOICE-LOG
+   wave block + character-profiles stub scaffold.
+2. ✅ USER DIRECTIVE mid-wave: Invrisil nobility layer — amendment in
+   the Invrisil plan (client → "A Lady with a Ring Box", Reinhart
+   ambient at the Rest/stationer); full thread filed as **#318 (v0.17,
+   spec-first)**.
+3. ⏳ IMPLEMENTATION FLEET IN FLIGHT: workflow wf_55262b42-410 — 4
+   lanes × (3 implement stages → traced adversarial review → fix wave),
+   Opus implementers, worktrees .claude/worktrees/v016-{riverfarm,
+   invrisil,pallass,floodplains} on branches issue/305-riverfarm-depth /
+   306-invrisil-depth / 307-pallass-depth / 308-floodplains-price-kept,
+   all from main c087559, asset overlays copied (185 files each).
+   Lane commits stay LOCAL; controller owns PRs. Per-lane progress:
+   <worktree>/.lane-progress.md.
+4. ⏳ Then: PR per lane ([ci-full] heads, 6 checks), merge-train with
+   composed-tree re-gates (census on MERGED tree per merge;
+   derive_qa_surfaces + render_qa_notes --write re-run per merge).
+5. ⏳ Wave close: cross-region machine playtest + VISUAL-LOG drain +
+   helper-pace re-run + economy-axes pass + deferred leads rows (after
+   freeze step-0) + hygiene (AGENTS.md (4,8) portal note; nine dead
+   *_inn_settled lines) + tag v0.16.0.
 
 ## NEXT ACTIONS (after / alongside the wave)
 
