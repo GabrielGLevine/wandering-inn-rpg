@@ -63,6 +63,7 @@ const MAP_REQUIRES := {
 	"brothers_parlor": ["door_awakened", "invrisil_attuned"],
 	"pallass_market": ["door_awakened", "pallass_attuned"],
 	"pallass_forge": ["door_awakened", "pallass_attuned", "elevator_pass_stamped"],
+	"pallass_forge_hall": ["door_awakened", "pallass_attuned", "elevator_pass_stamped"],
 }
 
 const POST_TUTORIAL_FLAGS := ["given_spear_by_relc", "reached_liscor", "post_game", "door_chain_started"]

@@ -1,0 +1,266 @@
+{
+ "biome": "pallass_forge",
+ "grid": {
+  "width": 12,
+  "height": 9
+ },
+ "blocked": [
+  [
+   2,
+   2
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   9,
+   2
+  ],
+  [
+   9,
+   5
+  ]
+ ],
+ "walls": {
+  "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "from": [
+     0,
+     0
+    ],
+    "to": [
+     11,
+     0
+    ],
+    "face": [
+     0,
+     0
+    ]
+   },
+   {
+    "from": [
+     0,
+     1
+    ],
+    "to": [
+     0,
+     8
+    ],
+    "face": [
+     0,
+     0
+    ]
+   },
+   {
+    "from": [
+     11,
+     1
+    ],
+    "to": [
+     11,
+     8
+    ],
+    "face": [
+     0,
+     0
+    ]
+   },
+   {
+    "from": [
+     1,
+     8
+    ],
+    "to": [
+     4,
+     8
+    ],
+    "face": [
+     0,
+     0
+    ]
+   },
+   {
+    "from": [
+     6,
+     8
+    ],
+    "to": [
+     10,
+     8
+    ],
+    "face": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ "decor": [
+  {
+   "sprite": "forge_station",
+   "cell": [
+    2,
+    2
+   ]
+  },
+  {
+   "sprite": "forge_station",
+   "cell": [
+    3,
+    2
+   ]
+  },
+  {
+   "sprite": "barrel",
+   "cell": [
+    2,
+    4
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "sprite": "library_shelf",
+   "cell": [
+    9,
+    5
+   ]
+  }
+ ],
+ "ambience": [
+  {
+   "preset": "embers",
+   "rect": [
+    2,
+    2,
+    3,
+    2
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "id": "forge_hall_exit",
+   "kind": "door",
+   "cell": [
+    5,
+    8
+   ],
+   "display_name": "Back to the Tier",
+   "sprite": "door",
+   "to_map": "pallass_forge",
+   "to_cell": [
+    15,
+    4
+   ],
+   "observe": "The hall door, propped with a wedge nobody has ever removed. Past it, the tier's noise resumes."
+  },
+  {
+   "_comment": "P1 SKILL route. requires_skill renders VISIBLE-LOCKED: a player without the arm still sees the route and takes TALK or FIGHT.",
+   "id": "forge_hall_temper_bench",
+   "kind": "prop",
+   "cell": [
+    4,
+    3
+   ],
+   "display_name": "The Temper Bench",
+   "sprite": "forge_station",
+   "observe": "A billet clamped mid-process, the quench beside it, a gauge nobody has reset since the last failure. Somebody stopped here on purpose and did not come back.",
+   "requires_skill": "appraise_goods",
+   "skill_hint_toast": "Colour, count, quench. You can see there is an order to it. You cannot see the order.",
+   "locked_toast": "Heat, metal, and a gauge you cannot read. Guessing here costs somebody a week.",
+   "on_skill_use": {
+    "accomplishment": "temper_run",
+    "toast": "[Appraise Goods] — You read the grain off the colour, hold the count two beats longer than the slate says, and quench. The billet comes out with the standard's own answer in it."
+   }
+  },
+  {
+   "id": "forge_hall_standard_notice",
+   "kind": "prop",
+   "cell": [
+    7,
+    2
+   ],
+   "display_name": "The Examination Standard",
+   "sprite": "price_board",
+   "observe": "A civic notice pinned at eye height, examiner's seal at the corner, the text underneath it read so often the ink has gone grey where thumbs land.",
+   "on_interact_accomplishment": "read_the_examination_standard",
+   "toast": "The standard does not measure how hard a blade comes out. It measures how it RECOVERS. Somebody up here has been failing the wrong test perfectly."
+  },
+  {
+   "id": "forge_apprentice",
+   "kind": "npc",
+   "cell": [
+    5,
+    4
+   ],
+   "display_name": "Forge Hall Apprentice",
+   "sprite": "drake_patron",
+   "tint": [
+    0.52,
+    0.58,
+    0.66
+   ],
+   "facing": "up",
+   "observe": "A young Drake with her sleeves pinned back and a scorch on one forearm she has not stopped working long enough to notice.",
+   "friendly_line": "She looks up for exactly as long as the count allows, then back down. From an apprentice on the clock, that is a warm welcome.",
+   "talk_pool": [
+    "Third year. Third year is when they stop telling you what you did wrong and start writing it down.",
+    "I can make it hard. Anyone can make it hard. Making it come back is the part.",
+    "Mind the tub, {addr}. It looks still until it isn't.",
+    "The smith says the bench is hers till second bell. She also says that at third bell."
+   ]
+  },
+  {
+   "id": "forge_hall_slack_tub",
+   "kind": "prop",
+   "cell": [
+    3,
+    5
+   ],
+   "display_name": "The Slack Tub",
+   "sprite": "barrel",
+   "observe": "Water gone grey with scale, a skin of oil across the top, and a scum line three fingers above the current level.",
+   "on_interact_accomplishment": "eyed_the_slack_tub",
+   "toast": "You touch the surface. Warm all the way down. This tub has not been cold in years, and the scum line says nobody has ever had time to change it."
+  },
+  {
+   "id": "forge_hall_apprentice_slate",
+   "kind": "prop",
+   "cell": [
+    6,
+    5
+   ],
+   "display_name": "The Practice Slate",
+   "sprite": "inn_room_ledger",
+   "observe": "A slate ruled into columns: heat, count, quench, result. The result column is chalked over so many times the surface has gone soft.",
+   "on_interact_accomplishment": "read_the_apprentice_slate",
+   "toast": "Forty-one attempts. Under the last one, in smaller writing than the rest: TRY THE OTHER WAY ROUND."
+  },
+  {
+   "id": "forge_hall_pattern_wall",
+   "kind": "prop",
+   "cell": [
+    10,
+    3
+   ],
+   "display_name": "The Pattern Wall",
+   "sprite": "library_shelf",
+   "observe": "Finished pieces racked in a grid, each with a civic tag wired to it. They are not for sale. They are the argument.",
+   "on_interact_accomplishment": "eyed_the_pattern_wall",
+   "toast": "Every piece on the wall passed. You count the tags: four different smiths, four different answers, one standard. Pallass framed the disagreement and hung it up."
+  }
+ ]
+}

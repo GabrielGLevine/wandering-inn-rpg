@@ -191,9 +191,9 @@ Anything downstream that keys on it — a future `leads.json` row, a QA `accompl
 
 ### Task 0.2: Baseline the census and the gates
 
-- [ ] **Step 1:** `cd /Users/gabriel/wandering-inn-rpg && python3 scripts/comment_census.py --check` — record the exact DATA ratio and char counts as the lane's baseline in the PR body.
-- [ ] **Step 2:** `python3 wandering_inn_game/scripts/data_lint.py` — record green.
-- [ ] **Step 3:** `perl -e 'alarm 300; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_content.gd` — record green (this is the "was it already red?" control).
+- [x] **Step 1:** `cd /Users/gabriel/wandering-inn-rpg && python3 scripts/comment_census.py --check` — record the exact DATA ratio and char counts as the lane's baseline in the PR body.
+- [x] **Step 2:** `python3 wandering_inn_game/scripts/data_lint.py` — record green.
+- [x] **Step 3:** `perl -e 'alarm 300; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_content.gd` — record green (this is the "was it already red?" control).
 
 ---
 
@@ -386,14 +386,14 @@ The wall SHEET is deliberately the slate atlas the two Pallass tiers already use
 	"pallass_forge_hall": ["door_awakened", "pallass_attuned", "elevator_pass_stamped"],
 ```
 
-- [ ] **Step 1: Load `wi-adding-a-scene`.** Read `data/maps/riverfarm/riverfarm_longhouse.json` end to end first — it is the small-interior template this file copies (walls/floor_layers/decor/ambience/entities order).
-- [ ] **Step 2:** Write `pallass_forge_hall.json` per the layout spec above. Floor layers: reuse the `pallass_forge` biome default (no override needed); add ONE overlay only if the windowed pass says the room reads flat.
-- [ ] **Step 3:** Append the mood row, the `LANDMARK_TOKENS` row, the `MAP_REQUIRES` row.
-- [ ] **Step 4: Run** `python3 wandering_inn_game/scripts/data_lint.py` — expect green (grid, in-grid blocked/entity cells).
-- [ ] **Step 5: Run** `res://tests/test_content.gd` and `res://tests/test_world_visuals.gd` alarm-wrapped — expect PASS + zero noise. `_validate_props` will red any `on_interact_accomplishment` prop missing a `toast`; `_validate_npc_interact_surface` will red an empty `talk_pool`.
-- [ ] **Step 6: Advisory (not a gate):** `godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd` — new scenes target composite ≥50; under 30 prints a loud advisory. Record the number in the PR body.
-- [ ] **Step 7: Census check** `python3 scripts/comment_census.py --check`.
-- [ ] **Step 8: Commit** `feat(pallass): the forge hall interior (walk-in, observables, temper bench)`.
+- [x] **Step 1: Load `wi-adding-a-scene`.** Read `data/maps/riverfarm/riverfarm_longhouse.json` end to end first — it is the small-interior template this file copies (walls/floor_layers/decor/ambience/entities order).
+- [x] **Step 2:** Write `pallass_forge_hall.json` per the layout spec above. Floor layers: reuse the `pallass_forge` biome default (no override needed); add ONE overlay only if the windowed pass says the room reads flat.
+- [x] **Step 3:** Append the mood row, the `LANDMARK_TOKENS` row, the `MAP_REQUIRES` row.
+- [x] **Step 4: Run** `python3 wandering_inn_game/scripts/data_lint.py` — expect green (grid, in-grid blocked/entity cells).
+- [x] **Step 5: Run** `res://tests/test_content.gd` and `res://tests/test_world_visuals.gd` alarm-wrapped — expect PASS + zero noise. `_validate_props` will red any `on_interact_accomplishment` prop missing a `toast`; `_validate_npc_interact_surface` will red an empty `talk_pool`.
+- [x] **Step 6: Advisory (not a gate):** `godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd` — new scenes target composite ≥50; under 30 prints a loud advisory. Record the number in the PR body.
+- [x] **Step 7: Census check** `python3 scripts/comment_census.py --check`.
+- [x] **Step 8: Commit** `feat(pallass): the forge hall interior (walk-in, observables, temper bench)`.
 
 ### Task 1.2: `pallass_forge` hooks — reject bin + hall door
 
