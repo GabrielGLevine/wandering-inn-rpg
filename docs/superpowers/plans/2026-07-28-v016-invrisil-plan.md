@@ -1365,7 +1365,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 - Consumes: `hat_job_taken`.
 - Produces: `handoff_talked`.
 
-- [ ] **Step 1: Author the graph.** Three exchanges, the trade never named, `{addr}` where he addresses the player:
+- [x] **Step 1: Author the graph.** Three exchanges, the trade never named, `{addr}` where he addresses the player:
 
 ```json
 {
@@ -1423,8 +1423,8 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 }
 ```
 
-- [ ] **Step 2: Event-order note for QA:** `exchange_three`'s close carries `effects` + `end: true` — wait `dialogue_ended`, **then** `accomplishment_recorded {id: handoff_talked}`.
-- [ ] **Step 3: Run** `data_lint.py` + `test_dialogue.gd` + `test_content.gd`; **commit** `feat(dialogue): the house factor (#306)`.
+- [x] **Step 2: Event-order note for QA:** `exchange_three`'s close carries `effects` + `end: true` — wait `dialogue_ended`, **then** `accomplishment_recorded {id: handoff_talked}`.
+- [x] **Step 3: Run** `data_lint.py` + `test_dialogue.gd` + `test_content.gd`; **commit** `feat(dialogue): the house factor (#306)`.
 
 ### Task 3.4: I2 combatants + harness cell
 
