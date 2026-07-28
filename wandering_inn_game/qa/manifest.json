@@ -3362,6 +3362,36 @@
    }
   },
   {
+   "script": "invrisil_round_trip",
+   "seed": 9,
+   "fixture": "spine_reach_start",
+   "note": "THE INVRISIL RETURN PROOF, pallass_round_trip's twin: the boulevard/alleys/parlor cluster's only way home is invrisil_anchor_stone, whose gate is door_mounted (NOT door_awakened -- the 18g-stone cohort never awakens the Door). Departs Liscor at street_anchor_stone, lands on the `invrisil` row's own arrival cell (4,8), walks the boulevard end to end and crosses into mercantile_alleys and back through the real door pair, then rides the anchor's picker home to the inn's authored (13,6); exact options pins both ends, zero combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "invrisil_boulevard",
+     "mercantile_alleys",
+     "street"
+    ],
+    "fixtures": [
+     "spine_reach_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "portals"
+    ]
+   }
+  },
+  {
    "script": "wilovan_address_f",
    "seed": 9,
    "fixture": "wilovan_parlor_f_start",

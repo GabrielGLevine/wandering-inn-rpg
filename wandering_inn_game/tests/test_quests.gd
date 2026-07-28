@@ -66,6 +66,40 @@ func _init() -> void:
 	assert(String(door_both["accomplishment"]) == "cleared_the_leak", "read THEN fought records the FIGHT -- the stronger claim wins")
 	assert(int((door_both["grant"] as Dictionary).get("won_combat", 0)) == 2 and not (door_both["grant"] as Dictionary).has("spell_cast"), "...and pays the fight grant, not the reading's")
 	assert(String(WIQuests.resolved_path(door, {})["text"]) == "You consulted Pisces about it.", "neither counter banked falls through to the consult fallback")
+
+	# missing_crate: three INDEPENDENT surfaces (street fight / watch_crate /
+	# Krshia's guile read, which hides only on crate_returned), so a player who
+	# fights and then still reads the truth holds two. Ladder: force > watch > guile.
+	var crate: Dictionary = WIQuests.quest_by_id(shipped, "missing_crate")
+	assert(String(WIQuests.resolved_path(crate, {"recovered_crate_guile": 1})["accomplishment"]) == "recovered_crate_guile", "a guile-only crate run still records the guile")
+	var crate_both: Dictionary = WIQuests.resolved_path(crate, {"recovered_crate_force": 1, "recovered_crate_guile": 1})
+	assert(String(crate_both["accomplishment"]) == "recovered_crate_force", "fought THEN read the truth records the FORCE ending -- the stronger claim wins")
+	assert(int((crate_both["grant"] as Dictionary).get("won_combat", 0)) == 1 and not (crate_both["grant"] as Dictionary).has("sneaked_past_danger"), "...and pays the force grant, not the guile's")
+	assert(String(WIQuests.resolved_path(crate, {"recovered_crate_guile": 1, "recovered_crate_watch": 1})["accomplishment"]) == "recovered_crate_watch", "guile then the Watch records the Watch")
+
+	# wrong_order: the short_order pot is ungated and supplier_scavengers carries
+	# no encounter_when, so cooking and fighting stay available after either.
+	var order: Dictionary = WIQuests.quest_by_id(shipped, "wrong_order")
+	assert(String(WIQuests.resolved_path(order, {"stretched_the_order": 1})["accomplishment"]) == "stretched_the_order", "a kitchen-only run still records the stretch")
+	var order_both: Dictionary = WIQuests.resolved_path(order, {"strongarmed_the_supplier": 1, "stretched_the_order": 1})
+	assert(String(order_both["accomplishment"]) == "strongarmed_the_supplier", "strong-armed THEN cooked records the STRONG-ARM ending -- the stronger claim wins")
+	assert(int((order_both["grant"] as Dictionary).get("won_combat", 0)) == 1 and not (order_both["grant"] as Dictionary).has("cooked_meal"), "...and pays the strong-arm grant, not the kitchen's")
+
+	# price_of_a_favor co-banks too, and its authored order already reads right:
+	# the renegotiated year is what lifts the blight, not clearing the field.
+	var favor: Dictionary = WIQuests.quest_by_id(shipped, "price_of_a_favor")
+	assert(String(WIQuests.resolved_path(favor, {"drove_off_collectors": 1, "mediated_the_debt": 1})["accomplishment"]) == "mediated_the_debt", "drove off THEN brokered records the MEDIATION")
+	assert(String(WIQuests.resolved_path(favor, {})["text"]) == "You paid the debt yourself, at the standing stones.", "neither counter banked falls through to the stones fallback")
+
+	# EVERY shipped array with 2+ real rungs must carry its ladder in writing --
+	# the ordering is load-bearing now, and an unnoted array is an unreviewed one.
+	for quest: Dictionary in shipped.get("quests", []):
+		var real_rungs := 0
+		for entry: Variant in quest.get("resolution_paths", []):
+			if String((entry as Dictionary).get("accomplishment", "")) != "":
+				real_rungs += 1
+		if real_rungs >= 2:
+			assert(quest.has("_resolution_order"), "quest %s has %d real resolution rungs but no _resolution_order note -- last-match makes the array order load-bearing" % [String(quest["id"]), real_rungs])
 	# The ""-req fallback keeps losing to any real match, wherever it sits.
 	var fallback_first := {"resolution_paths": [
 		{"accomplishment": "", "text": "fallback"},

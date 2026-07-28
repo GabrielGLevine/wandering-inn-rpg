@@ -58,6 +58,10 @@ func _audit_carrier_gates() -> void:
 			assert(not gate.is_empty(), "portal carrier %s (%s) has no requires-wrapped gate -- a bare or missing dict is vacuously true (data_lint's own arm)" % [String(entity["id"]), map_id])
 			for counter: String in gate:
 				assert(allowed.has(counter), "portal carrier %s (%s) gates on '%s', which its map's arrival (%s) does not imply -- a carrier may only gate on door_mounted or its own row's counter, else the region is a one-way trap" % [String(entity["id"]), map_id, counter, String(rows[map_id]) if String(rows[map_id]) != "" else "ungated"])
+				# THRESHOLD-BLIND FALSE-ACCEPT: the counter-name check above passes
+				# a `{door_mounted: 2}` that no arrival can ever satisfy (every
+				# producer banks these once). Only 1 is honest.
+				assert(int(gate[counter]) == 1, "portal carrier %s (%s) gates on '%s' at threshold %d -- an arrival implies the counter ONCE, so anything but 1 is unreachable by construction" % [String(entity["id"]), map_id, counter, int(gate[counter])])
 	assert(carriers >= 5, "the audit found only %d portal carriers -- it must walk every shipped one" % carriers)
 
 

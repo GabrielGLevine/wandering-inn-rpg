@@ -7,6 +7,7 @@
 				{ "id": "deliver", "description": "Deliver Erin's package to Selys at the Adventurer's Guild.", "complete_when": { "package_delivered": 1 } },
 				{ "id": "decide", "description": "Decide what to do with Selys's reward, there at the Guild.", "complete_when": { "errand_decided": 1 } }
 			],
+			"_resolution_order": "FORK-EXCLUSIVE, so the order is inert -- both rungs are options of the SAME node (selys_delivery's delivered/delivered_smooth) and each hide_when's on the errand_decided both of them bank, so a second rung can never land.",
 			"resolution_paths": [
 				{ "accomplishment": "kept_reward", "text": "You kept the coin as your own courier's fee." },
 				{ "accomplishment": "gave_reward", "text": "You sent the reward back to Erin." }
@@ -19,10 +20,11 @@
 				{ "id": "find", "description": "Find out what happened to Krshia's missing crate near the south-square sewers.", "complete_when": { "found_the_crate": 1 } },
 				{ "id": "report", "description": "Tell Krshia what became of her crate, at her market stall on Market Street.", "complete_when": { "crate_returned": 1 } }
 			],
+			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). Three independent surfaces bank these -- the street fight, watch_crate, and Krshia's guile read, which hides only on crate_returned and so stays offered after a fight -- so they co-bank freely. Ladder: force > watch > guile.",
 			"resolution_paths": [
-				{ "accomplishment": "recovered_crate_force", "text": "You cleared the scavengers by force.", "grant": {"melee_hit": 6, "won_combat": 1} },
+				{ "accomplishment": "recovered_crate_guile", "text": "You found the truth of it yourself, no fight needed.", "grant": {"sneaked_past_danger": 2, "heard_gossip": 3} },
 				{ "accomplishment": "recovered_crate_watch", "text": "You sent the Watch after them.", "grant": {"persuaded_someone": 2, "heard_gossip": 4} },
-				{ "accomplishment": "recovered_crate_guile", "text": "You found the truth of it yourself, no fight needed.", "grant": {"sneaked_past_danger": 2, "heard_gossip": 3} }
+				{ "accomplishment": "recovered_crate_force", "text": "You cleared the scavengers by force.", "grant": {"melee_hit": 6, "won_combat": 1} }
 			]
 		},
 		{
@@ -48,10 +50,11 @@
 				{ "id": "resolve", "description": "Set Lyonette's botched supply order right -- strong-arm the supplier on Market Street, sweet-talk Krshia at her stall, or stretch it in the inn kitchen.", "complete_when": { "resolved_wrong_order": 1 } },
 				{ "id": "report", "description": "Tell Lyonette it's handled, in the inn common room, before Erin hears of it.", "complete_when": { "wrong_order_reported": 1 } }
 			],
+			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). Same co-bank class as missing_crate: the short_order pot is ungated and supplier_scavengers carries no encounter_when, so cooking and fighting are both still available after either. Ladder: strongarmed > smoothed > stretched.",
 			"resolution_paths": [
-				{ "accomplishment": "strongarmed_the_supplier", "text": "You strong-armed the supplier.", "grant": {"melee_hit": 6, "won_combat": 1} },
+				{ "accomplishment": "stretched_the_order", "text": "You stretched the order yourself, in the kitchen.", "grant": {"cooked_meal": 4, "served_customer": 4} },
 				{ "accomplishment": "smoothed_with_krshia", "text": "You smoothed it over with Krshia.", "grant": {"persuaded_someone": 2, "befriended_moments": 3, "heard_gossip": 3} },
-				{ "accomplishment": "stretched_the_order", "text": "You stretched the order yourself, in the kitchen.", "grant": {"cooked_meal": 4, "served_customer": 4} }
+				{ "accomplishment": "strongarmed_the_supplier", "text": "You strong-armed the supplier.", "grant": {"melee_hit": 6, "won_combat": 1} }
 			]
 		},
 		{
@@ -100,6 +103,7 @@
 				{ "id": "report", "description": "Tell the headman, at the village longhouse-side square, it's done.", "complete_when": { "price_of_a_favor_reported": 1 } }
 			],
 			"region": "Riverfarm",
+			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins), and this array ALREADY reads correctly -- left as authored. The briar collectors and Eloise's mediation can co-bank, and the brokered terms are the stronger claim there: driving them off only clears the field, the renegotiated year is what actually lifts the blight. Ladder: mediated > drove_off. The \"\"-req entry is the FALLBACK (paid it yourself at the stones), not a rung.",
 			"resolution_paths": [
 				{ "accomplishment": "drove_off_collectors", "text": "You drove off the collectors by force." },
 				{ "accomplishment": "mediated_the_debt", "text": "You brokered fair terms with the witch." },
@@ -117,6 +121,7 @@
 			],
 			"region": "Invrisil",
 			"_resolution_paths_comment": "The 3 info-gathering methods (STEALTH/TALK/FIGHT) feed the SAME resolve beat regardless of which fork is chosen, so they aren't separately surfaced here.",
+			"_resolution_order": "FORK-EXCLUSIVE, so the order is inert -- both rungs are options of `cornered`, whose only two entrances (the hub row and the accusation row) each hide_when on the merchant_fate_decided both rungs bank, so the node cannot be re-reached after a choice.",
 			"resolution_paths": [
 				{ "accomplishment": "merchant_exposed", "text": "You exposed Coyle publicly.", "grant": {"persuaded_someone": 5, "heard_gossip": 8} },
 				{ "accomplishment": "merchant_extorted", "text": "You extorted Coyle for gold.", "grant": {"persuaded_someone": 3, "sneaked_past_danger": 3, "heard_gossip": 4} }
@@ -201,6 +206,7 @@
 					}
 				}
 			],
+			"_resolution_order": "FORK-EXCLUSIVE, so the order is inert -- all three rungs hang off `settle` (the draught, the trade goods, and [Draw steel.] which starts rags_scouting_party), the hub row into it hide_when's on rags_meeting_settled, and every rung banks that counter (the encounter via its own on_victory). Steel also removes the entity outright.",
 			"resolution_paths": [
 				{
 					"accomplishment": "helped_rags_tribe",
@@ -240,7 +246,7 @@
 			]
 		},
 		{
-			"_comment_resolution": "resolution_paths resolve LAST-MATCH-WINS (WIQuests.resolved_path), mirroring sleep_veil.gd's FINALE_CLOSE_LINES so the recorded ending and the paid grant can never contradict the curtain's own line. Load-bearing HERE and nowhere else yet: seal_opened is a bounce hatch -- open the door, then still get it fed or re-warded -- and first-match paid the FIGHT grant for an ending the player talked or warded their way to. Order these three by escalation, weakest claim first.",
+			"_resolution_order": "resolution_paths resolve LAST-MATCH-WINS (WIQuests.resolved_path), mirroring sleep_veil.gd's FINALE_CLOSE_LINES so the recorded ending and the paid grant can never contradict the curtain's own line. Load-bearing HERE and nowhere else yet: seal_opened is a bounce hatch -- open the door, then still get it fed or re-warded -- and first-match paid the FIGHT grant for an ending the player talked or warded their way to. Order these three by escalation, weakest claim first.",
 			"_comment": "Act V (#270 beats 1-3, as amended by spec 7). BEATS ARE ORDER-GATED: no beat's counter can bank before its predecessor's, so the catalyst-style cosmetic skip is impossible. descend banks ONLY at seal_kept_door with seal_descent_agreed held; read banks only once the runes are read; resolve has three producers, each behind the reading. SPOILER DISCIPLINE: 'feeding' appears in no beat copy until beat 3, which the journal only shows once the reading has revealed it on screen (WIQuests surfaces the ACTIVE beat alone). Landmarks: every beat names the trapped halls.",
 			"id": "what_the_seal_was_feeding",
 			"title": "What the Seal Was Feeding",
