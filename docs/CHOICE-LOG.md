@@ -1350,3 +1350,53 @@ by controller ruling — the plan was the defect, not the implementation.
   (install_git_hooks.sh) so the four in-flight lane worktrees are NOT
   retro-gated mid-plan; queue: activate per-worktree at the merge
   train, fold into wi-verifying-changes/wi-start-here at wave close.
+- **v0.16 #305 Riverfarm depth — lane decisions (2026-07-28)**: (1) Neither
+  new `sim_combat_batch` cell carries `check_rounds`. The authoritative
+  precedent, `riverfarm_thicket_patch_t3_solo`, clones the same roster stats
+  at the same build and itself measures median 2; with `check_rounds` both
+  new cells hard-failed `median rounds 2 outside 3-12` on shipped numbers.
+  The alternative — moving `con` off `thicket_remnant`'s stats — is forbidden
+  by the shipped `_comment`. Win-rate window unchanged at the stop-cell
+  0.55-0.95. Measured: granary 0.81 / median 2, den 0.81 / median 2, beside
+  the shipped stop cell's 0.74 / median 2. **The plan's exit criterion 3 and
+  its verification checklist's "median rounds 3-12" line are amended to
+  match.** (2) `encounter_when` does NOT hide an encounter — a gated
+  encounter stands visible and answers a plain interact SILENTLY unless it
+  carries `gate_closed_toast` (`wi_game.gd:876` / `interactions.gd:159`;
+  nine of ten shipped `encounter_when` entities carry one). Both new
+  encounters got one and the plan's drafted "the corner is empty until"
+  comment was rewritten as factually wrong. (3) `"facing"` is a STRING
+  (`up`/`down`/`left`/`right`) in all 81 shipped uses, not the vector the
+  plan drafted. (4) Both new map files ship `indent=1, ensure_ascii=False`
+  fully-expanded, matching every shipped map, not the plan's compact drafts.
+  (5) Mill/hut furniture sprite ids were picked in-lane from shipped
+  entries; zero `data/sprites.json` additions. (6)
+  `docs/design/scene-dynamism-report.md` is committed with the map commits —
+  the advisory tool rewrites it and a dirty copy would break the clean-tree
+  bar. (7) **Both fight fixtures derive `rng_state` at seed 2, not 9.** Seed
+  9's state is a genuine defeat in both fights (2 rounds each); at ~0.81
+  measured win rate roughly one start state in five loses, which is the
+  expected tail, not a tuning error. Found with the sanctioned
+  derive-then-verify loop; roster and gate window untouched. Rejected:
+  widening the fight or lowering `con`, which would move the very gate this
+  lane's band evidence rests on. (8) `flood_ledger_help` takes the door's
+  WEST approach (18,5) while `flood_ledger_talk` takes the south one (19,6);
+  the exit always returns to (19,6), so splitting the approaches across two
+  canonicals proves both legal approaches AND danger-row-6b's deliberate
+  one-cell asymmetry for free. (9) `basic_cooking` is deliberately absent
+  from `flood_ledger_help_start`: the plan left "prove the second skill arm
+  or pin the refusal" open, and the refusal was picked — the plain-interact
+  `SKILL_UNKNOWN` + `locked_toast` leg is pinned verbatim and both the
+  fixture and the script say the second arm is unexercised. (10)
+  `check_doc_drift.py` is red on this branch and none of it is this lane's:
+  the three residual lines are the other v0.16 plan docs' missing Status
+  headers, already fixed on `main` (09ebdbe) alongside the job's demotion to
+  advisory; this lane restored its OWN plan header verbatim to main's text so
+  it merges clean. (11) **`witch_hut_door` is invisible in play and the fix
+  is deferred, not guessed.** The windowed pass proved `hollow_tree_8`
+  ((0,9), y-sorted above the door at (1,7)) swallows it, and proved by
+  experiment that the plan's named lever — brightening the tint — changes
+  nothing, because the cause is occlusion. Moving the door cell is forbidden
+  by ruling 3, and moving a shipped decorative tree is a design call outside
+  this lane's "touch no existing row" instruction. Logged to VISUAL-LOG with
+  three ranked candidate fixes for the controller.

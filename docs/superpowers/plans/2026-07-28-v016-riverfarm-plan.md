@@ -1104,7 +1104,7 @@ The baseline `qa/fixtures/riverfarm_fight_start.json` carries `melee_hit: 18, sp
 
 **Settle the tree BEFORE launching a sweep** — a sweep launched while edits continue produces a mixed-state verdict; kill and relaunch.
 
-- [ ] **Step 1: Load `wi-verifying-changes`. Run the full local gate order:**
+- [x] **Step 1: Load `wi-verifying-changes`. Run the full local gate order:**
   1. `python3 wandering_inn_game/scripts/data_lint.py` (this is NOT pytest; there is no `scripts/tests/test_data_lint.py` in this layout)
   2. `python3 scripts/comment_census.py --check`
   3. `python3 scripts/sync_agent_guidance.py` (guidance-mirror check)
@@ -1112,13 +1112,13 @@ The baseline `qa/fixtures/riverfarm_fight_start.json` carries `melee_hit: 18, sp
   5. `qa/run_qa.sh load_gate headless`
   6. every `tests/test_*.gd` under a 240s alarm, each verdicted on rc + `^PASS` + zero-noise grep
   7. `tests/sim_combat_batch.gd` and `tests/sim_class_paths.gd` under 600s alarms
-- [ ] **Step 2: Targeted re-gate.** `qa/ci_sweep.sh --touching` for each shared surface, then run the union:
+- [x] **Step 2: Targeted re-gate.** `qa/ci_sweep.sh --touching` for each shared surface, then run the union:
   - `data/maps/riverfarm/riverfarm_village.json` → `longhouse_walkthrough, regional_work_loop, riverfarm_fight, riverfarm_skill, riverfarm_talk, riverfarm_walkthrough, spine_reach, thicket_cull_loop`
   - `data/maps/riverfarm/witch_hollow.json` → adds `witch_cottage_reachability, trader_earn_loop`
   - `data/quests.json` → **20+ canonicals** via `MONOLITH_SYSTEMS` (GH#281): `cisterns_*, crate_*, door_chain_*, horns_dig_*, invrisil_disagreement_*, missing_recruit_loop, pallass_walkthrough, ...`. The `wi-writing-qa-scripts` claim that this maps to zero scripts is **out of date** — budget the time.
   - `data/combatants.json` → every combat-touching canonical at its pinned seed.
-- [ ] **Step 3: Full sweep.** `qa/ci_sweep.sh` cannot run foreground in one Bash call — start it writing to a log, then poll with short foreground `sleep 60; tail -1 <log>` calls and read `rc=` from the log's own echo. Note that a full sweep runs `qa/flush_artifacts.sh` first and **WIPES prior windowed PNGs** — do the windowed pass AFTER the sweep, not before.
-- [ ] **Step 4: Load `wi-machine-playtest`. Windowed shots (player eyes, not logic):**
+- [x] **Step 3: Full sweep.** `qa/ci_sweep.sh` cannot run foreground in one Bash call — start it writing to a log, then poll with short foreground `sleep 60; tail -1 <log>` calls and read `rc=` from the log's own echo. Note that a full sweep runs `qa/flush_artifacts.sh` first and **WIPES prior windowed PNGs** — do the windowed pass AFTER the sweep, not before.
+- [x] **Step 4: Load `wi-machine-playtest`. Windowed shots (player eyes, not logic):**
   - the mill door on the village map at day and at dusk (does a `door`-sprite entity at the tower's base read as enterable next to `riverfarm_dock`, and is there exactly ONE windmill on screen?) — plus a frame from the **west approach (18,5)** as well as the south one, since both are legal
   - `riverfarm_mill` interior at day, dusk and night (mood row sanity — a flat white room means the mood row did not land)
   - the tallyman's talk_pool line and the ledger-walk dialogue at full width (copy-fit)
@@ -1127,8 +1127,10 @@ The baseline `qa/fixtures/riverfarm_fight_start.json` carries `melee_hit: 18, sp
   - both new fights on the board: `granary_scavenger_a/_b` on `inn_cellar` (do two `bat` rigs at 0.56 separate from each other and from the cellar floor?) and `line_stalker_a/_b` on `witch_hollow` (green-on-green separation). **These windowed reads ARE the legibility verdict for the four new ids** — `test_combat_visuals` never measures them (ruling F), so the VISUAL-LOG row states what was SEEN and must not quote a derived cell figure.
   - the headman's and hunter's hubs in the post-quest state (option count, no orphaned rows)
   Drain every finding to `docs/VISUAL-LOG.md`.
-- [ ] **Step 5: Write `docs/CHOICE-LOG.md` entries** for every decision listed in this plan's rulings and forks.
+- [x] **Step 5: Write `docs/CHOICE-LOG.md` entries** for every decision listed in this plan's rulings and forks.
 - [ ] **Step 6: Open the PR** using `.github/PULL_REQUEST_TEMPLATE/issue-close.md`: `Closes #305`; `## Choices made` (option taken + rejected alternative + reason, one per CHOICE-LOG entry); `## Validation evidence` (exact command + one-line result per gate — never "everything passed"), **including the two new sim cells' MEASURED win rate and median rounds and the shipped `riverfarm_thicket_patch_t3_solo` rate beside them — that table, not the gate width, is this lane's region-band ordering proof (ruling A)**, and **this lane's absolute projected `_comment` character total (2,647 chars, measured) so the controller can sum the four lanes before the merge train (ruling B)**; `## Player-visible proof` (which windowed script/seed, what was checked by eye); `## New agent context` (the `on_skill_use` single-counter contract at `wi_game.gd:480`; the headman/hunter first-visible-option dependency in the three riverfarm canonicals); `## Deferred / follow-ups` (the leads rows below). **Head commit message contains `[ci-full]`.**
+
+  > **NOT DONE BY THE IMPLEMENTER LANE.** Opening the PR requires `gh` and a push, both outside this worker's permissions. Every input the body needs is recorded: measured band table + census total in `.lane-progress.md` and CHOICE-LOG entry 1, the eleven lane decisions in `docs/CHOICE-LOG.md`, the windowed findings in `docs/VISUAL-LOG.md`. Controller opens it.
 
 ---
 
@@ -1203,25 +1205,25 @@ Every risk below has its mitigation baked into a step above; the step is named.
 
 Nothing in this lane may be called done until every line here is a recorded command with a recorded one-line result.
 
-- [ ] `python3 wandering_inn_game/scripts/data_lint.py` → clean
-- [ ] `python3 scripts/comment_census.py --check` → `rc=0`, DATA ratio ≤ 15.0%; **record this lane's absolute new `_comment` char total and compare it against the 2,647-char projection**
-- [ ] `python3 scripts/sync_agent_guidance.py` → no diff
-- [ ] `python3 scripts/render_qa_notes.py --write` → file rewritten, then bare `python3 scripts/render_qa_notes.py` → `rc=0` + `PASS: QA notes match manifest`, then `python3 scripts/check_doc_drift.py` → clean
-- [ ] `python3 wandering_inn_game/scripts/derive_qa_surfaces.py --check` → `rc=0`
-- [ ] `qa/run_qa.sh load_gate headless` → PASS
-- [ ] Every `tests/test_*.gd`, individually: `rc=0` **AND** a `^PASS` line **AND** zero `SCRIPT ERROR|Parse Error|WARNING` — reported per script, never as "everything passed"
-- [ ] `tests/sim_combat_batch.gd` full run → both new cells inside **0.55–0.95** with median rounds 3–12, **their measured rates and medians written down for the PR body**, **and every pre-existing gated cell still in band**
-- [ ] `tests/sim_class_paths.gd` → PASS
-- [ ] All six new canonicals green at seed 9, each with a real `result.json`
-- [ ] `qa/ci_sweep.sh --touching` union re-gate green (riverfarm maps + quests.json monolith set + combatants.json)
-- [ ] Full `qa/ci_sweep.sh` green (log-and-poll)
-- [ ] Windowed machine-playtest pass complete, findings drained to `docs/VISUAL-LOG.md`
+- [x] `python3 wandering_inn_game/scripts/data_lint.py` → clean
+- [x] `python3 scripts/comment_census.py --check` → `rc=0`, DATA ratio ≤ 15.0%; **record this lane's absolute new `_comment` char total and compare it against the 2,647-char projection**
+- [x] `python3 scripts/sync_agent_guidance.py` → no diff
+- [x] `python3 scripts/render_qa_notes.py --write` → file rewritten, then bare `python3 scripts/render_qa_notes.py` → `rc=0` + `PASS: QA notes match manifest`, then `python3 scripts/check_doc_drift.py` → clean
+- [x] `python3 wandering_inn_game/scripts/derive_qa_surfaces.py --check` → `rc=0`
+- [x] `qa/run_qa.sh load_gate headless` → PASS
+- [x] Every `tests/test_*.gd`, individually: `rc=0` **AND** a `^PASS` line **AND** zero `SCRIPT ERROR|Parse Error|WARNING` — reported per script, never as "everything passed"
+- [x] `tests/sim_combat_batch.gd` full run → both new cells inside **0.55–0.95**, **their measured rates and medians written down for the PR body**, **and every pre-existing gated cell still in band**. **AMENDED in-lane (CHOICE-LOG entry 1):** neither new cell carries `check_rounds`, so the "median rounds 3–12" clause does not apply to them — the authoritative precedent `riverfarm_thicket_patch_t3_solo` clones the same roster at the same build, carries no `check_rounds` either, and measures median 2 itself. MEASURED: `granary_scavengers_t3_warrior10_solo` **0.81 / median 2**, `thicket_line_den_t3_warrior10_solo` **0.81 / median 2**, beside the shipped stop cell's **0.74 / median 2**; all 136 cells green.
+- [x] `tests/sim_class_paths.gd` → PASS
+- [x] All six new canonicals green at seed 9, each with a real `result.json`
+- [x] `qa/ci_sweep.sh --touching` union re-gate green (riverfarm maps + quests.json monolith set + combatants.json)
+- [x] Full `qa/ci_sweep.sh` green (log-and-poll)
+- [x] Windowed machine-playtest pass complete, findings drained to `docs/VISUAL-LOG.md`
 
 ## Exit criteria
 
 1. `flood_ledger` and `what_the_thicket_keeps` are both completable end-to-end on **all three routes each**, each route banking a distinct counter and each producing a distinct journal resolution line, proven by six green canonicals.
 2. `riverfarm_mill` and `witch_hut` are walk-in only (no portal rows), each hosts at least one quest beat, each carries ≥3 non-quest observables with pinned toast copy, each has a `data/moods.json` row and a `LANDMARK_TOKENS` row, and both arrival directions are asserted in a canonical — **`flood_ledger_talk` owns the mill round trip, `thicket_keeps_talk` owns the hut round trip** (and the `hut_ward_scrap` locked-toast negative). Neither door ships a building sprite: both are `"sprite": "door"`, and neither adds a `decor` row.
-3. Both new fights are gated in `RIVERFARM_CELLS` at the **stop-cell window 0.55–0.95** (`t3_warrior10`, `check_rounds`), their measured win rates and median rounds are recorded in the PR body beside `riverfarm_thicket_patch_t3_solo`'s as the band-ordering evidence, and no other gated cell moved.
+3. Both new fights are gated in `RIVERFARM_CELLS` at the **stop-cell window 0.55–0.95** (`t3_warrior10`; **NO `check_rounds`** — amended in-lane, CHOICE-LOG entry 1, matching the `riverfarm_thicket_patch_t3_solo` precedent they clone, which carries none and measures median 2), their measured win rates and median rounds are recorded in the PR body beside `riverfarm_thicket_patch_t3_solo`'s as the band-ordering evidence, and no other gated cell moved.
 4. The Former Headman, the Hunter and Eloise each gained exactly one reactive `talk_pool_stage`, appended last, keyed to a terminal (or, for Eloise, to the SKILL route counter), with the shadow-out audit written down.
 5. `witch_cottage_prop` and `qa/scripts/witch_cottage_reachability.json` are byte-identical to `main`; `riverfarm_thicket_patch`, `thicket_remnants_culled` and `bounty_standing_thicket_watch` are untouched; `detected_wardwork` gained no fifth producer.
 6. `data/arenas.json`, `data/leads.json`, `data/shipped_ids.json`, `data/sprites.json`, `scripts/generate_shipped_ids.py`, `tests/test_shipped_ids.gd` and everything under `src/` are untouched by this lane.

@@ -16,6 +16,75 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### v0.16 #305 Riverfarm depth — windowed pass (2026-07-28)
+
+Shots: `qa_output/_vlog_{day,dusk,night,post}/` (temporary capture scripts,
+deleted after reading) and the six new canonicals' own windowed runs
+(`flood_ledger_{talk,help,fight}`, `thicket_keeps_{talk,skill,fight}`).
+
+- [ ] **BLOCKER-CLASS — `witch_hut_door` (witch_hollow 1,7) is INVISIBLE to a
+  player.** `hollow_tree_8` (`hollow_canopy_tree`, cell (0,9)) y-sorts ABOVE
+  the door (9 > 7) and its canopy covers roughly rows 5-9 at x 0-2, so both
+  the door AND the PC standing on the approach cell (1,8) are swallowed by
+  dark canopy (`_vlog_day/17_hut_door_from_approach_day.png`; the PC is a
+  few stray pixels of silhouette at ~(360,300)). The hunter's `thicket_topic`
+  node does say "there's a hut the far side of the hollow", so the route is
+  not undiscoverable — but nothing on screen answers that line.
+  **TINT IS NOT THE LEVER, measured:** re-shot the identical cell and facing
+  with the door's tint pushed to `[2.4, 2.4, 2.4]` and the frame is visually
+  unchanged (`crop_tint_experiment`), because the problem is occlusion, not
+  contrast. The experiment was reverted; the shipped tint `[0.62,0.7,0.6]`
+  stands. Candidate fixes, ranked, all needing a design call:
+  (a) move `hollow_tree_8` (0,9) -> (0,11) — one shipped decorative row, no
+      gate reads it, but `witch_cottage_reachability` must be re-run;
+  (b) a bespoke small-hut sprite instead of `door` at render_scale 0.5 —
+      the honest fix, c-lane art;
+  (c) a `light` block on the door like `witch_cottage_prop` carries — helps
+      at dusk/night ONLY (`moods.json` `light_energy_by_phase.day` is 0.0).
+  **NOT a fix:** moving the door cell. Ruling 3 fixes (1,7) as the only cell
+  with a legal single approach outside the pinned cottage cluster.
+- [ ] `line_stalker_a`/`_b` OVERLAP each other on the `witch_hollow` arena
+  (`thicket_keeps_fight/01_line_stalkers_board.png`): the mothbear rig is
+  taller than one cell, so the north stalker's body covers the south one's
+  head and the pair reads as one two-headed creature until you find the two
+  `44/44` labels. Contrast against the green field is FINE (brown body, grey
+  wings). Same class as the FoTI Grimalkin crowding note — a spawn-cell
+  choice, not a tint one.
+- [ ] `granary_scavenger_a`/`_b` on `inn_cellar` have the same vertical
+  overlap, milder (the `bat` rig is compact)
+  (`flood_ledger_fight/01_granary_scavengers_board.png`). Their warm rust
+  tint separates them from the grey-brown cellar stone cleanly; this pair
+  reads well and only the stacking is worth revisiting.
+- [ ] **NPC `talk_pool` line panel is overdrawn by the expanded field-hotbar
+  readout** (`_vlog_post/32_hunter_post_quest_pool_line.png`): the line panel
+  spans x 40-725 and the readout x 285-1000, and the readout wins, so about
+  three quarters of "The Hunter: Herd's wintering at the north bend..." is
+  covered. PRE-EXISTING and GLOBAL (the readout ships expanded by default and
+  its width grows with the number of known field skills — a mid-game PC hides
+  more of the line than an early one); surfaced here because v0.16 adds three
+  reactive `talk_pool_stages` whose whole point is that line. Layering fix:
+  line panel above the hotbar readout, or shrink/anchor the readout clear of
+  the bottom-left line slot. Same family as the combat-HP-label-through-pause
+  entry below.
+- Confirmed GOOD, no action: both new mood rows LANDED — `riverfarm_mill`
+  and `witch_hut` each render three visibly distinct phase grades and neither
+  is identity white (`sheet_mill_phases`, `sheet_hut_phases`). The village
+  mill door reads clearly as an enterable framed door at the windmill's stone
+  foot from the WEST approach (18,5) (`_vlog_day/11_mill_door_west_day.png`);
+  from the south approach (19,6) the PC's own sprite covers it, which is true
+  of every door directly north of its approach. Ruling 6c holds on both
+  doors: exactly ONE windmill and exactly ONE cottage on screen, no
+  double-rendered building. `hut_ward_scrap`'s five-line [Detect Magic] lore
+  toast renders complete with no fold clipping, and the tallyman's
+  `tally_walk` node wraps to two lines well inside the panel.
+- Watch, not a defect: `witch_hut` carries no light source of any kind, so at
+  night the room is near-black except the ward scrap's own glow
+  (`_vlog_night/15_hut_interior_night.png`). Deliberate for a shuttered
+  abandoned hut, and the four observables are still findable by bumping, but
+  if a later pass wants the room readable at night the fix is one `light`
+  block on `hut_hearth_ash`, not a mood-row lift.
+
+
 ### ⭐ v0.15 Playtest-State bundle — SIX taste asks for the user (2026-07-28)
 
 Every taste/FEEL call v0.15 accumulated, collected once so they can be
