@@ -99,17 +99,23 @@ func save_auto() -> void:
 		_rotate_auto_pending = false
 		_rotate_slot("auto", "auto_prev")
 	_write_slot("auto")
+	# GH#325: `housekeeping` demotes this line in the toast queue. This listener
+	# runs from inside QUEST_BEAT_COMPLETED/CLASS_* -- i.e. BEFORE the sim's own
+	# quest and payoff toasts reach the bus -- so without the flag "Autosaved."
+	# took slot 1 and the authored payoff took slot 3, then flashed past behind
+	# it. Marked toasts sort behind authored ones and are the only ones the
+	# queue's hold cap still clips.
 	if not _autosave_announced:
 		_autosave_announced = true
-		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Autosaved. (%s — save/load anytime)" % WIInputHints.label("cancel")})
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Autosaved. (%s — save/load anytime)" % WIInputHints.label("cancel"), "housekeeping": true})
 
 
 func save_manual(slot: String = "manual") -> bool:
 	if sim.combat != null or sim.dialogue != null or not sim.pending_consolidation.is_empty():
-		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Cannot save right now."})
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Cannot save right now.", "housekeeping": true})
 		return false
 	_write_slot(slot)
-	ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Game saved."})
+	ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Game saved.", "housekeeping": true})
 	return true
 
 
@@ -175,7 +181,7 @@ func reload_data() -> bool:
 	if not world_live:
 		return false  # title-screen boot sim: reloading it would swap_to_world uninvited (export_save_text parity)
 	if sim.combat != null or sim.dialogue != null or not sim.pending_consolidation.is_empty():
-		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Cannot reload data right now."})
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Cannot reload data right now.", "housekeeping": true})
 		return false
 	# String round-trip so applied state has passed the same JSON typing a
 	# disk save would (ints arrive as floats etc.), keeping this path
@@ -185,7 +191,7 @@ func reload_data() -> bool:
 		return false
 	var trial := _make_sim()
 	if not WISave.apply(trial, parsed):
-		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Reload refused: state no longer applies to the edited data."})
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Reload refused: state no longer applies to the edited data.", "housekeeping": true})
 		return false
 	sim = trial
 	ObservableBus.emit_domain_event(WIEvents.GAME_LOADED, {"reason": "reload_data"})

@@ -177,6 +177,16 @@ const FINALE_CURTAIN_CONVERSATIONS: Array[String] = [
 ## makes the beat read as mid-story rather than as an ending.
 const SEAL_TRANSITION_LINE := "[The warren is sealed. The record remains open.]"
 
+## v0.16.1 finding 25. The Watch-runner pointer banks INSIDE WIGame.sleep(), one
+## frame after PHASE_CHANGED -- and that same PHASE_CHANGED starts this veil.
+## The veil draws at layer 30, toasts at layer 12, so the pointer toast was
+## spoken UNDER the black and its hold expired around the time the black lifted;
+## a first step then killed whatever was left. The surface the player is
+## unavoidably watching at that instant is this one, so the beat gets a line
+## here. The toast stays the nudge and quests.json stays the durable copy
+## (GH#167); this is the guaranteed read.
+const WATCH_RUNNER_VEIL_LINE := "[A Watch runner was asking for you by name.]"
+
 const _EVOLUTION_RESULT_FLAVOR := {
 	"swordsman": "Your hands have chosen the sword.",
 	"spearmaster": "Your hands have chosen the spear.",
@@ -298,6 +308,8 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 				_lines.append("[The inn has a Door. The Door has opinions.]")
 			if _running and String(payload.get("id", "")) == "garden_door_unlocked":
 				_lines.append("[A door opens that no one built. The Garden of Sanctuary remembers how to wait.]")
+			if _running and String(payload.get("id", "")) == "watch_runner_pointed":
+				_lines.append(WATCH_RUNNER_VEIL_LINE)
 			if _running and String(payload.get("id", "")) == "resonance_grown":
 				_lines.append("[The anchor stone gives up a sliver of itself. You have room for it now.]")
 		WIEvents.DIALOGUE_STARTED:

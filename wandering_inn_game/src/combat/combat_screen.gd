@@ -184,6 +184,19 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		WIEvents.COMBAT_STARTED:
 			_show_combat()
 			_render_tutor_line(tutor)
+		# v0.16.1 finding 16: the toast strip has no combat position and never
+		# entered the HUD's disjoint-band budget -- at 1280x720 it covers
+		# x[808,1256] y[590,686], which is the board's lower-right rows. Drinking
+		# a draught mid-fight (WIGame.combat_use_item's "Used: X. Healed N HP.")
+		# is exactly the everyday case. Rather than relocate the panel (every
+		# alternative band collides with the order strip, feed, readout or
+		# hotbar), message_layer banks toasts for the fight's duration and the
+		# copy comes through HERE, in the feed, inside a band that IS measured --
+		# the v0.15 COMBAT/FEED-FOLD precedent. feed_push also lands it in Recent
+		# Messages, so the banked toast drains later without recording twice.
+		WIEvents.TOAST:
+			if _mode != Mode.INACTIVE:
+				_hud.feed_push(String(payload.get("text", "")))
 		WIEvents.TURN_STARTED:
 			if _mode != Mode.INACTIVE:
 				_render_tutor_line(tutor)

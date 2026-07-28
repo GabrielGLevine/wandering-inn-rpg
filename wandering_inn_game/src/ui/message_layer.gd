@@ -1,6 +1,5 @@
 extends CanvasLayer
 
-const TOAST_SECONDS := 3.75
 ## GH#170: last-N toast texts for the journal's Recent Messages section --
 ## the durable answer to "it went past before I could read it". Static so
 ## the journal (created on open) reads history it never saw live. Sleep
@@ -42,6 +41,15 @@ const QA_TOAST_HOLD_SECONDS := 0.4
 ## `from_start` on the class-toast render wait makes that script robust to
 ## EITHER emission order regardless.
 const QA_TOAST_HOLD_HEADLESS_SECONDS := 0.05
+## HOUSEKEEPING TOASTS ONLY (v0.16.1 findings 8/16/25 + GH#325). This cap used
+## to apply to EVERY queued toast, and it was the real reason transient toasts
+## "vanish too fast": every beat that matters emits 2-4 toasts at once (autosave
+## + quest updated + payoff; class gained + level + unlocks), so in exactly the
+## moments the player most needs to read, every toast but the last flashed for
+## 1.6s no matter how long its own hold was. AUTHORED toasts are no longer
+## capped -- a queued authored toast keeps at least its full `_toast_seconds`
+## hold. Chores stay capped: a stack of "Autosaved." must never eat reading
+## time ahead of the payoff prose it was queued beside.
 const TOAST_QUEUE_HOLD_CAP_SECONDS := 1.6
 const DIALOGUE_SECONDS := 3.0
 const DIALOGUE_SECONDS_PER_EXTRA_LINE := 1.2
@@ -90,7 +98,12 @@ var _hint_label: Label
 ## one mid-display. `_toast_queue` holds pending toast text in emission
 ## order; `_toast_draining` gates a single in-flight drain coroutine so
 ## concurrent _queue_toast calls never start a second drain loop.
-var _toast_queue: Array[String] = []
+## Entries are `{text, record, housekeeping}`, not bare strings: both flags have
+## to survive the bank/restore round trip, and `record` used to ride a parallel
+## `_transient_counts` tally keyed by TEXT (which could mis-credit an identical
+## real toast queued concurrently). One dictionary per queued toast makes both
+## exact.
+var _toast_queue: Array[Dictionary] = []
 ## v0.15 A3 (GH#304): THE QUEUE IS LOSSLESS. Only `_drain_toasts` may remove a
 ## queued toast. Map change and dialogue used to wipe it (`_clear_toast`),
 ## which is what ate the arc's Watch-runner pointer (VISUAL-LOG UI/QUEST-START,
@@ -111,13 +124,21 @@ var _toast_queue: Array[String] = []
 ## needs a specific toast ON SCREEN across a map change must wait on that
 ## toast's OWN `ui_toast_rendered` after the transition (it re-renders on the
 ## far side); a bare wait plus a screenshot can catch the panel already hidden.
-## Texts queued with record=false (GH#202 transient noise class) -- counted
-## so an identical REAL toast queued concurrently still records.
-var _transient_counts: Dictionary = {}
-## Toasts parked for the duration of a fight. Bank/restore move whole texts
-## between here and `_toast_queue`; nothing is ever dropped in either
-## direction, so `_transient_counts` needs no reconciliation.
-var _banked_toasts: Array[String] = []
+## Toasts parked for the duration of a fight. Bank/restore move whole entries
+## between here and `_toast_queue`; nothing is ever dropped in either direction.
+var _banked_toasts: Array[Dictionary] = []
+## True from COMBAT_STARTED to UI_COMBAT_HIDDEN. While set, EVERY toast banks
+## instead of queuing -- see `_queue_toast`. The toast strip's band
+## (x[808,1256] y[590,686] at 1280x720) is bare arena, absent from the combat
+## HUD's disjoint-band map, so a mid-fight toast (drinking a draught is the
+## everyday case) sat on the board's lower-right rows. Closing the acknowledged
+## exemption follows the v0.15 COMBAT/FEED-FOLD precedent: combat message copy
+## belongs in the FEED, measured inside its own band. Relocation was rejected --
+## every alternative band collides with the order strip, feed, readout or hotbar.
+var _combat_active := false
+## Whether the toast currently on screen is housekeeping -- read by `_show` to
+## decide whether TOAST_QUEUE_HOLD_CAP_SECONDS applies.
+var _showing_housekeeping := false
 var _toast_draining := false
 ## Open full-screen modals, keyed by their own SHOWN event id. A SET rather than
 ## a counter so a doubled show/hide pair cannot strand the drain paused forever
@@ -285,7 +306,9 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			if not _first_pickup_hint_shown:
 				_first_pickup_hint_pending = true
 		WIEvents.TOAST:
-			_queue_toast(String(payload["text"]))
+			# `housekeeping` is the emitter's own claim: save/settings chrome
+			# marks itself, everything else is authored copy by default.
+			_queue_toast(String(payload["text"]), true, bool(payload.get("housekeeping", false)))
 			if _first_pickup_hint_pending:
 				_first_pickup_hint_pending = false
 				_first_pickup_hint_shown = true
@@ -294,7 +317,9 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			# GH#202: empty-interact flavor is TRANSIENT -- render the toast
 			# but keep it out of Recent Messages, or idle wall-poking pushes
 			# real history past the cap.
-			_queue_toast(_interact_nothing_text(), false)
+			# ...and housekeeping: idle wall-poking must never queue ahead of an
+			# authored beat, nor spend the queue's reading time.
+			_queue_toast(_interact_nothing_text(), false, true)
 		WIEvents.DIALOGUE_LINE:
 			# An empty speaker (ambient/narration lines, e.g. the Invrisil
 			# crowd extras) must not render a bare leading ": " -- prefix
@@ -307,11 +332,13 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_show_dialogue_line(text, fitted)
 		WIEvents.COMBAT_STARTED:
 			_hint_panel.hide()
+			_combat_active = true
 			_clear_dialogue_line()
 			_defer_toast_display()
 			_bank_toasts()
 		WIEvents.UI_COMBAT_HIDDEN:
 			_hint_panel.show()
+			_combat_active = false
 			_restore_banked_toasts()
 		WIEvents.UI_SLEEP_VEIL_FINISHED:
 			# GH#171: one pointer at the full key reference, on the genuine
@@ -372,18 +399,21 @@ func _defer_toast_display() -> void:
 
 ## Combat's own feed replaces the toast strip for the fight's duration, so the
 ## pending queue waits it out rather than rendering over the board. Toasts
-## emitted DURING the fight are unaffected -- they queue and render as before.
+## emitted DURING the fight now wait it out too (`_combat_active` in
+## `_queue_toast`) -- the exemption that let them render over the arena is
+## closed; combat_screen mirrors their text into the feed so nothing is lost
+## in the moment either.
 func _bank_toasts() -> void:
-	for text: String in _toast_queue:
-		_banked_toasts.append(text)
+	for entry: Dictionary in _toast_queue:
+		_banked_toasts.append(entry)
 	_toast_queue.clear()
 
 
 func _restore_banked_toasts() -> void:
 	if _banked_toasts.is_empty():
 		return
-	for text: String in _banked_toasts:
-		_toast_queue.append(text)
+	for entry: Dictionary in _banked_toasts:
+		_toast_queue.append(entry)
 	_banked_toasts.clear()
 	# Unlike `_queue_toast`, this can run with no drain in flight (the drain
 	# loop exited while the queue sat banked), so it must kick one itself.
@@ -443,14 +473,44 @@ func _resize_dialogue_panel() -> void:
 	UIChrome.set_offsets(_dialogue_panel, 36.0, DIALOGUE_BOTTOM - panel_height, 736.0, DIALOGUE_BOTTOM)
 
 
-func _queue_toast(text: String, record := true) -> void:
-	# Transient marking MUST precede the drain kick: _drain_toasts() runs
-	# synchronously up to its first await, popping this very toast.
-	if not record:
-		_transient_counts[text] = int(_transient_counts.get(text, 0)) + 1
-	_toast_queue.append(text)
+## `housekeeping` = save/settings chrome and idle-poke flavor: real, worth
+## seeing, but never the thing the player was waiting for. Two rules follow.
+## (1) ORDER: an authored toast INSERTS ahead of any trailing housekeeping
+## entries instead of appending. That is GH#325's whole fix -- game.gd autosaves
+## from inside its own QUEST_BEAT_COMPLETED/CLASS_* listener, which runs BEFORE
+## the sim's own quest/payoff toasts reach the bus, so "Autosaved." took slot 1
+## and the authored payoff took slot 3. It fixes the order without introducing a
+## toast-ORDER pin (banned since the v0.15 fold): the queue is still strictly
+## FIFO within each class.
+## (2) HOLD: only housekeeping entries are clipped by
+## TOAST_QUEUE_HOLD_CAP_SECONDS while others wait.
+func _queue_toast(text: String, record := true, housekeeping := false) -> void:
+	var entry := {"text": text, "record": record, "housekeeping": housekeeping}
+	if _combat_active:
+		# The board is up: the feed speaks for the fight (combat_screen mirrors
+		# this text into it, which is also what puts it in Recent Messages), so
+		# the strip stays silent and the toast waits in the bank. `record` is
+		# dropped precisely because the feed already recorded it -- otherwise the
+		# post-fight drain would double-enter it in Recent Messages.
+		entry["record"] = false
+		_banked_toasts.append(entry)
+		return
+	if housekeeping:
+		_toast_queue.append(entry)
+	else:
+		_toast_queue.insert(_authored_insert_index(), entry)
 	if not _toast_draining:
 		_drain_toasts()
+
+
+## Index of the first entry in the trailing run of housekeeping toasts (== the
+## queue size when the tail is authored). Authored toasts land there, so chores
+## already waiting are pushed behind them without disturbing anything earlier.
+func _authored_insert_index() -> int:
+	var at := _toast_queue.size()
+	while at > 0 and bool(_toast_queue[at - 1].get("housekeeping", false)):
+		at -= 1
+	return at
 
 
 func dismiss_current_toast_early() -> void:
@@ -477,21 +537,25 @@ func _drain_toasts() -> void:
 		# the toast the moment the panel closes.
 		if not _open_modals.is_empty():
 			break
-		var text: String = _toast_queue.pop_front()
-		if int(_transient_counts.get(text, 0)) > 0:
-			_transient_counts[text] -= 1
-		else:
+		var entry: Dictionary = _toast_queue.pop_front()
+		var text := String(entry["text"])
+		_showing_housekeeping = bool(entry.get("housekeeping", false))
+		if bool(entry.get("record", true)):
 			record_message(text)
 		await _show(_toast_panel, _toast_label, text, _toast_seconds(text), WIEvents.UI_TOAST_RENDERED, "", true, true)
 	_toast_draining = false
 
 
 ## GH#170 (friend playtest x3 + #167): reading time scales with text.
-## ~median 30-char toast keeps today's 3.75s feel; long lore toasts hold
-## up to 7s. QA/headless holds are untouched (_hold_seconds still floors
-## them), so canonical timing is byte-identical.
+## v0.16.1 finding 8, per user directive: the whole curve is the old one x1.5 --
+## `clampf(2.8 + 0.035*len, 3.4, 7.0)` became `clampf(4.2 + 0.05*len, 5.1,
+## 10.5)`, so a transient toast hangs about half again as long as it used to.
+## The base duration was never the worst of it (the queue cap was), but at 3.4s
+## a short toast really did outrun a reader who had just looked at the board.
+## QA/headless holds are untouched (`_hold_seconds` still floors them to
+## 0.05s/0.4s), so canonical timing is byte-identical.
 func _toast_seconds(text: String) -> float:
-	return clampf(2.8 + 0.035 * float(text.length()), 3.4, 7.0)
+	return clampf(4.2 + 0.05 * float(text.length()), 5.1, 10.5)
 
 
 func _is_gold_toast(text: String) -> bool:
@@ -500,8 +564,8 @@ func _is_gold_toast(text: String) -> bool:
 
 func _fold_gold_toast(text: String) -> String:
 	var merged := text
-	while not _toast_queue.is_empty() and _is_gold_toast(_toast_queue[0]):
-		merged += " " + _toast_queue.pop_front()
+	while not _toast_queue.is_empty() and _is_gold_toast(String(_toast_queue[0]["text"])):
+		merged += " " + String((_toast_queue.pop_front() as Dictionary)["text"])
 	return merged
 
 
@@ -532,7 +596,8 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 			_resize_toast_panel(text)
 	ObservableBus.emit_domain_event(rendered_event, {"text": text})
 	var hold := _hold_seconds(seconds) if collapse_under_qa else seconds
-	if panel == _toast_panel and not _toast_queue.is_empty():
+	# Only CHORES yield their reading time to the queue -- see the constant.
+	if panel == _toast_panel and _showing_housekeeping and not _toast_queue.is_empty():
 		hold = minf(hold, TOAST_QUEUE_HOLD_CAP_SECONDS)
 	if hold > 0.0:
 		if interruptible:

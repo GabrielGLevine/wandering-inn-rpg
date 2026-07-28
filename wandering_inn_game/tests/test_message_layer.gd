@@ -15,6 +15,8 @@ func _init() -> void:
 	var raw := FileAccess.get_file_as_string(MESSAGE_LAYER_PATH)
 	_check_no_drop_paths(raw)
 	_check_combat_bank(raw)
+	_check_housekeeping_class(raw)
+	_check_hold_curve(raw)
 	print("PASS: toast queue survives transitions (defer + combat bank)")
 	quit(0)
 
@@ -42,23 +44,40 @@ func _check_no_drop_paths(raw: String) -> void:
 func _check_combat_bank(raw: String) -> void:
 	var layer := _stubbed_instance(raw)
 	var queue: Array = layer.get("_toast_queue")
-	queue.assign(["first", "second", "third"])
+	queue.assign([_entry("first"), _entry("second"), _entry("third")])
 	layer.call("_bank_toasts")
 	assert((layer.get("_toast_queue") as Array).is_empty(),
 		"combat banks the pending queue so nothing renders over the board")
-	assert((layer.get("_banked_toasts") as Array) == ["first", "second", "third"],
+	assert(_texts(layer.get("_banked_toasts")) == ["first", "second", "third"],
 		"banked toasts keep emission order")
 	# _toast_draining gates the restore's own drain kick -- pinned true here so
 	# the restore stays node-free (a real drain would touch the toast panel).
 	layer.set("_toast_draining", true)
 	layer.call("_restore_banked_toasts")
-	assert((layer.get("_toast_queue") as Array) == ["first", "second", "third"],
+	assert(_texts(layer.get("_toast_queue")) == ["first", "second", "third"],
 		"combat end re-queues every banked toast, in order")
 	assert((layer.get("_banked_toasts") as Array).is_empty(),
 		"the bank empties on restore -- a second combat must not replay it")
 	layer.call("_restore_banked_toasts")
-	assert((layer.get("_toast_queue") as Array) == ["first", "second", "third"],
+	assert(_texts(layer.get("_toast_queue")) == ["first", "second", "third"],
 		"restoring an empty bank is a no-op")
+
+	# v0.16.1 finding 16: a toast emitted DURING the fight banks too. The strip's
+	# band is bare arena in the combat HUD's map, so the exemption that let it
+	# render over the board is closed; combat_screen mirrors the text into the
+	# feed, which is also what records it, so the banked copy carries record=false.
+	(layer.get("_toast_queue") as Array).clear()
+	(layer.get("_banked_toasts") as Array).clear()
+	layer.set("_combat_active", true)
+	layer.call("_queue_toast", "Used: Mending Draught. Healed 8 HP.")
+	assert((layer.get("_toast_queue") as Array).is_empty(),
+		"a mid-fight toast must not reach the queue -- the strip stays off the board")
+	var banked: Array = layer.get("_banked_toasts")
+	assert(_texts(banked) == ["Used: Mending Draught. Healed 8 HP."],
+		"a mid-fight toast banks instead, so nothing is lost")
+	assert(bool((banked[0] as Dictionary)["record"]) == false,
+		"the banked mid-fight toast must not record -- combat's feed_push already did")
+	layer.set("_combat_active", false)
 	layer.free()
 	# The OTHER branch -- _toast_draining false, so the restore must kick a
 	# drain itself -- cannot run here: _drain_toasts() reaches _show(), which
@@ -71,6 +90,47 @@ func _check_combat_bank(raw: String) -> void:
 	var restore := raw.get_slice("func _restore_banked_toasts", 1).get_slice("\nfunc ", 0)
 	assert(restore.find("if not _toast_draining:") != -1 and restore.find("_drain_toasts()") != -1,
 		"_restore_banked_toasts must kick a drain when none is in flight -- the queue can otherwise sit full and idle after a fight")
+
+
+## v0.16.1 finding 8 + GH#325: authored toasts outrank housekeeping chores in the
+## queue, and only chores are clipped by the hold cap.
+func _check_housekeeping_class(raw: String) -> void:
+	var layer := _stubbed_instance(raw)
+	layer.set("_toast_draining", true)  # keep the drain (which needs a real panel) out of it
+	layer.call("_queue_toast", "Autosaved. (Esc — save/load anytime)", true, true)
+	layer.call("_queue_toast", "Quest updated: Something Beneath")
+	layer.call("_queue_toast", "A Watch runner is looking for you.")
+	layer.call("_queue_toast", "Game saved.", true, true)
+	assert(_texts(layer.get("_toast_queue")) == [
+			"Quest updated: Something Beneath",
+			"A Watch runner is looking for you.",
+			"Autosaved. (Esc — save/load anytime)",
+			"Game saved.",
+		],
+		"authored toasts insert ahead of trailing housekeeping, and each class stays FIFO within itself -- got %s" % [_texts(layer.get("_toast_queue"))])
+	layer.free()
+
+	var show := raw.get_slice("func _show(", 1).get_slice("\nfunc ", 0)
+	assert(show.find("_showing_housekeeping and not _toast_queue.is_empty()") != -1,
+		"the queue hold cap must be gated on _showing_housekeeping -- capping authored toasts at 1.6s is the defect finding 8 named")
+
+
+## The user directive for finding 8: the whole hold curve is the old one x1.5.
+func _check_hold_curve(raw: String) -> void:
+	var body := raw.get_slice("func _toast_seconds", 1).get_slice("\nfunc ", 0)
+	assert(body.find("clampf(4.2 + 0.05 * float(text.length()), 5.1, 10.5)") != -1,
+		"_toast_seconds must be the 1.5x curve (was clampf(2.8 + 0.035*len, 3.4, 7.0))")
+
+
+func _entry(text: String) -> Dictionary:
+	return {"text": text, "record": true, "housekeeping": false}
+
+
+func _texts(entries: Variant) -> Array:
+	var out: Array = []
+	for e: Dictionary in (entries as Array):
+		out.append(String(e["text"]))
+	return out
 
 
 func _stubbed_instance(raw: String) -> Object:
