@@ -275,6 +275,21 @@ func _init() -> void:
 	var blank := WIGame.new(scene_config, skill_config, _sink, 1, {}, {}, {"pc_name": "   "})
 	assert(blank.pc_name == "Traveler", "blank name falls back to Traveler")
 
+	# {addr} resolves at the SINK, so one authored line addresses both PCs.
+	assert(WIAddress.resolve("{Addr}. Evening, {addr}.", "m") == "Sir. Evening, sir.", "male terms, both cases")
+	assert(WIAddress.resolve("{Addr}. Evening, {addr}.", "f") == "Miss. Evening, miss.", "female terms, both cases")
+	assert(WIAddress.resolve("no token here", "f") == "no token here", "a token-free line is returned untouched")
+	assert(WIAddress.resolve("{addr}", "x") == "sir", "an unknown gender falls back to the sanitizer's own default")
+	var catalog_row := {"speaker": "Wilovan", "text": "Evening, {addr}."}
+	var resolved_row := WIAddress.resolve_payload(catalog_row, "f")
+	assert(String(resolved_row["text"]) == "Evening, miss.", "payload resolution reaches the text key")
+	assert(String(catalog_row["text"]) == "Evening, {addr}.", "and NEVER writes through to the caller's dict (it is often the shipped catalog's own row)")
+	var opt_payload := {"text": "{Addr}?", "options": [{"text": "Yes, {addr}.", "locked": false}]}
+	var opt_resolved := WIAddress.resolve_payload(opt_payload, "f")
+	assert(String((opt_resolved["options"] as Array)[0]["text"]) == "Yes, miss.", "option rows resolve too")
+	assert(String((opt_payload["options"] as Array)[0]["text"]) == "Yes, {addr}.", "and the caller's option rows stay authored")
+	assert(WIAddress.resolve_payload({"id": "x"}, "f").has("text") == false, "a text-less payload never grows a text key")
+
 	assert(game.move_player(Vector2i.UP), "open-cell move succeeds")
 	assert(game.player_cell == Vector2i(2, 2), "player moved up")
 	for i in 10:

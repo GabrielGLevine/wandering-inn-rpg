@@ -4,7 +4,7 @@
  "nodes": {
   "hub": {
    "speaker": "Wilovan",
-   "text": "Begging your pardon, sir, a moment of your evening. We don't steal, whatever you've heard. We RECOVER. Occasionally we recover things that were never lost. Tonight we'd like to recover a man's good name — his, and by unfortunate arithmetic, ours.",
+   "text": "Begging your pardon, {addr}, a moment of your evening. We don't steal, whatever you've heard. We RECOVER. Occasionally we recover things that were never lost. Tonight we'd like to recover a man's good name — his, and by unfortunate arithmetic, ours.",
    "text_variants": [
     {
      "requires": {
@@ -13,7 +13,7 @@
        "night"
       ]
      },
-     "text": "Evening proper now, sir. The Brothers keep gentler hours after dark, present company excepted."
+     "text": "Evening proper now, {addr}. The Brothers keep gentler hours after dark, present company excepted."
     },
     {
      "requires": {
@@ -21,7 +21,7 @@
        "took_brothers_job": 1
       }
      },
-     "text": "Evening, sir. The city's ears are long and the night is short — how goes our small disagreement?"
+     "text": "Evening, {addr}. The city's ears are long and the night is short — how goes our small disagreement?"
     },
     {
      "requires": {
@@ -29,7 +29,7 @@
        "brothers_job_done": 1
       }
      },
-     "text": "Sir. The parlor door is never shut to you, the alleys are safe as churches. Safer, if anything — we keep better hours. And a man remembers. All of us remember."
+     "text": "{Addr}. The parlor door is never shut to you, the alleys are safe as churches. Safer, if anything — we keep better hours. And a man remembers. All of us remember."
     }
    ],
    "options": [
@@ -143,7 +143,7 @@
   },
   "fence": {
    "speaker": "Wilovan",
-   "text": "For a marker-holder, sir, always. One piece worth mentioning came through recently — sewer work, but HONEST sewer work, if you follow. No questions asked on either side of the counter.",
+   "text": "For a marker-holder, {addr}, always. One piece worth mentioning came through recently — sewer work, but HONEST sewer work, if you follow. No questions asked on either side of the counter.",
    "text_variants": [
     {
      "requires": {
@@ -152,7 +152,7 @@
        "eyed_the_stash": 1
       }
      },
-     "text": "Shelf's thin, sir, and likely stays so. The banded chest by the wall, though — my colleague keeps it interesting for friends of the house.",
+     "text": "Shelf's thin, {addr}, and likely stays so. The banded chest by the wall, though — my colleague keeps it interesting for friends of the house.",
      "_comment": "b2 #218 handoff: gated on job_done AND eyed (he points people who NOTICED the chest); earliest slot so pendant/marker variants outrank when active."
     },
     {
@@ -161,7 +161,7 @@
        "bought_phosphor_pendant": 1
       }
      },
-     "text": "Nothing new on the shelf since your pendant, sir. Good stock finds us slowly, which is rather the point of it. Do check back."
+     "text": "Nothing new on the shelf since your pendant, {addr}. Good stock finds us slowly, which is rather the point of it. Do check back."
     }
    ],
    "options": [
@@ -196,7 +196,7 @@
   },
   "fence_bought": {
    "speaker": "Wilovan",
-   "text": "Sold, sir, and quietly. Wear it in good health, and do let us know if the light draws questions — we can always find you a story to go with it.",
+   "text": "Sold, {addr}, and quietly. Wear it in good health, and do let us know if the light draws questions — we can always find you a story to go with it.",
    "options": [
     {
      "text": "My thanks, Wilovan.",
@@ -206,7 +206,7 @@
   },
   "scout_nudge": {
    "speaker": "Wilovan",
-   "text": "Sir. A gentleman doesn't accuse a man he can't find. Walk the city a while — ask around, look past the front door, and come back once you know where Master Coyle actually keeps his business. Then we'll speak of doors.",
+   "text": "{Addr}. A gentleman doesn't accuse a man he can't find. Walk the city a while — ask around, look past the front door, and come back once you know where Master Coyle actually keeps his business. Then we'll speak of doors.",
    "options": [
     {
      "text": "Fair enough.",
@@ -216,7 +216,7 @@
   },
   "cups_favor_returned": {
    "speaker": "Wilovan",
-   "text": "Ah. That. Settled, then, and Cups need not have worried — we collect debts, sir, we don't chase tea-girls for them. Tell her the account's closed. Tell her we said so kindly, which is rarer than she'll admit.",
+   "text": "Ah. That. Settled, then, and Cups need not have worried — we collect debts, {addr}, we don't chase tea-girls for them. Tell her the account's closed. Tell her we said so kindly, which is rarer than she'll admit.",
    "options": [
     {
      "text": "I'll tell her.",
@@ -226,7 +226,7 @@
   },
   "commission": {
    "speaker": "Wilovan",
-   "text": "A merchant of standing, sir — Master Coyle, of Coyle and Sons, though the sons are decorative. He commissioned a quiet removal of certain goods. The removal went exactly as paid for. The ARREST afterward did not: our Mister Farley sits in a Watch cell for a theft he was hired to perform by the man now weeping loudest about it. We apologize in advance for imposing, sir. The Brothers cannot abide a frame. It's untidy.",
+   "text": "A merchant of standing, {addr} — Master Coyle, of Coyle and Sons, though the sons are decorative. He commissioned a quiet removal of certain goods. The removal went exactly as paid for. The ARREST afterward did not: our Mister Farley sits in a Watch cell for a theft he was hired to perform by the man now weeping loudest about it. We apologize in advance for imposing, {addr}. The Brothers cannot abide a frame. It's untidy.",
    "options": [
     {
      "text": "I'll take it.",
@@ -252,7 +252,7 @@
   },
   "why_you": {
    "speaker": "Wilovan",
-   "text": "Because you're not us, sir — that's the whole of your qualification, and we mean it as flattery. Every hand in this brotherhood is known to the Watch by its glove size. A stranger's word lands where ours bounces. Also, and we say this with affection: you look like a person things HAPPEN to. We'd like to point you at Master Coyle and observe.",
+   "text": "Because you're not us, {addr} — that's the whole of your qualification, and we mean it as flattery. Every hand in this brotherhood is known to the Watch by its glove size. A stranger's word lands where ours bounces. Also, and we say this with affection: you look like a person things HAPPEN to. We'd like to point you at Master Coyle and observe.",
    "options": [
     {
      "text": "Fair. I'll take it.",
@@ -274,7 +274,7 @@
   },
   "ways": {
    "speaker": "Wilovan",
-   "text": "Three doors, sir, as a man might put it. PAPER: Coyle keeps his true ledger at the counting-house off Wister's Alley, and paper doesn't lie. His says he paid for the theft himself. TONGUES: the fixer called Cups pours rumor by the alley gate, and Coyle has soured more partners than tea has leaves; testimony can be arranged. Politely arranged. Or FISTS, his warehouse crew — and we apologize for even setting that on the table, though should you open that particular door, sir, a man would be honored to attend.",
+   "text": "Three doors, {addr}, as a man might put it. PAPER: Coyle keeps his true ledger at the counting-house off Wister's Alley, and paper doesn't lie. His says he paid for the theft himself. TONGUES: the fixer called Cups pours rumor by the alley gate, and Coyle has soured more partners than tea has leaves; testimony can be arranged. Politely arranged. Or FISTS, his warehouse crew — and we apologize for even setting that on the table, though should you open that particular door, {addr}, a man would be honored to attend.",
    "options": [
     {
      "text": "The warehouse, then. Will you come?",
@@ -297,7 +297,7 @@
   },
   "fists_door": {
    "speaker": "Wilovan",
-   "text": "Sir, I'd come gladly — once we know precisely which building we're walking into. A Brother doesn't blunder in blind, whatever the invitation. Find the place first.",
+   "text": "{Addr}, I'd come gladly — once we know precisely which building we're walking into. A Brother doesn't blunder in blind, whatever the invitation. Find the place first.",
    "text_variants": [
     {
      "requires": {
@@ -305,7 +305,7 @@
        "warehouse_located": 1
       }
      },
-     "text": "Sir. Say the word and I'll come along — a Brother doesn't send a friend into a warehouse alone, not over an invitation this personal. I won't dress up what happens once we're through that door: hats off, and I do mean it literally."
+     "text": "{Addr}. Say the word and I'll come along — a Brother doesn't send a friend into a warehouse alone, not over an invitation this personal. I won't dress up what happens once we're through that door: hats off, and I do mean it literally."
     }
    ],
    "options": [
@@ -332,7 +332,7 @@
   },
   "marker": {
    "speaker": "Wilovan",
-   "text": "So we heard, sir. Mister Farley walked out this morning, hat restored to him at the gate — a small ceremony, but ours.",
+   "text": "So we heard, {addr}. Mister Farley walked out this morning, hat restored to him at the gate — a small ceremony, but ours.",
    "text_variants": [
     {
      "requires": {
@@ -340,7 +340,7 @@
        "merchant_exposed": 1
       }
      },
-     "text": "So we heard, sir, the criers had it by breakfast and the Merchant's Guild by lunch. Coyle's name is worth exactly what he paid for ours: nothing. Wilovan takes his hat off, plain and slow, and doesn't set it back on right away. Not the warning kind, sir. The other one. Mister Farley walked at dawn — that's Farley's ceremony. This one's mine, sir, for a man who held a fortune in his hand and burned it for a stranger in a cheap hat. We don't often get to mean it this way."
+     "text": "So we heard, {addr}, the criers had it by breakfast and the Merchant's Guild by lunch. Coyle's name is worth exactly what he paid for ours: nothing. Wilovan takes his hat off, plain and slow, and doesn't set it back on right away. Not the warning kind, {addr}. The other one. Mister Farley walked at dawn — that's Farley's ceremony. This one's mine, {addr}, for a man who held a fortune in his hand and burned it for a stranger in a cheap hat. We don't often get to mean it this way."
     },
     {
      "requires": {
@@ -348,7 +348,7 @@
        "merchant_extorted": 1
       }
      },
-     "text": "Quietly withdrawn, sir, charges and all, and a man notices your purse rides heavier than it did. We don't judge. We admire, on occasion, and this is one of those occasions. Wilovan takes his hat off too, the same unhurried motion, though there's something closer to approval than respect in it this time. Mind he stays bought, sir — gentlemen of Coyle's sort tend to un-buy themselves the moment it's cheap to."
+     "text": "Quietly withdrawn, {addr}, charges and all, and a man notices your purse rides heavier than it did. We don't judge. We admire, on occasion, and this is one of those occasions. Wilovan takes his hat off too, the same unhurried motion, though there's something closer to approval than respect in it this time. Mind he stays bought, {addr} — gentlemen of Coyle's sort tend to un-buy themselves the moment it's cheap to."
     }
    ],
    "options": [
@@ -364,7 +364,7 @@
   },
   "marker_terms": {
    "speaker": "Wilovan",
-   "text": "A Brother's marker, sir. Wood and tin, and worth rather more than its materials. Shown in the alleys, trouble will beg your pardon and step around you. Shown at the parlor, a man can find you things the shops pretend not to stock — recovered things, sir, of impeccable provenance. Which is to say: don't ask, and we shan't tell.",
+   "text": "A Brother's marker, {addr}. Wood and tin, and worth rather more than its materials. Shown in the alleys, trouble will beg your pardon and step around you. Shown at the parlor, a man can find you things the shops pretend not to stock — recovered things, {addr}, of impeccable provenance. Which is to say: don't ask, and we shan't tell.",
    "options": [
     {
      "text": "A pleasure doing business, Wilovan.",

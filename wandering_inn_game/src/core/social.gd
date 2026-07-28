@@ -14,7 +14,10 @@ func _init(event_sink: Callable, accomplishment_count_cb: Callable, record_accom
 	_find_entity = find_entity_cb
 
 
-func talk_pool_line(target: Dictionary, social_talked: Dictionary) -> Dictionary:
+## `repeat` = the pool is already spent this waking and the NPC has no authored
+## `dialogue` fallback: re-serve the SAME current line and bank NOTHING (a
+## second bank would rotate the pool mid-waking and inflate heard_gossip).
+func talk_pool_line(target: Dictionary, social_talked: Dictionary, repeat: bool = false) -> Dictionary:
 	var id := String(target[WIKeys.ID])
 	var pool: Array = target["talk_pool"]
 	for stage: Dictionary in target.get("talk_pool_stages", []):
@@ -22,8 +25,12 @@ func talk_pool_line(target: Dictionary, social_talked: Dictionary) -> Dictionary
 			pool = stage["lines"]
 	var counter_key := "chatted_with_%s" % id
 	var idx := int(_accomplishment_count.call(counter_key)) % pool.size()
+	if repeat:
+		idx = int(max(0, idx - 1)) % pool.size()
 	var speaker := String(target.get(WIKeys.DISPLAY_NAME, id))
 	_emit(WIEvents.DIALOGUE_LINE, {"speaker": speaker, "text": _resolve_pool_line(pool[idx])})
+	if repeat:
+		return {"talked": id, "index": idx, "repeat": true}
 	_record_accomplishment.call(counter_key, 1)
 	_record_accomplishment.call("heard_gossip", 1)
 	social_talked[id] = true

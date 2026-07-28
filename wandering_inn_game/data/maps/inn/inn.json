@@ -1218,7 +1218,7 @@
    "dialogue": [
     {
      "speaker": "Wilovan",
-     "text": "Evening, sir. No business tonight, you'll be glad to hear."
+     "text": "Evening, {addr}. No business tonight, you'll be glad to hear."
     }
    ]
   },
