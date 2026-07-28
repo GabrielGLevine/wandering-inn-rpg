@@ -1014,11 +1014,11 @@ ambience: [{ "preset": "dust_motes", "rect": "all", "phase": ["dusk", "night"] }
 }
 ```
 
-- [ ] **Step 1:** Insert the four entities, matching each file's own indent.
-- [ ] **Step 2:** `POPULATION_FLOORS` for `pallass_market` (24) and `pallass_forge` (15) — all four are UNCONDITIONAL, so counts RISE. No floor edits.
-- [ ] **Step 3: Run** `data_lint.py` + `res://tests/test_content.gd` + `res://tests/test_world_visuals.gd`.
-- [ ] **Step 4: Run** `qa/ci_sweep.sh --touching data/maps/pallass/pallass_market.json,data/maps/pallass/pallass_forge.json` — the crowded-cell proof for both tiers.
-- [ ] **Step 5: Commit** `feat(pallass): the den shop door, the landing manifest, and two carry legs`.
+- [x] **Step 1:** Insert the four entities, matching each file's own indent.
+- [x] **Step 2:** `POPULATION_FLOORS` for `pallass_market` (24) and `pallass_forge` (15) — all four are UNCONDITIONAL, so counts RISE. No floor edits.
+- [x] **Step 3: Run** `data_lint.py` + `res://tests/test_content.gd` + `res://tests/test_world_visuals.gd`.
+- [x] **Step 4: Run** `qa/ci_sweep.sh --touching data/maps/pallass/pallass_market.json,data/maps/pallass/pallass_forge.json` — the crowded-cell proof for both tiers.
+- [x] **Step 5: Commit** `feat(pallass): the den shop door, the landing manifest, and two carry legs`.
 
 ### Task 2.3: The den keeper's conversation — `data/dialogue/pallass_den_keeper.json`
 

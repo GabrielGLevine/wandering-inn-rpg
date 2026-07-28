@@ -718,6 +718,46 @@
    "observe": "A weighing pillar set out where anyone can use it, brass pans hanging true, the city's own test weights chained to the column. Any stallkeeper's measure can be checked here against the city's, in front of everyone.",
    "on_interact_accomplishment": "eyed_the_public_scales",
    "toast": "You set a hand on the pan and it swings back level. The chained weights have inspection dates stamped into them, the last one this month."
+  },
+  {
+   "id": "den_shop_door",
+   "kind": "door",
+   "cell": [
+    12,
+    4
+   ],
+   "display_name": "A Family Den Shop",
+   "sprite": "door",
+   "to_map": "pallass_den_shop",
+   "to_cell": [
+    4,
+    6
+   ],
+   "observe": "A shopfront wedged between two civic frontages, the only door on this row with a hand-painted sign and something cooking behind it."
+  },
+  {
+   "_comment": "P2 HELP leg 2 of 3. variants resolve BEFORE this interact banks, so every carry-leg threshold is (leg index - 1): leg 2 gates on 1.",
+   "id": "market_dray_rank",
+   "kind": "prop",
+   "cell": [
+    16,
+    4
+   ],
+   "display_name": "The Dray Rank",
+   "sprite": "market_stall_wood",
+   "observe": "A rank of low carts for hire, each chalked with a tier number and a rate, and a queue board nobody is standing at.",
+   "on_interact_accomplishment": "shipment_leg_carried",
+   "once_per_waking": true,
+   "once_per_waking_toast": "The rank is empty until the next rotation. Pallass hires carts on a schedule too.",
+   "toast": "You take a cart off the rank, walk the crate off the lift apron and across two blocks of very orderly stone, and nobody stops you once. The paperwork was never about the crate.",
+   "variants": [
+    {
+     "when": {
+      "shipment_leg_carried": 1
+     },
+     "toast": "Second leg, same cart, same two blocks. The rank clerk marks it without looking up, which in Pallass is a commendation."
+    }
+   ]
   }
  ]
 }
