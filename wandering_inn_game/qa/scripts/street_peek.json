@@ -81,6 +81,23 @@
   {
    "action": "screenshot",
    "name": "05_south_square"
+  },
+  {
+   "_comment": "v0.16.1 #7: the bread_stall approach. The stall carried a +20 field_y_sort_bias_px (key 52) against a PC on [11,3] (key 48) and painted over the player; the bias is deleted. This peek is where that read is checked.",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    11,
+    3
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "06_bread_stall_approach"
   }
  ]
 }

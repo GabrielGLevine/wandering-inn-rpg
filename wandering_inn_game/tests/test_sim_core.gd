@@ -251,10 +251,17 @@ func _init() -> void:
 
 	var street_map: Dictionary = scene_config["maps"]["street"]
 	var upstairs_map: Dictionary = scene_config["maps"]["inn_upstairs"]
-	assert(float(_entity_by_id(street_map["entities"], "bread_stall").get("field_y_sort_bias_px", 0.0)) == 20.0,
-		"bread_stall needs its entity-scoped sort override")
-	assert(float(_entity_by_id(upstairs_map["entities"], "lyonette_door").get("field_y_sort_bias_px", 0.0)) == 20.0,
-		"lyonette_door needs its entity-scoped sort override")
+	# v0.16.1 #7: these two used to PIN the defect (== 20.0). field_y_sort_bias_px
+	# is SIGNED and positive pushes the sort key SOUTH, so a +20 on a prop the PC
+	# can stand south of makes the prop paint over the player -- exactly what both
+	# of these did (lyonette_door key 36 vs the PC's 32 on its only approach [7,2];
+	# bread_stall key 52 vs 48 on [11,3]). The gate is now the RULE, not the value:
+	# no prop the player can stand south of may carry a positive bias. Negative is
+	# still legal and still used (witch_hollow's treeline at -80, stairs_up at -32).
+	assert(float(_entity_by_id(street_map["entities"], "bread_stall").get("field_y_sort_bias_px", 0.0)) <= 0.0,
+		"bread_stall must not carry a POSITIVE y-sort bias -- the PC stands south of it on [11,3] and would be painted over")
+	assert(float(_entity_by_id(upstairs_map["entities"], "lyonette_door").get("field_y_sort_bias_px", 0.0)) <= 0.0,
+		"lyonette_door must not carry a POSITIVE y-sort bias -- the PC's only approach [7,2] is south of it")
 	assert((upstairs_map["decor"] as Array).any(func(d: Dictionary) -> bool: return d.get("sprite", "") == "rug_tan" and _int_cell(d.get("cell", [])) == [6, 2]),
 		"Lyonette's threshold needs the bounded rug zoning cue")
 

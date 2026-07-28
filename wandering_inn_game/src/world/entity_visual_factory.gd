@@ -68,6 +68,13 @@ func make(
 		# TILES too, since those default to z_index 0, making it vanish
 		# outright rather than just tuck behind the PC. Bias must stay
 		# WITHIN the y-sort comparison, hence the position trick.)
+		# RULE (v0.16.1 #7, learned the hard way): a POSITIVE bias must never
+		# be set on a prop the PC can stand SOUTH of. The player's own visual
+		# carries no bias, so +N on a north-wall prop simply outsorts the
+		# player standing on its approach and paints over their head. Both
+		# shipped positive entity consumers (lyonette_door [7,1] against its
+		# approach [7,2]; bread_stall [11,2] against [11,3]) did exactly that
+		# and are now 0; test_sim_core gates the rule, not the old value.
 		var y_sort_bias := (
 			float(field_y_sort_bias_override)
 			if field_y_sort_bias_override is float or field_y_sort_bias_override is int
