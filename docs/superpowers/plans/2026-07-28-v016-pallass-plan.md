@@ -1,6 +1,6 @@
 # v0.16 "Region Depth" — Pallass Lane Implementation Plan
 
-> Status: **ACTIVE** (v0.16 wave, dispatched 2026-07-28)
+> Status: **ACTIVE** — issue #307, branch `issue/307-pallass-depth`. Progress ledger at `.lane-progress.md`.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
