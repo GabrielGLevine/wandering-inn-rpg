@@ -223,7 +223,8 @@
     "Fourth generation on this tier. Same permit number, four different clerks who each swore it was wrong.",
     "Everything on that shelf came up the lift. Everything. Including the shelf.",
     "I feed this quarter and I charge this quarter. Nobody has ever found that strange but visitors."
-   ]
+   ],
+   "conversation": "pallass_den_keeper"
   },
   {
    "_comment": "P2 SKILL route. Visible-locked (requires_skill), so a player without the arm still sees the route exists.",

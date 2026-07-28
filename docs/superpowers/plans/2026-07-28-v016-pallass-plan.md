@@ -1130,10 +1130,10 @@ graph. Without it the keeper has only a `talk_pool`, both P2 terminal rungs
 (`loop_walked`, `shipment_carried`) are unreachable, and nothing in the suite
 says so.
 
-- [ ] **Step 0 (stage-1 handoff):** Add `"conversation": "pallass_den_keeper"` to the `den_shop_keeper` entity in `pallass_den_shop.json`.
-- [ ] **Step 1:** Write the graph. Softlock guard: `hub` keeps `"Long month how?"` and `consignee` keeps its plain exit.
-- [ ] **Step 2: Run** `data_lint.py` (start node present, every node has speaker+text, every goto resolves), `res://tests/test_dialogue.gd`, `res://tests/test_content.gd`, `res://tests/test_copy_fit.gd`.
-- [ ] **Step 3: Commit** `feat(dialogue): the den-shop keeper, consignee of one crate of tin`.
+- [x] **Step 0 (stage-1 handoff):** Add `"conversation": "pallass_den_keeper"` to the `den_shop_keeper` entity in `pallass_den_shop.json`.
+- [x] **Step 1:** Write the graph. Softlock guard: `hub` keeps `"Long month how?"` and `consignee` keeps its plain exit.
+- [x] **Step 2: Run** `data_lint.py` (start node present, every node has speaker+text, every goto resolves), `res://tests/test_dialogue.gd`, `res://tests/test_content.gd`, `res://tests/test_copy_fit.gd`.
+- [x] **Step 3: Commit** `feat(dialogue): the den-shop keeper, consignee of one crate of tin`.
 
 ### Task 2.4: The attendant's quest — `pallass_lift_attendant.json`
 
