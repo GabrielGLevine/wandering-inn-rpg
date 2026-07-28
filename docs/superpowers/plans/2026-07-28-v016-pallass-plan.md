@@ -1247,11 +1247,11 @@ says so.
 
 Variant order is deliberate — last-match-wins puts a co-banking player on the SKILL line, matching the P2 ladder in Task 2.6. The HELP line is the spec's "region's warmest line" and is placed first so it survives as the sole match on a pure-HELP run.
 
-- [ ] **Step 1:** Append the two options and the five nodes.
-- [ ] **Step 2: Shadow-out audit.** The shipped `hub` `text_variant` (`seal_resolved`) is untouched; no variant is added to `hub`.
-- [ ] **Step 3: Run** `test_dialogue`, `test_content`, `test_copy_fit`.
-- [ ] **Step 4: Run** `qa/ci_sweep.sh --only pallass_walkthrough` — confirm the 3-row attendant pin holds.
-- [ ] **Step 5: Census check. Commit** `feat(dialogue): the attendant's queue, and three ways out of it`.
+- [x] **Step 1:** Append the two options and the five nodes.
+- [x] **Step 2: Shadow-out audit.** The shipped `hub` `text_variant` (`seal_resolved`) is untouched; no variant is added to `hub`.
+- [x] **Step 3: Run** `test_dialogue`, `test_content`, `test_copy_fit`.
+- [x] **Step 4: Run** `qa/ci_sweep.sh --only pallass_walkthrough` — confirm the 3-row attendant pin holds.
+- [x] **Step 5: Census check. Commit** `feat(dialogue): the attendant's queue, and three ways out of it`.
 
 ### Task 2.5: The office loop — market clerk + forge permit clerk
 
@@ -1429,6 +1429,9 @@ Variant order is deliberate — last-match-wins puts a co-banking player on the 
 	assert(String(WIQuests.resolved_path(p_ledger, {"loop_walked": 1, "exemption_found": 1})["accomplishment"]) == "exemption_found", "walked it THEN found the exemption records the EXEMPTION -- the fix that outlives the crate")
 ```
 
+> **BINDING TASK-2.4 HANDOFF (deferred quest-start effect).** `test_content.gd:1122-1124` reds any dialogue effect starting a quest id absent from `data/quests.json`, and Task 2.4's own gate list includes `test_content`, so Task 2.4 shipped the attendant's `"Somebody should unstick that."` option with only its `ledger_loop_started` effect. **Restore `{ "quest": "ledger_eats_first" }` as the FIRST entry of that option's `effects` array in `data/dialogue/pallass_lift_attendant.json`, in the SAME commit that splices the quest block** (one verb per dict — a second dict, never a second key). Without it P2 never starts, the journal never shows it, and every gate stays green. This is the exact shape of the Task 1.3 → 1.5 handoff.
+
+- [ ] **Step 0 (task-2.4 handoff):** Restore the `{ "quest": "ledger_eats_first" }` effect dict in `pallass_lift_attendant.json` per the block above, in this task's commit.
 - [ ] **Step 1:** Add the two props (if not already in 2.1) and splice the quest block.
 - [ ] **Step 2:** Add the `test_quests.gd` pins.
 - [ ] **Step 3: Verify the landmark arm.** `unstick`'s producers are all on `pallass_den_shop`; the giver map is `pallass_forge`; so the description MUST contain a token from `LANDMARK_TOKENS["pallass_den_shop"]` — it contains "den shop" and "market tier". Confirm `test_content.gd`'s `_validate_travel_beat_place_naming` passes rather than assuming.
