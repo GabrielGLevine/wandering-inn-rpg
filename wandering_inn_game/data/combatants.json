@@ -145,6 +145,7 @@
    "power_level": 1.8,
    "display_name": "Cave Bat",
    "sprite": "bat",
+   "combat_scale": 0.4,
    "side": "enemy",
    "stats": {
     "str": 9,
@@ -256,11 +257,17 @@
    "skills": []
   },
   {
-   "_comment": "Wiki lacks a named sewer-rat monster, so realized SPRITE-HONESTLY as cave bats (`bat` sheet, same as cave_spider's 'Cave Bat') -- canon-plausible tunnel vermin, flagged generic-diegetic per the spec.",
+   "_comment": "Wiki lacks a named sewer-rat monster, so realized SPRITE-HONESTLY as cave bats (`bat` sheet, same as cave_spider's 'Cave Bat') -- canon-plausible tunnel vermin, flagged generic-diegetic per the spec. v0.15 T5.1 COMBAT/DARK-ARENA: measured at 0.55 cells on the board (52 figure rows x render_scale 0.17 / CELL 16) -- a 4x9px smudge no brightening could rescue, since GH#28's boost lifts figure and floor together. combat_scale 0.40 puts it at 1.30 cells, level with a briar collector; combat_tint carries it warm off the blue-grey sewer grade. Board-only: the field bat is untouched, and neither key reaches the sim (bands unmoved).",
    "id": "sewer_vermin",
    "power_level": 3.0,
    "display_name": "Sewer Bat",
    "sprite": "bat",
+   "combat_scale": 0.4,
+   "combat_tint": [
+     1.14,
+     1.02,
+     0.82
+    ],
    "side": "enemy",
    "stats": {
     "str": 5,
@@ -317,11 +324,17 @@
    ]
   },
   {
-   "_comment": "CANON-PLAUSIBLE, wiki.wanderinginn.com/Magical_Rats: 'Magical Rats' are rodents drawn to ambient/leaking magic ('any place with magic'), display diverse powers incl.",
+   "_comment": "CANON-PLAUSIBLE, wiki.wanderinginn.com/Magical_Rats: 'Magical Rats' are rodents drawn to ambient/leaking magic ('any place with magic'), display diverse powers incl. v0.15 T5.1 COMBAT/CELLAR-VERMIN: a/b/c share one `bat` silhouette on the inn_cellar board, whose mood is identity (no arena_moods entry) so the legibility boost is a no-op there -- three tints, cold/violet/ember, are what make the roster countable without reading the turn strip. Ember is c's own flame kit.",
    "id": "rift_vermin_a",
    "power_level": 6.0,
    "display_name": "Rift Vermin",
    "sprite": "bat",
+   "combat_scale": 0.4,
+   "combat_tint": [
+     0.72,
+     0.88,
+     1.16
+    ],
    "side": "enemy",
    "stats": {
     "str": 16,
@@ -340,6 +353,12 @@
    "power_level": 6.0,
    "display_name": "Rift Vermin",
    "sprite": "bat",
+   "combat_scale": 0.4,
+   "combat_tint": [
+     0.88,
+     0.74,
+     1.14
+    ],
    "side": "enemy",
    "stats": {
     "str": 16,
@@ -359,6 +378,12 @@
    "power_level": 6.5,
    "display_name": "Ember-Touched Vermin",
    "sprite": "bat",
+   "combat_scale": 0.4,
+   "combat_tint": [
+     1.18,
+     0.76,
+     0.58
+    ],
    "side": "enemy",
    "stats": {
     "str": 10,
@@ -376,12 +401,12 @@
    ]
   },
   {
-   "_comment": "Ruin_guardian -- the anchor-stone pedestal's warden (beat-3 recovery run; the entity lives in ruin_surface, the pedestal gate is wired separately).",
+   "_comment": "Ruin_guardian -- the anchor-stone pedestal's warden (beat-3 recovery run; the entity lives in ruin_surface, the pedestal gate is wired separately). v0.15 T5.2 RUIN_WARDEN/RIG-SCALE: combat_scale 1.15 put this 216px rig at 7.4 cells tall and 6.0 wide -- 2.5x the next-largest boss and over half the board's width, which is why the crown kept clipping the turn banner. 0.54 lands it at 3.48 cells, still the biggest figure in the game (hired_blade_leader is 2.97); the Lesser Wards keep their proportion at 0.42 (2.70). Visual only.",
    "id": "ruin_guardian",
    "power_level": 8.0,
    "display_name": "Ruin Warden",
    "sprite": "ruin_warden",
-   "combat_scale": 1.15,
+   "combat_scale": 0.54,
    "side": "enemy",
    "stats": {
     "str": 18,
@@ -403,7 +428,7 @@
    "power_level": 5.0,
    "display_name": "Lesser Ward",
    "sprite": "ruin_warden",
-   "combat_scale": 0.85,
+   "combat_scale": 0.42,
    "side": "enemy",
    "stats": {
     "str": 11,
@@ -423,7 +448,7 @@
    "power_level": 5.5,
    "display_name": "Lesser Ward",
    "sprite": "ruin_warden",
-   "combat_scale": 0.85,
+   "combat_scale": 0.42,
    "side": "enemy",
    "stats": {
     "str": 11,
@@ -445,7 +470,7 @@
    "power_level": 11.0,
    "display_name": "Lesser Ward",
    "sprite": "ruin_warden",
-   "combat_scale": 0.85,
+   "combat_scale": 0.42,
    "side": "enemy",
    "stats": {
     "str": 11,
@@ -479,11 +504,16 @@
    "skills": []
   },
   {
-   "_comment": "Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); this roster is the witch's craft animating that plant into a debt-collecting construct, not an invented species.",
+   "_comment": "Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); this roster is the witch's craft animating that plant into a debt-collecting construct, not an invented species. v0.15 T5.1 COMBAT/BRIAR-CAMOUFLAGE: green foliage on a green floor under a green canopy -- combat_tint pulls the collectors thorn-warm so figure and ground separate. The DEEP pair keeps its own pair of tints; render_scale already separates the two tiers by 0.16 cells, which the windowed read found insufficient alone.",
    "id": "briar_collector_a",
    "power_level": 8.0,
    "display_name": "Briar Collector",
    "sprite": "briar_collector",
+   "combat_tint": [
+     1.16,
+     0.88,
+     0.8
+    ],
    "side": "enemy",
    "stats": {
     "str": 19,
@@ -503,6 +533,11 @@
    "power_level": 8.0,
    "display_name": "Briar Collector",
    "sprite": "briar_collector",
+   "combat_tint": [
+     1.1,
+     0.82,
+     0.94
+    ],
    "side": "enemy",
    "stats": {
     "str": 19,
@@ -522,6 +557,11 @@
    "power_level": 9.5,
    "display_name": "Deep Briar Collector",
    "sprite": "briar_collector_deep",
+   "combat_tint": [
+     1.22,
+     0.84,
+     0.66
+    ],
    "side": "enemy",
    "stats": {
     "str": 17,
@@ -543,6 +583,11 @@
    "power_level": 9.5,
    "display_name": "Deep Briar Collector",
    "sprite": "briar_collector_deep",
+   "combat_tint": [
+     1.06,
+     0.76,
+     0.86
+    ],
    "side": "enemy",
    "stats": {
     "str": 16,
@@ -1085,7 +1130,7 @@
    "power_level": 18.0,
    "display_name": "The Seal's Warden",
    "sprite": "ruin_warden",
-   "combat_scale": 1.15,
+   "combat_scale": 0.54,
    "side": "enemy",
    "stats": {
     "str": 17,

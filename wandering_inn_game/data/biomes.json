@@ -162,6 +162,10 @@
    9,
    9
   ],
+  "blocked_props": [
+   "hollow_bent_tree",
+   "bush_green"
+  ],
   "skirt_sheet": "res://assets/tiles/fairy_forest/Tiles.png",
   "skirt_tile_px": 16,
   "skirt": [
@@ -294,6 +298,10 @@
   "blocked": [
    0,
    0
+  ],
+  "blocked_props": [
+   "forge_station",
+   "crate"
   ],
   "skirt_sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
   "skirt_tile_px": 16,

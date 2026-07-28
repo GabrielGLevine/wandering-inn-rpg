@@ -184,6 +184,23 @@
  },
  "floor_layers": [
   {
+   "_comment": "MAP/PALLASS-FORGE-FLOOR (VISUAL-LOG P3): the tier wall (rows 0-1) and the walkable brick floor were the same purple-grey brick, so row 2 read as walkable-or-wall by guess. This paints row 2 with the slate band the BOTTOM edge (row 9) already uses -- the floor is now framed dark top and bottom with brick between it, an in-family cue that costs no new art and moves no blocking.",
+   "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
+   "tile_px": 16,
+   "coords": [
+    0,
+    3
+   ],
+   "cells": {
+    "rect": [
+     0,
+     2,
+     26,
+     1
+    ]
+   }
+  },
+  {
    "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
    "tile_px": 16,
    "coords": [
@@ -476,6 +493,12 @@
    ],
    "display_name": "Miscalibrated Golem",
    "sprite": "forge_golem",
+   "tint": [
+    1.18,
+    0.88,
+    0.74
+   ],
+   "_comment_tint": "MAP/PALLASS-FORGE-FLOOR (VISUAL-LOG P3): the golem read as machinery parked beside the lift, not a combatant, because it sat the same purple-grey as the tier it stands on. An ember-warm cast (the forge is what miscalibrated it) separates the figure from the brick without touching the rig or any stat.",
    "arena": "forge_hall",
    "conversation": "forge_calibration_golem",
    "enemies": [

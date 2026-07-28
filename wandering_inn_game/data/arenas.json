@@ -929,17 +929,18 @@
     ],
     [
      10,
+     6
+    ],
+    [
+     8,
      4
     ],
     [
      9,
-     3
-    ],
-    [
-     9,
-     4
+     6
     ]
    ],
+   "_comment_spawns": "SPRITE/ARC-CLIMAX (VISUAL-LOG P2): the awakened boss and its two scouts used to take (10,3)/(10,4)/(9,3) -- three figures 2.2-2.6 CELLS wide on adjacent cells, so count, identity and threat hierarchy collapsed into one stack (arc_flow dd_06_boss_fight). The boss KEEPS (10,3) so its engagement distance from the player half is untouched; only the scouts move, to a column below it and a diagonal step in. Enemies consume this list in roster order (wi_combat.gd), so the order is the staging.",
    "_comment_dressing": "Decor sits just outside the 12x8 grid, same standing rule as goblin_ambush/cave_mouth/sewers_nest.",
    "floor_layers": [
     {

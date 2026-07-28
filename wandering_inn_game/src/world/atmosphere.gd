@@ -23,6 +23,10 @@ static func reset() -> void:
 
 var _lights: Array[Dictionary] = []
 var _flicker_lights: Array[Dictionary] = []
+## Latched by `apply()` off the MAP grade only. `apply_arena()` deliberately
+## leaves it alone: the lights on screen still belong to the map underneath the
+## arena override, and an arena id is not a map id (it would always read false).
+var _map_lights_by_day := false
 var _flicker_time := 0.0
 
 var _emitters: Array[Dictionary] = []
@@ -88,6 +92,7 @@ func apply(map_id: String, phase: String) -> void:
 	assert(rgb is Array and rgb.size() == 3,
 		"moods.json malformed rgb for %s/%s: %s" % [map_id, phase, str(rgb)])
 	color = Color(float(rgb[0]), float(rgb[1]), float(rgb[2]))
+	_map_lights_by_day = map_lights_by_day(map_id)
 	_refresh_lights()
 	_refresh_emitters()
 	_apply_vignette(mood)
@@ -119,9 +124,27 @@ static func _arena_moods() -> Dictionary:
 	return _moods_data().get("arena_moods", {}) as Dictionary
 
 
-func light_multiplier(phase: String) -> float:
+## MAP-LIGHTS/DAY (VISUAL-LOG, P3 systemic). `meta.light_energy_by_phase.day`
+## is 0.0, which is RIGHT for a map with a sky: a lantern adds nothing at noon.
+## A sealed interior has no sky, so the same default deletes the only light the
+## room has and leaves its whole daytime read to the mood grade. The opt-out is
+## per-map (`moods.moods.<map>.lights_by_day: true`) rather than a brighter
+## default, so nothing outdoors moves a pixel.
+static func map_lights_by_day(map_id: String) -> bool:
+	var mood: Dictionary = (_moods_data().get("moods", {}) as Dictionary).get(map_id, {})
+	return bool(mood.get("lights_by_day", false))
+
+
+## A FLOOR, not an override: an opted-out map never falls below full energy,
+## but a phase that BRIGHTENS lights above 1.0 would still reach it.
+static func phase_light_energy(phase: String, lights_by_day: bool) -> float:
 	var by_phase: Dictionary = (_moods_data().get("meta", {}) as Dictionary).get("light_energy_by_phase", {})
-	return float(by_phase.get(phase, 1.0))
+	var raw := float(by_phase.get(phase, 1.0))
+	return maxf(raw, 1.0) if lights_by_day else raw
+
+
+func light_multiplier(phase: String) -> float:
+	return phase_light_energy(phase, _map_lights_by_day)
 
 
 func clear_lights() -> void:
