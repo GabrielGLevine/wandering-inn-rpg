@@ -1849,3 +1849,40 @@ by controller ruling — the plan was the defect, not the implementation.
   (7) `scripts/check_doc_drift.py` is red on this branch for four missing plan
   Status headers — already fixed on main (09ebdbe) and demoted to an advisory
   job the same hour; the branch predates both and the fix is out of lane.
+- **v0.16 close adjudications (2026-07-28, controller)**: (1) FREEZE
+  step-0 shipped with a GENERATOR PATCH first — generate_shipped_ids.py
+  never walked the `skill_uses` per-skill arm map (a shipped schema
+  test_content already counts as a producer), so the 0.16.0 regen would
+  have silently omitted two live counters incl. `flood_prep_done`, a
+  quests.json `complete_when_any` key. One arm added mirroring
+  test_content.gd:466-469; freeze = 778 ids (classes 35, skills 119,
+  items 73, maps 29, accomplishments 522), ZERO removals, zero
+  hand-adds (STRUCTURAL_LITERALS untouched since 0.14.0). (2) ECONOMY
+  AXES RATIFIED: wage floor 7g→9g/waking (sole mover camp_carry_yoke),
+  marker floor 10g, full helper ceiling 22g, [Perfect Hospitality]
+  rider +5g; talk_pool census 44→53 (+9, all ungated), max co-present
+  heard_gossip 39→48; class/skill thresholds byte-unmoved; pace harness
+  reproduces ALL NINE v0.15 p50s exactly (helper 10/20/24) — the
+  evening-lever trigger is unmet. Wages stand (regions should pay; the
+  sink total clears in ~29 risk-free wakings — acceptable). The REAL
+  drift is social: gossip-fed ladders ([Diplomat] entry+rungs,
+  [Innkeeper] L14 alternate) get easier every wave the world grows
+  while their thresholds stand still — balance-bound, so it goes to
+  the TASTE QUEUE with a recommendation (scale gossip rungs with
+  census, or scope the pace claim), never a wave edit. (3) LEADS: all
+  seven deferred rows landed post-regen; `lead_camp_winter` ships with
+  the terminal-arm hide_when as drafted — the settled-then-betrayed
+  edge (a stale pointer at a never-offering Rags) is rare and the
+  offer's own gate stays correct; rejected: a leads-schema `absent`
+  arm (engine work for one rare edge). (4) spine_reach's two
+  lead_lines pins re-derived from a real run — the strip growing IS
+  the feature; both new-lead gating behaviors confirmed correct in the
+  same payloads (Pallass pair absent pre-chat, camp lead absent
+  pre-settle). (5) `pallass` dropped from LANDMARK_TOKENS
+  [pallass_den_shop] (bare region token satisfied any Pallass beat).
+  (6) Playtest P2s filed not hotfixed: #324 (world_ready ~1.5s
+  dead-render window, global+pre-existing, corrects the v0.15
+  readout-overdraw diagnosis) and #325 (payoff toast behind
+  'Autosaved.', v0.16.1 hotfix candidate). (7) Dead *_inn_settled
+  lines → #323 (v0.17, scoped pass). (8) .lane-progress.md untracked
+  + gitignored (re-added by two lane squashes after 5213968).
