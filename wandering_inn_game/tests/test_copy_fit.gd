@@ -94,6 +94,7 @@ func _init() -> void:
 	_check_board_rumors()
 	_check_help_content()
 	_check_veil_lines()
+	_check_combat_hint_lines()
 
 	print("copy_fit: %d strings measured across all surfaces" % _measured_count)
 	if not _failures.is_empty():
@@ -601,6 +602,19 @@ func _check_toast(loc: String, text: String) -> void:
 	var top_y := bottom_y - panel_height
 	if top_y < 0.0:
 		_fail("TOAST", loc, text, "%d wrapped lines grows the toast panel to %.0fpx, pushing its top %.0fpx off-screen (raised anchor)" % [lines, panel_height, -top_y])
+
+
+## combat_screen.gd composes one-shot disclosure lines straight into the feed,
+## outside every data table this suite walks. They are held to the same feed
+## budget as an arena's authored tutor line.
+func _check_combat_hint_lines() -> void:
+	var src := FileAccess.get_file_as_string("res://src/combat/combat_screen.gd")
+	assert(src != "", "could not read combat_screen.gd")
+	var re := RegEx.new()
+	re.compile("const FIRST_MP_HINT_LINE := \"([^\"]*)\"")
+	var m := re.search(src)
+	assert(m != null, "combat_screen.gd has no `const FIRST_MP_HINT_LINE` -- this check drifted")
+	_check_feed("combat_screen.gd[FIRST_MP_HINT_LINE]", m.get_string(1))
 
 
 func _check_feed(loc: String, text: String) -> void:

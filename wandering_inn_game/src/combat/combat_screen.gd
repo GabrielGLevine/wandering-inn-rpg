@@ -104,14 +104,32 @@ var _acting_skill_flash_color: Color = Color.TRANSPARENT
 static var _first_combat_hint_shown := false
 static var _combat_hint_reset_hooked := false
 
+## v0.16.1 finding 19. The playtest question was "why did my MP recharge without
+## sleeping?" -- and the answer is that MP is not a persistent resource at all,
+## so nothing recharges: WICombat.build sets MAX_MP and then MP = MAX_MP for
+## every combatant at every fight (HP likewise), and an exhaustive search of the
+## MP surface finds no per-turn tick, no overworld tick, no item and no sleep
+## hook. There is nothing to carry, so nothing can be depleted between fights.
+## That IS the design -- evolution-reachability.md prices [Flame Dart]'s "AP/MP
+## premium" as fewer casts PER FIGHT -- but the game never said so, while
+## surfaces DO show MP (sleep_beat announces "+N Max MP", the journal prints
+## "3 MP"), which invites the player to model a persistent pool and then read
+## its refill as a bug. So: say it, once, on the first fight where the PC
+## actually has a pool. Own flag, not `_first_combat_hint_shown`'s -- a Warrior's
+## opening fights must not spend a disclosure that would mean nothing to them.
+const FIRST_MP_HINT_LINE := "[Mana gathers fresh at every battle's start.]"
+static var _first_mp_hint_shown := false
+
 
 static func _reset_first_combat_hint(type: String, _payload: Dictionary) -> void:
 	if type == WIEvents.GAME_RESET:
 		_first_combat_hint_shown = false
+		_first_mp_hint_shown = false
 
 
 static func reset_hints() -> void:
 	_first_combat_hint_shown = false
+	_first_mp_hint_shown = false
 
 
 func _ready() -> void:
@@ -252,6 +270,7 @@ func _show_combat() -> void:
 	_board_renderer.build(_view, main_ref)
 	_announce_allies()
 	_announce_first_combat_hint()
+	_announce_first_mp_hint()
 	_refresh()
 	_root.show()
 	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_SHOWN, {})
@@ -289,6 +308,23 @@ func _announce_first_combat_hint() -> void:
 	var text := "Your hotbar (%s) shows the skills your classes and weapon grant." % WIInputHints.label("hotbar")
 	_hud.feed_push(text)
 	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_HINT_RENDERED, {"text": text})
+
+
+## See FIRST_MP_HINT_LINE. Same one-shot shape as `_announce_first_combat_hint`
+## (feed push + UI_COMBAT_HINT_RENDERED), but it RE-CHECKS every fight instead of
+## burning on the first: a classless or pure-melee PC has MAX_MP 0, and the line
+## should wait for the fight where they first bring a pool to the board.
+func _announce_first_mp_hint() -> void:
+	if _first_mp_hint_shown:
+		return
+	var combat := _combat()
+	if combat == null or not combat.combatants.has("pc"):
+		return
+	if int((combat.combatants["pc"] as Dictionary).get(WIKeys.MAX_MP, 0)) <= 0:
+		return
+	_first_mp_hint_shown = true
+	_hud.feed_push(FIRST_MP_HINT_LINE)
+	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_HINT_RENDERED, {"text": FIRST_MP_HINT_LINE})
 
 
 func _join_and(names: Array[String]) -> String:
