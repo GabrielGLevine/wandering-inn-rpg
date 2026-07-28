@@ -1,0 +1,93 @@
+{
+ "_comment": "Voice contract: docs/design/character-profiles.md 'Forge-Tier Smith' (proud/laconic; pride lives in the spec, never in her own skill). The forge tier is reachable ONLY through the elevator_pass_stamped lift, so the base hub IS the post-permit read and no permit-keyed variant is authored -- v0.15 T4.1, CHOICE-LOG.",
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Forge-Tier Smith",
+   "text": "Bench is mine until the second bell. Say it quick.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "forge_golems_culled": 1
+      }
+     },
+     "text": "You put the miscalibrated one down. It had been drifting toward my slab for two shifts. Say what you need."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_resolved": 1
+      }
+     },
+     "text": "The Liscor news came up the shaft this morning. Say what you need. I listen better with a hammer in hand."
+    }
+   ],
+   "options": [
+    {
+     "text": "What's the bench rated for?",
+     "goto": "spec"
+    },
+    {
+     "text": "Who decides how a thing gets built up here?",
+     "goto": "standard"
+    },
+    {
+     "text": "[Ask what the seal news cost the tier.]",
+     "requires": {
+      "accomplishment": {
+       "seal_resolved": 1
+      }
+     },
+     "goto": "seal"
+    },
+    {
+     "text": "I'll let you work.",
+     "end": true
+    }
+   ]
+  },
+  "spec": {
+   "speaker": "Forge-Tier Smith",
+   "text": "A full working day at heat, then it stands down cold. Push it past that and the slab cracks. A cracked slab is a season of paperwork and a smith who doesn't work that season.",
+   "options": [
+    {
+     "text": "How often does someone push it?",
+     "goto": "standard"
+    },
+    {
+     "text": "Then I'll stand clear of it.",
+     "goto": "hub"
+    }
+   ]
+  },
+  "standard": {
+   "speaker": "Forge-Tier Smith",
+   "text": "The city sets the spec. I hold it. That's the whole arrangement, and it's better than it sounds. Nothing built on this tier fails quietly.",
+   "options": [
+    {
+     "text": "Things fail loudly instead?",
+     "goto": "hub"
+    },
+    {
+     "text": "Understood.",
+     "end": true
+    }
+   ]
+  },
+  "seal": {
+   "speaker": "Forge-Tier Smith",
+   "text": "Something under their stone wanted feeding, and now it doesn't. That's all of it that reached this tier. I'd have liked the measurements.",
+   "options": [
+    {
+     "text": "It was older than the city over it.",
+     "goto": "hub"
+    },
+    {
+     "text": "That's most of it.",
+     "end": true
+    }
+   ]
+  }
+ }
+}

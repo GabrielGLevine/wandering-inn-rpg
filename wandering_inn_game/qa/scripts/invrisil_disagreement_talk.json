@@ -996,6 +996,14 @@
     "text": "My consultant returns. Everything remains... current. Do spend some of it here."
    },
    "timeout_sec": 5
-  }
+  },
+  { "_comment": "== v0.15 T4.2 CROWD CONSEQUENCE: the boulevard itself reacts, not just Coyle. invrisil_extra_6 (23,10) carries a brothers_job_done stage; the same post-sleep waking clears social_talked, so this first interact reads the stage pool at index 0 (chatted_with_invrisil_extra_6 never banked in this run). Copy is resolution-AGNOSTIC on purpose -- the counter banks on BOTH endings, so the street names that something settled and never what. ==", "action": "teleport", "map": "invrisil_boulevard", "cell": [23, 11] },
+  { "action": "wait_frames", "frames": 5 },
+  { "action": "move", "direction": "up", "steps": 1 },
+  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [23, 10] } },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "A Lady in Plum Silk", "text": "There was a matter with Master Coyle. It resolved. In this city that is the whole of what you get told." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "90_crowd_reacts_plum_silk" }
  ]
 }

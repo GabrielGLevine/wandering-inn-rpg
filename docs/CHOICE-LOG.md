@@ -4,6 +4,209 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 T4.4 regional work + the Phase 4 helper-pace verdict
+
+- **The job props reuse the `serving_tray` idiom, not the bounty machinery.**
+  Read `deliveries.json` and `WIBounties` first: deliveries are a single
+  accepted slip with a parcel item and a destination (one at a time, tracked in
+  save state), and bounties are a rotating slate with rank tiers and a turn-in
+  desk. A regional odd job is neither — it is one prop, one press, once a
+  waking, forever. `once_per_waking` + `gold` + `on_interact_accomplishment`
+  (interactions.gd's `serve:` key, the inn's laden tray) is exactly that shape
+  and cost no new sim code. `variants` carry the escalation instead of tiers.
+- **2 gold flat, no repetition scaling.** Half the `crude_draught` bronze
+  anchor (4g), below a Guild bounty's 3-4g because there is no risk in ditching
+  a field, and flat because the bounty-scaling spec scales payouts by RANK, not
+  by how many times you have done a thing. The one exception is Invrisil's
+  marker-holder rate (3g), which is a fiction about trust, not a curve.
+- **THE WAGE-FLOOR AXIS (fix round 1 correction to the record — the wages
+  STAY).** Regions should pay; that is the whole finding this task answers. But
+  the review was right that the phase moved an economic number nothing in the
+  gate measures, and the honest figure belongs on the record next to the
+  gossip-ceiling caveat below. Exact, counted from the data: the interact
+  branch's `once_per_waking` + `gold` set went from ONE prop to FOUR
+  (`serving_tray` 1g, plus the three new ones at 2g), so the **risk-free wage
+  floor went 1g → 7g per waking** for a player who tours all three regions.
+  And `[Perfect Hospitality]`'s +1-per-prop rider (interactions.gd, one call
+  site, gated on `once_per_waking`) scales with that set: **+1g → +4g, a +3g
+  standing premium available only to a helper build.** The full ceiling, since
+  the floor is not the whole story: a marker-holder earns 3g on the Invrisil
+  slate instead of 2, so **8g per waking**, and a marker-holding helper carrying
+  `[Perfect Hospitality]` tops out at **12g** (11g without the marker). None of
+  these is a defect — 12g is three crude draughts for a full circuit of four
+  regions — but no gate watches any of them, so they are logged rather than
+  measured, and a wave-close economy pass is noted in HANDOFF.
+- **HELPER-PACE GATE, Phase 4 verdict: EVENING LEVER STAYS HOLSTERED.**
+  `sim_progression_pace` after Phase 4: helper_social p50 total-level 10 / 20 /
+  24 against warrior 6 / 9 / 13 and caster 6 / 10 / 15 — the same ~2x Act II
+  gap the harness has reported since #211, and Phase 4 could not have moved it:
+  the harness models a FIXED per-waking chore budget per archetype, and Lane B
+  touched only maps, dialogue, QA and tests. Act II did not worsen, so the
+  lever stays holstered per the plan's own condition. The verdict stands on the
+  axis the harness actually measures -- TOTAL LEVEL -- and on nothing else; the
+  two unmeasured axes (the wage floor above, the gossip ceiling below) are
+  recorded rather than claimed.
+- **The honest caveat, ledgered as a follow-up.** Phase 4 took the world from
+  33 talk_pool NPCs to 44, and every pool bank ticks `heard_gossip`, which is
+  the Barmaid/Innkeeper line's `requires_any` alternate and half of
+  `[Diplomat]`'s entry. A player who tours every region each waking now has a
+  higher gossip CEILING than before, and the harness cannot see that because
+  its chore budget is a fixed routine rather than a function of the world's
+  talkable census. Nothing measured worsened; the model just does not measure
+  this axis. Follow-up for the wave close: either scale the harness's social
+  chore budget with the census, or state explicitly that the pace claim covers
+  a fixed routine and not a completionist one.
+
+## 2026-07-28 — v0.15 T4.3 the dig camp + the migrated ruin (three in-wave calls)
+
+- **Yvlon and Ksmvr are POOL-ONLY, no conversations.** Ceria's first interact
+  at the camp has to stay the dig-invitation follow-up; two more graphs on the
+  same beat would compete with it for the player's first press. They share her
+  present_when byte-for-byte, so the whole team arrives and strikes together,
+  and the fiction that "the Horns are digging" stops fielding one half-Elf.
+- **The remnant shares Ceria's own cell (4,3).** Two entities on one cell is
+  unusual, and it is exactly right here: her window has `absent: door_mounted`
+  and the remnant's has `requires: door_mounted`, so they are provably never
+  co-present, and the cold fire-ring lands where the camp actually was. Data
+  lint, content validation and every ruin canonical are green on it.
+- **BILOCATION COLLAPSE, round 2: fix the RENDERER, then let every gate follow
+  the fiction.** Round 1 tightened four of the Horns' presence rows onto
+  `horns_dig_started` and held two back (the two interlocutors), on the reading
+  that v0.14's evidenced fix protects the SPEAKER. Re-review refuted that
+  reading and it was right: the photographed P1 (VISUAL-LOG RUIN/CAMP-DOUBLE,
+  not REVEAL-DESPAWN — round 1 mis-cited it) shows ALL THREE Horns popping out
+  of the inn in one frame with the panel still open. Protecting only the
+  speaker re-creates the defect for everyone standing beside her. So the fix
+  moved into the engine: `world.gd`'s presence reconcile is QUEUED while a
+  dialogue is open and flushed exactly once at DIALOGUE_ENDED
+  (`_presence_reconcile_deferred`; "is a dialogue open" is read off
+  `Game.sim.dialogue`, never mirrored, so the two cannot drift). With the pop
+  structurally impossible, ALL SIX presence rows took the tight gate —
+  `ceria_inn`, `yvlon_inn`, `ksmvr_inn`, `dungeon_approach`'s
+  `ceria`/`yvlon`/`ksmvr`, and `trapped_halls.ksmvr_plates` — and the
+  three-copies window is gone: post-invitation the Horns are at the camp and
+  nowhere else. SCOPED HONESTLY: that is a POST-invitation claim. Before it, a
+  post-seal player still finds Ceria and Yvlon in two places (inn + delve
+  staging) and Ksmvr in three (inn + staging + trapped_halls) — multiplicity
+  this collapse neither created nor changed, since every one of those rows was
+  equally present under v0.14's `horns_dig_joined` gate. Carried, not
+  introduced; the pre-invitation duplication wants presence windows the delve
+  arc does not currently have, so it is a v0.16 candidate, not a fix to bolt on
+  here. v0.14's gate choice was a workaround for a renderer bug and is
+  now recorded as such at its owning site (inn.json's `ceria_inn_returned`).
+  Alternatives rejected: keep the joined gate (leaves the three-copies window
+  the re-review found); defer per-bank rather than latching (a six-bank
+  conversation would cost six rebuilds). Revert = one call site plus six rows.
+- **Two guards the mechanism review named, both reachable, both one line.**
+  (a) `_dialogue_is_open()` reads `not dialogue.finished`, not just non-null:
+  `WIGame.dialogue_choose` nulls the walker ONLY on an `end: true` option, while
+  `WIDialogue._enter`'s softlock fail-safe finishes it from inside `advance()`
+  when a goto lands on a node whose every option is gated shut. That leaves a
+  live finished walker on the sim, and a bare null check would then defer every
+  later reconcile forever. The path is real, not theoretical, and is now pinned
+  in `test_dialogue`. (b) `_flush_deferred_presence_reconcile` carries the #119
+  stale-cover guard the ACCOMPLISHMENT_RECORDED arm already had, and leaves the
+  latch UP when it bails, because `_rebuild_field` is what clears it after
+  reconstructing from live sim.
+- **Scope held at ACCOMPLISHMENT_RECORDED.** PHASE_CHANGED's own reconcile is
+  deliberately NOT deferred: `_tick_action` fires only from
+  move/interact/use_skill_field, never from `dialogue_choose`, so a phase
+  crossing cannot happen inside a conversation. A full `_rebuild_field` drops
+  the latch, so a map crossing mid-conversation cannot emit a stray second
+  `ui_entities_rendered` afterwards.
+- **The nine dead `*_inn_settled` lines stay dead.** All three ORIGINAL inn
+  rows carry a settled stage gated on `door_awakened`, which no player can hold
+  while the original's window is open — it banks long after the door is
+  mounted. That was already true under v0.14's own gate, so this is a
+  PRE-EXISTING dead surface, not a regression of the collapse; the `_returned`
+  twins' equivalents are reachable and untouched. Flagged in-file and queued
+  for the v0.16 content pass rather than resurrected here, because reviving
+  them means re-gating, not re-wording.
+- **RUIN/MIGRATED-DIORAMA: fixed by re-skinning the guardian, NOT by deleting
+  it.** The ledger's own suggestion was to add `ruin_guardian` to the migration
+  backfill's removed set. Traced the consequence first: the guardian is the only
+  chance-1.0 source of `guardian_ward_fragment`, which Hedault's enchanting
+  chain consumes — deleting it would silently strip a quest input from every
+  migrated save, and the same contradiction (a guardian standing over an emptied
+  cradle) is reachable by any FRESH player who breaches through the plates or
+  the wardwork read, whom the backfill never touches. Shipped instead: a
+  `door_retrieved`-keyed `visual_states` re-skin plus an observe line that says
+  what a spent ward is, so every route reads the same and nobody loses a fight
+  or a drop. Revert = drop the visual_states block.
+
+## 2026-07-28 — v0.15 T4.2 Invrisil crowd (three in-wave calls)
+
+- **The seven extras KEEP their static `dialogue` line under the new pools.**
+  Dropping it would have been tidier (the parlor's gentlemen carry pool +
+  observe and no `dialogue`), but that line is the only surface
+  `invrisil_walkthrough`'s BEAT 2 proved, and it is good narration. Shipped
+  shape: `observe` (a new look-line) + a 3-line `talk_pool` + the shipped
+  narration as the post-pool fallback. First interact of a waking is speech;
+  every later one is the look. The canonical now pins BOTH surfaces at the
+  same stop, where it used to pin one.
+- **b5 #220's "stationer" was never authored; the teahouse took the third
+  slot.** The issue is closed and shipped glazier + cordwainer + teahouse. Read
+  the plan's naming as a fourth shopfront rather than a rename: `boulevard_
+  stationer` (20,1) joins them, same observe-only `hide_sprite` shape on a
+  blocked row-1 cell. Nothing shipped was touched.
+- **Both `brothers_job_done` stage lines are resolution-AGNOSTIC.** That
+  counter banks on the report beat, which is common to BOTH the extorted and
+  the exposed ending — a street line naming Coyle's ruin would be a lie on the
+  extortion fork (and vice versa). The porter and the lady in plum silk each
+  say that something settled and decline to say what, which is also the most
+  Invrisil thing either of them could say. Proven live on both forks (the
+  porter on `invrisil_disagreement_fight`, the lady on `..._talk`), with the
+  base pool proven unarmed on `invrisil_walkthrough`. Shadow-out adjudication
+  (the b7 rule): both stages PERMANENTLY replace their base pools once
+  `brothers_job_done` banks, and that is correct here where it would not be for
+  a signpost -- these are FLAVOUR acks on a monotone quest-completion register,
+  the class the audit explicitly allows to shadow, and a boulevard that went
+  back to small talk about a matter it had just watched resolve would read
+  worse than one that keeps mentioning it.
+
+## 2026-07-28 — v0.15 T4.1 Pallass population (five in-wave calls)
+
+- **The forge tier gets NO `elevator_pass_stamped` reactive stage.** The plan
+  asked for stages keyed on that counter AND `seal_resolved` on both new forge
+  NPCs. Traced the routes first: `pallass_forge` has exactly one live entrance,
+  the Grand Lift, and its `door_when` gates on `elevator_pass_stamped` (portals
+  .json's `pallass` row lands on the MARKET tier; nothing else reaches the
+  forge). A permit stage up there is therefore always-met, which under
+  last-match-wins would permanently replace the base pool and kill it — the b7
+  shadow-out finding exactly. Call: the forge NPCs' BASE pool is written as the
+  post-permit voice, they carry a `seal_resolved` stage (plus the smith's
+  `forge_golems_culled` stage, region-local), and the permit-chain
+  acknowledgment lives where it can actually toggle — the market tier.
+  Alternative considered and rejected: ship the dead stage for literal plan
+  compliance. Revert = add the stage back to both entities.
+- **Market reactivity ships as hub `text_variants`, not `talk_pool_stages`.**
+  Both market NPCs currently open a conversation on FIRST interact; giving them
+  a `talk_pool` would insert a pool line ahead of that graph and shift four
+  pinned canonicals' first-interact expectations (pallass_peek,
+  pallass_walkthrough, pallass_race_peek, trader_earn_loop). `text_variants`
+  gets the same reactive read with no index or routing shift. Placed AFTER the
+  race/phase variants on purpose (last match wins): once the tier's own chain
+  has moved, the region acknowledging it beats a first-meeting read. Verified
+  no shipped Pallass fixture banks either counter, so every pinned run still
+  lands on the base or race text.
+- **Both new NPCs are ROLES, not individuals** (no names) — the shipped tier
+  clerk's precedent, and it keeps the pair inside the Book-17 bar without
+  inventing named Pallass citizens. The lift attendant reuses the `tier_clerk`
+  rig under a brass tint: the uniformity IS the city's tell, the tint is what
+  keeps three uniformed Drakes readable apart.
+- **Three sprite picks reversed off the first windowed pass.** `cauldron` for a
+  quench trough rendered a LIT FIRE beside the anvil; `riverfarm_fence_ew` put
+  a wooden rail against the molten seam; a second `barrel` cloned the quench
+  seven cells away. Shipped instead: quench = `barrel` (a slack tub, which is
+  what a smith actually keeps), slag = `boulder` heap, and the rail moved to
+  the tier's open parapet edge (24,6) where the lift_overlook precedent's own
+  object class fits it. Names/counters renamed to match before any tag.
+- **Dead-space cure is `scatter`, not more props.** The tier reads swept-empty
+  between stations; a `pebble` scatter (the street/floodplains idiom, presentation
+  -only, seed 47) puts mill scale on a working floor without adding blocking
+  entities to a map three canonicals walk edge to edge. The floor/wall texture
+  cue itself stays Lane C's MAP/PALLASS-FORGE-FLOOR item.
+
 ## 2026-07-28 — v0.15 T3.2 hygiene batch (six in-wave calls)
 
 - **TOAST/LENGTH: verdict is NO RE-CUT.** The ledger entry itself says the

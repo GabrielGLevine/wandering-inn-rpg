@@ -690,6 +690,34 @@
     "item": "tonic_of_the_clear_eye",
     "toast": "[Perfect Reduction] — The still takes the crude draught apart and returns only the part that matters, clear as morning."
    }
+  },
+  {
+   "_comment": "v0.15 T4.1 market observables (2). Both sit in the tier's north/south dead bands, off every canonical's bounds lap (y2/y9 and x0/x25 stay clear) — see pallass_peek's route.",
+   "id": "market_ordinance_wall",
+   "kind": "prop",
+   "cell": [10, 3],
+   "display_name": "Posted Ordinances",
+   "sprite": "guild_notice_wall",
+   "observe": "Civic ordinances under glass, numbered and dated, the oldest one on the wall older than the wall. Nothing is pinned over anything else. There is a numbered slot for every notice and no notice without a slot.",
+   "on_interact_accomplishment": "read_the_posted_ordinances",
+   "toast": "Ordinances, numbered and glassed. Somewhere in Pallass a clerk owns the key to this case, and only that clerk.",
+   "variants": [
+    {
+     "when": {"elevator_pass_stamped": 1},
+     "toast": "Ordinance 44, third column: tier passes are the property of the city and the responsibility of the bearer. Yours is in your pocket, and now you know whose it is."
+    }
+   ]
+  },
+  {
+   "id": "market_public_scales",
+   "kind": "prop",
+   "cell": [14, 8],
+   "display_name": "The Public Scales",
+   "sprite": "pedestal",
+   "tint": [0.72, 0.68, 0.6],
+   "observe": "A weighing pillar set out where anyone can use it, brass pans hanging true, the city's own test weights chained to the column. Any stallkeeper's measure can be checked here against the city's, in front of everyone.",
+   "on_interact_accomplishment": "eyed_the_public_scales",
+   "toast": "You set a hand on the pan and it swings back level. The chained weights have inspection dates stamped into them, the last one this month."
   }
  ]
 }

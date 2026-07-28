@@ -1538,6 +1538,37 @@
    "respawns": true,
    "observe": "Vines thicker than they should be creep across open ground here, twitching against a wind that isn't blowing.",
    "on_victory": "thicket_remnants_culled"
+  },
+  {
+   "_comment": "v0.15 T4.4 regional repeatable work, 1 of 3. The serving_tray idiom (once_per_waking + gold, interactions.gd's `serve:` key): a job you can take once a waking, forever. NEW COUNTER riverfarm_field_jobs, frozen at the next tag. 2 gold = half the crude_draught bronze anchor -- below a Guild bounty because there is no risk in it, above nothing because Riverfarm pays on the day.",
+   "id": "riverfarm_field_board",
+   "kind": "prop",
+   "cell": [
+    3,
+    10
+   ],
+   "display_name": "The Field-Work Board",
+   "sprite": "request_board",
+   "observe": "A plank of hooks at the fence line, each hook holding a scrap with a task on it and no name. Ditching, thatch, a fence a cow disagrees with. The scraps come down about as fast as they go up.",
+   "on_interact_accomplishment": "riverfarm_field_jobs",
+   "once_per_waking": true,
+   "once_per_waking_toast": "Every hook is bare. Riverfarm doesn't invent work to keep a stranger busy.",
+   "gold": 2,
+   "toast": "You take a scrap off its hook and spend the morning behind it. Ditching, mostly. The village pays coin because coin is the thing it has least of, and it pays on the day.",
+   "variants": [
+    {
+     "when": {
+      "riverfarm_field_jobs": 3
+     },
+     "toast": "Somebody chalked your name against a hook before you got there. That is the whole of Riverfarm's vocabulary for gratitude, and it is not a small word."
+    },
+    {
+     "when": {
+      "riverfarm_field_jobs": 8
+     },
+     "toast": "The hook you get is the one nobody else will touch: the wet corner down by the river, every time. They give it to you because you finish it."
+    }
+   ]
   }
  ]
 }

@@ -1026,6 +1026,12 @@
      "speaker": "",
      "text": "A woman in a rose-dyed cloak checks a folded slip of paper against a shopfront number, unimpressed by both."
     }
+   ],
+   "observe": "She holds the slip at arm's length, then the shopfront number, then the slip again. Whatever address she was given, this street declines to be it.",
+   "talk_pool": [
+    "Number eleven. This IS number eleven. The sign says Havvers and my slip says Bellworth, so one of them is lying.",
+    "Three streets, four shopfronts, and not one of them the one I was sent to. Invrisil, that.",
+    "You want the glazier, it's the front with the panes stood out on edge. Everything here advertises with the thing itself."
    ]
   },
   {
@@ -1048,6 +1054,12 @@
      "speaker": "",
      "text": "Blue-grey wool, city cut. She doesn't look at you. Nobody here looks at anybody."
     }
+   ],
+   "observe": "Blue-grey wool, cut the way this city cuts it, and a walking pace she has no intention of breaking for you or anyone.",
+   "talk_pool": [
+    "If you're asking directions, ask somebody stopped. I'm not stopped.",
+    "It isn't rudeness. Look at anyone here for two seconds and you'll be sold something.",
+    "Wool like this means nothing except that I bought it here. That is the entire point of it."
    ]
   },
   {
@@ -1069,6 +1081,25 @@
     {
      "speaker": "",
      "text": "A porter's barrow, half-unloaded, and a man in no hurry to finish the other half."
+    }
+   ],
+   "observe": "The barrow is half empty and he is in no hurry about the other half. He has the arms for a faster day and has decided against one.",
+   "talk_pool": [
+    "Half now, half after. That's the arrangement, and after is a long word.",
+    "Everything in this city arrives on a barrow. Nobody who buys it has ever seen one.",
+    "Mind the wheel, {addr}. It's got a temper and I've got no insurance."
+   ],
+   "talk_pool_stages": [
+    {
+     "_comment": "v0.15 T4.2. Resolution-AGNOSTIC on purpose: brothers_job_done banks on BOTH the extorted and exposed endings, so street talk names that something settled and never what.",
+     "id": "porter_brothers_job_done",
+     "requires_accomplishment": {
+      "brothers_job_done": 1
+     },
+     "lines": [
+      "Something settled with Master Coyle's people. Nobody's saying what. My routes got easier, is all I know.",
+      "Farley's back on the boulevard with his chin up. That's news down at barrow height, whatever it is upstairs."
+     ]
     }
    ]
   },
@@ -1092,6 +1123,12 @@
      "speaker": "",
      "text": "Olive work clothes, ink-stained cuffs. A clerk between one ledger and the next."
     }
+   ],
+   "observe": "Olive work clothes, ink to the second knuckle, and a satchel worn flat on one side from the same walk every day.",
+   "talk_pool": [
+    "Six ledgers on this street and no two agree. That isn't fraud. That's just Invrisil.",
+    "I'm between errands. There's no such thing as between errands. There's the next one.",
+    "You want a number, ask a clerk. You want what happened, ask a porter."
    ]
   },
   {
@@ -1114,6 +1151,12 @@
      "speaker": "",
      "text": "Mustard-brown coat, city boots, the specific walk of a man pretending he isn't lost."
     }
+   ],
+   "observe": "Mustard-brown coat, good city boots, and the specific unhurried circling of a man who will not be asking anybody.",
+   "talk_pool": [
+    "I know exactly where I am. I'm reorienting.",
+    "The boulevard runs east. Everything runs east. That's the only fact this city gives away free.",
+    "Don't mention this to the woman in the wool. She'll have worked it out already."
    ]
   },
   {
@@ -1135,6 +1178,24 @@
     {
      "speaker": "",
      "text": "Plum silk, a little too fine for the errand she's running. She counts her change twice."
+    }
+   ],
+   "observe": "Plum silk a season past its moment, worn on an errand that plainly sits beneath it. She counts the change twice and does not hide the second count.",
+   "talk_pool": [
+    "You count it in front of them. Not after. In front of them, every time.",
+    "The silk is last season and the errand is beneath me. Both of those are my business.",
+    "Nobody in Invrisil is as rich as they are dressed. Including me. Especially me."
+   ],
+   "talk_pool_stages": [
+    {
+     "id": "silk_brothers_job_done",
+     "requires_accomplishment": {
+      "brothers_job_done": 1
+     },
+     "lines": [
+      "There was a matter with Master Coyle. It resolved. In this city that is the whole of what you get told.",
+      "The names on the good invitations moved this month. They do that when something has been settled."
+     ]
     }
    ]
   },
@@ -1158,6 +1219,12 @@
      "speaker": "",
      "text": "A Gnoll traveler, tan road-cloak, watching the crowd the way a stranger watches weather."
     }
+   ],
+   "observe": "A tan road-cloak with the dust still in the weave, and a Gnoll under it reading the crowd the way you would read weather coming.",
+   "talk_pool": [
+    "Hrr. So many, and every one of them going somewhere else.",
+    "In a hunt-family you know every face by the second day. Here I have been three days and learned none, yes?",
+    "I came to see the City of Adventurers. I have seen a very great many merchants."
    ]
   },
   {
@@ -1325,6 +1392,18 @@
    ],
    "display_name": "A Narrow Teahouse",
    "observe": "Three tables, steam on the glass, and a chalk line of prices that assumes you already know what smoke-leaf costs in Invrisil.",
+   "hide_sprite": true
+  },
+  {
+   "_comment": "v0.15 T4.2 closes the b5 #220 shopfront set: glazier + cordwainer shipped in b5, the teahouse took the third slot, and the plan's named stationer was never authored. Observe-only on a blocked row-1 cell, `hide_sprite` like its three siblings -- the facade art is the wall band itself.",
+   "id": "boulevard_stationer",
+   "kind": "prop",
+   "cell": [
+    20,
+    1
+   ],
+   "display_name": "A Stationer's Window",
+   "observe": "Ruled paper in three weights, ink in four, and a card offering a scribe by the hour in a hand that is itself the advertisement. Half the contracts argued about on this street were bought here first, quietly, by both sides.",
    "hide_sprite": true
   }
  ],

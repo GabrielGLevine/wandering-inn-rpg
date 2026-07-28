@@ -313,6 +313,8 @@ func _init() -> void:
 	_validate_class_skill_grant_ids_shape_cases()
 	_validate_props(scene)
 	_validate_talk_pool_stages_ascending(scene)
+	_validate_talk_pool_stage_shape(scene)
+	_validate_population_floors(scene)
 	_validate_npc_interact_surface(scene)
 	_validate_address_token_placement()
 	_validate_encounter_when(scene, produced_accomplishments)
@@ -482,6 +484,96 @@ func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> 
 				produced["chatted_with_%s" % String(entity["id"])] = true
 			for rumor: Dictionary in (entity.get("board_rumors", []) as Array):
 				produced[String(rumor["banks_accomplishment"])] = true
+
+
+## v0.15 T4.1 (Lane B population). `WISocial.talk_pool_line` swaps the whole
+## pool for the LAST matching stage's `lines` and then indexes `% pool.size()`
+## -- an absent or empty `lines` is a modulo-by-zero on a live interact, and a
+## duplicate stage id makes the shadow-out audit unreadable.
+func _validate_talk_pool_stage_shape(scene: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		for entity: Dictionary in map.get("entities", []):
+			var id := String(entity.get(WIKeys.ID, "?"))
+			var seen_ids: Dictionary = {}
+			for raw_stage: Variant in entity.get("talk_pool_stages", []):
+				if not _require(raw_stage is Dictionary, "entity %s (%s) has a non-Dictionary talk_pool_stages member" % [id, map_id]):
+					continue
+				var stage: Dictionary = raw_stage
+				var stage_id := String(stage.get(WIKeys.ID, ""))
+				_check(stage_id != "", "entity %s (%s) has a talk_pool_stage with no id" % [id, map_id])
+				_check(not seen_ids.has(stage_id), "entity %s (%s) repeats talk_pool_stage id %s" % [id, map_id, stage_id])
+				seen_ids[stage_id] = true
+				_check(not (stage.get("requires_accomplishment", {}) as Dictionary).is_empty(), "entity %s stage %s has no requires_accomplishment -- it would shadow every pool below it forever" % [id, stage_id])
+				var lines: Array = stage.get("lines", [])
+				if not _require(not lines.is_empty(), "entity %s stage %s has no lines -- talk_pool_line would divide by zero" % [id, stage_id]):
+					continue
+				for line: Variant in lines:
+					_check(line is String and String(line).strip_edges() != "", "entity %s stage %s carries an empty/non-String line" % [id, stage_id])
+			# The stage machinery reads `talk_pool` as its base; a stage list on an
+			# entity without one indexes a missing key at the first interact.
+			if not (entity.get("talk_pool_stages", []) as Array).is_empty():
+				_check(not (entity.get("talk_pool", []) as Array).is_empty(), "entity %s (%s) has talk_pool_stages but no base talk_pool" % [id, map_id])
+
+
+## v0.15 T4.1-4.4 population floors. The Lane B design bar is the
+## parlor/hollow/alleys standard (13+ interactables, no dead region), but the
+## LINT counts only UNCONDITIONAL entities -- a `present_when` row is furniture
+## for exactly one story window and counting it would let a map claim
+## population it does not have in every state. So each floor is that map's
+## own unconditional count, and `ruin_surface` sits at 8 on purpose: it is a
+## story site whose richness is deliberately windowed (the dig camp's nine
+## entities live and die with `horns_dig_started`), and horns_dig_flow is what
+## proves that window, not this lint. FLOORS, not pins: adding an UNCONDITIONAL
+## interactable never reds them. Deleting one does -- and so does window-gating
+## one that used to stand unconditionally, which is the point, because that IS a
+## real reduction in what the map holds in most states. Re-derive the number in
+## the same commit that makes such a move deliberately.
+const POPULATION_FLOORS := {
+	"brothers_parlor": 21,
+	"mercantile_alleys": 13,
+	"witch_hollow": 23,
+	"invrisil_boulevard": 20,
+	"riverfarm_village": 24,
+	"pallass_forge": 15,
+	"pallass_market": 24,
+	"ruin_surface": 8,
+}
+
+## Anything a player press can resolve to: a door/encounter, or a prop/npc
+## carrying at least one of the interact surfaces `WIInteractions.dispatch`
+## branches on (`observe` is the [Observe] surface and counts).
+const INTERACTABLE_KEYS := [
+	"observe", "toast", "conversation", "talk_pool", "dialogue",
+	"on_interact_accomplishment", "requires_skill", "sleep", "board",
+	"delivery_board", "portal_menu", "fence_menu", "contains",
+]
+
+
+func _interactable_count(map: Dictionary) -> int:
+	var total := 0
+	for entity: Dictionary in map.get("entities", []):
+		# Window-gated rows are absent in some reachable state, so they can
+		# never be evidence of a map's standing population.
+		if entity.has("present_when"):
+			continue
+		var kind := String(entity.get(WIKeys.KIND, ""))
+		if kind == "door" or kind == "encounter":
+			total += 1
+			continue
+		for key: String in INTERACTABLE_KEYS:
+			if entity.has(key):
+				total += 1
+				break
+	return total
+
+
+func _validate_population_floors(scene: Dictionary) -> void:
+	for map_id: String in POPULATION_FLOORS:
+		if not _require(scene["maps"].has(map_id), "POPULATION_FLOORS names map %s, which no longer exists" % map_id):
+			continue
+		var count := _interactable_count(scene["maps"][map_id])
+		_check(count >= int(POPULATION_FLOORS[map_id]), "map %s dropped to %d interactables, under its population floor of %d" % [map_id, count, int(POPULATION_FLOORS[map_id])])
 
 
 func _validate_talk_pool_stages_ascending(scene: Dictionary) -> void:

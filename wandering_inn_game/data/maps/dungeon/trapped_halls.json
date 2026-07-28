@@ -153,7 +153,7 @@
    ]
   },
   {
-   "_comment": "Own graph (ksmvr_plates.json): the guide option is the real beat, gated on `horns_party_formed` (the party must exist to guide)",
+   "_comment": "Own graph (ksmvr_plates.json): the guide option is the real beat, gated on `horns_party_formed` (the party must exist to guide). v0.15 T4.3 round 2: last of the six Horns presence rows to move onto horns_dig_started, so the halls stop holding a copy of Ksmvr while the camp holds one. Contract: inn.json's `ceria_inn_returned`.",
    "id": "ksmvr_plates",
    "kind": "npc",
    "cell": [
@@ -166,10 +166,10 @@
    "conversation": "ksmvr_plates",
    "present_when": {
     "absent": {
-     "horns_dig_joined": 1
+     "horns_dig_started": 1
     }
    },
-   "_comment_dig": "Task 2.7 round 2: retires PERMANENTLY at horns_dig_joined, the same delve-staging split as the approach map's Horns rows -- see dungeon_approach.json's `ceria` row _comment_dig for the contract. Safe for the seal beat: seal_kept_reported gates the dig invitation, so horns_dig_joined cannot bank until what_the_seal_kept is done."
+   "_comment_dig": "Retires PERMANENTLY at horns_dig_STARTED (v0.15 T4.3 round 2 tightened it from Task 2.7's horns_dig_joined, once world.gd's dialogue defer made the earlier counter safe to gate on), the same delve-staging split as the approach map's Horns rows -- see dungeon_approach.json's `ceria` row _comment_dig for the contract. Safe for the seal beat either way: seal_kept_reported gates the dig invitation, so neither counter can bank until what_the_seal_kept is done."
   },
   {
    "id": "dart_slit_a",

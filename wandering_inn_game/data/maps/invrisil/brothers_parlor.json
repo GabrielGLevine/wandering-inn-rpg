@@ -599,6 +599,32 @@
    "display_name": "The Hat Stand",
    "sprite": "hat_stand",
    "observe": "Hats on pegs, every one accounted for. House rule says they stay on. Nobody explains the exceptions, and nobody asks twice."
+  },
+  {
+   "_comment": "v0.15 T4.4 regional repeatable work, 2 of 3 (the serving_tray idiom: once_per_waking + gold, banked under interactions.gd's `serve:` key). NEW COUNTER invrisil_errands_run, frozen at the next tag. Ungated so the affordance is reachable the first time a player finds the parlor; the marker-holder `variants` arm is the earned RATE, not an entry fee. Cell (5,1) sits between the cots and the counter, off every route the six parlor-touching canonicals walk.",
+   "id": "parlor_errand_slate",
+   "kind": "prop",
+   "cell": [
+    5,
+    1
+   ],
+   "display_name": "The Errand Slate",
+   "sprite": "note_pinned",
+   "observe": "A slate by the cots, chalked in two hands: addresses with no names against them, times with no dates, and a column of initials down the edge. Small work. The Brothers keep the small work moving because the small work is how they hear things.",
+   "on_interact_accomplishment": "invrisil_errands_run",
+   "once_per_waking": true,
+   "once_per_waking_toast": "The slate is wiped clean. Come back when the chalk's been busy.",
+   "gold": 2,
+   "toast": "You take the top line off the slate and walk it across Invrisil: a package nobody described to you, to a door somebody did. Two gold, and the line is wiped before you're back through the alley.",
+   "variants": [
+    {
+     "when": {
+      "brothers_marker": 1
+     },
+     "gold": 3,
+     "toast": "Marker-holder's rate. The line you take is longer, the door further out, and nobody asks you to account for the way round you took getting there."
+    }
+   ]
   }
  ]
 }

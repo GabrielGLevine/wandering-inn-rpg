@@ -377,6 +377,10 @@ func _field_hotbar_slot_pressed(event: InputEvent) -> int:
 
 
 func _rebuild_field() -> void:
+	# A full rebuild reconstructs every visual from live sim, so it SUPERSEDES
+	# any reconcile queued by the dialogue defer -- drop the latch or the next
+	# DIALOGUE_ENDED emits a redundant ui_entities_rendered over fresh geometry.
+	_presence_reconcile_deferred = false
 	_click_path.clear()
 	for child: Node in _field_root.get_children():
 		child.queue_free()
@@ -833,6 +837,63 @@ func _refresh_entities_watching_phase() -> void:
 				break
 
 
+## v0.15 T4.3 round 2 — THE DIALOGUE DEFER, and the reason the whole Horns
+## bilocation split became possible. `_reconcile_entity_presence` runs on every
+## ACCOMPLISHMENT_RECORDED, so a counter banked by a dialogue OPTION used to free
+## presence-gated visuals mid-conversation: the speaker, or anyone standing
+## beside her, popping off-screen between two lines (VISUAL-LOG RUIN/CAMP-DOUBLE,
+## photographed P1). v0.14 worked around it by moving every affected gate onto a
+## LATER counter, which bought the pop off at the price of a three-copies window.
+## The rebuild is now QUEUED while a conversation is open and flushed once at
+## DIALOGUE_ENDED, so gates may key on whatever the fiction wants.
+##  * ONE flag: "is a dialogue open" is read straight off the sim
+##    (`Game.sim.dialogue`), never mirrored here, so the two can't drift.
+##  * EXACTLY ONCE: a conversation banking six counters queues one rebuild,
+##    not six -- the flag is a latch, not a counter.
+##  * EVENT-ORDER, load-bearing: `dialogue_choose` nulls `dialogue` BEFORE
+##    applying an `end: true` option's effects (wi_game.gd), so a closing
+##    option's banks arrive with the latch down and reconcile immediately.
+##    That is correct -- the conversation is already over.
+##  * PHASE_CHANGED's own reconcile is deliberately NOT deferred: `_tick_action`
+##    fires only from move/interact/use_skill_field, never from dialogue_choose,
+##    so a phase crossing cannot happen inside a conversation.
+##  * A full `_rebuild_field` supersedes any queued reconcile and drops the
+##    latch, so a map crossing mid-conversation can't emit a stray second
+##    ui_entities_rendered afterwards.
+var _presence_reconcile_deferred := false
+
+
+## `finished` is load-bearing, not belt-and-braces: WIDialogue sets it on the
+## terminal node and `dialogue_choose` only NULLS the walker on an `end: true`
+## option. A graph that runs out of options any other way leaves a finished
+## walker parked on `Game.sim.dialogue`, and a bare null check would defer every
+## reconcile after it FOREVER (nothing else flushes the latch until a rebuild).
+func _dialogue_is_open() -> bool:
+	return Game.sim != null and Game.sim.dialogue != null and not Game.sim.dialogue.finished
+
+
+func _reconcile_entity_presence_or_defer() -> void:
+	if _dialogue_is_open():
+		_presence_reconcile_deferred = true
+		return
+	_reconcile_entity_presence()
+
+
+func _flush_deferred_presence_reconcile() -> void:
+	if not _presence_reconcile_deferred:
+		return
+	# The #119 stale-cover contract the ACCOMPLISHMENT_RECORDED arm already
+	# carries: reconciling against geometry the cover is about to replace is
+	# pointless. Leave the latch UP -- `_rebuild_field` drops it after
+	# reconstructing every visual from live sim, so nothing is lost. Reachable
+	# once a dialogue option can travel (a `travel_to` close would end the
+	# conversation and start a transition in the same frame).
+	if _map_transition_stale_cover():
+		return
+	_presence_reconcile_deferred = false
+	_reconcile_entity_presence()
+
+
 func _reconcile_entity_presence() -> void:
 	var changed := false
 	for id: String in Game.sim.entities.keys():
@@ -1108,7 +1169,10 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		if _map_transition_stale_cover():
 			return
 		_refresh_entities_watching_counter(String(payload.get("id", "")))
-		_reconcile_entity_presence()
+		_reconcile_entity_presence_or_defer()
+	elif type == WIEvents.DIALOGUE_ENDED:
+		# The defer's flush point -- see _presence_reconcile_deferred's contract.
+		_flush_deferred_presence_reconcile()
 	elif type == WIEvents.ITEM_GAINED:
 		if _map_transition_stale_cover():
 			return

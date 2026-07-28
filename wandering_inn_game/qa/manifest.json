@@ -3348,7 +3348,9 @@
     "dialogue": [
      "krshia_crate",
      "pallass_forge_clerk",
+     "pallass_forge_smith",
      "pallass_grimalkin",
+     "pallass_lift_attendant",
      "pallass_market_clerk",
      "selys_delivery"
     ],
@@ -4780,6 +4782,36 @@
     "systems": [
      "exploration",
      "settings"
+    ]
+   }
+  },
+  {
+   "script": "regional_work_loop",
+   "seed": 9,
+   "fixture": "near_pallass",
+   "note": "v0.15 T4.4 (Lane B population): the regional repeatable-work canonical -- riverfarm_field_board, parlor_errand_slate and forge_fetch_slips each pay 2 gold once per waking, refuse a second take in the same waking, and re-arm after a sleep. Exact gold ledger 60 -> 62 -> 64 -> 66 across the three, the field board banked twice across the sleep, brothers_marker unbanked so the slate's marker-rate variant is provably unmatched, zero combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "brothers_parlor",
+     "guild",
+     "inn_upstairs",
+     "pallass_forge",
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "near_pallass"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "night_phase"
     ]
    }
   }
