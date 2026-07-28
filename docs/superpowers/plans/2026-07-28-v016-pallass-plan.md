@@ -1338,12 +1338,12 @@ Variant order is deliberate — last-match-wins puts a co-banking player on the 
 }
 ```
 
-- [ ] **Step 1:** Read both shipped graphs end to end; match the clerks' registers (the market clerk's is procedural-neutral; the permit clerk's is "I only handle paper").
-- [ ] **Step 2:** Append the options and nodes **exactly as drafted**, speaker strings included: `"Tier Clerk"` for the market clerk's two new nodes, `"Forge-Tier Clerk"` for the permit clerk's three. Confirm with `python3 -c "import json;d=json.load(open('data/dialogue/pallass_market_clerk.json'));print(sorted({n['speaker'] for n in d['nodes'].values()}))"` (and the same for `pallass_forge_clerk.json`) — each must print a ONE-element list after the edit.
-- [ ] **Step 3: Softlock guard:** both hubs already carry always-available options.
-- [ ] **Step 4: Run** `test_dialogue`, `test_content`, `test_copy_fit`.
-- [ ] **Step 5: Run** `qa/ci_sweep.sh --only pallass_walkthrough,pallass_peek,pallass_round_trip,spine_reach` — expect green.
-- [ ] **Step 6: Commit** `feat(dialogue): the queue that outranks itself, in two offices`.
+- [x] **Step 1:** Read both shipped graphs end to end; match the clerks' registers (the market clerk's is procedural-neutral; the permit clerk's is "I only handle paper").
+- [x] **Step 2:** Append the options and nodes **exactly as drafted**, speaker strings included: `"Tier Clerk"` for the market clerk's two new nodes, `"Forge-Tier Clerk"` for the permit clerk's three. Confirm with `python3 -c "import json;d=json.load(open('data/dialogue/pallass_market_clerk.json'));print(sorted({n['speaker'] for n in d['nodes'].values()}))"` (and the same for `pallass_forge_clerk.json`) — each must print a ONE-element list after the edit.
+- [x] **Step 3: Softlock guard:** both hubs already carry always-available options.
+- [x] **Step 4: Run** `test_dialogue`, `test_content`, `test_copy_fit`.
+- [x] **Step 5: Run** `qa/ci_sweep.sh --only pallass_walkthrough,pallass_peek,pallass_round_trip,spine_reach` — expect green.
+- [x] **Step 6: Commit** `feat(dialogue): the queue that outranks itself, in two offices`.
 
 ### Task 2.6: `ledger_eats_first` in `data/quests.json` + the SKILL/HELP props
 

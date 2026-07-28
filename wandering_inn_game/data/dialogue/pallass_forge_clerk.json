@@ -76,6 +76,20 @@
     {
      "text": "Not now.",
      "end": true
+    },
+    {
+     "text": "The stamp clerk endorsed the entry side. Countersign the release.",
+     "requires": {
+      "accomplishment": {
+       "queue_notice_endorsed": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "queue_notice_countersigned": 1
+      }
+     },
+     "goto": "queue_release"
     }
    ]
   },
@@ -165,6 +179,50 @@
    "options": [
     {
      "text": "My thanks.",
+     "end": true
+    }
+   ]
+  },
+  "queue_release": {
+   "speaker": "Forge-Tier Clerk",
+   "text": "I only handle paper, and this is paper, so we are finally in agreement about something. The release side is held because this office is waiting on its own supplies, which are in the queue. But an endorsed entry outranks a held release. That is the rule. Nobody has ever used it.",
+   "options": [
+    {
+     "text": "Use it.",
+     "effects": [
+      {
+       "accomplishment": "queue_notice_countersigned"
+      }
+     ],
+     "goto": "queue_release_done"
+    },
+    {
+     "text": "Why has nobody used it?",
+     "goto": "queue_release_why"
+    }
+   ]
+  },
+  "queue_release_why": {
+   "speaker": "Forge-Tier Clerk",
+   "text": "Because you have to walk to the other office first, and everybody assumes the answer is no. It is generally no. It is not no today.",
+   "options": [
+    {
+     "text": "Then countersign it.",
+     "effects": [
+      {
+       "accomplishment": "queue_notice_countersigned"
+      }
+     ],
+     "goto": "queue_release_done"
+    }
+   ]
+  },
+  "queue_release_done": {
+   "speaker": "Forge-Tier Clerk",
+   "text": "Countersigned. Take it to the consignee. She signs last, which is the only part of this that was ever simple.",
+   "options": [
+    {
+     "text": "She signs last.",
      "end": true
     }
    ]
