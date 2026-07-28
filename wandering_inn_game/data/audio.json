@@ -87,9 +87,11 @@
    "cooldown_ms": 120
   },
   {
+   "_comment": "v0.16.1 finding 23 -- THE COMBAT-BEAT CLOCK. Every row keyed on attack_resolved / combatant_downed / skill_resolved / reaction_triggered now listens to `ui_combat_beat` and matches the original event id through `beat_type`. Reason: WICombatAI.take_turn emits an entire AI turn SYNCHRONOUSLY, so footsteps, attack, downed and the sting all reached the raw bus at t=0 while combat_playback.drain() unspooled the visuals one beat_delay() apart -- a kill after a 3-cell approach was heard ~1.5-2s before it was seen, worst of all for the player's own death (which by definition happens on an enemy turn). combat_screen emits UI_COMBAT_BEAT from BOTH paths: the live player turn in the same frame as the sim (timing unchanged), the playback path at DEQUEUE, beside the animation. `dashed` and `combat_finished` are DELIBERATELY still raw -- scope stays this set.",
    "id": "attack_hit",
-   "event": "attack_resolved",
+   "event": "ui_combat_beat",
    "payload": {
+    "beat_type": "attack_resolved",
     "hit": true
    },
    "stream": "res://assets/audio/sfx/attack_hit.wav",
@@ -99,8 +101,9 @@
   },
   {
    "id": "attack_miss",
-   "event": "attack_resolved",
+   "event": "ui_combat_beat",
    "payload": {
+    "beat_type": "attack_resolved",
     "hit": false
    },
    "stream": "res://assets/audio/sfx/attack_miss.wav",
@@ -111,8 +114,9 @@
   {
    "_comment": "Voice bus (BUS_NAMES' 4th, previously unused) so a bark is never touched by the Music-bus duck or the SFX slider alone.",
    "id": "pc_hurt",
-   "event": "attack_resolved",
+   "event": "ui_combat_beat",
    "payload": {
+    "beat_type": "attack_resolved",
     "target": "pc",
     "hit": true
    },
@@ -128,8 +132,9 @@
   },
   {
    "id": "pc_death",
-   "event": "combatant_downed",
+   "event": "ui_combat_beat",
    "payload": {
+    "beat_type": "combatant_downed",
     "id": "pc"
    },
    "stream": "res://assets/audio/sfx/pc_death.wav",
@@ -139,8 +144,9 @@
   },
   {
    "id": "skill_cast_physical",
-   "event": "skill_resolved",
+   "event": "ui_combat_beat",
    "payload": {
+    "beat_type": "skill_resolved",
     "skill": "power_strike"
    },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
@@ -150,8 +156,9 @@
   },
   {
    "id": "skill_cast_fire",
-   "event": "skill_resolved",
+   "event": "ui_combat_beat",
    "payload": {
+    "beat_type": "skill_resolved",
     "skill": "flame_bolt"
    },
    "stream": "res://assets/audio/sfx/skill_fire.wav",
@@ -161,8 +168,9 @@
   },
   {
    "id": "skill_cast_fire_line",
-   "event": "skill_resolved",
+   "event": "ui_combat_beat",
    "payload": {
+    "beat_type": "skill_resolved",
     "skill": "flame_jet"
    },
    "stream": "res://assets/audio/sfx/skill_fire.wav",
@@ -172,8 +180,9 @@
   },
   {
    "id": "skill_cast_frost",
-   "event": "skill_resolved",
+   "event": "ui_combat_beat",
    "payload": {
+    "beat_type": "skill_resolved",
     "skill": "frost_bolt"
    },
    "stream": "res://assets/audio/sfx/skill_frost.wav",
@@ -183,8 +192,9 @@
   },
   {
    "id": "skill_cast_arcane",
-   "event": "reaction_triggered",
+   "event": "ui_combat_beat",
    "payload": {
+    "beat_type": "reaction_triggered",
     "skill": "mana_shield"
    },
    "stream": "res://assets/audio/sfx/skill_arcane.wav",
@@ -195,8 +205,8 @@
   {
    "_comment_skill_coverage": "Skill sounds reuse four curated timbres by effect family, not literal element name.",
    "id": "skill_cast_fire_scythe",
-   "event": "skill_resolved",
-   "payload": { "skill": "flame_scythe" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "flame_scythe" },
    "stream": "res://assets/audio/sfx/skill_fire.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -204,8 +214,8 @@
   },
   {
    "id": "skill_cast_fire_burst",
-   "event": "skill_resolved",
-   "payload": { "skill": "flare_burst" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "flare_burst" },
    "stream": "res://assets/audio/sfx/skill_fire.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -213,8 +223,8 @@
   },
   {
    "id": "skill_cast_fire_pillar",
-   "event": "skill_resolved",
-   "payload": { "skill": "flame_pillar" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "flame_pillar" },
    "stream": "res://assets/audio/sfx/skill_fire.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -222,8 +232,8 @@
   },
   {
    "id": "skill_cast_frost_shard",
-   "event": "skill_resolved",
-   "payload": { "skill": "ice_shard" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "ice_shard" },
    "stream": "res://assets/audio/sfx/skill_frost.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -231,8 +241,8 @@
   },
   {
    "id": "skill_cast_frost_floor",
-   "event": "skill_resolved",
-   "payload": { "skill": "icy_floor" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "icy_floor" },
    "stream": "res://assets/audio/sfx/skill_frost.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -240,8 +250,8 @@
   },
   {
    "id": "skill_cast_arcane_spellbound",
-   "event": "skill_resolved",
-   "payload": { "skill": "spellbound_strike" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "spellbound_strike" },
    "stream": "res://assets/audio/sfx/skill_arcane.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -249,8 +259,8 @@
   },
   {
    "id": "skill_cast_arcane_keener",
-   "event": "skill_resolved",
-   "payload": { "skill": "keener_edge" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "keener_edge" },
    "stream": "res://assets/audio/sfx/skill_arcane.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -258,8 +268,8 @@
   },
   {
    "id": "skill_cast_arcane_calming",
-   "event": "skill_resolved",
-   "payload": { "skill": "calming_touch" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "calming_touch" },
    "stream": "res://assets/audio/sfx/skill_arcane.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -267,8 +277,8 @@
   },
   {
    "id": "skill_cast_arcane_second_wind",
-   "event": "skill_resolved",
-   "payload": { "skill": "second_wind" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "second_wind" },
    "stream": "res://assets/audio/sfx/skill_arcane.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -276,8 +286,8 @@
   },
   {
    "id": "skill_cast_physical_piercing_strikes",
-   "event": "skill_resolved",
-   "payload": { "skill": "piercing_strikes" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "piercing_strikes" },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -285,8 +295,8 @@
   },
   {
    "id": "skill_cast_physical_quick_slash",
-   "event": "skill_resolved",
-   "payload": { "skill": "quick_slash" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "quick_slash" },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -294,8 +304,8 @@
   },
   {
    "id": "skill_cast_physical_flash_cut",
-   "event": "skill_resolved",
-   "payload": { "skill": "flash_cut" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "flash_cut" },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -303,8 +313,8 @@
   },
   {
    "id": "skill_cast_physical_devastating_slash",
-   "event": "skill_resolved",
-   "payload": { "skill": "devastating_slash" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "devastating_slash" },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -312,8 +322,8 @@
   },
   {
    "id": "skill_cast_physical_triple_thrust",
-   "event": "skill_resolved",
-   "payload": { "skill": "triple_thrust" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "triple_thrust" },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -321,8 +331,8 @@
   },
   {
    "id": "skill_cast_physical_extended_sweep",
-   "event": "skill_resolved",
-   "payload": { "skill": "extended_sweep" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "extended_sweep" },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -330,8 +340,8 @@
   },
   {
    "id": "skill_cast_physical_spear_flurry",
-   "event": "skill_resolved",
-   "payload": { "skill": "spear_flurry" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "spear_flurry" },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -339,8 +349,8 @@
   },
   {
    "id": "skill_cast_physical_power_shot",
-   "event": "skill_resolved",
-   "payload": { "skill": "power_shot" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "power_shot" },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -348,8 +358,8 @@
   },
   {
    "id": "skill_cast_physical_quick_nock",
-   "event": "skill_resolved",
-   "payload": { "skill": "quick_nock" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "quick_nock" },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -357,8 +367,8 @@
   },
   {
    "id": "skill_cast_physical_piercing_shot",
-   "event": "skill_resolved",
-   "payload": { "skill": "piercing_shot" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "piercing_shot" },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -366,8 +376,8 @@
   },
   {
    "id": "skill_cast_physical_raskghar_maul",
-   "event": "skill_resolved",
-   "payload": { "skill": "raskghar_maul" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "raskghar_maul" },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -375,8 +385,8 @@
   },
   {
    "id": "skill_cast_physical_slam",
-   "event": "skill_resolved",
-   "payload": { "skill": "slam" },
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "skill_resolved", "skill": "slam" },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -13.0,
@@ -409,7 +419,8 @@
   },
   {
    "id": "downed",
-   "event": "combatant_downed",
+   "event": "ui_combat_beat",
+   "payload": { "beat_type": "combatant_downed" },
    "stream": "res://assets/audio/sfx/downed.wav",
    "bus": "SFX",
    "volume_db": -14.0,

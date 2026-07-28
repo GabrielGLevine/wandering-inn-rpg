@@ -39,6 +39,7 @@ const KNOWN_EVENTS: Dictionary = {
 	"skill_resolved": true,
 	"skill_used": true,
 	"toast": true,
+	"ui_combat_beat": true,
 	"ui_dialogue_shown": true,
 	"ui_dialogue_line_hidden": true,
 	"ui_pause_hidden": true,
@@ -195,6 +196,20 @@ func _init() -> void:
 			_fail("pending must be a bool: %s" % id)
 		if not bool(entry.get("pending", false)) and not _stream_ok(stream):
 			_fail("missing audio stream for %s: %s" % [id, stream])
+		# v0.16.1 finding 23: combat-beat SFX must ride the PLAYBACK clock, not
+		# the sim clock -- an AI turn is emitted synchronously while its visuals
+		# unspool one beat_delay() apart, so a raw-event row is heard seconds
+		# before its animation. These four types are therefore forbidden as raw
+		# event keys; they key off `ui_combat_beat` and name themselves in
+		# `beat_type`. (`dashed`/`combat_finished` stay raw -- scope is this set.)
+		if event_type in ["attack_resolved", "combatant_downed", "skill_resolved", "reaction_triggered"]:
+			_fail("combat-beat audio must key off ui_combat_beat + payload.beat_type, not the raw %s event: %s" % [event_type, id])
+		if event_type == "ui_combat_beat":
+			var beat_payload: Dictionary = entry.get("payload", {})
+			var beat_type := String(beat_payload.get("beat_type", ""))
+			if not beat_type in ["attack_resolved", "combatant_downed", "skill_resolved", "reaction_triggered"]:
+				_fail("ui_combat_beat row %s has invalid/missing payload.beat_type: %s" % [id, beat_type])
+
 		if event_type == "player_moved":
 			var payload: Dictionary = entry.get("payload", {})
 			var family := String(payload.get("floor_family", ""))

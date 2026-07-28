@@ -131,6 +131,13 @@ const UI_CONSOLIDATION_PROMPT_RENDERED := &"ui_consolidation_prompt_rendered"
 const UI_CONSOLIDATION_PROMPT_HIDDEN := &"ui_consolidation_prompt_hidden"
 const UI_TUTOR_LINE_RENDERED := &"ui_tutor_line_rendered"
 const UI_COMBAT_HINT_RENDERED := &"ui_combat_hint_rendered"
+## A combat beat AT THE MOMENT IT IS SEEN. The sim emits an AI turn
+## SYNCHRONOUSLY -- footsteps, attack, downed, sting, all at t=0 -- while the
+## playback queue unspools the visuals one beat_delay() apart, so anything that
+## listened to the raw bus fired seconds before the matching animation. Audio
+## rides THIS instead for the beats where the mismatch is audible; the payload
+## is the original one plus `beat_type`, so a data row matches on that.
+const UI_COMBAT_BEAT := &"ui_combat_beat"
 
 const UI_MOOD_APPLIED := &"ui_mood_applied"
 const UI_LIGHTS_RENDERED := &"ui_lights_rendered"

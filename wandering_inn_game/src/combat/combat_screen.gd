@@ -45,6 +45,22 @@ const AI_PLAYBACK_TYPES := [
 	WIEvents.STATUS_TICKED,
 ]
 
+## v0.16.1 finding 23: the beats whose AUDIO must ride the playback clock rather
+## than the sim clock. WICombatAI.take_turn emits a whole AI turn synchronously,
+## so every SFX for that turn used to fire in one burst at t=0 while drain()
+## unspooled the visuals one beat_delay() (AI_BEAT_SECONDS 0.5, settings-scaled)
+## apart -- a kill after a 3-cell approach was HEARD 1.5-2s before it was SEEN,
+## worst of all for the player's own death, which by definition happens on an
+## enemy turn. Both paths emit UI_COMBAT_BEAT for these types: the LIVE player
+## turn renders in the same frame the sim emits, so its timing is unchanged, and
+## the playback path emits at DEQUEUE, beside the animation. data/audio.json's
+## rows for these types key off `ui_combat_beat` + `beat_type` accordingly.
+## DELIBERATELY NARROW: dashed and combat_finished stay on the raw event.
+const COMBAT_BEAT_AUDIO_TYPES := [
+	WIEvents.COMBATANT_DOWNED, WIEvents.ATTACK_RESOLVED,
+	WIEvents.SKILL_RESOLVED, WIEvents.REACTION_TRIGGERED,
+]
+
 ## DASH_CONFIRM guards against fat-fingering AP away with a stray hotbar_2
 ## press (Dash used to fire instantly on selection) -- selecting it now
 ## behaves like an aimed slot: shows its cost/effect in the readout and ARMS
@@ -240,6 +256,9 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			if _mode != Mode.INACTIVE:
 				var event := _capture_playback_event(type, payload)
 				_play_event_visual(type, event["payload"])
+				# Same frame as the sim emit, so the live path's audio timing is
+				# byte-identical to before -- it just arrives via one clock now.
+				emit_combat_beat(type, payload)
 				_push_feed(event["payload"])
 				_render_tutor_line(tutor)
 				_refresh()
@@ -325,6 +344,22 @@ func _announce_first_mp_hint() -> void:
 	_first_mp_hint_shown = true
 	_hud.feed_push(FIRST_MP_HINT_LINE)
 	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_HINT_RENDERED, {"text": FIRST_MP_HINT_LINE})
+
+
+## See COMBAT_BEAT_AUDIO_TYPES. Called from BOTH dispatch paths -- the live arm
+## above (same frame as the sim emit) and combat_playback's dequeue (beside the
+## animation) -- so exactly one UI_COMBAT_BEAT reaches the bus per rendered beat.
+## The `_ui` capture bag is stripped: it is renderer bookkeeping, and audio rows
+## match on a payload SUBSET, so leaving it in would put frame-timing noise in
+## the domain-event stream for no gain. Public (no underscore) because
+## combat_playback is a separate object calling in.
+func emit_combat_beat(type: String, payload: Dictionary) -> void:
+	if not type in COMBAT_BEAT_AUDIO_TYPES:
+		return
+	var beat := payload.duplicate()
+	beat.erase("_ui")
+	beat["beat_type"] = type
+	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_BEAT, beat)
 
 
 func _join_and(names: Array[String]) -> String:

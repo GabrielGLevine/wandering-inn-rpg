@@ -284,6 +284,14 @@ func _apply_playback_event(event: Dictionary, with_visuals: bool) -> void:
 		var downed_windup_cells: Array = (payload.get("_ui", {}) as Dictionary).get("windup_cells", [])
 		if not downed_windup_cells.is_empty():
 			_renderer.expire_terrain("windup_danger", _cells_from_payload(downed_windup_cells))
+	# v0.16.1 finding 23: the beat's AUDIO fires HERE, at dequeue, beside the
+	# animation -- not seconds earlier when WICombatAI.take_turn emitted the
+	# whole turn synchronously. `with_visuals` gates it for the same reason it
+	# gates the animations: a skip fast-forward must not machine-gun the sounds.
+	# Delegated through the screen because this file stays free of bare autoload
+	# identifiers (the load()-under---script-mode contract at the top).
+	if with_visuals:
+		_screen.emit_combat_beat(type, payload)
 	match type:
 		WIEvents.TURN_STARTED:
 			_screen._render_tutor_line(tutor)
