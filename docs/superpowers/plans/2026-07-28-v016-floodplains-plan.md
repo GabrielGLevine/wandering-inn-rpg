@@ -1292,13 +1292,15 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
 
 ## Task 9 — Re-gate, machine playtest, PR
 
-- [ ] **Step 1: SETTLE THE TREE FIRST.** A sweep launched while edits continue produces a MIXED-STATE verdict; kill and relaunch. Commit everything before this task.
-- [ ] **Step 2: Census RE-check** — `python3 scripts/comment_census.py --check` from repo root; must return 0. **This is the SECOND measurement, not the first: the binding one already happened at the end of Task 6**, when the last DATA edit landed. Compare the lane's actual `_comment` total against the **2,405 projection / ~2,742 budget** from Global Constraints and carry the real number into the PR body. If it overshoots, cut `_comment` prose (move rationale to a QA-script `_comment` or `docs/CHOICE-LOG.md`, both census-exempt) — never cut player copy, which is the budget's own denominator. **Re-running this on this branch alone is NOT the gate:** the census is a property of the merged tree, so it is re-run at every merge-train merge, and post-train overshoot is the wave-close PR's to own (RULING B).
-- [ ] **Step 3: Structural lint** — `python3 wandering_inn_game/scripts/data_lint.py`. Zero findings.
+- [x] **Step 1: SETTLE THE TREE FIRST.** A sweep launched while edits continue produces a MIXED-STATE verdict; kill and relaunch. Commit everything before this task.
+- [x] **Step 2: Census RE-check** — `python3 scripts/comment_census.py --check` from repo root; must return 0. **This is the SECOND measurement, not the first: the binding one already happened at the end of Task 6**, when the last DATA edit landed. Compare the lane's actual `_comment` total against the **2,405 projection / ~2,742 budget** from Global Constraints and carry the real number into the PR body. If it overshoots, cut `_comment` prose (move rationale to a QA-script `_comment` or `docs/CHOICE-LOG.md`, both census-exempt) — never cut player copy, which is the budget's own denominator. **Re-running this on this branch alone is NOT the gate:** the census is a property of the merged tree, so it is re-run at every merge-train merge, and post-train overshoot is the wave-close PR's to own (RULING B).
+- [x] **Step 3: Structural lint** — `python3 wandering_inn_game/scripts/data_lint.py`. Zero findings.
 - [ ] **Step 4: Guidance mirror + doc drift** — `python3 scripts/sync_agent_guidance.py`, then `python3 scripts/render_qa_notes.py --write` **followed by a bare `python3 scripts/render_qa_notes.py` as the check** (RULING E — the bare call alone only diffs and returns 1), then `python3 scripts/check_doc_drift.py`. (The `leak-check` job runs all of these.)
-- [ ] **Step 5: Every unit suite.** Loop `tests/test_*.gd` under a 240s alarm; each must give exit 0 + a `^PASS` line + zero `SCRIPT ERROR|Parse Error|WARNING`. Report PER SCRIPT, never "everything passed". Minimum attention: `test_content`, `test_reachability`, `test_quests`, `test_dialogue`, `test_combat_data`, `test_combat_visuals`, `test_copy_fit`, `test_fixture_coherence`, `test_inn_guests`, `test_shipped_ids`.
-- [ ] **Step 6: Full balance harness** — `res://tests/sim_combat_batch.gd` under a 600s alarm, unsharded, once, as the gate. Both new cells inside the 0.55–0.95 window with median rounds 3–12; **no pre-existing cell may move** (this lane adds new ids only and retunes nothing shipped). **Copy the two measured win rates and medians into the PR body** — per RULING A that record, not a narrowed window, is what places these fights in the Floodplains band.
-- [ ] **Step 7: Targeted re-gate.** Run `qa/ci_sweep.sh --touching` against each shared surface this lane changed:
+  
+  > **2026-07-28 STAGE 3:** `render_qa_notes.py --write` then bare = `PASS: QA notes match manifest`; `sync_agent_guidance.py` clean. **`check_doc_drift.py` is RED and stays red on this branch** — `plan lacks DONE/ACTIVE header` for all four v0.16 lane plan docs, PRE-EXISTING at this branch's base (stash-probed). This lane added the header to its own doc; the other three are sibling lanes' owned files. Left unticked deliberately.
+- [x] **Step 5: Every unit suite.** Loop `tests/test_*.gd` under a 240s alarm; each must give exit 0 + a `^PASS` line + zero `SCRIPT ERROR|Parse Error|WARNING`. Report PER SCRIPT, never "everything passed". Minimum attention: `test_content`, `test_reachability`, `test_quests`, `test_dialogue`, `test_combat_data`, `test_combat_visuals`, `test_copy_fit`, `test_fixture_coherence`, `test_inn_guests`, `test_shipped_ids`.
+- [x] **Step 6: Full balance harness** — `res://tests/sim_combat_batch.gd` under a 600s alarm, unsharded, once, as the gate. Both new cells inside the 0.55–0.95 window with median rounds 3–12; **no pre-existing cell may move** (this lane adds new ids only and retunes nothing shipped). **Copy the two measured win rates and medians into the PR body** — per RULING A that record, not a narrowed window, is what places these fights in the Floodplains band.
+- [x] **Step 7: Targeted re-gate.** Run `qa/ci_sweep.sh --touching` against each shared surface this lane changed:
 
 ```
 qa/ci_sweep.sh --touching data/quests.json
@@ -1310,8 +1312,8 @@ qa/ci_sweep.sh --touching data/combatants.json
 
 **`--touching data/quests.json` now maps to 20+ canonicals** (`cisterns_*`, `crate_*`, `door_chain_*`, `horns_dig_*`, `invrisil_disagreement_*`, `pallass_walkthrough`, …) via `MONOLITH_SYSTEMS` (GH#281) — the skill doc's "maps to ZERO scripts" line is OUT OF DATE. Budget the time. Named scripts that MUST be green: `rags_meeting_loop`, `rags_gate_check`, `inn_guests_ext_loop`, `inn_guests_gate_proof`, `stages_loop`, `crate_light`, `crate_talk`, `wrong_order_talk`, `pallass_walkthrough`, `door_chain_fight`, `floodplains_bestiary_loop`, `parley_gates_check`, `parley_talkdowns_loop`, `beast_tamer_loop`, `goblin_night_patrol_loop`, `regional_work_loop`.
 
-- [ ] **Step 8: Full sweep, polled not blocked.** A full `ci_sweep.sh` cannot run foreground in one Bash call — the harness promotes it to background and a waiting agent is stranded. Idiom: start it writing to a log with its own `rc=` echo, then POLL with short foreground `sleep 60; tail -1 <log>` calls. A full sweep runs `flush_artifacts.sh` first, which WIPES prior windowed PNGs — take screenshots AFTER, not before.
-- [ ] **Step 9: Machine playtest (windowed), `wi-machine-playtest`.** Shot list:
+- [x] **Step 8: Full sweep, polled not blocked.** A full `ci_sweep.sh` cannot run foreground in one Bash call — the harness promotes it to background and a waiting agent is stranded. Idiom: start it writing to a log with its own `rc=` echo, then POLL with short foreground `sleep 60; tail -1 <log>` calls. A full sweep runs `flush_artifacts.sh` first, which WIPES prior windowed PNGs — take screenshots AFTER, not before.
+- [x] **Step 9: Machine playtest (windowed), `wi-machine-playtest`.** Shot list:
   1. `floodplains` at (17,21) — the camp mouth PRESENT (settled fixture) and ABSENT (`rags_gate_unmet_start`, the can-fail pair).
   2. `rags_camp` on arrival at (5,7), day — read the hollow for brown-box, rim legibility, and whether the fire pit reads as the focal point.
   3. `rags_camp` at dusk and at night — the mood row is the whole point; if it renders flat white the row did not take.
@@ -1323,8 +1325,10 @@ qa/ci_sweep.sh --touching data/combatants.json
   5. The `winter` dialogue node with all three report rungs visible (a synthetic all-routes state) — cursor legibility with five visible options.
   6. Krshia's hub with both F1 rows visible — option-list length and the `[Charming Smile]` visible-locked render.
   Drain every finding to `docs/VISUAL-LOG.md`.
-- [ ] **Step 10: CHOICE-LOG.** Append every entry from this plan's "Choices logged" list to `docs/CHOICE-LOG.md` before opening the PR.
+- [x] **Step 10: CHOICE-LOG.** Append every entry from this plan's "Choices logged" list to `docs/CHOICE-LOG.md` before opening the PR.
 - [ ] **Step 11: PR** per `.github/PULL_REQUEST_TEMPLATE/issue-close.md` — `Closes #308`, `## Choices made` (options taken + rejected alternatives with reason), `## Validation evidence` (exact command + one-line result per gate), `## Player-visible proof` (which windowed script/seed, what was checked by eye), `## New agent context` (TRAPS/CONTRACTS added with `file:symbol`), `## Deferred / follow-ups` (the leads row below). **`[ci-full]` in the head commit message.**
+  
+  > **2026-07-28 STAGE 3:** NOT DONE by the implementer — this lane's agent is forbidden to push or run `gh`. Everything the PR body needs is in `.lane-progress.md` and the CHOICE-LOG entry: measured win rates/medians, the lane's `_comment` total, and the derived seed + observed WIN for both fight fixtures. The controller opens the PR.
 
   **Three things this lane's PR body MUST carry for the merge train:**
   1. **The measured medians and win rates** for `camp_ground_press_t1_rags_ally` and `camp_ground_press_t1_spear_ally`, next to the shipped Floodplains cells they are ordered against (RULING A — the window is deliberately the wide shipped precedent, so the PR body is the only place the band ordering is evidenced).
@@ -1415,18 +1419,18 @@ Every risk below has its mitigation baked into a numbered step.
 
 Run in this order; report PER COMMAND with its one-line result. Never "everything passed".
 
-- [ ] `python3 wandering_inn_game/scripts/data_lint.py` → zero findings
-- [ ] `python3 scripts/comment_census.py --check` → exit 0, DATA ≤ 15.0%, and this lane's `_comment` total at or under **2,405** (budget 112 + 0.1765 × new non-comment ≈ 2,742); the number goes in the PR body
-- [ ] `python3 scripts/sync_agent_guidance.py` → clean
+- [x] `python3 wandering_inn_game/scripts/data_lint.py` → zero findings
+- [x] `python3 scripts/comment_census.py --check` → exit 0, DATA ≤ 15.0%, and this lane's `_comment` total at or under **2,405** (budget 112 + 0.1765 × new non-comment ≈ 2,742); the number goes in the PR body
+- [x] `python3 scripts/sync_agent_guidance.py` → clean
 - [ ] `python3 scripts/render_qa_notes.py --write` **then** `python3 scripts/render_qa_notes.py` → rc=0 + `PASS: QA notes match manifest` (the bare call alone never writes), then `python3 scripts/check_doc_drift.py` → clean
-- [ ] `python3 wandering_inn_game/scripts/derive_qa_surfaces.py --check` → clean
-- [ ] `qa/run_qa.sh load_gate headless` → PASS with a real `result.json`
-- [ ] Every `tests/test_*.gd` under a 240s alarm → exit 0 **and** `^PASS` **and** zero `SCRIPT ERROR|Parse Error|WARNING`
-- [ ] `tests/sim_combat_batch.gd` (600s alarm, unsharded) → both new cells inside the 0.55–0.95 shipped-precedent window with median rounds 3–12; no shipped cell moved; **measured medians recorded in the PR body** (RULING A)
-- [ ] `qa/ci_sweep.sh --touching …` for all five shared surfaces → green
-- [ ] Full `qa/ci_sweep.sh` (polled) → green, `rc=0` read from the log's own echo
-- [ ] Headless smoke boot → clean
-- [ ] Windowed machine playtest, six shots, read by eye → findings drained to `docs/VISUAL-LOG.md`
+- [x] `python3 wandering_inn_game/scripts/derive_qa_surfaces.py --check` → clean
+- [x] `qa/run_qa.sh load_gate headless` → PASS with a real `result.json`
+- [x] Every `tests/test_*.gd` under a 240s alarm → exit 0 **and** `^PASS` **and** zero `SCRIPT ERROR|Parse Error|WARNING`
+- [x] `tests/sim_combat_batch.gd` (600s alarm, unsharded) → both new cells inside the 0.55–0.95 shipped-precedent window with median rounds 3–12; no shipped cell moved; **measured medians recorded in the PR body** (RULING A)
+- [x] `qa/ci_sweep.sh --touching …` for all five shared surfaces → green
+- [x] Full `qa/ci_sweep.sh` (polled) → green, `rc=0` read from the log's own echo
+- [x] Headless smoke boot → clean
+- [x] Windowed machine playtest, six shots, read by eye → findings drained to `docs/VISUAL-LOG.md`
 
 ## Exit criteria
 

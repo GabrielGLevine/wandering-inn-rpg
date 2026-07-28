@@ -270,6 +270,75 @@ shape under contact are marked FORK.
   rather than moved here, because the cells were hand-audited when the
   room was authored and moving her invalidates that audit, the mood row
   and the dynamism read.
+## 2026-07-28 — v0.16 F lane (#308) "The Price Kept" (implementation calls)
+
+The plan's rulings, as SHIPPED, plus the calls the implementation itself
+forced. (Wave-level rulings 12-20 in the v0.16 planning entry are the design
+side of the same list; this is what the code actually does.)
+
+- **RULING A — new `sim_combat_batch` cells gate at the wide shipped-precedent
+  window 0.55/0.95, not a narrowed band.** Band ordering is evidenced by
+  MEASURED medians in the PR body instead: `camp_ground_press_t1_rags_ally`
+  win 0.71 / median 4 (2-5), `camp_ground_press_t1_spear_ally` win 0.68 /
+  median 4 (2-6), against the shipped Floodplains stop cell
+  `rags_scouting_party_t1_solo` in the same window. Rejected: a 0.72-0.85 gate
+  — at 100 seeded runs sigma is ~0.04, so that is a 1-in-6 false red.
+  Both harness cells field ONE ally; the shipped encounter fields TWO, so real
+  play sits strictly above these readings.
+- **RULING B — the census constant is 112 per lane, not 450.** The 450 is the
+  whole-wave slack split four ways. Measured on this branch: DATA 169,081
+  `_comment` chars / 1,132,220 total = 14.9% (limit 15.0%); this lane's own
+  spend is 2,405 against a 112 + 0.1765x budget of ~2,924. The binding
+  measurement is the MERGED tree's, re-run at every train merge; post-train
+  residue is the wave-close PR's.
+- **RULING C — anchored inserts, never array-end appends, plus `f_`-prefixed
+  test locals.** Shipped anchors: `chieftains_price` (quests), `rags`
+  (combatants), `floodplains` (moods / LANDMARK_TOKENS), `ruin_surface`
+  (MAP_REQUIRES), the `rags_gate_check` manifest entry and AGENTS.md seed row,
+  `krshia_thread_door_neutral` (street stages). Two implementation additions:
+  `COMBAT_BAND_FIXTURES` took a HEAD-of-dict insert (its tail is the obvious
+  four-way collision point), and the new `test_dialogue` call was inserted
+  after `test_grimalkin_studies_gates_on_the_real_graph()` rather than at the
+  end of `_init`'s call list.
+- **RULING D — `docs/design/character-profiles.md` is SHARED and this lane is
+  READ-ONLY on it.** No Floodplains stub was pre-landed, so nothing was
+  appended at EOF.
+- **RULING E — `render_qa_notes.py --write` then a bare call as the check.**
+  Corollary found in implementation: `derive_qa_surfaces.py` has NO `--write`
+  flag at all (a bare call writes, `--check` diffs). The plan said `--write`;
+  the repo won.
+- **RULING F — no shipped `_comment` quotes a board-figure number.**
+  `test_combat_visuals` passes by EXCLUSION on all five new ids (none is in
+  `FIGURE_ROWS`, none in `audited`), and the plan said so plainly rather than
+  inventing a measurement. The windowed shot pass is the only evidence that
+  exists, and it FOUND the thing the exclusion was hiding: the three
+  `plains_scavenger_*` read as one mass (VISUAL-LOG, 2026-07-28).
+- **No `options`-array pin in any of the four new canonicals.** Four region
+  lanes append rows to Krshia's and Rags's hubs in one wave, and a pinned
+  `options` list compares WHOLE (exact members, exact order) — the #172
+  retirement-node wave reds four scripts that way. The exclusion proofs are
+  payload-filtered `assert_event_absent` and `assert_event_count` instead,
+  and every cursor index was derived from a real run's event log.
+- **The roster guard is POSITIVE-ONLY.** There is no working way to assert an
+  absent combatant: a bare-type `assert_event_absent combat_started` scans the
+  run's own event and reds, and `assert_state combat.combatants.relc` fails on
+  path-not-found — i.e. it fails exactly when it should pass. So D3 (Relc
+  fielding against the goblins if the region's `allies: ["relc"]` idiom is
+  copy-pasted) is guarded by an exact `equals` pin of the whole six-id
+  `combat.order`.
+- **`accomplishments.victories`, never a bare `victories`.** `WIGame.snapshot()`
+  has no top-level key, and `won_combat` deposits FRACTIONALLY under challenge
+  weighting while `victories` banks integer under both flag states.
+- **`check_doc_drift.py` is left RED on this branch, deliberately.** It fails
+  `plan lacks DONE/ACTIVE header` for all four v0.16 lane plan docs — a
+  PRE-EXISTING condition at this branch's base, proved with a stash probe.
+  This lane added the header to its OWN plan doc and left the other three
+  alone: they are sibling lanes' owned files. The gate goes green on the last
+  sibling merge, or the wave-close PR owns the remainder.
+- **`scene-dynamism-report.md` still NOT regenerated** (Stage 1's call, restated
+  because it is now a merge-train action item): running the tool rewrites the
+  whole ranked table and shifts ~10 unrelated scenes. Nothing gates the file.
+  Regenerate ONCE after the train.
 
 ## 2026-07-28 — v0.15 WAVE CLOSE (records, playtest, freeze prep)
 
