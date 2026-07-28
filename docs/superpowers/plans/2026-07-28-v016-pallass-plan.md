@@ -578,14 +578,14 @@ Both new options are `requires`-accomplishment gated, therefore HIDDEN (not visi
 
 Variant order is deliberate: `text_variants` are LAST-MATCH-WINS, so a co-banking player lands on the TALK line — matching the resolution ladder in Task 1.5.
 
-- [ ] **Step 1: Load `wi-adding-dialogue-and-quests`.** Read the whole shipped file first; match its 1-space indent.
-- [ ] **Step 2:** Append the two hub options and the five nodes exactly as drafted.
-- [ ] **Step 3: Shadow-out audit (mandatory).** The two shipped hub `text_variants` (`forge_golems_culled`, `seal_resolved`) are UNTOUCHED and no new variant is added to `hub` — the smith's greeting is unchanged in every shipped state. Record this in the PR's "New agent context".
-- [ ] **Step 4: Softlock guard check.** `commission_report` keeps `"Still working on it."` with neither `requires` nor `hide_when`; `commission` keeps the decline. `hub` keeps `"What's the bench rated for?"`.
-- [ ] **Step 5: Run** `res://tests/test_dialogue.gd` + `res://tests/test_content.gd` + `res://tests/test_copy_fit.gd` — expect PASS. Copy-fit will red any `text` past the 200-char page budget.
-- [ ] **Step 6: Run** `qa/ci_sweep.sh --only pallass_walkthrough` and confirm the 3-row pin at line ~1258 still passes.
-- [ ] **Step 7: Census check.**
-- [ ] **Step 8: Commit** `feat(dialogue): the smith's commission, the broker, and the settle`.
+- [x] **Step 1: Load `wi-adding-dialogue-and-quests`.** Read the whole shipped file first; match its 1-space indent.
+- [x] **Step 2:** Append the two hub options and the five nodes exactly as drafted.
+- [x] **Step 3: Shadow-out audit (mandatory).** The two shipped hub `text_variants` (`forge_golems_culled`, `seal_resolved`) are UNTOUCHED and no new variant is added to `hub` — the smith's greeting is unchanged in every shipped state. Record this in the PR's "New agent context".
+- [x] **Step 4: Softlock guard check.** `commission_report` keeps `"Still working on it."` with neither `requires` nor `hide_when`; `commission` keeps the decline. `hub` keeps `"What's the bench rated for?"`.
+- [x] **Step 5: Run** `res://tests/test_dialogue.gd` + `res://tests/test_content.gd` + `res://tests/test_copy_fit.gd` — expect PASS. Copy-fit will red any `text` past the 200-char page budget.
+- [x] **Step 6: Run** `qa/ci_sweep.sh --only pallass_walkthrough` and confirm the 3-row pin at line ~1258 still passes.
+- [x] **Step 7: Census check.**
+- [x] **Step 8: Commit** `feat(dialogue): the smith's commission, the broker, and the settle`.
 
 ### Task 1.4: The temper golem — combatant, encounter, parley, gated cell
 
@@ -700,6 +700,13 @@ Interact-only is what makes `[Stand out of its correction and leave it.]` reacha
 }
 ```
 
+> **BINDING TASK-1.3 HANDOFF (deferred FIGHT arm).** `golem_recalibrated` has no producer until this task, and `test_reachability.gd` reds any dialogue `requires`/`text_variants.requires` on a zero-producer counter. So Task 1.3 shipped the smith's graph WITHOUT its two FIGHT-arm blocks. **Restore both in the SAME commit as the encounter**, into `data/dialogue/pallass_forge_smith.json`:
+> 1. the `commission_report` option `"[Tell her what happened to the calibration rig.]"` (requires `golem_recalibrated` 1, effect `standards_tempered`, goto `commission_settled`), inserted between the `[Show her the billet you ran.]` and `[Tell her the argument is settled.]` options;
+> 2. the `commission_settled` `text_variants` entry gated on `golem_recalibrated` ("The rig is honest again and my apprentice gets a fair reading. I will not thank you over a hot hammer. Take it as said."), inserted FIRST in the variant array (last-match-wins ladder: rig < temper < broker).
+>
+> Without them the FIGHT route cannot report and the quest's third resolution path is unreachable from dialogue, and NO gate says so.
+
+- [ ] **Step 0 (task-1.3 handoff):** Restore the two FIGHT-arm blocks in `pallass_forge_smith.json` per the block above, in this task's commit.
 - [ ] **Step 1: Load `wi-adding-an-encounter`.**
 - [ ] **Step 2:** Splice the combatant row: `python3 wandering_inn_game/scripts/splice_json.py --file data/combatants.json --container combatants --record-file <draft.json>`. The tool re-parses, asserts sibling count +1 and byte-identity outside the splice, and exits non-zero with the file UNTOUCHED on failure.
 - [ ] **Step 3:** Add the encounter entity + the parley graph + the gated cell. **`grep -n trigger_radius` the finished `pallass_forge_hall.json` — it must return NOTHING.** An entity carrying both `conversation` and `trigger_radius` ships green through every gate and only surfaces as a mid-crossing ambush in play.
@@ -749,6 +756,9 @@ Interact-only is what makes `[Stand out of its correction and leave it.]` reacha
 	assert(String(WIQuests.resolved_path(p_tempered, {"temper_run": 1, "standards_brokered": 1})["accomplishment"]) == "standards_brokered", "ran it THEN brokered records the BROKERING -- the claim that outlives you leaving")
 ```
 
+> **BINDING TASK-1.3 HANDOFF (deferred quest-start effect).** `test_content.gd:1122-1124` reds any dialogue effect starting a quest id absent from `data/quests.json`, so Task 1.3 shipped the smith's `"I'll take the commission."` option with only its `standards_commission_taken` effect. **Restore `{ "quest": "tempered_standards" }` as the FIRST entry of that option's `effects` array in the SAME commit that splices the quest block** (one verb per dict — it is a second dict, never a second key). Without it the quest never starts, the journal never shows it, and every gate stays green.
+
+- [ ] **Step 0 (task-1.3 handoff):** Restore the `{ "quest": "tempered_standards" }` effect dict in `pallass_forge_smith.json` per the block above, in this task's commit.
 - [ ] **Step 1:** Splice the quest block: `splice_json.py --file data/quests.json --container quests --record-file <draft.json>`.
 - [ ] **Step 2:** Add the `test_quests.gd` pins.
 - [ ] **Step 3: Run** `res://tests/test_quests.gd` (`_resolution_order` guard + the new pins) and `res://tests/test_content.gd` (`_validate_quests` cross-refs every `complete_when` counter against a real producer) and `res://tests/test_reachability.gd` (every `resolution_paths[].accomplishment` needs a producer).

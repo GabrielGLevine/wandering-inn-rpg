@@ -44,6 +44,35 @@
     {
      "text": "I'll let you work.",
      "end": true
+    },
+    {
+     "_comment": "v0.16 P1 start. requires-hidden on saw_the_failed_temper (banked only by forge_reject_bin, which near_pallass never interacts), so pallass_walkthrough's 3-row hub pin and its index navigation are untouched.",
+     "text": "Nine blades in your reject bin, all failed the same way.",
+     "requires": {
+      "accomplishment": {
+       "saw_the_failed_temper": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "standards_commission_taken": 1
+      }
+     },
+     "goto": "commission"
+    },
+    {
+     "text": "About your commission.",
+     "requires": {
+      "accomplishment": {
+       "standards_commission_taken": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "standards_tempered": 1
+      }
+     },
+     "goto": "commission_report"
     }
    ]
   },
@@ -85,6 +114,149 @@
     },
     {
      "text": "That's most of it.",
+     "end": true
+    }
+   ]
+  },
+  "commission": {
+   "speaker": "Forge-Tier Smith",
+   "text": "You counted them. Good. My apprentice's hand is the steadiest on this tier and the examiner has failed her nine times running. One of us is wrong and it is not her.",
+   "options": [
+    {
+     "text": "I'll take the commission.",
+     "effects": [
+      {
+       "accomplishment": "standards_commission_taken"
+      }
+     ],
+     "goto": "commission_brief"
+    },
+    {
+     "text": "That sounds like your argument, not mine.",
+     "end": true
+    }
+   ]
+  },
+  "commission_brief": {
+   "speaker": "Forge-Tier Smith",
+   "text": "Hall's through the door past the second bench. Run the temper yourself if you have the eye for it, or read the examiner's own notice on my wall and come tell me what it says. Watch the calibration rig either way. It has been drifting.",
+   "options": [
+    {
+     "text": "I'll look at the hall.",
+     "end": true
+    },
+    {
+     "text": "Drifting how?",
+     "goto": "commission_drift"
+    }
+   ]
+  },
+  "commission_drift": {
+   "speaker": "Forge-Tier Smith",
+   "text": "It walks its own tolerance and corrects late. On a slab that is a scratch. On a person it is a season. Do not stand where it corrects.",
+   "options": [
+    {
+     "text": "Understood.",
+     "end": true
+    }
+   ]
+  },
+  "commission_report": {
+   "speaker": "Forge-Tier Smith",
+   "text": "Well? Say it in the order it happened.",
+   "options": [
+    {
+     "_comment": "TALK arm. Banks standards_brokered and goes on to the resolution -- brokering is a separate act from reporting it, which is why it does not bank the terminal itself.",
+     "text": "[The standard measures recovery, not hardness. His own notice says so.]",
+     "requires": {
+      "accomplishment": {
+       "read_the_examination_standard": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "standards_brokered": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "standards_brokered"
+      }
+     ],
+     "goto": "broker"
+    },
+    {
+     "text": "[Show her the billet you ran.]",
+     "requires": {
+      "accomplishment": {
+       "temper_run": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "standards_tempered"
+      }
+     ],
+     "goto": "commission_settled"
+    },
+    {
+     "text": "[Tell her the argument is settled.]",
+     "requires": {
+      "accomplishment": {
+       "standards_brokered": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "standards_tempered"
+      }
+     ],
+     "goto": "commission_settled"
+    },
+    {
+     "text": "Still working on it.",
+     "end": true
+    }
+   ]
+  },
+  "broker": {
+   "speaker": "Forge-Tier Smith",
+   "text": "Recovery. He has been failing her for coming back, and she has been chasing hardness because I taught her to. So he is right and I am right and she paid for both. Say the rest of it out loud, because I am not going to.",
+   "options": [
+    {
+     "text": "Nobody was wrong. That was the whole problem.",
+     "goto": "commission_report"
+    },
+    {
+     "text": "She'll pass the next one.",
+     "goto": "commission_report"
+    }
+   ]
+  },
+  "commission_settled": {
+   "speaker": "Forge-Tier Smith",
+   "text": "Then it is filed and it is finished. The bench is mine again until second bell.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "temper_run": 1
+      }
+     },
+     "text": "You ran it once and it came back. She has run it forty-one times and it came back too. Now the file says so. That is the difference and it should not have been yours to make."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "standards_brokered": 1
+      }
+     },
+     "text": "I have been arguing with that man for six years and it turns out we agreed the entire time. Do not repeat that. Especially to him."
+    }
+   ],
+   "options": [
+    {
+     "text": "She earned it.",
      "end": true
     }
    ]
