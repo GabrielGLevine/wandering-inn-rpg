@@ -22,27 +22,37 @@ Shots: `qa_output/_vlog_{day,dusk,night,post}/` (temporary capture scripts,
 deleted after reading) and the six new canonicals' own windowed runs
 (`flood_ledger_{talk,help,fight}`, `thicket_keeps_{talk,skill,fight}`).
 
-- [ ] **BLOCKER-CLASS — `witch_hut_door` (witch_hollow 1,7) is INVISIBLE to a
-  player.** `hollow_tree_8` (`hollow_canopy_tree`, cell (0,9)) y-sorts ABOVE
-  the door (9 > 7) and its canopy covers roughly rows 5-9 at x 0-2, so both
-  the door AND the PC standing on the approach cell (1,8) are swallowed by
-  dark canopy (`_vlog_day/17_hut_door_from_approach_day.png`; the PC is a
-  few stray pixels of silhouette at ~(360,300)). The hunter's `thicket_topic`
-  node does say "there's a hut the far side of the hollow", so the route is
-  not undiscoverable — but nothing on screen answers that line.
-  **TINT IS NOT THE LEVER, measured:** re-shot the identical cell and facing
-  with the door's tint pushed to `[2.4, 2.4, 2.4]` and the frame is visually
-  unchanged (`crop_tint_experiment`), because the problem is occlusion, not
-  contrast. The experiment was reverted; the shipped tint `[0.62,0.7,0.6]`
-  stands. Candidate fixes, ranked, all needing a design call:
-  (a) move `hollow_tree_8` (0,9) -> (0,11) — one shipped decorative row, no
-      gate reads it, but `witch_cottage_reachability` must be re-run;
-  (b) a bespoke small-hut sprite instead of `door` at render_scale 0.5 —
-      the honest fix, c-lane art;
-  (c) a `light` block on the door like `witch_cottage_prop` carries — helps
-      at dusk/night ONLY (`moods.json` `light_energy_by_phase.day` is 0.0).
-  **NOT a fix:** moving the door cell. Ruling 3 fixes (1,7) as the only cell
-  with a legal single approach outside the pinned cottage cluster.
+- [x] **FIXED (fix wave, uncommitted at time of writing → see the fix-wave
+  commit on `issue/305-riverfarm-depth`) — BLOCKER-CLASS `witch_hut_door`
+  (witch_hollow 1,7) was INVISIBLE to a player.** `hollow_tree_8`
+  (`hollow_canopy_tree`, cell (0,9)) y-sorted ABOVE the door (144 > 112) and
+  its canopy covers rows 5-9 at x 0-2, so both the door AND the PC standing on
+  the approach cell (1,8) were swallowed by dark canopy
+  (`_vlog_day/17_hut_door_from_approach_day.png`).
+  **Tint was measured NOT to be the lever** — the frame was visually unchanged
+  at `[2.4, 2.4, 2.4]`, because the cause was occlusion, not contrast.
+  **The lever was Y-SORT.** None of the three logged candidates was taken:
+  (a) fails on geometry (the canopy is 5.1 cells tall drawn UP from a bottom
+  anchor, so every column-0 base cell from y 9 to y 12 still covers the
+  approach row, and moving south only raises the sort key); (b) is c-lane art;
+  (c) helps at dusk/night only. Applied instead: the shipped, sort-only
+  `field_y_sort_bias_px` key (`inn_roof`/`rug_green` mechanism; entity-level
+  override precedent `inn_upstairs.json:235`, `street.json:1295`) at **-80.0**
+  on `hollow_tree_6`/`_7`/`_8`, one cell clear of each canopy's own top edge.
+  Pixels do not move. The door, the PC on (1,8), `hollow_offering_pot` (2,7)
+  and `thicket_line_den` (2,2) now render IN FRONT; tree stacking survives
+  (-32 < 16 < 64). The door's tint was then warmed to sunlit timber
+  (`[1.18,1.02,0.78]`, inside `pallass_forge`'s shipped 1.18 precedent) — the
+  plan's named lever, applied second, once occlusion stopped masking it.
+  Re-shot windowed: the door reads as a standalone framed doorway at the
+  hollow's west edge with the tree trunk drawn behind it, and the PC stands
+  clear on the approach cell. Ruling 3 held — the door cell is untouched and
+  `witch_cottage_reachability` re-ran green at seed 9.
+- [ ] Same class, NOT fixed here (no interactive entity reported invisible, so
+  out of the fix wave's scope): the SOUTH treeline `hollow_tree_3`/`_4`/`_5`
+  ((2,13)/(5,13)/(8,13)) canopies cover rows 9-13 across x 1-10 and still
+  y-sort above everything under them, including `briar_collectors_deep` (4,11)
+  and `hollow_true_knot` (8,10). Same one-key fix if a later pass wants it.
 - [ ] `line_stalker_a`/`_b` OVERLAP each other on the `witch_hollow` arena
   (`thicket_keeps_fight/01_line_stalkers_board.png`): the mothbear rig is
   taller than one cell, so the north stalker's body covers the south one's

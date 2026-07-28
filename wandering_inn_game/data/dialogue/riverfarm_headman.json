@@ -131,9 +131,11 @@
      "goto": "flood_brief"
     },
     {
+     "_comment": "REPORT ROWS all carry heard_flood_ledger beside their route counter: mill_flood_stack has no quest-start gate and basic_cleaning is the PC's STARTING field skill, so a wander into the mill banked flood_prep_done with started_quests empty and this hub then rendered the ask and the answer at once, settling a quest never offered. Stated on all three so a later ungated producer cannot leak either.",
      "text": "The tally's honest. Somebody's crop failed and they were ashamed of it.",
      "requires": {
       "accomplishment": {
+       "heard_flood_ledger": 1,
        "ledger_read_true": 1
       }
      },
@@ -153,6 +155,7 @@
      "text": "The flood work's done. The count came right in the doing.",
      "requires": {
       "accomplishment": {
+       "heard_flood_ledger": 1,
        "flood_prep_done": 1
       }
      },
@@ -172,6 +175,7 @@
      "text": "Your shortfall had teeth. The granary corner's clear now.",
      "requires": {
       "accomplishment": {
+       "heard_flood_ledger": 1,
        "granary_cleared": 1
       }
      },

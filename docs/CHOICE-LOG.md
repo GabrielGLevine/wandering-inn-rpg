@@ -1400,3 +1400,48 @@ by controller ruling — the plan was the defect, not the implementation.
   by ruling 3, and moving a shipped decorative tree is a design call outside
   this lane's "touch no existing row" instruction. Logged to VISUAL-LOG with
   three ranked candidate fixes for the controller.
+
+- **v0.16 #305 Riverfarm depth — fix wave after the traced adversarial review
+  (2026-07-28)**: three findings verified against the tree and applied; two
+  minors deferred to the milestone review (`.lane-progress.md`).
+  (1) **The CRITICAL was occlusion, and the lever was Y-SORT, not tint or the
+  cell.** `hollow_canopy_tree` is a 186x215 frame at `render_scale` 0.38
+  (~4.4 x 5.1 cells) drawn up from a bottom anchor, so each west-treeline tree
+  covers x 0-2 across the FIVE rows above its own base cell — `hollow_tree_8`
+  (0,9) therefore sat over `witch_hut_door` (1,7) AND its only approach (1,8),
+  and plain y-sort (144 > 112 > 128) drew the canopy over both. Fix: the
+  shipped, sort-only `field_y_sort_bias_px` key (the `inn_roof` / `rug_green`
+  mechanism; entity-level override precedent `inn_upstairs.json:235`,
+  `street.json:1295`) set to **-80.0** on `hollow_tree_6`/`_7`/`_8`, lifting
+  each key one cell clear of its own canopy's top edge. Pixels do not move;
+  `witch_hut_door`, the PC on (1,8), `hollow_offering_pot` (2,7) and
+  `thicket_line_den` (2,2) now render in front, and north-to-south stacking
+  between the three trees survives (-32 < 16 < 64). Ruling 3 held: the door
+  cell is untouched, `witch_cottage_prop` and
+  `qa/scripts/witch_cottage_reachability.json` are still byte-identical to
+  `main`. The door's tint was warmed to sunlit timber
+  ([0.62,0.7,0.6] -> [1.18,1.02,0.78], inside the shipped >1.0 precedent
+  `pallass_forge`'s 1.18) — the plan's named lever, applied SECOND, once
+  occlusion no longer masked it. Proven windowed: the door now reads as a
+  standalone framed doorway at the hollow's west edge with the trunk behind
+  it, and the PC stands clear on the approach cell.
+  (2) **R2's TALK route was a one-shot.** `thicket_brief`/`thicket_sign` hung
+  off the hub row that is `hide_when heard_thicket_keeps` — the counter that
+  row banks — so leaving the accept conversation at "I'll look into it." or
+  "I'll walk the line myself." orphaned `herd_rerouted` and `thicket_topic`'s
+  pointer at the hut permanently, leaving a non-mage low-level PC the FIGHT
+  route alone while the beat still read "Read the sign with the hunter".
+  Fixed with the re-enterable shape R1 already had on the tallyman (`requires`
+  the quest, `hide_when` the route's own terminal counter), **appended LAST**
+  in the hub so every cursor-pinned canonical keeps its indices.
+  (3) **Both quests could be REPORTED before they were asked for.** The
+  HELP/SKILL producers (`mill_flood_stack`, `hut_ward_scrap`) carry no
+  quest-start gate — and `basic_cleaning` is the PC's STARTING field skill —
+  so a wander into the mill banked `flood_prep_done` with `started_quests`
+  empty, and the giver's hub then rendered the question and its answer at
+  once. Fix: every REPORT row on both givers now requires `heard_*` alongside
+  its route counter (dialogue `requires` is AND over the accomplishment map,
+  `dialogue.gd:106`). Stated on all six rows, not just the two leaky ones, so
+  a later ungated producer cannot re-open the hole. Rejected: a new engine
+  gate key on `skill_uses` — `src/` is outside this lane (exit criterion 6)
+  and the dialogue gate closes the defect completely.
