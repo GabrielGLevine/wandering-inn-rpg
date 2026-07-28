@@ -255,3 +255,18 @@ composed tree, commit the regen. Squash-merges resurrect
 convention-untracked files silently (two lanes re-added the lane
 ledger after it was deliberately untracked) — enforce local-only
 conventions with .gitignore, not convention.
+
+## Owner-auth merges bypass required checks (v0.16 close, bit for real)
+enforce_admins is OFF (deliberately, for the housekeeping flow), so an
+owner-auth `gh pr merge` SUCCEEDS on a PR with a FAILED required check —
+protection only guards non-admin merges. The v0.16 close PR was merged
+with Unit suites red because the merge ran in the same compound command
+as the verdict read (the exact class the commit/push rule already
+names). Discipline, extended: READ THE CHECKS TABLE AS ITS OWN STEP and
+parse pass/fail BEFORE any merge command; a merge is never compounded
+with its verdict. Corollary from the same incident: a close/hygiene PR
+gets the FULL 30-suite bar locally, not a hand-picked trio — the red
+suite (test_sim_core) was the one not picked; and exact-array pins on
+derived surfaces (active_leads) live in SIM tests too, not only QA
+scripts — grep tests/ for the surface (active_leads, lead_lines) before
+landing rows that grow it.
