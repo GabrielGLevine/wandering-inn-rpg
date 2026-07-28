@@ -2,6 +2,34 @@
 
 ## Shipped (compressed ledger; per-issue detail in merged PR bodies)
 
+- **v0.15 (merged, UNTAGGED) — 2026-07-28, Legibility & Life.** Five
+  phases, PRs #310-#314, all `[ci-full]` green. A
+  **delivery-layer / population / readability** triad: (1) the
+  DELIVERY LAYER — 18 authored act-beat openings so every pending beat
+  reads as a forward ask instead of a spoiled outcome, a Leads strip at
+  every mainline seam, and a lossless lore queue with its own journal
+  Lore tab (#310); (2) VIEWPORTS — the combat feed, journal rows and
+  sleep veil re-budgeted so panels stop eating their last line, plus
+  endings acknowledgment (#311); (3) guest ARC-WINDOWS (`GUEST_POOL_GATES`
+  takes an ANY-of Array, windows derived from pool gate AND rows so the
+  two cannot disagree) + a hygiene batch — dead fixture keys, the
+  variant guard, `{addr}`/arrival lint arms, the em-dash sweep, the
+  golem name split (#312); (4) the POPULATION pass — Pallass, Invrisil
+  and the dig camp given working inhabitants and regional work props
+  (#313); (5) READABILITY — arena scale/tint, rigs and per-map
+  `lights_by_day` (#314). Four ENGINE wins came out of it, each worth
+  more than its phase: the toast drain **defers** on an open modal
+  (queue pauses, never drops), the dialogue fail-safe **nulls its
+  walker** (one trip used to softlock movement, interact, inventory,
+  journal and pause permanently), the lore queue is **lossless**, and
+  the combat board got a **measured figure bar** — floor 1.25 cells /
+  ceiling 3.55, with one stated measurement rule (`idle_side`, that
+  animation's own sheet, alpha bbox height) after round 1's unstated
+  rule let the bar pass subjects that were failing it. The shipped
+  roster had never been computed: it spanned **20x**, 0.38 to 7.62
+  cells. 28 new counters, ALL data-derived — zero new bare code
+  literals, so the freeze cut is a regen with no hand-add (contrast
+  v0.14's `finale_played`). The tag cut is user-gated.
 - **v0.14 (merged, UNTAGGED) — 2026-07-27, the Main Quest wave.** The
   story line restructured end to end across nine phases: acts I–V
   reframed off the "post-game" framing, Act IV opening on the seal
@@ -38,18 +66,30 @@
   (#165), Hedault enchanting (#142), class Waves A–D2, path-diversity
   harness, release automation. Earlier: git history.
 
-## Now (2026-07-27): main line in, board user-gated
+## Now (2026-07-28): v0.15 in, v0.16 SPECCED not executed
 
-The Main Quest plays start→finale. Agent-actionable work is the
-final-review follow-up batch only (HANDOFF is the authority for both
-queues). User-held: the v0.14 tag cut; the arc-window guest-gate design
-proposal; Grimalkin's sprite re-measure; web/#195 audio listen → wiring
-pass; #211 leveling FEEL; 3 Rags reads; windup-overlay + rock-crab
-visual/band verdicts; lore rulings #134 (Wave D classes) / #141
-([Priest]); user-deferred #253 (mobile import picker); flake #140;
-#19 Steam HOLD.
+The Main Quest plays start→finale and now READS while it plays — v0.15
+closed the legibility gap the line had. Agent-actionable work is the
+v0.15 follow-up batch (HANDOFF is the authority for both queues), then
+v0.16 from its spec. User-held: **the tag cut (v0.14 and v0.15 are both
+merged and untagged)**; the six-ask Playtest-State bundle at the top of
+docs/VISUAL-LOG.md; web/#195 audio listen → wiring pass; #211 leveling
+FEEL; 3 Rags reads; windup-overlay + rock-crab visual/band verdicts;
+lore rulings #134 (Wave D classes) / #141 ([Priest]); user-deferred
+#253 (mobile import picker); flake #140; #19 Steam HOLD.
+(Two v0.14 user-gated items are now CLOSED by v0.15: the arc-window
+guest-gate call shipped in P3, and Grimalkin's sprite re-measure was
+REFUTED on measurement in P5 — the logged "2.3x Relc" was frame height,
+his figure is 1.25x, exactly canon.)
 
-## Next milestone candidates (v0.15 — pick on user word)
+## Next milestone: v0.16 Region Depth — SPECCED, NOT EXECUTED
+
+The spec and its issues already exist; the next session implements from
+them rather than re-designing:
+`docs/design/2026-07-28-v0.16-region-depth-spec.md` + issues
+**#305-#308**. Nothing in that spec has been built.
+
+## Later candidates (pick on user word)
 
 Note (user-corrected 2026-07-20): **Three Pillars already EXECUTED** —
 not as a named milestone but distributed across the waves (38 field
@@ -86,7 +126,10 @@ batch (HANDOFF) clears first either way.
 Freeze cut step-0: bump RELEASE in generate_shipped_ids.py, regen,
 commit BEFORE the tag; grep new `record_accomplishment` literals
 against STRUCTURAL_LITERALS in BOTH lists (the v0.8.0 `victories`
-trap). Bundle-latest check before tagging (`gh release list` on the
+trap). **v0.15's inventory is already walked** — 28 accomplishment
+adds, 0 removals in any of the five id classes, and the literal grep
+came back IDENTICAL to v0.14.0, so this cut is a clean regen with no
+hand-add (numbers in the v0.15 wave-close PR body). Bundle-latest check before tagging (`gh release list` on the
 assets repo — prereleases never win Latest). Rename-era note: any
 future config/name change repeats the #111 carry-over pattern
 (WISaveMigration + the legacy_seed canonical are the template).

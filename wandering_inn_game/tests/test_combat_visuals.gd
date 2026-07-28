@@ -540,7 +540,7 @@ const FIGURE_ROWS := {
 	"ruin_warden": 106.0,          # idle_side, 216px frame
 }
 ## 1.25 = the briar collector, the smallest figure any windowed read HAS
-## accepted. 3.55 = half a cell above `hired_blade_leader` (2.97); past ~3.5 a
+## accepted. 3.55 = half a cell above `hired_blade_leader` (3.05); past ~3.5 a
 ## rig eats the turn banner on the board's top row. These are the DESIGN bar:
 ## when a subject misses them the data moves, not the bar.
 const BOARD_FIGURE_MIN_CELLS := 1.25
@@ -550,10 +550,14 @@ const BOARD_FIGURE_MAX_CELLS := 3.55
 ## and were never photographed as defects, so failing them here would assert a
 ## verdict no windowed read has made:
 ##   river_wolf_a/_b/_c + wolf_companion (0.62), shield_spider (0.75),
-##   goblin_raider (0.99), goblin_shaman (1.09), goblin_chieftain (1.13).
+##   goblin_raider (0.96), goblin_shaman (1.00), goblin_chieftain (1.07).
 ## Nothing ships over the ceiling. Sweeping those eight is filed for wave-close
 ## triage / v0.16 — each needs its own windowed read before its scale moves,
 ## exactly as the audited rosters got one.
+## The three goblins were logged 0.99/1.09/1.13 at wave close: those are their
+## `idle_down` rows (176/194/181). The board plays `idle_side` (170/178/171),
+## so the rule above re-derives them lower — the SAME slip as round 1, one
+## layer out, in a comment nothing asserted against. Re-derived at close.
 
 
 func _board_cells(cfg: Dictionary, sprite_entry: Dictionary) -> float:
