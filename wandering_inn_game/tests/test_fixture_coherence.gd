@@ -24,6 +24,11 @@ const COMBAT_BAND_FIXTURES := {
 	"thicket_fight_start": 10,
 	"near_invrisil": 2,
 	"near_invrisil_fight": 10,
+	# v0.16 Invrisil (#306): both new route fixtures ride the geared warrior-10
+	# reference build the two new sim_combat_batch cells were measured at
+	# (alley_fence_t3_warrior10_solo / rest_bravos_t3_warrior10_solo).
+	"invrisil_setting_fight_start": 10,
+	"invrisil_hat_loud_start": 10,
 	"delve_fight_start": 11,
 	# 2026-07-26 Act V: the seal warden's own tuned band (spellsword14, the
 	# t4_spellsword14_party reference build sim_combat_batch gates the fight at).

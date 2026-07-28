@@ -1583,8 +1583,8 @@ Load `wi-writing-qa-scripts` before this phase. **Fixture-first policy:** every 
 | `invrisil_hat_quiet_start` | `adventurers_rest` / `[2,7]`, facing `[-1,0]` | `brothers_job_done` 1, `hat_job_taken` 1; `started_quests` += `the_hat_stays_on` | plates armed, hook adjacent |
 | `invrisil_hat_loud_start` | `adventurers_rest` / `[9,5]`, facing `[0,1]` | `brothers_job_done` 1, `hat_job_taken` 1; `started_quests` += `the_hat_stays_on` | level-10 build, faces the bravos |
 
-- [ ] **Step 1: Author all eight from the `near_invrisil` base**, editing only `current_map`, `player_cell`, `player_facing`, `accomplishments`, `started_quests`, `player_skills`, `removed_entities`, `inventory` and `rng_state`.
-- [ ] **Step 2: Derive every `rng_state`** — never hand-type one:
+- [x] **Step 1: Author all eight from the `near_invrisil` base**, editing only `current_map`, `player_cell`, `player_facing`, `accomplishments`, `started_quests`, `player_skills`, `removed_entities`, `inventory` and `rng_state`.
+- [x] **Step 2: Derive every `rng_state`** — never hand-type one:
 
 ```
 /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/_derive_rng_state.gd -- <seed>
@@ -1592,8 +1592,8 @@ Load `wi-writing-qa-scripts` before this phase. **Fixture-first policy:** every 
 
 `RNG_STATE_MIN_MAGNITUDE = 1_000_000` (`test_fixture_coherence.gd:378-388`) fails any value below 1e6 as hand-typed.
 
-- [ ] **Step 3: `MAP_REQUIRES` compliance.** The three fixtures standing inside `stationer`/`adventurers_rest` inherit Task 1.5's rows — `door_awakened` + `invrisil_attuned` are already in the base fixture. Confirm, do not assume.
-- [ ] **Step 4: `COMBAT_BAND_FIXTURES`.** Read the const's semantics at `test_fixture_coherence.gd:19-29` (fixture → expected class level; `near_invrisil_fight` is 10), then append:
+- [x] **Step 3: `MAP_REQUIRES` compliance.** The three fixtures standing inside `stationer`/`adventurers_rest` inherit Task 1.5's rows — `door_awakened` + `invrisil_attuned` are already in the base fixture. Confirm, do not assume.
+- [x] **Step 4: `COMBAT_BAND_FIXTURES`.** Read the const's semantics at `test_fixture_coherence.gd:19-29` (fixture → expected class level; `near_invrisil_fight` is 10), then append:
 
 ```gdscript
 	"invrisil_setting_fight_start": 10,
@@ -1602,7 +1602,7 @@ Load `wi-writing-qa-scripts` before this phase. **Fixture-first policy:** every 
 
 and make both fixtures' `classes` match the level the const declares.
 
-- [ ] **Step 5: Run** `test_fixture_coherence.gd` — expect PASS. **Commit** `test(qa): Invrisil v0.16 fixtures (#306)`.
+- [x] **Step 5: Run** `test_fixture_coherence.gd` — expect PASS. **Commit** `test(qa): Invrisil v0.16 fixtures (#306)`.
 
 ### Task 5.2: Canonical scripts
 

@@ -1,0 +1,86 @@
+{
+ "_comment": "stationer_room_loop + invrisil_v016_gate_check's start (FIXTURE-FIRST). Copied from boulevard_night_footpads_start -- the shipped, geared, level-10 Invrisil position that already carries the whole monotone chain test_fixture_coherence enforces (door_awakened/door_mounted/dig chain, riverfarm_attuned + blight_lifted + invrisil_attuned with the stone in inventory), the full POST_GAME_BACKBONE (near_invrisil itself only passes that by a name-keyed exemption) and melee_hit 57, which is what warrior L10's own `requires` asks for. Stands on invrisil_boulevard at (20,2), the cell invrisil_walkthrough observes the stationer's facade from, facing up into the new door at (20,1) -- row 1 is blocked end to end, so the bump that opens this script sets facing without moving and the door opens on interact. `observe` is added to player_skills as the QA-fixture-only grant near_invrisil already establishes (no shipped class grants [Appraise Foe] this early): the interior's three non-quest observes are the point of the loop. actions_since_sleep 45 puts the run at DUSK so the stationer's dust_motes ambience and its sconce pool are live in the windowed read; the boulevard's two night encounters sit behind encounter_when phase:[night] and are still shut at dusk. rng_state is seed 9's derived state (tests/_derive_rng_state.gd), never hand-typed; no fight resolves here, so it is inert.",
+ "version": 5,
+ "state": {
+  "current_map": "invrisil_boulevard",
+  "player_cell": [
+   20,
+   2
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 10
+  },
+  "gold": 0,
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "reached_two_classes": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1,
+   "raskghar_sealed": 1,
+   "post_game": 1,
+   "door_chain_started": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
+   "read_the_board": 1,
+   "riverfarm_attuned": 1,
+   "blight_lifted": 1,
+   "invrisil_attuned": 1,
+   "won_combat": 1,
+   "melee_hit": 57,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
+  },
+  "player_skills": [
+   "basic_cleaning",
+   "observe"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns",
+   "door_that_goes_elsewhere"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "invrisil_attunement_stone",
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
+  "container_state": {},
+  "actions_since_sleep": 45,
+  "rng_state": "-6393592048753323481"
+ }
+}
