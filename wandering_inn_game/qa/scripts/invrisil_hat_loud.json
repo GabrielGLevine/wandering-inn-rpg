@@ -1,5 +1,5 @@
 {
- "_comment": "I2 'THE HAT STAYS ON', THE LOUD ROUTE (v0.16 #306). Interacts the bravos at the far table, wins the fight, banks handoff_loud off the encounter's on_victory, and reports it to Wilovan for hat_job_done + 25 gold -- the loud evening is a live third route, not a failure state. The two plates are spawned in this fixture and deliberately untouched. Real fight, so the fixture's rng_state is load-bearing and DERIVED (tests/_derive_rng_state.gd); any seed search is recorded in this comment.",
+ "_comment": "I2 'THE HAT STAYS ON', THE LOUD ROUTE (v0.16 #306). Interacts the bravos at the far table, wins the fight, banks handoff_loud off the encounter's on_victory, and reports it to Wilovan for hat_job_done + 25 gold -- the loud evening is a live third route, not a failure state. The two plates are spawned in this fixture and deliberately untouched. Real fight, so the fixture's rng_state is load-bearing and DERIVED (tests/_derive_rng_state.gd); seed 9's state won on the first attempt, no search needed. The `merchant_warehouse` board reads cleanly at night, unlike `mercantile_alley` (see invrisil_setting_fight_start's phase note).",
  "fixture_save": "invrisil_hat_loud_start",
  "starts_at_title": true,
  "steps": [

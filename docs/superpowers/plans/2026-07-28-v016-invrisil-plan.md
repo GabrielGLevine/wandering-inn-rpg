@@ -1694,7 +1694,7 @@ The must-be-green named set, at minimum: `invrisil_walkthrough`, `invrisil_round
 
 ### Task 5.5: Windowed machine playtest
 
-- [ ] **Step 1: Load `wi-machine-playtest`.** Run windowed passes and capture these shots:
+- [x] **Step 1: Load `wi-machine-playtest`.** Run windowed passes and capture these shots:
   1. `invrisil_walkthrough` at (20,2) — the stationer facade now rendering as a **door**, not `hide_sprite` wall band (this changes the shipped `01c_boulevard_stationer` image; it is a capture, not an assert).
   2. The (18,1) Adventurer's Rest door on the facade band, and the two doors read together at x=18–20.
   3. `stationer.json` interior — full room, the client at (3,2), the clerk at (8,1), mood/vignette, **and the room's dressing**: the `walls.segments` perimeter reading as walls (not a crate ring), the `[16,21]/[17,21]` shop-board floor reading apart from the parlor's parquet, the writing table + stools at (3–5,5), the sconce pool at (4,1), and the `counter_left`/`counter_right` run at (5–6,1) reading as one counter.
@@ -1703,7 +1703,7 @@ The must-be-green named set, at minimum: `invrisil_walkthrough`, `invrisil_round
   6. `alley_fence_door` at (11,12) in the alleys, and its `gate_closed_toast`.
   7. Both new fight boards (`mercantile_alley` with the fence pair; `merchant_warehouse` with the bravos) — figure sizes, tints, hit-flash settling back to the resting modulate. **This is the ONLY figure read the four new rigs get** — per ruling F, `test_combat_visuals.gd` does not measure `hired_blade`, `human_laborer` or `citizen_f` board figures and passes by exclusion. Check by eye that each pair reads apart at a glance and that neither figure crowds its cell.
   8. The handover node and the locket grant toast; Wilovan's errand node with `{addr}` resolved.
-- [ ] **Step 2: Drain findings to `docs/VISUAL-LOG.md`** (repo-root docs/, the wave's log — note that `wandering_inn_game/docs/VISUAL-LOG.md` is a **second, distinct** file).
+- [x] **Step 2: Drain findings to `docs/VISUAL-LOG.md`** (repo-root docs/, the wave's log — note that `wandering_inn_game/docs/VISUAL-LOG.md` is a **second, distinct** file).
 
 ---
 

@@ -29,7 +29,7 @@
   { "action": "move", "direction": "down", "steps": 4 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "_comment": "== GATE 2: the fence's back door answers with its gate_closed_toast, not a fight, while heirloom_commission_started is unbanked. ==", "action": "wait_frames", "frames": 1 },
+  { "_comment": "== GATE 2: the fence's back door answers with its gate_closed_toast, not a fight, while heirloom_commission_started is unbanked. NOTE (proven by run, twice): this save has NOT cleared the footpads, and (11,11) is Chebyshev 2 from alley_footpads_a at (9,9) -- inside its trigger_radius. The teleport does not tick the encounter check and the following move is BLOCKED, so nothing fires; the whole-run assert_event_absent combat_started at the end is what keeps that honest. Any future step that walks a successful move into this pocket WILL start that fight. ==", "action": "wait_frames", "frames": 1 },
   { "action": "teleport", "map": "mercantile_alleys", "cell": [11, 11] },
   { "action": "wait_frames", "frames": 5 },
   { "action": "move", "direction": "down", "steps": 1 },

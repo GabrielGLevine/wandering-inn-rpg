@@ -1,5 +1,5 @@
 {
- "_comment": "THE ADVENTURER'S REST INTERIOR LOOP (v0.16 #306, I2's host room), stationer_room_loop's twin. Proves the new (18,1) boulevard door both ways, three non-quest observes and two of the three ambient pool NPCs, and the return landing back on (18,2). Reads the room UNARMED -- the fixture has no hat_job_taken, so rest_hat_hook and rest_corner_table are unspawned (their present_when) and the bravos are inert; invrisil_hat_quiet reads the same room armed. The bravos rig still BLOCKS (9,6) with its gate shut (entity_present reads present_when, not encounter_when), which is why the return route uses row 7. Dusk fixture, for the hearth light and the two sconce pools. Seed inert: no fight resolves.",
+ "_comment": "THE ADVENTURER'S REST INTERIOR LOOP (v0.16 #306, I2's host room), stationer_room_loop's twin. Proves the new (18,1) boulevard door both ways, three non-quest observes and two of the three ambient pool NPCs, and the return landing back on (18,2). Reads the room UNARMED -- the fixture has no hat_job_taken, so rest_hat_hook and rest_corner_table are unspawned (their present_when) and the bravos are inert; invrisil_hat_quiet reads the same room armed. The bravos rig still BLOCKS (9,6) with its gate shut (entity_present reads present_when, not encounter_when), which is why the return route uses row 7. NIGHT fixture -- the hearth pool, both sconce pools and the dust motes read at night and are flat at dusk (measured both ways; see stationer_room_loop's own comment). Seed inert: no fight resolves.",
  "fixture_save": "invrisil_rest_start",
  "starts_at_title": true,
  "steps": [
@@ -71,7 +71,7 @@
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "A Man Not Drinking", "text": "I'll finish it before I go. I always do."}, "timeout_sec": 5 },
   { "action": "wait_frames", "frames": 10 },
-  { "action": "screenshot", "name": "04_the_room_at_dusk" },
+  { "action": "screenshot", "name": "04_the_room_at_night" },
   { "action": "move", "direction": "down", "steps": 2 },
   { "action": "assert_state", "path": "player_cell", "equals": [10, 7] },
   { "action": "move", "direction": "left", "steps": 4 },

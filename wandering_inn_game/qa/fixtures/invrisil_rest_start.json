@@ -1,5 +1,5 @@
 {
- "_comment": "adventurers_rest_loop's start (FIXTURE-FIRST), stationer_room_loop's twin. Stands on invrisil_boulevard at (18,2) facing up into the new Adventurer's Rest door at (18,1) -- the same blocked-row-1 bump-then-interact shape the stationer door uses two cells east. The Brothers' job is done (the boulevard-and-alleys cluster's normal late state, and what the Rest's own room reads as afterwards), which also clears both footpad rigs from the alleys; hat_job_taken is deliberately ABSENT so the hook and the corner table are still unspawned and the bravos still answer with their gate_closed_toast -- this loop reads the room in its UNARMED state, and invrisil_hat_quiet_start reads it armed. `observe` is the same QA-fixture-only grant invrisil_stationer_start carries, for the three non-quest observes. Dusk (actions_since_sleep 45) for the hearth light and the two sconce pools; the boulevard's night encounters stay shut at dusk.",
+ "_comment": "adventurers_rest_loop's start (FIXTURE-FIRST), stationer_room_loop's twin. Stands on invrisil_boulevard at (18,2) facing up into the new Adventurer's Rest door at (18,1) -- the same blocked-row-1 bump-then-interact shape the stationer door uses two cells east. The Brothers' job is done (the boulevard-and-alleys cluster's normal late state, and what the Rest's own room reads as afterwards), which also clears both footpad rigs from the alleys; hat_job_taken is deliberately ABSENT so the hook and the corner table are still unspawned and the bravos still answer with their gate_closed_toast -- this loop reads the room in its UNARMED state, and invrisil_hat_quiet_start reads it armed. `observe` is the same QA-fixture-only grant invrisil_stationer_start carries, for the three non-quest observes. NIGHT (the base's own actions_since_sleep 1000, kept): the hearth pool, both sconce pools and the dust motes only read at night -- see invrisil_stationer_start's comment for the measured dusk-vs-night comparison. The boulevard's night encounters arm at night and both sit on row 15 with trigger_radius 1; this route never leaves rows 1-2.",
  "version": 5,
  "state": {
   "current_map": "invrisil_boulevard",
@@ -94,7 +94,7 @@
    "accessory_2": "hunters_fang_talisman"
   },
   "container_state": {},
-  "actions_since_sleep": 45,
+  "actions_since_sleep": 1000,
   "rng_state": "-6393592048753323481"
  }
 }
