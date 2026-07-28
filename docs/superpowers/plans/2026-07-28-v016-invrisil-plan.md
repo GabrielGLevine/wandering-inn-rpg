@@ -840,7 +840,7 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 
 **Voice:** composed, exact about money, unsentimental about the stone and completely sentimental about the setting. Her register is transactional-Invrisil (`city-identity-bible.md:15` — the city's word is DEAL) but she is the one person on the street who is buying something that cannot be priced.
 
-- [ ] **Step 1: Author the graph:**
+- [x] **Step 1: Author the graph:**
 
 ```json
 {
@@ -942,10 +942,10 @@ Both interiors are reachable only off `invrisil_boulevard`, which already carrie
 }
 ```
 
-- [ ] **Step 2: Grant-duplicate audit (ruling 6).** `plum_silk_locket` is a brand-new id with exactly one producer — this option — and the option is `hide_when`-guarded on the terminal it banks in the same array. Nothing force-consumes; nothing else in the game grants it.
-- [ ] **Step 3: Effect-verb audit.** Every effect dict above carries exactly one verb. Every gated node keeps an ungated option (`"Another time."`, `"In a moment."`). No `{skill, item}` compound anywhere.
-- [ ] **Step 4: Event-order note for QA (Task 5.x):** the two handover options carry **`effects` AND `end: true`** — `DIALOGUE_ENDED` fires synchronously **before** effects apply. QA scripts must wait `dialogue_ended` first, then `accomplishment_recorded`.
-- [ ] **Step 5: Run** `data_lint.py` (start/nodes/speaker/text/goto targets) + `test_dialogue.gd` + `test_content.gd`. **Commit** `feat(dialogue): the woman with the ring box (#306)`.
+- [x] **Step 2: Grant-duplicate audit (ruling 6).** `plum_silk_locket` is a brand-new id with exactly one producer — this option — and the option is `hide_when`-guarded on the terminal it banks in the same array. Nothing force-consumes; nothing else in the game grants it.
+- [x] **Step 3: Effect-verb audit.** Every effect dict above carries exactly one verb. Every gated node keeps an ungated option (`"Another time."`, `"In a moment."`). No `{skill, item}` compound anywhere.
+- [x] **Step 4: Event-order note for QA (Task 5.x):** the two handover options carry **`effects` AND `end: true`** — `DIALOGUE_ENDED` fires synchronously **before** effects apply. QA scripts must wait `dialogue_ended` first, then `accomplishment_recorded`.
+- [x] **Step 5: Run** `data_lint.py` (start/nodes/speaker/text/goto targets) + `test_dialogue.gd` + `test_content.gd`. **Commit** `feat(dialogue): the woman with the ring box (#306)`.
 
 ### Task 2.3: Hedault's commission surfaces
 
