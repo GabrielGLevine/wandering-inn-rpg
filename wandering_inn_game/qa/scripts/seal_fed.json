@@ -331,6 +331,55 @@
    "name": "04_the_feeding_ward"
   },
   {
+   "_comment": "v0.15 A3 (GH#304): THE REVEAL RACE. Both reads are lore-tagged, so their text banks to lore_notes inside the sim's own emit sink -- before the toast queue, the escort dialogue two cells south, or a map change can decide whether it renders. This asserts the Act V facts survive independent of the render, which is the thing the playtest found missing.",
+   "action": "assert_state",
+   "path": "lore_notes",
+   "contains": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. Not a school, not a fashion. A HAND, and it cut this one first.\" He does not look away while he says it."
+  },
+  {
+   "action": "assert_state",
+   "path": "lore_notes",
+   "contains": "Pisces steps back at last. \"It is not a lock. The lines run one way, they have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
+  },
+  {
+   "_comment": "And the journal is where a player reads them back: the History tab's Lore section now leads with the world's own lines, newest first, above the item lore. The payload carries the same list the body renders.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "active_tab": "quests"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_journal_tab",
+   "tab": "history"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "active_tab": "history"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04b_journal_lore"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
    "_comment": "== THE CHOICE == back down to (18,8) and bump right into the escort (19,8). No talk_pool on that row, so the graph opens on the first interact.",
    "action": "move",
    "direction": "down",

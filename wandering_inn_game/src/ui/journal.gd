@@ -408,6 +408,9 @@ func _open() -> void:
 		"delivery_gold": int(delivery.get("gold", 0)),
 		"delivery_detail": String(delivery.get("detail", "")),
 		"found_notes": _found_note_ids(),
+		# Newest-first, matching the render order -- QA asserts lore CAPTURE
+		# structurally instead of reading a screenshot for it.
+		"lore_notes": _lore_note_lines(),
 		"recent_count": _recent_message_count(),
 	}
 	_emit_journal_shown()
@@ -752,8 +755,17 @@ func _build_skills_tab(cursor_index: int) -> Dictionary:
 func _build_history_tab() -> Dictionary:
 	var parts: Array = []
 	var found_notes := _found_note_ids()
-	if not found_notes.is_empty():
+	var lore_notes := _lore_note_lines()
+	if not lore_notes.is_empty() or not found_notes.is_empty():
 		parts.append("[b]Lore[/b]")
+	# v0.15 A3 (GH#304): what the WORLD told you, newest first -- the durable
+	# half of a toast that may never have finished rendering. Item lore (the
+	# notes actually in the pack) follows below, unchanged.
+	for line: String in lore_notes:
+		parts.append(UIChrome.bb_escape(line))
+	if not found_notes.is_empty():
+		if not lore_notes.is_empty():
+			parts.append("")
 		for note_id: String in found_notes:
 			var note_record: Dictionary = Game.sim.item(note_id)
 			var note_name := String(note_record.get("name", note_id))
@@ -762,6 +774,7 @@ func _build_history_tab() -> Dictionary:
 				parts.append(UIChrome.bb_escape("%s — %s" % [note_name, note_lore]))
 			else:
 				parts.append(UIChrome.bb_escape(note_name))
+	if parts.size() > 0:
 		parts.append("")
 	if not _open_chronicle_facts.is_empty():
 		parts.append("[b]Chronicle[/b]")
@@ -867,6 +880,16 @@ func _found_note_ids() -> Array[String]:
 	for id: String in Game.sim.inventory:
 		if id.begins_with("note_"):
 			out.append(id)
+	return out
+
+
+## `Game.sim.lore_notes` reversed: capture order in the sim, NEWEST-FIRST for
+## reading (the record's whole job is answering "what did that toast say").
+func _lore_note_lines() -> Array[String]:
+	var out: Array[String] = []
+	var notes: Array = Game.sim.lore_notes
+	for i: int in range(notes.size() - 1, -1, -1):
+		out.append(String(notes[i]))
 	return out
 
 

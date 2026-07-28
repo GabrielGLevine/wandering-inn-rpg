@@ -4,6 +4,38 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 A3 toast survival + Lore capture (four in-wave calls)
+
+- **`_pending_sticky` and `_first_wake_hint_pending` DELETED from
+  message_layer, not kept alongside the lossless queue.** Both existed only to
+  re-add a specific text after `_clear_toast` wiped the queue; with no wipe
+  left they are write-only state, and write-only state rots into a false
+  contract. The `sticky` PAYLOAD key stays as the sim-side authored signal
+  ("this line must not be lost", still pinned in test_sim_core) — the renderer
+  no longer special-cases it because nothing is lost. Alternative considered
+  and rejected: re-purpose `sticky` to mean "PLAYER_MOVED may not cut this
+  toast's hold short". Real and tempting (the Watch-runner pointer is exactly
+  the line a player steps past), but it changes display TIMING across 166
+  canonicals for a problem the brief did not scope. Revert path: restore the
+  two vars and the `_queue_toast(text, record, sticky)` third parameter.
+- **Quest-lifecycle toasts are NOT lore-tagged.** "New quest: X" / "Quest
+  updated" / "Quest complete" are the largest sticky set, but they are already
+  durable in the journal's Quests + Acts sections; tagging them would fill the
+  Lore record with tracking chatter and bury the world's own lines. Lore means
+  "a fact about the world you were told once".
+- **The tagged set is 16 surfaces, one thread.** The wardwork quartet's four
+  [Detect Magic] reads (pantry_door, warded_seam, leyline_stone,
+  anchor_socket) + the pantry [Observe] rune read; the Act V seal door's five
+  reads and its `detected_wardwork >= 3` lattice payoff; the two arc-start
+  arrival narrations (dungeon_approach, ruin_surface); the pedestal's "A DOOR —
+  unhung" reveal; the Watch-runner pointer. Deliberately UNTAGGED: the
+  anchor_socket `pedestal_unsealed` variant (an action, not a reading — its
+  outcome is already a quest beat) and the seal door's repeat-read filler line.
+- **No cap on `lore_notes`.** The set is bounded by authored copy and deduped
+  by exact text, so a cap would only ever silently drop the OLDEST fact — the
+  exact failure the feature exists to fix. Revisit if a future data pass tags
+  a repeatable generated line.
+
 ## 2026-07-28 — v0.15 A2 leads: two PLAN-DATA corrections (controller rulings)
 
 The brief's leads.json block was verbatim plan data and shipped verbatim; review

@@ -196,6 +196,7 @@ func _init() -> void:
 	var skill_config := _load_json("res://data/skills.json")
 	var game := WIGame.new(scene_config, skill_config, _sink, 12345)
 	_check_chronicle_facts(scene_config, skill_config)
+	_check_lore_notes(scene_config, skill_config)
 
 	var witch_map: Dictionary = scene_config["maps"]["witch_hollow"]
 	var witch := _entity_by_id(witch_map["entities"], "riverfarm_witch")
@@ -1119,7 +1120,7 @@ func _init() -> void:
 	arc.sleep()
 	assert(arc.accomplishment_count("watch_runner_pointed") == 1, "AF I1: post-consolidation sleep fires the tremor pointer (gate reads the flag, not the live count)")
 	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A Watch runner is looking for you."), "AF I1: the Watch-runner pointer toast renders after consolidation")
-	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A Watch runner is looking for you." and bool(e["payload"].get("sticky", false))), "GH#273: the pointer toast carries sticky=true -- it queues LAST at a busy wake beat and must survive message_layer's transition queue-wipe")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A Watch runner is looking for you." and bool(e["payload"].get("sticky", false))), "GH#273: the pointer toast carries sticky=true AND lore=true -- it queues LAST at a busy wake beat, so it must survive the transition (v0.15 A3 makes the whole queue lossless) and be readable afterwards in the journal")
 
 	var cc_garden := combat_config.duplicate(true)
 	cc_garden["acts"] = _load_json("res://data/acts.json")
@@ -3526,6 +3527,41 @@ func _init() -> void:
 
 	print("PASS: sim core behaves correctly")
 	quit(0)
+
+
+## v0.15 A3 (GH#304): a `lore: true` toast payload appends its text to the
+## durable `lore_notes` record AT EMIT, in the address-resolving sink -- so a
+## line the toast queue, a dialogue, or a combat swallowed is still readable in
+## the journal. Deduped by exact resolved text.
+func _check_lore_notes(scene_config: Dictionary, skill_config: Dictionary) -> void:
+	var cfg: Dictionary = scene_config.duplicate(true)
+	(cfg["maps"]["ruin_surface"] as Dictionary)["arrival_toasts"] = [
+		{"requires": {"door_understood": 1}, "lore": true, "text": "One lattice, and this door is where it drains to."},
+	]
+	(cfg["maps"]["dungeon_approach"] as Dictionary)["arrival_toasts"] = [
+		{"requires": {"door_understood": 1}, "text": "The dark has a direction today."},
+	]
+	(cfg["maps"]["street"] as Dictionary)["arrival_toasts"] = [
+		{"requires": {"door_understood": 1}, "lore": true, "text": "Evening, {addr}."},
+	]
+	# A SINKLESS sim is the structural proof of render-independence: no listener
+	# exists, so nothing could have rendered, and the note lands anyway.
+	var silent := WIGame.new(cfg, skill_config, Callable(), 4246)
+	assert(silent.lore_notes.is_empty(), "a fresh sim carries no lore notes")
+	silent.record_accomplishment("door_understood")
+	silent.transition("ruin_surface", Vector2i(17, 5))
+	assert(silent.lore_notes == ["One lattice, and this door is where it drains to."],
+		"a lore-tagged toast banks its text with no renderer attached")
+	silent.transition("dungeon_approach", Vector2i(8, 10))
+	assert(silent.lore_notes.size() == 1, "an untagged toast never becomes a lore note")
+	silent.transition("inn", Vector2i(2, 3))
+	silent.transition("ruin_surface", Vector2i(17, 5))
+	assert(silent.lore_notes.size() == 1, "re-emitting the same line is idempotent -- dedupe is by exact text")
+	silent.transition("street", Vector2i(4, 3))
+	assert(silent.lore_notes.size() == 2 and silent.lore_notes[1] == "Evening, sir.",
+		"a lore note banks the ADDRESS-RESOLVED text the player would have read, never the authored token")
+	assert((silent.snapshot()["lore_notes"] as Array) == silent.lore_notes,
+		"lore_notes rides the snapshot so QA can assert capture without a screenshot")
 
 
 func _check_chronicle_facts(scene_config: Dictionary, skill_config: Dictionary) -> void:

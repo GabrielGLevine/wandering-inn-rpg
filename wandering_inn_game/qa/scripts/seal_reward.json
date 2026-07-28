@@ -349,6 +349,12 @@
    "name": "04_the_feeding_ward"
   },
   {
+   "_comment": "v0.15 A3 (GH#304): the wardwork quartet's PAYOFF is the wave's densest single line, and it fires at a door two cells from a dialogue. Lore-tagged, so the lattice fact is banked at emit and readable in the journal afterwards -- the payoff cannot be spent by a render race.",
+   "action": "assert_state",
+   "path": "lore_notes",
+   "contains": "[Detect Magic] — Every reading you have taken lines up at once: the inn's frame, the ruin's socket, the seam back down the hall, the hollow west of Riverfarm. Not four wards. One lattice, and this door is where it drains to. Something behind this stone has been drinking Liscor's oldest work since before Liscor. Pisces uses a word you have never heard him use in public."
+  },
+  {
    "_comment": "== THE CHOICE == back down to (18,8) and bump right into the escort (19,8). No talk_pool on that row, so the graph opens on the first interact.",
    "action": "move",
    "direction": "down",

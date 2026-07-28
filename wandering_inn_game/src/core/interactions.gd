@@ -129,6 +129,7 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 				var resolved: Dictionary = _resolve_skill_use_effect.call({
 					"accomplishment": target["on_interact_accomplishment"],
 					"toast": target.get("toast", ""),
+					"lore": target.get("lore", false),
 					"gold": target.get("gold", 0),
 					"variants": target.get("variants", []),
 				})
@@ -136,7 +137,7 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 				_record_accomplishment.call(accomplishment_id, 1)
 				var toast_text := String(resolved.get("toast", ""))
 				if toast_text != "":
-					_emit(WIEvents.TOAST, {"text": toast_text})
+					_emit(WIEvents.TOAST, {"text": toast_text, "lore": bool(resolved.get("lore", false))})
 				if int(resolved.get("gold", 0)) != 0:
 					var wage := int(resolved["gold"])
 					if bool(target.get("once_per_waking", false)) and (_known_skills.call() as Array).has("perfect_hospitality"):
@@ -209,15 +210,17 @@ func _interact_container(target: Dictionary, container_state: Dictionary) -> Dic
 	#    first-discovery reveal), and after the bank every player looks alike.
 	#    The EMIT still happens last, so the toast order is unchanged.
 	var open_toast := String(target.get("open_toast", ""))
+	var open_lore := bool(target.get("lore", false))
 	for raw_variant: Variant in target.get("open_toast_variants", []):
 		var variant: Dictionary = raw_variant
 		if bool(_accomplishment_gate_met.call(variant.get("when", {}) as Dictionary)):
 			open_toast = String(variant.get("open_toast", open_toast))
+			open_lore = bool(variant.get("lore", open_lore))
 	var raw_open: Variant = target.get("on_open_accomplishment", [])
 	for counter: Variant in (raw_open as Array if raw_open is Array else [raw_open]):
 		_record_accomplishment.call(String(counter), 1)
 	if open_toast != "":
-		_emit(WIEvents.TOAST, {"text": open_toast})
+		_emit(WIEvents.TOAST, {"text": open_toast, "lore": open_lore})
 	return {"container": id, "items": granted}
 
 

@@ -1,7 +1,7 @@
 class_name WISave
 extends RefCounted
 
-const VERSION := 7
+const VERSION := 8
 
 
 const DEPRECATED_IDS := {
@@ -33,6 +33,7 @@ static func serialize(game: WIGame) -> Dictionary:
 		"pending_consolidation": game.pending_consolidation.duplicate(true),
 		"used_skills": game.used_skills.duplicate(),
 		"seen_statuses": game.seen_statuses.duplicate(),
+		"lore_notes": game.lore_notes.duplicate(),
 		"inventory": game.inventory.duplicate(),
 		"equipped": game.equipped.duplicate(true),
 		"container_state": game.container_state.duplicate(true),
@@ -70,7 +71,7 @@ static func _migrated(data: Dictionary) -> Dictionary:
 	if not (data.get("state") is Dictionary):
 		return data
 	var version := int(data.get("version", -1))
-	if version != 2 and version != 3 and version != 4 and version != 5 and version != 6 and version != VERSION:
+	if version < 2 or version > VERSION:
 		return data
 	var out: Dictionary = data.duplicate(true)
 	var state: Dictionary = out["state"]
@@ -101,6 +102,12 @@ static func _migrated(data: Dictionary) -> Dictionary:
 		# GH#211: fractional challenge-weight accumulators are new state; old
 		# saves resume with empty accumulators (no retroactive credit).
 		state["fractional_bank"] = {}
+		version = 7
+	if version == 7:
+		# v0.15 A3 (GH#304): the durable Lore record is new state. Capture
+		# happens at emit, so nothing before this save can be reconstructed --
+		# an old save starts its journal record empty and fills it from here on.
+		state["lore_notes"] = []
 		version = VERSION
 	out["version"] = version
 	var class_map: Dictionary = DEPRECATED_IDS["classes"]
@@ -191,6 +198,8 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 		return false
 	if s.has("seen_statuses") and not (s["seen_statuses"] is Array):
 		return false
+	if s.has("lore_notes") and not (s["lore_notes"] is Array):
+		return false
 	if s.has("social_talked") and not (s["social_talked"] is Dictionary):
 		return false
 	if s.has("fractional_bank") and not (s["fractional_bank"] is Dictionary):
@@ -259,6 +268,7 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	var pending_consolidation: Dictionary = s.get("pending_consolidation", {})
 	var used_skills: Array = s.get("used_skills", [])
 	var seen_statuses: Array = s.get("seen_statuses", [])
+	var lore_notes: Array = s.get("lore_notes", [])
 	var inventory: Array = s["inventory"]
 	var equipped: Dictionary = s["equipped"]
 	var container_state: Dictionary = s["container_state"]
@@ -294,6 +304,8 @@ static func apply(game: WIGame, data: Dictionary) -> bool:
 	game.used_skills.assign(used_skills)
 	game.seen_statuses.clear()
 	game.seen_statuses.assign(seen_statuses)
+	game.lore_notes.clear()
+	game.lore_notes.assign(lore_notes)
 	game.inventory.clear()
 	game.inventory.assign(inventory)
 	game.equipped = equipped.duplicate(true)

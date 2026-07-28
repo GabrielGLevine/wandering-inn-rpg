@@ -114,6 +114,47 @@ func _validate_victory_toast_keys(maps: Dictionary) -> void:
 			_check(first != "won_combat", "%s/%s: victory_toast carrier's first on_victory id must not be won_combat (fractional under GH#211 weighting)" % [map_id, String(ent.get("id", "?"))])
 
 
+## v0.15 A3 (GH#304): `lore` is a RESERVED BOOL on every toast-bearing arm
+## (entity, `variants`, `open_toast_variants`, `skill_uses`, `arrival_toasts`).
+## The sim reads it through `bool(...)`, so a stray String would silently tag a
+## line as durable lore -- items.json already uses `lore` for prose, which is
+## exactly the confusion this guards. A tagged arm must also carry text to bank.
+func _validate_lore_flags(maps: Dictionary) -> void:
+	for map_id: String in maps:
+		var map_cfg: Dictionary = maps[map_id]
+		for raw_arrival: Variant in map_cfg.get("arrival_toasts", []):
+			_check_lore_arm("%s/arrival_toasts" % map_id, raw_arrival, "text")
+		for ent: Dictionary in map_cfg.get("entities", []):
+			var label := "%s/%s" % [map_id, String(ent.get("id", "?"))]
+			_check_lore_arm(label, ent, "toast")
+			for raw: Variant in ent.get("variants", []):
+				_check_lore_arm(label + " variant", raw, "toast")
+			for raw: Variant in ent.get("open_toast_variants", []):
+				_check_lore_arm(label + " open_toast_variant", raw, "open_toast")
+			for skill_id: String in (ent.get("skill_uses", {}) as Dictionary):
+				var arm: Variant = (ent["skill_uses"] as Dictionary)[skill_id]
+				_check_lore_arm("%s skill_uses.%s" % [label, skill_id], arm, "toast")
+				if arm is Dictionary:
+					for raw: Variant in (arm as Dictionary).get("variants", []):
+						_check_lore_arm("%s skill_uses.%s variant" % [label, skill_id], raw, "toast")
+			if ent.has("on_skill_use"):
+				_check_lore_arm(label + " on_skill_use", ent["on_skill_use"], "toast")
+				for raw: Variant in (ent["on_skill_use"] as Dictionary).get("variants", []):
+					_check_lore_arm(label + " on_skill_use variant", raw, "toast")
+
+
+func _check_lore_arm(label: String, arm: Variant, text_key: String) -> void:
+	if not (arm is Dictionary) or not (arm as Dictionary).has("lore"):
+		return
+	var value: Variant = (arm as Dictionary)["lore"]
+	_check(value is bool, "%s: `lore` must be a bool (reserved toast-capture flag), got %s" % [label, type_string(typeof(value))])
+	if value is bool and bool(value):
+		var carrier := arm as Dictionary
+		var has_text := String(carrier.get(text_key, "")) != "" \
+				or String(carrier.get("open_toast", "")) != "" or String(carrier.get("toast", "")) != ""
+		_check(has_text, "%s: lore:true with no toast text banks an empty note" % label)
+
+
 ## GH#155 review L2: on a skill-gated prop, every id in on_skill_use.remove_item
 ## (and its variants) must also appear in requires_item -- otherwise the gate
 ## passes without the item and remove_item silently no-ops (free craft).
@@ -241,6 +282,7 @@ func _init() -> void:
 	_validate_class_level_tables(classes)
 	_validate_consume_subset(WISceneCatalog.compose()["maps"])
 	_validate_victory_toast_keys(WISceneCatalog.compose()["maps"])
+	_validate_lore_flags(WISceneCatalog.compose()["maps"])
 	_validate_economy_prices(scene, graphs, items)
 	_validate_class_skill_grant_ids(classes, skill_ids)
 	_validate_class_skill_grant_ids_shape_cases()

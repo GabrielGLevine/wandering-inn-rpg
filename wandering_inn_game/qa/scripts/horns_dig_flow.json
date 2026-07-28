@@ -637,6 +637,17 @@
    "equals": 1
   },
   {
+   "_comment": "v0.15 A3 (GH#304), TOAST/QUEUE-DROP's own script. Measured on this run's events.jsonl: 19 toast payloads emitted, 14 reaching ui_toast_rendered before the fix (the transition wipe ate the two 'Got:' lines and the autosave), 0 unrendered after. The two below are the durable half -- the reveal and the arrival pointer are banked to lore_notes AT EMIT, so they answer 'what did that say' from the journal even on a run where the queue never gets a chance to drain them.",
+   "action": "assert_state",
+   "path": "lore_notes",
+   "contains": "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
+  },
+  {
+   "action": "assert_state",
+   "path": "lore_notes",
+   "contains": "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, and someone's washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court."
+  },
+  {
    "_comment": "== THE HAUL, AND THE MOUNTING (Task 2.4) ==. Teleport to the inn at (13,4): the ruin -> floodplains -> inn return is already proven live by ruin_walkthrough/gate_district_walkthrough/inn_walkthrough, and what this script still has to prove is the mounting SURFACE, not pathing. `pisces_mounting` (13,5) is present for exactly this window -- door_retrieved just banked live at the pedestal and door_mounted has not banked at all -- so the entity's own present_when is under test here too.",
    "action": "teleport",
    "map": "inn",

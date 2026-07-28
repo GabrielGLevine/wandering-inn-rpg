@@ -286,12 +286,20 @@ pre-dig-hub reads. Durable evidence:
   spread over 25 files including long-shipped ones (bounties.json,
   trapped_halls.json, guild.json). Wants one normalization pass with the
   affected canonicals re-pinned, not piecemeal edits.
-- [ ] TOAST/QUEUE-DROP (P2, re-observed) — `horns_dig_flow` emits 17 distinct
+- [x] TOAST/QUEUE-DROP (P2, re-observed) — `horns_dig_flow` emits 17 distinct
   toast texts and renders 13; the pedestal's own flavor line ("The seam splits
   wider at your touch, cold air breathing up…") never reaches
   `ui_toast_rendered`, losing one of the two beats at the wave's biggest
   reveal. Same family as the open UI/QUEST-START entry below (queued toasts
   silently dropping payloads), now costing story copy rather than a pointer.
+  **FIXED v0.15 Task 1.3 (2026-07-28):** the toast queue is lossless —
+  `_clear_toast` is gone and map change / dialogue now defer the VISIBLE toast
+  only, so undisplayed lines drain on the far side (combat alone banks the
+  queue, and re-queues it at `ui_combat_hidden`). Measured on the script's own
+  `events.jsonl` at seed 9: 19 toast payloads emitted, **14 rendered before /
+  0 unrendered after**. The pedestal reveal is additionally `lore: true`, so it
+  is banked to `Game.sim.lore_notes` at emit and readable in the journal even
+  on a run that never renders it.
 - [ ] COMBAT/CELLAR-VERMIN (P2, pre-existing, re-observed on this wave's
   surface) — on the re-gated leak board
   (`door_chain_fight/00_rift_vermin_leak_board.png`) the Rift Vermin
@@ -318,7 +326,7 @@ Source: detached `c33faac` build with the complete local asset overlay; clean
 native resolution. Durable evidence:
 `wandering_inn_game/qa_output/machine_playtest_2026-07-19_quest_legibility/`.
 
-- [ ] UI/QUEST-START (P1) — the main arc starts `something_beneath` and emits
+- [x] UI/QUEST-START (P1) — the main arc starts `something_beneath` and emits
   two toast payloads in the same tick: `New quest: Something Beneath` and the
   actionable `A Watch runner is looking for you.` Only the quest-title toast
   ever produces `ui_toast_rendered`; the runner pointer never reaches the
@@ -326,6 +334,11 @@ native resolution. Durable evidence:
   player with a title but no person or destination to pursue. Queue both lines
   or combine them, then pin the directional copy in the screenshot/rendered
   event rather than only the domain log.
+  **FIXED v0.15 Task 1.3 (2026-07-28):** both lines now queue and both render —
+  `arc_flow` pins the pointer's own `ui_toast_rendered` before
+  `01_tremor_pointer.png` and additionally asserts it landed in `lore_notes`,
+  so the destination survives a player who walks off mid-toast. See the
+  TOAST/QUEUE-DROP entry above for the queue mechanism.
 - [ ] COMBAT/DARK-ARENA (P1 acceptance drift) — the two Sewer Rats in
   `sewers_walkthrough/01_vermin_encounter.png` are effectively invisible at
   native scale; their HP numerals and orange bars reveal that enemies exist,

@@ -86,7 +86,7 @@
     2,
     7
    ],
-   "_comment": "== ZEVARA SUMMONS ==. GH#273: the teleport fires map_changed BEFORE the pointer renders -- the exact wipe that ate the arc's route clue. The PINNED render wait below proves the sticky re-queue survives it; the old shape (bare ui_toast_rendered wait before the teleport) false-passed on the stale 'Your own bed.' render."
+   "_comment": "== ZEVARA SUMMONS ==. GH#273 / v0.15 A3: the teleport fires map_changed BEFORE the pointer renders -- the exact wipe that ate the arc's route clue, now impossible (the queue survives transitions; only the visible toast is deferred). The PINNED render wait below proves delivery on the far side; the old shape (bare ui_toast_rendered wait before the teleport) false-passed on the stale 'Your own bed.' render."
   },
   {
    "action": "wait_frames",
@@ -103,6 +103,12 @@
   {
    "action": "screenshot",
    "name": "01_tremor_pointer"
+  },
+  {
+   "_comment": "v0.15 A3 (GH#304), closing VISUAL-LOG UI/QUEST-START (P1): the pointer is lore-tagged, so 'who and where' outlives the toast strip. A player who walked off before reading it now finds the line in the journal's Lore section instead of holding a quest title with no destination.",
+   "action": "assert_state",
+   "path": "lore_notes",
+   "contains": "A Watch runner is looking for you."
   },
   {
    "action": "move",

@@ -18,6 +18,12 @@ var accomplishments: Dictionary = {}
 # GH#211: per-counter fractional accumulators (challenge-weighted banking);
 # save-serialized (VERSION 7). Empty until data/progression.json enables.
 var fractional_bank: Dictionary = {}
+## v0.15 A3 (GH#304): the journal's durable Lore record. A toast payload
+## carrying `lore: true` appends its ADDRESS-RESOLVED text here at EMIT (see
+## `_addressed_sink`) -- before any renderer sees it, so a line the toast queue,
+## a dialogue, or a combat swallowed is still readable afterwards. Capture
+## order, deduped by exact text; save-serialized (VERSION 8).
+var lore_notes: Array[String] = []
 var entities: Dictionary = {}
 var blocked_cells: Dictionary = {}
 var skills: Dictionary = {}
@@ -209,7 +215,10 @@ func _emit_arrival_toast(to_map: String) -> void:
 		if not (entry is Dictionary):
 			continue
 		if _arrival_gate_met((entry as Dictionary).get("requires", {}), (entry as Dictionary).get("hide_when", {})):
-			_emit(WIEvents.TOAST, {"text": String((entry as Dictionary).get("text", ""))})
+			_emit(WIEvents.TOAST, {
+				"text": String((entry as Dictionary).get("text", "")),
+				"lore": bool((entry as Dictionary).get("lore", false)),
+			})
 			return
 
 
@@ -469,7 +478,10 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": target_id})
 	_mark_skill_used(skill_id)
 	record_accomplishment(String(effect["accomplishment"]))
-	_emit(WIEvents.TOAST, {"text": String(effect["toast"])})
+	# `lore` rides the resolved effect, so a VARIANT can promote a read to the
+	# durable record the base arm does not earn (the wardwork quartet's
+	# lattice payoff is exactly that shape).
+	_emit(WIEvents.TOAST, {"text": String(effect["toast"]), "lore": bool(effect.get("lore", false))})
 	if effect.has("gold"):
 		# GH#202-adjacent (infinite-gold report): `gold_once_per_waking` caps
 		# the PAYOUT without touching the counter/skill_used stream -- the
@@ -2162,6 +2174,7 @@ func snapshot() -> Dictionary:
 		"pending_consolidation": pending_consolidation.duplicate(true),
 		"used_skills": used_skills.duplicate(),
 		"seen_statuses": seen_statuses.duplicate(),
+		"lore_notes": lore_notes.duplicate(),
 		"inventory": inventory.duplicate(),
 		"equipped": equipped.duplicate(true),
 		"container_state": container_state.duplicate(true),
@@ -2237,6 +2250,19 @@ func _emit(type: String, payload: Dictionary) -> void:
 	_addressed_sink(type, payload)
 
 
+## THE single choke point every sim-side emit crosses (WIGame's own `_emit`
+## plus every submodule's, all constructed with this bound method), which is
+## why the lore capture lives here: it fires whether or not anything is
+## listening, so `lore_notes` can never depend on a toast winning a render race.
 func _addressed_sink(type: String, payload: Dictionary) -> void:
+	var resolved := WIAddress.resolve_payload(payload, pc_gender)
+	if type == WIEvents.TOAST and bool(resolved.get("lore", false)):
+		_record_lore_note(String(resolved.get("text", "")))
 	if _event_sink.is_valid():
-		_event_sink.call(type, WIAddress.resolve_payload(payload, pc_gender))
+		_event_sink.call(type, resolved)
+
+
+func _record_lore_note(text: String) -> void:
+	if text == "" or lore_notes.has(text):
+		return
+	lore_notes.append(text)

@@ -555,6 +555,7 @@
    "locked_toast": "A standing stone, older than the village and not saying anything about it.",
    "on_skill_use": {
     "accomplishment": "detected_wardwork",
+    "lore": true,
     "toast": "[Detect Magic] — Light runs under the turf in one long seam, straight through the stone and away west. The hollow is built on a current."
    }
   },

@@ -105,7 +105,7 @@
    ]
   },
   {
-   "_comment": "GH#273: pinned render wait AFTER the teleport -- the map_changed wipe used to eat the pointer (and the quest toast) before either displayed; the sticky re-queue must deliver it on the street.",
+   "_comment": "GH#273 / v0.15 A3: pinned render wait AFTER the teleport -- map_changed used to WIPE the queue and eat the pointer (and the quest toast) before either displayed. The queue is now lossless (message_layer defers the visible toast only), so both must deliver on the street.",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "timeout_sec": 5,

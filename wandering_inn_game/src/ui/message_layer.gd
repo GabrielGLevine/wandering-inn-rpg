@@ -91,18 +91,26 @@ var _hint_label: Label
 ## order; `_toast_draining` gates a single in-flight drain coroutine so
 ## concurrent _queue_toast calls never start a second drain loop.
 var _toast_queue: Array[String] = []
+## v0.15 A3 (GH#304): THE QUEUE IS LOSSLESS. Only `_drain_toasts` may remove a
+## queued toast. Map change and dialogue used to wipe it (`_clear_toast`),
+## which is what ate the arc's Watch-runner pointer (VISUAL-LOG UI/QUEST-START,
+## P1) and, measured on horns_dig_flow at seed 9, left 14 of 19 emitted toast
+## payloads reaching `ui_toast_rendered` (TOAST/QUEUE-DROP, P2 -- 0 unrendered
+## after); they DEFER the visible toast only and the queue drains later. That
+## makes GH#273's sticky re-queue and the first-wake-hint re-queue structural
+## rather than per-text bookkeeping -- `sticky` survives as the SIM-side
+## authored signal ("this line must not be lost", pinned in test_sim_core), and
+## the renderer no longer needs to special-case it because nothing is lost.
+## Combat is the one deliberate exception: it has its own feed, so
+## COMBAT_STARTED BANKS the pending queue (below) and UI_COMBAT_HIDDEN
+## re-queues it.
 ## Texts queued with record=false (GH#202 transient noise class) -- counted
 ## so an identical REAL toast queued concurrently still records.
 var _transient_counts: Dictionary = {}
-## GH#273: texts whose TOAST payload carried sticky=true -- narratively
-## load-bearing nudges (the Watch-runner pointer, quest lifecycle) that
-## queue at the tail of a busy wake beat. A transition's _clear_toast
-## re-queues these instead of dropping them (the _first_wake_hint_pending
-## re-queue contract, generalized to sim-flagged texts); an entry leaves
-## only when its text is popped for display. Invariant: every entry here
-## is also in _toast_queue, so a re-queue always has a live drain to
-## pick it up.
-var _pending_sticky: Array[String] = []
+## Toasts parked for the duration of a fight. Bank/restore move whole texts
+## between here and `_toast_queue`; nothing is ever dropped in either
+## direction, so `_transient_counts` needs no reconciliation.
+var _banked_toasts: Array[String] = []
 var _toast_draining := false
 ## Issue #62 Lane U item 6: set by `dismiss_current_toast_early()`, consumed
 ## by `_show()`'s interruptible hold-wait (toast panel only -- the dialogue
@@ -146,9 +154,6 @@ var _first_pickup_hint_pending := false
 static var _first_pickup_hint_shown := false
 ## GH#171 first-waking controls pointer -- same static-lifetime contract.
 static var _first_wake_hint_shown := false
-## True from first-wake until the hint actually RENDERS -- toast-queue
-## clears (map change, dialogue) re-queue it instead of eating it.
-var _first_wake_hint_pending := false
 static var _hint_reset_hooked := false
 
 var _conversation_open := false
@@ -269,7 +274,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			if not _first_pickup_hint_shown:
 				_first_pickup_hint_pending = true
 		WIEvents.TOAST:
-			_queue_toast(String(payload["text"]), true, bool(payload.get("sticky", false)))
+			_queue_toast(String(payload["text"]))
 			if _first_pickup_hint_pending:
 				_first_pickup_hint_pending = false
 				_first_pickup_hint_shown = true
@@ -292,28 +297,29 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		WIEvents.COMBAT_STARTED:
 			_hint_panel.hide()
 			_clear_dialogue_line()
-			_clear_toast()
+			_defer_toast_display()
+			_bank_toasts()
 		WIEvents.UI_COMBAT_HIDDEN:
 			_hint_panel.show()
+			_restore_banked_toasts()
 		WIEvents.UI_SLEEP_VEIL_FINISHED:
 			# GH#171: one pointer at the full key reference, on the genuine
 			# first waking only (times_slept == 1 filters loaded veteran
 			# saves whose next sleep is not their first).
 			if not _first_wake_hint_shown and Game.sim != null and Game.sim.times_slept == 1:
 				_first_wake_hint_shown = true
-				_first_wake_hint_pending = true
 				_queue_toast(_first_wake_hint_text())
 		WIEvents.DIALOGUE_STARTED:
 			_conversation_open = true
 			_apply_toast_position()
 			_clear_dialogue_line()
-			_clear_toast()
+			_defer_toast_display()
 		WIEvents.DIALOGUE_ENDED:
 			_conversation_open = false
 			_apply_toast_position()
 		WIEvents.MAP_CHANGED:
 			_clear_dialogue_line()
-			_clear_toast()
+			_defer_toast_display()
 		WIEvents.PLAYER_MOVED:
 			dismiss_current_toast_early()
 
@@ -328,23 +334,34 @@ func _show_dialogue_line(text: String, fitted: String) -> void:
 	ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_LINE_HIDDEN, {})
 
 
-func _clear_toast() -> void:
+## A transition retires the toast that ALREADY RENDERED (it is about the side
+## the player just left, and dialogue needs the raised slot clear) and cuts its
+## remaining hold short so the survivors drain immediately on the far side. The
+## queue itself is untouched -- see `_toast_queue`'s contract.
+func _defer_toast_display() -> void:
+	dismiss_current_toast_early()
 	_toast_panel.hide()
-	# Transient counts pair with QUEUED texts -- discarding the queue
-	# without decrementing would leave stale counts that swallow a future
-	# REAL toast with identical text (review yellow).
-	for queued: String in _toast_queue:
-		if int(_transient_counts.get(queued, 0)) > 0:
-			_transient_counts[queued] -= 1
-	_toast_queue.clear()
-	# GH#273: sticky toasts are DEFERRED by a transition, never dropped --
-	# they re-render on the far side (raised position handles dialogue).
-	# The visible panel still hid above, so the stale-toast fix holds.
-	for pending: String in _pending_sticky:
-		_toast_queue.append(pending)
-	if _first_wake_hint_pending:
-		_toast_queue.append(_first_wake_hint_text())
 
+
+## Combat's own feed replaces the toast strip for the fight's duration, so the
+## pending queue waits it out rather than rendering over the board. Toasts
+## emitted DURING the fight are unaffected -- they queue and render as before.
+func _bank_toasts() -> void:
+	for text: String in _toast_queue:
+		_banked_toasts.append(text)
+	_toast_queue.clear()
+
+
+func _restore_banked_toasts() -> void:
+	if _banked_toasts.is_empty():
+		return
+	for text: String in _banked_toasts:
+		_toast_queue.append(text)
+	_banked_toasts.clear()
+	# Unlike `_queue_toast`, this can run with no drain in flight (the drain
+	# loop exited while the queue sat banked), so it must kick one itself.
+	if not _toast_draining:
+		_drain_toasts()
 
 
 func _apply_toast_position() -> void:
@@ -399,13 +416,11 @@ func _resize_dialogue_panel() -> void:
 	UIChrome.set_offsets(_dialogue_panel, 36.0, DIALOGUE_BOTTOM - panel_height, 736.0, DIALOGUE_BOTTOM)
 
 
-func _queue_toast(text: String, record := true, sticky := false) -> void:
+func _queue_toast(text: String, record := true) -> void:
 	# Transient marking MUST precede the drain kick: _drain_toasts() runs
 	# synchronously up to its first await, popping this very toast.
 	if not record:
 		_transient_counts[text] = int(_transient_counts.get(text, 0)) + 1
-	if sticky:
-		_pending_sticky.append(text)
 	_toast_queue.append(text)
 	if not _toast_draining:
 		_drain_toasts()
@@ -424,9 +439,6 @@ func _drain_toasts() -> void:
 	_toast_draining = true
 	while not _toast_queue.is_empty():
 		var text: String = _toast_queue.pop_front()
-		_pending_sticky.erase(text)
-		if _first_wake_hint_pending and text == _first_wake_hint_text():
-			_first_wake_hint_pending = false
 		if int(_transient_counts.get(text, 0)) > 0:
 			_transient_counts[text] -= 1
 		else:
