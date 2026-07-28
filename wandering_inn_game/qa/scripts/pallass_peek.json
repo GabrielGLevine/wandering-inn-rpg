@@ -29,10 +29,10 @@
   { "action": "assert_state", "path": "player_cell", "equals": [0, 2] },
   { "action": "screenshot", "name": "01_pallass_market_bounds_proven" },
 
-  { "_comment": "== the arrival anchor (4,6). It IS a portal carrier now, but this script boots with pallass_attuned unbanked, so the picker gate fails and the plain toast arm reads -- the carrier's own can-fail proof (pallass_round_trip walks the met side). The portals `pallass` row lands at (4,7), this exact approach cell. Slate recolor read (anchor_waystone_slate).", "action": "teleport", "map": "pallass_market", "cell": [4, 7] },
+  { "_comment": "== the arrival anchor (4,6). It IS a portal carrier now, but this script boots with pallass_attuned unbanked, so the picker gate fails and the plain toast arm reads -- the carrier's own can-fail proof (pallass_round_trip walks the met side). WEST approach (3,6), the same one pallass_round_trip takes home: the south cell (4,7) is alchemy_bench_reduction, solid, and standing inside it is what v0.15 moved the arrival off. Slate recolor read (anchor_waystone_slate).", "action": "teleport", "map": "pallass_market", "cell": [3, 6] },
   { "action": "wait_frames", "frames": 10 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [4, 7] },
+  { "action": "move", "direction": "right", "steps": 1 },
+  { "action": "assert_state", "path": "player_cell", "equals": [3, 6] },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "eyed_the_market_arrival_stone" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Cold, precise stone, and not as blank as it looks. Something the shape of a door is being held in it, patiently, for later." }, "timeout_sec": 5 },
