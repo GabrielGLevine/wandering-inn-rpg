@@ -1171,7 +1171,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 **Files:**
 - Modify: `wandering_inn_game/data/maps/invrisil/stationer.json` (`stationer_client`)
 
-- [ ] **Step 1: Append `talk_pool_stages` to the entity** — it has no stages today, so this is trivially "after the last existing stage". Key it on the **terminal**, `setting_commissioned`:
+- [x] **Step 1: Append `talk_pool_stages` to the entity** — it has no stages today, so this is trivially "after the last existing stage". Key it on the **terminal**, `setting_commissioned`:
 
 ```json
    "talk_pool_stages": [
@@ -1186,8 +1186,8 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
    ]
 ```
 
-- [ ] **Step 2: Shadow-out audit** (mandatory before shipping any stage). One stage over a two-line base pool: pre-terminal the base pool serves; post-terminal the stage wins permanently. Both states are reachable and both read correctly. Ascending-threshold check is vacuous with one stage. The entity keeps its base `talk_pool` (required when stages exist).
-- [ ] **Step 3: Run** `test_content.gd`; **commit** `feat(invrisil): the client remembers (#306)`.
+- [x] **Step 2: Shadow-out audit** (mandatory before shipping any stage). One stage over a two-line base pool: pre-terminal the base pool serves; post-terminal the stage wins permanently. Both states are reachable and both read correctly. Ascending-threshold check is vacuous with one stage. The entity keeps its base `talk_pool` (required when stages exist).
+- [x] **Step 3: Run** `test_content.gd`; **commit** `feat(invrisil): the client remembers (#306)`.
 
 ---
 

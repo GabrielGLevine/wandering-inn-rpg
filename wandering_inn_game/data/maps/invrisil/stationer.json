@@ -222,6 +222,18 @@
     "This is the only shop on the street where a woman may sit for an hour and be assumed to be choosing ink.",
     "I am not waiting for anyone. I am deciding something. They look identical from outside."
    ],
+   "talk_pool_stages": [
+    {
+     "id": "stationer_client_setting_done",
+     "requires_accomplishment": {
+      "setting_commissioned": 1
+     },
+     "lines": [
+      "I wear it to the difficult errands now. That was always what it was for.",
+      "He sent the order back with the true weight written on it in his own hand. I have kept the paper as well."
+     ]
+    }
+   ],
    "conversation": "invrisil_stationer_client"
   },
   {
