@@ -1338,3 +1338,15 @@ by controller ruling — the plan was the defect, not the implementation.
   09ebdbe). Regen drift keeps its real net: the merge train re-runs
   derive_qa_surfaces + render_qa_notes --write per merge, and nightly
   still reports.
+- **Pre-commit hook adjudication (2026-07-28, user directive)**: the
+  engine-free CI gates measured at 0.04-0.31s (data_lint, census,
+  render_qa_notes, doc_drift, mirror sync) and 4.2s (leak scan) — all
+  hookable without slowing development if path-scoped. Shipped
+  scripts/git-hooks/pre-commit (68fa336): BLOCKING = leak scan (only
+  when the commit ADDS files — the leak vector on a public repo),
+  data_lint + census (only on data/ edits), mirror sync (only on skill
+  edits); ADVISORY = the two demoted doc checks (print, never block —
+  consistent with the CI demotion). Worktree-scoped activation
+  (install_git_hooks.sh) so the four in-flight lane worktrees are NOT
+  retro-gated mid-plan; queue: activate per-worktree at the merge
+  train, fold into wi-verifying-changes/wi-start-here at wave close.
