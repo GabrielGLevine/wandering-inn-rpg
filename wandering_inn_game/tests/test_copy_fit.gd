@@ -53,7 +53,7 @@ const VEIL_LINE_MAX_ROWS := 2
 ## `_looks_like_identifier` rather than by position, so a table gaining a third
 ## column cannot silently drop out of the sweep.
 const VEIL_COPY_TABLES := [
-	"OPENER_LINES", "FINALE_LINES_OPEN", "FINALE_REGION_LINES",
+	"OPENER_LINES", "FINALE_LINES_OPEN", "FINALE_ACT_LINES", "FINALE_REGION_LINES",
 	"FINALE_CLOSE_LINES", "FINALE_LINK_LINE", "SEAL_TRANSITION_LINE",
 	"_EVOLUTION_RESULT_FLAVOR",
 ]
@@ -419,6 +419,7 @@ func _check_veil_lines() -> void:
 	# one line each, so they are part of the block whether or not they are copy.
 	for i in 3:
 		worst.append("[%s Level %d.]" % [_longest_class_name(), 20])
+	worst.append_array(_veil_copy_in(src, "FINALE_ACT_LINES"))
 	worst.append_array(_veil_copy_in(src, "FINALE_REGION_LINES"))
 	worst.append(_longest_of(_veil_copy_in(src, "FINALE_CLOSE_LINES")))
 	worst.append_array(_veil_copy_in(src, "FINALE_LINK_LINE"))
@@ -509,7 +510,14 @@ func _veil_copy_in(src: String, const_name: String) -> Array[String]:
 		var at := after.find(terminator)
 		if at != -1:
 			stop = mini(stop, at)
-	var block := after.substr(0, stop)
+	# COMMENT LINES OUT FIRST. A const's block runs to the NEXT declaration, which
+	# means it swallows that declaration's own `##` doc comment -- and a doc
+	# comment quoting a phrase ("known face") would otherwise be measured as veil
+	# copy and counted into the finale's line budget.
+	var block := ""
+	for line: String in after.substr(0, stop).split("\n"):
+		if not line.strip_edges().begins_with("#"):
+			block += line + "\n"
 	var re := RegEx.new()
 	re.compile("\"([^\"]*)\"")
 	var out: Array[String] = []

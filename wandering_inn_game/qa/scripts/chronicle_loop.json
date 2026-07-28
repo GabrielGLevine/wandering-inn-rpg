@@ -3,92 +3,558 @@
  "fixture_save": "near_riverfarm",
  "starts_at_title": true,
  "steps": [
-  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_title_rendered", "payload_contains": {"continue_enabled": true, "selectable_rows": 5}, "timeout_sec": 5},
-  {"action": "move", "direction": "down", "steps": 1},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
-  {"action": "assert_state", "path": "accomplishments.post_game", "equals": 1},
-  {"action": "press", "name": "journal"},
-  {"action": "wait_for_event", "type": "ui_chronicle_rendered", "payload_contains": {"surface": "journal", "facts": {"schema": 1, "name": "Traveler", "race": "Human", "classes": [{"name": "Mage", "level": 5}, {"name": "Warrior", "level": 5}], "quests_completed": 5, "victories": 4, "sleeps": 12, "ending": "The seal holds. Liscor counts you among its own."}}, "timeout_sec": 5},
-  {"action": "screenshot", "name": "01_journal_open"},
-  {"action": "move", "direction": "down", "steps": 20},
-  {"action": "wait_frames", "frames": 3},
-  {"action": "screenshot", "name": "02_journal_chronicle"},
-  {"action": "press", "name": "journal"},
-  {"action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5},
-  {"action": "install_fixture", "fixture": "climax_sealed_start", "slot": "auto"},
-  {"action": "press", "name": "cancel"},
-  {"action": "wait_for_event", "type": "ui_pause_shown", "timeout_sec": 5},
-  {"action": "move", "direction": "down", "steps": 6},
-  {"action": "press", "name": "confirm"},
-  {"action": "move", "direction": "down", "steps": 1},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_title_rendered", "payload_contains": {"continue_enabled": true, "selectable_rows": 5}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_chronicle_rendered", "payload_contains": {"surface": "title", "facts": {"schema": 1, "name": "Traveler", "race": "Human", "classes": [{"name": "Mage", "level": 5}, {"name": "Warrior", "level": 5}], "quests_completed": 5, "victories": 4, "sleeps": 12, "ending": "The seal holds. Liscor counts you among its own."}}, "timeout_sec": 5},
-  {"action": "wait_frames", "frames": 10},
-  {"action": "screenshot", "name": "03_title_chronicle"},
-  {"action": "move", "direction": "down", "steps": 1},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
-  {"action": "assert_state", "path": "current_map", "equals": "street"},
-  {"_comment": "Zevara pool line -> seal dialogue; option 1 banks raskghar_sealed.", "action": "move", "direction": "up", "steps": 1},
-  {"action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "Zevara"}, "timeout_sec": 5},
-  {"action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "zevara_intro"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5},
-  {"action": "move", "direction": "down", "steps": 1},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "raskghar_sealed"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "item_gained", "payload_contains": {"item": "moon_bone_amulet"}, "timeout_sec": 5},
-  {"_comment": "PHASE 8: ending the dialogue fires NOTHING now -- the epilogue retired to Act V's seal_resolved. Main's live capture arm is post_game, which banks at the first sleep AFTER the seal (sleep_beat.gd), so this run takes that sleep.", "action": "move", "direction": "down", "steps": 1},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5},
-  {"_comment": "== NO CLOSING SEQUENCE AT THE SEAL == the retired epilogue's exact former trigger, proven silent.", "action": "assert_event_absent", "type": "ui_gdi_epilogue_rendered"},
-  {"_comment": "== THE SLEEP THAT BANKS post_game == your_bed's approach (inn_upstairs 9,2 -- the inn's only bed); bump up into the bed to face it, then interact.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2]},
-  {"action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "inn_upstairs"}, "timeout_sec": 5},
-  {"action": "wait_frames", "frames": 10},
-  {"action": "move", "direction": "up", "steps": 1},
-  {"action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "phase_changed", "payload_contains": {"phase": "day"}, "timeout_sec": 5},
-  {"_comment": "THE CAPTURE ARM: main.gd records the chronicle on this very event.", "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "post_game"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_sleep_veil_finished", "timeout_sec": 5},
-  {"action": "assert_state", "path": "accomplishments.post_game", "equals": 1},
-  {"action": "press", "name": "cancel"},
-  {"action": "wait_for_event", "type": "ui_pause_shown", "timeout_sec": 5},
-  {"action": "move", "direction": "down", "steps": 6},
-  {"action": "press", "name": "confirm"},
-  {"action": "move", "direction": "down", "steps": 1},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_title_rendered", "payload_contains": {"continue_enabled": true, "selectable_rows": 5}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_chronicle_rendered", "payload_contains": {"surface": "title", "facts": {"schema": 1, "name": "Traveler", "race": "Human", "classes": [{"name": "Warrior", "level": 2}, {"name": "Diplomat", "level": 1}], "quests_completed": 4, "victories": 2, "sleeps": 1, "ending": "The seal holds. Liscor counts you among its own."}}, "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_new_game_confirm_rendered", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "game_reset", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_gdi_opener_rendered", "payload_contains": {"lines": 4}, "timeout_sec": 5},
-  {"action": "assert_state", "path": "current_map", "equals": "inn"},
-  {"action": "assert_state", "path": "classes", "equals": {}},
-  {"action": "press", "name": "cancel"},
-  {"action": "wait_for_event", "type": "ui_pause_shown", "timeout_sec": 5},
-  {"action": "move", "direction": "down", "steps": 6},
-  {"action": "press", "name": "confirm"},
-  {"action": "move", "direction": "down", "steps": 1},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_title_rendered", "payload_contains": {"continue_enabled": true, "selectable_rows": 5}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_chronicle_rendered", "payload_contains": {"surface": "title", "facts": {"schema": 1, "name": "Traveler", "race": "Human", "classes": [{"name": "Warrior", "level": 2}, {"name": "Diplomat", "level": 1}], "quests_completed": 4, "victories": 2, "sleeps": 1, "ending": "The seal holds. Liscor counts you among its own."}}, "timeout_sec": 5},
-  {"action": "wait_frames", "frames": 60},
-  {"action": "screenshot", "name": "04_chronicle_survives_new_game"},
-  {"action": "wait_frames", "frames": 10}
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "payload_contains": {
+    "continue_enabled": true,
+    "selectable_rows": 5
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.post_game",
+   "equals": 1
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "_comment": "v0.15 A5: the Completed list, pinned WHOLE. Two of these quests used to close on a bare '— Complete.' -- the flattest thing the journal can say about a finished story -- and now carry an authored line in their giver's voice. UI_JOURNAL_SHOWN fires immediately before UI_CHRONICLE_RENDERED on the same open, so this wait sits ahead of the chronicle one and the since-marker stays honest. A whole-list pin is what makes a future quest that forgets its ending line fail loud.",
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "completed_quest_lines": [
+     "The Errand — Complete.",
+     "The Missing Crate — Complete.",
+     "Something in the Cisterns — Complete.",
+     "The Door That Goes Elsewhere — You consulted Pisces about it.",
+     "Something Beneath — You brought the tremor's answer back up to Zevara, and she wrote the warren down as closed."
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_chronicle_rendered",
+   "payload_contains": {
+    "surface": "journal",
+    "facts": {
+     "schema": 1,
+     "name": "Traveler",
+     "race": "Human",
+     "classes": [
+      {
+       "name": "Mage",
+       "level": 5
+      },
+      {
+       "name": "Warrior",
+       "level": 5
+      }
+     ],
+     "quests_completed": 5,
+     "victories": 4,
+     "sleeps": 12,
+     "ending": "The seal holds. Liscor counts you among its own."
+    }
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_journal_open"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 20
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "02_journal_chronicle"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "install_fixture",
+   "fixture": "climax_sealed_start",
+   "slot": "auto"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "payload_contains": {
+    "continue_enabled": true,
+    "selectable_rows": 5
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_chronicle_rendered",
+   "payload_contains": {
+    "surface": "title",
+    "facts": {
+     "schema": 1,
+     "name": "Traveler",
+     "race": "Human",
+     "classes": [
+      {
+       "name": "Mage",
+       "level": 5
+      },
+      {
+       "name": "Warrior",
+       "level": 5
+      }
+     ],
+     "quests_completed": 5,
+     "victories": 4,
+     "sleeps": 12,
+     "ending": "The seal holds. Liscor counts you among its own."
+    }
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "03_title_chronicle"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "_comment": "Zevara pool line -> seal dialogue; option 1 banks raskghar_sealed.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Zevara"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "zevara_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "raskghar_sealed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "moon_bone_amulet"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "PHASE 8: ending the dialogue fires NOTHING now -- the epilogue retired to Act V's seal_resolved. Main's live capture arm is post_game, which banks at the first sleep AFTER the seal (sleep_beat.gd), so this run takes that sleep.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== NO CLOSING SEQUENCE AT THE SEAL == the retired epilogue's exact former trigger, proven silent.",
+   "action": "assert_event_absent",
+   "type": "ui_gdi_epilogue_rendered"
+  },
+  {
+   "_comment": "== THE SLEEP THAT BANKS post_game == your_bed's approach (inn_upstairs 9,2 -- the inn's only bed); bump up into the bed to face it, then interact.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE CAPTURE ARM: main.gd records the chronicle on this very event.",
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "post_game"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.post_game",
+   "equals": 1
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "payload_contains": {
+    "continue_enabled": true,
+    "selectable_rows": 5
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_chronicle_rendered",
+   "payload_contains": {
+    "surface": "title",
+    "facts": {
+     "schema": 1,
+     "name": "Traveler",
+     "race": "Human",
+     "classes": [
+      {
+       "name": "Warrior",
+       "level": 2
+      },
+      {
+       "name": "Diplomat",
+       "level": 1
+      }
+     ],
+     "quests_completed": 4,
+     "victories": 2,
+     "sleeps": 1,
+     "ending": "The seal holds. Liscor counts you among its own."
+    }
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_new_game_confirm_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_reset",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_gdi_opener_rendered",
+   "payload_contains": {
+    "lines": 4
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {}
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "payload_contains": {
+    "continue_enabled": true,
+    "selectable_rows": 5
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_chronicle_rendered",
+   "payload_contains": {
+    "surface": "title",
+    "facts": {
+     "schema": 1,
+     "name": "Traveler",
+     "race": "Human",
+     "classes": [
+      {
+       "name": "Warrior",
+       "level": 2
+      },
+      {
+       "name": "Diplomat",
+       "level": 1
+      }
+     ],
+     "quests_completed": 4,
+     "victories": 2,
+     "sleeps": 1,
+     "ending": "The seal holds. Liscor counts you among its own."
+    }
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 60
+  },
+  {
+   "action": "screenshot",
+   "name": "04_chronicle_survives_new_game"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  }
  ]
 }

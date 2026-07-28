@@ -4,6 +4,63 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 A5 endings acknowledgment (five in-wave calls)
+
+- **The seven completion lines ship as `""`-req resolution FALLBACKS, not as a
+  new `complete_text` key.** `completed_quest_summary` already renders
+  `"<title> — <path text>"` and falls back to `"— Complete."` only when
+  `resolved_path` answers empty; a one-entry `resolution_paths` array with no
+  `accomplishment` and no `grant` is exactly "this quest has one ending, here is
+  how it reads". Zero engine change, zero new schema, and `test_quests`'
+  `_resolution_order` guard stays quiet because it counts REAL rungs. Alternative
+  rejected: a `complete_text` key — a second mechanism for the same sentence,
+  and the first thing to rot when someone later gives one of these quests a
+  branch. Revert path: delete the seven arrays.
+- **The trapped-halls pacifist relabel SPLIT the fallback instead of swapping its
+  grant.** The spec's finding is exact — the pacifist route pays
+  `melee_hit`/`won_combat` — but the row carrying that grant was the `""`
+  fallback, which caught the DISARM route ([Observe] + trap kit on the dart
+  slit, which banks only `halls_cleared`) AND the fight, because the snare
+  encounter banked only `halls_cleared` too. Swapping that one grant to
+  `{sneaked_past_danger: 6, persuaded_someone: 2}` as written would have fixed
+  the pacifist by mislabelling the fighter in the opposite direction, under a
+  line still reading "You cleared the trapped halls yourself." So the fight got
+  an id of its own (`cleared_halls_by_force`, named now, freezes at the tag) on
+  `snare_nest_slot`'s `on_victory`, the fight keeps its old line and grant
+  VERBATIM as a real rung, and the fallback becomes what it always actually
+  described: the disarmer, with the spec's grant and a line that says what they
+  did. Revert path: drop the new rung and the counter, restore the old two-row
+  array.
+- **Four Act V fixtures gained `cleared_halls_by_force`; three horns_dig ones
+  deliberately did NOT.** Seven fixtures carried `halls_cleared` with no route
+  counter. The four that also carry `won_combat`/`melee_hit`/`vault_construct_downed`
+  are downstream of the fight, so naming it keeps their recorded ending
+  byte-identical to what shipped. The three `horns_dig_*`/`horns_residence`
+  fixtures carry NO combat counters at all — under the old data they were being
+  told "You cleared the trapped halls yourself" and paid 12 melee hits they had
+  never landed, which is precisely the unearned-outcome-text rule A1 exists to
+  forbid. They now read the disarm line honestly. That asymmetry is the point,
+  not an oversight.
+- **The OR-producer beats are `complete_when_any`, a sibling key — not an
+  ANY-of-Array `complete_when`.** Phase 3's ruling-1 guest gates take the
+  Array-means-ANY shape, and reusing it here would have made one key mean two
+  structurally different things in two files. A named sibling reads at the call
+  site (`complete_when` AND, `complete_when_any` OR) and is purely additive: a
+  beat without it evaluates exactly as before. `test_content`'s three quest arms
+  now read BOTH keys through one `_beat_gate_counters` helper, so an alternative
+  naming an unproduced counter, or one whose producer map the description never
+  points at, still fails loud. Revert path: delete `_beat_met`'s `any` block and
+  the two data keys.
+- **The two postings wired were `cisterns` and `wrong_order` — the file's own
+  vocabulary picked them.** `quests.json` calls these two "the cisterns/wrong_order
+  two-beat shape ... a posting" in `what_the_seal_kept`'s comment, and they are
+  the only two whose non-combat route banks its own counter and then waits for a
+  REPORT to close the resolve beat: scouting the nest ([Appraise Foe] at the
+  overlook ledge) and stretching the order in the inn kitchen. Both already had
+  the route counter — `scouted_the_nest`, `stretched_the_order` — so this wired
+  what exists and produced nothing new. Audited the other eight resolution-path
+  quests the same way; every other route already reaches its beat directly.
+
 ## 2026-07-28 — v0.15 A4 viewport correctness (four in-wave calls)
 
 - **The combat feed's fold fix is a LAYOUT fix, not a budget re-cut.** The

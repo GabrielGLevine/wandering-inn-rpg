@@ -240,6 +240,16 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "v0.15 A5 (OR-producer complete_when): the resolve beat closes HERE now, at the ledge, on scouted_the_nest -- not two rooms later when Olesm is told. That is the whole fix: the journal used to keep asking a scout to go settle the nest they had already read like a map.",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "cisterns",
+    "beat": 1
+   },
+   "timeout_sec": 5
+  },
+  {
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "timeout_sec": 5
@@ -368,15 +378,6 @@
    "type": "accomplishment_recorded",
    "payload_contains": {
     "id": "resolved_the_cisterns"
-   },
-   "timeout_sec": 5
-  },
-  {
-   "action": "wait_for_event",
-   "type": "quest_beat_completed",
-   "payload_contains": {
-    "id": "cisterns",
-    "beat": 1
    },
    "timeout_sec": 5
   },

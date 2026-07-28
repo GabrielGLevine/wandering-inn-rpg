@@ -92,6 +92,32 @@ const FINALE_LINES_OPEN: Array[String] = [
 	"[When you came to Liscor, there was nothing to record.]",
 	"[This is no longer true.]",
 ]
+## v0.15 A5. ACT PRESENCES, one line per act, each emitted ONLY if that act's
+## own counter banked — the same per-counter shape as the region recap below,
+## and deliberately NOT a last-match-wins ladder: a finale player holds all
+## three, and the point is that the recap walks the whole story, not just its
+## end. Before this, Acts I–III had no presence in the ending at all: the recap
+## opened on "there was nothing to record", jumped straight to the pilgrimage,
+## and the arrival, the city learning your face, and the warren under it went
+## unmentioned. Placed between the class recount and the region recap so the
+## sequence reads chronologically — who you became, what the city did about it,
+## then where the Door took you. SHORT by contract (spec A5: "seasoning, not a
+## second epilogue"): all three measure under the 880px column at 773/667/706px,
+## so each draws on ONE row and the three presences cost the block three rows,
+## not six. The first drafts ran 879/915/894px -- two of them wrapped, and the
+## worst-case block needed the separation ladder's third rung to fit. Measured,
+## not eyeballed; `test_copy_fit._check_veil_lines` holds the ceiling.
+##
+## `post_game` carries Act II rather than a "known face" counter of its own:
+## that beat's own gate is `reached_two_classes` + `quests_completed >= 3`, a
+## compound with no single id, and `post_game` banks at the first sleep after
+## the seal — by which point the city HAS decided, which is the thing the line
+## says.
+const FINALE_ACT_LINES: Array[Array] = [
+	["reached_liscor", "[You arrived with no class and no name here. Liscor has both now.]"],
+	["post_game", "[The city learned your face, and never once mentioned it.]"],
+	["raskghar_sealed", "[The warren under Liscor is sealed, and what it fed is cut off.]"],
+]
 ## Region recap, one line per pilgrimage stop, each emitted ONLY if that
 ## stop's counter banked. Ordered Riverfarm → Invrisil → Pallass, the spine's
 ## own order, so the recap reads back as the road the player walked.
@@ -428,6 +454,9 @@ func _finale_lines() -> Array[String]:
 	var classes: Dictionary = Game.sim.snapshot().get("classes", {})
 	for cid: Variant in classes:
 		lines.append("[%s Level %d.]" % [_class_name(String(cid)), int(classes[cid])])
+	for row: Array in FINALE_ACT_LINES:
+		if Game.sim.accomplishment_count(String(row[0])) > 0:
+			lines.append(String(row[1]))
 	for row: Array in FINALE_REGION_LINES:
 		if Game.sim.accomplishment_count(String(row[0])) > 0:
 			lines.append(String(row[1]))
