@@ -33,9 +33,9 @@
     13,
     5
    ],
-   "requires_accomplishment": "riverfarm_attuned",
+   "requires_accomplishment": "door_awakened",
    "arrival_toast": "The light warms and the air smells of wheat and river water before you've taken a step. Riverfarm, same as the rumor said.",
-   "_comment": "Arrival cell (13,5), one east of riverfarm_anchor_stone (12,5) at the village's own end of the pair; open and off every blocked/decor/entity cell (blast-radius checked)."
+   "_comment": "Arrival cell (13,5), one east of riverfarm_anchor_stone (12,5) at the village's own end of the pair; open and off every blocked/decor/entity cell (blast-radius checked). GATE IS door_awakened, NOT riverfarm_attuned: the far link IS the door chain's payoff, and the old gate let a board rumor alone strand a player in a village whose only exit stone gated on the awakening. riverfarm_attuned keeps banking off the rumor as lore."
   },
   {
    "id": "invrisil",

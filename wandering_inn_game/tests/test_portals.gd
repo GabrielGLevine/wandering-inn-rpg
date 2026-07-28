@@ -29,6 +29,10 @@ func _new_game() -> WIGame:
 	return WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, _combat_config())
 
 
+func _option_texts(game: WIGame) -> Array:
+	return (game.dialogue.current_options() as Array).map(func(o: Dictionary) -> String: return String(o["text"]))
+
+
 func _bank_beat3(game: WIGame) -> void:
 	game.record_accomplishment("door_understood")
 	game.record_accomplishment("recovered_anchor_stone")
@@ -146,13 +150,17 @@ func _init() -> void:
 	assert(mounted_ids.has("liscor_street") and mounted_ids.has("the_wandering_inn"), "door_mounted ALONE lists both Liscor rows -- the day-one link needs no awakening")
 	assert(mounted_only.accomplishment_count("door_awakened") == 0, "sanity: the day-one link is proven with door_awakened still unbanked")
 	for region_id: String in ["riverfarm", "invrisil", "pallass", "dungeon_depths"]:
-		assert(not mounted_ids.has(region_id), "door_mounted opens Liscor only -- %s still waits on its own *_attuned gate" % region_id)
+		assert(not mounted_ids.has(region_id), "door_mounted opens Liscor only -- %s still waits on its own further gate" % region_id)
+	# Riverfarm's row moved riverfarm_attuned -> door_awakened: the board rumor
+	# alone used to offer a village whose only exit stone gated on the awakening.
+	mounted_only.record_accomplishment("riverfarm_attuned")
+	assert(not mounted_only.attuned_destinations().map(func(d: Dictionary) -> String: return String(d["id"])).has("riverfarm"), "the board rumor alone no longer opens Riverfarm -- door_awakened does")
 	# The inn-side CARRIER moved with the rows: the picker must open at the
 	# mounted door, not three sleeps later (a row nothing can reach is dead).
 	mounted_only.bind_map_silent("inn", Vector2i(13, 6))
 	mounted_only.player_facing = Vector2i.RIGHT
 	assert(mounted_only.interact().get("dialogue", false), "pantry_door's portal picker opens at door_mounted, not door_awakened")
-	assert(mounted_only.dialogue.current_options().size() == 2, "from the inn the mounted door offers the street destination + 'Let it be.'")
+	assert(_option_texts(mounted_only) == ["Liscor — the Gate District", WIPortals.NEVER_MIND], "pre-awakening the inn picker offers Liscor and nothing further -- Riverfarm is absent: %s" % str(_option_texts(mounted_only)))
 	# ...and so did Liscor's end of the pair.
 	mounted_only.dialogue_choose(1)
 	mounted_only.bind_map_silent("street", Vector2i(29, 10))
@@ -171,8 +179,7 @@ func _init() -> void:
 	assert(result.get("dialogue", false), "interacting with the awakened pantry_door opens the portal menu, not the flavor toast")
 	var started: Array = _events.filter(func(e: Dictionary) -> bool: return String(e["type"]) == "dialogue_started")
 	assert(started.size() == 1 and String(started[0]["payload"].get("conversation", "")) == "portal_menu", "the code-built graph is labeled 'portal_menu'")
-	var menu_options: Array = game.dialogue.current_options()
-	assert(menu_options.size() == 2, "from the inn, the menu offers ONLY the street destination + 'Let it be.' (the_wandering_inn is excluded: you're already there)")
+	assert(_option_texts(game) == ["Liscor — the Gate District", "Riverfarm", WIPortals.NEVER_MIND], "awakened, the inn menu gains Riverfarm and still excludes the_wandering_inn (you're already there): %s" % str(_option_texts(game)))
 
 	_events.clear()
 	assert(game.dialogue_choose(0), "picking the (only) real destination succeeds")
@@ -186,11 +193,36 @@ func _init() -> void:
 	game.bind_map_silent("street", Vector2i(29, 10))
 	game.player_facing = Vector2i.RIGHT
 	game.interact()
-	var return_options: Array = game.dialogue.current_options()
-	assert(return_options.size() == 2, "from the street, the menu offers ONLY the inn destination + 'Let it be.'")
+	assert(_option_texts(game) == ["The Wandering Inn", "Riverfarm", WIPortals.NEVER_MIND], "from the street the menu excludes liscor_street (current map): %s" % str(_option_texts(game)))
 	assert(game.dialogue_choose(0), "picking the inn destination succeeds")
 	assert(game.current_map == "inn", "the return trip lands back on the inn")
 	assert(game.player_cell == Vector2i(13, 6), "the return trip lands on the inn's authored arrival cell")
+
+	# THE STRAND FIX, both cohorts. riverfarm_anchor_stone is the village's only
+	# exit (witch_hollow dead-ends off it), so it gates on door_mounted -- the one
+	# counter BOTH arrival paths carry: the legacy rumor route (riverfarm_attuned,
+	# no awakening) and the post-fix door_awakened row.
+	var stranded := _new_game()
+	stranded.record_accomplishment("door_mounted")
+	stranded.record_accomplishment("riverfarm_attuned")
+	stranded.bind_map_silent("riverfarm_village", Vector2i(13, 5))
+	stranded.player_facing = Vector2i.LEFT
+	assert(stranded.interact().get("dialogue", false), "a pre-awakening save parked in Riverfarm can still open the anchor stone and leave")
+	assert(_option_texts(stranded) == ["Liscor — the Gate District", "The Wandering Inn", WIPortals.NEVER_MIND], "the stranded save's own menu offers both Liscor rows home: %s" % str(_option_texts(stranded)))
+	assert(stranded.dialogue_choose(0), "and travelling out of Riverfarm succeeds")
+	assert(stranded.current_map == "street", "the stranded save lands back in Liscor")
+
+	var awakened_visitor := _new_game()
+	awakened_visitor.record_accomplishment("door_mounted")
+	_bank_beat3(awakened_visitor)
+	awakened_visitor.sleep()
+	awakened_visitor.sleep()
+	awakened_visitor.sleep()
+	assert(awakened_visitor.accomplishment_count("riverfarm_attuned") == 0, "sanity: this one never read the board rumor")
+	awakened_visitor._travel_to_portal("riverfarm")
+	assert(awakened_visitor.current_map == "riverfarm_village", "the awakening alone carries you to Riverfarm")
+	awakened_visitor.player_facing = Vector2i.LEFT
+	assert(awakened_visitor.interact().get("dialogue", false), "...and the anchor stone carries you back, rumor unread")
 
 	var fresh := _new_game()
 	fresh.bind_map_silent("inn", Vector2i(13, 6))
