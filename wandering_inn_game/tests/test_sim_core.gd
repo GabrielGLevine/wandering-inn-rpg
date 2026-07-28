@@ -1233,13 +1233,15 @@ func _init() -> void:
 	var armed: Array = []
 	for raw_lead: Variant in leads.active_leads():
 		armed.append(String((raw_lead as Dictionary)["id"]))
-	assert(armed == ["lead_dig", "lead_witch_ear"], "leads: spine_started arms the witch capstone (and retires lead_spine, its own hide_when)")
+	# v0.16 close: the two Riverfarm depth rows gate on the same
+	# price_of_a_favor_reported this leg banks, so they ride along from here.
+	assert(armed == ["lead_dig", "lead_witch_ear", "lead_flood_ledger", "lead_thicket"], "leads: spine_started arms the witch capstone (and retires lead_spine, its own hide_when)")
 
 	leads.accomplishments["lattice_witch_lore"] = 1
 	var spent: Array = []
 	for raw_lead: Variant in leads.active_leads():
 		spent.append(String((raw_lead as Dictionary)["id"]))
-	assert(spent == ["lead_dig"], "leads: taking the capstone conversation retires its lead")
+	assert(spent == ["lead_dig", "lead_flood_ledger", "lead_thicket"], "leads: taking the capstone conversation retires its lead")
 
 	_events.clear()
 	leads.active_leads()
