@@ -317,6 +317,7 @@ func _init() -> void:
 	_validate_encounter_when(scene, produced_accomplishments)
 	_validate_encounter_gate_counters(scene, produced_accomplishments)
 	_validate_present_when(scene, produced_accomplishments)
+	_validate_guest_gate_windows(scene)
 	_validate_skill_uses(scene, skill_ids, produced_accomplishments)
 	_validate_visual_states_phase(scene)
 	_validate_talk_pool_echo_of(scene, entity_ids)
@@ -673,6 +674,49 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 			if when.has("absent"):
 				for counter_id: String in (when["absent"] as Dictionary):
 					_check(produced_accomplishments.has(counter_id), "entity %s encounter_when.absent references unproduced counter: %s (a typo here silently never gates -- GH#199 review MEDIUM-3)" % [entity_id, counter_id])
+
+## v0.15 T3.1. A guest's pool gate and their row's counter arms are two
+## independent statements of ONE window, and they may never disagree: pooled
+## with every row hidden is a ghost-empty seat, rowed without the pool is a
+## person the rotation refuses to seat. Derived from both sides here so the
+## belt-and-braces stays belted -- an Array gate needs one row per spec (the
+## twin-row idiom: pisces before/returned, zevara before/returned).
+func _validate_guest_gate_windows(scene: Dictionary) -> void:
+	var rows: Dictionary = {}
+	for map_id: String in scene["maps"]:
+		for entity: Dictionary in (scene["maps"][map_id] as Dictionary).get("entities", []):
+			var when: Dictionary = entity.get("present_when", {})
+			if not when.has("guest") or not (when["guest"] is Dictionary):
+				continue
+			var npc := String((when["guest"] as Dictionary).get("npc", ""))
+			if not rows.has(npc):
+				rows[npc] = []
+			(rows[npc] as Array).append(_window_key(
+				(when.get("requires", {}) as Dictionary).keys(),
+				(when.get("absent", {}) as Dictionary).keys()
+			))
+	for npc: String in rows:
+		var gate: Variant = WIInnGuests.GUEST_POOL_GATES.get(npc, {})
+		var specs: Array = gate if gate is Array else [gate]
+		var want: Array = []
+		for spec: Variant in specs:
+			if spec is Dictionary:
+				want.append(_window_key((spec as Dictionary).get("requires", []), (spec as Dictionary).get("absent", [])))
+			else:
+				want.append(_window_key([String(spec)], []))
+		var got: Array = (rows[npc] as Array).duplicate()
+		want.sort()
+		got.sort()
+		_check(want == got, "guest %s: pool gate window %s does not match its row window(s) %s -- pool membership and row presence must state the SAME condition, or the rotation seats a chair nobody renders in" % [npc, want, got])
+
+
+func _window_key(requires: Array, absent: Array) -> String:
+	var req := requires.duplicate()
+	var ab := absent.duplicate()
+	req.sort()
+	ab.sort()
+	return "requires=%s absent=%s" % [req, ab]
+
 
 func _validate_visual_states_phase(scene: Dictionary) -> void:
 	for map_id: String in scene["maps"]:

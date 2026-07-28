@@ -4,6 +4,51 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 T3.1 guest arc-windows (three in-wave calls)
+
+- **Zevara's window opens at `heard_the_deep_tremor`, NOT at
+  `watch_runner_pointed`.** The spec's edge was verified against the
+  something_beneath chain and the wider one was measured, because the inn map
+  itself argues for it: `erin_thread_gate_runner` (inn.json) fires on
+  `watch_runner_pointed` and says "A runner was asking after you. Captain wants
+  you at the gate" — in the same room where the Captain may be sitting three
+  cells away, and her inn register is contractually barred from mentioning the
+  arc. The wider window was NOT taken because of what it costs: three fixtures
+  shift seating (`inn_guests_full_start`, `_ext_start`, `_gate_start` all carry
+  `watch_runner_pointed` with the arc unstarted), and restoring Zevara's live
+  coverage — she is the roster member with no other QA leg anywhere — would mean
+  banking `raskghar_sealed` AND `post_game` in three rotation fixtures, a
+  cross-cutting flag that turns on leads, bounties, journal sections and a sleep
+  GDI line inside canonicals that exist to prove seating. The residual gap is
+  short and self-closing (the player is already walking to the gate), and both
+  of Erin's later lines — the tremor thread and "TELL Zevara you came back up" —
+  fall INSIDE the shipped window. Revert path: one token in GUEST_POOL_GATES +
+  the matching row arm + those three fixtures.
+- **Relc gets NO entry; his descent window was audited and does not
+  reproduce.** `relc_descent_cameo` holds [reached_the_warren,
+  cleared_the_warren) on deep_tunnels, and a player can reach the warren mouth,
+  walk back up and sleep — so the double is real. It is not a DEFECT: every
+  guest already stands at a permanent home post on another map (relc on
+  floodplains, zevara at the gate, olesm/pisces/klbkch on street), so cross-map
+  doubling is the shipped idiom, not the bug the ruling names. What made pisces
+  and zevara defects was same-map: pisces's chair rendering EMPTY (pooled, both
+  rows hidden, `pisces_mounting` holding him at (13,5) on the inn map itself)
+  and Erin contradicting a seated Zevara in her own common room. Relc's row is
+  ungated, so there is no ghost seat to close, and no inn line names him.
+  Gating him would make a shipped ungated row gate-dependent for nothing.
+- **Zevara takes the twin-row idiom rather than a third row or an OR in
+  `present_when`.** `present_when` has no disjunction and the pisces pair
+  already proves the pattern, so `zevara_inn_guest` became the BEFORE arm
+  (absent heard_the_deep_tremor) and `zevara_inn_guest_returned` the AFTER arm
+  (requires raskghar_sealed), sharing seat, sprite and conversation — and so the
+  same once_per_waking serve key, safely, since `raskghar_sealed` implies
+  `heard_the_deep_tremor` and the two can never co-render. Pisces needed NO row
+  edit at all: his existing pair already states the window exactly; only the
+  pool gate was missing. Belt-and-braces is now machine-enforced rather than
+  asserted in prose — `test_content._validate_guest_gate_windows` derives the
+  window from BOTH sides and fails on any disagreement, which is what a ghost
+  seat is.
+
 ## 2026-07-28 — v0.15 A5 endings acknowledgment (five in-wave calls)
 
 - **The seven completion lines ship as `""`-req resolution FALLBACKS, not as a

@@ -1066,7 +1066,7 @@
    ]
   },
   {
-   "_comment": "Zevara rotates once chatted_with_zevara>=1; contract: see selys_inn_guest. The ONLY roster member with no prior met-state QA coverage, which is why PR2b adds the inn_guests_full_start fixture (all six met) to give her leg a live script at all. Seat (3,6), free floor south of Olesm's (3,5) chair and west of Krshia's (4,6). Her guest conversation must absorb none of the something-beneath arc, which routes BOTH its summons and its close through zevara_intro. sprite reuses her registered home rig.",
+   "_comment": "Zevara rotates once chatted_with_zevara>=1; contract: see selys_inn_guest. The ONLY roster member with no prior met-state QA coverage, which is why PR2b adds the inn_guests_full_start fixture (all six met) to give her leg a live script at all. Seat (3,6), free floor south of Olesm's (3,5) chair and west of Krshia's (4,6). Her guest conversation must absorb none of the something-beneath arc, which routes BOTH its summons and its close through zevara_intro. sprite reuses her registered home rig. ARC-WINDOW SPLIT (v0.15 ruling 1), same idiom as the pisces pair: THIS IS THE BEFORE ARM (absent heard_the_deep_tremor); zevara_inn_guest_returned is the AFTER arm (requires raskghar_sealed). Between them she is running the descent she ordered -- Erin's own thread on this map says the Captain wants you at the gate -- so no chair holds her, and GUEST_POOL_GATES states the same disjunction so the seat is re-based, not left empty.",
    "id": "zevara_inn_guest",
    "kind": "npc",
    "cell": [
@@ -1078,6 +1078,49 @@
    "facing": "down",
    "conversation": "zevara_inn",
    "present_when": {
+    "absent": {
+     "heard_the_deep_tremor": 1
+    },
+    "guest": {
+     "npc": "zevara",
+     "roster": [
+      "selys",
+      "krshia",
+      "olesm",
+      "pisces",
+      "relc",
+      "zevara",
+      "klbkch",
+      "rags",
+      "wilovan",
+      "grimalkin"
+     ],
+     "seats": 2
+    }
+   },
+   "dialogue": [
+    {
+     "speaker": "Zevara",
+     "text": "Nobody has found me yet. Do not be the one who does."
+    }
+   ]
+  },
+  {
+   "_comment": "The AFTER arm of the zevara arc-window split (see zevara_inn_guest). Byte-identical apart from the counter gate: requires raskghar_sealed, the moment she writes the warren down as closed. Shares the SAME zevara_inn conversation (and so its once_per_waking serve key) deliberately -- the two rows can never be present in the same waking, since raskghar_sealed implies heard_the_deep_tremor.",
+   "id": "zevara_inn_guest_returned",
+   "kind": "npc",
+   "cell": [
+    3,
+    6
+   ],
+   "display_name": "Zevara",
+   "sprite": "zevara",
+   "facing": "down",
+   "conversation": "zevara_inn",
+   "present_when": {
+    "requires": {
+     "raskghar_sealed": 1
+    },
     "guest": {
      "npc": "zevara",
      "roster": [
