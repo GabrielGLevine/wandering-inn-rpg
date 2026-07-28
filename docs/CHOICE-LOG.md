@@ -4,6 +4,50 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.15 T3.2 hygiene batch (six in-wave calls)
+
+- **TOAST/LENGTH: verdict is NO RE-CUT.** The ledger entry itself says the
+  `[Detect Magic]` quartet payoff FITS; re-verified against P2's budgets and it
+  still does, with room. The real finding in that entry was never the length —
+  it was that `test_copy_fit` measured nothing under `skill_uses`, so the
+  longest toast in the game set a ceiling nobody enforced. So the copy ships
+  whole and the WALK grew instead: `skill_uses.<skill>.toast` and its
+  `variants[].toast` are now measured, proven by ballooning that exact string
+  until the arm named it. Alternative rejected: trimming the beat's climax to
+  buy headroom nothing was asking for.
+- **SEAL-SLEEP/TOAST-MISMATCH was already fixed; the ledger had lagged.**
+  `sleep_beat.gd` flips `anything_happened` on the `post_game` bank and
+  `test_sim_core` pins both halves (no toast of its own, no "You sleep
+  soundly." under the GDI's seal line). Drained with that evidence rather than
+  re-fixed. Nothing shipped.
+- **Pallass arrival moved to (4,8), not (4,5).** (4,7) was
+  `alchemy_bench_reduction`'s cell. (4,5), north of the plinth, is also free and
+  is one cell CLOSER to the carrier — but (4,8) is the nearest free cell to the
+  old one, it is the open corridor the canonicals already walk, and it leaves
+  the plinth's WEST approach (3,6) as the single documented way to the picker
+  instead of adding a second. One arrival semantics, not two. Revert path: the
+  row's `cell`.
+- **The golem split closed by renaming the COMBATANT, not the parley.** The
+  literal "Stone Golem" is shared by three combatants (forge + both
+  watchgolems), so renaming the forge one is a one-literal change that leaves
+  the market pair — whose "Stone Golems" parley already agrees with them —
+  untouched. Renaming the parley instead would have made the forge golem read
+  like the market's, losing the miscalibration the whole encounter is about.
+- **Dash policy: the em dash wins, and `_comment` is exempt.** 283 player
+  strings to 112 is not close, and the lint rides
+  `_scan_player_strings`, whose walk already skips `_`-prefixed keys — so dev
+  text keeps its ASCII dashes with no second mechanism and no exemption list.
+  Census impact measured, ~neutral (the sweep frees a character per occurrence).
+- **Hedault's trader variant ships without a live QA leg, deliberately.** The
+  fixture that reaches `door_reading` (spine_reach_start) has not traded the
+  fragment, and the one that trades (hedault_fragment_start) lacks
+  `brothers_job_done`/`spine_started`, so covering the variant live would mean
+  a new fixture for one line. The GENERIC arm — the majority path, and the one
+  that was previously lying — is what spine_reach now pins live; the variant is
+  covered by the new variant-entry shape lint plus the 122 shipped
+  `text_variants` the dialogue tests already walk. Noted for the wave-close
+  playtest rather than blocked on.
+
 ## 2026-07-28 — v0.15 T3.1 guest arc-windows (three in-wave calls)
 
 - **Zevara's window opens at `heard_the_deep_tremor`, NOT at
