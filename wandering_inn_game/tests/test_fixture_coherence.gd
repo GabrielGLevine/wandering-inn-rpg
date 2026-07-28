@@ -45,6 +45,7 @@ const MAP_REQUIRES := {
 	"garden_sanctuary": ["garden_door_unlocked"],
 	"riverfarm_village": ["door_awakened", "riverfarm_attuned"],
 	"witch_hollow": ["door_awakened", "riverfarm_attuned"],
+	"riverfarm_mill": ["door_awakened", "riverfarm_attuned"],
 	"invrisil_boulevard": ["door_awakened", "invrisil_attuned"],
 	"mercantile_alleys": ["door_awakened", "invrisil_attuned"],
 	"brothers_parlor": ["door_awakened", "invrisil_attuned"],

@@ -59,26 +59,30 @@ that were never meant to show up here (uncounted, not a gap).
 
 | Scene | Region | Composite | c1 variety | c2 distinct | c3 composition | c4 utilization | c5 clutter | Verdict |
 |---|---|---|---|---|---|---|---|---|
-| invrisil_boulevard | invrisil | 72.84 | 22.76 | 22.88 | 22.90 | 4.29 | 0.00 | dynamic |
-| pallass_market | pallass | 72.83 | 26.38 | 23.62 | 19.08 | 3.75 | 0.00 | dynamic |
-| pallass_forge | pallass | 72.22 | 26.38 | 23.62 | 20.89 | 1.33 | 0.00 | dynamic |
+| invrisil_boulevard | invrisil | 72.82 | 22.76 | 22.86 | 22.90 | 4.29 | 0.00 | dynamic |
+| pallass_market | pallass | 72.75 | 26.38 | 23.54 | 19.08 | 3.75 | 0.00 | dynamic |
+| pallass_forge | pallass | 71.93 | 26.49 | 23.54 | 20.65 | 1.25 | 0.00 | dynamic |
 | street | liscor | 71.55 | 24.97 | 21.73 | 22.52 | 2.33 | 0.00 | dynamic |
-| mercantile_alleys | invrisil | 71.48 | 24.75 | 22.99 | 22.74 | 1.00 | 0.00 | dynamic |
+| mercantile_alleys | invrisil | 71.45 | 24.75 | 22.97 | 22.74 | 1.00 | 0.00 | dynamic |
 | sewers | liscor | 70.76 | 23.40 | 22.11 | 21.25 | 4.00 | 0.00 | dynamic |
 | floodplains | liscor | 69.41 | 24.28 | 21.84 | 18.53 | 4.76 | 0.00 | dynamic |
-| witch_hollow | riverfarm | 68.23 | 21.07 | 20.89 | 20.56 | 5.71 | 0.00 | dynamic |
-| riverfarm_village | riverfarm | 68.09 | 21.10 | 21.17 | 20.05 | 5.77 | 0.00 | dynamic |
+| witch_hollow | riverfarm | 68.23 | 21.07 | 20.88 | 20.56 | 5.71 | 0.00 | dynamic |
 | deep_tunnels | liscor | 67.98 | 23.00 | 22.08 | 20.17 | 2.73 | 0.00 | dynamic |
+| riverfarm_village | riverfarm | 67.91 | 21.28 | 21.16 | 19.92 | 5.56 | 0.00 | dynamic |
+| brothers_parlor | invrisil | 67.26 | 22.41 | 22.05 | 21.44 | 1.36 | 0.00 | dynamic |
 | garden_sanctuary | sanctuary | 67.18 | 19.74 | 23.50 | 17.94 | 6.00 | 0.00 | dynamic |
-| brothers_parlor | invrisil | 67.16 | 22.21 | 22.09 | 21.43 | 1.43 | 0.00 | dynamic |
-| runners_guild | interiors | 66.51 | 22.74 | 22.97 | 19.37 | 1.43 | 0.00 | dynamic |
 | barracks | interiors | 66.26 | 22.78 | 22.38 | 21.09 | 0.00 | 0.00 | dynamic |
+| riverfarm_mill | riverfarm_mill | 65.98 | 23.00 | 23.50 | 19.48 | 0.00 | 0.00 | dynamic |
 | seal_vault | dungeon | 65.80 | 23.13 | 23.41 | 17.60 | 1.67 | 0.00 | dynamic |
 | trapped_halls | dungeon | 65.54 | 21.86 | 23.59 | 17.94 | 2.14 | 0.00 | dynamic |
+| runners_guild | interiors | 65.08 | 22.74 | 22.97 | 19.37 | 0.00 | 0.00 | dynamic |
 | inn | interiors | 64.84 | 24.25 | 22.05 | 17.04 | 1.50 | 0.00 | dynamic |
-| guild | interiors | 64.81 | 22.50 | 23.30 | 18.29 | 0.71 | 0.00 | dynamic |
 | inn_upstairs | interiors | 64.69 | 19.48 | 22.63 | 22.58 | 0.00 | 0.00 | dynamic |
+| guild | interiors | 64.10 | 22.50 | 23.30 | 18.29 | 0.00 | 0.00 | dynamic |
 | dungeon_approach | dungeon | 63.30 | 20.45 | 23.69 | 16.66 | 2.50 | 0.00 | dynamic |
-| riverfarm_longhouse | riverfarm | 62.23 | 21.92 | 20.78 | 19.53 | 0.00 | 0.00 | dynamic |
+| riverfarm_longhouse | riverfarm | 62.22 | 21.92 | 20.77 | 19.53 | 0.00 | 0.00 | dynamic |
 | ruin_surface | liscor | 59.86 | 21.10 | 21.96 | 16.80 | 0.00 | 0.00 | dynamic |
+
+NOTE: map(s) with no region-group table entry (defaulted to their own
+singleton group, not a crash): ["riverfarm_mill"]
 

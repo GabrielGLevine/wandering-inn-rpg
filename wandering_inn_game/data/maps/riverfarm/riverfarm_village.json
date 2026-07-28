@@ -1569,6 +1569,29 @@
      "toast": "The hook you get is the one nobody else will touch: the wet corner down by the river, every time. They give it to you because you finish it."
     }
    ]
+  },
+  {
+   "_comment": "v0.16 #305: the mill's ground-floor door. [19,5] is inside the windmill's blocked footprint (the longhouse_door precedent). TWO free approaches, [19,6] and [18,5], neither on any walked QA route. mill_exit returns to [19,6] only, so a west-side entry exits one cell over -- deliberate. sprite `door`, never riverfarm_windmill: that art is 4x6 cells and is already drawn at [20,4].",
+   "id": "riverfarm_mill_door",
+   "kind": "door",
+   "cell": [
+    19,
+    5
+   ],
+   "display_name": "The Mill",
+   "sprite": "door",
+   "tint": [
+    0.74,
+    0.7,
+    0.62
+   ],
+   "observe": "The mill's ground-floor door, set into the base of the tower on the river side. The sluice hums even with the wheel pinned.",
+   "to_map": "riverfarm_mill",
+   "to_cell": [
+    6,
+    7
+   ],
+   "on_enter_accomplishment": "observed_riverfarm_mill"
   }
  ]
 }

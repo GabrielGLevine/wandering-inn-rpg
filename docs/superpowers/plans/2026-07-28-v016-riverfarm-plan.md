@@ -156,8 +156,8 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 
 **THE ROUTE-REPORT SHAPE (design fork, ruling-adjacent, log it).** The shipped `price_of_a_favor` gates its single report option on `blight_lifted`, one shared counter all three routes bank. That shape is **unavailable here**: R1's HELP route and R2's SKILL route bank through `on_skill_use`, which banks exactly one counter (`src/core/wi_game.gd:480`), so no shared resolve counter can cover them without inventing a second producer for one route only. Instead both quests use **`complete_when_any` over the three route counters** (the shipped `cisterns` resolve-beat idiom, `quests.json:35`) and **three route-specific report options** on the giver's hub, each gated on a single-key accomplishment `requires` and each banking the terminal. This adds no counters beyond the spec's, gives each route its own report line, and keeps every gate single-key.
 
-- [ ] **Step 1 (both sub-tasks): Read `data/quests.json` `price_of_a_favor` (:104-119) and `cisterns` (:30-44) first.** Match their TAB indentation and their `_comment` economy exactly. `price_of_a_favor` is also this lane's **insert anchor** — both blocks go immediately after its closing brace, per the anchor rule above.
-- [ ] **Step 2 (TASK 1a — run just before Task 5's commit): insert `flood_ledger` after `price_of_a_favor`:**
+- [x] **Step 1 (both sub-tasks): Read `data/quests.json` `price_of_a_favor` (:104-119) and `cisterns` (:30-44) first.** Match their TAB indentation and their `_comment` economy exactly. `price_of_a_favor` is also this lane's **insert anchor** — both blocks go immediately after its closing brace, per the anchor rule above.
+- [x] **Step 2 (TASK 1a — run just before Task 5's commit): insert `flood_ledger` after `price_of_a_favor`:**
 
 ```json
 {
@@ -199,8 +199,8 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 }
 ```
 
-- [ ] **Step 4: Run** `python3 wandering_inn_game/scripts/data_lint.py` — expect clean. Then `res://tests/test_content.gd`: because each block is spliced only once its own producers are already in the working tree, **this must be GREEN at both 1a and 1b**. A `waits on unproduced accomplishment` failure here means the splice ran too early — back it out and finish the producing task first. **Never commit a red tree.**
-- [ ] **Step 5: Census** `python3 scripts/comment_census.py --check` — expect `rc=0`. (Both quest `_comment`s together are ~480 chars against this lane's ~2,420 projection.)
+- [x] **Step 4: Run** `python3 wandering_inn_game/scripts/data_lint.py` — expect clean. Then `res://tests/test_content.gd`: because each block is spliced only once its own producers are already in the working tree, **this must be GREEN at both 1a and 1b**. A `waits on unproduced accomplishment` failure here means the splice ran too early — back it out and finish the producing task first. **Never commit a red tree.**
+- [x] **Step 5: Census** `python3 scripts/comment_census.py --check` — expect `rc=0`. (Both quest `_comment`s together are ~480 chars against this lane's ~2,420 projection.)
 
 ---
 
@@ -341,8 +341,8 @@ Each commit is then a whole-file state produced by a single anchored splice, and
 
 **Neither approach is touched by any walked QA route** (re-derived per map for all eight `riverfarm_village`-touching scripts): `longhouse_walkthrough`'s 16-cell walked union is row 4 x7–13, column 7 y4–8 and row 8 x8–11; `thicket_cull_loop` pins (17,15)/(17,14); `regional_work_loop` pins (3,11)/(3,10); `riverfarm_walkthrough`/`riverfarm_fight`/`riverfarm_talk`/`riverfarm_skill` pin (13,5),(2,13),(2,12),(2,11),(10,9),(11,10),(11,8),(11,3),(7,10),(12,4),(12,10). **None of them is (19,5), (19,6), (18,5), (18,6) or (19,7)** — the (18,5)/(18,4) hits that turn up in `regional_work_loop` and `spine_reach` are on `pallass_forge`/`pallass_market`, a different map. Reachability of (19,6): open from (18,6) and (19,7); (20,6) is the dock entity and blocks, which is fine.
 
-- [ ] **Step 1: Load `wi-adding-a-scene`. Read `data/maps/riverfarm/riverfarm_longhouse.json` in full** — it is the structural template (biome `inn`, `floor_layers` with `"cells": "all"`, `walls.segments` with `from`/`to`/`cap`/`face`, `decor`, `ambience` preset `dust_motes`). **Perimeter walls are rendered by `walls.segments` and block implicitly — never double-list a wall cell in `blocked`.** `blocked` holds furniture cells ONLY, each mirrored by a `decor` entry.
-- [ ] **Step 2: Write `data/maps/riverfarm/riverfarm_mill.json`** to this layout spec (12×9 — under the 14×10 parlor yardstick, and under the spec's own ≤14×10 mill cap):
+- [x] **Step 1: Load `wi-adding-a-scene`. Read `data/maps/riverfarm/riverfarm_longhouse.json` in full** — it is the structural template (biome `inn`, `floor_layers` with `"cells": "all"`, `walls.segments` with `from`/`to`/`cap`/`face`, `decor`, `ambience` preset `dust_motes`). **Perimeter walls are rendered by `walls.segments` and block implicitly — never double-list a wall cell in `blocked`.** `blocked` holds furniture cells ONLY, each mirrored by a `decor` entry.
+- [x] **Step 2: Write `data/maps/riverfarm/riverfarm_mill.json`** to this layout spec (12×9 — under the 14×10 parlor yardstick, and under the spec's own ≤14×10 mill cap):
 
 **Grid:** `{"width": 12, "height": 9}`. **Biome:** `"inn"` (the longhouse's own choice; no `data/biomes.json` edit).
 
@@ -493,7 +493,7 @@ The three observables (each `on_interact_accomplishment` + a non-empty `toast`, 
 
 **Light budget:** give the mill at most one `light` (a lantern on the tallyman's post is optional and can be skipped entirely). The ≤8-lights-per-map budget is a shipped convention (`witch_cottage_prop`'s `_comment`).
 
-- [ ] **Step 3: Append the village-side door entity to `data/maps/riverfarm/riverfarm_village.json`.** Read `longhouse_door` (:1009-1043) first and match its shape — **but NOT its sprite choice**, see the box below:
+- [x] **Step 3: Append the village-side door entity to `data/maps/riverfarm/riverfarm_village.json`.** Read `longhouse_door` (:1009-1043) first and match its shape — **but NOT its sprite choice**, see the box below:
 
 ```json
 {
@@ -513,7 +513,7 @@ The three observables (each `on_interact_accomplishment` + a non-empty `toast`, 
 
 **SPRITE FIX (fix round 1) — `"sprite": "door"`, and NO decor row.** The first draft gave this entity `"sprite": "riverfarm_windmill"` plus a paired `decor {"sprite":"door","cell":[19,5]}` row. That would render **a second full windmill** on top of the shipped one: `riverfarm_windmill` is `frame_size [64,96]` = **4×6 cells**, anchor [0.5,0.917], and `riverfarm_windmill_prop` at [20,4] is the map's ONLY windmill art — a second tower one cell left and one down is near-total overlap. The `longhouse_door` precedent does **not** transfer: `riverfarm_longhouse` art exists on that map ONLY as the door entity, so it duplicates nothing. Here the door is a door: `door` is `render_scale` 0.5 and is exactly what the paired decor row would have drawn, so **the decor row is dropped** (keeping it would draw a second door on the same cell). `riverfarm_village.json` gets **one entity append and no decor append** from this task.
 
-- [ ] **Step 4: `data/moods.json` — add `moods.riverfarm_mill`, inserted immediately after the `witch_hollow` key** (the lane's ruling-C anchor). A new interior with no mood row renders flat identity-white at every phase (`src/world/atmosphere.gd:90-91`) and **no test catches it**. **Grade exemplar: `witch_hollow`'s own authored row** (`day [0.72,0.92,0.78]` / `dusk [0.40,0.58,0.50]` / `night [0.20,0.34,0.30]` / `vignette 0.50`, with a `_comment` explaining its green shade) — it is the region's one commented, deliberately-graded row and the only honest reference. **Do NOT calibrate against `riverfarm_longhouse`:** it has NO mood row at all, so it renders at identity white; the mill and hut rows below are the region's FIRST graded interiors, and "warmer/dimmer than the longhouse" would mean "warmer/dimmer than pure white", which is not a target. Working-interior key, warmer than the hollow's green, cool at night through the sluice:
+- [x] **Step 4: `data/moods.json` — add `moods.riverfarm_mill`, inserted immediately after the `witch_hollow` key** (the lane's ruling-C anchor). A new interior with no mood row renders flat identity-white at every phase (`src/world/atmosphere.gd:90-91`) and **no test catches it**. **Grade exemplar: `witch_hollow`'s own authored row** (`day [0.72,0.92,0.78]` / `dusk [0.40,0.58,0.50]` / `night [0.20,0.34,0.30]` / `vignette 0.50`, with a `_comment` explaining its green shade) — it is the region's one commented, deliberately-graded row and the only honest reference. **Do NOT calibrate against `riverfarm_longhouse`:** it has NO mood row at all, so it renders at identity white; the mill and hut rows below are the region's FIRST graded interiors, and "warmer/dimmer than the longhouse" would mean "warmer/dimmer than pure white", which is not a target. Working-interior key, warmer than the hollow's green, cool at night through the sluice:
 
 ```json
 "riverfarm_mill": {
@@ -524,10 +524,10 @@ The three observables (each `on_interact_accomplishment` + a non-empty `toast`, 
 }
 ```
 
-- [ ] **Step 5: `tests/test_content.gd` `LANDMARK_TOKENS` (:1344) — insert `"riverfarm_mill": ["mill", "riverfarm"],` immediately after the `"riverfarm_village"` row** (this lane's anchor). **Mandatory:** R1's `resolve` beat has all three producers inside `riverfarm_mill` while the giver stands on `riverfarm_village`, so `_validate_travel_beat_place_naming` (:1459) arms and hard-fails at :1475 without the row. The beat description in Task 1a contains "the mill by the river" — verify the token match once that splice lands.
-- [ ] **Step 6: `tests/test_fixture_coherence.gd` `MAP_REQUIRES` (:31) — insert `"riverfarm_mill": ["door_awakened", "riverfarm_attuned"],` immediately after the `"witch_hollow"` row** (this lane's anchor; identical values — the mill is only reachable through the village).
-- [ ] **Step 7: Run** `python3 wandering_inn_game/scripts/data_lint.py` (grid/cell in-grid, gate shapes) and the scene-dynamism advisory `godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd` (target composite ≥50; a <30 print is a loud advisory, not a gate).
-- [ ] **Step 8: Census** check; hold the commit until Task 5 supplies `heard_flood_ledger`'s producer (the encounter gate counter must be produced or `_validate_encounter_when` reds) and **Task 1a** splices `flood_ledger`. Commit order inside the R1 group: Task 3 work in the tree → Task 5 dialogue in the tree → **Task 1a splice** → one commit (Task 5 Step 6).
+- [x] **Step 5: `tests/test_content.gd` `LANDMARK_TOKENS` (:1344) — insert `"riverfarm_mill": ["mill", "riverfarm"],` immediately after the `"riverfarm_village"` row** (this lane's anchor). **Mandatory:** R1's `resolve` beat has all three producers inside `riverfarm_mill` while the giver stands on `riverfarm_village`, so `_validate_travel_beat_place_naming` (:1459) arms and hard-fails at :1475 without the row. The beat description in Task 1a contains "the mill by the river" — verify the token match once that splice lands.
+- [x] **Step 6: `tests/test_fixture_coherence.gd` `MAP_REQUIRES` (:31) — insert `"riverfarm_mill": ["door_awakened", "riverfarm_attuned"],` immediately after the `"witch_hollow"` row** (this lane's anchor; identical values — the mill is only reachable through the village).
+- [x] **Step 7: Run** `python3 wandering_inn_game/scripts/data_lint.py` (grid/cell in-grid, gate shapes) and the scene-dynamism advisory `godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd` (target composite ≥50; a <30 print is a loud advisory, not a gate).
+- [x] **Step 8: Census** check; hold the commit until Task 5 supplies `heard_flood_ledger`'s producer (the encounter gate counter must be produced or `_validate_encounter_when` reds) and **Task 1a** splices `flood_ledger`. Commit order inside the R1 group: Task 3 work in the tree → Task 5 dialogue in the tree → **Task 1a splice** → one commit (Task 5 Step 6).
 
 ---
 
@@ -694,8 +694,8 @@ Interact-only (no `trigger_radius`) so nothing ambushes the pinned hollow routes
 1. **Every new option is APPENDED at the end of the `options` array**, so no existing row's position changes.
 2. **Both R1 and R2 start options are gated `requires {"accomplishment": {"price_of_a_favor_reported": 1}}`** — an accomplishment gate HIDES, and every crossing canonical renders the hub in a state where `price_of_a_favor_reported` is still 0 (the report leg's own press is what banks it, and the hub is rendered before the effect applies). The new rows are therefore invisible in every pinned state. This also reads correctly in fiction: the spec calls the headman's post-chain pools the hook, and both v0.16 threads open after his blight chain closes. **Log this as a design fork.**
 
-- [ ] **Step 1: Re-read `data/dialogue/riverfarm_headman.json` in full** and re-run the pin check before writing: `grep -rn 'riverfarm_headman' wandering_inn_game/qa/scripts/` and confirm no `"options"` payload pins that conversation (verified at plan time: `riverfarm_talk.json`'s three `options` pins are the portal menu and Eloise's shop, not the headman).
-- [ ] **Step 2: APPEND four options to the hub's `options` array** (after the existing "Remind me what needs doing about the witch?" row):
+- [x] **Step 1: Re-read `data/dialogue/riverfarm_headman.json` in full** and re-run the pin check before writing: `grep -rn 'riverfarm_headman' wandering_inn_game/qa/scripts/` and confirm no `"options"` payload pins that conversation (verified at plan time: `riverfarm_talk.json`'s three `options` pins are the portal menu and Eloise's shop, not the headman).
+- [x] **Step 2: APPEND four options to the hub's `options` array** (after the existing "Remind me what needs doing about the witch?" row):
 
 ```json
 {
@@ -733,7 +733,7 @@ Interact-only (no `trigger_radius`) so nothing ambushes the pinned hollow routes
 
 Softlock guard holds: the hub keeps "Just passing through." (`end: true`, neither key) and "Not much of a headman anymore, is there?" (neither key).
 
-- [ ] **Step 3: APPEND four nodes** to the graph:
+- [x] **Step 3: APPEND four nodes** to the graph:
 
 ```json
 "flood_brief": {
@@ -769,7 +769,7 @@ Softlock guard holds: the hub keeps "Just passing through." (`end: true`, neithe
 
 Register check: short declaratives, dry self-indictment, agricultural nouns — the hub's own "I trust my knees more than most people" voice. One em-dash maximum per line (these use none).
 
-- [ ] **Step 4: Create `data/dialogue/riverfarm_tallyman.json`:**
+- [x] **Step 4: Create `data/dialogue/riverfarm_tallyman.json`:**
 
 ```json
 {
@@ -821,8 +821,8 @@ Register check: short declaratives, dry self-indictment, agricultural nouns — 
 
 Traps observed: every node carries an unconditional `text` (a variants-only node is a guaranteed SCRIPT ERROR, `data_lint.py:198-202`); the banking option uses `goto`, not `end: true`, so effects apply before `DIALOGUE_ENDED`; the hub keeps an always-available exit.
 
-- [ ] **Step 5: Run `Task 1a` now** (splice `flood_ledger` after the `price_of_a_favor` anchor — every counter its beats read is produced by the work already in the working tree), then `python3 wandering_inn_game/scripts/data_lint.py`, `res://tests/test_dialogue.gd`, `res://tests/test_content.gd` — expect PASS on all three. R2's block is **not** in the tree yet, by design, so no R2 counter can red here.
-- [ ] **Step 6: Census** check; **commit** `feat(riverfarm): The Flood Ledger, the mill interior, and the tallyman` (this commit carries **Task 1a**, 3 and 5 together — a whole-file `quests.json` state from a single splice run, never a hunk-staged half-diff).
+- [x] **Step 5: Run `Task 1a` now** (splice `flood_ledger` after the `price_of_a_favor` anchor — every counter its beats read is produced by the work already in the working tree), then `python3 wandering_inn_game/scripts/data_lint.py`, `res://tests/test_dialogue.gd`, `res://tests/test_content.gd` — expect PASS on all three. R2's block is **not** in the tree yet, by design, so no R2 counter can red here.
+- [x] **Step 6: Census** check; **commit** `feat(riverfarm): The Flood Ledger, the mill interior, and the tallyman` (this commit carries **Task 1a**, 3 and 5 together — a whole-file `quests.json` state from a single splice run, never a hunk-staged half-diff).
 
 ---
 

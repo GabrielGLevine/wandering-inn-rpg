@@ -1,0 +1,88 @@
+{
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "The Tallyman",
+   "text": "Mill's yours to walk. Mind the wheel pit; it's deeper than it looks and twice as unfriendly.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "ledger_read_true": 1
+      }
+     },
+     "text": "Eleven bushels and a name I'm not saying out loud in my own mill. You'll keep it the same way, if you please."
+    }
+   ],
+   "options": [
+    {
+     "text": "Walk the tally with me.",
+     "requires": {
+      "accomplishment": {
+       "heard_flood_ledger": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "ledger_read_true": 1
+      }
+     },
+     "goto": "tally_walk"
+    },
+    {
+     "text": "Just looking.",
+     "end": true
+    }
+   ]
+  },
+  "tally_walk": {
+   "speaker": "The Tallyman",
+   "text": "Right. Barley in, barley out, household by household. Every column adds but one, and that one's been short three seasons running and getting shorter.",
+   "options": [
+    {
+     "text": "Which household?",
+     "goto": "tally_name"
+    },
+    {
+     "text": "Could be the count, not the crop.",
+     "goto": "tally_count"
+    }
+   ]
+  },
+  "tally_count": {
+   "speaker": "The Tallyman",
+   "text": "Four counts, and the last one with the headman's own stick alongside mine. It isn't the count. It's the crop.",
+   "options": [
+    {
+     "text": "Then whose crop?",
+     "goto": "tally_name"
+    }
+   ]
+  },
+  "tally_name": {
+   "speaker": "The Tallyman",
+   "text": "Not saying it aloud. But their entries are honest to the grain, and that's how you know. A thief rounds up. They round down and carry the shame home with them.",
+   "options": [
+    {
+     "text": "Their crop failed, and they let the village think worse.",
+     "effects": [
+      {
+       "accomplishment": "ledger_read_true"
+      }
+     ],
+     "goto": "tally_truth"
+    }
+   ]
+  },
+  "tally_truth": {
+   "speaker": "The Tallyman",
+   "text": "Three seasons of it. Tell the headman gently or don't tell him at all. He's a fair man on a good day and this is not one of his good days.",
+   "options": [
+    {
+     "text": "Gently, then.",
+     "end": true
+    }
+   ]
+  }
+ }
+}

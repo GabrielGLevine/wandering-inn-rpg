@@ -255,6 +255,24 @@
    ],
    "vignette": 0.5
   },
+  "riverfarm_mill": {
+   "day": [
+    0.82,
+    0.78,
+    0.68
+   ],
+   "dusk": [
+    0.58,
+    0.52,
+    0.46
+   ],
+   "night": [
+    0.34,
+    0.32,
+    0.34
+   ],
+   "vignette": 0.42
+  },
   "invrisil_boulevard": {
    "day": [
     1.0,

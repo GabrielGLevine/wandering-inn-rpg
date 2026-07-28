@@ -1,0 +1,318 @@
+{
+ "biome": "inn",
+ "grid": {
+  "width": 12,
+  "height": 9
+ },
+ "blocked": [
+  [
+   5,
+   4
+  ],
+  [
+   6,
+   4
+  ],
+  [
+   3,
+   6
+  ],
+  [
+   4,
+   6
+  ],
+  [
+   7,
+   2
+  ]
+ ],
+ "floor_layers": [
+  {
+   "_pick": "Same cool dark-plank swatch the Riverfarm longhouse picked out of Interior_Walls_01 ([12,21]/[13,21]/[12,22]/[13,22], rgb~87,64,49) -- one region, one interior floor language, and footstep-wood stays honest for a timber mill floor.",
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     12,
+     21
+    ],
+    [
+     13,
+     21
+    ],
+    [
+     12,
+     22
+    ],
+    [
+     13,
+     22
+    ]
+   ],
+   "cells": "all"
+  }
+ ],
+ "walls": {
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "from": [
+     0,
+     0
+    ],
+    "to": [
+     11,
+     0
+    ],
+    "cap": [
+     14,
+     6
+    ],
+    "face": [
+     14,
+     7
+    ]
+   },
+   {
+    "from": [
+     0,
+     1
+    ],
+    "to": [
+     0,
+     8
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     11,
+     1
+    ],
+    "to": [
+     11,
+     8
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     1,
+     8
+    ],
+    "to": [
+     5,
+     8
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     7,
+     8
+    ],
+    "to": [
+     10,
+     8
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   }
+  ]
+ },
+ "decor": [
+  {
+   "sprite": "table_brown",
+   "cell": [
+    5,
+    4
+   ]
+  },
+  {
+   "sprite": "table_brown",
+   "cell": [
+    6,
+    4
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    3,
+    6
+   ]
+  },
+  {
+   "sprite": "crate",
+   "cell": [
+    4,
+    6
+   ]
+  },
+  {
+   "sprite": "barrel",
+   "cell": [
+    7,
+    2
+   ]
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    5,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.75,
+     0.4
+    ],
+    "energy": 0.6,
+    "radius": 18,
+    "flicker": true
+   }
+  }
+ ],
+ "ambience": [
+  {
+   "preset": "dust_motes",
+   "rect": "all"
+  }
+ ],
+ "entities": [
+  {
+   "id": "mill_exit",
+   "kind": "door",
+   "cell": [
+    6,
+    8
+   ],
+   "display_name": "Outside",
+   "sprite": "door",
+   "to_map": "riverfarm_village",
+   "to_cell": [
+    19,
+    6
+   ]
+  },
+  {
+   "id": "mill_tallyman",
+   "kind": "npc",
+   "cell": [
+    4,
+    3
+   ],
+   "facing": "down",
+   "display_name": "The Tallyman",
+   "sprite": "human_laborer",
+   "observe": "A thin man with a hazel stick in each hand, laying them side by side against the light.",
+   "talk_pool": [
+    "Barley in, barley out. Anyone who says a mill is complicated has never run one.",
+    "The wheel's pinned till the river's done rising. Everything else keeps working.",
+    "Four counts I've done. The stick doesn't argue and neither do I."
+   ],
+   "conversation": "riverfarm_tallyman"
+  },
+  {
+   "id": "mill_flood_stack",
+   "kind": "prop",
+   "cell": [
+    8,
+    3
+   ],
+   "display_name": "The Flood Stacks",
+   "sprite": "crate",
+   "observe": "Grain sacks stacked at ankle height on a shed floor, with the river three weeks out.",
+   "locked_toast": "Sacks stacked low and a season coming for them. Lifting them above the flood line is work, and work is a Skill you either have or you don't.",
+   "skill_uses": {
+    "basic_cleaning": {
+     "accomplishment": "flood_prep_done",
+     "toast": "[Basic Cleaning] — You clear the shed floor and stack every sack up off the boards. The count comes right the moment anyone can see all of it at once."
+    },
+    "basic_cooking": {
+     "accomplishment": "flood_prep_done",
+     "toast": "[Basic Cooking] — You feed the flood crew out of the mill's own pot, and they work the shed twice over for it. The count comes right in the doing."
+    }
+   }
+  },
+  {
+   "_comment": "encounter_when gates on the quest start so the corner is empty until the shortfall is a question. Interact-only (no trigger_radius) -- the mill is a working interior and an ambush on the way to the tallyman would cross every TALK/HELP canonical. on_victory is an Array so the route counter is the only thing banked.",
+   "id": "mill_granary_scavengers",
+   "kind": "encounter",
+   "cell": [
+    9,
+    6
+   ],
+   "display_name": "The Granary Corner",
+   "sprite": "bat",
+   "beast": true,
+   "observe": "Chaff scattered wide, sacks opened low down, and something breathing behind the last row.",
+   "arena": "inn_cellar",
+   "enemies": [
+    "granary_scavenger_a",
+    "granary_scavenger_b"
+   ],
+   "allies": [],
+   "on_victory": [
+    "granary_cleared"
+   ],
+   "encounter_when": {
+    "requires": {
+     "heard_flood_ledger": 1
+    }
+   }
+  },
+  {
+   "id": "mill_wheel_pit",
+   "kind": "prop",
+   "cell": [
+    1,
+    6
+   ],
+   "display_name": "The Wheel Pit",
+   "sprite": "shaft_ladder",
+   "observe": "A ladder down into a pit of black water, with the wheel standing still in it and the sluice pinned shut against the season.",
+   "on_interact_accomplishment": "observed_mill_wheel_pit",
+   "toast": "The pinned sluice carries three seasons of high-water scratches, and each one sits higher than the last."
+  },
+  {
+   "id": "mill_high_shelf",
+   "kind": "prop",
+   "cell": [
+    10,
+    2
+   ],
+   "display_name": "The High Shelf",
+   "sprite": "library_shelf",
+   "observe": "A shelf set higher on the wall than any shelf needs to be, with notches and years cut into the post beside it.",
+   "on_interact_accomplishment": "observed_mill_high_shelf",
+   "toast": "Somebody has cut a notch for every flood since before the village had a headman, and built the shelf a hand above the worst of them."
+  },
+  {
+   "id": "mill_tally_sticks",
+   "kind": "prop",
+   "cell": [
+    2,
+    1
+   ],
+   "display_name": "The Tally Sticks",
+   "sprite": "chest",
+   "observe": "A bundle of split hazel sticks hung on a nail, each notched down one edge.",
+   "on_interact_accomplishment": "observed_mill_tally_sticks",
+   "toast": "Split tallies. One half stays with the mill, one half goes home with the household, and neither can be altered alone."
+  }
+ ]
+}
