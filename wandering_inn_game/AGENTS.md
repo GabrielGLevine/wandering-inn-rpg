@@ -325,6 +325,10 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `mobile_tap_check` | 9 | GH#196/#197/#202: title-art tap, real-paging tap-advance (`qa_real_paging` opt-out; pages 1..4 pinned), last-page tap defers, interact-nothing excluded from Recent Messages (`recent_count` 1; fixture `mobile_tap_start`) |
 | `rags_meeting_loop` | 9 (fixture `rags_gates_met_start`) | b1 #199: gated Rags meeting → SUPPLY close (draught consumed, pawn granted, quest completes, #211 grant banks) |
 | `rags_gate_check` | 9 (fixture `rags_gate_unmet_start`) | b1 #199: `encounter_when` absent-arm refusal — gate toast, no dialogue (the arm's can-fail proof) |
+| `floodplains_price_talk` | 9 (fixture `floodplains_price_talk_start`) | v0.16 F1 (#308): TALK route -- Krshia's 8g quiet run banks camp_trade_brokered, then the report to Rags closes the quest |
+| `floodplains_price_help` | 9 (fixture `floodplains_price_help_start`) | v0.16 F1 (#308): HELP route -- corusdeer cull + camp carry job arm the drying rack, camp_larder_filled, then the report |
+| `floodplains_price_fight` | 9 (fixture `floodplains_price_fight_start`) | v0.16 F1 (#308): FIGHT route -- the first goblin-ALLY encounter (rags_ally + goblin_spear_ally fielded), camp_ground_held, then the report |
+| `floodplains_price_gate_proof` | 9 (fixture `floodplains_price_betrayal_start`) | v0.16 F1 (#308): betrayal branch -- drove_off_rags banks BOTH terminals, the F1 offer never appears, the camp mouth stays shut (the exclusion's can-fail proof) |
 | `parley_talkdowns_loop` | 9 (fixture `parley_talkdowns_start`) | GH#217: four talk-downs close non-violently; staked formal bout fights by design |
 | `parley_gates_check` | 9 (fixture `parley_gates_unmet_start`) | GH#217: tease legs — skill/gold arms LOCKED, permit arm HIDDEN (exact-list pins = can-fail) |
 | `ratici_fence_loop` | 9 (fixture `ratici_fence_start`) | b2 #218: fence open, EXACT day-0 slate, buy leg, sleep rotation to day-1 |

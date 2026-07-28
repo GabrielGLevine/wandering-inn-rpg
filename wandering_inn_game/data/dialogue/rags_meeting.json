@@ -21,6 +21,14 @@
       }
      },
      "text": "Good trade. Plains quiet. Go safe."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "rags_price_kept": 1
+      }
+     },
+     "text": "Winter came. Camp ate. Go safe."
     }
    ],
    "options": [
@@ -118,6 +126,26 @@
     {
      "text": "(Leave them to their business.)",
      "end": true
+    },
+    {
+     "_comment": "v0.16 F1 offer. TRAP: APPENDED LAST because rags_meeting_loop's settled guard clicks visible option 1 blind -- every new row sits below the ungated exit. hide_when is SINGLE-KEY (it is AND across keys).",
+     "text": "Winter's coming. What does the camp need?",
+     "requires": {
+      "accomplishment": {
+       "rags_meeting_settled": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "drove_off_rags": 1
+      }
+     },
+     "effects": [
+      {
+       "quest": "the_price_kept"
+      }
+     ],
+     "goto": "winter"
     }
    ]
   },
@@ -272,6 +300,146 @@
        "start_combat": "rags_scouting_party"
       }
      ],
+     "end": true
+    }
+   ]
+  },
+  "winter": {
+   "speaker": "Rags",
+   "text": "Winter comes. Camp thin. Ask once.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "camp_trade_brokered": 1
+      }
+     },
+     "text": "Carts came. Gnoll kept quiet. Good."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "camp_larder_filled": 1
+      }
+     },
+     "text": "Racks heavy. Hunters ate. Good."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "camp_ground_held": 1
+      }
+     },
+     "text": "Ground held. They ran. Good."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "rags_price_kept": 1
+      }
+     },
+     "text": "Paid. Not asked. Different."
+    }
+   ],
+   "options": [
+    {
+     "text": "How do I help?",
+     "goto": "winter_ways"
+    },
+    {
+     "text": "Krshia's carts are moving south for you.",
+     "requires": {
+      "accomplishment": {
+       "camp_trade_brokered": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "rags_price_kept": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "rags_price_kept"
+      }
+     ],
+     "goto": "winter_kept"
+    },
+    {
+     "text": "Your racks are full. I carried what I could.",
+     "requires": {
+      "accomplishment": {
+       "camp_larder_filled": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "rags_price_kept": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "rags_price_kept"
+      }
+     ],
+     "goto": "winter_kept"
+    },
+    {
+     "text": "The scavengers won't press that ground again.",
+     "requires": {
+      "accomplishment": {
+       "camp_ground_held": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "rags_price_kept": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "rags_price_kept"
+      }
+     ],
+     "goto": "winter_kept"
+    },
+    {
+     "text": "(Leave her to it.)",
+     "end": true
+    }
+   ]
+  },
+  "winter_ways": {
+   "speaker": "Rags",
+   "_comment": "TRAP: three SEPARATE report rungs above, one per route counter -- requires.accomplishment is AND across keys, so one row naming all three would demand all three.",
+   "text": "Three ways. Gnoll moves goods. Hunters need hands. Scavengers press hollow.",
+   "options": [
+    {
+     "text": "Where's the hollow?",
+     "goto": "winter_where"
+    },
+    {
+     "text": "I'll see what I can do.",
+     "end": true
+    }
+   ]
+  },
+  "winter_where": {
+   "speaker": "Rags",
+   "text": "South. Cut in turf. Two stones. Walk in, no steel.",
+   "options": [
+    {
+     "text": "No steel.",
+     "end": true
+    }
+   ]
+  },
+  "winter_kept": {
+   "speaker": "Rags",
+   "text": "Price kept. Goblins remember. Longer than Humans.",
+   "options": [
+    {
+     "text": "Then we're square.",
      "end": true
     }
    ]

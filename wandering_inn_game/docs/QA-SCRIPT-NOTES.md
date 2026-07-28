@@ -180,6 +180,10 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `mobile_tap_check` | 9 | full | `mobile_tap_start` | GH#196/#197/#202: title-art tap clears the gesture gate; real-paging dialogue advanced by panel taps (qa_real_paging opt-out, page events pinned 1..4); last-page tap defers to options; interact-nothing renders but stays OUT of Recent Messages (recent_count 1) |
 | `rags_meeting_loop` | 9 | full | `rags_gates_met_start` | b1 #199: gated Rags meeting -> SUPPLY close (draught consumed, pawn granted, quest completes, #211 grant banks) |
 | `rags_gate_check` | 9 | full | `rags_gate_unmet_start` | b1 #199: encounter_when absent-arm refusal (hunted-the-camp fixture) -- gate toast, no dialogue; the arm's can-fail proof |
+| `floodplains_price_talk` | 9 | full | `floodplains_price_talk_start` | v0.16 F1 (#308): TALK route -- Krshia's 8g quiet run banks camp_trade_brokered, then the report to Rags closes the quest |
+| `floodplains_price_help` | 9 | full | `floodplains_price_help_start` | v0.16 F1 (#308): HELP route -- corusdeer cull + camp carry job arm the drying rack, camp_larder_filled, then the report |
+| `floodplains_price_fight` | 9 | full | `floodplains_price_fight_start` | v0.16 F1 (#308): FIGHT route -- the first goblin-ALLY encounter (rags_ally + goblin_spear_ally fielded), camp_ground_held, then the report |
+| `floodplains_price_gate_proof` | 9 | full | `floodplains_price_betrayal_start` | v0.16 F1 (#308): betrayal branch -- drove_off_rags banks BOTH terminals, the F1 offer never appears, the camp mouth stays shut (the exclusion's can-fail proof) |
 | `parley_talkdowns_loop` | 9 | full | `parley_talkdowns_start` | GH#217: all four talk-downs close non-violently (skills/permit fixture); staked formal bout fights by design |
 | `parley_gates_check` | 9 | full | `parley_gates_unmet_start` | GH#217: tease legs -- skill/gold arms render LOCKED, permit arm stays HIDDEN (exact-list pins are the can-fail) |
 | `ratici_fence_loop` | 9 | full | `ratici_fence_start` | b2 #218: fence open (trust gate), EXACT day-0 slate, buy leg (gold/item/held-hides), sleep rotation to day-1 slate |

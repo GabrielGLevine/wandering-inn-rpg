@@ -2,7 +2,7 @@
 	"_comment": "Rags's INN register, gated on rags_meeting_settled AND absent drove_off_rags -- stated identically on her row's present_when and in WIInnGuests.GUEST_POOL_GATES, so a betrayal win never seats her and never leaves a ghost-empty chair. Attached ONLY to rags_inn_guest; rags_meeting out on the floodplains never rides along, so the medicine trade, the carved pawn, the price and the draw-steel close all stay on the plains. REGISTER-PURE also means NO WAR PLANNING. Voice per docs/design/character-profiles.md: EARLY Rags, one to four words, no articles. Book-17 bar: pre-Vol-5 characterization ONLY. Serve mirrors selys_inn/zevara_inn: {once_per_waking, item} sanctioned compound.",
 	"start": "greet",
 	"nodes": {
-		"greet": { "speaker": "Rags", "text": "Human place. Warm. I count doors first. Two. Window there. Then I sit.", "options": [
+		"greet": { "speaker": "Rags", "text": "Human place. Warm. I count doors first. Two. Window there. Then I sit.", "text_variants": [ { "requires": { "accomplishment": { "rags_price_kept": 1 } }, "text": "You again. Camp ate. ...Still count doors. Habit, not you." } ], "options": [
 			{ "text": "Push a bowl across the table to her. (Serve)", "requires": { "once_per_waking": "serve:rags_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:rags_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"You don't have to watch the doors in here.\"", "goto": "offduty" },
 			{ "text": "\"Sit as long as you want.\"", "end": true }

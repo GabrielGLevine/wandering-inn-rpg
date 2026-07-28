@@ -2693,3 +2693,81 @@ in the same wave rather than logged as owed.
   godot child alive. Killing the child and re-running passed with all three
   shots. Headless is unaffected (green individually and in the full sweep).
   Logged as a harness flake to watch, not a script defect.
+## 2026-07-28 (#308, v0.16 Floodplains) — three new rigs ship UNMEASURED by the board-figure bar
+
+`goblin_spear_ally` reuses `goblin_base`, `rags_ally` reuses the bespoke `rags`
+rig, and `plains_scavenger_a/b/lead` reuse `human_laborer` — all with NO
+`combat_scale` key, so their board figures are byte-identical to what ships
+today. **None of these sprites is in `FIGURE_ROWS` and none of these ids is in
+the `audited` array**, so `test_combat_visuals` does not measure them; it passes
+by exclusion. No figure number is asserted or claimed here. Filed for the
+goblin-scale triage pass alongside `goblin_raider` / `goblin_shaman` /
+`goblin_chieftain`, each of which needs its own windowed read before its scale
+moves (HANDOFF.md:63-67). The FIRST evidence about these rigs' legibility is
+this PR's windowed machine-playtest shot of the `camp_ground_press` board —
+including whether the three `human_laborer` scavengers, which ship
+near-identical warm tints (0.86/0.78/0.62, 0.80/0.74/0.60, 0.90/0.70/0.55) on
+one board, separate by eye. Nothing in the suite checks that: the tint-uniqueness
+assert at `tests/test_combat_visuals.gd:544-556` covers only the hard-coded
+`camouflage` list.
+
+## 2026-07-28 (#308, v0.16 Floodplains) — the windowed read those rigs were waiting on
+
+Eleven windowed shots, seed 9, real asset overlay, read by eye
+(`floodplains_price_talk` / `_help` / `_fight` windowed, plus four throwaway
+shot scripts for the phase ladder, the can-fail mouth pair, and a synthetic
+all-routes `winter` node; the throwaways were deleted after capture). Logic was
+green before any of this — every row below is eyes-only, and none of it is a
+blocker.
+
+- **ANSWERED, the row above's open question: the three `plains_scavenger_*` DO
+  read as one mass.** On the `camp_ground_press` board all three render the same
+  `human_laborer` silhouette at the same height, and the shipped tint deltas
+  (~0.06 in a channel) are below perceptual threshold at sprite size — the only
+  thing separating them on screen is their HP numbers (30/30, 34/34, 30/30).
+  Re-tint on a real axis (value, not hue nudge) or give the lead a distinct rig.
+- **`goblin_spear_ally` is the least legible unit on the board** — a green-tinted
+  `goblin_base` at a smaller figure height, on a `boulder_flats` arena that is
+  mostly green. It is findable only by its ally-green HP bar.
+- **Ally/enemy separability overall is GOOD.** Green vs orange HP bars carry it
+  cleanly, and the turn banner names all six combatants in initiative order
+  ("Turn — Rags | > Traveler | Plains Scavenger B | The Band's Lead | A Goblin
+  with a Spear | Plains Scavenger A"). The goblin figures read fine beside the
+  human rigs; the problem is scavenger-vs-scavenger, not goblin-vs-human.
+- **`rags_camp_mouth` does not read as an entrance.** It renders as a small
+  grey-green `boulder` — on the same screen as ordinary boulder decor it is
+  indistinguishable from scenery, and it is the ONLY seam into the new interior.
+  Rags's directions ("South. Cut in turf. Two stones.") are doing all the work.
+  Wants a doorway-shaped sprite or a much stronger value contrast.
+  **FIXED in the #308 fix wave (2026-07-28):** new owned PixelLab sprite
+  `turf_cut_mouth` (stones leaning over a dark cut, grass over the lip). Read
+  windowed at floodplains (17,20): it now carries a black opening at sprite
+  size and separates cleanly from the `boulder` decor in the same frame.
+- **Two props are semantically wrong for their own copy.** `camp_hide_racks`
+  ("green hides pegged out on a lattice of spear-shafts") renders as
+  `request_board`, a parchment notice board; `camp_meat_rack` ("a rack of split
+  poles over a bed of ash") renders as `barrel`. The common-sense pass fails on
+  both — the interact copy is right, the sprite argues with it.
+  **FIXED in the #308 fix wave (2026-07-28):** three more owned PixelLab
+  sprites — `hide_rack` (hides pegged between two posts), `drying_rack` (bare
+  pole frame over an ash bed) and `drying_rack_hung` (the same frame under
+  strips of cut meat), anchors measured off each alpha bbox. The rack's filled
+  state is now a real second entity on the same cell, so the fill READS: the
+  windowed pair `01_rags_camp_arrival` / `02_rags_camp_rack_hung` on
+  `floodplains_price_help` shows bare poles becoming a hung rack in place.
+- **The `rags_camp` mood row TOOK, all three phases.** Day / dusk / night are
+  clearly distinct (bright green → muted olive+vignette → dark warm brown), and
+  dusk/night carry the `dust_motes` ambience. Nothing renders flat white.
+  **But the fire pit casts no light** — the mood `_comment` promises "firelight
+  only after dusk" and the hollow has no light anchor, so at night the fire is
+  embers on a dark field. One small warm light would sell the room.
+- **Copy nit:** the ally-announce renders "Rags and A Goblin with a Spear wade in
+  beside you." — a capital `A` mid-sentence, because the display name is used raw.
+- **Dialogue panel load, for the merge train:** Krshia's hub now shows SIX
+  visible rows and Rags's `winter` node FIVE (all three report rungs at once on a
+  synthetic all-routes state). Nothing clips — the panel auto-grows upward — but
+  at six rows it occupies ~45% of the window and fully occludes the speaker
+  standing directly south of the player. Two more shipped rows on either hub and
+  that is a real legibility call, not a nit.
+- Confirmed by eye, the can-fail pair: at (17,21) the camp mouth is PRESENT on a
+  settled fixture and ABSENT on `rags_gate_unmet_start` — bare grass, same frame.

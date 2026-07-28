@@ -79,6 +79,15 @@ const ENCOUNTER_CELLS := [
 	{"name": "beast_tamer5_goblin_ambush_with_wolf", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "beast_tamer5_melee", "ally": "wolf_companion", "companion_boons": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "beast_master10_raskghar_scouts_with_wolf", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "beast_master10_melee", "ally": "wolf_companion", "companion_boons": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "druid14_raskghar_scouts_with_wolf", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout", "raskghar_scout"], "build": "druid14_caster", "ally": "wolf_companion", "companion_boons": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# v0.16 F1 (#308): the camp-ground press, the first goblin-ALLY fight.
+	# The harness fields ONE ally per cell; the shipped encounter fields TWO,
+	# so both cells measure a strictly HARDER field than a player ever sees.
+	# Window is the shipped stop-cell precedent (0.55-0.95 + the 3-12 round
+	# gate), at warrior2, the build the region's gates open at. The measured
+	# medians -- not this window -- are what place these fights in the
+	# Floodplains band; they are recorded in the PR body (RULING A).
+	{"name": "camp_ground_press_t1_rags_ally", "arena": "boulder_flats", "enemies": ["plains_scavenger_a", "plains_scavenger_b", "plains_scavenger_lead"], "build": "warrior2", "ally": "rags_ally", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	{"name": "camp_ground_press_t1_spear_ally", "arena": "boulder_flats", "enemies": ["plains_scavenger_a", "plains_scavenger_b", "plains_scavenger_lead"], "build": "warrior2", "ally": "goblin_spear_ally", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 const BOSS_CELLS := [

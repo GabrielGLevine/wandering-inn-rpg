@@ -1686,6 +1686,20 @@
       "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
     "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
      ]
+    },
+    {
+     "_comment": "v0.16 F1 (#308). TRAP: MUST sit below krshia_thread_door_neutral -- that stage gates on door_awakened, which every eligible player holds, so anything above it is permanently outranked and silently dead.",
+     "id": "krshia_thread_goblin_run",
+     "requires_accomplishment": {
+      "camp_trade_brokered": 1
+     },
+     "lines": [
+      "The carts went south and came back empty, yes? Do not tell me what they carried. I priced it as wool.",
+      "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
+      "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
+      "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
+      "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+     ]
     }
    ],
    "conversation": "krshia_crate",

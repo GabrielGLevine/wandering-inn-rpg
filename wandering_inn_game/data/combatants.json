@@ -1301,6 +1301,122 @@
    "_comment": "b1 #199. Early-volume Rags: small, fast, SMART — dex/int lead, low con (she is a survivor, not a boss; coward profile = flees at low HP, canon-true). power_level 5.5: T1-elite band, above the chieftain (4.5) on cunning, tuned vs the gate-era build in sim_combat_batch's rags cell. Fought ONLY via the betrayal close of rags_meeting."
   },
   {
+   "_comment": "v0.16 F1 (#308). TRAP: a combatant id holds exactly ONE side, so the enemy `rags` row cannot be reused -- this is a distinct id, and the distinct id IS the override.",
+   "id": "rags_ally",
+   "power_level": 5.5,
+   "display_name": "Rags",
+   "sprite": "rags",
+   "side": "player",
+   "stats": {
+    "str": 8,
+    "dex": 16,
+    "con": 14,
+    "int": 14,
+    "wis": 12,
+    "cha": 10
+   },
+   "weapon_die": 5,
+   "ai": "skirmisher",
+   "skills": [
+    "quick_slash"
+   ]
+  },
+  {
+   "id": "goblin_spear_ally",
+   "power_level": 3.0,
+   "display_name": "A Goblin with a Spear",
+   "sprite": "goblin_base",
+   "combat_tint": [
+    0.82,
+    0.95,
+    0.78
+   ],
+   "side": "player",
+   "stats": {
+    "str": 11,
+    "dex": 10,
+    "con": 18,
+    "int": 6,
+    "wis": 7,
+    "cha": 5
+   },
+   "weapon_die": 5,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "_comment": "v0.16 F1 (#308). TRAP: NOT the footpad rigs -- their LOW-lethality contract belongs to the Invrisil alley band, so this is a distinct id at the Floodplains T1 band.",
+   "id": "plains_scavenger_a",
+   "power_level": 3.0,
+   "display_name": "Plains Scavenger",
+   "sprite": "human_laborer",
+   "combat_tint": [
+    0.86,
+    0.78,
+    0.62
+   ],
+   "side": "enemy",
+   "stats": {
+    "str": 10,
+    "dex": 9,
+    "con": 10,
+    "int": 6,
+    "wis": 6,
+    "cha": 6
+   },
+   "weapon_die": 4,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "id": "plains_scavenger_b",
+   "power_level": 3.0,
+   "display_name": "Plains Scavenger",
+   "sprite": "human_laborer",
+   "combat_tint": [
+    0.8,
+    0.74,
+    0.6
+   ],
+   "side": "enemy",
+   "stats": {
+    "str": 9,
+    "dex": 11,
+    "con": 10,
+    "int": 6,
+    "wis": 6,
+    "cha": 6
+   },
+   "weapon_die": 4,
+   "ai": "melee",
+   "skills": []
+  },
+  {
+   "id": "plains_scavenger_lead",
+   "power_level": 4.5,
+   "display_name": "The Band's Lead",
+   "sprite": "human_laborer",
+   "combat_tint": [
+    0.9,
+    0.7,
+    0.55
+   ],
+   "side": "enemy",
+   "stats": {
+    "str": 11,
+    "dex": 10,
+    "con": 14,
+    "int": 7,
+    "wis": 7,
+    "cha": 8
+   },
+   "weapon_die": 4,
+   "ai": "melee",
+   "skills": [
+    "power_strike"
+   ]
+  },
+  {
    "_comment": "Act V. ROSTER-ONLY retint of the ruin_warden rig at seal scale (:401's distinct-id-per-context contract: no per-encounter stat or AI override exists, so a new context takes a NEW ID, never a shared one re-tuned). Same sprite, same melee profile, same tough_body spine as ruin_guardian. Fought SOLO by design, which is why the con/die curve sits under vault_construct's party-scaled 190/15. Tuned against sim_combat_batch's seal_warden_t5_sw14_solo gated cell. MEASURED at authoring (100 seeds, spellsword14 solo): win 0.59, median 5 rounds (3-7) -- the hardest solo cell in the game at that build, against the forge golem's 0.71 and the market watchgolems' 0.88. Deliberately HIGH-con/LOW-die: a ward outlasts you rather than bursting you down. combat_scale 1.15 is ruin_guardian's own (at 1.35 the rig's head clipped under the combat HUD banner).",
    "id": "seal_warden",
    "power_level": 18.0,

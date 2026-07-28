@@ -4780,6 +4780,134 @@
    }
   },
   {
+   "script": "floodplains_price_talk",
+   "seed": 9,
+   "fixture": "floodplains_price_talk_start",
+   "note": "v0.16 F1 (#308): TALK route -- Krshia's 8g quiet run banks camp_trade_brokered, then the report to Rags closes the quest",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "street"
+    ],
+    "fixtures": [
+     "floodplains_price_talk_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate",
+     "rags_meeting"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "floodplains_price_help",
+   "seed": 9,
+   "fixture": "floodplains_price_help_start",
+   "note": "v0.16 F1 (#308): HELP route -- corusdeer cull + camp carry job arm the drying rack, camp_larder_filled, then the report",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "rags_camp"
+    ],
+    "fixtures": [
+     "floodplains_price_help_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "corusdeer_range",
+     "rags_meeting"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration",
+     "input",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "floodplains_price_fight",
+   "seed": 9,
+   "fixture": "floodplains_price_fight_start",
+   "note": "v0.16 F1 (#308): FIGHT route -- the first goblin-ALLY encounter (rags_ally + goblin_spear_ally fielded), camp_ground_held, then the report",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "rags_camp"
+    ],
+    "fixtures": [
+     "floodplains_price_fight_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "rags_meeting"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "input",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "floodplains_price_gate_proof",
+   "seed": 9,
+   "fixture": "floodplains_price_betrayal_start",
+   "note": "v0.16 F1 (#308): betrayal branch -- drove_off_rags banks BOTH terminals, the F1 offer never appears, the camp mouth stays shut (the exclusion's can-fail proof)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains",
+     "rags_camp"
+    ],
+    "fixtures": [
+     "floodplains_price_betrayal_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "rags_meeting"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "input",
+     "quests"
+    ]
+   }
+  },
+  {
    "script": "parley_talkdowns_loop",
    "seed": 9,
    "fixture": "parley_talkdowns_start",

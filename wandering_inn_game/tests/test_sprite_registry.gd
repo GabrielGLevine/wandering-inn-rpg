@@ -358,6 +358,11 @@ func _build_expected_counts() -> Dictionary:
 	counts["river_wolf/idle"] = 1
 
 	counts["corusdeer/idle"] = 1
+	## #308: the camp hollow's own props (owned PixelLab, one frame each).
+	counts["hide_rack/idle"] = 1
+	counts["drying_rack/idle"] = 1
+	counts["drying_rack_hung/idle"] = 1
+	counts["turf_cut_mouth/idle"] = 1
 	counts["razorbeak/idle"] = 1
 	## GH#156 follower-visual aliases of the same owned single-frame sheets.
 	counts["wolf_companion/idle"] = 1

@@ -270,6 +270,111 @@ shape under contact are marked FORK.
   rather than moved here, because the cells were hand-audited when the
   room was authored and moving her invalidates that audit, the mood row
   and the dynamism read.
+## 2026-07-28 — v0.16 F lane (#308) fix wave (adversarial-review IMPORTANTs)
+
+Two IMPORTANT findings from the traced review, both applied on the branch.
+
+- **The HELP route's drying rack is now VISIBLE-LOCKED, not presence-gated.**
+  `camp_meat_rack`'s `present_when` ANDed `camp_carry_jobs` with
+  `corusdeer_culled`, a counter banked two maps away — so a player who had not
+  hunted saw the route as NON-EXISTENT rather than locked, while the lane's
+  TALK arm deliberately ships visible-locked on Krshia's hub. The rack now
+  stands from arrival (`present_when: {absent: {camp_larder_filled: 1}}`) and
+  the two route gates moved onto a `variants` arm — the shipped `seal_kept_door`
+  / `rune_plate_far` / `wounded_corusdeer` idiom, where a met `when` overrides
+  both the toast and the banked `accomplishment`. A locked read banks
+  `eyed_the_drying_rack` and toasts what is missing (hands on the baskets, then
+  something brought down off the range north). Filling it swaps in
+  `camp_meat_rack_hung` on the SAME cell — the `ceria_dig_camp`/`dig_camp_remnant`
+  twin-row idiom. Rejected: leaving the gate on presence and only adding a
+  hint NPC (the rack itself would still be invisible), and one always-present
+  rack with no swap (the fill would then never read on screen).
+  `floodplains_price_help` traded its 8-vs-9 sprite-count pair — which the new
+  shape makes constant at 9 — for the stronger evidence: locked read (hint
+  toast, route counter provably not banked), fill, then the swapped-in entity
+  answering the very next interact from the same cell.
+- **Four stand-in sprites that argued with their own copy are now real art.**
+  `camp_hide_racks` wore `request_board` (a Human parchment notice board),
+  `camp_meat_rack` wore `barrel`, and `rags_camp_mouth` — the ONLY seam into the
+  new interior — wore `boulder` on a map that already carries boulder decor.
+  The registry had no rack/hide/entrance sprite (278 entries, zero matches), so
+  this was an asset gap, not a careless pick: four owned PixelLab sprites were
+  generated for it (`hide_rack`, `drying_rack`, `drying_rack_hung`,
+  `turf_cut_mouth`), anchors measured from each alpha bbox per the anchor rule,
+  and all four read by eye in windowed shots. Rejected: re-picking the nearest
+  wrong sprite (every candidate still argued with the copy) and rewriting the
+  copy down to the art (the copy is the character of the room). Precedent:
+  GH#113 Wave 1 replaced the same class of `boulder` stand-in the same way.
+
+## 2026-07-28 — v0.16 F lane (#308) "The Price Kept" (implementation calls)
+
+The plan's rulings, as SHIPPED, plus the calls the implementation itself
+forced. (Wave-level rulings 12-20 in the v0.16 planning entry are the design
+side of the same list; this is what the code actually does.)
+
+- **RULING A — new `sim_combat_batch` cells gate at the wide shipped-precedent
+  window 0.55/0.95, not a narrowed band.** Band ordering is evidenced by
+  MEASURED medians in the PR body instead: `camp_ground_press_t1_rags_ally`
+  win 0.71 / median 4 (2-5), `camp_ground_press_t1_spear_ally` win 0.68 /
+  median 4 (2-6), against the shipped Floodplains stop cell
+  `rags_scouting_party_t1_solo` in the same window. Rejected: a 0.72-0.85 gate
+  — at 100 seeded runs sigma is ~0.04, so that is a 1-in-6 false red.
+  Both harness cells field ONE ally; the shipped encounter fields TWO, so real
+  play sits strictly above these readings.
+- **RULING B — the census constant is 112 per lane, not 450.** The 450 is the
+  whole-wave slack split four ways. Measured on this branch: DATA 169,081
+  `_comment` chars / 1,132,220 total = 14.9% (limit 15.0%); this lane's own
+  spend is 2,405 against a 112 + 0.1765x budget of ~2,924. The binding
+  measurement is the MERGED tree's, re-run at every train merge; post-train
+  residue is the wave-close PR's.
+- **RULING C — anchored inserts, never array-end appends, plus `f_`-prefixed
+  test locals.** Shipped anchors: `chieftains_price` (quests), `rags`
+  (combatants), `floodplains` (moods / LANDMARK_TOKENS), `ruin_surface`
+  (MAP_REQUIRES), the `rags_gate_check` manifest entry and AGENTS.md seed row,
+  `krshia_thread_door_neutral` (street stages). Two implementation additions:
+  `COMBAT_BAND_FIXTURES` took a HEAD-of-dict insert (its tail is the obvious
+  four-way collision point), and the new `test_dialogue` call was inserted
+  after `test_grimalkin_studies_gates_on_the_real_graph()` rather than at the
+  end of `_init`'s call list.
+- **RULING D — `docs/design/character-profiles.md` is SHARED and this lane is
+  READ-ONLY on it.** No Floodplains stub was pre-landed, so nothing was
+  appended at EOF.
+- **RULING E — `render_qa_notes.py --write` then a bare call as the check.**
+  Corollary found in implementation: `derive_qa_surfaces.py` has NO `--write`
+  flag at all (a bare call writes, `--check` diffs). The plan said `--write`;
+  the repo won.
+- **RULING F — no shipped `_comment` quotes a board-figure number.**
+  `test_combat_visuals` passes by EXCLUSION on all five new ids (none is in
+  `FIGURE_ROWS`, none in `audited`), and the plan said so plainly rather than
+  inventing a measurement. The windowed shot pass is the only evidence that
+  exists, and it FOUND the thing the exclusion was hiding: the three
+  `plains_scavenger_*` read as one mass (VISUAL-LOG, 2026-07-28).
+- **No `options`-array pin in any of the four new canonicals.** Four region
+  lanes append rows to Krshia's and Rags's hubs in one wave, and a pinned
+  `options` list compares WHOLE (exact members, exact order) — the #172
+  retirement-node wave reds four scripts that way. The exclusion proofs are
+  payload-filtered `assert_event_absent` and `assert_event_count` instead,
+  and every cursor index was derived from a real run's event log.
+- **The roster guard is POSITIVE-ONLY.** There is no working way to assert an
+  absent combatant: a bare-type `assert_event_absent combat_started` scans the
+  run's own event and reds, and `assert_state combat.combatants.relc` fails on
+  path-not-found — i.e. it fails exactly when it should pass. So D3 (Relc
+  fielding against the goblins if the region's `allies: ["relc"]` idiom is
+  copy-pasted) is guarded by an exact `equals` pin of the whole six-id
+  `combat.order`.
+- **`accomplishments.victories`, never a bare `victories`.** `WIGame.snapshot()`
+  has no top-level key, and `won_combat` deposits FRACTIONALLY under challenge
+  weighting while `victories` banks integer under both flag states.
+- **`check_doc_drift.py` is left RED on this branch, deliberately.** It fails
+  `plan lacks DONE/ACTIVE header` for all four v0.16 lane plan docs — a
+  PRE-EXISTING condition at this branch's base, proved with a stash probe.
+  This lane added the header to its OWN plan doc and left the other three
+  alone: they are sibling lanes' owned files. The gate goes green on the last
+  sibling merge, or the wave-close PR owns the remainder.
+- **`scene-dynamism-report.md` still NOT regenerated** (Stage 1's call, restated
+  because it is now a merge-train action item): running the tool rewrites the
+  whole ranked table and shifts ~10 unrelated scenes. Nothing gates the file.
+  Regenerate ONCE after the train.
 
 ## 2026-07-28 — v0.15 WAVE CLOSE (records, playtest, freeze prep)
 

@@ -1,6 +1,6 @@
 # v0.16 Floodplains Lane — F1 "The Price Kept" + the camp hollow
 
-> Status: **ACTIVE** (v0.16 wave, dispatched 2026-07-28)
+> Status: **ACTIVE**
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -144,11 +144,11 @@ python3 scripts/render_qa_notes.py             # checks: rc=0 + "PASS: QA notes 
 - Produces: quest id `the_price_kept`; beat gates on `camp_trade_brokered` / `camp_larder_filled` / `camp_ground_held` / `rags_price_kept`.
 - Consumes: nothing yet. **Tasks 2–6 supply every producer; they land in the SAME COMMIT or the suite reds** (`test_content.gd:1322-1329` unproduced-counter arm; `test_reachability.gd:50` zero-producer arm). See Task 7 Step 1 for the commit-order rule.
 
-- [ ] **Step 1: Read `data/quests.json` first, then FIX THE REGION CASING (one word, same PR).** The file is TAB-indented. `chieftains_price` (the sibling Floodplains quest) sits at :202-254 carrying `"region": "floodplains"` — verified the **only lowercase region value among the eight quests that carry one** (`Liscor` ×3, `Riverfarm`, `Invrisil`, `Pallass` ×2, `chieftains_price`). Journal display appends `" (Region)"`, so shipping `"Floodplains"` here and leaving the sibling lowercase renders **two differently-cased labels for the same region** to any player holding both.
+- [x] **Step 1: Read `data/quests.json` first, then FIX THE REGION CASING (one word, same PR).** The file is TAB-indented. `chieftains_price` (the sibling Floodplains quest) sits at :202-254 carrying `"region": "floodplains"` — verified the **only lowercase region value among the eight quests that carry one** (`Liscor` ×3, `Riverfarm`, `Invrisil`, `Pallass` ×2, `chieftains_price`). Journal display appends `" (Region)"`, so shipping `"Floodplains"` here and leaving the sibling lowercase renders **two differently-cased labels for the same region** to any player holding both.
 
   **Do NOT ship the split.** Edit `chieftains_price`'s value `"floodplains"` → `"Floodplains"` — a one-word change to a file this lane already touches, in this PR. Both Floodplains quests then group under one journal label, matching `Riverfarm` / `Invrisil` / `Pallass` / `Liscor`. Nothing mechanical reads the value (it is display-only), so the edit is inert beyond the label. Log it.
 
-- [ ] **Step 2: Insert this record IMMEDIATELY AFTER `chieftains_price`** — the anchor from FILE OWNERSHIP, NOT the end of `quests[]`. Three sibling lanes append at the array end; inserting after a Floodplains-owned row means the four edits never touch the same line. Hand splice matching TAB indent, byte-identity outside the insert (`splice_json.py` only appends, so it cannot place this):
+- [x] **Step 2: Insert this record IMMEDIATELY AFTER `chieftains_price`** — the anchor from FILE OWNERSHIP, NOT the end of `quests[]`. Three sibling lanes append at the array end; inserting after a Floodplains-owned row means the four edits never touch the same line. Hand splice matching TAB indent, byte-identity outside the insert (`splice_json.py` only appends, so it cannot place this):
 
 ```json
 {
@@ -206,9 +206,9 @@ python3 scripts/render_qa_notes.py             # checks: rc=0 + "PASS: QA notes 
 
 **`complete_when_any` WITHOUT a sibling `complete_when` is valid and behaves as a pure OR** — verified at `src/core/quests.gd:28-38`: the `any` loop returns true on the first satisfied counter, and the empty-`all` branch falls through to `return any.is_empty()` (false) until one banks. The two shipped users (`cisterns`, `wrong_order`) pair both keys because their AND leg is a real second condition; F1's resolve beat has no such leg.
 
-- [ ] **Step 3: Verify the `_resolution_order` note exists and the array has 3 real rungs** — `tests/test_quests.gd:138-142` hard-fails a multi-rung quest without the note.
-- [ ] **Step 4:** No `test_quests.gd` co-bank pin is owed: F1's three route counters are mutually exclusive by route, and `rags_price_kept` co-banks with nothing. (If a later change makes two route counters co-bank, add the pin alongside the shipped halls/door/crate/order/favor arms at `test_quests.gd:100-132`.)
-- [ ] **Step 5: Do not run tests yet** — this file alone is red until Task 6. Continue.
+- [x] **Step 3: Verify the `_resolution_order` note exists and the array has 3 real rungs** — `tests/test_quests.gd:138-142` hard-fails a multi-rung quest without the note.
+- [x] **Step 4:** No `test_quests.gd` co-bank pin is owed: F1's three route counters are mutually exclusive by route, and `rags_price_kept` co-banks with nothing. (If a later change makes two route counters co-bank, add the pin alongside the shipped halls/door/crate/order/favor arms at `test_quests.gd:100-132`.)
+- [x] **Step 5: Do not run tests yet** — this file alone is red until Task 6. Continue.
 
 ---
 
@@ -227,8 +227,8 @@ python3 scripts/render_qa_notes.py             # checks: rc=0 + "PASS: QA notes 
 
 > **INDEX-PIN TRAP (load-bearing, verified):** `qa/scripts/rags_meeting_loop.json`'s THIRD interact does a bare `click_dialogue_option option 1` against the settled hub, expecting `"(Leave them to their business.)"` to be the only visible row. Any new row inserted BEFORE it shifts that click onto the F1 offer, the script starts a quest instead of leaving, and `dialogue_ended` never fires. **Every new hub option in this task is APPENDED LAST in the `options` array**, after `"(Leave them to their business.)"`, which leaves every existing visible index byte-identical.
 
-- [ ] **Step 1: Read the whole file** (280 lines). Confirm hub `text_variants` currently ends with the `rags_meeting_settled` arm at :17-24 and the options array ends with `"(Leave them to their business.)"` at :118-121.
-- [ ] **Step 2: Append ONE hub `text_variant` AFTER the `rags_meeting_settled` arm** (last-match-wins, so this is the post-quest reactive arm and it outranks "Good trade. Plains quiet. Go safe."):
+- [x] **Step 1: Read the whole file** (280 lines). Confirm hub `text_variants` currently ends with the `rags_meeting_settled` arm at :17-24 and the options array ends with `"(Leave them to their business.)"` at :118-121.
+- [x] **Step 2: Append ONE hub `text_variant` AFTER the `rags_meeting_settled` arm** (last-match-wins, so this is the post-quest reactive arm and it outranks "Good trade. Plains quiet. Go safe."):
 
 ```json
 {
@@ -243,7 +243,7 @@ python3 scripts/render_qa_notes.py             # checks: rc=0 + "PASS: QA notes 
 
 **Shadow check:** `rags_meeting_loop` never banks `rags_price_kept`, so its pinned base/settled arms can never match this variant. Confirm by grepping the fixture: `grep -c rags_price_kept qa/fixtures/rags_gates_met_start.json` → 0.
 
-- [ ] **Step 3: Append ONE hub option, LAST in the array:**
+- [x] **Step 3: Append ONE hub option, LAST in the array:**
 
 ```json
 {
@@ -268,7 +268,7 @@ python3 scripts/render_qa_notes.py             # checks: rc=0 + "PASS: QA notes 
 }
 ```
 
-- [ ] **Step 4: Add FOUR new nodes** — `winter`, `winter_ways`, `winter_where`, `winter_kept`. (`winter_where` is a live `goto` target from `winter_ways`; an earlier draft of this header said "three" and omitted it.) All three report rungs live one node deep, so the HUB gains exactly ONE row:
+- [x] **Step 4: Add FOUR new nodes** — `winter`, `winter_ways`, `winter_where`, `winter_kept`. (`winter_where` is a live `goto` target from `winter_ways`; an earlier draft of this header said "three" and omitted it.) All three report rungs live one node deep, so the HUB gains exactly ONE row:
 
 ```json
 "winter": {
@@ -413,14 +413,14 @@ python3 scripts/render_qa_notes.py             # checks: rc=0 + "PASS: QA notes 
 }
 ```
 
-- [ ] **Step 5: Softlock guard check** — `winter` carries `hide_when` and accomplishment-`requires` options, and its LAST option `"(Leave her to it.)"` carries neither key. `winter_ways` / `winter_where` / `winter_kept` carry no gated options at all. `_validate_hide_when_nodes_have_always_available_exit` (`test_content.gd:1144-1165`) is satisfied.
-- [ ] **Step 6: Copy pass against an EXPLICIT bar, not "read it aloud".** The bar is `docs/design/character-profiles.md` §Rags (450–481): *"EARLY Rags barely speaks the common tongue — one to four words, no articles, no fluency … NEVER fluent sentences, never exposition."* Check each new Rags line against all four clauses:
+- [x] **Step 5: Softlock guard check** — `winter` carries `hide_when` and accomplishment-`requires` options, and its LAST option `"(Leave her to it.)"` carries neither key. `winter_ways` / `winter_where` / `winter_kept` carry no gated options at all. `_validate_hide_when_nodes_have_always_available_exit` (`test_content.gd:1144-1165`) is satisfied.
+- [x] **Step 6: Copy pass against an EXPLICIT bar, not "read it aloud".** The bar is `docs/design/character-profiles.md` §Rags (450–481): *"EARLY Rags barely speaks the common tongue — one to four words, no articles, no fluency … NEVER fluent sentences, never exposition."* Check each new Rags line against all four clauses:
   - **≤4 words per clause.** `winter_kept` was drafted as `"Price kept. Goblins remember that longer than Humans do."` — a seven-word fluent comparative with a subordinate clause, and exposition about goblin memory. It is now `"Price kept. Goblins remember. Longer than Humans."`
   - **No articles.** `winter_ways` `"Scavengers press the hollow."` → `"Scavengers press hollow."`; `winter_where` `"Cut in the turf."` → `"Cut in turf."` Both were the profile's forbidden `the`.
   - Benchmarks to match, all shipped: `rags_meeting.json` `"Watch came. Goblins hurt. Not begging."` / `"This. Carved it. For medicine."` / `"Rags. Chieftain."`; `rags_inn.json` `"Hot. Good. ...Chieftain eats last. Always last."`
   - Narrator prose (`observe`, `toast`, `open_toast`, `display_name`) is NOT under this bar — it is the game's voice, not hers.
   - Zero em-dashes in the new lines; grep all three dash forms (`—`, the escape, ASCII `--`) before committing.
-- [ ] **Step 7: Run** `res://tests/test_dialogue.gd` (pure unit, should be green immediately) — expect PASS + zero noise. `test_content.gd` stays red until Tasks 3/5/6 land the producers.
+- [x] **Step 7: Run** `res://tests/test_dialogue.gd` (pure unit, should be green immediately) — expect PASS + zero noise. `test_content.gd` stays red until Tasks 3/5/6 land the producers.
 
 ---
 
@@ -437,7 +437,7 @@ python3 scripts/render_qa_notes.py             # checks: rc=0 + "PASS: QA notes 
 
 > **RULING 2 (binding):** the spec's claim that F1's TALK "builds on the shipped `brokered_goblin_trade` thread" is **WRONG**. `brokered_goblin_trade` banks at exactly ONE site — the 6-gold BROKER rung inside `data/dialogue/rags_meeting.json:253` — and Krshia's dialogue, her npc row, and her stall prop never reference it. **This lane CREATES the Krshia surface.** Her new stage APPENDS AFTER `street.json:1690` (ten last-match-wins stages ending in a `door_awakened`-gated one that every post-door player holds — anything placed earlier is permanently outranked and silently dead, the nine-`*_inn_settled`-lines bug class).
 
-- [ ] **Step 1: Run the TWO-GREP DISCRIMINATOR before editing** (`wi-adding-dialogue-and-quests:349-352`; #172 cost 4 scripts, #220 cost 3). Do NOT enumerate pinners by hand — `grep -rln "krshia_crate\|krshia" qa/scripts/` returns **23 scripts**, not the six an earlier draft of this step listed (it misses `social_loop`, `inn_guests_gate_proof`, `dialogue_walkthrough`, `economy_loop`, `journal_history` and others). The cheap, complete discriminator crosses the counter against the hub:
+- [x] **Step 1: Run the TWO-GREP DISCRIMINATOR before editing** (`wi-adding-dialogue-and-quests:349-352`; #172 cost 4 scripts, #220 cost 3). Do NOT enumerate pinners by hand — `grep -rln "krshia_crate\|krshia" qa/scripts/` returns **23 scripts**, not the six an earlier draft of this step listed (it misses `social_loop`, `inn_guests_gate_proof`, `dialogue_walkthrough`, `economy_loop`, `journal_history` and others). The cheap, complete discriminator crosses the counter against the hub:
 
 ```
 grep -rl  rags_meeting_settled wandering_inn_game/qa/fixtures/     # A: who holds the gate counter
@@ -448,7 +448,7 @@ grep -rln krshia_crate         wandering_inn_game/qa/scripts/      # B: who open
 
 > **Why the rows are safe is PLACEMENT, not hiding.** Get the mechanism right or the next author reuses a false rule: `src/core/dialogue.gd:90-91` `_progress_gated` returns true for `accomplishment`, and `:122` **hides only when progress-gated AND UNMET**. In a state that DOES hold `rags_meeting_settled`, both new rows render **VISIBLE-LOCKED, not hidden** — the `{accomplishment, skill}` and `{gold, accomplishment}` compounds lock on the skill/gold leg while still occupying a visible index. So the load-bearing defence is that both rows are **APPENDED LAST**, below every existing index; the empty grep intersection is the belt, not the braces.
 
-- [ ] **Step 2: Append TWO options at the END of `krshia_crate.json`'s `hub.options` array** (currently 11 entries, indices 0–10; append as 11 and 12). This is the shipped `wrong_order` fork shape verbatim — a `{accomplishment, skill}` Diplomat arm plus a `{gold, accomplishment}` real-cost alternate:
+- [x] **Step 2: Append TWO options at the END of `krshia_crate.json`'s `hub.options` array** (currently 11 entries, indices 0–10; append as 11 and 12). This is the shipped `wrong_order` fork shape verbatim — a `{accomplishment, skill}` Diplomat arm plus a `{gold, accomplishment}` real-cost alternate:
 
 ```json
 {
@@ -502,7 +502,7 @@ grep -rln krshia_crate         wandering_inn_game/qa/scripts/      # B: who open
 
 Both compounds are sanctioned ({accomplishment, skill} and {gold, accomplishment}) and are exactly two keys. `charming_smile` is the [Diplomat] L1 grant already used by this hub's `wrong_order` smooth-over row (`data/skills.json:361`), so the `persuaded_someone` producer stays Diplomat-only.
 
-- [ ] **Step 3: Add the `goblin_run` node** to `krshia_crate.json`:
+- [x] **Step 3: Add the `goblin_run` node** to `krshia_crate.json`:
 
 ```json
 "goblin_run": {
@@ -519,7 +519,7 @@ Both compounds are sanctioned ({accomplishment, skill} and {gold, accomplishment
 
 One `Hrr.` in the block, one `", yes?"`, zero em-dashes. Register check: proud, pragmatic, does not moralise about goblins — she prices the risk and keeps the ledger clean.
 
-- [ ] **Step 4: Append ONE `talk_pool_stages` member to the `krshia` entity in `street.json`, AFTER `krshia_thread_door_neutral` (ends :1690)**:
+- [x] **Step 4: Append ONE `talk_pool_stages` member to the `krshia` entity in `street.json`, AFTER `krshia_thread_door_neutral` (ends :1690)**:
 
 ```json
 {
@@ -538,9 +538,9 @@ One `Hrr.` in the block, one `", yes?"`, zero em-dashes. Register check: proud, 
 }
 ```
 
-- [ ] **Step 5: Ladder-order check** — `test_content.gd:579-593` reds a later stage whose threshold on a SHARED counter is lower than an earlier stage's. `camp_trade_brokered` appears in no other stage, so no ordering constraint applies. Confirm the stage `id` is unique across the entity and `requires_accomplishment` is non-empty (`test_content.gd:493-516`).
-- [ ] **Step 6: Copy-fit** — every stage line must wrap in ≤2 lines (`tests/test_copy_fit.gd`). Line 1 is new; lines 2–5 are shipped verbatim and already pass. Run `res://tests/test_copy_fit.gd`.
-- [ ] **Step 7: Run** `res://tests/test_dialogue.gd` + `res://tests/test_copy_fit.gd` — expect PASS.
+- [x] **Step 5: Ladder-order check** — `test_content.gd:579-593` reds a later stage whose threshold on a SHARED counter is lower than an earlier stage's. `camp_trade_brokered` appears in no other stage, so no ordering constraint applies. Confirm the stage `id` is unique across the entity and `requires_accomplishment` is non-empty (`test_content.gd:493-516`).
+- [x] **Step 6: Copy-fit** — every stage line must wrap in ≤2 lines (`tests/test_copy_fit.gd`). Line 1 is new; lines 2–5 are shipped verbatim and already pass. Run `res://tests/test_copy_fit.gd`.
+- [x] **Step 7: Run** `res://tests/test_dialogue.gd` + `res://tests/test_copy_fit.gd` — expect PASS.
 
 ---
 
@@ -562,7 +562,7 @@ One `Hrr.` in the block, one `", yes?"`, zero em-dashes. Register check: proud, 
 
 > **RULING 6 (binding):** interior stem `rags_camp`; at most parlor scale; fire pit / hide racks / chieftain's spot observables (≥3 non-quest); mood row; LANDMARK_TOKENS row; MAP_REQUIRES row.
 
-- [ ] **Step 1: Load `wi-adding-a-scene`. Prove the stem is unique:**
+- [x] **Step 1: Load `wi-adding-a-scene`. Prove the stem is unique:**
 
 ```
 grep -rn '"rags_camp"' wandering_inn_game/data/ wandering_inn_game/src/ wandering_inn_game/tests/
@@ -572,7 +572,7 @@ ls wandering_inn_game/data/maps/*/
 
 Expect zero hits (verified at plan time: no `rags_camp` map key, no `rags_camp` arena id). `WISceneCatalog.compose()` FATALs on duplicate MAP keys.
 
-- [ ] **Step 2: Place the camp mouth on `floodplains.json`.** Cell **(17,22)**. Justification, hand-verified against the map:
+- [x] **Step 2: Place the camp mouth on `floodplains.json`.** Cell **(17,22)**. Justification, hand-verified against the map:
   - `floodplains` grid is 40×26 with 36 blocked cells; **the only blocked cell anywhere in x12–24 / y15–25 is (24,19)**.
   - Neighbouring entities: `rags_scouting_party` (16,21), `goblin_night_patrol` (10,21), `wolf_den` (11,22), `rock_crab_nest` (21,16). Nearest decor: `bush_green` (14,20), `tree_round` (22,18), `boulder` (24,19).
   - **(16,20) is FORBIDDEN**: `rags_meeting_loop` boots at (16,19) and `move south 1` onto (16,20) to face the encounter. A blocking entity there strands the shipped canonical mid-walk.
@@ -620,7 +620,7 @@ Append this entity to `floodplains.json`'s `entities` array:
 }
 ```
 
-- [ ] **Step 3: Create `data/maps/floodplains/rags_camp.json`.** Grid **12×9** — under the `brothers_parlor` 14×10 parlor ceiling (RULING 6), above the 10×7 longhouse. Biome `floodplains` (existing key — no `data/biomes.json` edit, no new tile language). 1-SPACE indent, matching the region's sibling files.
+- [x] **Step 3: Create `data/maps/floodplains/rags_camp.json`.** Grid **12×9** — under the `brothers_parlor` 14×10 parlor ceiling (RULING 6), above the 10×7 longhouse. Biome `floodplains` (existing key — no `data/biomes.json` edit, no new tile language). 1-SPACE indent, matching the region's sibling files.
 
 **Blocked set shape — the hollow's rim, 42 cells** (12 + 7 + 7 + 11 + 5; an earlier draft said 41, off by one): full row `y=0` (x0–11, **12**); full column `x=0` (y1–7, **7**); full column `x=11` (y1–7, **7**); full row `y=8` minus (5,8) which is the exit (x0–4 and x6–11, **11**); plus **5** interior solids paired to solid-reading decor — (1,1), (10,1), (1,7), (10,7) (rim boulders) and (3,6) (a supply crate). **THE BLOCKING CONTRACT: every decor sprite that reads solid is paired into `blocked`; `bush_green` follows the shipped floodplains precedent of walkable brush decor.** (`data_lint.py` checks in-grid-ness, not cardinality — the count is decoration that can only be wrong, so verify it or drop it.)
 
@@ -782,11 +782,11 @@ Append this entity to `floodplains.json`'s `entities` array:
 
 **Observable audit (RULING 6, ≥3 NON-QUEST):** `camp_fire_pit`, `camp_hide_racks`, `camp_chieftains_seat` are pure observables with real toast copy and zero quest coupling — three, as required. `camp_watch_goblin` (talk_pool) and `camp_carry_yoke` (repeatable work) are two further non-quest surfaces. Post-quest the room keeps all five plus the meat rack.
 
-- [ ] **Step 4: Arrival cells, hand-verified BOTH directions** (no runtime code validates `to_map`/`to_cell` — a bad door strands the player silently):
+- [x] **Step 4: Arrival cells, hand-verified BOTH directions** (no runtime code validates `to_map`/`to_cell` — a bad door strands the player silently):
   - **In:** `floodplains` `rags_camp_mouth` (17,22) → `rags_camp` (5,7). (5,7) is inside the grid, absent from `blocked`, and holds no entity ✓ (nearest entity is the exit door at (5,8)).
   - **Out:** `rags_camp` `rags_camp_exit` (5,8) → `floodplains` (17,21). (17,21) is inside the 40×26 grid, absent from `blocked` (only (24,19) is blocked in that whole quadrant), and holds no entity ✓ (nearest: `rags_scouting_party` at (16,21), `rags_camp_mouth` at (17,22)).
   - **Prove it in play**, not on paper: the Task 8 QA scripts walk both crossings.
-- [ ] **Step 5: Mood row — INSERT AFTER THE `floodplains` KEY, not at EOF.** `data/moods.json` has 21 keys and `pallass_forge` is the LAST; all four lanes appending there would each have to comma the same closing brace, i.e. a designed-in four-way conflict on one line. Per RULING C this lane's anchor is **`floodplains`** (key 3) — Riverfarm takes `witch_hollow`, Invrisil `brothers_parlor`, Pallass `pallass_forge`. `moods.json` is 1-SPACE-per-level indented.
+- [x] **Step 5: Mood row — INSERT AFTER THE `floodplains` KEY, not at EOF.** `data/moods.json` has 21 keys and `pallass_forge` is the LAST; all four lanes appending there would each have to comma the same closing brace, i.e. a designed-in four-way conflict on one line. Per RULING C this lane's anchor is **`floodplains`** (key 3) — Riverfarm takes `witch_hollow`, Invrisil `brothers_parlor`, Pallass `pallass_forge`. `moods.json` is 1-SPACE-per-level indented.
 
   Content: a dug hollow reads warmer and more enclosed than the open plains (`floodplains` day is identity white, vignette 0.4; `witch_hollow` is the enclosure precedent at vignette 0.50):
 
@@ -814,7 +814,7 @@ Append this entity to `floodplains.json`'s `entities` array:
 
 **No test enforces this row** — `src/world/atmosphere.gd:90-91` falls back to identity white, so a missing row is a VISUAL defect that ships green. It is mandatory here.
 
-- [ ] **Step 6: `LANDMARK_TOKENS` row** in `tests/test_content.gd` (append inside the const, near the other side-map rows):
+- [x] **Step 6: `LANDMARK_TOKENS` row** in `tests/test_content.gd` (append inside the const, near the other side-map rows):
 
 ```gdscript
 	# 2026-07-28 (#308, F1): the camp hollow. `the_price_kept`'s resolve beat is
@@ -827,7 +827,7 @@ Append this entity to `floodplains.json`'s `entities` array:
 
 The `resolve` beat description contains both "Market Street" (a `street` token) and "the hollow's larder" (a `rags_camp` token) — `_description_names_place` needs only ONE match across the union, but carrying both keeps it honest if a route's producer map moves.
 
-- [ ] **Step 7: `MAP_REQUIRES` row** in `tests/test_fixture_coherence.gd` (append inside the const):
+- [x] **Step 7: `MAP_REQUIRES` row** in `tests/test_fixture_coherence.gd` (append inside the const):
 
 ```gdscript
 	# 2026-07-28 (#308): the camp hollow sits behind rags_camp_mouth's own
@@ -836,10 +836,10 @@ The `resolve` beat description contains both "Market Street" (a `street` token) 
 	"rags_camp": ["rags_meeting_settled"],
 ```
 
-- [ ] **Step 8: Run the structural lint** — `python3 wandering_inn_game/scripts/data_lint.py` from repo root. It checks grid presence/positivity, every `blocked` and entity cell in-grid, and the `*_when` wrapped-requires arm. Expect zero findings. **NOTE: this is NOT pytest and there is no `scripts/tests/test_data_lint.py` in this repo layout.**
-- [ ] **Step 9: Scene dynamism (advisory, not a gate)** — `perl -e 'alarm 120; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd`. Target composite ≥50 for the new scene; <30 prints a loud advisory and means the room is a brown box — fix before spending a windowed shot (low c1 = pull decor from more than one asset-pack family).
-- [ ] **Step 10: Do NOT write to `docs/design/character-profiles.md` (RULING D).** The file is SHARED across all four lanes and is exclusive to none — but verified against the plan commit, the controller pre-landed only three stubs (`## Forge Hall Apprentice`, `## Den-Shop Keeper` for Pallass; `## Hedault` for Invrisil) and **none for Floodplains**. `camp_watch_goblin` is an anonymous four-line `talk_pool` bark surface, not a named recurring character, so it does not earn a profile block. **This lane's only interaction with the file is READING §Rags (450–481)** as the Task 2 Step 6 voice bar. If a Floodplains stub is added later, fill it IN PLACE — never append at EOF, and never touch a sibling lane's stub.
-- [ ] **Step 11: Commit deferred** — Tasks 5 and 6 add two more entities to this same file; the whole map lands in one commit at Task 7.
+- [x] **Step 8: Run the structural lint** — `python3 wandering_inn_game/scripts/data_lint.py` from repo root. It checks grid presence/positivity, every `blocked` and entity cell in-grid, and the `*_when` wrapped-requires arm. Expect zero findings. **NOTE: this is NOT pytest and there is no `scripts/tests/test_data_lint.py` in this repo layout.**
+- [x] **Step 9: Scene dynamism (advisory, not a gate)** — `perl -e 'alarm 120; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tools/scene_dynamism.gd`. Target composite ≥50 for the new scene; <30 prints a loud advisory and means the room is a brown box — fix before spending a windowed shot (low c1 = pull decor from more than one asset-pack family).
+- [x] **Step 10: Do NOT write to `docs/design/character-profiles.md` (RULING D).** The file is SHARED across all four lanes and is exclusive to none — but verified against the plan commit, the controller pre-landed only three stubs (`## Forge Hall Apprentice`, `## Den-Shop Keeper` for Pallass; `## Hedault` for Invrisil) and **none for Floodplains**. `camp_watch_goblin` is an anonymous four-line `talk_pool` bark surface, not a named recurring character, so it does not earn a profile block. **This lane's only interaction with the file is READING §Rags (450–481)** as the Task 2 Step 6 voice bar. If a Floodplains stub is added later, fill it IN PLACE — never append at EOF, and never touch a sibling lane's stub.
+- [x] **Step 11: Commit deferred** — Tasks 5 and 6 add two more entities to this same file; the whole map lands in one commit at Task 7.
 
 ---
 
@@ -855,7 +855,7 @@ The `resolve` beat description contains both "Market Street" (a `street` token) 
 
 > **RULING 8 (binding):** the HELP route reuses the shipped corusdeer/hunt surfaces where natural **without breaking their pins**. The design here achieves that by **reading** `corusdeer_culled`, not by editing `corusdeer_range` or `wounded_corusdeer` at all — zero risk to `floodplains_bestiary_loop`, `parley_gates_check`, `parley_talkdowns_loop`, `beast_tamer_loop`, `bestiary_peek`, or `bounty_corusdeer_cull`.
 
-- [ ] **Step 1: Verify the crossing canonicals BEFORE relying on the counter** (trust-but-verify; do not touch the surfaces):
+- [x] **Step 1: Verify the crossing canonicals BEFORE relying on the counter** (trust-but-verify; do not touch the surfaces):
 
 ```
 grep -rn "corusdeer" wandering_inn_game/qa/scripts/ | head
@@ -865,7 +865,7 @@ python3 -c "import json;d=json.load(open('wandering_inn_game/data/maps/floodplai
 
 Confirm `corusdeer_range` still banks `corusdeer_culled` on victory and that this lane changes nothing about it.
 
-- [ ] **Step 2: Add the meat rack** to `rags_camp.json`'s entities:
+- [x] **Step 2: Add the meat rack** to `rags_camp.json`'s entities:
 
 ```json
 {
@@ -890,9 +890,9 @@ Confirm `corusdeer_range` still banks `corusdeer_culled` on victory and that thi
 }
 ```
 
-- [ ] **Step 3: Validator check** — `_validate_props` (`test_content.gd:1626-1643`): `on_interact_accomplishment` requires a non-empty `toast` ✓; the prop does NOT combine `sleep` with `on_interact_accomplishment` ✓. `_validate_present_when` (`:749-801`): shape is `{requires}` only, both counters have real producers (the yoke; `corusdeer_range`) ✓.
-- [ ] **Step 4: Reachability check** — (9,6) is inside the grid, absent from `blocked`, and its neighbours (8,6), (9,5), (9,7), (10,6) are all open. Because the entity is `present_when`-gated it is intermittently walkable; that is safe (no player can be standing on it when it appears — the two gating counters can only bank while the player is elsewhere or at another cell).
-- [ ] **Step 5: Do not commit yet** — Task 6 adds the encounter to the same file.
+- [x] **Step 3: Validator check** — `_validate_props` (`test_content.gd:1626-1643`): `on_interact_accomplishment` requires a non-empty `toast` ✓; the prop does NOT combine `sleep` with `on_interact_accomplishment` ✓. `_validate_present_when` (`:749-801`): shape is `{requires}` only, both counters have real producers (the yoke; `corusdeer_range`) ✓.
+- [x] **Step 4: Reachability check** — (9,6) is inside the grid, absent from `blocked`, and its neighbours (8,6), (9,5), (9,7), (10,6) are all open. Because the entity is `present_when`-gated it is intermittently walkable; that is safe (no player can be standing on it when it appears — the two gating counters can only bank while the player is elsewhere or at another cell).
+- [x] **Step 5: Do not commit yet** — Task 6 adds the encounter to the same file.
 
 ---
 
@@ -913,8 +913,8 @@ Confirm `corusdeer_range` still banks `corusdeer_culled` on victory and that thi
 
 > **RULING 5 (binding):** goblin sprite scales are NOT touched in this lane. `goblin_raider` / `goblin_shaman` / `goblin_chieftain` are documented legacies awaiting their OWN windowed reads (`HANDOFF.md:63-67`; the doc comment at `tests/test_combat_visuals.gd:548-560`, which is prose, not an assertion, and names COMBATANT ids rather than sprites). New ally rigs reuse the sprites as-is with no `combat_scale` key. **Per RULING F, no figure number is quoted in shipped data or in the VISUAL-LOG row** — the new ids are outside `FIGURE_ROWS` and outside `audited`, so nothing measures them (Task 6 Step 7).
 
-- [ ] **Step 1: Load `wi-adding-an-encounter`.** Read `data/combatants.json` head and tail — it is 1-SPACE-per-level indented, unlike `quests.json`. Read the shipped ally rows (`relc` :21, `klbkch` :62, `riverfarm_hunter` :84, `wilovan` :761, `wolf_companion`) for the ally-tuning idiom.
-- [ ] **Step 2: Insert FIVE combatant rows IMMEDIATELY AFTER the `rags` row** — this lane's RULING C anchor, not the end of `combatants[]` (three sibling lanes append there). Hand splice: `splice_json.py` can only place at the tail. `combatants.json` is 1-SPACE-per-level indented, unlike `quests.json`. Every row carries a POSITIVE `power_level` — the single most-forgotten field (`test_combat_data.gd:126-138`); HP derives from `con` and no `hp` field exists anywhere.
+- [x] **Step 1: Load `wi-adding-an-encounter`.** Read `data/combatants.json` head and tail — it is 1-SPACE-per-level indented, unlike `quests.json`. Read the shipped ally rows (`relc` :21, `klbkch` :62, `riverfarm_hunter` :84, `wilovan` :761, `wolf_companion`) for the ally-tuning idiom.
+- [x] **Step 2: Insert FIVE combatant rows IMMEDIATELY AFTER the `rags` row** — this lane's RULING C anchor, not the end of `combatants[]` (three sibling lanes append there). Hand splice: `splice_json.py` can only place at the tail. `combatants.json` is 1-SPACE-per-level indented, unlike `quests.json`. Every row carries a POSITIVE `power_level` — the single most-forgotten field (`test_combat_data.gd:126-138`); HP derives from `con` and no `hp` field exists anywhere.
 
 **The rationale for each of these five rows lives in `docs/CHOICE-LOG.md`, not in the shipped JSON** (census, RULING B). What survives in the file is the one trap a future editor can actually trip on.
 
@@ -1039,7 +1039,7 @@ Confirm `corusdeer_range` still banks `corusdeer_culled` on victory and that thi
 
 **These stats are a DRAFT tuned to the Floodplains band (`goblin_raider` 2.0 → `rags` 5.5). The harness is the numbers authority, not this document — Step 5 measures and Step 6 re-tunes.**
 
-- [ ] **Step 3: Add the encounter entity** to `rags_camp.json`:
+- [x] **Step 3: Add the encounter entity** to `rags_camp.json`:
 
 ```json
 {
@@ -1085,7 +1085,7 @@ Confirm `corusdeer_range` still banks `corusdeer_culled` on victory and that thi
 
 `arena: boulder_flats` is the shipped floodplains-biome 12×8 arena (`rock_crab_nest`'s own) — **no `data/arenas.json` edit is owed by this lane.** `respawns` is absent, so the entity is REMOVED permanently on victory.
 
-- [ ] **Step 4: Append TWO gated cells to `ENCOUNTER_CELLS`** in `tests/sim_combat_batch.gd` (the ONLY array with a per-cell `"ally"` key; `ally` resolution at :478, `gated := cell.has("win_lo")` at :522). **`total_cells` at :321 is NOT edited** — it already sums `ENCOUNTER_CELLS.size()`.
+- [x] **Step 4: Append TWO gated cells to `ENCOUNTER_CELLS`** in `tests/sim_combat_batch.gd` (the ONLY array with a per-cell `"ally"` key; `ally` resolution at :478, `gated := cell.has("win_lo")` at :522). **`total_cells` at :321 is NOT edited** — it already sums `ENCOUNTER_CELLS.size()`.
 
 > **CONTROLLER RULING A (binding):** every new `sim_combat_batch` gated cell in this wave uses **`win_lo: 0.55` / `win_hi: 0.95`** — the shipped stop-cell precedent (`tests/sim_combat_batch.gd:59`, `rags_scouting_party_t1_solo`). **Do NOT narrow the window to "prove" the region band.** Band ordering is proven by **recording the MEASURED MEDIANS in the PR body**, not by a tight gate: a narrow window turns ordinary RNG drift into a red CI on somebody else's PR, and it asserts a verdict the harness was never asked for.
 
@@ -1101,7 +1101,7 @@ Confirm `corusdeer_range` still banks `corusdeer_culled` on victory and that thi
 	{"name": "camp_ground_press_t1_spear_ally", "arena": "boulder_flats", "enemies": ["plains_scavenger_a", "plains_scavenger_b", "plains_scavenger_lead"], "build": "warrior2", "ally": "goblin_spear_ally", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ```
 
-- [ ] **Step 5: Measure cheaply, then fully.** Get the cell count and slice-run only the new cells:
+- [x] **Step 5: Measure cheaply, then fully.** Get the cell count and slice-run only the new cells:
 
 ```
 WI_CELL_COUNT_ONLY=1 perl -e 'alarm 120; exec @ARGV' -- /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_combat_batch.gd
@@ -1110,19 +1110,19 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 
 (`WI_CELL_RANGE` is 0-based inclusive; the two new cells are the last two of `ENCOUNTER_CELLS`.)
 
-- [ ] **Step 6: Re-tune to land IN band.** Order of levers, cheapest first: (a) enemy COUNT/composition selection, (b) `plains_scavenger_lead`'s `con`, (c) `weapon_die`, (d) `power_level` last (it is challenge-weighting, not lethality). **Aim for the MIDDLE of the window (~0.70–0.85 on the single-ally cells), not the ceiling** — the shipped fight adds a second ally, so a single-ally reading of 0.94 means real play sits above the window's spirit. **Record the measured win rate and median rounds for BOTH cells in the PR body** (RULING A), alongside the shipped Floodplains cells they are being ordered against. **Do NOT bake the numbers into a shipped `_comment`** — that is census spend on a figure nothing re-verifies, and the PR body is where the band ordering is actually reviewed.
-- [ ] **Step 7: Figure-height bar — what it actually measures (RULING F).** State this plainly, because the reverse claim was in the round-1 draft and is false:
+- [x] **Step 6: Re-tune to land IN band.** Order of levers, cheapest first: (a) enemy COUNT/composition selection, (b) `plains_scavenger_lead`'s `con`, (c) `weapon_die`, (d) `power_level` last (it is challenge-weighting, not lethality). **Aim for the MIDDLE of the window (~0.70–0.85 on the single-ally cells), not the ceiling** — the shipped fight adds a second ally, so a single-ally reading of 0.94 means real play sits above the window's spirit. **Record the measured win rate and median rounds for BOTH cells in the PR body** (RULING A), alongside the shipped Floodplains cells they are being ordered against. **Do NOT bake the numbers into a shipped `_comment`** — that is census spend on a figure nothing re-verifies, and the PR body is where the band ordering is actually reviewed.
+- [x] **Step 7: Figure-height bar — what it actually measures (RULING F).** State this plainly, because the reverse claim was in the round-1 draft and is false:
   - `tests/test_combat_visuals.gd:536-541` `FIGURE_ROWS` holds **exactly four sprites** — `bat`, `briar_collector`, `briar_collector_deep`, `ruin_warden`. `_board_cells` (:563-566) indexes `FIGURE_ROWS[cfg["sprite"]]` directly, so a sprite absent from that dict is a **KeyError, not a pass**.
   - The `BOARD_FIGURE_MIN_CELLS` / `MAX` bounds are asserted **only over the hard-coded `audited` array** (:605-619: the `camouflage` list plus `cave_spider`, `ruin_guardian`, `seal_warden`, `ruin_ward_a/_b`, `snare_ward_a`). **No new id from this lane is in it.**
   - Therefore: `rags`, `goblin_base` and `human_laborer` are **not measured by this test at all**. `test_combat_visuals` **passes by EXCLUSION** for every id this lane adds. Run it and expect PASS — but do not read that PASS as a legibility verdict.
   - **No id may be added to `audited` without FIRST adding its sprite to `FIGURE_ROWS` with a freshly derived row count** (alpha-bbox height over the animation's frames), or the test crashes instead of failing.
   - The 0.96 / 1.00 / 1.07 goblin numbers live in a **doc comment** at :548-560, not in an assertion, and that comment names COMBATANT ids, not sprites. **Quote no figure number in any shipped `_comment`** (RULING F).
   - **The legibility read for these three new rigs is the WINDOWED SHOT** (Task 9 Step 9 shot 4), not this test.
-- [ ] **Step 8: VISUAL-LOG row** — append to `docs/VISUAL-LOG.md` (the repo-root 2,426-line file that carries the sprite-scale history, NOT the 13-line game-side one):
+- [x] **Step 8: VISUAL-LOG row** — append to `docs/VISUAL-LOG.md` (the repo-root 2,426-line file that carries the sprite-scale history, NOT the 13-line game-side one):
 
 > **2026-07-28 (#308, v0.16 Floodplains) — three new rigs ship UNMEASURED by the board-figure bar.** `goblin_spear_ally` reuses `goblin_base`, `rags_ally` reuses the bespoke `rags` rig, and `plains_scavenger_a/b/lead` reuse `human_laborer` — all with NO `combat_scale` key, so their board figures are byte-identical to what ships today. **None of these sprites is in `FIGURE_ROWS` and none of these ids is in the `audited` array**, so `test_combat_visuals` does not measure them; it passes by exclusion. No figure number is asserted or claimed here. Filed for the goblin-scale triage pass alongside `goblin_raider` / `goblin_shaman` / `goblin_chieftain`, each of which needs its own windowed read before its scale moves (HANDOFF.md:63-67). The FIRST evidence about these rigs' legibility is this PR's windowed machine-playtest shot of the `camp_ground_press` board — including whether the three `human_laborer` scavengers, which ship near-identical warm tints (0.86/0.78/0.62, 0.80/0.74/0.60, 0.90/0.70/0.55) on one board, separate by eye. Nothing in the suite checks that: the tint-uniqueness assert at `tests/test_combat_visuals.gd:544-556` covers only the hard-coded `camouflage` list.
 
-- [ ] **Step 9: Run** `res://tests/test_combat_data.gd` (arena spawn reachability, encounter key presence, ally/enemy id resolution, positive power_level) — expect PASS.
+- [x] **Step 9: Run** `res://tests/test_combat_data.gd` (arena spawn reachability, encounter key presence, ally/enemy id resolution, positive power_level) — expect PASS.
 
 ---
 
@@ -1136,7 +1136,7 @@ WI_CELL_RANGE=<lo>:<hi> perl -e 'alarm 600; exec @ARGV' -- /usr/local/bin/godot 
 
 > **RULING 4 (binding):** `rags_inn.json`'s reactive line is a `text_variants` entry keyed on `rags_price_kept` on the `greet` node. **It is that node's FIRST AND ONLY variant, and the base `text` stays unconditional** (a variants-only node is a guaranteed SCRIPT ERROR, `data_lint.py:198-202`). Verified: the whole 18-line file carries no `text_variants` anywhere and its nodes are `greet` / `offduty` / `served`, each with a bare `text` — **there is no "settled arm" in this file to append after.** (An earlier draft of this ruling carried an "appended AFTER the existing settled arm" clause; it is struck. **That placement rule belongs to `rags_meeting.json`**, Task 2 Step 2, where the settled arm really does exist at `data/dialogue/rags_meeting.json:17-24` and last-match-wins makes append-order load-bearing.) Register-pure: manners, food, exits. **Pre-Vol-5 Rags bar is ABSOLUTE.**
 
-- [ ] **Step 1: Commit the producer/gate set as ONE commit.** Stage together: Task 1 (quests.json — the new quest AND the `chieftains_price` region-casing fix), Task 2 (rags_meeting.json), Task 3 (krshia_crate.json + street.json), Task 4 (rags_camp.json + floodplains.json + moods.json + the two test consts), Task 5 (meat rack), Task 6 (combatants.json + encounter + harness cells + VISUAL-LOG). Nothing before this point is independently green.
+- [x] **Step 1: Commit the producer/gate set as ONE commit.** Stage together: Task 1 (quests.json — the new quest AND the `chieftains_price` region-casing fix), Task 2 (rags_meeting.json), Task 3 (krshia_crate.json + street.json), Task 4 (rags_camp.json + floodplains.json + moods.json + the two test consts), Task 5 (meat rack), Task 6 (combatants.json + encounter + harness cells + VISUAL-LOG). Nothing before this point is independently green.
 
 Commit message:
 
@@ -1146,8 +1146,8 @@ feat(floodplains): "The Price Kept" -- three routes, the camp hollow, the first 
 Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
 ```
 
-- [ ] **Step 2: Read `data/dialogue/rags_inn.json` in full** (18 lines, TAB-indented, one-line node style). Note the `greet` node's shipped text and that the file's `_comment` is the register contract.
-- [ ] **Step 3: Add `text_variants` to the `greet` node ONLY**, keyed on the terminal:
+- [x] **Step 2: Read `data/dialogue/rags_inn.json` in full** (18 lines, TAB-indented, one-line node style). Note the `greet` node's shipped text and that the file's `_comment` is the register contract.
+- [x] **Step 3: Add `text_variants` to the `greet` node ONLY**, keyed on the terminal:
 
 ```json
 "text_variants": [ { "requires": { "accomplishment": { "rags_price_kept": 1 } }, "text": "You again. Camp ate. ...Still count doors. Habit, not you." } ]
@@ -1163,10 +1163,10 @@ grep -c rags_price_kept wandering_inn_game/qa/fixtures/inn_guests_ext_start.json
 
 Expect 0 for both. If either is nonzero, the pinned base line is dead and the script must be re-derived.
 
-- [ ] **Step 4: Do NOT touch `data/maps/inn/inn.json`.** Her guest row's two-arm window (`requires rags_meeting_settled` / `absent drove_off_rags`, `:1199`/`:1202`) and its code twin `src/core/inn_guests.gd:48` are unchanged and must never disagree. The inn guest roster array is byte-identical across twelve rows and is not this lane's to move.
-- [ ] **Step 5: Run** `res://tests/test_inn_guests.gd` + `res://tests/test_dialogue.gd` + `res://tests/test_copy_fit.gd` — expect PASS.
-- [ ] **Step 6: Run the counter-integrity trio** — `res://tests/test_content.gd`, `res://tests/test_reachability.gd`, `res://tests/test_quests.gd`. All three must now be green (all producers landed in Step 1). Verify each on the three-part bar: exit 0, `^PASS` present, zero `SCRIPT ERROR|Parse Error|WARNING`.
-- [ ] **Step 7: Commit**
+- [x] **Step 4: Do NOT touch `data/maps/inn/inn.json`.** Her guest row's two-arm window (`requires rags_meeting_settled` / `absent drove_off_rags`, `:1199`/`:1202`) and its code twin `src/core/inn_guests.gd:48` are unchanged and must never disagree. The inn guest roster array is byte-identical across twelve rows and is not this lane's to move.
+- [x] **Step 5: Run** `res://tests/test_inn_guests.gd` + `res://tests/test_dialogue.gd` + `res://tests/test_copy_fit.gd` — expect PASS.
+- [x] **Step 6: Run the counter-integrity trio** — `res://tests/test_content.gd`, `res://tests/test_reachability.gd`, `res://tests/test_quests.gd`. All three must now be green (all producers landed in Step 1). Verify each on the three-part bar: exit 0, `^PASS` present, zero `SCRIPT ERROR|Parse Error|WARNING`.
+- [x] **Step 7: Commit**
 
 ```
 feat(dialogue): Rags's inn register answers the kept price (#308)
@@ -1184,14 +1184,14 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
 - Modify: `qa/manifest.json`, `wandering_inn_game/AGENTS.md` (seed table), `tests/test_fixture_coherence.gd` (`COMBAT_BAND_FIXTURES` +1)
 - Regenerate: `qa/manifest.json` surfaces, `wandering_inn_game/docs/QA-SCRIPT-NOTES.md`
 
-- [ ] **Step 1: Load `wi-writing-qa-scripts`.** Fixture-first policy applies: all four are fixture starts. Note the traps: `click_dialogue_option` takes `"option"`, **1-BASED** (a wrong key silently no-ops); `assert_state` on a MISSING path ERRORS (`test_driver.gd:874` `_fail("assert_state: path not found")`) — so a missing-key probe can NEVER be a passing proof, and a counter path must be spelled in full (`accomplishments.<id>`, not `<id>`); comment keys NEVER go inside `payload_contains`; a bare `wait_for_event ui_toast_rendered` proves nothing about WHICH toast; `player_facing` is a 2-VECTOR, never a string; JSON coordinates parse as floats.
+- [x] **Step 1: Load `wi-writing-qa-scripts`.** Fixture-first policy applies: all four are fixture starts. Note the traps: `click_dialogue_option` takes `"option"`, **1-BASED** (a wrong key silently no-ops); `assert_state` on a MISSING path ERRORS (`test_driver.gd:874` `_fail("assert_state: path not found")`) — so a missing-key probe can NEVER be a passing proof, and a counter path must be spelled in full (`accomplishments.<id>`, not `<id>`); comment keys NEVER go inside `payload_contains`; a bare `wait_for_event ui_toast_rendered` proves nothing about WHICH toast; `player_facing` is a 2-VECTOR, never a string; JSON coordinates parse as floats.
 
   > **THE WHOLE-RUN-SCAN TRAP, and its fix.** `assert_event_absent` is implemented as `if _has_event(type, payload_contains): _fail(...)` (`qa/test_driver.gd:520-522`) and `_has_event` iterates **the entire `_events_seen` array from index 0** — there is no cursor. So a **BARE-TYPE** `assert_event_absent` on any event the script itself emitted earlier is **guaranteed to red**, no matter where in the step list it sits. Two legal escapes, both used below:
   > 1. **`assert_event_count`** (`test_driver.gd:523-526`, `_count_events` + an exact `count`) — the right shape for "this happened exactly once, and not again".
   > 2. **A payload-filtered `assert_event_absent`** — `payload_contains` narrows the scan to a value the run genuinely never emitted (e.g. `{"id": "the_price_kept"}` on `quest_started`).
   >
   > Every `assert_event_absent` in these four scripts must be one of those two. Audit them before running: bare-type asserts on `dialogue_started`, `combat_started`, `accomplishment_recorded`, `map_changed` are all self-inflicted reds.
-- [ ] **Step 2: Author the fixtures by COPYING `qa/fixtures/rags_gates_met_start.json`** (`"version": 7`; the skill doc's `"version": 3` and the cross-recon's "5" are both stale — copy the shipped file, never the doc). Required per-fixture deltas:
+- [x] **Step 2: Author the fixtures by COPYING `qa/fixtures/rags_gates_met_start.json`** (`"version": 7`; the skill doc's `"version": 3` and the cross-recon's "5" are both stale — copy the shipped file, never the doc). Required per-fixture deltas:
 
 | fixture | current_map / cell | accomplishments added on top of the rags template | started_quests | inventory / gold |
 |---|---|---|---|---|
@@ -1211,7 +1211,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
     Owed by **both**: `floodplains_price_betrayal_start` (drives `rags_scouting_party`, whose shipped cell `rags_scouting_party_t1_solo` is gated at 0.55–0.95, `tests/sim_combat_batch.gd:59`) **and** `floodplains_price_fight_start` (drives `camp_ground_press`, a brand-new 3-enemy encounter with no measured cell at all until Task 6 Step 5 runs). Do this AFTER Task 6's tuning has settled — a re-tune invalidates the observed outcome and the loop must be re-run.
   - **Monotone-chain coherence:** `rags_meeting_settled` implies the meeting happened — carry `met_rags` and `rags_price_named` and exactly ONE peaceful rung (`helped_rags_tribe`). Never carry `drove_off_rags` alongside `helped_rags_tribe`.
   - `floodplains_price_fight_start` stands on `rags_camp`, which is why Task 4 Step 7 added the `MAP_REQUIRES` row — the fixture's `rags_meeting_settled` satisfies it.
-- [ ] **Step 3: `COMBAT_BAND_FIXTURES` row** in `tests/test_fixture_coherence.gd` — pins the tuned build the Task 6 cells were measured at, and fails in BOTH directions:
+- [x] **Step 3: `COMBAT_BAND_FIXTURES` row** in `tests/test_fixture_coherence.gd` — pins the tuned build the Task 6 cells were measured at, and fails in BOTH directions:
 
 ```gdscript
 	# 2026-07-28 (#308): the camp-ground press was tuned at warrior2, the build
@@ -1219,10 +1219,10 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
 	"floodplains_price_fight_start": 2,
 ```
 
-- [ ] **Step 4: `floodplains_price_talk` — the TALK terminal path.** Steps: title Continue idiom (`ui_title_gate_rendered` → confirm → `ui_title_rendered` → move down 1 → confirm → `game_loaded` → `world_ready` → `assert_state current_map` = `street`) → bump-move into Krshia's cell to face her (never trust `player_facing`) → interact (pool line) → interact (hub) → count the VISIBLE options and select the 8-gold alternate → `wait_for_event accomplishment_recorded {"id": "camp_trade_brokered"}` → `wait_for_event dialogue_node {"speaker":"Krshia"}` on `goblin_run` → close → `assert_state gold` (the exact ledger, 12 → 4) → `teleport {"map":"floodplains","cell":[16,20]}` → interact → hub → select the F1 offer row → `winter` → select the trade report rung → `wait_for_event accomplishment_recorded {"id":"rags_price_kept"}` → `wait_for_event quest_completed {"id":"the_price_kept"}` → `assert_event_absent accomplishment_recorded {"id":"camp_ground_held"}` (route purity) → `assert_state accomplishments.persuaded_someone` (the grant deposited 4 + 0 from the gold arm).
+- [x] **Step 4: `floodplains_price_talk` — the TALK terminal path.** Steps: title Continue idiom (`ui_title_gate_rendered` → confirm → `ui_title_rendered` → move down 1 → confirm → `game_loaded` → `world_ready` → `assert_state current_map` = `street`) → bump-move into Krshia's cell to face her (never trust `player_facing`) → interact (pool line) → interact (hub) → count the VISIBLE options and select the 8-gold alternate → `wait_for_event accomplishment_recorded {"id": "camp_trade_brokered"}` → `wait_for_event dialogue_node {"speaker":"Krshia"}` on `goblin_run` → close → `assert_state gold` (the exact ledger, 12 → 4) → `teleport {"map":"floodplains","cell":[16,20]}` → interact → hub → select the F1 offer row → `winter` → select the trade report rung → `wait_for_event accomplishment_recorded {"id":"rags_price_kept"}` → `wait_for_event quest_completed {"id":"the_price_kept"}` → `assert_event_absent accomplishment_recorded {"id":"camp_ground_held"}` (route purity) → `assert_state accomplishments.persuaded_someone` (the grant deposited 4 + 0 from the gold arm).
   **Derive every cursor index from a REAL run's `events.jsonl`, never from the authored JSON order** — hidden options shift the visible list.
-- [ ] **Step 5: `floodplains_price_help` — the HELP route including the assisted hunt.** Steps: fixture boot on `floodplains` → walk into `corusdeer_range`, `combat_autoplay` → `wait_for_event accomplishment_recorded {"id":"corusdeer_culled"}` → `teleport` to (17,21) → interact `rags_camp_mouth` → `wait_for_event map_changed {"map":"rags_camp"}` → `assert_state current_map` = `rags_camp` → **`assert_event_logged ui_map_rendered` with the exact `floor_cells`/`blocked_cells` counts read off the run** (the standard render-confirmation idiom) → interact `camp_carry_yoke` → `wait_for_event accomplishment_recorded {"id":"camp_carry_jobs"}` + `gold_changed` delta 2 → **prove the meat rack was ABSENT before both gates and PRESENT after** (`ui_entities_rendered` count before/after, or `assert_event_absent` on its toast before the yoke) → interact `camp_meat_rack` → `wait_for_event accomplishment_recorded {"id":"camp_larder_filled"}` → exit door → `assert_state current_map` = `floodplains`, `player_cell` = (17,21) → walk to (16,20), interact, report rung → `rags_price_kept` + `quest_completed`.
-- [ ] **Step 6: `floodplains_price_fight` — the ally fight.** Steps: fixture boot INSIDE `rags_camp` at (5,7) → walk to face `camp_ground_press` → interact → `wait_for_event combat_started` → **the POSITIVE roster proof** (below) → `combat_autoplay` → `wait_for_event accomplishment_recorded {"id":"camp_ground_held"}` → **`assert_state accomplishments.victories`** → exit → report → `rags_price_kept` + `quest_completed`.
+- [x] **Step 5: `floodplains_price_help` — the HELP route including the assisted hunt.** Steps: fixture boot on `floodplains` → walk into `corusdeer_range`, `combat_autoplay` → `wait_for_event accomplishment_recorded {"id":"corusdeer_culled"}` → `teleport` to (17,21) → interact `rags_camp_mouth` → `wait_for_event map_changed {"map":"rags_camp"}` → `assert_state current_map` = `rags_camp` → **`assert_event_logged ui_map_rendered` with the exact `floor_cells`/`blocked_cells` counts read off the run** (the standard render-confirmation idiom) → interact `camp_carry_yoke` → `wait_for_event accomplishment_recorded {"id":"camp_carry_jobs"}` + `gold_changed` delta 2 → **prove the meat rack was ABSENT before both gates and PRESENT after** (`ui_entities_rendered` count before/after, or `assert_event_absent` on its toast before the yoke) → interact `camp_meat_rack` → `wait_for_event accomplishment_recorded {"id":"camp_larder_filled"}` → exit door → `assert_state current_map` = `floodplains`, `player_cell` = (17,21) → walk to (16,20), interact, report rung → `rags_price_kept` + `quest_completed`.
+- [x] **Step 6: `floodplains_price_fight` — the ally fight.** Steps: fixture boot INSIDE `rags_camp` at (5,7) → walk to face `camp_ground_press` → interact → `wait_for_event combat_started` → **the POSITIVE roster proof** (below) → `combat_autoplay` → `wait_for_event accomplishment_recorded {"id":"camp_ground_held"}` → **`assert_state accomplishments.victories`** → exit → report → `rags_price_kept` + `quest_completed`.
 
   **The roster proof is POSITIVE ONLY — there is no working way to assert an absent combatant.** Both mechanisms the round-1 draft prescribed are dead ends: a bare-type `assert_event_absent combat_started` reds on the run's own `combat_started` (whole-run scan, Step 1), and a missing-key probe via `assert_state combat.combatants.relc` **fails on path-not-found** (`test_driver.gd:874`), i.e. it fails exactly when it should pass. `WICombat.snapshot()` (`src/core/combat/wi_combat.gd:693-711`) exposes `order` (the turn order array) and `combatants` keyed by id with a `side`, so pin the roster from both ends:
 
@@ -1238,7 +1238,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
   **The victory counter path is `accomplishments.victories`, NOT `victories`.** `WIGame.snapshot()` (`src/core/wi_game.gd:2177-2221`) has no top-level `victories` key — it is banked as an ordinary accomplishment (`src/core/combat_banking.gd:111` `_record_accomplishment.call("victories", 1)`) and surfaces under the `accomplishments` dict at :2187. A bare `"path": "victories"` hard-fails on path-not-found. The reason for pinning it at all stands: a gray-band win deposits `won_combat` **fractionally** under challenge weighting (`combat_banking.gd:128-129`) while every other `on_victory` id banks integer at :131, so `victories` is the counter that reads the same under both flag states. **Any other bare counter name used as an `assert_state` path in these four scripts takes the same `accomplishments.` prefix.**
 
   **Never pin toast ORDER across `combat_started`** — pre-combat queue depth is wall-clock and varies with host frame rate. Pin delivery with `from_start` + a generous timeout.
-- [ ] **Step 7: `floodplains_price_gate_proof` — the betrayal branch (RULING 3, and the branch has ZERO live QA coverage today).** Steps: `floodplains_price_betrayal_start` boot at (16,19) → move south 1 → interact → hub `"You. The one who didn't kill."` → select `"(Draw steel.)"` → `wait_for_event dialogue_ended` **THEN** `wait_for_event combat_started` (the effects+`end:true` event-order trap) → `combat_autoplay` → `wait_for_event accomplishment_recorded {"id":"drove_off_rags"}` → `wait_for_event accomplishment_recorded {"id":"rags_meeting_settled"}` (proving BOTH terminals bank, which is the whole reason the gate is two-armed) → walk back to (16,20) → interact → **the second-interact proof (below)** → **`assert_event_absent quest_started {"id":"the_price_kept"}`** (payload-filtered: this id is never emitted in this run) → walk to (17,21) and interact toward (17,22) → **`assert_event_absent map_changed {"map":"rags_camp"}`** (payload-filtered; the camp mouth's `present_when.absent` arm holds, so a betrayer never gets in) → **`assert_event_absent accomplishment_recorded {"id":"rags_price_kept"}`** (payload-filtered).
+- [x] **Step 7: `floodplains_price_gate_proof` — the betrayal branch (RULING 3, and the branch has ZERO live QA coverage today).** Steps: `floodplains_price_betrayal_start` boot at (16,19) → move south 1 → interact → hub `"You. The one who didn't kill."` → select `"(Draw steel.)"` → `wait_for_event dialogue_ended` **THEN** `wait_for_event combat_started` (the effects+`end:true` event-order trap) → `combat_autoplay` → `wait_for_event accomplishment_recorded {"id":"drove_off_rags"}` → `wait_for_event accomplishment_recorded {"id":"rags_meeting_settled"}` (proving BOTH terminals bank, which is the whole reason the gate is two-armed) → walk back to (16,20) → interact → **the second-interact proof (below)** → **`assert_event_absent quest_started {"id":"the_price_kept"}`** (payload-filtered: this id is never emitted in this run) → walk to (17,21) and interact toward (17,22) → **`assert_event_absent map_changed {"map":"rags_camp"}`** (payload-filtered; the camp mouth's `present_when.absent` arm holds, so a betrayer never gets in) → **`assert_event_absent accomplishment_recorded {"id":"rags_price_kept"}`** (payload-filtered).
 
   **The second interact CANNOT be proven with a bare `assert_event_absent dialogue_started`.** This script opens Rags's dialogue itself three steps earlier — that is what `(Draw steel.)` is selected from — so a whole-run scan for `dialogue_started` finds the run's OWN event and reds (Step 1's trap, which the round-1 draft flagged and then violated). The encounter entity IS removed permanently on victory (`wi_game.gd:1988-1989`); prove it with a count, or with a payload filter on the node:
 
@@ -1247,9 +1247,9 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
 ```
 
   — the pre-fight open being the only one in the whole run. Equivalent alternate, if a later edit ever adds a second legitimate open: `{"action":"assert_event_absent","type":"dialogue_node","payload_contains":{"speaker":"Rags","text":"Good trade. Plains quiet. Go safe."}}` (the settled hub line this state would otherwise render).
-- [ ] **Step 8: Belt-and-braces unit arm for the `hide_when` itself.** The betrayal branch removes the entity, so the live script cannot render the settled hub with `drove_off_rags` held. Add ONE arm to `tests/test_dialogue.gd` (read its existing ctx idiom first) feeding accomplishments `{rags_meeting_settled: 1, drove_off_rags: 1}` at `rags_meeting`'s `hub` and asserting the F1 offer row is NOT in `current_options()`, plus the mirror case (`drove_off_rags` absent → row present). This is the can-fail pair the script cannot reach. **Every local this arm declares carries the `f_` lane prefix** (`f_ctx`, `f_hub`, `f_opts`) per RULING C — three sibling lanes append into the same function bodies in the same test files, and a duplicate `var` in one continuous function scope is a **parse error, not a shadow**, which reds the whole suite the moment the second lane merges.
-- [ ] **Step 9: Register all four in `qa/manifest.json`, INSERTED AFTER THE `rags_gate_check` ENTRY** (`qa/manifest.json:4342`) — this lane's RULING C anchor, not the end of `scripts[]`. Entry shape `{"script","seed","fixture","note","tiers","surfaces"}`. `seed: 9` for convention on all four; **the fixture `rng_state` — not this seed — governs the combats, and for the two fight fixtures that state is the one pinned by the derive-then-run-until-win loop in Step 2.** `tiers: ["full"]` for all four, matching every other Floodplains canonical (none are in `smoke`). **Write `surfaces` as `{}` or copy a sibling's shape and then REGENERATE — never hand-author it.**
-- [ ] **Step 10: Add four rows to `wandering_inn_game/AGENTS.md`'s "Canonical QA seed table", INSERTED AFTER THE `rags_gate_check` ROW** (`AGENTS.md:327`) — the same anchor as the manifest, so the two stay adjacent and no sibling lane's rows interleave. Row shape:
+- [x] **Step 8: Belt-and-braces unit arm for the `hide_when` itself.** The betrayal branch removes the entity, so the live script cannot render the settled hub with `drove_off_rags` held. Add ONE arm to `tests/test_dialogue.gd` (read its existing ctx idiom first) feeding accomplishments `{rags_meeting_settled: 1, drove_off_rags: 1}` at `rags_meeting`'s `hub` and asserting the F1 offer row is NOT in `current_options()`, plus the mirror case (`drove_off_rags` absent → row present). This is the can-fail pair the script cannot reach. **Every local this arm declares carries the `f_` lane prefix** (`f_ctx`, `f_hub`, `f_opts`) per RULING C — three sibling lanes append into the same function bodies in the same test files, and a duplicate `var` in one continuous function scope is a **parse error, not a shadow**, which reds the whole suite the moment the second lane merges.
+- [x] **Step 9: Register all four in `qa/manifest.json`, INSERTED AFTER THE `rags_gate_check` ENTRY** (`qa/manifest.json:4342`) — this lane's RULING C anchor, not the end of `scripts[]`. Entry shape `{"script","seed","fixture","note","tiers","surfaces"}`. `seed: 9` for convention on all four; **the fixture `rng_state` — not this seed — governs the combats, and for the two fight fixtures that state is the one pinned by the derive-then-run-until-win loop in Step 2.** `tiers: ["full"]` for all four, matching every other Floodplains canonical (none are in `smoke`). **Write `surfaces` as `{}` or copy a sibling's shape and then REGENERATE — never hand-author it.**
+- [x] **Step 10: Add four rows to `wandering_inn_game/AGENTS.md`'s "Canonical QA seed table", INSERTED AFTER THE `rags_gate_check` ROW** (`AGENTS.md:327`) — the same anchor as the manifest, so the two stay adjacent and no sibling lane's rows interleave. Row shape:
 
 ```
 | `floodplains_price_talk` | 9 (fixture `floodplains_price_talk_start`) | v0.16 F1 (#308): TALK route -- Krshia's 8g quiet run banks camp_trade_brokered, then the report to Rags closes the quest |
@@ -1260,7 +1260,7 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
 
 `ci_sweep.sh` HARD-FAILS at startup if this table and the manifest disagree.
 
-- [ ] **Step 11: Regenerate BOTH generated artifacts, in the SAME commit:**
+- [x] **Step 11: Regenerate BOTH generated artifacts, in the SAME commit:**
 
 ```
 python3 wandering_inn_game/scripts/derive_qa_surfaces.py --write
@@ -1272,7 +1272,7 @@ python3 wandering_inn_game/scripts/derive_qa_surfaces.py --check
 
 A stale `surfaces` tag or an un-rendered `docs/QA-SCRIPT-NOTES.md` REDS the `leak-check` job — that was the #312 CI red, and calling `render_qa_notes.py` without `--write` reproduces it exactly (`scripts/render_qa_notes.py:55-66`: it renders in memory, diffs, prints `QA NOTES DRIFT`, returns 1). **`QA-SCRIPT-NOTES.md` is rendered WHOLE from the entire manifest, so it must be re-rendered at every MERGE-TRAIN merge that combines two lanes' manifest entries — this lane's own commit is necessary, not sufficient.**
 
-- [ ] **Step 12: Run each new script** and read its `result.json`:
+- [x] **Step 12: Run each new script** and read its `result.json`:
 
 ```
 wandering_inn_game/qa/run_qa.sh floodplains_price_talk headless --seed=9
@@ -1280,7 +1280,7 @@ wandering_inn_game/qa/run_qa.sh floodplains_price_talk headless --seed=9
 
 Output lands in `wandering_inn_game/qa_output/<script>/` and is CLOBBERED by any re-run. **"missing result.json" with rc=0 is a RED, never a pass.**
 
-- [ ] **Step 13: Commit**
+- [x] **Step 13: Commit**
 
 ```
 test(qa): four canonicals for The Price Kept, incl. the untested betrayal branch (#308)
@@ -1292,13 +1292,17 @@ Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
 
 ## Task 9 — Re-gate, machine playtest, PR
 
-- [ ] **Step 1: SETTLE THE TREE FIRST.** A sweep launched while edits continue produces a MIXED-STATE verdict; kill and relaunch. Commit everything before this task.
-- [ ] **Step 2: Census RE-check** — `python3 scripts/comment_census.py --check` from repo root; must return 0. **This is the SECOND measurement, not the first: the binding one already happened at the end of Task 6**, when the last DATA edit landed. Compare the lane's actual `_comment` total against the **2,405 projection / ~2,742 budget** from Global Constraints and carry the real number into the PR body. If it overshoots, cut `_comment` prose (move rationale to a QA-script `_comment` or `docs/CHOICE-LOG.md`, both census-exempt) — never cut player copy, which is the budget's own denominator. **Re-running this on this branch alone is NOT the gate:** the census is a property of the merged tree, so it is re-run at every merge-train merge, and post-train overshoot is the wave-close PR's to own (RULING B).
-- [ ] **Step 3: Structural lint** — `python3 wandering_inn_game/scripts/data_lint.py`. Zero findings.
+- [x] **Step 1: SETTLE THE TREE FIRST.** A sweep launched while edits continue produces a MIXED-STATE verdict; kill and relaunch. Commit everything before this task.
+- [x] **Step 2: Census RE-check** — `python3 scripts/comment_census.py --check` from repo root; must return 0. **This is the SECOND measurement, not the first: the binding one already happened at the end of Task 6**, when the last DATA edit landed. Compare the lane's actual `_comment` total against the **2,405 projection / ~2,742 budget** from Global Constraints and carry the real number into the PR body. If it overshoots, cut `_comment` prose (move rationale to a QA-script `_comment` or `docs/CHOICE-LOG.md`, both census-exempt) — never cut player copy, which is the budget's own denominator. **Re-running this on this branch alone is NOT the gate:** the census is a property of the merged tree, so it is re-run at every merge-train merge, and post-train overshoot is the wave-close PR's to own (RULING B).
+- [x] **Step 3: Structural lint** — `python3 wandering_inn_game/scripts/data_lint.py`. Zero findings.
 - [ ] **Step 4: Guidance mirror + doc drift** — `python3 scripts/sync_agent_guidance.py`, then `python3 scripts/render_qa_notes.py --write` **followed by a bare `python3 scripts/render_qa_notes.py` as the check** (RULING E — the bare call alone only diffs and returns 1), then `python3 scripts/check_doc_drift.py`. (The `leak-check` job runs all of these.)
-- [ ] **Step 5: Every unit suite.** Loop `tests/test_*.gd` under a 240s alarm; each must give exit 0 + a `^PASS` line + zero `SCRIPT ERROR|Parse Error|WARNING`. Report PER SCRIPT, never "everything passed". Minimum attention: `test_content`, `test_reachability`, `test_quests`, `test_dialogue`, `test_combat_data`, `test_combat_visuals`, `test_copy_fit`, `test_fixture_coherence`, `test_inn_guests`, `test_shipped_ids`.
-- [ ] **Step 6: Full balance harness** — `res://tests/sim_combat_batch.gd` under a 600s alarm, unsharded, once, as the gate. Both new cells inside the 0.55–0.95 window with median rounds 3–12; **no pre-existing cell may move** (this lane adds new ids only and retunes nothing shipped). **Copy the two measured win rates and medians into the PR body** — per RULING A that record, not a narrowed window, is what places these fights in the Floodplains band.
-- [ ] **Step 7: Targeted re-gate.** Run `qa/ci_sweep.sh --touching` against each shared surface this lane changed:
+  
+  > **2026-07-28 STAGE 3:** `render_qa_notes.py --write` then bare = `PASS: QA notes match manifest`; `sync_agent_guidance.py` clean. **`check_doc_drift.py` is RED and stays red on this branch** — `plan lacks DONE/ACTIVE header` for all four v0.16 lane plan docs, PRE-EXISTING at this branch's base (stash-probed). This lane added the header to its own doc; the other three are sibling lanes' owned files. Left unticked deliberately.
+  >
+  > **2026-07-28 FIX WAVE (correction):** re-run gives the same rc=1 but only THREE findings (`invrisil`, `pallass`, `riverfarm`) — and `main` has since landed 9550bb2 "plan Status headers", which adds the header to all four docs, this lane's included. So the gate clears on a plain merge of `main`, at the cost of one trivial conflict on line 3 of this file (keep main's line). Do that in the PR rather than repeating "this lane cannot make it green". Still unticked here because the branch alone cannot.
+- [x] **Step 5: Every unit suite.** Loop `tests/test_*.gd` under a 240s alarm; each must give exit 0 + a `^PASS` line + zero `SCRIPT ERROR|Parse Error|WARNING`. Report PER SCRIPT, never "everything passed". Minimum attention: `test_content`, `test_reachability`, `test_quests`, `test_dialogue`, `test_combat_data`, `test_combat_visuals`, `test_copy_fit`, `test_fixture_coherence`, `test_inn_guests`, `test_shipped_ids`.
+- [x] **Step 6: Full balance harness** — `res://tests/sim_combat_batch.gd` under a 600s alarm, unsharded, once, as the gate. Both new cells inside the 0.55–0.95 window with median rounds 3–12; **no pre-existing cell may move** (this lane adds new ids only and retunes nothing shipped). **Copy the two measured win rates and medians into the PR body** — per RULING A that record, not a narrowed window, is what places these fights in the Floodplains band.
+- [x] **Step 7: Targeted re-gate.** Run `qa/ci_sweep.sh --touching` against each shared surface this lane changed:
 
 ```
 qa/ci_sweep.sh --touching data/quests.json
@@ -1310,8 +1314,8 @@ qa/ci_sweep.sh --touching data/combatants.json
 
 **`--touching data/quests.json` now maps to 20+ canonicals** (`cisterns_*`, `crate_*`, `door_chain_*`, `horns_dig_*`, `invrisil_disagreement_*`, `pallass_walkthrough`, …) via `MONOLITH_SYSTEMS` (GH#281) — the skill doc's "maps to ZERO scripts" line is OUT OF DATE. Budget the time. Named scripts that MUST be green: `rags_meeting_loop`, `rags_gate_check`, `inn_guests_ext_loop`, `inn_guests_gate_proof`, `stages_loop`, `crate_light`, `crate_talk`, `wrong_order_talk`, `pallass_walkthrough`, `door_chain_fight`, `floodplains_bestiary_loop`, `parley_gates_check`, `parley_talkdowns_loop`, `beast_tamer_loop`, `goblin_night_patrol_loop`, `regional_work_loop`.
 
-- [ ] **Step 8: Full sweep, polled not blocked.** A full `ci_sweep.sh` cannot run foreground in one Bash call — the harness promotes it to background and a waiting agent is stranded. Idiom: start it writing to a log with its own `rc=` echo, then POLL with short foreground `sleep 60; tail -1 <log>` calls. A full sweep runs `flush_artifacts.sh` first, which WIPES prior windowed PNGs — take screenshots AFTER, not before.
-- [ ] **Step 9: Machine playtest (windowed), `wi-machine-playtest`.** Shot list:
+- [x] **Step 8: Full sweep, polled not blocked.** A full `ci_sweep.sh` cannot run foreground in one Bash call — the harness promotes it to background and a waiting agent is stranded. Idiom: start it writing to a log with its own `rc=` echo, then POLL with short foreground `sleep 60; tail -1 <log>` calls. A full sweep runs `flush_artifacts.sh` first, which WIPES prior windowed PNGs — take screenshots AFTER, not before.
+- [x] **Step 9: Machine playtest (windowed), `wi-machine-playtest`.** Shot list:
   1. `floodplains` at (17,21) — the camp mouth PRESENT (settled fixture) and ABSENT (`rags_gate_unmet_start`, the can-fail pair).
   2. `rags_camp` on arrival at (5,7), day — read the hollow for brown-box, rim legibility, and whether the fire pit reads as the focal point.
   3. `rags_camp` at dusk and at night — the mood row is the whole point; if it renders flat white the row did not take.
@@ -1323,8 +1327,10 @@ qa/ci_sweep.sh --touching data/combatants.json
   5. The `winter` dialogue node with all three report rungs visible (a synthetic all-routes state) — cursor legibility with five visible options.
   6. Krshia's hub with both F1 rows visible — option-list length and the `[Charming Smile]` visible-locked render.
   Drain every finding to `docs/VISUAL-LOG.md`.
-- [ ] **Step 10: CHOICE-LOG.** Append every entry from this plan's "Choices logged" list to `docs/CHOICE-LOG.md` before opening the PR.
+- [x] **Step 10: CHOICE-LOG.** Append every entry from this plan's "Choices logged" list to `docs/CHOICE-LOG.md` before opening the PR.
 - [ ] **Step 11: PR** per `.github/PULL_REQUEST_TEMPLATE/issue-close.md` — `Closes #308`, `## Choices made` (options taken + rejected alternatives with reason), `## Validation evidence` (exact command + one-line result per gate), `## Player-visible proof` (which windowed script/seed, what was checked by eye), `## New agent context` (TRAPS/CONTRACTS added with `file:symbol`), `## Deferred / follow-ups` (the leads row below). **`[ci-full]` in the head commit message.**
+  
+  > **2026-07-28 STAGE 3:** NOT DONE by the implementer — this lane's agent is forbidden to push or run `gh`. Everything the PR body needs is in `.lane-progress.md` and the CHOICE-LOG entry: measured win rates/medians, the lane's `_comment` total, and the derived seed + observed WIN for both fight fixtures. The controller opens the PR.
 
   **Three things this lane's PR body MUST carry for the merge train:**
   1. **The measured medians and win rates** for `camp_ground_press_t1_rags_ally` and `camp_ground_press_t1_spear_ally`, next to the shipped Floodplains cells they are ordered against (RULING A — the window is deliberately the wide shipped precedent, so the PR body is the only place the band ordering is evidenced).
@@ -1415,18 +1421,18 @@ Every risk below has its mitigation baked into a numbered step.
 
 Run in this order; report PER COMMAND with its one-line result. Never "everything passed".
 
-- [ ] `python3 wandering_inn_game/scripts/data_lint.py` → zero findings
-- [ ] `python3 scripts/comment_census.py --check` → exit 0, DATA ≤ 15.0%, and this lane's `_comment` total at or under **2,405** (budget 112 + 0.1765 × new non-comment ≈ 2,742); the number goes in the PR body
-- [ ] `python3 scripts/sync_agent_guidance.py` → clean
+- [x] `python3 wandering_inn_game/scripts/data_lint.py` → zero findings
+- [x] `python3 scripts/comment_census.py --check` → exit 0, DATA ≤ 15.0%, and this lane's `_comment` total at or under **2,405** (budget 112 + 0.1765 × new non-comment ≈ 2,742); the number goes in the PR body
+- [x] `python3 scripts/sync_agent_guidance.py` → clean
 - [ ] `python3 scripts/render_qa_notes.py --write` **then** `python3 scripts/render_qa_notes.py` → rc=0 + `PASS: QA notes match manifest` (the bare call alone never writes), then `python3 scripts/check_doc_drift.py` → clean
-- [ ] `python3 wandering_inn_game/scripts/derive_qa_surfaces.py --check` → clean
-- [ ] `qa/run_qa.sh load_gate headless` → PASS with a real `result.json`
-- [ ] Every `tests/test_*.gd` under a 240s alarm → exit 0 **and** `^PASS` **and** zero `SCRIPT ERROR|Parse Error|WARNING`
-- [ ] `tests/sim_combat_batch.gd` (600s alarm, unsharded) → both new cells inside the 0.55–0.95 shipped-precedent window with median rounds 3–12; no shipped cell moved; **measured medians recorded in the PR body** (RULING A)
-- [ ] `qa/ci_sweep.sh --touching …` for all five shared surfaces → green
-- [ ] Full `qa/ci_sweep.sh` (polled) → green, `rc=0` read from the log's own echo
-- [ ] Headless smoke boot → clean
-- [ ] Windowed machine playtest, six shots, read by eye → findings drained to `docs/VISUAL-LOG.md`
+- [x] `python3 wandering_inn_game/scripts/derive_qa_surfaces.py --check` → clean
+- [x] `qa/run_qa.sh load_gate headless` → PASS with a real `result.json`
+- [x] Every `tests/test_*.gd` under a 240s alarm → exit 0 **and** `^PASS` **and** zero `SCRIPT ERROR|Parse Error|WARNING`
+- [x] `tests/sim_combat_batch.gd` (600s alarm, unsharded) → both new cells inside the 0.55–0.95 shipped-precedent window with median rounds 3–12; no shipped cell moved; **measured medians recorded in the PR body** (RULING A)
+- [x] `qa/ci_sweep.sh --touching …` for all five shared surfaces → green
+- [x] Full `qa/ci_sweep.sh` (polled) → green, `rc=0` read from the log's own echo
+- [x] Headless smoke boot → clean
+- [x] Windowed machine playtest, six shots, read by eye → findings drained to `docs/VISUAL-LOG.md`
 
 ## Exit criteria
 

@@ -128,6 +128,40 @@ func test_grimalkin_studies_gates_on_the_real_graph() -> void:
 		"casting-study completion variant verbatim")
 
 
+# 2026-07-28 (#308, F1): the can-fail pair NO live script can reach. The
+# betrayal branch REMOVES the rags_scouting_party entity on victory, so a
+# player holding drove_off_rags can never render the settled hub at all --
+# floodplains_price_gate_proof proves the exclusion by absence, and only this
+# arm proves the hide_when itself both ways on the real graph.
+# Every local carries the `f_` lane prefix: three sibling region lanes append
+# into this same file in one wave, and a duplicate `var` in one continuous
+# function scope is a PARSE error, not a shadow.
+func test_rags_winter_offer_hides_for_a_betrayer() -> void:
+	var f_graph: Dictionary = _load_json("res://data/dialogue/rags_meeting.json")
+	var f_offer := "Winter's coming. What does the camp need?"
+
+	var f_texts := func(opts: Array) -> Array:
+		return opts.map(func(o: Dictionary) -> String: return String(o["text"]))
+
+	# Peaceful settle: the offer row renders.
+	var f_ctx := {"skills": [], "classes": {}, "names": {},
+		"accomplishments": {"met_rags": 1, "rags_price_named": 1, "helped_rags_tribe": 1, "rags_meeting_settled": 1}}
+	var f_hub := WIDialogue.new(f_graph, f_ctx, Callable())
+	f_hub.begin()
+	var f_opts: Array = f_texts.call(f_hub.current_options())
+	assert(f_opts.has(f_offer), "a settled peaceful player sees the winter offer")
+
+	# Betrayal close: rags_meeting_settled is banked by the SAME on_victory
+	# array as drove_off_rags, so the requires arm alone would let it through.
+	var f_ctx_betrayed := {"skills": [], "classes": {}, "names": {},
+		"accomplishments": {"met_rags": 1, "rags_price_named": 1, "drove_off_rags": 1, "rags_meeting_settled": 1}}
+	var f_hub_betrayed := WIDialogue.new(f_graph, f_ctx_betrayed, Callable())
+	f_hub_betrayed.begin()
+	var f_opts_betrayed: Array = f_texts.call(f_hub_betrayed.current_options())
+	assert(not f_opts_betrayed.has(f_offer),
+		"drove_off_rags hides the winter offer even though the betrayal win banks rags_meeting_settled too")
+
+
 func test_node_text_variants_fall_back_to_base_text_when_unmet() -> void:
 	_events.clear()
 	var graph := {"start": "hub", "nodes": {"hub": {
@@ -797,6 +831,7 @@ func _init() -> void:
 	test_phase_requires_gates_text_variants_both_ways()
 	test_phase_requires_on_option_stays_visible_locked()
 	test_grimalkin_studies_gates_on_the_real_graph()
+	test_rags_winter_offer_hides_for_a_betrayer()
 	test_finished_walker_survives_a_goto_into_an_all_hidden_node()
 	test_wigame_nulls_the_walker_the_fail_safe_finished()
 	test_wigame_nulls_a_walker_the_fail_safe_finished_at_begin()

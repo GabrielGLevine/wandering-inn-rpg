@@ -247,6 +247,63 @@
       }
      },
      "goto": "wrong_order_recap"
+    },
+    {
+     "_comment": "v0.16 F1 TALK (#308). TRAP: both rows APPEND LAST -- once rags_meeting_settled is held they render VISIBLE-LOCKED, not hidden, so placement is what protects every index-pinned array on this hub.",
+     "text": "The camp south needs winter stores. Move a quiet run for them. [Charming Smile]",
+     "requires": {
+      "accomplishment": {
+       "rags_meeting_settled": 1
+      },
+      "skill": "charming_smile"
+     },
+     "hide_when": {
+      "accomplishment": {
+       "camp_trade_brokered": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "persuaded_someone"
+      },
+      {
+       "accomplishment": "camp_trade_brokered"
+      }
+     ],
+     "goto": "goblin_run"
+    },
+    {
+     "text": "Stand the cost of a quiet run south myself. (8 gold)",
+     "requires": {
+      "accomplishment": {
+       "rags_meeting_settled": 1
+      },
+      "gold": 8
+     },
+     "hide_when": {
+      "accomplishment": {
+       "camp_trade_brokered": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -8
+      },
+      {
+       "accomplishment": "camp_trade_brokered"
+      }
+     ],
+     "goto": "goblin_run"
+    }
+   ]
+  },
+  "goblin_run": {
+   "speaker": "Krshia",
+   "text": "Hrr. South. Grain, salt, hide-thread, and a cart that does not stop where anyone is counting. You will not say whose hands take it, and I will not ask, yes? I will price it as wool.",
+   "options": [
+    {
+     "text": "That's all I'm asking.",
+     "end": true
     }
    ]
   },
