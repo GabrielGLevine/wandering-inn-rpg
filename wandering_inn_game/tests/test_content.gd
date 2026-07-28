@@ -727,6 +727,11 @@ func _validate_guest_gate_windows(scene: Dictionary) -> void:
 				(when.get("requires", {}) as Dictionary).keys(),
 				(when.get("absent", {}) as Dictionary).keys()
 			))
+	# A gate keyed on an npc with no guest row is never consulted at all, so the
+	# guest it meant to hold pools UNGATED -- silent, and the exact failure the
+	# const exists to prevent. Check the direction the row walk cannot see.
+	for npc: String in WIInnGuests.GUEST_POOL_GATES:
+		_check(rows.has(npc), "GUEST_POOL_GATES holds a gate for '%s', which has no guest row on any map -- the gate would never be consulted" % npc)
 	for npc: String in rows:
 		var gate: Variant = WIInnGuests.GUEST_POOL_GATES.get(npc, {})
 		var specs: Array = gate if gate is Array else [gate]
