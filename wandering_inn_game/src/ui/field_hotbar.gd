@@ -261,7 +261,6 @@ func _render(reason: String = "skills") -> void:
 	_slot_numbers = []
 	_fallback_labels = []
 	var number := 1
-	var combatants_catalog := _load_combatants_catalog()
 	for id: String in _field_skills:
 		var sk: Dictionary = Game.sim.skills.get(id, {})
 		var display := String(sk.get("display_name", id))
@@ -276,7 +275,7 @@ func _render(reason: String = "skills") -> void:
 		})
 		_slot_numbers.append(str(number))
 		_fallback_labels.append(fallback)
-		_readout_lines.append("%d  %s" % [number, _readout_line(sk, id, combatants_catalog)])
+		_readout_lines.append("%d  %s" % [number, _readout_line(sk, id)])
 		number += 1
 	# Opt-in "Quest Thread" line (issue #148 tier 4), default OFF. Strictly
 	# guarded so the default state leaves `_readout_lines` byte-identical to
@@ -408,25 +407,22 @@ func _readout_content_height(width: float) -> float:
 	return measured.y + float(maxi(0, lines - 1)) * line_spacing
 
 
-func _readout_line(sk: Dictionary, id: String, combatants_catalog: Array = []) -> String:
+## The exploration readout composes through `field_effect_lines`, NOT the combat
+## composer: out here a cast spends no AP and no MP, and "for 3 rounds" names a
+## clock that is not running. Combat-only phrasing yields [] and the line falls
+## back to the authored "display_name — description". The combat HUD and the
+## journal keep the cost-bearing `skill_effect_lines`, which is where those
+## numbers are true. (No combatants catalog is loaded any more -- the field
+## composer never reaches the weapon-die lookup that needed it.)
+func _readout_line(sk: Dictionary, id: String) -> String:
 	var display := String(sk.get("display_name", id))
 	var desc := String(sk.get("description", ""))
-	var effect_lines := WIEffectText.skill_effect_lines(sk, combatants_catalog)
+	var effect_lines := WIEffectText.field_effect_lines(sk)
 	if effect_lines.is_empty():
 		return "%s — %s" % [display, desc] if desc != "" else display
 	if desc == "":
 		return "%s — %s" % [display, effect_lines[0]]
 	return "%s — %s — %s" % [display, effect_lines[0], desc]
-
-
-func _load_combatants_catalog() -> Array:
-	const COMBATANTS_PATH := "res://data/combatants.json"
-	if not FileAccess.file_exists(COMBATANTS_PATH):
-		return []
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(COMBATANTS_PATH))
-	if parsed is Dictionary and (parsed as Dictionary).has("combatants"):
-		return (parsed as Dictionary)["combatants"]
-	return []
 
 
 ## The field hotbar's slot list now comes straight from

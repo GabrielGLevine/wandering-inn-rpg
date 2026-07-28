@@ -208,11 +208,33 @@ const EXPECTED_SKILLS := {
 	"sworn_fang_boon": ["+8 to hit"],
 }
 
+## The FIELD variant (`WIEffectText.field_effect_lines`), pinned separately from
+## EXPECTED_SKILLS because the two composers answer to different surfaces: the
+## combat HUD and the journal want "1 AP, 3 MP — become impossible to target for
+## 3 rounds", the exploration hotbar must never say it (a field cast spends
+## nothing and no round clock is running). Every row here is a `field: true`
+## Skill that ALSO carries an `effect` block -- the only ones that could leak a
+## combat phrase onto the hotbar readout. All resolve to [], so `_readout_line`
+## falls back to "display_name — description". `_test_field_skills_exact` also
+## sweeps the WHOLE catalog for field silence, so a new effect type that is not
+## in `_COMBAT_ONLY_EFFECT_TYPES` reds this suite before it can reach a player.
+const EXPECTED_FIELD_SKILLS := {
+	"sneak": [],
+	"invisibility": [],
+	"double_step": [],
+	"flash_step": [],
+	"eagle_eyes": [],
+	"light": [],
+	"observe": [],
+	"hedge_remedy": [],
+}
+
 
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	_test_items_exact()
 	_test_skills_exact()
+	_test_field_skills_exact()
 	_test_status_exact()
 	_test_tripwires()
 	_test_forbidden_vocab()
@@ -260,6 +282,58 @@ func _test_skills_exact() -> void:
 		)
 	for id: String in EXPECTED_SKILLS:
 		_check(seen.has(id), "EXPECTED_SKILLS lists %s but it is not in skills.json" % id)
+
+
+func _test_field_skills_exact() -> void:
+	var skills: Array = _load("res://data/skills.json")["skills"]
+	var seen := {}
+	for skill: Dictionary in skills:
+		var id := String(skill["id"])
+		seen[id] = true
+		var field_lines := WIEffectText.field_effect_lines(skill)
+		if EXPECTED_FIELD_SKILLS.has(id):
+			_check(
+				field_lines == EXPECTED_FIELD_SKILLS[id],
+				"skill %s FIELD lines: got %s want %s" % [id, field_lines, EXPECTED_FIELD_SKILLS[id]]
+			)
+		# Catalog-wide silence: no shipped Skill speaks combat phrasing in the
+		# field today. A new effect type that belongs out on the map gets its own
+		# EXPECTED_FIELD_SKILLS row AND a deliberate omission from
+		# WIEffectText._COMBAT_ONLY_EFFECT_TYPES; until then this is the tripwire.
+		_check(
+			field_lines.is_empty(),
+			"skill %s leaks a combat phrase into the field readout: %s" % [id, field_lines]
+		)
+	for id: String in EXPECTED_FIELD_SKILLS:
+		_check(seen.has(id), "EXPECTED_FIELD_SKILLS lists %s but it is not in skills.json" % id)
+
+	# The dual-context four -- the shipped defect was these four rendering their
+	# combat line on the exploration hotbar. Pin BOTH halves: the field composer
+	# is silent, the combat composer is byte-identical to EXPECTED_SKILLS.
+	for id: String in ["sneak", "invisibility", "double_step", "flash_step"]:
+		for skill: Dictionary in skills:
+			if String(skill["id"]) != id:
+				continue
+			_check(WIEffectText.field_effect_lines(skill).is_empty(), "%s must be field-silent" % id)
+			_check(
+				WIEffectText.skill_effect_lines(skill) == EXPECTED_SKILLS[id],
+				"%s combat line must be untouched by the field split" % id
+			)
+
+	# Tripwires: cost prefixes never reach the field, and a non-combat effect
+	# type (one deliberately absent from _COMBAT_ONLY_EFFECT_TYPES) still speaks.
+	_check(
+		WIEffectText.field_effect_lines({"ap_cost": 2, "mp_cost": 3, "effect": {"type": "move_pool_bonus", "amount": 3}}).is_empty(),
+		"field tripwire: a costed move_pool_bonus is silent out of combat"
+	)
+	_check(
+		WIEffectText.field_effect_lines({"ap_cost": 4, "effect": {}}).is_empty(),
+		"field tripwire: a cost with no effect block never composes a bare cost line"
+	)
+	_check(
+		WIEffectText.field_effect_lines({"effect": {"type": "not_a_combat_type"}}).is_empty(),
+		"field tripwire: an unknown effect type yields no phrase, so no line"
+	)
 
 
 func _test_status_exact() -> void:

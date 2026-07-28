@@ -76,6 +76,52 @@ static func skill_effect_lines(skill: Dictionary, combatants_catalog: Array = []
 	return lines
 
 
+## Effect phrases that only mean anything inside a fight. `_effect_phrase` speaks
+## rounds, AP, targets and the initiative order -- none of which exist out on the
+## map, where a field cast spends nothing (`WIGame.use_skill_field` ticks an action
+## and dispatches; there is no overworld AP or MP pool to draw on). A dual-context
+## Skill like [Invisibility] therefore composes a TRUE combat line and a NONSENSE
+## field line from the same data, which is what shipped ("1 AP, 3 MP — become
+## impossible to target for 3 rounds" on the exploration hotbar).
+## Everything `_effect_phrase` can currently produce is combat-only, so this set is
+## exhaustive by construction: a NEW effect type is muted in the field until it is
+## deliberately left out of this map, and `test_effect_text` pins that silence.
+const _COMBAT_ONLY_EFFECT_TYPES := {
+	"spell_damage": true,
+	"line_damage": true,
+	"damage_mult": true,
+	"heal": true,
+	"icy_floor": true,
+	"blast_damage": true,
+	"move_pool_bonus": true,
+	"hp_bonus": true,
+	"hit_bonus": true,
+	"ap_on_kill": true,
+	"riposte": true,
+	"mana_shield": true,
+	"quick_cast": true,
+	"invisibility": true,
+}
+
+
+## The exploration readout's composer. Deliberately NOT `skill_effect_lines`: no
+## cost prefix (nothing is spent in the field) and no combat-only phrase. Returning
+## [] is the normal, expected answer -- `field_hotbar._readout_line` falls back to
+## "display_name — description", which is authored prose, and a Skill that wants
+## bespoke field copy carries `field_ambient` instead.
+static func field_effect_lines(skill: Dictionary) -> Array[String]:
+	var effect: Dictionary = skill.get(WIKeys.EFFECT, {})
+	var effect_type := String(effect.get(WIKeys.TYPE, ""))
+	if effect_type == "" or _COMBAT_ONLY_EFFECT_TYPES.has(effect_type):
+		return []
+	var phrase := _effect_phrase(effect, [], int(skill.get(WIKeys.AP_COST, 0)))
+	if phrase == "":
+		return []
+	var lines: Array[String] = []
+	lines.append(phrase)
+	return lines
+
+
 static func status_line(status_id: String, skills_catalog: Array = []) -> String:
 	match status_id:
 		"slowed":

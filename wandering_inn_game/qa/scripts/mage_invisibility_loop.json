@@ -16,11 +16,11 @@
   { "action": "assert_state", "path": "classes.rogue", "equals": 1 },
   { "action": "assert_state", "path": "sneaking", "equals": false },
 
-  { "_comment": "4 field slots: basic_cleaning, light, invisibility, sneak (known_skills order: player_skills, then mage's L1-L5 grants in level order, then rogue's L1 grant) -- [Invisibility] and [Stealth] both present and correctly carded. [Invisibility] now carries its own real combat read too (issue #46 -- a self-cast untargetable status), so its card shows that mechanic honestly, same as [Stealth]'s move_pool_bonus line beside it; the FIELD behavior this whole script proves (sneaking toggle, ambush skip, shared-flag coexistence) is completely untouched.", "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 4, "readout_lines": [
+  { "_comment": "4 field slots: basic_cleaning, light, invisibility, sneak (known_skills order: player_skills, then mage's L1-L5 grants in level order, then rogue's L1 grant) -- [Invisibility] and [Stealth] both present and correctly carded. THE COMBAT MECHANIC LINE IS GONE FROM THIS READOUT ON PURPOSE (v0.16.1 finding 1): the exploration hotbar used to compose through the COMBAT composer, so these two dual-context Skills advertised '1 AP, 3 MP — become impossible to target for 3 rounds' and '1 AP — +2 move cells this turn' out on the map, where nothing is spent and no round clock runs. The field readout now goes through WIEffectText.field_effect_lines, which is silent for combat-only phrasing, so each slot falls back to display_name — description. The combat HUD and the journal keep the cost-bearing line (pinned in test_effect_text's EXPECTED_SKILLS); the field variant is pinned in EXPECTED_FIELD_SKILLS. The FIELD behavior this whole script proves (sneaking toggle, ambush skip, shared-flag coexistence) is completely untouched.", "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 4, "readout_lines": [
    "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
    "2  [Light] — A mage's first, faithful spell: a small orb of steady white light.",
-   "3  [Invisibility] — 1 AP, 3 MP — become impossible to target for 3 rounds (breaks if you deal damage) — A working that bends the light around you until even a careful eye finds nothing worth watching.",
-   "4  [Stealth] — 1 AP — +2 move cells this turn — A soft step that slips past watching eyes and clears ground when blades are drawn."
+   "3  [Invisibility] — A working that bends the light around you until even a careful eye finds nothing worth watching.",
+   "4  [Stealth] — A soft step that slips past watching eyes and clears ground when blades are drawn."
   ] } },
   { "action": "screenshot", "name": "00_pre_sneak_4slots" },
 
