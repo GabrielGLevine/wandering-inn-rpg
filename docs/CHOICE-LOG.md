@@ -33,14 +33,19 @@ cross-release index of them.
   array.
 - **Four Act V fixtures gained `cleared_halls_by_force`; three horns_dig ones
   deliberately did NOT.** Seven fixtures carried `halls_cleared` with no route
-  counter. The four that also carry `won_combat`/`melee_hit`/`vault_construct_downed`
-  are downstream of the fight, so naming it keeps their recorded ending
-  byte-identical to what shipped. The three `horns_dig_*`/`horns_residence`
-  fixtures carry NO combat counters at all — under the old data they were being
-  told "You cleared the trapped halls yourself" and paid 12 melee hits they had
-  never landed, which is precisely the unearned-outcome-text rule A1 exists to
-  forbid. They now read the disarm line honestly. That asymmetry is the point,
-  not an oversight.
+  counter. **`vault_construct_downed` is NOT the discriminator** — all seven carry
+  it, because the vault boss sits BEHIND the halls and is reachable however you
+  got through them, so it says nothing about which route did. The discriminator is
+  evidence of the SNARE fight specifically, and the only such evidence these
+  fixtures carry is `won_combat`/`melee_hit`/`victories`: `finale_merge` (6/57/7)
+  and the three seal fixtures (3/18/4) have it, so naming the fight keeps their
+  recorded ending byte-identical to what shipped. `horns_dig_start`,
+  `horns_dig_plates_start` and `horns_residence_start` carry NONE of the three —
+  zero recorded combat of any kind — so under the old data they were being told
+  "You cleared the trapped halls yourself" and paid 12 melee hits and 2 wins they
+  had never landed, which is precisely the unearned-outcome-text rule A1 exists to
+  forbid. They now read the disarm line honestly. That asymmetry is the point, not
+  an oversight.
 - **The OR-producer beats are `complete_when_any`, a sibling key — not an
   ANY-of-Array `complete_when`.** Phase 3's ruling-1 guest gates take the
   Array-means-ANY shape, and reusing it here would have made one key mean two
@@ -60,6 +65,34 @@ cross-release index of them.
   the route counter — `scouted_the_nest`, `stretched_the_order` — so this wired
   what exists and produced nothing new. Audited the other eight resolution-path
   quests the same way; every other route already reaches its beat directly.
+
+## 2026-07-28 — v0.15 A4 fix round 1: the pan/tap slop threshold
+
+- **`BODY_PAN_SLOP_PX := 4.0`, and the latch ACCUMULATES.** Fix round 1 caught
+  that the first cut latched on the first motion event of ANY magnitude, which
+  is fine for a mouse (a tap drifts 0px) and wrong for touch, where a finger
+  never holds still: a 1px wobble between press and release would have eaten a
+  legitimate tap, and the player would get NOTHING instead of the wrong thing —
+  strictly worse than the bug being fixed. So the gesture now sums |dy| across
+  its whole life and latches once the total passes a slop threshold. **No repo
+  precedent existed for that number**, so it is argued rather than picked: it
+  must clear the couple of px a resting finger produces, and sit well under the
+  body's 20px row pitch so a pan cannot cross a whole row and still read as a tap
+  on the row it lands in. 4px is the middle of that window and a quarter of a
+  row. Probed at the four magnitudes that matter: a 1px-out-1px-back tap (2px)
+  and a 3×1px jitter (3px) both still TAP; a 6×1px slow pan and a 40px flick both
+  latch. Alternatives rejected: (a) a per-event threshold — a slow pan arrives as
+  many small deltas and would never latch; (b) net displacement rather than
+  absolute travel — an out-and-back pan nets ~0 and would toggle. Scrolling stays
+  unconditional: a sub-slop wobble pans by those same few px, which is invisible,
+  and still counts as a tap. Revert path: drop the const and the accumulator, and
+  latch on `absf(dy) > 0.0` again.
+- **The latch resets on open/close/tab-switch, not only on press.** A pan that
+  ended outside the body, or on a tab the player then left, would otherwise sit
+  armed and swallow the next tap — and a programmatic `meta_clicked` with no
+  press behind it (how QA and any future scripted click arrive) would hit that
+  stale flag with no gesture to blame. One `_reset_body_gesture()` helper, five
+  call sites.
 
 ## 2026-07-28 — v0.15 A4 viewport correctness (four in-wave calls)
 

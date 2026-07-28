@@ -693,6 +693,20 @@ func _apply_line_budget() -> void:
 
 ## Measured, not estimated: each row is the FONT's own height at
 ## LINE_FONT_SIZE, and a wrapped line contributes every row it wraps to.
+##
+## TWO KNOWN IMPRECISIONS, both inert today, both recorded so a future edit that
+## makes them matter is recognisable rather than mysterious:
+##  * ALIGNMENT ARG MIRROR. This passes HORIZONTAL_ALIGNMENT_CENTER (what the
+##    labels actually draw with) while `test_copy_fit._check_veil_lines` mirrors
+##    the same measurement with HORIZONTAL_ALIGNMENT_LEFT. Alignment does not
+##    change where TextServer breaks a line, so the two agree on the row COUNT --
+##    which is the only thing either uses the result for. If a future budget ever
+##    reads the measured WIDTH, make the two calls identical first.
+##  * `row_height` CARRIES the last measured label's value out of the loop. Every
+##    veil label is the same Header variation at the same LINE_FONT_SIZE, so every
+##    iteration writes the same number and the sum is exact. A veil line drawn at
+##    a different size would silently multiply the whole row count by the LAST
+##    label's height; if that day comes, accumulate per-label height instead.
 func _line_block_height(separation: int) -> float:
 	var rows := 0
 	var row_height := 0.0

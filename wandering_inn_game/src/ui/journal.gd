@@ -87,9 +87,22 @@ var _scroll_hint: Label
 ## `hotbar_loadout`.
 var _flat_skill_ids: Array[String] = []
 var _cursor_index := -1
-## True once the in-flight body gesture has moved: a pan, not a tap. Reset on
-## every fresh press and consumed by `_on_skill_row_meta_clicked`.
+## Total travel, in px, before an in-flight body gesture stops counting as a tap.
+## NO REPO PRECEDENT EXISTED -- this sets one, so the number is argued rather
+## than picked: (a) it must exceed the drift a resting finger produces between
+## press and release on a touch screen, which is a px or two, or the latch eats
+## real taps; (b) it must sit well under the 20px body row pitch, or a pan can
+## cross a whole row and still be read as a tap on the row it lands in. 4px is
+## the middle of that window and a quarter of a row. Mouse taps drift 0px and are
+## unaffected either way. CHOICE-LOG 2026-07-28 carries the call and its revert.
+const BODY_PAN_SLOP_PX := 4.0
+
+## True once the in-flight body gesture has travelled past the slop: a pan, not a
+## tap. `_body_gesture_drift` is its accumulator. Both reset on every fresh press
+## AND on every open/close/tab-switch (see `_reset_body_gesture`), so a latched
+## flag can never outlive the gesture that set it and swallow a later tap.
 var _body_gesture_panned := false
+var _body_gesture_drift := 0.0
 var _open_act: Dictionary = {}
 var _open_leads: Array = []
 var _open_quest_lines: Array = []
@@ -280,21 +293,38 @@ func body_rect() -> Rect2:
 	return Rect2(_body_label.global_position, _body_label.size)
 
 
+## Clears the in-flight gesture. Called on every fresh press, on the meta
+## handler's consume, and on every open/close/tab-switch: a flag latched by a pan
+## that ended outside the body (or on a tab the player then left) would otherwise
+## sit armed and swallow the NEXT tap -- and a programmatic `meta_clicked` with
+## no press behind it, which is how QA and any future scripted click arrive,
+## would hit that stale flag with no gesture to blame.
+func _reset_body_gesture() -> void:
+	_body_gesture_panned = false
+	_body_gesture_drift = 0.0
+
+
 func _on_body_gui_input(event: InputEvent) -> void:
 	if not open:
 		return
 	# A gesture that PANNED must not also count as a tap on whatever row it
 	# happens to let go over. RichTextLabel fires `meta_clicked` on button
 	# RELEASE over a meta region regardless of intervening motion, so before
-	# this flag a drag-to-scroll that ended on a skill row silently toggled that
+	# this latch a drag-to-scroll that ended on a skill row silently toggled that
 	# skill in and out of the field loadout -- the exact failure `field_skills_loop`
 	# hit the moment `_clip_body_to_line_boundary` moved the release point by a
 	# few px. The clip only EXPOSED it; any scroll position, panel size or font
 	# change could land the same accidental toggle on a player.
+	#
+	# ACCUMULATED, with slop -- see BODY_PAN_SLOP_PX. Latching on the first
+	# motion event of ANY magnitude would have been worse than the bug on touch,
+	# where a finger never holds still: a 1px drift between press and release
+	# would have eaten a legitimate tap, and the player would have got nothing at
+	# all instead of the wrong thing.
 	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
-		_body_gesture_panned = false
+		_reset_body_gesture()
 	elif event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed:
-		_body_gesture_panned = false
+		_reset_body_gesture()
 	var dy := 0.0
 	if event is InputEventScreenDrag:
 		dy = (event as InputEventScreenDrag).relative.y
@@ -302,7 +332,13 @@ func _on_body_gui_input(event: InputEvent) -> void:
 		dy = (event as InputEventMouseMotion).relative.y
 	else:
 		return
-	if absf(dy) > 0.0:
+	# Total travel, not per-event travel: a slow pan arrives as many small deltas
+	# and must still latch, while a jittery tap's deltas cancel out in position
+	# but NOT in magnitude -- so this sums absolute values and never resets
+	# mid-gesture. Scrolling itself stays unconditional below: a sub-slop wobble
+	# pans by those same few px, which is invisible, and still counts as a tap.
+	_body_gesture_drift += absf(dy)
+	if _body_gesture_drift > BODY_PAN_SLOP_PX:
 		_body_gesture_panned = true
 	var vbar := _body_label.get_v_scroll_bar()
 	if vbar != null and vbar.max_value > vbar.page:
@@ -365,6 +401,7 @@ func _can_open() -> bool:
 
 func _open() -> void:
 	open = true
+	_reset_body_gesture()
 	var act: Dictionary = Game.sim.act_summary()
 	var leads: Array = Game.sim.active_leads()
 	var quest_lines: Array = Game.sim.quest_summary()
@@ -484,6 +521,7 @@ func _open() -> void:
 
 func _close() -> void:
 	open = false
+	_reset_body_gesture()
 	_root.hide()
 	if _scroll_hint != null:
 		_scroll_hint.hide()
@@ -524,6 +562,7 @@ func _switch_tab_relative(delta: int) -> void:
 func _switch_tab(new_tab: int) -> void:
 	if not open or new_tab == _active_tab:
 		return
+	_reset_body_gesture()
 	_active_tab = new_tab
 	# Entering Skills re-arms the cursor at row 0 (or -1 when the PC knows zero
 	# skills); leaving it makes the cursor inert (guarded in `_unhandled_input`
@@ -667,7 +706,7 @@ func _on_skill_row_meta_clicked(meta: Variant) -> void:
 	# See `_on_body_gui_input`: a release that ended a PAN is not a tap. Consumed
 	# here (not just read) so the next genuine stationary press still toggles.
 	if _body_gesture_panned:
-		_body_gesture_panned = false
+		_reset_body_gesture()
 		return
 	var idx := String(meta).to_int()
 	if idx < 0 or idx >= _flat_skill_ids.size():

@@ -197,6 +197,27 @@ func _execute(step: Dictionary) -> void:
 					_inject_drag(Vector2(cx, br.position.y + br.size.y * 0.7), Vector2(cx, br.position.y + br.size.y * 0.25), int(step.get("steps", 8)))
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"tap_journal_body":
+			# v0.15 Task 2.1 fix round 1: the POSITIVE control for the pan/tap
+			# latch. Presses and releases at ONE point -- the exact point
+			# `drag_journal_body` above lets go at (mid-width, 25% of body
+			# height), so the two legs aim identically and differ only in whether
+			# the gesture moved. Aimed off `body_rect` for the same reason the
+			# drag is: a hard-coded coordinate rots the moment the panel or the
+			# viewport budget shifts.
+			var tap_jn := get_tree().root.find_child("Journal", true, false)
+			if tap_jn == null:
+				_fail("tap_journal_body: Journal node not found")
+			else:
+				var tap_br: Rect2 = tap_jn.call("body_rect")
+				if tap_br.size == Vector2.ZERO:
+					_fail("tap_journal_body: body has no rendered rect")
+				else:
+					_inject_mouse_click(Vector2(
+						tap_br.position.x + tap_br.size.x * 0.5,
+						tap_br.position.y + tap_br.size.y * float(step.get("at_height_fraction", 0.25))))
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"assert_journal_scrolled":
 			var jn2 := get_tree().root.find_child("Journal", true, false)
 			if jn2 == null:

@@ -63,9 +63,18 @@ truncated).
   is now measured: pause the drain while a modal is open, never re-drop.
   **FIXED v0.15 Task 2.1** (`message_layer.gd`): `_drain_toasts` breaks on a
   non-empty `_open_modals` set (journal/inventory/pause/settings, keyed by their
-  own SHOWN event) and the matching HIDDEN event kicks the drain again. PAUSE,
-  never drop — the lossless-queue contract is untouched, so the toast lands the
-  instant the panel closes. Windowed re-shot: `seal_fed/04b_journal_lore` now
+  own SHOWN event) and the matching HIDDEN event kicks the drain again. The
+  QUEUE pauses, never drops — the lossless-queue contract is untouched, so every
+  pending toast lands the instant the panel closes. **Precise about the
+  in-flight one:** a toast already ON SCREEN when the modal opens is still CUT,
+  because opening routes through `_defer_toast_display()`, which shortens the
+  current hold and hides the panel. That is pre-existing semantics, shared
+  verbatim with dialogue open, map change and combat start, and it is what keeps
+  the overlap from being visible for the first few frames; it is NOT new here and
+  it is not lossless — the cut toast has already rendered, so it is spent, and
+  only its remaining reading time is lost. Fixing the cut is a separate call
+  about `sticky` re-queueing, deliberately out of scope (see the A3 entry's own
+  rejected alternative). Windowed re-shot: `seal_fed/04b_journal_lore` now
   carries NO toast over the panel and Recent Messages reads to the end ("…cut
   the inn's frame too. Find out what the seal is FOR, there at the door in the
   halls."), where it previously clipped mid-word at "Find ou|".
@@ -195,9 +204,17 @@ what those runs showed.
   RichTextLabel fires `meta_clicked` on button release over a meta region
   whatever the gesture did in between, so drag-reading the Skills tab has always
   been able to silently add or drop a hotbar skill. Fixed with a
-  `_body_gesture_panned` flag (set by motion, reset on each fresh press,
-  consumed by the meta handler); the canonical's own pins were right and were
-  not touched.
+  `_body_gesture_panned` latch; the canonical's own pins were right and were not
+  touched. **Fix round 1** made the latch honest on touch: it ACCUMULATES |dy|
+  across the gesture and trips past `BODY_PAN_SLOP_PX` (4.0), because latching on
+  the first motion event of any magnitude would have eaten legitimate taps from a
+  finger that never holds still — worse than the bug. It also resets on
+  open/close/tab-switch, not only on press, so a latch set by a pan that ended
+  elsewhere cannot swallow the next tap. `field_skills_loop` now carries BOTH
+  halves: the drag's negative (`loadout: ["observe"]`, a single-element list any
+  stray toggle breaks) and a positive control — two `tap_journal_body` taps at the
+  drag's own release point, toggling `[Basic Cleaning]` on and back off, domain
+  event and `ui_journal_loadout_rendered` both pinned.
 - [ ] COMBAT/BRIAR-CAMOUFLAGE (P3, same family as the open COMBAT/CELLAR-VERMIN
   entry) — on `witch_hollow` the deep briar collectors are green foliage on a
   green floor under a green canopy. In `riverfarm_fight/02_briar_deep_wave.png`
