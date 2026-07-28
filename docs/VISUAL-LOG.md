@@ -16,6 +16,76 @@ Format: `- [ ] AREA — defect — first-seen/source — notes`. Move to a
 
 ## Open
 
+### Machine playtest — wave/v015-p1-delivery, PHASE-1 CLOSE: the delivery layer (2026-07-28)
+
+Source: `wave/v015-p1-delivery` at `70c002f` + this task's fixes, full asset
+overlay in tree (654 PNGs, real art), 30/30 unit suites + the 166-script sweep
+green first. Seven windowed runs read at native 1280x720 (`arc_flow`,
+`seal_fed`, `door_awakening`, `raskghar_entry_loop`, `journal_history`,
+`board_loop`, `sewers_walkthrough`). Targets: all five act pages, the Leads
+strip at the mainline seams, the Lore tab, and the toast-over-journal FEEL
+call the implementer flagged at T1.3.
+
+**What reads correctly** (no entry needed, recorded so the next pass doesn't
+re-litigate): all five act pages render their pending beats as authored
+openings — Act I `journal_history/01`, Act II `board_loop/03b`, Act III
+`raskghar_entry_loop/00`, Act IV `arc_flow/05`+`07`, Act V `seal_fed/01`.
+18/18 beats carry an `opening`, so `WIActs.render_beats`' drop-arm never
+fires in shipped content, and no opening states an outcome. Every one reads
+forward ("Krshia's counter sees everything. Earn a look behind it."), not as
+a summary. The Leads strip does its job at the seam: `door_awakening/00`
+shows "Quests — No quests in progress." carrying **two** leads plus five
+pending openings above it, where the pre-phase page was a dead end. The Lore
+tab is newest-first and reads as a record worth keeping (`seal_fed/04b` — the
+later Pisces line sits above the earlier one, full authored prose, not
+truncated).
+
+- [ ] TOAST/MODAL-OVERLAP (P2, pre-existing layer order, MADE MORE FREQUENT by
+  the v0.15 lossless queue) — **the FEEL call, answered both ways.** Toasts
+  draw at layer 12 over the journal's 10 (deliberate, `message_layer.gd`).
+  In the COMMON case this reads as *lively*, not broken: a 1-line toast
+  (96px) occupies x 808–1256 / y 590–686 and the journal is 640x560 centred
+  (x 320–960 / y 80–640), so the overlap is a 152x50 corner that covers only
+  blank parchment margin and the panel's bottom-right ornament — zero text,
+  zero controls, the scroll hint (`▼`, centred at x 640) and the scrollbar
+  (x≈945) both clear. `arc_flow/07` ("[Diplomat Level 2]" arriving over an
+  open journal) and `door_awakening/00` ("You sleep soundly.") are the
+  evidence, and in both the world-kept-moving signal is worth more than the
+  ornament it hides. The TALL case is a real defect: a 3-line toast is 122px
+  (`_toast_panel_height_for`: `3*pitch - spacing + 2*TOAST_FOLD_DANGER_PX`),
+  topping out at y≈564, which reaches the journal's last body rows — on the
+  History tab `seal_fed/04b` clips Recent Messages mid-word ("…cut the inn's
+  frame too. Find ou|") and truncates the line below it. Any journal row
+  extending past x≈808 in the y 564–640 band is exposed; the Leads rows are
+  the longest lines the panel draws (`door_awakening/00`'s Guild lead ends at
+  x≈910), so this worsens as leads accumulate. Cosmetic in the 1-line case,
+  information-losing in the 3-line case. Implementer's proposed fix stands and
+  is now measured: pause the drain while a modal is open, never re-drop.
+- [x] QA/SEWERS-WINDOWED-TIMING (P2, WAVE-AUTHORED at `50cbf6b`) — **FIXED
+  2026-07-28 on `wave/v015-p1-delivery`.** The prediction below held and then
+  went red on CI too: PR #310's canonical sweep failed on exactly these two
+  waits (`cursor=189`), because a loaded 4-job runner burns the same wall-clock
+  holds the windowed run does. Both waits are now `from_start` scans at
+  `timeout_sec: 20`, placed unchanged after `ui_combat_hidden` — delivery is
+  asserted at that checkpoint regardless of which side of `combat_started` the
+  render landed on. Verified 3x green headless AND green windowed at seed 9
+  (windowed reproduces the ledgered 7-pre/1-post split exactly). See
+  docs/CHOICE-LOG.md 2026-07-28.
+  `sewers_walkthrough` PASSES headless (what `ci_sweep`/CI run) and FAILS
+  windowed at its pinned seed 9: the two post-combat `ui_toast_rendered`
+  waits Task 1.3 added as the drain-kick's live proof time out (5.0s each,
+  cursor=190). Cause is frame pacing, not the feature — windowed real-time
+  frames let the queue drain BEFORE `combat_started`, so [Firefly] and
+  [Snap Freeze] render pre-combat (7 rendered pre / 1 post) and there is
+  nothing banked for the post-combat waits to catch; headless collapses the
+  holds, so 3 render pre and 4 are banked and delivered after
+  `ui_combat_hidden`. The assertions are therefore headless-only. This
+  matters because `sewers_walkthrough` is the designated dark-map script in
+  the MACHINE-PLAYTEST rotation — the rotation now has a script that cannot
+  be run windowed without a red result.json. Wants the two waits made
+  pacing-independent (assert the queue's delivery via state, or gate the
+  waits on the banked-count) rather than deleted.
+
 ### Machine playtest — wave/mq6-bands, MILESTONE CLOSE: the whole main line (2026-07-27)
 
 Source: `wave/mq6-bands` after Tasks 9.1–9.3, full asset overlay in tree, 29/29
@@ -286,12 +356,20 @@ pre-dig-hub reads. Durable evidence:
   spread over 25 files including long-shipped ones (bounties.json,
   trapped_halls.json, guild.json). Wants one normalization pass with the
   affected canonicals re-pinned, not piecemeal edits.
-- [ ] TOAST/QUEUE-DROP (P2, re-observed) — `horns_dig_flow` emits 17 distinct
+- [x] TOAST/QUEUE-DROP (P2, re-observed) — `horns_dig_flow` emits 17 distinct
   toast texts and renders 13; the pedestal's own flavor line ("The seam splits
   wider at your touch, cold air breathing up…") never reaches
   `ui_toast_rendered`, losing one of the two beats at the wave's biggest
   reveal. Same family as the open UI/QUEST-START entry below (queued toasts
   silently dropping payloads), now costing story copy rather than a pointer.
+  **FIXED v0.15 Task 1.3 (2026-07-28):** the toast queue is lossless —
+  `_clear_toast` is gone and map change / dialogue now defer the VISIBLE toast
+  only, so undisplayed lines drain on the far side (combat alone banks the
+  queue, and re-queues it at `ui_combat_hidden`). Measured on the script's own
+  `events.jsonl` at seed 9: 19 toast payloads emitted, **14 rendered before /
+  0 unrendered after**. The pedestal reveal is additionally `lore: true`, so it
+  is banked to `Game.sim.lore_notes` at emit and readable in the journal even
+  on a run that never renders it.
 - [ ] COMBAT/CELLAR-VERMIN (P2, pre-existing, re-observed on this wave's
   surface) — on the re-gated leak board
   (`door_chain_fight/00_rift_vermin_leak_board.png`) the Rift Vermin
@@ -318,7 +396,7 @@ Source: detached `c33faac` build with the complete local asset overlay; clean
 native resolution. Durable evidence:
 `wandering_inn_game/qa_output/machine_playtest_2026-07-19_quest_legibility/`.
 
-- [ ] UI/QUEST-START (P1) — the main arc starts `something_beneath` and emits
+- [x] UI/QUEST-START (P1) — the main arc starts `something_beneath` and emits
   two toast payloads in the same tick: `New quest: Something Beneath` and the
   actionable `A Watch runner is looking for you.` Only the quest-title toast
   ever produces `ui_toast_rendered`; the runner pointer never reaches the
@@ -326,6 +404,11 @@ native resolution. Durable evidence:
   player with a title but no person or destination to pursue. Queue both lines
   or combine them, then pin the directional copy in the screenshot/rendered
   event rather than only the domain log.
+  **FIXED v0.15 Task 1.3 (2026-07-28):** both lines now queue and both render —
+  `arc_flow` pins the pointer's own `ui_toast_rendered` before
+  `01_tremor_pointer.png` and additionally asserts it landed in `lore_notes`,
+  so the destination survives a player who walks off mid-toast. See the
+  TOAST/QUEUE-DROP entry above for the queue mechanism.
 - [ ] COMBAT/DARK-ARENA (P1 acceptance drift) — the two Sewer Rats in
   `sewers_walkthrough/01_vermin_encounter.png` are effectively invisible at
   native scale; their HP numerals and orange bars reveal that enemies exist,

@@ -88,6 +88,7 @@ var _scroll_hint: Label
 var _flat_skill_ids: Array[String] = []
 var _cursor_index := -1
 var _open_act: Dictionary = {}
+var _open_leads: Array = []
 var _open_quest_lines: Array = []
 var _open_completed_quest_lines: Array = []
 var _open_skill_groups: Array = []
@@ -304,6 +305,7 @@ func _can_open() -> bool:
 func _open() -> void:
 	open = true
 	var act: Dictionary = Game.sim.act_summary()
+	var leads: Array = Game.sim.active_leads()
 	var quest_lines: Array = Game.sim.quest_summary()
 	var completed_quest_lines: Array = Game.sim.completed_quest_summary()
 	var skill_groups: Array = Game.sim.skills_journal()
@@ -322,6 +324,7 @@ func _open() -> void:
 	if Game.sim.accomplishment_count("post_game") > 0:
 		chronicle_facts = Game.sim.chronicle_facts()
 	_open_act = act
+	_open_leads = leads
 	_open_quest_lines = quest_lines
 	_open_completed_quest_lines = completed_quest_lines
 	_open_skill_groups = skill_groups
@@ -393,6 +396,8 @@ func _open() -> void:
 		"act_id": String(act.get("id", "")),
 		"act_beats": act_beats.size(),
 		"act_beats_achieved": act_beats_achieved,
+		"act_beat_lines": _act_beat_lines(),
+		"lead_lines": _lead_lines(),
 		"seen_statuses": seen_statuses,
 		"posting_title": String(posting.get("title", "")),
 		"posting_status": String(posting.get("status", "")),
@@ -403,6 +408,9 @@ func _open() -> void:
 		"delivery_gold": int(delivery.get("gold", 0)),
 		"delivery_detail": String(delivery.get("detail", "")),
 		"found_notes": _found_note_ids(),
+		# Newest-first, matching the render order -- QA asserts lore CAPTURE
+		# structurally instead of reading a screenshot for it.
+		"lore_notes": _lore_note_lines(),
 		"recent_count": _recent_message_count(),
 	}
 	_emit_journal_shown()
@@ -626,6 +634,30 @@ func _update_scroll_hint() -> void:
 	_scroll_hint.visible = open and more_below
 
 
+## The act-beat rows exactly as the player reads them: "✓ " banked / "· "
+## pending, over WIActs.render_beats' copy policy (pending beat shows its
+## authored `opening`, never its outcome `text`; an opening-less pending beat
+## is dropped). ONE source for both the rendered tab and `act_beat_lines` in
+## the shown payload -- QA pins the strings the panel actually drew.
+func _act_beat_lines() -> Array:
+	var lines: Array = []
+	for raw_row: Variant in WIActs.render_beats(_open_act):
+		var row := raw_row as Dictionary
+		lines.append("%s%s" % ["✓ " if bool(row["achieved"]) else "· ", String(row["line"])])
+	return lines
+
+
+## v0.15 A2 — the Leads rows as the player reads them: "· <lead_text> (<place>)"
+## over `WIGame.active_leads()`. Same ONE-source rule as `_act_beat_lines`: the
+## rendered strip and the `lead_lines` payload key are this list.
+func _lead_lines() -> Array:
+	var lines: Array = []
+	for raw_lead: Variant in _open_leads:
+		var lead := raw_lead as Dictionary
+		lines.append("· %s (%s)" % [String(lead["lead_text"]), String(lead["place"])])
+	return lines
+
+
 ## Issue #209 — TAB 1 (Quests, the default): Act header/beats + Quests +
 ## Completed + Postings. "What am I doing now." Reads the `_open_*` snapshot
 ## fields (captured at `_open()`, immutable while the panel is open). Returns
@@ -634,10 +666,16 @@ func _build_quests_tab() -> Dictionary:
 	var parts: Array = []
 	if not _open_act.is_empty():
 		parts.append("[b]%s[/b]" % UIChrome.bb_escape(String(_open_act.get("header", ""))))
-		for raw_beat: Variant in _open_act.get("beats", []):
-			var beat := raw_beat as Dictionary
-			var marker := "✓ " if bool(beat.get("achieved", false)) else "· "
-			parts.append("%s%s" % [marker, UIChrome.bb_escape(String(beat.get("text", "")))])
+		for line: String in _act_beat_lines():
+			parts.append(UIChrome.bb_escape(line))
+		parts.append("")
+	# v0.15 A2: above Quests, and only when non-empty -- the three mainline
+	# seams used to land the player on "No quests in progress." with no pointer.
+	var lead_lines := _lead_lines()
+	if not lead_lines.is_empty():
+		parts.append("[b]Leads[/b]")
+		for line: String in lead_lines:
+			parts.append(UIChrome.bb_escape(line))
 		parts.append("")
 	parts.append("[b]Quests[/b]")
 	if _open_quest_lines.is_empty():
@@ -717,8 +755,17 @@ func _build_skills_tab(cursor_index: int) -> Dictionary:
 func _build_history_tab() -> Dictionary:
 	var parts: Array = []
 	var found_notes := _found_note_ids()
-	if not found_notes.is_empty():
+	var lore_notes := _lore_note_lines()
+	if not lore_notes.is_empty() or not found_notes.is_empty():
 		parts.append("[b]Lore[/b]")
+	# v0.15 A3 (GH#304): what the WORLD told you, newest first -- the durable
+	# half of a toast that may never have finished rendering. Item lore (the
+	# notes actually in the pack) follows below, unchanged.
+	for line: String in lore_notes:
+		parts.append(UIChrome.bb_escape(line))
+	if not found_notes.is_empty():
+		if not lore_notes.is_empty():
+			parts.append("")
 		for note_id: String in found_notes:
 			var note_record: Dictionary = Game.sim.item(note_id)
 			var note_name := String(note_record.get("name", note_id))
@@ -727,6 +774,7 @@ func _build_history_tab() -> Dictionary:
 				parts.append(UIChrome.bb_escape("%s — %s" % [note_name, note_lore]))
 			else:
 				parts.append(UIChrome.bb_escape(note_name))
+	if parts.size() > 0:
 		parts.append("")
 	if not _open_chronicle_facts.is_empty():
 		parts.append("[b]Chronicle[/b]")
@@ -832,6 +880,16 @@ func _found_note_ids() -> Array[String]:
 	for id: String in Game.sim.inventory:
 		if id.begins_with("note_"):
 			out.append(id)
+	return out
+
+
+## `Game.sim.lore_notes` reversed: capture order in the sim, NEWEST-FIRST for
+## reading (the record's whole job is answering "what did that toast say").
+func _lore_note_lines() -> Array[String]:
+	var out: Array[String] = []
+	var notes: Array = Game.sim.lore_notes
+	for i: int in range(notes.size() - 1, -1, -1):
+		out.append(String(notes[i]))
 	return out
 
 

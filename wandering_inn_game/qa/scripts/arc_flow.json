@@ -86,7 +86,7 @@
     2,
     7
    ],
-   "_comment": "== ZEVARA SUMMONS ==. GH#273: the teleport fires map_changed BEFORE the pointer renders -- the exact wipe that ate the arc's route clue. The PINNED render wait below proves the sticky re-queue survives it; the old shape (bare ui_toast_rendered wait before the teleport) false-passed on the stale 'Your own bed.' render."
+   "_comment": "== ZEVARA SUMMONS ==. GH#273 / v0.15 A3: the teleport fires map_changed BEFORE the pointer renders -- the exact wipe that ate the arc's route clue, now impossible (the queue survives transitions; only the visible toast is deferred). The PINNED render wait below proves delivery on the far side; the old shape (bare ui_toast_rendered wait before the teleport) false-passed on the stale 'Your own bed.' render."
   },
   {
    "action": "wait_frames",
@@ -103,6 +103,12 @@
   {
    "action": "screenshot",
    "name": "01_tremor_pointer"
+  },
+  {
+   "_comment": "v0.15 A3 (GH#304), closing VISUAL-LOG UI/QUEST-START (P1): the pointer is lore-tagged, so 'who and where' outlives the toast strip. A player who walked off before reading it now finds the line in the journal's Lore section instead of holding a quest title with no destination.",
+   "action": "assert_state",
+   "path": "lore_notes",
+   "contains": "A Watch runner is looking for you."
   },
   {
    "action": "move",
@@ -805,6 +811,7 @@
    "equals": 1
   },
   {
+   "_comment": "== THE SEAM, BEFORE THE SLEEP ==. The seal ends Act III's only quest thread, so this page carries a header, four Completed lines and 'No quests in progress.'. act_beat_lines (v0.15 A1): the player stands at Act IV's door having earned none of its seven beats, so every row is a '·' OPENING -- an outcome line here is the itinerary leak. lead_lines is EMPTY BY DESIGN (v0.15 A2): Olesm's survey option unlocks on post_game, which banks at the first sleep AFTER the seal, so a lead gated on raskghar_sealed would point at a hidden option for one whole waking. This exact-[] pin IS the refusal-window guard. Whole-list matches -- re-pin from a run if the copy is polished.",
    "action": "press",
    "name": "journal"
   },
@@ -813,10 +820,23 @@
    "type": "ui_journal_shown",
    "timeout_sec": 5,
    "payload_contains": {
-    "act_id": "act_iv"
+    "act_id": "act_iv",
+    "act_beats_achieved": 0,
+    "act_beat_lines": [
+     "· The city is deciding what you are to it.",
+     "· The Horns are digging east, and they are short a pair of hands.",
+     "· Riverfarm's fields hold more trouble than wheat.",
+     "· A name needs settling in the City of Adventurers.",
+     "· The Walled City opens for paperwork, not heroics.",
+     "· Four adventurers need somewhere to put their feet up.",
+     "· The Door strains for somewhere it cannot reach yet."
+    ],
+    "quest_lines": 0,
+    "lead_lines": []
    }
   },
   {
+   "_comment": "The windowed read of the seam page one waking early: Act IV openings, no Leads strip at all (the section is omitted, not empty-stated), empty Quests.",
    "action": "screenshot",
    "name": "05_journal_sealed"
   },
@@ -952,6 +972,32 @@
    "action": "wait_for_event",
    "type": "ui_sleep_veil_finished",
    "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE SEAM, AFTER THE SLEEP (v0.15 A2) ==. Same page, one waking later. post_game banked, so Olesm's survey option is live -- and the strip now says so, naming the Guild. The SAME counter flips counted_among from its opening to its outcome line, so the beat row and the pointer land together. This is the seam the wave exists to close; the '·'-empty page above is what it used to be permanently.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "act_id": "act_iv",
+    "act_beats_achieved": 1,
+    "quest_lines": 0,
+    "lead_lines": [
+     "· The Guild posted a Watch notice about the reopened gallery. (Adventurer's Guild)"
+    ]
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "07_journal_lead_survey"
+  },
+  {
+   "action": "press",
+   "name": "journal"
   },
   {
    "action": "press",

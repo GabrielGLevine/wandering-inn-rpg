@@ -339,7 +339,7 @@ func _init() -> void:
 	(bad_status_data["state"] as Dictionary)["seen_statuses"] = "slowed"
 	assert(not WISave.apply(_new_game(), bad_status_data), "wrong-typed seen_statuses rejected")
 
-	assert(WISave.VERSION == 7, "VERSION bumped to 7 for GH#211 fractional_bank")
+	assert(WISave.VERSION == 8, "VERSION bumped to 8 for the v0.15 A3 lore_notes record")
 
 	# GH#130 v5->v6 arm: a pre-#130 save with sleeps behind it gains slept=1
 	# exactly once; a never-slept v5 save gains nothing.
@@ -377,6 +377,36 @@ func _init() -> void:
 	var bad_frac_data := WISave.serialize(_new_game()).duplicate(true)
 	(bad_frac_data["state"] as Dictionary)["fractional_bank"] = "corrupt"
 	assert(not WISave.apply(_new_game(), bad_frac_data), "wrong-typed fractional_bank rejected before any mutation")
+
+	# v0.15 A3 v7->v8 arm: `lore_notes` is new durable state. Old saves resume
+	# with an EMPTY record -- nothing is retroactively remembered, and the
+	# migration COMPOSES (a v5 save walks 5->6->7->8 and lands empty too).
+	var v7_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
+	v7_data["version"] = 7
+	(v7_data["state"] as Dictionary).erase("lore_notes")
+	var v7_loaded := _new_game()
+	v7_loaded.lore_notes.append("stale note")
+	assert(WISave.apply(v7_loaded, v7_data), "v7 save applies")
+	assert(v7_loaded.lore_notes.is_empty(), "v7->v8 migration restores an EMPTY lore_notes, not stale data")
+	var v5_chain_data: Dictionary = JSON.parse_string(JSON.stringify(WISave.serialize(_new_game())))
+	v5_chain_data["version"] = 5
+	for dropped: String in ["fractional_bank", "lore_notes"]:
+		(v5_chain_data["state"] as Dictionary).erase(dropped)
+	var v5_chain_loaded := _new_game()
+	assert(WISave.apply(v5_chain_loaded, v5_chain_data), "a v5 save still walks the WHOLE composed chain to v8")
+	assert(v5_chain_loaded.lore_notes.is_empty() and v5_chain_loaded.fractional_bank.is_empty(),
+		"every arm on the composed path applies -- lore_notes and fractional_bank both land empty")
+	var lore_original := _new_game()
+	lore_original.lore_notes.assign([
+		"The runes are the same. Not similar — the same hand.",
+		"One lattice, and this door is where it drains to.",
+	])
+	var lore_restored := _new_game()
+	assert(WISave.apply(lore_restored, JSON.parse_string(JSON.stringify(WISave.serialize(lore_original)))), "lore save applies")
+	assert(lore_restored.lore_notes == lore_original.lore_notes, "lore_notes round-trips verbatim, in capture order")
+	var bad_lore_data := WISave.serialize(_new_game()).duplicate(true)
+	(bad_lore_data["state"] as Dictionary)["lore_notes"] = "corrupt"
+	assert(not WISave.apply(_new_game(), bad_lore_data), "wrong-typed lore_notes rejected before any mutation")
 
 	var street_v3_original := _new_game()
 	street_v3_original.transition("street", Vector2i(0, 0))

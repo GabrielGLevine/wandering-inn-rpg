@@ -9,6 +9,7 @@
    "hide_when": {
     "door_retrieved": 1
    },
+   "lore": true,
    "text": "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, and someone's washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court."
   }
  ],
@@ -240,6 +241,7 @@
     "pedestal_breached",
     "door_retrieved"
    ],
+   "open_lore": true,
    "open_toast": "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it.",
    "open_toast_variants": [
     {
@@ -247,6 +249,7 @@
      "when": {
       "door_retrieved": 1
      },
+     "open_lore": false,
      "open_toast": "Beneath where the door lay, still seated in its groove: the anchor stone. The Horns left nothing else behind."
     }
    ],
@@ -308,6 +311,7 @@
    "_comment": "The WARDWORK-READ leg of the breach; the dig-gated variant makes it a REAL producer of `pedestal_unsealed`. Before the fix the only producer reachable during the dig was `ruin_guardian`'s on_victory -- the others sit behind the door chain, which since the restructure starts only AFTER this pedestal opens, so the beat promised three routes and shipped fight-only. Gated on `horns_dig_joined` ONLY, mirroring the ruin_door re-gate. The variant SWAPS the banked counter rather than adding one (`on_skill_use.accomplishment` is String-only); `detected_wardwork` has three other producers and no consumers, so nothing is lost.",
    "on_skill_use": {
     "accomplishment": "detected_wardwork",
+    "lore": true,
     "toast": "[Detect Magic] — The socket still remembers its stone: a slow pulse, counting toward a door that already left. The warding reads near-first: the spiral beside the pedestal, then its far twin.",
     "variants": [
      {
@@ -315,6 +319,7 @@
        "horns_dig_joined": 1
       },
       "accomplishment": "pedestal_unsealed",
+      "lore": false,
       "toast": "[Detect Magic] — You read the binding the way Pisces reads a page, and the reading is the undoing: the ward was keyed to whatever stood guard here, and a keyed ward answers anyone who can say the key back. The seal lets go. Ceria, from the gap: 'Do that again and I'm putting you on the ledger.'"
      }
     ]

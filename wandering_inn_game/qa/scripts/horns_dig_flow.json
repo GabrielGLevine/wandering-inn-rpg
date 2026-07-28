@@ -51,6 +51,29 @@
    ]
   },
   {
+   "_comment": "== SEAM 2, BEFORE ==. Read-only journal detour (does not move the player). seal_kept_reported banked + horns_dig_started absent => the dig lead points at Ceria at the inn, which is the very conversation the next steps walk into. Paired with the AFTER open past the invitation below.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "lead_lines": [
+     "· Ceria's been planning a dig east past the floodplains. (The Wandering Inn)"
+    ]
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "00_journal_lead_dig"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
    "_comment": "== THE INVITATION ==. (8,4) -> (8,5), the open cell north of ceria_inn (8,6); the second `down` is a BUMP into her own cell (blocked) that sets facing without moving -- the walkthroughs' robust-facing idiom.",
    "action": "move",
    "direction": "down",
@@ -192,6 +215,23 @@
    "action": "assert_state",
    "path": "started_quests",
    "contains": "horns_dig"
+  },
+  {
+   "_comment": "== SEAM 2, AFTER ==. horns_dig_started is the dig lead's own hide_when, so the strip is EMPTY the moment the thread it pointed at begins -- the Quests list is carrying it now. Exact-list match on []: a leftover pointer to a started quest is the failure this pins.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "lead_lines": []
+   }
+  },
+  {
+   "action": "press",
+   "name": "journal"
   },
   {
    "_comment": "== TRAVEL: the ruin seam on its NEW gate ==. Teleport to (37,11) on the floodplains -- the ruin_walkthrough approach cell, one west of ruin_door (38,11) -- then bump east into the door's own (blocked) cell for facing and interact. door_chain_started is NOT banked in this fixture: if the gate had stayed on it, this interact would fall through to the inert 'It doesn't feel like it goes anywhere. Yet.' toast and the run would die here.",
@@ -595,6 +635,17 @@
    "action": "assert_state",
    "path": "accomplishments.pedestal_breached",
    "equals": 1
+  },
+  {
+   "_comment": "v0.15 A3 (GH#304), TOAST/QUEUE-DROP's own script. Measured on this run's events.jsonl: 19 toast payloads emitted, 14 reaching ui_toast_rendered before the fix (the transition wipe ate the two 'Got:' lines and the autosave), 0 unrendered after. The two below are the durable half -- the reveal and the arrival pointer are banked to lore_notes AT EMIT, so they answer 'what did that say' from the journal even on a run where the queue never gets a chance to drain them.",
+   "action": "assert_state",
+   "path": "lore_notes",
+   "contains": "Below the pedestal: not treasure. A DOOR -- unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it."
+  },
+  {
+   "action": "assert_state",
+   "path": "lore_notes",
+   "contains": "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, and someone's washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court."
   },
   {
    "_comment": "== THE HAUL, AND THE MOUNTING (Task 2.4) ==. Teleport to the inn at (13,4): the ruin -> floodplains -> inn return is already proven live by ruin_walkthrough/gate_district_walkthrough/inn_walkthrough, and what this script still has to prove is the mounting SURFACE, not pathing. `pisces_mounting` (13,5) is present for exactly this window -- door_retrieved just banked live at the pedestal and door_mounted has not banked at all -- so the entity's own present_when is under test here too.",

@@ -51,7 +51,7 @@
    ]
   },
   {
-   "_comment": "== ACT V IS ALREADY LIVE == the pilgrimage's third lattice piece plus the seal report is the act_iv gate, and this fixture holds both. The journal reads Act V before the player has done anything about it.",
+   "_comment": "== ACT V IS ALREADY LIVE == the pilgrimage's third lattice piece plus the seal report is the act_iv gate, and this fixture holds both. The journal reads Act V before the player has done anything about it. act_beat_lines is the ENDING-SPOILER PIN (v0.15 A1): all three rows are '·' openings, so nothing on this page names what the seal holds or how it resolves -- the outcome `text` lines land only as their own counters bank.",
    "action": "press",
    "name": "journal"
   },
@@ -59,7 +59,13 @@
    "action": "wait_for_event",
    "type": "ui_journal_shown",
    "payload_contains": {
-    "act_id": "act_v"
+    "act_id": "act_v",
+    "act_beats_achieved": 0,
+    "act_beat_lines": [
+     "· Pisces wants to read the seal in person, not from a treatise.",
+     "· The wardwork under Liscor is waiting to be read.",
+     "· What the seal keeps is still the seal's secret. Settle it."
+    ]
    },
    "timeout_sec": 5
   },

@@ -4,6 +4,248 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — sewers_walkthrough toast timing: the SCRIPT gave, not the engine
+
+- **The two post-combat `ui_toast_rendered` waits became `from_start` scans at
+  `timeout_sec: 20`; message_layer was not touched.** PR #310's canonical sweep
+  went red on `sewers_walkthrough` alone — both waits timing out at
+  `cursor=189` — and the same failure was already ledgered as
+  QA/SEWERS-WINDOWED-TIMING (P2, `50cbf6b`) for windowed runs. The engine is
+  correct: `_restore_banked_toasts` kicks a drain and the queue is lossless.
+  What is machine-dependent is WHICH SIDE of `combat_started` a given
+  narration renders on. Toast holds are wall-clock
+  (`QA_TOAST_HOLD_HEADLESS_SECONDS` 0.05s) while the driver's steps are
+  frame-paced, so faster frames burn less wall time between the cast and the
+  fight and leave MORE of the queue pending for `_bank_toasts` to catch.
+  Measured at seed 9: this laptop headless renders 3 pre-combat and banks 4;
+  windowed (and a loaded 4-job CI runner) renders 7 pre and 1 post. A
+  cursor-ordered forward wait can only see the banked half, so it reds the
+  healthy regime. `from_start` scans the whole log with the cursor untouched,
+  placed unchanged AFTER `ui_combat_hidden`: the assertion is now "by the time
+  the board has closed, both narrations have rendered", which is exactly the
+  GH#304 regression (4 of 7 payloads NEVER delivered at 23aca0b) and holds in
+  every pacing regime.
+- **Alternatives rejected.** (a) Just raise `timeout_sec` — does nothing: on a
+  slow runner the toasts already rendered BEHIND the cursor, so a forward scan
+  never finds them however long it waits. (b) `assert_event_absent` /
+  dropping the render proof — deletes the only end-to-end evidence for the
+  fix. (c) Emit a `toasts_banked` event so the script could gate on the bank
+  count (the ledger's own suggestion) — that is an engine change to a god-file
+  another branch owns, for a property that is an artifact of frame speed
+  rather than behavior. The bank/restore branch that genuinely needs pinning
+  (`_restore_banked_toasts` kicking a drain when `_toast_draining` is false)
+  already has deterministic, frame-rate-free coverage in
+  `tests/test_message_layer.gd`, which is the right home for it.
+- **Revert path:** drop `"from_start": true` from the two waits in
+  `qa/scripts/sewers_walkthrough.json` and restore `timeout_sec: 5`. That
+  re-pins post-combat ordering and re-breaks CI + windowed.
+
+## 2026-07-28 — v0.15 A3 toast survival + Lore capture (four in-wave calls)
+
+- **`_pending_sticky` and `_first_wake_hint_pending` DELETED from
+  message_layer, not kept alongside the lossless queue.** Both existed only to
+  re-add a specific text after `_clear_toast` wiped the queue; with no wipe
+  left they are write-only state, and write-only state rots into a false
+  contract. The `sticky` PAYLOAD key stays as the sim-side authored signal
+  ("this line must not be lost", still pinned in test_sim_core) — the renderer
+  no longer special-cases it because nothing is lost. Alternative considered
+  and rejected: re-purpose `sticky` to mean "PLAYER_MOVED may not cut this
+  toast's hold short". Real and tempting (the Watch-runner pointer is exactly
+  the line a player steps past), but it changes display TIMING across 166
+  canonicals for a problem the brief did not scope. Revert path: restore the
+  two vars and the `_queue_toast(text, record, sticky)` third parameter.
+- **Quest-lifecycle toasts are NOT lore-tagged.** "New quest: X" / "Quest
+  updated" / "Quest complete" are the largest sticky set, but they are already
+  durable in the journal's Quests + Acts sections; tagging them would fill the
+  Lore record with tracking chatter and bury the world's own lines. Lore means
+  "a fact about the world you were told once".
+- **The tagged set is 16 surfaces, one thread.** The wardwork quartet's four
+  [Detect Magic] reads (pantry_door, warded_seam, leyline_stone,
+  anchor_socket) + the pantry [Observe] rune read; the Act V seal door's five
+  reads and its `detected_wardwork >= 3` lattice payoff; the two arc-start
+  arrival narrations (dungeon_approach, ruin_surface); the pedestal's "A DOOR —
+  unhung" reveal; the Watch-runner pointer. Deliberately UNTAGGED: the
+  anchor_socket `pedestal_unsealed` variant (an action, not a reading — its
+  outcome is already a quest beat) and the seal door's repeat-read filler line.
+- **FIX ROUND 1 — the tag was inheritable, and leaked across surfaces.** Review
+  caught that BOTH resolvers accumulate (`_resolve_skill_use_effect` copies
+  every non-`when` key off each satisfied variant; `_interact_container`
+  defaults each variant to the running value), so an untagged variant under a
+  tagged arm silently inherited `lore: true`. Three arms the log had already
+  ruled untagged were in fact tagged in the shipped build, plus a fourth the
+  new lint found: anchor_socket's `pedestal_unsealed` unseal, seal_kept_door's
+  repeat-read filler, and anchor_stone_pedestal's migrated-save open arm. All
+  three now declare `"lore": false` explicitly, and `_validate_lore_flags`
+  makes the drift impossible: **if any arm on a surface is lore-tagged, every
+  variant on that surface must declare the key** — absent is a content failure.
+  The migrated-save arm ("the anchor stone. The Horns left nothing else
+  behind") is ruled NOT lore on its merits too: it is a pickup confirmation
+  for a player who already has the Door hanging in his inn, not a revelation.
+- **Containers get their own `open_lore` key, not the entity's `lore`.** A prop
+  can be a container AND a plain interact target — anchor_stone_pedestal serves
+  locked-plinth flavour until `contains_when` opens — and round 0 read one
+  entity-level `lore` for both, which measurably tagged the locked flavour line
+  ("The seal is broken and the Horns are already down the gap…") as durable
+  lore in a real horns_dig_flow run. `open_lore` pairs with `open_toast`
+  exactly as `lore` pairs with `toast`, so the two beats can never share a
+  flag. The event PAYLOAD key stays `lore` either way.
+- **No cap on `lore_notes`.** The set is bounded by authored copy and deduped
+  by exact text, so a cap would only ever silently drop the OLDEST fact — the
+  exact failure the feature exists to fix. Revisit if a future data pass tags
+  a repeatable generated line.
+
+## 2026-07-28 — v0.15 A2 leads: two PLAN-DATA corrections (controller rulings)
+
+The brief's leads.json block was verbatim plan data and shipped verbatim; review
+found two of its four rows wrong against the shipped dialogue. Both corrected
+by controller ruling — the plan was the defect, not the implementation.
+
+- **`lead_survey` gates on `post_game`, not `raskghar_sealed`.** Olesm's survey
+  option (`olesm_intro.json`) requires `post_game: 1` and hides on
+  `horns_delve_started: 1`; `post_game` banks at the first sleep AFTER the seal
+  (sleep_beat.gd). A lead on `raskghar_sealed` therefore lit one whole waking
+  early and pointed at an option the player could not see — a pointer to a
+  refusal, which is worse than the empty page A2 exists to fix. General rule
+  adopted and written into leads.json's own `_comment`: **a lead row mirrors
+  its target option's `requires`/`hide_when` exactly.** All six shipped rows
+  were audited against their options; the other five already matched. arc_flow
+  now pins BOTH sides of that window (`lead_lines: []` at the seal,
+  `[survey]` after the sleep) so the refusal window cannot reopen.
+- **`lead_capstone` deleted; three capstone-ARM rows in its place.** It gated
+  on one lattice piece (`lattice_witch_lore`) while pointing at Pisces's
+  descent ask, which needs all three — so it fired two pieces early, and what
+  it pointed at (return to Pisces) is the spine quest's own final beat, already
+  in the Quests list. The real playtest gap is upstream: closing a region
+  chain while the spine runs ARMS that stop's capstone conversation, and
+  nothing anywhere said so. `lead_witch_ear` / `lead_hedault_eye` /
+  `lead_forge_ledger` each mirror their stop's option gate exactly
+  (region terminal AND `spine_started`, hidden by that stop's lattice
+  counter). Net: 4 rows -> 6, no new counters, no new quests.
+- **One copy polish on the ruling's draft.** `lead_forge_ledger` shipped as
+  "Grimalkin has been about to say something since your papers were stamped."
+  rather than the draft's "The forge tier keeps its wards fed on a schedule.
+  Someone up there will say why." Two reasons: "wards fed" is Act V's reveal
+  vocabulary (`read_the_feeding_ward`, "What the Seal Was Feeding") and this
+  line is read mid-Act-IV — the same class as `the_reach_mapped`'s logged
+  leak; and the other two rows name their NPC (Eloise, Hedault), so naming
+  Grimalkin keeps the strip's grammar uniform. Question-not-answer holds, no
+  component named (the spine's no-fetch rule).
+- **`leads.json` joins `PLAYER_STRING_FILES`** so the house copy lints
+  (attribute tokens, percent-toward, dev-provenance citations) scan
+  `lead_text`/`place`. Proven can-fail with a planted `(Task 2.3)` and a
+  planted `CON` — both flagged, one per arm.
+- **spine_reach carries the capstone-arm proof.** Its existing post-bank
+  journal open now pins `lead_lines` too, and a 4-step read-only leg ahead of
+  Pisces pins the spine lead present — so the vanish crosses a real bank in
+  one run. That page is also the observed WORST CASE for the A4 scroll budget:
+  **4 concurrent leads** (survey + all three capstones), 8 rendered lines with
+  wrapping, which pushes Quests and Completed entirely below the fold. The
+  ledger estimate of 8 lines was right; the concurrency was 3, actual is 4
+  (a player who never took the survey keeps that row while all three
+  capstones arm).
+
+## 2026-07-28 — v0.15 A2 Leads strip (task 1.2) + T1.1 carried items
+
+- **`active_leads()` is a pure derivation on `_combat_config["leads"]`, nothing
+  persisted.** A `seen_leads`/`dismissed_leads` save field was the alternative
+  (it would allow "hide this pointer"), and it was rejected: a lead is defined
+  by two counters, so a saved copy can only ever DRIFT from them (the leads
+  vanish on their own quest-start counter, which is exactly the state a save
+  would duplicate). No save VERSION bump, no migration arm, and a migrated
+  v0.14 save shows the correct strip the first time it opens the journal.
+  Revert = delete the method, the catalog load, and the journal's section.
+- **`hide_when` is the ABSENT gate, not a second `requires`.** Extracted
+  `WIGame._absent_gate_met` and pointed the two pre-existing copies
+  (`_present_gate_met`, `_encounter_gate_met`) at it rather than writing a
+  fourth inline loop — same 4 lines, three sites, one seam to state the
+  ">= threshold shuts it" trap at. Behavior-preserving (full suite + the
+  touched canonicals green, presence/encounter gates included).
+- **The strip publishes RENDERED rows (`lead_lines`), matching
+  `act_beat_lines`.** Pinning ids would have been more stable across copy
+  edits, but the whole finding is that the player had no words to read — so
+  the QA pin is the words, place included. Cost accepted: polishing a lead
+  reds three canonicals (whole-list match); re-pin from a run.
+- **Marker glyph `· ` shared with pending act beats.** Deliberate: both mean
+  "not yet yours". A distinct glyph would imply a distinct mechanism the
+  player has no way to learn.
+- **The brief's "extend arc_flow at the three seams" read as "extend the
+  canonical AT each of the three seams".** arc_flow physically reaches only
+  seam 1 (it ends at the seal), so seams 2 and 3 landed on the canonicals
+  that already stand there: `horns_dig_flow` (journal open BEFORE the
+  invitation shows the dig lead, a second open after `horns_dig_started`
+  banks pins `lead_lines: []` — the appear/vanish pair proven in one live
+  run) and `door_awakening` (the awakening sleep completes the door quest,
+  and the same page now carries the spine lead). Alternative — a new
+  fixture-start canonical per seam — buys the same proof for three manifest
+  rows and three seeds. All three are read-only journal detours.
+- **T1.1 CARRIED-1 closed: `arc_flow` gets the `act_beat_lines` pin + windowed
+  journal shot the T1.1 brief named for it.** T1.1 swapped that pin to
+  `raskghar_entry_loop` unlogged (an Act III page for an Act IV pin — the
+  Act III fixture was standing in the more interesting spot, but the swap was
+  a substitution, not a superset). Both now exist: raskghar_entry_loop keeps
+  the Act III opening pin, arc_flow gains Act IV's 7-pending list on the seam
+  page, and its `05_journal_sealed` shot was read windowed.
+- **T1.1 CARRIED-3, outcome markers: added the `you have <verb>` FORMS, not a
+  bare "walked".** The gap the review found is an auxiliary between pronoun
+  and verb (`the_reach_mapped`'s own text reads "you have walked all of it",
+  which the shipped `you walked` entry misses); the same evasion exists for
+  read/took, so all three have-forms ship together. Bare "walked" was
+  rejected — it would red an honest forward line ("nobody has walked it
+  since"), and the ban is on second-person BANK verbs, not the verb stem.
+  No shipped opening trips any of the 7 entries (arm proven can-fail).
+- **T1.1 CARRIED-4, `render_beats` emptiness is now tested STRIPPED.** A
+  whitespace-only `opening` used to render a bare "· " row — a marker
+  pointing at nothing, which is worse than the hidden beat the policy
+  promises. Unit case pins it (proven can-fail).
+
+## 2026-07-28 — v0.15 A1 pending-beat openings (task 1.1)
+
+- **Render policy lives in `WIActs.render_beats`, not in journal.gd.** The
+  journal's pending branch could have chosen `opening`/`text` inline (2 lines,
+  no new API). Chose a derivation-side helper returning `[{id, achieved,
+  line}]` because the "outcome text never renders unearned" rule is a CONTENT
+  contract that must be unit-testable without a UI: test_acts now proves the
+  drop-vs-fallback behaviour directly, and any future beat surface (leads
+  strip, finale recap) reads the same policy. Revert = inline the three lines
+  at journal.gd's beat loop and delete the static.
+- **An opening-less PENDING beat is dropped; an opening-less BANKED beat
+  keeps rendering its text.** Alternative (render an empty `· ` row) leaks
+  "there is a beat here you haven't earned" without saying anything; hiding
+  is the spec's own fallback and the only choice that cannot leak. All 18
+  shipped beats author an opening, so the drop path is defense-in-depth —
+  test_content now REQUIRES an opening on every beat rather than treating it
+  as optional, so no future beat can ship invisible.
+- **All 18 draft openings shipped verbatim.** Audited each against its beat's
+  `when` counter and that counter's quest chain before accepting. The two
+  that looked mis-assigned are correct: `the_door_opens` (door_awakened)
+  opens on the DIG east because horns_dig -> door_mounted -> catalyst ->
+  attune is that counter's chain, and horns_dig's own spoiler rule forbids
+  naming the door before the haul beat — so the opening literally cannot
+  mention the Door. `the_horns_home`'s "somewhere to put their feet up" was
+  the one line considered for a rewrite (it poses the question but points at
+  no place); kept, because pointing is the Leads strip's job (A2) and a
+  rewrite would have invented delve fiction to do A2's work in A1's voice.
+- **Outcome-marker list normalized to 4 lowercase entries** matched
+  case-insensitively: `settled`, `you read`, `you took`, `you walked`. The
+  brief's 5-entry list carried "You settled" (subsumed by `settled`) and
+  mixed case (defeated by any recasing). No draft trips the list; "settling"
+  and "Settle it" pass by design — the ban is on past-tense BANK verbs, not
+  the verb stem.
+- **New journal payload key `act_beat_lines`** (the exact rendered rows,
+  marker included) so the spoiler rule is machine-checkable end-to-end, not
+  only by screenshot. `act_beats`/`act_beats_achieved` keep their old
+  count semantics, so no existing pin moved. Pinned in 4 canonicals:
+  climax_seal (Act IV, 7 pending — the VISUAL-LOG itinerary leak),
+  seal_open (Act V, 3 pending), spine_reach (Act IV, 5 banked + 2 pending),
+  raskghar_entry_loop (Act III, 2 pending). Cost accepted: polishing a
+  shipped opening now reds those 4 scripts (whole-list match) — that is the
+  copy freeze working, re-pin from a run.
+- **raskghar_entry_loop gains a read-only journal open.** No canonical
+  opened the journal anywhere in Act III, so the wave's own act-page
+  re-shots had a hole; that fixture is the only one standing in Act III with
+  both beats pending. Alternative (a new canonical) costs a manifest entry
+  and a seed row for one screenshot.
+
 ## 2026-07-18 — #147 music intake calls
 
 - Listening pass = inline signal analysis (tempo/RMS/brightness/mode vs

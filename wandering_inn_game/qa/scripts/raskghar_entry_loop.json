@@ -37,6 +37,33 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "== JOURNAL: Act III, EVERYTHING PENDING == the only canonical standing inside Act III with neither beat banked, so this is where the v0.15 A1 opening copy is proven live: both rows are '·' openings that pose the act's question (something below, and it has a den) without naming the tremor's answer. Read-only detour -- the journal does not move the player, and the bed bump below is unchanged.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "act_id": "act_iii",
+    "act_beats": 2,
+    "act_beats_achieved": 0,
+    "act_beat_lines": [
+     "· Something under the city has the Watch losing sleep.",
+     "· Whatever moves down there has a den, and dens have doors."
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_journal_act3_pending"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
    "action": "move",
    "direction": "right",
    "steps": 1,
@@ -78,7 +105,7 @@
    ]
   },
   {
-   "_comment": "GH#273: pinned render wait AFTER the teleport -- the map_changed wipe used to eat the pointer (and the quest toast) before either displayed; the sticky re-queue must deliver it on the street.",
+   "_comment": "GH#273 / v0.15 A3: pinned render wait AFTER the teleport -- map_changed used to WIPE the queue and eat the pointer (and the quest toast) before either displayed. The queue is now lossless (message_layer defers the visible toast only), so both must deliver on the street.",
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "timeout_sec": 5,

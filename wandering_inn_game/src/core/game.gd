@@ -239,6 +239,7 @@ func _make_sim(creation: Dictionary = {}) -> WIGame:
 	}
 	combat_config["quests"] = _load_json("res://data/quests.json")
 	combat_config["acts"] = _load_json("res://data/acts.json")
+	combat_config["leads"] = _load_json("res://data/leads.json")
 	combat_config["items"] = _load_json("res://data/items.json")
 	combat_config["bounties"] = _load_json("res://data/bounties.json")
 	combat_config["deliveries"] = _load_json("res://data/deliveries.json")

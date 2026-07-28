@@ -196,6 +196,7 @@ func _init() -> void:
 	var skill_config := _load_json("res://data/skills.json")
 	var game := WIGame.new(scene_config, skill_config, _sink, 12345)
 	_check_chronicle_facts(scene_config, skill_config)
+	_check_lore_notes(scene_config, skill_config)
 
 	var witch_map: Dictionary = scene_config["maps"]["witch_hollow"]
 	var witch := _entity_by_id(witch_map["entities"], "riverfarm_witch")
@@ -1119,7 +1120,7 @@ func _init() -> void:
 	arc.sleep()
 	assert(arc.accomplishment_count("watch_runner_pointed") == 1, "AF I1: post-consolidation sleep fires the tremor pointer (gate reads the flag, not the live count)")
 	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A Watch runner is looking for you."), "AF I1: the Watch-runner pointer toast renders after consolidation")
-	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A Watch runner is looking for you." and bool(e["payload"].get("sticky", false))), "GH#273: the pointer toast carries sticky=true -- it queues LAST at a busy wake beat and must survive message_layer's transition queue-wipe")
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "A Watch runner is looking for you." and bool(e["payload"].get("sticky", false))), "GH#273: the pointer toast carries sticky=true AND lore=true -- it queues LAST at a busy wake beat, so it must survive the transition (v0.15 A3 makes the whole queue lossless) and be readable afterwards in the journal")
 
 	var cc_garden := combat_config.duplicate(true)
 	cc_garden["acts"] = _load_json("res://data/acts.json")
@@ -1188,6 +1189,65 @@ func _init() -> void:
 	seal.sleep()
 	assert(seal.accomplishment_count("post_game") == 1, "seal bank: idempotent past the first qualifying sleep")
 	assert(not _events.any(func(e: Dictionary) -> bool: return e["type"] == "accomplishment_recorded" and String(e["payload"]["id"]) == "post_game"), "seal bank: no re-bank on a later sleep")
+
+	# v0.15 A2 -- the journal Leads strip. Pure counter read off the shipped
+	# catalog: `requires` banked AND `hide_when` still absent, both MIRRORING
+	# the target option's own gate (a lead that fires early points at a refusal).
+	var cc_leads: Dictionary = combat_config.duplicate(true)
+	cc_leads["leads"] = _load_json("res://data/leads.json")
+	var leads := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_leads)
+	assert(leads.active_leads().is_empty(), "leads: a fresh sim has earned no pointer yet")
+
+	# THE REFUSAL WINDOW: the seal alone is NOT the survey lead's gate. Olesm's
+	# option unlocks on post_game (the first sleep AFTER the seal), so a lead on
+	# raskghar_sealed would point at a hidden option for one whole waking.
+	leads.accomplishments["raskghar_sealed"] = 1
+	assert(leads.active_leads().is_empty(), "leads: the seal alone shows nothing -- the survey option is still hidden")
+
+	leads.accomplishments["post_game"] = 1
+	var survey: Array = leads.active_leads()
+	assert(survey.size() == 1 and String((survey[0] as Dictionary)["id"]) == "lead_survey", "leads: post_game opens the survey lead, the waking its option does")
+	assert(String((survey[0] as Dictionary)["lead_text"]) == "The Guild posted a Watch notice about the reopened gallery.", "leads: the row carries its authored copy")
+	assert(String((survey[0] as Dictionary)["place"]) == "Adventurer's Guild", "leads: the row carries its place -- a lead without a where is not a pointer")
+
+	leads.accomplishments["horns_delve_started"] = 1
+	assert(leads.active_leads().is_empty(), "leads: a lead vanishes the moment its own quest starts (hide_when)")
+
+	leads.accomplishments["seal_kept_reported"] = 1
+	leads.accomplishments["door_awakened"] = 1
+	var lead_ids: Array = []
+	for raw_lead: Variant in leads.active_leads():
+		lead_ids.append(String((raw_lead as Dictionary)["id"]))
+	assert(lead_ids == ["lead_dig", "lead_spine"], "leads: concurrent seams both list, in catalog order")
+
+	# THE CAPSTONE ARMS: a region chain closed while the spine runs arms that
+	# stop's own capstone option, and nothing else in the game says so. Both
+	# legs of the AND gate are required -- the region terminal alone is not it.
+	leads.accomplishments["price_of_a_favor_reported"] = 1
+	var pre_spine_ids: Array = []
+	for raw_lead: Variant in leads.active_leads():
+		pre_spine_ids.append(String((raw_lead as Dictionary)["id"]))
+	assert(not pre_spine_ids.has("lead_witch_ear"), "leads: the region terminal alone does not arm the capstone -- Eloise has nothing to say before the spine starts")
+
+	leads.accomplishments["spine_started"] = 1
+	var armed: Array = []
+	for raw_lead: Variant in leads.active_leads():
+		armed.append(String((raw_lead as Dictionary)["id"]))
+	assert(armed == ["lead_dig", "lead_witch_ear"], "leads: spine_started arms the witch capstone (and retires lead_spine, its own hide_when)")
+
+	leads.accomplishments["lattice_witch_lore"] = 1
+	var spent: Array = []
+	for raw_lead: Variant in leads.active_leads():
+		spent.append(String((raw_lead as Dictionary)["id"]))
+	assert(spent == ["lead_dig"], "leads: taking the capstone conversation retires its lead")
+
+	_events.clear()
+	leads.active_leads()
+	assert(_events.is_empty(), "leads: a derived read banks nothing and emits nothing")
+
+	var no_leads := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	no_leads.accomplishments["post_game"] = 1
+	assert(no_leads.active_leads().is_empty(), "leads: no catalog => empty strip, never a crash")
 
 	var gGuard := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	gGuard.bind_map_silent("garden_sanctuary", Vector2i(1, 1))
@@ -3467,6 +3527,41 @@ func _init() -> void:
 
 	print("PASS: sim core behaves correctly")
 	quit(0)
+
+
+## v0.15 A3 (GH#304): a `lore: true` toast payload appends its text to the
+## durable `lore_notes` record AT EMIT, in the address-resolving sink -- so a
+## line the toast queue, a dialogue, or a combat swallowed is still readable in
+## the journal. Deduped by exact resolved text.
+func _check_lore_notes(scene_config: Dictionary, skill_config: Dictionary) -> void:
+	var cfg: Dictionary = scene_config.duplicate(true)
+	(cfg["maps"]["ruin_surface"] as Dictionary)["arrival_toasts"] = [
+		{"requires": {"door_understood": 1}, "lore": true, "text": "One lattice, and this door is where it drains to."},
+	]
+	(cfg["maps"]["dungeon_approach"] as Dictionary)["arrival_toasts"] = [
+		{"requires": {"door_understood": 1}, "text": "The dark has a direction today."},
+	]
+	(cfg["maps"]["street"] as Dictionary)["arrival_toasts"] = [
+		{"requires": {"door_understood": 1}, "lore": true, "text": "Evening, {addr}."},
+	]
+	# A SINKLESS sim is the structural proof of render-independence: no listener
+	# exists, so nothing could have rendered, and the note lands anyway.
+	var silent := WIGame.new(cfg, skill_config, Callable(), 4246)
+	assert(silent.lore_notes.is_empty(), "a fresh sim carries no lore notes")
+	silent.record_accomplishment("door_understood")
+	silent.transition("ruin_surface", Vector2i(17, 5))
+	assert(silent.lore_notes == ["One lattice, and this door is where it drains to."],
+		"a lore-tagged toast banks its text with no renderer attached")
+	silent.transition("dungeon_approach", Vector2i(8, 10))
+	assert(silent.lore_notes.size() == 1, "an untagged toast never becomes a lore note")
+	silent.transition("inn", Vector2i(2, 3))
+	silent.transition("ruin_surface", Vector2i(17, 5))
+	assert(silent.lore_notes.size() == 1, "re-emitting the same line is idempotent -- dedupe is by exact text")
+	silent.transition("street", Vector2i(4, 3))
+	assert(silent.lore_notes.size() == 2 and silent.lore_notes[1] == "Evening, sir.",
+		"a lore note banks the ADDRESS-RESOLVED text the player would have read, never the authored token")
+	assert((silent.snapshot()["lore_notes"] as Array) == silent.lore_notes,
+		"lore_notes rides the snapshot so QA can assert capture without a screenshot")
 
 
 func _check_chronicle_facts(scene_config: Dictionary, skill_config: Dictionary) -> void:

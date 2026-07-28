@@ -51,6 +51,26 @@
    ]
   },
   {
+   "_comment": "== SEAM 3, BEFORE (v0.15 A2) ==. Read-only journal detour, 4 steps, no player movement. door_awakened banked + spine_started absent => the spine lead names Pisces and the Guild steps -- and the player is standing on them. The AFTER half is the existing journal open past the bank below, where the lead is gone and the three capstones have armed.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "lead_lines": [
+     "· The Guild posted a Watch notice about the reopened gallery. (Adventurer's Guild)",
+     "· Pisces keeps looking at the Door like it owes him a letter. (Guild steps, Market Street)"
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
    "_comment": "== THE SPINE START == Pisces (30,4). Bump up to face him; first interact = talk_pool line, second opens pisces_magic (door_chain_talk's own approach).",
    "action": "move",
    "direction": "up",
@@ -182,13 +202,32 @@
    "contains": "where_the_door_reaches"
   },
   {
-   "_comment": "== THE JOURNAL == the spine is a real thread now, not a toast. Payload fields are counts, so the durable proof is started_quests above; this open is the player-eyes surface (and the windowed screenshot the machine playtest reads).",
+   "_comment": "== THE JOURNAL / SEAM 3, AFTER == the spine is a real thread now, not a toast. This open is the player-eyes surface (and the windowed screenshot the machine playtest reads). act_beat_lines is the MIXED-PAGE PIN (v0.15 A1): five banked '✓' outcome lines above two '·' openings, so the flip is proven per beat off its own counter -- not act-wide. lead_lines is the CAPSTONE-ARM PIN (v0.15 A2): spine_started retired the spine lead (its own hide_when) and armed all three region capstones at once -- this fixture closed every region chain, and until this wave nothing in the game said those conversations had anything new in them.",
    "action": "press",
    "name": "journal"
   },
   {
    "action": "wait_for_event",
    "type": "ui_journal_shown",
+   "payload_contains": {
+    "act_id": "act_iv",
+    "act_beats_achieved": 5,
+    "act_beat_lines": [
+     "✓ The seal holds. Liscor counts you among its own.",
+     "✓ The pantry door remembers being elsewhere again, and somewhere else remembers it back.",
+     "✓ Riverfarm's fields breathe easier, and a witch in the hollow no longer collects on the village's fear.",
+     "✓ A merchant's name is settled in Invrisil, one way or another, and the Brothers remember who settled it.",
+     "✓ The forge tier of Pallass stands open above you now, papers stamped and the lift unlocked.",
+     "· Four adventurers need somewhere to put their feet up.",
+     "· The Door strains for somewhere it cannot reach yet."
+    ],
+    "lead_lines": [
+     "· The Guild posted a Watch notice about the reopened gallery. (Adventurer's Guild)",
+     "· Eloise has been eyeing the way you arrived. (The witch's hollow, Riverfarm)",
+     "· Hedault keeps stopping mid-appraisal when your Door comes up. (Hedault's shop, Invrisil)",
+     "· Grimalkin has been about to say something since your papers were stamped. (The forge tier, Pallass)"
+    ]
+   },
    "timeout_sec": 5
   },
   {

@@ -240,6 +240,7 @@
    "locked_toast": "The stone here looks like all the other stone. It is not.",
    "on_skill_use": {
     "accomplishment": "detected_wardwork",
+    "lore": true,
     "toast": "[Detect Magic] — The seam lights up like a badly kept secret: old wardwork, still holding, drawn tight around the floor ahead. Now you know exactly what not to trust."
    }
   },
@@ -357,6 +358,7 @@
       "vault_construct_downed": 1
      },
      "accomplishment": "seal_kept_found",
+     "lore": true,
      "toast": "The runes are the same. Not similar — the same hand, the same order, as the door in the inn's pantry."
     },
     {
@@ -365,6 +367,7 @@
       "seal_kept_found": 1
      },
      "accomplishment": "read_the_seal_runes",
+     "lore": true,
      "toast": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. Not a school, not a fashion. A HAND, and it cut this one first.\" He does not look away while he says it."
     },
     {
@@ -372,6 +375,7 @@
       "read_the_seal_runes": 1
      },
      "accomplishment": "read_the_feeding_ward",
+     "lore": true,
      "toast": "Pisces steps back at last. \"It is not a lock. The lines run one way, they have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
     },
     {
@@ -379,6 +383,7 @@
       "read_the_feeding_ward": 1
      },
      "accomplishment": "read_the_feeding_ward",
+     "lore": false,
      "toast": "The runes keep their slow one-way order. Pisces has stopped narrating and started counting under his breath, which is worse."
     }
    ],
@@ -393,12 +398,14 @@
         "seal_kept_found": 1
        },
        "accomplishment": "read_the_seal_runes",
+       "lore": true,
        "toast": "[Observe] — You take the runes in order, the way you would read a sentence. The turns repeat at a fixed interval. The pantry frame does exactly that, at exactly that interval, and this one is worn deeper: it has been doing it longer. Behind you, Pisces says nothing, which from him is applause."
       }
      ]
     },
     "detect_magic": {
      "accomplishment": "sensed_something_deeper",
+     "lore": true,
      "toast": "[Detect Magic] — Wardwork, and awake. It does not flare and settle the way a bound ward should. It holds one low steady note, like a breath nobody has to let out, and you have felt that note somewhere else.",
      "variants": [
       {
@@ -407,6 +414,7 @@
         "read_the_seal_runes": 1
        },
        "accomplishment": "read_the_feeding_ward",
+       "lore": true,
        "toast": "[Detect Magic] — The ward opens under your sight and does not stop opening. It is not holding anything shut. It is POURING: one direction, one slow measured rate, into whatever the stone is between. It has poured since before the city. Pisces, very quietly: \"Ah. So that is what the others were.\""
       },
       {
@@ -416,6 +424,7 @@
         "detected_wardwork": 3
        },
        "accomplishment": "read_the_feeding_ward",
+       "lore": true,
        "toast": "[Detect Magic] — Every reading you have taken lines up at once: the inn's frame, the ruin's socket, the seam back down the hall, the hollow west of Riverfarm. Not four wards. One lattice, and this door is where it drains to. Something behind this stone has been drinking Liscor's oldest work since before Liscor. Pisces uses a word you have never heard him use in public."
       }
      ]

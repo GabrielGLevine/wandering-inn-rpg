@@ -1431,10 +1431,12 @@
    "skill_uses": {
     "observe": {
      "accomplishment": "read_the_door_runes",
+     "lore": true,
      "toast": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away."
     },
     "detect_magic": {
      "accomplishment": "detected_wardwork",
+     "lore": true,
      "toast": "[Detect Magic] — The old wardwork wakes just enough to be read: someone bound this cellar's door long before it learned to go elsewhere."
     }
    },

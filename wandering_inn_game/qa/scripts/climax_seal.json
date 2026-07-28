@@ -148,7 +148,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== JOURNAL: Act IV ==. raskghar_sealed clears Act III's whole gate on its own (2026-07-26 reframe: the door is no longer part of it), so WIActs walks the fixture -- which already satisfies Act I+II -- straight through to Act IV. The journal act-line header reads Act IV.",
+   "_comment": "== JOURNAL: Act IV ==. raskghar_sealed clears Act III's whole gate on its own (2026-07-26 reframe: the door is no longer part of it), so WIActs walks the fixture -- which already satisfies Act I+II -- straight through to Act IV. The journal act-line header reads Act IV. act_beat_lines is the SPOILER PIN (v0.15 A1): the player stands at Act IV's door having earned none of its seven beats, so every row must be a '·' OPENING -- an outcome line here would be the itinerary leak this wave closes. Whole-list match: re-pin from a run if the copy is polished.",
    "action": "press",
    "name": "journal"
   },
@@ -156,7 +156,17 @@
    "action": "wait_for_event",
    "type": "ui_journal_shown",
    "payload_contains": {
-    "act_id": "act_iv"
+    "act_id": "act_iv",
+    "act_beats_achieved": 0,
+    "act_beat_lines": [
+     "· The city is deciding what you are to it.",
+     "· The Horns are digging east, and they are short a pair of hands.",
+     "· Riverfarm's fields hold more trouble than wheat.",
+     "· A name needs settling in the City of Adventurers.",
+     "· The Walled City opens for paperwork, not heroics.",
+     "· Four adventurers need somewhere to put their feet up.",
+     "· The Door strains for somewhere it cannot reach yet."
+    ]
    },
    "timeout_sec": 5
   },
