@@ -2739,11 +2739,22 @@ blocker.
   indistinguishable from scenery, and it is the ONLY seam into the new interior.
   Rags's directions ("South. Cut in turf. Two stones.") are doing all the work.
   Wants a doorway-shaped sprite or a much stronger value contrast.
+  **FIXED in the #308 fix wave (2026-07-28):** new owned PixelLab sprite
+  `turf_cut_mouth` (stones leaning over a dark cut, grass over the lip). Read
+  windowed at floodplains (17,20): it now carries a black opening at sprite
+  size and separates cleanly from the `boulder` decor in the same frame.
 - **Two props are semantically wrong for their own copy.** `camp_hide_racks`
   ("green hides pegged out on a lattice of spear-shafts") renders as
   `request_board`, a parchment notice board; `camp_meat_rack` ("a rack of split
   poles over a bed of ash") renders as `barrel`. The common-sense pass fails on
   both — the interact copy is right, the sprite argues with it.
+  **FIXED in the #308 fix wave (2026-07-28):** three more owned PixelLab
+  sprites — `hide_rack` (hides pegged between two posts), `drying_rack` (bare
+  pole frame over an ash bed) and `drying_rack_hung` (the same frame under
+  strips of cut meat), anchors measured off each alpha bbox. The rack's filled
+  state is now a real second entity on the same cell, so the fill READS: the
+  windowed pair `01_rags_camp_arrival` / `02_rags_camp_rack_hung` on
+  `floodplains_price_help` shows bare poles becoming a hung rack in place.
 - **The `rags_camp` mood row TOOK, all three phases.** Day / dusk / night are
   clearly distinct (bright green → muted olive+vignette → dark warm brown), and
   dusk/night carry the `dust_motes` ambience. Nothing renders flat white.

@@ -270,6 +270,42 @@ shape under contact are marked FORK.
   rather than moved here, because the cells were hand-audited when the
   room was authored and moving her invalidates that audit, the mood row
   and the dynamism read.
+## 2026-07-28 — v0.16 F lane (#308) fix wave (adversarial-review IMPORTANTs)
+
+Two IMPORTANT findings from the traced review, both applied on the branch.
+
+- **The HELP route's drying rack is now VISIBLE-LOCKED, not presence-gated.**
+  `camp_meat_rack`'s `present_when` ANDed `camp_carry_jobs` with
+  `corusdeer_culled`, a counter banked two maps away — so a player who had not
+  hunted saw the route as NON-EXISTENT rather than locked, while the lane's
+  TALK arm deliberately ships visible-locked on Krshia's hub. The rack now
+  stands from arrival (`present_when: {absent: {camp_larder_filled: 1}}`) and
+  the two route gates moved onto a `variants` arm — the shipped `seal_kept_door`
+  / `rune_plate_far` / `wounded_corusdeer` idiom, where a met `when` overrides
+  both the toast and the banked `accomplishment`. A locked read banks
+  `eyed_the_drying_rack` and toasts what is missing (hands on the baskets, then
+  something brought down off the range north). Filling it swaps in
+  `camp_meat_rack_hung` on the SAME cell — the `ceria_dig_camp`/`dig_camp_remnant`
+  twin-row idiom. Rejected: leaving the gate on presence and only adding a
+  hint NPC (the rack itself would still be invisible), and one always-present
+  rack with no swap (the fill would then never read on screen).
+  `floodplains_price_help` traded its 8-vs-9 sprite-count pair — which the new
+  shape makes constant at 9 — for the stronger evidence: locked read (hint
+  toast, route counter provably not banked), fill, then the swapped-in entity
+  answering the very next interact from the same cell.
+- **Four stand-in sprites that argued with their own copy are now real art.**
+  `camp_hide_racks` wore `request_board` (a Human parchment notice board),
+  `camp_meat_rack` wore `barrel`, and `rags_camp_mouth` — the ONLY seam into the
+  new interior — wore `boulder` on a map that already carries boulder decor.
+  The registry had no rack/hide/entrance sprite (278 entries, zero matches), so
+  this was an asset gap, not a careless pick: four owned PixelLab sprites were
+  generated for it (`hide_rack`, `drying_rack`, `drying_rack_hung`,
+  `turf_cut_mouth`), anchors measured from each alpha bbox per the anchor rule,
+  and all four read by eye in windowed shots. Rejected: re-picking the nearest
+  wrong sprite (every candidate still argued with the copy) and rewriting the
+  copy down to the art (the copy is the character of the room). Precedent:
+  GH#113 Wave 1 replaced the same class of `boulder` stand-in the same way.
+
 ## 2026-07-28 — v0.16 F lane (#308) "The Price Kept" (implementation calls)
 
 The plan's rulings, as SHIPPED, plus the calls the implementation itself

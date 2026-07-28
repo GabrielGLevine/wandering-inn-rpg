@@ -4815,6 +4815,79 @@
    }
   }
  },
+ "hide_rack": {
+  "_comment": "#308 owned PixelLab art, anchors measured from the alpha bbox (55/64, 60/64, 61/64, 58/64) -- these four replace stand-ins whose label fought their art.",
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.859
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/hide_rack/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "drying_rack": {
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.938
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/drying_rack/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "drying_rack_hung": {
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.953
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/drying_rack_hung/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "turf_cut_mouth": {
+  "render_scale": 0.45,
+  "anchor": [
+   0.5,
+   0.906
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/turf_cut_mouth/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
  "corusdeer": {
   "_comment": "Owned public-tier PixelLab sprite. Corusdeer behavior and stats live in combatants; this entry owns only presentation geometry.",
 "render_scale": 0.7,

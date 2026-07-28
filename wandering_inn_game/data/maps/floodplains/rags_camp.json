@@ -81,7 +81,7 @@
     2
    ],
    "display_name": "The Hide Racks",
-   "sprite": "request_board",
+   "sprite": "hide_rack",
    "observe": "Green hides pegged out on a lattice of spear-shafts, scraped down to nothing on one side. The pegs are all different lengths, whittled to fit whatever the rack needed that day.",
    "on_interact_accomplishment": "read_the_hide_racks",
    "toast": "Every hide is stretched to the same tension. Whoever runs this rack does not let anyone else near it."
@@ -148,7 +148,7 @@
    ]
   },
   {
-   "_comment": "v0.16 F1 HELP (#308). present_when.requires is AND across keys, which is the intent: haul here, cull a corusdeer on the plains, come back. Reads the frozen corusdeer_culled -- never edits corusdeer_range.",
+   "_comment": "v0.16 F1 HELP (#308). VISIBLE-LOCKED, the seal_kept_door idiom: the rack STANDS from arrival and the two route gates live on the variant, not on presence. TRAP: presence gated on the two gates hid the whole route from a player who had not hunted. Reads the frozen corusdeer_culled -- never edits corusdeer_range.",
    "id": "camp_meat_rack",
    "kind": "prop",
    "cell": [
@@ -156,16 +156,43 @@
     6
    ],
    "display_name": "The Drying Rack",
-   "sprite": "barrel",
+   "sprite": "drying_rack",
    "present_when": {
-    "requires": {
-     "camp_carry_jobs": 1,
-     "corusdeer_culled": 1
+    "absent": {
+     "camp_larder_filled": 1
     }
    },
-   "observe": "A rack of split poles standing empty over a bed of ash, waiting on the season the camp cannot count on.",
-   "on_interact_accomplishment": "camp_larder_filled",
-   "toast": "You hang what you brought back and cut it down thin the way the old one shows you, and by the time the light goes the rack is heavy for the first time this year."
+   "observe": "A rack of split poles standing empty over a bed of ash. The hunters look north at the range, and then back at it, and say nothing.",
+   "on_interact_accomplishment": "eyed_the_drying_rack",
+   "toast": "The poles are bare and the ash is cold. Hands on the camp's baskets first, the old one signs at you, and then something big brought down off the range north.",
+   "variants": [
+    {
+     "when": {
+      "camp_carry_jobs": 1,
+      "corusdeer_culled": 1
+     },
+     "accomplishment": "camp_larder_filled",
+     "toast": "You hang what you brought back and cut it down thin the way the old one shows you, and by the time the light goes the rack is heavy for the first time this year."
+    }
+   ]
+  },
+  {
+   "id": "camp_meat_rack_hung",
+   "kind": "prop",
+   "cell": [
+    9,
+    6
+   ],
+   "display_name": "The Drying Rack",
+   "sprite": "drying_rack_hung",
+   "present_when": {
+    "requires": {
+     "camp_larder_filled": 1
+    }
+   },
+   "observe": "The poles are bowed under strips cut thin and even, and the ash beneath has been banked warm to hold the smoke in them.",
+   "on_interact_accomplishment": "eyed_the_full_rack",
+   "toast": "Nobody moves the rack aside when you pass it now."
   },
   {
    "_comment": "v0.16 F1 FIGHT (#308). TRAP: allies is EXACTLY TWO by arena capacity -- 4 player_spawns and start_combat appends a tamed companion only at allies.size()+2 <= spawns, so a third ally benches a Beast Tamer's wolf.",

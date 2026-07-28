@@ -1643,12 +1643,7 @@
     22
    ],
    "display_name": "A Cut in the Turf",
-   "sprite": "boulder",
-   "tint": [
-    0.62,
-    0.66,
-    0.55
-   ],
+   "sprite": "turf_cut_mouth",
    "observe": "Two low stones lean together where the ground folds away, and the grass between them is beaten flat by small feet. Smoke comes up thin and does not spread.",
    "present_when": {
     "requires": {

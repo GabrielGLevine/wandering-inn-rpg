@@ -1,5 +1,5 @@
 {
- "_comment": "v0.16 F1 (#308) HELP route of 'The Price Kept': cull a corusdeer out on the plains, walk down through rags_camp_mouth into the hollow, take the camp's carrying job -- the two gates the drying rack's present_when ANDs -- watch the rack appear, fill it, walk back out the door, and report. Walks BOTH crossings of the new interior for real (nothing about to_map/to_cell is validated at runtime). The rack's before/after presence is proved by ui_entities_rendered sprite counts, the only observable the reconciler emits. No options-array pins (four lanes append to Rags's hub).",
+ "_comment": "v0.16 F1 (#308) HELP route of 'The Price Kept': cull a corusdeer out on the plains, walk down through rags_camp_mouth into the hollow, READ the locked rack, take the camp's carrying job -- the second of the two gates the fill variant ANDs -- fill the rack, walk back out the door, and report. Walks BOTH crossings of the new interior for real (nothing about to_map/to_cell is validated at runtime). FIX WAVE: the rack is VISIBLE-LOCKED (present_when is `absent camp_larder_filled`), so the evidence is no longer a sprite-count appearance but the LOCKED READ (hint toast, no route counter) followed by the fill and the same-cell swap to camp_meat_rack_hung answering the next interact. No options-array pins (four lanes append to Rags's hub).",
  "fixture_save": "floodplains_price_help_start",
  "starts_at_title": true,
  "steps": [
@@ -213,22 +213,22 @@
    }
   },
   {
-   "_comment": "RACK ABSENT, the before half: eight sprites on arrival (exit door, fire pit, hide racks, chieftain's spot, yoke, watch goblin, the rim encounter, the pc). The reconciler's post-gate emit carries nine and is the after half below -- payload-filtered, so this absent-assert is not the whole-run-scan self-red.",
+   "_comment": "THE RACK STANDS FROM ARRIVAL (fix wave): nine sprites (exit door, fire pit, hide racks, chieftain's spot, yoke, watch goblin, the BARE drying rack, the rim encounter, the pc). The rack is VISIBLE-LOCKED now -- presence is gated on `absent camp_larder_filled` only, so a player who has not hunted still SEES the route. Ten would mean both racks rendered at once, which their mutually exclusive gates forbid.",
    "action": "assert_event_logged",
-   "type": "ui_entities_rendered",
-   "payload_contains": {
-    "sprites": 8
-   }
-  },
-  {
-   "action": "assert_event_absent",
    "type": "ui_entities_rendered",
    "payload_contains": {
     "sprites": 9
    }
   },
   {
-   "_comment": "== THE CARRY JOB == east three, then bump north into the yoke at (8,5).",
+   "action": "assert_event_absent",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 10
+   }
+  },
+  {
+   "_comment": "== THE LOCKED READ == east three, north one to (8,6), then bump east into the bare rack at (9,6). The carry gate is unheld, so the variant does not resolve: the hint toast fires and camp_larder_filled does NOT bank. This is the half the old presence pair could not state -- an absent rack cannot be read by a player.",
    "action": "move",
    "direction": "right",
    "steps": 3
@@ -247,6 +247,49 @@
    ]
   },
   {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "ORDER TRAP: interactions.gd banks BEFORE it emits the toast, so the accomplishment wait comes first or its event is already behind the cursor.",
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "eyed_the_drying_rack"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The poles are bare and the ash is cold. Hands on the camp's baskets first, the old one signs at you, and then something big brought down off the range north."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Payload-filtered and placed BEFORE the yoke: the route counter has not banked off the locked read.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "camp_larder_filled"
+   }
+  },
+  {
+   "_comment": "== THE CARRY JOB == bump north into the yoke at (8,5).",
    "action": "move",
    "direction": "up",
    "steps": 1
@@ -281,19 +324,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "RACK PRESENT, the after half: the presence reconcile re-emits at nine sprites the moment the second gate banks (this emit carries no pc_sprite key -- world.gd:930 vs :441). assert_event_logged, not wait_for_event: the reconcile fires INSIDE the same interact as the gold_changed wait above, so the since-cursor has already passed it. The pairing with the payload-filtered absent-assert before the yoke is what makes this a real before/after, not a cumulative claim.",
-   "action": "assert_event_logged",
-   "type": "ui_entities_rendered",
-   "payload_contains": {
-    "sprites": 9
-   }
-  },
-  {
-   "action": "screenshot",
-   "name": "02_rags_camp_rack_present"
-  },
-  {
-   "_comment": "== THE RACK == both present_when gates are now held; bump east into (9,6).",
+   "_comment": "== THE RACK == both variant gates are now held; the player is already facing the rack at (9,6), so bump east again to re-prove the block and interact.",
    "action": "move",
    "direction": "right",
    "steps": 1
@@ -325,6 +356,38 @@
     "text": "You hang what you brought back and cut it down thin the way the old one shows you, and by the time the light goes the rack is heavy for the first time this year."
    },
    "timeout_sec": 5
+  },
+  {
+   "_comment": "THE SWAP, proved by WHO ANSWERS: the bare rack's present_when just failed and camp_meat_rack_hung took the same cell, so the very next interact from the same cell reaches the OTHER entity. Sprite counts cannot state this (both racks are one sprite at (9,6)); the answering toast can.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "eyed_the_full_rack"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Nobody moves the rack aside when you pass it now."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 9
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "02_rags_camp_rack_hung"
   },
   {
    "_comment": "== BACK UP == south one, west three, then bump south into the exit door at (5,8).",
