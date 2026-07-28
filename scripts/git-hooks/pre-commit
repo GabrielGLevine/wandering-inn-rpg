@@ -1,0 +1,69 @@
+#!/bin/bash
+# Tracked pre-commit hook (2026-07-28, user directive: catch the fast
+# engine-free CI gates at commit time instead of at the PR).
+# Path-scoped: a commit that touches none of the guarded surfaces runs
+# nothing. Every check here is <0.5s except the leak scan (~4s), which
+# only runs when the commit ADDS files (the leak vector on a public
+# repo). Bypass for emergencies: WI_SKIP_HOOKS=1 git commit ... (or
+# --no-verify); CI still enforces everything blocking.
+# Activate via scripts/install_git_hooks.sh (worktree-scoped config).
+# bash 3.2 / macOS: no mapfile, no timeout(1).
+
+set -u
+
+[ "${WI_SKIP_HOOKS:-0}" = "1" ] && exit 0
+
+ROOT="$(git rev-parse --show-toplevel)"
+STAGED="$(git diff --cached --name-only --diff-filter=ACMR)"
+[ -z "$STAGED" ] && exit 0
+
+fail=0
+say() { printf '%s\n' "$*"; }
+
+touches() { printf '%s\n' "$STAGED" | grep -Eq "$1"; }
+
+# --- Leak scan: only when the commit adds new paths (the leak vector).
+if git diff --cached --name-only --diff-filter=A | grep -q .; then
+	if ! bash "$ROOT/scripts/leak_check.sh" >/dev/null 2>&1; then
+		say "pre-commit BLOCK: scripts/leak_check.sh failed (licensed asset or secret staged?)"
+		bash "$ROOT/scripts/leak_check.sh" 2>&1 | tail -20
+		fail=1
+	fi
+fi
+
+# --- Structural data lint + comment census: any shipped-data edit.
+if touches '^wandering_inn_game/data/'; then
+	if ! python3 "$ROOT/wandering_inn_game/scripts/data_lint.py" >/dev/null 2>&1; then
+		say "pre-commit BLOCK: data_lint failed:"
+		python3 "$ROOT/wandering_inn_game/scripts/data_lint.py" 2>&1 | tail -20
+		fail=1
+	fi
+	if ! python3 "$ROOT/scripts/comment_census.py" --check >/dev/null 2>&1; then
+		say "pre-commit BLOCK: comment census over target (target <=15.0% DATA):"
+		python3 "$ROOT/scripts/comment_census.py" --check 2>&1 | grep -E '^(GDSCRIPT|DATA)' || true
+		fail=1
+	fi
+fi
+
+# --- Skill-mirror sync: canonical .agents/skills vs .claude mirror.
+if touches '^\.agents/skills/|^\.claude/skills/'; then
+	if ! python3 "$ROOT/scripts/sync_agent_guidance.py" >/dev/null 2>&1; then
+		say "pre-commit BLOCK: skill mirrors drifted — run: python3 scripts/sync_agent_guidance.py --write"
+		fail=1
+	fi
+fi
+
+# --- Advisory (never blocks; mirrors the CI docs-drift demotion).
+if touches '^wandering_inn_game/qa/manifest\.json$|^wandering_inn_game/qa/scripts/'; then
+	if ! python3 "$ROOT/scripts/render_qa_notes.py" >/dev/null 2>&1; then
+		say "pre-commit note: QA notes drifted — run: python3 scripts/render_qa_notes.py --write (advisory)"
+	fi
+fi
+if touches '^docs/|^README\.md$'; then
+	if ! python3 "$ROOT/scripts/check_doc_drift.py" >/dev/null 2>&1; then
+		say "pre-commit note: doc-drift check reports issues (advisory):"
+		python3 "$ROOT/scripts/check_doc_drift.py" 2>&1 | tail -8
+	fi
+fi
+
+exit $fail
