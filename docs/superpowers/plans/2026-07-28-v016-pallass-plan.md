@@ -1531,9 +1531,9 @@ All at **seed 9** (the shipped Pallass seed for every existing Pallass canonical
 
 ### Task 3.3: Crossing re-gate
 
-- [ ] **Step 1:** `wandering_inn_game/qa/ci_sweep.sh --touching data/quests.json,data/combatants.json,data/maps/pallass/pallass_forge.json,data/maps/pallass/pallass_market.json,data/dialogue/pallass_grimalkin.json` — **budget real time: `--touching data/quests.json` alone now maps to 20+ canonicals** via MONOLITH_SYSTEMS (GH#281). The skill doc's claim that it maps to ZERO scripts is OUT OF DATE.
-- [ ] **Step 2:** Expect green on at minimum: `pallass_walkthrough`, `pallass_peek`, `pallass_round_trip`, `pallass_race_peek`, `pallass_watchgolem_loop`, `regional_work_loop`, `grimalkin_study_loop`, `parley_talkdowns_loop`, `parley_gates_check`, `spine_reach`, `mixer_alchemist_loop`, `trader_earn_loop`, plus the `quests.json` monolith set (`cisterns_*`, `crate_*`, `door_chain_*`, `horns_dig_*`, `invrisil_disagreement_*`, `missing_recruit_loop`, …).
-- [ ] **Step 3: Subagent sweep idiom** — a full `ci_sweep.sh` cannot run foreground in one Bash call (the harness promotes it to background and strands a waiting subagent). Start it writing to a log with its own `rc=` echo, then poll with short foreground `sleep 60; tail -1 <log>` calls. **Settle the tree BEFORE launching** — a sweep started while edits continue yields a MIXED-STATE verdict; kill and relaunch.
+- [x] **Step 1:** `wandering_inn_game/qa/ci_sweep.sh --touching data/quests.json,data/combatants.json,data/maps/pallass/pallass_forge.json,data/maps/pallass/pallass_market.json,data/dialogue/pallass_grimalkin.json` — **budget real time: `--touching data/quests.json` alone now maps to 20+ canonicals** via MONOLITH_SYSTEMS (GH#281). The skill doc's claim that it maps to ZERO scripts is OUT OF DATE.
+- [x] **Step 2:** Expect green on at minimum: `pallass_walkthrough`, `pallass_peek`, `pallass_round_trip`, `pallass_race_peek`, `pallass_watchgolem_loop`, `regional_work_loop`, `grimalkin_study_loop`, `parley_talkdowns_loop`, `parley_gates_check`, `spine_reach`, `mixer_alchemist_loop`, `trader_earn_loop`, plus the `quests.json` monolith set (`cisterns_*`, `crate_*`, `door_chain_*`, `horns_dig_*`, `invrisil_disagreement_*`, `missing_recruit_loop`, …).
+- [x] **Step 3: Subagent sweep idiom** — a full `ci_sweep.sh` cannot run foreground in one Bash call (the harness promotes it to background and strands a waiting subagent). Start it writing to a log with its own `rc=` echo, then poll with short foreground `sleep 60; tail -1 <log>` calls. **Settle the tree BEFORE launching** — a sweep started while edits continue yields a MIXED-STATE verdict; kill and relaunch.
 
 ---
 
@@ -1543,15 +1543,15 @@ Load `wi-machine-playtest`. **Note:** a full `ci_sweep.sh` runs `qa/flush_artifa
 
 Windowed shot list (run each with `run_qa.sh <script> windowed --seed=9`):
 
-- [ ] `pallass_standards_fight` — **the forge_hall board mid-combat** (closes `docs/VISUAL-LOG.md:449-451` and `HANDOFF.md:86`; the v0.15 T5.1 blocked-cover fix means the arena's cover props now come from `biomes.json` `blocked_props` = `[forge_station, crate]` — eyeball that they render).
-- [ ] `pallass_standards_fight` — arrival inside `pallass_forge_hall` (mood, lighting, the embers ambience, no flat-white).
-- [ ] `pallass_standards_fight` — the `forge_temper_golem` rig on the map at [8,6] (tint separation from `forge_calibration_golem` on the tier below).
-- [ ] `pallass_standards_talk` — Grimalkin's hub with the new `text_variant` (page split legibility, per the `forge_runes` orphan-page lesson).
-- [ ] `pallass_standards_skill` — the temper bench skill toast.
-- [ ] `pallass_ledger_offices` — arrival inside `pallass_den_shop` (the warm-vs-slate contrast the whole room exists for) and the keeper at the counter.
-- [ ] `pallass_ledger_carry` — the receiving dock's third-leg toast.
-- [ ] `pallass_depth_gates_check` — both 3-row hubs, to see with human eyes that nothing new leaked into them.
-- [ ] Drain every finding to `docs/VISUAL-LOG.md`; strike the forge_hall board-screenshot item there.
+- [x] `pallass_standards_fight` — **the forge_hall board mid-combat** (closes `docs/VISUAL-LOG.md:449-451` and `HANDOFF.md:86`; the v0.15 T5.1 blocked-cover fix means the arena's cover props now come from `biomes.json` `blocked_props` = `[forge_station, crate]` — eyeball that they render).
+- [x] `pallass_standards_fight` — arrival inside `pallass_forge_hall` (mood, lighting, the embers ambience, no flat-white).
+- [x] `pallass_standards_fight` — the `forge_temper_golem` rig on the map at [8,6] (tint separation from `forge_calibration_golem` on the tier below).
+- [x] `pallass_standards_talk` — Grimalkin's hub with the new `text_variant` (page split legibility, per the `forge_runes` orphan-page lesson).
+- [x] `pallass_standards_skill` — the temper bench skill toast.
+- [x] `pallass_ledger_offices` — arrival inside `pallass_den_shop` (the warm-vs-slate contrast the whole room exists for) and the keeper at the counter.
+- [x] `pallass_ledger_carry` — the receiving dock's third-leg toast.
+- [x] `pallass_depth_gates_check` — both 3-row hubs, to see with human eyes that nothing new leaked into them.
+- [x] Drain every finding to `docs/VISUAL-LOG.md`; strike the forge_hall board-screenshot item there.
 
 ---
 

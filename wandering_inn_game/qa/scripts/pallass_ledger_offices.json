@@ -396,6 +396,10 @@
    ]
   },
   {
+   "action": "screenshot",
+   "name": "03_den_shop_arrival"
+  },
+  {
    "_comment": "== The keeper stands at (4,1) BEHIND a solid counter (3,2)-(5,2). Her only approach is round the counter's west end: column 3 up to y=3, across to column 2, up to y=1. The hatchling bench at (2,5) and the barrel at (1,5) close every shorter lane. ==",
    "action": "move",
    "direction": "left",
@@ -551,7 +555,7 @@
   },
   {
    "action": "screenshot",
-   "name": "03_den_keeper_released"
+   "name": "04_den_keeper_released"
   },
   {
    "action": "press",
