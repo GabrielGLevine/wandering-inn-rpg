@@ -533,6 +533,10 @@
   [
    26,
    15
+  ],
+  [
+   27,
+   3
   ]
  ],
  "floor_layers": [
@@ -743,7 +747,7 @@
    }
   },
   {
-   "_pick": "v0.16.1 #9, layer 6/6: the ALLEY GROUND, beyond the new east wall AND in the break itself. Reuses mercantile_alleys' own first floor layer verbatim (Floors_Tiles (16,2)/(17,2)/(18,2), already MOCKUP-PROVEN on the sibling map) across x=27 y3..15 plus the mouth cells [26,7..9]. Presentation only; its job is that the gap reads as a way INTO somewhere. The wall itself is `blocked` and takes the biome's own blocked tile (Wall_Tiles (8,2), the facade cornice stone), so it needs no layer.",
+   "_pick": "v0.16.1 #9, layer 6/6: the ALLEY GROUND, beyond the new east wall AND in the break itself. Reuses mercantile_alleys' own first floor layer verbatim (Floors_Tiles (16,2)/(17,2)/(18,2), already MOCKUP-PROVEN on the sibling map) across x=27 y4..15 plus the mouth cells [26,7..9]. Presentation only; its job is that the gap reads as a way INTO somewhere. Blocked cells take the biome's own blocked tile (Wall_Tiles (8,2)) and get no layer entry -- hence no [27,3].",
    "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
    "tile_px": 16,
    "variants": [
@@ -762,10 +766,6 @@
    ],
    "cells": {
     "list": [
-     [
-      27,
-      3
-     ],
      [
       27,
       4
@@ -1040,7 +1040,7 @@
    }
   },
   {
-   "_comment": "Landing (1,7) on the alleys side sits inside that map's own west corridor, open + off every blocked/entity cell there. v0.16.1 #9: this was a free-standing `door` prop on open paving -- rows 2..15 had no wall east of x=24, so the city's only alley entrance had plaza on all four sides. There is a building there now (the x=26 masonry runs, floor_layer 6 behind it) and this entity is the BREAK in it: hide_sprite, so the three-cell gap at y7..9 is what the player reads. `sprite` is kept as the fallback; `observe` was added because it had none.",
+   "_comment": "Landing (1,7) sits inside the alleys' own west corridor, open + off every blocked/entity cell there. v0.16.1 #9: this was a free-standing `door` on open paving -- rows 2..15 had no wall east of x=24, so the city's only alley entrance had plaza on all four sides. There is a building there now (x=26 masonry, sealed east at [27,3], floor_layer 6 behind it) and this entity is the BREAK in it: hide_sprite, so the three-cell gap at y7..9 is what the player reads. TRAP: row 2 stays open x0..27 (invrisil_walkthrough paces it to grind to night), so the north end seals at [27,3], never [26,2] -- without that one cell the masonry is a SCREEN, the lane behind it open off the plaza at (27,2).",
    "id": "boulevard_to_alleys",
    "kind": "door",
    "cell": [
