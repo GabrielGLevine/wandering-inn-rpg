@@ -15,10 +15,39 @@
      "end": true
     },
     {
-     "_comment": "#330 R1: calming IS tending. corusdeer_calmed keeps banking as shipped (frozen).",
+     "_comment": "#330 R1 banks tended_beasts here; corusdeer_calmed keeps banking as shipped. R3: the vouched twin below swaps in once the healed deer rejoins the herd.",
      "text": "[Basic Command] Steady it. Slow words, open hands.",
      "requires": {
       "skill": "animals_basic_command"
+     },
+     "hide_when": {
+      "accomplishment": {
+       "corusdeer_healed": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "corusdeer_calmed"
+      },
+      {
+       "accomplishment": "soothed_a_beast"
+      },
+      {
+       "accomplishment": "tended_beasts"
+      },
+      {
+       "dormant_entity": "corusdeer_range"
+      }
+     ],
+     "end": true
+    },
+    {
+     "_comment": "#330 R3 payoff: no Skill gate. An accomplishment requires is progress-gated, so this row is HIDDEN until the deer is healed.",
+     "text": "Steady it. The herd knows your hands now.",
+     "requires": {
+      "accomplishment": {
+       "corusdeer_healed": 1
+      }
      },
      "effects": [
       {

@@ -5499,5 +5499,24 @@
     "fps": 1
    }
   }
+ },
+ "corusdeer_doe": {
+  "_comment": "OWNED PixelLab v1 rig (2026-07-06 expansion batch, s3 base). #330 R3: the deer that stood back up. Anchor from the alpha bbox: feet 59/64, centre 30.9/64.",
+  "render_scale": 0.7,
+  "anchor": [
+   0.4824,
+   0.9219
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/corusdeer_doe/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 4
+   }
+  }
  }
 }

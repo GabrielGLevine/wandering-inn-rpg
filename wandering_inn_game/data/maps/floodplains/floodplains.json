@@ -1586,6 +1586,26 @@
     0.47
    ],
    "observe": "A corusdeer, down in the grass with a leg it won't put weight on. Its antlers barely glow. It watches you the way anything hurt watches anything larger. It would let patient hands close, and hands that tend enough hurt beasts learn something no drill yard teaches.",
+   "_comment_330": "#330 R3: at tended_beasts 10 it STANDS; the next tend banks corusdeer_healed and it goes home. Shipped strings untouched.",
+   "present_when": {
+    "absent": {
+     "corusdeer_healed": 1
+    }
+   },
+   "visual_states": [
+    {
+     "when": {
+      "counter": "tended_beasts",
+      "at": 10
+     },
+     "sprite": "corusdeer_doe",
+     "tint": [
+      1.0,
+      0.97,
+      0.9
+     ]
+    }
+   ],
    "on_interact_accomplishment": "soothed_a_beast",
    "once_per_waking": true,
    "once_per_waking_toast": "It has let you close once today. Don't spend what little trust it has.",
@@ -1597,14 +1617,59 @@
      },
      "accomplishment": "tended_beasts",
      "toast": "It knows you now. It holds still while you work, and its antlers warm the air between you."
+    },
+    {
+     "when": {
+      "tended_beasts": 10
+     },
+     "accomplishment": "corusdeer_healed",
+     "toast": "It is already standing when you come. It lets you run a hand down the leg once, then turns and goes up the rise at a trot, and does not look back."
     }
    ],
    "requires_skill": "beasts_mending",
    "on_skill_use": {
     "accomplishment": "tended_beasts",
     "toast": "[Beast's Mending] — Splint and salve, and the leg sits straighter than it has any right to. The corusdeer breathes easier.",
-    "gold": 2
+    "gold": 2,
+    "variants": [
+     {
+      "when": {
+       "tended_beasts": 10
+      },
+      "accomplishment": "corusdeer_healed",
+      "toast": "[Beast's Mending] — The splint comes away and stays away. It stands, tests the leg, and goes to find the herd. Your hands knew what to do because of this deer."
+     }
+    ]
    }
+  },
+  {
+   "_comment_330": "#330 R3: what the deer leaves behind. The antler is a ONE-TIME pickup on the frozen_cache variant-zeroing pattern.",
+   "id": "worn_grass_patch",
+   "kind": "prop",
+   "cell": [
+    33,
+    9
+   ],
+   "display_name": "Worn Grass",
+   "sprite": "grass_tuft",
+   "present_when": {
+    "requires": {
+     "corusdeer_healed": 1
+    }
+   },
+   "observe": "A body-shaped hollow pressed into the grass, going green again at the edges. Something lay here a long time, and then stopped needing to.",
+   "on_interact_accomplishment": "found_the_shed_antler",
+   "toast": "In the flattened grass, shed clean at the base: one antler, oaken-brown fading to a red glow at the tip. It is warm to hold, and stays warm.",
+   "item": "shed_antler",
+   "variants": [
+    {
+     "when": {
+      "found_the_shed_antler": 1
+     },
+     "item": "",
+     "toast": "Only the hollow in the grass now, and it is filling in."
+    }
+   ]
   },
   {
    "_comment": "GH#156 [Lesser Bond] tame target. companion_source routes through the generalized _animate_field seam; the skill-unknown path falls to use_skill's locked_toast.",
