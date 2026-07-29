@@ -320,6 +320,7 @@ func _init() -> void:
 	_validate_encounter_when(scene, produced_accomplishments)
 	_validate_encounter_gate_counters(scene, produced_accomplishments)
 	_validate_present_when(scene, produced_accomplishments)
+	_validate_entity_item_ids(scene, item_ids)
 	_validate_guest_gate_windows(scene)
 	_validate_skill_uses(scene, skill_ids, produced_accomplishments)
 	_validate_visual_states_phase(scene)
@@ -1734,3 +1735,44 @@ func _validate_enchant_pairs(graphs: Dictionary, items: Dictionary) -> void:
 					int(variant.get("price", 0)) * 2 > int(base.get("price", 0)) * 2 + fee,
 					"%s enchant %s->%s: variant price %d must exceed base %d + fee %d/2 (paid work must hold value)" % [conv_id, removed, granted, int(variant.get("price", 0)), int(base.get("price", 0)), fee]
 				)
+
+
+## GH#330: every item id a MAP ENTITY names must exist in the catalog. Dialogue
+## effects and the fence stock were already cross-referenced; entity arms never
+## were, and `pickup()` appends whatever String it is handed -- so a typo put a
+## phantom id straight into the player's inventory, silently. The interact arm
+## learned `item` in this wave, which widened that gap; this closes it for every
+## arm at once. Empty string is the sanctioned "no item" value (the
+## variant-zeroing idiom: a later variant sets `item: ""` to stop a repeat
+## handing the payload over twice).
+func _validate_entity_item_ids(scene: Dictionary, item_ids: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		for entity: Dictionary in (scene["maps"][map_id] as Dictionary).get("entities", []):
+			var entity_id := String(entity.get(WIKeys.ID, "?"))
+			var arms: Array = [{"label": "interact", "arm": entity}]
+			if entity.get("on_skill_use", null) is Dictionary:
+				arms.append({"label": "on_skill_use", "arm": entity["on_skill_use"]})
+			for skill_id: String in (entity.get("skill_uses", {}) as Dictionary):
+				if entity["skill_uses"][skill_id] is Dictionary:
+					arms.append({"label": "skill_uses[%s]" % skill_id, "arm": entity["skill_uses"][skill_id]})
+			for entry: Dictionary in arms:
+				var arm: Dictionary = entry["arm"]
+				var label := "%s/%s %s" % [map_id, entity_id, String(entry["label"])]
+				_check_item_refs(label, arm, item_ids)
+				for variant_index: int in (arm.get("variants", []) as Array).size():
+					var variant: Variant = (arm["variants"] as Array)[variant_index]
+					if variant is Dictionary:
+						_check_item_refs("%s variants[%d]" % [label, variant_index], variant as Dictionary, item_ids)
+
+
+func _check_item_refs(label: String, arm: Dictionary, item_ids: Dictionary) -> void:
+	for key: String in ["item", "requires_item", "remove_item"]:
+		if not arm.has(key):
+			continue
+		var raw: Variant = arm[key]
+		var refs: Array = raw if raw is Array else [String(raw)]
+		for ref: Variant in refs:
+			var item_id := String(ref)
+			if item_id == "":
+				continue
+			_check(item_ids.has(item_id), "%s %s references unknown item: %s" % [label, key, item_id])
