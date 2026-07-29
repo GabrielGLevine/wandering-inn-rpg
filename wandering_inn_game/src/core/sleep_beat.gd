@@ -152,6 +152,9 @@ func run(classes: Dictionary, accomplishments: Dictionary, combat_config: Dictio
 		_record_accomplishment.call("second_door_study_sleeps", 1)
 		if _count("second_door_study_sleeps") >= 2:
 			_record_accomplishment.call("dungeon_attuned", 1)
+			# GH#271: the bank was silent -- the Dungeon row just appeared in
+			# the portal menu. Nudge idiom (GH#167), lore = read-backable.
+			_emit(WIEvents.TOAST, {"text": "The Door hums against the wardwork below the city. Somewhere under Liscor, something answers it now.", "lore": true})
 			anything_happened = true
 
 	if _count("door_awakened") >= 1 and _count("resonance_grown") < 1:
