@@ -2,134 +2,108 @@
 
 ## Shipped (compressed ledger; per-issue detail in merged PR bodies)
 
-- **v0.15 (merged, UNTAGGED) — 2026-07-28, Legibility & Life.** Five
-  phases, PRs #310-#314, all `[ci-full]` green. A
-  **delivery-layer / population / readability** triad: (1) the
-  DELIVERY LAYER — 18 authored act-beat openings so every pending beat
-  reads as a forward ask instead of a spoiled outcome, a Leads strip at
-  every mainline seam, and a lossless lore queue with its own journal
-  Lore tab (#310); (2) VIEWPORTS — the combat feed, journal rows and
-  sleep veil re-budgeted so panels stop eating their last line, plus
-  endings acknowledgment (#311); (3) guest ARC-WINDOWS (`GUEST_POOL_GATES`
-  takes an ANY-of Array, windows derived from pool gate AND rows so the
-  two cannot disagree) + a hygiene batch — dead fixture keys, the
-  variant guard, `{addr}`/arrival lint arms, the em-dash sweep, the
-  golem name split (#312); (4) the POPULATION pass — Pallass, Invrisil
-  and the dig camp given working inhabitants and regional work props
-  (#313); (5) READABILITY — arena scale/tint, rigs and per-map
-  `lights_by_day` (#314). Four ENGINE wins came out of it, each worth
-  more than its phase: the toast drain **defers** on an open modal
-  (queue pauses, never drops), the dialogue fail-safe **nulls its
-  walker** (one trip used to softlock movement, interact, inventory,
-  journal and pause permanently), the lore queue is **lossless**, and
-  the combat board got a **measured figure bar** — floor 1.25 cells /
-  ceiling 3.55, with one stated measurement rule (`idle_side`, that
-  animation's own sheet, alpha bbox height) after round 1's unstated
-  rule let the bar pass subjects that were failing it. The shipped
-  roster had never been computed: it spanned **20x**, 0.38 to 7.62
-  cells. 28 new counters, ALL data-derived — zero new bare code
-  literals, so the freeze cut is a regen with no hand-add (contrast
-  v0.14's `finale_played`). The tag cut is user-gated.
-- **v0.14 (merged, UNTAGGED) — 2026-07-27, the Main Quest wave.** The
-  story line restructured end to end across nine phases: acts I–V
-  reframed off the "post-game" framing, Act IV opening on the seal
-  (#291); "The Dig" — the Horns door-retrieval quest backported to
-  day one with the Liscor link (#297); the ordered
-  Riverfarm→Invrisil→Pallass pilgrimage spine, Act V's three-path
-  conclusion and the finale sequence that retires the epilogue (#299);
-  a difficulty ladder stepping each pilgrimage stop one band above the
-  last (#300). Friends of the Inn closed out with it: PR2a Olesm+Pisces
-  (#293), PR2b Relc+Zevara (#294), roster to ten with four quest-gated
-  guests — Klbkch, Rags, Wilovan, Grimalkin (#295). Ships #269 and the
-  Act V arm of #270 (its Pallass-return B-side not taken, so
-  `pallass_return_carved` never existed). 21 new counters derive from
-  data; `finale_played` is the one bare code literal the freeze cut
-  must hand-add. The tag cut itself is user-gated.
-- **v0.13.0 — 2026-07-20, the Depth + Polish wave.** Project RENAMED
-  ("Wandering Inn RPG") with verified save carry-over (#111, both
-  rehearsals passed). #209 journal tabs, #247 Friends of the Inn
-  pilot (Selys+Krshia servable guests), #225 interior floors, #123
-  honest canonicals, and the complete art wave: #198 scroll split +
-  repo-wide placement sweep, #222 stalls/benches/statue, #224 batch B,
-  #210 bespoke Erin (canon Earth clothes), #223 rigs (Rags, Ceria with
-  real cast frames, Ruin Warden combat rig), pantry-door consolidation
-  (`skill_uses` multi-skill arms) + the dusty scroll's earned decipher.
-  647 ids frozen.
-- **v0.12.x — 2026-07-18/19.** God-file dissections (#194), #211
-  challenge-weighted leveling (flag-on), b-wave content (Grimalkin
-  studies, Rags meeting #199, parleys, Ratici's fence, fragment trade,
-  Invrisil aftermath, ruin stone, ack wave), a-wave UX (boss music,
-  auto-slot, Import/Export save, day pacing, dark-field legibility,
-  credits/volume, tap-aim), mobile hotfixes.
-- **v0.8.0–v0.11.x — 2026-07-15→18.** Chronicle, pickers, footsteps,
-  economy pass (#92), rank-tiered bounties (#163), Second Wind grants
-  (#165), Hedault enchanting (#142), class Waves A–D2, path-diversity
-  harness, release automation. Earlier: git history.
+- **v0.16.1 — 2026-07-29, the playtest wave.** All 26 findings from the
+  user's full sitting, same session as receipt, three PRs (#327-#329):
+  ONE toast spec (housekeeping class, per-dequeue cap, ×1.5 hold,
+  combat band closed, veil line — closes GH#325), [Light] as a toggle,
+  the field readout's own composer, combat-beat audio on the playback
+  clock, state-owned defeat music, biome-voice decoupling, the
+  brew-and-sell economy exploit closed with yarrow-gated brewing (+ a
+  hidden counter exploit found under it), the Hunter ruled a game
+  hunter, mill-ramp entrance, the alley mouth as a real wall break,
+  the fence fight's missing resolution beat, Cups gated, mothbears
+  re-homed to the road, blade banding, pot tints, the Coyle sign — and
+  the ART wave: bespoke Lady/Hedault/Coyle rigs + two shared civilian
+  rigs + the sign for $0.26, with a pc_* sprite ban enforced by a
+  mutation-proven registry gate.
+- **v0.16.0 — 2026-07-28, Region Depth.** One session end-to-end
+  (recon → 4 per-region plans → adversarial plan-verify, 42 findings
+  fixed pre-dispatch → 20-agent lane fleet → anchored merge-train →
+  close). Seven side quests with three-pillar parity (two each for
+  Riverfarm/Invrisil/Pallass + the Floodplains slice), seven walk-in
+  interiors, the game's FIRST goblin-ally fight (betrayal branch got
+  its first live QA coverage), the Invrisil NOBILITY layer (the Lady,
+  Reinhart ambients; full thread = #318), four bespoke camp sprites,
+  the forge-hall board-fight debt closed, seven leads rows. 778 ids
+  frozen — after the freeze pre-walk caught generate_shipped_ids
+  missing `skill_uses` producers (patched before regen; zero removals,
+  zero hand-adds).
+- **v0.15.0 — tagged 2026-07-28, Legibility & Life.** Delivery layer
+  (18 act-beat openings, Leads strip, lossless Lore tab), viewports +
+  endings acknowledgment, guest arc-windows + hygiene, the population
+  pass, readability (measured figure bar 1.25–3.55 cells; the shipped
+  roster had spanned 20x). 697 ids frozen.
+- **v0.14.0 — tagged 2026-07-28, the Main Quest wave.** Acts I–V off
+  the "post-game" framing, "The Dig" backport, the pilgrimage spine,
+  Act V's three-path seal conclusion + finale, FotI roster to ten,
+  the difficulty ladder. 669 ids frozen (`finale_played` hand-add).
+- **v0.13.0 — 2026-07-20, Depth + Polish.** The RENAME with verified
+  save carry-over (#111), journal tabs, FotI pilot, interior floors,
+  honest canonicals, the full art wave. 647 ids.
+- **v0.12.x — 2026-07-18/19.** God-file dissections, challenge-weighted
+  leveling, b-wave content, a-wave UX, mobile hotfixes.
+- **v0.8.0–v0.11.x — 2026-07-15→18.** Chronicle, pickers, economy pass,
+  rank-tiered bounties, Second Wind, Hedault enchanting, class Waves
+  A–D2, release automation. Earlier: git history.
 
-## Now (2026-07-28): v0.15 in, v0.16 SPECCED not executed
+## Now (2026-07-29): four releases in two days; the board is clean
 
-The Main Quest plays start→finale and now READS while it plays — v0.15
-closed the legibility gap the line had. Agent-actionable work is the
-v0.15 follow-up batch (HANDOFF is the authority for both queues), then
-v0.16 from its spec. User-held: **the tag cut (v0.14 and v0.15 are both
-merged and untagged)**; the six-ask Playtest-State bundle at the top of
-docs/VISUAL-LOG.md; web/#195 audio listen → wiring pass; #211 leveling
-FEEL; 3 Rags reads; windup-overlay + rock-crab visual/band verdicts;
-lore rulings #134 (Wave D classes) / #141 ([Priest]); user-deferred
-#253 (mobile import picker); flake #140; #19 Steam HOLD.
-(Two v0.14 user-gated items are now CLOSED by v0.15: the arc-window
-guest-gate call shipped in P3, and Grimalkin's sprite re-measure was
-REFUTED on measurement in P5 — the logged "2.3x Relc" was frame height,
-his figure is 1.25x, exactly canon.)
+v0.14.0 → v0.16.1 all tagged with green Release/Pages runs. The Main
+Quest plays start→finale, reads while it plays, and every region on the
+map now holds real side content. The user's first full sitting produced
+26 findings and all 26 shipped. Open board: 11 issues, every one either
+scheduled (v0.17 candidates), user-gated, or a documented flake/hold.
 
-## Next milestone: v0.16 Region Depth — SPECCED, NOT EXECUTED
+**User-held:** the gossip-ladder scaling adjudication (the one item from
+the sitting only the user can close — numbers in CHOICE-LOG's v0.16
+close block); the remaining full-sitting states on the new build; #195
+audio listen; #134 Wave-D lore ruling (absorbs #141); #253 stays
+user-deferred; #19 Steam HOLD; #140 flake reference.
 
-The spec and its issues already exist; the next session implements from
-them rather than re-designing:
-`docs/design/2026-07-28-v0.16-region-depth-spec.md` + issues
-**#305-#308**. Nothing in that spec has been built.
+## Next milestone: v0.17 — pick on user word
 
-## Later candidates (pick on user word)
+Candidates, in rough value order:
 
-Note (user-corrected 2026-07-20): **Three Pillars already EXECUTED** —
-not as a named milestone but distributed across the waves (38 field
-skills + the overworld hotbar, Helper/Tactician first-class curves,
-8 social canonicals, 46 puzzle-surface scripts; "talk/help/fight all
-real" is the shipped doctrine every wave is held to). It stays a
-STANDING GATE, not a future item.
+1. **#318 Invrisil nobility thread** (Magnolia-adjacent, spec-first —
+   her voice bar is the highest in the game; the v0.16 ambient layer is
+   the down payment).
+2. **#330 Beast Tamer dynamism + the no-treadmill audit** (the
+   principle — "actions never exist solely to level a class" — is now
+   law in wi-adding-a-class-or-skill; the audit will likely spawn
+   follow-ups).
+3. **Audio wave** (#195 after the user listen + boss/biome coverage).
+4. **#323 dead inn_settled lines re-gate** (small, scoped).
+5. **#134 Wave D classes** (after the lore ruling).
+6. **#324 world_ready dead-render window** (global engine bug; needs a
+   systematic-debugging session; on fix, the rendered-vs-seen caveat
+   comes out of two skills).
+7. **#253 mobile import** if the user un-defers.
 
-1. **Audio wave** (#195 after the user listen + the deferred #76
-   remainder): boss/biome coverage from the Ove Melaa pack.
-2. **#253 mobile import fix** (fix candidates already in the issue) +
-   a mobile-polish slice if playtests surface more.
-3. **Wave D classes** (#134, after lore rulings) + #141.
-
-(#269 FotI PR2 and #270's door continuation were the old 1 + 4 — both
-shipped inside the v0.14 wave above, so the story-spine slot is empty
-until the next big rock is picked.)
-
-Recommendation: 1 whenever the listen lands; the wave's own follow-up
-batch (HANDOFF) clears first either way.
+Loose singles that ride any wave: #283 (vacuous portal gate
+adjudication), the Krshia bespoke rig (owed from the art wave), the
+VISUAL-LOG residuals (five art debts + the v0.16 close P3s).
 
 ## Parked / standing
 
-- Necromancer evolution (user-parked at Wave A).
-- [Natural Allies: X] cross-class canon (parked at D-2).
-- Check-roll/DC system (file separately if threshold scaling proves
-  insufficient).
-- Renderer survey #140; Steam (#19, M-STEAM) on standing HOLD.
-- PixelLab budget: ~$2.7 overage credits; icon backfills (D-1/D-2
-  icons, [Flame Pillar] iconless) are cheap one-call items when wanted.
+- Three Pillars: EXECUTED and a STANDING GATE (every wave held to
+  "talk/help/fight all real"), not a future item.
+- Necromancer evolution (user-parked at Wave A); [Natural Allies: X]
+  (parked at D-2); check-roll/DC system (file if threshold scaling
+  proves insufficient).
+- #280 scored FEEL bench: CLOSED not-planned; revival criteria in
+  docs/design/2026-07-26-dev-arch-eval-275-280.md.
+- PixelLab budget: ~$2.30 credits. Icon backfills stay cheap one-call
+  items when wanted.
 
 ## Release discipline reminders
 
 Freeze cut step-0: bump RELEASE in generate_shipped_ids.py, regen,
 commit BEFORE the tag; grep new `record_accomplishment` literals
-against STRUCTURAL_LITERALS in BOTH lists (the v0.8.0 `victories`
-trap). **v0.15's inventory is already walked** — 28 accomplishment
-adds, 0 removals in any of the five id classes, and the literal grep
-came back IDENTICAL to v0.14.0, so this cut is a clean regen with no
-hand-add (numbers in the v0.15 wave-close PR body). Bundle-latest check before tagging (`gh release list` on the
-assets repo — prereleases never win Latest). Rename-era note: any
-future config/name change repeats the #111 carry-over pattern
-(WISaveMigration + the legacy_seed canonical are the template).
+against STRUCTURAL_LITERALS in BOTH lists. **Producer-schema parity
+(v0.16 lesson):** the generator and test_content must agree on what
+counts as a producer — dry-run the walk and reconcile its ADD list
+against the wave's planned counters before every regen; a new producer
+schema lands in BOTH files in one commit. Bundle-latest check before
+tagging. Merges: read the checks table as its OWN step first —
+owner-auth merges bypass required checks (enforce_admins off). Any
+future config/name change repeats the #111 carry-over pattern.
