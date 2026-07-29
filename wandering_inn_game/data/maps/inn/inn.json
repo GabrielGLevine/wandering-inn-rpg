@@ -1341,7 +1341,12 @@
     "remove_item": "dried_yarrow_bundle",
     "toast": "[Hedge Remedy] — The inn's kettle does in a pinch, just like she said. The steam settles into something kinder."
    },
-   "_comment": "GH#131 review-CI fix: moved off (2,2) -- test_sim_core walks it (open-cell move from the (2,3) start). (6,2) is a blocked kitchen-counter cell (the #116 dress-a-blocked-cell pattern); approach (6,3), facing up, which test_sim_core itself asserts open. v0.16.1 #6: same ingredient gate as eloise_cauldron, the other remedy_draught arm (see its _comment)."
+   "_comment": "GH#131 review-CI fix: moved off (2,2) -- test_sim_core walks it. (6,2) is a blocked kitchen-counter cell (the #116 dress-a-blocked-cell pattern); approach (6,3), facing up, which test_sim_core itself asserts open. v0.16.1 #6: same ingredient gate as eloise_cauldron, the other remedy_draught arm (see its _comment). v0.16.1 #26: cool green-blue tint.",
+   "tint": [
+    0.6,
+    0.92,
+    0.85
+   ]
   },
   {
    "id": "inn_chef_counter",
@@ -1395,7 +1400,13 @@
     "accomplishment": "cooked_meal",
     "item": "hot_meal",
     "toast": "[Basic Cooking] — The stew comes out rich and hot."
-   }
+   },
+   "tint": [
+    1.15,
+    0.78,
+    0.5
+   ],
+   "_comment": "v0.16.1 #26: warm copper. Three cauldron-sprite props share this kitchen row with three DIFFERENT skill gates and no visual difference at all -- a cooking PC found this and short_order live and the kettle dead, a witch PC the reverse, and the art predicted neither. This is the hero cauldron. Entity `render_scale` is a DEAD FIELD (read from the sprite CATALOG only), so tint is the only per-entity lever that works."
   },
   {
    "id": "short_order",
@@ -1412,7 +1423,13 @@
    "on_skill_use": {
     "accomplishment": "stretched_the_order",
     "toast": "[Basic Cooking] — You thin the stock, fold in day-old bread, and stretch the short order into a full service. Lyonette's shortfall vanishes into the pot."
-   }
+   },
+   "tint": [
+    0.62,
+    0.66,
+    0.72
+   ],
+   "_comment": "v0.16.1 #26: dull cold iron, against stew_pot's copper and inn_witch_kettle's green-blue."
   },
   {
    "id": "stairs_up",
