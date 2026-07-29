@@ -458,16 +458,22 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	# GH#330 R5 needs the output id in hand to refuse a duplicate BEFORE the
 	# once_per_waking key is spent (a refusal must never burn the day).
 	var effect: Dictionary = _resolve_skill_use_effect(skill_arm)
-	# TRAP (#155 review M1), GENERALIZED at GH#330 R5: an arm that yields an
-	# item must refuse BEFORE any state changes when the output cannot be
-	# picked up (inventory never stacks, so a held duplicate blocks pickup).
-	# For a CONSUMING recipe that stopped the components vanishing behind a
-	# success toast. For a PRODUCE-ONLY bench it closes the thing #330 exists
-	# to kill: the counter used to bank on a dup-refused pickup, so mashing a
-	# full pack carried [Chef]/[Alchemist] with nothing entering the world.
-	# The contract is now uniform -- the counter banks only when the output
-	# does (the v0.16.1 brew-arm ruling, applied to every yielding arm).
-	if effect.has("item") and inventory.has(String(effect["item"])):
+	# TRAP (#155 review M1), widened at GH#330 R5, SCOPED at its review: a
+	# yielding arm refuses BEFORE any state changes when the output cannot be
+	# picked up (inventory never stacks, so a held duplicate blocks pickup) --
+	# but ONLY where something real would otherwise be lost:
+	#  * CONSUMING recipe (remove_item): always, or the components vanish
+	#    behind a success toast.
+	#  * PRODUCE-ONLY and UNCAPPED: the #330 cure -- the counter used to bank
+	#    on a dup-refused pickup, so mashing a full pack carried
+	#    [Chef]/[Alchemist] with nothing entering the world.
+	# NOT a once_per_waking prop: already bounded, so there is no spigot to
+	# close, and refusing would silently KILL the arm for as long as the player
+	# holds an item the SAME prop hands out (the lamb pen's wool tuft bricked
+	# its [Beast's Mending] arm). Capped props bank and hand over nothing --
+	# the behavior interact() has always had for a failed pickup.
+	if effect.has("item") and inventory.has(String(effect["item"])) \
+			and (effect.has("remove_item") or not bool(target.get("once_per_waking", false))):
 		var dup_toast := "Your pack already holds one of those. The bench keeps its patience, and you keep your reagents."
 		if not effect.has("remove_item"):
 			dup_toast = "Your pack already holds one of those. No sense making a second you cannot carry."
