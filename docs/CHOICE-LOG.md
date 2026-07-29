@@ -2028,3 +2028,20 @@ by controller ruling — the plan was the defect, not the implementation.
   #330 carries the fix (functional producers, class dynamism, a payoff
   arc for the deer itself) plus a repo-wide audit of every leveling
   counter's producers against the principle.
+- **GH#330 wave adjudications (2026-07-29)**: (1) soothing IS tending —
+  the range soothe banks tended_beasts; dormancy-not-removal keeps cull
+  bounties a real alternative. (2) The lamb pen is the class door
+  outside the floodplains; item-yield (wool_tuft), zero gold — the 9g
+  wage floor stands. (3) The deer's arc ends: 10 tends → it stands
+  (corusdeer_doe rig, no new generations), heals, LEAVES; a one-time
+  shed antler + the herd's vouched soothe are the permanent payoff. (4)
+  present_when.companion is the wave's one engine seam (closed
+  vocabularies are why it's a spec'd seam, not a data hack). (5) The
+  dup-output refusal is SCOPED, not universal — generalizing it bricked
+  the lamb pen's own steady state (the pen hands you the tuft, then
+  refused you for holding it; review caught it live). (6) Audit
+  verdicts: archery butt cured (was an uncapped undecayed ranged_hit
+  spigot); 7 produce-benches on the successful-pickup contract;
+  accepted-THIN without change: dirty_table/serving_tray (real chores),
+  [Charming Smile]'s friendly_line (social texture is function). (7)
+  Companion dead-end split to #332 (needs a code literal + new dens).
