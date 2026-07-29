@@ -476,13 +476,17 @@
    "display_name": "Eloise's Cauldron",
    "sprite": "cauldron",
    "requires_skill": "hedge_remedy",
+   "requires_item": "dried_yarrow_bundle",
+   "item_hint_toast": "The kettle wants yarrow before it gives anything back.",
    "skill_hint_toast": "The cauldron's lit and the water's talking to itself. Hands that mean it could bring a remedy out of that.",
    "locked_toast": "A witch's cauldron, warm and waiting. Whatever it wants from you, it isn't just stirring.",
    "on_skill_use": {
     "accomplishment": "witch_craft_used",
     "item": "remedy_draught",
+    "remove_item": "dried_yarrow_bundle",
     "toast": "[Hedge Remedy] — You stir like you're sorry for the sick, the way she said. What comes off the ladle is the color of meaning it."
-   }
+   },
+   "_comment": "v0.16.1 #6 ECONOMY: the brew arm is INGREDIENT-GATED (requires_item + on_skill_use.remove_item, the #155 bench seam). Two exploits close on one shape: the brew->sell-to-Eloise arbitrage is now bounded by yarrow on hand, and making the arm CONSUMING arms wi_game.gd's dup-output refusal, which returns BEFORE record_accomplishment -- so spamming a full pack no longer banks free witch_craft_used toward [Witch]. Coverage: qa/scripts/witch_brew_loop.json."
   },
   {
    "_comment": "Light budget: witch_hollow carries 1 base light (witch_cottage_prop) before this, well under the 8/map cap.",

@@ -251,10 +251,17 @@ func _init() -> void:
 
 	var street_map: Dictionary = scene_config["maps"]["street"]
 	var upstairs_map: Dictionary = scene_config["maps"]["inn_upstairs"]
-	assert(float(_entity_by_id(street_map["entities"], "bread_stall").get("field_y_sort_bias_px", 0.0)) == 20.0,
-		"bread_stall needs its entity-scoped sort override")
-	assert(float(_entity_by_id(upstairs_map["entities"], "lyonette_door").get("field_y_sort_bias_px", 0.0)) == 20.0,
-		"lyonette_door needs its entity-scoped sort override")
+	# v0.16.1 #7: these two used to PIN the defect (== 20.0). field_y_sort_bias_px
+	# is SIGNED and positive pushes the sort key SOUTH, so a +20 on a prop the PC
+	# can stand south of makes the prop paint over the player -- exactly what both
+	# of these did (lyonette_door key 36 vs the PC's 32 on its only approach [7,2];
+	# bread_stall key 52 vs 48 on [11,3]). The gate is now the RULE, not the value:
+	# no prop the player can stand south of may carry a positive bias. Negative is
+	# still legal and still used (witch_hollow's treeline at -80, stairs_up at -32).
+	assert(float(_entity_by_id(street_map["entities"], "bread_stall").get("field_y_sort_bias_px", 0.0)) <= 0.0,
+		"bread_stall must not carry a POSITIVE y-sort bias -- the PC stands south of it on [11,3] and would be painted over")
+	assert(float(_entity_by_id(upstairs_map["entities"], "lyonette_door").get("field_y_sort_bias_px", 0.0)) <= 0.0,
+		"lyonette_door must not carry a POSITIVE y-sort bias -- the PC's only approach [7,2] is south of it")
 	assert((upstairs_map["decor"] as Array).any(func(d: Dictionary) -> bool: return d.get("sprite", "") == "rug_tan" and _int_cell(d.get("cell", [])) == [6, 2]),
 		"Lyonette's threshold needs the bounded rug zoning cue")
 
@@ -2100,6 +2107,37 @@ func _init() -> void:
 	assert(int((gGreaterWard.warded_encounters["goblin_encounter_1"] as Dictionary).get("sleeps", 0)) == 1, "greater ward decrements to one remaining sleep")
 	gGreaterWard.sleep()
 	assert(not gGreaterWard.warded_encounters.has("goblin_encounter_1"), "greater ward clears after its second sleep")
+
+	# v0.16.1 #6 ECONOMY: the [Hedge Remedy] brew arms are INGREDIENT-GATED, and
+	# the gate is what bounds the brew -> sell-to-Eloise loop (she stands on the
+	# cauldron's own map, so the cycle was zero-travel and free). Three legs on
+	# one game, against the real catalog:
+	#  (a) empty pack -- refused at requires_item; nothing produced, nothing banked
+	#  (b) yarrow held -- the arm resolves, EATS the bundle, banks the counter once
+	#  (c) yarrow held AND the output already in the pack -- the consuming-recipe
+	#      dup-output refusal fires BEFORE record_accomplishment, which is the fix
+	#      for the second, larger exploit: spamming a full pack used to bank free
+	#      witch_craft_used forever ([Hedge Witch] -> [Witch] needs 89 of them).
+	# Leg (c) is why this lives in a unit and not only in witch_brew_loop:
+	# inventory never stacks, so no save fixture can stage "holding both".
+	var gBrew := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gBrew.player_skills.append("hedge_remedy")
+	gBrew.transition("witch_hollow", Vector2i(6, 9))
+	gBrew.player_facing = Vector2i.UP
+	_events.clear()
+	assert(String(gBrew.use_skill_field("hedge_remedy").get("item_hint", "")) == "dried_yarrow_bundle", "an empty pack is refused at the brew's ingredient gate")
+	assert(_toast_texts() == ["The kettle wants yarrow before it gives anything back."], "the ingredient refusal uses the authored yarrow hint")
+	assert(gBrew.accomplishment_count("witch_craft_used") == 0 and not gBrew.inventory.has("remedy_draught"), "a gate-refused brew banks nothing and produces nothing")
+	gBrew.inventory.append("dried_yarrow_bundle")
+	_events.clear()
+	assert(String(gBrew.use_skill_field("hedge_remedy").get("accomplishment", "")) == "witch_craft_used", "a held yarrow bundle lets the brew resolve")
+	assert(gBrew.inventory.has("remedy_draught") and not gBrew.inventory.has("dried_yarrow_bundle"), "the resolved brew consumes the bundle and yields the draught")
+	assert(gBrew.accomplishment_count("witch_craft_used") == 1, "the resolved brew banks the craft counter exactly once")
+	gBrew.inventory.append("dried_yarrow_bundle")
+	_events.clear()
+	assert(String(gBrew.use_skill_field("hedge_remedy").get("blocked_duplicate", "")) == "remedy_draught", "a pack already holding the output refuses before any state changes")
+	assert(gBrew.accomplishment_count("witch_craft_used") == 1, "the dup-output refusal banks NO extra witch_craft_used -- the counter exploit is closed")
+	assert(gBrew.inventory.has("dried_yarrow_bundle"), "the dup-output refusal consumes no reagents")
 
 	var gAnimateCrowded := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
 	gAnimateCrowded.player_skills.append("test_animate")

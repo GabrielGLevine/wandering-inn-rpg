@@ -138,9 +138,27 @@
    "action": "press",
    "name": "interact"
   },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "A Rose-Cloaked Shopper", "text": "Number eleven. This IS number eleven. The sign says Havvers and my slip says Bellworth, so one of them is lying." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_invrisil_extra_1" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "A Rose-Cloaked Shopper",
+    "text": "Number eleven. This IS number eleven. The sign says Havvers and my slip says Bellworth, so one of them is lying."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "chatted_with_invrisil_extra_1"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
   {
    "action": "wait_for_event",
    "type": "dialogue_line",
@@ -154,18 +172,71 @@
    "action": "screenshot",
    "name": "01_extras_density"
   },
-
-  { "_comment": "== v0.15 T4.2 BEAT 2b: a SECOND voice in the crowd, on the way east. extra_1 still occupies (7,6), so drop to the clear y=7 lane: down 1 to (6,7), right 7 to (13,7), up 1 to (13,6), then bump up into the porter at (13,5). ==", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "move", "direction": "right", "steps": 7 },
-  { "action": "assert_state", "path": "player_cell", "equals": [13, 7] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [13, 6] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [13, 5] } },
-  { "action": "press", "name": "interact" },
-  { "_comment": "His brothers_job_done stage is unarmed at this fixture (the quest is not even started), so the BASE pool reads -- the can-fail side of T4.2's two reactive stages.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "A Porter at His Barrow", "text": "Half now, half after. That's the arrangement, and after is a long word." }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "01b_boulevard_porter" },
-
+  {
+   "_comment": "== v0.15 T4.2 BEAT 2b: a SECOND voice in the crowd, on the way east. extra_1 still occupies (7,6), so drop to the clear y=7 lane: down 1 to (6,7), right 7 to (13,7), up 1 to (13,6), then bump up into the porter at (13,5). ==",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     13,
+     5
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "His brothers_job_done stage is unarmed at this fixture (the quest is not even started), so the BASE pool reads -- the can-fail side of T4.2's two reactive stages.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "A Porter at His Barrow",
+    "text": "Half now, half after. That's the arrangement, and after is a long word."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01b_boulevard_porter"
+  },
   {
    "_comment": "== BEAT 3: the merchant-prince, NPC surface pre-quest -- Master Coyle (24,6), talk_pool only (no conversation yet, Task C3's own deliverable). From the porter's cell (13,6): down 3 to (13,9), right 5 to (18,9) -- the same clear y=9 lane the old (6,9) leg used, just entered further east after BEAT 2b -- GH#68 (quest-stage rework) detour to Stage 1's shared scouting beat here, before continuing right 5 + up 3 to Coyle -- bump right, interact -- first talk this waking absorbs the pool's rotation-0 line. ==",
    "action": "move",
@@ -281,23 +352,145 @@
    },
    "timeout_sec": 5
   },
-
-  { "_comment": "== v0.15 T4.2 BEAT 3b: the stationer's window (20,1), the fourth boulevard shopfront and the one b5 #220's plan named but never authored. Observe-only, `hide_sprite` on a blocked row-1 cell like its three siblings, so the read is [Observe] against the faced cell. Up 4 along the clear x=23 column to (23,2) (the y=3 blockers are x 4/10/16/22, and the lamp at (24,3) is off this column), left 3 to (20,2), bump up to face it. ==", "action": "move", "direction": "up", "steps": 4 },
-  { "action": "assert_state", "path": "player_cell", "equals": [23, 2] },
-  { "action": "move", "direction": "left", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [20, 2] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [20, 1] } },
-  { "action": "press_field_skill", "skill": "observe" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "observe", "target": "boulevard_stationer" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Ruled paper in three weights, ink in four, and a card offering a scribe by the hour in a hand that is itself the advertisement. Half the contracts argued about on this street were bought here first, quietly, by both sides." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "01c_boulevard_stationer" },
-  { "action": "move", "direction": "right", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [23, 2] },
-  { "action": "move", "direction": "down", "steps": 4 },
-  { "action": "assert_state", "path": "player_cell", "equals": [23, 6] },
-
+  {
+   "_comment": "== v0.15 T4.2 BEAT 3b: the stationer's window (20,1), the fourth boulevard shopfront and the one b5 #220's plan named but never authored. Observe-only, `hide_sprite` on a blocked row-1 cell like its three siblings, so the read is [Observe] against the faced cell. Up 4 along the clear x=23 column to (23,2) (the y=3 blockers are x 4/10/16/22, and the lamp at (24,3) is off this column), left 3 to (20,2), bump up to face it. ==",
+   "action": "move",
+   "direction": "up",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    20,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     20,
+     1
+    ]
+   }
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "observe"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "observe",
+    "target": "boulevard_stationer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Ruled paper in three weights, ink in four, and a card offering a scribe by the hour in a hand that is itself the advertisement. Half the contracts argued about on this street were bought here first, quietly, by both sides."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01c_boulevard_stationer"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    2
+   ]
+  },
+  {
+   "_comment": "v0.16.1 #17: COYLE AND SONS is named in two prose surfaces (the vantage toast, Wilovan's commission) and, until now, existed nowhere on screen -- the nearest art was an anonymous coin_shop_sign DECOR row with no id, name or observe. boulevard_coyle_front is a real prop on the blocked facade row [23,1]; this leg proves it is there, hoverable, and named.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     23,
+     1
+    ]
+   }
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "observe"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "observe",
+    "target": "boulevard_coyle_front"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. The frontage behind it is one narrow door and a clean window. Everything that actually moves through this firm goes round the side, on wagons, after dark."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01e_coyle_and_sons_sign"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    23,
+    6
+   ]
+  },
   {
    "_comment": "== BEAT 4: into the alleys (the traversal signature). Down 2 to (23,8), right 2 to (25,8), bump right to face boulevard_to_alleys (26,8), interact -> alleys landing (1,7). ==",
    "action": "move",
@@ -316,6 +509,11 @@
     25,
     8
    ]
+  },
+  {
+   "_comment": "v0.16.1 #9: the alley MOUTH read, from the approach the player actually stands on. The east side of the boulevard used to be open paving with a free-standing door prop on it; there is a masonry run there now (x=26, y3..6 and y10..15) with a three-cell break at y7..9 and the alley's own ground behind it. boulevard_to_alleys is hide_sprite, so the gap IS the entrance.",
+   "action": "screenshot",
+   "name": "01d_alley_mouth"
   },
   {
    "action": "press",
@@ -1090,14 +1288,27 @@
    "equals": "night"
   },
   {
-   "_comment": "== SHOT 07: the alleys' lantern pools at night. Down 6 to (27,8), bump left at the door (26,8), interact -> alleys (1,7) -- still sneaking, so the re-armed footpads_a zone stays quiet. Right 2 + up 1 to (3,6), directly under the (3,5) sconce's pool. ==",
+   "_comment": "== SHOT 07: the alleys' lantern pools at night. The grind ends at (27,2). Left 2 to (25,2), down 6 to (25,8), bump RIGHT at the door (26,8), interact -> alleys (1,7) -- still sneaking, so the re-armed footpads_a zone stays quiet. Right 2 + up 1 to (3,6), directly under the (3,5) sconce's pool. REVIEW ROUND 2: this leg used to descend column 27 -- i.e. BEHIND #9's new east wall -- and approach the door from the east, which is how the wall shipped as a free-standing screen. [27,3] seals the lane's north end, so the approach is the same column-25 one BEAT 4 already uses. ==",
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
    "action": "move",
    "direction": "down",
    "steps": 6
   },
   {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    25,
+    8
+   ]
+  },
+  {
    "action": "move",
-   "direction": "left",
+   "direction": "right",
    "steps": 1
   },
   {

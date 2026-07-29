@@ -147,6 +147,11 @@
    ]
   },
   {
+   "_comment": "v0.16.1 #3: the mill entrance read, from the south approach the player actually walks. The redundant `door` prop is hide_sprite now and riverfarm_windmill_prop moved one column west, so the ramp/doorway drawn into the windmill art is what sits above this cell.",
+   "action": "screenshot",
+   "name": "00_mill_ramp_entrance"
+  },
+  {
    "action": "press",
    "name": "interact"
   },

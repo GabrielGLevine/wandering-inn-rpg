@@ -26,6 +26,7 @@
   { "action": "wait_for_event", "type": "combat_finished", "payload_contains": {"victory": true}, "timeout_sec": 20 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "original_recovered"}, "timeout_sec": 5 },
+  { "_comment": "v0.16.1 #11: the seam this script used to jump straight over -- it waited on the counter and the combat teardown, then teleported. The FIGHT route's resolution IS this toast; without it the player is asked to report a recovery the game never showed them.", "action": "wait_for_event", "type": "toast", "payload_contains": {"text": "The fence's strongbox gives up a lady's stone — forty years missing and still warm with someone else's guilt. It goes in your pack like it weighs more than it does."}, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
   { "_comment": "== THE REPORT, on the recovery arm. ==", "action": "wait_frames", "frames": 1 },
   { "action": "teleport", "map": "stationer", "cell": [4, 2] },

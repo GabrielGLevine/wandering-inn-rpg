@@ -1044,7 +1044,7 @@
    ]
   },
   {
-   "_comment": "Round-trip pair with parlor_to_alleys (brothers_parlor cell 0,4).",
+   "_comment": "Round-trip pair with parlor_to_alleys (brothers_parlor cell 0,4). v0.16.1 #22: gains a cold slate tint, against warehouse_approach's burgundy on the north wall.",
    "id": "alleys_to_parlor",
    "kind": "door",
    "cell": [
@@ -1057,6 +1057,11 @@
    "to_cell": [
     1,
     4
+   ],
+   "tint": [
+    0.42,
+    0.46,
+    0.5
    ]
   },
   {
@@ -1176,19 +1181,19 @@
    "locked_toast": "Two men on the door, pacing something. You don't have the eye to time it yet."
   },
   {
-   "_comment": "Plain on_interact_accomplishment, no skill gate (a fighter-built PC must never need [Appraise Foe] to reach a fight).",
+   "_comment": "Plain on_interact_accomplishment, no skill gate (a fighter-built PC must never need [Appraise Foe] to reach a fight). v0.16.1 #22: moved [19,11] -> [18,10] (already-blocked north wall; approach [18,11] is the cell the canonical already teleports to) and hard-retinted to Coyle's burgundy. It used to sit DIRECTLY ABOVE alleys_to_parlor on the same wall column, both on the generic `door` sprite, so the pair read as one double door with adjacent approaches. NOT [16,11] as the triage proposed: row 11 is the map's ONLY through-corridor, so a blocker there strands the east end -- and invrisil_disagreement_stealth STANDS on [16,11] to lift the ledger.",
    "id": "warehouse_approach",
    "kind": "prop",
    "cell": [
-    19,
-    11
+    18,
+    10
    ],
    "display_name": "A Side Door, Watched",
    "sprite": "door",
    "tint": [
-    0.45,
-    0.4,
-    0.4
+    0.74,
+    0.44,
+    0.34
    ],
    "observe": "The runner's trail ends at a side door with fresh boot-scuff on the sill and burgundy-and-brass livery moving past the gap in the shutters. Coyle's crew, and no mistaking the building now.",
    "on_interact_accomplishment": "warehouse_located",
@@ -1285,10 +1290,17 @@
    "_comment": "GH#142: Hedault, Invrisil enchanter (user placement ruling 2026-07-15). CANON-NATIVE Vol 6-7. Sprite: human placeholder + tint, VISUAL-LOG. No shop -- his commerce is the enchant dialogue.",
    "id": "hedault",
    "kind": "npc",
-   "cell": [0, 6],
+   "cell": [
+    0,
+    6
+   ],
    "display_name": "Hedault",
    "sprite": "human_laborer",
-   "tint": [0.85, 0.85, 0.95],
+   "tint": [
+    0.85,
+    0.85,
+    0.95
+   ],
    "conversation": "hedault_enchanting",
    "talk_pool": [
     "Appraisal is free to watch and expensive to interrupt.",
@@ -1298,19 +1310,30 @@
    "observe": "A severe man at a spotless corner bench, tools laid out at right angles. Everything about him says the prices are exact and the opinions are free."
   },
   {
-   "_comment": "v0.16 I1 FIGHT (#306). INTERACT-ONLY (no trigger_radius) at (11,12): outside both shipped footpad trigger zones and off every pinned cell. Independent of the footpad rigs, so it is correct on a brothers_job_done save.",
+   "_comment": "v0.16 I1 FIGHT (#306). INTERACT-ONLY (no trigger_radius) at (11,12): outside both shipped footpad trigger zones and off every pinned cell. Independent of the footpad rigs, so it is correct on a brothers_job_done save. v0.16.1 #11: victory_toast added -- nothing rendered between the fight ending and the Lady's report row, so the player was asked to claim a recovery the game had never shown them. combat_banking's one-shot toast is contract-legal here (the first on_victory id is `original_recovered`, a quest-style String). No item id minted.",
    "id": "alley_fence_door",
    "kind": "encounter",
-   "cell": [11, 12],
+   "cell": [
+    11,
+    12
+   ],
    "display_name": "A Back Door with a Ledger Behind It",
    "sprite": "door",
    "observe": "A door with no handle on this side and a fresh scrape where somebody's boot goes when their hands are full. The ledger inside is worth more than the stock.",
    "arena": "mercantile_alley",
-   "enemies": ["heirloom_fence", "fence_doorman"],
+   "enemies": [
+    "heirloom_fence",
+    "fence_doorman"
+   ],
    "allies": [],
    "on_victory": "original_recovered",
-   "encounter_when": { "requires": { "heirloom_commission_started": 1 } },
-   "gate_closed_toast": "A back door with no handle on this side. Nothing about it is any of your business tonight."
+   "encounter_when": {
+    "requires": {
+     "heirloom_commission_started": 1
+    }
+   },
+   "gate_closed_toast": "A back door with no handle on this side. Nothing about it is any of your business tonight.",
+   "victory_toast": "The fence's strongbox gives up a lady's stone — forty years missing and still warm with someone else's guilt. It goes in your pack like it weighs more than it does."
   }
  ]
 }

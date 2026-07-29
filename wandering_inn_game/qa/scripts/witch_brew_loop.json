@@ -1,0 +1,32 @@
+{
+ "_comment": "v0.16.1 #6 ECONOMY: the brew arm had ZERO live coverage before this script -- nothing in qa/ ever cast [Hedge Remedy] at eloise_cauldron or inn_witch_kettle, which is exactly why the unbounded brew->sell arbitrage shipped. The loop is now INGREDIENT-BOUNDED and this is the proof a player can see: one cast turns the held dried_yarrow_bundle into a remedy_draught (item_gained + item_lost on the same cast, witch_craft_used 1), and the very next cast is REFUSED at the item gate with the authored hint, banking nothing. assert_event_count pins that the second press produced no second remedy -- the arbitrage's whole engine. The consuming-recipe dup-output refusal (a held remedy must not bank a free witch_craft_used) is unit-proven in test_sim_core, which can stage the two-items-held state a save fixture cannot (inventory never stacks).",
+ "fixture_save": "witch_brew_start",
+ "starts_at_title": true,
+ "steps": [
+  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
+  {"action": "move", "direction": "down", "steps": 1},
+  {"action": "press", "name": "confirm"},
+  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
+
+  {"_comment": "Start posture: one yarrow bundle in the pack, standing on the cauldron's only cardinal approach, facing it.", "action": "assert_state", "path": "inventory", "contains": "dried_yarrow_bundle"},
+  {"action": "assert_state", "path": "player_cell", "equals": [6, 9]},
+  {"action": "screenshot", "name": "00_cauldron_with_yarrow"},
+
+  {"_comment": "Cast 1 -- the ingredient gate is MET, so the arm resolves and CONSUMES.", "action": "press_field_skill", "skill": "hedge_remedy"},
+  {"action": "wait_for_event", "type": "item_gained", "payload_contains": {"item": "remedy_draught"}, "timeout_sec": 5},
+  {"action": "wait_for_event", "type": "item_lost", "payload_contains": {"item": "dried_yarrow_bundle", "source": "eloise_cauldron"}, "timeout_sec": 5},
+  {"action": "assert_state", "path": "accomplishments.witch_craft_used", "equals": 1},
+  {"action": "assert_state", "path": "inventory", "contains": "remedy_draught"},
+  {"action": "screenshot", "name": "01_brewed_once"},
+
+  {"_comment": "Cast 2 -- no yarrow left. The gate returns BEFORE any effect resolves: authored hint, no second remedy, counter unmoved. This is the bound.", "action": "press_field_skill", "skill": "hedge_remedy"},
+  {"action": "wait_for_event", "type": "toast", "payload_contains": {"text": "The kettle wants yarrow before it gives anything back."}, "timeout_sec": 5},
+  {"action": "assert_event_count", "type": "item_gained", "payload_contains": {"item": "remedy_draught"}, "count": 1},
+  {"action": "assert_event_count", "type": "item_lost", "payload_contains": {"item": "dried_yarrow_bundle"}, "count": 1},
+  {"action": "assert_state", "path": "accomplishments.witch_craft_used", "equals": 1},
+  {"action": "screenshot", "name": "02_second_cast_refused"}
+ ]
+}

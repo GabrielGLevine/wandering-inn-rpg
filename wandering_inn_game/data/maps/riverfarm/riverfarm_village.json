@@ -1104,11 +1104,11 @@
    ]
   },
   {
-   "_comment": "sails overhang above the blocked footprint.",
+   "_comment": "Sails overhang above the blocked footprint. v0.16.1 #3: moved [20,4] -> [19,4] so the ramp/doorway drawn into the windmill art lands on COLUMN 19, over riverfarm_mill_door's cell [19,5] and the pinned south approach [19,6]. Measured, not guessed: 64x96 sheet, render_scale 1.0, anchor [0.5,0.917], so the art draws from (cell.x*16 - 24); a pixel scan of rows 72-88 puts the doorway at sheet x 30..37. [19,4] was ALREADY blocked, so this moves art only -- no sim change, no canonical churn.",
    "id": "riverfarm_windmill_prop",
    "kind": "prop",
    "cell": [
-    20,
+    19,
     4
    ],
    "display_name": "The Windmill",
@@ -1385,7 +1385,7 @@
    ]
   },
   {
-   "_comment": "clear of every blocked cell and every other entity's cell, no trigger_radius so no blast-radius overlap with anything nearby.",
+   "_comment": "clear of every blocked cell and every other entity's cell, no trigger_radius so no blast-radius overlap with anything nearby. v0.16.1 #2 DISAMBIGUATION: \"The Hunter\" is a LOCAL GAME HUNTER, not a member of any order. His whole copy surface used to be the hollow, with zero game, meat or pelts in it, while he is mechanically the man who walks you to the witch and fights her briars. The observe line now carries the trade signal, and one line is APPENDED LAST to the base pool and to the thread_neutral stage (which duplicates it). The copy never names or negates the order -- positive trade signal only. NOT renamed: a rename must move combatants.json's display_name too and re-pins five QA speaker payloads.",
    "id": "riverfarm_hunter",
    "kind": "npc",
    "cell": [
@@ -1399,7 +1399,8 @@
     "Hollow's quieter than it should be. Doesn't sit right.",
     "Lost two lambs to something with thorns for teeth. Wasn't a wolf.",
     "Know that treeline better than the headman does. He'd rather not.",
-    "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health."
+    "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health.",
+    "The witch? Her business is hers and I keep to mine. Wolves took two lambs this spring — that's the whole of my trade."
    ],
    "talk_pool_stages": [
     {
@@ -1420,7 +1421,8 @@
       "Hollow's quieter than it should be. Doesn't sit right.",
       "Lost two lambs to something with thorns for teeth. Wasn't a wolf.",
       "Know that treeline better than the headman does. He'd rather not.",
-      "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health."
+      "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health.",
+      "The witch? Her business is hers and I keep to mine. Wolves took two lambs this spring — that's the whole of my trade."
      ]
     },
     {
@@ -1435,7 +1437,7 @@
      ]
     }
    ],
-   "observe": "Weathered hands, a hunting knife worn plain at the hip, eyes on the treeline more than on you.",
+   "observe": "Rope-burned hands, a game bag, and wolf sign on his boots. Whatever he hunts, it walks on four legs.",
    "conversation": "riverfarm_hunter",
    "dialogue": [
     {
@@ -1593,7 +1595,7 @@
    ]
   },
   {
-   "_comment": "v0.16 #305: the mill's ground-floor door. [19,5] is inside the windmill's blocked footprint (the longhouse_door precedent). TWO free approaches, [19,6] and [18,5], neither on any walked QA route. mill_exit returns to [19,6] only, so a west-side entry exits one cell over -- deliberate. sprite `door`, never riverfarm_windmill: that art is 4x6 cells and is already drawn at [20,4].",
+   "_comment": "v0.16 #305: the mill's ground-floor door. [19,5] is inside the windmill's blocked footprint (the longhouse_door precedent). TWO free approaches, [19,6] and [18,5], neither on any walked QA route. mill_exit returns to [19,6] only. v0.16.1 #3: hide_sprite -- the `door` prop was a SECOND doorway pasted on the tower's west corner, y-sorting in front of the mill, one column from the ramp the art already draws. The art carries the entrance now; the entity keeps blocking, observe, to_map and to_cell. `sprite` is retained as the fallback if the mill art is re-cut.",
    "id": "riverfarm_mill_door",
    "kind": "door",
    "cell": [
@@ -1602,6 +1604,7 @@
    ],
    "display_name": "The Mill",
    "sprite": "door",
+   "hide_sprite": true,
    "tint": [
     0.74,
     0.7,

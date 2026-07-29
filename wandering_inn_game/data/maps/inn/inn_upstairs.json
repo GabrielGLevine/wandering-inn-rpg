@@ -223,7 +223,7 @@
    ]
   },
   {
-   "_comment": "Lyonette's room, hinted but never entered",
+   "_comment": "Lyonette's room, hinted but never entered. v0.16.1 #7: the +20 field_y_sort_bias_px is DELETED. The field is signed and positive pushes the sort key SOUTH, so a door on the north wall row (holder y 16, biased to 36) outsorted the PC on its only approach [7,2] (holder y 32, no bias) and painted its 22px sprite straight over the player's head and torso. Zero is correct here and buys nothing back: floors and wall bands build into _field_root BEFORE _entities_root, so entities already draw over the wall unconditionally. The two sibling doors at [3,1]/[5,1] never carried a bias.",
    "id": "lyonette_door",
    "kind": "prop",
    "cell": [
@@ -232,7 +232,6 @@
    ],
    "display_name": "Lyonette's Door",
    "sprite": "door",
-   "field_y_sort_bias_px": 20.0,
    "locked_toast": "Locked. Lyonette keeps exactly one door in this inn that isn't anyone's business but hers.",
    "observe": "Lyonette's door, shut the way she shuts most things: completely, and without discussion. Whatever the room looks like behind it, you'll have to imagine it; she's not one to leave doors, or herself, half open."
   }

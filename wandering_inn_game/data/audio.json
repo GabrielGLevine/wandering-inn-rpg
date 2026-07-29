@@ -44,14 +44,20 @@
    "_comment": "CONTRACT: family comes from biomes.json; stream/variants/pitch_variants share one round-robin index.",
    "id": "footstep_wood",
    "event": "player_moved",
-   "payload": { "floor_family": "wood" },
+   "payload": {
+    "floor_family": "wood"
+   },
    "stream": "res://assets/audio/sfx/footstep.wav",
    "variants": [
     "res://assets/audio/sfx/footstep.wav",
     "res://assets/audio/sfx/footstep.wav",
     "res://assets/audio/sfx/footstep.wav"
    ],
-   "pitch_variants": [0.94, 1.0, 1.06],
+   "pitch_variants": [
+    0.94,
+    1.0,
+    1.06
+   ],
    "bus": "SFX",
    "volume_db": -24.0,
    "cooldown_ms": 120
@@ -59,14 +65,20 @@
   {
    "id": "footstep_stone",
    "event": "player_moved",
-   "payload": { "floor_family": "stone" },
+   "payload": {
+    "floor_family": "stone"
+   },
    "stream": "res://assets/audio/sfx/footstep.wav",
    "variants": [
     "res://assets/audio/sfx/footstep.wav",
     "res://assets/audio/sfx/footstep.wav",
     "res://assets/audio/sfx/footstep.wav"
    ],
-   "pitch_variants": [1.1, 1.16, 1.22],
+   "pitch_variants": [
+    1.1,
+    1.16,
+    1.22
+   ],
    "bus": "SFX",
    "volume_db": -23.0,
    "cooldown_ms": 120
@@ -74,20 +86,26 @@
   {
    "id": "footstep_earth",
    "event": "player_moved",
-   "payload": { "floor_family": "earth" },
+   "payload": {
+    "floor_family": "earth"
+   },
    "stream": "res://assets/audio/sfx/footstep.wav",
    "variants": [
     "res://assets/audio/sfx/footstep.wav",
     "res://assets/audio/sfx/footstep.wav",
     "res://assets/audio/sfx/footstep.wav"
    ],
-   "pitch_variants": [0.78, 0.84, 0.9],
+   "pitch_variants": [
+    0.78,
+    0.84,
+    0.9
+   ],
    "bus": "SFX",
    "volume_db": -26.0,
    "cooldown_ms": 120
   },
   {
-   "_comment": "v0.16.1 finding 23 -- THE COMBAT-BEAT CLOCK. Every row keyed on attack_resolved / combatant_downed / skill_resolved / reaction_triggered now listens to `ui_combat_beat` and matches the original event id through `beat_type`. Reason: WICombatAI.take_turn emits an entire AI turn SYNCHRONOUSLY, so footsteps, attack, downed and the sting all reached the raw bus at t=0 while combat_playback.drain() unspooled the visuals one beat_delay() apart -- a kill after a 3-cell approach was heard ~1.5-2s before it was seen, worst of all for the player's own death (which by definition happens on an enemy turn). combat_screen emits UI_COMBAT_BEAT from BOTH paths: the live player turn in the same frame as the sim (timing unchanged), the playback path at DEQUEUE, beside the animation. `dashed` and `combat_finished` are DELIBERATELY still raw -- scope stays this set.",
+   "_comment": "v0.16.1 #23: combat-beat rows ride ui_combat_beat (playback clock). The four beat types are FORBIDDEN as raw event keys -- test_audio_data tripwire.",
    "id": "attack_hit",
    "event": "ui_combat_beat",
    "payload": {
@@ -206,7 +224,10 @@
    "_comment_skill_coverage": "Skill sounds reuse four curated timbres by effect family, not literal element name.",
    "id": "skill_cast_fire_scythe",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "flame_scythe" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "flame_scythe"
+   },
    "stream": "res://assets/audio/sfx/skill_fire.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -215,7 +236,10 @@
   {
    "id": "skill_cast_fire_burst",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "flare_burst" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "flare_burst"
+   },
    "stream": "res://assets/audio/sfx/skill_fire.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -224,7 +248,10 @@
   {
    "id": "skill_cast_fire_pillar",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "flame_pillar" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "flame_pillar"
+   },
    "stream": "res://assets/audio/sfx/skill_fire.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -233,7 +260,10 @@
   {
    "id": "skill_cast_frost_shard",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "ice_shard" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "ice_shard"
+   },
    "stream": "res://assets/audio/sfx/skill_frost.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -242,7 +272,10 @@
   {
    "id": "skill_cast_frost_floor",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "icy_floor" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "icy_floor"
+   },
    "stream": "res://assets/audio/sfx/skill_frost.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -251,7 +284,10 @@
   {
    "id": "skill_cast_arcane_spellbound",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "spellbound_strike" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "spellbound_strike"
+   },
    "stream": "res://assets/audio/sfx/skill_arcane.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -260,7 +296,10 @@
   {
    "id": "skill_cast_arcane_keener",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "keener_edge" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "keener_edge"
+   },
    "stream": "res://assets/audio/sfx/skill_arcane.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -269,7 +308,10 @@
   {
    "id": "skill_cast_arcane_calming",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "calming_touch" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "calming_touch"
+   },
    "stream": "res://assets/audio/sfx/skill_arcane.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -278,7 +320,10 @@
   {
    "id": "skill_cast_arcane_second_wind",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "second_wind" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "second_wind"
+   },
    "stream": "res://assets/audio/sfx/skill_arcane.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -287,7 +332,10 @@
   {
    "id": "skill_cast_physical_piercing_strikes",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "piercing_strikes" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "piercing_strikes"
+   },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -296,7 +344,10 @@
   {
    "id": "skill_cast_physical_quick_slash",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "quick_slash" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "quick_slash"
+   },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -305,7 +356,10 @@
   {
    "id": "skill_cast_physical_flash_cut",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "flash_cut" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "flash_cut"
+   },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -314,7 +368,10 @@
   {
    "id": "skill_cast_physical_devastating_slash",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "devastating_slash" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "devastating_slash"
+   },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -323,7 +380,10 @@
   {
    "id": "skill_cast_physical_triple_thrust",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "triple_thrust" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "triple_thrust"
+   },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -332,7 +392,10 @@
   {
    "id": "skill_cast_physical_extended_sweep",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "extended_sweep" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "extended_sweep"
+   },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -341,7 +404,10 @@
   {
    "id": "skill_cast_physical_spear_flurry",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "spear_flurry" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "spear_flurry"
+   },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -350,7 +416,10 @@
   {
    "id": "skill_cast_physical_power_shot",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "power_shot" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "power_shot"
+   },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -359,7 +428,10 @@
   {
    "id": "skill_cast_physical_quick_nock",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "quick_nock" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "quick_nock"
+   },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -368,7 +440,10 @@
   {
    "id": "skill_cast_physical_piercing_shot",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "piercing_shot" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "piercing_shot"
+   },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -377,7 +452,10 @@
   {
    "id": "skill_cast_physical_raskghar_maul",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "raskghar_maul" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "raskghar_maul"
+   },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -15.0,
@@ -386,7 +464,10 @@
   {
    "id": "skill_cast_physical_slam",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "skill_resolved", "skill": "slam" },
+   "payload": {
+    "beat_type": "skill_resolved",
+    "skill": "slam"
+   },
    "stream": "res://assets/audio/sfx/skill_physical.wav",
    "bus": "SFX",
    "volume_db": -13.0,
@@ -420,7 +501,9 @@
   {
    "id": "downed",
    "event": "ui_combat_beat",
-   "payload": { "beat_type": "combatant_downed" },
+   "payload": {
+    "beat_type": "combatant_downed"
+   },
    "stream": "res://assets/audio/sfx/downed.wav",
    "bus": "SFX",
    "volume_db": -14.0,
@@ -765,7 +848,7 @@
    "payload": {
     "map": "brothers_parlor"
    },
-   "_comment": "GH#133 ear-gate iteration 3 (v0.16.1 finding 13): LENGTH IS NOW A SELECTION CRITERION. Iteration 1 was junkala_childhood_friends (102.9s, wholesome, rejected); iteration 2 picked peaceful_night on mood alone -- but that file is 11.15s, curated as the SLEEP STING (music_sleep_beat, kind sting, loop false), where an 11s nocturne is right. As a looping FIELD bed it restarted ~5x a minute, and because it has a composed intro/decay shape every wrap read as a restart rather than a bar line. Every other field track in the game is 46-110s. junkala_encounter_witches (113.5s, CC0 Juhani Junkala) keeps #133's intent -- low-key, courteous, not wholesome -- at 10x the loop length, and reads as a clandestine den rather than a bedroom. It also fixes a LATENT SECOND BUG in the same row: peaceful_night is private-overlay-only (gitignored, synced from the purchased xDeviruchi pack), and test_audio_data's _stream_ok deliberately accepts manifest-only paths, so the public/community build had NO music in this room at all and QA was green on it. junkala_encounter_witches is in-repo and committed. peaceful_night stays the sleep sting -- that use is correct and is untouched.",
+   "_comment": "v0.16.1 #13 (GH#133 iter 3): 113.5s bed -- LENGTH is a selection criterion; an 11s sting reads as a loop bug. peaceful_night stays on music_sleep_beat only.",
    "stream": "res://assets/audio/music/junkala_encounter_witches.ogg",
    "bus": "Music",
    "volume_db": -8.0,
@@ -962,7 +1045,7 @@
    "payload": {
     "map": "mercantile_alleys"
    },
-   "_comment": "v0.16.1 finding 14: this was cynicmusic's 'Town Theme RPG' -- a warm major-key village cue playing in a back-alley the design treats as a threat space (the map has its own ambush arena, music_combat_mercantile_alley). It came from commit 009b0f3's bulk coverage sweep, which picked by license tier and availability so that no map fell through to the previous map's bed; the `_v2` suffix shows it was re-picked once, still inside the same town register, and the alley never got an ear-gate the way brothers_parlor did. hydrogene_malicious_scheme (71.2s, CC0 HydroGene, in-repo) is the game's existing 'something is wrong here' timbre; sharing it with trapped_halls is precedented reuse (definitely_our_town serves inn + inn_upstairs, junkala_home_town serves riverfarm_village + riverfarm_longhouse, hydrogene_hidden_cavern serves dungeon_approach + seal_vault) and the two consumers -- a dungeon corridor and an urban alley -- sit far apart in the pilgrimage. It also fixes the neighbouring GRADIENT: invrisil_boulevard (junkala_bazaar, bright bustling market) -> mercantile_alleys (menacing) -> brothers_parlor (hushed) is now a real three-step descent instead of town-theme -> town-theme -> lullaby. The alley carries 100% of its own mood because it has no `ambience` row; adding one is a separate change (ambience streams are held to the public/CC0 tier with no manifest relaxation).",
+   "_comment": "v0.16.1 #14: alley bed = malicious_scheme (creepy per the user ear-gate; boulevard->alley->parlor gradient). Reuse with trapped_halls is precedented.",
    "stream": "res://assets/audio/music/hydrogene_malicious_scheme.ogg",
    "bus": "Music",
    "volume_db": -7.0,
@@ -1107,7 +1190,9 @@
    "kind": "ambience",
    "context": "inn",
    "event": "map_changed",
-   "payload": { "map": "inn" },
+   "payload": {
+    "map": "inn"
+   },
    "stream": "res://assets/audio/ambience/inn_crowd_murmur.ogg",
    "bus": "Ambience",
    "volume_db": -10.0,
@@ -1118,7 +1203,9 @@
    "kind": "ambience",
    "context": "street",
    "event": "map_changed",
-   "payload": { "map": "street" },
+   "payload": {
+    "map": "street"
+   },
    "stream": "res://assets/audio/ambience/street_town_bed.ogg",
    "bus": "Ambience",
    "volume_db": -10.0,
@@ -1129,7 +1216,9 @@
    "kind": "ambience",
    "context": "floodplains",
    "event": "map_changed",
-   "payload": { "map": "floodplains" },
+   "payload": {
+    "map": "floodplains"
+   },
    "stream": "res://assets/audio/ambience/floodplains_river_bed.ogg",
    "bus": "Ambience",
    "volume_db": -8.0,
@@ -1140,7 +1229,9 @@
    "kind": "ambience",
    "context": "sewers",
    "event": "map_changed",
-   "payload": { "map": "sewers" },
+   "payload": {
+    "map": "sewers"
+   },
    "stream": "res://assets/audio/ambience/sewers_drip.ogg",
    "bus": "Ambience",
    "volume_db": -8.0,
@@ -1151,7 +1242,9 @@
    "kind": "ambience",
    "context": "trapped_halls",
    "event": "map_changed",
-   "payload": { "map": "trapped_halls" },
+   "payload": {
+    "map": "trapped_halls"
+   },
    "stream": "res://assets/audio/ambience/dungeon_hum.ogg",
    "bus": "Ambience",
    "volume_db": -8.0,
@@ -1162,7 +1255,9 @@
    "kind": "ambience",
    "context": "seal_vault",
    "event": "map_changed",
-   "payload": { "map": "seal_vault" },
+   "payload": {
+    "map": "seal_vault"
+   },
    "stream": "res://assets/audio/ambience/dungeon_hum.ogg",
    "bus": "Ambience",
    "volume_db": -8.0,

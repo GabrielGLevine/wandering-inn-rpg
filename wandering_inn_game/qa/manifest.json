@@ -3885,14 +3885,14 @@
    "script": "invrisil_mothbear_loop",
    "seed": 9,
    "fixture": "invrisil_mothbear_loop_start",
-   "note": "Issue #97: bounty_mothbear_cull end to end -- accept at Selys's desk (guild), teleport to invrisil_boulevard at NIGHT (actions_since_sleep pre-set), a real move into trigger_radius 1 springs boulevard_mothbears live, win it ONCE (single-kill by design), turn in for the exact 4 gold payout",
+   "note": "Issue #97: bounty_mothbear_cull end to end -- accept at Selys's desk (guild), teleport to the NIGHT floodplains (actions_since_sleep pre-set), a real move into trigger_radius 1 springs road_mothbears live, win it ONCE (single-kill by design), turn in for the exact 4 gold payout. v0.16.1 #21 moved the kill site off invrisil_boulevard to the wagon road; the bounty, the counter and the payout are unchanged",
    "tiers": [
     "full"
    ],
    "surfaces": {
     "maps": [
-     "guild",
-     "invrisil_boulevard"
+     "floodplains",
+     "guild"
     ],
     "fixtures": [
      "invrisil_mothbear_loop_start"
@@ -5624,6 +5624,32 @@
      "combat",
      "exploration",
      "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "witch_brew_loop",
+   "seed": 9,
+   "fixture": "witch_brew_start",
+   "note": "v0.16.1 #6 ECONOMY: the ingredient-bounded brew arm. Before this the [Hedge Remedy] bench props had ZERO live coverage, which is how an unbounded brew->sell loop shipped. One cast eats the held dried_yarrow_bundle and yields a remedy_draught; the next cast is refused at the requires_item gate with the authored hint and banks nothing (assert_event_count pins exactly one remedy per yarrow). The consuming-recipe dup-output refusal is unit-proven in test_sim_core",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "witch_brew_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "hedge_remedy"
+    ],
+    "dialogue": [],
+    "systems": [
+     "economy",
+     "exploration"
     ]
    }
   }

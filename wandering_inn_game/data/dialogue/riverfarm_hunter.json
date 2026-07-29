@@ -3,7 +3,7 @@
 	"nodes": {
 		"hub": {
 			"speaker": "The Hunter",
-			"text": "Hollow's not safe alone. Hasn't been for weeks.",
+			"text": "Hollow's not safe alone. Hasn't been for weeks. The witch? Her business is hers and I keep to mine. Wolves took two lambs this spring — that's the whole of my trade.",
 			"text_variants": [
 				{ "requires": { "accomplishment": { "hunter_will_come": 1 } }, "text": "Still headed that way? Say when. I'm not doing anything the fields need me for today." },
 				{ "requires": { "accomplishment": { "survived_wolf_night": 1 } }, "text": "Didn't figure we'd both still be standing after that. Hollow's not the only thing that gets ugly once the sun's down out here, and now you've seen it firsthand." }

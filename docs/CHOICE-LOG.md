@@ -4,6 +4,48 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.16.1 CONTENT/MAPS: the Invrisil mothbear (#21)
+
+**Call: OPTION A — keep the beast and the bounty, move the kill site outside
+the walls.** The user asked why there was a Mothbear in Invrisil. There was no
+good answer. `boulevard_mothbears` sat at [5,15] on the boulevard, night-gated,
+and `mothbear_a`'s `_comment` asserted the placement was canon-drawn to the
+lantern-line; `mothbear_b`'s then said "see mothbear_a's own _comment for the
+canon cite." The chain terminated in nothing — a grep for `mothbear` across
+`data/`, `docs/design/` and the wiki reference returns zero canon references.
+Canon mothbears are northern-Izril WILDERNESS beasts; Invrisil is the largest
+walled human city on the continent, with a Watch and two guilds.
+
+Alternatives considered:
+- **Option B, swap the roster for a canon-urban night threat.** Rejected: the
+  right thing already exists eight cells away (`boulevard_night_footpads`), so
+  Option B would have put two human night-ambush encounters on one map and
+  thrown away a shipped bespoke rig.
+- **Leave it and write a better `_comment`.** Rejected: the placement is the
+  defect, not its documentation.
+
+What moved: the encounter re-homes to `floodplains` [23,12] — the verge of the
+POI-A shoulder, the road spur hanging north off the main artery at (20..22,12)
+and (22,13), i.e. a carter pull-off. Chebyshev 1 reaches the spur but not the
+artery (rows 14/15), and the nearest cell any canonical walks is four away,
+verified by harvesting every `player_moved`/`player_blocked` event out of a
+full sweep rather than by eye. (Adversarial review round 2 moved it here from
+[23,2]: that cell is plain grass ten rows north of the nearest `dirt_01` road
+layer, so the rewritten copy — "the verge of the wagon road", "my carters camp
+out there" — named scenery the map does not draw. That is the same defect
+class #17 was raised to fix, one wave and one map over.) It keeps
+goblin_night_patrol's night/respawn/
+hidden-marker shape, and moves onto `boulder_flats`, that map's own outdoor
+arena, so the board matches the fiction. Coyle's two bounties keep their ids
+and their gold and lose "the lantern-line" for the wagon road and the carter
+camps. `mothbears_culled` is UNCHANGED — it is the bounty condition and is
+registered in `shipped_ids`, so the producer moves and the counter does not.
+`bounty_standing_lantern_line`'s id is now a legacy name, flagged in its own
+`_comment`.
+
+Honest note recorded in `mothbear_a`'s `_comment` in place of the dead cite:
+this is an ORIGINAL beast placed on wilderness logic, not a cited one.
+
 ## 2026-07-28 — v0.16 PALLASS LANE (#307), FIX WAVE (post-adversarial-review)
 
 Two IMPORTANT findings applied. One of them turned out to rest on a false

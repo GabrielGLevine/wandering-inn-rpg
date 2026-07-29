@@ -263,7 +263,7 @@
    "toast": "Every piece on the wall passed. You count the tags: four different smiths, four different answers, one standard. Pallass framed the disagreement and hung it up."
   },
   {
-   "_comment": "P1 FIGHT. INTERACT-ONLY: never add trigger_radius here -- wi_game.gd:365 calls start_combat directly and never reads `conversation`, so the parley dies and the SKILL/TALK routes get ambushed. on_victory is golem_recalibrated ALONE, never forge_golems_culled (that feeds a repeatable bounty). respawns/scales absent: a story fight is one-shot. PRESENT-BUT-INERT before the commission: `encounter_when` is an INTERACT/TRIGGER gate (interactions.gd:159, wi_game.gd:349), NOT structural absence -- `present_when` is validator-forbidden on encounters -- so the rig STANDS at (8,6) and blocks from first arrival. It therefore needs its own `gate_closed_toast` or the refusal is a silent no-op (the seal_warden precedent, trapped_halls.json:448/477).",
+   "_comment": "P1 FIGHT. INTERACT-ONLY -- never add trigger_radius (it would ambush the TALK/SKILL routes; encounter_when gate is mutation-proven by pallass_depth_gates_check). Banks golem_recalibrated ONLY, never forge_golems_culled.",
    "id": "forge_temper_golem",
    "kind": "encounter",
    "cell": [

@@ -493,6 +493,50 @@
   [
    27,
    17
+  ],
+  [
+   26,
+   3
+  ],
+  [
+   26,
+   4
+  ],
+  [
+   26,
+   5
+  ],
+  [
+   26,
+   6
+  ],
+  [
+   26,
+   10
+  ],
+  [
+   26,
+   11
+  ],
+  [
+   26,
+   12
+  ],
+  [
+   26,
+   13
+  ],
+  [
+   26,
+   14
+  ],
+  [
+   26,
+   15
+  ],
+  [
+   27,
+   3
   ]
  ],
  "floor_layers": [
@@ -701,6 +745,89 @@
      2
     ]
    }
+  },
+  {
+   "_pick": "v0.16.1 #9, layer 6/6: the ALLEY GROUND, beyond the new east wall AND in the break itself. Reuses mercantile_alleys' own first floor layer verbatim (Floors_Tiles (16,2)/(17,2)/(18,2), already MOCKUP-PROVEN on the sibling map) across x=27 y4..15 plus the mouth cells [26,7..9]. Presentation only; its job is that the gap reads as a way INTO somewhere. Blocked cells take the biome's own blocked tile (Wall_Tiles (8,2)) and get no layer entry -- hence no [27,3].",
+   "sheet": "res://assets/tiles/free_pack/Floors_Tiles.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     16,
+     2
+    ],
+    [
+     17,
+     2
+    ],
+    [
+     18,
+     2
+    ]
+   ],
+   "cells": {
+    "list": [
+     [
+      27,
+      4
+     ],
+     [
+      27,
+      5
+     ],
+     [
+      27,
+      6
+     ],
+     [
+      27,
+      7
+     ],
+     [
+      27,
+      8
+     ],
+     [
+      27,
+      9
+     ],
+     [
+      27,
+      10
+     ],
+     [
+      27,
+      11
+     ],
+     [
+      27,
+      12
+     ],
+     [
+      27,
+      13
+     ],
+     [
+      27,
+      14
+     ],
+     [
+      27,
+      15
+     ],
+     [
+      26,
+      7
+     ],
+     [
+      26,
+      8
+     ],
+     [
+      26,
+      9
+     ]
+    ]
+   }
   }
  ],
  "decor": [
@@ -855,13 +982,6 @@
    ]
   },
   {
-   "sprite": "coin_shop_sign",
-   "cell": [
-    22,
-    1
-   ]
-  },
-  {
    "sprite": "guild_banner",
    "cell": [
     13,
@@ -920,7 +1040,7 @@
    }
   },
   {
-   "_comment": "Landing (1,7) on the alleys side sits inside that map's own west corridor, open + off every blocked/entity cell there.",
+   "_comment": "Landing (1,7) sits inside the alleys' own west corridor, open + off every blocked/entity cell there. v0.16.1 #9: this was a free-standing `door` on open paving -- rows 2..15 had no wall east of x=24, so the city's only alley entrance had plaza on all four sides. There is a building there now (x=26 masonry, sealed east at [27,3], floor_layer 6 behind it) and this entity is the BREAK in it: hide_sprite, so the three-cell gap at y7..9 is what the player reads. TRAP: row 2 stays open x0..27 (invrisil_walkthrough paces it to grind to night), so the north end seals at [27,3], never [26,2] -- without that one cell the masonry is a SCREEN, the lane behind it open off the plaza at (27,2).",
    "id": "boulevard_to_alleys",
    "kind": "door",
    "cell": [
@@ -929,6 +1049,8 @@
    ],
    "display_name": "Into the Alleys",
    "sprite": "door",
+   "hide_sprite": true,
+   "observe": "A gap in the row of shopfronts, three strides wide and going darker the further in it goes. A stride past the wall line the paving changes underfoot, boulevard marble to whatever the alleys were laid with.",
    "to_map": "mercantile_alleys",
    "to_cell": [
     1,
@@ -1313,45 +1435,6 @@
    "on_victory": "won_combat"
   },
   {
-   "id": "boulevard_mothbears",
-   "kind": "encounter",
-   "beast": true,
-   "cell": [
-    5,
-    15
-   ],
-   "display_name": "Shapes in the Dark",
-   "sprite": "mothbear",
-   "arena": "mercantile_alley",
-   "enemies": [
-    "mothbear_a",
-    "mothbear_b"
-   ],
-   "allies": [],
-   "respawns": true,
-   "encounter_when": {
-    "phase": [
-     "night"
-    ]
-   },
-   "trigger_radius": 1,
-   "observe": "Two heavy shapes lope along the lantern-line, wings folded tight, drawn to the light the way moths are. Only after dark.",
-   "gate_closed_toast": "The lantern-line is quiet. Whatever comes for the light only comes at night.",
-   "visual_states": [
-    {
-     "_comment": "Marker visible ONLY while the night encounter_when gate can fire",
-     "when": {
-      "phase": [
-       "day",
-       "dusk"
-      ]
-     },
-     "hidden": true
-    }
-   ],
-   "on_victory": "mothbears_culled"
-  },
-  {
    "id": "boulevard_duel_ring",
    "kind": "encounter",
    "cell": [
@@ -1403,6 +1486,23 @@
    "display_name": "A Narrow Teahouse",
    "observe": "Three tables, steam on the glass, and a chalk line of prices that assumes you already know what smoke-leaf costs in Invrisil.",
    "hide_sprite": true
+  },
+  {
+   "_comment": "v0.16.1 #17: the sign the game TALKS about now exists. coyle_operation_lookout's toast and Wilovan both name COYLE AND SONS; a repo-wide grep found those two prose hits and nothing else. The nearest art was an anonymous `coin_shop_sign` DECOR row at [22,1] with no id, name or observe -- deleted and re-expressed here on the blocked facade row (the boulevard_stationer pattern; no walkable cell lost). INTERIM ART by directive: existing sprite, burgundy-and-brass tint (Coyle's livery). Bespoke art rides the art PR. No on_interact_accomplishment -- it would mint a shipped id for a read the vantage prop already banks.",
+   "id": "boulevard_coyle_front",
+   "kind": "prop",
+   "cell": [
+    23,
+    1
+   ],
+   "display_name": "Coyle and Sons",
+   "sprite": "coin_shop_sign",
+   "tint": [
+    0.72,
+    0.42,
+    0.38
+   ],
+   "observe": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. The frontage behind it is one narrow door and a clean window. Everything that actually moves through this firm goes round the side, on wagons, after dark."
   },
   {
    "_comment": "v0.16 I1 (#306): kind flips prop -> door in place on the SAME already-blocked cell (20,1), id and `observe` byte-identical, so invrisil_walkthrough's player_blocked + [Observe] + toast pins stay exact. hide_sprite dropped so the facade reads enterable.",

@@ -1,61 +1,337 @@
 {
- "_comment": "Issue #97: bounty_mothbear_cull end to end -- accept at Selys's desk (guild), teleport to invrisil_boulevard at NIGHT (actions_since_sleep pre-set past night_at, the goblin_night_patrol/boulevard_night_footpads precedent), a real move into trigger_radius 1 springs boulevard_mothbears live, win it ONCE (single-kill by design -- the night+dormancy double-gate makes a 2-kill delta awkward to prove), turn in for the exact 4 gold payout. No confirm-conversation here (this is a trigger_radius ambush, the river_wolf_pack/boulevard_night_footpads shape, not the crab_nest informed-consent shape).",
+ "_comment": "Issue #97: bounty_mothbear_cull end to end -- accept at Selys's desk (guild), teleport to the NIGHT floodplains (actions_since_sleep pre-set past night_at, the goblin_night_patrol precedent), a real move into trigger_radius 1 springs road_mothbears live, win it ONCE (single-kill by design -- the night+dormancy double-gate makes a 2-kill delta awkward to prove), turn in for the exact 4 gold payout. No confirm-conversation here (this is a trigger_radius ambush, the river_wolf_pack shape, not the crab_nest informed-consent shape). v0.16.1 #21: the kill site moved off invrisil_boulevard to the wagon road; the bounty, the counter and the payout are untouched.",
  "fixture_save": "invrisil_mothbear_loop_start",
  "starts_at_title": true,
  "steps": [
-  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
-  {"action": "move", "direction": "down", "steps": 1},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
-  {"action": "assert_state", "path": "current_map", "equals": "guild"},
-  {"action": "assert_state", "path": "player_cell", "equals": [8, 3]},
-  {"_comment": "== ROTATION, PRE-STATE == times_slept 22 -> pool window [22,23,24] = mothbear_cull/kingslayer_cull/forge_golem_cull.", "action": "assert_state", "path": "board_active_bounties", "equals": ["bounty_mothbear_cull", "bounty_kingslayer_cull", "bounty_forge_golem_cull"]},
-  {"action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "Selys"}, "timeout_sec": 5},
-  {"action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "selys_delivery"}, "timeout_sec": 5},
-  {"action": "move", "direction": "down", "steps": 2},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "board_picker", "entity": "selys"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "Selys"}, "timeout_sec": 5},
-  {"_comment": "mothbear_cull is the window's 1st entry -- confirm at cursor index 0.", "action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "accepted_bounty_bounty_mothbear_cull", "count": 1}, "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5},
-  {"action": "assert_state", "path": "accepted_bounty_id", "equals": "bounty_mothbear_cull"},
-  {"_comment": "== TRAVEL + SPRING THE AMBUSH == teleport to invrisil_boulevard, 2 cells north of boulevard_mothbears (5,15) -- phase is already night (actions_since_sleep pre-set). Move down 2: the 2nd step lands within trigger_radius 1 and fires start_combat live -- no interact needed.", "action": "teleport", "map": "invrisil_boulevard", "cell": [5, 13]},
-  {"action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "invrisil_boulevard", "cell": [5, 13]}, "timeout_sec": 5},
-  {"action": "move", "direction": "down", "steps": 2},
-  {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5},
-  {"action": "screenshot", "name": "mothbears_combat"},
-  {"action": "combat_autoplay", "max_turns": 200},
-  {"action": "wait_for_event", "type": "combat_finished", "payload_contains": {"victory": true}, "timeout_sec": 20},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5},
-  {"action": "assert_state", "path": "accomplishments.mothbears_culled", "equals": 1},
-  {"action": "assert_state", "path": "accepted_bounty_id", "equals": "bounty_mothbear_cull"},
-  {"_comment": "== TURN IN == single-kill bounty, no sleep needed -- SAME waking as the accept step, so Selys's rotating pool line already fired once and does NOT replay (the dungeon_kingslayer_loop precedent).", "action": "teleport", "map": "guild", "cell": [8, 4]},
-  {"action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "guild", "cell": [8, 4]}, "timeout_sec": 5},
-  {"action": "move", "direction": "up", "steps": 1},
-  {"action": "assert_state", "path": "player_cell", "equals": [8, 3]},
-  {"action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "selys_delivery"}, "timeout_sec": 5},
-  {"action": "move", "direction": "down", "steps": 2},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "gold_changed", "payload_contains": {"delta": 4, "total": 4, "source": "bounty_bounty_mothbear_cull"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "toast", "payload_contains": {"text": "Earned 4 gold."}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "completed_bounty_bounty_mothbear_cull", "count": 1}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "board_turnin", "entity": "selys"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "dialogue_node", "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5},
-  {"action": "assert_state", "path": "accepted_bounty_id", "equals": ""},
-  {"action": "assert_state", "path": "gold", "equals": 4}
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "guild"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "_comment": "== ROTATION, PRE-STATE == times_slept 22 -> pool window [22,23,24] = mothbear_cull/kingslayer_cull/forge_golem_cull.",
+   "action": "assert_state",
+   "path": "board_active_bounties",
+   "equals": [
+    "bounty_mothbear_cull",
+    "bounty_kingslayer_cull",
+    "bounty_forge_golem_cull"
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "selys_delivery"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "board_picker",
+    "entity": "selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "mothbear_cull is the window's 1st entry -- confirm at cursor index 0.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "accepted_bounty_bounty_mothbear_cull",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accepted_bounty_id",
+   "equals": "bounty_mothbear_cull"
+  },
+  {
+   "_comment": "== TRAVEL + SPRING THE AMBUSH == teleport onto the wagon road at (23,14), 2 cells below road_mothbears (23,12) -- phase is already night (actions_since_sleep pre-set). Move up: the step into (23,13) is Chebyshev 1 from the encounter and fires start_combat live -- no interact needed.",
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    23,
+    14
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains",
+    "cell": [
+     23,
+     14
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "mothbears_combat"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.mothbears_culled",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accepted_bounty_id",
+   "equals": "bounty_mothbear_cull"
+  },
+  {
+   "_comment": "== TURN IN == single-kill bounty, no sleep needed -- SAME waking as the accept step, so Selys's rotating pool line already fired once and does NOT replay (the dungeon_kingslayer_loop precedent).",
+   "action": "teleport",
+   "map": "guild",
+   "cell": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "guild",
+    "cell": [
+     8,
+     4
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "selys_delivery"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "payload_contains": {
+    "delta": 4,
+    "total": 4,
+    "source": "bounty_bounty_mothbear_cull"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Earned 4 gold."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "completed_bounty_bounty_mothbear_cull",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "board_turnin",
+    "entity": "selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accepted_bounty_id",
+   "equals": ""
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 4
+  }
  ]
 }

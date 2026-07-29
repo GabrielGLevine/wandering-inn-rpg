@@ -264,10 +264,10 @@
    "sprite": "bat",
    "combat_scale": 0.56,
    "combat_tint": [
-     1.3,
-     1.05,
-     0.72
-    ],
+    1.3,
+    1.05,
+    0.72
+   ],
    "side": "enemy",
    "stats": {
     "str": 5,
@@ -331,10 +331,10 @@
    "sprite": "bat",
    "combat_scale": 0.56,
    "combat_tint": [
-     0.55,
-     0.85,
-     1.5
-    ],
+    0.55,
+    0.85,
+    1.5
+   ],
    "side": "enemy",
    "stats": {
     "str": 16,
@@ -355,10 +355,10 @@
    "sprite": "bat",
    "combat_scale": 0.56,
    "combat_tint": [
-     0.8,
-     0.52,
-     1.5
-    ],
+    0.8,
+    0.52,
+    1.5
+   ],
    "side": "enemy",
    "stats": {
     "str": 16,
@@ -380,10 +380,10 @@
    "sprite": "bat",
    "combat_scale": 0.56,
    "combat_tint": [
-     1.5,
-     0.62,
-     0.38
-    ],
+    1.5,
+    0.62,
+    0.38
+   ],
    "side": "enemy",
    "stats": {
     "str": 10,
@@ -510,10 +510,10 @@
    "display_name": "Briar Collector",
    "sprite": "briar_collector",
    "combat_tint": [
-     1.4,
-     0.82,
-     0.62
-    ],
+    1.4,
+    0.82,
+    0.62
+   ],
    "side": "enemy",
    "stats": {
     "str": 19,
@@ -534,10 +534,10 @@
    "display_name": "Briar Collector",
    "sprite": "briar_collector",
    "combat_tint": [
-     1.1,
-     0.7,
-     1.0
-    ],
+    1.1,
+    0.7,
+    1.0
+   ],
    "side": "enemy",
    "stats": {
     "str": 19,
@@ -558,10 +558,10 @@
    "display_name": "Deep Briar Collector",
    "sprite": "briar_collector_deep",
    "combat_tint": [
-     1.45,
-     0.78,
-     0.55
-    ],
+    1.45,
+    0.78,
+    0.55
+   ],
    "side": "enemy",
    "stats": {
     "str": 17,
@@ -584,10 +584,10 @@
    "display_name": "Deep Briar Collector",
    "sprite": "briar_collector_deep",
    "combat_tint": [
-     1.06,
-     0.76,
-     0.86
-    ],
+    1.06,
+    0.76,
+    0.86
+   ],
    "side": "enemy",
    "stats": {
     "str": 16,
@@ -697,11 +697,12 @@
    "skills": []
   },
   {
-   "_comment": "The game's FIRST all-human combatant family, per spec sec.2: 'his hired blades = the first all-human combatant family (art: doublets + clubs/knives -- NOT Watch-alike; distinct palette)'. Phase 9 band sweep 2026-07-27: gained [Counter Strike] (SKILL, not stat inflation -- the knives are untouched, so boulevard_duel_ring's band is unmoved) to raise Invrisil one band over Riverfarm, matching its authored 11.0 vs the collectors' 9.5. power_level unchanged: the labels were right, the stats had drifted. display_name is DISTINCT from the two knives on purpose (fix round 1): the turn banner auto-suffixes duplicate names, so three 'Hired Blade' rows left the fight's only Skill-carrier unidentifiable -- a boss the player cannot point at.",
+   "_comment": "First all-human combatant family (spec sec.2). v0.16.1 #20: combat_scale bands the crew to ~2.0 cells; FIGURE_ROWS measures idle_side alpha-bbox -- re-derive on any sheet change.",
    "id": "hired_blade_leader",
    "power_level": 11.0,
    "display_name": "Hired Blade Captain",
    "sprite": "hired_blade",
+   "combat_scale": 0.28,
    "side": "enemy",
    "stats": {
     "str": 14,
@@ -757,11 +758,12 @@
    "skills": []
   },
   {
-   "_comment": "v0.16 I1 FIGHT (#306). NEW ids, never a retune of footpad_*/hired_blade_* -- those feed boulevard_duel_ring, both night loops and Invrisil's two ladder rungs. A distinct id IS the per-encounter override. Sprite reused from hired_blade; no combat_scale.",
+   "_comment": "v0.16 I1 FIGHT (#306). NEW ids, never a retune of footpad_*/hired_blade_* -- those feed boulevard_duel_ring, both night loops and Invrisil's two ladder rungs. A distinct id IS the per-encounter override. Sprite reused from hired_blade. v0.16.1 #20: combat_scale 0.28, the same banding as hired_blade_leader (see its _comment for the measurement).",
    "id": "heirloom_fence",
    "power_level": 8.0,
    "display_name": "The Fence",
    "sprite": "hired_blade",
+   "combat_scale": 0.28,
    "side": "enemy",
    "combat_tint": [
     0.62,
@@ -1031,7 +1033,7 @@
    "skills": []
   },
   {
-   "_comment": "Mothbear, T3 Invrisil-boulevard NIGHT-ONLY pack encounter (`boulevard_mothbears`, drawn to the boulevard's lanterns).",
+   "_comment": "Mothbear, T3 NIGHT-ONLY pack encounter (`road_mothbears`, floodplains wagon road). v0.16.1 #21: re-homed off invrisil_boulevard. The old comment claimed a canon placement inside a walled city with no citation, and a grep for `mothbear` across data/, docs/design/ and the wiki reference returns none -- so, honestly: an ORIGINAL beast on wilderness logic, not a cited one.",
    "id": "mothbear_a",
    "power_level": 7.0,
    "display_name": "Mothbear",
@@ -1050,7 +1052,7 @@
    "skills": []
   },
   {
-   "_comment": "Boulevard_mothbears' pack alpha -- see mothbear_a's own _comment for the canon cite.",
+   "_comment": "`road_mothbears`' pack alpha. v0.16.1 #21: the old note pointed at mothbear_a \"for the canon cite\", which pointed at nothing -- the dangling pointer is deleted rather than re-aimed.",
    "id": "mothbear_b",
    "power_level": 8.0,
    "display_name": "Mothbear",
@@ -1120,7 +1122,11 @@
    "power_level": 16.0,
    "display_name": "Calibration Rig",
    "sprite": "forge_golem",
-   "combat_tint": [1.28, 0.74, 0.58],
+   "combat_tint": [
+    1.28,
+    0.74,
+    0.58
+   ],
    "side": "enemy",
    "stats": {
     "str": 17,
@@ -1186,7 +1192,14 @@
    "display_name": "Thicket Remnant",
    "sprite": "briar_collector",
    "side": "enemy",
-   "stats": { "str": 17, "dex": 10, "con": 24, "int": 2, "wis": 6, "cha": 2 },
+   "stats": {
+    "str": 17,
+    "dex": 10,
+    "con": 24,
+    "int": 2,
+    "wis": 6,
+    "cha": 2
+   },
    "weapon_die": 6,
    "ai": "melee",
    "skills": []
@@ -1198,7 +1211,14 @@
    "display_name": "Thicket Remnant",
    "sprite": "briar_collector",
    "side": "enemy",
-   "stats": { "str": 17, "dex": 10, "con": 24, "int": 2, "wis": 6, "cha": 2 },
+   "stats": {
+    "str": 17,
+    "dex": 10,
+    "con": 24,
+    "int": 2,
+    "wis": 6,
+    "cha": 2
+   },
    "weapon_die": 6,
    "ai": "melee",
    "skills": []
@@ -1210,9 +1230,20 @@
    "display_name": "Granary Scavenger",
    "sprite": "bat",
    "combat_scale": 0.56,
-   "combat_tint": [ 1.3, 1.12, 0.7 ],
+   "combat_tint": [
+    1.3,
+    1.12,
+    0.7
+   ],
    "side": "enemy",
-   "stats": { "str": 17, "dex": 10, "con": 24, "int": 2, "wis": 6, "cha": 2 },
+   "stats": {
+    "str": 17,
+    "dex": 10,
+    "con": 24,
+    "int": 2,
+    "wis": 6,
+    "cha": 2
+   },
    "weapon_die": 6,
    "ai": "melee",
    "skills": []
@@ -1223,9 +1254,20 @@
    "display_name": "Granary Scavenger",
    "sprite": "bat",
    "combat_scale": 0.56,
-   "combat_tint": [ 0.96, 0.86, 0.72 ],
+   "combat_tint": [
+    0.96,
+    0.86,
+    0.72
+   ],
    "side": "enemy",
-   "stats": { "str": 17, "dex": 10, "con": 24, "int": 2, "wis": 6, "cha": 2 },
+   "stats": {
+    "str": 17,
+    "dex": 10,
+    "con": 24,
+    "int": 2,
+    "wis": 6,
+    "cha": 2
+   },
    "weapon_die": 6,
    "ai": "melee",
    "skills": []
@@ -1236,9 +1278,20 @@
    "power_level": 7.5,
    "display_name": "Line Stalker",
    "sprite": "mothbear",
-   "combat_tint": [ 0.78, 0.86, 0.7 ],
+   "combat_tint": [
+    0.78,
+    0.86,
+    0.7
+   ],
    "side": "enemy",
-   "stats": { "str": 17, "dex": 10, "con": 24, "int": 2, "wis": 6, "cha": 2 },
+   "stats": {
+    "str": 17,
+    "dex": 10,
+    "con": 24,
+    "int": 2,
+    "wis": 6,
+    "cha": 2
+   },
    "weapon_die": 6,
    "ai": "melee",
    "skills": []
@@ -1248,9 +1301,20 @@
    "power_level": 7.5,
    "display_name": "Line Stalker",
    "sprite": "mothbear",
-   "combat_tint": [ 0.66, 0.72, 0.82 ],
+   "combat_tint": [
+    0.66,
+    0.72,
+    0.82
+   ],
    "side": "enemy",
-   "stats": { "str": 17, "dex": 10, "con": 24, "int": 2, "wis": 6, "cha": 2 },
+   "stats": {
+    "str": 17,
+    "dex": 10,
+    "con": 24,
+    "int": 2,
+    "wis": 6,
+    "cha": 2
+   },
    "weapon_die": 6,
    "ai": "melee",
    "skills": []
@@ -1262,7 +1326,14 @@
    "display_name": "Bonded Wolf",
    "sprite": "river_wolf",
    "side": "player",
-   "stats": { "str": 11, "dex": 14, "con": 10, "int": 3, "wis": 8, "cha": 4 },
+   "stats": {
+    "str": 11,
+    "dex": 14,
+    "con": 10,
+    "int": 3,
+    "wis": 8,
+    "cha": 4
+   },
    "weapon_die": 5,
    "ai": "skirmisher",
    "skills": []
@@ -1274,7 +1345,14 @@
    "display_name": "Bonded Razorbeak",
    "sprite": "razorbeak",
    "side": "player",
-   "stats": { "str": 9, "dex": 13, "con": 8, "int": 4, "wis": 6, "cha": 4 },
+   "stats": {
+    "str": 9,
+    "dex": 13,
+    "con": 8,
+    "int": 4,
+    "wis": 6,
+    "cha": 4
+   },
    "weapon_die": 5,
    "ai": "skirmisher",
    "skills": []
@@ -1417,7 +1495,7 @@
    ]
   },
   {
-   "_comment": "Act V. ROSTER-ONLY retint of the ruin_warden rig at seal scale (:401's distinct-id-per-context contract: no per-encounter stat or AI override exists, so a new context takes a NEW ID, never a shared one re-tuned). Same sprite, same melee profile, same tough_body spine as ruin_guardian. Fought SOLO by design, which is why the con/die curve sits under vault_construct's party-scaled 190/15. Tuned against sim_combat_batch's seal_warden_t5_sw14_solo gated cell. MEASURED at authoring (100 seeds, spellsword14 solo): win 0.59, median 5 rounds (3-7) -- the hardest solo cell in the game at that build, against the forge golem's 0.71 and the market watchgolems' 0.88. Deliberately HIGH-con/LOW-die: a ward outlasts you rather than bursting you down. combat_scale 1.15 is ruin_guardian's own (at 1.35 the rig's head clipped under the combat HUD banner).",
+   "_comment": "Act V: roster-only retint of the ruin_warden rig at seal scale (distinct-id-per-context convention, :401). Stats belong to the seal band -- never retune toward the ruin fight's.",
    "id": "seal_warden",
    "power_level": 18.0,
    "display_name": "The Seal's Warden",

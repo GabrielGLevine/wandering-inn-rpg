@@ -1,4 +1,5 @@
 {
+	"_comment": "v0.16.1 #15: the two Coyle rumor rows gained `requires.accomplishment.took_brothers_job` -- the gate this hub already uses one row down for the testimony ask. requires.gold is NOT a hiding gate, so a broke first-time visitor used to read both rows spelled out and be told about a man cooking books before anyone had named him. Fixed IN PLACE: no row reordered or inserted, because hub indices are cursor-pinned by QA. The three ungated rumors stay open and can still supply cups_favor's count, so nothing dead-ends.",
 	"start": "hub",
 	"nodes": {
 		"hub": {
@@ -10,8 +11,8 @@
 			],
 			"options": [
 				{ "text": "The alley boys. What's their round? (1 gold)", "requires": { "gold": 1 }, "hide_when": { "accomplishment": { "heard_rumor_footpads": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_footpads" }, { "accomplishment": "bought_rumor_from_cups" } ], "goto": "rumor_footpads" },
-				{ "text": "Coyle's counting-house. (1 gold)", "requires": { "gold": 1 }, "hide_when": { "accomplishment": { "heard_rumor_counting_house": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_counting_house" }, { "accomplishment": "bought_rumor_from_cups" } ], "goto": "rumor_counting_house" },
-				{ "text": "Who in this city hates Coyle enough to say so? (1 gold)", "requires": { "gold": 1 }, "hide_when": { "accomplishment": { "heard_rumor_hellam": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_hellam" }, { "accomplishment": "bought_rumor_from_cups" } ], "goto": "rumor_hellam" },
+				{ "text": "Coyle's counting-house. (1 gold)", "requires": { "gold": 1, "accomplishment": { "took_brothers_job": 1 } }, "hide_when": { "accomplishment": { "heard_rumor_counting_house": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_counting_house" }, { "accomplishment": "bought_rumor_from_cups" } ], "goto": "rumor_counting_house" },
+				{ "text": "Who in this city hates Coyle enough to say so? (1 gold)", "requires": { "gold": 1, "accomplishment": { "took_brothers_job": 1 } }, "hide_when": { "accomplishment": { "heard_rumor_hellam": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_hellam" }, { "accomplishment": "bought_rumor_from_cups" } ], "goto": "rumor_hellam" },
 				{ "text": "The men in the hats. (1 gold)", "requires": { "gold": 1 }, "hide_when": { "accomplishment": { "heard_rumor_hats": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_hats" }, { "accomplishment": "bought_rumor_from_cups" } ], "goto": "rumor_hats" },
 				{ "text": "Anything strange brewing? (1 gold)", "requires": { "gold": 1 }, "hide_when": { "accomplishment": { "heard_rumor_door": 1 } }, "effects": [ { "gold": -1 }, { "accomplishment": "heard_rumor_door" }, { "accomplishment": "bought_rumor_from_cups" } ], "goto": "rumor_door" },
 				{ "text": "Two cups deep. What's the real price, Cups?", "requires": { "accomplishment": { "coyle_operation_found": 1, "bought_rumor_from_cups": 2 } }, "hide_when": { "accomplishment": { "cups_favor_requested": 1 } }, "goto": "cups_favor" },
