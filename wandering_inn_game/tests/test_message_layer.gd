@@ -119,8 +119,16 @@ func _check_housekeeping_class(raw: String) -> void:
 	layer.free()
 
 	var show := raw.get_slice("func _show(", 1).get_slice("\nfunc ", 0)
-	assert(show.find("_showing_housekeeping and not _toast_queue.is_empty()") != -1,
+	assert(show.find("var chore := panel == _toast_panel and _showing_housekeeping") != -1
+			and show.find("if chore and not _toast_queue.is_empty():") != -1,
 		"the queue hold cap must be gated on _showing_housekeeping -- capping authored toasts at 1.6s is the defect finding 8 named")
+	# GH#325's own sequence queues the chore FIRST, so the queue is EMPTY when
+	# "Autosaved." starts displaying and a one-shot cap check never fires: the
+	# chore then held its FULL 6.0s (1.5x curve, 36 chars) with the payoff behind
+	# it -- longer than main's uncapped 4.06s. The cap must be re-checked inside
+	# the hold loop, or finding 8's headline repro comes out worse than it went in.
+	assert(show.find("deadline_msec = mini(deadline_msec, started_msec + int(TOAST_QUEUE_HOLD_CAP_SECONDS * 1000.0))") != -1,
+		"the hold cap must be RE-CHECKED during the hold -- a chore that starts alone must still yield when an authored toast joins the queue")
 
 
 ## The user directive for finding 8: the whole hold curve is the old one x1.5.

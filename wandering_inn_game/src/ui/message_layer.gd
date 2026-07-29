@@ -626,13 +626,25 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 	ObservableBus.emit_domain_event(rendered_event, {"text": text})
 	var hold := _hold_seconds(seconds) if collapse_under_qa else seconds
 	# Only CHORES yield their reading time to the queue -- see the constant.
-	if panel == _toast_panel and _showing_housekeeping and not _toast_queue.is_empty():
+	var chore := panel == _toast_panel and _showing_housekeeping
+	if chore and not _toast_queue.is_empty():
 		hold = minf(hold, TOAST_QUEUE_HOLD_CAP_SECONDS)
 	if hold > 0.0:
 		if interruptible:
 			_toast_skip_requested = false
-			var deadline_msec := Time.get_ticks_msec() + int(hold * 1000.0)
+			var started_msec := Time.get_ticks_msec()
+			var deadline_msec := started_msec + int(hold * 1000.0)
 			while Time.get_ticks_msec() < deadline_msec and not _toast_skip_requested:
+				# RE-CHECKED EVERY FRAME, not once at display time -- GH#325's own
+				# sequence queues the chore FIRST (game.gd autosaves from inside
+				# its QUEST_BEAT_COMPLETED listener, before the sim's payoff toast
+				# reaches the bus), so the queue is still EMPTY when "Autosaved."
+				# starts and a one-shot check leaves it holding its full duration
+				# with the payoff waiting behind it. Authored toasts are never
+				# clamped here; QA holds (0.05s/0.4s) are already under the cap, so
+				# canonical timing is untouched.
+				if chore and not _toast_queue.is_empty():
+					deadline_msec = mini(deadline_msec, started_msec + int(TOAST_QUEUE_HOLD_CAP_SECONDS * 1000.0))
 				tree = get_tree()
 				if tree == null:
 					return
