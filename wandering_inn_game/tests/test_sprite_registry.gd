@@ -30,6 +30,7 @@ func _init() -> void:
 					assert(actual == expected, "%s animation %s: expected %d frames, got %d" % [sprite_id, full_name, expected, actual])
 				_assert_expected_region(sprite_id, full_name, frames.get_frame_texture(full_name, 0))
 	_assert_visual_log_assets_are_real(catalog)
+	_assert_no_pc_sprites_in_scene()
 	assert(not WISpriteRegistry.has_sprite("missing_sprite"), "registry should reject unknown sprite ids")
 	_assert_biome_tiles_build()
 	_assert_missing_sheet_fallback()
@@ -58,6 +59,25 @@ func _assert_visual_log_assets_are_real(catalog: Dictionary) -> void:
 				assert(path.begins_with("res://assets/"), "%s uses non-asset sheet: %s" % [sprite_id, path])
 				assert(FileAccess.file_exists(path), "%s sheet does not exist: %s" % [sprite_id, path])
 				assert(not WISpriteRegistry.is_fallback_sheet(path), "%s still uses fallback sheet: %s" % [sprite_id, path])
+
+
+## pc_* ids are the PLAYER's own skin (WIGame.pc_sprite_variant); any map row
+## wearing one puts a copy of the player on screen as an NPC or a prop.
+func _assert_no_pc_sprites_in_scene() -> void:
+	var maps: Dictionary = WISceneCatalog.compose()["maps"]
+	for map_id: String in maps:
+		var map: Dictionary = maps[map_id]
+		for row_key: String in ["entities", "decor"]:
+			for row: Variant in map.get(row_key, []):
+				var rec: Dictionary = row
+				_assert_row_sprite_not_pc(map_id, rec)
+				for state: Variant in rec.get("visual_states", []):
+					_assert_row_sprite_not_pc(map_id, state)
+
+
+func _assert_row_sprite_not_pc(map_id: String, rec: Dictionary) -> void:
+	var sprite := String(rec.get("sprite", ""))
+	assert(not sprite.begins_with("pc_"), "%s/%s wears PC-only sprite '%s' -- give it an NPC rig" % [map_id, String(rec.get("id", "?")), sprite])
 
 
 func _assert_missing_sheet_fallback() -> void:
@@ -374,6 +394,12 @@ func _build_expected_counts() -> Dictionary:
 
 	counts["hired_blade/idle"] = 4
 	counts["hired_blade/walk"] = 6
+
+	## v0.16.1 art wave: idle-only PixelLab v3 rigs, one frame per facing.
+	for idle_only_rig: String in ["invrisil_lady_client", "master_coyle", "hedault",
+			"city_scribe", "city_runner"]:
+		counts["%s/idle" % idle_only_rig] = 1
+	counts["coyle_shop_sign/idle"] = 1
 
 	for invrisil_owned_static: String in ["plaza_fountain", "street_lamp", "coin_shop_sign", "guild_banner"]:
 		counts["%s/idle" % invrisil_owned_static] = 1

@@ -235,11 +235,11 @@
     1
    ],
    "display_name": "The House Factor",
-   "sprite": "human_laborer",
+   "sprite": "city_scribe",
    "tint": [
-    0.44,
-    0.42,
-    0.5
+    0.7,
+    0.68,
+    0.8
    ],
    "facing": "down",
    "observe": "He keeps the ledger of who is owed a table rather than who is owed money, which in this house is the more delicate book. He has not written anything down since you came in.",
@@ -276,11 +276,11 @@
     4
    ],
    "display_name": "A Man Not Drinking",
-   "sprite": "pc_human_m",
+   "sprite": "human_laborer",
    "tint": [
-    0.4,
-    0.4,
-    0.44
+    0.62,
+    0.62,
+    0.7
    ],
    "facing": "left",
    "observe": "A full cup, untouched, at his right hand, and his chair turned three degrees off the table so he can see both doors without turning his head.",

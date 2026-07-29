@@ -171,7 +171,7 @@
     2
    ],
    "display_name": "Vess",
-   "sprite": "pc_drake_f",
+   "sprite": "drake_patron",
    "tint": [
     0.5,
     0.55,
@@ -215,11 +215,11 @@
     5
    ],
    "display_name": "Resting Runner",
-   "sprite": "pc_gnoll_m",
+   "sprite": "gnoll_traveler",
    "tint": [
-    0.5,
-    0.46,
-    0.4
+    0.72,
+    0.66,
+    0.58
    ],
    "facing": "left",
    "present_when": {

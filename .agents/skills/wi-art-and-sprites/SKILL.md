@@ -51,6 +51,18 @@ windowed adjacency screenshot, don't trust the math alone.
 | `TS-CARTOON` (Tiny Swords) | chunky ~192px cartoon | UI chrome + cropped VFX ONLY — clashes as world art |
 | `PIXELLAB-AI` (Relc) | 128px, 8 static rotations, zero animation | provisional, unverified scale, not yet wired |
 
+## Sprite reuse policy (v0.16.1 art wave — one gate is live)
+`pc_<race>_<gender>` ids are the **PLAYER's skin** (`WIGame.pc_sprite_variant`).
+No entity, decor row or `visual_states` arm may reference one — a human-male
+PC used to meet four copies of himself, one of them Master Coyle.
+**GATED**: `tests/test_sprite_registry.gd::_assert_no_pc_sprites_in_scene`
+walks `WISceneCatalog.compose()` and reds on any `pc_*` reference.
+The rest is judgement, not yet enforced: one rig backs at most ONE named
+character; anonymous extras (`A `/`An `/`The ` display names) may share
+freely; never share a rig between a named friendly and a combatant roster;
+the rig's species must match canon. `antinium_worker`'s identical Workers
+are diegetic by design and stay.
+
 ## Props-over-tiles (user-mandated, repo-wide)
 Furniture/barricade/obstacle objects use **prop sprites** (`table_brown`,
 `dirty_table`, `door`), never a recolored environment tile — applies to

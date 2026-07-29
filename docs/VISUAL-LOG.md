@@ -2972,3 +2972,38 @@ blocker.
   that is a real legibility call, not a nit.
 - Confirmed by eye, the can-fail pair: at (17,21) the camp mouth is PRESENT on a
   settled fixture and ABSENT on `rags_gate_unmet_start` — bare grass, same frame.
+
+## 2026-07-28 (v0.16.1 ART lane) — the pc_* sweep, what shipped and what is still owed
+
+Six owned PixelLab v3 rigs landed (`invrisil_lady_client`, `master_coyle`,
+`hedault`, `city_scribe`, `city_runner`, `coyle_shop_sign`) and all 16 map rows
+that wore a `pc_*` id were re-cast. `test_sprite_registry.gd` now reds on any
+`pc_*` reference from a map entity/decor/visual_states row, so this class cannot
+regress. Read windowed at the stationer, the Rest, the boulevard facade, the
+Guild and the Brothers' parlor — shots under `qa_output/v0161_art/`.
+
+Residuals, deliberately left and logged rather than silently patched:
+
+- [ ] SPRITE/WILOVAN — `wilovan` is an ID, not yet bespoke ART. The sprites.json
+  entry still points at `pc_gnoll_m`'s sheets, so a Gnoll-male PC still meets a
+  copy of himself in the parlor and at the inn. Moving `brothers_parlor/wilovan`
+  onto the `wilovan` id was still the right first step (one character, one rig,
+  gate-clean, and `combatants.json` keys on it) — but the bespoke Gnoll rig the
+  entry's own `_comment` promises is still owed. Same for `krshia`, now on
+  `gnoll_traveler` + a brown tint: species-correct and no longer the PC's skin,
+  but a canon named [Shopkeeper] sharing the generic traveler rig with Xif.
+- [ ] SPRITE/SPECIES — `selys` and `octavia` still wear `citizen_f`, a human
+  woman, while Selys is a Drake and Octavia a Stitch-girl. Named in the triage
+  as species errors; out of this lane's five-item budget, untouched here.
+- [ ] SPRITE/ILVO — Ilvo wears `tier_clerk`, a Pallass civic rig (bronze guild
+  sash), because the registry holds exactly two Drake civilian rigs and Renn
+  needed the other one four cells away. It reads as a slim coated Drake beside
+  Renn's bulk — the adjacency defect is gone — but a Liscor-native Drake rig
+  would be the honest fix.
+- [ ] COPY-VS-ART — `gentleman_bowler` ("A broad man in a bowler hat") now wears
+  `hired_blade`, which has a goatee and a burgundy coat and no bowler. Not a
+  regression (`human_laborer` had no bowler either) and it reads well in a den
+  of gentleman thieves, but the hat is still only in the prose.
+- [ ] TINT — six NPC tints were re-tuned in this lane because they had been
+  chosen against `human_laborer`'s light apron and went near-silhouette on the
+  darker new rigs. Any future rig swap must re-read the tint, not carry it.

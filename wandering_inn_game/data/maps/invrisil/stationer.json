@@ -210,12 +210,7 @@
     2
    ],
    "display_name": "A Lady with a Ring Box",
-   "sprite": "pc_human_f",
-   "tint": [
-    0.62,
-    0.52,
-    0.58
-   ],
+   "sprite": "invrisil_lady_client",
    "facing": "right",
    "observe": "She has taken the chair furthest from the window and put a small hinged box on the table in front of her, closed. She has not opened it once in the time you have been standing here.",
    "talk_pool": [
@@ -244,11 +239,11 @@
     1
    ],
    "display_name": "A Scribe by the Hour",
-   "sprite": "human_laborer",
+   "sprite": "city_scribe",
    "tint": [
-    0.48,
-    0.5,
-    0.56
+    0.74,
+    0.76,
+    0.86
    ],
    "facing": "down",
    "observe": "Cuffs pinned back, three nibs laid out in order of nerve, and the particular stillness of a man who is paid to have heard nothing.",
