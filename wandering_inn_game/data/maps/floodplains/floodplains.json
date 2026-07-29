@@ -1718,13 +1718,13 @@
    }
   },
   {
-   "_comment": "v0.16.1 #21: RE-HOMED from invrisil_boulevard [5,15]. Canon mothbears are northern-Izril WILDERNESS beasts; Invrisil is the largest walled human city on the continent, and the placement's only justification was a `_comment` citing a canon reference that does not exist. OPTION A of the ruling: keep the beast and Coyle's bounty, move the KILL SITE. Cell [23,2] is the map's NORTH verge -- the wagon road -- and is three cells clear of every route a canonical walks, verified by harvesting every player_moved/player_blocked event out of a full sweep. Shape follows goblin_night_patrol on this same map; arena moved to boulder_flats, the map's own outdoor arena. `mothbears_culled` is UNCHANGED: it is the bounty condition and is registered in shipped_ids.",
+   "_comment": "v0.16.1 #21 (ruling: docs/CHOICE-LOG.md): RE-HOMED off invrisil_boulevard [5,15], a walled city. [23,12] is the verge of the POI-A shoulder -- the road spur at (20..22,12)/(22,13), a carter pull-off, which is what the observe and both bounty copies say. Review round 2 moved it here from [23,2], plain grass ten rows off the nearest dirt_01 layer, where the copy named a road the map does not draw. Chebyshev 1 reaches the spur, NOT the artery (rows 14/15); nearest canonical-walked cell is 4 away, harvested from a full sweep. Shape follows goblin_night_patrol; arena boulder_flats. `mothbears_culled` UNCHANGED: bounty condition, in shipped_ids.",
    "id": "road_mothbears",
    "kind": "encounter",
    "beast": true,
    "cell": [
     23,
-    2
+    12
    ],
    "display_name": "Shapes in the Dark",
    "sprite": "mothbear",

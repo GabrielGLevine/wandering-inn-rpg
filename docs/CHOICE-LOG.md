@@ -24,10 +24,17 @@ Alternatives considered:
 - **Leave it and write a better `_comment`.** Rejected: the placement is the
   defect, not its documentation.
 
-What moved: the encounter re-homes to `floodplains` [23,2] (the north verge —
-the wagon road, three cells clear of every route the canonical sweep walks,
+What moved: the encounter re-homes to `floodplains` [23,12] — the verge of the
+POI-A shoulder, the road spur hanging north off the main artery at (20..22,12)
+and (22,13), i.e. a carter pull-off. Chebyshev 1 reaches the spur but not the
+artery (rows 14/15), and the nearest cell any canonical walks is four away,
 verified by harvesting every `player_moved`/`player_blocked` event out of a
-full sweep rather than by eye), keeps goblin_night_patrol's night/respawn/
+full sweep rather than by eye. (Adversarial review round 2 moved it here from
+[23,2]: that cell is plain grass ten rows north of the nearest `dirt_01` road
+layer, so the rewritten copy — "the verge of the wagon road", "my carters camp
+out there" — named scenery the map does not draw. That is the same defect
+class #17 was raised to fix, one wave and one map over.) It keeps
+goblin_night_patrol's night/respawn/
 hidden-marker shape, and moves onto `boulder_flats`, that map's own outdoor
 arena, so the board matches the fiction. Coyle's two bounties keep their ids
 and their gold and lose "the lantern-line" for the wagon road and the carter
