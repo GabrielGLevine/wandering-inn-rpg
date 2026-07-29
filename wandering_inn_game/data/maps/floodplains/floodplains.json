@@ -1821,6 +1821,55 @@
     }
    ],
    "on_victory": "mothbears_culled"
+  },
+  {
+   "_comment": "#330 R4: present only while the wolf rides. One-time find on the frozen_cache variant-zeroing shape; no gold key, so the wage floor is untouched.",
+   "id": "wolf_scent_cache_floodplains",
+   "kind": "prop",
+   "cell": [
+    13,
+    22
+   ],
+   "display_name": "Turned Turf",
+   "sprite": "grass_tuft",
+   "tint": [
+    0.72,
+    0.62,
+    0.48
+   ],
+   "present_when": {
+    "companion": "wolf_companion"
+   },
+   "observe": "The wolf will not leave this patch alone. It noses the turf, circles, and noses it again, and looks back at you as though the next part is your job.",
+   "on_interact_accomplishment": "found_wolf_cache_floodplains",
+   "toast": "You dig where the wolf keeps insisting. A handspan down, wrapped in rotted cloth: a charm on a cord gone soft with age.",
+   "item": "traveler_charm",
+   "variants": [
+    {
+     "when": {
+      "found_wolf_cache_floodplains": 1
+     },
+     "item": "",
+     "toast": "Open earth and nothing under it now. The wolf has lost interest, which is its own verdict."
+    }
+   ]
+  },
+  {
+   "_comment": "#330 R4: the razorbeak's information arm. Its observe carries the [Observe] payoff; interact is the bird wheeling up and coming back with a real lead.",
+   "id": "razorbeak_vantage_floodplains",
+   "kind": "prop",
+   "cell": [
+    7,
+    17
+   ],
+   "display_name": "Bank Above the Pond",
+   "sprite": "boulder",
+   "present_when": {
+    "companion": "razorbeak_companion"
+   },
+   "observe": "A rise of dry bank with the whole pond below it. The razorbeak keeps climbing it and screaming at the water, which is either an opinion or a report.",
+   "on_interact_accomplishment": "found_pond_vantage",
+   "toast": "It wheels out over the pond, hangs, and comes back loud. There is something square and man-made on the bottom, a stride out from the bank — too far to reach across open water, and water can be made to bear weight."
   }
  ],
  "cover_skip": [

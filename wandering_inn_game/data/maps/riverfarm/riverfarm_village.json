@@ -433,7 +433,6 @@
   [
    8,
    11
- 
   ],
   [
    15,
@@ -1690,6 +1689,38 @@
     "toast": "[Beast's Mending] — You strap the lamb's leg, and it stands on it before you have finished. The ewes crowd in to look.",
     "item": "wool_tuft"
    }
+  },
+  {
+   "_comment": "#330 R4: the wolf's second cache. Same variant-zeroing shape as its floodplains twin; item yield, no gold.",
+   "id": "wolf_scent_cache_riverfarm",
+   "kind": "prop",
+   "cell": [
+    14,
+    13
+   ],
+   "display_name": "Turned Turf",
+   "sprite": "grass_tuft",
+   "tint": [
+    0.72,
+    0.62,
+    0.48
+   ],
+   "present_when": {
+    "companion": "wolf_companion"
+   },
+   "observe": "Field grass the wolf keeps returning to, head down, digging and stopping and digging again. Riverfarm has walked past this patch all spring.",
+   "on_interact_accomplishment": "found_wolf_cache_riverfarm",
+   "toast": "Under a stone, under the turf: a thin copper ring, polished bright by somebody's worried thumbs before they lost it here.",
+   "item": "copper_luck_band",
+   "variants": [
+    {
+     "when": {
+      "found_wolf_cache_riverfarm": 1
+     },
+     "item": "",
+     "toast": "Turned earth, filled in and gone quiet. The wolf walks past it now."
+    }
+   ]
   }
  ]
 }
