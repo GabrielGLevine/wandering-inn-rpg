@@ -433,6 +433,15 @@
   [
    8,
    11
+ 
+  ],
+  [
+   15,
+   11
+  ],
+  [
+   17,
+   11
   ]
  ],
  "_comment_cover_skip": "cover_skip mirrors blocked here because every blocked cell has building, fence, earthwork, or river art; sim blocking is unchanged.",
@@ -990,6 +999,20 @@
     11,
     7
    ]
+  },
+  {
+   "sprite": "riverfarm_fence_ns",
+   "cell": [
+    15,
+    11
+   ]
+  },
+  {
+   "sprite": "riverfarm_fence_ns",
+   "cell": [
+    17,
+    11
+   ]
   }
  ],
  "entities": [
@@ -1435,6 +1458,19 @@
       "Still don't walk that line after dark. Knowing what it is didn't make it friendly.",
       "Two lambs I lost this spring. Whatever took them, it wasn't the thing on the line."
      ]
+    },
+    {
+     "_comment": "#330 R2: the pen answers back. Last-satisfied-wins, so this needs thicket_answered too.",
+     "id": "riverfarm_hunter_lambs_tended",
+     "requires_accomplishment": {
+      "thicket_answered": 1,
+      "tended_beasts": 10
+     },
+     "lines": [
+      "Lambs know your step before I do. Never seen that off a stranger.",
+      "The one that limped is walking sound. I'd stopped expecting it to.",
+      "Herd at the north bend, pen full, and hands that aren't mine doing the gentling."
+     ]
     }
    ],
    "observe": "Rope-burned hands, a game bag, and wolf sign on his boots. Whatever he hunts, it walks on four legs.",
@@ -1617,6 +1653,43 @@
     7
    ],
    "on_enter_accomplishment": "observed_riverfarm_mill"
+  },
+  {
+   "_comment": "#330 R2: a [Beast Tamer] door outside the floodplains. Base banks soothed_a_beast, the variant tended_beasts; pays in wool, never gold.",
+   "id": "hunters_lamb_pen",
+   "kind": "prop",
+   "cell": [
+    16,
+    11
+   ],
+   "display_name": "Hunter's Lamb Pen",
+   "sprite": "riverfarm_fence_ns",
+   "present_when": {
+    "requires": {
+     "thicket_answered": 1
+    }
+   },
+   "observe": "Hurdle fencing the hunter threw up after the thicket business. Two ewe lambs inside it, and a third that will not put weight on a foreleg.",
+   "on_interact_accomplishment": "soothed_a_beast",
+   "once_per_waking": true,
+   "once_per_waking_toast": "The lambs have had their handling for today. Crowd them now and you undo it.",
+   "toast": "You get a hand under the limping one and hold it until it stops shaking. Fleece comes away on your fingers.",
+   "item": "wool_tuft",
+   "variants": [
+    {
+     "when": {
+      "soothed_a_beast": 1
+     },
+     "accomplishment": "tended_beasts",
+     "toast": "They come to the rail for you now. You work burrs out of three fleeces and leave the bad leg for last."
+    }
+   ],
+   "requires_skill": "beasts_mending",
+   "on_skill_use": {
+    "accomplishment": "tended_beasts",
+    "toast": "[Beast's Mending] — You strap the lamb's leg, and it stands on it before you have finished. The ewes crowd in to look.",
+    "item": "wool_tuft"
+   }
   }
  ]
 }

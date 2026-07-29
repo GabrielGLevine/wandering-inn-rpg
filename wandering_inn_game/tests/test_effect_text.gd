@@ -27,6 +27,7 @@ const EXPECTED_ITEMS := {
 	"brothers_marker": [],
 	"field_whetstone": ["Worth 5 gold"],
 	"fishers_handline": ["Worth 4 gold"],
+	"wool_tuft": ["Worth 1 gold"],
 	"parcel_plains_wool": [],
 	"parcel_that_ticks": [],
 	"parcel_watch_dispatch": [],

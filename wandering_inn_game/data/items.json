@@ -1121,6 +1121,22 @@
 			"abilities": [],
 			"description": "A plain silver mount holding nothing, which is the point: the warding is in the setting itself, laid in Hedault's exact hand.",
 			"lore": "He kept the fragment. What he handed back holds the same discipline without the grief of the original — his phrase, delivered like an invoice."
+		},
+		{
+			"_comment": "#330 R2: the lamb pen's yield. Priced, so it sells -- the tend pays in trade goods, never in wage gold.",
+			"id": "wool_tuft",
+			"name": "Wool Tuft",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 1,
+			"description": "A handful of fleece pulled off a lamb's flank while it stood still for you. Greasy with lanolin, warm out of all proportion to its weight.",
+			"lore": "Riverfarm sells its clip south by the bolt and its scraps to nobody, so a tuft in a pocket is a hunter's way of saying the beast let you near. Krshia's people weigh it and pay the honest coin."
 		}
 	]
 }
