@@ -408,7 +408,7 @@ func _select_slot() -> void:
 		Game.save_manual(choice)
 	else:
 		if not Game.load_slot(choice):
-			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Could not load save."})
+			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Could not load save.", "housekeeping": true})
 
 
 func _refresh_slots() -> void:
@@ -555,7 +555,7 @@ func _confirm() -> void:
 		"Load Autosave":
 			_close()
 			if not Game.load_slot("auto"):
-				ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Could not load save."})
+				ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Could not load save.", "housekeeping": true})
 		"Quit to Title":
 			_enter_confirm("quit")
 		"Settings":

@@ -101,12 +101,15 @@
 			"description": "The first spell leaves the fingers before the thought finishes."
 		},
 		{
+			"_comment": "`toggles_light` puts [Light] on the same footing as the `sneaks` Skills: one flag, one arm, on/off with its own copy on each side. Before v0.16.1 the orb had no off path at all -- a hardcoded id check in field_skills.gd hard-SET the flag, so re-casting while lit did nothing and only sleep() ever cleared it. field_ambient is the ON line, field_ambient_off the OFF line.",
 			"id": "light",
 			"display_name": "[Light]",
 			"icon": "icon_light",
 			"contexts": ["exploration"],
 			"field": true,
+			"toggles_light": true,
 			"field_ambient": "[Light] — A steady white orb rises to follow you, throwing back the dark.",
+			"field_ambient_off": "[Light] — You let the orb thin out. The dark closes back in, patient as ever.",
 			"description": "A mage's first, faithful spell: a small orb of steady white light."
 		},
 		{

@@ -45,6 +45,22 @@ const AI_PLAYBACK_TYPES := [
 	WIEvents.STATUS_TICKED,
 ]
 
+## v0.16.1 finding 23: the beats whose AUDIO must ride the playback clock rather
+## than the sim clock. WICombatAI.take_turn emits a whole AI turn synchronously,
+## so every SFX for that turn used to fire in one burst at t=0 while drain()
+## unspooled the visuals one beat_delay() (AI_BEAT_SECONDS 0.5, settings-scaled)
+## apart -- a kill after a 3-cell approach was HEARD 1.5-2s before it was SEEN,
+## worst of all for the player's own death, which by definition happens on an
+## enemy turn. Both paths emit UI_COMBAT_BEAT for these types: the LIVE player
+## turn renders in the same frame the sim emits, so its timing is unchanged, and
+## the playback path emits at DEQUEUE, beside the animation. data/audio.json's
+## rows for these types key off `ui_combat_beat` + `beat_type` accordingly.
+## DELIBERATELY NARROW: dashed and combat_finished stay on the raw event.
+const COMBAT_BEAT_AUDIO_TYPES := [
+	WIEvents.COMBATANT_DOWNED, WIEvents.ATTACK_RESOLVED,
+	WIEvents.SKILL_RESOLVED, WIEvents.REACTION_TRIGGERED,
+]
+
 ## DASH_CONFIRM guards against fat-fingering AP away with a stray hotbar_2
 ## press (Dash used to fire instantly on selection) -- selecting it now
 ## behaves like an aimed slot: shows its cost/effect in the readout and ARMS
@@ -104,14 +120,32 @@ var _acting_skill_flash_color: Color = Color.TRANSPARENT
 static var _first_combat_hint_shown := false
 static var _combat_hint_reset_hooked := false
 
+## v0.16.1 finding 19. The playtest question was "why did my MP recharge without
+## sleeping?" -- and the answer is that MP is not a persistent resource at all,
+## so nothing recharges: WICombat.build sets MAX_MP and then MP = MAX_MP for
+## every combatant at every fight (HP likewise), and an exhaustive search of the
+## MP surface finds no per-turn tick, no overworld tick, no item and no sleep
+## hook. There is nothing to carry, so nothing can be depleted between fights.
+## That IS the design -- evolution-reachability.md prices [Flame Dart]'s "AP/MP
+## premium" as fewer casts PER FIGHT -- but the game never said so, while
+## surfaces DO show MP (sleep_beat announces "+N Max MP", the journal prints
+## "3 MP"), which invites the player to model a persistent pool and then read
+## its refill as a bug. So: say it, once, on the first fight where the PC
+## actually has a pool. Own flag, not `_first_combat_hint_shown`'s -- a Warrior's
+## opening fights must not spend a disclosure that would mean nothing to them.
+const FIRST_MP_HINT_LINE := "[Mana gathers fresh at every battle's start.]"
+static var _first_mp_hint_shown := false
+
 
 static func _reset_first_combat_hint(type: String, _payload: Dictionary) -> void:
 	if type == WIEvents.GAME_RESET:
 		_first_combat_hint_shown = false
+		_first_mp_hint_shown = false
 
 
 static func reset_hints() -> void:
 	_first_combat_hint_shown = false
+	_first_mp_hint_shown = false
 
 
 func _ready() -> void:
@@ -184,6 +218,24 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		WIEvents.COMBAT_STARTED:
 			_show_combat()
 			_render_tutor_line(tutor)
+		# v0.16.1 finding 16: the toast strip has no combat position and never
+		# entered the HUD's disjoint-band budget -- at 1280x720 it covers
+		# x[808,1256] y[590,686], which is the board's lower-right rows. Drinking
+		# a draught mid-fight (WIGame.combat_use_item's "Used: X. Healed N HP.")
+		# is exactly the everyday case. Rather than relocate the panel (every
+		# alternative band collides with the order strip, feed, readout or
+		# hotbar), message_layer banks toasts for the fight's duration and the
+		# copy comes through HERE, in the feed, inside a band that IS measured --
+		# the v0.15 COMBAT/FEED-FOLD precedent. feed_push also lands it in Recent
+		# Messages, so the banked toast drains later without recording twice.
+		WIEvents.TOAST:
+			# HOUSEKEEPING IS EXCLUDED: "Autosaved." has no business in a
+			# blow-by-blow combat feed. Those toasts bank silently instead and
+			# drain (and record) after the board closes, exactly as before --
+			# message_layer only drops the `record` flag for the ones that
+			# arrive here, because feed_push is what records them.
+			if _mode != Mode.INACTIVE and not bool(payload.get("housekeeping", false)):
+				_hud.feed_push(String(payload.get("text", "")))
 		WIEvents.TURN_STARTED:
 			if _mode != Mode.INACTIVE:
 				_render_tutor_line(tutor)
@@ -209,6 +261,9 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			if _mode != Mode.INACTIVE:
 				var event := _capture_playback_event(type, payload)
 				_play_event_visual(type, event["payload"])
+				# Same frame as the sim emit, so the live path's audio timing is
+				# byte-identical to before -- it just arrives via one clock now.
+				emit_combat_beat(type, payload)
 				_push_feed(event["payload"])
 				_render_tutor_line(tutor)
 				_refresh()
@@ -239,6 +294,7 @@ func _show_combat() -> void:
 	_board_renderer.build(_view, main_ref)
 	_announce_allies()
 	_announce_first_combat_hint()
+	_announce_first_mp_hint()
 	_refresh()
 	_root.show()
 	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_SHOWN, {})
@@ -276,6 +332,39 @@ func _announce_first_combat_hint() -> void:
 	var text := "Your hotbar (%s) shows the skills your classes and weapon grant." % WIInputHints.label("hotbar")
 	_hud.feed_push(text)
 	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_HINT_RENDERED, {"text": text})
+
+
+## See FIRST_MP_HINT_LINE. Same one-shot shape as `_announce_first_combat_hint`
+## (feed push + UI_COMBAT_HINT_RENDERED), but it RE-CHECKS every fight instead of
+## burning on the first: a classless or pure-melee PC has MAX_MP 0, and the line
+## should wait for the fight where they first bring a pool to the board.
+func _announce_first_mp_hint() -> void:
+	if _first_mp_hint_shown:
+		return
+	var combat := _combat()
+	if combat == null or not combat.combatants.has("pc"):
+		return
+	if int((combat.combatants["pc"] as Dictionary).get(WIKeys.MAX_MP, 0)) <= 0:
+		return
+	_first_mp_hint_shown = true
+	_hud.feed_push(FIRST_MP_HINT_LINE)
+	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_HINT_RENDERED, {"text": FIRST_MP_HINT_LINE})
+
+
+## See COMBAT_BEAT_AUDIO_TYPES. Called from BOTH dispatch paths -- the live arm
+## above (same frame as the sim emit) and combat_playback's dequeue (beside the
+## animation) -- so exactly one UI_COMBAT_BEAT reaches the bus per rendered beat.
+## The `_ui` capture bag is stripped: it is renderer bookkeeping, and audio rows
+## match on a payload SUBSET, so leaving it in would put frame-timing noise in
+## the domain-event stream for no gain. Public (no underscore) because
+## combat_playback is a separate object calling in.
+func emit_combat_beat(type: String, payload: Dictionary) -> void:
+	if not type in COMBAT_BEAT_AUDIO_TYPES:
+		return
+	var beat := payload.duplicate()
+	beat.erase("_ui")
+	beat["beat_type"] = type
+	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_BEAT, beat)
 
 
 func _join_and(names: Array[String]) -> String:

@@ -615,7 +615,7 @@ var _web_import_cb: JavaScriptObject = null
 func _export_save() -> void:
 	var text: String = Game.export_save_text()
 	if text == "":
-		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Cannot export right now."})
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Cannot export right now.", "housekeeping": true})
 		return
 	var fname := "wandering-inn-save-%d.json" % int(Game.sim.times_slept)
 	if OS.has_feature("web"):
@@ -634,7 +634,7 @@ URL.revokeObjectURL(a.href);
 		DirAccess.make_dir_recursive_absolute(EXPORT_DIR)
 		var f := FileAccess.open("%s/%s" % [EXPORT_DIR, fname], FileAccess.WRITE)
 		if f == null:
-			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Couldn't write the export. Save not exported."})
+			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Couldn't write the export. Save not exported.", "housekeeping": true})
 			return
 		f.store_string(text)
 		f.close()
@@ -645,7 +645,7 @@ URL.revokeObjectURL(a.href);
 			return
 		var out := FileAccess.open(paths[0], FileAccess.WRITE)
 		if out == null:
-			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Couldn't write there. Save not exported."})
+			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Couldn't write there. Save not exported.", "housekeeping": true})
 			return
 		out.store_string(text)
 		out.close()
@@ -656,16 +656,16 @@ URL.revokeObjectURL(a.href);
 		DirAccess.make_dir_recursive_absolute(EXPORT_DIR)
 		var f2 := FileAccess.open("%s/%s" % [EXPORT_DIR, fname], FileAccess.WRITE)
 		if f2 == null:
-			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Couldn't write the export. Save not exported."})
+			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Couldn't write the export. Save not exported.", "housekeeping": true})
 			return
 		f2.store_string(text)
 		f2.close()
-		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "No file dialog here — exported to %s" % ProjectSettings.globalize_path("%s/%s" % [EXPORT_DIR, fname])})
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "No file dialog here — exported to %s" % ProjectSettings.globalize_path("%s/%s" % [EXPORT_DIR, fname]), "housekeeping": true})
 		ObservableBus.emit_domain_event(WIEvents.SAVE_EXPORTED, {"file": fname, "fallback": true})
 
 
 func _finish_export(fname: String) -> void:
-	ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Save exported: %s" % fname})
+	ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Save exported: %s" % fname, "housekeeping": true})
 	ObservableBus.emit_domain_event(WIEvents.SAVE_EXPORTED, {"file": fname})
 
 
@@ -707,7 +707,7 @@ inp.click();
 		if probe != "" and FileAccess.file_exists(probe):
 			_apply_import_text(FileAccess.get_file_as_string(probe))
 		else:
-			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": IMPORT_REFUSED_TOAST})
+			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": IMPORT_REFUSED_TOAST, "housekeeping": true})
 		return
 	var on_picked := func(status: bool, paths: PackedStringArray, _idx: int) -> void:
 		if not is_instance_valid(self) or not status or paths.is_empty():
@@ -724,7 +724,7 @@ inp.click();
 			_apply_import_text(FileAccess.get_file_as_string(probe2))
 		else:
 			DirAccess.make_dir_recursive_absolute(EXPORT_DIR)
-			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "No file dialog here — drop the file at %s and use Import again." % ProjectSettings.globalize_path(probe2)})
+			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "No file dialog here — drop the file at %s and use Import again." % ProjectSettings.globalize_path(probe2), "housekeeping": true})
 
 
 func _on_web_import_text(args: Array) -> void:
@@ -736,10 +736,10 @@ func _on_web_import_text(args: Array) -> void:
 func _apply_import_text(text: String) -> void:
 	if Game.import_save_text(text):
 		ObservableBus.emit_domain_event(WIEvents.SAVE_IMPORTED, {})
-		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Save imported. Welcome back."})
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Save imported. Welcome back.", "housekeeping": true})
 		_close()
 	else:
-		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": IMPORT_REFUSED_TOAST})
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": IMPORT_REFUSED_TOAST, "housekeeping": true})
 
 
 func _activate_row() -> void:
@@ -762,7 +762,7 @@ func _activate_row() -> void:
 		"Replay Hints":
 			WISettings.replay_hints()
 			ObservableBus.emit_domain_event(WIEvents.UI_HINTS_REPLAYED, {})
-			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Tutorial hints will show again."})
+			ObservableBus.emit_domain_event(WIEvents.TOAST, {"text": "Tutorial hints will show again.", "housekeeping": true})
 		"Help...":
 			_enter_help()
 		"Credits...":

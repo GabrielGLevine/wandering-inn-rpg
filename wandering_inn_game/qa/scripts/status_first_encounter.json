@@ -321,7 +321,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "(5) Post-victory journal: seen_statuses now carries slowed, and the Effects section renders the exact L1 glossary sentence.",
+   "_comment": "(5) Post-victory journal: seen_statuses now carries slowed, and the Effects section renders the exact L1 glossary sentence. recent_count RE-DERIVED 22 -> 23 for v0.16.1 finding 19: this fixture's PC holds [Mage], so the new one-shot MP disclosure ('[Mana gathers fresh at every battle's start.]') fires at the start of this fight, and combat_hud.feed_push lands every feed line in Recent Messages by GH#170(b)'s standing contract. Measured against main on this exact seed: main's list is 22 entries, this run's is the same 22 plus that one line in slot 2. Nothing else moved -- in particular the fight's own two post-victory toasts land exactly where they did before (the Relc line records on its drain; 'Autosaved.' is housekeeping, is NOT mirrored into the combat feed, and is still mid-queue-drain when the journal pauses the drain, so it is outside the snapshot on both sides).",
    "action": "press",
    "name": "journal"
   },
@@ -332,7 +332,7 @@
     "seen_statuses": [
      "slowed"
     ],
-    "recent_count": 22
+    "recent_count": 23
    },
    "timeout_sec": 5
   },

@@ -66,6 +66,11 @@ var _active_music_index := 0
 var _current_music_id := ""
 var _current_music_stream_path := ""
 var _field_context_id := ""
+## Set by a GAME_LOADED carrying reason "defeat"; cleared by the defeat veil's
+## own finish (or by any other load/reset). While set, WORLD_READY does NOT
+## re-sync the field bed -- the defeat presentation owns that moment. See
+## finding 24's comment in `_on_domain_event`.
+var _defeat_reload_pending := false
 ## The live crossfade Tween, if any -- killed before scheduling a new one
 ## (see `_crossfade_to_music`'s doc comment for the double-trigger ordering
 ## trap this guards).
@@ -391,6 +396,16 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		return  # re-entrancy guard: never let our own emission trigger another lookup
 	if type == WIEvents.GAME_RESET or type == WIEvents.GAME_LOADED:
 		_reset_duck()
+		# v0.16.1 finding 24. A defeat reload rebuilds the world, and the
+		# WORLD_READY that falls out of it used to crossfade the restored map's
+		# bed back in IMMEDIATELY -- before the black had even started, and the
+		# defeat sequence then holds that black until the player chooses. So the
+		# boulevard's bazaar looped happily under "[Defeat.]". Latch the reason
+		# here (main.gd reads the same key to decide swap_to_world's defeat path)
+		# and let the defeat presentation say when the world may sing again.
+		# GAME_RESET and any non-defeat load CLEAR it: a latch that could strand
+		# would leave a whole session mute.
+		_defeat_reload_pending = type == WIEvents.GAME_LOADED and String(payload.get("reason", "")) == "defeat"
 		# GH#278 (review find): audio.json was a FIFTH stale cache -- these
 		# instance lists loaded once at _ready and never re-read. DEFERRED
 		# because this arm connects before Main's handler (autoloads ready
@@ -566,7 +581,17 @@ func _log_missing_stream(path: String) -> void:
 ## context switch is fully data-driven from `data/audio.json`'s `music` list.
 func _dispatch_music_event(type: String, payload: Dictionary) -> void:
 	if type == WIEvents.WORLD_READY:
+		# See the defeat latch in `_on_domain_event`: this WORLD_READY is the
+		# defeat reload's own, and the veil that will cover it has not started.
+		if _defeat_reload_pending:
+			return
 		_sync_field_music_to_current_map()
+		return
+	if type == WIEvents.UI_DEFEAT_VEIL_FINISHED:
+		if _defeat_reload_pending:
+			_defeat_reload_pending = false
+			if bool(payload.get("continue", true)):
+				_sync_field_music_to_current_map()
 		return
 	for entry: Dictionary in _music_entries:
 		if String(entry.get("event", "")) != type:

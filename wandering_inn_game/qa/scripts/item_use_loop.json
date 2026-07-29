@@ -95,6 +95,13 @@
   },
   { "_comment": "Consumption = inventory.erase (items never stack) -- the draught is gone, repurchasable once R5 wires a vendor to it.", "action": "assert_state", "path": "inventory", "equals": ["rusty_sword", "relcs_spare_spear"] },
   { "action": "assert_state", "path": "combat.combatants.pc.ap", "equals": 3 },
-  { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "Used: Mending Draught. Healed 0 HP." } }
+  { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "Used: Mending Draught. Healed 0 HP." } },
+  {
+   "_comment": "v0.16.1 finding 16: the SIM still emits that toast, but the STRIP must not render it over the board. The toast panel sits at x[808,1256] y[590,686] -- bare arena in the combat HUD's disjoint-band map -- so drinking a draught mid-fight used to cover the lower-right rows. message_layer now banks every toast for the fight's duration (ui_toast_rendered is therefore ABSENT here and fires only after ui_combat_hidden), and combat_screen mirrors the copy into the feed, inside a band that IS budgeted. This screenshot is the eye-gate for both halves: the feed's last line reads 'Used: Mending Draught. Healed 0 HP.' and no parchment strip covers the arena.",
+   "action": "wait_frames",
+   "frames": 5
+  },
+  { "action": "assert_event_absent", "type": "ui_toast_rendered" },
+  { "action": "screenshot", "name": "05_item_used_feed_not_toast" }
  ]
 }

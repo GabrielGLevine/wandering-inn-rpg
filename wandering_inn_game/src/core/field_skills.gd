@@ -10,13 +10,13 @@ var _mark_skill_used: Callable
 var _record_accomplishment: Callable
 var _remove_entity: Callable
 var _use_skill: Callable
-var _set_light_active: Callable
+var _toggle_light: Callable
 var _blink: Callable
 var _ward: Callable
 var _animate: Callable
 
 
-func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, toggle_sneak_cb: Callable, mark_skill_used_cb: Callable, record_accomplishment_cb: Callable, remove_entity_cb: Callable, use_skill_cb: Callable, set_light_active_cb: Callable, blink_cb: Callable, ward_cb: Callable, animate_cb: Callable, door_openable_cb: Callable = Callable()) -> void:
+func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, toggle_sneak_cb: Callable, mark_skill_used_cb: Callable, record_accomplishment_cb: Callable, remove_entity_cb: Callable, use_skill_cb: Callable, toggle_light_cb: Callable, blink_cb: Callable, ward_cb: Callable, animate_cb: Callable, door_openable_cb: Callable = Callable()) -> void:
 	_event_sink = event_sink
 	_skills = skills
 	_door_openable = door_openable_cb
@@ -26,7 +26,7 @@ func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, t
 	_record_accomplishment = record_accomplishment_cb
 	_remove_entity = remove_entity_cb
 	_use_skill = use_skill_cb
-	_set_light_active = set_light_active_cb
+	_toggle_light = toggle_light_cb
 	_blink = blink_cb
 	_ward = ward_cb
 	_animate = animate_cb
@@ -126,10 +126,20 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 		_mark_skill_used.call(skill_id)
 		_emit(WIEvents.TOAST, {"text": door_flavor})
 		return {"door_flavored": String(target[WIKeys.ID])}
+	# [Light]'s toggle, the `sneaks` idiom for the orb (v0.16.1 finding 5). This
+	# replaced a hardcoded `if skill_id == "light"` inside the field_ambient arm
+	# that only ever SET the flag, so a second cast was a no-op and only sleep()
+	# put the orb out.
+	# PLACEMENT IS LOAD-BEARING: this must stay BELOW the requires_skill and
+	# skill_uses arms above. Lighting a light-requiring prop (the witch hollow's
+	# threshold candles) faces an entity whose on_skill_use answers "light" --
+	# route the toggle first and lighting the candles would snuff your own orb as
+	# a side effect. Facing such a prop, the prop wins; facing anything else, the
+	# orb toggles.
+	if bool(_skills.get(skill_id, {}).get("toggles_light", false)):
+		return _toggle_light.call(skill_id)
 	var field_ambient := String(_skills.get(skill_id, {}).get("field_ambient", ""))
 	if field_ambient != "":
-		if skill_id == "light":
-			_set_light_active.call(true)
 		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
 		_mark_skill_used.call(skill_id)
 		_emit(WIEvents.TOAST, {"text": field_ambient})

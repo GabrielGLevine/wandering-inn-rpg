@@ -80,6 +80,14 @@
    }
   },
   {
+   "_comment": "v0.16.1 finding 25: the pointer's GUARANTEED read. The toast above is spoken UNDER the sleep veil (veil layer 30, toasts layer 12) and its hold expires around the time the black lifts, so sleep_veil now mirrors the beat as a veil line on the ACCOMPLISHMENT_RECORDED arm. This veil is the ONLY one in the whole game that fires under `watch_runner_pointed`, and it is otherwise line-less: `lines` 0 -> 1 IS the new line, measured on this seed (arc_flow's other two veils are the pinned 4-line and 0-line ones far below, so the count is unambiguous here). Without this pin the only guaranteed-read line in the arc had no canonical proof at all.",
+   "action": "assert_event_logged",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {
+    "lines": 1
+   }
+  },
+  {
    "action": "teleport",
    "map": "street",
    "cell": [
