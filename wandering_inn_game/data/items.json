@@ -1153,6 +1153,22 @@
 			"price": 6,
 			"description": "A corusdeer antler, shed clean at the base, oaken-brown fading to a banked red at the tip. It has not gone cold and does not seem inclined to.",
 			"lore": "The cull notices are careful about this: the herd stays off the paper, antlers freely shed only. Nobody has ever worked out why a dropped one keeps its heat, and the Gnoll caravans have stopped asking."
+		},
+		{
+			"_comment": "#330 R5: the archery butt's yield. The drill now buys a recoverable shaft, not a free ranged_hit.",
+			"id": "loose_arrow",
+			"name": "Loose Arrow",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 1,
+			"description": "A single arrow pulled back out of the straw, fletching creased where it went in. Straight enough to shoot again, once.",
+			"lore": "The barracks yard counts its shafts twice a day and still comes up short, so nobody minds one walking off in a recruit's pack. Everybody who ever drilled here has done it."
 		}
 	]
 }

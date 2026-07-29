@@ -29,6 +29,7 @@ const EXPECTED_ITEMS := {
 	"fishers_handline": ["Worth 4 gold"],
 	"wool_tuft": ["Worth 1 gold"],
 	"shed_antler": ["Worth 6 gold"],
+	"loose_arrow": ["Worth 1 gold"],
 	"parcel_plains_wool": [],
 	"parcel_that_ticks": [],
 	"parcel_watch_dispatch": [],
