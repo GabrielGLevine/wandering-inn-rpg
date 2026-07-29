@@ -4,43 +4,31 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
-## Current state (2026-07-28, session close)
+## Current state (2026-07-29)
 
-**v0.16.0 "REGION DEPTH" SHIPPED — tag at 1c1756b, Release run
-30398347500 + Pages run 30398347409 green (full QA on real assets, itch
-html5, Win/Linux desktops).** Third tag cut this day (v0.14.0, v0.15.0,
-v0.16.0). One session end-to-end: recon → 4 per-region plans →
-adversarial verify (42 findings, 4 BLOCK, all fixed pre-dispatch) →
-4-lane worktree fleet (20 agents) → anchored merge-train (#319 Riverfarm,
-#320 Invrisil, #321 Pallass, #322 Floodplains) → close PR #326 (freeze
-step-0 with the skill_uses generator gap patched; 778 ids, zero
-removals; 7 leads rows) → tag. Issues #305-#308 closed.
+**v0.16.1 "the playtest wave" TAGGED at 0fe611d** (Release/Pages runs
+verifying at close — confirm green). ALL 26 findings from the user's
+full sitting addressed in three PRs, same session as receipt: #327
+(sim/UX/audio — one toast spec incl. GH#325, [Light] toggle, field
+readout, combat-beat audio clock, defeat music, biome voice, MP hint,
+both music swaps), #328 (content/maps — economy exploit closed with
+yarrow-gated brewing + the hidden counter exploit, Hunter ruling,
+mill ramp, alley mouth, fence resolution toast, Cups gating, mothbear
+re-home, blade banding, pot tints, sign entity, warehouse-door split),
+#329 (art — bespoke Lady/Hedault/Coyle rigs + 2 shared civilians +
+sign for $0.26, pc_* sprite ban with a mutation-proven registry gate,
+16 entities re-cast). Process notes ledgered: composed-census red on
+#328's first head (both lanes trimmed to their own trees) caught at
+the verdict read and trimmed; sim reviewer caught the toast fix
+regressing GH#325's own repro (one-shot cap) pre-merge.
 
-Content: 7 quests with three-pillar parity, 7 walk-in interiors, the
-first goblin-ally fight (betrayal branch got its first live QA
-coverage), the nobility layer (user directive; #318 = v0.17 Magnolia
-thread), 4 bespoke PixelLab camp sprites, forge-hall board-fight debt
-closed. Close evidence: 22-run windowed machine playtest (all pass);
-economy axes ratified (CHOICE-LOG close block). Per-issue narrative:
-the five PR bodies. INCIDENT (ledgered + skill-folded): the close PR
-was merged past a red Unit suites via owner-auth bypass — main red ~5
-min, fixed forward (test_sim_core active_leads pins re-derived), full
-30-suite bar green before the tag.
-
-**Session infra (user directives):** CI doc-drift → advisory
-non-required job (09ebdbe); tracked pre-commit hooks, path-scoped,
-worktree-scoped install (68fa336). Wave-lesson skill folds: producer-
-schema parity (wi-shipping), leads re-pin + rendered-vs-seen
-(wi-writing-qa-scripts, wi-machine-playtest), anchored merge trains +
-owner-auth merge-bypass discipline (wi-running-the-machine).
+**v0.16.0 shipped earlier the same day** (see git history of this
+block): the Region Depth wave, 778 frozen ids, one-session end-to-end.
 
 ## 🎯 NEXT ACTIONS
 
 1. ~~Tag v0.16.0~~ — DONE (runs 30398347500/30398347409 green).
-2. **#325 payoff-toast-behind-Autosaved** — v0.16.1 HOTFIX CANDIDATE: all
-   seven new quests' payoff prose currently dies unread behind the
-   housekeeping toast if the player moves. Small presentation fix +
-   re-derive first-toast-after-beat canonicals.
+2. ~~#325~~ — SHIPPED in v0.16.1 (#327's toast spec; issue closable).
 3. **#324 world_ready ~1.5s dead-render window** (global, PRE-EXISTING;
    corrects the v0.15 "readout overdraw" diagnosis): ambient lines render
    nothing while ui_dialogue_rendered fires. Needs systematic-debugging in
