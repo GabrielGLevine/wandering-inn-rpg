@@ -287,7 +287,7 @@ const DUNGEON_CELLS := [
 const BESTIARY_CELLS := [
 	{"name": "corusdeer_range_t1_solo", "arena": "boulder_flats", "enemies": ["corusdeer"], "build": "warrior2", "solo": true},
 	{"name": "razorbeak_nest_t1_solo", "arena": "boulder_flats", "enemies": ["razorbeak_a", "razorbeak_b"], "build": "warrior2", "solo": true},
-	{"name": "boulevard_mothbears_t3_solo", "arena": "mercantile_alley", "enemies": ["mothbear_a", "mothbear_b"], "build": "t3_warrior10", "solo": true},
+	{"name": "road_mothbears_t3_solo", "arena": "boulder_flats", "enemies": ["mothbear_a", "mothbear_b"], "build": "t3_warrior10", "solo": true},  # v0.16.1 #21: re-homed to the floodplains wagon road, so the cell now measures the arena the fight actually opens on
 	{"name": "kingslayer_den_t4_solo", "arena": "spider_den", "enemies": ["kingslayer_spider"], "build": "t4_spellsword11_party", "solo": true},
 	{"name": "forge_calibration_golem_t4_solo", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword11_party", "solo": true},
 	# MAIN-LINE BAND LADDER rung 3 of 4 and Pallass's GATED stop cell (Phase 9,

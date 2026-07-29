@@ -1033,7 +1033,7 @@
    "skills": []
   },
   {
-   "_comment": "Mothbear, T3 Invrisil-boulevard NIGHT-ONLY pack encounter (`boulevard_mothbears`, drawn to the boulevard's lanterns).",
+   "_comment": "Mothbear, T3 NIGHT-ONLY pack encounter (`road_mothbears`, floodplains wagon road). v0.16.1 #21: re-homed off invrisil_boulevard. The old comment claimed a canon placement inside the walls of Izril's largest human city with no citation, and a grep for `mothbear` across data/, docs/design/ and the wiki reference returns no canon reference at all -- so the honest note is that this is an ORIGINAL beast placed on wilderness logic, not a cited one. The witch_hollow line_stalker pair shares this rig and was always a wilderness placement; only the Invrisil instance was wrong.",
    "id": "mothbear_a",
    "power_level": 7.0,
    "display_name": "Mothbear",
@@ -1052,7 +1052,7 @@
    "skills": []
   },
   {
-   "_comment": "Boulevard_mothbears' pack alpha -- see mothbear_a's own _comment for the canon cite.",
+   "_comment": "`road_mothbears`' pack alpha. v0.16.1 #21: the old note pointed at mothbear_a \"for the canon cite\", which pointed at nothing -- the dangling pointer is deleted rather than re-aimed.",
    "id": "mothbear_b",
    "power_level": 8.0,
    "display_name": "Mothbear",

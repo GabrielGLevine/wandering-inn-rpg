@@ -4,6 +4,41 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.16.1 CONTENT/MAPS: the Invrisil mothbear (#21)
+
+**Call: OPTION A — keep the beast and the bounty, move the kill site outside
+the walls.** The user asked why there was a Mothbear in Invrisil. There was no
+good answer. `boulevard_mothbears` sat at [5,15] on the boulevard, night-gated,
+and `mothbear_a`'s `_comment` asserted the placement was canon-drawn to the
+lantern-line; `mothbear_b`'s then said "see mothbear_a's own _comment for the
+canon cite." The chain terminated in nothing — a grep for `mothbear` across
+`data/`, `docs/design/` and the wiki reference returns zero canon references.
+Canon mothbears are northern-Izril WILDERNESS beasts; Invrisil is the largest
+walled human city on the continent, with a Watch and two guilds.
+
+Alternatives considered:
+- **Option B, swap the roster for a canon-urban night threat.** Rejected: the
+  right thing already exists eight cells away (`boulevard_night_footpads`), so
+  Option B would have put two human night-ambush encounters on one map and
+  thrown away a shipped bespoke rig.
+- **Leave it and write a better `_comment`.** Rejected: the placement is the
+  defect, not its documentation.
+
+What moved: the encounter re-homes to `floodplains` [23,2] (the north verge —
+the wagon road, three cells clear of every route the canonical sweep walks,
+verified by harvesting every `player_moved`/`player_blocked` event out of a
+full sweep rather than by eye), keeps goblin_night_patrol's night/respawn/
+hidden-marker shape, and moves onto `boulder_flats`, that map's own outdoor
+arena, so the board matches the fiction. Coyle's two bounties keep their ids
+and their gold and lose "the lantern-line" for the wagon road and the carter
+camps. `mothbears_culled` is UNCHANGED — it is the bounty condition and is
+registered in `shipped_ids`, so the producer moves and the counter does not.
+`bounty_standing_lantern_line`'s id is now a legacy name, flagged in its own
+`_comment`.
+
+Honest note recorded in `mothbear_a`'s `_comment` in place of the dead cite:
+this is an ORIGINAL beast placed on wilderness logic, not a cited one.
+
 ## 2026-07-28 — v0.16 PALLASS LANE (#307), FIX WAVE (post-adversarial-review)
 
 Two IMPORTANT findings applied. One of them turned out to rest on a false

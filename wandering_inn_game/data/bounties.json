@@ -339,7 +339,7 @@
     "mothbears_culled": 1
    },
    "gold": 4,
-   "copy": "The lantern-line draws them after dark — moth-winged bears, heavy enough to crack a cart axle. One culled, after dark, shown by Guild attestation. 4 gold on turn-in. Coyle."
+   "copy": "They work the wagon road after dark — moth-winged bears, heavy enough to crack a cart axle, and my carters camp out there. One culled, after dark, shown by Guild attestation. 4 gold on turn-in. Coyle."
   },
   {
    "_comment": "Pay: 2.0g/unit * 1 unit * T4 2.5 = 5g.",
@@ -400,6 +400,7 @@
    "copy": "Guild standing order, Silver-rank and up. The approach galleries do not stay swept — whatever nests in that seam nests DEEP, and it recruits. Two confirmed kills per rotation, shell-plate as proof, 10 gold. This notice does not come down. Selys, for the Guild."
   },
   {
+   "_comment": "v0.16.1 #21: the id is a LEGACY NAME. The kill site moved outside the walls and the copy moved with it (wagon road, not lantern-line), but bounty_standing_lantern_line is registered in shipped_ids via its accepted_/completed_ counters, so the id is frozen where the copy is not.",
    "id": "bounty_standing_lantern_line",
    "pillar": "fight",
    "giver": "Master Coyle",
@@ -410,7 +411,7 @@
     "mothbears_culled": 2
    },
    "gold": 8,
-   "copy": "A standing arrangement, for professionals. The lantern-line draws the moth-winged bears every dark season and my carters have families. Two culled per settlement of the account, after dark, Guild-attested. 8 gold, paid without commentary. Coyle."
+   "copy": "A standing arrangement, for professionals. The moth-winged bears come down onto the wagon road every dark season and my carters have families. Two culled per settlement of the account, after dark, Guild-attested. 8 gold, paid without commentary. Coyle."
   },
   {
    "id": "bounty_standing_road_order",

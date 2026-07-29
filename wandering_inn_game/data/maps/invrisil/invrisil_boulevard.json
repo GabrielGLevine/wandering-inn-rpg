@@ -1435,45 +1435,6 @@
    "on_victory": "won_combat"
   },
   {
-   "id": "boulevard_mothbears",
-   "kind": "encounter",
-   "beast": true,
-   "cell": [
-    5,
-    15
-   ],
-   "display_name": "Shapes in the Dark",
-   "sprite": "mothbear",
-   "arena": "mercantile_alley",
-   "enemies": [
-    "mothbear_a",
-    "mothbear_b"
-   ],
-   "allies": [],
-   "respawns": true,
-   "encounter_when": {
-    "phase": [
-     "night"
-    ]
-   },
-   "trigger_radius": 1,
-   "observe": "Two heavy shapes lope along the lantern-line, wings folded tight, drawn to the light the way moths are. Only after dark.",
-   "gate_closed_toast": "The lantern-line is quiet. Whatever comes for the light only comes at night.",
-   "visual_states": [
-    {
-     "_comment": "Marker visible ONLY while the night encounter_when gate can fire",
-     "when": {
-      "phase": [
-       "day",
-       "dusk"
-      ]
-     },
-     "hidden": true
-    }
-   ],
-   "on_victory": "mothbears_culled"
-  },
-  {
    "id": "boulevard_duel_ring",
    "kind": "encounter",
    "cell": [
