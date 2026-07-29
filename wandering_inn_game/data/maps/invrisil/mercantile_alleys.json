@@ -1295,12 +1295,7 @@
     6
    ],
    "display_name": "Hedault",
-   "sprite": "human_laborer",
-   "tint": [
-    0.85,
-    0.85,
-    0.95
-   ],
+   "sprite": "hedault",
    "conversation": "hedault_enchanting",
    "talk_pool": [
     "Appraisal is free to watch and expensive to interrupt.",

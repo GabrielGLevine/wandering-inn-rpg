@@ -883,7 +883,7 @@
     6
    ],
    "display_name": "Krshia",
-   "sprite": "pc_gnoll_f",
+   "sprite": "gnoll_traveler",
    "facing": "down",
    "conversation": "krshia_inn",
    "present_when": {
@@ -909,6 +909,11 @@
      "speaker": "Krshia",
      "text": "The market can keep until morning. A good bowl and a warm fire, yes?"
     }
+   ],
+   "tint": [
+    0.8,
+    0.66,
+    0.5
    ]
   },
   {

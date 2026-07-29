@@ -5412,5 +5412,92 @@
     "fps": 8
    }
   }
+ },
+ "invrisil_lady_client": {
+  "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig. Idle-only (she never walks); feet plane 92/124, 61 rows -> 30/61.",
+  "directional": true,
+  "render_scale": 0.4918,
+  "anchor": [0.4919, 0.75],
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/invrisil_lady_client/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/invrisil_lady_client/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/invrisil_lady_client/Idle_Up-Sheet.png",
+    "frame_size": [124, 124],
+    "fps": 4
+   }
+  }
+ },
+ "master_coyle": {
+  "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig, burgundy-and-gold merchant livery his own copy names. Feet plane 95/128.",
+  "directional": true,
+  "render_scale": 0.4839,
+  "anchor": [0.4857, 0.7422],
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/master_coyle/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/master_coyle/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/master_coyle/Idle_Up-Sheet.png",
+    "frame_size": [128, 128],
+    "fps": 4
+   }
+  }
+ },
+ "hedault": {
+  "_comment": "v0.16.1 art wave: bespoke PixelLab v3 rig; he no longer shares the Headman's laborer rig with his own alley's footpads.",
+  "directional": true,
+  "render_scale": 0.4918,
+  "anchor": [0.4906, 0.75],
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/hedault/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/hedault/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/hedault/Idle_Up-Sheet.png",
+    "frame_size": [124, 124],
+    "fps": 4
+   }
+  }
+ },
+ "city_scribe": {
+  "_comment": "v0.16.1 art wave: shared clerk rig for anonymous ledger-keepers (extras may share; named characters may not).",
+  "directional": true,
+  "render_scale": 0.4839,
+  "anchor": [0.4973, 0.75],
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/city_scribe/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/city_scribe/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/city_scribe/Idle_Up-Sheet.png",
+    "frame_size": [124, 124],
+    "fps": 4
+   }
+  }
+ },
+ "city_runner": {
+  "_comment": "v0.16.1 art wave: shared courier rig (pack + satchel + papers) for errand-runners; extras may share this one.",
+  "directional": true,
+  "render_scale": 0.4918,
+  "anchor": [0.4758, 0.7419],
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/city_runner/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/city_runner/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/city_runner/Idle_Up-Sheet.png",
+    "frame_size": [124, 124],
+    "fps": 4
+   }
+  }
+ },
+ "coyle_shop_sign": {
+  "_comment": "v0.16.1 art wave: Coyle and Sons' own board. 0.45 = 27x25 world px, above coin_shop_sign's 24 so the named front outranks it.",
+  "render_scale": 0.45,
+  "anchor": [0.5, 0.9062],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/coyle_shop_sign/Idle-Sheet.png",
+    "frame_size": [64, 64],
+    "fps": 1
+   }
+  }
  }
 }

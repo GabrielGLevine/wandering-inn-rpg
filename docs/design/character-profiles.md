@@ -103,7 +103,10 @@ canon cites · current sprite state.
   closed. Still proud, still pragmatic ("a Gnoll knows when the market
   is done"), but at ease — the ", yes?" palette leads. Never the stall's
   wares hub; she is a guest here, not a vendor.
-- Sprite: stand-in (upgrade queued — Gnoll = tall hyena-folk).
+- Sprite: `gnoll_traveler` + a brown tint (v0.16.1 ART lane — was
+  `pc_gnoll_f`, the PLAYER's own skin, on both her street and inn rows).
+  Species-correct and no longer a PC copy, but still a shared extras rig;
+  the bespoke Gnoll [Shopkeeper] rig stays queued (VISUAL-LOG).
 
 ## Selys Shivertail
 - Drake [Receptionist] (Adventurer's Guild), average build.
@@ -566,3 +569,44 @@ Pisces (ours already), Ksmvr — complete; no other members in-window.
 - v0.16 (I1, "A Setting for a Lady"): he will not cut a mount around a
   lie. The comedy and the kindness are both in his refusal being the
   most respectful thing anyone does for the client all quest.
+
+- **Sprite (v0.16.1 ART lane):** bespoke `hedault` rig — high-buttoned
+  charcoal coat, pale silver cuffs and collar, iron-grey crop, gloves held
+  at the sides, upright and still. The silhouette is the voice: nothing
+  hangs loose, nothing is decorative. He no longer wears the Riverfarm
+  Headman's laborer rig, which he had been sharing with the two footpad
+  encounters in his own alley.
+
+## Master Coyle (profile added 2026-07-28; v0.16.1 ART lane)
+- OUR INVENTION (no canon figure) — the Invrisil merchant-prince the
+  Brothers' quest line orbits. Human, middle-aged, broad.
+- Silhouette contract: **WEALTH WORN OUTWARD.** Burgundy frock coat with
+  coin-gold trim on a high collar, brass buttons, a cream silk cravat,
+  heavy rings on both hands, feet planted wide. Deliberately the widest
+  human figure on the boulevard — he takes up more room than the extras
+  around him, which is the whole character.
+- Voice (as shipped, `data/maps/invrisil/invrisil_boulevard.json` +
+  `data/dialogue/invrisil_merchant_prince.json`): everything is priced,
+  including you; courtesy delivered as a transaction ("New face. I do like
+  a new face — they're cheap").
+- **Sprite:** bespoke `master_coyle` rig. Replaces `pc_human_m`, which had
+  him wearing the player's own travel kit four cells from an identically
+  dressed nameless extra.
+
+## Invrisil civilian rigs (added 2026-07-28; v0.16.1 ART lane)
+Three shared, deliberately ANONYMOUS rigs. Policy: one rig backs at most
+one NAMED character, but extras (`A `/`An `/`The ` display names) may share
+freely — these three exist so a re-cast extra never has to land back on
+`human_laborer` and deepen that pile.
+- `invrisil_lady_client` — merchant-class/minor-noble woman: high-collared
+  deep plum gown, silver-grey brocade panel, gloves, hair pinned (not
+  tied), a small hinged ring box held at the waist. NO pack, NO belt
+  pouches, NO boots — the whole point is that she cannot read as a
+  traveler. Worn by the stationer's client and by "A Lady in Plum Silk".
+- `city_scribe` — ledger-keeper: shirtsleeves with cuffs pinned back,
+  olive waistcoat, ink to the knuckle, flat satchel, closed ledger. Worn
+  by the stationer's scribe, the Rest's House Factor, and the boulevard's
+  clerk between errands.
+- `city_runner` — errand courier: short brown coat, flat cap, pack and
+  satchel strap, papers clutched under one arm, caught mid-hurry. Worn by
+  the boulevard's `coyle_runner_trail` tail-marker.

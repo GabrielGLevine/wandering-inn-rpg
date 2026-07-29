@@ -4,6 +4,70 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-07-28 — v0.16.1 ART: the pc_* sweep, five reuse fixes, the Coyle sign
+
+**Call: SIX owned PixelLab v3 rigs, then re-cast every `pc_*` row onto new or
+existing NPC art, then gate it.** `pc_<race>_<gender>` is the PLAYER's skin
+(`WIGame.pc_sprite_variant`, `wi_game.gd:175`); 16 map rows across 9 maps wore
+one, so a human-male PC met four copies of himself — one of them Master Coyle,
+another four cells away on the same row. `tests/test_sprite_registry.gd` now
+walks `WISceneCatalog.compose()` and reds on any `pc_*` reference from an
+entity, decor or `visual_states` row. Mutation-proven: pointing `guild/renn` at
+`pc_human_m` prints `guild/renn wears PC-only sprite 'pc_human_m'`, reverted.
+
+- **Generation budget: 6 calls, ~30 generations, ~$0.15 of a $2.56 credit
+  balance** (subscription generations were exhausted, so everything billed
+  credits). `create_character(mode="v3")` costs 2 generations for 8 directions
+  and was the whole reason a six-rig wave was affordable — `create_1_direction_
+  object` costs 20-40 for one prop. Only the sign used the object pipeline.
+- **The new rigs ship IDLE-ONLY and DIRECTIONAL** (south/east/north from the
+  8-rotation set, side mirrors west, diagonals parked). Rejected: the full
+  `animate-character` walk pass — none of these entities ever moves, and the
+  shipped `antinium_worker` / `royal_soldier` idle-only precedent already
+  covers stationed extras. Anchors measured off each alpha bbox per the anchor
+  rule; `render_scale = 30 / bbox_rows` lands every rig in the shipped
+  human-civilian band (`citizen_f` 30 rows x 1.0, `human_laborer` 49 x 0.6154).
+- **RULING — the five-item reuse budget went to collisions, not to the pile.**
+  `human_laborer` backed 9 NPCs plus 8 combatants. The five spent: `hedault`
+  (bespoke — a canon named [Enchanter] sharing his rig with the two footpad
+  encounters on his OWN map was the worst case), `rest_house_factor` and
+  `invrisil_extra_4` (moved to the new shared `city_scribe`), `gentleman_bowler`
+  (moved to `hired_blade`), `rest_quiet_drinker` (moved ONTO `human_laborer`
+  from `pc_human_m`, which is a net-zero pile change but a real PC-skin fix).
+  `invrisil_extra_3` KEEPS `human_laborer` on purpose: he is a porter at a
+  barrow, the rig is semantically his, and the collision he was in went away
+  when `invrisil_extra_4` left. Rejected: bespoke art for all nine, which would
+  have burned the wave on anonymous extras the policy explicitly lets share.
+- **RULING — anonymous extras may share a rig; named characters may not.**
+  `invrisil_extra_6` ("A Lady in Plum Silk") reuses the bespoke
+  `invrisil_lady_client` rather than deepening the boulevard's `citizen_f`
+  pair, because both are anonymous and they are two maps apart. Rejected: a
+  third `citizen_f` tint, which is exactly the "separated by tint alone" defect
+  the triage flagged.
+- **RULING — Master Coyle got bespoke art even though the brief said "existing
+  non-PC sprites".** He is quest-critical, named, and his own copy and
+  `warehouse_approach`'s observe both name burgundy-and-brass livery. At 2
+  generations the honest rig was cheaper than the argument. Same reasoning
+  declined for Krshia: `gnoll_traveler` + a brown tint is species-correct and
+  no longer the PC's skin, and the bespoke Gnoll rig is logged as owed.
+- **RULING — the sign is a real sprite, not the interim.** #17's option (a),
+  re-using `coin_shop_sign`, had already shipped in the content lane, which
+  left two identical anonymous coin plaques competing on one facade. The
+  bespoke board (burgundy, brass studs, a wagon-wheel device, blank lettering
+  bar) ships at `render_scale` 0.45 = 27x25 world px, deliberately ABOVE
+  `coin_shop_sign`'s 24, so the named front outranks the generic one. Letters
+  cannot resolve at 16px cells — the name lives in `display_name`/`observe`,
+  as the finding itself conceded.
+- **Six tints were re-tuned after the windowed read**, not before it. They had
+  been chosen against `human_laborer`'s light apron and went near-silhouette on
+  the darker new rigs (the House Factor and the stationer's scribe were the
+  worst). This is the anchor rule's sibling: a rig swap invalidates the tint.
+- **Ilvo wears `tier_clerk`, a Pallass rig, and that is logged not hidden.**
+  The registry holds two Drake civilian rigs and Renn needed one of them from
+  four cells away. Rejected: both on `drake_patron` with different tints (the
+  exact adjacency defect), and reusing a named Drake's rig (`zevara`/`olesm`)
+  for another named Drake (the policy forbids it). VISUAL-LOG carries the debt.
+
 ## 2026-07-28 — v0.16.1 CONTENT/MAPS: the Invrisil mothbear (#21)
 
 **Call: OPTION A — keep the beast and the bounty, move the kill site outside

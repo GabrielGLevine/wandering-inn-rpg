@@ -1310,7 +1310,7 @@
     2
    ],
    "display_name": "Peddler",
-   "sprite": "pc_human_m",
+   "sprite": "hired_blade",
    "observe": "A cart of odds and ends, half of it Watch-stamped. He's not saying how he came by that, and you're not asking.",
    "facing": "down",
    "conversation": "peddler_stall",
@@ -1561,7 +1561,12 @@
     2
    ],
    "display_name": "Krshia",
-   "sprite": "pc_gnoll_f",
+   "sprite": "gnoll_traveler",
+   "tint": [
+    0.8,
+    0.66,
+    0.5
+   ],
    "observe": "A Gnoll with a merchant's smile and a soldier's eyes. She prices you the moment you approach, and remembers the number.",
    "friendly_line": "You have a warm way about you, and warmth I can trade with. Come - for you, I will call it a fair price, and I will mean it. This is not nothing, from me.",
    "facing": "right",
@@ -1818,7 +1823,12 @@
     12
    ],
    "display_name": "Watch Sergeant",
-   "sprite": "pc_drake_m",
+   "sprite": "royal_soldier",
+   "tint": [
+    0.62,
+    0.55,
+    0.72
+   ],
    "observe": "Stripes on the sleeve, ink on the fingers. He would send the crate problem down the chain if the chain had not already sent it back up to him.",
    "facing": "down",
    "conversation": "watch_crate",

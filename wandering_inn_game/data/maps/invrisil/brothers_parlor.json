@@ -303,7 +303,7 @@
     3
    ],
    "display_name": "Wilovan",
-   "sprite": "pc_gnoll_m",
+   "sprite": "wilovan",
    "tint": [
     0.75,
     0.8,
@@ -412,11 +412,11 @@
     5
    ],
    "display_name": "A Gentleman in a Bowler",
-   "sprite": "human_laborer",
+   "sprite": "hired_blade",
    "tint": [
-    0.5,
-    0.48,
-    0.52
+    0.78,
+    0.75,
+    0.82
    ],
    "facing": "left",
    "observe": "A broad man in a bowler hat, playing solitaire like the deck owes him money. Politely, though.",

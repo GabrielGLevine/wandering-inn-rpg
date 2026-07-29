@@ -1082,12 +1082,7 @@
     6
    ],
    "display_name": "Master Coyle",
-   "sprite": "pc_human_m",
-   "tint": [
-    0.85,
-    0.75,
-    0.55
-   ],
+   "sprite": "master_coyle",
    "facing": "left",
    "observe": "Coin-gold trim on a merchant's collar, rings enough to case a fist. He totals you before you've said a word — cheaply, by the look on his face.",
    "friendly_line": "He offers a smile with the price tag still visible on the underside. \"Charming,\" he allows, in the tone of a man crossing an item off a ledger.",
@@ -1243,11 +1238,11 @@
     12
    ],
    "display_name": "A Clerk Between Errands",
-   "sprite": "human_laborer",
+   "sprite": "city_scribe",
    "tint": [
-    0.45,
-    0.5,
-    0.4
+    0.74,
+    0.82,
+    0.66
    ],
    "facing": "down",
    "dialogue": [
@@ -1271,7 +1266,7 @@
     6
    ],
    "display_name": "A Man Who Isn't Lost",
-   "sprite": "pc_human_m",
+   "sprite": "hired_blade",
    "tint": [
     0.65,
     0.55,
@@ -1299,11 +1294,11 @@
     10
    ],
    "display_name": "A Lady in Plum Silk",
-   "sprite": "pc_human_f",
+   "sprite": "invrisil_lady_client",
    "tint": [
-    0.55,
-    0.35,
-    0.45
+    0.72,
+    0.66,
+    0.78
    ],
    "facing": "left",
    "dialogue": [
@@ -1386,7 +1381,7 @@
     13
    ],
    "display_name": "A Hurrying Runner",
-   "sprite": "pc_human_m",
+   "sprite": "city_runner",
    "tint": [
     0.5,
     0.45,
@@ -1496,7 +1491,7 @@
     1
    ],
    "display_name": "Coyle and Sons",
-   "sprite": "coin_shop_sign",
+   "sprite": "coyle_shop_sign",
    "tint": [
     0.72,
     0.42,

@@ -399,7 +399,7 @@
     3
    ],
    "display_name": "Renn",
-   "sprite": "pc_drake_m",
+   "sprite": "drake_patron",
    "tint": [
     0.55,
     0.58,
@@ -426,11 +426,11 @@
     4
    ],
    "display_name": "Ilvo",
-   "sprite": "pc_drake_f",
+   "sprite": "tier_clerk",
    "tint": [
-    0.4,
-    0.55,
-    0.35
+    0.66,
+    0.9,
+    0.58
    ],
    "facing": "left",
    "present_when": {
@@ -458,7 +458,7 @@
     6
    ],
    "display_name": "Yelra",
-   "sprite": "pc_gnoll_f",
+   "sprite": "gnoll_traveler",
    "tint": [
     0.62,
     0.5,
