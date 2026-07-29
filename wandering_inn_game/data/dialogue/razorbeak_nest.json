@@ -15,6 +15,25 @@
 					"end": true
 				},
 				{
+					"_comment": "#330 R1: the corusdeer talk-down's shape. Dormant, never remove -- the cull bounty respawns.",
+					"text": "[Basic Command] Crouch low. Give the nest room.",
+					"requires": {
+						"skill": "animals_basic_command"
+					},
+					"effects": [
+						{
+							"accomplishment": "soothed_a_beast"
+						},
+						{
+							"accomplishment": "tended_beasts"
+						},
+						{
+							"dormant_entity": "razorbeak_nest"
+						}
+					],
+					"end": true
+				},
+				{
 					"text": "[Back away.]",
 					"end": true
 				}

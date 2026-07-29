@@ -15,6 +15,7 @@
      "end": true
     },
     {
+     "_comment": "#330 R1: calming IS tending. corusdeer_calmed keeps banking as shipped (frozen).",
      "text": "[Basic Command] Steady it. Slow words, open hands.",
      "requires": {
       "skill": "animals_basic_command"
@@ -25,6 +26,9 @@
       },
       {
        "accomplishment": "soothed_a_beast"
+      },
+      {
+       "accomplishment": "tended_beasts"
       },
       {
        "dormant_entity": "corusdeer_range"
