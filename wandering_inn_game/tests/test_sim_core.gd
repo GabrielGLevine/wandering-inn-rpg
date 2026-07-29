@@ -249,6 +249,24 @@ func _init() -> void:
 	var combo_ok := {"id": "combo_ok", "present_when": {"requires": {"reached_the_warren": 1}, "absent": {"other_counter": 1}}}
 	assert(presence_game.entity_present(combo_ok), "requires+absent ANDs: both legs met = present")
 
+	# GH#330 R4 `companion` present_when arm -- the one companion-reading gate.
+	# CAN-FAIL by construction: each leg below is asserted in BOTH directions
+	# from the same entity dict, so a stubbed-true arm reds the absent legs and
+	# a stubbed-false arm reds the present legs.
+	var wolf_gate := {"id": "wolf_gate_probe", "present_when": {"companion": "wolf_companion"}}
+	presence_game.companion = ""
+	assert(not presence_game.entity_present(wolf_gate), "companion-gated entity must be absent while no bond rides")
+	presence_game.companion = "razorbeak_companion"
+	assert(not presence_game.entity_present(wolf_gate), "companion-gated entity must be absent while a DIFFERENT companion rides")
+	presence_game.companion = "wolf_companion"
+	assert(presence_game.entity_present(wolf_gate), "companion-gated entity must be present while its named companion rides")
+	# ANDs with the counter arms rather than short-circuiting them.
+	var companion_and_requires := {"id": "companion_and_requires_probe", "present_when": {"companion": "wolf_companion", "requires": {"never_banked_probe": 1}}}
+	assert(not presence_game.entity_present(companion_and_requires), "companion ANDs with requires: an unmet requires leg still hides a held-companion entity")
+	var companion_and_absent := {"id": "companion_and_absent_probe", "present_when": {"companion": "wolf_companion", "absent": {"probe_kills": 1}}}
+	assert(not presence_game.entity_present(companion_and_absent), "companion ANDs with absent: a banked absent leg still hides a held-companion entity")
+	presence_game.companion = ""
+
 	var street_map: Dictionary = scene_config["maps"]["street"]
 	var upstairs_map: Dictionary = scene_config["maps"]["inn_upstairs"]
 	# v0.16.1 #7: these two used to PIN the defect (== 20.0). field_y_sort_bias_px

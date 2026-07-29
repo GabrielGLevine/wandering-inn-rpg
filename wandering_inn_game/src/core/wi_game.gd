@@ -885,6 +885,14 @@ func _present_gate_met(when: Dictionary) -> bool:
 		# missing-key SCRIPT ERROR on every entity-presence pass.
 		if not WIInnGuests.guest_active(String(g.get("npc", "")), g.get("roster", []) as Array, is_met, times_slept, int(g.get("seats", 2)), gate_met):
 			return false
+	# GH#330 R4: `companion` = the one companion-reading gate in the vocabulary.
+	# Plain String match on the live `companion` slot (empty while none rides),
+	# ANDed with every arm above. The bond is single-slot, so this is exactly
+	# "is THIS beast at your heel right now" -- a wolf's scent cache is not
+	# there for a razorbeak. Presence is reconciled on COMPANION_CHANGED by
+	# world.gd, so the entity appears/vanishes the moment the bond changes.
+	if when.has("companion") and companion != String(when["companion"]):
+		return false
 	return true
 
 

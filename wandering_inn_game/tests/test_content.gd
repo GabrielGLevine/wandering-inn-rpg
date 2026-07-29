@@ -752,6 +752,16 @@ func _validate_skill_uses(scene: Dictionary, skill_ids: Dictionary, produced_acc
 
 
 func _validate_present_when(scene: Dictionary, produced_accomplishments: Dictionary) -> void:
+	# GH#330 R4: the `companion` arm matches WIGame.companion by String, and the
+	# ONLY way that slot is ever filled is a companion_source prop (wi_game.gd's
+	# _animate_field). A typo'd id would gate an entity that can never appear --
+	# silent, permanently. Derive the legal set from the props themselves.
+	var bondable: Dictionary = {}
+	for map_id: String in scene["maps"]:
+		for entity: Dictionary in (scene["maps"][map_id] as Dictionary).get("entities", []):
+			var source: Variant = entity.get("companion_source", null)
+			if source is Dictionary:
+				bondable[String((source as Dictionary).get("companion_id", ""))] = true
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
 		# #247 review MINOR-3: all guest entities on a map share ONE rotation
@@ -768,7 +778,7 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 				String(entity.get("kind", "")) != "encounter",
 				"entity %s: present_when is forbidden on kind:encounter -- _check_trigger_radius never consults presence, so a present_when encounter would be invisible/unblocked yet still ambush; use encounter_when" % entity_id
 			)
-			_check(when.has("requires") or when.has("phase") or when.has("absent") or when.has("guest"), "entity %s present_when has no recognized shape (only 'requires'/'phase'/'absent'/'guest' are sanctioned)" % entity_id)
+			_check(when.has("requires") or when.has("phase") or when.has("absent") or when.has("guest") or when.has("companion"), "entity %s present_when has no recognized shape (only 'requires'/'phase'/'absent'/'guest'/'companion' are sanctioned)" % entity_id)
 			if when.has("phase"):
 				for p: Variant in when["phase"]:
 					_check(VALID_PHASES.has(String(p)), "entity %s present_when references unknown phase: %s" % [entity_id, p])
@@ -804,6 +814,9 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 			if when.has("absent"):
 				for counter_id: String in (when["absent"] as Dictionary):
 					_check(produced_accomplishments.has(counter_id), "entity %s encounter_when.absent references unproduced counter: %s (a typo here silently never gates -- GH#199 review MEDIUM-3)" % [entity_id, counter_id])
+			if when.has("companion"):
+				var comp_id := String(when["companion"])
+				_check(bondable.has(comp_id), "entity %s present_when.companion names %s, which no companion_source prop can ever bond -- the gate would never open" % [entity_id, comp_id])
 
 ## v0.15 T3.1. A guest's pool gate and their row's counter arms are two
 ## independent statements of ONE window, and they may never disagree: pooled
