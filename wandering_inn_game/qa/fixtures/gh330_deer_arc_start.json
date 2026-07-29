@@ -1,0 +1,34 @@
+{
+ "_comment": "GH#330 R3 deer-arc start: [Beast Tamer] 5 (the L5 rung, tended_beasts 10 exactly -- the same threshold that grants [Beast's Mending] and the threshold the arc's closing variant reads) standing at floodplains (33,10) facing UP into the wounded corusdeer at (33,9). At tended_beasts 10 the prop already renders the standing corusdeer_doe; the NEXT tend banks corusdeer_healed and takes it off the map. soothed_a_beast 1 is the gained_by bank. rng_state DERIVED from seed 330 (tests/_derive_rng_state.gd), never hand-typed.",
+ "version": 6,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [33, 10],
+  "player_facing": [0, -1],
+  "classes": {
+   "beast_tamer": 5
+  },
+  "accomplishments": {
+   "soothed_a_beast": 1,
+   "tended_beasts": 10,
+   "met_relc": 1,
+   "won_combat": 1
+  },
+  "player_skills": [],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword"],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "7352287698016553364",
+  "hotbar_loadout": []
+ }
+}

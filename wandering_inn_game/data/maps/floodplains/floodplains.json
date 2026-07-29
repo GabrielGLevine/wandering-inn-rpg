@@ -1651,7 +1651,12 @@
     9
    ],
    "display_name": "Worn Grass",
-   "sprite": "grass_tuft",
+   "sprite": "worn_grass_bed",
+   "tint": [
+    0.88,
+    0.82,
+    0.55
+   ],
    "present_when": {
     "requires": {
      "corusdeer_healed": 1
@@ -1823,26 +1828,21 @@
    "on_victory": "mothbears_culled"
   },
   {
-   "_comment": "#330 R4: present only while the wolf rides. One-time find on the frozen_cache variant-zeroing shape; no gold key, so the wage floor is untouched.",
+   "_comment": "#330 R4: present only while the wolf rides. One-time find, frozen_cache shape, no gold.",
    "id": "wolf_scent_cache_floodplains",
    "kind": "prop",
    "cell": [
     13,
     22
    ],
-   "display_name": "Turned Turf",
-   "sprite": "grass_tuft",
-   "tint": [
-    0.72,
-    0.62,
-    0.48
-   ],
+   "display_name": "Gnawed Scatter",
+   "sprite": "gnaw_pile",
    "present_when": {
     "companion": "wolf_companion"
    },
-   "observe": "The wolf will not leave this patch alone. It noses the turf, circles, and noses it again, and looks back at you as though the next part is your job.",
+   "observe": "A scatter of old bones the wolf will not leave alone. It noses through them, circles, noses again, and looks back at you as though the next part is your job.",
    "on_interact_accomplishment": "found_wolf_cache_floodplains",
-   "toast": "You dig where the wolf keeps insisting. A handspan down, wrapped in rotted cloth: a charm on a cord gone soft with age.",
+   "toast": "You dig where the wolf keeps insisting. Under the bones, wrapped in rotted cloth: a charm on a cord gone soft with age.",
    "item": "traveler_charm",
    "variants": [
     {
@@ -1850,24 +1850,24 @@
       "found_wolf_cache_floodplains": 1
      },
      "item": "",
-     "toast": "Open earth and nothing under it now. The wolf has lost interest, which is its own verdict."
+     "toast": "Turned bones and nothing under them now. The wolf has lost interest, which is its own verdict."
     }
    ]
   },
   {
-   "_comment": "#330 R4: the razorbeak's information arm. Its observe carries the [Observe] payoff; interact is the bird wheeling up and coming back with a real lead.",
+   "_comment": "#330 R4: the observe carries the [Observe] payoff; interact is the bird coming back with a lead.",
    "id": "razorbeak_vantage_floodplains",
    "kind": "prop",
    "cell": [
     7,
     17
    ],
-   "display_name": "Bank Above the Pond",
+   "display_name": "Rock Over the Pond",
    "sprite": "boulder",
    "present_when": {
     "companion": "razorbeak_companion"
    },
-   "observe": "A rise of dry bank with the whole pond below it. The razorbeak keeps climbing it and screaming at the water, which is either an opinion or a report.",
+   "observe": "A boulder standing clear of the reeds with the whole pond below it. The razorbeak keeps climbing it and screaming at the water, which is either an opinion or a report.",
    "on_interact_accomplishment": "found_pond_vantage",
    "toast": "It wheels out over the pond, hangs, and comes back loud. There is something square and man-made on the bottom, a stride out from the bank — too far to reach across open water, and water can be made to bear weight."
   }

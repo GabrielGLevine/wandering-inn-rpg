@@ -767,14 +767,14 @@
     16,
     3
    ],
-   "display_name": "Awning Post",
+   "display_name": "Crate Stack",
    "sprite": "crate",
    "present_when": {
     "companion": "razorbeak_companion"
    },
-   "observe": "A stall post standing a head above the awnings. The razorbeak has decided it belongs to the razorbeak, and no stallkeeper has argued yet.",
+   "observe": "Empty crates stacked a head above the awnings behind the stalls. The razorbeak has decided they belong to the razorbeak, and no stallkeeper has argued yet.",
    "on_interact_accomplishment": "found_market_vantage",
-   "toast": "It goes up off the post and comes back screaming about the west end. The two standing things down there step aside for anyone whose permit is already filed — and the office that files it is the counter four stalls behind you."
+   "toast": "It goes up off the crates and comes back screaming about the west end. The two standing things down there step aside for anyone whose permit is already filed — and the office that files it is the counter four stalls behind you."
   }
  ]
 }

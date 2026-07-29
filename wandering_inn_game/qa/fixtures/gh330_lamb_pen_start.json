@@ -1,0 +1,65 @@
+{
+ "_comment": "GH#330 R2 lamb-pen start: built from thicket_talk_start (the region's shipped baseline -- post-mounting, door_awakened + riverfarm_attuned, so riverfarm_village satisfies test_fixture_coherence MAP_REQUIRES) with the thicket quest CLOSED (heard_thicket_keeps + herd_rerouted + thicket_answered, the humane resolution), which is the pen's own present_when. Warrior5+mage5, and soothed_a_beast deliberately ABSENT: this fixture's subject is the pen as a [Beast Tamer] DOOR, the first one outside the floodplains. Standing at (16,12) facing UP into hunters_lamb_pen (16,11). rng_state DERIVED from seed 331 (tests/_derive_rng_state.gd), never hand-typed.",
+ "version": 5,
+ "state": {
+  "current_map": "riverfarm_village",
+  "player_cell": [
+   16,
+   12
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 5,
+   "mage": 5
+  },
+  "accomplishments": {
+   "blight_lifted": 1,
+   "bought_catalyst": 1,
+   "door_awakened": 1,
+   "door_chain_started": 1,
+   "door_mounted": 1,
+   "door_retrieved": 1,
+   "door_study_sleeps": 3,
+   "door_understood": 1,
+   "given_spear_by_relc": 1,
+   "heard_price_of_a_favor": 1,
+   "heard_thicket_keeps": 1,
+   "herd_rerouted": 1,
+   "horns_dig_joined": 1,
+   "horns_dig_started": 1,
+   "learned_magic_from_pisces": 1,
+   "melee_hit": 18,
+   "met_relc": 1,
+   "pedestal_breached": 1,
+   "price_of_a_favor_reported": 1,
+   "recovered_anchor_stone": 1,
+   "riverfarm_attuned": 1,
+   "sparred_with_relc": 1,
+   "spell_cast": 13,
+   "thicket_answered": 1,
+   "won_combat": 3
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-4730320151846205247"
+ }
+}

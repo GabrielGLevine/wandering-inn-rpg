@@ -1,0 +1,258 @@
+{
+ "_comment": "GH#330 R2 canonical: the hunter's lamb pen as a [Beast Tamer] DOOR outside the floodplains, and as a producer with a payload. Fixture gh330_lamb_pen_start stands a warrior5+mage5 at riverfarm_village (16,12) facing UP into hunters_lamb_pen (16,11) with the thicket quest closed (the pen's present_when) and soothed_a_beast deliberately unbanked. Legs: (1) THE DOOR -- one tend banks soothed_a_beast, the class's gained_by, at a prop the wounded deer used to own alone, and hands over a wool_tuft; (2) THE CAP -- a second press the same waking refuses and banks nothing; (3) THE GAIN -- a real sleep grants [Beast Tamer]; (4) THE LADDER -- the next waking's tend takes the soothed>=1 variant and banks tended_beasts instead. Windowed shot 00 is the eye-gate for the pen's placement beside the hunter.",
+ "fixture_save": "gh330_lamb_pen_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    12
+   ]
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "soothed_a_beast"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 90
+  },
+  {
+   "action": "screenshot",
+   "name": "00_lamb_pen"
+  },
+  {
+   "_comment": "== (1) THE DOOR == bump up into the pen to fix facing, then tend. Base arm banks soothed_a_beast -- the [Beast Tamer] gained_by, earned in Riverfarm.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "soothed_a_beast",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You get a hand under the limping one and hold it until it stops shaking. Fleece comes away on your fingers."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "wool_tuft"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "wool_tuft"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== (2) THE CAP == one careful visit a waking; the refusal banks nothing.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The lambs have had their handling for today. Crowd them now and you undo it."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.soothed_a_beast",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "tended_beasts"
+   }
+  },
+  {
+   "_comment": "== (3) THE GAIN == the inn bed. class_gained is emitted inside sleep(), BEFORE the veil finishes -- wait it first.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     9,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "beast_tamer"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.beast_tamer",
+   "equals": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 10
+  },
+  {
+   "_comment": "== (4) THE LADDER == a new waking; the soothed>=1 variant now banks the curve counter instead.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    16,
+    12
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "riverfarm_village",
+    "cell": [
+     16,
+     12
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "tended_beasts",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "They come to the rail for you now. You work burrs out of three fleeces and leave the bad leg for last."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.soothed_a_beast",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  }
+ ]
+}

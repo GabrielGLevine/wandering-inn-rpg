@@ -229,6 +229,9 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `beast_tamer_loop` | 7 (fixture `near_tamer`) | Wave D-2 (#156): wounded-corusdeer soothe → `class_gained` [Beast Tamer] at sleep; `once_per_waking` grind guard |
 | `tamer_bond_loop` | 7 (fixture `near_tamer_bond`) | Wave D-2 (#156): [Lesser Bond] wolf tame → crab refusal joke → boon-carrying roster fight → tamed bond persists sleep |
 | `druid_consolidation_loop` | 7 (fixture `near_druid_consolidation`) | tamer/mage lines → [Druid] floor 14 + [Peace of the Wild] kit |
+| `gh330_companion_gate_loop` | 7 (fixture `near_tamer_bond`) | GH#330 R4: `present_when.companion` as a PAIR — the wolf's cache cell is walkable with no bond, blocking with the wolf, walkable again with the razorbeak; plus the pond vantage's lead |
+| `gh330_deer_arc_loop` | 7 (fixture `gh330_deer_arc_start`) | GH#330 R3: the wounded corusdeer stands (corusdeer_doe rig), heals, and leaves — worn grass + one-time shed antler, then corusdeer_range's ungated vouched soothe |
+| `gh330_lamb_pen_loop` | 7 (fixture `gh330_lamb_pen_start`) | GH#330 R2: the hunter's lamb pen as a [Beast Tamer] door outside the floodplains — wool yield, waking cap, class gain at sleep, then the `tended_beasts` variant |
 | `room_upgrade_loop` | 7 (fixture `near_room_upgrade`) | GH#92 D3: Erin tier-1 room purchase → gold spend + `room_tier_1` bank (HP step pinned in test_sim_core) |
 | `watch_donation_loop` | 7 (fixture `near_watch_donation`) | GH#92 D3: Ashgrave supply-fund donation → repeatable sink banks `donated_watch_supplies` |
 | `dialogue_numkey_loop` | 7 (fixture `near_room_upgrade`) | GH#171: number keys pick numbered dialogue options; no field-cast leak |

@@ -3007,3 +3007,40 @@ Residuals, deliberately left and logged rather than silently patched:
 - [ ] TINT — six NPC tints were re-tuned in this lane because they had been
   chosen against `human_laborer`'s light apron and went near-silhouette on the
   darker new rigs. Any future rig swap must re-read the tint, not carry it.
+
+## 2026-07-29 — GH#330 Beast Tamer dynamism (windowed reads)
+
+Read and passed:
+
+- **The healed corusdeer stands.** `corusdeer_doe` (owned PixelLab rig,
+  2026-07-06 expansion batch) is registered and rides `wounded_corusdeer`'s
+  `visual_states` at `tended_beasts` 10. The windowed read
+  (`qa_output/gh330/00_deer_standing.png`) shows an upright tawny deer where a
+  dull lying one used to be — the stand-up beat lands without a line of copy.
+  Scale matches the shipped `corusdeer` (0.7) so the animal does not change
+  size when it changes posture; anchor measured off the alpha bbox.
+- **The lamb pen.** Three `riverfarm_fence_ew` panels (entity + two decor
+  flanks, both blocked) read as a continuous rail run beside the hunter's
+  cottage, matching the map's own western fence line.
+- **The wolf's cache** and **the razorbeak's vantage** both read at a glance
+  (`gnaw_pile` bone scatter; `boulder` beside the pond, with the sunken crate
+  visible in the same frame the vantage's hint names).
+
+Residuals, logged rather than silently shipped:
+
+- [ ] PROP/BEDDED-GRASS — `worn_grass_bed` is the free-pack Vegetation grass
+  tuft at prop scale (1.6) with a straw tint. The FIRST pick (`grass_tuft` at
+  0.75) was invisible against the grass floor in the windowed read — a real
+  fails-to-read defect, caught only by the shot. The scaled version is legible
+  as an object but is still a clump of blades, not the body-shaped hollow the
+  copy describes. A bespoke bedded-hollow prop (with the shed antler lying in
+  it) is the honest fix.
+- [ ] PROP/NO-LAMBS — the Hunter's Lamb Pen has fencing and no lambs. The
+  animals live entirely in the display name, the observe, and the tend toasts.
+  A small lamb sprite inside the rails would make the pen read as a pen rather
+  than as a fence.
+- [ ] SPRITE/DOE-VS-STAG — the healed animal swaps onto a DOE rig, so the
+  antlers the observe line describes ("its antlers barely glow") become the
+  doe's ember nubs at the moment it stands. Species and palette are right and
+  the shed-antler pickup still reads; a stag-shaped standing rig would close
+  the last inch.

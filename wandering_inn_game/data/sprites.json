@@ -5518,5 +5518,25 @@
     "fps": 4
    }
   }
+ },
+ "worn_grass_bed": {
+  "_comment": "#330 R3: grass_tuft region at prop scale -- the 0.75 tuft was invisible on grass.",
+  "render_scale": 1.6,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Vegetation.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "region": [
+     64,
+     144,
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
  }
 }

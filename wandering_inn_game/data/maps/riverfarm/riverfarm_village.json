@@ -1000,14 +1000,14 @@
    ]
   },
   {
-   "sprite": "riverfarm_fence_ns",
+   "sprite": "riverfarm_fence_ew",
    "cell": [
     15,
     11
    ]
   },
   {
-   "sprite": "riverfarm_fence_ns",
+   "sprite": "riverfarm_fence_ew",
    "cell": [
     17,
     11
@@ -1662,7 +1662,7 @@
     11
    ],
    "display_name": "Hunter's Lamb Pen",
-   "sprite": "riverfarm_fence_ns",
+   "sprite": "riverfarm_fence_ew",
    "present_when": {
     "requires": {
      "thicket_answered": 1
@@ -1698,17 +1698,12 @@
     14,
     13
    ],
-   "display_name": "Turned Turf",
-   "sprite": "grass_tuft",
-   "tint": [
-    0.72,
-    0.62,
-    0.48
-   ],
+   "display_name": "Gnawed Scatter",
+   "sprite": "gnaw_pile",
    "present_when": {
     "companion": "wolf_companion"
    },
-   "observe": "Field grass the wolf keeps returning to, head down, digging and stopping and digging again. Riverfarm has walked past this patch all spring.",
+   "observe": "A scatter of old bones in the field grass, half sunk. The wolf keeps returning to it, head down, digging and stopping and digging again.",
    "on_interact_accomplishment": "found_wolf_cache_riverfarm",
    "toast": "Under a stone, under the turf: a thin copper ring, polished bright by somebody's worried thumbs before they lost it here.",
    "item": "copper_luck_band",
