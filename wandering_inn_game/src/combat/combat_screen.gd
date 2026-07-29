@@ -229,7 +229,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		# the v0.15 COMBAT/FEED-FOLD precedent. feed_push also lands it in Recent
 		# Messages, so the banked toast drains later without recording twice.
 		WIEvents.TOAST:
-			if _mode != Mode.INACTIVE:
+			# HOUSEKEEPING IS EXCLUDED: "Autosaved." has no business in a
+			# blow-by-blow combat feed. Those toasts bank silently instead and
+			# drain (and record) after the board closes, exactly as before --
+			# message_layer only drops the `record` flag for the ones that
+			# arrive here, because feed_push is what records them.
+			if _mode != Mode.INACTIVE and not bool(payload.get("housekeeping", false)):
 				_hud.feed_push(String(payload.get("text", "")))
 		WIEvents.TURN_STARTED:
 			if _mode != Mode.INACTIVE:

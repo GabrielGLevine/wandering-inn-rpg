@@ -77,6 +77,14 @@ func _check_combat_bank(raw: String) -> void:
 		"a mid-fight toast banks instead, so nothing is lost")
 	assert(bool((banked[0] as Dictionary)["record"]) == false,
 		"the banked mid-fight toast must not record -- combat's feed_push already did")
+	# ...but a HOUSEKEEPING toast is never mirrored into the combat feed
+	# ("Autosaved." has no place in a blow-by-blow), so its only route into
+	# Recent Messages is the post-fight drain and it MUST keep record=true.
+	layer.call("_queue_toast", "Autosaved. (Esc — save/load anytime)", true, true)
+	assert(_texts(banked) == ["Used: Mending Draught. Healed 8 HP.", "Autosaved. (Esc — save/load anytime)"],
+		"a mid-fight housekeeping toast banks too")
+	assert(bool((banked[1] as Dictionary)["record"]) == true,
+		"a banked housekeeping toast keeps record=true -- the feed never took it")
 	layer.set("_combat_active", false)
 	layer.free()
 	# The OTHER branch -- _toast_draining false, so the restore must kick a

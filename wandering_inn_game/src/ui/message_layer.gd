@@ -514,11 +514,14 @@ func _queue_toast(text: String, record := true, housekeeping := false) -> void:
 	var entry := {"text": text, "record": record, "housekeeping": housekeeping}
 	if _combat_active:
 		# The board is up: the feed speaks for the fight (combat_screen mirrors
-		# this text into it, which is also what puts it in Recent Messages), so
-		# the strip stays silent and the toast waits in the bank. `record` is
-		# dropped precisely because the feed already recorded it -- otherwise the
-		# post-fight drain would double-enter it in Recent Messages.
-		entry["record"] = false
+		# authored text into it, which is also what puts it in Recent Messages),
+		# so the strip stays silent and the toast waits in the bank. `record` is
+		# dropped for exactly those toasts, because the feed already recorded
+		# them -- otherwise the post-fight drain would double-enter them.
+		# HOUSEKEEPING keeps its record flag: chrome is not mirrored into the
+		# combat feed, so its only entry into Recent Messages is that drain.
+		if not housekeeping:
+			entry["record"] = false
 		_banked_toasts.append(entry)
 		return
 	if housekeeping:
