@@ -5,6 +5,16 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 history in git. Read order for a fresh session: wi-start-here.
 
 ## Current state (2026-07-29)
+**GH#330 SHIPPED (2026-07-29, PR #333 → 16f7078, issue closed).** Beast
+Tamer dynamism per the six-ruling spec: soothe-as-tend, the lamb-pen
+class door (Riverfarm), the deer's healed-and-leaves payoff arc
+(corusdeer_doe rig), `present_when.companion` seam + wolf caches /
+razorbeak vantages, archery-butt cure + the scoped successful-pickup
+bench contract, entity-item-id cross-reference hardening. Pace proof
+byte-identical vs baseline. #332 filed (companion dead-end). UNTAGGED
+on main: #331 (board pair) + #333 — bundle into a v0.16.2 cut or ride
+the next wave's tag.
+
 
 **v0.16.1 "the playtest wave" TAGGED at 0fe611d** (Release/Pages runs
 verifying at close — confirm green). ALL 26 findings from the user's
