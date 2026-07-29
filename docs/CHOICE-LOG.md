@@ -2018,3 +2018,13 @@ by controller ruling — the plan was the defect, not the implementation.
   POLICY (art PR + skill fold): one sprite backs at most one NAMED
   character; pc_* sprites are PC-ONLY with a registry gate; the worst
   human_laborer collisions get bespoke/retint replacements.
+- **No-treadmill principle (2026-07-29, user directive, GH#330)**:
+  "Actions should never have the sole purpose/function of leveling a
+  class" is now a repo-wide design law (folded into
+  wi-adding-a-class-or-skill). Trigger case: Beast Tamer's ladder runs
+  through one prop (the Wounded Corusdeer) whose interact has no
+  function but the counter — sole producer pre-[Lesser Bond], and the
+  post-Lv-3 ladder (10/18 tends) is a designed-by-accident treadmill.
+  #330 carries the fix (functional producers, class dynamism, a payoff
+  arc for the deer itself) plus a repo-wide audit of every leveling
+  counter's producers against the principle.

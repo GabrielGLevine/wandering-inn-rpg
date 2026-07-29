@@ -159,3 +159,14 @@ class outside `MIGRATABLE_ID_CLASSES` fails until its remap arm exists
 (green means handled, never advertised). A NEW id is free to be
 renamed/reworked until the next `scripts/generate_shipped_ids.py` cut
 (wi-shipping deploy step 0).
+
+## The no-treadmill principle (user directive 2026-07-29, GH#330)
+**Actions must never exist solely to level a class.** Every producer a
+`gained_by` or level `requires` counter reads must have a real in-world
+function beyond the counter — it pays, feeds, resolves, unlocks, or
+advances something a player would do anyway (cooking feeds guests AND
+levels; combat wins fights AND levels). A prop whose interact banks a
+counter and nothing else is the violation class (the Wounded Corusdeer,
+pre-#330). When adding a class/level: name each counter's producers and
+what ELSE each one does; a producer with no second function needs one
+designed before the rung ships.
