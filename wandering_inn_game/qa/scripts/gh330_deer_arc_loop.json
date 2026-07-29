@@ -1,0 +1,365 @@
+{
+ "_comment": "GH#330 R3 canonical: the Wounded Corusdeer's payoff arc, end to end. Fixture gh330_deer_arc_start puts a [Beast Tamer] 5 at floodplains (33,10) facing the deer with tended_beasts already at 10, so the prop renders the STANDING corusdeer_doe before a single press. Legs: (1) BEFORE -- corusdeer_range still offers the shipped [Basic Command] row, visible-locked/unlocked as authored, and [Back away.] closes without combat; (2) THE CLOSE -- one tend banks the NEW corusdeer_healed with the arc's closing toast, and the deer is gone from the map (present_when.absent) rather than a lever forever; (3) WHAT IT LEAVES -- worn_grass_patch now stands on the deer's own cell (33,9) and hands over the one-time shed_antler, and a SECOND read hands over nothing (the frozen_cache variant-zeroing shape); (4) THE VOUCH -- corusdeer_range's node has swapped rows: the [Basic Command] soothe is hidden and an UNGATED soothe stands in its place, and taking it banks the same tended_beasts + dormant close. Windowed shots 00/01 are the eye-gate for the stand-up rig.",
+ "fixture_save": "gh330_deer_arc_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    33,
+    10
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.tended_beasts",
+   "equals": 10
+  },
+  {
+   "_comment": "The stand-up beat: at tended_beasts 10 the prop's visual_states row swaps the lying corusdeer for the corusdeer_doe rig, untinted. This shot is the eye-gate.",
+   "action": "wait_frames",
+   "frames": 90
+  },
+  {
+   "action": "screenshot",
+   "name": "00_deer_standing"
+  },
+  {
+   "_comment": "== (1) BEFORE == corusdeer_range (36,6) still carries the shipped [Basic Command] row. Approach from (36,8): up 1 -> (36,7), up 1 blocks on the encounter and faces it.",
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    36,
+    8
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains",
+    "cell": [
+     36,
+     8
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "corusdeer_range"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Stray Corusdeer",
+    "options": [
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "[Strike first.]"
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "[Basic Command] Steady it. Slow words, open hands."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "[Back away.]"
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "[Back away.] -- leaves the herd's stray untouched so the arc's own tend is the next bank.",
+   "action": "click_dialogue_option",
+   "option": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "_comment": "== (2) THE CLOSE == back to the deer. One tend at tended_beasts >= 10 banks corusdeer_healed, not tended_beasts.",
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    33,
+    10
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains",
+    "cell": [
+     33,
+     10
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    33,
+    10
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "corusdeer_healed",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "It is already standing when you come. It lets you run a hand down the leg once, then turns and goes up the rise at a trot, and does not look back."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE POINT OF THE ISSUE: tended_beasts did NOT move. The deer stopped being a producer.",
+   "action": "assert_state",
+   "path": "accomplishments.tended_beasts",
+   "equals": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 60
+  },
+  {
+   "action": "screenshot",
+   "name": "01_deer_gone_patch_stands"
+  },
+  {
+   "_comment": "== (3) WHAT IT LEAVES == the deer's own cell (33,9) now holds worn_grass_patch. The player is still at (33,10) facing up, so the same press reaches the new prop.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "found_the_shed_antler",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "shed_antler"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "inventory",
+   "contains": "shed_antler"
+  },
+  {
+   "_comment": "ONE-TIME: the second read hands over nothing and says so.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Only the hollow in the grass now, and it is filling in."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== (4) THE VOUCH == the herd's stray knows your scent. The shipped [Basic Command] row is HIDDEN and an ungated soothe stands where it was -- same three options, no skill requirement.",
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    36,
+    8
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains",
+    "cell": [
+     36,
+     8
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Stray Corusdeer",
+    "options": [
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "[Strike first.]"
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Steady it. The herd knows your hands now."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "[Back away.]"
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "tended_beasts",
+    "count": 11
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "dormant_encounters",
+   "contains": "corusdeer_range"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  }
+ ]
+}

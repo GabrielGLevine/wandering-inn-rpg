@@ -454,6 +454,31 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 			var item_hint := String(target.get("item_hint_toast", "Bare hands won't do it. Something in your pack might."))
 			_emit(WIEvents.TOAST, {"text": item_hint})
 			return {"item_hint": req_item}
+	# Resolution is PURE (no state touched), so it happens before every gate --
+	# GH#330 R5 needs the output id in hand to refuse a duplicate BEFORE the
+	# once_per_waking key is spent (a refusal must never burn the day).
+	var effect: Dictionary = _resolve_skill_use_effect(skill_arm)
+	# TRAP (#155 review M1), widened at GH#330 R5, SCOPED at its review: a
+	# yielding arm refuses BEFORE any state changes when the output cannot be
+	# picked up (inventory never stacks, so a held duplicate blocks pickup) --
+	# but ONLY where something real would otherwise be lost:
+	#  * CONSUMING recipe (remove_item): always, or the components vanish
+	#    behind a success toast.
+	#  * PRODUCE-ONLY and UNCAPPED: the #330 cure -- the counter used to bank
+	#    on a dup-refused pickup, so mashing a full pack carried
+	#    [Chef]/[Alchemist] with nothing entering the world.
+	# NOT a once_per_waking prop: already bounded, so there is no spigot to
+	# close, and refusing would silently KILL the arm for as long as the player
+	# holds an item the SAME prop hands out (the lamb pen's wool tuft bricked
+	# its [Beast's Mending] arm). Capped props bank and hand over nothing --
+	# the behavior interact() has always had for a failed pickup.
+	if effect.has("item") and inventory.has(String(effect["item"])) \
+			and (effect.has("remove_item") or not bool(target.get("once_per_waking", false))):
+		var dup_toast := "Your pack already holds one of those. The bench keeps its patience, and you keep your reagents."
+		if not effect.has("remove_item"):
+			dup_toast = "Your pack already holds one of those. No sense making a second you cannot carry."
+		_emit(WIEvents.TOAST, {"text": dup_toast})
+		return {"blocked_duplicate": String(effect["item"])}
 	# GH#156 review M1: once_per_waking is OPT-IN here exactly as in interact()
 	# and SHARES interact's serve: key -- one careful visit per waking TOTAL
 	# (a soothe burns the mend and vice versa). Bench props never set the flag:
@@ -465,16 +490,6 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 			_emit(WIEvents.TOAST, {"text": String(target.get("once_per_waking_toast", "Nothing more to carry out right now. Come back another day."))})
 			return {"once_per_waking_spent": true}
 		entity_first_use[waking_key] = true
-	var effect: Dictionary = _resolve_skill_use_effect(skill_arm)
-	# TRAP (#155 review M1): a CONSUMING recipe (both `item` and `remove_item`)
-	# must refuse BEFORE any state changes when the output can't be picked up
-	# (inventory never stacks, so a held duplicate blocks pickup) -- otherwise
-	# the components vanish behind a success toast. All-or-nothing covers the
-	# output slot, not just the ingredient gate. Produce-only props keep the
-	# shipped bank-even-on-dup behavior (the basic_cooking precedent).
-	if effect.has("item") and effect.has("remove_item") and inventory.has(String(effect["item"])):
-		_emit(WIEvents.TOAST, {"text": "Your pack already holds one of those. The bench keeps its patience, and you keep your reagents."})
-		return {"blocked_duplicate": String(effect["item"])}
 	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": target_id})
 	_mark_skill_used(skill_id)
 	record_accomplishment(String(effect["accomplishment"]))
@@ -885,6 +900,14 @@ func _present_gate_met(when: Dictionary) -> bool:
 		# missing-key SCRIPT ERROR on every entity-presence pass.
 		if not WIInnGuests.guest_active(String(g.get("npc", "")), g.get("roster", []) as Array, is_met, times_slept, int(g.get("seats", 2)), gate_met):
 			return false
+	# GH#330 R4: `companion` = the one companion-reading gate in the vocabulary.
+	# Plain String match on the live `companion` slot (empty while none rides),
+	# ANDed with every arm above. The bond is single-slot, so this is exactly
+	# "is THIS beast at your heel right now" -- a wolf's scent cache is not
+	# there for a razorbeak. Presence is reconciled on COMPANION_CHANGED by
+	# world.gd, so the entity appears/vanishes the moment the bond changes.
+	if when.has("companion") and companion != String(when["companion"]):
+		return false
 	return true
 
 

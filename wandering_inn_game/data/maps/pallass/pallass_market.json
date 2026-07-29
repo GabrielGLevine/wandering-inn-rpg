@@ -758,6 +758,23 @@
      "toast": "Second leg, same cart, same two blocks. The rank clerk marks it without looking up, which in Pallass is a commendation."
     }
    ]
+  },
+  {
+   "_comment": "#330 R4: the market perch. observe carries the [Observe] payoff; interact spends the bird on a real lead about the watchgolems.",
+   "id": "razorbeak_vantage_pallass",
+   "kind": "prop",
+   "cell": [
+    16,
+    3
+   ],
+   "display_name": "Crate Stack",
+   "sprite": "crate",
+   "present_when": {
+    "companion": "razorbeak_companion"
+   },
+   "observe": "Empty crates stacked a head above the awnings behind the stalls. The razorbeak has decided they belong to the razorbeak, and no stallkeeper has argued yet.",
+   "on_interact_accomplishment": "found_market_vantage",
+   "toast": "It goes up off the crates and comes back screaming about the west end. The two standing things down there step aside for anyone whose permit is already filed — and the office that files it is the counter four stalls behind you."
   }
  ]
 }

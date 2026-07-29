@@ -378,6 +378,10 @@ func _build_expected_counts() -> Dictionary:
 	counts["river_wolf/idle"] = 1
 
 	counts["corusdeer/idle"] = 1
+	## #330 R3: the healed doe's four-frame breathing idle (owned PixelLab rig).
+	counts["corusdeer_doe/idle"] = 4
+	## #330 R3: the deer's bedded hollow (Vegetation atlas region at prop scale).
+	counts["worn_grass_bed/idle"] = 1
 	## #308: the camp hollow's own props (owned PixelLab, one frame each).
 	counts["hide_rack/idle"] = 1
 	counts["drying_rack/idle"] = 1

@@ -249,6 +249,24 @@ func _init() -> void:
 	var combo_ok := {"id": "combo_ok", "present_when": {"requires": {"reached_the_warren": 1}, "absent": {"other_counter": 1}}}
 	assert(presence_game.entity_present(combo_ok), "requires+absent ANDs: both legs met = present")
 
+	# GH#330 R4 `companion` present_when arm -- the one companion-reading gate.
+	# CAN-FAIL by construction: each leg below is asserted in BOTH directions
+	# from the same entity dict, so a stubbed-true arm reds the absent legs and
+	# a stubbed-false arm reds the present legs.
+	var wolf_gate := {"id": "wolf_gate_probe", "present_when": {"companion": "wolf_companion"}}
+	presence_game.companion = ""
+	assert(not presence_game.entity_present(wolf_gate), "companion-gated entity must be absent while no bond rides")
+	presence_game.companion = "razorbeak_companion"
+	assert(not presence_game.entity_present(wolf_gate), "companion-gated entity must be absent while a DIFFERENT companion rides")
+	presence_game.companion = "wolf_companion"
+	assert(presence_game.entity_present(wolf_gate), "companion-gated entity must be present while its named companion rides")
+	# ANDs with the counter arms rather than short-circuiting them.
+	var companion_and_requires := {"id": "companion_and_requires_probe", "present_when": {"companion": "wolf_companion", "requires": {"never_banked_probe": 1}}}
+	assert(not presence_game.entity_present(companion_and_requires), "companion ANDs with requires: an unmet requires leg still hides a held-companion entity")
+	var companion_and_absent := {"id": "companion_and_absent_probe", "present_when": {"companion": "wolf_companion", "absent": {"probe_kills": 1}}}
+	assert(not presence_game.entity_present(companion_and_absent), "companion ANDs with absent: a banked absent leg still hides a held-companion entity")
+	presence_game.companion = ""
+
 	var street_map: Dictionary = scene_config["maps"]["street"]
 	var upstairs_map: Dictionary = scene_config["maps"]["inn_upstairs"]
 	# v0.16.1 #7: these two used to PIN the defect (== 20.0). field_y_sort_bias_px
@@ -3433,6 +3451,40 @@ func _init() -> void:
 	assert(String(r_dup.get("blocked_duplicate", "")) == "tonic_of_the_clear_eye", "dup-output: refusal names the held output")
 	assert(g_synth_dup.inventory.has("solvent_phial") and g_synth_dup.inventory.has("mineral_salts"), "dup-output: components NOT consumed")
 	assert(_count("item_lost") == 0 and _count("skill_used") == 0 and _count("accomplishment_recorded") == 0, "dup-output: no state changes at all")
+
+	# GH#330 R5 review: the dup-output refusal is SCOPED to arms where holding
+	# the output would cost something -- an UNCAPPED bench (the cure) or a
+	# consuming recipe (#155). A once_per_waking prop is already bounded, so
+	# refusing there only bricks the arm: the shipped lamb pen hands out a
+	# wool_tuft on its plain interact, and that same tuft used to make every
+	# later [Beast's Mending] cast at the pen bank NOTHING, permanently.
+	# CAN-FAIL BOTH WAYS: dropping the once_per_waking clause reds the capped
+	# leg; dropping the whole guard reds the uncapped bench leg below.
+	var g_capped := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_capped.player_skills.append("beasts_mending")
+	g_capped.record_accomplishment("thicket_answered")
+	g_capped.record_accomplishment("soothed_a_beast")
+	g_capped.transition("riverfarm_village", Vector2i(16, 12))
+	g_capped.inventory.append("wool_tuft")
+	_events.clear()
+	var r_capped: Dictionary = g_capped.use_skill("beasts_mending", "hunters_lamb_pen")
+	assert(not r_capped.has("blocked_duplicate"), "capped prop: a held yield must NOT refuse the arm")
+	assert(g_capped.accomplishment_count("tended_beasts") == 1, "capped prop: the tend still banks its counter with the yield already held")
+	assert(g_capped.entity_first_use.has("serve:hunters_lamb_pen"), "capped prop: the waking use is spent by a real tend")
+	assert(_count("item_gained") == 0, "capped prop: nothing enters the pack twice -- the pickup no-ops, silently, as interact() has always done")
+	# The uncapped bench keeps the cure, from the same run of the same seam.
+	var g_bench := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	g_bench.player_skills.append("basic_cooking")
+	g_bench.transition("inn", Vector2i(4, 2))
+	g_bench.inventory.append("hot_meal")
+	_events.clear()
+	var r_bench: Dictionary = g_bench.use_skill("basic_cooking", "stew_pot")
+	assert(String(r_bench.get("blocked_duplicate", "")) == "hot_meal", "uncapped bench: a held output still refuses")
+	assert(g_bench.accomplishment_count("cooked_meal") == 0, "uncapped bench: the refusal banks NOTHING")
+	g_bench.remove_item("hot_meal", "test")
+	var r_bench_ok: Dictionary = g_bench.use_skill("basic_cooking", "stew_pot")
+	assert(String(r_bench_ok.get("accomplishment", "")) == "cooked_meal", "uncapped bench: the normal path still banks")
+	assert(g_bench.inventory.has("hot_meal"), "uncapped bench: and the output still lands in the pack")
 
 	# --- GH#165: [Perfect Reduction] recipe bench (lane deviation B, wired by controller) ---
 	var g_reduce := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)

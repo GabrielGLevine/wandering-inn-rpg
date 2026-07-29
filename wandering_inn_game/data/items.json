@@ -1121,6 +1121,54 @@
 			"abilities": [],
 			"description": "A plain silver mount holding nothing, which is the point: the warding is in the setting itself, laid in Hedault's exact hand.",
 			"lore": "He kept the fragment. What he handed back holds the same discipline without the grief of the original — his phrase, delivered like an invoice."
+		},
+		{
+			"_comment": "#330 R2: the lamb pen's yield. Priced, so it sells -- the tend pays in trade goods, never in wage gold.",
+			"id": "wool_tuft",
+			"name": "Wool Tuft",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 1,
+			"description": "A handful of fleece pulled off a lamb's flank while it stood still for you. Greasy with lanolin, warm out of all proportion to its weight.",
+			"lore": "Riverfarm sells its clip south by the bolt and its scraps to nobody, so a tuft in a pocket is a hunter's way of saying the beast let you near. Krshia's people weigh it and pay the honest coin."
+		},
+		{
+			"_comment": "#330 R3: the arc's keepsake. One-time pickup, priced so it can be sold -- the choice to keep it is the player's.",
+			"id": "shed_antler",
+			"name": "Shed Antler",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 6,
+			"description": "A corusdeer antler, shed clean at the base, oaken-brown fading to a banked red at the tip. It has not gone cold and does not seem inclined to.",
+			"lore": "The cull notices are careful about this: the herd stays off the paper, antlers freely shed only. Nobody has ever worked out why a dropped one keeps its heat, and the Gnoll caravans have stopped asking."
+		},
+		{
+			"_comment": "#330 R5: the archery butt's yield. The drill now buys a recoverable shaft, not a free ranged_hit.",
+			"id": "loose_arrow",
+			"name": "Loose Arrow",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"price": 1,
+			"description": "A single arrow pulled back out of the straw, fletching creased where it went in. Straight enough to shoot again, once.",
+			"lore": "The barracks yard counts its shafts twice a day and still comes up short, so nobody minds one walking off in a recruit's pack. Everybody who ever drilled here has done it."
 		}
 	]
 }

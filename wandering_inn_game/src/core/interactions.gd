@@ -126,11 +126,17 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 					# Bank precedes effect resolution: never combine with a met-gated
 					# locked variant, or its flavor read burns the waking use/wage.
 					entity_first_use[waking_key] = true
+				# GH#330 R2/R5: `item` joins the resolved set so a plain-interact
+				# prop can hand over a real thing, the way the use_skill arm
+				# already does. Absent key = "" = no pickup, so every shipped
+				# interact prop stays byte-identical. Variants inherit the base
+				# item through _resolve_skill_use_effect's duplicate().
 				var resolved: Dictionary = _resolve_skill_use_effect.call({
 					"accomplishment": target["on_interact_accomplishment"],
 					"toast": target.get("toast", ""),
 					"lore": target.get("lore", false),
 					"gold": target.get("gold", 0),
+					"item": target.get("item", ""),
 					"variants": target.get("variants", []),
 				})
 				var accomplishment_id := String(resolved["accomplishment"])
@@ -143,6 +149,9 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 					if bool(target.get("once_per_waking", false)) and (_known_skills.call() as Array).has("perfect_hospitality"):
 						wage += 1
 					_apply_gold_effect.call(wage, String(target[WIKeys.ID]))
+				var yielded := String(resolved.get("item", ""))
+				if yielded != "":
+					_pickup.call(yielded, String(target[WIKeys.ID]))
 				return {"accomplishment": accomplishment_id}
 			# Explicit-Skill-use directive (2026-07-10): a KNOWN required skill
 			# hints toward the hotbar (interact never auto-casts); an unknown

@@ -1200,6 +1200,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		_reconcile_ward_visuals()
 	elif type == WIEvents.COMPANION_CHANGED:
 		_reconcile_companion_visual()
+		# GH#330 R4: the EXISTENCE half, same shape as the PHASE_CHANGED arm
+		# below -- `present_when.companion` rows flip the instant the bond
+		# does, so the wolf's caches must build/free on the same beat the
+		# follower sprite appears (a tame is same-map by construction).
+		if not _map_transition_stale_cover():
+			_reconcile_entity_presence()
 	elif type == WIEvents.UI_MOOD_APPLIED:
 		# Mood grade just landed (fresh map or a phase crossing) — re-lift the
 		# field interactables against the new darkness (a5 #205). Skip while a

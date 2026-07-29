@@ -320,6 +320,7 @@ func _init() -> void:
 	_validate_encounter_when(scene, produced_accomplishments)
 	_validate_encounter_gate_counters(scene, produced_accomplishments)
 	_validate_present_when(scene, produced_accomplishments)
+	_validate_entity_item_ids(scene, item_ids)
 	_validate_guest_gate_windows(scene)
 	_validate_skill_uses(scene, skill_ids, produced_accomplishments)
 	_validate_visual_states_phase(scene)
@@ -752,6 +753,16 @@ func _validate_skill_uses(scene: Dictionary, skill_ids: Dictionary, produced_acc
 
 
 func _validate_present_when(scene: Dictionary, produced_accomplishments: Dictionary) -> void:
+	# GH#330 R4: the `companion` arm matches WIGame.companion by String, and the
+	# ONLY way that slot is ever filled is a companion_source prop (wi_game.gd's
+	# _animate_field). A typo'd id would gate an entity that can never appear --
+	# silent, permanently. Derive the legal set from the props themselves.
+	var bondable: Dictionary = {}
+	for map_id: String in scene["maps"]:
+		for entity: Dictionary in (scene["maps"][map_id] as Dictionary).get("entities", []):
+			var source: Variant = entity.get("companion_source", null)
+			if source is Dictionary:
+				bondable[String((source as Dictionary).get("companion_id", ""))] = true
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
 		# #247 review MINOR-3: all guest entities on a map share ONE rotation
@@ -768,7 +779,7 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 				String(entity.get("kind", "")) != "encounter",
 				"entity %s: present_when is forbidden on kind:encounter -- _check_trigger_radius never consults presence, so a present_when encounter would be invisible/unblocked yet still ambush; use encounter_when" % entity_id
 			)
-			_check(when.has("requires") or when.has("phase") or when.has("absent") or when.has("guest"), "entity %s present_when has no recognized shape (only 'requires'/'phase'/'absent'/'guest' are sanctioned)" % entity_id)
+			_check(when.has("requires") or when.has("phase") or when.has("absent") or when.has("guest") or when.has("companion"), "entity %s present_when has no recognized shape (only 'requires'/'phase'/'absent'/'guest'/'companion' are sanctioned)" % entity_id)
 			if when.has("phase"):
 				for p: Variant in when["phase"]:
 					_check(VALID_PHASES.has(String(p)), "entity %s present_when references unknown phase: %s" % [entity_id, p])
@@ -804,6 +815,9 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 			if when.has("absent"):
 				for counter_id: String in (when["absent"] as Dictionary):
 					_check(produced_accomplishments.has(counter_id), "entity %s encounter_when.absent references unproduced counter: %s (a typo here silently never gates -- GH#199 review MEDIUM-3)" % [entity_id, counter_id])
+			if when.has("companion"):
+				var comp_id := String(when["companion"])
+				_check(bondable.has(comp_id), "entity %s present_when.companion names %s, which no companion_source prop can ever bond -- the gate would never open" % [entity_id, comp_id])
 
 ## v0.15 T3.1. A guest's pool gate and their row's counter arms are two
 ## independent statements of ONE window, and they may never disagree: pooled
@@ -1721,3 +1735,44 @@ func _validate_enchant_pairs(graphs: Dictionary, items: Dictionary) -> void:
 					int(variant.get("price", 0)) * 2 > int(base.get("price", 0)) * 2 + fee,
 					"%s enchant %s->%s: variant price %d must exceed base %d + fee %d/2 (paid work must hold value)" % [conv_id, removed, granted, int(variant.get("price", 0)), int(base.get("price", 0)), fee]
 				)
+
+
+## GH#330: every item id a MAP ENTITY names must exist in the catalog. Dialogue
+## effects and the fence stock were already cross-referenced; entity arms never
+## were, and `pickup()` appends whatever String it is handed -- so a typo put a
+## phantom id straight into the player's inventory, silently. The interact arm
+## learned `item` in this wave, which widened that gap; this closes it for every
+## arm at once. Empty string is the sanctioned "no item" value (the
+## variant-zeroing idiom: a later variant sets `item: ""` to stop a repeat
+## handing the payload over twice).
+func _validate_entity_item_ids(scene: Dictionary, item_ids: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		for entity: Dictionary in (scene["maps"][map_id] as Dictionary).get("entities", []):
+			var entity_id := String(entity.get(WIKeys.ID, "?"))
+			var arms: Array = [{"label": "interact", "arm": entity}]
+			if entity.get("on_skill_use", null) is Dictionary:
+				arms.append({"label": "on_skill_use", "arm": entity["on_skill_use"]})
+			for skill_id: String in (entity.get("skill_uses", {}) as Dictionary):
+				if entity["skill_uses"][skill_id] is Dictionary:
+					arms.append({"label": "skill_uses[%s]" % skill_id, "arm": entity["skill_uses"][skill_id]})
+			for entry: Dictionary in arms:
+				var arm: Dictionary = entry["arm"]
+				var label := "%s/%s %s" % [map_id, entity_id, String(entry["label"])]
+				_check_item_refs(label, arm, item_ids)
+				for variant_index: int in (arm.get("variants", []) as Array).size():
+					var variant: Variant = (arm["variants"] as Array)[variant_index]
+					if variant is Dictionary:
+						_check_item_refs("%s variants[%d]" % [label, variant_index], variant as Dictionary, item_ids)
+
+
+func _check_item_refs(label: String, arm: Dictionary, item_ids: Dictionary) -> void:
+	for key: String in ["item", "requires_item", "remove_item"]:
+		if not arm.has(key):
+			continue
+		var raw: Variant = arm[key]
+		var refs: Array = raw if raw is Array else [String(raw)]
+		for ref: Variant in refs:
+			var item_id := String(ref)
+			if item_id == "":
+				continue
+			_check(item_ids.has(item_id), "%s %s references unknown item: %s" % [label, key, item_id])

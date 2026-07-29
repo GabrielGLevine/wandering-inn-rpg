@@ -5652,6 +5652,83 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "gh330_companion_gate_loop",
+   "seed": 7,
+   "fixture": "near_tamer_bond",
+   "note": "#330 R4: present_when.companion proven as a pair -- cache cell walkable with no bond, blocking with the wolf, walkable again with the razorbeak; plus the pond vantage's lead",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "near_tamer_bond"
+    ],
+    "skills": [],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy"
+    ]
+   }
+  },
+  {
+   "script": "gh330_deer_arc_loop",
+   "seed": 7,
+   "fixture": "gh330_deer_arc_start",
+   "note": "#330 R3: the wounded corusdeer stands, heals, and leaves -- worn grass + one-time shed antler, and corusdeer_range's ungated vouched soothe",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "gh330_deer_arc_start"
+    ],
+    "skills": [],
+    "dialogue": [
+     "corusdeer_range"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "input"
+    ]
+   }
+  },
+  {
+   "script": "gh330_lamb_pen_loop",
+   "seed": 7,
+   "fixture": "gh330_lamb_pen_start",
+   "note": "#330 R2: the hunter's lamb pen as a [Beast Tamer] door outside the floodplains -- wool yield, waking cap, class gain at sleep, then the tended_beasts variant",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs",
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "gh330_lamb_pen_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
   }
  ]
 }

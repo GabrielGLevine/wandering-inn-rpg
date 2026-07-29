@@ -1,5 +1,5 @@
 {
- "_comment": "GH#70 [Archer] canonical -- the rogue_earn_loop shape (bow bought+equipped -> archery_butt practice -> sleep -> class_gained -> kit fielded) PLUS the combat leg rogue_earn_loop doesn't need: a won ranged fight proving Attack resolves at distance >1 (the range+LoS seam, live). Loads near_barracks (post_tutorial_street's exact state + gold:25 -- the same fixture barracks_walkthrough uses): warrior L1, rusty_sword equipped, street (1,3), 25 gold. Route: (1) peddler's stall -> buy training_bow (8g, peddler_stall.json's appended index-2 option) -> equip it via the real inventory UI; (2) into the barracks -> the SAME (2,3)->(11,3) waypoints barracks_walkthrough's own cell_door leg already uses, then straight up 2 onto the new archery_butt prop (11,1) -- three interacts bank ranged_hit directly, no combat, no kill; (3) teleport to inn_upstairs's bed (the rogue_earn_loop bed-jump precedent -- the walk back isn't this script's subject) -> sleep -> class_gained{archer} + the kit toast; (4) teleport to floodplains beside Relc (the flame_pillar_loop/ice_floor_loop vantage) -> re-spar -> THE RANGE PROOF: move exactly one cell (chebyshev 4 to the target, nowhere near adjacent) -> Attack resolves at that distance -> combat_autoplay mops up the two inert dummies to victory. Seed 9 for convention; the dummies are 0-damage/inert (weapon_die 0, ai inert) so the fight's outcome never depends on rng.",
+ "_comment": "GH#70 [Archer] canonical -- the rogue_earn_loop shape (bow bought+equipped -> archery_butt practice -> sleep -> class_gained -> kit fielded) PLUS the combat leg rogue_earn_loop doesn't need: a won ranged fight proving Attack resolves at distance >1 (the range+LoS seam, live). Loads near_barracks (post_tutorial_street's exact state + gold:25 -- the same fixture barracks_walkthrough uses): warrior L1, rusty_sword equipped, street (1,3), 25 gold. Route: (1) peddler's stall -> buy training_bow (8g, peddler_stall.json's appended index-2 option) -> equip it via the real inventory UI; (2) into the barracks -> the SAME (2,3)->(11,3) waypoints barracks_walkthrough's own cell_door leg already uses, then straight up 2 onto the new archery_butt prop (11,1) -- one drill per waking (GH#330 R5 capped it and gave it a loose_arrow yield), so three drills across three sleeps -- the second same-waking press proves the refusal; (3) teleport to inn_upstairs's bed (the rogue_earn_loop bed-jump precedent -- the walk back isn't this script's subject) -> sleep -> class_gained{archer} + the kit toast; (4) teleport to floodplains beside Relc (the flame_pillar_loop/ice_floor_loop vantage) -> re-spar -> THE RANGE PROOF: move exactly one cell (chebyshev 4 to the target, nowhere near adjacent) -> Attack resolves at that distance -> combat_autoplay mops up the two inert dummies to victory. Seed 9 for convention; the dummies are 0-damage/inert (weapon_die 0, ai inert) so the fight's outcome never depends on rng.",
  "fixture_save": "near_barracks",
  "starts_at_title": true,
  "steps": [
@@ -408,6 +408,15 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "#330 R5: the drill now pays a real shaft instead of a bare counter.",
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "loose_arrow"
+   },
+   "timeout_sec": 5
+  },
+  {
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "timeout_sec": 5
@@ -415,6 +424,110 @@
   {
    "action": "screenshot",
    "name": "04_archery_butt"
+  },
+  {
+   "_comment": "#330 R5 THE CURE, proven: a second press in the SAME waking refuses and banks nothing. This drill used to be an uncapped, undecayed ranged_hit spigot that carried [Archer] through [Ranger] without a fight.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You have shot your quiver dry for today. The straw will keep."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.ranged_hit",
+   "equals": 1
+  },
+  {
+   "_comment": "== SLEEP 1 == one drill per waking, so the [Archer] gate is now three wakings of practice, not three presses.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     9,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 1
+  },
+  {
+   "action": "teleport",
+   "map": "barracks",
+   "cell": [
+    11,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "barracks",
+    "cell": [
+     11,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    2
+   ]
   },
   {
    "action": "press",
@@ -433,6 +546,92 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "timeout_sec": 5
+  },
+  {
+   "_comment": "== SLEEP 2 ==",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     9,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 2
+  },
+  {
+   "action": "teleport",
+   "map": "barracks",
+   "cell": [
+    11,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "barracks",
+    "cell": [
+     11,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    11,
+    2
+   ]
   },
   {
    "action": "press",
@@ -458,13 +657,25 @@
    "equals": 3
   },
   {
-   "_comment": "== (3) SLEEP -> [ARCHER] == teleport straight to the bed (rogue_earn_loop's own bed-jump precedent -- the walk back through barracks/street/floodplains isn't this script's subject). ranged_hit==3 already clears [Archer]'s gained_by threshold (OPAQUE-UNTIL-SLEEP: nothing renders progress-toward before this beat).",
+   "_comment": "== (3) SLEEP 3 -> [ARCHER] == ranged_hit==3 now clears the gained_by threshold (OPAQUE-UNTIL-SLEEP: nothing renders progress-toward before this beat).",
    "action": "teleport",
    "map": "inn_upstairs",
    "cell": [
     9,
-    2
+    3
    ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     9,
+     3
+    ]
+   },
+   "timeout_sec": 5
   },
   {
    "action": "move",
@@ -472,16 +683,25 @@
    "steps": 1
   },
   {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
    "action": "press",
    "name": "interact"
   },
   {
+   "_comment": "class_gained is emitted inside sleep(), BEFORE the veil finishes -- wait it first or the veil wait eats the cursor.",
    "action": "wait_for_event",
    "type": "class_gained",
    "payload_contains": {
     "class": "archer"
    },
-   "timeout_sec": 5
+   "timeout_sec": 10
   },
   {
    "action": "assert_state",
@@ -495,6 +715,16 @@
     "slots": 2
    },
    "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_finished",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 3
   },
   {
    "action": "assert_event_logged",
