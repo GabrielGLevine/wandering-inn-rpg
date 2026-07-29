@@ -193,3 +193,15 @@ matched palette but flattened our 3/4 sprite perspective into literal
 top-down (the oval mask erases perspective cues) — retry only with
 rectangle/custom masks + explicit perspective prompts. Map-object
 results AUTO-DELETE server-side after 8h — download immediately.
+
+## Sprite re-use policy (v0.16.1, user directive from the 26-finding sitting)
+- One sprite id backs at most ONE named character. Anonymous archetypes
+  (display_name "A …"/"An …"/"The …") may share a sprite, but never two
+  co-visible on one map without a distinguishing tint.
+- pc_* sprite ids are PC-ONLY. No entity of any kind may reference them
+  — test_sprite_registry carries the failing gate (added v0.16.1; the
+  Lady-as-pc_human_f class). New PC variants inherit the ban by prefix.
+- Breaking a collision: prefer a retint (tint/combat_tint on the shared
+  sheet) for background extras; a named character with dialogue gets a
+  bespoke generation (PixelLab pipeline above; anchor from alpha bbox;
+  license note per generation).
