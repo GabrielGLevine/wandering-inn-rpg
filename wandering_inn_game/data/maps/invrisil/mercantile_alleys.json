@@ -1044,7 +1044,7 @@
    ]
   },
   {
-   "_comment": "Round-trip pair with parlor_to_alleys (brothers_parlor cell 0,4).",
+   "_comment": "Round-trip pair with parlor_to_alleys (brothers_parlor cell 0,4). v0.16.1 #22: gains a cold slate tint, against warehouse_approach's burgundy on the north wall.",
    "id": "alleys_to_parlor",
    "kind": "door",
    "cell": [
@@ -1057,6 +1057,11 @@
    "to_cell": [
     1,
     4
+   ],
+   "tint": [
+    0.42,
+    0.46,
+    0.5
    ]
   },
   {
@@ -1176,19 +1181,19 @@
    "locked_toast": "Two men on the door, pacing something. You don't have the eye to time it yet."
   },
   {
-   "_comment": "Plain on_interact_accomplishment, no skill gate (a fighter-built PC must never need [Appraise Foe] to reach a fight).",
+   "_comment": "Plain on_interact_accomplishment, no skill gate (a fighter-built PC must never need [Appraise Foe] to reach a fight). v0.16.1 #22: moved [19,11] -> [18,10] (already-blocked north wall; approach [18,11] is the cell the canonical already teleports to) and hard-retinted to Coyle's burgundy. It used to sit DIRECTLY ABOVE alleys_to_parlor on the same wall column, both on the generic `door` sprite, so the pair read as one double door with adjacent approaches. NOT [16,11] as the triage proposed: row 11 is the map's ONLY through-corridor, so a blocker there strands the east end -- and invrisil_disagreement_stealth STANDS on [16,11] to lift the ledger.",
    "id": "warehouse_approach",
    "kind": "prop",
    "cell": [
-    19,
-    11
+    18,
+    10
    ],
    "display_name": "A Side Door, Watched",
    "sprite": "door",
    "tint": [
-    0.45,
-    0.4,
-    0.4
+    0.74,
+    0.44,
+    0.34
    ],
    "observe": "The runner's trail ends at a side door with fresh boot-scuff on the sill and burgundy-and-brass livery moving past the gap in the shutters. Coyle's crew, and no mistaking the building now.",
    "on_interact_accomplishment": "warehouse_located",

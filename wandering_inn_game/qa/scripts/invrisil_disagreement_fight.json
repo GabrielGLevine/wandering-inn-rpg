@@ -108,7 +108,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== STAGE 2, LEG 2: the tailing chain's second beat. Teleport to mercantile_alleys (18,11), facing right -- adjacent to the NEW warehouse_approach prop (19,11). Banks warehouse_located, the counter fists_door's 'Come with me.' now gates on. ==",
+   "_comment": "== STAGE 2, LEG 2: the tailing chain's second beat. Teleport to mercantile_alleys (18,11) -- the approach cell for warehouse_approach, which v0.16.1 #22 moved onto the alley's NORTH wall at (18,10) (it used to sit at (19,11), directly above the parlor door). Bump UP (that cell is blocked, so facing sets without moving), interact, bank warehouse_located -- the counter fists_door's 'Come with me.' gates on.",
    "action": "teleport",
    "map": "mercantile_alleys",
    "cell": [
@@ -134,7 +134,7 @@
   },
   {
    "action": "move",
-   "direction": "right",
+   "direction": "up",
    "steps": 1
   },
   {
@@ -164,6 +164,11 @@
     "text": "The runner ducks inside, and you finally see the whole of it: crates stacked to the rafters, more of Coyle's livery than a legitimate warehouse ever needs. Wherever the come-along ends, it ends here."
    },
    "timeout_sec": 5
+  },
+  {
+   "_comment": "v0.16.1 #22: the alley's east end, from the warehouse approach. The two doors used to be one column apart on the same wall with adjacent approaches and near-identical art; warehouse_approach is now on the north wall in Coyle's burgundy, alleys_to_parlor on the east wall in cold slate.",
+   "action": "screenshot",
+   "name": "00b_alley_east_end_doors"
   },
   {
    "_comment": "== THE COME-ALONG ASK: teleport back to (5,3) in the parlor, facing right (adjacent to Wilovan). warehouse_located is now met, so fists_door renders its ORIGINAL come-along speech and 'Come with me.' is visible. First interact plays Wilovan's talk_pool line, second opens invrisil_wilovan. ==",
@@ -718,13 +723,55 @@
    },
    "timeout_sec": 5
   },
-  { "_comment": "== v0.15 T4.2 CROWD CONSEQUENCE, the second of the two reactive extras: invrisil_extra_3 (13,5), the porter, on the FIGHT fork. Same resolution-agnostic stage copy as the plum-silk lady on the talk fork -- brothers_job_done banks on both endings, so neither line may name which. Stage pool index 0 (chatted_with_invrisil_extra_3 never banked in this run). ==", "action": "teleport", "map": "invrisil_boulevard", "cell": [13, 6] },
-  { "action": "wait_frames", "frames": 5 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [13, 5] } },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "A Porter at His Barrow", "text": "Something settled with Master Coyle's people. Nobody's saying what. My routes got easier, is all I know." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "90_crowd_reacts_porter" }
+  {
+   "_comment": "== v0.15 T4.2 CROWD CONSEQUENCE, the second of the two reactive extras: invrisil_extra_3 (13,5), the porter, on the FIGHT fork. Same resolution-agnostic stage copy as the plum-silk lady on the talk fork -- brothers_job_done banks on both endings, so neither line may name which. Stage pool index 0 (chatted_with_invrisil_extra_3 never banked in this run). ==",
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     13,
+     5
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "A Porter at His Barrow",
+    "text": "Something settled with Master Coyle's people. Nobody's saying what. My routes got easier, is all I know."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "90_crowd_reacts_porter"
+  }
  ]
 }

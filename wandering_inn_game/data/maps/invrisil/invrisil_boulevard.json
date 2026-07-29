@@ -1040,7 +1040,7 @@
    }
   },
   {
-   "_comment": "Landing (1,7) on the alleys side sits inside that map's own west corridor, open + off every blocked/entity cell there. v0.16.1 #9: this was a free-standing `door` prop on open paving -- rows 2..15 had no wall and no blocked cell east of x=24, so the city's only alley entrance had plaza on all four sides. There is a building there now (the x=26 masonry runs, floor_layer 6 behind it) and this entity is the BREAK in it: hide_sprite, so the three-cell gap at y7..9 is what the player reads. `sprite` is kept as the fallback if the masonry is re-cut. `observe` was added because it had none -- with the sprite gone it is the entity's only label.",
+   "_comment": "Landing (1,7) on the alleys side sits inside that map's own west corridor, open + off every blocked/entity cell there. v0.16.1 #9: this was a free-standing `door` prop on open paving -- rows 2..15 had no wall east of x=24, so the city's only alley entrance had plaza on all four sides. There is a building there now (the x=26 masonry runs, floor_layer 6 behind it) and this entity is the BREAK in it: hide_sprite, so the three-cell gap at y7..9 is what the player reads. `sprite` is kept as the fallback; `observe` was added because it had none.",
    "id": "boulevard_to_alleys",
    "kind": "door",
    "cell": [
@@ -1488,7 +1488,7 @@
    "hide_sprite": true
   },
   {
-   "_comment": "v0.16.1 #17: the sign the game TALKS about now exists. coyle_operation_lookout's toast and Wilovan both name COYLE AND SONS, but a repo-wide grep found those two prose hits and nothing else -- Coyle had no shopfront, and the nearest art was an anonymous `coin_shop_sign` DECOR row at [22,1] that carried no id, name or observe and could not even be hovered. That row is deleted and re-expressed here on the blocked facade row (the boulevard_stationer pattern; no walkable cell is lost). INTERIM ART by directive: the existing sprite with a burgundy-and-brass tint, the livery Coyle's own copy names. Bespoke art rides the art PR. No on_interact_accomplishment -- it would mint a shipped id for a read the vantage prop already banks.",
+   "_comment": "v0.16.1 #17: the sign the game TALKS about now exists. coyle_operation_lookout's toast and Wilovan both name COYLE AND SONS; a repo-wide grep found those two prose hits and nothing else. The nearest art was an anonymous `coin_shop_sign` DECOR row at [22,1] with no id, name or observe -- deleted and re-expressed here on the blocked facade row (the boulevard_stationer pattern; no walkable cell lost). INTERIM ART by directive: existing sprite, burgundy-and-brass tint (Coyle's livery). Bespoke art rides the art PR. No on_interact_accomplishment -- it would mint a shipped id for a read the vantage prop already banks.",
    "id": "boulevard_coyle_front",
    "kind": "prop",
    "cell": [
