@@ -17,6 +17,7 @@ func _init() -> void:
 	_check_combat_bank(raw)
 	_check_housekeeping_class(raw)
 	_check_hold_curve(raw)
+	_check_movement_dismiss_protection(raw)
 	print("PASS: toast queue survives transitions (defer + combat bank)")
 	quit(0)
 
@@ -158,3 +159,49 @@ func _stubbed_instance(raw: String) -> Object:
 	var err := script.reload()
 	assert(err == OK, "message_layer.gd (autoload-stubbed copy) failed to compile: %d" % err)
 	return script.new()
+
+
+## GH#334 note 7: a PROTECTED toast keeps its full hold across PLAYER_MOVED.
+## Delivery arrival is the one completion beat in the game that can only fire
+## FROM movement, so the movement dismiss killed the only mark the moment had --
+## a player holding a direction took the next step ~0.12s later and cancelled it.
+func _check_movement_dismiss_protection(raw: String) -> void:
+	var layer := _stubbed_instance(raw)
+	layer.set("_toast_draining", true)
+	layer.call("_queue_toast", "Delivered: Sealed Letter.", true, false, true)
+	layer.call("_queue_toast", "Nothing there.")
+	var queue: Array = layer.get("_toast_queue")
+	assert(bool((queue[0] as Dictionary).get("protected", false)),
+		"the protected claim rides the queue entry beside record/housekeeping")
+	assert(not bool((queue[1] as Dictionary).get("protected", false)),
+		"and every ordinary toast is unprotected by default -- movement still clears the strip")
+
+	# Protection changes NOTHING about ordering or class: a protected authored
+	# toast is still an authored toast, still FIFO within its class.
+	layer.call("_queue_toast", "Autosaved. (Esc — save/load anytime)", true, true)
+	layer.call("_queue_toast", "Quest complete: The Errand", true, false, true)
+	assert(_texts(layer.get("_toast_queue")) == [
+			"Delivered: Sealed Letter.",
+			"Nothing there.",
+			"Quest complete: The Errand",
+			"Autosaved. (Esc — save/load anytime)",
+		],
+		"protection must not disturb the authored-ahead-of-housekeeping order -- got %s" % [_texts(layer.get("_toast_queue"))])
+	layer.free()
+
+	# Source tripwires: the exemption must live on the MOVEMENT arm only, and the
+	# showing-entry flag must be lit from the drain. Both are the kind of wiring a
+	# refactor drops silently -- a headless run can never see a hold expire.
+	var handler := raw.get_slice("func _on_domain_event", 1).get_slice("\nfunc ", 0)
+	var moved := handler.get_slice("WIEvents.PLAYER_MOVED:", 1).get_slice("WIEvents.", 0)
+	assert(moved.find("if not _showing_protected:") != -1 and moved.find("dismiss_current_toast_early()") != -1,
+		"the PLAYER_MOVED dismiss must be gated on _showing_protected")
+	var drain := raw.get_slice("func _drain_toasts", 1).get_slice("\nfunc ", 0)
+	assert(drain.find("_showing_protected = bool(entry.get(\"protected\", false))") != -1,
+		"the drain must light _showing_protected from the entry it is about to show")
+	# ...and ONLY the movement arm: a map change, a conversation and an interact
+	# each replace what the player is reading, so they must still cut it short.
+	for other_arm: String in ["MAP_CHANGED", "DIALOGUE_STARTED"]:
+		var arm := handler.get_slice("WIEvents.%s:" % other_arm, 1).get_slice("WIEvents.", 0)
+		assert(arm.find("_showing_protected") == -1,
+			"%s must NOT consult _showing_protected -- the exemption is scoped to movement" % other_arm)

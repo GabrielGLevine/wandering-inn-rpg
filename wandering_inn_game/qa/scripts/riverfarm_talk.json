@@ -723,7 +723,7 @@
      },
      {
       "effect_lines": [
-       "Heals 8 HP (single use)"
+       "Heals 8 HP in combat (single use)"
       ],
       "locked": true,
       "requirement": "costs 10 gold",

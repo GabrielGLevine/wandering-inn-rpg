@@ -91,6 +91,19 @@
 
   { "_comment": "AUDIO teeth for the selection/shown decoupling: ui_inventory_shown drives audio.json's ui_open panel-open chime, and this run presses ~35 cursor moves -- if cursor moves ever regress to emitting shown, the chime replays per arrow press (inaudible to existence-only pins). Exactly 4 shown emits are legitimate here: 1 open + 3 equip/unequip re-confirms (copper equip, hedge equip, copper unequip); the refusal + tool toasts don't re-confirm and gold never changes.", "action": "assert_event_count", "type": "ui_inventory_shown", "count": 4 },
 
+  { "_comment": "== (7) GH#334 note 1: THE DRAG-TO-SCROLL LEG == the 19-item pack is the only place in the game where the carried list is genuinely taller than its viewport, so this is where the gesture has to be proven. Before this wave the list had NO touch/drag handling at all: on touch, Godot's touch->mouse emulation turned the first contact into a left-button PRESS that `_confirm()` acted on instantly, so a swipe to read past the fold equipped whatever row the finger started on. Setup: two move_downs wrap the cursor 17 -> 18 -> 0, and `_rebuild_items`' cursor==0 branch snaps the scroll back to the top, giving the drag somewhere to go.", "action": "press", "name": "move_down" },
+  { "action": "press", "name": "move_down" },
+  { "action": "wait_for_event", "type": "ui_inventory_selection_rendered", "payload_contains": { "cursor": 0, "item": "rusty_sword" }, "timeout_sec": 5 },
+  { "action": "assert_inventory_scrolled", "greater_than": -1.0 },
+
+  { "_comment": "Drag UP inside the list (70% -> 25% of its height) = scroll DOWN, journal_body's own sign convention. Two things must follow: the viewport actually moved, and the CURSOR came with it (note 1(b) -- the wheel used to move the viewport while `> `, the detail column and the mechanical corner all kept describing an item that was now off screen, and the next arrow press threw the scroll away re-snapping to the stale cursor). The forward-only wait below is the cursor-follow proof: it can only match a selection emitted AFTER the {cursor:0} wait above, i.e. one the drag itself caused.", "action": "drag_inventory_list" },
+  { "action": "assert_inventory_scrolled", "greater_than": 0.0 },
+  { "action": "wait_for_event", "type": "ui_inventory_selection_rendered", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "04_drag_scrolled_cursor_followed" },
+
+  { "_comment": "THE PAN-SLOP LATCH, negatively: that drag RELEASED on a row (it ends at 25% of the list height, squarely over one), and before the fix a press-driven `_confirm()` would have equipped/unequipped it. The equip ledger for this whole run is closed and exact -- copper equip, hedge equip, copper unequip -- so any confirm the gesture leaked shows up here as a count miss. inventory_loop's own click_inventory_row legs are the matching POSITIVE control (a press+release at one point still equips).", "action": "assert_event_count", "type": "item_equipped", "count": 2 },
+  { "action": "assert_event_count", "type": "item_unequipped", "count": 1 },
+
   { "action": "press", "name": "inventory" },
   { "action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 5 }
  ]

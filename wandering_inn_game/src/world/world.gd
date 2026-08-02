@@ -234,6 +234,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		# stayed armed, every later A-press would keep re-firing the skill
 		# instead of interacting -- the exact interact/confirm-share-A trap
 		# this ordering exists to manage. Re-arm is one LB/RB press away.
+		# GH#334 note 8 piece 1: a field cast is an ACTION, and `interact` below
+		# has always cleared the strip before speaking. Without the same call the
+		# skill's own toast queued BEHIND whatever was still showing -- up to
+		# 10.5s of apparently nothing happening after a deliberate press, on the
+		# one input path that has no animation, no target mark and no world
+		# change to fall back on.
+		_notify_action_taken()
 		if _field_hotbar != null:
 			var skill_id := String(_field_hotbar.skill_for_slot(_field_slot_index + 1))
 			if skill_id != "":
@@ -357,6 +364,11 @@ func _activate_field_slot(slot: int) -> void:
 		return
 	if _movement_gated():
 		return
+	# GH#334 note 8 piece 1 -- the number-key twin of the pad confirm branch
+	# above. Cleared here rather than inside the `skill_id != ""` arm on purpose:
+	# a press on an empty slot is still a press the player made, and the strip
+	# should not sit on stale copy through it.
+	_notify_action_taken()
 	if _field_slot_index >= 0:
 		_disarm_field_slot()
 	var skill_id := String(_field_hotbar.skill_for_slot(slot))

@@ -392,7 +392,15 @@ func _check_delivery_arrival() -> void:
 	record_accomplishment("delivered_%s" % accepted_delivery_id)
 	record_accomplishment("completed_delivery")
 	remove_item(parcel_id, accepted_delivery_id)
-	_emit(WIEvents.TOAST, {"text": "Delivered: %s." % String(parcel.get("display_name", parcel_id))})
+	# GH#334 note 7: `sticky`. Delivery arrival is the ONE completion beat in the
+	# game that can only ever fire FROM movement -- and message_layer dismissed
+	# the showing toast on every PLAYER_MOVED, so a player holding a direction
+	# (the normal way you walk up to someone) took the next step ~0.12s later and
+	# cancelled the only mark the moment had. Nothing else marked it: no world
+	# change, no dedicated sound, no parcel-icon change. Audited with it: no other
+	# sim emitter toasts out of `move_player` -- the trigger-radius path opens
+	# combat, which speaks through the feed and never toasts.
+	_emit(WIEvents.TOAST, {"text": "Delivered: %s." % String(parcel.get("display_name", parcel_id)), "sticky": true})
 
 
 func interact() -> Dictionary:
@@ -1703,13 +1711,37 @@ func _collect_class_grants(cls: Dictionary, held: int, catalog_by_id: Dictionary
 		_collect_class_grants(catalog_by_id[parent_id], held, catalog_by_id, out, visited)
 
 
+## GH#334 note 9: can the player ever ACTIVATE this Skill? The two activation
+## paths in the game are the field hotbar (`field_hotbar_loadout`'s own
+## `field: true` filter) and the combat bar (`combat_hud.rebuild_slots`' own
+## `contexts has "combat" AND ap_cost > 0` filter) -- read from the same data
+## keys those two consumers read, deliberately, rather than re-derived. Anything
+## outside both is a passive or an inert: `used_skills` can never come to
+## contain it, so the reveal gate below would hold its authored description
+## hostage forever.
+##
+## COUNT, re-derived at implementation (the brief said 30): 40 of the 119
+## shipped Skills are un-activatable, and all 40 carry an authored description.
+func _skill_activatable(sk: Dictionary) -> bool:
+	if bool(sk.get("field", false)):
+		return true
+	return (sk.get(WIKeys.CONTEXTS, []) as Array).has("combat") and int(sk.get(WIKeys.AP_COST, 0)) > 0
+
+
 func _skill_entries(ids: Array) -> Array:
 	var out: Array = []
 	for raw: Variant in ids:
 		var id := String(raw)
 		var sk: Dictionary = skills.get(id, {})
 		var display := String(sk.get(WIKeys.DISPLAY_NAME, id))
-		var revealed := used_skills.has(id)
+		# OPAQUE-UNTIL-FIRST-USE, amended (GH#334 note 9). The gate was designed
+		# for Skills that CAN be used and never exempted the ones that cannot --
+		# so 40 of 119 descriptions sat behind an unsatisfiable condition,
+		# including both Skills a level-1 Warrior starts with. The rule is now
+		# "opaque until first use, FOR SKILLS THAT CAN BE USED"; a passive reads
+		# revealed from the moment it is granted, which is also when its text is
+		# the thing the player most needs.
+		var revealed := used_skills.has(id) or not _skill_activatable(sk)
 		var text := display
 		if revealed:
 			var desc := String(sk.get("description", ""))
@@ -1880,11 +1912,37 @@ func use_item(item_id: String) -> bool:
 	var result := WIItems.resolve_use(rec, null)
 	if not bool(result.get("ok", false)):
 		return false
-	pending_meal = (result.get("pending_meal", {}) as Dictionary).duplicate(true)
+	_merge_pending_meal(result.get("pending_meal", {}) as Dictionary)
 	inventory.erase(item_id)
 	_emit(WIEvents.ITEM_USED, {"item": item_id})
-	_emit(WIEvents.TOAST, {"text": "Used: %s." % String(rec.get("name", item_id))})
+	# GH#334 note 28 item 3: the toast used to be "Used: Fine Meal." and nothing
+	# else -- the payload the player just spent an item and a walk to the cook
+	# for was never restated, and its one-fight scope was stated nowhere in the
+	# game. Composed off the LIVE `pending_meal` (post-merge), so it reports what
+	# `_build_player_combatant` will actually apply, including a second item's
+	# contribution, rather than re-describing this one item's card.
+	var payload_line := WIEffectText.pending_meal_line(pending_meal)
+	var used_text := "Used: %s." % String(rec.get("name", item_id))
+	if payload_line != "":
+		used_text += " " + payload_line
+	_emit(WIEvents.TOAST, {"text": used_text})
 	return true
+
+
+## GH#334 ruling 5: PAY TWICE, GET BOTH. `pending_meal` used to be REPLACED by
+## each use, so eating a Fine Meal after a Tempering Oil silently threw the oil
+## away -- an item consumed, gold spent, and no signal of any kind that the
+## first buff had been overwritten. Numeric keys now SUM; anything else is
+## last-writer-wins (there is no non-numeric mod today, and a future one has no
+## meaningful addition). Cleared wholesale by `_build_player_combatant` exactly
+## as before, so the one-fight scope is unchanged.
+func _merge_pending_meal(gained: Dictionary) -> void:
+	for key: String in gained:
+		var incoming: Variant = gained[key]
+		if incoming is int or incoming is float:
+			pending_meal[key] = int(pending_meal.get(key, 0)) + int(incoming)
+		else:
+			pending_meal[key] = incoming
 
 
 func combat_use_item(item_id: String) -> bool:

@@ -1102,7 +1102,10 @@
      "inn_upstairs"
     ],
     "fixtures": [],
-    "skills": [],
+    "skills": [
+     "basic_swordwork",
+     "tough_body"
+    ],
     "dialogue": [
      "relc_intro"
     ],
