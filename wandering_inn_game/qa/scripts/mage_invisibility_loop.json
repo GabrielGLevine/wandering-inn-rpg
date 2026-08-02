@@ -50,6 +50,7 @@
   { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
   { "action": "screenshot", "name": "02_ambush_fires" },
   { "_comment": "v0.16.1 finding 19 (a playtest QUESTION -- 'my MP recharged without sleeping': it is not a bug, MP is a per-fight budget that WICombat.build refills at every build, and the game simply never said so). THIS fixture is the one that can prove it: the PC holds [Mage], so max_mp > 0 and the one-shot disclosure fires here where combat_walkthrough's Warrior (max_mp 0) correctly never sees it -- that script's assert_event_count ui_combat_hint_rendered:1 is the negative half of the same pin.", "action": "assert_event_logged", "type": "ui_combat_hint_rendered", "payload_contains": { "text": "[Mana gathers fresh at every battle's start.]" } },
-  { "action": "assert_event_count", "type": "ui_combat_hint_rendered", "count": 2 }
+  { "_comment": "GH#334 notes 19/28: THREE now -- the kit hint, the HP half (every build), and the MP half (this fixture holds [Mage], which is why it is the script that can prove the MP line at all). combat_walkthrough's Warrior is the negative half: two hints there, never the MP one.", "action": "assert_event_count", "type": "ui_combat_hint_rendered", "count": 3 },
+  { "action": "assert_event_logged", "type": "ui_combat_hint_rendered", "payload_contains": { "text": "[You come to every fight whole. Wounds do not follow you out of one.]" } }
  ]
 }

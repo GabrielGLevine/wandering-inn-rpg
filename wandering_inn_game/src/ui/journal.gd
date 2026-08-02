@@ -228,18 +228,22 @@ func _ready() -> void:
 	body_slot.add_child(_body_label)
 	body_slot.resized.connect(_clip_body_to_line_boundary)
 
-	# GH#334 note 2: the close affordance. Lives OUTSIDE the body (its own row
-	# under the scrolling slot) rather than inside a per-tab hint row, because a
-	# hint that scrolls away is not an affordance -- and the Skills tab was the
-	# only tab that had a hint row at all. Right-aligned so it never sits under
-	# the centered `▼` more-below arrow. Device-aware through the same
-	# `WIInputHints.label()` table every other on-screen hint composes from, and
-	# re-composed on INPUT_DEVICE_CHANGED (see `_on_domain_event`) so a pad
-	# pickup mid-read swaps Esc/J for B/Y live.
+	# GH#334 note 2: the close affordance. Deliberately NOT a row in `stack` and
+	# NOT a line in a per-tab hint block -- both were tried and both are wrong.
+	# A body line scrolls away (and only the Skills tab had a hint block at all);
+	# a stack row steals height from `body_slot`, which moves every BBCode line
+	# in the panel and quietly re-aims field_skills_loop's own drag/tap
+	# coordinates. It is an OVERLAY on `_root` instead, the exact idiom the `▼`
+	# more-below cue below already uses: bottom margin band, zero layout effect.
+	# Bottom-RIGHT so it never sits under the centered arrow. Device-aware
+	# through the same `WIInputHints.label()` table every other on-screen hint
+	# composes from, re-composed on INPUT_DEVICE_CHANGED (see `_on_domain_event`)
+	# so picking up a pad mid-read swaps Esc/J for B/Y live.
 	_close_hint = UIChrome.make_label("", "Small")
 	_close_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_close_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	stack.add_child(_close_hint)
+	_close_hint.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_MINSIZE, 10)
+	_root.add_child(_close_hint)
 	_refresh_close_hint()
 
 	_scroll_hint = UIChrome.make_label("▼")
