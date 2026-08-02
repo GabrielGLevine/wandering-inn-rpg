@@ -1719,6 +1719,9 @@ func _collect_class_grants(cls: Dictionary, held: int, catalog_by_id: Dictionary
 ## outside both is a passive or an inert: `used_skills` can never come to
 ## contain it, so the reveal gate below would hold its authored description
 ## hostage forever.
+##
+## COUNT, re-derived at implementation (the brief said 30): 40 of the 119
+## shipped Skills are un-activatable, and all 40 carry an authored description.
 func _skill_activatable(sk: Dictionary) -> bool:
 	if bool(sk.get("field", false)):
 		return true

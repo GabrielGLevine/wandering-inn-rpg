@@ -1040,8 +1040,9 @@ task names, and self-references to "this task"/"this block".
     rule is "opaque until first use, FOR SKILLS THAT CAN BE USED".** The
     gate was written for skills with an activation path and never exempted
     the ones without: every `ap_cost: 0` combat skill and every non-`field`
-    exploration skill has no way into `used_skills` at all, so 30 of 119
-    authored descriptions sat behind an unsatisfiable condition — including
+    exploration skill has no way into `used_skills` at all, so 40 of the 119
+    shipped Skills (re-derived at implementation; the wave brief said 30)
+    had authored descriptions behind an unsatisfiable condition — including
     both skills a level-1 Warrior starts with, which rendered as a bare
     "[Lesser Stamina]" forever. `WIGame._skill_activatable()` now
     pre-reveals them, reading the SAME two data keys the two activation
