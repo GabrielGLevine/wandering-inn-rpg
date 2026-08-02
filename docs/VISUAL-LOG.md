@@ -84,7 +84,7 @@ DELETED after capture — their PNGs live under the same evidence root
   mid-word ("…breaks if you d", "You have learned h"). Every QA fixture ships
   `times_slept` unset, so every windowed shot in this log is taken in the
   expanded configuration.
-- [ ] **MAP/OLD-HUT-HAS-NO-HUT (P3, NEW).** The y-sort fix works (see the
+- [x] **MAP/OLD-HUT-HAS-NO-HUT (P3) — DRAINED 2026-08-02 (PR #344).** codex_hut (Codex→PixelLab-pro hero art) wired at witch_hollow (1,7); controller windowed read: golden-thatch hut clearly its own building beside the cottage. Original row: The y-sort fix works (see the
   confirmations below), and now that the door is visible the next question
   lands: `witch_hut_door` (`witch_hollow` 1,7, display name "The Old Hut")
   renders as a **freestanding door frame standing in the treeline** at the
@@ -3044,3 +3044,16 @@ Residuals, logged rather than silently shipped:
   doe's ember nubs at the moment it stands. Species and palette are right and
   the shed-antler pickup still reads; a stag-shaped standing rig would close
   the last inch.
+
+## 2026-08-02 wave-2 art drain (PR #344, controller reads on file)
+- ruin_gate wired at floodplains (38,11) — the note-6 "ruins look like a
+  rock" cure; the #74-era hard-stall site finally has findable art.
+- rune_door at trapped_halls seal (imposing = correct for the vault).
+- wardstone_anchor on dungeon_approach (the new portal carrier).
+- witch_cauldron in the inn kitchen — silhouette differentiation per the
+  tint≠disambiguation directive; decor pots untouched.
+- STILL OPEN from prior lists: readout-eats-interior-bottom-rows (P3),
+  line_stalker two-headed overlap, scavenger-vs-scavenger sameness,
+  stationer mood phase-flat, ward-scrap lore toast slicing — all queue
+  for v0.17 L4 (art lane) with the tint-site audit (pot tints, blade
+  banding).
