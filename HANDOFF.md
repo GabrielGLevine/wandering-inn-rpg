@@ -4,59 +4,36 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
-## Current state (2026-08-02)
-**FRIEND-PLAYTEST WAVE 2 IN FLIGHT.** A friend's 28-note list (NEW list,
-zero overlap with the owner's 26) triaged by an 11-investigator fleet —
-all verdicts file:line-cited; 3 surprises beyond the notes: pending_meal
-whole-value replacement silently eats armed buffs, an uncured free-cook-
-then-sell twin of the #6 economy exploit (pallass_stall_burner), and a
-latent hard softlock (dungeon_attuned without horns_delve_started =
-zero exits, probe-proven). Rulings: CHOICE-LOG 2026-08-02 block (18).
-SHIPPED ALREADY: seam PR #340 (dialogue-effect `toast` arm — talk-route
-resolutions can finally speak; merged f8481c5, 7/7 green); #283 closed
-as already-fixed; specs committed (skill cooldowns v0.17+ milestone
-#337, Skills-tab redesign #336, quest clarity #338) + deferral issues
-#335 (feedback layer) / #339 (tripwires+inerts). RUNNING: fix-wave
-fleet wf_ad27edcc — sim lane (/private/tmp/wi334-sim, issue/334-sim)
-+ content lane (/private/tmp/wi334-content, issue/334-content), each
-impl→adversarial-review→fix; briefs in session scratchpad; #334 is the
-umbrella. Controller owns PRs + anchored train (sim first). THEN: art
-pass (ruins/rune-door/hut via the NEW Codex→image-to-pixelart-pro
-pipeline — proven 2026-08-02, folded into wi-art-and-sprites; ship-
-grade candidates in session scratchpad codex-art/) + audio leg (wire
-the profiled HydroGene combat winner for the Raskghar fight, ear-gate
-state) + composed gates + close.
+## Current state (2026-08-02, session close)
+**v0.16.2 TAGGED at 300a478 — the friend-playtest wave, one session
+end-to-end.** 28 notes triaged (11 investigators) -> 18 CHOICE-LOG
+rulings -> seam PR #340 (dialogue toast arm) -> lane fleet
+(impl->adversarial-review->fix x2) -> #341 sim + #342 content (incl.
+controller items: Raskghar tempo swap [profile refuted the HydroGene
+wire], Erin meal duration) -> #344 art (five hero sprites via the NEW
+Codex->PixelLab-pro pipeline, all five controller-read SHIP) -> id
+freeze (zero removals; GH#330's stray ids captured) -> tag. Release/
+Pages runs were in progress at close — CONFIRM GREEN first thing.
+Board: #334 closed; deferred work lives in #335-#339 + #343; #283
+closed stale. v0.17 is RATIFIED as six parallel lanes (ROADMAP) and
+its dispatch prompt is below — FRESH SESSION ONLY (user directive).
 
-**Codex image gen = REAL and wired into the art doctrine.** Codex CLI
-has native image generation (feature stable+on, ChatGPT auth). Hero-art
-pipeline: painterly concept → PixelLab /image-to-pixelart-pro (~180px
-clean pixel art, full fidelity). Visual next-level strategy at
-docs/design/2026-08-02-visual-next-level.md (Atmosphere Milestone =
-v0.17 candidate: palette unification + time-of-day grading + motion
-layer). gpt-image licensing: bundle-tier until redistribution verified.
-
-UNTAGGED on main: #331 (board pair) + #333 + #340 + wave-2 docs —
-v0.16.2 cut rides the wave-2 close.
-
-
-**v0.16.1 "the playtest wave" TAGGED at 0fe611d** (Release/Pages runs
-verifying at close — confirm green). ALL 26 findings from the user's
-full sitting addressed in three PRs, same session as receipt: #327
-(sim/UX/audio — one toast spec incl. GH#325, [Light] toggle, field
-readout, combat-beat audio clock, defeat music, biome voice, MP hint,
-both music swaps), #328 (content/maps — economy exploit closed with
-yarrow-gated brewing + the hidden counter exploit, Hunter ruling,
-mill ramp, alley mouth, fence resolution toast, Cups gating, mothbear
-re-home, blade banding, pot tints, sign entity, warehouse-door split),
-#329 (art — bespoke Lady/Hedault/Coyle rigs + 2 shared civilians +
-sign for $0.26, pc_* sprite ban with a mutation-proven registry gate,
-16 entities re-cast). Process notes ledgered: composed-census red on
-#328's first head (both lanes trimmed to their own trees) caught at
-the verdict read and trimmed; sim reviewer caught the toast fix
-regressing GH#325's own repro (one-shot cap) pre-merge.
-
-**v0.16.0 shipped earlier the same day** (see git history of this
-block): the Region Depth wave, 778 frozen ids, one-session end-to-end.
+Process lessons this session (fold candidates for wi-running-the-machine
+/ wi-verifying-changes / wi-machine-playtest):
+1. Pre-commit hook BLOCK swallowed by `tail -1` — three commits
+   silently never happened; branch pushed a stale head. Read commit
+   success from rc + `git log`, never hook chatter.
+2. Composed census ceiling bit AGAIN (15.0% exact, ~70 chars over
+   after merge): comment-trim is the cure; census slack belongs in the
+   pre-merge checklist for every content-heavy train.
+3. Canonical QA scripts FAIL under guessed seeds and under
+   several-windowed-runs-in-one-loop: pinned seeds via ci_sweep/
+   manifest; windowed runs SERIAL, one per invocation.
+4. Headless re-runs CLOBBER windowed outputs (same qa_output dir) —
+   capture windowed LAST, or read PNGs before any re-gate.
+5. Candidate-art claims ("born transparent") must be verified by alpha
+   scan before recording; three of five were false and one hid the
+   Body_A bottom-pad trap.
 
 ## 🎯 NEXT ACTIONS
 
