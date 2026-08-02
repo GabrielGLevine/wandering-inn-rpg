@@ -43,6 +43,11 @@ var _script_path := ""
 ## exercises the paging surface itself (mobile_tap_check).
 var real_paging := false
 var _out_dir := ""
+## GH#324: how many evidence captures are settling right now (screenshot or
+## display probe). Nonzero means "a PNG/probe is about to read the screen", and
+## message_layer.gd holds its transient panels open until it drops back to
+## zero. See `capture_in_flight` for why this seam exists at all.
+var _capture_depth := 0
 var _failures: PackedStringArray = []
 var _events_seen: Array = []
 var _screenshots: PackedStringArray = []
@@ -52,6 +57,25 @@ var _wants_creation_ui := false
 
 func active() -> bool:
 	return not _script_path.is_empty()
+
+
+## GH#324. A transient panel (toast strip, standalone line) collapses its hold
+## to a 0.4s WALL-CLOCK floor under windowed QA -- a number chosen against
+## `SCREENSHOT_SETTLE_SECONDS` (0.15s) back when the settle WAS that constant.
+## #119 then made a capture settle 0.15s PLUS up to 3s of live-tween drain, and
+## that arithmetic quietly stopped holding: with the boot music crossfade
+## (1.0s) or a bark's own music duck (0.2s) still running, the capture landed
+## AFTER the panel had already retired, so the PNG showed an empty slot while
+## `ui_dialogue_rendered` carried the full string. That is GH#324 end to end --
+## a verification-boundary defect, not a rendering one (an unattended session
+## never collapses the hold and always shows the line for its authored 3s+).
+## Rather than guess a larger floor (the same arithmetic, one round later),
+## message_layer.gd asks THIS: while a capture is settling, a transient panel
+## does not retire. Zero effect outside a windowed QA run -- both capture paths
+## return before touching the counter in headless, and a real session has no
+## TestDriver at all.
+func capture_in_flight() -> bool:
+	return _capture_depth > 0
 
 
 func wants_creation_ui() -> bool:
@@ -544,6 +568,8 @@ func _execute(step: Dictionary) -> void:
 			await _wait_for_event(String(step["type"]), float(step.get("timeout_sec", 5.0)), step.get("payload_contains", {}), bool(step.get("from_start", false)))
 		"screenshot":
 			await _screenshot(String(step["name"]))
+		"assert_dialogue_displayed":
+			await _assert_dialogue_displayed(step)
 		"assert_state":
 			_assert_state(step)
 		"assert_event_logged":
@@ -856,17 +882,16 @@ func _screenshot(name: String) -> void:
 	if DisplayServer.get_name() == "headless":
 		_events_seen.append({"type": "screenshot_skipped_headless", "payload": {"name": name}})
 		return
-	await get_tree().create_timer(SCREENSHOT_SETTLE_SECONDS).timeout
-	# CONTRACT (#119): after the base settle, drain live tweens (bounded 3s)
-	# + two clean frames — a completion signal, not a machine-speed guess.
-	# Kills the pinned wait_frames-before-evidence class (#91 whack-a-mole);
-	# scripts should not stack extra sleeps in front of screenshots.
-	var tween_deadline_ms := Time.get_ticks_msec() + 3000
-	while not get_tree().get_processed_tweens().is_empty() \
-			and Time.get_ticks_msec() < tween_deadline_ms:
-		await get_tree().process_frame
-	await get_tree().process_frame
-	await get_tree().process_frame
+	_capture_depth += 1
+	await _capture_png(name)
+	_capture_depth -= 1
+
+
+## GH#324: `_screenshot`'s body, split out so the capture-in-flight counter can
+## bracket EVERY exit path (the web branch has two early returns of its own) in
+## one place instead of being decremented at each `return`.
+func _capture_png(name: String) -> void:
+	await _settle_for_capture()
 	if OS.has_feature("web"):
 		JavaScriptBridge.eval("window.__WI_QA_SHOT__ = %s" % JSON.stringify(name), true)
 		var deadline := Time.get_ticks_msec() + 10000
@@ -884,6 +909,70 @@ func _screenshot(name: String) -> void:
 	var path := _out_dir.path_join(name + ".png")
 	img.save_png(path)
 	_screenshots.append(path)
+
+
+## CONTRACT (#119): before evidence is captured, settle -- base delay, then
+## drain live VISUAL tweens (bounded 3s) + two clean frames. A completion
+## signal, not a machine-speed guess; kills the pinned wait_frames-before-
+## evidence class (#91 whack-a-mole), so scripts should not stack extra sleeps
+## in front of a capture.
+## GH#324: shared by `_screenshot` and `assert_dialogue_displayed` so the probe
+## reports the panel state at exactly the moment the PNG would be taken -- a
+## probe that settled differently would prove something no screenshot sees.
+func _settle_for_capture() -> void:
+	await get_tree().create_timer(SCREENSHOT_SETTLE_SECONDS).timeout
+	var tween_deadline_ms := Time.get_ticks_msec() + 3000
+	while not get_tree().get_processed_tweens().is_empty() \
+			and Time.get_ticks_msec() < tween_deadline_ms:
+		await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+
+## GH#324 DISPLAY PROOF. `ui_dialogue_rendered` is a bus confirmation that the
+## renderer STARTED a line, not proof the panel is on screen when evidence is
+## taken -- the issue's own finding. This settles exactly as `_screenshot` does
+## and then reads message_layer.gd's live panel state, so "the line is visible"
+## becomes a hard assertion instead of an inference from an event payload.
+## Optional `contains` pins the composed text (speaker prefix included).
+## WINDOWED-ONLY, exactly like `screenshot` and for the same reason: headless
+## has no display to prove anything about, and every transient panel's headless
+## hold is a near-zero frame-bounded collapse, so a headless probe would only
+## ever restate that collapse. A headless run records the skip and moves on.
+func _assert_dialogue_displayed(step: Dictionary) -> void:
+	if DisplayServer.get_name() == "headless":
+		_events_seen.append({"type": "dialogue_display_skipped_headless", "payload": {}})
+		return
+	_capture_depth += 1
+	await _probe_dialogue_display(step)
+	_capture_depth -= 1
+
+
+func _probe_dialogue_display(step: Dictionary) -> void:
+	await _settle_for_capture()
+	var main := get_tree().root.find_child("Main", true, false)
+	if main == null:
+		_fail("assert_dialogue_displayed: Main not found")
+		return
+	var layer := main.get_node_or_null("MessageLayer")
+	if layer == null or not layer.has_method("dialogue_display_state"):
+		_fail("assert_dialogue_displayed: MessageLayer.dialogue_display_state not found")
+		return
+	var state: Dictionary = layer.call("dialogue_display_state")
+	if not bool(state["visible"]):
+		_fail("assert_dialogue_displayed: line panel is NOT visible at capture time (state %s)" % JSON.stringify(state))
+		return
+	if not bool(state["on_screen"]):
+		_fail("assert_dialogue_displayed: line panel rect is off screen (state %s)" % JSON.stringify(state))
+		return
+	if String(state["text"]).strip_edges() == "":
+		_fail("assert_dialogue_displayed: line panel is visible but empty (state %s)" % JSON.stringify(state))
+		return
+	var want := String(step.get("contains", ""))
+	if want != "" and not String(state["text"]).contains(want):
+		_fail("assert_dialogue_displayed: displayed line %s does not contain %s" % [JSON.stringify(String(state["text"])), JSON.stringify(want)])
+		return
+	_events_seen.append({"type": "qa_dialogue_displayed", "payload": state})
 
 
 func _assert_state(step: Dictionary) -> void:

@@ -1,0 +1,25 @@
+{
+ "_comment": "GH#324 A/B — THE dead-render repro, kept as a live regression capture. A talk_pool bark interacted at world_ready+0 vs +90 idle frames, same NPC, same run. BEFORE the fix, shot 01 was an empty line slot while ui_dialogue_rendered carried the full string (three maps, pre-existing); the cause was NOT rendering but the evidence boundary — a transient panel's windowed-QA hold is a 0.4s wall-clock floor while a capture settles 0.15s PLUS up to 3s of live-tween drain (#119), and the boot music crossfade (1.0s) reliably pushed the capture past the floor. Measured on this very script: settle 817ms at world_ready+0 vs 226ms at +90, against a 400ms hold. test_driver now holds transient panels while a capture is in flight (TestDriver.capture_in_flight), so BOTH legs render. `assert_dialogue_displayed` is the assertion half — it reads message_layer's live panel state at capture time, so a regression fails loud instead of quietly shipping an empty PNG. WINDOWED ONLY (headless skips both the shots and the probe, by construction). NOT canonical: screenshot utility, title_peek/street_peek's class, deliberately absent from qa/manifest.json. Seed inert: no fight resolves.",
+ "fixture_save": "line_display_ab_start",
+ "starts_at_title": true,
+ "steps": [
+  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
+  { "_comment": "Title's default row is New Game — down 1 to Continue, which loads the fixture-seeded manual slot.", "action": "move", "direction": "down", "steps": 1 },
+  { "action": "press", "name": "confirm" },
+  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 10 },
+  { "action": "assert_state", "path": "current_map", "equals": "stationer" },
+  { "action": "assert_state", "path": "player_cell", "equals": [8, 2] },
+  { "_comment": "== LEG A: interact with ZERO frames spent since world_ready — the failing side of the issue. No wait_frames, no move: any of those spend the window under test. ==", "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "payload_contains": {"text": "A Scribe by the Hour: Contracts, letters, and the occasional apology. The apologies pay best and take longest."}, "timeout_sec": 5 },
+  { "action": "screenshot", "name": "01_interact_at_world_ready" },
+  { "action": "assert_dialogue_displayed", "contains": "A Scribe by the Hour:" },
+  { "_comment": "== LEG B: the control — same NPC, same bark, 90 idle frames later. This one always rendered; it is here so the pair reads as one A/B, not two claims. ==", "action": "wait_frames", "frames": 90 },
+  { "action": "press", "name": "interact" },
+  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "timeout_sec": 5 },
+  { "action": "screenshot", "name": "02_interact_90_frames_later" },
+  { "action": "assert_dialogue_displayed", "contains": "A Scribe by the Hour:" }
+ ]
+}

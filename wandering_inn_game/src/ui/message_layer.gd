@@ -41,6 +41,11 @@ const QA_TOAST_HOLD_SECONDS := 0.4
 ## `from_start` on the class-toast render wait makes that script robust to
 ## EITHER emission order regardless.
 const QA_TOAST_HOLD_HEADLESS_SECONDS := 0.05
+## Ceiling on the GH#324 capture hold (`_await_capture_release`). The driver's
+## own settle is bounded (0.15s + a 3s tween-drain cap + two frames), so this
+## only has to be comfortably longer than that -- it exists so a wedged capture
+## can never strand a panel on screen for the rest of a run.
+const CAPTURE_HOLD_CEILING_SECONDS := 6.0
 ## HOUSEKEEPING TOASTS ONLY (v0.16.1 findings 8/16/25 + GH#325). This cap used
 ## to apply to EVERY queued toast, and it was the real reason transient toasts
 ## "vanish too fast": every beat that matters emits 2-4 toasts at once (autosave
@@ -428,6 +433,26 @@ func _clear_dialogue_line() -> void:
 	_dialogue_panel.hide()
 
 
+## DISPLAY PROOF (GH#324). `ui_dialogue_rendered` fires ONE process frame after
+## `panel.show()` and says nothing about whether the panel is still on screen
+## when evidence is captured -- that gap is the whole substance of GH#324, where
+## a bark's own hold expired before the windowed screenshot fired and every
+## capture showed an empty line slot while the bus reported the full string.
+## This reports the line panel's LIVE state (visibility through the entire
+## CanvasLayer chain, the composed text as the label actually holds it, and the
+## panel's on-screen rect) so a QA capture can assert what a PLAYER would see.
+## Read-only: never mutates panel state, so probing can't perturb a run.
+func dialogue_display_state() -> Dictionary:
+	var rect := _dialogue_panel.get_global_rect()
+	var view := get_viewport().get_visible_rect()
+	return {
+		"visible": _dialogue_panel.is_visible_in_tree(),
+		"text": _dialogue_label.text,
+		"rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y],
+		"on_screen": view.intersects(rect),
+	}
+
+
 func _show_dialogue_line(text: String, fitted: String) -> void:
 	await _show(_dialogue_panel, _dialogue_label, text, _dialogue_hold_seconds(fitted), WIEvents.UI_DIALOGUE_RENDERED, fitted, true)
 	# CONTRACT: audio releases standalone-line duck on the renderer's actual close.
@@ -684,7 +709,38 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 			await tree.create_timer(hold).timeout
 			if not is_inside_tree():
 				return
+	await _await_capture_release()
+	if not is_inside_tree():
+		return
 	panel.hide()
+
+
+## GH#324, the verification-boundary half. The QA hold above is a wall-clock
+## floor (`QA_TOAST_HOLD_SECONDS`) picked so a panel would outlive
+## `SCREENSHOT_SETTLE_SECONDS` -- arithmetic that #119's tween drain
+## invalidated: a capture now settles 0.15s PLUS up to 3s of live-tween drain,
+## and the boot music crossfade (1.0s) or a bark's own music duck (0.2s) pushed
+## the capture past the floor. The panel had already retired, so every windowed
+## shot of a line served near `world_ready` caught an empty slot while
+## `ui_dialogue_rendered` reported the full string. A bigger floor is the same
+## arithmetic one round later; instead the panel now simply does not retire
+## while the driver has evidence capture in flight, which makes
+## "capture never races a transient panel's retirement" structural.
+## Bounded (a wedged capture cannot strand a panel on screen forever) and
+## QA-only by construction: `_capture_depth` is never raised in headless (both
+## capture paths return first) and there is no TestDriver in a real session, so
+## unattended play and every headless canonical are byte-identical to before.
+func _await_capture_release() -> void:
+	if TestDriver == null or not TestDriver.active():
+		return
+	var deadline_msec := Time.get_ticks_msec() + int(CAPTURE_HOLD_CEILING_SECONDS * 1000.0)
+	while TestDriver.capture_in_flight() and Time.get_ticks_msec() < deadline_msec:
+		var tree := get_tree()
+		if tree == null:
+			return
+		await tree.process_frame
+		if not is_inside_tree():
+			return
 
 
 func _wrapped_line_count(label: Label, text: String, width: float) -> int:
