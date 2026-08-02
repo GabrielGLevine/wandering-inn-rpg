@@ -325,7 +325,7 @@ func use_skill(skill_id: String, target_id: String) -> bool:
 	var skill: Dictionary = skills.get(skill_id, {})
 	if not (skill.get(WIKeys.CONTEXTS, []) as Array).has("combat"):
 		return false
-	if bool(skill.get(WIKeys.ONCE_PER_FIGHT, false)) and (used_skills_tally.get(actor_id, {}) as Dictionary).has(skill_id):
+	if skill_spent(actor_id, skill_id):
 		return false
 	if int(a.get(WIKeys.MP, 0)) < int(skill.get(WIKeys.MP_COST, 0)):
 		return false
@@ -334,6 +334,18 @@ func use_skill(skill_id: String, target_id: String) -> bool:
 	if int((skill.get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.WINDUP_ROUNDS, 0)) > 0:
 		return WISkillEffects.declare_windup(self, actor_id, target_id, skill)
 	return WISkillEffects.resolve_active(self, actor_id, target_id, skill)
+
+
+## GH#334 ruling 14: THE ONE reader of the once-per-fight refusal, shared by the
+## sim's own `use_skill` gate above and by the HUD's affordability test through
+## `WICombatView.skill_spent`. It used to exist only inside `use_skill`, so the
+## bar drew a spent skill exactly as bright as an affordable one and the press
+## simply did nothing -- indistinguishable, from the player's seat, from an
+## input that had been dropped.
+func skill_spent(actor_id: String, skill_id: String) -> bool:
+	if not bool((skills.get(skill_id, {}) as Dictionary).get(WIKeys.ONCE_PER_FIGHT, false)):
+		return false
+	return (used_skills_tally.get(actor_id, {}) as Dictionary).has(skill_id)
 
 
 func effective_ap_cost(c: Dictionary, skill: Dictionary) -> int:
@@ -384,14 +396,43 @@ func _apply_damage_reduction(t: Dictionary, amount: int) -> int:
 	return maxi(1, amount - reduction)
 
 
+## GH#334 ruling 12: WHICH Skill absorbed. The gate and the credit used to be
+## the literal id "mana_shield", so [Ice Wall] -- an Ice Mage L14 capstone whose
+## whole effect block IS `mana_shield` -- could never be the thing the game said
+## had acted, and never entered `used_skills`: its authored description stayed
+## unreachable while a phantom [Mana Shield] took the credit in the save.
+##
+## FIRST match in kit order, deliberately: `WIProgression.granted_skills` lists a
+## class's OWN grants ahead of its inherited ones, so an ice_mage (who holds both,
+## mana_shield by inheritance from [Mage] L2) credits the capstone, while a plain
+## mage -- and every enemy that carries the base skill by name -- credits
+## mana_shield exactly as before. Reading the effect TYPE rather than the id also
+## closes the latent hole where a future absorber-only holder got no shield at
+## all. "" = no absorber held; the absorb math itself is untouched.
+func _absorber_skill_id(t: Dictionary) -> String:
+	for raw: Variant in (t[WIKeys.SKILLS] as Array):
+		var sid := String(raw)
+		if String(((skills.get(sid, {}) as Dictionary).get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.TYPE, "")) == "mana_shield":
+			return sid
+	return ""
+
+
 func _absorb_with_mana_shield(t: Dictionary, amount: int) -> int:
-	if amount <= 0 or not (t[WIKeys.SKILLS] as Array).has("mana_shield"):
+	if amount <= 0:
+		return amount
+	var absorber := _absorber_skill_id(t)
+	if absorber == "":
 		return amount
 	var absorbed := mini(int(t.get(WIKeys.MP, 0)), amount)
 	if absorbed <= 0:
 		return amount
 	t[WIKeys.MP] = int(t[WIKeys.MP]) - absorbed
-	_emit(WIEvents.REACTION_TRIGGERED, {"id": String(t[WIKeys.ID]), "skill": "mana_shield", "absorbed": absorbed})
+	# `family` names the MECHANISM the presentation layer keys its shield tell on
+	# (combat_hud's feed line, combat_screen's flash, combat_playback's beat), so
+	# those three stay one string comparison instead of a growing id list as more
+	# absorbers ship -- while `skill` stays the id, which is what the credit,
+	# the save, and the journal reveal need.
+	_emit(WIEvents.REACTION_TRIGGERED, {"id": String(t[WIKeys.ID]), "skill": absorber, "family": "mana_shield", "absorbed": absorbed})
 	_emit(WIEvents.MP_CHANGED, {"id": String(t[WIKeys.ID]), "mp": t[WIKeys.MP]})
 	return amount - absorbed
 

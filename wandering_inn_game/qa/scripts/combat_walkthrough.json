@@ -85,6 +85,8 @@
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "current_map", "equals": "street" },
-  { "_comment": "Issue #60 item 1: the first-combat hint fired exactly once across BOTH fights this run -- it's a one-time-per-sitting disclosure, not a per-encounter tutor line.", "action": "assert_event_count", "type": "ui_combat_hint_rendered", "count": 1 }
+  { "_comment": "GH#334 notes 19/28: TWO first-combat hints now, and both are one-time-per-sitting -- the count is the proof they are disclosures, not per-encounter tutor lines (two fights run here). The second is the HP half of the per-fight-pools model, which fires for EVERY build: the MP line correctly waits for max_mp > 0, so this Warrior used to be told nothing at all about a model the game shows them HP bars for and announces '+N Max HP' at every level. mage_invisibility_loop pins the caster's three.", "action": "assert_event_count", "type": "ui_combat_hint_rendered", "count": 2 },
+  { "action": "assert_event_logged", "type": "ui_combat_hint_rendered", "payload_contains": { "text": "[You come to every fight whole. Wounds do not follow you out of one.]" } },
+  { "action": "assert_event_absent", "type": "ui_combat_hint_rendered", "payload_contains": { "text": "[Mana gathers fresh at every battle\u0027s start.]" } }
  ]
 }

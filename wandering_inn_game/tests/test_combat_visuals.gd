@@ -362,6 +362,55 @@ func _init() -> void:
 	assert(String(loaded_slots[0]["key_hint"]) == "1" and String(loaded_slots[1]["key_hint"]) == "2", "Attack/Dash key hints stay 1/2 regardless of the loadout")
 	assert(String(loaded_slots[2]["key_hint"]) == "3" and String(loaded_slots[3]["key_hint"]) == "4", "kit slots renumber from 3 in the FILTERED order")
 
+	# GH#334 ruling 14: the once-per-fight HUD hole and the narrowed tooltip
+	# record. Both are defects in their own right and both live on this bar.
+	var opf_pc_cfg: Dictionary = (_combatant_config(k2b_combatants, "pc") as Dictionary).duplicate(true)
+	opf_pc_cfg["skills"] = ["sudden_strike", "power_strike"]
+	var opf_combat := WICombat.new(k2b_arena, [opf_pc_cfg, (_combatant_config(k2b_combatants, "goblin_raider") as Dictionary).duplicate(true)], k2b_skills, func(_t: String, _p: Dictionary) -> void: pass, 9)
+	opf_combat.begin()
+	opf_combat.active_index = opf_combat.turn_order.find("pc")
+	opf_combat._start_turn()
+	opf_combat.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
+	opf_combat.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
+	opf_combat.combatants["pc"][WIKeys.AP] = 8
+	var opf_view := WICombatView.new(opf_combat)
+	var opf_hud: RefCounted = hud_script.new(null, null, null)
+	var opf_pc: Dictionary = opf_view.combatant("pc")
+
+	# TOOLTIP: the slot record was NARROWER than the formatter it feeds --
+	# `once_per_fight` was simply never carried, so the one restriction a player
+	# most needs before spending a turn was the one clause the line could not say.
+	var opf_slots: Array = opf_hud.rebuild_slots(opf_view, "pc")
+	var opf_slot: Dictionary = {}
+	for s: Dictionary in opf_slots:
+		if String(s.get("id", "")) == "sudden_strike":
+			opf_slot = s
+	assert(not opf_slot.is_empty(), "fixture: sudden_strike is on the bar")
+	assert(bool(opf_slot.get("once_per_fight", false)),
+		"the slot record must carry once_per_fight -- WIEffectText generates its clause from that key")
+	var opf_rendered: Array = opf_hud.render_bar_slots(opf_view, opf_slots)
+	var opf_line := ""
+	for d: Dictionary in opf_rendered:
+		if String(d.get("id", "")) == "sudden_strike":
+			opf_line = opf_hud._slot_info_line(d)
+	assert(opf_line.contains("Once per fight."),
+		"the tooltip must reach the generated once-per-fight clause, got: %s" % opf_line)
+
+	# HUD HOLE: affordable has to mean "the sim will accept this press".
+	assert(opf_hud.skill_affordable(opf_pc, "sudden_strike", opf_view),
+		"unspent and paid for: affordable")
+	assert(opf_combat.use_skill("sudden_strike", "goblin_raider"), "fixture: the one real cast lands")
+	var opf_pc_after: Dictionary = opf_view.combatant("pc")
+	assert(int(opf_pc_after[WIKeys.AP]) >= 2, "fixture: AP headroom remains, so AP is not what refuses the repeat")
+	assert(not opf_hud.skill_affordable(opf_pc_after, "sudden_strike", opf_view),
+		"a spent once-per-fight skill must read UNAFFORDABLE -- it drew at full brightness and then did nothing when pressed")
+	assert(opf_hud.skill_affordable(opf_pc_after, "power_strike", opf_view),
+		"and the rest of the bar is untouched by the new term")
+	var opf_dimmed: Array = opf_hud.render_bar_slots(opf_view, opf_slots)
+	for d2: Dictionary in opf_dimmed:
+		if String(d2.get("id", "")) == "sudden_strike":
+			assert(not bool(d2["affordable"]), "the rendered slot the hotbar dims on carries the same verdict")
+
 	var world_labels_source := FileAccess.get_file_as_string("res://src/ui/world_labels.gd")
 	assert(not world_labels_source.is_empty(), "world_labels.gd must exist")
 	var world_labels_script := load("res://src/ui/world_labels.gd") as Script

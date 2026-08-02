@@ -77,7 +77,11 @@ func _capture_event_ui(type: String, payload: Dictionary) -> Dictionary:
 			ui["stats"] = _capture_combatant_stats(combat, [String(payload.get("actor", ""))])
 		WIEvents.REACTION_TRIGGERED:
 			ui["stats"] = _capture_combatant_stats(combat, [String(payload.get("id", ""))])
-			if String(payload.get("skill", "")) == "mana_shield":
+			# GH#334 ruling 12: keyed on the reaction FAMILY, not the base skill id
+			# -- `skill` now names whichever absorber actually acted ([Ice Wall] for
+			# an Ice Mage), so an id comparison silently dropped the shield tell for
+			# every holder of a specialised absorber.
+			if String(payload.get("family", payload.get("skill", ""))) == "mana_shield":
 				var reactor_cell: Variant = _combatant_cell(combat, String(payload["id"]))
 				ui["flash_cells"] = _cells_payload([reactor_cell] if reactor_cell is Vector2i else [])
 				ui["flash_color"] = _screen.SHIELD_FLASH

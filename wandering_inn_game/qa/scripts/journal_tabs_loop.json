@@ -36,6 +36,13 @@
   { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "history" }, "timeout_sec": 5 },
 
   { "action": "press", "name": "journal" },
-  { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 }
+  { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },
+
+  { "_comment": "== GH#334 note 2: ESC CLOSES THE JOURNAL == before this wave `cancel` did literally nothing here (journal.gd never handled it) and pause_menu refuses to open behind an open journal, so the universal back key was swallowed with no feedback -- the one panel in the game that was the exception. Re-open, then press `cancel`: the SAME ui_journal_hidden the `journal` toggle emits fires, proving the close routes through _close() rather than a bare hide. The re-open's payload also pins the rendered close-affordance row (`close_hint`, composed device-aware off WIInputHints.label -- the driver injects key events, so the kb column governs).", "action": "press", "name": "journal" },
+  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "quests", "close_hint": "Esc or J to close" }, "timeout_sec": 5 },
+  { "action": "press", "name": "cancel" },
+  { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },
+  { "_comment": "The CONSUME proof: `cancel` was set_input_as_handled in the journal, so nothing downstream ever saw it -- the pause menu never opened at any point in this run.", "action": "assert_event_count", "type": "ui_pause_shown", "count": 0 },
+  { "action": "screenshot", "name": "04_esc_closed" }
  ]
 }

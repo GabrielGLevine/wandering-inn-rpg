@@ -90,6 +90,13 @@ func effective_ap_cost(id: String, skill_id: String) -> int:
 	return _combat.effective_ap_cost(_combat.combatants[id], _combat.skills[skill_id])
 
 
+## GH#334 ruling 14: one-line passthrough to the sim's own once-per-fight
+## refusal, so `combat_hud.skill_affordable` tests the SAME condition
+## `WICombat.use_skill` refuses on rather than a second copy of it.
+func skill_spent(id: String, skill_id: String) -> bool:
+	return _combat.skill_spent(id, skill_id)
+
+
 func line_cells(origin: Vector2i, dir: Vector2i, length: int) -> Array:
 	return _combat.line_cells(origin, dir, length)
 

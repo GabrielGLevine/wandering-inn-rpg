@@ -59,8 +59,8 @@ const EXPECTED_ITEMS := {
 	"hunting_bow": ["+1 damage on ranged hits", "Range 4", "Bow kit replaces other weapon Skills in combat", "Worth 18 gold"],
 	"trap_kit": ["Worth 3 gold"],
 	"warding_salt_pinch": ["Worth 7 gold"],
-	"mending_draught": ["Heals 8 HP (single use)", "Worth 10 gold"],
-	"remedy_draught": ["Heals 8 HP (single use)", "Worth 10 gold"],
+	"mending_draught": ["Heals 8 HP in combat (single use)", "Worth 10 gold"],
+	"remedy_draught": ["Heals 8 HP in combat (single use)", "Worth 10 gold"],
 	# 2026-08-02 (GH#334 ruling 7): both lost their `price` key -- a meal is
 	# served or eaten, never merchandise (hot_meal's precedent) -- so the
 	# generated "Worth N gold" row is gone with it.
@@ -243,6 +243,7 @@ func _init() -> void:
 	_test_field_skills_exact()
 	_test_status_exact()
 	_test_tripwires()
+	_test_pending_meal_line()
 	_test_forbidden_vocab()
 	print("PASS: WIEffectText generates every shipped line in visible currency only")
 	quit(0)
@@ -473,3 +474,35 @@ func _test_forbidden_vocab() -> void:
 	for line: String in lines:
 		_check(attr.search(line) == null, "forbidden attribute token in generated line: %s" % line)
 		_check(not line.contains("%"), "forbidden percent-toward token in generated line: %s" % line)
+
+
+## GH#334 note 28 item 3 + ruling 5. The meal-use toast restates the payload the
+## next fight will actually apply, composed off the LIVE `pending_meal` dict --
+## so it must share the item card's "Next fight:" phrasebook, not carry a second
+## one that drifts the first time either is edited.
+func _test_pending_meal_line() -> void:
+	_check(WIEffectText.pending_meal_line({}) == "", "an empty armed dict phrases nothing")
+	_check(
+		WIEffectText.pending_meal_line({"hp_mod": 2}) == "+2 HP in your next fight.",
+		"single-mod meal line tripwire"
+	)
+	_check(
+		WIEffectText.pending_meal_line({"damage_mod": 1, "hp_mod": 2, "damage_reduction": 3})
+			== "+1 damage, +2 HP, reduces hits by 3 in your next fight.",
+		"merged meal line keeps card order (damage, HP, reduction) and the card's own wording"
+	)
+	# The card and the toast read the same bits, in the same order, from the same
+	# function -- this is the drift tripwire for that sharing.
+	_check(
+		WIEffectText.next_fight_bits({"damage_mod": 1, "hp_mod": 2})
+			== WIEffectText.next_fight_bits({"hp_mod": 2, "damage_mod": 1}),
+		"bit ORDER is the formatter's, never the incoming dict's key order"
+	)
+	_check(
+		WIEffectText.item_effect_lines({"use_effect": {"next_fight": {"damage_mod": 1, "hp_mod": 2}}})
+			== ["Next fight: +1 damage, +2 HP (single use)"],
+		"the item card still composes from the shared bits"
+	)
+	# Non-positive mods are not phrased at all (nothing in data authors them
+	# today; a future negative would need its own deliberate wording).
+	_check(WIEffectText.pending_meal_line({"hp_mod": 0}) == "", "a zero mod phrases nothing")

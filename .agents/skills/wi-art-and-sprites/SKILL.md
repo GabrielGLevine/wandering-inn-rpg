@@ -242,3 +242,17 @@ if you forgot transparent. Integrate as a CUSTOM-HD-like family via
 pixflux 64px stays the tool for SMALL props/icons. Licensing: gpt-image
 outputs are user-owned per OpenAI terms — BUNDLE-TIER until the public-repo
 redistribution posture is verified (two-tier policy).
+
+## Tint is NOT disambiguation (user directive 2026-08-02)
+A retint of the same sprite may satisfy a checklist ("the two props
+differ") but players do not REGISTER shade variants as separate things —
+same silhouette = same thing, full stop. Therefore:
+- Retints are for cosmetic variety WITHIN one kind (crowd extras, pot
+  colors as decoration) — never to signal a functional or identity
+  difference (the working cauldron vs decor pots, a captain vs their
+  soldiers, a magic door vs a plain one).
+- Anything the player must TELL APART gets a distinct silhouette or
+  distinct art (bespoke gen via the hero-art pipeline is cheap now).
+- Supersedes v0.16.1 ruling (7) tint-only cauldron differentiation — the
+  bespoke cauldron/kettle art is DUE, not deferred. Audit standing tint
+  sites (pot tints, blade banding) at the next art pass.

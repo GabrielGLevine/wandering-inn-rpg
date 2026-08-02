@@ -139,6 +139,11 @@ var _combat_active := false
 ## Whether the toast currently on screen is housekeeping -- read by `_show` to
 ## decide whether TOAST_QUEUE_HOLD_CAP_SECONDS applies.
 var _showing_housekeeping := false
+## GH#334 note 7: whether the toast currently on screen carries `protected` --
+## read by the PLAYER_MOVED arm to leave it alone. Instance state rather than a
+## queue peek, for the same reason `_showing_housekeeping` is: the entry has
+## already been popped by the time it is showing.
+var _showing_protected := false
 var _toast_draining := false
 ## Open full-screen modals, keyed by their own SHOWN event id. A SET rather than
 ## a counter so a doubled show/hide pair cannot strand the drain paused forever
@@ -334,7 +339,12 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 		WIEvents.TOAST:
 			# `housekeeping` is the emitter's own claim: save/settings chrome
 			# marks itself, everything else is authored copy by default.
-			_queue_toast(String(payload["text"]), true, bool(payload.get("housekeeping", false)))
+			# GH#334 note 7: `sticky` -- the SIM-side "this line must not be
+			# lost" marker quest beats and the Watch-runner pointer already
+			# carry -- now also buys exemption from the MOVEMENT dismiss. See
+			# `_queue_toast`'s `protected` and the PLAYER_MOVED arm below.
+			_queue_toast(String(payload["text"]), true, bool(payload.get("housekeeping", false)),
+				bool(payload.get("sticky", false)))
 			if _first_pickup_hint_pending:
 				_first_pickup_hint_pending = false
 				_first_pickup_hint_shown = true
@@ -385,7 +395,17 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			_clear_dialogue_line()
 			_defer_toast_display()
 		WIEvents.PLAYER_MOVED:
-			dismiss_current_toast_early()
+			# GH#334 note 7: a PROTECTED toast survives this. Movement is the
+			# ordinary "I have read it, move on" signal for a toast about
+			# somewhere the player was standing -- but the delivery arrival beat
+			# is the one completion that only ever fires FROM movement, and a
+			# player holding a direction (the normal way you approach an NPC)
+			# took the next step ~0.12s later and cancelled the only mark the
+			# moment had. The exemption is scoped to THIS dismiss: a map change,
+			# a conversation and an interact all still cut a protected toast
+			# short, because each of those is a new thing to read.
+			if not _showing_protected:
+				dismiss_current_toast_early()
 		WIEvents.UI_JOURNAL_SHOWN, WIEvents.UI_INVENTORY_SHOWN, \
 		WIEvents.UI_PAUSE_SHOWN, WIEvents.UI_SETTINGS_SHOWN:
 			_open_modals[type] = true
@@ -510,8 +530,11 @@ func _resize_dialogue_panel() -> void:
 ## FIFO within each class.
 ## (2) HOLD: only housekeeping entries are clipped by
 ## TOAST_QUEUE_HOLD_CAP_SECONDS while others wait.
-func _queue_toast(text: String, record := true, housekeeping := false) -> void:
-	var entry := {"text": text, "record": record, "housekeeping": housekeeping}
+## (3) MOVEMENT DISMISS: `protected` entries (GH#334 note 7 -- the sim's own
+## `sticky` marker) keep their full hold across PLAYER_MOVED. Nothing else about
+## them differs: ordering, recording and the hold cap are untouched.
+func _queue_toast(text: String, record := true, housekeeping := false, protected := false) -> void:
+	var entry := {"text": text, "record": record, "housekeeping": housekeeping, "protected": protected}
 	if _combat_active:
 		# The board is up: the feed speaks for the fight (combat_screen mirrors
 		# authored text into it, which is also what puts it in Recent Messages),
@@ -569,9 +592,11 @@ func _drain_toasts() -> void:
 		var entry: Dictionary = _toast_queue.pop_front()
 		var text := String(entry["text"])
 		_showing_housekeeping = bool(entry.get("housekeeping", false))
+		_showing_protected = bool(entry.get("protected", false))
 		if bool(entry.get("record", true)):
 			record_message(text)
 		await _show(_toast_panel, _toast_label, text, _toast_seconds(text), WIEvents.UI_TOAST_RENDERED, "", true, true)
+		_showing_protected = false
 	_toast_draining = false
 
 
