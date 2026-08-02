@@ -60,6 +60,39 @@ block): the Region Depth wave, 778 frozen ids, one-session end-to-end.
 
 ## 🎯 NEXT ACTIONS
 
+0. **v0.17 DISPATCH IS RESERVED FOR A FRESH SESSION (user directive
+   2026-08-02).** This session finishes wave-2 ONLY (train → close →
+   tag decision) and STOPS. The fresh session's dispatch prompt is
+   recorded below; art candidates parked durably at
+   potential_assets/codex_pixellab_2026-08-02/ (gitignored, README
+   inside maps candidate→target).
+
+### v0.17 dispatch prompt (paste into the fresh session)
+
+> Dispatch v0.17 per docs/ROADMAP.md's ratified six-lane plan. First:
+> wi-start-here read order, confirm wave-2/#334 is CLOSED and tagged
+> (if residuals exist, fold them into the matching lane's brief), run
+> wi-usage-guard. Then dispatch ALL SIX LANES CONCURRENTLY as worktree
+> lanes with the exact file ownership printed in the roadmap — no
+> cross-lane waits; intra-lane order as written (L1 #336→#338;
+> L3 #324→#335→grading+motion; L4 drain+tint-audit→palette). Design
+> authorities: docs/design/2026-08-02-{skill-panel,quest-clarity,
+> skill-cooldown,visual-next-level}-spec/.md + issues #335-#338
+> (#323/#332 ride L5, #339 singles ride any lane). Each lane runs
+> impl → traced adversarial review → fix per wi-running-the-machine;
+> briefs carry file:line evidence from the specs + method hints.
+> Controller owns PRs + the anchored merge train per the roadmap's
+> train notes (L3 lint vs siblings pre-merge; L2 sole balance
+> authority; L4 palette lands LAST; checks table read as its own
+> step; composed census + full 30-suite bar). Close: windowed
+> machine-playtest, VISUAL-LOG verification, id-freeze regen step-0,
+> HANDOFF/CHOICE-LOG/ledger updates, tag v0.17.0. Wave autonomy
+> applies: decide + log, surface at close. Art lane uses the banked
+> candidates in potential_assets/codex_pixellab_2026-08-02/ (README
+> maps candidate→target) + the wi-art-and-sprites hero-art pipeline
+> for anything missing; tint is NOT disambiguation.
+
+
 1. ~~Tag v0.16.0~~ — DONE (runs 30398347500/30398347409 green).
 2. ~~#325~~ — SHIPPED in v0.16.1 (#327's toast spec; issue closable).
 3. **#324 world_ready ~1.5s dead-render window** (global, PRE-EXISTING;
