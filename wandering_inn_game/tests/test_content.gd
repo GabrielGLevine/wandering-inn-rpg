@@ -56,6 +56,64 @@ const ACT_OPENING_OUTCOME_MARKERS := [
 ]
 
 
+## The Horns of Hammerad are FOUR: Ceria, Yvlon, Ksmvr, Pisces. The count has
+## been re-cut in both directions once already, so both halves are pinned here.
+## RETIRED FORMS are matched against every player-facing string in every
+## dialogue graph and acts.json (case-insensitive substring); ANCHORS pin the
+## three lines that carry the count, so silently deleting one reds as loudly as
+## re-cutting it. Pisces starting in Liscor independent of his team is a
+## LOCATION fact, not a membership one -- copy may place him away from them,
+## never off the roster.
+const L5_HORNS_RETIRED_COUNT_FORMS := [
+	"three of us, one of you",
+	"third member of the horns",
+	"three adventurers",
+]
+const L5_HORNS_FOUR_MEMBER_ANCHORS := [
+	["ceria_intro", "hub", "four of us on the roster"],
+	["ksmvr_intro", "hub", "there are four of us"],
+	["pisces_magic", "horns_bridge", "horns of hammerad"],
+	["ceria_dig_camp", "camp_fourth", "four names on the roster"],
+]
+
+
+func _validate_horns_four_member_reading(graphs: Dictionary, acts: Dictionary) -> void:
+	var corpus: Array = []
+	for graph_id: String in graphs:
+		for node_id: String in (graphs[graph_id] as Dictionary).get("nodes", {}):
+			var node: Dictionary = graphs[graph_id]["nodes"][node_id]
+			var label := "%s/%s" % [graph_id, node_id]
+			corpus.append([label, String(node.get("text", ""))])
+			for variant: Dictionary in node.get("text_variants", []):
+				corpus.append([label + " variant", String(variant.get("text", ""))])
+			for option: Dictionary in node.get("options", []):
+				corpus.append([label + " option", String(option.get("text", ""))])
+	for act: Dictionary in acts.get("acts", []):
+		for beat: Dictionary in act.get("beats", []):
+			var label := "acts.json %s/%s" % [String(act.get("id", "?")), String(beat.get("id", "?"))]
+			corpus.append([label, String(beat.get("text", ""))])
+			corpus.append([label + " opening", String(beat.get("opening", ""))])
+	for row: Array in corpus:
+		var lowered := String(row[1]).to_lower()
+		for form: String in L5_HORNS_RETIRED_COUNT_FORMS:
+			_check(not lowered.contains(form), "%s: retired three-member Horns form '%s' -- the Horns are four (Ceria, Yvlon, Ksmvr, Pisces)" % [String(row[0]), form])
+
+	for anchor: Array in L5_HORNS_FOUR_MEMBER_ANCHORS:
+		var graph_id := String(anchor[0])
+		var node_id := String(anchor[1])
+		var needle := String(anchor[2])
+		if not _require(graphs.has(graph_id), "four-member anchor graph %s is missing" % graph_id):
+			continue
+		var nodes: Dictionary = (graphs[graph_id] as Dictionary).get("nodes", {})
+		if not _require(nodes.has(node_id), "four-member anchor node %s/%s is missing" % [graph_id, node_id]):
+			continue
+		var node: Dictionary = nodes[node_id]
+		var haystack := String(node.get("text", "")).to_lower()
+		for variant: Dictionary in node.get("text_variants", []):
+			haystack += " " + String(variant.get("text", "")).to_lower()
+		_check(haystack.contains(needle), "%s/%s no longer carries the four-member anchor '%s'" % [graph_id, node_id, needle])
+
+
 func _validate_act_openings(acts: Dictionary) -> void:
 	for act: Dictionary in acts.get("acts", []):
 		for raw_beat: Variant in act.get("beats", []):
@@ -344,6 +402,7 @@ func _init() -> void:
 	_validate_place_naming_shape_cases()
 	_validate_tutor_line_help_consistency()
 	_validate_act_openings(_load_json("res://data/acts.json"))
+	_validate_horns_four_member_reading(graphs, _load_json("res://data/acts.json"))
 	var shipped_accomplishments: Dictionary = {}
 	for raw_id: Variant in _load_json("res://data/shipped_ids.json").get("accomplishments", []):
 		shipped_accomplishments[String(raw_id)] = true

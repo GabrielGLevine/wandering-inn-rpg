@@ -2,7 +2,9 @@
 	"_comment": "Pisces's INN register. Attached ONLY to pisces_inn_guest; his street hub (pisces_magic) never rides along, so the magic tutoring, the necromancy defence and EVERY door consult stay home-only -- reinforced now that door_mounting.json exists on this same map: the guest row must never touch door mechanics. A magic question is DEFLECTED in the greet, never answered. Serve mirrors selys_inn/patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter. Voice per docs/design/character-profiles.md: haughty THAWING.",
 	"start": "greet",
 	"nodes": {
-		"greet": { "speaker": "Pisces", "text": "You are the one with the trays. I am not here for the cuisine, you understand, nor to discuss my work over it. The fire is adequate. My rooms are not.", "options": [
+		"greet": { "speaker": "Pisces", "text": "You are the one with the trays. I am not here for the cuisine, you understand, nor to discuss my work over it. The fire is adequate. My rooms are not.", "text_variants": [
+			{ "_comment": "#349 residence arm: once the Horns move into the corner (seal_kept_reported), his own reason for being in this room is THEM, not the stew. Stays REGISTER-PURE -- no magic, no door mechanics, exactly as the file contract requires.", "requires": { "accomplishment": { "seal_kept_reported": 1 } }, "text": "My team have annexed the corner by the fire and appear to consider the matter settled. I am here to observe the decline at close range. The fire remains adequate. My rooms remain not." }
+		], "options": [
 			{ "text": "Bring him a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:pisces_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:pisces_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"Not here for the food. Noted.\"", "goto": "offduty" },
 			{ "text": "\"Enjoy the adequate fire.\"", "end": true }

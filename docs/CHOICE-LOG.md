@@ -2130,3 +2130,25 @@ by controller ruling — the plan was the defect, not the implementation.
   Hunted as an easter egg — an EXPLICIT user-granted exception to the
   Vol 7 spoiler cutoff, names only; exact names wiki-verified before
   authoring, never invented.
+
+<!-- v017-L5 -->
+- **#349 dig-camp Pisces is NAMED, not FIELDED (2026-08-02, L5 lane call)**:
+  the four-member reading needed the camp to account for its fourth. A real
+  `pisces_dig_camp` presence row was rejected: his street hub (`liscor/street`
+  `pisces`) is UNCONDITIONAL and six canonicals pin it, so a camp row would
+  have shipped a fresh two-places-at-once for the whole dig window — the exact
+  defect #349's own scope line asks to reconcile. Retiring the street hub for
+  that window is cross-canonical (mage arc + the whole door chain) and is not a
+  copy call. SHIPPED instead: `ceria_dig_camp`'s new `camp_fourth` node says
+  who the fourth is and where he is, which the camp props already counted
+  (rations for four, four names on the pinned sheets, four bedroll squares in
+  the remnant), and matches the user's own justification — he is the player's
+  Door consultant first. DEFERRED, needs controller: an actual camp presence
+  row + the street-hub window it requires.
+- **#349 post-seal residence stays a GUEST seat (2026-08-02, L5 lane call)**:
+  Ceria/Yvlon/Ksmvr return unconditionally at `door_mounted`; Pisces returns
+  through the `guest` rotation. Promoting him to an unconditional inn row would
+  stand him permanently in two rooms (the street hub again). The rotation is
+  the honest reading of a Horn whose post is in the city — reconciled in COPY
+  instead, via a `seal_kept_reported` text_variant on `pisces_inn`'s greet
+  where the corner his team annexed is the reason he is in the room.
