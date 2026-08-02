@@ -347,6 +347,12 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = [], usab
 			"icon": String(sk.get("icon", "")), "key_hint": str(number),
 			"description": String(sk.get("description", "")),
 			"effect": sk.get("effect", {}),
+			# GH#334 ruling 14: the slot record was NARROWER than the formatter
+			# it feeds. `WIEffectText.skill_effect_lines` generates the "Once per
+			# fight." clause from this key, and it was simply never carried here
+			# -- so the one restriction a player most needs before spending a
+			# turn on the skill was the one clause the tooltip could not say.
+			"once_per_fight": bool(sk.get("once_per_fight", false)),
 		})
 		number += 1
 	var usable_by_id: Dictionary = {}
@@ -409,10 +415,17 @@ func bar_action_affordable(action: String, c: Dictionary) -> bool:
 			return true
 
 
+## GH#334 ruling 14: "affordable" has to mean "the sim will accept this press".
+## It tested only MP and AP, so a once-per-fight skill already spent this fight
+## drew at full brightness and then did nothing when pressed -- from the player's
+## seat, identical to a dropped input. The spent term is read through the view's
+## passthrough to `WICombat.skill_spent`, the same function `use_skill` refuses
+## on, so the bar and the sim can never disagree about it.
 func skill_affordable(c: Dictionary, skill_id: String, view: RefCounted) -> bool:
 	var skill: Dictionary = view.skill(skill_id)
 	return int(c.get("mp", 0)) >= int(skill.get("mp_cost", 0)) \
-			and int(c["ap"]) >= view.effective_ap_cost(view.active_id(), skill_id)
+			and int(c["ap"]) >= view.effective_ap_cost(view.active_id(), skill_id) \
+			and not bool(view.skill_spent(view.active_id(), skill_id))
 
 
 ## Issue #87 (skip affordance): the EXISTING per-turn AI-playback skip
@@ -528,10 +541,15 @@ func _slot_info_line(d: Dictionary) -> String:
 		"skill":
 			var skill_name := String(d.get("label", ""))
 			var desc := String(d.get("description", ""))
+			# GH#334 ruling 14: `once_per_fight` joins the record. Every key the
+			# formatter reads must be present here or the clause it generates is
+			# silently dropped -- widen BOTH this dict and `rebuild_slots`' slot
+			# record together when a new one lands.
 			var record := {
 				"ap_cost": d.get("ap_cost", 0),
 				"mp_cost": d.get("mp_cost", 0),
 				"effect": d.get("effect", {}),
+				"once_per_fight": d.get("once_per_fight", false),
 			}
 			var effect_lines := WIEffectText.skill_effect_lines(record)
 			if desc == "":
@@ -636,7 +654,10 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, vi
 			if combat == null or not combat.combatants.has(String(payload["id"])):
 				return ""
 			var reactor_name := _display_name(combat, view, String(payload["id"]))
-			if String(payload["skill"]) == "mana_shield":
+			# GH#334 ruling 12: the reaction FAMILY, not the base id -- an Ice Mage's
+			# absorb credits [Ice Wall] and must still read as a shield drinking the
+			# blow, not fall through to the generic "answers with" reaction line.
+			if String(payload.get("family", payload.get("skill", ""))) == "mana_shield":
 				line = "%s's shield drinks the blow (%d)." % [reactor_name, int(payload["absorbed"])]
 			else:
 				if not combat.skills.has(String(payload["skill"])):

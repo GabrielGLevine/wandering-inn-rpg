@@ -618,7 +618,9 @@ func _play_event_visual(type: String, payload: Dictionary) -> void:
 				if int((resolved_skill.get("effect", {}) as Dictionary).get("windup_rounds", 0)) > 0:
 					_board_renderer.expire_terrain("windup_danger", _ai_playback._cells_from_payload(payload.get("cells", [])))
 		WIEvents.REACTION_TRIGGERED:
-			if String(payload.get("skill", "")) == "mana_shield":
+			# GH#334 ruling 12: the reaction FAMILY, not the base id -- see
+			# wi_combat.gd's `_absorber_skill_id`.
+			if String(payload.get("family", payload.get("skill", ""))) == "mana_shield":
 				_flash_cells(_ai_playback._cells_from_payload(ui.get("flash_cells", [])), SHIELD_FLASH)
 		WIEvents.TERRAIN_ADDED:
 			# No enqueue-time `_ui` capture needed -- `cells`/`kind` are

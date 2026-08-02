@@ -621,6 +621,52 @@ func _init() -> void:
 	assert(int(c28.combatants["pc"][WIKeys.HP]) == hp_before_inert - 5, "shield inert at 0 MP: full damage to HP")
 	assert(_count("reaction_triggered") == 0, "no reaction fires once MP is empty")
 
+	# GH#334 ruling 12: WHICH Skill absorbed. The gate and the credit were both
+	# the literal id "mana_shield", so [Ice Wall] -- an Ice Mage L14 capstone
+	# whose entire effect block IS `mana_shield` -- could never be the thing the
+	# game said had acted, and never entered `used_skills`: its authored
+	# description stayed unreachable while a phantom [Mana Shield] took the
+	# credit in the save. The absorber is now the FIRST held skill whose effect
+	# TYPE is mana_shield, which for a real ice_mage kit (own grants ahead of
+	# inherited ones) is the capstone and for everyone else is unchanged.
+	_events.clear()
+	var c28b := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["ice_wall", "mana_shield"]}})
+	c28b.combatants["pc"][WIKeys.MP] = 6
+	var hp28b: int = int(c28b.combatants["pc"][WIKeys.HP])
+	c28b.apply_damage("pc", 3, "goblin_raider", true)
+	assert(int(c28b.combatants["pc"][WIKeys.MP]) == 3 and int(c28b.combatants["pc"][WIKeys.HP]) == hp28b,
+		"the absorb math is untouched -- only the credit moved")
+	var ice_payload: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "reaction_triggered":
+			ice_payload = e["payload"]
+	assert(String(ice_payload.get("skill", "")) == "ice_wall",
+		"the ACTING skill is credited, not the base id it shares an effect type with")
+	assert(String(ice_payload.get("family", "")) == "mana_shield",
+		"the shield FAMILY still rides the payload -- the three presentation sites key their shield tell on it, not on a growing id list")
+
+	# A holder of ONLY the specialised absorber is shielded at all, which the
+	# literal-id gate never allowed.
+	_events.clear()
+	var c28c := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["ice_wall"]}})
+	c28c.combatants["pc"][WIKeys.MP] = 5
+	var hp28c: int = int(c28c.combatants["pc"][WIKeys.HP])
+	c28c.apply_damage("pc", 2, "goblin_raider", true)
+	assert(int(c28c.combatants["pc"][WIKeys.HP]) == hp28c and int(c28c.combatants["pc"][WIKeys.MP]) == 3,
+		"[Ice Wall] alone absorbs -- reading the effect type closes the latent hole where it did nothing")
+
+	# ...and the plain [Mana Shield] holder is byte-identical to before.
+	_events.clear()
+	var c28d := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt", "mana_shield"]}})
+	c28d.combatants["pc"][WIKeys.MP] = 5
+	c28d.apply_damage("pc", 2, "goblin_raider", true)
+	var base_payload: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "reaction_triggered":
+			base_payload = e["payload"]
+	assert(String(base_payload.get("skill", "")) == "mana_shield",
+		"a plain mage still credits mana_shield -- every shipped enemy that carries it by name is unchanged")
+
 	var c29 := _make_custom(11, _sink, {"pc": {WIKeys.SKILLS: ["frost_bolt"]}})
 	_events.clear()
 	c29.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(1, 1)
@@ -1852,6 +1898,21 @@ func _init() -> void:
 	assert(not c111.use_skill("sudden_strike", "goblin_raider"), "a second sudden_strike cast in the SAME fight is refused -- once per fight")
 	assert(int(pc111[WIKeys.AP]) == ap111_after_first, "the refused repeat cast spends neither AP nor MP -- checked before any spend, same discipline as every other refusal gate")
 	assert(_count("skill_resolved") == 0, "the refused repeat cast never resolves")
+
+	# GH#334 ruling 14: the HUD hole. `WICombat.skill_spent` is the ONE reader of
+	# that refusal, shared by `use_skill` above and by combat_hud's affordability
+	# test through the view -- before it existed the bar drew a spent skill at
+	# full brightness and the press simply did nothing, indistinguishable from a
+	# dropped input.
+	assert(c111.skill_spent("pc", "sudden_strike"),
+		"a once-per-fight skill reads SPENT after its one cast -- the term the bar dims on")
+	assert(not c111.skill_spent("goblin_raider", "sudden_strike"),
+		"spent is per ACTOR: another combatant's tally is not the player's")
+	assert(not c111.skill_spent("pc", "power_strike"),
+		"a skill without once_per_fight is never spent, however often it is cast")
+	var view111 := WICombatView.new(c111)
+	assert(view111.skill_spent("pc", "sudden_strike"),
+		"the view passthrough reports the same fact the sim refuses on")
 
 	var c112 := _make_custom(12, _sink, {"pc": {WIKeys.SKILLS: ["sudden_strike"]}})
 	c112.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)

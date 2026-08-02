@@ -392,7 +392,15 @@ func _check_delivery_arrival() -> void:
 	record_accomplishment("delivered_%s" % accepted_delivery_id)
 	record_accomplishment("completed_delivery")
 	remove_item(parcel_id, accepted_delivery_id)
-	_emit(WIEvents.TOAST, {"text": "Delivered: %s." % String(parcel.get("display_name", parcel_id))})
+	# GH#334 note 7: `sticky`. Delivery arrival is the ONE completion beat in the
+	# game that can only ever fire FROM movement -- and message_layer dismissed
+	# the showing toast on every PLAYER_MOVED, so a player holding a direction
+	# (the normal way you walk up to someone) took the next step ~0.12s later and
+	# cancelled the only mark the moment had. Nothing else marked it: no world
+	# change, no dedicated sound, no parcel-icon change. Audited with it: no other
+	# sim emitter toasts out of `move_player` -- the trigger-radius path opens
+	# combat, which speaks through the feed and never toasts.
+	_emit(WIEvents.TOAST, {"text": "Delivered: %s." % String(parcel.get("display_name", parcel_id)), "sticky": true})
 
 
 func interact() -> Dictionary:
