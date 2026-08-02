@@ -5578,11 +5578,11 @@
   }
  },
  "rune_door": {
-  "_comment": "GH#334 hero-art: seal_kept_door's bespoke rune-door (note 14).",
+  "_comment": "GH#334 hero-art: seal_kept_door's bespoke rune-door (note 14). Keyed; anchor from true bbox.",
   "render_scale": 0.35,
   "anchor": [
    0.5,
-   1.0
+   0.9624
   ],
   "shadow": true,
   "animations": {
@@ -5597,11 +5597,11 @@
   }
  },
  "wardstone_anchor": {
-  "_comment": "GH#334 hero-art: the dungeon_approach portal carrier (note 20).",
+  "_comment": "GH#334 hero-art: dungeon_approach portal carrier (note 20). Keyed; 18px bottom pad -> 0.8854 (Body_A trap).",
   "render_scale": 0.3,
   "anchor": [
-   0.5,
-   1.0
+   0.5221,
+   0.8854
   ],
   "shadow": true,
   "animations": {
@@ -5616,11 +5616,11 @@
   }
  },
  "witch_cauldron": {
-  "_comment": "GH#334 hero-art: the working kettle's own silhouette (tint-is-not-disambiguation).",
+  "_comment": "GH#334 hero-art: the working kettle's own silhouette (tint-is-not-disambiguation). Keyed; anchor from true bbox.",
   "render_scale": 0.35,
   "anchor": [
-   0.5,
-   1.0
+   0.5206,
+   0.9381
   ],
   "animations": {
    "idle": {
