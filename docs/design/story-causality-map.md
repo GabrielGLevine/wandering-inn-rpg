@@ -569,7 +569,10 @@ lead rows exist solely to name it (§6.3.1).
 * **Consumed by:** `brothers_job_done` → `acts.json:act_iv` advance_when +
   `act_iv/invrisil_squared`; `hedault_enchanting:hub#5` (the lattice reading);
   `leads.json:lead_hedault_eye`, `leads.json:lead_hat_stays_on`;
-  `brothers_parlor#parlor_stash_chest` (`fence_menu_when` — the Fence opens here);
+  `brothers_parlor#parlor_stash_chest` (`fence_menu_when.requires:
+  {eyed_the_stash, brothers_job_done}` — the Fence opens only once the chest has
+  been interacted with AND the job is done; the unmet case falls through to the
+  plain prop, `src/core/interactions.gd:102-105`);
   `inn#wilovan_inn_guest` `present_when`.
 
 #### `a_setting_for_a_lady` — "A Setting for a Lady"
