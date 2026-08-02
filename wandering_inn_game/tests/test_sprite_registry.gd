@@ -387,6 +387,13 @@ func _build_expected_counts() -> Dictionary:
 	counts["drying_rack/idle"] = 1
 	counts["drying_rack_hung/idle"] = 1
 	counts["turf_cut_mouth/idle"] = 1
+	## GH#334: Codex gpt-image concept -> PixelLab image-to-pixelart-pro
+	## hero-art wave (owned, one frame each).
+	counts["codex_hut/idle"] = 1
+	counts["ruin_gate/idle"] = 1
+	counts["rune_door/idle"] = 1
+	counts["wardstone_anchor/idle"] = 1
+	counts["witch_cauldron/idle"] = 1
 	counts["razorbeak/idle"] = 1
 	## GH#156 follower-visual aliases of the same owned single-frame sheets.
 	counts["wolf_companion/idle"] = 1

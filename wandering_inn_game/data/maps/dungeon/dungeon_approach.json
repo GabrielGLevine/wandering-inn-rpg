@@ -125,7 +125,7 @@
     5
    ],
    "display_name": "A Warded Stone",
-   "sprite": "anchor_waystone",
+   "sprite": "wardstone_anchor",
    "tint": [
     0.62,
     0.6,

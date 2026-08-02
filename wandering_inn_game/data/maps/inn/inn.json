@@ -1343,7 +1343,7 @@
     2
    ],
    "display_name": "Hearth-Side Kettle",
-   "sprite": "cauldron",
+   "sprite": "witch_cauldron",
    "requires_skill": "hedge_remedy",
    "requires_item": "dried_yarrow_bundle",
    "item_hint_toast": "The kettle wants yarrow before it gives anything back.",
