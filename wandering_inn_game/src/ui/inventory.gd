@@ -91,6 +91,25 @@ var _cursor := 0
 var _item_labels: Array[Label] = []
 const WHEEL_SCROLL_STEP := 48
 
+## GH#334 note 1, ported from journal.gd's #216 pan-slop latch (same value,
+## same argument -- see BODY_PAN_SLOP_PX's own doc comment there). Before this
+## the carried list had NO drag handling at all, and Godot's touch->mouse
+## emulation turned a touch player's first contact into a left-button PRESS
+## that `_confirm()` acted on instantly: swiping the list to read past the fold
+## equipped/unequipped whatever row the finger happened to start on. The cure
+## is the journal's, verbatim in shape: accumulate absolute travel, latch past
+## the slop, and gate `_confirm()` on RELEASE-without-pan instead of on press.
+const LIST_PAN_SLOP_PX := 4.0
+## Latched by a gesture that travelled past the slop -- consumed and cleared by
+## the release that ends it.
+var _list_gesture_panned := false
+var _list_gesture_drift := 0.0
+## The row the current gesture PRESSED on (-1 = none / press missed every row).
+## A release only confirms when it lands on the same row it started on, so a
+## press that slides one row down and lets go does nothing rather than equipping
+## the neighbour.
+var _list_press_index := -1
+
 
 func _ready() -> void:
 	# See the file doc comment: must outrank WIWorldLabels regardless of
@@ -363,6 +382,7 @@ func _can_open() -> bool:
 func _open() -> void:
 	open = true
 	_cursor = 0
+	_reset_list_gesture()
 	_refresh()
 	_root.show()
 	_emit_shown()
@@ -370,6 +390,7 @@ func _open() -> void:
 
 func _close() -> void:
 	open = false
+	_reset_list_gesture()
 	_root.hide()
 	ObservableBus.emit_domain_event(WIEvents.UI_INVENTORY_HIDDEN, {})
 
@@ -446,7 +467,92 @@ func _hover_cursor(i: int) -> void:
 	_emit_selection()
 
 
+## Clears the in-flight gesture. Called on every fresh press and on every
+## open/close/rebuild, for journal.gd's `_reset_body_gesture` reason: a flag
+## latched by a pan that ended outside the list would otherwise sit armed and
+## swallow the NEXT tap.
+func _reset_list_gesture() -> void:
+	_list_gesture_panned = false
+	_list_gesture_drift = 0.0
+	_list_press_index = -1
+
+
+## Pans the carried list by `dy` screen pixels of finger/cursor travel (the
+## gesture moves the CONTENT with it, so a downward drag scrolls up -- the
+## journal body's own sign convention). Routed through the scrollbar's float
+## `value` rather than `ScrollContainer.scroll_vertical` (an int) so a slow pan
+## made of sub-pixel deltas still accumulates instead of rounding to nothing.
+func _pan_list(dy: float) -> void:
+	var vbar := _scroll.get_v_scroll_bar()
+	if vbar == null or vbar.max_value <= vbar.page:
+		return
+	vbar.value = clampf(vbar.value - dy, vbar.min_value, vbar.max_value - vbar.page)
+	_sync_cursor_to_scroll()
+
+
+## GH#334 note 1(b): the wheel used to move the viewport WITHOUT moving
+## `_cursor`, so after a notch the `> ` mark, the right-hand detail column and
+## the top-right mechanical corner all still described an item that was now off
+## screen -- and the next arrow press re-snapped the scroll to the cursor and
+## threw the wheel position away. Keeping the cursor on the top visible row
+## makes every scroll gesture a real selection change: the two columns can never
+## again disagree with the list, and `_rebuild_items`' snap has nothing to undo.
+## Uses `_hover_cursor` (mark refresh + detail/corner re-render + the selection
+## event) rather than `_move_cursor`, precisely because that path does NOT
+## rebuild rows or scroll-into-view -- the row is on screen by construction.
+func _sync_cursor_to_scroll() -> void:
+	var top := _top_visible_row()
+	if top >= 0:
+		_hover_cursor(top)
+
+
+func _top_visible_row() -> int:
+	if _item_labels.is_empty():
+		return -1
+	var top := float(_scroll.scroll_vertical)
+	for i in _item_labels.size():
+		var lbl := _item_labels[i]
+		if lbl.position.y + lbl.size.y > top + 1.0:
+			return i
+	return _item_labels.size() - 1
+
+
 func _on_items_gui_input(event: InputEvent) -> void:
+	# PRESS (mouse or touch) opens a fresh gesture. Touch is handled explicitly
+	# alongside the emulated mouse event for journal.gd's reason: Godot's
+	# touch->mouse emulation is on by default, but a ScreenTouch/ScreenDrag pair
+	# also arrives, and only the drag carries the travel a pan needs.
+	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed \
+			and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+		_reset_list_gesture()
+		_list_press_index = UIChrome.control_index_at(_item_labels, (event as InputEventMouseButton).position)
+		return
+	if event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed:
+		_reset_list_gesture()
+		_list_press_index = UIChrome.control_index_at(_item_labels, (event as InputEventScreenTouch).position)
+		return
+	# PAN: a screen drag, or a mouse motion with the left button held.
+	var dy := 0.0
+	var panning := false
+	if event is InputEventScreenDrag:
+		dy = (event as InputEventScreenDrag).relative.y
+		panning = true
+	elif event is InputEventMouseMotion and ((event as InputEventMouseMotion).button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+		dy = (event as InputEventMouseMotion).relative.y
+		panning = true
+	if panning:
+		# Total travel, not per-event travel -- see journal.gd's identical
+		# accumulator: a slow pan arrives as many small deltas and must still
+		# latch, while a jittery tap's deltas cancel in position but not in
+		# magnitude. Scrolling itself stays unconditional: a sub-slop wobble
+		# pans by those same few px (invisible) and still counts as a tap.
+		_list_gesture_drift += absf(dy)
+		if _list_gesture_drift > LIST_PAN_SLOP_PX:
+			_list_gesture_panned = true
+		_pan_list(dy)
+		get_viewport().set_input_as_handled()
+		return
+	# HOVER: bare motion (no button) still re-selects the row under the pointer.
 	if event is InputEventMouseMotion:
 		var hover_idx := UIChrome.control_index_at(_item_labels, (event as InputEventMouseMotion).position)
 		if hover_idx >= 0:
@@ -455,18 +561,29 @@ func _on_items_gui_input(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton):
 		return
 	var mb := event as InputEventMouseButton
-	if not mb.pressed:
+	if mb.pressed:
+		# Wheel notches arrive as PRESSED buttons. Hand-rolled because
+		# `_items_box` is MOUSE_FILTER_STOP for hover-select and swallows the
+		# event before `_scroll` ever sees it -- see `_item_labels`' doc comment.
+		if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
+			_scroll.scroll_vertical = maxi(0, _scroll.scroll_vertical - WHEEL_SCROLL_STEP)
+			_sync_cursor_to_scroll()
+		elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			_scroll.scroll_vertical += WHEEL_SCROLL_STEP
+			_sync_cursor_to_scroll()
 		return
-	if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
-		_scroll.scroll_vertical = maxi(0, _scroll.scroll_vertical - WHEEL_SCROLL_STEP)
-		return
-	if mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-		_scroll.scroll_vertical += WHEEL_SCROLL_STEP
-		return
+	# RELEASE = the confirm beat (GH#334 note 1(d)). A gesture that PANNED must
+	# not also count as a tap on whatever row it let go over, and a release that
+	# wandered off the row it started on is not a tap on either row.
 	if mb.button_index != MOUSE_BUTTON_LEFT:
 		return
+	var panned := _list_gesture_panned
+	var press_idx := _list_press_index
+	_reset_list_gesture()
+	if panned:
+		return
 	var idx := UIChrome.control_index_at(_item_labels, mb.position)
-	if idx < 0:
+	if idx < 0 or (press_idx >= 0 and press_idx != idx):
 		return
 	_hover_cursor(idx)
 	_cursor = idx
@@ -630,6 +747,30 @@ func item_row_rect(i: int) -> Rect2:
 	if label == null or not is_instance_valid(label) or not label.visible:
 		return Rect2()
 	return Rect2(label.global_position, label.size)
+
+
+## GH#334 note 1 QA hooks, the carried list's twins of journal.gd's
+## `body_rect`/`body_scroll_value`/`body_scrollable`: the drag leg reads the
+## rect to aim the pan and the scroll VALUE to prove it moved. `cursor_scroll`
+## already rides `ui_inventory_shown`, but nothing asserted that any gesture
+## ever changed it.
+func list_rect() -> Rect2:
+	if not open or _scroll == null or not _scroll.visible:
+		return Rect2()
+	return Rect2(_scroll.global_position, _scroll.size)
+
+
+func list_scroll_value() -> float:
+	if not open or _scroll == null:
+		return -1.0
+	return float(_scroll.scroll_vertical)
+
+
+func list_scrollable() -> bool:
+	if not open or _scroll == null:
+		return false
+	var vbar := _scroll.get_v_scroll_bar()
+	return vbar != null and vbar.max_value > vbar.page
 
 
 func _icon_texture_for(item_id: String) -> Texture2D:

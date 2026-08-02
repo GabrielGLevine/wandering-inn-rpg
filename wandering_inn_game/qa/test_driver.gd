@@ -484,6 +484,38 @@ func _execute(step: Dictionary) -> void:
 					_inject_mouse_click(rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"drag_inventory_list":
+			# GH#334 note 1: drag UP inside the carried list to scroll DOWN --
+			# `drag_journal_body`'s twin, aimed off the list's own rendered rect
+			# for the same reason (a hard-coded coordinate rots the moment the
+			# panel or the viewport budget shifts). The gesture ends ON a row, so
+			# it is simultaneously the proof that the pan-slop latch keeps
+			# `_confirm()` from firing on the row it let go over.
+			var dinv := get_tree().root.find_child("Inventory", true, false)
+			if dinv == null:
+				_fail("drag_inventory_list: Inventory node not found")
+			else:
+				var lr: Rect2 = dinv.call("list_rect")
+				if lr.size == Vector2.ZERO:
+					_fail("drag_inventory_list: list has no rendered rect")
+				else:
+					var lcx := lr.position.x + lr.size.x * 0.5
+					_inject_drag(
+						Vector2(lcx, lr.position.y + lr.size.y * float(step.get("from_height_fraction", 0.7))),
+						Vector2(lcx, lr.position.y + lr.size.y * float(step.get("to_height_fraction", 0.25))),
+						int(step.get("steps", 8)))
+			await get_tree().process_frame
+			await get_tree().process_frame
+		"assert_inventory_scrolled":
+			var sinv := get_tree().root.find_child("Inventory", true, false)
+			if sinv == null:
+				_fail("assert_inventory_scrolled: Inventory node not found")
+			else:
+				var sval: float = sinv.call("list_scroll_value")
+				var sw_gt := float(step.get("greater_than", 0.0))
+				if sval <= sw_gt:
+					_fail("assert_inventory_scrolled: scroll value %.1f not > %.1f" % [sval, sw_gt])
+			await get_tree().process_frame
 		"click_field_chip":
 			var chip_name := String(step["chip"])
 			var fc := get_tree().root.find_child("FieldChips", true, false)
