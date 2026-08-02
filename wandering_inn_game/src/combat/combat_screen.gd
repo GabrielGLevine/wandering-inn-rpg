@@ -302,6 +302,11 @@ func _show_combat() -> void:
 	_mode = Mode.WAIT_AI
 	_hud.clear_feed()
 	_view = load("res://src/combat/combat_view.gd").new(_combat())
+	# GH#337: the composition root hands the live fight to the HUD so the action
+	# bar can read THE cooldown predicate (`WICombat.cooldown_remaining`) rather
+	# than keep a second copy of the rule. Paired with the clear in
+	# `_teardown_board` -- the HUD outlives any one fight.
+	_hud.set_combat(_combat())
 	_targeting = load("res://src/combat/targeting_controller.gd").new(_view, self)
 	_board_renderer.build(_view, main_ref)
 	_announce_allies()
@@ -935,6 +940,7 @@ func _teardown_board() -> void:
 	_mode = Mode.INACTIVE
 	_root.hide()
 	_board_renderer.clear()
+	_hud.set_combat(null)  # GH#337: never hold a finished fight's ledger
 	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_HIDDEN, {})
 
 

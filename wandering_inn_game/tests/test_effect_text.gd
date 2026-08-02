@@ -244,6 +244,7 @@ func _init() -> void:
 	_test_status_exact()
 	_test_tripwires()
 	_test_pending_meal_line()
+	_test_cooldown_clause()
 	_test_forbidden_vocab()
 	print("PASS: WIEffectText generates every shipped line in visible currency only")
 	quit(0)
@@ -455,6 +456,43 @@ func _test_tripwires() -> void:
 		WIEffectText.status_line("burning", burn_catalog) == "Burning — takes 5 damage at the end of each round for 2 rounds.",
 		"burning status tripwire: tick_damage and duration follow the catalog"
 	)
+
+
+## GH#337 ruling 5. A cooldown is a COMBAT resource of the same class as AP and
+## MP, so the card is allowed to say it -- the opaque-until-sleep lock governs
+## PROGRESSION text. The clause is generated from the record (never hand-composed
+## at a call site), and it has to be true to the ABSOLUTE-stamp semantics: `round
+## + N` means unusable for N rounds counting the one it was used in.
+func _test_cooldown_clause() -> void:
+	_check(WIEffectText.cooldown_clause(0) == "Once per round.", "a non-positive count degrades to the tightest true statement")
+	_check(WIEffectText.cooldown_clause(1) == "Once per round.", "N=1 only forbids a second cast inside the same turn")
+	_check(WIEffectText.cooldown_clause(2) == "Once every 2 rounds.", "N=2 is the every-other-turn rhythm the milestone is for")
+	_check(WIEffectText.cooldown_clause(3) == "Once every 3 rounds.", "cooldown clause tripwire: the count moves")
+	var cd_skill := {"ap_cost": 3, "effect": {"type": "damage_mult", "mult": 2.0}}
+	_check(WIEffectText.skill_effect_lines(cd_skill) == ["3 AP — ×2 damage"], "no cooldown_rounds row: byte-identical to before GH#337")
+	cd_skill["cooldown_rounds"] = 0
+	_check(WIEffectText.skill_effect_lines(cd_skill) == ["3 AP — ×2 damage"], "an explicit 0 is still no clause")
+	cd_skill["cooldown_rounds"] = 2
+	_check(
+		WIEffectText.skill_effect_lines(cd_skill) == ["3 AP — ×2 damage. Once every 2 rounds."],
+		"the clause rides the once_per_fight idiom, appended to the generated line"
+	)
+	cd_skill["effect"]["applies"] = {"weakened": {"duration_rounds": 2}}
+	_check(
+		WIEffectText.skill_effect_lines(cd_skill) == ["3 AP — ×2 damage. Weakens. Once every 2 rounds."],
+		"status verb first, cooldown after -- effect then restriction"
+	)
+	cd_skill["effect"].erase("applies")
+	cd_skill["once_per_fight"] = true
+	_check(
+		WIEffectText.skill_effect_lines(cd_skill) == ["3 AP — ×2 damage. Once every 2 rounds. Once per fight."],
+		"the two restrictions stay distinct concepts (spec ruling 4) and both speak"
+	)
+	# The LIVE half, for a slot cooling right now.
+	_check(WIEffectText.cooldown_recovering_line(0) == "", "a ready slot says nothing")
+	_check(WIEffectText.cooldown_recovering_line(-1) == "", "a negative count says nothing")
+	_check(WIEffectText.cooldown_recovering_line(1) == "Recovering — ready next round.", "one round left names the round, not a bare 1")
+	_check(WIEffectText.cooldown_recovering_line(2) == "Recovering — ready in 2 rounds.", "recovering-line tripwire: the count moves")
 
 
 func _test_forbidden_vocab() -> void:

@@ -2347,5 +2347,46 @@ func _init() -> void:
 		"the item-use path still resolves")
 	assert(cd5.cooldowns.is_empty(), "using an item never writes a cooldown stamp")
 
+	# cd6: the BAR agrees with the sim -- the surface half of ruling 5. Built
+	# here rather than in test_combat_visuals because the assertion only means
+	# anything against a LIVE ledger, which is what this file has.
+	var hud_script_cd := load("res://src/combat/combat_hud.gd")
+	var cd6 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd6.begin()
+	cd6.combatants["pc"][WIKeys.SKILLS] = ["power_strike"]
+	cd6.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
+	cd6.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
+	cd6.active_index = cd6.turn_order.find("pc")
+	cd6._start_turn()
+	cd6.combatants["pc"][WIKeys.AP] = 8  # AP is never what refuses, in either half
+	var view_cd6 := WICombatView.new(cd6)
+	var hud_cd6: RefCounted = hud_script_cd.new(null, null, null)
+	hud_cd6.set_combat(cd6)
+	var slots_cd6: Array = hud_cd6.rebuild_slots(view_cd6, "pc")
+	var pc_cd6: Dictionary = view_cd6.combatant("pc")
+	assert(hud_cd6.skill_affordable(pc_cd6, "power_strike", view_cd6),
+		"a ready power_strike reads affordable")
+	cd6.cooldowns["pc"] = {"power_strike": cd6.round_number + 2}
+	assert(not hud_cd6.skill_affordable(view_cd6.combatant("pc"), "power_strike", view_cd6),
+		"a cooling skill reads UNAFFORDABLE -- it must not draw bright and swallow the press")
+	var rendered_cd6: Array = hud_cd6.render_bar_slots(view_cd6, slots_cd6)
+	var line_cd6 := ""
+	for d_cd6: Dictionary in rendered_cd6:
+		if String(d_cd6.get("id", "")) == "power_strike":
+			assert(not bool(d_cd6["affordable"]), "the rendered slot the hotbar dims on carries the same verdict")
+			assert(int(d_cd6.get("cooldown_remaining", -1)) == 2,
+				"the rendered slot record carries the LIVE remaining count, read from the sim predicate")
+			line_cd6 = hud_cd6._slot_info_line(d_cd6)
+	assert(line_cd6.contains("Recovering"),
+		"a dimmed slot must SAY why it is dimmed, got: %s" % line_cd6)
+	assert(line_cd6.contains("2 rounds"), "and say how long, got: %s" % line_cd6)
+	# The HUD built with no combat handed in (test_combat_visuals' bare-new()
+	# shape) can never think anything is cooling -- every pre-GH#337 call site
+	# keeps its exact previous answer.
+	var hud_bare_cd6: RefCounted = hud_script_cd.new(null, null, null)
+	assert(hud_bare_cd6.skill_affordable(view_cd6.combatant("pc"), "power_strike", view_cd6),
+		"a HUD with no combat reference is cooldown-blind by construction")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)
