@@ -2,6 +2,11 @@ extends SceneTree
 
 const DIALOGUE_DIR := "res://data/dialogue"
 
+## Single source of truth for code-banked counters: the list is maintained in
+## test_shipped_ids.gd (synced with generate_shipped_ids.py per wi-shipping).
+## Preload, never re-copy -- test_reachability's own pattern.
+const _SHIPPED_IDS_TEST := preload("res://tests/test_shipped_ids.gd")
+
 ## LOUD-FAIL CONTRACT (2026-07-27 wave-close review). A bare `assert` does NOT
 ## stop a `--script` run: this suite used to print every failure as a SCRIPT
 ## ERROR, keep going, print its trailing PASS line and exit 0 -- so a `tail -1`
@@ -342,26 +347,12 @@ func _init() -> void:
 	var produced_accomplishments: Dictionary = {}
 
 	_collect_scene_accomplishments(scene, produced_accomplishments)
-	produced_accomplishments["observed_things"] = true
-	produced_accomplishments["befriended_moments"] = true
-	produced_accomplishments["deliberate_commerce"] = true
-	produced_accomplishments["completed_delivery"] = true
-	# door_awakened is banked in code (wi_game.gd's sleep hook, the Act IV gate), never
-	# by a scene/dialogue effect the scanner can see -- register it here so quest beats may
-	# gate on it (the door chain's `attune` beat, #148). Mirrors STRUCTURAL_LITERALS in
-	# test_shipped_ids.gd, which already lists door_awakened as a code-produced counter.
-	produced_accomplishments["door_awakened"] = true
-	# garden_door_unlocked: same class (code-banked at the qualifying sleep,
-	# STRUCTURAL_LITERALS member) -- registered for the garden door's
-	# present_when (GH#167). If a third one appears, import the whole
-	# STRUCTURAL_LITERALS set via the test_reachability preload pattern.
-	produced_accomplishments["garden_door_unlocked"] = true
-	# b4 #219: the combat action-tally trio is code-banked per fight
-	# (combat_banking's _bank_action_tally) — registered so bounty/quest
-	# conditions may key on them (the fought_* synthesis precedent).
-	produced_accomplishments["melee_hit"] = true
-	produced_accomplishments["spell_cast"] = true
-	produced_accomplishments["ranged_hit"] = true
+	# Code-banked counters no scene/dialogue scanner can see (sleep hooks,
+	# combat tallies, the companion downed-clear). The hand-add list crossed the
+	# threshold its own comment set, so the WHOLE set is imported from the one
+	# place it is maintained -- test_reachability's own preload pattern.
+	for literal: String in _SHIPPED_IDS_TEST.STRUCTURAL_LITERALS:
+		produced_accomplishments[literal] = true
 	_validate_conversations(scene, graphs)
 	_validate_variant_entries(scene, graphs)
 	_validate_enchant_pairs(graphs, items)
@@ -904,8 +895,13 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 				for counter_id: String in (when["absent"] as Dictionary):
 					_check(produced_accomplishments.has(counter_id), "entity %s encounter_when.absent references unproduced counter: %s (a typo here silently never gates -- GH#199 review MEDIUM-3)" % [entity_id, counter_id])
 			if when.has("companion"):
+				# GH#332: "" is the EMPTY-SLOT arm -- WIGame.companion reads ""
+				# while no bond rides, so the plain String match already says "no
+				# companion", the half the spring-litter dens need. Any other
+				# value must name a bondable id.
 				var comp_id := String(when["companion"])
-				_check(bondable.has(comp_id), "entity %s present_when.companion names %s, which no companion_source prop can ever bond -- the gate would never open" % [entity_id, comp_id])
+				if comp_id != "":
+					_check(bondable.has(comp_id), "entity %s present_when.companion names %s, which no companion_source prop can ever bond -- the gate would never open" % [entity_id, comp_id])
 
 ## v0.15 T3.1. A guest's pool gate and their row's counter arms are two
 ## independent statements of ONE window, and they may never disagree: pooled

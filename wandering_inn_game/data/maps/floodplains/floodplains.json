@@ -1717,6 +1717,90 @@
    }
   },
   {
+   "_comment": "GH#332 SPRING LITTER, rung 1 of 3. Tame props are consumed permanently, so a re-bond needs its own row. Each rung opens on one more `companion_lost` (banked ONLY by the downed-clear) and closes as the next opens -- exactly one live, so rungs may share a cell. `companion: \"\"` = empty slot; the wild does not offer while a bond rides. CAP: three losses covered; unbounded re-supply needs a respawning prop (sim, not data).",
+   "id": "wolf_den_spring",
+   "kind": "prop",
+   "cell": [
+    12,
+    22
+   ],
+   "display_name": "Spring Litter",
+   "sprite": "river_wolf",
+   "present_when": {
+    "requires": {
+     "companion_lost": 1
+    },
+    "absent": {
+     "companion_lost": 2
+    },
+    "companion": ""
+   },
+   "observe": "The scrape under the boulder line has been dug out again and re-lined. A season on, and there is a pup in it: bolder than the last one, and entirely unimpressed by you.",
+   "requires_skill": "lesser_bond",
+   "skill_hint_toast": "It has not learned to be afraid of hands yet. Make the offer before it does.",
+   "locked_toast": "The pup watches you the way it watches weather. Hands that can take an offer like this are learned on hurt animals, one at a time.",
+   "companion_source": {
+    "companion_id": "wolf_companion",
+    "kind": "tamed",
+    "taken_toast": "It walks out of the scrape without being asked and stands on your foot. The pack keeps its own counsel about who leaves with whom."
+   }
+  },
+  {
+   "_comment": "GH#332 SPRING LITTER, rung 2 of 3 -- the razorbeak arm, so the ladder is not the same pup three times. Contract: see `wolf_den_spring`.",
+   "id": "razorbeak_chick_fledgling",
+   "kind": "prop",
+   "cell": [
+    9,
+    23
+   ],
+   "display_name": "Razorbeak Fledgling",
+   "sprite": "razorbeak",
+   "present_when": {
+    "requires": {
+     "companion_lost": 2
+    },
+    "absent": {
+     "companion_lost": 3
+    },
+    "companion": ""
+   },
+   "observe": "The nest scrape has fledged another. This one has already worked out that the tussock is cover and that you are not, and it is holding both facts against you.",
+   "requires_skill": "lesser_bond",
+   "skill_hint_toast": "It goes still when you crouch, which from a razorbeak is an invitation. Make the offer properly.",
+   "locked_toast": "It flares its hackles and holds the tussock. Nothing wild takes an offer from hands that have never tended anything.",
+   "companion_source": {
+    "companion_id": "razorbeak_companion",
+    "kind": "tamed",
+    "taken_toast": "It stalks the length of your arm, finds the shoulder acceptable, and settles there facing backwards. Somebody has to watch the way you came."
+   }
+  },
+  {
+   "_comment": "GH#332 SPRING LITTER, rung 3 of 3 -- TOP RUNG: no `absent`, stays offered once reached. Shares rung 1's cell; they can never be live together. Contract: see `wolf_den_spring`.",
+   "id": "wolf_den_late_litter",
+   "kind": "prop",
+   "cell": [
+    12,
+    22
+   ],
+   "display_name": "Late Litter",
+   "sprite": "river_wolf",
+   "present_when": {
+    "requires": {
+     "companion_lost": 3
+    },
+    "companion": ""
+   },
+   "observe": "Late in the season and thin with it, but the scrape is occupied again. Whatever else the floodplains do, they keep doing this.",
+   "requires_skill": "lesser_bond",
+   "skill_hint_toast": "It is too tired to flinch. Offer, and mean it.",
+   "locked_toast": "The pup does not move. Hands that can take an offer like this are learned on hurt animals, one at a time.",
+   "companion_source": {
+    "companion_id": "wolf_companion",
+    "kind": "tamed",
+    "taken_toast": "It leans, the way the first one leaned. You are not being given a replacement. You are being given another one."
+   }
+  },
+  {
    "id": "rags_scouting_party",
    "kind": "encounter",
    "tint": [

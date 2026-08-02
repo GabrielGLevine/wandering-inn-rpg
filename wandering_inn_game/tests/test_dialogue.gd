@@ -756,6 +756,64 @@ func test_horns_inn_settled_stages_serve_inside_their_own_window() -> void:
 		assert(game.entity_present(ent), "%s is still standing there after six wakings -- the window never needed the dig" % id)
 
 
+## GH#332. Both tame props are consumed permanently and a downed companion was
+## gone for good, so one bad fight could exhaust taming forever. Two halves,
+## both pinned here: only a DEATH banks `companion_lost` (a swap or a sleep
+## expiry is a choice, not a loss), and the spring-litter ladder opens exactly
+## one rung per loss and only while the bond slot is empty. Lives in this file
+## because it is a content-gate proof and this is one of the two test files the
+## content lane owns; the sim-side clear is called at its own seam.
+func test_companion_loss_reopens_a_den_one_rung_at_a_time() -> void:
+	var scene := WISceneCatalog.compose()
+	var rungs := {
+		"wolf_den_spring": _find_entity(scene, "floodplains", "wolf_den_spring"),
+		"razorbeak_chick_fledgling": _find_entity(scene, "floodplains", "razorbeak_chick_fledgling"),
+		"wolf_den_late_litter": _find_entity(scene, "floodplains", "wolf_den_late_litter"),
+	}
+	for id: String in rungs:
+		assert(not (rungs[id] as Dictionary).is_empty(), "floodplains carries the spring-litter rung %s" % id)
+
+	var live := func(game: WIGame) -> Array:
+		var out: Array = []
+		for id: String in ["wolf_den_spring", "razorbeak_chick_fledgling", "wolf_den_late_litter"]:
+			if game.entity_present(rungs[id] as Dictionary):
+				out.append(id)
+		return out
+
+	var game := _make_game_with_dialogue({})
+	assert(game.entity_present(_find_entity(scene, "floodplains", "wolf_den")), "the original den still stands on a fresh save")
+	assert(live.call(game).is_empty(), "no spring rung is offered before any bond is lost")
+
+	# Only a death banks. A swap and a sleep expiry must not.
+	game.companion = "wolf_companion"
+	game.companion_source = "tamed"
+	game._clear_companion("released")
+	assert(game.accomplishment_count("companion_lost") == 0, "swapping bonds is a choice, not a loss")
+	game.companion = "skeleton_ally"
+	game.companion_source = "animated"
+	game._clear_companion("sleep")
+	assert(game.accomplishment_count("companion_lost") == 0, "an animated follower expiring at sleep is not a loss")
+
+	game.companion = "wolf_companion"
+	game.companion_source = "tamed"
+	game._clear_companion("downed")
+	assert(game.accomplishment_count("companion_lost") == 1, "a DOWNED companion banks the loss")
+	assert(game.companion == "", "the bond slot is empty after the clear")
+	assert(live.call(game) == ["wolf_den_spring"], "first loss opens rung 1 and only rung 1")
+
+	# The wild does not offer while a bond already walks with you.
+	game.companion = "razorbeak_companion"
+	assert(live.call(game).is_empty(), "no rung is offered while a companion rides")
+	game.companion = ""
+
+	game.record_accomplishment("companion_lost")
+	assert(live.call(game) == ["razorbeak_chick_fledgling"], "second loss closes rung 1 and opens rung 2 -- exactly one live")
+	game.record_accomplishment("companion_lost")
+	assert(live.call(game) == ["wolf_den_late_litter"], "third loss opens the top rung")
+	game.record_accomplishment("companion_lost")
+	assert(live.call(game) == ["wolf_den_late_litter"], "the top rung carries no `absent`, so it stays offered past its own count")
+
+
 const GRAPH := {
 	"start": "hub",
 	"nodes": {
@@ -927,6 +985,7 @@ func _init() -> void:
 	test_node_text_variants_last_match_wins()
 	test_talk_pool_post_grows_pool_after_gate()
 	test_horns_inn_settled_stages_serve_inside_their_own_window()
+	test_companion_loss_reopens_a_den_one_rung_at_a_time()
 	test_gold_effect_verb_applies_through_dialogue_choose()
 	test_well_fed_effect_verb_applies_through_dialogue_choose()
 	test_gold_affordability_greys_when_broke()

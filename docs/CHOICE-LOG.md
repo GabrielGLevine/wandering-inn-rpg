@@ -2152,3 +2152,16 @@ by controller ruling — the plan was the defect, not the implementation.
   the honest reading of a Horn whose post is in the city — reconciled in COPY
   instead, via a `seal_kept_reported` text_variant on `pisces_inn`'s greet
   where the corner his team annexed is the reason he is in the room.
+- **#332 companion re-supply is a 3-RUNG LADDER, not an infinite spigot
+  (2026-08-02, L5 lane call)**: `remove_entity` persists by id, so a
+  re-suppliable tame prop cannot be re-offered — every re-bond needs its own
+  row. Shipped: three rungs (`wolf_den_spring` / `razorbeak_chick_fledgling` /
+  `wolf_den_late_litter`), each opening on one more `companion_lost` and
+  closing when the next opens, so exactly one is live and rungs 1 and 3 share
+  a cell. Gate carries the new empty-slot arm `companion: ""` — the wild does
+  not offer while a bond already walks with you. `companion_lost` banks ONLY
+  in the downed-clear: a swap ("released") and a sleep expiry ("sleep") are
+  choices, not losses. CAP IS REAL: three permanent deaths covered, five bonds
+  total with the two originals. An unbounded re-supply needs a respawning prop
+  — sim behaviour, out of a content lane's authority, DEFERRED to the
+  controller.

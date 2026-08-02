@@ -759,6 +759,14 @@ func _clear_companion(reason: String) -> void:
 	var old_id := companion
 	companion = ""
 	companion_source = ""
+	# GH#332: only a DEATH banks. "released" (swapped bonds) and "sleep" (an
+	# animated follower expiring) are both choices with the bond still
+	# available; a downed companion is the only permanent loss, and the
+	# spring-litter dens gate on this counter to re-supply it. STRUCTURAL
+	# LITERAL -- mirrored by hand in tests/test_shipped_ids.gd and
+	# scripts/generate_shipped_ids.py.
+	if reason == "downed":
+		record_accomplishment("companion_lost")
 	_emit(WIEvents.COMPANION_CHANGED, {"id": old_id, "active": false, "reason": reason})
 
 

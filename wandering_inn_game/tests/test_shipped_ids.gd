@@ -12,7 +12,7 @@ const STRUCTURAL_LITERALS := [
 	"slept", "completed_delivery", "blinked_past_danger",
 	"warded_danger", "witch_craft_used", "second_door_study_sleeps",
 	"dungeon_attuned", "catalyst_attunement_sleeps", "resonance_grown",
-	"tended_beasts", "finale_played",
+	"tended_beasts", "finale_played", "companion_lost",
 ]
 
 var _errors: Array[String] = []
