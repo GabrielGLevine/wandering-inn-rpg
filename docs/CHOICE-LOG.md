@@ -2118,3 +2118,15 @@ by controller ruling — the plan was the defect, not the implementation.
   plausible "chill" axis two humans flagged), forge_hall inherits
   battle_for_despair. If the ear-gate still reads chill, the answer is a
   NEW track (#195 listen or commission), not a fourth in-library shuffle.
+- **Pisces IS a Horn (2026-08-02, USER JUDGEMENT CALL — reverses this
+  log's wave-2 ruling 6)**: most readers know the core four; a
+  three-member Horns is the confusing reading, not the fix. Four-member
+  copy returns in v0.17 (#349); Pisces still STARTS in Liscor
+  independent of the party (his Door-consultant role IS the in-fiction
+  justification), converging with the Horns as the arcs do. The arena
+  leg (vault ally roster) is balance-bound and lives with L2.
+- **Liscor's Hunted difficulty names (2026-08-02, user grant)**: the
+  three new difficulty settings (#345) take their names from Liscor's
+  Hunted as an easter egg — an EXPLICIT user-granted exception to the
+  Vol 7 spoiler cutoff, names only; exact names wiki-verified before
+  authoring, never invented.

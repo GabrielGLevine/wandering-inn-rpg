@@ -68,17 +68,25 @@ directive): six concurrent lanes, exclusive file ownership, one anchored
 merge train, one release. Sequencing exists ONLY inside a lane where a
 shared file forces it — no cross-lane waits.
 
-**L1 — Journal/UI** (owns journal.gd, wi_game.gd UI-producer region
-[_skill_entries/quest_summary siblings], quests.gd, settings_panel.gd +
-wi_settings.gd, quests.json hint fields, their QA pins): #336 Skills-tab
-redesign + AUTO 9-cap, THEN #338 quest-hints slice (same files — one
-implementer, two slices).
+**L1 — Journal/UI/Settings** (owns journal.gd, wi_game.gd UI-producer
+region [_skill_entries/quest_summary siblings], quests.gd,
+settings_panel.gd + wi_settings.gd, char_creation.gd, quests.json hint
+fields, their QA pins): #336 Skills-tab redesign + AUTO 9-cap, THEN
+#338 quest-hints slice, THEN #345 three difficulty settings (anytime-
+changeable; Liscor's Hunted names — wiki-verify, Vol-7 exception
+user-granted), THEN #346 New Game creation prompts (difficulty +
+hints). One implementer, four slices, same files. DECLARED SEAM: the
+difficulty apply-site, if it lands in a combat file, is a one-field
+read L2 signs off on at train time.
 
 **L2 — Combat/Dynamism** (owns wi_combat.gd, combat_ai.gd,
 combat_hud.gd, combat_screen.gd, skills.json, the balance-cell bands,
-test_combat_sim/test_combat_data/test_effect_text): #337 cooldowns per
-spec — AI fall-through first, surgical set, full 141-cell re-author,
-badge/tooltip UI. No other lane touches combat or balance data.
+test_combat_sim/test_combat_data/test_effect_text, arenas.json):
+#337 cooldowns per spec — AI fall-through first, surgical set, full
+141-cell re-author, badge/tooltip UI. RIDERS: #349's arena leg (vault
+ally roster gains Pisces or stages him explicitly — spawn arrays +
+band re-checks are this lane's authority) and the #345 difficulty-knob
+apply seam sign-off. No other lane touches combat or balance data.
 
 **L3 — Presentation/Feel** (owns message_layer.gd, world.gd, WIAmbience,
 new shader/particle resources, audio.json, the acted-on data_lint
@@ -93,12 +101,28 @@ VISUAL-LOG drain + tint-site audit (cauldron/hut/ruins/rune-door/
 wardstone candidates banked) THEN the palette-unification pass over the
 drained base. Hero-art pipeline per wi-art-and-sprites.
 
-**L5 — Content riders** (owns dialogue data, dens/companion data +
-the one companion code literal — declared exception, no L3 overlap):
-#323 dead inn_settled re-gate + #332 companion dead-end.
+**L5 — Content riders** (owns dialogue data, acts.json, dens/companion
+data + the one companion code literal — declared exception, no L3
+overlap): #323 dead inn_settled re-gate + #332 companion dead-end +
+#349 Pisces-joins-the-Horns narrative legs (four-member copy restore,
+the #15 bridge beat, dig-camp/residence presence rows; he still STARTS
+in Liscor independent — the arena leg is L2's).
 
-**L6 — Docs/causality** (owns docs/): the story causality map,
-agent-drafted → hand-verified → wired into wi-adding-dialogue-and-quests.
+**L6 — Docs/causality** (owns docs/design/story-causality-map.md): the
+story causality map, agent-drafted → hand-verified → wired into
+wi-adding-dialogue-and-quests.
+
+**L7 — Fable design lane** (owns its two new docs/design specs; ZERO
+code): #347 dynamic Class creation (GDI-bestowed unique classes) +
+#348 emergent property-based Skill/object interactions (ToTK-style).
+Strongest-reasoner work per the allocation doctrine; deliverable =
+build/no-build specs feeding the post-v0.17 board.
+
+Re-parallelized 2026-08-02 after the user's five additions (#345-#349):
+still ZERO cross-lane waits — the new items slot as intra-lane slices
+(L1), riders (L2/L5), and a new conflict-free docs lane (L7); the two
+new seams (difficulty apply-site, Pisces arena leg) are declared above
+with single owners.
 
 Merge-train notes: standard-setter rule applies (L3's new lint runs
 against every sibling branch pre-merge); L2's re-authored bands are the
