@@ -217,3 +217,28 @@ results AUTO-DELETE server-side after 8h — download immediately.
   sheet) for background extras; a named character with dialogue gets a
   bespoke generation (PixelLab pipeline above; anchor from alpha bbox;
   license note per generation).
+
+## Codex → image-to-pixelart-pro: the HERO-ART pipeline (proven 2026-08-02)
+For landmarks, buildings, multi-cell set pieces, act cards — anything whose
+narrative weight exceeds a 64px squint. Two steps:
+1. `codex exec --skip-git-repo-check -s workspace-write -C <dir> "<prompt>"`
+   — Codex CLI has NATIVE image generation (feature `image_generation`
+   stable+on; ChatGPT-account auth, no API key). Prompt for a PAINTERLY
+   concept: "3/4 top-down RPG camera, front face and roof visible, crisp
+   silhouette, subject centered ~80% of frame, TRANSPARENT background"
+   (transparent bg here saves the keying step later). Do NOT ask it to
+   pixelate.
+2. POST `api.pixellab.ai/v2/image-to-pixelart-pro` `{"image":{"base64":…},
+   "description":"16-bit top-down RPG sprite, hard black outline, chunky
+   pixels", "seed":N}` (ASYNC — poll /background-jobs/{id}). Resize input
+   to ~512 first. Output arrives at its OWN logical size (~160-190px),
+   clean true-pixel art, full concept fidelity.
+Traps: the STANDARD `/image-to-pixelart` (fixed 64px out) loses too much —
+pro only for hero art; Codex DIRECT pixel-art gen renders a pseudo-grid
+(~6-13px fake pixels) needing nearest-neighbor true-pixel downscale and
+goes muddy on fine-grained subjects; gray concept backgrounds need keying
+if you forgot transparent. Integrate as a CUSTOM-HD-like family via
+`render_scale` (0.35-0.5 ≈ 2.5-4 cells); windowed-read before size verdict.
+pixflux 64px stays the tool for SMALL props/icons. Licensing: gpt-image
+outputs are user-owned per OpenAI terms — BUNDLE-TIER until the public-repo
+redistribution posture is verified (two-tier policy).
