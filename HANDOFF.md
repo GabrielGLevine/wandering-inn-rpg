@@ -70,29 +70,12 @@ Process lessons this session (fold candidates for wi-running-the-machine
 > for anything missing; tint is NOT disambiguation.
 
 
-1. ~~Tag v0.16.0~~ — DONE (runs 30398347500/30398347409 green).
-2. ~~#325~~ — SHIPPED in v0.16.1 (#327's toast spec; issue closable).
-3. **#324 world_ready ~1.5s dead-render window** (global, PRE-EXISTING;
-   corrects the v0.15 "readout overdraw" diagnosis): ambient lines render
-   nothing while ui_dialogue_rendered fires. Needs systematic-debugging in
-   message_layer timing; on fix, fold the "rendered-event ≠ seen"
-   verification boundary into wi-writing-qa-scripts.
-4. **VISUAL-LOG open rows from the close pass**: readout-eats-interior-
-   bottom-rows (P3, all 8-9-row interiors), OLD-HUT-HAS-NO-HUT (P3 — the
-   enterable frame has no hut art; the cottage arch is decoy),
-   line_stalker two-headed overlap (still open), scavenger-vs-scavenger
-   sameness, stationer mood phase-flat + south-half emptiness, ward-scrap
-   lore toast slicing the field readout lines. Art/map/UI pass candidates.
-5. **Deferred minors** from the four lane ledgers (preserved at the
-   session scratchpad + summarized in the PR bodies): armed-plate pocket
-   cell (I2), fence power_level re-derivation, gate-closed-toast coverage
-   legs, QUIET-arm canonical, post-terminal offer hide, quest-starts-from-
-   offer canonical, den-keeper reactive stages.
-6. **Economy carried items**: gossip-ladder scaling ask (taste queue ⭐),
-   sim_progression_pace still blind to both axes (structural), #65 travel
-   ledger someday.
-7. Board: #283 (vacuous gate), #280 (deferred), #271/#272 (Codex-sized),
-   #323 (dead inn_settled lines, v0.17), #318 (nobility thread, v0.17).
+1. **CONFIRM the v0.16.2 Release/Pages runs green** (in progress at
+   session close).
+2. Everything else scheduled lives on the board (#335-#339, #343,
+   #324/#323/#332 inside the v0.17 lanes) or in the taste queue below.
+   Deferred minors from the v0.16 lane ledgers + economy carried items
+   (gossip-ladder ask, pace-harness blindness, #65) are unchanged.
 
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)
 
@@ -103,9 +86,9 @@ Process lessons this session (fold candidates for wi-running-the-machine
   CHOICE-LOG ruling 6: this game's Horns are a three-person party,
   Pisces staged as YOUR consultant (the Act IV/V thread requires it) —
   copy now says so consistently; veto reopens it as the L-sized
-  four-member reading. (3) Hero-art candidates (ruins/hut via the new
-  pipeline) get windowed reads at integration — eye-gate the style fit
-  vs PC16 neighbors.
+  four-member reading. (3) Hero-art
+  shipped in #344 with controller reads — eye-gate only if something
+  reads wrong in play.
 
 - **⭐ THE FULL SITTING — 14 states + 1 paper read, ~1hr** (v0.16 bundle +
   v0.15 carryover + organic Riverfarm run, ALL in
