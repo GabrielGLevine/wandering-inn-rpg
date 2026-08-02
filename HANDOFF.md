@@ -54,8 +54,11 @@ Process lessons this session (fold candidates for wi-running-the-machine
 > cross-lane waits; intra-lane order as written (L1 #336→#338;
 > L3 #324→#335→grading+motion; L4 drain+tint-audit→palette). Design
 > authorities: docs/design/2026-08-02-{skill-panel,quest-clarity,
-> skill-cooldown,visual-next-level}-spec/.md + issues #335-#338
-> (#323/#332 ride L5, #339 singles ride any lane). Each lane runs
+> skill-cooldown,visual-next-level}-spec docs + issues #335-#338 and
+> #345-#349 (L1 also carries #345 difficulty + #346 creation prompts;
+> L2 carries the #349 arena leg; L5 carries #349 narrative + #323/#332;
+> L7 is the Fable design lane for #347/#348; #339 singles ride any
+> lane). Each lane runs
 > impl → traced adversarial review → fix per wi-running-the-machine;
 > briefs carry file:line evidence from the specs + method hints.
 > Controller owns PRs + the anchored merge train per the roadmap's
@@ -82,11 +85,9 @@ Process lessons this session (fold candidates for wi-running-the-machine
 - **⭐ WAVE-2 EAR/EYE GATES (land with the wave close)**: (1) Raskghar
   fight music swap — profiled HydroGene winner wired, ear-gate state
   ships; THIRD strike if it reads wrong, say the word and the runner-up
-  wires (#200 history). (2) Pisces canon deviation ACKNOWLEDGED in
-  CHOICE-LOG ruling 6: this game's Horns are a three-person party,
-  Pisces staged as YOUR consultant (the Act IV/V thread requires it) —
-  copy now says so consistently; veto reopens it as the L-sized
-  four-member reading. (3) Hero-art
+  wires (#200 history). (2) RESOLVED 2026-08-02: user reversed —
+  Pisces IS a Horn (#349, v0.17); he still starts in Liscor
+  independent. (3) Hero-art
   shipped in #344 with controller reads — eye-gate only if something
   reads wrong in play.
 

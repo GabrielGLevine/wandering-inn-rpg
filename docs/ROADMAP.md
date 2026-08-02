@@ -46,22 +46,17 @@
   rank-tiered bounties, Second Wind, Hedault enchanting, class Waves
   A–D2, release automation. Earlier: git history.
 
-## Now (2026-08-02): wave-2 in flight; three directions spec'd
+## Now (2026-08-02, post-v0.16.2): board is the v0.17 lane plan
 
-#330 shipped (2026-07-29). A friend's 28-note playtest triaged same-day
-(11 investigators) → CHOICE-LOG rulings → the wave-2 fleet is running
-(sim + content lanes, #334; seam PR #340 merged). The user's three
-strategic directions each landed a committed spec: skill cooldowns
-(#337), Skills-tab redesign (#336), quest clarity (#338); plus the
-feedback-layer issue (#335), tripwires parking lot (#339), and the
-visual next-level strategy doc. NEW ART DOCTRINE: Codex concept →
-PixelLab image-to-pixelart-pro (hero art, proven; six candidates
-banked) and tint-is-not-disambiguation (user directive).
+v0.16.2 tagged same-day (the friend-playtest wave: #340/#341/#342/#344,
+Release/Pages green). All scheduled work sits inside the seven v0.17
+lanes below (#335-#339, #345-#349 + #323/#324/#332/#343 riders).
+Dispatch is reserved for a FRESH SESSION — prompt in HANDOFF.
 
 **User-held:** gossip-ladder scaling adjudication; the full-sitting
-states; wave-2 ear-gate (Raskghar swap) + Pisces three-Horn deviation
-ack; #195 audio listen; #134 Wave-D lore ruling; #253 user-deferred;
-#19 HOLD; #140 flake reference.
+states; Raskghar swap ear-gate (third strike = new track); #195 audio
+listen; #134 Wave-D lore ruling; #253 user-deferred; #19 HOLD; #140
+flake reference.
 
 ## v0.17 plan (RATIFIED 2026-08-02, refactored HIGHLY PARALLEL per user
 directive): six concurrent lanes, exclusive file ownership, one anchored
