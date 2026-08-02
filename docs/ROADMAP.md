@@ -46,42 +46,55 @@
   rank-tiered bounties, Second Wind, Hedault enchanting, class Waves
   A–D2, release automation. Earlier: git history.
 
-## Now (2026-07-29): four releases in two days; the board is clean
+## Now (2026-08-02): wave-2 in flight; three directions spec'd
 
-v0.14.0 → v0.16.1 all tagged with green Release/Pages runs. The Main
-Quest plays start→finale, reads while it plays, and every region on the
-map now holds real side content. The user's first full sitting produced
-26 findings and all 26 shipped. Open board: 11 issues, every one either
-scheduled (v0.17 candidates), user-gated, or a documented flake/hold.
+#330 shipped (2026-07-29). A friend's 28-note playtest triaged same-day
+(11 investigators) → CHOICE-LOG rulings → the wave-2 fleet is running
+(sim + content lanes, #334; seam PR #340 merged). The user's three
+strategic directions each landed a committed spec: skill cooldowns
+(#337), Skills-tab redesign (#336), quest clarity (#338); plus the
+feedback-layer issue (#335), tripwires parking lot (#339), and the
+visual next-level strategy doc. NEW ART DOCTRINE: Codex concept →
+PixelLab image-to-pixelart-pro (hero art, proven; six candidates
+banked) and tint-is-not-disambiguation (user directive).
 
-**User-held:** the gossip-ladder scaling adjudication (the one item from
-the sitting only the user can close — numbers in CHOICE-LOG's v0.16
-close block); the remaining full-sitting states on the new build; #195
-audio listen; #134 Wave-D lore ruling (absorbs #141); #253 stays
-user-deferred; #19 Steam HOLD; #140 flake reference.
+**User-held:** gossip-ladder scaling adjudication; the full-sitting
+states; wave-2 ear-gate (Raskghar swap) + Pisces three-Horn deviation
+ack; #195 audio listen; #134 Wave-D lore ruling; #253 user-deferred;
+#19 HOLD; #140 flake reference.
 
-## Next milestone: v0.17 — pick on user word
+## v0.17 plan (proposed 2026-08-02): three waves, dependency-ordered
 
-Candidates, in rough value order:
+**Wave A — "Command & Clarity" (build-ready, first session after wave-2
+closes).** Four parallel lanes + a rider, file ownership pre-cut:
+- A1+A2 (ONE lane, owns journal.gd): #336 Skills-tab redesign (+ AUTO
+  9-cap) then #338 quest-hints slice — both rebuild journal surfaces,
+  never split across implementers. Settings row rides A2.
+- A3 (own lane): #324 world_ready dead-render — systematic-debugging in
+  message_layer timing; on fix, the rendered≠seen caveat comes out of
+  wi-writing-qa-scripts + wi-machine-playtest.
+- A4 (art lane): VISUAL-LOG drain + the tint-site audit (cauldron wire
+  [candidate banked], pot tints, blade banding, line_stalker overlap,
+  scavenger sameness, Krshia rig, OLD-HUT wire [candidate banked]).
+- A5 (rider, data-only): #323 dead inn_settled re-gate.
 
-1. **#318 Invrisil nobility thread** (Magnolia-adjacent, spec-first —
-   her voice bar is the highest in the game; the v0.16 ambient layer is
-   the down payment).
-2. **#330 Beast Tamer dynamism + the no-treadmill audit** (the
-   principle — "actions never exist solely to level a class" — is now
-   law in wi-adding-a-class-or-skill; the audit will likely spawn
-   follow-ups).
-3. **Audio wave** (#195 after the user listen + boss/biome coverage).
-4. **#323 dead inn_settled lines re-gate** (small, scoped).
-5. **#134 Wave D classes** (after the lore ruling).
-6. **#324 world_ready dead-render window** (global engine bug; needs a
-   systematic-debugging session; on fix, the rendered-vs-seen caveat
-   comes out of two skills).
-7. **#253 mobile import** if the user un-defers.
+**Wave B — "The World Responds" (needs A3).** #335 feedback layer
+phase 1: universal action tell, interactable affordance (eye-gate
+heavy), audio gap rows, acted-on-state lint. Plus the #338 second
+half: the story causality map (agent-drafted, hand-verified, then a
+living doc wired into wi-adding-dialogue-and-quests).
 
-Loose singles that ride any wave: #283 (vacuous portal gate
-adjudication), the Krshia bespoke rig (owed from the art wave), the
-VISUAL-LOG residuals (five art debts + the v0.16 close P3s).
+**Wave C — "Dynamism" (milestone-sized, own run).** #337 skill
+cooldowns per spec: AI fall-through first, surgical cooldown set,
+full balance re-author (141 cells), badge/tooltip UI. Prereqs already
+shipped in wave-2. #332 companion dead-end rides as the combat-content
+sibling.
+
+**v0.18 candidates (pick later):** Atmosphere Milestone (palette
+unification + time-of-day grading + motion layer — the visual
+next-level doc), #318 Invrisil nobility thread (spec-first), #134
+Wave D (AFTER #336 lands — the skills list must scale first), #195
+audio wave post-listen, room-tier real second room, rest-verb design.
 
 ## Parked / standing
 
