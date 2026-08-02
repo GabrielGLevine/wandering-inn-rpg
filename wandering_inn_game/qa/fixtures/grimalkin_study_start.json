@@ -46,6 +46,7 @@
    "door_understood": 1,
    "door_study_sleeps": 3,
    "door_awakened": 1,
+   "catalyst_delivered": 1,
    "pallass_sponsored": 1,
    "pallass_attuned": 1,
    "recovered_anchor_stone": 1,
