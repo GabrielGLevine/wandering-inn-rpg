@@ -46,12 +46,12 @@ Process lessons this session (fold candidates for wi-running-the-machine
 
 ### v0.17 dispatch prompt (paste into the fresh session)
 
-> Dispatch v0.17 per docs/ROADMAP.md's ratified six-lane plan. First:
+> Dispatch v0.17 per docs/ROADMAP.md's ratified seven-lane plan. First:
 > wi-start-here read order, confirm wave-2/#334 is CLOSED and tagged
 > (if residuals exist, fold them into the matching lane's brief), run
 > wi-usage-guard. Then dispatch ALL SIX LANES CONCURRENTLY as worktree
 > lanes with the exact file ownership printed in the roadmap — no
-> cross-lane waits; intra-lane order as written (L1 #336→#338;
+> cross-lane waits; intra-lane order as written (L1 #336→#338→#345→#346;
 > L3 #324→#335→grading+motion; L4 drain+tint-audit→palette). Design
 > authorities: docs/design/2026-08-02-{skill-panel,quest-clarity,
 > skill-cooldown,visual-next-level}-spec docs + issues #335-#338 and
