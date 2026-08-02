@@ -606,6 +606,15 @@
      ]
     },
     {
+     "id": "erin_thread_door_resting",
+     "requires_accomplishment": {
+      "catalyst_delivered": 1
+     },
+     "lines": [
+      "Pisces says the frame has to learn the stone, and that means sleeping on it. More than once. Upstairs. Go on."
+     ]
+    },
+    {
      "id": "erin_thread_door_neutral",
      "requires_accomplishment": {
       "door_awakened": 1

@@ -6,7 +6,7 @@
 			"speaker": "Ceria",
 			"text": "You're the one Olesm's paying to poke the gallery? Good. We're the ones the Guild's paying to make sure you come back out. Ceria Springwalker — Horns of Hammerad.",
 			"text_variants": [
-				{ "requires": { "accomplishment": { "horns_party_formed": 1 } }, "text": "All right. Four of us, one of you. Try to keep up." },
+				{ "requires": { "accomplishment": { "horns_party_formed": 1 } }, "text": "All right. Three of us, one of you. Try to keep up." },
 				{ "requires": { "accomplishment": { "vault_construct_downed": 1 } }, "text": "It was guarding a door. Wonderful. I hate doors that need guarding." },
 				{ "requires": { "accomplishment": { "door_retrieved": 1 } }, "text": "Still can't believe we carried that thing across the floodplains. Erin's already put a tablecloth on it. A TABLECLOTH." }
 			],
@@ -27,7 +27,7 @@
 		"dig_pitch": {
 			"_comment": "2026-07-26 main-quest restructure (Task 2.2): the horns_dig pitch. The quest + horns_dig_started already banked on the option that reached here, so both exits below are ungated -- the invitation cannot be re-taken (hub's hide_when) and cannot strand the player (dig_directions repeats the camp's location, and Task 2.3's camp NPC gates on horns_dig_started, not on hearing this node).",
 			"speaker": "Ceria",
-			"text": "Word travels. Yes — there's a ruin out past the floodplains, and under it a level nobody's opened since before Liscor had walls. We hit the seal three days ago. Yvlon can't cut it, Pisces won't shut up about it, and we are exactly one pair of hands short.",
+			"text": "Word travels. Yes — there's a ruin out past the floodplains, and under it a level nobody's opened since before Liscor had walls. We hit the seal three days ago. Yvlon can't cut it, and the one mage in this city who could read it works for himself and charges accordingly. We are exactly one pair of hands short.",
 			"options": [
 				{ "text": "I'm in. Where's the camp?", "goto": "dig_directions" },
 				{ "text": "What's down there?", "goto": "dig_unknown" }

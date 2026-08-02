@@ -759,8 +759,8 @@
 			"icon": "icon_advanced_cooking",
 			"contexts": ["exploration"],
 			"field": true,
-			"field_ambient": "[Advanced Cooking] — You compose a meal in your head. It needs a proper station and a hungry table.",
-			"description": "A kitchen becomes possibility: timing, balance, and the dish hidden inside the ingredients."
+			"field_ambient": "[Advanced Cooking] — You compose a meal in your head. It needs a proper station: a chef's counter, or a stall burner.",
+			"description": "Cast at a chef's station to plate a fine meal — worth an extra 2 HP in your next fight. A kitchen becomes possibility: timing, balance, and the dish hidden inside the ingredients."
 		},
 		{
 			"_comment": "CANON-VERDICT: ATTESTED -- Erin, 2.17; passive-identity shape limited to recipes and practiced arts.",

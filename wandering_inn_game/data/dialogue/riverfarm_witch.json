@@ -270,7 +270,7 @@
      "goto": "bought"
     },
     {
-     "text": "The travel-stone, under the cloth. (18 gold)",
+     "text": "The travel-stone under the cloth. It already knows the road to Invrisil. (18 gold)",
      "requires": {
       "gold": 18
      },
@@ -288,6 +288,9 @@
       },
       {
        "accomplishment": "invrisil_attuned"
+      },
+      {
+       "toast": "The stone is warm and it keeps turning a little north in your hand. Ask the Door for Invrisil now and it will know what you mean."
       }
      ],
      "goto": "stone_sold"

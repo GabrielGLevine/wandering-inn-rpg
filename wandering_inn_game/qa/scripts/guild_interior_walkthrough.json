@@ -31,7 +31,7 @@
   { "action": "screenshot", "name": "02_selys_desk" },
   { "_comment": "Fresh state: only 'Just looking around.' (idx0) and the new 'How does the board work?' (idx1) are visible -- has_package/lyonette_tip/package_delivered/errand_decided/chatted_with_selys:2 are all unmet.", "action": "move", "direction": "down", "steps": 1 },
   { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Selys", "text": "The board's behind you. Reading it is free. Taking a posting means telling me, so I can log it and not have to chase you across Liscor." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Selys", "text": "The board's behind you. Reading it is free. Taking a posting means telling me, so I can log it and not have to chase you across Liscor. Anything else worth walking to, write it down — that's what the leads page in your journal is for." }, "timeout_sec": 5 },
   { "action": "move", "direction": "down", "steps": 1 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },

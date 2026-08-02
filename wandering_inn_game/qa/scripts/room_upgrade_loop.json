@@ -1,5 +1,5 @@
 {
- "_comment": "GH#92 D3: tier-1 purchase at the room-register PROP (own conversation, zero hub-pin exposure). Proves gold spend + room_tier_1 bank + Lyonette's thanks; +HP math pinned in test_sim_core.",
+ "_comment": "GH#92 D3: tier-1 purchase at the room-register PROP (own conversation, zero hub-pin exposure). Proves gold spend + room_tier_1 bank + Lyonette's thanks; +HP math pinned in test_sim_core. GH#334 note 25 RE-PIN: tier_thanks gained per-tier text_variants, so the node text here is now the room_tier_1 arm -- the bank happens in the option's own effects, before the walker rebuilds ctx and re-resolves the variant, which is exactly what this pin now proves.",
  "fixture_save": "near_room_upgrade",
  "starts_at_title": true,
  "steps": [
@@ -56,7 +56,7 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "text": "Lyonette enters it without looking up, and the line is perfect anyway. \"Paid in full. I'll have it aired by tonight — you'll sleep better than you have been, which frankly is not difficult.\""
+    "text": "Lyonette enters it without looking up, and the line is perfect anyway. \"Paid in full. Aired, swept, and the draught stopped — you'll get up with more in you than you have been.\""
    },
    "timeout_sec": 5
   },

@@ -1100,7 +1100,7 @@
      "lines": [
       "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
       "The cistern file is closed. Do you know how few files CLOSE in this office? I keep it on top of the stack for morale.",
-      "If you're between jobs, see me about bounty work. The Watch pays slow, but it pays. And I sign faster for people who don't invoice me for heroics."
+      "If you're between jobs, the Watch pays for work already done — the crate crew, the cisterns, anything with a file. My desk, not the Guild's board; that's Selys's paper and her rules."
      ]
     },
     {
@@ -1131,7 +1131,7 @@
      "lines": [
       "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
       "The cistern file is closed. Do you know how few files CLOSE in this office? I keep it on top of the stack for morale.",
-      "If you're between jobs, see me about bounty work. The Watch pays slow, but it pays. And I sign faster for people who don't invoice me for heroics."
+      "If you're between jobs, the Watch pays for work already done — the crate crew, the cisterns, anything with a file. My desk, not the Guild's board; that's Selys's paper and her rules."
      ]
     }
    ],
@@ -1677,6 +1677,15 @@
      },
      "lines": [
       "You have everything. Pisces is by the Guild steps, being smug at pigeons."
+     ]
+    },
+    {
+     "id": "krshia_thread_door_resting",
+     "requires_accomplishment": {
+      "catalyst_delivered": 1
+     },
+     "lines": [
+      "The mage has your stone and your dust and no more use for your questions, yes? Then go and sleep, several times. This is the part nobody sells tickets to."
      ]
     },
     {

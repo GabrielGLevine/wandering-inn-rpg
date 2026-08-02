@@ -210,10 +210,20 @@ func _validate_consume_subset(maps: Dictionary) -> void:
 func _validate_economy_prices(scene: Dictionary, graphs: Dictionary, items: Dictionary) -> void:
 	var price: Dictionary = {}
 	var is_consumable: Dictionary = {}
+	# 2026-08-02 (GH#334 ruling 7): `kind: "meal"` is EXEMPT from the
+	# must-be-priced arm. hot_meal already shipped priceless because a meal is
+	# served or eaten, never merchandise; fine_meal/signature_meal joined it
+	# when the free-cook-then-sell loop was ruled shut. A priceless item is
+	# unsellable by construction (wi_game.gd sellable_items drops price<=0), so
+	# the "no sell margin" hazard this arm guards cannot apply to them. The
+	# component-sum arm below still runs for meals, so a meal that ever eats
+	# reagents is still checked.
+	var is_meal: Dictionary = {}
 	for entry: Dictionary in items.get("items", []):
 		var iid := String(entry["id"])
 		price[iid] = int(entry.get("price", 0))
 		is_consumable[iid] = entry.has("use_effect")
+		is_meal[iid] = String(entry.get("kind", "")) == "meal"
 	# Shop buys: an option that charges gold AND grants a consumable.
 	for graph_id: String in graphs:
 		var nodes: Dictionary = graphs[graph_id]["nodes"]
@@ -226,6 +236,8 @@ func _validate_economy_prices(scene: Dictionary, graphs: Dictionary, items: Dict
 						continue
 					var bought := String(effect["item"])
 					if not bool(is_consumable.get(bought, false)):
+						continue
+					if bool(is_meal.get(bought, false)):
 						continue
 					_check(int(price.get(bought, 0)) > 0, "%s/%s: shop-buy option sells consumable '%s' but it has no price>0 (no sell margin) -- #92 D1" % [graph_id, node_id, bought])
 	# Crafts: a bench prop's on_skill_use output; consumable outputs must be
@@ -243,7 +255,7 @@ func _validate_economy_prices(scene: Dictionary, graphs: Dictionary, items: Dict
 				var out_id := String(payload["item"])
 				var rems: Variant = payload.get("remove_item", [])
 				var rem_list: Array = rems if rems is Array else ([String(rems)] if String(rems) != "" else [])
-				if bool(is_consumable.get(out_id, false)):
+				if bool(is_consumable.get(out_id, false)) and not bool(is_meal.get(out_id, false)):
 					_check(int(price.get(out_id, 0)) > 0, "%s/%s: craft yields consumable '%s' but it has no price>0 -- #92 D1" % [map_id, ent.get("id", "?"), out_id])
 				if rem_list.is_empty():
 					continue
@@ -540,7 +552,14 @@ const POPULATION_FLOORS := {
 	# +1 per INTERACTABLE_KEYS carrier. encounter_when does NOT exempt a row.
 	"stationer": 11,
 	"adventurers_rest": 10,
-	"riverfarm_village": 24,
+	# 2026-08-02 (GH#334) RE-DERIVED 24 -> 22, deliberately, per this constant's
+	# own rule. Three rows that used to stand unconditionally are now
+	# window-gated: the two east EW fence rails swap out on herd_rerouted (note
+	# 27 leg C -- their re-set twins are present_when rows and so count for
+	# nothing here, which is correct), and riverfarm_thicket_patch gates on
+	# thicket_answered (note 18 ruling b -- the intrusion is a consequence, not
+	# permanent village furniture). Counted by the test's own rule, not guessed.
+	"riverfarm_village": 22,
 	"pallass_forge": 15,
 	"pallass_market": 24,
 	"ruin_surface": 8,
@@ -775,9 +794,19 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 				continue
 			var entity_id: String = String(entity["id"])
 			var when: Dictionary = entity["present_when"]
+			# 2026-08-02 (GH#334 note 18, ruling b) NARROWED, not lifted. The
+			# hazard this arm names is exact and mechanical: `_check_trigger_radius`
+			# (wi_game.gd) never consults `entity_present`, so a present_when
+			# encounter THAT CAN AMBUSH would be invisible and unblocked yet still
+			# fire. That same function returns early for any encounter with no
+			# `trigger_radius` -- an interact-only encounter cannot ambush at all,
+			# so structural absence is safe there and is the only way to express
+			# "this threat arrives as a consequence" (encounter_when leaves the
+			# rig standing as furniture and only refuses the fight). Keep the ban
+			# for every encounter that carries a trigger_radius.
 			_check(
-				String(entity.get("kind", "")) != "encounter",
-				"entity %s: present_when is forbidden on kind:encounter -- _check_trigger_radius never consults presence, so a present_when encounter would be invisible/unblocked yet still ambush; use encounter_when" % entity_id
+				String(entity.get("kind", "")) != "encounter" or not entity.has("trigger_radius"),
+				"entity %s: present_when is forbidden on a kind:encounter that carries a trigger_radius -- _check_trigger_radius never consults presence, so it would be invisible/unblocked yet still ambush; use encounter_when" % entity_id
 			)
 			_check(when.has("requires") or when.has("phase") or when.has("absent") or when.has("guest") or when.has("companion"), "entity %s present_when has no recognized shape (only 'requires'/'phase'/'absent'/'guest'/'companion' are sanctioned)" % entity_id)
 			if when.has("phase"):
@@ -1117,6 +1146,13 @@ const DIALOGUE_EFFECT_VERBS := [
 	"accept_bounty", "accept_delivery", "sell_item", "open_board_picker",
 	"open_board_turnin", "open_board_abandon", "open_delivery_picker",
 	"open_delivery_turnin", "open_sell_picker",
+	# 2026-08-02 (GH#334): the talk-route sibling of an encounter's
+	# victory_toast and a prop's toast, shipped in wi_game.gd's effect loop by
+	# PR #340. Its whole purpose is that a dialogue pick which RESOLVES
+	# something can say so -- before it, every talk-route quest resolution in
+	# the game was silent by construction and the only feedback was the generic
+	# "Quest updated:" line naming the NEXT step.
+	"toast",
 ]
 
 
@@ -1475,9 +1511,24 @@ func _quest_giver_maps(graphs: Dictionary, conversation_maps: Dictionary) -> Dic
 	return out
 
 
+## 2026-08-02 (GH#334 ruling 15): the EMPTY-PRODUCER EARLY-OUT is gone from
+## here. A beat whose counter no map produces is banked in CODE -- today only
+## sleep_beat.gd's door_awakened -- and `beat_maps.is_empty()` used to exempt
+## exactly that beat from every place-naming rule in this file. That is the
+## beat that told the player to carry a catalyst to Pisces when the actual
+## instruction was "sleep, three times, at the inn". Callers now route the
+## empty case through CODE_BANKED_BEAT_TOKENS instead of skipping it.
+const CODE_BANKED_BEAT_TOKENS := {
+	# Where the player must physically BE for the sleep hook to fire. Both
+	# study pairs run off any bed, and the inn's is the only bed the main
+	# thread ever hands you, so "inn" is the honest landmark.
+	"door_awakened": ["inn"],
+	"dungeon_attuned": ["inn"],
+	"post_game": ["inn"],
+}
+
+
 func _beat_needs_place_name(beat_maps: Dictionary, giver_maps: Dictionary) -> bool:
-	if beat_maps.is_empty():
-		return false
 	for map_id: String in beat_maps:
 		if giver_maps.has(map_id):
 			return false
@@ -1504,13 +1555,31 @@ func _validate_travel_beat_place_naming(quests: Dictionary, scene: Dictionary, g
 			for accomplishment_id: String in _beat_gate_counters(beat):
 				for map_id: String in (producer_maps.get(accomplishment_id, {}) as Dictionary):
 					beat_maps[map_id] = true
+			var description := String(beat.get("description", ""))
+			# GH#334 ruling 15: the code-banked case, no longer a silent skip.
+			# No map produces this counter, so there is no giver-map coincidence
+			# to excuse the beat -- it MUST say where the player has to be.
+			if beat_maps.is_empty():
+				var code_tokens: Array = []
+				var covered := true
+				for accomplishment_id: String in _beat_gate_counters(beat):
+					if CODE_BANKED_BEAT_TOKENS.has(accomplishment_id):
+						code_tokens.append_array(CODE_BANKED_BEAT_TOKENS[accomplishment_id])
+					else:
+						covered = false
+						_check(false, "quest %s beat %s waits on '%s', which no map produces and CODE_BANKED_BEAT_TOKENS does not cover -- a code-banked beat has to declare where the player must be, or the journal points at nothing" % [quest_id, String(beat["id"]), accomplishment_id])
+				if covered:
+					_check(
+						_description_names_place(description, code_tokens),
+						"quest %s beat %s is code-banked (counters %s) but its description names no landmark from %s: %s" % [quest_id, String(beat["id"]), _beat_gate_counters(beat).keys(), code_tokens, description]
+					)
+				continue
 			if not _beat_needs_place_name(beat_maps, quest_giver_maps):
 				continue
 			var tokens: Array = []
 			for map_id: String in beat_maps:
 				_check(LANDMARK_TOKENS.has(map_id), "quest %s beat %s needs a travel landmark on map %s, which has no LANDMARK_TOKENS entry" % [quest_id, String(beat["id"]), map_id])
 				tokens.append_array(LANDMARK_TOKENS[map_id])
-			var description := String(beat.get("description", ""))
 			_check(
 				_description_names_place(description, tokens),
 				"quest %s beat %s is a travel-only beat (giver map(s) %s, producer map(s) %s) but its description names no landmark from %s: %s" % [quest_id, String(beat["id"]), quest_giver_maps.keys(), beat_maps.keys(), tokens, description]
@@ -1521,7 +1590,12 @@ func _validate_place_naming_shape_cases() -> void:
 	_check(not _beat_needs_place_name({"inn": true}, {"inn": true}), "same-map beat needs no landmark")
 	_check(_beat_needs_place_name({"guild": true}, {"inn": true}), "guild-only beat, inn-given quest, needs a landmark")
 	_check(not _beat_needs_place_name({"inn": true, "street": true}, {"inn": true}), "a beat with ANY same-map route needs no landmark, even with a foreign alternate route")
-	_check(not _beat_needs_place_name({}, {"inn": true}), "no known producer map -- nothing to cross-check, not this check's business")
+	# 2026-08-02 (GH#334 ruling 15): the empty-producer case NO LONGER reaches
+	# this helper -- the caller intercepts it and demands a CODE_BANKED_BEAT_TOKENS
+	# landmark instead of skipping the beat. The shape case moved with it.
+	_check(_beat_needs_place_name({}, {"inn": true}), "an empty producer set shares no map with any giver, so the helper's own answer is 'needs naming'; the caller handles it before ever asking")
+	_check(_description_names_place("Sleep at the inn while the Door learns the stone — it takes more than one night.", CODE_BANKED_BEAT_TOKENS["door_awakened"]), "the code-banked attune beat names the inn")
+	_check(not _description_names_place("Bring Krshia's catalyst to Pisces and see how far the Door can reach.", CODE_BANKED_BEAT_TOKENS["door_awakened"]), "the pre-fix attune copy named no sleep site -- the negative control for the closed early-out")
 	_check(_beat_needs_place_name({"guild": true}, {}), "an unresolvable quest-giver map (empty set) can share no map with anything -- fails loud (requires naming) rather than silently skipping the beat")
 
 	# 2026-07-26 (Task 2.3): "ruin" joined LANDMARK_TOKENS["ruin_surface"] --

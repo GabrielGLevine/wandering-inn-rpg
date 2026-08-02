@@ -210,6 +210,11 @@
        "door_awakened": 1
       }
      },
+     "effects": [
+      {
+       "accomplishment": "catalyst_delivered"
+      }
+     ],
      "goto": "door_attune"
     },
     {

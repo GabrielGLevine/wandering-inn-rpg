@@ -820,7 +820,7 @@
 			"lore": "A hedge remedy does not promise miracles. It promises that the bleeding slows, the swelling settles, and morning remains possible."
 		},
 		{
-			"_comment": "The +2 HP next-fight payload anchors on the shipped well_fed combat-build bonus; 8g is a conservative placeholder price, with final pricing deferred to open issue #92.",
+			"_comment": "The +2 HP next-fight payload anchors on the shipped well_fed combat-build bonus. NO `price` KEY (GH#334 ruling 7): hot_meal's precedent -- a meal is served or eaten, never merchandise. Cooking plates it free, so a price was a gold spigot.",
 			"id": "fine_meal",
 			"name": "Fine Meal",
 			"kind": "meal",
@@ -831,13 +831,12 @@
 			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
-			"price": 8,
 			"use_effect": { "next_fight": { "hp_mod": 2 } },
 			"description": "A careful plate of browned vegetables, hot bread, and stew reduced until every spoonful holds together.",
 			"lore": "Good cooking is partly ingredients and mostly attention. This plate had enough of both to follow a traveler well past the table."
 		},
 		{
-			"_comment": "The +2 HP/+1 damage next-fight payload is the controller-ruled chef-tier step above well_fed; 14g is a conservative placeholder price, with final pricing deferred to open issue #92.",
+			"_comment": "The +2 HP/+1 damage next-fight payload is the controller-ruled chef-tier step above well_fed. No `price` key (GH#334 ruling 7): see fine_meal.",
 			"id": "signature_meal",
 			"name": "Signature Meal",
 			"kind": "meal",
@@ -848,7 +847,6 @@
 			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
-			"price": 14,
 			"use_effect": { "next_fight": { "hp_mod": 2, "damage_mod": 1 } },
 			"description": "A cook's answer to an empty table: crisp edges, deep broth, and one unmistakable finishing touch.",
 			"lore": "A signature dish is remembered before anyone knows why. The second bite explains it; the empty plate settles the argument."

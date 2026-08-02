@@ -1246,6 +1246,7 @@
    "observe": "Low fence rail, bordering the tilled rows."
   },
   {
+   "_comment": "GH#334 note 27C: absent on herd_rerouted, twins at (8,9)/(9,9) turn present -- the journal's moved-fences line becomes TRUE. Both cells stay in `blocked`.",
    "id": "riverfarm_fence_ew_5_9",
    "kind": "prop",
    "cell": [
@@ -1254,6 +1255,11 @@
    ],
    "display_name": "Fence",
    "sprite": "riverfarm_fence_ew",
+   "present_when": {
+    "absent": {
+     "herd_rerouted": 1
+    }
+   },
    "observe": "Low fence rail, bordering the tilled rows."
   },
   {
@@ -1265,7 +1271,44 @@
    ],
    "display_name": "Fence",
    "sprite": "riverfarm_fence_ew",
+   "present_when": {
+    "absent": {
+     "herd_rerouted": 1
+    }
+   },
    "observe": "Low fence rail, bordering the tilled rows."
+  },
+  {
+   "id": "riverfarm_fence_ew_8_9",
+   "kind": "prop",
+   "cell": [
+    8,
+    9
+   ],
+   "display_name": "Fence",
+   "sprite": "riverfarm_fence_ew",
+   "present_when": {
+    "requires": {
+     "herd_rerouted": 1
+    }
+   },
+   "observe": "Rails re-set forty paces east of where they stood. The gap they left is the corusdeer road, and the hoof marks say the herd found it."
+  },
+  {
+   "id": "riverfarm_fence_ew_9_9",
+   "kind": "prop",
+   "cell": [
+    9,
+    9
+   ],
+   "display_name": "Fence",
+   "sprite": "riverfarm_fence_ew",
+   "present_when": {
+    "requires": {
+     "herd_rerouted": 1
+    }
+   },
+   "observe": "Rails re-set forty paces east of where they stood. The gap they left is the corusdeer road, and the hoof marks say the herd found it."
   },
   {
    "id": "riverfarm_fence_ns_2_6",
@@ -1578,13 +1621,18 @@
    }
   },
   {
-   "_comment": "interact-only, no trigger_radius, no encounter_when gate (always available, matching corusdeer_range/razorbeak_nest's own unconditional shape).",
+   "_comment": "interact-only, no trigger_radius, no encounter_when gate (matching corusdeer_range/razorbeak_nest's own unconditional shape). GH#334 note 18 (b): ungated beside the lamb pen from hour one -- furniture, not a threat. present_when is legal here: no trigger_radius.",
    "id": "riverfarm_thicket_patch",
    "kind": "encounter",
    "cell": [
     17,
     13
    ],
+   "present_when": {
+    "requires": {
+     "thicket_answered": 1
+    }
+   },
    "display_name": "A Creeping Thicket",
    "sprite": "briar_collector",
    "arena": "witch_hollow",
@@ -1595,7 +1643,7 @@
    ],
    "allies": [],
    "respawns": true,
-   "observe": "Vines thicker than they should be creep across open ground here, twitching against a wind that isn't blowing.",
+   "observe": "Vines thicker than they should be, over the fence line and into the village since the thicket business settled. They creep across open ground, twitching against a wind that isn't blowing.",
    "on_victory": "thicket_remnants_culled"
   },
   {

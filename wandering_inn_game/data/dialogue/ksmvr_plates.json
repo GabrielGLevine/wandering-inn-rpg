@@ -8,7 +8,7 @@
 				{ "requires": { "accomplishment": { "guided_ksmvr_through_plates": 1 } }, "text": "I did not die. This is the preferred outcome." }
 			],
 			"options": [
-				{ "text": "Follow exactly. Left, then straight.", "requires": { "accomplishment": { "horns_party_formed": 1 } }, "hide_when": { "accomplishment": { "guided_ksmvr_through_plates": 1 } }, "effects": [ { "accomplishment": "guided_ksmvr_through_plates" }, { "accomplishment": "halls_cleared" } ], "goto": "success" },
+				{ "_comment": "GH#334 note 15: halls_cleared joins the hide_when -- the row was re-takeable, re-applying the ally_hp_penalty in silence.", "text": "Follow exactly. Left, then straight.", "requires": { "accomplishment": { "horns_party_formed": 1 } }, "hide_when": { "accomplishment": { "guided_ksmvr_through_plates": 1, "halls_cleared": 1 } }, "effects": [ { "accomplishment": "guided_ksmvr_through_plates" }, { "accomplishment": "halls_cleared" }, { "toast": "The plates go quiet behind you, one after another, and stay quiet. Whatever they were counting, they have stopped." } ], "goto": "success" },
 				{ "text": "Not yet.", "end": true }
 			]
 		},

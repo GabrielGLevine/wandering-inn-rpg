@@ -62,7 +62,8 @@
      },
      "hide_when": {
       "accomplishment": {
-       "watch_swept_cisterns": 1
+       "watch_swept_cisterns": 1,
+       "resolved_the_cisterns": 1
       }
      },
      "goto": "sweep_pitch"
@@ -128,7 +129,7 @@
      "goto": "zevara_oath"
     },
     {
-     "text": "About that bounty work.",
+     "text": "You pay for jobs?",
      "requires": {
       "accomplishment": {
        "resolved_the_cisterns": 1,
@@ -290,8 +291,19 @@
    ]
   },
   "summons": {
+   "_comment": "GH#334 note 4b: Act II pacing fires this, so it told cistern-innocent players 'You've been down there'. text_variants cannot express absence, so the base assumes none.",
    "speaker": "Zevara",
-   "text": "There you are. The cisterns crew found something under the new grates: tunnels nobody dug, going DOWN. Olesm's maps say they shouldn't exist. You've been down there; you're going again. This time for the Watch.",
+   "text": "There you are. A crew opening the grates under the market broke through into tunnels nobody dug, going DOWN. Olesm's maps say they shouldn't exist. I need somebody who isn't Watch to go and look, and you have the look of somebody who says yes.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "heard_about_cisterns": 1
+      }
+     },
+     "text": "There you are. The cisterns crew found something under the new grates: tunnels nobody dug, going DOWN. Olesm's maps say they shouldn't exist. You've been down there; you're going again. This time for the Watch."
+    }
+   ],
    "options": [
     {
      "text": "Then I'll go down.",
