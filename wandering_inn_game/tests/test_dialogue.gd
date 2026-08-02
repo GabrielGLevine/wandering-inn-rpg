@@ -709,6 +709,53 @@ func test_talk_pool_post_grows_pool_after_gate() -> void:
 	assert(not base_pool.has(after), "post-resolution talk REPLACED the base pool, not merged it")
 
 
+## GH#323 per-line proof. The three ORIGINAL Horns inn rows live in exactly one
+## window -- seal_kept_reported banked, horns_dig_started not yet -- and their
+## settled stages used to gate on door_awakened, which sits far past the closing
+## counter. Nine lines that could never render. This walks each stage LIVE
+## inside that window and pins every line, so re-gating either arm behind an
+## out-of-window counter reds immediately. The `_returned` twins keep
+## door_awakened; their own window opens at door_mounted (asserted here too, so
+## the two arms can never be collapsed by accident).
+func test_horns_inn_settled_stages_serve_inside_their_own_window() -> void:
+	var scene := WISceneCatalog.compose()
+	for row: Array in [["ceria_inn", Vector2i(8, 6)], ["yvlon_inn", Vector2i(2, 3)], ["ksmvr_inn", Vector2i(14, 7)]]:
+		var id := String(row[0])
+		var cell: Vector2i = row[1]
+		var ent := _find_entity(scene, "inn", id)
+		assert(not ent.is_empty(), "inn carries %s" % id)
+		var base_pool: Array = ent["talk_pool"]
+		var stage: Dictionary = (ent["talk_pool_stages"] as Array)[0]
+		var settled: Array = stage["lines"]
+		assert(settled.size() == 3, "%s settled stage carries three lines" % id)
+
+		var game := _make_game_with_dialogue({})
+		assert(not game.entity_present(ent), "%s is absent before seal_kept_reported" % id)
+		game.record_accomplishment("seal_kept_reported")
+		assert(game.entity_present(ent), "%s stands in the inn once the seal is reported" % id)
+		var twin := _find_entity(scene, "inn", id + "_returned")
+		assert(not game.entity_present(twin), "%s_returned stays away -- the twin's window opens at door_mounted" % id)
+
+		# One pool line per waking (social_talked clears at sleep). Chats 1-3
+		# spend the base pool and carry the counter to the stage threshold;
+		# chats 4-6 must serve settled lines 0, 1, 2 in order.
+		var served: Array = []
+		for chat: int in 6:
+			_events.clear()
+			game.player_cell = cell - Vector2i(0, 1)
+			game.player_facing = Vector2i(0, 1)
+			game.interact()
+			served.append(_last_line_text())
+			game.sleep()
+			assert(game.accomplishment_count("horns_dig_started") == 0, "%s: the window never closed under us" % id)
+			assert(game.accomplishment_count("door_awakened") == 0, "%s: door_awakened stays unheld all window long -- the old gate's exact problem" % id)
+		for i: int in 3:
+			assert(served[i] == String(base_pool[i]), "%s chat %d serves base pool line %d" % [id, i + 1, i])
+		for i: int in 3:
+			assert(served[i + 3] == String(settled[i]), "%s chat %d serves SETTLED line %d (dead before GH#323)" % [id, i + 4, i])
+		assert(game.entity_present(ent), "%s is still standing there after six wakings -- the window never needed the dig" % id)
+
+
 const GRAPH := {
 	"start": "hub",
 	"nodes": {
@@ -879,6 +926,7 @@ func _init() -> void:
 	test_node_text_variants_use_met_requires()
 	test_node_text_variants_last_match_wins()
 	test_talk_pool_post_grows_pool_after_gate()
+	test_horns_inn_settled_stages_serve_inside_their_own_window()
 	test_gold_effect_verb_applies_through_dialogue_choose()
 	test_well_fed_effect_verb_applies_through_dialogue_choose()
 	test_gold_affordability_greys_when_broke()
