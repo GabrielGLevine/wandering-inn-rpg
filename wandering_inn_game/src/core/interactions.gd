@@ -79,7 +79,7 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 			return _npc_post_pool(target)
 		"prop":
 			if bool(target.get("sleep", false)):
-				var sleep_toast := String(target.get("sleep_toast", ""))
+				var sleep_toast := _resolve_sleep_toast(target.get("sleep_toast", ""))
 				if sleep_toast != "":
 					_emit(WIEvents.TOAST, {"text": sleep_toast})
 				_sleep.call()
@@ -187,6 +187,26 @@ func dispatch(target: Dictionary, social_talked: Dictionary, entity_first_use: D
 		_:
 			_emit(WIEvents.INTERACT_UNHANDLED, {"kind": String(target[WIKeys.KIND]), "id": String(target[WIKeys.ID])})
 			return {}
+
+
+## GH#334 ruling 3 (room tiers): a bed's `sleep_toast` accepts EITHER the plain
+## String every shipped bed carries today, OR an Array of
+## `{"when": {counter: n}, "text": "..."}` variants -- so the bed can speak the
+## upgrade the player bought instead of saying "Your own bed." forever while the
+## room quietly grows three tiers of comfort underneath them.
+##
+## Resolution is `WIGame._resolve_skill_use_effect` ITSELF, not a second
+## resolver: the array is handed over as that function's own `variants` list
+## against an empty base, so the gate semantics (`_accomplishment_gate_met`) and
+## the LATER-SATISFIED-WINS ordering are shared by construction rather than by
+## being written twice and kept in step by hand. A ladder therefore authors its
+## rungs in ascending order and the highest satisfied one speaks. No match at
+## all = "" = silence, which is the same thing an absent key already meant.
+func _resolve_sleep_toast(raw: Variant) -> String:
+	if not (raw is Array):
+		return String(raw)
+	var resolved: Dictionary = _resolve_skill_use_effect.call({"text": "", "variants": raw})
+	return String(resolved.get("text", ""))
 
 
 func _interact_container(target: Dictionary, container_state: Dictionary) -> Dictionary:

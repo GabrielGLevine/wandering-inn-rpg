@@ -116,8 +116,8 @@
   { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "diplomat" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Diplomat] class gained! — [Charming Smile], [Calming Touch]" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "class_level_up", "payload_contains": { "class": "warrior", "level": 2 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Warrior Level 1 → 3] — unlocked [Counter Strike], [Battle Momentum], [Quick Movement] (+2 Max HP, +1 damage)" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "[Warrior Level 1 → 3] — unlocked [Counter Strike], [Battle Momentum], [Quick Movement] (+2 Max HP, +1 damage)" }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Warrior Level 1 → 3] — unlocked [Counter Strike], [Battle Momentum], [Quick Movement] (+2 Max HP, +1 damage) — you start every fight full." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "[Warrior Level 1 → 3] — unlocked [Counter Strike], [Battle Momentum], [Quick Movement] (+2 Max HP, +1 damage) — you start every fight full." }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "01_post_sleep" },
   { "_comment": "Whole-dict pin: diplomat exists ONLY NOW, rogue does not exist at all this run.", "action": "assert_state", "path": "classes", "equals": { "warrior": 3, "diplomat": 1 } },
 

@@ -197,6 +197,9 @@ func _init() -> void:
 	var game := WIGame.new(scene_config, skill_config, _sink, 12345)
 	_check_chronicle_facts(scene_config, skill_config)
 	_check_lore_notes(scene_config, skill_config)
+	_check_unactivatable_skills_pre_revealed(scene_config, skill_config)
+	_check_pending_meal_merges(scene_config, skill_config)
+	_check_sleep_toast_variants(scene_config, skill_config)
 
 	var witch_map: Dictionary = scene_config["maps"]["witch_hollow"]
 	var witch := _entity_by_id(witch_map["entities"], "riverfarm_witch")
@@ -935,7 +938,14 @@ func _init() -> void:
 			warrior_toasts.append(String(e["payload"]["text"]))
 	assert(warrior_levels == [3, 4, 5], "a class_level_up event per earned level, ascending")
 	assert(warrior_toasts.size() == 1, "ONE batched toast per class")
-	assert(warrior_toasts[0] == "[Warrior Level 2 → 5] — unlocked [Quick Movement], [Second Wind], [Dangersense] (+2 Max HP, +1 damage)", "batched toast announces span + all unlocks + felt growth")
+	# GH#334 notes 19/28: the growth clause now names what a Max HP/Max MP
+	# number MEANS. The sleep beat was the single largest producer of the false
+	# persistent-pool model -- a player told at bedtime that sleep raises Max HP
+	# reasonably infers a pool sleep refills, and then reads the next fight's
+	# full bar as a bug. The clarifier rides ONLY when a pool number is actually
+	# on screen -- a damage-only or grant-only toast says nothing about pools and
+	# so gets no clarifier (`pool_grew`, sleep_beat.gd).
+	assert(warrior_toasts[0] == "[Warrior Level 2 → 5] — unlocked [Quick Movement], [Second Wind], [Dangersense] (+2 Max HP, +1 damage) — you start every fight full.", "batched toast announces span + all unlocks + felt growth + the no-pool clarifier")
 	assert(_count("skill_unlocked") == 3, "per-level grants all unlock")
 	g16.record_accomplishment("melee_hit", 30)
 	_events.clear()
@@ -945,7 +955,7 @@ func _init() -> void:
 	for e: Dictionary in _events:
 		if e["type"] == "toast" and String(e["payload"]["text"]).begins_with("[Warrior"):
 			span_toast = String(e["payload"]["text"])
-	assert(span_toast == "[Warrior Level 5 → 9] (+4 Max HP, +2 damage)", "grant-less batch toasts the span's own felt growth, not silence")
+	assert(span_toast == "[Warrior Level 5 → 9] (+4 Max HP, +2 damage) — you start every fight full.", "grant-less batch toasts the span's own felt growth, not silence")
 	g16.record_accomplishment("won_combat", 3)
 	_events.clear()
 	g16.sleep()
@@ -953,7 +963,7 @@ func _init() -> void:
 	for e: Dictionary in _events:
 		if e["type"] == "toast" and String(e["payload"]["text"]).begins_with("[Mage"):
 			mage_toast = String(e["payload"]["text"])
-	assert(mage_toast == "[Mage Level 2] — unlocked [Flame Jet], [Mana Shield], [Flame Dart] (+1 Max MP)", "single level keeps the plain shape + felt growth")
+	assert(mage_toast == "[Mage Level 2] — unlocked [Flame Jet], [Mana Shield], [Flame Dart] (+1 Max MP) — you start every fight full.", "single level keeps the plain shape + felt growth + the no-pool clarifier (MP is the other half of the same false model)")
 
 	var g17 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	g17.find_entity("goblin_encounter_2")["respawns"] = true
@@ -3722,3 +3732,130 @@ func _check_chronicle_facts(scene_config: Dictionary, skill_config: Dictionary) 
 		"Chronicle reports achieved combat victories and sleeps")
 	assert(facts["ending"] == "The seal holds. Liscor counts you among its own.",
 		"Chronicle ending must remain exact")
+
+
+## GH#334 note 9: the reveal gate was written for Skills that CAN be used and
+## never exempted the ones that cannot. `used_skills` is fed only by the two
+## activation paths -- the field hotbar (`field: true`) and combat's own
+## `ap_cost > 0` bar -- so a passive could never enter it, and its authored
+## description sat behind a condition nothing in the game could satisfy.
+func _check_unactivatable_skills_pre_revealed(scene_config: Dictionary, skill_config: Dictionary) -> void:
+	var combat_config := {
+		"combatants": _load_json("res://data/combatants.json"),
+		"classes": _load_json("res://data/classes.json"),
+		"arenas": _load_json("res://data/arenas.json"),
+		"items": _load_json("res://data/items.json"),
+	}
+	var g := WIGame.new(scene_config, skill_config, func(_t: String, _p: Dictionary) -> void: pass, 4242, combat_config)
+	g.classes = {"warrior": 1}
+	var by_id: Dictionary = {}
+	for raw_group: Variant in g.skills_journal():
+		for raw_skill: Variant in (raw_group as Dictionary)["skills"]:
+			var entry := raw_skill as Dictionary
+			by_id[String(entry[WIKeys.ID])] = entry
+
+	# Both skills a level-1 Warrior starts with are ap_cost-0 combat passives.
+	# Before this ruling they rendered as a bare "[Basic Swordwork]" for the
+	# whole run, on a save that had never used anything.
+	for passive_id: String in ["basic_swordwork", "tough_body"]:
+		assert(by_id.has(passive_id), "fixture: warrior L1 grants %s" % passive_id)
+		var passive := by_id[passive_id] as Dictionary
+		assert(bool(passive["revealed"]),
+			"un-activatable skill %s must render revealed with no use behind it" % passive_id)
+		assert(String(passive["text"]).contains(" — "),
+			"a revealed passive's row must carry its authored description, not just its name")
+		assert(g.used_skills.is_empty(),
+			"the reveal must come from the predicate, never from a phantom used_skills entry")
+
+	# ...and the gate still EXISTS for everything with a way in. This is the
+	# half a regression that pre-revealed the whole catalog would break.
+	for activatable_id: String in ["power_strike", "piercing_strikes", "basic_cleaning"]:
+		assert(by_id.has(activatable_id), "fixture: %s is in the level-1 Warrior journal" % activatable_id)
+		assert(not bool((by_id[activatable_id] as Dictionary)["revealed"]),
+			"activatable skill %s must stay opaque until it is actually used" % activatable_id)
+		assert(String((by_id[activatable_id] as Dictionary)["text"]) == String((by_id[activatable_id] as Dictionary)[WIKeys.DISPLAY_NAME]),
+			"an unrevealed row is NAME ONLY")
+
+	# The reveal is a display fact, not a state change: using one of the
+	# activatable ones still flips it the ordinary way.
+	g.used_skills.append("power_strike")
+	var after: Dictionary = {}
+	for raw_group2: Variant in g.skills_journal():
+		for raw_skill2: Variant in (raw_group2 as Dictionary)["skills"]:
+			after[String((raw_skill2 as Dictionary)[WIKeys.ID])] = raw_skill2
+	assert(bool((after["power_strike"] as Dictionary)["revealed"]),
+		"first use still reveals an activatable skill")
+
+
+## GH#334 ruling 5: PAY TWICE, GET BOTH. `pending_meal` was REPLACED on every
+## use, so eating a meal after an oil silently threw the oil away -- an item
+## consumed and gold spent with no signal of any kind.
+func _check_pending_meal_merges(scene_config: Dictionary, skill_config: Dictionary) -> void:
+	var toasts: Array[String] = []
+	var g := WIGame.new(scene_config, skill_config, func(t: String, p: Dictionary) -> void:
+		if t == WIEvents.TOAST:
+			toasts.append(String(p.get("text", ""))), 77, {
+				"combatants": _load_json("res://data/combatants.json"),
+				"classes": _load_json("res://data/classes.json"),
+				"arenas": _load_json("res://data/arenas.json"),
+				"items": _load_json("res://data/items.json"),
+			})
+	g.inventory.assign(["tempering_oil", "fine_meal"])
+
+	assert(g.use_item("tempering_oil"), "tempering_oil is a next_fight item and uses out of combat")
+	assert(int(g.pending_meal.get(WIKeys.DAMAGE_MOD, 0)) == 1, "the oil arms +1 damage")
+	assert(toasts.back() == "Used: Tempering Oil. +1 damage in your next fight.",
+		"the use toast restates the armed payload and its scope, got: %s" % toasts.back())
+
+	assert(g.use_item("fine_meal"), "fine_meal uses on top of the armed oil")
+	assert(int(g.pending_meal.get(WIKeys.DAMAGE_MOD, 0)) == 1,
+		"the meal must NOT clear the oil's damage -- this is the whole bug")
+	assert(int(g.pending_meal.get(WIKeys.HP_MOD, 0)) == 2, "and the meal's own +2 HP is armed beside it")
+	assert(toasts.back() == "Used: Fine Meal. +1 damage, +2 HP in your next fight.",
+		"the second toast reports the MERGED total, not just its own item, got: %s" % toasts.back())
+
+	# Two of the same item stack rather than one overwriting the other.
+	g.inventory.assign(["crude_draught"])
+	var hp_before := int(g.pending_meal.get(WIKeys.HP_MOD, 0))
+	assert(g.use_item("crude_draught"), "crude_draught uses")
+	assert(int(g.pending_meal.get(WIKeys.HP_MOD, 0)) == hp_before + 1,
+		"a same-key second use SUMS")
+
+	assert(WIEffectText.pending_meal_line({}) == "",
+		"an empty armed dict says nothing rather than inventing a payload")
+
+
+## GH#334 ruling 3: a bed's `sleep_toast` accepts a `{when, text}` variant
+## ladder so the room tiers the player bought are audible at the place they were
+## bought for -- the bed said "Your own bed." forever regardless.
+func _check_sleep_toast_variants(scene_config: Dictionary, skill_config: Dictionary) -> void:
+	var toasts: Array[String] = []
+	var g := WIGame.new(scene_config, skill_config, func(t: String, p: Dictionary) -> void:
+		if t == WIEvents.TOAST:
+			toasts.append(String(p.get("text", ""))), 31)
+	g.transition("inn_upstairs", Vector2i(9, 2))
+	g.player_facing = Vector2i(0, -1)
+
+	toasts.clear()
+	g.interact()
+	assert(toasts.size() >= 1 and toasts[0] == "Your own bed.",
+		"an untiered room reads the base rung, byte-identical to the pre-ladder string, got: %s" % toasts)
+
+	for tier: String in ["room_tier_1", "room_tier_2", "room_tier_3"]:
+		g.record_accomplishment(tier)
+	toasts.clear()
+	g.interact()
+	assert(toasts.size() >= 1 and toasts[0] == "Your own room, warm and quiet, with a bed you are almost sorry to leave.",
+		"the highest held tier speaks (later-satisfied-wins, shared with _resolve_skill_use_effect), got: %s" % toasts)
+
+	# The middle rungs are reachable in their own right, not just as a top rung.
+	var mid := WIGame.new(scene_config, skill_config, func(t: String, p: Dictionary) -> void:
+		if t == WIEvents.TOAST:
+			toasts.append(String(p.get("text", ""))), 32)
+	mid.transition("inn_upstairs", Vector2i(9, 2))
+	mid.player_facing = Vector2i(0, -1)
+	mid.record_accomplishment("room_tier_1")
+	toasts.clear()
+	mid.interact()
+	assert(toasts.size() >= 1 and toasts[0] == "Your own bed, and a mattress that no longer remembers the last guest.",
+		"tier 1 alone reads the tier-1 rung, got: %s" % toasts)

@@ -917,6 +917,9 @@ func _find_entity_by_id(scene: Dictionary, id: String) -> Dictionary:
 const VARIANT_KEYS := {
 	"open_toast_variants": ["_comment", "when", "open_toast", "open_lore"],
 	"text_variants": ["_comment", "requires", "text"],
+	# GH#334 ruling 3: the bed ladder. `sleep_toast` is String|Array; when it is
+	# an Array each member is a `{when, text}` rung.
+	"sleep_toast": ["_comment", "when", "text"],
 }
 
 
@@ -924,6 +927,18 @@ func _validate_variant_entries(scene: Dictionary, graphs: Dictionary) -> void:
 	for map_id: String in scene["maps"]:
 		for entity: Dictionary in (scene["maps"][map_id] as Dictionary).get("entities", []):
 			_check_variant_array(entity.get("open_toast_variants", []), "open_toast_variants", "entity " + String(entity.get("id", "?")))
+			# String form (every other bed in the game) is left alone; only the
+			# ladder form has a shape to get wrong. A rung missing `text`
+			# resolves to "" and the bed goes silent for that state, which is
+			# exactly the class of bug the shape check exists to catch early.
+			var raw_sleep: Variant = entity.get("sleep_toast", "")
+			if raw_sleep is Array:
+				var where := "entity " + String(entity.get("id", "?"))
+				_check_variant_array(raw_sleep, "sleep_toast", where)
+				for entry: Variant in (raw_sleep as Array):
+					if entry is Dictionary:
+						_check((entry as Dictionary).has("text"),
+							"%s sleep_toast rung has no `text` -- it would resolve to silence" % where)
 	for graph_id: String in graphs:
 		for node_id: String in (graphs[graph_id] as Dictionary).get("nodes", {}):
 			var node: Dictionary = graphs[graph_id]["nodes"][node_id]

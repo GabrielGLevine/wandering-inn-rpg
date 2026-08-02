@@ -198,7 +198,19 @@ func _check_skeleton_scene() -> void:
 			var loc := "data/skeleton_scene.json[maps.%s.entities.%s]" % [map_id, eid]
 			for field: String in TOAST_FIELDS:
 				if entity.has(field):
-					_check_toast(loc + "." + field, String(entity[field]))
+					# GH#334 ruling 3: `sleep_toast` may be an ARRAY of
+					# `{when, text}` rungs (interactions.gd's
+					# `_resolve_sleep_toast`), not just a String -- and a
+					# late-tier rung is exactly the kind of copy that renders in
+					# one game state only and so never meets a playtester's eye.
+					# Measure every rung; a bare String still measures itself.
+					if entity[field] is Array:
+						for ri: int in (entity[field] as Array).size():
+							var rung: Variant = entity[field][ri]
+							if rung is Dictionary and (rung as Dictionary).has("text"):
+								_check_toast("%s.%s[%d].text" % [loc, field, ri], String((rung as Dictionary)["text"]))
+					else:
+						_check_toast(loc + "." + field, String(entity[field]))
 				# v0.15 A4: `<field>_variants` (interactions.gd's
 				# LATER-SATISFIED-WINS entity contract) carries REPLACEMENT copy for
 				# the same panel and was never measured. A variant is exactly where
@@ -610,11 +622,15 @@ func _check_toast(loc: String, text: String) -> void:
 func _check_combat_hint_lines() -> void:
 	var src := FileAccess.get_file_as_string("res://src/combat/combat_screen.gd")
 	assert(src != "", "could not read combat_screen.gd")
-	var re := RegEx.new()
-	re.compile("const FIRST_MP_HINT_LINE := \"([^\"]*)\"")
-	var m := re.search(src)
-	assert(m != null, "combat_screen.gd has no `const FIRST_MP_HINT_LINE` -- this check drifted")
-	_check_feed("combat_screen.gd[FIRST_MP_HINT_LINE]", m.get_string(1))
+	# GH#334 notes 19/28 added FIRST_HP_HINT_LINE beside the MP one -- and it is
+	# the LONGER of the two, so measuring only the MP line would have left the
+	# wider string unmeasured. Both are swept by name; a rename fails loud.
+	for const_name: String in ["FIRST_MP_HINT_LINE", "FIRST_HP_HINT_LINE"]:
+		var re := RegEx.new()
+		re.compile("const %s := \"([^\"]*)\"" % const_name)
+		var m := re.search(src)
+		assert(m != null, "combat_screen.gd has no `const %s` -- this check drifted" % const_name)
+		_check_feed("combat_screen.gd[%s]" % const_name, m.get_string(1))
 
 
 func _check_feed(loc: String, text: String) -> void:

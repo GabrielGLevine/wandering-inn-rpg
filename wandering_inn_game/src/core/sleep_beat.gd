@@ -104,14 +104,28 @@ func run(classes: Dictionary, accomplishments: Dictionary, combat_config: Dictio
 			if not names.is_empty():
 				text += " — unlocked %s" % ", ".join(names)
 			var growth: Array[String] = []
+			var pool_grew := false
 			if int(summary["hp_delta"]) > 0:
 				growth.append("+%d Max HP" % int(summary["hp_delta"]))
+				pool_grew = true
 			if int(summary["dmg_delta"]) > 0:
 				growth.append("+%d damage" % int(summary["dmg_delta"]))
 			if int(summary["mp_delta"]) > 0 and has_mp_skill:
 				growth.append("+%d Max MP" % int(summary["mp_delta"]))
+				pool_grew = true
 			if not growth.is_empty():
 				text += " (%s)" % ", ".join(growth)
+			# GH#334 notes 19/28: this line is the single largest source of the
+			# false persistent-pool model (combat_screen.gd's own FIRST_MP_HINT
+			# comment names it). A player told at bedtime that sleep raises Max
+			# HP and Max MP reasonably infers a pool that sleep refills -- and
+			# then reads the next fight's full bar as a bug. There is no pool:
+			# `WICombat.build` sets HP = MAX_HP and MP = MAX_MP for every
+			# combatant at every fight, and neither is a WIGame field or a save
+			# key. Keep the numbers, say what they are, and say it only when a
+			# pool number is actually on screen.
+			if pool_grew:
+				text += " — you start every fight full."
 			_emit(WIEvents.TOAST, {"text": text})
 
 	_bank_reached_two_classes.call()

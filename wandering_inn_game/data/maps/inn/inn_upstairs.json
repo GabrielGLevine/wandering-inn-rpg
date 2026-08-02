@@ -189,7 +189,7 @@
    "locked_toast": "It doesn't budge."
   },
   {
-   "_comment": "The ONE authored difference is `sleep_toast`, a flavor line fired BEFORE sleep()'s own stream (see wi_game.gd interact() prop branch)",
+   "_comment": "`sleep_toast` fires BEFORE sleep()'s own stream. GH#334 ruling 3: a VARIANT LADDER now (interactions.gd `_resolve_sleep_toast`), so the room tiers the player bought are audible at the bed instead of the line never changing. Rungs ascend, highest held tier wins; the base rung is byte-identical for an untiered save.",
    "id": "your_bed",
    "kind": "prop",
    "cell": [
@@ -199,7 +199,30 @@
    "display_name": "Your Bed",
    "sprite": "bed",
    "sleep": true,
-   "sleep_toast": "Your own bed."
+   "sleep_toast": [
+    {
+     "when": {},
+     "text": "Your own bed."
+    },
+    {
+     "when": {
+      "room_tier_1": 1
+     },
+     "text": "Your own bed, and a mattress that no longer remembers the last guest."
+    },
+    {
+     "when": {
+      "room_tier_2": 1
+     },
+     "text": "Your own bed, thick blankets, and a shutter that actually closes."
+    },
+    {
+     "when": {
+      "room_tier_3": 1
+     },
+     "text": "Your own room, warm and quiet, with a bed you are almost sorry to leave."
+    }
+   ]
   },
   {
    "id": "inn_chest",

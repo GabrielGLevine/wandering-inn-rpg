@@ -605,8 +605,19 @@ func _confirm() -> void:
 		return
 	var use_effect: Dictionary = rec.get("use_effect", {})
 	if use_effect.has("heal"):
-		Game.sim.loadout_toggle("item:%s" % item_id)
+		# GH#334 note 28 item 6: this branch is a DEAD END dressed as an action.
+		# `WIItems._resolve_heal_use` refuses out of combat before anything else,
+		# and items are filtered out of the field bar entirely -- so confirming
+		# on a draught here silently repurposed the key into a hotbar toggle and
+		# left the player to infer the whole rule from an "[On Hotbar]" tag
+		# appearing on the row. Say it instead.
+		var token := "item:%s" % item_id
+		var slotting := not Game.sim.hotbar_loadout.has(token)
+		Game.sim.loadout_toggle(token)
 		_refresh_row_marks()
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {"text":
+			"Draughts are drunk mid-fight. Slotted to your combat bar." if slotting
+			else "Taken off your combat bar. Draughts are drunk mid-fight."})
 		return
 	if use_effect.has("next_fight"):
 		if Game.sim.use_item(item_id):

@@ -925,7 +925,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "[Warrior Level 2 → 4] — unlocked [Quick Movement], [Second Wind] (+2 Max HP, +1 damage)"
+    "text": "[Warrior Level 2 → 4] — unlocked [Quick Movement], [Second Wind] (+2 Max HP, +1 damage) — you start every fight full."
    },
    "timeout_sec": 5
   },

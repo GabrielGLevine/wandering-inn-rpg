@@ -15,7 +15,7 @@
   { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
   { "action": "assert_state", "path": "inventory", "equals": ["rusty_sword", "relcs_spare_spear", "mending_draught"] },
 
-  { "_comment": "== THE TOGGLE: open inventory, cursor starts at index 0 (rusty_sword) -- move_down x2 selects mending_draught (index 2). ui_inventory_shown's item_effect_lines pins the draught's own visible card: 'Heals 8 HP (single use)' generated from the SAME use_effect field WIItems.resolve_use dispatches on, plus its price line. ==", "action": "press", "name": "inventory" },
+  { "_comment": "== THE TOGGLE: open inventory, cursor starts at index 0 (rusty_sword) -- move_down x2 selects mending_draught (index 2). ui_inventory_shown's item_effect_lines pins the draught's own visible card: 'Heals 8 HP in combat (single use)' generated (GH#334 note 28 item 2 added the 'in combat' qualifier -- WIItems._resolve_heal_use refuses outright when combat == null, and the panel's own confirm on this row is a hotbar toggle, so the unqualified card promised a press the game will not honour) from the SAME use_effect field WIItems.resolve_use dispatches on, plus its price line. ==", "action": "press", "name": "inventory" },
   {
    "action": "wait_for_event",
    "type": "ui_inventory_shown",
@@ -24,7 +24,7 @@
     "item_effect_lines": [
      ["Sword kit replaces other weapon Skills in combat"],
      ["+1 damage on melee hits", "Spear kit replaces other weapon Skills in combat"],
-     ["Heals 8 HP (single use)", "Worth 10 gold"]
+     ["Heals 8 HP in combat (single use)", "Worth 10 gold"]
     ]
    },
    "timeout_sec": 5
@@ -45,6 +45,7 @@
    "timeout_sec": 5
   },
   { "action": "assert_state", "path": "hotbar_loadout", "equals": ["item:mending_draught"] },
+  { "_comment": "GH#334 note 28 item 6: that confirm is a DEAD END dressed as an action -- the heal path refuses out of combat before anything else and items are filtered out of the field bar, so pressing confirm on a draught here silently repurposed the key into a hotbar toggle and left the player to infer the whole rule from an '[On Hotbar]' tag appearing on the row. The branch now says what it did and why.", "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Draughts are drunk mid-fight. Slotted to your combat bar." }, "timeout_sec": 5 },
   { "action": "press", "name": "inventory" },
   { "action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 5 },
 
@@ -101,7 +102,7 @@
    "action": "wait_frames",
    "frames": 5
   },
-  { "action": "assert_event_absent", "type": "ui_toast_rendered" },
+  { "_comment": "PAYLOAD-QUALIFIED since GH#334: the run now legitimately renders a strip toast BEFORE the fight (the note-28 hotbar-toggle disclosure above), so a bare type-only absence assert would fail on that instead of on the thing it guards. What must stay absent is THIS text on the strip -- the mid-fight draught toast, which belongs to the feed and nowhere else.", "action": "assert_event_absent", "type": "ui_toast_rendered", "payload_contains": { "text": "Used: Mending Draught. Healed 0 HP." } },
   { "action": "screenshot", "name": "05_item_used_feed_not_toast" }
  ]
 }

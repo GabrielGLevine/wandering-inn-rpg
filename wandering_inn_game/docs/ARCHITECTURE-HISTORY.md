@@ -1036,7 +1036,21 @@ task names, and self-references to "this task"/"this block".
     `WIProgression`'s own/inherited-grants walk, since progression.gd
     wasn't in that task's edit scope); pre-first-use a skill's `text` is
     NAME ONLY, post-first-use "NAME — description" (opacity: static text
-    only, never a number). `journal.gd` renders it via a scrollable
+    only, never a number). **AMENDED GH#334 (friend-playtest note 9): the
+    rule is "opaque until first use, FOR SKILLS THAT CAN BE USED".** The
+    gate was written for skills with an activation path and never exempted
+    the ones without: every `ap_cost: 0` combat skill and every non-`field`
+    exploration skill has no way into `used_skills` at all, so 30 of 119
+    authored descriptions sat behind an unsatisfiable condition — including
+    both skills a level-1 Warrior starts with, which rendered as a bare
+    "[Lesser Stamina]" forever. `WIGame._skill_activatable()` now
+    pre-reveals them, reading the SAME two data keys the two activation
+    surfaces filter on (`field: true` for `field_hotbar_loadout`,
+    `contexts has "combat" AND ap_cost > 0` for
+    `combat_hud.rebuild_slots`) rather than re-deriving the predicate.
+    `journal.gd` needs no mirror — both `_build_skills_tab` and the
+    `revealed_skills`/`revealed_effect_lines` payload read the sim's own
+    `revealed` flag. `journal.gd` renders it via a scrollable
     BBCode `RichTextLabel` and extends `ui_journal_shown`'s payload
     (`skill_groups`, `skill_count`, `revealed_skills`, `quest_lines`) so
     QA can assert the panel's structure/reveal state without OCR. QA:

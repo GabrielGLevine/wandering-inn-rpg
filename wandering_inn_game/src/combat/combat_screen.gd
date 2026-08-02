@@ -136,16 +136,28 @@ static var _combat_hint_reset_hooked := false
 const FIRST_MP_HINT_LINE := "[Mana gathers fresh at every battle's start.]"
 static var _first_mp_hint_shown := false
 
+## GH#334 notes 19/28, the HP half of the disclosure above. The MP line's own
+## comment named HP in the same breath ("HP likewise") and then said only the MP
+## half -- and because that line correctly waits for MAX_MP > 0, a Warrior gets
+## NO disclosure of the model at all, ever, while the game keeps showing them HP
+## bars in combat and announcing "+N Max HP" at every level. So: a sibling that
+## fires on the FIRST COMBAT REGARDLESS OF POOL. Own flag, same one-shot shape,
+## same UI_COMBAT_HINT_RENDERED so QA can pin it.
+const FIRST_HP_HINT_LINE := "[You come to every fight whole. Wounds do not follow you out of one.]"
+static var _first_hp_hint_shown := false
+
 
 static func _reset_first_combat_hint(type: String, _payload: Dictionary) -> void:
 	if type == WIEvents.GAME_RESET:
 		_first_combat_hint_shown = false
 		_first_mp_hint_shown = false
+		_first_hp_hint_shown = false
 
 
 static func reset_hints() -> void:
 	_first_combat_hint_shown = false
 	_first_mp_hint_shown = false
+	_first_hp_hint_shown = false
 
 
 func _ready() -> void:
@@ -294,6 +306,7 @@ func _show_combat() -> void:
 	_board_renderer.build(_view, main_ref)
 	_announce_allies()
 	_announce_first_combat_hint()
+	_announce_first_hp_hint()
 	_announce_first_mp_hint()
 	_refresh()
 	_root.show()
@@ -332,6 +345,20 @@ func _announce_first_combat_hint() -> void:
 	var text := "Your hotbar (%s) shows the skills your classes and weapon grant." % WIInputHints.label("hotbar")
 	_hud.feed_push(text)
 	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_HINT_RENDERED, {"text": text})
+
+
+## See FIRST_HP_HINT_LINE. Fires on the first combat of the sitting for EVERY
+## build -- no pool test, deliberately: HP is the one resource every combatant
+## has, and the Warrior who never sees `_announce_first_mp_hint` is exactly the
+## player this line exists for. Pushed BEFORE the MP line at the shared call
+## site so a caster reads the HP half first, in the order the two resources are
+## drawn on the readout.
+func _announce_first_hp_hint() -> void:
+	if _first_hp_hint_shown:
+		return
+	_first_hp_hint_shown = true
+	_hud.feed_push(FIRST_HP_HINT_LINE)
+	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_HINT_RENDERED, {"text": FIRST_HP_HINT_LINE})
 
 
 ## See FIRST_MP_HINT_LINE. Same one-shot shape as `_announce_first_combat_hint`

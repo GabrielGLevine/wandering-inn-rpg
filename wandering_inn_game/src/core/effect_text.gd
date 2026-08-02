@@ -42,21 +42,49 @@ static func item_effect_lines(item: Dictionary, skills_catalog: Array = []) -> A
 			lines.append("Grants %s in combat" % ability_display)
 	var use_effect: Dictionary = item.get(WIKeys.USE_EFFECT, {})
 	if use_effect.has("heal"):
-		lines.append("Heals %d HP (single use)" % int(use_effect["heal"]))
+		# GH#334 note 28 item 2: "in combat" is not decoration. `WIItems.
+		# _resolve_heal_use` refuses outright when `combat == null`, and the
+		# inventory panel silently repurposes confirm into a hotbar toggle for
+		# exactly these items -- so an unqualified "Heals 8 HP" was the card
+		# promising something the only reachable out-of-combat press cannot do.
+		# The `next_fight` branch three lines down already models the idiom.
+		lines.append("Heals %d HP in combat (single use)" % int(use_effect["heal"]))
 	if use_effect.has("next_fight"):
-		var nf: Dictionary = use_effect["next_fight"]
-		var nf_bits: Array[String] = []
-		if int(nf.get(WIKeys.DAMAGE_MOD, 0)) > 0:
-			nf_bits.append("+%d damage" % int(nf[WIKeys.DAMAGE_MOD]))
-		if int(nf.get(WIKeys.HP_MOD, 0)) > 0:
-			nf_bits.append("+%d HP" % int(nf[WIKeys.HP_MOD]))
-		if int(nf.get(WIKeys.DAMAGE_REDUCTION, 0)) > 0:
-			nf_bits.append("reduces hits by %d" % int(nf[WIKeys.DAMAGE_REDUCTION]))
+		var nf_bits := next_fight_bits(use_effect["next_fight"] as Dictionary)
 		if not nf_bits.is_empty():
 			lines.append("Next fight: %s (single use)" % ", ".join(nf_bits))
 	if item.has(WIKeys.PRICE) and int(item[WIKeys.PRICE]) > 0:
 		lines.append(PRICE_LINE_PREFIX + "%d gold" % int(item[WIKeys.PRICE]))
 	return lines
+
+
+## The mod-dict phrasebook shared by the item CARD (the "Next fight: ..." line
+## above) and the meal USE toast (`WIGame.use_item`). ONE source, deliberately:
+## the card promises a payload and the toast must restate the same payload in
+## the same words, and after GH#334 ruling 5 the toast speaks the MERGED
+## `pending_meal` (two armed items both apply) rather than the single item's own
+## dict -- two composers would have drifted the moment that merge landed.
+static func next_fight_bits(mods: Dictionary) -> Array[String]:
+	var bits: Array[String] = []
+	if int(mods.get(WIKeys.DAMAGE_MOD, 0)) > 0:
+		bits.append("+%d damage" % int(mods[WIKeys.DAMAGE_MOD]))
+	if int(mods.get(WIKeys.HP_MOD, 0)) > 0:
+		bits.append("+%d HP" % int(mods[WIKeys.HP_MOD]))
+	if int(mods.get(WIKeys.DAMAGE_REDUCTION, 0)) > 0:
+		bits.append("reduces hits by %d" % int(mods[WIKeys.DAMAGE_REDUCTION]))
+	return bits
+
+
+## GH#334 note 28 item 3: what the meal-use toast says after "Used: <name>.".
+## Composed off the LIVE `pending_meal` dict `_build_player_combatant` will
+## actually read, so the promise and the payment can never disagree; "" when the
+## armed dict carries nothing this formatter can phrase (which is also the
+## honest answer -- say nothing rather than invent a payload).
+static func pending_meal_line(pending: Dictionary) -> String:
+	var bits := next_fight_bits(pending)
+	if bits.is_empty():
+		return ""
+	return "%s in your next fight." % ", ".join(bits)
 
 
 static func skill_effect_lines(skill: Dictionary, combatants_catalog: Array = []) -> Array[String]:
