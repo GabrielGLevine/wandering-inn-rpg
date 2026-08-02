@@ -37,12 +37,25 @@ Process lessons this session (fold candidates for wi-running-the-machine
 
 ## 🎯 NEXT ACTIONS
 
-0. **v0.17 DISPATCH IS RESERVED FOR A FRESH SESSION (user directive
-   2026-08-02).** This session finishes wave-2 ONLY (train → close →
-   tag decision) and STOPS. The fresh session's dispatch prompt is
-   recorded below; art candidates parked durably at
-   potential_assets/codex_pixellab_2026-08-02/ (gitignored, README
-   inside maps candidate→target).
+0. **v0.17 WAVE IS RUNNING (dispatched 2026-08-02, fresh session per
+   directive; ultracode on).** Pre-flight confirmed: #334 CLOSED,
+   v0.16.2 tagged, Release run 30770686326 + Pages 30770686332 both
+   GREEN, guard OK (43%/9%). Workflow `wf_fcf9addc-7e4`: seven
+   concurrent worktree lanes at /Users/gabriel/wi-lanes/v017-l{1..7}
+   (branches issue/336-l1-journal-ui, issue/337-l2-combat-cooldowns,
+   issue/324-l3-presentation, lane/v017-l4-art,
+   issue/323-l5-content-riders, lane/v017-l6-causality,
+   lane/v017-l7-fable-design; base 5569c5c; overlay 185 files copied
+   into L1-L5). Each code lane: impl → TWO adversarial review lenses
+   (correctness-trace + QA-evidence-repro) → fix. Briefs (file:line
+   evidence + method hints) in session scratchpad briefs/; slotting:
+   #343+#339(1-3)→L5, #339(4)→L6. RUNNING — controller owns PRs +
+   anchored train next (L3 lint vs siblings pre-merge; L2 sole balance
+   authority; L4 palette LAST; checks table its own step; composed
+   census + full 30-suite). **NEW mid-wave user directive → #350
+   (player buys an inn room): controller-dispatched rider AFTER L5's
+   train slot lands, before tag; price default 20g pending CHOICE-LOG
+   adjudication at close.**
 
 ### v0.17 dispatch prompt (paste into the fresh session)
 
@@ -73,8 +86,8 @@ Process lessons this session (fold candidates for wi-running-the-machine
 > for anything missing; tint is NOT disambiguation.
 
 
-1. **CONFIRM the v0.16.2 Release/Pages runs green** (in progress at
-   session close).
+1. ~~CONFIRM the v0.16.2 Release/Pages runs green~~ — DONE 2026-08-02,
+   both green (see item 0).
 2. Everything else scheduled lives on the board (#335-#339, #343,
    #324/#323/#332 inside the v0.17 lanes) or in the taste queue below.
    Deferred minors from the v0.16 lane ledgers + economy carried items
