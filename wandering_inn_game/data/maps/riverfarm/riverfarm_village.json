@@ -407,14 +407,6 @@
    9
   ],
   [
-   5,
-   9
-  ],
-  [
-   6,
-   9
-  ],
-  [
    2,
    6
   ],
@@ -846,14 +838,6 @@
    9
   ],
   [
-   5,
-   9
-  ],
-  [
-   6,
-   9
-  ],
-  [
    2,
    6
   ],
@@ -1246,7 +1230,7 @@
    "observe": "Low fence rail, bordering the tilled rows."
   },
   {
-   "_comment": "GH#334 note 27C: absent on herd_rerouted, twins at (8,9)/(9,9) turn present -- the journal's moved-fences line becomes TRUE. Both cells stay in `blocked`.",
+   "_comment": "GH#334 note 27C + H4: absent on herd_rerouted, twins at (8,9)/(9,9) present; these cells also left `blocked`/`cover_skip` (map array beats presence).",
    "id": "riverfarm_fence_ew_5_9",
    "kind": "prop",
    "cell": [

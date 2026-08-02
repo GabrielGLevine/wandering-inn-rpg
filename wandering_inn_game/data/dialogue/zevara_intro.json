@@ -60,9 +60,9 @@
        "heard_about_cisterns": 1
       }
      },
+     "_comment": "GH#334 ruling 8 (H1): hide_when is an AND; one key, not two.",
      "hide_when": {
       "accomplishment": {
-       "watch_swept_cisterns": 1,
        "resolved_the_cisterns": 1
       }
      },
