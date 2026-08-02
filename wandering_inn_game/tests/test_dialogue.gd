@@ -333,23 +333,91 @@ func test_once_per_waking_requires_hides_until_used() -> void:
 
 
 func test_once_per_waking_refused_in_hide_when() -> void:
+	# NEGATIVE CONTROL: feeds the guard the exact shape it refuses, so every
+	# call below DELIBERATELY trips WIDialogue's push_error. Error printing is
+	# muted for the block and restored in the same function -- the suite's
+	# `ERROR:` grep must stay a zero-tolerance signal, and six expected lines
+	# are exactly the noise a real regression hides behind (GH#343). Mute the
+	# NARROWEST span that still covers every guard-tripping call; never leave
+	# it false past this function.
+	var printing := Engine.print_error_messages
+	Engine.print_error_messages = false
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "follow_up", "hide_when": {"once_per_waking": "meal:erin"}, "end": true},
 		{"text": "always", "end": true},
 	]}}}
 	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "entity_first_use": {}}, Callable())
 	d.begin()
-	assert(d.current_options().size() == 2, "hide_when once_per_waking refused: option visible while UNUSED (no inverted hide)")
+	var unused_size := d.current_options().size()
 	var d2b := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "entity_first_use": {"meal:erin": true}}, Callable())
 	d2b.begin()
-	assert(d2b.current_options().size() == 2, "hide_when once_per_waking refused: option visible while USED too (key ignored entirely)")
+	var used_size := d2b.current_options().size()
 	var combo := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "retired", "hide_when": {"accomplishment": {"done": 1}, "once_per_waking": "meal:erin"}, "end": true},
 		{"text": "always", "end": true},
 	]}}}
 	var d3 := WIDialogue.new(combo, {"skills": [], "classes": {}, "accomplishments": {"done": 1}, "names": {}, "entity_first_use": {}}, Callable())
 	d3.begin()
-	assert(d3.current_options().size() == 1, "combined hide_when: the REAL key (accomplishment, met) still hides -- only once_per_waking is stripped")
+	var combo_size := d3.current_options().size()
+	Engine.print_error_messages = printing
+	assert(Engine.print_error_messages, "error printing restored before any further assert can fire")
+	assert(unused_size == 2, "hide_when once_per_waking refused: option visible while UNUSED (no inverted hide)")
+	assert(used_size == 2, "hide_when once_per_waking refused: option visible while USED too (key ignored entirely)")
+	assert(combo_size == 1, "combined hide_when: the REAL key (accomplishment, met) still hides -- only once_per_waking is stripped")
+
+
+func test_erin_meal_seat_is_requires_seated_and_holds_one_per_waking() -> void:
+	# GH#343 repro attempt, inverted into a permanent proof: the report claimed
+	# erin_errand's meal seat carried once_per_waking in hide_when (ignored ->
+	# takeable twice a waking). It does not, and the seat DOES hold. Guards
+	# both halves: the SHAPE (no hide_when in the shipped file may carry the
+	# key) and the BEHAVIOUR (second take same waking is refused, sleep frees).
+	const ERIN_ERRAND := "res://data/dialogue/erin_errand.json"
+	var graph := _load_json(ERIN_ERRAND)
+	var seat_gates := 0
+	for node_id: String in (graph["nodes"] as Dictionary):
+		for option: Dictionary in (graph["nodes"][node_id] as Dictionary).get("options", []):
+			assert(not (option.get("hide_when", {}) as Dictionary).has("once_per_waking"), "erin_errand %s: once_per_waking must never sit in hide_when (guard ignores it there)" % node_id)
+			if (option.get("requires", {}) as Dictionary).get("once_per_waking", "") == "meal:erin":
+				seat_gates += 1
+	assert(seat_gates == 1, "exactly one erin_errand option is the meal seat, gated in requires")
+
+	var combat_config := {
+		"combatants": _load_json("res://data/combatants.json"),
+		"classes": _load_json("res://data/classes.json"),
+		"arenas": _load_json("res://data/arenas.json"),
+		"dialogue": {"erin_errand": graph},
+	}
+	var game := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	game.record_accomplishment("resolved_wrong_order")
+	for _i: int in 4:
+		game.record_accomplishment("chatted_with_erin")
+
+	var seat_text := func() -> int:
+		var n := 0
+		for opt: Dictionary in game.dialogue.current_options():
+			if String(opt["text"]).begins_with("(Take the seat."):
+				n += 1
+		return n
+
+	game.start_dialogue("erin_errand", "erin")
+	assert(seat_text.call() == 1, "seat offered once the meal window is open")
+	assert(not game.well_fed, "no meal eaten yet")
+	var seat_index := -1
+	for i: int in game.dialogue.current_options().size():
+		if String(game.dialogue.current_options()[i]["text"]).begins_with("(Take the seat."):
+			seat_index = i
+	game.dialogue_choose(seat_index)
+	assert(game.well_fed, "taking the seat banks the meal")
+	assert(game.entity_first_use.has("meal:erin"), "bank_first_use wrote the per-waking key")
+
+	game.start_dialogue("erin_errand", "erin")
+	assert(seat_text.call() == 0, "SAME waking: the seat is gone -- it cannot be taken twice")
+	game.dialogue = null
+	game.sleep()
+	assert(not game.entity_first_use.has("meal:erin"), "sleep clears the per-waking bank")
+	game.start_dialogue("erin_errand", "erin")
+	assert(seat_text.call() == 1, "after sleep: the seat is offered again")
 
 
 func test_picker_presenter_derives_scanable_rows_without_mutating_payload() -> void:
@@ -818,6 +886,7 @@ func _init() -> void:
 	test_bargain_price_mod_haggle_optin_display_equals_charge()
 	test_once_per_waking_requires_hides_until_used()
 	test_once_per_waking_refused_in_hide_when()
+	test_erin_meal_seat_is_requires_seated_and_holds_one_per_waking()
 	test_picker_presenter_derives_scanable_rows_without_mutating_payload()
 	test_once_per_waking_gate_lifecycle_through_bank_first_use()
 	test_compound_accomplishment_once_per_waking_gate()
