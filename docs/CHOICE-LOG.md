@@ -2103,3 +2103,18 @@ by controller ruling — the plan was the defect, not the implementation.
   WAD (ruled affordance) but its observe copy manufactures the refused
   expectation — copy re-cut only. (18) Rags pre-quest (13): WAD, no
   change.
+- **Tint ≠ disambiguation (2026-08-02, user directive)**: a shade-swap of
+  the same sprite does not register as a separate THING to players even
+  when it technically differs. Functional/identity differences require
+  distinct silhouettes/art; retints are cosmetic variety within one kind
+  only. SUPERSEDES v0.16.1 ruling (7)'s tint-only cauldron answer — the
+  bespoke cauldron art is due at the wave-2 art pass, plus an audit of
+  standing tint-as-disambiguation sites (pot tints, blade banding).
+  Folded into wi-art-and-sprites.
+- **Wave-2 audio correction (2026-08-02)**: the profile REFUTED the
+  planned HydroGene wire — all six unwired combat tracks score 0.244-0.293
+  energy vs shipped anchors 0.366-0.371. Ruling: deep_warren takes
+  battle_for_humanity (equal energy, 172 vs 152 BPM — tempo is the
+  plausible "chill" axis two humans flagged), forge_hall inherits
+  battle_for_despair. If the ear-gate still reads chill, the answer is a
+  NEW track (#195 listen or commission), not a fourth in-library shuffle.
