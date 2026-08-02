@@ -90,11 +90,18 @@ full balance re-author (141 cells), badge/tooltip UI. Prereqs already
 shipped in wave-2. #332 companion dead-end rides as the combat-content
 sibling.
 
-**v0.18 candidates (pick later):** Atmosphere Milestone (palette
-unification + time-of-day grading + motion layer — the visual
-next-level doc), #318 Invrisil nobility thread (spec-first), #134
-Wave D (AFTER #336 lands — the skills list must scale first), #195
-audio wave post-listen, room-tier real second room, rest-verb design.
+**Wave D — "Atmosphere" (USER-PROMOTED into v0.17, 2026-08-02).**
+Palette unification + time-of-day grading + motion layer per
+docs/design/2026-08-02-visual-next-level.md. Runs LAST: the palette
+pass wants the art-debt drain (A4) done and the board stable.
+
+v0.17 ratified shape (user, 2026-08-02): BOTH legibility and cooldowns
+ship in this release, order A → B → C → D.
+
+**v0.18 candidates (pick later):** #318 Invrisil nobility thread
+(spec-first), #134 Wave D (AFTER #336 lands — the skills list must
+scale first), #195 audio wave post-listen, room-tier real second room,
+rest-verb design.
 
 ## Parked / standing
 
