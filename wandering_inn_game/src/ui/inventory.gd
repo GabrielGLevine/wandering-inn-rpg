@@ -467,8 +467,8 @@ func _hover_cursor(i: int) -> void:
 	_emit_selection()
 
 
-## Clears the in-flight gesture. Called on every fresh press and on every
-## open/close/rebuild, for journal.gd's `_reset_body_gesture` reason: a flag
+## Clears the in-flight gesture. Called on every fresh press, on release, and
+## on every open/close, for journal.gd's `_reset_body_gesture` reason: a flag
 ## latched by a pan that ended outside the list would otherwise sit armed and
 ## swallow the NEXT tap.
 func _reset_list_gesture() -> void:

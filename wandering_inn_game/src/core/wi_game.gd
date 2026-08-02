@@ -1736,7 +1736,7 @@ func _skill_entries(ids: Array) -> Array:
 		var display := String(sk.get(WIKeys.DISPLAY_NAME, id))
 		# OPAQUE-UNTIL-FIRST-USE, amended (GH#334 note 9). The gate was designed
 		# for Skills that CAN be used and never exempted the ones that cannot --
-		# so 30 of 119 descriptions sat behind an unsatisfiable condition,
+		# so 40 of 119 descriptions sat behind an unsatisfiable condition,
 		# including both Skills a level-1 Warrior starts with. The rule is now
 		# "opaque until first use, FOR SKILLS THAT CAN BE USED"; a passive reads
 		# revealed from the moment it is granted, which is also when its text is

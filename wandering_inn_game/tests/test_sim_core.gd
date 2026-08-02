@@ -3839,14 +3839,14 @@ func _check_sleep_toast_variants(scene_config: Dictionary, skill_config: Diction
 	toasts.clear()
 	g.interact()
 	assert(toasts.size() >= 1 and toasts[0] == "Your own bed.",
-		"an untiered room reads the base rung, byte-identical to the pre-ladder string, got: %s" % toasts)
+		"an untiered room reads the base rung, byte-identical to the pre-ladder string, got: %s" % [toasts])
 
 	for tier: String in ["room_tier_1", "room_tier_2", "room_tier_3"]:
 		g.record_accomplishment(tier)
 	toasts.clear()
 	g.interact()
 	assert(toasts.size() >= 1 and toasts[0] == "Your own room, warm and quiet, with a bed you are almost sorry to leave.",
-		"the highest held tier speaks (later-satisfied-wins, shared with _resolve_skill_use_effect), got: %s" % toasts)
+		"the highest held tier speaks (later-satisfied-wins, shared with _resolve_skill_use_effect), got: %s" % [toasts])
 
 	# The middle rungs are reachable in their own right, not just as a top rung.
 	var mid := WIGame.new(scene_config, skill_config, func(t: String, p: Dictionary) -> void:
@@ -3858,4 +3858,4 @@ func _check_sleep_toast_variants(scene_config: Dictionary, skill_config: Diction
 	toasts.clear()
 	mid.interact()
 	assert(toasts.size() >= 1 and toasts[0] == "Your own bed, and a mattress that no longer remembers the last guest.",
-		"tier 1 alone reads the tier-1 rung, got: %s" % toasts)
+		"tier 1 alone reads the tier-1 rung, got: %s" % [toasts])
