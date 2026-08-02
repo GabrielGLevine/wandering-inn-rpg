@@ -1165,6 +1165,11 @@ func dialogue_choose(index: int) -> bool:
 		elif effect.has("open_sell_picker"):
 			pending_board_action = "sell_picker"
 			pending_sell_vendor = String(effect["open_sell_picker"]) if effect["open_sell_picker"] is String else "krshia"
+		elif effect.has("toast"):
+			# Talk-route sibling of encounters' victory_toast and props'
+			# toast: an authored line at the moment a dialogue pick
+			# resolves something, so talk resolutions stop being silent.
+			_emit(WIEvents.TOAST, {"text": String(effect["toast"])})
 	if not bool(result["ended"]):
 		walker.set_ctx(_build_dialogue_ctx())
 		walker.advance(String(result["next"]))

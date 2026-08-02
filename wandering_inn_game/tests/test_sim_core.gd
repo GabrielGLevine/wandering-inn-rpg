@@ -606,6 +606,22 @@ func _init() -> void:
 	g7.record_accomplishment("errand_decided")
 	assert(_count("quest_beat_completed") == 1 and _count("quest_completed") == 1, "edge quest completes from cached started progress")
 
+	var toast_graph := {"start": "n1", "nodes": {"n1": {"speaker": "X", "text": "t", "options": [
+		{"text": "do the thing", "effects": [{"accomplishment": "package_delivered"}, {"toast": "The fences are moved."}], "end": true},
+	]}}}
+	var cc_toast: Dictionary = combat_config.duplicate(true)
+	cc_toast["dialogue"] = {"toast_conv": toast_graph}
+	var g7t := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, cc_toast)
+	g7t.start_dialogue("toast_conv", "erin")
+	_events.clear()
+	assert(g7t.dialogue_choose(0), "toast-effect choice succeeds")
+	var toast_texts: Array = []
+	for ev: Dictionary in _events:
+		if String(ev["type"]) == "toast":
+			toast_texts.append(String(ev["payload"].get("text", "")))
+	assert(toast_texts.has("The fences are moved."), "dialogue toast effect emits TOAST with the authored line")
+	assert(g7t.accomplishments.get("package_delivered", 0) == 1, "sibling effect in the same list still applies")
+
 	var dlg_graph2 := {"start": "n1", "nodes": {"n1": {"speaker": "X", "text": "t", "options": [
 		{"text": "fight mid-convo", "effects": [{"start_combat": "goblin_encounter_1"}], "goto": "n2"}]},
 		"n2": {"speaker": "X", "text": "t2", "options": [{"text": "bye", "end": true}]}}}
