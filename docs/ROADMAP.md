@@ -63,45 +63,52 @@ states; wave-2 ear-gate (Raskghar swap) + Pisces three-Horn deviation
 ack; #195 audio listen; #134 Wave-D lore ruling; #253 user-deferred;
 #19 HOLD; #140 flake reference.
 
-## v0.17 plan (proposed 2026-08-02): three waves, dependency-ordered
+## v0.17 plan (RATIFIED 2026-08-02, refactored HIGHLY PARALLEL per user
+directive): six concurrent lanes, exclusive file ownership, one anchored
+merge train, one release. Sequencing exists ONLY inside a lane where a
+shared file forces it — no cross-lane waits.
 
-**Wave A — "Command & Clarity" (build-ready, first session after wave-2
-closes).** Four parallel lanes + a rider, file ownership pre-cut:
-- A1+A2 (ONE lane, owns journal.gd): #336 Skills-tab redesign (+ AUTO
-  9-cap) then #338 quest-hints slice — both rebuild journal surfaces,
-  never split across implementers. Settings row rides A2.
-- A3 (own lane): #324 world_ready dead-render — systematic-debugging in
-  message_layer timing; on fix, the rendered≠seen caveat comes out of
-  wi-writing-qa-scripts + wi-machine-playtest.
-- A4 (art lane): VISUAL-LOG drain + the tint-site audit (cauldron wire
-  [candidate banked], pot tints, blade banding, line_stalker overlap,
-  scavenger sameness, Krshia rig, OLD-HUT wire [candidate banked]).
-- A5 (rider, data-only): #323 dead inn_settled re-gate.
+**L1 — Journal/UI** (owns journal.gd, wi_game.gd UI-producer region
+[_skill_entries/quest_summary siblings], quests.gd, settings_panel.gd +
+wi_settings.gd, quests.json hint fields, their QA pins): #336 Skills-tab
+redesign + AUTO 9-cap, THEN #338 quest-hints slice (same files — one
+implementer, two slices).
 
-**Wave B — "The World Responds" (needs A3).** #335 feedback layer
-phase 1: universal action tell, interactable affordance (eye-gate
-heavy), audio gap rows, acted-on-state lint. Plus the #338 second
-half: the story causality map (agent-drafted, hand-verified, then a
-living doc wired into wi-adding-dialogue-and-quests).
+**L2 — Combat/Dynamism** (owns wi_combat.gd, combat_ai.gd,
+combat_hud.gd, combat_screen.gd, skills.json, the balance-cell bands,
+test_combat_sim/test_combat_data/test_effect_text): #337 cooldowns per
+spec — AI fall-through first, surgical set, full 141-cell re-author,
+badge/tooltip UI. No other lane touches combat or balance data.
 
-**Wave C — "Dynamism" (milestone-sized, own run).** #337 skill
-cooldowns per spec: AI fall-through first, surgical cooldown set,
-full balance re-author (141 cells), badge/tooltip UI. Prereqs already
-shipped in wave-2. #332 companion dead-end rides as the combat-content
-sibling.
+**L3 — Presentation/Feel** (owns message_layer.gd, world.gd, WIAmbience,
+new shader/particle resources, audio.json, the acted-on data_lint
+advisory): #324 dead-render root-cause FIRST (its fix unblocks bark
+reliability), then #335 feedback layer phase 1 (action tell, affordance,
+audio gap rows), then the Atmosphere presentation half — time-of-day
+grading + motion layer. One lane because world.gd/message_layer are one
+ownership zone; internally sequenced, externally parallel to everything.
 
-**Wave D — "Atmosphere" (USER-PROMOTED into v0.17, 2026-08-02).**
-Palette unification + time-of-day grading + motion layer per
-docs/design/2026-08-02-visual-next-level.md. Runs LAST: the palette
-pass wants the art-debt drain (A4) done and the board stable.
+**L4 — Art** (owns assets/**, sprites.json, map decor/visual rows):
+VISUAL-LOG drain + tint-site audit (cauldron/hut/ruins/rune-door/
+wardstone candidates banked) THEN the palette-unification pass over the
+drained base. Hero-art pipeline per wi-art-and-sprites.
 
-v0.17 ratified shape (user, 2026-08-02): BOTH legibility and cooldowns
-ship in this release, order A → B → C → D.
+**L5 — Content riders** (owns dialogue data, dens/companion data +
+the one companion code literal — declared exception, no L3 overlap):
+#323 dead inn_settled re-gate + #332 companion dead-end.
 
-**v0.18 candidates (pick later):** #318 Invrisil nobility thread
-(spec-first), #134 Wave D (AFTER #336 lands — the skills list must
-scale first), #195 audio wave post-listen, room-tier real second room,
-rest-verb design.
+**L6 — Docs/causality** (owns docs/): the story causality map,
+agent-drafted → hand-verified → wired into wi-adding-dialogue-and-quests.
+
+Merge-train notes: standard-setter rule applies (L3's new lint runs
+against every sibling branch pre-merge); L2's re-authored bands are the
+only balance authority — no sibling may touch combatants/arenas; L4
+palette lands its sheet rewrites LAST in the train so every windowed
+re-read happens once, on the composed tree.
+
+v0.18 candidates: REMOVED from consideration (user directive
+2026-08-02). #318/#134/#195 stay parked on the board behind their
+existing gates; the roadmap plans nothing beyond v0.17.
 
 ## Parked / standing
 
