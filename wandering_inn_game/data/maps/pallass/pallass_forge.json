@@ -372,6 +372,30 @@
     "radius": 24,
     "flicker": false
    }
+  },
+  {
+   "sprite": "steam_vent",
+   "cell": [
+    12,
+    5
+   ]
+  },
+  {
+   "sprite": "steam_vent",
+   "cell": [
+    18,
+    5
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.62,
+     0.28
+    ],
+    "energy": 0.85,
+    "radius": 30,
+    "flicker": true
+   }
   }
  ],
  "_comment_scatter": "v0.15 T4.1: the tier's floor read as swept-empty slate between stations. Mill scale and scrap, drifted the way a working floor drifts (the street/floodplains scatter idiom, presentation-only).",

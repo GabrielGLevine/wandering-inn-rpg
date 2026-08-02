@@ -394,6 +394,14 @@ func _build_expected_counts() -> Dictionary:
 	counts["rune_door/idle"] = 1
 	counts["wardstone_anchor/idle"] = 1
 	counts["witch_cauldron/idle"] = 1
+	## <!-- v017-L4 --> art lane: owned PixelLab props, one frame each. This
+	## table is the mechanical mirror of data/sprites.json's ids -- a new
+	## sprite row is unshippable without its key here (the .get default is -1
+	## and the assert HANGS headless), so these lines land with the rows they
+	## describe. APPEND-ONLY under this marker; never reorder the block above.
+	counts["temper_bench/idle"] = 1
+	counts["wax_seal_tray/idle"] = 1
+	counts["shop_oil_lamp/idle"] = 1
 	counts["razorbeak/idle"] = 1
 	## GH#156 follower-visual aliases of the same owned single-frame sheets.
 	counts["wolf_companion/idle"] = 1

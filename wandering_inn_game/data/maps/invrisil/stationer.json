@@ -138,9 +138,9 @@
     4
    ],
    "tint": [
-    0.52,
-    0.46,
-    0.38
+    1.0,
+    0.97,
+    0.92
    ]
   },
   {
@@ -306,7 +306,7 @@
     5
    ],
    "display_name": "A Tray of Sealing Wax",
-   "sprite": "crate",
+   "sprite": "wax_seal_tray",
    "observe": "Nine colours of wax and one blank seal for hire. The blank is the most used thing in the shop, by a distance."
   },
   {

@@ -799,21 +799,15 @@
   "field_y_sort_bias_px": -160.0,
   "animations": {
    "idle": {
-    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
-    "region": [
-     432,
-     312,
-     80,
-     72
-    ],
+    "sheet": "res://assets/sprites/rug_woven_cream/Idle-Sheet.png",
     "frame_size": [
-     80,
-     72
+     64,
+     64
     ],
     "fps": 1
    }
   },
-  "render_scale": 0.4
+  "render_scale": 0.35
  },
  "table_brown": {
   "animations": {
@@ -2024,20 +2018,15 @@
  },
  "rug_green": {
   "_comment_ysort": "GH#127: flat floor decor must ALWAYS render under sorted content -- large north bias keeps it above the floor layers (different parent) but under every y-sorted sibling on any crossed cell. Small biases cannot fix a walk-across prop.",
+  "_comment": "v0.17 L4. Id LEGACY: the art is red now.",
   "field_y_sort_bias_px": -160.0,
-  "render_scale": 0.4,
+  "render_scale": 0.35,
   "animations": {
    "idle": {
-    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
-    "region": [
-     336,
-     338,
-     46,
-     42
-    ],
+    "sheet": "res://assets/sprites/rug_woven_red/Idle-Sheet.png",
     "frame_size": [
-     46,
-     42
+     64,
+     64
     ],
     "fps": 1
    }
@@ -5628,6 +5617,62 @@
     "frame_size": [
      97,
      97
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "temper_bench": {
+  "_comment": "v0.17 L4. Anchor MEASURED off alpha bbox (Body_A trap).",
+  "render_scale": 0.5,
+  "shadow": true,
+  "anchor": [
+   0.5,
+   0.9219
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/temper_bench/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "wax_seal_tray": {
+  "_comment": "v0.17 L4. Anchor MEASURED off alpha bbox.",
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.8438
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/wax_seal_tray/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "shop_oil_lamp": {
+  "_comment": "v0.17 L4. Anchor MEASURED off alpha bbox.",
+  "render_scale": 0.45,
+  "shadow": true,
+  "anchor": [
+   0.5,
+   0.9844
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/shop_oil_lamp/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
     ],
     "fps": 1
    }
