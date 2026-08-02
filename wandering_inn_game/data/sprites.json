@@ -5538,5 +5538,99 @@
     "fps": 1
    }
   }
+ },
+ "codex_hut": {
+  "_comment": "GH#334 hero-art (license-notes verdict doc). Cures OLD-HUT-HAS-NO-HUT; anchor from alpha bbox.",
+  "render_scale": 0.4,
+  "anchor": [
+   0.509,
+   0.945
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/codex_hut/Idle-Sheet.png",
+    "frame_size": [
+     165,
+     163
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "ruin_gate": {
+  "_comment": "GH#334 hero-art, friend note 6. 20px bottom pad -> anchor 0.894, NOT 1.0 (the Body_A trap).",
+  "render_scale": 0.4,
+  "anchor": [
+   0.5,
+   0.894
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/ruin_gate/Idle-Sheet.png",
+    "frame_size": [
+     183,
+     189
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "rune_door": {
+  "_comment": "GH#334 hero-art: seal_kept_door's bespoke rune-door (note 14).",
+  "render_scale": 0.35,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/rune_door/Idle-Sheet.png",
+    "frame_size": [
+     130,
+     133
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "wardstone_anchor": {
+  "_comment": "GH#334 hero-art: the dungeon_approach portal carrier (note 20).",
+  "render_scale": 0.3,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/wardstone_anchor/Idle-Sheet.png",
+    "frame_size": [
+     113,
+     157
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "witch_cauldron": {
+  "_comment": "GH#334 hero-art: the working kettle's own silhouette (tint-is-not-disambiguation).",
+  "render_scale": 0.35,
+  "anchor": [
+   0.5,
+   1.0
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/witch_cauldron/Idle-Sheet.png",
+    "frame_size": [
+     97,
+     97
+    ],
+    "fps": 1
+   }
+  }
  }
 }
