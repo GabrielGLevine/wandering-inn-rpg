@@ -2219,5 +2219,133 @@ func _init() -> void:
 		assert(not c_blind.combatants[blind_target]["statuses"].has("weakened"),
 			"a missed blinding_arrow applies nothing")
 
+	# --- GH#337 cd1: the cooldown ledger + THE AI FALL-THROUGH ---
+	# Deliberately driven off a SYNTHETIC unavailable (a hand-written stamp),
+	# not off shipped data: the AI work is the spec's hard prerequisite and had
+	# to be provable before any skill in skills.json carried `cooldown_rounds`.
+	# The probe this whole ruling came from: `take_turn` breaks on the first
+	# refused action, so a chieftain whose power_strike merely REFUSED lost its
+	# entire turn (16 damage -> 0, 4 AP unspent). These arms pin the opposite.
+	var cd1 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_chieftain"]), _load("res://data/skills.json"), _sink, 7)
+	cd1.begin()
+	assert(cd1.cooldowns.is_empty(), "a fresh fight starts with an empty cooldown ledger")
+	assert(cd1.skill_available("goblin_chieftain", "power_strike"),
+		"nothing is on cooldown until something stamps it")
+	assert(cd1.cooldown_remaining("goblin_chieftain", "power_strike") == 0,
+		"an unstamped skill reports 0 rounds remaining")
+	assert(((cd1.snapshot()["combatants"]["goblin_chieftain"] as Dictionary)["cooldowns"] as Dictionary).is_empty(),
+		"snapshot carries an empty cooldown map when nothing has cooled")
+
+	# Park the two adjacent so the melee AI's adjacency arm is the branch under
+	# test, and hand the chieftain the turn.
+	cd1.combatants["pc"][WIKeys.CELL] = Vector2i(5, 3)
+	cd1.combatants["goblin_chieftain"][WIKeys.CELL] = Vector2i(6, 3)
+	cd1.active_index = cd1.turn_order.find("goblin_chieftain")
+	cd1._start_turn()
+	_events.clear()
+	# THE synthetic unavailable: two rounds out, written straight into the
+	# ledger. No data row exists yet -- that is the point.
+	cd1.cooldowns["goblin_chieftain"] = {"power_strike": cd1.round_number + 2}
+	assert(not cd1.skill_available("goblin_chieftain", "power_strike"),
+		"a future stamp makes the skill unavailable")
+	assert(cd1.cooldown_remaining("goblin_chieftain", "power_strike") == 2,
+		"remaining is stamp-minus-round, in rounds")
+	assert(int(((cd1.snapshot()["combatants"]["goblin_chieftain"] as Dictionary)["cooldowns"] as Dictionary)["power_strike"]) == 2,
+		"snapshot reports REMAINING rounds, not the absolute stamp")
+	WICombatAI.take_turn(cd1)
+	var used_ps121 := false
+	var attacked121 := 0
+	var refused121 := 0
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved" and String(e["payload"].get("skill", "")) == "power_strike":
+			used_ps121 = true
+		if e["type"] == "attack_resolved" and String(e["payload"].get("attacker", "")) == "goblin_chieftain":
+			attacked121 += 1
+		if e["type"] == "action_refused" and String(e["payload"].get("reason", "")) == "cooldown":
+			refused121 += 1
+	assert(not used_ps121, "a cooling power_strike is never cast")
+	assert(attacked121 == 2, "the AI FALLS THROUGH to plain attacks and spends its whole 4 AP -- not one refusal and a lost turn")
+	assert(refused121 == 0, "the fall-through happens BEFORE use_skill, so no refusal event is produced at all")
+
+	# The same skill, two rounds on: the ledger is not purged, the stamp simply
+	# stops being in the future (no tick loop exists).
+	cd1.round_number += 2
+	assert(cd1.skill_available("goblin_chieftain", "power_strike"),
+		"the stamp expires by the round counter passing it, with nothing purged")
+	assert(((cd1.snapshot()["combatants"]["goblin_chieftain"] as Dictionary)["cooldowns"] as Dictionary).is_empty(),
+		"an elapsed stamp drops out of the snapshot entirely")
+
+	# cd2: the sim's own gate refuses a cooling cast, and refuses it LOUDLY.
+	var cd2 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd2.begin()
+	cd2.combatants["pc"][WIKeys.SKILLS] = ["power_strike"]
+	cd2.combatants["pc"][WIKeys.CELL] = Vector2i(5, 3)
+	cd2.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 3)
+	cd2.active_index = cd2.turn_order.find("pc")
+	cd2._start_turn()
+	cd2.cooldowns["pc"] = {"power_strike": cd2.round_number + 1}
+	_events.clear()
+	var raider_hp122 := int(cd2.combatants["goblin_raider"][WIKeys.HP])
+	var ap122_before := int(cd2.combatants["pc"][WIKeys.AP])
+	assert(not cd2.use_skill("power_strike", "goblin_raider"), "use_skill refuses a cooling skill")
+	assert(int(cd2.combatants["pc"][WIKeys.AP]) == ap122_before, "a refused cast spends no AP")
+	assert(int(cd2.combatants["goblin_raider"][WIKeys.HP]) == raider_hp122, "a refused cast deals no damage")
+	var cooldown_refusal122 := {}
+	for e: Dictionary in _events:
+		if e["type"] == "action_refused":
+			cooldown_refusal122 = e["payload"]
+	assert(String(cooldown_refusal122.get("reason", "")) == "cooldown",
+		"the refusal rides ACTION_REFUSED with reason 'cooldown' (spec ruling 5)")
+	assert(String(cooldown_refusal122.get("skill", "")) == "power_strike",
+		"the refusal names which Skill is recovering")
+
+	# cd3: the STAMP itself, taken in spend_skill_costs beside the other spends
+	# -- and taken only when the cast actually resolved.
+	var cd3 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd3.begin()
+	cd3.combatants["pc"][WIKeys.SKILLS] = ["power_strike"]
+	cd3.combatants["pc"][WIKeys.CELL] = Vector2i(5, 3)
+	cd3.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 3)
+	cd3.active_index = cd3.turn_order.find("pc")
+	cd3._start_turn()
+	# Data-driven on purpose at this stage of the milestone: the mechanism ships
+	# and is proven BEFORE any skills.json row carries `cooldown_rounds` (spec
+	# ruling 2 -- the AI work lands first). The data commit tightens the first
+	# assert to `> 0`.
+	var shipped_cd123 := int((cd3.skills["power_strike"] as Dictionary).get(WICombat.COOLDOWN_ROUNDS, 0))
+	assert(cd3.use_skill("power_strike", "goblin_raider"), "a ready power_strike resolves")
+	assert(cd3.cooldown_remaining("pc", "power_strike") == shipped_cd123,
+		"a resolved cast stamps round_number + cooldown_rounds, so remaining == cooldown_rounds on the same round")
+	assert(cd3.skill_available("pc", "power_strike") == (shipped_cd123 <= 0),
+		"and the skill is immediately unavailable exactly when it carries a cooldown")
+
+	# cd4: a cast the RESOLVER refuses (out of weapon range) must not burn the
+	# cooldown -- the exact defect that put the stamp in spend_skill_costs
+	# rather than at the top of use_skill.
+	var cd4 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd4.begin()
+	cd4.combatants["pc"][WIKeys.SKILLS] = ["power_strike"]
+	cd4.combatants["pc"][WIKeys.CELL] = Vector2i(1, 3)
+	cd4.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
+	cd4.active_index = cd4.turn_order.find("pc")
+	cd4._start_turn()
+	assert(not cd4.use_skill("power_strike", "goblin_raider"), "an out-of-range melee skill is refused by its resolver")
+	assert(cd4.cooldown_remaining("pc", "power_strike") == 0,
+		"a cast the RESOLVER refused burns no cooldown -- the stamp lives beside the spends, past every gate")
+
+	# cd5: WIItems' synthetic item-use skill dict is EXEMPT by construction
+	# (spec ruling 3) -- it carries no cooldown_rounds and there is no default.
+	var cd5 := _make(5, _sink)
+	cd5.active_index = cd5.turn_order.find("pc")
+	cd5._start_turn()
+	cd5.combatants["pc"][WIKeys.HP] = int(cd5.combatants["pc"][WIKeys.MAX_HP]) - 10
+	assert(bool(WIItems.resolve_use({"id": "test_draught_cd", "use_effect": {"heal": 8}}, cd5).get("ok", false)),
+		"the item-use path still resolves")
+	assert(cd5.cooldowns.is_empty(), "using an item never writes a cooldown stamp")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)
