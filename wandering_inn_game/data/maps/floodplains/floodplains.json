@@ -1113,13 +1113,13 @@
     0.85,
     0.9
    ],
-   "observe": "The pond narrows here over a drop the light doesn't reach. Every so often the water moves wrong. Something under there is not a fish, or is a very large one.",
+   "observe": "The pond narrows here over a drop the light doesn't reach. Every so often the water moves wrong, and then it stops, the way a room stops when you walk into it. Whatever keeps this water is not interested in being caught.",
    "requires_item": "fishers_handline",
    "item_hint_toast": "Whatever's under there won't come to bare hands. Lism's shelf had a fisher's handline.",
    "on_interact_accomplishment": "went_fishing",
    "once_per_waking": true,
    "once_per_waking_toast": "The water's gone still. Whatever considered you today is done considering.",
-   "toast": "You pay out the line into the dark water. Something mouths the hook, considers, and lets go. Heavier than any fish has a right to be."
+   "toast": "You pay out the line into the dark water. Nothing takes it, and nothing was ever going to — whatever keeps this pool knows the difference between an offer and a hook."
   },
   {
    "_comment": "Interact-only, banks `found_the_frozen_cache` (opaque) + a flavor toast.",
@@ -1689,7 +1689,7 @@
    "observe": "A scrape under the boulder line, and in it one wolf pup, ribs showing, too young to be alone. The pack that left it is not coming back.",
    "requires_skill": "lesser_bond",
    "skill_hint_toast": "It watches your hands. Whatever you mean to offer it, offer it properly.",
-   "locked_toast": "The pup shrinks back. Whatever you meant to do, you don't know how to do it gently enough yet. The kind of hands it would trust learn on hurt beasts first.",
+   "locked_toast": "The pup shrinks back. You don't have the hands for this yet — hands like that are learned on hurt animals, one at a time. There's a corusdeer down in the grass east of here that would let you start.",
    "companion_source": {
     "companion_id": "wolf_companion",
     "kind": "tamed",

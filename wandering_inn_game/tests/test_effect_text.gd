@@ -61,8 +61,11 @@ const EXPECTED_ITEMS := {
 	"warding_salt_pinch": ["Worth 7 gold"],
 	"mending_draught": ["Heals 8 HP in combat (single use)", "Worth 10 gold"],
 	"remedy_draught": ["Heals 8 HP in combat (single use)", "Worth 10 gold"],
-	"fine_meal": ["Next fight: +2 HP (single use)", "Worth 8 gold"],
-	"signature_meal": ["Next fight: +1 damage, +2 HP (single use)", "Worth 14 gold"],
+	# 2026-08-02 (GH#334 ruling 7): both lost their `price` key -- a meal is
+	# served or eaten, never merchandise (hot_meal's precedent) -- so the
+	# generated "Worth N gold" row is gone with it.
+	"fine_meal": ["Next fight: +2 HP (single use)"],
+	"signature_meal": ["Next fight: +1 damage, +2 HP (single use)"],
 	"tempering_oil": ["Next fight: +1 damage (single use)", "Worth 12 gold"],
 	"crude_draught": ["Next fight: +1 HP (single use)", "Worth 4 gold"],
 	"solvent_phial": ["Worth 6 gold"],

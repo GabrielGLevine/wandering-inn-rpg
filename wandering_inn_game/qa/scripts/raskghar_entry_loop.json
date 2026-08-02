@@ -136,8 +136,8 @@
   },
   {
    "action": "click_dialogue_option",
-   "option": 3,
-   "_comment": "adjust from trace if hub list shifts"
+   "option": 2,
+   "_comment": "\"You sent a runner for me?\" -- RE-PINNED (GH#334 H1): the sweep row above it is now hidden."
   },
   {
    "action": "wait_for_event",

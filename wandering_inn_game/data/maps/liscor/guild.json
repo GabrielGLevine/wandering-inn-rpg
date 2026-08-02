@@ -340,7 +340,7 @@
    "sprite": "request_board",
    "facing": "right",
    "board": true,
-   "toast": "The Request Board. Paper three layers deep in places. New notices pinned straight over the dead ones. Two or three have fresh ink.",
+   "toast": "The Request Board. Paper three layers deep, new notices pinned straight over the dead ones. A posting pays on turn-in; take one at the Guildmistress's desk so it's logged, and only what you do after counts.",
    "second_visit_toast": "The Request Board. Your slip is still logged at the desk. The board does not care how it's going.",
    "observe": "Rates set by the Guild. Complaints to the Guildmistress in person. Bring patience. — S.S.",
    "board_rumors": [

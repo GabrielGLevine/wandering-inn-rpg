@@ -9,6 +9,22 @@
     {
      "requires": {
       "accomplishment": {
+       "room_tier_1": 1
+      }
+     },
+     "text": "The register has your name against the draughty single now, in Lyonette's ruled hand. Paid, and the column beside it says so."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "room_tier_2": 1
+      }
+     },
+     "text": "Your line in the register has been rewritten one column over, neater than it needed to be. Lyonette moved you up herself."
+    },
+    {
+     "requires": {
+      "accomplishment": {
        "room_tier_3": 1
       }
      },
@@ -18,7 +34,7 @@
    "options": [
     {
      "_comment": "Tier chain: each requires the previous, hides once owned. Persistent +1 max HP each via _room_tier_bonus (wi_game.gd).",
-     "text": "Take the draughty single upstairs. (25 gold)",
+     "text": "Have the draughty single properly aired and banked. (25 gold)",
      "requires": {
       "gold": 25,
       "accomplishment": {
@@ -41,7 +57,7 @@
      "goto": "tier_thanks"
     },
     {
-     "text": "Move up to the good room, the one with the window that shuts. (60 gold)",
+     "text": "Pay for the good mattress and the window that shuts. (60 gold)",
      "requires": {
       "gold": 60,
       "accomplishment": {
@@ -64,7 +80,7 @@
      "goto": "tier_thanks"
     },
     {
-     "text": "The best room in the inn. Whatever it costs. (120 gold)",
+     "text": "Best bedding in the inn, under your own window. Whatever it costs. (120 gold)",
      "requires": {
       "gold": 120,
       "accomplishment": {
@@ -95,6 +111,32 @@
   "tier_thanks": {
    "speaker": "Lyonette",
    "text": "Lyonette enters it without looking up, and the line is perfect anyway. \"Paid in full. I'll have it aired by tonight — you'll sleep better than you have been, which frankly is not difficult.\"",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "room_tier_1": 1
+      }
+     },
+     "text": "Lyonette enters it without looking up, and the line is perfect anyway. \"Paid in full. Aired, swept, and the draught stopped — you'll get up with more in you than you have been.\""
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "room_tier_2": 1
+      }
+     },
+     "text": "Lyonette blots the line and looks up for once. \"The good mattress and a window that actually shuts. People underestimate the window. You'll feel the difference the next time something hits you.\""
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "room_tier_3": 1
+      }
+     },
+     "text": "Lyonette underlines it. \"Best bedding in the house, and I will know if you don't use it. Sleep like that and you walk into the next bad morning with something left over.\""
+    }
+   ],
    "options": [
     {
      "text": "Done, then.",

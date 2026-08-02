@@ -70,7 +70,8 @@
     6
    ],
    "requires_accomplishment": "dungeon_attuned",
-   "arrival_toast": "The light dims into torchlit stone, and the deep hush of the dungeon closes back around you. You know this quiet."
+   "arrival_toast": "The light dims into torchlit stone, and the deep hush of the dungeon closes back around you. You know this quiet.",
+   "_comment": "dungeon_attuned banks from sleep_beat.gd's second-door pair. Carrier `dungeon_wardstone` (2,5) gates on this counter -- it shipped one-way (GH#334 note 20)."
   }
  ]
 }

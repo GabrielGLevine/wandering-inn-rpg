@@ -91,7 +91,8 @@
 			"beats": [
 				{ "id": "consult", "description": "The Magical Door manages the hop to Liscor but strains at anything farther. Fight what leaks through in the cellar, ask Pisces by the Guild steps, or read the wardwork yourself.", "complete_when": { "door_understood": 1 } },
 				{ "id": "buy_catalyst", "description": "Buy the attunement catalyst from Krshia's stall on Market Street in Liscor.", "complete_when": { "bought_catalyst": 1 } },
-				{ "id": "attune", "description": "Bring Krshia's catalyst to Pisces, by the Guild steps on Market Street, and see how far the Door can reach.", "complete_when": { "door_awakened": 1 } }
+				{ "_comment": "GH#334 ruling 15: errand/wait split. H3: door_awakened closes it too.", "id": "deliver_catalyst", "description": "Bring Krshia's catalyst and the anchor stone to Pisces, by the Guild steps on Market Street.", "complete_when_any": { "catalyst_delivered": 1, "door_awakened": 1 } },
+				{ "id": "attune", "description": "Sleep at the inn while the Door learns the stone — it takes more than one night.", "complete_when": { "door_awakened": 1 } }
 			],
 			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). Reading the wardwork and fighting the leak co-bank freely, and the STRONGER claim must win: fought > read. The \"\"-req consult entry is the FALLBACK, not a path -- it answers only when neither counter banked, and its trailing position is convention, not mechanism.",
 			"resolution_paths": [
@@ -138,7 +139,7 @@
 			"title": "What the Thicket Keeps",
 			"region": "Riverfarm",
 			"beats": [
-				{ "id": "resolve", "description": "The corusdeer herd stops dead at a line in the thicket it will not cross. Read the sign with the hunter, read the old boundary work in the hut at the hollow, or clear whatever has denned on the line.", "complete_when_any": { "herd_rerouted": 1, "ward_scrap_read": 1, "thicket_cleared": 1 } },
+				{ "id": "resolve", "description": "The corusdeer herd stops dead at a line in the thicket it will not cross. Walk the line with the hunter and shift the fences off the herd's road, read the old boundary work in the hut at the hollow, or clear whatever has denned on the line.", "complete_when_any": { "herd_rerouted": 1, "ward_scrap_read": 1, "thicket_cleared": 1 } },
 				{ "id": "report", "description": "Tell the hunter what the thicket is keeping, back at his post in the village.", "complete_when": { "thicket_answered": 1 } }
 			],
 			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins) and all three co-bank -- kill the den, then still read the ward. Ladder: read > rerouted > cleared. Killing the predator moves one animal off a line that was never about the predator; moving the fences is the humble, correct answer; reading the boundary is the only one that explains why the line is there at all.",
@@ -209,7 +210,7 @@
 			"resolution_paths": [
 				{ "accomplishment": "setting_assisted", "text": "You stood at Hedault's bench and read the ward-line with him. He did not correct you, which from him is a reference.", "grant": { "observed_things": 2, "heard_gossip": 2 } },
 				{ "accomplishment": "heirloom_truth_kept", "text": "You said the true thing about the stone out loud so she would never have to, and the setting was made honest around it.", "grant": { "persuaded_someone": 2, "heard_gossip": 3 } },
-				{ "accomplishment": "original_recovered", "text": "Forty years after somebody swapped it, you took the original back off a fence's shelf and put it in her hands.", "grant": { "melee_hit": 6, "won_combat": 1 } }
+				{ "accomplishment": "original_recovered", "text": "Forty years after somebody swapped it, you took the original back off a Fence's shelf and put it in her hands.", "grant": { "melee_hit": 6, "won_combat": 1 } }
 			]
 		},
 		{
@@ -401,12 +402,12 @@
 			]
 		},
 		{
-			"_comment": "Spec 4: discovery-driven spine. Beats complete on lattice counters the REGIONS bank; journal copy points at reach, never objects. Starts from Pisces at door_awakened.",
+			"_comment": "Spec 4: discovery-driven spine. Beats complete on lattice counters the REGIONS bank. Starts from Pisces at door_awakened. RULE AMENDED (GH#334 note 21): 'reach, never objects' PRODUCED the Invrisil bug. A beat names the ERRAND when the reach is gated on an object.",
 			"id": "where_the_door_reaches",
 			"title": "Where the Door Reaches",
 			"beats": [
 				{ "id": "riverfarm_reach", "description": "The Door reaches Riverfarm now. See what's out there.", "complete_when": { "lattice_witch_lore": 1 } },
-				{ "id": "invrisil_reach", "description": "The Door reaches Invrisil now. A city that size holds people worth knowing.", "complete_when": { "lattice_hedault_reading": 1 } },
+				{ "id": "invrisil_reach", "description": "Invrisil is where the Door wants to go next, and it will not go on its own. Eloise keeps travel-stones under the cloth in her hollow at Riverfarm. A city that size holds people worth knowing.", "complete_when": { "lattice_hedault_reading": 1 } },
 				{ "id": "pallass_reach", "description": "The Door reaches Pallass now. The Walled City does not open for just anyone.", "complete_when": { "lattice_forge_rune": 1 } },
 				{ "id": "return", "description": "Pisces has been collecting everything you've learned. Hear him out, by the Guild steps.", "complete_when": { "seal_descent_agreed": 1 } }
 			],

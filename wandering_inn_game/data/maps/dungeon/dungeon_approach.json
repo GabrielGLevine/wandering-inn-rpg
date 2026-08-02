@@ -117,6 +117,31 @@
  ],
  "entities": [
   {
+   "_comment": "GH#334 note 20: THE DUNGEON RETURN CARRIER -- the cluster had none, so the Door's dungeon row was one-way. Gates on this map's own portals counter; (2,5) keeps arrival (2,6) clear.",
+   "id": "dungeon_wardstone",
+   "kind": "prop",
+   "cell": [
+    2,
+    5
+   ],
+   "display_name": "A Warded Stone",
+   "sprite": "anchor_waystone",
+   "tint": [
+    0.62,
+    0.6,
+    0.72
+   ],
+   "facing": "right",
+   "portal_menu": true,
+   "portal_menu_when": {
+    "requires": {
+     "dungeon_attuned": 1
+    }
+   },
+   "toast": "Set into the wall beside the landing, older than the rubble and colder than the air. The frame of light under its surface answers the moment you look at it.",
+   "observe": "Somebody warded a way out of here before the passage was ever choked. The vein through it is the same coin-gold as the stones above."
+  },
+  {
    "_comment": "Met, it becomes a real door to `deep_tunnels`, landing at (13,5)",
    "id": "gallery_seal_anchor",
    "kind": "prop",

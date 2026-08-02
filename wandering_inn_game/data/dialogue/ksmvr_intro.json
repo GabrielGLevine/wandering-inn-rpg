@@ -3,7 +3,7 @@
 	"nodes": {
 		"hub": {
 			"speaker": "Ksmvr",
-			"text": "I am Ksmvr. I am the fourth member of the Horns of Hammerad. This is a good number. Four is more than three.",
+			"text": "I am Ksmvr. I am the third member of the Horns of Hammerad. Three is a defensible number. I proposed a fourth: the [Necromancer] who reads our doors. Captain Ceria says he is hired, not ours, and that a person who invoices you is not a teammate. I have written this down.",
 			"text_variants": [
 				{ "requires": { "accomplishment": { "vault_construct_downed": 1 } }, "text": "The construct was very large. I stabbed it anyway. Captain Ceria says this is called 'initiative.'" }
 			],

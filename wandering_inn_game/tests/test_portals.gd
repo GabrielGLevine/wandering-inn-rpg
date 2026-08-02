@@ -44,6 +44,21 @@ func _audit_carrier_gates() -> void:
 	for row: Dictionary in (_load_json("res://data/portals.json").get("portals", []) as Array):
 		rows[String(row.get("map", ""))] = String(row.get("requires_accomplishment", ""))
 	var maps: Dictionary = WISceneCatalog.compose()["maps"]
+	# 2026-08-02 (GH#334 note 20): THE CONVERSE, and the hole that let a
+	# one-way region ship. The loop below proves that every carrier sits on a
+	# map something can arrive at, and gates no tighter than that arrival
+	# implies. It never asked the other question -- does every DESTINATION own
+	# a carrier? -- so `dungeon_depths` shipped as a place the Magical Door
+	# would take you and nothing would take you back from, and no test noticed.
+	# A row without a carrier is a one-way trip by construction.
+	var carrier_maps: Dictionary = {}
+	for map_id: String in maps:
+		for entity: Dictionary in (maps[map_id] as Dictionary).get("entities", []):
+			if bool(entity.get("portal_menu", false)):
+				carrier_maps[map_id] = true
+	for row: Dictionary in (_load_json("res://data/portals.json").get("portals", []) as Array):
+		var dest_map := String(row.get("map", ""))
+		assert(carrier_maps.has(dest_map), "portals.json row '%s' lands on %s, which owns NO portal_menu carrier -- the destination is a one-way trip and the only way home is whatever the level geometry allows" % [String(row.get("id", "?")), dest_map])
 	var carriers := 0
 	for map_id: String in maps:
 		for entity: Dictionary in (maps[map_id] as Dictionary).get("entities", []):
@@ -62,7 +77,7 @@ func _audit_carrier_gates() -> void:
 				# a `{door_mounted: 2}` that no arrival can ever satisfy (every
 				# producer banks these once). Only 1 is honest.
 				assert(int(gate[counter]) == 1, "portal carrier %s (%s) gates on '%s' at threshold %d -- an arrival implies the counter ONCE, so anything but 1 is unreachable by construction" % [String(entity["id"]), map_id, counter, int(gate[counter])])
-	assert(carriers >= 5, "the audit found only %d portal carriers -- it must walk every shipped one" % carriers)
+	assert(carriers >= 6, "the audit found only %d portal carriers -- it must walk every shipped one" % carriers)
 
 
 func _option_texts(game: WIGame) -> Array:

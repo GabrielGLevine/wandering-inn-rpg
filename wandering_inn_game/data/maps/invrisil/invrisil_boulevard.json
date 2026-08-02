@@ -998,7 +998,7 @@
  ],
  "entities": [
   {
-   "_comment": "THE INVRISIL RETURN CARRIER, and the boulevard cluster's only way out. portal_menu_when SHIPPED WITHOUT its `requires` wrapper -- _door_gate_met reads .requires, so a bare {door_awakened:1} was an empty dict: vacuously true, the picker open from a fresh game. Wrapping it at door_awakened would have STRANDED the cohort that buys Eloise's 18g stone without ever awakening the Door, so the gate is door_mounted: the CARRIER-VS-ROW rule (test_portals' own audit) says a carrier may gate only on door_mounted or its own map's portals row counter, never tighter. Never author a *_when without the wrapper (data_lint's vacuous-gate arm).",
+   "_comment": "THE INVRISIL RETURN CARRIER. requires-wrapped door_mounted gate (35c319d). Gate is deliberately loose: prior 'stranded 18g-stone cohort' rationale was FALSE -- Riverfarm is portal-only behind door_awakened, so every arrival already holds door_mounted (GH#334).",
    "id": "invrisil_anchor_stone",
    "kind": "prop",
    "cell": [

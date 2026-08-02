@@ -91,7 +91,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Sit. Eat. That's an order, not a suggestion. New recipe \u2014 still testing it, but it should stick to your ribs. Call it +2 HP. Don't ask me to explain the math."
+    "text": "Sit. Eat. That's an order, not a suggestion. New recipe \u2014 still testing it, but it should stick to your ribs. Call it +2 HP, every fight until you next sleep. Don't ask me to explain the math."
    },
    "timeout_sec": 5
   },
@@ -617,7 +617,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Sit. Eat. That's an order, not a suggestion. New recipe \u2014 still testing it, but it should stick to your ribs. Call it +2 HP. Don't ask me to explain the math."
+    "text": "Sit. Eat. That's an order, not a suggestion. New recipe \u2014 still testing it, but it should stick to your ribs. Call it +2 HP, every fight until you next sleep. Don't ask me to explain the math."
    },
    "timeout_sec": 5
   },

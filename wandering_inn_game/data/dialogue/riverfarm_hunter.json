@@ -38,13 +38,13 @@
 			"speaker": "The Hunter",
 			"text": "Here. Hoof marks come up, stop, turn, and go back, all along one line you can't see from standing. Not one print past it in a mile of treeline. Whatever's holding them isn't teeth. Teeth leave a mess.",
 			"options": [
-				{ "text": "Then we move the fences, not the deer.", "effects": [ { "accomplishment": "herd_rerouted" } ], "goto": "thicket_rerouted" },
+				{ "text": "Then we move the fences, not the deer.", "effects": [ { "accomplishment": "herd_rerouted" }, { "toast": "You spend the afternoon on it. Two rails down, re-set forty paces east, and the herd's road runs through the gap by dusk." } ], "goto": "thicket_rerouted" },
 				{ "text": "I'll walk the line myself.", "end": true }
 			]
 		},
 		"thicket_rerouted": {
 			"speaker": "The Hunter",
-			"text": "Warn the fields, shift two fences, and the herd keeps its road for the winter. That's the whole of it. Nobody thanks you for work they can't see afterward. The deer will, in their way.",
+			"text": "So you spend the afternoon on it — two fence lines down and re-set forty paces east, and word round the fields before dusk. The herd keeps its road for the winter. Nobody thanks you for work they can't see afterward. The deer will, in their way.",
 			"options": [
 				{ "text": "Good enough.", "end": true }
 			]

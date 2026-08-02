@@ -45,7 +45,7 @@
 				{ "id": "riverfarm_owed", "text": "Riverfarm's fields breathe easier, and a witch in the hollow no longer collects on the village's fear.", "opening": "Riverfarm's fields hold more trouble than wheat.", "when": { "accomplishments": { "price_of_a_favor_reported": 1 } } },
 				{ "id": "invrisil_squared", "text": "A merchant's name is settled in Invrisil, one way or another, and the Brothers remember who settled it.", "opening": "A name needs settling in the City of Adventurers.", "when": { "accomplishments": { "brothers_job_done": 1 } } },
 				{ "id": "pallass_tiers", "text": "The forge tier of Pallass stands open above you now, papers stamped and the lift unlocked.", "opening": "The Walled City opens for paperwork, not heroics.", "when": { "accomplishments": { "elevator_pass_stamped": 1 } } },
-				{ "id": "the_horns_home", "text": "The Horns of Hammerad have taken a corner of the inn as their own, and the seal beneath Liscor holds quiet.", "opening": "Four adventurers need somewhere to put their feet up.", "when": { "accomplishments": { "seal_kept_reported": 1 } } },
+				{ "id": "the_horns_home", "text": "The Horns of Hammerad have taken a corner of the inn as their own, and the seal beneath Liscor holds quiet.", "opening": "Three adventurers need somewhere to put their feet up.", "when": { "accomplishments": { "seal_kept_reported": 1 } } },
 				{ "id": "the_reach_mapped", "text": "The Door's reach has outgrown the map you started with, and you have walked all of it.", "opening": "The Door strains for somewhere it cannot reach yet.", "when": { "accomplishments": { "lattice_forge_rune": 1 } } }
 			]
 		},
