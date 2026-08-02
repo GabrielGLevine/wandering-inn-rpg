@@ -72,6 +72,8 @@ var _root: Control
 var _title_label: Label
 var _body_label: RichTextLabel
 var _scroll_hint: Label
+## GH#334 note 2: the always-visible "how do I get out of here" row.
+var _close_hint: Label
 
 ## The assignment surface. `_flat_skill_ids` is every known skill id in the
 ## SAME order `_build_skills_tab` renders its rows (Innate group first, then
@@ -226,6 +228,20 @@ func _ready() -> void:
 	body_slot.add_child(_body_label)
 	body_slot.resized.connect(_clip_body_to_line_boundary)
 
+	# GH#334 note 2: the close affordance. Lives OUTSIDE the body (its own row
+	# under the scrolling slot) rather than inside a per-tab hint row, because a
+	# hint that scrolls away is not an affordance -- and the Skills tab was the
+	# only tab that had a hint row at all. Right-aligned so it never sits under
+	# the centered `▼` more-below arrow. Device-aware through the same
+	# `WIInputHints.label()` table every other on-screen hint composes from, and
+	# re-composed on INPUT_DEVICE_CHANGED (see `_on_domain_event`) so a pad
+	# pickup mid-read swaps Esc/J for B/Y live.
+	_close_hint = UIChrome.make_label("", "Small")
+	_close_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_close_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stack.add_child(_close_hint)
+	_refresh_close_hint()
+
 	_scroll_hint = UIChrome.make_label("▼")
 	_scroll_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_scroll_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -263,8 +279,21 @@ func _clip_body_to_line_boundary() -> void:
 	_update_scroll_hint.call_deferred()
 
 
+## GH#334 note 2. Both keys are true: `cancel` is the new universal-back close,
+## `journal` is the toggle that has always closed it. Naming both is what makes
+## the row an answer rather than a second thing to memorize.
+func _close_hint_text() -> String:
+	return "%s or %s to close" % [WIInputHints.label("cancel"), WIInputHints.label("journal")]
+
+
+func _refresh_close_hint() -> void:
+	if _close_hint != null:
+		_close_hint.text = _close_hint_text()
+
+
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
 	if type == WIEvents.INPUT_DEVICE_CHANGED and open:
+		_refresh_close_hint()
 		_rebuild_body_follow_cursor()
 
 
@@ -359,6 +388,19 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if not open:
 		return
+	# GH#334 note 2: `cancel` closes the journal. The inventory has always done
+	# this; the journal never handled `cancel` at all, so Esc/B was swallowed
+	# with no feedback (pause_menu refuses to open while the journal is open,
+	# `pause_menu.gd`'s own `_can_open`) -- the one panel in the game where the
+	# universal back key did literally nothing. Routed through `_close()` so
+	# UI_JOURNAL_HIDDEN still emits exactly as the `journal` toggle's close does,
+	# and CONSUMED here (`set_input_as_handled`) so it can never fall through to
+	# the pause menu in some future ordering where that refusal is relaxed.
+	# Placed FIRST among the open-only branches: no other branch claims `cancel`.
+	if event.is_action_pressed("cancel"):
+		_close()
+		get_viewport().set_input_as_handled()
+		return
 	# Issue #209: left/right switch tabs (world.gd gates its own move_left/
 	# move_right out while any modal is open -- `_movement_gated` -- so
 	# consuming them here is purely additive, never a lost player move).
@@ -440,6 +482,7 @@ func _open() -> void:
 	_active_tab = Tab.QUESTS
 	_render_active_tab(false)
 	_refresh_tab_bar()
+	_refresh_close_hint()
 	_root.show()
 	var vbar := _body_label.get_v_scroll_bar()
 	if vbar != null:
@@ -489,6 +532,9 @@ func _open() -> void:
 		"class_aspirations": class_aspiration_lines,
 		"skill_count": skill_count,
 		"skills_note": COMBAT_KIT_NOTE,
+		# GH#334 note 2: the rendered close-affordance row, carried as a real
+		# rendered fact so QA pins the string the player actually reads.
+		"close_hint": _close_hint_text(),
 		"revealed_skills": revealed_skills,
 		"revealed_effect_lines": revealed_effect_lines,
 		"act_id": String(act.get("id", "")),
