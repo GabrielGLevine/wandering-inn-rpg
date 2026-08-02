@@ -2045,3 +2045,61 @@ by controller ruling — the plan was the defect, not the implementation.
   accepted-THIN without change: dirty_table/serving_tray (real chores),
   [Charming Smile]'s friendly_line (social texture is function). (7)
   Companion dead-end split to #332 (needs a code literal + new dens).
+- **Friend-playtest wave 2 adjudications (2026-08-02, notes 1-28 + fleet
+  surprises; verdicts in the wave PR bodies)**: (1) ENGINE CENTERPIECE —
+  dialogue effects gain a `toast` arm (wi_game.gd:1108-1167 has 17 keys,
+  none is toast; every TALK-route quest resolution is silent by
+  construction — the #328 victory_toast cure was fight-route-only). Built
+  once, sim lane, first; content hangs authored lines on it (notes 21/23/
+  25/27). (2) Invrisil claim-vs-graph (21/22): beat copy re-cut to name
+  the errand, TWO leads rows (stone + rumor promotion), shop row names
+  Invrisil BEFORE the spend; the quests.json "reach, never objects"
+  _comment rule is AMENDED (it produced the bug); 18g price unmoved; the
+  "softlock" is refuted (three blight_lifted producers) and #283 closes as
+  already-fixed (35c319d) with its false stranded-cohort rationale comment
+  corrected. (3) Room tiers (25): copy sells an upgrade of the room you
+  HAVE; per-tier acknowledgment; sleep_toast gains when:-variant seam (sim)
+  + bed ladder — a real second room is REJECTED this wave (sleep-prop
+  reachability trap), v0.17 candidate. (4) Thicket (27): beat vocabulary
+  matches resolution; thicket_rerouted becomes a completed act with the
+  player in it; one visible fence-rail swap on herd_rerouted (absent/
+  requires pair) makes the journal line true; capital-F Fence = the
+  criminal, lowercase = rails. (5) HP/MP model (19/28): sim unchanged
+  (per-fight pools stand); six presentation cures incl. an HP first-combat
+  line that fires for ALL builds (MP line never fires for Warriors) and
+  sleep-beat copy that stops teaching a persistent pool. pending_meal
+  REPLACEMENT bug -> additive per-key merge (pay twice get both, never
+  silent loss). (6) Pisces IS staged independent of the Horns in this
+  game (three-member party) — the copy claiming four is what's wrong;
+  re-cut + ONE in-world line explaining his separation (canon deviation
+  ACKNOWLEDGED: the Act IV/V thread requires him as the player's
+  consultant). (7) Economy twin of #6: fine_meal/signature_meal lose
+  their price keys (hot_meal precedent — serve/eat items, not
+  merchandise); the free-cook-then-sell loop dies without touching the
+  cooking arms. (8) Zevara (4/23): cistern branches become mutually
+  exclusive; dungeon lines gate on knowing of the dungeon; bounty
+  first-mention explains itself + Request Board first-read gets the
+  Delivery Board treatment (the shipped good template). (9) Dungeon
+  return (20 + latent softlock): dungeon-side portal carrier prop +
+  row->carrier converse assert in test_portals (the audit hole that let a
+  one-way region ship). (10) Thickets-by-town (18): ruling (b) — the
+  intrusion becomes the point: present_when on the thicket thread,
+  observe copy says it crossed the line; consequence, not furniture.
+  (11) Raskghar music (5): SECOND report of the unresolved #200 ear-gate
+  = the word is said; profile the six unwired CC0 HydroGene combat tracks,
+  wire the winner, ear-gate state ships with the wave. (12) Ice Wall
+  reaction credit emits the acting skill's id (phantom mana_shield in
+  saves). (13) Un-activatable skills (9): 30 of 119 descriptions are
+  behind an unsatisfiable use-gate; passives/inerts render revealed from
+  the start. (14) once_per_fight HUD hole + tooltip record narrowing:
+  fixed now as standalone defects (they precede any cooldown work).
+  (15) attune beat (quest-clarity recon): SPLIT into deliver + sleep-wait
+  beats; Erin/street relay stage moves in the same edit; the
+  empty-producer early-out in the landmark tripwire closes. (16) DEFERRED
+  with issues: note 12 feedback-layer wave (universal action tell,
+  interactable affordance — L, spec'd), note 3 flavor-line pool, quest
+  hint field + toggle slice, self-defining-noun tripwire, >9 field-slot
+  ceiling, went_fishing inert counter. (17) Fishing heavy-bite (11) is
+  WAD (ruled affordance) but its observe copy manufactures the refused
+  expectation — copy re-cut only. (18) Rags pre-quest (13): WAD, no
+  change.
