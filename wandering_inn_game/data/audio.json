@@ -681,7 +681,7 @@
    "payload": {
     "arena": "deep_warren"
    },
-   "stream": "res://assets/audio/music/battle_for_despair.ogg",
+   "stream": "res://assets/audio/music/battle_for_humanity.ogg",
    "bus": "Music",
    "volume_db": -7.0,
    "loop": true
@@ -1150,7 +1150,7 @@
    "payload": {
     "arena": "forge_hall"
    },
-   "stream": "res://assets/audio/music/battle_for_humanity.ogg",
+   "stream": "res://assets/audio/music/battle_for_despair.ogg",
    "bus": "Music",
    "volume_db": -7.0,
    "loop": true
