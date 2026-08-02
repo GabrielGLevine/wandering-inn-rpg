@@ -1,0 +1,316 @@
+extends SceneTree
+## GH#336 — the Skills-tab redesign's unit floor: the SIM-side derivation the
+## redesigned journal renders (`WIGame.skill_category`/`skill_bar`/
+## `skills_journal_categories`) plus the AUTO field-bar cap (ruling 9).
+##
+## WHY A DEDICATED SUITE: the whole point of the redesign is that the
+## category/slottable rule is derived ONCE, in the sim, and that the derivation
+## AGREES with the two live hotbar filters it is supposed to be a restatement
+## of. That agreement is a drift tripwire over another file's source text
+## (`combat_hud.gd`'s filter), which belongs nowhere near a rendering test.
+
+
+var _events: Array = []
+
+
+func _sink(type: String, payload: Dictionary) -> void:
+	_events.append({"type": type, "payload": payload})
+
+
+func _load_json(path: String) -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	assert(parsed is Dictionary, "invalid JSON at " + path)
+	return parsed
+
+
+func _combat_config() -> Dictionary:
+	return {
+		"combatants": _load_json("res://data/combatants.json"),
+		"classes": _load_json("res://data/classes.json"),
+		"arenas": _load_json("res://data/arenas.json"),
+		"items": _load_json("res://data/items.json"),
+	}
+
+
+func _new_game() -> WIGame:
+	return WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 4242, _combat_config())
+
+
+func _read(path: String) -> String:
+	assert(FileAccess.file_exists(path), "missing source file " + path)
+	return FileAccess.get_file_as_string(path)
+
+
+func _init() -> void:
+	# `data/skills.json` is `{"skills": [...]}`; WIGame keys it by id at
+	# construction, and THAT dict is what every consumer reads.
+	var skills: Dictionary = _new_game().skills
+	assert(not skills.is_empty(), "fixture: the skill catalog loaded")
+
+	_check_category_partition(skills)
+	_check_filter_agreement(skills)
+	_check_bar_semantics(skills)
+	_check_dedupe_and_provenance()
+	_check_entry_enrichment()
+	_check_checkbox_honesty()
+	_check_auto_bar_cap()
+
+	print("PASS: GH#336 skill categorisation (partition + live-filter agreement), dedupe/provenance, checkbox honesty, AUTO field-bar 9-cap")
+	quit(0)
+
+
+## Every shipped Skill lands in EXACTLY ONE bucket, and every bucket name is one
+## the renderer knows how to head. A Skill that fell through would render
+## nowhere -- silently missing from the only screen that lists it.
+func _check_category_partition(skills: Dictionary) -> void:
+	var counts: Dictionary = {}
+	for category: String in WIGame.SKILL_CATEGORY_ORDER:
+		counts[category] = 0
+	for id: String in skills:
+		var category := WIGame.skill_category(skills[id] as Dictionary)
+		assert(counts.has(category), "skill %s derived category %s, which is not in SKILL_CATEGORY_ORDER" % [id, category])
+		assert(WIGame.SKILL_CATEGORY_HEADINGS.has(category), "category %s has no heading copy" % category)
+		counts[category] += 1
+	var total := 0
+	for category: String in counts:
+		total += int(counts[category])
+	assert(total == skills.size(), "the four buckets partition the catalog exactly: %d bucketed vs %d shipped" % [total, skills.size()])
+	for category: String in counts:
+		assert(int(counts[category]) > 0, "bucket %s is empty -- the redesign would draw a heading with nothing under it" % category)
+
+
+## SPEC RULING 3, the agreement check. `skill_category` is a RESTATEMENT of the
+## two filters that decide what actually reaches a bar; if either of those moves
+## and this one doesn't, the journal starts lying again -- exactly the defect
+## the redesign exists to fix. Two teeth:
+##   (a) BEHAVIOURAL -- re-derive both live filters over the whole catalog here
+##       and demand the same answer, entry by entry.
+##   (b) SOURCE-TEXT -- pin the filter expressions themselves. `combat_hud.gd`
+##       is not this lane's file to change, so the tripwire fires on ITS edit
+##       and surfaces the seam instead of silently disagreeing.
+func _check_filter_agreement(skills: Dictionary) -> void:
+	for id: String in skills:
+		var sk: Dictionary = skills[id]
+		# combat_hud.gd's rebuild_slots kit filter, verbatim.
+		var combat_bar_takes_it: bool = (sk.get("contexts", []) as Array).has("combat") and int(sk.get("ap_cost", 0)) > 0
+		# wi_game.gd's field_hotbar_loadout candidate filter, verbatim.
+		var field_bar_takes_it: bool = bool(sk.get("field", false))
+		var category := WIGame.skill_category(sk)
+		var slottable := WIGame.SLOTTABLE_SKILL_CATEGORIES.has(category)
+		assert(slottable == (combat_bar_takes_it or field_bar_takes_it),
+			"%s: derived slottable=%s disagrees with the live bar filters (combat=%s field=%s)" % [id, slottable, combat_bar_takes_it, field_bar_takes_it])
+		if combat_bar_takes_it:
+			assert(category == WIGame.SKILL_CATEGORY_COMBAT_ACTIVE,
+				"%s reaches the combat bar, so its primary bucket must be Combat — Active, got %s" % [id, category])
+		elif field_bar_takes_it:
+			assert(category == WIGame.SKILL_CATEGORY_FIELD_ACTIVE,
+				"%s reaches only the field bar, so its bucket must be Exploration — Active, got %s" % [id, category])
+
+	var hud_source := _read("res://src/combat/combat_hud.gd")
+	assert(hud_source.contains("if (sk.get(\"contexts\", []) as Array).has(\"combat\") and int(sk.get(\"ap_cost\", 0)) > 0:"),
+		"combat_hud.gd's combat-bar kit filter moved -- re-derive WIGame.skill_category against it (GH#336 spec ruling 3) before touching this pin")
+	var sim_source := _read("res://src/core/wi_game.gd")
+	assert(sim_source.contains("if bool((skills.get(id, {}) as Dictionary).get(\"field\", false)):"),
+		"field_hotbar_loadout's candidate filter moved -- re-derive WIGame.skill_category against it")
+
+
+## `bar` says which bar a tick on the row actually moves. `hotbar_loadout` is
+## ONE shared array, so a Skill that clears both candidate filters is genuinely
+## toggled onto both bars at once -- the "both" badge is the only place the tab
+## can say so, since the row renders once.
+func _check_bar_semantics(skills: Dictionary) -> void:
+	var both_count := 0
+	for id: String in skills:
+		var sk: Dictionary = skills[id]
+		var combat_slot: bool = (sk.get("contexts", []) as Array).has("combat") and int(sk.get("ap_cost", 0)) > 0
+		var field_slot: bool = bool(sk.get("field", false))
+		var bar := WIGame.skill_bar(sk)
+		var expected := ""
+		if combat_slot and field_slot:
+			expected = "both"
+			both_count += 1
+		elif combat_slot:
+			expected = "combat"
+		elif field_slot:
+			expected = "field"
+		assert(bar == expected, "%s: bar %s, expected %s" % [id, bar, expected])
+		assert((bar != "") == WIGame.SLOTTABLE_SKILL_CATEGORIES.has(WIGame.skill_category(sk)),
+			"%s: a Skill has a bar exactly when it is slottable" % id)
+	assert(both_count > 0, "at least one dual-context Skill ships -- otherwise the 'both' badge is dead code")
+
+
+## THE 46-ROWS-FOR-28-SKILLS DEFECT. The class-primary producer walks the
+## inherits closure once PER GROUP, so a consolidation class re-renders every
+## inherited Skill; the categorized producer renders each id exactly once and
+## names its sources in the row instead.
+func _check_dedupe_and_provenance() -> void:
+	var g := _new_game()
+	g.classes = {"warrior": 4, "mage": 4, "spellsword": 4}
+
+	var class_rows: Array[String] = []
+	for raw_group: Variant in g.skills_journal():
+		for raw_skill: Variant in (raw_group as Dictionary)["skills"]:
+			class_rows.append(String((raw_skill as Dictionary)["id"]))
+	var distinct: Dictionary = {}
+	for id: String in class_rows:
+		distinct[id] = true
+	assert(class_rows.size() > distinct.size(),
+		"fixture: the spellsword closure must actually duplicate rows in the class-primary producer, or this test proves nothing")
+
+	var category_rows: Array[String] = []
+	var seen: Dictionary = {}
+	var headings: Array[String] = []
+	for raw_group: Variant in g.skills_journal_categories():
+		var group := raw_group as Dictionary
+		headings.append(String(group["heading"]))
+		assert(WIGame.SKILL_CATEGORY_HEADINGS.values().has(String(group["heading"])), "unknown category heading " + String(group["heading"]))
+		for raw_skill: Variant in (group[WIKeys.SKILLS] as Array):
+			var entry := raw_skill as Dictionary
+			var id := String(entry[WIKeys.ID])
+			assert(not seen.has(id), "%s rendered twice -- the dedupe is the whole point of the redesign" % id)
+			seen[id] = true
+			category_rows.append(id)
+			assert(String(entry["category"]) == String(group["category"]),
+				"%s sits under %s but derives %s" % [id, String(group["category"]), String(entry["category"])])
+	assert(category_rows.size() == distinct.size(),
+		"the categorized tab renders every DISTINCT Skill exactly once: %d rows vs %d distinct" % [category_rows.size(), distinct.size()])
+	# Bucket order is the render order the cursor walks; it must follow the const.
+	var expected_headings: Array[String] = []
+	for category: String in WIGame.SKILL_CATEGORY_ORDER:
+		if WIGame.SKILL_CATEGORY_HEADINGS[category] in headings:
+			expected_headings.append(String(WIGame.SKILL_CATEGORY_HEADINGS[category]))
+	assert(headings == expected_headings, "categories render in SKILL_CATEGORY_ORDER, got %s" % [headings])
+
+	var provenance: Dictionary = {}
+	for raw_group: Variant in g.skills_journal_categories():
+		for raw_skill: Variant in ((raw_group as Dictionary)[WIKeys.SKILLS] as Array):
+			var entry := raw_skill as Dictionary
+			provenance[String(entry[WIKeys.ID])] = String(entry["provenance"])
+	for id: String in provenance:
+		assert(String(provenance[id]) != "", "%s rendered with no provenance at all" % id)
+	assert(String(provenance.get("basic_cleaning", "")) == "Innate",
+		"an innate Skill's provenance is the word Innate, not a class rung, got: %s" % [provenance.get("basic_cleaning", "")])
+	var multi_source := 0
+	for id: String in provenance:
+		if String(provenance[id]).contains(", "):
+			multi_source += 1
+		else:
+			var single := String(provenance[id])
+			assert(single == "Innate" or single.contains(" L"),
+				"a single-source class row names its rung (\"Warrior L1\"), got: %s" % single)
+	assert(multi_source > 0,
+		"fixture: a warrior/mage/spellsword save must produce at least one multi-source row, or the \", \" provenance shape is untested")
+
+	# Single-class sanity: the 1-class saves every shipped QA pin uses have no
+	# duplicates at all, which is WHY their skill_count pins survive the change.
+	var solo := _new_game()
+	solo.classes = {"warrior": 1}
+	var solo_rows := 0
+	for raw_group: Variant in solo.skills_journal_categories():
+		solo_rows += ((raw_group as Dictionary)[WIKeys.SKILLS] as Array).size()
+	var solo_class_rows := 0
+	for raw_group: Variant in solo.skills_journal():
+		solo_class_rows += ((raw_group as Dictionary)["skills"] as Array).size()
+	assert(solo_rows == solo_class_rows,
+		"a single-class save has nothing to dedupe: %d categorized rows vs %d class rows" % [solo_rows, solo_class_rows])
+
+
+## Seam 1a: the enrichment is ADDITIVE. Every pre-existing key keeps its exact
+## meaning (test_sim_core's reveal-gate suite reads `revealed`/`text` off these
+## same entries), and the new keys carry what the renderer needs so it never
+## re-derives the rule a third time.
+func _check_entry_enrichment() -> void:
+	var g := _new_game()
+	g.classes = {"warrior": 1}
+	var by_id: Dictionary = {}
+	for raw_group: Variant in g.skills_journal():
+		for raw_skill: Variant in (raw_group as Dictionary)["skills"]:
+			by_id[String((raw_skill as Dictionary)[WIKeys.ID])] = raw_skill
+	for key: String in ["id", "display_name", "revealed", "text", "category", "slottable", "bar", "ap_cost", "mp_cost", "icon"]:
+		assert((by_id["power_strike"] as Dictionary).has(key), "enriched entry is missing key " + key)
+	var power := by_id["power_strike"] as Dictionary
+	var power_source: Dictionary = g.skills["power_strike"]
+	assert(int(power[WIKeys.AP_COST]) == int(power_source.get("ap_cost", 0)), "ap_cost is carried straight from the catalog record")
+	assert(int(power[WIKeys.MP_COST]) == int(power_source.get("mp_cost", 0)), "mp_cost is carried straight from the catalog record")
+	assert(String(power["icon"]) == String(power_source.get("icon", "")), "icon is carried straight from the catalog record")
+	assert(String(power["category"]) == WIGame.SKILL_CATEGORY_COMBAT_ACTIVE and bool(power["slottable"]),
+		"a 2 AP combat strike is Combat — Active and slottable")
+	# The reveal gate is unchanged by the refactor: an activatable Skill stays
+	# opaque, a passive reads revealed from the moment it is granted.
+	assert(not bool(power["revealed"]), "an unused activatable Skill is still opaque")
+	assert(bool((by_id["tough_body"] as Dictionary)["revealed"]), "a passive still reads revealed with no use behind it")
+	assert(not bool((by_id["tough_body"] as Dictionary)["slottable"]), "a passive is not slottable")
+
+
+## SPEC RULING 4, the honest checkbox. The old tab let the player tick 41 of 119
+## catalog entries that ride `hotbar_loadout` and appear on no bar, ever. The
+## invariant now: a row carries a checkbox EXACTLY when ticking it changes a bar.
+func _check_checkbox_honesty() -> void:
+	var g := _new_game()
+	g.classes = {"warrior": 4, "mage": 4, "spellsword": 4}
+	var combat_candidates: Dictionary = {}
+	var field_candidates: Dictionary = {}
+	for raw: Variant in g.known_skills():
+		var id := String(raw)
+		var sk: Dictionary = g.skills.get(id, {})
+		if (sk.get("contexts", []) as Array).has("combat") and int(sk.get("ap_cost", 0)) > 0:
+			combat_candidates[id] = true
+		if bool(sk.get("field", false)):
+			field_candidates[id] = true
+	var checked := 0
+	var glyphed := 0
+	for raw_group: Variant in g.skills_journal_categories():
+		for raw_skill: Variant in ((raw_group as Dictionary)[WIKeys.SKILLS] as Array):
+			var entry := raw_skill as Dictionary
+			var id := String(entry[WIKeys.ID])
+			var reaches_a_bar: bool = combat_candidates.has(id) or field_candidates.has(id)
+			assert(bool(entry["slottable"]) == reaches_a_bar,
+				"%s: checkbox rendered=%s but reaches-a-bar=%s -- this IS the lie the redesign kills" % [id, entry["slottable"], reaches_a_bar])
+			if bool(entry["slottable"]):
+				checked += 1
+			else:
+				glyphed += 1
+	assert(checked > 0 and glyphed > 0,
+		"fixture must hold both slottable and passive Skills, got %d/%d" % [checked, glyphed])
+
+
+## SPEC RULING 9. The CUSTOM path has honoured the cap since a7 #208; AUTO --
+## the mode a player who never opened the journal is in -- was uncapped, so
+## field-skill number ten onward drew a slot no number key can reach.
+func _check_auto_bar_cap() -> void:
+	var g := _new_game()
+	var field_ids: Array[String] = []
+	for id: String in g.skills:
+		if bool((g.skills[id] as Dictionary).get("field", false)):
+			field_ids.append(id)
+	assert(field_ids.size() > WIGame.AUTO_SLOT_CAP,
+		"fixture: the shipped catalog must carry more than %d field Skills for the cap to be reachable at all" % WIGame.AUTO_SLOT_CAP)
+
+	# Under the cap: AUTO is byte-identical to the plain known-and-field
+	# derivation (the a7 #208 parity contract test_sim_core pins).
+	g.player_skills = field_ids.slice(0, WIGame.AUTO_SLOT_CAP - 1)
+	assert(g.field_hotbar_loadout() == g.player_skills,
+		"under the cap, AUTO is the unfiltered field list exactly")
+
+	# Exactly at the cap: still untouched.
+	g.player_skills = field_ids.slice(0, WIGame.AUTO_SLOT_CAP)
+	assert(g.field_hotbar_loadout().size() == WIGame.AUTO_SLOT_CAP,
+		"exactly at the cap the bar is unchanged, not clipped by one")
+
+	# Over the cap: clipped, and clipped from the FRONT (the first N in
+	# derivation order survive, so a player's existing slot 1-9 bindings do not
+	# shuffle when the tenth Skill is granted).
+	g.player_skills = field_ids.duplicate()
+	var capped: Array = g.field_hotbar_loadout()
+	assert(capped.size() == WIGame.AUTO_SLOT_CAP,
+		"AUTO caps at %d, got %d slots for %d field Skills" % [WIGame.AUTO_SLOT_CAP, capped.size(), field_ids.size()])
+	assert(capped == field_ids.slice(0, WIGame.AUTO_SLOT_CAP),
+		"the cap keeps the FIRST %d in derivation order -- a later grant must never renumber an existing slot" % WIGame.AUTO_SLOT_CAP)
+
+	# A CUSTOM loadout is not silently re-clipped here: `loadout_toggle` is the
+	# player's explicit curation and `_auto_slot_new_field_skills` already
+	# refuses to auto-add past the cap. The redesigned tab is the tool for
+	# deliberately exceeding 9 (spec ruling 9), so the cap must NOT apply here.
+	g.hotbar_loadout = field_ids.duplicate()
+	assert(g.field_hotbar_loadout().size() == field_ids.size(),
+		"a CUSTOM loadout is honoured in full -- the cap is an AUTO-mode rule only")

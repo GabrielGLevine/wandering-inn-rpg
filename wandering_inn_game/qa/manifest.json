@@ -3141,7 +3141,8 @@
     ],
     "skills": [
      "basic_cleaning",
-     "frost_bolt"
+     "frost_bolt",
+     "quick_cast"
     ],
     "dialogue": [],
     "systems": [
@@ -5730,6 +5731,52 @@
      "combat",
      "economy",
      "exploration"
+    ]
+   }
+  },
+  {
+   "script": "journal_categories",
+   "seed": 3,
+   "fixture": "inn_guests_start",
+   "note": "GH#336 Skills-tab redesign: category-primary + deduped rows (skill_categories/skill_row_ids pinned verbatim) + honest checkbox (assigns on Combat-Active and Exploration-Active, refuses on a Combat-Passive row that reaches no bar)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "inn_guests_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking",
+     "basic_swordwork",
+     "battle_momentum",
+     "battlefield_awareness",
+     "calming_touch",
+     "charming_smile",
+     "counter_strike",
+     "dangersense",
+     "flame_dart",
+     "flame_jet",
+     "frost_bolt",
+     "light",
+     "mana_shield",
+     "observe",
+     "piercing_strikes",
+     "power_strike",
+     "quick_cast",
+     "quick_movement",
+     "second_wind",
+     "tough_body"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "input"
     ]
    }
   }

@@ -1,129 +1,722 @@
 {
- "_comment": "THREE PILLARS P5: the milestone's own end-to-end proof of the FIELD-SKILL LOOP. Loads the near_tactician fixture (warrior L1 at the inn, chess_with_olesm banked (the [Tactician] driver -- earned at Olesm's chessboard), [Basic Cleaning] innate) via the title 'Continue'. PHASE A proves the overworld hotbar itself: it renders at load (slots:1, the innate [Basic Cleaning]); a NUMBER KEY on the faced dirty_table fires the exact interact stream (P1 byte-parity: skill_used{basic_cleaning,dirty_table} + accomplishment cleaned_the_inn + the same toast); and a number key facing empty floor takes the field_ambient fallback. PHASE B proves the earned-class arc: one sleep resolves TWO gained_by gates at once -- the pre-banked chess_with_olesm grants [Tactician] (the class is earned at Olesm's chessboard, user ruling) and Phase A's fresh cleaned_the_inn:1 grants [Helper] (a genuine emergent co-grant: the loop earns Helper by doing the chore) -- so the hotbar RE-RENDERS from 1 field slot to THREE ([Basic Cleaning], [Helper]'s [Basic Cooking], [Tactician]'s [Appraise Foe], in catalog order). Pressing [Appraise Foe]'s slot (3) on Erin surfaces her exact observe string as a toast and reveals the skill in the journal (used_skills). No combat anywhere -- fixture rng_state governs, --seed is cosmetic; seed 9 for convention.",
+ "_comment": "THREE PILLARS P5: the milestone's own end-to-end proof of the FIELD-SKILL LOOP. Loads the near_tactician fixture (warrior L1 at the inn, chess_with_olesm banked (the [Tactician] driver -- earned at Olesm's chessboard), [Basic Cleaning] innate) via the title 'Continue'. PHASE A proves the overworld hotbar itself: it renders at load (slots:1, the innate [Basic Cleaning]); a NUMBER KEY on the faced dirty_table fires the exact interact stream (P1 byte-parity: skill_used{basic_cleaning,dirty_table} + accomplishment cleaned_the_inn + the same toast); and a number key facing empty floor takes the field_ambient fallback. PHASE B proves the earned-class arc: one sleep resolves TWO gained_by gates at once -- the pre-banked chess_with_olesm grants [Tactician] (the class is earned at Olesm's chessboard, user ruling) and Phase A's fresh cleaned_the_inn:1 grants [Helper] (a genuine emergent co-grant: the loop earns Helper by doing the chore) -- so the hotbar RE-RENDERS from 1 field slot to THREE ([Basic Cleaning], [Helper]'s [Basic Cooking], [Tactician]'s [Appraise Foe], in catalog order). Pressing [Appraise Foe]'s slot (3) on Erin surfaces her exact observe string as a toast and reveals the skill in the journal (used_skills). No combat anywhere -- fixture rng_state governs, --seed is cosmetic; seed 9 for convention. GH#336: the Skills tab is category-primary and deduped now, so every cursor index this script pins was re-derived off the new `skill_row_ids` payload (row 5 = [Basic Cleaning], row 7 = [Appraise Foe]); `ui_journal_loadout_rendered` also carries `slottable` and both pinned rows are true.",
  "fixture_save": "near_tactician",
  "starts_at_title": true,
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "inn" },
-  { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
-
-  { "_comment": "Fresh settings start expanded: names + mechanics render before first sleep.", "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1, "expanded": true, "slot_numbers": ["1"], "fallback_labels": ["BC"], "readout_lines": ["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease."] } },
-  { "action": "screenshot", "name": "00_hotbar_boot_1slot" },
-
-  { "_comment": "Face dirty_table (5,4): right3 -> (5,3), down1 blocks on the table & faces it.", "action": "move", "direction": "right", "steps": 3 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
-  { "action": "press", "name": "hotbar_1" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "basic_cleaning", "target": "dirty_table", "context": "exploration" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "cleaned_the_inn", "count": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Basic Cleaning] — The table is spotless." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.cleaned_the_inn", "equals": 1 },
-  { "action": "screenshot", "name": "01_field_clean_via_numberkey" },
-
-  { "_comment": "Ambient fallback: left1 -> (4,3) facing the empty (3,3); the number key takes basic_cleaning's field_ambient line (no target, banks nothing).", "action": "move", "direction": "left", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [4, 3] },
-  { "action": "press", "name": "hotbar_1" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "basic_cleaning", "context": "exploration", "target": "" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Basic Cleaning] — You wipe down the nearest surface out of old habit. It gleams." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-
-  { "_comment": "== PHASE B: one sleep grants [Tactician] (pre-banked chess_with_olesm) AND [Helper] (Phase A's cleaned_the_inn:1); hotbar re-renders 1 -> 3 field slots ==. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 2] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "tactician" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "classes.tactician", "equals": 1 },
-  { "action": "assert_state", "path": "classes.helper", "equals": 1 },
-  { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3 }, "timeout_sec": 5 },
-  { "_comment": "First waking auto-collapses only after the expanded onboarding read and sleep reveal.", "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "expanded": false, "reason": "first_waking" }, "timeout_sec": 5 },
-  { "_comment": "Keyboard toggle reopens and recloses details without touching dispatch/order.", "action": "press", "name": "field_readout" },
-  { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3, "expanded": true, "reason": "player" }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "02a_hotbar_details_reopened" },
-  { "action": "press", "name": "field_readout" },
-  { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3, "expanded": false, "reason": "player" }, "timeout_sec": 5 },
-  { "action": "assert_settings_file_exists" },
-  { "action": "assert_settings_value", "path": "field_readout_expanded", "equals": false },
-  { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Tactician] class gained! — [Appraise Foe], [Battlefield Awareness]" } },
-  { "action": "assert_event_logged", "type": "toast", "payload_contains": { "text": "[Helper] class gained! — [Basic Cooking]" } },
-
-  { "_comment": "Face Erin (7,2): teleport down to (2,3) (the cell the old ground-floor route reached via 'up 3'), right5 -> (7,3), up1 blocks on Erin & faces her.", "action": "teleport", "map": "inn", "cell": [2, 3] },
-  { "action": "move", "direction": "right", "steps": 5 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 3] },
-  { "action": "screenshot", "name": "02_hotbar_grown_3slots" },
-  { "_comment": "Slot 3 is [Appraise Foe] (catalog order: innate basic_cleaning, then helper's basic_cooking, then tactician's observe -- basic_cooking is field-tagged too). Press it facing Erin.", "action": "press", "name": "hotbar_3" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "observe", "context": "exploration", "target": "erin" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "observed_things", "count": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.observed_things", "equals": 1 },
-  { "_comment": "Journal reveal: both field skills used this run are now in used_skills (basic_cleaning from Phase A's dispatch, observe from this [Appraise Foe]).", "action": "assert_state", "path": "used_skills", "equals": ["basic_cleaning", "observe"] },
-  { "action": "screenshot", "name": "03_observe_erin_toast" },
-
-  { "_comment": "== PHASE C: loadout assign through the REAL journal UI -- the field bar re-renders to the chosen subset and the number key fires the REMAPPED slot. Issue #209: the journal opens on the Quests tab now, so switch to the Skills tab first (move_right, Quests->Skills) -- the skill cursor is LIVE only there and resets to flattened row 0 ([Basic Cleaning]/Innate) on entry; move down 6 rows to [Appraise Foe] (flattened order: Innate's basic_cleaning, then Warrior's L1 grants basic_swordwork/tough_body/power_strike/piercing_strikes, then Helper's basic_cooking, then Tactician's observe). EMIT ORDER on toggle: Game.sim.loadout_toggle mutates + emits loadout_changed SYNCHRONOUSLY, which field_hotbar.gd (still mounted/listening under the journal modal) re-renders and emits ui_field_hotbar_rendered from -- BEFORE journal.gd's own _toggle_cursor_skill gets to its ui_journal_loadout_rendered emit; waits below are ordered to match.", "action": "press", "name": "journal" },
-  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "quests" }, "timeout_sec": 5 },
-  { "action": "press", "name": "move_right" },
-  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "skills" }, "timeout_sec": 5 },
-  { "_comment": "a4 #216 slice 2 (touch drag-to-scroll), RELOCATED here from journal_history by issue #209: near_tactician's multi-class kit (Innate + Warrior L1 + Helper + Tactician) overflows the shrunk one-tab Skills body, so a touch/mouse drag UP pans it DOWN. A fresh tab switch resets scroll to 0; the drag moves it off zero. (journal_history_start no longer overflows ANY single tab post-split -- measured -- so the touch-scroll proof rides this bigger-kit fixture instead of journal_history.)", "action": "assert_journal_scrolled", "greater_than": -0.5 },
-  { "action": "drag_journal_body" },
-  { "action": "assert_journal_scrolled", "greater_than": 0.0 },
-  { "_comment": "POSITIVE CONTROL for the pan/tap latch (v0.15 Task 2.1 fix round 1). The drag above must NOT toggle a skill -- that negative is pinned below, where `loadout: [\"observe\"]` is a SINGLE-element list any stray toggle breaks. This is the other half: a STATIONARY press at the very point the drag let go of still reaches meta_clicked and still toggles. [Basic Cleaning] is row 0, the exact row the drag used to let go over and silently flip. Tapped TWICE so the net loadout is unchanged (the pins below stand) and the OFF direction is proven too.", "action": "tap_journal_body" },
-  { "action": "wait_for_event", "type": "loadout_changed", "payload_contains": { "skill": "basic_cleaning", "assigned": true, "loadout": ["basic_cleaning"] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_journal_loadout_rendered", "payload_contains": { "skill": "basic_cleaning", "assigned": true, "cursor_index": 0 }, "timeout_sec": 5 },
-  { "action": "tap_journal_body" },
-  { "action": "wait_for_event", "type": "loadout_changed", "payload_contains": { "skill": "basic_cleaning", "assigned": false, "loadout": [] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_journal_loadout_rendered", "payload_contains": { "skill": "basic_cleaning", "assigned": false, "cursor_index": 0 }, "timeout_sec": 5 },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "loadout_changed", "payload_contains": { "skill": "observe", "assigned": true, "loadout": ["observe"] }, "timeout_sec": 5 },
-  { "_comment": "A non-empty loadout intersects+reorders the field bar: only [Appraise Foe] survives ([Basic Cleaning]/[Basic Cooking] are known but unslotted this walk), so it's now the ONLY slot -- slot 1, not its old AUTO slot 3. Fires while the journal is still open (field_hotbar.gd isn't journal-gated).", "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1, "readout_lines": ["1  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_journal_loadout_rendered", "payload_contains": { "skill": "observe", "assigned": true, "cursor_index": 6 }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "04_journal_observe_assigned" },
-  { "action": "press", "name": "journal" },
-  { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "05_hotbar_remapped_1slot" },
-  { "_comment": "Still facing Erin (journal doesn't move the player) -- hotbar_1, NOT hotbar_3, now fires [Appraise Foe] (the remapped slot proof).", "action": "press", "name": "hotbar_1" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "observe", "context": "exploration", "target": "erin" }, "timeout_sec": 5 },
-
-  { "_comment": "Unassign through the same journal UI. Issue #209: reopen lands on Quests again, so switch to Skills (move_right); the cursor resets to row 0 on tab entry, same 6 downs reach [Appraise Foe] again -- loadout empties back to AUTO and the field bar re-renders back to its original 3-slot order.", "action": "press", "name": "journal" },
-  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "quests" }, "timeout_sec": 5 },
-  { "action": "press", "name": "move_right" },
-  { "action": "wait_for_event", "type": "ui_journal_shown", "payload_contains": { "active_tab": "skills" }, "timeout_sec": 5 },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "loadout_changed", "payload_contains": { "skill": "observe", "assigned": false, "loadout": [] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_journal_loadout_rendered", "payload_contains": { "skill": "observe", "assigned": false, "cursor_index": 6 }, "timeout_sec": 5 },
-
-  { "_comment": "Issue #84 QA-teeth: the SAME assign toggle again, this time via CLICK (`click_journal_skill`, flat_index 6 = [Appraise Foe], the identical flattened index the 6-downs keyboard path above lands on) instead of move_down x6 + confirm -- fires the byte-identical loadout_changed/ui_field_hotbar_rendered/ui_journal_loadout_rendered triple as the keyboard assign at line 71-73 above (`_on_skill_row_meta_clicked` routes through the SAME `_toggle_cursor_skill()` Enter calls).", "action": "click_journal_skill", "flat_index": 6 },
-  { "action": "wait_for_event", "type": "loadout_changed", "payload_contains": { "skill": "observe", "assigned": true, "loadout": ["observe"] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1, "readout_lines": ["1  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_journal_loadout_rendered", "payload_contains": { "skill": "observe", "assigned": true, "cursor_index": 6 }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "06_journal_click_assign" },
-
-  { "_comment": "Click-driven UNASSIGN, same row, restoring the clean AUTO-loadout baseline this script ends on either way.", "action": "click_journal_skill", "flat_index": 6 },
-  { "action": "wait_for_event", "type": "loadout_changed", "payload_contains": { "skill": "observe", "assigned": false, "loadout": [] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 3 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_journal_loadout_rendered", "payload_contains": { "skill": "observe", "assigned": false, "cursor_index": 6 }, "timeout_sec": 5 },
-
-  { "action": "press", "name": "journal" },
-  { "action": "wait_for_event", "type": "ui_journal_hidden", "timeout_sec": 5 }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "_comment": "Fresh settings start expanded: names + mechanics render before first sleep.",
+   "action": "assert_event_logged",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 1,
+    "expanded": true,
+    "slot_numbers": [
+     "1"
+    ],
+    "fallback_labels": [
+     "BC"
+    ],
+    "readout_lines": [
+     "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease."
+    ]
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "00_hotbar_boot_1slot"
+  },
+  {
+   "_comment": "Face dirty_table (5,4): right3 -> (5,3), down1 blocks on the table & faces it.",
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "target": "dirty_table",
+    "context": "exploration"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "cleaned_the_inn",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Basic Cleaning] — The table is spotless."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.cleaned_the_inn",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "01_field_clean_via_numberkey"
+  },
+  {
+   "_comment": "Ambient fallback: left1 -> (4,3) facing the empty (3,3); the number key takes basic_cleaning's field_ambient line (no target, banks nothing).",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "context": "exploration",
+    "target": ""
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Basic Cleaning] — You wipe down the nearest surface out of old habit. It gleams."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== PHASE B: one sleep grants [Tactician] (pre-banked chess_with_olesm) AND [Helper] (Phase A's cleaned_the_inn:1); hotbar re-renders 1 -> 3 field slots ==. #49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "tactician"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.tactician",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.helper",
+   "equals": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "First waking auto-collapses only after the expanded onboarding read and sleep reveal.",
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "expanded": false,
+    "reason": "first_waking"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Keyboard toggle reopens and recloses details without touching dispatch/order.",
+   "action": "press",
+   "name": "field_readout"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 3,
+    "expanded": true,
+    "reason": "player"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02a_hotbar_details_reopened"
+  },
+  {
+   "action": "press",
+   "name": "field_readout"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 3,
+    "expanded": false,
+    "reason": "player"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_settings_file_exists"
+  },
+  {
+   "action": "assert_settings_value",
+   "path": "field_readout_expanded",
+   "equals": false
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Tactician] class gained! — [Appraise Foe], [Battlefield Awareness]"
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Helper] class gained! — [Basic Cooking]"
+   }
+  },
+  {
+   "_comment": "Face Erin (7,2): teleport down to (2,3) (the cell the old ground-floor route reached via 'up 3'), right5 -> (7,3), up1 blocks on Erin & faces her.",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    3
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "02_hotbar_grown_3slots"
+  },
+  {
+   "_comment": "Slot 3 is [Appraise Foe] (catalog order: innate basic_cleaning, then helper's basic_cooking, then tactician's observe -- basic_cooking is field-tagged too). Press it facing Erin.",
+   "action": "press",
+   "name": "hotbar_3"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "observe",
+    "context": "exploration",
+    "target": "erin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "observed_things",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.observed_things",
+   "equals": 1
+  },
+  {
+   "_comment": "Journal reveal: both field skills used this run are now in used_skills (basic_cleaning from Phase A's dispatch, observe from this [Appraise Foe]).",
+   "action": "assert_state",
+   "path": "used_skills",
+   "equals": [
+    "basic_cleaning",
+    "observe"
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "03_observe_erin_toast"
+  },
+  {
+   "_comment": "== PHASE C: loadout assign through the REAL journal UI -- the field bar re-renders to the chosen subset and the number key fires the REMAPPED slot. Issue #209: the journal opens on the Quests tab now, so switch to the Skills tab first (move_right, Quests->Skills) -- the skill cursor is LIVE only there and resets to flattened row 0 ([Basic Cleaning]/Innate) on entry; move down 6 rows to [Appraise Foe] (flattened order: Innate's basic_cleaning, then Warrior's L1 grants basic_swordwork/tough_body/power_strike/piercing_strikes, then Helper's basic_cooking, then Tactician's observe). EMIT ORDER on toggle: Game.sim.loadout_toggle mutates + emits loadout_changed SYNCHRONOUSLY, which field_hotbar.gd (still mounted/listening under the journal modal) re-renders and emits ui_field_hotbar_rendered from -- BEFORE journal.gd's own _toggle_cursor_skill gets to its ui_journal_loadout_rendered emit; waits below are ordered to match.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "active_tab": "quests"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "active_tab": "skills"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "a4 #216 slice 2 (touch drag-to-scroll), RELOCATED here from journal_history by issue #209: near_tactician's multi-class kit (Innate + Warrior L1 + Helper + Tactician) overflows the shrunk one-tab Skills body, so a touch/mouse drag UP pans it DOWN. A fresh tab switch resets scroll to 0; the drag moves it off zero. (journal_history_start no longer overflows ANY single tab post-split -- measured -- so the touch-scroll proof rides this bigger-kit fixture instead of journal_history.)",
+   "action": "assert_journal_scrolled",
+   "greater_than": -0.5
+  },
+  {
+   "action": "drag_journal_body"
+  },
+  {
+   "action": "assert_journal_scrolled",
+   "greater_than": 0.0
+  },
+  {
+   "_comment": "POSITIVE CONTROL for the pan/tap latch (v0.15 Task 2.1 fix round 1). The drag above must NOT toggle a skill -- that negative is pinned below, where `loadout: [\"observe\"]` is a SINGLE-element list any stray toggle breaks. This is the other half: a STATIONARY press still reaches meta_clicked and still toggles. GH#336 re-pin, twice over: (1) the categorized body is TALLER (a Classes strip plus four category headings), so the drag's own release point (0.25 of body height) now lands on a heading -- not a row, and headings are deliberately non-focusable -- and the tap is aimed explicitly at 0.52 (measured band ~0.47-0.57, re-derive by sweeping at_height_fraction if the Skills body ever changes height again), which lands on [Basic Cleaning], now row 5 of the Exploration - Active bucket rather than row 0 of Innate. (2) the OFF direction is driven by `click_journal_skill` on the SAME row instead of a second tap at the same point: a slottable toggle rebuilds the body follow-cursor, so the post-toggle scroll moves the row out from under a repeated geometric tap. One tap-driven toggle is all the latch needs to prove; the index-addressed unassign restores the empty-loadout baseline every pin below depends on.",
+   "action": "tap_journal_body",
+   "at_height_fraction": 0.52
+  },
+  {
+   "action": "wait_for_event",
+   "type": "loadout_changed",
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "assigned": true,
+    "loadout": [
+     "basic_cleaning"
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_loadout_rendered",
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "assigned": true,
+    "cursor_index": 5,
+    "slottable": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_journal_skill",
+   "flat_index": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "loadout_changed",
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "assigned": false,
+    "loadout": []
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_loadout_rendered",
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "assigned": false,
+    "cursor_index": 5,
+    "slottable": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "GH#336 re-pin: the tap legs above left the cursor on [Basic Cleaning] (row 5); two more downs reach [Appraise Foe] at row 7, the last row of the Exploration - Active bucket. It was six downs from row 0 back when the tab was class-primary.",
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "loadout_changed",
+   "payload_contains": {
+    "skill": "observe",
+    "assigned": true,
+    "loadout": [
+     "observe"
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "A non-empty loadout intersects+reorders the field bar: only [Appraise Foe] survives ([Basic Cleaning]/[Basic Cooking] are known but unslotted this walk), so it's now the ONLY slot -- slot 1, not its old AUTO slot 3. Fires while the journal is still open (field_hotbar.gd isn't journal-gated).",
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 1,
+    "readout_lines": [
+     "1  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_loadout_rendered",
+   "payload_contains": {
+    "skill": "observe",
+    "assigned": true,
+    "cursor_index": 7,
+    "slottable": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_journal_observe_assigned"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "05_hotbar_remapped_1slot"
+  },
+  {
+   "_comment": "Still facing Erin (journal doesn't move the player) -- hotbar_1, NOT hotbar_3, now fires [Appraise Foe] (the remapped slot proof).",
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "observe",
+    "context": "exploration",
+    "target": "erin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Unassign through the same journal UI. Issue #209: reopen lands on Quests again, so switch to Skills (move_right); the cursor resets to row 0 on tab entry. GH#336 re-pin: SEVEN downs now reach [Appraise Foe] (row 7 of the deduped, category-ordered list) where six used to -- loadout empties back to AUTO and the field bar re-renders back to its original 3-slot order.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "active_tab": "quests"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "active_tab": "skills"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "loadout_changed",
+   "payload_contains": {
+    "skill": "observe",
+    "assigned": false,
+    "loadout": []
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_loadout_rendered",
+   "payload_contains": {
+    "skill": "observe",
+    "assigned": false,
+    "cursor_index": 7,
+    "slottable": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Issue #84 QA-teeth: the SAME assign toggle again, this time via CLICK (`click_journal_skill`, flat_index 6 = [Appraise Foe], the identical flattened index the 6-downs keyboard path above lands on) instead of move_down x6 + confirm -- fires the byte-identical loadout_changed/ui_field_hotbar_rendered/ui_journal_loadout_rendered triple as the keyboard assign at line 71-73 above (`_on_skill_row_meta_clicked` routes through the SAME `_toggle_cursor_skill()` Enter calls).",
+   "action": "click_journal_skill",
+   "flat_index": 7
+  },
+  {
+   "action": "wait_for_event",
+   "type": "loadout_changed",
+   "payload_contains": {
+    "skill": "observe",
+    "assigned": true,
+    "loadout": [
+     "observe"
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 1,
+    "readout_lines": [
+     "1  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_loadout_rendered",
+   "payload_contains": {
+    "skill": "observe",
+    "assigned": true,
+    "cursor_index": 7,
+    "slottable": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "06_journal_click_assign"
+  },
+  {
+   "_comment": "Click-driven UNASSIGN, same row, restoring the clean AUTO-loadout baseline this script ends on either way.",
+   "action": "click_journal_skill",
+   "flat_index": 7
+  },
+  {
+   "action": "wait_for_event",
+   "type": "loadout_changed",
+   "payload_contains": {
+    "skill": "observe",
+    "assigned": false,
+    "loadout": []
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "slots": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_loadout_rendered",
+   "payload_contains": {
+    "skill": "observe",
+    "assigned": false,
+    "cursor_index": 7,
+    "slottable": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  }
  ]
 }
