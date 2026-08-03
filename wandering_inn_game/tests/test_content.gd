@@ -86,14 +86,26 @@ const L5_HORNS_FOUR_MEMBER_ANCHORS := [
 ## of a surface no optional gate hides -- a noun the game uses but never
 ## explains is a word the player has to guess. Each row pins the defining
 ## surface AND the fragment that does the defining, so deleting the clause reds
-## as loudly as deleting the surface. Rows: [noun, file, locator, fragment];
-## locator = entity id for a scene file, item id for items.json.
+## as loudly as deleting the surface. Rows: [noun, map file, entity id,
+## fragment].
+##
+## THE DEFINING SURFACE MUST BE A SCENE ENTITY, and the review wave is why.
+## The first cut let a row name an items.json id, and the ungated arm below was
+## structurally unable to judge it -- items carry no `present_when`, so the
+## flag stayed false and `_check(not gated, ...)` was a tautology for exactly
+## the rows that needed it most. It was also wrong on the merits: an item's
+## description only renders once the item is OWNED, and both attunement stones
+## sit behind gold plus an arc gate (riverfarm_witch / krshia_crate's
+## pallass_sponsored), so neither could ever be the ungated producer this
+## tripwire exists to guarantee. Attunement's real ungated producer is
+## `riverfarm_anchor_stone`, which stands in the village with no present_when
+## at all. If a future noun's only home is an item, that is the finding, not a
+## row to add here.
 const L5_SELF_DEFINING_NOUNS := [
 	["posting", "res://data/maps/liscor/guild.json", "guild_board", "a posting pays on turn-in"],
 	["delivery", "res://data/maps/liscor/runners_guild.json", "runner_board", "gold by distance, paid on the mark"],
 	["lead", "res://data/maps/liscor/guild.json", "guild_notice_wall", "into your journal as a lead"],
-	["attunement", "res://data/items.json", "invrisil_attunement_stone", "the door learns a place from it"],
-	["attunement", "res://data/items.json", "pallass_attunement_stone", "the door learns a place from it"],
+	["attunement", "res://data/maps/riverfarm/riverfarm_village.json", "riverfarm_anchor_stone", "learns the place"],
 ]
 
 
@@ -105,18 +117,17 @@ func _validate_self_defining_nouns() -> void:
 		var fragment := String(row[3])
 		var doc: Dictionary = _load_json(path)
 		var copy := ""
-		var gated := false
-		if path.ends_with("items.json"):
-			for item: Dictionary in doc.get("items", []):
-				if String(item.get("id", "")) == locator:
-					copy = String(item.get("description", "")) + " " + String(item.get("lore", ""))
-		else:
-			for entity: Dictionary in doc.get("entities", []):
-				if String(entity.get("id", "")) != locator:
-					continue
-				gated = entity.has("present_when")
-				for key: String in ["toast", "observe", "second_visit_toast"]:
-					copy += " " + String(entity.get(key, ""))
+		var gated := true
+		var found := false
+		for entity: Dictionary in doc.get("entities", []):
+			if String(entity.get("id", "")) != locator:
+				continue
+			found = true
+			gated = entity.has("present_when")
+			for key: String in ["toast", "observe", "second_visit_toast"]:
+				copy += " " + String(entity.get(key, ""))
+		if not _require(found, "self-defining noun '%s': %s is not an entity in %s -- defining surfaces must be scene entities, so the ungated arm below can judge them" % [noun, locator, path]):
+			continue
 		if not _require(copy.strip_edges() != "", "self-defining noun '%s': %s in %s has no copy at all" % [noun, locator, path]):
 			continue
 		_check(not gated, "self-defining noun '%s': %s carries a present_when -- the surface that DEFINES a noun may not be gated away" % [noun, locator])

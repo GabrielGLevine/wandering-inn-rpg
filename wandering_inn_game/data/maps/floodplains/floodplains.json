@@ -1717,7 +1717,7 @@
    }
   },
   {
-   "_comment": "GH#332 SPRING LITTER, rung 1 of 3. Tame props are consumed permanently, so a re-bond needs its own row. Each rung opens on one more `companion_lost` (banked ONLY by the downed-clear) and closes as the next opens -- exactly one live, so rungs may share a cell. `companion: \"\"` = empty slot; the wild does not offer while a bond rides. CAP: three losses covered; unbounded re-supply needs a respawning prop (sim, not data).",
+   "_comment": "GH#332 SPRING LITTER, rung 1 of 3. Tame props are consumed permanently, so a re-bond needs its own row. A rung opens on one more `companion_lost` (banked ONLY by a TAMED downed-clear) and NEVER closes on a counter -- a counter `absent` erased rungs nobody visited. Being TAKEN retires it (`removed_entities`), so rungs COEXIST on distinct cells. `companion: \"\"` = empty slot.",
    "id": "wolf_den_spring",
    "kind": "prop",
    "cell": [
@@ -1729,9 +1729,6 @@
    "present_when": {
     "requires": {
      "companion_lost": 1
-    },
-    "absent": {
-     "companion_lost": 2
     },
     "companion": ""
    },
@@ -1746,7 +1743,7 @@
    }
   },
   {
-   "_comment": "GH#332 SPRING LITTER, rung 2 of 3 -- the razorbeak arm, so the ladder is not the same pup three times. Contract: see `wolf_den_spring`.",
+   "_comment": "GH#332 SPRING LITTER, rung 2 of 3 -- the razorbeak arm, so the ladder is not one pup thrice. See `wolf_den_spring`.",
    "id": "razorbeak_chick_fledgling",
    "kind": "prop",
    "cell": [
@@ -1758,9 +1755,6 @@
    "present_when": {
     "requires": {
      "companion_lost": 2
-    },
-    "absent": {
-     "companion_lost": 3
     },
     "companion": ""
    },
@@ -1775,12 +1769,12 @@
    }
   },
   {
-   "_comment": "GH#332 SPRING LITTER, rung 3 of 3 -- TOP RUNG: no `absent`, stays offered once reached. Shares rung 1's cell; they can never be live together. Contract: see `wolf_den_spring`.",
+   "_comment": "GH#332 SPRING LITTER, rung 3 of 3 -- TOP RUNG. Own cell one south of rung 1: all three can stand at once. See `wolf_den_spring`.",
    "id": "wolf_den_late_litter",
    "kind": "prop",
    "cell": [
     12,
-    22
+    23
    ],
    "display_name": "Late Litter",
    "sprite": "river_wolf",
@@ -1790,7 +1784,7 @@
     },
     "companion": ""
    },
-   "observe": "Late in the season and thin with it, but the scrape is occupied again. Whatever else the floodplains do, they keep doing this.",
+   "observe": "Late in the season and thin with it, but another scrape further down the boulder line is occupied. Whatever else the floodplains do, they keep doing this.",
    "requires_skill": "lesser_bond",
    "skill_hint_toast": "It is too tired to flinch. Offer, and mean it.",
    "locked_toast": "The pup does not move. Hands that can take an offer like this are learned on hurt animals, one at a time.",

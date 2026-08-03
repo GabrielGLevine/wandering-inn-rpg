@@ -115,7 +115,7 @@
   { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [5, 5] }, "timeout_sec": 10 },
   { "action": "click", "cell": [6, 5] },
   { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "pisces_inn" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Pisces", "text": "You are the one with the trays. I am not here for the cuisine, you understand, nor to discuss my work over it. The fire is adequate. My rooms are not.", "options": [
+  { "_comment": "#349 review wave: this fixture banks door_mounted, which arms `ceria/yvlon/ksmvr_inn_returned` -- the Horns really are in the corner here, so the greet serves the RESIDENCE variant (pisces_inn's greet text_variants, row 3). The base text below it is the pre-seal greet and is no longer what this state renders.", "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Pisces", "text": "My team have reclaimed the corner by the fire and appear to consider the matter settled. I am here to observe the decline at close range. The fire remains adequate. My rooms remain not.", "options": [
    { "text": "Bring him a bowl from the kitchen. (Serve)", "locked": true, "requirement": "requires Hot Meal" },
    { "text": "\"Not here for the food. Noted.\"", "locked": false, "requirement": "" },
    { "text": "\"Enjoy the adequate fire.\"", "locked": false, "requirement": "" }

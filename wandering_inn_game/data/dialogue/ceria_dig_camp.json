@@ -8,13 +8,13 @@
 			"options": [
 				{ "text": "Let's open it up.", "hide_when": { "accomplishment": { "horns_dig_joined": 1 } }, "effects": [ { "accomplishment": "horns_dig_joined" } ], "end": true },
 				{ "text": "Just passing through.", "end": true },
-				{ "text": "There's a fourth bedroll.", "goto": "camp_fourth" }
+				{ "text": "Who else is on this crew?", "goto": "camp_fourth" }
 			]
 		},
 		"camp_fourth": {
-			"_comment": "#349 four-member reading, camp side: the crate's rations for four, the notes' four names and the remnant's four bedroll squares all already count him. This is the line that says WHO and WHY he isn't holding a shovel. Ungated on purpose -- a player who never asks still reads the count in the props, and a player who asks gets it straight. SPOILER RULE holds: no line here names a door.",
+			"_comment": "#349 four-member reading, camp side. The option is ungated and openable on a first interact, so it asserts NO observation (the earlier 'fourth bedroll' named `dig_camp_remnant`, out of window here). It agrees with a prop that IS live: `dig_camp_notes` shares the hours out EVEN across four names. SPOILER RULE: no door named.",
 			"speaker": "Ceria",
-			"text": "Pisces. He's ours, whatever he tells you about invoices, and he's back in the city with his nose in a treatise — which is exactly where I want him. Four names on the roster, three of us with shovels. He turns up when there's something down here worth reading, and not one hour before.",
+			"text": "Pisces. He's ours, whatever he tells you about invoices. Four names on the roster and the hours split four ways — he takes his, he just takes them in the city with a treatise open, which is exactly where I want him until there's something down here worth reading. Three of us hold the shovels. That was the trade, and he argued it well.",
 			"options": [
 				{ "text": "Back to the camp rules.", "goto": "camp_hub" },
 				{ "text": "Fair enough.", "end": true }

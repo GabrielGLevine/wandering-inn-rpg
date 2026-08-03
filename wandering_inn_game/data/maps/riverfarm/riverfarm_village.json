@@ -1523,7 +1523,7 @@
     0.58,
     0.62
    ],
-   "observe": "A worn marker stone at the village's heart. Someone scratched a spiral into its face, long since softened by weather.",
+   "observe": "A worn marker stone at the village's heart. Someone scratched a spiral into its face, long since softened by weather. Attunement is what markers like this are cut for: a door shown the right stone learns the place, and can open onto it ever after.",
    "portal_menu": true,
    "portal_menu_when": {
     "requires": {
