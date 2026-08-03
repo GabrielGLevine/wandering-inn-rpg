@@ -82,6 +82,125 @@ const L5_HORNS_FOUR_MEMBER_ANCHORS := [
 ]
 
 
+## GH#339 item 1. Every player-facing SYSTEM NOUN must be defined by the copy
+## of a surface no optional gate hides -- a noun the game uses but never
+## explains is a word the player has to guess. Each row pins the defining
+## surface AND the fragment that does the defining, so deleting the clause reds
+## as loudly as deleting the surface. Rows: [noun, file, locator, fragment];
+## locator = entity id for a scene file, item id for items.json.
+const L5_SELF_DEFINING_NOUNS := [
+	["posting", "res://data/maps/liscor/guild.json", "guild_board", "a posting pays on turn-in"],
+	["delivery", "res://data/maps/liscor/runners_guild.json", "runner_board", "gold by distance, paid on the mark"],
+	["lead", "res://data/maps/liscor/guild.json", "guild_notice_wall", "into your journal as a lead"],
+	["attunement", "res://data/items.json", "invrisil_attunement_stone", "the door learns a place from it"],
+	["attunement", "res://data/items.json", "pallass_attunement_stone", "the door learns a place from it"],
+]
+
+
+func _validate_self_defining_nouns() -> void:
+	for row: Array in L5_SELF_DEFINING_NOUNS:
+		var noun := String(row[0])
+		var path := String(row[1])
+		var locator := String(row[2])
+		var fragment := String(row[3])
+		var doc: Dictionary = _load_json(path)
+		var copy := ""
+		var gated := false
+		if path.ends_with("items.json"):
+			for item: Dictionary in doc.get("items", []):
+				if String(item.get("id", "")) == locator:
+					copy = String(item.get("description", "")) + " " + String(item.get("lore", ""))
+		else:
+			for entity: Dictionary in doc.get("entities", []):
+				if String(entity.get("id", "")) != locator:
+					continue
+				gated = entity.has("present_when")
+				for key: String in ["toast", "observe", "second_visit_toast"]:
+					copy += " " + String(entity.get(key, ""))
+		if not _require(copy.strip_edges() != "", "self-defining noun '%s': %s in %s has no copy at all" % [noun, locator, path]):
+			continue
+		_check(not gated, "self-defining noun '%s': %s carries a present_when -- the surface that DEFINES a noun may not be gated away" % [noun, locator])
+		var lowered := copy.to_lower()
+		_check(lowered.contains(noun), "self-defining noun '%s': %s never says the word it is meant to define" % [noun, locator])
+		_check(lowered.contains(fragment), "self-defining noun '%s': %s lost its defining clause ('%s')" % [noun, locator, fragment])
+
+
+## GH#339 item 2, the wave-2 capitalization convention: capital-F Fence is the
+## CRIMINAL, lowercase fence is rails. Three checkable halves, all zero-false-
+## positive against the shipped corpus: a bare `display_name` of "Fence" is
+## banned outright (the criminal reads "The Fence", rails read "Fence Rail");
+## in prose a MID-SENTENCE capital Fence may not sit beside farm vocabulary;
+## a lowercase fence may not sit beside receiver vocabulary. Sentence-initial
+## capitals are exempt -- "Fences are moved." is ordinary grammar.
+const L5_FENCE_RAIL_WORDS := ["rail", "paddock", "pasture", "tilled", "cow", "herd", "deer", "furrow"]
+const L5_FENCE_CRIMINAL_WORDS := ["strongbox", "stolen", "stash", "receiver", "shelf", "fenced"]
+## display_name is DELIBERATELY absent: names are Title Case by convention, so a
+## prose capitalization rule would flag every legitimate one.
+const L5_PROSE_KEYS := ["text", "observe", "toast", "second_visit_toast", "open_toast", "locked_toast",
+	"victory_toast", "arrival_toast", "friendly_line", "taken_toast", "gate_closed_toast",
+	"description", "lore", "lead_text", "opening", "copy", "body"]
+
+
+func _validate_fence_capitalization(scene: Dictionary, graphs: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		for entity: Dictionary in (scene["maps"][map_id] as Dictionary).get("entities", []):
+			_check(String(entity.get("display_name", "")) != "Fence", "entity %s (%s) is named bare 'Fence' -- capital-F Fence is the criminal; rails are 'Fence Rail'" % [String(entity.get("id", "?")), map_id])
+	var corpus: Array = []
+	for path: String in PLAYER_STRING_FILES:
+		_collect_prose(_load_json(path), path.get_file(), corpus)
+	for graph_id: String in graphs:
+		_collect_prose(graphs[graph_id], graph_id, corpus)
+	for map_id: String in scene["maps"]:
+		_collect_prose(scene["maps"][map_id], map_id, corpus)
+	for row: Array in corpus:
+		var label := String(row[0])
+		var text := String(row[1])
+		var lowered := text.to_lower()
+		if _has_midsentence_capital_fence(text):
+			for word: String in L5_FENCE_RAIL_WORDS:
+				_check(not lowered.contains(word), "%s: capital-F Fence beside farm vocabulary ('%s') -- rails are lowercase" % [label, word])
+		if _has_standalone_lowercase_fence(text):
+			for word: String in L5_FENCE_CRIMINAL_WORDS:
+				_check(not lowered.contains(word), "%s: lowercase fence beside receiver vocabulary ('%s') -- the criminal is capital-F" % [label, word])
+
+
+func _has_midsentence_capital_fence(text: String) -> bool:
+	var re := RegEx.create_from_string("\\bFences?\\b")
+	if re == null:
+		return false
+	for m: RegExMatch in re.search_all(text):
+		var start := m.get_start()
+		if start == 0:
+			continue
+		var before := text.substr(0, start).strip_edges()
+		if before.is_empty() or before.ends_with(".") or before.ends_with("!") or before.ends_with("?") or before.ends_with("—") or before.ends_with(":"):
+			continue
+		return true
+	return false
+
+
+func _has_standalone_lowercase_fence(text: String) -> bool:
+	var re := RegEx.create_from_string("\\bfences?\\b")
+	return re != null and not re.search_all(text).is_empty()
+
+
+func _collect_prose(node: Variant, label: String, out: Array) -> void:
+	if node is Dictionary:
+		for key: String in (node as Dictionary):
+			var value: Variant = (node as Dictionary)[key]
+			if value is String:
+				if L5_PROSE_KEYS.has(key):
+					out.append([label + "." + key, String(value)])
+			else:
+				_collect_prose(value, label, out)
+	elif node is Array:
+		for value: Variant in (node as Array):
+			if value is String:
+				out.append([label, String(value)])
+			else:
+				_collect_prose(value, label, out)
+
+
 func _validate_horns_four_member_reading(graphs: Dictionary, acts: Dictionary) -> void:
 	var corpus: Array = []
 	for graph_id: String in graphs:
@@ -394,6 +513,8 @@ func _init() -> void:
 	_validate_tutor_line_help_consistency()
 	_validate_act_openings(_load_json("res://data/acts.json"))
 	_validate_horns_four_member_reading(graphs, _load_json("res://data/acts.json"))
+	_validate_self_defining_nouns()
+	_validate_fence_capitalization(scene, graphs)
 	var shipped_accomplishments: Dictionary = {}
 	for raw_id: Variant in _load_json("res://data/shipped_ids.json").get("accomplishments", []):
 		shipped_accomplishments[String(raw_id)] = true

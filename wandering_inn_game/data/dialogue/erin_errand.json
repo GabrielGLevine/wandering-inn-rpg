@@ -227,7 +227,30 @@
      "requires": { "accomplishment": { "door_mounted": 1 } },
      "hide_when": { "accomplishment": { "door_awakened": 1 } },
      "goto": "erin_door_flicker"
+    },
+    {
+     "_comment": "GH#339 item 3: went_fishing had NO consumer -- banked once a waking by the pond handline and read by nothing. Wired here rather than retired: Erin is the nearest voice to that pond and the shallows already carry their own unanswered question. Appended LAST so every cursor-pinned canonical stays byte-identical. Retires on its own reveal counter.",
+     "text": "Something in the pond wouldn't take my line.",
+     "requires": { "accomplishment": { "went_fishing": 1 } },
+     "hide_when": { "accomplishment": { "heard_about_the_pond": 1 } },
+     "effects": [ { "accomplishment": "heard_about_the_pond" } ],
+     "goto": "erin_pond"
     }
+   ]
+  },
+  "erin_pond": {
+   "speaker": "Erin",
+   "text": "The deep end? Nobody catches anything out of that. Krshia says it's been that way since before there was a wall on Liscor, and Krshia says most things like she was there. I take a bowl out sometimes and leave it on the flat rock. It's gone by morning. That could mean anything and I've decided not to find out which.",
+   "options": [
+    { "text": "You feed it.", "goto": "erin_pond_two" },
+    { "text": "I'll stop putting a hook in it, then.", "end": true }
+   ]
+  },
+  "erin_pond_two": {
+   "speaker": "Erin",
+   "text": "I feed everyone. That's the whole business. If something's been out there long enough to be older than the wall, it has definitely not had a hot meal in a while, and that seems like the sort of thing somebody ought to fix.",
+   "options": [
+    { "text": "That's either very kind or very reckless.", "end": true }
    ]
   },
   "package": {
