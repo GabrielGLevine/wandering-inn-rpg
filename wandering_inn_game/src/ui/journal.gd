@@ -9,6 +9,22 @@ extends CanvasLayer
 
 const PANEL_SIZE := Vector2(640.0, 560.0)
 
+## Close-hint placement, panel-local. `_root` is the 9-slice's DESTINATION
+## rect, not the painted paper: Banner_Vertical's art-safe body ends ~24px
+## above `_root`'s bottom edge and ~13px inside its right edge (measured off
+## the source alpha/luma bands -- below/right of that lie the border rule, the
+## fold and the scroll rod). At the old 10px `_root` margin the hint drew on
+## the fold and on the world beyond it -- dark ink on dark wood, 2.85:1, half
+## occluded by the curl. These are the CONTENT margins, so the hint aligns
+## with the body text block's own right/bottom edge and sits on paper.
+const CLOSE_HINT_INSET := 34
+## Gap between the last body row and the hint. The hint stays an OVERLAY (zero
+## effect on anything above it -- see `_close_hint`'s own comment); the room it
+## needs is taken by `_clip_body_to_line_boundary` reserving this band plus the
+## hint's own line height out of the body's ROW budget. One fewer visible row,
+## never an overlapping one.
+const CLOSE_HINT_GAP := 6.0
+
 ## Issue #60 item 1: the Skills section's one-line disclosure that combat
 ## kit is class+weapon-DERIVED, not player-assigned (there is no loadout
 ## editor for combat skills -- only field/hotbar assignment, handled by the
@@ -252,7 +268,6 @@ func _ready() -> void:
 	_close_hint = UIChrome.make_label("", "Small")
 	_close_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_close_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_close_hint.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_MINSIZE, 10)
 	_root.add_child(_close_hint)
 	_refresh_close_hint()
 
@@ -287,10 +302,25 @@ func _clip_body_to_line_boundary() -> void:
 	var pitch := font.get_height(font_size) + separation
 	if pitch <= 0.0:
 		return
-	var rows := maxi(int((slot.size.y + separation) / pitch), 1)
+	var usable := maxf(pitch, slot.size.y - _close_hint_reserve())
+	var rows := maxi(int((usable + separation) / pitch), 1)
 	var used := float(rows) * pitch - separation
 	_body_label.offset_bottom = -maxf(slot.size.y - used, 0.0)
 	_update_scroll_hint.call_deferred()
+
+
+## Height the close hint claims out of the body's row budget: its own line
+## height (live font metrics, so a Text Scale step re-reserves correctly) plus
+## CLOSE_HINT_GAP. Zero when the hint has no font yet -- the pre-existing
+## full-fill behaviour, same fallback contract as the clip itself.
+func _close_hint_reserve() -> float:
+	if _close_hint == null:
+		return 0.0
+	var font := _close_hint.get_theme_font("font")
+	var font_size := _close_hint.get_theme_font_size("font_size")
+	if font == null or font_size <= 0:
+		return 0.0
+	return font.get_height(font_size) + CLOSE_HINT_GAP
 
 
 ## GH#334 note 2. Both keys are true: `cancel` is the new universal-back close,
@@ -300,9 +330,19 @@ func _close_hint_text() -> String:
 	return "%s or %s to close" % [WIInputHints.label("cancel"), WIInputHints.label("journal")]
 
 
+## TRAP (v0.17 close finding, the OTHER half of the misplacement): a
+## MINSIZE preset freezes the offsets from the label's minimum size AT THE
+## MOMENT IT IS CALLED, and Control still enforces its own minimum on top of
+## them -- so applying the preset while `text` is still "" pinned a ZERO-width
+## rect at the inset and let the real text grow RIGHTWARD out of it, past the
+## parchment entirely. Re-apply AFTER every text write (build, and each
+## INPUT_DEVICE_CHANGED that swaps Esc/J for B/Y).
 func _refresh_close_hint() -> void:
-	if _close_hint != null:
-		_close_hint.text = _close_hint_text()
+	if _close_hint == null:
+		return
+	_close_hint.text = _close_hint_text()
+	_close_hint.set_anchors_and_offsets_preset(
+		Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_MINSIZE, CLOSE_HINT_INSET)
 
 
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
@@ -843,6 +883,17 @@ func _toggle_cursor_skill() -> void:
 	if slottable or stale_entry:
 		Game.sim.loadout_toggle(skill_id)
 		_rebuild_body_follow_cursor()
+	else:
+		# v0.17 close finding: the refusal was mechanically right and totally
+		# invisible -- a dropped keypress and a principled refusal looked
+		# identical (only `ui_journal_loadout_rendered{slottable:false}` in the
+		# log, nothing on screen). `modal_response` is what gets one short line
+		# past message_layer's modal pause; see `_queue_toast`'s note 4.
+		ObservableBus.emit_domain_event(WIEvents.TOAST, {
+			"text": "%s is always on — passives don't take a slot." % _row_display_name(skill_id),
+			"record": false,
+			"modal_response": true,
+		})
 	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_LOADOUT_RENDERED, {
 		"skill": skill_id,
 		"assigned": Game.sim.hotbar_loadout.has(skill_id),
@@ -860,6 +911,18 @@ func _row_slottable(skill_id: String) -> bool:
 			if String(skill["id"]) == skill_id:
 				return bool(skill["slottable"])
 	return false
+
+
+## Bracket-formatted display name off the SAME captured rows `_row_slottable`
+## reads, so the refusal line names exactly the row that refused. Falls back to
+## the id (never blank copy) if the row went away mid-frame.
+func _row_display_name(skill_id: String) -> String:
+	for raw_group: Variant in _open_skill_categories:
+		for raw_skill: Variant in ((raw_group as Dictionary)["skills"] as Array):
+			var skill := raw_skill as Dictionary
+			if String(skill["id"]) == skill_id:
+				return String(skill.get("display_name", skill_id))
+	return skill_id
 
 
 func _on_skill_row_hover_started(meta: Variant) -> void:
@@ -1019,6 +1082,15 @@ func _build_quests_tab() -> Dictionary:
 ## `_clip_body_to_line_boundary`'s single-pitch assumption is untouched and a
 ## passive row can never be mistaken for an unchecked slottable one.
 const PASSIVE_ROW_GLYPH := "· "
+## The UNCHECKED box. Two blank spaces drew no box at all, so a category with
+## nothing slotted contradicted the header's own "confirm on a checkbox row"
+## promise and was distinguishable from a passive only by the ABSENCE of the
+## "· " glyph. CONSTRAINT: U+25A1 is in the shipped `wi_symbol_fallback.ttf`
+## subset (U+2610 BALLOT BOX is NOT) -- the web export has no system fonts to
+## borrow from and renders tofu for anything outside it, so any new symbol has
+## to be checked against that subset first.
+const UNCHECKED_ROW_GLYPH := "□ "
+const CHECKED_ROW_GLYPH := "✓ "
 
 ## GH#336 ruling 7: the glossary keeps its place at the tab bottom and stops
 ## calling itself a bare "Effects" list -- it is the reference for statuses this
@@ -1059,7 +1131,7 @@ func _build_skills_tab(cursor_index: int) -> Dictionary:
 			# box that does nothing when ticked.
 			var marker := PASSIVE_ROW_GLYPH
 			if bool(skill["slottable"]):
-				marker = "✓ " if Game.sim.hotbar_loadout.has(skill_id) else "  "
+				marker = CHECKED_ROW_GLYPH if Game.sim.hotbar_loadout.has(skill_id) else UNCHECKED_ROW_GLYPH
 			var line := marker + UIChrome.bb_escape(row_text)
 			if flat_i == cursor_index:
 				cursor_line = parts.size()

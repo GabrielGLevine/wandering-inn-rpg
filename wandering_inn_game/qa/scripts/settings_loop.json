@@ -241,6 +241,45 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "== HINT-RIBBON FIT, v0.18 W4 hotfix. `_hint_panel` was a hardcoded 400x28 while its sibling `_dialogue_panel` derived its rect from live font metrics, so at 115% the strip clipped descenders (\"J — journal\" degraded to a bare stroke, indistinguishable from \"I — inventory\") and truncated the tail mid-word. Text Scale is at step 1 (115%) here, applied BEFORE this world was ever built, and the ribbon re-derived at build: `fits` is the machine half of the claim, the windowed shot below is the eye half. `text` is unchanged from the 100% pin in inn_walkthrough -- the payload always carries the WHOLE string.",
+   "action": "assert_event_logged",
+   "type": "ui_hint_rendered",
+   "payload_contains": {
+    "text": "Esc — menu (save/load)   J — journal   I — inventory",
+    "fits": true
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "10_hint_ribbon_115"
+  },
+  {
+   "_comment": "...and the LIVE re-fit at the largest supported step: 130% mutates UIChrome.THEME under an already-built MessageLayer, and the ribbon re-derives off Theme.changed rather than staying frozen at the size it was built with. Stepped back to 115% right after so nothing downstream in this script moves.",
+   "action": "set_text_scale_step",
+   "step": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_hint_rendered",
+   "payload_contains": {
+    "fits": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "11_hint_ribbon_130"
+  },
+  {
+   "action": "set_text_scale_step",
+   "step": 1
+  },
+  {
+   "action": "assert_settings_value",
+   "path": "text_scale_step",
+   "equals": 1
+  },
+  {
    "_comment": "== In-game PAUSE -> Settings (MOUSE path): row 8 = 'Settings' (index 7, appended after 'Quit to Title'). The panel is a FRESH instance (world swap rebuilt every UI layer) -- its render still reflects fullscreen/text_scale_step carried by WISettings across the title->world boundary.",
    "action": "press",
    "name": "cancel"

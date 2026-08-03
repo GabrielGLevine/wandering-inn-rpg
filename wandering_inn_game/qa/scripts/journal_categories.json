@@ -202,9 +202,22 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "v0.18 W4 hotfix: the refusal is PERCEIVABLE now. Mechanically right and invisible was the whole finding -- a dropped keypress and a principled refusal rendered identically (this event in the log, nothing on screen). One short line rides message_layer's `modal_response` exemption straight over the open journal; every other queued toast still waits for the panel to close.",
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "[Basic Swordwork] is always on — passives don't take a slot."
+   },
+   "timeout_sec": 5
+  },
+  {
    "action": "assert_event_count",
    "type": "loadout_changed",
    "count": 2
+  },
+  {
+   "action": "screenshot",
+   "name": "03_passive_refusal_toast"
   },
   {
    "_comment": "...and the exploration half of the honest checkbox: row 16 is [Basic Cleaning] (Exploration - Active), which reaches the FIELD bar. Assigning it collapses the AUTO five-slot bar to the one curated slot -- the same intersect-and-reorder contract field_skills_loop pins, reached here through the categorized tab.",
