@@ -1,5 +1,5 @@
 {
- "_comment": "#318 beat 2, the three-pillar beat. Every non-fight arm banks its route counter AND the shared seal_block_settled, which is the ONE gate all of them hide on (hide_when is an AND over one dict, so a shared settle counter is the only way three forks can retire each other). The FIGHT arm is the broker_hands encounter on the same map, whose on_victory is the ARRAY [block_taken, seal_block_settled] -- same settle, banked by the win.",
+ "_comment": "#318 beat 2, the three-pillar beat, all four forks on ONE node. Every non-fight arm banks its route counter AND the shared seal_block_settled, which is the ONE gate all of them hide on (hide_when is an AND over a single dict, so a shared settle counter is the only way three forks can retire each other). The FIGHT arm commits broker_hands from `the_other_way` and from nowhere else -- the rig is hidden on an unreachable wall cell (its own map _comment carries why) -- and its on_victory is the ARRAY [block_taken, seal_block_settled], the same settle banked by the win.",
  "start": "table",
  "nodes": {
   "table": {
@@ -178,11 +178,21 @@
   },
   "the_other_way": {
    "speaker": "A Man with a Rented Table",
-   "text": "It can. I keep two men at the mouth of this alley for exactly the conversation you are about to have, and they are paid by the week whether they work or not. Go and see them. They get so little to do.",
+   "_comment": "The ONLY door to broker_hands: the rig is hidden on an unreachable wall cell, so the fight is a choice made in a conversation and cannot be walked into. start_combat is legal only on an end:true option.",
+   "text": "It can. I keep two men at the mouth of this alley for exactly the conversation you are about to have, and they are paid by the week whether they work or not. Shall I call them, or would you like to look at the brass a while longer first?",
    "options": [
     {
-     "text": "\"I'll go and see them.\"",
+     "text": "\"Call them.\"",
+     "effects": [
+      {
+       "start_combat": "broker_hands"
+      }
+     ],
      "end": true
+    },
+    {
+     "text": "\"The brass, a while longer.\"",
+     "goto": "named"
     }
    ]
   }

@@ -1355,16 +1355,17 @@
    "conversation": "invrisil_seal_broker"
   },
   {
-   "_comment": "#318 beat 2 FIGHT arm. INTERACT-ONLY (no trigger_radius) so it can never spring on a pinned alley route. CELL IS LOAD-BEARING: present_when is FORBIDDEN on encounters (encounter_when gates whether the fight FIRES, never whether the rig blocks) and this alley has no spare walkable cell -- (4,6) obstructed invrisil_walkthrough's own westward row-6 leg. The pair stands against the north wall line on the already-blocked (4,5), the boulevard_glazier facade idiom: zero footprint on every route, still bumped from (4,6) below, and also committable straight from the broker's hub. Roster and arena are BOTH shipped and unchanged -- footpad_lookout + footpad_bruiser in mercantile_alley is exactly the composition sim_combat_batch measures as alley_footpads_t3_warrior10_solo, so no new balance cell is owed. on_victory is the ARRAY form: route counter FIRST (victory_toast contract), then the shared settle.",
+   "_comment": "#318 beat 2 FIGHT arm, COMMITTED FROM THE HUB AND NOWHERE ELSE. Two constraints collide here: present_when is FORBIDDEN on encounters (encounter_when gates whether the fight FIRES, never whether the rig blocks or draws), and this alley has no spare walkable cell -- (4,6) obstructed invrisil_walkthrough's own westward row-6 leg, and (4,5) put a man standing on the building face. So the rig parks on (5,4), an interior wall cell with NO walkable neighbour, hidden: nothing draws, nothing blocks, nothing can be bumped into it. start_combat resolves by id off the current map and consults neither adjacency nor encounter_when, so the broker's own `call_them` option is the single door. Roster and arena are BOTH shipped and unchanged -- footpad_lookout + footpad_bruiser in mercantile_alley is exactly the composition sim_combat_batch measures as alley_footpads_t3_warrior10_solo, so no new balance cell is owed. on_victory is the ARRAY form: route counter FIRST (victory_toast contract), then the shared settle.",
    "id": "broker_hands",
    "kind": "encounter",
    "cell": [
-    4,
-    5
+    5,
+    4
    ],
    "display_name": "Two Paid by the Week",
    "sprite": "human_laborer",
-   "observe": "Two men leaning at the wall line where the alley narrows, paid by the week whether they work or not, and plainly out of practice.",
+   "hide_sprite": true,
+   "observe": "Two men paid by the week whether they work or not, and plainly out of practice.",
    "arena": "mercantile_alley",
    "enemies": [
     "footpad_lookout",
@@ -1375,13 +1376,7 @@
     "block_taken",
     "seal_block_settled"
    ],
-   "victory_toast": "You take the brass off the cloth yourself. Two letters, cut deep, and a table with nobody left standing beside it.",
-   "encounter_when": {
-    "requires": {
-     "forged_hand_named": 1
-    }
-   },
-   "gate_closed_toast": "Two men lean at the alley mouth doing nothing in particular, and doing it well."
+   "victory_toast": "You take the brass off the cloth yourself. Two letters, cut deep, and a table with nobody left standing beside it."
   }
  ]
 }
