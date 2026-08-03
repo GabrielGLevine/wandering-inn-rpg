@@ -3352,3 +3352,52 @@ in a vertical stack, `_talk/06`). New:
 - [ ] **(P2)** | `invrisil_lady_client` rig | stationer, adventurers_rest, invrisil_boulevard | The rig now backs THREE Invrisil surfaces, TWO of them conversation-bearing: "A Lady with a Ring Box" (stationer) and "A Woman Who Came in a Carriage" (the Rest's steward), plus "A Lady in Plum Silk" on the boulevard. All three are `A `-prefixed extras, so the one-rig-one-named-character policy is not violated, and no tint is used to separate them (correctly — tint is not disambiguation). But two women who each hold a real conversation in the same region now share one silhouette, and only the speaker banner tells them apart. Wants a second gentlewoman rig with a distinct silhouette (the steward reads as gloves-indoors + no ring box, which is a real drawing difference) before either becomes a returning face | #318 W3, invrisil_house_name_talk/01 vs /06 |
 - [ ] **(P3)** | `mercantile_alley` arena, DAY | invrisil combat | The day counterpart of the shipped night finding (which measured the same board as unreadable after dark). At day the board IS readable — every silhouette and HP numeral resolves, which is why this lane's fixture is staged at day — but the arena is a large flat tan field whose only structure is a handful of scattered dark props. Nothing in it says "alley": no wall line, no narrowing, no paving change, against a city whose one traversal signature is alleys-around-fronts | #318 W3, invrisil_house_name_fight/03 |
 - [ ] **(P3)** | `boulevard_carriage_wake` | invrisil_boulevard (11,1) | The thread's one atmosphere beat (the pink carriage already gone, only the street's reaction left) is a `hide_sprite` facade prop on the blocked row, the shipped `boulevard_glazier`/`boulevard_teahouse` idiom. So its only on-screen affordance is the interact bracket, which draws over the player's own sprite from the bump cell below. Correct and consistent for a shopfront; thinner than it should be for a prop that carries a story beat and a counter. Wants a small ground mark (a wheel-track decal on the marble) so the beat has a thing to walk up to | #318 W3, invrisil_house_name_talk/03 |
+<!-- v018-W5 -->
+- [ ] **(P3)** **The cooldown badge is now photographed, and it is a small low-contrast digit** (class_evolution_loop 03_power_strike_cooldown_badge — the first shot of this UI in the repo; W5 added the leg because the v0.16.2 close flagged zero badge coverage). `hotbar.gd:170-177` draws `cooldown_remaining` as a bare 10px Label in the slot's top-right corner with NO colour override, so it inherits the default font colour over slot art rather than the deliberate AP-pip / MP-diamond treatment its two neighbours get. It is legible once you know to look for it. Whether a player who does not know to look ever finds it is the open question — the readout line beside it ("[Power Strike] — 3 AP — ×2 damage — Recovering — ready in 2 rounds.") is currently carrying the whole message. Wants the same colour+outline treatment AP_PIP_COLOR/MP_DIAMOND_COLOR already establish two lines above it.
+
+<!-- v018-W1 -->
+### v0.18 W1 — #348 property-table proof shots (2026-08-03)
+
+Windowed `property_seams` at seed 9, six frames, evidence under
+`wandering_inn_game/qa_output/property_seams/`.
+
+- [ ] **(P2, TINT-ONLY — the lane that owns terrain art)** The frozen cell
+  reads as a SHADE of water, not as ice. RETRACTION: this row's first draft
+  filed the pale-blue slab as a POSITIVE "real render tell". That judgement
+  contradicts the standing directive of 2026-08-02 — tint is NOT
+  disambiguation, shade variants never read as separate things, distinct
+  silhouettes are required — so it is re-filed as an OPEN row, because a row
+  logged as a positive is a row nobody drains.
+  Evidence `01_water_before_freeze` → `02_ice_floor_formed` →
+  `03_standing_on_the_ice`: the frozen cell (3,5) is the same water tile at a
+  lighter value — same silhouette, same texture, no rime, no fracture, no edge
+  treatment. In `02` (the frame literally named "ice floor formed") the change
+  is barely perceptible at all — a few white specks at the band's left edge —
+  because the PC is still standing north of the cell.
+  Why this is not cosmetic: `freeze_cell` is the one verb in the slice that
+  flips WALKABILITY. A playtester who freezes the channel, sees the same blue
+  band and reads the toast as flavour never tries to cross — K5 (discovery
+  failure) firing on the slice's headline interaction. Cure is an ice tile
+  with its own silhouette (rime edge / fracture lines), not a brighter blue.
+  NOT fixable inside W1: the property table ships no art, and
+  `sprites.json` + `assets/**` belong to the art lane this wave.
+- **POSITIVE — the burn resolution reads.** `04_debris_blocks_the_nook` →
+  `05_nook_cleared`: prop gone, nook open, prop-authored line spoken.
+- **RUN HYGIENE — investigated, NOT a W1 regression.** `property_seams`
+  windowed intermittently exits with `WARNING: 12 ObjectDB instances were
+  leaked at exit` + `ERROR: 6 resources still in use at exit` — the
+  `pallass_ledger_offices` teardown-noise class logged directly above.
+  A/B'd rather than assumed: same tree, same script, same fixture, swapping
+  ONLY the three edited `src/core` files — table engine 5 leaks/10 runs,
+  pre-table engine 1 leak/5 runs, and the two engines' event streams are
+  byte-identical (61 events, timestamps stripped). Headless is
+  deterministically clean (0 grep hits, 3/3), which is what `ci_sweep`
+  greps. Conclusion: pre-existing flaky windowed teardown; it deserves a
+  real fix in whichever wave owns run hygiene, but it is not the property
+  table's.
+- [ ] **(P2, EVIDENCE FOR THE EXISTING ROW — W4 owns the fix)** Toast over
+  field-skill legend, reproduced three times in this run
+  (`02_ice_floor_formed`, `05_nook_cleared`, `06_untagged_prop_refused`): the
+  toast panel overlaps the legend and truncates it mid-word ("...old timber in
+  momen"). Same defect as the v0.17-close row; logging the extra frames
+  because they show it at three different toast lengths.

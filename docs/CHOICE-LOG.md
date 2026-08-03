@@ -2661,3 +2661,244 @@ the guard, in the pre-flight tier that runs before any Godot boot.
 14. **R1 lease gate:** gates on visited_own_room (stairs counter), not
     story progress — keeps two pinned canonicals byte-green. USER
     CONFIRM queued (morning read).
+
+<!-- v018-W5 -->
+## 2026-08-03 — v0.18 W5 (balance lane): #360 first reads, rung-4, Wave-D audit
+
+1. **#360 (a) shape — a hook, not a second harness.** The tier sweep drives
+   `sim_combat_batch.gd` through one new env hook (`WI_DIFFICULTY_MULT`) rather
+   than cloning its 141 cells into a parallel driver. Same relationship
+   `harness_shard_diff.sh` already has to that file, and the reason is the same:
+   a cloned cell table drifts the first time a cell moves. Analysis split into
+   `scripts/difficulty_tier_report.py` so a read can be re-taken against saved
+   legs without paying for four more godot runs.
+2. **The one thing the sweep ASSERTS: x1.0 is inert.** `wi_combat.gd` promises
+   "Silver IS the shipped balance … byte-identical by construction", and a hook
+   like this is exactly what could break that quietly. The sweep runs a plain
+   env-unset leg beside the explicit x1.0 leg and fails if any of the 141 cells
+   disagree. Everything else is report-only (#211 harness-first precedent).
+3. **#360 (a) FIRST READ, and the gates it makes ratifiable.** Pooled bronze
+   +0.129 / gold −0.185 (unsaturated cells only: +0.226 / −0.273). Two gates
+   are ready now and are PROPOSED, not landed:
+   - **monotonicity** — bronze ≥ silver ≥ gold per cell, 1σ tolerance 0.05.
+     Currently CLEAN, 0 of 141. This is a real contract and cheap to hold.
+   - **material extreme flips** — a cell reaching 0.00/1.00 at a tier where
+     Silver sat ≥0.10 off the extreme. Currently 2, of which ONE is gated
+     (`alley_fence_t3_warrior10_solo`, 0.81 → 1.00 at Bronze). Proposed
+     threshold: 0 gated flips, i.e. fix that cell rather than budget for it.
+   Deliberately NOT proposed: per-cell bands at Bronze/Gold. 26 of 43 gated
+   cells sit above their band at Bronze and 31 below at Gold, which is the knob
+   working, not 57 regressions; the Silver bands are Silver's contract.
+4. **#360 (b) answers the asked question, and then disowns half its own
+   number.** Lv10 Warrior 0.890 vs Lv10 Mage 0.670 over the same three fights.
+   Band spreads (**corrected in the fix round — the first-read 14/18 numbers
+   below were censored; see entry 11**): 10 → 0.617, 14 → 0.782, 18 → 0.815,
+   all three now labelled MEASURED by the harness itself. **No spread gate is
+   ratifiable this wave**, and that is the finding rather than a punt:
+   `WICombatAI`'s melee profile can select exactly one named skill
+   (`power_strike`) plus a windup, and its caster profile line/spell/heal/area.
+   Nothing fires `damage_mult`, `sneak` or any positioning verb, so rogue,
+   archer, scout, tactician and the beast lines fight as bare stats however
+   large their kit is. The split is +0.392 / +0.296 / +0.350 across the three
+   bands — a third of the spread is the harness's vocabulary, not the classes'
+   design. Gating it now would gate the vocabulary. Every row prints `ai_kit`
+   so the number can never be read without the caveat. THE REAL FOLLOW-UP is
+   an AI that can express more verbs; that is a task, not a threshold.
+5. **Parity rosters re-cut TWICE, and this entry's first version claimed a
+   calibration that had not happened.** As written on the first read it said
+   the rosters were re-cut so that no build sat on the floor. The read it was
+   written to justify shipped `scout18` at 0.00 / 0.00 / 0.00 — band 18's
+   "spread 0.847" was the distance to a pinned floor, and band 14's floor
+   (`infiltrator14`, 0.08 / 0.01 / 0.00) was saturated on two rosters of three.
+   Entry 5's own rule — *a spread whose floor is a floor measures nothing* —
+   was therefore unmet by the numbers it shipped beside. Corrected in the fix
+   round: see entry 11. Kept rather than deleted because the failure mode is
+   the point — a calibration rule enforced only in prose gets claimed, not
+   held.
+6. **Rung-4 lever: weapon_die, NOT con** (both measured, neither guessed).
+   GH#337 broke the captain's CADENCE, so the number moved is his ordinary
+   swing: `hired_blade_leader.weapon_die` 6 → 8, con untouched. con +12 buys
+   −0.07 of ladder movement and costs the on-level stop cell −0.14; weapon_die
+   +2 buys −0.08 and costs it −0.07. 8 is also the shipped humanoid ceiling
+   (ruin_guardian, forge_golem), not a new high-water mark. Ladder restored to
+   four steps: 0.92 > 0.84 > 0.69 > 0.61.
+7. **`LADDER_TIE` 0.05 → 0.03.** The wide tie band was authored FOR the
+   collapsed step and is not owed once the step is back; every gap now clears
+   0.03 by ≥0.05 and the harness is deterministic.
+8. **The Invrisil stop cell moved with its own rung (0.70 → 0.63, window
+   0.56-0.70).** Collateral of the repair, not a finding: the on-level build
+   always pays an enemy buff harder than the over-levelled yardstick. Still
+   disjoint and ordered beneath Riverfarm's t3 pair.
+9. **Wave-D was ALREADY SHIPPED; the lane audited instead of re-building.**
+   [Alchemist]/[Mixer] and [Druid]/[Beast Tamer]/[Beast Master] rows, kits,
+   evolutions, aspirations, balance cells and QA canonicals all exist and are
+   green. One spec-vs-shipped divergence for the controller: the Wave D-1 spec
+   fences Xif's [Perfect Reduction] as "DIALOGUE COLOR only (never player
+   grants)", and it now ships as [Alchemist]'s L14 grant with its own
+   CANON-VERDICT annotation. NOT reverted by this lane — a later ruling
+   plainly superseded the fence — but it should be ratified rather than left
+   as two documents disagreeing.
+10. **Badge coverage closed on `class_evolution_loop`, not on a Wave-D
+    canonical.** Neither new class can hold a cooldown skill ([Alchemist] is
+    field-only, [Druid]'s combat kit is the inherited mage line plus [Thorn
+    Hand]); a survey found this is the ONLY class canonical whose PC fields a
+    cooldown holder at all. The badge now has a windowed shot and a pinned
+    slot-info line so the digit is falsifiable.
+
+### Fix round (2026-08-03) — three of this lane's own claims were unmeasured
+
+11. **The censoring check is now MACHINE-made, not promised in a comment.**
+    `sim_class_parity.gd` gained `_spread_verdict`: a band's spread is
+    MEASURED only if BOTH endpoint builds respond to a change in their own
+    class (mean strictly inside (0,1) AND at least one roster strictly inside
+    (0,1)); otherwise the recap prints CENSORED with the reason and says the
+    number is not gateable. Run against the shipped rosters it immediately
+    caught band 18 (`floor scout18 pinned at 0.000, 3/3 rosters on a rail`),
+    which is exactly what entry 5 had claimed was fixed. Bands 14 and 18 then
+    gained a FLOOR-RESOLUTION roster (`sewer_vermin_pair` / `raider_vermin`)
+    chosen so the weakest parity line has somewhere to be measured. Result:
+    band 14 floor 0.030 → 0.210, band 18 floor 0.000 → 0.070, and BOTH
+    headline spreads SHRANK (0.960 → 0.782, 0.847 → 0.815) because the old
+    numbers were partly roster. All three bands now read MEASURED. Band 10 was
+    left alone — its floor always satisfied the rule, so re-cutting it would
+    only have moved a number that was already measuring classes. The user's
+    asked question is unaffected (band-10 rosters untouched): **Lv10 Warrior
+    0.890 vs Lv10 Mage 0.670.** `WI_PARITY_BAND=<n>` added so the next re-cut
+    costs one band, not three.
+12. **SEAM-FOR-TRAIN #2 was FALSE and is retired, not deferred.** The lane
+    told the train that threading `WEAPON_RANGE` into
+    `sim_combat_batch.gd::_build_pc` would move `sharpshooter14_solo` (GATED)
+    "and every other bow cell", so it wanted its own re-authoring pass. That
+    was never run. It moves **0 of 141 cells** — the full-matrix output is
+    byte-identical with and without the line. It cannot move any: every
+    `combat.attack()` call site in `WICombatAI` is guarded by
+    `combat.is_adjacent()` (combat_ai.gd:66/69/73, 106/108, 149/153) and
+    `_act_ranged` never calls `attack` at all, so `in_weapon_range`
+    (wi_combat.gd:179) is only ever asked at adjacency, where every weapon
+    passes. The line is applied; the seam is gone. The same false premise had
+    been written into `sim_class_parity.gd`'s head comment as the justification
+    for the two harnesses diverging ("a parity read that measured archers with
+    their range removed would be a lie") — the parity harness was measuring
+    archers with their range removed too, and its own output proved it:
+    `archer10` (bow, range 4) and `rogue10` (sword, range 1) print
+    byte-identical rows. Bow rows now carry a **RANGE-MUTE** flag. The real
+    follow-up is unchanged and is entry 4's: an AI that can express bow damage.
+13. **Data-comment census: the lane now hands the train MORE headroom than it
+    found.** The rung-4 `_comment` had taken the DATA budget from 200.6 spare
+    characters to 97.75 against a CI-hard 15.0% cap
+    (`.github/workflows/ci.yml`, `scripts/git-hooks/pre-commit`) — in a
+    seven-lane concurrent wave where every sibling appends to the same
+    denominator, that is one ~100-character sibling comment away from reddening
+    the train rather than any lane. Trim-first applied to W5-owned
+    `combatants.json`: 439 characters of comment prose compressed with no fact
+    dropped, **headroom 97.75 → 470.9**. Recorded as a standing seam with the
+    exact number, because the next lane to append cannot see it otherwise.
+<!-- v018-W1 -->
+## v0.18 wave-1 — W1 (#348 slice 1, property-verb substrate)
+
+1. **Table injected through `WISceneCatalog.compose()`, not a new WIGame
+   parameter.** 182 call sites construct a sim from `compose()`; a required
+   constructor arg would have churned every one, and a defaulted one would
+   have silently emptied the table in most of them (burn/freeze inert, caught
+   only by canonicals). Composing `data/interactions.json` into `scene_config`
+   beside `maps` hands the table to every existing caller with a two-line
+   diff, keeps core pure (WIGame still reads no disk), and leaves a hand-built
+   `scene_config` legitimately table-less — which is exactly the fixture
+   `test_interactions_table` uses to prove no hardcoded arm survives.
+2. **`dispatch`'s `is_freezable: bool` became `cell_properties: Dictionary`.**
+   The cell-placement half of the target vocabulary cannot generalize past one
+   property while the seam passes a single boolean. `WIGame._cell_properties`
+   is the one place a new cell class is registered (it must also be taught to
+   the map loader, which decides whether the class blocks).
+3. **Byte-identity proven by DIFF, not by assertion.** `sewers_walkthrough`'s
+   full 213-event stream (timestamps stripped) is identical between base
+   6b47c0d and the table-driven tree — the formalized git-archive method, not
+   "the canonical still passes". K1 is satisfied on evidence.
+4. **Outcome-verb set stayed at exactly the two shipped verbs.** `state_set`,
+   `thaw_cell`, `bank_toast` and `refuse` are named by the spec but ship no
+   row here, and a verb with no row is dead code by the same argument that
+   makes a carrier-less row dead data (K2). They arrive with slice 2's rows.
+5. **The mirror contract is triple-pinned, deliberately.** The verb set exists
+   in `WIFieldSkills.OUTCOMES`, in `data/interactions.json`, and in
+   `data_lint.ENGINE_OUTCOMES`; a unit arm and a lint arm each fail on drift.
+   The engine-free tier has to know the closed set to reject an unknown verb,
+   and a silent third copy would be worse than a policed one.
+6. **`--touching data/interactions.json` maps to the `exploration` system tag
+   (169 canonicals).** A row edit genuinely can change any field cast, so the
+   honest mapping is broad. ~~Slice-1 verification ran the spec's named
+   byte-identity set plus `--tier smoke` plus the new canonical, NOT all
+   169 — disclosed rather than implied.~~ SUPERSEDED by the fix wave (item 11):
+   the spec's `--touching` gate was RUN, all 169 green. Note for anyone
+   repeating it: `src/**` paths have no surface mapping, so
+   `derive_qa_surfaces --touching` warns and derives nothing for the three
+   edited `src/core` files — the 169 come from `data/interactions.json` plus
+   the new script/fixture, and `--tier smoke` is what covers the `src/**` side.
+7. **The two user-named interactions split.** [Ice Floor]-on-water needs no
+   substrate work at all: it is the shipped `freezes x freezable -> freeze_cell`
+   row, and a new carrier skill is pure `skills.json` data (W5's file this
+   wave). `test_interactions_table` proves it with a synthetic `w1_ice_floor`
+   carrier that freezes and is walked upon. [Flame Jet]-on-corpse is BLOCKED,
+   not deferred by preference: it needs a skills.json edit, a corpse carrier
+   in map data, and an item yield the table deliberately does not own
+   (spec §6 — yields are `use_skill`'s job). Costed in `.lane-progress`;
+   question returned to the controller rather than disclose-and-proceed.
+
+### W1 fix wave (review findings applied, same day)
+
+8. **A verb is now BOUND to the target placement its body dereferences.** The
+   slice's central claim is "a new ROW is data alone"; that was false, because
+   nothing tied `outcome` to `target_property`'s placement. `remove_scorch`
+   reaches `target[id]`/`target[cell]` unconditionally, `freeze_cell` writes
+   the faced cell and never reads `target` — opposite contracts, unchecked in
+   both directions. Proven, not theorized: a single appended row
+   (`burns × freezable → remove_scorch`) passed `data_lint`, both GDScript
+   suites and the python suite, then raised
+   `SCRIPT ERROR: Invalid access to property or key 'id'` at
+   `_outcome_remove_scorch` on a live cast at sewers (3,5). The mirror row
+   (`freezes × burnable → freeze_cell`) was WORSE — silent, and since
+   `is_cell_blocked` treats any frozen cell as passable, it is a wall-phase
+   primitive. Cure is two-tier and both tiers are failure-proven:
+   `data_lint.OUTCOME_PLACEMENT` fails such a row (`scripts/tests/test_data_lint.py`
+   `test_entity_verb_on_a_cell_property_fails` / `test_cell_verb_on_an_entity_property_fails`),
+   and `WIFieldSkills.OUTCOME_PLACEMENT` makes it INERT in the engine so a
+   hand-edited or half-merged table degrades to the ambient fallthrough
+   instead of crashing (`test_interactions_table.gd`; deleting the guard
+   reproduces the SCRIPT ERROR above and fails the second assert). This
+   matters most for slice 2, which is a rows-and-tags wave and which the spec
+   §7 already stages with a second cell class (`dark cell*`) and a second cell
+   verb (`thaw_cell`) — exactly the pairs that were unguarded.
+9. **A row's `counter` gets the standard producer/consumer treatment (spec
+   §5c).** `counter` is the ONE table field the engine banks into the save,
+   and nothing in the repo read `interactions.json` — `generate_shipped_ids.py`
+   carries `burned_the_debris` as a hand-maintained STRUCTURAL_LITERAL. So a
+   slice-2 row banking `lit_the_hearths` would have gone green everywhere and
+   written an id no registry knows. `check_interactions` now cross-refs the
+   counter against `data/shipped_ids.json`'s accomplishments (a missing census
+   is a failure, never a silent pass) and rejects a counter on a verb whose
+   body never banks one. Registration route is unchanged and stated in the
+   error text: STRUCTURAL_LITERALS + the `test_shipped_ids.gd` mirror, then
+   regenerate. Deliberately NOT made mandatory — a future burn row that
+   should bank nothing stays legal.
+10. **The tint row was RETRACTED, not defended.** The first VISUAL-LOG draft
+    filed the frozen cell's pale-blue slab as a POSITIVE "real render tell".
+    It is a shade of the same water tile — same silhouette, no rime, no
+    fracture — which the 2026-08-02 directive says never reads as a separate
+    thing. Re-filed as an open P2 against the art lane. `freeze_cell` is the
+    slice's only walkability flip, so a missed tell is K5 (discovery failure)
+    on the headline interaction, and a row logged as a positive is a row
+    nobody drains.
+11. **The `--touching` gate ran, and "byte-identical" needs a caveat.** All
+    169 derived canonicals green, plus `--tier smoke` (14), plus all 38 unit
+    files, plus the re-captured windowed canonical. On byte-identity: the SIM
+    stream (events minus `ui_*` and `audio_played`) is IDENTICAL base 6b47c0d
+    vs this tree for all four spec-named canonicals — `sewers_walkthrough`
+    118/118, `ward_loop` 30/30, `blink_bypass_loop` 30/30,
+    `field_skills_loop` 45/45, one variant each across 4 runs per tree. The
+    FULL stream is NOT stable enough to compare literally, and that is
+    PRE-EXISTING: base-vs-BASE, `sewers_walkthrough` alternates 213/214
+    events across consecutive runs of the identical tree, and `ward_loop`
+    reached 109 and 111 from the base tree alone. The presentation layer
+    interleaves `ui_*_rendered`/`audio_played` nondeterministically. Anyone
+    re-running the spec's "byte-identical" gate on the raw stream will see
+    red and must not read it as drift — strip presentation events first.
+    Filed as an observation, not W1's defect to fix.

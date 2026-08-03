@@ -3,6 +3,7 @@
 fixtures per check) + clean-on-HEAD subprocess proof. Run manually:
     python3 scripts/tests/test_data_lint.py -v"""
 
+import json
 import subprocess
 import sys
 import unittest
@@ -140,6 +141,164 @@ class TestBrokenFixtures(unittest.TestCase):
         maps = {"m": {**GRID, "entities": [
             {"id": "d", "door_when": {"requires": {"door_awakened": 1}}}]}}
         self.assertEqual(self._errs(data_lint.check_gate_shapes, maps), [])
+
+
+# --- W1 / issue #348: the interactions-table tier ---------------------------
+W1_TABLE = {
+    "skill_properties": ["burns"],
+    "target_properties": {"burnable": "entity"},
+    "outcomes": list(data_lint.ENGINE_OUTCOMES),
+    "interactions": [{
+        "skill_property": "burns", "target_property": "burnable",
+        "outcome": "remove_scorch", "persistence": "permanent",
+        "counter": "burned_the_debris", "terrain": "scorched",
+        "toast_from": "target", "toast_key": "burn_toast",
+        "toast_default": "It burns.",
+    }],
+}
+W1_SKILLS = {"skills": [{"id": "kindle", "burns": True}]}
+# The counter registry data_lint cross-refs (spec §5c producer/consumer).
+W1_SHIPPED = {"accomplishments": ["burned_the_debris"]}
+W1_MAPS = {"m": {**GRID, "entities": [{"id": "debris", "cell": [0, 0], "burnable": True}]}}
+
+
+class TestInteractionsTable(unittest.TestCase):
+    def _run(self, table=None, skills=None, maps=None, shipped=None):
+        parsed = {
+            data_lint.DATA / "skills.json": skills if skills is not None else W1_SKILLS,
+            data_lint.DATA / "shipped_ids.json": W1_SHIPPED if shipped is None else shipped,
+        }
+        if table is not None:
+            parsed[data_lint.DATA / "interactions.json"] = table
+        errors, report = [], []
+        data_lint.check_interactions(
+            parsed, W1_MAPS if maps is None else maps, errors, report)
+        return errors, report
+
+    def _mutated(self, **overrides):
+        table = json.loads(json.dumps(W1_TABLE))
+        for key, value in overrides.items():
+            if key.startswith("row_"):
+                table["interactions"][0][key[4:]] = value
+            else:
+                table[key] = value
+        return table
+
+    def test_clean_table_passes_and_reports_totality(self):
+        errors, report = self._run(W1_TABLE)
+        self.assertEqual(errors, [])
+        self.assertIn("totality census 1/1 cells authored", report[0])
+
+    def test_missing_file_fails(self):
+        errors, _ = self._run(None)
+        self.assertIn("missing", errors[0])
+
+    def test_outcome_mirror_drift_fails(self):
+        errors, _ = self._run(self._mutated(outcomes=["remove_scorch"]))
+        self.assertIn("MIRROR CONTRACT", errors[0])
+
+    def test_unregistered_vocabulary_fails(self):
+        errors, _ = self._run(self._mutated(row_skill_property="melts"))
+        self.assertTrue(any("unregistered skill property" in e for e in errors))
+
+    def test_bad_placement_and_unknown_outcome_fail(self):
+        errors, _ = self._run(self._mutated(target_properties={"burnable": "aura"}))
+        self.assertTrue(any("must be one of ['entity', 'cell']" in e for e in errors))
+        errors, _ = self._run(self._mutated(row_outcome="cook_yield"))
+        self.assertTrue(any("unknown outcome" in e for e in errors))
+
+    def test_wrong_persistence_class_fails(self):
+        errors, _ = self._run(self._mutated(row_persistence="until_sleep"))
+        self.assertTrue(any("claims persistence" in e for e in errors))
+
+    def test_missing_copy_fields_fail(self):
+        errors, _ = self._run(self._mutated(row_toast_from="vibes", row_terrain=""))
+        self.assertTrue(any("'toast_from' must be one of" in e for e in errors))
+        self.assertTrue(any("missing non-empty 'terrain'" in e for e in errors))
+
+    def test_carrierless_row_is_dead_data(self):
+        # No skills.json row carries `burns`, and no map entity is burnable.
+        errors, _ = self._run(W1_TABLE, skills={"skills": [{"id": "kindle"}]},
+            maps={"m": {**GRID, "entities": []}})
+        self.assertTrue(any("no skills.json row carries it" in e for e in errors))
+        self.assertTrue(any("no map carries it as a entity property" in e for e in errors))
+        self.assertTrue(any("has no skill carrier" in e for e in errors))
+        self.assertTrue(any("has no shipped target carrier" in e for e in errors))
+
+    def test_duplicate_row_is_unreachable(self):
+        table = self._mutated()
+        table["interactions"].append(json.loads(json.dumps(table["interactions"][0])))
+        errors, _ = self._run(table)
+        self.assertTrue(any("unreachable" in e for e in errors))
+
+    def test_cell_placement_carrier_reads_map_cell_classes(self):
+        table = self._mutated(
+            skill_properties=["freezes"], target_properties={"freezable": "cell"},
+            interactions=[{
+                "skill_property": "freezes", "target_property": "freezable",
+                "outcome": "freeze_cell", "persistence": "until_sleep",
+                "terrain": "ice", "toast_from": "skill",
+                "toast_key": "freeze_toast", "toast_default": "It freezes.",
+            }])
+        errors, _ = self._run(table, skills={"skills": [{"id": "f", "freezes": True}]},
+            maps={"m": {**GRID, "entities": [], "freezable": [[1, 1]]}})
+        self.assertEqual(errors, [])
+
+    # --- v0.18 W1 review fix: verb/placement binding + counter registration ---
+    def test_entity_verb_on_a_cell_property_fails(self):
+        # The PROVEN crash row: remove_scorch dereferences target[id], but a
+        # cell-placement property never populates `target`, so this row used to
+        # lint clean and then SCRIPT ERROR on a live cast.
+        table = self._mutated(
+            target_properties={"burnable": "entity", "freezable": "cell"},
+            row_target_property="freezable")
+        errors, _ = self._run(table,
+            maps={"m": {**GRID, "entities": [{"id": "d", "cell": [0, 0], "burnable": True}],
+                "freezable": [[1, 1]]}})
+        self.assertTrue(any("acts on the faced entity" in e for e in errors), errors)
+
+    def test_cell_verb_on_an_entity_property_fails(self):
+        # The silent mirror: freeze_cell bound to an entity flag freezes the
+        # faced CELL whenever the entity carries the flag -- and a frozen cell is
+        # walkable unconditionally (is_cell_blocked), i.e. a wall-phase primitive.
+        table = self._mutated(
+            skill_properties=["freezes"], target_properties={"burnable": "entity"},
+            interactions=[{
+                "skill_property": "freezes", "target_property": "burnable",
+                "outcome": "freeze_cell", "persistence": "until_sleep",
+                "terrain": "ice", "toast_from": "skill",
+                "toast_key": "freeze_toast", "toast_default": "It freezes.",
+            }])
+        errors, _ = self._run(table, skills={"skills": [{"id": "f", "freezes": True}]})
+        self.assertTrue(any("acts on the faced cell" in e for e in errors), errors)
+
+    def test_unregistered_counter_fails(self):
+        errors, _ = self._run(self._mutated(row_counter="lit_the_hearths"))
+        self.assertTrue(any("not in data/shipped_ids.json" in e for e in errors), errors)
+
+    def test_counter_on_a_non_banking_verb_is_dead_data(self):
+        table = self._mutated(
+            skill_properties=["freezes"], target_properties={"freezable": "cell"},
+            interactions=[{
+                "skill_property": "freezes", "target_property": "freezable",
+                "outcome": "freeze_cell", "persistence": "until_sleep",
+                "counter": "burned_the_debris", "terrain": "ice",
+                "toast_from": "skill", "toast_key": "freeze_toast",
+                "toast_default": "It freezes.",
+            }])
+        errors, _ = self._run(table, skills={"skills": [{"id": "f", "freezes": True}]},
+            maps={"m": {**GRID, "entities": [], "freezable": [[1, 1]]}})
+        self.assertTrue(any("banks no counter" in e for e in errors), errors)
+
+    def test_absent_counter_registry_is_a_failure_not_a_pass(self):
+        errors, _ = self._run(W1_TABLE, shipped={})
+        self.assertTrue(any("cannot verify" in e for e in errors), errors)
+
+    def test_counter_is_optional_on_a_banking_verb(self):
+        table = self._mutated()
+        del table["interactions"][0]["counter"]
+        errors, _ = self._run(table)
+        self.assertEqual(errors, [])
 
 
 class TestRealTree(unittest.TestCase):

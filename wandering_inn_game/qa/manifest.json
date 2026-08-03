@@ -576,7 +576,8 @@
      "near_evolution"
     ],
     "skills": [
-     "basic_cleaning"
+     "basic_cleaning",
+     "power_strike"
     ],
     "dialogue": [
      "goblin_parley",
@@ -1292,6 +1293,34 @@
      "combat",
      "exploration",
      "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "property_seams",
+   "seed": 9,
+   "fixture": "sewers_property_seams",
+   "note": "#348 property table: freeze_cell (ice floor on water, walked onto) + remove_scorch (debris) + a null cell (untagged prop refused)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "sewers"
+    ],
+    "fixtures": [
+     "sewers_property_seams"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_touch",
+     "kindle",
+     "light"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
     ]
    }
   },
