@@ -70,6 +70,14 @@ for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skill
 	# underlying env-var hooks sim_combat_batch.gd itself honors (both unset =
 	# unchanged single-process behavior, proven byte-identical).
 	wandering_inn_game/scripts/harness_shard_diff.sh --shards 4 --baseline-ref main
+	# Difficulty-tier sweep (GH#360a) — the 141 cells at x0.75/x1.0/x1.3 via
+	# WI_DIFFICULTY_MULT on the ONE batch driver; asserts the x1.0 leg is
+	# identical to a plain run. Report-only until gates ratify.
+	wandering_inn_game/scripts/difficulty_tier_sweep.sh
+	# Class-parity leg (GH#360b) — mirror-matched builds at total-level bands
+	# 10/14/18 over a fixed arena set; reports max spread per band. Envelope
+	# gate deliberately unratified (ai_kit coverage confound; see CHOICE-LOG).
+	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_class_parity.gd
 
 	# QA scripts isolate user:// by default via HOME=.godot_home/qa-<script>-<pid>.
 	# Use --user-dir DIR after the mode to choose a stable isolated HOME explicitly.
