@@ -1,5 +1,5 @@
 {
- "_comment": "#318 beat 1. Rides the SHIPPED stationer_clerk entity, so his talk_pool bark still serves first and the graph opens on the second interact (Hedault's idiom). `counter`'s free ask is a signposting line, not a solution: he refuses it and loops back. Three real-cost arms bank forged_hand_named; each hides on it so the name cannot be bought twice.",
+ "_comment": "#318 beat 1. Rides the SHIPPED stationer_clerk, so his bark serves first and the graph opens on the second interact (Hedault's idiom). THE QUEST GATE LIVES ON THE OPTIONS, not the entity: the engine has no `conversation_when`, so an attached `conversation` is unconditional. All three real-cost arms therefore require house_card_shown as well as their own cost, and accomplishment gates HIDE, so pre-quest he shows only his refusal and his exit (spec section 4, fix round 1). The free ask is a signposting line: it banks nothing and loops back. Each banking arm hides on forged_hand_named.",
  "start": "counter",
  "nodes": {
   "counter": {
@@ -23,6 +23,9 @@
     {
      "text": "[Charming Smile] Ask about the handwriting instead of the name.",
      "requires": {
+      "accomplishment": {
+       "house_card_shown": 1
+      },
       "skill": "charming_smile"
      },
      "hide_when": {
@@ -33,9 +36,12 @@
      "goto": "persuade_pitch"
     },
     {
-     "_comment": "The spend rides the GATE option, not the node behind it, so _is_priced_purchase fires and the row renders its own price token.",
+     "_comment": "The spend rides the GATE option, not the node behind it, so _is_priced_purchase fires and the row renders its price token.",
      "text": "\"I'll buy the hour you were not working.\"",
      "requires": {
+      "accomplishment": {
+       "house_card_shown": 1
+      },
       "gold": 8
      },
      "hide_when": {
@@ -56,6 +62,9 @@
     {
      "text": "[Appraise Foe] The blotter under his elbow.",
      "requires": {
+      "accomplishment": {
+       "house_card_shown": 1
+      },
       "skill": "observe"
      },
      "hide_when": {

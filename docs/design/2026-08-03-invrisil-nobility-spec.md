@@ -97,7 +97,7 @@ second, smaller parity of its own so no build is walled out of starting.
 
 | pillar | beat 1 `trace` (the scribe) | beat 2 `answer` (the broker) |
 |---|---|---|
-| SOCIAL | `[Charming Smile]` two-node persuade | `[Charming Smile]` two-node persuade → `block_bought_back` |
+| SOCIAL | `[Charming Smile]` two-node persuade | `[Charming Smile]` two-node persuade → `block_handed_over` |
 | PUZZLE/SKILL | `[Appraise Foe]` reads the blotter | `[Stealth]` lifts the block off the table → `block_lifted` |
 | COMBAT | — | the broker's two hired men → `block_taken` |
 | REAL-COST ALTERNATE | 8 gold for "the hour he was not working" | 30 gold, name your price for the block → `block_bought_back` |
@@ -117,11 +117,38 @@ the shipped idiom for a gate that earns itself inside the conversation.
 ### Resolution paths (weakest claim first, LAST MATCH WINS)
 
 Mirrors `the_hat_stays_on`'s own ladder, which is the right register for
-this city: loud < talked < unseen.
+this city: loud < talked < unseen. Ranked by how much of the acquisition
+survives to be found afterwards.
 
 1. `block_taken` — you took it with his men on the floor. The street saw.
 2. `block_bought_back` — you bought it, and the transaction is a record.
-3. `block_lifted` — nobody ever knew the block moved. The house's ideal.
+3. `block_handed_over` — he gave it up for nothing. No coin, no witness,
+   only his own memory, and he asked for it to be forgotten.
+4. `block_lifted` — nobody ever knew the block moved. The house's ideal.
+
+**FIX ROUND 1 (2026-08-03).** The first cut of this table had THREE rungs
+for FOUR forks: the free `[Charming Smile]` arm and the 30-gold purchase
+both banked `block_bought_back`. The Social pillar — the headline fork,
+and the one the primary canonical walks — therefore had no outcome record
+of its own, and both the journal history line and the steward's only
+report row told a player who had spent nothing that they had bought the
+block outright. That is the pacifist-mislabel class this repo already
+named and fixed once at `quests.json`'s `hatch` ladder. A fork with real
+consequences owes a rung; four forks owe four.
+
+**Gating correction, same round.** Beat 1 rides the shipped
+`stationer_clerk`, and the engine has **no `conversation_when` key** — an
+entity that carries a `conversation` carries it unconditionally. Every
+other surface in this thread is gated on a new counter, but the scribe's
+three banking arms were not, so a player who had never met the Lady could
+open his graph straight off the boulevard, bank `forged_hand_named`,
+materialise the broker, settle the block, and only then take the Lady's
+entry row — opening a quest already two beats spent. Per-option
+`requires` is the only gate available on an ungated graph, so all three
+banking arms now require `house_card_shown`. Accomplishment gates HIDE
+rather than lock, so the pre-quest scribe shows exactly his ungated
+refusal and his exit: a scribe with nothing to sell you yet. Pinned by
+the talk canonical's first leg (`00_nothing_to_sell_you_yet`).
 
 ### The Lady's arc
 
@@ -142,7 +169,7 @@ to a card, in her own hand, for the first time in eleven years.
 ## 5. New counters
 
 `house_card_shown`, `forged_hand_named`, `block_bought_back`,
-`block_lifted`, `block_taken`, `seal_block_settled`,
+`block_handed_over`, `block_lifted`, `block_taken`, `seal_block_settled`,
 `house_answer_given`, `carriage_passed`.
 
 All follow the shipped verb conventions and freeze at the next release

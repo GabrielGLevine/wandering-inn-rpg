@@ -253,7 +253,7 @@
     "Both sides of an argument have bought their paper here. Neither knows. Neither asks.",
     "House paper is a third of the trade and all of the discretion. A crest on the envelope changes what the words inside are allowed to mean."
    ],
-   "_comment": "#318 beat 1: ADDITIVE. His talk_pool bark still serves the FIRST interact (Hedault's idiom), so stationer_room_loop's and line_display_ab's pins hold; the graph opens on the second.",
+   "_comment": "#318 beat 1: ADDITIVE. His talk_pool bark still serves the FIRST interact (Hedault's idiom), so stationer_room_loop's pin holds; the graph opens on the second. The engine has no `conversation_when`, so this attachment is UNCONDITIONAL and beat 1's quest gate lives on the graph's OPTIONS. His second interact now opens a graph rather than a bark, which retargeted line_display_ab's leg B (see .lane-progress SEAMS).",
    "conversation": "invrisil_hired_scribe"
   },
   {

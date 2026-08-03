@@ -1,5 +1,5 @@
 {
- "_comment": "#318 beat 3. She is an ORIGINAL UNNAMED ARCHETYPE, never Ressa and never Reynold, and she never names her mistress -- the felt/seen rule (spec section 2). Three report arms, one per route, converge on `answered`, which carries the ONLY grant so the pay cannot double-fire.",
+ "_comment": "#318 beat 3. ORIGINAL UNNAMED ARCHETYPE, never Ressa and never Reynold, and she never names her mistress -- the felt/seen rule (spec section 2). FOUR report arms, one per route counter (bought / handed over / lifted / taken), converge on `answered`, which carries the ONLY grant so the pay cannot double-fire. Exactly one is visible.",
  "start": "waiting",
  "nodes": {
   "waiting": {
@@ -29,6 +29,21 @@
      "requires": {
       "accomplishment": {
        "block_bought_back": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "house_answer_given": 1
+      }
+     },
+     "goto": "answered"
+    },
+    {
+     "_comment": "The SOCIAL rung: he gave it up and asked to have it called destroyed; this player declined to.",
+     "text": "\"He handed it over himself. He wanted it called destroyed. It isn't.\"",
+     "requires": {
+      "accomplishment": {
+       "block_handed_over": 1
       }
      },
      "hide_when": {

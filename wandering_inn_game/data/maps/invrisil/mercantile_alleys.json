@@ -1355,7 +1355,7 @@
    "conversation": "invrisil_seal_broker"
   },
   {
-   "_comment": "#318 beat 2 FIGHT arm, COMMITTED FROM THE HUB AND NOWHERE ELSE. Two constraints collide here: present_when is FORBIDDEN on encounters (encounter_when gates whether the fight FIRES, never whether the rig blocks or draws), and this alley has no spare walkable cell -- (4,6) obstructed invrisil_walkthrough's own westward row-6 leg, and (4,5) put a man standing on the building face. So the rig parks on (5,4), an interior wall cell with NO walkable neighbour, hidden: nothing draws, nothing blocks, nothing can be bumped into it. start_combat resolves by id off the current map and consults neither adjacency nor encounter_when, so the broker's own `call_them` option is the single door. Roster and arena are BOTH shipped and unchanged -- footpad_lookout + footpad_bruiser in mercantile_alley is exactly the composition sim_combat_batch measures as alley_footpads_t3_warrior10_solo, so no new balance cell is owed. on_victory is the ARRAY form: route counter FIRST (victory_toast contract), then the shared settle.",
+   "_comment": "#318 beat 2 FIGHT arm, committed from the hub and nowhere else. present_when is FORBIDDEN on encounters and this alley has no spare walkable cell ((4,6) blocks invrisil_walkthrough's row-6 leg; (4,5) puts a man on the building face), so the rig parks hidden on wall cell (5,4), which has no walkable neighbour. start_combat resolves by id and reads neither adjacency nor encounter_when, so `call_them` is the single door. Roster and arena are BOTH shipped: footpad_lookout + footpad_bruiser in mercantile_alley is the alley_footpads_t3_warrior10_solo cell, so no new balance cell is owed.",
    "id": "broker_hands",
    "kind": "encounter",
    "cell": [

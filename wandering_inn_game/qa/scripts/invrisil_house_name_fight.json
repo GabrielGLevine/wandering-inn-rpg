@@ -112,7 +112,8 @@
   { "action": "assert_state", "path": "accomplishments.block_taken", "equals": 1 },
   { "action": "assert_state", "path": "accomplishments.seal_block_settled", "equals": 1 },
   { "action": "assert_event_count", "type": "combat_started", "count": 1 },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": {"id": "block_bought_back"} },
+  { "_comment": "FIX ROUND 1: FOUR route counters now, one per fork, so the negative set is three-wide. block_handed_over is the SOCIAL rung the persuade arm used to borrow from the purchase.", "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": {"id": "block_bought_back"} },
+  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": {"id": "block_handed_over"} },
   { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": {"id": "block_lifted"} }
  ]
 }

@@ -1,5 +1,5 @@
 {
- "_comment": "#318 beat 2, the three-pillar beat, all four forks on ONE node. Every non-fight arm banks its route counter AND the shared seal_block_settled, which is the ONE gate all of them hide on (hide_when is an AND over a single dict, so a shared settle counter is the only way three forks can retire each other). The FIGHT arm commits broker_hands from `the_other_way` and from nowhere else -- the rig is hidden on an unreachable wall cell (its own map _comment carries why) -- and its on_victory is the ARRAY [block_taken, seal_block_settled], the same settle banked by the win.",
+ "_comment": "#318 beat 2, the three-pillar beat, all four forks on ONE node, each with its OWN route counter: block_bought_back (30 gold), block_handed_over ([Charming Smile], no coin), block_lifted ([Stealth]), block_taken (the fight). Fix round 1 split the first two apart (spec section 4). Every non-fight arm also banks the shared seal_block_settled, the ONE gate they all hide on -- hide_when is an AND over one dict, so a shared settle is the only way four forks retire each other. The FIGHT arm commits broker_hands from `the_other_way` and nowhere else.",
  "start": "table",
  "nodes": {
   "table": {
@@ -49,7 +49,7 @@
    ],
    "options": [
     {
-     "_comment": "The spend rides the GATE option, not the node behind it, so _is_priced_purchase fires and the row renders its own price token.",
+     "_comment": "The spend rides the GATE option so _is_priced_purchase fires and the row renders its price token (as on the scribe's 8-gold arm).",
      "text": "\"Name your price for the block.\"",
      "requires": {
       "gold": 30
@@ -139,10 +139,11 @@
    "text": "Then take the brass and take it now, before anybody thinks to ask me where it went. I have been careful for eleven years about which names I borrow and I have never once borrowed upward. Tell them the block was destroyed. Tell them a bad season did it.",
    "options": [
     {
+     "_comment": "Banks block_handed_over, NOT block_bought_back: no gold rides this arm, so banking the purchase's counter made the resolution row and the steward's report describe a transaction that never happened.",
      "text": "\"I'll tell them it was handed over.\"",
      "effects": [
       {
-       "accomplishment": "block_bought_back"
+       "accomplishment": "block_handed_over"
       },
       {
        "accomplishment": "seal_block_settled"

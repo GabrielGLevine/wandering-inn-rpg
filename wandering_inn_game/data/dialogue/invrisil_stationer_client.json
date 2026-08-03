@@ -23,7 +23,7 @@
      "text": "It sits differently on the chain. I noticed before I looked. Thank you for the part of that which was not the silver."
     },
     {
-     "_comment": "#318. Every v0.18 variant gates on a counter no shipped fixture holds, so the three pinned I1 canonicals can never match one (the text_variants-vs-pinned-base trap).",
+     "_comment": "#318. Every v0.18 variant gates on a counter no shipped fixture holds, so the pinned I1 canonicals can never match one (the text_variants-vs-pinned-base trap).",
      "requires": {
       "accomplishment": {
        "house_card_shown": 1

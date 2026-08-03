@@ -428,7 +428,7 @@
    "gate_closed_toast": "Two men at the far table are having a conversation you are not in. Tonight, that is all they are."
   },
   {
-   "_comment": "#318 beat 3. ORIGINAL UNNAMED ARCHETYPE, never Ressa and never Reynold (spec section 2). `invrisil_lady_client` rather than the House Factor's `city_scribe`: two scribe silhouettes in one room would read as one person twice, and the rig's whole design note is that it cannot read as a traveler -- which is the point of her.",
+   "_comment": "#318 beat 3. ORIGINAL UNNAMED ARCHETYPE, never Ressa and never Reynold (spec section 2). `invrisil_lady_client`, not the House Factor's `city_scribe`: two scribe silhouettes in one room read as one person twice, and this rig cannot read as a traveler.",
    "id": "rest_house_steward",
    "kind": "npc",
    "cell": [
