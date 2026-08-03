@@ -29,6 +29,19 @@ const OUTCOMES: Array[String] = [OUTCOME_REMOVE_SCORCH, OUTCOME_FREEZE_CELL]
 ## the faced ENTITY (burnable), or a map-authored CELL class (freezable).
 const PLACEMENT_ENTITY := "entity"
 const PLACEMENT_CELL := "cell"
+## VERB/PLACEMENT BINDING: each verb's body dereferences ONE shape, and the two
+## are opposites -- remove_scorch reads the faced ENTITY (target[id]/[cell]),
+## freeze_cell writes the faced CELL and never reads target. TRAP: a row pairing
+## a verb with the other placement crashes the cast (remove_scorch, empty
+## target) or silently flips an arbitrary cell's walkability (freeze_cell --
+## is_cell_blocked passes ANY frozen cell, so that row is a wall-phase
+## primitive). data_lint.OUTCOME_PLACEMENT fails such a row; _resolve_property
+## makes it inert here. Mirrored in data_lint, asserted in
+## tests/test_interactions_table.gd.
+const OUTCOME_PLACEMENT: Dictionary = {
+	OUTCOME_REMOVE_SCORCH: PLACEMENT_ENTITY,
+	OUTCOME_FREEZE_CELL: PLACEMENT_CELL,
+}
 
 var _event_sink: Callable
 var _skills: Dictionary
@@ -177,16 +190,21 @@ func _resolve_property(skill_id: String, skill: Dictionary, target: Dictionary, 
 		if skill_prop == "" or not bool(skill.get(skill_prop, false)):
 			continue
 		var target_prop := String(row.get("target_property", ""))
-		match String(_target_placements.get(target_prop, "")):
+		var placement := String(_target_placements.get(target_prop, ""))
+		var outcome := String(row.get("outcome", ""))
+		# Binding guard, BEFORE any placement test: unregistered target property
+		# (placement "") or verb/placement mismatch -> row is inert, cast falls
+		# through to ambient. Shipped rows satisfy it, so the stream is unchanged.
+		if placement == "" or String(OUTCOME_PLACEMENT.get(outcome, "")) != placement:
+			continue
+		match placement:
 			PLACEMENT_ENTITY:
 				if target.is_empty() or not bool(target.get(target_prop, false)):
 					continue
 			PLACEMENT_CELL:
 				if not bool(cell_properties.get(target_prop, false)):
 					continue
-			_:
-				continue
-		match String(row.get("outcome", "")):
+		match outcome:
 			OUTCOME_REMOVE_SCORCH:
 				return _outcome_remove_scorch(skill_id, row, target, current_map)
 			OUTCOME_FREEZE_CELL:

@@ -3344,11 +3344,26 @@ head v0.18 W4 as HOTFIX-PRIORITY. Ranked player-visible-first.
 Windowed `property_seams` at seed 9, six frames, evidence under
 `wandering_inn_game/qa_output/property_seams/`.
 
-- **POSITIVE — the frozen cell has a real render tell.** `02_ice_floor_formed`
-  → `03_standing_on_the_ice`: the frozen channel cell draws as a distinctly
-  paler blue slab under the PC, so "I can cross now" is legible without the
-  toast. The property table's one walkability-flipping verb ships with its
-  tell already in place; nothing needed here.
+- [ ] **(P2, TINT-ONLY — the lane that owns terrain art)** The frozen cell
+  reads as a SHADE of water, not as ice. RETRACTION: this row's first draft
+  filed the pale-blue slab as a POSITIVE "real render tell". That judgement
+  contradicts the standing directive of 2026-08-02 — tint is NOT
+  disambiguation, shade variants never read as separate things, distinct
+  silhouettes are required — so it is re-filed as an OPEN row, because a row
+  logged as a positive is a row nobody drains.
+  Evidence `01_water_before_freeze` → `02_ice_floor_formed` →
+  `03_standing_on_the_ice`: the frozen cell (3,5) is the same water tile at a
+  lighter value — same silhouette, same texture, no rime, no fracture, no edge
+  treatment. In `02` (the frame literally named "ice floor formed") the change
+  is barely perceptible at all — a few white specks at the band's left edge —
+  because the PC is still standing north of the cell.
+  Why this is not cosmetic: `freeze_cell` is the one verb in the slice that
+  flips WALKABILITY. A playtester who freezes the channel, sees the same blue
+  band and reads the toast as flavour never tries to cross — K5 (discovery
+  failure) firing on the slice's headline interaction. Cure is an ice tile
+  with its own silhouette (rime edge / fracture lines), not a brighter blue.
+  NOT fixable inside W1: the property table ships no art, and
+  `sprites.json` + `assets/**` belong to the art lane this wave.
 - **POSITIVE — the burn resolution reads.** `04_debris_blocks_the_nook` →
   `05_nook_cleared`: prop gone, nook open, prop-authored line spoken.
 - **RUN HYGIENE — investigated, NOT a W1 regression.** `property_seams`

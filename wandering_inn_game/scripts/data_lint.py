@@ -378,6 +378,23 @@ OUTCOME_PERSISTENCE = {
 	"remove_scorch": {"permanent"},
 	"freeze_cell": {"until_sleep"},
 }
+# VERB/PLACEMENT BINDING -- mirrors WIFieldSkills.OUTCOME_PLACEMENT. Each verb's
+# body has a fixed target shape: `remove_scorch` dereferences the faced ENTITY,
+# `freeze_cell` writes the faced CELL and never reads the entity. Binding them
+# is what makes "a new ROW is data alone" TRUE: without it a lint-clean row
+# could hard-error a live cast (remove_scorch on a cell class, which reaches
+# `target[id]` with target == {}) or silently flip an arbitrary cell's
+# walkability (freeze_cell on an entity class -- `is_cell_blocked` treats every
+# frozen cell as passable, so that row is a wall-phase primitive). Slice 2 adds
+# `dark cell*` and `thaw_cell`, i.e. exactly the pairs this table disambiguates.
+OUTCOME_PLACEMENT = {
+	"remove_scorch": "entity",
+	"freeze_cell": "cell",
+}
+# Verbs whose BODY actually banks `counter` (WIFieldSkills._outcome_*). A row
+# carrying a counter for any other verb is dead data: the field is silently
+# dropped at dispatch.
+OUTCOME_BANKS_COUNTER = {"remove_scorch"}
 
 
 def _skill_property_carriers(parsed: dict, prop: str) -> list:
@@ -399,6 +416,51 @@ def _target_property_carriers(maps: dict, prop: str, placement: str) -> list:
 	return out
 
 
+def _shipped_accomplishments(parsed: dict) -> set:
+	path = DATA / "shipped_ids.json"
+	rows = (parsed.get(path) or {}).get("accomplishments") or []
+	return {str(a) for a in rows}
+
+
+def _check_row_counter(row: dict, outcome: str, label: str, parsed: dict, errors: list) -> None:
+	"""Spec §5(c): a row's `counter` gets the standard producer/consumer treatment.
+
+	`counter` is the ONE table field the engine banks into the save
+	(WIFieldSkills._outcome_remove_scorch -> _record_accomplishment), and nothing
+	else in the repo reads interactions.json -- generate_shipped_ids.py's census
+	is hand-maintained. So an unregistered counter used to bank into saves as an
+	id no registry knows, and the first quest beat or class gate naming it would
+	trip test_content's unproduced-counter tripwire with no pointer back to the
+	table. Registration is the cure: a new row's counter joins
+	scripts/generate_shipped_ids.py STRUCTURAL_LITERALS (+ its
+	tests/test_shipped_ids.gd mirror), then data/shipped_ids.json is regenerated.
+	Also catches the other direction -- a counter on a verb whose body never
+	banks one is silently dropped at dispatch, i.e. dead data.
+	"""
+	counter = row.get("counter")
+	if outcome not in OUTCOME_BANKS_COUNTER:
+		if counter not in (None, ""):
+			errors.append(f"interactions.json: {label} outcome '{outcome}' banks no counter, "
+				f"but the row declares counter {counter!r} -- dead data (the field is "
+				"dropped at dispatch); drop it or use a counter-banking verb")
+		return
+	if counter is None:
+		return  # optional: a burn row may legitimately bank nothing
+	if not isinstance(counter, str) or not counter:
+		errors.append(f"interactions.json: {label} 'counter' must be a non-empty string when present")
+		return
+	shipped = _shipped_accomplishments(parsed)
+	if shipped and counter not in shipped:
+		errors.append(f"interactions.json: {label} banks counter '{counter}', which is not in "
+			"data/shipped_ids.json's accomplishments -- register it in "
+			"scripts/generate_shipped_ids.py STRUCTURAL_LITERALS (and the matching const "
+			"in tests/test_shipped_ids.gd), then regenerate")
+	elif not shipped:
+		errors.append(f"interactions.json: {label} banks counter '{counter}' but "
+			"data/shipped_ids.json carries no accomplishments list -- cannot verify "
+			"registration, which is a broken census, not a pass")
+
+
 def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> None:
 	"""Vocabulary registration + row shape + carrier cross-ref + totality census.
 
@@ -407,6 +469,12 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 	carrier-less row is dead data and fails HERE rather than rotting. K4 applies
 	-- if this arm ever seems to need an allowlist, the vocabulary is wrong.
 	"""
+	uncovered = [v for v in ENGINE_OUTCOMES
+		if v not in OUTCOME_PLACEMENT or v not in OUTCOME_PERSISTENCE]
+	if uncovered:
+		errors.append(f"data_lint: outcome verb(s) {uncovered} are in ENGINE_OUTCOMES but carry no "
+			"OUTCOME_PLACEMENT/OUTCOME_PERSISTENCE row -- a new verb fills BOTH tables here")
+		return
 	path = DATA / "interactions.json"
 	if path not in parsed:
 		errors.append("interactions.json: missing -- the property table is required "
@@ -465,6 +533,16 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 		if outcome not in ENGINE_OUTCOMES:
 			errors.append(f"interactions.json: {label} names unknown outcome {outcome!r}")
 			continue
+		# VERB/PLACEMENT BINDING: the verb's body dereferences one shape or the
+		# other, so the pairing is a correctness question, not a style one -- see
+		# OUTCOME_PLACEMENT above for the two failure modes it forecloses.
+		want = OUTCOME_PLACEMENT[outcome]
+		got = target_props.get(tp)
+		if got != want:
+			errors.append(f"interactions.json: {label} outcome '{outcome}' acts on the faced "
+				f"{want}, but target property '{tp}' is declared placement {got!r} -- bind "
+				f"'{outcome}' to a '{want}'-placement property; WIFieldSkills.OUTCOME_PLACEMENT "
+				"is the engine mirror of this rule and makes such a row inert")
 		allowed = OUTCOME_PERSISTENCE[outcome]
 		if row.get("persistence") not in allowed:
 			errors.append(f"interactions.json: {label} outcome '{outcome}' claims persistence "
@@ -474,6 +552,7 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 		for key in ("toast_key", "toast_default", "terrain"):
 			if not isinstance(row.get(key), str) or not row[key]:
 				errors.append(f"interactions.json: {label} missing non-empty '{key}'")
+		_check_row_counter(row, outcome, label, parsed, errors)
 		# Per-row carrier cross-ref (spec §5b): a row nothing can reach is dead.
 		if sp in skill_props and not _skill_property_carriers(parsed, sp):
 			errors.append(f"interactions.json: {label} has no skill carrier")
@@ -549,13 +628,17 @@ def main() -> int:
 		return 1
 	maps = _compose_maps(parsed, errors)
 	check_maps(maps, errors)
+	# MERGE NOTE (v0.18 W1): this pair is parked HERE, at the top of the check_*
+	# block, and its REPORT print at the very bottom of main() -- both as far as
+	# possible from the advisory region a sibling lane is extending this wave, so
+	# the two arms auto-merge instead of colliding inside one function.
+	report: list = []
+	check_interactions(parsed, maps, errors, report)
 	check_portals(parsed, maps, errors)
 	check_dialogue(parsed, errors)
 	check_sprites(parsed, errors)
 	check_gate_shapes(maps, errors)
 	check_moods(parsed, maps, errors)
-	report: list = []
-	check_interactions(parsed, maps, errors, report)
 	advisories: list = []
 	advise_unlit_sealed_rooms(maps, parsed, advisories)
 	interacted_props = advise_acted_on_state(maps, advisories)
@@ -568,8 +651,6 @@ def main() -> int:
 		return 1
 	print(f"data_lint: OK -- {len(parsed)} files, {len(maps)} maps clean "
 		f"in {elapsed_ms:.0f}ms (structural tier only -- Godot gates still apply).")
-	for line in report:
-		print(f"data_lint: REPORT -- {line}")
 	if advisories:
 		# ONE line by default. A 90-row wall printed on every sweep is a wall
 		# nobody reads, and this tier's whole value is that someone reads it.
@@ -579,6 +660,8 @@ def main() -> int:
 		print(f"data_lint: ADVISORY -- {len(advisories)}/{interacted_props} props that bank "
 			"an interact accomplishment show no visual change for it (GH#335 item 3); "
 			"re-run with --advisories to list them. Report-only, never fails.")
+	for line in report:
+		print(f"data_lint: REPORT -- {line}")
 	return 0
 
 

@@ -157,13 +157,16 @@ W1_TABLE = {
     }],
 }
 W1_SKILLS = {"skills": [{"id": "kindle", "burns": True}]}
+# The counter registry data_lint cross-refs (spec §5c producer/consumer).
+W1_SHIPPED = {"accomplishments": ["burned_the_debris"]}
 W1_MAPS = {"m": {**GRID, "entities": [{"id": "debris", "cell": [0, 0], "burnable": True}]}}
 
 
 class TestInteractionsTable(unittest.TestCase):
-    def _run(self, table=None, skills=None, maps=None):
+    def _run(self, table=None, skills=None, maps=None, shipped=None):
         parsed = {
             data_lint.DATA / "skills.json": skills if skills is not None else W1_SKILLS,
+            data_lint.DATA / "shipped_ids.json": W1_SHIPPED if shipped is None else shipped,
         }
         if table is not None:
             parsed[data_lint.DATA / "interactions.json"] = table
@@ -239,6 +242,62 @@ class TestInteractionsTable(unittest.TestCase):
             }])
         errors, _ = self._run(table, skills={"skills": [{"id": "f", "freezes": True}]},
             maps={"m": {**GRID, "entities": [], "freezable": [[1, 1]]}})
+        self.assertEqual(errors, [])
+
+    # --- v0.18 W1 review fix: verb/placement binding + counter registration ---
+    def test_entity_verb_on_a_cell_property_fails(self):
+        # The PROVEN crash row: remove_scorch dereferences target[id], but a
+        # cell-placement property never populates `target`, so this row used to
+        # lint clean and then SCRIPT ERROR on a live cast.
+        table = self._mutated(
+            target_properties={"burnable": "entity", "freezable": "cell"},
+            row_target_property="freezable")
+        errors, _ = self._run(table,
+            maps={"m": {**GRID, "entities": [{"id": "d", "cell": [0, 0], "burnable": True}],
+                "freezable": [[1, 1]]}})
+        self.assertTrue(any("acts on the faced entity" in e for e in errors), errors)
+
+    def test_cell_verb_on_an_entity_property_fails(self):
+        # The silent mirror: freeze_cell bound to an entity flag freezes the
+        # faced CELL whenever the entity carries the flag -- and a frozen cell is
+        # walkable unconditionally (is_cell_blocked), i.e. a wall-phase primitive.
+        table = self._mutated(
+            skill_properties=["freezes"], target_properties={"burnable": "entity"},
+            interactions=[{
+                "skill_property": "freezes", "target_property": "burnable",
+                "outcome": "freeze_cell", "persistence": "until_sleep",
+                "terrain": "ice", "toast_from": "skill",
+                "toast_key": "freeze_toast", "toast_default": "It freezes.",
+            }])
+        errors, _ = self._run(table, skills={"skills": [{"id": "f", "freezes": True}]})
+        self.assertTrue(any("acts on the faced cell" in e for e in errors), errors)
+
+    def test_unregistered_counter_fails(self):
+        errors, _ = self._run(self._mutated(row_counter="lit_the_hearths"))
+        self.assertTrue(any("not in data/shipped_ids.json" in e for e in errors), errors)
+
+    def test_counter_on_a_non_banking_verb_is_dead_data(self):
+        table = self._mutated(
+            skill_properties=["freezes"], target_properties={"freezable": "cell"},
+            interactions=[{
+                "skill_property": "freezes", "target_property": "freezable",
+                "outcome": "freeze_cell", "persistence": "until_sleep",
+                "counter": "burned_the_debris", "terrain": "ice",
+                "toast_from": "skill", "toast_key": "freeze_toast",
+                "toast_default": "It freezes.",
+            }])
+        errors, _ = self._run(table, skills={"skills": [{"id": "f", "freezes": True}]},
+            maps={"m": {**GRID, "entities": [], "freezable": [[1, 1]]}})
+        self.assertTrue(any("banks no counter" in e for e in errors), errors)
+
+    def test_absent_counter_registry_is_a_failure_not_a_pass(self):
+        errors, _ = self._run(W1_TABLE, shipped={})
+        self.assertTrue(any("cannot verify" in e for e in errors), errors)
+
+    def test_counter_is_optional_on_a_banking_verb(self):
+        table = self._mutated()
+        del table["interactions"][0]["counter"]
+        errors, _ = self._run(table)
         self.assertEqual(errors, [])
 
 

@@ -43,7 +43,7 @@ for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skill
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_acts.gd          # M-ARC A1: act-derivation
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_items.gd         # M7 E1: items/equipment validation
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_traversal_seams.gd  # Skills Wave K1: freeze/burn seams -- the property table's BYTE-IDENTITY referee
-	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_interactions_table.gd  # #348: property table (mirror contract, injection, new carriers as data, authored precedence)
+	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_interactions_table.gd  # #348: property table (mirror contract, injection, new carriers as data, authored precedence, verb/placement binding)
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_input_hints.gd      # Issue #18 S3: WIInputHints label table + device classification
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_portals.gd          # Magical Door plan Task D4 (issue #8): WIPortals catalog filter + graph derivation
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_settings.gd         # Issue #77: text-scale math + drift tripwire, settings.cfg round-trip, WIAudio UI-bus-routing fix, hint reset_hints() flips, board_renderer.gd reduce-motion gate sites

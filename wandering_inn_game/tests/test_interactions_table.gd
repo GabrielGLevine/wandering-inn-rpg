@@ -116,6 +116,24 @@ func _init() -> void:
 		assert(String(placement) in [WIFieldSkills.PLACEMENT_ENTITY, WIFieldSkills.PLACEMENT_CELL],
 			"every target property declares a shipped placement")
 
+	# --- VERB/PLACEMENT BINDING (v0.18 W1 review fix). Each verb's body has a
+	# fixed target shape; nothing used to bind the two, so a lint-clean row could
+	# hard-error a cast (remove_scorch reaching target[id] with no entity) or
+	# silently flip an arbitrary cell's walkability (freeze_cell on an entity
+	# class). Three proofs: the const covers the verb set, every SHIPPED row
+	# obeys it, and a violating row is INERT in the engine rather than fatal.
+	assert(WIFieldSkills.OUTCOME_PLACEMENT.keys().size() == WIFieldSkills.OUTCOMES.size(),
+		"OUTCOME_PLACEMENT names exactly the shipped verb set")
+	for w1_verb: String in WIFieldSkills.OUTCOMES:
+		assert(WIFieldSkills.OUTCOME_PLACEMENT.has(w1_verb),
+			"every shipped verb declares the placement its body dereferences")
+		assert(String(WIFieldSkills.OUTCOME_PLACEMENT[w1_verb]) in [WIFieldSkills.PLACEMENT_ENTITY, WIFieldSkills.PLACEMENT_CELL],
+			"a verb's declared placement is one of the two shipped shapes")
+	for row: Dictionary in w1_rows:
+		assert(String(WIFieldSkills.OUTCOME_PLACEMENT[String(row["outcome"])])
+				== String(w1_target_props[String(row["target_property"])]),
+			"every shipped row binds its verb to the placement that verb acts on")
+
 	# --- Injection: the table reaches the sim through scene_config, not disk.
 	var w1_composed := WISceneCatalog.compose()
 	assert(w1_composed.has("interactions"), "WISceneCatalog composes the table into scene_config")
@@ -198,5 +216,49 @@ func _init() -> void:
 		"with no table, a freezes cast on water falls through to ambient")
 	assert(w1_bare.frozen_cells.is_empty(), "with no table nothing freezes")
 
-	print("PASS: property-interaction table -- mirror contract, injection, new carriers, precedence, inert fallthrough")
+	# --- A MISMATCHED ROW IS INERT, not fatal and not silent. data_lint fails
+	# both shapes at the lint tier; these two prove the engine's own guard, so a
+	# hand-edited or half-merged table degrades to the ambient fallthrough.
+	# (A) entity verb bound to a CELL class: this is the row that used to reach
+	# `target[WIKeys.ID]` with target == {} and raise a SCRIPT ERROR.
+	var w1_bad_entity_scene := _w1_scene()
+	w1_bad_entity_scene["interactions"] = {
+		"skill_properties": ["burns"], "target_properties": {"freezable": "cell"},
+		"outcomes": WIFieldSkills.OUTCOMES,
+		"interactions": [{
+			"skill_property": "burns", "target_property": "freezable",
+			"outcome": "remove_scorch", "persistence": "permanent",
+			"counter": "burned_the_debris", "terrain": "scorched",
+			"toast_from": "target", "toast_key": "burn_toast", "toast_default": "x",
+		}],
+	}
+	var w1_bad_entity := _w1_game(w1_bad_entity_scene)
+	_w1_face(w1_bad_entity, Vector2i(3, 4), Vector2i.DOWN)
+	assert(w1_bad_entity.use_skill_field("w1_scorch").get("ambient", "") == "w1_scorch",
+		"remove_scorch bound to a cell class resolves NO row -- it falls through to ambient")
+	assert(w1_bad_entity.removed_entities.is_empty(), "the inert row removes nothing")
+	assert(int(w1_bad_entity.accomplishments.get("burned_the_debris", 0)) == 0,
+		"the inert row banks no counter")
+	# (B) cell verb bound to an ENTITY flag: the silent mirror. This row used to
+	# freeze the faced CELL whenever the faced ENTITY carried the flag, and a
+	# frozen cell is walkable unconditionally -- a wall-phase primitive.
+	var w1_bad_cell_scene := _w1_scene()
+	w1_bad_cell_scene["interactions"] = {
+		"skill_properties": ["freezes"], "target_properties": {"burnable": "entity"},
+		"outcomes": WIFieldSkills.OUTCOMES,
+		"interactions": [{
+			"skill_property": "freezes", "target_property": "burnable",
+			"outcome": "freeze_cell", "persistence": "until_sleep", "terrain": "ice",
+			"toast_from": "skill", "toast_key": "freeze_toast", "toast_default": "x",
+		}],
+	}
+	var w1_bad_cell := _w1_game(w1_bad_cell_scene)
+	_w1_face(w1_bad_cell, Vector2i(2, 4), Vector2i.DOWN)
+	assert(w1_bad_cell.use_skill_field("w1_ice_floor").get("ambient", "") == "w1_ice_floor",
+		"freeze_cell bound to an entity flag resolves NO row -- it falls through to ambient")
+	assert(w1_bad_cell.frozen_cells.is_empty(), "the inert row freezes nothing")
+	assert(w1_bad_cell.is_cell_blocked(Vector2i(3, 5)),
+		"the water channel stays impassable -- the inert row flipped no walkability")
+
+	print("PASS: property-interaction table -- mirror contract, injection, new carriers, precedence, verb/placement binding, inert fallthrough")
 	quit(0)

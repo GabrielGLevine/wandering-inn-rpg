@@ -2694,10 +2694,14 @@ the guard, in the pre-flight tier that runs before any Godot boot.
    and a silent third copy would be worse than a policed one.
 6. **`--touching data/interactions.json` maps to the `exploration` system tag
    (169 canonicals).** A row edit genuinely can change any field cast, so the
-   honest mapping is broad. Slice-1 verification ran the spec's named
-   byte-identity set (`sewers_walkthrough`, `blink_bypass_loop`, `ward_loop`,
-   `field_skills_loop`) plus `--tier smoke` plus the new canonical, NOT all
-   169 — disclosed rather than implied.
+   honest mapping is broad. ~~Slice-1 verification ran the spec's named
+   byte-identity set plus `--tier smoke` plus the new canonical, NOT all
+   169 — disclosed rather than implied.~~ SUPERSEDED by the fix wave (item 11):
+   the spec's `--touching` gate was RUN, all 169 green. Note for anyone
+   repeating it: `src/**` paths have no surface mapping, so
+   `derive_qa_surfaces --touching` warns and derives nothing for the three
+   edited `src/core` files — the 169 come from `data/interactions.json` plus
+   the new script/fixture, and `--tier smoke` is what covers the `src/**` side.
 7. **The two user-named interactions split.** [Ice Floor]-on-water needs no
    substrate work at all: it is the shipped `freezes x freezable -> freeze_cell`
    row, and a new carrier skill is pure `skills.json` data (W5's file this
@@ -2707,3 +2711,63 @@ the guard, in the pre-flight tier that runs before any Godot boot.
    in map data, and an item yield the table deliberately does not own
    (spec §6 — yields are `use_skill`'s job). Costed in `.lane-progress`;
    question returned to the controller rather than disclose-and-proceed.
+
+### W1 fix wave (review findings applied, same day)
+
+8. **A verb is now BOUND to the target placement its body dereferences.** The
+   slice's central claim is "a new ROW is data alone"; that was false, because
+   nothing tied `outcome` to `target_property`'s placement. `remove_scorch`
+   reaches `target[id]`/`target[cell]` unconditionally, `freeze_cell` writes
+   the faced cell and never reads `target` — opposite contracts, unchecked in
+   both directions. Proven, not theorized: a single appended row
+   (`burns × freezable → remove_scorch`) passed `data_lint`, both GDScript
+   suites and the python suite, then raised
+   `SCRIPT ERROR: Invalid access to property or key 'id'` at
+   `_outcome_remove_scorch` on a live cast at sewers (3,5). The mirror row
+   (`freezes × burnable → freeze_cell`) was WORSE — silent, and since
+   `is_cell_blocked` treats any frozen cell as passable, it is a wall-phase
+   primitive. Cure is two-tier and both tiers are failure-proven:
+   `data_lint.OUTCOME_PLACEMENT` fails such a row (`scripts/tests/test_data_lint.py`
+   `test_entity_verb_on_a_cell_property_fails` / `test_cell_verb_on_an_entity_property_fails`),
+   and `WIFieldSkills.OUTCOME_PLACEMENT` makes it INERT in the engine so a
+   hand-edited or half-merged table degrades to the ambient fallthrough
+   instead of crashing (`test_interactions_table.gd`; deleting the guard
+   reproduces the SCRIPT ERROR above and fails the second assert). This
+   matters most for slice 2, which is a rows-and-tags wave and which the spec
+   §7 already stages with a second cell class (`dark cell*`) and a second cell
+   verb (`thaw_cell`) — exactly the pairs that were unguarded.
+9. **A row's `counter` gets the standard producer/consumer treatment (spec
+   §5c).** `counter` is the ONE table field the engine banks into the save,
+   and nothing in the repo read `interactions.json` — `generate_shipped_ids.py`
+   carries `burned_the_debris` as a hand-maintained STRUCTURAL_LITERAL. So a
+   slice-2 row banking `lit_the_hearths` would have gone green everywhere and
+   written an id no registry knows. `check_interactions` now cross-refs the
+   counter against `data/shipped_ids.json`'s accomplishments (a missing census
+   is a failure, never a silent pass) and rejects a counter on a verb whose
+   body never banks one. Registration route is unchanged and stated in the
+   error text: STRUCTURAL_LITERALS + the `test_shipped_ids.gd` mirror, then
+   regenerate. Deliberately NOT made mandatory — a future burn row that
+   should bank nothing stays legal.
+10. **The tint row was RETRACTED, not defended.** The first VISUAL-LOG draft
+    filed the frozen cell's pale-blue slab as a POSITIVE "real render tell".
+    It is a shade of the same water tile — same silhouette, no rime, no
+    fracture — which the 2026-08-02 directive says never reads as a separate
+    thing. Re-filed as an open P2 against the art lane. `freeze_cell` is the
+    slice's only walkability flip, so a missed tell is K5 (discovery failure)
+    on the headline interaction, and a row logged as a positive is a row
+    nobody drains.
+11. **The `--touching` gate ran, and "byte-identical" needs a caveat.** All
+    169 derived canonicals green, plus `--tier smoke` (14), plus all 38 unit
+    files, plus the re-captured windowed canonical. On byte-identity: the SIM
+    stream (events minus `ui_*` and `audio_played`) is IDENTICAL base 6b47c0d
+    vs this tree for all four spec-named canonicals — `sewers_walkthrough`
+    118/118, `ward_loop` 30/30, `blink_bypass_loop` 30/30,
+    `field_skills_loop` 45/45, one variant each across 4 runs per tree. The
+    FULL stream is NOT stable enough to compare literally, and that is
+    PRE-EXISTING: base-vs-BASE, `sewers_walkthrough` alternates 213/214
+    events across consecutive runs of the identical tree, and `ward_loop`
+    reached 109 and 111 from the base tree alone. The presentation layer
+    interleaves `ui_*_rendered`/`audio_played` nondeterministically. Anyone
+    re-running the spec's "byte-identical" gate on the raw stream will see
+    red and must not read it as drift — strip presentation events first.
+    Filed as an observation, not W1's defect to fix.
