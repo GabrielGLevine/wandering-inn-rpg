@@ -2616,3 +2616,48 @@ the guard, in the pre-flight tier that runs before any Godot boot.
   shot, and the fourth is the forge's sibling room — the temperature call is
   now measured on both rooms rather than argued from one. `mood_sheet_*` stays
   non-canonical (feel_peek's class, no manifest row).
+
+<!-- v017-close (controller rulings, 2026-08-02/03) -->
+## v0.17 close — controller adjudication block
+
+1. **#350 slotting:** user mid-wave directive; rode as post-L5 rider
+   (dialogue single-writer). Price 20g pre-granted FIRM 2026-08-03.
+2. **L3 STOP Q1 (atmosphere ownership):** moods/map-light DATA re-tune
+   ruled OUT of L3 — must tune on the palette-remapped composed tree.
+   Became rider R2. L3 kept code-side presentation only.
+3. **L3 STOP Q2:** test_audio_data KNOWN_EVENTS edit sanctioned (the
+   whitelist lives with the data); landed as anchored append.
+4. **L2 ownership extension (dispatch):** skill_effects.gd, items.gd,
+   effect_text.gd cooldown hunks granted — no sibling claimed them.
+5. **#339 slotting:** items 1-3 → L5; item 4 → L6; #343 → L5.
+6. **L2 seam prescription REVERSED at the train (core purity):** the
+   WISettings read in start_combat would break autoload-free core —
+   landed as a plain WIGame field + scene-layer pushes (world boot,
+   GAME_LOADED/MAP_CHANGED re-push, settings row, creation prompt).
+   L2's read-once/damage-taken-only contract preserved verbatim.
+7. **L3 promotion Q:** line_display_ab canonical (seed 9);
+   feel_peek_* stay windowed-only utilities (title_peek class — a
+   windowed-only script in the headless sweep would false-fail).
+8. **atmosphere.gd _set_emitter_state refactor DEFERRED:** world.gd's
+   mirror already covers map-declared emitters; cosmetic.
+9. **#347 public title de-initialized** (spoiler-cutoff rule 1, L7
+   catch): "GDI-bestowed" → "system-bestowed" on GitHub surfaces.
+10. **Import rule extended to IMAGE assets** (99-red seam-gate
+    incident): merges delivering new textures need a main-tree
+    --import before any QA re-gate. Folded into the skill.
+11. **Ladder rung-4:** user pre-grant — W5 restores the step next wave
+    via hired_blade_leader; {r1,r2}>r3>r4 assertion stands meanwhile.
+12. **v0.18 wave-1 RATIFIED (user, pre-sleep):** W1 #348-slice-1 / W2
+    #347-prototype-flag / W3 #318 / W4 debt+#359 clock / W5 Wave-D
+    Alchemist+Druid (PRIEST PARKED) + rung-4 + #360 harnesses. W5 sole
+    balance writer. Pre-grants: Pisces re-window (W4), companion
+    respawning prop, #350 20g. All eye/ear verdicts queue for the user
+    with prepared states.
+13. **hook-BLOCK-swallowed-by-tail recurrence (R1 seam commit):** the
+    recorded class bit again; caught same-minute by the rc+log
+    read-back the v0.16.2 lesson mandates. Recovery: moods-row comment
+    trimmed, real commit verified, PR head re-pushed. The lesson text
+    already covers it; no new rule needed.
+14. **R1 lease gate:** gates on visited_own_room (stairs counter), not
+    story progress — keeps two pinned canonicals byte-green. USER
+    CONFIRM queued (morning read).
