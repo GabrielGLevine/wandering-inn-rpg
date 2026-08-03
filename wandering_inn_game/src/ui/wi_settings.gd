@@ -45,6 +45,13 @@ var _combat_speed_step := 0
 var _field_readout_expanded := true
 var _field_readout_choice := false
 var _show_quest_thread := false
+## GH#338 — DEFAULT ON, and deliberately so. Every other knob in this file
+## defaults to the shipped-before behaviour; this one changes it, because the
+## owner asked for clarity-by-default with an immersion off switch (spec's
+## fresh adjudication, a partial supersession of the thread-legibility spec,
+## logged in CHOICE-LOG). Distinct from `_show_quest_thread` above, which is the
+## FIELD-HUD strip and stays default-OFF: this is the JOURNAL sub-row only.
+var _show_quest_hints := true
 
 
 func _ready() -> void:
@@ -64,6 +71,9 @@ func _load_settings() -> void:
 	_field_readout_choice = field_value is bool
 	_field_readout_expanded = bool(field_value) if _field_readout_choice else true
 	_show_quest_thread = bool(_settings.get_value("field_hud", "show_quest_thread", false))
+	# Own section: this is a JOURNAL knob, not a field-HUD one, and the default
+	# is TRUE -- so an absent key must read ON, not OFF.
+	_show_quest_hints = bool(_settings.get_value("journal", "quest_hints", true))
 
 
 func _persist(section: String, key: String, value: Variant) -> void:
@@ -232,6 +242,19 @@ func set_show_quest_thread(value: bool) -> void:
 
 func toggle_show_quest_thread() -> void:
 	set_show_quest_thread(not _show_quest_thread)
+
+
+func show_quest_hints() -> bool:
+	return _show_quest_hints
+
+
+func set_show_quest_hints(value: bool) -> void:
+	_show_quest_hints = value
+	_persist("journal", "quest_hints", value)
+
+
+func toggle_show_quest_hints() -> void:
+	set_show_quest_hints(not _show_quest_hints)
 
 
 

@@ -2130,3 +2130,22 @@ by controller ruling — the plan was the defect, not the implementation.
   Hunted as an easter egg — an EXPLICIT user-granted exception to the
   Vol 7 spoiler cutoff, names only; exact names wiki-verified before
   authoring, never invented.
+<!-- v017-L1 -->
+- **Quest hints default ON (2026-08-02, GH#338, PARTIAL SUPERSESSION)**: the
+  thread-legibility spec's §105-121 anti-trivialization rule is relaxed for
+  ONE surface — a sparse per-beat `hint`, rendered as an indented italic
+  sub-row under its quest line in the journal, shipping DEFAULT ON behind a
+  new "Quest Hints" settings row. The owner asked for clarity by default
+  with an immersion off switch, and that is what this is. Everything else
+  stands: "no floating quest markers, ever"; relay dialogue keeps
+  WHO/WHERE-never-WHAT-TO-DO; the field-HUD "Quest Thread" strip is a
+  separate knob and stays default-OFF; the "Quest updated:" toast and the
+  Leads strip are out of scope (the sim cannot read WISettings, and gating
+  the toast would mean suppressing it in message_layer for no real gain).
+  Hints are SPARSE (5 of 61 beats at ship; test_quests caps the ratio at a
+  quarter so the refused "double 60+ rows of copy" alternative cannot
+  arrive by accretion) and STATIC — state-awareness comes from splitting a
+  beat until each has one actionable condition, never from a conditional
+  hint evaluator. `chieftains_price/price` was re-cut from narration to
+  imperative in the same pass (ruling 6): it reported what had already
+  happened, so an ACTIVE journal line read like a completed one.

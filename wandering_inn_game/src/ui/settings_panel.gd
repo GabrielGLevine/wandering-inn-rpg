@@ -2,7 +2,10 @@ extends CanvasLayer
 
 # a9 #246: 492 fit the 14-row list; the import/export pair (+2 rows at the
 # ~36px pitch) overflowed the parchment (windowed catch) — grown to match.
-const PANEL_SIZE := Vector2(320.0, 648.0)
+# GH#338: +1 row ("Quest Hints") at the same ~36px pitch — same windowed catch,
+# same fix. Any further row here needs the same arithmetic AND a windowed read;
+# the 720px window is the ceiling this can grow to.
+const PANEL_SIZE := Vector2(320.0, 684.0)
 const CONTROLS_PANEL_SIZE := Vector2(620.0, 380.0)
 const HELP_PANEL_SIZE := Vector2(620.0, 530.0)
 ## a4 #216: credits content (5 sections) overflowed the 530-tall help panel —
@@ -24,7 +27,7 @@ const ROWS := [
 	"Master volume", "Music volume", "SFX volume",
 	"Fullscreen", "Text Scale", "Reduce Motion",
 	"Controls...", "Replay Hints", "Help...", "Combat Speed", "Quest Thread", "Credits...",
-	"Export Save", "Import Save...", "Back",
+	"Export Save", "Import Save...", "Quest Hints", "Back",
 ]
 const AUDIO_ROWS := {"Master volume": "Master", "Music volume": "Music", "SFX volume": "SFX"}
 
@@ -566,6 +569,11 @@ func _row_text(i: int) -> String:
 			return "Combat Speed: %s" % WISettings.combat_speed_label()
 		"Quest Thread":
 			return "Quest Thread: %s" % ("On" if WISettings.show_quest_thread() else "Off")
+		# GH#338. Named apart from "Quest Thread" on purpose: that one is the
+		# opt-in FIELD-HUD strip (default OFF), this one is the journal's own
+		# next-step sub-row (default ON), and they switch independently.
+		"Quest Hints":
+			return "Quest Hints: %s" % ("On" if WISettings.show_quest_hints() else "Off")
 		_:
 			return key
 
@@ -584,6 +592,7 @@ func _refresh() -> void:
 		"reduce_motion": WISettings.reduce_motion(),
 		"combat_speed_step": WISettings.combat_speed_step(),
 		"show_quest_thread": WISettings.show_quest_thread(),
+		"show_quest_hints": WISettings.show_quest_hints(),
 	})
 
 
@@ -756,6 +765,9 @@ func _activate_row() -> void:
 			_refresh()
 		"Quest Thread":
 			WISettings.toggle_show_quest_thread()
+			_refresh()
+		"Quest Hints":
+			WISettings.toggle_show_quest_hints()
 			_refresh()
 		"Controls...":
 			_enter_controls()

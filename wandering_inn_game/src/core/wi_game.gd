@@ -1575,6 +1575,26 @@ func quest_summary() -> Array:
 	return out
 
 
+## GH#338 — the hint sub-rows, PARALLEL to `quest_summary()` by index (""
+## wherever the active beat authored no hint). A sibling rather than a widened
+## `quest_summary`, deliberately: that function's Array-of-plain-Strings shape
+## is pinned by consumers outside the journal (field_hotbar's quest-thread
+## strip), and this feature has no business reshaping them.
+##
+## The sim CANNOT read WISettings (purity rule), so the DEFAULT-ON toggle is
+## applied by the journal at render time -- this producer always tells the
+## truth about what the beats authored.
+func quest_hint_lines() -> Array:
+	var catalog: Dictionary = _combat_config.get("quests", {})
+	var out: Array = []
+	var ev := WIQuests.evaluate(catalog, started_quests, accomplishments)
+	for id: String in started_quests:
+		if not ev.has(id) or bool(ev[id]["completed"]):
+			continue
+		out.append(String(ev[id].get("hint", "")))
+	return out
+
+
 func completed_quest_summary() -> Array:
 	var catalog: Dictionary = _combat_config.get("quests", {})
 	var out: Array = []

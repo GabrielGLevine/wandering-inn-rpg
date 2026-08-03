@@ -1575,6 +1575,14 @@ func _validate_travel_beat_place_naming(quests: Dictionary, scene: Dictionary, g
 			# No map produces this counter, so there is no giver-map coincidence
 			# to excuse the beat -- it MUST say where the player has to be.
 			if beat_maps.is_empty():
+				# GH#338, the spec's wave-2 close item. A code-banked beat has
+				# NO producer map anywhere, so its own copy is the only pointer
+				# the player ever gets and nothing in the world confirms it --
+				# precisely the beat class the sparse-hint rule exists for.
+				_check(
+					String(beat.get("hint", "")) != "",
+					"quest %s beat %s is code-banked (no map produces its counters) and MUST carry a `hint`" % [quest_id, String(beat["id"])]
+				)
 				var code_tokens: Array = []
 				var covered := true
 				for accomplishment_id: String in _beat_gate_counters(beat):

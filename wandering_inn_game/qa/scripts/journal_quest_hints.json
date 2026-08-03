@@ -1,0 +1,241 @@
+{
+ "_comment": "GH#338 -- THE quest-hints canonical, and the only script that pins the hint array (spec pin policy). Loads door_awakening_start via title Continue: every earlier beat of The Door That Goes Elsewhere is closed and door_awakened is not banked, so the active beat is `attune`, the ONE code-banked beat in the game -- no map produces its counter, so its own copy is the only pointer a player ever gets, which is exactly the shape the friend's report named. Proves: the payload's new `quest_line_texts`/`quest_hint_lines` keys (the count-only gap closed), the indented sub-row rendering DEFAULT ON, the 'Quest Hints' settings row switching it off with the quest line itself byte-unchanged, and switching it back on. Fixture rng_state governs; seed 9 held for convention.",
+ "fixture_save": "door_awakening_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Continue loads door_awakening_start: every earlier beat of The Door That Goes Elsewhere is banked and door_awakened is not, so the ACTIVE beat is `attune` -- the one code-banked beat in the game and the exact beat the friend's report was about.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "DEFAULT ON. `quest_line_texts` closes the count-only gap (the payload used to carry a bare `quest_lines: 1`); `quest_hint_lines` is parallel to it by index and carries the indented sub-row the panel drew underneath. Pinned VERBATIM -- this is the one canonical that pins the hint array, per the spec's pin policy.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "active_tab": "quests",
+    "quest_lines": 1,
+    "quest_line_texts": [
+     "The Door That Goes Elsewhere — Sleep at the inn while the Door learns the stone — it takes more than one night."
+    ],
+    "quest_hint_lines": [
+     "Take a bed at the inn and sleep. The Door goes on working at the stone while you rest."
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_journal_hint_on"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE OFF SWITCH. Pause -> Settings (row 8) -> a fresh open puts the cursor on 'Master volume' (index 0); down x14 reaches 'Quest Hints' (index 14, appended immediately before 'Back'). Confirm turns it off.",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_pause_row",
+   "row": 8
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 14
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "show_quest_hints": false
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "down x1 -> 'Back' (index 15), confirm closes settings and the pause menu resumes; cancel closes the pause menu.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "HINTS OFF: the quest line is byte-identical and the sub-row is gone. Scope proof, too -- the toggle blanks the journal sub-row and nothing else; `quest_lines` and `quest_line_texts` do not move, and the Leads strip / 'Quest updated:' toast were never in scope (ruling 3).",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "active_tab": "quests",
+    "quest_lines": 1,
+    "quest_line_texts": [
+     "The Door That Goes Elsewhere — Sleep at the inn while the Door learns the stone — it takes more than one night."
+    ],
+    "quest_hint_lines": [
+     ""
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_journal_hint_off"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "...and back ON through the same three-site row, proving the switch is a switch and not a one-way door.",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_pause_row",
+   "row": 8
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 14
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "show_quest_hints": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "payload_contains": {
+    "active_tab": "quests",
+    "quest_hint_lines": [
+     "Take a bed at the inn and sleep. The Door goes on working at the stone while you rest."
+    ]
+   },
+   "timeout_sec": 5
+  }
+ ]
+}

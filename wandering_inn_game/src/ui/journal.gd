@@ -109,6 +109,10 @@ var _body_gesture_drift := 0.0
 var _open_act: Dictionary = {}
 var _open_leads: Array = []
 var _open_quest_lines: Array = []
+## GH#338: parallel to `_open_quest_lines` by index, already gated by the
+## "Quest Hints" setting -- "" means "no sub-row drawn for this quest", whether
+## because the beat authored none or because the player switched them off.
+var _open_quest_hint_lines: Array = []
 var _open_completed_quest_lines: Array = []
 var _open_skill_groups: Array = []
 ## GH#336: the CATEGORIZED, deduped groups the Skills-tab body actually renders
@@ -457,6 +461,7 @@ func _open() -> void:
 	var act: Dictionary = Game.sim.act_summary()
 	var leads: Array = Game.sim.active_leads()
 	var quest_lines: Array = Game.sim.quest_summary()
+	var quest_hints: Array = Game.sim.quest_hint_lines()
 	var completed_quest_lines: Array = Game.sim.completed_quest_summary()
 	var skill_groups: Array = Game.sim.skills_journal()
 	var skill_categories: Array = Game.sim.skills_journal_categories()
@@ -477,6 +482,10 @@ func _open() -> void:
 	_open_act = act
 	_open_leads = leads
 	_open_quest_lines = quest_lines
+	# GH#338: captured PRE-gated (the sim always tells the truth about what the
+	# beats authored); the settings toggle is applied once, here, so the render
+	# and the payload can never disagree about what the player saw.
+	_open_quest_hint_lines = _gated_quest_hints(quest_hints)
 	_open_completed_quest_lines = completed_quest_lines
 	_open_skill_groups = skill_groups
 	_open_skill_categories = skill_categories
@@ -556,6 +565,12 @@ func _open() -> void:
 	# `_emit_journal_shown`.
 	_journal_payload = {
 		"quest_lines": quest_lines.size(),
+		# GH#338 ruling 5: the count-only gap closes. `quest_line_texts` is the
+		# exact rendered quest rows, `quest_hint_lines` their sub-rows (parallel
+		# by index, "" where none drew) -- so QA can pin the strings the panel
+		# actually wrote instead of asserting on a number.
+		"quest_line_texts": quest_lines.duplicate(),
+		"quest_hint_lines": _open_quest_hint_lines.duplicate(),
 		"completed_quest_lines": completed_quest_lines,
 		"skill_groups": headings,
 		"class_aspirations": class_aspiration_lines,
@@ -852,6 +867,21 @@ func _act_beat_lines() -> Array:
 	return lines
 
 
+## GH#338 — apply the "Quest Hints" setting ONCE, at capture. Default ON: the
+## owner asked for clarity by default with an immersion off switch, which is a
+## deliberate partial supersession of the thread-legibility spec (CHOICE-LOG).
+## Scope is the journal sub-row ONLY -- the "Quest updated:" toast and the Leads
+## strip are untouched, because the sim cannot read WISettings and gating the
+## toast would mean suppressing it in message_layer for no real gain (ruling 3).
+func _gated_quest_hints(hints: Array) -> Array:
+	if not WISettings.show_quest_hints():
+		var blanked: Array = []
+		blanked.resize(hints.size())
+		blanked.fill("")
+		return blanked
+	return hints.duplicate()
+
+
 ## v0.15 A2 — the Leads rows as the player reads them: "· <lead_text> (<place>)"
 ## over `WIGame.active_leads()`. Same ONE-source rule as `_act_beat_lines`: the
 ## rendered strip and the `lead_lines` payload key are this list.
@@ -886,8 +916,14 @@ func _build_quests_tab() -> Dictionary:
 	if _open_quest_lines.is_empty():
 		parts.append("No quests in progress." if not _open_completed_quest_lines.is_empty() else "No quests yet.")
 	else:
-		for line: Variant in _open_quest_lines:
-			parts.append(UIChrome.bb_escape(String(line)))
+		for i in _open_quest_lines.size():
+			parts.append(UIChrome.bb_escape(String(_open_quest_lines[i])))
+			# GH#338: the hint rides as an INDENTED sub-row under its own quest
+			# line -- the Postings detail indent, same three spaces, so the two
+			# secondary rows in this tab read as one convention.
+			var hint := String(_open_quest_hint_lines[i]) if i < _open_quest_hint_lines.size() else ""
+			if hint != "":
+				parts.append("   [i]%s[/i]" % UIChrome.bb_escape(hint))
 	parts.append("")
 	if not _open_completed_quest_lines.is_empty():
 		parts.append("[b]Completed[/b]")

@@ -5779,6 +5779,32 @@
      "input"
     ]
    }
+  },
+  {
+   "script": "journal_quest_hints",
+   "seed": 9,
+   "fixture": "door_awakening_start",
+   "note": "GH#338 quest hints: the indented journal sub-row on the one code-banked beat, default ON, switched off and back on from the 'Quest Hints' settings row; the only script that pins quest_hint_lines",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "door_awakening_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "input",
+     "settings"
+    ]
+   }
   }
  ]
 }

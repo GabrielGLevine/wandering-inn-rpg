@@ -32,7 +32,7 @@
 			"id": "cisterns",
 			"title": "Something in the Cisterns",
 			"beats": [
-				{ "id": "resolve", "description": "Settle the nest Olesm marked in the cisterns beneath the market — however you see fit.", "complete_when": { "resolved_the_cisterns": 1 }, "complete_when_any": { "scouted_the_nest": 1 } },
+				{ "id": "resolve", "description": "Settle the nest Olesm marked in the cisterns beneath the market — however you see fit.", "hint": "The way down is the sewer grate off the south square; the cisterns open off the sewers.", "complete_when": { "resolved_the_cisterns": 1 }, "complete_when_any": { "scouted_the_nest": 1 } },
 				{ "id": "report", "description": "Report the outcome to Olesm at the Guild.", "complete_when": { "cisterns_reported": 1 } }
 			],
 			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). All three counters can co-bank -- scout the ledge, then still clear the nest -- and the STRONGER claim must be what the journal records: cleared > swept > scouted.",
@@ -89,10 +89,10 @@
 			"id": "door_that_goes_elsewhere",
 			"title": "The Door That Goes Elsewhere",
 			"beats": [
-				{ "id": "consult", "description": "The Magical Door manages the hop to Liscor but strains at anything farther. Fight what leaks through in the cellar, ask Pisces by the Guild steps, or read the wardwork yourself.", "complete_when": { "door_understood": 1 } },
+				{ "id": "consult", "description": "The Magical Door manages the hop to Liscor but strains at anything farther. Fight what leaks through in the cellar, ask Pisces by the Guild steps, or read the wardwork yourself.", "hint": "Pisces keeps to the Guild steps on Market Street — asking him is the plainest of the three.", "complete_when": { "door_understood": 1 } },
 				{ "id": "buy_catalyst", "description": "Buy the attunement catalyst from Krshia's stall on Market Street in Liscor.", "complete_when": { "bought_catalyst": 1 } },
 				{ "_comment": "GH#334 ruling 15: errand/wait split. H3: door_awakened closes it too.", "id": "deliver_catalyst", "description": "Bring Krshia's catalyst and the anchor stone to Pisces, by the Guild steps on Market Street.", "complete_when_any": { "catalyst_delivered": 1, "door_awakened": 1 } },
-				{ "id": "attune", "description": "Sleep at the inn while the Door learns the stone — it takes more than one night.", "complete_when": { "door_awakened": 1 } }
+				{ "_comment": "GH#338: code-banked, so the hint is mandatory (test_content enforces).", "id": "attune", "description": "Sleep at the inn while the Door learns the stone — it takes more than one night.", "hint": "Take a bed at the inn and sleep. The Door goes on working at the stone while you rest.", "complete_when": { "door_awakened": 1 } }
 			],
 			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). Reading the wardwork and fighting the leak co-bank freely, and the STRONGER claim must win: fought > read. The \"\"-req consult entry is the FALLBACK, not a path -- it answers only when neither counter banked, and its trailing position is convention, not mechanism.",
 			"resolution_paths": [
@@ -303,13 +303,16 @@
 				{
 					"id": "meet",
 					"description": "Someone on the southern floodplains has been watching you. Find out who.",
+					"hint": "Walk the southern floodplains and speak to the scouting party you find out there.",
 					"complete_when": {
 						"met_rags": 1
 					}
 				},
 				{
+					"_comment": "GH#338 ruling 6: was narration, re-cut to the imperative.",
 					"id": "price",
-					"description": "Rags named her trade: medicine for her wounded, a carved piece in return.",
+					"description": "Let Rags name her terms — she is out on the southern floodplains, and she will not send for you twice.",
+					"hint": "Talk with Rags again, out with her scouting party on the southern floodplains.",
 					"complete_when": {
 						"rags_price_named": 1
 					}

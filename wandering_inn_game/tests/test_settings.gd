@@ -18,6 +18,7 @@ func _init() -> void:
 	_check_audio_bus_routing()
 	_check_hint_reset_functions()
 	_check_reduce_motion_gate_sites()
+	_check_quest_hints_persistence()
 	_reset_test_settings_file()
 	print("PASS: settings + accessibility surface (WISettings/WIAudio/hint-replay/reduce-motion) holds")
 	quit(0)
@@ -167,6 +168,45 @@ func _check_settings_persistence() -> void:
 	b.call("set_reduce_motion", false)
 	b.call("set_combat_speed_step", 0)
 	b.free()
+
+
+## GH#338 — "Quest Hints" is the FIRST knob in this file that defaults to ON,
+## which makes its absent-key behaviour load-bearing in a way none of its
+## siblings' is: a `get_value(..., false)` typo would silently ship the feature
+## switched off for every existing player and no other test would notice.
+## Also pinned: its own section, so it cannot collide with the field-HUD
+## "Quest Thread" knob it is deliberately independent of.
+func _check_quest_hints_persistence() -> void:
+	var script := load("res://src/ui/wi_settings.gd")
+	var config := ConfigFile.new()
+	config.load(SETTINGS_PATH)
+	if config.has_section("journal"):
+		config.erase_section("journal")
+	assert(config.save(SETTINGS_PATH) == OK, "quest-hints setup must preserve other settings")
+
+	var fresh = _settings_instance(script)
+	assert(bool(fresh.call("show_quest_hints")) == true,
+		"with NO persisted key, Quest Hints must read ON -- clarity-by-default is the whole ruling")
+	assert(bool(fresh.call("show_quest_thread")) == false,
+		"...and the field-HUD Quest Thread knob stays default-OFF beside it, untouched")
+	fresh.call("toggle_show_quest_hints")
+	assert(bool(fresh.call("show_quest_hints")) == false, "the toggle turns it off")
+	fresh.free()
+
+	var reloaded = _settings_instance(script)
+	assert(bool(reloaded.call("show_quest_hints")) == false,
+		"a fresh instance loads the persisted OFF -- a default-ON knob must still be able to persist false")
+	reloaded.call("set_show_quest_hints", true)
+	reloaded.free()
+
+	var restored = _settings_instance(script)
+	assert(bool(restored.call("show_quest_hints")) == true, "and back ON round-trips too")
+	restored.free()
+
+	var stored := ConfigFile.new()
+	stored.load(SETTINGS_PATH)
+	assert(stored.has_section_key("journal", "quest_hints"),
+		"the knob persists under its own [journal] section, not on top of [field_hud]")
 
 
 func _check_field_readout_persistence() -> void:
