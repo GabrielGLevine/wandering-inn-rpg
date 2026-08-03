@@ -3120,3 +3120,28 @@ remaining PROP/CRATE-READS-AS-CLUTTER members (den-shop receiving dock,
 lift cargo pallet, forge reject bin) and BOARD/CRATE-COVER-READ — all
 want new sprite ids; `line_stalker_a`/`_b` and the `plains_scavenger_*`
 overlap rows are spawn-cell choices in arena data, not art.
+
+<!-- v017-R1 -->
+## 2026-08-02 — #350 the room you buy (rider R1)
+
+**WANTED, art-addressable, NOT blocking**: a `door_named` sprite — a
+guest-room door with a name card in the frame — so the player's own door
+is legible at a glance in the inn's upper hall. Today `hallway_door_a`,
+`hallway_door_b` and `lyonette_door` all draw the SAME `door` sprite in
+one row, and the only ownership tell after the purchase is the door's
+`observe` line swapping through `visual_states`. A tint would not fix
+this (tint is not disambiguation); it wants a distinct silhouette. The
+gate, the copy and the QA proof all ship without it.
+
+**Observed while shooting `player_room_loop` windowed, systemic and not
+this room's to fix**: an interior `sconce` reads as a dark smudge at DAY
+in every room that uses one (`moods.meta.light_energy_by_phase.day` is
+0.0, and the `lights_by_day` opt-out is set on `seal_vault` alone). The
+new room's own sconce is the shipped stationer idiom verbatim, so it
+inherits the same flat daytime read.
+
+**`inn_player_room` composition**: scene_dynamism composite **68.77**
+(c1 21.98 / c2 23.50 / c3 23.30), the highest score in the report's
+interior band — but c2 is inflated: the map has no `REGION_GROUPS` entry
+in `tools/scene_dynamism.gd`, so it scored as its own singleton with
+nothing to be distinct FROM. Seam filed for the train.
