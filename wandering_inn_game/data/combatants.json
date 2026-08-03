@@ -697,7 +697,7 @@
    "skills": []
   },
   {
-   "_comment": "First all-human combatant family (spec sec.2). v0.16.1 #20: combat_scale bands the crew to ~2.0 cells; FIGURE_ROWS measures idle_side alpha-bbox -- re-derive on any sheet change.",
+   "_comment": "First all-human combatant family (spec sec.2). v0.16.1 #20: combat_scale bands the crew to ~2.0 cells; FIGURE_ROWS measures idle_side alpha-bbox -- re-derive on any sheet change. v0.18 W5 RUNG-4: weapon_die 6 -> 8, con untouched; rationale + re-authored windows on sim_combat_batch.gd's rung-2 cell.",
    "id": "hired_blade_leader",
    "power_level": 11.0,
    "display_name": "Hired Blade Captain",
@@ -712,7 +712,7 @@
     "wis": 6,
     "cha": 8
    },
-   "weapon_die": 6,
+   "weapon_die": 8,
    "ai": "melee",
    "skills": [
     "power_strike",
