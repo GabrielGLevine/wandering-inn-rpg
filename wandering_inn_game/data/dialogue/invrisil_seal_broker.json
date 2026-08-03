@@ -1,0 +1,201 @@
+{
+ "_comment": "#318 beat 2, the three-pillar beat, all four forks on ONE node, each with its OWN route counter: block_bought_back (30 gold), block_handed_over ([Charming Smile], no coin), block_lifted ([Stealth]), block_taken (the fight). Fix round 1 split the first two apart (spec section 4). Every non-fight arm also banks the shared seal_block_settled, the ONE gate they all hide on -- hide_when is an AND over one dict, so a shared settle is the only way four forks retire each other. The FIGHT arm commits broker_hands from `the_other_way` and nowhere else.",
+ "start": "table",
+ "nodes": {
+  "table": {
+   "speaker": "A Man with a Rented Table",
+   "text": "Whatever it is, I can have it on paper by this evening and nobody will ever prove I wrote it. That is not a boast. That is the entire business.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_block_settled": 1
+      }
+     },
+     "text": "The block is gone off my table and I am sitting at a table with nothing on it, which in this city is the same as not being here. Go on. Say the thing people say."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "block_taken": 1
+      }
+     },
+     "text": "Two of my men on the paving and my table in the gutter behind them. You could have simply bought it. I would have taken almost anything."
+    }
+   ],
+   "options": [
+    {
+     "text": "\"You've been renting a house's initials.\"",
+     "goto": "named"
+    },
+    {
+     "text": "\"Wrong table.\"",
+     "end": true
+    }
+   ]
+  },
+  "named": {
+   "speaker": "A Man with a Rented Table",
+   "text": "I cut blocks. A block is brass. What a man presses it into is between him and whoever reads the letter. That house has had nothing behind it since before I was born and the name was doing no work at all, so I found it some.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_block_settled": 1
+      }
+     },
+     "text": "You have the block. I have a table and a story about a bad season. Neither of us needs to say any more about it."
+    }
+   ],
+   "options": [
+    {
+     "_comment": "The spend rides the GATE option so _is_priced_purchase fires and the row renders its price token (as on the scribe's 8-gold arm).",
+     "text": "\"Name your price for the block.\"",
+     "requires": {
+      "gold": 30
+     },
+     "hide_when": {
+      "accomplishment": {
+       "seal_block_settled": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -30
+      },
+      {
+       "accomplishment": "block_bought_back"
+      },
+      {
+       "accomplishment": "seal_block_settled"
+      },
+      {
+       "toast": "The brass goes into your pack still warm from his hand. Two initials, cut deep, worth thirty gold and a fallen house's whole remaining credit."
+      }
+     ],
+     "goto": "bought"
+    },
+    {
+     "text": "[Charming Smile] Tell him what the card cost her.",
+     "requires": {
+      "skill": "charming_smile"
+     },
+     "hide_when": {
+      "accomplishment": {
+       "seal_block_settled": 1
+      }
+     },
+     "goto": "talk_pitch"
+    },
+    {
+     "text": "[Stealth] Take it off the table while he is still explaining.",
+     "requires": {
+      "skill": "sneak"
+     },
+     "hide_when": {
+      "accomplishment": {
+       "seal_block_settled": 1
+      }
+     },
+     "goto": "lifted"
+    },
+    {
+     "text": "\"Then it goes the other way.\"",
+     "hide_when": {
+      "accomplishment": {
+       "seal_block_settled": 1
+      }
+     },
+     "goto": "the_other_way"
+    },
+    {
+     "text": "\"Sit there a while longer.\"",
+     "end": true
+    }
+   ]
+  },
+  "bought": {
+   "speaker": "A Man with a Rented Table",
+   "text": "Thirty and it is yours, and you will get no receipt and no complaint. A block anybody has come looking for is a block that has stopped earning. I would rather sell a thing once than be found holding it twice.",
+   "options": [
+    {
+     "text": "\"Thirty, then.\"",
+     "end": true
+    }
+   ]
+  },
+  "talk_pitch": {
+   "speaker": "A Man with a Rented Table",
+   "text": "A card. To her. Cream, was it, and one line on it? I did wonder how far the paper would travel.",
+   "options": [
+    {
+     "text": "\"Far enough that somebody with an estate in this city knows your handwriting now.\"",
+     "goto": "talk_close"
+    }
+   ]
+  },
+  "talk_close": {
+   "speaker": "A Man with a Rented Table",
+   "text": "Then take the brass and take it now, before anybody thinks to ask me where it went. I have been careful for eleven years about which names I borrow and I have never once borrowed upward. Tell them the block was destroyed. Tell them a bad season did it.",
+   "options": [
+    {
+     "_comment": "Banks block_handed_over, NOT block_bought_back: no gold rides this arm, so banking the purchase's counter made the resolution row and the steward's report describe a transaction that never happened.",
+     "text": "\"I'll tell them it was handed over.\"",
+     "effects": [
+      {
+       "accomplishment": "block_handed_over"
+      },
+      {
+       "accomplishment": "seal_block_settled"
+      },
+      {
+       "toast": "He puts the brass in your hand and keeps his own hand out a moment longer, as if the table might want it back."
+      }
+     ],
+     "end": true
+    }
+   ]
+  },
+  "lifted": {
+   "speaker": "A Man with a Rented Table",
+   "text": "The house has had nothing behind it for forty years, and a name doing no work is a name nobody misses, and I would go so far as to say I did that family a kindness, all things considered.",
+   "options": [
+    {
+     "text": "Let him finish the sentence. Walk while he is enjoying it.",
+     "effects": [
+      {
+       "accomplishment": "block_lifted"
+      },
+      {
+       "accomplishment": "seal_block_settled"
+      },
+      {
+       "toast": "The brass is off the cloth and inside your coat before the sentence ends. He talks on to the space where you were standing."
+      }
+     ],
+     "end": true
+    }
+   ]
+  },
+  "the_other_way": {
+   "speaker": "A Man with a Rented Table",
+   "_comment": "The ONLY door to broker_hands: the rig is hidden on an unreachable wall cell, so the fight is a choice made in a conversation and cannot be walked into. start_combat is legal only on an end:true option.",
+   "text": "It can. I keep two men at the mouth of this alley for exactly the conversation you are about to have, and they are paid by the week whether they work or not. Shall I call them, or would you like to look at the brass a while longer first?",
+   "options": [
+    {
+     "text": "\"Call them.\"",
+     "effects": [
+      {
+       "start_combat": "broker_hands"
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "\"The brass, a while longer.\"",
+     "goto": "named"
+    }
+   ]
+  }
+ }
+}
