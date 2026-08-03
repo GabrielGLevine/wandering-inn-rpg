@@ -123,6 +123,13 @@
    ],
    "vignette": 0.3
   },
+  "inn_player_room": {
+   "_comment": "#350: inn's own day/dusk/night ladder, not the corridor pin; sconce = dusk/night warmth; window daylight, no lights_by_day.",
+   "day": [1.0, 1.0, 1.0],
+   "dusk": [0.56, 0.62, 0.76],
+   "night": [0.4, 0.45, 0.62],
+   "vignette": 0.4
+  },
   "inn_upstairs": {
    "_comment": "TIME-INVARIANT. The old pin was the inn's dusk grade verbatim, so it moved with it; a corridor lit by its own sconce. Its `window_blue` decor is dressing, not a light well.",
    "day": [

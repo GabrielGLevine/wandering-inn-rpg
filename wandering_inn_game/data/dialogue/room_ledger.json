@@ -7,6 +7,15 @@
    "text": "The room register. Lyonette's hand, every line ruled straight: names, nights, and three columns of prices that mostly get paid.",
    "text_variants": [
     {
+     "_comment": "#350: FIRST rung on purpose -- later-match-wins, so a tiered player still reads their tier line below.",
+     "requires": {
+      "accomplishment": {
+       "room_purchased": 1
+      }
+     },
+     "text": "Your name has a line of its own in the register now, with the first room past the stairhead written beside it."
+    },
+    {
      "requires": {
       "accomplishment": {
        "room_tier_1": 1
@@ -32,6 +41,30 @@
     }
    ],
    "options": [
+    {
+     "_comment": "#350 THE LEASE, and THE PRICE: 20 lives in this option's text, requires.gold and effects.gold, nowhere else. Sanctioned {gold, accomplishment} compound -- the accomplishment leg HIDES the row until the player has been upstairs, the gold leg greys it visible after. hide_when is meant to be PERMANENT. Authored FIRST, and hidden at near_room_upgrade (no visited_own_room), which is what keeps room_upgrade_loop's and dialogue_numkey_loop's visible-index pins intact.",
+     "text": "Put my name against the first room past the stairhead. (20 gold)",
+     "requires": {
+      "gold": 20,
+      "accomplishment": {
+       "visited_own_room": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "room_purchased": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -20
+      },
+      {
+       "accomplishment": "room_purchased"
+      }
+     ],
+     "goto": "lease_done"
+    },
     {
      "_comment": "Tier chain: each requires the previous, hides once owned. Persistent +1 max HP each via _room_tier_bonus (wi_game.gd).",
      "text": "Have the draughty single properly aired and banked. (25 gold)",
@@ -104,6 +137,16 @@
     },
     {
      "text": "Just checking the rates.",
+     "end": true
+    }
+   ]
+  },
+  "lease_done": {
+   "speaker": "Lyonette",
+   "text": "Lyonette rules the line before she writes in it. \"Paid. First door past the stairhead. The key is yours, the room is yours, and the noise out of the common room is unfortunately also yours.\"",
+   "options": [
+    {
+     "text": "Mine, then.",
      "end": true
     }
    ]

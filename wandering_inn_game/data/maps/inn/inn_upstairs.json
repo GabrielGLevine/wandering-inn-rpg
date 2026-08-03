@@ -185,6 +185,7 @@
    ]
   },
   {
+   "_comment": "#350: the first door past the stairhead is what the register leases. `locked_toast` is HELD VERBATIM (upstairs_walkthrough pins it) and still right -- unbought, this is an anonymous shut door. interactions.gd checks door_when BEFORE the use_skill fallthrough. No owned-door sprite exists yet (VISUAL-LOG row); the observe variant is the ownership tell.",
    "id": "hallway_door_a",
    "kind": "prop",
    "cell": [
@@ -193,7 +194,28 @@
    ],
    "display_name": "A Closed Door",
    "sprite": "door",
-   "locked_toast": "It doesn't budge."
+   "locked_toast": "It doesn't budge.",
+   "observe": "Shut, and the card slot in the frame is empty. Somebody paid for this one once and stopped.",
+   "visual_states": [
+    {
+     "when": {
+      "counter": "room_purchased",
+      "at": 1
+     },
+     "observe": "Your name in the card slot, in Lyonette's ruled hand, and the key for it somewhere in your pack."
+    }
+   ],
+   "door_when": {
+    "requires": {
+     "room_purchased": 1
+    },
+    "to_map": "inn_player_room",
+    "to_cell": [
+     4,
+     5
+    ],
+    "open_toast": "The key turns like it has been waiting to. Your room, and nobody else's."
+   }
   },
   {
    "id": "hallway_door_b",

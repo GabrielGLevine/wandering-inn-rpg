@@ -68,6 +68,7 @@ that were never meant to show up here (uncounted, not a gap).
 | adventurers_rest | adventurers_rest | 69.76 | 24.66 | 23.50 | 21.59 | 0.00 | 0.00 | dynamic |
 | pallass_forge | pallass | 69.66 | 26.17 | 23.96 | 19.54 | 0.00 | 0.00 | dynamic |
 | rags_camp | rags_camp | 68.87 | 22.84 | 23.50 | 19.80 | 2.73 | 0.00 | dynamic |
+| inn_player_room | inn_player_room | 68.77 | 21.98 | 23.50 | 23.30 | 0.00 | 0.00 | dynamic |
 | deep_tunnels | liscor | 68.03 | 23.00 | 22.14 | 20.17 | 2.73 | 0.00 | dynamic |
 | stationer | stationer | 67.96 | 22.06 | 23.50 | 21.77 | 0.62 | 0.00 | dynamic |
 | pallass_den_shop | pallass_den_shop | 67.64 | 23.00 | 23.50 | 20.30 | 0.83 | 0.00 | dynamic |
@@ -90,5 +91,5 @@ that were never meant to show up here (uncounted, not a gap).
 | ruin_surface | liscor | 59.90 | 21.10 | 22.00 | 16.80 | 0.00 | 0.00 | dynamic |
 
 NOTE: map(s) with no region-group table entry (defaulted to their own
-singleton group, not a crash): ["rags_camp", "adventurers_rest", "stationer", "pallass_den_shop", "pallass_forge_hall", "riverfarm_mill", "witch_hut"]
+singleton group, not a crash): ["rags_camp", "inn_player_room", "adventurers_rest", "stationer", "pallass_den_shop", "pallass_forge_hall", "riverfarm_mill", "witch_hut"]
 

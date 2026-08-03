@@ -2456,6 +2456,43 @@ by controller ruling — the plan was the defect, not the implementation.
   before the emit, `ui_slot_info_rendered` now carries the string the
   player actually sees, which is what makes it gateable at all
   (qa/scripts/combat_move_input.json + 03_power_strike_slot_info.png).
+<!-- v017-R1 -->
+- **The player's room costs 20 gold, and the free bed stays free
+  (2026-08-02, #350, rider R1)**: the lease sits on the room register
+  (`room_ledger`, Lyonette's own conversation surface — commerce never
+  rides a pinned hub) at 20 gold, one rung UNDER the 25-gold tier-1
+  comfort upgrade already on that hub. Deliberate ordering, not an
+  oversight: 20 buys a door and a key on a nearly empty inn, 25 buys the
+  bedding behind it, and the register reads as a price list with a cheap
+  entry rather than a wall. The economy context is the 9-gold ledger
+  floor and the ~82-gold travel tier, so this lands as an early-midgame
+  ask a chore run can close. THE PRICE LIVES IN ONE PLACE:
+  `room_ledger.json`'s lease option (its text, `requires.gold` and
+  `effects.gold`) — a re-rule is a three-number edit in one option plus
+  the `player_room_loop` fixture's starting gold (19, one short) and its
+  two gold pins. Controller may re-rule freely; nothing else reads 20.
+  In particular NO prose spells the number: the exit door's `observe`
+  said "what the twenty gold bought" in the first pass and was cut to
+  "what the lease bought" (fix wave), because a price spelled in WORDS
+  survives every `grep '20'` a re-rule runs and ships stale.
+- **The lease gates on `visited_own_room`, not on story progress
+  (2026-08-02, #350)**: the sanctioned `{gold, accomplishment}` compound,
+  with the accomplishment leg naming the counter the STAIRS bank. A
+  player who has been up to the inn's upper floor once can rent a room
+  there; nobody else sees the row. It is an in-fiction gate rather than
+  an arbitrary quest gate, and it is what keeps `room_upgrade_loop` and
+  `dialogue_numkey_loop` byte-green: `near_room_upgrade` never went
+  upstairs, so the new row is hidden at that fixture and no visible
+  index moves.
+- **The bought room is a NEW map, and `your_bed` is untouched
+  (2026-08-02, #350)**: `inn_player_room` hangs off `inn_upstairs`'s
+  first hallway door (`hallway_door_a`, `door_when` on `room_purchased`),
+  rather than walling off part of the existing hall. Partitioning the
+  hall was rejected on the merits: every candidate wall put the inn's
+  ONLY bed behind the paywall, which would have taken free sleep away
+  from a player who never buys. The leased room ships its own bed as a
+  SECOND sleep site with its own `sleep_toast` ladder, so the room tiers
+  stay audible once a tiered player finally has a door.
 
 <!-- v017-R2 -->
 ## 2026-08-02 — v0.17 R2: moods/atmosphere re-tune (post-palette rider)

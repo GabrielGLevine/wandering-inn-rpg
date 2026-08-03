@@ -1,0 +1,286 @@
+{
+ "_comment": "#350: the leased room behind inn_upstairs' hallway_door_a (gated on room_purchased). Walk-in only, no portals row; biome, sprites and floor swatch all reused. Perimeter is walls.segments with a gap at (4,6) for the exit door, so wall cells are never also in `blocked`; `blocked` is empty because nothing here reads solid.",
+ "_comment_mood": "NO data/moods.json row yet (that file is the moods lane's this wave), so the grade is identity white at EVERY phase and no gate can catch it -- the row to add is queued verbatim in .lane-progress SEAM 1. player_room_loop's 07_room_night shot is the standing eye-check.",
+ "biome": "inn",
+ "interior_flavor": "Nothing there — just your own four walls, and the particular quiet of a room nobody else is paying for.",
+ "grid": {
+  "width": 9,
+  "height": 7
+ },
+ "blocked": [],
+ "floor_layers": [
+  {
+   "_pick": "The pale swept board [16,21]/[17,21] the inn's own upstairs uses for its bedroom corner, so the room you bought is floored like the corner that was already yours. Same sheet, same licence, same wood footsteps.",
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     16,
+     21
+    ],
+    [
+     17,
+     21
+    ]
+   ],
+   "cells": "all"
+  },
+  {
+   "_pick": "One warmer plank band under the bed wall, from the inn's hall swatch, so the room is not one flat tone edge to edge.",
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16,
+   "variants": [
+    [
+     1,
+     21
+    ],
+    [
+     2,
+     22
+    ]
+   ],
+   "cells": {
+    "rect": [
+     1,
+     1,
+     3,
+     2
+    ]
+   }
+  }
+ ],
+ "walls": {
+  "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+  "tile_px": 16,
+  "segments": [
+   {
+    "from": [
+     0,
+     0
+    ],
+    "to": [
+     8,
+     0
+    ],
+    "cap": [
+     14,
+     6
+    ],
+    "face": [
+     14,
+     7
+    ]
+   },
+   {
+    "from": [
+     0,
+     1
+    ],
+    "to": [
+     0,
+     6
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     8,
+     1
+    ],
+    "to": [
+     8,
+     6
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     1,
+     6
+    ],
+    "to": [
+     3,
+     6
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   },
+   {
+    "from": [
+     5,
+     6
+    ],
+    "to": [
+     7,
+     6
+    ],
+    "cap": [
+     14,
+     6
+    ]
+   }
+  ]
+ },
+ "decor": [
+  {
+   "sprite": "sconce",
+   "cell": [
+    3,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.82,
+     0.55
+    ],
+    "energy": 0.8,
+    "radius": 32,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "window_blue",
+   "cell": [
+    5,
+    1
+   ]
+  },
+  {
+   "sprite": "rug_woven_red",
+   "cell": [
+    3,
+    3
+   ]
+  },
+  {
+   "sprite": "stool",
+   "cell": [
+    6,
+    2
+   ]
+  },
+  {
+   "sprite": "plant_pot",
+   "cell": [
+    7,
+    5
+   ]
+  }
+ ],
+ "ambience": [
+  {
+   "preset": "dust_motes",
+   "rect": "all",
+   "phase": [
+    "dusk",
+    "night"
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "id": "player_room_exit",
+   "kind": "door",
+   "cell": [
+    4,
+    6
+   ],
+   "display_name": "Out to the Hall",
+   "sprite": "door",
+   "to_map": "inn_upstairs",
+   "to_cell": [
+    3,
+    2
+   ],
+   "observe": "The hall on the other side, and a bolt on this side. The bolt is most of what the lease bought."
+  },
+  {
+   "_comment": "Second sleep site. `your_bed` upstairs is NOT moved or gated: a player who never leases keeps the free bed. Ladder rungs ascend, highest satisfied wins.",
+   "id": "player_room_bed",
+   "kind": "prop",
+   "cell": [
+    1,
+    1
+   ],
+   "display_name": "Your Bed",
+   "sprite": "bed",
+   "sleep": true,
+   "sleep_toast": [
+    {
+     "when": {},
+     "text": "Your own room, and a door you can shut behind you."
+    },
+    {
+     "when": {
+      "room_tier_1": 1
+     },
+     "text": "Your own room, and bedding aired for you rather than for whoever comes next."
+    },
+    {
+     "when": {
+      "room_tier_3": 1
+     },
+     "text": "Your own room, the best bedding in the house, and a shut door between you and all of Liscor."
+    }
+   ],
+   "observe": "Made up tight, corners squared. Lyonette did that, and she will know if you undo it badly."
+  },
+  {
+   "id": "player_room_chest",
+   "kind": "prop",
+   "cell": [
+    2,
+    1
+   ],
+   "display_name": "Your Footlocker",
+   "sprite": "chest",
+   "locked_toast": "Your own footlocker. Nothing in it yet that needs a key.",
+   "observe": "A plain footlocker at the head of the bed, hasp and no lock. Everything you own would rattle around in it."
+  },
+  {
+   "id": "player_room_desk",
+   "kind": "prop",
+   "cell": [
+    6,
+    1
+   ],
+   "display_name": "A Writing Desk",
+   "sprite": "library_desk",
+   "locked_toast": "The desk is yours to use. Nothing on it yet is asking to be done.",
+   "observe": "A narrow desk under the window, one drawer, and a pale ring where somebody set a cup down for a whole winter."
+  },
+  {
+   "id": "player_room_shelf",
+   "kind": "prop",
+   "cell": [
+    7,
+    1
+   ],
+   "display_name": "A Shelf, Mostly Empty",
+   "sprite": "library_shelf",
+   "locked_toast": "Nothing on the shelves yet. Give it a season.",
+   "observe": "Three shelves and you have filled none of them. Depending on the hour that is a sad thing or a hopeful one."
+  },
+  {
+   "id": "player_room_pegs",
+   "kind": "prop",
+   "cell": [
+    7,
+    3
+   ],
+   "display_name": "A Row of Pegs",
+   "sprite": "hat_stand",
+   "locked_toast": "You hang the day's coat and it stays hung. It is a small thing and it is not nothing.",
+   "observe": "Pegs worn pale at the shoulder height of forty travellers who hung a coat here and went away again."
+  }
+ ]
+}

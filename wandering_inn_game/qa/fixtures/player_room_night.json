@@ -1,0 +1,46 @@
+{
+ "_comment": "#350 fix wave. player_room_loop's NIGHT leg, installed mid-run into the manual slot and reloaded via the pause->Load idiom (thread_lattice_loop precedent). Identical to player_room_start EXCEPT: the lease is already bought (room_purchased, gold spent to 0), the player STANDS in the leased room at its arrival cell (4,5), and actions_since_sleep is 901 -- one past moods.json meta.phase_thresholds.night (900), so the room loads at NIGHT with its sconce at full energy. Reaching night by walking would cost 900 real actions; this is the cheap, deterministic way to put a human eye on the only phase where a missing mood row is loud. rng_state is seed 9's derived state (inert -- no fight resolves here); version 8.",
+ "version": 8,
+ "state": {
+  "current_map": "inn_player_room",
+  "player_cell": [
+   4,
+   5
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 2
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "reached_liscor": 1,
+   "visited_own_room": 1,
+   "room_purchased": 1
+  },
+  "player_skills": [
+   "basic_cleaning",
+   "observe"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": {
+   "weapon": "",
+   "armor": ""
+  },
+  "container_state": {},
+  "gold": 0,
+  "actions_since_sleep": 901,
+  "rng_state": "-6393592048753323481",
+  "hotbar_loadout": []
+ }
+}

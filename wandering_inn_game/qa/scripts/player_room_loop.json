@@ -1,0 +1,937 @@
+{
+ "_comment": "#350: the room you buy. ONE loop over the whole feature -- the shut door before a coin is spent, the register's lease rendered LOCKED at 19 gold (exact option array, the can-fail proof), a real 1-gold earn, the purchase, the SAME door opening on the same key, the bed's own sleep beat, and a pause Save/Load round trip that walks out of the room first so the load has to put you back in it. Closes on a post-load round trip in both directions, then a NIGHT leg (second fixture, swapped in and reloaded) so the room is read after dark and not only in daylight. Fixtures player_room_start + player_room_night; no combat anywhere, so seed 9 is convention only (the fixtures' own rng_state governs).",
+ "fixture_save": "player_room_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Title's default row is New Game -- down 1 to Continue, which loads the fixture-seeded manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn_upstairs"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    2
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 19
+  },
+  {
+   "_comment": "== (1) THE GATE, SHUT == the fixture opens bumped into hallway_door_a at (3,1) with room_purchased at 0. door_when is unmet, so the prop falls through interactions.gd's use_skill('') arm to its own locked_toast, which is HELD VERBATIM from before this issue. Nothing transitions.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_unknown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "It doesn't budge."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "observe"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "observe",
+    "target": "hallway_door_a"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Shut, and the card slot in the frame is empty. Somebody paid for this one once and stopped."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_door_shut"
+  },
+  {
+   "_comment": "== DOWN TO THE REGISTER == (3,2) left1 -> (2,2), up1 -> (2,1), left1 -> (1,1), down1 blocks on stairs_down (1,2) and faces it. Same approach upstairs_walkthrough uses.",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    1
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     1,
+     7
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Landing (1,7) -> the register's approach (10,4): up2, right5, up1, right4. Row 5's guest seats are all EMPTY at this fixture (no chatted_with_* counters, so WIInnGuests seats nobody), which is what keeps this route open.",
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    4
+   ]
+  },
+  {
+   "_comment": "The ledger at (10,5) blocks the step, so the bump only sets facing.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    4
+   ]
+  },
+  {
+   "_comment": "== (2) REFUSAL BEFORE GOLD == the lease rides the sanctioned {gold, accomplishment} compound: visited_own_room is banked so the row is VISIBLE, 19 gold is one short so it renders LOCKED with its own price reason. EXACT option array = the can-fail proof (the three tier rows are hidden here, resolved_wrong_order being absent).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "room_ledger"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lyonette",
+    "options": [
+     {
+      "text": "Put my name against the first room past the stairhead. (20 gold)",
+      "locked": true,
+      "requirement": "costs 20 gold"
+     },
+     {
+      "text": "Just checking the rates.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_lease_locked"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 19
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "room_purchased"
+   }
+  },
+  {
+   "_comment": "== THE LAST COIN == up1 -> (10,3), up1 blocks on the laden tray (10,2) and faces it. A plain interact banks delivered_item and pays 1 ([Helper] gains on cleaned_the_inn, not this, so the sleep later stays quiet).",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You carry the laden tray out to the tables."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 20
+  },
+  {
+   "_comment": "== (3) THE PURCHASE == back to (10,4) and bump the ledger again. Same two rows, the lease now SELECTABLE -- the second half of the gate pair.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    10,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "room_ledger"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lyonette",
+    "options": [
+     {
+      "text": "Put my name against the first room past the stairhead. (20 gold)",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Just checking the rates.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "room_purchased"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Lyonette",
+    "text": "Lyonette rules the line before she writes in it. \"Paid. First door past the stairhead. The key is yours, the room is yours, and the noise out of the common room is unfortunately also yours.\""
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.room_purchased",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "02_lease_paid"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== BACK UPSTAIRS == (10,4) left2 -> (8,4), down3 -> (8,7), left7 -> (1,7), down1 blocks on stairs_up (1,8) and faces it.",
+   "action": "move",
+   "direction": "left",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     1,
+     1
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "_comment": "== (4) THE GATE, OPEN == same cell, same key, same entity. The observe swings to its room_purchased visual_states variant (the ownership tell -- no owned-door sprite exists yet), then the interact takes door_when's arm instead of the locked one.",
+   "action": "press_field_skill",
+   "skill": "observe"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "observe",
+    "target": "hallway_door_a"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Your name in the card slot, in Lyonette's ruled hand, and the key for it somewhere in your pack."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The key turns like it has been waiting to. Your room, and nobody else's."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_player_room",
+    "cell": [
+     4,
+     5
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "inn_player_room"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "9x7 grid = 63 floor cells. blocked_cells is the static-list + wall-segment union only (entity cells were never counted): 9 north + 6 west + 6 east + the two south runs of 3 either side of the (4,6) door gap = 27, and `blocked` itself is empty.",
+   "action": "wait_for_event",
+   "type": "ui_map_rendered",
+   "payload_contains": {
+    "map": "inn_player_room",
+    "floor_cells": 63,
+    "blocked_cells": 27
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "6 entities (exit door, bed, footlocker, desk, shelf, pegs) + the PC's own sprite = 7.",
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 7,
+    "fallbacks": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_room_day"
+  },
+  {
+   "_comment": "== (5) THE BED == arrival (4,5) left3 -> (1,5), up3 -> (1,2), already facing up into the bed at (1,1). The sleep_toast ladder's BASE rung speaks (no room_tier_* banked), then sleep()'s own stream.",
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    2
+   ]
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "observe"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "observe",
+    "target": "player_room_bed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Made up tight, corners squared. Lyonette did that, and she will know if you undo it badly."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Your own room, and a door you can shut behind you."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "You sleep soundly."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 1
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_room_after_sleep"
+  },
+  {
+   "_comment": "== (6) PERSISTENCE == pause-Save into slot 1 (ROWS[1] -> picker -> default row), the board_loop affordance.",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "save"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Game saved."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_save_exists",
+   "slot": "manual"
+  },
+  {
+   "_comment": "Walk OUT before loading, so the load has real work to do: (1,2) down3 -> (1,5), right3 -> (4,5), down1 blocks on the exit door (4,6) and faces it.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     3,
+     2
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn_upstairs"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn_player_room"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    2
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.room_purchased",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 0
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "05_room_after_load"
+  },
+  {
+   "_comment": "== (7) THE GATE STILL HONOURS THE FLAG AFTER A LOAD == out through the exit door, then straight back in through hallway_door_a. Both legs re-emit their own toasts, so the since-marker matches the SECOND occurrence, not the first.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     3,
+     2
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The key turns like it has been waiting to. Your room, and nobody else's."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_player_room",
+    "cell": [
+     4,
+     5
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "06_reentry"
+  },
+  {
+   "_comment": "== (8) THE ROOM AFTER DARK == every leg above lands on DAY (the fixture starts at 0 actions and the bed resets the clock), so without this the room is only ever shot in daylight and its night read ships unseen. Swap in player_room_night (room_purchased banked, standing at the arrival cell, actions_since_sleep 901 = one past the night threshold) and reload it via the pause->Load idiom, the thread_lattice_loop technique. Walking to night would cost 900 actions. This shot is the standing eye-check on the map's mood grade: while data/moods.json carries NO inn_player_room row (moods lane, see .lane-progress SEAM 1) the room renders identity-white here with its sconce at full energy, which is exactly what a human reader must be able to see.",
+   "action": "install_fixture",
+   "fixture": "player_room_night",
+   "slot": "manual"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The mood APPLY is assertable; the grade it applies is not (ui_mood_applied carries map+phase only). So this pins the phase the shot below was taken at, and the pixel evidence carries the rest.",
+   "action": "wait_for_event",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "inn_player_room",
+    "phase": "night"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn_player_room"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    5
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "07_room_night"
+  }
+ ]
+}
