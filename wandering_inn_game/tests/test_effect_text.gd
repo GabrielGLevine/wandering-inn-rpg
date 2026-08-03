@@ -96,7 +96,7 @@ const EXPECTED_SKILLS := {
 	"basic_cleaning": [],
 	"basic_swordwork": ["+5 to hit"],
 	"tough_body": ["+10 max HP"],
-	"power_strike": ["3 AP — ×2 damage"],
+	"power_strike": ["3 AP — ×2 damage. Once every 2 rounds."],
 	"counter_strike": ["Strike back for ×0.8 damage when hit in melee."],
 	"battle_momentum": ["+1 AP when you down a foe"],
 	"flame_bolt": ["2 AP — damage 1d6 at range 4. Burns."],
@@ -115,10 +115,10 @@ const EXPECTED_SKILLS := {
 	"piercing_strikes": ["2 AP — ×1.4 damage"],
 	"quick_slash": ["1 AP — ×0.7 damage"],
 	"flash_cut": ["2 AP — ×1.4 damage"],
-	"devastating_slash": ["4 AP — ×2.6 damage"],
-	"triple_thrust": ["3 AP — ×2 damage"],
+	"devastating_slash": ["3 AP — ×2.6 damage. Once every 2 rounds."],
+	"triple_thrust": ["3 AP — ×2 damage. Once every 2 rounds."],
 	"extended_sweep": ["2 AP — ×1.3 damage"],
-	"spear_flurry": ["4 AP — ×2.6 damage"],
+	"spear_flurry": ["3 AP — ×2.6 damage. Once every 2 rounds."],
 	"ice_shard": ["2 AP, 3 MP — damage 1d6 at range 4"],
 	"icy_floor": ["2 AP, 4 MP — glaze a 3×3 patch of ground at range 3 for 2 rounds. Slows."],
 	"flame_scythe": ["2 AP, 4 MP — damage 1d6 at range 1"],
@@ -126,7 +126,7 @@ const EXPECTED_SKILLS := {
 	"flame_pillar": ["3 AP, 5 MP — blast a 3×3 area around the target for 1d6. Hits friend and foe."],
 	"slam": ["4 AP — blast a 3×3 area around the target for 1d6 after a round's gathering. Hits friend and foe. Roots."],
 	"keener_edge": ["2 AP — ×1.6 damage"],
-	"spellbound_strike": ["4 AP, 3 MP — ×3 damage"],
+	"spellbound_strike": ["3 AP, 3 MP — ×3 damage. Once every 2 rounds."],
 	"lesser_stamina": [],
 	"low_grade_synthesis": [],
 	"cleansing_heat": [],
@@ -144,9 +144,9 @@ const EXPECTED_SKILLS := {
 	"charming_smile": [],
 	"calming_touch": ["2 AP — damage 1d6 at range 1. Slows."],
 	"raskghar_maul": ["3 AP — damage 1d6 at range 2. Slows. Weakens."],
-	"power_shot": ["3 AP — ×2 damage"],
+	"power_shot": ["3 AP — ×2 damage. Once every 2 rounds."],
 	"quick_nock": ["1 AP — ×0.7 damage"],
-	"piercing_shot": ["3 AP — damage everything in a line 4 cells long"],
+	"piercing_shot": ["3 AP — damage everything in a line 4 cells long. Once every 2 rounds."],
 	"keen_eye": [],
 	"directed_strike": ["2 AP — ×1.6 damage"],
 	"flanking_step": ["+1 move cell every turn"],
@@ -158,8 +158,8 @@ const EXPECTED_SKILLS := {
 	"find_trap": [],
 	"disarm_trap": [],
 	"sudden_strike": ["2 AP — ×1.8 damage. Once per fight."],
-	"called_shot": ["3 AP — ×2.2 damage"],
-	"piercing_volley": ["4 AP — damage everything in a line 5 cells long"],
+	"called_shot": ["3 AP — ×2.2 damage. Once every 2 rounds."],
+	"piercing_volley": ["3 AP — damage everything in a line 5 cells long. Once every 2 rounds."],
 	"flame_dart": ["2 AP, 3 MP — damage 1d6 at range 4"],
 	"perfect_hospitality": [],
 	"steady_draw": ["+8 to hit"],
@@ -201,7 +201,7 @@ const EXPECTED_SKILLS := {
 	"flashfire_spellcraft": ["Your first spell each turn costs 1 less AP."],
 	"blinding_arrow": ["2 AP — ×1.2 damage. Weakens."],
 	"shadowstep": ["+2 move cells every turn"],
-	"phantom_barrage": ["3 AP — damage everything in a line 4 cells long"],
+	"phantom_barrage": ["3 AP — damage everything in a line 4 cells long. Once every 2 rounds."],
 	"trusted_voice": [],
 	"barmaids_prescience": [],
 	"swift_service": ["+1 move cell every turn"],
@@ -244,6 +244,7 @@ func _init() -> void:
 	_test_status_exact()
 	_test_tripwires()
 	_test_pending_meal_line()
+	_test_cooldown_clause()
 	_test_forbidden_vocab()
 	print("PASS: WIEffectText generates every shipped line in visible currency only")
 	quit(0)
@@ -455,6 +456,43 @@ func _test_tripwires() -> void:
 		WIEffectText.status_line("burning", burn_catalog) == "Burning — takes 5 damage at the end of each round for 2 rounds.",
 		"burning status tripwire: tick_damage and duration follow the catalog"
 	)
+
+
+## GH#337 ruling 5. A cooldown is a COMBAT resource of the same class as AP and
+## MP, so the card is allowed to say it -- the opaque-until-sleep lock governs
+## PROGRESSION text. The clause is generated from the record (never hand-composed
+## at a call site), and it has to be true to the ABSOLUTE-stamp semantics: `round
+## + N` means unusable for N rounds counting the one it was used in.
+func _test_cooldown_clause() -> void:
+	_check(WIEffectText.cooldown_clause(0) == "Once per round.", "a non-positive count degrades to the tightest true statement")
+	_check(WIEffectText.cooldown_clause(1) == "Once per round.", "N=1 only forbids a second cast inside the same turn")
+	_check(WIEffectText.cooldown_clause(2) == "Once every 2 rounds.", "N=2 is the every-other-turn rhythm the milestone is for")
+	_check(WIEffectText.cooldown_clause(3) == "Once every 3 rounds.", "cooldown clause tripwire: the count moves")
+	var cd_skill := {"ap_cost": 3, "effect": {"type": "damage_mult", "mult": 2.0}}
+	_check(WIEffectText.skill_effect_lines(cd_skill) == ["3 AP — ×2 damage"], "no cooldown_rounds row: byte-identical to before GH#337")
+	cd_skill["cooldown_rounds"] = 0
+	_check(WIEffectText.skill_effect_lines(cd_skill) == ["3 AP — ×2 damage"], "an explicit 0 is still no clause")
+	cd_skill["cooldown_rounds"] = 2
+	_check(
+		WIEffectText.skill_effect_lines(cd_skill) == ["3 AP — ×2 damage. Once every 2 rounds."],
+		"the clause rides the once_per_fight idiom, appended to the generated line"
+	)
+	cd_skill["effect"]["applies"] = {"weakened": {"duration_rounds": 2}}
+	_check(
+		WIEffectText.skill_effect_lines(cd_skill) == ["3 AP — ×2 damage. Weakens. Once every 2 rounds."],
+		"status verb first, cooldown after -- effect then restriction"
+	)
+	cd_skill["effect"].erase("applies")
+	cd_skill["once_per_fight"] = true
+	_check(
+		WIEffectText.skill_effect_lines(cd_skill) == ["3 AP — ×2 damage. Once every 2 rounds. Once per fight."],
+		"the two restrictions stay distinct concepts (spec ruling 4) and both speak"
+	)
+	# The LIVE half, for a slot cooling right now.
+	_check(WIEffectText.cooldown_recovering_line(0) == "", "a ready slot says nothing")
+	_check(WIEffectText.cooldown_recovering_line(-1) == "", "a negative count says nothing")
+	_check(WIEffectText.cooldown_recovering_line(1) == "Recovering — ready next round.", "one round left names the round, not a bare 1")
+	_check(WIEffectText.cooldown_recovering_line(2) == "Recovering — ready in 2 rounds.", "recovering-line tripwire: the count moves")
 
 
 func _test_forbidden_vocab() -> void:

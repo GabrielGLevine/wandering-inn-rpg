@@ -302,6 +302,11 @@ func _show_combat() -> void:
 	_mode = Mode.WAIT_AI
 	_hud.clear_feed()
 	_view = load("res://src/combat/combat_view.gd").new(_combat())
+	# GH#337: the composition root hands the live fight to the HUD so the action
+	# bar can read THE cooldown predicate (`WICombat.cooldown_remaining`) rather
+	# than keep a second copy of the rule. Paired with the clear in
+	# `_teardown_board` -- the HUD outlives any one fight.
+	_hud.set_combat(_combat())
 	_targeting = load("res://src/combat/targeting_controller.gd").new(_view, self)
 	_board_renderer.build(_view, main_ref)
 	_announce_allies()
@@ -749,9 +754,20 @@ func _activate_bar_slot(index: int) -> void:
 				_mode = Mode.DASH_CONFIRM
 		"skill":
 			var skill_id := String(slot["id"])
+			# GH#337: a slot the sim will refuse still gets to EXPLAIN itself.
+			# Pressing an unaffordable skill has always been a silent no-op, which
+			# was tolerable while the only two reasons were AP and MP -- both of
+			# them permanently on screen in the readout head, so the player could
+			# always work it out. A cooldown is not on screen anywhere else, so the
+			# press now moves the info line onto that slot ("... — Recovering —
+			# ready in 2 rounds.") WITHOUT arming targeting and without spending
+			# anything. Discovered by windowed read, not by a test: the clause
+			# `_slot_info_line` generates was literally unreachable through the UI
+			# because the only press that renders it was gated behind the very
+			# affordability check it exists to explain.
+			_info_slot_index = index
 			if _hud.skill_affordable(c, skill_id, _view):
 				_bar_index = index
-				_info_slot_index = index
 				_mode = Mode.SKILL_TARGET
 				_targeting.enter(Mode.SKILL_TARGET, skill_id)
 		"end_turn":
@@ -935,6 +951,7 @@ func _teardown_board() -> void:
 	_mode = Mode.INACTIVE
 	_root.hide()
 	_board_renderer.clear()
+	_hud.set_combat(null)  # GH#337: never hold a finished fight's ledger
 	ObservableBus.emit_domain_event(WIEvents.UI_COMBAT_HIDDEN, {})
 
 

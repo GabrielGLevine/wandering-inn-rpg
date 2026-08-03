@@ -12,6 +12,22 @@ const DASH_GAIN := 3
 const WEAKENED_MULT := 0.75
 const GUARDED_MULT := 0.75
 
+## GH#337 skill cooldowns. The skills.json field name lives HERE rather than in
+## `WIKeys` because it is a combat-only knob with exactly three readers (this
+## file, `combat_hud.gd`'s slot record, `WIEffectText`'s clause) -- the same
+## call every other combat-local key already makes ("statuses", "hit_bonus",
+## "expires_after_round").
+##
+## SEMANTICS, and they are the whole design: a stamp is ABSOLUTE
+## (`round_number + cooldown_rounds`, the terrain/status expiry idiom -- no tick
+## loop exists and none is wanted), so `cooldown_rounds: N` means "unavailable
+## for N rounds COUNTING the round it was used in". N=1 therefore only forbids a
+## second cast inside the SAME turn (meaningful for a cheap skill a 4-AP turn
+## could fire twice); N=2 is the real alternation knob -- used on round R, ready
+## again on R+2, i.e. exactly one of your own turns skipped. Nothing shipped
+## carries N>2.
+const COOLDOWN_ROUNDS := "cooldown_rounds"
+
 var grid_size: Vector2i
 var blocked: Dictionary = {}
 var combatants: Dictionary = {}
@@ -27,6 +43,32 @@ var arena_id := ""
 var action_tally: Dictionary = {}
 var used_skills_tally: Dictionary = {}
 var terrain: Dictionary = {}
+
+## GH#337: actor id -> {skill id -> the round number it becomes usable again}.
+## Written ONLY by `spend_skill_costs` (and `_resolve_windup` for the two-beat
+## skills, which stamp at RESOLUTION, not declaration) and read ONLY through
+## `skill_available`/`cooldown_remaining`. Never purged: an absolute stamp
+## simply stops being in the future, so there is nothing to expire. Never
+## save-serialized -- `WISave.serialize` carries no `combat` field at all, and a
+## fresh `WICombat` per encounter clears the ledger by construction.
+var cooldowns: Dictionary = {}
+
+## GH#345 rider (v0.17). L1 owns the settings getter and its semantics
+## (`WISettings.difficulty_damage_taken_mult`, whose own doc comment is the
+## contract this implements); this lane owns the apply site, and the apply site
+## has to live in the sim because the sim is where damage is dealt.
+##
+## INJECTED, never read: the PURITY RULE forbids this class from touching an
+## autoload, so the composition root sets this field once, right after the
+## `WICombat` is built and exactly where equipment mods are read. That is also
+## the whole "safe mid-save" answer L1's contract asks for -- a player may move
+## the row at any time, and because nothing re-reads it mid-fight the change
+## lands on the NEXT fight rather than halfway through a live one.
+##
+## Default 1.0 IS Silver IS the shipped balance, so every balance cell, every
+## QA fixture and every test that constructs a WICombat directly stays
+## byte-identical by construction.
+var difficulty_damage_taken_mult := 1.0
 
 var windups: Dictionary = {}
 
@@ -327,6 +369,15 @@ func use_skill(skill_id: String, target_id: String) -> bool:
 		return false
 	if skill_spent(actor_id, skill_id):
 		return false
+	if not skill_available(actor_id, skill_id):
+		# Defensive, not a live path: the bar dims a cooling slot
+		# (`combat_hud.skill_affordable`) so it can't be pressed, and every AI
+		# arm tests `skill_available` before it commits. The refusal rides the
+		# shipped ACTION_REFUSED render arm so that IF the gate is ever reached
+		# it speaks, rather than silently no-oping -- the exact defect GH#334
+		# ruling 14 closed for `once_per_fight`.
+		_emit(WIEvents.ACTION_REFUSED, {"actor": actor_id, "reason": "cooldown", "skill": skill_id})
+		return false
 	if int(a.get(WIKeys.MP, 0)) < int(skill.get(WIKeys.MP_COST, 0)):
 		return false
 	if int(a[WIKeys.AP]) < effective_ap_cost(a, skill):
@@ -348,6 +399,24 @@ func skill_spent(actor_id: String, skill_id: String) -> bool:
 	return (used_skills_tally.get(actor_id, {}) as Dictionary).has(skill_id)
 
 
+## GH#337: THE cooldown predicate, and the only one. `use_skill`'s own gate,
+## `WICombatAI._can_afford` (plus the two hardcoded power_strike arms), and the
+## HUD's `skill_affordable` all route through it, so the bar, the enemy AI and
+## the rules can never disagree about what is still recovering -- the
+## `skill_spent` contract, applied to the second refusal reason.
+func skill_available(actor_id: String, skill_id: String) -> bool:
+	return cooldown_remaining(actor_id, skill_id) <= 0
+
+
+## Rounds still to wait before `skill_id` is usable again, 0 when it is ready.
+## Combat-visible state of the same class as AP and MP (spec ruling 5): the
+## opaque-until-sleep lock governs PROGRESSION text, not combat resources, so
+## the HUD is free to render this number.
+func cooldown_remaining(actor_id: String, skill_id: String) -> int:
+	var ready_on := int((cooldowns.get(actor_id, {}) as Dictionary).get(skill_id, 0))
+	return maxi(0, ready_on - round_number)
+
+
 func effective_ap_cost(c: Dictionary, skill: Dictionary) -> int:
 	var cost := int(skill.get(WIKeys.AP_COST, 0))
 	if _quick_cast_applies(c, skill):
@@ -363,6 +432,16 @@ func _quick_cast_applies(c: Dictionary, skill: Dictionary) -> bool:
 func spend_skill_costs(c: Dictionary, skill: Dictionary) -> void:
 	_tally_skill_use(String(c[WIKeys.ID]), skill)
 	_mark_skill_used(String(c[WIKeys.ID]), String(skill.get(WIKeys.ID, "")))
+	# GH#337 spec ruling 3: the stamp belongs HERE, beside the other spends, and
+	# never in `use_skill` -- the resolvers validate range/LoS/target side AFTER
+	# the gate chain, so a stamp taken at the gate would burn the cooldown on a
+	# cast the sim then refuses. Every resolver that reaches a real effect has
+	# already called through this function.
+	# A windup skill is the ONE exception (spec ruling 3): it stamps at
+	# RESOLUTION, in `_resolve_windup`, so the two-beat declare doesn't start the
+	# clock a round early.
+	if int((skill.get(WIKeys.EFFECT, {}) as Dictionary).get(WIKeys.WINDUP_ROUNDS, 0)) <= 0:
+		_stamp_cooldown(String(c[WIKeys.ID]), skill)
 	var ap_cost := effective_ap_cost(c, skill)
 	if _quick_cast_applies(c, skill):
 		_quick_cast_spent[String(c[WIKeys.ID])] = true
@@ -374,6 +453,20 @@ func spend_skill_costs(c: Dictionary, skill: Dictionary) -> void:
 		_emit(WIEvents.MP_CHANGED, {"id": String(c[WIKeys.ID]), "mp": c[WIKeys.MP]})
 
 
+## GH#337. Data-driven ONLY -- a skill with no `cooldown_rounds` writes nothing,
+## which is also what makes `WIItems`' synthetic item-use skill dict EXEMPT by
+## construction (spec ruling 3): it carries no such field and there is no default
+## to fall back on, so drinking a potion can never start a clock.
+func _stamp_cooldown(actor_id: String, skill: Dictionary) -> void:
+	var rounds := int(skill.get(COOLDOWN_ROUNDS, 0))
+	var skill_id := String(skill.get(WIKeys.ID, ""))
+	if rounds <= 0 or skill_id == "":
+		return
+	var ledger: Dictionary = cooldowns.get(actor_id, {})
+	ledger[skill_id] = round_number + rounds
+	cooldowns[actor_id] = ledger
+
+
 func apply_damage(target_id: String, amount: int, source_id: String, melee: bool) -> void:
 	_deduct_hp(target_id, amount)
 	_post_damage(target_id, source_id)
@@ -383,10 +476,33 @@ func _deduct_hp(target_id: String, amount: int) -> int:
 	var t: Dictionary = combatants[target_id]
 	if not t[WIKeys.ALIVE]:
 		return int(t[WIKeys.HP])
+	amount = _apply_difficulty(t, amount)
 	amount = _apply_damage_reduction(t, amount)
 	amount = _absorb_with_mana_shield(t, amount)
 	t[WIKeys.HP] = maxi(0, int(t[WIKeys.HP]) - amount)
 	return int(t[WIKeys.HP])
+
+
+## GH#345 rider. THE one-field read, and it is one field: damage dealt TO a
+## player-side combatant, scaled. Nothing else -- not enemy HP, not AP, not
+## accuracy, and above all not any RNG draw, so a seeded fight has the IDENTICAL
+## shape (initiative, AI decisions, every roll) at every setting and only the
+## cost of a hit moves.
+##
+## Placed on the RAW incoming amount, AHEAD of `damage_reduction`, deliberately:
+## DR is a flat subtraction, so scaling after it would quietly make a point of
+## armour worth more on the easy rung and less on the hard one. The knob is
+## meant to say how hard the world hits, not to re-weight gear.
+##
+## `_deduct_hp` is the choke point every source already funnels through --
+## attacks, ripostes, line/blast multi-hits, windup resolutions and burning
+## ticks -- so there is exactly one site, not one per damage type.
+func _apply_difficulty(t: Dictionary, amount: int) -> int:
+	if amount <= 0 or difficulty_damage_taken_mult == 1.0:
+		return amount
+	if String(t.get(WIKeys.SIDE, "")) != "player":
+		return amount
+	return maxi(1, int(round(amount * difficulty_damage_taken_mult)))
 
 
 func _apply_damage_reduction(t: Dictionary, amount: int) -> int:
@@ -464,6 +580,23 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 		damage = maxi(1, base_damage)
 		damage = _apply_status_damage_mods(a, t, damage)
 		target_hp = _deduct_hp(target_id, damage)
+		# GH#345, THE REPORTED number. `_deduct_hp` scales by the difficulty
+		# multiplier internally, so emitting the pre-scale `damage` would float a
+		# "10" over a 13-point HP drop and print "strikes you for 10!" in the feed
+		# -- HP readouts + damage numbers are a stated product constraint
+		# (AGENTS.md), and the burning tick three functions down already reports the
+		# honest `hp_before - hp_after`. `_apply_difficulty` is PURE (it reads only
+		# the target's side and the injected multiplier, and mutates nothing), so
+		# re-evaluating it on the same raw `damage` reports exactly the number
+		# `_deduct_hp` used without applying the scale twice.
+		#
+		# Deliberately NOT switched to a raw HP delta: `damage_reduction` and the
+		# mana-shield absorb also sit inside `_deduct_hp`, and both already have
+		# their own player-facing tells (the armour readout; REACTION_TRIGGERED's
+		# `absorbed`). An HP delta would silently fold them into the attack number
+		# and re-pin every DR/shield assertion in the suite. The one thing this
+		# fixes is the scalar the player just chose on the settings row.
+		damage = _apply_difficulty(t, damage)
 		if melee and int(a.get(WIKeys.WEAPON_RANGE, 1)) <= 1:
 			_tally(attacker_id, "melee_hit")
 		if int(a.get(WIKeys.WEAPON_RANGE, 1)) > 1:
@@ -605,6 +738,12 @@ func _resolve_windup(c: Dictionary) -> void:
 	var w: Dictionary = windups[actor_id]
 	windups.erase(actor_id)
 	var skill_id := String(w["skill_id"])
+	# GH#337 spec ruling 3: a windup's cooldown starts when the blow LANDS, not
+	# when it was telegraphed -- `spend_skill_costs` deliberately skipped it at
+	# declare time. Nothing shipped pairs `windup_rounds` with `cooldown_rounds`
+	# today (slam's `windup_cadence` already paces the only holders), so this arm
+	# is the mechanism being correct ahead of a data row, not a live path.
+	_stamp_cooldown(actor_id, skills.get(skill_id, {}))
 	var effect: Dictionary = (skills.get(skill_id, {}) as Dictionary).get(WIKeys.EFFECT, {})
 	var cells: Array = w["cells"]
 	var hit_ids: Array = []
@@ -743,6 +882,7 @@ func snapshot() -> Dictionary:
 			"alive": c[WIKeys.ALIVE], "side": c[WIKeys.SIDE],
 			"skills": (c[WIKeys.SKILLS] as Array).duplicate(),
 			"weapon_range": int(c.get(WIKeys.WEAPON_RANGE, 1)),
+			"cooldowns": _cooldown_snapshot(id),
 		}
 	return {
 		"round": round_number, "active": get_active() if not turn_order.is_empty() else "",
@@ -750,6 +890,26 @@ func snapshot() -> Dictionary:
 		"order": turn_order.duplicate(), "combatants": cs,
 		"terrain": _terrain_snapshot(),
 	}
+
+
+## GH#337. REMAINING rounds, not the absolute stamp: a snapshot consumer wants
+## "how long until I can use this", and a relative number is also the only form
+## that stays stable across a replay from a different round. Ready skills are
+## omitted entirely, so a fight where nothing has cooled reads `{}` for every
+## combatant. Skill ids are SORTED -- the `_terrain_snapshot` determinism
+## discipline, since Dictionary key order is insertion order.
+func _cooldown_snapshot(actor_id: String) -> Dictionary:
+	var ledger: Dictionary = cooldowns.get(actor_id, {})
+	if ledger.is_empty():
+		return {}
+	var skill_ids := ledger.keys()
+	skill_ids.sort()
+	var out := {}
+	for skill_id: String in skill_ids:
+		var remaining := maxi(0, int(ledger[skill_id]) - round_number)
+		if remaining > 0:
+			out[skill_id] = remaining
+	return out
 
 
 func _terrain_snapshot() -> Dictionary:
