@@ -62,8 +62,30 @@ python3 scripts/generate_shipped_ids.py   # clean tree ⇒ byte-identical data/s
 ```
 
 A diff there means the producer set genuinely changed and this doc's §6 orphan
-tables are stale. The consumer side has no shipped generator; the gate shapes
-that read counters are enumerated in §5.3 — grep those keys.
+tables are stale. Note the shipped-ids census does NOT include the dynamic
+`fought_<encounter_id>` family (§6.3.4) — add one per `kind: "encounter"` entity
+in `data/maps/**` to reach the 569 this doc counts.
+
+The consumer side has no shipped generator; the gate shapes that read counters
+are enumerated in §5.3 — grep those keys. **Three traps in that regeneration,
+all of which have bitten this doc:**
+
+1. §5.3 is a DATA-gate list. It cannot see a counter that only `src/**` reads.
+   Before calling anything an orphan, grep the id across `src/**` AND check the
+   two shapes that never spell an id out literally: `fought_<encounter_id>`
+   (`combat_banking.gd:122`) and `chatted_with_<npc>` (`wi_game.gd:900`), both
+   built by string concatenation. `sign_defended` (§6.2) is the counter that
+   proves the cost of missing this.
+2. `arrival_toasts` is a MAP-level key, not an entity key — a census that walks
+   `entities[]` never reaches it.
+3. `talk_pool_stages[].requires_accomplishment` and `bounties`/`deliveries`
+   `condition` are bare counter→count DICTS. Parsing either as a string or as an
+   `{accomplishment: ...}` wrapper silently drops ~40 real consumers and
+   manufactures phantom orphans.
+
+Validate a regenerated census against this doc's arithmetic before trusting it:
+producers 569 (529 frozen + 40 `fought_*`), data consumers 295, consumed-but-
+never-produced 0, produced-but-not-data-consumed 274.
 
 ### 0.4 When you add a quest, a beat, or a counter
 
@@ -349,11 +371,18 @@ structural edges. Full lists are one grep away (§0.3, §5.3).
 * `horns_dig_started` also opens `floodplains#ruin_door` (`door_when.requires`)
   and removes the Horns from the dungeon approach (`present_when.absent` on
   `dungeon_approach#ceria`, `#yvlon`, `#ksmvr`, `trapped_halls#ksmvr_plates`).
-* **`door_mounted` is the largest single fan-out counter in the game.** It gates
-  `portals.json:liscor_street` and `portals.json:the_wandering_inn` (the day-one
-  inn↔Liscor hop), `inn#pantry_door` (`portal_menu_when` + `visual_states`),
-  `inn#rift_vermin_leak` (`encounter_when`), the Horns' "returned" inn variants,
-  and `invrisil_boulevard#invrisil_anchor_stone` (`portal_menu_when`).
+* **`door_mounted` is the largest single fan-out counter in the game** — 27
+  consumer sites. It gates `portals.json:liscor_street` and
+  `portals.json:the_wandering_inn` (the day-one inn↔Liscor hop); THREE of the six
+  portal carriers (`inn#pantry_door`, `street#street_anchor_stone`,
+  `invrisil_boulevard#invrisil_anchor_stone`) plus a fourth,
+  `riverfarm_village#riverfarm_anchor_stone`, whose own portal row gates on
+  `door_awakened` instead (§3); `inn#pantry_door` and `street#street_anchor_stone`
+  `visual_states`; `inn#rift_vermin_leak` (`encounter_when` + `visual_states`);
+  the Horns' and Pisces' "returned" inn variants (`present_when`);
+  `inn#pisces_mounting` (`present_when` — this is the counter that RETIRES the
+  mounting scene); the ten `ruin_surface` dig-camp rows (`present_when`);
+  `quests.json:horns_dig`; and `erin_errand`.
 
 #### `door_that_goes_elsewhere` — "The Door That Goes Elsewhere"
 
@@ -694,12 +723,42 @@ lead rows exist solely to name it (§6.3.1).
 | `dungeon_depths` | `dungeon_approach` | `dungeon_attuned` | CODE, `src/core/sleep_beat.gd:165-171` |
 
 The carrier props (the things a player interacts with to open the picker) are
-gated separately and can differ from the portal row's own gate:
-`inn#pantry_door` and `street#street_anchor_stone` use `door_mounted`;
-`invrisil_boulevard#invrisil_anchor_stone` uses `door_mounted`;
-`pallass_market#pallass_market_arrival_anchor` uses `pallass_attuned`;
-`dungeon_approach#dungeon_wardstone` uses `dungeon_attuned` (one-way — it has no
-inbound twin).
+gated separately and can differ from the portal row's own gate. There are
+exactly SIX in the whole of `data/maps/**` — every entity carrying
+`portal_menu: true` + `portal_menu_when.requires`:
+
+| Carrier prop | Carrier gate | Its own map's portal row, and that row's gate |
+| --- | --- | --- |
+| `inn#pantry_door` | `door_mounted` | `the_wandering_inn` → `door_mounted` (same) |
+| `street#street_anchor_stone` | `door_mounted` | `liscor_street` → `door_mounted` (same) |
+| `invrisil_boulevard#invrisil_anchor_stone` | `door_mounted` | `invrisil` → `invrisil_attuned` (**differs**) |
+| `riverfarm_village#riverfarm_anchor_stone` | `door_mounted` | `riverfarm` → `door_awakened` (**differs**) |
+| `pallass_market#pallass_market_arrival_anchor` | `pallass_attuned` | `pallass` → `pallass_attuned` (same) |
+| `dungeon_approach#dungeon_wardstone` | `dungeon_attuned` | `dungeon_depths` → `dungeon_attuned` (same) |
+
+**Carrier = the DEPARTURE leg; portal row = the ARRIVAL leg.** Every carrier's
+picker offers the SAME set — every row whose counter is banked and whose map
+exists, minus the map you are standing on
+(`WIPortals.attuned_destinations` + `build_portal_graph`, `src/core/portals.gd:10-33`,
+reached via `src/core/wi_game.gd:1470-1481`). So a region needs a carrier only to
+let a player LEAVE; arriving costs the row's gate and nothing else. That is why
+the two gates are allowed to differ — and why tightening a carrier to match its
+row strands everyone already standing there:
+
+* `riverfarm_village#riverfarm_anchor_stone` is the village's ONLY exit
+  (`witch_hollow` is a dead end hanging off it), so its gate must be satisfied by
+  every cohort that can arrive — the pre-fix `riverfarm_attuned` path and the
+  shipped `door_awakened` row alike. `door_mounted` is the one counter both hold.
+  The entity's own `_comment` states the ruling and ends "Never tighten past the
+  row's own gate."
+* `invrisil_boulevard#invrisil_anchor_stone` is the same shape one region over:
+  arrival costs `invrisil_attuned` (Eloise's 18-gold stone), departure costs only
+  `door_mounted`, so the region can never become a one-way trap.
+
+`pallass_market#pallass_market_arrival_anchor` reaches the same safety from the
+other side: its gate is deliberately IDENTICAL to the `pallass` row, which (per
+its own `_comment`) is always met by anyone standing on it, because
+`pallass_market`/`pallass_forge` have no map exit but each other.
 
 **Region chain, end to end:**
 
@@ -769,20 +828,51 @@ All five board rumors live on `guild#guild_board`:
 
 ### 5.3 The complete list of gate shapes that READ a counter
 
-Map entities: `present_when.{requires,absent}`, `encounter_when.{requires,absent}`,
+**Map file, top level (NOT inside `entities`):** `arrival_toasts[].requires` and
+`arrival_toasts[].hide_when` — a map-level array, read by
+`WIGame._emit_arrival_toast` (`src/core/wi_game.gd:213-222`, gate at `:225-233`),
+first satisfied entry wins. Two shipped uses:
+`data/maps/dungeon/dungeon_approach.json` (requires `heard_the_deep_tremor`, hides
+on `cleared_the_warren`) and `data/maps/ruin/ruin_surface.json` (requires
+`horns_dig_started`, hides on `door_retrieved`). **This shape is easy to miss
+because a whole-file `entities[]` walk never reaches it.**
+
+**Map entities:** `present_when.{requires,absent}`, `encounter_when.{requires,absent}`,
 `door_when.requires`, `contains_when.requires`, `portal_menu_when.requires`,
 `fence_menu_when.requires`, `ally_requires`, `ally_hp_penalty.*.when`,
 `visual_states[].when.counter`, `variants[].when`, `skill_uses[*].variants[].when`,
-`on_skill_use.variants[].when`, `talk_pool_stages[].requires_accomplishment`.
-Dialogue: `option.requires.accomplishment`, `option.hide_when.accomplishment`,
+`on_skill_use.variants[].when`, `talk_pool_stages[].requires_accomplishment`
+(a DICT of counter→count, not a string — mis-reading it as a string drops all 109
+shipped `talk_pool_stages` gates, and with them the six Horns inn-variant
+counters that no other gate names),
+`sleep_toast[].when` (the array form only; `WIInteractions._resolve_sleep_toast`,
+`src/core/interactions.gd:205-209` — shipped at
+`data/maps/inn/inn_upstairs.json#your_bed`, reading `room_tier_1/2/3`), and
+`open_toast_variants[].when` (`src/core/interactions.gd:248-258` — shipped at
+`data/maps/ruin/ruin_surface.json#anchor_stone_pedestal`, reading
+`door_retrieved`).
+
+**Dialogue:** `option.requires.accomplishment`, `option.hide_when.accomplishment`,
 `text_variants[].requires/hide_when.accomplishment`.
-Catalogs: `quests.json` `complete_when` / `complete_when_any` /
+
+**Catalogs:** `quests.json` `complete_when` / `complete_when_any` /
 `resolution_paths[].accomplishment`; `acts.json` `advance_when.accomplishments` /
 `beats[].when.accomplishments`; `leads.json` `requires` / `hide_when`;
 `portals.json` `requires_accomplishment`; `classes.json` `gained_by.accomplishment`,
-`levels[].requires`, `levels[].requires_any`, `evolution.targets` keys;
+`levels[].requires`, `levels[].requires_any`, `evolution.targets` keys (the KEYS
+are counters, the values are class ids);
 `bounties.json` `condition` + `tiers.*.condition` + `requires`;
-`deliveries.json` `condition`.
+`deliveries.json` `condition`. Note `bounties.json`/`deliveries.json`
+`condition` is a bare counter→count dict, NOT an `{accomplishment: ...}` wrapper;
+reading it as the latter drops ~30 consumers (the `*_culled` and
+`delivered_delivery_*` families) and manufactures phantom orphans.
+
+The four toast-side shapes above (`arrival_toasts` ×2, `sleep_toast[].when`,
+`open_toast_variants[].when`) all read counters that other gates ALSO read today,
+so no live counter is mis-classified by their omission — but a future counter
+whose only consumer is a toast variant would land in §6.2's orphan list and get
+retired as dead, silently deleting a shipped line. They are listed here because
+§0.3 sends a maintainer to grep exactly these keys.
 
 Three `visual_states.when` keys are NOT counters and must not be mistaken for
 them (`src/world/world.gd:791-799`): `container_opened` (reads
@@ -808,39 +898,47 @@ producer is the dynamic `fought_<encounter_id>` bank for the separate
 `floodplains#chieftains_raid` encounter (`combat_banking.gd:126`). It is real, and
 the can-fail proof lives in `qa/fixtures/rags_gate_unmet_start.json`.
 
-### 6.2 Produced but never consumed — 274 counters
+### 6.2 Produced but never consumed by any DATA gate — 274 counters
 
-Most are structural by design. Breakdown:
+"Consumed" in this section's headline number means **consumed by one of §5.3's
+authored gate shapes**. Code reads are not visible to that census, so several
+families below are read by `src/**` and are NOT orphans; each row says so
+explicitly. Breakdown (every counter lands in exactly ONE row):
 
 | Family | Count | Verdict |
 | --- | --- | --- |
 | `fought_*` | 39 | **Consumed in code** (`combat_banking.gd:122`). Not orphans. |
 | `accepted_bounty_*` / `completed_bounty_*` | 33 / 31 | Board bookkeeping. `accepted_bounty_bounty_sewer_survey` and `completed_bounty_grimalkin_study_*` ARE read by dialogue; the rest are inert by design. |
 | `accepted_delivery_*` / `completed_delivery_*` | 13 / 13 | Delivery bookkeeping; the `delivered_*` twins are what relay stages actually read. |
-| `chatted_with_*` | 38 orphaned of 55 produced | Per-NPC talk tally. Exactly 17 are gated on (Erin, Selys, Krshia, Olesm, Pisces, Relc, Zevara, Klbkch, the duty sergeant, the forge smith, the lift attendant, and the six Horns inn variants); the other 38 are flavor. |
+| `chatted_with_*` | 38 without a data gate, of 55 produced | Per-NPC talk tally, banked by `WISocial.talk_pool_line` (`src/core/social.gd:26`). Exactly 17 are named by an authored gate: `chatted_with_` + `erin`, `selys`, `krshia`, `olesm`, `pisces`, `relc`, `zevara`, `klbkch`, `duty_sergeant`, `forge_smith`, `lift_attendant`, plus the six Horns inn-row counters `ceria_inn`, `ceria_inn_returned`, `yvlon_inn`, `yvlon_inn_returned`, `ksmvr_inn`, `ksmvr_inn_returned` (each row's own `talk_pool_stages`). Of the remaining 38, **three are read in code, not data**: `chatted_with_rags`, `chatted_with_wilovan`, `chatted_with_grimalkin` are the inn-guest roster's "met" test, built inline at `src/core/wi_game.gd:900` (`accomplishment_count("chatted_with_" + npc) >= 1`) over `inn#selys_inn_guest`'s ten-name roster and consumed by `WIInnGuests.met_pool` (`src/core/inn_guests.gd:109-121`) via `guest_active` (`:137-138`). The other 35 are flavor. |
 | Observation / flavor props (`observed_*`, `eyed_*`, `read_*`, `found_*`, `heard_*`, `saw_*`, `browsed_*`, `leaned_*`, `noticed_*`, `visited_*`, `searched_*`, `scouted_vantage`, `rune_far_cold`) | 79 | **Inert by design** — a per-prop breadcrumb. Note these props do NOT feed progression on a plain interact: `src/core/interactions.gd:106-142` banks only the named counter. `observed_things` banks separately, on the FIRST `[Observe]` per entity (`src/core/field_skills.gd:73-81`). |
-| Ungrouped, code-read | 4 | `catalyst_attunement_sleeps`, `resonance_grown`, `finale_played`, `victories` — all read in `sleep_beat.gd` / `sleep_veil.gd` / `wi_game.gd:1618`. Not orphans. |
-| Ungrouped, **no consumer anywhere** | 24 | Listed below. |
+| Ungrouped, code-read | 5 | `catalyst_attunement_sleeps`, `resonance_grown`, `finale_played`, `victories` — all read in `sleep_beat.gd` / `sleep_veil.gd` / `wi_game.gd:1618` — plus `sign_defended`, read at `src/core/sleep_beat.gd:209`. Not orphans. |
+| Ungrouped, **no consumer anywhere** | 23 | Listed below. |
 
-The 24 with no consumer in data OR code:
+39 + 33 + 31 + 13 + 13 + 38 + 79 + 5 + 23 = **274**. Each counter appears in
+exactly ONE family row; the residual bucket is what is left after the other
+eight claim theirs.
+
+The 23 with no consumer in data OR code. **Every id here is residual — none of
+them also belongs to a family row above, so the table's id count and the 23 in
+the family table are the same 23.** Three counters a reader will hunt for here
+are deliberately NOT in it, because they are already counted in a family row and
+listing them twice would break the arithmetic; they are described immediately
+after the table instead.
 
 | Counter | Produced by | Note |
 | --- | --- | --- |
-| `blinked_past_danger` | `src/core/wi_game.gd:669` | Field-skill tally; no class level, bounty, or gate reads it. |
-| `burned_the_debris` | `src/core/field_skills.gd:97` | Same shape. |
+| `blinked_past_danger` | `src/core/wi_game.gd:669` | Field-skill tally; that line is the PRODUCER — no class level, bounty, or gate reads it. |
+| `burned_the_debris` | `src/core/field_skills.gd:97` | Same shape (producer site, no reader). |
 | `warded_danger` | `src/core/wi_game.gd:712` and `quests.json:what_the_seal_was_feeding` resolution grant | Produced twice, read never. |
-| `read_the_board` | `src/core/wi_game.gd:1308` | Banked idempotently on every board browse. |
-| `read_the_delivery_board` | `src/core/wi_game.gd:1419` | Same. |
 | `went_fishing` | `floodplains#pond_edge` | Named in GH#339 item 3 as fully inert — wire or retire. |
 | `riverfarm_attuned` | `guild#guild_board` rumor `rumor_riverfarm` | Deliberate: `portals.json:riverfarm` gates on `door_awakened` instead, and the row's `_comment` says this counter "keeps banking off the rumor as lore". |
 | `pallass_sponsorship_asked` | `selys_delivery:hub#10` | Quest-start flag; the real gate is `pallass_sponsored`. |
 | `forge_tier_permit_asked` | `pallass_forge_clerk:hub#0` | Quest-start flag; the real gate is `forge_permit_filed`. |
 | `selys_impressed` | `selys_delivery:hub#1` | The Lyonette-tip reward; no downstream read. |
 | `commended_by_olesm` | `olesm_intro:cisterns#1/#2/#3` | |
-| `chatted_with_rags` | `rags_meeting:hub#0/#1` | Hand-written twin of the talk-pool family; Rags has no talk pool. |
 | `goblin_left_in_peace` | `goblin_parley:hub#2` | `goblins_spared` (same node, options #1/#2) is the counter everything gates on. |
 | `street_cleared` | `floodplains#goblin_encounter_2`, `goblin_parley:hub#1` | |
-| `sign_defended` | `floodplains#goblin_encounter_1` | **NOT an orphan** — read at `src/core/sleep_beat.gd:209` as a Garden unlock leg. Listed here only because the data census cannot see it. |
 | `trap_disarmed` | `mercantile_alleys#alley_footpad_snag_a/_b`, `witch_hollow#hollow_briar_snare` | Three producers, no consumer. |
 | `cooked_the_offering` | `witch_hollow#hollow_offering_pot` | |
 | `corusdeer_calmed` | `corusdeer_range:confront#1/#2` | |
@@ -855,6 +953,22 @@ The 24 with no consumer in data OR code:
 Nothing in this table is asserted to be a BUG. The pattern worth watching is the
 last group: a fight or a dialogue fork that banks a distinct id nobody reads is
 a route the world cannot acknowledge afterwards.
+
+**Counted in a family row above, NOT in the 23** (recorded here so a cleanup
+pass working the table top-to-bottom does not double-retire them):
+
+| Counter | Produced by | Which row counts it | Status |
+| --- | --- | --- | --- |
+| `chatted_with_rags` | `rags_meeting:hub#0/#1` | `chatted_with_*` (38) | **NOT inert.** It is the roster met-test for Rags at `src/core/wi_game.gd:900`; the graph's own `_comment` says so ("the met counter her inn-guest row needs"). Hand-written because Rags has no npc entity anywhere — her graph hangs off the `rags_scouting_party` ENCOUNTER, so the usual `talk_pool` producer cannot exist. Deliberately absent from "(Draw steel.)" so a betrayal win cannot seat the Chieftain you drove off. |
+| `read_the_board` | `src/core/wi_game.gd:1308` | flavor / `read_*` (79) | Inert. Banked idempotently on every board browse. |
+| `read_the_delivery_board` | `src/core/wi_game.gd:1419` | flavor / `read_*` (79) | Inert. Same shape. |
+
+And one counter the old table listed under a "no consumer anywhere" heading
+while its own note said the opposite:
+
+| Counter | Produced by | Which row counts it | Status |
+| --- | --- | --- | --- |
+| `sign_defended` | `floodplains#goblin_encounter_1` `on_victory` | Ungrouped, code-read (5) | **NOT an orphan and must never be retired.** Read at `src/core/sleep_beat.gd:209` as one of the four Garden of Sanctuary unlock legs (`_garden_earn_met` needs `>= 2` of `cleaned_the_inn` / `goblins_spared` / `sign_defended` / `resolved_wrong_order`). Retiring it costs a player who spared the goblins their second leg, and the Garden never opens. It has no DATA consumer, which is exactly why it looks retirable from a §5.3 grep alone. |
 
 ### 6.3 Named dead ends and soft defects
 
@@ -930,9 +1044,20 @@ written for them in the shape every other lead uses.
 * **`quests_completed`** is used by two act gates and two sleep-beat gates. It is
   a derived count of quests whose every beat is met, not a counter; the exact
   call chain feeding `ctx["quests_completed"]` was not traced here.
-* **Inn-guest rosters.** `present_when.guest` rosters gate several inn NPCs on
-  per-NPC "met" counters synthesised in code (`tests/test_content.gd:830` proves
-  they are produced). Those edges are not enumerated in §2.
+* **Inn-guest rosters — the met-counter arm is now traced, the rotation is not.**
+  `present_when.guest` resolves at `src/core/wi_game.gd:898-909`: the per-NPC
+  "met" test is `accomplishment_count("chatted_with_" + npc) >= 1`, so every
+  name in `inn#selys_inn_guest`'s ten-entry roster (selys, krshia, olesm, pisces,
+  relc, zevara, klbkch, rags, wilovan, grimalkin) consumes its own
+  `chatted_with_*` counter in CODE — that is the §6.2 carve-out for
+  `chatted_with_rags` / `_wilovan` / `_grimalkin`. FIVE roster members carry an
+  extra `WIInnGuests.GUEST_POOL_GATES` arm — rags, wilovan, grimalkin, zevara,
+  pisces (`src/core/inn_guests.gd:47-52`; the inline comment at
+  `src/core/wi_game.gd:901` still says "three" and is stale). What is still
+  untraced: which guest is seated on which waking (the `times_slept`-driven
+  shift window, `WIInnGuests.active_guests` / `guest_active`,
+  `src/core/inn_guests.gd:123-138`), so per-guest presence edges remain absent
+  from §2.
 * **Class/skill progression edges.** Every observation counter that feeds
   `classes.json` `levels[].requires` / `requires_any` was counted for §6 but is
   not mapped per class — that belongs in `class-expansion-spec.md`, not here.
