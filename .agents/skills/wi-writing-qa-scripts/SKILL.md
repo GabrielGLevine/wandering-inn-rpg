@@ -232,10 +232,14 @@ seven v0.16 rows. Before landing leads rows, grep `qa/scripts` for
 `lead_lines` and re-derive each pin from a real run (the growth is the
 feature; the payloads double as gating proof for the new rows).
 
-## Rendered-event ≠ seen (GH#324, until fixed)
-A talk_pool line served within ~1.5s of `world_ready` draws NOTHING
-while `ui_dialogue_rendered` fires with the full string (global,
-pre-existing). Scripts that interact immediately after fixture load are
-screenshotting an empty line slot — wait ~90 frames (or one move)
-before the first ambient-line capture, and never cite
-`ui_dialogue_rendered` alone as display proof.
+## Rendered-event ≠ seen (GH#324, RESOLVED v0.17 — do not hand-pad)
+The "dead render" was never a render bug: windowed capture holds were
+eaten by live-tween drain (music crossfade at world_ready), so early
+shots caught the line after expiry. Fixed at the driver —
+`TestDriver.capture_hold_ceiling_msec()` DERIVES the hold from the
+script's own waits, and the crossfade tween is excluded from capture
+gating. Consequences for authors: never hand-pad waits "for settle"
+(the old ~90-frame workaround is obsolete and hides real timing bugs);
+`line_display_ab` is the canonical regression proof (interact at
+world_ready+0 must render); `ui_dialogue_rendered` alone is still not
+display proof — pair it with a windowed shot or a hold assertion.

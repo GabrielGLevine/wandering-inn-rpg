@@ -84,8 +84,11 @@ command (commit/merge/ledger append) runs from the repo root explicitly.
 A drifted CWD has committed controller work onto a LANE'S branch
 mid-review (2026-07-07, caught same-minute: cherry-pick to main +
 `reset --hard` the lane tip was the recovery).
-**A merge that delivers NEW `.gd` files needs a main-tree import pass
-BEFORE the re-gate** (`--headless --import`): class_name registration
+**A merge that delivers NEW `.gd` files OR NEW IMAGE ASSETS needs a
+main-tree import pass BEFORE the re-gate** (`--headless --import`) —
+v0.17 seam gate: L4's new sheets unimported on main read as 99/200
+canonicals red ("missing sheet" on files present on disk). For `.gd`
+the mechanism is class_name registration
 lives in the local `.godot` cache and the lane's import does NOT travel
 with the merge — skipping it reads as a total-cascade compile failure
 (64/64 red on a correct tree, 2026-07-07). Corollary: capture the

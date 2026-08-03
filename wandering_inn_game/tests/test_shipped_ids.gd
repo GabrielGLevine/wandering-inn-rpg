@@ -128,6 +128,11 @@ func _produced_accomplishments(scene: Dictionary, graphs: Dictionary, skills: Di
 				var victory_ids: Array = victory if victory is Array else [victory]
 				for id: Variant in victory_ids:
 					out[String(id)] = true
+				# v0.17 close: combat_banking banks fought_<encounter_id> on
+				# every victory — third parity participant with the generator
+				# and test_content:647 (the freeze regen that missed this arm
+				# went red on exactly the 40 ids it froze).
+				out["fought_%s" % String(entity["id"])] = true
 			if entity.has("on_skill_use"):
 				var skill_use: Dictionary = entity["on_skill_use"]
 				if skill_use.has("accomplishment"):

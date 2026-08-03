@@ -83,7 +83,7 @@ from wi_data_lib import DATA, GAME_ROOT, load_dialogue_graphs, load_json, load_s
 
 OUT_PATH = DATA / "shipped_ids.json"
 
-RELEASE = "0.16.2"
+RELEASE = "0.17.0"
 
 # ---------------------------------------------------------------------------
 # STRUCTURAL_LITERALS -- KEEP IN SYNC with tests/test_shipped_ids.gd's own
@@ -132,6 +132,11 @@ def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: 
                 victory = entity.get("on_victory", "won_combat")
                 victory_ids = victory if isinstance(victory, list) else [victory]
                 out.update(str(v) for v in victory_ids)
+                # v0.17 close (causality map §6.2): combat_banking banks
+                # fought_<encounter_id> on every victory (repetition decay
+                # reads it back) — test_content:647 already counts it; the
+                # generator omitting it left ~40 live counters unfrozen.
+                out.add("fought_%s" % str(entity["id"]))
             skill_use = entity.get("on_skill_use", {})
             if "accomplishment" in skill_use:
                 out.add(str(skill_use["accomplishment"]))
