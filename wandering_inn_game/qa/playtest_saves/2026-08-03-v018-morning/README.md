@@ -39,3 +39,13 @@ assume the windowed game (`/usr/local/bin/godot --path wandering_inn_game`).
 ## Standing (unchanged)
 Full sitting (14 states), Raskghar third-strike ear-gate, #195 listen,
 gossip-ladder adjudication, #253.
+
+## Appendix — the [Ice Floor] paste block (CHOICE-LOG v018-close #8)
+Lands with your picks (needs a granting class + three authored lines +
+the bespoke ice tile per the P1 ordering constraint):
+```json
+{"id": "ice_floor", "display_name": "[Ice Floor]", "icon": "icon_frost_bolt",
+ "contexts": ["exploration"], "field": true, "freezes": true,
+ "freeze_toast": "<authored>", "field_ambient": "<authored>",
+ "description": "<authored>"}
+```
