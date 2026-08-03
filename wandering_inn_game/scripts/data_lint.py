@@ -34,6 +34,13 @@ Checks:
      instance (invrisil_anchor_stone) was wrapped for real, so the arm now
      has zero exemptions -- keep it that way.
 
+ADVISORIES (v0.17 L3, GH#335 item 3) are a SECOND, non-failing tier. They
+never touch the exit code and can never break a sweep, because they measure a
+DESIGN gap, not a defect: an advisory row is a question ("should this have
+persistent state?"), and plenty of honest answers are "no". A hard error would
+force 90-odd waivers and teach everyone to stop reading the output. Default
+output is one summary line; `--advisories` prints the full list.
+
 Wiring: ci_sweep.sh pre-flight (fails the sweep before any Godot boot) and
 ci.yml's leak-check job (the no-Godot CI lane). Run standalone after any
 data edit:  python3 scripts/data_lint.py   (from wandering_inn_game/).
@@ -239,8 +246,37 @@ def check_gate_shapes(maps: dict, errors: list) -> None:
 			_walk_gates(entity, map_id, entity.get("id", "<no id>"), errors)
 
 
+def advise_acted_on_state(maps: dict, advisories: list) -> int:
+	"""GH#335 item 3 -- persistent acted-on state.
+
+	A prop with `on_interact_accomplishment` is one the player CHANGES: they
+	interact, a counter banks, and the world is different afterwards. With
+	field name tags retired (R3), the ONLY way that difference can reach the
+	player is a `visual_states` row -- otherwise the prop looks byte-identical
+	before and after, and every later visit invites the same pointless press.
+
+	Report-only, and deliberately so: "should this prop show its state?" is a
+	design question with real "no" answers (a pond edge you merely looked at
+	does not change). This tier's job is to keep the ratio VISIBLE so the gap
+	is chosen rather than forgotten. Returns the total interacted-prop count so
+	the caller can print the ratio, not a bare scary number.
+	"""
+	total = 0
+	for map_id, m in sorted(maps.items()):
+		for entity in m.get("entities", []):
+			if not entity.get("on_interact_accomplishment"):
+				continue
+			total += 1
+			if not entity.get("visual_states"):
+				advisories.append(f"maps/{map_id}: entity "
+					f"'{entity.get('id', '<no id>')}' banks on_interact_accomplishment "
+					"but carries no visual_states row -- the world cannot show it was acted on")
+	return total
+
+
 def main() -> int:
 	start = time.monotonic()
+	list_advisories = "--advisories" in sys.argv
 	errors: list = []
 	parsed = check_wellformed(errors)
 	if errors:
@@ -255,6 +291,8 @@ def main() -> int:
 	check_dialogue(parsed, errors)
 	check_sprites(parsed, errors)
 	check_gate_shapes(maps, errors)
+	advisories: list = []
+	interacted_props = advise_acted_on_state(maps, advisories)
 	elapsed_ms = (time.monotonic() - start) * 1000
 	if errors:
 		for e in errors:
@@ -264,6 +302,15 @@ def main() -> int:
 		return 1
 	print(f"data_lint: OK -- {len(parsed)} files, {len(maps)} maps clean "
 		f"in {elapsed_ms:.0f}ms (structural tier only -- Godot gates still apply).")
+	if advisories:
+		# ONE line by default. A 90-row wall printed on every sweep is a wall
+		# nobody reads, and this tier's whole value is that someone reads it.
+		if list_advisories:
+			for a in advisories:
+				print(f"data_lint: ADVISORY -- {a}")
+		print(f"data_lint: ADVISORY -- {len(advisories)}/{interacted_props} props that bank "
+			"an interact accomplishment show no visual change for it (GH#335 item 3); "
+			"re-run with --advisories to list them. Report-only, never fails.")
 	return 0
 
 

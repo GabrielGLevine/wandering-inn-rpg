@@ -15,6 +15,55 @@ const MOVE_TWEEN_SECONDS := 0.12
 const BUMP_PIXELS := 3.0
 const BUMP_TWEEN_SECONDS := 0.06
 
+## GH#335 phase 1 -- the UNIVERSAL ACTION TELL. Every explicit input must get a
+## visible world response (friend notes 8/12); the field-cast and the
+## interact-into-flavor paths had literally none. Amplitude and duration sit
+## deliberately UNDER `_bump_player_visual`'s refusal bump (3px / 0.06s): a
+## refusal has to stay the louder of the two gestures, or "I hit a wall" and
+## "I did a thing" read as the same motion.
+const ACTION_TELL_PIXELS := 1.5
+const ACTION_TELL_TWEEN_SECONDS := 0.05
+## How long the faced-cell pip lives before freeing itself -- comfortably past
+## the particle's own lifetime so nothing is culled mid-fade, and past a QA
+## capture's settle so a windowed shot taken straight after the press still
+## catches it. That capture IS the tell's proof: it carries no bus event,
+## because adding one means a new WIEvents const and wi_events.gd is outside
+## this lane's ownership (see .lane-progress SEAMS). #335 calls this family
+## headless-invisible by construction and names windowed playtest as the gate.
+const ACTION_PIP_LIFETIME_SECONDS := 0.8
+
+## GH#335 phase 1 -- the FACED-INTERACTABLE AFFORDANCE. Field name tags are
+## RETIRED (R3), which left "what will this key do here?" answerable only by
+## guessing from the sprite; notes 6/14's illegible-landmark class drains here
+## too. Four corner ticks bracket the cell the player FACES, and only while a
+## present entity actually stands in it. A SHAPE, never a tint: tint is not
+## disambiguation (2026-08-02 ruling), and a bracket still reads at 16px over
+## every biome the sprite families already fight for contrast against.
+const AFFORDANCE_COLOR := Color(0.99, 0.93, 0.72)
+const AFFORDANCE_INSET_PX := 1.0
+const AFFORDANCE_TICK_PX := 4.0
+const AFFORDANCE_WIDTH_PX := 1.0
+const AFFORDANCE_ALPHA_MIN := 0.34
+const AFFORDANCE_ALPHA_MAX := 0.86
+const AFFORDANCE_PULSE_HZ := 0.85
+## Every producer of a change to (player_cell, player_facing, who is present in
+## the faced cell). PLAYER_BLOCKED earns its row: a blocked move TURNS without
+## moving, so it is the one input that changes the faced cell with no
+## PLAYER_MOVED behind it. MAP_CHANGED is deliberately ABSENT -- `_rebuild_field`
+## ends with its own reconcile against the field it just built.
+const AFFORDANCE_REFRESH_EVENTS: Array[StringName] = [
+	WIEvents.PLAYER_MOVED,
+	WIEvents.PLAYER_BLOCKED,
+	WIEvents.PLAYER_TELEPORTED,
+	WIEvents.ENTITY_REMOVED,
+	WIEvents.PHASE_CHANGED,
+	WIEvents.ACCOMPLISHMENT_RECORDED,
+	WIEvents.COMPANION_CHANGED,
+	WIEvents.DIALOGUE_STARTED,
+	WIEvents.DIALOGUE_ENDED,
+	WIEvents.UI_COMBAT_HIDDEN,
+]
+
 const LIGHT_TEXTURE := preload("res://assets/fx/light_radial.png")
 const LIGHT_TEXTURE_PX := 64.0
 const LIGHT_BUDGET := 8
@@ -117,6 +166,11 @@ var _sway_material: ShaderMaterial
 var _visual_factory: WIEntityVisualFactory
 var _sneak_shimmer_material: ShaderMaterial
 var _vignette: ColorRect
+## GH#335 phase 1. Built lazily on the first reconcile and freed with the rest
+## of `_field_root` on every rebuild (hence the null-out beside `_player_sprite`
+## in `_rebuild_field`) -- it is field furniture, not a persistent overlay.
+var _affordance_cursor: Node2D
+var _affordance_time := 0.0
 
 
 func _ready() -> void:
@@ -351,12 +405,142 @@ func _disarm_field_slot() -> void:
 		_field_hotbar.set_selected(-1)
 
 
+## THE universal explicit-action hook. Already the one place every deliberate
+## world action funnels through (pad-confirm cast, number-key cast, interact
+## press, click-walk's arrival interact), which is exactly why GH#335's action
+## tell hangs here rather than off four separate call sites -- a fifth action
+## path added later gets the tell for free, the way it already gets the toast
+## dismiss.
 func _notify_action_taken() -> void:
+	_play_action_tell()
 	if _main == null:
 		return
 	var ml := _main.message_layer()
 	if ml != null:
 		ml.dismiss_current_toast_early()
+
+
+## GH#335 phase 1. Fires BEFORE the sim call it precedes, so `player_facing` is
+## still the direction the player aimed at when they pressed -- that is the
+## cell the tell must mark, whatever the sim then decides happened there.
+## Deliberately fires on a NULL result too (interact into empty air, a cast
+## with no target): the tell answers "the game heard you", which is precisely
+## the input the old silence left unanswered.
+func _play_action_tell() -> void:
+	if _player_visual == null:
+		return
+	# reduce-motion trades the tell for the persistent affordance below plus
+	# the new audio rows (item_used/player_blocked/skill_no_effect, data/
+	# audio.json) -- the non-motion feedback channels of this same wave. Same
+	# shared-gate shape as board_renderer.gd's juice family.
+	if WISettings.reduce_motion():
+		return
+	_spawn_action_pip(Game.sim.player_cell + Game.sim.player_facing)
+	var duration := _presentation_delay(ACTION_TELL_TWEEN_SECONDS)
+	if duration <= 0.0:
+		return
+	_kill_player_tween()
+	var home := Vector2(Game.sim.player_cell) * CELL
+	_player_visual.position = home
+	_player_tween = create_tween()
+	_player_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_player_tween.tween_property(_player_visual, "position", home + Vector2(Game.sim.player_facing) * ACTION_TELL_PIXELS, duration)
+	_player_tween.tween_property(_player_visual, "position", home, duration)
+
+
+## Unlike `_spawn_burn_poof`, this does NOT collapse under an active TestDriver
+## -- a windowed capture is the tell's only proof, so collapsing it there would
+## delete the evidence for the one feature that has no bus event. It still
+## skips HEADLESS entirely (no renderer, and every headless canonical stays
+## byte-identical: no node churn, no timer).
+func _spawn_action_pip(cell: Vector2i) -> void:
+	if _field_root == null or DisplayServer.get_name() == "headless":
+		return
+	var rect := Rect2(Vector2(cell) * CELL, Vector2(CELL, CELL))
+	var pip := WIAmbience.make("action_pip", rect)
+	if pip == null:
+		return
+	pip.z_index = 30
+	pip.emitting = true
+	_field_root.add_child(pip)
+	get_tree().create_timer(ACTION_PIP_LIFETIME_SECONDS).timeout.connect(pip.queue_free)
+
+
+## GH#335 phase 1. Shown only when the faced cell actually holds a PRESENT
+## entity, so the bracket never promises an interaction that is not there --
+## `entity_at` already applies the `present_when` gate, which is what keeps
+## this honest across the phase clock (a night-absent flavor NPC takes its
+## bracket with it, same beat its sprite goes).
+func _reconcile_faced_affordance() -> void:
+	if _field_root == null or Game.sim == null:
+		return
+	if _affordance_cursor == null or not is_instance_valid(_affordance_cursor):
+		_affordance_cursor = _make_affordance_cursor()
+		_field_root.add_child(_affordance_cursor)
+	var cell: Vector2i = Game.sim.player_cell + Game.sim.player_facing
+	# A conversation owns the screen; a bracket under an open dialogue panel is
+	# noise pointing at the thing you are already talking to. Combat is covered
+	# by `_field_root.visible = false` and needs no arm of its own.
+	var showing := Game.sim.dialogue == null and not Game.sim.entity_at(cell).is_empty()
+	_affordance_cursor.visible = showing
+	if not showing:
+		return
+	_affordance_cursor.position = Vector2(cell) * CELL
+	if not _affordance_pulsing():
+		_affordance_cursor.modulate.a = AFFORDANCE_ALPHA_MAX
+
+
+## Pulse is suppressed under reduce-motion AND under any driven run
+## (`_presentation_delay`'s QA/headless collapse) -- the second half matters as
+## much as the first: an oscillating alpha would make every windowed screenshot
+## of a bracketed prop a different brightness, so evidence would never compare.
+func _affordance_pulsing() -> bool:
+	return _presentation_delay(1.0) > 0.0 and not WISettings.reduce_motion()
+
+
+func _make_affordance_cursor() -> Node2D:
+	var root := Node2D.new()
+	root.name = "FacedAffordance"
+	root.z_index = 25
+	root.visible = false
+	root.modulate.a = AFFORDANCE_ALPHA_MAX
+	var near := AFFORDANCE_INSET_PX
+	var far := float(CELL) - AFFORDANCE_INSET_PX
+	var tick := AFFORDANCE_TICK_PX
+	# One L per corner, drawn as a 3-point polyline so the corner pixel is
+	# shared rather than double-struck (a doubled pixel reads as a blob at 16px).
+	var corners := [
+		[Vector2(near, near + tick), Vector2(near, near), Vector2(near + tick, near)],
+		[Vector2(far - tick, near), Vector2(far, near), Vector2(far, near + tick)],
+		[Vector2(far, far - tick), Vector2(far, far), Vector2(far - tick, far)],
+		[Vector2(near + tick, far), Vector2(near, far), Vector2(near, far - tick)],
+	]
+	for pts: Array in corners:
+		var line := Line2D.new()
+		line.width = AFFORDANCE_WIDTH_PX
+		line.default_color = AFFORDANCE_COLOR
+		line.joint_mode = Line2D.LINE_JOINT_SHARP
+		line.begin_cap_mode = Line2D.LINE_CAP_NONE
+		line.end_cap_mode = Line2D.LINE_CAP_NONE
+		line.antialiased = false
+		for p: Vector2 in pts:
+			line.add_point(p)
+		root.add_child(line)
+	return root
+
+
+## Pulse driven from `_process`, never a Tween -- GH#324 measured what a live
+## tween costs: `test_driver`'s capture settle drains `get_processed_tweens()`
+## before every screenshot, so ONE looping tween anywhere would add the full
+## 3s drain cap to every windowed shot in the whole suite. atmosphere.gd's
+## flicker clock is the same call, for the same reason.
+func _process(delta: float) -> void:
+	if _affordance_cursor == null or not is_instance_valid(_affordance_cursor) \
+			or not _affordance_cursor.visible or not _affordance_pulsing():
+		return
+	_affordance_time += delta
+	var wave := 0.5 + 0.5 * sin(TAU * AFFORDANCE_PULSE_HZ * _affordance_time)
+	_affordance_cursor.modulate.a = lerpf(AFFORDANCE_ALPHA_MIN, AFFORDANCE_ALPHA_MAX, wave)
 
 
 func _activate_field_slot(slot: int) -> void:
@@ -397,6 +581,9 @@ func _rebuild_field() -> void:
 	for child: Node in _field_root.get_children():
 		child.queue_free()
 	_entity_visuals.clear()
+	# GH#335: field furniture, freed with everything else above -- the
+	# end-of-rebuild reconcile rebuilds it against the new map.
+	_affordance_cursor = null
 	_player_sprite = null
 	_companion_visual = null
 	_ward_visuals.clear()
@@ -455,6 +642,9 @@ func _rebuild_field() -> void:
 		"map %s exceeds the %d-light budget (%d) -- spec §5" % [Game.sim.current_map, LIGHT_BUDGET, _light_count])
 	ObservableBus.emit_domain_event(WIEvents.UI_LIGHTS_RENDERED, {"map": Game.sim.current_map, "count": _light_count})
 	_build_ambience()
+	# GH#335: after every visual exists, so `entity_at`'s answer and the built
+	# geometry can never disagree about what the bracket is pointing at.
+	_reconcile_faced_affordance()
 	_update_camera()
 
 
@@ -1136,6 +1326,17 @@ func _queue_player_idle() -> void:
 
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
+	# GH#335: the faced cell (and therefore the affordance bracket) is a pure
+	# function of player_cell + player_facing + who is present there, so one
+	# membership list catches every producer of a change to any of the three --
+	# a move, a blocked bump (which turns without moving), a blink, a presence
+	# flip, a conversation opening or closing. Reconciling here rather than in
+	# each arm keeps the arms about their own subject; MAP_CHANGED is absent on
+	# purpose (`_rebuild_field` ends with its own reconcile against the built
+	# field, and reconciling against stale geometry mid-transition is exactly
+	# the class of bug the stale-cover guard exists for).
+	if type in AFFORDANCE_REFRESH_EVENTS and not _map_transition_stale_cover():
+		_reconcile_faced_affordance()
 	if type == WIEvents.PLAYER_MOVED:
 		var cell := Vector2i(int(payload["cell"][0]), int(payload["cell"][1]))
 		_move_companion_visual(_player_visual.position)

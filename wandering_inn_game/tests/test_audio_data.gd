@@ -9,12 +9,23 @@ const VALID_BUSES: Dictionary = {
 	"Ambience": true,
 }
 
+## Whitelist of bus events an `audio.json` row may key on. Extending it is part
+## of the SAME edit unit as adding the row it legalises -- a row for an event
+## missing here fails this gate, so the table can never drift ahead of the
+## catalog. The four v0.17 L3 entries below (GH#335 phase 1, item 4) close the
+## "explicit input, zero response" gaps: item_used / player_blocked /
+## skill_no_effect, plus class_evolved, the largest completion in the game and
+## the only progression beat with no sound at all.
 const KNOWN_EVENTS: Dictionary = {
 	"action_refused": true,
 	"audio_played": true,
 	"attack_resolved": true,
+	"class_evolved": true,  # v0.17 L3 (GH#335)
 	"class_gained": true,
 	"class_level_up": true,
+	"item_used": true,  # v0.17 L3 (GH#335)
+	"player_blocked": true,  # v0.17 L3 (GH#335)
+	"skill_no_effect": true,  # v0.17 L3 (GH#335)
 	"combatant_downed": true,
 	"combat_finished": true,
 	"combat_resolved": true,

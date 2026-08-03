@@ -621,6 +621,40 @@
    "bus": "UI",
    "volume_db": -15.0,
    "cooldown_ms": 60
+  },
+  {
+   "_comment": "v0.17 L3 anchor (GH#335 item 4): inputs that answered with silence. Streams reused. Append this lane's rows below.",
+   "id": "item_used",
+   "event": "item_used",
+   "stream": "res://assets/audio/sfx/item_equip.wav",
+   "bus": "SFX",
+   "volume_db": -13.0,
+   "cooldown_ms": 100
+  },
+  {
+   "id": "player_blocked",
+   "event": "player_blocked",
+   "stream": "res://assets/audio/sfx/footstep_3.wav",
+   "bus": "SFX",
+   "volume_db": -22.0,
+   "cooldown_ms": 140
+  },
+  {
+   "id": "skill_no_effect",
+   "event": "skill_no_effect",
+   "stream": "res://assets/audio/sfx/ui_tick.wav",
+   "bus": "UI",
+   "volume_db": -20.0,
+   "cooldown_ms": 120
+  },
+  {
+   "id": "class_evolved",
+   "event": "class_evolved",
+   "stream": "res://assets/audio/sfx/level_up.wav",
+   "bus": "SFX",
+   "volume_db": -9.0,
+   "pitch_scale": 0.78,
+   "cooldown_ms": 200
   }
  ],
  "music": [
