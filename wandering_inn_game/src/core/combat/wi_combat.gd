@@ -580,6 +580,23 @@ func _resolve_hit(attacker_id: String, target_id: String, mult: float, melee: bo
 		damage = maxi(1, base_damage)
 		damage = _apply_status_damage_mods(a, t, damage)
 		target_hp = _deduct_hp(target_id, damage)
+		# GH#345, THE REPORTED number. `_deduct_hp` scales by the difficulty
+		# multiplier internally, so emitting the pre-scale `damage` would float a
+		# "10" over a 13-point HP drop and print "strikes you for 10!" in the feed
+		# -- HP readouts + damage numbers are a stated product constraint
+		# (AGENTS.md), and the burning tick three functions down already reports the
+		# honest `hp_before - hp_after`. `_apply_difficulty` is PURE (it reads only
+		# the target's side and the injected multiplier, and mutates nothing), so
+		# re-evaluating it on the same raw `damage` reports exactly the number
+		# `_deduct_hp` used without applying the scale twice.
+		#
+		# Deliberately NOT switched to a raw HP delta: `damage_reduction` and the
+		# mana-shield absorb also sit inside `_deduct_hp`, and both already have
+		# their own player-facing tells (the armour readout; REACTION_TRIGGERED's
+		# `absorbed`). An HP delta would silently fold them into the attack number
+		# and re-pin every DR/shield assertion in the suite. The one thing this
+		# fixes is the scalar the player just chose on the settings row.
+		damage = _apply_difficulty(t, damage)
 		if melee and int(a.get(WIKeys.WEAPON_RANGE, 1)) <= 1:
 			_tally(attacker_id, "melee_hit")
 		if int(a.get(WIKeys.WEAPON_RANGE, 1)) > 1:

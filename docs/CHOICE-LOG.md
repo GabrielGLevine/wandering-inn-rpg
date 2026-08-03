@@ -2181,3 +2181,49 @@ by controller ruling — the plan was the defect, not the implementation.
   `WICombat` rather than read (the sim purity rule), which is also the
   whole "safe mid-save" answer: nothing re-reads it, so moving the row
   lands on the NEXT fight, never a live one.
+- **The cooldown wave MOVED PROGRESSION PACE, and the move is accepted
+  with numbers, not asserted away (2026-08-02, GH#337, fix round)**:
+  `sim_progression_pace` measured at the lane base and at the shipped
+  tree, warrior_line Act III total-level p10/p50/p90 **12/13/13 -> 10/11/11**
+  (fights won p50 31 -> 30); caster_line loses one Act III fight (27 ->
+  26) at the same levels; helper_social is unchanged. Two scripted QA
+  routes moved the OPPOSITE way (`level_up_loop` / `defeat_ally_alive`
+  re-pinned [Warrior] 2 -> 3) because on a FIXED short route the freed AP
+  buys an extra plain attack and `melee_hit` banks the same either way --
+  a local effect that does not survive the whole arc, where fewer big
+  hits means fewer fights won per act. THE DISCIPLINE POINT: the first
+  pass cited "sim_progression_pace re-run and stays green" as evidence
+  for a global pace claim. It is not evidence of anything of the kind --
+  that harness asserts only `Act I p50 >= 2`, `p50 grows across acts`
+  and a determinism leg, and says so itself ("band NUMBERS are
+  report-only until ratified via CHOICE-LOG"). A pace claim needs the
+  before/after numbers, which is what this entry is. ACCEPTED rather
+  than compensated: ~15% off the melee line's Act III total is inside
+  what GH#211's own baselines were re-tuned by, and compensating it from
+  `skills.json` would undo the milestone. Re-ratify the #211 bands
+  against these numbers next time they are touched.
+- **Ladder ordering is an ASSERTION now, not an inference from window
+  arithmetic (2026-08-02, GH#337, fix round)**: the entry above tied
+  rungs 1 and 2 and overlapped their windows -- which silently repealed
+  the contract those windows were carrying, because rung 2 was then free
+  to climb to 0.98 against rung 1's floor of 0.88 with both gates green,
+  i.e. exactly the Invrisil-easier-than-Riverfarm inversion the ladder
+  exists to catch. `sim_combat_batch.gd` now records the four rung win
+  rates and asserts rung-by-rung descent directly (`LADDER_RUNGS`,
+  `LADDER_TIE = 0.05`), so consecutive stops may READ EQUAL inside the
+  tie band and nothing wider, and restoring a real step never trips it.
+  Skipped under `WI_CELL_RANGE` (a shard holds only a slice); an
+  unsharded run that fails to measure all four rungs reddens by itself.
+- **On the fitted combat readout, the DESCRIPTION yields -- in BOTH
+  cooldown states (2026-08-02, GH#337, fix round)**: the first pass
+  applied this only while a Skill was cooling, so a READY cooled Skill
+  carried the standing clause AND the flavour and overflowed the strip
+  ([Power Strike] rendered "...Once every 2 rounds. — Everything behind
+  one…"). `_slot_info_line` now asks the real fitter whether the full
+  line fits one readout line and drops the flavour if it does not,
+  ONLY when a standing cooldown clause is present -- no Skill outside
+  the cooled ten changes. The rule stated once: the mechanical statement
+  is never the thing that gets ellipsised. Because the degrade happens
+  before the emit, `ui_slot_info_rendered` now carries the string the
+  player actually sees, which is what makes it gateable at all
+  (qa/scripts/combat_move_input.json + 03_power_strike_slot_info.png).

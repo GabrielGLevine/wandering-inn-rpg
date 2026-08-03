@@ -616,7 +616,27 @@ func _slot_info_line(d: Dictionary) -> String:
 				return skill_name if effect_lines.is_empty() else "%s — %s" % [skill_name, effect_lines[0]]
 			if effect_lines.is_empty():
 				return "%s — %s" % [skill_name, tail]
-			return "%s — %s — %s" % [skill_name, effect_lines[0], tail]
+			var line := "%s — %s — %s" % [skill_name, effect_lines[0], tail]
+			# ...and the READY state needed the SAME rule, which the first pass
+			# missed. A cooled Skill at full readiness carries BOTH the standing
+			# clause (inside `effect_lines[0]`) and the description, and that pushed
+			# [Power Strike] -- the one cooled Skill whose description was short
+			# enough to fit before -- over the edge: the strip rendered
+			# "×2 damage. Once every 2 rounds. — Everything behind one…". Same
+			# resolution as the cooling branch, applied only when a standing clause
+			# is actually riding the line, so no Skill outside the cooled set changes
+			# at all: the description yields, the mechanical statement never does.
+			#
+			# `_readout_label` is the real fitter, so this asks IT rather than
+			# guessing at character counts. Null on a bare-`new()` HUD (the unit
+			# construction `test_combat_visuals`/`test_combat_sim` use) -- with no
+			# label there is no budget to bust, so the full line stands and those
+			# tests keep their exact previous answers.
+			if recovering == "" and int(record[WICombat.COOLDOWN_ROUNDS]) > 0 \
+					and _readout_label != null \
+					and _rtl_wrapped_line_count(_readout_label, line, READOUT_TEXT_WIDTH) > 1:
+				return "%s — %s" % [skill_name, effect_lines[0]]
+			return line
 		"item":
 			var item_name := String(d.get("label", ""))
 			var item_desc := String(d.get("description", ""))

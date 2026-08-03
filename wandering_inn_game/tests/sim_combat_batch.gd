@@ -5,15 +5,48 @@ extends SceneTree
 
 const RUNS_PER_CELL := 100
 
+## THE MAIN-QUEST BAND LADDER, in stop order, at the shared t4_spellsword14
+## yardstick. Riverfarm -> Invrisil -> Pallass -> the seal; a HIGHER win rate
+## means an EASIER stop, so the ladder must descend.
+##
+## GH#337 fix round. Until this milestone the ordering was carried implicitly by
+## four strictly-disjoint windows, and the ladder's own comment said so. Then
+## cooldowns tied rungs 1 and 2 at 0.92, their windows had to overlap, and the
+## implicit contract quietly evaporated across the whole overlap: rung 2 could
+## climb to 0.98 against rung 1's floor of 0.88 -- a full Invrisil-easier-than-
+## Riverfarm inversion -- with both gates still green. That is precisely the
+## failure the ladder exists to catch, so the ordering is now asserted DIRECTLY
+## and no longer depends on the windows staying disjoint.
+##
+## LADDER_TIE is the width inside which two consecutive rungs are allowed to read
+## equal (which rungs 1 and 2 currently do, deliberately -- see rung 2's own
+## comment and the CHOICE-LOG entry). Anything beyond it in the wrong direction
+## is an inversion and reddens. Restoring a real step never trips this: a bigger
+## DESCENT is always legal.
+const LADDER_RUNGS := [
+	"briar_collectors_deep_t5_sw14_hunter",
+	"hired_blades_t5_sw14_wilovan",
+	"forge_calibration_golem_t5_sw14_solo",
+	"seal_warden_t5_sw14_solo",
+]
+const LADDER_TIE := 0.05
+
 var _cell_idx := -1
 var _range_lo := -1
 var _range_hi := -1
+var _ladder_rates := {}
 
 func _cell_in_range() -> bool:
 	_cell_idx += 1
 	if _range_lo < 0:
 		return true
 	return _cell_idx >= _range_lo and _cell_idx <= _range_hi
+
+
+func _note_ladder(cell: Dictionary, win_rate: float) -> void:
+	var name := String(cell["name"])
+	if LADDER_RUNGS.has(name):
+		_ladder_rates[name] = win_rate
 
 const COMPOSITIONS := [
 	{"name": "goblin_ambush", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"]},
@@ -51,6 +84,18 @@ const ENCOUNTER_CELLS := [
 	{"name": "crate_scavengers_w1_klbkch", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": false, "ally": "klbkch"},
 	{"name": "supplier_scavengers_w1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": true},
 	{"name": "rock_crab_nest_t1_relc", "arena": "boulder_flats", "enemies": ["rock_crab"], "build": "warrior2", "solo": false, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# MEASURED-ONLY, and GH#337 moved it hard the other way: 0.18 -> 0.03. This is
+	# the cell that states "do not solo a rock crab at warrior2", and the statement
+	# got louder, not quieter -- but it is the clearest reading of the trade's
+	# player-NEGATIVE side and belongs on the record rather than only in a log.
+	# rock_crab carries damage_reduction, which `_apply_damage_reduction` subtracts
+	# PER HIT, so halving power_strike's cadence makes the solo warrior pay the
+	# shell twice per round instead of once (the DR-4 forge golem is the same case
+	# at the top of the game). The two other double-digit measured movers are the
+	# mirror image of it -- alley_footpads_w1_tutorial_solo 0.11 -> 0.22 and
+	# hired_blades_t3_spellsword9_wilovan 0.63 -> 0.75, both against DR-0 rosters.
+	# Left MEASURED on purpose: gating an intentional do-not-fight-this cell would
+	# force it into a window that contradicts what it exists to say.
 	{"name": "rock_crab_nest_t1_solo", "arena": "boulder_flats", "enemies": ["rock_crab"], "build": "warrior2", "solo": true},
 	{"name": "goblin_night_patrol_t1_relc", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "build": "warrior2", "solo": false},
 	{"name": "goblin_night_patrol_t1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_shaman"], "build": "warrior2", "solo": true},
@@ -165,23 +210,30 @@ const RIVERFARM_CELLS := [
 	# roster -- so their win rates read as a single descending ladder. Riverfarm
 	# is the FIRST stop and the LOWEST band. Ladder table + adjacent-pair proof:
 	# docs/design/2026-07-26-main-quest-line-spec.md sec.6.
-	# THE WINDOWS ARE DISJOINT AND ORDERED. A measured-only ladder could invert
-	# without reddening; these four gates make ordering itself the assertion, so
-	# any retune that flattens or reverses a step FAILS the harness. That is
-	# exactly what happened at GH#337 (skill cooldowns): rungs 1 and 2 read 0.92
-	# / 0.92 after the change and rung 2's window went red, which is the gate
-	# working. Current authored ladder, THREE steps rather than four --
-	# {rung 1 .88-.98, rung 2 .86-.98} / rung 3 .65-.76 / rung 4 .55-.64 -- the
-	# top pair deliberately sharing a band because Riverfarm and Invrisil now
-	# measure equal at the yardstick. Restoring the fourth step needs
-	# hired_blade_leader's own stats (combatants.json); the full story and the
-	# two rejected skills.json compensations are on rung 2 itself. Every window
+	# ORDERING IS ASSERTED DIRECTLY, by `LADDER_RUNGS`/`LADDER_TIE` at the bottom
+	# of this file -- NOT, any more, by the windows happening to be disjoint. A
+	# measured-only ladder could invert without reddening; the explicit gate is
+	# what makes ordering itself an assertion, and it keeps holding when two rungs
+	# have to share a band. That sharing is the state GH#337 (skill cooldowns) put
+	# the ladder in: rungs 1 and 2 both read 0.92 afterwards and rung 2's old
+	# window went red, which is the gate working. Current authored ladder, THREE
+	# steps rather than four -- {rung 1 .88-.98, rung 2 .86-.98} / rung 3 .65-.76 /
+	# rung 4 .55-.64 -- the top pair deliberately sharing a band because Riverfarm
+	# and Invrisil now measure equal at the yardstick. Restoring the fourth step
+	# needs hired_blade_leader's own stats (combatants.json); the full story and
+	# the two rejected skills.json compensations are on rung 2 itself. Every window
 	# keeps >=0.03 margin on both sides of its authored value.
 	{"name": "briar_collectors_deep_t5_sw14_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.88, "win_hi": 0.98, "check_rounds": true},
 ]
 
 const INVRISIL_CELLS := [
-	{"name": "alley_footpads_w2_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "warrior2", "solo": true, "win_lo": 0.75, "win_hi": 0.98},
+	# GH#337: 0.95 -> 0.96, ceiling 0.98 -> 0.99. A +0.01 move, but it landed on a
+	# margin that was ALREADY only 0.03 before this milestone, so the ceiling is
+	# lifted by exactly what the change consumed and no further -- the gate keeps
+	# the same tolerance it was authored with rather than being widened to make
+	# room. (Deliberately not re-centred: this cell's job is catching a collapse
+	# of an intentionally-soft early alley fight, and its floor is what does that.)
+	{"name": "alley_footpads_w2_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "warrior2", "solo": true, "win_lo": 0.75, "win_hi": 0.99},
 	{"name": "alley_footpads_w1_tutorial_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "warrior1_tutorial", "solo": true},
 	{"name": "alley_footpads_t3_spellsword9_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_spellsword9", "solo": true},
 	{"name": "alley_footpads_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_warrior10", "solo": true},
@@ -204,7 +256,12 @@ const INVRISIL_CELLS := [
 	{"name": "hired_blades_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": true},
 	{"name": "boulevard_night_footpads_t3_spellsword9_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_spellsword9", "solo": true},
 	{"name": "boulevard_night_footpads_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_warrior10", "solo": true},
-	{"name": "boulevard_duel_ring_t3_solo", "arena": "mercantile_alley", "enemies": ["hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
+	# GH#337: 0.92 -> 0.93, ceiling 0.95 -> 0.96. Same treatment and same reason as
+	# alley_footpads_w2_solo above -- a +0.01 move against a margin that was
+	# already 0.03 at base, so the ceiling moves by the +0.01 the change spent and
+	# nothing more. Neither knife carries power_strike, so what moved here is the
+	# PC's own side of the trade, not the enemies'.
+	{"name": "boulevard_duel_ring_t3_solo", "arena": "mercantile_alley", "enemies": ["hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.96},
 	# MAIN-LINE BAND LADDER rung 2 of 4 (yardstick rung; see rung 1's comment for
 	# the disjoint-window contract). The sw11 rung below is the SHARED-LEVEL
 	# comparison against Pallass's own T4 cell (forge_calibration_golem_t4_solo)
@@ -227,9 +284,13 @@ const INVRISIL_CELLS := [
 	# skills.json: the lever is hired_blade_leader's own con/weapon_die in
 	# combatants.json, which this lane does not own. Logged as a SEAM. Until
 	# then this window and rung 1's are deliberately the SAME BAND -- the honest
-	# statement that Invrisil and Riverfarm now read equal at the yardstick --
-	# and the ladder's remaining, still-gated assertion is {rung 1, rung 2} >
-	# rung 3 > rung 4, whose windows stay strictly disjoint and ordered.
+	# statement that Invrisil and Riverfarm now read equal at the yardstick.
+	# THE ORDERING CONTRACT DID NOT GO WITH IT: overlapping these two windows
+	# would have left rung 2 free to climb to 0.98 against rung 1's 0.88 with both
+	# gates green, so `LADDER_RUNGS`/`LADDER_TIE` now assert rung-by-rung descent
+	# directly (fix round). This pair is allowed to READ EQUAL inside the 0.05 tie
+	# band and nothing wider; {rung 1, rung 2} > rung 3 > rung 4 is asserted by
+	# the same gate rather than inferred from window arithmetic.
 	{"name": "hired_blades_t5_sw14_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.86, "win_hi": 0.98, "check_rounds": true},
 	{"name": "hired_blades_t4_sw11_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword11_party", "solo": false},
 	# v0.16 I1 (#306). Side-quest fight at Invrisil's own expected level, SOLO
@@ -251,7 +312,23 @@ const INVRISIL_CELLS := [
 	# Measured 0.78, median 3, as drafted -- no tuning needed. That sits ABOVE
 	# the fence cell's 0.67 by construction: the brawl is a failure state, not a
 	# target, so it is the softer of the two v0.16 Invrisil fights.
-	{"name": "rest_bravos_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["rest_bravo_a", "rest_bravo_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# GH#337 re-author (0.78 -> 0.93, window 0.55-0.95 -> 0.85-0.99). MOVED
+	# INTENTIONALLY, and this is the LARGEST single move in the 141-cell set
+	# (+0.15), so it gets its own rationale rather than riding the milestone's
+	# general note. Mechanism is the one the CHOICE-LOG names: rest_bravo_b holds
+	# power_strike and carries damage_mod 0, while the t3_warrior10 build carries
+	# +2 -- `_resolve_hit` adds damage_mod PER HIT, so cooling the bravo's big
+	# swing into two ordinary ones is worth nothing to it and +2 a round to the
+	# player. It is the cleanest case of the trade in the whole set because
+	# neither bravo has counter_strike to muddy it. The window had to move too:
+	# 0.93 sat 0.02 under the old ceiling, the same false-red-in-waiting the
+	# Riverfarm stop was re-centred for.
+	# THE DESIGN COST IS REAL AND IS NOT FIXED HERE: a failure-state brawl at the
+	# player's own level is now a 93% formality, and the fence cell beside it also
+	# climbed (0.67 -> 0.81, still mid-band). Restoring the brawl's teeth means
+	# rest_bravo_a/b's own con/weapon_die in combatants.json, which this lane does
+	# not own -- recorded as a seam, not silently absorbed. Margins 0.08/0.06.
+	{"name": "rest_bravos_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["rest_bravo_a", "rest_bravo_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.85, "win_hi": 0.99, "check_rounds": true},
 ]
 
 const BUILDS := [
@@ -802,6 +879,7 @@ func _init() -> void:
 		for r: int in rounds:
 			hist[r] = int(hist.get(r, 0)) + 1
 		var gated := cell.has("win_lo")
+		_note_ladder(cell, win_rate)
 		print("[riverfarm / %s] arena=%s build=%s%s%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
 			cell["name"], String(cell["arena"]), String(cell["build"]),
 			"" if has_hunter else " solo", "" if gated else " (measured)",
@@ -855,6 +933,7 @@ func _init() -> void:
 		for r: int in rounds:
 			hist[r] = int(hist.get(r, 0)) + 1
 		var gated := cell.has("win_lo")
+		_note_ladder(cell, win_rate)
 		print("[invrisil / %s] arena=%s build=%s%s%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
 			cell["name"], String(cell["arena"]), String(cell["build"]),
 			"" if has_wilovan else " solo", "" if gated else " (measured)",
@@ -963,6 +1042,7 @@ func _init() -> void:
 		for r: int in rounds:
 			hist[r] = int(hist.get(r, 0)) + 1
 		var gated := cell.has("win_lo")
+		_note_ladder(cell, win_rate)
 		print("[dungeon / %s] arena=%s build=%s%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
 			cell["name"], String(cell["arena"]), String(cell["build"]), "" if gated else " (measured)",
 			win_rate, median, rounds[0], rounds[-1],
@@ -1010,6 +1090,7 @@ func _init() -> void:
 		for r: int in rounds:
 			hist[r] = int(hist.get(r, 0)) + 1
 		var gated := cell.has("win_lo")
+		_note_ladder(cell, win_rate)
 		print("[bestiary / %s] arena=%s build=%s%s win_rate=%.2f median_rounds=%d min=%d max=%d" % [
 			cell["name"], String(cell["arena"]), String(cell["build"]), "" if gated else " (measured)",
 			win_rate, median, rounds[0], rounds[-1],
@@ -1145,6 +1226,31 @@ func _init() -> void:
 		if bool(cell.get("check_rounds", false)) and (median < 3 or median > 12):
 			any_failed = true
 			printerr("FAIL [scaled / %s]: median rounds %d outside 3-12" % [cell["name"], median])
+
+	# THE LADDER ORDERING GATE (see LADDER_RUNGS' doc comment). Skipped entirely
+	# under WI_CELL_RANGE -- a shard holds only a slice of the four rungs, and the
+	# sharded runs exist to be concatenated and diffed, not to re-assert a global
+	# contract. The unsharded run is the one that owns this.
+	if _ladder_rates.size() == LADDER_RUNGS.size():
+		var ladder_line: Array = []
+		for rung_name: String in LADDER_RUNGS:
+			ladder_line.append("%s %.2f" % [rung_name, float(_ladder_rates[rung_name])])
+		print("[ladder] main-quest stops, descending: ", " > ".join(ladder_line))
+		for i in range(LADDER_RUNGS.size() - 1):
+			var upper := String(LADDER_RUNGS[i])
+			var lower := String(LADDER_RUNGS[i + 1])
+			var upper_rate := float(_ladder_rates[upper])
+			var lower_rate := float(_ladder_rates[lower])
+			if lower_rate > upper_rate + LADDER_TIE:
+				any_failed = true
+				printerr("FAIL [ladder]: rung %d (%s, %.2f) reads EASIER than rung %d (%s, %.2f) by more than the %.2f tie band — the main-quest stops have inverted" % [
+					i + 2, lower, lower_rate, i + 1, upper, upper_rate, LADDER_TIE,
+				])
+	elif _range_lo < 0:
+		any_failed = true
+		printerr("FAIL [ladder]: an unsharded run measured %d of the %d ladder rungs — a rung was renamed or dropped without updating LADDER_RUNGS" % [
+			_ladder_rates.size(), LADDER_RUNGS.size(),
+		])
 
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:

@@ -2390,6 +2390,23 @@ func _init() -> void:
 	# that got ellipsised away (found by windowed read, not by this test).
 	assert(not line_cd6.contains(String((cd6.skills["power_strike"] as Dictionary)["description"])),
 		"while cooling the authored flavour yields to the live state, got: %s" % line_cd6)
+	# ...and the READY state carries the STANDING clause, which is the half the
+	# first pass overflowed the readout strip with. This bare-`new()` HUD has no
+	# `_readout_label`, so the fit-driven degrade in `_slot_info_line` cannot fire
+	# here BY DESIGN -- that is exactly what this pair of asserts pins: the clause
+	# is unconditional, and dropping the flavour is a decision the real fitter
+	# makes, never a hardcoded truncation. The player-visible half is gated by
+	# qa/scripts/combat_move_input.json + 03_power_strike_slot_info.png.
+	cd6.cooldowns["pc"] = {}
+	var ready_line_cd6 := ""
+	for d_ready_cd6: Dictionary in hud_cd6.render_bar_slots(view_cd6, slots_cd6):
+		if String(d_ready_cd6.get("id", "")) == "power_strike":
+			assert(int(d_ready_cd6.get("cooldown_remaining", -1)) == 0, "the slot is ready again")
+			ready_line_cd6 = hud_cd6._slot_info_line(d_ready_cd6)
+	assert(ready_line_cd6.contains("Once every 2 rounds."),
+		"a READY cooled Skill states its cadence before the player spends a turn finding out, got: %s" % ready_line_cd6)
+	assert(ready_line_cd6.contains(String((cd6.skills["power_strike"] as Dictionary)["description"])),
+		"and with no fitter attached the authored flavour is still there, got: %s" % ready_line_cd6)
 	# The HUD built with no combat handed in (test_combat_visuals' bare-new()
 	# shape) can never think anything is cooling -- every pre-GH#337 call site
 	# keeps its exact previous answer.
@@ -2432,6 +2449,64 @@ func _init() -> void:
 	var hp_floor_cd7 := int(pc_cd7[WIKeys.HP])
 	cd7._deduct_hp("pc", 1)
 	assert(int(pc_cd7[WIKeys.HP]) == hp_floor_cd7 - 1, "a 1-damage hit still costs 1 on the softest rung")
+
+	# --- GH#345: the REPORTED number is the number the HP bar pays ---------------
+	# `_apply_difficulty` lives inside `_deduct_hp`, so ATTACK_RESOLVED's `damage`
+	# was the PRE-scale figure -- the floating damage number
+	# (`combat_screen._board_renderer.spawn_damage_number`) and the feed line
+	# ("%s strikes %s for %d!") both read that field verbatim, so on the hard rung
+	# the player would watch a "10" float over a 13-point HP drop. Driven through
+	# the real `_resolve_hit` because the EMIT is the thing under test. The bare pc
+	# carries no damage_reduction and no mana_shield, so the HP delta and the
+	# reported field must agree exactly.
+	var cd8 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd8.begin()
+	cd8.difficulty_damage_taken_mult = 1.3
+	var pc_cd8: Dictionary = cd8.combatants["pc"]
+	assert(int(pc_cd8.get(WIKeys.DAMAGE_REDUCTION, 0)) == 0,
+		"fixture: the bare pc carries no damage_reduction, so HP delta == reported damage")
+	pc_cd8[WIKeys.HP] = 4000
+	pc_cd8[WIKeys.MAX_HP] = 4000
+	var checked_cd8 := 0
+	var scaled_cd8 := 0
+	for attempt_cd8 in 40:
+		var before_cd8 := int(pc_cd8[WIKeys.HP])
+		_events.clear()
+		cd8._resolve_hit("goblin_raider", "pc", 1.0, true, false)
+		for e_cd8: Dictionary in _events:
+			if String(e_cd8["type"]) != "attack_resolved" or not bool(e_cd8["payload"]["hit"]):
+				continue
+			var payload_cd8: Dictionary = e_cd8["payload"]
+			checked_cd8 += 1
+			var paid_cd8 := before_cd8 - int(pc_cd8[WIKeys.HP])
+			if paid_cd8 > 1:
+				scaled_cd8 += 1
+			assert(int(payload_cd8["damage"]) == paid_cd8,
+				"ATTACK_RESOLVED's damage must equal the HP the difficulty rung actually cost")
+			assert(int(payload_cd8["target_hp"]) == int(pc_cd8[WIKeys.HP]),
+				"target_hp is the post-scale HP, and always was")
+	assert(checked_cd8 >= 5, "the hard-rung loop has to land real hits or it proves nothing")
+	assert(scaled_cd8 >= 5, "and those hits have to be big enough for 1.3 to bite")
+	# At the default rung the field is byte-identical to its pre-GH#345 value.
+	var cd8b := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd8b.begin()
+	var pc_cd8b: Dictionary = cd8b.combatants["pc"]
+	pc_cd8b[WIKeys.HP] = 4000
+	pc_cd8b[WIKeys.MAX_HP] = 4000
+	var checked_cd8b := 0
+	for attempt_cd8b in 40:
+		var before_cd8b := int(pc_cd8b[WIKeys.HP])
+		_events.clear()
+		cd8b._resolve_hit("goblin_raider", "pc", 1.0, true, false)
+		for e_cd8b: Dictionary in _events:
+			if String(e_cd8b["type"]) != "attack_resolved" or not bool(e_cd8b["payload"]["hit"]):
+				continue
+			checked_cd8b += 1
+			assert(int(e_cd8b["payload"]["damage"]) == before_cd8b - int(pc_cd8b[WIKeys.HP]),
+				"at 1.0 the reported damage is unchanged from before the rider")
+	assert(checked_cd8b >= 5, "the 1.0 loop has to land real hits too")
 
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)
