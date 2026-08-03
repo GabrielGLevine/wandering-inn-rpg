@@ -3039,3 +3039,22 @@ plausible-looking wrong number within reach is what produced the bug.
     fully gated, zero playtest blockers expected on the delta; the
     user's morning verdicts shape wave-2, not this tag). User re-rules
     by reverting the tag if wanted.
+
+## Voice pass (2026-08-03, voice-pass branch)
+
+1. **W2 dispatched as ONE 36-agent workflow, not ≤8-agent rounds:**
+   plan's round structure existed for usage pacing; the workflow
+   concurrency cap self-paces and the USAGE-GUARD hook covers
+   mid-flight escalation. Guard was OK (9%/33%) at dispatch.
+2. **14 card-vs-constraint conflicts in W2 resolved by agents,
+   accepted on review:** every case favored either fact survival
+   (Liscor restored, stew restored, treeline kept) or gate-regex
+   compliance over card verbatim text (wilovan "entire", smith
+   ", not", drayman antithesis pruning incl. player option
+   meaning-preserving flip). Full list in W2 task output.
+3. **{addr} token drop in one lift-attendant variant accepted:**
+   card-ordered verbatim text omits it; token survives elsewhere
+   in file; file-level token survival verified corpus-wide vs HEAD.
+4. **W4 HELD at CAUTION (burn-rate only, 89%/hr post-W2 spike;
+   base 42%/45%):** background watcher polls usage every 5m,
+   W4 dispatches when tier returns OK. No user gate.
