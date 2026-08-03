@@ -156,7 +156,7 @@ extends SceneTree
 ## mood-grade buckets are the proxy); no combat-arena scoring; no auto-fix.
 
 const REGION_GROUPS := {
-	"inn": "interiors", "inn_upstairs": "interiors", "guild": "interiors",
+	"inn": "interiors", "inn_upstairs": "interiors", "inn_player_room": "interiors", "guild": "interiors",
 	"barracks": "interiors", "runners_guild": "interiors",
 	"garden_sanctuary": "sanctuary",
 	"street": "liscor", "floodplains": "liscor", "sewers": "liscor",
