@@ -3351,8 +3351,20 @@ Windowed `property_seams` at seed 9, six frames, evidence under
   tell already in place; nothing needed here.
 - **POSITIVE — the burn resolution reads.** `04_debris_blocks_the_nook` →
   `05_nook_cleared`: prop gone, nook open, prop-authored line spoken.
+- **RUN HYGIENE — investigated, NOT a W1 regression.** `property_seams`
+  windowed intermittently exits with `WARNING: 12 ObjectDB instances were
+  leaked at exit` + `ERROR: 6 resources still in use at exit` — the
+  `pallass_ledger_offices` teardown-noise class logged directly above.
+  A/B'd rather than assumed: same tree, same script, same fixture, swapping
+  ONLY the three edited `src/core` files — table engine 5 leaks/10 runs,
+  pre-table engine 1 leak/5 runs, and the two engines' event streams are
+  byte-identical (61 events, timestamps stripped). Headless is
+  deterministically clean (0 grep hits, 3/3), which is what `ci_sweep`
+  greps. Conclusion: pre-existing flaky windowed teardown; it deserves a
+  real fix in whichever wave owns run hygiene, but it is not the property
+  table's.
 - [ ] **(P2, EVIDENCE FOR THE EXISTING ROW — W4 owns the fix)** Toast over
-  field-skill legend, reproduced twice in this run
+  field-skill legend, reproduced three times in this run
   (`02_ice_floor_formed`, `05_nook_cleared`, `06_untagged_prop_refused`): the
   toast panel overlaps the legend and truncates it mid-word ("...old timber in
   momen"). Same defect as the v0.17-close row; logging the extra frames
