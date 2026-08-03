@@ -69,6 +69,14 @@ Process lessons this session (fold candidates for wi-running-the-machine
    companion respawning prop, #350 20g FIRM. Overnight: close v0.17 →
    tag → dispatch W1-W5 → train → HANDOFF; eye/ear verdicts queue with
    prepared states.**
+   FOUR LATE USER ADDITIONS (2026-08-03, slotted no-new-seams):
+   #359 day/night looping clock → W4 (owns phase derivation +
+   fixtures); #360 difficulty-tier sweep + class-parity harness → W5
+   (both axes honestly unsimmed today — cells run at x1.0, parity
+   ungated); Ice-Floor/Flame-Jet examples → W1 brief verbatim (#348
+   comment); martial exploration-Skills CANDIDATE DOC (canon-checked,
+   property-mapped) → controller overnight deliverable, USER PICKS —
+   morning read beside the #347 FEEL gate.
 
 ### v0.17 dispatch prompt (paste into the fresh session)
 
