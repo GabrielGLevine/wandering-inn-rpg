@@ -3058,3 +3058,15 @@ plausible-looking wrong number within reach is what produced the bug.
 4. **W4 HELD at CAUTION (burn-rate only, 89%/hr post-W2 spike;
    base 42%/45%):** background watcher polls usage every 5m,
    W4 dispatches when tier returns OK. No user gate.
+5. **W4 52-FAIL routed to Fable reconciliation BEFORE any W5 loop:**
+   failure signal is systemic (button placement on hubs + wit
+   density), not per-file; blind loops would re-run the same
+   generous bible reading or overcorrect to flatness. Detector
+   hits on §5-sanctioned keeps (rags served, zevara_oath_two,
+   tallyman + pisces_seal reveals) need overruling, which only
+   Fable's allocation authority can do. This IS the plan's
+   escalate-to-Fable path, batched.
+6. **Voice pass WOUND DOWN at WINDDOWN tier (session 71%,
+   61%/hr):** W2+W4 burned ~4.3M subagent tokens in one session
+   window. Resume queue with verbatim prompts in
+   docs/dialogue-voice/W5-QUEUE.md; watcher resumes on OK.

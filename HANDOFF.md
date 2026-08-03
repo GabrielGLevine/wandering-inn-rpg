@@ -8,16 +8,21 @@ history in git. Read order for a fresh session: wi-start-here.
 De-AI rewrite of all 71 dialogue files per external critique
 (docs/dialogue-voice/critique-2026-08-03.md). Spec + plan in
 docs/superpowers/{specs,plans}/2026-08-03-dialogue-voice-pass*.
-DONE: Tasks 1-5 — gate script (qa/scripts/dialogue_voice_gate.py,
+DONE: Tasks 1-6 — gate script (qa/scripts/dialogue_voice_gate.py,
 self-testing; snapshot baseline committed), 36-cluster manifest,
 Fable bible + 36 cards (docs/dialogue-voice-bible.md, -cards/),
 W2 rewrite (36 sibling-blind agents, 288 nodes, 68 files changed),
-W3 final gate CLEAN (anti=6/30). NEXT: Task 6 W4 cold-reader
-detection (71 per-file adversarial readers + 1 budget aggregator,
-prompts verbatim in plan) — HELD at usage CAUTION (burn-rate spike
-post-W2); background watcher polls 5m, dispatch on OK. Then W5
-failure loop, W6 Fable adjudication + wi-verifying-changes sweep +
-wi-machine-playtest. CHOICE-LOG "Voice pass" block has 4 rulings.
+W3 final gate CLEAN (anti=6/30), W4 cold-reader detection
+(report-w4.json: 52/71 FAIL — typography dead, residue = button
+placement/density tell 2, 4 unsanctioned sentiment-deflects, smith
+reveal leak, bark template x3; several hits are bible-§5 sanctioned
+keeps the auditor can't know). NEXT (exact steps + verbatim prompts:
+docs/dialogue-voice/W5-QUEUE.md): Fable reconciliation ruling →
+w5-directive.md → W5 cluster wave → gate stays CLEAN → sampled
+re-detect → W6 close per plan Task 8. SESSION WOUND DOWN at
+WINDDOWN tier (session 71%, burn-rate); background watcher polls
+until OK (post-reset ~4h), resume from W5-QUEUE Step 1.
+CHOICE-LOG "Voice pass" block has 6 rulings.
 Unrelated: filed #370 (Relc front-on first meeting), #371 (inn
 one-party-at-a-time canonical groups), #372 (Floodplains
 tutorializing defeat text) from user playtest notes.
