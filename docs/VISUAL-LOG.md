@@ -3337,3 +3337,50 @@ head v0.18 W4 as HOTFIX-PRIORITY. Ranked player-visible-first.
 - [ ] **(P3)** | window_blue | inn_upstairs (10,4) | Reads as a dark grey slab with a blue edge rather than a window; doors in the same wall read correctly | v0.17 close machine-playtest, player_room_loop/00 |
 - [ ] **(P3)** | Room register node | inn register dialogue | Speaker banner reads 'Lyonette' over body text that is third-person narration about her | v0.17 close machine-playtest, player_room_loop/01 |
 - [ ] **(P3)** **pallass_ledger_offices run hygiene** (pallass_ledger_offices/04_den_keeper_released.png): Not player-visible, but pallass_ledger_offices is the only one of my seven runs that exits noisy: 'WARNING: 23 ObjectDB instances were leaked at exit' plus 'ERROR: 10 resources still in use at exit'. QA_RESULT is PASS with zero failures and all four screenshots land, so this is teardown noise rather than a route failure — flagging it because the other six runs (including two other three-map routes
+
+<!-- v018-W1 -->
+### v0.18 W1 — #348 property-table proof shots (2026-08-03)
+
+Windowed `property_seams` at seed 9, six frames, evidence under
+`wandering_inn_game/qa_output/property_seams/`.
+
+- [ ] **(P2, TINT-ONLY — the lane that owns terrain art)** The frozen cell
+  reads as a SHADE of water, not as ice. RETRACTION: this row's first draft
+  filed the pale-blue slab as a POSITIVE "real render tell". That judgement
+  contradicts the standing directive of 2026-08-02 — tint is NOT
+  disambiguation, shade variants never read as separate things, distinct
+  silhouettes are required — so it is re-filed as an OPEN row, because a row
+  logged as a positive is a row nobody drains.
+  Evidence `01_water_before_freeze` → `02_ice_floor_formed` →
+  `03_standing_on_the_ice`: the frozen cell (3,5) is the same water tile at a
+  lighter value — same silhouette, same texture, no rime, no fracture, no edge
+  treatment. In `02` (the frame literally named "ice floor formed") the change
+  is barely perceptible at all — a few white specks at the band's left edge —
+  because the PC is still standing north of the cell.
+  Why this is not cosmetic: `freeze_cell` is the one verb in the slice that
+  flips WALKABILITY. A playtester who freezes the channel, sees the same blue
+  band and reads the toast as flavour never tries to cross — K5 (discovery
+  failure) firing on the slice's headline interaction. Cure is an ice tile
+  with its own silhouette (rime edge / fracture lines), not a brighter blue.
+  NOT fixable inside W1: the property table ships no art, and
+  `sprites.json` + `assets/**` belong to the art lane this wave.
+- **POSITIVE — the burn resolution reads.** `04_debris_blocks_the_nook` →
+  `05_nook_cleared`: prop gone, nook open, prop-authored line spoken.
+- **RUN HYGIENE — investigated, NOT a W1 regression.** `property_seams`
+  windowed intermittently exits with `WARNING: 12 ObjectDB instances were
+  leaked at exit` + `ERROR: 6 resources still in use at exit` — the
+  `pallass_ledger_offices` teardown-noise class logged directly above.
+  A/B'd rather than assumed: same tree, same script, same fixture, swapping
+  ONLY the three edited `src/core` files — table engine 5 leaks/10 runs,
+  pre-table engine 1 leak/5 runs, and the two engines' event streams are
+  byte-identical (61 events, timestamps stripped). Headless is
+  deterministically clean (0 grep hits, 3/3), which is what `ci_sweep`
+  greps. Conclusion: pre-existing flaky windowed teardown; it deserves a
+  real fix in whichever wave owns run hygiene, but it is not the property
+  table's.
+- [ ] **(P2, EVIDENCE FOR THE EXISTING ROW — W4 owns the fix)** Toast over
+  field-skill legend, reproduced three times in this run
+  (`02_ice_floor_formed`, `05_nook_cleared`, `06_untagged_prop_refused`): the
+  toast panel overlaps the legend and truncates it mid-word ("...old timber in
+  momen"). Same defect as the v0.17-close row; logging the extra frames
+  because they show it at three different toast lengths.

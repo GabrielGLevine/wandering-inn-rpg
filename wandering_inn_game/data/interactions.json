@@ -1,0 +1,38 @@
+{
+ "_comment": "#348 slice 1 property table (spec docs/design/2026-08-02-emergent-skill-interactions-spec.md). Closed vocabularies + rows, resolved in WIFieldSkills.dispatch. ROW ORDER IS THE CONTRACT (first match wins). Verb contracts: field_skills.gd; policing: data_lint.",
+ "skill_properties": [
+  "burns",
+  "freezes"
+ ],
+ "target_properties": {
+  "burnable": "entity",
+  "freezable": "cell"
+ },
+ "outcomes": [
+  "remove_scorch",
+  "freeze_cell"
+ ],
+ "interactions": [
+  {
+   "skill_property": "burns",
+   "target_property": "burnable",
+   "outcome": "remove_scorch",
+   "persistence": "permanent",
+   "counter": "burned_the_debris",
+   "terrain": "scorched",
+   "toast_from": "target",
+   "toast_key": "burn_toast",
+   "toast_default": "Flame takes the debris. It crackles, collapses to ash, and the way is clear."
+  },
+  {
+   "skill_property": "freezes",
+   "target_property": "freezable",
+   "outcome": "freeze_cell",
+   "persistence": "until_sleep",
+   "terrain": "ice",
+   "toast_from": "skill",
+   "toast_key": "freeze_toast",
+   "toast_default": "Frost races across the water and locks it solid. You can cross now. Until it thaws."
+  }
+ ]
+}
