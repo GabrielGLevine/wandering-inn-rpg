@@ -3337,3 +3337,23 @@ head v0.18 W4 as HOTFIX-PRIORITY. Ranked player-visible-first.
 - [ ] **(P3)** | window_blue | inn_upstairs (10,4) | Reads as a dark grey slab with a blue edge rather than a window; doors in the same wall read correctly | v0.17 close machine-playtest, player_room_loop/00 |
 - [ ] **(P3)** | Room register node | inn register dialogue | Speaker banner reads 'Lyonette' over body text that is third-person narration about her | v0.17 close machine-playtest, player_room_loop/01 |
 - [ ] **(P3)** **pallass_ledger_offices run hygiene** (pallass_ledger_offices/04_den_keeper_released.png): Not player-visible, but pallass_ledger_offices is the only one of my seven runs that exits noisy: 'WARNING: 23 ObjectDB instances were leaked at exit' plus 'ERROR: 10 resources still in use at exit'. QA_RESULT is PASS with zero failures and all four screenshots land, so this is teardown noise rather than a route failure — flagging it because the other six runs (including two other three-map routes
+
+<!-- v018-W1 -->
+### v0.18 W1 — #348 property-table proof shots (2026-08-03)
+
+Windowed `property_seams` at seed 9, six frames, evidence under
+`wandering_inn_game/qa_output/property_seams/`.
+
+- **POSITIVE — the frozen cell has a real render tell.** `02_ice_floor_formed`
+  → `03_standing_on_the_ice`: the frozen channel cell draws as a distinctly
+  paler blue slab under the PC, so "I can cross now" is legible without the
+  toast. The property table's one walkability-flipping verb ships with its
+  tell already in place; nothing needed here.
+- **POSITIVE — the burn resolution reads.** `04_debris_blocks_the_nook` →
+  `05_nook_cleared`: prop gone, nook open, prop-authored line spoken.
+- [ ] **(P2, EVIDENCE FOR THE EXISTING ROW — W4 owns the fix)** Toast over
+  field-skill legend, reproduced twice in this run
+  (`02_ice_floor_formed`, `05_nook_cleared`, `06_untagged_prop_refused`): the
+  toast panel overlaps the legend and truncates it mid-word ("...old timber in
+  momen"). Same defect as the v0.17-close row; logging the extra frames
+  because they show it at three different toast lengths.

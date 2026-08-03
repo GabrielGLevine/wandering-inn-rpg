@@ -1,5 +1,5 @@
 {
- "_comment": "#348 slice 1 property table (spec docs/design/2026-08-02-emergent-skill-interactions-spec.md). Closed vocabularies + authored rows; resolved in WIFieldSkills.dispatch. ROW ORDER IS THE CONTRACT (first match wins). Rationale + outcome-verb contracts live in src/core/field_skills.gd; data_lint's check_interactions polices this file.",
+ "_comment": "#348 slice 1 property table (spec docs/design/2026-08-02-emergent-skill-interactions-spec.md). Closed vocabularies + rows, resolved in WIFieldSkills.dispatch. ROW ORDER IS THE CONTRACT (first match wins). Verb contracts: field_skills.gd; policing: data_lint.",
  "skill_properties": [
   "burns",
   "freezes"

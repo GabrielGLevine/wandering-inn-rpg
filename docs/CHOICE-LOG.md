@@ -2661,3 +2661,49 @@ the guard, in the pre-flight tier that runs before any Godot boot.
 14. **R1 lease gate:** gates on visited_own_room (stairs counter), not
     story progress — keeps two pinned canonicals byte-green. USER
     CONFIRM queued (morning read).
+
+<!-- v018-W1 -->
+## v0.18 wave-1 — W1 (#348 slice 1, property-verb substrate)
+
+1. **Table injected through `WISceneCatalog.compose()`, not a new WIGame
+   parameter.** 182 call sites construct a sim from `compose()`; a required
+   constructor arg would have churned every one, and a defaulted one would
+   have silently emptied the table in most of them (burn/freeze inert, caught
+   only by canonicals). Composing `data/interactions.json` into `scene_config`
+   beside `maps` hands the table to every existing caller with a two-line
+   diff, keeps core pure (WIGame still reads no disk), and leaves a hand-built
+   `scene_config` legitimately table-less — which is exactly the fixture
+   `test_interactions_table` uses to prove no hardcoded arm survives.
+2. **`dispatch`'s `is_freezable: bool` became `cell_properties: Dictionary`.**
+   The cell-placement half of the target vocabulary cannot generalize past one
+   property while the seam passes a single boolean. `WIGame._cell_properties`
+   is the one place a new cell class is registered (it must also be taught to
+   the map loader, which decides whether the class blocks).
+3. **Byte-identity proven by DIFF, not by assertion.** `sewers_walkthrough`'s
+   full 213-event stream (timestamps stripped) is identical between base
+   6b47c0d and the table-driven tree — the formalized git-archive method, not
+   "the canonical still passes". K1 is satisfied on evidence.
+4. **Outcome-verb set stayed at exactly the two shipped verbs.** `state_set`,
+   `thaw_cell`, `bank_toast` and `refuse` are named by the spec but ship no
+   row here, and a verb with no row is dead code by the same argument that
+   makes a carrier-less row dead data (K2). They arrive with slice 2's rows.
+5. **The mirror contract is triple-pinned, deliberately.** The verb set exists
+   in `WIFieldSkills.OUTCOMES`, in `data/interactions.json`, and in
+   `data_lint.ENGINE_OUTCOMES`; a unit arm and a lint arm each fail on drift.
+   The engine-free tier has to know the closed set to reject an unknown verb,
+   and a silent third copy would be worse than a policed one.
+6. **`--touching data/interactions.json` maps to the `exploration` system tag
+   (169 canonicals).** A row edit genuinely can change any field cast, so the
+   honest mapping is broad. Slice-1 verification ran the spec's named
+   byte-identity set (`sewers_walkthrough`, `blink_bypass_loop`, `ward_loop`,
+   `field_skills_loop`) plus `--tier smoke` plus the new canonical, NOT all
+   169 — disclosed rather than implied.
+7. **The two user-named interactions split.** [Ice Floor]-on-water needs no
+   substrate work at all: it is the shipped `freezes x freezable -> freeze_cell`
+   row, and a new carrier skill is pure `skills.json` data (W5's file this
+   wave). `test_interactions_table` proves it with a synthetic `w1_ice_floor`
+   carrier that freezes and is walked upon. [Flame Jet]-on-corpse is BLOCKED,
+   not deferred by preference: it needs a skills.json edit, a corpse carrier
+   in map data, and an item yield the table deliberately does not own
+   (spec §6 — yields are `use_skill`'s job). Costed in `.lane-progress`;
+   question returned to the controller rather than disclose-and-proceed.
