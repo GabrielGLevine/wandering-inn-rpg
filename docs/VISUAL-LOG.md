@@ -95,7 +95,7 @@ DELETED after capture — their PNGs live under the same evidence root
   arch as the way in and the lone frame as scenery or a portal. Cheapest
   fixes: a hut/lean-to sprite behind the door, or move the door onto a
   visible wall face.
-- [ ] **SPRITE/CAMP-WATCH-GOBLIN-INVISIBLE (P3, NEW).** `camp_watch_goblin`
+- [x] **SPRITE/CAMP-WATCH-GOBLIN-INVISIBLE (P3) — DRAINED 2026-08-02 (v0.17 L4).** Value-axis tint [0.66,0.62,0.58] on the map row, no hue nudge: measured goblin_base mean luma ~78 against the camp grass tile's ~114, and the drop takes it to ~50. `goblin_spear_ally` is a COMBATANT tint and stays open (L2 owns combat data). Original row: `camp_watch_goblin`
   (`rags_camp` 2,6, `goblin_base`) is a small green-tinted goblin on the
   camp's bright green field and is genuinely unfindable at 1×
   (`floodplains_price_help/02_rags_camp_rack_hung.png` — the tangle at
@@ -104,7 +104,7 @@ DELETED after capture — their PNGs live under the same evidence root
   least legible unit on the board": the `goblin_base` green sits on top of
   green everywhere the goblins actually live. One value-axis re-tint (darker,
   not a hue nudge) would fix both at once.
-- [ ] **DECOR/REST-RUG-READS-AS-HOLE (P4, NEW — second instance of the
+- [x] **DECOR/REST-RUG-READS-AS-HOLE (P4) — DRAINED 2026-08-02 (v0.17 L4), together with DECOR/DEN-SHOP-RUG-READS-AS-HOLE below: ONE root, five sites.** The free-pack rug regions carry no border and no pattern, so any tint below the floor value reads as a gap in the boards. `rug_green`/`rug_tan` now point at owned PixelLab weaves with fringed borders (distinct artwork per id, not one sheet retinted) and all five crushing tints go near-identity. Evidence: qa_output/adventurers_rest_loop/02_the_common_hall.png, qa_output/pallass_ledger_offices/03_den_shop_arrival.png, qa_output/stationer_room_loop/01_the_stationers.png. Original row: (second instance of the
   den-shop row below).** `rug_green` at `adventurers_rest` (6,5) ships with
   `tint [0.42, 0.35, 0.3]`, which darkens it BELOW the floor value and kills
   what pattern the sprite had: it renders as a flat dark-olive square in the
@@ -114,7 +114,7 @@ DELETED after capture — their PNGs live under the same evidence root
   `rug_tan` has the same failure at the opposite end of the value scale
   (`pallass_ledger_carry/04_den_keeper_carried.png`) — a rug wants a border
   or a pattern, not a tint.
-- [ ] **PROP/WAX-TRAY-IS-A-CRATE (P4, NEW).** `stationer_wax_tray` (10,5) is
+- [x] **PROP/WAX-TRAY-IS-A-CRATE (P4) — DRAINED 2026-08-02 (v0.17 L4).** New owned `wax_seal_tray` sprite; evidence qa_output/stationer_room_loop/01_the_stationers.png. The other three CRATE-READS-AS-CLUTTER members stay open. Original row: `stationer_wax_tray` (10,5) is
   "Nine colours of wax and one blank seal for hire" and draws as the `crate`
   sprite — a thin dark sliver against the stationer's floor
   (`stationer_room_loop/01_the_stationers.png`, screen ≈(955,425)). Third
@@ -128,7 +128,7 @@ DELETED after capture — their PNGs live under the same evidence root
   Defensible for a ceiling-hung prop, but it is the room's only tall sprite
   and it eats the player's silhouette; a small `field_y_sort_bias_px` would
   settle it either way.
-- [ ] **DECOR/FORGE-MOLTEN-SEAM-HARD-RECT (P4, NEW, pre-existing surface).**
+- [x] **DECOR/FORGE-MOLTEN-SEAM-HARD-RECT (P4) — DRAINED 2026-08-02 (v0.17 L4).** Two `steam_vent` decor rows on the free cells flanking the band break the rectangle's ends, and the east one carries the seam's only warm flickering light so the glow reaches the floor. Seam cells untouched (still blocked + cover_skip); map light count 6 -> 7. Evidence qa_output/pallass_depth_gates_check/01_attendant_hub_three_rows.png. Original row:
   `pallass_forge`'s molten seam band renders as a perfectly rectangular flat
   orange block on the slate with no edge treatment and no light bleed onto
   the surrounding floor (`pallass_depth_gates_check/01_attendant_hub_three_rows.png`,
@@ -336,7 +336,7 @@ Ranked player-visible first.
   at (4,2). Deliberately NOT changed inside the implementing lane: the
   cells were hand-audited when the room was authored, and moving them
   invalidates that audit, the `moods.json` row and the dynamism read.
-- [ ] PROP/TEMPER-BENCH-INDISTINGUISHABLE (P3, v0.16 #307 windowed pass) —
+- [x] PROP/TEMPER-BENCH-INDISTINGUISHABLE (P3) — DRAINED 2026-08-02 (v0.17 L4). New owned `temper_bench` sprite: a legged timber bench with a vise and a gauge, which is a distinct SILHOUETTE against the two dark stone forges beside it. The row's own "or a `tint`" suggestion is SUPERSEDED by the 2026-08-02 tint-is-not-disambiguation directive — a retint would have satisfied the checklist and not the player. Evidence qa_output/pallass_depth_gates_check/03_temper_bench_locked.png. Original row: —
   `forge_hall_temper_bench` (4,3) is P1's entire SKILL route and it uses
   the `forge_station` sprite, which `pallass_forge_hall`'s decor also
   places at (2,2) and (3,2) immediately beside it. In
@@ -368,7 +368,7 @@ Ranked player-visible first.
   is what the v0.15 T5.1 fix promised — but a player reading the board for
   cover at a glance will find only the forge. Same root as
   PROP/CRATE-READS-AS-CLUTTER.
-- [ ] DECOR/DEN-SHOP-STREET-LAMP-INDOORS (P4, v0.16 #307 windowed pass) —
+- [x] DECOR/DEN-SHOP-STREET-LAMP-INDOORS (P4) — DRAINED 2026-08-02 (v0.17 L4). New owned `shop_oil_lamp` (brass lamp on a small table). `crystal_lamp` could NOT simply be repointed: it is Pallass civic street furniture at ten outdoor sites across the market and forge tiers. The row's `light` block is untouched — only the fixture changed. Evidence qa_output/pallass_ledger_offices/03_den_shop_arrival.png. Original row: —
   `pallass_den_shop`'s `crystal_lamp` at (2,1) draws as a tall municipal
   street lamp on a post standing inside a family provisions den
   (`pallass_ledger_offices/03_den_shop_arrival.png`). Its warm light is
@@ -376,7 +376,7 @@ Ranked player-visible first.
   tier's slate, and that contrast lands — but the fixture itself is
   outdoor furniture. A hanging or counter-top lamp sprite would keep the
   light and lose the street.
-- [ ] DECOR/DEN-SHOP-RUG-READS-AS-HOLE (P4, v0.16 #307 windowed pass) —
+- [x] DECOR/DEN-SHOP-RUG-READS-AS-HOLE (P4) — DRAINED 2026-08-02 (v0.17 L4), same fix as DECOR/REST-RUG-READS-AS-HOLE above. Original row: —
   `rug_tan` at (4,4) renders as a pale plus-shaped patch in the middle of
   the timber floor with no border or pattern; at a glance it reads as a
   gap in the boards rather than a rug (same shot as above). Low priority,
@@ -3057,3 +3057,66 @@ Residuals, logged rather than silently shipped:
   stationer mood phase-flat, ward-scrap lore toast slicing — all queue
   for v0.17 L4 (art lane) with the tint-site audit (pot tints, blade
   banding).
+
+## 2026-08-02 v0.17 L4 (art lane) — drain, tint audit, palette pass
+<!-- v017-L4 -->
+
+**Drained** (six rows, each windowed before/after; all six re-verified as
+still reproducing on this tree BEFORE any fix — none were stale):
+PROP/TEMPER-BENCH-INDISTINGUISHABLE, PROP/WAX-TRAY-IS-A-CRATE,
+DECOR/DEN-SHOP-STREET-LAMP-INDOORS, DECOR/REST-RUG-READS-AS-HOLE +
+DECOR/DEN-SHOP-RUG-READS-AS-HOLE (one root, five sites),
+SPRITE/CAMP-WATCH-GOBLIN-INVISIBLE, DECOR/FORGE-MOLTEN-SEAM-HARD-RECT.
+Three new owned sprites (temper_bench, wax_seal_tray, shop_oil_lamp) and
+two new owned rug weaves; anchors measured off the alpha bbox with the
+new `scripts/sprite_alpha_probe.py`, never off the frame.
+
+**Tint-site audit** (directive: TINT IS NOT DISAMBIGUATION). 153 tint
+rows across data/maps were enumerated and classified. Cosmetic variety
+WITHIN one kind — dungeon_statue/dungeon_rubble/facade_plaster/inn_roof
+crowd variation, the three note_pinned notes — is sanctioned and stays.
+Sites where tint was carrying a FUNCTIONAL or IDENTITY difference, i.e.
+the banned use:
+- **FIXED**: `forge_hall_temper_bench` (was the same forge sprite as its
+  two neighbours), the den-shop lamp, the rug family.
+- **OPEN, and the sharpest remaining one**: `stew_pot` (4,1) and
+  `short_order` (1,1) are BOTH the `cauldron` sprite in the inn's one
+  kitchen band, both `basic_cooking` interactables, both banking
+  different accomplishments — separated by nothing but a warm/cool
+  tint. `inn_witch_kettle` already got its own silhouette in the wave-2
+  drain; these two still need a second pot form (a flat short-order
+  griddle is the obvious read for the copy: "three plates, one order").
+  Needs a new sprite id, which needs the registry counts key — see the
+  ownership note in .lane-progress.
+- **OPEN, rig-sharing rather than tint per se**: `drake_patron` backs
+  FIVE named characters (vess, renn, forge_apprentice, forge_smith,
+  den_shop_keeper) and `royal_soldier` three, each separated only by
+  tint. No two are co-visible on one map, so this is below the
+  co-visibility bar the v0.16.1 policy sets — but it is the same class
+  as the Lady-as-pc_human_f finding and wants bespoke rigs eventually.
+- **OPEN, not ours**: `goblin_spear_ally` and the BOARD/TINT-NUMERAL-
+  CONTRAST row are combatant tints (combat data, L2's ownership).
+
+**Palette unification** — 271 tracked sheets re-seated on ramps derived
+from PC16, 8 rigs excluded by the damage guard. Windowed before/after
+pairs at `qa_output/_l4_palette_{before,after}/`:
+`inn_common_room.png` (5.6% of pixels moved), `interior_rest_hall.png`
+(5.1%), `exterior_rags_camp.png` (1.3%), `arena_forge_hall_board.png`
+(81.5%). The arena pair is the one to open first: the forge-hall slate
+moves off a warm brown-grey that fought the golem's embers and the
+torch flames, onto a cool neutral stone, and the warm props stop
+blending into the floor. No banding or identity loss in any pair.
+
+**Scope note for whoever runs the palette pass next.** It only touches
+git-TRACKED assets, by construction — the private bundle overlay is
+gitignored and has no original in this repo, so it is out of scope and
+must stay out. That means most painterly CUSTOM-HD rigs (the goblins,
+bat, river_wolf, shield_spider) are NOT yet unified: they live in the
+overlay. Finishing them needs a bundle-aware run with the bundle in
+hand and its own preserved originals.
+
+**Still open, art-addressable, NOT taken this wave**: the three
+remaining PROP/CRATE-READS-AS-CLUTTER members (den-shop receiving dock,
+lift cargo pallet, forge reject bin) and BOARD/CRATE-COVER-READ — all
+want new sprite ids; `line_stalker_a`/`_b` and the `plains_scavenger_*`
+overlap rows are spawn-cell choices in arena data, not art.

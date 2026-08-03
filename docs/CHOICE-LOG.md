@@ -2130,3 +2130,32 @@ by controller ruling — the plan was the defect, not the implementation.
   Hunted as an easter egg — an EXPLICIT user-granted exception to the
   Vol 7 spoiler cutoff, names only; exact names wiki-verified before
   authoring, never invented.
+<!-- v017-L4 -->
+- **Palette pull is what the damage guard says it is (2026-08-02, L4)**:
+  CUSTOM-HD was authored at 0.55 pull toward the PC16 ramps on the
+  reasoning that the family which disagrees hardest with the backbone
+  should move furthest. The guard rejected 12 of its 17 rigs. Ruling:
+  the guard is the authority, not the intuition — 0.35 for CUSTOM-HD,
+  0.30 PIXELLAB, 0.35 TILES. A painterly rig cannot absorb more than
+  about a third of the way onto a 16px ramp before it stops being
+  itself, and that number came from measurement.
+- **Palette reversibility is git, not a stored inverse (2026-08-02,
+  L4)**: per-file LUTs were built and rejected — 32 MB of manifest, and
+  not byte-exact anyway (Pillow re-encodes a PNG it merely opened and
+  re-saved: 208 of 389 files returned correct pixels under a different
+  sha256). `--apply` records its base commit; `--revert` is a git
+  checkout of exactly those paths, verified per-file against the
+  recorded pre-hash.
+- **The palette pass may only touch git-TRACKED assets (2026-08-02,
+  L4)**: a working checkout carries the private bundle overlay —
+  gitignored, licence-limited pack extracts with no original in this
+  repo. The first draft walked `assets/` and rewrote 105 of them with
+  no way to put them back. Scope is now `git ls-files` by
+  construction. Consequence worth knowing: most painterly rigs ARE
+  overlay assets, so the pass reaches 30 CUSTOM-HD sheets, not 130 —
+  the rest need the bundle in hand and a separate, bundle-aware run.
+- **rug_green/rug_tan keep their stale ids (2026-08-02, L4)**: both now
+  carry owned woven art (rug_green's is red), but an id rename needs
+  the matching key in test_sprite_registry's expected-counts table, and
+  L4's brief puts .gd files outside its ownership. Ids stay, comments
+  say so, rename queued for the controller.
