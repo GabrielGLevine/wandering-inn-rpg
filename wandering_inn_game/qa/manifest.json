@@ -354,8 +354,8 @@
   },
   {
    "script": "defeat_reload",
-   "seed": 1,
-   "note": "losing seed; defeat loads the pre-combat snapshot, no game_reset; issue #88: proximity-triggered goblin_encounter_1 leg proves reload-inside-trigger_radius doesn't insta-refire, then the original interact-triggered chieftains_raid leg",
+   "seed": 2,
+   "note": "losing seed (re-derived 1 -> 2 at GH#337, skill cooldowns: the chieftain's cooled power_strike flipped seed 1 to a WIN); defeat loads the pre-combat snapshot, no game_reset; issue #88: proximity-triggered goblin_encounter_1 leg proves reload-inside-trigger_radius doesn't insta-refire, then the original interact-triggered chieftains_raid leg",
    "tiers": [
     "smoke",
     "full"

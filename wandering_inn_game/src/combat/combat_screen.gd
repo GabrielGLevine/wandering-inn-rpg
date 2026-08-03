@@ -754,9 +754,20 @@ func _activate_bar_slot(index: int) -> void:
 				_mode = Mode.DASH_CONFIRM
 		"skill":
 			var skill_id := String(slot["id"])
+			# GH#337: a slot the sim will refuse still gets to EXPLAIN itself.
+			# Pressing an unaffordable skill has always been a silent no-op, which
+			# was tolerable while the only two reasons were AP and MP -- both of
+			# them permanently on screen in the readout head, so the player could
+			# always work it out. A cooldown is not on screen anywhere else, so the
+			# press now moves the info line onto that slot ("... — Recovering —
+			# ready in 2 rounds.") WITHOUT arming targeting and without spending
+			# anything. Discovered by windowed read, not by a test: the clause
+			# `_slot_info_line` generates was literally unreachable through the UI
+			# because the only press that renders it was gated behind the very
+			# affordability check it exists to explain.
+			_info_slot_index = index
 			if _hud.skill_affordable(c, skill_id, _view):
 				_bar_index = index
-				_info_slot_index = index
 				_mode = Mode.SKILL_TARGET
 				_targeting.enter(Mode.SKILL_TARGET, skill_id)
 		"end_turn":

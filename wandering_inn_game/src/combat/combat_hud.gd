@@ -587,27 +587,36 @@ func _slot_info_line(d: Dictionary) -> String:
 			# formatter reads must be present here or the clause it generates is
 			# silently dropped -- widen BOTH this dict and `rebuild_slots`' slot
 			# record together when a new one lands.
+			var recovering := WIEffectText.cooldown_recovering_line(int(d.get("cooldown_remaining", 0)))
 			var record := {
 				"ap_cost": d.get("ap_cost", 0),
 				"mp_cost": d.get("mp_cost", 0),
 				"effect": d.get("effect", {}),
 				"once_per_fight": d.get("once_per_fight", false),
-				WICombat.COOLDOWN_ROUNDS: d.get(WICombat.COOLDOWN_ROUNDS, 0),
+				# While the Skill is actually cooling, the STANDING rule is
+				# suppressed: "Recovering — ready in 2 rounds." already says
+				# everything "Once every 2 rounds." would, and this strip is fitted
+				# to a fixed pixel budget -- carrying both cost the player the
+				# number at the end of the line (windowed read, twice).
+				WICombat.COOLDOWN_ROUNDS: 0 if recovering != "" else d.get(WICombat.COOLDOWN_ROUNDS, 0),
 			}
 			var effect_lines := WIEffectText.skill_effect_lines(record)
-			# GH#337: the LIVE clause, appended LAST so it reads as the current
-			# state of this slot rather than part of the Skill's standing rule
-			# (which `skill_effect_lines` already speaks as "Once every N
-			# rounds."). Without it a dimmed slot is a dead button with no stated
-			# reason -- the same hole ruling 14 closed for a spent
-			# once-per-fight Skill.
-			var recovering := WIEffectText.cooldown_recovering_line(int(d.get("cooldown_remaining", 0)))
-			var tail := "" if recovering == "" else " — " + recovering
-			if desc == "":
-				return (skill_name if effect_lines.is_empty() else "%s — %s" % [skill_name, effect_lines[0]]) + tail
+			# GH#337: while the slot is cooling, the LIVE clause TAKES THE
+			# DESCRIPTION'S PLACE rather than being appended after it. Appending was
+			# tried first and the windowed read killed it: this strip is fitted to a
+			# fixed pixel budget (`_compose_readout`), so the tail is exactly what
+			# gets ellipsised -- the line rendered "... Everything behind one..." and
+			# the one thing the player pressed a dim slot to find out was the one
+			# thing cut. The authored flavour is what yields: the standing rule
+			# ("Once every 2 rounds.") still rides `effect_lines`, so nothing
+			# mechanical is lost, and the description comes back the moment the
+			# Skill is ready again.
+			var tail := recovering if recovering != "" else desc
+			if tail == "":
+				return skill_name if effect_lines.is_empty() else "%s — %s" % [skill_name, effect_lines[0]]
 			if effect_lines.is_empty():
-				return "%s — %s%s" % [skill_name, desc, tail]
-			return "%s — %s — %s%s" % [skill_name, effect_lines[0], desc, tail]
+				return "%s — %s" % [skill_name, tail]
+			return "%s — %s — %s" % [skill_name, effect_lines[0], tail]
 		"item":
 			var item_name := String(d.get("label", ""))
 			var item_desc := String(d.get("description", ""))

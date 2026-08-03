@@ -32,7 +32,7 @@
 			"ap_cost": 3,
 			"weapon": "sword",
 			"icon": "icon_power_strike",
-			"effect": { "type": "damage_mult", "mult": 2.0 },
+			"effect": { "type": "damage_mult", "mult": 2.0 },			"cooldown_rounds": 2,
 			"description": "Everything behind one blow."
 		},
 		{
@@ -171,10 +171,10 @@
 			"id": "devastating_slash",
 			"display_name": "[Devastating Slash]",
 			"contexts": ["combat"],
-			"ap_cost": 4,
+			"ap_cost": 3,
 			"weapon": "sword",
 			"icon": "icon_devastating_slash",
-			"effect": { "type": "damage_mult", "mult": 2.6 },
+			"effect": { "type": "damage_mult", "mult": 2.6 },			"cooldown_rounds": 2,
 			"description": "Mid-swing, the blade bends its path toward whatever is unguarded."
 		},
 		{
@@ -184,7 +184,7 @@
 			"ap_cost": 3,
 			"weapon": "spear",
 			"icon": "icon_triple_thrust",
-			"effect": { "type": "damage_mult", "mult": 2.0 },
+			"effect": { "type": "damage_mult", "mult": 2.0 },			"cooldown_rounds": 2,
 			"description": "Three points of pain in a single breath."
 		},
 		{
@@ -201,10 +201,10 @@
 			"id": "spear_flurry",
 			"display_name": "[Spear Flurry]",
 			"contexts": ["combat"],
-			"ap_cost": 4,
+			"ap_cost": 3,
 			"weapon": "spear",
 			"icon": "icon_spear_flurry",
-			"effect": { "type": "damage_mult", "mult": 2.6 },
+			"effect": { "type": "damage_mult", "mult": 2.6 },			"cooldown_rounds": 2,
 			"description": "For one moment the air is stitched with spearpoints."
 		},
 		{
@@ -280,9 +280,9 @@
 			"display_name": "[Spellbound Strike]",
 			"icon": "icon_spellbound_strike",
 			"contexts": ["combat"],
-			"ap_cost": 4,
+			"ap_cost": 3,
 			"mp_cost": 3,
-			"effect": { "type": "damage_mult", "mult": 3.0 },
+			"effect": { "type": "damage_mult", "mult": 3.0 },			"cooldown_rounds": 2,
 			"description": "Every spell you have ever cast settles into the strike, and the strike remembers all of them at once."
 		},
 		{
@@ -444,7 +444,7 @@
 			"contexts": ["combat"],
 			"ap_cost": 3,
 			"weapon": "bow",
-			"effect": { "type": "damage_mult", "mult": 2.0 },
+			"effect": { "type": "damage_mult", "mult": 2.0 },			"cooldown_rounds": 2,
 			"description": "A full draw, held a breath too long, loosed dead center."
 		},
 		{
@@ -466,7 +466,7 @@
 			"contexts": ["combat"],
 			"ap_cost": 3,
 			"weapon": "bow",
-			"effect": { "type": "line_damage", "length": 4 },
+			"effect": { "type": "line_damage", "length": 4 },			"cooldown_rounds": 2,
 			"description": "One arrow, and everything in its path pays the same price."
 		},
 		{
@@ -595,7 +595,7 @@
 			"contexts": ["combat"],
 			"ap_cost": 3,
 			"weapon": "bow",
-			"effect": { "type": "damage_mult", "mult": 2.2 },
+			"effect": { "type": "damage_mult", "mult": 2.2 },			"cooldown_rounds": 2,
 			"description": "A shot picked out in advance, and placed exactly there."
 		},
 		{
@@ -604,9 +604,9 @@
 			"icon": "icon_piercing_volley",
 			"display_name": "[Piercing Volley]",
 			"contexts": ["combat"],
-			"ap_cost": 4,
+			"ap_cost": 3,
 			"weapon": "bow",
-			"effect": { "type": "line_damage", "length": 5 },
+			"effect": { "type": "line_damage", "length": 5 },			"cooldown_rounds": 2,
 			"description": "A punishing volley loosed down the line, arrow after arrow finding the same seam."
 		},
 		{
@@ -1112,6 +1112,7 @@
 				"type": "line_damage",
 				"length": 4
 			},
+			"cooldown_rounds": 2,
 			"description": "A hundred arrows that were never real fall in the same instant, and everything beneath them is."
 		},
 		{

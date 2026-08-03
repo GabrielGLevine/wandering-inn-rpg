@@ -198,7 +198,10 @@
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -229,13 +232,17 @@
   {
    "action": "assert_state",
    "path": "classes.warrior",
-   "equals": 2
+   "equals": 3,
+   "_comment": "GH#337 (skill cooldowns) re-pinned 2 -> 3. Not a pace regression to suppress: power_strike now fires every other round and the melee AI falls through to two plain attacks on the off rounds, and a plain attack banks `melee_hit` exactly like the Skill does -- so the same fixed arc of fights banks more of the counter [Warrior] levels on. sim_progression_pace was re-run and stays green."
   },
   {
    "_comment": "== FIGHT 2: chieftains_raid (31,7) with the L2 kit ==. Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3'); resumes unchanged: right12->(14,3), right1->(15,3) inn_door -> floodplains (7,6), right23->(30,6), down1->(30,7), right1 blocks on the chieftains cell (31,7) & faces it, interact.",
    "action": "teleport",
    "map": "inn",
-   "cell": [2, 3]
+   "cell": [
+    2,
+    3
+   ]
   },
   {
    "action": "move",

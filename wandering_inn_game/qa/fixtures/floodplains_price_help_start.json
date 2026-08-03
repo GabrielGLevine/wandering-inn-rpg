@@ -1,5 +1,5 @@
 {
- "_comment": "v0.16 F1 (#308) HELP-route start for floodplains_price_help. Same settled-terminal state as floodplains_price_talk_start (the peaceful SUPPLY close: draught spent, pawn held), positioned on floodplains at (36,8), two cells south of corusdeer_range (36,6) -- floodplains_bestiary_loop's own approach idiom, so the script walks the last two cells for real. rng_state derived from seed 9 (tests/_derive_rng_state.gd) and VERIFIED by running the script end to end: the corusdeer_range fight WINS at this state (2026-07-28). A re-derivation must re-verify that win or the script times out waiting on corusdeer_culled.",
+ "_comment": "v0.16 F1 (#308) HELP-route start for floodplains_price_help. Same settled-terminal state as floodplains_price_talk_start (the peaceful SUPPLY close: draught spent, pawn held), positioned on floodplains at (36,8), two cells south of corusdeer_range (36,6) -- floodplains_bestiary_loop's own approach idiom, so the script walks the last two cells for real. rng_state derived from seed 9 (tests/_derive_rng_state.gd) and VERIFIED by running the script end to end: the corusdeer_range fight WINS at this state (2026-07-28). A re-derivation must re-verify that win or the script times out waiting on corusdeer_culled. GH#337 (skill cooldowns) re-derived this state, seed 9 -> 12: the corusdeer cull's pinned draw flipped to a loss once the PC's power_strike moved to an every-other-round cadence.",
  "version": 7,
  "state": {
   "current_map": "floodplains",
@@ -59,7 +59,7 @@
   "times_slept": 17,
   "board_last_seen_times_slept": 17,
   "gold": 20,
-  "rng_state": "-6393592048753323481",
+  "rng_state": "-5747927450922496082",
   "fractional_bank": {}
  }
 }

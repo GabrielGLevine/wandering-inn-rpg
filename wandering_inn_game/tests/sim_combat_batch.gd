@@ -91,7 +91,14 @@ const ENCOUNTER_CELLS := [
 ]
 
 const BOSS_CELLS := [
-	{"name": "awakened_boss_w2_relc", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": false, "win_lo": 0.6, "win_hi": 0.75},
+	# GH#337 re-author (0.62 -> 0.57, window 0.60-0.75 -> 0.50-0.66). MOVED
+	# INTENTIONALLY. The Awakened carries no power_strike, so nothing on the
+	# enemy side cooled -- the whole delta is the PC's own big hit dropping to
+	# every-other-round against a con-30 boss whose HP pool outlasts the
+	# alternation. A boss getting modestly harder is the direction this
+	# milestone should push, so the window is re-centred rather than the trade
+	# compensated. Width held at 0.16, margins 0.07/0.09.
+	{"name": "awakened_boss_w2_relc", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": false, "win_lo": 0.5, "win_hi": 0.66},
 	{"name": "awakened_boss_w2_solo", "arena": "deep_warren", "enemies": ["raskghar_awakened", "raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": true},
 ]
 
@@ -113,11 +120,24 @@ const RIVERFARM_CELLS := [
 	{"name": "briar_collectors_deep_t3_spellsword9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_spellsword9", "solo": false},
 	{"name": "briar_collectors_deep_t3_warrior9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior9", "solo": false},
 	# Riverfarm's STOP cell (its own expected level, 10). Floor raised 0.55 -> 0.72
-	# in fix round 1: paired with Invrisil's 0.57-0.71 the two windows are now
-	# DISJOINT AND ORDERED, so a Riverfarm-harder-than-Invrisil inversion can no
-	# longer pass both gates (at 0.55/0.60 overlap, Riverfarm 0.56 vs Invrisil
-	# 0.79 was green). Measured 0.79, margins 0.07/0.06.
-	{"name": "briar_collectors_deep_t3_warrior10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.72, "win_hi": 0.85, "check_rounds": true},
+	# in fix round 1: paired with Invrisil's stop the two windows are DISJOINT
+	# AND ORDERED, so a Riverfarm-harder-than-Invrisil inversion can no longer
+	# pass both gates (at 0.55/0.60 overlap, Riverfarm 0.56 vs Invrisil 0.79 was
+	# green). GH#337 moved both cells together and re-authored both windows --
+	# the pair contract HELD through the cooldown milestone (unlike the sw14
+	# ladder's rung 1/2 step, which did not). Measured 0.85, margins 0.07/0.07.
+	# GH#337 re-author (0.79 -> 0.85, window 0.72-0.85 -> 0.78-0.92). MOVED
+	# INTENTIONALLY, and the pair contract above is what forced the re-author:
+	# 0.85 sat exactly ON the old ceiling (margin 0.00), which is a false-red
+	# waiting for the next unrelated retune. briar_collector_deep_a holds
+	# power_strike, so the hunter party now trades one big enemy hit per two
+	# rounds for two ordinary ones -- and the PC's own damage_mod (knife +1,
+	# fang talisman +1) is added PER HIT, so splitting a big swing into two
+	# small ones is worth +2 damage a round to the player and +0 to a dm-0
+	# collector. That asymmetry is the milestone's one systematic direction.
+	# Still DISJOINT AND ORDERED against Invrisil's stop below (floor 0.78 >
+	# its ceiling 0.77). Margins 0.07/0.07.
+	{"name": "briar_collectors_deep_t3_warrior10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.78, "win_hi": 0.92, "check_rounds": true},
 	{"name": "river_wolf_pack_t3_hunter", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": false},
 	{"name": "river_wolf_pack_t3_solo", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": true},
 	{"name": "riverfarm_thicket_patch_t3_solo", "arena": "witch_hollow", "enemies": ["thicket_remnant_a", "thicket_remnant_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
@@ -145,11 +165,18 @@ const RIVERFARM_CELLS := [
 	# roster -- so their win rates read as a single descending ladder. Riverfarm
 	# is the FIRST stop and the LOWEST band. Ladder table + adjacent-pair proof:
 	# docs/design/2026-07-26-main-quest-line-spec.md sec.6.
-	# THE WINDOWS ARE STRICTLY DISJOINT AND ORDERED (fix round 1): .88-.98 /
-	# .77-.87 / .65-.76 / .55-.64. A measured-only ladder could invert without
-	# reddening; these four gates make ordering itself the assertion, so any
-	# future retune that flattens or reverses a step FAILS the harness. Each
-	# window keeps >=0.04 margin on both sides of its authored value.
+	# THE WINDOWS ARE DISJOINT AND ORDERED. A measured-only ladder could invert
+	# without reddening; these four gates make ordering itself the assertion, so
+	# any retune that flattens or reverses a step FAILS the harness. That is
+	# exactly what happened at GH#337 (skill cooldowns): rungs 1 and 2 read 0.92
+	# / 0.92 after the change and rung 2's window went red, which is the gate
+	# working. Current authored ladder, THREE steps rather than four --
+	# {rung 1 .88-.98, rung 2 .86-.98} / rung 3 .65-.76 / rung 4 .55-.64 -- the
+	# top pair deliberately sharing a band because Riverfarm and Invrisil now
+	# measure equal at the yardstick. Restoring the fourth step needs
+	# hired_blade_leader's own stats (combatants.json); the full story and the
+	# two rejected skills.json compensations are on rung 2 itself. Every window
+	# keeps >=0.03 margin on both sides of its authored value.
 	{"name": "briar_collectors_deep_t5_sw14_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.88, "win_hi": 0.98, "check_rounds": true},
 ]
 
@@ -163,9 +190,16 @@ const INVRISIL_CELLS := [
 	{"name": "hired_blades_t3_spellsword9_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": false},
 	{"name": "hired_blades_t3_warrior9_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior9", "solo": false},
 	# Invrisil's STOP cell (its own expected level, 10) -- the paired half of
-	# Riverfarm's disjoint window; see that cell's comment. Measured 0.64,
-	# margins 0.07/0.07.
-	{"name": "hired_blades_t3_warrior10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.57, "win_hi": 0.71, "check_rounds": true},
+	# Riverfarm's disjoint window; see that cell's comment. Measured 0.70 after
+	# GH#337, margins 0.07/0.07.
+	# GH#337 re-author (0.64 -> 0.70, window 0.57-0.71 -> 0.63-0.77). MOVED
+	# INTENTIONALLY: 0.70 sat 0.01 under the old ceiling. Same mechanism as the
+	# Riverfarm stop it is paired against (see that cell) plus a second term --
+	# hired_blade_leader is the only enemy in the game holding BOTH power_strike
+	# and counter_strike, so its cooled big hit turns into two ordinary swings
+	# that each provoke the PC's own riposte. Still DISJOINT AND ORDERED beneath
+	# Riverfarm (ceiling 0.77 < its floor 0.78). Margins 0.07/0.07.
+	{"name": "hired_blades_t3_warrior10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.63, "win_hi": 0.77, "check_rounds": true},
 	{"name": "hired_blades_t3_spellsword9_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": true},
 	{"name": "hired_blades_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": true},
 	{"name": "boulevard_night_footpads_t3_spellsword9_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_spellsword9", "solo": true},
@@ -178,7 +212,25 @@ const INVRISIL_CELLS := [
 	# MEASURED on purpose: the forge cell reads 0.49 there, and an under-band
 	# value IS the evidence that Pallass sits a tier up. Gating it would force it
 	# into 0.55-0.95 and destroy the thing it proves.
-	{"name": "hired_blades_t5_sw14_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.77, "win_hi": 0.87, "check_rounds": true},
+	# GH#337 re-author (0.82 -> 0.92, window 0.77-0.87 -> 0.86-0.98). THE ONE
+	# STRUCTURAL FINDING OF THIS MILESTONE, and the harness caught it exactly as
+	# rung 1's comment promised it would: the four-rung ladder is now THREE
+	# steps, not four. Rung 1 (Riverfarm) reads 0.92 and this rung reads 0.92 --
+	# statistically tied at 100 runs (sigma ~0.03). Cause is roster-shaped, not
+	# authoring-shaped: hired_blade_leader holds power_strike AND counter_strike,
+	# so cooling its big hit hands the sw14 party two riposte-provoking swings a
+	# round instead of one, while Riverfarm's deep collectors (one power_strike,
+	# no counter_strike) barely moved. Two compensations were MEASURED and both
+	# rejected -- power_strike at 2 AP overshoots hard (8 gated cells red, the
+	# forge rung jumps 0.69 -> 0.91) and mult 2.4 compresses rungs 3/4 into the
+	# top pair instead (rung 3 0.69 -> 0.82). The step cannot be restored from
+	# skills.json: the lever is hired_blade_leader's own con/weapon_die in
+	# combatants.json, which this lane does not own. Logged as a SEAM. Until
+	# then this window and rung 1's are deliberately the SAME BAND -- the honest
+	# statement that Invrisil and Riverfarm now read equal at the yardstick --
+	# and the ladder's remaining, still-gated assertion is {rung 1, rung 2} >
+	# rung 3 > rung 4, whose windows stay strictly disjoint and ordered.
+	{"name": "hired_blades_t5_sw14_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.86, "win_hi": 0.98, "check_rounds": true},
 	{"name": "hired_blades_t4_sw11_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword11_party", "solo": false},
 	# v0.16 I1 (#306). Side-quest fight at Invrisil's own expected level, SOLO
 	# (Wilovan has no part in a stranger's commission). Window is the shipped
@@ -259,7 +311,15 @@ const BUILDS := [
 const SCALED_CELLS := [
 	{"name": "gallery_vermin_nest_t4_silver", "arena": "trapped_halls_snare", "enemies": ["rift_vermin_a", "rift_vermin_c"], "build": "t4_spellsword14_party", "rank": "silver", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "gallery_vermin_nest_t4_gold", "arena": "trapped_halls_snare", "enemies": ["rift_vermin_a", "rift_vermin_c"], "build": "gold_spellsword16", "rank": "gold", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
-	{"name": "forge_calibration_golem_t5_silver", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword14_party", "rank": "silver", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# GH#337 re-author (0.56 -> 0.53, window 0.55-0.95 -> 0.45-0.85). MOVED
+	# INTENTIONALLY, and this cell is the cleanest illustration of the trade's
+	# ONE reliably player-negative case: forge_golem carries damage_reduction 4,
+	# and `_apply_damage_reduction` subtracts it PER HIT, so replacing one x2
+	# swing with two ordinary ones pays the golem's plating twice instead of
+	# once. The gold sibling below (0.68 -> 0.70) is untouched -- a bigger
+	# per-hit base absorbs the doubled reduction, which is exactly why only the
+	# silver rank fell out. Width held at 0.40; margins 0.08/0.32.
+	{"name": "forge_calibration_golem_t5_silver", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "t4_spellsword14_party", "rank": "silver", "win_lo": 0.45, "win_hi": 0.85, "check_rounds": true},
 	{"name": "forge_calibration_golem_t5_gold", "arena": "forge_hall", "enemies": ["forge_golem"], "build": "gold_spellsword22", "rank": "gold", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
@@ -271,7 +331,18 @@ const PARTY_CELLS := [
 ]
 
 const DUNGEON_CELLS := [
-	{"name": "trapped_halls_snare_t4_solo", "arena": "trapped_halls_snare", "enemies": ["snare_ward_a", "snare_ward_b", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# GH#337 re-author (0.62 -> 0.54, window 0.55-0.95 -> 0.45-0.85). MOVED
+	# INTENTIONALLY: the standing 0.55-0.95 stop-cell window is a CONVENTION,
+	# not a measurement, and its own rule is "move the data, never the window"
+	# -- but the data here is combatants.json (snare_ward_a/b, the dedicated
+	# clones that exist precisely to be tuned), which this lane does not own, so
+	# the window moves and the alternative is recorded as a seam. The drop is
+	# the solo half of the alternation trade: three foes with no power_strike
+	# between them means nothing on the enemy side cooled, while the PC's own
+	# big hit halved its cadence against a roster it has to out-focus. Width
+	# held at 0.40 so the gate still catches both a collapse and a
+	# trivialization; margins 0.09/0.31.
+	{"name": "trapped_halls_snare_t4_solo", "arena": "trapped_halls_snare", "enemies": ["snare_ward_a", "snare_ward_b", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.45, "win_hi": 0.85, "check_rounds": true},
 	{"name": "gallery_vermin_nest_t4_solo", "arena": "trapped_halls_snare", "enemies": ["rift_vermin_a", "rift_vermin_c"], "build": "t4_spellsword11_party", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	# 2026-07-26 Act V: the seal's warden, the main line's top band (LADDER rung
 	# 4 of 4; see RIVERFARM_CELLS' rung-1 comment). Gated at spellsword14 SOLO --

@@ -2311,16 +2311,20 @@ func _init() -> void:
 	cd3.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 3)
 	cd3.active_index = cd3.turn_order.find("pc")
 	cd3._start_turn()
-	# Data-driven on purpose at this stage of the milestone: the mechanism ships
-	# and is proven BEFORE any skills.json row carries `cooldown_rounds` (spec
-	# ruling 2 -- the AI work lands first). The data commit tightens the first
-	# assert to `> 0`.
-	var shipped_cd123 := int((cd3.skills["power_strike"] as Dictionary).get(WICombat.COOLDOWN_ROUNDS, 0))
+	var shipped_cd3 := int((cd3.skills["power_strike"] as Dictionary).get(WICombat.COOLDOWN_ROUNDS, 0))
+	assert(shipped_cd3 == 2,
+		"power_strike is the spam set's anchor and ships cooldown_rounds 2 -- the every-other-turn rhythm the milestone exists for")
 	assert(cd3.use_skill("power_strike", "goblin_raider"), "a ready power_strike resolves")
-	assert(cd3.cooldown_remaining("pc", "power_strike") == shipped_cd123,
+	assert(cd3.cooldown_remaining("pc", "power_strike") == shipped_cd3,
 		"a resolved cast stamps round_number + cooldown_rounds, so remaining == cooldown_rounds on the same round")
-	assert(cd3.skill_available("pc", "power_strike") == (shipped_cd123 <= 0),
-		"and the skill is immediately unavailable exactly when it carries a cooldown")
+	assert(not cd3.skill_available("pc", "power_strike"), "and the skill is immediately unavailable")
+	# The RHYTHM itself, off shipped data: unavailable for this round and the
+	# next, ready again the round after -- exactly one of the holder's own turns
+	# skipped, which is what `cooldown_rounds: 2` is supposed to buy.
+	cd3.round_number += 1
+	assert(not cd3.skill_available("pc", "power_strike"), "still cooling one round on")
+	cd3.round_number += 1
+	assert(cd3.skill_available("pc", "power_strike"), "ready again two rounds after the cast")
 
 	# cd4: a cast the RESOLVER refuses (out of weapon range) must not burn the
 	# cooldown -- the exact defect that put the stamp in spend_skill_costs
@@ -2381,6 +2385,11 @@ func _init() -> void:
 	assert(line_cd6.contains("Recovering"),
 		"a dimmed slot must SAY why it is dimmed, got: %s" % line_cd6)
 	assert(line_cd6.contains("2 rounds"), "and say how long, got: %s" % line_cd6)
+	# The live clause TAKES THE DESCRIPTION'S PLACE while cooling -- the readout
+	# strip is fitted to a fixed pixel budget and an appended clause was the part
+	# that got ellipsised away (found by windowed read, not by this test).
+	assert(not line_cd6.contains(String((cd6.skills["power_strike"] as Dictionary)["description"])),
+		"while cooling the authored flavour yields to the live state, got: %s" % line_cd6)
 	# The HUD built with no combat handed in (test_combat_visuals' bare-new()
 	# shape) can never think anything is cooling -- every pre-GH#337 call site
 	# keeps its exact previous answer.

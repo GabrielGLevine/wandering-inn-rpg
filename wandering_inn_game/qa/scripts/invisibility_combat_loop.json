@@ -61,7 +61,7 @@
   { "action": "wait_for_event", "type": "combatant_moved", "payload_contains": { "id": "pc", "cell": [6, 2] }, "timeout_sec": 5 },
   { "action": "press", "name": "move_right" },
   { "action": "wait_for_event", "type": "combatant_moved", "payload_contains": { "id": "pc", "cell": [7, 2] }, "timeout_sec": 5 },
-  { "_comment": "Second dash, same turn (dash has no cooldown/once-per-turn gate -- WICombat.dash()'s own doc comment: 'Repeatable while AP lasts'). Slot 1 is ALREADY the selected hotbar entry from the first dash above, so re-pressing hotbar_2 is a no-op selection (no fresh ui_slot_info_rendered -- that event only fires on a selection CHANGE); wait_frames instead of a second slot_info wait.", "action": "press", "name": "hotbar_2" },
+  { "_comment": "Second dash, same turn. GH#337 introduced a real cooldown system, so this line no longer means 'the game has no such concept': Dash specifically is exempt -- `cooldown_rounds` is a per-SKILL data knob read in `spend_skill_costs`, and `WICombat.dash()` is a bare AP spend that never passes through it (its own doc comment: 'Repeatable while AP lasts'). Slot 1 is ALREADY the selected hotbar entry from the first dash above, so re-pressing hotbar_2 is a no-op selection (no fresh ui_slot_info_rendered -- that event only fires on a selection CHANGE); wait_frames instead of a second slot_info wait.", "action": "press", "name": "hotbar_2" },
   { "action": "wait_frames", "frames": 3 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dashed", "payload_contains": { "id": "pc", "move_pool": 3 }, "timeout_sec": 5 },

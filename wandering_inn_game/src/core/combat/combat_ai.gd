@@ -90,9 +90,14 @@ static func _act_melee(combat: WICombat, id: String, c: Dictionary, foes: Array)
 ## power_strike must FALL THROUGH to the basic attack on the very next line --
 ## the whole point of doing the AI work before any skill carries a cooldown.
 static func _power_strike_ready(combat: WICombat, id: String, c: Dictionary) -> bool:
-	return (c[WIKeys.SKILLS] as Array).has("power_strike") \
-			and int(c[WIKeys.AP]) >= 3 \
-			and combat.skill_available(id, "power_strike")
+	if not (c[WIKeys.SKILLS] as Array).has("power_strike"):
+		return false
+	# The raw literal 3 this arm used to carry was power_strike's own ap_cost
+	# copied into code -- byte-identical while that cost held, silently wrong the
+	# first time the data moved. Read the cost the sim will actually charge.
+	if int(c[WIKeys.AP]) < combat.effective_ap_cost(c, combat.skills.get("power_strike", {})):
+		return false
+	return combat.skill_available(id, "power_strike")
 
 
 static func _act_skirmisher(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:
