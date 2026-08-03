@@ -36,11 +36,44 @@ var _range_lo := -1
 var _range_hi := -1
 var _ladder_rates := {}
 
+## GH#360 (a) — THE DIFFICULTY-TIER SWEEP HOOK, and it is deliberately a hook on
+## this harness rather than a second 141-cell driver. The cells, the builds, the
+## rosters and the per-family setup (allies, hp mods, companion boons, bounty
+## scaling) all live here already; a parallel harness would have to clone every
+## one of them and would drift from this file the first time a cell moved.
+##
+## `WI_DIFFICULTY_MULT=<float>` sets `WICombat.difficulty_damage_taken_mult` on
+## EVERY fight this run builds — the same field the composition root sets from
+## `WISettings.difficulty_damage_taken_mult` (0.75 Bronze / 1.0 Silver / 1.3
+## Gold). Same seed discipline as an ordinary run: the knob scales damage dealt
+## to the player's side and touches no RNG draw, so a tier leg replays the
+## IDENTICAL fight shape and only the cost of a hit moves.
+##
+## UNSET = byte-identical to before this hook existed (the field defaults to 1.0
+## and `_apply_difficulty` early-returns at 1.0, so even an explicit
+## `WI_DIFFICULTY_MULT=1.0` leg is numerically identical -- `difficulty_tier_
+## sweep.sh` proves that by diffing the x1.0 leg against a plain run).
+##
+## REPORT-ONLY, and structurally so: every gated band in this file is authored
+## at Silver, so asserting them at 0.75/1.3 would just red the whole matrix.
+## A tier leg therefore prints its FAIL lines as the REPORT it is and exits 0;
+## the plain (env-unset) run is the only one that asserts, and it is unchanged.
+var _difficulty_mult := 1.0
+var _tier_sweep := false
+
 func _cell_in_range() -> bool:
 	_cell_idx += 1
 	if _range_lo < 0:
 		return true
 	return _cell_idx >= _range_lo and _cell_idx <= _range_hi
+
+
+## THE one construction site for every fight in this file, so the tier hook is
+## applied once rather than at each of the eleven per-family loops.
+func _new_combat(arena: Dictionary, cfgs: Array, skills_cfg: Dictionary, sink: Callable, rng_seed: int) -> WICombat:
+	var combat := WICombat.new(arena, cfgs, skills_cfg, sink, rng_seed)
+	combat.difficulty_damage_taken_mult = _difficulty_mult
+	return combat
 
 
 func _note_ladder(cell: Dictionary, win_rate: float) -> void:
@@ -524,6 +557,13 @@ func _init() -> void:
 		print("WI_CELL_COUNT: %d" % total_cells)
 		quit(0)
 		return
+	var diff_env := OS.get_environment("WI_DIFFICULTY_MULT")
+	if diff_env != "":
+		_difficulty_mult = float(diff_env)
+		assert(_difficulty_mult > 0.0, "WI_DIFFICULTY_MULT must be a positive float (0.75 Bronze / 1.0 Silver / 1.3 Gold)")
+		_tier_sweep = true
+		print("[tier-sweep] difficulty_damage_taken_mult=%.2f -- REPORT ONLY (every band in this file is authored at Silver 1.0)" % _difficulty_mult)
+
 	var range_env := OS.get_environment("WI_CELL_RANGE")
 	if range_env != "":
 		var parts := range_env.split(":")
@@ -567,7 +607,7 @@ func _init() -> void:
 					cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
 				for enemy_id: String in comp["enemies"]:
 					cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-				var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+				var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 				combat.begin()
 				var guard := 0
 				while not combat.finished and guard < 2000:
@@ -634,7 +674,7 @@ func _init() -> void:
 				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
 			for enemy_id: String in comp["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -701,7 +741,7 @@ func _init() -> void:
 				cfgs.append(ally_cfg)
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -756,7 +796,7 @@ func _init() -> void:
 				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -809,7 +849,7 @@ func _init() -> void:
 				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -859,7 +899,7 @@ func _init() -> void:
 				cfgs.append((by_id["riverfarm_hunter"] as Dictionary).duplicate(true))
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -913,7 +953,7 @@ func _init() -> void:
 				cfgs.append((by_id["wilovan"] as Dictionary).duplicate(true))
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -971,7 +1011,7 @@ func _init() -> void:
 				cfgs.append(ally_cfg)
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -1024,7 +1064,7 @@ func _init() -> void:
 			var cfgs: Array = [pc]
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -1070,7 +1110,7 @@ func _init() -> void:
 			var cfgs: Array = [pc]
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -1141,7 +1181,7 @@ func _init() -> void:
 				cfgs.append(ally_cfg)
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -1193,7 +1233,7 @@ func _init() -> void:
 			for enemy_id: String in cell["enemies"]:
 				# THE one WIBountyScaling site -- mirrors wi_game.start_combat.
 				cfgs.append(WIBountyScaling.scale_enemy((by_id[enemy_id] as Dictionary).duplicate(true), rank))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -1251,6 +1291,18 @@ func _init() -> void:
 		printerr("FAIL [ladder]: an unsharded run measured %d of the %d ladder rungs — a rung was renamed or dropped without updating LADDER_RUNGS" % [
 			_ladder_rates.size(), LADDER_RUNGS.size(),
 		])
+
+	# GH#360 (a). A tier leg is a READ, not a contract: the bands above are all
+	# authored at Silver, so an out-of-band value at 0.75/1.3 is the measurement
+	# this sweep exists to take. The FAIL lines stay printed on purpose -- they
+	# are the per-cell report -- but they never fail the process, and the plain
+	# (env-unset) run below is untouched and still the only asserting one.
+	if _tier_sweep:
+		print("[tier-sweep] mult=%.2f complete over %d cells x %d seeded runs — any FAIL lines above are the REPORT, not a regression" % [
+			_difficulty_mult, total_cells, RUNS_PER_CELL,
+		])
+		quit(0)
+		return
 
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:
