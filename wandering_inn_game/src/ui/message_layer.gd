@@ -41,11 +41,14 @@ const QA_TOAST_HOLD_SECONDS := 0.4
 ## `from_start` on the class-toast render wait makes that script robust to
 ## EITHER emission order regardless.
 const QA_TOAST_HOLD_HEADLESS_SECONDS := 0.05
-## Ceiling on the GH#324 capture hold (`_await_capture_release`). The driver's
-## own settle is bounded (0.15s + a 3s tween-drain cap + two frames), so this
-## only has to be comfortably longer than that -- it exists so a wedged capture
-## can never strand a panel on screen for the rest of a run.
-const CAPTURE_HOLD_CEILING_SECONDS := 6.0
+## FALLBACK ceiling on the GH#324 capture hold (`_await_capture_release`). The
+## live number comes from `TestDriver.capture_hold_ceiling_msec()`, which adds
+## up the waits a capture can actually sit in -- including the web export's 10s
+## browser handshake, which this hand-picked constant used to be less than half
+## of (v0.17 fix wave, adversarial finding #5: a web shot slower than ~2.85s
+## re-opened the exact #324 race, silently). This value survives only for a
+## driver too old to answer, and hitting EITHER bound is now reported loudly.
+const CAPTURE_HOLD_CEILING_SECONDS := 16.0
 ## HOUSEKEEPING TOASTS ONLY (v0.16.1 findings 8/16/25 + GH#325). This cap used
 ## to apply to EVERY queued toast, and it was the real reason transient toasts
 ## "vanish too fast": every beat that matters emits 2-4 toasts at once (autosave
@@ -730,10 +733,18 @@ func _show(panel: Control, label: Label, text: String, seconds: float, rendered_
 ## QA-only by construction: `_capture_depth` is never raised in headless (both
 ## capture paths return first) and there is no TestDriver in a real session, so
 ## unattended play and every headless canonical are byte-identical to before.
+## The bound is ASKED FOR, not assumed (finding #5): the driver derives it from
+## the waits a capture can really sit in, which on the web path is ~13.2s -- a
+## shorter bound would hand the race back with no signal. Expiring it is
+## therefore never routine, so it fails loud (`push_error` prints an `ERROR:`
+## line, which every run's grep discipline treats as a failure).
 func _await_capture_release() -> void:
 	if TestDriver == null or not TestDriver.active():
 		return
-	var deadline_msec := Time.get_ticks_msec() + int(CAPTURE_HOLD_CEILING_SECONDS * 1000.0)
+	var ceiling_msec := int(CAPTURE_HOLD_CEILING_SECONDS * 1000.0)
+	if TestDriver.has_method("capture_hold_ceiling_msec"):
+		ceiling_msec = int(TestDriver.capture_hold_ceiling_msec())
+	var deadline_msec := Time.get_ticks_msec() + ceiling_msec
 	while TestDriver.capture_in_flight() and Time.get_ticks_msec() < deadline_msec:
 		var tree := get_tree()
 		if tree == null:
@@ -741,6 +752,8 @@ func _await_capture_release() -> void:
 		await tree.process_frame
 		if not is_inside_tree():
 			return
+	if TestDriver.capture_in_flight():
+		push_error("GH#324: capture-hold ceiling (%d ms) expired with a capture still in flight -- a transient panel just retired mid-capture; the evidence race is OPEN for this shot" % ceiling_msec)
 
 
 func _wrapped_line_count(label: Label, text: String, width: float) -> int:

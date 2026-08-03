@@ -51,6 +51,15 @@
    }
   },
   {
+   "_comment": "DAY IS IDENTITY, asserted rather than eyeballed (v0.17 fix wave, finding #2/#9). `emitters` counts the emitters BUILT and would read 1 here whatever the gate did; `emitting` counts the ones actually moving, so this is the tooth that bites if a sky-bearing map ever starts drifting particles through a noon frame.",
+   "action": "assert_event_logged",
+   "type": "ui_ambience_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "emitting": 0
+   }
+  },
+  {
    "action": "wait_frames",
    "frames": 10
   },

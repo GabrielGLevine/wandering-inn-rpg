@@ -35,6 +35,15 @@ const ACTION_JOYPAD_BUTTONS := {
 	"cancel": JOY_BUTTON_B,
 }
 const SCREENSHOT_SETTLE_SECONDS := 0.15
+## The two bounded waits a capture can sit in after its base settle: #119's
+## live-tween drain (every capture) and the web export's browser-side PNG
+## handshake (`_capture_png`'s web branch only). Named consts because
+## `capture_hold_ceiling_msec` below has to add them up -- see there.
+const TWEEN_DRAIN_CAP_MSEC := 3000
+const WEB_CAPTURE_DEADLINE_MSEC := 10000
+## Slack on the derived ceiling: frame waits, timer granularity, and the
+## `_probe_dialogue_display` bookkeeping after the settle.
+const CAPTURE_HOLD_MARGIN_MSEC := 2000
 const CELL := 16
 
 var _script_path := ""
@@ -76,6 +85,19 @@ func active() -> bool:
 ## TestDriver at all.
 func capture_in_flight() -> bool:
 	return _capture_depth > 0
+
+
+## The panel-hold ceiling message_layer.gd brackets that wait with, DERIVED
+## from the waits it actually has to outlast rather than picked by hand
+## (v0.17 fix wave, adversarial finding #5: the hand-picked 6.0s was justified
+## against the native settle only and was SHORTER than the web path's own
+## worst case -- 0.15s + 3s drain + a 10s browser handshake ~= 13.2s -- so any
+## slow web shot silently re-opened the #324 race with no failure signal).
+## Adding a wait to a capture now moves this number automatically.
+func capture_hold_ceiling_msec() -> int:
+	var web_msec := WEB_CAPTURE_DEADLINE_MSEC if OS.has_feature("web") else 0
+	return int(SCREENSHOT_SETTLE_SECONDS * 1000.0) + TWEEN_DRAIN_CAP_MSEC \
+			+ web_msec + CAPTURE_HOLD_MARGIN_MSEC
 
 
 func wants_creation_ui() -> bool:
@@ -894,7 +916,7 @@ func _capture_png(name: String) -> void:
 	await _settle_for_capture()
 	if OS.has_feature("web"):
 		JavaScriptBridge.eval("window.__WI_QA_SHOT__ = %s" % JSON.stringify(name), true)
-		var deadline := Time.get_ticks_msec() + 10000
+		var deadline := Time.get_ticks_msec() + WEB_CAPTURE_DEADLINE_MSEC
 		while Time.get_ticks_msec() < deadline:
 			var pending: Variant = JavaScriptBridge.eval("window.__WI_QA_SHOT__", true)
 			if pending == null:
@@ -921,7 +943,7 @@ func _capture_png(name: String) -> void:
 ## probe that settled differently would prove something no screenshot sees.
 func _settle_for_capture() -> void:
 	await get_tree().create_timer(SCREENSHOT_SETTLE_SECONDS).timeout
-	var tween_deadline_ms := Time.get_ticks_msec() + 3000
+	var tween_deadline_ms := Time.get_ticks_msec() + TWEEN_DRAIN_CAP_MSEC
 	while not get_tree().get_processed_tweens().is_empty() \
 			and Time.get_ticks_msec() < tween_deadline_ms:
 		await get_tree().process_frame

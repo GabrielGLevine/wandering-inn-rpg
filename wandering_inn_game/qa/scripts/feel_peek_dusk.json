@@ -50,6 +50,15 @@
    }
   },
   {
+   "_comment": "The same emitter that reads `emitting: 0` in the day leg is running at dusk -- the gate is a gate, not a deletion.",
+   "action": "assert_event_logged",
+   "type": "ui_ambience_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "emitting": 1
+   }
+  },
+  {
    "action": "wait_frames",
    "frames": 10
   },
