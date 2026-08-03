@@ -257,7 +257,7 @@
    "skills": []
   },
   {
-   "_comment": "Wiki lacks a named sewer-rat monster, so realized SPRITE-HONESTLY as cave bats (`bat` sheet, same as cave_spider's 'Cave Bat') -- canon-plausible tunnel vermin, flagged generic-diegetic per the spec. T5.1 COMBAT/DARK-ARENA: 0.38 cells pre-wave (36 idle_side bbox rows x 0.17 / CELL 16). combat_scale 0.56 = 1.26 cells, tint warm off the blue-grey grade. Board-only, sim untouched.",
+   "_comment": "Wiki lacks a named sewer-rat monster, so realized SPRITE-HONESTLY as cave bats (`bat` sheet, as cave_spider's 'Cave Bat') -- canon-plausible tunnel vermin, generic-diegetic per the spec. T5.1 DARK-ARENA: combat_scale 0.56 = 1.26 cells (36 idle_side bbox rows x 0.17 / CELL 16), tint warm off the blue-grey grade. Board-only, sim untouched.",
    "id": "sewer_vermin",
    "power_level": 3.0,
    "display_name": "Sewer Bat",
@@ -324,7 +324,7 @@
    ]
   },
   {
-   "_comment": "CANON-PLAUSIBLE, wiki.wanderinginn.com/Magical_Rats: 'Magical Rats' are rodents drawn to ambient/leaking magic ('any place with magic'), display diverse powers incl. T5.1 COMBAT/CELLAR-VERMIN: a/b/c share one `bat` on a board whose mood is identity (boost is a no-op); cold/violet/ember tints make the roster countable.",
+   "_comment": "CANON-PLAUSIBLE, wiki.wanderinginn.com/Magical_Rats: 'Magical Rats' are rodents drawn to ambient magic, with diverse powers. T5.1 CELLAR-VERMIN: a/b/c share one `bat` on a board whose mood is identity (boost is a no-op); cold/violet/ember tints make the roster countable.",
    "id": "rift_vermin_a",
    "power_level": 6.0,
    "display_name": "Rift Vermin",
@@ -401,7 +401,7 @@
    ]
   },
   {
-   "_comment": "Ruin_guardian -- the anchor-stone pedestal's warden (beat-3 recovery run; the entity lives in ruin_surface, the pedestal gate is wired separately). T5.2 RUIN_WARDEN/RIG-SCALE: 1.15 put this 216px rig at 7.62 cells (2.5x the next boss) and clipped the turn banner; 0.53 = 3.51, under the 3.55 ceiling and still the game's biggest. Wards 0.42. Visual only.",
+   "_comment": "The anchor-stone pedestal's warden (beat-3 recovery run; the entity lives in ruin_surface, the pedestal gate is wired separately). T5.2 RIG-SCALE: 1.15 put this 216px rig at 7.62 cells (2.5x the next boss) and clipped the turn banner; 0.53 = 3.51, under the 3.55 ceiling and still the game's biggest. Wards 0.42. Visual only.",
    "id": "ruin_guardian",
    "power_level": 8.0,
    "display_name": "Ruin Warden",
@@ -504,7 +504,7 @@
    "skills": []
   },
   {
-   "_comment": "Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); this roster is the witch's craft animating that plant into a debt-collecting construct, not an invented species. T5.1 COMBAT/BRIAR-CAMOUFLAGE: green on green under a green canopy; combat_tint pulls the collectors thorn-warm so figure and ground part.",
+   "_comment": "Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); the witch's craft animating that plant into a debt-collecting construct, not an invented species. T5.1 BRIAR-CAMOUFLAGE: green on green under a green canopy; combat_tint pulls them thorn-warm so figure and ground part.",
    "id": "briar_collector_a",
    "power_level": 8.0,
    "display_name": "Briar Collector",
@@ -552,7 +552,7 @@
    "skills": []
   },
   {
-   "_comment": "Riverfarm's capstone (blight_lifted), FIRST pilgrimage stop = LOWEST band. Phase 9 band sweep 2026-07-27: con 38/40 -> 34/36 on the pair, moving the measured fight down to the 9.5 power_level it was always authored at (it was measuring level with Invrisil's 11.0). Bands table + method: docs/design/2026-07-26-main-quest-line-spec.md sec.6.",
+   "_comment": "Riverfarm's capstone (blight_lifted), FIRST pilgrimage stop = LOWEST band. Phase 9 sweep 2026-07-27: con 38/40 -> 34/36 on the pair, moving the fight down to the 9.5 power_level it was authored at (it was reading level with Invrisil's 11.0). Bands + method: docs/design/2026-07-26-main-quest-line-spec.md sec.6.",
    "id": "briar_collector_deep_a",
    "power_level": 9.5,
    "display_name": "Deep Briar Collector",
@@ -697,7 +697,7 @@
    "skills": []
   },
   {
-   "_comment": "First all-human combatant family (spec sec.2). v0.16.1 #20: combat_scale bands the crew to ~2.0 cells; FIGURE_ROWS measures idle_side alpha-bbox -- re-derive on any sheet change. v0.18 W5 RUNG-4: weapon_die 6 -> 8, con untouched; rationale + re-authored windows on sim_combat_batch.gd's rung-2 cell.",
+   "_comment": "First all-human combatant family (spec sec.2). v0.16.1 #20: combat_scale bands the crew to ~2.0 cells; FIGURE_ROWS measures idle_side alpha-bbox -- re-derive on any sheet change. v0.18 W5 rung-4: weapon_die 6->8, con untouched (sim_combat_batch rung-2 cell).",
    "id": "hired_blade_leader",
    "power_level": 11.0,
    "display_name": "Hired Blade Captain",
@@ -758,7 +758,7 @@
    "skills": []
   },
   {
-   "_comment": "v0.16 I1 FIGHT (#306). NEW ids, never a retune of footpad_*/hired_blade_* -- those feed boulevard_duel_ring, both night loops and Invrisil's two ladder rungs. A distinct id IS the per-encounter override. Sprite reused from hired_blade. v0.16.1 #20: combat_scale 0.28, the same banding as hired_blade_leader (see its _comment for the measurement).",
+   "_comment": "v0.16 I1 FIGHT (#306). NEW ids, never a retune of footpad_*/hired_blade_* -- those feed boulevard_duel_ring, both night loops and Invrisil's two ladder rungs. A distinct id IS the per-encounter override. Sprite reused from hired_blade. v0.16.1 #20: combat_scale 0.28, banded as hired_blade_leader.",
    "id": "heirloom_fence",
    "power_level": 8.0,
    "display_name": "The Fence",
@@ -1033,7 +1033,7 @@
    "skills": []
   },
   {
-   "_comment": "Mothbear, T3 NIGHT-ONLY pack encounter (`road_mothbears`, floodplains wagon road). v0.16.1 #21: re-homed off invrisil_boulevard. The old comment claimed a canon placement inside a walled city with no citation, and a grep for `mothbear` across data/, docs/design/ and the wiki reference returns none -- so, honestly: an ORIGINAL beast on wilderness logic, not a cited one.",
+   "_comment": "Mothbear, T3 NIGHT-ONLY pack encounter (`road_mothbears`, floodplains wagon road). v0.16.1 #21: re-homed off invrisil_boulevard. No cite exists for `mothbear` in the wiki, data/ or docs/design/ -- an ORIGINAL beast on wilderness logic, not a cited one.",
    "id": "mothbear_a",
    "power_level": 7.0,
    "display_name": "Mothbear",
@@ -1117,7 +1117,7 @@
    ]
   },
   {
-   "_comment": "v0.16 P1 FIGHT. Roster-only retint of forge_golem; a new context takes a NEW ID (:426/:468, no per-encounter override). ai:caster is required: the melee profile never casts flame_bolt. Measured strictly below the shipped forge golem at the same build.",
+   "_comment": "v0.16 P1 FIGHT. Roster-only retint of forge_golem; a new context takes a NEW ID (:426/:468, no override). ai:caster is required: the melee profile never casts flame_bolt. Measured strictly below the shipped forge golem at the same build.",
    "id": "forge_temper_golem",
    "power_level": 16.0,
    "display_name": "Calibration Rig",
@@ -1224,7 +1224,7 @@
    "skills": []
   },
   {
-   "_comment": "v0.16 #305 R1 FIGHT. Roster-only clone of thicket_remnant's numbers (a distinct id IS the override, see :468) so the granary fight sits in the Riverfarm stop band. NOT goblin_raider: that Act-I rig sits four bands under this stop. Balance: sim_combat_batch.gd RIVERFARM_CELLS' `granary_scavengers_t3_warrior10_solo`, gated 0.55-0.95 (the stop-cell window, not a ladder rung's).",
+   "_comment": "v0.16 #305 R1 FIGHT. Roster-only clone of thicket_remnant's numbers (a distinct id IS the override, see :468) so the granary fight sits in the Riverfarm stop band. NOT goblin_raider: that Act-I rig sits four bands under this stop. Balance: RIVERFARM_CELLS' `granary_scavengers_t3_warrior10_solo`, gated 0.55-0.95 (stop-cell window, not a rung's).",
    "id": "granary_scavenger_a",
    "power_level": 7.5,
    "display_name": "Granary Scavenger",
@@ -1320,7 +1320,7 @@
    "skills": []
   },
   {
-   "_comment": "GH#156 tamed companion ([Lesser Bond], wolf-den prop). River-wolf frame at companion tuning: con down from 12 so it stays precious, not a second PC. Boon skills (basic_command_boon/pack_bond_boon) are injected at roster build, never listed here.",
+   "_comment": "GH#156 tamed companion ([Lesser Bond], wolf-den prop). River-wolf frame at companion tuning: con down from 12 so it stays precious, not a second PC. Boons (basic_command_boon/pack_bond_boon) are injected at roster build, never listed here.",
    "id": "wolf_companion",
    "power_level": 3.0,
    "display_name": "Bonded Wolf",

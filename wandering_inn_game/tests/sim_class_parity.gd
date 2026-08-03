@@ -23,13 +23,34 @@ extends SceneTree
 ##     single largest confound in this sim, and the companion lines get their
 ##     own clearly-labelled context rows instead.
 ##
-## WEAPON_RANGE IS THREADED HERE AND IS NOT IN sim_combat_batch.gd. `wi_game.gd`
-## `_build_player_combatant` sets `pc[WEAPON_RANGE] = weapon.range` (bows: 4);
-## `sim_combat_batch.gd`'s `_build_pc` does not, so every bow build in THAT file
-## silently fights at melee reach. Correct there would move shipped bands, so it
-## is logged as a seam rather than changed mid-wave -- but a parity read that
-## measured archers with their range removed would be a lie, so this harness
-## mirrors the game.
+## WEAPON RANGE IS INERT UNDER AUTOPLAY -- MEASURED, NOT ASSUMED, AND THE FIRST
+## AUTHORING OF THIS COMMENT GOT IT WRONG. `_build_pc` below threads
+## `pc[WEAPON_RANGE]` because `wi_game.gd::_build_player_combatant` does
+## (line 2099) and a mirror should mirror. It changes NOTHING, here or anywhere:
+## every `combat.attack()` call site in `WICombatAI` is guarded by
+## `combat.is_adjacent()` (combat_ai.gd:66/69/73, 106/108, 149/153), and
+## `_act_ranged` never calls `attack` at all -- it only fires line/area/spell
+## skills against their own effect ranges. `WICombat.in_weapon_range`
+## (wi_combat.gd:179) is therefore only ever asked at adjacency, where it passes
+## for every weapon. This file's own output is the proof: `archer10`
+## (training_bow, range 4) and `rogue10` (rusty_sword, range 1) share
+## stat_growth {dex: 1}, hold no AI-expressible skill, and print BYTE-IDENTICAL
+## rows on all three rosters (0.74 / 0.34 / 0.00, mean 0.360).
+##
+## The version of this comment shipped on 2026-08-03 claimed the opposite --
+## that threading the line was the difference between a parity read and "a lie",
+## and that adding it to `sim_combat_batch.gd` would move `sharpshooter14_solo`
+## and every other bow cell. Both halves were false and neither had been run.
+## The line was applied to `sim_combat_batch.gd::_build_pc` in the fix round and
+## moved 0 of 141 cells (full-matrix diff, byte-identical). The harnesses no
+## longer diverge on this and there is no seam.
+##
+## SO: EVERY BOW ROW BELOW IS MEASURED WITH ARCHERY DELETED, and now says so in
+## its own row with a RANGE-MUTE flag. This is the `ai_kit` confound wearing a
+## second hat rather than a separate one -- both are fixed by an AI profile that
+## can express bow damage, which does not exist (`_act_ranged` fires only
+## int-based line/spell). Until it does, do not read a bow row as an archery
+## read, and do not expect the WEAPON_RANGE field to change one.
 ##
 ## THE BIGGEST CONFOUND, MEASURED RATHER THAN HIDDEN -- `ai_kit`. Autoplay is
 ## `WICombatAI`, and its profiles can express only a SLICE of any kit: the melee
@@ -47,7 +68,9 @@ extends SceneTree
 ##
 ## REPORT-ONLY (harness-first, the #211 precedent). The only assertion is
 ## determinism: every fight terminates. Spread envelopes are proposed from the
-## first read and ratified after the numbers are seen.
+## first read and ratified after the numbers are seen. `WI_PARITY_BAND=<n>`
+## restricts the run to one band -- roster re-cutting is an iterative
+## measurement and paying for all three bands per candidate is waste.
 ##
 ## TOTAL LEVEL vs EFFECTIVE POWER: bands are TOTAL class level (the user's
 ## question is "Lv10 Mage vs Lv10 Warrior"), and the report prints
@@ -63,13 +86,39 @@ const WEAPON_SPEAR := "chipped_spear"
 const WEAPON_BOW := "training_bow"
 const PARITY_ARMOR := "leather_jerkin"
 
-## Fixed per band, never per build. Chosen from SHIPPED rosters and CALIBRATED
-## on the first read (2026-08-03): each band carries an easy / medium / hard
-## roster so the band has RESOLUTION at both ends. Both saturations destroy the
-## measurement -- a roster everyone wins flatters the weak lines to zero spread,
-## and a roster everyone loses pins half the table at 0.00 and reports a spread
-## that is really just a floor. The first authored band-14/18 sets did the
-## latter (8 of 14 parity builds at exactly 0.000) and were re-calibrated down.
+## Fixed per band, never per build. Chosen from SHIPPED rosters. Each band needs
+## RESOLUTION at both ends: both saturations destroy the measurement -- a roster
+## everyone wins flatters the weak lines to zero spread, and a roster everyone
+## loses pins the table at 0.00 and reports a spread that is really just a floor.
+##
+## THAT RULE IS NOW MACHINE-CHECKED (`_spread_verdict`), because prose stating it
+## did not stop two consecutive authorings from breaking it:
+##   authoring 1  -- pinned 8 of 14 parity builds at exactly 0.000. Discarded.
+##   authoring 2  (2026-08-03) -- re-cut easy/medium/hard, and STILL shipped
+##     `scout18` at 0.00 / 0.00 / 0.00. Band 18's headline "spread 0.847" was
+##     therefore the distance to a pinned floor, not a measured range: weakening
+##     scout further could not have moved it, and re-cutting the roster would
+##     have "improved" it with no class changing. Band 14's floor
+##     (`infiltrator14`, 0.08 / 0.01 / 0.00) was saturated on two rosters of
+##     three. The comment claimed the calibration was done; the numbers it
+##     shipped with said otherwise.
+##   authoring 3  (fix round) -- bands 14 and 18 gain a FLOOR-RESOLUTION roster
+##     chosen so the WEAKEST parity line still has somewhere to be measured
+##     (band 14 `sewer_vermin_pair`, band 18 `raider_vermin`), and the recap now
+##     labels every band MEASURED or CENSORED from its own numbers. A CENSORED
+##     band is not a balance finding and must never be quoted as one.
+##     Effect, measured: band 14 floor `infiltrator14` 0.030 -> 0.210 (spread
+##     0.960 -> 0.782), band 18 floor `scout18` 0.000 -> 0.070 (spread 0.847 ->
+##     0.815). BOTH headline numbers SHRANK because the old ones were partly
+##     roster, which is the whole point. Band 10 was left at three rosters: its
+##     floor (`tactician10` 0.273, resolved at 0.82 on sewer_vermin_pair) always
+##     satisfied the rule, so re-cutting it would only have moved a number that
+##     was already measuring the classes.
+##
+## Verdict rule (`_spread_verdict`): a band is MEASURED only if BOTH endpoint
+## builds respond to a change in their own class -- mean strictly inside (0,1)
+## AND at least one roster strictly inside (0,1). An endpoint sitting on a rail
+## is a censored statistic no matter how large the arithmetic difference is.
 const BANDS := [
 	{
 		"band": 10,
@@ -99,6 +148,7 @@ const BANDS := [
 	{
 		"band": 14,
 		"rosters": [
+			{"name": "sewer_vermin_pair", "arena": "goblin_ambush", "enemies": ["sewer_vermin", "sewer_vermin"]},
 			{"name": "raider_vermin", "arena": "goblin_ambush", "enemies": ["goblin_raider", "sewer_vermin"]},
 			{"name": "raskghar_pair", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"]},
 			{"name": "raskghar_scouts", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout", "raskghar_scout"]},
@@ -130,6 +180,7 @@ const BANDS := [
 	{
 		"band": 18,
 		"rosters": [
+			{"name": "raider_vermin", "arena": "goblin_ambush", "enemies": ["goblin_raider", "sewer_vermin"]},
 			{"name": "raskghar_scouts", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout", "raskghar_scout"]},
 			{"name": "briar_collectors", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"]},
 			{"name": "forge_golem", "arena": "forge_hall", "enemies": ["forge_golem"]},
@@ -227,6 +278,43 @@ func _total_level(classes: Dictionary) -> int:
 	return total
 
 
+## How many of this build's rosters sat on a rail (exactly 0.00 or exactly
+## 1.00). A rail cell cannot report a change in the class that fought it, so a
+## row's `sat` count is how much of its mean is unmeasured.
+func _sat_count(per_roster: Array) -> int:
+	var n := 0
+	for v: float in per_roster:
+		if v <= 0.0 or v >= 1.0:
+			n += 1
+	return n
+
+
+## The CENSORING CHECK the recap line is not allowed to skip. `stats` maps a
+## build name to [mean, per_roster]. A spread is only a spread if BOTH of its
+## endpoints would move when their class moves; an endpoint whose mean is on a
+## rail, or whose every roster is on a rail, is measuring the roster instead.
+## Returns [is_measured, reason].
+func _spread_verdict(stats: Dictionary, lo_name: String, hi_name: String) -> Array:
+	var reasons: Array = []
+	for pair: Array in [[lo_name, "floor"], [hi_name, "ceiling"]]:
+		var nm := String(pair[0])
+		var role := String(pair[1])
+		if not stats.has(nm):
+			continue
+		var mean: float = (stats[nm] as Array)[0]
+		var per_roster: Array = (stats[nm] as Array)[1]
+		var sat := _sat_count(per_roster)
+		if mean <= 0.0 or mean >= 1.0:
+			reasons.append("%s %s pinned at %.3f (%d/%d rosters on a rail)" % [
+				role, nm, mean, sat, per_roster.size(),
+			])
+		elif sat >= per_roster.size():
+			reasons.append("%s %s has no unsaturated roster (%d/%d on a rail)" % [
+				role, nm, sat, per_roster.size(),
+			])
+	return [reasons.is_empty(), ", ".join(reasons)]
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var arenas_by_id := {}
@@ -255,8 +343,15 @@ func _init() -> void:
 	print("gear held constant: armour %s, no accessories, weapon damage_mod 0 in every family" % PARITY_ARMOR)
 	print("=".repeat(78))
 
+	# Roster re-cutting is iterative; paying for all three bands per candidate is
+	# waste. Unset = every band, which is the only shape CI/AGENTS.md ever runs.
+	var band_env := OS.get_environment("WI_PARITY_BAND")
+	var only_band := int(band_env) if band_env != "" else -1
+
 	for band_cfg: Dictionary in BANDS:
 		var band := int(band_cfg["band"])
+		if only_band >= 0 and band != only_band:
+			continue
 		var rosters: Array = band_cfg["rosters"]
 		var builds: Array = band_cfg["builds"]
 		var roster_names: Array = []
@@ -269,6 +364,7 @@ func _init() -> void:
 
 		var parity_means := {}
 		var all_means := {}
+		var parity_stats := {}
 		var expressive_means: Array = []
 		var mute_means: Array = []
 		for build: Dictionary in builds:
@@ -312,6 +408,7 @@ func _init() -> void:
 			all_means[String(build["name"])] = mean
 			if is_parity:
 				parity_means[String(build["name"])] = mean
+				parity_stats[String(build["name"])] = [mean, per_roster]
 			var cells: Array = []
 			for i in range(per_roster.size()):
 				cells.append("%s %.2f[%d]" % [String((rosters[i] as Dictionary)["name"]), per_roster[i], int(per_roster_median[i])])
@@ -322,9 +419,15 @@ func _init() -> void:
 					expressive_means.append(mean)
 				else:
 					mute_means.append(mean)
-			print("  %s %-22s lv%2d pow%5.1f ai_kit%2d/%-2d  mean %.3f   %s" % [
+			# RANGE-MUTE: this build carries a reach weapon and autoplay will
+			# never use the reach (see the head comment's proof). The row is a
+			# melee read of a ranged class, and must not be quoted otherwise.
+			var row_weapon: Dictionary = items_by_id.get(String(build[WIKeys.WEAPON]), {})
+			var range_mute := int(row_weapon.get(WIKeys.RANGE, 1)) > 1
+			print("  %s %-22s lv%2d pow%5.1f ai_kit%2d/%-2d sat%d/%-2d %s mean %.3f   %s" % [
 				" " if is_parity else "~", String(build["name"]), _total_level(classes_dict), power,
-				int(ai_kit[0]), int(ai_kit[1]), mean, "  ".join(cells),
+				int(ai_kit[0]), int(ai_kit[1]), _sat_count(per_roster), per_roster.size(),
+				"RANGE-MUTE" if range_mute else "          ", mean, "  ".join(cells),
 			])
 
 		var lo := 2.0
@@ -347,12 +450,21 @@ func _init() -> void:
 		for v: float in mute_means:
 			mute_mean += v
 		mute_mean /= maxf(1.0, float(mute_means.size()))
-		band_spreads.append([band, hi - lo, lo_name, lo, hi_name, hi, parity_means.size()])
+		var verdict: Array = _spread_verdict(parity_stats, lo_name, hi_name)
+		var measured := bool(verdict[0])
+		band_spreads.append([band, hi - lo, lo_name, lo, hi_name, hi, parity_means.size(), measured, String(verdict[1])])
 		band_ai_split.append([band, expressive_means.size(), exp_mean, mute_means.size(), mute_mean])
 		print("  ---")
 		print("  PARITY SPREAD band %d: %.3f  (%s %.3f  ...  %s %.3f) over %d parity builds" % [
 			band, hi - lo, lo_name, lo, hi_name, hi, parity_means.size(),
 		])
+		if measured:
+			print("  SPREAD VERDICT band %d: MEASURED -- both endpoints respond to their own class." % band)
+		else:
+			print("  SPREAD VERDICT band %d: CENSORED -- %s." % [band, String(verdict[1])])
+			print("  The number above is a distance to a rail, NOT a class-balance delta. Do not")
+			print("  quote it, and do not gate on it: re-cutting the roster would move it with no")
+			print("  class changing. Give the endpoint a roster it can be measured on first.")
 		print("  AI-EXPRESSIBLE SPLIT band %d: ai_kit>0 n=%d mean %.3f   |   ai_kit=0 n=%d mean %.3f" % [
 			band, expressive_means.size(), exp_mean, mute_means.size(), mute_mean,
 		])
@@ -360,14 +472,24 @@ func _init() -> void:
 		print("   no other row has. They are printed, never counted in the spread.)")
 		print("  (ai_kit N/M: N skills autoplay can select of M combat-context skills held. N=0")
 		print("   means the row measures stat growth + a basic attack, not the class's design.)")
+		print("  (sat K/N: rosters where this row sat on a rail -- exactly 0.00 or 1.00. A rail")
+		print("   cell reports the roster, not the class. RANGE-MUTE: reach weapon, unusable AI.)")
 
 	print("")
 	print("=".repeat(78))
 	print("RECAP -- max spread per band (this is the number #360 asks to gate)")
+	var censored := 0
 	for row: Array in band_spreads:
-		print("  band %2d  spread %.3f   floor %s %.3f   ceiling %s %.3f   (n=%d)" % [
-			int(row[0]), float(row[1]), String(row[2]), float(row[3]), String(row[4]), float(row[5]), int(row[6]),
+		print("  band %2d  spread %.3f  %s   floor %s %.3f   ceiling %s %.3f   (n=%d)" % [
+			int(row[0]), float(row[1]), "MEASURED" if bool(row[7]) else "CENSORED",
+			String(row[2]), float(row[3]), String(row[4]), float(row[5]), int(row[6]),
 		])
+		if not bool(row[7]):
+			censored += 1
+			print("            ^ CENSORED: %s -- not a balance finding, not gateable." % String(row[8]))
+	if censored > 0:
+		print("  %d of %d bands are CENSORED. A censored spread is an artifact of its roster;" % [censored, band_spreads.size()])
+		print("  fix the roster before anyone ratifies an envelope off this table.")
 	print("")
 	print("RECAP -- the confound, quantified: does autoplay speak the class's kit?")
 	for row: Array in band_ai_split:

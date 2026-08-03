@@ -583,6 +583,19 @@ func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalog: Dict
 		for acc_id_v: Variant in (build.get("accessories", []) as Array):
 			accessories.append(items_by_id.get(String(acc_id_v), {}))
 		pc[WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills_by_id)
+		# Mirrors `wi_game.gd::_build_player_combatant` (line 2099). Threaded for
+		# fidelity, and MEASURED to be inert rather than assumed to matter: the
+		# full 141-cell matrix is byte-identical with and without this line
+		# (2026-08-03 fix round; `sharpshooter14_solo`, this file's only bow
+		# build, holds 0.76/median 4 either way). It cannot matter under
+		# autoplay -- every `combat.attack()` call site in `WICombatAI` is
+		# guarded by `combat.is_adjacent()` (combat_ai.gd:66/69/73, 106/108,
+		# 149/153) and `_act_ranged` never calls `attack` at all, so
+		# `WICombat.in_weapon_range` (wi_combat.gd:179) is only ever asked at
+		# adjacency, where every weapon passes. Bow builds here fight at melee
+		# reach because the AI has no bow verb, NOT because of this field --
+		# do not "fix" a bow band by expecting this line to move it.
+		pc[WIKeys.WEAPON_RANGE] = int(weapon.get(WIKeys.RANGE, 1))
 		pc[WIKeys.SKILLS] = WICombatBuild.fold_abilities(pc[WIKeys.SKILLS] as Array, accessories)
 		var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
 		pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD]
