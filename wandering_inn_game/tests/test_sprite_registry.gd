@@ -168,7 +168,7 @@ func _build_expected_counts() -> Dictionary:
 	counts["bed/idle"] = 1
 	counts["door/idle"] = 1
 
-	counts["rug_tan/idle"] = 1
+	counts["rug_woven_cream/idle"] = 1
 	counts["table_brown/idle"] = 1
 	counts["chest/idle"] = 1
 	counts["chest_open/idle"] = 1
@@ -297,7 +297,7 @@ func _build_expected_counts() -> Dictionary:
 	for e3_static: String in [
 		"hearth", "counter_left", "counter_mid", "counter_right",
 		"shelf_bottles", "window_blue", "food_bread", "food_ham",
-		"food_basket", "rug_green", "facade_plaster", "bush_green",
+		"food_basket", "rug_woven_red", "facade_plaster", "bush_green",
 		"grass_tuft", "flower_purple", "flower_tiny", "pebble",
 		"boulder", "tree_big",
 		"mushroom_purple_l", "mushroom_purple_m", "mushroom_purple_s",

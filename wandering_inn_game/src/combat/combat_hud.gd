@@ -337,7 +337,7 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = [], usab
 	var kit_ids: Array = []
 	for sk_id: String in c["skills"]:
 		var sk: Dictionary = view.skill(sk_id)
-		if (sk.get("contexts", []) as Array).has("combat") and int(sk.get("ap_cost", 0)) > 0:
+		if WIGame.skill_bar(sk) in ["combat", "both"]:
 			kit_ids.append(sk_id)
 	var skill_loadout: Array = []
 	for raw: Variant in loadout:

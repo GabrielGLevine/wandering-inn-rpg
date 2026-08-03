@@ -858,7 +858,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "blocked_cells 58 -> 57 (): guild's rug_tan (8,4) unblocked -- see guild_interior_walkthrough's own comment.",
+   "_comment": "blocked_cells 58 -> 57 (): guild's rug_woven_cream (8,4) unblocked -- see guild_interior_walkthrough's own comment.",
    "action": "wait_for_event",
    "type": "ui_map_rendered",
    "payload_contains": {

@@ -617,6 +617,7 @@ func _adjust_row(delta: int) -> void:
 		_refresh()
 	elif key == "Difficulty":
 		WISettings.set_difficulty_step(wrapi(WISettings.difficulty_step() + delta, 0, WISettings.DIFFICULTY_LABELS.size()))
+		Game.sim.difficulty_damage_taken_mult = WISettings.difficulty_damage_taken_mult()
 		_refresh()
 
 

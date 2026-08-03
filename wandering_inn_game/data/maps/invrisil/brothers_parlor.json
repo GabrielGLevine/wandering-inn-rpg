@@ -184,7 +184,7 @@
  ],
  "floor_layers": [
   {
-   "_pick": "#225 first floor layer (was biome-default inn plank, zero floor_layers): the Brothers' parlor reads as a richer parquet than the plain inn plank -- a classy gentleman-thieves' establishment. Library pack warm reddish parquet ([21,3]/[22,3]/[21,4]/[23,4], rgb~135,86,50), already manifest-wired (bundle:true). Chosen over castle brown [6,18], which windowed-read too close to the inn plank to differentiate. Rugs (rug_tan/rug_green) still dress it on top; footstep-wood stays honest. (Shares the guild's parquet: both are finer establishments in different cities -- an acceptable, thematic overlap.)",
+   "_pick": "#225 first floor layer (was biome-default inn plank, zero floor_layers): the Brothers' parlor reads as a richer parquet than the plain inn plank -- a classy gentleman-thieves' establishment. Library pack warm reddish parquet ([21,3]/[22,3]/[21,4]/[23,4], rgb~135,86,50), already manifest-wired (bundle:true). Chosen over castle brown [6,18], which windowed-read too close to the inn plank to differentiate. Rugs (rug_woven_cream/rug_woven_red) still dress it on top; footstep-wood stays honest. (Shares the guild's parquet: both are finer establishments in different cities -- an acceptable, thematic overlap.)",
    "sheet": "res://assets/tiles/library/Tiles.png",
    "tile_px": 16,
    "variants": [
@@ -227,7 +227,7 @@
    }
   },
   {
-   "sprite": "rug_tan",
+   "sprite": "rug_woven_cream",
    "cell": [
     6,
     6
@@ -247,7 +247,7 @@
   },
   {
    "id": "parlor_rug_east",
-   "sprite": "rug_green",
+   "sprite": "rug_woven_red",
    "cell": [
     9,
     5

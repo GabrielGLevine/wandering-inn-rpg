@@ -167,4 +167,13 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 		mp_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		root.add_child(mp_label)
 
+	var cd_left := int(slot.get("cooldown_remaining", 0))
+	if cd_left > 0:
+		var cd_label := Label.new()
+		cd_label.text = str(cd_left)
+		cd_label.position = Vector2(SLOT_SIZE.x - 14, 1)
+		cd_label.add_theme_font_size_override("font_size", 10)
+		cd_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		root.add_child(cd_label)
+
 	return root
