@@ -1,0 +1,96 @@
+{
+ "_comment": "v0.17 L3 FEEL EVIDENCE, DUSK leg. Same cell, same framing as feel_peek_day -- the ONLY difference is the fixture's actions_since_sleep, so the pair is a real A/B of the grade plus the newly-defaulted invrisil_street ambience (that biome declared no ambience row at all before this wave).",
+ "fixture_save": "feel_peek_dusk_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "invrisil_boulevard"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "phase": "dusk"
+   }
+  },
+  {
+   "_comment": "The same emitter that reads `emitting: 0` in the day leg is running at dusk -- the gate is a gate, not a deletion.",
+   "action": "assert_event_logged",
+   "type": "ui_ambience_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "emitting": 1
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "01_boulevard_dusk"
+  },
+  {
+   "_comment": "Row 1 of the boulevard is blocked end to end, so the bump sets facing without moving and the stationer door opens on interact.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "stationer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "02_stationer_interior"
+  }
+ ]
+}

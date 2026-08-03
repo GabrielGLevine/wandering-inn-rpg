@@ -1,0 +1,87 @@
+{
+ "_comment": "feel_peek_night's start -- as feel_peek_day_start but actions_since_sleep 950, past moods.json's night threshold (900).",
+ "version": 5,
+ "state": {
+  "current_map": "invrisil_boulevard",
+  "player_cell": [
+   20,
+   2
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "warrior": 10
+  },
+  "gold": 0,
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "given_spear_by_relc": 1,
+   "reached_liscor": 1,
+   "package_delivered": 1,
+   "errand_decided": 1,
+   "found_the_crate": 1,
+   "crate_returned": 1,
+   "resolved_the_cisterns": 1,
+   "cisterns_reported": 1,
+   "reached_two_classes": 1,
+   "watch_runner_pointed": 1,
+   "heard_the_deep_tremor": 1,
+   "heard_olesm_briefing": 1,
+   "cleared_the_warren": 1,
+   "raskghar_sealed": 1,
+   "post_game": 1,
+   "door_chain_started": 1,
+   "door_understood": 1,
+   "recovered_anchor_stone": 1,
+   "bought_catalyst": 1,
+   "door_study_sleeps": 3,
+   "door_awakened": 1,
+   "catalyst_delivered": 1,
+   "read_the_board": 1,
+   "riverfarm_attuned": 1,
+   "blight_lifted": 1,
+   "invrisil_attuned": 1,
+   "won_combat": 1,
+   "melee_hit": 57,
+   "horns_dig_started": 1,
+   "horns_dig_joined": 1,
+   "pedestal_breached": 1,
+   "door_retrieved": 1,
+   "door_mounted": 1
+  },
+  "player_skills": [
+   "basic_cleaning",
+   "observe"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_errand",
+   "missing_crate",
+   "cisterns",
+   "door_that_goes_elsewhere"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "invrisil_attunement_stone",
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
+  "container_state": {},
+  "actions_since_sleep": 950,
+  "rng_state": "-6393592048753323481"
+ }
+}

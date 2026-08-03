@@ -1,0 +1,97 @@
+{
+ "_comment": "v0.17 L3 FEEL EVIDENCE, DAY leg (non-canonical utility, title_peek/street_peek's class -- absent from qa/manifest.json). Third of a day/dusk/night triptych shot from one cell on invrisil_boulevard plus its interior twin; phase comes from the FIXTURE because moods.json's real thresholds are 400/900 actions, far past what a script can walk. WINDOWED ONLY. Seed inert: no fight resolves.",
+ "fixture_save": "feel_peek_day_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "invrisil_boulevard"
+  },
+  {
+   "_comment": "== DAY, the ship-neutral contract. Identity grade AND no biome-default emitter: every sky-bearing biome's default is gated to dusk/night precisely so this frame stays byte-identical to the pre-wave one. ==",
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "phase": "day"
+   }
+  },
+  {
+   "_comment": "DAY IS IDENTITY, asserted rather than eyeballed (v0.17 fix wave, finding #2/#9). `emitters` counts the emitters BUILT and would read 1 here whatever the gate did; `emitting` counts the ones actually moving, so this is the tooth that bites if a sky-bearing map ever starts drifting particles through a noon frame.",
+   "action": "assert_event_logged",
+   "type": "ui_ambience_rendered",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "emitting": 0
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "01_boulevard_day"
+  },
+  {
+   "_comment": "Row 1 of the boulevard is blocked end to end, so the bump sets facing without moving and the stationer door opens on interact.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "stationer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "02_stationer_interior"
+  }
+ ]
+}

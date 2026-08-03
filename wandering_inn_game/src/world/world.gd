@@ -15,6 +15,53 @@ const MOVE_TWEEN_SECONDS := 0.12
 const BUMP_PIXELS := 3.0
 const BUMP_TWEEN_SECONDS := 0.06
 
+## GH#335 phase 1 -- the UNIVERSAL ACTION TELL. Every explicit input must get a
+## visible world response (friend notes 8/12); the field-cast and the
+## interact-into-flavor paths had literally none. Amplitude and duration sit
+## deliberately UNDER `_bump_player_visual`'s refusal bump (3px / 0.06s): a
+## refusal has to stay the louder of the two gestures, or "I hit a wall" and
+## "I did a thing" read as the same motion.
+const ACTION_TELL_PIXELS := 1.5
+const ACTION_TELL_TWEEN_SECONDS := 0.05
+## The faced-cell pip carries no bus event -- adding one means a new WIEvents
+## const and wi_events.gd is outside this lane's ownership (see .lane-progress
+## SEAMS) -- so a windowed capture IS the tell's proof. #335 calls this family
+## headless-invisible by construction and names windowed playtest as the gate.
+## The emitter itself is pooled and one-shot (`_spawn_action_pip`), so it needs
+## no lifetime timer: `restart()` is the whole per-press cost.
+
+## GH#335 phase 1 -- the FACED-INTERACTABLE AFFORDANCE. Field name tags are
+## RETIRED (R3), which left "what will this key do here?" answerable only by
+## guessing from the sprite; notes 6/14's illegible-landmark class drains here
+## too. Four corner ticks bracket the cell the player FACES, and only while a
+## present entity actually stands in it. A SHAPE, never a tint: tint is not
+## disambiguation (2026-08-02 ruling), and a bracket still reads at 16px over
+## every biome the sprite families already fight for contrast against.
+const AFFORDANCE_COLOR := Color(0.99, 0.93, 0.72)
+const AFFORDANCE_INSET_PX := 1.0
+const AFFORDANCE_TICK_PX := 4.0
+const AFFORDANCE_WIDTH_PX := 1.0
+const AFFORDANCE_ALPHA_MIN := 0.34
+const AFFORDANCE_ALPHA_MAX := 0.86
+const AFFORDANCE_PULSE_HZ := 0.85
+## Every producer of a change to (player_cell, player_facing, who is present in
+## the faced cell). PLAYER_BLOCKED earns its row: a blocked move TURNS without
+## moving, so it is the one input that changes the faced cell with no
+## PLAYER_MOVED behind it. MAP_CHANGED is deliberately ABSENT -- `_rebuild_field`
+## ends with its own reconcile against the field it just built.
+const AFFORDANCE_REFRESH_EVENTS: Array[StringName] = [
+	WIEvents.PLAYER_MOVED,
+	WIEvents.PLAYER_BLOCKED,
+	WIEvents.PLAYER_TELEPORTED,
+	WIEvents.ENTITY_REMOVED,
+	WIEvents.PHASE_CHANGED,
+	WIEvents.ACCOMPLISHMENT_RECORDED,
+	WIEvents.COMPANION_CHANGED,
+	WIEvents.DIALOGUE_STARTED,
+	WIEvents.DIALOGUE_ENDED,
+	WIEvents.UI_COMBAT_HIDDEN,
+]
+
 const LIGHT_TEXTURE := preload("res://assets/fx/light_radial.png")
 const LIGHT_TEXTURE_PX := 64.0
 const LIGHT_BUDGET := 8
@@ -26,9 +73,62 @@ const PC_LIGHT_ENERGY := 1.0
 const SNEAK_ALPHA := 0.6
 
 const AMBIENCE_BUDGET := 6
+## The phase list any SKY-BEARING map's biome default is forced to, whatever
+## the biome row below says (`_biome_default_ambience`/`_map_has_sky`).
+const SKY_DEFAULT_PHASES: Array = ["dusk", "night"]
+## Tolerance on the day-vs-dusk grade comparison that decides "has a sky"
+## (`_map_has_sky`). Well under the smallest real drop in moods.json
+## (pallass_market, ~0.07) and well over float noise from JSON.
+const SKY_GRADE_EPSILON := 0.01
+const MOODS_PATH := "res://data/moods.json"
+## Read-only mirrors of moods.json, populated once per process. `reset()` on
+## WIAtmosphere/WISpriteRegistry is the live-reload seam for the real caches;
+## these two hold nothing a data edit can invalidate mid-session that a map
+## rebuild would not already re-read, and are static so the parse is paid once
+## per process, not once per door.
+static var _moods_cache: Dictionary = {}
+static var _sky_cache: Dictionary = {}
+## Atmosphere lever 3. Per-biome fallback for a map that declares no `ambience`
+## row of its own -- see `_build_ambience`/`_biome_default_ambience` for the
+## layering rule and why the phase gates are what they are. Keyed by
+## biomes.json ids; a biome absent here simply has no default (silence is a
+## legitimate answer, and an unlisted biome must never inherit a wrong one).
+## Entries exist for biomes whose maps all currently declare rows too --
+## the table is the DEFAULT for the kind of place, not a patch list.
+## `phase: []` here means "as far as the BIOME is concerned, every phase" --
+## a sky-bearing MAP inside such a biome (ruin_surface in `cave`,
+## mercantile_alleys in `invrisil_alley`) is still forced to dusk/night by
+## `_biome_default_ambience`, because daylight is a property of the room, not
+## of the tileset it was built from.
+const BIOME_DEFAULT_AMBIENCE := {
+	"dungeon": {"preset": "dust_motes", "phase": []},
+	"cave": {"preset": "dust_motes", "phase": []},
+	"invrisil_alley": {"preset": "dust_motes", "phase": []},
+	"brothers_parlor": {"preset": "dust_motes", "phase": []},
+	"inn": {"preset": "dust_motes", "phase": ["dusk", "night"]},
+	"pallass_forge": {"preset": "embers", "phase": []},
+	"garden": {"preset": "fireflies", "phase": ["dusk", "night"]},
+	"witch_hollow": {"preset": "fireflies", "phase": ["dusk", "night"]},
+	"floodplains": {"preset": "leaves", "phase": ["dusk", "night"]},
+	"riverfarm_village": {"preset": "leaves", "phase": ["dusk", "night"]},
+	"street": {"preset": "dust_motes", "phase": ["dusk", "night"]},
+	"invrisil_street": {"preset": "dust_motes", "phase": ["dusk", "night"]},
+	"pallass_market": {"preset": "dust_motes", "phase": ["dusk", "night"]},
+}
 const SWAY_SHADER := preload("res://src/world/shaders/foliage_sway.gdshader")
 const WATER_SHEET := "res://assets/tiles/free_pack/Water_tiles.png"
 const WATER_SHIMMER_SHADER := preload("res://src/world/shaders/water_shimmer.gdshader")
+## The two always-on world shaders animate off a `speed` uniform, and
+## reduce-motion owns it (v0.17 fix wave, adversarial finding #10: both were
+## unconditional, so a motion-sensitive player standing in the floodplains had
+## foliage swaying and water rippling with the setting ON). world.gd writes the
+## uniform EXPLICITLY in both directions -- the shader-file defaults are never
+## relied on -- so these values cannot silently drift out of sync with the
+## .gdshader sources. Zeroing the clock rather than the amplitude keeps each
+## sprite's own phase offset, i.e. a still, naturally-varied field instead of a
+## rank of identically-straight stalks.
+const SWAY_SPEED := 1.2
+const WATER_SHIMMER_SPEED := 1.0
 ## TRAP: do not swap this to (1,7) -- PIL alpha-scan confirms it is a
 ## completely flat solid-fill tile (every pixel in the 16x16 region is the
 ## identical (62,146,209), zero variance); a frost tint over it still reads
@@ -87,6 +187,11 @@ var _ice_overlay: TileMapLayer
 ## running before starting the other, or both fight over `.position` for up
 ## to ~0.12s. See `_kill_player_tween`.
 var _player_tween: Tween
+## Which KIND of tween currently occupies the shared `_player_tween` slot. Only
+## the move tween's `finished` signal drives held-direction auto-repeat and the
+## click path, so only the move tween is un-killable by a same-frame action tell
+## -- see `_move_tween_live`.
+var _player_tween_is_move := false
 var _camera_ctl: WICameraController
 var _entity_visuals: Dictionary = {}
 var _field_blocked_prop_plan: Dictionary = {}
@@ -117,6 +222,26 @@ var _sway_material: ShaderMaterial
 var _visual_factory: WIEntityVisualFactory
 var _sneak_shimmer_material: ShaderMaterial
 var _vignette: ColorRect
+## GH#335 phase 1. Built lazily on the first reconcile and freed with the rest
+## of `_field_root` on every rebuild (hence the null-out beside `_player_sprite`
+## in `_rebuild_field`) -- it is field furniture, not a persistent overlay.
+var _affordance_cursor: Node2D
+var _affordance_time := 0.0
+## The single pooled action-tell emitter (see `_spawn_action_pip`). Field
+## furniture like `_affordance_cursor`: nulled in `_rebuild_field`, rebuilt on
+## the next press.
+var _action_pip: GPUParticles2D
+## Every ambient emitter this field built -- map-DECLARED rows AND biome
+## defaults -- with the phase list each was registered under, so reduce-motion
+## can cut all of them and re-derive the phase gate itself when it is switched
+## back off (see `_apply_ambient_emitter_state`).
+var _ambient_emitters: Array[Dictionary] = []
+## The water overlay's own ShaderMaterial for the CURRENT map (null on maps
+## with no water). Held only so reduce-motion can stop its clock live.
+var _water_material: ShaderMaterial
+## Last reduce-motion value pushed into the always-on motion layer. Seeded in
+## `_ready` so the first `_process` tick is a no-op on a normal boot.
+var _reduce_motion_applied := false
 
 
 func _ready() -> void:
@@ -131,6 +256,11 @@ func _ready() -> void:
 	_camera_ctl = WICameraController.new(_camera, CELL, VIEW_SIZE)
 	_sway_material = ShaderMaterial.new()
 	_sway_material.shader = SWAY_SHADER
+	# Seed the always-on motion layer from the live setting before the first
+	# field is built, so a player who booted with reduce-motion ON never sees a
+	# frame of sway/shimmer (and `_process`'s first tick is a no-op).
+	_reduce_motion_applied = WISettings.reduce_motion()
+	_apply_motion_settings()
 	_visual_factory = WIEntityVisualFactory.new(CELL, _sway_material)
 	_sneak_shimmer_material = ShaderMaterial.new()
 	_sneak_shimmer_material.shader = WATER_SHIMMER_SHADER
@@ -351,12 +481,239 @@ func _disarm_field_slot() -> void:
 		_field_hotbar.set_selected(-1)
 
 
+## THE universal explicit-action hook. Already the one place every deliberate
+## world action funnels through (pad-confirm cast, number-key cast, interact
+## press, click-walk's arrival interact), which is exactly why GH#335's action
+## tell hangs here rather than off four separate call sites -- a fifth action
+## path added later gets the tell for free, the way it already gets the toast
+## dismiss.
 func _notify_action_taken() -> void:
+	_play_action_tell()
 	if _main == null:
 		return
 	var ml := _main.message_layer()
 	if ml != null:
 		ml.dismiss_current_toast_early()
+
+
+## GH#335 phase 1. Fires BEFORE the sim call it precedes, so `player_facing` is
+## still the direction the player aimed at when they pressed -- that is the
+## cell the tell must mark, whatever the sim then decides happened there.
+## Deliberately fires on a NULL result too (interact into empty air, a cast
+## with no target): the tell answers "the game heard you", which is precisely
+## the input the old silence left unanswered.
+func _play_action_tell() -> void:
+	if _player_visual == null:
+		return
+	# reduce-motion trades the tell for the persistent affordance below plus
+	# the new audio rows (item_used/player_blocked/skill_no_effect, data/
+	# audio.json) -- the non-motion feedback channels of this same wave. Same
+	# shared-gate shape as board_renderer.gd's juice family.
+	if WISettings.reduce_motion():
+		return
+	_spawn_action_pip(Game.sim.player_cell + Game.sim.player_facing)
+	# INVARIANT (v0.17 fix wave, adversarial finding C1): the tell NEVER touches
+	# `_player_visual.position` while a real move is animating. It used to
+	# `_kill_player_tween()` unconditionally, and `Tween.kill()` does not emit
+	# `finished` -- which is the ONE driver of held-direction auto-repeat
+	# (`_on_move_tween_finished` is where `_held_move_direction` is read). An
+	# interact/cast pressed mid-step therefore stopped a held walk dead AND
+	# snapped the sprite a whole cell to its destination, and no QA gate could
+	# ever see it (`_presentation_delay` collapses this whole function to the
+	# pip under any TestDriver). A press during a step still gets the pip and
+	# the audio row; it just does not fight the step for `.position`.
+	if _move_tween_live():
+		return
+	var duration := _presentation_delay(ACTION_TELL_TWEEN_SECONDS)
+	if duration <= 0.0:
+		return
+	_kill_player_tween()
+	var home := Vector2(Game.sim.player_cell) * CELL
+	_player_visual.position = home
+	_player_tween = create_tween()
+	_player_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_player_tween.tween_property(_player_visual, "position", home + Vector2(Game.sim.player_facing) * ACTION_TELL_PIXELS, duration)
+	_player_tween.tween_property(_player_visual, "position", home, duration)
+	_player_tween_is_move = false
+
+
+## True only while `_move_player_visual`'s tween -- the one whose `finished`
+## signal drives held-direction auto-repeat and click-path advance -- is still
+## running. A finished or killed Tween reports neither valid nor running, so
+## this needs no teardown hook; `_player_tween_is_move` only disambiguates the
+## shared `_player_tween` slot (a bump/tell tween must not read as a move).
+func _move_tween_live() -> bool:
+	return _player_tween_is_move and _player_tween != null \
+			and _player_tween.is_valid() and _player_tween.is_running()
+
+
+## Unlike `_spawn_burn_poof`, this does NOT collapse under an active TestDriver
+## -- a windowed capture is the tell's only proof, so collapsing it there would
+## delete the evidence for the one feature that has no bus event. It still
+## skips HEADLESS entirely (no renderer, and every headless canonical stays
+## byte-identical: no node churn, no timer).
+## POOLED, exactly ONE emitter per field (v0.17 fix wave, adversarial finding
+## #7): the first version built a fresh GPUParticles2D + ParticleProcessMaterial
+## + CanvasItemMaterial + GradientTexture1D and a SceneTreeTimer on every single
+## press, uncapped -- ten presses a second on a wasm build meant ~8 live emitters
+## and ~32 freshly allocated resources in flight. A one-shot emitter is
+## `restart()`-able, so a mash now costs one reposition and one restart, and the
+## node is freed with `_field_root` like the affordance bracket beside it.
+func _spawn_action_pip(cell: Vector2i) -> void:
+	if _field_root == null or DisplayServer.get_name() == "headless":
+		return
+	if _action_pip == null or not is_instance_valid(_action_pip):
+		_action_pip = WIAmbience.make("action_pip", Rect2(Vector2.ZERO, Vector2(CELL, CELL)))
+		if _action_pip == null:
+			return
+		_action_pip.z_index = 30
+		_action_pip.emitting = false
+		_field_root.add_child(_action_pip)
+	# `_base` centres the emitter on its rect, so the pool node carries the
+	# half-cell offset and only the cell origin moves per press.
+	_action_pip.position = Vector2(cell) * CELL + Vector2(CELL, CELL) * 0.5
+	_action_pip.restart()
+	_action_pip.emitting = true
+
+
+## GH#335 phase 1. Shown only when the faced cell actually holds a PRESENT
+## entity, so the bracket never promises an interaction that is not there --
+## `entity_at` already applies the `present_when` gate, which is what keeps
+## this honest across the phase clock (a night-absent flavor NPC takes its
+## bracket with it, same beat its sprite goes).
+func _reconcile_faced_affordance() -> void:
+	if _field_root == null or Game.sim == null:
+		return
+	if _affordance_cursor == null or not is_instance_valid(_affordance_cursor):
+		_affordance_cursor = _make_affordance_cursor()
+		_field_root.add_child(_affordance_cursor)
+	var cell: Vector2i = Game.sim.player_cell + Game.sim.player_facing
+	# A conversation owns the screen; a bracket under an open dialogue panel is
+	# noise pointing at the thing you are already talking to. Combat is covered
+	# by `_field_root.visible = false` and needs no arm of its own.
+	var showing := Game.sim.dialogue == null and not Game.sim.entity_at(cell).is_empty()
+	_affordance_cursor.visible = showing
+	if not showing:
+		return
+	_affordance_cursor.position = Vector2(cell) * CELL
+	if not _affordance_pulsing():
+		_affordance_cursor.modulate.a = AFFORDANCE_ALPHA_MAX
+
+
+## Pulse is suppressed under reduce-motion AND under any driven run
+## (`_presentation_delay`'s QA/headless collapse) -- the second half matters as
+## much as the first: an oscillating alpha would make every windowed screenshot
+## of a bracketed prop a different brightness, so evidence would never compare.
+func _affordance_pulsing() -> bool:
+	return _presentation_delay(1.0) > 0.0 and not WISettings.reduce_motion()
+
+
+func _make_affordance_cursor() -> Node2D:
+	var root := Node2D.new()
+	root.name = "FacedAffordance"
+	root.z_index = 25
+	root.visible = false
+	root.modulate.a = AFFORDANCE_ALPHA_MAX
+	var near := AFFORDANCE_INSET_PX
+	var far := float(CELL) - AFFORDANCE_INSET_PX
+	var tick := AFFORDANCE_TICK_PX
+	# One L per corner, drawn as a 3-point polyline so the corner pixel is
+	# shared rather than double-struck (a doubled pixel reads as a blob at 16px).
+	var corners := [
+		[Vector2(near, near + tick), Vector2(near, near), Vector2(near + tick, near)],
+		[Vector2(far - tick, near), Vector2(far, near), Vector2(far, near + tick)],
+		[Vector2(far, far - tick), Vector2(far, far), Vector2(far - tick, far)],
+		[Vector2(near + tick, far), Vector2(near, far), Vector2(near, far - tick)],
+	]
+	for pts: Array in corners:
+		var line := Line2D.new()
+		line.width = AFFORDANCE_WIDTH_PX
+		line.default_color = AFFORDANCE_COLOR
+		line.joint_mode = Line2D.LINE_JOINT_SHARP
+		line.begin_cap_mode = Line2D.LINE_CAP_NONE
+		line.end_cap_mode = Line2D.LINE_CAP_NONE
+		line.antialiased = false
+		for p: Vector2 in pts:
+			line.add_point(p)
+		root.add_child(line)
+	return root
+
+
+## Pulse driven from `_process`, never a Tween -- GH#324 measured what a live
+## tween costs: `test_driver`'s capture settle drains `get_processed_tweens()`
+## before every screenshot, so ONE looping tween anywhere would add the full
+## 3s drain cap to every windowed shot in the whole suite. atmosphere.gd's
+## flicker clock is the same call, for the same reason.
+## This tick is ALSO where reduce-motion is observed (v0.17 fix wave,
+## adversarial finding #3/#10): WISettings is a plain config-backed autoload
+## with no change signal, so the only way for the world's always-on motion --
+## foliage sway, water shimmer, ambient emitters -- to answer the toggle at the
+## moment it is flipped (rather than at the next door crossing) is to read the
+## bool where motion is already driven. Every other reduce-motion gate in the
+## repo is evaluated at the moment of motion; these three are the exception
+## only because their motion is continuous, so this tick IS that moment.
+func _process(delta: float) -> void:
+	_tick_motion_settings()
+	if _affordance_cursor == null or not is_instance_valid(_affordance_cursor) \
+			or not _affordance_cursor.visible or not _affordance_pulsing():
+		return
+	_affordance_time += delta
+	var wave := 0.5 + 0.5 * sin(TAU * AFFORDANCE_PULSE_HZ * _affordance_time)
+	_affordance_cursor.modulate.a = lerpf(AFFORDANCE_ALPHA_MIN, AFFORDANCE_ALPHA_MAX, wave)
+
+
+## The live half of the reduce-motion contract. On a FLIP it repaints both
+## shader clocks and every ambient emitter; while reduce-motion is ON it also
+## re-asserts the emitter cut every tick, because atmosphere.gd's
+## `_refresh_emitters` (phase crossings, arena enter/exit) re-derives
+## `emitting`/`visible` from the phase alone and would otherwise switch a
+## suppressed field back on behind our back. `_set_emitter_state` taking the
+## gate itself is the right long-term home -- atmosphere.gd is outside this
+## lane's ownership, see .lane-progress SEAMS.
+func _tick_motion_settings() -> void:
+	var reduced := WISettings.reduce_motion()
+	if reduced != _reduce_motion_applied:
+		_reduce_motion_applied = reduced
+		_apply_motion_settings()
+	elif reduced:
+		_apply_ambient_emitter_state()
+
+
+## Shader clocks first (one shared material each, so this is two
+## RenderingServer parameter writes, not one per sprite), then the emitters.
+func _apply_motion_settings() -> void:
+	var reduced := WISettings.reduce_motion()
+	if _sway_material != null:
+		_sway_material.set_shader_parameter("speed", 0.0 if reduced else SWAY_SPEED)
+	if _water_material != null:
+		_water_material.set_shader_parameter("speed", 0.0 if reduced else WATER_SHIMMER_SPEED)
+	_apply_ambient_emitter_state()
+
+
+## Mirrors atmosphere.gd's `_set_emitter_state` (phase gate, both `.emitting`
+## and `.visible` so no straggler survives the cut) and ANDs reduce-motion on
+## top. Covers map-DECLARED rows as well as the new biome defaults -- 17 of the
+## 29 maps declare their own ambience, and before this they kept drifting with
+## reduce-motion on.
+## Returns how many emitters are left actually moving -- `_build_ambience`
+## publishes that number so the day-identity contract is machine-checkable.
+func _apply_ambient_emitter_state() -> int:
+	if _ambient_emitters.is_empty():
+		return 0
+	var reduced := WISettings.reduce_motion()
+	var phase := _atmosphere.phase_now() if _atmosphere != null else ""
+	var active := 0
+	for entry: Dictionary in _ambient_emitters:
+		var node: GPUParticles2D = entry["node"]
+		if not is_instance_valid(node):
+			continue
+		var phases: Array = entry["phases"]
+		var should_emit: bool = (phases.is_empty() or phase in phases) and not reduced
+		node.emitting = should_emit
+		node.visible = should_emit
+		if should_emit:
+			active += 1
+	return active
 
 
 func _activate_field_slot(slot: int) -> void:
@@ -397,6 +754,14 @@ func _rebuild_field() -> void:
 	for child: Node in _field_root.get_children():
 		child.queue_free()
 	_entity_visuals.clear()
+	# GH#335: field furniture, freed with everything else above -- the
+	# end-of-rebuild reconcile rebuilds it against the new map.
+	_affordance_cursor = null
+	# Same discipline for the pooled action pip and the water overlay's
+	# material: both hang off `_field_root`'s children, which were just queued
+	# for free, so the references must not outlive them.
+	_action_pip = null
+	_water_material = null
 	_player_sprite = null
 	_companion_visual = null
 	_ward_visuals.clear()
@@ -415,6 +780,7 @@ func _rebuild_field() -> void:
 	_atmosphere.clear_lights()
 	_light_count = 0
 	_atmosphere.clear_emitters()
+	_ambient_emitters.clear()
 	_ambience_count = 0
 	_build_floor()
 	_build_water_shimmer()
@@ -455,6 +821,9 @@ func _rebuild_field() -> void:
 		"map %s exceeds the %d-light budget (%d) -- spec §5" % [Game.sim.current_map, LIGHT_BUDGET, _light_count])
 	ObservableBus.emit_domain_event(WIEvents.UI_LIGHTS_RENDERED, {"map": Game.sim.current_map, "count": _light_count})
 	_build_ambience()
+	# GH#335: after every visual exists, so `entity_at`'s answer and the built
+	# geometry can never disagree about what the bracket is pointing at.
+	_reconcile_faced_affordance()
 	_update_camera()
 
 
@@ -553,6 +922,11 @@ func _build_water_shimmer() -> void:
 			var mat := ShaderMaterial.new()
 			mat.shader = WATER_SHIMMER_SHADER
 			overlay.material = mat
+			# Held so reduce-motion can stop (and restart) this clock without a
+			# map rebuild; the assignment below applies the CURRENT setting to
+			# the freshly built overlay.
+			_water_material = mat
+			_apply_motion_settings()
 		var cap_raw: Array = seg.get("cap", [1, 5])
 		var coord := Vector2i(int(cap_raw[0]), int(cap_raw[1]))
 		for cell: Vector2i in cells:
@@ -563,6 +937,7 @@ func _build_water_shimmer() -> void:
 	if painted:
 		_field_root.add_child(overlay)
 	else:
+		_water_material = null
 		overlay.queue_free()
 
 
@@ -1065,8 +1440,19 @@ func _detach_pc_light() -> void:
 	_pc_light = null
 
 
+## Atmosphere lever 3 (the motion layer's ambient-particle half): 12 of the 29
+## shipped maps declare no `ambience` row at all, so nothing in them moves. The
+## fallback lives in the BIOME rather than in twelve new hand-authored map rows
+## because that is the honest layer for it -- "what drifts in the air of an
+## indoor room" is a property of the kind of place, not of each room that
+## happens to be one. A map declaring even ONE row keeps exactly what it
+## declares (no merge with the default), so every hand-tuned scene is
+## byte-identical and the fallback only ever fills a vacuum.
 func _build_ambience() -> void:
-	for raw: Variant in _current_map_cfg().get("ambience", []):
+	var rows: Array = _current_map_cfg().get("ambience", [])
+	if rows.is_empty():
+		rows = _biome_default_ambience()
+	for raw: Variant in rows:
 		if not (raw is Dictionary):
 			continue
 		var spec := raw as Dictionary
@@ -1076,11 +1462,83 @@ func _build_ambience() -> void:
 		var rect := _resolve_ambience_rect(spec.get("rect", "all"))
 		var node := WIAmbience.make(preset, rect)
 		_field_root.add_child(node)
-		_atmosphere.register_emitter(node, spec.get("phase", []))
+		var phases: Array = spec.get("phase", [])
+		_atmosphere.register_emitter(node, phases)
+		_ambient_emitters.append({"node": node, "phases": phases})
 		_ambience_count += 1
 	assert(_ambience_count <= AMBIENCE_BUDGET,
 		"map %s exceeds the %d-emitter budget (%d) -- spec §5" % [Game.sim.current_map, AMBIENCE_BUDGET, _ambience_count])
-	ObservableBus.emit_domain_event(WIEvents.UI_AMBIENCE_RENDERED, {"map": Game.sim.current_map, "emitters": _ambience_count})
+	# Reduce-motion is applied AFTER registration, never by refusing to build:
+	# an emitter that exists but is cut can be switched back on the instant the
+	# setting flips, which is what makes the toggle live (finding #3). Same
+	# emitter-always-exists / state-toggled shape the phase gate already uses.
+	# `emitting` is the count actually MOVING at build time -- `emitters` alone
+	# could never distinguish "a dusk/night emitter parked at day" from "indoor
+	# motes drifting through a noon frame", which is exactly the confusion that
+	# let two sky-bearing exteriors break the day-identity contract unnoticed
+	# (finding #2/#9). Payload matching is subset-based, so this is additive.
+	ObservableBus.emit_domain_event(WIEvents.UI_AMBIENCE_RENDERED, {
+		"map": Game.sim.current_map,
+		"emitters": _ambience_count,
+		"emitting": _apply_ambient_emitter_state(),
+	})
+
+
+## One row max, `rect: "all"` implied. Phase gating is the load-bearing half:
+## anything with a SKY is dusk/night only, so the ship-neutral "day is fully
+## identity" contract every windowed day shot pins stays exactly true; sealed
+## interiors and underground have no sky and read at every phase.
+## THE GATE IS PER-MAP, NOT PER-BIOME (v0.17 fix wave, adversarial finding
+## #2/#9). Keying it on the biome alone was simply wrong: `ruin_surface` is
+## biome `cave` and `mercantile_alleys` is biome `invrisil_alley`, and both are
+## sky-bearing exteriors with a full day/night grade -- they were emitting
+## indoor dust motes at noon, on the two maps the day-identity claim is loudest
+## about. Sky-vs-no-sky is a property of the ROOM, so it is read off the room:
+## see `_map_has_sky`. Reduce-motion is NOT handled here -- the rows are always
+## built and the emitters cut in `_apply_ambient_emitter_state`, so the setting
+## answers live instead of at the next door crossing.
+func _biome_default_ambience() -> Array:
+	var biome_id := String(_current_map_cfg().get("biome", ""))
+	var row: Variant = BIOME_DEFAULT_AMBIENCE.get(biome_id)
+	if row == null:
+		return []
+	var spec: Dictionary = (row as Dictionary).duplicate()
+	if _map_has_sky(Game.sim.current_map):
+		spec["phase"] = SKY_DEFAULT_PHASES.duplicate()
+	return [spec]
+
+
+## Does this map answer to the SUN? Read from the map's own mood card rather
+## than from any new flag: a room with a sky is graded down at DUSK, and a
+## sealed one is not -- `dungeon_approach`/`trapped_halls`/`seal_vault`/
+## `brothers_parlor` all pin day and dusk to the identical triple, while every
+## exterior (street, the boulevard, the alleys, ruin_surface, witch_hollow's
+## canopy) drops hard at sunset. Night is deliberately NOT part of the test:
+## the dungeon dims after dark too, which is authorial mood, not daylight.
+## A map with no mood row at all falls to TRUE -- the conservative direction,
+## since a false negative would put drifting particles in a day-identity frame.
+## Read-only duplicate of moods.json, same load-once idiom (and same reason)
+## as board_renderer.gd's `_resolved_mood_rgb`: this must not reach into
+## atmosphere.gd, which is outside this lane's ownership. Long-term home is a
+## `WIAtmosphere.map_has_sky()` -- see .lane-progress SEAMS.
+static func _map_has_sky(map_id: String) -> bool:
+	if _sky_cache.has(map_id):
+		return bool(_sky_cache[map_id])
+	if _moods_cache.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(MOODS_PATH))
+		_moods_cache = parsed if parsed is Dictionary else {}
+	var mood: Dictionary = (_moods_cache.get("moods", {}) as Dictionary).get(map_id, {})
+	var day: Variant = mood.get("day")
+	var dusk: Variant = mood.get("dusk")
+	var has_sky := true
+	if day is Array and dusk is Array and (day as Array).size() == 3 and (dusk as Array).size() == 3:
+		has_sky = false
+		for i in range(3):
+			if absf(float(day[i]) - float(dusk[i])) > SKY_GRADE_EPSILON:
+				has_sky = true
+				break
+	_sky_cache[map_id] = has_sky
+	return has_sky
 
 
 func _resolve_ambience_rect(rect_spec: Variant) -> Rect2:
@@ -1136,6 +1594,17 @@ func _queue_player_idle() -> void:
 
 
 func _on_domain_event(type: String, payload: Dictionary) -> void:
+	# GH#335: the faced cell (and therefore the affordance bracket) is a pure
+	# function of player_cell + player_facing + who is present there, so one
+	# membership list catches every producer of a change to any of the three --
+	# a move, a blocked bump (which turns without moving), a blink, a presence
+	# flip, a conversation opening or closing. Reconciling here rather than in
+	# each arm keeps the arms about their own subject; MAP_CHANGED is absent on
+	# purpose (`_rebuild_field` ends with its own reconcile against the built
+	# field, and reconciling against stale geometry mid-transition is exactly
+	# the class of bug the stale-cover guard exists for).
+	if type in AFFORDANCE_REFRESH_EVENTS and not _map_transition_stale_cover():
+		_reconcile_faced_affordance()
 	if type == WIEvents.PLAYER_MOVED:
 		var cell := Vector2i(int(payload["cell"][0]), int(payload["cell"][1]))
 		_move_companion_visual(_player_visual.position)
@@ -1271,6 +1740,10 @@ func _move_player_visual(target: Vector2) -> void:
 	_player_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	_player_tween.tween_property(_player_visual, "position", target, duration)
 	_player_tween.finished.connect(_on_move_tween_finished)
+	# Marks the slot as THE walk tween: `_play_action_tell` refuses to kill it,
+	# because killing it would swallow the `finished` above and with it the
+	# held-key repeat / click-path advance.
+	_player_tween_is_move = true
 
 
 func _move_companion_visual(target: Vector2) -> void:
@@ -1389,11 +1862,13 @@ func _bump_player_visual() -> void:
 	_player_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	_player_tween.tween_property(_player_visual, "position", home + Vector2(Game.sim.player_facing) * BUMP_PIXELS, duration)
 	_player_tween.tween_property(_player_visual, "position", home, duration)
+	_player_tween_is_move = false
 
 
 func _kill_player_tween() -> void:
 	if _player_tween != null and _player_tween.is_valid():
 		_player_tween.kill()
+	_player_tween_is_move = false
 
 
 func _presentation_delay(seconds: float) -> float:

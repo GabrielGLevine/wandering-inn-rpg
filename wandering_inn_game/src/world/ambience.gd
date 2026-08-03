@@ -3,7 +3,7 @@ class_name WIAmbience
 const DOT_TEXTURE := preload("res://assets/fx/particle_dot.png")
 const LEAF_TEXTURE := preload("res://assets/fx/particle_leaf.png")
 
-const PRESETS := ["fireflies", "dust_motes", "leaves", "pond_glints", "embers", "hit_sparks"]
+const PRESETS := ["fireflies", "dust_motes", "leaves", "pond_glints", "embers", "hit_sparks", "action_pip"]
 
 
 static func make(preset: String, rect: Rect2) -> GPUParticles2D:
@@ -21,6 +21,8 @@ static func make(preset: String, rect: Rect2) -> GPUParticles2D:
 			return _embers(rect)
 		"hit_sparks":
 			return _hit_sparks(rect)
+		"action_pip":
+			return _action_pip(rect)
 	return null # unreachable -- assert above covers every non-PRESETS value
 
 
@@ -152,6 +154,36 @@ static func _embers(rect: Rect2) -> GPUParticles2D:
 ## radial sparks, short life, additive -- reads as a bright hit flare, wasm-safe
 ## constructs only (BOX emission + velocity/gravity/scale/color_ramp), same
 ## constraint list as every preset above.
+## GH#335 phase 1 -- the faced-cell half of the universal action tell. A
+## one-shot sibling of `_hit_sparks` (same one_shot/explosiveness/preprocess-0
+## contract, same caller-frees discipline -- see world.gd's `_spawn_action_pip`)
+## but deliberately QUIETER in every dimension: 5 motes to 8, a third of the
+## velocity, no gravity, cool parchment-white instead of a warm flare. A combat
+## hit is a consequence and should flash; an action tell only has to say "the
+## game heard you", and a tell that outshouts a real hit teaches the wrong
+## grammar. Rises very slightly so it reads as a puff over the faced cell
+## rather than a target reticle competing with the affordance bracket already
+## drawn there. wasm-safe constructs only, same list as every preset above.
+static func _action_pip(rect: Rect2) -> GPUParticles2D:
+	var b := _base(rect, DOT_TEXTURE, 5, 0.45)
+	var node: GPUParticles2D = b["node"]
+	var mat: ParticleProcessMaterial = b["mat"]
+	node.preprocess = 0.0
+	node.one_shot = true
+	node.explosiveness = 1.0
+	mat.direction = Vector3(0, -1, 0)
+	mat.spread = 55.0
+	mat.initial_velocity_min = 6.0
+	mat.initial_velocity_max = 14.0
+	mat.gravity = Vector3.ZERO
+	mat.scale_min = 0.2
+	mat.scale_max = 0.4
+	mat.color = Color(0.99, 0.96, 0.85, 0.9)
+	mat.color_ramp = _fade_ramp()
+	_additive(node)
+	return node
+
+
 static func _hit_sparks(rect: Rect2) -> GPUParticles2D:
 	var b := _base(rect, DOT_TEXTURE, 8, 0.4)
 	var node: GPUParticles2D = b["node"]
