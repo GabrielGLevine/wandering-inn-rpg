@@ -1,0 +1,177 @@
+{
+ "_comment": "v0.17 L3 FEEL EVIDENCE, NIGHT leg + the reduce-motion control. Same cell and framing as the day/dusk legs, then the control shot: reduce-motion ON and the exterior re-derived by a door crossing, so the biome-default ambient particles are absent and the faced-cell bracket holds a static alpha instead of pulsing.",
+ "fixture_save": "feel_peek_night_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "invrisil_boulevard"
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "phase": "night"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "01_boulevard_night"
+  },
+  {
+   "_comment": "Row 1 of the boulevard is blocked end to end, so the bump sets facing without moving and the stationer door opens on interact.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "stationer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "02_stationer_interior"
+  },
+  {
+   "_comment": "== REDUCE-MOTION CONTROL. Toggled in the interior, then the door crossing back out is what re-derives the boulevard without its biome default (the default is decided at BUILD time). Pause row 8 = 'Settings' (index 7); inside, down x5 from 'Master volume' = 'Reduce Motion' (index 5) -- settings_loop's own pins, reused rather than re-derived. ==",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 7
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "reduce_motion": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_settings_value",
+   "path": "reduce_motion",
+   "equals": true
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Back out through the same door: the stationer's own exit sits below the arrival cell.",
+   "action": "move",
+   "direction": "down",
+   "steps": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "03_boulevard_night_reduce_motion"
+  }
+ ]
+}

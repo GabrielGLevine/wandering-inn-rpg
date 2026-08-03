@@ -75,6 +75,28 @@ const PC_LIGHT_ENERGY := 1.0
 const SNEAK_ALPHA := 0.6
 
 const AMBIENCE_BUDGET := 6
+## Atmosphere lever 3. Per-biome fallback for a map that declares no `ambience`
+## row of its own -- see `_build_ambience`/`_biome_default_ambience` for the
+## layering rule and why the phase gates are what they are. Keyed by
+## biomes.json ids; a biome absent here simply has no default (silence is a
+## legitimate answer, and an unlisted biome must never inherit a wrong one).
+## Entries exist for biomes whose maps all currently declare rows too --
+## the table is the DEFAULT for the kind of place, not a patch list.
+const BIOME_DEFAULT_AMBIENCE := {
+	"dungeon": {"preset": "dust_motes", "phase": []},
+	"cave": {"preset": "dust_motes", "phase": []},
+	"invrisil_alley": {"preset": "dust_motes", "phase": []},
+	"brothers_parlor": {"preset": "dust_motes", "phase": []},
+	"inn": {"preset": "dust_motes", "phase": ["dusk", "night"]},
+	"pallass_forge": {"preset": "embers", "phase": []},
+	"garden": {"preset": "fireflies", "phase": ["dusk", "night"]},
+	"witch_hollow": {"preset": "fireflies", "phase": ["dusk", "night"]},
+	"floodplains": {"preset": "leaves", "phase": ["dusk", "night"]},
+	"riverfarm_village": {"preset": "leaves", "phase": ["dusk", "night"]},
+	"street": {"preset": "dust_motes", "phase": ["dusk", "night"]},
+	"invrisil_street": {"preset": "dust_motes", "phase": ["dusk", "night"]},
+	"pallass_market": {"preset": "dust_motes", "phase": ["dusk", "night"]},
+}
 const SWAY_SHADER := preload("res://src/world/shaders/foliage_sway.gdshader")
 const WATER_SHEET := "res://assets/tiles/free_pack/Water_tiles.png"
 const WATER_SHIMMER_SHADER := preload("res://src/world/shaders/water_shimmer.gdshader")
@@ -1255,8 +1277,19 @@ func _detach_pc_light() -> void:
 	_pc_light = null
 
 
+## Atmosphere lever 3 (the motion layer's ambient-particle half): 12 of the 29
+## shipped maps declare no `ambience` row at all, so nothing in them moves. The
+## fallback lives in the BIOME rather than in twelve new hand-authored map rows
+## because that is the honest layer for it -- "what drifts in the air of an
+## indoor room" is a property of the kind of place, not of each room that
+## happens to be one. A map declaring even ONE row keeps exactly what it
+## declares (no merge with the default), so every hand-tuned scene is
+## byte-identical and the fallback only ever fills a vacuum.
 func _build_ambience() -> void:
-	for raw: Variant in _current_map_cfg().get("ambience", []):
+	var rows: Array = _current_map_cfg().get("ambience", [])
+	if rows.is_empty():
+		rows = _biome_default_ambience()
+	for raw: Variant in rows:
 		if not (raw is Dictionary):
 			continue
 		var spec := raw as Dictionary
@@ -1271,6 +1304,24 @@ func _build_ambience() -> void:
 	assert(_ambience_count <= AMBIENCE_BUDGET,
 		"map %s exceeds the %d-emitter budget (%d) -- spec §5" % [Game.sim.current_map, AMBIENCE_BUDGET, _ambience_count])
 	ObservableBus.emit_domain_event(WIEvents.UI_AMBIENCE_RENDERED, {"map": Game.sim.current_map, "emitters": _ambience_count})
+
+
+## One row max, `rect: "all"` implied. Phase gating is the load-bearing half:
+## anything with a SKY is dusk/night only, so the ship-neutral "day is fully
+## identity" contract every windowed day shot pins stays exactly true; sealed
+## interiors and underground have no sky and read at every phase. Reduce-motion
+## returns nothing at all -- a drifting particle field is motion, whatever else
+## it is. (Map-DECLARED emitters are not gated here: that switch belongs in
+## atmosphere.gd's `_set_emitter_state`, outside this lane -- see
+## .lane-progress SEAMS.)
+func _biome_default_ambience() -> Array:
+	if WISettings.reduce_motion():
+		return []
+	var biome_id := String(_current_map_cfg().get("biome", ""))
+	var row: Variant = BIOME_DEFAULT_AMBIENCE.get(biome_id)
+	if row == null:
+		return []
+	return [(row as Dictionary).duplicate()]
 
 
 func _resolve_ambience_rect(rect_spec: Variant) -> Rect2:
