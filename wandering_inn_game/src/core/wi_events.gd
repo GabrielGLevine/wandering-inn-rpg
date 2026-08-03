@@ -37,6 +37,9 @@ const CLASS_EVOLVED := &"class_evolved"
 const CONSOLIDATION_OFFERED := &"consolidation_offered"
 const CONSOLIDATION_ACCEPTED := &"consolidation_accepted"
 const CONSOLIDATION_DECLINED := &"consolidation_declined"
+# v018-W2 (#347 prototype): DEV-ONLY log line. Emitted at the sleep beat ONLY
+# while WISystemBestowal.log_enabled() -- it grants nothing and no UI listens.
+const SYSTEM_BESTOWAL_CANDIDATE := &"system_bestowal_candidate"
 
 const DIALOGUE_STARTED := &"dialogue_started"
 const DIALOGUE_NODE := &"dialogue_node"

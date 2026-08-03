@@ -1,0 +1,50 @@
+{
+ "_comment": "#347 PROTOTYPE table, read ONLY by WISystemBestowal behind a debug flag. No shipped path grants these; names are PROPOSALS for the naming-voice read. See docs/design/2026-08-02-dynamic-class-creation-spec.md.",
+ "meta": {
+  "version": 1,
+  "cap_counter": "class_bestowed",
+  "status": "prototype",
+  "player_surface": "none"
+ },
+ "bestowals": [
+  {
+   "id": "system_bestowal_pacifist",
+   "name_proposed": "Peacebinder",
+   "name_alternates": ["Gentle Hand", "Quiet Diplomat"],
+   "name_status": "proposed-original: wiki-check + cutoff-check owed before any name reaches a surface",
+   "why": "You walked into quarrels that wanted blood, and left none behind you.",
+   "when": {
+    "breadth": {
+     "counters": ["goblins_spared", "resolved_wrong_order", "mediated_the_debt"],
+     "min_each": 1
+    },
+    "requires": {
+     "persuaded_someone": 2,
+     "heard_gossip": 3
+    },
+    "absence": {
+     "won_combat": 2
+    },
+    "excludes_classes": ["spellsword", "ranger", "scout"]
+   }
+  },
+  {
+   "id": "system_bestowal_unseen",
+   "name_proposed": "Passerby",
+   "name_alternates": ["Quiet Foot", "Untroubled Wanderer"],
+   "name_status": "proposed-original: wiki-check + cutoff-check owed before any name reaches a surface",
+   "why": "You crossed the rooms other people fought through, and nothing in them ever knew you came.",
+   "when": {
+    "dominance": {
+     "counter": "sneaked_past_danger",
+     "pool": ["sneaked_past_danger", "won_combat", "warded_danger"],
+     "share": 0.6
+    },
+    "requires_any": {
+     "sneaked_past_danger": 5,
+     "blinked_past_danger": 3
+    }
+   }
+  }
+ ]
+}
