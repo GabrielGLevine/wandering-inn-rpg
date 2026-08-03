@@ -15,6 +15,6 @@
 		{ "id": "lead_hat_stays_on", "requires": { "brothers_job_done": 1 }, "hide_when": { "hat_job_taken": 1 }, "lead_text": "Wilovan has an errand that wants a quiet pair of hands.", "place": "The Brothers' parlor, Invrisil" },
 		{ "id": "lead_tempered_standards", "requires": { "elevator_pass_stamped": 1, "chatted_with_forge_smith": 1 }, "hide_when": { "standards_commission_taken": 1 }, "lead_text": "The smith's reject bin is filling up with work that should have passed.", "place": "The forge tier, Pallass" },
 		{ "id": "lead_ledger_eats_first", "requires": { "elevator_pass_stamped": 1, "chatted_with_lift_attendant": 1 }, "hide_when": { "ledger_loop_started": 1 }, "lead_text": "One crate of tin has been held on the landing manifest three cycles running.", "place": "The forge tier, Pallass" },
-		{ "id": "lead_camp_winter", "requires": { "rags_meeting_settled": 1 }, "hide_when": { "rags_price_kept": 1 }, "lead_text": "Rags stood on the rise the whole time you were leaving, and did not sit down.", "place": "The southern floodplains" }
+		{ "id": "lead_camp_winter", "requires": { "rags_meeting_settled": 1 }, "hide_when": { "rags_price_kept": 1, "drove_off_rags": 1 }, "lead_text": "Rags stood on the rise the whole time you were leaving, and did not sit down.", "place": "The southern floodplains" }
 	]
 }
