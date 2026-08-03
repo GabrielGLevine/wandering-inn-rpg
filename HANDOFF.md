@@ -56,6 +56,19 @@ Process lessons this session (fold candidates for wi-running-the-machine
    (player buys an inn room): controller-dispatched rider AFTER L5's
    train slot lands, before tag; price default 20g pending CHOICE-LOG
    adjudication at close.**
+   UPDATE (session continues, 2026-08-03): train COMPLETE — 8 PRs
+   merged (#351-#358 incl. controller seam PR; L2's difficulty-wire
+   prescription reversed for core purity, landed as field+scene-push).
+   Riders wf_c0579423 running (R1 #350 room @ rider/350-inn-room, R2
+   moods re-tune @ rider/moods-retune). close/v017 branch carries:
+   lead_camp_winter cure, 2 skill folds, fought_<id> freeze-generator
+   parity. **v0.18 WAVE-1 RATIFIED (user, pre-sleep): W1 #348-slice-1 /
+   W2 #347-prototype-BEHIND-FLAG / W3 #318 / W4 debt-drain(+Pisces
+   re-window) / W5 Wave-D Alchemist+Druid (Priest PARKED) + rung-4 —
+   W5 = sole balance writer. Pre-grants: rung-4, Pisces re-window,
+   companion respawning prop, #350 20g FIRM. Overnight: close v0.17 →
+   tag → dispatch W1-W5 → train → HANDOFF; eye/ear verdicts queue with
+   prepared states.**
 
 ### v0.17 dispatch prompt (paste into the fresh session)
 
