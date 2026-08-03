@@ -1,6 +1,35 @@
 class_name WIFieldSkills
 extends RefCounted
 
+## PROPERTY TABLE (issue #348 slice 1, spec §4.1/§4.3/§9). The burnable and
+## freezable arms used to be two hardcoded branches here; they are now ONE
+## table-lookup arm at the SAME dispatch position, fed by data/interactions.json
+## (injected through scene_config, never read from disk -- core stays pure).
+## Contracts:
+##  * OUTCOMES is a CLOSED verb set, and each verb names a SHIPPED sim
+##    behavior. A new verb is a sim arm + its own proof canonical; a new
+##    ROW (or a new carrier for an existing row) is data alone -- that
+##    asymmetry is the whole point of the slice.
+##  * MIRROR CONTRACT: data/interactions.json's "outcomes" must equal
+##    OUTCOMES exactly (proven in tests/test_interactions_table.gd, policed
+##    by scripts/data_lint.py). Changing one without the other is a red gate.
+##  * ROW ORDER IS THE CONTRACT: first matching row wins, so the shipped
+##    order (burn, then freeze) reproduces the pre-table precedence.
+##  * A row whose guard says "already applied" (a frozen cell re-frozen)
+##    does NOT match -- it falls through to field_ambient exactly as the
+##    hardcoded arm did.
+##  * An EMPTY table (synthetic scene_config with no "interactions" key)
+##    resolves nothing and every cast falls through to ambient/refusal.
+##    That is by design for hand-built unit worlds; the canonical lattice
+##    is what proves the shipped table is actually wired.
+const OUTCOME_REMOVE_SCORCH := "remove_scorch"
+const OUTCOME_FREEZE_CELL := "freeze_cell"
+const OUTCOMES: Array[String] = [OUTCOME_REMOVE_SCORCH, OUTCOME_FREEZE_CELL]
+## The two shipped target-property placements (spec §4.2): a boolean flag on
+## the faced ENTITY (burnable), or a map-authored CELL class (freezable).
+const PLACEMENT_ENTITY := "entity"
+const PLACEMENT_CELL := "cell"
+
 var _event_sink: Callable
 var _skills: Dictionary
 var _door_openable: Callable
@@ -14,11 +43,17 @@ var _toggle_light: Callable
 var _blink: Callable
 var _ward: Callable
 var _animate: Callable
+var _property_rows: Array = []
+var _target_placements: Dictionary = {}
 
 
-func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, toggle_sneak_cb: Callable, mark_skill_used_cb: Callable, record_accomplishment_cb: Callable, remove_entity_cb: Callable, use_skill_cb: Callable, toggle_light_cb: Callable, blink_cb: Callable, ward_cb: Callable, animate_cb: Callable, door_openable_cb: Callable = Callable()) -> void:
+func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, toggle_sneak_cb: Callable, mark_skill_used_cb: Callable, record_accomplishment_cb: Callable, remove_entity_cb: Callable, use_skill_cb: Callable, toggle_light_cb: Callable, blink_cb: Callable, ward_cb: Callable, animate_cb: Callable, door_openable_cb: Callable = Callable(), interaction_config: Dictionary = {}) -> void:
 	_event_sink = event_sink
 	_skills = skills
+	_target_placements = (interaction_config.get("target_properties", {}) as Dictionary).duplicate()
+	for row: Variant in interaction_config.get("interactions", []):
+		if row is Dictionary:
+			_property_rows.append(row)
 	_door_openable = door_openable_cb
 	_break_sneak = break_sneak_cb
 	_toggle_sneak = toggle_sneak_cb
@@ -38,7 +73,7 @@ func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, t
 ## no qualifying entity -> skill's field_ambient toast; none authored -> refusal
 ## idiom. Unknown-skill and non-field guards are the CALLER's job
 ## (wi_game.use_skill_field) — never re-guard here.
-func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vector2i, current_map: String, frozen_cells: Dictionary, entity_first_use: Dictionary, is_freezable: bool) -> Dictionary:
+func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vector2i, current_map: String, frozen_cells: Dictionary, entity_first_use: Dictionary, cell_properties: Dictionary) -> Dictionary:
 	# Required-skill props route through WIGame.use_skill so field and generic interaction share one effect seam.
 	if not known:
 		_emit(WIEvents.SKILL_UNKNOWN, {"skill": skill_id})
@@ -88,30 +123,12 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 			_record_accomplishment.call("befriended_moments", 1)
 		_emit(WIEvents.TOAST, {"text": friendly_line})
 		return {"befriended": String(target[WIKeys.ID])}
-	if not target.is_empty() and bool(target.get("burnable", false)) and bool(_skills.get(skill_id, {}).get("burns", false)):
-		_break_sneak.call()
-		var burned_id := String(target[WIKeys.ID])
-		var burned_cell: Vector2i = target[WIKeys.CELL]
-		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": burned_id})
-		_mark_skill_used.call(skill_id)
-		_record_accomplishment.call("burned_the_debris", 1)
-		var burn_toast := String(target.get("burn_toast", "Flame takes the debris. It crackles, collapses to ash, and the way is clear."))
-		_remove_entity.call(burned_id)
-		_emit(WIEvents.TERRAIN_CHANGED, {"map": current_map, "cell": [burned_cell.x, burned_cell.y], "to": "scorched"})
-		_emit(WIEvents.TOAST, {"text": burn_toast})
-		return {"burned": burned_id}
-	var is_frozen := (frozen_cells.get(current_map, {}) as Dictionary).has(faced_cell)
-	if bool(_skills.get(skill_id, {}).get("freezes", false)) and is_freezable and not is_frozen:
-		_break_sneak.call()
-		if not frozen_cells.has(current_map):
-			frozen_cells[current_map] = {}
-		(frozen_cells[current_map] as Dictionary)[faced_cell] = true
-		_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
-		_mark_skill_used.call(skill_id)
-		_emit(WIEvents.TERRAIN_CHANGED, {"map": current_map, "cell": [faced_cell.x, faced_cell.y], "to": "ice"})
-		var freeze_toast := String(_skills.get(skill_id, {}).get("freeze_toast", "Frost races across the water and locks it solid. You can cross now. Until it thaws."))
-		_emit(WIEvents.TOAST, {"text": freeze_toast})
-		return {"frozen": [faced_cell.x, faced_cell.y]}
+	# THE PROPERTY TABLE (spec §4.3 precedence step 4). Sits BELOW the authored
+	# per-entity arms and the named generic arms, ABOVE door_flavor/toggles_light
+	# /field_ambient -- the position the two hardcoded arms held, kept exactly.
+	var resolved := _resolve_property(skill_id, skill, target, faced_cell, current_map, frozen_cells, cell_properties)
+	if not resolved.is_empty():
+		return resolved
 	# b7 #214b: skill-authored door flavor — a data key, not an effect block
 	# (test_effect_text's empty-effect-lines pin for open_doors stays
 	# honest). Fires only on an OPENABLE door (review M1): a sealed
@@ -147,6 +164,83 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 	_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": ""})
 	_emit(WIEvents.TOAST, {"text": "Nothing here calls for that."})
 	return {}
+
+
+## Pure lookup over the injected table: no RNG, no Node refs, no disk. Returns
+## the dispatch result of the FIRST row whose skill property, target property
+## and outcome guard all hold; {} means "no row applies" and the caller keeps
+## falling through. `cell_properties` is the faced cell's class membership
+## ({freezable: bool} today) -- the cell-placement mirror of the entity flags.
+func _resolve_property(skill_id: String, skill: Dictionary, target: Dictionary, faced_cell: Vector2i, current_map: String, frozen_cells: Dictionary, cell_properties: Dictionary) -> Dictionary:
+	for row: Dictionary in _property_rows:
+		var skill_prop := String(row.get("skill_property", ""))
+		if skill_prop == "" or not bool(skill.get(skill_prop, false)):
+			continue
+		var target_prop := String(row.get("target_property", ""))
+		match String(_target_placements.get(target_prop, "")):
+			PLACEMENT_ENTITY:
+				if target.is_empty() or not bool(target.get(target_prop, false)):
+					continue
+			PLACEMENT_CELL:
+				if not bool(cell_properties.get(target_prop, false)):
+					continue
+			_:
+				continue
+		match String(row.get("outcome", "")):
+			OUTCOME_REMOVE_SCORCH:
+				return _outcome_remove_scorch(skill_id, row, target, current_map)
+			OUTCOME_FREEZE_CELL:
+				# Already-applied guard: a re-freeze is a fallthrough, never a
+				# second freeze (no duplicate terrain_changed).
+				if (frozen_cells.get(current_map, {}) as Dictionary).has(faced_cell):
+					continue
+				return _outcome_freeze_cell(skill_id, skill, row, faced_cell, current_map, frozen_cells)
+	return {}
+
+
+## `remove_scorch` -- the burn shape: permanent removal (removed_entities) +
+## TERRAIN_CHANGED + an optional monotone counter. Emission order is the
+## byte-identity contract with the pre-table arm.
+func _outcome_remove_scorch(skill_id: String, row: Dictionary, target: Dictionary, current_map: String) -> Dictionary:
+	_break_sneak.call()
+	var burned_id := String(target[WIKeys.ID])
+	var burned_cell: Vector2i = target[WIKeys.CELL]
+	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": burned_id})
+	_mark_skill_used.call(skill_id)
+	var counter := String(row.get("counter", ""))
+	if counter != "":
+		_record_accomplishment.call(counter, 1)
+	var burn_toast := _row_toast(row, target, {})
+	_remove_entity.call(burned_id)
+	_emit(WIEvents.TERRAIN_CHANGED, {"map": current_map, "cell": [burned_cell.x, burned_cell.y], "to": String(row.get("terrain", ""))})
+	_emit(WIEvents.TOAST, {"text": burn_toast})
+	return {"burned": burned_id}
+
+
+## `freeze_cell` -- the until-sleep walkability flip over `frozen_cells`
+## (sleep() clears it; WISave round-trips it). Cell-shaped, so SKILL_USED
+## carries an empty target and no counter banks.
+func _outcome_freeze_cell(skill_id: String, skill: Dictionary, row: Dictionary, faced_cell: Vector2i, current_map: String, frozen_cells: Dictionary) -> Dictionary:
+	_break_sneak.call()
+	if not frozen_cells.has(current_map):
+		frozen_cells[current_map] = {}
+	(frozen_cells[current_map] as Dictionary)[faced_cell] = true
+	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
+	_mark_skill_used.call(skill_id)
+	_emit(WIEvents.TERRAIN_CHANGED, {"map": current_map, "cell": [faced_cell.x, faced_cell.y], "to": String(row.get("terrain", ""))})
+	_emit(WIEvents.TOAST, {"text": _row_toast(row, {}, skill)})
+	return {"frozen": [faced_cell.x, faced_cell.y]}
+
+
+## Row copy resolution: `toast_from` picks WHICH side authors the line --
+## "target" (the prop's own burn_toast) or "skill" (the caster's freeze_toast)
+## -- and `toast_default` is the shipped fallback when neither side authored one.
+func _row_toast(row: Dictionary, target: Dictionary, skill: Dictionary) -> String:
+	var key := String(row.get("toast_key", ""))
+	var fallback := String(row.get("toast_default", ""))
+	if String(row.get("toast_from", "")) == "target":
+		return String(target.get(key, fallback))
+	return String(skill.get(key, fallback))
 
 
 func _bank_first_use(entity_first_use: Dictionary, verb: String, entity_id: String) -> bool:

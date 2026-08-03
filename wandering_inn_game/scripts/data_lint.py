@@ -364,6 +364,133 @@ def check_moods(parsed: dict, maps: dict, errors: list) -> None:
 		_mood_triples(card, f"arena_moods.{arena_id}", errors)
 
 
+# --- interactions.json (issue #348 slice 1) ----------------------------------
+# MIRROR CONTRACT: the engine's closed outcome-verb set lives in
+# src/core/field_skills.gd (WIFieldSkills.OUTCOMES). This copy lets the
+# engine-free tier reject an unknown verb; tests/test_interactions_table.gd
+# asserts the JSON's own "outcomes" equals the GDScript const, so the three can
+# never drift silently. A new verb touches all three, deliberately.
+ENGINE_OUTCOMES = ("remove_scorch", "freeze_cell")
+PLACEMENTS = ("entity", "cell")
+TOAST_SOURCES = ("skill", "target")
+# Persistence classes each verb may claim (spec §4.1's table).
+OUTCOME_PERSISTENCE = {
+	"remove_scorch": {"permanent"},
+	"freeze_cell": {"until_sleep"},
+}
+
+
+def _skill_property_carriers(parsed: dict, prop: str) -> list:
+	skills_path = DATA / "skills.json"
+	rows = (parsed.get(skills_path) or {}).get("skills", []) if skills_path in parsed else []
+	return [str(s.get("id")) for s in rows if isinstance(s, dict) and s.get(prop) is True]
+
+
+def _target_property_carriers(maps: dict, prop: str, placement: str) -> list:
+	"""Shipped carriers of a target property: entity flags, or map cell classes."""
+	out = []
+	for map_id, m in sorted(maps.items()):
+		if placement == "entity":
+			for entity in m.get("entities", []):
+				if entity.get(prop) is True:
+					out.append(f"{map_id}:{entity.get('id', '<no id>')}")
+		elif placement == "cell" and m.get(prop):
+			out.append(f"{map_id}:{len(m[prop])}")
+	return out
+
+
+def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> None:
+	"""Vocabulary registration + row shape + carrier cross-ref + totality census.
+
+	The combinatorial fear (N properties x M objects) is answered by making the
+	TABLE the QA surface: rows are finite and each must be REACHABLE, so a
+	carrier-less row is dead data and fails HERE rather than rotting. K4 applies
+	-- if this arm ever seems to need an allowlist, the vocabulary is wrong.
+	"""
+	path = DATA / "interactions.json"
+	if path not in parsed:
+		errors.append("interactions.json: missing -- the property table is required "
+			"(WISceneCatalog composes it into every scene_config)")
+		return
+	doc = parsed[path]
+	skill_props = doc.get("skill_properties")
+	target_props = doc.get("target_properties")
+	rows = doc.get("interactions")
+	if not (isinstance(skill_props, list) and skill_props
+			and all(isinstance(p, str) for p in skill_props)):
+		errors.append("interactions.json: 'skill_properties' must be a non-empty list of names")
+		return
+	if not (isinstance(target_props, dict) and target_props):
+		errors.append("interactions.json: 'target_properties' must be a non-empty {name: placement} map")
+		return
+	if not isinstance(rows, list) or not rows:
+		errors.append("interactions.json: 'interactions' must be a non-empty list of rows")
+		return
+	if list(doc.get("outcomes") or []) != list(ENGINE_OUTCOMES):
+		errors.append(f"interactions.json: 'outcomes' {doc.get('outcomes')!r} must mirror the "
+			f"engine's WIFieldSkills.OUTCOMES {list(ENGINE_OUTCOMES)!r} (MIRROR CONTRACT)")
+		return
+	if len(set(skill_props)) != len(skill_props):
+		errors.append("interactions.json: duplicate entry in 'skill_properties'")
+	for prop, placement in sorted(target_props.items()):
+		if placement not in PLACEMENTS:
+			errors.append(f"interactions.json: target property '{prop}' declares placement "
+				f"'{placement}' -- must be one of {list(PLACEMENTS)}")
+	# Vocabulary must be CARRIED on both sides: an uncarried term is dead data.
+	for prop in sorted(set(skill_props)):
+		if not _skill_property_carriers(parsed, prop):
+			errors.append(f"interactions.json: skill property '{prop}' is registered but no "
+				"skills.json row carries it -- dead vocabulary")
+	for prop, placement in sorted(target_props.items()):
+		if placement in PLACEMENTS and not _target_property_carriers(maps, prop, placement):
+			errors.append(f"interactions.json: target property '{prop}' is registered but no "
+				f"map carries it as a {placement} property -- dead vocabulary")
+	seen = set()
+	for i, row in enumerate(rows):
+		if not isinstance(row, dict):
+			errors.append(f"interactions.json: row {i} is not an object")
+			continue
+		sp, tp = row.get("skill_property"), row.get("target_property")
+		label = f"row {i} ({sp} x {tp})"
+		if sp not in skill_props:
+			errors.append(f"interactions.json: {label} names unregistered skill property {sp!r}")
+		if tp not in target_props:
+			errors.append(f"interactions.json: {label} names unregistered target property {tp!r}")
+			continue
+		if (sp, tp) in seen:
+			errors.append(f"interactions.json: {label} duplicates an earlier row -- "
+				"first match wins, so the later one is unreachable")
+		seen.add((sp, tp))
+		outcome = row.get("outcome")
+		if outcome not in ENGINE_OUTCOMES:
+			errors.append(f"interactions.json: {label} names unknown outcome {outcome!r}")
+			continue
+		allowed = OUTCOME_PERSISTENCE[outcome]
+		if row.get("persistence") not in allowed:
+			errors.append(f"interactions.json: {label} outcome '{outcome}' claims persistence "
+				f"{row.get('persistence')!r} -- allowed: {sorted(allowed)}")
+		if row.get("toast_from") not in TOAST_SOURCES:
+			errors.append(f"interactions.json: {label} 'toast_from' must be one of {list(TOAST_SOURCES)}")
+		for key in ("toast_key", "toast_default", "terrain"):
+			if not isinstance(row.get(key), str) or not row[key]:
+				errors.append(f"interactions.json: {label} missing non-empty '{key}'")
+		# Per-row carrier cross-ref (spec §5b): a row nothing can reach is dead.
+		if sp in skill_props and not _skill_property_carriers(parsed, sp):
+			errors.append(f"interactions.json: {label} has no skill carrier")
+		if not _target_property_carriers(maps, tp, target_props.get(tp, "")):
+			errors.append(f"interactions.json: {label} has no shipped target carrier")
+	# TOTALITY CENSUS (spec §4.2 tier 3): the whole cross-product, classified.
+	# Report-only by design -- a null cell is the SHIPPED fallthrough
+	# (field_ambient/refusal), not a gap. Its job is to keep the surface finite
+	# and visible, so K2 (abstraction failure) stays measurable.
+	authored = {(str(r.get("skill_property")), str(r.get("target_property")))
+		for r in rows if isinstance(r, dict)}
+	cells = len(set(skill_props)) * len(target_props)
+	report.append(f"interactions.json: totality census {len(authored)}/{cells} cells authored "
+		f"({len(set(skill_props))} skill x {len(target_props)} target properties); "
+		"the rest fall through to field_ambient/refusal by design")
+
+
 def advise_unlit_sealed_rooms(maps: dict, parsed: dict, advisories: list) -> None:
 	"""The riverfarm_longhouse class: a map with light rows and NO mood card.
 
@@ -427,6 +554,8 @@ def main() -> int:
 	check_sprites(parsed, errors)
 	check_gate_shapes(maps, errors)
 	check_moods(parsed, maps, errors)
+	report: list = []
+	check_interactions(parsed, maps, errors, report)
 	advisories: list = []
 	advise_unlit_sealed_rooms(maps, parsed, advisories)
 	interacted_props = advise_acted_on_state(maps, advisories)
@@ -439,6 +568,8 @@ def main() -> int:
 		return 1
 	print(f"data_lint: OK -- {len(parsed)} files, {len(maps)} maps clean "
 		f"in {elapsed_ms:.0f}ms (structural tier only -- Godot gates still apply).")
+	for line in report:
+		print(f"data_lint: REPORT -- {line}")
 	if advisories:
 		# ONE line by default. A 90-row wall printed on every sweep is a wall
 		# nobody reads, and this tier's whole value is that someone reads it.
