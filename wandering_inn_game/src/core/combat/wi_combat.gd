@@ -53,6 +53,23 @@ var terrain: Dictionary = {}
 ## fresh `WICombat` per encounter clears the ledger by construction.
 var cooldowns: Dictionary = {}
 
+## GH#345 rider (v0.17). L1 owns the settings getter and its semantics
+## (`WISettings.difficulty_damage_taken_mult`, whose own doc comment is the
+## contract this implements); this lane owns the apply site, and the apply site
+## has to live in the sim because the sim is where damage is dealt.
+##
+## INJECTED, never read: the PURITY RULE forbids this class from touching an
+## autoload, so the composition root sets this field once, right after the
+## `WICombat` is built and exactly where equipment mods are read. That is also
+## the whole "safe mid-save" answer L1's contract asks for -- a player may move
+## the row at any time, and because nothing re-reads it mid-fight the change
+## lands on the NEXT fight rather than halfway through a live one.
+##
+## Default 1.0 IS Silver IS the shipped balance, so every balance cell, every
+## QA fixture and every test that constructs a WICombat directly stays
+## byte-identical by construction.
+var difficulty_damage_taken_mult := 1.0
+
 var windups: Dictionary = {}
 
 var _event_sink: Callable
@@ -459,10 +476,33 @@ func _deduct_hp(target_id: String, amount: int) -> int:
 	var t: Dictionary = combatants[target_id]
 	if not t[WIKeys.ALIVE]:
 		return int(t[WIKeys.HP])
+	amount = _apply_difficulty(t, amount)
 	amount = _apply_damage_reduction(t, amount)
 	amount = _absorb_with_mana_shield(t, amount)
 	t[WIKeys.HP] = maxi(0, int(t[WIKeys.HP]) - amount)
 	return int(t[WIKeys.HP])
+
+
+## GH#345 rider. THE one-field read, and it is one field: damage dealt TO a
+## player-side combatant, scaled. Nothing else -- not enemy HP, not AP, not
+## accuracy, and above all not any RNG draw, so a seeded fight has the IDENTICAL
+## shape (initiative, AI decisions, every roll) at every setting and only the
+## cost of a hit moves.
+##
+## Placed on the RAW incoming amount, AHEAD of `damage_reduction`, deliberately:
+## DR is a flat subtraction, so scaling after it would quietly make a point of
+## armour worth more on the easy rung and less on the hard one. The knob is
+## meant to say how hard the world hits, not to re-weight gear.
+##
+## `_deduct_hp` is the choke point every source already funnels through --
+## attacks, ripostes, line/blast multi-hits, windup resolutions and burning
+## ticks -- so there is exactly one site, not one per damage type.
+func _apply_difficulty(t: Dictionary, amount: int) -> int:
+	if amount <= 0 or difficulty_damage_taken_mult == 1.0:
+		return amount
+	if String(t.get(WIKeys.SIDE, "")) != "player":
+		return amount
+	return maxi(1, int(round(amount * difficulty_damage_taken_mult)))
 
 
 func _apply_damage_reduction(t: Dictionary, amount: int) -> int:

@@ -2397,5 +2397,41 @@ func _init() -> void:
 	assert(hud_bare_cd6.skill_affordable(view_cd6.combatant("pc"), "power_strike", view_cd6),
 		"a HUD with no combat reference is cooldown-blind by construction")
 
+	# --- GH#345 rider: the difficulty apply site --------------------------------
+	# L1 owns `WISettings.difficulty_damage_taken_mult` and its contract; this is
+	# the sim half. Driven off the injected field directly -- the sim never reads
+	# an autoload, and that injection is exactly what makes the settings row safe
+	# to move mid-save.
+	var cd7 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd7.begin()
+	assert(cd7.difficulty_damage_taken_mult == 1.0,
+		"default is Silver is 1.0 -- every balance cell and QA fixture is byte-identical by construction")
+	var pc_cd7: Dictionary = cd7.combatants["pc"]
+	var raider_cd7: Dictionary = cd7.combatants["goblin_raider"]
+	var dr_cd7 := int(pc_cd7.get(WIKeys.DAMAGE_REDUCTION, 0))
+	assert(dr_cd7 == 0, "fixture: the bare pc carries no damage_reduction, so the arithmetic below is the mult alone")
+	pc_cd7[WIKeys.HP] = 100
+	pc_cd7[WIKeys.MAX_HP] = 100
+	cd7._deduct_hp("pc", 10)
+	assert(int(pc_cd7[WIKeys.HP]) == 90, "at 1.0 the amount passes through untouched")
+	cd7.difficulty_damage_taken_mult = 0.75
+	cd7._deduct_hp("pc", 10)
+	assert(int(pc_cd7[WIKeys.HP]) == 82, "the softer rung scales damage TAKEN (10 -> 8, rounded)")
+	cd7.difficulty_damage_taken_mult = 1.3
+	cd7._deduct_hp("pc", 10)
+	assert(int(pc_cd7[WIKeys.HP]) == 69, "the harder rung scales the same way (10 -> 13)")
+	# ENEMY side is untouched at every setting -- the knob is damage taken by the
+	# player, never a global damage dial.
+	raider_cd7[WIKeys.HP] = 100
+	raider_cd7[WIKeys.MAX_HP] = 100
+	cd7._deduct_hp("goblin_raider", 10)
+	assert(int(raider_cd7[WIKeys.HP]) == 90, "an enemy takes its raw amount at every difficulty")
+	# A hit can never be scaled out of existence.
+	cd7.difficulty_damage_taken_mult = 0.75
+	var hp_floor_cd7 := int(pc_cd7[WIKeys.HP])
+	cd7._deduct_hp("pc", 1)
+	assert(int(pc_cd7[WIKeys.HP]) == hp_floor_cd7 - 1, "a 1-damage hit still costs 1 on the softest rung")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)
