@@ -4,6 +4,24 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
+## RUNNING (2026-08-03 evening): dialogue voice pass, branch `voice-pass`
+De-AI rewrite of all 71 dialogue files per external critique
+(docs/dialogue-voice/critique-2026-08-03.md). Spec + plan in
+docs/superpowers/{specs,plans}/2026-08-03-dialogue-voice-pass*.
+DONE: Tasks 1-5 — gate script (qa/scripts/dialogue_voice_gate.py,
+self-testing; snapshot baseline committed), 36-cluster manifest,
+Fable bible + 36 cards (docs/dialogue-voice-bible.md, -cards/),
+W2 rewrite (36 sibling-blind agents, 288 nodes, 68 files changed),
+W3 final gate CLEAN (anti=6/30). NEXT: Task 6 W4 cold-reader
+detection (71 per-file adversarial readers + 1 budget aggregator,
+prompts verbatim in plan) — HELD at usage CAUTION (burn-rate spike
+post-W2); background watcher polls 5m, dispatch on OK. Then W5
+failure loop, W6 Fable adjudication + wi-verifying-changes sweep +
+wi-machine-playtest. CHOICE-LOG "Voice pass" block has 4 rulings.
+Unrelated: filed #370 (Relc front-on first meeting), #371 (inn
+one-party-at-a-time canonical groups), #372 (Floodplains
+tutorializing defeat text) from user playtest notes.
+
 ## Current state (2026-08-03, overnight session close — v0.17.0 SHIPPED, v0.18.0 closing)
 **v0.17.0 TAGGED + Release/Pages GREEN. v0.18 wave-1 train COMPLETE
 (#364-#368, five lanes, 20 agents, dual adversarial lenses), close in
