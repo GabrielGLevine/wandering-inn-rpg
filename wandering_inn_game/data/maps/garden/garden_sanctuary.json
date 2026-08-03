@@ -337,6 +337,17 @@
    ]
   }
  ],
+ "_comment_ambience": "v0.17 R2 GUARD, do not delete: the moods key rename flips _map_has_sky false, which would un-force the biome default to dusk/night. This row pins today's behaviour.",
+ "ambience": [
+  {
+   "preset": "fireflies",
+   "rect": "all",
+   "phase": [
+    "dusk",
+    "night"
+   ]
+  }
+ ],
  "entities": [
   {
    "_comment": "GH#171 item 7: the fountain statue is decor (basin+statue own the visual); this interact-only prop gives it a voice instead of 'Nothing there.' -- same hide_sprite overlay idiom as the inn facade doors.",

@@ -136,7 +136,42 @@
    }
   ]
  },
+ "_comment_lights": "v0.17 R2: the hall had ZERO light sources. `sconce` is not in the `inn` biome's blocked_props, so blocked_cells stays 57 (unchanged).",
  "decor": [
+  {
+   "sprite": "sconce",
+   "cell": [
+    4,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.72,
+     0.38
+    ],
+    "energy": 0.85,
+    "radius": 36,
+    "flicker": true
+   }
+  },
+  {
+   "sprite": "sconce",
+   "cell": [
+    11,
+    1
+   ],
+   "light": {
+    "color": [
+     1.0,
+     0.72,
+     0.38
+    ],
+    "energy": 0.85,
+    "radius": 36,
+    "flicker": true
+   }
+  },
   {
    "sprite": "counter_left",
    "cell": [
