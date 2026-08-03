@@ -227,9 +227,10 @@
    "name": "01_level_up_toast"
   },
   {
+   "_comment": "GH#337 (skill cooldowns) re-pinned 2 -> 3. A LOCAL fact, not a pace claim: on THIS fixed route power_strike's every-other-round cadence leaves AP for a plain attack on the off rounds, and a plain attack banks `melee_hit` exactly as the Skill does, so this route banks one more counter [Warrior] level. The WHOLE-ARC pace moved the OTHER way -- sim_progression_pace measures warrior_line Act III total-level p50 13 -> 11 (p10 12 -> 10, p90 13 -> 11; fights won 31 -> 30). That harness's bands are report-only (its own PASS line says so), so green is evidence of neither direction; the accepted trade is recorded in docs/CHOICE-LOG.md under v017-L2.",
    "action": "assert_state",
    "path": "classes.warrior",
-   "equals": 2
+   "equals": 3
   },
   {
    "_comment": "== FIGHT 2: chieftains_raid (31,7) with the L2 kit ==. Teleport back down to (2,3) (the cell the old ground-floor route reached via 'up 3'); resumes unchanged: right12->(14,3), right1->(15,3) inn_door -> floodplains (7,6), right23->(30,6), down1->(30,7), right1 blocks on the chieftains cell (31,7) & faces it, interact.",

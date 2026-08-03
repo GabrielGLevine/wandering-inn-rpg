@@ -1,5 +1,5 @@
 {
- "_comment": "Quest 2 FIGHT-adjacent path start (STREET). The supplier's scavenger problem -- supplier_scavengers (2x goblin_raider, goblin_ambush arena) at (5,16). Player spawns at (5,15) facing DOWN so the first interact starts the fight (interact-only encounter, crate precedent). Warrior L1 + rusty_sword (post_tutorial shape) to solo the pair, exactly like crate_fight/cisterns_fight. heard_wrong_order PRE-BANKED + quest PRE-STARTED (give+report proven by wrong_order_loop; this run proves the DISTINCT combat resolution -- on_victory banks strongarmed_the_supplier + resolved_wrong_order, completing quest beat 1 IN COMBAT). rng_state re-derived: the pair now correctly fields BOTH goblin_raiders (same-id roster dedup fix, same as crate_scavengers), a genuinely harder solo warrior-L1 fight than the old 1-raider collapse, so this state is one of the real winning draws (fixture rng overrides --seed).",
+ "_comment": "Quest 2 FIGHT-adjacent path start (STREET). The supplier's scavenger problem -- supplier_scavengers (2x goblin_raider, goblin_ambush arena) at (5,16). Player spawns at (5,15) facing DOWN so the first interact starts the fight (interact-only encounter, crate precedent). Warrior L1 + rusty_sword (post_tutorial shape) to solo the pair, exactly like crate_fight/cisterns_fight. heard_wrong_order PRE-BANKED + quest PRE-STARTED (give+report proven by wrong_order_loop; this run proves the DISTINCT combat resolution -- on_victory banks strongarmed_the_supplier + resolved_wrong_order, completing quest beat 1 IN COMBAT). rng_state re-derived: the pair now correctly fields BOTH goblin_raiders (same-id roster dedup fix, same as crate_scavengers), a genuinely harder solo warrior-L1 fight than the old 1-raider collapse, so this state is one of the real winning draws (fixture rng overrides --seed). GH#337 re-derived, seed 9 -> 15: a 0.17-win fight, so the pin is always a minority seed and power_strike's new cadence moved which.",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -24,6 +24,6 @@
   "equipped": { "weapon": "rusty_sword", "armor": "" },
   "container_state": {},
   "actions_since_sleep": 0,
-  "rng_state": "5043351203278607731"
+  "rng_state": "-5102262853091668683"
  }
 }

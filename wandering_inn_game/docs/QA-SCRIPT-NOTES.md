@@ -28,7 +28,7 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `level_up_loop` | 9 | full | `post_tutorial` | level-up loop; fight 2 tests riposte |
 | `mage_unlock_loop` | 9 | full | `—` | [Mage] earned from Pisces; full cold-start arc + mage kit fielded |
 | `line_of_sight_denial` | 9 | full | `—` | wall-aware ranged AI proof (positive has_los gate) |
-| `defeat_reload` | 1 | smoke, full | `—` | losing seed; defeat loads the pre-combat snapshot, no game_reset; issue #88: proximity-triggered goblin_encounter_1 leg proves reload-inside-trigger_radius doesn't insta-refire, then the original interact-triggered chieftains_raid leg |
+| `defeat_reload` | 2 | smoke, full | `—` | losing seed; defeat loads the pre-combat snapshot, no game_reset; issue #88: proximity-triggered goblin_encounter_1 leg proves reload-inside-trigger_radius doesn't insta-refire, then the original interact-triggered chieftains_raid leg |
 | `relc_descent_rewind` | 1 | full | `relc_descent_rewind_start` | issue #88 fix wave: THE pre_combat_choice canonical -- a dialogue-committed fight's defeat rewinds the committing choice too (lose [Go together.] -> relc_joined_descent GONE, [I go alone.] re-choice fields NO relc) |
 | `defeat_ally_alive` | 3 | full | `near_defeat` | THE canonical proof of the PC-death-is-instant-defeat rule |
 | `title_flow` | 9 | full | `—` | title screen flow; no combat; issue #88: a second New Game (once auto exists) pins the overwrite-confirm's coverage event, TestDriver's collapse-bypass, and the auto_prev rotation |

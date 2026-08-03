@@ -1,5 +1,5 @@
 {
- "_comment": "Quest 1 FIGHT path start. post_tutorial shape (warrior L1, met/sparred/given_spear, rusty_sword equipped) standing next to Olesm at the Guild frontage -- cell (29,4) facing UP so the first interact opens olesm_intro (Olesm at 29,3). heard_about_cisterns is NOT banked and the quest is NOT started -- the script proves the full give -> grate -> descend -> clear the nest -> report -> completion loop honestly. rng_state re-derived: the nest now correctly fields BOTH shield_spiders (same-id roster dedup fix), a genuinely harder solo warrior-L1 fight than the old 1-spider collapse, so this state is one of the real winning draws for that fight (fixture rng overrides --seed). Issue #69: `chatted_with_klbkch: 1` added so cisterns_fight's own canonical proves the real ally gate live (shield_spiders now fields Klbkch, not Relc) -- plausible on this exact story position (the gate plaza is on the way from the street's arrival cell to the Guild frontage). rng_state re-verified still resolves a win with Klbkch fielded (extra roster entry shifts initiative-order rng draws).",
+ "_comment": "Quest 1 FIGHT path start. post_tutorial shape (warrior L1, met/sparred/given_spear, rusty_sword equipped) standing next to Olesm at the Guild frontage -- cell (29,4) facing UP so the first interact opens olesm_intro (Olesm at 29,3). heard_about_cisterns is NOT banked and the quest is NOT started -- the script proves the full give -> grate -> descend -> clear the nest -> report -> completion loop honestly. rng_state re-derived: the nest now correctly fields BOTH shield_spiders (same-id roster dedup fix), a genuinely harder solo warrior-L1 fight than the old 1-spider collapse, so this state is one of the real winning draws for that fight (fixture rng overrides --seed). Issue #69: `chatted_with_klbkch: 1` added so cisterns_fight's own canonical proves the real ally gate live (shield_spiders now fields Klbkch, not Relc) -- plausible on this exact story position (the gate plaza is on the way from the street's arrival cell to the Guild frontage). rng_state re-verified still resolves a win with Klbkch fielded (extra roster entry shifts initiative-order rng draws). GH#337 re-derived again, seed 9 -> 11 (power_strike's new cadence flipped the draw).",
  "version": 5,
  "state": {
   "current_map": "street",
@@ -24,6 +24,6 @@
   "equipped": { "weapon": "rusty_sword", "armor": "" },
   "container_state": {},
   "actions_since_sleep": 0,
-  "rng_state": "5043351203278607731"
+  "rng_state": "6334680398940262529"
  }
 }

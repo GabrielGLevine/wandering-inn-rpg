@@ -2219,5 +2219,294 @@ func _init() -> void:
 		assert(not c_blind.combatants[blind_target]["statuses"].has("weakened"),
 			"a missed blinding_arrow applies nothing")
 
+	# --- GH#337 cd1: the cooldown ledger + THE AI FALL-THROUGH ---
+	# Deliberately driven off a SYNTHETIC unavailable (a hand-written stamp),
+	# not off shipped data: the AI work is the spec's hard prerequisite and had
+	# to be provable before any skill in skills.json carried `cooldown_rounds`.
+	# The probe this whole ruling came from: `take_turn` breaks on the first
+	# refused action, so a chieftain whose power_strike merely REFUSED lost its
+	# entire turn (16 damage -> 0, 4 AP unspent). These arms pin the opposite.
+	var cd1 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_chieftain"]), _load("res://data/skills.json"), _sink, 7)
+	cd1.begin()
+	assert(cd1.cooldowns.is_empty(), "a fresh fight starts with an empty cooldown ledger")
+	assert(cd1.skill_available("goblin_chieftain", "power_strike"),
+		"nothing is on cooldown until something stamps it")
+	assert(cd1.cooldown_remaining("goblin_chieftain", "power_strike") == 0,
+		"an unstamped skill reports 0 rounds remaining")
+	assert(((cd1.snapshot()["combatants"]["goblin_chieftain"] as Dictionary)["cooldowns"] as Dictionary).is_empty(),
+		"snapshot carries an empty cooldown map when nothing has cooled")
+
+	# Park the two adjacent so the melee AI's adjacency arm is the branch under
+	# test, and hand the chieftain the turn.
+	cd1.combatants["pc"][WIKeys.CELL] = Vector2i(5, 3)
+	cd1.combatants["goblin_chieftain"][WIKeys.CELL] = Vector2i(6, 3)
+	cd1.active_index = cd1.turn_order.find("goblin_chieftain")
+	cd1._start_turn()
+	_events.clear()
+	# THE synthetic unavailable: two rounds out, written straight into the
+	# ledger. No data row exists yet -- that is the point.
+	cd1.cooldowns["goblin_chieftain"] = {"power_strike": cd1.round_number + 2}
+	assert(not cd1.skill_available("goblin_chieftain", "power_strike"),
+		"a future stamp makes the skill unavailable")
+	assert(cd1.cooldown_remaining("goblin_chieftain", "power_strike") == 2,
+		"remaining is stamp-minus-round, in rounds")
+	assert(int(((cd1.snapshot()["combatants"]["goblin_chieftain"] as Dictionary)["cooldowns"] as Dictionary)["power_strike"]) == 2,
+		"snapshot reports REMAINING rounds, not the absolute stamp")
+	WICombatAI.take_turn(cd1)
+	var used_ps121 := false
+	var attacked121 := 0
+	var refused121 := 0
+	for e: Dictionary in _events:
+		if e["type"] == "skill_resolved" and String(e["payload"].get("skill", "")) == "power_strike":
+			used_ps121 = true
+		if e["type"] == "attack_resolved" and String(e["payload"].get("attacker", "")) == "goblin_chieftain":
+			attacked121 += 1
+		if e["type"] == "action_refused" and String(e["payload"].get("reason", "")) == "cooldown":
+			refused121 += 1
+	assert(not used_ps121, "a cooling power_strike is never cast")
+	assert(attacked121 == 2, "the AI FALLS THROUGH to plain attacks and spends its whole 4 AP -- not one refusal and a lost turn")
+	assert(refused121 == 0, "the fall-through happens BEFORE use_skill, so no refusal event is produced at all")
+
+	# The same skill, two rounds on: the ledger is not purged, the stamp simply
+	# stops being in the future (no tick loop exists).
+	cd1.round_number += 2
+	assert(cd1.skill_available("goblin_chieftain", "power_strike"),
+		"the stamp expires by the round counter passing it, with nothing purged")
+	assert(((cd1.snapshot()["combatants"]["goblin_chieftain"] as Dictionary)["cooldowns"] as Dictionary).is_empty(),
+		"an elapsed stamp drops out of the snapshot entirely")
+
+	# cd2: the sim's own gate refuses a cooling cast, and refuses it LOUDLY.
+	var cd2 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd2.begin()
+	cd2.combatants["pc"][WIKeys.SKILLS] = ["power_strike"]
+	cd2.combatants["pc"][WIKeys.CELL] = Vector2i(5, 3)
+	cd2.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 3)
+	cd2.active_index = cd2.turn_order.find("pc")
+	cd2._start_turn()
+	cd2.cooldowns["pc"] = {"power_strike": cd2.round_number + 1}
+	_events.clear()
+	var raider_hp122 := int(cd2.combatants["goblin_raider"][WIKeys.HP])
+	var ap122_before := int(cd2.combatants["pc"][WIKeys.AP])
+	assert(not cd2.use_skill("power_strike", "goblin_raider"), "use_skill refuses a cooling skill")
+	assert(int(cd2.combatants["pc"][WIKeys.AP]) == ap122_before, "a refused cast spends no AP")
+	assert(int(cd2.combatants["goblin_raider"][WIKeys.HP]) == raider_hp122, "a refused cast deals no damage")
+	var cooldown_refusal122 := {}
+	for e: Dictionary in _events:
+		if e["type"] == "action_refused":
+			cooldown_refusal122 = e["payload"]
+	assert(String(cooldown_refusal122.get("reason", "")) == "cooldown",
+		"the refusal rides ACTION_REFUSED with reason 'cooldown' (spec ruling 5)")
+	assert(String(cooldown_refusal122.get("skill", "")) == "power_strike",
+		"the refusal names which Skill is recovering")
+
+	# cd3: the STAMP itself, taken in spend_skill_costs beside the other spends
+	# -- and taken only when the cast actually resolved.
+	var cd3 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd3.begin()
+	cd3.combatants["pc"][WIKeys.SKILLS] = ["power_strike"]
+	cd3.combatants["pc"][WIKeys.CELL] = Vector2i(5, 3)
+	cd3.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(6, 3)
+	cd3.active_index = cd3.turn_order.find("pc")
+	cd3._start_turn()
+	var shipped_cd3 := int((cd3.skills["power_strike"] as Dictionary).get(WICombat.COOLDOWN_ROUNDS, 0))
+	assert(shipped_cd3 == 2,
+		"power_strike is the spam set's anchor and ships cooldown_rounds 2 -- the every-other-turn rhythm the milestone exists for")
+	assert(cd3.use_skill("power_strike", "goblin_raider"), "a ready power_strike resolves")
+	assert(cd3.cooldown_remaining("pc", "power_strike") == shipped_cd3,
+		"a resolved cast stamps round_number + cooldown_rounds, so remaining == cooldown_rounds on the same round")
+	assert(not cd3.skill_available("pc", "power_strike"), "and the skill is immediately unavailable")
+	# The RHYTHM itself, off shipped data: unavailable for this round and the
+	# next, ready again the round after -- exactly one of the holder's own turns
+	# skipped, which is what `cooldown_rounds: 2` is supposed to buy.
+	cd3.round_number += 1
+	assert(not cd3.skill_available("pc", "power_strike"), "still cooling one round on")
+	cd3.round_number += 1
+	assert(cd3.skill_available("pc", "power_strike"), "ready again two rounds after the cast")
+
+	# cd4: a cast the RESOLVER refuses (out of weapon range) must not burn the
+	# cooldown -- the exact defect that put the stamp in spend_skill_costs
+	# rather than at the top of use_skill.
+	var cd4 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd4.begin()
+	cd4.combatants["pc"][WIKeys.SKILLS] = ["power_strike"]
+	cd4.combatants["pc"][WIKeys.CELL] = Vector2i(1, 3)
+	cd4.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
+	cd4.active_index = cd4.turn_order.find("pc")
+	cd4._start_turn()
+	assert(not cd4.use_skill("power_strike", "goblin_raider"), "an out-of-range melee skill is refused by its resolver")
+	assert(cd4.cooldown_remaining("pc", "power_strike") == 0,
+		"a cast the RESOLVER refused burns no cooldown -- the stamp lives beside the spends, past every gate")
+
+	# cd5: WIItems' synthetic item-use skill dict is EXEMPT by construction
+	# (spec ruling 3) -- it carries no cooldown_rounds and there is no default.
+	var cd5 := _make(5, _sink)
+	cd5.active_index = cd5.turn_order.find("pc")
+	cd5._start_turn()
+	cd5.combatants["pc"][WIKeys.HP] = int(cd5.combatants["pc"][WIKeys.MAX_HP]) - 10
+	assert(bool(WIItems.resolve_use({"id": "test_draught_cd", "use_effect": {"heal": 8}}, cd5).get("ok", false)),
+		"the item-use path still resolves")
+	assert(cd5.cooldowns.is_empty(), "using an item never writes a cooldown stamp")
+
+	# cd6: the BAR agrees with the sim -- the surface half of ruling 5. Built
+	# here rather than in test_combat_visuals because the assertion only means
+	# anything against a LIVE ledger, which is what this file has.
+	var hud_script_cd := load("res://src/combat/combat_hud.gd")
+	var cd6 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd6.begin()
+	cd6.combatants["pc"][WIKeys.SKILLS] = ["power_strike"]
+	cd6.combatants["pc"][WIKeys.CELL] = Vector2i(8, 3)
+	cd6.combatants["goblin_raider"][WIKeys.CELL] = Vector2i(9, 3)
+	cd6.active_index = cd6.turn_order.find("pc")
+	cd6._start_turn()
+	cd6.combatants["pc"][WIKeys.AP] = 8  # AP is never what refuses, in either half
+	var view_cd6 := WICombatView.new(cd6)
+	var hud_cd6: RefCounted = hud_script_cd.new(null, null, null)
+	hud_cd6.set_combat(cd6)
+	var slots_cd6: Array = hud_cd6.rebuild_slots(view_cd6, "pc")
+	var pc_cd6: Dictionary = view_cd6.combatant("pc")
+	assert(hud_cd6.skill_affordable(pc_cd6, "power_strike", view_cd6),
+		"a ready power_strike reads affordable")
+	cd6.cooldowns["pc"] = {"power_strike": cd6.round_number + 2}
+	assert(not hud_cd6.skill_affordable(view_cd6.combatant("pc"), "power_strike", view_cd6),
+		"a cooling skill reads UNAFFORDABLE -- it must not draw bright and swallow the press")
+	var rendered_cd6: Array = hud_cd6.render_bar_slots(view_cd6, slots_cd6)
+	var line_cd6 := ""
+	for d_cd6: Dictionary in rendered_cd6:
+		if String(d_cd6.get("id", "")) == "power_strike":
+			assert(not bool(d_cd6["affordable"]), "the rendered slot the hotbar dims on carries the same verdict")
+			assert(int(d_cd6.get("cooldown_remaining", -1)) == 2,
+				"the rendered slot record carries the LIVE remaining count, read from the sim predicate")
+			line_cd6 = hud_cd6._slot_info_line(d_cd6)
+	assert(line_cd6.contains("Recovering"),
+		"a dimmed slot must SAY why it is dimmed, got: %s" % line_cd6)
+	assert(line_cd6.contains("2 rounds"), "and say how long, got: %s" % line_cd6)
+	# The live clause TAKES THE DESCRIPTION'S PLACE while cooling -- the readout
+	# strip is fitted to a fixed pixel budget and an appended clause was the part
+	# that got ellipsised away (found by windowed read, not by this test).
+	assert(not line_cd6.contains(String((cd6.skills["power_strike"] as Dictionary)["description"])),
+		"while cooling the authored flavour yields to the live state, got: %s" % line_cd6)
+	# ...and the READY state carries the STANDING clause, which is the half the
+	# first pass overflowed the readout strip with. This bare-`new()` HUD has no
+	# `_readout_label`, so the fit-driven degrade in `_slot_info_line` cannot fire
+	# here BY DESIGN -- that is exactly what this pair of asserts pins: the clause
+	# is unconditional, and dropping the flavour is a decision the real fitter
+	# makes, never a hardcoded truncation. The player-visible half is gated by
+	# qa/scripts/combat_move_input.json + 03_power_strike_slot_info.png.
+	cd6.cooldowns["pc"] = {}
+	var ready_line_cd6 := ""
+	for d_ready_cd6: Dictionary in hud_cd6.render_bar_slots(view_cd6, slots_cd6):
+		if String(d_ready_cd6.get("id", "")) == "power_strike":
+			assert(int(d_ready_cd6.get("cooldown_remaining", -1)) == 0, "the slot is ready again")
+			ready_line_cd6 = hud_cd6._slot_info_line(d_ready_cd6)
+	assert(ready_line_cd6.contains("Once every 2 rounds."),
+		"a READY cooled Skill states its cadence before the player spends a turn finding out, got: %s" % ready_line_cd6)
+	assert(ready_line_cd6.contains(String((cd6.skills["power_strike"] as Dictionary)["description"])),
+		"and with no fitter attached the authored flavour is still there, got: %s" % ready_line_cd6)
+	# The HUD built with no combat handed in (test_combat_visuals' bare-new()
+	# shape) can never think anything is cooling -- every pre-GH#337 call site
+	# keeps its exact previous answer.
+	var hud_bare_cd6: RefCounted = hud_script_cd.new(null, null, null)
+	assert(hud_bare_cd6.skill_affordable(view_cd6.combatant("pc"), "power_strike", view_cd6),
+		"a HUD with no combat reference is cooldown-blind by construction")
+
+	# --- GH#345 rider: the difficulty apply site --------------------------------
+	# L1 owns `WISettings.difficulty_damage_taken_mult` and its contract; this is
+	# the sim half. Driven off the injected field directly -- the sim never reads
+	# an autoload, and that injection is exactly what makes the settings row safe
+	# to move mid-save.
+	var cd7 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd7.begin()
+	assert(cd7.difficulty_damage_taken_mult == 1.0,
+		"default is Silver is 1.0 -- every balance cell and QA fixture is byte-identical by construction")
+	var pc_cd7: Dictionary = cd7.combatants["pc"]
+	var raider_cd7: Dictionary = cd7.combatants["goblin_raider"]
+	var dr_cd7 := int(pc_cd7.get(WIKeys.DAMAGE_REDUCTION, 0))
+	assert(dr_cd7 == 0, "fixture: the bare pc carries no damage_reduction, so the arithmetic below is the mult alone")
+	pc_cd7[WIKeys.HP] = 100
+	pc_cd7[WIKeys.MAX_HP] = 100
+	cd7._deduct_hp("pc", 10)
+	assert(int(pc_cd7[WIKeys.HP]) == 90, "at 1.0 the amount passes through untouched")
+	cd7.difficulty_damage_taken_mult = 0.75
+	cd7._deduct_hp("pc", 10)
+	assert(int(pc_cd7[WIKeys.HP]) == 82, "the softer rung scales damage TAKEN (10 -> 8, rounded)")
+	cd7.difficulty_damage_taken_mult = 1.3
+	cd7._deduct_hp("pc", 10)
+	assert(int(pc_cd7[WIKeys.HP]) == 69, "the harder rung scales the same way (10 -> 13)")
+	# ENEMY side is untouched at every setting -- the knob is damage taken by the
+	# player, never a global damage dial.
+	raider_cd7[WIKeys.HP] = 100
+	raider_cd7[WIKeys.MAX_HP] = 100
+	cd7._deduct_hp("goblin_raider", 10)
+	assert(int(raider_cd7[WIKeys.HP]) == 90, "an enemy takes its raw amount at every difficulty")
+	# A hit can never be scaled out of existence.
+	cd7.difficulty_damage_taken_mult = 0.75
+	var hp_floor_cd7 := int(pc_cd7[WIKeys.HP])
+	cd7._deduct_hp("pc", 1)
+	assert(int(pc_cd7[WIKeys.HP]) == hp_floor_cd7 - 1, "a 1-damage hit still costs 1 on the softest rung")
+
+	# --- GH#345: the REPORTED number is the number the HP bar pays ---------------
+	# `_apply_difficulty` lives inside `_deduct_hp`, so ATTACK_RESOLVED's `damage`
+	# was the PRE-scale figure -- the floating damage number
+	# (`combat_screen._board_renderer.spawn_damage_number`) and the feed line
+	# ("%s strikes %s for %d!") both read that field verbatim, so on the hard rung
+	# the player would watch a "10" float over a 13-point HP drop. Driven through
+	# the real `_resolve_hit` because the EMIT is the thing under test. The bare pc
+	# carries no damage_reduction and no mana_shield, so the HP delta and the
+	# reported field must agree exactly.
+	var cd8 := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd8.begin()
+	cd8.difficulty_damage_taken_mult = 1.3
+	var pc_cd8: Dictionary = cd8.combatants["pc"]
+	assert(int(pc_cd8.get(WIKeys.DAMAGE_REDUCTION, 0)) == 0,
+		"fixture: the bare pc carries no damage_reduction, so HP delta == reported damage")
+	pc_cd8[WIKeys.HP] = 4000
+	pc_cd8[WIKeys.MAX_HP] = 4000
+	var checked_cd8 := 0
+	var scaled_cd8 := 0
+	for attempt_cd8 in 40:
+		var before_cd8 := int(pc_cd8[WIKeys.HP])
+		_events.clear()
+		cd8._resolve_hit("goblin_raider", "pc", 1.0, true, false)
+		for e_cd8: Dictionary in _events:
+			if String(e_cd8["type"]) != "attack_resolved" or not bool(e_cd8["payload"]["hit"]):
+				continue
+			var payload_cd8: Dictionary = e_cd8["payload"]
+			checked_cd8 += 1
+			var paid_cd8 := before_cd8 - int(pc_cd8[WIKeys.HP])
+			if paid_cd8 > 1:
+				scaled_cd8 += 1
+			assert(int(payload_cd8["damage"]) == paid_cd8,
+				"ATTACK_RESOLVED's damage must equal the HP the difficulty rung actually cost")
+			assert(int(payload_cd8["target_hp"]) == int(pc_cd8[WIKeys.HP]),
+				"target_hp is the post-scale HP, and always was")
+	assert(checked_cd8 >= 5, "the hard-rung loop has to land real hits or it proves nothing")
+	assert(scaled_cd8 >= 5, "and those hits have to be big enough for 1.3 to bite")
+	# At the default rung the field is byte-identical to its pre-GH#345 value.
+	var cd8b := WICombat.new(_load("res://data/arenas.json")["arenas"][0],
+			_cfgs(["pc", "goblin_raider"]), _load("res://data/skills.json"), _sink, 7)
+	cd8b.begin()
+	var pc_cd8b: Dictionary = cd8b.combatants["pc"]
+	pc_cd8b[WIKeys.HP] = 4000
+	pc_cd8b[WIKeys.MAX_HP] = 4000
+	var checked_cd8b := 0
+	for attempt_cd8b in 40:
+		var before_cd8b := int(pc_cd8b[WIKeys.HP])
+		_events.clear()
+		cd8b._resolve_hit("goblin_raider", "pc", 1.0, true, false)
+		for e_cd8b: Dictionary in _events:
+			if String(e_cd8b["type"]) != "attack_resolved" or not bool(e_cd8b["payload"]["hit"]):
+				continue
+			checked_cd8b += 1
+			assert(int(e_cd8b["payload"]["damage"]) == before_cd8b - int(pc_cd8b[WIKeys.HP]),
+				"at 1.0 the reported damage is unchanged from before the rider")
+	assert(checked_cd8b >= 5, "the 1.0 loop has to land real hits too")
+
 	print("PASS: combat sim core rules and determinism hold")
 	quit(0)

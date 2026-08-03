@@ -110,6 +110,10 @@ var _banner_label: Label
 var _readout_panel: Control
 var _banner_panel: Control
 var _hotbar: WIHotbar
+## GH#337: the live fight, handed in by `combat_screen.gd`'s `set_combat` so the
+## bar can read THE cooldown predicate rather than keep a second copy of the
+## rule. Null outside a fight and under bare-`new()` unit construction.
+var _combat: WICombat
 var _confirm_chip: Control
 var _confirm_armed := false
 var _feed: Array = []
@@ -353,6 +357,12 @@ func rebuild_slots(view: RefCounted, actor_id: String, loadout: Array = [], usab
 			# -- so the one restriction a player most needs before spending a
 			# turn on the skill was the one clause the tooltip could not say.
 			"once_per_fight": bool(sk.get("once_per_fight", false)),
+			# GH#337: the STATIC rule ("Once every 2 rounds."), the exact same
+			# widen-the-record-with-the-formatter discipline the comment above
+			# describes. Its LIVE sibling `cooldown_remaining` is stamped on in
+			# `render_bar_slots` instead, because it changes every round while
+			# this list is rebuilt only at turn start.
+			WICombat.COOLDOWN_ROUNDS: int(sk.get(WICombat.COOLDOWN_ROUNDS, 0)),
 		})
 		number += 1
 	var usable_by_id: Dictionary = {}
@@ -396,6 +406,13 @@ func render_bar_slots(view: RefCounted, bar_slots: Array) -> Array:
 				d["affordable"] = skill_affordable(c, skill_id, view)
 				d["ap_cost"] = view.effective_ap_cost(view.active_id(), skill_id)
 				d["mp_cost"] = int(sk.get("mp_cost", 0))
+				# GH#337, the MP-diamond precedent two lines up: the LIVE
+				# cooldown counter joins the rendered slot record, read from
+				# THE sim predicate (never a second copy of the rule) so the
+				# bar and `use_skill` can never disagree. `_slot_info_line`
+				# speaks it; the dim comes from `affordable` above, the same
+				# affordance a spent once-per-fight skill already gets.
+				d["cooldown_remaining"] = _cooldown_remaining(view, skill_id)
 			"item":
 				d["affordable"] = int(c["ap"]) >= WIItems.FLAT_AP_COST
 				d["ap_cost"] = WIItems.FLAT_AP_COST
@@ -421,11 +438,36 @@ func bar_action_affordable(action: String, c: Dictionary) -> bool:
 ## seat, identical to a dropped input. The spent term is read through the view's
 ## passthrough to `WICombat.skill_spent`, the same function `use_skill` refuses
 ## on, so the bar and the sim can never disagree about it.
+##
+## GH#337 extends the same rule to cooldowns, for the same reason: a cooling
+## slot the sim will refuse must not draw bright and swallow the press.
 func skill_affordable(c: Dictionary, skill_id: String, view: RefCounted) -> bool:
 	var skill: Dictionary = view.skill(skill_id)
 	return int(c.get("mp", 0)) >= int(skill.get("mp_cost", 0)) \
 			and int(c["ap"]) >= view.effective_ap_cost(view.active_id(), skill_id) \
-			and not bool(view.skill_spent(view.active_id(), skill_id))
+			and not bool(view.skill_spent(view.active_id(), skill_id)) \
+			and _cooldown_remaining(view, skill_id) <= 0
+
+
+## GH#337. `WICombatView` (owned by the presentation-decomposition plan, not by
+## this milestone) exposes no cooldown getter, so the ONE sim reader is reached
+## through the combat reference the composition root hands over at fight start
+## -- never through a second copy of the rule, and never by reaching back into
+## `_screen` for sim state (this file's own contract). Null before `set_combat`
+## has been called (bare-`new()` unit construction, `test_combat_visuals`), and
+## a null combat means nothing can be cooling: every pre-GH#337 call site keeps
+## its exact previous answer.
+func _cooldown_remaining(view: RefCounted, skill_id: String) -> int:
+	if _combat == null:
+		return 0
+	return _combat.cooldown_remaining(String(view.active_id()), skill_id)
+
+
+## GH#337. Handed the live `WICombat` by `combat_screen.gd` when a fight is
+## built (and cleared at teardown), the same "state handed in, never fetched"
+## shape every other render input on this class already uses.
+func set_combat(combat: WICombat) -> void:
+	_combat = combat
 
 
 ## Issue #87 (skip affordance): the EXISTING per-turn AI-playback skip
@@ -545,18 +587,56 @@ func _slot_info_line(d: Dictionary) -> String:
 			# formatter reads must be present here or the clause it generates is
 			# silently dropped -- widen BOTH this dict and `rebuild_slots`' slot
 			# record together when a new one lands.
+			var recovering := WIEffectText.cooldown_recovering_line(int(d.get("cooldown_remaining", 0)))
 			var record := {
 				"ap_cost": d.get("ap_cost", 0),
 				"mp_cost": d.get("mp_cost", 0),
 				"effect": d.get("effect", {}),
 				"once_per_fight": d.get("once_per_fight", false),
+				# While the Skill is actually cooling, the STANDING rule is
+				# suppressed: "Recovering — ready in 2 rounds." already says
+				# everything "Once every 2 rounds." would, and this strip is fitted
+				# to a fixed pixel budget -- carrying both cost the player the
+				# number at the end of the line (windowed read, twice).
+				WICombat.COOLDOWN_ROUNDS: 0 if recovering != "" else d.get(WICombat.COOLDOWN_ROUNDS, 0),
 			}
 			var effect_lines := WIEffectText.skill_effect_lines(record)
-			if desc == "":
+			# GH#337: while the slot is cooling, the LIVE clause TAKES THE
+			# DESCRIPTION'S PLACE rather than being appended after it. Appending was
+			# tried first and the windowed read killed it: this strip is fitted to a
+			# fixed pixel budget (`_compose_readout`), so the tail is exactly what
+			# gets ellipsised -- the line rendered "... Everything behind one..." and
+			# the one thing the player pressed a dim slot to find out was the one
+			# thing cut. The authored flavour is what yields: the standing rule
+			# ("Once every 2 rounds.") still rides `effect_lines`, so nothing
+			# mechanical is lost, and the description comes back the moment the
+			# Skill is ready again.
+			var tail := recovering if recovering != "" else desc
+			if tail == "":
 				return skill_name if effect_lines.is_empty() else "%s — %s" % [skill_name, effect_lines[0]]
 			if effect_lines.is_empty():
-				return "%s — %s" % [skill_name, desc]
-			return "%s — %s — %s" % [skill_name, effect_lines[0], desc]
+				return "%s — %s" % [skill_name, tail]
+			var line := "%s — %s — %s" % [skill_name, effect_lines[0], tail]
+			# ...and the READY state needed the SAME rule, which the first pass
+			# missed. A cooled Skill at full readiness carries BOTH the standing
+			# clause (inside `effect_lines[0]`) and the description, and that pushed
+			# [Power Strike] -- the one cooled Skill whose description was short
+			# enough to fit before -- over the edge: the strip rendered
+			# "×2 damage. Once every 2 rounds. — Everything behind one…". Same
+			# resolution as the cooling branch, applied only when a standing clause
+			# is actually riding the line, so no Skill outside the cooled set changes
+			# at all: the description yields, the mechanical statement never does.
+			#
+			# `_readout_label` is the real fitter, so this asks IT rather than
+			# guessing at character counts. Null on a bare-`new()` HUD (the unit
+			# construction `test_combat_visuals`/`test_combat_sim` use) -- with no
+			# label there is no budget to bust, so the full line stands and those
+			# tests keep their exact previous answers.
+			if recovering == "" and int(record[WICombat.COOLDOWN_ROUNDS]) > 0 \
+					and _readout_label != null \
+					and _rtl_wrapped_line_count(_readout_label, line, READOUT_TEXT_WIDTH) > 1:
+				return "%s — %s" % [skill_name, effect_lines[0]]
+			return line
 		"item":
 			var item_name := String(d.get("label", ""))
 			var item_desc := String(d.get("description", ""))
@@ -714,7 +794,13 @@ func feed_line_for_event(type: String, payload: Dictionary, combat: WICombat, vi
 				return ""
 			var refused := _display_name(combat, view, String(payload["actor"]))
 			var why := String(payload.get("reason", ""))
-			var why_text := "no clear line of sight" if why == "no_los" else ("out of range" if why == "out_of_range" else why.replace("_", " "))
+			# GH#337: "cooldown" would otherwise fall through the generic
+			# underscore-swap arm and read "hesitates -- cooldown." -- a data key
+			# spoken at the player. The Skill is recovering; say that.
+			var why_text := "no clear line of sight" if why == "no_los" \
+					else ("out of range" if why == "out_of_range" \
+					else ("that Skill is still recovering" if why == "cooldown" \
+					else why.replace("_", " ")))
 			line = "%s hesitates — %s." % [refused, why_text]
 	return line
 

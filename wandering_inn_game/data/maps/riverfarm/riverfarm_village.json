@@ -1214,7 +1214,7 @@
     3,
     9
    ],
-   "display_name": "Fence",
+   "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ew",
    "observe": "Low fence rail, bordering the tilled rows."
   },
@@ -1225,7 +1225,7 @@
     4,
     9
    ],
-   "display_name": "Fence",
+   "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ew",
    "observe": "Low fence rail, bordering the tilled rows."
   },
@@ -1237,7 +1237,7 @@
     5,
     9
    ],
-   "display_name": "Fence",
+   "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ew",
    "present_when": {
     "absent": {
@@ -1253,7 +1253,7 @@
     6,
     9
    ],
-   "display_name": "Fence",
+   "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ew",
    "present_when": {
     "absent": {
@@ -1269,7 +1269,7 @@
     8,
     9
    ],
-   "display_name": "Fence",
+   "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ew",
    "present_when": {
     "requires": {
@@ -1285,7 +1285,7 @@
     9,
     9
    ],
-   "display_name": "Fence",
+   "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ew",
    "present_when": {
     "requires": {
@@ -1301,7 +1301,7 @@
     2,
     6
    ],
-   "display_name": "Fence",
+   "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ns",
    "observe": "Low fence rail, bordering the tilled rows."
   },
@@ -1312,7 +1312,7 @@
     2,
     7
    ],
-   "display_name": "Fence",
+   "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ns",
    "observe": "Low fence rail, bordering the tilled rows."
   },
@@ -1323,7 +1323,7 @@
     2,
     8
    ],
-   "display_name": "Fence",
+   "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ns",
    "observe": "Low fence rail, bordering the tilled rows."
   },
@@ -1523,7 +1523,7 @@
     0.58,
     0.62
    ],
-   "observe": "A worn marker stone at the village's heart. Someone scratched a spiral into its face, long since softened by weather.",
+   "observe": "A worn marker stone at the village's heart. Someone scratched a spiral into its face, long since softened by weather. Attunement is what markers like this are cut for: a door shown the right stone learns the place, and can open onto it ever after.",
    "portal_menu": true,
    "portal_menu_when": {
     "requires": {
