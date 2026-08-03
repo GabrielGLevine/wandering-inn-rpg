@@ -2130,3 +2130,100 @@ by controller ruling — the plan was the defect, not the implementation.
   Hunted as an easter egg — an EXPLICIT user-granted exception to the
   Vol 7 spoiler cutoff, names only; exact names wiki-verified before
   authoring, never invented.
+<!-- v017-L2 -->
+- **Skill cooldowns: the set is a RULE, not a taste list (2026-08-02,
+  GH#337, L2 as sole balance authority)**: `cooldown_rounds: 2` on every
+  combat Skill whose `damage_mult >= 2.0`, plus every AP-ONLY line Skill
+  of `length >= 4`. Ten Skills; the four 4-AP entries pay -1 AP for it.
+  A rule rather than a list so the next Skill added answers the question
+  by itself. EXCLUDED and why: every `mp_cost` carrier (MP is the canon
+  limiter — that IS the canon split), `once_per_fight` holders (already
+  stricter), `slam` (`windup_cadence` already paces it), and the sub-2.0
+  mults / length-3 lines (the mid-tier is not the spam set). 2 and not 1
+  because an absolute `round + n` stamp makes n=1 a same-turn lockout
+  only — at 3 AP a 4-AP turn could never double-fire anyway.
+- **The main-line ladder is THREE steps now, not four (2026-08-02,
+  GH#337)**: rungs 1 (Riverfarm) and 2 (Invrisil) both read 0.92 at the
+  t4_spellsword14 yardstick, so their windows deliberately share a band
+  and the still-gated assertion is {r1,r2} > r3 > r4. The harness caught
+  it exactly as the ladder's own comment promised it would. Cause is
+  roster-shaped: `hired_blade_leader` is the only combatant holding
+  power_strike AND counter_strike, so cooling its big hit hands the party
+  two riposte-provoking swings a round. Two skills.json compensations
+  were MEASURED and rejected (power_strike at 2 AP overshoots — 8 cells
+  red, the forge rung 0.69 -> 0.91; mult 2.4 compresses rungs 3/4 upward
+  instead). The step needs `hired_blade_leader`'s own stats, which is
+  combatants.json — outside the lane, logged as a seam.
+- **Splitting a big hit into two counts damage_mod TWICE (2026-08-02,
+  GH#337 — the finding to tune against next time)**: `_resolve_hit` adds
+  `damage_mod` per hit and `_apply_damage_reduction` subtracts per hit.
+  Player kits carry +2 damage_mod and almost no enemy carries any, so
+  the alternation trade is quietly player-positive nearly everywhere —
+  and player-NEGATIVE exactly where the target has real DR (the DR-4
+  forge golem is the one clean case, and the only silver-rank cell that
+  fell out of band).
+- **GH#349 arena leg: stage Pisces, do not field him (2026-08-02, L2's
+  call under the issue's "your call on which reading fights better")**:
+  the vault roster is unchanged and the 5th player spawn is deliberately
+  NOT cut. Fiction is the issue's own — Door consultant first, converging
+  later, and a four-member team where three take a job is how the books
+  read. The mechanical reason decided it: `wi_game.gd`'s companion gate
+  is `allies.size() + 2 > player_spawns.size()`, so a 5th spawn would
+  silently admit a tamed companion into the main line's top-band boss
+  fight for a seat nothing sits in. Recorded in the `vault` arena's own
+  `_comment`, with the four-file recipe for reversing it.
+- **Difficulty is ONE knob, injected, read once (2026-08-02, GH#345 L2
+  half)**: damage dealt TO the player's side, scaled, applied in
+  `_deduct_hp` AHEAD of `damage_reduction` (DR is a flat subtraction, so
+  scaling after it would re-weight gear per difficulty rather than say
+  how hard the world hits). No RNG draw is touched, so a seeded fight has
+  the identical SHAPE at every setting. The value is INJECTED into
+  `WICombat` rather than read (the sim purity rule), which is also the
+  whole "safe mid-save" answer: nothing re-reads it, so moving the row
+  lands on the NEXT fight, never a live one.
+- **The cooldown wave MOVED PROGRESSION PACE, and the move is accepted
+  with numbers, not asserted away (2026-08-02, GH#337, fix round)**:
+  `sim_progression_pace` measured at the lane base and at the shipped
+  tree, warrior_line Act III total-level p10/p50/p90 **12/13/13 -> 10/11/11**
+  (fights won p50 31 -> 30); caster_line loses one Act III fight (27 ->
+  26) at the same levels; helper_social is unchanged. Two scripted QA
+  routes moved the OPPOSITE way (`level_up_loop` / `defeat_ally_alive`
+  re-pinned [Warrior] 2 -> 3) because on a FIXED short route the freed AP
+  buys an extra plain attack and `melee_hit` banks the same either way --
+  a local effect that does not survive the whole arc, where fewer big
+  hits means fewer fights won per act. THE DISCIPLINE POINT: the first
+  pass cited "sim_progression_pace re-run and stays green" as evidence
+  for a global pace claim. It is not evidence of anything of the kind --
+  that harness asserts only `Act I p50 >= 2`, `p50 grows across acts`
+  and a determinism leg, and says so itself ("band NUMBERS are
+  report-only until ratified via CHOICE-LOG"). A pace claim needs the
+  before/after numbers, which is what this entry is. ACCEPTED rather
+  than compensated: ~15% off the melee line's Act III total is inside
+  what GH#211's own baselines were re-tuned by, and compensating it from
+  `skills.json` would undo the milestone. Re-ratify the #211 bands
+  against these numbers next time they are touched.
+- **Ladder ordering is an ASSERTION now, not an inference from window
+  arithmetic (2026-08-02, GH#337, fix round)**: the entry above tied
+  rungs 1 and 2 and overlapped their windows -- which silently repealed
+  the contract those windows were carrying, because rung 2 was then free
+  to climb to 0.98 against rung 1's floor of 0.88 with both gates green,
+  i.e. exactly the Invrisil-easier-than-Riverfarm inversion the ladder
+  exists to catch. `sim_combat_batch.gd` now records the four rung win
+  rates and asserts rung-by-rung descent directly (`LADDER_RUNGS`,
+  `LADDER_TIE = 0.05`), so consecutive stops may READ EQUAL inside the
+  tie band and nothing wider, and restoring a real step never trips it.
+  Skipped under `WI_CELL_RANGE` (a shard holds only a slice); an
+  unsharded run that fails to measure all four rungs reddens by itself.
+- **On the fitted combat readout, the DESCRIPTION yields -- in BOTH
+  cooldown states (2026-08-02, GH#337, fix round)**: the first pass
+  applied this only while a Skill was cooling, so a READY cooled Skill
+  carried the standing clause AND the flavour and overflowed the strip
+  ([Power Strike] rendered "...Once every 2 rounds. — Everything behind
+  one…"). `_slot_info_line` now asks the real fitter whether the full
+  line fits one readout line and drops the flavour if it does not,
+  ONLY when a standing cooldown clause is present -- no Skill outside
+  the cooled ten changes. The rule stated once: the mechanical statement
+  is never the thing that gets ellipsised. Because the degrade happens
+  before the emit, `ui_slot_info_rendered` now carries the string the
+  player actually sees, which is what makes it gateable at all
+  (qa/scripts/combat_move_input.json + 03_power_strike_slot_info.png).

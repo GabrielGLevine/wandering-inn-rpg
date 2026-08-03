@@ -354,7 +354,7 @@
   },
   {
    "script": "defeat_reload",
-   "seed": 1,
+   "seed": 2,
    "note": "losing seed; defeat loads the pre-combat snapshot, no game_reset; issue #88: proximity-triggered goblin_encounter_1 leg proves reload-inside-trigger_radius doesn't insta-refire, then the original interact-triggered chieftains_raid leg",
    "tiers": [
     "smoke",
