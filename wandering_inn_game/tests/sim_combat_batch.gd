@@ -19,28 +19,69 @@ const RUNS_PER_CELL := 100
 ## and no longer depends on the windows staying disjoint.
 ##
 ## LADDER_TIE is the width inside which two consecutive rungs are allowed to read
-## equal (which rungs 1 and 2 currently do, deliberately -- see rung 2's own
-## comment and the CHOICE-LOG entry). Anything beyond it in the wrong direction
-## is an inversion and reddens. Restoring a real step never trips this: a bigger
-## DESCENT is always legal.
+## equal. Anything beyond it in the wrong direction is an inversion and reddens.
+## Restoring a real step never trips this: a bigger DESCENT is always legal.
+##
+## v0.18 W5: 0.05 -> 0.03. The wide band was authored FOR the collapsed step --
+## rungs 1 and 2 read 0.92/0.92 and needed room to read equal without reddening.
+## The step is back (0.92 / 0.84 / 0.69 / 0.61, gaps 0.08 / 0.15 / 0.08), so the
+## slack it was bought with is no longer owed and the contract tightens back to
+## catching a smaller inversion. Every gap clears 0.03 by 0.05 or more, and this
+## harness is DETERMINISTIC (seeds 1..RUNS_PER_CELL, fixed) -- the only thing
+## that can move a rung is a real data change, which is precisely what the gate
+## is for. If a future wave has to let two rungs share a band again, widen this
+## deliberately and say why, the way GH#337 did.
 const LADDER_RUNGS := [
 	"briar_collectors_deep_t5_sw14_hunter",
 	"hired_blades_t5_sw14_wilovan",
 	"forge_calibration_golem_t5_sw14_solo",
 	"seal_warden_t5_sw14_solo",
 ]
-const LADDER_TIE := 0.05
+const LADDER_TIE := 0.03
 
 var _cell_idx := -1
 var _range_lo := -1
 var _range_hi := -1
 var _ladder_rates := {}
 
+## GH#360 (a) — THE DIFFICULTY-TIER SWEEP HOOK, and it is deliberately a hook on
+## this harness rather than a second 141-cell driver. The cells, the builds, the
+## rosters and the per-family setup (allies, hp mods, companion boons, bounty
+## scaling) all live here already; a parallel harness would have to clone every
+## one of them and would drift from this file the first time a cell moved.
+##
+## `WI_DIFFICULTY_MULT=<float>` sets `WICombat.difficulty_damage_taken_mult` on
+## EVERY fight this run builds — the same field the composition root sets from
+## `WISettings.difficulty_damage_taken_mult` (0.75 Bronze / 1.0 Silver / 1.3
+## Gold). Same seed discipline as an ordinary run: the knob scales damage dealt
+## to the player's side and touches no RNG draw, so a tier leg replays the
+## IDENTICAL fight shape and only the cost of a hit moves.
+##
+## UNSET = byte-identical to before this hook existed (the field defaults to 1.0
+## and `_apply_difficulty` early-returns at 1.0, so even an explicit
+## `WI_DIFFICULTY_MULT=1.0` leg is numerically identical -- `difficulty_tier_
+## sweep.sh` proves that by diffing the x1.0 leg against a plain run).
+##
+## REPORT-ONLY, and structurally so: every gated band in this file is authored
+## at Silver, so asserting them at 0.75/1.3 would just red the whole matrix.
+## A tier leg therefore prints its FAIL lines as the REPORT it is and exits 0;
+## the plain (env-unset) run is the only one that asserts, and it is unchanged.
+var _difficulty_mult := 1.0
+var _tier_sweep := false
+
 func _cell_in_range() -> bool:
 	_cell_idx += 1
 	if _range_lo < 0:
 		return true
 	return _cell_idx >= _range_lo and _cell_idx <= _range_hi
+
+
+## THE one construction site for every fight in this file, so the tier hook is
+## applied once rather than at each of the eleven per-family loops.
+func _new_combat(arena: Dictionary, cfgs: Array, skills_cfg: Dictionary, sink: Callable, rng_seed: int) -> WICombat:
+	var combat := WICombat.new(arena, cfgs, skills_cfg, sink, rng_seed)
+	combat.difficulty_damage_taken_mult = _difficulty_mult
+	return combat
 
 
 func _note_ladder(cell: Dictionary, win_rate: float) -> void:
@@ -216,13 +257,16 @@ const RIVERFARM_CELLS := [
 	# what makes ordering itself an assertion, and it keeps holding when two rungs
 	# have to share a band. That sharing is the state GH#337 (skill cooldowns) put
 	# the ladder in: rungs 1 and 2 both read 0.92 afterwards and rung 2's old
-	# window went red, which is the gate working. Current authored ladder, THREE
-	# steps rather than four -- {rung 1 .88-.98, rung 2 .86-.98} / rung 3 .65-.76 /
-	# rung 4 .55-.64 -- the top pair deliberately sharing a band because Riverfarm
-	# and Invrisil now measure equal at the yardstick. Restoring the fourth step
-	# needs hired_blade_leader's own stats (combatants.json); the full story and
-	# the two rejected skills.json compensations are on rung 2 itself. Every window
-	# keeps >=0.03 margin on both sides of its authored value.
+	# window went red, which is the gate working.
+	# v0.18 W5: THE FOURTH STEP IS RESTORED. hired_blade_leader's weapon_die went
+	# 6 -> 8 (the compensation GH#337 identified but could not reach from the lane
+	# that found it), Invrisil fell 0.92 -> 0.84, and the authored ladder is FOUR
+	# steps again -- rung 1 .88-.98 / rung 2 .76-.90 / rung 3 .65-.76 / rung 4
+	# .55-.64, measuring 0.92 > 0.84 > 0.69 > 0.61 with gaps 0.08 / 0.15 / 0.08.
+	# THIS rung is unchanged by that work: Riverfarm is the first stop, its numbers
+	# are the fixed reference the other three moved relative to, and the whole
+	# repair was carried on Invrisil's side of the pair. Every window keeps >=0.03
+	# margin on both sides of its authored value.
 	{"name": "briar_collectors_deep_t5_sw14_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.88, "win_hi": 0.98, "check_rounds": true},
 ]
 
@@ -242,16 +286,28 @@ const INVRISIL_CELLS := [
 	{"name": "hired_blades_t3_spellsword9_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": false},
 	{"name": "hired_blades_t3_warrior9_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior9", "solo": false},
 	# Invrisil's STOP cell (its own expected level, 10) -- the paired half of
-	# Riverfarm's disjoint window; see that cell's comment. Measured 0.70 after
-	# GH#337, margins 0.07/0.07.
+	# Riverfarm's disjoint window; see that cell's comment.
 	# GH#337 re-author (0.64 -> 0.70, window 0.57-0.71 -> 0.63-0.77). MOVED
 	# INTENTIONALLY: 0.70 sat 0.01 under the old ceiling. Same mechanism as the
 	# Riverfarm stop it is paired against (see that cell) plus a second term --
 	# hired_blade_leader is the only enemy in the game holding BOTH power_strike
 	# and counter_strike, so its cooled big hit turns into two ordinary swings
-	# that each provoke the PC's own riposte. Still DISJOINT AND ORDERED beneath
-	# Riverfarm (ceiling 0.77 < its floor 0.78). Margins 0.07/0.07.
-	{"name": "hired_blades_t3_warrior10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.63, "win_hi": 0.77, "check_rounds": true},
+	# that each provoke the PC's own riposte.
+	# v0.18 W5 RUNG-4 RESTORE (0.70 -> 0.63, window 0.63-0.77 -> 0.56-0.70).
+	# MOVED INTENTIONALLY, and it is the COLLATERAL of the ladder repair rather
+	# than a finding of its own: the captain's weapon_die went 6 -> 8 to give
+	# rung 2 a real step back (see that cell), and this build meets the same
+	# captain at its own expected level. The on-level build always pays a buff
+	# harder than the over-levelled yardstick does -- it sits on the steeper
+	# part of the curve -- and weapon_die was chosen over con precisely because
+	# it costs this cell the LEAST per point of ladder movement (con +12 buys
+	# -0.07 of rung and costs -0.14 here; weapon_die +2 buys -0.08 and costs
+	# -0.07). Still DISJOINT AND ORDERED beneath Riverfarm's own t3 pair
+	# (ceiling 0.70 < briar_collectors_deep_t3_warrior10_hunter's floor 0.78),
+	# and the gap between the first two stops at this build widens 0.15 -> 0.22,
+	# which is the SAME statement the yardstick rung now makes. Width held at
+	# 0.14, margins 0.07/0.07.
+	{"name": "hired_blades_t3_warrior10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.56, "win_hi": 0.70, "check_rounds": true},
 	{"name": "hired_blades_t3_spellsword9_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": true},
 	{"name": "hired_blades_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": true},
 	{"name": "boulevard_night_footpads_t3_spellsword9_solo", "arena": "mercantile_alley", "enemies": ["footpad_lookout", "footpad_bruiser"], "build": "t3_spellsword9", "solo": true},
@@ -288,10 +344,29 @@ const INVRISIL_CELLS := [
 	# THE ORDERING CONTRACT DID NOT GO WITH IT: overlapping these two windows
 	# would have left rung 2 free to climb to 0.98 against rung 1's 0.88 with both
 	# gates green, so `LADDER_RUNGS`/`LADDER_TIE` now assert rung-by-rung descent
-	# directly (fix round). This pair is allowed to READ EQUAL inside the 0.05 tie
+	# directly (fix round). This pair is allowed to READ EQUAL inside the tie
 	# band and nothing wider; {rung 1, rung 2} > rung 3 > rung 4 is asserted by
 	# the same gate rather than inferred from window arithmetic.
-	{"name": "hired_blades_t5_sw14_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.86, "win_hi": 0.98, "check_rounds": true},
+	#
+	# v0.18 W5: THE SEAM ABOVE IS NOW CLOSED AND THE FOURTH STEP IS BACK
+	# (0.92 -> 0.84, window 0.86-0.98 -> 0.76-0.90). This lane owns
+	# combatants.json, so the compensation GH#337 could only describe was
+	# finally taken: hired_blade_leader's weapon_die 6 -> 8, con untouched. The
+	# choice of lever is the whole point -- what GH#337 broke was the captain's
+	# CADENCE (one big hit became two ordinary swings), so the number to move is
+	# the ordinary swing, and the two rejected skills.json compensations are
+	# still rejected for the same reasons recorded above. con was measured as
+	# the alternative and rejected on collateral, not on feel: con +12 buys
+	# -0.07 of rung and costs the on-level stop cell -0.14, while weapon_die +2
+	# buys -0.08 and costs it -0.07. Ladder now reads 0.92 > 0.84 > 0.69 > 0.61,
+	# four real steps of 0.08 / 0.15 / 0.08.
+	# Window margins 0.08/0.06 -- deliberately NOT squeezed to 0.77-0.87 to
+	# restore literal disjointness with rung 1 (0.88-0.98). A 0.03 ceiling
+	# margin on a cell measuring 0.84 is a flaky gate, and disjointness is no
+	# longer what carries ordering: `LADDER_RUNGS`/`LADDER_TIE` does, by
+	# assertion, and that is the contract this restoration hands it back a real
+	# step to defend.
+	{"name": "hired_blades_t5_sw14_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.76, "win_hi": 0.90, "check_rounds": true},
 	{"name": "hired_blades_t4_sw11_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t4_spellsword11_party", "solo": false},
 	# v0.16 I1 (#306). Side-quest fight at Invrisil's own expected level, SOLO
 	# (Wilovan has no part in a stranger's commission). Window is the shipped
@@ -508,6 +583,19 @@ func _build_pc(build: Dictionary, pc_template: Dictionary, classes_catalog: Dict
 		for acc_id_v: Variant in (build.get("accessories", []) as Array):
 			accessories.append(items_by_id.get(String(acc_id_v), {}))
 		pc[WIKeys.SKILLS] = WICombatBuild.weapon_gated_kit(kit, String(weapon.get("weapon_family", "")), skills_by_id)
+		# Mirrors `wi_game.gd::_build_player_combatant` (line 2099). Threaded for
+		# fidelity, and MEASURED to be inert rather than assumed to matter: the
+		# full 141-cell matrix is byte-identical with and without this line
+		# (2026-08-03 fix round; `sharpshooter14_solo`, this file's only bow
+		# build, holds 0.76/median 4 either way). It cannot matter under
+		# autoplay -- every `combat.attack()` call site in `WICombatAI` is
+		# guarded by `combat.is_adjacent()` (combat_ai.gd:66/69/73, 106/108,
+		# 149/153) and `_act_ranged` never calls `attack` at all, so
+		# `WICombat.in_weapon_range` (wi_combat.gd:179) is only ever asked at
+		# adjacency, where every weapon passes. Bow builds here fight at melee
+		# reach because the AI has no bow verb, NOT because of this field --
+		# do not "fix" a bow band by expecting this line to move it.
+		pc[WIKeys.WEAPON_RANGE] = int(weapon.get(WIKeys.RANGE, 1))
 		pc[WIKeys.SKILLS] = WICombatBuild.fold_abilities(pc[WIKeys.SKILLS] as Array, accessories)
 		var mods: Dictionary = WICombatBuild.equipment_mods(weapon, armor, accessories)
 		pc[WIKeys.DAMAGE_MOD] = mods[WIKeys.DAMAGE_MOD]
@@ -524,6 +612,13 @@ func _init() -> void:
 		print("WI_CELL_COUNT: %d" % total_cells)
 		quit(0)
 		return
+	var diff_env := OS.get_environment("WI_DIFFICULTY_MULT")
+	if diff_env != "":
+		_difficulty_mult = float(diff_env)
+		assert(_difficulty_mult > 0.0, "WI_DIFFICULTY_MULT must be a positive float (0.75 Bronze / 1.0 Silver / 1.3 Gold)")
+		_tier_sweep = true
+		print("[tier-sweep] difficulty_damage_taken_mult=%.2f -- REPORT ONLY (every band in this file is authored at Silver 1.0)" % _difficulty_mult)
+
 	var range_env := OS.get_environment("WI_CELL_RANGE")
 	if range_env != "":
 		var parts := range_env.split(":")
@@ -567,7 +662,7 @@ func _init() -> void:
 					cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
 				for enemy_id: String in comp["enemies"]:
 					cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-				var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+				var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 				combat.begin()
 				var guard := 0
 				while not combat.finished and guard < 2000:
@@ -634,7 +729,7 @@ func _init() -> void:
 				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
 			for enemy_id: String in comp["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -701,7 +796,7 @@ func _init() -> void:
 				cfgs.append(ally_cfg)
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -756,7 +851,7 @@ func _init() -> void:
 				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -809,7 +904,7 @@ func _init() -> void:
 				cfgs.append((by_id["relc"] as Dictionary).duplicate(true))
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -859,7 +954,7 @@ func _init() -> void:
 				cfgs.append((by_id["riverfarm_hunter"] as Dictionary).duplicate(true))
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -913,7 +1008,7 @@ func _init() -> void:
 				cfgs.append((by_id["wilovan"] as Dictionary).duplicate(true))
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -971,7 +1066,7 @@ func _init() -> void:
 				cfgs.append(ally_cfg)
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -1024,7 +1119,7 @@ func _init() -> void:
 			var cfgs: Array = [pc]
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -1070,7 +1165,7 @@ func _init() -> void:
 			var cfgs: Array = [pc]
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -1141,7 +1236,7 @@ func _init() -> void:
 				cfgs.append(ally_cfg)
 			for enemy_id: String in cell["enemies"]:
 				cfgs.append((by_id[enemy_id] as Dictionary).duplicate(true))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -1193,7 +1288,7 @@ func _init() -> void:
 			for enemy_id: String in cell["enemies"]:
 				# THE one WIBountyScaling site -- mirrors wi_game.start_combat.
 				cfgs.append(WIBountyScaling.scale_enemy((by_id[enemy_id] as Dictionary).duplicate(true), rank))
-			var combat := WICombat.new(arena, cfgs, skills, sink, seed_v)
+			var combat := _new_combat(arena, cfgs, skills, sink, seed_v)
 			combat.begin()
 			var guard := 0
 			while not combat.finished and guard < 2000:
@@ -1251,6 +1346,18 @@ func _init() -> void:
 		printerr("FAIL [ladder]: an unsharded run measured %d of the %d ladder rungs — a rung was renamed or dropped without updating LADDER_RUNGS" % [
 			_ladder_rates.size(), LADDER_RUNGS.size(),
 		])
+
+	# GH#360 (a). A tier leg is a READ, not a contract: the bands above are all
+	# authored at Silver, so an out-of-band value at 0.75/1.3 is the measurement
+	# this sweep exists to take. The FAIL lines stay printed on purpose -- they
+	# are the per-cell report -- but they never fail the process, and the plain
+	# (env-unset) run below is untouched and still the only asserting one.
+	if _tier_sweep:
+		print("[tier-sweep] mult=%.2f complete over %d cells x %d seeded runs — any FAIL lines above are the REPORT, not a regression" % [
+			_difficulty_mult, total_cells, RUNS_PER_CELL,
+		])
+		quit(0)
+		return
 
 	assert(not any_failed, "one or more matrix cells failed bounds — see FAIL lines above")
 	if any_failed:

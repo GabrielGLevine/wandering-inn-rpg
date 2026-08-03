@@ -489,6 +489,78 @@
    "name": "02_swordsman_kit_combat"
   },
   {
+   "_comment": "v0.18 W5 -- THE COOLDOWN-BADGE LEG. The v0.16.2 close playtest flagged ZERO badge coverage: cooldowns shipped in GH#337 and the little number hotbar.gd draws in a cooling slot's top-right corner had never been photographed. This is the natural home for it -- the only class canonical whose PC fields a cooldown-holding kit at all (every other one either has no sword/bow line or is gated out of it by weapon_gated_kit), and the evolved-kit fight is exactly where a [Swordsman]'s Skills should be shown working. Kit order (granted_skills: swordsman's own L10 grants first, then inherited warrior grants, spear-family piercing_strikes stripped by the rusty sword): Attack(1)/Dash(2)/Quick Slash(3)/Flash Cut(4)/Power Strike(5)/Second Wind(6)/End Turn -- 6 numbered slots, 7 total, matching the ui_hotbar_rendered pin below. Power Strike is the ONLY cooldown holder in this kit (cooldown_rounds 2).",
+   "action": "assert_event_logged",
+   "type": "ui_hotbar_rendered",
+   "payload_contains": {
+    "slots": 7
+   }
+  },
+  {
+   "_comment": "Close first: [Power Strike] is a damage_mult skill and routes through in_weapon_range, so with a sword it needs ADJACENCY -- opening its targeting from the spawn cell paints `targets: 0` and confirm reads as a cancel (that is what the first authoring of this leg measured). training_yard spawns the pc at (2,3) and training_dummy_a at (7,3); move_pool is 4 here (warrior's [Quick Movement] passive on top of the base 3), so four free steps land the pc at (6,3), adjacent, with all 4 AP still in hand for a 3 AP Power Strike.",
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     6,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "hotbar_5"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "mode": "skill",
+    "skill": "power_strike",
+    "targets": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_resolved",
+   "payload_contains": {
+    "actor": "pc",
+    "skill": "power_strike",
+    "target": "training_dummy_a"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The SIM-side twin of the badge: combat_hud's slot-info line and hotbar.gd's corner number read the same `cooldown_remaining`, so pinning the line makes the screenshot's number falsifiable rather than decorative.",
+   "action": "assert_event_logged",
+   "type": "ui_slot_info_rendered",
+   "payload_contains": {
+    "slot": 4,
+    "text": "[lb]Power Strike[rb] — 3 AP — ×2 damage — Recovering — ready in 2 rounds."
+   }
+  },
+  {
+   "_comment": "The badge is presentation, so it needs frames to land -- and it must be READ off the PNG, not inferred: hotbar.gd draws `cooldown_remaining` as a bare number in the slot's top-right corner, and nothing else on screen carries that fact.",
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "03_power_strike_cooldown_badge"
+  },
+  {
    "action": "combat_autoplay",
    "max_turns": 300
   },
