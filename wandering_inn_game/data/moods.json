@@ -1,5 +1,5 @@
 {
- "_comment": "Current values (400/900) are a6 #206's doubling of 200/450 (lineage: #62 doubled the ORIGINAL 100/225), same 2.25x dusk->night ratio preserved. The v0.17 R2 lighting language these cards obey is stated once in docs/CHOICE-LOG.md.",
+ "_comment": "Current values (400/900) are a6 #206's doubling of 200/450 (lineage: #62 doubled the ORIGINAL 100/225), same 2.25x dusk->night ratio preserved. The v0.17 R2 lighting language: docs/CHOICE-LOG.md states it, scripts/data_lint.py (check_moods) enforces it. SEALED vs SKY is this file's `day == dusk` pin -- an authored call.",
  "meta": {
   "phase_thresholds": {
    "dusk": 400,
@@ -67,7 +67,7 @@
    "vignette": 0.4
   },
   "rags_camp": {
-   "_comment": "Sheltered hollow. `camp_fire_pit` carries the firelight now -- the old card faked it in the grade on a map with no light row. Vignette 0.52 sits just above witch_hollow's 0.50.",
+   "_comment": "Sheltered hollow. `camp_fire_pit` carries the firelight the old card faked in the grade.",
    "day": [
     0.86,
     0.82,
@@ -124,7 +124,7 @@
    "vignette": 0.3
   },
   "inn_upstairs": {
-   "_comment": "TIME-INVARIANT. The old pin was the inn's dusk grade reused verbatim, so it moved with it; re-authored as a windowless corridor lit by its own sconce.",
+   "_comment": "TIME-INVARIANT. The old pin was the inn's dusk grade verbatim, so it moved with it; a corridor lit by its own sconce. Its `window_blue` decor is dressing, not a light well.",
    "day": [
     0.66,
     0.7,
@@ -221,7 +221,7 @@
    "lights_by_day": true
   },
   "riverfarm_village": {
-   "_comment": "\"harvest light\" -- the ONLY map whose day grade tips warm (identity everywhere else is [1,1,1]); deep-blue night per spec sec.1.",
+   "_comment": "\"harvest light\" -- the ONLY map whose day grade tips warm; deep-blue night per spec sec.1.",
    "day": [
     0.76,
     0.72,
@@ -391,7 +391,7 @@
    "lights_by_day": true
   },
   "dungeon_approach": {
-   "_comment": "Per-prop accent variation (the 4 trap tells' post-reveal warning tints, the statue/rubble dressing) rides the live decor `tint` field (GH#55) on top of this base grade, not a second mood card. GH-VISUAL-LOG 2026-07-17: base grade lifted ~35% total (12% then a further 20% on user call) (user-ratified USER-EYES item -- vault shots read near-black).",
+   "_comment": "Per-prop accent variation (trap tells, statue/rubble dressing) rides the live decor `tint` field (GH#55) over this base grade, not a second card. GH-VISUAL-LOG 2026-07-17: base lifted ~35% total, user-ratified USER-EYES item (vault shots read near-black).",
    "day": [
     0.282,
     0.295,
@@ -468,39 +468,41 @@
    "vignette": 0.34
   },
   "pallass_forge": {
+   "_comment": "NEUTRAL on purpose: RULE 2 bars a warm grade, not a cold one, and the first cut read colder than the sewers.",
    "day": [
-    0.76,
-    0.81,
-    0.88
+    0.85,
+    0.85,
+    0.85
    ],
    "dusk": [
-    0.76,
-    0.81,
-    0.88
+    0.85,
+    0.85,
+    0.85
    ],
    "night": [
-    0.76,
-    0.81,
-    0.88
+    0.85,
+    0.85,
+    0.85
    ],
    "vignette": 0.42,
    "lights_by_day": true
   },
   "pallass_forge_hall": {
+   "_comment": "Neutralised with its pallass_forge twin, hue-only at the value it already had.",
    "day": [
-    0.8,
     0.85,
-    0.9
+    0.85,
+    0.85
    ],
    "dusk": [
-    0.8,
     0.85,
-    0.9
+    0.85,
+    0.85
    ],
    "night": [
-    0.7,
-    0.75,
-    0.82
+    0.76,
+    0.76,
+    0.76
    ],
    "vignette": 0.48,
    "lights_by_day": true
@@ -524,7 +526,7 @@
    "vignette": 0.3
   },
   "garden_sanctuary": {
-   "_comment": "The eyes-closed test IS the mood system itself: if the screen never dims and never vignettes on this map, you are in the garden.",
+   "_comment": "If the screen never dims and never vignettes here, you are in the garden.",
    "day": [
     1.0,
     1.0,
@@ -543,27 +545,29 @@
    "vignette": 0.0
   },
   "riverfarm_longhouse": {
+   "_comment": "Windowless hall, so SEALED: a day-identity pin reads as a SKY and dark-ends its hearth at noon.",
    "day": [
-    1.0,
-    1.0,
-    1.0
+    0.64,
+    0.68,
+    0.76
    ],
    "dusk": [
-    0.56,
-    0.62,
+    0.64,
+    0.68,
     0.76
    ],
    "night": [
-    0.4,
-    0.45,
-    0.62
+    0.64,
+    0.68,
+    0.76
    ],
-   "vignette": 0.4
+   "vignette": 0.4,
+   "lights_by_day": true
   }
  },
  "arena_moods": {
   "sewers_nest": {
-   "_comment": "kept in lockstep with the deepened `moods.sewers` field pin (day/dusk [0.24,0.26,0.37], avg .29) so the vermin/nest fights still read as the SAME underground the player just walked through, not a lit-back-up combat pin.",
+   "_comment": "kept in lockstep with the `moods.sewers` field pin so nest fights read as the SAME underground the player walked through, not a lit-back-up combat pin.",
    "day": [
     0.24,
     0.26,

@@ -179,7 +179,7 @@
    ],
    "display_name": "The Boundary Scrap",
    "sprite": "hollow_glow_stone",
-   "_light_comment": "v0.17 R2 night-readability light. VISUAL-LOG named `hut_hearth_ash`; NOT used -- that prop is \"The Cold Hearth\" whose toast says the ash has been cold for years. The scrap is what this room says glows.",
+   "_light_comment": "v0.17 R2 night-readability light. VISUAL-LOG named `hut_hearth_ash`; NOT used -- that prop's own toast says its ash is cold. Ward-green, low, steady, no flicker.",
    "light": {
     "color": [
      0.72,

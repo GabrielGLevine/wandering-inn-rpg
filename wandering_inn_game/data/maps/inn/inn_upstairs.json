@@ -140,7 +140,7 @@
    ]
   },
   {
-   "_comment": "v0.17 R2: the corridor's first light source, between hallway_door_b (5,1) and lyonette_door (7,1). Paired with the card's lights_by_day -- this room is sealed and this is its only source.",
+   "_comment": "v0.17 R2: the corridor's first light source, between hallway_door_b (5,1) and lyonette_door (7,1). Sealed room, so lights_by_day keeps it lit.",
    "sprite": "sconce",
    "cell": [
     6,

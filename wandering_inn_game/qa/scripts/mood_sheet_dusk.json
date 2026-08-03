@@ -469,6 +469,138 @@
   {
    "action": "screenshot",
    "name": "13_sewers"
+  },
+  {
+   "_comment": "EXTERIOR Invrisil -- one of the three day-identity cards the R2 close claimed byte-stable without ever shooting it (fix wave). Cell is off boulevard_night_footpads' radius-1 trigger at (13,15).",
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    12,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "phase": "dusk"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "14_invrisil_boulevard"
+  },
+  {
+   "_comment": "EXTERIOR alley -- second unshot day-identity card. (9,6) is three cells clear of alley_footpads_a's radius-2 trigger at (9,9).",
+   "action": "teleport",
+   "map": "mercantile_alleys",
+   "cell": [
+    9,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "mercantile_alleys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "mercantile_alleys",
+    "phase": "dusk"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "15_mercantile_alleys"
+  },
+  {
+   "_comment": "SEALED sanctuary -- third unshot card, and the one whose key this pass renamed; its grade is literal identity at every phase, so the frame is the proof the rename changed nothing visible.",
+   "action": "teleport",
+   "map": "garden_sanctuary",
+   "cell": [
+    6,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "garden_sanctuary"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "garden_sanctuary",
+    "phase": "dusk"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "16_garden_sanctuary"
+  },
+  {
+   "_comment": "SEALED forge hall -- pallass_forge's sibling, added so the forge temperature call is measured on BOTH rooms instead of one. The map's only encounter is interact-only (no trigger_radius).",
+   "action": "teleport",
+   "map": "pallass_forge_hall",
+   "cell": [
+    5,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge_hall"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "pallass_forge_hall",
+    "phase": "dusk"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "17_pallass_forge_hall"
   }
  ]
 }

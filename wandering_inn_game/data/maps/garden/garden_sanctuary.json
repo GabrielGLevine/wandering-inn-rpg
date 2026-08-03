@@ -337,7 +337,7 @@
    ]
   }
  ],
- "_comment_ambience": "v0.17 R2 GUARD, not a new effect -- do not delete. moods.json's card was keyed `garden`, naming no map; renaming it to `garden_sanctuary` flips world.gd's _map_has_sky to false, and a no-sky map stops having its BIOME-DEFAULT ambience forced to dusk/night. This row pins today's exact behaviour.",
+ "_comment_ambience": "v0.17 R2 GUARD, do not delete: the moods key rename flips _map_has_sky false, which would un-force the biome default to dusk/night. This row pins today's behaviour.",
  "ambience": [
   {
    "preset": "fireflies",

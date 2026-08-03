@@ -447,14 +447,15 @@
    "observe": "An anvil bolted to its own slab, a furnace mouth banked low beside it — cold for now, but built to run hot for a working day at a time.",
    "on_interact_accomplishment": "eyed_the_forge_station",
    "toast": "The metal underfoot still holds the day's heat, hours after the last hammer fell.",
+   "_light_comment": "v0.17 R2: 0.8@26 -> 1.05@42, so the banked mouth reaches the floor of a 26-cell tier.",
    "light": {
     "color": [
      0.965,
      0.333,
      0.063
     ],
-    "energy": 0.8,
-    "radius": 26,
+    "energy": 1.05,
+    "radius": 42,
     "flicker": true
    }
   },
@@ -469,7 +470,18 @@
    "sprite": "forge_station",
    "observe": "A second bench, same pattern as the first — built to the same civic spec as the market tier's stalls, just built for heat instead of trade.",
    "on_interact_accomplishment": "eyed_the_forge_station",
-   "toast": "Tool racks, empty for the moment. Whoever works this bench keeps it orderly."
+   "toast": "Tool racks, empty for the moment. Whoever works this bench keeps it orderly.",
+   "_light_comment": "v0.17 R2: the tier's second banked mouth. Count 7 -> 8 = LIGHT_BUDGET, so this map is FULL.",
+   "light": {
+    "color": [
+     0.965,
+     0.333,
+     0.063
+    ],
+    "energy": 0.9,
+    "radius": 34,
+    "flicker": true
+   }
   },
   {
    "id": "steam_vent_forge",

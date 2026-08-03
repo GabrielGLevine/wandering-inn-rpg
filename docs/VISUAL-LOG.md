@@ -3124,13 +3124,19 @@ overlap rows are spawn-cell choices in arena data, not art.
 <!-- v017-R2 -->
 ### v0.17 R2 — moods/atmosphere re-tune (post-palette rider), 2026-08-02
 
-Data-only pass (no code). Evidence: `mood_sheet_{day,dusk,night}` — a new
-non-canonical windowed peek triptych that teleports one fixture through
-thirteen maps (every exterior beside the interior you reach from it) so the
-whole lighting language can be read in one frame set. Before/after archived at
-`art-feel-review/v017-r2-moods/{before,after}/{day,dusk,night}/` (deliberately NOT under
-`qa_output/`, which every full `ci_sweep.sh` flushes; contact sheets and a
-`measurements.csv` of every frame's mean luma and mean R-B sit beside them).
+Data-only pass except for one lint arm (`scripts/data_lint.py:check_moods`,
+added in the fix wave — see the last row). Evidence:
+`mood_sheet_{day,dusk,night}` — a new non-canonical windowed peek triptych that
+teleports one fixture through SEVENTEEN maps (every exterior beside the
+interior you reach from it) so the whole lighting language can be read in one
+frame set. Archived at
+`art-feel-review/v017-r2-moods/` (deliberately NOT under `qa_output/`, which
+every full `ci_sweep.sh` flushes): `{before,after}/` are the pass's own 13-map
+pair, `{fix_before,fix_after}/` the fix wave's 17-map pair, with
+`measurements.csv` / `fixwave_measurements.csv` beside them (mean luma + mean
+R−B per frame). NOTE on reading them: frames are reproducible to ±0.2 luma,
+NOT byte-identical — idle sprite animation and light flicker are wall-clock
+driven, so two runs of identical data differ on any map that has either.
 
 THE LANGUAGE, stated once so the next pass does not re-derive it
 (`t = r - b`, `v = mean(rgb)`, per mood card):
@@ -3140,8 +3146,12 @@ THE LANGUAGE, stated once so the next pass does not re-derive it
 - **RULE 2 — a map WITHOUT a sky** (day == dusk): the FLAME owns the warmth,
   never the grade. The grade may be cool or neutral, never warm (`t <= +0.03`),
   and a sealed room that owns light rows carries `lights_by_day: true` so those
-  sources actually burn. This generalises seal_vault's shipped rationale into
-  something derivable instead of a per-map taste call.
+  sources actually burn. This generalises seal_vault's shipped rationale.
+  Which maps ARE sealed is an authored call — `_map_has_sky` reads the
+  day-vs-dusk pin this same file writes — so the rules buy consistency after
+  the call, not the call itself. Both are enforced by
+  `scripts/data_lint.py:check_moods`, and RULE 2's ceiling is one-sided: it
+  forbids a warm grade, it does not license a cold one (see the forge row).
 
 Rows this pass closes or moves:
 
@@ -3159,11 +3169,20 @@ Rows this pass closes or moves:
   street t −0.30 → −0.24): the sun set and then came halfway back. RULE 1
   monotonicity now holds on all 29 cards, `guild`/`rags_camp` included.
 - [x] **MOOD/RIVERFARM-LONGHOUSE-HAS-NO-CARD (NEW, found this pass) —
-  DRAINED.** The map had no `moods.json` entry at all, so it fell through
-  `apply()`'s identity fallback at every phase while its hearth and two sconces
-  switched on at dusk. Measured mean luma **79.4 at noon, 83.6 at midnight** —
-  brighter in the middle of the night than the middle of the day — and it was
-  the only interior in the game with no vignette. Now 75.7 / 55.8 / 45.7.
+  DRAINED, and re-DRAINED in the fix wave.** The map had no `moods.json` entry
+  at all, so it fell through `apply()`'s identity fallback at every phase while
+  its hearth and two sconces switched on only at dusk — brighter in the middle
+  of the night than the middle of the day, and the only interior in the game
+  with no vignette. The card written for it then pinned day to identity against
+  a blue dusk, which is a SKY pin: `_map_has_sky` returned true and the hall's
+  hearth plus both sconces went dark at noon again
+  (`fix_before/day/07_riverfarm_longhouse.png` — a bright room with a grey
+  dead stove in it, the adventurers_rest defect on a fresh card). The hall has
+  no window prop anywhere in its decor, so it is SEALED like every other
+  windowless room: one pin `[.64,.68,.76]` + `lights_by_day`, hearth and
+  sconces burning at every hour (`fix_after/day/07_riverfarm_longhouse.png`).
+  Measured 54.1 / 54.2 / 54.2 luma at +14.3 R−B, flat across the clock by
+  construction.
 - [x] **MOOD/GARDEN-CARD-IS-DEAD-DATA (NEW, found this pass) — DRAINED.**
   `moods.moods.garden` names no map (the id is `garden_sanctuary`), so the
   sanctuary's carefully-authored "never dims" card has never once been read.
@@ -3190,6 +3209,37 @@ Rows this pass closes or moves:
   shipped "a lantern adds nothing at noon" default is right there. Same key,
   opposite answers, and the reason is in the data rather than in taste. If your
   eyes disagree on the market, the change is one key.
+- [x] **LIGHT/FORGE-READS-COLD (NEW, fix wave) — DRAINED.** Trimming the two
+  forge cards for RULE 2 overshot and pushed both rooms NET-COLD: measured
+  −11.1 (`pallass_forge`) and −11.4 (`pallass_forge_hall`) mean R−B, colder
+  than the sewers, on the two rooms whose fiction is banked coal. RULE 2 was
+  satisfied the whole time — it bounds warm grades, not cold ones — which is
+  the olive-interiors lesson in the opposite direction. Both cards are now
+  NEUTRAL (`[.85,.85,.85]`; forge_hall's edit is hue-only at its existing
+  value, so the room is exactly as dark as it was), `forge_station_a`'s banked
+  mouth reaches the floor (0.8@26 → 1.05@42) and `forge_station_b` gains the
+  tier's second mouth (0.9@34, seven cells away in a 26-wide hall — NOT the
+  adjacent matched pair the forge_hall row refused). Light count 7 → 8 =
+  `LIGHT_BUDGET` exactly, so pallass_forge is now FULL. Measured
+  −11.1 → −3.2 and −11.4 → −8.9, against `pallass_market` at −29.2.
+- [ ] **ART/PALLASS-BLUE-BRICK-CARRIES-THE-FORGE (NEW, fix wave) — OPEN, art.**
+  With both forge grades at literal neutral the tier still measures ~−3 to −9
+  R−B, and the reason is on screen in `fix_after/day/{10_pallass_forge,
+  17_pallass_forge_hall}.png`: floor AND walls are the Pallass blue-brick
+  tileset, so the room is blue before any grade touches it. No mood value can
+  answer that without putting the amber wash back on. Wants a warm floor
+  variant (soot/scale near the stations) or a hotter `forge_station` sprite.
+- [x] **PROCESS/THE-LANGUAGE-WAS-PROSE-ONLY (fix wave) — DRAINED.** RULE 1 and
+  RULE 2 were checked by a throwaway script with an absolute path in it, living
+  outside version control: reverting the entire payload left every gate green.
+  Both rules, plus the mood-key-names-a-real-map check, now live in
+  `scripts/data_lint.py:check_moods` (pre-flight tier, no Godot boot).
+  Mutation-proven: stripping every `lights_by_day`, restoring the inn's amber
+  dusk, re-inverting `street`'s night, renaming `garden_sanctuary` back to the
+  dead `garden` key, tipping a sealed grade warm, opting a sky map into day
+  lights, and re-splitting the longhouse's day pin each fail the lint with a
+  named row. A report-only advisory covers the remaining hole: a map with light
+  rows and NO card at all reads as sky-bearing, so its lamps are dark at noon.
 - [x] **`mercantile_alleys` night near-black (widened row) — PARTLY DRAINED.**
   Overworld night value 0.313 → 0.357 while temperature drops −0.24 → −0.36:
   colder, not darker. The arena half of that row is untouched (not this lane).

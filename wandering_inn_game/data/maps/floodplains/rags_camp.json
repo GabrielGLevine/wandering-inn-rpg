@@ -69,7 +69,7 @@
    ],
    "display_name": "The Fire Pit",
    "sprite": "campfire",
-   "_light_comment": "v0.17 R2: the camp's card claimed firelight and the map owned no light. One notch under the floodplains campfire -- this fire is kept small on purpose.",
+   "_light_comment": "v0.17 R2: the card claimed firelight and the map owned no light. One notch under the floodplains campfire -- kept small on purpose.",
    "light": {
     "color": [
      1.0,
