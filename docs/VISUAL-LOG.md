@@ -3344,29 +3344,81 @@ head v0.18 W4 as HOTFIX-PRIORITY. Ranked player-visible-first.
 Fourteen v0.17-close rows closed and checked above, each with the evidence
 path and the measured before/after. Windowed runs serial, every PNG read.
 
-| row | evidence (qa_output/) | measured |
-|---|---|---|
-| Hint ribbon at 115/130% | `settings_loop/10_hint_ribbon_115.png`, `11_hint_ribbon_130.png` | panel 48/50/53px at 100/115/130, `ui_hint_rendered{fits:true}` at all three; descenders clear the fold |
-| Journal close hint | `journal_categories/00_skills_tab_categories.png` | on the parchment; contrast 2.85:1 → 11.34:1 |
-| Unchecked checkbox | `journal_categories/00_skills_tab_categories.png` | "□ " (U+25A1, inside the shipped symbol-fallback subset) |
-| Passive refusal | `journal_categories/03_passive_refusal_toast.png` | one line over the open journal, `ui_toast_rendered` pinned |
-| Creation caret | `char_creation/00_picker_grid_drake_f_selected.png`, `02_creation_difficulty.png` | "▶" on card and row; texture swap demoted to secondary |
-| HUD chips | `player_room_loop/03_room_day.png` | chip region 52 → 255 post-dialogue, and correctly 93 (dark) DURING one |
-| Toast over legend | `player_room_loop/03_room_day.png`, `field_skills_loop/01_field_clean_via_numberkey.png` | legend clears the strip's reserved band; slot lines whole |
-| Sewers | `sewers_walkthrough/00_sewers_landing.png`, `mood_sheet_night/13_sewers.png` | 21 → 54 mean, 93% → 1.3% under lum 20; arena 13 → 30 |
-| Hedault workshop | `mood_sheet_night/15_mercantile_alleys.png` | 30.5 → 38.4 mean, 44% → 28% under lum 20 |
-| Garden letterbox | `mood_sheet_night/16_garden_sanctuary.png`, `garden_walkthrough/02_garden_day_bright_identity.png` | surround 222 → 102; map grade untouched |
-| Boulevard plaza | `feel_peek_day/01_boulevard_day.png`, `feel_peek_night/01_boulevard_night.png` | plaza/cobble 2.7-3.2x → 1.77x day, 1.06x night; tile sd 2.35 → 11.15 |
+**HOW TO REPRODUCE, and why the numbers below differ from the first draft of
+this block.** `qa_output/` is a regenerated artifact directory, not a stored
+one: any later run (a headless `ci_sweep`, a sibling lane) overwrites it, so an
+evidence path is a claim about a COMMAND, not about a file that will still be
+there. Every row's `qa/run_qa.sh <script> windowed --seed=<seed>` is named
+below, and every number was re-measured on a fresh run of it. The BEFORE column
+is the same shot from the v0.17-close windowed sweep at this lane's base
+(`6b47c0d`), so before and after use one method and one framing. Method:
+whole-frame Rec.709 luma unless a region is named; regions are pixel boxes on
+the 1280x720 native shot, stated inline.
 
-#359's own read is the continuous loop in `atmosphere_check`: day 74.6 → dusk
-49.0 → night 36.7 → **dawn dusk 48.8 → day 74.5** (`01d_dawn_dusk.png`,
-`01e_wrapped_to_day.png`), with the post-sleep day at 74.6 — day identity
-byte-stable across the whole cycle.
+| row | run (windowed) | evidence shot | measured BEFORE → AFTER |
+|---|---|---|---|
+| Hint ribbon at 115/130% | `settings_loop` | `10_hint_ribbon_115.png`, `11_hint_ribbon_130.png` | panel 400x52 at 100/115% (width floor absorbs), 442x55 at 130% (was 424, text+28, label rect crossing the end-cap at x=410 against a paper edge at 404); `ui_hint_rendered{fits:true}` at every step, and `fits` now goes FALSE if the inset regresses (mutation-proven: `side := 14.0` fails the run headlessly) |
+| Journal close hint | `journal_categories` | `00_skills_tab_categories.png` (repeat `field_skills_loop/04`) | BEFORE the string is not on the panel at all — off the parchment onto the wood; AFTER it sits in the panel footer, ink-on-paper, 8.8:1 (`jc/00`) and 9.2:1 (`fs/04`) by WCAG relative luminance over the hint's own box |
+| Unchecked checkbox | `journal_categories` | `00_skills_tab_categories.png` | "□ " (U+25A1, inside the shipped symbol-fallback subset — renders, no tofu, on every Combat—Active row) |
+| Passive refusal | `journal_categories` | `03_passive_refusal_toast.png` | "[Basic Swordwork] is always on — passives don't take a slot." renders over the open journal (`ui_toast_rendered` pinned in-script) |
+| Creation caret | `char_creation` | `00_picker_grid_drake_f_selected.png`, `02_creation_difficulty.png` | "▶" on the selected card and on the selected setup row; tint demoted to secondary |
+| HUD chips | `player_room_loop` | `03_room_day.png`, `04_room_after_sleep.png` | chip region (x980-1280, y0-40) max 52 → 255 in BOTH shots. ISOLATED: re-run with the lane's `field_chips.gd` and MAIN's unmodified script still reads 255, so the CODE is the cure and the script's `click_field_chip` pair is only the can-fail guard |
+| Toast over legend | `field_skills_loop` | `01_field_clean_via_numberkey.png` | legend line 1 renders whole ("...with supernatural ease.") with the toast in its own band below-right; no overlap |
+| Sewers | `mood_sheet_night` + `sewers_walkthrough` | `13_sewers.png`, `00_sewers_landing.png` | `13_sewers` mean 25.2 → 41.5, p90 28.0 → 49.9, under-lum-20 87.5% → 9.7%. Landing shot reads at mean 51.3 / 2.5% under 20: floor hexes, grates, water channels and the PC all legible without a gamma lift |
+| Hedault workshop | `invrisil_setting_talk` | `03_he_will_not_cut_a_mount_around_a_lie.png` | world band (y0-430, above the dialogue plate) mean 28.1 → 32.9, p90 33.3 → 45.2, under-lum-20 55.4% → 35.5%. Modest but real: wall, floor, left-hand props and the standing NPC separate where they did not |
+| Garden letterbox | `mood_sheet_night` | `16_garden_sanctuary.png` | surround band (x0-160 ∪ x1120-1280, y60-600) 221.9 → 102.6 while the playfield (x300-900, y60-420) holds at 76.6 → 77.2 — the map's identity grade is untouched, exactly as the row asked |
+| Boulevard plaza | `feel_peek_day`, `feel_peek_night` | `01_boulevard_day.png`, `01_boulevard_night.png` | plaza (x180-340, y320-470) vs cobble (x40-140, same rows): day 234.9/77.4 = **3.03x → 1.87x** (120.6/64.5), night 79.2/26.6 = **2.98x → 1.84x** (40.7/22.1); plaza texture sd 25.7 → 17.1 day. Still above the cobble family, not yet inside it — see the residual below |
+
+#359's own read is the continuous loop in `atmosphere_check`: the inn's
+`ui_mood_applied` walks day → dusk → night → **dusk → day** with no sleep in
+between, and the frames measure 72.5 → 56.6 → 41.3 → **51.1 → 72.4**
+(`01d_dawn_dusk.png`, `01e_wrapped_to_day.png`). The wrapped day reads 72.4
+against the opening day's 72.5 — same grade; the 0.1 delta is scene content
+(1800 actions of walking), not the clock.
+
+**#359 REGRESSION FOUND AND FIXED IN THIS LANE, worth its own row.** The wrap
+emits `phase_changed{phase:"day"}` from `_tick_action`, which the monotone
+clock structurally could not — and `sleep_veil.gd` read exactly that as "the
+player slept". In the first draft of this lane the loop therefore fired a full
+mid-field blackout on the 1800th un-slept action, and `_play_finale_off_the_bed`
+spent the game's ONE ending cinematic there, banking `finale_played` so the bed
+could never replay it. `sleep()` now tags its own emit `{"slept": true}` and
+that flag is the whole trigger. Proof in the same run's `events.jsonl`: the
+wrap at index 2098 is followed by NOTHING until the real sleep at 2114-2115,
+where `accomplishment_recorded{slept}` → `phase_changed{day, slept:true}` →
+`ui_sleep_veil_rendered` → `ui_sleep_veil_finished`. Pinned in
+`test_sim_core` off a real 180-action walk over a real wrap (mutation-proven:
+dropping the flag fails the suite).
 
 RESIDUALS, logged not hidden (rows left `[ ]`):
+- The plaza is **inside the value family but still the brightest slab in it**
+  (1.87x day, 1.84x night, against the ~1.0-1.3x the neighbouring cobble
+  variants hold). Closed as "outside the family" — it is not any more — but a
+  second value pull is owed before it reads as pavement rather than as a
+  lighter courtyard.
 - The plaza's **edge** is still a razor rectangle. The value/texture half is
   fixed; the transition needs per-cell wang edge tiles, a bigger job than a
   tile repaint.
 - The toast band is reserved at the strip's BASE height: a 3-line toast still
   tops out above it, and the bottom controls row can still reach the strip's
   own footprint at 3+ hotbar slots.
+- The passive-refusal toast lands over the journal's own bottom-right corner
+  and covers the "Esc or J to close" footer for its hold
+  (`journal_categories/03_passive_refusal_toast.png`). Both are correct
+  individually — the toast is the `modal_response` exemption, the footer is the
+  P1 cure — but the one surface that had no close affordance is briefly the one
+  the toast sits on.
+- Hedault's workshop is LIFTED, not solved: 32.9 mean world-band still reads
+  as the darkest interior in the set. Real light entities are the honest cure;
+  this was a grade pull.
+
+NEW ROW OPENED BY THIS LANE (`[ ]`, for the next drain):
+
+- [ ] **(P3)** **`player_room_loop` exited windowed once with `6 ObjectDB
+  instances were leaked` + `3 resources still in use`** — non-deterministic:
+  clean on the two immediately following identical windowed runs, clean
+  headless, and clean on main's own script under this lane's code, so it is
+  neither the lane's added `click_field_chip` pair nor a route failure. Same
+  teardown-noise class as the `pallass_ledger_offices` P3 above; logged rather
+  than swallowed because COMMON's grep discipline is zero-tolerance and a
+  once-in-three flake will read as a lane regression the next time it lands.

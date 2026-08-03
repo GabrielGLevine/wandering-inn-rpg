@@ -85,15 +85,16 @@ const TOAST_TEXT_WIDTH := 412.0
 const TOAST_FOLD_DANGER_PX := 30.0
 const STRIP_FOLD_PATCH_BOTTOM := 32
 
-## World hint ribbon ("Esc — menu   J — journal   I — inventory"). Content
-## margins of `hint_margin`; the panel rect is DERIVED from these plus live
-## font metrics (`_resize_hint_panel`), never hardcoded. TRAP: the old fixed
-## 400x28 clipped descenders and truncated the tail mid-word at Text Scale
-## 115%/130% -- "J — journal" degraded to a bare stroke indistinguishable
-## from "I — inventory". Same derive-from-metrics contract as
-## `_resize_dialogue_panel`.
-const HINT_MARGIN_X := 14
-const HINT_MARGIN_Y := 5
+## World hint ribbon ("Esc — menu   J — journal   I — inventory"). The panel
+## rect and its content margins are BOTH derived, from live font metrics plus
+## the strip art's own patch geometry (`_resize_hint_panel`), never hardcoded.
+## TRAP: the old fixed 400x28 clipped descenders and truncated the tail
+## mid-word at Text Scale 115%/130% -- "J — journal" degraded to a bare stroke
+## indistinguishable from "I — inventory". Same derive-from-metrics contract as
+## `_resize_dialogue_panel`. The old 14/5 content margins are DELETED, not kept
+## as named constants -- 14 is narrower than the art's end caps, and a
+## plausible-looking wrong number within reach is what HINT_PAPER_SIDE_INSET
+## exists to stop.
 ## Floor only: keeps the strip's 9-slice corners from crushing when the copy
 ## is short. Growth above it is metric-driven.
 const HINT_PANEL_MIN_SIZE := Vector2(400.0, 28.0)
@@ -108,8 +109,18 @@ const HINT_PANEL_MIN_SIZE := Vector2(400.0, 28.0)
 const HINT_PAPER_TOP_INSET := 4.0
 const HINT_PAPER_CENTER_SHARE := 73.0 / 83.0
 const HINT_STRIP_PATCH := 20.0
+## THE HORIZONTAL HALF OF THE SAME TRAP: the 9-patch's END CAPS are that same
+## 20, so the art-safe band is [20, width - 20], NOT [14, width - 14]. Padding
+## the width by 14 put the line 6px inside the ornament the moment the natural
+## width beat the floor -- measured at 130%: panel 424 = text + 28, label rect
+## to x=410 against a paper edge at 404, tail of "inventory" across the stroke.
+const HINT_PAPER_SIDE_INSET := HINT_STRIP_PATCH
 ## Breathing room under the descenders before the bottom rule.
 const HINT_PAPER_BOTTOM_PAD := 3.0
+## Same at the ends. TRAP: the label is OVERRUN_TRIM_ELLIPSIS, so a rect sized
+## to the measurement exactly has ZERO slack and one pixel of layout rounding
+## trims to "I — inventor…". `_resize_hint_panel` also ceils the width.
+const HINT_PAPER_SIDE_PAD := HINT_PAPER_BOTTOM_PAD
 ## The ribbon is one line by contract (three key hints, never wrapped) -- it
 ## may not eat the screen if a device label grows, so the derived width caps
 ## here and the label ellipsizes rather than running under the toast strip.
@@ -598,7 +609,11 @@ func _resize_hint_panel() -> void:
 	var font := _hint_label.get_theme_font("font")
 	var font_size := _hint_label.get_theme_font_size("font_size")
 	var text_size := font.get_string_size(_hint_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
-	var width := clampf(text_size.x + 2.0 * float(HINT_MARGIN_X), HINT_PANEL_MIN_SIZE.x, HINT_PANEL_MAX_WIDTH)
+	# HINT_PAPER_SIDE_INSET, not the old 14px content margin: the width has to
+	# clear the 9-patch's END CAPS, which are 20 wide, or the string sits inside
+	# the ornament the moment the natural width beats the floor. See the const.
+	var side := HINT_PAPER_SIDE_INSET + HINT_PAPER_SIDE_PAD
+	var width := clampf(ceilf(text_size.x + 2.0 * side), HINT_PANEL_MIN_SIZE.x, HINT_PANEL_MAX_WIDTH)
 	var text_h := font.get_height(font_size)
 	var size := Vector2(width, _hint_panel_height_for(text_h))
 	_hint_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -614,7 +629,8 @@ func _resize_hint_panel() -> void:
 	# `vertical_alignment` keeps the placement exact and alignment-independent.
 	var top := int(round(HINT_PAPER_TOP_INSET + (_hint_paper_height(size.y) - text_h) * 0.5))
 	var bottom := maxi(0, int(round(size.y)) - top - int(ceilf(text_h)))
-	UIChrome.add_margins(_hint_margin, HINT_MARGIN_X, top, HINT_MARGIN_X, bottom)
+	var side_px := int(round(side))
+	UIChrome.add_margins(_hint_margin, side_px, top, side_px, bottom)
 
 
 ## Painted-paper height inside a panel `height` px tall -- see
@@ -650,16 +666,24 @@ func _on_theme_changed() -> void:
 ## overflow machine-detectable: `fits` is false exactly when one line of the
 ## live font no longer clears the panel's inner width, which is the state the
 ## hardcoded 400x28 shipped in at 115%/130%.
+## NOT A TAUTOLOGY, deliberately: `inner` is read back off the margins the
+## container was ACTUALLY given, and those margins are checked against the
+## art-safe band, so an inset regression flips `fits` false and settings_loop
+## catches it headlessly. Deriving `inner` from a constant while the width was
+## derived from that same constant is what made it unfalsifiable below the cap.
 func _hint_payload() -> Dictionary:
 	var font := _hint_label.get_theme_font("font")
 	var font_size := _hint_label.get_theme_font_size("font_size")
 	var text_width := font.get_string_size(_hint_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x
-	var inner := _hint_panel.size.x - 2.0 * float(HINT_MARGIN_X)
+	var left := float(_hint_margin.get_theme_constant("margin_left"))
+	var right := float(_hint_margin.get_theme_constant("margin_right"))
+	var on_paper := left >= HINT_PAPER_SIDE_INSET - 0.5 and right >= HINT_PAPER_SIDE_INSET - 0.5
+	var inner := _hint_panel.size.x - left - right
 	return {
 		"text": _hint_label.text,
 		"width": int(round(_hint_panel.size.x)),
 		"height": int(round(_hint_panel.size.y)),
-		"fits": text_width <= inner + 0.5,
+		"fits": on_paper and text_width <= inner + 0.5,
 	}
 
 

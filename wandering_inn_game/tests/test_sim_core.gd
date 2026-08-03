@@ -1770,6 +1770,41 @@ func _init() -> void:
 	assert(_count("phase_changed") == 1, "sleep() emits phase_changed even on a same-phase (day->day) reset")
 	assert(e7.rng.state == rng_before_ticks, "actions_since_sleep/phase bookkeeping consumes no rng")
 
+	# #359 THE SLEEP SIGNAL, LIVE. Before the loop, `phase_changed{phase:"day"}`
+	# could ONLY come from sleep() -- a tick reached dusk or night, never day --
+	# and sleep_veil.gd read exactly that as "the player slept", raising a full
+	# blackout and, post-Act-V, spending the game's one-shot finale. The wrap
+	# breaks the inference, so sleep() tags its own emit and NOTHING else does.
+	# This walks the real clock over a real wrap rather than pinning phase_for,
+	# because the thing under test is which EMIT carries the flag.
+	var e7c := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	var cycle7c := 2 * 90
+	for i in cycle7c - 1:
+		e7c.move_player(Vector2i.RIGHT if i % 2 == 0 else Vector2i.LEFT)
+	assert(e7c.actions_since_sleep == cycle7c - 1, "walked to one action short of the wrap")
+	assert(e7c.phase() == "dusk", "the action before the wrap is dawn dusk")
+	assert(e7c.times_slept == 0, "and nothing slept getting there")
+	_events.clear()
+	e7c.move_player(Vector2i.RIGHT)
+	assert(e7c.actions_since_sleep == cycle7c, "the wrap action lands on the cycle boundary")
+	assert(e7c.phase() == "day", "the clock WRAPS to day mid-waking")
+	assert(e7c.times_slept == 0, "with no sleep anywhere -- times_slept still 0")
+	assert(_count("phase_changed") == 1, "the wrap emits phase_changed exactly once")
+	var wrap_payload: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "phase_changed":
+			wrap_payload = e["payload"]
+	assert(wrap_payload.get("phase", "") == "day", "the wrap payload reads day, indistinguishable from a sleep's on phase alone")
+	assert(not bool(wrap_payload.get("slept", false)), "THE PIN: a wrap carries no slept flag, so the veil/finale must not fire")
+	_events.clear()
+	e7c.sleep()
+	var slept_payload: Dictionary = {}
+	for e: Dictionary in _events:
+		if e["type"] == "phase_changed":
+			slept_payload = e["payload"]
+	assert(slept_payload.get("phase", "") == "day", "a real sleep still reads day")
+	assert(bool(slept_payload.get("slept", false)), "and a real sleep DOES carry slept:true")
+
 	var e8 := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
 	assert(e8.actions_since_sleep == 0, "fresh game, zeroed clock")
 	e8.transition("street", Vector2i(4, 3))

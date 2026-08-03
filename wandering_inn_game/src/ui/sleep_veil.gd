@@ -10,11 +10,14 @@ extends CanvasLayer
 ## it interleaves with — never rewrites — any existing stream).
 ## TRIGGER: sleep() (wi_game.gd) emits phase_changed UNCONDITIONALLY as its
 ## first event, resetting the clock so phase() == "day" (actions_since_sleep is
-## 0). A dusk/night threshold crossing during the day emits phase_changed with
-## phase "dusk"/"night" and never "day" (see wi_game.gd `_tick_action` vs
-## `sleep`), and no load/boot path re-emits phase_changed at all — so
-## `phase_changed{phase:"day"}` is a precise, sim-change-free sleep signal. The
-## announcements arrive as class_gained/class_level_up/skill_unlocked/
+## 0), and TAGS that emit `{"slept": true}`. That flag is the trigger, and the
+## whole trigger. `_tick_action` never sets it, and no load/boot path re-emits
+## phase_changed at all, so it is a precise, sim-change-free sleep signal.
+## TRAP: never re-derive "slept" from the phase VALUE. This keyed on
+## phase == "day" while the clock was monotone per waking; #359's wrap emits day
+## from `_tick_action` at action 2*night_at (1800 shipped), which fired a full
+## blackout mid-field and spent the one-shot finale off the bed.
+## The announcements arrive as class_gained/class_level_up/skill_unlocked/
 ## class_evolved events fired SYNCHRONOUSLY right after that phase_changed in
 ## the same sleep() call; the veil buffers them, then a single call_deferred
 ## runs the reveal once the whole synchronous beat has unwound (so the buffer is
@@ -263,7 +266,10 @@ func _ready() -> void:
 func _on_domain_event(type: String, payload: Dictionary) -> void:
 	match type:
 		WIEvents.PHASE_CHANGED:
-			if String(payload.get("phase", "")) == "day":
+			# `slept`, NOT the phase value — see this file's TRIGGER block. A
+			# cycle wrap emits phase "day" from `_tick_action` with no sleep
+			# behind it and must not raise the veil.
+			if bool(payload.get("slept", false)):
 				_begin_sleep()
 		WIEvents.CLASS_GAINED:
 			if _running:

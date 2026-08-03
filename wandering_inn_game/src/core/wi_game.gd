@@ -2401,7 +2401,12 @@ func sleep() -> void:
 	# GH#130: the only unconditional sleep counter -- talk-pool/dialogue gates can
 	# now express "has slept" (times_slept is a plain var, invisible to gates).
 	record_accomplishment("slept")
-	_emit(WIEvents.PHASE_CHANGED, {"phase": phase()})
+	# `slept` IS THE SLEEP SIGNAL, and the only one -- `_tick_action` never sets
+	# it, so its ABSENCE is the wrap. Additive key: every `phase` reader
+	# (world.gd presence reconcile, atmosphere.gd grade, game.gd autosave, every
+	# QA `payload_contains` subset match) is untouched by construction.
+	# TRAP: phase == "day" is NOT a sleep -- see `phase_for`'s TRAP 2.
+	_emit(WIEvents.PHASE_CHANGED, {"phase": phase(), "slept": true})
 	_sleep_beat.run(classes, accomplishments, _combat_config)
 	_auto_slot_new_field_skills(known_before_sleep)
 
@@ -2598,6 +2603,11 @@ func phase() -> String:
 ## TRAP: a QA route sized past a band edge now WRAPS instead of saturating --
 ## walk far enough past night_at and dawn dusk flips every phase-gated
 ## present_when/encounter_when/text_variants back.
+## TRAP 2, THE SLEEP INFERENCE: `_tick_action` can now emit
+## `phase_changed{phase:"day"}`, which it structurally could not before, so a
+## day crossing NO LONGER means the player slept. `sleep()` tags its own emit
+## `{"slept": true}`; that flag is the only sleep signal. Cost when sleep_veil
+## read the phase instead: mid-field blackout + the one-shot finale spent.
 ## DEGENERATE CONFIG (dusk_at <= 0, or night_at <= dusk_at) has no band to wrap
 ## through and keeps the old monotone read; data_lint's check_moods rejects it
 ## in shipped data.
