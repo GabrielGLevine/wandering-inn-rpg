@@ -1,5 +1,5 @@
 {
- "_comment": "Current values (400/900) are a6 #206's doubling of 200/450 (lineage: #62 doubled the ORIGINAL 100/225), same 2.25x dusk->night ratio preserved. The v0.17 R2 lighting language: docs/CHOICE-LOG.md states it, scripts/data_lint.py (check_moods) enforces it. SEALED vs SKY is this file's `day == dusk` pin -- an authored call.",
+ "_comment": "phase_thresholds feed WIGame's LOOPING clock (#359): cycle = 2*night, dusk band = night-dusk. Lighting language stated in docs/CHOICE-LOG.md, enforced by scripts/data_lint.py (check_moods). SEALED vs SKY = this file's `day == dusk` pin, an authored call.",
  "meta": {
   "phase_thresholds": {
    "dusk": 400,
@@ -86,23 +86,23 @@
    "vignette": 0.52
   },
   "sewers": {
-   "_comment": "Same day/dusk/night shape as before (night a further even step down), vignette nudged 0.45->0.48 (between the old sewers pin and deep_tunnels' 0.55).",
+   "_comment": "MEASURED, not felt: 0.24/0.26/0.37 + vignette 0.48 read 21 mean, 93% under lum 20 -- a black screen. Cave art is dark alone, so grade carries it: ~2.6x, vignette 0.36 -> 54 mean. deep_tunnels keeps the darkest pin. Other half of the cure = three decor phosphor lights, so the south is not void.",
    "day": [
-    0.24,
-    0.26,
-    0.37
+    0.62,
+    0.66,
+    0.78
    ],
    "dusk": [
-    0.24,
-    0.26,
-    0.37
+    0.62,
+    0.66,
+    0.78
    ],
    "night": [
-    0.2,
-    0.22,
-    0.32
+    0.54,
+    0.58,
+    0.7
    ],
-   "vignette": 0.48,
+   "vignette": 0.36,
    "lights_by_day": true
   },
   "guild": {
@@ -131,7 +131,7 @@
    "vignette": 0.4
   },
   "inn_upstairs": {
-   "_comment": "TIME-INVARIANT. The old pin was the inn's dusk grade verbatim, so it moved with it; a corridor lit by its own sconce. Its `window_blue` decor is dressing, not a light well.",
+   "_comment": "TIME-INVARIANT: a corridor lit by its own sconce. `window_blue` decor is dressing, not a light well.",
    "day": [
     0.66,
     0.7,
@@ -151,7 +151,7 @@
    "lights_by_day": true
   },
   "barracks": {
-   "_comment": "TIME-INVARIANT (inn_upstairs/sewers precedent): a barracks is staffed day and night, so it reads the same at any phase rather than tracking the outside clock.",
+   "_comment": "TIME-INVARIANT (inn_upstairs precedent): staffed day and night, so it never tracks the outside clock.",
    "day": [
     0.68,
     0.74,
@@ -170,7 +170,7 @@
    "vignette": 0.36
   },
   "runners_guild": {
-   "_comment": "TIME-INVARIANT (barracks/inn_upstairs/sewers precedent): couriers keep counter hours day and night (deliveries complete within any waking), so the room reads the same at any phase.",
+   "_comment": "TIME-INVARIANT (barracks/inn_upstairs precedent): couriers keep counter hours, so the room reads the same at any phase.",
    "day": [
     0.83,
     0.86,
@@ -208,7 +208,7 @@
    "vignette": 0.42
   },
   "deep_tunnels": {
-   "_comment": "The Raskghar descent -- the DARKEST pin in the game, time-invariant (below the sewers, no daylight ever reaches it).",
+   "_comment": "The Raskghar descent: DARKEST pin in the game, time-invariant -- no daylight reaches it.",
    "day": [
     0.2,
     0.22,
@@ -247,7 +247,7 @@
    "vignette": 0.4
   },
   "witch_hollow": {
-   "_comment": "\"green shade\" -- never reaches identity white even at day (canopy); dusk is the map's home key (firefly-dense per spec); vignette 0.50 > sewers' 0.45 (enclosure without an underground pin).",
+   "_comment": "\"green shade\" -- never identity white even at day (canopy); dusk is the home key (firefly-dense); vignette 0.50 = enclosure without an underground pin.",
    "day": [
     0.72,
     0.92,
@@ -320,6 +320,7 @@
    "vignette": 0.35
   },
   "mercantile_alleys": {
+   "_comment": "Hedault's bench: night read 22 mean, floor/wall/enchanter indistinguishable, half the next-darkest scene. Lifted to the boulevard family; still the darkest Invrisil exterior.",
    "day": [
     1.0,
     1.0,
@@ -331,11 +332,11 @@
     0.66
    ],
    "night": [
-    0.22,
-    0.27,
-    0.58
+    0.34,
+    0.39,
+    0.66
    ],
-   "vignette": 0.48
+   "vignette": 0.42
   },
   "brothers_parlor": {
    "_comment": "The hero-light-over-the-card-table contrast survives the lift (the table light's own energy was raised 0.9->1.0 in the same fix, mercantile decor entry).",
@@ -398,7 +399,7 @@
    "lights_by_day": true
   },
   "dungeon_approach": {
-   "_comment": "Per-prop accent variation (trap tells, statue/rubble dressing) rides the live decor `tint` field (GH#55) over this base grade, not a second card. GH-VISUAL-LOG 2026-07-17: base lifted ~35% total, user-ratified USER-EYES item (vault shots read near-black).",
+   "_comment": "Per-prop accents (trap tells, rubble) ride decor `tint` over this base grade, never a second card. Base lifted ~35% after vault shots read near-black.",
    "day": [
     0.282,
     0.295,
@@ -436,7 +437,7 @@
    "_comment": "GH-VISUAL-LOG 2026-07-17: base grade lifted ~35% total (12% then a further 20% on user call) (user-ratified USER-EYES item -- vault shots read near-black)."
   },
   "seal_vault": {
-   "_comment": "Act V. WARMER and markedly brighter than trapped_halls (0.282) on purpose: this chamber never fell in. Windowed read 2026-07-27 set the level -- at 0.335 the room still read as another near-black dungeon cell and the castle floor's warmth never arrived on screen. The tilt is COOL on purpose: what lights this room is ward-light, not a window. T5.3: `lights_by_day` opts this map out of meta.light_energy_by_phase's day=0.0 -- a sealed chamber has no sky, so zeroing its lights deleted the room's only source. Grade unchanged; the lights now ADD to it.",
+   "_comment": "Act V. Brighter/warmer than trapped_halls (0.282): this chamber never fell in; at 0.335 it still read near-black. Tilt is COOL -- ward-light, not a window. `lights_by_day` opts out of day=0.0: a sealed chamber has no sky, so zeroing its lights deleted its only source.",
    "lights_by_day": true,
    "day": [
     0.6,
@@ -574,23 +575,23 @@
  },
  "arena_moods": {
   "sewers_nest": {
-   "_comment": "kept in lockstep with the `moods.sewers` field pin so nest fights read as the SAME underground the player walked through, not a lit-back-up combat pin.",
+   "_comment": "Lockstep with `moods.sewers` DAY (phase-invariant): the nest reads as the underground walked through, not a lit-back-up board. No lights here, so grade is the whole read.",
    "day": [
-    0.24,
-    0.26,
-    0.37
+    0.62,
+    0.66,
+    0.78
    ],
    "dusk": [
-    0.24,
-    0.26,
-    0.37
+    0.62,
+    0.66,
+    0.78
    ],
    "night": [
-    0.24,
-    0.26,
-    0.37
+    0.62,
+    0.66,
+    0.78
    ],
-   "vignette": 0.48
+   "vignette": 0.36
   },
   "cave_mouth": {
    "day": [

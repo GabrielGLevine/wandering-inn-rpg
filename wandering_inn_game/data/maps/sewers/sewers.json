@@ -75,20 +75,41 @@
    }
   ]
  },
+ "_comment_decor": "Three carry a phosphor light: both entity lights sit in the north strip, so everything south had no source and the grade alone decided the read. Dimmer/shorter than the phosphor_moss landmark. 5 lights, budget 8, PC [Light] makes 6.",
  "decor": [
   {
    "sprite": "mushroom_purple_s",
    "cell": [
     9,
     11
-   ]
+   ],
+   "light": {
+    "color": [
+     0.35,
+     0.85,
+     0.5
+    ],
+    "energy": 0.45,
+    "radius": 16,
+    "flicker": false
+   }
   },
   {
    "sprite": "mushroom_purple_m",
    "cell": [
     12,
     2
-   ]
+   ],
+   "light": {
+    "color": [
+     0.35,
+     0.85,
+     0.5
+    ],
+    "energy": 0.45,
+    "radius": 16,
+    "flicker": false
+   }
   },
   {
    "sprite": "boulder",
@@ -109,7 +130,17 @@
    "cell": [
     18,
     11
-   ]
+   ],
+   "light": {
+    "color": [
+     0.35,
+     0.85,
+     0.5
+    ],
+    "energy": 0.45,
+    "radius": 16,
+    "flicker": false
+   }
   }
  ],
  "ambience": [
