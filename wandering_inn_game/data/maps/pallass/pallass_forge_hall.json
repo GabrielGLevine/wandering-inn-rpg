@@ -176,7 +176,7 @@
     3
    ],
    "display_name": "The Temper Bench",
-   "sprite": "forge_station",
+   "sprite": "temper_bench",
    "observe": "A billet clamped mid-process, the quench beside it, a gauge nobody has reset since the last failure. Somebody stopped here on purpose and did not come back.",
    "requires_skill": "appraise_goods",
    "skill_hint_toast": "Colour, count, quench. You can see there is an order to it. You cannot see the order.",

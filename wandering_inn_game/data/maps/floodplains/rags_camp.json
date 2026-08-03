@@ -138,6 +138,11 @@
    ],
    "display_name": "A Goblin on Watch",
    "sprite": "goblin_base",
+   "tint": [
+    0.66,
+    0.62,
+    0.58
+   ],
    "facing": "right",
    "observe": "A goblin sitting where the light from the cut in the turf lands, sharpening something that is already sharp. It has not looked directly at you once.",
    "talk_pool": [

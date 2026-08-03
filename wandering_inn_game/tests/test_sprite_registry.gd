@@ -394,6 +394,32 @@ func _build_expected_counts() -> Dictionary:
 	counts["rune_door/idle"] = 1
 	counts["wardstone_anchor/idle"] = 1
 	counts["witch_cauldron/idle"] = 1
+	## <!-- v017-L4 BEGIN --> CROSS-OWNERSHIP, DISCLOSED. The v0.17 art lane
+	## owns assets/, data/sprites.json and map sprite fields, and explicitly
+	## NOT .gd files -- but this table is the mechanical mirror of
+	## sprites.json's ids (_build_expected_counts has no default: .get(..., -1)
+	## then assert(expected >= 0), and a failed assert HANGS the headless run),
+	## so a new sprite row cannot ship without its key here. PR #344 set the
+	## same precedent one wave earlier. Appended, never reordered.
+	##
+	## DROPPING THIS BLOCK: it is only safe to remove together with the data
+	## rows it mirrors, or the suite goes red. The complete, mechanically
+	## derived recipe -- three sprite rows, three map sprite fields, three
+	## keys, and nothing else in data/ references these ids:
+	##   data/sprites.json                              drop "temper_bench"
+	##   data/maps/pallass/pallass_forge_hall.json:179  -> "forge_station"
+	##   data/sprites.json                              drop "wax_seal_tray"
+	##   data/maps/invrisil/stationer.json:309          -> "crate"
+	##   data/sprites.json                              drop "shop_oil_lamp"
+	##   data/maps/pallass/pallass_den_shop.json:150    -> "crystal_lamp"
+	##   the three counts lines below
+	## Both states were RUN in the v0.17 fix wave and both print
+	## "PASS: sprite registry catalog builds SpriteFrames". Reverting this
+	## .gd hunk on its own is the one combination that is red.
+	counts["temper_bench/idle"] = 1
+	counts["wax_seal_tray/idle"] = 1
+	counts["shop_oil_lamp/idle"] = 1
+	## <!-- v017-L4 END -->
 	counts["razorbeak/idle"] = 1
 	## GH#156 follower-visual aliases of the same owned single-frame sheets.
 	counts["wolf_companion/idle"] = 1

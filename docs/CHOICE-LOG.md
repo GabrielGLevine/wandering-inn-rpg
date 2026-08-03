@@ -2130,6 +2130,89 @@ by controller ruling — the plan was the defect, not the implementation.
   Hunted as an easter egg — an EXPLICIT user-granted exception to the
   Vol 7 spoiler cutoff, names only; exact names wiki-verified before
   authoring, never invented.
+<!-- v017-L4 -->
+- **Palette pull is what the damage guard says it is (2026-08-02, L4;
+  FIGURES CORRECTED in the v0.17 fix wave)**: CUSTOM-HD was authored at
+  0.55 pull toward the PC16 ramps on the reasoning that the family which
+  disagrees hardest with the backbone should move furthest. Ruling
+  stands — the guard is the authority, not the intuition: 0.35 for
+  CUSTOM-HD, 0.30 PIXELLAB, 0.35 TILES. The NUMBERS first logged here
+  ("12 of 17 rigs", "116 of 130 sheets", "every goblin sheet on keep")
+  were NOT reproducible and are withdrawn: they came from a first draft
+  that walked `assets/` directly, overlay included, and the shipped
+  script's tracked-only scope can only ever see 13 CUSTOM-HD rigs / 48
+  sheets — the goblins and the bat have ZERO tracked files. The sweep
+  anyone can rerun (`palette_unify.py --report --calibrate`) says:
+  pull 0.35 -> 2/13 rigs and 18/48 sheets dropped; 0.45 -> 7/13 and
+  34/48; 0.55 -> 8/13 and 35/48. Every one of those is MEAN SHIFT, not
+  banding. Same ruling, honest arithmetic.
+- **The damage guard's banding arm was dead code until the fix wave
+  (2026-08-02, L4)**: `color_keep` was computed AFTER the LUT's
+  injectivity nudge, which hands every collision a numerically distinct
+  but visually identical target, so it read >= 0.949 on all 271 sheets
+  and could not have fired. It is now measured on the RAW pre-nudge
+  targets, and a second metric `band_frac` measures the share of PIXELS
+  merged with a source more than 8/255 away — the difference between
+  collapsing two rounding-neighbours (invisible) and collapsing two
+  shading steps (the damage). Proof it is live: corusdeer_doe scores
+  band 0.0000 at pull 0.30 and 0.8587 at 0.90. Consequence to state
+  plainly: at the shipped pulls the mapping CANNOT band, because the
+  source colour still contributes 65-70% of every channel — so all 8
+  exclusions really are mean-shift, and that is now a measurement
+  instead of an artefact of a broken metric.
+- **Palette reversibility is git BLOBS, not a git COMMIT (2026-08-02,
+  L4; corrected in the fix wave)**: per-file LUTs were built and
+  rejected — 32 MB of manifest, and not byte-exact anyway (Pillow
+  re-encodes a PNG it merely opened and re-saved: 208 of 389 files
+  returned correct pixels under a different sha256). The first
+  git-based design stored one `base_ref` COMMIT and reverted with
+  `git checkout <base_ref> -- <path>`, and that was a trap in a repo
+  that SQUASH-merges: base_ref was the lane commit, so the pass would
+  have become irreversible the day it landed and 271 shipped sheets
+  would have had no way back. Now every record stores `blob_before`,
+  the git BLOB sha, and `--revert` uses `git cat-file blob`, which does
+  not care which commit is reachable. `--apply` proves that durability
+  before writing a byte and embeds (zlib+base64) the original of any
+  file whose blob is not at base_ref — which is what covers art the
+  same branch introduced, whose blobs the squash deletes. base_ref is
+  the mainline merge-base, never plain HEAD. And `--apply` REFUSES
+  outright while a manifest exists: the pass is not idempotent, the
+  manifest is a committed repo file, so a clean checkout is protected
+  by default.
+- **The palette pass may only touch git-TRACKED assets (2026-08-02,
+  L4)**: a working checkout carries the private bundle overlay —
+  gitignored, licence-limited pack extracts with no original in this
+  repo. The first draft walked `assets/` and rewrote 105 of them with
+  no way to put them back. Scope is now `git ls-files` by
+  construction. Consequence worth knowing: most painterly rigs ARE
+  overlay assets, so the pass ships 30 of the 48 tracked CUSTOM-HD
+  sheets across 13 rigs — the goblins, the bat and the rest of that
+  family are overlay files with zero tracked bytes, and finishing them
+  needs the bundle in hand and a separate, bundle-aware run.
+- **The witch's own kettle stops being the offering pot (2026-08-02, L4
+  fix wave)**: witch_hollow carried a sharper tint-directive violation
+  than the inn pair the audit named — `hollow_offering_pot` (2,7) and
+  `eloise_cauldron` (6,8) were both sprite `cauldron` with NO tint at
+  all, four cells apart on one map, gating different skills and banking
+  different accomplishments. Two byte-identical iron pots is the
+  directive's failure mode with the tint removed. eloise_cauldron now
+  wears `witch_cauldron`, the bespoke kettle PR #344 drained for exactly
+  this and which was wired at one site only. Zero spend, no new id.
+- **New art is verified by ALPHA SCAN, not by looking at the thumbnail
+  (2026-08-02, L4 fix wave)**: `rug_woven_cream` shipped with its entire
+  field keyed to alpha 0 — 1405 of the 3038 pixels inside its bbox
+  transparent — so the rug rendered as a hole in the floor at all five
+  sites, the exact defect its VISUAL-LOG rows were checked off for. The
+  wax tray had the same failure between its sticks. Both were replaced
+  free from candidates of the SAME paid PixelLab generation. The rule
+  the wave adds: a new sheet's alpha map is read before its row is
+  marked drained, the same way its anchor already is — a 64x64 preview
+  at 1x hides a keyed-out interior completely.
+- **rug_green/rug_tan keep their stale ids (2026-08-02, L4)**: both now
+  carry owned woven art (rug_green's is red), but an id rename needs
+  the matching key in test_sprite_registry's expected-counts table, and
+  L4's brief puts .gd files outside its ownership. Ids stay, comments
+  say so, rename queued for the controller.
 <!-- v017-L1 -->
 - **Quest hints default ON (2026-08-02, GH#338, PARTIAL SUPERSESSION)**: the
   thread-legibility spec's §105-121 anti-trivialization rule is relaxed for
