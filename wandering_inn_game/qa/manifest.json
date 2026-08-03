@@ -354,7 +354,7 @@
   },
   {
    "script": "defeat_reload",
-   "seed": 1,
+   "seed": 2,
    "note": "losing seed; defeat loads the pre-combat snapshot, no game_reset; issue #88: proximity-triggered goblin_encounter_1 leg proves reload-inside-trigger_radius doesn't insta-refire, then the original interact-triggered chieftains_raid leg",
    "tiers": [
     "smoke",
@@ -1509,7 +1509,7 @@
   {
    "script": "char_creation",
    "seed": null,
-   "note": "THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof)",
+   "note": "THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof); #346: the two setup prompts after the name (difficulty by key, quest hints by TAP), both opening on the live WISettings value, both read back through the Settings panel in the new save's first session",
    "tiers": [
     "smoke",
     "full"
@@ -1521,7 +1521,8 @@
     "dialogue": [],
     "systems": [
      "char_creation",
-     "input"
+     "input",
+     "settings"
     ]
    }
   },
@@ -3141,7 +3142,8 @@
     ],
     "skills": [
      "basic_cleaning",
-     "frost_bolt"
+     "frost_bolt",
+     "quick_cast"
     ],
     "dialogue": [],
     "systems": [
@@ -5730,6 +5732,78 @@
      "combat",
      "economy",
      "exploration"
+    ]
+   }
+  },
+  {
+   "script": "journal_categories",
+   "seed": 3,
+   "fixture": "inn_guests_start",
+   "note": "GH#336 Skills-tab redesign: category-primary + deduped rows (skill_categories/skill_row_ids pinned verbatim) + honest checkbox (assigns on Combat-Active and Exploration-Active, refuses on a Combat-Passive row that reaches no bar)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn"
+    ],
+    "fixtures": [
+     "inn_guests_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "basic_cooking",
+     "basic_swordwork",
+     "battle_momentum",
+     "battlefield_awareness",
+     "calming_touch",
+     "charming_smile",
+     "counter_strike",
+     "dangersense",
+     "flame_dart",
+     "flame_jet",
+     "frost_bolt",
+     "light",
+     "mana_shield",
+     "observe",
+     "piercing_strikes",
+     "power_strike",
+     "quick_cast",
+     "quick_movement",
+     "second_wind",
+     "tough_body"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration",
+     "input"
+    ]
+   }
+  },
+  {
+   "script": "journal_quest_hints",
+   "seed": 9,
+   "fixture": "door_awakening_start",
+   "note": "GH#338 quest hints: the indented journal sub-row on the one code-banked beat, default ON, switched off and back on from the 'Quest Hints' settings row; the only script that pins quest_hint_lines",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "door_awakening_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "exploration",
+     "input",
+     "settings"
     ]
    }
   }

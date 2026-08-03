@@ -28,7 +28,7 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `level_up_loop` | 9 | full | `post_tutorial` | level-up loop; fight 2 tests riposte |
 | `mage_unlock_loop` | 9 | full | `—` | [Mage] earned from Pisces; full cold-start arc + mage kit fielded |
 | `line_of_sight_denial` | 9 | full | `—` | wall-aware ranged AI proof (positive has_los gate) |
-| `defeat_reload` | 1 | smoke, full | `—` | losing seed; defeat loads the pre-combat snapshot, no game_reset; issue #88: proximity-triggered goblin_encounter_1 leg proves reload-inside-trigger_radius doesn't insta-refire, then the original interact-triggered chieftains_raid leg |
+| `defeat_reload` | 2 | smoke, full | `—` | losing seed; defeat loads the pre-combat snapshot, no game_reset; issue #88: proximity-triggered goblin_encounter_1 leg proves reload-inside-trigger_radius doesn't insta-refire, then the original interact-triggered chieftains_raid leg |
 | `relc_descent_rewind` | 1 | full | `relc_descent_rewind_start` | issue #88 fix wave: THE pre_combat_choice canonical -- a dialogue-committed fight's defeat rewinds the committing choice too (lose [Go together.] -> relc_joined_descent GONE, [I go alone.] re-choice fields NO relc) |
 | `defeat_ally_alive` | 3 | full | `near_defeat` | THE canonical proof of the PC-death-is-instant-defeat rule |
 | `title_flow` | 9 | full | `—` | title screen flow; no combat; issue #88: a second New Game (once auto exists) pins the overwrite-confirm's coverage event, TestDriver's collapse-bypass, and the auto_prev rotation |
@@ -69,7 +69,7 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `wrong_order_talk` | 9 | full | `wrong_order_talk_start` | The Wrong Order TALK path (Krshia smooth-over, no combat) |
 | `wrong_order_fight` | 9 | full | `wrong_order_fight_start` | The Wrong Order FIGHT path (clear supplier_scavengers) |
 | `economy_loop` | 9 | smoke, full | `economy_loop_start` | the coin arc: chore earn -> loot -> shop -> spend |
-| `char_creation` | none | smoke, full | `—` | THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof) |
+| `char_creation` | none | smoke, full | `—` | THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof); #346: the two setup prompts after the name (difficulty by key, quest hints by TAP), both opening on the live WISettings value, both read back through the Settings panel in the new save's first session |
 | `deep_descent` | 9 | full | `deep_descent_start` | the Raskghar descent + JOIN-Relc boss victory |
 | `climax_chain` | 9 | full | `climax_surface_start` | the tremor beat + Zevara summons + Olesm briefing |
 | `climax_seal` | 9 | full | `climax_sealed_start` | the seal beat + journal Act III advance |
@@ -212,3 +212,5 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `gh330_companion_gate_loop` | 7 | full | `near_tamer_bond` | #330 R4: present_when.companion proven as a pair -- cache cell walkable with no bond, blocking with the wolf, walkable again with the razorbeak; plus the pond vantage's lead |
 | `gh330_deer_arc_loop` | 7 | full | `gh330_deer_arc_start` | #330 R3: the wounded corusdeer stands, heals, and leaves -- worn grass + one-time shed antler, and corusdeer_range's ungated vouched soothe |
 | `gh330_lamb_pen_loop` | 7 | full | `gh330_lamb_pen_start` | #330 R2: the hunter's lamb pen as a [Beast Tamer] door outside the floodplains -- wool yield, waking cap, class gain at sleep, then the tended_beasts variant |
+| `journal_categories` | 3 | full | `inn_guests_start` | GH#336 Skills-tab redesign: category-primary + deduped rows (skill_categories/skill_row_ids pinned verbatim) + honest checkbox (assigns on Combat-Active and Exploration-Active, refuses on a Combat-Passive row that reaches no bar) |
+| `journal_quest_hints` | 9 | full | `door_awakening_start` | GH#338 quest hints: the indented journal sub-row on the one code-banked beat, default ON, switched off and back on from the 'Quest Hints' settings row; the only script that pins quest_hint_lines |

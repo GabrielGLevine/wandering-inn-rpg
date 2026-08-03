@@ -1,26 +1,128 @@
 {
- "_comment": "peek-only (NOT a canonical gate member): windowed screenshots of the character-creation picker + name step to eyeball the UI. Same creation_ui opt-in as char_creation. Two screenshots ~0.5s apart at the pick step (wait_frames 30 between them) to catch two distinct idle-animation frames -- a single screenshot can't prove the sprites are animating, not just static art.",
+ "_comment": "peek-only (NOT a canonical gate member): windowed screenshots of the character-creation picker + name step to eyeball the UI. Same creation_ui opt-in as char_creation. Two screenshots ~0.5s apart at the pick step (wait_frames 30 between them) to catch two distinct idle-animation frames -- a single screenshot can't prove the sprites are animating, not just static art. Issue #346: the two new setup steps (difficulty, quest hints) get their own peek frames -- they are text-list surfaces and the only way to catch a copy overflow or a mis-sized row is to look at them.",
  "starts_at_title": true,
  "creation_ui": true,
  "steps": [
-  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_char_creation_rendered", "payload_contains": {"step": "pick"}, "timeout_sec": 5},
-  {"action": "screenshot", "name": "cc1_pick_frame_a"},
-  {"action": "wait_frames", "frames": 200},
-  {"action": "screenshot", "name": "cc1_pick_frame_b"},
-  {"action": "move", "direction": "right", "steps": 1},
-  {"action": "move", "direction": "down", "steps": 1},
-  {"action": "screenshot", "name": "cc2_pick_selected_drake_f"},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_char_creation_rendered", "payload_contains": {"step": "name"}, "timeout_sec": 5},
-  {"action": "screenshot", "name": "cc3_name_empty"},
-  {"action": "type_text", "text": "Sella"},
-  {"action": "screenshot", "name": "cc4_name_typed"},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
-  {"action": "screenshot", "name": "cc5_inn_after"}
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "pick"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "cc1_pick_frame_a"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 200
+  },
+  {
+   "action": "screenshot",
+   "name": "cc1_pick_frame_b"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "cc2_pick_selected_drake_f"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "name"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "cc3_name_empty"
+  },
+  {
+   "action": "type_text",
+   "text": "Sella"
+  },
+  {
+   "action": "screenshot",
+   "name": "cc4_name_typed"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "difficulty"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "cc4b_difficulty"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "hints"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "cc4c_hints"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "cc5_inn_after"
+  }
  ]
 }

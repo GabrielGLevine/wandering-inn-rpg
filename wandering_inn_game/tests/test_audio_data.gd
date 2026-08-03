@@ -9,6 +9,15 @@ const VALID_BUSES: Dictionary = {
 	"Ambience": true,
 }
 
+## Whitelist of bus events an `audio.json` row may key on. Extending it is part
+## of the SAME edit unit as adding the row it legalises -- a row for an event
+## missing here fails this gate, so the table can never drift ahead of the
+## catalog.
+## APPEND-ONLY, UNDER A LANE ANCHOR (v0.17 fix wave, adversarial finding #4/#8):
+## concurrent lanes all reach for this dictionary, so new keys go at the END
+## beneath the owning lane's marker and no existing row is moved or reformatted
+## -- a mid-table insert makes a three-way conflict out of what should be two
+## clean appends.
 const KNOWN_EVENTS: Dictionary = {
 	"action_refused": true,
 	"audio_played": true,
@@ -49,6 +58,14 @@ const KNOWN_EVENTS: Dictionary = {
 	"ui_toast_rendered": true,
 	"unit_downed": true,
 	"windup_declared": true,
+	# v017-L3 (GH#335 phase 1, item 4) -- the "explicit input, zero response"
+	# gaps: item_used / player_blocked / skill_no_effect, plus class_evolved,
+	# the largest completion in the game and the only progression beat that had
+	# no sound at all. Rows live in data/audio.json under the same anchor.
+	"item_used": true,
+	"player_blocked": true,
+	"skill_no_effect": true,
+	"class_evolved": true,
 }
 
 const REQUIRED_IDS: Array[String] = [

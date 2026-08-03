@@ -1,5 +1,5 @@
 {
- "_comment": "The 6-sprite picker grid: drives the REAL character-creation UI path. starts_at_title gives raw title control; creation_ui:true makes New Game open the creation screen (the default TestDriver skip goes straight to Game.reset with defaults, so every OTHER canonical is byte-unchanged). PC_OPTIONS is laid out row-major (row0 = Male across Human/Drake/Gnoll, row1 = Female) so cursor 0 starts on Human/Male; one move_right then one move_down lands on Drake/Female (same pick this canonical made pre-#42). Confirming the card sets pc_race+pc_gender TOGETHER (the payload keys the sim asserts below are byte-identical to before -- presentation-only recomposition). Asserts the snapshot identity fields, the sim variant sprite key, the GDI opener event (de-race-ified 2026-07-07 -- one opener for all races; `race` stays in the payload harmlessly, cosmetic only now), and the RENDERED variant binding on both the field (ui_entities_rendered pc_sprite) and combat is proven by the sim key (combat chip resolves the same pc_drake_f via board_renderer). Mouse teeth: after the keyboard confirm lands on NAME, an Esc-back + click-the-same-card round trip re-confirms drake_f via a mouse click, pinning the identical step:'name' payload the keyboard path just produced; the NAME step then commits via the tappable Begin control (click_char_creation_begin, issue #106) with every downstream pin held verbatim from the keyboard-commit era -- click/keyboard commit equivalence proven by the pins themselves.",
+ "_comment": "The 6-sprite picker grid: drives the REAL character-creation UI path. starts_at_title gives raw title control; creation_ui:true makes New Game open the creation screen (the default TestDriver skip goes straight to Game.reset with defaults, so every OTHER canonical is byte-unchanged). PC_OPTIONS is laid out row-major (row0 = Male across Human/Drake/Gnoll, row1 = Female) so cursor 0 starts on Human/Male; one move_right then one move_down lands on Drake/Female (same pick this canonical made pre-#42). Confirming the card sets pc_race+pc_gender TOGETHER (the payload keys the sim asserts below are byte-identical to before -- presentation-only recomposition). Asserts the snapshot identity fields, the sim variant sprite key, the GDI opener event (de-race-ified 2026-07-07 -- one opener for all races; `race` stays in the payload harmlessly, cosmetic only now), and the RENDERED variant binding on both the field (ui_entities_rendered pc_sprite) and combat is proven by the sim key (combat chip resolves the same pc_drake_f via board_renderer). Mouse teeth: after the keyboard confirm lands on NAME, an Esc-back + click-the-same-card round trip re-confirms drake_f via a mouse click, pinning the identical step:'name' payload the keyboard path just produced; the NAME step then commits via the tappable Begin control (click_char_creation_begin, issue #106) with every downstream pin held verbatim from the keyboard-commit era -- click/keyboard commit equivalence proven by the pins themselves. ISSUE #346: two setup prompts now follow the name -- difficulty (the #345 ladder) and quest hints (the #338 toggle) -- both opening on the CURRENT WISettings value and both writing those same keys, never a parallel copy. The difficulty row is answered by keyboard and the hints row by TAP (click_char_creation_card, which reaches the choice rows through card_rect), and a closing leg reads both back through the Settings panel in the new save's first session.",
  "starts_at_title": true,
  "creation_ui": true,
  "steps": [
@@ -93,8 +93,66 @@
    "name": "01_name_step_begin_control"
   },
   {
-   "_comment": "Issue #106: the name commit goes through the tappable Begin control (click_char_creation_begin resolves the LIVE begin_button_rect, the click_char_creation_card idiom) instead of the keyboard confirm -- the button's gui_input calls the SAME _confirm() Enter's _handle_name_input branch does, and every downstream pin below (the ui_char_creation_confirmed payload, world_ready, the GDI opener, the sim identity asserts, the rendered variant binding) is held VERBATIM from the keyboard-commit era of this script, so the click path proving them is the equivalence proof. Only one commit is possible per run (Game.reset tears this screen down), so the keyboard NAME-commit dispatch itself is covered by this screen's PICK-step confirm above (same _unhandled_input -> _confirm() route) + char_creation_peek's keyboard commit.",
+   "_comment": "Issue #106 + #346: the NAME step no longer commits -- two setup prompts follow it -- so this control now reads 'Continue' and its tap leaves NAME for the difficulty prompt. Every downstream identity pin below is still held VERBATIM from the keyboard-commit era of this script, so the click path proving them is still the equivalence proof; the commit itself moved to the last setup row.",
    "action": "click_char_creation_begin"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "difficulty",
+    "options": [
+     "Bronze",
+     "Silver",
+     "Gold"
+    ],
+    "cursor": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Issue #346: the difficulty prompt OPENS ON THE CURRENT SETTING (cursor 1 = Silver, the shipped-balance default), because the Settings panel is the source of truth and this screen is a shortcut into it, not a second copy. One down reaches Gold; confirm accepts and moves on.",
+   "action": "screenshot",
+   "name": "02_creation_difficulty"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "difficulty",
+    "cursor": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_char_creation_rendered",
+   "payload_contains": {
+    "step": "hints",
+    "options": [
+     "Yes — name the next step",
+     "No — let me find it"
+    ],
+    "cursor": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "...and the hints prompt likewise opens on the live value (cursor 0 = Yes, GH#338's default-ON). This row is committed by TAP (click_char_creation_card: char_creation.gd's `card_rect` hands back the i'th tappable option of the CURRENT step, so the setup rows reuse the sprite cards' driver action instead of adding one to shared QA infrastructure) rather than by key: a4 #216's credits modal is the standing lesson that a new keyboard-only surface strands a touch player, and this is the LAST step, so the tap both answers the prompt and starts the run.",
+   "action": "screenshot",
+   "name": "03_creation_hints"
+  },
+  {
+   "action": "click_char_creation_card",
+   "card": 2
   },
   {
    "action": "wait_for_event",
@@ -102,7 +160,9 @@
    "payload_contains": {
     "pc_name": "Sella",
     "pc_race": "drake",
-    "pc_gender": "f"
+    "pc_gender": "f",
+    "difficulty_step": 2,
+    "quest_hints": false
    },
    "timeout_sec": 5
   },
@@ -156,6 +216,39 @@
   {
    "action": "screenshot",
    "name": "char_creation_drake_f_inn"
+  },
+  {
+   "_comment": "== ISSUE #346's OWN GATE: the chosen values are LIVE in the first session of the new save, read back through the Settings panel itself -- the same rows that own them. Pause -> Settings, then nudge the cursor to force a fresh render (open()'s own render fires BEFORE ui_settings_shown, so it is already behind the forward-only wait cursor -- the settings_loop idiom).",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_pause_row",
+   "row": 8
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "difficulty_step": 2,
+    "show_quest_hints": false
+   },
+   "timeout_sec": 5
   }
  ]
 }

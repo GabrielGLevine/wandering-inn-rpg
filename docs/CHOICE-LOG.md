@@ -2213,3 +2213,246 @@ by controller ruling — the plan was the defect, not the implementation.
   the matching key in test_sprite_registry's expected-counts table, and
   L4's brief puts .gd files outside its ownership. Ids stay, comments
   say so, rename queued for the controller.
+<!-- v017-L1 -->
+- **Quest hints default ON (2026-08-02, GH#338, PARTIAL SUPERSESSION)**: the
+  thread-legibility spec's §105-121 anti-trivialization rule is relaxed for
+  ONE surface — a sparse per-beat `hint`, rendered as an indented italic
+  sub-row under its quest line in the journal, shipping DEFAULT ON behind a
+  new "Quest Hints" settings row. The owner asked for clarity by default
+  with an immersion off switch, and that is what this is. Everything else
+  stands: "no floating quest markers, ever"; relay dialogue keeps
+  WHO/WHERE-never-WHAT-TO-DO; the field-HUD "Quest Thread" strip is a
+  separate knob and stays default-OFF; the "Quest updated:" toast and the
+  Leads strip are out of scope (the sim cannot read WISettings, and gating
+  the toast would mean suppressing it in message_layer for no real gain).
+  Hints are SPARSE (5 of 61 beats at ship; test_quests caps the ratio at a
+  quarter so the refused "double 60+ rows of copy" alternative cannot
+  arrive by accretion) and STATIC — state-awareness comes from splitting a
+  beat until each has one actionable condition, never from a conditional
+  hint evaluator. `chieftains_price/price` was re-cut from narration to
+  imperative in the same pass (ruling 6): it reported what had already
+  happened, so an ACTIVE journal line read like a completed one.
+- **Bronze / Silver / Gold, not Platinum (2026-08-02, #345)**: the wiki
+  mirror was checked before any copy was written, and Liscor Hunted — the
+  adventure-experience company Menolit runs out on the floodplains — sells
+  "Bronze, Silver, Gold, and Platinum-ranked challenges" (killing a Rock
+  Crab is a Gold-level one). FOUR canon ranks exist; THREE settings were
+  asked for. Ruling: take the first three consecutive ranks and leave
+  Platinum unclaimed, rather than skipping a rung or inventing a fourth
+  meaning for one. Platinum stays available if a fourth level is ever
+  wanted, and no player who knows the source reads the ladder as wrong.
+  SILVER IS THE DEFAULT and its multiplier is exactly 1.0 — the shipped
+  balance — so every existing save, every balance cell and every QA
+  fixture is untouched unless a player deliberately moves the row.
+- **Difficulty is ONE knob, applied at fight build (2026-08-02, #345)**:
+  the ladder multiplies damage dealt TO the player's side and nothing
+  else — not enemy HP, AP, accuracy, or any RNG draw — so a difficulty
+  change can never alter a seeded fight's SHAPE, only what a hit costs.
+  The value is read ONCE when a fight is built (where equipment mods are
+  read), never per-hit. That is what makes "changeable at any time" safe
+  mid-save: a player may move the row mid-fight and the change lands on
+  the NEXT fight, never rewriting the numbers under a live encounter.
+  L1 owns the getter (`WISettings.difficulty_damage_taken_mult`) and its
+  semantics; the combat lane owns the apply-site and signs it off at the
+  merge train — a declared one-field seam, deliberately narrow.
+- **The AUTO field-bar 9-cap is reversed (2026-08-02, GH#336 ruling 9)**:
+  ruling 9 asked the AUTO exploration bar to cap at nine because "slot 10
+  is keyboard-unreachable", and a first pass shipped that as a slice. The
+  premise does not survive the code: slot ten is *number-key*-unreachable
+  only. `world.gd::_move_field_slot_cursor` wraps the armed cursor with
+  `(idx + delta + count) % count`, so prime + move_right walks onto slot
+  ten and every slot after it, and `field_hotbar.gd`'s `slot_clicked ->
+  slot_activate_requested` fires for any RENDERED slot, so touch reaches
+  them too. The cap therefore did not retire a dead affordance — it
+  DELETED earned Skills from the field, for exactly the player the ruling
+  names (AUTO mode = "never opened the journal"), with no toast, glyph or
+  overflow indicator and the journal checkbox as the only recovery.
+  Uncastable-and-silent is strictly worse than reachable-without-a-number-
+  key, so the bar renders every field Skill again. `AUTO_SLOT_CAP` keeps
+  its one honest job (bounding a7 #208's AUTO-SLOTTING into a CUSTOM
+  loadout); `loadout_toggle` stays uncapped, which is what makes the
+  redesigned tab the tool for exceeding nine ON PURPOSE, as ruling 9
+  itself says. The real cure for the missing number key is an affordance
+  on the bar (`field_hotbar.gd`), recorded for the train rather than faked
+  with a slice — and it is not urgent: no shipped save reaches ten field
+  Skills, which is why nothing noticed the original gap either.
+- **An empty intersection is not an empty bar (2026-08-02, GH#336)**:
+  one `hotbar_loadout` array feeds BOTH bars through `WIGame.apply_loadout`,
+  so curating a combat-only kit used to blank the exploration bar outright
+  (5 slots -> 0) — and the redesigned Skills tab makes that the very first
+  tick a player is invited to make, on the top row of the top category.
+  Nothing in the UI can ASK for an empty field bar, so an intersection of
+  nothing now reads as "this bar was never curated" and falls back to AUTO.
+  The combat-side mirror of the same hazard lives in `combat_hud.gd` and is
+  recorded for its owner; the real answer is two arrays instead of one,
+  which is a save-format change and belongs to a milestone, not a lane.
+
+<!-- v017-L5 -->
+- **#349 dig-camp Pisces is NAMED, not FIELDED (2026-08-02, L5 lane call)**:
+  the four-member reading needed the camp to account for its fourth. A real
+  `pisces_dig_camp` presence row was rejected: his street hub (`liscor/street`
+  `pisces`) is UNCONDITIONAL and six canonicals pin it, so a camp row would
+  have shipped a fresh two-places-at-once for the whole dig window — the exact
+  defect #349's own scope line asks to reconcile. Retiring the street hub for
+  that window is cross-canonical (mage arc + the whole door chain) and is not a
+  copy call. SHIPPED instead: `ceria_dig_camp`'s new `camp_fourth` node says
+  who the fourth is and where he is. SUPPORTING PROPS, corrected in the review
+  wave: only `dig_camp_crate` (rations for four) and `dig_camp_notes` (four
+  names, hours shared out EVEN) are live in this speaker's window —
+  `dig_camp_remnant`'s four bedroll squares require `door_mounted`, the exact
+  complement of the camp's own gate, so the first draft's option text ("There's
+  a fourth bedroll.") named a prop the player could not have seen and the
+  answer contradicted the even-hours sheet. The option is now an assertion-free
+  question and the answer splits the hours four ways. Matches the user's own
+  justification — he is the player's Door consultant first. DEFERRED, needs
+  controller: an actual camp presence row + the street-hub window it requires.
+- **#349 post-seal residence stays a GUEST seat (2026-08-02, L5 lane call)**:
+  Ceria/Yvlon/Ksmvr return unconditionally at `door_mounted`; Pisces returns
+  through the `guest` rotation. Promoting him to an unconditional inn row would
+  stand him permanently in two rooms (the street hub again). The rotation is
+  the honest reading of a Horn whose post is in the city — reconciled in COPY
+  instead, via `text_variants` on `pisces_inn`'s greet where the corner his
+  team annexed is the reason he is in the room. THREE arms, not one (review
+  wave): `text_variants` has no `hide_when` and LAST MATCH WINS, so the window
+  is carved by ordering. A single `seal_kept_reported` arm described an
+  occupied corner right through the dig — `horns_dig_started` retires the three
+  original Horns inn rows and the `_returned` twins do not arm until
+  `door_mounted`, so for that whole stretch no Horn is on the inn map at all.
+  Arms are now seal_kept_reported (corner annexed) → horns_dig_started (corner
+  empty, team underground) → door_mounted (corner reclaimed), pinned by
+  `test_pisces_inn_greet_never_seats_the_horns_in_an_empty_corner`, which
+  asserts the INVARIANT rather than the copy: the greet may only claim the
+  corner in states where the scene catalog stands a Horn in the inn.
+- **#332 companion re-supply is a 3-RUNG LADDER, not an infinite spigot
+  (2026-08-02, L5 lane call)**: `remove_entity` persists by id, so a
+  re-suppliable tame prop cannot be re-offered — every re-bond needs its own
+  row. Shipped: three rungs (`wolf_den_spring` / `razorbeak_chick_fledgling` /
+  `wolf_den_late_litter`), each opening on one more `companion_lost`. REVIEW
+  WAVE, two corrections that the "five bonds total" claim below depended on:
+  (a) rungs do NOT close on the counter. The first cut gave rungs 1 and 2 an
+  `absent` arm one count above their own, so a player who lost a bond in the
+  floodplains and the next one in a dungeon walked back to a rung erased
+  unclaimed — a self-consuming ladder capped at 3-4 bonds under ordinary play.
+  Being TAKEN is what retires a rung (`removed_entities` persists), so the
+  `absent` arms were unnecessary as well as destructive; they are gone, rungs
+  accumulate, and rung 3 moved off rung 1's cell because the two can now stand
+  together. (b) `companion_lost` banks only on a TAMED downed-clear.
+  `_combat_event_relay` routes EVERY downed companion through
+  `_clear_companion("downed")`, so a necromancer losing animated skeletons —
+  all three bone piles are `animated` — used to burn ladder rungs they could
+  never take without [Lesser Bond]. A swap ("released") and a sleep expiry
+  ("sleep") were already excluded. CAP IS REAL: three permanent tamed deaths
+  covered, five bonds total with the two originals, and now actually five. An
+  unbounded re-supply needs a respawning prop — sim behaviour, out of a content
+  lane's authority, DEFERRED to the controller. ALSO DEFERRED: the animated
+  path has its own untouched dead-end (bone piles are one-shot and an animated
+  follower expires at every sleep), which #332's body explicitly scopes to the
+  tame props.
+- **#339 item 1: a defining surface must be a SCENE ENTITY (2026-08-02, L5
+  review wave)**: the first cut let `L5_SELF_DEFINING_NOUNS` name items.json
+  ids for `attunement`. Items carry no `present_when`, so the tripwire's own
+  ungated arm was structurally unable to judge those rows — `_check(not gated,
+  …)` was a tautology for exactly the two rows that needed it. It was wrong on
+  the merits too: an item description renders only once OWNED, and both
+  attunement stones sit behind gold plus an arc gate. The noun's real ungated
+  producer is `riverfarm_anchor_stone` (no `present_when` at all — the case the
+  brief named), which now carries the defining clause; the item-description
+  edits are reverted and items.json is back to `main`. The validator refuses a
+  non-entity locator loudly rather than silently passing it.
+<!-- v017-L2 -->
+- **Skill cooldowns: the set is a RULE, not a taste list (2026-08-02,
+  GH#337, L2 as sole balance authority)**: `cooldown_rounds: 2` on every
+  combat Skill whose `damage_mult >= 2.0`, plus every AP-ONLY line Skill
+  of `length >= 4`. Ten Skills; the four 4-AP entries pay -1 AP for it.
+  A rule rather than a list so the next Skill added answers the question
+  by itself. EXCLUDED and why: every `mp_cost` carrier (MP is the canon
+  limiter — that IS the canon split), `once_per_fight` holders (already
+  stricter), `slam` (`windup_cadence` already paces it), and the sub-2.0
+  mults / length-3 lines (the mid-tier is not the spam set). 2 and not 1
+  because an absolute `round + n` stamp makes n=1 a same-turn lockout
+  only — at 3 AP a 4-AP turn could never double-fire anyway.
+- **The main-line ladder is THREE steps now, not four (2026-08-02,
+  GH#337)**: rungs 1 (Riverfarm) and 2 (Invrisil) both read 0.92 at the
+  t4_spellsword14 yardstick, so their windows deliberately share a band
+  and the still-gated assertion is {r1,r2} > r3 > r4. The harness caught
+  it exactly as the ladder's own comment promised it would. Cause is
+  roster-shaped: `hired_blade_leader` is the only combatant holding
+  power_strike AND counter_strike, so cooling its big hit hands the party
+  two riposte-provoking swings a round. Two skills.json compensations
+  were MEASURED and rejected (power_strike at 2 AP overshoots — 8 cells
+  red, the forge rung 0.69 -> 0.91; mult 2.4 compresses rungs 3/4 upward
+  instead). The step needs `hired_blade_leader`'s own stats, which is
+  combatants.json — outside the lane, logged as a seam.
+- **Splitting a big hit into two counts damage_mod TWICE (2026-08-02,
+  GH#337 — the finding to tune against next time)**: `_resolve_hit` adds
+  `damage_mod` per hit and `_apply_damage_reduction` subtracts per hit.
+  Player kits carry +2 damage_mod and almost no enemy carries any, so
+  the alternation trade is quietly player-positive nearly everywhere —
+  and player-NEGATIVE exactly where the target has real DR (the DR-4
+  forge golem is the one clean case, and the only silver-rank cell that
+  fell out of band).
+- **GH#349 arena leg: stage Pisces, do not field him (2026-08-02, L2's
+  call under the issue's "your call on which reading fights better")**:
+  the vault roster is unchanged and the 5th player spawn is deliberately
+  NOT cut. Fiction is the issue's own — Door consultant first, converging
+  later, and a four-member team where three take a job is how the books
+  read. The mechanical reason decided it: `wi_game.gd`'s companion gate
+  is `allies.size() + 2 > player_spawns.size()`, so a 5th spawn would
+  silently admit a tamed companion into the main line's top-band boss
+  fight for a seat nothing sits in. Recorded in the `vault` arena's own
+  `_comment`, with the four-file recipe for reversing it.
+- **Difficulty is ONE knob, injected, read once (2026-08-02, GH#345 L2
+  half)**: damage dealt TO the player's side, scaled, applied in
+  `_deduct_hp` AHEAD of `damage_reduction` (DR is a flat subtraction, so
+  scaling after it would re-weight gear per difficulty rather than say
+  how hard the world hits). No RNG draw is touched, so a seeded fight has
+  the identical SHAPE at every setting. The value is INJECTED into
+  `WICombat` rather than read (the sim purity rule), which is also the
+  whole "safe mid-save" answer: nothing re-reads it, so moving the row
+  lands on the NEXT fight, never a live one.
+- **The cooldown wave MOVED PROGRESSION PACE, and the move is accepted
+  with numbers, not asserted away (2026-08-02, GH#337, fix round)**:
+  `sim_progression_pace` measured at the lane base and at the shipped
+  tree, warrior_line Act III total-level p10/p50/p90 **12/13/13 -> 10/11/11**
+  (fights won p50 31 -> 30); caster_line loses one Act III fight (27 ->
+  26) at the same levels; helper_social is unchanged. Two scripted QA
+  routes moved the OPPOSITE way (`level_up_loop` / `defeat_ally_alive`
+  re-pinned [Warrior] 2 -> 3) because on a FIXED short route the freed AP
+  buys an extra plain attack and `melee_hit` banks the same either way --
+  a local effect that does not survive the whole arc, where fewer big
+  hits means fewer fights won per act. THE DISCIPLINE POINT: the first
+  pass cited "sim_progression_pace re-run and stays green" as evidence
+  for a global pace claim. It is not evidence of anything of the kind --
+  that harness asserts only `Act I p50 >= 2`, `p50 grows across acts`
+  and a determinism leg, and says so itself ("band NUMBERS are
+  report-only until ratified via CHOICE-LOG"). A pace claim needs the
+  before/after numbers, which is what this entry is. ACCEPTED rather
+  than compensated: ~15% off the melee line's Act III total is inside
+  what GH#211's own baselines were re-tuned by, and compensating it from
+  `skills.json` would undo the milestone. Re-ratify the #211 bands
+  against these numbers next time they are touched.
+- **Ladder ordering is an ASSERTION now, not an inference from window
+  arithmetic (2026-08-02, GH#337, fix round)**: the entry above tied
+  rungs 1 and 2 and overlapped their windows -- which silently repealed
+  the contract those windows were carrying, because rung 2 was then free
+  to climb to 0.98 against rung 1's floor of 0.88 with both gates green,
+  i.e. exactly the Invrisil-easier-than-Riverfarm inversion the ladder
+  exists to catch. `sim_combat_batch.gd` now records the four rung win
+  rates and asserts rung-by-rung descent directly (`LADDER_RUNGS`,
+  `LADDER_TIE = 0.05`), so consecutive stops may READ EQUAL inside the
+  tie band and nothing wider, and restoring a real step never trips it.
+  Skipped under `WI_CELL_RANGE` (a shard holds only a slice); an
+  unsharded run that fails to measure all four rungs reddens by itself.
+- **On the fitted combat readout, the DESCRIPTION yields -- in BOTH
+  cooldown states (2026-08-02, GH#337, fix round)**: the first pass
+  applied this only while a Skill was cooling, so a READY cooled Skill
+  carried the standing clause AND the flavour and overflowed the strip
+  ([Power Strike] rendered "...Once every 2 rounds. — Everything behind
+  one…"). `_slot_info_line` now asks the real fitter whether the full
+  line fits one readout line and drops the flavour if it does not,
+  ONLY when a standing cooldown clause is present -- no Skill outside
+  the cooled ten changes. The rule stated once: the mechanical statement
+  is never the thing that gets ellipsised. Because the degrade happens
+  before the emit, `ui_slot_info_rendered` now carries the string the
+  player actually sees, which is what makes it gateable at all
+  (qa/scripts/combat_move_input.json + 03_power_strike_slot_info.png).

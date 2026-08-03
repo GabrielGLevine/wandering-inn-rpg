@@ -1,5 +1,5 @@
 {
- "_comment": "Issue #77: the settings + accessibility surface, canonical end-to-end. No fixture needed -- boots straight at title (starts_at_title) so the FIRST phase covers the boot path (settings.cfg loaded before title, the bus-routing fix live from process start) via Settings opened from the TITLE screen; the SECOND phase re-opens it from the in-game PAUSE menu after a real New Game, proving the SAME panel/state survives the title->world boundary and a later save/load round-trip. Covers: (1) the CONFIRMED bus-routing bug fix -- AudioServer.get_bus_send('UI') == 'SFX' (a real bus-GRAPH assertion, not by ear), SFX untouched (still sends to Master); (2) a real SFX volume slider move asserted via AudioServer.get_bus_volume_db (linear_to_db formula, headless-real since wi_audio.gd's bus setup is no longer headless-gated); (3) fullscreen toggle via its ui_settings_rendered payload; (4) a text-scale step change (100%->115%) immediately followed by a real interact-at-spawn (facing RIGHT from the classless-start default (2,3), (3,3) is open floor -- INTERACT_NOTHING) proving the TOAST panel (a copy-fit-budgeted surface) still renders cleanly post-scale; (5) reduce_motion toggled, then proven to SURVIVE a full Save->Load round-trip (which tears down and rebuilds EVERY UI layer, including this panel itself, via game_loaded's swap_to_world) by reading the live WISettings autoload directly, not the save file; (6) the Controls reference sub-page renders; (7) Replay Hints fires its confirmation + toast, re-arming the two one-shot session hints WITHOUT touching any accomplishment counter (see wi_settings.gd's replay_hints() doc comment); (8) settings.cfg exists on disk both immediately at boot (WIAudio's own unconditional first-save) and again at the very end. Every control exercised through BOTH a keyboard path (move+confirm) and a mouse path (click_title_row/click_pause_row/click_settings_row) somewhere in the run, per the issue #84 standard. Issue #87: (9) the Combat Speed row (Normal/Fast/Instant) -- a mouse click on the title-side visit steps it 0->1 (Fast), a keyboard confirm on the pause-side visit steps it 1->2 (Instant), and the FINAL persistence proof (after the same Save->Load round trip reduce_motion already survives) confirms combat_speed_step stays 2 -- proving the append-only ROWS discipline held (every pre-existing row index this script pins was shifted, never re-pointed at the wrong control) and that the new setting round-trips through WISettings' config-file idiom exactly like every sibling setting.",
+ "_comment": "Issue #77: the settings + accessibility surface, canonical end-to-end. No fixture needed -- boots straight at title (starts_at_title) so the FIRST phase covers the boot path (settings.cfg loaded before title, the bus-routing fix live from process start) via Settings opened from the TITLE screen; the SECOND phase re-opens it from the in-game PAUSE menu after a real New Game, proving the SAME panel/state survives the title->world boundary and a later save/load round-trip. Covers: (1) the CONFIRMED bus-routing bug fix -- AudioServer.get_bus_send('UI') == 'SFX' (a real bus-GRAPH assertion, not by ear), SFX untouched (still sends to Master); (2) a real SFX volume slider move asserted via AudioServer.get_bus_volume_db (linear_to_db formula, headless-real since wi_audio.gd's bus setup is no longer headless-gated); (3) fullscreen toggle via its ui_settings_rendered payload; (4) a text-scale step change (100%->115%) immediately followed by a real interact-at-spawn (facing RIGHT from the classless-start default (2,3), (3,3) is open floor -- INTERACT_NOTHING) proving the TOAST panel (a copy-fit-budgeted surface) still renders cleanly post-scale; (5) reduce_motion toggled, then proven to SURVIVE a full Save->Load round-trip (which tears down and rebuilds EVERY UI layer, including this panel itself, via game_loaded's swap_to_world) by reading the live WISettings autoload directly, not the save file; (6) the Controls reference sub-page renders; (7) Replay Hints fires its confirmation + toast, re-arming the two one-shot session hints WITHOUT touching any accomplishment counter (see wi_settings.gd's replay_hints() doc comment); (8) settings.cfg exists on disk both immediately at boot (WIAudio's own unconditional first-save) and again at the very end. Every control exercised through BOTH a keyboard path (move+confirm) and a mouse path (click_title_row/click_pause_row/click_settings_row) somewhere in the run, per the issue #84 standard. Issue #87: (9) the Combat Speed row (Normal/Fast/Instant) -- a mouse click on the title-side visit steps it 0->1 (Fast), a keyboard confirm on the pause-side visit steps it 1->2 (Instant), and the FINAL persistence proof (after the same Save->Load round trip reduce_motion already survives) confirms combat_speed_step stays 2 -- proving the append-only ROWS discipline held (every pre-existing row index this script pins was shifted, never re-pointed at the wrong control) and that the new setting round-trips through WISettings' config-file idiom exactly like every sibling setting. GH#338: the append-only ROWS discipline held again -- 'Quest Hints' landed immediately before 'Back', so every Back index in this script shifted by one and a new leg at the end proves the knob's default-ON boot render, its OFF/ON toggle, and its independence from 'Quest Thread'.",
  "starts_at_title": true,
  "steps": [
   {
@@ -49,7 +49,7 @@
    "name": "00_settings_panel_rows"
   },
   {
-   "_comment": "assert_event_logged (whole-log scan), not wait_for_event: this exact all-defaults snapshot already fired as part of open() itself (BEFORE ui_settings_shown, by construction -- see settings_panel.gd's open() doc comment), so it's already behind the forward-only wait cursor by the time ui_settings_shown resolves; nothing LATER reproduces all-defaults once the very next steps start changing values.",
+   "_comment": "assert_event_logged (whole-log scan), not wait_for_event: this exact all-defaults snapshot already fired as part of open() itself (BEFORE ui_settings_shown, by construction -- see settings_panel.gd's open() doc comment), so it's already behind the forward-only wait cursor by the time ui_settings_shown resolves; nothing LATER reproduces all-defaults once the very next steps start changing values. GH#338: the same all-defaults snapshot now also pins show_quest_hints:true beside show_quest_thread:false -- the ONE knob in this panel that ships ON, proven at the boot render before any player action, and proven distinct from the field-HUD strip it is named next to. Issue #345: difficulty_step:1 rides the same all-defaults snapshot -- Silver, whose multiplier is exactly 1.0, so a player who never touches the row plays the shipped balance.",
    "action": "assert_event_logged",
    "type": "ui_settings_rendered",
    "payload_contains": {
@@ -58,7 +58,10 @@
     "sfx": 10,
     "fullscreen": false,
     "text_scale_step": 0,
-    "reduce_motion": false
+    "reduce_motion": false,
+    "show_quest_hints": true,
+    "show_quest_thread": false,
+    "difficulty_step": 1
    }
   },
   {
@@ -129,7 +132,9 @@
   {
    "action": "wait_for_event",
    "type": "ui_settings_rendered",
-   "payload_contains": { "master": 9 },
+   "payload_contains": {
+    "master": 9
+   },
    "timeout_sec": 5
   },
   {
@@ -140,7 +145,9 @@
   {
    "action": "wait_for_event",
    "type": "ui_settings_rendered",
-   "payload_contains": { "master": 10 },
+   "payload_contains": {
+    "master": 10
+   },
    "timeout_sec": 5
   },
   {
@@ -184,9 +191,9 @@
    "frames": 2
   },
   {
-   "_comment": "== Back (MOUSE path): row 15 = 'Back' (index 14 -- shifted by 'Export Save'/'Import Save...' a9 #246, same append-before-Back lineage as Credits GH#147 / Combat Speed #87 / Quest Thread #148).",
+   "_comment": "== Back (MOUSE path): row 17 = 'Back' (index 16 -- shifted by 'Export Save'/'Import Save...' a9 #246, 'Quest Hints' GH#338 and 'Difficulty' #345, same append-before-Back lineage as Credits GH#147 / Combat Speed #87 / Quest Thread #148).",
    "action": "click_settings_row",
-   "row": 15
+   "row": 17
   },
   {
    "action": "wait_for_event",
@@ -386,10 +393,10 @@
    "equals": 2
   },
   {
-   "_comment": "== Close settings (KEYBOARD path): down x5 from 'Combat Speed' (index 9) -> 'Back' (index 14, shifted by 'Export Save'/'Import Save...' a9 #246 past the GH#147 Credits shift). The cursor passes THROUGH 'Quest Thread' (index 10) without toggling it (move never activates -- only Confirm does), so the setting stays default-OFF here; the dedicated Quest Thread toggle + round-trip is appended at the very end. Confirm closes -- the pause menu resumes right where it was (cursor untouched, no re-open).",
+   "_comment": "== Close settings (KEYBOARD path): down x7 from 'Combat Speed' (index 9) -> 'Back' (index 16; GH#338's 'Quest Hints' and #345's 'Difficulty' both landed before Back). The cursor passes THROUGH 'Quest Thread' (index 10) without toggling it (move never activates -- only Confirm does), so the setting stays default-OFF here; the dedicated Quest Thread toggle + round-trip is appended at the very end. Confirm closes -- the pause menu resumes right where it was (cursor untouched, no re-open).",
    "action": "move",
    "direction": "down",
-   "steps": 5
+   "steps": 7
   },
   {
    "action": "press",
@@ -509,7 +516,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Fresh open -> cursor at 'Master volume' (index 0). down x10 reaches 'Quest Thread' (index 10, appended immediately before 'Back'). Confirm toggles it ON (mirrors the Reduce Motion row's confirm-to-toggle).",
+   "_comment": "Fresh open -> cursor at 'Master volume' (index 0). down x10 reaches 'Quest Thread' (index 10, appended before 'Back'). Confirm toggles it ON (mirrors the Reduce Motion row's confirm-to-toggle).",
    "action": "move",
    "direction": "down",
    "steps": 10
@@ -527,10 +534,10 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Close settings: down x4 from 'Quest Thread' (index 10) -> 'Back' (index 14, past Credits GH#147 and the a9 #246 import/export pair), Confirm closes.",
+   "_comment": "Close settings: down x6 from 'Quest Thread' (index 10) -> 'Back' (index 16, past Credits GH#147, the a9 #246 import/export pair, GH#338's 'Quest Hints' and #345's 'Difficulty'), Confirm closes.",
    "action": "move",
    "direction": "down",
-   "steps": 4
+   "steps": 6
   },
   {
    "action": "press",
@@ -682,7 +689,10 @@
   {
    "action": "wait_for_event",
    "type": "ui_credits_link_opened",
-   "payload_contains": { "key": "1", "url": "https://wanderinginn.com" },
+   "payload_contains": {
+    "key": "1",
+    "url": "https://wanderinginn.com"
+   },
    "timeout_sec": 5
   },
   {
@@ -693,6 +703,77 @@
    "action": "wait_for_event",
    "type": "ui_settings_rendered",
    "timeout_sec": 5
+  },
+  {
+   "_comment": "== QUEST HINTS toggle (GH#338, APPENDED). The credits modal exited back to ROWS with the cursor still on 'Credits...' (index 11); down x3 reaches 'Quest Hints' (index 14, appended immediately before 'Back'). It ships ON -- the only knob here that does -- so the FIRST confirm turns it OFF, which is the immersion switch the ruling promised.",
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "show_quest_hints": false,
+    "show_quest_thread": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "...and back ON, so the panel's own default is what this canonical leaves behind. show_quest_thread stays TRUE beside it throughout, which is the independence proof: the field-HUD strip and the journal sub-row are two switches, not one.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "show_quest_hints": true,
+    "show_quest_thread": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_settings_file_exists"
+  },
+  {
+   "_comment": "== DIFFICULTY (issue #345, APPENDED). The Quest Hints leg above left the cursor on index 14; down x1 reaches 'Difficulty' (index 15). It ships on Silver (step 1, multiplier exactly 1.0 = the shipped balance); confirm cycles FORWARD like Text Scale / Combat Speed rather than toggling, so this lands on Gold (step 2). Changeable ANY time is the point of the issue: this is an in-game pause visit on a loaded save, not a new-game gate.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "difficulty_step": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "A LEFT half-tap steps it back down (the volume-row half-tap idiom the a4 #216 rows already use), proving the three-position row is reachable in both directions on touch as well as by key -- back to Silver, the default this canonical leaves behind.",
+   "action": "click_settings_row",
+   "row": 16,
+   "half": "left"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "difficulty_step": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_settings_file_exists"
   }
  ]
 }

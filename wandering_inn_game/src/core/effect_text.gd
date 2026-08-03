@@ -97,6 +97,16 @@ static func skill_effect_lines(skill: Dictionary, combatants_catalog: Array = []
 	var suffix := _status_suffix(effect)
 	if suffix != "":
 		line += (" " if line.ends_with(".") else ". ") + suffix
+	# GH#337 ruling 5: a cooldown is a COMBAT resource of the same class as AP
+	# and MP, so saying it out loud is legal -- the opaque-until-sleep lock
+	# governs progression text, not combat state. Rides the exact clause idiom
+	# `once_per_fight` established one line below, and like it, is generated from
+	# the record rather than hand-composed at the call site (combat_hud.gd's
+	# `_slot_info_line` record has to carry the key or the clause silently
+	# vanishes -- the GH#334 ruling-14 defect).
+	var cooldown := int(skill.get(WICombat.COOLDOWN_ROUNDS, 0))
+	if cooldown > 0:
+		line += (" " if line.ends_with(".") else ". ") + cooldown_clause(cooldown)
 	if bool(skill.get(WIKeys.ONCE_PER_FIGHT, false)):
 		line += (" " if line.ends_with(".") else ". ") + "Once per fight."
 	var lines: Array[String] = []
@@ -148,6 +158,31 @@ static func field_effect_lines(skill: Dictionary) -> Array[String]:
 	var lines: Array[String] = []
 	lines.append(phrase)
 	return lines
+
+
+## GH#337. Phrased in ROUNDS, the unit the player already reads off status
+## glossary lines and the terrain cards -- never in turns (the sim has no
+## per-actor turn counter to be honest about) and never as a bare number. The
+## semantics it has to be true to: an ABSOLUTE stamp of `round + N` means the
+## Skill is unusable for N rounds counting the one it was used in, so N=1 forbids
+## only a second cast inside the SAME turn, and N=2 is the real every-other-turn
+## rhythm the milestone is for.
+static func cooldown_clause(rounds: int) -> String:
+	if rounds <= 1:
+		return "Once per round."
+	return "Once every %d rounds." % rounds
+
+
+## GH#337. The LIVE half, for a slot that is cooling right now (the card clause
+## above is the static rule). Separate function because it is only ever true of
+## one combatant at one moment, and the tooltip has to say the number rather
+## than leave a dimmed slot unexplained.
+static func cooldown_recovering_line(rounds_left: int) -> String:
+	if rounds_left <= 0:
+		return ""
+	if rounds_left == 1:
+		return "Recovering — ready next round."
+	return "Recovering — ready in %d rounds." % rounds_left
 
 
 static func status_line(status_id: String, skills_catalog: Array = []) -> String:

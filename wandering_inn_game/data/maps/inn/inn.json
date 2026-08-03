@@ -847,7 +847,7 @@
    ]
   },
   {
-   "_comment": "GUEST-ROW CONTRACT (owning site -- every guest row on this map points here). present_when.guest is the WIInnGuests rotation arm, and test_content's co-located validator forces every guest row to carry an IDENTICAL roster/seats: the roster grew APPEND-ONLY to its ten names, seats stay 2, so the shift window SLIDES by times_slept over the met pool. Each guest's own *_inn conversation is REGISTER-PURE -- the hub that character owns elsewhere never rides along. SEATS come off the map's free set and must clear the boot cell (2,6), the serve lane (4,7)/(5,7)/(6,7), hungry_patron (5,6), the garden approach (3,7)->(3,8), the walkthrough diagonal (2,3)/(3,3)/(4,4), Lyonette's (9,4) approach, the stew-pot approach (4,2), the (2,5) step inn_guests_full_loop walks, door_awakening/portal_menu's (13,6), the leak (9,7) and every other chair; connectivity is re-proved with ALL rows present at once. Future inn routes belong on row 4 or row 7, never rows 5-6. Every guest row is ABSENT in the fresh sprite-count canonicals. Selys rotates once chatted_with_selys>=1.",
+   "_comment": "GUEST-ROW CONTRACT (owning site -- every guest row points here). present_when.guest = WIInnGuests rotation arm; test_content's co-located validator forces IDENTICAL roster/seats on every guest row: roster grew APPEND-ONLY to ten names, seats stay 2, shift window SLIDES by times_slept over the met pool. Each guest's *_inn conversation is REGISTER-PURE (their hub elsewhere never rides along). SEATS come off the map's free set and must clear: boot cell (2,6), serve lane (4,7)/(5,7)/(6,7), hungry_patron (5,6), garden approach (3,7)->(3,8), walkthrough diagonal (2,3)/(3,3)/(4,4), Lyonette's (9,4) approach, stew-pot approach (4,2), the (2,5) step inn_guests_full_loop walks, door_awakening/portal_menu's (13,6), the leak (9,7), every other chair; connectivity re-proved with ALL rows present. Future inn routes: row 4 or 7, never 5-6. Guest rows are ABSENT in fresh sprite-count canonicals. Selys rotates once chatted_with_selys>=1.",
    "id": "selys_inn_guest",
    "kind": "npc",
    "cell": [
@@ -1280,7 +1280,7 @@
    ]
   },
   {
-   "_comment": "Grimalkin appears only after forge_tier_permit CLOSES (elevator_pass_stamped), belt-and-braces with GUEST_POOL_GATES on the same counter. His conversation never touches the permit office (pallass_grimalkin keeps all of it). SEAT (14,5) IS THE FAR-EAST CORNER AND IT IS FORCED -- the owning site for the four-chair spacing rule the other new rows point at. His rig is the biggest shipped by a wide margin (224px frames; ~2 tiles wide, nearly 4 tall), and the first pass at (12,6) with Wilovan at (11,6) failed the windowed check outright: Wilovan vanished behind his arm and a player at (12,4) covered his head, Relc's (2,5) lesson repeating. entity render_scale comes from the sprite CATALOG only (entity_visual_factory.gd:54), so a per-row shrink was never an option; the fix had to be the cell. TWO COSTS, checked and accepted. (1) His left arm crosses pisces_mounting (13,5), in a state no save can hold: elevator_pass_stamped's only producer sits on portal-only pallass_market, and this map's portal carrier requires door_mounted, which has already retired pisces_mounting. (2) He stands on ONE of pantry_door's two live approaches; ksmvr_inn_returned holds the third (14,7) in every door_mounted state, and on his two wakings in ten the Door runs on (13,6) alone, the cell door_awakening teleports to and portal_menu asserts. ROOT CAUSE, ledgered not fixed: this rig's render_scale was never measured against the figure-height convention Relc's catalog entry documents (0.6781 preserves the approved 43.4px figure); Grimalkin's lands near 98px. A re-measure is a VISUAL-LOG item, not an inn edit.",
+   "_comment": "Appears once forge_tier_permit CLOSES (elevator_pass_stamped; belt-and-braces with GUEST_POOL_GATES). Conversation lives in pallass_grimalkin only. SEAT (14,5) FORCED -- owning site of the four-chair spacing rule. 224px rig (~2x4 tiles): at (12,6) the windowed check failed (Wilovan behind his arm, a player at (12,4) covers his head -- the Relc (2,5) lesson), and render_scale is catalog-only (entity_visual_factory.gd:54), so the CELL was the only lever. Accepted costs: (1) his arm crosses pisces_mounting (13,5) -- unreachable state: elevator_pass_stamped's sole producer is portal-only pallass_market and the portal carrier requires door_mounted, which retires pisces_mounting; (2) he blocks one of pantry_door's two live approaches (ksmvr_inn_returned holds (14,7); on his 2 wakings in 10 the Door runs on (13,6) alone -- door_awakening teleport + portal_menu assert). Rig never measured against the figure-height convention (Relc 0.6781 = 43.4px; his ~98px) -- re-measure is a VISUAL-LOG item, not an inn edit.",
    "id": "grimalkin_inn_guest",
    "kind": "npc",
    "cell": [
@@ -1670,10 +1670,11 @@
    ],
    "talk_pool_stages": [
     {
+     "_comment": "Gates on seal_kept_reported, not door_awakened: this row is gone by horns_dig_started, long before the door wakes. See `ceria_inn_returned` for the window rule.",
      "id": "ceria_inn_settled",
      "requires_accomplishment": {
-      "chatted_with_ceria_inn": 3,
-      "door_awakened": 1
+      "seal_kept_reported": 1,
+      "chatted_with_ceria_inn": 3
      },
      "lines": [
       "I trained formal, once. Robes, theory, the whole overpriced show. Doesn't come up much anymore, and I like it that way.",
@@ -1717,8 +1718,8 @@
     {
      "id": "yvlon_inn_settled",
      "requires_accomplishment": {
-      "chatted_with_yvlon_inn": 3,
-      "door_awakened": 1
+      "seal_kept_reported": 1,
+      "chatted_with_yvlon_inn": 3
      },
      "lines": [
       "Ask about the arms all you like, now. Silver-steel, shapeable, better grip than flesh ever gave me. I've stopped flinching from the question, so you don't have to either.",
@@ -1762,8 +1763,8 @@
     {
      "id": "ksmvr_inn_settled",
      "requires_accomplishment": {
-      "chatted_with_ksmvr_inn": 3,
-      "door_awakened": 1
+      "seal_kept_reported": 1,
+      "chatted_with_ksmvr_inn": 3
      },
      "lines": [
       "I was Prognugator, once. Command caste. I was exiled, is the word Klbkch uses. 'Reassigned' is the word I prefer. Neither changes what happened.",
@@ -1780,7 +1781,7 @@
    ]
   },
   {
-   "_comment": "Task 2.7 (P1 RUIN/CAMP-DOUBLE) -- OWNING SITE for all three Horns inn twins. `ceria_inn`/`yvlon_inn`/`ksmvr_inn` gated on seal_kept_reported ALONE while the ruin carried a live camp, so the player could speak to them at the inn and at the camp in the same breath. Each inn row's window is SPLIT: the original retires, this twin brings them home at door_mounted. CURRENT CONTRACT (v0.15 T4.3 round 2, supersedes Task 2.7's): all three originals retire at horns_dig_STARTED, the counter the camp rows arm on, so the three-copies window is gone entirely -- post-invitation the Horns are at the camp and nowhere else. Task 2.7 had to use horns_dig_joined instead because retiring on the started counter popped all three out of the room mid-sentence with the invitation panel still open; that is now fixed AT THE RENDERER (world.gd defers presence reconciles while a dialogue is open and flushes once at DIALOGUE_ENDED), not by moving gates. Identical cell/sprite/facing/pool/conversation; only `id` and `present_when` differ. GATE TRAP: talk-pool counters are id-derived (social.gd's `chatted_with_%s`), so each twin banks `chatted_with_<twin id>` and its settled stage must gate on THAT counter -- gating on the original's would lock the settled lines out forever for anyone who never chatted pre-dig. KNOWN DEAD, PRE-EXISTING, do not resurrect here: the three ORIGINALS' `*_inn_settled` stages also gate on `door_awakened`, which no player can hold while the original's window is still open (it is banked long after the door is mounted) -- nine lines that were already unreachable under Task 2.7's own gate. Flagged for the v0.16 content pass.",
+   "_comment": "OWNING SITE for the three Horns inn twins. Each Horn has two rows: the ORIGINAL stands from seal_kept_reported to horns_dig_started (then the camp holds them); this twin from door_mounted on. Identical cell/sprite/facing/pool/conversation -- only `id` and `present_when` differ. GATE TRAP: talk-pool counters are id-derived (social.gd's `chatted_with_%s`), so a twin's settled stage must gate on ITS OWN counter; the original's would lock the lines out for anyone who never chatted pre-dig. WINDOW RULE (was nine dead lines): a stage may gate ONLY on counters holdable inside its own row's window -- twins on door_awakened, originals on seal_kept_reported. test_dialogue's `test_horns_inn_settled_stages_serve_inside_their_own_window` walks all nine lines live; re-gate either arm and it reds.",
    "id": "ceria_inn_returned",
    "kind": "npc",
    "cell": [

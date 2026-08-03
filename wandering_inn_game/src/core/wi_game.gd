@@ -757,8 +757,20 @@ func _clear_companion(reason: String) -> void:
 	if companion == "":
 		return
 	var old_id := companion
+	var was_tamed := companion_source == "tamed"
 	companion = ""
 	companion_source = ""
+	# GH#332: only a TAMED death banks. "released" (a swap) and "sleep" (an
+	# animated follower expiring) are choices with the bond still available.
+	# The `was_tamed` half matters as much as the reason: an ANIMATED summon
+	# going down mid-fight is a spent working, not a lost bond -- the three
+	# bone piles it came from are not what the spring-litter dens re-supply,
+	# so banking on it would burn ladder rungs a necromancer without
+	# [Lesser Bond] can never take. Read BEFORE the clear; companion_source
+	# is wiped two lines up. STRUCTURAL LITERAL -- mirrored by hand in
+	# tests/test_shipped_ids.gd and scripts/generate_shipped_ids.py.
+	if reason == "downed" and was_tamed:
+		record_accomplishment("companion_lost")
 	_emit(WIEvents.COMPANION_CHANGED, {"id": old_id, "active": false, "reason": reason})
 
 
@@ -993,7 +1005,36 @@ func field_hotbar_loadout() -> Array:
 	for raw: Variant in hotbar_loadout:
 		if not String(raw).begins_with("item:"):
 			skill_loadout.append(raw)
-	return WIGame.apply_loadout(candidates, skill_loadout)
+	var bar: Array = WIGame.apply_loadout(candidates, skill_loadout)
+	# GH#336 ruling 9 asked AUTO to cap at AUTO_SLOT_CAP, and a first pass shipped
+	# that as `bar.slice(0, AUTO_SLOT_CAP)`. It was REVERTED here in the fix wave,
+	# because the ruling's premise does not survive contact with the code it
+	# describes: slot ten is *number-key*-unreachable, not unreachable.
+	# `world.gd::_move_field_slot_cursor` wraps `(idx + delta + count) % count`, so
+	# hotbar_prime + move_right walks onto slot ten and every slot after it, and
+	# `field_hotbar.gd`'s `slot_clicked -> slot_activate_requested` fires for any
+	# RENDERED slot, so touch reaches them too. Slicing therefore did not remove a
+	# dead affordance; it deleted earned Skills from the field entirely -- for the
+	# exact player the ruling names (AUTO = "never opened the journal"), with no
+	# toast, glyph or overflow indicator, and with the journal checkbox as the
+	# only recovery. Uncastable-and-silent is a strictly worse defect than
+	# reachable-without-a-number-key, so the bar renders everything again.
+	# AUTO_SLOT_CAP keeps its ONE real job below: bounding auto-slotting into a
+	# CUSTOM loadout (a7 #208). The honest cure for the missing number key is an
+	# affordance on the bar itself (an overflow glyph / "arrows reach the rest"
+	# legend in `field_hotbar.gd`, which this lane does not own) -- recorded for
+	# the train, not faked with a slice.
+	#
+	# Second fix-wave repair, same call: an empty INTERSECTION is not an empty
+	# bar. `hotbar_loadout` is ONE array feeding both bars through the shared
+	# `apply_loadout`, so a player who curates a combat-only kit on the
+	# redesigned Skills tab used to blank the exploration bar outright (slots
+	# 5 -> 0 on the first tick the new tab invites). Nothing in the UI can ASK
+	# for an empty field bar, so an intersection of nothing means "this bar was
+	# never curated" -> fall back to AUTO rather than to blank.
+	if bar.is_empty() and not candidates.is_empty():
+		return candidates
+	return bar
 
 
 ## a7 #208: newly acquired FIELD skills join a CUSTOM loadout automatically
@@ -1001,6 +1042,13 @@ func field_hotbar_loadout() -> Array:
 ## skill, so it needs nothing). Selection stays manual; presence becomes
 ## automatic. Cap = 9: the number-key affordance is the bar's honest capacity
 ## (CHOICE-LOG). Emits LOADOUT_CHANGED with auto:true per slotted skill.
+##
+## SCOPE, precisely: this bounds what the game adds BY ITSELF. It is not a
+## ceiling on the bar. `loadout_toggle` is deliberately uncapped — the
+## redesigned Skills tab is the tool for exceeding nine ON PURPOSE (GH#336
+## ruling 9) — and `field_hotbar_loadout` no longer clips AUTO either (see the
+## reversal note there). So: automatic growth stops at nine, player intent
+## does not.
 const AUTO_SLOT_CAP := 9
 
 
@@ -1566,6 +1614,26 @@ func quest_summary() -> Array:
 	return out
 
 
+## GH#338 — the hint sub-rows, PARALLEL to `quest_summary()` by index (""
+## wherever the active beat authored no hint). A sibling rather than a widened
+## `quest_summary`, deliberately: that function's Array-of-plain-Strings shape
+## is pinned by consumers outside the journal (field_hotbar's quest-thread
+## strip), and this feature has no business reshaping them.
+##
+## The sim CANNOT read WISettings (purity rule), so the DEFAULT-ON toggle is
+## applied by the journal at render time -- this producer always tells the
+## truth about what the beats authored.
+func quest_hint_lines() -> Array:
+	var catalog: Dictionary = _combat_config.get("quests", {})
+	var out: Array = []
+	var ev := WIQuests.evaluate(catalog, started_quests, accomplishments)
+	for id: String in started_quests:
+		if not ev.has(id) or bool(ev[id]["completed"]):
+			continue
+		out.append(String(ev[id].get("hint", "")))
+	return out
+
+
 func completed_quest_summary() -> Array:
 	var catalog: Dictionary = _combat_config.get("quests", {})
 	var out: Array = []
@@ -1711,21 +1779,78 @@ func _collect_class_grants(cls: Dictionary, held: int, catalog_by_id: Dictionary
 		_collect_class_grants(catalog_by_id[parent_id], held, catalog_by_id, out, visited)
 
 
-## GH#334 note 9: can the player ever ACTIVATE this Skill? The two activation
-## paths in the game are the field hotbar (`field_hotbar_loadout`'s own
-## `field: true` filter) and the combat bar (`combat_hud.rebuild_slots`' own
-## `contexts has "combat" AND ap_cost > 0` filter) -- read from the same data
-## keys those two consumers read, deliberately, rather than re-derived. Anything
-## outside both is a passive or an inert: `used_skills` can never come to
-## contain it, so the reveal gate below would hold its authored description
-## hostage forever.
+## GH#336 (skill-panel spec ruling 3) — THE ONE CATEGORY DERIVATION. It is done
+## HERE, in the sim, once per journal open, and every consumer reads the derived
+## `category`/`slottable`/`bar` keys instead of re-deriving. The rule is
+## deliberately expressed over the SAME data keys the two live hotbar filters
+## already read -- `field_hotbar_loadout`'s `field: true` and
+## `combat_hud.rebuild_slots`' `contexts has "combat" AND ap_cost > 0` -- so the
+## journal can never disagree with the bars about what is fieldable.
+##
+## PRECEDENCE (a Skill lands in exactly ONE bucket, its PRIMARY use):
+## ACTIVATABLE beats passive, and combat beats exploration when both activate.
+## A dual-context Skill therefore renders once, under Combat — Active, and
+## carries `bar: "both"` so the row can say so.
+const SKILL_CATEGORY_COMBAT_ACTIVE := "combat_active"
+const SKILL_CATEGORY_COMBAT_PASSIVE := "combat_passive"
+const SKILL_CATEGORY_FIELD_ACTIVE := "field_active"
+const SKILL_CATEGORY_FIELD_PASSIVE := "field_passive"
+
+## Render order + heading copy. Spec ruling 1's own order; headings are the
+## strings the panel draws AND the `skill_categories` payload key carries.
+const SKILL_CATEGORY_ORDER: Array[String] = [
+	SKILL_CATEGORY_COMBAT_ACTIVE, SKILL_CATEGORY_COMBAT_PASSIVE,
+	SKILL_CATEGORY_FIELD_ACTIVE, SKILL_CATEGORY_FIELD_PASSIVE,
+]
+const SKILL_CATEGORY_HEADINGS := {
+	SKILL_CATEGORY_COMBAT_ACTIVE: "Combat — Active",
+	SKILL_CATEGORY_COMBAT_PASSIVE: "Combat — Passive",
+	SKILL_CATEGORY_FIELD_ACTIVE: "Exploration — Active",
+	SKILL_CATEGORY_FIELD_PASSIVE: "Exploration — Passive",
+}
+## The two buckets whose rows can honestly carry a checkbox: everything in them
+## reaches at least one bar, everything outside them reaches none (spec ruling
+## 4 -- the checkbox lied on 41 of 119 catalog entries before this).
+const SLOTTABLE_SKILL_CATEGORIES: Array[String] = [
+	SKILL_CATEGORY_COMBAT_ACTIVE, SKILL_CATEGORY_FIELD_ACTIVE,
+]
+
+
+static func skill_category(sk: Dictionary) -> String:
+	var in_combat := (sk.get(WIKeys.CONTEXTS, []) as Array).has("combat")
+	if in_combat and int(sk.get(WIKeys.AP_COST, 0)) > 0:
+		return SKILL_CATEGORY_COMBAT_ACTIVE
+	if bool(sk.get(WIKeys.FIELD, false)):
+		return SKILL_CATEGORY_FIELD_ACTIVE
+	if in_combat:
+		return SKILL_CATEGORY_COMBAT_PASSIVE
+	return SKILL_CATEGORY_FIELD_PASSIVE
+
+
+## Which bar(s) a checkbox on this Skill's row actually moves. `hotbar_loadout`
+## is ONE shared array read by both bars through their own candidate filters, so
+## a Skill that clears both filters is genuinely toggled onto both.
+static func skill_bar(sk: Dictionary) -> String:
+	var combat_slot := (sk.get(WIKeys.CONTEXTS, []) as Array).has("combat") and int(sk.get(WIKeys.AP_COST, 0)) > 0
+	var field_slot := bool(sk.get(WIKeys.FIELD, false))
+	if combat_slot and field_slot:
+		return "both"
+	if combat_slot:
+		return "combat"
+	if field_slot:
+		return "field"
+	return ""
+
+
+## GH#334 note 9: can the player ever ACTIVATE this Skill? Now expressed as
+## "its category is one of the slottable two" so the reveal gate and the
+## checkbox affordance can never drift apart -- byte-identical predicate to the
+## hand-written `field OR (combat AND ap_cost > 0)` it replaces.
 ##
 ## COUNT, re-derived at implementation (the brief said 30): 40 of the 119
 ## shipped Skills are un-activatable, and all 40 carry an authored description.
 func _skill_activatable(sk: Dictionary) -> bool:
-	if bool(sk.get("field", false)):
-		return true
-	return (sk.get(WIKeys.CONTEXTS, []) as Array).has("combat") and int(sk.get(WIKeys.AP_COST, 0)) > 0
+	return SLOTTABLE_SKILL_CATEGORIES.has(WIGame.skill_category(sk))
 
 
 func _skill_entries(ids: Array) -> Array:
@@ -1747,8 +1872,132 @@ func _skill_entries(ids: Array) -> Array:
 			var desc := String(sk.get("description", ""))
 			if desc != "":
 				text = "%s — %s" % [display, desc]
-		out.append({WIKeys.ID: id, WIKeys.DISPLAY_NAME: display, "revealed": revealed, "text": text})
+		# GH#336 seam 1a: ADDITIVE enrichment. The array SHAPE is unchanged and
+		# every pre-existing key keeps its exact meaning, so `skills_journal()`'s
+		# own consumers (test_sim_core's reveal-gate suite, the class-group
+		# payload) survive untouched; the new keys are what the categorized
+		# renderer reads instead of re-deriving the rule a third time.
+		var category := WIGame.skill_category(sk)
+		out.append({
+			WIKeys.ID: id, WIKeys.DISPLAY_NAME: display, "revealed": revealed, "text": text,
+			"category": category,
+			"slottable": SLOTTABLE_SKILL_CATEGORIES.has(category),
+			"bar": WIGame.skill_bar(sk),
+			WIKeys.AP_COST: int(sk.get(WIKeys.AP_COST, 0)),
+			WIKeys.MP_COST: int(sk.get(WIKeys.MP_COST, 0)),
+			"icon": String(sk.get("icon", "")),
+		})
 	return out
+
+
+## GH#336 — THE CATEGORIZED, DEDUPED Skills-tab source. `skills_journal()` above
+## stays exactly as it was (class-primary, duplicates and all) because its
+## grouping IS the `skill_groups`/`class_aspirations` payload contract and the
+## Classes strip the redesigned tab still draws; this is its sibling, and it is
+## what the tab BODY renders.
+##
+## Two defects it exists to kill, both measured on the 7-class stage-6 save:
+## 46 rendered rows for 28 distinct Skills (the spellsword inherits-closure gets
+## walked once per group, so [Dangersense] drew three times and checking any one
+## copy flipped all three), and CLASS as the only axis, which buried the
+## combat/exploration + active/passive distinction the player actually navigates
+## by. Here a Skill appears EXACTLY ONCE, in its primary-use bucket, and the
+## class it came from demotes to per-row provenance.
+##
+## Buckets are emitted in `SKILL_CATEGORY_ORDER`; empty buckets are dropped
+## entirely (a level-1 classless PC gets one heading, not four). Within a
+## bucket, rows hold FIRST-ENCOUNTER order -- innate first, then class grants in
+## catalog order -- which is the reading order the class-primary tab had.
+func skills_journal_categories() -> Array:
+	var order: Array[String] = []
+	## id -> Array[{name: String, level: int}] -- `level` is -1 for innate.
+	var sources: Dictionary = {}
+	for raw: Variant in player_skills:
+		var innate_id := String(raw)
+		if not sources.has(innate_id):
+			order.append(innate_id)
+			sources[innate_id] = []
+		(sources[innate_id] as Array).append({"name": "Innate", "level": -1})
+	if not _combat_config.is_empty() and _combat_config.has("classes"):
+		var catalog: Array = _combat_config["classes"]["classes"]
+		var catalog_by_id: Dictionary = {}
+		for cls: Dictionary in catalog:
+			catalog_by_id[String(cls[WIKeys.ID])] = cls
+		for cls: Dictionary in catalog:
+			var cls_id := String(cls[WIKeys.ID])
+			if not classes.has(cls_id):
+				continue
+			var levels: Dictionary = {}
+			_collect_class_grant_levels(cls, int(classes[cls_id]), catalog_by_id, levels, {cls_id: true})
+			var cls_name := String(cls.get(WIKeys.DISPLAY_NAME, cls_id))
+			for grant_id: String in levels:
+				if not sources.has(grant_id):
+					order.append(grant_id)
+					sources[grant_id] = []
+				(sources[grant_id] as Array).append({"name": cls_name, "level": int(levels[grant_id])})
+	var by_category: Dictionary = {}
+	for id: String in order:
+		var category := WIGame.skill_category(skills.get(id, {}))
+		if not by_category.has(category):
+			by_category[category] = []
+		(by_category[category] as Array).append(id)
+	var groups: Array = []
+	for category: String in SKILL_CATEGORY_ORDER:
+		if not by_category.has(category):
+			continue
+		var ids: Array = by_category[category]
+		var entries: Array = _skill_entries(ids)
+		for i in entries.size():
+			(entries[i] as Dictionary)["provenance"] = _provenance_text(sources[String(ids[i])] as Array)
+		groups.append({
+			"category": category,
+			"heading": String(SKILL_CATEGORY_HEADINGS[category]),
+			WIKeys.SKILLS: entries,
+		})
+	return groups
+
+
+## " — Warrior L1" for a single source, " — Warrior, Mage" once two or more
+## classes grant the same Skill (spec ruling 2): the LEVEL is only meaningful
+## while there is one place it came from, and a multi-source row's useful fact
+## is WHICH classes, not which rung of each.
+static func _provenance_text(source_list: Array) -> String:
+	if source_list.is_empty():
+		return ""
+	if source_list.size() == 1:
+		var only := source_list[0] as Dictionary
+		var level := int(only["level"])
+		return String(only["name"]) if level < 0 else "%s L%d" % [String(only["name"]), level]
+	var names: Array[String] = []
+	for raw: Variant in source_list:
+		var name := String((raw as Dictionary)["name"])
+		if not names.has(name):
+			names.append(name)
+	return ", ".join(names)
+
+
+## `_collect_class_grants`' level-carrying twin: skill id -> the LOWEST class
+## level that grants it anywhere in this class's inherit closure. Kept separate
+## rather than widening `_collect_class_grants`, whose Array-of-ids return shape
+## is what `skills_journal()` and its own pins consume.
+func _collect_class_grant_levels(cls: Dictionary, held: int, catalog_by_id: Dictionary, out: Dictionary, visited: Dictionary) -> void:
+	for lv: Dictionary in cls.get("levels", []):
+		var level := int(lv["level"])
+		if level <= held:
+			for sk: Variant in lv.get("grants", []):
+				var sk_id := String(sk)
+				if not out.has(sk_id) or level < int(out[sk_id]):
+					out[sk_id] = level
+	var inherits_raw: Variant = cls.get("inherits")
+	if inherits_raw == null:
+		return
+	var parent_ids: Array = inherits_raw if inherits_raw is Array else [inherits_raw]
+	for parent: Variant in parent_ids:
+		var parent_id := String(parent)
+		if visited.has(parent_id) or not catalog_by_id.has(parent_id):
+			continue
+		visited[parent_id] = true
+		_collect_class_grant_levels(catalog_by_id[parent_id], held, catalog_by_id, out, visited)
 
 
 const GARDEN_MAP_ID := "garden_sanctuary"

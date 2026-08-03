@@ -333,23 +333,91 @@ func test_once_per_waking_requires_hides_until_used() -> void:
 
 
 func test_once_per_waking_refused_in_hide_when() -> void:
+	# NEGATIVE CONTROL: feeds the guard the exact shape it refuses, so every
+	# call below DELIBERATELY trips WIDialogue's push_error. Error printing is
+	# muted for the block and restored in the same function -- the suite's
+	# `ERROR:` grep must stay a zero-tolerance signal, and six expected lines
+	# are exactly the noise a real regression hides behind (GH#343). Mute the
+	# NARROWEST span that still covers every guard-tripping call; never leave
+	# it false past this function.
+	var printing := Engine.print_error_messages
+	Engine.print_error_messages = false
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "follow_up", "hide_when": {"once_per_waking": "meal:erin"}, "end": true},
 		{"text": "always", "end": true},
 	]}}}
 	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "entity_first_use": {}}, Callable())
 	d.begin()
-	assert(d.current_options().size() == 2, "hide_when once_per_waking refused: option visible while UNUSED (no inverted hide)")
+	var unused_size := d.current_options().size()
 	var d2b := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "entity_first_use": {"meal:erin": true}}, Callable())
 	d2b.begin()
-	assert(d2b.current_options().size() == 2, "hide_when once_per_waking refused: option visible while USED too (key ignored entirely)")
+	var used_size := d2b.current_options().size()
 	var combo := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "retired", "hide_when": {"accomplishment": {"done": 1}, "once_per_waking": "meal:erin"}, "end": true},
 		{"text": "always", "end": true},
 	]}}}
 	var d3 := WIDialogue.new(combo, {"skills": [], "classes": {}, "accomplishments": {"done": 1}, "names": {}, "entity_first_use": {}}, Callable())
 	d3.begin()
-	assert(d3.current_options().size() == 1, "combined hide_when: the REAL key (accomplishment, met) still hides -- only once_per_waking is stripped")
+	var combo_size := d3.current_options().size()
+	Engine.print_error_messages = printing
+	assert(Engine.print_error_messages, "error printing restored before any further assert can fire")
+	assert(unused_size == 2, "hide_when once_per_waking refused: option visible while UNUSED (no inverted hide)")
+	assert(used_size == 2, "hide_when once_per_waking refused: option visible while USED too (key ignored entirely)")
+	assert(combo_size == 1, "combined hide_when: the REAL key (accomplishment, met) still hides -- only once_per_waking is stripped")
+
+
+func test_erin_meal_seat_is_requires_seated_and_holds_one_per_waking() -> void:
+	# GH#343 repro attempt, inverted into a permanent proof: the report claimed
+	# erin_errand's meal seat carried once_per_waking in hide_when (ignored ->
+	# takeable twice a waking). It does not, and the seat DOES hold. Guards
+	# both halves: the SHAPE (no hide_when in the shipped file may carry the
+	# key) and the BEHAVIOUR (second take same waking is refused, sleep frees).
+	const ERIN_ERRAND := "res://data/dialogue/erin_errand.json"
+	var graph := _load_json(ERIN_ERRAND)
+	var seat_gates := 0
+	for node_id: String in (graph["nodes"] as Dictionary):
+		for option: Dictionary in (graph["nodes"][node_id] as Dictionary).get("options", []):
+			assert(not (option.get("hide_when", {}) as Dictionary).has("once_per_waking"), "erin_errand %s: once_per_waking must never sit in hide_when (guard ignores it there)" % node_id)
+			if (option.get("requires", {}) as Dictionary).get("once_per_waking", "") == "meal:erin":
+				seat_gates += 1
+	assert(seat_gates == 1, "exactly one erin_errand option is the meal seat, gated in requires")
+
+	var combat_config := {
+		"combatants": _load_json("res://data/combatants.json"),
+		"classes": _load_json("res://data/classes.json"),
+		"arenas": _load_json("res://data/arenas.json"),
+		"dialogue": {"erin_errand": graph},
+	}
+	var game := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	game.record_accomplishment("resolved_wrong_order")
+	for _i: int in 4:
+		game.record_accomplishment("chatted_with_erin")
+
+	var seat_text := func() -> int:
+		var n := 0
+		for opt: Dictionary in game.dialogue.current_options():
+			if String(opt["text"]).begins_with("(Take the seat."):
+				n += 1
+		return n
+
+	game.start_dialogue("erin_errand", "erin")
+	assert(seat_text.call() == 1, "seat offered once the meal window is open")
+	assert(not game.well_fed, "no meal eaten yet")
+	var seat_index := -1
+	for i: int in game.dialogue.current_options().size():
+		if String(game.dialogue.current_options()[i]["text"]).begins_with("(Take the seat."):
+			seat_index = i
+	game.dialogue_choose(seat_index)
+	assert(game.well_fed, "taking the seat banks the meal")
+	assert(game.entity_first_use.has("meal:erin"), "bank_first_use wrote the per-waking key")
+
+	game.start_dialogue("erin_errand", "erin")
+	assert(seat_text.call() == 0, "SAME waking: the seat is gone -- it cannot be taken twice")
+	game.dialogue = null
+	game.sleep()
+	assert(not game.entity_first_use.has("meal:erin"), "sleep clears the per-waking bank")
+	game.start_dialogue("erin_errand", "erin")
+	assert(seat_text.call() == 1, "after sleep: the seat is offered again")
 
 
 func test_picker_presenter_derives_scanable_rows_without_mutating_payload() -> void:
@@ -641,6 +709,199 @@ func test_talk_pool_post_grows_pool_after_gate() -> void:
 	assert(not base_pool.has(after), "post-resolution talk REPLACED the base pool, not merged it")
 
 
+## GH#323 per-line proof. The three ORIGINAL Horns inn rows live in exactly one
+## window -- seal_kept_reported banked, horns_dig_started not yet -- and their
+## settled stages used to gate on door_awakened, which sits far past the closing
+## counter. Nine lines that could never render. This walks each stage LIVE
+## inside that window and pins every line, so re-gating either arm behind an
+## out-of-window counter reds immediately. The `_returned` twins keep
+## door_awakened; their own window opens at door_mounted (asserted here too, so
+## the two arms can never be collapsed by accident).
+func test_horns_inn_settled_stages_serve_inside_their_own_window() -> void:
+	var scene := WISceneCatalog.compose()
+	for row: Array in [["ceria_inn", Vector2i(8, 6)], ["yvlon_inn", Vector2i(2, 3)], ["ksmvr_inn", Vector2i(14, 7)]]:
+		var id := String(row[0])
+		var cell: Vector2i = row[1]
+		var ent := _find_entity(scene, "inn", id)
+		assert(not ent.is_empty(), "inn carries %s" % id)
+		var base_pool: Array = ent["talk_pool"]
+		var stage: Dictionary = (ent["talk_pool_stages"] as Array)[0]
+		var settled: Array = stage["lines"]
+		assert(settled.size() == 3, "%s settled stage carries three lines" % id)
+
+		var game := _make_game_with_dialogue({})
+		assert(not game.entity_present(ent), "%s is absent before seal_kept_reported" % id)
+		game.record_accomplishment("seal_kept_reported")
+		assert(game.entity_present(ent), "%s stands in the inn once the seal is reported" % id)
+		var twin := _find_entity(scene, "inn", id + "_returned")
+		assert(not game.entity_present(twin), "%s_returned stays away -- the twin's window opens at door_mounted" % id)
+
+		# One pool line per waking (social_talked clears at sleep). Chats 1-3
+		# spend the base pool and carry the counter to the stage threshold;
+		# chats 4-6 must serve settled lines 0, 1, 2 in order.
+		var served: Array = []
+		for chat: int in 6:
+			_events.clear()
+			game.player_cell = cell - Vector2i(0, 1)
+			game.player_facing = Vector2i(0, 1)
+			game.interact()
+			served.append(_last_line_text())
+			game.sleep()
+			assert(game.accomplishment_count("horns_dig_started") == 0, "%s: the window never closed under us" % id)
+			assert(game.accomplishment_count("door_awakened") == 0, "%s: door_awakened stays unheld all window long -- the old gate's exact problem" % id)
+		for i: int in 3:
+			assert(served[i] == String(base_pool[i]), "%s chat %d serves base pool line %d" % [id, i + 1, i])
+		for i: int in 3:
+			assert(served[i + 3] == String(settled[i]), "%s chat %d serves SETTLED line %d (dead before GH#323)" % [id, i + 4, i])
+		assert(game.entity_present(ent), "%s is still standing there after six wakings -- the window never needed the dig" % id)
+
+
+## GH#349, review-wave repair. Pisces's inn greet grew a residence arm that
+## seats his team "in the corner by the fire". `text_variants` has no hide_when
+## (dialogue.gd `_resolved_text` reads `requires` only, LAST MATCH WINS), so a
+## single seal_kept_reported arm kept describing an occupied corner right
+## through the dig window -- horns_dig_started retires all three original Horns
+## rows and the `_returned` twins do not arm until door_mounted, so for that
+## whole stretch no Horn is on the inn map at all. The contract this pins is
+## not "which text" but the INVARIANT: the greet may only claim the corner in
+## states where the scene catalog actually stands a Horn in the inn.
+func test_pisces_inn_greet_never_seats_the_horns_in_an_empty_corner() -> void:
+	var scene := WISceneCatalog.compose()
+	var graph := _load_json("res://data/dialogue/pisces_inn.json")
+	var horn_rows: Array = []
+	for id: String in ["ceria_inn", "yvlon_inn", "ksmvr_inn", "ceria_inn_returned", "yvlon_inn_returned", "ksmvr_inn_returned"]:
+		var ent := _find_entity(scene, "inn", id)
+		assert(not ent.is_empty(), "inn carries %s" % id)
+		horn_rows.append(ent)
+
+	# Every state the guest row can be interacted in, walked in arc order.
+	var states: Array = [
+		{},
+		{"seal_kept_reported": 1},
+		{"seal_kept_reported": 1, "horns_dig_started": 1},
+		{"seal_kept_reported": 1, "horns_dig_started": 1, "horns_dig_joined": 1},
+		{"seal_kept_reported": 1, "horns_dig_started": 1, "door_retrieved": 1},
+		{"seal_kept_reported": 1, "horns_dig_started": 1, "door_retrieved": 1, "door_mounted": 1},
+	]
+	var claimed_at_least_once := false
+	var declined_at_least_once := false
+	for banked: Dictionary in states:
+		var game := _make_game_with_dialogue({})
+		for id: String in banked:
+			for _i: int in int(banked[id]):
+				game.record_accomplishment(id)
+		var a_horn_is_here := false
+		for ent: Dictionary in horn_rows:
+			if game.entity_present(ent):
+				a_horn_is_here = true
+		_events.clear()
+		var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": banked, "names": {}}, _sink)
+		d.begin()
+		var text := String(_events[0]["payload"]["text"]).to_lower()
+		var claims_the_corner := text.contains("annexed the corner") or text.contains("reclaimed the corner")
+		if claims_the_corner:
+			claimed_at_least_once = true
+			assert(a_horn_is_here, "pisces_inn greet claims the corner at %s, and no Horns inn row is present there" % [banked])
+		else:
+			declined_at_least_once = true
+		if a_horn_is_here:
+			assert(claims_the_corner, "a Horn IS in the inn at %s and the greet has dropped the residence reading" % [banked])
+		else:
+			assert(not text.contains("annexed the corner"), "the empty-corner window must not serve the occupied-corner line")
+	assert(claimed_at_least_once, "the residence arm is reachable in at least one shipped state")
+	assert(declined_at_least_once, "at least one shipped state serves a non-corner greet -- otherwise the arm is unconditional")
+
+
+## GH#332. Both tame props are consumed permanently and a downed companion was
+## gone for good, so one bad fight could exhaust taming forever. Three halves,
+## all pinned here, and two of them are review-wave repairs:
+##  1. Only a TAMED death banks `companion_lost`. A swap and a sleep expiry
+##     were always excluded; an ANIMATED summon going down in a fight is the
+##     one the first cut missed, and `_combat_event_relay` routes EVERY downed
+##     companion through `_clear_companion("downed")`, so a necromancer with
+##     three bone piles and no [Lesser Bond] used to burn the whole ladder.
+##  2. A rung NEVER closes on the counter. The first cut gave rungs 1 and 2 an
+##     `absent` arm one count above their own, so a player who lost a bond in
+##     the floodplains and the next one in a dungeon came back to a rung
+##     erased unclaimed. Rungs accumulate; being TAKEN is what retires them.
+##  3. No rung is offered while a bond already rides.
+## Lives in this file because it is a content-gate proof and this is one of the
+## two test files the content lane owns; the sim-side clear is called at its
+## own seam.
+func test_companion_loss_reopens_a_den_one_rung_at_a_time() -> void:
+	var scene := WISceneCatalog.compose()
+	var rungs := {
+		"wolf_den_spring": _find_entity(scene, "floodplains", "wolf_den_spring"),
+		"razorbeak_chick_fledgling": _find_entity(scene, "floodplains", "razorbeak_chick_fledgling"),
+		"wolf_den_late_litter": _find_entity(scene, "floodplains", "wolf_den_late_litter"),
+	}
+	for id: String in rungs:
+		assert(not (rungs[id] as Dictionary).is_empty(), "floodplains carries the spring-litter rung %s" % id)
+
+	# Rungs coexist now, so two of them may never sit on the same cell.
+	var seen_cells: Array = []
+	for id: String in rungs:
+		var cell: Array = (rungs[id] as Dictionary)["cell"]
+		assert(not seen_cells.has(cell), "spring-litter rung %s shares a cell with an earlier rung; they can be live together" % id)
+		seen_cells.append(cell)
+
+	var live := func(game: WIGame) -> Array:
+		var out: Array = []
+		for id: String in ["wolf_den_spring", "razorbeak_chick_fledgling", "wolf_den_late_litter"]:
+			if game.entity_present(rungs[id] as Dictionary):
+				out.append(id)
+		return out
+
+	var game := _make_game_with_dialogue({})
+	assert(game.entity_present(_find_entity(scene, "floodplains", "wolf_den")), "the original den still stands on a fresh save")
+	assert(live.call(game).is_empty(), "no spring rung is offered before any bond is lost")
+
+	# Only a TAMED death banks. A swap, a sleep expiry, and an animated summon
+	# going down in a fight must not.
+	game.companion = "wolf_companion"
+	game.companion_source = "tamed"
+	game._clear_companion("released")
+	assert(game.accomplishment_count("companion_lost") == 0, "swapping bonds is a choice, not a loss")
+	game.companion = "skeleton_ally"
+	game.companion_source = "animated"
+	game._clear_companion("sleep")
+	assert(game.accomplishment_count("companion_lost") == 0, "an animated follower expiring at sleep is not a loss")
+	game.companion = "skeleton_ally"
+	game.companion_source = "animated"
+	game._clear_companion("downed")
+	assert(game.accomplishment_count("companion_lost") == 0, "a DOWNED ANIMATED summon is a spent working, not a lost bond -- it may not burn a ladder rung")
+	assert(live.call(game).is_empty(), "no rung opens for a skeleton the player could never have bonded")
+
+	game.companion = "wolf_companion"
+	game.companion_source = "tamed"
+	game._clear_companion("downed")
+	assert(game.accomplishment_count("companion_lost") == 1, "a DOWNED TAMED companion banks the loss")
+	assert(game.companion == "", "the bond slot is empty after the clear")
+	assert(live.call(game) == ["wolf_den_spring"], "first loss opens rung 1 and only rung 1")
+
+	# The wild does not offer while a bond already walks with you.
+	game.companion = "razorbeak_companion"
+	assert(live.call(game).is_empty(), "no rung is offered while a companion rides")
+	game.companion = ""
+
+	# An UNCLAIMED rung survives the next loss. This is the review-wave repro:
+	# lose a bond in the floodplains, lose the next one somewhere else, come
+	# back -- rung 1 must still be standing, because the player was never
+	# offered it.
+	game.record_accomplishment("companion_lost")
+	assert(live.call(game) == ["wolf_den_spring", "razorbeak_chick_fledgling"], "a second loss opens rung 2 WITHOUT erasing the rung 1 the player never walked back to")
+	game.record_accomplishment("companion_lost")
+	assert(live.call(game) == ["wolf_den_spring", "razorbeak_chick_fledgling", "wolf_den_late_litter"], "three losses stand three unclaimed rungs -- the ladder's advertised depth")
+	game.record_accomplishment("companion_lost")
+	assert(live.call(game).size() == 3, "no rung carries an `absent`, so none closes past its own count")
+
+	# TAKEN is what retires a rung: `remove_entity` appends to the persisted
+	# `removed_entities`, which is why the counter-based `absent` arms were
+	# both unnecessary and destructive.
+	game.remove_entity("wolf_den_spring")
+	assert(game.removed_entities.has("wolf_den_spring"), "bonding a rung removes it for good, and the removal persists")
+
+
 const GRAPH := {
 	"start": "hub",
 	"nodes": {
@@ -811,6 +1072,9 @@ func _init() -> void:
 	test_node_text_variants_use_met_requires()
 	test_node_text_variants_last_match_wins()
 	test_talk_pool_post_grows_pool_after_gate()
+	test_horns_inn_settled_stages_serve_inside_their_own_window()
+	test_pisces_inn_greet_never_seats_the_horns_in_an_empty_corner()
+	test_companion_loss_reopens_a_den_one_rung_at_a_time()
 	test_gold_effect_verb_applies_through_dialogue_choose()
 	test_well_fed_effect_verb_applies_through_dialogue_choose()
 	test_gold_affordability_greys_when_broke()
@@ -818,6 +1082,7 @@ func _init() -> void:
 	test_bargain_price_mod_haggle_optin_display_equals_charge()
 	test_once_per_waking_requires_hides_until_used()
 	test_once_per_waking_refused_in_hide_when()
+	test_erin_meal_seat_is_requires_seated_and_holds_one_per_waking()
 	test_picker_presenter_derives_scanable_rows_without_mutating_payload()
 	test_once_per_waking_gate_lifecycle_through_bank_first_use()
 	test_compound_accomplishment_once_per_waking_gate()

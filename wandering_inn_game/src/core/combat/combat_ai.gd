@@ -67,7 +67,7 @@ static func _act_melee(combat: WICombat, id: String, c: Dictionary, foes: Array)
 					return combat.use_skill(windup_id, foe)
 	for foe: String in foes:
 		if combat.is_adjacent(id, foe):
-			if (c[WIKeys.SKILLS] as Array).has("power_strike") and int(c[WIKeys.AP]) >= 3:
+			if _power_strike_ready(combat, id, c):
 				return combat.use_skill("power_strike", foe)
 			if int(c[WIKeys.AP]) >= WICombat.ATTACK_COST:
 				return combat.attack(foe)
@@ -81,6 +81,23 @@ static func _act_melee(combat: WICombat, id: String, c: Dictionary, foes: Array)
 	if _should_dash(combat, c, goal, 1, WICombat.ATTACK_COST):
 		return combat.dash()
 	return false
+
+
+## GH#337 spec ruling 2: `_act_melee` and `_act_guard` are the two places that
+## hardcode power_strike behind a RAW `AP >= 3` test rather than going through
+## `_can_afford`, so they need the availability term spliced in explicitly. The
+## shape is deliberately a plain `if` and NOT a `return false`: a cooling
+## power_strike must FALL THROUGH to the basic attack on the very next line --
+## the whole point of doing the AI work before any skill carries a cooldown.
+static func _power_strike_ready(combat: WICombat, id: String, c: Dictionary) -> bool:
+	if not (c[WIKeys.SKILLS] as Array).has("power_strike"):
+		return false
+	# The raw literal 3 this arm used to carry was power_strike's own ap_cost
+	# copied into code -- byte-identical while that cost held, silently wrong the
+	# first time the data moved. Read the cost the sim will actually charge.
+	if int(c[WIKeys.AP]) < combat.effective_ap_cost(c, combat.skills.get("power_strike", {})):
+		return false
+	return combat.skill_available(id, "power_strike")
 
 
 static func _act_skirmisher(combat: WICombat, id: String, c: Dictionary, foes: Array) -> bool:
@@ -130,7 +147,7 @@ static func _act_guard(combat: WICombat, id: String, c: Dictionary, foes: Array)
 				return combat.use_skill(support_id, ward)
 	for foe: String in foes:
 		if combat.is_adjacent(id, foe):
-			if (c[WIKeys.SKILLS] as Array).has("power_strike") and int(c[WIKeys.AP]) >= 3:
+			if _power_strike_ready(combat, id, c):
 				return combat.use_skill("power_strike", foe)
 			if int(c[WIKeys.AP]) >= WICombat.ATTACK_COST:
 				return combat.attack(foe)
@@ -231,10 +248,20 @@ static func _support_skill(combat: WICombat, c: Dictionary) -> String:
 	return ""
 
 
+## GH#337 spec ruling 2, and it lands FIRST for a reason proven by probe:
+## `take_turn` breaks on the FIRST refused action, so a skill that refuses
+## mid-scan costs its holder the WHOLE turn (flagging power_strike unavailable
+## cost the goblin chieftain 16 damage and 4 unspent AP). Availability therefore
+## has to be part of what "can afford" MEANS, not a separate refusal the AI
+## discovers by being told no -- every arm that already filters on this function
+## (`_act_ranged`'s line/spell/area scan, `_support_skill`, `_act_melee`'s windup
+## cadence) now falls through to its own next option for free.
 static func _can_afford(combat: WICombat, c: Dictionary, s: Dictionary) -> bool:
 	if int(c[WIKeys.AP]) < combat.effective_ap_cost(c, s):
 		return false
-	return int(c.get(WIKeys.MP, 0)) >= int(s.get(WIKeys.MP_COST, 0))
+	if int(c.get(WIKeys.MP, 0)) < int(s.get(WIKeys.MP_COST, 0)):
+		return false
+	return combat.skill_available(String(c[WIKeys.ID]), String(s.get(WIKeys.ID, "")))
 
 
 static func _act_line(combat: WICombat, id: String, c: Dictionary, line_id: String) -> bool:

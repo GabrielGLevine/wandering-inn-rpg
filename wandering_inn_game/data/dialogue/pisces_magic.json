@@ -312,6 +312,54 @@
       }
      },
      "goto": "descent_ask"
+    },
+    {
+     "_comment": "#15's BRIDGE BEAT: the one place his Horns membership is said out loud, in his own mouth. Gate is horns_party_formed -- the player has met the team, so the question is earned, not exposition. Appended LAST so every cursor-pinned canonical stays byte-identical. CANON BAR: names no delve, no casualty, no date -- membership and its terms only.",
+     "text": "Ksmvr counts you as a Horn of Hammerad. Do you?",
+     "requires": {
+      "accomplishment": {
+       "horns_party_formed": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "heard_pisces_horns": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "heard_pisces_horns"
+      }
+     ],
+     "goto": "horns_bridge"
+    }
+   ]
+  },
+  "horns_bridge": {
+   "speaker": "Pisces",
+   "text": "Horns of Hammerad. Yes. Say it quietly and do not congratulate me. There is a name on their roster and a share of their debts attached to it, and that is the whole of what membership consists of. I am not in the hole with them because the interesting half of the work is here — things that are written do not read themselves, and nobody else in this city can. Ceria calls that being hired. Ceria also calls my handwriting adequate, so her judgement is not beyond dispute.",
+   "options": [
+    {
+     "text": "Four of you, then.",
+     "goto": "horns_bridge_two"
+    },
+    {
+     "text": "Back to magic, then.",
+     "goto": "greet"
+    }
+   ]
+  },
+  "horns_bridge_two": {
+   "speaker": "Pisces",
+   "text": "Four. Yvlon holds what is falling, Ksmvr counts what is left, Ceria decides which of the two we do next, and I am told afterwards. It is not a democracy and it is not, strictly, a friendship. It has kept four people alive who had no business staying that way, and I have stopped auditing the arrangement. Next question — about magic, ideally.",
+   "options": [
+    {
+     "text": "Back to magic, then.",
+     "goto": "greet"
+    },
+    {
+     "text": "Understood, Pisces.",
+     "end": true
     }
    ]
   },
