@@ -1,5 +1,5 @@
 {
- "_comment": "Current values (400/900) are a6 #206's doubling of 200/450 (lineage: #62 doubled the ORIGINAL 100/225) (the 1.5x that was promised-but-never-applied, compounded with another ~1.33x on top, landing on a clean round number) -- same 2.25x dusk->night ratio preserved.",
+ "_comment": "Current values (400/900) are a6 #206's doubling of 200/450 (lineage: #62 doubled the ORIGINAL 100/225), same 2.25x dusk->night ratio preserved. The v0.17 R2 lighting language: docs/CHOICE-LOG.md states it, scripts/data_lint.py (check_moods) enforces it. SEALED vs SKY is this file's `day == dusk` pin -- an authored call.",
  "meta": {
   "phase_thresholds": {
    "dusk": 400,
@@ -19,13 +19,13 @@
     1.0
    ],
    "dusk": [
-    0.85,
-    0.72,
-    0.55
+    0.56,
+    0.62,
+    0.76
    ],
    "night": [
-    0.55,
-    0.5,
+    0.4,
+    0.45,
     0.62
    ],
    "vignette": 0.4
@@ -42,9 +42,9 @@
     0.65
    ],
    "night": [
-    0.24,
-    0.28,
-    0.48
+    0.2,
+    0.26,
+    0.54
    ],
    "vignette": 0.44
   },
@@ -55,33 +55,33 @@
     1
    ],
    "dusk": [
+    0.42,
     0.45,
-    0.5,
-    0.92
+    0.94
    ],
    "night": [
+    0.25,
     0.3,
-    0.36,
-    0.72
+    0.8
    ],
    "vignette": 0.4
   },
   "rags_camp": {
-   "_comment": "Sheltered hollow: rim-shaded warm-dim at noon, firelight only after dusk. Vignette 0.52 sits just above witch_hollow's 0.50.",
+   "_comment": "Sheltered hollow. `camp_fire_pit` carries the firelight the old card faked in the grade.",
    "day": [
     0.86,
     0.82,
     0.72
    ],
    "dusk": [
-    0.58,
-    0.46,
-    0.36
+    0.5,
+    0.48,
+    0.56
    ],
    "night": [
-    0.34,
-    0.26,
-    0.22
+    0.28,
+    0.29,
+    0.42
    ],
    "vignette": 0.52
   },
@@ -102,7 +102,8 @@
     0.22,
     0.32
    ],
-   "vignette": 0.48
+   "vignette": 0.48,
+   "lights_by_day": true
   },
   "guild": {
    "day": [
@@ -111,35 +112,43 @@
     0.82
    ],
    "dusk": [
-    0.88,
-    0.72,
-    0.5
+    0.66,
+    0.7,
+    0.8
    ],
    "night": [
-    0.7,
-    0.58,
-    0.4
+    0.44,
+    0.49,
+    0.62
    ],
    "vignette": 0.3
   },
+  "inn_player_room": {
+   "_comment": "#350: inn's own day/dusk/night ladder, not the corridor pin; sconce = dusk/night warmth; window daylight, no lights_by_day.",
+   "day": [1.0, 1.0, 1.0],
+   "dusk": [0.56, 0.62, 0.76],
+   "night": [0.4, 0.45, 0.62],
+   "vignette": 0.4
+  },
   "inn_upstairs": {
-   "_comment": "Reuses the inn's OWN dusk grade verbatim ([0.85,0.72,0.55]) as the permanent pin -- literally 'always looks like the warm end of the day downstairs', a direct, defensible reuse rather than inventing a new palette.",
+   "_comment": "TIME-INVARIANT. The old pin was the inn's dusk grade verbatim, so it moved with it; a corridor lit by its own sconce. Its `window_blue` decor is dressing, not a light well.",
    "day": [
-    0.85,
-    0.72,
-    0.55
+    0.66,
+    0.7,
+    0.76
    ],
    "dusk": [
-    0.85,
-    0.72,
-    0.55
+    0.66,
+    0.7,
+    0.76
    ],
    "night": [
-    0.85,
-    0.72,
-    0.55
+    0.66,
+    0.7,
+    0.76
    ],
-   "vignette": 0.4
+   "vignette": 0.4,
+   "lights_by_day": true
   },
   "barracks": {
    "_comment": "TIME-INVARIANT (inn_upstairs/sewers precedent): a barracks is staffed day and night, so it reads the same at any phase rather than tracking the outside clock.",
@@ -163,19 +172,19 @@
   "runners_guild": {
    "_comment": "TIME-INVARIANT (barracks/inn_upstairs/sewers precedent): couriers keep counter hours day and night (deliveries complete within any waking), so the room reads the same at any phase.",
    "day": [
-    0.88,
+    0.83,
     0.86,
-    0.78
+    0.89
    ],
    "dusk": [
-    0.88,
+    0.83,
     0.86,
-    0.78
+    0.89
    ],
    "night": [
-    0.88,
+    0.83,
     0.86,
-    0.78
+    0.89
    ],
    "vignette": 0.28
   },
@@ -192,30 +201,11 @@
     0.62
    ],
    "night": [
-    0.26,
-    0.27,
-    0.38
+    0.23,
+    0.25,
+    0.42
    ],
    "vignette": 0.42
-  },
-  "garden": {
-   "_comment": "The eyes-closed test IS the mood system itself: if the screen never dims and never vignettes on this map, you are in the garden.",
-   "day": [
-    1.0,
-    1.0,
-    1.0
-   ],
-   "dusk": [
-    1.0,
-    1.0,
-    1.0
-   ],
-   "night": [
-    1.0,
-    1.0,
-    1.0
-   ],
-   "vignette": 0.0
   },
   "deep_tunnels": {
    "_comment": "The Raskghar descent -- the DARKEST pin in the game, time-invariant (below the sewers, no daylight ever reaches it).",
@@ -234,24 +224,25 @@
     0.2,
     0.3
    ],
-   "vignette": 0.55
+   "vignette": 0.55,
+   "lights_by_day": true
   },
   "riverfarm_village": {
-   "_comment": "\"harvest light\" -- the ONLY map whose day grade tips warm (identity everywhere else is [1,1,1]); deep-blue night per spec sec.1.",
+   "_comment": "\"harvest light\" -- the ONLY map whose day grade tips warm; deep-blue night per spec sec.1.",
    "day": [
     0.76,
     0.72,
     0.63
    ],
    "dusk": [
-    0.48,
-    0.4,
-    0.62
+    0.44,
+    0.43,
+    0.66
    ],
    "night": [
-    0.26,
-    0.3,
-    0.55
+    0.24,
+    0.28,
+    0.58
    ],
    "vignette": 0.4
   },
@@ -268,9 +259,9 @@
     0.5
    ],
    "night": [
-    0.2,
-    0.34,
-    0.3
+    0.19,
+    0.33,
+    0.33
    ],
    "vignette": 0.5
   },
@@ -304,9 +295,9 @@
     0.44
    ],
    "night": [
-    0.24,
-    0.3,
-    0.28
+    0.22,
+    0.29,
+    0.3
    ],
    "vignette": 0.5
   },
@@ -322,9 +313,9 @@
     0.8
    ],
    "night": [
-    0.3,
-    0.34,
-    0.62
+    0.27,
+    0.32,
+    0.68
    ],
    "vignette": 0.35
   },
@@ -341,70 +332,73 @@
    ],
    "night": [
     0.22,
-    0.26,
-    0.46
+    0.27,
+    0.58
    ],
    "vignette": 0.48
   },
   "brothers_parlor": {
    "_comment": "The hero-light-over-the-card-table contrast survives the lift (the table light's own energy was raised 0.9->1.0 in the same fix, mercantile decor entry).",
    "day": [
-    0.85,
-    0.72,
-    0.58
+    0.62,
+    0.66,
+    0.74
    ],
    "dusk": [
-    0.85,
-    0.72,
-    0.58
+    0.62,
+    0.66,
+    0.74
    ],
    "night": [
-    0.85,
-    0.72,
-    0.58
+    0.62,
+    0.66,
+    0.74
    ],
-   "vignette": 0.34
+   "vignette": 0.34,
+   "lights_by_day": true
   },
   "stationer": {
    "_comment": "Paper-warm and a shade cooler than the parlor: lamplight on rag paper, not on brandy.",
    "day": [
-    0.86,
-    0.82,
-    0.72
+    0.71,
+    0.75,
+    0.81
    ],
    "dusk": [
-    0.86,
-    0.82,
-    0.72
+    0.71,
+    0.75,
+    0.81
    ],
    "night": [
-    0.86,
-    0.82,
-    0.72
+    0.71,
+    0.75,
+    0.81
    ],
-   "vignette": 0.30
+   "vignette": 0.3,
+   "lights_by_day": true
   },
   "adventurers_rest": {
    "_comment": "Common-hall amber, one notch under the inn's: a bigger hearth in a smaller room.",
    "day": [
-    0.88,
-    0.76,
-    0.60
+    0.66,
+    0.7,
+    0.77
    ],
    "dusk": [
-    0.88,
-    0.76,
-    0.60
+    0.66,
+    0.7,
+    0.77
    ],
    "night": [
-    0.88,
-    0.76,
-    0.60
+    0.66,
+    0.7,
+    0.77
    ],
-   "vignette": 0.36
+   "vignette": 0.36,
+   "lights_by_day": true
   },
   "dungeon_approach": {
-   "_comment": "Per-prop accent variation (the 4 trap tells' post-reveal warning tints, the statue/rubble dressing) rides the live decor `tint` field (GH#55) on top of this base grade, not a second mood card. GH-VISUAL-LOG 2026-07-17: base grade lifted ~35% total (12% then a further 20% on user call) (user-ratified USER-EYES item -- vault shots read near-black).",
+   "_comment": "Per-prop accent variation (trap tells, statue/rubble dressing) rides the live decor `tint` field (GH#55) over this base grade, not a second card. GH-VISUAL-LOG 2026-07-17: base lifted ~35% total, user-ratified USER-EYES item (vault shots read near-black).",
    "day": [
     0.282,
     0.295,
@@ -481,40 +475,44 @@
    "vignette": 0.34
   },
   "pallass_forge": {
+   "_comment": "NEUTRAL on purpose: RULE 2 bars a warm grade, not a cold one, and the first cut read colder than the sewers.",
    "day": [
-    1.02,
-    0.86,
-    0.78
+    0.85,
+    0.85,
+    0.85
    ],
    "dusk": [
-    1.02,
-    0.86,
-    0.78
+    0.85,
+    0.85,
+    0.85
    ],
    "night": [
-    1.02,
-    0.86,
-    0.78
+    0.85,
+    0.85,
+    0.85
    ],
-   "vignette": 0.42
+   "vignette": 0.42,
+   "lights_by_day": true
   },
   "pallass_forge_hall": {
+   "_comment": "Neutralised with its pallass_forge twin, hue-only at the value it already had.",
    "day": [
-    1.06,
-    0.82,
-    0.64
+    0.85,
+    0.85,
+    0.85
    ],
    "dusk": [
-    1.06,
-    0.82,
-    0.64
+    0.85,
+    0.85,
+    0.85
    ],
    "night": [
-    1.02,
-    0.78,
-    0.6
+    0.76,
+    0.76,
+    0.76
    ],
-   "vignette": 0.48
+   "vignette": 0.48,
+   "lights_by_day": true
   },
   "pallass_den_shop": {
    "day": [
@@ -523,21 +521,60 @@
     0.76
    ],
    "dusk": [
-    0.98,
-    0.86,
-    0.72
+    0.82,
+    0.85,
+    0.89
    ],
    "night": [
-    0.92,
-    0.8,
-    0.68
+    0.68,
+    0.72,
+    0.8
    ],
    "vignette": 0.3
+  },
+  "garden_sanctuary": {
+   "_comment": "If the screen never dims and never vignettes here, you are in the garden.",
+   "day": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "dusk": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "night": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "vignette": 0.0
+  },
+  "riverfarm_longhouse": {
+   "_comment": "Windowless hall, so SEALED: a day-identity pin reads as a SKY and dark-ends its hearth at noon.",
+   "day": [
+    0.64,
+    0.68,
+    0.76
+   ],
+   "dusk": [
+    0.64,
+    0.68,
+    0.76
+   ],
+   "night": [
+    0.64,
+    0.68,
+    0.76
+   ],
+   "vignette": 0.4,
+   "lights_by_day": true
   }
  },
  "arena_moods": {
   "sewers_nest": {
-   "_comment": "kept in lockstep with the deepened `moods.sewers` field pin (day/dusk [0.24,0.26,0.37], avg .29) so the vermin/nest fights still read as the SAME underground the player just walked through, not a lit-back-up combat pin.",
+   "_comment": "kept in lockstep with the `moods.sewers` field pin so nest fights read as the SAME underground the player walked through, not a lit-back-up combat pin.",
    "day": [
     0.24,
     0.26,

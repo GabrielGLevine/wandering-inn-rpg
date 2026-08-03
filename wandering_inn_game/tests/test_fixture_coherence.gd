@@ -41,6 +41,7 @@ const COMBAT_BAND_FIXTURES := {
 }
 
 const MAP_REQUIRES := {
+	"inn_player_room": ["room_purchased"],
 	"street": ["reached_liscor"],
 	"guild": ["reached_liscor"],
 	"barracks": ["reached_liscor"],

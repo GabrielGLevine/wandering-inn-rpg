@@ -33,6 +33,8 @@ Checks:
      so a bare counter dict is VACUOUSLY TRUE (masked gate). The one shipped
      instance (invrisil_anchor_stone) was wrapped for real, so the arm now
      has zero exemptions -- keep it that way.
+  7. mood language    -- moods.json keys must name a real map/arena, and each
+     card must obey the v0.17 R2 lighting language (see check_moods).
 
 ADVISORIES (v0.17 L3, GH#335 item 3) are a SECOND, non-failing tier. They
 never touch the exit code and can never break a sweep, because they measure a
@@ -55,6 +57,12 @@ from pathlib import Path
 from wi_data_lib import DATA
 
 GATE_KEYS = ("door_when", "contains_when", "portal_menu_when", "fence_menu_when")
+MOOD_PHASES = ("day", "dusk", "night")
+# world.gd's own SKY_GRADE_EPSILON -- the two must agree or the lint would
+# police a different sealed/sky split than the engine reads.
+SKY_GRADE_EPSILON = 0.01
+WARM_GRADE_CEILING = 0.03  # RULE 2: a sealed grade may be cool or neutral, never warm
+MONO_EPS = 1e-9  # float-noise guard on the strict-monotone comparisons
 # (map_id, entity_id, gate_key) -> the follow-up issue that owns the fix.
 # EMPTY BY DESIGN: a masked always-true gate is a shipped bug, never a waiver.
 VACUOUS_GATE_ALLOWLIST: dict = {}
@@ -246,6 +254,133 @@ def check_gate_shapes(maps: dict, errors: list) -> None:
 			_walk_gates(entity, map_id, entity.get("id", "<no id>"), errors)
 
 
+def _mood_triples(card: dict, label: str, errors: list):
+	"""Return (day, dusk, night) as float triples, or None once reported."""
+	out = []
+	for phase in MOOD_PHASES:
+		rgb = card.get(phase)
+		if not (isinstance(rgb, list) and len(rgb) == 3
+				and all(isinstance(c, (int, float)) and not isinstance(c, bool) for c in rgb)):
+			errors.append(f"moods.json: {label} '{phase}' must be a 3-number RGB triple")
+			return None
+		out.append([float(c) for c in rgb])
+	return out
+
+
+def _light_row_counts(maps: dict) -> dict:
+	"""Light rows per map -- decor and entities both carry them (world.gd
+	_build_decor / _build_entities each call _attach_light)."""
+	counts = {}
+	for map_id, m in maps.items():
+		n = 0
+		for key in ("decor", "entities"):
+			for row in m.get(key) or []:
+				if isinstance(row, dict) and isinstance(row.get("light"), dict):
+					n += 1
+		counts[map_id] = n
+	return counts
+
+
+def check_moods(parsed: dict, maps: dict, errors: list) -> None:
+	"""GH v0.17 R2 -- the lighting language, enforced instead of asserted.
+
+	Three failure classes, all of them shipped at least once:
+
+	(a) DEAD DATA. `moods.moods.garden` named no map for the life of the
+	    project, so a hand-authored card was never once read -- invisible
+	    because a missing card silently falls through apply()'s identity
+	    fallback. A key here must name a real map (arena cards, a real arena).
+
+	(b) RULE 1, a map WITH a sky (`day != dusk`, which is world.gd's own
+	    `_map_has_sky` test): the sky owns the grade, so temperature
+	    `t = r - b` and value `v = mean(rgb)` both fall monotonically
+	    day -> dusk -> night. Four shipped maps finished the night WARMER
+	    than their own dusk before this landed.
+
+	(c) RULE 2, a map WITHOUT one (`day == dusk`): the FLAME owns the warmth,
+	    so the grade never tips warm (`t <= 0.03`), and a sealed room that owns
+	    light rows must carry `lights_by_day: true` -- otherwise
+	    meta.light_energy_by_phase.day = 0.0 deletes the only source the room
+	    has and it reads as a cold unlit oven at noon (the adventurers_rest /
+	    riverfarm_longhouse defect). The mirror holds too: a map with a sky
+	    must NOT opt in, because a lantern adds nothing at noon.
+
+	This is deliberately NOT the cut ID-cross-ref tier: it duplicates no
+	GDScript layer (nothing else in the suite reads a moods key at all), it is
+	derivable from the JSON alone, and tests/test_world_visuals.gd can only
+	hand-pin ids one at a time. Keep the rule here and the pins there.
+	"""
+	moods_path = DATA / "moods.json"
+	if moods_path not in parsed:
+		return
+	doc = parsed[moods_path]
+	lights = _light_row_counts(maps)
+	for map_id, card in sorted((doc.get("moods") or {}).items()):
+		if map_id.startswith("_") or not isinstance(card, dict):
+			continue
+		label = f"moods.{map_id}"
+		if map_id not in maps:
+			errors.append(f"moods.json: '{map_id}' names no map -- the card is dead data "
+				"(a missing card falls through to the identity fallback, so nothing looks wrong)")
+			continue
+		triples = _mood_triples(card, label, errors)
+		if triples is None:
+			continue
+		day, dusk, night = triples
+		temps = [rgb[0] - rgb[2] for rgb in triples]
+		values = [sum(rgb) / 3.0 for rgb in triples]
+		has_sky = any(abs(day[i] - dusk[i]) > SKY_GRADE_EPSILON for i in range(3))
+		opts_in = bool(card.get("lights_by_day", False))
+		if has_sky:
+			for name, series in (("temperature (r-b)", temps), ("value", values)):
+				if not (series[0] - series[1] > MONO_EPS and series[1] - series[2] > MONO_EPS):
+					errors.append(f"moods.json: '{map_id}' has a sky (day != dusk) but its "
+						f"{name} is not monotone day>dusk>night "
+						f"({series[0]:+.3f}/{series[1]:+.3f}/{series[2]:+.3f}) -- RULE 1")
+			if opts_in:
+				errors.append(f"moods.json: '{map_id}' has a sky yet sets lights_by_day -- "
+					"a lantern adds nothing at noon (RULE 2 mirror)")
+		else:
+			for phase, temp in zip(MOOD_PHASES, temps):
+				if temp > WARM_GRADE_CEILING + MONO_EPS:
+					errors.append(f"moods.json: sealed map '{map_id}' tips its {phase} grade WARM "
+						f"(t={temp:+.3f} > {WARM_GRADE_CEILING}) -- warmth belongs to the light "
+						"rows, never to the grade (RULE 2)")
+			if lights.get(map_id, 0) > 0 and not opts_in:
+				errors.append(f"moods.json: sealed map '{map_id}' owns {lights[map_id]} light row(s) "
+					"but no lights_by_day -- meta.light_energy_by_phase.day = 0.0 switches them "
+					"all off at noon (RULE 2)")
+	arenas_path = DATA / "arenas.json"
+	arena_ids = set()
+	if arenas_path in parsed:
+		arena_ids = {str(a.get("id")) for a in parsed[arenas_path].get("arenas", [])
+			if isinstance(a, dict)}
+	for arena_id, card in sorted((doc.get("arena_moods") or {}).items()):
+		if arena_id.startswith("_") or not isinstance(card, dict):
+			continue
+		if arena_ids and arena_id not in arena_ids:
+			errors.append(f"moods.json: arena_moods '{arena_id}' names no arena -- dead data")
+			continue
+		_mood_triples(card, f"arena_moods.{arena_id}", errors)
+
+
+def advise_unlit_sealed_rooms(maps: dict, parsed: dict, advisories: list) -> None:
+	"""The riverfarm_longhouse class: a map with light rows and NO mood card.
+
+	`_map_has_sky` falls to TRUE for a card-less map (the conservative
+	direction for particles), so its lamps are zeroed at noon and its grade is
+	identity at every hour -- which is how the longhouse ended up measurably
+	brighter at midnight than at midday. Advisory, not an error: an exterior
+	with a campfire is a perfectly honest answer.
+	"""
+	moods_path = DATA / "moods.json"
+	cards = (parsed.get(moods_path) or {}).get("moods", {}) if moods_path in parsed else {}
+	for map_id, n in sorted(_light_row_counts(maps).items()):
+		if n > 0 and map_id not in cards:
+			advisories.append(f"maps/{map_id}: {n} light row(s) but no moods.json card -- "
+				"the map is treated as sky-bearing, so those lights are dark at day")
+
+
 def advise_acted_on_state(maps: dict, advisories: list) -> int:
 	"""GH#335 item 3 -- persistent acted-on state.
 
@@ -291,7 +426,9 @@ def main() -> int:
 	check_dialogue(parsed, errors)
 	check_sprites(parsed, errors)
 	check_gate_shapes(maps, errors)
+	check_moods(parsed, maps, errors)
 	advisories: list = []
+	advise_unlit_sealed_rooms(maps, parsed, advisories)
 	interacted_props = advise_acted_on_state(maps, advisories)
 	elapsed_ms = (time.monotonic() - start) * 1000
 	if errors:
