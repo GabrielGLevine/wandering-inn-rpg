@@ -5830,6 +5830,39 @@
      "exploration"
     ]
    }
+  },
+  {
+   "script": "player_room_loop",
+   "seed": 9,
+   "fixture": "player_room_start",
+   "note": "<!-- v017-R1 --> #350 the room you buy: hallway_door_a shut at 19 gold, the register's lease rendered LOCKED (exact 2-row option array), a 1-gold tray earn, the 20g purchase, the SAME door opening, the new room's own bed sleep beat, and a pause Save/Load that walks out first so the load has to put you back in",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn",
+     "inn_player_room",
+     "inn_upstairs"
+    ],
+    "fixtures": [
+     "player_room_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [
+     "room_ledger"
+    ],
+    "systems": [
+     "dialogue",
+     "exploration",
+     "input",
+     "night_phase",
+     "save"
+    ]
+   }
   }
  ]
 }

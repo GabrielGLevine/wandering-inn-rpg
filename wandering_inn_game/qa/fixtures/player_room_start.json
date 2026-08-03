@@ -1,0 +1,45 @@
+{
+ "_comment": "#350 player_room_loop's start (FIXTURE-FIRST). Stands in the inn's upper hall at (3,2) facing UP into hallway_door_a -- the shut door the room register leases -- so the run opens on the gate's NEGATIVE arm before a coin is spent. visited_own_room is banked (the stairs' own on_enter_accomplishment) because that is the lease option's hidden gate; resolved_wrong_order is deliberately ABSENT so the register renders exactly two rows (the locked lease, the rates exit) and the option-array pins stay crisp. gold 19 is one short of the 20g lease on purpose: the script earns the last coin off the laden tray, which banks delivered_item and nothing class-shaped ([Helper] gains on cleaned_the_inn, not delivered_item). warrior 2 is the near_room_upgrade build (gained_by sparred_with_relc, L2 requires won_combat 1, L3 wants melee_hit 6 which is 0 here, so the sleep in the new room stays quiet). `observe` is the QA-fixture-only grant the Invrisil interiors already establish. rng_state is seed 9's derived state (tests/_derive_rng_state.gd); no fight resolves here, so it is inert.",
+ "version": 8,
+ "state": {
+  "current_map": "inn_upstairs",
+  "player_cell": [
+   3,
+   2
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 2
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "reached_liscor": 1,
+   "visited_own_room": 1
+  },
+  "player_skills": [
+   "basic_cleaning",
+   "observe"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": {
+   "weapon": "",
+   "armor": ""
+  },
+  "container_state": {},
+  "gold": 19,
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481",
+  "hotbar_loadout": []
+ }
+}
