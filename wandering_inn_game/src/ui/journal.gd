@@ -75,10 +75,11 @@ var _scroll_hint: Label
 ## GH#334 note 2: the always-visible "how do I get out of here" row.
 var _close_hint: Label
 
-## The assignment surface. `_flat_skill_ids` is every known skill id in the
-## SAME order `_build_skills_tab` renders its rows (Innate group first, then
-## one entry per held class in catalog order, mirroring `skills_journal()`'s
-## own grouping) -- rebuilt once per `_open()` (the group/skill SET can't
+## The assignment surface. `_flat_skill_ids` is every RENDERED skill id in the
+## SAME order `_build_skills_tab` renders its rows (GH#336: the four category
+## buckets in `WIGame.SKILL_CATEGORY_ORDER`, deduped, mirroring
+## `skills_journal_categories()`'s own grouping -- it was class-primary and
+## duplicated before) -- rebuilt once per `_open()` (the group/skill SET can't
 ## change while the journal is open: movement/interact/sleep are all gated
 ## shut by `_can_open`'s modal-exclusivity check, so nothing can grant/level
 ## a class mid-session). `_cursor_index` indexes into it (-1 when the PC
@@ -108,8 +109,17 @@ var _body_gesture_drift := 0.0
 var _open_act: Dictionary = {}
 var _open_leads: Array = []
 var _open_quest_lines: Array = []
+## GH#338: parallel to `_open_quest_lines` by index, already gated by the
+## "Quest Hints" setting -- "" means "no sub-row drawn for this quest", whether
+## because the beat authored none or because the player switched them off.
+var _open_quest_hint_lines: Array = []
 var _open_completed_quest_lines: Array = []
 var _open_skill_groups: Array = []
+## GH#336: the CATEGORIZED, deduped groups the Skills-tab body actually renders
+## (`WIGame.skills_journal_categories()`). `_open_skill_groups` above is still
+## captured, unchanged, because the class-primary grouping is what the
+## `skill_groups`/`class_aspirations` payload keys and the Classes strip need.
+var _open_skill_categories: Array = []
 var _open_seen_statuses: Array = []
 var _open_combatants_catalog: Array = []
 var _open_bounty_pool: Array = []
@@ -451,8 +461,10 @@ func _open() -> void:
 	var act: Dictionary = Game.sim.act_summary()
 	var leads: Array = Game.sim.active_leads()
 	var quest_lines: Array = Game.sim.quest_summary()
+	var quest_hints: Array = Game.sim.quest_hint_lines()
 	var completed_quest_lines: Array = Game.sim.completed_quest_summary()
 	var skill_groups: Array = Game.sim.skills_journal()
+	var skill_categories: Array = Game.sim.skills_journal_categories()
 	var seen_statuses: Array = Game.sim.seen_statuses.duplicate()
 	# Threaded through both call sites that need it below: the render loop
 	# (`_build_skills_tab` -> `_revealed_skill_line`) and the event-payload
@@ -470,8 +482,13 @@ func _open() -> void:
 	_open_act = act
 	_open_leads = leads
 	_open_quest_lines = quest_lines
+	# GH#338: captured PRE-gated (the sim always tells the truth about what the
+	# beats authored); the settings toggle is applied once, here, so the render
+	# and the payload can never disagree about what the player saw.
+	_open_quest_hint_lines = _gated_quest_hints(quest_hints)
 	_open_completed_quest_lines = completed_quest_lines
 	_open_skill_groups = skill_groups
+	_open_skill_categories = skill_categories
 	_open_seen_statuses = seen_statuses
 	_open_combatants_catalog = combatants_catalog
 	_open_bounty_pool = bounty_pool
@@ -479,7 +496,7 @@ func _open() -> void:
 	_open_class_levels = class_levels
 	_open_class_aspirations = class_aspirations
 	_open_chronicle_facts = chronicle_facts
-	_flat_skill_ids = _flatten_skill_ids(skill_groups)
+	_flat_skill_ids = _flatten_skill_ids(skill_categories)
 	_cursor_index = 0 if not _flat_skill_ids.is_empty() else -1
 	# Issue #209: every open lands on the Quests tab; the skill cursor is armed
 	# but inert until the player switches to the Skills tab.
@@ -505,17 +522,34 @@ func _open() -> void:
 	## revealed skill (e.g. basic_cleaning) carries `[]` here -- no formatter
 	## phrase, same as its card showing no effect row below.
 	var revealed_effect_lines: Array = []
-	var skill_count := 0
 	for raw_group: Variant in skill_groups:
 		var group := raw_group as Dictionary
 		var heading := String(group["heading"])
 		headings.append(_class_heading_text(heading, class_levels))
 		class_aspiration_lines.append(String(class_aspirations.get(heading, "")))
-		for raw_skill: Variant in (group["skills"] as Array):
+	## GH#336: `skill_count`/`revealed_skills`/`revealed_effect_lines` now count
+	## RENDERED ROWS, which after the dedupe is one per DISTINCT Skill -- the
+	## number the panel actually draws. On every save that pins them today the
+	## PC holds at most one class, so no Skill had a duplicate and the pinned
+	## values are byte-unchanged; a multi-class save is where the old count was
+	## lying (46 rows for 28 Skills).
+	var skill_count := 0
+	## Category headings in render order (spec trap R4: category headings ride a
+	## NEW payload key -- `skill_groups` keeps carrying the CLASS headings).
+	var skill_categories_rendered: Array = []
+	## Every rendered row's skill id, in the exact flattened cursor order
+	## `_flatten_skill_ids` produces -- so a QA re-pin of a cursor index is
+	## derivable from the payload instead of by counting rows in a screenshot.
+	var skill_row_ids: Array = []
+	for raw_group: Variant in skill_categories:
+		var category_group := raw_group as Dictionary
+		skill_categories_rendered.append(String(category_group["heading"]))
+		for raw_skill: Variant in (category_group["skills"] as Array):
 			var skill := raw_skill as Dictionary
 			skill_count += 1
+			var skill_id := String(skill["id"])
+			skill_row_ids.append(skill_id)
 			if bool(skill["revealed"]):
-				var skill_id := String(skill["id"])
 				revealed_skills.append(skill_id)
 				revealed_effect_lines.append(WIEffectText.skill_effect_lines(Game.sim.skills.get(skill_id, {}), combatants_catalog))
 	var act_beats: Array = act.get("beats", [])
@@ -531,9 +565,17 @@ func _open() -> void:
 	# `_emit_journal_shown`.
 	_journal_payload = {
 		"quest_lines": quest_lines.size(),
+		# GH#338 ruling 5: the count-only gap closes. `quest_line_texts` is the
+		# exact rendered quest rows, `quest_hint_lines` their sub-rows (parallel
+		# by index, "" where none drew) -- so QA can pin the strings the panel
+		# actually wrote instead of asserting on a number.
+		"quest_line_texts": quest_lines.duplicate(),
+		"quest_hint_lines": _open_quest_hint_lines.duplicate(),
 		"completed_quest_lines": completed_quest_lines,
 		"skill_groups": headings,
 		"class_aspirations": class_aspiration_lines,
+		"skill_categories": skill_categories_rendered,
+		"skill_row_ids": skill_row_ids,
 		"skill_count": skill_count,
 		"skills_note": COMBAT_KIT_NOTE,
 		# GH#334 note 2: the rendered close-affordance row, carried as a real
@@ -674,16 +716,65 @@ func _render_active_tab(follow_cursor: bool) -> void:
 	if _active_tab == Tab.SKILLS and follow_cursor:
 		var cursor_line := int(built.get("cursor_line", -1))
 		if cursor_line >= 0:
-			_body_label.scroll_to_line.call_deferred(cursor_line)
+			_scroll_skill_cursor_into_view.call_deferred(cursor_line)
 	_update_scroll_hint.call_deferred()
 
 
-## Every known skill id, in the SAME order `_build_skills_tab` renders its
-## rows (Innate group first, then one group per held class in catalog
-## order) -- see `_flat_skill_ids`' own doc comment.
-func _flatten_skill_ids(skill_groups: Array) -> Array[String]:
+## FIX WAVE — two defects in what used to be one `scroll_to_line` call.
+##
+## (a) INDEX SPACE. `cursor_line` counts entries in `parts`, i.e. PARAGRAPHS,
+##     while `scroll_to_line` takes a WRAPPED VISUAL line. The redesign renders
+##     full descriptions on passive rows, and those wrap to two or three visual
+##     lines each, so the old call undershot progressively worse the further
+##     down the list the cursor moved. `scroll_to_paragraph` is the
+##     index-matched twin — same counting as the renderer, no drift.
+##
+## (b) UNCONDITIONAL FOLLOW. Scrolling on EVERY render parks the cursor row at
+##     the top of the panel, which scrolled the tab's own header off the moment
+##     it opened — the kit note, the controls line, and the one sentence that
+##     explains the `·` glyph and why confirm refuses on those rows. (Windowed
+##     proof of the old behaviour: `qa_output/journal_categories/
+##     00_skills_tab_categories.png` opened on "Combat — Active" with all four
+##     header lines above the fold and the panel's hint pointing DOWN.) So:
+##     scroll only when the cursor row is not already visible. Measured against
+##     the live scrollbar rather than guessed from a line count —
+##     `get_paragraph_offset` is in the same pixel space as `value`/`page`.
+func _scroll_skill_cursor_into_view(paragraph: int) -> void:
+	if _body_label == null or paragraph < 0:
+		return
+	var bar := _body_label.get_v_scroll_bar()
+	var top := float(_body_label.get_paragraph_offset(paragraph))
+	# Belt: a label that has not laid out yet answers 0 for every offset. Fall
+	# back to the unconditional scroll there — a wrong scroll is recoverable,
+	# a silent no-op would strand the cursor off-screen on a long list.
+	if bar == null or bar.page <= 0.0 or (paragraph > 0 and top <= 0.0):
+		_body_label.scroll_to_paragraph(paragraph)
+		return
+	if top >= bar.value and top + _paragraph_height(paragraph) <= bar.value + bar.page:
+		return
+	_body_label.scroll_to_paragraph(paragraph)
+
+
+## Height of one rendered paragraph: the next paragraph's offset minus this
+## one's, which counts its wrapped lines exactly. The font size is the floor for
+## the last paragraph, which has no successor to measure against.
+func _paragraph_height(paragraph: int) -> float:
+	var top := float(_body_label.get_paragraph_offset(paragraph))
+	if paragraph + 1 < _body_label.get_paragraph_count():
+		var next := float(_body_label.get_paragraph_offset(paragraph + 1))
+		if next > top:
+			return next - top
+	return float(_body_label.get_theme_font_size("normal_font_size"))
+
+
+## Every rendered skill id, in the SAME order `_build_skills_tab` draws its rows
+## -- GH#336 moved that from class groups to the four CATEGORY buckets
+## (`WIGame.SKILL_CATEGORY_ORDER`), deduped, so this walks `category_groups`
+## now. It stays in lockstep with the renderer by construction: both iterate the
+## same captured array in the same order, and neither re-sorts.
+func _flatten_skill_ids(category_groups: Array) -> Array[String]:
 	var out: Array[String] = []
-	for raw_group: Variant in skill_groups:
+	for raw_group: Variant in category_groups:
 		for raw_skill: Variant in (raw_group as Dictionary)["skills"]:
 			out.append(String((raw_skill as Dictionary)["id"]))
 	return out
@@ -725,17 +816,50 @@ func _move_cursor(delta: int) -> void:
 	_rebuild_body_follow_cursor()
 
 
+## GH#336 ruling 4, the other half of the honest checkbox: a row that draws no
+## checkbox must not ACT like one either. A passive reaches no bar, so confirm/
+## tap on its row refuses instead of quietly parking it on `hotbar_loadout` —
+## which is exactly how 41 of 119 catalog entries came to ride a loadout they
+## could never appear in. The row stays focusable (one flat cursor, ruling 6);
+## only the toggle refuses. `slottable` rides the confirmation event both ways
+## so QA can pin the refusal as a rendered fact, not as an absence.
+##
+## FIX WAVE — the refusal is ONE-WAY. Before GH#336 the checkbox was drawn on
+## all 119 catalog entries and ticking a passive parked it on `hotbar_loadout`;
+## every v0.16.2 save can therefore be carrying one. A symmetric refusal would
+## make that entry PERMANENT — `loadout_toggle` has exactly two UI callers
+## (here and inventory.gd's `item:` tokens), so nothing else could clear it,
+## and a save whose loadout is a single passive would render BOTH bars empty
+## forever (a non-empty loadout is CUSTOM to `WIGame.apply_loadout`). Removing
+## a stale entry is never the defect this gate exists to stop, so the gate only
+## covers ADDING. Deliberately not "filter hotbar_loadout on load": the spec's
+## own trap says never to do that, and this needs no migration pass.
 func _toggle_cursor_skill() -> void:
 	if _cursor_index < 0 or _cursor_index >= _flat_skill_ids.size():
 		return
 	var skill_id := _flat_skill_ids[_cursor_index]
-	Game.sim.loadout_toggle(skill_id)
-	_rebuild_body_follow_cursor()
+	var slottable := _row_slottable(skill_id)
+	var stale_entry := not slottable and Game.sim.hotbar_loadout.has(skill_id)
+	if slottable or stale_entry:
+		Game.sim.loadout_toggle(skill_id)
+		_rebuild_body_follow_cursor()
 	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_LOADOUT_RENDERED, {
 		"skill": skill_id,
 		"assigned": Game.sim.hotbar_loadout.has(skill_id),
 		"cursor_index": _cursor_index,
+		"slottable": slottable,
 	})
+
+
+## Read the derived flag off the captured rows -- never re-derived here, so the
+## renderer's checkbox and this gate can never disagree.
+func _row_slottable(skill_id: String) -> bool:
+	for raw_group: Variant in _open_skill_categories:
+		for raw_skill: Variant in ((raw_group as Dictionary)["skills"] as Array):
+			var skill := raw_skill as Dictionary
+			if String(skill["id"]) == skill_id:
+				return bool(skill["slottable"])
+	return false
 
 
 func _on_skill_row_hover_started(meta: Variant) -> void:
@@ -802,6 +926,21 @@ func _act_beat_lines() -> Array:
 	return lines
 
 
+## GH#338 — apply the "Quest Hints" setting ONCE, at capture. Default ON: the
+## owner asked for clarity by default with an immersion off switch, which is a
+## deliberate partial supersession of the thread-legibility spec (CHOICE-LOG).
+## Scope is the journal sub-row ONLY -- the "Quest updated:" toast and the Leads
+## strip are untouched, because the sim cannot read WISettings and gating the
+## toast would mean suppressing it in message_layer for no real gain (ruling 3).
+func _gated_quest_hints(hints: Array) -> Array:
+	if not WISettings.show_quest_hints():
+		var blanked: Array = []
+		blanked.resize(hints.size())
+		blanked.fill("")
+		return blanked
+	return hints.duplicate()
+
+
 ## v0.15 A2 — the Leads rows as the player reads them: "· <lead_text> (<place>)"
 ## over `WIGame.active_leads()`. Same ONE-source rule as `_act_beat_lines`: the
 ## rendered strip and the `lead_lines` payload key are this list.
@@ -836,8 +975,14 @@ func _build_quests_tab() -> Dictionary:
 	if _open_quest_lines.is_empty():
 		parts.append("No quests in progress." if not _open_completed_quest_lines.is_empty() else "No quests yet.")
 	else:
-		for line: Variant in _open_quest_lines:
-			parts.append(UIChrome.bb_escape(String(line)))
+		for i in _open_quest_lines.size():
+			parts.append(UIChrome.bb_escape(String(_open_quest_lines[i])))
+			# GH#338: the hint rides as an INDENTED sub-row under its own quest
+			# line -- the Postings detail indent, same three spaces, so the two
+			# secondary rows in this tab read as one convention.
+			var hint := String(_open_quest_hint_lines[i]) if i < _open_quest_hint_lines.size() else ""
+			if hint != "":
+				parts.append("   [i]%s[/i]" % UIChrome.bb_escape(hint))
 	parts.append("")
 	if not _open_completed_quest_lines.is_empty():
 		parts.append("[b]Completed[/b]")
@@ -850,20 +995,38 @@ func _build_quests_tab() -> Dictionary:
 	return {"text": "\n".join(parts)}
 
 
-## Issue #209 — TAB 2 (Skills, the ONLY interactive tab): the class/skill kit
-## with the loadout cursor, then the Effects glossary (combat-status reference,
-## adjacent to the kit). Every skill row leads with a "✓ "/"  " assign marker
-## (reading `Game.sim.hotbar_loadout` directly — journal.gd references Game.sim
-## freely, it isn't purity-constrained) and the `cursor_index`'th row (in the
-## SAME flattened order `_flatten_skill_ids` produces) is wrapped in `[b]...[/b]`
-## with a "▶ " lead glyph. A class group's heading additionally gets " — Lv N"
-## appended (`_open_class_levels`, keyed by the SAME display-name string the
-## heading already is) — "Innate" never matches, so it stays bare, per the
+## Issue #209 — TAB 2 (Skills, the ONLY interactive tab). GH#336 rebuilt the
+## BODY (not the panel): a Classes strip (level + issue #79's aspiration line,
+## non-focusable), then the four CATEGORY sections in
+## `WIGame.SKILL_CATEGORY_ORDER`, then the Effects glossary. Every Skill appears
+## exactly ONCE — the class it came from is a per-row provenance suffix now, so
+## the spellsword inherits-closure can no longer draw [Dangersense] three times
+## and have one tick flip all three.
+##
+## Row markers read `Game.sim.hotbar_loadout` directly (journal.gd references
+## Game.sim freely, it isn't purity-constrained): "✓ "/"  " on a SLOTTABLE row,
+## the category glyph on a passive, all two chars wide. The `cursor_index`'th
+## row (in the SAME flattened order `_flatten_skill_ids` produces) is wrapped in
+## `[b]...[/b]` with a "▶ " lead glyph. A class row gets " — Lv N" appended
+## (`_open_class_levels`, keyed by the SAME display-name string the heading
+## already is) — "Innate" never matches, so it stays bare, per the
 ## OPAQUE-UNTIL-SLEEP rule (class LEVEL is player-visible, unlike raw stats).
 ## Returns `{text: String, cursor_line: int}` — `cursor_line` is the 0-based
 ## BBCode line the cursor row landed on (-1 if `cursor_index` matched no row),
 ## so `_render_active_tab` can `scroll_to_line` it without a drift-prone
 ## second line-counting pass.
+## The honest passive marker. Two chars wide, exactly like "✓ " and "  ", so
+## `_clip_body_to_line_boundary`'s single-pitch assumption is untouched and a
+## passive row can never be mistaken for an unchecked slottable one.
+const PASSIVE_ROW_GLYPH := "· "
+
+## GH#336 ruling 7: the glossary keeps its place at the tab bottom and stops
+## calling itself a bare "Effects" list -- it is the reference for statuses this
+## run has actually met, one line each.
+const EFFECTS_GLOSSARY_TITLE := "Effects you've seen"
+const EFFECTS_GLOSSARY_NOTE := "One line each, as they behaved in the fight you met them in."
+
+
 func _build_skills_tab(cursor_index: int) -> Dictionary:
 	var parts: Array = []
 	var cursor_line := -1
@@ -871,24 +1034,32 @@ func _build_skills_tab(cursor_index: int) -> Dictionary:
 	parts.append(COMBAT_KIT_NOTE)
 	parts.append("Slotted skills appear on your bars.  •  Up/Down to move  •  %s to toggle" % WIInputHints.label("confirm"))
 	# GH#171: the checkmarks were unlabeled -- players could not tell
-	# selection = hotbar loadout.
-	parts.append("[i]Checked skills ride your hotbar — confirm on a row to swap it.[/i]")
+	# selection = hotbar loadout. GH#336 amends it: only ACTIVE rows carry a
+	# checkbox at all now, so the sentence has to say which rows those are.
+	parts.append("[i]Active skills can ride a bar — confirm on a checkbox row to swap it. Passive skills (%s) are always on.[/i]" % PASSIVE_ROW_GLYPH.strip_edges())
 	var flat_i := 0
-	for raw_group: Variant in _open_skill_groups:
+	for raw_group: Variant in _open_skill_categories:
 		var group := raw_group as Dictionary
-		var heading := String(group["heading"])
 		parts.append("")
-		parts.append("[b]%s[/b]" % UIChrome.bb_escape(_class_heading_text(heading, _open_class_levels)))
-		if _open_class_aspirations.has(heading):
-			parts.append("[i]%s[/i]" % UIChrome.bb_escape(String(_open_class_aspirations[heading])))
+		parts.append("[b]%s[/b]" % UIChrome.bb_escape(String(group["heading"])))
 		for raw_skill: Variant in (group["skills"] as Array):
 			var skill := raw_skill as Dictionary
+			var skill_id := String(skill["id"])
 			var row_text: String
 			if bool(skill["revealed"]):
-				row_text = _revealed_skill_line(String(skill["id"]), String(skill["display_name"]), _open_combatants_catalog)
+				row_text = _revealed_skill_line(skill_id, String(skill["display_name"]), _open_combatants_catalog)
 			else:
+				# Spec ruling 5: a PRE-REVEAL row still shows name + category +
+				# provenance. Category is not progression information, so
+				# carrying it costs the reveal convention nothing.
 				row_text = String(skill["text"])
-			var marker := "✓ " if Game.sim.hotbar_loadout.has(String(skill["id"])) else "  "
+			row_text += _row_suffix(skill)
+			# Spec ruling 4: the checkbox appears ONLY where it is true. A
+			# passive reaches no bar, so it gets the category glyph instead of a
+			# box that does nothing when ticked.
+			var marker := PASSIVE_ROW_GLYPH
+			if bool(skill["slottable"]):
+				marker = "✓ " if Game.sim.hotbar_loadout.has(skill_id) else "  "
 			var line := marker + UIChrome.bb_escape(row_text)
 			if flat_i == cursor_index:
 				cursor_line = parts.size()
@@ -896,12 +1067,42 @@ func _build_skills_tab(cursor_index: int) -> Dictionary:
 			line = "[url=%d]%s[/url]" % [flat_i, line]
 			parts.append(line)
 			flat_i += 1
+	# GH#336: class provenance demoted from the outer axis to a per-row suffix,
+	# but the CLASS facts the tab carried (level, issue #79's aspiration line)
+	# are real and keep a home of their own -- BELOW the interactive rows, with
+	# the glossary, as non-focusable reference text. Above them it would be
+	# strictly worse than the old layout: entering the tab scrolls the cursor
+	# row into view, so a tall block over row 0 is a block the player is
+	# auto-scrolled PAST and would have to scroll UP to find, against the
+	# panel's own "more below" hint.
+	if not _open_skill_groups.is_empty():
+		parts.append("")
+		parts.append("[b]Classes[/b]")
+		for raw_group: Variant in _open_skill_groups:
+			var class_heading := String((raw_group as Dictionary)["heading"])
+			parts.append(UIChrome.bb_escape(_class_heading_text(class_heading, _open_class_levels)))
+			if _open_class_aspirations.has(class_heading):
+				parts.append("[i]%s[/i]" % UIChrome.bb_escape(String(_open_class_aspirations[class_heading])))
 	if not _open_seen_statuses.is_empty():
 		parts.append("")
-		parts.append("[b]Effects[/b]")
+		parts.append("[b]%s[/b]" % EFFECTS_GLOSSARY_TITLE)
+		parts.append("[i]%s[/i]" % UIChrome.bb_escape(EFFECTS_GLOSSARY_NOTE))
 		for status_id: Variant in _open_seen_statuses:
 			parts.append(UIChrome.bb_escape(WIEffectText.status_line(String(status_id), Game.sim.skills.values())))
 	return {"text": "\n".join(parts), "cursor_line": cursor_line}
+
+
+## The per-row tail: where the Skill came from, plus the "both" badge for a
+## Skill that is genuinely activatable in BOTH contexts (it renders once, in its
+## primary bucket, so the badge is the only place that fact can live).
+func _row_suffix(skill: Dictionary) -> String:
+	var suffix := ""
+	var provenance := String(skill.get("provenance", ""))
+	if provenance != "":
+		suffix += " — %s" % provenance
+	if String(skill.get("bar", "")) == "both":
+		suffix += " · both"
+	return suffix
 
 
 ## Issue #209 — TAB 3 (History): Lore (found notes) + Chronicle facts + Recent

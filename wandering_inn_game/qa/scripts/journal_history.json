@@ -3,16 +3,54 @@
  "fixture_save": "journal_history_start",
  "starts_at_title": true,
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "started_quests", "contains": "the_errand" },
-  { "action": "assert_state", "path": "accepted_bounty_id", "equals": "bounty_road_cull" },
-  { "action": "assert_state", "path": "accepted_delivery_id", "equals": "delivery_krshia_wool" },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "contains": "the_errand"
+  },
+  {
+   "action": "assert_state",
+   "path": "accepted_bounty_id",
+   "equals": "bounty_road_cull"
+  },
+  {
+   "action": "assert_state",
+   "path": "accepted_delivery_id",
+   "equals": "delivery_krshia_wool"
+  },
   {
    "action": "press",
    "name": "journal"
@@ -69,7 +107,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Issue #84 QA-teeth precedent: the pre-existing skill-row cursor still moves/toggles correctly on the Skills tab -- one Down from row 0 lands on Mage's [Frost Bolt].",
+   "_comment": "Issue #84 QA-teeth precedent: the pre-existing skill-row cursor still moves/toggles correctly on the Skills tab. GH#336 re-pin AND new teeth: the tab is category-primary and deduped now, so row 0 is [Frost Bolt] (Combat - Active, 3 AP) and one Down lands on [Quick Cast] (Combat - Passive) -- and a confirm on a PASSIVE row now REFUSES. That refusal is ruling 4's whole point: the checkbox used to be drawable and tickable on 41 of 119 catalog entries that ride hotbar_loadout and appear on no bar ever. `slottable:false` + `assigned:false` is the rendered fact; `loadout_changed` never fires for it (the assign leg right below is the contrast).",
    "action": "press",
    "name": "move_down"
   },
@@ -81,9 +119,42 @@
    "action": "wait_for_event",
    "type": "ui_journal_loadout_rendered",
    "payload_contains": {
+    "skill": "quick_cast",
+    "assigned": false,
+    "cursor_index": 1,
+    "slottable": false
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "...and back up to row 0, [Frost Bolt], where the checkbox IS honest: the same confirm assigns it for real.",
+   "action": "press",
+   "name": "move_up"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "loadout_changed",
+   "payload_contains": {
     "skill": "frost_bolt",
     "assigned": true,
-    "cursor_index": 1
+    "loadout": [
+     "frost_bolt"
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_loadout_rendered",
+   "payload_contains": {
+    "skill": "frost_bolt",
+    "assigned": true,
+    "cursor_index": 0,
+    "slottable": true
    },
    "timeout_sec": 5
   }

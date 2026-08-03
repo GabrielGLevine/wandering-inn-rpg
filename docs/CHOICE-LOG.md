@@ -2130,6 +2130,79 @@ by controller ruling — the plan was the defect, not the implementation.
   Hunted as an easter egg — an EXPLICIT user-granted exception to the
   Vol 7 spoiler cutoff, names only; exact names wiki-verified before
   authoring, never invented.
+<!-- v017-L1 -->
+- **Quest hints default ON (2026-08-02, GH#338, PARTIAL SUPERSESSION)**: the
+  thread-legibility spec's §105-121 anti-trivialization rule is relaxed for
+  ONE surface — a sparse per-beat `hint`, rendered as an indented italic
+  sub-row under its quest line in the journal, shipping DEFAULT ON behind a
+  new "Quest Hints" settings row. The owner asked for clarity by default
+  with an immersion off switch, and that is what this is. Everything else
+  stands: "no floating quest markers, ever"; relay dialogue keeps
+  WHO/WHERE-never-WHAT-TO-DO; the field-HUD "Quest Thread" strip is a
+  separate knob and stays default-OFF; the "Quest updated:" toast and the
+  Leads strip are out of scope (the sim cannot read WISettings, and gating
+  the toast would mean suppressing it in message_layer for no real gain).
+  Hints are SPARSE (5 of 61 beats at ship; test_quests caps the ratio at a
+  quarter so the refused "double 60+ rows of copy" alternative cannot
+  arrive by accretion) and STATIC — state-awareness comes from splitting a
+  beat until each has one actionable condition, never from a conditional
+  hint evaluator. `chieftains_price/price` was re-cut from narration to
+  imperative in the same pass (ruling 6): it reported what had already
+  happened, so an ACTIVE journal line read like a completed one.
+- **Bronze / Silver / Gold, not Platinum (2026-08-02, #345)**: the wiki
+  mirror was checked before any copy was written, and Liscor Hunted — the
+  adventure-experience company Menolit runs out on the floodplains — sells
+  "Bronze, Silver, Gold, and Platinum-ranked challenges" (killing a Rock
+  Crab is a Gold-level one). FOUR canon ranks exist; THREE settings were
+  asked for. Ruling: take the first three consecutive ranks and leave
+  Platinum unclaimed, rather than skipping a rung or inventing a fourth
+  meaning for one. Platinum stays available if a fourth level is ever
+  wanted, and no player who knows the source reads the ladder as wrong.
+  SILVER IS THE DEFAULT and its multiplier is exactly 1.0 — the shipped
+  balance — so every existing save, every balance cell and every QA
+  fixture is untouched unless a player deliberately moves the row.
+- **Difficulty is ONE knob, applied at fight build (2026-08-02, #345)**:
+  the ladder multiplies damage dealt TO the player's side and nothing
+  else — not enemy HP, AP, accuracy, or any RNG draw — so a difficulty
+  change can never alter a seeded fight's SHAPE, only what a hit costs.
+  The value is read ONCE when a fight is built (where equipment mods are
+  read), never per-hit. That is what makes "changeable at any time" safe
+  mid-save: a player may move the row mid-fight and the change lands on
+  the NEXT fight, never rewriting the numbers under a live encounter.
+  L1 owns the getter (`WISettings.difficulty_damage_taken_mult`) and its
+  semantics; the combat lane owns the apply-site and signs it off at the
+  merge train — a declared one-field seam, deliberately narrow.
+- **The AUTO field-bar 9-cap is reversed (2026-08-02, GH#336 ruling 9)**:
+  ruling 9 asked the AUTO exploration bar to cap at nine because "slot 10
+  is keyboard-unreachable", and a first pass shipped that as a slice. The
+  premise does not survive the code: slot ten is *number-key*-unreachable
+  only. `world.gd::_move_field_slot_cursor` wraps the armed cursor with
+  `(idx + delta + count) % count`, so prime + move_right walks onto slot
+  ten and every slot after it, and `field_hotbar.gd`'s `slot_clicked ->
+  slot_activate_requested` fires for any RENDERED slot, so touch reaches
+  them too. The cap therefore did not retire a dead affordance — it
+  DELETED earned Skills from the field, for exactly the player the ruling
+  names (AUTO mode = "never opened the journal"), with no toast, glyph or
+  overflow indicator and the journal checkbox as the only recovery.
+  Uncastable-and-silent is strictly worse than reachable-without-a-number-
+  key, so the bar renders every field Skill again. `AUTO_SLOT_CAP` keeps
+  its one honest job (bounding a7 #208's AUTO-SLOTTING into a CUSTOM
+  loadout); `loadout_toggle` stays uncapped, which is what makes the
+  redesigned tab the tool for exceeding nine ON PURPOSE, as ruling 9
+  itself says. The real cure for the missing number key is an affordance
+  on the bar (`field_hotbar.gd`), recorded for the train rather than faked
+  with a slice — and it is not urgent: no shipped save reaches ten field
+  Skills, which is why nothing noticed the original gap either.
+- **An empty intersection is not an empty bar (2026-08-02, GH#336)**:
+  one `hotbar_loadout` array feeds BOTH bars through `WIGame.apply_loadout`,
+  so curating a combat-only kit used to blank the exploration bar outright
+  (5 slots -> 0) — and the redesigned Skills tab makes that the very first
+  tick a player is invited to make, on the top row of the top category.
+  Nothing in the UI can ASK for an empty field bar, so an intersection of
+  nothing now reads as "this bar was never curated" and falls back to AUTO.
+  The combat-side mirror of the same hazard lives in `combat_hud.gd` and is
+  recorded for its owner; the real answer is two arrays instead of one,
+  which is a save-format change and belongs to a milestone, not a lane.
 
 <!-- v017-L5 -->
 - **#349 dig-camp Pisces is NAMED, not FIELDED (2026-08-02, L5 lane call)**:

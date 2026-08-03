@@ -141,9 +141,9 @@
    "name": "03_pause_chip_to_settings"
   },
   {
-   "_comment": "row 15 = 'Back' (last settings row, shifted by the a9 #246 import/export pair past Credits GH#147 -- matches settings_loop's own row-15 click).",
+   "_comment": "row 17 = 'Back', the LAST settings row (a9 #246's import/export pair, then GH#338's 'Quest Hints' and #345's 'Difficulty'). settings_panel.gd ROWS is index-addressed by TWO canonicals -- this one and settings_loop -- so an insert before 'Back' moves both; re-pin both or the click flips a live row and Settings never closes.",
    "action": "click_settings_row",
-   "row": 15
+   "row": 17
   },
   {
    "action": "wait_for_event",
