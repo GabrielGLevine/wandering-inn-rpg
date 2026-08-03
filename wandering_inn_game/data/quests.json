@@ -92,7 +92,7 @@
 				{ "id": "consult", "description": "The Magical Door manages the hop to Liscor but strains at anything farther. Fight what leaks through in the cellar, ask Pisces by the Guild steps, or read the wardwork yourself.", "hint": "Pisces keeps to the Guild steps on Market Street — asking him is the plainest of the three.", "complete_when": { "door_understood": 1 } },
 				{ "id": "buy_catalyst", "description": "Buy the attunement catalyst from Krshia's stall on Market Street in Liscor.", "complete_when": { "bought_catalyst": 1 } },
 				{ "_comment": "GH#334 ruling 15: errand/wait split. H3: door_awakened closes it too.", "id": "deliver_catalyst", "description": "Bring Krshia's catalyst and the anchor stone to Pisces, by the Guild steps on Market Street.", "complete_when_any": { "catalyst_delivered": 1, "door_awakened": 1 } },
-				{ "_comment": "GH#338: code-banked, so the hint is mandatory (test_content enforces).", "id": "attune", "description": "Sleep at the inn while the Door learns the stone — it takes more than one night.", "hint": "Take a bed at the inn and sleep. The Door goes on working at the stone while you rest.", "complete_when": { "door_awakened": 1 } }
+				{ "_comment": "GH#338: code-banked -> hint mandatory (test_content).", "id": "attune", "description": "Sleep at the inn while the Door learns the stone — it takes more than one night.", "hint": "Take a bed at the inn and sleep. The Door goes on working at the stone while you rest.", "complete_when": { "door_awakened": 1 } }
 			],
 			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins). Reading the wardwork and fighting the leak co-bank freely, and the STRONGER claim must win: fought > read. The \"\"-req consult entry is the FALLBACK, not a path -- it answers only when neither counter banked, and its trailing position is convention, not mechanism.",
 			"resolution_paths": [
@@ -309,9 +309,9 @@
 					}
 				},
 				{
-					"_comment": "GH#338 ruling 6: was narration, re-cut to the imperative.",
+					"_comment": "GH#338: hint only -- the imperative re-cut of this description is deferred, see .lane-progress.",
 					"id": "price",
-					"description": "Let Rags name her terms — she is out on the southern floodplains, and she will not send for you twice.",
+					"description": "Rags named her trade: medicine for her wounded, a carved piece in return.",
 					"hint": "Talk with Rags again, out with her scouting party on the southern floodplains.",
 					"complete_when": {
 						"rags_price_named": 1

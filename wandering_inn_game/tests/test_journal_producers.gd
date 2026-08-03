@@ -1,7 +1,8 @@
 extends SceneTree
 ## GH#336 — the Skills-tab redesign's unit floor: the SIM-side derivation the
 ## redesigned journal renders (`WIGame.skill_category`/`skill_bar`/
-## `skills_journal_categories`) plus the AUTO field-bar cap (ruling 9).
+## `skills_journal_categories`) plus the AUTO field-bar contract (ruling 9, as
+## reversed in the fix wave: the bar never deletes a Skill).
 ##
 ## WHY A DEDICATED SUITE: the whole point of the redesign is that the
 ## category/slottable rule is derived ONCE, in the sim, and that the derivation
@@ -55,7 +56,7 @@ func _init() -> void:
 	_check_checkbox_honesty()
 	_check_auto_bar_cap()
 
-	print("PASS: GH#336 skill categorisation (partition + live-filter agreement), dedupe/provenance, checkbox honesty, AUTO field-bar 9-cap")
+	print("PASS: GH#336 skill categorisation (partition + live-filter agreement), dedupe/provenance, checkbox honesty, AUTO field bar loses no Skill")
 	quit(0)
 
 
@@ -274,9 +275,16 @@ func _check_checkbox_honesty() -> void:
 		"fixture must hold both slottable and passive Skills, got %d/%d" % [checked, glyphed])
 
 
-## SPEC RULING 9. The CUSTOM path has honoured the cap since a7 #208; AUTO --
-## the mode a player who never opened the journal is in -- was uncapped, so
-## field-skill number ten onward drew a slot no number key can reach.
+## SPEC RULING 9, as REVERSED in the fix wave: the AUTO bar must never DELETE a
+## field Skill. A first pass clipped AUTO to `AUTO_SLOT_CAP`, on the ruling's
+## premise that slot ten was unreachable; it is only *number-key*-unreachable
+## (`world.gd::_move_field_slot_cursor` wraps the cursor onto it, and
+## `field_hotbar.gd`'s `slot_clicked` fires for any rendered slot), so clipping
+## made earned Skills uncastable instead of tidying a dead affordance. These
+## asserts are the regression tripwire on that: they fail the moment a slice
+## comes back. AUTO_SLOT_CAP keeps its real job (bounding AUTO-SLOTTING into a
+## CUSTOM loadout, a7 #208), which is asserted here too so the const cannot be
+## deleted as unused.
 func _check_auto_bar_cap() -> void:
 	var g := _new_game()
 	var field_ids: Array[String] = []
@@ -284,7 +292,7 @@ func _check_auto_bar_cap() -> void:
 		if bool((g.skills[id] as Dictionary).get("field", false)):
 			field_ids.append(id)
 	assert(field_ids.size() > WIGame.AUTO_SLOT_CAP,
-		"fixture: the shipped catalog must carry more than %d field Skills for the cap to be reachable at all" % WIGame.AUTO_SLOT_CAP)
+		"fixture: the shipped catalog must carry more than %d field Skills for the over-cap case to be reachable at all" % WIGame.AUTO_SLOT_CAP)
 
 	# Under the cap: AUTO is byte-identical to the plain known-and-field
 	# derivation (the a7 #208 parity contract test_sim_core pins).
@@ -292,25 +300,41 @@ func _check_auto_bar_cap() -> void:
 	assert(g.field_hotbar_loadout() == g.player_skills,
 		"under the cap, AUTO is the unfiltered field list exactly")
 
-	# Exactly at the cap: still untouched.
-	g.player_skills = field_ids.slice(0, WIGame.AUTO_SLOT_CAP)
-	assert(g.field_hotbar_loadout().size() == WIGame.AUTO_SLOT_CAP,
-		"exactly at the cap the bar is unchanged, not clipped by one")
-
-	# Over the cap: clipped, and clipped from the FRONT (the first N in
-	# derivation order survive, so a player's existing slot 1-9 bindings do not
-	# shuffle when the tenth Skill is granted).
+	# OVER the cap: still the unfiltered field list. Every field Skill the
+	# player earned is on the bar; none is silently dropped.
 	g.player_skills = field_ids.duplicate()
-	var capped: Array = g.field_hotbar_loadout()
-	assert(capped.size() == WIGame.AUTO_SLOT_CAP,
-		"AUTO caps at %d, got %d slots for %d field Skills" % [WIGame.AUTO_SLOT_CAP, capped.size(), field_ids.size()])
-	assert(capped == field_ids.slice(0, WIGame.AUTO_SLOT_CAP),
-		"the cap keeps the FIRST %d in derivation order -- a later grant must never renumber an existing slot" % WIGame.AUTO_SLOT_CAP)
+	var bar: Array = g.field_hotbar_loadout()
+	assert(bar == field_ids,
+		"AUTO renders EVERY field Skill (%d), got %d -- a clip here deletes earned Skills from the field, it does not tidy the bar" % [field_ids.size(), bar.size()])
 
-	# A CUSTOM loadout is not silently re-clipped here: `loadout_toggle` is the
-	# player's explicit curation and `_auto_slot_new_field_skills` already
-	# refuses to auto-add past the cap. The redesigned tab is the tool for
-	# deliberately exceeding 9 (spec ruling 9), so the cap must NOT apply here.
+	# A CUSTOM loadout is honoured in full for the same reason, and because
+	# `loadout_toggle` is the player's explicit curation: the redesigned tab IS
+	# the tool for deliberately exceeding nine (spec ruling 9).
 	g.hotbar_loadout = field_ids.duplicate()
 	assert(g.field_hotbar_loadout().size() == field_ids.size(),
-		"a CUSTOM loadout is honoured in full -- the cap is an AUTO-mode rule only")
+		"a CUSTOM loadout is honoured in full")
+
+	# Fix wave: a curated kit that names no FIELD Skill is a statement about the
+	# combat bar, not a request for an empty exploration bar. One shared
+	# `hotbar_loadout` feeds both, so before this the first tick on the new
+	# tab's top row (a combat-only Skill) blanked the field bar to zero slots.
+	var combat_only: Array = []
+	for id: String in g.skills:
+		var sk := g.skills[id] as Dictionary
+		if not bool(sk.get("field", false)) and (sk.get("contexts", []) as Array).has("combat"):
+			combat_only.append(id)
+	assert(not combat_only.is_empty(), "fixture: the catalog must carry a combat-only Skill")
+	g.hotbar_loadout = [combat_only[0]]
+	assert(g.field_hotbar_loadout() == field_ids,
+		"a combat-only loadout leaves the field bar on AUTO, it does not blank it")
+
+	# The cap's ONE surviving job: automatic growth. A CUSTOM loadout already at
+	# the cap does not grow when a new field Skill is learned.
+	var g2 := _new_game()
+	var known_before: Array = field_ids.slice(0, WIGame.AUTO_SLOT_CAP)
+	g2.player_skills = known_before.duplicate()
+	g2.hotbar_loadout = known_before.duplicate()
+	g2.player_skills = field_ids.duplicate()
+	g2._auto_slot_new_field_skills(known_before)
+	assert(g2.hotbar_loadout.size() == WIGame.AUTO_SLOT_CAP,
+		"auto-slotting stops at the cap (%d), got %d" % [WIGame.AUTO_SLOT_CAP, g2.hotbar_loadout.size()])

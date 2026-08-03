@@ -427,7 +427,17 @@ func _on_grid_gui_input(event: InputEvent) -> void:
 		_confirm()
 
 
+## The i'th TAPPABLE option of the CURRENT step: the sprite cards on PICK, the
+## setup-choice rows on #346's DIFFICULTY/HINTS. ONE accessor on purpose —
+## `qa/test_driver.gd` is shared infrastructure this lane does not own, and its
+## existing `click_char_creation_card` step already means exactly "tap option i
+## of whatever this screen is asking". Adding a driver action for the new rows
+## would have put a second lane's hands on a file seven lanes append to; adding
+## a case here does not. Empty Rect2 when option `i` is not on screen, the same
+## contract `begin_button_rect` keeps.
 func card_rect(i: int) -> Rect2:
+	if _step == Step.DIFFICULTY or _step == Step.HINTS:
+		return choice_row_rect(i)
 	if _step != Step.PICK or i < 0 or i >= _cards.size():
 		return Rect2()
 	var card := _cards[i]

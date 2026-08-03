@@ -994,14 +994,34 @@ func field_hotbar_loadout() -> Array:
 		if not String(raw).begins_with("item:"):
 			skill_loadout.append(raw)
 	var bar: Array = WIGame.apply_loadout(candidates, skill_loadout)
-	# GH#336 ruling 9: AUTO caps at AUTO_SLOT_CAP. The CUSTOM path has honoured
-	# the cap since a7 #208 (`_auto_slot_new_field_skills`), but AUTO -- the mode
-	# a player who never opened the journal is in -- was uncapped, so field skill
-	# number ten onward rendered a slot with no key that can reach it. The cap is
-	# applied HERE and only here: `apply_loadout` is shared with the combat bar
-	# (combat_hud.gd), whose own slot budget is a different number.
-	if skill_loadout.is_empty() and bar.size() > AUTO_SLOT_CAP:
-		return bar.slice(0, AUTO_SLOT_CAP)
+	# GH#336 ruling 9 asked AUTO to cap at AUTO_SLOT_CAP, and a first pass shipped
+	# that as `bar.slice(0, AUTO_SLOT_CAP)`. It was REVERTED here in the fix wave,
+	# because the ruling's premise does not survive contact with the code it
+	# describes: slot ten is *number-key*-unreachable, not unreachable.
+	# `world.gd::_move_field_slot_cursor` wraps `(idx + delta + count) % count`, so
+	# hotbar_prime + move_right walks onto slot ten and every slot after it, and
+	# `field_hotbar.gd`'s `slot_clicked -> slot_activate_requested` fires for any
+	# RENDERED slot, so touch reaches them too. Slicing therefore did not remove a
+	# dead affordance; it deleted earned Skills from the field entirely -- for the
+	# exact player the ruling names (AUTO = "never opened the journal"), with no
+	# toast, glyph or overflow indicator, and with the journal checkbox as the
+	# only recovery. Uncastable-and-silent is a strictly worse defect than
+	# reachable-without-a-number-key, so the bar renders everything again.
+	# AUTO_SLOT_CAP keeps its ONE real job below: bounding auto-slotting into a
+	# CUSTOM loadout (a7 #208). The honest cure for the missing number key is an
+	# affordance on the bar itself (an overflow glyph / "arrows reach the rest"
+	# legend in `field_hotbar.gd`, which this lane does not own) -- recorded for
+	# the train, not faked with a slice.
+	#
+	# Second fix-wave repair, same call: an empty INTERSECTION is not an empty
+	# bar. `hotbar_loadout` is ONE array feeding both bars through the shared
+	# `apply_loadout`, so a player who curates a combat-only kit on the
+	# redesigned Skills tab used to blank the exploration bar outright (slots
+	# 5 -> 0 on the first tick the new tab invites). Nothing in the UI can ASK
+	# for an empty field bar, so an intersection of nothing means "this bar was
+	# never curated" -> fall back to AUTO rather than to blank.
+	if bar.is_empty() and not candidates.is_empty():
+		return candidates
 	return bar
 
 
@@ -1010,6 +1030,13 @@ func field_hotbar_loadout() -> Array:
 ## skill, so it needs nothing). Selection stays manual; presence becomes
 ## automatic. Cap = 9: the number-key affordance is the bar's honest capacity
 ## (CHOICE-LOG). Emits LOADOUT_CHANGED with auto:true per slotted skill.
+##
+## SCOPE, precisely: this bounds what the game adds BY ITSELF. It is not a
+## ceiling on the bar. `loadout_toggle` is deliberately uncapped — the
+## redesigned Skills tab is the tool for exceeding nine ON PURPOSE (GH#336
+## ruling 9) — and `field_hotbar_loadout` no longer clips AUTO either (see the
+## reversal note there). So: automatic growth stops at nine, player intent
+## does not.
 const AUTO_SLOT_CAP := 9
 
 

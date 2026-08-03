@@ -38,7 +38,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "AUTO field bar, for contrast with the 9-cap: this kit fields FIVE exploration-active Skills, comfortably under WIGame.AUTO_SLOT_CAP, so the cap is inert here and every slot still carries a number key. (The cap itself is unit-proven in tests/test_journal_producers.gd against a synthetic >9 kit -- no shipped save reaches ten yet, which is exactly why slot 10 shipped keyboard-unreachable and nothing noticed.)",
+   "_comment": "AUTO field bar: this kit fields FIVE exploration-active Skills. The AUTO bar is deliberately UNCAPPED -- clipping it to WIGame.AUTO_SLOT_CAP deleted earned Skills, and slot ten is number-key-less, not unreachable. Regression tripwire: tests/test_journal_producers.gd.",
    "action": "wait_for_event",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
@@ -121,7 +121,7 @@
    "name": "00_skills_tab_categories"
   },
   {
-   "_comment": "HONEST CHECKBOX, positive half: row 0 is [Frost Bolt], a Mage strike with a real AP cost -- Combat - Active, so it reaches the combat bar and its checkbox is true. Confirm assigns it for real. The emit order pinned here IS the contract field_skills_loop established: loadout_changed -> ui_field_hotbar_rendered -> ui_journal_loadout_rendered, synchronous. Note the FIELD bar drops 5 -> 0 on this assign: a non-empty hotbar_loadout intersects BOTH bars, and a loadout holding only a combat skill leaves the field bar with nothing to show. Pre-existing behaviour (WIGame.apply_loadout, one shared array), pinned here because the redesigned tab is the first place a player is invited to curate deliberately.",
+   "_comment": "HONEST CHECKBOX, positive half: row 0 is [Frost Bolt], a Mage strike with a real AP cost -- Combat - Active, so it reaches the combat bar and its checkbox is true. Confirm assigns it for real. The emit order pinned here IS the contract field_skills_loop established: loadout_changed -> ui_field_hotbar_rendered -> ui_journal_loadout_rendered, synchronous. THE FIELD BAR MUST STAY AT 5 ACROSS THIS ASSIGN: one shared hotbar_loadout intersects BOTH bars, so a combat-only kit used to blank the exploration bar (5 -> 0) on the first tick this tab invites. An empty intersection now falls back to AUTO. A 0 here is the regression.",
    "action": "press",
    "name": "confirm"
   },
@@ -141,7 +141,14 @@
    "action": "wait_for_event",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 0
+    "slots": 5,
+    "slot_numbers": [
+     "1",
+     "2",
+     "3",
+     "4",
+     "5"
+    ]
    },
    "timeout_sec": 5
   },
@@ -251,6 +258,16 @@
     "slots": 5
    },
    "timeout_sec": 5
+  },
+  {
+   "_comment": "CURSOR-FOLLOW, the other half of the scroll contract. 00_skills_tab_categories proves the tab OPENS on its own header (kit note, controls line, passive-glyph legend) instead of scrolling past it. This leg proves following still happens when needed: the cursor walks to the LAST row, far below the fold, and the panel scrolls it in.",
+   "action": "move",
+   "direction": "down",
+   "steps": 20
+  },
+  {
+   "action": "screenshot",
+   "name": "02_skills_tab_cursor_follow"
   },
   {
    "action": "press",

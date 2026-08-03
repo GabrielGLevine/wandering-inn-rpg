@@ -716,8 +716,55 @@ func _render_active_tab(follow_cursor: bool) -> void:
 	if _active_tab == Tab.SKILLS and follow_cursor:
 		var cursor_line := int(built.get("cursor_line", -1))
 		if cursor_line >= 0:
-			_body_label.scroll_to_line.call_deferred(cursor_line)
+			_scroll_skill_cursor_into_view.call_deferred(cursor_line)
 	_update_scroll_hint.call_deferred()
+
+
+## FIX WAVE — two defects in what used to be one `scroll_to_line` call.
+##
+## (a) INDEX SPACE. `cursor_line` counts entries in `parts`, i.e. PARAGRAPHS,
+##     while `scroll_to_line` takes a WRAPPED VISUAL line. The redesign renders
+##     full descriptions on passive rows, and those wrap to two or three visual
+##     lines each, so the old call undershot progressively worse the further
+##     down the list the cursor moved. `scroll_to_paragraph` is the
+##     index-matched twin — same counting as the renderer, no drift.
+##
+## (b) UNCONDITIONAL FOLLOW. Scrolling on EVERY render parks the cursor row at
+##     the top of the panel, which scrolled the tab's own header off the moment
+##     it opened — the kit note, the controls line, and the one sentence that
+##     explains the `·` glyph and why confirm refuses on those rows. (Windowed
+##     proof of the old behaviour: `qa_output/journal_categories/
+##     00_skills_tab_categories.png` opened on "Combat — Active" with all four
+##     header lines above the fold and the panel's hint pointing DOWN.) So:
+##     scroll only when the cursor row is not already visible. Measured against
+##     the live scrollbar rather than guessed from a line count —
+##     `get_paragraph_offset` is in the same pixel space as `value`/`page`.
+func _scroll_skill_cursor_into_view(paragraph: int) -> void:
+	if _body_label == null or paragraph < 0:
+		return
+	var bar := _body_label.get_v_scroll_bar()
+	var top := float(_body_label.get_paragraph_offset(paragraph))
+	# Belt: a label that has not laid out yet answers 0 for every offset. Fall
+	# back to the unconditional scroll there — a wrong scroll is recoverable,
+	# a silent no-op would strand the cursor off-screen on a long list.
+	if bar == null or bar.page <= 0.0 or (paragraph > 0 and top <= 0.0):
+		_body_label.scroll_to_paragraph(paragraph)
+		return
+	if top >= bar.value and top + _paragraph_height(paragraph) <= bar.value + bar.page:
+		return
+	_body_label.scroll_to_paragraph(paragraph)
+
+
+## Height of one rendered paragraph: the next paragraph's offset minus this
+## one's, which counts its wrapped lines exactly. The font size is the floor for
+## the last paragraph, which has no successor to measure against.
+func _paragraph_height(paragraph: int) -> float:
+	var top := float(_body_label.get_paragraph_offset(paragraph))
+	if paragraph + 1 < _body_label.get_paragraph_count():
+		var next := float(_body_label.get_paragraph_offset(paragraph + 1))
+		if next > top:
+			return next - top
+	return float(_body_label.get_theme_font_size("normal_font_size"))
 
 
 ## Every rendered skill id, in the SAME order `_build_skills_tab` draws its rows
@@ -776,12 +823,24 @@ func _move_cursor(delta: int) -> void:
 ## could never appear in. The row stays focusable (one flat cursor, ruling 6);
 ## only the toggle refuses. `slottable` rides the confirmation event both ways
 ## so QA can pin the refusal as a rendered fact, not as an absence.
+##
+## FIX WAVE — the refusal is ONE-WAY. Before GH#336 the checkbox was drawn on
+## all 119 catalog entries and ticking a passive parked it on `hotbar_loadout`;
+## every v0.16.2 save can therefore be carrying one. A symmetric refusal would
+## make that entry PERMANENT — `loadout_toggle` has exactly two UI callers
+## (here and inventory.gd's `item:` tokens), so nothing else could clear it,
+## and a save whose loadout is a single passive would render BOTH bars empty
+## forever (a non-empty loadout is CUSTOM to `WIGame.apply_loadout`). Removing
+## a stale entry is never the defect this gate exists to stop, so the gate only
+## covers ADDING. Deliberately not "filter hotbar_loadout on load": the spec's
+## own trap says never to do that, and this needs no migration pass.
 func _toggle_cursor_skill() -> void:
 	if _cursor_index < 0 or _cursor_index >= _flat_skill_ids.size():
 		return
 	var skill_id := _flat_skill_ids[_cursor_index]
 	var slottable := _row_slottable(skill_id)
-	if slottable:
+	var stale_entry := not slottable and Game.sim.hotbar_loadout.has(skill_id)
+	if slottable or stale_entry:
 		Game.sim.loadout_toggle(skill_id)
 		_rebuild_body_follow_cursor()
 	ObservableBus.emit_domain_event(WIEvents.UI_JOURNAL_LOADOUT_RENDERED, {
