@@ -58,6 +58,13 @@ static func evaluate(quest_catalog: Dictionary, started: Array, accomplishments:
 			"beat_index": idx,
 			"completed": completed,
 			"beat_description": String(beats[idx]["description"]) if idx < beats.size() else "",
+			# GH#338: the SPARSE per-beat hint. "" for the great majority of
+			# beats, whose own description already carries the instruction --
+			# doubling 61 rows of copy was the alternative and it was refused
+			# (spec ruling 1). Static string, never evaluated against state:
+			# state-awareness comes from SPLITTING a beat so each has one
+			# actionable condition (ruling 2), not from a conditional evaluator.
+			"hint": String(beats[idx].get("hint", "")) if idx < beats.size() else "",
 			"region": String(quest.get("region", "")),
 			"path": resolution_path_text(quest, accomplishments) if completed else "",
 		}

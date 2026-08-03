@@ -25,8 +25,9 @@ biggest slice — if it threatens the release window, it ships behind D3-D5
 and can defer to v0.11.0 (flag in PR).
 
 ## D3 — repeatable sinks
-Two standing gold sinks: inn room upgrade tiers (bed quality → small
-max-HP-at-waking bonus, 3 tiers, 25/60/120g) and Watch supply donations
+Two standing gold sinks: inn room upgrade tiers (bed quality → +1 max HP in
+COMBAT per held tier, cumulative, cap +3 — a persistent `hp_mod` contribution,
+not a sleep-restored pool; 3 tiers, 25/60/120g) and Watch supply donations
 (reputation flavor + a barracks thread relay line). Both data-first
 (props/dialogue gold_cost), no new engine.
 

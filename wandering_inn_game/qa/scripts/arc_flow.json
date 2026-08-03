@@ -836,7 +836,7 @@
      "· Riverfarm's fields hold more trouble than wheat.",
      "· A name needs settling in the City of Adventurers.",
      "· The Walled City opens for paperwork, not heroics.",
-     "· Three adventurers need somewhere to put their feet up.",
+     "· Four adventurers need somewhere to put their feet up.",
      "· The Door strains for somewhere it cannot reach yet."
     ],
     "quest_lines": 0,
@@ -961,12 +961,12 @@
    }
   },
   {
-   "_comment": "THE SEAL'S LIGHT TRANSITION rides this sleep: 4 veil lines, re-derived from the run's own events.jsonl -- three progression lines the arc's fights earned (Warrior 6, Warrior 7, Diplomat 2) plus the GDI's seal beat, appended under the black when post_game banks. Before Phase 8 this sleep rendered 3.",
+   "_comment": "THE SEAL'S LIGHT TRANSITION rides this sleep: 5 veil lines, re-derived from the run's own events.jsonl -- four progression lines the arc's fights earned (Warrior 6, Warrior 7, Warrior 8, Diplomat 2) plus the GDI's seal beat. GH#337 (skill cooldowns) added the fourth: power_strike now fires every other round, and the plain attacks the melee AI falls through to on the off rounds each bank their own `melee_hit`, so a fixed arc of fights earns MORE Warrior levels than it used to, appended under the black when post_game banks. Before Phase 8 this sleep rendered 3.",
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "lines": 4
+    "lines": 5
    }
   },
   {

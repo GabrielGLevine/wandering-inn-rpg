@@ -202,8 +202,54 @@ func _init() -> void:
 	assert(String(WIQuests.resolved_path(fallback_first, {})["text"]) == "fallback", "...and the fallback still answers when nothing banked")
 	assert(WIQuests.resolved_path({"resolution_paths": [{"accomplishment": "nope", "text": "x"}]}, {}).is_empty(), "no match and no fallback = no entry")
 
+	_check_quest_hints()
+
 	print("PASS: quest progress derives purely from accomplishment counters")
 	quit(0)
+
+
+## GH#338 — the sparse per-beat `hint`. Three properties, all of them things
+## the feature could plausibly lose:
+##   1. `evaluate` CARRIES it, on the ACTIVE beat only, "" when unauthored.
+##   2. It stays SPARSE (ruling 1). The refused alternative was doubling 60+
+##      rows of copy; a hint on every beat is that alternative arriving by
+##      accretion, so the ceiling is asserted, not just documented.
+##   3. It is an INSTRUCTION, not progress. Opaque-until-sleep forbids
+##      progress-toward text anywhere player-visible, and a "next step" line is
+##      the likeliest place for a well-meaning "2 of 3 nights" to appear.
+func _check_quest_hints() -> void:
+	var hinted := {"quests": [{"id": "h", "title": "H", "beats": [
+		{"id": "one", "description": "Do one.", "hint": "Go to the inn.", "complete_when": {"did_one": 1}},
+		{"id": "two", "description": "Do two.", "complete_when": {"did_two": 1}},
+	]}]}
+	var at_one := WIQuests.evaluate(hinted, ["h"], {})
+	assert(String(at_one["h"]["hint"]) == "Go to the inn.", "evaluate carries the ACTIVE beat's hint")
+	var at_two := WIQuests.evaluate(hinted, ["h"], {"did_one": 1})
+	assert(String(at_two["h"]["hint"]) == "", "a beat with no authored hint carries \"\", never the previous beat's")
+	var finished := WIQuests.evaluate(hinted, ["h"], {"did_one": 1, "did_two": 1})
+	assert(String(finished["h"]["hint"]) == "" and bool(finished["h"]["completed"]), "a completed quest has no active beat and so no hint")
+
+	var quests: Dictionary = _load_json("res://data/quests.json")
+	var beats := 0
+	var hints := 0
+	var progress := RegEx.new()
+	progress.compile("(?i)\\b\\d+\\s*(of|/)\\s*\\d+\\b|\\bso far\\b|\\bremaining\\b")
+	for quest: Dictionary in quests["quests"]:
+		for beat: Dictionary in quest.get("beats", []):
+			beats += 1
+			var hint := String(beat.get("hint", ""))
+			if hint == "":
+				continue
+			hints += 1
+			assert(hint.strip_edges() == hint and hint.length() > 12,
+				"quest %s beat %s: a hint is a real sentence, trimmed: %s" % [String(quest["id"]), String(beat["id"]), hint])
+			assert(hint != String(beat.get("description", "")),
+				"quest %s beat %s: the hint just restates the description" % [String(quest["id"]), String(beat["id"])])
+			assert(progress.search(hint) == null,
+				"quest %s beat %s: hint carries progress-toward text, which opaque-until-sleep forbids: %s" % [String(quest["id"]), String(beat["id"]), hint])
+	assert(hints > 0, "the sparse hint set is empty -- the feature shipped with no data")
+	assert(hints * 4 <= beats,
+		"hints stopped being SPARSE: %d of %d beats carry one (ruling 1 caps this at a quarter; if the set genuinely needs to grow, re-argue the ruling rather than loosening this quietly)" % [hints, beats])
 
 
 func _load_json(path: String) -> Dictionary:

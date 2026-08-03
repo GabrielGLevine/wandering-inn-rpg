@@ -100,6 +100,12 @@ STRUCTURAL_LITERALS = [
     "warded_danger", "witch_craft_used", "second_door_study_sleeps",
     "dungeon_attuned", "catalyst_attunement_sleeps", "resonance_grown",
     "tended_beasts", "finale_played",
+    # v017-L5 (GH#332): banked by wi_game._clear_companion, and only on a
+    # TAMED downed-clear. Own row under this lane's anchor rather than
+    # appended to the line above, so a sibling lane adding its own
+    # code-banked counter appends a row instead of colliding on a shared
+    # line. Same shape in tests/test_shipped_ids.gd.
+    "companion_lost",
 ]
 
 
