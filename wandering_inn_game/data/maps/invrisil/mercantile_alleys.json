@@ -1329,6 +1329,59 @@
    },
    "gate_closed_toast": "A back door with no handle on this side. Nothing about it is any of your business tonight.",
    "victory_toast": "The Fence's strongbox gives up a lady's stone — forty years missing and still warm with someone else's guilt. It goes in your pack like it weighs more than it does."
+  },
+  {
+   "_comment": "#318 beat 2. present_when keeps him off every shipped fixture's alley.",
+   "id": "alley_seal_broker",
+   "kind": "npc",
+   "cell": [
+    5,
+    6
+   ],
+   "display_name": "A Man with a Rented Table",
+   "sprite": "city_scribe",
+   "facing": "down",
+   "present_when": {
+    "requires": {
+     "forged_hand_named": 1
+    }
+   },
+   "observe": "A folding table rented by the day, a cloth over it, and a brass block sitting on the cloth with two letters cut into the face. He has not covered it, because covering a thing is how a street learns you have one.",
+   "talk_pool": [
+    "Brass, boxwood, or wax. Boxwood is cheaper and it cracks, and the crack is always in the one letter you needed.",
+    "A name is only worth what the man reading it thinks it is worth. I do not set that price. I only cut the letters.",
+    "I rent the table by the day so that on a bad day there is nothing here to take."
+   ],
+   "conversation": "invrisil_seal_broker"
+  },
+  {
+   "_comment": "#318 beat 2 FIGHT arm. INTERACT-ONLY (no trigger_radius) so it can never spring on a pinned alley route, and encounter_when keeps it unspawned before the thread. Roster and arena are BOTH shipped and unchanged -- footpad_lookout + footpad_bruiser in mercantile_alley is exactly the composition sim_combat_batch already measures as alley_footpads_t3_warrior10_solo, so no new balance cell is owed. on_victory is the ARRAY form: the route counter FIRST (victory_toast contract), then the shared settle.",
+   "id": "broker_hands",
+   "kind": "encounter",
+   "cell": [
+    4,
+    6
+   ],
+   "display_name": "Two Paid by the Week",
+   "sprite": "human_laborer",
+   "observe": "Two men at the mouth of the alley who have been paid whether they work or not, and who have not worked in some time.",
+   "arena": "mercantile_alley",
+   "enemies": [
+    "footpad_lookout",
+    "footpad_bruiser"
+   ],
+   "allies": [],
+   "on_victory": [
+    "block_taken",
+    "seal_block_settled"
+   ],
+   "victory_toast": "You take the brass off the cloth yourself. Two letters, cut deep, and a table with nobody left standing beside it.",
+   "encounter_when": {
+    "requires": {
+     "forged_hand_named": 1
+    }
+   },
+   "gate_closed_toast": "Two men lean at the alley mouth doing nothing in particular, and doing it well."
   }
  ]
 }

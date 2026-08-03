@@ -21,6 +21,31 @@
       }
      },
      "text": "It sits differently on the chain. I noticed before I looked. Thank you for the part of that which was not the silver."
+    },
+    {
+     "_comment": "#318. Every v0.18 variant gates on a counter no shipped fixture holds, so the three pinned I1 canonicals can never match one (the text_variants-vs-pinned-base trap).",
+     "requires": {
+      "accomplishment": {
+       "house_card_shown": 1
+      }
+     },
+     "text": "I have not put the card down since it came and I have not answered it either. Both of those are being noticed by somebody, I expect."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "forged_hand_named": 1
+      }
+     },
+     "text": "A clerk with a good hand and a rented block. Forty years of keeping very still, and it was a man renting my mother's initials by the hour to people who wanted a door opened."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "house_answer_given": 1
+      }
+     },
+     "text": "I answered it in my own hand. Two lines and no apology in either of them. That is the first thing I have signed in eleven years that nobody had to be told about afterwards."
     }
    ],
    "options": [
@@ -84,7 +109,114 @@
      "goto": "handover"
     },
     {
+     "_comment": "#318 entry. Gated on the I1 terminal, so no shipped canonical can render this row and every pinned option array here holds.",
+     "text": "\"You've been holding that card since I came in.\"",
+     "requires": {
+      "accomplishment": {
+       "setting_commissioned": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "house_card_shown": 1
+      }
+     },
+     "effects": [
+      {
+       "quest": "the_name_and_the_habit"
+      },
+      {
+       "accomplishment": "house_card_shown"
+      }
+     ],
+     "goto": "the_card"
+    },
+    {
+     "text": "\"I have the hand that did it.\"",
+     "requires": {
+      "accomplishment": {
+       "forged_hand_named": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "seal_block_settled": 1
+      }
+     },
+     "goto": "the_name"
+    },
+    {
+     "text": "\"The card is answered.\"",
+     "requires": {
+      "accomplishment": {
+       "house_answer_given": 1
+      }
+     },
+     "goto": "after"
+    },
+    {
      "text": "\"Another time.\"",
+     "end": true
+    }
+   ]
+  },
+  "the_card": {
+   "speaker": "A Lady with a Ring Box",
+   "text": "It came to my rooms before breakfast. Cream, no crest on it, one line, in a hand I have seen twice in my life on paper I was not supposed to be holding either time. It asks me to confirm a signature.",
+   "options": [
+    {
+     "text": "\"And did you sign something?\"",
+     "goto": "the_hand"
+    }
+   ]
+  },
+  "the_hand": {
+   "speaker": "A Lady with a Ring Box",
+   "text": "I have signed nothing of consequence since the year my mother died. I am not going to say whose hand it is in a shop with a scribe in it. You already know which house I mean, because I told you where this city is run from and you did not laugh at me. She does not write to people like me. She writes about them, and only once something with her attention on it has started to move.",
+   "options": [
+    {
+     "text": "\"So somebody's been signing with your name.\"",
+     "goto": "terms_card"
+    }
+   ]
+  },
+  "terms_card": {
+   "speaker": "A Lady with a Ring Box",
+   "_comment": "The thread's premise, in her own voice: the second of the two assets her shipped `terms` node names is the one being spent.",
+   "text": "Somebody has, and it has been out in this city doing business without me for long enough that a woman who notices everything has noticed. I will not answer that card until I can say who. Start at the counter of this very shop. There is a scribe there who rents a blank seal by the hour and who has never once asked me how I am.",
+   "options": [
+    {
+     "text": "\"I'll start with the scribe.\"",
+     "end": true
+    }
+   ]
+  },
+  "the_name": {
+   "speaker": "A Lady with a Ring Box",
+   "text": "A rented block and a good hand. I am not angry at him. I am forty years past being angry at the small ones, and he is very small. Take the block off whatever table it is sitting on and I will answer the card myself, in my own hand, which is a thing I have been putting off doing for a very long time.",
+   "options": [
+    {
+     "text": "\"It'll be off the table today.\"",
+     "end": true
+    }
+   ]
+  },
+  "after": {
+   "speaker": "A Lady with a Ring Box",
+   "text": "She has not replied. She will not. That is not how any of it works and I would not have the first idea what to do with a reply if one came. What I have instead is a card in a drawer with my own name on the back of it, and the strange discovery that I would rather be noticed than left alone.",
+   "options": [
+    {
+     "text": "\"That's a house asset too.\"",
+     "goto": "after_two"
+    }
+   ]
+  },
+  "after_two": {
+   "speaker": "A Lady with a Ring Box",
+   "text": "Three, then. Do not tell me the third one is the ring. I would have to be gracious about it and I have used all of that up this week.",
+   "options": [
+    {
+     "text": "\"I'll see you, then.\"",
      "end": true
     }
    ]
