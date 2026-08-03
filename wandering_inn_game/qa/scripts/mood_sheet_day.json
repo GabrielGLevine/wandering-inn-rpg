@@ -1,0 +1,606 @@
+{
+ "_comment": "v0.17 R2 MOOD SHEET, DAY leg (non-canonical windowed utility -- feel_peek's own class, absent from qa/manifest.json, no seed row). ONE frame per region at ONE phase so the whole lighting language can be read side by side in a single pass: every exterior next to the interior you reach from it. Phase comes from the fixture (reused verbatim from the feel_peek triptych) because moods.json's real thresholds are 400/900 actions. `teleport` rather than door routing is deliberate -- the subject is the GRADE, not the route, and every cell below is clear of its map's encounter triggers. WINDOWED ONLY (screenshot is a no-op headless).",
+ "fixture_save": "feel_peek_day_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "invrisil_boulevard"
+  },
+  {
+   "_comment": "EXTERIOR Liscor region -- the inn facade + campfire warm lights against the field grade",
+   "action": "teleport",
+   "map": "floodplains",
+   "cell": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "floodplains",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "01_floodplains"
+  },
+  {
+   "_comment": "INTERIOR with windows -- hearth + grill are the room's warm sources",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    7,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "inn",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "02_inn"
+  },
+  {
+   "_comment": "INTERIOR, time-invariant, ZERO light sources -- the grade is all it has",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "03_inn_upstairs"
+  },
+  {
+   "_comment": "EXTERIOR city -- two campfires + three sconces inside a cool dusk",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    13,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "street",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "04_street"
+  },
+  {
+   "_comment": "INTERIOR with windows, no light rows -- the warm-grade-only case",
+   "action": "teleport",
+   "map": "guild",
+   "cell": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "guild"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "guild",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "05_guild"
+  },
+  {
+   "_comment": "EXTERIOR village -- harvest-warm day, deep-blue night",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    12,
+    10
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "riverfarm_village"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "riverfarm_village",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "06_riverfarm_village"
+  },
+  {
+   "_comment": "INTERIOR hearth + 2 sconces",
+   "action": "teleport",
+   "map": "riverfarm_longhouse",
+   "cell": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "riverfarm_longhouse"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "riverfarm_longhouse",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "07_riverfarm_longhouse"
+  },
+  {
+   "_comment": "EXTERIOR under canopy -- the green-shade ladder",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    6,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "witch_hollow"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "witch_hollow",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "08_witch_hollow"
+  },
+  {
+   "_comment": "Walled-city tier, crystal lamps, NEVER amber",
+   "action": "teleport",
+   "map": "pallass_market",
+   "cell": [
+    12,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_market"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "pallass_market",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "09_pallass_market"
+  },
+  {
+   "_comment": "INTERIOR forge tier -- 5 crystal lamps + steam vent + forge station",
+   "action": "teleport",
+   "map": "pallass_forge",
+   "cell": [
+    15,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "pallass_forge",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "10_pallass_forge"
+  },
+  {
+   "_comment": "SEALED interior -- hero light over the card table",
+   "action": "teleport",
+   "map": "brothers_parlor",
+   "cell": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "brothers_parlor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "brothers_parlor",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "11_brothers_parlor"
+  },
+  {
+   "_comment": "INTERIOR common hall -- hearth + 2 sconces",
+   "action": "teleport",
+   "map": "adventurers_rest",
+   "cell": [
+    6,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "adventurers_rest"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "adventurers_rest",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "12_adventurers_rest"
+  },
+  {
+   "_comment": "UNDERGROUND -- shaft daylight + phosphor moss",
+   "action": "teleport",
+   "map": "sewers",
+   "cell": [
+    8,
+    11
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "sewers"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "sewers",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "13_sewers"
+  },
+  {
+   "_comment": "EXTERIOR Invrisil -- one of the three day-identity cards the R2 close claimed byte-stable without ever shooting it (fix wave). Cell is off boulevard_night_footpads' radius-1 trigger at (13,15).",
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    12,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "invrisil_boulevard"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "invrisil_boulevard",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "14_invrisil_boulevard"
+  },
+  {
+   "_comment": "EXTERIOR alley -- second unshot day-identity card. (9,6) is three cells clear of alley_footpads_a's radius-2 trigger at (9,9).",
+   "action": "teleport",
+   "map": "mercantile_alleys",
+   "cell": [
+    9,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "mercantile_alleys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "mercantile_alleys",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "15_mercantile_alleys"
+  },
+  {
+   "_comment": "SEALED sanctuary -- third unshot card, and the one whose key this pass renamed; its grade is literal identity at every phase, so the frame is the proof the rename changed nothing visible.",
+   "action": "teleport",
+   "map": "garden_sanctuary",
+   "cell": [
+    6,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "garden_sanctuary"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "garden_sanctuary",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "16_garden_sanctuary"
+  },
+  {
+   "_comment": "SEALED forge hall -- pallass_forge's sibling, added so the forge temperature call is measured on BOTH rooms instead of one. The map's only encounter is interact-only (no trigger_radius).",
+   "action": "teleport",
+   "map": "pallass_forge_hall",
+   "cell": [
+    5,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "pallass_forge_hall"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "pallass_forge_hall",
+    "phase": "day"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "17_pallass_forge_hall"
+  }
+ ]
+}

@@ -2456,3 +2456,126 @@ by controller ruling — the plan was the defect, not the implementation.
   before the emit, `ui_slot_info_rendered` now carries the string the
   player actually sees, which is what makes it gateable at all
   (qa/scripts/combat_move_input.json + 03_power_strike_slot_info.png).
+
+<!-- v017-R2 -->
+## 2026-08-02 — v0.17 R2: moods/atmosphere re-tune (post-palette rider)
+
+**Call: warmth belongs to SOURCES, never to the grade — stated as two rules
+checkable off the data alone, not as a per-map taste call.** `t = r - b`,
+`v = mean(rgb)` per mood card. RULE 1, a map WITH a sky (day != dusk, which is
+world.gd's own `_map_has_sky` test): the sky owns the grade, so it cools and
+darkens monotonically. RULE 2, a map WITHOUT one (day == dusk): the flame owns
+the warmth, the grade may be cool or neutral but never warm (`t <= +0.03`), and
+a sealed room that owns light rows carries `lights_by_day: true` so those
+sources actually burn. Alternatives rejected: (a) leave the exteriors cool and
+just dim the interiors — the six interiors were interchangeable with each other
+as well as with dusk, and dimming does not separate them; (b) hand-pick a
+temperature per room — that is what produced the defect, and it does not
+survive the next art pass. The rules are mechanically checkable, and as of the
+fix wave they are mechanically CHECKED: `scripts/data_lint.py:check_moods` is
+the guard, in the pre-flight tier that runs before any Godot boot.
+
+- **The DAY contract, as read here.** atmosphere.gd's contract is
+  "ship-neutral-first: identity `[1,1,1]` everywhere except tuned rollouts", so
+  "day stays identity" binds the maps whose day IS identity. FIVE of them
+  survive this pass untouched — inn, street, invrisil_boulevard,
+  mercantile_alleys, garden_sanctuary — and their day frames are
+  BYTE-identical before and after (`shasum` on the windowed day sheets, all
+  five). `floodplains` measures identical (99.8 luma / +44.0 R−B both sides)
+  but is NOT byte-identical, and neither is any other map carrying an idle
+  sprite animation or a flickering light: two runs of the SAME data differ
+  there, because animation phase is wall-clock driven. Byte-identity is
+  therefore a property of a few still frames, never a claim to make about the
+  sheet as a whole — the honest instrument is the measurement, and the
+  measurement floor is ±0.2 luma.
+  `riverfarm_longhouse` is the ONE map whose day frame this pass deliberately
+  moves (69.3 → 54.1 luma): it is now a sealed card, see the ruling below.
+  No new day-phase EMITTER is introduced anywhere, which is the half of the
+  contract that decides whether a day frame is reproducible at all.
+- **RULING — a TIME-INVARIANT card moves as a UNIT or not at all**, and this
+  is where the first draft was wrong. Six sealed interiors pin day == dusk ==
+  night; the first pass moved their dusk/night and pinned day, reading "day
+  frozen" literally. That does not freeze anything — it SPLITS the card, flips
+  the map from sealed to sky-bearing under the day-vs-dusk test, silently
+  changes the biome-default ambience gating that hangs off that test, and
+  leaves the room wearing golden-hour amber at noon and a neutral wash after
+  dusk. Caught by the invariant checker written alongside the data, before a
+  single screenshot was taken; that checker was a throwaway with an absolute
+  path in it, so the fix wave moved its two rules verbatim into
+  `scripts/data_lint.py:check_moods` and deleted it.
+- **CORRECTION — SEALED vs SKY is an AUTHORED call, not a derivation.** The
+  original wording of this entry ("derived from the sky test rather than from
+  taste") reads as though something outside the file decides it. Nothing does:
+  `_map_has_sky` reads the day-vs-dusk triple THIS file writes, so the pin IS
+  the classification and the author is the one making it. What the rules
+  actually buy is consistency after the call — a room pinned sealed must then
+  grade neutral-or-cool and burn its lights at noon, and a room pinned skied
+  must not. Three rooms pinned sealed here do own a `window_blue` decor
+  (inn_upstairs, brothers_parlor, stationer); they are read as wall dressing,
+  which is a judgement, and it is now written down as one in each card's
+  `_comment` rather than implied to be a survey result. The trap for the next
+  lane is in `moods.json`'s top `_comment`: pinning `day == dusk` also flips
+  that map's biome-default ambience gating (world.gd `_biome_default_ambience`)
+  and licenses `lights_by_day`, so it is never only a colour edit.
+- **Two interior iterations, and the first one was wrong on the screen.** Draft
+  one read "low chroma" as `R ~= G ~= B` (inn dusk `[0.62,0.63,0.72]`). On warm
+  plank that reads OLIVE: holding R level with G while dropping B-relative
+  pushes the hue toward yellow-green, not toward evening. Every interior triple
+  now carries a real blue tilt (`R < G < B`, t between −0.06 and −0.22) at the
+  same value. Windowed evidence was the verdict on this, exactly as briefed —
+  the numbers alone said draft one was fine.
+- **RULING — the open USER-EYES ask "pallass_market / pallass_forge lights by
+  day" is ANSWERED, not deferred** (wave-autonomy directive 2026-07-28).
+  **Forge yes, market no**, and by derivation rather than by taste: the forge
+  tier pins day == dusk so it has no sky and seal_vault's own rationale ("a
+  sealed chamber has no sky, so zeroing its lights deleted the room's only
+  source") applies unchanged; the market's grade tracks the sun, so the shipped
+  default is right there. One key each if the user's eyes disagree.
+- **RULING (fix wave) — RULE 2 forbids a WARM grade; it never licensed a COLD
+  one.** The first cut of this pass moved `pallass_forge` from `[1.02,.86,.78]`
+  to `[.76,.81,.88]` and flipped the tier from +10 to −11 mean R−B on screen:
+  the one room in the game whose fiction is banked coal came out colder than
+  the sewers, and neither log said so. The rule as written was satisfied and
+  the room was still wrong, which is the same shape as the olive-interiors
+  miss — a rule that bounds one direction only. Both forge cards are now
+  NEUTRAL (`[.85,.85,.85]`, and forge_hall hue-only at its existing value), the
+  banked mouth at `forge_station_a` reaches the floor (0.8@26 → 1.05@42), and
+  `forge_station_b` gains the tier's second mouth (0.9@34, count 7 → 8 =
+  LIGHT_BUDGET exactly). Measured: forge −11.1 → −3.2, forge_hall −11.4 → −8.9,
+  against pallass_market at −29.2. The residue is the tier's blue-brick
+  TILESET, not a filter — logged as an art row, because no grade can fix it
+  without putting the amber wash back.
+- **RULING — `witch_hut`'s prescribed light anchor was overridden.** The
+  VISUAL-LOG named `hut_hearth_ash`. That prop is "The Cold Hearth" and its own
+  toast says the ash "has been cold for years", so a flickering firelight there
+  lights the room by contradicting its copy. The light went on
+  `hut_ward_scrap` — the thing the room already says glows.
+- **Two dead-data bugs found by inspection, both fixed.**
+  `moods.moods.garden` names no map (the id is `garden_sanctuary`), so that
+  card has never been read; and `riverfarm_longhouse` had no card at all, which
+  made it measurably BRIGHTER at midnight than at noon. The garden rename would
+  have un-gated the biome's fireflies into a day-identity frame, so it ships
+  with an explicit ambience row pinning today's behaviour — the rename and its
+  guard are one change, not two. Both classes are now LINTED rather than
+  remembered: `check_moods` fails on a mood key that names no map, and a
+  report-only advisory names every map that owns light rows but no card (the
+  longhouse's exact shape — a card-less map reads as sky-bearing, so its lamps
+  are dark at noon).
+- **RULING (fix wave) — the new `riverfarm_longhouse` card is SEALED.** Written
+  from scratch, it was the only card in the pass with a free hand, and it
+  pinned day to identity against a blue dusk — which made `_map_has_sky` return
+  true and switched the hall's hearth and both sconces OFF at noon. The
+  windowed pair is unambiguous: `fix_before/day/07_riverfarm_longhouse.png` is
+  a full-brightness room with a grey dead stove in it, which is the
+  `adventurers_rest` "cold unlit oven" row this same pass closed elsewhere. The
+  hall carries no window prop anywhere in its decor, so it takes the sealed
+  treatment every other windowless room here takes: one pin at
+  `[.64,.68,.76]` (a notch under adventurers_rest) plus `lights_by_day`. Its
+  day frame moves 69.3 → 54.1 luma as a result, and that is the intended
+  consequence of the time-invariant-card ruling above, not an exception to it.
+- **The evidence sheet grew from 13 maps to 17** (`invrisil_boulevard`,
+  `mercantile_alleys`, `garden_sanctuary`, `pallass_forge_hall`). Three of them
+  were named in this entry's own day-identity claim without ever having been
+  shot, and the fourth is the forge's sibling room — the temperature call is
+  now measured on both rooms rather than argued from one. `mood_sheet_*` stays
+  non-canonical (feel_peek's class, no manifest row).
