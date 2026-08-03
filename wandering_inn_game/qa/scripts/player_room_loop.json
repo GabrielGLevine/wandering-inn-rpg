@@ -366,7 +366,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Lyonette",
-    "text": "Lyonette rules the line before she writes in it, because of course she does. \"Paid. First door past the stairhead. The key is yours, the room is yours, and the noise out of the common room is unfortunately also yours.\""
+    "text": "Lyonette rules the line before she writes in it. \"Paid. First door past the stairhead. The key is yours, the room is yours, and the noise out of the common room is unfortunately also yours.\""
    },
    "timeout_sec": 5
   },
