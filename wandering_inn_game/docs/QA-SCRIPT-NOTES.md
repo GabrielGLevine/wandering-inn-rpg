@@ -62,6 +62,7 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `mouse_loop` | 9 | smoke, full | `near_tactician` | Issue #57/#84: mouse support -- distant prop click walks to nearest approach cell and stops without interacting, hotbar slot CLICK fires the number-key-equivalent stream and disarms a Tab-primed cursor, adjacent click faces+interacts in one click, click-to-walk on open ground (exact per-step count), keyboard press mid-path cancels, a title-row click reaches Continue, a pause-row click Resumes, dialogue-option clicks pin the exact keyboard-equivalent dialogue_choice payload |
 | `social_loop` | 9 | full | `social_loop_start` | Social Pillar v1 proof; rotating talk pools + goblin_parley's Warrior-gated intimidate -> LIVE [Diplomat] earn at the sleep (#123: fixture no longer pre-holds the class); post-earn [Charming Smile]-gated Watch persuade fires as the issue #50 gate's live proof |
 | `sewers_walkthrough` | 9 | full | `near_sewers` | Liscor sewers proof; grate-gate seam + vermin fight |
+| `property_seams` | 9 | full | `sewers_property_seams` | #348 property table: freeze_cell (ice floor on water, walked onto) + remove_scorch (debris) + a null cell (untagged prop refused) |
 | `cisterns_fight` | 9 | full | `cisterns_fight_start` | Quest 1 FIGHT path (clear shield_spiders nest) |
 | `cisterns_talk` | 9 | full | `cisterns_talk_start` | Quest 1 TALK path (persuade Zevara, no combat) |
 | `cisterns_scout` | 9 | full | `cisterns_scout_start` | Quest 1 SKILL path ([Appraise Foe] the nest_ledge) |

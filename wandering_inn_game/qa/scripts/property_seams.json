@@ -1,0 +1,308 @@
+{
+ "_comment": "== #348 slice 1 canonical: the PROPERTY TABLE end-to-end, one outcome verb per leg plus a null cell. LEG 1 freeze_cell (the user's named [Ice Floor]-on-water interaction, resolved today by frost_touch through the freezes x freezable row): face the channel, cast, terrain_changed{to:ice}, then WALK ONTO the cell -- frozen_walkable proven by movement, not by a flag. LEG 2 remove_scorch: face the debris, cast, entity_removed + terrain_changed{to:scorched} + the counter, then walk into the vacated nook. LEG 3 the NULL cell: the same burns cast on the untagged drainage_marker falls through to field_ambient and destroys nothing -- the honest refusal that makes quest props safe from every burns carrier, present and future. Screenshots are the player-eye proof for each. Seed is inert here (no combat resolves); it is pinned anyway so the run is reproducible. ==",
+ "fixture_save": "sewers_property_seams",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    4
+   ]
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "light"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "light"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "screenshot",
+   "name": "01_water_before_freeze"
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "frost_touch"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "frost_touch",
+    "context": "exploration",
+    "target": ""
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "terrain_changed",
+   "payload_contains": {
+    "map": "sewers",
+    "cell": [
+     3,
+     5
+    ],
+    "to": "ice"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Snap Freeze] — You lay your palm to the water and cold spiders out from it. In a breath the channel locks to grey-white ice, thick enough to bear your weight. It will not last past your next rest."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "frozen_cells.sewers",
+   "contains": [
+    [
+     3,
+     5
+    ]
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "screenshot",
+   "name": "02_ice_floor_formed"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    5
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "screenshot",
+   "name": "03_standing_on_the_ice"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "screenshot",
+   "name": "04_debris_blocks_the_nook"
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "kindle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "kindle",
+    "context": "exploration",
+    "target": "sewer_debris"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "sewer_debris"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "terrain_changed",
+   "payload_contains": {
+    "map": "sewers",
+    "cell": [
+     1,
+     2
+    ],
+    "to": "scorched"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "removed_entities",
+   "contains": [
+    "sewer_debris"
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "screenshot",
+   "name": "05_nook_cleared"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    3
+   ]
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "kindle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Firefly] — A curl of flame dances up over your knuckles and gutters out. Nothing here will take the fire."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "entity_removed",
+   "payload_contains": {
+    "id": "drainage_marker"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "terrain_changed",
+   "payload_contains": {
+    "map": "sewers",
+    "cell": [
+     5,
+     3
+    ]
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "screenshot",
+   "name": "06_untagged_prop_refused"
+  }
+ ]
+}

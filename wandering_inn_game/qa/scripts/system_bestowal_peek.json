@@ -1,0 +1,108 @@
+{
+ "_comment": "#347 prototype PEEK -- a finding-pin utility, not a canonical, so it is deliberately NOT registered in qa/manifest.json (the feel_peek_*/*_shot family precedent): the feature it exercises is dev-only and off in every shipped run, so it has no place in the sweep. REQUIRES THE FLAG: run it as `WI_SYSTEM_BESTOWAL_LOG=1 qa/run_qa.sh system_bestowal_peek headless --seed=9` (or pass --system-bestowal-log=1 through run_qa.sh's arg passthrough). With the flag off the wait on system_bestowal_candidate times out BY DESIGN -- that timeout IS the flag-fence proof. Loads the system_bestowal_demo fixture into the leased room already facing the bed, so one interact is the whole route: sleep -> the candidate line -> F3 overlay showing it in the event tail beside the counters that decided it.",
+ "fixture_save": "system_bestowal_demo",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn_player_room"
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "warrior": 2,
+    "helper": 1,
+    "diplomat": 1
+   }
+  },
+  {
+   "_comment": "Opaque-until-sleep: nothing about the pending recognition exists before the pillow. This asserts the absence, so a future surface leak reds this script.",
+   "action": "assert_event_absent",
+   "type": "system_bestowal_candidate"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "The whole prototype in one line: the rule that matched, and the counters that decided it. matched:true is asserted structurally -- no OCR.",
+   "action": "wait_for_event",
+   "type": "system_bestowal_candidate",
+   "payload_contains": {
+    "matched": true,
+    "id": "system_bestowal_pacifist"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "ZERO player surface is the contract: the sleep resolves as an ordinary quiet night. No class was gained, no level chained, nothing was granted.",
+   "action": "assert_event_absent",
+   "type": "class_gained"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "class_level_up"
+  },
+  {
+   "action": "assert_state",
+   "path": "classes",
+   "equals": {
+    "warrior": 2,
+    "helper": 1,
+    "diplomat": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "toggle_overlay"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_debug_overlay_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_candidate_logged_overlay"
+  }
+ ]
+}
