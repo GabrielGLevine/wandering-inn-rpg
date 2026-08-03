@@ -1,0 +1,96 @@
+{
+ "facts": {
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor"
+   ]
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "open_sell_picker": "pallass_stallkeeper"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Market-Tier Local",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "race": "human"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "race": "drake"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "v0.15 T4.1 market ambient reactivity. Ordered AFTER the race reads on purpose (last match wins): once the tier's own chain has moved, the region acknowledging it beats a first-meeting read. No shipped pallass fixture banks either counter, so every pinned canonical still lands on the base or race text.",
+      "requires": {
+       "accomplishment": {
+        "elevator_pass_stamped": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "seal_resolved": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   }
+  },
+  "start": "hub"
+ }
+}

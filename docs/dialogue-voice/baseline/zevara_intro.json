@@ -1,0 +1,930 @@
+{
+ "facts": {
+  "$.nodes.authority.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.authority.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Captain"
+   ]
+  },
+  "$.nodes.authority.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.cisterns_recap.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.cisterns_recap.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Captain"
+   ]
+  },
+  "$.nodes.cisterns_recap.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cisterns_recap.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild",
+    "Olesm"
+   ]
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[8].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Captain",
+    "Zevara"
+   ]
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [
+    "[Necromancer]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Guild",
+    "Necromancer"
+   ]
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.hub.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.nodes.hub.text_variants[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Good",
+    "Liscor",
+    "Watch"
+   ]
+  },
+  "$.nodes.shift.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.shift.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.shift.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.shift.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Antinium",
+    "Guardsmen",
+    "Senior"
+   ]
+  },
+  "$.nodes.summons.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.summons.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.summons.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.summons.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.summons_send.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Captain"
+   ]
+  },
+  "$.nodes.summons_send.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.summons_send.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm",
+    "Relc"
+   ]
+  },
+  "$.nodes.sweep_argue.options[0].text": {
+   "brackets": [
+    "[Charming Smile]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Charming",
+    "Dungeon",
+    "Smile"
+   ]
+  },
+  "$.nodes.sweep_argue.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.sweep_argue.options[2].text": {
+   "brackets": [],
+   "digits": [
+    "3"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.sweep_argue.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.sweep_pitch.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.sweep_pitch.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.sweep_pitch.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Council",
+    "Watchmen"
+   ]
+  },
+  "$.nodes.swept.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Captain"
+   ]
+  },
+  "$.nodes.swept.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.swept.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Dungeon",
+    "Watch"
+   ]
+  },
+  "$.nodes.swept_paid.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Captain"
+   ]
+  },
+  "$.nodes.swept_paid.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.swept_paid.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.zevara_bounties.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Market",
+    "Street"
+   ]
+  },
+  "$.nodes.zevara_bounties.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.zevara_bounties.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.zevara_bounties.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.zevara_bounties.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.zevara_bounty_paid.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.zevara_bounty_paid.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.zevara_bounty_paid.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.zevara_oath.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.zevara_oath.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.zevara_oath.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Captain"
+   ]
+  },
+  "$.nodes.zevara_oath.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.zevara_oath_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.zevara_oath_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Captain"
+   ]
+  },
+  "$.nodes.zevara_oath_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.zevara_oldblood.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.zevara_oldblood.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Captain"
+   ]
+  },
+  "$.nodes.zevara_oldblood.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "authority": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "cisterns_recap": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "resolved_the_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "hub": {
+    "options": [
+     {
+      "goto": "shift",
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "GH#334 ruling 8 (H1): hide_when is an AND; one key, not two.",
+      "goto": "sweep_pitch",
+      "hide_when": {
+       "accomplishment": {
+        "resolved_the_cisterns": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_about_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "summons",
+      "hide_when": {
+       "accomplishment": {
+        "heard_the_deep_tremor": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "watch_runner_pointed": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "raskghar_sealed"
+       },
+       {
+        "item": "moon_bone_amulet"
+       }
+      ],
+      "goto": "seal",
+      "hide_when": {
+       "accomplishment": {
+        "raskghar_sealed": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "cleared_the_warren": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "zevara_oldblood",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_zevara": 2,
+        "resolved_the_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "zevara_oath",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_zevara": 2,
+        "resolved_the_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "zevara_bounties",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_zevara": 2,
+        "resolved_the_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "cisterns_recap",
+      "hide_when": {
+       "accomplishment": {
+        "cisterns_reported": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_about_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "_comment": "Authored FIRST deliberately: last-match-wins, so quest/closure greetings override the standing cold line.",
+      "requires": {
+       "accomplishment": {
+        "studied_necromancy": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "phase": [
+        "dusk",
+        "night"
+       ]
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "resolved_the_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "heard_the_deep_tremor": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "raskghar_sealed": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "seal": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "shift": {
+    "options": [
+     {
+      "goto": "authority",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "summons": {
+    "_comment": "GH#334 note 4b: Act II pacing fires this, so it told cistern-innocent players 'You've been down there'. text_variants cannot express absence, so the base assumes none.",
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "heard_the_deep_tremor"
+       }
+      ],
+      "goto": "summons_send",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "heard_about_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "summons_send": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "sweep_argue": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "persuaded_someone"
+       },
+       {
+        "accomplishment": "watch_swept_cisterns"
+       },
+       {
+        "accomplishment": "resolved_the_cisterns"
+       },
+       {
+        "remove_entity": "shield_spiders"
+       },
+       {
+        "item": "watch_token"
+       }
+      ],
+      "goto": "swept",
+      "requires": {
+       "skill": "charming_smile"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -3
+       },
+       {
+        "accomplishment": "watch_swept_cisterns"
+       },
+       {
+        "accomplishment": "resolved_the_cisterns"
+       },
+       {
+        "remove_entity": "shield_spiders"
+       },
+       {
+        "item": "watch_token"
+       }
+      ],
+      "goto": "swept_paid",
+      "requires": {
+       "gold": 3
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "sweep_pitch": {
+    "options": [
+     {
+      "goto": "sweep_argue",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "swept": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "swept_paid": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "zevara_bounties": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "claimed_bounty_crate"
+       },
+       {
+        "gold": 3
+       }
+      ],
+      "goto": "zevara_bounty_paid",
+      "hide_when": {
+       "accomplishment": {
+        "claimed_bounty_crate": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "found_the_crate": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "claimed_bounty_cisterns"
+       },
+       {
+        "gold": 4
+       }
+      ],
+      "goto": "zevara_bounty_paid",
+      "hide_when": {
+       "accomplishment": {
+        "claimed_bounty_cisterns": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "resolved_the_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "claimed_bounty_warren"
+       },
+       {
+        "gold": 10
+       }
+      ],
+      "goto": "zevara_bounty_paid",
+      "hide_when": {
+       "accomplishment": {
+        "claimed_bounty_warren": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "cleared_the_warren": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "zevara_bounty_paid": {
+    "options": [
+     {
+      "goto": "zevara_bounties",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "zevara_oath": {
+    "options": [
+     {
+      "goto": "zevara_oath_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "zevara_oath_two": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "zevara_oldblood": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

@@ -1,0 +1,141 @@
+{
+ "facts": {
+  "$.nodes.greet.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.greet.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Captain"
+   ]
+  },
+  "$.nodes.greet.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.offduty.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.offduty.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Captain"
+   ]
+  },
+  "$.nodes.offduty.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.served.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.served.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Zevara's INN register. Attached ONLY to zevara_inn_guest; her gatehouse hub (zevara_intro) never rides along, so the cisterns sweep, the runner's summons, the seal report and EVERY Watch authorization stay home-only (REGISTER-PURE, spec 2026-07-20-foti-pr2-spec.md). That matters doubly here: the something-beneath arc routes its summons and its close through zevara_intro, and this register must absorb none of it. Serve mirrors selys_inn/patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter. Voice per docs/design/character-profiles.md: dry, overworked, off shift and never off duty.",
+  "nodes": {
+   "greet": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:zevara_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:zevara_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "offduty",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "offduty": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:zevara_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:zevara_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   },
+   "served": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Zevara",
+    "text": "\u00a7"
+   }
+  },
+  "start": "greet"
+ }
+}

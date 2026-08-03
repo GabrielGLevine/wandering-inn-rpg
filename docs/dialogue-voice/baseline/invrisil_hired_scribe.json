@@ -1,0 +1,265 @@
+{
+ "facts": {
+  "$.nodes.blotter.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.blotter.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.blotter_read.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.blotter_read.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.counter.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.counter.options[1].text": {
+   "brackets": [
+    "[Charming Smile]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Ask",
+    "Charming",
+    "Smile"
+   ]
+  },
+  "$.nodes.counter.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.counter.options[3].text": {
+   "brackets": [
+    "[Appraise Foe]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Appraise",
+    "Foe",
+    "The"
+   ]
+  },
+  "$.nodes.counter.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.counter.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.counter.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.paid.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.paid.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.persuade_close.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.persuade_close.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.persuade_pitch.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.persuade_pitch.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.refuses.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.refuses.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "#318 beat 1. Rides the SHIPPED stationer_clerk, so his bark serves first and the graph opens on the second interact (Hedault's idiom). THE QUEST GATE LIVES ON THE OPTIONS, not the entity: the engine has no `conversation_when`, so an attached `conversation` is unconditional. All three real-cost arms therefore require house_card_shown as well as their own cost, and accomplishment gates HIDE, so pre-quest he shows only his refusal and his exit (spec section 4, fix round 1). The free ask is a signposting line: it banks nothing and loops back. Each banking arm hides on forged_hand_named.",
+  "nodes": {
+   "blotter": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "forged_hand_named"
+       }
+      ],
+      "goto": "blotter_read",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Scribe by the Hour",
+    "text": "\u00a7"
+   },
+   "blotter_read": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Scribe by the Hour",
+    "text": "\u00a7"
+   },
+   "counter": {
+    "options": [
+     {
+      "goto": "refuses",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "persuade_pitch",
+      "hide_when": {
+       "accomplishment": {
+        "forged_hand_named": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "house_card_shown": 1
+       },
+       "skill": "charming_smile"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "The spend rides the GATE option, not the node behind it, so _is_priced_purchase fires and the row renders its price token.",
+      "effects": [
+       {
+        "gold": -8
+       },
+       {
+        "accomplishment": "forged_hand_named"
+       }
+      ],
+      "goto": "paid",
+      "hide_when": {
+       "accomplishment": {
+        "forged_hand_named": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "house_card_shown": 1
+       },
+       "gold": 8
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "blotter",
+      "hide_when": {
+       "accomplishment": {
+        "forged_hand_named": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "house_card_shown": 1
+       },
+       "skill": "observe"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Scribe by the Hour",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "forged_hand_named": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "paid": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Scribe by the Hour",
+    "text": "\u00a7"
+   },
+   "persuade_close": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "forged_hand_named"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Scribe by the Hour",
+    "text": "\u00a7"
+   },
+   "persuade_pitch": {
+    "options": [
+     {
+      "goto": "persuade_close",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Scribe by the Hour",
+    "text": "\u00a7"
+   },
+   "refuses": {
+    "options": [
+     {
+      "goto": "counter",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Scribe by the Hour",
+    "text": "\u00a7"
+   }
+  },
+  "start": "counter"
+ }
+}

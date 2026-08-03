@@ -1,0 +1,33 @@
+{
+ "facts": {
+  "$.nodes.note.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Leave"
+   ]
+  },
+  "$.nodes.note.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "note": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Training Dummies",
+    "text": "\u00a7"
+   }
+  },
+  "start": "note"
+ }
+}

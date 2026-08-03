@@ -1,0 +1,143 @@
+{
+ "facts": {
+  "$.nodes.greet.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.greet.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Relc"
+   ]
+  },
+  "$.nodes.greet.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Captain"
+   ]
+  },
+  "$.nodes.offduty.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.offduty.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.offduty.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Drake"
+   ]
+  },
+  "$.nodes.served.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.served.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Relc's INN register. Attached ONLY to relc_inn_guest; his road hub (relc_intro) never rides along, so the SPAR, the wager, the spare-spear gift and every descent window (relc_descent) stay home-only (REGISTER-PURE). Serve mirrors selys_inn/patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter. Voice per docs/design/character-profiles.md: loud, at ease, kind right on the surface because nothing is being guarded.",
+  "nodes": {
+   "greet": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:relc_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:relc_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "offduty",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7"
+   },
+   "offduty": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:relc_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:relc_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7"
+   },
+   "served": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7"
+   }
+  },
+  "start": "greet"
+ }
+}

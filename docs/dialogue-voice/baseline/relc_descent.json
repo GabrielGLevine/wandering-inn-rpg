@@ -1,0 +1,91 @@
+{
+ "facts": {
+  "$.nodes.alone_confirm.options[0].text": {
+   "brackets": [
+    "[I'm sure. Wait here.]"
+   ],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.alone_confirm.options[1].text": {
+   "brackets": [
+    "[On second thought, with me.]"
+   ],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.alone_confirm.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.join.options[0].text": {
+   "brackets": [
+    "[Go together.]"
+   ],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.join.options[1].text": {
+   "brackets": [
+    "[I go alone.]"
+   ],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.join.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "alone_confirm": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "went_alone"
+       },
+       {
+        "start_combat": "awakened_boss"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "join",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7"
+   },
+   "join": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "relc_joined_descent"
+       },
+       {
+        "start_combat": "awakened_boss"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "alone_confirm",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7"
+   }
+  },
+  "start": "join"
+ }
+}

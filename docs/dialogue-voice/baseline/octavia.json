@@ -1,0 +1,214 @@
+{
+ "facts": {
+  "$.nodes.bought.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.bought.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.bought.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.first_mix.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Octavia"
+   ]
+  },
+  "$.nodes.first_mix.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Celum"
+   ]
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "6"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [
+    "6"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lesson.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lesson.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lesson.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Wave D-1 (#155): Octavia's consignment day-trade stall (RELOCATION-FLAGGED -- a Celum day-tripper through the Door, non-citizen trader, NOT resident). Voice: fast-talking sales pitch, low-20s nerves, the stink/explosion gag (2.44) referenced ONCE. SHE teaches [Mixer]: the 'Show me' option is HIDDEN until the player buys anything from her (bought_from_octavia), runs a warmth beat (the 'lesson' node), then banks the FIRST synthesized_draught (mixer's gained_by). 'Apprentice of Saliss' NEVER appears. hide_when synthesized_draught retires the lesson once the player is already mixing.",
+  "nodes": {
+   "bought": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Octavia",
+    "text": "\u00a7"
+   },
+   "first_mix": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Octavia",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "gold": -6
+       },
+       {
+        "item": "solvent_phial"
+       },
+       {
+        "accomplishment": "bought_from_octavia"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 6
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -6
+       },
+       {
+        "item": "mineral_salts"
+       },
+       {
+        "accomplishment": "bought_from_octavia"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 6
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "lesson",
+      "hide_when": {
+       "accomplishment": {
+        "synthesized_draught": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "bought_from_octavia": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Octavia",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "synthesized_draught": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "bought_from_octavia": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "lesson": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "synthesized_draught"
+       }
+      ],
+      "goto": "first_mix",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Octavia",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

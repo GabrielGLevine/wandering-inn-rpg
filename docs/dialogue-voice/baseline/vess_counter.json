@@ -1,0 +1,63 @@
+{
+ "facts": {
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "hub": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "open_delivery_picker": true
+       }
+      ],
+      "end": true,
+      "hide_when": {
+       "delivery_accepted": true
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "open_delivery_turnin": true
+       }
+      ],
+      "end": true,
+      "requires": {
+       "delivery_accepted": true
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Vess",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

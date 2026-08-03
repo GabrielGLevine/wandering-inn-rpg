@@ -1,0 +1,716 @@
+{
+ "facts": {
+  "$.nodes.ask.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ask.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Come"
+   ]
+  },
+  "$.nodes.ask.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ask.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ask_back.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Leave"
+   ]
+  },
+  "$.nodes.ask_back.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Say"
+   ]
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Draw"
+   ]
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Leave"
+   ]
+  },
+  "$.nodes.hub.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.name.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.name.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Leave"
+   ]
+  },
+  "$.nodes.name.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.price.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.price.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Draw"
+   ]
+  },
+  "$.nodes.price.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.sealed.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.sealed.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Human"
+   ]
+  },
+  "$.nodes.settle.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Hand"
+   ]
+  },
+  "$.nodes.settle.options[1].text": {
+   "brackets": [],
+   "digits": [
+    "6"
+   ],
+   "propnouns": [
+    "Hand",
+    "Liscor"
+   ]
+  },
+  "$.nodes.settle.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.settle.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Draw"
+   ]
+  },
+  "$.nodes.settle.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Leave"
+   ]
+  },
+  "$.nodes.winter.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_kept.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_kept.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Humans"
+   ]
+  },
+  "$.nodes.winter_ways.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_ways.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_ways.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_where.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_where.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "b1 #199 'The Chieftain's Price'. Opens the quest and carries all three resolution paths (SUPPLY item / BROKER gold / FIGHT betrayal). Voice contract: docs/design/character-profiles.md#rags -- early-volume Rags, 1-4 word utterances, no articles. Costs follow the witch pattern: SUPPLY consumes a 10g draught, BROKER charges 6g, FIGHT is the betrayal close (start_combat on end). Back-out exit stays free and ungated (softlock guard). The two PEACEFUL first-contact options also bank chatted_with_rags, the met counter her inn-guest row needs: she has no npc entity anywhere (this graph hangs off the rags_scouting_party ENCOUNTER), so the usual talk_pool producer cannot exist for her. Deliberately NOT on '(Draw steel.)': the encounter's on_victory banks rags_meeting_settled, so without the split a betrayal win would satisfy the guest gate and seat the Chieftain you drove off.",
+  "nodes": {
+   "ask": {
+    "_comment": "The problem beat: wounded tribe, Watch sweep. She trades, never begs \u2014 offers the carved piece FIRST.",
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "rags_price_named"
+       }
+      ],
+      "goto": "price",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Rags",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "rags_price_named": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "ask_back": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Rags",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "met_rags"
+       },
+       {
+        "quest": "chieftains_price"
+       },
+       {
+        "accomplishment": "chatted_with_rags"
+       }
+      ],
+      "goto": "name",
+      "hide_when": {
+       "accomplishment": {
+        "met_rags": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "met_rags"
+       },
+       {
+        "quest": "chieftains_price"
+       },
+       {
+        "accomplishment": "chatted_with_rags"
+       }
+      ],
+      "goto": "name",
+      "hide_when": {
+       "accomplishment": {
+        "met_rags": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "ask",
+      "hide_when": {
+       "accomplishment": {
+        "rags_price_named": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "met_rags": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "settle",
+      "hide_when": {
+       "accomplishment": {
+        "rags_meeting_settled": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "rags_price_named": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "met_rags"
+       },
+       {
+        "quest": "chieftains_price"
+       },
+       {
+        "accomplishment": "rags_price_named"
+       },
+       {
+        "start_combat": "rags_scouting_party"
+       }
+      ],
+      "end": true,
+      "hide_when": {
+       "accomplishment": {
+        "rags_meeting_settled": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "v0.16 F1 offer. TRAP: APPENDED LAST because rags_meeting_loop's settled guard clicks visible option 1 blind -- every new row sits below the ungated exit. hide_when is SINGLE-KEY (it is AND across keys).",
+      "effects": [
+       {
+        "quest": "the_price_kept"
+       }
+      ],
+      "goto": "winter",
+      "hide_when": {
+       "accomplishment": {
+        "drove_off_rags": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "rags_meeting_settled": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Rags",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "met_rags": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "rags_meeting_settled": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "rags_price_kept": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "name": {
+    "options": [
+     {
+      "goto": "ask",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Rags",
+    "text": "\u00a7"
+   },
+   "price": {
+    "_comment": "She holds up a carved chess pawn \u2014 her own work. FIRST visit only names the price (multi-stage rule: the settle lives behind a leave-and-return through the hub's 'About the medicine.'; the Invrisil one-visit shape is the named mistake).",
+    "options": [
+     {
+      "goto": "ask_back",
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "start_combat": "rags_scouting_party"
+       }
+      ],
+      "end": true,
+      "hide_when": {
+       "accomplishment": {
+        "rags_meeting_settled": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Rags",
+    "text": "\u00a7"
+   },
+   "sealed": {
+    "_comment": "Close beat. The Erin chess nod \u2014 smallest possible thaw, no fluency.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Rags",
+    "text": "\u00a7"
+   },
+   "settle": {
+    "_comment": "Second-visit settle node. BROKER's between-visits fiction is now literal: the player left, arranged goods with Liscor coin, returned. Draw-steel here carries no settle bank \u2014 the betrayal resolves via the encounter's on_victory (win-only; lose/flee leaves the quest open).",
+    "options": [
+     {
+      "effects": [
+       {
+        "remove_item": "mending_draught"
+       },
+       {
+        "accomplishment": "helped_rags_tribe"
+       },
+       {
+        "accomplishment": "rags_meeting_settled"
+       },
+       {
+        "item": "carved_chess_pawn"
+       }
+      ],
+      "goto": "sealed",
+      "requires": {
+       "item": "mending_draught"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -6
+       },
+       {
+        "accomplishment": "brokered_goblin_trade"
+       },
+       {
+        "accomplishment": "rags_meeting_settled"
+       },
+       {
+        "item": "carved_chess_pawn"
+       }
+      ],
+      "goto": "sealed",
+      "requires": {
+       "accomplishment": {
+        "rags_price_named": 1
+       },
+       "gold": 6
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "ask_back",
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "start_combat": "rags_scouting_party"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Rags",
+    "text": "\u00a7"
+   },
+   "winter": {
+    "options": [
+     {
+      "goto": "winter_ways",
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "rags_price_kept"
+       }
+      ],
+      "goto": "winter_kept",
+      "hide_when": {
+       "accomplishment": {
+        "rags_price_kept": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "camp_trade_brokered": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "rags_price_kept"
+       }
+      ],
+      "goto": "winter_kept",
+      "hide_when": {
+       "accomplishment": {
+        "rags_price_kept": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "camp_larder_filled": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "rags_price_kept"
+       }
+      ],
+      "goto": "winter_kept",
+      "hide_when": {
+       "accomplishment": {
+        "rags_price_kept": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "camp_ground_held": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Rags",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "camp_trade_brokered": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "camp_larder_filled": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "camp_ground_held": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "rags_price_kept": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "winter_kept": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Rags",
+    "text": "\u00a7"
+   },
+   "winter_ways": {
+    "_comment": "TRAP: three SEPARATE report rungs above, one per route counter -- requires.accomplishment is AND across keys, so one row naming all three would demand all three.",
+    "options": [
+     {
+      "goto": "winter_where",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Rags",
+    "text": "\u00a7"
+   },
+   "winter_where": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Rags",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

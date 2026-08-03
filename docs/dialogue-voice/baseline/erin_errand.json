@@ -1,0 +1,879 @@
+{
+ "facts": {
+  "$.nodes.ceria_nudge.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ceria_nudge.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Ceria"
+   ]
+  },
+  "$.nodes.cleaned.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cleaned.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cleaned.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cleaning_directions.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cleaning_directions.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cleaning_directions.text": {
+   "brackets": [
+    "[Basic Cleaning]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Basic",
+    "Cleaning"
+   ]
+  },
+  "$.nodes.door_paths.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_paths.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild",
+    "Market",
+    "Street"
+   ]
+  },
+  "$.nodes.epilogue_gave.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.epilogue_gave.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Drake"
+   ]
+  },
+  "$.nodes.epilogue_kept.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.epilogue_kept.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Drake",
+    "Krshia"
+   ]
+  },
+  "$.nodes.erin_chess.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_chess.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_chess.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_chess.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_chess_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_chess_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_chess_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_door_flicker.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_door_flicker.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_door_flicker.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Can"
+   ]
+  },
+  "$.nodes.erin_home.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_home.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_home.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_home.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_home_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_home_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_home_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_meal.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_meal.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin"
+   ]
+  },
+  "$.nodes.erin_meal.text": {
+   "brackets": [],
+   "digits": [
+    "2"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.erin_pond.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_pond.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_pond.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Krshia",
+    "Liscor"
+   ]
+  },
+  "$.nodes.erin_pond_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.erin_pond_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.errand_recap.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.errand_recap.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.nodes.errand_recap.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Adventurer",
+    "Guild"
+   ]
+  },
+  "$.nodes.errand_recap.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[10].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Selys"
+   ]
+  },
+  "$.nodes.hub.options[11].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[12].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[13].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [
+    "[Basic Cleaning]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Basic",
+    "Cleaning"
+   ]
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[8].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Take"
+   ]
+  },
+  "$.nodes.hub.options[9].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild",
+    "Selys"
+   ]
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.package.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.package.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.package.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Drake"
+   ]
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "ceria_nudge": {
+    "_comment": "2026-07-26 main-quest restructure (Task 2.2): the pointer that replaced the chain start. SPOILER RULE: no door word here -- Erin knows only that the Horns left with shovels.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "cleaned": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "cleaning_directions": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "door_paths": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "epilogue_gave": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "epilogue_kept": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "erin_chess": {
+    "options": [
+     {
+      "goto": "erin_chess_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "erin_chess_two": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "erin_door_flicker": {
+    "_comment": "Task 2.2 orphaned this node (its only inbound goto was the retired door-chain start option); Task 2.4 CLAIMED it. Its inbound is now the hub's last option, gated door_mounted -> door_awakened. Unchanged text -- it needed a window, not a rewrite.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "erin_home": {
+    "options": [
+     {
+      "goto": "erin_home_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "erin_home_two": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "erin_meal": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "erin_pond": {
+    "options": [
+     {
+      "goto": "erin_pond_two",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "erin_pond_two": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   },
+   "errand_recap": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "package_delivered": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "quest": "the_errand"
+       },
+       {
+        "accomplishment": "has_package"
+       }
+      ],
+      "goto": "package",
+      "hide_when": {
+       "accomplishment": {
+        "has_package": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "cleaning_directions",
+      "hide_when": {
+       "accomplishment": {
+        "cleaned_the_inn": 1
+       }
+      },
+      "requires": {
+       "skill": "basic_cleaning"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "reported_cleaning"
+       }
+      ],
+      "goto": "cleaned",
+      "hide_when": {
+       "accomplishment": {
+        "reported_cleaning": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "cleaned_the_inn": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "reward_acknowledged"
+       }
+      ],
+      "goto": "epilogue_gave",
+      "hide_when": {
+       "accomplishment": {
+        "reward_acknowledged": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "gave_reward": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "reward_acknowledged"
+       }
+      ],
+      "goto": "epilogue_kept",
+      "hide_when": {
+       "accomplishment": {
+        "reward_acknowledged": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "kept_reward": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "erin_chess",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_erin": 2,
+        "errand_decided": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "erin_home",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_erin": 4,
+        "resolved_wrong_order": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "bank_first_use": "meal:erin"
+       },
+       {
+        "well_fed": true
+       }
+      ],
+      "goto": "erin_meal",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_erin": 4,
+        "resolved_wrong_order": 1
+       },
+       "once_per_waking": "meal:erin"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "Task 2.2: this WAS the door chain's start (quest door_that_goes_elsewhere + door_chain_started). The chain no longer starts here -- it auto-starts at the mounting scene once the Horns haul the thing home. Erin only POINTS at Ceria now: no quest effect, no accomplishment. Re-gated post_game -> seal_kept_reported so the nudge lands after the delve, and hides once the dig is under way.",
+      "goto": "ceria_nudge",
+      "hide_when": {
+       "accomplishment": {
+        "horns_dig_started": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "seal_kept_reported": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "errand_recap",
+      "hide_when": {
+       "accomplishment": {
+        "errand_decided": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "has_package": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "GH#167: door-chain follow-up -- the consult window (door_chain_started, retired at door_understood) previously left Erin with NO new options, a dead end at the chain's stuck point. Appended LAST; visible only inside the window, so cursor-pinned canonicals outside it stay byte-identical.",
+      "goto": "door_paths",
+      "hide_when": {
+       "accomplishment": {
+        "door_understood": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "door_chain_started": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "Task 2.4: the re-entry for `erin_door_flicker`, which Task 2.2 orphaned when it retired the old chain-start option. Controller ruling: KEEP the node, re-gate its reachability on the MOUNTED door -- the window is door_mounted -> door_awakened, wider than the GH#167 option above it. Appended LAST so every cursor-pinned canonical outside this window stays byte-identical.",
+      "goto": "erin_door_flicker",
+      "hide_when": {
+       "accomplishment": {
+        "door_awakened": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "door_mounted": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "GH#339 item 3: went_fishing had NO consumer -- banked once a waking by the pond handline and read by nothing. Wired here rather than retired: Erin is the nearest voice to that pond and the shallows already carry their own unanswered question. Appended LAST so every cursor-pinned canonical stays byte-identical. Retires on its own reveal counter.",
+      "effects": [
+       {
+        "accomplishment": "heard_about_the_pond"
+       }
+      ],
+      "goto": "erin_pond",
+      "hide_when": {
+       "accomplishment": {
+        "heard_about_the_pond": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "went_fishing": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "phase": [
+        "dusk",
+        "night"
+       ]
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "has_package": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "errand_decided": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "won_combat": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "goblins_spared": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "wrong_order_reported": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "package": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Erin",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

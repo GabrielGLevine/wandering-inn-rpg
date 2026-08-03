@@ -1,0 +1,86 @@
+{
+ "facts": {
+  "$.nodes.door_mounting.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_mounting.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_mounting.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor"
+   ]
+  },
+  "$.nodes.door_mounting_far.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_mounting_far.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor"
+   ]
+  }
+ },
+ "skeleton": {
+  "_comment": "Task 2.4: the MOUNTING scene -- the haul beat's payoff and the door chain's new start. Carrier is inn.json's `pisces_mounting`, present only in the door_retrieved -> door_mounted window. SEPARATE GRAPH FILE, not nodes inside pisces_magic.json, for the engine reason ceria_dig_camp.json split on: dialogue.gd always enters at the graph's own `start`, so a node parked in pisces_magic could only be reached through Pisces's STREET hub -- and interactions.gd routes `conversation` for kind:npc/encounter only, so the pantry PROP cannot open a graph at all. Placing it here also makes `inn` the quest-giver map for door_that_goes_elsewhere (test_content's place-naming validator reads conversation_maps). Naming rule: the Magical Door, never a Vol-9 name.",
+  "nodes": {
+   "door_mounting": {
+    "_comment": "BOTH exits bank and start -- the quest auto-start IS this conversation (spec section 2.5), so there is no way to leave the scene without the chain running. `door_chain_started` rides along as a LEGACY ALIAS: the id is frozen (shipped_ids) and test_shipped_ids requires a live producer, but Task 2.2 retired its original producer, so the mounting carries it. It now means exactly what door_mounted means, and every shipped consumer reads correctly under that sense.",
+    "options": [
+     {
+      "goto": "door_mounting_far",
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "door_mounted"
+       },
+       {
+        "accomplishment": "door_chain_started"
+       },
+       {
+        "quest": "door_that_goes_elsewhere"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "door_mounting_far": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "door_mounted"
+       },
+       {
+        "accomplishment": "door_chain_started"
+       },
+       {
+        "quest": "door_that_goes_elsewhere"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   }
+  },
+  "start": "door_mounting"
+ }
+}

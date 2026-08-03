@@ -1,0 +1,223 @@
+{
+ "facts": {
+  "$.nodes.dig_directions.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.dig_directions.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.dig_pitch.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.dig_pitch.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.dig_pitch.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor"
+   ]
+  },
+  "$.nodes.dig_unknown.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.dig_unknown.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild",
+    "Hammerad",
+    "Olesm",
+    "Springwalker"
+   ]
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rules.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rules.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rules.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Contract: text_variants are ascending and the last satisfied wins, so vault_construct_downed must follow horns_party_formed, and door_retrieved (spec 8's past-tense arm) must follow both. It lives HERE, on the inn/dungeon hub, NOT on the camp's graph: the camp NPC carries a SEPARATE graph, so an arm written into this file could never render there. Its hub is `ceria_inn_returned`, gated on door_mounted, so the arm is first reachable at the mounting, never during the dig. Task 2.2: this hub is also the `horns_dig` START surface -- the invitation gates on seal_kept_reported and retires itself on horns_dig_started, the counter it banks. SPOILER RULE: no dig_* line names a door.",
+  "nodes": {
+   "dig_directions": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Ceria",
+    "text": "\u00a7"
+   },
+   "dig_pitch": {
+    "_comment": "2026-07-26 main-quest restructure (Task 2.2): the horns_dig pitch. The quest + horns_dig_started already banked on the option that reached here, so both exits below are ungated -- the invitation cannot be re-taken (hub's hide_when) and cannot strand the player (dig_directions repeats the camp's location, and Task 2.3's camp NPC gates on horns_dig_started, not on hearing this node).",
+    "options": [
+     {
+      "goto": "dig_directions",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "dig_unknown",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Ceria",
+    "text": "\u00a7"
+   },
+   "dig_unknown": {
+    "options": [
+     {
+      "goto": "dig_directions",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Ceria",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "goto": "rules",
+      "hide_when": {
+       "accomplishment": {
+        "horns_party_formed": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "quest": "horns_dig"
+       },
+       {
+        "accomplishment": "horns_dig_started"
+       }
+      ],
+      "goto": "dig_pitch",
+      "hide_when": {
+       "accomplishment": {
+        "horns_dig_started": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "seal_kept_reported": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Ceria",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "horns_party_formed": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "vault_construct_downed": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "door_retrieved": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "rules": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "horns_party_formed"
+       }
+      ],
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Ceria",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

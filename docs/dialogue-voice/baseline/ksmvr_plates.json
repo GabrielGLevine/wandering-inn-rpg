@@ -1,0 +1,95 @@
+{
+ "facts": {
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.success.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.success.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "hub": {
+    "options": [
+     {
+      "_comment": "GH#334 note 15 (H2): hide_when is an AND; guided_* only banks beside halls_cleared.",
+      "effects": [
+       {
+        "accomplishment": "guided_ksmvr_through_plates"
+       },
+       {
+        "accomplishment": "halls_cleared"
+       },
+       {
+        "toast": "The plates go quiet behind you, one after another, and stay quiet. Whatever they were counting, they have stopped."
+       }
+      ],
+      "goto": "success",
+      "hide_when": {
+       "accomplishment": {
+        "halls_cleared": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "horns_party_formed": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Ksmvr",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "guided_ksmvr_through_plates": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "success": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Ksmvr",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

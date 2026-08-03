@@ -1,0 +1,493 @@
+{
+ "facts": {
+  "$.nodes.after.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.after.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.after_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.after_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.text_variants[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.handover.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.handover.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.handover.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.handover.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.terms.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.terms.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.terms_card.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.terms_card.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_card.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_card.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_hand.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_hand.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_name.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_name.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_stone.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_stone.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_stone.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.why_keep.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.why_keep.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "v0.16 I1 giver (#306, ruling 1). Three route arms converge on `handover`, which carries the only grant, so the reward cannot double-fire. Every gated node keeps an ungated exit.",
+  "nodes": {
+   "after": {
+    "options": [
+     {
+      "goto": "after_two",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Lady with a Ring Box",
+    "text": "\u00a7"
+   },
+   "after_two": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Lady with a Ring Box",
+    "text": "\u00a7"
+   },
+   "commission": {
+    "options": [
+     {
+      "effects": [
+       {
+        "quest": "a_setting_for_a_lady"
+       },
+       {
+        "accomplishment": "heirloom_commission_started"
+       }
+      ],
+      "goto": "the_stone",
+      "hide_when": {
+       "accomplishment": {
+        "heirloom_commission_started": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "handover",
+      "hide_when": {
+       "accomplishment": {
+        "setting_commissioned": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heirloom_truth_kept": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "handover",
+      "hide_when": {
+       "accomplishment": {
+        "setting_commissioned": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "setting_assisted": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "handover",
+      "hide_when": {
+       "accomplishment": {
+        "setting_commissioned": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "original_recovered": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "#318 entry. Gated on the I1 terminal, so no shipped canonical can render this row and every pinned option array here holds.",
+      "effects": [
+       {
+        "quest": "the_name_and_the_habit"
+       },
+       {
+        "accomplishment": "house_card_shown"
+       }
+      ],
+      "goto": "the_card",
+      "hide_when": {
+       "accomplishment": {
+        "house_card_shown": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "setting_commissioned": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "the_name",
+      "hide_when": {
+       "accomplishment": {
+        "seal_block_settled": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "forged_hand_named": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "after",
+      "requires": {
+       "accomplishment": {
+        "house_answer_given": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Lady with a Ring Box",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "heirloom_commission_started": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "setting_commissioned": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "#318. Every v0.18 variant gates on a counter no shipped fixture holds, so the pinned I1 canonicals can never match one (the text_variants-vs-pinned-base trap).",
+      "requires": {
+       "accomplishment": {
+        "house_card_shown": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "forged_hand_named": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "house_answer_given": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "handover": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "setting_commissioned"
+       },
+       {
+        "item": "plum_silk_locket"
+       },
+       {
+        "gold": 25
+       }
+      ],
+      "end": true,
+      "hide_when": {
+       "accomplishment": {
+        "setting_commissioned": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "setting_commissioned"
+       }
+      ],
+      "end": true,
+      "hide_when": {
+       "accomplishment": {
+        "setting_commissioned": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Lady with a Ring Box",
+    "text": "\u00a7"
+   },
+   "terms": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Lady with a Ring Box",
+    "text": "\u00a7"
+   },
+   "terms_card": {
+    "_comment": "The thread's premise, in her own voice: the second of the two assets her shipped `terms` node names is the one being spent.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Lady with a Ring Box",
+    "text": "\u00a7"
+   },
+   "the_card": {
+    "options": [
+     {
+      "goto": "the_hand",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Lady with a Ring Box",
+    "text": "\u00a7"
+   },
+   "the_hand": {
+    "options": [
+     {
+      "goto": "terms_card",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Lady with a Ring Box",
+    "text": "\u00a7"
+   },
+   "the_name": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Lady with a Ring Box",
+    "text": "\u00a7"
+   },
+   "the_stone": {
+    "_comment": "Nobility layer (controller amendment A1): her only acknowledgment of who really owns this city, oblique and Vol-1-safe. Never name her own house.",
+    "options": [
+     {
+      "goto": "why_keep",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "terms",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Lady with a Ring Box",
+    "text": "\u00a7"
+   },
+   "why_keep": {
+    "options": [
+     {
+      "goto": "terms",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Lady with a Ring Box",
+    "text": "\u00a7"
+   }
+  },
+  "start": "commission"
+ }
+}

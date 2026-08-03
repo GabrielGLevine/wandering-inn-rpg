@@ -259,7 +259,7 @@ Expected: `self-test: PASS`. Fix the script (not the cases) until it does.
 
 Run: `python3 wandering_inn_game/qa/scripts/dialogue_voice_gate.py snapshot --out docs/dialogue-voice/baseline`
 Then: `python3 wandering_inn_game/qa/scripts/dialogue_voice_gate.py check --baseline docs/dialogue-voice/baseline`
-Expected: `snapshot: 71 files`, then all files pass (warns allowed; the untouched corpus must produce zero hard fails — if any appear, the gate is buggy; fix before proceeding). Note current `anti=` total in the run log (expect ≈60; it is the pre-pass baseline number).
+Expected: `snapshot: 71 files`. The check then FAILS overall — correct: tell detectors fire on the old prose (that is the debt this pass pays; measured 2026-08-03: 48 CAPS, 48 ellipsis, 13 whole/entire, anti=41). Gate-bug test is narrower: the untouched corpus must produce ZERO structure/digit/bracket hard fails (verify: pipe check output through `grep '!' | grep -vE "CAPS|ellipsis|whole of"` — must be empty). If any appear, the gate is buggy; fix before proceeding.
 
 - [ ] **Step 5: Commit**
 

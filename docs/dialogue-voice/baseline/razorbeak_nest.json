@@ -1,0 +1,81 @@
+{
+ "facts": {
+  "$.nodes.confront.options[0].text": {
+   "brackets": [
+    "[Strike first.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Strike"
+   ]
+  },
+  "$.nodes.confront.options[1].text": {
+   "brackets": [
+    "[Basic Command]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Basic",
+    "Command",
+    "Crouch"
+   ]
+  },
+  "$.nodes.confront.options[2].text": {
+   "brackets": [
+    "[Back away.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.confront.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "confront": {
+    "options": [
+     {
+      "effects": [
+       {
+        "start_combat": "razorbeak_nest"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "#330 R1: the corusdeer talk-down's shape. Dormant, never remove -- the cull bounty respawns.",
+      "effects": [
+       {
+        "accomplishment": "soothed_a_beast"
+       },
+       {
+        "accomplishment": "tended_beasts"
+       },
+       {
+        "dormant_entity": "razorbeak_nest"
+       }
+      ],
+      "end": true,
+      "requires": {
+       "skill": "animals_basic_command"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Razorbeak Nest",
+    "text": "\u00a7"
+   }
+  },
+  "start": "confront"
+ }
+}

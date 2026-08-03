@@ -1,0 +1,126 @@
+{
+ "facts": {
+  "$.nodes.bought.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.bought.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.bought.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "20"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [
+    "8"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [
+    "3"
+   ],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "bought": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Peddler",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "gold": -20
+       },
+       {
+        "item": "watch_issue_gambeson"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 20
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -8
+       },
+       {
+        "item": "training_bow"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 8
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -3
+       },
+       {
+        "item": "trap_kit"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 3
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Peddler",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

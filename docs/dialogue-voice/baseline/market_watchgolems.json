@@ -1,0 +1,73 @@
+{
+ "facts": {
+  "$.nodes.confront.options[0].text": {
+   "brackets": [
+    "[Strike first.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Strike"
+   ]
+  },
+  "$.nodes.confront.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.confront.options[2].text": {
+   "brackets": [
+    "[Back away.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.confront.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "confront": {
+    "options": [
+     {
+      "effects": [
+       {
+        "start_combat": "market_watchgolems"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "watchgolems_stood_down"
+       },
+       {
+        "dormant_entity": "market_watchgolems"
+       }
+      ],
+      "end": true,
+      "requires": {
+       "accomplishment": {
+        "forge_permit_filed": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Stone Golems",
+    "text": "\u00a7"
+   }
+  },
+  "start": "confront"
+ }
+}

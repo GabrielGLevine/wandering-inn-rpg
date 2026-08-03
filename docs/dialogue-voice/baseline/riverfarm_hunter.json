@@ -1,0 +1,407 @@
+{
+ "facts": {
+  "$.nodes.agreed.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.agreed.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [
+    "[Ask him to come with you.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Ask"
+   ]
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_brief.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_brief.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_brief.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_brief.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_reported_cleared.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_reported_cleared.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_reported_read.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_reported_read.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_reported_rerouted.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_reported_rerouted.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_rerouted.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_rerouted.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_sign.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_sign.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_sign.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_topic.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_topic.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thicket_topic.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "agreed": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "hunter_will_come"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Hunter",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "goto": "agreed",
+      "hide_when": {
+       "accomplishment": {
+        "hunter_will_come": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "quest": "what_the_thicket_keeps"
+       },
+       {
+        "accomplishment": "heard_thicket_keeps"
+       }
+      ],
+      "goto": "thicket_brief",
+      "hide_when": {
+       "accomplishment": {
+        "heard_thicket_keeps": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "price_of_a_favor_reported": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "REPORT ROWS all carry heard_thicket_keeps beside their route counter: hut_ward_scrap has no quest-start gate, so a mage PC could read the scrap on a wander and settle thicket_answered for a quest never offered, firing 'New quest'/'Quest complete' back to back. Stated on all three so a later ungated producer cannot leak either.",
+      "effects": [
+       {
+        "accomplishment": "thicket_answered"
+       }
+      ],
+      "goto": "thicket_reported_read",
+      "hide_when": {
+       "accomplishment": {
+        "thicket_answered": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_thicket_keeps": 1,
+        "ward_scrap_read": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "thicket_answered"
+       }
+      ],
+      "goto": "thicket_reported_rerouted",
+      "hide_when": {
+       "accomplishment": {
+        "thicket_answered": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_thicket_keeps": 1,
+        "herd_rerouted": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "thicket_answered"
+       }
+      ],
+      "goto": "thicket_reported_cleared",
+      "hide_when": {
+       "accomplishment": {
+        "thicket_answered": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_thicket_keeps": 1,
+        "thicket_cleared": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "R2 TALK-route RE-ENTRY, APPENDED LAST so cursor-pinned canonicals keep their indices. The start row is hide_when heard_thicket_keeps, the counter it banks, so thicket_brief/thicket_sign (herd_rerouted, the whole TALK route, and the hut pointer) were reachable only inside the accept conversation; leaving early orphaned them permanently while the beat still read 'Read the sign with the hunter'. Tallyman shape: requires the quest, hides on the route's terminal counter.",
+      "goto": "thicket_brief",
+      "hide_when": {
+       "accomplishment": {
+        "herd_rerouted": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_thicket_keeps": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Hunter",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "hunter_will_come": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "survived_wolf_night": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "thicket_brief": {
+    "options": [
+     {
+      "goto": "thicket_sign",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "thicket_topic",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Hunter",
+    "text": "\u00a7"
+   },
+   "thicket_reported_cleared": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Hunter",
+    "text": "\u00a7"
+   },
+   "thicket_reported_read": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Hunter",
+    "text": "\u00a7"
+   },
+   "thicket_reported_rerouted": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Hunter",
+    "text": "\u00a7"
+   },
+   "thicket_rerouted": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Hunter",
+    "text": "\u00a7"
+   },
+   "thicket_sign": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "herd_rerouted"
+       },
+       {
+        "toast": "You spend the afternoon on it. Two rails down, re-set forty paces east, and the herd's road runs through the gap by dusk."
+       }
+      ],
+      "goto": "thicket_rerouted",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Hunter",
+    "text": "\u00a7"
+   },
+   "thicket_topic": {
+    "options": [
+     {
+      "goto": "thicket_brief",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Hunter",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

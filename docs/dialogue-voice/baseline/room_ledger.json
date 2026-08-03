@@ -1,0 +1,290 @@
+{
+ "facts": {
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "20"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [
+    "25"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [
+    "60"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [
+    "120"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Lyonette"
+   ]
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lease_done.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lease_done.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tier_thanks.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tier_thanks.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tier_thanks.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tier_thanks.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tier_thanks.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "GH#92 D3: the room ledger -- its OWN conversation surface so no existing hub's cursor/option pins move (three canonicals broke when the tiers rode erin_errand; lyonette_tip is pinned too). Lyonette keeps the register; tier-1 gates on resolved_wrong_order (HER arc) so the early-game inn stays purchase-free.",
+  "nodes": {
+   "hub": {
+    "options": [
+     {
+      "_comment": "#350 THE LEASE, and THE PRICE: 20 lives in this option's text, requires.gold and effects.gold, nowhere else. Sanctioned {gold, accomplishment} compound -- the accomplishment leg HIDES the row until the player has been upstairs, the gold leg greys it visible after. hide_when is meant to be PERMANENT. Authored FIRST, and hidden at near_room_upgrade (no visited_own_room), which is what keeps room_upgrade_loop's and dialogue_numkey_loop's visible-index pins intact.",
+      "effects": [
+       {
+        "gold": -20
+       },
+       {
+        "accomplishment": "room_purchased"
+       }
+      ],
+      "goto": "lease_done",
+      "hide_when": {
+       "accomplishment": {
+        "room_purchased": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "visited_own_room": 1
+       },
+       "gold": 20
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "Tier chain: each requires the previous, hides once owned. Persistent +1 max HP each via _room_tier_bonus (wi_game.gd).",
+      "effects": [
+       {
+        "gold": -25
+       },
+       {
+        "accomplishment": "room_tier_1"
+       }
+      ],
+      "goto": "tier_thanks",
+      "hide_when": {
+       "accomplishment": {
+        "room_tier_1": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "resolved_wrong_order": 1
+       },
+       "gold": 25
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -60
+       },
+       {
+        "accomplishment": "room_tier_2"
+       }
+      ],
+      "goto": "tier_thanks",
+      "hide_when": {
+       "accomplishment": {
+        "room_tier_2": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "room_tier_1": 1
+       },
+       "gold": 60
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -120
+       },
+       {
+        "accomplishment": "room_tier_3"
+       }
+      ],
+      "goto": "tier_thanks",
+      "hide_when": {
+       "accomplishment": {
+        "room_tier_3": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "room_tier_2": 1
+       },
+       "gold": 120
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lyonette",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "_comment": "#350: FIRST rung on purpose -- later-match-wins, so a tiered player still reads their tier line below.",
+      "requires": {
+       "accomplishment": {
+        "room_purchased": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "room_tier_1": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "room_tier_2": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "room_tier_3": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "lease_done": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lyonette",
+    "text": "\u00a7"
+   },
+   "tier_thanks": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lyonette",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "room_tier_1": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "room_tier_2": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "room_tier_3": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   }
+  },
+  "start": "hub"
+ }
+}

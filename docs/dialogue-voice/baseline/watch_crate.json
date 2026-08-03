@@ -1,0 +1,139 @@
+{
+ "facts": {
+  "$.nodes.cleared.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cleared.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [
+    "[Charming Smile]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Charming",
+    "Smile"
+   ]
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [
+    "2"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "cleared": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Watch Sergeant",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "recovered_crate_watch"
+       },
+       {
+        "accomplishment": "found_the_crate"
+       },
+       {
+        "accomplishment": "persuaded_someone"
+       },
+       {
+        "remove_entity": "crate_scavengers"
+       }
+      ],
+      "goto": "cleared",
+      "hide_when": {
+       "accomplishment": {
+        "found_the_crate": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "asked_about_crate": 1
+       },
+       "skill": "charming_smile"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -2
+       },
+       {
+        "accomplishment": "recovered_crate_watch"
+       },
+       {
+        "accomplishment": "found_the_crate"
+       },
+       {
+        "remove_entity": "crate_scavengers"
+       }
+      ],
+      "goto": "cleared",
+      "hide_when": {
+       "accomplishment": {
+        "found_the_crate": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "asked_about_crate": 1
+       },
+       "gold": 2
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Watch Sergeant",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "found_the_crate": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   }
+  },
+  "start": "hub"
+ }
+}

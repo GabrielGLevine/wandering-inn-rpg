@@ -1,0 +1,139 @@
+{
+ "facts": {
+  "$.nodes.greet.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.greet.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Selys"
+   ]
+  },
+  "$.nodes.greet.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.offduty.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.offduty.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.offduty.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.served.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.served.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "d1 #247 Friends of the Inn -- Selys's INN register. Attached ONLY to the selys_inn_guest entity; her guild hub (the delivery board, the 'over there' signpost) never rides along, so the context is off-duty-at-the-inn, not at-the-counter (the user's hard requirement). Serve mirrors patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter (feeds Helper/barmaid). Voice per docs/design/character-profiles.md: dry, competent, secretly soft-hearted.",
+  "nodes": {
+   "greet": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:selys_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:selys_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "offduty",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7"
+   },
+   "offduty": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:selys_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:selys_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7"
+   },
+   "served": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7"
+   }
+  },
+  "start": "greet"
+ }
+}

@@ -1,0 +1,88 @@
+{
+ "facts": {
+  "$.nodes.calmed.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.calmed.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.greet.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "calmed": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Frazzled Drayman",
+    "text": "\u00a7"
+   },
+   "greet": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "persuaded_someone"
+       },
+       {
+        "accomplishment": "soothed_the_drayman"
+       }
+      ],
+      "goto": "calmed",
+      "hide_when": {
+       "accomplishment": {
+        "soothed_the_drayman": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Frazzled Drayman",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "soothed_the_drayman": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   }
+  },
+  "start": "greet"
+ }
+}

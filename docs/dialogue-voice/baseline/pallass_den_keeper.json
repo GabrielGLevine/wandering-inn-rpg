@@ -1,0 +1,249 @@
+{
+ "facts": {
+  "$.nodes.carried.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.carried.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.consignee.options[0].text": {
+   "brackets": [
+    "[Hand her the countersigned queue notice.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Hand"
+   ]
+  },
+  "$.nodes.consignee.options[1].text": {
+   "brackets": [
+    "[Tell her the crate is already on her dock.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Tell"
+   ]
+  },
+  "$.nodes.consignee.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.consignee.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.month.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.month.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.month.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.month_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.month_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.month_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.released.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.released.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "v0.16 P2 (#307). Voice: character-profiles.md 'Den-Shop Keeper'. NEW graph on a NEW entity, so the loop and sign-off surfaces never ride a pinned hub.",
+  "nodes": {
+   "carried": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Den-Shop Keeper",
+    "text": "\u00a7"
+   },
+   "consignee": {
+    "options": [
+     {
+      "_comment": "TALK route terminal rung. Requires the countersigned notice, i.e. offices 1 and 2 walked in order.",
+      "effects": [
+       {
+        "accomplishment": "loop_walked"
+       }
+      ],
+      "goto": "released",
+      "hide_when": {
+       "accomplishment": {
+        "loop_walked": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "queue_notice_countersigned": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "HELP route terminal rung. Three legs = the two carry props plus this shop's own receiving dock.",
+      "effects": [
+       {
+        "accomplishment": "shipment_carried"
+       }
+      ],
+      "goto": "carried",
+      "hide_when": {
+       "accomplishment": {
+        "shipment_carried": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "shipment_leg_carried": 3
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Den-Shop Keeper",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "goto": "month",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "consignee",
+      "hide_when": {
+       "accomplishment": {
+        "ledger_unstuck": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "ledger_loop_started": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Den-Shop Keeper",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "ledger_unstuck": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "month": {
+    "options": [
+     {
+      "goto": "month_two",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Den-Shop Keeper",
+    "text": "\u00a7"
+   },
+   "month_two": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Den-Shop Keeper",
+    "text": "\u00a7"
+   },
+   "released": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Den-Shop Keeper",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

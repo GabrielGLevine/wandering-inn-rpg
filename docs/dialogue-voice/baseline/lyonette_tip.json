@@ -1,0 +1,366 @@
+{
+ "facts": {
+  "$.nodes.barmaid_retort.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.barmaid_retort.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.barmaid_retort.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.gratitude.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Lyonette"
+   ]
+  },
+  "$.nodes.gratitude.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Krshia"
+   ]
+  },
+  "$.nodes.hub.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin"
+   ]
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.order_brief.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.order_brief.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.order_brief.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin",
+    "Krshia"
+   ]
+  },
+  "$.nodes.tip.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tip.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tip.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tip.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment_advice_flow": "Both tip entries bank lyonette_tip and go directly to tip; routing barmaid_retort through hub wrongly replays the opening. The Warrior 2 variant avoids claiming combat experience for other builds.",
+  "_comment_c4": "Wrong Order reports stay hidden until their matching accomplishment. Maybe later remains the ungated exit.",
+  "nodes": {
+   "barmaid_retort": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "lyonette_tip"
+       }
+      ],
+      "goto": "tip",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lyonette",
+    "text": "\u00a7"
+   },
+   "gratitude": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lyonette",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "asked_lyonette_guild"
+       }
+      ],
+      "goto": "barmaid_retort",
+      "hide_when": {
+       "accomplishment": {
+        "asked_lyonette_guild": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "lyonette_tip"
+       }
+      ],
+      "goto": "tip",
+      "hide_when": {
+       "accomplishment": {
+        "lyonette_tip": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "asked_lyonette_guild": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "quest": "wrong_order"
+       },
+       {
+        "accomplishment": "heard_wrong_order"
+       }
+      ],
+      "goto": "order_brief",
+      "hide_when": {
+       "accomplishment": {
+        "heard_wrong_order": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "wrong_order_reported"
+       },
+       {
+        "gold": 3
+       }
+      ],
+      "goto": "gratitude",
+      "hide_when": {
+       "accomplishment": {
+        "wrong_order_reported": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_wrong_order": 1,
+        "strongarmed_the_supplier": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "wrong_order_reported"
+       },
+       {
+        "gold": 3
+       }
+      ],
+      "goto": "gratitude",
+      "hide_when": {
+       "accomplishment": {
+        "wrong_order_reported": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_wrong_order": 1,
+        "smoothed_with_krshia": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "resolved_wrong_order"
+       },
+       {
+        "accomplishment": "wrong_order_reported"
+       },
+       {
+        "gold": 3
+       }
+      ],
+      "goto": "gratitude",
+      "hide_when": {
+       "accomplishment": {
+        "wrong_order_reported": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_wrong_order": 1,
+        "stretched_the_order": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lyonette",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "lyonette_tip": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "heard_wrong_order": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "resolved_wrong_order": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "order_brief": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lyonette",
+    "text": "\u00a7"
+   },
+   "tip": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lyonette",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "class": {
+        "warrior": 2
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   }
+  },
+  "start": "hub"
+ }
+}

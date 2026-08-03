@@ -1,0 +1,453 @@
+{
+ "facts": {
+  "$.nodes.at_the_door.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.at_the_door.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.at_the_door.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.at_the_door.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.at_the_door.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.at_the_door.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.at_the_door.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Ceria"
+   ]
+  },
+  "$.nodes.at_the_door.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.at_the_door.text_variants[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.fork_fed.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.nodes.fork_fed.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fork_fed.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.fork_open.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fork_open.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fork_reward.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fork_reward.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fork_reward.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fork_reward.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fork_reward_done.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fork_reward_done.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fork_reward_done.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fork_reward_done.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_appetite.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_appetite.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_appetite.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_appetite_unknown.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_appetite_unknown.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_appetite_unknown.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_choice.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_choice.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.the_choice.options[2].text": {
+   "brackets": [
+    "[Hedge Remedy]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Hedge",
+    "Remedy"
+   ]
+  },
+  "$.nodes.the_choice.options[3].text": {
+   "brackets": [
+    "[Detect Magic]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Detect",
+    "Magic"
+   ]
+  },
+  "$.nodes.the_choice.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_choice.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Act V (#270 beats 2-3): Pisces at the sealed rune-door. THE DOOR NEVER SPEAKS -- every option this beat needs lives on him. Beat 2's OR-parity is the `the_appetite` arm: #270 wants EITHER read to unlock beat 3, but only one counter can gate an option, so the rune-read player gets the ward fact from Pisces himself (the third producer of read_the_feeding_ward) and lands on the same choice.",
+  "nodes": {
+   "at_the_door": {
+    "options": [
+     {
+      "_comment": "The OR-bridge: a player who only matched the hand (bare interact or [Observe]) hears the appetite from the man himself. Hidden once the fact is held, by whichever route landed it.",
+      "effects": [
+       {
+        "accomplishment": "read_the_feeding_ward"
+       }
+      ],
+      "goto": "the_appetite",
+      "hide_when": {
+       "accomplishment": {
+        "read_the_feeding_ward": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "read_the_seal_runes": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "2026-07-26 Act V beat 3, THE CHOICE. One entry, three forks inside, so the decision is made in one place and reads as a decision. Gated on the ward fact (never on which Skill read it) and hidden once resolved.",
+      "goto": "the_choice",
+      "hide_when": {
+       "accomplishment": {
+        "seal_resolved": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "read_the_feeding_ward": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "read_the_seal_runes": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "read_the_feeding_ward": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "One arm per outcome, appended after the reading arms so last-match-wins leaves him standing in the ending the player chose. seal_kept_fed sits LAST on purpose: it is the only outcome another path can be layered on top of (a player who opened the seal and could not finish the warden can still fund the keeper), and the fed line is the true state in that case.",
+      "requires": {
+       "accomplishment": {
+        "seal_opened": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "seal_rewarded": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "seal_kept_fed": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "fork_fed": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "at_the_door",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "fork_open": {
+    "_comment": "seal_opened is banked on the OPTION, not here, so the door and the warden arm the instant the decision is made. He does not come into the fight: the ward re-seals the moment nobody holds the reading open, which is also why the harness cell is SOLO.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "fork_reward": {
+    "_comment": "The item gate closes the fork. `requires {item}` renders VISIBLE-LOCKED with its own reason string, NOT hidden -- dialogue.gd hides only accomplishment-shaped gates (_progress_gated) -- so a player holding neither piece sees both arms and what each wants. TWO close arms, not one: guardian_ward_fragment drops only from ruin_guardian, the FIGHT breach of the dig's pedestal, and Hedault's trade consumes it, so a plates-or-wardwork player had no route to seal_rewarded at all. construct_core_shard is the MAIN-LINE drop (vault_boss_slot, chance 1.0, no other sink), so the second arm is the universal one. Each arm consumes its own item, so the real cost is preserved on both.",
+    "options": [
+     {
+      "effects": [
+       {
+        "remove_item": "guardian_ward_fragment"
+       },
+       {
+        "accomplishment": "seal_rewarded"
+       },
+       {
+        "accomplishment": "seal_resolved"
+       }
+      ],
+      "goto": "fork_reward_done",
+      "requires": {
+       "item": "guardian_ward_fragment"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "remove_item": "construct_core_shard"
+       },
+       {
+        "accomplishment": "seal_rewarded"
+       },
+       {
+        "accomplishment": "seal_resolved"
+       }
+      ],
+      "goto": "fork_reward_done",
+      "requires": {
+       "item": "construct_core_shard"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "at_the_door",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "fork_reward_done": {
+    "_comment": "A seal_opened arm for the same hatch Olesm's posted node carries: a player who broke the seal first and re-cut the ward after is describing a repair, not an untouched pour. hide_when is FORBIDDEN -- it would close the hatch.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "seal_opened": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "the_appetite": {
+    "_comment": "The MINIMUM read, deliberately plainer than the [Detect Magic] arm's quartet payoff -- the literate player gets the lattice, everyone gets the fact.",
+    "options": [
+     {
+      "goto": "the_appetite_unknown",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "at_the_door",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "the_appetite_unknown": {
+    "options": [
+     {
+      "goto": "at_the_door",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "the_choice": {
+    "_comment": "THREE REAL-COST PATHS (#270 beat 3), each with its own producer: FIGHT banks seal_opened here and resolves in the vault beyond the warden; TALK points at Olesm, whose arm carries the Skill-or-gold cost and banks seal_kept_fed + seal_resolved; SKILL closes it here, but only for a player holding BOTH a warding Skill and a piece of warded ruin-stone, whichever arm they take being CONSUMED.",
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "seal_opened"
+       }
+      ],
+      "goto": "fork_open",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "fork_fed",
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "SKILL fork, visible-locked (the witch pattern). TWO entry arms because #270 names both a warding Skill and a reading one and `requires` cannot compound {skill, item} -- the Skill gate opens the pitch and the ITEM gate closes it one node down. That is the shipped multi-node persuade shape, not a gate stacked on a gate.",
+      "goto": "fork_reward",
+      "requires": {
+       "skill": "hedge_remedy"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "fork_reward",
+      "requires": {
+       "skill": "detect_magic"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   }
+  },
+  "start": "at_the_door"
+ }
+}

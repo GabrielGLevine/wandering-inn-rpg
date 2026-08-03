@@ -1,0 +1,209 @@
+{
+ "facts": {
+  "$.nodes.answered.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.answered.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.answered.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.waiting.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.waiting.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.waiting.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.waiting.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.waiting.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.waiting.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.waiting.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.waiting.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.waiting.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.who.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.who.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "#318 beat 3. ORIGINAL UNNAMED ARCHETYPE, never Ressa and never Reynold, and she never names her mistress -- the felt/seen rule (spec section 2). FOUR report arms, one per route counter (bought / handed over / lifted / taken), converge on `answered`, which carries the ONLY grant so the pay cannot double-fire. Exactly one is visible.",
+  "nodes": {
+   "answered": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "house_answer_given"
+       },
+       {
+        "gold": 30
+       },
+       {
+        "toast": "Thirty gold, counted out flat on the table with no purse and no flourish, by a woman who has plainly never once had to check the count."
+       }
+      ],
+      "end": true,
+      "hide_when": {
+       "accomplishment": {
+        "house_answer_given": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Woman Who Came in a Carriage",
+    "text": "\u00a7"
+   },
+   "waiting": {
+    "options": [
+     {
+      "goto": "answered",
+      "hide_when": {
+       "accomplishment": {
+        "house_answer_given": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "block_bought_back": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "The SOCIAL rung: he gave it up and asked to have it called destroyed; this player declined to.",
+      "goto": "answered",
+      "hide_when": {
+       "accomplishment": {
+        "house_answer_given": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "block_handed_over": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "answered",
+      "hide_when": {
+       "accomplishment": {
+        "house_answer_given": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "block_lifted": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "answered",
+      "hide_when": {
+       "accomplishment": {
+        "house_answer_given": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "block_taken": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "who",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Woman Who Came in a Carriage",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "seal_block_settled": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "house_answer_given": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "who": {
+    "options": [
+     {
+      "goto": "waiting",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Woman Who Came in a Carriage",
+    "text": "\u00a7"
+   }
+  },
+  "start": "waiting"
+ }
+}

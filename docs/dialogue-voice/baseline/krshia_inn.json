@@ -1,0 +1,145 @@
+{
+ "facts": {
+  "$.nodes.greet.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.greet.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Krshia"
+   ]
+  },
+  "$.nodes.greet.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Human"
+   ]
+  },
+  "$.nodes.served.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.served.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Silverfangs"
+   ]
+  },
+  "$.nodes.stall.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.stall.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.stall.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Gnoll"
+   ]
+  }
+ },
+ "skeleton": {
+  "_comment": "d1 #247 Friends of the Inn -- Krshia's INN register. Attached ONLY to the krshia_inn_guest entity; her market stall (and its wares hub) never rides along -- off-duty-at-the-inn context. Serve mirrors patron_serving ({once_per_waking, item}), banks the shared served_customer counter. Voice per docs/design/character-profiles.md: measured, proud Silverfang; 'Hrr.' used SPARINGLY, the ', yes?' Gnoll ending preferred for variation (user note 2026-07-19).",
+  "nodes": {
+   "greet": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:krshia_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:krshia_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "stall",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "served": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "stall": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:krshia_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:krshia_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   }
+  },
+  "start": "greet"
+ }
+}

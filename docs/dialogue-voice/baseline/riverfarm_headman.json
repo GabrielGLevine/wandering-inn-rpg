@@ -1,0 +1,518 @@
+{
+ "facts": {
+  "$.nodes.authority_topic.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.authority_topic.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.authority_topic.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Riverfarm"
+   ]
+  },
+  "$.nodes.brief.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.brief.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.brief.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.favor_recap.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.favor_recap.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.favor_recap.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.favor_recap.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.flood_brief.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.flood_brief.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.flood_brief.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.flood_reported_cleared.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.flood_reported_cleared.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.flood_reported_read.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.flood_reported_read.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.flood_reported_worked.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.flood_reported_worked.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[8].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[9].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.reported.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.reported.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.witches_topic.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.witches_topic.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.witches_topic.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "authority_topic": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Former Headman",
+    "text": "\u00a7"
+   },
+   "brief": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Former Headman",
+    "text": "\u00a7"
+   },
+   "favor_recap": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Former Headman",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "blight_lifted": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "flood_brief": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Former Headman",
+    "text": "\u00a7"
+   },
+   "flood_reported_cleared": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Former Headman",
+    "text": "\u00a7"
+   },
+   "flood_reported_read": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Former Headman",
+    "text": "\u00a7"
+   },
+   "flood_reported_worked": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Former Headman",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "quest": "price_of_a_favor"
+       },
+       {
+        "accomplishment": "heard_price_of_a_favor"
+       }
+      ],
+      "goto": "brief",
+      "hide_when": {
+       "accomplishment": {
+        "heard_price_of_a_favor": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "price_of_a_favor_reported"
+       }
+      ],
+      "goto": "reported",
+      "hide_when": {
+       "accomplishment": {
+        "price_of_a_favor_reported": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "blight_lifted": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "witches_topic",
+      "requires": {
+       "accomplishment": {
+        "heard_price_of_a_favor": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "authority_topic",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "favor_recap",
+      "hide_when": {
+       "accomplishment": {
+        "price_of_a_favor_reported": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_price_of_a_favor": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "quest": "flood_ledger"
+       },
+       {
+        "accomplishment": "heard_flood_ledger"
+       }
+      ],
+      "goto": "flood_brief",
+      "hide_when": {
+       "accomplishment": {
+        "heard_flood_ledger": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "price_of_a_favor_reported": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "REPORT ROWS all carry heard_flood_ledger beside their route counter: mill_flood_stack has no quest-start gate and basic_cleaning is the PC's STARTING field skill, so a wander into the mill banked flood_prep_done with started_quests empty and this hub then rendered the ask and the answer at once, settling a quest never offered. Stated on all three so a later ungated producer cannot leak either.",
+      "effects": [
+       {
+        "accomplishment": "flood_ledger_settled"
+       }
+      ],
+      "goto": "flood_reported_read",
+      "hide_when": {
+       "accomplishment": {
+        "flood_ledger_settled": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_flood_ledger": 1,
+        "ledger_read_true": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "flood_ledger_settled"
+       }
+      ],
+      "goto": "flood_reported_worked",
+      "hide_when": {
+       "accomplishment": {
+        "flood_ledger_settled": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "flood_prep_done": 1,
+        "heard_flood_ledger": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "flood_ledger_settled"
+       }
+      ],
+      "goto": "flood_reported_cleared",
+      "hide_when": {
+       "accomplishment": {
+        "flood_ledger_settled": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "granary_cleared": 1,
+        "heard_flood_ledger": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Former Headman",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "heard_price_of_a_favor": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "blight_lifted": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "blight_lifted": 1,
+        "drove_off_collectors": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "blight_lifted": 1,
+        "mediated_the_debt": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "reported": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Former Headman",
+    "text": "\u00a7"
+   },
+   "witches_topic": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Former Headman",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

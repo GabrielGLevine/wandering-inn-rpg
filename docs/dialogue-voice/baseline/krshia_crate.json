@@ -1,0 +1,1328 @@
+{
+ "facts": {
+  "$.nodes.accepted.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.accepted.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.accepted.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.bought.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.bought.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Krshia"
+   ]
+  },
+  "$.nodes.bought.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.catalyst_sold.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.catalyst_sold.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Krshia"
+   ]
+  },
+  "$.nodes.catalyst_sold.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor"
+   ]
+  },
+  "$.nodes.charms.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "4"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.charms.options[1].text": {
+   "brackets": [],
+   "digits": [
+    "4"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.charms.options[2].text": {
+   "brackets": [],
+   "digits": [
+    "5"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.charms.options[3].text": {
+   "brackets": [],
+   "digits": [
+    "9"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.charms.options[4].text": {
+   "brackets": [],
+   "digits": [
+    "14"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.charms.options[5].text": {
+   "brackets": [],
+   "digits": [
+    "35"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.charms.options[6].text": {
+   "brackets": [],
+   "digits": [
+    "18"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.charms.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.charms.options[8].text": {
+   "brackets": [],
+   "digits": [
+    "18"
+   ],
+   "propnouns": [
+    "Pallass"
+   ]
+  },
+  "$.nodes.charms.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.goblin_run.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.goblin_run.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[10].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[11].text": {
+   "brackets": [
+    "[Charming Smile]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Charming",
+    "Smile"
+   ]
+  },
+  "$.nodes.hub.options[12].text": {
+   "brackets": [],
+   "digits": [
+    "8"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Light"
+   ]
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [
+    "[Charming Smile]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Charming",
+    "Lyonette",
+    "Smile"
+   ]
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [
+    "2"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[8].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[9].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.hub.text_variants[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.krshia_plans.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.krshia_plans.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.krshia_plans.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.krshia_plans.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Gnolls"
+   ]
+  },
+  "$.nodes.krshia_plans_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.krshia_plans_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Krshia"
+   ]
+  },
+  "$.nodes.krshia_plans_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Silverfang"
+   ]
+  },
+  "$.nodes.krshia_tribe.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.krshia_tribe.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.krshia_tribe.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.krshia_tribe.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Gnoll"
+   ]
+  },
+  "$.nodes.krshia_tribe_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.krshia_tribe_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.krshia_tribe_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.pallass_stone_sold.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.pallass_stone_sold.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Krshia"
+   ]
+  },
+  "$.nodes.pallass_stone_sold.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Door",
+    "Silverfang"
+   ]
+  },
+  "$.nodes.shop.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "5"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.shop.options[10].text": {
+   "brackets": [],
+   "digits": [
+    "18"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.shop.options[1].text": {
+   "brackets": [],
+   "digits": [
+    "15"
+   ],
+   "propnouns": [
+    "Silverfang"
+   ]
+  },
+  "$.nodes.shop.options[2].text": {
+   "brackets": [],
+   "digits": [
+    "18"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.shop.options[3].text": {
+   "brackets": [],
+   "digits": [
+    "24"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.shop.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.shop.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.shop.options[6].text": {
+   "brackets": [],
+   "digits": [
+    "4"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.shop.options[7].text": {
+   "brackets": [],
+   "digits": [
+    "13"
+   ],
+   "propnouns": [
+    "Silverfang"
+   ]
+  },
+  "$.nodes.shop.options[8].text": {
+   "brackets": [],
+   "digits": [
+    "16"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.shop.options[9].text": {
+   "brackets": [],
+   "digits": [
+    "22"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.shop.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor"
+   ]
+  },
+  "$.nodes.smoothed.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Krshia"
+   ]
+  },
+  "$.nodes.smoothed.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin"
+   ]
+  },
+  "$.nodes.smoothed_paid.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Krshia"
+   ]
+  },
+  "$.nodes.smoothed_paid.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin"
+   ]
+  },
+  "$.nodes.thanks.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thanks.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.wrong_order_recap.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.wrong_order_recap.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.wrong_order_recap.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Lyonette"
+   ]
+  },
+  "$.nodes.wrong_order_recap.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin",
+    "Lyonette"
+   ]
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "accepted": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "bought": {
+    "options": [
+     {
+      "goto": "shop",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "catalyst_sold": {
+    "options": [
+     {
+      "goto": "shop",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "charms": {
+    "options": [
+     {
+      "effects": [
+       {
+        "gold": -4
+       },
+       {
+        "item": "copper_luck_band"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 4
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -4
+       },
+       {
+        "item": "fishers_handline"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 4
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -5
+       },
+       {
+        "item": "field_whetstone"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 5
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -9
+       },
+       {
+        "item": "hedge_ward_charm"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 9
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -14
+       },
+       {
+        "item": "hunters_fang_talisman"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 14
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -35
+       },
+       {
+        "item": "stonescale_talisman"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 35
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -18
+       },
+       {
+        "item": "resonant_catalyst"
+       },
+       {
+        "accomplishment": "bought_catalyst"
+       }
+      ],
+      "goto": "catalyst_sold",
+      "requires": {
+       "gold": 18
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "shop",
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -18
+       },
+       {
+        "item": "pallass_attunement_stone"
+       },
+       {
+        "accomplishment": "pallass_attuned"
+       }
+      ],
+      "goto": "pallass_stone_sold",
+      "requires": {
+       "accomplishment": {
+        "pallass_sponsored": 1
+       },
+       "gold": 18
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "goblin_run": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "quest": "missing_crate"
+       },
+       {
+        "accomplishment": "asked_about_crate"
+       }
+      ],
+      "goto": "accepted",
+      "hide_when": {
+       "accomplishment": {
+        "asked_about_crate": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "recovered_crate_guile"
+       },
+       {
+        "accomplishment": "found_the_crate"
+       },
+       {
+        "accomplishment": "crate_returned"
+       }
+      ],
+      "goto": "thanks",
+      "hide_when": {
+       "accomplishment": {
+        "crate_returned": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "studied_the_cellar": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "crate_returned"
+       }
+      ],
+      "goto": "thanks",
+      "hide_when": {
+       "accomplishment": {
+        "crate_returned": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "found_the_crate": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "smoothed_with_krshia"
+       },
+       {
+        "accomplishment": "persuaded_someone"
+       },
+       {
+        "accomplishment": "resolved_wrong_order"
+       }
+      ],
+      "goto": "smoothed",
+      "hide_when": {
+       "accomplishment": {
+        "resolved_wrong_order": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_wrong_order": 1
+       },
+       "skill": "charming_smile"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -2
+       },
+       {
+        "accomplishment": "smoothed_with_krshia"
+       },
+       {
+        "accomplishment": "resolved_wrong_order"
+       }
+      ],
+      "goto": "smoothed_paid",
+      "hide_when": {
+       "accomplishment": {
+        "resolved_wrong_order": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_wrong_order": 1
+       },
+       "gold": 2
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "shop",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "krshia_tribe",
+      "requires": {
+       "accomplishment": {
+        "crate_returned": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "heard_krshia_plans"
+       }
+      ],
+      "goto": "krshia_plans",
+      "hide_when": {
+       "accomplishment": {
+        "heard_krshia_plans": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "chatted_with_krshia": 4,
+        "crate_returned": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "open_sell_picker": "krshia"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "wrong_order_recap",
+      "hide_when": {
+       "accomplishment": {
+        "wrong_order_reported": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_wrong_order": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "v0.16 F1 TALK (#308). TRAP: both rows APPEND LAST -- once rags_meeting_settled is held they render VISIBLE-LOCKED, not hidden, so placement is what protects every index-pinned array on this hub.",
+      "effects": [
+       {
+        "accomplishment": "persuaded_someone"
+       },
+       {
+        "accomplishment": "camp_trade_brokered"
+       }
+      ],
+      "goto": "goblin_run",
+      "hide_when": {
+       "accomplishment": {
+        "camp_trade_brokered": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "rags_meeting_settled": 1
+       },
+       "skill": "charming_smile"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -8
+       },
+       {
+        "accomplishment": "camp_trade_brokered"
+       }
+      ],
+      "goto": "goblin_run",
+      "hide_when": {
+       "accomplishment": {
+        "camp_trade_brokered": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "rags_meeting_settled": 1
+       },
+       "gold": 8
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "phase": [
+        "dusk",
+        "night"
+       ]
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "asked_about_crate": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "crate_returned": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "crate_returned": 1,
+        "recovered_crate_force": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "crate_returned": 1,
+        "recovered_crate_guile": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "crate_returned": 1,
+        "recovered_crate_watch": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "heard_wrong_order": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "smoothed_with_krshia": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "krshia_plans": {
+    "options": [
+     {
+      "goto": "krshia_plans_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "krshia_plans_two": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "krshia_tribe": {
+    "options": [
+     {
+      "goto": "krshia_tribe_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "krshia_tribe_two": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "pallass_stone_sold": {
+    "options": [
+     {
+      "goto": "shop",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "shop": {
+    "options": [
+     {
+      "effects": [
+       {
+        "gold": -5
+       },
+       {
+        "item": "traveler_charm"
+       }
+      ],
+      "goto": "bought",
+      "hide_when": {
+       "accomplishment": {
+        "chatted_with_krshia": 4,
+        "crate_returned": 1,
+        "heard_krshia_plans": 1
+       }
+      },
+      "requires": {
+       "gold": 5
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -15
+       },
+       {
+        "item": "gnollish_hunting_knife"
+       }
+      ],
+      "goto": "bought",
+      "hide_when": {
+       "accomplishment": {
+        "chatted_with_krshia": 4,
+        "crate_returned": 1,
+        "heard_krshia_plans": 1
+       }
+      },
+      "requires": {
+       "gold": 15
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -18
+       },
+       {
+        "item": "wool_lined_cloak"
+       }
+      ],
+      "goto": "bought",
+      "hide_when": {
+       "accomplishment": {
+        "chatted_with_krshia": 4,
+        "crate_returned": 1,
+        "heard_krshia_plans": 1
+       }
+      },
+      "requires": {
+       "gold": 18
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -24
+       },
+       {
+        "item": "leather_jerkin"
+       }
+      ],
+      "goto": "bought",
+      "hide_when": {
+       "accomplishment": {
+        "chatted_with_krshia": 4,
+        "crate_returned": 1,
+        "heard_krshia_plans": 1
+       }
+      },
+      "requires": {
+       "gold": 24
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "charms",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -4
+       },
+       {
+        "item": "traveler_charm"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_krshia": 4,
+        "crate_returned": 1,
+        "heard_krshia_plans": 1
+       },
+       "gold": 4
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -13
+       },
+       {
+        "item": "gnollish_hunting_knife"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_krshia": 4,
+        "crate_returned": 1,
+        "heard_krshia_plans": 1
+       },
+       "gold": 13
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -16
+       },
+       {
+        "item": "wool_lined_cloak"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_krshia": 4,
+        "crate_returned": 1,
+        "heard_krshia_plans": 1
+       },
+       "gold": 16
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -22
+       },
+       {
+        "item": "leather_jerkin"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_krshia": 4,
+        "crate_returned": 1,
+        "heard_krshia_plans": 1
+       },
+       "gold": 22
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -18
+       },
+       {
+        "item": "hunting_bow"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 18
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "smoothed": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "smoothed_paid": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "thanks": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7"
+   },
+   "wrong_order_recap": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Krshia",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "resolved_wrong_order": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   }
+  },
+  "start": "hub"
+ }
+}

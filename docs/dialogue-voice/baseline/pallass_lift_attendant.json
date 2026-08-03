@@ -1,0 +1,443 @@
+{
+ "facts": {
+  "$.nodes.cycle.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cycle.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cycle.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [
+    "[Ask what the tier made of the seal news.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Ask"
+   ]
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor"
+   ]
+  },
+  "$.nodes.ledger_brief.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_brief.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_brief.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_brief_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_brief_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_pitch.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_pitch.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_pitch.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_report.options[0].text": {
+   "brackets": [
+    "[The offices countersigned each other. It's released.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "The"
+   ]
+  },
+  "$.nodes.ledger_report.options[1].text": {
+   "brackets": [
+    "[The exemption was in the forms the whole time.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "The"
+   ]
+  },
+  "$.nodes.ledger_report.options[2].text": {
+   "brackets": [
+    "[I carried it down myself. It's on her dock.]"
+   ],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_report.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_report.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_settled.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_settled.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_settled.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_settled.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ledger_settled.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.traffic.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.traffic.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.traffic.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Voice contract: docs/design/character-profiles.md 'Grand Lift Attendant' (precise/kind; rule first, then the human way through it; kindness arrives as practical information). Forge-tier post, so the base hub is already the post-permit read -- see pallass_forge_smith.json's note.",
+  "nodes": {
+   "cycle": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lift Attendant",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "goto": "cycle",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "traffic",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "seal",
+      "requires": {
+       "accomplishment": {
+        "seal_resolved": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "v0.16 P2 start. requires-hidden on read_the_lift_manifest (banked only by lift_manifest_slate, which near_pallass never interacts), so the 3-row pin and index navigation are untouched.",
+      "goto": "ledger_pitch",
+      "hide_when": {
+       "accomplishment": {
+        "ledger_loop_started": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "read_the_lift_manifest": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "ledger_report",
+      "hide_when": {
+       "accomplishment": {
+        "ledger_unstuck": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "ledger_loop_started": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lift Attendant",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "seal_resolved": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "ledger_brief": {
+    "options": [
+     {
+      "goto": "ledger_brief_two",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lift Attendant",
+    "text": "\u00a7"
+   },
+   "ledger_brief_two": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lift Attendant",
+    "text": "\u00a7"
+   },
+   "ledger_pitch": {
+    "options": [
+     {
+      "effects": [
+       {
+        "quest": "ledger_eats_first"
+       },
+       {
+        "accomplishment": "ledger_loop_started"
+       }
+      ],
+      "goto": "ledger_brief",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lift Attendant",
+    "text": "\u00a7"
+   },
+   "ledger_report": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "ledger_unstuck"
+       }
+      ],
+      "goto": "ledger_settled",
+      "requires": {
+       "accomplishment": {
+        "loop_walked": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "ledger_unstuck"
+       }
+      ],
+      "goto": "ledger_settled",
+      "requires": {
+       "accomplishment": {
+        "exemption_found": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "ledger_unstuck"
+       }
+      ],
+      "goto": "ledger_settled",
+      "requires": {
+       "accomplishment": {
+        "shipment_carried": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lift Attendant",
+    "text": "\u00a7"
+   },
+   "ledger_settled": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lift Attendant",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "shipment_carried": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "loop_walked": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "exemption_found": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "seal": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lift Attendant",
+    "text": "\u00a7"
+   },
+   "traffic": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Lift Attendant",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

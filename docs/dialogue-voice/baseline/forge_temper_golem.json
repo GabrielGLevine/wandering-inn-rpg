@@ -1,0 +1,52 @@
+{
+ "facts": {
+  "$.nodes.confront.options[0].text": {
+   "brackets": [
+    "[Bring it back into tolerance the hard way.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Bring"
+   ]
+  },
+  "$.nodes.confront.options[1].text": {
+   "brackets": [
+    "[Stand out of its correction and leave it.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Stand"
+   ]
+  },
+  "$.nodes.confront.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "P1 FIGHT entry. forge_calibration_golem.json's decline-or-strike shape minus the talk-down arm: P1's non-violent answers are the bench and the broker, so a third bypass here collapses route parity.",
+  "nodes": {
+   "confront": {
+    "options": [
+     {
+      "effects": [
+       {
+        "start_combat": "forge_temper_golem"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Calibration Rig",
+    "text": "\u00a7"
+   }
+  },
+  "start": "confront"
+ }
+}

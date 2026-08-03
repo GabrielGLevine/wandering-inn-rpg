@@ -1,0 +1,462 @@
+{
+ "facts": {
+  "$.nodes.bench_assist.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.bench_assist.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_reading.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_reading.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_reading.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_reading.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_reading_verdict.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_reading_verdict.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fence_pointer.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fence_pointer.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.fragment_study.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fragment_study.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.heirloom_bench.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.heirloom_bench.options[1].text": {
+   "brackets": [
+    "[Appraise Goods]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Appraise",
+    "Goods",
+    "Read"
+   ]
+  },
+  "$.nodes.heirloom_bench.options[2].text": {
+   "brackets": [
+    "[Detect Magic]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Detect",
+    "Follow",
+    "Magic"
+   ]
+  },
+  "$.nodes.heirloom_bench.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.heirloom_bench.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.heirloom_bench.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.heirloom_truth.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.heirloom_truth.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "20"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [
+    "35"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [
+    "40"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.work_done.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.work_done.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "GH#142: Hedault's enchanting. requires {item, gold} gates show-locked with the item/gold labels; effects = gold-fee + remove_item base + item variant (the shipped swap triple -- ZERO engine). Canon voice: exacting, formal, no haggling, hates being touched. Book-17 bar: no Vol 8+ content.",
+  "nodes": {
+   "bench_assist": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Hedault",
+    "text": "\u00a7"
+   },
+   "door_reading": {
+    "_comment": "The 'catalogued exactly once before' callback is a TRADER's line: it names the fragment this player handed him, so it may only render if they did. Base is the same read without the claim.",
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "lattice_hedault_reading"
+       }
+      ],
+      "goto": "door_reading_verdict",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Hedault",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "traded_guardian_fragment": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "door_reading_verdict": {
+    "_comment": "HIS OWN PIECE ONLY (spec 4): the set-versus-fed distinction is an enchanter's read, and he stops exactly where the fragment_study node stops. The source of the draw is named as unknown, never as a seal.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Hedault",
+    "text": "\u00a7"
+   },
+   "fence_pointer": {
+    "_comment": "Pointer only -- banks nothing; the FIGHT counter comes off the alley encounter's on_victory.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Hedault",
+    "text": "\u00a7"
+   },
+   "fragment_study": {
+    "_comment": "b6 #221 the trade-by-CHOICE close + the door-chain lore line. SPOILER BAR: oblique \u2014 one school of warding, no names, no volumes. The player gives up guarding_ward (the fragment's combat skill) for the wardstone + the read; keeping the fragment is the equally valid choice.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Hedault",
+    "text": "\u00a7"
+   },
+   "heirloom_bench": {
+    "_comment": "He will not work until the lie is named. The two SKILL arms are SEPARATE single-key options (test_content rejects {skill, item} -- pisces_seal.json:112).",
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "heirloom_truth_kept"
+       }
+      ],
+      "goto": "heirloom_truth",
+      "hide_when": {
+       "accomplishment": {
+        "heirloom_truth_kept": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "setting_assisted"
+       }
+      ],
+      "goto": "bench_assist",
+      "hide_when": {
+       "accomplishment": {
+        "setting_assisted": 1
+       }
+      },
+      "requires": {
+       "skill": "appraise_goods"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "setting_assisted"
+       }
+      ],
+      "goto": "bench_assist",
+      "hide_when": {
+       "accomplishment": {
+        "setting_assisted": 1
+       }
+      },
+      "requires": {
+       "skill": "detect_magic"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "fence_pointer",
+      "hide_when": {
+       "accomplishment": {
+        "original_recovered": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Hedault",
+    "text": "\u00a7"
+   },
+   "heirloom_truth": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Hedault",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "gold": -20
+       },
+       {
+        "remove_item": "traveler_charm"
+       },
+       {
+        "item": "hedaults_traveler_charm"
+       }
+      ],
+      "goto": "work_done",
+      "requires": {
+       "gold": 20,
+       "item": "traveler_charm"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -35
+       },
+       {
+        "remove_item": "hunters_fang_talisman"
+       },
+       {
+        "item": "hedaults_hunters_fang"
+       }
+      ],
+      "goto": "work_done",
+      "requires": {
+       "gold": 35,
+       "item": "hunters_fang_talisman"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -40
+       },
+       {
+        "remove_item": "witch_wardstone_bead"
+       },
+       {
+        "item": "hedaults_warded_setting"
+       }
+      ],
+      "goto": "work_done",
+      "requires": {
+       "gold": 40,
+       "item": "witch_wardstone_bead"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "remove_item": "guardian_ward_fragment"
+       },
+       {
+        "item": "hedaults_warded_setting"
+       },
+       {
+        "accomplishment": "traded_guardian_fragment"
+       }
+      ],
+      "goto": "fragment_study",
+      "hide_when": {
+       "accomplishment": {
+        "traded_guardian_fragment": 1
+       }
+      },
+      "requires": {
+       "item": "guardian_ward_fragment"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "Spec 4 (Task 6.2) INVRISIL CAPSTONE. Gated on the Invrisil chain's terminal (brothers_job_done) + spine_started, hidden once read. Revisit arm on the hub, not a chain tail, so a save that already closed the Brothers' job reaches it (spec 8). He knows CRAFT -- a fed draw versus a set one -- and refuses to speculate past his own trade, so the assembled picture is never spoken here.",
+      "goto": "door_reading",
+      "hide_when": {
+       "accomplishment": {
+        "lattice_hedault_reading": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "brothers_job_done": 1,
+        "spine_started": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "v0.16 I1 (#306, ruling 1). Appended LAST and accomplishment-gated, so it is HIDDEN in hedault_fragment_start and spine_reach_start -- the 5-row options pin and spine_reach's blind `move down 5` both stay exact, zero re-pins.",
+      "goto": "heirloom_bench",
+      "hide_when": {
+       "accomplishment": {
+        "setting_commissioned": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heirloom_commission_started": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Hedault",
+    "text": "\u00a7"
+   },
+   "work_done": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Hedault",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

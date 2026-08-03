@@ -1,0 +1,381 @@
+{
+ "facts": {
+  "$.nodes.collect_stamp.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "3"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.collect_stamp.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.collect_stamp.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [
+    "12"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.permit_filed_reaction.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.permit_filed_reaction.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.permit_intro.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "5"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.permit_intro.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.permit_intro.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.permit_status.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.permit_status.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.queue_release.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.queue_release.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.queue_release.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.queue_release_done.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.queue_release_done.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.queue_release_why.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.queue_release_why.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.stamp_reaction.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.stamp_reaction.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tempering_sold.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tempering_sold.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "collect_stamp": {
+    "options": [
+     {
+      "effects": [
+       {
+        "gold": -3
+       },
+       {
+        "accomplishment": "elevator_pass_stamped"
+       }
+      ],
+      "goto": "stamp_reaction",
+      "requires": {
+       "gold": 3
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Clerk",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "quest": "forge_tier_permit"
+       },
+       {
+        "accomplishment": "forge_tier_permit_asked"
+       }
+      ],
+      "goto": "permit_intro",
+      "hide_when": {
+       "accomplishment": {
+        "forge_permit_filed": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "pallass_entry_stamped": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "permit_status",
+      "hide_when": {
+       "accomplishment": {
+        "grimalkin_examination_passed": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "forge_permit_filed": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "collect_stamp",
+      "hide_when": {
+       "accomplishment": {
+        "elevator_pass_stamped": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "grimalkin_examination_passed": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -12
+       },
+       {
+        "item": "tempering_oil"
+       }
+      ],
+      "goto": "tempering_sold",
+      "requires": {
+       "accomplishment": {
+        "pallass_entry_stamped": 1
+       },
+       "gold": 12
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "queue_release",
+      "hide_when": {
+       "accomplishment": {
+        "queue_notice_countersigned": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "queue_notice_endorsed": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Clerk",
+    "text": "\u00a7"
+   },
+   "permit_filed_reaction": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Clerk",
+    "text": "\u00a7"
+   },
+   "permit_intro": {
+    "options": [
+     {
+      "effects": [
+       {
+        "gold": -5
+       },
+       {
+        "accomplishment": "forge_permit_filed"
+       }
+      ],
+      "goto": "permit_filed_reaction",
+      "requires": {
+       "gold": 5
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Clerk",
+    "text": "\u00a7"
+   },
+   "permit_status": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Clerk",
+    "text": "\u00a7"
+   },
+   "queue_release": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "queue_notice_countersigned"
+       }
+      ],
+      "goto": "queue_release_done",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "queue_release_why",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Clerk",
+    "text": "\u00a7"
+   },
+   "queue_release_done": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Clerk",
+    "text": "\u00a7"
+   },
+   "queue_release_why": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "queue_notice_countersigned"
+       }
+      ],
+      "goto": "queue_release_done",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Clerk",
+    "text": "\u00a7"
+   },
+   "stamp_reaction": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Clerk",
+    "text": "\u00a7"
+   },
+   "tempering_sold": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Clerk",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

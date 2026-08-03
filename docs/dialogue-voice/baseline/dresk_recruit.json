@@ -1,0 +1,246 @@
+{
+ "facts": {
+  "$.nodes.donation_thanks.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.donation_thanks.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.donation_thanks.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.explain.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.explain.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Pell"
+   ]
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [
+    "10"
+   ],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Pell"
+   ]
+  },
+  "$.nodes.hub.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thanks.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thanks.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "donation_thanks": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Sergeant Ashgrave",
+    "text": "\u00a7"
+   },
+   "explain": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Sergeant Ashgrave",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "missing_recruit_started"
+       },
+       {
+        "quest": "the_missing_recruit"
+       }
+      ],
+      "goto": "explain",
+      "hide_when": {
+       "accomplishment": {
+        "missing_recruit_started": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_about_missing_recruit": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "recruit_reported_safe"
+       },
+       {
+        "gold": 4
+       },
+       {
+        "remove_entity": "recruit_pell"
+       }
+      ],
+      "goto": "thanks",
+      "hide_when": {
+       "accomplishment": {
+        "recruit_reported_safe": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "found_missing_recruit": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "#92 D3: appended LAST so it never shifts the recruit options' indices (missing_recruit_loop selects by index). Repeatable standing sink -- no hide_when; requires.gold greys it when short.",
+      "effects": [
+       {
+        "gold": -10
+       },
+       {
+        "accomplishment": "donated_watch_supplies"
+       }
+      ],
+      "goto": "donation_thanks",
+      "requires": {
+       "gold": 10
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Sergeant Ashgrave",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "_comment": "#92 D3 relay: standing donor acknowledgment, authored FIRST so it stays lowest priority -- any quest-status greeting below overrides it.",
+      "requires": {
+       "accomplishment": {
+        "donated_watch_supplies": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "Authored after the donor line, before the quest greetings: last-match-wins, so quest-status greetings (Pell etc.) override both standing lines.",
+      "requires": {
+       "accomplishment": {
+        "studied_necromancy": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "missing_recruit_started": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "recruit_reported_safe": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "thanks": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Sergeant Ashgrave",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

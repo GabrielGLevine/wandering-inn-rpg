@@ -1,0 +1,118 @@
+{
+ "facts": {
+  "$.nodes.confront.options[0].text": {
+   "brackets": [
+    "[Strike first.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Strike"
+   ]
+  },
+  "$.nodes.confront.options[1].text": {
+   "brackets": [
+    "[Basic Command]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Basic",
+    "Command",
+    "Steady"
+   ]
+  },
+  "$.nodes.confront.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.confront.options[3].text": {
+   "brackets": [
+    "[Back away.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.confront.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "confront": {
+    "options": [
+     {
+      "effects": [
+       {
+        "start_combat": "corusdeer_range"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "#330 R1 banks tended_beasts here; corusdeer_calmed keeps banking as shipped. R3: the vouched twin below swaps in once the healed deer rejoins the herd.",
+      "effects": [
+       {
+        "accomplishment": "corusdeer_calmed"
+       },
+       {
+        "accomplishment": "soothed_a_beast"
+       },
+       {
+        "accomplishment": "tended_beasts"
+       },
+       {
+        "dormant_entity": "corusdeer_range"
+       }
+      ],
+      "end": true,
+      "hide_when": {
+       "accomplishment": {
+        "corusdeer_healed": 1
+       }
+      },
+      "requires": {
+       "skill": "animals_basic_command"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "#330 R3 payoff: no Skill gate. An accomplishment requires is progress-gated, so this row is HIDDEN until the deer is healed.",
+      "effects": [
+       {
+        "accomplishment": "corusdeer_calmed"
+       },
+       {
+        "accomplishment": "soothed_a_beast"
+       },
+       {
+        "accomplishment": "tended_beasts"
+       },
+       {
+        "dormant_entity": "corusdeer_range"
+       }
+      ],
+      "end": true,
+      "requires": {
+       "accomplishment": {
+        "corusdeer_healed": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Stray Corusdeer",
+    "text": "\u00a7"
+   }
+  },
+  "start": "confront"
+ }
+}

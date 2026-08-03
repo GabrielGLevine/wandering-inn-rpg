@@ -1,0 +1,152 @@
+{
+ "facts": {
+  "$.nodes.exchange_one.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.exchange_one.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.exchange_one.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.exchange_three.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.exchange_three.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.exchange_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.exchange_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.house.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.house.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.table.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.table.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.table.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.table.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "v0.16 I2 TALK (#306): three exchanges, nothing named. The job arm is accomplishment-gated so the node reads as plain house talk before the errand exists; the ungated `house` arm keeps the softlock guard satisfied and gives the room a permanent surface after hat_job_done.",
+  "nodes": {
+   "exchange_one": {
+    "options": [
+     {
+      "goto": "exchange_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "exchange_two",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The House Factor",
+    "text": "\u00a7"
+   },
+   "exchange_three": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "handoff_talked"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The House Factor",
+    "text": "\u00a7"
+   },
+   "exchange_two": {
+    "options": [
+     {
+      "goto": "exchange_three",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The House Factor",
+    "text": "\u00a7"
+   },
+   "house": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The House Factor",
+    "text": "\u00a7"
+   },
+   "table": {
+    "options": [
+     {
+      "goto": "exchange_one",
+      "hide_when": {
+       "accomplishment": {
+        "handoff_talked": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "hat_job_taken": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "house",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The House Factor",
+    "text": "\u00a7"
+   }
+  },
+  "start": "table"
+ }
+}

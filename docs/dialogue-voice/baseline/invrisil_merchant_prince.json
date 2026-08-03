@@ -1,0 +1,297 @@
+{
+ "facts": {
+  "$.nodes.accusation.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.accusation.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Hellam"
+   ]
+  },
+  "$.nodes.accusation.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Draw",
+    "Then"
+   ]
+  },
+  "$.nodes.accusation.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Coyle"
+   ]
+  },
+  "$.nodes.accusation.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.accusation.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cornered.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild",
+    "Watch"
+   ]
+  },
+  "$.nodes.cornered.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Farley"
+   ]
+  },
+  "$.nodes.cornered.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cornered.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ending_exposed.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ending_exposed.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Farley",
+    "Mister"
+   ]
+  },
+  "$.nodes.ending_extorted.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Coyle"
+   ]
+  },
+  "$.nodes.ending_extorted.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "accusation": {
+    "options": [
+     {
+      "goto": "cornered",
+      "requires": {
+       "accomplishment": {
+        "coyle_operation_found": 1,
+        "lifted_true_ledger": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "cornered",
+      "requires": {
+       "accomplishment": {
+        "coyle_operation_found": 1,
+        "secured_testimony": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "start_combat": "hired_blades"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Master Coyle",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "coyle_operation_found": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "cornered": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "merchant_exposed"
+       },
+       {
+        "accomplishment": "merchant_fate_decided"
+       }
+      ],
+      "goto": "ending_exposed",
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": 40
+       },
+       {
+        "accomplishment": "merchant_extorted"
+       },
+       {
+        "accomplishment": "merchant_fate_decided"
+       }
+      ],
+      "goto": "ending_extorted",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Master Coyle",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "forced_confession": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "ending_exposed": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Master Coyle",
+    "text": "\u00a7"
+   },
+   "ending_extorted": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Master Coyle",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "goto": "accusation",
+      "hide_when": {
+       "accomplishment": {
+        "merchant_fate_decided": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "took_brothers_job": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "cornered",
+      "hide_when": {
+       "accomplishment": {
+        "merchant_fate_decided": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "coyle_operation_found": 1,
+        "forced_confession": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Master Coyle",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "merchant_exposed": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "merchant_extorted": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   }
+  },
+  "start": "hub"
+ }
+}
