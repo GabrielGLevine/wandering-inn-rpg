@@ -74,8 +74,12 @@ authoring per wi-writing-qa-scripts; park the save under
 playtest_saves/ with a dated name.
 
 
-## First-interact captures lie near world_ready (GH#324)
-Ambient/talk_pool lines render nothing for ~1.5s after `world_ready`
-even as the rendered event fires. For any shot whose subject is an
-NPC line, idle ~90 frames (or take one move) first; an empty line
-panel in an immediate-interact frame is THIS bug, not missing content.
+## First-interact captures near world_ready (GH#324 — RESOLVED v0.17)
+The "dead render" was an EVIDENCE bug, not a render bug: windowed
+capture holds were eaten by live-tween drain (music crossfade), so
+early shots caught the line after expiry. Fixed at the driver
+(capture-hold ceiling derives from script waits; crossfade excluded
+from capture gating). Do NOT idle-pad shots anymore — the old
+~90-frame workaround hides real timing bugs. `line_display_ab` is the
+canonical proof; an empty line panel in a fresh capture is now REAL
+missing content, report it.
