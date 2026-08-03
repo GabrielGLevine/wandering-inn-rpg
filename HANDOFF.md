@@ -4,19 +4,36 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
-## Current state (2026-08-02, session close)
-**v0.16.2 TAGGED at 300a478 — the friend-playtest wave, one session
-end-to-end.** 28 notes triaged (11 investigators) -> 18 CHOICE-LOG
-rulings -> seam PR #340 (dialogue toast arm) -> lane fleet
-(impl->adversarial-review->fix x2) -> #341 sim + #342 content (incl.
-controller items: Raskghar tempo swap [profile refuted the HydroGene
-wire], Erin meal duration) -> #344 art (five hero sprites via the NEW
-Codex->PixelLab-pro pipeline, all five controller-read SHIP) -> id
-freeze (zero removals; GH#330's stray ids captured) -> tag. Release/
-Pages runs were in progress at close — CONFIRM GREEN first thing.
-Board: #334 closed; deferred work lives in #335-#339 + #343; #283
-closed stale. v0.17 is RATIFIED as six parallel lanes (ROADMAP) and
-its dispatch prompt is below — FRESH SESSION ONLY (user directive).
+## Current state (2026-08-03, overnight session — v0.17 SHIPPED, v0.18 wave-1 next)
+**v0.17.0 CLOSING at close/v017 (tag imminent this session).** The whole
+seven-lane wave + both riders shipped in ONE overnight session under
+ultracode: 26-agent lane fleet (dual adversarial lenses per code lane) →
+integration rehearsal (census trim pre-solved composition) → 8-PR
+anchored train (#351-#358; L4 palette LAST; every checks table read as
+its own step) → riders R1 #350 player room + R2 moods re-tune (8 agents)
+→ close: 14-ruling CHOICE-LOG block, freeze step-0 (45 adds incl. the
+fought_* parity family, ZERO removals), 3-agent serial machine-playtest
+(3x SHIP_WITH_ROWS, zero blockers, 40 VISUAL-LOG rows).
+Wave content: #336 Skills tab (derived categories; AUTO-cap REVERSED on
+in-tree evidence), #338 hints, #345 difficulty (Bronze/Silver/Gold,
+wiki-verified, wiring proven live), #346 creation prompts, #337 cooldowns
+(141-cell re-author + ladder assertion), #349 Pisces (arena + narrative),
+#324 root-caused (EVIDENCE boundary, not render — capture-hold now
+derived; do NOT idle-pad), #335 phase 1, #323/#332/#343/#339(1-3),
+atmosphere grading+motion, VISUAL-LOG drain + palette unification,
+causality map, two Fable specs (#347/#348 BUILD-REDUCED), #350 room.
+INCIDENTS (both recovered same-minute): core-purity violation in my own
+seam edit (caught by first unit gate; landed pure-field+scene-push);
+hook-BLOCK-swallowed-by-tail RECURRED on the R1 seam commit (caught by
+the mandated rc+log read-back).
+**v0.18 WAVE-1 IS RATIFIED AND DISPATCHES AFTER THE TAG** (user
+pre-sleep, all rulings in CHOICE-LOG block #12 + #345-#360 board): W1
+#348-slice-1 (+Ice-Floor/Flame-Jet examples) / W2 #347 prototype BEHIND
+FLAG / W3 #318 / W4 debt-drain+#359 clock + THE PLAYTEST HOTFIX HEAD
+(hint-ribbon text-scale overflow, journal close-hint, checkbox glyph,
+creation caret, toast-over-legend, HUD-chips investigation, art misses)
+/ W5 Wave-D Alchemist+Druid (Priest PARKED) + rung-4 + #360 harnesses.
+W5 = sole balance writer.
 
 Process lessons this session (fold candidates for wi-running-the-machine
 / wi-verifying-changes / wi-machine-playtest):
@@ -37,82 +54,20 @@ Process lessons this session (fold candidates for wi-running-the-machine
 
 ## 🎯 NEXT ACTIONS
 
-0. **v0.17 WAVE IS RUNNING (dispatched 2026-08-02, fresh session per
-   directive; ultracode on).** Pre-flight confirmed: #334 CLOSED,
-   v0.16.2 tagged, Release run 30770686326 + Pages 30770686332 both
-   GREEN, guard OK (43%/9%). Workflow `wf_fcf9addc-7e4`: seven
-   concurrent worktree lanes at /Users/gabriel/wi-lanes/v017-l{1..7}
-   (branches issue/336-l1-journal-ui, issue/337-l2-combat-cooldowns,
-   issue/324-l3-presentation, lane/v017-l4-art,
-   issue/323-l5-content-riders, lane/v017-l6-causality,
-   lane/v017-l7-fable-design; base 5569c5c; overlay 185 files copied
-   into L1-L5). Each code lane: impl → TWO adversarial review lenses
-   (correctness-trace + QA-evidence-repro) → fix. Briefs (file:line
-   evidence + method hints) in session scratchpad briefs/; slotting:
-   #343+#339(1-3)→L5, #339(4)→L6. RUNNING — controller owns PRs +
-   anchored train next (L3 lint vs siblings pre-merge; L2 sole balance
-   authority; L4 palette LAST; checks table its own step; composed
-   census + full 30-suite). **NEW mid-wave user directive → #350
-   (player buys an inn room): controller-dispatched rider AFTER L5's
-   train slot lands, before tag; price default 20g pending CHOICE-LOG
-   adjudication at close.**
-   UPDATE (session continues, 2026-08-03): train COMPLETE — 8 PRs
-   merged (#351-#358 incl. controller seam PR; L2's difficulty-wire
-   prescription reversed for core purity, landed as field+scene-push).
-   Riders wf_c0579423 running (R1 #350 room @ rider/350-inn-room, R2
-   moods re-tune @ rider/moods-retune). close/v017 branch carries:
-   lead_camp_winter cure, 2 skill folds, fought_<id> freeze-generator
-   parity. **v0.18 WAVE-1 RATIFIED (user, pre-sleep): W1 #348-slice-1 /
-   W2 #347-prototype-BEHIND-FLAG / W3 #318 / W4 debt-drain(+Pisces
-   re-window) / W5 Wave-D Alchemist+Druid (Priest PARKED) + rung-4 —
-   W5 = sole balance writer. Pre-grants: rung-4, Pisces re-window,
-   companion respawning prop, #350 20g FIRM. Overnight: close v0.17 →
-   tag → dispatch W1-W5 → train → HANDOFF; eye/ear verdicts queue with
-   prepared states.**
-   FOUR LATE USER ADDITIONS (2026-08-03, slotted no-new-seams):
-   #359 day/night looping clock → W4 (owns phase derivation +
-   fixtures); #360 difficulty-tier sweep + class-parity harness → W5
-   (both axes honestly unsimmed today — cells run at x1.0, parity
-   ungated); Ice-Floor/Flame-Jet examples → W1 brief verbatim (#348
-   comment); martial exploration-Skills CANDIDATE DOC (canon-checked,
-   property-mapped) → controller overnight deliverable, USER PICKS —
-   morning read beside the #347 FEEL gate.
+0. **This session (in flight):** close/v017 PR → checks → merge → tag
+   v0.17.0 → confirm Release/Pages → dispatch W1-W5 → v0.18 train →
+   HANDOFF re-close. If the session dies mid-chain: close/v017 branch
+   holds everything; resume at the first unchecked item above.
+1. **MORNING QUEUE (user picks/verdicts, prepared states where visual):**
+   (a) martial exploration-Skills doc — 24 curated candidates, top-3
+   mirror your Ice-Floor/Flame-Jet examples (scratchpad copy lands in
+   docs/design at v0.18 close); (b) #347 bestowal FEEL read; (c) moods
+   eye-items: longhouse vignette 0.4, forge-lamps-at-noon vs market,
+   den_shop sky classification; (d) #350 lease-gate confirm
+   (visited_own_room vs story counter); (e) playtest P1 pair fix
+   verdicts after W4 lands them; (f) standing: full sitting, Raskghar
+   third-strike, #195 listen, gossip ladders.
 
-### v0.17 dispatch prompt (paste into the fresh session)
-
-> Dispatch v0.17 per docs/ROADMAP.md's ratified seven-lane plan. First:
-> wi-start-here read order, confirm wave-2/#334 is CLOSED and tagged
-> (if residuals exist, fold them into the matching lane's brief), run
-> wi-usage-guard. Then dispatch ALL SIX LANES CONCURRENTLY as worktree
-> lanes with the exact file ownership printed in the roadmap — no
-> cross-lane waits; intra-lane order as written (L1 #336→#338→#345→#346;
-> L3 #324→#335→grading+motion; L4 drain+tint-audit→palette). Design
-> authorities: docs/design/2026-08-02-{skill-panel,quest-clarity,
-> skill-cooldown,visual-next-level}-spec docs + issues #335-#338 and
-> #345-#349 (L1 also carries #345 difficulty + #346 creation prompts;
-> L2 carries the #349 arena leg; L5 carries #349 narrative + #323/#332;
-> L7 is the Fable design lane for #347/#348; #339 singles ride any
-> lane). Each lane runs
-> impl → traced adversarial review → fix per wi-running-the-machine;
-> briefs carry file:line evidence from the specs + method hints.
-> Controller owns PRs + the anchored merge train per the roadmap's
-> train notes (L3 lint vs siblings pre-merge; L2 sole balance
-> authority; L4 palette lands LAST; checks table read as its own
-> step; composed census + full 30-suite bar). Close: windowed
-> machine-playtest, VISUAL-LOG verification, id-freeze regen step-0,
-> HANDOFF/CHOICE-LOG/ledger updates, tag v0.17.0. Wave autonomy
-> applies: decide + log, surface at close. Art lane uses the banked
-> candidates in potential_assets/codex_pixellab_2026-08-02/ (README
-> maps candidate→target) + the wi-art-and-sprites hero-art pipeline
-> for anything missing; tint is NOT disambiguation.
-
-
-1. ~~CONFIRM the v0.16.2 Release/Pages runs green~~ — DONE 2026-08-02,
-   both green (see item 0).
-2. Everything else scheduled lives on the board (#335-#339, #343,
-   #324/#323/#332 inside the v0.17 lanes) or in the taste queue below.
-   Deferred minors from the v0.16 lane ledgers + economy carried items
-   (gossip-ladder ask, pace-harness blindness, #65) are unchanged.
 
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)
 
