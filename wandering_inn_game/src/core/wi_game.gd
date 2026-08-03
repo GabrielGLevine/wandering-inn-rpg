@@ -757,8 +757,20 @@ func _clear_companion(reason: String) -> void:
 	if companion == "":
 		return
 	var old_id := companion
+	var was_tamed := companion_source == "tamed"
 	companion = ""
 	companion_source = ""
+	# GH#332: only a TAMED death banks. "released" (a swap) and "sleep" (an
+	# animated follower expiring) are choices with the bond still available.
+	# The `was_tamed` half matters as much as the reason: an ANIMATED summon
+	# going down mid-fight is a spent working, not a lost bond -- the three
+	# bone piles it came from are not what the spring-litter dens re-supply,
+	# so banking on it would burn ladder rungs a necromancer without
+	# [Lesser Bond] can never take. Read BEFORE the clear; companion_source
+	# is wiped two lines up. STRUCTURAL LITERAL -- mirrored by hand in
+	# tests/test_shipped_ids.gd and scripts/generate_shipped_ids.py.
+	if reason == "downed" and was_tamed:
+		record_accomplishment("companion_lost")
 	_emit(WIEvents.COMPANION_CHANGED, {"id": old_id, "active": false, "reason": reason})
 
 

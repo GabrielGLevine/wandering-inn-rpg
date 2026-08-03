@@ -2130,6 +2130,79 @@ by controller ruling — the plan was the defect, not the implementation.
   Hunted as an easter egg — an EXPLICIT user-granted exception to the
   Vol 7 spoiler cutoff, names only; exact names wiki-verified before
   authoring, never invented.
+
+<!-- v017-L5 -->
+- **#349 dig-camp Pisces is NAMED, not FIELDED (2026-08-02, L5 lane call)**:
+  the four-member reading needed the camp to account for its fourth. A real
+  `pisces_dig_camp` presence row was rejected: his street hub (`liscor/street`
+  `pisces`) is UNCONDITIONAL and six canonicals pin it, so a camp row would
+  have shipped a fresh two-places-at-once for the whole dig window — the exact
+  defect #349's own scope line asks to reconcile. Retiring the street hub for
+  that window is cross-canonical (mage arc + the whole door chain) and is not a
+  copy call. SHIPPED instead: `ceria_dig_camp`'s new `camp_fourth` node says
+  who the fourth is and where he is. SUPPORTING PROPS, corrected in the review
+  wave: only `dig_camp_crate` (rations for four) and `dig_camp_notes` (four
+  names, hours shared out EVEN) are live in this speaker's window —
+  `dig_camp_remnant`'s four bedroll squares require `door_mounted`, the exact
+  complement of the camp's own gate, so the first draft's option text ("There's
+  a fourth bedroll.") named a prop the player could not have seen and the
+  answer contradicted the even-hours sheet. The option is now an assertion-free
+  question and the answer splits the hours four ways. Matches the user's own
+  justification — he is the player's Door consultant first. DEFERRED, needs
+  controller: an actual camp presence row + the street-hub window it requires.
+- **#349 post-seal residence stays a GUEST seat (2026-08-02, L5 lane call)**:
+  Ceria/Yvlon/Ksmvr return unconditionally at `door_mounted`; Pisces returns
+  through the `guest` rotation. Promoting him to an unconditional inn row would
+  stand him permanently in two rooms (the street hub again). The rotation is
+  the honest reading of a Horn whose post is in the city — reconciled in COPY
+  instead, via `text_variants` on `pisces_inn`'s greet where the corner his
+  team annexed is the reason he is in the room. THREE arms, not one (review
+  wave): `text_variants` has no `hide_when` and LAST MATCH WINS, so the window
+  is carved by ordering. A single `seal_kept_reported` arm described an
+  occupied corner right through the dig — `horns_dig_started` retires the three
+  original Horns inn rows and the `_returned` twins do not arm until
+  `door_mounted`, so for that whole stretch no Horn is on the inn map at all.
+  Arms are now seal_kept_reported (corner annexed) → horns_dig_started (corner
+  empty, team underground) → door_mounted (corner reclaimed), pinned by
+  `test_pisces_inn_greet_never_seats_the_horns_in_an_empty_corner`, which
+  asserts the INVARIANT rather than the copy: the greet may only claim the
+  corner in states where the scene catalog stands a Horn in the inn.
+- **#332 companion re-supply is a 3-RUNG LADDER, not an infinite spigot
+  (2026-08-02, L5 lane call)**: `remove_entity` persists by id, so a
+  re-suppliable tame prop cannot be re-offered — every re-bond needs its own
+  row. Shipped: three rungs (`wolf_den_spring` / `razorbeak_chick_fledgling` /
+  `wolf_den_late_litter`), each opening on one more `companion_lost`. REVIEW
+  WAVE, two corrections that the "five bonds total" claim below depended on:
+  (a) rungs do NOT close on the counter. The first cut gave rungs 1 and 2 an
+  `absent` arm one count above their own, so a player who lost a bond in the
+  floodplains and the next one in a dungeon walked back to a rung erased
+  unclaimed — a self-consuming ladder capped at 3-4 bonds under ordinary play.
+  Being TAKEN is what retires a rung (`removed_entities` persists), so the
+  `absent` arms were unnecessary as well as destructive; they are gone, rungs
+  accumulate, and rung 3 moved off rung 1's cell because the two can now stand
+  together. (b) `companion_lost` banks only on a TAMED downed-clear.
+  `_combat_event_relay` routes EVERY downed companion through
+  `_clear_companion("downed")`, so a necromancer losing animated skeletons —
+  all three bone piles are `animated` — used to burn ladder rungs they could
+  never take without [Lesser Bond]. A swap ("released") and a sleep expiry
+  ("sleep") were already excluded. CAP IS REAL: three permanent tamed deaths
+  covered, five bonds total with the two originals, and now actually five. An
+  unbounded re-supply needs a respawning prop — sim behaviour, out of a content
+  lane's authority, DEFERRED to the controller. ALSO DEFERRED: the animated
+  path has its own untouched dead-end (bone piles are one-shot and an animated
+  follower expires at every sleep), which #332's body explicitly scopes to the
+  tame props.
+- **#339 item 1: a defining surface must be a SCENE ENTITY (2026-08-02, L5
+  review wave)**: the first cut let `L5_SELF_DEFINING_NOUNS` name items.json
+  ids for `attunement`. Items carry no `present_when`, so the tripwire's own
+  ungated arm was structurally unable to judge those rows — `_check(not gated,
+  …)` was a tautology for exactly the two rows that needed it. It was wrong on
+  the merits too: an item description renders only once OWNED, and both
+  attunement stones sit behind gold plus an arc gate. The noun's real ungated
+  producer is `riverfarm_anchor_stone` (no `present_when` at all — the case the
+  brief named), which now carries the defining clause; the item-description
+  edits are reverted and items.json is back to `main`. The validator refuses a
+  non-entity locator loudly rather than silently passing it.
 <!-- v017-L2 -->
 - **Skill cooldowns: the set is a RULE, not a taste list (2026-08-02,
   GH#337, L2 as sole balance authority)**: `cooldown_rounds: 2` on every

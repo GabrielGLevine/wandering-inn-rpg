@@ -1670,10 +1670,11 @@
    ],
    "talk_pool_stages": [
     {
+     "_comment": "Gates on seal_kept_reported, not door_awakened: this row is gone by horns_dig_started, long before the door wakes. See `ceria_inn_returned` for the window rule.",
      "id": "ceria_inn_settled",
      "requires_accomplishment": {
-      "chatted_with_ceria_inn": 3,
-      "door_awakened": 1
+      "seal_kept_reported": 1,
+      "chatted_with_ceria_inn": 3
      },
      "lines": [
       "I trained formal, once. Robes, theory, the whole overpriced show. Doesn't come up much anymore, and I like it that way.",
@@ -1717,8 +1718,8 @@
     {
      "id": "yvlon_inn_settled",
      "requires_accomplishment": {
-      "chatted_with_yvlon_inn": 3,
-      "door_awakened": 1
+      "seal_kept_reported": 1,
+      "chatted_with_yvlon_inn": 3
      },
      "lines": [
       "Ask about the arms all you like, now. Silver-steel, shapeable, better grip than flesh ever gave me. I've stopped flinching from the question, so you don't have to either.",
@@ -1762,8 +1763,8 @@
     {
      "id": "ksmvr_inn_settled",
      "requires_accomplishment": {
-      "chatted_with_ksmvr_inn": 3,
-      "door_awakened": 1
+      "seal_kept_reported": 1,
+      "chatted_with_ksmvr_inn": 3
      },
      "lines": [
       "I was Prognugator, once. Command caste. I was exiled, is the word Klbkch uses. 'Reassigned' is the word I prefer. Neither changes what happened.",
@@ -1780,7 +1781,7 @@
    ]
   },
   {
-   "_comment": "Task 2.7 (P1 RUIN/CAMP-DOUBLE) -- OWNING SITE for all three Horns inn twins. `ceria_inn`/`yvlon_inn`/`ksmvr_inn` gated on seal_kept_reported ALONE while the ruin carried a live camp, so the player could speak to them at the inn and at the camp in the same breath. Each inn row's window is SPLIT: the original retires, this twin brings them home at door_mounted. CURRENT CONTRACT (v0.15 T4.3 round 2, supersedes Task 2.7's): all three originals retire at horns_dig_STARTED, the counter the camp rows arm on, so the three-copies window is gone entirely -- post-invitation the Horns are at the camp and nowhere else. Task 2.7 had to use horns_dig_joined instead because retiring on the started counter popped all three out of the room mid-sentence with the invitation panel still open; that is now fixed AT THE RENDERER (world.gd defers presence reconciles while a dialogue is open and flushes once at DIALOGUE_ENDED), not by moving gates. Identical cell/sprite/facing/pool/conversation; only `id` and `present_when` differ. GATE TRAP: talk-pool counters are id-derived (social.gd's `chatted_with_%s`), so each twin banks `chatted_with_<twin id>` and its settled stage must gate on THAT counter -- gating on the original's would lock the settled lines out forever for anyone who never chatted pre-dig. KNOWN DEAD, PRE-EXISTING, do not resurrect here: the three ORIGINALS' `*_inn_settled` stages also gate on `door_awakened`, which no player can hold while the original's window is still open (it is banked long after the door is mounted) -- nine lines that were already unreachable under Task 2.7's own gate. Flagged for the v0.16 content pass.",
+   "_comment": "OWNING SITE for the three Horns inn twins. Each Horn has two rows: the ORIGINAL stands from seal_kept_reported to horns_dig_started (then the camp holds them); this twin from door_mounted on. Identical cell/sprite/facing/pool/conversation -- only `id` and `present_when` differ. GATE TRAP: talk-pool counters are id-derived (social.gd's `chatted_with_%s`), so a twin's settled stage must gate on ITS OWN counter; the original's would lock the lines out for anyone who never chatted pre-dig. WINDOW RULE (was nine dead lines): a stage may gate ONLY on counters holdable inside its own row's window -- twins on door_awakened, originals on seal_kept_reported. test_dialogue's `test_horns_inn_settled_stages_serve_inside_their_own_window` walks all nine lines live; re-gate either arm and it reds.",
    "id": "ceria_inn_returned",
    "kind": "npc",
    "cell": [

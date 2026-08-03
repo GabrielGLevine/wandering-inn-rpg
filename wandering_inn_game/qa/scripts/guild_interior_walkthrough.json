@@ -45,7 +45,7 @@
   { "action": "move", "direction": "up", "steps": 1 },
   { "action": "press", "name": "interact" },
   { "_comment": "guild_notice_wall (2,5) blocks the step, so this bumps and interacts it from (2,6) facing up.", "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "read_guild_notices" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "A second board, smaller and less official: lost gear, room-for-rent scraps, one challenge to a duel that's clearly gone unanswered a long time." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "A second board, smaller and less official: lost gear, room-for-rent scraps, one challenge to a duel that's clearly gone unanswered a long time. Anything worth chasing copies into your journal as a lead: a name and a place, nothing promised." }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "move", "direction": "left", "steps": 1 },
   { "action": "move", "direction": "up", "steps": 3 },
