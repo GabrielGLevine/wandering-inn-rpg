@@ -2149,3 +2149,26 @@ by controller ruling — the plan was the defect, not the implementation.
   hint evaluator. `chieftains_price/price` was re-cut from narration to
   imperative in the same pass (ruling 6): it reported what had already
   happened, so an ACTIVE journal line read like a completed one.
+- **Bronze / Silver / Gold, not Platinum (2026-08-02, #345)**: the wiki
+  mirror was checked before any copy was written, and Liscor Hunted — the
+  adventure-experience company Menolit runs out on the floodplains — sells
+  "Bronze, Silver, Gold, and Platinum-ranked challenges" (killing a Rock
+  Crab is a Gold-level one). FOUR canon ranks exist; THREE settings were
+  asked for. Ruling: take the first three consecutive ranks and leave
+  Platinum unclaimed, rather than skipping a rung or inventing a fourth
+  meaning for one. Platinum stays available if a fourth level is ever
+  wanted, and no player who knows the source reads the ladder as wrong.
+  SILVER IS THE DEFAULT and its multiplier is exactly 1.0 — the shipped
+  balance — so every existing save, every balance cell and every QA
+  fixture is untouched unless a player deliberately moves the row.
+- **Difficulty is ONE knob, applied at fight build (2026-08-02, #345)**:
+  the ladder multiplies damage dealt TO the player's side and nothing
+  else — not enemy HP, AP, accuracy, or any RNG draw — so a difficulty
+  change can never alter a seeded fight's SHAPE, only what a hit costs.
+  The value is read ONCE when a fight is built (where equipment mods are
+  read), never per-hit. That is what makes "changeable at any time" safe
+  mid-save: a player may move the row mid-fight and the change lands on
+  the NEXT fight, never rewriting the numbers under a live encounter.
+  L1 owns the getter (`WISettings.difficulty_damage_taken_mult`) and its
+  semantics; the combat lane owns the apply-site and signs it off at the
+  merge train — a declared one-field seam, deliberately narrow.

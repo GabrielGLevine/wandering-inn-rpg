@@ -107,10 +107,10 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "down x1 -> 'Back' (index 15), confirm closes settings and the pause menu resumes; cancel closes the pause menu.",
+   "_comment": "down x2 -> 'Back' (index 16, past #345's 'Difficulty' row), confirm closes settings and the pause menu resumes; cancel closes the pause menu.",
    "action": "move",
    "direction": "down",
-   "steps": 1
+   "steps": 2
   },
   {
    "action": "press",
@@ -202,7 +202,7 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 1
+   "steps": 2
   },
   {
    "action": "press",

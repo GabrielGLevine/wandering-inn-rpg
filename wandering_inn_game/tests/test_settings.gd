@@ -19,6 +19,7 @@ func _init() -> void:
 	_check_hint_reset_functions()
 	_check_reduce_motion_gate_sites()
 	_check_quest_hints_persistence()
+	_check_difficulty_ladder()
 	_reset_test_settings_file()
 	print("PASS: settings + accessibility surface (WISettings/WIAudio/hint-replay/reduce-motion) holds")
 	quit(0)
@@ -168,6 +169,62 @@ func _check_settings_persistence() -> void:
 	b.call("set_reduce_motion", false)
 	b.call("set_combat_speed_step", 0)
 	b.free()
+
+
+## Issue #345 — the difficulty ladder. The load-bearing facts, in order of how
+## badly each would hurt if it broke:
+##   1. SILVER IS 1.0. It is the default, and it is the shipped balance. If it
+##      ever stopped being exactly 1.0, every balance cell, every seeded QA
+##      fight and every existing save would quietly change underneath a player
+##      who never touched the row.
+##   2. The names are CANON (Liscor Hunted's Bronze/Silver/Gold challenge
+##      ranks, wiki-verified under the user's names-only Vol 7 exception) and
+##      in ascending order, so a rename or a reorder that made "Bronze" the
+##      hard one has to be deliberate.
+##   3. It round-trips like every sibling knob, and out-of-range input clamps
+##      rather than crashing an index.
+func _check_difficulty_ladder() -> void:
+	var script := load("res://src/ui/wi_settings.gd")
+	var names: Array = Array(script.DIFFICULTY_LABELS)
+	assert(names == ["Bronze", "Silver", "Gold"],
+		"the three difficulty names are Liscor Hunted's own challenge ranks, in ascending order, got: %s" % [names])
+	assert(script.DIFFICULTY_LABELS.size() == script.DIFFICULTY_DAMAGE_TAKEN_MULTS.size(),
+		"every difficulty name must have a multiplier and vice versa")
+	assert(is_equal_approx(float(script.damage_taken_mult_for_step(script.DIFFICULTY_DEFAULT_STEP)), 1.0),
+		"the DEFAULT rung must be exactly 1.0 -- it is the shipped balance, and every band/fixture depends on it being untouched")
+	assert(String(script.DIFFICULTY_LABELS[script.DIFFICULTY_DEFAULT_STEP]) == "Silver",
+		"Silver is the default rung (Bronze softer, Gold sharper)")
+	var mults: Array = Array(script.DIFFICULTY_DAMAGE_TAKEN_MULTS)
+	for i in mults.size() - 1:
+		assert(float(mults[i]) < float(mults[i + 1]),
+			"the ladder must rise: rung %d (%s) is not gentler than rung %d (%s)" % [i, mults[i], i + 1, mults[i + 1]])
+	assert(is_equal_approx(float(script.damage_taken_mult_for_step(-5)), float(mults[0])) and is_equal_approx(float(script.damage_taken_mult_for_step(99)), float(mults[mults.size() - 1])),
+		"an out-of-range step clamps to an end of the ladder, never indexes off it")
+
+	var config := ConfigFile.new()
+	config.load(SETTINGS_PATH)
+	if config.has_section_key("combat", "difficulty_step"):
+		config.erase_section_key("combat", "difficulty_step")
+	assert(config.save(SETTINGS_PATH) == OK, "difficulty setup must preserve other settings")
+
+	var fresh = _settings_instance(script)
+	assert(int(fresh.call("difficulty_step")) == script.DIFFICULTY_DEFAULT_STEP,
+		"with no persisted key the ladder reads its default rung")
+	assert(is_equal_approx(float(fresh.call("difficulty_damage_taken_mult")), 1.0),
+		"...and the getter L2's apply-site reads returns the shipped 1.0 there")
+	fresh.call("cycle_difficulty")
+	assert(String(fresh.call("difficulty_label")) == "Gold" and int(fresh.call("difficulty_step")) == 2, "cycle steps forward")
+	fresh.call("cycle_difficulty")
+	assert(int(fresh.call("difficulty_step")) == 0, "...and wraps around the end")
+	fresh.call("set_difficulty_step", 2)
+	fresh.free()
+
+	var reloaded = _settings_instance(script)
+	assert(int(reloaded.call("difficulty_step")) == 2 and String(reloaded.call("difficulty_label")) == "Gold",
+		"a fresh instance loads the persisted rung -- changeable ANY time means it has to survive the process, not just the panel")
+	assert(float(reloaded.call("difficulty_damage_taken_mult")) > 1.0, "Gold sharpens what a hit costs")
+	reloaded.call("set_difficulty_step", script.DIFFICULTY_DEFAULT_STEP)
+	reloaded.free()
 
 
 ## GH#338 — "Quest Hints" is the FIRST knob in this file that defaults to ON,

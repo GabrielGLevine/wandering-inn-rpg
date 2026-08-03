@@ -27,6 +27,35 @@ const TEXT_SCALE_LABELS: Array[String] = ["100%", "115%", "130%"]
 const COMBAT_SPEED_STEPS: Array[float] = [1.0, 0.5, 0.0]
 const COMBAT_SPEED_LABELS: Array[String] = ["Normal", "Fast", "Instant"]
 
+## Difficulty (issue #345). NAMES ARE CANON, wiki-verified before authoring:
+## Liscor Hunted — Menolit's adventure-experience company out on the
+## floodplains — sells "Bronze, Silver, Gold, and Platinum-ranked challenges",
+## and killing a Rock Crab is a Gold-level one. The user granted an EXPLICIT,
+## names-only exception to the Vol 7 spoiler cutoff for this easter egg. Three
+## levels were asked for and four exist, so the ladder takes the first three
+## consecutive ranks and leaves Platinum unclaimed — the canon top rung stays
+## available if a fourth is ever wanted, and no rank is skipped over.
+##
+## INDEX 1 (Silver) IS THE DEFAULT AND IS THE SHIPPED BALANCE: its multiplier
+## is exactly 1.0, so every existing save, every balance cell and every QA
+## fixture reads the numbers it always did unless a player deliberately moves
+## the row.
+const DIFFICULTY_LABELS: Array[String] = ["Bronze", "Silver", "Gold"]
+const DIFFICULTY_DEFAULT_STEP := 1
+
+## THE ONE KNOB, and it is deliberately one: a multiplier on damage dealt TO
+## the player's side. Bronze softens the punishment for a mistake, Gold
+## sharpens it; neither touches turn order, initiative, AI behaviour, or any
+## RNG draw, so a difficulty change can never alter a seeded fight's SHAPE,
+## only how much a hit costs.
+##
+## APPLY TIMING (the "safe mid-save" contract issue #345 asks for): read ONCE
+## when a fight is built, exactly where equipment mods are read. A player may
+## move the row at any time, mid-save and even mid-fight, and the change lands
+## on the NEXT fight — never on one already in progress, which would otherwise
+## let the numbers under a live encounter shift halfway through it.
+const DIFFICULTY_DAMAGE_TAKEN_MULTS: Array[float] = [0.75, 1.0, 1.3]
+
 ## Base (100%) font sizes -- MUST mirror assets/ui/chrome/wi_ui_theme.tres
 ## exactly (tests/test_settings.gd drift-tripwires these against the real
 ## .tres, same discipline test_copy_fit.gd's own mirrored consts use).
@@ -42,6 +71,7 @@ var _fullscreen := false
 var _text_scale_step := 0
 var _reduce_motion := false
 var _combat_speed_step := 0
+var _difficulty_step := DIFFICULTY_DEFAULT_STEP
 var _field_readout_expanded := true
 var _field_readout_choice := false
 var _show_quest_thread := false
@@ -66,6 +96,7 @@ func _load_settings() -> void:
 	_text_scale_step = clampi(int(_settings.get_value("accessibility", "text_scale_step", 0)), 0, TEXT_SCALE_STEPS.size() - 1)
 	_reduce_motion = bool(_settings.get_value("accessibility", "reduce_motion", false))
 	_combat_speed_step = clampi(int(_settings.get_value("combat", "speed_step", 0)), 0, COMBAT_SPEED_STEPS.size() - 1)
+	_difficulty_step = clampi(int(_settings.get_value("combat", "difficulty_step", DIFFICULTY_DEFAULT_STEP)), 0, DIFFICULTY_LABELS.size() - 1)
 	var field_value: Variant = _settings.get_value("field_hud", "readout_expanded") \
 			if _settings.has_section_key("field_hud", "readout_expanded") else null
 	_field_readout_choice = field_value is bool
@@ -277,6 +308,47 @@ func cycle_combat_speed() -> void:
 
 static func beat_seconds_for_step(step: int, base: float) -> float:
 	return base * COMBAT_SPEED_STEPS[clampi(step, 0, COMBAT_SPEED_STEPS.size() - 1)]
+
+
+
+func difficulty_step() -> int:
+	return _difficulty_step
+
+
+func difficulty_label() -> String:
+	return DIFFICULTY_LABELS[_difficulty_step]
+
+
+func set_difficulty_step(step: int) -> void:
+	_difficulty_step = clampi(step, 0, DIFFICULTY_LABELS.size() - 1)
+	_persist("combat", "difficulty_step", _difficulty_step)
+
+
+func cycle_difficulty() -> void:
+	set_difficulty_step(wrapi(_difficulty_step + 1, 0, DIFFICULTY_LABELS.size()))
+
+
+## THE APPLY-SITE SEAM (issue #345, single-owner). L1 owns this getter and its
+## semantics; the combat lane owns where it is read. CONTRACT for that reader:
+##
+##   * Multiply damage dealt TO a player-side combatant by this value. Nothing
+##     else. Not enemy HP, not AP, not accuracy, not any RNG draw — so a
+##     difficulty change can never alter a seeded fight's shape.
+##   * Read it ONCE, when the fight is BUILT (where equipment mods are read),
+##     never per-hit. That is what makes the row safe to move mid-save: the
+##     change lands on the next fight, never on a live one.
+##   * Balance cells and QA fixtures never call this — they exercise the sim
+##     directly, and Silver is 1.0, so the shipped bands are unmoved by
+##     construction.
+func difficulty_damage_taken_mult() -> float:
+	# Unqualified on purpose: this file carries no bare autoload identifiers
+	# (see its head comment), and `WISettings.` here would be exactly that.
+	return damage_taken_mult_for_step(_difficulty_step)
+
+
+## Pure twin of the above, so the ladder can be exercised without an autoload.
+static func damage_taken_mult_for_step(step: int) -> float:
+	return DIFFICULTY_DAMAGE_TAKEN_MULTS[clampi(step, 0, DIFFICULTY_DAMAGE_TAKEN_MULTS.size() - 1)]
 
 
 

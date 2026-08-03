@@ -49,7 +49,7 @@
    "name": "00_settings_panel_rows"
   },
   {
-   "_comment": "assert_event_logged (whole-log scan), not wait_for_event: this exact all-defaults snapshot already fired as part of open() itself (BEFORE ui_settings_shown, by construction -- see settings_panel.gd's open() doc comment), so it's already behind the forward-only wait cursor by the time ui_settings_shown resolves; nothing LATER reproduces all-defaults once the very next steps start changing values. GH#338: the same all-defaults snapshot now also pins show_quest_hints:true beside show_quest_thread:false -- the ONE knob in this panel that ships ON, proven at the boot render before any player action, and proven distinct from the field-HUD strip it is named next to.",
+   "_comment": "assert_event_logged (whole-log scan), not wait_for_event: this exact all-defaults snapshot already fired as part of open() itself (BEFORE ui_settings_shown, by construction -- see settings_panel.gd's open() doc comment), so it's already behind the forward-only wait cursor by the time ui_settings_shown resolves; nothing LATER reproduces all-defaults once the very next steps start changing values. GH#338: the same all-defaults snapshot now also pins show_quest_hints:true beside show_quest_thread:false -- the ONE knob in this panel that ships ON, proven at the boot render before any player action, and proven distinct from the field-HUD strip it is named next to. Issue #345: difficulty_step:1 rides the same all-defaults snapshot -- Silver, whose multiplier is exactly 1.0, so a player who never touches the row plays the shipped balance.",
    "action": "assert_event_logged",
    "type": "ui_settings_rendered",
    "payload_contains": {
@@ -60,7 +60,8 @@
     "text_scale_step": 0,
     "reduce_motion": false,
     "show_quest_hints": true,
-    "show_quest_thread": false
+    "show_quest_thread": false,
+    "difficulty_step": 1
    }
   },
   {
@@ -190,9 +191,9 @@
    "frames": 2
   },
   {
-   "_comment": "== Back (MOUSE path): row 16 = 'Back' (index 15 -- shifted by 'Export Save'/'Import Save...' a9 #246 and 'Quest Hints' GH#338, same append-before-Back lineage as Credits GH#147 / Combat Speed #87 / Quest Thread #148).",
+   "_comment": "== Back (MOUSE path): row 17 = 'Back' (index 16 -- shifted by 'Export Save'/'Import Save...' a9 #246, 'Quest Hints' GH#338 and 'Difficulty' #345, same append-before-Back lineage as Credits GH#147 / Combat Speed #87 / Quest Thread #148).",
    "action": "click_settings_row",
-   "row": 16
+   "row": 17
   },
   {
    "action": "wait_for_event",
@@ -392,10 +393,10 @@
    "equals": 2
   },
   {
-   "_comment": "== Close settings (KEYBOARD path): down x6 from 'Combat Speed' (index 9) -> 'Back' (index 15; GH#338's 'Quest Hints' row landed before Back, one more down than before). The cursor passes THROUGH 'Quest Thread' (index 10) without toggling it (move never activates -- only Confirm does), so the setting stays default-OFF here; the dedicated Quest Thread toggle + round-trip is appended at the very end. Confirm closes -- the pause menu resumes right where it was (cursor untouched, no re-open).",
+   "_comment": "== Close settings (KEYBOARD path): down x7 from 'Combat Speed' (index 9) -> 'Back' (index 16; GH#338's 'Quest Hints' and #345's 'Difficulty' both landed before Back). The cursor passes THROUGH 'Quest Thread' (index 10) without toggling it (move never activates -- only Confirm does), so the setting stays default-OFF here; the dedicated Quest Thread toggle + round-trip is appended at the very end. Confirm closes -- the pause menu resumes right where it was (cursor untouched, no re-open).",
    "action": "move",
    "direction": "down",
-   "steps": 6
+   "steps": 7
   },
   {
    "action": "press",
@@ -533,10 +534,10 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Close settings: down x5 from 'Quest Thread' (index 10) -> 'Back' (index 15, past Credits GH#147, the a9 #246 import/export pair and GH#338's 'Quest Hints'), Confirm closes.",
+   "_comment": "Close settings: down x6 from 'Quest Thread' (index 10) -> 'Back' (index 16, past Credits GH#147, the a9 #246 import/export pair, GH#338's 'Quest Hints' and #345's 'Difficulty'), Confirm closes.",
    "action": "move",
    "direction": "down",
-   "steps": 5
+   "steps": 6
   },
   {
    "action": "press",
@@ -733,6 +734,41 @@
    "payload_contains": {
     "show_quest_hints": true,
     "show_quest_thread": true
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_settings_file_exists"
+  },
+  {
+   "_comment": "== DIFFICULTY (issue #345, APPENDED). The Quest Hints leg above left the cursor on index 14; down x1 reaches 'Difficulty' (index 15). It ships on Silver (step 1, multiplier exactly 1.0 = the shipped balance); confirm cycles FORWARD like Text Scale / Combat Speed rather than toggling, so this lands on Gold (step 2). Changeable ANY time is the point of the issue: this is an in-game pause visit on a loaded save, not a new-game gate.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "difficulty_step": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "A LEFT half-tap steps it back down (the volume-row half-tap idiom the a4 #216 rows already use), proving the three-position row is reachable in both directions on touch as well as by key -- back to Silver, the default this canonical leaves behind.",
+   "action": "click_settings_row",
+   "row": 16,
+   "half": "left"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_settings_rendered",
+   "payload_contains": {
+    "difficulty_step": 1
    },
    "timeout_sec": 5
   },

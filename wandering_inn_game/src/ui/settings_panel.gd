@@ -2,10 +2,11 @@ extends CanvasLayer
 
 # a9 #246: 492 fit the 14-row list; the import/export pair (+2 rows at the
 # ~36px pitch) overflowed the parchment (windowed catch) — grown to match.
-# GH#338: +1 row ("Quest Hints") at the same ~36px pitch — same windowed catch,
-# same fix. Any further row here needs the same arithmetic AND a windowed read;
-# the 720px window is the ceiling this can grow to.
-const PANEL_SIZE := Vector2(320.0, 684.0)
+# GH#338/#345: +2 rows ("Quest Hints", "Difficulty") at the same ~36px pitch —
+# same windowed catch, same fix. This is now within one row of the 720px window
+# itself: the NEXT row added here needs a different answer (a scrolling list, or
+# a second page), not another +36.
+const PANEL_SIZE := Vector2(320.0, 716.0)
 const CONTROLS_PANEL_SIZE := Vector2(620.0, 380.0)
 const HELP_PANEL_SIZE := Vector2(620.0, 530.0)
 ## a4 #216: credits content (5 sections) overflowed the 530-tall help panel —
@@ -27,7 +28,7 @@ const ROWS := [
 	"Master volume", "Music volume", "SFX volume",
 	"Fullscreen", "Text Scale", "Reduce Motion",
 	"Controls...", "Replay Hints", "Help...", "Combat Speed", "Quest Thread", "Credits...",
-	"Export Save", "Import Save...", "Quest Hints", "Back",
+	"Export Save", "Import Save...", "Quest Hints", "Difficulty", "Back",
 ]
 const AUDIO_ROWS := {"Master volume": "Master", "Music volume": "Music", "SFX volume": "SFX"}
 
@@ -347,7 +348,7 @@ func _on_rows_gui_input(event: InputEvent) -> void:
 		# the LEFT half decrements and the RIGHT half increments — touch had
 		# no way to turn a value DOWN (tap always activated = +1).
 		var key := String(ROWS[idx])
-		if AUDIO_ROWS.has(key) or key == "Text Scale" or key == "Combat Speed":
+		if AUDIO_ROWS.has(key) or key == "Text Scale" or key == "Combat Speed" or key == "Difficulty":
 			var row_ctl := _row_labels[idx] as Control
 			var left_half := mb.position.x < row_ctl.position.x + row_ctl.size.x * 0.5
 			_adjust_row(-1 if left_half else 1)
@@ -574,6 +575,11 @@ func _row_text(i: int) -> String:
 		# next-step sub-row (default ON), and they switch independently.
 		"Quest Hints":
 			return "Quest Hints: %s" % ("On" if WISettings.show_quest_hints() else "Off")
+		# Issue #345. Cycles like Text Scale / Combat Speed rather than
+		# toggling, because it has three positions; the names are Liscor
+		# Hunted's own challenge ranks (canon, wiki-verified).
+		"Difficulty":
+			return "Difficulty: %s" % WISettings.difficulty_label()
 		_:
 			return key
 
@@ -593,6 +599,7 @@ func _refresh() -> void:
 		"combat_speed_step": WISettings.combat_speed_step(),
 		"show_quest_thread": WISettings.show_quest_thread(),
 		"show_quest_hints": WISettings.show_quest_hints(),
+		"difficulty_step": WISettings.difficulty_step(),
 	})
 
 
@@ -607,6 +614,9 @@ func _adjust_row(delta: int) -> void:
 		_refresh()
 	elif key == "Combat Speed":
 		WISettings.set_combat_speed_step(wrapi(WISettings.combat_speed_step() + delta, 0, WISettings.COMBAT_SPEED_STEPS.size()))
+		_refresh()
+	elif key == "Difficulty":
+		WISettings.set_difficulty_step(wrapi(WISettings.difficulty_step() + delta, 0, WISettings.DIFFICULTY_LABELS.size()))
 		_refresh()
 
 
@@ -753,7 +763,7 @@ func _apply_import_text(text: String) -> void:
 
 func _activate_row() -> void:
 	var key := String(ROWS[_cursor])
-	if AUDIO_ROWS.has(key) or key == "Text Scale" or key == "Combat Speed":
+	if AUDIO_ROWS.has(key) or key == "Text Scale" or key == "Combat Speed" or key == "Difficulty":
 		_adjust_row(1)
 		return
 	match key:
