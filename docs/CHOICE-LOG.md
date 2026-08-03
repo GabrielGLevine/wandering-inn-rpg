@@ -2471,6 +2471,10 @@ by controller ruling — the plan was the defect, not the implementation.
   `effects.gold`) — a re-rule is a three-number edit in one option plus
   the `player_room_loop` fixture's starting gold (19, one short) and its
   two gold pins. Controller may re-rule freely; nothing else reads 20.
+  In particular NO prose spells the number: the exit door's `observe`
+  said "what the twenty gold bought" in the first pass and was cut to
+  "what the lease bought" (fix wave), because a price spelled in WORDS
+  survives every `grep '20'` a re-rule runs and ships stale.
 - **The lease gates on `visited_own_room`, not on story progress
   (2026-08-02, #350)**: the sanctioned `{gold, accomplishment}` compound,
   with the accomplishment leg naming the counter the STAIRS bank. A

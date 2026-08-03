@@ -1,5 +1,5 @@
 {
- "_comment": "#350: the room you buy. ONE loop over the whole feature -- the shut door before a coin is spent, the register's lease rendered LOCKED at 19 gold (exact option array, the can-fail proof), a real 1-gold earn, the purchase, the SAME door opening on the same key, the bed's own sleep beat, and a pause Save/Load round trip that walks out of the room first so the load has to put you back in it. Closes on a post-load round trip in both directions. Fixture player_room_start; no combat anywhere, so seed 9 is convention only (the fixture's own rng_state governs).",
+ "_comment": "#350: the room you buy. ONE loop over the whole feature -- the shut door before a coin is spent, the register's lease rendered LOCKED at 19 gold (exact option array, the can-fail proof), a real 1-gold earn, the purchase, the SAME door opening on the same key, the bed's own sleep beat, and a pause Save/Load round trip that walks out of the room first so the load has to put you back in it. Closes on a post-load round trip in both directions, then a NIGHT leg (second fixture, swapped in and reloaded) so the room is read after dark and not only in daylight. Fixtures player_room_start + player_room_night; no combat anywhere, so seed 9 is convention only (the fixtures' own rng_state governs).",
  "fixture_save": "player_room_start",
  "starts_at_title": true,
  "steps": [
@@ -855,6 +855,83 @@
   {
    "action": "screenshot",
    "name": "06_reentry"
+  },
+  {
+   "_comment": "== (8) THE ROOM AFTER DARK == every leg above lands on DAY (the fixture starts at 0 actions and the bed resets the clock), so without this the room is only ever shot in daylight and its night read ships unseen. Swap in player_room_night (room_purchased banked, standing at the arrival cell, actions_since_sleep 901 = one past the night threshold) and reload it via the pause->Load idiom, the thread_lattice_loop technique. Walking to night would cost 900 actions. This shot is the standing eye-check on the map's mood grade: while data/moods.json carries NO inn_player_room row (moods lane, see .lane-progress SEAM 1) the room renders identity-white here with its sconce at full energy, which is exactly what a human reader must be able to see.",
+   "action": "install_fixture",
+   "fixture": "player_room_night",
+   "slot": "manual"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "payload_contains": {
+    "mode": "load"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The mood APPLY is assertable; the grade it applies is not (ui_mood_applied carries map+phase only). So this pins the phase the shot below was taken at, and the pixel evidence carries the rest.",
+   "action": "wait_for_event",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "inn_player_room",
+    "phase": "night"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn_player_room"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    5
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "07_room_night"
   }
  ]
 }

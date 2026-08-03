@@ -1,6 +1,6 @@
 {
  "_comment": "#350: the leased room behind inn_upstairs' hallway_door_a (gated on room_purchased). Walk-in only, no portals row; biome, sprites and floor swatch all reused. Perimeter is walls.segments with a gap at (4,6) for the exit door, so wall cells are never also in `blocked`; `blocked` is empty because nothing here reads solid.",
- "_comment_mood": "NO data/moods.json row yet -- that file is another lane's this wave. Until the queued row lands (.lane-progress) the grade falls back to identity white.",
+ "_comment_mood": "NO data/moods.json row yet (that file is the moods lane's this wave), so the grade is identity white at EVERY phase and no gate can catch it -- the row to add is queued verbatim in .lane-progress SEAM 1. player_room_loop's 07_room_night shot is the standing eye-check.",
  "biome": "inn",
  "interior_flavor": "Nothing there — just your own four walls, and the particular quiet of a room nobody else is paying for.",
  "grid": {
@@ -201,7 +201,7 @@
     3,
     2
    ],
-   "observe": "The hall on the other side, and a bolt on this side. The bolt is most of what the twenty gold bought."
+   "observe": "The hall on the other side, and a bolt on this side. The bolt is most of what the lease bought."
   },
   {
    "_comment": "Second sleep site. `your_bed` upstairs is NOT moved or gated: a player who never leases keeps the free bed. Ladder rungs ascend, highest satisfied wins.",

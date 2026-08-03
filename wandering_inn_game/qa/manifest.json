@@ -5835,7 +5835,7 @@
    "script": "player_room_loop",
    "seed": 9,
    "fixture": "player_room_start",
-   "note": "<!-- v017-R1 --> #350 the room you buy: hallway_door_a shut at 19 gold, the register's lease rendered LOCKED (exact 2-row option array), a 1-gold tray earn, the 20g purchase, the SAME door opening, the new room's own bed sleep beat, and a pause Save/Load that walks out first so the load has to put you back in",
+   "note": "<!-- v017-R1 --> #350 the room you buy: hallway_door_a shut at 19 gold, the register's lease rendered LOCKED (exact 2-row option array), a 1-gold tray earn, the 20g purchase, the SAME door opening, the new room's own bed sleep beat, a pause Save/Load that walks out first so the load has to put you back in, and a NIGHT leg (second fixture player_room_night, swapped in and reloaded) so the room is read after dark",
    "tiers": [
     "full"
    ],
