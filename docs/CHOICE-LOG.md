@@ -2661,3 +2661,78 @@ the guard, in the pre-flight tier that runs before any Godot boot.
 14. **R1 lease gate:** gates on visited_own_room (stairs counter), not
     story progress — keeps two pinned canonicals byte-green. USER
     CONFIRM queued (morning read).
+
+<!-- v018-W5 -->
+## 2026-08-03 — v0.18 W5 (balance lane): #360 first reads, rung-4, Wave-D audit
+
+1. **#360 (a) shape — a hook, not a second harness.** The tier sweep drives
+   `sim_combat_batch.gd` through one new env hook (`WI_DIFFICULTY_MULT`) rather
+   than cloning its 141 cells into a parallel driver. Same relationship
+   `harness_shard_diff.sh` already has to that file, and the reason is the same:
+   a cloned cell table drifts the first time a cell moves. Analysis split into
+   `scripts/difficulty_tier_report.py` so a read can be re-taken against saved
+   legs without paying for four more godot runs.
+2. **The one thing the sweep ASSERTS: x1.0 is inert.** `wi_combat.gd` promises
+   "Silver IS the shipped balance … byte-identical by construction", and a hook
+   like this is exactly what could break that quietly. The sweep runs a plain
+   env-unset leg beside the explicit x1.0 leg and fails if any of the 141 cells
+   disagree. Everything else is report-only (#211 harness-first precedent).
+3. **#360 (a) FIRST READ, and the gates it makes ratifiable.** Pooled bronze
+   +0.129 / gold −0.185 (unsaturated cells only: +0.226 / −0.273). Two gates
+   are ready now and are PROPOSED, not landed:
+   - **monotonicity** — bronze ≥ silver ≥ gold per cell, 1σ tolerance 0.05.
+     Currently CLEAN, 0 of 141. This is a real contract and cheap to hold.
+   - **material extreme flips** — a cell reaching 0.00/1.00 at a tier where
+     Silver sat ≥0.10 off the extreme. Currently 2, of which ONE is gated
+     (`alley_fence_t3_warrior10_solo`, 0.81 → 1.00 at Bronze). Proposed
+     threshold: 0 gated flips, i.e. fix that cell rather than budget for it.
+   Deliberately NOT proposed: per-cell bands at Bronze/Gold. 26 of 43 gated
+   cells sit above their band at Bronze and 31 below at Gold, which is the knob
+   working, not 57 regressions; the Silver bands are Silver's contract.
+4. **#360 (b) answers the asked question, and then disowns half its own
+   number.** Lv10 Warrior 0.890 vs Lv10 Mage 0.670 over the same three fights.
+   Band spreads: 10 → 0.617, 14 → 0.960, 18 → 0.847. **No spread gate is
+   ratifiable this wave**, and that is the finding rather than a punt:
+   `WICombatAI`'s melee profile can select exactly one named skill
+   (`power_strike`) plus a windup, and its caster profile line/spell/heal/area.
+   Nothing fires `damage_mult`, `sneak` or any positioning verb, so rogue,
+   archer, scout, tactician and the beast lines fight as bare stats however
+   large their kit is. The split is +0.392 / +0.366 / +0.348 across the three
+   bands — a third of the spread is the harness's vocabulary, not the classes'
+   design. Gating it now would gate the vocabulary. Every row prints `ai_kit`
+   so the number can never be read without the caveat. THE REAL FOLLOW-UP is
+   an AI that can express more verbs; that is a task, not a threshold.
+5. **Parity rosters CALIBRATED, and the first authoring thrown away.** The
+   initial band-14/18 roster sets pinned 8 of 14 parity builds at exactly
+   0.000. A spread whose floor is a floor measures nothing, so each band was
+   re-cut easy/medium/hard. Recorded because the discarded read is the evidence
+   for the calibration rule now written into the harness.
+6. **Rung-4 lever: weapon_die, NOT con** (both measured, neither guessed).
+   GH#337 broke the captain's CADENCE, so the number moved is his ordinary
+   swing: `hired_blade_leader.weapon_die` 6 → 8, con untouched. con +12 buys
+   −0.07 of ladder movement and costs the on-level stop cell −0.14; weapon_die
+   +2 buys −0.08 and costs it −0.07. 8 is also the shipped humanoid ceiling
+   (ruin_guardian, forge_golem), not a new high-water mark. Ladder restored to
+   four steps: 0.92 > 0.84 > 0.69 > 0.61.
+7. **`LADDER_TIE` 0.05 → 0.03.** The wide tie band was authored FOR the
+   collapsed step and is not owed once the step is back; every gap now clears
+   0.03 by ≥0.05 and the harness is deterministic.
+8. **The Invrisil stop cell moved with its own rung (0.70 → 0.63, window
+   0.56-0.70).** Collateral of the repair, not a finding: the on-level build
+   always pays an enemy buff harder than the over-levelled yardstick. Still
+   disjoint and ordered beneath Riverfarm's t3 pair.
+9. **Wave-D was ALREADY SHIPPED; the lane audited instead of re-building.**
+   [Alchemist]/[Mixer] and [Druid]/[Beast Tamer]/[Beast Master] rows, kits,
+   evolutions, aspirations, balance cells and QA canonicals all exist and are
+   green. One spec-vs-shipped divergence for the controller: the Wave D-1 spec
+   fences Xif's [Perfect Reduction] as "DIALOGUE COLOR only (never player
+   grants)", and it now ships as [Alchemist]'s L14 grant with its own
+   CANON-VERDICT annotation. NOT reverted by this lane — a later ruling
+   plainly superseded the fence — but it should be ratified rather than left
+   as two documents disagreeing.
+10. **Badge coverage closed on `class_evolution_loop`, not on a Wave-D
+    canonical.** Neither new class can hold a cooldown skill ([Alchemist] is
+    field-only, [Druid]'s combat kit is the inherited mage line plus [Thorn
+    Hand]); a survey found this is the ONLY class canonical whose PC fields a
+    cooldown holder at all. The badge now has a windowed shot and a pinned
+    slot-info line so the digit is falsifiable.
