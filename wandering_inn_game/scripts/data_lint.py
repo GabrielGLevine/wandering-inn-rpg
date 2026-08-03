@@ -350,6 +350,20 @@ def check_moods(parsed: dict, maps: dict, errors: list) -> None:
 				errors.append(f"moods.json: sealed map '{map_id}' owns {lights[map_id]} light row(s) "
 					"but no lights_by_day -- meta.light_energy_by_phase.day = 0.0 switches them "
 					"all off at noon (RULE 2)")
+	# (d) THE CLOCK'S OWN PRECONDITION (#359). WIGame.phase_for derives the
+	# looping cycle as 2*night, day == night == dusk, dusk band == night - dusk.
+	# dusk <= 0 or night <= dusk leaves no band to wrap through: the sim falls
+	# back to the pre-loop monotone read (safe, but the clock silently stops
+	# looping), so shipped data may never carry it.
+	thresholds = (doc.get("meta") or {}).get("phase_thresholds") or {}
+	dusk_at, night_at = thresholds.get("dusk"), thresholds.get("night")
+	if not isinstance(dusk_at, int) or not isinstance(night_at, int):
+		errors.append("moods.json: meta.phase_thresholds needs int 'dusk' and 'night' -- "
+			"WIGame.phase_for reads them as the looping clock's only inputs (#359)")
+	elif not 0 < dusk_at < night_at:
+		errors.append(f"moods.json: meta.phase_thresholds must satisfy 0 < dusk ({dusk_at}) "
+			f"< night ({night_at}) -- otherwise the cycle has no dusk band to wrap through "
+			"and phase_for drops back to the pre-loop monotone read (#359)")
 	arenas_path = DATA / "arenas.json"
 	arena_ids = set()
 	if arenas_path in parsed:

@@ -2578,13 +2578,44 @@ func snapshot() -> Dictionary:
 
 
 func phase() -> String:
-	var dusk_at := int(_phase_config.get("dusk_at", 40))
-	var night_at := int(_phase_config.get("night_at", 90))
-	if actions_since_sleep >= night_at:
-		return "night"
-	if actions_since_sleep >= dusk_at:
+	return phase_for(actions_since_sleep,
+		int(_phase_config.get("dusk_at", 40)), int(_phase_config.get("night_at", 90)))
+
+
+## THE LOOPING CLOCK (#359). Thresholds used to be monotone per waking, so a
+## long waking sat in indefinite night -- the clock ran out and stopped. It
+## wraps now, day and night EQUAL, dusk the transition band on BOTH sides:
+##   day   [0, dusk_at)                     len dusk_at
+##   dusk  [dusk_at, night_at)              len night_at - dusk_at  (evening)
+##   night [night_at, night_at + dusk_at)   len dusk_at             (== day)
+##   dusk  [night_at + dusk_at, 2*night_at) len night_at - dusk_at  (dawn)
+## CYCLE = 2 * night_at, DERIVED -- never a third threshold to keep in sync.
+## The first waking is BYTE-IDENTICAL to the pre-loop read up to night's end,
+## so day-identity determinism holds and every shipped fixture pin (max 1000,
+## inside night's [900, 1300) at the shipped 400/900) still reads the phase it
+## was authored for. `once_per_waking` is SLEEP-keyed and never consults this;
+## sleep still zeroes `actions_since_sleep`, so waking still lands on day.
+## TRAP: a QA route sized past a band edge now WRAPS instead of saturating --
+## walk far enough past night_at and dawn dusk flips every phase-gated
+## present_when/encounter_when/text_variants back.
+## DEGENERATE CONFIG (dusk_at <= 0, or night_at <= dusk_at) has no band to wrap
+## through and keeps the old monotone read; data_lint's check_moods rejects it
+## in shipped data.
+static func phase_for(actions: int, dusk_at: int, night_at: int) -> String:
+	if dusk_at <= 0 or night_at <= dusk_at:
+		if actions >= night_at:
+			return "night"
+		if actions >= dusk_at:
+			return "dusk"
+		return "day"
+	var at := posmod(actions, 2 * night_at)
+	if at < dusk_at:
+		return "day"
+	if at < night_at:
 		return "dusk"
-	return "day"
+	if at < night_at + dusk_at:
+		return "night"
+	return "dusk"
 
 
 func _tick_action() -> void:

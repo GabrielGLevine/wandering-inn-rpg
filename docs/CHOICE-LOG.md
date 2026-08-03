@@ -2661,3 +2661,58 @@ the guard, in the pre-flight tier that runs before any Godot boot.
 14. **R1 lease gate:** gates on visited_own_room (stairs counter), not
     story progress — keeps two pinned canonicals byte-green. USER
     CONFIRM queued (morning read).
+
+<!-- v018-W4 -->
+## 2026-08-03 — v0.18 W4: the looping phase clock (#359) + three hotfix calls
+
+**Call: cycle = 2 × night_at, derived — never a third threshold.** The issue
+asked for a looping clock with day and night of equal length and dusk as the
+transition band, and left the durations to the lane. The shipped thresholds
+(`data/moods.json` `meta.phase_thresholds`, 400/900) already encode two of the
+three numbers, so the cycle takes the third by derivation rather than by
+adding a `cycle` key someone has to keep in sync:
+
+    day   [0, 400)      400   |  night [900, 1300)   400   (== day, the ask)
+    dusk  [400, 900)    500   |  dusk  [1300, 1800)  500   (dawn, same band)
+
+Alternatives rejected: (a) an explicit `cycle_at` third threshold — a fourth
+number to drift, and every existing route sized against 400/900 would have had
+to be re-derived; (b) day→dusk→night→day with no dawn band — cheaper, but the
+night→day edge would be the one hard cut in a system whose whole point is a
+graded transition; (c) shortening the bands so a waking sees several cycles —
+rejected as a balance-shaped change (encounter/presence gates ride phase), and
+balance is W5's, not this lane's.
+
+**Consequence, deliberately taken: the first waking is byte-identical.** Every
+crossing below 1300 reads exactly what it read before the loop, so
+day-identity determinism holds, `atmosphere_check`'s 400/900 route is
+unchanged, and — the thing the brief expected to cost a re-base — **no fixture
+needed re-basing at all**: the highest shipped pin is 1000, which is still
+inside night's own window. `player_room_night`'s 901 included.
+
+**`once_per_waking` untouched, and now pinned as untouched.** It keys on SLEEP
+and never reads `phase()`; the new leg asserts `times_slept == 0` at the moment
+a new day opens without one.
+
+**Degenerate configs keep the old monotone read** rather than dividing into a
+zero-length night, and `scripts/data_lint.py` (`check_moods`) now rejects
+`0 < dusk < night` violations in shipped data, so the fallback can never be
+what ships.
+
+Three further calls in the same wave, all on v0.17-close findings:
+
+1. **Journal passive-refusal gets a toast, via a new `modal_response`
+   exemption** — the one class of toast allowed to render over an open modal.
+   Alternatives: an in-panel notice line (invisible when the cursor is
+   scrolled away from the header) or a row flash (no animation infra). The
+   modal pause exists to stop a 3-line toast reaching a journal body row; a
+   one-line direct answer to a keypress is scoped out of it explicitly.
+2. **The field legend clears the toast band STATICALLY, not by yielding.** The
+   finding offered either. Yielding live would move the panel under a reader,
+   which is the same jitter `field_hotbar.gd`'s own DIALOGUE ruling refuses.
+   Residual logged rather than hidden: a 3-line toast still tops out above the
+   reserved band, and the controls row can still reach the strip at 3+ slots.
+3. **Creation cards keep NO name label.** The tint-is-not-disambiguation fix
+   wanted a caret, border, weight *or* label; `PC_OPTIONS`' own constraint
+   block bars race/gender text on that step (playtest hotfix #3), so the fix
+   is the caret and the constraint stands.

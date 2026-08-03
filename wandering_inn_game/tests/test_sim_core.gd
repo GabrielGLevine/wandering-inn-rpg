@@ -3331,6 +3331,13 @@ func _init() -> void:
 
 	gGate.player_cell = Vector2i(1, 1)
 	gGate.player_facing = Vector2i.RIGHT
+	# #359: the clock LOOPS, so this toy config's cycle is only 2*night_at = 6
+	# actions long and the fight above (every PC turn ticks it) walked the clock
+	# out of night's [3,5) window. Re-seat it the same way the two lines above
+	# re-seat the cell -- the subject here is the encounter gate, not the clock,
+	# and the clock's own wrap is pinned exhaustively below.
+	gGate.actions_since_sleep = 3
+	assert(gGate.phase() == "night", "re-seated into night's own window")
 	_events.clear()
 	var gi_night := gGate.interact()
 	assert(gi_night.get("combat", false), "gate_interact_only now opens through interact() at night")
@@ -3338,6 +3345,31 @@ func _init() -> void:
 	gGate.combat.apply_damage("training_dummy_a", 999, "pc", true)
 	gGate.resolve_combat()
 	assert(gGate.accomplishment_count("test_won_gate_interact") == 1, "interact-site gate's on_victory banks too")
+
+	# #359 THE LOOPING CLOCK. Pure derivation, so it is pinned off the static
+	# instead of by walking 1800 actions. Shipped thresholds (400/900): cycle
+	# 1800, day [0,400), evening dusk [400,900), night [900,1300), dawn dusk
+	# [1300,1800), then day again.
+	assert(WIGame.phase_for(0, 400, 900) == "day", "clock opens on day")
+	assert(WIGame.phase_for(399, 400, 900) == "day", "last day action")
+	assert(WIGame.phase_for(400, 400, 900) == "dusk", "dusk_at edge exact, as before the loop")
+	assert(WIGame.phase_for(899, 400, 900) == "dusk", "evening dusk runs to night_at")
+	assert(WIGame.phase_for(900, 400, 900) == "night", "night_at edge exact, as before the loop")
+	assert(WIGame.phase_for(1000, 400, 900) == "night", "every shipped fixture pin (max 1000) still reads night")
+	assert(WIGame.phase_for(1299, 400, 900) == "night", "night is dusk_at long -- EQUAL to day")
+	assert(WIGame.phase_for(1300, 400, 900) == "dusk", "dawn is the same dusk band, the other way round")
+	assert(WIGame.phase_for(1799, 400, 900) == "dusk", "dawn runs to the cycle end")
+	assert(WIGame.phase_for(1800, 400, 900) == "day", "cycle = 2 * night_at, and it WRAPS")
+	assert(WIGame.phase_for(2200, 400, 900) == "dusk", "second cycle repeats the first exactly")
+	assert(WIGame.phase_for(3600, 400, 900) == "day", "and the third")
+	for probe: int in [0, 137, 400, 899, 900, 1299, 1300, 1799]:
+		assert(WIGame.phase_for(probe, 400, 900) == WIGame.phase_for(probe + 1800, 400, 900),
+			"phase is periodic in 2*night_at at action %d" % probe)
+	# DEGENERATE CONFIG keeps the pre-loop monotone read rather than dividing
+	# into a zero-length night. data_lint's check_moods rejects it in shipped
+	# data; this pins the fallback the sim takes if one ever slips through.
+	assert(WIGame.phase_for(10000, 5, 5) == "night", "night <= dusk -> old monotone read, no wrap")
+	assert(WIGame.phase_for(10000, 0, 900) == "night", "dusk_at 0 -> old monotone read, no wrap")
 
 	var echo_scene := {
 		"start_map": "village",
