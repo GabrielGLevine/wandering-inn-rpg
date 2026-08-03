@@ -17,6 +17,7 @@ static var SELECTED_TEXTURE: Texture2D = UIChrome.chrome_texture("res://assets/u
 const UNAFFORDABLE_MODULATE := Color(0.55, 0.55, 0.55, 1.0)
 const AP_PIP_COLOR := Color(0.05, 0.05, 0.05)
 const MP_DIAMOND_COLOR := Color(0.1, 0.2, 0.6)
+const COOLDOWN_BADGE_COLOR := Color(0.55, 0.12, 0.08)
 
 ## Issue #57: a left-click on a rendered slot activates it EXACTLY as its
 ## number key -- callers (field_hotbar.gd/combat_screen.gd, via combat_hud.gd)
@@ -173,6 +174,7 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 		cd_label.text = str(cd_left)
 		cd_label.position = Vector2(SLOT_SIZE.x - 14, 1)
 		cd_label.add_theme_font_size_override("font_size", 10)
+		cd_label.add_theme_color_override("font_color", COOLDOWN_BADGE_COLOR)
 		cd_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		root.add_child(cd_label)
 

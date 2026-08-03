@@ -4,36 +4,28 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
-## Current state (2026-08-03, overnight session — v0.17 SHIPPED, v0.18 wave-1 next)
-**v0.17.0 CLOSING at close/v017 (tag imminent this session).** The whole
-seven-lane wave + both riders shipped in ONE overnight session under
-ultracode: 26-agent lane fleet (dual adversarial lenses per code lane) →
-integration rehearsal (census trim pre-solved composition) → 8-PR
-anchored train (#351-#358; L4 palette LAST; every checks table read as
-its own step) → riders R1 #350 player room + R2 moods re-tune (8 agents)
-→ close: 14-ruling CHOICE-LOG block, freeze step-0 (45 adds incl. the
-fought_* parity family, ZERO removals), 3-agent serial machine-playtest
-(3x SHIP_WITH_ROWS, zero blockers, 40 VISUAL-LOG rows).
-Wave content: #336 Skills tab (derived categories; AUTO-cap REVERSED on
-in-tree evidence), #338 hints, #345 difficulty (Bronze/Silver/Gold,
-wiki-verified, wiring proven live), #346 creation prompts, #337 cooldowns
-(141-cell re-author + ladder assertion), #349 Pisces (arena + narrative),
-#324 root-caused (EVIDENCE boundary, not render — capture-hold now
-derived; do NOT idle-pad), #335 phase 1, #323/#332/#343/#339(1-3),
-atmosphere grading+motion, VISUAL-LOG drain + palette unification,
-causality map, two Fable specs (#347/#348 BUILD-REDUCED), #350 room.
-INCIDENTS (both recovered same-minute): core-purity violation in my own
-seam edit (caught by first unit gate; landed pure-field+scene-push);
-hook-BLOCK-swallowed-by-tail RECURRED on the R1 seam commit (caught by
-the mandated rc+log read-back).
-**v0.18 WAVE-1 IS RATIFIED AND DISPATCHES AFTER THE TAG** (user
-pre-sleep, all rulings in CHOICE-LOG block #12 + #345-#360 board): W1
-#348-slice-1 (+Ice-Floor/Flame-Jet examples) / W2 #347 prototype BEHIND
-FLAG / W3 #318 / W4 debt-drain+#359 clock + THE PLAYTEST HOTFIX HEAD
-(hint-ribbon text-scale overflow, journal close-hint, checkbox glyph,
-creation caret, toast-over-legend, HUD-chips investigation, art misses)
-/ W5 Wave-D Alchemist+Druid (Priest PARKED) + rung-4 + #360 harnesses.
-W5 = sole balance writer.
+## Current state (2026-08-03, overnight session close — v0.17.0 SHIPPED, v0.18.0 closing)
+**v0.17.0 TAGGED + Release/Pages GREEN. v0.18 wave-1 train COMPLETE
+(#364-#368, five lanes, 20 agents, dual adversarial lenses), close in
+flight (freeze 12 adds/0 removals, CHOICE-LOG 12-ruling block, focused
+playtest running, tag v0.18.0 per ruling #12).**
+v0.18 wave-1 content: #348 slice-1 substrate (proven byte-identical
+inert; ice-floor works as pure data; Flame-Jet corpse deferred to the
+skill-picks package), #347 prototype behind flag (demo state for the
+naming read), #318 nobility thread (Magnolia felt-never-seen,
+spec-first, "Five Families" REFUSED on spoiler grounds), the whole
+playtest hotfix head + #359 looping clock (first waking byte-identical),
+Wave-D Alchemist+Druid (Priest parked) + rung-4 restored (4-step ladder
+0.92>0.84>0.69>0.61) + #360 harnesses (difficulty tiers monotone clean
+0/141; parity measured, envelope deliberately unratified on the ai_kit
+confound).
+**MORNING QUEUE: wandering_inn_game/qa/playtest_saves/2026-08-03-v018-morning/README.md
+— one doc, six items, load lines included** (martial picks, [Perfect
+Reduction] fence-vs-grant, bestowal naming/rarity, moods eye-items,
+new classes in play, lease gate). Wave-2 shape follows the picks.
+Incidents this session (all gate-caught, all logged): core-purity seam
+reversal, hook-BLOCK-swallowed recurrence, import-rule x3 (now covers
+image assets + train pulls).
 
 Process lessons this session (fold candidates for wi-running-the-machine
 / wi-verifying-changes / wi-machine-playtest):
@@ -54,19 +46,16 @@ Process lessons this session (fold candidates for wi-running-the-machine
 
 ## 🎯 NEXT ACTIONS
 
-0. **This session (in flight):** close/v017 PR → checks → merge → tag
-   v0.17.0 → confirm Release/Pages → dispatch W1-W5 → v0.18 train →
-   HANDOFF re-close. If the session dies mid-chain: close/v017 branch
-   holds everything; resume at the first unchecked item above.
-1. **MORNING QUEUE (user picks/verdicts, prepared states where visual):**
-   (a) martial exploration-Skills doc — 24 curated candidates, top-3
-   mirror your Ice-Floor/Flame-Jet examples (scratchpad copy lands in
-   docs/design at v0.18 close); (b) #347 bestowal FEEL read; (c) moods
-   eye-items: longhouse vignette 0.4, forge-lamps-at-noon vs market,
-   den_shop sky classification; (d) #350 lease-gate confirm
-   (visited_own_room vs story counter); (e) playtest P1 pair fix
-   verdicts after W4 lands them; (f) standing: full sitting, Raskghar
-   third-strike, #195 listen, gossip ladders.
+0. **If this session died mid-close:** close/v018 branch holds
+   everything; resume: playtest verdict → close PR → checks-as-own-step
+   → merge → tag v0.18.0 → Release/Pages watch → worktree cleanup.
+1. **MORNING QUEUE — the six-item README above.** Wave-2 dispatches
+   after the picks (skill package: martial picks + ice_floor + the
+   Flame-Jet corpse arm + [Perfect Reduction] ruling + bestowal
+   direction + remaining W4 debt incl. Pisces re-window).
+2. Board: #348 open (slice 2+), #347 open (migration behind rulings),
+   #360 open (flip-gate triage + stratified envelope), #359/#134/#318
+   close via the train PRs.
 
 
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)

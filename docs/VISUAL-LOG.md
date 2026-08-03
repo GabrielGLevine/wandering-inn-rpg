@@ -3485,3 +3485,39 @@ Windowed `property_seams` at seed 9, six frames, evidence under
   toast panel overlaps the legend and truncates it mid-word ("...old timber in
   momen"). Same defect as the v0.17-close row; logging the extra frames
   because they show it at three different toast lengths.
+
+### v0.18 wave-1 CLOSE — focused machine playtest (2026-08-03)
+
+Single-agent serial pass, 13 runs, verdict SHIP_WITH_ROWS. All three W4
+hotfixes VERIFIED HOLDING (ribbon 115/130%, journal close-hint,
+creation caret); bestowal contract exact (flag-off provably silent);
+clock loops with correct phase identity. Ranked.
+
+- [ ] **(P1) ICE TILE IS TINTED WATER — HARD WAVE-2 ORDERING CONSTRAINT**
+  (property_seams 02/03/05): _paint_ice_cell reuses WATER_SHEET under
+  ICE_TINT (world.gd:956-962) — tint-as-disambiguation on a world
+  surface; copy promises "grey-white ice", player sees brighter blue;
+  cue weakest under the player's own light. SHIP-SAFE TODAY: frost_touch
+  is the only freezes carrier and no class grants it — no player can
+  reach this surface in v0.18.0. RULE: the bespoke ice tile (rime edge /
+  fracture silhouette) + "the channel"→cell copy fix land BEFORE any
+  freezes-granting skill (ice_floor picks included).
+- [ ] **(P2)** Boulevard plaza razor-edge seam at day (1.47x lum, no
+  transition tiles; inverts at night) — wants wang edges.
+- [ ] **(P2)** PC drawn under field chips on bottom-row cells — no
+  HUD-safe area (invrisil_house_name_talk 03).
+- [ ] **(P2)** Stacked-NPC burial of the reticled speaker in the
+  thread's climax column (06) — conversation draw-order/nudge wanted.
+- [ ] **(P2)** "Inventory" nav pill overflows at 115/130% — the ribbon
+  fix's sibling widget, same cure (font-derived rect).
+- [ ] **(P2)** "[Mixer] has become [Alchemist]!" enqueued, never
+  rendered in its own canonical (15 enqueued/10 rendered, shared FIFO
+  with loot) — class evolution wants its own lane or beat; Wave-D's
+  moment currently has no photograph.
+- [ ] **(P3)** Cooldown badge ~1.3:1 vs plate (slot-dim carries the
+  meaning; v0.16.2 row half-retired). **(P3)** legend clipped by 4-line
+  toast (W4 residual, reproduced). **(P3)** dialogue panel over ribbon
+  tail. **(P3)** Lady's coda orphans 92 chars on blank parchment.
+  **(P3)** interiors phase-invariant (clock invisible indoors). **(P3)**
+  day identity is brightness-only (no hue). **(P3)** debug overlay no
+  backing plate (dev-only). **(P3)** sewers ladder scribble at 1x.

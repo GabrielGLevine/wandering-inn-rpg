@@ -2998,3 +2998,44 @@ plausible-looking wrong number within reach is what produced the bug.
     re-running the spec's "byte-identical" gate on the raw stream will see
     red and must not read it as drift — strip presentation events first.
     Filed as an observation, not W1's defect to fix.
+
+<!-- v018-close (controller rulings, 2026-08-03) -->
+## v0.18 wave-1 close — controller adjudication block
+
+1. **W1 scene_catalog.gd ownership ACK'd:** the spec's "existing
+   injected-config path" IS compose(); the alternative churned 182
+   construction sites. Granted retroactively, logged here.
+2. **W4 field_chips.gd grant CONFIRMED:** hotfix item 6 commissioned
+   "fix the render gate if real"; the gate lives only there. 8-line
+   dialogue-open latch stands.
+3. **#359 durations ACCEPTED as lane-decided:** day 400 = night 400,
+   dusk band 500 both sides; first waking byte-identical to shipped.
+4. **[Perfect Reduction] PROVISIONAL-KEEP (user morning item):** W5
+   shipped it as Alchemist L14 against the spec's dialogue-color fence,
+   carrying ATTESTED 6.39. Batch green. Reversal = one row + cell
+   re-run. The fence was a ruled spec — user decides which survives.
+5. **#360 gates: monotonicity gate READY to ratify (clean 0/141);
+   extreme-flip gate HELD** — the one flip (alley_fence 1.00 at Bronze)
+   may be easy-mode working-as-intended; triage next wave.
+6. **Parity envelope: W5's decline ACCEPTED** — the ai_kit confound
+   (+0.35-0.39 of spread) would make any envelope gate AI coverage,
+   not class balance. Follow-up: ai_kit-stratified envelope (board).
+7. **Invrisil stop 0.70→0.63 ACCEPTED:** the restored rung-4's
+   intended "second stop reads harder" statement.
+8. **[Ice Floor] grant DEFERRED to the user's skill picks:** the row
+   without a granting class is dead data (W1's own verbs-without-rows
+   argument); paste-block ready in W1 lane notes; copy unauthored.
+9. **[Flame Jet]→cooked-corpse DEFERRED to wave-2:** W1's authored-arm
+   recommendation adopted in principle; the corpse package (skills
+   flag + carrier prop + sprite + yield wiring) rides with the martial
+   picks so the skill roster lands coherently.
+10. **W3 acts.json row DEFERRED:** the thread ships complete without
+    it; the recorded row is a wave-2 candidate needing its own gate.
+11. **Import-rule third occurrence (close-branch suites red pre-import
+    after the train pull):** the rule text covers it; the miss was
+    mine; gates caught it. No new rule — the checklist ordering in
+    wi-verifying-changes gets a one-line "after ANY train pull" nudge.
+12. **Tag decision: v0.18.0 TAGS THIS SESSION** (wave-1 is coherent,
+    fully gated, zero playtest blockers expected on the delta; the
+    user's morning verdicts shape wave-2, not this tag). User re-rules
+    by reverting the tag if wanted.
