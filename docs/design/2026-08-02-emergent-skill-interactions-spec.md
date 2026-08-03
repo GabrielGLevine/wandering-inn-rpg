@@ -128,13 +128,34 @@ rows of
 | `remove_scorch` | burn shape: remove_entity + TERRAIN_CHANGED + counter (field_skills.gd:91-102) | `permanent` (removed_entities) |
 | `freeze_cell` | frozen_cells walkability flip (field_skills.gd:103-114) | `until_sleep` (wi_game.gd:2127) |
 | `thaw_cell` | frozen_cells erase (the inverse; trivial new arm over existing state) | immediate |
-| `state_flip` | visual_states/counter flip (the unlit_lantern seam) | `until_sleep` or `permanent` via counter |
+| `state_set` | counter-backed visual_states swap (the unlit_lantern seam: inn.json `unlit_lantern` + world.gd:767-800) — ONE-WAY by substrate | `permanent` (counters are monotone) |
 | `bank_toast` | counter + toast, the observe shape (field_skills.gd:73-81) | n/a |
 | `refuse` | authored refusal with its own toast (distinct from ambient fallthrough) | n/a |
 
 - Absent pair = no row = the SHIPPED fallthrough: `field_ambient` toast
   or the "Nothing here calls for that." refusal (field_skills.gd:141-149).
   Null is a first-class, already-shipped answer.
+
+**No reversal in v1 — ruled.** `state_set` is deliberately named *set*,
+not *flip*: the shipped substrate cannot express flip-BACK. The
+visual_states render layer resolves `when` conditions from exactly four
+reads — counter threshold, `container_opened`, `dormant`, `phase`
+(world.gd:791-800) — and the counter store is monotone:
+`record_accomplishment` only increments (wi_game.gd:835-838), no
+decrement API exists, and `sleep()` clears frozen_cells / light_active /
+dormant_encounters but never counters (wi_game.gd:2110-2135). Negative
+counter banking is ruled out twice over: nothing shipped does it, and
+`_check_quests` re-derives every started quest's beat_index from the
+same counters (wi_game.gd:1518-1534), so a decrement could regress a
+quest beat. `dormant_encounters` is until-sleep and entity-keyed, but it
+is the warding/taming pacification surface — repurposing it as a generic
+prop-state store would put props inside encounter logic; ruled out.
+Therefore reversible prop state — dousing a lit hearth, re-dirtying a
+cleaned table — requires a NEW save store and a `WISave.VERSION` bump:
+that is K3 by construction, out of v1, dedicated spec if content ever
+demands it. The only until-sleep state outcome v1 offers is cell-shaped
+(`freeze_cell`/`thaw_cell` over `frozen_cells`); douse cells in the
+matrix are authored REFUSALS, not flips (§7).
 
 ### 4.2 Vocabularies stay where they already live
 
@@ -180,12 +201,16 @@ byte-identical (slice-1 gate, §9).
 Resolution is a pure Dictionary lookup over injected data — no RNG, no
 Node refs, event-emitting through the existing sink (`WIFieldSkills` is
 already the pure extracted seam, field_skills.gd:1-33). State outcomes
-reuse ONLY the two shipped persistence stores: `frozen_cells`
-(until-sleep, save-serialized) and `removed_entities` (permanent,
-save-serialized). **v1 adds no new save state → no `WISave.VERSION`
-bump** (stays 8, src/core/save.gd:4). Any property that demands new
-state (wet, charge, temperature) is out of v1 by construction and gates
-on a version-bump decision (K3).
+reuse ONLY the three shipped, already-serialized persistence stores:
+`frozen_cells` (until-sleep, cell-shaped; save.gd:48),
+`removed_entities` (permanent; save.gd:29), and the `accomplishments`
+counters (permanent, monotone — what `state_set` and `bank_toast`
+write, and what visual_states read; save.gd:26, world.gd:791-793).
+**v1 adds no new save state → no `WISave.VERSION` bump** (stays 8,
+src/core/save.gd:4). Any property that demands new or REVERSIBLE
+per-prop state (wet, charge, temperature, douse) is out of v1 by
+construction (§4.1 "No reversal") and gates on a version-bump
+decision (K3).
 
 ## 5. The QA cost census (issue question b)
 
@@ -239,12 +264,12 @@ exist today (as flags, kinds, or map cell classes).
 
 | skill \ target | burnable | freezable water | frozen ice | dirty* | warded* | unlit* | bone | beast | person (npc) | door | container | hearth* | growth* | dark cell* | (no target) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| kindle (burns) | **S** f_s:91 | **R** ("water drinks the flame") | **G** thaw_cell ★ | · | · | **G** state_flip (light it) | · | · | **R** | · | · | **G** state_flip ★ | **G** remove_scorch ★ | · | S ambient |
-| frost_touch (freezes) | · | **S** f_s:103 | **R** (already ice) | · | · | · | · | · | **R** ("No. They are a person.") ★ | · | · | **G** state_flip (douse) ★ | · | · | S ambient |
+| kindle (burns) | **S** f_s:91 | **R** ("water drinks the flame") | **G** thaw_cell ★ | · | · | **G** state_set (light it) | · | · | **R** | · | · | **G** state_set ★ | **G** remove_scorch ★ | · | S ambient |
+| frost_touch (freezes) | · | **S** f_s:103 | **R** (already ice) | · | · | · | · | · | **R** ("No. They are a person.") ★ | · | · | **R** (douse copy — no reversal substrate, §4.1) ★ | · | · | S ambient |
 | basic_cleaning (cleans*) | · | · | · | **S** authored arms; **G** for untagged grime | **R** ("this filth is not natural") ★ | · | · | · | · | · | · | · | · | · | S ambient |
 | observe (appraises) | **S** generic arm f_s:73 | · | · | S | S | S | S | S | S | S | S | S | S | · | S ambient |
 | detect_magic (detects) | · | · | **G** bank_toast ★ | · | **S** authored arms (class-expansion §6) | · | **G** bank_toast | · | · | **G** bank_toast (warded doors) | · | · | · | · | S ambient |
-| light (toggles_light) | · | · | · | · | · | **S** per-prop arms; **G** for untagged | · | · | · | · | · | · | · | **G** state_flip ★ | S toggle f_s:139 |
+| light (toggles_light) | · | · | · | · | · | **S** per-prop arms; **G** for untagged | · | · | · | · | · | · | · | **G** state_set ★ | S toggle f_s:139 |
 | animate_dead (animates) | · | · | · | · | · | · | **S** companion_source wi_g:719 | · | · | · | · | · | · | · | S refusal |
 | lesser_bond (tames) | · | · | · | · | · | · | · | **S** companion_source | **R** (the crab-refusal joke precedent) | · | · | · | · | · | S refusal |
 | charming_smile (calms*) | · | · | · | · | · | · | · | **G** bank_toast (soothe line) ★ | **S** generic arm f_s:82 | · | · | · | · | · | S ambient |
@@ -311,11 +336,14 @@ Three properties over existing content, zero new outcome verbs:
 - `dirty` tag pass: table row for basic_cleaning × dirty on UNTAGGED
   grime props (authored dirty_table arms keep winning by precedence —
   regression-proof by construction).
-- `hearth` + `unlit` tags: kindle-lights / frost-douses / light-lights
-  state flips on brazier/hearth/lantern props.
-Plus the R-cells' refusal copy (frost×person, kindle×water) — cheap,
-high-charm, and they teach the vocabulary. Canonical extensions +
-windowed playtest per wi-machine-playtest.
+- `hearth` + `unlit` tags: kindle-lights / light-lights ONE-WAY
+  `state_set` rows on brazier/hearth/lantern props — the shipped
+  unlit_lantern shape, counter-backed. No dousing: reversal has no v1
+  substrate (§4.1); frost×hearth ships as a refusal row instead.
+Plus the R-cells' refusal copy (frost×person, kindle×water,
+frost×hearth — the douse cell IS its refusal copy) — cheap, high-charm,
+and they teach the vocabulary. Canonical extensions + windowed playtest
+per wi-machine-playtest.
 
 ### Slice 3 — discovery content (MEDIUM; content lanes; AFTER #335 items 1-2)
 One or two genuinely new verbs with puzzle content (detect_magic
@@ -340,9 +368,10 @@ here.
   specific entity ids, or a property ships with fewer than three
   interesting rows → the vocabulary is wrong; freeze the table at
   current size and return to authored arms for new content.
-- **K3 (state creep):** a property needs new save state, real-time
-  propagation, or combat-side semantics → out of scope; dedicated spec
-  or decline. Combat unification in particular is NEVER a lane rider —
+- **K3 (state creep):** a property needs new save state (reversible
+  prop state — douse, re-dirty — is the canonical case, §4.1),
+  real-time propagation, or combat-side semantics → out of scope;
+  dedicated spec or decline. Combat unification in particular is NEVER a lane rider —
   the combat vocabulary (element/terrain/status) has its own balance
   authority and its own registry, and gluing the two multiplies the
   harness surface for no proven player value.
