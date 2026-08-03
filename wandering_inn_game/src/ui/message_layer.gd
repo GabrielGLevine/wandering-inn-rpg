@@ -85,6 +85,49 @@ const TOAST_TEXT_WIDTH := 412.0
 const TOAST_FOLD_DANGER_PX := 30.0
 const STRIP_FOLD_PATCH_BOTTOM := 32
 
+## World hint ribbon ("Esc — menu   J — journal   I — inventory"). The panel
+## rect and its content margins are BOTH derived, from live font metrics plus
+## the strip art's own patch geometry (`_resize_hint_panel`), never hardcoded.
+## TRAP: the old fixed 400x28 clipped descenders and truncated the tail
+## mid-word at Text Scale 115%/130% -- "J — journal" degraded to a bare stroke
+## indistinguishable from "I — inventory". Same derive-from-metrics contract as
+## `_resize_dialogue_panel`. The old 14/5 content margins are DELETED, not kept
+## as named constants -- 14 is narrower than the art's end caps, and a
+## plausible-looking wrong number within reach is what HINT_PAPER_SIDE_INSET
+## exists to stop.
+## Floor only: keeps the strip's 9-slice corners from crushing when the copy
+## is short. Growth above it is metric-driven.
+const HINT_PANEL_MIN_SIZE := Vector2(400.0, 28.0)
+## THE VERTICAL TRAP, measured off Banner_Horizontal's own bands (source
+## region y 47..169; painted paper 51..140, then the bottom rule, the fold and
+## the scroll shadow). The strip is drawn as a 9-patch with STRIP_PATCH_MARGIN
+## (20) top and bottom, so BELOW a 40px panel the center band never stretches
+## at all and the visible paper is stuck at ~16px no matter how tall the rect
+## is -- which is why the old 400x28 clipped the moment Small went 12 -> 14.
+## Above 40px the paper grows at HINT_PAPER_CENTER_SHARE per extra pixel
+## (73 of the center band's 83 source rows are paper; the rest is ornament).
+const HINT_PAPER_TOP_INSET := 4.0
+const HINT_PAPER_CENTER_SHARE := 73.0 / 83.0
+const HINT_STRIP_PATCH := 20.0
+## THE HORIZONTAL HALF OF THE SAME TRAP: the 9-patch's END CAPS are that same
+## 20, so the art-safe band is [20, width - 20], NOT [14, width - 14]. Padding
+## the width by 14 put the line 6px inside the ornament the moment the natural
+## width beat the floor -- measured at 130%: panel 424 = text + 28, label rect
+## to x=410 against a paper edge at 404, tail of "inventory" across the stroke.
+const HINT_PAPER_SIDE_INSET := HINT_STRIP_PATCH
+## Breathing room under the descenders before the bottom rule.
+const HINT_PAPER_BOTTOM_PAD := 3.0
+## Same at the ends. TRAP: the label is OVERRUN_TRIM_ELLIPSIS, so a rect sized
+## to the measurement exactly has ZERO slack and one pixel of layout rounding
+## trims to "I — inventor…". `_resize_hint_panel` also ceils the width.
+const HINT_PAPER_SIDE_PAD := HINT_PAPER_BOTTOM_PAD
+## The ribbon is one line by contract (three key hints, never wrapped) -- it
+## may not eat the screen if a device label grows, so the derived width caps
+## here and the label ellipsizes rather than running under the toast strip.
+const HINT_PANEL_MAX_WIDTH := 640.0
+const HINT_PANEL_LEFT := 8.0
+const HINT_PANEL_BOTTOM := -8.0
+
 ## Toasts use layer 12: above journal/inventory modals (10), below the sleep
 ## veil (30). This ordering keeps feedback visible without piercing sleep.
 const TOAST_CANVAS_LAYER := 12
@@ -96,6 +139,7 @@ var _dialogue_panel: Control
 var _dialogue_label: Label
 var _dialogue_text_height := 0.0
 var _hint_panel: Control
+var _hint_margin: MarginContainer
 var _hint_label: Label
 
 ## Toast queue: TOAST/INTERACT_NOTHING both render onto the single
@@ -311,18 +355,22 @@ func _ready() -> void:
 
 	_hint_panel = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
 	_hint_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	_hint_panel.custom_minimum_size = Vector2(400, 28)
-	_hint_panel.size = Vector2(400, 28)
-	UIChrome.set_offsets(_hint_panel, 8.0, -36.0, 408.0, -8.0)
-	var hint_margin := MarginContainer.new()
-	UIChrome.full_rect(hint_margin)
-	UIChrome.add_margins(hint_margin, 14, 5, 14, 5)
-	_hint_panel.add_child(hint_margin)
+	_hint_margin = MarginContainer.new()
+	UIChrome.full_rect(_hint_margin)
+	_hint_panel.add_child(_hint_margin)
 	_hint_label = UIChrome.make_label("", "Small")
 	_hint_label.text = _hint_text()
-	hint_margin.add_child(_hint_label)
+	_hint_margin.add_child(_hint_label)
 	root.add_child(_hint_panel)
-	ObservableBus.emit_domain_event.call_deferred(WIEvents.UI_HINT_RENDERED, {"text": _hint_label.text})
+	# Must run AFTER add_child, same theme-lookup ordering `_resize_dialogue_panel`
+	# needs: `_hint_label` has to be inside the themed tree before its font
+	# metrics answer.
+	_resize_hint_panel()
+	# Text scale mutates UIChrome.THEME in place; Theme.changed propagates to
+	# every Control using it, so BOTH derived panels re-fit live instead of
+	# staying frozen at the size they were built with.
+	root.theme_changed.connect(_on_theme_changed)
+	ObservableBus.emit_domain_event.call_deferred(WIEvents.UI_HINT_RENDERED, _hint_payload())
 
 	ObservableBus.domain_event.connect(_on_domain_event)
 	# See _first_pickup_hint_shown's doc comment: hooked once per process,
@@ -338,7 +386,8 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 	match type:
 		WIEvents.INPUT_DEVICE_CHANGED:
 			_hint_label.text = _hint_text()
-			ObservableBus.emit_domain_event(WIEvents.UI_HINT_RENDERED, {"text": _hint_label.text})
+			_resize_hint_panel()
+			ObservableBus.emit_domain_event(WIEvents.UI_HINT_RENDERED, _hint_payload())
 		WIEvents.ITEM_GAINED:
 			# pickup() emits ITEM_GAINED then TOAST synchronously; arm first so
 			# the hint queues immediately after the pickup's own toast.
@@ -351,8 +400,10 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			# lost" marker quest beats and the Watch-runner pointer already
 			# carry -- now also buys exemption from the MOVEMENT dismiss. See
 			# `_queue_toast`'s `protected` and the PLAYER_MOVED arm below.
-			_queue_toast(String(payload["text"]), true, bool(payload.get("housekeeping", false)),
-				bool(payload.get("sticky", false)))
+			_queue_toast(String(payload["text"]), bool(payload.get("record", true)),
+				bool(payload.get("housekeeping", false)),
+				bool(payload.get("sticky", false)),
+				bool(payload.get("modal_response", false)))
 			if _first_pickup_hint_pending:
 				_first_pickup_hint_pending = false
 				_first_pickup_hint_shown = true
@@ -547,6 +598,95 @@ func _resize_dialogue_panel() -> void:
 	UIChrome.set_offsets(_dialogue_panel, 36.0, DIALOGUE_BOTTOM - panel_height, 736.0, DIALOGUE_BOTTOM)
 
 
+## Fits the hint ribbon to ONE line of `_hint_label`'s LIVE font metrics plus
+## its MarginContainer's own content margins, floored at HINT_PANEL_MIN_SIZE
+## and capped at HINT_PANEL_MAX_WIDTH. Above the cap the label ellipsizes
+## (`TextServer.OVERRUN_TRIM_ELLIPSIS`) instead of the panel widening under
+## the toast strip -- design rule D2-7 #6: cut words, never widen UI.
+## CONSTRAINT: `ui_hint_rendered` keeps carrying the WHOLE string, so QA text
+## pins are unaffected by any trim (the `_fit_dialogue_line` contract).
+func _resize_hint_panel() -> void:
+	var font := _hint_label.get_theme_font("font")
+	var font_size := _hint_label.get_theme_font_size("font_size")
+	var text_size := font.get_string_size(_hint_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
+	# HINT_PAPER_SIDE_INSET, not the old 14px content margin: the width has to
+	# clear the 9-patch's END CAPS, which are 20 wide, or the string sits inside
+	# the ornament the moment the natural width beats the floor. See the const.
+	var side := HINT_PAPER_SIDE_INSET + HINT_PAPER_SIDE_PAD
+	var width := clampf(ceilf(text_size.x + 2.0 * side), HINT_PANEL_MIN_SIZE.x, HINT_PANEL_MAX_WIDTH)
+	var text_h := font.get_height(font_size)
+	var size := Vector2(width, _hint_panel_height_for(text_h))
+	_hint_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_hint_panel.custom_minimum_size = size
+	_hint_panel.size = size
+	UIChrome.set_offsets(
+		_hint_panel, HINT_PANEL_LEFT, HINT_PANEL_BOTTOM - size.y,
+		HINT_PANEL_LEFT + size.x, HINT_PANEL_BOTTOM)
+	# Centre the line in the PAPER, not in the panel rect: the rect's bottom
+	# ~40% is rule/fold/shadow/transparency, so panel-centred (the Label
+	# default) is paper-LOW and walks into the ornament as the font grows.
+	# Driving it from the container's own margins rather than from
+	# `vertical_alignment` keeps the placement exact and alignment-independent.
+	var top := int(round(HINT_PAPER_TOP_INSET + (_hint_paper_height(size.y) - text_h) * 0.5))
+	var bottom := maxi(0, int(round(size.y)) - top - int(ceilf(text_h)))
+	var side_px := int(round(side))
+	UIChrome.add_margins(_hint_margin, side_px, top, side_px, bottom)
+
+
+## Painted-paper height inside a panel `height` px tall -- see
+## HINT_PAPER_TOP_INSET's block for the band arithmetic.
+func _hint_paper_height(height: float) -> float:
+	return HINT_STRIP_PATCH + HINT_PAPER_CENTER_SHARE * (height - 2.0 * HINT_STRIP_PATCH) - HINT_PAPER_TOP_INSET
+
+
+## Smallest panel height whose PAINTED PAPER holds one line of `text_h` with
+## HINT_PAPER_BOTTOM_PAD clear above and below it. Below 2*HINT_STRIP_PATCH the
+## strip's center band never stretches at all, so growing the rect buys no
+## paper -- which is exactly the regime the old 400x28 was stuck in.
+func _hint_panel_height_for(text_h: float) -> float:
+	var needed_paper := text_h + 2.0 * HINT_PAPER_BOTTOM_PAD
+	var height := 2.0 * HINT_STRIP_PATCH \
+		+ (needed_paper + HINT_PAPER_TOP_INSET - HINT_STRIP_PATCH) / HINT_PAPER_CENTER_SHARE
+	return maxf(HINT_PANEL_MIN_SIZE.y, ceilf(height))
+
+
+## Text Scale rewrites UIChrome.THEME's font sizes in place. Both derived
+## panels re-fit here; nothing else in this layer caches a font metric (the
+## toast/feed budgets all read `get_theme_font_size` at render time).
+func _on_theme_changed() -> void:
+	if _dialogue_label == null or _hint_label == null:
+		return
+	_resize_dialogue_panel()
+	_resize_hint_panel()
+	ObservableBus.emit_domain_event(WIEvents.UI_HINT_RENDERED, _hint_payload())
+
+
+## `text` stays the WHOLE authored string (never the trimmed render) so every
+## existing text pin holds. The three geometry keys are what makes the
+## overflow machine-detectable: `fits` is false exactly when one line of the
+## live font no longer clears the panel's inner width, which is the state the
+## hardcoded 400x28 shipped in at 115%/130%.
+## NOT A TAUTOLOGY, deliberately: `inner` is read back off the margins the
+## container was ACTUALLY given, and those margins are checked against the
+## art-safe band, so an inset regression flips `fits` false and settings_loop
+## catches it headlessly. Deriving `inner` from a constant while the width was
+## derived from that same constant is what made it unfalsifiable below the cap.
+func _hint_payload() -> Dictionary:
+	var font := _hint_label.get_theme_font("font")
+	var font_size := _hint_label.get_theme_font_size("font_size")
+	var text_width := font.get_string_size(_hint_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x
+	var left := float(_hint_margin.get_theme_constant("margin_left"))
+	var right := float(_hint_margin.get_theme_constant("margin_right"))
+	var on_paper := left >= HINT_PAPER_SIDE_INSET - 0.5 and right >= HINT_PAPER_SIDE_INSET - 0.5
+	var inner := _hint_panel.size.x - left - right
+	return {
+		"text": _hint_label.text,
+		"width": int(round(_hint_panel.size.x)),
+		"height": int(round(_hint_panel.size.y)),
+		"fits": on_paper and text_width <= inner + 0.5,
+	}
+
+
 ## `housekeeping` = save/settings chrome and idle-poke flavor: real, worth
 ## seeing, but never the thing the player was waiting for. Two rules follow.
 ## (1) ORDER: an authored toast INSERTS ahead of any trailing housekeeping
@@ -561,8 +701,20 @@ func _resize_dialogue_panel() -> void:
 ## (3) MOVEMENT DISMISS: `protected` entries (GH#334 note 7 -- the sim's own
 ## `sticky` marker) keep their full hold across PLAYER_MOVED. Nothing else about
 ## them differs: ordering, recording and the hold cap are untouched.
-func _queue_toast(text: String, record := true, housekeeping := false, protected := false) -> void:
-	var entry := {"text": text, "record": record, "housekeeping": housekeeping, "protected": protected}
+## (4) MODAL RESPONSE: a `modal_response` entry is the ONE class of toast that
+## may render while a modal is open -- it is the direct answer to a key the
+## player just pressed INSIDE that modal (the journal's passive-row refusal is
+## the first), and holding it until the panel closes turns a principled refusal
+## back into the dropped keypress it must not look like. Scoped hard: the
+## overlap the modal pause exists to prevent is a 3-line toast reaching a
+## journal body row, so a modal-response line is one short line by contract.
+## Nothing else about it differs -- lossless queue, ordering within its class,
+## the hold cap.
+func _queue_toast(text: String, record := true, housekeeping := false, protected := false, modal_response := false) -> void:
+	var entry := {
+		"text": text, "record": record, "housekeeping": housekeeping,
+		"protected": protected, "modal_response": modal_response,
+	}
 	if _combat_active:
 		# The board is up: the feed speaks for the fight (combat_screen mirrors
 		# authored text into it, which is also what puts it in Recent Messages),
@@ -581,6 +733,21 @@ func _queue_toast(text: String, record := true, housekeeping := false, protected
 		_toast_queue.insert(_authored_insert_index(), entry)
 	if not _toast_draining:
 		_drain_toasts()
+
+
+## Which queued toast may show right now: the head (plain FIFO) with no modal
+## open, otherwise the first `modal_response` entry, otherwise -1 = "nothing may
+## show, leave the queue untouched" (the lossless-queue contract -- the modal's
+## own HIDDEN event kicks the drain again).
+func _next_toast_index() -> int:
+	if _toast_queue.is_empty():
+		return -1
+	if _open_modals.is_empty():
+		return 0
+	for i in _toast_queue.size():
+		if bool((_toast_queue[i] as Dictionary).get("modal_response", false)):
+			return i
+	return -1
 
 
 ## Index of the first entry in the trailing run of housekeeping toasts (== the
@@ -615,9 +782,13 @@ func _drain_toasts() -> void:
 		# drop: `break` leaves the queue untouched (the lossless-queue contract) and
 		# the modal's own HIDDEN event kicks the drain again, so the player reads
 		# the toast the moment the panel closes.
-		if not _open_modals.is_empty():
+		# ...with ONE exemption: a `modal_response` entry (see `_queue_toast`
+		# note 4). `_next_toast_index` returns -1 when a modal is open and the
+		# queue holds no such entry, which is the original `break`.
+		var at := _next_toast_index()
+		if at < 0:
 			break
-		var entry: Dictionary = _toast_queue.pop_front()
+		var entry: Dictionary = _toast_queue.pop_at(at)
 		var text := String(entry["text"])
 		_showing_housekeeping = bool(entry.get("housekeeping", false))
 		_showing_protected = bool(entry.get("protected", false))

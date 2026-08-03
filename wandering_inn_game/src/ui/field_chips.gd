@@ -18,6 +18,16 @@ var inventory_ref: Node = null
 var _pause_chip: Control
 var _journal_chip: Control
 var _inventory_chip: Control
+## THE STALE-GATE TRAP (v0.17 close finding: chips absent in 5/30 captures with
+## no modal on screen). `WIGame.dialogue` is ASSIGNED AFTER DIALOGUE_STARTED is
+## emitted and CLEARED AFTER DIALOGUE_ENDED, so a listener reading the field
+## from inside either handler reads it INVERTED: the chips stayed lit through
+## the whole conversation and then went dark when it closed, and stayed dark
+## until some unrelated listened event re-derived -- which is exactly the
+## report's "chip-region max 53, then 255 after a pause cycle". Tracked off the
+## event PAIR instead, the `_dialogue_open`/`_conversation_open` idiom
+## field_hotbar.gd and message_layer.gd already carry for this same reason.
+var _dialogue_open := false
 
 
 func _ready() -> void:
@@ -102,6 +112,12 @@ func chip_rect(chip_name: String) -> Rect2:
 
 
 func _on_domain_event(type: String, _payload: Dictionary) -> void:
+	# Order matters: latch the pair BEFORE the re-derive below reads it.
+	match type:
+		WIEvents.DIALOGUE_STARTED:
+			_dialogue_open = true
+		WIEvents.DIALOGUE_ENDED, WIEvents.WORLD_READY, WIEvents.GAME_LOADED:
+			_dialogue_open = false
 	match type:
 		WIEvents.WORLD_READY, WIEvents.COMBAT_STARTED, WIEvents.UI_COMBAT_HIDDEN, \
 		WIEvents.TURN_STARTED, WIEvents.COMBAT_RESOLVED, WIEvents.COMBAT_FINISHED, \
@@ -120,7 +136,7 @@ func _apply_visibility() -> void:
 	# open the combat pause (keyboard cancel was the only route). Only the
 	# pause chip shows; journal/inventory stay combat-blocked.
 	var combat_resting := Game.sim.combat != null and combat_ref != null and bool(combat_ref.is_resting())
-	var hard_blocked := (Game.sim.combat != null and not combat_resting) or Game.sim.dialogue != null \
+	var hard_blocked := (Game.sim.combat != null and not combat_resting) or _dialogue_open \
 			or not Game.sim.pending_consolidation.is_empty() \
 			or (main_ref != null and bool(main_ref.veil_modal_active()))
 	visible = not hard_blocked

@@ -2662,6 +2662,102 @@ the guard, in the pre-flight tier that runs before any Godot boot.
     story progress — keeps two pinned canonicals byte-green. USER
     CONFIRM queued (morning read).
 
+<!-- v018-W4 -->
+## 2026-08-03 — v0.18 W4: the looping phase clock (#359) + three hotfix calls
+
+**Call: cycle = 2 × night_at, derived — never a third threshold.** The issue
+asked for a looping clock with day and night of equal length and dusk as the
+transition band, and left the durations to the lane. The shipped thresholds
+(`data/moods.json` `meta.phase_thresholds`, 400/900) already encode two of the
+three numbers, so the cycle takes the third by derivation rather than by
+adding a `cycle` key someone has to keep in sync:
+
+    day   [0, 400)      400   |  night [900, 1300)   400   (== day, the ask)
+    dusk  [400, 900)    500   |  dusk  [1300, 1800)  500   (dawn, same band)
+
+Alternatives rejected: (a) an explicit `cycle_at` third threshold — a fourth
+number to drift, and every existing route sized against 400/900 would have had
+to be re-derived; (b) day→dusk→night→day with no dawn band — cheaper, but the
+night→day edge would be the one hard cut in a system whose whole point is a
+graded transition; (c) shortening the bands so a waking sees several cycles —
+rejected as a balance-shaped change (encounter/presence gates ride phase), and
+balance is W5's, not this lane's.
+
+**Consequence, deliberately taken: the first waking is byte-identical.** Every
+crossing below 1300 reads exactly what it read before the loop, so
+day-identity determinism holds, `atmosphere_check`'s 400/900 route is
+unchanged, and — the thing the brief expected to cost a re-base — **no fixture
+needed re-basing at all**: the highest shipped pin is 1000, which is still
+inside night's own window. `player_room_night`'s 901 included.
+
+**`once_per_waking` untouched, and now pinned as untouched.** It keys on SLEEP
+and never reads `phase()`; the new leg asserts `times_slept == 0` at the moment
+a new day opens without one.
+
+**Degenerate configs keep the old monotone read** rather than dividing into a
+zero-length night, and `scripts/data_lint.py` (`check_moods`) now rejects
+`0 < dusk < night` violations in shipped data, so the fallback can never be
+what ships.
+
+Three further calls in the same wave, all on v0.17-close findings:
+
+1. **Journal passive-refusal gets a toast, via a new `modal_response`
+   exemption** — the one class of toast allowed to render over an open modal.
+   Alternatives: an in-panel notice line (invisible when the cursor is
+   scrolled away from the header) or a row flash (no animation infra). The
+   modal pause exists to stop a 3-line toast reaching a journal body row; a
+   one-line direct answer to a keypress is scoped out of it explicitly.
+2. **The field legend clears the toast band STATICALLY, not by yielding.** The
+   finding offered either. Yielding live would move the panel under a reader,
+   which is the same jitter `field_hotbar.gd`'s own DIALOGUE ruling refuses.
+   Residual logged rather than hidden: a 3-line toast still tops out above the
+   reserved band, and the controls row can still reach the strip at 3+ slots.
+3. **Creation cards keep NO name label.** The tint-is-not-disambiguation fix
+   wanted a caret, border, weight *or* label; `PC_OPTIONS`' own constraint
+   block bars race/gender text on that step (playtest hotfix #3), so the fix
+   is the caret and the constraint stands.
+
+**Call, taken at fix-wave review: the sleep signal becomes an explicit flag,
+not an inference from the phase value.** The looping clock quietly voided a
+contract `sleep_veil.gd` states verbatim in its own header — "a dusk/night
+threshold crossing during the day emits phase_changed with phase 'dusk'/'night'
+and never 'day' … so `phase_changed{phase:"day"}` is a precise, sim-change-free
+sleep signal". With the wrap, `_tick_action` emits day at action 2×night_at
+(1800 shipped). Cost, reproduced live: a full 0.6s-fade blackout mid-field on
+the 1800th un-slept action with the HUD suppressed for its duration, and — for
+any player holding `seal_resolved` but not yet slept — `_play_finale_off_the_bed`
+spending the game's ONE ending cinematic at an arbitrary field step, banking
+`finale_played` so the bed could never deliver it.
+
+`sleep()` now emits `{"phase": phase(), "slept": true}` and the veil keys on
+`slept`. Alternatives rejected: (a) key the veil on `actions_since_sleep == 0`
+— correct today and touches one file, but it re-derives a fact from state
+instead of receiving it, the same shape of inference that just broke;
+(b) a separate `slept` event — a new type for a fact the existing event already
+carries, and every consumer's ordering contract (the veil buffers the
+class/skill announcements that fire SYNCHRONOUSLY after this emit) would have
+had to be re-established; (c) suppress the wrap's day emit — breaks
+`world.gd`'s presence reconciler and `atmosphere.gd`'s grade, which genuinely
+need it. The chosen key is ADDITIVE, so every `phase` reader and every QA
+`payload_contains` subset match is untouched by construction.
+
+**Standing rule this leaves behind:** never re-derive "the player slept" from
+a phase value. It is written into `phase_for`'s doc block, into `sleep()`'s
+emit and into `sleep_veil.gd`'s TRIGGER paragraph, and pinned in
+`test_sim_core` off a real walk over a real wrap.
+
+**Second fix-wave call: the hint ribbon's horizontal inset is the ART's patch
+margin, not a content margin.** The derived width padded by 14px while the
+strip is a 9-patch whose end caps are 20px, so the moment the natural width
+beat the 400px floor (130% text scale) the string sat 6px inside the ornament —
+and `fits` could not see it, because `fits` compared the text against a width
+that had been derived from the same 14. Both halves are now the patch margin
+(+3px breathing room, the horizontal twin of `HINT_PAPER_BOTTOM_PAD`), and
+`fits` reads the margins the container was ACTUALLY given and checks them
+against the art-safe band — so it is falsifiable. Mutation-proven: forcing the
+inset back to 14 fails `settings_loop` headlessly. The old `HINT_MARGIN_X`/`_Y`
+constants are deleted rather than left beside the correct one; a
+plausible-looking wrong number within reach is what produced the bug.
 <!-- v018-W5 -->
 ## 2026-08-03 — v0.18 W5 (balance lane): #360 first reads, rung-4, Wave-D audit
 

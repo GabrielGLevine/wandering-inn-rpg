@@ -12,6 +12,10 @@ extends CanvasLayer
 ## since combat and a real conversation never overlap (combat_screen ends
 ## any open dialogue first) but both independently want this layer hidden.
 const HOTBAR_SCRIPT := preload("res://src/ui/hotbar.gd")
+## Read, never copied: the toast strip's own geometry decides how much bottom
+## band this layer may not enter (see TOAST_BAND_RESERVE), and a duplicated
+## number here would drift the first time that panel is retuned.
+const MESSAGE_LAYER_SCRIPT := preload("res://src/ui/message_layer.gd")
 
 signal slot_activate_requested(slot: int)
 
@@ -25,6 +29,20 @@ const READOUT_SCROLLBAR_RESERVE := 14.0
 const CONTROLS_BOTTOM_MARGIN := 10.0
 const READOUT_GAP := 8.0
 const READOUT_SELECTION_CLEARANCE := 34.0
+## THE TOAST BAND. The toast strip is bottom-RIGHT anchored and draws on a
+## higher CanvasLayer (12) than this one, so where the two rects met, the toast
+## simply painted over the legend -- slot lines stopped dead at the toast
+## plate's left edge mid-word ("...until even a careful eye find") while the
+## authored text was whole and the legend plate had room. Z-order, never
+## wrapping, so no copy fix could reach it. The readout's bottom now stays
+## clear of the band the strip reserves for itself at its BASE height; the
+## legend sits a couple of dozen px higher and nothing is overdrawn. STATIC on
+## purpose: yielding live to each toast would make the panel jump under a
+## reader, which is the same jitter the DIALOGUE ruling above refuses.
+## RESIDUAL, logged not hidden: a 3-line toast tops out above this band, and
+## the controls row can still reach the strip's own footprint at 3+ slots.
+const TOAST_BAND_RESERVE := \
+	-MESSAGE_LAYER_SCRIPT.TOAST_BOTTOM_DEFAULT + MESSAGE_LAYER_SCRIPT.TOAST_PANEL_BASE_SIZE.y
 
 var _hotbar: WIHotbar
 var _root: Control
@@ -364,6 +382,7 @@ func _layout_controls() -> void:
 	var content_height := _readout_content_height(text_width)
 	var desired_height := content_height + frame_size.y
 	var reserved_bottom := maxf(_hotbar.size.y, TOGGLE_SIZE.y) + CONTROLS_BOTTOM_MARGIN + READOUT_GAP + READOUT_SELECTION_CLEARANCE
+	reserved_bottom = maxf(reserved_bottom, TOAST_BAND_RESERVE + READOUT_GAP)
 	var rect := WIFieldHotbarLayout.readout_rect(safe, READOUT_MAX_WIDTH, desired_height, reserved_bottom)
 	_readout_panel.position = rect.position
 	_readout_panel.size = rect.size

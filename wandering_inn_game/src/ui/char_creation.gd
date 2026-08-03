@@ -73,6 +73,15 @@ const STEP_PROMPT := {
 ## the same pass rather than only widening the furniture.
 const CHOICE_ROW_SIZE := Vector2(620.0, 44.0)
 const CHOICE_ROW_GAP := 10
+## Selection caret placement, card- and row-local: just inside the 9-slice's
+## own left border, the half-height being the glyph's vertical centring nudge.
+## The card caret draws at Title weight -- a 300x236 card against a near-black
+## backdrop swallows a body-sized glyph, and this mark is the ONLY thing
+## distinguishing the chosen card now that the texture swap alone is ruled out.
+const CARD_CARET_INSET_X := 10.0
+const CARD_CARET_HALF_H := 26.0
+const ROW_CARET_INSET_X := 14.0
+const ROW_CARET_HALF_H := 13.0
 const DIFFICULTY_BLURBS := {
 	"Bronze": "a gentler road",
 	"Silver": "the road as it was cut",
@@ -94,6 +103,14 @@ var _prompt_label: Label
 var _hint_label: Label
 var _grid_anchor: Control
 var _cards: Array[Control] = []
+## TINT IS NOT DISAMBIGUATION (user directive 2026-08-02, and it binds UI, not
+## only sprites): selection used to be a texture swap alone -- the chosen card
+## and row were desaturated copies of the same teal ribbon, against a
+## near-black backdrop where three teal ribbons already read alike. These
+## carets are the SHAPE half, and the project already speaks in them
+## (pause_menu/settings_panel's own "> " row mark). Deliberately NOT a name
+## label: PC_OPTIONS' own constraint block bars race/gender text on this step.
+var _card_carets: Array[Label] = []
 var _portraits: Array[AnimatedSprite2D] = []
 var _name_edit: LineEdit
 var _begin_button: Control
@@ -105,6 +122,7 @@ var _begin_button: Control
 var _choice_anchor: Control
 var _choice_rows: Array[Control] = []
 var _choice_labels: Array[Label] = []
+var _choice_carets: Array[Label] = []
 var _choice_cursor := 0
 var _difficulty_step := 0
 var _quest_hints := true
@@ -248,6 +266,11 @@ func _build_picker_grid() -> void:
 		portrait.play("idle_down")
 		card.add_child(portrait)
 		_portraits.append(portrait)
+		var caret := UIChrome.make_label("▶", "Title")
+		caret.position = Vector2(CARD_CARET_INSET_X, CARD_SIZE.y * 0.5 - CARD_CARET_HALF_H)
+		caret.visible = false
+		card.add_child(caret)
+		_card_carets.append(caret)
 		_cards.append(card)
 
 
@@ -283,8 +306,13 @@ func _build_choice_list() -> void:
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.set_anchors_preset(Control.PRESET_FULL_RECT)
 		row.add_child(label)
+		var caret := UIChrome.make_label("▶", "Menu")
+		caret.position = Vector2(ROW_CARET_INSET_X, CHOICE_ROW_SIZE.y * 0.5 - ROW_CARET_HALF_H)
+		caret.visible = false
+		row.add_child(caret)
 		_choice_rows.append(row)
 		_choice_labels.append(label)
+		_choice_carets.append(caret)
 
 
 ## `[{label, blurb}]` for the ACTIVE setup step, empty off those steps. One
@@ -323,6 +351,7 @@ func _render_step() -> void:
 			var option := options[i] as Dictionary
 			_choice_labels[i].text = "%s — %s" % [String(option["label"]), String(option["blurb"])]
 			UIChrome.set_patch_texture(_choice_rows[i].get_child(0) as NinePatchRect, UIChrome.BLUE_BUTTON_PRESSED if i == _choice_cursor else UIChrome.BLUE_BUTTON)
+			_choice_carets[i].visible = i == _choice_cursor
 		# Issue #346: say it is not a one-way door. A setup prompt a player
 		# meets once and cannot find again is worse than no prompt.
 		_hint_label.text = "Arrows to choose  •  %s to confirm  •  %s to go back  •  change it any time in Settings" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
@@ -346,6 +375,7 @@ func _refresh_card(i: int) -> void:
 	for child: Node in card.get_children():
 		if child is NinePatchRect:
 			UIChrome.set_patch_texture(child as NinePatchRect, UIChrome.BLUE_BUTTON_PRESSED if selected else UIChrome.BLUE_BUTTON)
+	_card_carets[i].visible = selected
 
 
 func _step_name() -> String:

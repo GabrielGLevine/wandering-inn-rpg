@@ -8,6 +8,7 @@ func _init() -> void:
 	var src := FileAccess.get_file_as_string(SLEEP_VEIL_PATH)
 	assert(not src.is_empty(), "sleep_veil.gd must exist")
 
+	_check_trigger_is_the_slept_flag(src)
 	_check_guard_flag_lifecycle(src)
 	_check_run_sequence_branches(src)
 	_check_input_gate_widened(src)
@@ -18,6 +19,27 @@ func _init() -> void:
 
 	print("PASS: sleep_veil.gd's plain-sleep skip, consolidation guard, and seal_resolved finale are wired")
 	quit(0)
+
+
+## THE DRIFT TRIPWIRE for #359's cost. `_tick_action` emits
+## phase_changed{phase:"day"} at every cycle wrap, so keying the veil on the
+## phase VALUE raises a mid-field blackout on the 1800th un-slept action and
+## spends the one-shot finale there. test_sim_core pins the EMIT side (sleep()
+## carries `slept`, a wrap does not); this pins the READ side, which no
+## behavioural test can reach without a live veil.
+func _check_trigger_is_the_slept_flag(src: String) -> void:
+	var phase_arm := src.get_slice("WIEvents.PHASE_CHANGED:", 1).get_slice("WIEvents.CLASS_GAINED:", 0)
+	# Comments in this arm NAME the trap ("a cycle wrap emits phase \"day\"..."),
+	# so the value check has to run on code lines only or it trips on its own
+	# documentation.
+	var code := ""
+	for line: String in phase_arm.split("\n"):
+		if not line.strip_edges().begins_with("#"):
+			code += line + "\n"
+	assert(code.find("payload.get(\"slept\"") != -1,
+		"the PHASE_CHANGED arm must trigger off the `slept` flag")
+	assert(code.find("\"day\"") == -1,
+		"the PHASE_CHANGED arm must NOT read the phase value -- a cycle wrap emits day with no sleep behind it")
 
 
 func _check_guard_flag_lifecycle(src: String) -> void:

@@ -730,6 +730,575 @@
    }
   },
   {
+   "_comment": "== #359 THE LOOP, walked. Before this the clock was MONOTONE per waking -- night was terminal and a long waking simply sat in it until the player slept. It wraps now: cycle = 2*night_at (1800 at the shipped 400/900), day and night both dusk_at long (400), and the dusk band (500) is the transition on BOTH sides -- evening above, dawn below. Everything from here to the sleep leg is walked for real on the same clear y=3 row the dusk/night crossings used, with actions_since_sleep pinned at every edge, so a threshold retune fails this loudly instead of silently sitting in night. Clock reads 913 here (the presence-flip leg's own move landed it there); teleport back to the row's west end -- a teleport never ticks the clock.",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "actions_since_sleep",
+   "equals": 913
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "night"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "_comment": "913 + 380 = 1293, seven short of the dawn edge at night_at + dusk_at = 1300. Night is EXACTLY as long as day (400 actions, 900..1299) -- that equality is the issue's own ask.",
+   "action": "assert_state",
+   "path": "actions_since_sleep",
+   "equals": 1293
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "night"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 7
+  },
+  {
+   "_comment": "The 1300th action is the dawn crossing: night ends, the SAME dusk band the evening used takes over.",
+   "action": "assert_state",
+   "path": "actions_since_sleep",
+   "equals": 1300
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "dusk"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "dusk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "inn",
+    "phase": "dusk"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "And the consumers came with it: hungry_patron's present_when{phase:[day,dusk]} is met again at dawn WITHOUT a sleep, so world.gd's PHASE_CHANGED reconciler rebuilds him on the same map (17 -> 18 sprites, the night half's own count reversed).",
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 18,
+    "fallbacks": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01d_dawn_dusk"
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 7
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "actions_since_sleep",
+   "equals": 1787
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "dusk"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 10
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 3
+  },
+  {
+   "_comment": "1800 = 2 * night_at = the cycle. A new day opens with NO sleep -- the whole point of #359. once_per_waking is untouched by this (it keys on SLEEP, never on phase), and `times_slept` is still 0 at this line.",
+   "action": "assert_state",
+   "path": "actions_since_sleep",
+   "equals": 1800
+  },
+  {
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "day"
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 0
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_mood_applied",
+   "payload_contains": {
+    "map": "inn",
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01e_wrapped_to_day"
+  },
+  {
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the specific bed is incidental to this test -- the subject is the unconditional actions_since_sleep reset to 0 + phase_changed firing even day->day (M7 doc comment). Then interact triggers sleep(), and a return teleport to the inn re-renders the inn's own day mood grade so the ui_mood_applied{map:inn,phase:day} wait below still observes it.",
    "action": "teleport",
    "map": "inn_upstairs",

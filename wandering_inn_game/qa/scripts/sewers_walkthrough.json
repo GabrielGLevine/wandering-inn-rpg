@@ -133,11 +133,12 @@
    }
   },
   {
+   "_comment": "v0.18 W4 hotfix: 2 -> 5. The two entity lights (sewer_exit's shaft, phosphor_moss) both sat in the north strip, so everything from the middle channel south had no source at all and the grade alone decided the read -- 21 mean / 93% of the world band under lum 20, a black screen. Three decor mosses carry a phosphor light now; LIGHT_BUDGET 8, and the PC's own [Light] cast below makes 6.",
    "action": "assert_event_logged",
    "type": "ui_lights_rendered",
    "payload_contains": {
     "map": "sewers",
-    "count": 2
+    "count": 5
    }
   },
   {

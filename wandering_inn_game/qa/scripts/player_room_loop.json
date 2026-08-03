@@ -546,6 +546,25 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "v0.18 W4 hotfix: THE HUD-CHIP GATE, proved AFTER a conversation. The chips were absent in 5/30 captures of the v0.17 close playtest with no modal on screen, this arrival among them -- field_chips.gd read `WIGame.dialogue` from inside its own DIALOGUE_STARTED/ENDED handlers, and the sim assigns that field AFTER the started emit and clears it AFTER the ended emit, so the gate latched INVERTED and stayed that way until an unrelated event re-derived. `click_field_chip` fails loud on a zero rect, which makes this the can-fail proof: the room-ledger conversation is behind us, the chip must be live, and its own toggle pair must fire.",
+   "action": "click_field_chip",
+   "chip": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_field_chip",
+   "chip": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_hidden",
+   "timeout_sec": 5
+  },
+  {
    "action": "screenshot",
    "name": "03_room_day"
   },
