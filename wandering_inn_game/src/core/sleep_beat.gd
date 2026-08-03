@@ -56,6 +56,7 @@ func run(classes: Dictionary, accomplishments: Dictionary, combat_config: Dictio
 		anything_happened = true
 		_emit(WIEvents.CLASS_GAINED, {"class": class_id})
 		_emit(WIEvents.TOAST, {"text": _class_gained_toast(class_id, combat_config)})
+	_log_system_bestowal_candidate(classes, accomplishments)
 	var gains := WIProgression.check_level_ups(classes, accomplishments, combat_config["classes"])
 	if not gains.is_empty():
 		anything_happened = true
@@ -182,6 +183,21 @@ func run(classes: Dictionary, accomplishments: Dictionary, combat_config: Dictio
 
 	if not anything_happened:
 		_emit(WIEvents.TOAST, {"text": "You sleep soundly."})
+
+
+## v018-W2, issue #347 PROTOTYPE. Placement is the spec's own (§3.2): between
+## the class-gains block and the level-ups block, so the eventual REAL bestowal
+## step drops in exactly here and inherits the retroactive level chain. This
+## wave it only LOGS -- flag off (the default, and every shipped run) it does
+## not even read the table, and with the flag on it still grants nothing, banks
+## nothing, and leaves `anything_happened` alone, so the "You sleep soundly."
+## fallback and every downstream beat behave identically in both modes. The
+## payload is the whole point: which rule, which counters, and why not.
+func _log_system_bestowal_candidate(classes: Dictionary, accomplishments: Dictionary) -> void:
+	if not WISystemBestowal.log_enabled():
+		return
+	_emit(WIEvents.SYSTEM_BESTOWAL_CANDIDATE, WISystemBestowal.evaluate(
+		WISystemBestowal.rules(), classes, accomplishments))
 
 
 func _maybe_fire_tremor_pointer() -> bool:
