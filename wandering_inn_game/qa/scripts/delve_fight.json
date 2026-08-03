@@ -55,7 +55,7 @@
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "horns_party_formed" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "what_the_seal_kept" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "text": "All right. Three of us, one of you. Try to keep up." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "text": "All right. Four of us on the roster, three of us actually walking in — Pisces bills from a distance. Try to keep up." }, "timeout_sec": 5 },
   { "action": "press", "name": "confirm" },
   { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
   { "action": "screenshot", "name": "02_party_formed" },
