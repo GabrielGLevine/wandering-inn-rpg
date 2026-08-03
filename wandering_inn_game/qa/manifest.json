@@ -576,7 +576,8 @@
      "near_evolution"
     ],
     "skills": [
-     "basic_cleaning"
+     "basic_cleaning",
+     "power_strike"
     ],
     "dialogue": [
      "goblin_parley",
@@ -1292,6 +1293,34 @@
      "combat",
      "exploration",
      "night_phase"
+    ]
+   }
+  },
+  {
+   "script": "property_seams",
+   "seed": 9,
+   "fixture": "sewers_property_seams",
+   "note": "#348 property table: freeze_cell (ice floor on water, walked onto) + remove_scorch (debris) + a null cell (untagged prop refused)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "sewers"
+    ],
+    "fixtures": [
+     "sewers_property_seams"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_touch",
+     "kindle",
+     "light"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
     ]
    }
   },
@@ -5861,6 +5890,112 @@
      "input",
      "night_phase",
      "save"
+    ]
+   }
+  },
+  {
+   "script": "invrisil_house_name_talk",
+   "seed": 9,
+   "fixture": "invrisil_house_name_talk_start",
+   "note": "v0.18 W3 (#318) 'The Name and the Habit', the TALK route: the PRE-QUEST scribe (his counter at TWO rows -- the three banking arms hide until the card is shown), the Lady's hub with I1 already closed (its option array pinned whole -- the proof five new rows moved nothing shipped), the boulevard carriage wake (Magnolia felt, never seen), the scribe's FREE ask refused then his [Charming Smile] chain, the broker's persuade banking block_handed_over with the ledger flat at 25, the steward's report, the journal's Completed list pinned whole, and the Lady's coda. OWNS three negative pins its siblings cannot: [Appraise Foe] and [Stealth] LOCKED, and the 30-gold buy LOCKED at 25 gold. Zero combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "invrisil_boulevard",
+     "mercantile_alleys",
+     "stationer"
+    ],
+    "fixtures": [
+     "invrisil_house_name_talk_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "charming_smile"
+    ],
+    "dialogue": [
+     "invrisil_hired_scribe",
+     "invrisil_house_steward",
+     "invrisil_seal_broker",
+     "invrisil_stationer_client"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "invrisil_house_name_skill",
+   "seed": 9,
+   "fixture": "invrisil_house_name_skill_start",
+   "note": "v0.18 W3 (#318) the SKILL route, the mirror ledger: [Appraise Foe] reads the scribe's blotter and [Stealth] lifts the block off the broker's table (the game's first [Stealth]-gated dialogue option), with BOTH persuade arms rendered VISIBLE-LOCKED. Also owns the shared-settle re-entry pin -- all four fork rows retire together off seal_block_settled and his settled variant is what a returning player gets. Zero combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "mercantile_alleys",
+     "stationer"
+    ],
+    "fixtures": [
+     "invrisil_house_name_skill_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe",
+     "sneak"
+    ],
+    "dialogue": [
+     "invrisil_hired_scribe",
+     "invrisil_house_steward",
+     "invrisil_seal_broker",
+     "invrisil_stationer_client"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "script": "invrisil_house_name_fight",
+   "seed": 9,
+   "fixture": "invrisil_house_name_fight_start",
+   "note": "v0.18 W3 (#318) the FIGHT route, and the thread's only coin spend: neither Skill held, so beat 1 goes through the 8-gold alternate (25 -> 17 on the ledger) and beat 2 through broker_hands, which composes the SHIPPED mercantile_alley arena with the SHIPPED footpad pair (alley_footpads_t3_warrior10_solo, no new balance cell). BAND FIXTURE at 10, DAY for arena legibility, on_victory in its ARRAY form, then the broker's beaten register and the loud report",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "adventurers_rest",
+     "mercantile_alleys",
+     "stationer"
+    ],
+    "fixtures": [
+     "invrisil_house_name_fight_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "invrisil_hired_scribe",
+     "invrisil_house_steward",
+     "invrisil_seal_broker",
+     "invrisil_stationer_client"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
     ]
    }
   }

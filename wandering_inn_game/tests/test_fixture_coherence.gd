@@ -38,6 +38,15 @@ const COMBAT_BAND_FIXTURES := {
 	# 2026-07-26 Act V: the seal warden's own tuned band (spellsword14, the
 	# t4_spellsword14_party reference build sim_combat_batch gates the fight at).
 	"seal_open_start": 14,
+	# --- v018-W3 (#318) --- APPEND-ONLY LANE ANCHOR. This const is shared and
+	# this lane does not own this file, so the row sits at the TAIL under its own
+	# marker rather than beside the v0.16 Invrisil pair: a sibling appending in
+	# the same wave then conflicts on nothing, and no shipped row moved. Dict
+	# order is not read by the validator, so tail placement costs nothing.
+	# The nobility thread's fight route rides the SAME geared warrior-10
+	# reference build as that v0.16 pair, against the shipped footpad pair the
+	# alley_footpads_t3_warrior10_solo cell already measures -- no new cell.
+	"invrisil_house_name_fight_start": 10,
 }
 
 const MAP_REQUIRES := {

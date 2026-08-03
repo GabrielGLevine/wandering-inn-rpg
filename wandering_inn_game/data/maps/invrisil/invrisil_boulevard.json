@@ -1515,6 +1515,25 @@
     6,
     7
    ]
+  },
+  {
+   "_comment": "#318 the world event, felt-not-seen: the carriage is gone and only the street's reaction is on screen. Facade row prop, the boulevard_glazier idiom (hide_sprite, bumped from the row below).",
+   "id": "boulevard_carriage_wake",
+   "kind": "prop",
+   "cell": [
+    11,
+    1
+   ],
+   "display_name": "The Street, Suddenly Quiet",
+   "hide_sprite": true,
+   "present_when": {
+    "requires": {
+     "house_card_shown": 1
+    }
+   },
+   "observe": "Every front on this stretch has stopped pretending to be busy. A wheel-track runs through the wet marble, wider than a trade wagon lays and far too clean, and it is already curving away three streets north.",
+   "on_interact_accomplishment": "carriage_passed",
+   "toast": "Pink lacquer, gone before you turned your head. The boulevard takes a moment to remember it was doing something, and nobody on it says the name out loud."
   }
  ],
  "cover_skip": [

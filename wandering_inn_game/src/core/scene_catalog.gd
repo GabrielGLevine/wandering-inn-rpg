@@ -3,6 +3,11 @@ extends RefCounted
 
 const MAPS_DIR := "res://data/maps"
 const ROOT_PATH := "res://data/scene_root.json"
+## #348 slice 1: the property-interaction table composes into scene_config
+## beside the maps, so every WIGame built from compose() is handed it with no
+## new constructor parameter (WIGame reads scene_config.interactions and
+## injects it into WIFieldSkills -- core itself never touches disk).
+const INTERACTIONS_PATH := "res://data/interactions.json"
 
 static var _cache: Dictionary = {}
 
@@ -25,6 +30,7 @@ static func _compose() -> Dictionary:
 		assert(not maps.has(map_id), "duplicate map key '%s' (%s)" % [map_id, path])
 		maps[map_id] = _read_json(path)
 	root["maps"] = maps
+	root["interactions"] = _read_json(INTERACTIONS_PATH)
 	return root
 
 

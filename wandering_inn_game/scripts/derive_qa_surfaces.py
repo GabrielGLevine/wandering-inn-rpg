@@ -290,6 +290,9 @@ MONOLITH_SYSTEMS: dict[str, set[str]] = {
 	"audio.json": {"audio"},
 	"items.json": {"economy"},
 	"fence_stock.json": {"economy"},
+	# #348: the property table resolves inside field-skill dispatch, so a row
+	# or vocabulary edit crosses every canonical that casts in the field.
+	"interactions.json": {"exploration"},
 }
 ALL_SKILLS_FALLBACK = ("skills.json", "classes.json", "progression.json")
 

@@ -1,0 +1,154 @@
+{
+ "_comment": "#318 beat 1. Rides the SHIPPED stationer_clerk, so his bark serves first and the graph opens on the second interact (Hedault's idiom). THE QUEST GATE LIVES ON THE OPTIONS, not the entity: the engine has no `conversation_when`, so an attached `conversation` is unconditional. All three real-cost arms therefore require house_card_shown as well as their own cost, and accomplishment gates HIDE, so pre-quest he shows only his refusal and his exit (spec section 4, fix round 1). The free ask is a signposting line: it banks nothing and loops back. Each banking arm hides on forged_hand_named.",
+ "start": "counter",
+ "nodes": {
+  "counter": {
+   "speaker": "A Scribe by the Hour",
+   "text": "The blank seal is eight gold the hour and it goes back in the tray when the hour is up. That is the entire arrangement, {addr}, and I have never been asked a second question about it.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "forged_hand_named": 1
+      }
+     },
+     "text": "You have what you came for and I have said nothing, which is the version I intend to remember. Paper is over there. Ink is behind me."
+    }
+   ],
+   "options": [
+    {
+     "text": "\"Who has been hiring the blank seal?\"",
+     "goto": "refuses"
+    },
+    {
+     "text": "[Charming Smile] Ask about the handwriting instead of the name.",
+     "requires": {
+      "accomplishment": {
+       "house_card_shown": 1
+      },
+      "skill": "charming_smile"
+     },
+     "hide_when": {
+      "accomplishment": {
+       "forged_hand_named": 1
+      }
+     },
+     "goto": "persuade_pitch"
+    },
+    {
+     "_comment": "The spend rides the GATE option, not the node behind it, so _is_priced_purchase fires and the row renders its price token.",
+     "text": "\"I'll buy the hour you were not working.\"",
+     "requires": {
+      "accomplishment": {
+       "house_card_shown": 1
+      },
+      "gold": 8
+     },
+     "hide_when": {
+      "accomplishment": {
+       "forged_hand_named": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -8
+      },
+      {
+       "accomplishment": "forged_hand_named"
+      }
+     ],
+     "goto": "paid"
+    },
+    {
+     "text": "[Appraise Foe] The blotter under his elbow.",
+     "requires": {
+      "accomplishment": {
+       "house_card_shown": 1
+      },
+      "skill": "observe"
+     },
+     "hide_when": {
+      "accomplishment": {
+       "forged_hand_named": 1
+      }
+     },
+     "goto": "blotter"
+    },
+    {
+     "text": "\"Nothing today.\"",
+     "end": true
+    }
+   ]
+  },
+  "refuses": {
+   "speaker": "A Scribe by the Hour",
+   "text": "No. Not for coin, not for a kind face, and not because the asking was polite. The whole trade is that nobody who uses me ever finds out I was used. The day that stops being true I am a man with very good handwriting and no work at all.",
+   "options": [
+    {
+     "text": "\"Fair enough.\"",
+     "goto": "counter"
+    }
+   ]
+  },
+  "persuade_pitch": {
+   "speaker": "A Scribe by the Hour",
+   "text": "Handwriting. Well. Handwriting is not a name, so I suppose I can be charmed about handwriting. Go on and be charming. It is usually about paper.",
+   "options": [
+    {
+     "text": "\"It's about somebody wearing a house's initials by the hour.\"",
+     "goto": "persuade_close"
+    }
+   ]
+  },
+  "persuade_close": {
+   "speaker": "A Scribe by the Hour",
+   "text": "Then I am not keeping a client's confidence. I am keeping a renter's, and he did not tell me what he was renting. He works a table at the west end of the alleys, past the tea. He pays in coin and he pays late, which is the whole of what I know about what he is.",
+   "options": [
+    {
+     "text": "\"That will do.\"",
+     "effects": [
+      {
+       "accomplishment": "forged_hand_named"
+      }
+     ],
+     "end": true
+    }
+   ]
+  },
+  "paid": {
+   "speaker": "A Scribe by the Hour",
+   "text": "That buys the hour. It does not buy an answer, and you will notice I am not giving you one. I did not see who I wrote for. I did see the seal come back to the tray with alley grit still in the cut, and there is exactly one man west of the tea who works out of an alley and can afford this shop.",
+   "options": [
+    {
+     "text": "\"That's an answer.\"",
+     "end": true
+    }
+   ]
+  },
+  "blotter": {
+   "speaker": "A Scribe by the Hour",
+   "text": "You are looking at my blotter. People do not look at my blotter.",
+   "options": [
+    {
+     "text": "\"Your blotter keeps everything backwards. Including a set of initials that isn't yours to press.\"",
+     "effects": [
+      {
+       "accomplishment": "forged_hand_named"
+      }
+     ],
+     "goto": "blotter_read"
+    }
+   ]
+  },
+  "blotter_read": {
+   "speaker": "A Scribe by the Hour",
+   "text": "It is a blotter. It blots. If a man reads it and walks west past the tea and finds a table there, that is a thing a man did, and it is not a thing I told him. Do me the courtesy of remembering it that way.",
+   "options": [
+    {
+     "text": "\"You never said a word.\"",
+     "end": true
+    }
+   ]
+  }
+ }
+}

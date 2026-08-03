@@ -1,0 +1,135 @@
+{
+ "_comment": "#318 beat 3. ORIGINAL UNNAMED ARCHETYPE, never Ressa and never Reynold, and she never names her mistress -- the felt/seen rule (spec section 2). FOUR report arms, one per route counter (bought / handed over / lifted / taken), converge on `answered`, which carries the ONLY grant so the pay cannot double-fire. Exactly one is visible.",
+ "start": "waiting",
+ "nodes": {
+  "waiting": {
+   "speaker": "A Woman Who Came in a Carriage",
+   "text": "Sit if you like. I am not waiting for you and I am not waiting for the house. I am waiting for a question to be answered, and I would rather do that in a warm room than in a cold one.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "seal_block_settled": 1
+      }
+     },
+     "text": "You have something in your coat that is the wrong shape for a coat. Take the chair. Nobody in this house has ever once looked at what is on the table."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "house_answer_given": 1
+      }
+     },
+     "text": "The card was answered, in her own hand, which was the answer. My mistress asked only whether the name was being sold or taken. It was being sold. That is a different letter to write and she has written it."
+    }
+   ],
+   "options": [
+    {
+     "text": "\"You bought the block off him.\"",
+     "requires": {
+      "accomplishment": {
+       "block_bought_back": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "house_answer_given": 1
+      }
+     },
+     "goto": "answered"
+    },
+    {
+     "_comment": "The SOCIAL rung: he gave it up and asked to have it called destroyed; this player declined to.",
+     "text": "\"He handed it over himself. He wanted it called destroyed. It isn't.\"",
+     "requires": {
+      "accomplishment": {
+       "block_handed_over": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "house_answer_given": 1
+      }
+     },
+     "goto": "answered"
+    },
+    {
+     "text": "\"He never noticed it leave the table.\"",
+     "requires": {
+      "accomplishment": {
+       "block_lifted": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "house_answer_given": 1
+      }
+     },
+     "goto": "answered"
+    },
+    {
+     "text": "\"He had two men. He has neither, and I have the block.\"",
+     "requires": {
+      "accomplishment": {
+       "block_taken": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "house_answer_given": 1
+      }
+     },
+     "goto": "answered"
+    },
+    {
+     "text": "\"Who sent you?\"",
+     "goto": "who"
+    },
+    {
+     "text": "\"Enjoy the room.\"",
+     "end": true
+    }
+   ]
+  },
+  "who": {
+   "speaker": "A Woman Who Came in a Carriage",
+   "text": "A house sent me. You have been in this city long enough to know there is only one answer to that question worth giving and that nobody here gives it. I take a card out and I bring an answer back, and between those two things I sit somewhere warm and I am extremely dull.",
+   "options": [
+    {
+     "text": "\"Dull is a whole profession here.\"",
+     "goto": "waiting"
+    }
+   ]
+  },
+  "answered": {
+   "speaker": "A Woman Who Came in a Carriage",
+   "text": "Good. Then the name was being sold, not taken, and the lady kept enough of it to be worth the theft. That will go back exactly as you said it and not one word further. She is paid for her trouble and you are paid for yours, and neither of those is a favour. My mistress does not do favours. She does accounts, and she settles them the same week.",
+   "options": [
+    {
+     "text": "\"Then we're square.\"",
+     "hide_when": {
+      "accomplishment": {
+       "house_answer_given": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "house_answer_given"
+      },
+      {
+       "gold": 30
+      },
+      {
+       "toast": "Thirty gold, counted out flat on the table with no purse and no flourish, by a woman who has plainly never once had to check the count."
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "\"Give me a moment with it.\"",
+     "end": true
+    }
+   ]
+  }
+ }
+}

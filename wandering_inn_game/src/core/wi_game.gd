@@ -103,7 +103,10 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	_run_seed = rng_seed
 	_economy = WIEconomy.new(sink, pickup, _set_gold)
 	_social = WISocial.new(sink, accomplishment_count, record_accomplishment, find_entity)
-	_field_skills = WIFieldSkills.new(sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _toggle_light, _blink_field, _ward_field, _animate_field, _door_openable)
+	# #348 slice 1: the property table rides scene_config (WISceneCatalog composes
+	# data/interactions.json into it) -- INJECTED, never read from disk here, so
+	# core stays pure and a hand-built scene_config can run with no table at all.
+	_field_skills = WIFieldSkills.new(sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _toggle_light, _blink_field, _ward_field, _animate_field, _door_openable, scene_config.get("interactions", {}))
 	_interactions = WIInteractions.new(sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup, _has_required_items)
 	_sleep_beat = WISleepBeat.new(sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _enriched_offer, _set_pending_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
 	_banking = WICombatBanking.new(sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity, (combat_config.get("progression", {}) as Dictionary).get("challenge", {}), combat_config.get("classes", {}), (combat_config.get("combatants", {}) as Dictionary).get("combatants", []))
@@ -274,6 +277,14 @@ func is_cell_blocked(cell: Vector2i) -> bool:
 
 func _is_freezable(cell: Vector2i) -> bool:
 	return (_maps.get(current_map, {}).get("freezable", {}) as Dictionary).has(cell)
+
+
+## #348 slice 1: the CELL-placement half of the property table's target
+## vocabulary (the entity half is read straight off the faced entity's flags).
+## `freezable` is the one shipped cell class; a new one is a new key here AND
+## in the map loader above (which also decides whether it blocks).
+func _cell_properties(cell: Vector2i) -> Dictionary:
+	return {"freezable": _is_freezable(cell)}
 
 
 func _is_frozen(cell: Vector2i) -> bool:
@@ -578,8 +589,7 @@ func use_skill_field(skill_id: String) -> Dictionary:
 		target = target.duplicate(true)
 		target["observe"] = _resolve_observe_text(target)
 	var faced_cell := player_cell + player_facing
-	var is_freezable := _is_freezable(faced_cell)
-	return _field_skills.dispatch(skill_id, known, target, faced_cell, current_map, frozen_cells, entity_first_use, is_freezable)
+	return _field_skills.dispatch(skill_id, known, target, faced_cell, current_map, frozen_cells, entity_first_use, _cell_properties(faced_cell))
 
 
 ## Cardinal-only clear-line scan. Freezable cells are water leverage: blink

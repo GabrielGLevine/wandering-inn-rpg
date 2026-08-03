@@ -1,0 +1,54 @@
+{
+ "_comment": "#347 prototype demo: a run that talked its way through everything. Stands in the leased room facing the bed, so the FIRST interact is the sleep that logs a system-bestowal candidate (WI_SYSTEM_BESTOWAL_LOG=1 / --system-bestowal-log=1 -- with the flag off this save is an ordinary quiet night). The portfolio is the spec's pacifist shape: three peaceful resolutions banked (goblins_spared, resolved_wrong_order, mediated_the_debt), persuaded_someone 2 + heard_gossip 3 behind the held Diplomat, and won_combat 2 -- at the absence arm's ceiling, not under it, so the demo also proves the boundary is inclusive. Classes are honest: warrior 2 (sparred_with_relc + won_combat 1 for L2, melee_hit 5 keeps L3's 6 out of reach), helper 1 (cleaned_the_inn 1, its L2 needs 3), diplomat 1 (its own gained_by exactly met, L2 needs heard_gossip 5). Nothing here trips a class gain, level, evolution or consolidation, so the sleep's only new line IS the candidate log. rng_state derived from seed 347 via tests/_derive_rng_state.gd.",
+ "state": {
+  "current_map": "inn_player_room",
+  "player_cell": [
+   1,
+   2
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 2,
+   "helper": 1,
+   "diplomat": 1
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "reached_liscor": 1,
+   "room_purchased": 1,
+   "visited_own_room": 1,
+   "won_combat": 2,
+   "melee_hit": 5,
+   "cleaned_the_inn": 1,
+   "persuaded_someone": 2,
+   "heard_gossip": 3,
+   "goblins_spared": 1,
+   "resolved_wrong_order": 1,
+   "mediated_the_debt": 1
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [],
+  "equipped": {
+   "weapon": "",
+   "armor": ""
+  },
+  "container_state": {},
+  "gold": 0,
+  "actions_since_sleep": 12,
+  "rng_state": "4862139061154724753",
+  "hotbar_loadout": []
+ },
+ "version": 8
+}

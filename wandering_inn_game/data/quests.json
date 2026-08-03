@@ -434,6 +434,24 @@
 				{ "accomplishment": "seal_kept_fed", "text": "You got the Watch to keep it fed.", "grant": { "persuaded_someone": 6, "heard_gossip": 8 } },
 				{ "accomplishment": "seal_rewarded", "text": "You re-cut the ward yourself, and paid for it in ruin-glass.", "grant": { "spell_cast": 10, "warded_danger": 3 } }
 			]
+		},
+		{
+			"_comment": "v0.18 W3 (#318) <!-- v018-W3 -->. Giver is the stationer client, behind her I1 terminal. `trace` produces on the giver's own map so it needs no landmark; `answer` and `report` are travel beats and name the alleys and the Rest. `{addr}` is FORBIDDEN here -- quests.json is scanned as unresolvable.",
+			"id": "the_name_and_the_habit",
+			"title": "The Name and the Habit",
+			"region": "Invrisil",
+			"beats": [
+				{ "id": "trace", "description": "Somebody is signing with her house's name. The scribe at this stationer's counter rents a blank seal by the hour, so start with him.", "complete_when": { "forged_hand_named": 1 } },
+				{ "id": "answer", "description": "The hand that rented it keeps a table at the west end of the mercantile alleys. Buy the block back, lift it off him, or take it the other way.", "complete_when": { "seal_block_settled": 1 } },
+				{ "id": "report", "description": "A steward is waiting at the Adventurer's Rest for the answer to a card. Give it to her yourself.", "complete_when": { "house_answer_given": 1 } }
+			],
+			"_resolution_order": "Weakest claim first, LAST MATCH WINS (src/core/quests.gd), the_hat_stays_on's ladder for this city, ranked by how much of the acquisition survives to be found: taken (half the street watched) < bought (a transaction to find) < handed over (no coin, no witness, only his memory) < lifted (nobody knew it moved). FOUR rungs for FOUR forks -- fix round 1 added block_handed_over, since the free [Charming Smile] arm banked block_bought_back and this line then told a player who spent nothing that they had bought the block. Order is authorial, not load-bearing (one counter can ever bank), but ordered so a fifth fork inherits the ladder. No \"\"-fallback rung -- beat 2 completes on seal_block_settled, which every route banks.",
+			"resolution_paths": [
+				{ "accomplishment": "block_taken", "text": "You took the brass off his table with his two men on the paving beside it. Half that street watched, which is its own kind of answer.", "grant": { "melee_hit": 6, "won_combat": 1 } },
+				{ "accomplishment": "block_bought_back", "text": "You bought the block off him outright. He would have taken less, and both of you knew it, and neither of you said so.", "grant": { "persuaded_someone": 2, "heard_gossip": 3 } },
+				{ "accomplishment": "block_handed_over", "text": "He put the brass into your hand for nothing and asked you to call it destroyed. You did not call it destroyed, and that is the part of it he will remember.", "grant": { "persuaded_someone": 5, "heard_gossip": 2 } },
+				{ "accomplishment": "block_lifted", "text": "The block left the table mid-sentence and he was still talking when you reached the tea shop. Nobody in the city knows it moved.", "grant": { "sneaked_past_danger": 2, "observed_things": 2 } }
+			]
 		}
 	]
 }

@@ -426,6 +426,29 @@
     }
    },
    "gate_closed_toast": "Two men at the far table are having a conversation you are not in. Tonight, that is all they are."
+  },
+  {
+   "_comment": "#318 beat 3. ORIGINAL UNNAMED ARCHETYPE, never Ressa and never Reynold (spec section 2). `invrisil_lady_client`, not the House Factor's `city_scribe`: two scribe silhouettes in one room read as one person twice, and this rig cannot read as a traveler.",
+   "id": "rest_house_steward",
+   "kind": "npc",
+   "cell": [
+    10,
+    2
+   ],
+   "display_name": "A Woman Who Came in a Carriage",
+   "sprite": "invrisil_lady_client",
+   "facing": "left",
+   "present_when": {
+    "requires": {
+     "house_card_shown": 1
+    }
+   },
+   "observe": "Gloves still on indoors, a chair chosen for its view of the door, and nothing at all on the table in front of her. She has been served and has not touched it.",
+   "talk_pool": [
+    "The hearth is good here. I have sat in worse rooms for longer and been told they were an honour.",
+    "Nobody has asked me my business since I sat down. That is what the house is actually selling."
+   ],
+   "conversation": "invrisil_house_steward"
   }
  ]
 }
