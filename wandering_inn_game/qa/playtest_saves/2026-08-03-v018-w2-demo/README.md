@@ -12,14 +12,27 @@ builds it.
 
 ## Restore + launch — the flag is the whole point
 
-The state ships as a QA fixture too, so the one-click path is **Title →
-Playtest States → `system_bestowal_demo`** (debug builds only). The manual
-path, if you prefer the Continue slot:
+The state ships as a QA fixture too, so the path to use is **Title → Playtest
+States → `System Bestowal Demo`** (debug builds only). It installs into the
+game's own dedicated `playtest` slot and loads it directly, so your saves are
+untouched — nothing to copy, nothing to restore afterwards.
+
+If you would rather come in through **Continue**, the target must be a slot
+Continue actually scans, which is `auto` + `manual`/`manual_2`/`manual_3`
+(`_newest_save_slot`, `src/ui/title_screen.gd`). `playtest` is **not** one of
+them — copying there and pressing Continue silently boots your own newest save
+instead, and the demo never loads. So this path OVERWRITES `manual`; back it up
+first:
 
 ```bash
+SAVES="$HOME/Library/Application Support/Godot/app_userdata/Wandering Inn RPG/saves"
+cp "$SAVES/manual.json" "$SAVES/manual.json.bak" 2>/dev/null   # no-op if you have none
 cp "wandering_inn_game/qa/playtest_saves/2026-08-03-v018-w2-demo/system-bestowal-demo.json" \
-  "$HOME/Library/Application Support/Godot/app_userdata/Wandering Inn RPG/saves/playtest.json"
+  "$SAVES/manual.json"
 ```
+
+The copy is the newest file afterwards, so Continue offers it. Restore with
+`mv "$SAVES/manual.json.bak" "$SAVES/manual.json"` when you are done.
 
 Launch **with the flag** — without it the table is never even read, and the
 night is an ordinary quiet one:

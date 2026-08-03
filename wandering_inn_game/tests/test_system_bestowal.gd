@@ -130,6 +130,13 @@ func _test_order_and_cap() -> void:
 
 
 func _test_flag_paths() -> void:
+	# The SHIPPED off-state is the key being ABSENT, so that is what this arm
+	# must read. Asserting against an explicitly-false key instead would pass
+	# even if log_enabled()'s fallback default flipped to true -- i.e. even if
+	# every shipped build evaluated the bestowal on every sleep. Mutation-checked
+	# (`get_setting(FLAG_SETTING, true)` must red this line).
+	assert(not ProjectSettings.has_setting(WISystemBestowal.FLAG_SETTING),
+		"the flag key must be ABSENT here, not false -- absent is what project.godot ships")
 	assert(not WISystemBestowal.log_enabled(), "flag is OFF by default -- no project.godot entry, no env, no user arg")
 	OS.set_environment(WISystemBestowal.FLAG_ENV, "1")
 	assert(WISystemBestowal.log_enabled(), "the environment path arms the log")
@@ -137,7 +144,13 @@ func _test_flag_paths() -> void:
 	assert(not WISystemBestowal.log_enabled(), "clearing the environment disarms it")
 	ProjectSettings.set_setting(WISystemBestowal.FLAG_SETTING, true)
 	assert(WISystemBestowal.log_enabled(), "the ProjectSettings path arms the log")
+	# ...and an editor/user who writes the key as false is off too -- a separate
+	# claim from the absent-key default above, so both are asserted.
+	ProjectSettings.set_setting(WISystemBestowal.FLAG_SETTING, false)
+	assert(not WISystemBestowal.log_enabled(), "an explicitly-false key reads off")
 	_flag_off()
+	assert(not ProjectSettings.has_setting(WISystemBestowal.FLAG_SETTING),
+		"_flag_off must REMOVE the key, not pin it false -- every later flag-off arm depends on it")
 	assert(not WISystemBestowal.log_enabled(), "and disarms again")
 
 
@@ -194,7 +207,11 @@ func _test_demo_fixture_and_determinism() -> void:
 		"the playtest_saves copy has drifted from qa/fixtures/system_bestowal_demo.json -- re-copy it")
 
 	# The flag fence, proven through the REAL sleep beat: flag off, the stream
-	# carries no candidate line at all.
+	# carries no candidate line at all. "Off" here is the SHIPPED off -- the key
+	# absent, not written false -- so this arm reds if the default ever flips.
+	_flag_off()
+	assert(not ProjectSettings.has_setting(WISystemBestowal.FLAG_SETTING),
+		"the flag-off sleep arm must run against an ABSENT key")
 	var w2_off := _sleep_events(9)
 	for event: Dictionary in w2_off:
 		assert(String(event["type"]) != WIEvents.SYSTEM_BESTOWAL_CANDIDATE, "flag off must emit no candidate")
@@ -294,9 +311,16 @@ func _sink(type: String, payload: Dictionary) -> void:
 	_events.append({"type": type, "payload": payload})
 
 
+## Restores the state a SHIPPED build is in: env cleared and the ProjectSettings
+## key genuinely absent. Pinning it to false instead (the original shape) made
+## every "flag off" arm in this file -- the default-state assert AND the
+## flag-off sleep-stream comparison -- test a key no build ever carries, so a
+## flipped default in log_enabled() sailed through the whole suite green.
+## `clear` errors on a missing property, hence the guard.
 func _flag_off() -> void:
 	OS.set_environment(WISystemBestowal.FLAG_ENV, "")
-	ProjectSettings.set_setting(WISystemBestowal.FLAG_SETTING, false)
+	if ProjectSettings.has_setting(WISystemBestowal.FLAG_SETTING):
+		ProjectSettings.clear(WISystemBestowal.FLAG_SETTING)
 
 
 func _load_json(path: String) -> Dictionary:
