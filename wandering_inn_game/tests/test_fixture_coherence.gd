@@ -34,6 +34,10 @@ const COMBAT_BAND_FIXTURES := {
 	# (alley_fence_t3_warrior10_solo / rest_bravos_t3_warrior10_solo).
 	"invrisil_setting_fight_start": 10,
 	"invrisil_hat_loud_start": 10,
+	# v0.18 W3 (#318): the nobility thread's fight route rides the SAME geared
+	# warrior-10 reference build, against the shipped footpad pair the
+	# alley_footpads_t3_warrior10_solo cell already measures -- no new cell.
+	"invrisil_house_name_fight_start": 10,
 	"delve_fight_start": 11,
 	# 2026-07-26 Act V: the seal warden's own tuned band (spellsword14, the
 	# t4_spellsword14_party reference build sim_combat_batch gates the fight at).

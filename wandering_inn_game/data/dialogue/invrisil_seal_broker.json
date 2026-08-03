@@ -49,6 +49,7 @@
    ],
    "options": [
     {
+     "_comment": "The spend rides the GATE option, not the node behind it, so _is_priced_purchase fires and the row renders its own price token.",
      "text": "\"Name your price for the block.\"",
      "requires": {
       "gold": 30
@@ -58,6 +59,20 @@
        "seal_block_settled": 1
       }
      },
+     "effects": [
+      {
+       "gold": -30
+      },
+      {
+       "accomplishment": "block_bought_back"
+      },
+      {
+       "accomplishment": "seal_block_settled"
+      },
+      {
+       "toast": "The brass goes into your pack still warm from his hand. Two initials, cut deep, worth thirty gold and a fallen house's whole remaining credit."
+      }
+     ],
      "goto": "bought"
     },
     {
@@ -105,20 +120,6 @@
    "options": [
     {
      "text": "\"Thirty, then.\"",
-     "effects": [
-      {
-       "gold": -30
-      },
-      {
-       "accomplishment": "block_bought_back"
-      },
-      {
-       "accomplishment": "seal_block_settled"
-      },
-      {
-       "toast": "The brass goes into your pack still warm from his hand. Two initials, cut deep, worth thirty gold and a fallen house's whole remaining credit."
-      }
-     ],
      "end": true
     }
    ]

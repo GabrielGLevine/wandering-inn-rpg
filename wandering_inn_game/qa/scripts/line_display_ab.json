@@ -16,10 +16,14 @@
   { "action": "wait_for_event", "type": "ui_dialogue_rendered", "payload_contains": {"text": "A Scribe by the Hour: Contracts, letters, and the occasional apology. The apologies pay best and take longest."}, "timeout_sec": 5 },
   { "action": "screenshot", "name": "01_interact_at_world_ready" },
   { "action": "assert_dialogue_displayed", "contains": "A Scribe by the Hour:" },
-  { "_comment": "== LEG B: the control — same NPC, same bark, 90 idle frames later. This one always rendered; it is here so the pair reads as one A/B, not two claims. ==", "action": "wait_frames", "frames": 90 },
+  { "_comment": "== LEG B: the control — a talk_pool bark in the same room, same run, 90 idle frames later. This one always rendered; it is here so the pair reads as one A/B, not two claims. TARGET MOVED 2026-08-03 (#318, W3): the clerk now carries a `conversation` as well as his pool, so his SECOND interact opens a graph instead of re-serving a bark (interactions.gd's npc arm consults `social_talked` first) — a graph panel is a DIFFERENT panel and would have silently changed what this capture proves. The mechanism under test is the capture-hold boundary on a TRANSIENT bark panel, not this particular speaker, so leg B moves to the room's other pool NPC and the A/B is intact. ==", "action": "wait_frames", "frames": 90 },
+  { "action": "move", "direction": "left", "steps": 4 },
+  { "action": "assert_state", "path": "player_cell", "equals": [4, 2] },
+  { "action": "move", "direction": "left", "steps": 1 },
+  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [3, 2]} },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "ui_dialogue_rendered", "timeout_sec": 5 },
   { "action": "screenshot", "name": "02_interact_90_frames_later" },
-  { "action": "assert_dialogue_displayed", "contains": "A Scribe by the Hour:" }
+  { "action": "assert_dialogue_displayed", "contains": "A Lady with a Ring Box:" }
  ]
 }

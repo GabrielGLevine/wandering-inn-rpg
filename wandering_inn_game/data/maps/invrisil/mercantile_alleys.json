@@ -1355,16 +1355,16 @@
    "conversation": "invrisil_seal_broker"
   },
   {
-   "_comment": "#318 beat 2 FIGHT arm. INTERACT-ONLY (no trigger_radius) so it can never spring on a pinned alley route, and encounter_when keeps it unspawned before the thread. Roster and arena are BOTH shipped and unchanged -- footpad_lookout + footpad_bruiser in mercantile_alley is exactly the composition sim_combat_batch already measures as alley_footpads_t3_warrior10_solo, so no new balance cell is owed. on_victory is the ARRAY form: the route counter FIRST (victory_toast contract), then the shared settle.",
+   "_comment": "#318 beat 2 FIGHT arm. INTERACT-ONLY (no trigger_radius) so it can never spring on a pinned alley route. CELL IS LOAD-BEARING: present_when is FORBIDDEN on encounters (encounter_when gates whether the fight FIRES, never whether the rig blocks) and this alley has no spare walkable cell -- (4,6) obstructed invrisil_walkthrough's own westward row-6 leg. The pair stands against the north wall line on the already-blocked (4,5), the boulevard_glazier facade idiom: zero footprint on every route, still bumped from (4,6) below, and also committable straight from the broker's hub. Roster and arena are BOTH shipped and unchanged -- footpad_lookout + footpad_bruiser in mercantile_alley is exactly the composition sim_combat_batch measures as alley_footpads_t3_warrior10_solo, so no new balance cell is owed. on_victory is the ARRAY form: route counter FIRST (victory_toast contract), then the shared settle.",
    "id": "broker_hands",
    "kind": "encounter",
    "cell": [
     4,
-    6
+    5
    ],
    "display_name": "Two Paid by the Week",
    "sprite": "human_laborer",
-   "observe": "Two men at the mouth of the alley who have been paid whether they work or not, and who have not worked in some time.",
+   "observe": "Two men leaning at the wall line where the alley narrows, paid by the week whether they work or not, and plainly out of practice.",
    "arena": "mercantile_alley",
    "enemies": [
     "footpad_lookout",

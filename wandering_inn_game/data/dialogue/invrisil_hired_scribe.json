@@ -33,6 +33,7 @@
      "goto": "persuade_pitch"
     },
     {
+     "_comment": "The spend rides the GATE option, not the node behind it, so _is_priced_purchase fires and the row renders its own price token.",
      "text": "\"I'll buy the hour you were not working.\"",
      "requires": {
       "gold": 8
@@ -42,6 +43,14 @@
        "forged_hand_named": 1
       }
      },
+     "effects": [
+      {
+       "gold": -8
+      },
+      {
+       "accomplishment": "forged_hand_named"
+      }
+     ],
      "goto": "paid"
     },
     {
@@ -103,14 +112,6 @@
    "options": [
     {
      "text": "\"That's an answer.\"",
-     "effects": [
-      {
-       "gold": -8
-      },
-      {
-       "accomplishment": "forged_hand_named"
-      }
-     ],
      "end": true
     }
    ]
