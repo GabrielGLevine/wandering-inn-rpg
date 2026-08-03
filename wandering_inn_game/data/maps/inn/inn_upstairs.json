@@ -121,7 +121,7 @@
  "_comment_decor": "Visible generic doors must be entities, not decor, so interaction returns a locked response instead of Nothing there.",
  "decor": [
   {
-   "sprite": "rug_tan",
+   "sprite": "rug_woven_cream",
    "cell": [
     6,
     2

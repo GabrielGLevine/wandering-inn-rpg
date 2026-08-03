@@ -245,6 +245,11 @@ var _reduce_motion_applied := false
 
 
 func _ready() -> void:
+	# GH#345 boot push: core is pure (WIGame never reads WISettings), so the
+	# scene layer hands the sim instance the persisted difficulty at world
+	# start; the GAME_LOADED/MAP_CHANGED arm below re-pushes after every sim
+	# swap, and the settings row / creation prompt push on change.
+	Game.sim.difficulty_damage_taken_mult = WISettings.difficulty_damage_taken_mult()
 	_field_root = Node2D.new()
 	add_child(_field_root)
 	_atmosphere = WIAtmosphere.new()
@@ -1605,6 +1610,10 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 	# the class of bug the stale-cover guard exists for).
 	if type in AFFORDANCE_REFRESH_EVENTS and not _map_transition_stale_cover():
 		_reconcile_faced_affordance()
+	if type == WIEvents.GAME_LOADED or type == WIEvents.MAP_CHANGED:
+		# GH#345: a sim swap (load/import/new game) builds a fresh WIGame with
+		# the field at its 1.0 default -- re-push the persisted difficulty.
+		Game.sim.difficulty_damage_taken_mult = WISettings.difficulty_damage_taken_mult()
 	if type == WIEvents.PLAYER_MOVED:
 		var cell := Vector2i(int(payload["cell"][0]), int(payload["cell"][1]))
 		_move_companion_visual(_player_visual.position)

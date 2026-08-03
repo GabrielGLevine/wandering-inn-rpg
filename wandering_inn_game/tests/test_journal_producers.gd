@@ -108,8 +108,8 @@ func _check_filter_agreement(skills: Dictionary) -> void:
 				"%s reaches only the field bar, so its bucket must be Exploration — Active, got %s" % [id, category])
 
 	var hud_source := _read("res://src/combat/combat_hud.gd")
-	assert(hud_source.contains("if (sk.get(\"contexts\", []) as Array).has(\"combat\") and int(sk.get(\"ap_cost\", 0)) > 0:"),
-		"combat_hud.gd's combat-bar kit filter moved -- re-derive WIGame.skill_category against it (GH#336 spec ruling 3) before touching this pin")
+	assert(hud_source.contains("if WIGame.skill_bar(sk) in [\"combat\", \"both\"]:"),
+		"combat_hud.gd's combat-bar kit filter no longer consumes WIGame.skill_bar -- the v0.17 train swap (GH#336 seam) collapsed the third filter copy onto the derived source; if the filter moved again, re-point this pin at the new consumer line")
 	var sim_source := _read("res://src/core/wi_game.gd")
 	assert(sim_source.contains("if bool((skills.get(id, {}) as Dictionary).get(\"field\", false)):"),
 		"field_hotbar_loadout's candidate filter moved -- re-derive WIGame.skill_category against it")

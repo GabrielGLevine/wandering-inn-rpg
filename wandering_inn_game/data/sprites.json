@@ -794,7 +794,7 @@
    }
   }
  },
- "rug_tan": {
+ "rug_woven_cream": {
   "_comment_ysort": "GH#127: flat floor decor must ALWAYS render under sorted content -- large north bias keeps it above the floor layers (different parent) but under every y-sorted sibling on any crossed cell. Small biases cannot fix a walk-across prop.",
   "field_y_sort_bias_px": -160.0,
   "animations": {
@@ -2016,7 +2016,7 @@
    }
   }
  },
- "rug_green": {
+ "rug_woven_red": {
   "_comment_ysort": "GH#127: flat floor decor must ALWAYS render under sorted content -- large north bias keeps it above the floor layers (different parent) but under every y-sorted sibling on any crossed cell. Small biases cannot fix a walk-across prop.",
   "_comment": "v0.17 L4. Id LEGACY: the art is red now.",
   "field_y_sort_bias_px": -160.0,

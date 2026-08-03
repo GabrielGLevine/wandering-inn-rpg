@@ -29,6 +29,11 @@ var blocked_cells: Dictionary = {}
 var skills: Dictionary = {}
 var classes: Dictionary = {}
 var combat: WICombat = null
+## GH#345 difficulty seam: plain data, PURE (core never touches the
+## WISettings autoload). Scene layer pushes the current value (settings
+## row, creation prompt, world boot); start_combat copies it into the
+## fight at build time — the read-once contract lives at the copy.
+var difficulty_damage_taken_mult: float = 1.0
 var dialogue: WIDialogue = null
 var started_quests: Array[String] = []
 var removed_entities: Array[String] = []
@@ -2079,6 +2084,7 @@ func start_combat(entity_id: String) -> bool:
 	_break_sneak()
 	_pending_encounter = entity_id
 	combat = WICombat.new(arena, cfgs, skills_config_raw(), _combat_event_relay, rng.randi())
+	combat.difficulty_damage_taken_mult = difficulty_damage_taken_mult
 	combat.begin()
 	return true
 

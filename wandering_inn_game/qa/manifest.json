@@ -5806,6 +5806,30 @@
      "settings"
     ]
    }
+  },
+  {
+   "script": "line_display_ab",
+   "seed": 9,
+   "note": "GH#324 regression capture: bark at world_ready+0 vs +90 must both render; capture-hold ceiling derives from script waits",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "stationer"
+    ],
+    "fixtures": [
+     "line_display_ab_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "dialogue",
+     "exploration"
+    ]
+   }
   }
  ]
 }

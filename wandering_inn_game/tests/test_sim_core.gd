@@ -283,7 +283,7 @@ func _init() -> void:
 		"bread_stall must not carry a POSITIVE y-sort bias -- the PC stands south of it on [11,3] and would be painted over")
 	assert(float(_entity_by_id(upstairs_map["entities"], "lyonette_door").get("field_y_sort_bias_px", 0.0)) <= 0.0,
 		"lyonette_door must not carry a POSITIVE y-sort bias -- the PC's only approach [7,2] is south of it")
-	assert((upstairs_map["decor"] as Array).any(func(d: Dictionary) -> bool: return d.get("sprite", "") == "rug_tan" and _int_cell(d.get("cell", [])) == [6, 2]),
+	assert((upstairs_map["decor"] as Array).any(func(d: Dictionary) -> bool: return d.get("sprite", "") == "rug_woven_cream" and _int_cell(d.get("cell", [])) == [6, 2]),
 		"Lyonette's threshold needs the bounded rug zoning cue")
 
 	var ruin_map: Dictionary = scene_config["maps"]["ruin_surface"]

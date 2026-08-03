@@ -640,6 +640,7 @@ func _begin_game() -> void:
 	# the same keys the Settings panel owns, the player can move either of them
 	# again five minutes later with no second source of truth to reconcile.
 	WISettings.set_difficulty_step(_difficulty_step)
+	Game.sim.difficulty_damage_taken_mult = WISettings.difficulty_damage_taken_mult()
 	WISettings.set_show_quest_hints(_quest_hints)
 	var creation := {"pc_name": final_name, "pc_race": _race, "pc_gender": _gender}
 	# The chosen setup values ride the confirmation payload (they are NOT part
