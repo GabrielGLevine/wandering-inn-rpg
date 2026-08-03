@@ -62,8 +62,9 @@ and this path closes (canon-true: paths close).
 1. **The name.** `Peacebinder` is the proposal; the alternates in the table are
    `Gentle Hand` and `Quiet Diplomat`. Does any of them read as something a
    world would *name you*, rather than something a table offered? (All three
-   are original noun phrases; wiki-check + cutoff-check are owed before a name
-   reaches any surface, so a veto here costs nothing.)
+   are original noun phrases — wiki-checked 2026-08-03 against the canon class
+   lists, no collision, so nothing here brushes the spoiler cutoff. They are
+   proposals: a veto costs nothing, since no name has reached a surface.)
 2. **The `why` line.** Second person, about the deeds, no progress language.
    Is that the register — the same unnamed voice that speaks in bracket lines
    under the sleep veil — or does it want to be colder and shorter?
