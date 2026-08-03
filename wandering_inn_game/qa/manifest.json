@@ -1296,6 +1296,34 @@
    }
   },
   {
+   "script": "property_seams",
+   "seed": 9,
+   "fixture": "sewers_property_seams",
+   "note": "#348 property table: freeze_cell (ice floor on water, walked onto) + remove_scorch (debris) + a null cell (untagged prop refused)",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "sewers"
+    ],
+    "fixtures": [
+     "sewers_property_seams"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_touch",
+     "kindle",
+     "light"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "exploration"
+    ]
+   }
+  },
+  {
    "script": "cisterns_fight",
    "seed": 9,
    "fixture": "cisterns_fight_start",

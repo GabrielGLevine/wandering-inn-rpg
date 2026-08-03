@@ -42,7 +42,8 @@ for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skill
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_effect_text.gd  # M-LEGIBILITY L1: WIEffectText exact lines + drift tripwires + forbidden-vocab
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_acts.gd          # M-ARC A1: act-derivation
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_items.gd         # M7 E1: items/equipment validation
-	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_traversal_seams.gd  # Skills Wave K1: freeze/burn seams
+	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_traversal_seams.gd  # Skills Wave K1: freeze/burn seams -- the property table's BYTE-IDENTITY referee
+	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_interactions_table.gd  # #348: property table (mirror contract, injection, new carriers as data, authored precedence)
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_input_hints.gd      # Issue #18 S3: WIInputHints label table + device classification
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_portals.gd          # Magical Door plan Task D4 (issue #8): WIPortals catalog filter + graph derivation
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/test_settings.gd         # Issue #77: text-scale math + drift tripwire, settings.cfg round-trip, WIAudio UI-bus-routing fix, hint reset_hints() flips, board_renderer.gd reduce-motion gate sites
@@ -257,6 +258,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `hotbar_tab_loop` | 9 (fixture `near_tactician`) | Issue #58: Tab-primed field-hotbar select -- prime/re-prime, wrap-in-place move_right with player_cell unchanged (arrows captured while primed), Esc disarm, confirm fires the number-key-equivalent stream |
 | `social_loop` | 9 (fixture `social_loop_start`) | Social Pillar v1 proof; rotating talk pools + `goblin_parley`'s Warrior-gated intimidate → LIVE [Diplomat] earn at the sleep (#123: fixture no longer pre-holds the class); post-earn [Charming Smile]-gated Watch persuade fires as the issue #50 gate's live proof |
 | `sewers_walkthrough` | 9 (fixture `near_sewers`) | Liscor sewers proof; grate-gate seam + vermin fight |
+| `property_seams` | 9 (fixture `sewers_property_seams`) | #348 property table: freeze_cell (ice floor on water, walked onto) + remove_scorch (debris) + a null cell (untagged prop refused) |
 | `cisterns_fight` | 9 (fixture `cisterns_fight_start`) | Quest 1 FIGHT path (clear `shield_spiders` nest); issue #69's other Klbkch-allied fight (seed re-verified, not independently roster-asserted -- crate_fight carries that proof) |
 | `cisterns_talk` | 9 (fixture `cisterns_talk_start`) | Quest 1 TALK path (persuade Zevara, no combat) |
 | `cisterns_scout` | 9 (fixture `cisterns_scout_start`) | Quest 1 SKILL path ([Appraise Foe] the `nest_ledge`) |
