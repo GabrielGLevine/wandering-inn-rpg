@@ -342,6 +342,24 @@ func _execute(step: Dictionary) -> void:
 					_inject_mouse_click(card_rect.get_center())
 			await get_tree().process_frame
 			await get_tree().process_frame
+		"click_char_creation_choice":
+			# Issue #346: tap a setup-choice row (difficulty / quest hints) by
+			# its LIVE rect -- the click_char_creation_card idiom exactly. These
+			# steps are keyboard-reachable too, but a4 #216's credits modal is
+			# the standing lesson that a new keyboard-only surface strands a
+			# touch player, so the tap path gets a driver, not a promise.
+			var choice_n := int(step["choice"])
+			var cc_choice := get_tree().root.find_child("CharCreation", true, false)
+			if cc_choice == null:
+				_fail("click_char_creation_choice: CharCreation node not found")
+			else:
+				var choice_rect: Rect2 = cc_choice.call("choice_row_rect", choice_n - 1)
+				if choice_rect.size == Vector2.ZERO:
+					_fail("click_char_creation_choice: choice %d has no rendered rect" % choice_n)
+				else:
+					_inject_mouse_click(choice_rect.get_center())
+			await get_tree().process_frame
+			await get_tree().process_frame
 		"click_dialogue_option":
 			var opt_n := int(step["option"])
 			var dp := get_tree().root.find_child("DialoguePanel", true, false)

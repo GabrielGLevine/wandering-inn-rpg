@@ -69,7 +69,7 @@ Generating this complete inventory resolved the drift; CI now checks it.
 | `wrong_order_talk` | 9 | full | `wrong_order_talk_start` | The Wrong Order TALK path (Krshia smooth-over, no combat) |
 | `wrong_order_fight` | 9 | full | `wrong_order_fight_start` | The Wrong Order FIGHT path (clear supplier_scavengers) |
 | `economy_loop` | 9 | smoke, full | `economy_loop_start` | the coin arc: chore earn -> loot -> shop -> spend |
-| `char_creation` | none | smoke, full | `—` | THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof) |
+| `char_creation` | none | smoke, full | `—` | THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof); #346: the two setup prompts after the name (difficulty by key, quest hints by TAP), both opening on the live WISettings value, both read back through the Settings panel in the new save's first session |
 | `deep_descent` | 9 | full | `deep_descent_start` | the Raskghar descent + JOIN-Relc boss victory |
 | `climax_chain` | 9 | full | `climax_surface_start` | the tremor beat + Zevara summons + Olesm briefing |
 | `climax_seal` | 9 | full | `climax_sealed_start` | the seal beat + journal Act III advance |

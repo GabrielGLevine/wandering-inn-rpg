@@ -264,7 +264,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `wrong_order_talk` | 9 (fixture) | "The Wrong Order" TALK path (Krshia smooth-over, no combat) |
 | `wrong_order_fight` | 9 (fixture) | "The Wrong Order" FIGHT path (clear `supplier_scavengers`) |
 | `economy_loop` | 9 (fixture `economy_loop_start`) | the coin arc: chore earn → loot → shop → spend |
-| `char_creation` | none | THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof) |
+| `char_creation` | none | THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name, left via the tappable Continue control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof). <!-- v017-L1 --> #346: two setup prompts follow the name — difficulty (the #345 ladder, answered by key) and quest hints (the #338 toggle, answered by TAP via `click_char_creation_choice`) — both opening on the CURRENT `WISettings` value rather than a hardcoded default, both writing those same keys instead of a parallel copy, and a closing leg reads both back through the Settings panel in the new save's first session |
 | `deep_descent` | 9 (fixture `deep_descent_start`) | the Raskghar descent + JOIN-Relc boss victory |
 | `climax_chain` | 9 (fixture `climax_surface_start`) | the tremor beat + Zevara summons + Olesm briefing |
 | `climax_seal` | 9 (fixture `climax_sealed_start`) | the seal beat + journal Act III advance |

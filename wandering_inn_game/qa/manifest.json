@@ -1509,7 +1509,7 @@
   {
    "script": "char_creation",
    "seed": null,
-   "note": "THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof)",
+   "note": "THE character-creation UI proof (sprite-pick (2x3 idle grid, #42) + name committed via the tappable Begin control (#106), downstream pins held verbatim from the keyboard-commit era = click/keyboard equivalence proof); #346: the two setup prompts after the name (difficulty by key, quest hints by TAP), both opening on the live WISettings value, both read back through the Settings panel in the new save's first session",
    "tiers": [
     "smoke",
     "full"
@@ -1521,7 +1521,8 @@
     "dialogue": [],
     "systems": [
      "char_creation",
-     "input"
+     "input",
+     "settings"
     ]
    }
   },
