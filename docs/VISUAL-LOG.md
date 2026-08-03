@@ -3120,3 +3120,95 @@ remaining PROP/CRATE-READS-AS-CLUTTER members (den-shop receiving dock,
 lift cargo pallet, forge reject bin) and BOARD/CRATE-COVER-READ — all
 want new sprite ids; `line_stalker_a`/`_b` and the `plains_scavenger_*`
 overlap rows are spawn-cell choices in arena data, not art.
+
+<!-- v017-R2 -->
+### v0.17 R2 — moods/atmosphere re-tune (post-palette rider), 2026-08-02
+
+Data-only pass (no code). Evidence: `mood_sheet_{day,dusk,night}` — a new
+non-canonical windowed peek triptych that teleports one fixture through
+thirteen maps (every exterior beside the interior you reach from it) so the
+whole lighting language can be read in one frame set. Before/after archived at
+`art-feel-review/v017-r2-moods/{before,after}/{day,dusk,night}/` (deliberately NOT under
+`qa_output/`, which every full `ci_sweep.sh` flushes; contact sheets and a
+`measurements.csv` of every frame's mean luma and mean R-B sit beside them).
+
+THE LANGUAGE, stated once so the next pass does not re-derive it
+(`t = r - b`, `v = mean(rgb)`, per mood card):
+- **RULE 1 — a map WITH a sky** (day != dusk, world.gd's own `_map_has_sky`
+  test): the sky owns the grade, so it cools and darkens monotonically —
+  `t(day) > t(dusk) > t(night)` and `v` likewise.
+- **RULE 2 — a map WITHOUT a sky** (day == dusk): the FLAME owns the warmth,
+  never the grade. The grade may be cool or neutral, never warm (`t <= +0.03`),
+  and a sealed room that owns light rows carries `lights_by_day: true` so those
+  sources actually burn. This generalises seal_vault's shipped rationale into
+  something derivable instead of a per-map taste call.
+
+Rows this pass closes or moves:
+
+- [x] **LIGHT/INTERIORS-AND-DUSK-ARE-ONE-TEMPERATURE (the visual-next-level
+  spec's §3 named defect) — DRAINED.** Measured on screen, before: at dusk the
+  six warm interiors sat at `+63.9 / +55.9 / +82.6 / +42.1 / +77.8 / +51.1`
+  mean R−B (inn, inn_upstairs, guild, riverfarm_longhouse, brothers_parlor,
+  adventurers_rest) — one amber, six rooms, and `inn_upstairs`' card was
+  literally the inn's DUSK triple reused verbatim. After: `+31.2 / +32.6 /
+  +48.9 / +18.0 / +45.9 / +26.5`, against exteriors unchanged at `+14.3 / +1.4
+  / +17.0 / −0.6`. The remaining interior warmth is now the WOOD, not a filter.
+- [x] **LIGHT/NIGHT-IS-WARMER-THAN-DUSK (systemic, previously unlogged) —
+  DRAINED.** `street`, `floodplains`, `invrisil_boulevard` and
+  `mercantile_alleys` all finished the night WARMER than their own dusk (e.g.
+  street t −0.30 → −0.24): the sun set and then came halfway back. RULE 1
+  monotonicity now holds on all 29 cards, `guild`/`rags_camp` included.
+- [x] **MOOD/RIVERFARM-LONGHOUSE-HAS-NO-CARD (NEW, found this pass) —
+  DRAINED.** The map had no `moods.json` entry at all, so it fell through
+  `apply()`'s identity fallback at every phase while its hearth and two sconces
+  switched on at dusk. Measured mean luma **79.4 at noon, 83.6 at midnight** —
+  brighter in the middle of the night than the middle of the day — and it was
+  the only interior in the game with no vignette. Now 75.7 / 55.8 / 45.7.
+- [x] **MOOD/GARDEN-CARD-IS-DEAD-DATA (NEW, found this pass) — DRAINED.**
+  `moods.moods.garden` names no map (the id is `garden_sanctuary`), so the
+  sanctuary's carefully-authored "never dims" card has never once been read.
+  Renamed. The rename alone would have flipped the map from has-sky to no-sky
+  and un-gated the biome's fireflies into a day-identity frame, so
+  `garden_sanctuary.json` gains an explicit ambience row stating today's
+  effective behaviour — see its `_comment_ambience`.
+- [x] **DECOR/RAGS-CAMP-FAKES-ITS-FIRELIGHT (NEW) — DRAINED.** The card said
+  "firelight only after dusk" and delivered it by tipping the whole grade warm
+  on a map with zero light rows. `camp_fire_pit` is now a light.
+- [x] **DECOR/GUILD-HALL-HAS-NO-LIGHT-SOURCE (NEW) — DRAINED.** The flattest-lit
+  room in the game: highest chroma of any map at every phase, warmer at
+  midnight than the inn at noon, and not one lamp in it. Two wall sconces at
+  (4,1)/(11,1); `blocked_cells` stays 57 (`guild_interior_walkthrough` green).
+- [x] **DECOR/FORGE-HALL-HAS-NO-LIGHT-SOURCE (NEW) — DRAINED.** Same shape:
+  t +0.42 at every phase, two `forge_station` decor rows, no light. One of the
+  two now carries its twin's molten-orange flicker (one hot mouth reads as a
+  working forge; a matched pair reads as a decal).
+- [x] **USER-EYES item 4, `pallass_market` / `pallass_forge` lights by day —
+  ANSWERED BY DERIVATION, no user gate spent** (wave-autonomy directive
+  2026-07-28). **Forge YES, market NO.** The forge tier's day and dusk grades
+  are identical, so by world.gd's own sky test it has no sky and seal_vault's
+  rationale applies unchanged; the market's grade DOES track the sun, so the
+  shipped "a lantern adds nothing at noon" default is right there. Same key,
+  opposite answers, and the reason is in the data rather than in taste. If your
+  eyes disagree on the market, the change is one key.
+- [x] **`mercantile_alleys` night near-black (widened row) — PARTLY DRAINED.**
+  Overworld night value 0.313 → 0.357 while temperature drops −0.24 → −0.36:
+  colder, not darker. The arena half of that row is untouched (not this lane).
+- [~] **`hearth` is still a cold unlit oven (`adventurers_rest`) — HALF.** The
+  mechanical half is fixed: the hearth and both sconces were switched OFF in
+  every daytime frame of that room and now burn (`lights_by_day`). The SPRITE
+  still draws as an unlit oven — that is an art row and stays open.
+- [~] **`witch_hut` "watch, not a defect" night readability — TAKEN, different
+  anchor.** The log named `hut_hearth_ash`; this pass deliberately did not use
+  it, because that prop's display name is "The Cold Hearth" and its toast says
+  the ash "has been cold for years" — lighting the room by contradicting its
+  own copy is not a fix. The light went on `hut_ward_scrap`, the thing the
+  room's fiction already says glows: pale ward-green, low, steady, no flicker.
+
+**Still open, NOT taken here** (all art or code, none of them data-tunable):
+the `sconce` sprite reads as a small bracket box rather than a flame at 1x, so
+the guild's two new pools have no visible source object; the
+`wandering_inn_facade` light at radius 56 paints a visibly rectangular warm
+patch on the floodplains grass at night (light-texture falloff, not a grade);
+and `sewers`/`deep_tunnels` gained `lights_by_day` but their two lights sit at
+the shaft mouth, far off-frame from any normal standing cell, so the opt-in is
+correct-by-rule and invisible in practice (measured delta ±0.1 luma).

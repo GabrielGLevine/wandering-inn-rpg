@@ -69,6 +69,17 @@
    ],
    "display_name": "The Fire Pit",
    "sprite": "campfire",
+   "_light_comment": "v0.17 R2: the camp's card claimed firelight and the map owned no light. One notch under the floodplains campfire -- this fire is kept small on purpose.",
+   "light": {
+    "color": [
+     1.0,
+     0.5,
+     0.2
+    ],
+    "energy": 1.3,
+    "radius": 44,
+    "flicker": true
+   },
    "observe": "A ring of river stones with a fire kept deliberately small. Someone has banked it low and swept the ash back, so the smoke goes up thin instead of out wide. Nothing about this fire wants to be seen from the road.",
    "on_interact_accomplishment": "eyed_the_camp_fire",
    "toast": "The wood is sorted by burn time in three piles. Somebody in this camp thinks two nights ahead."

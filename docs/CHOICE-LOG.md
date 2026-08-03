@@ -2456,3 +2456,66 @@ by controller ruling — the plan was the defect, not the implementation.
   before the emit, `ui_slot_info_rendered` now carries the string the
   player actually sees, which is what makes it gateable at all
   (qa/scripts/combat_move_input.json + 03_power_strike_slot_info.png).
+
+<!-- v017-R2 -->
+## 2026-08-02 — v0.17 R2: moods/atmosphere re-tune (post-palette rider)
+
+**Call: warmth belongs to SOURCES, never to the grade — stated as two rules
+checkable off the data alone, not as a per-map taste call.** `t = r - b`,
+`v = mean(rgb)` per mood card. RULE 1, a map WITH a sky (day != dusk, which is
+world.gd's own `_map_has_sky` test): the sky owns the grade, so it cools and
+darkens monotonically. RULE 2, a map WITHOUT one (day == dusk): the flame owns
+the warmth, the grade may be cool or neutral but never warm (`t <= +0.03`), and
+a sealed room that owns light rows carries `lights_by_day: true` so those
+sources actually burn. Alternatives rejected: (a) leave the exteriors cool and
+just dim the interiors — the six interiors were interchangeable with each other
+as well as with dusk, and dimming does not separate them; (b) hand-pick a
+temperature per room — that is what produced the defect, and it does not
+survive the next art pass. The rules are mechanically checkable, which is what
+made the one real error in this lane fall out before any screenshot (below).
+
+- **The DAY contract, as read here.** atmosphere.gd's contract is
+  "ship-neutral-first: identity `[1,1,1]` everywhere except tuned rollouts", so
+  "day stays identity" binds the maps whose day IS identity. Those seven (inn,
+  street, floodplains, invrisil_boulevard, mercantile_alleys,
+  garden_sanctuary, and the new riverfarm_longhouse card) are byte-stable
+  across this pass — verified, not asserted: mean luma and mean R−B both move
+  `0.0` on every one of them between the before and after windowed day sheets.
+  No new day-phase emitter is introduced anywhere either, which is the half of
+  that contract that actually makes a day frame non-deterministic.
+- **RULING — a TIME-INVARIANT card moves as a UNIT or not at all**, and this
+  is where the first draft was wrong. Six sealed interiors pin day == dusk ==
+  night; the first pass moved their dusk/night and pinned day, reading "day
+  frozen" literally. That does not freeze anything — it SPLITS the card, flips
+  the map from sealed to sky-bearing under the day-vs-dusk test, silently
+  changes the biome-default ambience gating that hangs off that test, and
+  leaves the room wearing golden-hour amber at noon and a neutral wash after
+  dusk. Caught by the invariant checker written alongside the data, before a
+  single screenshot was taken; the checker's sealed/sky assertion is now the
+  guard in the tuning script itself.
+- **Two interior iterations, and the first one was wrong on the screen.** Draft
+  one read "low chroma" as `R ~= G ~= B` (inn dusk `[0.62,0.63,0.72]`). On warm
+  plank that reads OLIVE: holding R level with G while dropping B-relative
+  pushes the hue toward yellow-green, not toward evening. Every interior triple
+  now carries a real blue tilt (`R < G < B`, t between −0.06 and −0.22) at the
+  same value. Windowed evidence was the verdict on this, exactly as briefed —
+  the numbers alone said draft one was fine.
+- **RULING — the open USER-EYES ask "pallass_market / pallass_forge lights by
+  day" is ANSWERED, not deferred** (wave-autonomy directive 2026-07-28).
+  **Forge yes, market no**, and by derivation rather than by taste: the forge
+  tier pins day == dusk so it has no sky and seal_vault's own rationale ("a
+  sealed chamber has no sky, so zeroing its lights deleted the room's only
+  source") applies unchanged; the market's grade tracks the sun, so the shipped
+  default is right there. One key each if the user's eyes disagree.
+- **RULING — `witch_hut`'s prescribed light anchor was overridden.** The
+  VISUAL-LOG named `hut_hearth_ash`. That prop is "The Cold Hearth" and its own
+  toast says the ash "has been cold for years", so a flickering firelight there
+  lights the room by contradicting its copy. The light went on
+  `hut_ward_scrap` — the thing the room already says glows.
+- **Two dead-data bugs found by inspection, both fixed.**
+  `moods.moods.garden` names no map (the id is `garden_sanctuary`), so that
+  card has never been read; and `riverfarm_longhouse` had no card at all, which
+  made it measurably BRIGHTER at midnight (mean luma 83.6) than at noon (79.4).
+  The garden rename would have un-gated the biome's fireflies into a
+  day-identity frame, so it ships with an explicit ambience row pinning today's
+  behaviour — the rename and its guard are one change, not two.

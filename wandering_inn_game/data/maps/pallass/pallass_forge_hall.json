@@ -115,7 +115,18 @@
    "cell": [
     3,
     2
-   ]
+   ],
+   "_light_comment": "v0.17 R2: a forge hall with no light in it. Same molten flicker its pallass_forge twin carries. ONE of the two stations on purpose -- a matched pair reads as a decal. Count 0 -> 1.",
+   "light": {
+    "color": [
+     0.965,
+     0.333,
+     0.063
+    ],
+    "energy": 0.8,
+    "radius": 26,
+    "flicker": true
+   }
   },
   {
    "sprite": "barrel",

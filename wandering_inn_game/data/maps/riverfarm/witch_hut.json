@@ -179,6 +179,17 @@
    ],
    "display_name": "The Boundary Scrap",
    "sprite": "hollow_glow_stone",
+   "_light_comment": "v0.17 R2 night-readability light. VISUAL-LOG named `hut_hearth_ash`; NOT used -- that prop is \"The Cold Hearth\" whose toast says the ash has been cold for years. The scrap is what this room says glows.",
+   "light": {
+    "color": [
+     0.72,
+     0.9,
+     0.72
+    ],
+    "energy": 0.5,
+    "radius": 22,
+    "flicker": false
+   },
    "requires_skill": "detect_magic",
    "skill_hint_toast": "The scrap hums under the dust, and not the way dust hums.",
    "locked_toast": "A palm-sized shard of grey stone on the shelf, cut along one edge with marks you cannot read.",
