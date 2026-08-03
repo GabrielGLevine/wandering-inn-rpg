@@ -4,7 +4,7 @@
  "nodes": {
   "counter": {
    "speaker": "A Scribe by the Hour",
-   "text": "The blank seal is eight gold the hour and it goes back in the tray when the hour is up. That is the entire arrangement, {addr}, and I have never been asked a second question about it.",
+   "text": "The blank seal is eight gold the hour. It goes back in the tray when the hour is up. That is the arrangement, {addr}. Nobody has ever asked me a second question about it.",
    "text_variants": [
     {
      "requires": {
@@ -12,7 +12,7 @@
        "forged_hand_named": 1
       }
      },
-     "text": "You have what you came for and I have said nothing, which is the version I intend to remember. Paper is over there. Ink is behind me."
+     "text": "You have what you came for and I said nothing. That is the version I intend to remember. Paper is over there. Ink is behind me."
     }
    ],
    "options": [
@@ -82,7 +82,7 @@
   },
   "refuses": {
    "speaker": "A Scribe by the Hour",
-   "text": "No. Not for coin, not for a kind face, and not because the asking was polite. The whole trade is that nobody who uses me ever finds out I was used. The day that stops being true I am a man with very good handwriting and no work at all.",
+   "text": "No. Coin doesn't change it. Neither does the manners, and I'll thank you for them anyway. Nobody who rents this seal finds out who else rented it. That's what they're paying for. The day it stops being true, I am a man with very good handwriting and no work at all.",
    "options": [
     {
      "text": "\"Fair enough.\"",
@@ -102,7 +102,7 @@
   },
   "persuade_close": {
    "speaker": "A Scribe by the Hour",
-   "text": "Then I am not keeping a client's confidence. I am keeping a renter's, and he did not tell me what he was renting. He works a table at the west end of the alleys, past the tea. He pays in coin and he pays late, which is the whole of what I know about what he is.",
+   "text": "Then there is no confidence to keep. A confidence is a thing a client tells me, and this man was a renter who never said what he was renting. He works a table at the west end of the alleys, past the tea. He pays in coin and he pays late. That is everything I know about what he is.",
    "options": [
     {
      "text": "\"That will do.\"",
@@ -117,7 +117,7 @@
   },
   "paid": {
    "speaker": "A Scribe by the Hour",
-   "text": "That buys the hour. It does not buy an answer, and you will notice I am not giving you one. I did not see who I wrote for. I did see the seal come back to the tray with alley grit still in the cut, and there is exactly one man west of the tea who works out of an alley and can afford this shop.",
+   "text": "That buys the hour. You will notice it has not bought you an answer. I never saw who I wrote for. The seal came back to the tray with alley grit still in the cut, and there is exactly one man west of the tea who works out of an alley and can afford this shop.",
    "options": [
     {
      "text": "\"That's an answer.\"",
@@ -127,7 +127,7 @@
   },
   "blotter": {
    "speaker": "A Scribe by the Hour",
-   "text": "You are looking at my blotter. People do not look at my blotter.",
+   "text": "That is my— you are looking at my blotter. People do not look at my blotter.",
    "options": [
     {
      "text": "\"Your blotter keeps everything backwards. Including a set of initials that isn't yours to press.\"",
@@ -142,7 +142,7 @@
   },
   "blotter_read": {
    "speaker": "A Scribe by the Hour",
-   "text": "It is a blotter. It blots. If a man reads it and walks west past the tea and finds a table there, that is a thing a man did, and it is not a thing I told him. Do me the courtesy of remembering it that way.",
+   "text": "It is a blotter. It blots. If a man reads it and walks west past the tea and finds a table there, I never said a word to him. Remember it that way.",
    "options": [
     {
      "text": "\"You never said a word.\"",

@@ -3,7 +3,7 @@
  "nodes": {
   "hub": {
    "speaker": "Olesm",
-   "text": "Oh — hello. One moment; I'm three columns into a supply tally and if I lose the thread I start again from the granary. ...There. Olesm, council clerk. How can I help?",
+   "text": "Oh — hello. One moment; I'm three columns into a supply tally and if I lose the thread I start again from the granary. Sixty-one, sixty-two. There. Olesm, council clerk. How can I help?",
    "text_variants": [
     {
      "requires": {
@@ -44,7 +44,7 @@
        "seal_kept_reported": 1
       }
      },
-     "text": "The gallery's sealed and the report is filed, which means my column finally has its number. I still don't care for a construct existing under my streets, but I care for it existing under control rather less badly. My thanks, again."
+     "text": "The gallery's sealed and the report is filed, which means my column finally has its number. I would still rather have no construct under my streets at all, but 'under control' is a phrase I can file. My thanks, again."
     }
    ],
    "options": [
@@ -283,7 +283,7 @@
   },
   "seal_bounty_posted": {
    "speaker": "Olesm",
-   "text": "Right. Right. Standing notice, Guild board, renewed by the season: one keeper, one lantern of mana a month, no questions logged about what it feeds. I'm putting my name on it, which means when it lapses it will be my fault. Somehow that IS better than not knowing. Thank you. I think.",
+   "text": "Right. Right. Standing notice, Guild board, renewed by the season: one keeper, one lantern of mana a month, no questions logged about what it feeds. I'm putting my name on it, which means when it lapses it will be my fault. That sits better than not knowing did. Thank you. I think.",
    "options": [
     {
      "text": "Somebody has to hold the door.",
@@ -302,7 +302,7 @@
        "seal_opened": 1
       }
      },
-     "text": "Right. Right. Standing notice, Guild board, renewed by the season: one keeper, one lantern of mana a month, and a door that is already open at the bottom of it. I'm putting my name on that too. If it was worth feeding shut, it is worth watching open. Thank you. I think."
+     "text": "Right. Right. Standing notice, Guild board, renewed by the season: one keeper, one lantern of mana a month, and a door that is already open at the bottom of it. I'm putting my name on that too. The keeper's first duty changes from feeding it to watching it, and I want that in writing before anyone asks me why. Thank you. I think."
     }
    ]
   },
@@ -374,7 +374,7 @@
   },
   "olesm_chess_wrong_pieces": {
    "speaker": "Olesm",
-   "text": "Safe. Sound. Exactly what I played that day, and exactly why I lost: I traded fear for fear and never once asked what SHE wanted. Try again.",
+   "text": "Safe. Sound. Exactly what I played that day, and exactly why I lost: I traded fear for fear and never once asked what she wanted. Her plan. I never once looked at her plan. Try again.",
    "options": [
     {
      "text": "Show me the board again.",
@@ -388,7 +388,7 @@
   },
   "olesm_chess_wrong_queen": {
    "speaker": "Olesm",
-   "text": "The obvious answer. Take the piece, kill the threat, sleep well. I made that exact trade against her, three games earlier, and it taught me nothing. Try again.",
+   "text": "The obvious answer. Take the piece and the threat dies with it. I made that exact trade against her, three games earlier, and it taught me nothing. Try again.",
    "options": [
     {
      "text": "Show me the board again.",
@@ -402,7 +402,7 @@
   },
   "olesm_chess_win": {
    "speaker": "Olesm",
-   "text": "...Oh. OH. You'd let the mate stand and walk past it. That's her move. That is EXACTLY her move. I have stared at this position for a season and you found the door in one sitting. I don't know whether to be humiliated or thrilled. Both, I've decided. Here.",
+   "text": "Oh. Oh no. You'd let the mate stand and walk past it. That's her move. That is exactly her move. I stared at this position for a season and you found the door in one sitting. Here — two gold. I need to write this down before it stops making sense.",
    "options": [
     {
      "text": "Good game, Olesm.",
@@ -416,7 +416,7 @@
   },
   "olesm_chess_loss": {
    "speaker": "Olesm",
-   "text": "A draw offered from a winning position is a resignation wearing a hat. I'll take it, and the coin, and I promise to feel appropriately guilty about both. ...Actually, no. Only the first one.",
+   "text": "Draw accepted, and the coin with it. My position was lost — I sat with it a season, I know what you had on that board. She played on from here and took me apart. I'm entering it in the book as a draw, two gold to me, and the entry will look wrong every time I open the page.",
    "options": [
     {
      "text": "Take the coin, Olesm.",
@@ -430,7 +430,7 @@
   },
   "olesm_doubt": {
    "speaker": "Olesm",
-   "text": "Ha. HA. No. I run the paperwork the Council ignores, and I'm a [Tactician] whose largest engagement to date was a supply-cart dispute. ...Which I won. Decisively. I keep a list of what I'd do if Liscor were ever truly tested. It's a good list. I would just rather die of old age never having to show anyone.",
+   "text": "Ha. Ha. No. I run the paperwork the Council ignores, and I'm a [Tactician] whose largest engagement to date was a supply-cart dispute. Which I won. Decisively. I keep a list of what I'd do if Liscor were ever truly tested. It's a good list. I would just rather die of old age never having to show anyone.",
    "options": [
     {
      "text": "I hope the list stays theoretical.",
@@ -448,7 +448,7 @@
   },
   "olesm_doubt_two": {
    "speaker": "Olesm",
-   "text": "So do I. That's the strange arithmetic of the job: you train your whole life for a day you pray never comes, and the better you are, the more boring the city stays. Liscor is very boring. I'm quietly proud of that.",
+   "text": "So do I. You train your whole life for a day you pray never comes. The better you are, the more boring the city stays. Liscor is very boring. I'm quietly proud of that.",
    "options": [
     {
      "text": "Back to the top.",
@@ -462,7 +462,7 @@
   },
   "olesm_ambition": {
    "speaker": "Olesm",
-   "text": "Honestly? There's a class above mine. [Strategist]. Cities write to theirs. Armies wait on them. Some nights I can almost see the shape of the level, like a move you know is on the board and cannot find yet. ...I've started writing to other [Tacticians]. Comparing games, doctrine, mistakes. Perhaps it becomes nothing. Perhaps it becomes something every city wants a copy of.",
+   "text": "Honestly? There's a class above mine. [Strategist]. Cities write to theirs. Armies wait on them. Some nights I can almost see the shape of the level, like a move you know is on the board and cannot find yet. I've started writing to other [Tacticians]. Comparing games. Doctrine, where anyone will admit to having one. Mistakes — mine, mostly, in generous detail. It may come to nothing. Or every city ends up wanting a copy of it.",
    "options": [
     {
      "text": "I'd read it.",
@@ -480,7 +480,7 @@
   },
   "olesm_ambition_two": {
    "speaker": "Olesm",
-   "text": "You'd be the second subscriber. The first is me, checking for errors. ...Thank you. People ask what I do; you asked what I'm FOR. There's a difference, and it's most of why the second chair stays out.",
+   "text": "You'd be the second subscriber. The first is me, checking for errors. Thank you. People ask what I do; you asked what I'm for. There's a difference, and it's most of why the second chair stays out.",
    "options": [
     {
      "text": "Back to the top.",
@@ -494,7 +494,7 @@
   },
   "briefing": {
    "speaker": "Olesm",
-   "text": "I mapped your ledge sketches against the city plans. There's a gallery below the cisterns older than Liscor's walls, and something has been widening it. Kill it, chase it off, or map it — but do NOT let it follow you up. …Take Relc. Please.",
+   "text": "I mapped your ledge sketches against the city plans. There's a gallery below the cisterns older than Liscor's walls, and something has been widening it. Kill it, chase it off — or map it, a map would serve. The one fixed term: it does not follow you up. Take Relc. Please.",
    "options": [
     {
      "text": "I'll take him.",
@@ -508,7 +508,7 @@
   },
   "resolution": {
    "speaker": "Olesm",
-   "text": "A Raskghar. AWAKE. Under my streets. I'm filing this under 'problems the Council pays adventurers for' — which, as of today, includes you. The seal will hold. Probably. Play chess with me sometime; you've earned the good board.",
+   "text": "A Raskghar, awake, under my streets. I get to write that sentence into the minutes now, and initial it. I'm filing this under 'problems the Council pays adventurers for' — which, as of today, includes you. The seal will hold. Probably. Play chess with me sometime; you've earned the good board.",
    "options": [
     {
      "text": "Set the board, Olesm.",
@@ -525,7 +525,7 @@
    "text": "Both sides, yes. It's the only honest way to learn how the enemy thinks. You have to want to win as them. A human beat me across this very board once, so thoroughly I nearly thanked her. I did thank her. Best thing to happen to my game in years.",
    "options": [
     {
-     "text": "You lost, and you're... pleased?",
+     "text": "You lost, and you're pleased?",
      "goto": "chess_two"
     },
     {
@@ -540,7 +540,7 @@
   },
   "chess_two": {
    "speaker": "Olesm",
-   "text": "A loss you understand is worth ten wins you don't. That isn't just chess. That's the whole job. If only the Council read reports the way I read a board.",
+   "text": "I learned more from that one loss than from ten wins before it. I have the ten wins; I checked. Her game is written out in my desk, second drawer, and I take it out when a report has me stuck. If only the Council read reports the way I read a board.",
    "options": [
     {
      "text": "Back up a moment.",
@@ -554,7 +554,7 @@
   },
   "resonance": {
    "speaker": "Olesm",
-   "text": "The weak point? Everyone points at the gap in the south wall. It isn't. It's that Liscor has never been besieged long enough to learn its own supply. Morale holds until the third hungry week, and no one has ever counted past the second. ...You already knew that. I can see you did. It is, honestly, a relief not to be the only one in the room doing that arithmetic.",
+   "text": "The weak point? Everyone points at the gap in the south wall, and I have stopped correcting them, because the true answer takes longer to say: Liscor has never been besieged long enough to learn its own supply. Morale holds until the third hungry week, and no one has ever counted past the second. You already knew that. I can see you did. It is, honestly, a relief not to be the only one in the room doing that arithmetic.",
    "options": [
     {
      "text": "We should compare notes sometime.",
@@ -572,7 +572,7 @@
   },
   "resonance_two": {
    "speaker": "Olesm",
-   "text": "I would like that. Genuinely. Bring a board. We'll settle the wall and the war in one afternoon.",
+   "text": "I would like that. Genuinely. Bring a board. One afternoon, the wall first, then the war — I'll have the supply figures out before you're through the door.",
    "options": [
     {
      "text": "Back to the top.",
@@ -586,7 +586,7 @@
   },
   "cisterns": {
    "speaker": "Olesm",
-   "text": "Worried is the professional term, yes. The market's had reports: things moving under the grates, a cistern gone foul, a fishmonger who swears something looked back at him from the dark. Probably nothing. I do not care for probably-nothings under a walled city. ...Actually. You have the look of someone who finishes things. Would you go down and settle it?",
+   "text": "Worried is the professional term, yes. The market's had reports: things moving under the grates, a cistern gone foul, a fishmonger who swears something looked back at him from the dark. Probably nothing. I do not care for probably-nothings under a walled city. Actually — you have the look of someone who finishes things. Would you go down and settle it?",
    "text_variants": [
     {
      "requires": {
@@ -594,7 +594,7 @@
        "heard_about_cisterns": 1
       }
      },
-     "text": "You're back. The cisterns. Any word? The grate's open now, and whatever's nesting down there will not count itself."
+     "text": "You're back. The cisterns. Any word? The grate's open now, and I still have no count for what's nesting down there."
     },
     {
      "requires": {
@@ -737,7 +737,7 @@
   },
   "cisterns_brief": {
    "speaker": "Olesm",
-   "text": "Thank you. Here's what I have. What: something's nested in the old cisterns under the market. The reports say spiders, big ones, silver-backed, the kind that climb up from the Dungeon when a wall cracks. Where: down the green sewer-grate off the south square. It's rusted, but it'll open now that someone official wants it open. How: I genuinely don't mind. Put a blade through it, get the Watch to sweep it, or just bring me a proper picture of what's down there — count, size, exits. A map is as good as a corpse to me, and cheaper in bandages. Settle it however suits you, then come tell me it's done.",
+   "text": "Thank you. Here's what I have. What: something's nested in the old cisterns under the market. The reports say spiders, big ones, silver-backed, the kind that climb up from the Dungeon when a wall cracks. Where: down the green sewer-grate off the south square. It's rusted, but it'll open now that someone official wants it open. How: I genuinely don't mind. Put a blade through it. Get the Watch to sweep it. Or just bring me a proper picture of what's down there — count, size, exits. A map does the same work for me as a corpse, and costs less in bandages. Settle it however suits you, then come tell me it's done.",
    "options": [
     {
      "text": "Understood. I'll head down.",
@@ -751,7 +751,7 @@
   },
   "cisterns_done": {
    "speaker": "Olesm",
-   "text": "Then it's over, and the city's quieter for it. That's real work, the kind nobody thanks you for, so let me be the exception. You've the Council's gratitude, and mine, which comes with more paperwork but rather more warmth. If you ever want a game, or a job that needs a clear head, you know where the board is.",
+   "text": "Then it's over, and the city's quieter for it. Nobody thanks anyone for this kind of work — the streets just stay dull and no one asks why. So let me do it here: you've the Council's gratitude, and mine, which comes with more paperwork attached. If you ever want a game, or a job that needs a clear head, you know where the board is.",
    "options": [
     {
      "text": "Anytime, Olesm.",
@@ -762,7 +762,7 @@
   },
   "cisterns_intel": {
    "speaker": "Olesm",
-   "text": "...Oh, this is lovely work. You counted them. Exits, chokepoints, the drop where the tunnel falls away. The whole shape of the problem on one page. Now the Watch goes in knowing the ground instead of bleeding to learn it. A map IS as good as a corpse, and I have never once gotten to say that to someone who agreed. Take the Council's thanks — and mine, doubled, because you did it the clever way.",
+   "text": "Oh, this is lovely work. You counted them. Exits, chokepoints, the drop where the tunnel falls away. The problem has a shape now, and it fits on one page. The Watch goes in knowing the ground instead of bleeding to learn it. A map is as good as a corpse, and I have never once gotten to say that to someone who agreed. Take the Council's thanks — and mine, doubled, because you did it the clever way.",
    "options": [
     {
      "text": "Glad it's useful.",
@@ -787,7 +787,7 @@
   },
   "seal_survey_offer": {
    "speaker": "Olesm",
-   "text": "The Watch wants eyes on the reopened gallery — proper eyes, not another guardsman who reports 'it is dark.' Five gold now, fifteen when you bring me something I can put in a report. The Guild is sending a Silver-rank team to meet you there.",
+   "text": "The Watch wants eyes on the reopened gallery — proper eyes. The last guardsman down there filed three words: 'it is dark.' Five gold now, fifteen when you bring me something I can put in a report. The Guild is sending a Silver-rank team to meet you there.",
    "options": [
     {
      "text": "Back to the top.",
@@ -801,7 +801,7 @@
   },
   "seal_kept_report": {
    "speaker": "Olesm",
-   "text": "A construct, a vault, and ANOTHER rune-door. Do you know what this does to my casualty projections? ...Nothing good. Here is your fifteen. Earned.",
+   "text": "A construct. A vault. Another rune-door — another. Do you know what this does to my casualty projections? Nothing good. Here is your fifteen. Earned.",
    "options": [
     {
      "text": "Back to the top.",

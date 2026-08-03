@@ -4,7 +4,7 @@
  "nodes": {
   "waiting": {
    "speaker": "A Woman Who Came in a Carriage",
-   "text": "Sit if you like. I am not waiting for you and I am not waiting for the house. I am waiting for a question to be answered, and I would rather do that in a warm room than in a cold one.",
+   "text": "Sit if you like. My waiting has nothing to do with you, or with this house. A question went out in her hand. When its answer exists, I will carry it back. Until then there is a fire here, and I intend to use it.",
    "text_variants": [
     {
      "requires": {
@@ -96,14 +96,14 @@
    "text": "A house sent me. You have been in this city long enough to know there is only one answer to that question worth giving and that nobody here gives it. I take a card out and I bring an answer back, and between those two things I sit somewhere warm and I am extremely dull.",
    "options": [
     {
-     "text": "\"Dull is a whole profession here.\"",
+     "text": "\"There's a lot of that trade in this city.\"",
      "goto": "waiting"
     }
    ]
   },
   "answered": {
    "speaker": "A Woman Who Came in a Carriage",
-   "text": "Good. Then the name was being sold, not taken, and the lady kept enough of it to be worth the theft. That will go back exactly as you said it and not one word further. She is paid for her trouble and you are paid for yours, and neither of those is a favour. My mistress does not do favours. She does accounts, and she settles them the same week.",
+   "text": "Good. Then he was selling it, and nobody had to take it from him, and the lady kept enough of the name to be worth the theft. That will go back exactly as you said it and not one word further. She is paid for her trouble and you are paid for yours. My mistress does not do favours. She does accounts, and she settles them the same week.",
    "options": [
     {
      "text": "\"Then we're square.\"",

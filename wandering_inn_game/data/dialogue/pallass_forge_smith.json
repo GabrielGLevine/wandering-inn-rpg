@@ -78,7 +78,7 @@
   },
   "spec": {
    "speaker": "Forge-Tier Smith",
-   "text": "A full working day at heat, then it stands down cold. Push it past that and the slab cracks. A cracked slab is a season of paperwork and a smith who doesn't work that season.",
+   "text": "A full working day at heat, then it stands down cold. Push it past that and the slab cracks. A cracked slab is a season of paperwork before the city clears it again. I do not swing a hammer that season.",
    "options": [
     {
      "text": "How often does someone push it?",
@@ -92,7 +92,7 @@
   },
   "standard": {
    "speaker": "Forge-Tier Smith",
-   "text": "The city sets the spec. I hold it. That's the whole arrangement, and it's better than it sounds. Nothing built on this tier fails quietly.",
+   "text": "The city sets the spec. I hold it. That's the arrangement, and it's better than it sounds. Nothing built on this tier fails quietly.",
    "options": [
     {
      "text": "Things fail loudly instead?",
@@ -120,7 +120,7 @@
   },
   "commission": {
    "speaker": "Forge-Tier Smith",
-   "text": "You counted them. Good. My apprentice's hand is the steadiest on this tier and the examiner has failed her nine times running. One of us is wrong and it is not her.",
+   "text": "You counted them. Good. My apprentice has the steadiest hand on this tier. The examiner has failed her nine times running. One of us is wrong and it is not her.",
    "options": [
     {
      "text": "I'll take the commission.",
@@ -135,7 +135,7 @@
      "goto": "commission_brief"
     },
     {
-     "text": "That sounds like your argument, not mine.",
+     "text": "That sounds like a fight between you and the examiner.",
      "end": true
     }
    ]
@@ -238,10 +238,10 @@
   },
   "broker": {
    "speaker": "Forge-Tier Smith",
-   "text": "Recovery. He has been failing her for coming back, and she has been chasing hardness because I taught her to. So he is right and I am right and she paid for both. Say the rest of it out loud, because I am not going to.",
+   "text": "Recovery. It is on his own notice, the one hanging on my wall, and I have walked past it for six years without reading it. She kept bringing him harder steel because harder is what I taught her. Nine fails. Say the rest of it out loud, because I am not going to.",
    "options": [
     {
-     "text": "Nobody was wrong. That was the whole problem.",
+     "text": "She'll hear it from the file before she hears it from either of you.",
      "goto": "commission_report"
     },
     {
@@ -260,7 +260,7 @@
        "golem_recalibrated": 1
       }
      },
-     "text": "The rig is honest again and my apprentice gets a fair reading. I will not thank you over a hot hammer. Take it as said."
+     "text": "The rig is honest again and my apprentice gets a fair reading. Hand me the tongs — no, the short ones. She has forty-two on the board and I want the slab hot before second bell."
     },
     {
      "requires": {
@@ -268,7 +268,7 @@
        "temper_run": 1
       }
      },
-     "text": "You ran it once and it came back. She has run it forty-one times and it came back too. Now the file says so. That is the difference and it should not have been yours to make."
+     "text": "You ran it once and it came back. She has run it forty-one times and it came back too. Now the file says so. Pull the vent chain on your way past. I have a billet in and she will want the bench."
     },
     {
      "requires": {
@@ -276,7 +276,7 @@
        "standards_brokered": 1
       }
      },
-     "text": "I have been arguing with that man for six years and it turns out we agreed the entire time. Do not repeat that. Especially to him."
+     "text": "I have been arguing with that man for six years and it turns out we agreed all six years. Do not repeat that. Especially to him."
     }
    ],
    "options": [

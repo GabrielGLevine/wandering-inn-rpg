@@ -1,25 +1,25 @@
 {
 	"start": "hub",
 	"nodes": {
-		"hub": { "speaker": "Sergeant Ashgrave", "text": "If you're here to report something, report it plain. The belt-slate does the writing; you do the talking.", "text_variants": [
-				{ "_comment": "#92 D3 relay: standing donor acknowledgment, authored FIRST so it stays lowest priority -- any quest-status greeting below overrides it.", "requires": { "accomplishment": { "donated_watch_supplies": 1 } }, "text": "The supply fund's the better for your coin. Boots and bandages don't buy themselves. The Watch counts you a friend." },
+		"hub": { "speaker": "Sergeant Ashgrave", "text": "If you're here to report something, report it plain. You do the talking, the belt-slate writes it down.", "text_variants": [
+				{ "_comment": "#92 D3 relay: standing donor acknowledgment, authored FIRST so it stays lowest priority -- any quest-status greeting below overrides it.", "requires": { "accomplishment": { "donated_watch_supplies": 1 } }, "text": "The supply fund's the better for your coin. Boots this month, bandages when the next crate comes in. The Watch counts you a friend." },
 				{ "_comment": "Authored after the donor line, before the quest greetings: last-match-wins, so quest-status greetings (Pell etc.) override both standing lines.", "requires": { "accomplishment": { "studied_necromancy": 1 } }, "text": "Heard what you've been studying. Keep it out of my barracks and off my streets, and you and I stay civil." },
 				{ "requires": { "accomplishment": { "missing_recruit_started": 1 } }, "text": "Still no word from Pell. Kit's counted twice over on account of it. Slate stays open till someone finds them." },
-				{ "requires": { "accomplishment": { "recruit_reported_safe": 1 } }, "text": "Pell's back on the roster, thanks to you. Kit's counted, slate's closed. Good day, officially, this time." }
+				{ "requires": { "accomplishment": { "recruit_reported_safe": 1 } }, "text": "Pell's back on the roster, thanks to you. Kit's counted, slate's closed. Muster sheet reads full again." }
 			], "options": [
 			{ "text": "Just checking in.", "end": true },
 			{ "text": "Heard a recruit's gone missing.", "requires": { "accomplishment": { "heard_about_missing_recruit": 1 } }, "hide_when": { "accomplishment": { "missing_recruit_started": 1 } }, "effects": [ { "accomplishment": "missing_recruit_started" }, { "quest": "the_missing_recruit" } ], "goto": "explain" },
 			{ "text": "I found Pell. Safe, just turned around.", "requires": { "accomplishment": { "found_missing_recruit": 1 } }, "hide_when": { "accomplishment": { "recruit_reported_safe": 1 } }, "effects": [ { "accomplishment": "recruit_reported_safe" }, { "gold": 4 }, { "remove_entity": "recruit_pell" } ], "goto": "thanks" },
 			{ "_comment": "#92 D3: appended LAST so it never shifts the recruit options' indices (missing_recruit_loop selects by index). Repeatable standing sink -- no hide_when; requires.gold greys it when short.", "text": "Something toward the Watch's supply fund. (10 gold)", "requires": { "gold": 10 }, "effects": [ { "gold": -10 }, { "accomplishment": "donated_watch_supplies" } ], "goto": "donation_thanks" }
 		] },
-		"donation_thanks": { "speaker": "Sergeant Ashgrave", "text": "Logged and counted. Lamp oil, bandages, a spare gambeson for the next green recruit — it all goes somewhere it's needed. The Watch doesn't forget who stands the fund.", "options": [
+		"donation_thanks": { "speaker": "Sergeant Ashgrave", "text": "Logged and counted. Lamp oil first — the Watch's night patrol has been burning dregs for a week. Then bandages, then a spare gambeson for the next green recruit. The gambeson may have to wait for the next levy.", "options": [
 			{ "text": "Put in again.", "goto": "hub" },
 			{ "text": "That's all for now.", "end": true }
 		] },
-		"explain": { "speaker": "Sergeant Ashgrave", "text": "Pell. Green, keen, checks every noise personally instead of logging it and moving on. Went to look at scratching in the drainage gallery two musters back. Hasn't reported since. Not panicking. Yet.", "options": [
+		"explain": { "speaker": "Sergeant Ashgrave", "text": "Pell. Green, keen, checks every noise personally instead of logging it and moving on. Went to look at scratching in the drainage gallery two musters back. Hasn't reported since. Not panicking yet. Ask me again after next muster.", "options": [
 			{ "text": "I'll take a look.", "end": true }
 		] },
-		"thanks": { "speaker": "Sergeant Ashgrave", "text": "Turned around, not hurt. That's the good version of this story. Four gold, out of my own kit budget — the Guild doesn't pay for finding my own people. Pell owes you a drink they can't afford yet.", "options": [
+		"thanks": { "speaker": "Sergeant Ashgrave", "text": "Turned around, unhurt. Slate closes tonight. Four gold, out of my own kit budget — the Guild doesn't pay for finding my own people. Pell owes you a drink they can't afford yet.", "options": [
 			{ "text": "Glad it worked out.", "end": true }
 		] }
 	}

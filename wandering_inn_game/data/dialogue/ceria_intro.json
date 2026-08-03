@@ -7,8 +7,8 @@
 			"text": "You're the one Olesm's paying to poke the gallery? Good. We're the ones the Guild's paying to make sure you come back out. Ceria Springwalker — Horns of Hammerad.",
 			"text_variants": [
 				{ "requires": { "accomplishment": { "horns_party_formed": 1 } }, "text": "All right. Four of us on the roster, three of us actually walking in — Pisces bills from a distance. Try to keep up." },
-				{ "requires": { "accomplishment": { "vault_construct_downed": 1 } }, "text": "It was guarding a door. Wonderful. I hate doors that need guarding." },
-				{ "requires": { "accomplishment": { "door_retrieved": 1 } }, "text": "Still can't believe we carried that thing across the floodplains. Erin's already put a tablecloth on it. A TABLECLOTH." }
+				{ "requires": { "accomplishment": { "vault_construct_downed": 1 } }, "text": "It was guarding a door. Wonderful. Somebody left a construct in the dark to watch one door, and we still don't know what's on the other side." },
+				{ "requires": { "accomplishment": { "door_retrieved": 1 } }, "text": "Still can't believe we carried that thing across the floodplains. Erin's already put a tablecloth on it. A tablecloth. On the pedestal guardian." }
 			],
 			"options": [
 				{ "text": "Go on.", "hide_when": { "accomplishment": { "horns_party_formed": 1 } }, "goto": "rules" },
@@ -35,7 +35,7 @@
 		},
 		"dig_unknown": {
 			"speaker": "Ceria",
-			"text": "If I knew, I wouldn't need a dig. Whatever it is, someone sealed it on purpose and did a very good job. That usually means valuable, dangerous, or both.",
+			"text": "If I knew, I wouldn't need a dig. Whatever it is, someone sealed it on purpose and did a very good job. Usually that means valuable or it means dangerous. I plan the camp for dangerous.",
 			"options": [ { "text": "I'm in. Where's the camp?", "goto": "dig_directions" } ]
 		},
 		"dig_directions": {

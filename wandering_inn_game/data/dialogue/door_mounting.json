@@ -8,7 +8,7 @@
 			"text": "Mounted, hinged, and — observe — already holding a hop to Liscor's gate district without so much as a rune of encouragement. It works. Now let us see how far it can go.",
 			"options": [
 				{
-					"text": "How far CAN it go?",
+					"text": "How far can it actually go?",
 					"goto": "door_mounting_far"
 				},
 				{
@@ -30,7 +30,7 @@
 		},
 		"door_mounting_far": {
 			"speaker": "Pisces",
-			"text": "Farther than Liscor. The wardwork wants distance the way a bowstring wants release — but push it unattuned and things will leak through that we did not invite. Properly? We attune it. Krshia stocks catalysts; I stock expertise.",
+			"text": "Farther than Liscor. The wardwork wants distance the way a bowstring wants release — but push it unattuned and things we did not invite will leak through. So we attune it properly. Krshia stocks the catalysts. The expertise you are currently standing in front of.",
 			"options": [
 				{
 					"text": "Then let's start.",

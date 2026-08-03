@@ -3,7 +3,7 @@
 	"nodes": {
 		"hub": {
 			"speaker": "Yvlon",
-			"text": "Stay behind my shield arm if it goes bad. Not out of charity — I just hate digging graves.",
+			"text": "Stay behind my shield arm if it goes bad. Left side. My left. I've dug graves for people who got that wrong.",
 			"text_variants": [
 				{ "requires": { "accomplishment": { "horns_party_formed": 1 } }, "text": "Dust this thick means nothing's walked here in years. Or the thing that walks here doesn't leave tracks." },
 				{ "requires": { "accomplishment": { "vault_construct_downed": 1 } }, "text": "Solid work back there. You'd pass for a second-string Silver-rank. That's a compliment. Take it." }

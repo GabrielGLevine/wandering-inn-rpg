@@ -3,7 +3,7 @@
  "nodes": {
   "hub": {
    "speaker": "Zevara",
-   "text": "Watch Captain Zevara. If this is a report, keep it short; if it's a complaint, keep it shorter. I've been on since before the gate opened and I'll be on after it shuts.",
+   "text": "Watch Captain Zevara. Report or complaint, give me the short version. I've been on since before the gate opened and I'll be on after it shuts.",
    "text_variants": [
     {
      "requires": {
@@ -11,7 +11,7 @@
        "studied_necromancy": 1
       }
      },
-     "text": "Word travels. You've been taking lessons from the Guild-square [Necromancer]. Not illegal. Noted, all the same — this city has burned for less.",
+     "text": "Word travels. You've been taking lessons from the Guild-square [Necromancer]. Legal. It went in a file anyway. This city has burned for less.",
      "_comment": "Authored FIRST deliberately: last-match-wins, so quest/closure greetings override the standing cold line."
     },
     {
@@ -21,7 +21,7 @@
        "night"
       ]
      },
-     "text": "Gate doesn't close at dusk. Neither do I. Say your business and let one of us get some sleep eventually."
+     "text": "The gate doesn't close at dusk and neither do I. Say your business and let one of us get some sleep eventually."
     },
     {
      "requires": {
@@ -29,7 +29,7 @@
        "resolved_the_cisterns": 1
       }
      },
-     "text": "The thing under the market. I hear it's handled. Good. I sleep worse than you'd think over not knowing what's beneath my own streets. However you settled it, the Watch owes you a quiet night. Don't tell the others I said so."
+     "text": "The thing under the market. I hear it's handled. Good. I sleep worse than you'd think over not knowing what's beneath my own streets. However you settled it, the Watch owes you a quiet night."
     },
     {
      "requires": {
@@ -45,7 +45,7 @@
        "raskghar_sealed": 1
       }
      },
-     "text": "The one who went down the tunnels and climbed back out. The gallery's bricked and the streets are quiet. I've a report with your name on it that I'll deny writing. Rest. You've earned a boring week. Take it before the next one."
+     "text": "The one who went down the tunnels and climbed back out. The gallery's bricked and the streets are quiet. There's a report on my desk with your name in it, and I signed it this time. Rest. You've earned a boring week."
     }
    ],
    "options": [
@@ -170,7 +170,7 @@
   },
   "zevara_oath": {
    "speaker": "Zevara",
-   "text": "Somebody before me let things slide. Reports that went nowhere, as long as the dead were the kind the city didn't mourn. I wrote it up. Command found the paperwork inconvenient and the facts worse — and then the chair was mine. So no, I don't sleep much. I know exactly what this office looks like when its captain does.",
+   "text": "Somebody before me let things slide. Reports that went nowhere, as long as the dead were the kind the city didn't mourn. I wrote it up. Command found the paperwork inconvenient and the facts worse — and then the chair was mine. So no, I don't sleep much. The old reports are still in the cabinet behind my desk. Archiving them is a one-line requisition. I haven't written it.",
    "options": [
     {
      "text": "The city's lucky it was you.",
@@ -188,7 +188,7 @@
   },
   "zevara_oath_two": {
    "speaker": "Zevara",
-   "text": "Luck is what people call other people's overtime. But — thank you. File that under 'said once'. Now get out of my gatehouse before I find you a shift.",
+   "text": "Ten years of overtime is what that was. But — thank you. File it under 'said once.' Now get out of my gatehouse before I find you a shift.",
    "options": [
     {
      "text": "(Back a step.)",
@@ -202,7 +202,7 @@
   },
   "zevara_bounties": {
    "speaker": "Zevara",
-   "text": "Good. The Watch posts standing bounties on anything that made a file cross my desk. You clear it, you claim it here, I sign it. Keep the receipts honest and this arrangement outlives both our patience.",
+   "text": "Good. The Watch posts standing bounties on anything that made a file cross my desk. You clear it and claim it here. I sign it. Keep the receipts honest. The Council audits the ledger every month.",
    "options": [
     {
      "text": "The scavengers off Market Street are dealt with.",
@@ -278,7 +278,7 @@
   },
   "zevara_bounty_paid": {
    "speaker": "Zevara",
-   "text": "Signed. Spend it somewhere that doesn't generate paperwork.",
+   "text": "Signed. Mind the ink, it's still wet.",
    "options": [
     {
      "text": "Anything else on the books?",
@@ -293,7 +293,7 @@
   "summons": {
    "_comment": "GH#334 note 4b: Act II pacing fires this, so it told cistern-innocent players 'You've been down there'. text_variants cannot express absence, so the base assumes none.",
    "speaker": "Zevara",
-   "text": "There you are. A crew opening the grates under the market broke through into tunnels nobody dug, going DOWN. Olesm's maps say they shouldn't exist. I need somebody who isn't Watch to go and look, and you have the look of somebody who says yes.",
+   "text": "There you are. A crew opening the grates under the market broke through into tunnels nobody dug. They go down, and they keep going. Olesm's maps say they shouldn't exist. I need somebody who isn't Watch to go and look. That's you.",
    "text_variants": [
     {
      "requires": {
@@ -301,7 +301,7 @@
        "heard_about_cisterns": 1
       }
      },
-     "text": "There you are. The cisterns crew found something under the new grates: tunnels nobody dug, going DOWN. Olesm's maps say they shouldn't exist. You've been down there; you're going again. This time for the Watch."
+     "text": "There you are. The cisterns crew found something under the new grates: tunnels nobody dug, going down past where their lanterns reached. Olesm's maps say they shouldn't exist. You've been down there. You're going again, this time for the Watch."
     }
    ],
    "options": [
@@ -336,7 +336,7 @@
   },
   "seal": {
    "speaker": "Zevara",
-   "text": "Gone? Good. Dead? Better. The Watch is bricking that gallery before sundown — 'for now,' before you say it. Things under Liscor have a way of minding being sealed. …Good work. I mean it. Don't make me say it twice.",
+   "text": "Gone? Good. Dead? Better. The Watch is bricking that gallery before sundown — 'for now,' before you say it. Things under Liscor have a way of minding being sealed. Good work. I mean it. Now clear the street. The masons are already stacking brick.",
    "options": [
     {
      "text": "For now.",
@@ -350,7 +350,7 @@
   },
   "shift": {
    "speaker": "Zevara",
-   "text": "Ten years of long shifts. Six weeks of leave across all of them. Do the arithmetic and then don't ask why I look like this. My Senior Guardsmen are a spearmaster who won't stop talking and an Antinium who won't start, and the wall stands in spite of both of them. Don't tell either of them the streak's holding. They'll take the credit.",
+   "text": "Ten years of long shifts. Six weeks of leave across all of them. Do the arithmetic and then don't ask why I look like this. My Senior Guardsmen are a spearmaster who won't stop talking and an Antinium I've heard maybe a dozen sentences from in two years. The wall stands. Ten years, no breach. I count that every morning before I count anything else.",
    "options": [
     {
      "text": "The guard on the gate speaks well of you.",
@@ -368,7 +368,7 @@
   },
   "authority": {
    "speaker": "Zevara",
-   "text": "He should. I signed his posting and I read his reports: both of them, the real one and the one where nothing happened. Liscor's Watch runs on people who'd rather stand a boring gate than let an interesting one through. Long may it bore us.",
+   "text": "He should. I signed his posting and I read his reports — both of them, the real one and the one where nothing happened. That's Liscor's Watch as I intend it: boring gates, boring reports. I've read the other kind of report. I keep those in a different drawer.",
    "options": [
     {
      "text": "(Back a step.)",
@@ -385,7 +385,7 @@
    "text": "Sweep the cisterns. You know what a sweep costs? Six Watchmen off the wall, lanterns, a healer on standby, and a form in triplicate explaining to the Council why the wall was six thin. Give me one reason worth the ink.",
    "options": [
     {
-     "text": "If it's under the city and moving, it's Watch business — before it's an emergency, not a form.",
+     "text": "If it's under the city and moving, it's Watch business before it becomes an emergency. File the form after.",
      "goto": "sweep_argue"
     },
     {
@@ -396,7 +396,7 @@
   },
   "sweep_argue": {
    "speaker": "Zevara",
-   "text": "...Before it's an emergency. Hm. You argue like someone who's read a casualty report. Fine. Make it plain. What am I actually sending them into?",
+   "text": "Before it's an emergency. Hm. You argue like someone who's read a casualty report. Fine. Make it plain. What am I actually sending them into?",
    "options": [
     {
      "text": "A nest. Silver-backed spiders, up from the Dungeon. [Charming Smile]",
@@ -454,7 +454,7 @@
   },
   "swept": {
    "speaker": "Zevara",
-   "text": "Spiders from the Dungeon. Wonderful. That's exactly the small-now-large-later I'd rather pay for in overtime than in funerals. Consider it swept. I'll pull a squad at dusk and burn the silk out before it spreads. You did right bringing it to me clean, before it had teeth. Go tell whoever set you on this that the Watch has it. And, good work. That's rarer from my side of the gate than you'd think.",
+   "text": "Spiders from the Dungeon. Wonderful. That's still the size of problem overtime fixes. The next size up gets paid for in funerals. Consider it swept. I'll pull a squad at dusk and burn the silk out before it spreads. You did right bringing it to me clean, before it had teeth. And good work. Now go tell whoever set you on this that the Watch has it.",
    "options": [
     {
      "text": "That's all I ask, Captain.",
@@ -490,7 +490,7 @@
        "resolved_the_cisterns": 1
       }
      },
-     "text": "It's cleared, is it? Then go tell Olesm at the Guild — he's the one keeping the tally, not me."
+     "text": "It's cleared, is it? Then go tell Olesm at the Guild — he's the one keeping the tally."
     }
    ],
    "options": [

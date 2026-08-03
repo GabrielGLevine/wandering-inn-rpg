@@ -4,7 +4,7 @@
  "nodes": {
   "hub": {
    "speaker": "Den-Shop Keeper",
-   "text": "Come in, mind the small ones. If you're buying, the shelf is the shelf. If you're official, the counter is the counter and I've had a long month of counters.",
+   "text": "Come in, mind the small ones. If you're buying, the shelf is the shelf. If you're official, the counter's there, and I have had a long month of counters.",
    "text_variants": [
     {
      "requires": {
@@ -12,7 +12,7 @@
        "ledger_unstuck": 1
       }
      },
-     "text": "The tin came up. Four cycles late and every stamp on it correct, which is the joke, {addr}. Sit down. You are eating something."
+     "text": "The tin came up. Four cycles late and every stamp on it correct. Sit down, {addr}. You are eating something."
     }
    ],
    "options": [
@@ -42,21 +42,21 @@
   },
   "month": {
    "speaker": "Den-Shop Keeper",
-   "text": "My tin is in a queue. I am in the queue behind my tin. The office that holds the queue is also waiting on the queue, for its own supplies, which are also tin. I have stopped finding it funny and started finding it restful.",
+   "text": "A crate of tin, four cycles late, and every stamp on it correct. The permit office cannot release it because the office is short its own supplies. Which are tin. I have hatchlings upstairs chewing yesterday's bread and a shelf with a tin-shaped hole in it.",
    "options": [
     {
      "text": "That can't be how it works.",
      "goto": "month_two"
     },
     {
-     "text": "Restful.",
+     "text": "Long month, then.",
      "end": true
     }
    ]
   },
   "month_two": {
    "speaker": "Den-Shop Keeper",
-   "text": "It is exactly how it works and every single person in that chain is doing their job correctly. That is what visitors never believe. Nobody up here is lazy, {addr}. They are all precisely as careful as the last person who got blamed.",
+   "text": "It is exactly how it works and every single person in that chain is doing their job correctly. That is what visitors never believe. Nobody up here is lazy, {addr}. The clerk at the release window checks every stamp twice, both sides, and the dock behind her fills up while she does it.",
    "options": [
     {
      "text": "Somebody has to be able to sign.",
@@ -70,7 +70,7 @@
   },
   "consignee": {
    "speaker": "Den-Shop Keeper",
-   "text": "I am the consignee. I can release it the moment somebody hands me a notice I am allowed to act on. Not a promise, not a word from the landing. A notice.",
+   "text": "I am the consignee. I can release the crate the moment somebody hands me a notice I am allowed to act on. I have been offered promises. I have been offered a shout down from the landing. A notice has a stamp on it. I am still waiting on the stamp.",
    "options": [
     {
      "_comment": "TALK route terminal rung. Requires the countersigned notice, i.e. offices 1 and 2 walked in order.",
@@ -120,7 +120,7 @@
   },
   "released": {
    "speaker": "Den-Shop Keeper",
-   "text": "Countersigned. By the office that was waiting on the queue, about the queue. I am going to have this framed and I am going to hang it where the hatchlings can see it.",
+   "text": "Countersigned. The same office that held my crate in its queue for four cycles signed the release. I am going to have this framed and I am going to hang it where the hatchlings can see it.",
    "options": [
     {
      "text": "Everyone in that chain was right.",
@@ -133,7 +133,7 @@
    "text": "You carried it. Two tiers and three legs and no stamp on any of it. That is not how it is done and I am not going to say another word about it. Take the small jar. No, take it.",
    "options": [
     {
-     "text": "It's tin. It was always just tin.",
+     "text": "It's just tin.",
      "end": true
     }
    ]

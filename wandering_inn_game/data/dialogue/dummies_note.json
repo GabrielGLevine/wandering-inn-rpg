@@ -3,7 +3,7 @@
 	"nodes": {
 		"note": {
 			"speaker": "Training Dummies",
-			"text": "Two battered Watch training dummies on little wheels. One has a face painted on. It has seen things. Relc runs the drills. Talk to him.",
+			"text": "Two battered Watch training dummies on little wheels. One has a face painted on, mostly worn off at the jaw. Relc runs the drills. Talk to him.",
 			"options": [ { "text": "(Leave them be.)", "end": true } ]
 		}
 	}

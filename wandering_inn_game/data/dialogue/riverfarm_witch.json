@@ -12,7 +12,7 @@
        "night"
       ]
      },
-     "text": "The craft listens better once the birds stop. Sit. Tea's still tea in the dark."
+     "text": "The craft listens better once the birds stop. Sit. There's tea in the pot yet."
     },
     {
      "requires": {
@@ -20,7 +20,7 @@
        "heard_price_of_a_favor": 1
       }
      },
-     "text": "You want the blight gone. I want what I'm owed. One of these is easy. Sit. Tea first. The craft has MANNERS."
+     "text": "You want the blight gone. I want what I'm owed. One of these is easy. Sit. Tea first. The craft minds its manners."
     },
     {
      "requires": {
@@ -36,7 +36,7 @@
        "witch_lessons": 1
       }
      },
-     "text": "Mind the kettle, apprentice-of-no-one. The craft heard you. What it does about it is between you and your sleep."
+     "text": "Mind the kettle, apprentice-of-no-one. The craft heard you. Pour before it whistles; that's your first lesson."
     }
    ],
    "options": [
@@ -147,7 +147,7 @@
   },
   "truth": {
    "speaker": "Eloise",
-   "text": "No blight. A bargain, unpaid. Someone in that village asked me for a favor and got exactly what they asked for. The price was always the second half of the deal, and they're pretending they forgot that part. The craft doesn't forget. It collects.",
+   "text": "No blight. A bargain, unpaid. Someone in that village asked me for a favor and got exactly what they asked for. The price was always the second half of the deal, and they're pretending they forgot that part. The craft has been collecting on the debt ever since, out of their fields.",
    "options": [
     {
      "text": "Back to it.",
@@ -161,7 +161,7 @@
   },
   "mediate_pitch": {
    "speaker": "Eloise",
-   "text": "Broker. That's a word for it. Go on, then, make your pitch. I'm not unreasonable. I'm owed, which isn't the same thing.",
+   "text": "Broker. That's a word for it. Go on, then, make your pitch. I'll hear it out. Being owed has never yet made me unreasonable.",
    "options": [
     {
      "text": "Take a year of hearth-tending instead of whatever you were owed.",
@@ -175,7 +175,7 @@
   },
   "mediate_argue": {
    "speaker": "Eloise",
-   "text": "A year, tending my hearth. Not nothing, and not the debt I was owed either.",
+   "text": "A year, tending my hearth. Wood in winter, the kettle seen to the year round. It falls short of the debt I was owed. It might do.",
    "options": [
     {
      "text": "It's settled, then.",
@@ -196,7 +196,7 @@
   },
   "mediated": {
    "speaker": "Eloise",
-   "text": "Fine. Tea first, and then it's settled — a year's honest work is worth more to me than a favor nobody meant to keep.",
+   "text": "Fine. Tea first, and then it's settled. A year's honest work from a village that never meant to keep its favor. The woodpile is behind the house; tell them it starts there.",
    "options": [
     {
      "text": "Fair enough.",
@@ -333,7 +333,7 @@
   },
   "bought": {
    "speaker": "Eloise",
-   "text": "Sold. Don't come back asking for a refund because it didn't work the way you hoped. Nothing ever works the way anyone hopes.",
+   "text": "Sold. Don't come back asking for a refund because it didn't work the way you hoped. And keep it out of the damp.",
    "options": [
     {
      "text": "Show me again.",
@@ -347,7 +347,7 @@
   },
   "stone_sold": {
    "speaker": "Eloise",
-   "text": "Distance is just another kindness, if you carry the right stone. This one already knows the road to Invrisil. Don't lose it before you get there.",
+   "text": "That stone's walked the Invrisil road more times than I have. Keep it in a dry pocket, on the side you don't fall on. Don't lose it before you get there.",
    "options": [
     {
      "text": "Show me again.",
@@ -361,7 +361,7 @@
   },
   "witch_ask": {
    "speaker": "Eloise",
-   "text": "Anyone can learn the shape of it. Hats, herbs, words said over water. The craft itself asks one question first, and it isn't 'are you clever.'",
+   "text": "Anyone can learn the shape of it. Hats, herbs, words said over water. The craft itself asks one question first, and clever has nothing to do with the answer.",
    "options": [
     {
      "text": "What's the question?",
@@ -376,7 +376,7 @@
   "witch_lesson": {
    "_comment": "The bank option is the spent one (hide_when witch_lessons); the ask path stays replayable as flavor. Gate shape: requires blight_lifted + hide_when drove_off_collectors on the hub option = the ratified peaceful-OR-path exactly (mediated OR paid), single-key hide_when because _meets_hide_when is AND-semantics (dialogue.gd:128).",
    "speaker": "Eloise",
-   "text": "Why did the debt get paid, child? Not how — why. You sat at my table and went looking for the ending where nobody bled. That's the question, answered before I asked it. The craft roots in what a person already is. Mine roots in kindness. Yours will tell you its name when it's ready.",
+   "text": "Why did the debt get paid, child? Think past the how of it. Why. You sat at my table and went looking for the ending where nobody bled. That's the question, answered before I asked it. The craft roots in what a person already is. Mine roots in kindness.",
    "options": [
     {
      "text": "Then teach me the first of it.",
@@ -400,7 +400,7 @@
   },
   "witch_taught": {
    "speaker": "Eloise",
-   "text": "Small things first. A remedy that means it — stir like you're sorry for the sick, not proud of the pot. My cauldron is yours when the fire's lit, and the inn's kettle will do in a pinch. Sleep on it, child. The craft does its accounting at rest.",
+   "text": "Small things first. A remedy that means it — stir it thinking of the sick one, and never mind how the pot looks. My cauldron is yours when the fire's lit, and the inn's kettle will do in a pinch. Sleep on it, child. There's yarrow drying over the hearth; we'll start there.",
    "options": [
     {
      "text": "I will.",

@@ -3,7 +3,7 @@
  "nodes": {
   "hub": {
    "speaker": "Krshia",
-   "text": "Hrr. My crate. Gone from the storeroom three nights past. Sewers, I think. Scavengers do not knock first.",
+   "text": "Hrr. My crate. Gone from the storeroom three nights past. Sewers, I think. There are scavenger tracks at the grate behind the fish stalls, and the bars are bent wide.",
    "text_variants": [
     {
      "requires": {
@@ -37,7 +37,7 @@
        "recovered_crate_force": 1
       }
      },
-     "text": "Fists first, questions after. Not subtle, but the crate came home. I do not complain about method, only results."
+     "text": "So you went in with your fists and asked your questions after. Loud, that. But the crate is home, and nothing in it rattles loose."
     },
     {
      "requires": {
@@ -46,7 +46,7 @@
        "recovered_crate_guile": 1
       }
      },
-     "text": "You found it with your own eyes, not your knuckles. That is sharper than most bring me. I notice sharper."
+     "text": "You found it with your own eyes and no knuckles spent. That is sharper than most bring me. Where did you learn to look first?"
     },
     {
      "requires": {
@@ -55,7 +55,7 @@
        "recovered_crate_watch": 1
       }
      },
-     "text": "You sent the Watch to do it for you. Sensible. I respect sensible almost as much as I respect a paid debt."
+     "text": "You sent the Watch to do it for you. Sensible. It came home on a Watch cart, stamps whole. This goes in my ledger, with the debts I owe."
     },
     {
      "requires": {
@@ -309,7 +309,7 @@
   },
   "krshia_tribe": {
    "speaker": "Krshia",
-   "text": "My tribe, yes. Plains east and south of here: many hearths, one name. A Gnoll in a city is still her tribe's Gnoll; the distance changes nothing that matters. The necklace is not decoration. It is a promise I carry.",
+   "text": "My tribe, yes. Plains east and south of here — many hearths, one name. A Gnoll in a city is still her tribe's Gnoll, and the distance changes nothing that matters. The necklace is a promise I carry.",
    "options": [
     {
      "text": "What's the promise?",
@@ -327,7 +327,7 @@
   },
   "krshia_tribe_two": {
    "speaker": "Krshia",
-   "text": "Ask me when you have known me longer than one crate. A promise spoken cheap gets spent cheap. This is true of coin and truer of words.",
+   "text": "That promise, you may ask about when you have known me longer than one crate. Hrr. The wool wants restacking before the rain comes. Hand me the bolt by your elbow.",
    "options": [
     {
      "text": "Back to business.",
@@ -709,7 +709,7 @@
   },
   "catalyst_sold": {
    "speaker": "Krshia",
-   "text": "That one, I do not ask questions about. Silverfang trade brings stranger things than that through Liscor, and it always finds the buyer who was already looking for it. Yours now. Spend the rest of your coin on something that talks less.",
+   "text": "That one, I do not ask questions about. Silverfang trade brings stranger things than that through Liscor. It came in under the wool two winters back and it has sat under that cloth since. Yours now. Wrap it before you carry it. It hums against tin, yes?",
    "options": [
     {
      "text": "Show me the stall again.",
@@ -775,7 +775,7 @@
   },
   "smoothed": {
    "speaker": "Krshia",
-   "text": "For the barmaid, then. She is prickly, that one, but she works. I have watched her learn it. The order goes out full, and no word of the shortfall reaches Erin from my stall. You speak plainly and you speak for a friend. That, I respect.",
+   "text": "For the barmaid, then. She is prickly, that one, but she works. I have watched her learn it. The order goes out full, and no word of the shortfall reaches Erin from my stall. You speak plainly and you speak for a friend. I respect both. It leaves with the morning cart.",
    "options": [
     {
      "text": "Thank you, Krshia.",

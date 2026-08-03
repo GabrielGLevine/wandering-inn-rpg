@@ -1,7 +1,7 @@
 {
 	"start": "hub",
 	"nodes": {
-		"hub": { "speaker": "Vess", "text": "Counter's open. Taking a slip, turning one in, or just here to admire the board?", "options": [
+		"hub": { "speaker": "Vess", "text": "Counter's open. Taking a slip or turning one in? Board's current as of this morning.", "options": [
 			{ "text": "Just passing through.", "end": true },
 			{ "text": "Take a slip.", "hide_when": { "delivery_accepted": true }, "effects": [ { "open_delivery_picker": true } ], "end": true },
 			{ "text": "Turn in a slip.", "requires": { "delivery_accepted": true }, "effects": [ { "open_delivery_turnin": true } ], "end": true }

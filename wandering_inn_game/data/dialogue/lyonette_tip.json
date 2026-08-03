@@ -5,8 +5,8 @@
 	"nodes": {
 		"hub": { "speaker": "Lyonette", "text": "If you're headed to the Guild, there's something worth hearing, and it costs you nothing.", "text_variants": [
 				{ "requires": { "accomplishment": { "lyonette_tip": 1 } }, "text": "You'll do fine at the Guild - just remember what I told you." },
-				{ "requires": { "accomplishment": { "heard_wrong_order": 1 } }, "text": "...Don't. Don't say the word 'order' too loudly. If Erin hears of it before it's fixed I will simply die on the spot. Tell me you've sorted it." },
-				{ "requires": { "accomplishment": { "resolved_wrong_order": 1 } }, "text": "There you are. The... supply matter. It's handled, and quietly. I won't forget that you did that." }
+				{ "requires": { "accomplishment": { "heard_wrong_order": 1 } }, "text": "Don't. Don't say the word 'order' too loudly. If Erin hears of it before it's fixed I will simply die on the spot. Tell me you've sorted it." },
+				{ "requires": { "accomplishment": { "resolved_wrong_order": 1 } }, "text": "There you are. The supply matter. Handled, and quietly. I won't forget that you did that." }
 			], "options": [
 			{ "text": "Advice about the Guild? From a barmaid?", "hide_when": { "accomplishment": { "asked_lyonette_guild": 1 } }, "effects": [ { "accomplishment": "asked_lyonette_guild" } ], "goto": "barmaid_retort" },
 			{ "text": "Go on.", "requires": { "accomplishment": { "asked_lyonette_guild": 1 } }, "hide_when": { "accomplishment": { "lyonette_tip": 1 } }, "effects": [ { "accomplishment": "lyonette_tip" } ], "goto": "tip" },
@@ -21,16 +21,16 @@
 			{ "text": "Maybe later.", "end": true }
 		] },
 		"tip": { "speaker": "Lyonette", "text": "Selys respects competence, not chatter. Keep your answers short and skip the small talk.", "text_variants": [
-				{ "requires": { "class": { "warrior": 2 } }, "text": "Selys respects competence, not chatter. Stand like you've held a line before - which, evidently, you have - and skip the small talk." }
+				{ "requires": { "class": { "warrior": 2 } }, "text": "Selys respects competence. Stand like you've held a line before - which, evidently, you have - and skip the small talk." }
 			], "options": [
 			{ "text": "Sorry — one more thing.", "goto": "hub" },
 			{ "text": "Noted.", "end": true }
 		] },
-		"order_brief": { "speaker": "Lyonette", "text": "I under-counted the week's supply order. I was raised to run a household larger than this inn, and I cannot count a grocery list. Spare me. It's short, and Erin trusts me to run this without her checking. There are three ways to make it right before she notices. The supplier - Krshia's people - has scavengers picking at their stores in the south market; clear that trouble by force and the delivery comes free and full. Or you could smooth it over with Krshia herself; she'll extend the order on a good word. Or - if you can cook - stretch what we have in the kitchen until the shortfall simply... isn't one. Pick whichever suits you. Only be quick.", "options": [
+		"order_brief": { "speaker": "Lyonette", "text": "I under-counted the week's supply order. I was raised to run a household larger than this inn, and I cannot count a grocery list. Spare me. It's short, and Erin trusts me to run this without her checking. It can still be made right before she notices. The supplier - Krshia's people - has scavengers picking at their stores in the south market. Clear that trouble by force and the delivery comes free and full. Or you smooth it over with Krshia herself, and she extends the order on a good word. Or - I should have opened with the simplest - if you can cook, stretch what we have in the kitchen so the shortfall never shows. Pick whichever suits you. Only be quick.", "options": [
 			{ "text": "How bad is it, really?", "goto": "hub" },
 			{ "text": "I'll see it done.", "end": true }
 		] },
-		"gratitude": { "speaker": "Lyonette", "text": "It's... done. Truly done. I keep waiting for you to name a price, and you don't. Do you know how strange that is, to me? Where I'm from, no one lifts a finger without a ledger open. — Here. It's what I could scrape together, and no, I'll not hear a word against taking it. Thank you. And not the court kind of thank-you. The real one. Now go sit down before I say something I'll regret.", "options": [
+		"gratitude": { "speaker": "Lyonette", "text": "Done. Truly done. I keep waiting for you to name a price, and you don't. Do you know how strange that is to me? Where I'm from, nobody lifted a finger unless a ledger was open somewhere. Here. It's what I could scrape together, and no, I'll not hear a word against taking it. Thank you. And not the court kind. The real one. The kitchen's still warm, if you want the end of the bread.", "options": [
 			{ "text": "Anytime, Lyonette.", "end": true }
 		] }
 	}

@@ -4,7 +4,7 @@
  "nodes": {
   "commission": {
    "speaker": "A Lady with a Ring Box",
-   "text": "I have been sitting in a paper shop for an hour, because a paper shop is the only room on this street where a woman may hold something closed and nobody asks her to open it.",
+   "text": "I have been sitting in a paper shop for an hour. On this street it is the one room where a woman may hold something closed and nobody asks her to open it. I have needed the hour.",
    "text_variants": [
     {
      "requires": {
@@ -12,7 +12,7 @@
        "heirloom_commission_started": 1
       }
      },
-     "text": "You went, then. Sit down and tell me what he said, and please tell me the whole of it. I have had forty years of the polite half."
+     "text": "You went, then. Sit down and tell me what he said. Every word, please. I have had forty years of the polite half."
     },
     {
      "requires": {
@@ -20,7 +20,7 @@
        "setting_commissioned": 1
       }
      },
-     "text": "It sits differently on the chain. I noticed before I looked. Thank you for the part of that which was not the silver."
+     "text": "It sits differently on the chain. I noticed before I looked. You were paid for the silver. Thank you for the remainder."
     },
     {
      "_comment": "#318. Every v0.18 variant gates on a counter no shipped fixture holds, so the pinned I1 canonicals can never match one (the text_variants-vs-pinned-base trap).",
@@ -193,7 +193,7 @@
   },
   "the_name": {
    "speaker": "A Lady with a Ring Box",
-   "text": "A rented block and a good hand. I am not angry at him. I am forty years past being angry at the small ones, and he is very small. Take the block off whatever table it is sitting on and I will answer the card myself, in my own hand, which is a thing I have been putting off doing for a very long time.",
+   "text": "A rented block and a good hand. I am not angry at him. I used up angry on larger people, forty years of them, and he is very small. Take the block off whatever table it is sitting on and I will answer the card myself, in my own hand, which is a thing I have been putting off doing for a very long time.",
    "options": [
     {
      "text": "\"It'll be off the table today.\"",
@@ -238,7 +238,7 @@
   },
   "why_keep": {
    "speaker": "A Lady with a Ring Box",
-   "text": "Because she wore it to every hard thing she ever did and it never once let her down. That part was never glass. That is the only part of it that was ever real, and it lives in the setting, not the stone.",
+   "text": "Because she wore it to every hard thing she ever did and it never once let her down. The stone was glass for all forty of those years. It did not matter then and I will not let it start mattering now. I want the setting held properly. The stone can stay glass.",
    "options": [
     {
      "text": "\"Who's refusing the work?\"",
@@ -248,7 +248,7 @@
   },
   "terms": {
    "speaker": "A Lady with a Ring Box",
-   "text": "There is an enchanter with a bench in the alleys who will not touch a piece until somebody in the transaction tells him the truth about it. He is right to insist and I cannot be the one who does it. Twenty five gold when it is set. Do not be charming at him. My house has exactly two assets left: its name, and the habit people have of not looking past it. The enchanter may have the truth. He may not have the name.",
+   "text": "There is an enchanter with a bench in the alleys who will not touch a piece until somebody in the transaction tells him the truth about it. He is right to insist and I cannot be the one who does it. Twenty five gold when it is set. Do not be charming at him. My house has exactly two assets left: its name, and the habit people have of not looking past it. Tell him the truth of the stone and keep the name out of his order book.",
    "options": [
     {
      "text": "\"I'll tell him.\"",
@@ -258,7 +258,7 @@
   },
   "handover": {
    "speaker": "A Lady with a Ring Box",
-   "text": "Then it is done, and done in the open, which I did not expect and did not know I wanted. Here. My mother had a second piece, plain, honest, worth a tenth of the first and worn twice as often. I would rather it went to somebody who earned it than sat in a box being important.",
+   "text": "Then it is done, and done in the open, which I did not expect and did not know I wanted. Here. My mother had a second piece, plain, honest, worth a tenth of the first and worn twice as often. I would rather it went to somebody who earned it. It has spent long enough in the box.",
    "options": [
     {
      "text": "\"I'll take it.\"",
@@ -281,7 +281,7 @@
      "end": true
     },
     {
-     "text": "\"Keep it. The work was the payment.\"",
+     "text": "\"Keep it. I don't need paying for this.\"",
      "hide_when": {
       "accomplishment": {
        "setting_commissioned": 1

@@ -7,11 +7,11 @@
 			{ "text": "\"Two hours is light?\"", "goto": "offduty" },
 			{ "text": "\"I'll leave you to your rest day.\"", "end": true }
 		] },
-		"offduty": { "speaker": "Grimalkin", "text": "Light is a ratio, not a number. Half the load, half the volume, all of the intent. And I am still working, since you ask. Fourteen people have stood up out of a chair since I sat down. Five did it correctly. The tall one clearing tables has better hip mobility than half my Pallass intake and has no idea. I intend to tell her before I leave. They never do thank me, and they always improve.", "options": [
+		"offduty": { "speaker": "Grimalkin", "text": "Light is a ratio. Half the load, half the volume, and the intent does not change. And I am still working, since you ask. Fourteen people have stood up out of a chair since I sat down. Five did it correctly. The tall one clearing tables has better hip mobility than half my Pallass intake and has no idea. I intend to tell her before I leave. She will not thank me. Noted in advance.", "options": [
 			{ "text": "Set a full bowl down in front of him. (Serve)", "requires": { "once_per_waking": "serve:grimalkin_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:grimalkin_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"Tell her gently, Magus.\"", "end": true }
 		] },
-		"served": { "speaker": "Grimalkin", "text": "Good. All of it, while it is hot. Recovery is the half of training people skip, and then they come to me baffled that the second set is worse than the first. You did not ask for that and I told you anyway. Sit. Eat something yourself.", "options": [
+		"served": { "speaker": "Grimalkin", "text": "Good. All of it, while it is hot. Recovery is the half of training people skip, and then they come to me baffled that the second set is worse than the first. Sit. Heels under you, back straight. Eat something yourself.", "options": [
 			{ "text": "\"Yes, Magus.\"", "end": true }
 		] }
 	}

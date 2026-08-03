@@ -95,7 +95,7 @@
        "completed_bounty_grimalkin_study_combat": 1
       }
      },
-     "text": "The field subject returns. Your engagement data survived review. It is in the literature now; that is the only compliment I issue."
+     "text": "The field subject returns. Your engagement data survived review. It is in the literature now, fourth appendix, entered under a subject number. State your business."
     },
     {
      "requires": {
@@ -111,13 +111,13 @@
        "standards_tempered": 1
       }
      },
-     "text": "The forge tier settled its temper argument and my name is in the file twice. Understand: a blade that will not come back is a blade that never bent. Same measure as a squat. Depth, then recovery, then the file. State your business."
+     "text": "The forge tier settled its temper argument and my name is in the file twice. The examiners log recovery on the blades now, same measure as a squat. Depth, then recovery, then the file. State your business."
     }
    ]
   },
   "exam": {
    "speaker": "Grimalkin",
-   "text": "Grip, wind, and whether you quit before I do — three measures. You cleared all three. Barely, on the second. Numbers don't lie, and neither do I: you'll survive the forge tier. The file will say 'adequate.' From me, that is not an insult.",
+   "text": "Grip first. Then wind. Then whether you quit before I do. You cleared all of it — barely, on the wind. The numbers say you will survive the forge tier, and I agree with numbers. The file will say 'adequate.' Ask around this office what I usually write.",
    "options": [
     {
      "text": "Understood.",
@@ -153,7 +153,7 @@
   "forge_runes_verdict": {
    "_comment": "HIS OWN PIECE ONLY (spec 4): rune-feeding as forge-tier maintenance practice, plus his standing objection to anything unmeasured. He does not know what is at the far end of the draw; the assembled picture is Act V's.",
    "speaker": "Grimalkin",
-   "text": "It costs whatever it is drawing on, and it has been drawing unsupervised since long before you owned it. I do not find that alarming. I find it UNMEASURED, which is worse. Find what sits at the far end of the draw and bring me the numbers. I will publish them and you will be a footnote. That is the highest offer I make.",
+   "text": "It costs whatever it is drawing on, and it has been drawing unsupervised since long before you owned it. I do not find that alarming. I find it unmeasured. Find what sits at the far end of the draw and bring me the numbers. I will publish them and you will be a footnote. That is the highest offer I make.",
    "options": [
     {
      "text": "Understood.",
@@ -174,7 +174,7 @@
   },
   "studies": {
    "speaker": "Grimalkin",
-   "text": "Two open protocols. Field engagements, or witnessed casting. Both pay on data, neither pays for stories.",
+   "text": "Two open protocols. Field engagements, or witnessed casting. Both pay on data. Bring numbers.",
    "options": [
     {
      "text": "Sign me on as a field subject. Three engagements, logged.",

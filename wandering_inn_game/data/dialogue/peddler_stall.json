@@ -3,7 +3,7 @@
 	"nodes": {
 		"hub": {
 			"speaker": "Peddler",
-			"text": "Watch gear, mostly honest. Some of it's even been laundered.",
+			"text": "Watch gear, mostly honest. Mostly. The gambeson's clean. The bow I'd not ask about.",
 			"options": [
 				{ "text": "That gambeson. Watch-issue? (20 gold)", "requires": { "gold": 20 }, "effects": [ { "gold": -20 }, { "item": "watch_issue_gambeson" } ], "goto": "bought" },
 				{ "text": "Just looking.", "end": true },
@@ -13,7 +13,7 @@
 		},
 		"bought": {
 			"speaker": "Peddler",
-			"text": "Deposit's already paid, so don't ask where it came from. Wear it in good health.",
+			"text": "Deposit's already paid, so don't ask where it came from. Wear it in good health. More under the tarp.",
 			"options": [
 				{ "text": "Anything else?", "goto": "hub" },
 				{ "text": "That's all.", "end": true }

@@ -3,7 +3,7 @@
  "nodes": {
   "hub": {
    "speaker": "Former Headman",
-   "text": "Village's had a bad run. Crops came up wrong two seasons straight, animals spooked for no cause, and the ledger won't add up no matter how many times I recount it. Something's collecting on us, and I mean to know what.",
+   "text": "Village's had a bad run. Crops came up wrong two seasons straight. Animals spooked for no cause. And the ledger won't add up. I count it, it comes up short. Count it again, short again. Something's collecting on us. I mean to know what.",
    "text_variants": [
     {
      "requires": {
@@ -11,7 +11,7 @@
        "heard_price_of_a_favor": 1
       }
      },
-     "text": "Whatever you find out there, I want to hear it plain. No riddles, and no half-truths either. The witch keeps to the hollow — west, past my fields, where the trees break."
+     "text": "Whatever you find out there, I want to hear it plain. No riddles and no half-truths neither. The witch keeps to the hollow — west, past my fields, where the trees break."
     },
     {
      "requires": {
@@ -28,7 +28,7 @@
        "drove_off_collectors": 1
       }
      },
-     "text": "Word's got round about a fight at the hollow. Briars don't walk off on their own account, whatever spooked them into it worked. I've stopped asking how you people manage these things."
+     "text": "Word's got round about a fight at the hollow. The briars walked off. Briars don't walk off. Whatever spooked them into it, it worked. Ground's all tore up down the hollow's edge."
     },
     {
      "requires": {
@@ -37,7 +37,7 @@
        "mediated_the_debt": 1
       }
      },
-     "text": "Talked her to terms, they tell me. Didn't figure that witch for a bargaining sort, but the fields don't seem to mind however you settled it."
+     "text": "Talked her to terms, they tell me. Didn't figure that witch for a bargaining sort. But the fields don't seem to mind however you settled it."
     }
    ],
    "options": [
@@ -195,7 +195,7 @@
   },
   "brief": {
    "speaker": "Former Headman",
-   "text": "We don't truck with witches here. Didn't used to, anyway. But there's one in the old hollow past the fields, and half the village is pretending not to know it. Crops fail, stock spooks, and one of my own stands there mumbling like her mouth belongs to someone else. Find out what she wants, and end it. However you have to.",
+   "text": "We don't— didn't used to truck with witches. There's one in the old hollow now. Past the fields. Half the village knows it and pretends it don't. Crops fail. Stock spooks. And one of my own stands there mumbling. Somebody else's talk coming out of her mouth. Find out what she wants and end it. However you have to.",
    "options": [
     {
      "text": "I'll see to it.",
@@ -209,7 +209,7 @@
   },
   "witches_topic": {
    "speaker": "Former Headman",
-   "text": "We didn't USE to truck with witches, I mean. Things change when the harvest doesn't. Everyone's something these days, I suppose. Even me, apparently, since I sent someone door to door instead of walking out there myself.",
+   "text": "Didn't used to truck with witches, I mean. Used to. Then two seasons came up wrong. Everyone's something these days. Even me. I sent someone door to door over a witch. Never walked out there myself.",
    "options": [
     {
      "text": "Back to it.",
@@ -223,7 +223,7 @@
   },
   "reported": {
    "speaker": "Former Headman",
-   "text": "Handled. Good. I won't ask how — a man learns when not to ask, running a village long enough. Whatever you did, thank you. Truly.",
+   "text": "Handled. Good. I won't ask how. Whatever you did, thank you. Truly. Now there's hay down and rain coming, so I'd best be at it.",
    "options": [
     {
      "text": "Glad to help.",
@@ -233,7 +233,7 @@
   },
   "authority_topic": {
    "speaker": "Former Headman",
-   "text": "There's a new authority in Riverfarm proper — a real one, and the village answers to it gladly enough. I mind this end of things the old way. Someone has to know where the shovels are.",
+   "text": "There's a new authority in Riverfarm proper now. A real one. The village answers to it, and answers glad. I mind this end of things the old way. I know where the shovels are. Four in the granary, six behind the mill. Six behind the mill. I count them after rain.",
    "options": [
     {
      "text": "Back to it.",
@@ -247,7 +247,7 @@
   },
   "favor_recap": {
    "speaker": "Former Headman",
-   "text": "The witch keeps to the hollow, west past my own fields, where the trees give out. Whatever she's owed, you'll have to settle it out there.",
+   "text": "The witch keeps to the hollow. West, past my own fields, where the trees give out. Whatever she's owed, you'll have to settle it out there.",
    "text_variants": [
     {
      "requires": {
@@ -255,7 +255,7 @@
        "blight_lifted": 1
       }
      },
-     "text": "Sounds like it's already settled, out at the hollow. Come say so plain, then, so I know to stop chewing on it."
+     "text": "Word from the hollow says it's settled. Come tell me plain. Then I'll stop chewing on it."
     }
    ],
    "options": [
@@ -271,7 +271,7 @@
   },
   "flood_brief": {
    "speaker": "Former Headman",
-   "text": "River comes up every spring, and every spring we count what we can carry above the line. This year the count's eleven bushels short and there isn't a thief in this village. That's worse than a thief. Go down to the mill, walk the tally with the tallyman, and bring me an answer I can live with.",
+   "text": "River comes up every spring. Every spring we count what we can carry above the line. This year the count's eleven bushels short. There's no thief in this village. That's worse than a thief. Go down to the mill. Walk the tally with the tallyman. Bring me an answer I can live with.",
    "options": [
     {
      "text": "I'll see to it.",
@@ -285,7 +285,7 @@
   },
   "flood_reported_read": {
    "speaker": "Former Headman",
-   "text": "Ashamed. Three seasons of it, and they'd sooner be counted light-fingered than counted unlucky. Then we don't say the name. Eleven bushels off my own share and the ledger balances, and the village can go on thinking whatever keeps it civil.",
+   "text": "Ashamed. Three seasons of it. They'd let the village call them thieves first. Unlucky's the harder word out here. Then we don't say the name. Eleven bushels off my own share. The ledger balances. The village can think what it likes.",
    "options": [
     {
      "text": "That's the right answer.",
@@ -295,17 +295,17 @@
   },
   "flood_reported_worked": {
    "speaker": "Former Headman",
-   "text": "You did a week of my people's week in a day, and the count came right because somebody finally stood in that shed long enough to see all of it at once. I've been recounting a stack I couldn't see over. I'll take the lesson.",
+   "text": "You did a week of my people's week in a day. The count came right. Somebody finally stood in that shed long enough. Saw all of it at once. Me, I count from the doorway. There's sacks at the back I've never once shifted.",
    "options": [
     {
-     "text": "It counts better in daylight.",
+     "text": "Easier to count in daylight.",
      "end": true
     }
    ]
   },
   "flood_reported_cleared": {
    "speaker": "Former Headman",
-   "text": "Teeth. Eleven bushels of teeth. I'd rather it was vermin than a neighbour and I'm not proud of that either. Take something off the field board, and don't tell me what you found down there again.",
+   "text": "Teeth. Eleven bushels of teeth. I'd rather it was vermin than a neighbour and I'm not proud of that either. Take something off the field board. And don't tell me what you found down there again.",
    "options": [
     {
      "text": "Fair enough.",

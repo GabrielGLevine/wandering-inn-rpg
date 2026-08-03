@@ -3,13 +3,13 @@
  "nodes": {
   "hub": {
    "speaker": "Market-Tier Local",
-   "text": "Busy morning for the stalls. Mind the queues — they move faster than they look.",
+   "text": "Busy morning for the stalls. Mind the queues — the one at my lamp table is out past the awning already.",
    "text_variants": [
     {
      "requires": {
       "race": "human"
      },
-     "text": "Don't see many of you up this tier. Nothing personal in the look — just not a common one."
+     "text": "Don't see many of you up this tier. And now I'm staring. Sorry. It's not personal, you're just not a common sight up here."
     },
     {
      "requires": {

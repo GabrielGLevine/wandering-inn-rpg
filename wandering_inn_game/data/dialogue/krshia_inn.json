@@ -7,11 +7,11 @@
 			{ "text": "\"Closed the stall early?\"", "goto": "stall" },
 			{ "text": "\"Rest easy, Krshia.\"", "end": true }
 		] },
-		"stall": { "speaker": "Krshia", "text": "A Gnoll knows when the market is done. Push past that and you sell nothing and smell of desperation, yes? Better to sit, and eat, and let the town come to me tomorrow.", "options": [
+		"stall": { "speaker": "Krshia", "text": "The market was done an hour before I closed. Push past that and you sell nothing and smell of desperation, yes? So this Gnoll sits, and eats, and tomorrow the town comes to me.", "options": [
 			{ "text": "Bring her a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:krshia_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:krshia_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"Wise. Goodnight.\"", "end": true }
 		] },
-		"served": { "speaker": "Krshia", "text": "Hrr. Generous hands. The Silverfangs remember generous hands. You will not regret this, yes?", "options": [
+		"served": { "speaker": "Krshia", "text": "Hrr. Generous hands. Hot through, and full to the lip. The Silverfangs remember generous hands.", "options": [
 			{ "text": "\"Least I could do.\"", "end": true }
 		] }
 	}

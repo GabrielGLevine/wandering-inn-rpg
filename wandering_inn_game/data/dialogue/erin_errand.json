@@ -12,7 +12,7 @@
        "night"
       ]
      },
-     "text": "Kitchen's slowing down for the night, but the door's not locked on you. Sit, stay warm, and don't let the wind convince you the walk back is a good idea."
+     "text": "Kitchen's slowing down for the night, but the door's not locked on you. Sit, stay warm, and think hard before you try the walk back in that wind."
     },
     {
      "requires": {
@@ -44,7 +44,7 @@
        "goblins_spared": 1
       }
      },
-     "text": "Heard you talked the goblins into just... leaving. Actual talking, not begging, not bribing. I don't know how you managed it and I don't want the details, I just want it to keep working."
+     "text": "Heard you talked the goblins into leaving. Talked. With words. I don't know how you managed it and I don't want the details, I just want it to keep working."
     },
     {
      "requires": {
@@ -52,7 +52,7 @@
        "wrong_order_reported": 1
       }
      },
-     "text": "The order came in full, no thanks to whatever almost happened to it. Lyonette hasn't stopped humming since. Don't tell her I noticed."
+     "text": "The order came in full, no thanks to whatever almost happened to it. Lyonette hasn't stopped humming since. Same four notes over and over, and I can't place the song."
     }
    ],
    "options": [
@@ -167,7 +167,7 @@
      "goto": "erin_home"
     },
     {
-     "text": "(Take the seat. The cook has spoken.)",
+     "text": "(Take the seat. The cook is already ladling.)",
      "requires": {
       "accomplishment": {
        "resolved_wrong_order": 1,
@@ -248,14 +248,14 @@
   },
   "erin_pond_two": {
    "speaker": "Erin",
-   "text": "I feed everyone. That's the whole business. If something's been out there long enough to be older than the wall, it has definitely not had a hot meal in a while, and that seems like the sort of thing somebody ought to fix.",
+   "text": "I feed everyone. That's the job. If something's been out there long enough to be older than the wall, it has definitely not had a hot meal in a while, and that seems like the sort of thing somebody ought to fix.",
    "options": [
-    { "text": "That's either very kind or very reckless.", "end": true }
+    { "text": "That's a lot of kindness for something you've never seen.", "end": true }
    ]
   },
   "package": {
    "speaker": "Erin",
-   "text": "You're a lifesaver! Selys is out the door, past the... goblin situation. She's the Drake who looks like she's already done with your nonsense.",
+   "text": "You're a lifesaver! Selys is out the door, past the goblin situation. She's the Drake who looks like she's already done with your nonsense.",
    "options": [
     {
      "text": "Wait, one more thing!",
@@ -269,7 +269,7 @@
   },
   "door_paths": {
    "speaker": "Erin",
-   "text": "I don't KNOW, that's the fun part! Okay. Three ideas. Pisces knows creepy old magic — he's usually by the Guild steps on Market Street, being smug at pigeons. Or the frame itself — the grain does a thing, look at it properly if you know how. Or... there's the scratching in my cellar. If you go say hi to that, bring a weapon and don't tell me about it after.",
+   "text": "I don't know! That's the fun part. Okay, so — Pisces knows creepy old magic, he's usually by the Guild steps on Market Street being smug at pigeons. Or the frame itself, the grain does a thing — look at it properly if you know how. Or the scratching in my cellar, you could — okay, forget the cellar one. Don't do the cellar one. If you go anyway, bring a weapon and don't tell me about it after.",
    "options": [ { "text": "I'll look into it.", "end": true } ]
   },
   "cleaning_directions": {
@@ -322,7 +322,7 @@
   },
   "erin_chess": {
    "speaker": "Erin",
-   "text": "Heard from who? Okay, yes. I play a little. And by a little I mean I will destroy you and feel great about it. It's the one thing I never have to think about. Which is funny, because it's ALL thinking.",
+   "text": "Heard from who? Okay, yes. I play a little. And by a little I mean I will destroy you and feel great about it. It's the one thing I never have to think about. Board's behind the bar — the black queen's a salt cellar until somebody finds the real one.",
    "options": [
     {
      "text": "Set up a board sometime?",
@@ -340,7 +340,7 @@
   },
   "erin_chess_two": {
    "speaker": "Erin",
-   "text": "Deal. Fair warning: Olesm's been practicing for months and I still win. Draw your own conclusions and bring snacks.",
+   "text": "Deal. Fair warning — Olesm's been practicing for months and I still win. Bring snacks, we'll make an evening of it.",
    "options": [
     {
      "text": "Back up a moment.",
@@ -354,7 +354,7 @@
   },
   "erin_home": {
    "speaker": "Erin",
-   "text": "Far. Really far. Like, you can't get there by walking, and believe me, I did the math on walking. ...Anyway! The inn's home now. It has a door and everything. Some of the chairs match.",
+   "text": "Far. Really far. Like, you can't get there by walking, and believe me, I did the math on walking. The math was bad. Anyway! The inn's home now. It has a door and everything. Some of the chairs match.",
    "options": [
     {
      "text": "It suits you.",
@@ -372,21 +372,21 @@
   },
   "erin_home_two": {
    "speaker": "Erin",
-   "text": "Yeah? I keep deciding that on purpose, so it's nice when it lands by accident. Okay — no more feelings before lunch, house rule.",
+   "text": "Yeah? I keep deciding that on purpose, so it's nice when it lands by accident. Anyway the bread's about done and it stops being bread if I stand here. Stay put, I'll cut you the end bit.",
    "options": [
     {
      "text": "Back up a moment.",
      "goto": "hub"
     },
     {
-     "text": "House rule respected.",
+     "text": "Staying put.",
      "end": true
     }
    ]
   },
   "erin_meal": {
    "speaker": "Erin",
-   "text": "Sit. Eat. That's an order, not a suggestion. New recipe — still testing it, but it should stick to your ribs. Call it +2 HP, every fight until you next sleep. Don't ask me to explain the math.",
+   "text": "Sit. Eat. That's an order. New recipe — still testing it, but it should stick to your ribs. Call it +2 HP, every fight until you next sleep. Don't ask me to explain the math.",
    "options": [
     {
      "text": "Back up a moment.",
@@ -401,7 +401,7 @@
   "erin_door_flicker": {
    "_comment": "Task 2.2 orphaned this node (its only inbound goto was the retired door-chain start option); Task 2.4 CLAIMED it. Its inbound is now the hub's last option, gated door_mounted -> door_awakened. Unchanged text -- it needed a window, not a rewrite.",
    "speaker": "Erin",
-   "text": "It went somewhere COLD this morning. Doors shouldn't have moods. …Can you look? If it eats you, yell.",
+   "text": "It went somewhere cold this morning. Cold enough the frame's still wet where I touched it. Doors shouldn't have moods. Can you look? If it eats you, yell.",
    "options": [
     {
      "text": "I'll take a look.",

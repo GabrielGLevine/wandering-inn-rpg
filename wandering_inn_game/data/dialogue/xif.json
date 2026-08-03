@@ -4,7 +4,7 @@
 	"nodes": {
 		"hub": {
 			"speaker": "Xif",
-			"text": "Cunning Crafts, best on the tier. I am a City Gnoll, if anyone asks. Prices are posted and prices are final, this is Pallass, we do not haggle here. What do you need?",
+			"text": "Cunning Crafts, best on the tier. I am a City Gnoll, if anyone asks. Prices are posted and prices are final. This is Pallass. We do not haggle here. What do you need?",
 			"text_variants": [
 				{ "requires": { "accomplishment": { "bought_from_xif": 1 } }, "text": "The repeat customer. I like repeat customers. They have already learned the prices are final. What now?" }
 			],
@@ -18,7 +18,7 @@
 		},
 		"bought": {
 			"speaker": "Xif",
-			"text": "Sold, at the posted price, which is the only price. Come back when you have run out. You always run out.",
+			"text": "Sold, at the posted price. There is no other price. You will run out — everyone runs out, it is the one reliable thing about customers. Come back then. The shop opens at the first bell.",
 			"options": [
 				{ "text": "Anything else?", "goto": "hub" },
 				{ "text": "That is all.", "end": true }

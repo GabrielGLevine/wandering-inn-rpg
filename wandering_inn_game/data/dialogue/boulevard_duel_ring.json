@@ -3,7 +3,7 @@
  "nodes": {
   "confront": {
    "speaker": "Coyle's Regulars",
-   "text": "One of them cracks his knuckles, unbothered. \"Coyle pays for a good show. You in, or just looking?\"",
+   "text": "One of them is wrapping his hands, in no hurry to finish. \"Coyle pays for a good show. You in, or just looking?\"",
    "options": [
     {
      "text": "[Strike first.]",
@@ -15,7 +15,7 @@
      "end": true
     },
     {
-     "text": "[Charming Smile] A show needs an audience that pays. This one won't.",
+     "text": "[Charming Smile] A show needs a paying audience, and I'm not paying.",
      "requires": {
       "skill": "charming_smile"
      },

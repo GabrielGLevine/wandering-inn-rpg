@@ -4,7 +4,7 @@
  "nodes": {
   "table": {
    "speaker": "The House Factor",
-   "text": "You'll want the long table, {addr}, not this one. Long table's for people waiting on somebody. This one's for people who have already arrived.",
+   "text": "You'll want the long table, {addr}. That's the waiting table. This one's mine, and the gentleman who shares it didn't wait for anybody. Sit where the evening puts you.",
    "options": [
     {
      "text": "\"I was told to wait on somebody.\"",
@@ -32,7 +32,7 @@
   },
   "exchange_one": {
    "speaker": "The House Factor",
-   "text": "Then you're early, which is a manner, or you're late, which is a message. Which would you like it to have been?",
+   "text": "Then you're early or you're late. Somebody in this room has already counted. Which would you like it to have been?",
    "options": [
     {
      "text": "\"Early. I can wait.\"",
@@ -56,7 +56,7 @@
   },
   "exchange_three": {
    "speaker": "The House Factor",
-   "text": "Mind it well, {addr}. Nobody in this room raises their voice and nobody in this room has ever seen a thing. That isn't a rule of the house. That's the rent.",
+   "text": "Mind it well, {addr}. Nobody in this room raises their voice and nobody in this room has ever seen a thing. Third peg by the fire's been holding the same coat since Wintersday. Nobody's asked about that either.",
    "options": [
     {
      "text": "\"Understood.\"",
@@ -71,7 +71,7 @@
   },
   "house": {
    "speaker": "The House Factor",
-   "text": "Busy enough. Silver rank drinks free the night they make it, once, and we have never once had to say it twice. The rest pay, and the rest are grateful for a room where the price is the only thing anybody asks them for.",
+   "text": "Busy enough. Silver rank drinks free the night they make it, once, and we have never once had to say it twice. The rest pay the board price. Nobody here asks them anything else.",
    "options": [
     {
      "text": "\"Fair terms.\"",

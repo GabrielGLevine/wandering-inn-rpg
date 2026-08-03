@@ -37,7 +37,7 @@
        "seal_rewarded": 1
       }
      },
-     "text": "Your cut is holding. I have checked it eleven times, which you may read as distrust or as admiration; I decline to clarify."
+     "text": "Your cut is holding. I have checked it eleven times. The twelfth check is scheduled for after supper."
     },
     {
      "requires": {
@@ -93,7 +93,7 @@
   "the_choice": {
    "_comment": "THREE REAL-COST PATHS (#270 beat 3), each with its own producer: FIGHT banks seal_opened here and resolves in the vault beyond the warden; TALK points at Olesm, whose arm carries the Skill-or-gold cost and banks seal_kept_fed + seal_resolved; SKILL closes it here, but only for a player holding BOTH a warding Skill and a piece of warded ruin-stone, whichever arm they take being CONSUMED.",
    "speaker": "Pisces",
-   "text": "Three things, and I dislike two of them. We open it and see what three centuries of feeding produced. Or we leave it fed and make that somebody's paid duty, which is dull and correct. Or you re-cut the ward yourself, if you can, and it holds another age without anyone watching it.",
+   "text": "We open it and see what three centuries of feeding produced. Or we leave it fed and make that somebody's paid duty, which is dull, and correct, and I resent both qualities. Or — if your hands are equal to it, which remains unproven — you re-cut the ward yourself and it holds another age without a keeper. I dislike most of these. I decline to say which most.",
    "options": [
     {
      "text": "We open it.",
@@ -203,7 +203,7 @@
   },
   "fork_reward_done": {
    "speaker": "Pisces",
-   "text": "There. The pour runs the way it always did and now it runs through YOUR hand's work, which will outlast the city and annoy me for the rest of my life. Whatever is back there gets to keep sleeping. I have decided that is the outcome I wanted, and I will be saying so as though I said it first.",
+   "text": "There. The pour runs the way it always did, and the work it runs through now is yours, which will outlast the city and annoy me for the rest of my life. Whatever is back there gets to keep sleeping. I have decided that is the outcome I wanted, and I will be saying so as though I said it first.",
    "options": [
     {
      "text": "You did say it first.",
@@ -222,7 +222,7 @@
        "seal_opened": 1
       }
      },
-     "text": "There. It runs again, through YOUR hand's work this time, which will outlast the city and annoy me for the rest of my life. It is a repair and not a rescue, and the door behind it stays open. I have decided that is the outcome I wanted, and I will be saying so as though I said it first."
+     "text": "There. It runs again, and the work it runs through this time is yours, which will outlast the city and annoy me for the rest of my life. It is a repair, and the door behind it stays open; I would call it a rescue if the facts allowed. They do not. I have decided that is the outcome I wanted, and I will be saying so as though I said it first."
     }
    ]
   },
@@ -243,7 +243,7 @@
   },
   "the_appetite_unknown": {
    "speaker": "Pisces",
-   "text": "I do not know. That is the entire problem and I want it written down that I said so first. A ward this careful was not built to imprison. It was built to KEEP something, the way you keep a fire, and someone chose to keep it fed rather than let it go out.",
+   "text": "I do not know. That is the problem, and I want it written down that I said so first. A ward this careful was not built to imprison. It was built to keep something, the way you keep a fire, and someone chose to keep it fed rather than let it go out.",
    "options": [
     {
      "text": "Then we decide what to do about it.",

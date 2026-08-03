@@ -4,7 +4,7 @@
  "nodes": {
   "table": {
    "speaker": "A Man with a Rented Table",
-   "text": "Whatever it is, I can have it on paper by this evening and nobody will ever prove I wrote it. That is not a boast. That is the entire business.",
+   "text": "Whatever it is, I can have it on paper by this evening, and nobody will ever prove I wrote it. Eleven years at this table. The Watch has my name, my rates, and nothing to pin either to.",
    "text_variants": [
     {
      "requires": {
@@ -12,7 +12,7 @@
        "seal_block_settled": 1
       }
      },
-     "text": "The block is gone off my table and I am sitting at a table with nothing on it, which in this city is the same as not being here. Go on. Say the thing people say."
+     "text": "The block is gone off my table and the cloth is sitting there with nothing on it, which in this city means nobody so much as slows down walking past. Go on. Say the thing people say."
     },
     {
      "requires": {
@@ -44,7 +44,7 @@
        "seal_block_settled": 1
       }
      },
-     "text": "You have the block. I have a table and a story about a bad season. Neither of us needs to say any more about it."
+     "text": "You have the block. I have a table and a story about a bad season. I would as soon we left it there."
     }
    ],
    "options": [
@@ -116,7 +116,7 @@
   },
   "bought": {
    "speaker": "A Man with a Rented Table",
-   "text": "Thirty and it is yours, and you will get no receipt and no complaint. A block anybody has come looking for is a block that has stopped earning. I would rather sell a thing once than be found holding it twice.",
+   "text": "Thirty and it is yours, and you will get no receipt and no complaint. Take it off the cloth yourself, now, while the alley is quiet. Put it away. Deeper than that.",
    "options": [
     {
      "text": "\"Thirty, then.\"",
@@ -126,7 +126,7 @@
   },
   "talk_pitch": {
    "speaker": "A Man with a Rented Table",
-   "text": "A card. To her. Cream, was it, and one line on it? I did wonder how far the paper would travel.",
+   "text": "A card. To her. Cream, was it, and one line on it? I remember the stock. I did wonder at the time how far the paper would travel, and then a customer sat down and I stopped wondering.",
    "options": [
     {
      "text": "\"Far enough that somebody with an estate in this city knows your handwriting now.\"",
@@ -158,7 +158,7 @@
   },
   "lifted": {
    "speaker": "A Man with a Rented Table",
-   "text": "The house has had nothing behind it for forty years, and a name doing no work is a name nobody misses, and I would go so far as to say I did that family a kindness, all things considered.",
+   "text": "The house has had nothing behind it for forty years, and the name was doing no work, and nobody was missing it, and I would go so far as to say I did that family a kindness, all things considered.",
    "options": [
     {
      "text": "Let him finish the sentence. Walk while he is enjoying it.",
