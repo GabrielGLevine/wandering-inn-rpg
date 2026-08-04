@@ -72,6 +72,41 @@ extends SceneTree
 ## restricts the run to one band -- roster re-cutting is an iterative
 ## measurement and paying for all three bands per candidate is waste.
 ##
+## THE STRATIFIED ENVELOPE (#384 item 2). The whole-band spread is NOT gateable
+## and never was: it straddles the `ai_kit` confound above, so an envelope drawn
+## over it gates AI COVERAGE, not class balance -- which is the opposite of what
+## an envelope is for, and is exactly why v0.18's decline was accepted. The fix
+## is to compare like with like: bucket every parity row by whether autoplay can
+## fire ANY skill the class itself grants (`_ai_stratum`), and draw the envelope
+## INSIDE each bucket. The bucket boundary is categorical, not a tuned threshold
+## -- N=0 means the row is stat growth plus a basic attack, N>0 means the class's
+## own kit is on the board at all -- so nothing here is a number somebody picked.
+## A finer cut (by N/M share) was measured and rejected: it splits strata to n=1
+## and n=2, where a "spread" is one build's distance to itself.
+##
+## `PROPOSED_ENVELOPE` is a REGRESSION FENCE, not an aspiration: each ceiling is
+## the 2026-08-04 measured stratum spread plus MARGIN, so it reds when a data
+## change MOVES a stratum and stays quiet when the stratum holds. Ceiling only --
+## a shrinking spread is never a regression. Report-only by default (the #211/
+## #360 precedent: gates propose after the numbers are seen);
+## `WI_PARITY_ENVELOPE_GATE=1` makes a bust exit nonzero, which is the shape a
+## merge train runs against a candidate branch.
+##
+## CENSORED STRATA GET NO ENVELOPE, by the same `_spread_verdict` rule the band
+## line already obeys, and a stratum of fewer than two parity builds gets none
+## either. Adding or removing a parity build CHANGES a stratum's membership and
+## may legitimately bust its ceiling -- that is a re-read, not a bug: re-run,
+## paste the numbers, and move the ceiling deliberately.
+##
+## WHAT THE FIRST STRATIFIED READ FOUND (2026-08-04). Splitting collapses band 10
+## (0.617 -> 0.340 SPOKEN / 0.087 MUTE): at that band the whole apparent gap WAS
+## the confound. It barely moves bands 14 and 18, and at band 14 the MUTE stratum
+## is WIDER than the SPOKEN one -- spearmaster14 0.907 against infiltrator14 0.210,
+## 0.698 apart with NEITHER class's kit on the board. Autoplay cannot explain that
+## one: it is stat growth and weapon family alone, which is a real class-balance
+## finding and the first this project has been able to state. Not this lane's to
+## fix (that is data tuning, the split trigger), recorded so it is not re-derived.
+##
 ## TOTAL LEVEL vs EFFECTIVE POWER: bands are TOTAL class level (the user's
 ## question is "Lv10 Mage vs Lv10 Warrior"), and the report prints
 ## `WIProgression.effective_power` beside it, because they are NOT the same
@@ -79,6 +114,36 @@ extends SceneTree
 ## is a finding, not noise, so the generalist rows are in the parity set.
 
 const RUNS_PER_CELL := 100
+
+## Envelope buckets. CATEGORICAL, never a tuned threshold: MUTE = autoplay fires
+## none of the skills this class itself grants (the row is stat growth + a basic
+## attack); SPOKEN = it fires at least one. `_ai_stratum` is the only place the
+## boundary exists.
+const STRATUM_SPOKEN := "SPOKEN"
+const STRATUM_MUTE := "MUTE"
+const STRATA := [STRATUM_SPOKEN, STRATUM_MUTE]
+
+## Ceiling = measured stratum spread + this. 0.10 is twice the tier report's own
+## single-cell NOISE constant (0.05, ~1 sigma at 100 runs) and sits inside
+## sim_combat_batch.gd's shipped 0.08-0.28 window-margin practice. A tighter
+## fence is a flaky gate, not a proof.
+const ENVELOPE_MARGIN := 0.10
+
+## PROPOSED, drawn 2026-08-04 (#384 item 2) from the read pasted in this lane's
+## report. Key "<band>/<stratum>"; ceiling = `measured` + ENVELOPE_MARGIN,
+## rounded UP to 2dp so the fence never sits inside its own margin. `measured`
+## is kept beside the ceiling so a re-draw is a visible diff instead of a silent
+## one -- `ENVELOPE DRIFT` fires the moment the live spread stops matching it,
+## which is the early warning that some data change moved a parity row.
+## STRATA WITH NO ENTRY ARE UNGATED BY DESIGN -- censored, or n<2.
+const PROPOSED_ENVELOPE := {
+	"10/SPOKEN": {"ceiling": 0.44, "measured": 0.3400},
+	"10/MUTE": {"ceiling": 0.19, "measured": 0.0867},
+	"14/SPOKEN": {"ceiling": 0.63, "measured": 0.5275},
+	"14/MUTE": {"ceiling": 0.80, "measured": 0.6975},
+	"18/SPOKEN": {"ceiling": 0.73, "measured": 0.6250},
+	"18/MUTE": {"ceiling": 0.47, "measured": 0.3625},
+}
 
 ## damage_mod 0 in every family (items.json): the mirror-match's whole point.
 const WEAPON_SWORD := "rusty_sword"
@@ -315,6 +380,37 @@ func _spread_verdict(stats: Dictionary, lo_name: String, hi_name: String) -> Arr
 	return [reasons.is_empty(), ", ".join(reasons)]
 
 
+## The envelope's ONLY bucket boundary. `n` is `_ai_expressible`'s first element.
+func _ai_stratum(n_expressible: int) -> String:
+	return STRATUM_SPOKEN if n_expressible > 0 else STRATUM_MUTE
+
+
+## One stratum's spread, censoring rule included. `stats` maps build name ->
+## [mean, per_roster] and `members` is the subset of names in this bucket.
+## Returns [n, spread, lo_name, lo, hi_name, hi, measured, reason].
+## n < 2 is NOT a spread and is reported as such -- one build's distance to
+## itself is zero and would ratify a ceiling that can never fire.
+func _stratum_spread(stats: Dictionary, members: Array) -> Array:
+	if members.size() < 2:
+		return [members.size(), 0.0, "", 0.0, "", 0.0, false, "n<2 -- not a spread"]
+	var lo := 2.0
+	var hi := -1.0
+	var lo_name := ""
+	var hi_name := ""
+	var subset := {}
+	for nm: String in members:
+		var v: float = (stats[nm] as Array)[0]
+		subset[nm] = stats[nm]
+		if v < lo:
+			lo = v
+			lo_name = nm
+		if v > hi:
+			hi = v
+			hi_name = nm
+	var verdict: Array = _spread_verdict(subset, lo_name, hi_name)
+	return [members.size(), hi - lo, lo_name, lo, hi_name, hi, bool(verdict[0]), String(verdict[1])]
+
+
 func _init() -> void:
 	WITestWatchdog.arm(self)
 	var arenas_by_id := {}
@@ -337,6 +433,7 @@ func _init() -> void:
 	var total_cells := 0
 	var band_spreads: Array = []
 	var band_ai_split: Array = []
+	var envelope_rows: Array = []
 
 	print("=".repeat(78))
 	print("GH#360 (b) CROSS-CLASS PARITY -- fixed rosters, mirror-matched gear, %d seeded runs/cell" % RUNS_PER_CELL)
@@ -365,6 +462,7 @@ func _init() -> void:
 		var parity_means := {}
 		var all_means := {}
 		var parity_stats := {}
+		var stratum_of := {}
 		var expressive_means: Array = []
 		var mute_means: Array = []
 		for build: Dictionary in builds:
@@ -415,6 +513,7 @@ func _init() -> void:
 			var probe_pc: Dictionary = _build_pc(build, by_id["pc"], classes, skills_by_id, items_by_id)
 			var ai_kit: Array = _ai_expressible(probe_pc[WIKeys.SKILLS] as Array, String(probe_pc[WIKeys.AI]), skills_by_id)
 			if is_parity:
+				stratum_of[String(build["name"])] = _ai_stratum(int(ai_kit[0]))
 				if int(ai_kit[0]) > 0:
 					expressive_means.append(mean)
 				else:
@@ -475,6 +574,44 @@ func _init() -> void:
 		print("  (sat K/N: rosters where this row sat on a rail -- exactly 0.00 or 1.00. A rail")
 		print("   cell reports the roster, not the class. RANGE-MUTE: reach weapon, unusable AI.)")
 
+		# #384 item 2 -- the SAME spread arithmetic, inside each ai_kit bucket.
+		# This is the only number on this page that is a class-balance read: the
+		# band line above it straddles the confound and never was one.
+		print("  --- STRATIFIED ENVELOPE (#384 item 2): the spread with the ai_kit confound held fixed")
+		for stratum: String in STRATA:
+			var members: Array = []
+			for nm: String in parity_means:
+				if String(stratum_of[nm]) == stratum:
+					members.append(nm)
+			var st: Array = _stratum_spread(parity_stats, members)
+			var key := "%d/%s" % [band, stratum]
+			if not bool(st[6]):
+				print("    %-6s n=%-2d NO ENVELOPE -- %s" % [stratum, int(st[0]), String(st[7])])
+				envelope_rows.append([band, stratum, int(st[0]), float(st[1]), false, false, "", ""])
+				continue
+			print("    %-6s n=%-2d spread %.3f  MEASURED   floor %s %.3f  ...  ceiling %s %.3f" % [
+				stratum, int(st[0]), float(st[1]), String(st[2]), float(st[3]), String(st[4]), float(st[5]),
+			])
+			if not PROPOSED_ENVELOPE.has(key):
+				print("           no proposed ceiling for %s -- this stratum is new or was censored when the envelope was drawn; re-draw it deliberately" % key)
+				envelope_rows.append([band, stratum, int(st[0]), float(st[1]), true, false, "", ""])
+				continue
+			var entry: Dictionary = PROPOSED_ENVELOPE[key]
+			var ceiling: float = float(entry["ceiling"])
+			var drawn_from: float = float(entry["measured"])
+			var busted := float(st[1]) > ceiling
+			print("           envelope ceiling %.2f (drawn from %.3f + margin %.2f) -> %s by %.3f" % [
+				ceiling, drawn_from, ENVELOPE_MARGIN,
+				"OVER" if busted else "WITHIN", absf(ceiling - float(st[1])),
+			])
+			if absf(float(st[1]) - drawn_from) > 0.0005:
+				print("           ENVELOPE DRIFT: live spread %.3f != the %.3f this ceiling was drawn from." % [float(st[1]), drawn_from])
+				print("           Something moved a parity row. Read WHAT moved before re-drawing the ceiling.")
+			envelope_rows.append([band, stratum, int(st[0]), float(st[1]), true, true, ceiling, drawn_from])
+		print("    (bucket = does autoplay fire ANY skill this class grants. SPOKEN yes, MUTE no.")
+		print("     Comparing a MUTE row to a SPOKEN one measures the harness; comparing two rows")
+		print("     inside one bucket measures the classes. That is the whole point of the split.)")
+
 	print("")
 	print("=".repeat(78))
 	print("RECAP -- max spread per band (this is the number #360 asks to gate)")
@@ -497,6 +634,48 @@ func _init() -> void:
 			int(row[0]), int(row[1]), float(row[2]), int(row[3]), float(row[4]), float(row[2]) - float(row[4]),
 		])
 	print("")
-	print("REPORT-ONLY (#360 harness-first). Spread envelopes ratify after this read.")
+	print("RECAP -- THE STRATIFIED ENVELOPE (#384 item 2): the project's class-balance gate")
+	var gate_on := OS.get_environment("WI_PARITY_ENVELOPE_GATE") == "1"
+	var busts: Array = []
+	var ungated := 0
+	for row: Array in envelope_rows:
+		if not bool(row[5]):
+			ungated += 1
+			print("  band %2d %-6s n=%-2d spread %.3f   UNGATED (%s)" % [
+				int(row[0]), String(row[1]), int(row[2]), float(row[3]),
+				"measured, no ceiling drawn yet" if bool(row[4]) else "censored or n<2",
+			])
+			continue
+		var over: bool = float(row[3]) > float(row[6])
+		if over:
+			busts.append(row)
+		print("  band %2d %-6s n=%-2d spread %.3f   ceiling %.2f   %s" % [
+			int(row[0]), String(row[1]), int(row[2]), float(row[3]), float(row[6]),
+			"OVER  <-- BUST" if over else "WITHIN",
+		])
+	if ungated > 0:
+		print("  %d stratum row(s) carry no ceiling. An UNGATED stratum is not covered by anything;" % ungated)
+		print("  it is not a pass. Censored strata need a floor-resolution roster before they can be.")
+	print("")
+	if busts.is_empty():
+		print("ENVELOPE: every gateable stratum is inside its ceiling.")
+	else:
+		print("ENVELOPE: %d stratum row(s) BUST their ceiling." % busts.size())
+		for row: Array in busts:
+			print("  band %d %s: spread %.3f > ceiling %.2f (drawn from %.3f). Read what moved --" % [
+				int(row[0]), String(row[1]), float(row[3]), float(row[6]), float(row[7]),
+			])
+			print("  a bust is a class getting further from its stratum-mates, not a harness fault.")
+	if gate_on:
+		if busts.is_empty():
+			print("PASS: class-parity harness terminated cleanly over %d cells x %d seeded runs; envelope GATE ON, no busts" % [total_cells, RUNS_PER_CELL])
+			quit(0)
+		else:
+			print("FAIL: WI_PARITY_ENVELOPE_GATE=1 and %d stratum row(s) are over ceiling" % busts.size())
+			quit(1)
+		return
+	print("REPORT-ONLY by default (#360/#211 harness-first): the envelope above PROPOSES, it does")
+	print("not fail the run. WI_PARITY_ENVELOPE_GATE=1 makes a bust exit nonzero -- that is the")
+	print("shape a merge train runs against a candidate branch.")
 	print("PASS: class-parity harness terminated cleanly over %d cells x %d seeded runs" % [total_cells, RUNS_PER_CELL])
 	quit(0)
