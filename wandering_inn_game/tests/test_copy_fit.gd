@@ -57,6 +57,13 @@ const VEIL_COPY_TABLES := [
 	"FINALE_CLOSE_LINES", "FINALE_LINK_LINE", "SEAL_TRANSITION_LINE",
 	"WATCH_RUNNER_VEIL_LINE",
 	"_EVOLUTION_RESULT_FLAVOR",
+	# GH#372's defeat closers. `_defeat_lines()` composes line 3 from this table,
+	# and the two gated variants only ever render behind a map+counter gate --
+	# so without a row here they would be the only veil copy in the file that
+	# ships unmeasured, and the next edit to them would be unmeasured too.
+	# Dictionary-shaped exactly like _EVOLUTION_RESULT_FLAVOR: the keys
+	# ("pre_spar"/"pre_sleep"/"default") are filtered by `_looks_like_identifier`.
+	"DEFEAT_NUDGE_LINES",
 ]
 
 
