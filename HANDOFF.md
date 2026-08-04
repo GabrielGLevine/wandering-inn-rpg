@@ -4,6 +4,87 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
+## PAUSED (2026-08-04): v0.19 playtest feedback — 14 findings, 1 BLOCKER class, handed off
+
+**State:** PR #394 open (branch `v0.19-wave-2`, 61 commits), **CI 7/7 green**.
+`v0.19.0` tagged LOCALLY ONLY — deliberately not pushed, so Release/Pages do
+not fire. Working tree clean. DO NOT MERGE #394 until the blocker below is
+resolved.
+
+### PROCESS FAILURE, mine, read this first
+I ran a windowed capture in a detached worktree at `180ebbce` WITHOUT the
+private asset overlay. That violates the iron rule in wi-machine-playtest
+("windowed verification ALWAYS runs on the real asset overlay"). The specific
+conclusion I drew from it survives — I compared TEXT ROW GEOMETRY (option
+positions, exit-row y), which is UI and unaffected by world art, and the rows
+matched to the pixel — but **do not trust that frame for any FEEL judgment**,
+and re-run it properly with the overlay before relying on it.
+
+### THE BLOCKER (user finding 11 + 13): shop dialogue traps the player
+Krshia (`krshia_crate`) and the street Peddler (`peddler_stall`) — the game's
+only `requires: {gold:}` shop hubs. User reports a huge panel with no way out;
+had to quit the program.
+
+**Verified by me:**
+- The shop panel is UNBOUNDED and does not scroll. On the charms sub-menu (8
+  options with effect sub-lines) the EXIT row "Back to the regular stall" lands
+  at y=662 of a 720px viewport, already clipped by the input-hint bar. One more
+  option or effect line and the only exit is off-screen.
+- **This PREDATES v0.19.** Reproduced identically at `180ebbce`. My autowrap
+  change is NOT the cause — removing it does not fix it.
+- I could NOT reproduce a fully EMPTY panel. Mine renders text. The user's
+  "empty" needs their state or a screenshot — that may be a second, distinct
+  defect. ASK BEFORE ASSUMING it is the same bug.
+- I did not finish checking whether `cancel`/Esc has ANY path out of a dialogue
+  hub (`dialogue_panel.gd:444` handles cancel only for the PICKER). If Esc
+  cannot close a conversation, that is the actual trap and the real fix.
+
+**Why every gate missed it — three independent holes:**
+1. `d2_shop_shot`, the ONE script whose whole purpose is the shop panel
+   screenshot, is **NOT in `ci_sweep`'s canonical list** (grep count 0). It has
+   been failing since at least `180ebbce` and nothing reported it.
+2. The scripts that DO cover `krshia_crate` assert EVENT payloads — option
+   text, locked, requirement — all of which are correct. Event-level QA is
+   structurally blind to "the panel is taller than the screen".
+3. My machine-playtest rotation did not include a shop. The protocol says
+   rotate the subset; I picked combat/inn/street/martial/panels and no vendor.
+
+### The other 13, triaged (NOT yet investigated unless noted)
+- **(3) Martial skills have no hotbar icons — user calls it non-shippable.** Highest
+  priority after the blocker. Likely missing `icon` ids on the five new skills.
+- **(1)/(5) [Ice Floor] and [Snap Freeze] refuse at the pond/channel** ("no
+  standing water" / "nothing here to grip") — the wave's marquee feature not
+  working in play. Suspect the faced-cell freezable lookup vs where the player
+  actually stands. THIS IS THE THESIS FEATURE; treat as near-blocker.
+- **(6) Enemy health numbers show through the pause menu.** I looked at
+  `01_pause_over_combat.png` and judged it acceptable; the user disagrees on
+  their screen. The scrim alpha 0.55 was my invented value — raise it, or the
+  combat HUD needs to hide under pause rather than be dimmed.
+- **(2) Corusdeer healthy/injured/dead differ only by TINT** — direct violation
+  of the tint-is-not-disambiguation directive. Needs distinct art per state.
+- **(14) `martial_field_armed` has no cooking skills** — my prepared playtest
+  state is wrong for the #391 read. Fixture fix.
+- **(12) Pisces idle reads as walking in place** — my v3 "breathing idle"
+  generation drifts the legs. Regenerate with a stiller prompt.
+- **(10) "Octavia is black?"** — check the generated rig's palette against the
+  Stitch-girl profile; may be a bad generation or a tint left on the row.
+- **(4) "What is the scree chute? The cairn on a hill?"** — the [Even Footing]
+  placement does not read as a crossable slope. Dressing problem.
+- **(7) Flame Jet destroys the sodden timber but the point is unclear** — the
+  yield/consequence is not legible.
+- **(9) Yellow menu text on light toast background is hard to read** — contrast.
+- **(8) Sleep prompt copy lacks flavor.**
+- **(13) "Who is the male vendor supposed to be?"** — `peddler`, sprite
+  `hired_blade`; it is a shared/undistinguished rig and the name says nothing.
+
+### Suggested order for whoever picks this up
+1. Reproduce finding 11 WITH the overlay and get the user's exact state.
+2. Answer: can Esc leave a dialogue? If not, that is the fix and it is small.
+3. Cap the dialogue panel height + scroll or paginate options so the exit row
+   is ALWAYS reachable. Add `d2_shop_shot` to `ci_sweep` and repair its stale
+   pins so this can never rot again.
+4. Then finding 3 (icons), then 1/5 (the freeze verbs).
+
 ## DONE (2026-08-04): v0.19 (wave-2) — "the world answers the hand" — SHIPPED
 
 **Tagged v0.19.0.** 19 of 20 issues closed; #348 stays open by design (its
