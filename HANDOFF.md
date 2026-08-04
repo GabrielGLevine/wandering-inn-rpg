@@ -20,6 +20,44 @@ positions, exit-row y), which is UI and unaffected by world art, and the rows
 matched to the pixel — but **do not trust that frame for any FEEL judgment**,
 and re-run it properly with the overlay before relying on it.
 
+### FABLE VERDICT (2026-08-04, wound down at WINDDOWN before fixing)
+Reviewed the code against the 14 findings. **The engine is NOT broken; the
+build is not corrupted.** Three verified root causes, in one diagnostic pass:
+
+1. **Findings 1/5 (freeze verbs "not working") = CONTENT GAP + OVERSOLD BRIEF,
+   not engine.** Both reported strings are `field_ambient` FALLBACKS
+   (skills.json:373, :625) — dispatch correctly found no freezable cell where
+   the player aimed. The floodplains "pond" has exactly ONE freezable cell:
+   `[[10,17]]` on a 40x26 map. The playtest brief said "cast [Ice Floor] on
+   the pond, walk across it" — a promise the data never supported; the QA
+   canonical teleports to the one tagged cell, a human aims anywhere.
+   FIX: tag the pond's water band freezable (cells are already blocked, so
+   blocked-counts hold; re-run --touching floodplains) + make the ambient copy
+   honest ("stand at the water's edge"). Same treatment for sewers channels if
+   coverage there is also single-cell.
+2. **Finding 3 (missing hotbar icons) CONFIRMED: five of six martial skills
+   ship `icon: None`** (even_footing, greater_strength, broader_shoulders,
+   bar_fighting, rope_work, basic_repair; icy_floor/flame_jet are fine).
+   L2 never wired icons and no gate checks that a field skill has one.
+   FIX: 5-6 icons (pixflux 64px or pack), sprites.json rows, AND a data_lint
+   arm: field:true + contexts exploration => icon required. User calls this
+   non-shippable; agree.
+3. **Findings 11/13 (shop trap) predate v0.19** (Opus verified at 180ebbce;
+   geometry-only comparison, survives the overlay violation). Real fix is
+   panel height cap + scroll, an Esc path out of conversation hubs, and
+   putting `d2_shop_shot` INTO ci_sweep with repaired pins — it is the one
+   script aimed at this surface and it is not in the sweep.
+
+Remaining findings triaged below by the prior session stand. Sequencing for
+the fix wave: (a) icons + data_lint arm, (b) pond freezable + copy,
+(c) shop panel cap/scroll + Esc + sweep membership, (d) scrim alpha or hide
+combat labels under pause, (e) fixture adds basic_cooking (finding 14),
+(f) art/copy batch (corusdeer states, Pisces idle regen, scree dressing,
+timber yield legibility, sleep-line flavor, yellow-on-parchment contrast,
+peddler identity). Check Octavia against canon FIRST — canon Octavia Cotton
+is dark-skinned (wiki), so finding 10 may be working as intended; answer,
+don't repaint.
+
 ### THE BLOCKER (user finding 11 + 13): shop dialogue traps the player
 Krshia (`krshia_crate`) and the street Peddler (`peddler_stall`) — the game's
 only `requires: {gold:}` shop hubs. User reports a huge panel with no way out;
