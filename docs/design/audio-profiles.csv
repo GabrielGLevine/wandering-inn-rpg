@@ -1,0 +1,195 @@
+role,category,name,path,duration_s,tempo_bpm,rms_p95,centroid_hz,onset_density,onsets_per_sec,chroma_mode,chroma_key,energy
+anchor,music,battle_1,wandering_inn_game/assets/audio/music/battle_1.ogg,73.369,92.3,0.3038,2992.5,0.2256,4.593,minor,F#,0.3119
+anchor,music,battle_for_ashes,wandering_inn_game/assets/audio/music/battle_for_ashes.ogg,118.323,112.3,0.3343,2254.3,0.2133,2.358,minor,A,0.3435
+anchor,music,battle_for_courage,wandering_inn_game/assets/audio/music/battle_for_courage.ogg,142.942,136.0,0.3088,2721.9,0.2301,6.065,minor,A,0.3595
+anchor,music,battle_for_despair,wandering_inn_game/assets/audio/music/battle_for_despair.ogg,56.605,152.0,0.3315,2654.7,0.2246,6.325,minor,C,0.3851
+anchor,music,battle_for_hope,wandering_inn_game/assets/audio/music/battle_for_hope.ogg,182.002,89.1,0.2876,2659.6,0.1762,4.33,minor,G,0.2858
+anchor,music,battle_for_humanity,wandering_inn_game/assets/audio/music/battle_for_humanity.ogg,88.763,172.3,0.3005,2647.9,0.1794,4.551,minor,D,0.3763
+anchor,music,battle_for_nothing,wandering_inn_game/assets/audio/music/battle_for_nothing.ogg,104.907,152.0,0.3377,2117.5,0.2366,3.784,minor,C,0.3918
+anchor,music,battle_for_the_fallen_ones,wandering_inn_game/assets/audio/music/battle_for_the_fallen_ones.ogg,74.488,172.3,0.2983,2721.7,0.1679,4.511,major,G,0.3718
+anchor,music,battle_for_vengeance,wandering_inn_game/assets/audio/music/battle_for_vengeance.ogg,91.791,112.3,0.2925,2548.9,0.1597,4.772,minor,G,0.3065
+anchor,music,battle_for_what_remains,wandering_inn_game/assets/audio/music/battle_for_what_remains.ogg,74.421,161.5,0.2938,2635.0,0.1825,2.822,minor,F#,0.3631
+anchor,music,battle_the_final_of_the_fantasy,wandering_inn_game/assets/audio/music/battle_the_final_of_the_fantasy.ogg,88.747,143.6,0.2777,1845.4,0.1727,1.555,major,C,0.3342
+anchor,music,cynicmusic_battle_a,wandering_inn_game/assets/audio/music/cynicmusic_battle_a.ogg,95.852,143.6,0.2505,1972.1,0.2432,4.799,minor,C,0.3417
+anchor,music,cynicmusic_town_theme,wandering_inn_game/assets/audio/music/cynicmusic_town_theme.ogg,97.454,92.3,0.1963,1070.6,0.2248,2.586,major,G,0.2579
+anchor,music,decisive_battle_1,wandering_inn_game/assets/audio/music/decisive_battle_1.ogg,107.669,117.5,0.3054,2324.2,0.2043,4.467,minor,F#,0.3314
+anchor,music,definitely_our_town,wandering_inn_game/assets/audio/music/definitely_our_town.ogg,97.589,86.1,0.2807,2325.8,0.1616,3.586,major,A,0.2749
+anchor,music,hydrogene_dangerous_cave,wandering_inn_game/assets/audio/music/hydrogene_dangerous_cave.ogg,79.288,112.3,0.1758,1785.2,0.1076,3.784,major,E,0.2325
+anchor,music,hydrogene_dwarven_mine,wandering_inn_game/assets/audio/music/hydrogene_dwarven_mine.ogg,50.769,103.4,0.1823,2433.0,0.1165,4.136,major,C,0.2294
+anchor,music,hydrogene_east_town,wandering_inn_game/assets/audio/music/hydrogene_east_town.ogg,58.777,99.4,0.211,1618.8,0.1601,3.267,minor,A,0.2529
+anchor,music,hydrogene_hidden_cavern,wandering_inn_game/assets/audio/music/hydrogene_hidden_cavern.ogg,81.821,89.1,0.1541,1151.9,0.1663,3.288,major,F,0.216
+anchor,music,hydrogene_malicious_scheme,wandering_inn_game/assets/audio/music/hydrogene_malicious_scheme.ogg,71.21,92.3,0.1475,768.1,0.2434,2.696,minor,G,0.239
+anchor,music,hydrogene_military_base,wandering_inn_game/assets/audio/music/hydrogene_military_base.ogg,48.973,99.4,0.1738,1928.7,0.1514,3.573,major,G,0.2317
+anchor,music,junkala_army_approaching,wandering_inn_game/assets/audio/music/junkala_army_approaching.ogg,124.235,86.1,0.2707,1437.0,0.1876,3.123,minor,G,0.2778
+anchor,music,junkala_bazaar,wandering_inn_game/assets/audio/music/junkala_bazaar.ogg,110.345,172.3,0.2539,2125.5,0.1326,3.534,major,F,0.339
+anchor,music,junkala_childhood_friends,wandering_inn_game/assets/audio/music/junkala_childhood_friends.ogg,102.857,112.3,0.1653,1496.0,0.1574,1.876,major,D,0.2422
+anchor,music,junkala_encounter_witches,wandering_inn_game/assets/audio/music/junkala_encounter_witches.ogg,113.548,136.0,0.2259,2071.6,0.2271,3.003,minor,D,0.3171
+anchor,music,junkala_home_town,wandering_inn_game/assets/audio/music/junkala_home_town.ogg,90.0,95.7,0.2705,1216.3,0.1174,1.367,major,G,0.2662
+anchor,music,junkala_innocence,wandering_inn_game/assets/audio/music/junkala_innocence.ogg,71.111,53.8,0.0792,1050.1,0.087,1.111,minor,E,0.1195
+anchor,music,junkala_peaceful_days,wandering_inn_game/assets/audio/music/junkala_peaceful_days.ogg,64.0,152.0,0.279,459.2,0.0717,1.969,major,G,0.313
+anchor,music,junkala_place_i_call_home,wandering_inn_game/assets/audio/music/junkala_place_i_call_home.ogg,46.452,123.0,0.1855,1225.5,0.1457,3.122,major,D,0.2595
+anchor,music,junkala_preparing_battle,wandering_inn_game/assets/audio/music/junkala_preparing_battle.ogg,54.857,103.4,0.1974,1565.9,0.2058,3.227,minor,F,0.2638
+anchor,music,junkala_summer_memories,wandering_inn_game/assets/audio/music/junkala_summer_memories.ogg,65.455,89.1,0.2599,1351.1,0.1005,1.757,major,D,0.2492
+anchor,music,junkala_sunshine_coast,wandering_inn_game/assets/audio/music/junkala_sunshine_coast.ogg,112.34,95.7,0.3032,2368.1,0.1708,4.495,major,C,0.2985
+anchor,music,junkala_time_stands_still,wandering_inn_game/assets/audio/music/junkala_time_stands_still.ogg,75.506,89.1,0.2843,1540.9,0.1445,3.139,major,A,0.2746
+anchor,music,never_give_up,wandering_inn_game/assets/audio/music/never_give_up.ogg,7.876,123.0,0.1641,1856.2,0.1385,1.905,minor,D,0.2467
+anchor,music,peaceful_night,wandering_inn_game/assets/audio/music/peaceful_night.ogg,11.146,136.0,0.192,1764.0,0.1479,5.922,minor,D,0.2764
+anchor,music,port_town,wandering_inn_game/assets/audio/music/port_town.ogg,78.926,112.3,0.3205,2200.8,0.2136,4.751,major,A,0.3367
+anchor,music,randommind_old_tower_inn,wandering_inn_game/assets/audio/music/randommind_old_tower_inn.ogg,49.952,172.3,0.1516,1480.2,0.1417,3.644,minor,F,0.2906
+anchor,music,silent_forest,wandering_inn_game/assets/audio/music/silent_forest.ogg,85.807,117.5,0.2949,1588.5,0.3328,6.48,major,E,0.3648
+anchor,music,title_theme,wandering_inn_game/assets/audio/music/title_theme.ogg,72.96,161.5,0.2955,1648.8,0.2077,3.043,minor,D,0.3716
+anchor,music,victory,wandering_inn_game/assets/audio/music/victory.ogg,40.501,123.0,0.2302,3062.3,0.2189,4.765,major,D,0.3038
+anchor,ambience,dungeon_hum,wandering_inn_game/assets/audio/ambience/dungeon_hum.ogg,20.0,123.0,0.0502,539.2,0.4092,0.2,minor,A,0.2709
+anchor,ambience,floodplains_river_bed,wandering_inn_game/assets/audio/ambience/floodplains_river_bed.ogg,18.0,129.2,0.06,3157.5,0.5977,0.111,minor,B,0.3385
+anchor,ambience,inn_crowd_murmur,wandering_inn_game/assets/audio/ambience/inn_crowd_murmur.ogg,15.708,123.0,0.1091,1784.2,0.3084,3.565,minor,A#,0.2701
+anchor,ambience,sewers_drip,wandering_inn_game/assets/audio/ambience/sewers_drip.ogg,20.063,152.0,0.0573,3515.6,0.1854,3.489,major,G,0.2363
+anchor,ambience,street_town_bed,wandering_inn_game/assets/audio/ambience/street_town_bed.ogg,18.0,136.0,0.1017,2076.7,0.3324,2.667,major,F,0.2866
+candidate,FullScores/Orchestral Scores/Ambient Style,Ove Melaa - Psycho Behind The Keys,potential_assets/EssentialGameAudiopackFixed/FullScores/Orchestral Scores/Ambient Style/Ove Melaa - Psycho Behind The Keys.mp3,60.97,123.0,0.221,316.4,0.1299,0.312,minor,D#,0.2725
+candidate,FullScores/Orchestral Scores,Ove Melaa - Heaven Sings,potential_assets/EssentialGameAudiopackFixed/FullScores/Orchestral Scores/Ove Melaa - Heaven Sings.mp3,266.736,123.0,0.2146,2495.5,0.2865,3.254,minor,A,0.3163
+candidate,FullScores/Orchestral Scores,Ove Melaa - Theme Crystalized ,potential_assets/EssentialGameAudiopackFixed/FullScores/Orchestral Scores/Ove Melaa - Theme Crystalized .mp3,168.046,117.5,0.3016,1455.7,0.1818,3.457,major,F,0.3228
+candidate,FullScores/Orchestral Scores,Ove Melaa - Times,potential_assets/EssentialGameAudiopackFixed/FullScores/Orchestral Scores/Ove Melaa - Times.mp3,137.221,76.0,0.3617,857.2,0.1103,1.348,major,C,0.2899
+candidate,FullScores/Retro Scores,Ove Melaa - Dark,potential_assets/EssentialGameAudiopackFixed/FullScores/Retro Scores/Ove Melaa - Dark.ogg,179.354,123.0,0.1615,2734.3,0.3043,6.312,minor,G,0.2951
+candidate,FullScores/Retro Scores,"Ove Melaa - High Stakes,Low Chances","potential_assets/EssentialGameAudiopackFixed/FullScores/Retro Scores/Ove Melaa - High Stakes,Low Chances.mp3",106.005,112.3,0.1625,2312.0,0.1437,4.67,minor,C,0.2367
+candidate,FullScores/Retro Scores,Ove Melaa - Italo Unlimited,potential_assets/EssentialGameAudiopackFixed/FullScores/Retro Scores/Ove Melaa - Italo Unlimited.mp3,65.672,117.5,0.3811,3537.9,0.1646,7.096,major,C,0.3574
+candidate,FullScores/Retro Scores,Ove Melaa - Power Of Thy YES,potential_assets/EssentialGameAudiopackFixed/FullScores/Retro Scores/Ove Melaa - Power Of Thy YES.mp3,68.78,103.4,0.223,3269.3,0.2721,4.638,minor,C,0.2965
+candidate,FullScores/Retro Scores,Ove Melaa - Super Ninja Assasin,potential_assets/EssentialGameAudiopackFixed/FullScores/Retro Scores/Ove Melaa - Super Ninja Assasin.mp3,42.24,92.3,0.2783,2889.7,0.164,3.717,minor,A,0.2806
+candidate,Loops/Drum Only Loops,Ove Melaa - DrumLoop 1 64BPM,potential_assets/EssentialGameAudiopackFixed/Loops/Drum Only Loops/Ove Melaa - DrumLoop 1 64BPM.mp3,15.073,129.2,0.2608,2292.2,0.1108,3.185,minor,F,0.2928
+candidate,Loops/Drum Only Loops,Ove Melaa - DrumLoop 1,potential_assets/EssentialGameAudiopackFixed/Loops/Drum Only Loops/Ove Melaa - DrumLoop 1.mp3,8.62,112.3,0.268,2365.2,0.1722,3.944,minor,G,0.298
+candidate,Loops,Ove Melaa - Dark Loop,potential_assets/EssentialGameAudiopackFixed/Loops/Ove Melaa - Dark Loop.ogg,179.354,123.0,0.1615,2734.3,0.3043,6.312,minor,G,0.2951
+candidate,Loops,Ove Melaa - General Snus Loop A,potential_assets/EssentialGameAudiopackFixed/Loops/Ove Melaa - General Snus Loop A.ogg,36.933,129.2,0.3215,2262.0,0.3035,8.637,major,C,0.381
+candidate,Loops,Ove Melaa - General Snus Loop B,potential_assets/EssentialGameAudiopackFixed/Loops/Ove Melaa - General Snus Loop B.ogg,36.933,129.2,0.3338,2445.4,0.2722,8.312,minor,C,0.3777
+candidate,Loops,Ove Melaa - Supa Powa Loop A,potential_assets/EssentialGameAudiopackFixed/Loops/Ove Melaa - Supa Powa Loop A.mp3,28.709,136.0,0.3971,2809.5,0.2102,2.821,major,G,0.3976
+candidate,Loops,Ove Melaa - They Ate My Family,potential_assets/EssentialGameAudiopackFixed/Loops/Ove Melaa - They Ate My Family.mp3,58.253,117.5,0.4929,802.1,0.4836,0.172,major,C,0.509
+candidate,Loops,Ove Melaa - Tube Ambient Loop,potential_assets/EssentialGameAudiopackFixed/Loops/Ove Melaa - Tube Ambient Loop.ogg,23.445,112.3,0.4444,601.0,0.472,5.118,minor,D,0.4761
+candidate,Loops,Ove Melaa - Whoozer,potential_assets/EssentialGameAudiopackFixed/Loops/Ove Melaa - Whoozer.mp3,12.904,112.3,0.1837,2359.0,0.1605,1.627,minor,F,0.2524
+candidate,Loops,Ove Melaa -Supa Powa C,potential_assets/EssentialGameAudiopackFixed/Loops/Ove Melaa -Supa Powa C.mp3,28.709,136.0,0.4107,2675.3,0.185,3.553,minor,G,0.3968
+candidate,Loops,Ove Melaa Supa Powa Loop B,potential_assets/EssentialGameAudiopackFixed/Loops/Ove Melaa Supa Powa Loop B.mp3,28.709,136.0,0.4046,2706.7,0.1833,4.319,major,G,0.3933
+candidate,Loops,OveMelaa - Trance Bit Bit Loop,potential_assets/EssentialGameAudiopackFixed/Loops/OveMelaa - Trance Bit Bit Loop.ogg,11.787,161.5,0.4257,2447.9,0.1572,4.751,major,E,0.4215
+candidate,Sound Effects/AbstractPackSFX/BONUS,01,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/BONUS/01.mp3,28.709,136.0,0.4107,2675.3,0.185,3.553,minor,G,0.3968
+candidate,Sound Effects/AbstractPackSFX/BONUS,01,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/BONUS/01.ogg,23.445,112.3,0.4444,601.0,0.472,5.118,minor,D,0.4761
+candidate,Sound Effects/AbstractPackSFX/BONUS,02,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/BONUS/02.mp3,28.709,136.0,0.4046,2706.7,0.1833,4.319,major,G,0.3933
+candidate,Sound Effects/AbstractPackSFX/BONUS,02,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/BONUS/02.ogg,36.933,129.2,0.3215,2262.0,0.3035,8.637,major,C,0.381
+candidate,Sound Effects/AbstractPackSFX/BONUS,03,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/BONUS/03.mp3,28.709,136.0,0.3971,2809.5,0.2102,2.821,major,G,0.3976
+candidate,Sound Effects/AbstractPackSFX/BONUS,03,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/BONUS/03.ogg,36.933,129.2,0.3338,2445.4,0.2722,8.312,minor,C,0.3777
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,01,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/01.ogg,1.851,184.6,0.1767,326.5,0.0487,1.081,major,D,0.2875
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,02,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/02.ogg,1.228,287.1,0.2584,481.9,0.0517,1.629,major,A#,0.4318
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,03,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/03.ogg,0.642,198.8,0.3064,915.6,0.1208,3.117,minor,G,0.3882
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,04,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/04.ogg,0.642,198.8,0.3208,1056.0,0.1098,3.117,minor,F,0.3921
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,05,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/05.ogg,0.642,258.4,0.2488,765.3,0.1533,3.117,minor,E,0.4288
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,06,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/06.ogg,0.642,143.6,0.2469,1913.1,0.4742,9.35,minor,E,0.4092
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,07,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/07.ogg,0.642,198.8,0.3616,2120.5,0.1488,4.675,minor,E,0.4242
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,08,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/08.ogg,0.642,117.5,0.2436,747.8,0.0506,1.558,minor,F,0.2544
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,09,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/09.ogg,0.642,234.9,0.3931,1809.6,0.1366,3.117,minor,A,0.4725
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,10,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/10.ogg,1.81,136.0,0.2867,2891.0,0.379,12.153,minor,D#,0.393
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,100,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/100.ogg,2.51,161.5,0.1483,307.8,0.3652,14.345,minor,A#,0.3452
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,101,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/101.ogg,2.476,129.2,0.3688,1522.4,0.281,8.077,major,C#,0.3979
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,102,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/102.ogg,7.324,99.4,0.3502,3249.5,0.0836,2.184,minor,E,0.2996
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,103,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/103.ogg,2.935,161.5,0.1372,4818.0,0.1926,5.11,major,B,0.2879
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,104,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/104.ogg,2.633,152.0,0.1017,3608.9,0.1976,1.139,minor,B,0.2621
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,105,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/105.ogg,92.856,129.2,0.0169,118.3,0.0966,2.014,minor,A,0.1666
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,106,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/106.ogg,4.987,129.2,0.2396,2780.2,0.6074,2.807,minor,F#,0.4312
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,107,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/107.ogg,1.217,103.4,0.111,292.8,0.0866,0.822,minor,G,0.1848
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,108,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/108.ogg,5.47,89.1,0.1097,158.6,0.0885,2.377,major,F,0.1705
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,109,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/109.ogg,0.609,117.5,0.4239,326.7,0.0501,1.641,minor,C#,0.3445
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,11,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/11.ogg,0.908,117.5,0.173,2008.6,0.1657,6.608,minor,G,0.2537
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,110,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/110.ogg,0.609,143.6,0.5949,595.4,0.318,9.849,major,A,0.5364
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,111,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/111.ogg,0.609,123.0,0.4971,571.8,0.3176,8.207,minor,A,0.4669
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,12,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/12.ogg,0.897,136.0,0.4084,2909.2,0.2946,13.38,major,G,0.4286
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,13,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/13.ogg,0.895,258.4,0.1698,1974.9,0.0918,1.118,major,G,0.3709
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,14,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/14.ogg,1.26,123.0,0.2216,4355.4,0.1436,0.794,major,F,0.2769
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,15,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/15.ogg,0.84,215.3,0.2023,3868.4,0.1148,1.19,major,A,0.3509
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,16,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/16.ogg,1.26,143.6,0.1131,3165.2,0.1253,0.794,major,E,0.2377
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,17,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/17.ogg,1.26,143.6,0.1194,3925.2,0.1246,1.587,major,E,0.2406
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,18,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/18.ogg,0.422,136.0,0.3274,2408.1,0.3604,11.855,minor,G,0.4078
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,19,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/19.ogg,0.421,117.5,0.1051,2375.3,0.0754,2.377,minor,G,0.1926
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,20,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/20.ogg,1.809,112.3,0.2588,1787.7,0.1099,3.869,major,D,0.2747
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,21,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/21.ogg,0.352,136.0,0.3671,2974.0,0.2227,5.685,major,G,0.3864
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,22,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/22.ogg,0.352,117.5,0.1607,2457.0,0.0978,2.843,minor,F,0.2271
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,23,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/23.ogg,2.589,123.0,0.277,2659.0,0.1932,6.179,minor,E,0.3195
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,24,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/24.ogg,0.573,123.0,0.2235,2747.3,0.1205,3.491,major,A,0.271
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,25,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/25.ogg,1.104,136.0,0.3534,1800.4,0.2552,5.436,major,A,0.3892
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,26,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/26.ogg,1.104,172.3,0.3161,2688.5,0.2448,2.718,minor,C#,0.4038
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,27,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/27.ogg,1.104,129.2,0.2108,1916.2,0.2567,9.965,major,G,0.3116
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,28,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/28.ogg,1.104,234.9,0.2047,1258.4,0.0548,1.812,major,C,0.3537
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,29,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/29.ogg,1.104,287.1,0.2727,1340.3,0.0733,1.812,minor,B,0.4454
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,30,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/30.ogg,1.104,215.3,0.1454,1244.3,0.054,1.812,minor,A#,0.3042
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,31,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/31.ogg,1.104,234.9,0.1656,2396.1,0.1376,3.624,major,G,0.359
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,32,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/32.ogg,1.545,172.3,0.3126,1462.9,0.2256,2.588,major,G,0.3962
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,33,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/33.ogg,3.091,136.0,0.1511,2255.9,0.5722,0.324,minor,G#,0.3832
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,34,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/34.ogg,0.774,215.3,0.372,2530.0,0.1087,1.292,major,G,0.4339
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,35,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/35.ogg,0.774,198.8,0.243,1523.5,0.2251,6.462,major,A#,0.3878
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,36,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/36.ogg,1.545,136.0,0.4115,3188.6,0.3193,5.824,minor,A#,0.4375
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,37,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/37.ogg,0.774,215.3,0.3798,1725.0,0.0826,1.292,minor,B,0.43
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,38,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/38.ogg,0.776,117.5,0.4816,1447.9,0.313,6.445,minor,D,0.4522
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,39,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/39.ogg,2.319,129.2,0.29,2257.5,0.3787,3.018,major,A,0.3878
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,40,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/40.ogg,0.774,143.6,0.3398,2236.1,0.1957,1.292,minor,A,0.3722
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,41,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/41.ogg,5.869,41.0,0.0531,2929.9,0.1182,0.852,minor,C,0.103
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,42,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/42.ogg,5.884,123.0,0.2603,1532.6,0.5703,4.249,major,C,0.4243
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,43,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/43.ogg,5.869,83.4,0.2124,1942.7,0.0656,1.022,major,G,0.2092
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,44,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/44.ogg,0.706,184.6,0.2479,2563.9,0.1131,5.668,major,G,0.3424
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,45,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/45.ogg,0.706,184.6,0.2445,2071.8,0.1003,2.834,major,B,0.3369
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,46,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/46.ogg,0.706,215.3,0.3109,2218.4,0.1367,8.503,major,G,0.4118
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,47,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/47.ogg,1.411,198.8,0.3343,1198.7,0.1967,3.543,minor,G,0.425
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,48,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/48.ogg,1.411,215.3,0.2697,1900.0,0.2542,5.669,minor,G,0.4264
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,49,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/49.ogg,0.975,215.3,0.3146,2313.6,0.0721,2.051,major,A#,0.3942
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,50,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/50.ogg,0.367,136.0,0.417,2191.9,0.1589,2.726,minor,A#,0.3922
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,51,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/51.ogg,4.391,129.2,0.4173,1844.2,0.4999,1.822,minor,G,0.4878
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,52,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/52.ogg,0.591,123.0,0.1579,4142.6,0.3533,8.467,major,C#,0.308
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,53,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/53.ogg,0.591,123.0,0.1794,3808.2,0.3537,8.467,major,A,0.3189
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,54,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/54.ogg,0.992,123.0,0.176,3785.7,0.2997,14.109,minor,F#,0.3009
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,55,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/55.ogg,1.329,258.4,0.3161,1117.3,0.0637,1.504,minor,D,0.4356
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,56,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/56.ogg,1.329,258.4,0.1824,534.1,0.0441,1.504,minor,D,0.3628
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,57,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/57.ogg,0.521,172.3,0.2509,1640.3,0.2643,9.599,minor,B,0.377
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,58,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/58.ogg,1.851,172.3,0.1064,1444.5,0.0855,3.242,minor,C#,0.2511
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,59,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/59.ogg,3.697,117.5,0.0124,269.6,0.0431,0.811,minor,C,0.1366
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,60,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/60.ogg,1.851,184.6,0.1515,4083.7,0.0897,2.701,minor,A#,0.2872
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,61,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/61.ogg,1.851,172.3,0.0167,2616.8,0.1003,4.322,minor,A#,0.2107
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,62,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/62.ogg,1.851,258.4,0.0302,306.1,0.0519,1.081,minor,A#,0.2891
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,63,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/63.ogg,1.851,258.4,0.2208,359.0,0.0574,1.081,minor,A#,0.386
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,64,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/64.ogg,1.851,215.3,0.1391,772.0,0.1072,2.161,minor,D,0.317
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,65,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/65.ogg,1.851,117.5,0.1814,506.0,0.0493,0.54,minor,D#,0.223
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,66,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/66.ogg,1.851,117.5,0.0109,427.8,0.0594,0.54,minor,G#,0.1407
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,67,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/67.ogg,1.851,117.5,0.0019,325.1,0.0595,0.54,minor,E,0.1362
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,68,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/68.ogg,1.851,287.1,0.1374,1055.7,0.0587,0.54,minor,C,0.3734
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,69,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/69.ogg,1.851,287.1,0.0572,848.6,0.0773,2.161,minor,D#,0.3389
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,70,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/70.ogg,1.851,172.3,0.0417,418.7,0.0467,0.54,minor,G,0.2071
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,71,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/71.ogg,1.851,172.3,0.0122,521.5,0.0927,3.242,minor,F#,0.2062
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,72,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/72.ogg,1.851,184.6,0.3016,418.4,0.0531,1.081,minor,D#,0.3513
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,73,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/73.ogg,1.851,117.5,0.134,631.2,0.0552,0.54,minor,E,0.201
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,74,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/74.ogg,1.851,117.5,0.1198,2655.4,0.271,3.242,minor,A,0.2586
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,75,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/75.ogg,1.851,143.6,0.2828,2336.0,0.0781,0.54,minor,C#,0.3084
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,76,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/76.ogg,1.851,107.7,0.0556,474.0,0.1006,3.782,minor,D#,0.1657
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,77,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/77.ogg,1.851,117.5,0.0132,458.6,0.0449,0.54,minor,A#,0.1375
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,78,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/78.ogg,2.409,161.5,0.0643,2180.3,0.2442,11.21,major,C,0.2669
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,79,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/79.ogg,1.851,117.5,0.0012,263.4,0.0595,0.54,minor,D,0.1359
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,80,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/80.ogg,1.851,117.5,0.0688,340.2,0.0413,0.54,minor,B,0.1642
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,81,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/81.ogg,1.851,258.4,0.2139,598.3,0.0495,0.54,minor,B,0.3802
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,82,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/82.ogg,1.851,161.5,0.3191,1634.2,0.1703,1.081,minor,B,0.3721
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,83,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/83.ogg,3.01,152.0,0.2914,2383.8,0.1216,1.661,minor,C,0.3342
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,84,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/84.ogg,3.841,143.6,0.357,2481.9,0.1287,2.343,major,D#,0.3607
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,85,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/85.ogg,1.923,129.2,0.5252,3953.1,0.279,2.08,major,C,0.4755
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,86,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/86.ogg,3.697,136.0,0.4299,1200.5,0.2637,0.27,minor,D,0.43
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,87,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/87.ogg,1.851,172.3,0.0862,4061.4,0.0889,0.54,major,F,0.2421
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,88,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/88.ogg,1.851,136.0,0.0143,4591.8,0.2502,0.54,minor,G#,0.2182
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,89,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/89.ogg,1.851,117.5,0.0423,586.3,0.0335,0.54,minor,G#,0.1486
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,90,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/90.ogg,1.851,161.5,0.052,1096.0,0.0575,1.081,minor,G,0.2048
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,91,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/91.ogg,1.851,198.8,0.031,590.1,0.0566,0.54,minor,G,0.2312
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,92,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/92.ogg,1.851,184.6,0.0362,380.6,0.0515,0.54,minor,G#,0.2181
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,93,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/93.ogg,1.412,172.3,0.1309,3079.7,0.1642,2.125,major,G,0.287
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,94,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/94.ogg,1.063,184.6,0.0573,2245.9,0.1766,7.523,major,G,0.2662
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,95,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/95.ogg,0.532,172.3,0.1758,2180.9,0.1743,5.635,minor,G,0.3124
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,96,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/96.ogg,2.182,152.0,0.0372,5403.3,0.223,0.917,major,D#,0.2375
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,97,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/97.ogg,0.56,123.0,0.2131,1146.8,0.3696,3.571,minor,G,0.3405
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,98,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/98.ogg,0.56,143.6,0.208,1189.6,0.5004,7.143,minor,F#,0.3976
+candidate,Sound Effects/AbstractPackSFX/Files/AbstractSfx,99,potential_assets/EssentialGameAudiopackFixed/Sound Effects/AbstractPackSFX/Files/AbstractSfx/99.ogg,0.56,143.6,0.3175,1150.1,0.3733,5.357,minor,A#,0.4143
+candidate,Sound Effects/RandomSfx,appleeat,potential_assets/EssentialGameAudiopackFixed/Sound Effects/RandomSfx/appleeat.ogg,0.241,117.5,0.0577,4780.2,0.1219,4.152,major,D#,0.1829
+candidate,Sound Effects/RandomSfx,click,potential_assets/EssentialGameAudiopackFixed/Sound Effects/RandomSfx/click.ogg,1.851,117.5,0.0092,657.3,0.0595,0.54,minor,D#,0.1399
+candidate,Sound Effects/RandomSfx,door,potential_assets/EssentialGameAudiopackFixed/Sound Effects/RandomSfx/door.ogg,2.039,136.0,0.0181,1237.7,0.1773,3.923,major,D#,0.1983
+candidate,Sound Effects/RandomSfx,gem,potential_assets/EssentialGameAudiopackFixed/Sound Effects/RandomSfx/gem.ogg,1.117,136.0,0.0905,2809.3,0.4128,8.953,major,G,0.3051
+candidate,Sound Effects/RandomSfx,key,potential_assets/EssentialGameAudiopackFixed/Sound Effects/RandomSfx/key.ogg,1.114,161.5,0.0333,1545.6,0.0632,0.898,major,F,0.1971
+candidate,Sound Effects/RandomSfx,lvlup,potential_assets/EssentialGameAudiopackFixed/Sound Effects/RandomSfx/lvlup.ogg,2.406,136.0,0.1881,1493.7,0.1056,2.493,minor,G,0.2617
+candidate,Sound Effects/RandomSfx,pot,potential_assets/EssentialGameAudiopackFixed/Sound Effects/RandomSfx/pot.ogg,1.117,152.0,0.0468,2577.8,0.1859,4.477,major,D,0.2312
+candidate,Sound Effects/RandomSfx,potpickup,potential_assets/EssentialGameAudiopackFixed/Sound Effects/RandomSfx/potpickup.ogg,0.534,258.4,0.2518,1848.2,0.065,1.874,major,C#,0.4038
+candidate,Sound Effects/RandomSfx,s_gem,potential_assets/EssentialGameAudiopackFixed/Sound Effects/RandomSfx/s_gem.ogg,2.225,136.0,0.1162,3086.2,0.4816,0.899,minor,D,0.3386
+candidate,Sound Effects/RandomSfx,swhit,potential_assets/EssentialGameAudiopackFixed/Sound Effects/RandomSfx/swhit.ogg,1.114,136.0,0.0986,1935.5,0.1535,0.898,major,E,0.2314
+candidate,Sound Effects/RandomSfx,win,potential_assets/EssentialGameAudiopackFixed/Sound Effects/RandomSfx/win.ogg,2.228,143.6,0.0531,2154.1,0.2693,10.772,minor,G,0.2509
