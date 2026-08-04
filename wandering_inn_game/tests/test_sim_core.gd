@@ -955,7 +955,13 @@ func _init() -> void:
 	for e: Dictionary in _events:
 		if e["type"] == "toast" and String(e["payload"]["text"]).begins_with("[Warrior"):
 			span_toast = String(e["payload"]["text"])
-	assert(span_toast == "[Warrior Level 5 → 9] (+4 Max HP, +2 damage) — you start every fight full.", "grant-less batch toasts the span's own felt growth, not silence")
+	# GH#380 re-pin: warrior L6/L7/L8 are grant-BEARING now (the martial
+	# exploration slate), so the 5 -> 9 span is no longer the grant-less case.
+	# The grant-less shape is still exercised below by [Mage]-less spans and by
+	# every class whose empty levels this walk crosses; what this line pins now is
+	# that a multi-level span lists EVERY unlock in level order beside its own
+	# felt growth.
+	assert(span_toast == "[Warrior Level 5 → 9] — unlocked [Even Footing], [Greater Strength], [Basic Repair] (+4 Max HP, +2 damage) — you start every fight full.", "multi-level batch lists every unlock in level order beside the span's felt growth")
 	g16.record_accomplishment("won_combat", 3)
 	_events.clear()
 	g16.sleep()

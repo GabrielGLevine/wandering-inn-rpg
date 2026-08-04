@@ -5,6 +5,16 @@ const KNOWN_ICONLESS_SKILLS := {
 	"guarding_ward": true,
 	"raskghar_maul": true,
 	"slam": true,
+	# GH#380/#381/#382 martial exploration slate: five field-active verbs shipped
+	# ahead of their 16x16 icons (art lane owes icon_<id> for each). They degrade
+	# to field_hotbar.gd's two-letter fallback label, the flame_pillar precedent.
+	# SHRINK THIS LIST as each icon lands -- the loop below fails loud on a stale
+	# entry, so it cannot rot silently.
+	"greater_strength": true,
+	"broader_shoulders": true,
+	"bar_fighting": true,
+	"basic_repair": true,
+	"rope_work": true,
 }
 
 const VISUAL_LOG_ICON_SKILLS := [

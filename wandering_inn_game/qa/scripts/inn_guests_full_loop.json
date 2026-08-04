@@ -225,8 +225,9 @@
    ]
   },
   {
-   "action": "press",
-   "name": "hotbar_3"
+   "_comment": "v019-L2: was a raw `hotbar_3`. GH#383 gave flame_jet a field context and mage L2 grants it, so slot 3 is no longer [Basic Cooking]. press_field_skill resolves by id, so the next slot shift cannot silently re-point this cast either.",
+   "action": "press_field_skill",
+   "skill": "basic_cooking"
   },
   {
    "action": "wait_for_event",

@@ -503,6 +503,7 @@ func _init() -> void:
 	_validate_class_skill_grant_ids(classes, skill_ids)
 	_validate_class_skill_grant_ids_shape_cases()
 	_validate_props(scene)
+	_validate_unsteady_authoring(scene)
 	_validate_talk_pool_stages_ascending(scene)
 	_validate_talk_pool_stage_shape(scene)
 	_validate_population_floors(scene)
@@ -637,10 +638,34 @@ func _entity_ids(scene: Dictionary) -> Dictionary:
 	return out
 
 
+## #348 slice 2: a `state_set` row banks the counter named by whatever field the
+## row's `counter_key` points at ON THE CARRIER, so the property table is the
+## producer registry for those ids. test_reachability already walks this; THIS
+## walk was the one that did not, which made a `present_when.absent` gate on a
+## repaired/anchored carrier read as an unproduced counter (GH#381/#382).
+func _state_set_counter_keys(scene: Dictionary) -> Array:
+	var keys: Array = []
+	for raw_row: Variant in (scene.get("interactions", {}) as Dictionary).get("interactions", []):
+		if not (raw_row is Dictionary):
+			continue
+		var row := raw_row as Dictionary
+		if String(row.get("outcome", "")) != "state_set":
+			continue
+		var key := String(row.get("counter_key", ""))
+		if key != "" and not keys.has(key):
+			keys.append(key)
+	return keys
+
+
 func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> void:
+	var state_set_keys: Array = _state_set_counter_keys(scene)
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):
+			for state_key: String in state_set_keys:
+				var state_counter := String(entity.get(state_key, ""))
+				if state_counter != "":
+					produced[state_counter] = true
 			if String(entity.get("kind", "")) == "encounter":
 				# GH#211: combat_banking banks fought_<encounter_id> on every
 				# weighted victory -- a real code-banked producer per encounter.
@@ -1941,6 +1966,24 @@ func _validate_deliveries(deliveries: Dictionary, produced_accomplishments: Dict
 				produced.has(accomplishment_id),
 				"delivery %s condition waits on unproduced accomplishment: %s" % [String(delivery["id"]), accomplishment_id]
 			)
+
+
+## GH#380. An `unsteady` cell is a BLOCKED cell whose whole point is that the
+## right Skill crosses it, so a map that declares one and authors no
+## `unsteady_toast` ships this wave's own thesis failure: an input the world
+## takes and does not answer. wi_game.gd carries a footing-flavoured fallback so
+## the seam is never literally silent -- this arm is what stops that fallback
+## from becoming the shipped answer. The line must also never name the Skill
+## (that would be a hint system aimed at a player who has not heard of it).
+func _validate_unsteady_authoring(scene: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		if (map.get("unsteady", []) as Array).is_empty():
+			continue
+		var line := String(map.get("unsteady_toast", ""))
+		_check(line != "", "map %s declares unsteady cells but authors no unsteady_toast -- the engine fallback is a safety net, not the shipped answer" % map_id)
+		_check(not line.to_lower().contains("even footing"),
+			"map %s unsteady_toast names the Skill that opens it; the line is about FOOTING, never about which Skill the player has not got yet" % map_id)
 
 
 func _validate_props(scene: Dictionary) -> void:

@@ -4,6 +4,7 @@
   "width": 20,
   "height": 14
  },
+ "_comment_gallery": "THE NORTH GALLERY: x14-19 y0-2, sealed by these six cells plus (13,0)/(13,1)/(16,3). Two ways in, neither a spell: [Rope Work] rigs the drop, [Greater Strength] shifts the slab. Rows 0-4 is the only quadrant no QA route walks; blocked_cells 6 -> 12 and sprites 13 -> 17 re-pin dungeon_peek.",
  "blocked": [
   [
    5,
@@ -20,6 +21,30 @@
   [
    16,
    11
+  ],
+  [
+   13,
+   2
+  ],
+  [
+   14,
+   3
+  ],
+  [
+   17,
+   3
+  ],
+  [
+   18,
+   3
+  ],
+  [
+   19,
+   3
+  ],
+  [
+   15,
+   1
   ]
  ],
  "walls": {
@@ -101,6 +126,56 @@
    "cell": [
     16,
     11
+   ],
+   "tint": [
+    0.85,
+    0.82,
+    0.85
+   ]
+  },
+  {
+   "_comment": "Blocked-pair focal (THE BLOCKING CONTRACT).",
+   "sprite": "dungeon_statue",
+   "cell": [
+    15,
+    1
+   ],
+   "tint": [
+    0.68,
+    0.7,
+    0.76
+   ]
+  },
+  {
+   "_comment": "Collapse dressing: the mouth reads as a fall-in, not built masonry.",
+   "sprite": "dungeon_rubble",
+   "cell": [
+    14,
+    3
+   ],
+   "tint": [
+    0.85,
+    0.82,
+    0.85
+   ]
+  },
+  {
+   "sprite": "dungeon_rubble",
+   "cell": [
+    17,
+    3
+   ],
+   "tint": [
+    0.85,
+    0.82,
+    0.85
+   ]
+  },
+  {
+   "sprite": "dungeon_rubble",
+   "cell": [
+    13,
+    2
    ],
    "tint": [
     0.85,
@@ -546,6 +621,97 @@
     "taken_toast": "The bones rise and fall into step behind you."
    },
    "observe": "Old bones, settled where they fell. They are not going anywhere. Probably."
+  },
+  {
+   "_comment": "[Rope Work] CARRIER. `gap` + `state_counter` are the table pair; (13,1) opens. The stub never goes absent, which is what lets visual_states SHOW the line -- a state_set the world never shows is invisible durable state.",
+   "id": "halls_span_stub",
+   "kind": "prop",
+   "cell": [
+    13,
+    0
+   ],
+   "display_name": "The Broken Span",
+   "sprite": "pedestal",
+   "gap": true,
+   "state_counter": "gallery_line_anchored",
+   "observe": "A stub of masonry where a walkway used to leave this wall, sheared off clean. The other side is still there, four feet out and a long way down. The stub would hold a line all day.",
+   "locked_toast": "You get a hand on the stub and lean out. Nothing about that gap is jumpable, and nothing about the stub is climbable. What it wants is a rope.",
+   "anchor_toast": "[Rope Work] — You make the line fast to the stub, drop the tail across, and set it taut. The crossing is a crossing now, and it stays one.",
+   "visual_states": [
+    {
+     "when": {
+      "counter": "gallery_line_anchored",
+      "at": 1
+     },
+     "sprite": "shaft_ladder"
+    }
+   ]
+  },
+  {
+   "id": "halls_gallery_drop",
+   "kind": "prop",
+   "cell": [
+    13,
+    1
+   ],
+   "display_name": "The Drop",
+   "sprite": "deep_fissure",
+   "present_when": {
+    "absent": {
+     "gallery_line_anchored": 1
+    }
+   },
+   "observe": "The floor is simply gone here, one span of it, edge to edge. Dropped stone comes back as a sound and not much of one.",
+   "locked_toast": "The floor stops. You put a boot to the lip and gravel goes over the edge and keeps going. Not without something to hold."
+  },
+  {
+   "_comment": "[Greater Strength] carrier. on_skill_use has NO remove_entity verb (dialogue-side only), so permanence is present_when.absent on the arm's own monotone counter.",
+   "id": "halls_gallery_slab",
+   "kind": "prop",
+   "cell": [
+    16,
+    3
+   ],
+   "display_name": "The Fallen Slab",
+   "sprite": "dungeon_rubble",
+   "tint": [
+    0.85,
+    0.82,
+    0.85
+   ],
+   "present_when": {
+    "absent": {
+     "shouldered_the_slab": 1
+    }
+   },
+   "requires_skill": "greater_strength",
+   "observe": "One slab off the ceiling, come down whole and standing on its edge across the gap in the wall. Its own weight is the only thing holding it there.",
+   "locked_toast": "You get both hands under the edge and pull until your eyes swim. It rocks an inch and settles back. Heavier than you.",
+   "skill_hint_toast": "Hauling at it idly will not do it. Setting your shoulder to it properly might.",
+   "on_skill_use": {
+    "accomplishment": "shouldered_the_slab",
+    "toast": "[Greater Strength] — You set your shoulder low, take the whole weight on your legs, and walk it aside. Stone grinds on stone and the gallery mouth stands open behind it."
+   }
+  },
+  {
+   "_comment": "Gallery payoff; one-shot via present_when.absent on its own counter.",
+   "id": "halls_gallery_cache",
+   "kind": "prop",
+   "cell": [
+    17,
+    1
+   ],
+   "display_name": "The Wardwright's Kit",
+   "sprite": "chest",
+   "present_when": {
+    "absent": {
+     "found_gallery_cache": 1
+    }
+   },
+   "observe": "A strapped case set down against the wall and never picked up again, the leather gone stiff and pale. Whoever put it there meant to come back through the span.",
+   "on_interact_accomplishment": "found_gallery_cache",
+   "gold": 5,
+   "toast": "The straps give at a pull. Inside: chalk, a bent square, a coil of good wire, and five gold in a twist of cloth that somebody was saving for the walk home."
   }
  ]
 }
