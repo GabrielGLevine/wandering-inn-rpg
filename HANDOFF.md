@@ -22,7 +22,10 @@ w5-directive.md → W5 cluster wave → gate stays CLEAN → sampled
 re-detect → W6 close per plan Task 8. SESSION WOUND DOWN at
 WINDDOWN tier (session 71%, burn-rate); background watcher polls
 until OK (post-reset ~4h), resume from W5-QUEUE Step 1.
-CHOICE-LOG "Voice pass" block has 6 rulings.
+CHOICE-LOG "Voice pass" block has 6 rulings. Task 7a DONE:
+Fable reconciliation committed (w5-directive.md, 50 REAL in 29
+cluster orders); W5 wave queued behind session reset (~60m),
+watcher auto-resumes.
 Unrelated: filed #370 (Relc front-on first meeting), #371 (inn
 one-party-at-a-time canonical groups), #372 (Floodplains
 tutorializing defeat text) from user playtest notes.
