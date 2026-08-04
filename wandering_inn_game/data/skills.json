@@ -65,7 +65,7 @@
 			"description": "A hissing dart of goblin fire."
 		},
 		{
-			"_comment": "NO `burns` FLAG: it would enroll this in the burns x burnable row and make a combat spell a universal debris-burner. Its one field use is the AUTHORED carcass arm, which beats the table by dispatch precedence.",
+			"_comment": "NO `burns` FLAG: it would enroll this in the burns x burnable row and make a combat spell a universal debris-burner. Its one field use is the AUTHORED carcass arm, which wins by dispatch precedence.",
 			"id": "flame_jet",
 			"display_name": "[Flame Jet]",
 			"contexts": ["combat", "exploration"],
@@ -227,7 +227,7 @@
 			"description": "A fist-sized spike of ice, hurled hard enough to crack shields."
 		},
 		{
-			"_comment": "Renamed [Icy Floor] -> [Ice Floor], id UNCHANGED (save-compat). SECOND `freezes` carrier -- which is why both freezes REFUSAL rows read copy off the skill, not the row: a row line would name the wrong Skill.",
+			"_comment": "Renamed [Icy Floor] -> [Ice Floor], id UNCHANGED (save-compat). SECOND `freezes` carrier -- why both freezes REFUSAL rows read copy off the skill: a row line would name the wrong Skill.",
 			"id": "icy_floor",
 			"display_name": "[Ice Floor]",
 			"contexts": ["combat", "exploration"],

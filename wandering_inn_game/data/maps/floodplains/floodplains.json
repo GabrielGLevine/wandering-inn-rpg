@@ -11,7 +11,7 @@
    17
   ]
  ],
- "_comment_unsteady": "[Even Footing] chute up the east outcrop. (31,4)-(31,6) were ALREADY blocked, so blocked_cells and every route are unchanged; a holder cuts (31,3)->(31,6) from 7 steps to 3. Pebble-dressed so it reads as scree, not masonry. NOT the pond: walking a warrior over open water reads wrong.",
+ "_comment_unsteady": "[Even Footing] chute up the east outcrop. (31,4)-(31,6) were ALREADY blocked, so blocked_cells and every route are unchanged; a holder cuts (31,3)->(31,6) from 7 to 3. Pebble-dressed: scree, not masonry. NOT the pond -- a warrior on open water reads wrong.",
  "unsteady": [
   [
    31,
@@ -885,7 +885,7 @@
    ]
   },
   {
-   "_comment": "Scree dressing for the unsteady chute; suppresses the biome blocked-prop so it reads as loose ground.",
+   "_comment": "Scree dressing; suppresses the biome blocked-prop so the chute reads as ground.",
    "sprite": "pebble",
    "cell": [
     31,
@@ -1981,7 +1981,7 @@
    "toast": "It wheels out over the pond, hangs, and comes back loud. There is something square and man-made on the bottom, a stride out from the bank — too far to reach across open water, and water can be made to bear weight."
   },
   {
-   "_comment": "AUTHORED arm only, never a `burnable` tag: flame_jet has no `burns` flag, so no other burnable prop changes. ONE-SHOT via present_when.absent on its own counter. Sited off every QA-walked cell, 5 clear of goblin_encounter_1's radius.",
+   "_comment": "AUTHORED arm only, never a `burnable` tag: flame_jet has no `burns` flag, so no other burnable prop moves. ONE-SHOT via present_when.absent. Off every QA-walked cell, 5 clear of goblin_encounter_1.",
    "id": "corusdeer_carcass",
    "kind": "prop",
    "cell": [

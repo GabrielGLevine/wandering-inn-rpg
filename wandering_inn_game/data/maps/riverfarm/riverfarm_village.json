@@ -1793,7 +1793,7 @@
    "locked_toast": "The bank is cut clean through here, down to brown water. You could go the long way round the cottage, or somebody could put boards back across it."
   },
   {
-   "_comment": "[Broader Shoulders] carrier. REPEATABLE (once_per_waking + gold): the work pays, which is the no-treadmill bar. Sited here and not in the north gallery because this is a trader L2 grant and a trader has to be able to stand where its carrier is.",
+   "_comment": "[Broader Shoulders] carrier. REPEATABLE (once_per_waking + gold): the work pays, the no-treadmill bar. Sited here, not the north gallery -- this is a trader L2 grant and a trader has to be able to reach its carrier.",
    "id": "riverfarm_bank_load",
    "kind": "prop",
    "cell": [

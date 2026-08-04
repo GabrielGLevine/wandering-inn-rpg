@@ -4,7 +4,7 @@
   "width": 20,
   "height": 14
  },
- "_comment_gallery": "THE NORTH GALLERY: x14-19 y0-2, sealed by these six cells plus (13,0)/(13,1)/(16,3). Two martial ways in, neither a spell: [Rope Work] rigs the drop, [Greater Strength] shifts the slab. Rows 0-4 are the only quadrant no QA route walks, so nothing moved; blocked_cells 6 -> 12 and sprites 13 -> 17 re-pin dungeon_peek.",
+ "_comment_gallery": "THE NORTH GALLERY: x14-19 y0-2, sealed by these six cells plus (13,0)/(13,1)/(16,3). Two ways in, neither a spell: [Rope Work] rigs the drop, [Greater Strength] shifts the slab. Rows 0-4 is the only quadrant no QA route walks; blocked_cells 6 -> 12 and sprites 13 -> 17 re-pin dungeon_peek.",
  "blocked": [
   [
    5,
@@ -134,7 +134,7 @@
    ]
   },
   {
-   "_comment": "Interior focal, blocked-pair (THE BLOCKING CONTRACT).",
+   "_comment": "Blocked-pair focal (THE BLOCKING CONTRACT).",
    "sprite": "dungeon_statue",
    "cell": [
     15,
@@ -147,7 +147,7 @@
    ]
   },
   {
-   "_comment": "Collapse dressing so the gallery mouth reads as a fall-in, not built masonry.",
+   "_comment": "Collapse dressing: the mouth reads as a fall-in, not built masonry.",
    "sprite": "dungeon_rubble",
    "cell": [
     14,
@@ -623,7 +623,7 @@
    "observe": "Old bones, settled where they fell. They are not going anywhere. Probably."
   },
   {
-   "_comment": "[Rope Work] CARRIER. `gap` + `state_counter` are the table pair; (13,1) is the cell that opens. The stub never goes absent, which is what lets visual_states SHOW the line -- a state_set the world never shows is invisible durable state.",
+   "_comment": "[Rope Work] CARRIER. `gap` + `state_counter` are the table pair; (13,1) opens. The stub never goes absent, which is what lets visual_states SHOW the line -- a state_set the world never shows is invisible durable state.",
    "id": "halls_span_stub",
    "kind": "prop",
    "cell": [
