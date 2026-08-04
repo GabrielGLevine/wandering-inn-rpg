@@ -153,7 +153,7 @@
    }
   },
   {
-   "_comment": "Issue #75 item 1: THE attack-aim pin -- entering Attack targeting (hotbar_1) must paint/confirm the board-space aim preview through the real input path, kind 'attack'. No enemy is adjacent at the opening cell (the goblins are far east per this script's own route comment), so `cells` is empty (no ring candidate) -- that's still a real, asserted render (the range tint still paints around the pc). A bare Esc cancel right after costs no AP/pool and leaves every later cell/state assertion in this script unaffected.",
+   "_comment": "Issue #75 item 1: THE attack-aim pin -- entering Attack targeting (hotbar_1) must paint/confirm the board-space aim preview through the real input path, kind 'attack'. No enemy is adjacent at the opening cell (the goblins are far east per this script's own route comment), so `cells` is empty (no ring candidate) -- that's still a real, asserted render (the range tint still paints around the pc). REVIEW/LENS-A: the old tail here said the exit right after was 'a bare Esc cancel' -- since GH#373 it is a move press (see the next step), and the AP/pool claim now belongs to that step's own asserts.",
    "action": "press",
    "name": "hotbar_1"
   },
