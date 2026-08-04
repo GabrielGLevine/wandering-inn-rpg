@@ -3070,3 +3070,13 @@ plausible-looking wrong number within reach is what produced the bug.
    61%/hr):** W2+W4 burned ~4.3M subagent tokens in one session
    window. Resume queue with verbatim prompts in
    docs/dialogue-voice/W5-QUEUE.md; watcher resumes on OK.
+7. **SHIP on Fable's terminal adjudication despite 3/3 spot-read
+   FAILs:** hits split A5-registry re-flags (pre-ruled accepted
+   noise) vs residual wit-density in canonically witty T3 voices —
+   the register-only-dullness constraint (user-fixed) caps how flat
+   Pisces/Olesm can go. Convergence stalled: readers now flag
+   W6-installed replacement lines. Corpus-level product: all
+   critique worst-lines dead, typography zero, barks reshaped and
+   passing, 9/25 sampled files fully PASS, anti 2/30 from 62.
+   Re-openable by user taste read; per-file hostile bar recorded
+   as not-met for olesm_intro/pisces_magic/invrisil_fixer.
