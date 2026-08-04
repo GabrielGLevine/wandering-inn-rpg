@@ -69,6 +69,10 @@ var _break_sneak: Callable
 var _toggle_sneak: Callable
 var _mark_skill_used: Callable
 var _record_accomplishment: Callable
+## GH#387 S0.1: reads the CARRIER's own save-persisted counter. state_set's
+## one-way guard cannot use entity_first_use -- wi_game.sleep() clears that
+## dictionary, so the guard would only hold within a single waking.
+var _accomplishment_count: Callable
 var _remove_entity: Callable
 var _use_skill: Callable
 var _toggle_light: Callable
@@ -79,7 +83,8 @@ var _property_rows: Array = []
 var _target_placements: Dictionary = {}
 
 
-func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, toggle_sneak_cb: Callable, mark_skill_used_cb: Callable, record_accomplishment_cb: Callable, remove_entity_cb: Callable, use_skill_cb: Callable, toggle_light_cb: Callable, blink_cb: Callable, ward_cb: Callable, animate_cb: Callable, door_openable_cb: Callable = Callable(), interaction_config: Dictionary = {}) -> void:
+func _init(event_sink: Callable, skills: Dictionary, break_sneak_cb: Callable, toggle_sneak_cb: Callable, mark_skill_used_cb: Callable, record_accomplishment_cb: Callable, remove_entity_cb: Callable, use_skill_cb: Callable, toggle_light_cb: Callable, blink_cb: Callable, ward_cb: Callable, animate_cb: Callable, door_openable_cb: Callable = Callable(), interaction_config: Dictionary = {}, accomplishment_count_cb: Callable = Callable()) -> void:
+	_accomplishment_count = accomplishment_count_cb
 	_event_sink = event_sink
 	_skills = skills
 	_target_placements = (interaction_config.get("target_properties", {}) as Dictionary).duplicate()
@@ -260,12 +265,14 @@ func _resolve_property(skill_id: String, skill: Dictionary, target: Dictionary, 
 				if set_counter == "":
 					continue
 				# ONE-WAY, so a repeat is a fallthrough, not a second set (the
-				# freeze_cell already-applied precedent). TRAP: entity_first_use
-				# is WAKING-scoped (wi_game.sleep clears it), so a re-cast after
-				# a sleep re-banks the monotone counter -- inert (nothing reads
-				# these counters but visual_states, which is already satisfied),
-				# but a state counter must never gate a quest beat or class gain.
-				if not _bank_first_use(entity_first_use, "state_set", String(target[WIKeys.ID])):
+				# freeze_cell already-applied precedent). The guard reads the
+				# CARRIER'S OWN save-persisted counter, never entity_first_use:
+				# that dictionary is WAKING-scoped (wi_game.sleep clears it), so
+				# guarding on it let an already-lit hearth replay its first-time
+				# toast and re-bank the monotone counter once per sleep, forever.
+				# Measured in phase-0 review; "permanent" is a persistence class
+				# data_lint enforces, so the code has to actually mean it.
+				if _state_already_set(set_counter):
 					continue
 				return _outcome_state_set(skill_id, row, target, set_counter)
 			OUTCOME_REFUSE:
@@ -375,6 +382,16 @@ func _row_toast(row: Dictionary, target: Dictionary, skill: Dictionary) -> Strin
 		"skill":
 			return String(skill.get(key, fallback))
 	return fallback
+
+
+## GH#387 S0.1. True once the carrier's own counter has been banked, i.e. the
+## one-way state is already set. Without an injected reader the row stays
+## castable rather than silently jamming shut -- a missing callable is a wiring
+## bug, and a permanently-inert row hides it better than a repeatable one.
+func _state_already_set(counter_key: String) -> bool:
+	if not _accomplishment_count.is_valid():
+		return false
+	return int(_accomplishment_count.call(counter_key)) > 0
 
 
 func _bank_first_use(entity_first_use: Dictionary, verb: String, entity_id: String) -> bool:

@@ -285,6 +285,21 @@ func _init() -> void:
 	assert(w1_state.use_skill_field("w1_scorch").get("ambient", "") == "w1_scorch",
 		"a second set on the same prop falls through to ambient (one-way, no double bank)")
 	assert(int(w1_state.accomplishments.get("w1_brazier_lit", 0)) == 1, "the counter banked exactly once")
+	# S0.1 REGRESSION GUARD (phase-0 review, BLOCK). The one-way guard used to
+	# read entity_first_use, which sleep() CLEARS -- so an already-lit hearth
+	# replayed its first-time toast and re-banked the save-persisted counter
+	# once per sleep, unbounded, while data_lint declared the row "permanent".
+	# The guard now reads the carrier's own counter. Sleeping is the only thing
+	# that can red this arm, so it has to be here and not in the waking above.
+	w1_state.sleep()
+	_events.clear()
+	_w1_face(w1_state, Vector2i(10, 3), Vector2i.UP)
+	assert(w1_state.use_skill_field("w1_scorch").get("ambient", "") == "w1_scorch",
+		"ACROSS A SLEEP a set prop still falls through to ambient -- one-way means permanent")
+	assert(int(w1_state.accomplishments.get("w1_brazier_lit", 0)) == 1,
+		"the counter did NOT re-bank after a sleep")
+	assert(String(_w1_last("toast").get("text", "")) != "W1 brazier toast.",
+		"the prop's FIRST-TIME line did not replay on an already-lit hearth (the ambient line is correct here)")
 	# The douse cell has no substrate, so it is an authored refusal even on a
 	# prop whose state is already set.
 	_events.clear()

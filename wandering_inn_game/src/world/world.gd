@@ -962,6 +962,11 @@ func _paint_ice_cell(cell: Vector2i) -> void:
 	_ice_overlay.set_cell(cell, 0, ICE_CAP_COORD)
 
 
+func _unpaint_ice_cell(cell: Vector2i) -> void:
+	if _ice_overlay != null:
+		_ice_overlay.erase_cell(cell)
+
+
 func _reconcile_ice_overlay() -> void:
 	if _ice_overlay != null:
 		_ice_overlay.queue_free()
@@ -1729,6 +1734,14 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 			match String(payload.get("to", "")):
 				"ice":
 					_paint_ice_cell(tc_cell)
+				"water":
+					# GH#387 thaw_cell's inverse. Without this the cap stays
+					# painted until the next PHASE_CHANGED or map rebuild (the
+					# overlay's only other removals, :1712 and :778), so the
+					# player is shown ice on a cell the sim has already made
+					# open water -- reads as "walk here", refuses, tells them
+					# nothing. Caught by phase-0 review, both lenses.
+					_unpaint_ice_cell(tc_cell)
 				"scorched":
 					_spawn_burn_poof(tc_cell)
 	elif type in [WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED, WIEvents.COMBAT_STARTED, WIEvents.DIALOGUE_STARTED]:
