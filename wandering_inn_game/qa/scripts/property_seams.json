@@ -1,5 +1,5 @@
 {
- "_comment": "== #348 slice 1 canonical: the PROPERTY TABLE end-to-end, one outcome verb per leg plus a null cell. LEG 1 freeze_cell (the user's named [Ice Floor]-on-water interaction, resolved today by frost_touch through the freezes x freezable row): face the channel, cast, terrain_changed{to:ice}, then WALK ONTO the cell -- frozen_walkable proven by movement, not by a flag. LEG 2 remove_scorch: face the debris, cast, entity_removed + terrain_changed{to:scorched} + the counter, then walk into the vacated nook. LEG 3 the NULL cell: the same burns cast on the untagged drainage_marker falls through to field_ambient and destroys nothing -- the honest refusal that makes quest props safe from every burns carrier, present and future. Screenshots are the player-eye proof for each. Seed is inert here (no combat resolves); it is pinned anyway so the run is reproducible. ==",
+ "_comment": "== #348 slices 1+2 canonical: the PROPERTY TABLE end-to-end, one leg per outcome verb plus a null cell. SEWERS: fire at open water is an authored REFUSAL, not the generic ambient line (leg 0). freeze_cell -- face the channel, cast, terrain_changed{to:ice}, then WALK ONTO the cell (frozen_walkable proven by movement, not by a flag). thaw_cell -- the second channel frozen then taken back by the SAME fire that water refuses, proven by a blocked step south afterwards; the first channel stays frozen, so the thaw is per-cell. remove_scorch -- entity_removed + terrain_changed{to:scorched} + the counter, then walk into the vacated nook. The NULL cell -- the same burns cast on the untagged drainage_marker falls through to field_ambient and destroys nothing. RUNNERS' GUILD (teleported to, dungeon_peek precedent): state_set three ways -- kindle lights the hearth, [Light] lights the wall lamp, [Basic Cleaning] scrubs the mud table -- each banking the CARRIER's own counter once; a second kindle at the lit hearth falls to ambient (one-way, no double bank). Two more REFUSALS with their own copy: frost at a lit hearth (no douse substrate) and frost at a person. Every refusal pins its ui_toast_rendered, because unpinned refusal copy rots. Screenshots are the player-eye proof for each. Seed is inert here (no combat resolves); it is pinned anyway so the run is reproducible. ==",
  "fixture_save": "sewers_property_seams",
  "starts_at_title": true,
  "steps": [
@@ -58,6 +58,48 @@
   {
    "action": "screenshot",
    "name": "01_water_before_freeze"
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "kindle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_no_effect",
+   "payload_contains": {
+    "skill": "kindle",
+    "target": ""
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Firefly] — The flame gutters the moment it nears the water. Steam ghosts off the surface and the channel takes it back. Fire has nothing to hold here."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "terrain_changed",
+   "payload_contains": {
+    "map": "sewers",
+    "cell": [
+     3,
+     5
+    ]
+   },
+   "count": 0
+  },
+  {
+   "action": "screenshot",
+   "name": "01b_fire_refused_by_water"
   },
   {
    "action": "press_field_skill",
@@ -132,6 +174,143 @@
   {
    "action": "screenshot",
    "name": "03_standing_on_the_ice"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    8
+   ]
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "frost_touch"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "terrain_changed",
+   "payload_contains": {
+    "map": "sewers",
+    "cell": [
+     3,
+     9
+    ],
+    "to": "ice"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "frozen_cells.sewers",
+   "contains": [
+    [
+     3,
+     9
+    ]
+   ]
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "kindle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "kindle",
+    "context": "exploration",
+    "target": ""
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "terrain_changed",
+   "payload_contains": {
+    "map": "sewers",
+    "cell": [
+     3,
+     9
+    ],
+    "to": "water"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Firefly] — You hold the flame low over the ice. It sags, greys, then drops away into black water. The channel runs open again."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "frozen_cells.sewers",
+   "contains": [
+    [
+     3,
+     5
+    ]
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    8
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "screenshot",
+   "name": "03b_channel_thawed_and_shut"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    5
+   ]
   },
   {
    "action": "move",
@@ -303,6 +482,399 @@
   {
    "action": "screenshot",
    "name": "06_untagged_prop_refused"
+  },
+  {
+   "action": "teleport",
+   "map": "runners_guild",
+   "cell": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "runners_guild"
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    2
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "screenshot",
+   "name": "07_hearth_cold"
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "kindle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "kindle",
+    "context": "exploration",
+    "target": "runners_hearth"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "lit_the_runners_hearth",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Firefly] — The flame takes the birch on the second breath. Heat crawls out into the room and the stone begins giving it back."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.lit_the_runners_hearth",
+   "equals": 1
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "screenshot",
+   "name": "08_hearth_lit"
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "kindle"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Firefly] — A curl of flame dances up over your knuckles and gutters out. Nothing here will take the fire."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.lit_the_runners_hearth",
+   "equals": 1
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "frost_touch"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_no_effect",
+   "payload_contains": {
+    "skill": "frost_touch",
+    "target": "runners_hearth"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Snap Freeze] — Frost crawls onto the hot stone and vanishes before it can settle. The fire goes on eating. Your cold has no purchase on it."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.lit_the_runners_hearth",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "terrain_changed",
+   "payload_contains": {
+    "map": "runners_guild"
+   },
+   "count": 0
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    2
+   ]
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "light"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "light",
+    "context": "exploration",
+    "target": "runners_wall_lamp"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "lit_the_runners_lamp",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Light] — The orb slides into the lamp glass and settles. Yellow light spreads down the wall and over the slips pinned there."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.lit_the_runners_lamp",
+   "equals": 1
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "screenshot",
+   "name": "09_wall_lamp_lit"
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    3,
+    6
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "screenshot",
+   "name": "10_table_mud_tracked"
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "basic_cleaning"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cleaning",
+    "context": "exploration",
+    "target": "runners_mud_table"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "scrubbed_the_runners_table",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Basic Cleaning] — You take it off in three passes. The dried mud lifts, the grain comes up pale, and the boards stop smelling of the road."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.scrubbed_the_runners_table",
+   "equals": 1
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "screenshot",
+   "name": "11_table_scrubbed"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "press_field_skill",
+   "skill": "frost_touch"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_no_effect",
+   "payload_contains": {
+    "skill": "frost_touch",
+    "target": "vess"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "[Snap Freeze] — The cold gathers in your palm and stops there. You are pointing a killing frost at someone who has done nothing to you. Your hand comes down."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "terrain_changed",
+   "payload_contains": {
+    "map": "runners_guild"
+   },
+   "count": 0
+  },
+  {
+   "action": "wait_frames",
+   "frames": 12
+  },
+  {
+   "action": "screenshot",
+   "name": "12_frost_refused_at_a_person"
   }
  ]
 }

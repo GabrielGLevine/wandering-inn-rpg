@@ -1,16 +1,26 @@
 {
- "_comment": "#348 slice 1 property table (spec docs/design/2026-08-02-emergent-skill-interactions-spec.md). Closed vocabularies + rows, resolved in WIFieldSkills.dispatch. ROW ORDER IS THE CONTRACT (first match wins). Verb contracts: field_skills.gd; policing: data_lint.",
+ "_comment": "#348 property table (spec docs/design/2026-08-02-emergent-skill-interactions-spec.md). Closed vocabularies + rows, resolved in WIFieldSkills.dispatch. ROW ORDER IS THE CONTRACT (first match wins): a frozen water cell carries BOTH `frozen` and `freezable`, so the thaw row must precede the water refusal. Verb contracts: field_skills.gd; policing: data_lint. state_set banks the counter named by the CARRIER's `counter_key` field, never a row-level id -- one shared counter would flip every sibling prop's visual_states at once.",
  "skill_properties": [
   "burns",
-  "freezes"
+  "freezes",
+  "cleans",
+  "toggles_light"
  ],
  "target_properties": {
   "burnable": "entity",
-  "freezable": "cell"
+  "freezable": "cell",
+  "frozen": "cell",
+  "dirty": "entity",
+  "hearth": "entity",
+  "unlit": "entity",
+  "person": "entity"
  },
  "outcomes": [
   "remove_scorch",
-  "freeze_cell"
+  "freeze_cell",
+  "thaw_cell",
+  "state_set",
+  "refuse"
  ],
  "interactions": [
   {
@@ -33,6 +43,81 @@
    "toast_from": "skill",
    "toast_key": "freeze_toast",
    "toast_default": "Frost races across the water and locks it solid. You can cross now. Until it thaws."
+  },
+  {
+   "_comment": "MUST precede the burns x freezable refusal below -- a frozen cell is still a freezable one.",
+   "skill_property": "burns",
+   "target_property": "frozen",
+   "outcome": "thaw_cell",
+   "persistence": "immediate",
+   "terrain": "water",
+   "toast_from": "row",
+   "toast_default": "[Firefly] — You hold the flame low over the ice. It sags, greys, then drops away into black water. The channel runs open again."
+  },
+  {
+   "skill_property": "burns",
+   "target_property": "freezable",
+   "outcome": "refuse",
+   "persistence": "none",
+   "toast_from": "row",
+   "toast_default": "[Firefly] — The flame gutters the moment it nears the water. Steam ghosts off the surface and the channel takes it back. Fire has nothing to hold here."
+  },
+  {
+   "skill_property": "burns",
+   "target_property": "hearth",
+   "outcome": "state_set",
+   "persistence": "permanent",
+   "counter_key": "state_counter",
+   "toast_from": "target",
+   "toast_key": "kindle_toast",
+   "toast_default": "[Firefly] — The flame catches and the hearth takes it. Warmth climbs the stone."
+  },
+  {
+   "skill_property": "burns",
+   "target_property": "unlit",
+   "outcome": "state_set",
+   "persistence": "permanent",
+   "counter_key": "state_counter",
+   "toast_from": "target",
+   "toast_key": "kindle_toast",
+   "toast_default": "[Firefly] — The wick takes the flame and holds it. Light spreads out from the glass."
+  },
+  {
+   "skill_property": "toggles_light",
+   "target_property": "unlit",
+   "outcome": "state_set",
+   "persistence": "permanent",
+   "counter_key": "state_counter",
+   "toast_from": "target",
+   "toast_key": "light_toast",
+   "toast_default": "[Light] — A steady orb settles into the glass and stays lit."
+  },
+  {
+   "skill_property": "cleans",
+   "target_property": "dirty",
+   "outcome": "state_set",
+   "persistence": "permanent",
+   "counter_key": "state_counter",
+   "toast_from": "target",
+   "toast_key": "clean_toast",
+   "toast_default": "[Basic Cleaning] — The grime lifts away and the surface comes up clean."
+  },
+  {
+   "_comment": "The douse cell. No reversal substrate in v1 (spec §4.1), so the refusal IS the answer.",
+   "skill_property": "freezes",
+   "target_property": "hearth",
+   "outcome": "refuse",
+   "persistence": "none",
+   "toast_from": "row",
+   "toast_default": "[Snap Freeze] — Frost crawls onto the hot stone and vanishes before it can settle. The fire goes on eating. Your cold has no purchase on it."
+  },
+  {
+   "skill_property": "freezes",
+   "target_property": "person",
+   "outcome": "refuse",
+   "persistence": "none",
+   "toast_from": "row",
+   "toast_default": "[Snap Freeze] — The cold gathers in your palm and stops there. You are pointing a killing frost at someone who has done nothing to you. Your hand comes down."
   }
  ]
 }

@@ -190,6 +190,7 @@
     4
    ],
    "display_name": "Sergeant Ashgrave",
+   "person": true,
    "sprite": "royal_soldier",
    "tint": [
     0.55,

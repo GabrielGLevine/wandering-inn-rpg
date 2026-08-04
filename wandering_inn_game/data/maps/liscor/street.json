@@ -1044,6 +1044,7 @@
     5
    ],
    "display_name": "Watch Guard",
+   "person": true,
    "sprite": "royal_soldier",
    "observe": "Watch armor, kept. He stands the post properly: weight even, eyes on the gap in the wall. Bored, but the boredom is a discipline, not a lapse.",
    "friendly_line": "The guard's mouth twitches toward a smile despite himself. Hah. You seem decent enough. Go on through easy - I'll remember the friendly one.",
@@ -1070,6 +1071,7 @@
     6
    ],
    "display_name": "Zevara",
+   "person": true,
    "sprite": "zevara",
    "observe": "Oldblood Drake, light scales, a scar down the left of her jaw she's long past explaining. She reads the gate the way a clerk reads a ledger: every figure accounted for, and every one of them a suspect.",
    "friendly_line": "Zevara's shoulders come down a fraction. Huh. Civil, and no bribe. You would not believe how short that list is. Go on through. And, thank you. Genuinely.",
@@ -1151,6 +1153,7 @@
     6
    ],
    "display_name": "Klbkch",
+   "person": true,
    "sprite": "klbkch",
    "facing": "left",
    "observe": "An Antinium of Liscor's Watch — dark chitin, four arms, antennae, twin swords worn at the hips like a closed argument. He stands still the way patient things do.",
@@ -1181,6 +1184,7 @@
     3
    ],
    "display_name": "Olesm",
+   "person": true,
    "sprite": "olesm",
    "observe": "Thin, sky-blue scales, ink drying on three of his claws. A chess board waits at his elbow mid-game, played against himself, to feel how the other side thinks. His eyes are a wild, patterned blue, the one soft thing about a man who counts exits.",
    "friendly_line": "Olesm brightens like a lamp. Oh! A friendly face. Most people's eyes glaze when I mention troop dispersal. Yours didn't. Would you... that is... care to see the board sometime? No pressure. A little pressure.",
@@ -1310,6 +1314,7 @@
     2
    ],
    "display_name": "Peddler",
+   "person": true,
    "sprite": "hired_blade",
    "observe": "A cart of odds and ends, half of it Watch-stamped. He's not saying how he came by that, and you're not asking.",
    "facing": "down",
@@ -1385,6 +1390,7 @@
     4
    ],
    "display_name": "Pisces",
+   "person": true,
    "sprite": "pisces",
    "observe": "Thin, immaculate, hungry in a way food will not fix. He holds himself like a duelist and watches hands, not faces. Whatever he studies, it is not small.",
    "friendly_line": "A sniff - though a fractionally warmer one. You are... tolerable company. Rarer praise than you comprehend. I shall permit you to remain within conversational range.",
@@ -1561,6 +1567,7 @@
     2
    ],
    "display_name": "Krshia",
+   "person": true,
    "sprite": "gnoll_traveler",
    "tint": [
     0.8,
@@ -1819,6 +1826,7 @@
    ],
    "facing": "left",
    "display_name": "A Frazzled Drayman",
+   "person": true,
    "sprite": "human_laborer",
    "conversation": "drayman_dispute",
    "observe": "A dray cart, a missing axle-pin, and a man about one shout from tipping the whole day over."
@@ -1832,6 +1840,7 @@
     12
    ],
    "display_name": "Watch Sergeant",
+   "person": true,
    "sprite": "royal_soldier",
    "tint": [
     0.62,
@@ -1906,6 +1915,7 @@
     3
    ],
    "display_name": "Antinium Worker",
+   "person": true,
    "sprite": "antinium_worker",
    "facing": "down",
    "observe": "An Antinium Worker — dark chitin, four arms, a crate balanced with unreasonable precision. It does not fidget. It does not need to.",
@@ -1924,6 +1934,7 @@
     16
    ],
    "display_name": "Antinium Worker",
+   "person": true,
    "sprite": "antinium_worker",
    "facing": "up",
    "observe": "Another Worker, identical to the first in the way coins from one mint are identical. It sweeps the same three cobbles until they answer for something.",

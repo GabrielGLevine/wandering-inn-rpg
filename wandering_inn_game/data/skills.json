@@ -6,6 +6,7 @@
 			"icon": "icon_basic_cleaning",
 			"contexts": ["exploration"],
 			"field": true,
+			"cleans": true,
 			"field_ambient": "[Basic Cleaning] — You wipe down the nearest surface out of old habit. It gleams.",
 			"description": "Cleans mundane messes with supernatural ease."
 		},

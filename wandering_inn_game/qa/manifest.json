@@ -1300,12 +1300,13 @@
    "script": "property_seams",
    "seed": 9,
    "fixture": "sewers_property_seams",
-   "note": "#348 property table: freeze_cell (ice floor on water, walked onto) + remove_scorch (debris) + a null cell (untagged prop refused)",
+   "note": "#348 property table slices 1+2, one leg per outcome verb: freeze_cell (ice floor on water, walked onto) + thaw_cell (a SECOND channel frozen then taken back by the same fire water refuses -- per-cell, first channel stays frozen, blocked step south proves it re-shut) + remove_scorch (debris) + state_set three ways in the runners' guild, teleported to (kindle the hearth, [Light] the wall lamp, [Basic Cleaning] the mud table), each banking the CARRIER's own counter once, plus the one-way second kindle falling to ambient + three authored REFUSALS with their own copy (fire at water, frost at a lit hearth, frost at a person), each pinning toast AND ui_toast_rendered + a null cell (untagged prop refused)",
    "tiers": [
     "full"
    ],
    "surfaces": {
     "maps": [
+     "runners_guild",
      "sewers"
     ],
     "fixtures": [
