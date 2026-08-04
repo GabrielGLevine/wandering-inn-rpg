@@ -126,13 +126,13 @@
    "toast_default": "[Snap Freeze] — The cold gathers in your palm and stops there. You are pointing a killing frost at someone who has done nothing to you. Your hand comes down."
   },
   {
-   "_comment": "state_set on a `broken` carrier: one-way, save-persisted, and a traversal seam the world keeps open.",
+   "_comment": "state_set on a `broken` carrier: one-way, save-persisted, a traversal seam the world keeps open. toast_from=target because _outcome_state_set passes an EMPTY skill dict -- a state_set row can never read the caster.",
    "skill_property": "repairs",
    "target_property": "broken",
    "outcome": "state_set",
    "persistence": "permanent",
    "counter_key": "state_counter",
-   "toast_from": "skill",
+   "toast_from": "target",
    "toast_key": "repair_toast",
    "toast_default": "[Basic Repair] — You put the break back the way it was meant to sit. It holds."
   },
@@ -143,7 +143,7 @@
    "outcome": "state_set",
    "persistence": "permanent",
    "counter_key": "state_counter",
-   "toast_from": "skill",
+   "toast_from": "target",
    "toast_key": "anchor_toast",
    "toast_default": "[Rope Work] — You make the line fast and set it taut across. The crossing stays a crossing."
   }

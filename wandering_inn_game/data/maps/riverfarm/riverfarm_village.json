@@ -1763,6 +1763,7 @@
    "state_counter": "bank_planks_mended",
    "observe": "Two stringers still run out along the bank from the cottage corner, and the decking between them is gone — lifted by a flood and never replaced. The beams are sound. It is boards it wants.",
    "locked_toast": "The stringers are sound and the boards are somewhere downriver. Standing here wishing at it will not deck it.",
+   "repair_toast": "[Basic Repair] — You cut and lay boards across the stringers until the walk is a walk again. It holds when you lean on it, and it will hold tomorrow.",
    "visual_states": [
     {
      "when": {

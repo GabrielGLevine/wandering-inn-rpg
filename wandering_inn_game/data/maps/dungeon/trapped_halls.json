@@ -636,6 +636,7 @@
    "state_counter": "gallery_line_anchored",
    "observe": "A stub of masonry where a walkway used to leave this wall, sheared off clean. The other side is still there, four feet out and a long way down. The stub would hold a line all day.",
    "locked_toast": "You get a hand on the stub and lean out. Nothing about that gap is jumpable, and nothing about the stub is climbable. What it wants is a rope.",
+   "anchor_toast": "[Rope Work] — You make the line fast to the stub, drop the tail across, and set it taut. The crossing is a crossing now, and it stays one.",
    "visual_states": [
     {
      "when": {

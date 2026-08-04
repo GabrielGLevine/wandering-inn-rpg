@@ -1298,7 +1298,6 @@
 			"contexts": ["exploration"],
 			"field": true,
 			"repairs": true,
-			"repair_toast": "[Basic Repair] — You work the break until it sits the way it was meant to sit. It holds when you lean on it, and it will hold tomorrow.",
 			"field_ambient": "[Basic Repair] — You look for the break and find none. Whatever is here is already holding.",
 			"description": "A break put back the way it was meant to sit, and it stays put."
 		},
@@ -1309,7 +1308,6 @@
 			"contexts": ["exploration"],
 			"field": true,
 			"anchors": true,
-			"anchor_toast": "[Rope Work] — You make the line fast, drop the tail across, and set it taut. The crossing is a crossing now, and it stays one.",
 			"field_ambient": "[Rope Work] — You pay out a length and look for something to make it fast to. Nothing here will hold a line.",
 			"description": "A line made fast at both ends. A gap crossed once stays crossed for whoever comes next."
 		}

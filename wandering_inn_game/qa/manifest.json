@@ -5999,6 +5999,44 @@
      "quests"
     ]
    }
+  },
+  {
+   "script": "martial_field_loop",
+   "seed": 9,
+   "note": "GH#380/#381/#382/#383: THE martial exploration canonical -- every refusal at warrior 5 (both unsteady lines, four locked_toasts, the carcass), then the armed half through pause-Load: [Even Footing] crosses both placements, [Greater Strength] opens the gallery, [Rope Work] rigs the drop and the run leaves through it, [Basic Repair] decks the bank walk, and both state_set seams survive a save round-trip AND a sleep; [Broader Shoulders]' waking cap, [Flame Jet]'s one-shot carcass (with burned_the_debris absent whole-run as the no-`burns`-flag proof), and [Ice Floor] cast out of combat",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "dungeon_approach",
+     "floodplains",
+     "riverfarm_longhouse",
+     "riverfarm_village",
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "martial_field_start"
+    ],
+    "skills": [
+     "bar_fighting",
+     "basic_cleaning",
+     "basic_repair",
+     "broader_shoulders",
+     "flame_jet",
+     "greater_strength",
+     "icy_floor",
+     "rope_work"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration",
+     "night_phase",
+     "save"
+    ]
+   }
   }
  ]
 }

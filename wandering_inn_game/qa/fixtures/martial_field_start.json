@@ -1,0 +1,29 @@
+{
+ "_comment": "martial_field_loop's NEGATIVE half. Warrior 5 is one level short of [Even Footing] and three short of [Basic Repair], and the innate list carries none of the other martial verbs -- which is what makes every refusal in phase 0 reachable (an unsteady bump, four locked_toasts, a skill_unknown at the carcass). Standing on the floodplains scree chute's north lip (31,3) facing down, clear of every trigger_radius. No combat in the route, so rng_state is inert; borrowed from near_tactician rather than hand-typed.",
+ "version": 5,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [31, 3],
+  "player_facing": [0, 1],
+  "classes": { "warrior": 5 },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "melee_hit": 18
+  },
+  "player_skills": ["basic_cleaning"],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": ["rusty_sword"],
+  "equipped": { "weapon": "rusty_sword", "armor": "" },
+  "container_state": {},
+  "gold": 20,
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}
