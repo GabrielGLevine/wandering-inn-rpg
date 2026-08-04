@@ -4,7 +4,20 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
-## RUNNING (2026-08-03 evening): dialogue voice pass, branch `voice-pass`
+## DONE (2026-08-04): dialogue voice pass — SHIPPED via `voice-pass` branch PR
+All 71 dialogue files de-AI'd per the 2026-08-03 critique. Six waves
+(Fable bible/cards → 36-cluster rewrite → cold-reader detection →
+Fable reconciliation → fix wave → Fable terminal adjudication SHIP).
+Corpus: antithesis 62→2, typography tells 0, worst-lines dead, barks
+reshaped. QA: five repair rounds re-pinned ~200 verbatim-prose waits
+across ~90 script files + sync'd 3 map-embedded duplicates; sweep
+205/205, playtest clean. Artifacts under docs/dialogue-voice*.
+Follow-ups filed: #388 (map talk_pools out of scope), #370-372
+(user playtest notes). VISUAL-LOG: center-panel footer margin watch.
+Gate script stays: qa/scripts/dialogue_voice_gate.py guards future
+dialogue edits (snapshot baseline committed).
+
+## ARCHIVED RUNNING BLOCK (2026-08-03 evening): dialogue voice pass, branch `voice-pass`
 De-AI rewrite of all 71 dialogue files per external critique
 (docs/dialogue-voice/critique-2026-08-03.md). Spec + plan in
 docs/superpowers/{specs,plans}/2026-08-03-dialogue-voice-pass*.
