@@ -589,7 +589,7 @@ func _spawn_action_pip(cell: Vector2i) -> void:
 ## `entity_at` already applies the `present_when` gate, which is what keeps
 ## this honest across the phase clock (a night-absent flavor NPC takes its
 ## bracket with it, same beat its sprite goes).
-func _reconcile_faced_affordance() -> void:
+func _reconcile_faced_affordance(trigger: StringName = &"") -> void:
 	if _field_root == null or Game.sim == null:
 		return
 	if _affordance_cursor == null or not is_instance_valid(_affordance_cursor):
@@ -599,8 +599,30 @@ func _reconcile_faced_affordance() -> void:
 	# A conversation owns the screen; a bracket under an open dialogue panel is
 	# noise pointing at the thing you are already talking to. Combat is covered
 	# by `_field_root.visible = false` and needs no arm of its own.
+	#
+	# EMIT-ORDER TRAP (v0.19 L5 reviewer lens A, proven off the new
+	# UI_AFFORDANCE_RENDERED log): `Game.sim.dialogue` is the WRONG answer on
+	# exactly the two frames this reconcile is driven by the dialogue events
+	# themselves, and it is wrong in both directions.
+	#  * `start_dialogue` emits DIALOGUE_STARTED BEFORE assigning `dialogue`
+	#    (wi_game.gd:1270), so the sim still reads null and the bracket turned
+	#    ON at the instant a conversation opened -- the exact noise the
+	#    paragraph above forbids -- and stayed on until some unrelated event
+	#    happened to re-reconcile.
+	#  * `WIDialogue.choose` emits DIALOGUE_ENDED from inside the walker
+	#    (dialogue.gd:80), i.e. BEFORE `dialogue_choose` clears the handle
+	#    (wi_game.gd), so the sim still reads non-null and the bracket turned
+	#    OFF at the instant the panel closed.
+	# Corrected from the trigger, not from a mirrored flag: a latch that misses
+	# one edge would strand the bracket hidden forever, while this stays a pure
+	# read of live sim on every other path.
+	var dialogue_open := Game.sim.dialogue != null
+	if trigger == WIEvents.DIALOGUE_STARTED:
+		dialogue_open = true
+	elif trigger == WIEvents.DIALOGUE_ENDED:
+		dialogue_open = false
 	var faced: Dictionary = Game.sim.entity_at(cell)
-	var showing := Game.sim.dialogue == null and not faced.is_empty()
+	var showing := not dialogue_open and not faced.is_empty()
 	_affordance_cursor.visible = showing
 	_emit_affordance_rendered(showing, cell, String(faced.get("id", "")) if showing else "")
 	if not showing:
@@ -1637,7 +1659,7 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 	# field, and reconciling against stale geometry mid-transition is exactly
 	# the class of bug the stale-cover guard exists for).
 	if type in AFFORDANCE_REFRESH_EVENTS and not _map_transition_stale_cover():
-		_reconcile_faced_affordance()
+		_reconcile_faced_affordance(type)
 	if type == WIEvents.GAME_LOADED or type == WIEvents.MAP_CHANGED:
 		# GH#345: a sim swap (load/import/new game) builds a fresh WIGame with
 		# the field at its 1.0 default -- re-push the persisted difficulty.
@@ -2018,6 +2040,15 @@ static func _facing_from_delta(delta: Vector2i) -> Vector2i:
 func _face_cell(cell: Vector2i) -> void:
 	Game.sim.player_facing = _facing_from_delta(cell - Game.sim.player_cell)
 	_play_player_anim("idle")
+	# v0.19 L5 reviewer lens A: this is the ONE facing change in the game that
+	# passes through no sim event at all (it writes `player_facing` directly),
+	# so the bracket -- and now UI_AFFORDANCE_RENDERED with it -- stayed pinned
+	# to the cell the player was facing BEFORE the click. Mouse/touch players
+	# clicking an adjacent prop that only toasts got no bracket on the thing
+	# they were plainly facing until their next step. Reconcile here rather
+	# than teaching every caller: `handle_world_click` is the sole call site
+	# today and a future one gets the answer for free.
+	_reconcile_faced_affordance()
 
 
 ## Every entity's occupied cell on the current map -- the pathfinder's
