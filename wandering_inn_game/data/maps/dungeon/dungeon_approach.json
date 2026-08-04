@@ -26,7 +26,7 @@
    9
   ]
  ],
- "_comment_unsteady": "[Even Footing] placement 2: the (3,9) collapse band spills two cells east. NEW blocked cells -- blocked_cells 6 -> 8, dungeon_peek re-pinned. Non-holders swing a row (+2 steps).",
+ "_comment_unsteady": "[Even Footing] placement 2: the (3,9) collapse band spills two cells east. NEW blocked cells -- blocked_cells 6 -> 8, dungeon_peek re-pinned. Non-holders swing a row (+2; +4 at (4,10)/(4,11)).",
  "unsteady": [
   [
    4,
