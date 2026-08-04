@@ -569,7 +569,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Wilovan",
-    "text": "Sir. A good evening to you, and a very good room to have it in. No business tonight, you'll be relieved to hear. A gentleman does occasionally sit somewhere nobody owes anybody anything.",
+    "text": "Sir. A good evening to you, and a very good room to have it in. No business tonight, you'll be relieved to hear. Just this chair, and whatever the kitchen has in the pot.",
     "options": [
      {
       "text": "Bring him a bowl from the kitchen. (Serve)",
@@ -605,7 +605,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Wilovan",
-    "text": "None whatever, sir. My colleague is off attending an errand of the sort that keeps a man out past a decent hour, and I declined to attend it with him. A room where the fellow at the next table hasn't the first idea what I do, and no reason at all to ask, is a rare comfort. You'll note I've kept the hat on. That isn't a warning this evening. It's simply a good hat."
+    "text": "None whatever, sir. My colleague is off attending an errand of the sort that keeps a man out past a decent hour, and I declined to attend it with him. A room where the fellow at the next table hasn't the first idea what I do, and no reason at all to ask, is a rare comfort. You'll note I've kept the hat on. It is simply a good hat, sir."
    },
    "timeout_sec": 5
   },

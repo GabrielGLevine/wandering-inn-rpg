@@ -240,7 +240,7 @@
    "name": "confirm"
   },
   {
-   "_comment": "tally_walk: 0 'Which household?', 1 'Could be the count, not the crop.'. Take 1 -- the longer leg, so tally_count is walked and not merely reachable.",
+   "_comment": "tally_walk: 0 'Which household?', 1 'Could be the count's off and the crop's fine.'. Take 1 -- the longer leg, so tally_count is walked and not merely reachable.",
    "action": "wait_frames",
    "frames": 3
   },
@@ -548,7 +548,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Hub post-tally: heard_flood_ledger now hides the start row and ledger_read_true opens the READ report. 0 'You said you don't truck with witches.', 1 'Just passing through.', 2 'Not much of a headman anymore, is there?', 3 'The tally's honest. Somebody's crop failed and they were ashamed of it.'. Take 3.",
+   "_comment": "Hub post-tally: heard_flood_ledger now hides the start row and ledger_read_true opens the READ report. 0 'You said you don't truck with witches.', 1 'Just passing through.', 2 'Not much of a headman anymore, is there?', 3 'The tally's honest. I walked it with the tallyman. He told me what's behind it.'. Take 3.",
    "action": "move",
    "direction": "down",
    "steps": 3

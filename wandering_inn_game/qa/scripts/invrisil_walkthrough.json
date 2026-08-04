@@ -605,7 +605,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== BEAT 6: the fixer Cups (2,6), the rumor-by-the-cup bit. Up 1 to (7,6), left 4 to (3,6), bump left to face her, interact. First hub visit, gold:1 in the fixture: hub option 0 ('The alley boys...', footpads rumor -- thematically on-the-nose right after clearing them) -> rumor_footpads node, option 1 ('Useful fish. My thanks.') is the ungated exit. ==",
+   "_comment": "== BEAT 6: the fixer Cups (2,6), the rumor-by-the-cup bit. Up 1 to (7,6), left 4 to (3,6), bump left to face her, interact. First hub visit, gold:1 in the fixture: hub option 0 ('The alley boys...', footpads rumor -- thematically on-the-nose right after clearing them) -> rumor_footpads node, option 1 ('Good to know. Thanks.') is the ungated exit. ==",
    "action": "move",
    "direction": "up",
    "steps": 1

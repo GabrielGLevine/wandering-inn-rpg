@@ -927,7 +927,7 @@
    "name": "03_the_mounting"
   },
   {
-   "_comment": "Options: [0 'How far CAN it go?', 1 'One thing at a time.']. Take 0 -- the branch that also renders the far-attunement setup, so this canonical covers BOTH nodes of the scene and banks off the deeper one.",
+   "_comment": "Options: [0 'How far can it actually go?', 1 'One thing at a time.']. Take 0 -- the branch that also renders the far-attunement setup, so this canonical covers BOTH nodes of the scene and banks off the deeper one.",
    "action": "press",
    "name": "confirm"
   },

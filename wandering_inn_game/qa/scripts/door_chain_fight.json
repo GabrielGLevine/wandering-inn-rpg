@@ -83,7 +83,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Options: [0 'How far CAN it go?', 1 'One thing at a time.']. This canonical takes the SHORT exit (index 1) -- horns_dig_flow takes index 0 and the door_mounting_far branch, so the two scripts cover both of the scene's exits, and both exits must bank the identical set.",
+   "_comment": "Options: [0 'How far can it actually go?', 1 'One thing at a time.']. This canonical takes the SHORT exit (index 1) -- horns_dig_flow takes index 0 and the door_mounting_far branch, so the two scripts cover both of the scene's exits, and both exits must bank the identical set.",
    "action": "move",
    "direction": "down",
    "steps": 1

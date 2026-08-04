@@ -124,7 +124,7 @@
    }
   },
   {
-   "_comment": "thicket_sign: 0 'Then we move the fences, not the deer.' banks herd_rerouted (goto thicket_rerouted, not end), 1 \"I'll walk the line myself.\". Take 0.",
+   "_comment": "thicket_sign: 0 'Then the fences move.' banks herd_rerouted (goto thicket_rerouted, not end), 1 \"I'll walk the line myself.\". Take 0.",
    "action": "wait_frames",
    "frames": 3
   },

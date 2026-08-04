@@ -115,7 +115,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Wilovan",
-    "text": "There is, sir, and I'll ask your pardon before I describe it, because describing it is most of the offence. A small parcel wants to be somewhere else by morning, and the somewhere else drinks at the Adventurer's Rest. House rule there is that nobody raises a voice. We hold to it. So does everybody who owes them a table."
+    "text": "There is, sir, and I'll ask your pardon before I describe it, because describing it is most of the offence. A small parcel wants to be somewhere else by morning. The man expecting it drinks at the Adventurer's Rest. House rule there is that nobody raises a voice. We hold to it. So does everybody who owes them a table."
    },
    "timeout_sec": 5
   },
@@ -157,7 +157,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Wilovan",
-    "text": "Then here are the manners of it. You don't name the thing, you don't name the man, and you don't hurry. A gentleman who hurries is a gentleman explaining himself later. Hat stays on the whole while, sir. That's not superstition. That's the whole of the etiquette."
+    "text": "Then here are the manners of it. You don't name the thing and you don't name the man. Hat stays on, sir, door to door, and the room will read it. Ah — and you don't hurry. A man nearly forgot the one that matters most."
    },
    "timeout_sec": 5
   },
@@ -241,7 +241,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "The House Factor",
-    "text": "You'll want the long table, sir, not this one. Long table's for people waiting on somebody. This one's for people who have already arrived."
+    "text": "You'll want the long table, sir. That's the waiting table. This one's mine, and the gentleman who shares it didn't wait for anybody. Take whatever seat's open down that end."
    },
    "timeout_sec": 5
   },
@@ -298,7 +298,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "The House Factor",
-    "text": "Mind it well, sir. Nobody in this room raises their voice and nobody in this room has ever seen a thing. That isn't a rule of the house. That's the rent."
+    "text": "Mind it well, sir. Nobody in this room raises their voice and nobody in this room has ever seen a thing. Third peg by the fire's been holding the same coat since Wintersday. Nobody's asked about that either."
    },
    "timeout_sec": 5
   },
@@ -404,7 +404,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Wilovan",
-    "text": "It is, and I've had it confirmed by a man who does not confirm things. Tell me how the room took it, sir, and I'll know what I owe you."
+    "text": "It is, sir, and I had it from a man I pay to be certain. Tell me how the room took it, and I'll know what I owe you."
    },
    "timeout_sec": 5
   },

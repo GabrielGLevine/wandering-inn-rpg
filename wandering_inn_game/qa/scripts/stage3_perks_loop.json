@@ -60,7 +60,7 @@
    "equals": 0
   },
   {
-   "_comment": "== (1) ERIN'S MEAL == social_talked already carries {erin:true}, so this first interact opens the real hub directly. Fixture pins has_package/errand_decided (hides the package row) with cleaned_the_inn/gave_reward/kept_reward unmet and basic_cleaning unknown (hides the cleaning/reward rows), leaving exactly 4 visible options: [0] Just passing through. [1] I heard you play chess. [2] You never talk about where you're from. [3] (Take the seat. The cook has spoken.) -- the new perk option, visible because stage 3 (resolved_wrong_order+chatted_with_erin:4) is met and meal:erin is unused this waking.",
+   "_comment": "== (1) ERIN'S MEAL == social_talked already carries {erin:true}, so this first interact opens the real hub directly. Fixture pins has_package/errand_decided (hides the package row) with cleaned_the_inn/gave_reward/kept_reward unmet and basic_cleaning unknown (hides the cleaning/reward rows), leaving exactly 4 visible options: [0] Just passing through. [1] I heard you play chess. [2] You never talk about where you're from. [3] (Take the seat. The cook is already ladling.) -- the new perk option, visible because stage 3 (resolved_wrong_order+chatted_with_erin:4) is met and meal:erin is unused this waking.",
    "action": "press",
    "name": "interact"
   },

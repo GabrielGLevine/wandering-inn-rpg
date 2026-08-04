@@ -97,7 +97,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "rumor_footpads: [0 'Another cup.' -> hub, 1 'Useful fish. My thanks.' -> end]. Loop back for the second purchase.",
+   "_comment": "rumor_footpads: [0 'Another cup.' -> hub, 1 'Good to know. Thanks.' -> end]. Loop back for the second purchase.",
    "action": "press",
    "name": "confirm"
   },
@@ -796,7 +796,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Wilovan",
-    "text": "For a marker-holder, sir, always. One piece worth mentioning came through recently — sewer work, but HONEST sewer work, if you follow. No questions asked on either side of the counter."
+    "text": "For a marker-holder, sir, always. One piece worth mentioning came through recently — sewer work, but honest sewer work, if you follow. No questions asked on either side of the counter."
    },
    "timeout_sec": 5
   },
@@ -889,7 +889,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Wilovan",
-    "text": "Nothing new on the shelf since your pendant, sir. Good stock finds us slowly, which is rather the point of it. Do check back."
+    "text": "Nothing new on the shelf since your pendant, sir. Good stock finds us slowly. Do check back."
    },
    "timeout_sec": 5
   },
@@ -997,13 +997,55 @@
    },
    "timeout_sec": 5
   },
-  { "_comment": "== v0.15 T4.2 CROWD CONSEQUENCE: the boulevard itself reacts, not just Coyle. invrisil_extra_6 (23,10) carries a brothers_job_done stage; the same post-sleep waking clears social_talked, so this first interact reads the stage pool at index 0 (chatted_with_invrisil_extra_6 never banked in this run). Copy is resolution-AGNOSTIC on purpose -- the counter banks on BOTH endings, so the street names that something settled and never what. ==", "action": "teleport", "map": "invrisil_boulevard", "cell": [23, 11] },
-  { "action": "wait_frames", "frames": 5 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [23, 10] } },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "A Lady in Plum Silk", "text": "There was a matter with Master Coyle. It resolved. In this city that is the whole of what you get told." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "90_crowd_reacts_plum_silk" }
+  {
+   "_comment": "== v0.15 T4.2 CROWD CONSEQUENCE: the boulevard itself reacts, not just Coyle. invrisil_extra_6 (23,10) carries a brothers_job_done stage; the same post-sleep waking clears social_talked, so this first interact reads the stage pool at index 0 (chatted_with_invrisil_extra_6 never banked in this run). Copy is resolution-AGNOSTIC on purpose -- the counter banks on BOTH endings, so the street names that something settled and never what. ==",
+   "action": "teleport",
+   "map": "invrisil_boulevard",
+   "cell": [
+    23,
+    11
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     23,
+     10
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "A Lady in Plum Silk",
+    "text": "There was a matter with Master Coyle. It resolved. In this city that is the whole of what you get told."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "90_crowd_reacts_plum_silk"
+  }
  ]
 }

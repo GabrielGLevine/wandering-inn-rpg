@@ -117,7 +117,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "A Scribe by the Hour",
-    "text": "The blank seal is eight gold the hour and it goes back in the tray when the hour is up. That is the entire arrangement, sir, and I have never been asked a second question about it.",
+    "text": "The blank seal is eight gold the hour. It goes back in the tray when the hour is up. That is the arrangement, sir. Ink and paper are extra.",
     "options": [
      {
       "locked": false,
@@ -521,7 +521,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "A Scribe by the Hour",
-    "text": "The blank seal is eight gold the hour and it goes back in the tray when the hour is up. That is the entire arrangement, sir, and I have never been asked a second question about it."
+    "text": "The blank seal is eight gold the hour. It goes back in the tray when the hour is up. That is the arrangement, sir. Ink and paper are extra."
    },
    "timeout_sec": 5
   },
