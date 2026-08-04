@@ -159,6 +159,14 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "REVIEWER LENS B: the wait above does NOT pin invisibility on its own and must not be read as doing so. `wait_for_event` scans FORWARD from the cursor for the first match, and this map re-renders its wards on every field rebuild and phase crossing -- so a run that drew a charm for the grace (count:1) would simply skip ahead to some later count:0 render and stay green. Verified by mutation: deleting world.gd's `until_exit` skip left this script passing. This is the assertion that actually holds the line -- `assert_event_absent` runs `_has_event`, which scans the WHOLE log from index 0, and defeat_reload never casts a real charm anywhere (the whole-dict `warded_encounters == {}` below is that proof), so ANY count:1 in this run can only be a grace that got drawn. Today the grace is doubly guarded (the marker loop's explicit `until_exit` skip AND the `raw_cell.size() != 2` guard under it); the regression this catches is a future suppression shape that gains a `cell` key and loses the skip.",
+   "action": "assert_event_absent",
+   "type": "ui_ward_rendered",
+   "payload_contains": {
+    "count": 1
+   }
+  },
+  {
    "_comment": "THE CAN-FAIL, positive half: a REAL move_player DEEPER into the radius -- (30,22) is Chebyshev 1, well inside -- and combat_started must still stand at 1. Without the grace this step is a second ambush; assert_event_count is whole-run, so a re-fire shows up here as 2.",
    "action": "move",
    "direction": "down",
