@@ -41,9 +41,18 @@ candidate list, so Attack-with-no-target parks the player in a modal state
 that eats every key but Esc. ONE bug behind both reported symptoms
 ("movement fails silently" + "no target in reach"); ~8 repros across three
 sessions; the agent's zone-of-control theory is wrong.
-**#374 (taste-gate)** — all three Liscor gate cells are Chebyshev 2 from
-`goblin_encounter_1` (radius 2): no unfought route into the city.
-**Fix #373 first and re-measure** — it may be sufficient. **#375 (S)** —
+**#374 (bug, S, successor-ready — REWRITTEN 2026-08-03 on user ruling)** —
+the ambush gating Liscor is INTENDED; the original gate-geometry framing
+was wrong and is withdrawn. Real defect: Continue-after-Defeat restores
+the `auto_pre_combat` slot written at COMBAT_STARTED (game.gd:82-86 →
+combat_screen.gd:946), which is BY CONSTRUCTION a cell inside the
+encounter's trigger radius — so the next step re-fires the fight you just
+lost. Also explains the "respawn moves between deaths" report (the slot is
+rewritten per fight; deterministic, but unnamed). Fix seam:
+`warded_encounters` (wi_game.gd:72, checked :368) gains an exit-clearing
+entry on defeat load — wake where you fell, encounter stays live, walking
+away works first try. Lands WITH #372 (copy half of the same beat).
+**#375 (S)** —
 `inn_sign` at [6,6] blocks a third of the GH#185-widened facade; move to
 [5,6]. Carries a stale-comment one-liner (world.gd:148 claims
 clamped-follow is unexercised; floodplains 40x26 exercises it).
