@@ -93,7 +93,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry."
+    "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are you move and you hit. That's it. That's all the rules."
    },
    "timeout_sec": 5
   },
@@ -155,7 +155,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry."
+    "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are you move and you hit. That's it. That's all the rules."
    },
    "timeout_sec": 5
   },
@@ -528,7 +528,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "My spare spear. Held gates wider than that one. Now listen. Owning a weapon and HOLDING it are different things: check your pack, put the spear in your hand before the road checks your grip. Sword arm, spear arm. The weapon you carry decides which of your moves come with you."
+    "text": "My spare spear. Held gates wider than that one. Now listen. It won't help you from inside a pack. Check your pack, get the spear in your hand before you're back on the road. Sword arm, spear arm. What you carry decides which moves you get."
    },
    "timeout_sec": 5
   },

@@ -167,7 +167,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry."
+    "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are you move and you hit. That's it. That's all the rules."
    },
    "timeout_sec": 5
   },

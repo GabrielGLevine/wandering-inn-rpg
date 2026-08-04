@@ -3,58 +3,373 @@
  "fixture_save": "near_flame_pillar",
  "starts_at_title": true,
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "_comment": "Move down to the 'Continue' row, confirm loads the near_flame_pillar manual slot.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "floodplains" },
-  { "action": "assert_state", "path": "classes.fire_mage", "equals": 11 },
-  { "action": "assert_state", "path": "player_cell", "equals": [12, 12] },
-
-  { "_comment": "Relc is right below, already met -- 'meet' node's visible options are ['What's out here worth guarding?', 'Got time to show me how to fight? (Spar)', 'Keep walking.'] (index 1 is the spar option).", "action": "press", "name": "interact" },
-  { "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Relc" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "relc_intro" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Relc", "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry." }, "timeout_sec": 5 },
-  { "_comment": "'spar_offer' node: default cursor (0) is 'Ready when you are.' -- accept.", "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
-  { "action": "wait_frames", "frames": 5 },
-  { "action": "assert_state", "path": "combat.active", "equals": "pc" },
-  { "action": "assert_state", "path": "combat.combatants.pc.cell", "equals": [2, 3] },
-  { "action": "assert_state", "path": "combat.combatants.pc.skills", "contains": "flame_pillar" },
-  { "_comment": "Kit order (granted_skills: fire_mage's own L10-then-L11 grants first, then inherited mage grants) -> combat kit flame_scythe, flare_burst, flame_pillar, frost_bolt, flame_jet, flame_dart, invisibility; Wave B then appends inherited Mage L11 flash_step. Attack(1)/Dash(2)/flame_scythe(3)/flare_burst(4)/flame_pillar(5)/frost_bolt(6)/flame_jet(7)/flame_dart(8)/invisibility(9)/flash_step(10)/End Turn = 10 numbered slots, 11 total; Flame Pillar stays slot 5.", "action": "assert_event_logged", "type": "ui_hotbar_rendered", "payload_contains": { "slots": 11 } },
-  { "_comment": "Issue #75 item 5a: THE active-unit marker read -- a persistent chevron over the pc's holder at turn_started, before any input this fight. Windowed-verified alongside the aim-preview-over-blast shot below.", "action": "screenshot", "name": "00_active_marker" },
-
-  { "_comment": "Dash first: pool 3 -> 6, AP 4 -> 3. Needed so this SAME turn can close all the way onto (6,3), inside flame_pillar's own future blast radius (the self-hit proof).", "action": "press", "name": "hotbar_2" },
-  { "action": "wait_for_event", "type": "ui_slot_info_rendered", "payload_contains": { "slot": 1 }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dashed", "payload_contains": { "id": "pc", "move_pool": 6 }, "timeout_sec": 5 },
-
-  { "_comment": "(2,3) -> (6,3): adjacent to training_dummy_a (7,3), well within flame_pillar's range 3.", "action": "move", "direction": "right", "steps": 4 },
-  { "action": "wait_for_event", "type": "combatant_moved", "payload_contains": { "id": "pc", "cell": [6, 3] }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "combat.combatants.pc.move_pool", "equals": 2 },
-
-  { "action": "press", "name": "hotbar_5" },
-  { "action": "wait_for_event", "type": "ui_targeting_shown", "payload_contains": { "mode": "skill", "skill": "flame_pillar" }, "timeout_sec": 5 },
-  { "_comment": "Issue #75 item 1: the aim preview's BLAST footprint over the default target's cell (7,3) -- board_renderer.gd's render_aim_preview, derived by WICombatTargeting.aim_preview() through WICombatView.radius_area() -> WISkillEffects._radius_area, the SAME function the real cast's own skill_resolved cells below come from. Same 9-cell sorted list either way -- the preview cannot lie.", "action": "wait_for_event", "type": "ui_aim_preview_rendered", "payload_contains": { "kind": "blast", "cells": [[6, 2], [6, 3], [6, 4], [7, 2], [7, 3], [7, 4], [8, 2], [8, 3], [8, 4]] }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "00a_aim_preview_blast" },
-  { "_comment": "Default target is the lowest-hp-then-id enemy -- both dummies start at equal hp, so training_dummy_a (alphabetically first) is targeted with no cycle needed.", "action": "press", "name": "confirm" },
-  { "_comment": "Radius-1 blast around (7,3): x[6,8] y[2,4], no walls/bounds to clip in this arena -- the exact 9-cell sorted list. hit_ids: pc's own cell (6,3), training_dummy_a (the cast target, 7,3), and training_dummy_b (the second enemy, adjacent at 7,4) all land inside -- friendly fire across enemy+enemy+self, one cast.", "action": "wait_for_event", "type": "skill_resolved", "payload_contains": { "actor": "pc", "skill": "flame_pillar", "target": "training_dummy_a", "cells": [[6, 2], [6, 3], [6, 4], [7, 2], [7, 3], [7, 4], [8, 2], [8, 3], [8, 4]], "hit_ids": ["pc", "training_dummy_a", "training_dummy_b"] }, "timeout_sec": 5 },
-  { "_comment": "Damage deltas themselves are NOT asserted exactly (a per-victim hit-chance roll can still miss under this fixture's rng_state, exactly like test_combat_sim.gd's own `<=`-not-`<` discipline for this skill) -- the deterministic proof is the skill_resolved payload (cells + hit_ids) and the real attack_resolved roll each of the three gets. No terrain, no status -- instant damage only (the contrast with icy_floor's own canonical).", "action": "assert_state", "path": "combat.terrain", "equals": {} },
-  { "_comment": "AP: Dash 1 (4->3) + flame_pillar's EFFECTIVE cost 2 (base 3, minus 1 -- [Quick Cast]'s first-spell-this-turn discount, inherited from mage L1 and still live in this kit) == 3 spent, landing at 1, not 0.", "action": "assert_state", "path": "combat.combatants.pc.ap", "equals": 1 },
-  { "action": "screenshot", "name": "00_flame_pillar_cast" },
-
-  { "_comment": "1 AP left, not enough for a second real action -- combat_autoplay ends the turn and finishes the fight against the two inert dummies (the flame_pillar proof is already banked, low-risk finish, same idiom as ice_floor_loop).", "action": "combat_autoplay" },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 15 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Move down to the 'Continue' row, confirm loads the near_flame_pillar manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.fire_mage",
+   "equals": 11
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "_comment": "Relc is right below, already met -- 'meet' node's visible options are ['What's out here worth guarding?', 'Got time to show me how to fight? (Spar)', 'Keep walking.'] (index 1 is the spar option).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are you move and you hit. That's it. That's all the rules."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "'spar_offer' node: default cursor (0) is 'Ready when you are.' -- accept.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.active",
+   "equals": "pc"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.skills",
+   "contains": "flame_pillar"
+  },
+  {
+   "_comment": "Kit order (granted_skills: fire_mage's own L10-then-L11 grants first, then inherited mage grants) -> combat kit flame_scythe, flare_burst, flame_pillar, frost_bolt, flame_jet, flame_dart, invisibility; Wave B then appends inherited Mage L11 flash_step. Attack(1)/Dash(2)/flame_scythe(3)/flare_burst(4)/flame_pillar(5)/frost_bolt(6)/flame_jet(7)/flame_dart(8)/invisibility(9)/flash_step(10)/End Turn = 10 numbered slots, 11 total; Flame Pillar stays slot 5.",
+   "action": "assert_event_logged",
+   "type": "ui_hotbar_rendered",
+   "payload_contains": {
+    "slots": 11
+   }
+  },
+  {
+   "_comment": "Issue #75 item 5a: THE active-unit marker read -- a persistent chevron over the pc's holder at turn_started, before any input this fight. Windowed-verified alongside the aim-preview-over-blast shot below.",
+   "action": "screenshot",
+   "name": "00_active_marker"
+  },
+  {
+   "_comment": "Dash first: pool 3 -> 6, AP 4 -> 3. Needed so this SAME turn can close all the way onto (6,3), inside flame_pillar's own future blast radius (the self-hit proof).",
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_info_rendered",
+   "payload_contains": {
+    "slot": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dashed",
+   "payload_contains": {
+    "id": "pc",
+    "move_pool": 6
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "(2,3) -> (6,3): adjacent to training_dummy_a (7,3), well within flame_pillar's range 3.",
+   "action": "move",
+   "direction": "right",
+   "steps": 4
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     6,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.move_pool",
+   "equals": 2
+  },
+  {
+   "action": "press",
+   "name": "hotbar_5"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "mode": "skill",
+    "skill": "flame_pillar"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Issue #75 item 1: the aim preview's BLAST footprint over the default target's cell (7,3) -- board_renderer.gd's render_aim_preview, derived by WICombatTargeting.aim_preview() through WICombatView.radius_area() -> WISkillEffects._radius_area, the SAME function the real cast's own skill_resolved cells below come from. Same 9-cell sorted list either way -- the preview cannot lie.",
+   "action": "wait_for_event",
+   "type": "ui_aim_preview_rendered",
+   "payload_contains": {
+    "kind": "blast",
+    "cells": [
+     [
+      6,
+      2
+     ],
+     [
+      6,
+      3
+     ],
+     [
+      6,
+      4
+     ],
+     [
+      7,
+      2
+     ],
+     [
+      7,
+      3
+     ],
+     [
+      7,
+      4
+     ],
+     [
+      8,
+      2
+     ],
+     [
+      8,
+      3
+     ],
+     [
+      8,
+      4
+     ]
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00a_aim_preview_blast"
+  },
+  {
+   "_comment": "Default target is the lowest-hp-then-id enemy -- both dummies start at equal hp, so training_dummy_a (alphabetically first) is targeted with no cycle needed.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "Radius-1 blast around (7,3): x[6,8] y[2,4], no walls/bounds to clip in this arena -- the exact 9-cell sorted list. hit_ids: pc's own cell (6,3), training_dummy_a (the cast target, 7,3), and training_dummy_b (the second enemy, adjacent at 7,4) all land inside -- friendly fire across enemy+enemy+self, one cast.",
+   "action": "wait_for_event",
+   "type": "skill_resolved",
+   "payload_contains": {
+    "actor": "pc",
+    "skill": "flame_pillar",
+    "target": "training_dummy_a",
+    "cells": [
+     [
+      6,
+      2
+     ],
+     [
+      6,
+      3
+     ],
+     [
+      6,
+      4
+     ],
+     [
+      7,
+      2
+     ],
+     [
+      7,
+      3
+     ],
+     [
+      7,
+      4
+     ],
+     [
+      8,
+      2
+     ],
+     [
+      8,
+      3
+     ],
+     [
+      8,
+      4
+     ]
+    ],
+    "hit_ids": [
+     "pc",
+     "training_dummy_a",
+     "training_dummy_b"
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Damage deltas themselves are NOT asserted exactly (a per-victim hit-chance roll can still miss under this fixture's rng_state, exactly like test_combat_sim.gd's own `<=`-not-`<` discipline for this skill) -- the deterministic proof is the skill_resolved payload (cells + hit_ids) and the real attack_resolved roll each of the three gets. No terrain, no status -- instant damage only (the contrast with icy_floor's own canonical).",
+   "action": "assert_state",
+   "path": "combat.terrain",
+   "equals": {}
+  },
+  {
+   "_comment": "AP: Dash 1 (4->3) + flame_pillar's EFFECTIVE cost 2 (base 3, minus 1 -- [Quick Cast]'s first-spell-this-turn discount, inherited from mage L1 and still live in this kit) == 3 spent, landing at 1, not 0.",
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 1
+  },
+  {
+   "action": "screenshot",
+   "name": "00_flame_pillar_cast"
+  },
+  {
+   "_comment": "1 AP left, not enough for a second real action -- combat_autoplay ends the turn and finishes the fight against the two inert dummies (the flame_pillar proof is already banked, low-risk finish, same idiom as ice_floor_loop).",
+   "action": "combat_autoplay"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  }
  ]
 }

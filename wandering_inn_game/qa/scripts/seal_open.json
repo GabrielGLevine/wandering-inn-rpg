@@ -118,7 +118,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "A Drake forge taught you in an afternoon what my tuition has been circling for a month. They FEED their runes. Maintenance, they call it. I am revising my rates. Downward. Do not comment.",
+    "text": "A Drake forge taught you in an afternoon what my tuition has been circling for a month. They feed their runes. Feed them, on a schedule. Maintenance, they call it. I am revising my rates. Downward. The new schedule is chalked on my slate already.",
     "options": [
      {
       "text": "Walk me through it again.",
@@ -174,7 +174,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Three regions taught you the same word in three accents and not one of them noticed doing it. A witch feeds hers. An enchanter reads the draw as craftsmanship. A forge calls it maintenance and bills by the hour. Under this city is wardwork by the hand that cut our frame, and it has been drawing since before Liscor had walls. I want to read it standing in front of it."
+    "text": "Three regions taught you the same word in three accents and not one of them noticed doing it. A witch feeds hers, milk and a word. An enchanter prices the draw and calls it craftsmanship. Pallass bills it as maintenance. Maintenance. Under this city is wardwork by the hand that cut our frame, and it has been drawing since before Liscor had walls. I want to read it standing in front of it."
    },
    "timeout_sec": 5
   },
@@ -426,7 +426,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Three things, and I dislike two of them. We open it and see what three centuries of feeding produced. Or we leave it fed and make that somebody's paid duty, which is dull and correct. Or you re-cut the ward yourself, if you can, and it holds another age without anyone watching it."
+    "text": "We open it and see what three centuries of feeding produced. Or we leave it fed and make that somebody's paid duty, which is dull, and correct, and I resent both qualities. Or — if your hands are equal to it, which remains unproven — you re-cut the ward yourself and it holds another age without a keeper. I dislike most of these. I will be copying the outer lines while you decide."
    },
    "timeout_sec": 5
   },
@@ -452,7 +452,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Then stand clear of it. The reading has to stay open while the seal comes apart, which means I am occupied and you are on your own for whatever objects to this. Something will. Wards this good are never the only precaution."
+    "text": "Then stand clear of it. The reading has to stay open while the seal comes apart, which means I am occupied and you are on your own for whatever objects to this. Something will. Expect a guardian."
    },
    "timeout_sec": 5
   },

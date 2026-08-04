@@ -188,7 +188,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "Former Headman",
-    "text": "We don't truck with witches here. Didn't used to, anyway."
+    "text": "We don't— didn't used to truck with witches. There's one in the old hollow now. Past the fields. Half the village knows it and pretends it don't. Crops fail. Stock spooks. And one of my own stands there mumbling. Somebody else's talk coming out of her mouth. Find out what she wants and end it. However you have to."
    },
    "timeout_sec": 5
   },
@@ -4231,7 +4231,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Straw tick, borrowed blanket \u2014 Riverfarm always finds room for one more."
+    "text": "Straw tick, borrowed blanket — Riverfarm always finds room for one more."
    },
    "timeout_sec": 5
   },

@@ -91,7 +91,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Sit. Eat. That's an order, not a suggestion. New recipe \u2014 still testing it, but it should stick to your ribs. Call it +2 HP, every fight until you next sleep. Don't ask me to explain the math."
+    "text": "Sit. Eat. That's an order. New recipe — still testing it, but it should stick to your ribs. Call it +2 HP, every fight until you next sleep. Don't ask me to explain the math."
    },
    "timeout_sec": 5
   },
@@ -119,7 +119,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Back already? The inn feels almost manageable since you sorted that delivery. Almost."
+    "text": "Back already? The inn feels almost manageable since you sorted that delivery. I even got to sit down this morning, for about a minute."
    },
    "timeout_sec": 5
   },
@@ -200,7 +200,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Again? Fine. The dummies heal fast. Perk of being straw. Same rules: move, hit, no crying."
+    "text": "Again? Fine. The dummies heal fast. Straw's forgiving that way. Same rules. Move and hit."
    },
    "timeout_sec": 5
   },
@@ -279,7 +279,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Ugh \u2014 fine, you win. Here's your cut. Watch doesn't pay enough for me to keep losing bets to my own students, but don't tell the paymaster I said that."
+    "text": "Ugh — fine, you win. Here's your cut. Watch doesn't pay enough for me to keep losing bets to my own students. The paymaster docks me for less."
    },
    "timeout_sec": 5
   },
@@ -321,7 +321,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Goblins on the road since the thaw. A warband near the gate with a chief who's got actual teeth. Old stones to the north-east? Stay off them. And if the pond looks deep, that's because it is."
+    "text": "Goblins on the road since the thaw. A warband near the gate with a chief who's got actual teeth. Old stones to the north-east? Stay off them. And the pond is deeper than the gatehouse rope. Stay out of it."
    },
    "timeout_sec": 5
   },
@@ -406,11 +406,31 @@
    "payload_contains": {
     "speaker": "Selys",
     "options": [
-     { "text": "Just looking around.", "locked": false, "requirement": "" },
-     { "text": "Shivertail. Any relation to the Guildmistress?", "locked": false, "requirement": "" },
-     { "text": "Anything on the board worth my time?", "locked": false, "requirement": "" },
-     { "text": "How does the board work?", "locked": false, "requirement": "" },
-     { "text": "Take on a posting.", "locked": false, "requirement": "" }
+     {
+      "text": "Just looking around.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Shivertail. Any relation to the Guildmistress?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Anything on the board worth my time?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "How does the board work?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Take on a posting.",
+      "locked": false,
+      "requirement": ""
+     }
     ]
    },
    "timeout_sec": 5
@@ -429,7 +449,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Selys",
-    "text": "One job. I flagged it because the client isn't insane and the pay is honest: a courier run out to Riverfarm, nothing that bites back. Bring me the receipt and I'll square you from the Guild's own purse, not the client's excuse for one."
+    "text": "One job. I flagged it because the client isn't insane and the pay is honest: a courier run out to Riverfarm, nothing that bites back. Bring me the receipt. You get squared from the Guild's own purse, and the client's excuse for one never comes into it."
    },
    "timeout_sec": 5
   },
@@ -470,10 +490,26 @@
    "payload_contains": {
     "speaker": "Selys",
     "options": [
-     { "text": "Just looking around.", "locked": false, "requirement": "" },
-     { "text": "Shivertail. Any relation to the Guildmistress?", "locked": false, "requirement": "" },
-     { "text": "How does the board work?", "locked": false, "requirement": "" },
-     { "text": "Take on a posting.", "locked": false, "requirement": "" }
+     {
+      "text": "Just looking around.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Shivertail. Any relation to the Guildmistress?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "How does the board work?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Take on a posting.",
+      "locked": false,
+      "requirement": ""
+     }
     ]
    },
    "timeout_sec": 5
@@ -617,7 +653,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Sit. Eat. That's an order, not a suggestion. New recipe \u2014 still testing it, but it should stick to your ribs. Call it +2 HP, every fight until you next sleep. Don't ask me to explain the math."
+    "text": "Sit. Eat. That's an order. New recipe — still testing it, but it should stick to your ribs. Call it +2 HP, every fight until you next sleep. Don't ask me to explain the math."
    },
    "timeout_sec": 5
   },
@@ -635,7 +671,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Back already? The inn feels almost manageable since you sorted that delivery. Almost."
+    "text": "Back already? The inn feels almost manageable since you sorted that delivery. I even got to sit down this morning, for about a minute."
    },
    "timeout_sec": 5
   },
@@ -721,7 +757,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Ugh \u2014 fine, you win. Here's your cut. Watch doesn't pay enough for me to keep losing bets to my own students, but don't tell the paymaster I said that."
+    "text": "Ugh — fine, you win. Here's your cut. Watch doesn't pay enough for me to keep losing bets to my own students. The paymaster docks me for less."
    },
    "timeout_sec": 5
   },
@@ -731,7 +767,9 @@
    "equals": 7
   },
   {
-   "_comment": "The original script ENDED here with Relc's relc_wager reaction node still open -- appending more steps after it (Selys' own leg below) needs that dialogue genuinely closed first, or the next 'press interact' just advances THIS node instead of doing a world interact. Close it the same way leg (3)'s own wager close does: 'Back a step.' (default cursor 0) returns to the meet hub, then 'Keep walking.' (visible index 2 of the same 5-entry hub) ends the conversation cleanly.", "action": "press", "name": "confirm"
+   "_comment": "The original script ENDED here with Relc's relc_wager reaction node still open -- appending more steps after it (Selys' own leg below) needs that dialogue genuinely closed first, or the next 'press interact' just advances THIS node instead of doing a world interact. Close it the same way leg (3)'s own wager close does: 'Back a step.' (default cursor 0) returns to the meet hub, then 'Keep walking.' (visible index 2 of the same 5-entry hub) ends the conversation cleanly.",
+   "action": "press",
+   "name": "confirm"
   },
   {
    "action": "wait_for_event",
@@ -829,7 +867,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Selys",
-    "text": "One job. I flagged it because the client isn't insane and the pay is honest: a courier run out to Riverfarm, nothing that bites back. Bring me the receipt and I'll square you from the Guild's own purse, not the client's excuse for one."
+    "text": "One job. I flagged it because the client isn't insane and the pay is honest: a courier run out to Riverfarm, nothing that bites back. Bring me the receipt. You get squared from the Guild's own purse, and the client's excuse for one never comes into it."
    },
    "timeout_sec": 5
   },

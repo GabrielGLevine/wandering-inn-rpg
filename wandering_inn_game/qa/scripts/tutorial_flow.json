@@ -143,7 +143,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry."
+    "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are you move and you hit. That's it. That's all the rules."
    },
    "timeout_sec": 5
   },
@@ -469,7 +469,10 @@
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -492,12 +495,12 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Warrior] class gained! \u2014 [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
+    "text": "[Warrior] class gained! — [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
    },
    "timeout_sec": 5
   },
   {
-   "_comment": "The GDI sleep veil voices the level-1 kit as [Skill \u2013 X Obtained!] lines under the [Warrior Class Obtained!] proclamation, matching the toast's 4 grants. lines == 5 (1 class line + 4 skill lines) is the automated proof the FIRST class gain lists its grants; later level-ups already list theirs via skill_unlocked. Under QA the veil collapses but still emits this count.",
+   "_comment": "The GDI sleep veil voices the level-1 kit as [Skill – X Obtained!] lines under the [Warrior Class Obtained!] proclamation, matching the toast's 4 grants. lines == 5 (1 class line + 4 skill lines) is the automated proof the FIRST class gain lists its grants; later level-ups already list theirs via skill_unlocked. Under QA the veil collapses but still emits this count.",
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "payload_contains": {
@@ -510,7 +513,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "[Warrior] class gained! \u2014 [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
+    "text": "[Warrior] class gained! — [Basic Swordwork], [Tough Body], [Power Strike], [Piercing Strikes]"
    },
    "from_start": true,
    "timeout_sec": 10.0
@@ -528,7 +531,10 @@
    "_comment": "== GIFT NODE ==. Back to Relc for the spear. Teleport down to (2,3) (the cell the old ground-floor route reached via 'up 3'); resumes unchanged: right12->(14,3), right1->(15,3) inn_door -> floodplains (7,6), right5->(12,6), down6->(12,12), interact.",
    "action": "teleport",
    "map": "inn",
-   "cell": [2, 3]
+   "cell": [
+    2,
+    3
+   ]
   },
   {
    "action": "move",
@@ -641,7 +647,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "My spare spear. Held gates wider than that one. Now listen. Owning a weapon and HOLDING it are different things: check your pack, put the spear in your hand before the road checks your grip. Sword arm, spear arm. The weapon you carry decides which of your moves come with you."
+    "text": "My spare spear. Held gates wider than that one. Now listen. It won't help you from inside a pack. Check your pack, get the spear in your hand before you're back on the road. Sword arm, spear arm. What you carry decides which moves you get."
    },
    "timeout_sec": 5
   },

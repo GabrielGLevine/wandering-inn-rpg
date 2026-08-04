@@ -746,7 +746,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Krshia",
-    "text": "Sold. Wear it, use it, and do not bring it back to me broken expecting sympathy. Anything else catch your eye?"
+    "text": "Sold. Wear it and use it. Mending costs extra. Anything else catch your eye?"
    },
    "timeout_sec": 5
   },

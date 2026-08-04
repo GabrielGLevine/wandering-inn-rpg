@@ -377,7 +377,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry."
+    "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are you move and you hit. That's it. That's all the rules."
    },
    "timeout_sec": 5
   },
@@ -464,7 +464,10 @@
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -492,7 +495,10 @@
    "_comment": "Back to (7,3) so the original gob2-fight route (move right 7 -> inn_door) resumes unchanged. Teleport down to (2,3) (the cell the old ground-floor route reached via 'up 3'), right5->(7,3).",
    "action": "teleport",
    "map": "inn",
-   "cell": [2, 3]
+   "cell": [
+    2,
+    3
+   ]
   },
   {
    "action": "move",
@@ -650,7 +656,10 @@
    "_comment": "#49: ground-floor alcove bed removed; teleport up to your_bed (the inn's only bed now) since the inn walk isn't this beat's subject.",
    "action": "teleport",
    "map": "inn_upstairs",
-   "cell": [9, 2]
+   "cell": [
+    9,
+    2
+   ]
   },
   {
    "action": "move",
@@ -700,7 +709,10 @@
    "_comment": "RE-ROUTED for FoTI PR2b: the old leg teleported to (2,6) and walked up onto (2,5) then east along row 5 -- and rows 5/6 are the guest-rotation seat lanes now (relc (1,5), olesm (3,5), pisces (6,5), zevara (3,6), krshia (4,6), selys (6,6)). This run banks chatted_with_relc, and with a met pool of ONE the window seats him every waking, so that walk went blocked at Relc's chair (which sat on (2,5) at the time) and the rest of the route slid into hungry_patron. Moving his chair to (1,5) for the crowding check happens to clear (2,5) again, but the walk stays re-routed on purpose: it crosses Olesm's and Pisces's chairs too, and any run that met either of them would break it the same way. Lyonette is approached from (9,4) instead -- row 4 carries no guest chair and never will (every rostered seat is on rows 5-6) -- with a BLOCKED move down onto her (9,5) for the facing, the walkthroughs' own robust-facing idiom.",
    "action": "teleport",
    "map": "inn",
-   "cell": [9, 4]
+   "cell": [
+    9,
+    4
+   ]
   },
   {
    "action": "move",
@@ -710,7 +722,10 @@
   {
    "action": "assert_state",
    "path": "player_cell",
-   "equals": [9, 4]
+   "equals": [
+    9,
+    4
+   ]
   },
   {
    "action": "press",
@@ -792,7 +807,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Lyonette",
-    "text": "Selys respects competence, not chatter. Stand like you've held a line before - which, evidently, you have - and skip the small talk."
+    "text": "Selys respects competence. Stand like you've held a line before - which, evidently, you have - and skip the small talk."
    },
    "timeout_sec": 5
   },

@@ -61,7 +61,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Hedault",
-    "text": "Done. The work is correct; the item was merely early. Do not thank me, do not shake my hand, and do not let a street enchanter touch it afterward."
+    "text": "Done. The work is correct; it is on the cloth and the fee is as quoted. Do not thank me or shake my hand. And keep it away from street enchanters afterward."
    },
    "timeout_sec": 5
   },

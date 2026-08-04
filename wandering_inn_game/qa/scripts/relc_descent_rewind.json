@@ -47,7 +47,10 @@
    "_comment": "Straight to the warren mouth -- the descent walk + scouts route-fight are deep_descent's own proven scope, not this canonical's subject.",
    "action": "teleport",
    "map": "deep_tunnels",
-   "cell": [12, 6]
+   "cell": [
+    12,
+    6
+   ]
   },
   {
    "action": "wait_for_event",
@@ -66,7 +69,10 @@
   {
    "action": "assert_state",
    "path": "player_cell",
-   "equals": [12, 6]
+   "equals": [
+    12,
+    6
+   ]
   },
   {
    "action": "press",
@@ -160,7 +166,10 @@
   {
    "action": "assert_state",
    "path": "player_cell",
-   "equals": [12, 6]
+   "equals": [
+    12,
+    6
+   ]
   },
   {
    "_comment": "THE STATE ASSERT the review demanded: the WHOLE accomplishments dict equals the fixture's exact 8 keys -- relc_joined_descent is GONE (the pre-effects snapshot never held it), and nothing else leaked in either.",
@@ -210,7 +219,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Alone? Ha! You're either very brave or very— actually, no. Just the one thing. I'll hang back at the mouth, then, and let the professional wait by the door for once. Shout if you find teeth. ...You sure about this?"
+    "text": "Alone? Ha! You're either very brave or very— actually, no. Just the one thing. I'll hang back at the mouth, then, and let the professional wait by the door for once. Shout if you find teeth. Shout early."
    },
    "timeout_sec": 5
   },
@@ -232,7 +241,12 @@
    "action": "wait_for_event",
    "type": "combat_started",
    "payload_contains": {
-    "order": ["raskghar_awakened", "raskghar_scout", "raskghar_scout_2", "pc"]
+    "order": [
+     "raskghar_awakened",
+     "raskghar_scout",
+     "raskghar_scout_2",
+     "pc"
+    ]
    },
    "timeout_sec": 5
   },

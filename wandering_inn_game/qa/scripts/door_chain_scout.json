@@ -194,7 +194,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "...Correct. Aggravatingly correct. You have the eye, if not the training. Do not let it go to your head. The training is where the real work is."
+    "text": "Hm. Correct. Aggravatingly correct. You have the eye, if not the training. Do not let it go to your head. The training is where the real work is."
    },
    "timeout_sec": 5
   },

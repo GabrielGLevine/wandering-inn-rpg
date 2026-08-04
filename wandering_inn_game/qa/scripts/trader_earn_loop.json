@@ -403,7 +403,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Eloise",
-    "text": "Sold. Don't come back asking for a refund because it didn't work the way you hoped. Nothing ever works the way anyone hopes."
+    "text": "Sold. Don't come back asking for a refund because it didn't work the way you hoped. And keep it out of the damp."
    },
    "timeout_sec": 5
   },

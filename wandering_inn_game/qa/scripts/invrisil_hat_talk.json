@@ -3,83 +3,467 @@
  "fixture_save": "invrisil_hat_start",
  "starts_at_title": true,
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "_comment": "Title's default row is New Game -- down 1 to Continue, which loads the fixture-seeded manual slot.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 10 },
-  { "action": "assert_state", "path": "current_map", "equals": "brothers_parlor" },
-  { "action": "assert_state", "path": "player_cell", "equals": [5, 3] },
-  { "_comment": "Every {addr} pin below resolves to 'sir' for this fixture's default identity -- assert the identity so a future change fails HERE and not at a text pin.", "action": "assert_state", "path": "pc_gender", "equals": "m" },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "Wilovan", "text": "Evening. Might I say, sir, you carry yourself like a person things happen to. We collect a few of those."}, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "invrisil_wilovan", "entity": "wilovan"}, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "Wilovan", "text": "Sir. The parlor door is never shut to you, the alleys are safe as churches. Safer, if anything — we keep better hours. And a man remembers. All of us remember."}, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Four visible rows with the Brothers' job done: 'Evening.', the Cups chit row (item-gated, VISIBLE-LOCKED -- this save holds no cups_debt_chit), the marker row, and the errand row LAST. Down 3.", "action": "wait_frames", "frames": 1 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "Wilovan", "text": "There is, sir, and I'll ask your pardon before I describe it, because describing it is most of the offence. A small parcel wants to be somewhere else by morning, and the somewhere else drinks at the Adventurer's Rest. House rule there is that nobody raises a voice. We hold to it. So does everybody who owes them a table."}, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 10 },
-  { "action": "screenshot", "name": "01_anything_wanting_a_quiet_pair_of_hands" },
-  { "_comment": "Row 0 takes the errand; rows 1 and 2 are the what-if and the decline.", "action": "wait_frames", "frames": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "timeout_sec": 5, "type": "quest_started", "payload_contains": {"id": "the_hat_stays_on"} },
-  { "action": "wait_for_event", "timeout_sec": 5, "type": "accomplishment_recorded", "payload_contains": {"id": "hat_job_taken"} },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "Wilovan", "text": "Then here are the manners of it. You don't name the thing, you don't name the man, and you don't hurry. A gentleman who hurries is a gentleman explaining himself later. Hat stays on the whole while, sir. That's not superstition. That's the whole of the etiquette."}, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "_comment": "== THE REST, THE TALK ROUTE. The factor stands at (6,1); approach from (6,2) and bump north. First interact is his pool line, the second opens the graph. ==", "action": "wait_frames", "frames": 1 },
-  { "action": "teleport", "map": "adventurers_rest", "cell": [6, 2] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "adventurers_rest"}, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 5 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [6, 1]} },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "The House Factor", "text": "Long table's for people waiting on somebody. This one's for people who've already arrived."}, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "invrisil_rest_factor", "entity": "rest_house_factor"}, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "The House Factor", "text": "You'll want the long table, sir, not this one. Long table's for people waiting on somebody. This one's for people who have already arrived."}, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 10 },
-  { "action": "screenshot", "name": "02_the_long_table_is_for_people_waiting" },
-  { "_comment": "Three visible rows: the wait arm (armed by hat_job_taken), 'Busy house.', and the leave row.", "action": "wait_frames", "frames": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "The House Factor", "text": "Then you're early, which is a manner, or you're late, which is a message. Which would you like it to have been?"}, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "The House Factor", "text": "Warm is a good answer. The gentleman who left that coat was warm too, and he'll be back for it or he won't, and either way the coat is paid for through the season."}, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "The House Factor", "text": "Mind it well, sir. Nobody in this room raises their voice and nobody in this room has ever seen a thing. That isn't a rule of the house. That's the rent."}, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 10 },
-  { "action": "screenshot", "name": "03_that_is_the_rent" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "handoff_talked"}, "timeout_sec": 5 },
-  { "_comment": "== THE REPORT. Wilovan's pool is spent for this waking, so the interact opens the hub directly; the errand row is now hidden and the report row has taken its place. ==", "action": "wait_frames", "frames": 1 },
-  { "action": "teleport", "map": "brothers_parlor", "cell": [5, 3] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "brothers_parlor"}, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 5 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [6, 3]} },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "invrisil_wilovan", "entity": "wilovan"}, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Still four visible rows, the last one swapped: the errand row hides on hat_job_taken and the report row arms on it.", "action": "wait_frames", "frames": 1 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "Wilovan", "text": "It is, and I've had it confirmed by a man who does not confirm things. Tell me how the room took it, sir, and I'll know what I owe you."}, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "hat_job_done"}, "timeout_sec": 5 },
-  { "action": "assert_event_logged", "type": "quest_completed", "payload_contains": {"id": "the_hat_stays_on"} },
-  { "action": "assert_state", "path": "accomplishments.handoff_talked", "equals": 1 },
-  { "action": "assert_state", "path": "accomplishments.hat_job_done", "equals": 1 },
-  { "action": "assert_state", "path": "gold", "equals": 25 },
-  { "action": "assert_event_absent", "type": "combat_started" },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": {"id": "handoff_quiet"} },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": {"id": "handoff_loud"} }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Title's default row is New Game -- down 1 to Continue, which loads the fixture-seeded manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "brothers_parlor"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "_comment": "Every {addr} pin below resolves to 'sir' for this fixture's default identity -- assert the identity so a future change fails HERE and not at a text pin.",
+   "action": "assert_state",
+   "path": "pc_gender",
+   "equals": "m"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Wilovan",
+    "text": "Evening. Might I say, sir, you carry yourself like a person things happen to. We collect a few of those."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_wilovan",
+    "entity": "wilovan"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Wilovan",
+    "text": "Sir. The parlor door is never shut to you, the alleys are safe as churches. Safer, if anything — we keep better hours. And a man remembers. All of us remember."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Four visible rows with the Brothers' job done: 'Evening.', the Cups chit row (item-gated, VISIBLE-LOCKED -- this save holds no cups_debt_chit), the marker row, and the errand row LAST. Down 3.",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Wilovan",
+    "text": "There is, sir, and I'll ask your pardon before I describe it, because describing it is most of the offence. A small parcel wants to be somewhere else by morning, and the somewhere else drinks at the Adventurer's Rest. House rule there is that nobody raises a voice. We hold to it. So does everybody who owes them a table."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "01_anything_wanting_a_quiet_pair_of_hands"
+  },
+  {
+   "_comment": "Row 0 takes the errand; rows 1 and 2 are the what-if and the decline.",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "timeout_sec": 5,
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "the_hat_stays_on"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "timeout_sec": 5,
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "hat_job_taken"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Wilovan",
+    "text": "Then here are the manners of it. You don't name the thing, you don't name the man, and you don't hurry. A gentleman who hurries is a gentleman explaining himself later. Hat stays on the whole while, sir. That's not superstition. That's the whole of the etiquette."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE REST, THE TALK ROUTE. The factor stands at (6,1); approach from (6,2) and bump north. First interact is his pool line, the second opens the graph. ==",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "teleport",
+   "map": "adventurers_rest",
+   "cell": [
+    6,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "adventurers_rest"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     6,
+     1
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "The House Factor",
+    "text": "Long table's for people waiting on somebody. This one's for people who've already arrived."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_rest_factor",
+    "entity": "rest_house_factor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "The House Factor",
+    "text": "You'll want the long table, sir, not this one. Long table's for people waiting on somebody. This one's for people who have already arrived."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "02_the_long_table_is_for_people_waiting"
+  },
+  {
+   "_comment": "Three visible rows: the wait arm (armed by hat_job_taken), 'Busy house.', and the leave row.",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "The House Factor",
+    "text": "Then you're early or you're late. Somebody in this room has already counted. I haven't heard which."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "The House Factor",
+    "text": "Warm is a good answer. The gentleman who left that coat was warm too. No word yet on when he'll be back for it. The coat's paid for through the season."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "The House Factor",
+    "text": "Mind it well, sir. Nobody in this room raises their voice and nobody in this room has ever seen a thing. That isn't a rule of the house. That's the rent."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "03_that_is_the_rent"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "handoff_talked"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE REPORT. Wilovan's pool is spent for this waking, so the interact opens the hub directly; the errand row is now hidden and the report row has taken its place. ==",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "teleport",
+   "map": "brothers_parlor",
+   "cell": [
+    5,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "brothers_parlor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     6,
+     3
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_wilovan",
+    "entity": "wilovan"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Still four visible rows, the last one swapped: the errand row hides on hat_job_taken and the report row arms on it.",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Wilovan",
+    "text": "It is, and I've had it confirmed by a man who does not confirm things. Tell me how the room took it, sir, and I'll know what I owe you."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "hat_job_done"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "the_hat_stays_on"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.handoff_talked",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.hat_job_done",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 25
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "handoff_quiet"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "handoff_loud"
+   }
+  }
  ]
 }

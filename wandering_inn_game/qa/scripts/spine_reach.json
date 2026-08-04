@@ -427,7 +427,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Eloise",
-    "text": "Mine takes milk and a word, every seventh night. Small appetite, small keeping. Yours was built to hold something that argues back, and a ward like that gets fed on purpose, by someone who meant it to outlast them. Don't starve it in a hurry, child. A hungry ward goes looking."
+    "text": "Mine takes milk and a word, every seventh night. Yours was built to hold something that argues back, and a ward like that gets fed on purpose, by someone who meant it to outlast them. Don't starve it in a hurry, child. Left hungry, it will start drawing what it needs from whatever is nearest — the heat off your hearth first, then the sleep of whoever lives over it."
    },
    "timeout_sec": 5
   },
@@ -548,7 +548,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's and she FED hers too. That word keeps recurring.",
+    "text": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's, and she fed hers too. Fed. That word keeps recurring.",
     "options": [
      {
       "text": "Walk me through it again.",
@@ -641,7 +641,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Hedault",
-    "text": "State the item and keep your hands where I can see them. I appraise, I correct, I charge exactly what the work is worth. In that order."
+    "text": "State the item and keep your hands where I can see them. First I appraise. Then I correct, if correction is warranted, and I charge exactly what the work is worth."
    },
    "timeout_sec": 5
   },
@@ -666,7 +666,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Hedault",
-    "text": "Hold still. There is a residue on your sleeve I do not see twice in a decade. Ruin warding, and it is FED. A live draw, not a set one. I do not invoice for looking."
+    "text": "Hold still. There is a residue on your sleeve I do not see twice in a decade. Ruin warding. A set ward would have gone quiet years ago; this one is fed, and the draw is live. Looking costs nothing."
    },
    "timeout_sec": 5
   },
@@ -706,7 +706,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Hedault",
-    "text": "A set ward holds a shape. A fed ward holds an appetite, and an appetite has to be sourced. Whoever hung that frame did not hang it alone. A draw that size runs to something, and the something is not in your pantry. I will not speculate further in a shop. Bring me the setting when you know, and I will price the work correctly."
+    "text": "A set ward holds a shape. A fed ward has to be sourced, continuously, from somewhere with capacity. Whoever hung that frame did not hang it alone, and I have measured what it pulls. Nothing in your pantry pulls that. I will not speculate further in a shop. Bring me the setting when you know, and I will price the work correctly."
    },
    "timeout_sec": 5
   },
@@ -759,7 +759,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Hedault read your frame unbidden and charged you nothing, which from that man is appetite, not generosity. I know the feeling. He is better at settings than I will ever be. Deny I said it."
+    "text": "Hedault read your frame unbidden and charged you nothing, and from that man a waived fee is appetite. I know the feeling. He is better at settings than I will ever be. I am still deciding what to do with knowing it."
    },
    "timeout_sec": 5
   },
@@ -885,7 +885,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Grimalkin",
-    "text": "I have. The forge tier runs on rune-fed work. Every ward up there eats on a schedule a smith keeps in a ledger. Feed it on time or it feeds itself. Your door has no ledger. Stand still."
+    "text": "I have. The forge tier runs on rune-fed work. Every ward up there eats on a schedule a smith keeps in a ledger. Two feedings a shift, logged. No smith keeps one for your door. Stand still."
    },
    "timeout_sec": 5
   },
@@ -925,7 +925,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Grimalkin",
-    "text": "It costs whatever it is drawing on, and it has been drawing unsupervised since long before you owned it. I do not find that alarming. I find it UNMEASURED, which is worse. Find what sits at the far end of the draw and bring me the numbers. I will publish them and you will be a footnote. That is the highest offer I make."
+    "text": "It costs whatever it is drawing on, and it has been drawing unsupervised since long before you owned it. I do not find that alarming. I find it unmeasured. Find what sits at the far end of the draw and bring me the numbers. I will publish them and you will be a footnote."
    },
    "timeout_sec": 5
   },
@@ -978,7 +978,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "A Drake forge taught you in an afternoon what my tuition has been circling for a month. They FEED their runes. Maintenance, they call it. I am revising my rates. Downward. Do not comment."
+    "text": "A Drake forge taught you in an afternoon what my tuition has been circling for a month. They feed their runes. Feed them, on a schedule. Maintenance, they call it. I am revising my rates. Downward. The new schedule is chalked on my slate already."
    },
    "timeout_sec": 5
   },

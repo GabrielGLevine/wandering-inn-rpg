@@ -3,88 +3,602 @@
  "fixture_save": "near_ice_floor",
  "starts_at_title": true,
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "_comment": "Move down to the 'Continue' row, confirm loads the near_ice_floor manual slot.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "floodplains" },
-  { "action": "assert_state", "path": "classes.ice_mage", "equals": 10 },
-  { "action": "assert_state", "path": "player_cell", "equals": [12, 12] },
-
-  { "_comment": "Relc is right below, already met -- 'meet' node's visible options are ['What's out here worth guarding?', 'Got time to show me how to fight? (Spar)', 'Keep walking.'] (index 1 is the spar option).", "action": "press", "name": "interact" },
-  { "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Relc" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "relc_intro" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Relc", "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry." }, "timeout_sec": 5 },
-  { "_comment": "'spar_offer' node: default cursor (0) is 'Ready when you are.' -- accept.", "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
-  { "action": "wait_frames", "frames": 5 },
-  { "action": "assert_state", "path": "combat.active", "equals": "pc" },
-  { "action": "assert_state", "path": "combat.combatants.pc.cell", "equals": [2, 3] },
-  { "action": "assert_state", "path": "combat.combatants.pc.skills", "contains": "icy_floor" },
-  { "_comment": "Kit order ice_shard/icy_floor/frost_bolt/flame_jet/flame_dart, then invisibility (all contexts:combat + ap_cost>0 -- issue #46 gave [Invisibility] a real combat read, inherited from mage L5; class-foundation R2 (#93) added [Flame Dart] to mage L2's grants, right after flame_jet, ahead of invisibility) -- Attack(1)/Dash(2)/ice_shard(3)/icy_floor(4)/frost_bolt(5)/flame_jet(6)/flame_dart(7)/invisibility(8)/End Turn = 8 numbered slots, 9 total.", "action": "assert_event_logged", "type": "ui_hotbar_rendered", "payload_contains": { "slots": 9 } },
-
-  { "_comment": "Dash first: pool 3 -> 6, AP 4 -> 3. Needed so this SAME turn can both close into icy_floor's range 3 and step onto the freshly-cast ice afterward.", "action": "press", "name": "hotbar_2" },
-  { "action": "wait_for_event", "type": "ui_slot_info_rendered", "payload_contains": { "slot": 1 }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dashed", "payload_contains": { "id": "pc", "move_pool": 6 }, "timeout_sec": 5 },
-
-  { "_comment": "(2,3) -> (4,3): chebyshev to training_dummy_a (7,3) == 3, exactly icy_floor's range.", "action": "move", "direction": "right", "steps": 2 },
-  { "action": "wait_for_event", "type": "combatant_moved", "payload_contains": { "id": "pc", "cell": [4, 3] }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "combat.combatants.pc.move_pool", "equals": 4 },
-
-  { "action": "press", "name": "hotbar_4" },
-  { "action": "wait_for_event", "type": "ui_targeting_shown", "payload_contains": { "mode": "skill", "skill": "icy_floor" }, "timeout_sec": 5 },
-  { "_comment": "Default target is the lowest-hp-then-id enemy -- both dummies start at equal hp, so training_dummy_a (alphabetically first) is targeted with no cycle needed.", "action": "press", "name": "confirm" },
-  { "_comment": "Emit order: skill_resolved -> terrain_added -> ui_terrain_rendered (the renderer's confirmation, fired synchronously off terrain_added) -> status_applied per occupant (training_dummy_a, then training_dummy_b -- it also sits inside the blast at (7,4), a deliberate side effect of 'occupied cells included').", "action": "wait_for_event", "type": "skill_resolved", "payload_contains": { "actor": "pc", "skill": "icy_floor", "target": "training_dummy_a" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "terrain_added", "payload_contains": { "kind": "icy_floor", "rounds": 2 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_terrain_rendered", "payload_contains": { "kind": "icy_floor" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "status_applied", "payload_contains": { "id": "training_dummy_a", "status": "slowed" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "combat.terrain.icy_floor", "equals": [[6, 2], [6, 3], [6, 4], [7, 2], [7, 3], [7, 4], [8, 2], [8, 3], [8, 4]] },
-  { "action": "screenshot", "name": "00_icy_floor_cast" },
-
-  { "_comment": "Move onto the ice, same turn: (4,3) -> (6,3), the blast's west edge. Applies slowed to the pc immediately (mid-turn, before any pool-penalty consume).", "action": "move", "direction": "right", "steps": 2 },
-  { "action": "wait_for_event", "type": "combatant_moved", "payload_contains": { "id": "pc", "cell": [6, 3] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "status_applied", "payload_contains": { "id": "pc", "status": "slowed" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "combat.combatants.pc.move_pool", "equals": 2 },
-
-  { "_comment": "End turn 1 standing on the ice -- the two inert dummies auto-end theirs, then pc's own turn 2 (round 2) begins already on (6,3): the standing-slow proof, live.", "action": "press", "name": "end_turn" },
-  { "action": "wait_for_event", "type": "status_applied", "payload_contains": { "id": "pc", "status": "slowed", "source_kind": "icy_floor" }, "timeout_sec": 10 },
-  { "action": "wait_for_event", "type": "status_expired", "payload_contains": { "id": "pc", "status": "slowed", "source_kind": "icy_floor" }, "timeout_sec": 10 },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc", "move_pool": 1 }, "timeout_sec": 10 },
-  { "action": "assert_state", "path": "combat.round", "equals": 2 },
-  { "action": "screenshot", "name": "01_standing_slow" },
-  { "action": "screenshot", "name": "02_ice_reapplication_copy" },
-
-  { "_comment": "End turn 2 without moving (still on (6,3)) -- the round 2->3 rollover purges icy_floor (expires_after_round 2 < round 3), firing terrain_expired once, then pc's turn 3 starts off the now-plain cell with a full, unslowed pool.", "action": "press", "name": "end_turn" },
-  { "action": "wait_for_event", "type": "terrain_expired", "payload_contains": { "kind": "icy_floor", "cells": [[6, 2], [6, 3], [6, 4], [7, 2], [7, 3], [7, 4], [8, 2], [8, 3], [8, 4]] }, "timeout_sec": 10 },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc", "move_pool": 3 }, "timeout_sec": 10 },
-  { "action": "assert_state", "path": "combat.round", "equals": 3 },
-  { "action": "assert_state", "path": "combat.terrain", "equals": {} },
-
-  { "_comment": "Issue #60 item 2: [Flame Jet]'s line-direction picker now remembers the LAST direction actually CAST this combat (targeting_controller.gd), instead of always resetting to 'up'. No canonical exercises flame_jet's direction picker via real player input anywhere else (grepped: every other flame_jet reference is a hotbar-presence check or an autoplay finish, never a player-driven cast -- combat_autoplay can't reach it either, melee-profile default per CLAUDE.md Gotchas), so this is the ONLY pin -- added here rather than a new script since turn 3 is already a stable, fully-resourced state (fresh 4 AP, 13 of 17 mp banked after the single earlier icy_floor cast) with nothing left to prove about icy_floor itself. Still at (6,3): flame_jet ap_cost 2 fits BOTH casts in this one turn (2+2=4 AP), mp_cost 4 each (8 of 13 -- no depletion). 'down' (one cycle off the pristine 'up' default, LINE_DIRS order up/down/left/right) walks (6,4)-(6,7) -- neither dummy (7,3)/(7,4) sits in that column, so this is a clean zero-damage geometry probe, not a combat-outcome risk.", "action": "press", "name": "hotbar_6" },
-  { "action": "wait_for_event", "type": "ui_targeting_shown", "payload_contains": { "mode": "skill", "skill": "flame_jet" }, "timeout_sec": 5 },
-  { "action": "press", "name": "cycle" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "skill_resolved", "payload_contains": { "actor": "pc", "skill": "flame_jet", "target": "down", "cells": [[6, 4], [6, 5], [6, 6], [6, 7]] }, "timeout_sec": 5 },
-
-  { "_comment": "Second cast, SAME turn, position unchanged, NO cycle at all before confirm -- if the picker still reset to 'up' on every fresh entry (the pre-#60 behavior) this would resolve target:'up'; it resolves 'down' again instead, proving the per-combat memory. A fresh WICombatTargeting is constructed per encounter (combat_screen.gd._show_combat()), so this memory needs no explicit reset anywhere -- a LATER combat starts a brand new instance back at 'up'.", "action": "press", "name": "hotbar_6" },
-  { "action": "wait_for_event", "type": "ui_targeting_shown", "payload_contains": { "mode": "skill", "skill": "flame_jet" }, "timeout_sec": 5 },
-  { "_comment": "Issue #75 item 1: the aim preview's LINE path -- WICombatTargeting.aim_preview() -> _view.line_cells(), the exact cells the confirmed cast walks (asserted below via skill_resolved). Entry already defaults to 'down' (the remembered direction, no cycle needed this time), so the preview shows the SAME 4-cell path the cast is about to resolve -- the direction-memory fix and the aim preview agreeing is the point.", "action": "wait_for_event", "type": "ui_aim_preview_rendered", "payload_contains": { "kind": "line", "cells": [[6, 4], [6, 5], [6, 6], [6, 7]] }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "skill_resolved", "payload_contains": { "actor": "pc", "skill": "flame_jet", "target": "down", "cells": [[6, 4], [6, 5], [6, 6], [6, 7]] }, "timeout_sec": 5 },
-
-  { "_comment": "The icy_floor proof is banked; finish the fight with plain autoplay (melee-profile default -- 21-HP-class inert dummies, real kit, no risk).", "action": "combat_autoplay" },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 15 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Move down to the 'Continue' row, confirm loads the near_ice_floor manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.ice_mage",
+   "equals": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "_comment": "Relc is right below, already met -- 'meet' node's visible options are ['What's out here worth guarding?', 'Got time to show me how to fight? (Spar)', 'Keep walking.'] (index 1 is the spar option).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are you move and you hit. That's it. That's all the rules."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "'spar_offer' node: default cursor (0) is 'Ready when you are.' -- accept.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.active",
+   "equals": "pc"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.cell",
+   "equals": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.skills",
+   "contains": "icy_floor"
+  },
+  {
+   "_comment": "Kit order ice_shard/icy_floor/frost_bolt/flame_jet/flame_dart, then invisibility (all contexts:combat + ap_cost>0 -- issue #46 gave [Invisibility] a real combat read, inherited from mage L5; class-foundation R2 (#93) added [Flame Dart] to mage L2's grants, right after flame_jet, ahead of invisibility) -- Attack(1)/Dash(2)/ice_shard(3)/icy_floor(4)/frost_bolt(5)/flame_jet(6)/flame_dart(7)/invisibility(8)/End Turn = 8 numbered slots, 9 total.",
+   "action": "assert_event_logged",
+   "type": "ui_hotbar_rendered",
+   "payload_contains": {
+    "slots": 9
+   }
+  },
+  {
+   "_comment": "Dash first: pool 3 -> 6, AP 4 -> 3. Needed so this SAME turn can both close into icy_floor's range 3 and step onto the freshly-cast ice afterward.",
+   "action": "press",
+   "name": "hotbar_2"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_info_rendered",
+   "payload_contains": {
+    "slot": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dashed",
+   "payload_contains": {
+    "id": "pc",
+    "move_pool": 6
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "(2,3) -> (4,3): chebyshev to training_dummy_a (7,3) == 3, exactly icy_floor's range.",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     4,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.move_pool",
+   "equals": 4
+  },
+  {
+   "action": "press",
+   "name": "hotbar_4"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "mode": "skill",
+    "skill": "icy_floor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Default target is the lowest-hp-then-id enemy -- both dummies start at equal hp, so training_dummy_a (alphabetically first) is targeted with no cycle needed.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "Emit order: skill_resolved -> terrain_added -> ui_terrain_rendered (the renderer's confirmation, fired synchronously off terrain_added) -> status_applied per occupant (training_dummy_a, then training_dummy_b -- it also sits inside the blast at (7,4), a deliberate side effect of 'occupied cells included').",
+   "action": "wait_for_event",
+   "type": "skill_resolved",
+   "payload_contains": {
+    "actor": "pc",
+    "skill": "icy_floor",
+    "target": "training_dummy_a"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "terrain_added",
+   "payload_contains": {
+    "kind": "icy_floor",
+    "rounds": 2
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_terrain_rendered",
+   "payload_contains": {
+    "kind": "icy_floor"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "status_applied",
+   "payload_contains": {
+    "id": "training_dummy_a",
+    "status": "slowed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.terrain.icy_floor",
+   "equals": [
+    [
+     6,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     6,
+     4
+    ],
+    [
+     7,
+     2
+    ],
+    [
+     7,
+     3
+    ],
+    [
+     7,
+     4
+    ],
+    [
+     8,
+     2
+    ],
+    [
+     8,
+     3
+    ],
+    [
+     8,
+     4
+    ]
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "00_icy_floor_cast"
+  },
+  {
+   "_comment": "Move onto the ice, same turn: (4,3) -> (6,3), the blast's west edge. Applies slowed to the pc immediately (mid-turn, before any pool-penalty consume).",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combatant_moved",
+   "payload_contains": {
+    "id": "pc",
+    "cell": [
+     6,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "status_applied",
+   "payload_contains": {
+    "id": "pc",
+    "status": "slowed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.move_pool",
+   "equals": 2
+  },
+  {
+   "_comment": "End turn 1 standing on the ice -- the two inert dummies auto-end theirs, then pc's own turn 2 (round 2) begins already on (6,3): the standing-slow proof, live.",
+   "action": "press",
+   "name": "end_turn"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "status_applied",
+   "payload_contains": {
+    "id": "pc",
+    "status": "slowed",
+    "source_kind": "icy_floor"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_for_event",
+   "type": "status_expired",
+   "payload_contains": {
+    "id": "pc",
+    "status": "slowed",
+    "source_kind": "icy_floor"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc",
+    "move_pool": 1
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.round",
+   "equals": 2
+  },
+  {
+   "action": "screenshot",
+   "name": "01_standing_slow"
+  },
+  {
+   "action": "screenshot",
+   "name": "02_ice_reapplication_copy"
+  },
+  {
+   "_comment": "End turn 2 without moving (still on (6,3)) -- the round 2->3 rollover purges icy_floor (expires_after_round 2 < round 3), firing terrain_expired once, then pc's turn 3 starts off the now-plain cell with a full, unslowed pool.",
+   "action": "press",
+   "name": "end_turn"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "terrain_expired",
+   "payload_contains": {
+    "kind": "icy_floor",
+    "cells": [
+     [
+      6,
+      2
+     ],
+     [
+      6,
+      3
+     ],
+     [
+      6,
+      4
+     ],
+     [
+      7,
+      2
+     ],
+     [
+      7,
+      3
+     ],
+     [
+      7,
+      4
+     ],
+     [
+      8,
+      2
+     ],
+     [
+      8,
+      3
+     ],
+     [
+      8,
+      4
+     ]
+    ]
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc",
+    "move_pool": 3
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.round",
+   "equals": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.terrain",
+   "equals": {}
+  },
+  {
+   "_comment": "Issue #60 item 2: [Flame Jet]'s line-direction picker now remembers the LAST direction actually CAST this combat (targeting_controller.gd), instead of always resetting to 'up'. No canonical exercises flame_jet's direction picker via real player input anywhere else (grepped: every other flame_jet reference is a hotbar-presence check or an autoplay finish, never a player-driven cast -- combat_autoplay can't reach it either, melee-profile default per CLAUDE.md Gotchas), so this is the ONLY pin -- added here rather than a new script since turn 3 is already a stable, fully-resourced state (fresh 4 AP, 13 of 17 mp banked after the single earlier icy_floor cast) with nothing left to prove about icy_floor itself. Still at (6,3): flame_jet ap_cost 2 fits BOTH casts in this one turn (2+2=4 AP), mp_cost 4 each (8 of 13 -- no depletion). 'down' (one cycle off the pristine 'up' default, LINE_DIRS order up/down/left/right) walks (6,4)-(6,7) -- neither dummy (7,3)/(7,4) sits in that column, so this is a clean zero-damage geometry probe, not a combat-outcome risk.",
+   "action": "press",
+   "name": "hotbar_6"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "mode": "skill",
+    "skill": "flame_jet"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cycle"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_resolved",
+   "payload_contains": {
+    "actor": "pc",
+    "skill": "flame_jet",
+    "target": "down",
+    "cells": [
+     [
+      6,
+      4
+     ],
+     [
+      6,
+      5
+     ],
+     [
+      6,
+      6
+     ],
+     [
+      6,
+      7
+     ]
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Second cast, SAME turn, position unchanged, NO cycle at all before confirm -- if the picker still reset to 'up' on every fresh entry (the pre-#60 behavior) this would resolve target:'up'; it resolves 'down' again instead, proving the per-combat memory. A fresh WICombatTargeting is constructed per encounter (combat_screen.gd._show_combat()), so this memory needs no explicit reset anywhere -- a LATER combat starts a brand new instance back at 'up'.",
+   "action": "press",
+   "name": "hotbar_6"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "mode": "skill",
+    "skill": "flame_jet"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Issue #75 item 1: the aim preview's LINE path -- WICombatTargeting.aim_preview() -> _view.line_cells(), the exact cells the confirmed cast walks (asserted below via skill_resolved). Entry already defaults to 'down' (the remembered direction, no cycle needed this time), so the preview shows the SAME 4-cell path the cast is about to resolve -- the direction-memory fix and the aim preview agreeing is the point.",
+   "action": "wait_for_event",
+   "type": "ui_aim_preview_rendered",
+   "payload_contains": {
+    "kind": "line",
+    "cells": [
+     [
+      6,
+      4
+     ],
+     [
+      6,
+      5
+     ],
+     [
+      6,
+      6
+     ],
+     [
+      6,
+      7
+     ]
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_resolved",
+   "payload_contains": {
+    "actor": "pc",
+    "skill": "flame_jet",
+    "target": "down",
+    "cells": [
+     [
+      6,
+      4
+     ],
+     [
+      6,
+      5
+     ],
+     [
+      6,
+      6
+     ],
+     [
+      6,
+      7
+     ]
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "The icy_floor proof is banked; finish the fight with plain autoplay (melee-profile default -- 21-HP-class inert dummies, real kit, no risk).",
+   "action": "combat_autoplay"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  }
  ]
 }

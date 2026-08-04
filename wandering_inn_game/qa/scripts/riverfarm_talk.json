@@ -669,7 +669,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Eloise",
-    "text": "Distance is just another kindness, if you carry the right stone. This one already knows the road to Invrisil. Don't lose it before you get there."
+    "text": "That stone's walked the Invrisil road more times than I have. Keep it in a dry pocket, on the side you don't fall on. Don't lose it before you get there."
    },
    "timeout_sec": 5
   },

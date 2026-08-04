@@ -131,7 +131,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Ceria",
-    "text": "It was guarding a door. Wonderful. I hate doors that need guarding."
+    "text": "It was guarding a door. Wonderful. Somebody left a construct in the dark to watch one door, and we still don't know what's on the other side."
    },
    "timeout_sec": 5
   },
@@ -166,14 +166,28 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Ceria",
-    "text": "Word travels. Yes — there's a ruin out past the floodplains, and under it a level nobody's opened since before Liscor had walls. We hit the seal three days ago. Yvlon can't cut it, and the one mage in this city who could read it works for himself and charges accordingly. We are exactly one pair of hands short."
+    "text": "Word travels. Yes — there's a ruin out past the floodplains, and under it a level nobody's opened since before Liscor had walls. We hit the seal three days ago. Yvlon can't cut it, and the one mage in this city who could read it works for himself and charges accordingly. We need one more pair of hands."
    },
    "timeout_sec": 5
   },
-  { "_comment": "== v0.15 T4.3 round 2: THE DIALOGUE DEFER, proven at the seam it was built for. The option just taken banked horns_dig_started and went on to dig_pitch, and that counter retires ceria_inn/yvlon_inn/ksmvr_inn (all three on screen, the speaker among them). Before the defer, world.gd reconciled presence on the bank and popped them mid-sentence -- VISUAL-LOG RUIN/CAMP-DOUBLE. Exactly ONE ui_entities_rendered has fired this run (the inn's own boot build, 21 sprites): the bank added none. ==", "action": "assert_event_count", "type": "ui_entities_rendered", "count": 1 },
-  { "action": "assert_event_logged", "type": "ui_entities_rendered", "payload_contains": { "sprites": 21, "fallbacks": 0 } },
-  { "action": "screenshot", "name": "00b_invitation_all_three_still_present" },
-
+  {
+   "_comment": "== v0.15 T4.3 round 2: THE DIALOGUE DEFER, proven at the seam it was built for. The option just taken banked horns_dig_started and went on to dig_pitch, and that counter retires ceria_inn/yvlon_inn/ksmvr_inn (all three on screen, the speaker among them). Before the defer, world.gd reconciled presence on the bank and popped them mid-sentence -- VISUAL-LOG RUIN/CAMP-DOUBLE. Exactly ONE ui_entities_rendered has fired this run (the inn's own boot build, 21 sprites): the bank added none. ==",
+   "action": "assert_event_count",
+   "type": "ui_entities_rendered",
+   "count": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 21,
+    "fallbacks": 0
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "00b_invitation_all_three_still_present"
+  },
   {
    "_comment": "Take the SECOND branch first (What's down there? -> dig_unknown) so the pitch's other arm is covered, then rejoin dig_directions from it.",
    "action": "move",
@@ -189,7 +203,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Ceria",
-    "text": "If I knew, I wouldn't need a dig. Whatever it is, someone sealed it on purpose and did a very good job. That usually means valuable, dangerous, or both."
+    "text": "If I knew, I wouldn't need a dig. Whatever it is, someone sealed it on purpose and did a very good job. Usually that means valuable or it means dangerous. I plan the camp for dangerous."
    },
    "timeout_sec": 5
   },
@@ -215,10 +229,25 @@
    "type": "dialogue_ended",
    "timeout_sec": 5
   },
-  { "_comment": "== THE FLUSH, exactly once. DIALOGUE_ENDED drains the queued reconcile in a single rebuild: 21 -> 18, the three Horns gone together, and the whole-run count is now 2 (boot + flush), not 2-per-bank. ==", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 18, "fallbacks": 0 }, "timeout_sec": 5 },
-  { "action": "assert_event_count", "type": "ui_entities_rendered", "count": 2 },
-  { "action": "screenshot", "name": "00c_after_dialogue_horns_gone_to_camp" },
-
+  {
+   "_comment": "== THE FLUSH, exactly once. DIALOGUE_ENDED drains the queued reconcile in a single rebuild: 21 -> 18, the three Horns gone together, and the whole-run count is now 2 (boot + flush), not 2-per-bank. ==",
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 18,
+    "fallbacks": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "ui_entities_rendered",
+   "count": 2
+  },
+  {
+   "action": "screenshot",
+   "name": "00c_after_dialogue_horns_gone_to_camp"
+  },
   {
    "action": "assert_state",
    "path": "started_quests",
@@ -348,7 +377,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Ceria",
-    "text": "You made it. Camp rules: nobody touches anything shiny, nobody wanders past the survey stakes alone. The sealed level's below the pedestal court. We found the site off an old expedition ledger — half the pages were about what they DIDN'T bring out."
+    "text": "You made it. Camp rules: nobody touches anything shiny, nobody wanders past the survey stakes alone. The sealed level's below the pedestal court. We found the site off an old expedition ledger — half the pages are about what they didn't bring out. It's in my tent, filed with the survey maps."
    },
    "timeout_sec": 5
   },
@@ -388,37 +417,187 @@
    },
    "timeout_sec": 5
   },
-
-  { "_comment": "== v0.15 T4.3 THE REST OF THE TEAM. The camp shipped as Ceria alone, so 'help the Horns' fielded one half-Elf, a fire and a crate. Walk the camp for real from (4,2): right 2 to (6,2), bump south into Yvlon (6,3). Row 3 is solid x=2..7 during the window now, so Ksmvr (4,4) is approached from BELOW -- right 1 to (8,2) past the stakes, down 3 to (8,5) on the clear promenade row, left 4 to (4,5), bump north. ==", "action": "move", "direction": "right", "steps": 2 },
-  { "action": "assert_state", "path": "player_cell", "equals": [6, 2] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [6, 3] } },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Yvlon Byres", "text": "Ceria plans it, Ksmvr measures it, I hold the part that's about to fall. That's the arrangement." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_yvlon_dig_camp" }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "01b_camp_yvlon" },
-
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 2] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [7, 3] } },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "eyed_the_survey_stakes" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "The string is taut. Somebody re-tensions it each morning, which is not a thing four adventurers usually bother to do." }, "timeout_sec": 5 },
-
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [8, 2] },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [8, 5] },
-  { "action": "move", "direction": "left", "steps": 4 },
-  { "action": "assert_state", "path": "player_cell", "equals": [4, 5] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [4, 4] } },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Ksmvr", "text": "Sixty-one strides of rope. I have counted it four times. The number has not improved. I am accounting for that." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "chatted_with_ksmvr_dig_camp" }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "01c_camp_ksmvr" },
-
+  {
+   "_comment": "== v0.15 T4.3 THE REST OF THE TEAM. The camp shipped as Ceria alone, so 'help the Horns' fielded one half-Elf, a fire and a crate. Walk the camp for real from (4,2): right 2 to (6,2), bump south into Yvlon (6,3). Row 3 is solid x=2..7 during the window now, so Ksmvr (4,4) is approached from BELOW -- right 1 to (8,2) past the stakes, down 3 to (8,5) on the clear promenade row, left 4 to (4,5), bump north. ==",
+   "action": "move",
+   "direction": "right",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    6,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     6,
+     3
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Yvlon Byres",
+    "text": "Ceria plans it, Ksmvr measures it, I hold the part that's about to fall. That's the arrangement."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "chatted_with_yvlon_dig_camp"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01b_camp_yvlon"
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     7,
+     3
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "eyed_the_survey_stakes"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The string is taut. Somebody re-tensions it each morning, which is not a thing four adventurers usually bother to do."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 4
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    5
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     4,
+     4
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Ksmvr",
+    "text": "Sixty-one strides of rope. I have counted it four times. The number has not improved. I am accounting for that."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "chatted_with_ksmvr_dig_camp"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01c_camp_ksmvr"
+  },
   {
    "_comment": "== THE BREACH, fight leg ==. Teleport to the guardian alcove (16,8), west of ruin_guardian (17,8) -- the door_chain_fight precedent cell and comment; the ruin interior route is already walked live by ruin_walkthrough.",
    "action": "teleport",
@@ -734,7 +913,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Mounted, hinged, and — observe — already holding a hop to Liscor's gate district without so much as a rune of encouragement. It works. Now let us see how far it can go."
+    "text": "Mounted and hinged. Observe — already holding a hop to Liscor's gate district, and nobody has offered it so much as a rune of encouragement. It works. The next test is range."
    },
    "timeout_sec": 5
   },
@@ -757,7 +936,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Farther than Liscor. The wardwork wants distance the way a bowstring wants release — but push it unattuned and things will leak through that we did not invite. Properly? We attune it. Krshia stocks catalysts; I stock expertise."
+    "text": "Farther than Liscor. The wardwork is straining for distance; set a palm to the frame and you can feel the pull. But push it unattuned and things we did not invite will leak through. So we attune it properly. Krshia stocks the catalysts, and I have already started on the calculations for our half of the work."
    },
    "timeout_sec": 5
   },
@@ -856,8 +1035,16 @@
    "type": "dialogue_node",
    "payload_contains": {
     "options": [
-     { "text": "Liscor \u2014 the Gate District", "locked": false, "requirement": "" },
-     { "text": "Let it be.", "locked": false, "requirement": "" }
+     {
+      "text": "Liscor — the Gate District",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Let it be.",
+      "locked": false,
+      "requirement": ""
+     }
     ]
    },
    "timeout_sec": 5

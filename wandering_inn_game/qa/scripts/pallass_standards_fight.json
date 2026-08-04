@@ -160,7 +160,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Calibration Rig",
-    "text": "The rig registers you, corrects a half-beat late, and registers you again. Its gauges swing past their own marks and settle wrong. Whatever schedule it keeps, it stopped keeping it a while ago.",
+    "text": "The rig registers you, corrects a half-beat late, and registers you again. Its gauges swing past their own marks and settle wrong. Three of the four needles disagree. The fourth is not moving at all.",
     "options": [
      {
       "text": "[Bring it back into tolerance the hard way.]",

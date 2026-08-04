@@ -56,7 +56,7 @@
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
-    "text": "Lyonette enters it without looking up, and the line is perfect anyway. \"Paid in full. Aired, swept, and the draught stopped — you'll get up with more in you than you have been.\""
+    "text": "Lyonette enters it without looking up, and the line comes out straight. \"Paid in full. Aired and swept. The draught is stopped — you'll get up with more in you than you have been.\""
    },
    "timeout_sec": 5
   },
