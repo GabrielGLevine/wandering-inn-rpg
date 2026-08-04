@@ -71,13 +71,23 @@ for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skill
 	# unchanged single-process behavior, proven byte-identical).
 	wandering_inn_game/scripts/harness_shard_diff.sh --shards 4 --baseline-ref main
 	# Difficulty-tier sweep (GH#360a) — the 141 cells at x0.75/x1.0/x1.3 via
-	# WI_DIFFICULTY_MULT on the ONE batch driver; asserts the x1.0 leg is
-	# identical to a plain run. Report-only until gates ratify.
+	# WI_DIFFICULTY_MULT on the ONE batch driver. THREE GATES, ON BY DEFAULT
+	# (#384 item 1, ratified 2026-08-04): inert-at-Silver (the explicit x1.0 leg
+	# is identical to a plain run), per-cell monotonicity, and extreme flips with
+	# a NAMED whitelist — each entry pins the Silver it was argued from and
+	# LAPSES (reds) when that number moves. --report-only explores a candidate
+	# tune without a red.
 	wandering_inn_game/scripts/difficulty_tier_sweep.sh
 	# Class-parity leg (GH#360b) — mirror-matched builds at total-level bands
-	# 10/14/18 over a fixed arena set; reports max spread per band. Envelope
-	# gate deliberately unratified (ai_kit coverage confound; see CHOICE-LOG).
+	# 10/14/18 over a fixed arena set; reports max spread per band. The WHOLE-BAND
+	# spread is still NOT gateable (ai_kit coverage confound). The ratified gate
+	# (#384 item 2) is the ai_kit-STRATIFIED envelope, report-only by default:
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_class_parity.gd
+	# Envelope GATE ON — what the merge train runs against a candidate branch.
+	# rc!=0 = a stratum busted its ceiling, OR a ratified ceiling went unevaluated
+	# (a stratum can vanish when a grant flips a row MUTE->SPOKEN).
+	# WI_PARITY_BAND=<10|14|18> narrows the run and is only ever a PARTIAL fence.
+	WI_PARITY_ENVELOPE_GATE=1 /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_class_parity.gd
 
 	# QA scripts isolate user:// by default via HOME=.godot_home/qa-<script>-<pid>.
 	# Use --user-dir DIR after the mode to choose a stable isolated HOME explicitly.

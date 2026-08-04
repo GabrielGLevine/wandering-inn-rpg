@@ -102,7 +102,8 @@ func _init() -> void:
 	# last piece still reads Act IV -- the gate is four keys (lattice_forge_rune,
 	# seal_kept_reported, price_of_a_favor_reported, brothers_job_done; asserted
 	# key-by-key below), and this context holds every one of them except the
-	# forge rune, so six of the act's seven beats light.
+	# forge rune, so six of the act's eight beats light (the seventh, the
+	# pilgrimage, waits on the rune; the eighth is the optional nobility thread).
 	var region_arc := WIActs.evaluate(catalog, _ctx(6, 4, {
 		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
 		"post_game": 1, "door_awakened": 1, "price_of_a_favor_reported": 1,
@@ -113,7 +114,59 @@ func _init() -> void:
 	for beat: Dictionary in region_arc["beats"]:
 		if bool(beat["achieved"]):
 			region_arc_achieved.append(beat["id"])
-	assert(region_arc_achieved.size() == 6 and not region_arc_achieved.has("the_reach_mapped"), "six of Act IV's seven beats light; the pilgrimage beat waits on the forge rune")
+	assert(region_arc_achieved.size() == 6 and not region_arc_achieved.has("the_reach_mapped"), "six of Act IV's beats light; the pilgrimage beat waits on the forge rune")
+	assert(not region_arc_achieved.has("house_name_answered"), "the optional nobility beat stays dark on a save that never took the Lady's card")
+
+	# #384 item 3 -- the W3 (#318) row's OWN GATE. house_name_answered is the
+	# first act_iv beat NOT named by the act's gate and not implied by anything
+	# in it, so its bankable-in-act window is the thing that has to be proven
+	# rather than assumed (the act_iii defect: a beat whose counter can only bank
+	# in an act already left never renders).
+	# Leg 1, POSITIVE: an act_iv-resident save that banks house_answer_given
+	# lights the beat WHILE STILL IN ACT IV. This is the window.
+	var house_mid_iv := WIActs.evaluate(catalog, _ctx(6, 4, {
+		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
+		"house_answer_given": 1,
+	}))
+	var house_mid_achieved: Array = []
+	for beat: Dictionary in house_mid_iv["beats"]:
+		if bool(beat["achieved"]):
+			house_mid_achieved.append(beat["id"])
+	assert(house_mid_iv["id"] == "act_iv" and house_mid_achieved == ["house_name_answered"], "the nobility answer lights house_name_answered in Act IV, on a save holding nothing else Act IV wants")
+	# Leg 2, TRANSITIVITY: banking it must not itself move the act. If it did,
+	# the beat would light and the act would advance in the same evaluation and
+	# the player would never read the line -- act_iii's exact defect.
+	assert(_act_gate(catalog, "act_iv").get("accomplishments", {}).size() == 4, "Act IV's gate is still the four keys -- the nobility thread is a beat, never a gate")
+	var house_only_gate: Dictionary = (_act_gate(catalog, "act_iv").get("accomplishments", {}) as Dictionary)
+	assert(not house_only_gate.has("house_answer_given"), "house_answer_given must NOT join Act IV's gate: an optional side thread cannot hold the main line shut")
+	# Leg 3, THE CHAIN DOES NOT PUSH YOU OUT: every counter the nobility thread
+	# banks short of its terminal leaves the player in Act IV, so the whole chain
+	# fits inside the window rather than only its tail.
+	# THIS IS NOT A NO-STRANDING PROOF, and must not be read as one (review round,
+	# adversarial lens B). The act_iv->act_v gate does NOT name house_answer_given,
+	# so a player who banks the four gate keys BEFORE starting the thread is in
+	# Act V when the terminal banks and never reads the line. Probed 2026-08-04:
+	# the four gate keys + house_answer_given evaluates to act_v, whose beats are
+	# the_descent/the_reading/the_answer -- house_name_answered renders nowhere.
+	# That is the accepted cost of an OPTIONAL beat (acts.json's own _comment says
+	# so out loud); it is deliberately NOT asserted here, because pinning it would
+	# ratify the miss instead of leaving it a live design question.
+	var house_entry_iv := WIActs.evaluate(catalog, _ctx(6, 4, {
+		"reached_liscor": 1, "reached_two_classes": 1, "raskghar_sealed": 1,
+		"setting_commissioned": 1, "house_card_shown": 1, "forged_hand_named": 1,
+		"seal_block_settled": 1,
+	}))
+	assert(house_entry_iv["id"] == "act_iv", "every step of the nobility chain short of its own terminal leaves the player in Act IV -- the beat has a real window, not a one-frame one")
+	# ...and the assertion above is VACUOUS on its own (review round, lens A):
+	# that context holds none of act_iv's four gate keys, so it could not leave
+	# Act IV whatever the chain banked -- delete the four chain keys from it and
+	# it still passes. The property it MEANT to prove is catalog-shaped and is
+	# proven here instead: no step of the nobility chain appears in ANY act's
+	# advance_when, so no step of it can close the window the beat renders in.
+	for chain_key: String in ["setting_commissioned", "house_card_shown", "forged_hand_named", "seal_block_settled", "house_answer_given"]:
+		for act: Dictionary in (catalog["acts"] as Array):
+			var accs: Dictionary = (act.get("advance_when", {}) as Dictionary).get("accomplishments", {})
+			assert(not accs.has(chain_key), "%s must advance no act: a side thread that moves the act line can close its own beat's window" % chain_key)
 
 	# Fix round 1 (controller ruling over plan 7.4): the two region terminals the
 	# pilgrimage does not imply are back in the gate. Transitivity makes them
