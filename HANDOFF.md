@@ -4,6 +4,45 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
+## RUNNING (2026-08-04): v0.19 (wave-2) — "the world answers the hand"
+Plan: `docs/superpowers/plans/2026-08-04-v019-wave2-plan.md` (authoritative).
+Two Fable passes produced it — a spec audit of all 22 milestone issues
+(every claim re-checked against HEAD; four false premises corrected in
+#380 alone; #349 found ~90% already shipped) and a holistic wave shape.
+Each issue carries its audit as a GitHub comment; **where the audit and
+an issue body disagree, the audit wins.**
+
+**Slate: 20 in, 2 cut.** #371 (inn presence) and #388 (map talk_pools)
+moved to the new **v0.20** milestone with rationale + the audit's
+measured scope, so neither is a "deferred to the board" ghost. #348 stays
+an umbrella closing on the K5 discovery playtest; #349 is verify-and-close;
+#385 is Tier-1-only with the Tier-2/3 split FILED at close.
+
+**Phase structure.** Phase 0 (running) = two disjoint worktrees landing
+EVERY `src/core` edit in the wave at once, so phase 1 can fan out six-wide
+over pure data/copy/UI/art. `src/core` is FROZEN for phase 1 — any lane
+needing a seam STOPS and reports (a one-hunk patch lane is cheaper than
+the seam reversal this project has already logged once). Phase 2 = anchored
+merge train L6→L1→L3→L4→L2→L5, then `--import` (new image assets), full
+gates, machine-playtest. Phase 3 = close + tag v0.19.0.
+
+**Landed on main already:** #375 + #370. #375 was stricter than filed —
+the west inn door had ZERO legal approach cells, not "a third blocked";
+`tutorial_flow` now carries a can-fail reachability pin (65/65 crossing
+canonicals green).
+
+**13 rulings made under wave autonomy** (plan §6, all revocable, CHOICE-LOG
+at close). The ones most likely to be overruled: [Ice Floor] ships as
+dual-context on the EXISTING `icy_floor` id rather than a second id with a
+colliding display name; [Durable Picks] deferred (its granting classes
+`miner`/`laborer` do not exist); the Serve economy stays cooking-gated but
+signposted via one `source_hint` seam covering all 21 options; [Rope Work]
+ships under its invented name, pinned by id so a rename is one string.
+**Budget fact everyone had wrong: PixelLab is $1.53 with 0 subscription
+generations left, not ~$2.7.** Pack-first is now mandatory; the bespoke-rig
+art rows cannot be funded and are carried with reasons. A top-up is the one
+genuine user decision in the slate.
+
 ## DONE (2026-08-04): dialogue voice pass — SHIPPED via `voice-pass` branch PR
 All 71 dialogue files de-AI'd per the 2026-08-03 critique. Six waves
 (Fable bible/cards → 36-cluster rewrite → cold-reader detection →
