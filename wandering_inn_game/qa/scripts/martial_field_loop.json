@@ -240,7 +240,7 @@
   { "action": "press_field_skill", "skill": "icy_floor" },
   { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "icy_floor", "context": "exploration" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "terrain_changed", "payload_contains": { "map": "floodplains", "cell": [10, 17], "to": "ice" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Ice Floor] — The spell wants a floor and takes the water instead. Grey ice spreads out from the bank in one long crack, thick enough to stand on. It will not last past your next rest." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Ice Floor] — The spell wants a floor and takes the water instead. Grey ice spreads from the bank in one long crack, thick enough to stand on. It will not last past your next rest." }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "move", "direction": "down", "steps": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [10, 17] },

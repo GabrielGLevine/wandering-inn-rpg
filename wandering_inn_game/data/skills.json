@@ -238,7 +238,7 @@
 			"element": "ice",
 			"icon": "icon_icy_floor",
 			"effect": { "type": "icy_floor", "range": 3, "radius": 1, "duration_rounds": 2, "applies": { "slowed": { "pool_penalty": 2 } } },
-			"freeze_toast": "[Ice Floor] — The spell wants a floor and takes the water instead. Grey ice spreads out from the bank in one long crack, thick enough to stand on. It will not last past your next rest.",
+			"freeze_toast": "[Ice Floor] — The spell wants a floor and takes the water instead. Grey ice spreads from the bank in one long crack, thick enough to stand on. It will not last past your next rest.",
 			"field_ambient": "[Ice Floor] — Frost sheets out across the ground and thins away to nothing. There is no standing water here for it to lock.",
 			"frost_hearth_refusal": "[Ice Floor] — Ice skids over the hot stone and is gone before it can settle. The fire goes on eating.",
 			"frost_person_refusal": "[Ice Floor] — The glaze starts under their boots and you stop it there. Putting someone on their back on ice is a thing you do to an enemy.",
