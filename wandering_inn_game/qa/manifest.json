@@ -2323,6 +2323,7 @@
     ],
     "dialogue": [],
     "systems": [
+     "audio",
      "dialogue",
      "economy",
      "exploration",
@@ -3037,6 +3038,7 @@
     "systems": [
      "audio",
      "input",
+     "night_phase",
      "save",
      "settings"
     ]

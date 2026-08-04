@@ -44,6 +44,18 @@ const READOUT_SELECTION_CLEARANCE := 34.0
 const TOAST_BAND_RESERVE := \
 	-MESSAGE_LAYER_SCRIPT.TOAST_BOTTOM_DEFAULT + MESSAGE_LAYER_SCRIPT.TOAST_PANEL_BASE_SIZE.y
 
+## THE PHASE GLYPH (GH#335 item 5, ruling 10). Three states, day/dusk/night, and
+## NOTHING ELSE: no action count, no fill bar, no "2 moves to dusk". An action
+## clock would render progress-toward, which is refused. What this restores is
+## PARITY: outdoors the mood grade already says the phase out loud, but interiors
+## are phase-invariant (VISUAL-LOG P3), so indoors the player had no read at all.
+## Three DISTINCT SILHOUETTES, never three tints of one shape (2026-08-02 ruling):
+## a rayed disc, a half disc on a horizon line, a crescent.
+const PHASE_GLYPH_SIZE := Vector2(40.0, 40.0)
+const PHASE_GLYPH_GAP := 8.0
+const PHASE_GLYPH_INK := Color(0.16, 0.13, 0.10)
+const PHASE_GLYPHS := {"day": "sun", "dusk": "half_sun", "night": "crescent"}
+
 var _hotbar: WIHotbar
 var _root: Control
 var _readout_panel: PanelContainer
@@ -58,6 +70,10 @@ var _selection_label: Label
 ## `_position_selection_label`; visibility mirrors the label's own in
 ## `_update_selection_label`.
 var _selection_label_backing: Control
+## Parchment plate + the drawn glyph riding on it, left of the slot group.
+var _phase_plate: Control
+var _phase_glyph: PhaseGlyph
+var _phase_glyph_name := ""
 var _field_skills: Array = []
 var _last_slots: Array = []
 var _readout_lines: Array = []
@@ -80,6 +96,7 @@ func _ready() -> void:
 	_root.add_child(_hotbar)
 	_build_readout()
 	_build_toggle()
+	_build_phase_glyph()
 	_selection_label_backing = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
 	_selection_label_backing.name = "SelectionLabelBacking"
 	_selection_label_backing.visible = false
@@ -127,6 +144,39 @@ func _build_toggle() -> void:
 	_toggle_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_toggle_label.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_toggle.add_child(_toggle_label)
+
+
+## The glyph is drawn, not sprited: data/sprites.json is another lane's file
+## every wave, and three vector marks at 40px need no atlas pick to read.
+func _build_phase_glyph() -> void:
+	_phase_plate = UIChrome.make_texture_panel(UIChrome.PARCHMENT_STRIP)
+	_phase_plate.name = "PhaseGlyphPlate"
+	_phase_plate.custom_minimum_size = PHASE_GLYPH_SIZE
+	_phase_plate.size = PHASE_GLYPH_SIZE
+	_phase_plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(_phase_plate)
+	_phase_glyph = PhaseGlyph.new()
+	_phase_glyph.name = "PhaseGlyph"
+	_phase_glyph.ink = PHASE_GLYPH_INK
+	_phase_glyph.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_phase_glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_phase_plate.add_child(_phase_glyph)
+
+
+## Re-reads the sim's own phase and announces it. `reason` is diagnostic only --
+## the payload's contract is `{phase, glyph}` and NOTHING that counts toward the
+## next crossing (opaque-until-sleep, see PHASE_GLYPHS' doc comment).
+func _update_phase_glyph() -> void:
+	if _phase_glyph == null or Game.sim == null:
+		return
+	var phase := String(Game.sim.phase())
+	var glyph := String(PHASE_GLYPHS.get(phase, "sun"))
+	if glyph == _phase_glyph_name:
+		return
+	_phase_glyph_name = glyph
+	_phase_glyph.glyph = glyph
+	_phase_glyph.queue_redraw()
+	ObservableBus.emit_domain_event(WIEvents.UI_PHASE_GLYPH_RENDERED, {"phase": phase, "glyph": glyph})
 
 
 func hotbar_node() -> WIHotbar:
@@ -240,7 +290,14 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 				_expanded = false
 				reason = "prior_waking"
 			_apply_visibility()
+			# Boot/post-load re-announce: `_phase_glyph_name` is process-lifetime
+			# memory and a loaded save can land on a different phase than the run
+			# that built this layer, so clear it before reading.
+			_phase_glyph_name = ""
+			_update_phase_glyph()
 			_render(reason)
+		WIEvents.PHASE_CHANGED:
+			_update_phase_glyph()
 		WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED:
 			_render()
 		WIEvents.COMBAT_STARTED:
@@ -367,6 +424,14 @@ func _layout_controls() -> void:
 		group_width += TOGGLE_GAP + TOGGLE_SIZE.x
 	var group_left := safe.position.x + (safe.size.x - group_width) * 0.5
 	var hotbar_center := group_left + _hotbar.size.x * 0.5
+	if _phase_plate != null:
+		# LEFT of the slot group and OUTSIDE the centring math above: a bar that
+		# grew a slot must not shove the glyph, and the glyph must not shift the
+		# bar off centre. Bottom-aligned with the slot row, never with the taller
+		# Details toggle, so it reads as part of the bar's own baseline.
+		_phase_plate.position = Vector2(
+			group_left - PHASE_GLYPH_GAP - PHASE_GLYPH_SIZE.x,
+			safe.end.y - CONTROLS_BOTTOM_MARGIN - PHASE_GLYPH_SIZE.y)
 	var center_shift := hotbar_center - viewport_size.x * 0.5
 	var safe_bottom := maxf(0.0, viewport_size.y - safe.end.y)
 	_hotbar.offset_left = -_hotbar.size.x * 0.5 + center_shift
@@ -461,3 +526,41 @@ func _collect_field_skills() -> Array:
 	# inside `_render()`'s per-skill loop) to keep both in lockstep -- a
 	# skipped id is skipped everywhere, not just in the visual row.
 	return loadout.filter(func(id: Variant) -> bool: return Game.sim.skills.has(String(id)))
+
+
+## The three phase marks, drawn. SILHOUETTE is the whole disambiguation budget
+## here -- same ink, same plate, three different outlines -- because a shade
+## variant never reads as a separate thing (2026-08-02 ruling) and this glyph is
+## read at a glance in the corner of the eye, not studied.
+##   sun      full disc + eight rays
+##   half_sun half disc sitting ON a horizon rule that overhangs it
+##   crescent disc with a second disc bitten out of its upper right
+class PhaseGlyph extends Control:
+	var glyph := "sun"
+	var ink := Color(0.16, 0.13, 0.10)
+
+	func _draw() -> void:
+		var mid := size * 0.5
+		var r := minf(size.x, size.y) * 0.26
+		match glyph:
+			"half_sun":
+				var base := mid.y + r * 0.55
+				draw_arc(Vector2(mid.x, base), r, PI, TAU, 24, ink, 2.0)
+				draw_line(Vector2(mid.x - r * 2.1, base), Vector2(mid.x + r * 2.1, base), ink, 2.0)
+				for i in 3:
+					var a := PI + PI * (float(i) + 1.0) / 4.0
+					var from := Vector2(mid.x, base) + Vector2(cos(a), sin(a)) * (r * 1.45)
+					var to := Vector2(mid.x, base) + Vector2(cos(a), sin(a)) * (r * 1.95)
+					draw_line(from, to, ink, 1.5)
+			"crescent":
+				# Drawn as a filled disc with a second, offset disc cut out of it
+				# in the PLATE's own colour would need the plate's pixels; the
+				# outline form needs no such read and survives any chrome swap.
+				draw_arc(mid, r * 1.15, PI * 0.32, PI * 1.72, 28, ink, 2.0)
+				draw_arc(mid + Vector2(r * 0.62, -r * 0.20), r * 1.05, PI * 1.30, TAU + PI * 0.42, 24, ink, 1.5)
+			_:
+				draw_arc(mid, r, 0.0, TAU, 28, ink, 2.0)
+				for i in 8:
+					var a := TAU * float(i) / 8.0
+					draw_line(mid + Vector2(cos(a), sin(a)) * (r * 1.4),
+							mid + Vector2(cos(a), sin(a)) * (r * 1.9), ink, 1.5)

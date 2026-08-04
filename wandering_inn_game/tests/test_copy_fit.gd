@@ -126,7 +126,7 @@ func _check_drift_tripwires() -> void:
 	var src := FileAccess.get_file_as_string("res://src/ui/dialogue_panel.gd")
 	assert(src.contains("Vector2(720.0, 232.0)"), "dialogue_panel.gd's PANEL_SIZE literal drifted from the mirrored PANEL_SIZE_X/Y (720.0, 232.0) -- update this test's mirrored consts")
 	var settings_src := FileAccess.get_file_as_string("res://src/ui/settings_panel.gd")
-	assert(settings_src.contains("const HELP_PANEL_SIZE := Vector2(620.0, 530.0)"), "settings_panel.gd's HELP_PANEL_SIZE literal drifted from the mirrored HELP_PANEL_WIDTH (620.0) -- update this test's mirrored consts")
+	assert(settings_src.contains("const HELP_PANEL_SIZE := Vector2(620.0, 680.0)"), "settings_panel.gd's HELP_PANEL_SIZE literal drifted from the mirrored HELP_PANEL_WIDTH (620.0) -- update this test's mirrored consts")
 	assert(settings_src.contains("const HELP_TEXT_WIDTH := HELP_PANEL_SIZE.x - 52.0"), "settings_panel.gd's HELP_TEXT_WIDTH derivation drifted from the mirrored HELP_TEXT_WIDTH (HELP_PANEL_WIDTH - 52.0) -- update this test's mirrored const")
 
 

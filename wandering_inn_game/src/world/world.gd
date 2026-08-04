@@ -227,6 +227,9 @@ var _vignette: ColorRect
 ## in `_rebuild_field`) -- it is field furniture, not a persistent overlay.
 var _affordance_cursor: Node2D
 var _affordance_time := 0.0
+## Last payload UI_AFFORDANCE_RENDERED announced, so the emit is a TRANSITION
+## and not a per-reconcile spam (see `_emit_affordance_rendered`).
+var _affordance_state: Dictionary = {}
 ## The single pooled action-tell emitter (see `_spawn_action_pip`). Field
 ## furniture like `_affordance_cursor`: nulled in `_rebuild_field`, rebuilt on
 ## the next press.
@@ -596,13 +599,30 @@ func _reconcile_faced_affordance() -> void:
 	# A conversation owns the screen; a bracket under an open dialogue panel is
 	# noise pointing at the thing you are already talking to. Combat is covered
 	# by `_field_root.visible = false` and needs no arm of its own.
-	var showing := Game.sim.dialogue == null and not Game.sim.entity_at(cell).is_empty()
+	var faced: Dictionary = Game.sim.entity_at(cell)
+	var showing := Game.sim.dialogue == null and not faced.is_empty()
 	_affordance_cursor.visible = showing
+	_emit_affordance_rendered(showing, cell, String(faced.get("id", "")) if showing else "")
 	if not showing:
 		return
 	_affordance_cursor.position = Vector2(cell) * CELL
 	if not _affordance_pulsing():
 		_affordance_cursor.modulate.a = AFFORDANCE_ALPHA_MAX
+
+
+## The bracket's ONLY headless-visible trace (v0.19 L5, GH#335 item 2's QA-first
+## bar). Emitted on TRANSITIONS only: `_reconcile_faced_affordance` runs on ten
+## event types plus every field rebuild and most of those leave the answer
+## byte-identical, so a per-call emit would bury the real changes under a wall
+## and make `assert_event_count` useless. `_affordance_state` is presentation
+## memory, reset with the rest of the field furniture in `_rebuild_field` so a
+## map crossing re-announces rather than deduping against the old map's cell.
+func _emit_affordance_rendered(showing: bool, cell: Vector2i, entity_id: String) -> void:
+	var state := {"showing": showing, "cell": [cell.x, cell.y], "entity": entity_id}
+	if state == _affordance_state:
+		return
+	_affordance_state = state
+	ObservableBus.emit_domain_event(WIEvents.UI_AFFORDANCE_RENDERED, state.duplicate(true))
 
 
 ## Pulse is suppressed under reduce-motion AND under any driven run
@@ -762,6 +782,9 @@ func _rebuild_field() -> void:
 	# GH#335: field furniture, freed with everything else above -- the
 	# end-of-rebuild reconcile rebuilds it against the new map.
 	_affordance_cursor = null
+	# ...and its announced state with it: the same faced cell on a DIFFERENT map
+	# is a different answer, so the dedup memory must not survive the crossing.
+	_affordance_state = {}
 	# Same discipline for the pooled action pip and the water overlay's
 	# material: both hang off `_field_root`'s children, which were just queued
 	# for free, so the references must not outlive them.

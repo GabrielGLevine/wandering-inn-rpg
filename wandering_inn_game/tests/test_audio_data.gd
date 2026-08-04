@@ -66,6 +66,9 @@ const KNOWN_EVENTS: Dictionary = {
 	"player_blocked": true,
 	"skill_no_effect": true,
 	"class_evolved": true,
+	# v019-L5 (GH#335 item 4, the row the v0.19 audit found still missing):
+	# `accomplishment_recorded` at count:1 -- the first bank of any counter.
+	"accomplishment_recorded": true,
 }
 
 const REQUIRED_IDS: Array[String] = [

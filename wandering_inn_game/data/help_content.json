@@ -1,5 +1,5 @@
 {
- "_comment": "DATA not code -- content = data + code convention (CLAUDE.md).",
+ "_comment": "DATA not code (CLAUDE.md). Section count pinned by settings_loop; each body capped at 3 wrapped lines by test_copy_fit.",
  "sections": [
   {
    "heading": "Classes & Levels",
@@ -10,12 +10,24 @@
    "body": "Skills never trigger themselves. The field bar opens with names and effects; use its Details control to show or hide that readout."
   },
   {
+   "heading": "Resonance",
+   "body": "Attuned gear hums, and you can only wear so much of that hum at once — that is Resonance. It grows as the Door's own story does, and worn pieces show what each one costs you."
+  },
+  {
    "heading": "The Boards",
    "body": "The Request Board and the Runner's Guild board post bounties and deliveries — accept first, then only what you do after counts. The Notice Wall posts rumors and notices — leads turn up on every board."
   },
   {
    "heading": "Sleep",
    "body": "Sleep is when it lands — classes, level-ups, and evolutions resolve overnight. The boards can turn over, and the day begins again."
+  },
+  {
+   "heading": "Difficulty",
+   "body": "It changes one thing: how hard a hit lands on you. Enemy strength, accuracy and fight shape are the same at every rung, and you can move it any time."
+  },
+  {
+   "heading": "Quest Hints",
+   "body": "On, the journal adds a pointer line under each quest. Off, quests read as written and the next step is yours to find."
   },
   {
    "heading": "Saving",

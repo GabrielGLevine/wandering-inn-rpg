@@ -18,6 +18,13 @@ const UNAFFORDABLE_MODULATE := Color(0.55, 0.55, 0.55, 1.0)
 const AP_PIP_COLOR := Color(0.05, 0.05, 0.05)
 const MP_DIAMOND_COLOR := Color(0.1, 0.2, 0.6)
 const COOLDOWN_BADGE_COLOR := Color(0.55, 0.12, 0.08)
+const COOLDOWN_BADGE_RIM := Color(0.98, 0.86, 0.62)
+const COOLDOWN_BADGE_INK := Color(0.99, 0.95, 0.88)
+const COOLDOWN_BADGE_SIZE := 16.0
+const COOLDOWN_BADGE_FONT_PX := 11
+## The key-hint numeral's own ink. The theme default is dark, and the carved
+## slot frame it sits on is dark -- see `_make_slot`'s key-hint block.
+const KEY_HINT_COLOR := Color(0.98, 0.93, 0.80)
 
 ## Issue #57: a left-click on a rendered slot activates it EXACTLY as its
 ## number key -- callers (field_hotbar.gd/combat_screen.gd, via combat_hud.gd)
@@ -138,11 +145,18 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 		text_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		root.add_child(text_label)
 
+	# GH#386: the key number is the slot's ONLY "press this" cue once details are
+	# hidden, and a 1-slot bar is the BOOT state -- the first session is exactly
+	# the one that read numberless. Given an explicit rect and explicit ink so it
+	# cannot be a zero-width label or a dark-on-dark glyph on the carved frame.
 	var key_hint := String(slot.get("key_hint", ""))
 	if key_hint != "":
 		var key_label := UIChrome.make_label("", "Small")
 		key_label.text = key_hint
 		key_label.position = Vector2(4, 1)
+		key_label.custom_minimum_size = Vector2(14, 14)
+		key_label.size = Vector2(14, 14)
+		key_label.add_theme_color_override("font_color", KEY_HINT_COLOR)
 		key_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		root.add_child(key_label)
 
@@ -168,14 +182,41 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 		mp_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		root.add_child(mp_label)
 
+	# THE COOLDOWN BADGE (GH#337, fixed under GH#386's badge trio). It used to be
+	# a bare numeral at the chip's top-RIGHT, twin in size and weight to the key
+	# numeral at its top-LEFT and with no legend anywhere -- two numbers on one
+	# 52px chip, one meaning "press me", the other meaning "you cannot". A
+	# SHAPE + a COLOUR carry it now, never colour alone (2026-08-02 ruling): a
+	# filled ring the numeral sits inside, so the badge reads as a badge at a
+	# glance and the key number keeps the only bare numeral on the chip.
 	var cd_left := int(slot.get("cooldown_remaining", 0))
 	if cd_left > 0:
-		var cd_label := Label.new()
-		cd_label.text = str(cd_left)
-		cd_label.position = Vector2(SLOT_SIZE.x - 14, 1)
-		cd_label.add_theme_font_size_override("font_size", 10)
-		cd_label.add_theme_color_override("font_color", COOLDOWN_BADGE_COLOR)
-		cd_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		root.add_child(cd_label)
+		var badge := CooldownBadge.new()
+		badge.rounds = cd_left
+		badge.position = Vector2(SLOT_SIZE.x - COOLDOWN_BADGE_SIZE - 2.0, 2.0)
+		badge.custom_minimum_size = Vector2(COOLDOWN_BADGE_SIZE, COOLDOWN_BADGE_SIZE)
+		badge.size = Vector2(COOLDOWN_BADGE_SIZE, COOLDOWN_BADGE_SIZE)
+		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		root.add_child(badge)
 
 	return root
+
+
+## The cooling-slot badge: a filled disc with a rim, the remaining-round count
+## centred inside it. Drawn rather than labelled so the SHAPE does the work at
+## 52px and the numeral inside it can never be mistaken for the key hint on the
+## opposite corner. Font size is fixed on purpose -- this glyph has to stay
+## inside a fixed 16px disc at every Text Scale rung.
+class CooldownBadge extends Control:
+	var rounds := 0
+
+	func _draw() -> void:
+		var mid := size * 0.5
+		var r := size.x * 0.5
+		draw_circle(mid, r, WIHotbar.COOLDOWN_BADGE_COLOR)
+		draw_arc(mid, r - 0.5, 0.0, TAU, 20, WIHotbar.COOLDOWN_BADGE_RIM, 1.0)
+		var font := ThemeDB.get_fallback_font()
+		var text := str(rounds)
+		var extents := font.get_string_size(text, HORIZONTAL_ALIGNMENT_CENTER, -1.0, COOLDOWN_BADGE_FONT_PX)
+		draw_string(font, mid + Vector2(-extents.x * 0.5, extents.y * 0.34), text,
+				HORIZONTAL_ALIGNMENT_LEFT, -1.0, COOLDOWN_BADGE_FONT_PX, WIHotbar.COOLDOWN_BADGE_INK)
