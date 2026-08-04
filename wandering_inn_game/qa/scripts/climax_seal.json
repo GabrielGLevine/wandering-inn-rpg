@@ -148,7 +148,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== JOURNAL: Act IV ==. raskghar_sealed clears Act III's whole gate on its own (2026-07-26 reframe: the door is no longer part of it), so WIActs walks the fixture -- which already satisfies Act I+II -- straight through to Act IV. The journal act-line header reads Act IV. act_beat_lines is the SPOILER PIN (v0.15 A1): the player stands at Act IV's door having earned none of its seven beats, so every row must be a '·' OPENING -- an outcome line here would be the itinerary leak this wave closes. Whole-list match: re-pin from a run if the copy is polished.",
+   "_comment": "== JOURNAL: Act IV ==. raskghar_sealed clears Act III's whole gate on its own (2026-07-26 reframe: the door is no longer part of it), so WIActs walks the fixture -- which already satisfies Act I+II -- straight through to Act IV. The journal act-line header reads Act IV. act_beat_lines is the SPOILER PIN (v0.15 A1): the player stands at Act IV's door having earned none of its eight beats (#384 item 3 added the eighth, house_name_answered), so every row must be a '·' OPENING -- an outcome line here would be the itinerary leak this wave closes. Whole-list match: re-pin from a run if the copy is polished.",
    "action": "press",
    "name": "journal"
   },

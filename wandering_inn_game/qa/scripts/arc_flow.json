@@ -819,7 +819,7 @@
    "equals": 1
   },
   {
-   "_comment": "== THE SEAM, BEFORE THE SLEEP ==. The seal ends Act III's only quest thread, so this page carries a header, four Completed lines and 'No quests in progress.'. act_beat_lines (v0.15 A1): the player stands at Act IV's door having earned none of its seven beats, so every row is a '·' OPENING -- an outcome line here is the itinerary leak. lead_lines is EMPTY BY DESIGN (v0.15 A2): Olesm's survey option unlocks on post_game, which banks at the first sleep AFTER the seal, so a lead gated on raskghar_sealed would point at a hidden option for one whole waking. This exact-[] pin IS the refusal-window guard. Whole-list matches -- re-pin from a run if the copy is polished.",
+   "_comment": "== THE SEAM, BEFORE THE SLEEP ==. The seal ends Act III's only quest thread, so this page carries a header, four Completed lines and 'No quests in progress.'. act_beat_lines (v0.15 A1): the player stands at Act IV's door having earned none of its eight beats (#384 item 3 added the eighth, house_name_answered), so every row is a '·' OPENING -- an outcome line here is the itinerary leak. lead_lines is EMPTY BY DESIGN (v0.15 A2): Olesm's survey option unlocks on post_game, which banks at the first sleep AFTER the seal, so a lead gated on raskghar_sealed would point at a hidden option for one whole waking. This exact-[] pin IS the refusal-window guard. Whole-list matches -- re-pin from a run if the copy is polished.",
    "action": "press",
    "name": "journal"
   },
