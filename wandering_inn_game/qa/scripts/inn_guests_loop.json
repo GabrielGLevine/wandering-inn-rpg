@@ -194,7 +194,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== KRSHIA: the other half of the on-shift pair, register-pure == her seat is (4,6), unchanged since PR1. Approach from (4,5) directly above it; the hot_meal is spent, so her Serve renders VISIBLE-LOCKED rather than hidden -- an item gate is a grey tease, not a secret. GH#378 arm 1: the greyed suffix now carries items.json's `source_hint` as its second clause ('requires Hot Meal — the stew pot, if you cook'), so the locked option itself says where a bowl comes from and who can make one. This is one of the SEVEN pins across six scripts that hold that string verbatim -- re-derive all seven together if the hint is ever reworded -- and the stall topic is therefore visible option 2.",
+   "_comment": "== KRSHIA: the other half of the on-shift pair, register-pure == her seat is (4,6), unchanged since PR1. Approach from (4,5) directly above it; the hot_meal is spent, so her Serve renders VISIBLE-LOCKED rather than hidden -- an item gate is a grey tease, not a secret. GH#378 arm 1: the greyed suffix now carries items.json's `source_hint` as its second clause ('requires Hot Meal — the stew pot, if you cook'), so the locked option itself says where a bowl comes from and who can make one. This is one of SEVEN pins across FOUR scripts that hold that string verbatim (inn_guests_loop x3, inn_guests_ext_loop x2, inn_guests_full_loop x1, work_loop x1) -- re-derive all seven together if the hint is ever reworded -- and the stall topic is therefore visible option 2.",
    "action": "click",
    "cell": [
     4,
