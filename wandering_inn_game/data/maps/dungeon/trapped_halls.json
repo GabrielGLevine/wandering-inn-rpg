@@ -685,7 +685,7 @@
     }
    },
    "requires_skill": "greater_strength",
-   "observe": "One slab off the ceiling, come down whole and standing on its edge across the gap in the wall. It is not wedged. It is only heavy.",
+   "observe": "One slab off the ceiling, come down whole and standing on its edge across the gap in the wall. Its own weight is the only thing holding it there.",
    "locked_toast": "You get both hands under the edge and pull until your eyes swim. It rocks an inch and settles back. Heavier than you.",
    "skill_hint_toast": "Hauling at it idly will not do it. Setting your shoulder to it properly might.",
    "on_skill_use": {
