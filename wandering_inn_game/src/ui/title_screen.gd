@@ -24,6 +24,11 @@ const PLAYTEST_FIXTURE_ORDER: Array[String] = [
 	"portal_menu_start", "near_ruin", "near_garden", "garden_unlocked", "deep_descent_start",
 	"climax_surface_start", "climax_sealed_start", "near_act3",
 	"near_mixer",
+	# v0.19 close. `martial_field_armed` is the wave's MARQUEE read: the five
+	# martial verbs plus [Ice Floor] in one hand, on the floodplains, where the
+	# unsteady chute and the carcass both are. `sewers_property_seams` is the
+	# mage half of the same sentence -- freeze, cross, thaw, kindle, clean.
+	"martial_field_armed", "martial_field_start", "sewers_property_seams",
 ]
 const PLAYTEST_PAGE_SIZE := 10
 const NEW_GAME_CONFIRM_ROWS := ["No", "Yes"]
