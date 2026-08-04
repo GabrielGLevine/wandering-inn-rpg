@@ -11,7 +11,7 @@
    17
   ]
  ],
- "_comment_unsteady": "[Even Footing] chute up the east outcrop. (31,4)-(31,6) were ALREADY blocked, so blocked_cells and every route are unchanged; holder saves 2 steps (6->4 to (30,6)); (31,6) is holder-only. Pebble-dressed: scree, not masonry. NOT the pond -- a warrior on open water reads wrong.",
+ "_comment_unsteady": "[Even Footing] chute up the east outcrop. (31,4)-(31,6) were ALREADY blocked, so blocked_cells and every route are unchanged. Scree-dressed, not masonry. NOT the pond -- a warrior on open water reads wrong.",
  "unsteady": [
   [
    31,

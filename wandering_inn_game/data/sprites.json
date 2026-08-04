@@ -544,7 +544,7 @@
   }
  },
  "cauldron": {
-  "_comment": "Kitchen HERO pot (stew_pot). TRAP: three skill-gated stations share that row -- keep three SILHOUETTES (round pot / flat-topped box / pot on a hook), never one sprite under three tints. The tint predicted nothing: a cooking PC read the kettle dead, a witch PC the reverse.",
+  "_comment": "Kitchen HERO pot (stew_pot). TRAP: three skill-gated stations share that row -- keep three SILHOUETTES (round pot / flat-topped box / pot on a hook), never one sprite under three tints. The tint predicted nothing for either build.",
   "render_scale": 0.4,
   "anchor": [
    0.5,
@@ -638,7 +638,7 @@
   }
  },
  "bed": {
-  "_comment": "Tight bed bbox (headboard, pillow, quilt, footboard). TRAP: scale is a legibility floor, not taste -- 34x44@0.375 rendered 11x20px, the pillow collapsed to 3px, and two blind playtests slept on the chest instead. Cold-read at 1x against `chest` before lowering it.",
+  "_comment": "Tight bed bbox (headboard, pillow, quilt, footboard). TRAP: scale is a legibility floor, not taste -- 34x44@0.375 rendered 11x20px, the pillow collapsed to 3px, and two blind playtests slept on the chest. Cold-read at 1x against `chest`.",
   "animations": {
    "idle": {
     "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
@@ -657,7 +657,7 @@
   },
   "render_scale": 0.55,
   "shadow": true,
-  "_comment_ysort": "Covers all six beds/cots. TRAP: 0.55 makes the art 1.86 cells tall, overhanging the cell NORTH; bias 0 amputated a PC standing there (riverfarm_guest_cot (8,4), garden_bed (11,4) have walkable north cells). -32 = the `stairs_up` remedy, NOT -16 (ties the approach key) and never positive (paints over the fronting player).",
+  "_comment_ysort": "Covers all six beds/cots. TRAP: 0.55 makes the art 1.86 cells tall, overhanging the cell NORTH, and bias 0 amputated a PC standing there (riverfarm_guest_cot (8,4), garden_bed (11,4) have walkable north cells). -32 is the `stairs_up` remedy; NOT -16 (ties the approach key), never positive.",
   "field_y_sort_bias_px": -32.0
  },
  "door": {
@@ -4648,7 +4648,7 @@
   }
  },
  "grimalkin": {
-  "_comment": "Side mirrors west; diagonals parked. TRAP: measure the FIGURE, not the frame -- 49.1px (106 rows x 0.463) = 1.25x Relc, which is canon's 'bigger than Relc'; the 2.3x once logged was frame height. What crowds the inn is his 2.89-cell WIDTH (Relc 1.82); no scale fixes aspect.",
+  "_comment": "Side mirrors west; diagonals parked. TRAP: measure the FIGURE, not the frame -- 49.1px = 1.25x Relc, i.e. canon's 'bigger than Relc'; the 2.3x once logged was frame height. What crowds the inn is his 2.89-cell WIDTH (Relc 1.82); no scale fixes aspect.",
   "directional": true,
   "render_scale": 0.463,
   "animations": {
@@ -5401,7 +5401,7 @@
   }
  },
  "city_gatehouse": {
-  "_comment": "Native 192x128 at 0.5 = 6x4 cells centred on gate cell 31 x row 25 -- monumental on purpose (great_lift precedent); towers overlap the curtain wall, arch reads ~1.5 cells. Anchor MEASURED from alpha bbox (28,14,170,118) so the base sits on the wall line.",
+  "_comment": "Native 192x128 at 0.5 = 6x4 cells on gate cell 31 x row 25 -- monumental on purpose (great_lift precedent); arch reads ~1.5 cells. Anchor MEASURED from alpha bbox (28,14,170,118) so the base sits on the wall line.",
   "render_scale": 0.5,
   "shadow": true,
   "anchor": [

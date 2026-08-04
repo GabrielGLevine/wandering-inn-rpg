@@ -4,7 +4,7 @@
   "width": 20,
   "height": 14
  },
- "_comment_gallery": "THE NORTH GALLERY: x14-19 y0-2, sealed by these six cells plus (13,0)/(13,1)/(16,3). Two ways in, neither a spell: [Rope Work] rigs the drop, [Greater Strength] shifts the slab. Rows 0-4 is the only quadrant no QA route walks; blocked_cells 6 -> 12 and sprites 13 -> 17 re-pin dungeon_peek.",
+ "_comment_gallery": "NORTH GALLERY x14-19 y0-2, sealed by these six + (13,0)/(13,1)/(16,3). Two ways in, neither a spell: [Rope Work] rigs the drop, [Greater Strength] shifts the slab. Rows 0-4 is the only quadrant no QA route walks; blocked_cells 6->12, sprites 13->17 re-pin dungeon_peek.",
  "blocked": [
   [
    5,

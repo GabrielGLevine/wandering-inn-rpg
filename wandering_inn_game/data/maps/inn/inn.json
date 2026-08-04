@@ -1343,7 +1343,7 @@
     2
    ],
    "display_name": "Hearth-Side Kettle",
-   "sprite": "witch_cauldron",
+   "sprite": "witch_kettle_hook",
    "requires_skill": "hedge_remedy",
    "requires_item": "dried_yarrow_bundle",
    "item_hint_toast": "The kettle wants yarrow before it gives anything back.",
@@ -1355,7 +1355,7 @@
     "remove_item": "dried_yarrow_bundle",
     "toast": "[Hedge Remedy] — The inn's kettle does in a pinch, just like she said. The steam settles into something kinder."
    },
-   "_comment": "GH#131 review-CI fix: moved off (2,2) -- test_sim_core walks it. (6,2) is a blocked kitchen-counter cell (the #116 dress-a-blocked-cell pattern); approach (6,3), facing up, which test_sim_core itself asserts open. v0.16.1 #6: same ingredient gate as eloise_cauldron, the other remedy_draught arm (see its _comment). GH#378 arm 2: the v0.16.1 #26 green-blue tint is GONE -- pure identity-signal; PR #344's bespoke `witch_cauldron` already carries it."
+   "_comment": "GH#131: on (6,2), a blocked kitchen-counter cell (#116 dress-a-blocked-cell); approach (6,3) facing up, which test_sim_core asserts open. NOT (2,2) -- test_sim_core walks it. Same ingredient gate as eloise_cauldron. GH#378 arm 2: kettle-on-a-crane, the row's only vertical silhouette; tint retired."
   },
   {
    "id": "inn_chef_counter",
@@ -1410,12 +1410,7 @@
     "item": "hot_meal",
     "toast": "[Basic Cooking] — The stew comes out rich and hot."
    },
-   "tint": [
-    1.15,
-    0.78,
-    0.5
-   ],
-   "_comment": "The HERO cauldron; keeps `cauldron` (GH#378 arm-2 ruling). TWO props share it now, not three -- the kettle took `witch_cauldron` at PR #344. The rest is stew_pot vs short_order (1,1): one sprite, one gate, one yields a bowl and one nothing, split by tint alone. TINT HELD, NOT KEPT -- it goes when L4's flat-top range sprite lands; dropping it first leaves two identical iron pots, worse than the tint. THE SWAP: delete both tint blocks, repoint short_order's `sprite`. `render_scale` here is a DEAD FIELD, so the answer is art."
+   "_comment": "The kitchen HERO pot; keeps `cauldron`. Tint RETIRED (GH#378 arm 2) now that short_order and inn_witch_kettle carry their own silhouettes -- tint is not disambiguation. `render_scale` here is a DEAD FIELD."
   },
   {
    "id": "short_order",
@@ -1425,7 +1420,7 @@
     1
    ],
    "display_name": "Short-Order Pot",
-   "sprite": "cauldron",
+   "sprite": "short_order_range",
    "requires_skill": "basic_cooking",
    "skill_hint_toast": "Three plates ordered, one pot of stock. You could stretch it to cover them all. Nothing leaves the kitchen in your hands.",
    "locked_toast": "The order's a mess and you haven't the first idea how to stretch it. Not yet.",
@@ -1433,12 +1428,7 @@
     "accomplishment": "stretched_the_order",
     "toast": "[Basic Cooking] — You thin the stock, fold in day-old bread, and stretch the short order into a full service. Lyonette's shortfall vanishes into the pot."
    },
-   "tint": [
-    0.62,
-    0.66,
-    0.72
-   ],
-   "_comment": "GH#378 arm-2 fold-in: `skill_hint_toast` states the no-yield outcome up front. Same sprite and gate as stew_pot (4,1) but no `item` in the arm -- press it on the art's word and you bank a stretch with an empty pack. It was this prop's one unpinned string; work_loop beat 6b.5 pins it. The other two stay verbatim (wrong_order_loop.json pins them). Tint held, see stew_pot. The new sprite must NOT be `grill` -- inn_copper_pan (5,2) wears it, decor has a second at (3,2)."
+   "_comment": "GH#378 arm 2: its OWN silhouette (flat hotplate + firebox), so the kitchen's three skill-gated stations stop being one sprite under three tints. `skill_hint_toast` states the no-yield outcome up front -- same gate as stew_pot (4,1), no `item` in the arm. work_loop 6b.5 pins it; the other two stay verbatim (wrong_order_loop)."
   },
   {
    "id": "stairs_up",

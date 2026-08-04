@@ -540,7 +540,7 @@
    "cooldown_ms": 200
   },
   {
-   "_comment": "v0.19 L5 distinct-sting audit (GH#335 item 4): this row and `level_up` were BYTE-IDENTICAL -- same wav, same level, no pitch -- so a new class and a level in a class you already had sounded the same at the one beat the game asks you to notice the difference. The three progression stings are a pitch LADDER now, descending with the size of the beat: level_up 1.0, class_gained 0.88, class_evolved 0.78.",
+   "_comment": "GH#335 item 4. The three progression stings are a pitch LADDER, descending with the beat's size: level_up 1.0, class_gained 0.88, class_evolved 0.78. They shared one wav at one pitch before.",
    "id": "class_gained",
    "event": "class_gained",
    "stream": "res://assets/audio/sfx/level_up.wav",
@@ -659,7 +659,7 @@
    "cooldown_ms": 200
   },
   {
-   "_comment": "v0.19 L5 anchor (GH#335 item 4). Non-quest, non-class banks were the last silent completion. GATED count:1 -- the FIRST bank of a counter, which also stops a per-hit combat tally (melee_hit) machine-gunning it. Distinct by stream AND pitch: save_chime fires only on the literal Game saved. toast, so nothing overlaps it in the world.",
+   "_comment": "GH#335 item 4: non-quest, non-class banks were the last silent completion. GATED count:1 -- first bank only, which also stops a per-hit tally (melee_hit) machine-gunning it. Distinct by stream and pitch.",
    "id": "accomplishment_noted",
    "event": "accomplishment_recorded",
    "payload": {

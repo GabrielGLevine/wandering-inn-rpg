@@ -328,7 +328,7 @@
 			"lore": "Drakes fish the pond in fair weather and swear off it every winter, when the water starts moving wrong. The line-sellers do their best business in spring, replacing gear that was 'lost.'"
 		},
 		{
-			"_comment": "GH#378 arm 1: signposts the cooking gate at all 21 Serve options at once. TRAP: test_copy_fit measures the 664px no-autowrap option row at fs14 ONLY (22px spare); at 115%/130% text scale all 21 rows run 59-162px over and the hint clips. No wording fits fs18.",
+			"_comment": "GH#378 arm 1: signposts the cooking gate at all 21 Serve options at once. TRAP: test_copy_fit measures the option row at fs14 ONLY (22px spare); at 115%/130% scale every row ran 59-162px over until dialogue_panel gained autowrap. No wording fits fs18.",
 			"id": "hot_meal",
 			"name": "Hot Meal",
 			"kind": "meal",
