@@ -170,16 +170,7 @@
    "timeout_sec": 5
   },
   {
-   "action": "press",
-   "name": "cancel"
-  },
-  {
-   "action": "assert_state",
-   "path": "combat.combatants.pc.ap",
-   "equals": 4
-  },
-  {
-   "_comment": "ONBOARDING O5 re-route: relc (ally) reliably holds its (2,4) spawn (turn order puts it after the pc, so it never vacates), so the pc's manual demo now goes NORTH/WEST -- (2,3)->up(2,2)->left(1,2)->up(1,1) -- all clear of relc and of the eastbound goblins. Direct arrow movement: one pool point per step, no Move mode.",
+   "_comment": "== GH#373: THE EMPTY-TARGET ESCAPE ==. The step above already established the trap state exactly: targeting is armed with an EMPTY candidate list (`cells` empty, no enemy in reach at the opening cell). There, cycle and confirm are both gated off and every other key fell through to a numbered slot that does not exist -- Esc was the only exit, and three blind playtests read that as a hang. A move press now cancels targeting AND takes the step in one beat: the pc leaves (2,3) for (2,2), spending one pool point exactly as an arrow from the resting bar would. This REPLACES the bare Esc cancel that used to sit here: same net cell, same untouched AP, one keypress instead of two, so every later cell/state assertion in this script is unchanged.",
    "action": "press",
    "name": "move_up"
   },
@@ -196,11 +187,38 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "A real move-pool step, not a free escape hatch: the pool is one down.",
    "action": "assert_state",
    "path": "combat.combatants.pc.move_pool",
    "equals": 2
   },
   {
+   "_comment": "And leaving targeting this way still costs no AP -- the same contract the Esc cancel had.",
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "_comment": "THE MODE HALF, which 'a move happened' does not prove on its own. pause_menu._can_open() refuses to open mid-combat unless combat_screen.is_resting() -- which is literally `_mode == Mode.HOTBAR` -- so an Esc that OPENS the pause menu here is the strongest mode proof the bus exposes (nothing emits on leaving targeting). Under the old swallow-everything behaviour this Esc would have cancelled targeting instead and no pause event would ever fire. Open it, close it: pause spends no AP, no move pool and no action tally, so the route below resumes untouched.",
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "ONBOARDING O5 re-route: relc (ally) reliably holds its (2,4) spawn (turn order puts it after the pc, so it never vacates), so the pc's manual demo goes NORTH/WEST -- (2,3)->up(2,2)->left(1,2)->up(1,1) -- all clear of relc and of the eastbound goblins. Direct arrow movement: one pool point per step, no Move mode. The first leg of that route is now the GH#373 escape step above, which is an ordinary pool step in every respect that matters here.",
    "action": "press",
    "name": "move_left"
   },

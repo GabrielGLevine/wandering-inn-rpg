@@ -1034,11 +1034,45 @@ func _input_target(event: InputEvent) -> void:
 		_confirm_targeted_action()
 		get_viewport().set_input_as_handled()
 	else:
-		var numbered := _numbered_slot_pressed(event)
-		if numbered >= 0:
-			_switch_bar_slot(numbered)
+		# GH#373: the empty-target trap's keyboard exit. `targeting_controller`'s
+		# enter() has no empty-list bail -- Attack with nothing in reach parks
+		# this mode with `_targets == []`, where cycle and confirm are both gated
+		# off above and every other key falls through to a numbered slot that
+		# does not exist. Esc was the only way out, and three blind playtests
+		# read that as a hang. TOUCH already had the exit (a tap that misses
+		# every candidate returns false from select_at_cell and the caller reads
+		# it as cancel); this restores the keyboard half of that asymmetry.
+		# SCOPED TO THE EMPTY LIST ON PURPOSE: with a real candidate present,
+		# arrows are plausibly aim-adjacent muscle memory, so they stay inert
+		# rather than walking the actor off its own firing line.
+		var escape_dir := _move_dir_pressed(event)
+		if escape_dir != Vector2i.ZERO and not _targeting.has_valid_target():
+			_cancel_targeting()
+			_move_active_or_bump(escape_dir)
 			get_viewport().set_input_as_handled()
+		else:
+			var numbered := _numbered_slot_pressed(event)
+			if numbered >= 0:
+				_switch_bar_slot(numbered)
+				get_viewport().set_input_as_handled()
 	_refresh()
+
+
+## The four `move_*` actions as one direction, `Vector2i.ZERO` for "not a move
+## press" (no real direction is zero, so the sentinel can never collide).
+## Deliberately NOT folded back into `_input_hotbar`'s own elif chain: that
+## chain is the shipped resting-mode dispatch order and a rewrite of it buys
+## nothing here.
+func _move_dir_pressed(event: InputEvent) -> Vector2i:
+	if event.is_action_pressed("move_up"):
+		return Vector2i.UP
+	if event.is_action_pressed("move_down"):
+		return Vector2i.DOWN
+	if event.is_action_pressed("move_left"):
+		return Vector2i.LEFT
+	if event.is_action_pressed("move_right"):
+		return Vector2i.RIGHT
+	return Vector2i.ZERO
 
 
 ## Executes `_targeting.confirm()`'s returned action -- verbatim body of the
