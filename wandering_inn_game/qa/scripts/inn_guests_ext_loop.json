@@ -531,7 +531,7 @@
    "equals": 5
   },
   {
-   "_comment": "== WILOVAN ARRIVED == his chair is (12,6), directly under Rags's, the same vertical stack the shipped pisces (6,5)/selys (6,6) pair already runs. Approach from (11,6), plain floor west of it. Both bowls are spent, so his Serve renders VISIBLE-LOCKED ('requires Hot Meal') in slot 1 on BOTH nodes.",
+   "_comment": "== WILOVAN ARRIVED == his chair is (12,6), directly under Rags's, the same vertical stack the shipped pisces (6,5)/selys (6,6) pair already runs. Approach from (11,6), plain floor west of it. Both bowls are spent, so his Serve renders VISIBLE-LOCKED in slot 1 on BOTH nodes, carrying GH#378's signposted suffix ('requires Hot Meal — the stew pot, if you cook') -- pinned on both, because a per-NODE regression is exactly what a shared item gate can hide.",
    "action": "click",
    "cell": [
     11,
@@ -574,7 +574,7 @@
      {
       "text": "Bring him a bowl from the kitchen. (Serve)",
       "locked": true,
-      "requirement": "requires Hot Meal"
+      "requirement": "requires Hot Meal — the stew pot, if you cook"
      },
      {
       "text": "\"No business at all?\"",
@@ -759,7 +759,7 @@
      {
       "text": "Set a full bowl down in front of him. (Serve)",
       "locked": true,
-      "requirement": "requires Hot Meal"
+      "requirement": "requires Hot Meal — the stew pot, if you cook"
      },
      {
       "text": "\"Two hours is light?\"",
