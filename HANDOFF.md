@@ -30,6 +30,41 @@ Unrelated: filed #370 (Relc front-on first meeting), #371 (inn
 one-party-at-a-time canonical groups), #372 (Floodplains
 tutorializing defeat text) from user playtest notes.
 
+### Blind machine-playtest triage (2026-08-03) — #373-#379 filed, user takes next wave
+Four blind browser-agent reports (v0.16.1, 2026-08-02 + three legs
+2026-08-03). Every claim re-verified against HEAD before filing; the
+already-fixed and the agent-artifact halves were dropped, not filed.
+**#373 (blocker, S, successor-ready)** — combat's empty-target mode is
+sticky: `_input_target` (combat_screen.gd:1017-1032) swallows movement
+actions and `targeting_controller.enter()` never auto-cancels on an empty
+candidate list, so Attack-with-no-target parks the player in a modal state
+that eats every key but Esc. ONE bug behind both reported symptoms
+("movement fails silently" + "no target in reach"); ~8 repros across three
+sessions; the agent's zone-of-control theory is wrong.
+**#374 (taste-gate)** — all three Liscor gate cells are Chebyshev 2 from
+`goblin_encounter_1` (radius 2): no unfought route into the city.
+**Fix #373 first and re-measure** — it may be sufficient. **#375 (S)** —
+`inn_sign` at [6,6] blocks a third of the GH#185-widened facade; move to
+[5,6]. Carries a stale-comment one-liner (world.gd:148 claims
+clamped-follow is unexercised; floodplains 40x26 exercises it).
+**#376 (art)** — `your_bed` and `inn_chest` read as each other; BOTH
+playtests made the identical inversion, and v0.17's relc_spar toast now
+points at "bed" explicitly. Directive case: tint-is-not-disambiguation.
+**#377 (S)** — pause_menu builds no scrim; combat HP text bleeds through
+"Abandon to Last Save". **#378 (M)** — seven Serve options gate on
+`hot_meal`, whose only producer needs `basic_cooking`; same issue carries
+the three-cauldrons-one-silhouette tint debt the entity comment admits.
+**#379 (S, copy)** — Resonance is shipped/save-persisted/sleep-grown and
+explained nowhere; open question in all four reports.
+Already fixed, do NOT re-open: save-less Continue (greyed), sleep-is-the-verb
+signposting (relc_spar toast), journal scroll (#216 slice 2), unlabelled
+creation cards (deliberate, hotfix #3), single-tile inn door (GH#185).
+Agent artifacts, discounted with evidence: missable toasts (`_toast_seconds`
+scales; 0.4s cap is QA-mode only), "attack only works orthogonally"
+(`is_adjacent` is Chebyshev, diagonals included), walked-off-screen past the
+map edge (camera clamp is correct; the agent admits it could not identify
+its own sprite).
+
 ## Current state (2026-08-03, overnight session close — v0.17.0 SHIPPED, v0.18.0 closing)
 **v0.17.0 TAGGED + Release/Pages GREEN. v0.18 wave-1 train COMPLETE
 (#364-#368, five lanes, 20 agents, dual adversarial lenses), close in
