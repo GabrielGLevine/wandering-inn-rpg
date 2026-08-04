@@ -2,12 +2,12 @@
 	"_comment": "Relc's INN register. Attached ONLY to relc_inn_guest; his road hub (relc_intro) never rides along, so the SPAR, the wager, the spare-spear gift and every descent window (relc_descent) stay home-only (REGISTER-PURE). Serve mirrors selys_inn/patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter. Voice per docs/design/character-profiles.md: loud, at ease, kind right on the surface because nothing is being guarded.",
 	"start": "greet",
 	"nodes": {
-		"greet": { "speaker": "Relc", "text": "Hah! There you are. Good chair, good fire, no gate to stand at. The Captain still thinks I am out walking the road.", "options": [
+		"greet": { "speaker": "Relc", "text": "Hah! There you are. Good chair, good fire. Nobody has stationed me at a gate all evening. The Captain still thinks I am out walking the road.", "options": [
 			{ "text": "Bring him a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:relc_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:relc_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"So that's the good chair, is it?\"", "goto": "offduty" },
 			{ "text": "\"Your secret's safe, Relc.\"", "end": true }
 		] },
-		"offduty": { "speaker": "Relc", "text": "Close enough to the fire that my tail stops complaining, far enough that I do not cook. Took me three visits to work that out. Standing all day does something to a Drake. You do not notice until you sit down. Then you notice all of it at once. Chair first. Then somebody feeds me. The wall can mind itself for one night.", "options": [
+		"offduty": { "speaker": "Relc", "text": "Close enough to the fire that my tail stops complaining, far enough that I do not cook. Took me three visits to work that out. Standing all day does something to a Drake. You do not notice until you sit down. Then it catches up with you all at once. Chair first. After that, somebody feeds me. I can hear the kitchen from here.", "options": [
 			{ "text": "Bring him a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:relc_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:relc_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"The wall can manage. Sit.\"", "end": true }
 		] },

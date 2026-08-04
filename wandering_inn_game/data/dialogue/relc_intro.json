@@ -36,7 +36,7 @@
        "went_alone": 1
       }
      },
-     "text": "Alone. You went into that thing's own hole alone, no backup, and I offered. I've replayed it a dozen ways and every version ends with a body bag. Instead you're standing here being smug at me about it. I don't know whether to buy you a drink or write you up. Reckless conduct is a real charge. I've filed it before."
+     "text": "Alone. You went into that thing's own hole alone, no backup, and I offered. I've replayed it a dozen ways and every version ends with a body bag. Instead you're standing here being smug at me about it. I don't know whether to buy you a drink or write you up. Reckless conduct is a real charge. Next time I file it."
     }
    ],
    "options": [
@@ -142,7 +142,7 @@
   },
   "banter": {
    "speaker": "Relc",
-   "text": "Relc. Senior Guardsman, best spear in Liscor. Right now I'm guarding grass. The inn feeds you, the city taxes you. Everything between is my road, so behave on it. There's goblins about. Sing out if you spot one.",
+   "text": "Relc. Senior Guardsman, best spear in Liscor. Right now I'm guarding grass. My beat runs from the inn to the city gate, so behave on it. There's goblins about. Sing out if you spot one.",
    "options": [
     {
      "text": "You any good with that spear? (Spar)",
@@ -170,7 +170,7 @@
   },
   "spar_offer": {
    "speaker": "Relc",
-   "text": "Ha! Good instinct. Everybody swings wrong at the start, so do your wrong swinging here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules: you move, you hit. If you have to cry, do it before we start.",
+   "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules: you move, you hit, no crying.",
    "text_variants": [
     {
      "requires": {
@@ -199,7 +199,7 @@
   },
   "gift": {
    "speaker": "Relc",
-   "text": "My spare spear. Held gates wider than that one. Now listen. Owning a weapon and holding it are different things. Check your pack, get the spear in your hand before you're back on the road. Sword arm, spear arm. The weapon you carry decides which of your moves come with you.",
+   "text": "My spare spear. Held gates wider than that one. Now listen. It won't help you from inside a pack. Check your pack, get the spear in your hand before you're back on the road. Sword arm, spear arm. What you carry decides which moves you get.",
    "options": [
     {
      "text": "I’ll try it on. (Check your pack after this.)",
@@ -213,7 +213,7 @@
   },
   "relc_army": {
    "speaker": "Relc",
-   "text": "Ha! No. Army, before. Liscor's got one. It just never comes home. I did. Walls pay worse. Nobody makes you march in the rain, though. I am done marching. That and the spear are the two best calls I ever made.",
+   "text": "Ha! No. Army, before. Liscor's got one. It just never comes home. I did. Walls pay worse. Nobody makes you march in the rain, though. I am done marching. Kept the spear.",
    "options": [
     {
      "text": "Why'd you leave?",
@@ -245,7 +245,7 @@
   },
   "relc_after": {
    "speaker": "Relc",
-   "text": "Miss it? I left people in it. Some I'd still take a spear for, even now. That's all the answer you're getting sober. Hey. You did good down there. Buy me that drink sometime and I'll say the long version.",
+   "text": "Miss it? I left people in it. Some I'd still take a spear for, even now. Hey. You did good down there. Buy me that drink sometime and I'll say the long version.",
    "options": [
     {
      "text": "(Back a step.)",

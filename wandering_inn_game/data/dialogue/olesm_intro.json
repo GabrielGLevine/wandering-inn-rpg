@@ -283,7 +283,7 @@
   },
   "seal_bounty_posted": {
    "speaker": "Olesm",
-   "text": "Right. Right. Standing notice, Guild board, renewed by the season: one keeper, one lantern of mana a month, no questions logged about what it feeds. I'm putting my name on it, which means when it lapses it will be my fault. That sits better than not knowing did. Thank you. I think.",
+   "text": "Right. Right. Standing notice, Guild board, renewed by the season: one keeper, one lantern of mana a month, no questions logged about what it feeds. I'm putting my name on it, which means when it lapses it will be my fault. That sits better than not knowing did. Thank you.",
    "options": [
     {
      "text": "Somebody has to hold the door.",
@@ -302,13 +302,13 @@
        "seal_opened": 1
       }
      },
-     "text": "Right. Right. Standing notice, Guild board, renewed by the season: one keeper, one lantern of mana a month, and a door that is already open at the bottom of it. I'm putting my name on that too. The keeper's first duty changes from feeding it to watching it, and I want that in writing before anyone asks me why. Thank you. I think."
+     "text": "Right. Right. Standing notice, Guild board, renewed by the season: one keeper, one lantern of mana a month, and a door that is already open at the bottom of it. I'm putting my name on that too. The keeper's first duty changes from feeding it to watching it, and I want that in writing before anyone asks me why. Thank you."
     }
    ]
   },
   "olesm_chess_invite": {
    "speaker": "Olesm",
-   "text": "The board's been out since Tuesday, if you want the honest count. I'm not going to pretend otherwise. Whenever you're ready. I'll even let you have white, which should tell you how confident I am.",
+   "text": "The board's been out since Tuesday, if you want the honest count. I'm not going to pretend otherwise. Whenever you're ready. You'll have white — let me clear the tally sheets off your side of the desk.",
    "options": [
     {
      "text": "Sit. Show me.",
@@ -416,7 +416,7 @@
   },
   "olesm_chess_loss": {
    "speaker": "Olesm",
-   "text": "Draw accepted, and the coin with it. My position was lost — I sat with it a season, I know what you had on that board. She played on from here and took me apart. I'm entering it in the book as a draw, two gold to me, and the entry will look wrong every time I open the page.",
+   "text": "Draw accepted, and the coin with it. My position was lost — I sat with it a season, I know what you had on that board. She played on from here and took me apart. I'm entering it in the book as a draw, two gold to me, and copying the final position in beneath it.",
    "options": [
     {
      "text": "Take the coin, Olesm.",
@@ -430,7 +430,7 @@
   },
   "olesm_doubt": {
    "speaker": "Olesm",
-   "text": "Ha. Ha. No. I run the paperwork the Council ignores, and I'm a [Tactician] whose largest engagement to date was a supply-cart dispute. Which I won. Decisively. I keep a list of what I'd do if Liscor were ever truly tested. It's a good list. I would just rather die of old age never having to show anyone.",
+   "text": "Ha. Ha. No. I run the paperwork the Council ignores, and I'm a [Tactician] whose largest engagement to date was a supply-cart dispute. Which I won. Decisively. I keep a list of what I'd do if Liscor were ever truly tested. It's a good list. It lives in the bottom drawer, and I hope it stays there.",
    "options": [
     {
      "text": "I hope the list stays theoretical.",
@@ -540,7 +540,7 @@
   },
   "chess_two": {
    "speaker": "Olesm",
-   "text": "I learned more from that one loss than from ten wins before it. I have the ten wins; I checked. Her game is written out in my desk, second drawer, and I take it out when a report has me stuck. If only the Council read reports the way I read a board.",
+   "text": "I learned more from that one loss than from ten wins before it. I have the ten wins; I checked. Her game is written out in my desk, second drawer, and I take it out when a Council report has me stuck. It's out on the desk now, as it happens. The granary tally has had me stuck since yesterday.",
    "options": [
     {
      "text": "Back up a moment.",
@@ -586,7 +586,7 @@
   },
   "cisterns": {
    "speaker": "Olesm",
-   "text": "Worried is the professional term, yes. The market's had reports: things moving under the grates, a cistern gone foul, a fishmonger who swears something looked back at him from the dark. Probably nothing. I do not care for probably-nothings under a walled city. Actually — you have the look of someone who finishes things. Would you go down and settle it?",
+   "text": "Worried is the professional term, yes. The market's had reports: things moving under the grates, a cistern gone foul, a fishmonger who swears something looked back at him from the dark. Probably nothing. But it is under a walled city, and I would like to be certain. Actually — you have the look of someone who finishes things. Would you go down and settle it?",
    "text_variants": [
     {
      "requires": {
@@ -737,7 +737,7 @@
   },
   "cisterns_brief": {
    "speaker": "Olesm",
-   "text": "Thank you. Here's what I have. What: something's nested in the old cisterns under the market. The reports say spiders, big ones, silver-backed, the kind that climb up from the Dungeon when a wall cracks. Where: down the green sewer-grate off the south square. It's rusted, but it'll open now that someone official wants it open. How: I genuinely don't mind. Put a blade through it. Get the Watch to sweep it. Or just bring me a proper picture of what's down there — count, size, exits. A map does the same work for me as a corpse, and costs less in bandages. Settle it however suits you, then come tell me it's done.",
+   "text": "Thank you. Here's what I have. Something's nested in the old cisterns under the market — the reports say spiders, big ones, silver-backed, the kind that climb up from the Dungeon when a wall cracks. You get down there by the green sewer-grate off the south square. It's rusted, but it'll open now that someone official wants it open. As for settling it, I genuinely don't mind how. Put a blade through it, or get the Watch to sweep it. Or just bring me a proper picture of what's down there — count, size, exits. I can plan from a page like that, and it costs less in bandages than fighting does. Settle it however suits you, then come tell me it's done.",
    "options": [
     {
      "text": "Understood. I'll head down.",
@@ -762,7 +762,7 @@
   },
   "cisterns_intel": {
    "speaker": "Olesm",
-   "text": "Oh, this is lovely work. You counted them. Exits, chokepoints, the drop where the tunnel falls away. The problem has a shape now, and it fits on one page. The Watch goes in knowing the ground instead of bleeding to learn it. A map is as good as a corpse, and I have never once gotten to say that to someone who agreed. Take the Council's thanks — and mine, doubled, because you did it the clever way.",
+   "text": "Oh, this is lovely work. You counted them. Exits, chokepoints, the drop where the tunnel falls away. The problem has a shape now, and it fits on one page. The Watch goes in knowing the ground instead of bleeding to learn it. This goes into their brief exactly as you drew it. Take the Council's thanks — and mine, doubled, because you did it the clever way.",
    "options": [
     {
      "text": "Glad it's useful.",
@@ -773,7 +773,7 @@
   },
   "lism_errand": {
    "speaker": "Olesm",
-   "text": "My uncle's notice? That's the same gallery under the cisterns — down the green sewer-grate off the south square, same as I'd send you for the nest. He wants two things confirmed in writing: the old drainage marker, still legible or not, and whether the phosphor moss has spread past the first junction. Both, mind. He does not deal in 'probably.'",
+   "text": "My uncle's notice? That's the same gallery under the cisterns — down the green sewer-grate off the south square, same as I'd send you for the nest. He wants two things confirmed in writing: the old drainage marker, still legible or not, and whether the phosphor moss has spread past the first junction. Both, mind. If one's missing, he'll send the page back and I'll hear about it at dinner.",
    "options": [
     {
      "text": "Back to the top.",

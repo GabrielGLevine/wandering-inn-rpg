@@ -26,23 +26,23 @@
 			"text": "Wister's Alley boys walk it in pairs, and pairs keep habits. Every round they turn at the fish-drying racks — both heads, every time, like the fish might've moved. That's a whole alley of nobody-looking twice a bell. A patient someone could stroll it like a garden. Drink up.",
 			"options": [
 				{ "text": "Another cup.", "goto": "hub" },
-				{ "text": "Useful fish. My thanks.", "end": true }
+				{ "text": "Good to know. Thanks.", "end": true }
 			]
 		},
 		"rumor_counting_house": {
 			"speaker": "Cups",
-			"text": "Lamps burn past midnight there two nights before every 'audit' — a man cooking books likes them fresh. Better cup, though. The clerk with the inky cuffs takes his supper out, and props the yard-side door for his return. Props it with a cheese wedge. I have seen the cheese, friend. That's not rumor, that's reportage. Costs the same, mind.",
+			"text": "Lamps burn past midnight there two nights before every 'audit' — a man cooking books likes them fresh. Better cup, though. The clerk with the inky cuffs takes his supper out, and props the yard-side door for his return. Props it with a cheese wedge. I have seen the cheese, friend. Costs the same, mind.",
 			"options": [
 				{ "text": "Another cup.", "goto": "hub" },
-				{ "text": "To the cheese. My thanks.", "end": true }
+				{ "text": "I'll remember the yard door.", "end": true }
 			]
 		},
 		"rumor_hellam": {
 			"speaker": "Cups",
-			"text": "Master Hellam — silk trade, salt tongue. Coyle soured their partnership over a warehouse lease, then bought that same lease through a cousin. Hellam keeps the grudge fed and walked like a prize hound. He'd testify against Coyle at his own wedding.",
+			"text": "Master Hellam — silk trade, salt tongue. Coyle soured their partnership over a warehouse lease, then bought that same lease through a cousin. Hellam keeps the grudge fed and walked like a prize hound. He's wanted to testify against Coyle for years. You'd be doing him the favor.",
 			"options": [
 				{ "text": "Another cup.", "goto": "hub" },
-				{ "text": "Good hound. My thanks.", "end": true }
+				{ "text": "Then I'll go see Hellam.", "end": true }
 			]
 		},
 		"rumor_hats": {
@@ -50,7 +50,7 @@
 			"text": "The Brothers? Sweetest muggers you'll ever meet. Tip the hat, beg your pardon. Then they relieve you of exactly what's owed, to the clip — I've had ruder service in shops. But the whole street knows the arithmetic. Hat on, you talk. Hat comes off, you run, and you don't spend breath asking why.",
 			"options": [
 				{ "text": "Another cup.", "goto": "hub" },
-				{ "text": "Hats on, then. My thanks.", "end": true }
+				{ "text": "Fair warning. Thanks.", "end": true }
 			]
 		},
 		"rumor_door": {
@@ -58,7 +58,7 @@
 			"text": "There's talk of a door — an inn door, in some Drake town two hundred miles south — that opens here, when it's minded to. Adventurers swear by it. Me, I say any door that shortchanges two hundred miles of road out of its gossip is a menace to my trade personally. Marvelous, though, if it's true.",
 			"options": [
 				{ "text": "Another cup.", "goto": "hub" },
-				{ "text": "Mind your trade. My thanks.", "end": true }
+				{ "text": "That's all for today.", "end": true }
 			]
 		},
 		"balk": {
@@ -90,7 +90,7 @@
 		},
 		"agreed_paid": {
 			"speaker": "Cups",
-			"text": "Ten. Well. The water's warmer already — funny how that works. Set it on the tray where I can count it. Done, I'll sign. But one cup won't drown a man like Coyle — you want Hellam's grudge on paper next to mine. Come back and say 'pour for three' and I'll have him here, wedding manners and all.",
+			"text": "Ten. Well. The water's warmer already. Set it on the tray where I can count it. Done, I'll sign. But one cup won't drown a man like Coyle — you want Hellam's grudge on paper next to mine. Come back and say 'pour for three' and I'll have him here, wedding manners and all.",
 			"options": [
 				{ "text": "Pour for three, then. Set it up.", "effects": [ { "accomplishment": "secured_testimony" } ], "goto": "arranged" },
 				{ "text": "I'll be back for it.", "end": true }
@@ -98,14 +98,14 @@
 		},
 		"arranged": {
 			"speaker": "Cups",
-			"text": "Done and done. Hellam didn't even finish his cup. Signed and sanded before it cooled. Sealed it himself, then asked could he sign twice. Take the papers wherever names like Coyle's go to be spent. And friend — best rumor I ever poured, this one, and my own name's in the middle of it. I keep saying that over while the pot steeps.",
+			"text": "Done and done. Hellam didn't even finish his cup. Signed and sanded before it cooled. Sealed it himself, then asked could he sign twice. Take the papers wherever names like Coyle's go to be spent. And friend — my own name's in the middle of this one. The pot's gone cold while I've sat here reading my own signature back.",
 			"options": [
 				{ "text": "You earned the byline, Cups.", "end": true }
 			]
 		},
 		"just_tea": {
 			"speaker": "Cups",
-			"text": "Free tea, then. You'd be surprised how few take just the tea. Sit, drink it while it's hot. Crate's still wobbly — I keep meaning to fix it, and then I'd have nothing to warn people about.",
+			"text": "Free tea, then. You'd be surprised how few take just the tea. Sit, drink it while it's hot. Crate's still wobbly — sit to the left and it won't tip.",
 			"options": [
 				{ "text": "Good tea, Cups.", "end": true }
 			]

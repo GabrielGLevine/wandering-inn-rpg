@@ -14,7 +14,7 @@
 				{ "text": "The deer stopped at the treeline. Why?", "requires": { "accomplishment": { "price_of_a_favor_reported": 1 } }, "hide_when": { "accomplishment": { "heard_thicket_keeps": 1 } }, "effects": [ { "quest": "what_the_thicket_keeps" }, { "accomplishment": "heard_thicket_keeps" } ], "goto": "thicket_brief" },
 				{ "_comment": "REPORT ROWS all carry heard_thicket_keeps beside their route counter: hut_ward_scrap has no quest-start gate, so a mage PC could read the scrap on a wander and settle thicket_answered for a quest never offered, firing 'New quest'/'Quest complete' back to back. Stated on all three so a later ungated producer cannot leak either.", "text": "The line's a ward. An old one, gone sour.", "requires": { "accomplishment": { "heard_thicket_keeps": 1, "ward_scrap_read": 1 } }, "hide_when": { "accomplishment": { "thicket_answered": 1 } }, "effects": [ { "accomplishment": "thicket_answered" } ], "goto": "thicket_reported_read" },
 				{ "text": "Fences are moved. The herd's got its road.", "requires": { "accomplishment": { "heard_thicket_keeps": 1, "herd_rerouted": 1 } }, "hide_when": { "accomplishment": { "thicket_answered": 1 } }, "effects": [ { "accomplishment": "thicket_answered" } ], "goto": "thicket_reported_rerouted" },
-				{ "text": "Whatever was denning on the line isn't anymore.", "requires": { "accomplishment": { "heard_thicket_keeps": 1, "thicket_cleared": 1 } }, "hide_when": { "accomplishment": { "thicket_answered": 1 } }, "effects": [ { "accomplishment": "thicket_answered" } ], "goto": "thicket_reported_cleared" },
+				{ "text": "The den's empty. Whatever it was.", "requires": { "accomplishment": { "heard_thicket_keeps": 1, "thicket_cleared": 1 } }, "hide_when": { "accomplishment": { "thicket_answered": 1 } }, "effects": [ { "accomplishment": "thicket_answered" } ], "goto": "thicket_reported_cleared" },
 				{ "_comment": "R2 TALK-route RE-ENTRY, APPENDED LAST so cursor-pinned canonicals keep their indices. The start row is hide_when heard_thicket_keeps, the counter it banks, so thicket_brief/thicket_sign (herd_rerouted, the whole TALK route, and the hut pointer) were reachable only inside the accept conversation; leaving early orphaned them permanently while the beat still read 'Read the sign with the hunter'. Tallyman shape: requires the quest, hides on the route's terminal counter.", "text": "Take me back to that line in the thicket.", "requires": { "accomplishment": { "heard_thicket_keeps": 1 } }, "hide_when": { "accomplishment": { "herd_rerouted": 1 } }, "goto": "thicket_brief" }
 			]
 		},
@@ -27,7 +27,7 @@
 		},
 		"thicket_brief": {
 			"speaker": "The Hunter",
-			"text": "Corusdeer. Whole herd came down off the north road. Stopped dead at the old line in the thicket. Wouldn't cross. Wouldn't spook. Turned and walked back the way they came. Deer don't hold a line unless something taught them to. Two lambs I lost this spring. Something with thorns for teeth took them. So no. I'm not walking in there on my own.",
+			"text": "Corusdeer. Whole herd came down off the north road. Stopped dead at the old line in the thicket. Wouldn't cross. Wouldn't spook. Turned and walked back the way they came. Something taught this herd that line. Two lambs I lost this spring. Something with thorns for teeth took them. So no. I'm not walking in there on my own.",
 			"options": [
 				{ "text": "Show me the sign.", "goto": "thicket_sign" },
 				{ "text": "What's in there?", "goto": "thicket_topic" },
@@ -59,7 +59,7 @@
 		},
 		"thicket_reported_read": {
 			"speaker": "The Hunter",
-			"text": "A ward. Somebody scratched a line in the dirt a hundred years back. The deer still read it better than I do. First real thing anyone's told me about that thicket. The rest was guesses.",
+			"text": "A ward. Somebody scratched a line in the dirt a hundred years back. The deer still stop at it. Grass grown right over the scratch by now. First real thing anyone's told me about that thicket. The rest was guesses.",
 			"options": [
 				{ "text": "It's failing, whatever it was.", "end": true }
 			]

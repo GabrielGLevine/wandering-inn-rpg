@@ -4,7 +4,7 @@
  "nodes": {
   "hub": {
    "speaker": "Wilovan",
-   "text": "Begging your pardon, {addr}, a moment of your evening. We don't steal, whatever you've heard. We recover. Occasionally we recover things that were never lost. Tonight we'd like to recover a man's good name — his, and by unfortunate arithmetic, ours.",
+   "text": "Begging your pardon, {addr}, a moment of your evening. We don't steal, whatever you've heard. We recover. Tonight we'd like to recover a man's good name — his, and ours with it.",
    "text_variants": [
     {
      "requires": {
@@ -281,7 +281,7 @@
   },
   "why_you": {
    "speaker": "Wilovan",
-   "text": "Because you're not us, {addr}, and a man could write the job description in those four words. We mean it as flattery. Every hand in this brotherhood is known to the Watch by its glove size. A stranger's word lands where ours bounces. Also — and a man says this with affection — things happen to you, {addr}. We have watched it happen twice since Tuesday. We'd like to point you at Master Coyle and observe.",
+   "text": "Because you're not us, {addr}, and we mean that as flattery. Every hand in this brotherhood is known to the Watch by its glove size. A stranger's word will actually get listened to. Also — and a man says this with affection — things happen to you, {addr}. We have watched it happen twice since Tuesday. We'd like to point you at Master Coyle and observe.",
    "options": [
     {
      "text": "Fair. I'll take it.",
@@ -303,7 +303,7 @@
   },
   "ways": {
    "speaker": "Wilovan",
-   "text": "Doors, {addr}, as a man might put it — a fellow in Coyle's position leaves several ajar. His ledger, to begin: the true one lives at the counting-house off Wister's Alley, and paper doesn't lie. His says he paid for the theft himself. Or tongues. The fixer called Cups pours rumor by the alley gate, and Coyle has soured more partners than tea has leaves; testimony can be arranged. Politely arranged. There is a third door, {addr}, and we apologize for so much as setting it on the table: his warehouse crew. Should you open that particular one, a man would be honored to attend.",
+   "text": "Doors, {addr}, as a man might put it — a fellow in Coyle's position leaves several ajar. The true ledger lives at the counting-house off Wister's Alley, and paper doesn't lie; his says he paid for the theft himself. Then there's the fixer called Cups, who pours rumor by the alley gate. Coyle has soured more partners than tea has leaves, and testimony can be arranged. Politely arranged. A man meant to stop there, {addr}. There's also his warehouse crew. Should you open that particular door, a man would be honored to attend.",
    "options": [
     {
      "text": "The warehouse, then. Will you come?",
@@ -369,7 +369,7 @@
        "merchant_exposed": 1
       }
      },
-     "text": "So we heard, {addr}, the criers had it by breakfast and the Merchant's Guild by lunch. Coyle's name is worth exactly what he paid for ours: nothing. Wilovan takes his hat off, plain and slow, and doesn't set it back on right away. He holds it to his chest, crown out, and lets the room watch him do it. Mister Farley walked at dawn — that's Farley's ceremony. This one's mine, {addr}, for a man who held a fortune in his hand and burned it for a stranger in a cheap hat. We don't often get to mean it this way."
+     "text": "So we heard, {addr}, the criers had it by breakfast and the Merchant's Guild by lunch. Coyle's name is worth nothing in this city now. Wilovan takes his hat off, plain and slow, and doesn't set it back on right away. He holds it to his chest, crown out, and lets the room watch him do it. Mister Farley walked at dawn — that's Farley's ceremony. This one's mine, {addr}, for a man who held a fortune in his hand and burned it for a stranger in a cheap hat. We don't often get to mean it this way."
     },
     {
      "requires": {
@@ -393,7 +393,7 @@
   },
   "marker_terms": {
    "speaker": "Wilovan",
-   "text": "A Brother's marker, {addr}. Wood and tin, and worth rather more than its materials. Shown in the alleys, trouble will beg your pardon and step around you. Shown at the parlor, a man can find you things the shops pretend not to stock — recovered things, {addr}, of impeccable provenance. Keep it dry. The tin outlasts the wood, and we don't cut replacements.",
+   "text": "A Brother's marker, {addr}. Wood and tin, and worth rather more than its materials. Shown in the alleys, trouble will beg your pardon and step around you. Shown at the parlor, a man can find you things the shops pretend not to stock — recovered things, {addr}, of impeccable provenance. Keep it dry, for the wood's sake. We don't cut replacements.",
    "options": [
     {
      "text": "A pleasure doing business, Wilovan.",
@@ -403,7 +403,7 @@
   },
   "hat_errand": {
    "speaker": "Wilovan",
-   "text": "There is, {addr}, and I'll ask your pardon before I describe it, because describing it is most of the offence. A small parcel wants to be somewhere else by morning, and the somewhere else drinks at the Adventurer's Rest. House rule there is that nobody raises a voice. We hold to it. So does everybody who owes them a table.",
+   "text": "There is, {addr}, and I'll ask your pardon before I describe it, because describing it is most of the offence. A small parcel wants to be somewhere else by morning. The man expecting it drinks at the Adventurer's Rest. House rule there is that nobody raises a voice. We hold to it. So does everybody who owes them a table.",
    "options": [
     {
      "text": "\"I'll carry it.\"",

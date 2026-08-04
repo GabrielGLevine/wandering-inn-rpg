@@ -20,7 +20,7 @@
        "seal_resolved": 1
       }
      },
-     "text": "The Liscor news came up the shaft this morning. Say what you need. I listen better with a hammer in hand."
+     "text": "The Liscor news came up the shaft this morning. Say what you need while the billet heats."
     }
    ],
    "options": [
@@ -78,7 +78,7 @@
   },
   "spec": {
    "speaker": "Forge-Tier Smith",
-   "text": "A full working day at heat, then it stands down cold. Push it past that and the slab cracks. A cracked slab is a season of paperwork before the city clears it again. I do not swing a hammer that season.",
+   "text": "A full working day at heat, then it stands down cold. Push it past that and the slab cracks. A cracked slab is a season of paperwork before the city clears it again. The hammer hangs on its peg for all of it.",
    "options": [
     {
      "text": "How often does someone push it?",
@@ -92,7 +92,7 @@
   },
   "standard": {
    "speaker": "Forge-Tier Smith",
-   "text": "The city sets the spec. I hold it. That's the arrangement, and it's better than it sounds. Nothing built on this tier fails quietly.",
+   "text": "The city sets the spec. I hold it. That's the arrangement, and it's better than it sounds. A failure on this tier means an inquest with my name in the file.",
    "options": [
     {
      "text": "Things fail loudly instead?",
@@ -106,7 +106,7 @@
   },
   "seal": {
    "speaker": "Forge-Tier Smith",
-   "text": "Something under their stone wanted feeding, and now it doesn't. That's all of it that reached this tier. I'd have liked the measurements.",
+   "text": "Something under their stone wanted feeding, and now it doesn't. Nothing else reached this tier. I'd have liked the measurements.",
    "options": [
     {
      "text": "It was older than the city over it.",
@@ -120,7 +120,7 @@
   },
   "commission": {
    "speaker": "Forge-Tier Smith",
-   "text": "You counted them. Good. My apprentice has the steadiest hand on this tier. The examiner has failed her nine times running. One of us is wrong and it is not her.",
+   "text": "You counted them. Good. My apprentice has the steadiest hand on this tier. The examiner has failed her nine times running. Between him and me, somebody has this wrong. I do not believe it is her hands.",
    "options": [
     {
      "text": "I'll take the commission.",
@@ -238,7 +238,7 @@
   },
   "broker": {
    "speaker": "Forge-Tier Smith",
-   "text": "Recovery. It is on his own notice, the one hanging on my wall, and I have walked past it for six years without reading it. She kept bringing him harder steel because harder is what I taught her. Nine fails. Say the rest of it out loud, because I am not going to.",
+   "text": "Recovery. It is printed on his own notice, the one that has hung on my wall six years. Take it down and read me the standard clause, line by line. She kept bringing him harder steel because harder is what I taught her. Nine fails. Say the rest of it out loud, because I am not going to.",
    "options": [
     {
      "text": "She'll hear it from the file before she hears it from either of you.",
@@ -276,7 +276,7 @@
        "standards_brokered": 1
       }
      },
-     "text": "I have been arguing with that man for six years and it turns out we agreed all six years. Do not repeat that. Especially to him."
+     "text": "I have been arguing with that man for six years and it turns out we agreed all six years. It is in the file now. She will read it in the morning."
     }
    ],
    "options": [

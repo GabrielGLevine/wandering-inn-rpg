@@ -70,7 +70,7 @@
   },
   "cycle": {
    "speaker": "Lift Attendant",
-   "text": "Once a quarter, for inspection, and the notice goes up two days ahead so nobody is stranded. If the day catches you up here anyway, the service stair at the west end stays open. Nine flights. Honest work, and open.",
+   "text": "Once a quarter, for inspection, and the notice goes up two days ahead so nobody is stranded. If the day catches you up here anyway, the service stair at the west end stays open. Nine flights. Take water up with you, the stairwell holds the forge heat past sundown.",
    "options": [
     {
      "text": "Nine flights.",
@@ -84,7 +84,7 @@
   },
   "traffic": {
    "speaker": "Lift Attendant",
-   "text": "Smiths down at the quarter bell, clerks up at the half, and one crate of tin that has been late three cycles running. I know this tier by what it carries. You I haven't placed yet, {addr}. Came up on a stamp, then. Stamps don't show on my schedule.",
+   "text": "Smiths down at the quarter bell, clerks up at the half, and one crate of tin that has been late three cycles running. This morning it was charcoal and a coop of live hens for the ninth tier. You I haven't placed yet, {addr}. Came up on a stamp, then. Stamps don't show on my schedule.",
    "options": [
     {
      "text": "Give it a cycle.",

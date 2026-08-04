@@ -28,7 +28,7 @@
        "cisterns_reported": 1
       }
      },
-     "text": "Heard the cisterns crawled with something. Heard it stopped crawling, too. The file crossed my desk this morning with your name on the referral line."
+     "text": "Word from the cisterns — there was something living down there, and it's been dealt with. The file crossed my desk this morning with your name on the referral line."
     }
    ],
    "options": [
@@ -192,7 +192,7 @@
   },
   "selys_gran": {
    "speaker": "Selys",
-   "text": "Grandmother. Yes, that Tekshia Shivertail. Yes, she still throws a spear better than half the Silver-ranks. No, I will not introduce you when she's in a mood, which is always. I wanted to be her when I was small. Then I noticed the paperwork ran in the family and picked the desk with better hours.",
+   "text": "Grandmother. Yes, that Tekshia Shivertail. Yes, she still throws a spear better than half the Silver-ranks. No, I will not introduce you when she's in a mood, which is always. I wanted to be her when I was small. Then I noticed the paperwork ran in the family too, and took the desk side of it. The hours are better, most weeks.",
    "options": [
     {
      "text": "You wanted to be a hero?",
@@ -210,7 +210,7 @@
   },
   "selys_gran_two": {
    "speaker": "Selys",
-   "text": "Everyone behind this counter did, once. Then you log your first casualty report. The desk keeps more people alive than a sword does. Took me years to believe that. You don't have to believe it today. Anyway. Board's behind you, and I've got intake forms with the Guild's name spelled wrong on them.",
+   "text": "Everyone behind this counter did, once. Then you log your first casualty report. The desk keeps more people alive than a sword does. Took me years to believe that. You don't have to believe it today. Board's behind you, and I've got intake forms with the Guild's name spelled wrong on them.",
    "options": [
     {
      "text": "Might as well ask.",
@@ -305,7 +305,7 @@
        "errand_decided": 1
       }
      },
-     "text": "The Erin file is closed, believe it or not. Guild business, the board's behind you. Gossip, the line forms behind Lism."
+     "text": "The Erin file is closed. Guild business, the board's behind you. Gossip, go ask Lism."
     }
    ]
   },
@@ -374,7 +374,7 @@
        "errand_decided": 1
       }
      },
-     "text": "The Erin file is closed, believe it or not. Guild business, the board's behind you. Gossip, the line forms behind Lism."
+     "text": "The Erin file is closed. Guild business, the board's behind you. Gossip, go ask Lism."
     }
    ]
   },

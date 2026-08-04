@@ -7,7 +7,7 @@
 			{ "text": "\"You don't have to watch the doors in here.\"", "goto": "offduty" },
 			{ "text": "\"Sit as long as you want.\"", "end": true }
 		] },
-		"offduty": { "speaker": "Rags", "text": "Always watch doors. Not for here. For after. Tables here flat. No wobble. Tribe has rocks. I do not complain. Inn Human cooks. Plays chess. Feeds goblins. Stupid. Works. Hate that it works.", "options": [
+		"offduty": { "speaker": "Rags", "text": "Always watch doors. For after. Tables here flat. No wobble. Tribe has rocks. I do not complain. Inn Human cooks. Plays chess. Feeds goblins. Stupid. Works.", "options": [
 			{ "text": "Push a bowl across the table to her. (Serve)", "requires": { "once_per_waking": "serve:rags_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:rags_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"Don't tell her. She'd only be smug.\"", "end": true }
 		] },

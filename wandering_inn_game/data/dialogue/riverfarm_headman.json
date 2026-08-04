@@ -19,7 +19,7 @@
        "blight_lifted": 1
       }
      },
-     "text": "Whatever you did, the air's changed. I can feel it in my knees, and I trust my knees more than most people."
+     "text": "Whatever you did, the air's changed. I can feel it in my knees. Felt it in the rows this morning too."
     },
     {
      "requires": {
@@ -132,7 +132,7 @@
     },
     {
      "_comment": "REPORT ROWS all carry heard_flood_ledger beside their route counter: mill_flood_stack has no quest-start gate and basic_cleaning is the PC's STARTING field skill, so a wander into the mill banked flood_prep_done with started_quests empty and this hub then rendered the ask and the answer at once, settling a quest never offered. Stated on all three so a later ungated producer cannot leak either.",
-     "text": "The tally's honest. Somebody's crop failed and they were ashamed of it.",
+     "text": "The tally's honest. I walked it with the tallyman. He told me what's behind it.",
      "requires": {
       "accomplishment": {
        "heard_flood_ledger": 1,
@@ -271,7 +271,7 @@
   },
   "flood_brief": {
    "speaker": "Former Headman",
-   "text": "River comes up every spring. Every spring we count what we can carry above the line. This year the count's eleven bushels short. There's no thief in this village. That's worse than a thief. Go down to the mill. Walk the tally with the tallyman. Bring me an answer I can live with.",
+   "text": "River comes up every spring. Every spring we count what we can carry above the line. This year the count's eleven bushels short. There's no thief in this village. I'd know. That's the bad news. Go down to the mill. Walk the tally with the tallyman. Bring me an answer I can live with.",
    "options": [
     {
      "text": "I'll see to it.",
@@ -285,7 +285,7 @@
   },
   "flood_reported_read": {
    "speaker": "Former Headman",
-   "text": "Ashamed. Three seasons of it. They'd let the village call them thieves first. Unlucky's the harder word out here. Then we don't say the name. Eleven bushels off my own share. The ledger balances. The village can think what it likes.",
+   "text": "Ashamed. Three seasons of it. They'd let the village call them thieves first. Then we don't say the name. Eleven bushels off my own share. The ledger balances. The village can think what it likes.",
    "options": [
     {
      "text": "That's the right answer.",

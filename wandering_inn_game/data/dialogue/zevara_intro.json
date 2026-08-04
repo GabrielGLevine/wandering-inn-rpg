@@ -11,7 +11,7 @@
        "studied_necromancy": 1
       }
      },
-     "text": "Word travels. You've been taking lessons from the Guild-square [Necromancer]. Legal. It went in a file anyway. This city has burned for less.",
+     "text": "Word travels. You've been taking lessons from the Guild-square [Necromancer]. Legal. It went in a file anyway. Two pages so far. Attendance and dates.",
      "_comment": "Authored FIRST deliberately: last-match-wins, so quest/closure greetings override the standing cold line."
     },
     {
@@ -322,7 +322,7 @@
   },
   "summons_send": {
    "speaker": "Zevara",
-   "text": "Good. See Olesm before you climb down. He's been up since the second bell drawing what shouldn't be there, and he'll want you carrying it. And take Relc. That's not the suggestion it sounds like.",
+   "text": "Good. See Olesm before you climb down. He's been up since the second bell drawing what shouldn't be there, and he'll want you carrying it. And take Relc. That's an order.",
    "options": [
     {
      "text": "Understood, Captain.",
@@ -336,7 +336,7 @@
   },
   "seal": {
    "speaker": "Zevara",
-   "text": "Gone? Good. Dead? Better. The Watch is bricking that gallery before sundown — 'for now,' before you say it. Things under Liscor have a way of minding being sealed. Good work. I mean it. Now clear the street. The masons are already stacking brick.",
+   "text": "Gone? Good. Dead? Better. The Watch is bricking that gallery before sundown — 'for now,' before you say it. Things under Liscor have a way of minding being sealed. The masons are already stacking brick, and they'll want the street clear. Good work. I mean it.",
    "options": [
     {
      "text": "For now.",
@@ -350,7 +350,7 @@
   },
   "shift": {
    "speaker": "Zevara",
-   "text": "Ten years of long shifts. Six weeks of leave across all of them. Do the arithmetic and then don't ask why I look like this. My Senior Guardsmen are a spearmaster who won't stop talking and an Antinium I've heard maybe a dozen sentences from in two years. The wall stands. Ten years, no breach. I count that every morning before I count anything else.",
+   "text": "Ten years of long shifts. Six weeks of leave across all of them. Do the arithmetic and then don't ask why I look like this. My Senior Guardsmen are a spearmaster who won't stop talking and an Antinium I've heard maybe a dozen sentences from in two years. The wall stands. Ten years, no breach. I count that every morning, before the rosters.",
    "options": [
     {
      "text": "The guard on the gate speaks well of you.",
@@ -368,7 +368,7 @@
   },
   "authority": {
    "speaker": "Zevara",
-   "text": "He should. I signed his posting and I read his reports — both of them, the real one and the one where nothing happened. That's Liscor's Watch as I intend it: boring gates, boring reports. I've read the other kind of report. I keep those in a different drawer.",
+   "text": "He should. I signed his posting and I read his reports — both of them, the real one and the one where nothing happened. That's Liscor's Watch as I intend it: boring gates, boring reports. I've read the other kind of report. There's a stack of them in my office a hand high.",
    "options": [
     {
      "text": "(Back a step.)",
@@ -454,7 +454,7 @@
   },
   "swept": {
    "speaker": "Zevara",
-   "text": "Spiders from the Dungeon. Wonderful. That's still the size of problem overtime fixes. The next size up gets paid for in funerals. Consider it swept. I'll pull a squad at dusk and burn the silk out before it spreads. You did right bringing it to me clean, before it had teeth. And good work. Now go tell whoever set you on this that the Watch has it.",
+   "text": "Spiders from the Dungeon. Wonderful. A nest that size costs me six Watchmen and a night of overtime. Consider it swept. I'll pull a squad at dusk and burn the silk out before it spreads. You did right bringing it to me clean, before it had teeth. And good work. Now go tell whoever set you on this that the Watch has it.",
    "options": [
     {
      "text": "That's all I ask, Captain.",
@@ -468,7 +468,7 @@
   },
   "swept_paid": {
    "speaker": "Zevara",
-   "text": "Funding, not evidence. Fine — my ledger doesn't much care which. I'll pull a squad at dusk and burn the silk out, whatever's actually down there. Paperwork's cleaner when someone else already covered the bill.",
+   "text": "Funding, not evidence. Fine — my ledger doesn't much care which. I'll pull a squad at dusk and burn the silk out, whatever's actually down there. Set the coin on the desk. It goes down as lanterns and a healer.",
    "options": [
     {
      "text": "That's all I ask, Captain.",

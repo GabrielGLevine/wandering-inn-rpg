@@ -7,11 +7,11 @@
 			{ "text": "\"Counting exits on your evening off?\"", "goto": "offduty" },
 			{ "text": "\"Sit closer to the fire, Olesm.\"", "end": true }
 		] },
-		"offduty": { "speaker": "Olesm", "text": "Every room is a position, and I never asked to see them that way. Your hearth is the strong square. The stairs are an open file. Whoever sits with their back to the door is brave or new. It happens on its own, and then my stew goes cold while I admire it.", "options": [
+		"offduty": { "speaker": "Olesm", "text": "Every room is a position, and I never asked to see them that way. Your hearth is the strong square. The stairs I haven't worked out yet — an open file, possibly, but I keep revising it. Whoever sits with their back to the door is brave or new. It happens on its own, and my stew goes cold in the meantime.", "options": [
 			{ "text": "Bring him a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:olesm_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:olesm_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"Eat something before it goes cold, then.\"", "end": true }
 		] },
-		"served": { "speaker": "Olesm", "text": "Oh. That is properly hot. I had it in my head I would eat later, and later has been three hours away all evening. Thank you. Really — thank you. I'm going to stop talking and eat now.", "options": [
+		"served": { "speaker": "Olesm", "text": "Oh. That is properly hot. I had it in my head I would eat later. I've been saying later for three hours. Thank you. Really — thank you.", "options": [
 			{ "text": "\"Any time, Olesm.\"", "end": true }
 		] }
 	}

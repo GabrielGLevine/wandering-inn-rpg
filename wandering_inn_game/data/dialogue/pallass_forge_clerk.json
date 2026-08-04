@@ -95,7 +95,7 @@
   },
   "tempering_sold": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Posted price, paid in full. Work it into the edge the night before you need it. Questions of application are outside this window's remit; I sell the flask and record the fee.",
+   "text": "Posted price, paid in full. Work it into the edge the night before you need it. Questions of application go to the smiths on the floor. I sell the flask and record the fee.",
    "options": [
     {
      "text": "Understood.",
@@ -185,7 +185,7 @@
   },
   "queue_release": {
    "speaker": "Forge-Tier Clerk",
-   "text": "This is paper, so it is mine to handle. The release is held pending this office's own requisitions. However. An endorsed entry outranks a held release. The rule is posted beside the door, and it has been posted there longer than I have held this window. Nobody has ever used it.",
+   "text": "The release is held pending requisitions filed with the Supply Office, two tiers down. However, an endorsed entry outranks a held release. The rule is posted beside the door, and it has been posted there longer than I have held this window. There is no recorded use of it.",
    "options": [
     {
      "text": "Use it.",
@@ -204,7 +204,7 @@
   },
   "queue_release_why": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Because you have to walk to the other office first, and everybody assumes the answer is no. It is generally no. It is not no today.",
+   "text": "Because you have to walk to the other office first, and everybody assumes the answer is no. On most days that assumption is correct. Today you arrive with an endorsement, and the rule applies.",
    "options": [
     {
      "text": "Then countersign it.",

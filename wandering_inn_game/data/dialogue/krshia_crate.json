@@ -71,7 +71,7 @@
        "smoothed_with_krshia": 1
       }
      },
-     "text": "The inn's order, extended. For the barmaid's sake, and yours. Do not make a habit of it."
+     "text": "The inn's order, extended. For the barmaid's sake, and yours. It goes out on the morning cart, with the flour."
     }
    ],
    "options": [
@@ -309,7 +309,7 @@
   },
   "krshia_tribe": {
    "speaker": "Krshia",
-   "text": "My tribe, yes. Plains east and south of here — many hearths, one name. A Gnoll in a city is still her tribe's Gnoll, and the distance changes nothing that matters. The necklace is a promise I carry.",
+   "text": "My tribe, yes. Plains east and south of here — many hearths, one name. I am a Gnoll with a stall in Liscor, and the tribe is still mine. The necklace is a promise I carry.",
    "options": [
     {
      "text": "What's the promise?",
@@ -341,7 +341,7 @@
   },
   "krshia_plans": {
    "speaker": "Krshia",
-   "text": "So you remembered. Hrr. Then hear a little of it. Every coin this stall clears past its keep goes toward something for the tribes. Something Gnolls have been told we cannot have, and are done being told. There is a gathering, some years off. I mean to stand up at it with full hands. That stays between you, me, and the wool.",
+   "text": "So you remembered. Hrr. Then hear a little of it. Every coin this stall clears past its keep goes toward something for the tribes. Something Gnolls have been told we cannot have. We save for it anyway. There is a gathering, some years off. I mean to stand up at it with full hands. That stays between you, me, and the wool.",
    "options": [
     {
      "text": "Full hands. I'd like to see that.",
@@ -359,7 +359,7 @@
   },
   "krshia_plans_two": {
    "speaker": "Krshia",
-   "text": "You will, if the city behaves and the thieves stay bored. And you are now a keeper of Silverfang business. For you, the front-of-stall price is the back-of-stall price. Do not announce it.",
+   "text": "You will, if the city behaves and the thieves stay bored. And you are now a keeper of Silverfang business. For you, the front-of-stall price is the back-of-stall price. Come early on market days. The good stock does not sit past noon.",
    "options": [
     {
      "text": "Back to business.",
@@ -737,7 +737,7 @@
   },
   "bought": {
    "speaker": "Krshia",
-   "text": "Sold. Wear it, use it, and do not bring it back to me broken expecting sympathy. Anything else catch your eye?",
+   "text": "Sold. Wear it and use it. Mending costs extra. Anything else catch your eye?",
    "options": [
     {
      "text": "Show me the stall again.",
@@ -765,7 +765,7 @@
   },
   "thanks": {
    "speaker": "Krshia",
-   "text": "Yes. This is mine. My thanks. Do not expect a discount, but my thanks.",
+   "text": "Yes. This is mine. Stamps whole, lid tight. My thanks. Take that corner — it goes behind the counter.",
    "options": [
     {
      "text": "Glad to help.",

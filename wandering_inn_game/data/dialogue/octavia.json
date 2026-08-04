@@ -4,7 +4,7 @@
 	"nodes": {
 		"hub": {
 			"speaker": "Octavia",
-			"text": "You look like someone who could use a potion. Everyone can use a potion. Mine are very reasonably priced and only occasionally on fire — once. It was once, and the counter survived. Solvent or salts, six gold either way. What do you need?",
+			"text": "You look like someone who could use a potion. Everyone can use a potion. Mine are very reasonably priced and only occasionally on fire — once. The scorch is still on the counter. Solvent or salts, six gold either way. What do you need?",
 			"text_variants": [
 				{ "requires": { "accomplishment": { "synthesized_draught": 1 } }, "text": "Back already. Told you it gets in the blood. What are we mixing today?" },
 				{ "requires": { "accomplishment": { "bought_from_octavia": 1 } }, "text": "A paying customer, my favorite kind. Anything else, or do you want to see how these actually get made?" }
@@ -26,7 +26,7 @@
 		},
 		"lesson": {
 			"speaker": "Octavia",
-			"text": "Okay. Real talk, because you actually bought something and that buys you the good lesson. Mixing is measuring plus nerve. It will hiss at you. You will want to flinch and you will not. Here, take the bench — cheap reagents, low flame. Watch my hands, then do exactly what I did and not one thing more.",
+			"text": "Okay. Real talk, because you actually bought something and that buys you the good lesson. Measure everything before it touches the flame. It will hiss at you. When it does, keep your hands level and keep pouring. Here, take the bench — cheap reagents, low flame. Watch my hands, then do exactly what I did, step by step.",
 			"options": [
 				{ "text": "Low flame. Steady hands.", "effects": [ { "accomplishment": "synthesized_draught" } ], "goto": "first_mix" },
 				{ "text": "Maybe later.", "goto": "hub" }

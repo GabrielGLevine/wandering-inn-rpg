@@ -4,7 +4,7 @@
  "nodes": {
   "counter": {
    "speaker": "A Scribe by the Hour",
-   "text": "The blank seal is eight gold the hour. It goes back in the tray when the hour is up. That is the arrangement, {addr}. Nobody has ever asked me a second question about it.",
+   "text": "The blank seal is eight gold the hour. It goes back in the tray when the hour is up. That is the arrangement, {addr}. Ink and paper are extra.",
    "text_variants": [
     {
      "requires": {
@@ -12,7 +12,7 @@
        "forged_hand_named": 1
       }
      },
-     "text": "You have what you came for and I said nothing. That is the version I intend to remember. Paper is over there. Ink is behind me."
+     "text": "You have what you came for, and the tray is full again. Paper is over there. Ink is behind me."
     }
    ],
    "options": [
@@ -82,7 +82,7 @@
   },
   "refuses": {
    "speaker": "A Scribe by the Hour",
-   "text": "No. Coin doesn't change it. Neither does the manners, and I'll thank you for them anyway. Nobody who rents this seal finds out who else rented it. That's what they're paying for. The day it stops being true, I am a man with very good handwriting and no work at all.",
+   "text": "No. Coin doesn't change it. Neither does the manners, and I'll thank you for them anyway. The seal goes out and the hour goes in the book. Nothing else gets written down. No names. The day people stop believing that, I have not worked out what I do next.",
    "options": [
     {
      "text": "\"Fair enough.\"",
@@ -92,7 +92,7 @@
   },
   "persuade_pitch": {
    "speaker": "A Scribe by the Hour",
-   "text": "Handwriting. Well. Handwriting is not a name, so I suppose I can be charmed about handwriting. Go on and be charming. It is usually about paper.",
+   "text": "Handwriting. Well. Handwriting I can talk about, I suppose. Go on and be charming. It is usually about paper.",
    "options": [
     {
      "text": "\"It's about somebody wearing a house's initials by the hour.\"",
@@ -102,7 +102,7 @@
   },
   "persuade_close": {
    "speaker": "A Scribe by the Hour",
-   "text": "Then there is no confidence to keep. A confidence is a thing a client tells me, and this man was a renter who never said what he was renting. He works a table at the west end of the alleys, past the tea. He pays in coin and he pays late. That is everything I know about what he is.",
+   "text": "Then there is no confidence to keep. A confidence is a thing a client tells me, and this man was a renter who never said what he was renting. He works a table at the west end of the alleys, past the tea. He pays in coin and he pays late. That's all I know about him.",
    "options": [
     {
      "text": "\"That will do.\"",
@@ -117,7 +117,7 @@
   },
   "paid": {
    "speaker": "A Scribe by the Hour",
-   "text": "That buys the hour. You will notice it has not bought you an answer. I never saw who I wrote for. The seal came back to the tray with alley grit still in the cut, and there is exactly one man west of the tea who works out of an alley and can afford this shop.",
+   "text": "Eight gold, and the hour is yours. What I have is small. I never saw who I wrote for. The seal came back to the tray with alley grit still in the cut, and there is exactly one man west of the tea who works out of an alley and can afford this shop.",
    "options": [
     {
      "text": "\"That's an answer.\"",

@@ -2,16 +2,16 @@
 	"_comment": "d1 #247 Friends of the Inn -- Krshia's INN register. Attached ONLY to the krshia_inn_guest entity; her market stall (and its wares hub) never rides along -- off-duty-at-the-inn context. Serve mirrors patron_serving ({once_per_waking, item}), banks the shared served_customer counter. Voice per docs/design/character-profiles.md: measured, proud Silverfang; 'Hrr.' used SPARINGLY, the ', yes?' Gnoll ending preferred for variation (user note 2026-07-19).",
 	"start": "greet",
 	"nodes": {
-		"greet": { "speaker": "Krshia", "text": "A Human inn, and the food does not insult me. This is worth the walk from the stall, yes?", "options": [
+		"greet": { "speaker": "Krshia", "text": "A Human inn, and the food does not insult me. I walked up from the stall, and there is nobody haggling in my ear, yes?", "options": [
 			{ "text": "Bring her a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:krshia_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:krshia_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"Closed the stall early?\"", "goto": "stall" },
 			{ "text": "\"Rest easy, Krshia.\"", "end": true }
 		] },
-		"stall": { "speaker": "Krshia", "text": "The market was done an hour before I closed. Push past that and you sell nothing and smell of desperation, yes? So this Gnoll sits, and eats, and tomorrow the town comes to me.", "options": [
+		"stall": { "speaker": "Krshia", "text": "The market was done an hour before I closed. Push past that and nothing sells. Buyers smell the desperation on a stall, yes? So this Gnoll sits and eats. Tomorrow the town can come find the stall. The shutters are down and the weights are in their box.", "options": [
 			{ "text": "Bring her a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:krshia_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:krshia_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"Wise. Goodnight.\"", "end": true }
 		] },
-		"served": { "speaker": "Krshia", "text": "Hrr. Generous hands. Hot through, and full to the lip. The Silverfangs remember generous hands.", "options": [
+		"served": { "speaker": "Krshia", "text": "Hrr. Hot through, and full to the lip. The Silverfangs remember generous hands.", "options": [
 			{ "text": "\"Least I could do.\"", "end": true }
 		] }
 	}

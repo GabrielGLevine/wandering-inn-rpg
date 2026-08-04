@@ -126,7 +126,7 @@
   "door_reading": {
    "speaker": "Hedault",
    "_comment": "The 'catalogued exactly once before' callback is a TRADER's line: it names the fragment this player handed him, so it may only render if they did. Base is the same read without the claim.",
-   "text": "Hold still. There is a residue on your sleeve I do not see twice in a decade. Ruin warding. A set ward would have gone quiet years ago; this one is fed, and the draw is live. I do not invoice for looking.",
+   "text": "Hold still. There is a residue on your sleeve I do not see twice in a decade. Ruin warding. A set ward would have gone quiet years ago; this one is fed, and the draw is live. Looking costs nothing.",
    "text_variants": [
     {
      "requires": {
@@ -134,7 +134,7 @@
        "traded_guardian_fragment": 1
       }
      },
-     "text": "Hold still. There is a residue on your sleeve I have catalogued exactly once before — in this shop, on the fragment you handed me. Ruin warding. A set ward would have gone quiet years ago; this one is fed, and the draw is live. I do not invoice for looking."
+     "text": "Hold still. There is a residue on your sleeve I have catalogued exactly once before — in this shop, on the fragment you handed me. Ruin warding. A set ward would have gone quiet years ago; this one is fed, and the draw is live. Looking costs nothing."
     }
    ],
    "options": [
@@ -166,7 +166,7 @@
   },
   "work_done": {
    "speaker": "Hedault",
-   "text": "Done. The work is correct; it is on the cloth and the fee is as quoted. Do not thank me, do not shake my hand, and do not let a street enchanter touch it afterward.",
+   "text": "Done. The work is correct; it is on the cloth and the fee is as quoted. Do not thank me or shake my hand. And keep it away from street enchanters afterward.",
    "options": [
     {
      "text": "Understood.",
@@ -188,7 +188,7 @@
   "heirloom_bench": {
    "speaker": "Hedault",
    "_comment": "He will not work until the lie is named. The two SKILL arms are SEPARATE single-key options (test_content rejects {skill, item} -- pisces_seal.json:112).",
-   "text": "Set it on the cloth. Do not hand it to me. I have looked at it twice already and I will not cut a mount until somebody in this transaction says the true thing out loud: that stone is glass, cut well, sold badly, and about forty years old. I will not work over a lie. Tell me the fact and I will invoice for the fact.",
+   "text": "Set it on the cloth. Do not hand it to me. I have looked at it twice already and I will not cut a mount until somebody in this transaction says the true thing out loud: that stone is glass, cut well, sold badly, and about forty years old. I will not work over a lie. I price what is true.",
    "options": [
     {
      "text": "\"She knows. She's known since she was nineteen. It's the setting she wants honest.\"",
@@ -276,7 +276,7 @@
   "fence_pointer": {
    "speaker": "Hedault",
    "_comment": "Pointer only -- banks nothing; the FIGHT counter comes off the alley encounter's on_victory.",
-   "text": "Forty years ago somebody took the stone and left the glass, and did it well enough that the family never thought to ask. A stone like that is sold twice in this city and kept once. There is a man with a back door off the alleys and a ledger he would not show the Watch. I do not go there. You have the address. I have a mount to cut.",
+   "text": "Forty years ago somebody took the stone and left the glass, and did it well enough that the family never thought to ask. Do not expect the thief to still hold it. Stones of that quality get sold on. There is a man with a back door off the alleys and a ledger he would not show the Watch. I do not go there. You have the address. I have a mount to cut.",
    "options": [
     {
      "text": "\"That's enough.\"",

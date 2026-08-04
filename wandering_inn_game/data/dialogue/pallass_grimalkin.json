@@ -103,7 +103,7 @@
        "completed_bounty_grimalkin_study_casting": 1
       }
      },
-     "text": "The casting subject. Your wind held past the eighth measure, which surprised exactly one of us. Speak."
+     "text": "The casting subject. Your wind held past the eighth measure. The file has it already. Speak."
     },
     {
      "requires": {
@@ -111,13 +111,13 @@
        "standards_tempered": 1
       }
      },
-     "text": "The forge tier settled its temper argument and my name is in the file twice. The examiners log recovery on the blades now, same measure as a squat. Depth, then recovery, then the file. State your business."
+     "text": "The forge tier settled its temper argument and my name is in the file twice. The examiners log recovery on the blades now, same measure as a squat. Depth, then recovery, then it goes in the file. State your business."
     }
    ]
   },
   "exam": {
    "speaker": "Grimalkin",
-   "text": "Grip first. Then wind. Then whether you quit before I do. You cleared all of it — barely, on the wind. The numbers say you will survive the forge tier, and I agree with numbers. The file will say 'adequate.' Ask around this office what I usually write.",
+   "text": "Grip, cleared. Wind, cleared — barely. The last measure was whether you quit before I did. You did not. The numbers say you will survive the forge tier. The file will say 'adequate.' Ask around this office what I usually write.",
    "options": [
     {
      "text": "Understood.",
@@ -133,7 +133,7 @@
   "forge_runes": {
    "speaker": "Grimalkin",
    "_comment": "Held under the 200-char page budget ON PURPOSE: at 204 it split into a 191-char page plus a 12-char orphan reading only 'Stand still.', which the windowed read caught looking like a rendering fault.",
-   "text": "I have. The forge tier runs on rune-fed work. Every ward up there eats on a schedule a smith keeps in a ledger. Feed it on time or it feeds itself. Your door has no ledger. Stand still.",
+   "text": "I have. The forge tier runs on rune-fed work. Every ward up there eats on a schedule a smith keeps in a ledger. Two feedings a shift, logged. No smith keeps one for your door. Stand still.",
    "options": [
     {
      "text": "What does that cost me?",
@@ -153,7 +153,7 @@
   "forge_runes_verdict": {
    "_comment": "HIS OWN PIECE ONLY (spec 4): rune-feeding as forge-tier maintenance practice, plus his standing objection to anything unmeasured. He does not know what is at the far end of the draw; the assembled picture is Act V's.",
    "speaker": "Grimalkin",
-   "text": "It costs whatever it is drawing on, and it has been drawing unsupervised since long before you owned it. I do not find that alarming. I find it unmeasured. Find what sits at the far end of the draw and bring me the numbers. I will publish them and you will be a footnote. That is the highest offer I make.",
+   "text": "It costs whatever it is drawing on, and it has been drawing unsupervised since long before you owned it. I do not find that alarming. I find it unmeasured. Find what sits at the far end of the draw and bring me the numbers. I will publish them and you will be a footnote.",
    "options": [
     {
      "text": "Understood.",

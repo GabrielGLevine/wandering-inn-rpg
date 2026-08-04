@@ -5,7 +5,7 @@
    "speaker": "A Frazzled Drayman",
    "text": "Half a day! Half a day stuck behind the market row and now the axle-pin's walked off somewhere and the Watch says move along. Move along where, exactly? Nobody. Nobody is listening.",
    "text_variants": [
-    { "requires": { "accomplishment": { "soothed_the_drayman": 1 } }, "text": "Found the pin. Right where you said to look — under the whole mess, not in it. Cart's rolling before dusk. I owe you a quiet word, and that's worth more than it sounds on this street." }
+    { "requires": { "accomplishment": { "soothed_the_drayman": 1 } }, "text": "Found the pin. Right where you said to look — wedged under the load, hard up against the axle. I owe you a quiet word for that. Cart's off the row and rolling before dusk." }
    ],
    "options": [
     { "text": "Breathe. Start at the axle-pin — walk me through it once, slow.", "hide_when": { "accomplishment": { "soothed_the_drayman": 1 } }, "effects": [ { "accomplishment": "persuaded_someone" }, { "accomplishment": "soothed_the_drayman" } ], "goto": "calmed" },
@@ -14,7 +14,7 @@
   },
   "calmed": {
    "speaker": "A Frazzled Drayman",
-   "text": "Slow. Right. Pin came loose past the gate, cart's been dragging since, which means it's under the load. Never hit the road. Huh. You just stood there and let me hear myself. Sergeant's been shouting at me for an hour and got less done.",
+   "text": "Slow. Right. Pin came loose past the gate, cart's been dragging since, which means it's under the load. Never hit the road. Huh. I'll get the boards down and dig it out. Sergeant's been shouting at me for an hour and got less done.",
    "options": [
     { "text": "Good luck with the cart.", "end": true }
    ]

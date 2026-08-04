@@ -4,7 +4,7 @@
  "nodes": {
   "hub": {
    "speaker": "Den-Shop Keeper",
-   "text": "Come in, mind the small ones. If you're buying, the shelf is the shelf. If you're official, the counter's there, and I have had a long month of counters.",
+   "text": "Come in, mind the small ones. If you're buying, the shelf is the shelf. If you're official, the counter's there, and it has been a long month already. There's bread in the oven I need to get back to.",
    "text_variants": [
     {
      "requires": {
@@ -42,7 +42,7 @@
   },
   "month": {
    "speaker": "Den-Shop Keeper",
-   "text": "A crate of tin, four cycles late, and every stamp on it correct. The permit office cannot release it because the office is short its own supplies. Which are tin. I have hatchlings upstairs chewing yesterday's bread and a shelf with a tin-shaped hole in it.",
+   "text": "A crate of tin, four cycles late, and every stamp on it correct. The permit office cannot release it. Their own supplies have not come in, and nobody up there will put a day to it. I have hatchlings upstairs chewing yesterday's bread and a shelf with a tin-shaped hole in it.",
    "options": [
     {
      "text": "That can't be how it works.",
@@ -56,7 +56,7 @@
   },
   "month_two": {
    "speaker": "Den-Shop Keeper",
-   "text": "It is exactly how it works and every single person in that chain is doing their job correctly. That is what visitors never believe. Nobody up here is lazy, {addr}. The clerk at the release window checks every stamp twice, both sides, and the dock behind her fills up while she does it.",
+   "text": "It is exactly how it works and every single person in that chain is doing their job correctly. Nobody up here is lazy, {addr}. The clerk at the release window checks every stamp twice, both sides, and the dock behind her fills up while she does it.",
    "options": [
     {
      "text": "Somebody has to be able to sign.",
@@ -70,7 +70,7 @@
   },
   "consignee": {
    "speaker": "Den-Shop Keeper",
-   "text": "I am the consignee. I can release the crate the moment somebody hands me a notice I am allowed to act on. I have been offered promises. I have been offered a shout down from the landing. A notice has a stamp on it. I am still waiting on the stamp.",
+   "text": "I am the consignee. I have been offered promises and one shout down from the landing. The procedure needs a notice with a stamp on it, one I am allowed to act on. Hand me that and the crate moves the same hour.",
    "options": [
     {
      "_comment": "TALK route terminal rung. Requires the countersigned notice, i.e. offices 1 and 2 walked in order.",
@@ -120,10 +120,10 @@
   },
   "released": {
    "speaker": "Den-Shop Keeper",
-   "text": "Countersigned. The same office that held my crate in its queue for four cycles signed the release. I am going to have this framed and I am going to hang it where the hatchlings can see it.",
+   "text": "Countersigned. A stamp I can act on, four cycles late. I will send for the crate before the shop closes. I am going to frame this notice.",
    "options": [
     {
-     "text": "Everyone in that chain was right.",
+     "text": "Glad it came through.",
      "end": true
     }
    ]

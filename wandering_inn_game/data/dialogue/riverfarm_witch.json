@@ -20,7 +20,7 @@
        "heard_price_of_a_favor": 1
       }
      },
-     "text": "You want the blight gone. I want what I'm owed. One of these is easy. Sit. Tea first. The craft minds its manners."
+     "text": "You want the blight gone. I want what I'm owed. One of these is easy. Sit. Tea first. There's honey if you take it."
     },
     {
      "requires": {
@@ -36,7 +36,7 @@
        "witch_lessons": 1
       }
      },
-     "text": "Mind the kettle, apprentice-of-no-one. The craft heard you. Pour before it whistles; that's your first lesson."
+     "text": "Mind the kettle, apprentice-of-no-one. The craft heard you. Pour before it whistles."
     }
    ],
    "options": [
@@ -137,7 +137,7 @@
   "witch_ward_taught": {
    "_comment": "HER OWN PIECE ONLY (spec 4): a hedge witch's feeding practice, scaled to her hollow. No seal, no lattice, no assembled picture -- she has never been under Liscor.",
    "speaker": "Eloise",
-   "text": "Mine takes milk and a word, every seventh night. Small appetite, small keeping. Yours was built to hold something that argues back, and a ward like that gets fed on purpose, by someone who meant it to outlast them. Don't starve it in a hurry, child. A hungry ward goes looking.",
+   "text": "Mine takes milk and a word, every seventh night. Small appetite, small keeping. Yours was built to hold something that argues back, and a ward like that gets fed on purpose, by someone who meant it to outlast them. Don't starve it in a hurry, child. Left hungry, it will start drawing what it needs from whatever is nearest — the heat off your hearth first, then the sleep of whoever lives over it.",
    "options": [
     {
      "text": "I'll remember that.",
@@ -147,7 +147,7 @@
   },
   "truth": {
    "speaker": "Eloise",
-   "text": "No blight. A bargain, unpaid. Someone in that village asked me for a favor and got exactly what they asked for. The price was always the second half of the deal, and they're pretending they forgot that part. The craft has been collecting on the debt ever since, out of their fields.",
+   "text": "Blight is the word the village picked, and it's the wrong one. Someone there struck a bargain with me — asked a favor, got exactly what they asked for. The price was always the second half of the deal, and they're pretending they forgot that part. The craft has been collecting on the debt ever since, out of their fields.",
    "options": [
     {
      "text": "Back to it.",
@@ -361,7 +361,7 @@
   },
   "witch_ask": {
    "speaker": "Eloise",
-   "text": "Anyone can learn the shape of it. Hats, herbs, words said over water. The craft itself asks one question first, and clever has nothing to do with the answer.",
+   "text": "Anyone can learn the shape of it. Hats. Herbs, mostly, if I'm honest. Words said over water come later in the learning. The craft itself asks one question first, and clever has nothing to do with the answer.",
    "options": [
     {
      "text": "What's the question?",
@@ -376,7 +376,7 @@
   "witch_lesson": {
    "_comment": "The bank option is the spent one (hide_when witch_lessons); the ask path stays replayable as flavor. Gate shape: requires blight_lifted + hide_when drove_off_collectors on the hub option = the ratified peaceful-OR-path exactly (mediated OR paid), single-key hide_when because _meets_hide_when is AND-semantics (dialogue.gd:128).",
    "speaker": "Eloise",
-   "text": "Why did the debt get paid, child? Think past the how of it. Why. You sat at my table and went looking for the ending where nobody bled. That's the question, answered before I asked it. The craft roots in what a person already is. Mine roots in kindness.",
+   "text": "Why did the debt get paid, child? Think past the how of it. Why. You sat at my table and went looking for the ending where nobody bled. That's the question, answered before I asked it. The craft grows from what a person already is. Mine roots in kindness.",
    "options": [
     {
      "text": "Then teach me the first of it.",

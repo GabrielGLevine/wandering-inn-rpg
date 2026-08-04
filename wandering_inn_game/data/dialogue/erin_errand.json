@@ -28,7 +28,7 @@
        "errand_decided": 1
       }
      },
-     "text": "Back already? The inn feels almost manageable since you sorted that delivery. Almost."
+     "text": "Back already? The inn feels almost manageable since you sorted that delivery. I even got to sit down this morning, for about a minute."
     },
     {
      "requires": {
@@ -36,7 +36,7 @@
        "won_combat": 1
       }
      },
-     "text": "I know what the road is like. I'm not asking you to un-fight anything. I'm asking you to knock first at the idea that they're all the same. Sign stays up."
+     "text": "I know what the road is like. Whatever you fought out there, I'm sure it needed fighting. Just look twice at the next one before you decide what it is. That's all I want. Sign stays up."
     },
     {
      "requires": {
@@ -240,7 +240,7 @@
   },
   "erin_pond": {
    "speaker": "Erin",
-   "text": "The deep end? Nobody catches anything out of that. Krshia says it's been that way since before there was a wall on Liscor, and Krshia says most things like she was there. I take a bowl out sometimes and leave it on the flat rock. It's gone by morning. That could mean anything and I've decided not to find out which.",
+   "text": "The deep end? Nobody catches anything out of that. Krshia says it's been that way since before there was a wall on Liscor. I take a bowl out sometimes and leave it on the flat rock. It's gone by morning. I haven't gone down to watch.",
    "options": [
     { "text": "You feed it.", "goto": "erin_pond_two" },
     { "text": "I'll stop putting a hook in it, then.", "end": true }
@@ -248,7 +248,7 @@
   },
   "erin_pond_two": {
    "speaker": "Erin",
-   "text": "I feed everyone. That's the job. If something's been out there long enough to be older than the wall, it has definitely not had a hot meal in a while, and that seems like the sort of thing somebody ought to fix.",
+   "text": "Well, yeah, I feed everyone who turns up. If something's been out there long enough to be older than the wall, it has definitely not had a hot meal in a while, and that seems like the sort of thing somebody ought to fix.",
    "options": [
     { "text": "That's a lot of kindness for something you've never seen.", "end": true }
    ]
@@ -288,7 +288,7 @@
   },
   "cleaned": {
    "speaker": "Erin",
-   "text": "Whoa. That was - the table's actually reflective now. Skills are so unfair.",
+   "text": "Whoa. That was - the table's actually reflective now. I scrubbed at that thing all spring and it never looked like this.",
    "options": [
     {
      "text": "Wait, one more thing!",
@@ -354,7 +354,7 @@
   },
   "erin_home": {
    "speaker": "Erin",
-   "text": "Far. Really far. Like, you can't get there by walking, and believe me, I did the math on walking. The math was bad. Anyway! The inn's home now. It has a door and everything. Some of the chairs match.",
+   "text": "Far. Really far. Like, you can't get there by walking, and believe me, I did the math on walking. The math was bad. Anyway! The inn's home now. It has a door and everything, and about half the chairs match. I pick up more whenever a trader has them.",
    "options": [
     {
      "text": "It suits you.",
@@ -372,7 +372,7 @@
   },
   "erin_home_two": {
    "speaker": "Erin",
-   "text": "Yeah? I keep deciding that on purpose, so it's nice when it lands by accident. Anyway the bread's about done and it stops being bread if I stand here. Stay put, I'll cut you the end bit.",
+   "text": "Yeah? I keep deciding that on purpose, so it's nice when it lands by accident. Hang on — bread's about done and I have to pull it. Stay put, I'll cut you the end bit.",
    "options": [
     {
      "text": "Back up a moment.",
@@ -401,7 +401,7 @@
   "erin_door_flicker": {
    "_comment": "Task 2.2 orphaned this node (its only inbound goto was the retired door-chain start option); Task 2.4 CLAIMED it. Its inbound is now the hub's last option, gated door_mounted -> door_awakened. Unchanged text -- it needed a window, not a rewrite.",
    "speaker": "Erin",
-   "text": "It went somewhere cold this morning. Cold enough the frame's still wet where I touched it. Doors shouldn't have moods. Can you look? If it eats you, yell.",
+   "text": "It went somewhere cold this morning. Cold enough the frame's still wet where I touched it. Nobody was near it when it happened. Can you look? Just stay on this side of it while you do.",
    "options": [
     {
      "text": "I'll take a look.",

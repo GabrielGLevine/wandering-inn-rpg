@@ -3,9 +3,9 @@
 	"nodes": {
 		"hub": {
 			"speaker": "A Villager",
-			"text": "They take a beat too long to look at you. \"Fine. I'm fine. Everyone keeps asking that.\"",
+			"text": "They take a beat too long to look at you. \"The hens are laying again. No. That weren't your question. Everyone keeps asking after me.\"",
 			"text_variants": [
-				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "So that's what that was. I keep losing the thread of it. I meant to say something. It's gone again. Thank you. However it happened, thank you." }
+				{ "requires": { "accomplishment": { "blight_lifted": 1 } }, "text": "So that's what that was. I keep losing the thread of it. I meant to say something. It's gone again. Thank you. Them beans went in crooked last month. Been staring at the rows all morning." }
 			],
 			"options": [
 				{ "text": "What do you remember?", "requires": { "accomplishment": { "blight_lifted": 1 } }, "goto": "remember" },

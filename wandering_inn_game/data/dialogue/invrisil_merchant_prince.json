@@ -11,7 +11,7 @@
        "merchant_exposed": 1
       }
      },
-     "text": "Come to inventory the wreckage? The Guild took the charter, the criers took the rest. I hope the hat-people paid you in something that keeps."
+     "text": "Come to inventory the wreckage? The Guild took the charter, the criers took the rest. I hope the hat-people paid you properly for it."
     },
     {
      "requires": {
@@ -109,7 +109,7 @@
   },
   "cornered": {
    "speaker": "Master Coyle",
-   "text": "That was a better hand than I priced you for. Sit down. Please. Let us speak as adults who know what things cost. Yes — I paid for the removal; the frame was simply cheaper than the fee. Farley's sort are priced by the dozen — warehouse math, a line in anyone's book. To price me you would need the city, and the city hasn't finished paying. So. Name yours. Everyone has one, and today I am buying above market.",
+   "text": "That was a better hand than I priced you for. Sit down. Please. Let us speak as adults who know what things cost. Yes — I paid for the removal; the frame was simply cheaper than the fee. Farley's sort are priced by the dozen — warehouse math, a line in anyone's book. My price would want the city's own books, all of them, and several years of them. So. Name yours. Everyone has one, and today I am buying above market.",
    "text_variants": [
     {
      "requires": {
@@ -117,12 +117,12 @@
        "forced_confession": 1
       }
      },
-     "text": "Enough. You've made your point in bruises — a currency I accept, though I do not respect it. Yes. I paid for the removal, and the frame was simply cheaper than the fee. There. Plainly said. Now sit down and let us discuss what your silence costs. I will open with wine and a number, and you may argue with the number."
+     "text": "Enough. You've made your point in bruises — a currency I accept, though I do not respect it. Yes. I paid for the removal, and the frame was simply cheaper than the fee. There. Plainly said. Now sit down and let us discuss what your silence costs. I will pour the wine myself and open with a number you will want to hear."
     }
    ],
    "options": [
     {
-     "text": "Not for sale. The ledger goes to the Watch, the Guild, and every crier with working lungs.",
+     "text": "Not for sale. The ledger goes to the Watch, the Guild, and the criers.",
      "effects": [
       {
        "accomplishment": "merchant_exposed"
@@ -152,7 +152,7 @@
   },
   "ending_exposed": {
    "speaker": "Master Coyle",
-   "text": "Wait. No. No, you actually mean it. You held a fortune in your hand just now and you're going to burn it — for your Mister Farley, a man in a cheap hat you've never shared a drink with. I have bought forty people in that chair. I want it noted that I offered. Get out. Go be expensive somewhere else.",
+   "text": "Wait. No. No, you actually mean it. You held a fortune in your hand just now and you're going to burn it — for your Mister Farley, a man in a cheap hat you've never shared a drink with. I have bought forty people in that chair. I want it noted that I offered. Get out. Take the stairs, and touch nothing on the way down.",
    "options": [
     {
      "text": "The criers will explain the rest.",
@@ -162,7 +162,7 @@
   },
   "ending_extorted": {
    "speaker": "Master Coyle",
-   "text": "Forty. Done. Worth it, too, which annoys me more than the sum. The charges were always mine to un-make; watch how fast this city forgets a theft once a rich man yawns. A genuine pleasure, consultant. I prefer enemies with prices. Friends run so very much dearer.",
+   "text": "Forty. Done. Worth it, too, at twice the sum. The charges were always mine to un-make; a word at the Guild, a dinner or two, and this city will have forgotten the theft by month's end. A genuine pleasure, consultant. I prefer enemies with prices. Friends run so very much dearer.",
    "options": [
     {
      "text": "Stay bought, Coyle.",
