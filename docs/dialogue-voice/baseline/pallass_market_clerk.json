@@ -1,0 +1,232 @@
+{
+ "facts": {
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "2"
+   ],
+   "propnouns": [
+    "Pallass"
+   ]
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Human"
+   ]
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.queue_entry.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.queue_entry.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.queue_entry.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.queue_entry_done.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.queue_entry_done.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.stamped.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.stamped.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "gold": -2
+       },
+       {
+        "accomplishment": "pallass_entry_stamped"
+       }
+      ],
+      "goto": "stamped",
+      "hide_when": {
+       "accomplishment": {
+        "pallass_entry_stamped": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "pallass_attuned": 1
+       },
+       "gold": 2
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "queue_entry",
+      "hide_when": {
+       "accomplishment": {
+        "queue_notice_endorsed": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "ledger_loop_started": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Tier Clerk",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "phase": [
+        "dusk",
+        "night"
+       ]
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "race": "human"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "race": "drake"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "skill": "bargain"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "v0.15 T4.1 market ambient reactivity \u2014 same ordering rule as pallass_market_local.json's pair.",
+      "requires": {
+       "accomplishment": {
+        "elevator_pass_stamped": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "seal_resolved": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "queue_entry": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "queue_notice_endorsed"
+       }
+      ],
+      "goto": "queue_entry_done",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Tier Clerk",
+    "text": "\u00a7"
+   },
+   "queue_entry_done": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Tier Clerk",
+    "text": "\u00a7"
+   },
+   "stamped": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Tier Clerk",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

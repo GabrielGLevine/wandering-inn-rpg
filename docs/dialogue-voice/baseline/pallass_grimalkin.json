@@ -1,0 +1,326 @@
+{
+ "facts": {
+  "$.nodes.exam.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.exam.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.forge_runes.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.forge_runes.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.forge_runes.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.forge_runes_verdict.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.forge_runes_verdict.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "8"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.studies.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.studies.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.studies.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.studies.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.study_enrolled.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.study_enrolled.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Every hub option banks chatted_with_grimalkin, the met counter his inn-guest row needs. The repo's usual producer is a talk_pool on the entity, but this Grimalkin carries a conversation and NO talk_pool, and giving him one would change what his first interact of every waking does on a shipped entity -- so the bank rides the conversation, appended LAST in each effects array so no existing effect's event order moves. All four options carry it; effects never change the rendered option list, so every index-driven script over this hub is untouched.",
+  "nodes": {
+   "exam": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "grimalkin_examination_passed"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Grimalkin",
+    "text": "\u00a7"
+   },
+   "forge_runes": {
+    "_comment": "Held under the 200-char page budget ON PURPOSE: at 204 it split into a 191-char page plus a 12-char orphan reading only 'Stand still.', which the windowed read caught looking like a rendering fault.",
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "lattice_forge_rune"
+       }
+      ],
+      "goto": "forge_runes_verdict",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Grimalkin",
+    "text": "\u00a7"
+   },
+   "forge_runes_verdict": {
+    "_comment": "HIS OWN PIECE ONLY (spec 4): rune-feeding as forge-tier maintenance practice, plus his standing objection to anything unmeasured. He does not know what is at the far end of the draw; the assembled picture is Act V's.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Grimalkin",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "gold": -8
+       },
+       {
+        "accomplishment": "chatted_with_grimalkin"
+       }
+      ],
+      "goto": "exam",
+      "hide_when": {
+       "accomplishment": {
+        "grimalkin_examination_passed": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "forge_permit_filed": 1
+       },
+       "gold": 8
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "b4 #219 slot gate: a held posting blocks enrollment. The board_accepted bool gate HIDES (both directions, same as Selys's hub) \u2014 no visible-locked render exists; the study-loop canonical's mutual-exclusion option pins are the proof.",
+      "effects": [
+       {
+        "accomplishment": "chatted_with_grimalkin"
+       }
+      ],
+      "goto": "studies",
+      "requires": {
+       "board_accepted": false
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "open_board_turnin": "grimalkin"
+       },
+       {
+        "accomplishment": "chatted_with_grimalkin"
+       }
+      ],
+      "end": true,
+      "requires": {
+       "board_accepted": true
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "chatted_with_grimalkin"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "Spec 4 (Task 6.2) PALLASS CAPSTONE. Placed on GRIMALKIN, not pallass_forge_clerk: the clerk says 'I only handle paper' in three separate nodes, while forge-tier rune practice is Grimalkin's professional register. Gated on the forge chain's terminal (elevator_pass_stamped) + spine_started, hidden once heard; revisit arm on the hub he already sees the player at (spec 8). Carries chatted_with_grimalkin like every other option here; the lattice bank rides the ACCEPT one node down, so declining costs nothing.",
+      "effects": [
+       {
+        "accomplishment": "chatted_with_grimalkin"
+       }
+      ],
+      "goto": "forge_runes",
+      "hide_when": {
+       "accomplishment": {
+        "lattice_forge_rune": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "elevator_pass_stamped": 1,
+        "spine_started": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Grimalkin",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "completed_bounty_grimalkin_study_combat": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "completed_bounty_grimalkin_study_casting": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "standards_tempered": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "studies": {
+    "options": [
+     {
+      "_comment": "b4 review fix: NO hide_when \u2014 accepted_bounty_* counters never reset, so hiding on them permanently retired the study after one accept-then-abandon (the hub's board_accepted:false gate already prevents double-accept while a posting is held; delta rows are repeatable by design).",
+      "effects": [
+       {
+        "accept_bounty": "grimalkin_study_combat"
+       }
+      ],
+      "goto": "study_enrolled",
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accept_bounty": "grimalkin_study_casting"
+       }
+      ],
+      "goto": "study_enrolled",
+      "requires": {
+       "accomplishment": {
+        "learned_magic_from_pisces": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Grimalkin",
+    "text": "\u00a7"
+   },
+   "study_enrolled": {
+    "_comment": "b4 #219 enrollment ack. board_accepted:false on the hub's studies entry blocks accept while ANY posting is held (hidden, not locked); studies are re-acceptable after completion or abandon \u2014 delta rows are repeatable.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Grimalkin",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

@@ -3,128 +3,698 @@
  "fixture_save": "inn_guests_start",
  "starts_at_title": true,
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "inn" },
-  { "action": "assert_state", "path": "times_slept", "equals": 10 },
-
-  { "_comment": "Exactly TWO of the SIX guest rows render this waking -- the seat count never grows with the roster. Off-shift rows are structurally absent, so they contribute no sprite (present_when, unlike visual_states `hidden`). 23 = 16 ungated entities + hungry_patron (day) + the 3 _returned Horns (door_mounted) + selys + krshia + the PC. Identical to PR2a's count because the roster grew and the SEATS did not. from_start because the boot render lands before world_ready, ahead of this step's since-marker.", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 23, "fallbacks": 0 }, "from_start": true, "timeout_sec": 5 },
-
-  { "action": "screenshot", "name": "00_pilot_pair_seated" },
-
-  { "_comment": "== DISPLACEMENT, BEFORE ANYONE IS GREETED == (3,5) is Olesm's chair and (6,5) is Pisces's, and both are plain floor at t=10 -- the player walks straight over them. That is the negative half of the rotation, and it is only proof because THIS SAME RUN seats Olesm on the first cell at t=11 and Pisces on the second at t=12. The row-5 walk also doubles as the approach to Selys, whose (6,6) chair sits directly south of the second cell.", "action": "click", "cell": [3, 5] },
-  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [3, 5] }, "timeout_sec": 10 },
-  { "action": "click", "cell": [6, 5] },
-  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [6, 5] }, "timeout_sec": 10 },
-
-  { "_comment": "== SELYS: on shift + inn register + serve == her seat (6,6) is cardinally south of where the displacement walk ended, so this click faces and interacts in one. Her OWN conversation opens directly (single interact, no bark -- the guest rows carry no talk_pool), and it is the off-duty register, never selys_delivery's board.", "action": "click", "cell": [6, 6] },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "selys_inn" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Selys", "text": "You actually work here? That explains why the stew smells like something worth queuing for.", "options": [
-   { "text": "Bring her a bowl from the kitchen. (Serve)", "locked": false, "requirement": "" },
-   { "text": "\"Long day at the desk?\"", "locked": false, "requirement": "" },
-   { "text": "\"Enjoy your evening, Selys.\"", "locked": false, "requirement": "" }
-  ] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Serve is visible option 1 (hot_meal held + not yet served this waking, both legs of the {once_per_waking, item} compound met). Effects: bank the serve key, served_customer++, gold+2, consume the hot_meal -> goto served.", "action": "click_dialogue_option", "option": 1 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "hot_meal" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Selys", "text": "...that is a good bowl of stew. Do not tell anyone I said so. I have a reputation for being hard to please." }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "gold", "equals": 13 },
-  { "action": "screenshot", "name": "01_selys_served" },
-  { "action": "click_dialogue_option", "option": 1 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== KRSHIA: the other half of the on-shift pair, register-pure == her seat is (4,6), unchanged since PR1. Approach from (4,5) directly above it; the hot_meal is spent, so her Serve renders VISIBLE-LOCKED ('requires Hot Meal') rather than hidden -- an item gate is a grey tease, not a secret -- and the stall topic is therefore visible option 2.", "action": "click", "cell": [4, 5] },
-  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [4, 5] }, "timeout_sec": 10 },
-  { "action": "click", "cell": [4, 6] },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_inn" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "A Human inn, and the food does not insult me. This is worth the walk from the stall, yes?", "options": [
-   { "text": "Bring her a bowl from the kitchen. (Serve)", "locked": true, "requirement": "requires Hot Meal" },
-   { "text": "\"Closed the stall early?\"", "locked": false, "requirement": "" },
-   { "text": "\"Rest easy, Krshia.\"", "locked": false, "requirement": "" }
-  ] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Her stall topic: off-duty, the market closed, never the wares hub -- the register-purity half PR1 pinned, plus the second ', yes?' the Gnoll palette wants.", "action": "click_dialogue_option", "option": 2 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Krshia", "text": "A Gnoll knows when the market is done. Push past that and you sell nothing and smell of desperation, yes? Better to sit, and eat, and let the town come to me tomorrow." }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "02_krshia_offduty" },
-  { "_comment": "Serve stays visible-locked here too, so the exit is visible option 2.", "action": "click_dialogue_option", "option": 2 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== THE SLIDE == a real sleep at your_bed (the inn's only bed, upstairs) takes times_slept 10 -> 11, so start goes 0 -> 1 and the window seats [krshia, olesm]. olesm_chess_loop's exact bed idiom.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 3] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn_upstairs", "cell": [9, 3] }, "timeout_sec": 5 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [9, 2] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "times_slept", "equals": 11 },
-
-  { "action": "teleport", "map": "inn", "cell": [4, 5] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn", "cell": [4, 5] }, "timeout_sec": 5 },
-  { "_comment": "Still exactly two seats filled after the slide -- the same two seats, different people. 23 -> 24 is NOT a third guest: the sleep completed the resonant_catalyst attunement and banked garden_door_unlocked, so the always-authored garden_door (3,8) turns present in the same rebuild (event log: accomplishment_recorded garden_door_unlocked fires inside the sleep beat, before this render).", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 24, "fallbacks": 0 }, "timeout_sec": 5 },
-
-  { "_comment": "OLESM ROTATED IN: the chair the player walked clean across before the sleep now blocks a move. A successful step would have put the player on (3,5).", "action": "move", "direction": "left", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [4, 5] },
-
-  { "_comment": "== OLESM: register-pure off-duty topic == (3,5), west-adjacent to the player, so this click faces + interacts. olesm_inn opens, never olesm_intro's council desk -- no chess wager, no puzzle, no briefing. Serve is visible-locked (the hot_meal went to Selys), so the topic is visible option 2.", "action": "click", "cell": [3, 5] },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_inn" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Oh, good, a friendly face. I promised myself one night off and I have spent it counting how many people can reach that door before I can.", "options": [
-   { "text": "Bring him a bowl from the kitchen. (Serve)", "locked": true, "requirement": "requires Hot Meal" },
-   { "text": "\"Counting exits on your evening off?\"", "locked": false, "requirement": "" },
-   { "text": "\"Sit closer to the fire, Olesm.\"", "locked": false, "requirement": "" }
-  ] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "click_dialogue_option", "option": 2 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Olesm", "text": "Every room is a position, and I never asked to see them that way. Your hearth is the strong square. The stairs are an open file. Whoever sits with their back to the door is brave or new. It happens on its own, and then my stew goes cold while I admire it." }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "03_slid_window_olesm_in" },
-  { "action": "click_dialogue_option", "option": 2 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "KRSHIA STAYED: she is in BOTH windows (start 0 -> [selys,krshia], start 1 -> [krshia,olesm]), which is what makes this a slide and not a swap. Her (4,6) chair is directly south of the player; the sleep cleared entity_first_use so the once_per_waking leg is armed again, but the hot_meal is still spent, so Serve stays visible-locked and the exit is visible option 3.", "action": "click", "cell": [4, 6] },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "krshia_inn" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "click_dialogue_option", "option": 3 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== THE SECOND SLIDE == one more sleep takes times_slept to 12, start = 12%5 = 2, seating [olesm, pisces]: Olesm holds a second waking, Krshia finally rotates out, and Pisces takes the OTHER cell the opening displacement walk crossed.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 3] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn_upstairs", "cell": [9, 3] }, "timeout_sec": 5 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [9, 2] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "times_slept", "equals": 12 },
-
-  { "action": "teleport", "map": "inn", "cell": [4, 5] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn", "cell": [4, 5] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 24, "fallbacks": 0 }, "timeout_sec": 5 },
-
-  { "_comment": "OLESM HELD HIS CHAIR across two wakings -- his conversation still opens from the same cell. Exit is visible option 3 (Serve visible-locked in slot 1, the room-reading topic in slot 2).", "action": "click", "cell": [3, 5] },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "olesm_inn" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "click_dialogue_option", "option": 3 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "KRSHIA ROTATED OUT at last: she held a seat across t=10 and t=11 and leaves at t=12, so (4,6) is walkable floor and a plain move down lands on it.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [4, 6] },
-
-  { "_comment": "== PISCES: rotated in, register-pure off-duty topic == (6,5), the second cell the opening displacement walk crossed. Approach from (5,5), the free cell west of his seat.", "action": "click", "cell": [5, 5] },
-  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [5, 5] }, "timeout_sec": 10 },
-  { "action": "click", "cell": [6, 5] },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "pisces_inn" }, "timeout_sec": 5 },
-  { "_comment": "#349 review wave: this fixture banks door_mounted, which arms `ceria/yvlon/ksmvr_inn_returned` -- the Horns really are in the corner here, so the greet serves the RESIDENCE variant (pisces_inn's greet text_variants, row 3). The base text below it is the pre-seal greet and is no longer what this state renders.", "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Pisces", "text": "My team have reclaimed the corner by the fire and appear to consider the matter settled. I am here to observe the decline at close range. The fire remains adequate. My rooms remain not.", "options": [
-   { "text": "Bring him a bowl from the kitchen. (Serve)", "locked": true, "requirement": "requires Hot Meal" },
-   { "text": "\"Not here for the food. Noted.\"", "locked": false, "requirement": "" },
-   { "text": "\"Enjoy the adequate fire.\"", "locked": false, "requirement": "" }
-  ] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "His ONE off-duty topic: food and travel, no magic, no necromancy, no Door -- the register-purity proof that the guest row never borrows pisces_magic's tutoring or the door_mounting beat that shares this map.", "action": "click_dialogue_option", "option": 2 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Pisces", "text": "Tavern fare is a solved problem. Salt, fat, and enough of it that nobody asks a second question. I have eaten better in three cities. I have eaten considerably worse in nine. I decline to say where this kitchen falls between them." }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "04_second_slide_pisces_in" },
-  { "_comment": "Serve stays visible-locked on this node too, so the exit is visible option 2.", "action": "click_dialogue_option", "option": 2 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 10
+  },
+  {
+   "_comment": "Exactly TWO of the SIX guest rows render this waking -- the seat count never grows with the roster. Off-shift rows are structurally absent, so they contribute no sprite (present_when, unlike visual_states `hidden`). 23 = 16 ungated entities + hungry_patron (day) + the 3 _returned Horns (door_mounted) + selys + krshia + the PC. Identical to PR2a's count because the roster grew and the SEATS did not. from_start because the boot render lands before world_ready, ahead of this step's since-marker.",
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 23,
+    "fallbacks": 0
+   },
+   "from_start": true,
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_pilot_pair_seated"
+  },
+  {
+   "_comment": "== DISPLACEMENT, BEFORE ANYONE IS GREETED == (3,5) is Olesm's chair and (6,5) is Pisces's, and both are plain floor at t=10 -- the player walks straight over them. That is the negative half of the rotation, and it is only proof because THIS SAME RUN seats Olesm on the first cell at t=11 and Pisces on the second at t=12. The row-5 walk also doubles as the approach to Selys, whose (6,6) chair sits directly south of the second cell.",
+   "action": "click",
+   "cell": [
+    3,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     3,
+     5
+    ]
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "click",
+   "cell": [
+    6,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     6,
+     5
+    ]
+   },
+   "timeout_sec": 10
+  },
+  {
+   "_comment": "== SELYS: on shift + inn register + serve == her seat (6,6) is cardinally south of where the displacement walk ended, so this click faces and interacts in one. Her OWN conversation opens directly (single interact, no bark -- the guest rows carry no talk_pool), and it is the off-duty register, never selys_delivery's board.",
+   "action": "click",
+   "cell": [
+    6,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "selys_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Selys",
+    "text": "You actually work here? That explains the stew. The Guild canteen hasn't made anything worth queuing for in years.",
+    "options": [
+     {
+      "text": "Bring her a bowl from the kitchen. (Serve)",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"Long day at the desk?\"",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"Enjoy your evening, Selys.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Serve is visible option 1 (hot_meal held + not yet served this waking, both legs of the {once_per_waking, item} compound met). Effects: bank the serve key, served_customer++, gold+2, consume the hot_meal -> goto served.",
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "served_customer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_lost",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Selys",
+    "text": "That's a proper bowl of stew. Barley in it and everything. Where does she even get barley before the pass opens?"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 13
+  },
+  {
+   "action": "screenshot",
+   "name": "01_selys_served"
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== KRSHIA: the other half of the on-shift pair, register-pure == her seat is (4,6), unchanged since PR1. Approach from (4,5) directly above it; the hot_meal is spent, so her Serve renders VISIBLE-LOCKED ('requires Hot Meal') rather than hidden -- an item gate is a grey tease, not a secret -- and the stall topic is therefore visible option 2.",
+   "action": "click",
+   "cell": [
+    4,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     4,
+     5
+    ]
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "click",
+   "cell": [
+    4,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "krshia_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia",
+    "text": "A Human inn, and the food does not insult me. I walked up from the stall, and there is nobody haggling in my ear, yes?",
+    "options": [
+     {
+      "text": "Bring her a bowl from the kitchen. (Serve)",
+      "locked": true,
+      "requirement": "requires Hot Meal"
+     },
+     {
+      "text": "\"Closed the stall early?\"",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"Rest easy, Krshia.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Her stall topic: off-duty, the market closed, never the wares hub -- the register-purity half PR1 pinned, plus the second ', yes?' the Gnoll palette wants.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Krshia",
+    "text": "The market was done an hour before I closed. Push past that and nothing sells. Buyers smell the desperation on a stall, yes? So this Gnoll sits and eats. Tomorrow the town can come find the stall. The shutters are down and the weights are in their box."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_krshia_offduty"
+  },
+  {
+   "_comment": "Serve stays visible-locked here too, so the exit is visible option 2.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE SLIDE == a real sleep at your_bed (the inn's only bed, upstairs) takes times_slept 10 -> 11, so start goes 0 -> 1 and the window seats [krshia, olesm]. olesm_chess_loop's exact bed idiom.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     9,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 11
+  },
+  {
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    4,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     4,
+     5
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Still exactly two seats filled after the slide -- the same two seats, different people. 23 -> 24 is NOT a third guest: the sleep completed the resonant_catalyst attunement and banked garden_door_unlocked, so the always-authored garden_door (3,8) turns present in the same rebuild (event log: accomplishment_recorded garden_door_unlocked fires inside the sleep beat, before this render).",
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 24,
+    "fallbacks": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "OLESM ROTATED IN: the chair the player walked clean across before the sleep now blocks a move. A successful step would have put the player on (3,5).",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    5
+   ]
+  },
+  {
+   "_comment": "== OLESM: register-pure off-duty topic == (3,5), west-adjacent to the player, so this click faces + interacts. olesm_inn opens, never olesm_intro's council desk -- no chess wager, no puzzle, no briefing. Serve is visible-locked (the hot_meal went to Selys), so the topic is visible option 2.",
+   "action": "click",
+   "cell": [
+    3,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "olesm_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Olesm",
+    "text": "Oh, good, a friendly face. I promised myself one night off and I have spent it counting how many people can reach that door before I can.",
+    "options": [
+     {
+      "text": "Bring him a bowl from the kitchen. (Serve)",
+      "locked": true,
+      "requirement": "requires Hot Meal"
+     },
+     {
+      "text": "\"Counting exits on your evening off?\"",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"Sit closer to the fire, Olesm.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Olesm",
+    "text": "Every room is a position, and I never asked to see them that way. Your hearth is the strong square. The stairs I haven't worked out yet — an open file, possibly, but I keep revising it. Whoever sits with their back to the door is brave or new. It happens on its own, and my stew goes cold in the meantime."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_slid_window_olesm_in"
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "KRSHIA STAYED: she is in BOTH windows (start 0 -> [selys,krshia], start 1 -> [krshia,olesm]), which is what makes this a slide and not a swap. Her (4,6) chair is directly south of the player; the sleep cleared entity_first_use so the once_per_waking leg is armed again, but the hot_meal is still spent, so Serve stays visible-locked and the exit is visible option 3.",
+   "action": "click",
+   "cell": [
+    4,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "krshia_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE SECOND SLIDE == one more sleep takes times_slept to 12, start = 12%5 = 2, seating [olesm, pisces]: Olesm holds a second waking, Krshia finally rotates out, and Pisces takes the OTHER cell the opening displacement walk crossed.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     9,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 12
+  },
+  {
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    4,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     4,
+     5
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 24,
+    "fallbacks": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "OLESM HELD HIS CHAIR across two wakings -- his conversation still opens from the same cell. Exit is visible option 3 (Serve visible-locked in slot 1, the room-reading topic in slot 2).",
+   "action": "click",
+   "cell": [
+    3,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "olesm_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "KRSHIA ROTATED OUT at last: she held a seat across t=10 and t=11 and leaves at t=12, so (4,6) is walkable floor and a plain move down lands on it.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    6
+   ]
+  },
+  {
+   "_comment": "== PISCES: rotated in, register-pure off-duty topic == (6,5), the second cell the opening displacement walk crossed. Approach from (5,5), the free cell west of his seat.",
+   "action": "click",
+   "cell": [
+    5,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     5,
+     5
+    ]
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "click",
+   "cell": [
+    6,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pisces_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#349 review wave: this fixture banks door_mounted, which arms `ceria/yvlon/ksmvr_inn_returned` -- the Horns really are in the corner here, so the greet serves the RESIDENCE variant (pisces_inn's greet text_variants, row 3). The base text below it is the pre-seal greet and is no longer what this state renders.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "My team have reclaimed the corner by the fire and appear to consider the matter settled. I have taken the next table to observe the decline at close range. The fire is generous tonight. The rooms upstairs stay cold past midnight, and I have said so at the bar.",
+    "options": [
+     {
+      "text": "Bring him a bowl from the kitchen. (Serve)",
+      "locked": true,
+      "requirement": "requires Hot Meal"
+     },
+     {
+      "text": "\"Not here for the food. Noted.\"",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"Enjoy the adequate fire.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "His ONE off-duty topic: food and travel, no magic, no necromancy, no Door -- the register-purity proof that the guest row never borrows pisces_magic's tutoring or the door_mounting beat that shares this map.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Pisces",
+    "text": "Tavern fare is a solved problem. Salt and fat, applied in quantity until nobody thinks to ask a second question. I have eaten better in three cities. I have eaten considerably worse in nine. This kitchen I am still placing. I will want more bowls before I commit to a number."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_second_slide_pisces_in"
+  },
+  {
+   "_comment": "Serve stays visible-locked on this node too, so the exit is visible option 2.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  }
  ]
 }

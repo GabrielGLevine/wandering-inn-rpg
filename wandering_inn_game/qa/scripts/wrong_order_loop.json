@@ -127,7 +127,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Lyonette",
-    "text": "I under-counted the week's supply order. I was raised to run a household larger than this inn, and I cannot count a grocery list. Spare me. It's short, and Erin trusts me to run this without her checking. There are three ways to make it right before she notices. The supplier - Krshia's people - has scavengers picking at their stores in the south market; clear that trouble by force and the delivery comes free and full. Or you could smooth it over with Krshia herself; she'll extend the order on a good word. Or - if you can cook - stretch what we have in the kitchen until the shortfall simply... isn't one. Pick whichever suits you. Only be quick."
+    "text": "I under-counted the week's supply order. I was raised to run a household larger than this inn. I cannot count a grocery list. It's short, and Erin trusts me to run this without her checking. It can still be made right before she notices. The supplier - Krshia's people - has scavengers picking at their stores in the south market. Clear that trouble by force and the delivery comes free and full. Or you smooth it over with Krshia herself, and she extends the order on a good word. Or - I should have opened with the simplest - if you can cook, stretch what we have in the kitchen so the shortfall never shows. Pick whichever suits you. Only be quick."
    }
   },
   {
@@ -420,7 +420,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Lyonette",
-    "text": "It's... done. Truly done. I keep waiting for you to name a price, and you don't. Do you know how strange that is, to me? Where I'm from, no one lifts a finger without a ledger open. — Here. It's what I could scrape together, and no, I'll not hear a word against taking it. Thank you. And not the court kind of thank-you. The real one. Now go sit down before I say something I'll regret."
+    "text": "Done. Truly done. I keep waiting for you to name a price, and you don't. Do you know how strange that is to me? Where I'm from, a favour like this would have gone into a ledger before you'd even agreed to it. Here. It's what I could scrape together, and no, I'll not hear a word against taking it. Thank you. And not the court kind. The real one. The kitchen's still warm. Go and have the end of the bread."
    }
   },
   {

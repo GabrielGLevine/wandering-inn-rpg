@@ -1,0 +1,102 @@
+{
+ "facts": {
+  "$.nodes.confront.options[0].text": {
+   "brackets": [
+    "[Strike first.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Strike"
+   ]
+  },
+  "$.nodes.confront.options[1].text": {
+   "brackets": [
+    "[Charming Smile]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Charming",
+    "Smile"
+   ]
+  },
+  "$.nodes.confront.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.confront.options[3].text": {
+   "brackets": [
+    "[Back away.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.confront.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "confront": {
+    "options": [
+     {
+      "effects": [
+       {
+        "start_combat": "boulevard_duel_ring"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "boulevard_challenge_declined"
+       },
+       {
+        "accomplishment": "persuaded_someone"
+       },
+       {
+        "dormant_entity": "boulevard_duel_ring"
+       }
+      ],
+      "end": true,
+      "requires": {
+       "skill": "charming_smile"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -4
+       },
+       {
+        "accomplishment": "boulevard_formal_bout"
+       },
+       {
+        "start_combat": "boulevard_duel_ring"
+       }
+      ],
+      "end": true,
+      "requires": {
+       "gold": 4
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Coyle's Regulars",
+    "text": "\u00a7"
+   }
+  },
+  "start": "confront"
+ }
+}

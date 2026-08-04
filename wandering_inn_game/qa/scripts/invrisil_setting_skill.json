@@ -3,64 +3,388 @@
  "fixture_save": "invrisil_setting_skill_start",
  "starts_at_title": true,
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "_comment": "Title's default row is New Game -- down 1 to Continue, which loads the fixture-seeded manual slot.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 10 },
-  { "action": "assert_state", "path": "current_map", "equals": "stationer" },
-  { "action": "assert_state", "path": "player_cell", "equals": [4, 2] },
-  { "action": "teleport", "map": "mercantile_alleys", "cell": [0, 7] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "mercantile_alleys"}, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 5 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [0, 6]} },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "Hedault", "text": "Appraisal is free to watch and expensive to interrupt."}, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "hedault_enchanting", "entity": "hedault"}, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "Hedault", "text": "State the item and keep your hands where I can see them. I appraise, I correct, I charge exactly what the work is worth. In that order."}, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Same six visible rows as invrisil_setting_talk's run -- the quest is already taken here, so the heirloom row is visible for the same reason. THE PIN on the node it opens is this script's whole subject: the [Appraise Goods] row with locked:false and an empty requirement.", "action": "wait_frames", "frames": 1 },
-  { "action": "move", "direction": "down", "steps": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "Hedault", "text": "Set it on the cloth. Do not hand it to me. I have looked at it twice already and I will not cut a mount until somebody in this transaction says the true thing out loud: that stone is glass, cut well, sold badly, and about forty years old. I do not work around a lie. I work around a fact, and I invoice for the work.", "options": [{"locked": false, "requirement": "", "text": "\"She knows. She's known since she was nineteen. It's the setting she wants honest.\""}, {"locked": false, "requirement": "", "text": "[Appraise Goods] Read it out with him, weight by weight."}, {"locked": true, "requirement": "requires [Detect Magic]", "text": "[Detect Magic] Follow the ward-line to where it wants to sit."}, {"locked": false, "requirement": "", "text": "\"Somebody swapped it. Who buys a stone like that?\""}, {"locked": false, "requirement": "", "text": "\"I'll come back with an answer.\""}]}, "timeout_sec": 5 },
-  { "_comment": "Row 1 is the [Appraise Goods] arm. THIS fixture holds the skill, so the row is SELECTABLE -- the pinned options array above carries locked:false on it, which is the whole difference between this script and its twin.", "action": "wait_frames", "frames": 1 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "timeout_sec": 5, "type": "accomplishment_recorded", "payload_contains": {"id": "setting_assisted"} },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "Hedault", "text": "Stand where I put you and keep your hands flat on the cloth. Now read it back to me. If you are right I will not say so; I will simply not correct you, and you may take that as the same thing. There. The ward wants to sit under the setting, not around the stone. It always did."}, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 10 },
-  { "action": "screenshot", "name": "01_read_it_back_to_me" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "_comment": "== THE REPORT, on the assist arm. Her pool is untouched this run, so the first interact is the pool line and the second opens the graph. ==", "action": "wait_frames", "frames": 1 },
-  { "action": "teleport", "map": "stationer", "cell": [4, 2] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "stationer"}, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 5 },
-  { "action": "move", "direction": "left", "steps": 1 },
-  { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [3, 2]} },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "A Lady with a Ring Box", "text": "This is the only shop on the street where a woman may sit for an hour and be assumed to be choosing ink."}, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "invrisil_stationer_client", "entity": "stationer_client"}, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "A Lady with a Ring Box", "text": "You went, then. Sit down and tell me what he said, and please tell me the whole of it. I have had forty years of the polite half."}, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Two visible rows: the assist report arm, then 'Another time.'", "action": "wait_frames", "frames": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "A Lady with a Ring Box", "text": "Then it is done, and done in the open, which I did not expect and did not know I wanted. Here. My mother had a second piece, plain, honest, worth a tenth of the first and worn twice as often. I would rather it went to somebody who earned it than sat in a box being important."}, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "setting_commissioned"}, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "item_gained", "payload_contains": {"item": "plum_silk_locket"}, "timeout_sec": 5 },
-  { "action": "assert_event_logged", "type": "quest_completed", "payload_contains": {"id": "a_setting_for_a_lady"} },
-  { "action": "assert_state", "path": "accomplishments.setting_assisted", "equals": 1 },
-  { "action": "assert_state", "path": "accomplishments.setting_commissioned", "equals": 1 },
-  { "action": "assert_state", "path": "gold", "equals": 25 },
-  { "action": "assert_event_absent", "type": "combat_started" },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": {"id": "heirloom_truth_kept"} },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": {"id": "original_recovered"} }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Title's default row is New Game -- down 1 to Continue, which loads the fixture-seeded manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "stationer"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "teleport",
+   "map": "mercantile_alleys",
+   "cell": [
+    0,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "mercantile_alleys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     0,
+     6
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Hedault",
+    "text": "Appraisal is free to watch and expensive to interrupt."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "hedault_enchanting",
+    "entity": "hedault"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hedault",
+    "text": "State the item and keep your hands where I can see them. First I appraise. Then I correct, if correction is warranted, and I charge exactly what the work is worth."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Same six visible rows as invrisil_setting_talk's run -- the quest is already taken here, so the heirloom row is visible for the same reason. THE PIN on the node it opens is this script's whole subject: the [Appraise Goods] row with locked:false and an empty requirement.",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hedault",
+    "text": "Set it on the cloth. Do not hand it to me. I have looked at it twice already and I will not cut a mount until somebody in this transaction says the true thing out loud: that stone is glass, cut well, sold badly, and about forty years old. I will not cut a mount over a lie. It is half-drawn on the bench behind me, and it stays half-drawn until I hear it.",
+    "options": [
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "\"She's known since she was nineteen. She wants the setting held, and the stone left as it is.\""
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "[Appraise Goods] Read it out with him, weight by weight."
+     },
+     {
+      "locked": true,
+      "requirement": "requires [Detect Magic]",
+      "text": "[Detect Magic] Follow the ward-line to where it wants to sit."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "\"Somebody swapped it. Who buys a stone like that?\""
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "\"I'll come back with an answer.\""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Row 1 is the [Appraise Goods] arm. THIS fixture holds the skill, so the row is SELECTABLE -- the pinned options array above carries locked:false on it, which is the whole difference between this script and its twin.",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "timeout_sec": 5,
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "setting_assisted"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Hedault",
+    "text": "Stand where I put you and keep your hands flat on the cloth. Now read it back to me. If you are wrong, I will stop you. There. The ward wants to sit under the setting. It has ignored the stone from the first weighing. Keep your hands flat while I mark the line."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "screenshot",
+   "name": "01_read_it_back_to_me"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE REPORT, on the assist arm. Her pool is untouched this run, so the first interact is the pool line and the second opens the graph. ==",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "teleport",
+   "map": "stationer",
+   "cell": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "stationer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "player_blocked",
+   "payload_contains": {
+    "cell": [
+     3,
+     2
+    ]
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "A Lady with a Ring Box",
+    "text": "This is the only shop on the street where a woman may sit for an hour and be assumed to be choosing ink."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_stationer_client",
+    "entity": "stationer_client"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "A Lady with a Ring Box",
+    "text": "You went, then. Sit down and tell me what he said. Every word, please. People have been giving me the polite half of things for forty years."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Two visible rows: the assist report arm, then 'Another time.'",
+   "action": "wait_frames",
+   "frames": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "A Lady with a Ring Box",
+    "text": "Then it is done, and done in the open, which I did not expect and did not know I wanted. Here. My mother had a second piece, plain, honest, worth a tenth of the first and worn twice as often. I would rather it went to somebody who earned it. It has spent long enough in the box."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "setting_commissioned"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "plum_silk_locket"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "a_setting_for_a_lady"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.setting_assisted",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.setting_commissioned",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 25
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "heirloom_truth_kept"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "original_recovered"
+   }
+  }
  ]
 }

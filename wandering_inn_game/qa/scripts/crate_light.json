@@ -693,7 +693,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Again? Fine. The dummies heal fast. Perk of being straw. Same rules: move, hit, no crying."
+    "text": "Again? Fine. The dummies heal fast. Straw's forgiving that way. Same rules. Move and hit."
    },
    "timeout_sec": 5
   },
@@ -891,7 +891,7 @@
    "name": "confirm"
   },
   {
-   "_comment": "OPACITY TEETH: at the hub with asked_about_crate banked but studied_the_cellar NOT yet, the guile report option is genuinely absent (exact-length array match). Krshia's hub also carries an ALWAYS-visible shop-entry option ('Hrr \u2014 what's on the stall today?', unlocked -- no gold gate on the nav option itself) and, since the ratified sell mechanic, an ALWAYS-visible sell-entry option too (appended last, krshia_crate.json), so the exact array is now [shop-entry, Just visiting, sell-entry] -- all unlocked. The buy options' gold-greying lives one node deeper (the 'shop' node), not here.",
+   "_comment": "OPACITY TEETH: at the hub with asked_about_crate banked but studied_the_cellar NOT yet, the guile report option is genuinely absent (exact-length array match). Krshia's hub also carries an ALWAYS-visible shop-entry option ('Hrr — what's on the stall today?', unlocked -- no gold gate on the nav option itself) and, since the ratified sell mechanic, an ALWAYS-visible sell-entry option too (appended last, krshia_crate.json), so the exact array is now [shop-entry, Just visiting, sell-entry] -- all unlocked. The buy options' gold-greying lives one node deeper (the 'shop' node), not here.",
    "action": "wait_for_event",
    "type": "dialogue_node",
    "payload_contains": {
@@ -986,7 +986,7 @@
    "action": "assert_event_logged",
    "type": "toast",
    "payload_contains": {
-    "text": "[Light] \u2014 The orb drifts down the stairs. There: Krshia's crate, dragged behind a broken shelf."
+    "text": "[Light] — The orb drifts down the stairs. There: Krshia's crate, dragged behind a broken shelf."
    }
   },
   {
@@ -1123,7 +1123,7 @@
    "action": "assert_event_logged",
    "type": "toast",
    "payload_contains": {
-    "text": "[Light] \u2014 The orb drifts down the stairs. Just an empty cellar now, and a scuff in the dust where the crate used to sit."
+    "text": "[Light] — The orb drifts down the stairs. Just an empty cellar now, and a scuff in the dust where the crate used to sit."
    }
   }
  ]

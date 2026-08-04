@@ -1,0 +1,151 @@
+{
+ "facts": {
+  "$.nodes.explain.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.explain.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Ilvo"
+   ]
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thanks.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.thanks.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Ilvo"
+   ]
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "explain": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Renn",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "hammer_quest_started"
+       },
+       {
+        "quest": "renns_warhammer"
+       }
+      ],
+      "goto": "explain",
+      "hide_when": {
+       "accomplishment": {
+        "hammer_quest_started": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_about_lost_hammer": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "returned_the_warhammer"
+       },
+       {
+        "remove_item": "renns_warhammer"
+       },
+       {
+        "gold": 3
+       }
+      ],
+      "goto": "thanks",
+      "requires": {
+       "item": "renns_warhammer"
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Renn",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "hammer_quest_started": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "returned_the_warhammer": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "thanks": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Renn",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

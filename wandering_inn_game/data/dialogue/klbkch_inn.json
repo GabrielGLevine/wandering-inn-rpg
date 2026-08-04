@@ -2,16 +2,16 @@
 	"_comment": "Klbkch's INN register. Attached ONLY to klbkch_inn_guest; the plaza post he keeps on street.json carries a talk_pool and nothing else, and it never rides along. REGISTER-PURE means the HIVE stays out of this room entirely: no projects, no castes, no Queen, nothing below the city, no Klbkchhezeim. He is the ONE new roster member with no quest gate: met is the whole gate (chatted_with_klbkch, banked by his plaza talk_pool). Serve mirrors selys_inn/zevara_inn: {once_per_waking, item} sanctioned compound, four one-verb effect dicts, banks the shared served_customer counter. Voice per docs/design/character-profiles.md: precise, courteous, unfailingly calm, dry.",
 	"start": "greet",
 	"nodes": {
-		"greet": { "speaker": "Klbkch", "text": "Guardsman Klbkch. Off duty, which I am told is a condition a person can be in. I have been sitting for forty minutes. I am not yet certain what I have achieved.", "options": [
+		"greet": { "speaker": "Klbkch", "text": "Guardsman Klbkch. Off duty for another three hours. I have been sitting for forty minutes. I am not yet certain what I have achieved.", "options": [
 			{ "text": "Bring him a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:klbkch_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:klbkch_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"Resting isn't supposed to achieve anything.\"", "goto": "offduty" },
 			{ "text": "\"You're doing it correctly, Klbkch.\"", "end": true }
 		] },
-		"offduty": { "speaker": "Klbkch", "text": "Then I would like to know what it IS supposed to do. Relc says the point is that there is no point, which is what he says about anything he has not thought about. So I have measured instead. Eleven people have laughed since I sat down. Not one has looked at the door. On a street that would concern me a great deal. In here I believe it is the intended result.", "options": [
+		"offduty": { "speaker": "Klbkch", "text": "Then I would like to know what it is supposed to do. Relc says the point is that there is no point, which is what he says about anything he has not thought about. So I have measured instead. Eleven people have laughed since I sat down. Not one has looked at the door. On a street I would report that. Here, apparently, it is normal. I am still counting.", "options": [
 			{ "text": "Bring him a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:klbkch_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:klbkch_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"Then stop counting and sit.\"", "end": true }
 		] },
-		"served": { "speaker": "Klbkch", "text": "Thank you. I will record the evening as follows. A meal was carried to me by someone who was not required to carry it, and I was not required to ask. That is what resting accomplished. It is a great deal more than I expected of it.", "options": [
+		"served": { "speaker": "Klbkch", "text": "Thank you. I will record the evening as follows. A meal was carried to me by someone who was not required to carry it, and I was not required to ask. The bowl is warm. I will sit a while longer.", "options": [
 			{ "text": "\"File it under a good night.\"", "end": true }
 		] }
 	}

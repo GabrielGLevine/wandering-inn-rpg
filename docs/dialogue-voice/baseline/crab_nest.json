@@ -1,0 +1,51 @@
+{
+ "facts": {
+  "$.nodes.confront.options[0].text": {
+   "brackets": [
+    "[Strike first.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Strike"
+   ]
+  },
+  "$.nodes.confront.options[1].text": {
+   "brackets": [
+    "[Back away.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.confront.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "confront": {
+    "options": [
+     {
+      "effects": [
+       {
+        "start_combat": "rock_crab_nest"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Boulder Shapes",
+    "text": "\u00a7"
+   }
+  },
+  "start": "confront"
+ }
+}

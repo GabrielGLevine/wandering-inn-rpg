@@ -1,92 +1,509 @@
 {
  "_comment": "combat_walkthrough's natural new shape is the part-1 + part-2 tutorial arc. Part 1 -- the classless spar vs the inert training dummies (proves combat opens/renders with NO class kit). Sleep -> Warrior L1. Part 2 -- the mandatory floodplains proximity ambush (goblin_encounter_1) fought with the warrior kit + Relc fielded as an ally (ally_requires{met_relc} banked in part 1), where the combat-mechanics teeth live: roster-POSITIVE (relc.side==player), 4-slot hotbar, ap 4, Attack targeting opens and CANCELS spending nothing (ap stays 4), and the combat HP/MP stats overlay projects on-screen (assert_world_labels_in_view). Victory banks won_combat (goblin_encounter_1 respawns, so it is NOT entity_removed) and the gate opens onto the street. Seed 9 (live). Cells reuse mage_unlock_loop's proven phase A/B.",
  "steps": [
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "_comment": "Issue #76 remainder: the inn bed starts at boot via WIAudio's WORLD_READY ambience sync (the same no-map-payload seam the field-music sync uses); emitted synchronously during world_ready dispatch, so a forward wait here resolves immediately.", "action": "wait_for_event", "type": "audio_played", "payload_contains": { "id": "ambience_inn", "bus": "Ambience" }, "timeout_sec": 5 },
-
-  { "_comment": "== PART 1: meet Relc, spar (classless) ==. (2,3) right12+1 -> inn_door (15,3) -> floodplains (7,6), right5->(12,6), down6->(12,12).", "action": "move", "direction": "right", "steps": 12 },
-  { "_comment": "Biome-driven footstep proof: inn -> wood.", "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "footstep_wood", "bus": "SFX" } },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "floodplains" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "audio_played", "payload_contains": { "id": "music_floodplains" }, "timeout_sec": 5 },
-  { "_comment": "Issue #76 remainder: the floodplains bed rides the SAME map_changed the field track does -- the bed layer's headless proof, mirroring the music wait above.", "action": "wait_for_event", "type": "audio_played", "payload_contains": { "id": "ambience_floodplains", "bus": "Ambience" }, "timeout_sec": 5 },
-  { "action": "move", "direction": "right", "steps": 5 },
-  { "_comment": "Biome-driven footstep proof: floodplains -> earth.", "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "footstep_earth", "bus": "SFX" } },
-  { "action": "move", "direction": "down", "steps": 6 },
-  { "action": "assert_state", "path": "player_cell", "equals": [12, 12] },
-  { "action": "press", "name": "interact" },
-  { "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.", "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Relc" }, "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "relc_intro" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "met_relc" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Relc", "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry." }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "_comment": "Classless: exactly Attack/Dash/End = 3 slots.", "action": "assert_event_logged", "type": "ui_hotbar_rendered", "payload_contains": { "slots": 3 } },
-  { "_comment": "Issue #60 item 1: the ONE-TIME first-combat kit hint (fires before ui_combat_shown in the real event log -- assert_event_logged scans the whole log, not the wait cursor, so ordering here doesn't matter).", "action": "assert_event_logged", "type": "ui_combat_hint_rendered", "payload_contains": { "text": "Your hotbar (number keys) shows the skills your classes and weapon grant." } },
-  { "action": "wait_for_event", "type": "ui_tutor_line_rendered", "payload_contains": { "beat": "opening" }, "timeout_sec": 5 },
-  { "action": "combat_autoplay", "max_turns": 200 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 15 },
-  { "action": "wait_for_event", "type": "ui_tutor_line_rendered", "payload_contains": { "beat": "wrap" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== SLEEP -> Warrior L1 ==. (12,12) up6->(12,6), left5->(7,6), up+interact -> inn (14,3). #49: the ground-floor alcove bed is REMOVED; the inn's only bed is upstairs now (your_bed) -- teleport there (inn walk isn't this beat's subject, board_loop/stages_loop debug-teleport precedent), bump-face for real, sleep.", "action": "move", "direction": "up", "steps": 6 },
-  { "action": "move", "direction": "left", "steps": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn" }, "timeout_sec": 5 },
-  { "action": "teleport", "map": "inn_upstairs", "cell": [9, 2] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "class_gained", "payload_contains": { "class": "warrior" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
-
-  { "_comment": "== PART 2: cross the proximity ambush (warrior + Relc) ==. Teleport back down to (2,3) -- the exact cell the old ground-floor route reached via 'up 3' from the alcove bed; resumes unchanged: right12+1 -> inn_door -> floodplains (7,6), right23->(30,6), down14->(30,20), down1 springs the ambush.", "action": "teleport", "map": "inn", "cell": [2, 3] },
-  { "action": "move", "direction": "right", "steps": 12 },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "floodplains" }, "timeout_sec": 5 },
-  { "action": "move", "direction": "right", "steps": 23 },
-  { "action": "move", "direction": "down", "steps": 14 },
-  { "action": "assert_state", "path": "player_cell", "equals": [30, 20] },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5 },
-  { "_comment": "Roster POSITIVE: met_relc banked in part 1, so ally_requires fields Relc on the player side.", "action": "assert_state", "path": "combat.combatants.relc.side", "equals": "player" },
-  { "action": "assert_world_labels_in_view", "context": "combat" },
-  { "action": "wait_for_event", "type": "turn_started", "payload_contains": { "id": "pc" }, "timeout_sec": 10 },
-  { "action": "wait_frames", "frames": 5 },
-  { "action": "assert_state", "path": "combat.active", "equals": "pc" },
-  { "action": "assert_state", "path": "combat.combatants.pc.ap", "equals": 4 },
-  { "action": "assert_event_logged", "type": "ui_hotbar_rendered", "payload_contains": { "slots": 4 } },
-  { "_comment": "Attack targeting opens and cancels spending nothing -- ap stays 4.", "action": "press", "name": "hotbar_1" },
-  { "action": "wait_for_event", "type": "ui_targeting_shown", "payload_contains": { "mode": "attack" }, "timeout_sec": 5 },
-  { "action": "press", "name": "cancel" },
-  { "action": "wait_frames", "frames": 2 },
-  { "action": "assert_state", "path": "combat.combatants.pc.ap", "equals": 4 },
-  { "action": "combat_autoplay", "max_turns": 300 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
-  { "action": "wait_for_event", "type": "ui_tutor_line_rendered", "payload_contains": { "beat": "road_clear" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 5 },
-  { "action": "assert_state", "path": "accomplishments.won_combat", "equals": 2, "_comment": "GH#211 challenge weighting: a low-power player beating this real fight banks capped adversity 2.0 -- the directive-intended payout, not a double-count." },
-
-  { "_comment": "The gate opens onto the street (post-victory the ambush is dormant, no re-trigger).", "action": "move", "direction": "right", "steps": 1 },
-  { "action": "move", "direction": "down", "steps": 3 },
-  { "action": "assert_state", "path": "player_cell", "equals": [31, 24] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "street" },
-  { "_comment": "GH#334 notes 19/28: TWO first-combat hints now, and both are one-time-per-sitting -- the count is the proof they are disclosures, not per-encounter tutor lines (two fights run here). The second is the HP half of the per-fight-pools model, which fires for EVERY build: the MP line correctly waits for max_mp > 0, so this Warrior used to be told nothing at all about a model the game shows them HP bars for and announces '+N Max HP' at every level. mage_invisibility_loop pins the caster's three.", "action": "assert_event_count", "type": "ui_combat_hint_rendered", "count": 2 },
-  { "action": "assert_event_logged", "type": "ui_combat_hint_rendered", "payload_contains": { "text": "[You come to every fight whole. Wounds do not follow you out of one.]" } },
-  { "action": "assert_event_absent", "type": "ui_combat_hint_rendered", "payload_contains": { "text": "[Mana gathers fresh at every battle\u0027s start.]" } }
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Issue #76 remainder: the inn bed starts at boot via WIAudio's WORLD_READY ambience sync (the same no-map-payload seam the field-music sync uses); emitted synchronously during world_ready dispatch, so a forward wait here resolves immediately.",
+   "action": "wait_for_event",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "ambience_inn",
+    "bus": "Ambience"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== PART 1: meet Relc, spar (classless) ==. (2,3) right12+1 -> inn_door (15,3) -> floodplains (7,6), right5->(12,6), down6->(12,12).",
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "_comment": "Biome-driven footstep proof: inn -> wood.",
+   "action": "assert_event_logged",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "footstep_wood",
+    "bus": "SFX"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "music_floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Issue #76 remainder: the floodplains bed rides the SAME map_changed the field track does -- the bed layer's headless proof, mirroring the music wait above.",
+   "action": "wait_for_event",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "ambience_floodplains",
+    "bus": "Ambience"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "_comment": "Biome-driven footstep proof: floodplains -> earth.",
+   "action": "assert_event_logged",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "footstep_earth",
+    "bus": "SFX"
+   }
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    12
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "SOCIAL PILLAR II PHASE C: first talk to Relc this waking now absorbs the rotating pool line (dialogue_line + chatted_with_<id> + heard_gossip banks); a second interact opens the real conversation.",
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_intro"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "met_relc"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are you move and you hit. That's it. That's all the rules."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Classless: exactly Attack/Dash/End = 3 slots.",
+   "action": "assert_event_logged",
+   "type": "ui_hotbar_rendered",
+   "payload_contains": {
+    "slots": 3
+   }
+  },
+  {
+   "_comment": "Issue #60 item 1: the ONE-TIME first-combat kit hint (fires before ui_combat_shown in the real event log -- assert_event_logged scans the whole log, not the wait cursor, so ordering here doesn't matter).",
+   "action": "assert_event_logged",
+   "type": "ui_combat_hint_rendered",
+   "payload_contains": {
+    "text": "Your hotbar (number keys) shows the skills your classes and weapon grant."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "opening"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "wrap"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== SLEEP -> Warrior L1 ==. (12,12) up6->(12,6), left5->(7,6), up+interact -> inn (14,3). #49: the ground-floor alcove bed is REMOVED; the inn's only bed is upstairs now (your_bed) -- teleport there (inn walk isn't this beat's subject, board_loop/stages_loop debug-teleport precedent), bump-face for real, sleep.",
+   "action": "move",
+   "direction": "up",
+   "steps": 6
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "class_gained",
+   "payload_contains": {
+    "class": "warrior"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 1
+  },
+  {
+   "_comment": "== PART 2: cross the proximity ambush (warrior + Relc) ==. Teleport back down to (2,3) -- the exact cell the old ground-floor route reached via 'up 3' from the alcove bed; resumes unchanged: right12+1 -> inn_door -> floodplains (7,6), right23->(30,6), down14->(30,20), down1 springs the ambush.",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    2,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 12
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 23
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 14
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    30,
+    20
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Roster POSITIVE: met_relc banked in part 1, so ally_requires fields Relc on the player side.",
+   "action": "assert_state",
+   "path": "combat.combatants.relc.side",
+   "equals": "player"
+  },
+  {
+   "action": "assert_world_labels_in_view",
+   "context": "combat"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.active",
+   "equals": "pc"
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_hotbar_rendered",
+   "payload_contains": {
+    "slots": 4
+   }
+  },
+  {
+   "_comment": "Attack targeting opens and cancels spending nothing -- ap stays 4.",
+   "action": "press",
+   "name": "hotbar_1"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_targeting_shown",
+   "payload_contains": {
+    "mode": "attack"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_frames",
+   "frames": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.pc.ap",
+   "equals": 4
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_tutor_line_rendered",
+   "payload_contains": {
+    "beat": "road_clear"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.won_combat",
+   "equals": 2,
+   "_comment": "GH#211 challenge weighting: a low-power player beating this real fight banks capped adversity 2.0 -- the directive-intended payout, not a double-count."
+  },
+  {
+   "_comment": "The gate opens onto the street (post-victory the ambush is dormant, no re-trigger).",
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 3
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    31,
+    24
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "_comment": "GH#334 notes 19/28: TWO first-combat hints now, and both are one-time-per-sitting -- the count is the proof they are disclosures, not per-encounter tutor lines (two fights run here). The second is the HP half of the per-fight-pools model, which fires for EVERY build: the MP line correctly waits for max_mp > 0, so this Warrior used to be told nothing at all about a model the game shows them HP bars for and announces '+N Max HP' at every level. mage_invisibility_loop pins the caster's three.",
+   "action": "assert_event_count",
+   "type": "ui_combat_hint_rendered",
+   "count": 2
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_combat_hint_rendered",
+   "payload_contains": {
+    "text": "[You come to every fight whole. Wounds do not follow you out of one.]"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "ui_combat_hint_rendered",
+   "payload_contains": {
+    "text": "[Mana gathers fresh at every battle's start.]"
+   }
+  }
  ]
 }

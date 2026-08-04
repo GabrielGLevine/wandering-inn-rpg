@@ -12,7 +12,7 @@
        "seal_resolved": 1
       }
      },
-     "text": "Down at the quarter bell, up at the half. The Liscor news rode up on the same cycle as the tin did. Everything reaches this landing eventually."
+     "text": "Down at the quarter bell, up at the half. The Liscor news rode up on the same cycle as the tin did. I heard it four times before the cage reached the landing."
     }
    ],
    "options": [
@@ -70,7 +70,7 @@
   },
   "cycle": {
    "speaker": "Lift Attendant",
-   "text": "Once a quarter, for inspection, and the notice goes up two days ahead so nobody is stranded. If the day catches you up here anyway, the service stair at the west end stays open. Nine flights. Honest work, and open.",
+   "text": "Once a quarter, for inspection, and the notice goes up two days ahead so nobody is stranded. If the day catches you up here anyway, the service stair at the west end stays open. Nine flights. Take water up with you, the stairwell holds the forge heat past sundown.",
    "options": [
     {
      "text": "Nine flights.",
@@ -84,7 +84,7 @@
   },
   "traffic": {
    "speaker": "Lift Attendant",
-   "text": "Smiths down at the quarter bell, clerks up at the half, and one crate of tin that has been late three cycles running. I know this tier by what it carries. You I haven't placed yet, {addr}, which tells me you came up on a stamp and not a schedule.",
+   "text": "Smiths down at the quarter bell, clerks up at the half, and one crate of tin that has been late three cycles running. This morning it was charcoal and a coop of live hens for the ninth tier. You I haven't placed yet, {addr}. Came up on a stamp, then. Stamps don't show on my schedule.",
    "options": [
     {
      "text": "Give it a cycle.",
@@ -98,7 +98,7 @@
   },
   "seal": {
    "speaker": "Lift Attendant",
-   "text": "It came up the shaft the way everything does. One voice at a time, each one louder. Liscor settled what was under its stone. The tier will talk about it for a week and then talk about tin again. That isn't coldness, {addr}. It's how a city that far off stays a city you can think about at all.",
+   "text": "It came up the shaft the way everything does, one voice at a time, each louder than the last. Liscor settled what was under its stone. The tier will talk about it for a week and then it will talk about tin again. The tin is four cycles late, {addr}. Liscor is two hundred miles away.",
    "options": [
     {
      "text": "That's fairer than most of what I've heard.",
@@ -112,7 +112,7 @@
   },
   "ledger_pitch": {
    "speaker": "Lift Attendant",
-   "text": "Four cycles, and it will be five. The permit office holds the queue and the office's own supplies are in it, so the office cannot clear the queue until the queue clears the office. Nobody may skip it. That includes the queue.",
+   "text": "Four cycles, and it will be five. The permit office holds the queue, and the office's own requisitions are sitting in that queue with everything else. Until their paper moves, nothing behind it moves, and nobody up there will sign out of order.",
    "options": [
     {
      "text": "Somebody should unstick that.",
@@ -134,7 +134,7 @@
   },
   "ledger_brief": {
    "speaker": "Lift Attendant",
-   "text": "Three ways down, {addr}, and I will not tell you which. Walk the offices in order and get it in writing. Read the forms properly, if you read forms. Or put the crate on the cart yourself and carry it, which is not how it is done. The consignee is a den shop on the market tier.",
+   "text": "Walk the offices in order, {addr}, and get it in writing. Start at the quarter bell or you will spend the day at windows. Read the forms properly, if you read forms. Or put the crate on the cart yourself and carry it down, which is not how it is done. The consignee is a den shop on the market tier.",
    "options": [
     {
      "text": "Which office starts it?",
@@ -148,7 +148,7 @@
   },
   "ledger_brief_two": {
    "speaker": "Lift Attendant",
-   "text": "The stamp clerk on the market tier holds the entry side. The permit window holds the release side. The consignee signs last and cannot sign first. Down at the quarter bell.",
+   "text": "The stamp clerk on the market tier holds the entry side. The permit window holds the release side. The consignee signs last. She cannot sign first. Down at the quarter bell.",
    "options": [
     {
      "text": "Down at the quarter bell.",
@@ -226,7 +226,7 @@
        "loop_walked": 1
       }
      },
-     "text": "You made the offices sign each other's paper. I am going to tell that story at every quarter bell for a month and it will be true every time."
+     "text": "You made the offices sign each other's paper. I am going to tell that story at every quarter bell for a month. The crate goes down on the next cycle, on top of the load."
     },
     {
      "requires": {
@@ -234,7 +234,7 @@
        "exemption_found": 1
       }
      },
-     "text": "It was in the forms. Four cycles, and it was in the forms. I am not angry, {addr}. I am going to be angry at the half bell, when I have time."
+     "text": "It was in the forms. Four cycles, and it was in the forms. Do not speak to me until the half bell."
     }
    ],
    "options": [

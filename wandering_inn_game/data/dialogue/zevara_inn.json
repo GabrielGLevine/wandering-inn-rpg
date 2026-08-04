@@ -2,17 +2,17 @@
 	"_comment": "Zevara's INN register. Attached ONLY to zevara_inn_guest; her gatehouse hub (zevara_intro) never rides along, so the cisterns sweep, the runner's summons, the seal report and EVERY Watch authorization stay home-only (REGISTER-PURE, spec 2026-07-20-foti-pr2-spec.md). That matters doubly here: the something-beneath arc routes its summons and its close through zevara_intro, and this register must absorb none of it. Serve mirrors selys_inn/patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter. Voice per docs/design/character-profiles.md: dry, overworked, off shift and never off duty.",
 	"start": "greet",
 	"nodes": {
-		"greet": { "speaker": "Zevara", "text": "Off shift, which means nobody has found me yet. Give it an hour. If a runner comes through that door with my name in his mouth, you did not see me.", "options": [
+		"greet": { "speaker": "Zevara", "text": "Off shift, which means nobody has found me yet. Give it an hour. If a runner comes through that door with my name in his mouth, send him to the gatehouse first. The night sergeant can sign for anything short of a breach.", "options": [
 			{ "text": "Bring her a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:zevara_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:zevara_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"An evening to yourself, then?\"", "goto": "offduty" },
 			{ "text": "\"I never saw you, Captain.\"", "end": true }
 		] },
-		"offduty": { "speaker": "Zevara", "text": "Relax. People say it as though it were a thing you do with your hands. I sat down an hour ago and I have written half a duty roster since. Tomorrow's, then the day after's, then one for a week I will not live to see. The stew is the only part of this evening I am not scheduling.", "options": [
+		"offduty": { "speaker": "Zevara", "text": "I sat down an hour ago and I have written half a duty roster since. Tomorrow's is done. I am partway through the day after's, and under that is one for a week I will not live to see. The stew smells ready. I have not ordered any yet.", "options": [
 			{ "text": "Bring her a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:zevara_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:zevara_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
 			{ "text": "\"Stop scheduling and eat, Captain.\"", "end": true }
 		] },
-		"served": { "speaker": "Zevara", "text": "You carried that across a full room without spilling it and without asking anyone to move. You have no idea how rare that is on my side of the gate. ...It is good. Thank you. I will deny the tone I said it in.", "options": [
-			{ "text": "\"Denied and forgotten.\"", "end": true }
+		"served": { "speaker": "Zevara", "text": "You carried that across a full room without spilling it and without asking anyone to move. You have no idea how rare that is on my side of the gate. It is good. Thank you. The roster can wait another quarter hour.", "options": [
+			{ "text": "\"Take the quarter hour, Captain.\"", "end": true }
 		] }
 	}
 }

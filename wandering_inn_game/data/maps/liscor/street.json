@@ -1079,7 +1079,7 @@
     "Ten years running this Watch. Six weeks of leave, total. That's the whole personality, if you were wondering.",
     "Relc's off being enormous at someone. Klbkch is... Klbkch. The gate still stands. Don't jinx it."
    ],
-   "_comment": "stages are last-match-wins; keep story order — earliest gates first; relays outrank standing signposts",
+   "_comment_stages": "stages are last-match-wins; keep story order — earliest gates first; relays outrank standing signposts",
    "talk_pool_stages": [
     {
      "id": "zevara_delivery_dispatch",
@@ -1600,7 +1600,7 @@
       "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
       "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
       "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
-    "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+      "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
      ]
     },
     {
@@ -1622,7 +1622,7 @@
       "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
       "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
       "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
-    "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+      "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
      ]
     },
     {
@@ -1644,7 +1644,7 @@
       "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
       "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
       "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
-    "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+      "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
      ]
     },
     {
@@ -1666,7 +1666,7 @@
       "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
       "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
       "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
-    "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+      "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
      ]
     },
     {
@@ -1698,7 +1698,7 @@
       "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
       "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
       "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
-    "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+      "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
      ]
     },
     {
@@ -1844,7 +1844,7 @@
    "dialogue": [
     {
      "speaker": "Watch Sergeant",
-     "text": "Sewers, scavengers, paperwork. Pick one."
+     "text": "The sewer grates are backing up again and there's scavengers in the cellars. And paperwork. There's always the paperwork. Which is it?"
     }
    ]
   },

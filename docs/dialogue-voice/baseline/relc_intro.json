@@ -1,0 +1,499 @@
+{
+ "facts": {
+  "$.nodes.banter.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Spar"
+   ]
+  },
+  "$.nodes.banter.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.banter.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guardsman",
+    "Liscor"
+   ]
+  },
+  "$.nodes.gift.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Check"
+   ]
+  },
+  "$.nodes.gift.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Relc"
+   ]
+  },
+  "$.nodes.gift.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.meet.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor"
+   ]
+  },
+  "$.nodes.meet.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.meet.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.meet.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Spar"
+   ]
+  },
+  "$.nodes.meet.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.meet.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.meet.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.meet.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.meet.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Drake"
+   ]
+  },
+  "$.nodes.meet.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Drake"
+   ]
+  },
+  "$.nodes.meet.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.meet.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.meet.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.relc_after.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.relc_after.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.relc_after.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.relc_army.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.relc_army.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.relc_army.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.relc_army.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.relc_army_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.relc_army_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.relc_army_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.relc_wager.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Back"
+   ]
+  },
+  "$.nodes.relc_wager.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.relc_wager.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.spar_offer.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.spar_offer.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.spar_offer.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.spar_offer.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.warns.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.warns.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.warns.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "banter": {
+    "options": [
+     {
+      "goto": "spar_offer",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7"
+   },
+   "gift": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7"
+   },
+   "meet": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "met_relc"
+       }
+      ],
+      "goto": "banter",
+      "hide_when": {
+       "accomplishment": {
+        "met_relc": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "warns",
+      "requires": {
+       "accomplishment": {
+        "met_relc": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "item": "relcs_spare_spear"
+       },
+       {
+        "accomplishment": "given_spear_by_relc"
+       }
+      ],
+      "goto": "gift",
+      "hide_when": {
+       "accomplishment": {
+        "given_spear_by_relc": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "sparred_with_relc": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "spar_offer",
+      "requires": {
+       "accomplishment": {
+        "met_relc": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "relc_army",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_relc": 2,
+        "sparred_with_relc": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "relc_after",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_relc": 3,
+        "cleared_the_warren": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "bank_first_use": "wager:relc"
+       },
+       {
+        "gold": 1
+       }
+      ],
+      "goto": "relc_wager",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_relc": 3,
+        "cleared_the_warren": 1,
+        "sparred_with_relc": 1
+       },
+       "once_per_waking": "wager:relc"
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "phase": [
+        "dusk",
+        "night"
+       ]
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "met_relc": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "sparred_with_relc": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "went_alone": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "relc_after": {
+    "options": [
+     {
+      "goto": "meet",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7"
+   },
+   "relc_army": {
+    "options": [
+     {
+      "goto": "relc_army_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "meet",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7"
+   },
+   "relc_army_two": {
+    "options": [
+     {
+      "goto": "meet",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7"
+   },
+   "relc_wager": {
+    "options": [
+     {
+      "goto": "meet",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7"
+   },
+   "spar_offer": {
+    "options": [
+     {
+      "effects": [
+       {
+        "start_combat": "relc_spar"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "sparred_with_relc": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "warns": {
+    "options": [
+     {
+      "goto": "meet",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Relc",
+    "text": "\u00a7"
+   }
+  },
+  "start": "meet"
+ }
+}

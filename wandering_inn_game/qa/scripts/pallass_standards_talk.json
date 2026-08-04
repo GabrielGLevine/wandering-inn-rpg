@@ -466,7 +466,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Grimalkin",
-    "text": "The forge tier settled its temper argument and my name is in the file twice. Understand: a blade that will not come back is a blade that never bent. Same measure as a squat. Depth, then recovery, then the file. State your business.",
+    "text": "The forge tier settled its temper argument and my name is in the file twice. The examiners log recovery on the blades now, same measure as a squat. Depth, then recovery, then it goes in the file. State your business.",
     "options": [
      {
       "text": "About the studies.",

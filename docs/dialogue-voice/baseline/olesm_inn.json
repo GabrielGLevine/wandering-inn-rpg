@@ -1,0 +1,141 @@
+{
+ "facts": {
+  "$.nodes.greet.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.greet.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.nodes.greet.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.offduty.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.offduty.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.offduty.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.served.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.nodes.served.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Olesm's INN register. Attached ONLY to olesm_inn_guest; his desk hub (olesm_intro) never rides along, so the chess WAGER, the puzzle, the rematch residue and every council briefing stay home-only (REGISTER-PURE). What survives is chess-ADJACENT: he reads the ROOM like a position. Serve mirrors selys_inn/patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter. Voice per docs/design/character-profiles.md: earnest, self-deprecating about the night off, quietly proud.",
+  "nodes": {
+   "greet": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:olesm_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:olesm_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "offduty",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "offduty": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:olesm_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:olesm_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "served": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   }
+  },
+  "start": "greet"
+ }
+}

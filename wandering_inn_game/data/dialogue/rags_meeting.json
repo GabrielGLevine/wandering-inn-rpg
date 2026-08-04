@@ -338,7 +338,7 @@
        "rags_price_kept": 1
       }
      },
-     "text": "Paid. Not asked. Different."
+     "text": "Paid. Nobody asked us first."
     }
    ],
    "options": [
@@ -412,7 +412,7 @@
   "winter_ways": {
    "speaker": "Rags",
    "_comment": "TRAP: three SEPARATE report rungs above, one per route counter -- requires.accomplishment is AND across keys, so one row naming all three would demand all three.",
-   "text": "Three ways. Gnoll moves goods. Hunters need hands. Scavengers press hollow.",
+   "text": "Two ways. Gnoll moves goods. Hunters need hands. No, three. Scavengers press hollow.",
    "options": [
     {
      "text": "Where's the hollow?",

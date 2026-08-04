@@ -1,0 +1,1358 @@
+{
+ "facts": {
+  "$.nodes.consult_fight_response.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.consult_fight_response.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.consult_skill_report.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.consult_skill_report.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.consult_skill_response.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.consult_skill_response.text": {
+   "brackets": [
+    "[Observe]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Observe"
+   ]
+  },
+  "$.nodes.consult_talk_argue.options[0].text": {
+   "brackets": [
+    "[Charming Smile]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Charming",
+    "Smile"
+   ]
+  },
+  "$.nodes.consult_talk_argue.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.consult_talk_argue.options[2].text": {
+   "brackets": [],
+   "digits": [
+    "5"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.consult_talk_argue.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.consult_talk_done.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Pisces"
+   ]
+  },
+  "$.nodes.consult_talk_done.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.consult_talk_pitch.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.consult_talk_pitch.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.consult_talk_pitch.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.descent_agreed.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.descent_agreed.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.descent_agreed.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.descent_ask.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.descent_ask.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.descent_ask.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.descent_ask.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor"
+   ]
+  },
+  "$.nodes.descent_ask.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.descent_expect.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.descent_expect.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.descent_expect.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_attune.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_attune.text": {
+   "brackets": [
+    "[Mage]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Mage"
+   ]
+  },
+  "$.nodes.door_consult.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_consult.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_consult.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_consult.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_recap.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_recap.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_recap.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_recap_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.door_recap_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.nodes.greet.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[10].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[11].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[12].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Door",
+    "Liscor"
+   ]
+  },
+  "$.nodes.greet.options[13].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Invrisil",
+    "Pallass"
+   ]
+  },
+  "$.nodes.greet.options[14].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Hammerad",
+    "Horn"
+   ]
+  },
+  "$.nodes.greet.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[8].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Krshia"
+   ]
+  },
+  "$.nodes.greet.options[9].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.text": {
+   "brackets": [
+    "[Necromancer]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Guild",
+    "Jealnv",
+    "Necromancer"
+   ]
+  },
+  "$.nodes.greet.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.greet.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.text_variants[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.greet.text_variants[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.nodes.greet.text_variants[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.text_variants[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Drake"
+   ]
+  },
+  "$.nodes.greet.text_variants[8].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.text_variants[9].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.horns_bridge.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.horns_bridge.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.horns_bridge.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Hammerad"
+   ]
+  },
+  "$.nodes.horns_bridge_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.horns_bridge_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Pisces"
+   ]
+  },
+  "$.nodes.horns_bridge_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Ceria",
+    "Ksmvr"
+   ]
+  },
+  "$.nodes.lesson_casting.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lesson_casting.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lesson_casting.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.lesson_light.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lesson_light.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lesson_light.text": {
+   "brackets": [
+    "[Light]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Light"
+   ]
+  },
+  "$.nodes.lesson_mana.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lesson_mana.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lesson_mana.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.necro_deflect.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.necro_deflect.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.necro_taught.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.necro_taught.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.necro_teach.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.necro_teach.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.necro_teach.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.pisces_fence.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.pisces_fence.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.pisces_fence.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.pisces_fence.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.pisces_fence_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.pisces_fence_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Pisces"
+   ]
+  },
+  "$.nodes.pisces_fence_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.scroll_secret.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.scroll_secret.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.scroll_secret.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.sealed.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Pisces"
+   ]
+  },
+  "$.nodes.sealed.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.second_door_bridge.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.second_door_bridge.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.second_door_bridge.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.spine_start.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.spine_start.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.spine_start.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Door"
+   ]
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "consult_fight_response": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "consult_skill_report": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "consult_skill_response": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "consult_talk_argue": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "persuaded_someone"
+       },
+       {
+        "accomplishment": "door_understood"
+       },
+       {
+        "accomplishment": "pedestal_unsealed"
+       }
+      ],
+      "goto": "consult_talk_done",
+      "requires": {
+       "skill": "charming_smile"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -5
+       },
+       {
+        "accomplishment": "door_understood"
+       },
+       {
+        "accomplishment": "pedestal_unsealed"
+       }
+      ],
+      "goto": "consult_talk_done",
+      "requires": {
+       "gold": 5
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "consult_talk_done": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "consult_talk_pitch": {
+    "options": [
+     {
+      "goto": "consult_talk_argue",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "descent_agreed": {
+    "_comment": "Ceria's shipped 'bring his own rope' pool line, paid off. The safe-line claim is not new lore: pisces_second_door_study_2 (street.json talk_pool) already says he mapped the gauntlet during the study sleeps.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "greet",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "descent_ask": {
+    "_comment": "#270 beat 1. The scroll leg (scroll_secret_shared) is an OR-ENRICHMENT, never a requirement: with the treatise read he connects it explicitly, without it his own arithmetic carries the ask, so the [Mage] line stays optional. Spoiler bar: he names an appetite and a hand, never what is on the other end.",
+    "options": [
+     {
+      "goto": "descent_expect",
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "quest": "what_the_seal_was_feeding"
+       },
+       {
+        "accomplishment": "seal_descent_agreed"
+       }
+      ],
+      "goto": "descent_agreed",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "scroll_secret_shared": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "descent_expect": {
+    "options": [
+     {
+      "effects": [
+       {
+        "quest": "what_the_seal_was_feeding"
+       },
+       {
+        "accomplishment": "seal_descent_agreed"
+       }
+      ],
+      "goto": "descent_agreed",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "door_attune": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "door_consult": {
+    "options": [
+     {
+      "goto": "consult_fight_response",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "consult_talk_pitch",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "consult_skill_response",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "door_recap": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "door_recap_two",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "door_recap_two": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "greet": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "met_pisces"
+       }
+      ],
+      "goto": "lesson_mana",
+      "hide_when": {
+       "accomplishment": {
+        "met_pisces": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "lesson_mana",
+      "requires": {
+       "accomplishment": {
+        "met_pisces": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "pisces_fence",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_pisces": 3,
+        "learned_magic_from_pisces": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "door_consult",
+      "hide_when": {
+       "accomplishment": {
+        "door_understood": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "door_chain_started": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "door_understood"
+       },
+       {
+        "accomplishment": "pedestal_unsealed"
+       }
+      ],
+      "goto": "consult_skill_report",
+      "hide_when": {
+       "accomplishment": {
+        "door_understood": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "read_the_door_runes": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "scroll_secret_shared"
+       }
+      ],
+      "goto": "scroll_secret",
+      "hide_when": {
+       "accomplishment": {
+        "scroll_secret_shared": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "deciphered_dusty_scroll": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "door_recap",
+      "hide_when": {
+       "accomplishment": {
+        "recovered_anchor_stone": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "door_chain_started": 1,
+        "door_understood": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "catalyst_delivered"
+       }
+      ],
+      "goto": "door_attune",
+      "hide_when": {
+       "accomplishment": {
+        "door_awakened": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "bought_catalyst": 1,
+        "recovered_anchor_stone": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "Spec 7 amendment 1 re-copy: the shipped id heard_pisces_second_door stays, the 'second door' fiction does not. What the player found under the city is a sealed rune-door full of wardwork by the same hand.",
+      "effects": [
+       {
+        "accomplishment": "heard_pisces_second_door"
+       }
+      ],
+      "goto": "second_door_bridge",
+      "hide_when": {
+       "accomplishment": {
+        "heard_pisces_second_door": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "seal_kept_found": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "asked_about_necromancy"
+       }
+      ],
+      "goto": "necro_deflect",
+      "hide_when": {
+       "accomplishment": {
+        "asked_about_necromancy": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "learned_magic_from_pisces": 1
+       },
+       "class": {
+        "mage": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "necro_teach",
+      "hide_when": {
+       "accomplishment": {
+        "studied_necromancy": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "asked_about_necromancy": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "Spec 4 (Task 6.1) THE SPINE START. The shipped producer of door_awakened is sleep_beat.gd:142 (three study sleeps), so the attune-completion surface is this arm: the player reports the awakening the morning after. The spine 'starts from Pisces at door_awakened' and the foreshadow copy is a SPOKEN line, so a code-side bank could not have carried it. Appended LAST so every cursor-pinned canonical over this hub is byte-identical (no shipped fixture carries door_awakened AND opens this graph).",
+      "effects": [
+       {
+        "quest": "where_the_door_reaches"
+       },
+       {
+        "accomplishment": "spine_started"
+       }
+      ],
+      "goto": "spine_start",
+      "hide_when": {
+       "accomplishment": {
+        "spine_started": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "door_awakened": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "Act V (#270 beat 1, spec 7 amendment 2) THE DESCENT ASK. Gate is ALL THREE lattice counters, which is the amendment's 'fires when lattice_forge_rune banks' in data terms -- the forge rune is last in the spine's own order. NO bank on this option: seal_descent_agreed rides the ACCEPT below, so a player who opens the pitch and walks away can come back (hide_when is the accept's counter, not a read-flag). Appended LAST so every cursor-pinned canonical stays byte-identical.",
+      "goto": "descent_ask",
+      "hide_when": {
+       "accomplishment": {
+        "seal_descent_agreed": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "lattice_forge_rune": 1,
+        "lattice_hedault_reading": 1,
+        "lattice_witch_lore": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "#15's BRIDGE BEAT: the one place his Horns membership is said out loud, in his own mouth. Gate is horns_party_formed -- the player has met the team, so the question is earned, not exposition. Appended LAST so every cursor-pinned canonical stays byte-identical. CANON BAR: names no delve, no casualty, no date -- membership and its terms only.",
+      "effects": [
+       {
+        "accomplishment": "heard_pisces_horns"
+       }
+      ],
+      "goto": "horns_bridge",
+      "hide_when": {
+       "accomplishment": {
+        "heard_pisces_horns": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "horns_party_formed": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "phase": [
+        "dusk",
+        "night"
+       ]
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "learned_magic_from_pisces": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "met_pisces": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "sensed_something_deeper": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "studied_necromancy": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "Spec 4 (Task 6.1): three CONTEXTUALIZING reactions, one per lattice counter, appended in pilgrimage order under last-match-wins so the most recent discovery opens. He never assigns and never assembles -- each line reacts to a piece the REGION handed the player, and the picture waits for Act V.",
+      "requires": {
+       "accomplishment": {
+        "lattice_witch_lore": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "lattice_hedault_reading": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "lattice_forge_rune": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "Act V: two thread-current arms, appended after the lattice trio so last-match-wins keeps his greeting on the newest state. Neither can shadow a pinned canonical -- both counters are Act V's own, unheld by every shipped fixture.",
+      "requires": {
+       "accomplishment": {
+        "seal_descent_agreed": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "seal_resolved": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "horns_bridge": {
+    "options": [
+     {
+      "goto": "horns_bridge_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "greet",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "horns_bridge_two": {
+    "options": [
+     {
+      "goto": "greet",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "lesson_casting": {
+    "options": [
+     {
+      "goto": "lesson_light",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "lesson_light": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "learned_magic_from_pisces"
+       }
+      ],
+      "goto": "sealed",
+      "hide_when": {
+       "accomplishment": {
+        "learned_magic_from_pisces": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "lesson_mana": {
+    "options": [
+     {
+      "goto": "lesson_casting",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "necro_deflect": {
+    "_comment": "Two-visit deflect->teach per spec \u00a75; the deflect option banks asked_about_necromancy and hides itself, which reveals the second ask on the next hub entry.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "necro_taught": {
+    "_comment": "'A fencer's trick first, a spell second' = the WB [Flash Step] teaching-beat callback (spec \u00a75). 'Sleep will settle the argument' = diegetic bed signpost (#130 family).",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "necro_teach": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "studied_necromancy"
+       }
+      ],
+      "goto": "necro_taught",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "pisces_fence": {
+    "options": [
+     {
+      "goto": "pisces_fence_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "greet",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "pisces_fence_two": {
+    "options": [
+     {
+      "goto": "greet",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "scroll_secret": {
+    "options": [
+     {
+      "goto": "greet",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "sealed": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "second_door_bridge": {
+    "_comment": "Spec 7 amendment 1: the counter id heard_pisces_second_door is SHIPPED and frozen, so it keeps its id -- but the fiction is dead. Every surface it touches now reads 'the seal's wardwork', never a second door and never another portal. Node id kept for the same freeze reason.",
+    "options": [
+     {
+      "goto": "greet",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "spine_start": {
+    "_comment": "FORESHADOW, NEVER ASSIGN (spec 4 copy discipline): he names an appetite and a direction, no list, no errand. 'wardwork by the same hand' is the Act V seal, kept oblique.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "greet",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   }
+  },
+  "start": "greet"
+ }
+}

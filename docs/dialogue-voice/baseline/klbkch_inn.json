@@ -1,0 +1,141 @@
+{
+ "facts": {
+  "$.nodes.greet.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.greet.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Klbkch"
+   ]
+  },
+  "$.nodes.greet.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Klbkch"
+   ]
+  },
+  "$.nodes.offduty.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.offduty.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.offduty.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.served.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.served.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Klbkch's INN register. Attached ONLY to klbkch_inn_guest; the plaza post he keeps on street.json carries a talk_pool and nothing else, and it never rides along. REGISTER-PURE means the HIVE stays out of this room entirely: no projects, no castes, no Queen, nothing below the city, no Klbkchhezeim. He is the ONE new roster member with no quest gate: met is the whole gate (chatted_with_klbkch, banked by his plaza talk_pool). Serve mirrors selys_inn/zevara_inn: {once_per_waking, item} sanctioned compound, four one-verb effect dicts, banks the shared served_customer counter. Voice per docs/design/character-profiles.md: precise, courteous, unfailingly calm, dry.",
+  "nodes": {
+   "greet": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:klbkch_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:klbkch_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "offduty",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Klbkch",
+    "text": "\u00a7"
+   },
+   "offduty": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:klbkch_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:klbkch_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Klbkch",
+    "text": "\u00a7"
+   },
+   "served": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Klbkch",
+    "text": "\u00a7"
+   }
+  },
+  "start": "greet"
+ }
+}

@@ -1,0 +1,455 @@
+{
+ "files": {
+  "boulevard_duel_ring.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "ceria_dig_camp.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "ceria_intro.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "corusdeer_range.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "crab_nest.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "door_mounting.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "drayman_dispute.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "dresk_recruit.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "dummies_note.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "erin_errand.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "forge_calibration_golem.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "forge_temper_golem.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "gallery_vermin_nest.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "goblin_parley.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "grimalkin_inn.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "hedault_enchanting.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "invrisil_fixer.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "invrisil_hired_scribe.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "invrisil_house_steward.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "invrisil_merchant_prince.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "invrisil_rest_factor.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "invrisil_seal_broker.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "invrisil_stationer_client.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "invrisil_wilovan.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "kingslayer_den.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "klbkch_inn.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "krshia_crate.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "krshia_inn.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "ksmvr_intro.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "ksmvr_plates.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "lyonette_tip.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "market_watchgolems.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "octavia.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "olesm_inn.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "olesm_intro.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "pallass_den_keeper.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "pallass_forge_clerk.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "pallass_forge_smith.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": [
+    {
+     "speaker": "Forge-Tier Smith",
+     "node": "$.nodes.commission_report.options[0].text",
+     "quote": "[The standard measures recovery, not hardness. His own notice says so.]"
+    }
+   ]
+  },
+  "pallass_grimalkin.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "pallass_lift_attendant.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "pallass_market_clerk.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "pallass_market_local.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "patron_serving.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "peddler_stall.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "pisces_inn.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "pisces_magic.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "pisces_seal.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "rags_inn.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": [
+    {
+     "speaker": "Rags",
+     "node": "$.nodes.greet.text_variants[0].text",
+     "quote": "gain. Camp ate. Still count doors. Habit, not you."
+    }
+   ]
+  },
+  "rags_meeting.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "razorbeak_nest.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "recruit_pell.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "relc_descent.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "relc_inn.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "relc_intro.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "renn_hammer.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "riverfarm_headman.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "riverfarm_hunter.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "riverfarm_tallyman.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "riverfarm_thicket_patch.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "riverfarm_villager.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "riverfarm_witch.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "room_ledger.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "selys_delivery.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": [
+    {
+     "speaker": "Selys",
+     "node": "$.nodes.pallass_sponsor.text",
+     "quote": "gh same-day. Ten gold, paid to the Guild, not to me."
+    }
+   ]
+  },
+  "selys_inn.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "vess_counter.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "watch_crate.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "wilovan_inn.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "xif.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "yvlon_intro.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "zevara_inn.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": []
+  },
+  "zevara_intro.json": {
+   "status": "PASS",
+   "hard": [],
+   "warn": [],
+   "antithesis": [
+    {
+     "speaker": "Zevara",
+     "node": "$.nodes.swept_paid.text",
+     "quote": "Funding, not evidence. Fine \u2014 my ledger doesn't much"
+    }
+   ]
+  }
+ },
+ "antithesis_total": 4
+}

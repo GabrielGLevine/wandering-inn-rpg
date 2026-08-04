@@ -1,0 +1,88 @@
+{
+ "facts": {
+  "$.nodes.camp_fourth.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.camp_fourth.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.camp_fourth.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.camp_hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.camp_hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.camp_hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.camp_hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Task 2.3: the Horns' camp, attached to ruin_surface's `ceria_dig_camp` NPC. A SEPARATE graph file, not nodes inside ceria_intro.json: a graph is one file (game.gd keys dialogue_graphs by basename) and always opens at its own `start`, with no per-entity start-node override, so camp_hub could never be reached through ceria_intro's hub. The split is also what the place-naming validator wants -- the horns_dig GIVER maps stay disjoint from the join_dig PRODUCER map. SPOILER RULE: no line here names a door; the reveal is the pedestal's open_toast. NO door_retrieved arm lives here: the camp survives the whole haul window, so a past-tense arm would be wrong while the haul is still running; spec 8's past-tense arm stays on ceria_intro's hub.",
+  "nodes": {
+   "camp_fourth": {
+    "_comment": "#349 four-member reading, camp side. The option is ungated and openable on a first interact, so it asserts NO observation (the earlier 'fourth bedroll' named `dig_camp_remnant`, out of window here). It agrees with a prop that IS live: `dig_camp_notes` shares the hours out EVEN across four names. SPOILER RULE: no door named.",
+    "options": [
+     {
+      "goto": "camp_hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Ceria",
+    "text": "\u00a7"
+   },
+   "camp_hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "horns_dig_joined"
+       }
+      ],
+      "end": true,
+      "hide_when": {
+       "accomplishment": {
+        "horns_dig_joined": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "camp_fourth",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Ceria",
+    "text": "\u00a7"
+   }
+  },
+  "start": "camp_hub"
+ }
+}

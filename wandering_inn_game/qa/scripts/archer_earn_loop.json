@@ -145,7 +145,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Peddler",
-    "text": "Deposit's already paid, so don't ask where it came from. Wear it in good health."
+    "text": "Deposit's already paid, so don't ask where it came from. Wear it in good health. More under the tarp."
    },
    "timeout_sec": 5
   },
@@ -795,7 +795,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Relc",
-    "text": "Again? Fine. The dummies heal fast. Perk of being straw. Same rules: move, hit, no crying."
+    "text": "Again? Fine. The dummies heal fast. Straw's forgiving that way. Same rules. Move and hit."
    },
    "timeout_sec": 5
   },

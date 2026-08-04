@@ -3,7 +3,7 @@
 	"nodes": {
 		"confront": {
 			"speaker": "Boulder Shapes",
-			"text": "One of the boulder shapes grinds upright — plates of grey stone sliding over something alive underneath. It does not hurry. Things armored like that rarely need to.",
+			"text": "One of the boulder shapes grinds upright — plates of grey stone sliding over something alive underneath. Sand pours out of the joints. It starts toward you at a walk and does not speed up.",
 			"options": [
 				{
 					"text": "[Strike first.]",

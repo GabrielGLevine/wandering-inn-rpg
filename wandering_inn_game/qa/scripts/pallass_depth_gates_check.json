@@ -575,7 +575,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Tier Clerk",
-    "text": "You're carrying a forge-tier stamp. That's the permit office's business and not this window's. State whatever this window is for.",
+    "text": "You're carrying a forge-tier stamp. That's the permit office's business, and they keep their own ledger of it. State whatever this window is for.",
     "options": [
      {
       "text": "Just looking.",

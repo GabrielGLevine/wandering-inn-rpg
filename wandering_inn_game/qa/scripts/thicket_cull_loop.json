@@ -3,100 +3,613 @@
  "fixture_save": "thicket_cull_loop_start",
  "starts_at_title": true,
  "steps": [
-  {"action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5},
-  {"action": "move", "direction": "down", "steps": 1},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "world_ready", "timeout_sec": 5},
-  {"action": "assert_state", "path": "current_map", "equals": "guild"},
-  {"action": "assert_state", "path": "player_cell", "equals": [8, 3]},
-  {"_comment": "== ROTATION, PRE-STATE == times_slept 30 -> pool window [30,31,0] = thicket_watch/boulevard_duels/road_cull (data/bounties.json's append order -- thicket_watch is the newest post_game append at this window).", "action": "assert_state", "path": "board_active_bounties", "equals": ["bounty_standing_thicket_watch", "bounty_standing_boulevard_duels", "bounty_road_cull"]},
-  {"_comment": "== ACCEPT == already at the desk-approach cell (fixture-positioned) -- fresh waking, first interact plays Selys's rotating pool line, second opens the real graph.", "action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "Selys"}, "timeout_sec": 5},
-  {"action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "selys_delivery"}, "timeout_sec": 5},
-  {"_comment": "Fresh state: idx0 'Just looking around.', idx1 'How does the board work?', idx2 'Take on a posting.' (board_accepted false) -- 'Turn in my posting.' hidden.", "action": "move", "direction": "down", "steps": 2},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "board_picker", "entity": "selys"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "Selys"}, "timeout_sec": 5},
-  {"_comment": "Picker options render posting TITLES (WIBounties._posting_title -- these three new ids have no authored title yet, so all fall back to the readable trim_prefix+capitalize form): ['Take: Standing Thicket Watch. (8 gold)' (thicket_watch, 0), 'Take: Standing Boulevard Duels. (8 gold)' (boulevard_duels, 1), 'Take: Goblin Cull, Floodplains Road. (4 gold)' (road_cull, 2), 'Never mind.' (3)] -- cursor already at 0, pick it directly.", "action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "accepted_bounty_bounty_standing_thicket_watch", "count": 1}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "Selys", "text": "That one? Fine. Logged. Don't die over a handful of gold. It's paperwork for me and embarrassing for you."}, "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5},
-  {"action": "assert_state", "path": "accepted_bounty_id", "equals": "bounty_standing_thicket_watch"},
-  {"_comment": "== TRAVEL (1st) == teleport to riverfarm_village, 2 cells south of riverfarm_thicket_patch (17,13) -- the guild<->riverfarm route is proven elsewhere (riverfarm_walkthrough/riverfarm_fight), the subject here is the bounty+fight loop. Move up 2 for a REAL approach: the first step is open ground, the second is blocked by the entity at (17,13), stopping at (17,14) facing up -- proves riverfarm_thicket_patch's own interact-adjacency for real.", "action": "teleport", "map": "riverfarm_village", "cell": [17, 15]},
-  {"action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "riverfarm_village", "cell": [17, 15]}, "timeout_sec": 5},
-  {"action": "move", "direction": "up", "steps": 2},
-  {"action": "assert_state", "path": "player_cell", "equals": [17, 14]},
-  {"_comment": "== THE CONFIRM CONVERSATION == interact opens the riverfarm_thicket_patch 1-node graph (no trigger_radius, no talk_pool -- an encounter dispatches straight to its conversation). The node text IS the flavor telegraph; pinned verbatim with both options.", "action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "riverfarm_thicket_patch", "entity": "riverfarm_thicket_patch"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "The Creeping Thicket", "text": "The vines shift again, closer this time, thorns catching the light like drawn wire. Whatever Eloise's craft left in them, it never quite went back to sleep.", "options": [{"text": "[Strike first.]", "locked": false, "requirement": ""}, {"text": "[Back away.]", "locked": false, "requirement": ""}]}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5},
-  {"_comment": "== BACK-AWAY NEGATIVE == cursor down to [Back away.] (index 1), confirm -- conversation ends, NO combat fires (assert_event_absent scans the run history up to this step; placed before any fight, it proves the decline is a real no-op), and the encounter stays live for the immediate re-interact below.", "action": "move", "direction": "down", "steps": 1},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5},
-  {"action": "assert_event_absent", "type": "combat_started"},
-  {"_comment": "== FIGHT (1st) == re-interact re-opens the same conversation (fresh cursor at index 0 = [Strike first.]); confirm ends it (dialogue_ended fires from within WIDialogue.choose BEFORE the start_combat effect applies) and the fight starts. No ally_requires on this encounter -- solo.", "action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "riverfarm_thicket_patch", "entity": "riverfarm_thicket_patch"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5},
-  {"action": "combat_autoplay", "max_turns": 200},
-  {"action": "wait_for_event", "type": "combat_finished", "payload_contains": {"victory": true}, "timeout_sec": 20},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5},
-  {"_comment": "thicket_remnants_culled banks synchronously inside resolve_combat, BEFORE ui_combat_hidden's own presentation-close event -- asserted as STATE here, same idiom crab_cull_loop's own post-fight accomplishment check uses.", "action": "assert_state", "path": "accomplishments.thicket_remnants_culled", "equals": 1},
-  {"_comment": "delta-since-accept is 1 of the 2 needed -- posting stays accepted, unmet (opaque-safe: no progress readout anywhere).", "action": "assert_state", "path": "accepted_bounty_id", "equals": "bounty_standing_thicket_watch"},
-  {"_comment": "== SLEEP == respawns:true only re-arms a dormant encounter at the NEXT sleep (sleep() clears dormant_encounters wholesale) -- teleport to bed upstairs (debug bypass, the inn walk is proven elsewhere), one cell short of the approach cell so a REAL move picks up the correct facing (transition() never touches player_facing).", "action": "teleport", "map": "inn_upstairs", "cell": [9, 3]},
-  {"action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "inn_upstairs", "cell": [9, 3]}, "timeout_sec": 5},
-  {"action": "move", "direction": "up", "steps": 1},
-  {"action": "assert_state", "path": "player_cell", "equals": [9, 2]},
-  {"action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5},
-  {"action": "assert_state", "path": "times_slept", "equals": 31},
-  {"_comment": "== TRAVEL (2nd) + FIGHT (2nd) == same teleport-then-real-approach idiom as the first leg; riverfarm_thicket_patch is dormant no longer. Straight [Strike first.] this time (cursor opens at index 0).", "action": "teleport", "map": "riverfarm_village", "cell": [17, 15]},
-  {"action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "riverfarm_village", "cell": [17, 15]}, "timeout_sec": 5},
-  {"action": "move", "direction": "up", "steps": 2},
-  {"action": "assert_state", "path": "player_cell", "equals": [17, 14]},
-  {"action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "riverfarm_thicket_patch", "entity": "riverfarm_thicket_patch"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "combat_started", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_combat_shown", "timeout_sec": 5},
-  {"action": "combat_autoplay", "max_turns": 200},
-  {"action": "wait_for_event", "type": "combat_finished", "payload_contains": {"victory": true}, "timeout_sec": 20},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5},
-  {"action": "assert_state", "path": "accomplishments.thicket_remnants_culled", "equals": 2},
-  {"_comment": "delta-since-accept is now 2 of 2 -- condition_met would read true, but nothing auto-completes: turn-in is Selys's own explicit action.", "action": "assert_state", "path": "accepted_bounty_id", "equals": "bounty_standing_thicket_watch"},
-  {"_comment": "== TURN IN == teleport back to the desk-approach cell, one cell south so a real move picks up the correct UP facing. New waking since the sleep -- first interact plays the pool line again.", "action": "teleport", "map": "guild", "cell": [8, 4]},
-  {"action": "wait_for_event", "type": "map_changed", "payload_contains": {"map": "guild", "cell": [8, 4]}, "timeout_sec": 5},
-  {"action": "move", "direction": "up", "steps": 1},
-  {"action": "assert_state", "path": "player_cell", "equals": [8, 3]},
-  {"action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "dialogue_line", "payload_contains": {"speaker": "Selys"}, "timeout_sec": 5},
-  {"action": "press", "name": "interact"},
-  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "selys_delivery"}, "timeout_sec": 5},
-  {"_comment": "board_accepted true AND chatted_with_selys now 2 (this fixture, unlike crab_cull_loop_start, already carries errand_decided:1 -- so the SECOND pool-line interact of this run, just above, pushes chatted_with_selys 1->2 and reveals two errand_decided-gated options that stayed hidden at accept time): idx0 'Just looking around.', idx1 'Shivertail. Any relation to the Guildmistress?', idx2 'Anything on the board worth my time?', idx3 'How does the board work?', idx4 'Turn in my posting.', idx5 'Hand the posting back.'", "action": "move", "direction": "down", "steps": 4},
-  {"action": "press", "name": "confirm"},
-  {"_comment": "Emission order (board_loop/crab_cull_loop's own traced precedent): turn_in_bounty() resolves + pays out BEFORE _open_board_turnin_dialogue starts the display graph -- gold_changed/toast/completed_bounty fire first, THEN dialogue_started{board_turnin}, THEN dialogue_node. gold delta/total are both 8 (the fixture starts at 0 gold, no other gold source in this run -- riverfarm_thicket_patch carries no loot table).", "action": "wait_for_event", "type": "gold_changed", "payload_contains": {"delta": 8, "total": 8, "source": "bounty_bounty_standing_thicket_watch"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "toast", "payload_contains": {"text": "Earned 8 gold."}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "completed_bounty_bounty_standing_thicket_watch", "count": 1}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "dialogue_started", "payload_contains": {"conversation": "board_turnin", "entity": "selys"}, "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "dialogue_node", "payload_contains": {"speaker": "Selys", "text": "Done? …So it is. Here. Counted twice, because the last adventurer counted once, loudly, and was wrong. The Guild thanks you. I'm the Guild. So: thanks."}, "timeout_sec": 5},
-  {"action": "press", "name": "confirm"},
-  {"action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5},
-  {"action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5},
-  {"action": "assert_state", "path": "accepted_bounty_id", "equals": ""},
-  {"action": "assert_state", "path": "gold", "equals": 8}
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "guild"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "_comment": "== ROTATION, PRE-STATE == times_slept 30 -> pool window [30,31,0] = thicket_watch/boulevard_duels/road_cull (data/bounties.json's append order -- thicket_watch is the newest post_game append at this window).",
+   "action": "assert_state",
+   "path": "board_active_bounties",
+   "equals": [
+    "bounty_standing_thicket_watch",
+    "bounty_standing_boulevard_duels",
+    "bounty_road_cull"
+   ]
+  },
+  {
+   "_comment": "== ACCEPT == already at the desk-approach cell (fixture-positioned) -- fresh waking, first interact plays Selys's rotating pool line, second opens the real graph.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "selys_delivery"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Fresh state: idx0 'Just looking around.', idx1 'How does the board work?', idx2 'Take on a posting.' (board_accepted false) -- 'Turn in my posting.' hidden.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "board_picker",
+    "entity": "selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Picker options render posting TITLES (WIBounties._posting_title -- these three new ids have no authored title yet, so all fall back to the readable trim_prefix+capitalize form): ['Take: Standing Thicket Watch. (8 gold)' (thicket_watch, 0), 'Take: Standing Boulevard Duels. (8 gold)' (boulevard_duels, 1), 'Take: Goblin Cull, Floodplains Road. (4 gold)' (road_cull, 2), 'Never mind.' (3)] -- cursor already at 0, pick it directly.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "accepted_bounty_bounty_standing_thicket_watch",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Selys",
+    "text": "That one? Fine. Logged. Don't die over a handful of gold. It's paperwork for me and embarrassing for you."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accepted_bounty_id",
+   "equals": "bounty_standing_thicket_watch"
+  },
+  {
+   "_comment": "== TRAVEL (1st) == teleport to riverfarm_village, 2 cells south of riverfarm_thicket_patch (17,13) -- the guild<->riverfarm route is proven elsewhere (riverfarm_walkthrough/riverfarm_fight), the subject here is the bounty+fight loop. Move up 2 for a REAL approach: the first step is open ground, the second is blocked by the entity at (17,13), stopping at (17,14) facing up -- proves riverfarm_thicket_patch's own interact-adjacency for real.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    17,
+    15
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "riverfarm_village",
+    "cell": [
+     17,
+     15
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    14
+   ]
+  },
+  {
+   "_comment": "== THE CONFIRM CONVERSATION == interact opens the riverfarm_thicket_patch 1-node graph (no trigger_radius, no talk_pool -- an encounter dispatches straight to its conversation). The node text IS the flavor telegraph; pinned verbatim with both options.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "riverfarm_thicket_patch",
+    "entity": "riverfarm_thicket_patch"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "The Creeping Thicket",
+    "text": "The vines shift again, closer this time. The thorns are the old kind, finger-long, and there are new green tips on last year's dead wood. Whatever Eloise's craft left in them is still moving the growth.",
+    "options": [
+     {
+      "text": "[Strike first.]",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "[Back away.]",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== BACK-AWAY NEGATIVE == cursor down to [Back away.] (index 1), confirm -- conversation ends, NO combat fires (assert_event_absent scans the run history up to this step; placed before any fight, it proves the decline is a real no-op), and the encounter stays live for the immediate re-interact below.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started"
+  },
+  {
+   "_comment": "== FIGHT (1st) == re-interact re-opens the same conversation (fresh cursor at index 0 = [Strike first.]); confirm ends it (dialogue_ended fires from within WIDialogue.choose BEFORE the start_combat effect applies) and the fight starts. No ally_requires on this encounter -- solo.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "riverfarm_thicket_patch",
+    "entity": "riverfarm_thicket_patch"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "thicket_remnants_culled banks synchronously inside resolve_combat, BEFORE ui_combat_hidden's own presentation-close event -- asserted as STATE here, same idiom crab_cull_loop's own post-fight accomplishment check uses.",
+   "action": "assert_state",
+   "path": "accomplishments.thicket_remnants_culled",
+   "equals": 1
+  },
+  {
+   "_comment": "delta-since-accept is 1 of the 2 needed -- posting stays accepted, unmet (opaque-safe: no progress readout anywhere).",
+   "action": "assert_state",
+   "path": "accepted_bounty_id",
+   "equals": "bounty_standing_thicket_watch"
+  },
+  {
+   "_comment": "== SLEEP == respawns:true only re-arms a dormant encounter at the NEXT sleep (sleep() clears dormant_encounters wholesale) -- teleport to bed upstairs (debug bypass, the inn walk is proven elsewhere), one cell short of the approach cell so a REAL move picks up the correct facing (transition() never touches player_facing).",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     9,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 31
+  },
+  {
+   "_comment": "== TRAVEL (2nd) + FIGHT (2nd) == same teleport-then-real-approach idiom as the first leg; riverfarm_thicket_patch is dormant no longer. Straight [Strike first.] this time (cursor opens at index 0).",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    17,
+    15
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "riverfarm_village",
+    "cell": [
+     17,
+     15
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    14
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "riverfarm_thicket_patch",
+    "entity": "riverfarm_thicket_patch"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 200
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.thicket_remnants_culled",
+   "equals": 2
+  },
+  {
+   "_comment": "delta-since-accept is now 2 of 2 -- condition_met would read true, but nothing auto-completes: turn-in is Selys's own explicit action.",
+   "action": "assert_state",
+   "path": "accepted_bounty_id",
+   "equals": "bounty_standing_thicket_watch"
+  },
+  {
+   "_comment": "== TURN IN == teleport back to the desk-approach cell, one cell south so a real move picks up the correct UP facing. New waking since the sleep -- first interact plays the pool line again.",
+   "action": "teleport",
+   "map": "guild",
+   "cell": [
+    8,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "guild",
+    "cell": [
+     8,
+     4
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    8,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "payload_contains": {
+    "speaker": "Selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "selys_delivery"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "board_accepted true AND chatted_with_selys now 2 (this fixture, unlike crab_cull_loop_start, already carries errand_decided:1 -- so the SECOND pool-line interact of this run, just above, pushes chatted_with_selys 1->2 and reveals two errand_decided-gated options that stayed hidden at accept time): idx0 'Just looking around.', idx1 'Shivertail. Any relation to the Guildmistress?', idx2 'Anything on the board worth my time?', idx3 'How does the board work?', idx4 'Turn in my posting.', idx5 'Hand the posting back.'",
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "Emission order (board_loop/crab_cull_loop's own traced precedent): turn_in_bounty() resolves + pays out BEFORE _open_board_turnin_dialogue starts the display graph -- gold_changed/toast/completed_bounty fire first, THEN dialogue_started{board_turnin}, THEN dialogue_node. gold delta/total are both 8 (the fixture starts at 0 gold, no other gold source in this run -- riverfarm_thicket_patch carries no loot table).",
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "payload_contains": {
+    "delta": 8,
+    "total": 8,
+    "source": "bounty_bounty_standing_thicket_watch"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Earned 8 gold."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "completed_bounty_bounty_standing_thicket_watch",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "board_turnin",
+    "entity": "selys"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Selys",
+    "text": "Done? …So it is. Here. Counted twice, because the last adventurer counted once, loudly, and was wrong. The Guild thanks you. I'm the Guild. So: thanks."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accepted_bounty_id",
+   "equals": ""
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 8
+  }
  ]
 }

@@ -12,7 +12,7 @@
        "night"
       ]
      },
-     "text": "Guild's near closing. If you're here about paperwork, it can wait for daylight — I can't."
+     "text": "Guild's near closing. If it's paperwork, it keeps till daylight. Come back when I've slept."
     },
     {
      "requires": {
@@ -28,7 +28,7 @@
        "cisterns_reported": 1
       }
      },
-     "text": "Heard the cisterns crawled with something. Heard it stopped crawling, too, and the file crossed my desk with your name on the referral. Don't let it go to your head — I still make you wait for good tea."
+     "text": "Word from the cisterns — there was something living down there, and it's been dealt with. The file crossed my desk this morning with your name on the referral line."
     }
    ],
    "options": [
@@ -74,7 +74,7 @@
      "goto": "delivered_smooth"
     },
     {
-     "text": "About that reward...",
+     "text": "About that reward.",
      "requires": {
       "accomplishment": {
        "package_delivered": 1
@@ -192,7 +192,7 @@
   },
   "selys_gran": {
    "speaker": "Selys",
-   "text": "Grandmother. Yes, THE Tekshia Shivertail. Yes, she still throws a spear better than half the Silver-ranks. No, I will not introduce you when she's in a mood, which is always. I wanted to be her when I was small. Then I noticed the paperwork ran in the family and picked the desk with better hours.",
+   "text": "Grandmother. Yes, that Tekshia Shivertail. Yes, she still throws a spear better than half the Silver-ranks. No, I will not introduce you when she's in a mood, which is always. I wanted to be her when I was small. Then I noticed the paperwork ran in the family too, and took the desk side of it. The hours are better, most weeks.",
    "options": [
     {
      "text": "You wanted to be a hero?",
@@ -210,21 +210,21 @@
   },
   "selys_gran_two": {
    "speaker": "Selys",
-   "text": "Everyone behind this counter did, once. Then you log your first casualty report. The desk keeps more people alive than a sword does. That took me years to believe, so you don't have to believe it today. Now stop making me sincere during business hours.",
+   "text": "Everyone behind this counter did, once. Then you log your first casualty report. The desk keeps more people alive than a sword does. Took me years to believe that. You don't have to believe it today. Board's behind you, and I've got intake forms with the Guild's name spelled wrong on them.",
    "options": [
     {
      "text": "Might as well ask.",
      "goto": "hub"
     },
     {
-     "text": "Wouldn't dream of it.",
+     "text": "Good luck with the forms.",
      "end": true
     }
    ]
   },
   "selys_board_pick": {
    "speaker": "Selys",
-   "text": "One job. I flagged it because the client isn't insane and the pay is honest: a courier run out to Riverfarm, nothing that bites back. Bring me the receipt and I'll square you from the Guild's own purse, not the client's excuse for one.",
+   "text": "One job. I flagged it because the client isn't insane and the pay is honest: a courier run out to Riverfarm, nothing that bites back. Bring me the receipt. You get squared from the Guild's own purse, and the client's excuse for one never comes into it.",
    "options": [
     {
      "text": "I'll take it.",
@@ -305,7 +305,7 @@
        "errand_decided": 1
       }
      },
-     "text": "The Erin file is closed, believe it or not. If you're here for guild business, the board's behind you; if you're here for gossip, the line forms behind Lism."
+     "text": "The Erin file is closed. Guild business, the board's behind you. Gossip, go ask Lism."
     }
    ]
   },
@@ -374,13 +374,13 @@
        "errand_decided": 1
       }
      },
-     "text": "The Erin file is closed, believe it or not. If you're here for guild business, the board's behind you; if you're here for gossip, the line forms behind Lism."
+     "text": "The Erin file is closed. Guild business, the board's behind you. Gossip, go ask Lism."
     }
    ]
   },
   "pallass_sponsor": {
    "speaker": "Selys",
-   "text": "Pallass. Guild's got the standing arrangement — I file the sponsorship, you cover the clerk's fee, and it goes through same-day. Ten gold, paid to the Guild, not to me.",
+   "text": "Pallass. Guild's got the standing arrangement. I file the sponsorship, you cover the clerk's fee — fee first, actually. It goes through same-day. Ten gold, paid to the Guild, not to me.",
    "options": [
     {
      "text": "File it. (10 gold)",
@@ -405,7 +405,7 @@
   },
   "pallass_sponsored_reaction": {
    "speaker": "Selys",
-   "text": "Filed, stamped, done — same-day, like I said. The Door will answer for Pallass the next time you ask it. Try to look impressed; that arrangement took the Guild years.",
+   "text": "Filed and stamped — same-day, like I said. The Door will answer for Pallass the next time you ask it. That arrangement took the Guild years.",
    "options": [
     {
      "text": "My thanks, Selys.",
@@ -429,7 +429,7 @@
   },
   "errand_returned": {
    "speaker": "Selys",
-   "text": "Sent back, then. She'll spend it on flour and act like she won an argument. You did the walking and took nothing for it — I'm noting that, even if the ledger doesn't.",
+   "text": "Sent back, then. She'll spend it on flour and act like she won an argument. You did the walking and took nothing for it. Noted. Now I owe her a return slip, and she never signs them the same way twice.",
    "options": [
     {
      "text": "Might as well ask.",

@@ -411,7 +411,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Krshia",
-    "text": "So you remembered. Hrr. Then hear a little of it. Every coin this stall clears past its keep goes toward something for the tribes. Something Gnolls have been told we cannot have, and are done being told. There is a gathering, some years off. I mean to stand up at it with full hands. That stays between you, me, and the wool."
+    "text": "So you remembered. Hrr. Then hear a little of it. Every coin this stall clears past its keep goes toward something for the tribes. Something Gnolls have been told we cannot have. We save for it anyway. There is a gathering, some years off. I mean to stand up at it with full hands. That stays between you, me, and the wool."
    },
    "timeout_sec": 5
   },

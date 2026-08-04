@@ -1,0 +1,887 @@
+{
+ "facts": {
+  "$.nodes.commission.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Brothers",
+    "Coyle",
+    "Farley",
+    "Mister",
+    "Sons",
+    "Watch"
+   ]
+  },
+  "$.nodes.cups_favor_returned.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cups_favor_returned.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Cups"
+   ]
+  },
+  "$.nodes.fence.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "20"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.fence.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fence.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fence.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fence.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fence_bought.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Wilovan"
+   ]
+  },
+  "$.nodes.fence_bought.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fists_door.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fists_door.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.fists_door.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Addr",
+    "Brother"
+   ]
+  },
+  "$.nodes.fists_door.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Addr",
+    "Brother"
+   ]
+  },
+  "$.nodes.hat_errand.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hat_errand.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hat_errand.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hat_errand.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Adventurer",
+    "Rest"
+   ]
+  },
+  "$.nodes.hat_report.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hat_report.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hat_report.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hat_report.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hat_report.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hat_terms.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hat_terms.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hat_terms_loud.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hat_terms_loud.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Show"
+   ]
+  },
+  "$.nodes.hub.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[8].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Brothers"
+   ]
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Addr"
+   ]
+  },
+  "$.nodes.marker.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.marker.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Farley"
+   ]
+  },
+  "$.nodes.marker.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Farley"
+   ]
+  },
+  "$.nodes.marker.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Farley",
+    "Guild",
+    "Merchant"
+   ]
+  },
+  "$.nodes.marker.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Coyle"
+   ]
+  },
+  "$.nodes.marker_terms.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Wilovan"
+   ]
+  },
+  "$.nodes.marker_terms.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Brother"
+   ]
+  },
+  "$.nodes.scout_nudge.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.scout_nudge.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Addr",
+    "Coyle",
+    "Master"
+   ]
+  },
+  "$.nodes.ways.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ways.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ways.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.ways.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Alley",
+    "Coyle",
+    "Cups",
+    "Wister"
+   ]
+  },
+  "$.nodes.why_you.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.why_you.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.why_you.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Coyle",
+    "Master",
+    "Watch"
+   ]
+  }
+ },
+ "skeleton": {
+  "_comment": "Contract: append new hub options last to preserve QA-visible indexes. The fence gold requirement stays visible-locked, while accomplishment gates remain hidden.",
+  "nodes": {
+   "commission": {
+    "options": [
+     {
+      "effects": [
+       {
+        "quest": "a_gentlemans_disagreement"
+       },
+       {
+        "accomplishment": "took_brothers_job"
+       }
+      ],
+      "goto": "ways",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "why_you",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7"
+   },
+   "cups_favor_returned": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7"
+   },
+   "fence": {
+    "options": [
+     {
+      "effects": [
+       {
+        "gold": -20
+       },
+       {
+        "item": "phosphor_pendant"
+       },
+       {
+        "accomplishment": "bought_phosphor_pendant"
+       }
+      ],
+      "goto": "fence_bought",
+      "hide_when": {
+       "accomplishment": {
+        "bought_phosphor_pendant": 1
+       }
+      },
+      "requires": {
+       "gold": 20
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "_comment": "b2 #218 handoff: gated on job_done AND eyed (he points people who NOTICED the chest); earliest slot so pendant/marker variants outrank when active.",
+      "requires": {
+       "accomplishment": {
+        "brothers_job_done": 1,
+        "eyed_the_stash": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "bought_phosphor_pendant": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "fence_bought": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7"
+   },
+   "fists_door": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "wilovan_will_fight"
+       }
+      ],
+      "goto": "hub",
+      "requires": {
+       "accomplishment": {
+        "spotted_the_runner": 1,
+        "warehouse_located": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "warehouse_located": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "hat_errand": {
+    "options": [
+     {
+      "effects": [
+       {
+        "quest": "the_hat_stays_on"
+       },
+       {
+        "accomplishment": "hat_job_taken"
+       }
+      ],
+      "goto": "hat_terms",
+      "hide_when": {
+       "accomplishment": {
+        "hat_job_taken": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hat_terms_loud",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7"
+   },
+   "hat_report": {
+    "_comment": "Three route arms, one close. Ungated exit keeps the softlock guard satisfied.",
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "hat_job_done"
+       },
+       {
+        "gold": 25
+       }
+      ],
+      "end": true,
+      "hide_when": {
+       "accomplishment": {
+        "hat_job_done": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "handoff_talked": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "hat_job_done"
+       },
+       {
+        "gold": 25
+       }
+      ],
+      "end": true,
+      "hide_when": {
+       "accomplishment": {
+        "hat_job_done": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "handoff_quiet": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "hat_job_done"
+       },
+       {
+        "gold": 25
+       }
+      ],
+      "end": true,
+      "hide_when": {
+       "accomplishment": {
+        "hat_job_done": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "handoff_loud": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7"
+   },
+   "hat_terms": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7"
+   },
+   "hat_terms_loud": {
+    "options": [
+     {
+      "goto": "hat_terms",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "goto": "commission",
+      "hide_when": {
+       "accomplishment": {
+        "took_brothers_job": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "ways",
+      "hide_when": {
+       "accomplishment": {
+        "brothers_job_done": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "coyle_operation_found": 1,
+        "took_brothers_job": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "scout_nudge",
+      "hide_when": {
+       "accomplishment": {
+        "coyle_operation_found": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "took_brothers_job": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "brothers_job_done"
+       },
+       {
+        "accomplishment": "cleared_brothers_name"
+       },
+       {
+        "accomplishment": "brothers_marker"
+       },
+       {
+        "item": "brothers_marker"
+       },
+       {
+        "remove_entity": "alley_footpads_a"
+       },
+       {
+        "remove_entity": "alley_footpads_b"
+       }
+      ],
+      "goto": "marker",
+      "hide_when": {
+       "accomplishment": {
+        "brothers_job_done": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "merchant_fate_decided": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "remove_item": "cups_debt_chit"
+       },
+       {
+        "accomplishment": "returned_cups_debt"
+       }
+      ],
+      "goto": "cups_favor_returned",
+      "hide_when": {
+       "accomplishment": {
+        "returned_cups_debt": 1
+       }
+      },
+      "requires": {
+       "item": "cups_debt_chit"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "fence",
+      "requires": {
+       "accomplishment": {
+        "brothers_marker": 1,
+        "cleared_brothers_name": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "v0.16 I2 giver (#306). Appended LAST per this file's index contract; accomplishment-gated so it is HIDDEN in every shipped disagreement fixture and in wilovan_parlor_f_start.",
+      "goto": "hat_errand",
+      "hide_when": {
+       "accomplishment": {
+        "hat_job_taken": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "brothers_job_done": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hat_report",
+      "hide_when": {
+       "accomplishment": {
+        "hat_job_done": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "hat_job_taken": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "phase": [
+        "dusk",
+        "night"
+       ]
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "took_brothers_job": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "brothers_job_done": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "marker": {
+    "options": [
+     {
+      "goto": "marker_terms",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "merchant_exposed": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "merchant_extorted": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "marker_terms": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7"
+   },
+   "scout_nudge": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7"
+   },
+   "ways": {
+    "options": [
+     {
+      "goto": "fists_door",
+      "hide_when": {
+       "accomplishment": {
+        "wilovan_will_fight": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7"
+   },
+   "why_you": {
+    "options": [
+     {
+      "effects": [
+       {
+        "quest": "a_gentlemans_disagreement"
+       },
+       {
+        "accomplishment": "took_brothers_job"
+       }
+      ],
+      "goto": "ways",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Wilovan",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

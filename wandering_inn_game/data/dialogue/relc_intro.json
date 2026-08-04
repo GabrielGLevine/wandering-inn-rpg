@@ -3,7 +3,7 @@
  "nodes": {
   "meet": {
    "speaker": "Relc",
-   "text": "Oi. Hold up. Big spear, bored Drake, official business. That's me covered. You came off the inn hill. Name and errand.",
+   "text": "Oi. Hold up. Big spear, bored Drake. The official business part is me standing here. You came off the inn hill. Name and errand.",
    "text_variants": [
     {
      "requires": {
@@ -12,7 +12,7 @@
        "night"
       ]
      },
-     "text": "Dark road, same Drake. Goblins get bold once the sun's down — so do I."
+     "text": "Dark road, same Drake. Goblins get bold once the sun's down. Keep to the middle where I can see you."
     },
     {
      "requires": {
@@ -20,7 +20,7 @@
        "met_relc": 1
       }
      },
-     "text": "Hah! The inn's errand-runner. Road's been quiet since you passed. Mostly."
+     "text": "Hah! The inn's errand-runner. Road's been mostly quiet since you passed."
     },
     {
      "requires": {
@@ -36,7 +36,7 @@
        "went_alone": 1
       }
      },
-     "text": "You went down there ALONE. Into that thing's own hole, no backup, and I offered. I've replayed it a dozen ways and every version ends with a body bag. Instead you're standing here being smug at me about it. I don't know whether to buy you a drink or write you up for reckless conduct."
+     "text": "Alone. You went into that thing's own hole alone, no backup, and I offered. I've replayed it a dozen ways and every version ends with a body bag. Instead you're standing here being smug at me about it. Don't do that to me twice."
     }
    ],
    "options": [
@@ -142,7 +142,7 @@
   },
   "banter": {
    "speaker": "Relc",
-   "text": "Relc. Senior Guardsman, best spear in Liscor, currently guarding grass. The inn feeds you, the city taxes you. Everything between is my road, so behave on it. There's goblins about, if the walk gets boring.",
+   "text": "Relc. Senior Guardsman, best spear in Liscor. Right now I'm guarding grass. My beat runs from the inn to the city gate, so behave on it. There's goblins about. Sing out if you spot one.",
    "options": [
     {
      "text": "You any good with that spear? (Spar)",
@@ -156,7 +156,7 @@
   },
   "warns": {
    "speaker": "Relc",
-   "text": "Goblins on the road since the thaw. A warband near the gate with a chief who's got actual teeth. Old stones to the north-east? Stay off them. And if the pond looks deep, that's because it is.",
+   "text": "Goblins on the road since the thaw. A warband near the gate with a chief who's got actual teeth. Old stones to the north-east? Stay off them. And the pond is deeper than the gatehouse rope. Stay out of it.",
    "options": [
     {
      "text": "Good to know.",
@@ -170,7 +170,7 @@
   },
   "spar_offer": {
    "speaker": "Relc",
-   "text": "Ha! Good instinct. Everyone swings wrong until someone laughs at them. Watch keeps training dummies in the gatehouse; I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are simple: you move, you hit, you don't cry.",
+   "text": "Ha! Good instinct. Everybody swings wrong at the start. Might as well get it done here. Watch keeps training dummies in the gatehouse. I drag a couple out when gate duty gets slow. Don't ask about the wheels. Rules are you move and you hit. That's it. That's all the rules.",
    "text_variants": [
     {
      "requires": {
@@ -178,7 +178,7 @@
        "sparred_with_relc": 1
       }
      },
-     "text": "Again? Fine. The dummies heal fast. Perk of being straw. Same rules: move, hit, no crying."
+     "text": "Again? Fine. The dummies heal fast. Straw's forgiving that way. Same rules. Move and hit."
     }
    ],
    "options": [
@@ -199,7 +199,7 @@
   },
   "gift": {
    "speaker": "Relc",
-   "text": "My spare spear. Held gates wider than that one. Now listen. Owning a weapon and HOLDING it are different things: check your pack, put the spear in your hand before the road checks your grip. Sword arm, spear arm. The weapon you carry decides which of your moves come with you.",
+   "text": "My spare spear. Held gates wider than that one. Now listen. It won't help you from inside a pack. Check your pack, get the spear in your hand before you're back on the road. Sword arm, spear arm. What you carry decides which moves you get.",
    "options": [
     {
      "text": "I’ll try it on. (Check your pack after this.)",
@@ -213,7 +213,7 @@
   },
   "relc_army": {
    "speaker": "Relc",
-   "text": "Ha! No. Army, before. Liscor's got one. It just never comes home. I did. Walls pay worse, but nobody makes you march in the rain, and I am DONE with marching. Best decision I ever made, after the spear.",
+   "text": "Ha! No. Army, before. Liscor's army stays out on campaign, years at a stretch. I came home instead. Walls pay worse. Nobody makes you march in the rain, though. I am done marching. Kept the spear.",
    "options": [
     {
      "text": "Why'd you leave?",
@@ -231,7 +231,7 @@
   },
   "relc_army_two": {
    "speaker": "Relc",
-   "text": "Long version costs a drink. Short version: I got tired of holes in the ground and people I liked going into them. Watch work, the worst thing I dig is paperwork. ...What? I can be deep. It's the tail, nobody expects it.",
+   "text": "Long version costs a drink. Short version: I got tired of holes in the ground and people I liked going into them. Watch work, the worst thing I dig is paperwork. There's a longer version. It costs a drink and I lose the middle of it every time.",
    "options": [
     {
      "text": "(Back a step.)",
@@ -245,21 +245,21 @@
   },
   "relc_after": {
    "speaker": "Relc",
-   "text": "Miss it? I left people in it. Some I'd still take a spear for, even now. That's all the answer you're getting sober. ...Hey. You did good, down there. I don't say that to walls, so stand still while it lands.",
+   "text": "Miss it? I left people in it. Some I'd still take a spear for, even now. Hey. You did good down there. Buy me that drink sometime and I'll say the long version.",
    "options": [
     {
      "text": "(Back a step.)",
      "goto": "meet"
     },
     {
-     "text": "It landed.",
+     "text": "I'll hold you to the long version.",
      "end": true
     }
    ]
   },
   "relc_wager": {
    "speaker": "Relc",
-   "text": "Ugh — fine, you win. Here's your cut. Watch doesn't pay enough for me to keep losing bets to my own students, but don't tell the paymaster I said that.",
+   "text": "Ugh — fine, you win. Here's your cut. Watch doesn't pay enough for me to keep losing bets to my own students. The paymaster docks me for less.",
    "options": [
     {
      "text": "(Back a step.)",

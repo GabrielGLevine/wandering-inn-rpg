@@ -5,10 +5,10 @@
 		"door_mounting": {
 			"_comment": "BOTH exits bank and start -- the quest auto-start IS this conversation (spec section 2.5), so there is no way to leave the scene without the chain running. `door_chain_started` rides along as a LEGACY ALIAS: the id is frozen (shipped_ids) and test_shipped_ids requires a live producer, but Task 2.2 retired its original producer, so the mounting carries it. It now means exactly what door_mounted means, and every shipped consumer reads correctly under that sense.",
 			"speaker": "Pisces",
-			"text": "Mounted, hinged, and — observe — already holding a hop to Liscor's gate district without so much as a rune of encouragement. It works. Now let us see how far it can go.",
+			"text": "Mounted and hinged. Observe — already holding a hop to Liscor's gate district, and nobody has offered it so much as a rune of encouragement. It works. The next test is range.",
 			"options": [
 				{
-					"text": "How far CAN it go?",
+					"text": "How far can it actually go?",
 					"goto": "door_mounting_far"
 				},
 				{
@@ -30,7 +30,7 @@
 		},
 		"door_mounting_far": {
 			"speaker": "Pisces",
-			"text": "Farther than Liscor. The wardwork wants distance the way a bowstring wants release — but push it unattuned and things will leak through that we did not invite. Properly? We attune it. Krshia stocks catalysts; I stock expertise.",
+			"text": "Farther than Liscor. The wardwork is straining for distance; set a palm to the frame and you can feel the pull. But push it unattuned and things we did not invite will leak through. So we attune it properly. Krshia stocks the catalysts, and I have already started on the calculations for our half of the work.",
 			"options": [
 				{
 					"text": "Then let's start.",

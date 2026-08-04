@@ -3,61 +3,363 @@
  "fixture_save": "grimalkin_study_start",
  "starts_at_title": true,
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "pallass_market" },
-  { "action": "assert_state", "path": "player_cell", "equals": [18, 5] },
-
-  { "_comment": "== LEG A: ENROLL == up 1 to (18,4), then a blocked bump into Grimalkin's own cell (18,3) to face up without moving -- the walkthrough's own approach idiom.", "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [18, 4] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [18, 4] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "pallass_grimalkin", "entity": "grimalkin" }, "timeout_sec": 5 },
-  { "_comment": "Fresh-hub EXACT option array: the enroll row present, the turn-in row ABSENT (board_accepted:true unmet -> hidden, the bool gate's symmetric hide), the exam option hidden (forge_permit_filed 0). Half 1 of the single-slot mutual-exclusion pin pair.", "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Grimalkin", "text": "Stand up straight when you address me. I measure everything that comes through this office, and most of it is found wanting. State your business.", "options": [{ "locked": false, "requirement": "", "text": "About the studies." }, { "locked": false, "requirement": "", "text": "Just passing through." }] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "01_hub_fresh" },
-  { "action": "press", "name": "confirm" },
-  { "_comment": "Studies node EXACT: both protocols visible -- the casting row's learned_magic_from_pisces requires is MET in this fixture, so its PRESENCE here is the row-gate's positive proof.", "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Grimalkin", "text": "Two open protocols. Field engagements, or witnessed casting. Both pay on data, neither pays for stories.", "options": [{ "locked": false, "requirement": "", "text": "Sign me on as a field subject. Three engagements, logged." }, { "locked": false, "requirement": "", "text": "Measure my casting. Eight witnessed, as posted." }, { "locked": false, "requirement": "", "text": "Another time." }] }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "02_studies" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "accepted_bounty_grimalkin_study_combat", "count": 1 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Grimalkin", "text": "Enrolled. Fight as you would; I will know if you perform for the ledger. Return when the numbers exist." }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "03_enrolled" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accepted_bounty_id", "equals": "grimalkin_study_combat" },
-
-  { "_comment": "== LEG B: THE VOICE PIN == re-open. Enrolled-hub EXACT array -- 'About the studies.' now ABSENT (board_accepted true), 'Reporting in...' row 0. Half 2 of the mutual-exclusion pair.", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "pallass_grimalkin", "entity": "grimalkin" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Grimalkin", "options": [{ "locked": false, "requirement": "", "text": "Reporting in on the study." }, { "locked": false, "requirement": "", "text": "Just passing through." }] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "04_hub_enrolled" },
-  { "_comment": "Row 0 'Reporting in on the study.' -- end:true, so the end pair fires BEFORE the open_board_turnin effect (the event-order trap): wait ended/hidden, THEN the turnin graph's own start.", "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "board_turnin" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Grimalkin", "text": "Incomplete measurements are noise. I did not assign you that errand, or you have not finished mine. Either way: come back with data." }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "05_turnin_voice" },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== LEG C: NO EVICTION == a not-done report neither pays nor clears -- the posting stays held and the hub still renders the enrolled array.", "action": "assert_state", "path": "accepted_bounty_id", "equals": "grimalkin_study_combat" },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "pallass_grimalkin", "entity": "grimalkin" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Grimalkin", "options": [{ "locked": false, "requirement": "", "text": "Reporting in on the study." }, { "locked": false, "requirement": "", "text": "Just passing through." }] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accepted_bounty_id", "equals": "grimalkin_study_combat" }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "pallass_market"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    5
+   ]
+  },
+  {
+   "_comment": "== LEG A: ENROLL == up 1 to (18,4), then a blocked bump into Grimalkin's own cell (18,3) to face up without moving -- the walkthrough's own approach idiom.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    4
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_grimalkin",
+    "entity": "grimalkin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Fresh-hub EXACT option array: the enroll row present, the turn-in row ABSENT (board_accepted:true unmet -> hidden, the bool gate's symmetric hide), the exam option hidden (forge_permit_filed 0). Half 1 of the single-slot mutual-exclusion pin pair.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Grimalkin",
+    "text": "Stand up straight when you address me. I measure everything that comes through this office, and most of it is found wanting. State your business.",
+    "options": [
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "About the studies."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Just passing through."
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_hub_fresh"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "Studies node EXACT: both protocols visible -- the casting row's learned_magic_from_pisces requires is MET in this fixture, so its PRESENCE here is the row-gate's positive proof.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Grimalkin",
+    "text": "Two open protocols. Field engagements, or witnessed casting. Both pay on data. Bring numbers.",
+    "options": [
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Sign me on as a field subject. Three engagements, logged."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Measure my casting. Eight witnessed, as posted."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Another time."
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_studies"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "accepted_bounty_grimalkin_study_combat",
+    "count": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Grimalkin",
+    "text": "Enrolled. Fight as you would; I will know if you perform for the ledger. Return when the numbers exist."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_enrolled"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accepted_bounty_id",
+   "equals": "grimalkin_study_combat"
+  },
+  {
+   "_comment": "== LEG B: THE VOICE PIN == re-open. Enrolled-hub EXACT array -- 'About the studies.' now ABSENT (board_accepted true), 'Reporting in...' row 0. Half 2 of the mutual-exclusion pair.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_grimalkin",
+    "entity": "grimalkin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Grimalkin",
+    "options": [
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Reporting in on the study."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Just passing through."
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_hub_enrolled"
+  },
+  {
+   "_comment": "Row 0 'Reporting in on the study.' -- end:true, so the end pair fires BEFORE the open_board_turnin effect (the event-order trap): wait ended/hidden, THEN the turnin graph's own start.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "board_turnin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Grimalkin",
+    "text": "Incomplete measurements are noise. I did not assign you that errand, or you have not finished mine. Either way: come back with data."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "05_turnin_voice"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== LEG C: NO EVICTION == a not-done report neither pays nor clears -- the posting stays held and the hub still renders the enrolled array.",
+   "action": "assert_state",
+   "path": "accepted_bounty_id",
+   "equals": "grimalkin_study_combat"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_grimalkin",
+    "entity": "grimalkin"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Grimalkin",
+    "options": [
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Reporting in on the study."
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Just passing through."
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accepted_bounty_id",
+   "equals": "grimalkin_study_combat"
+  }
  ]
 }

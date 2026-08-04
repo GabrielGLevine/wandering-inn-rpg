@@ -1,147 +1,832 @@
 {
-	"_comment": "d1 #247 FoTI EXTENSION -- the only live coverage klbkch_inn, rags_inn, wilovan_inn and grimalkin_inn have. Off inn_guests_ext_start: all TEN rostered met AND the three quest terminals banked, so the pool is 10 and times_slept=16 puts the window start at 16%10=6, seating KLBKCH (11,5) + RAGS (12,5). Two real sleeps walk the window through the whole new block: 17 seats [rags, wilovan] and 18 seats [wilovan, grimalkin], so every new register opens live and each of the four is proven to arrive AND to leave. Legs: (1) ALL FOUR NEW SEATS RENDER, in the east block beside the ledger. Spacing was set by GRIMALKIN, whose 224px rig is the biggest shipped: the first pass sat him at (12,6) next to Wilovan at (11,6) and the windowed check killed it (Wilovan vanished behind his arm, the player two rows north ate his head -- Relc's (2,5) lesson repeating), so he holds the far-east CORNER (14,5) where the wall takes his right side and nothing but floor sits above him. Note that ANY two roster members can co-render, not just adjacent indices: with a partial met-pool the window's neighbours change, so no seat pair may rely on the full roster's ordering; (2) REGISTER-PURITY -- klbkch_inn opens and the Hive is never named, rags_inn opens and never touches the medicine trade or the carved pawn, wilovan_inn never names the trade or a single beat of a_gentlemans_disagreement, grimalkin_inn never mentions a form; (3) SERVE ON BOTH NODES -- Klbkch is served from his GREET node on the fixture's bowl, Rags from her OFF-DUTY TOPIC node on a bowl COOKED at the stew pot (helper 2 grants basic_cooking), so both serve sites are live and served_customer banks twice; Wilovan and Grimalkin pin the VISIBLE-LOCKED render on both of their nodes with an empty pack; (4) ARRIVE AND LEAVE -- Klbkch's chair is walked ONTO at t=17 and Rags's at t=18, which is the structural-absence proof (is_cell_blocked/entity_at/_build_entities all skip an off-shift guest), while Rags stays across 16->17 and Wilovan across 17->18, so each transition is a SLIDE and not a swap. INTERACT IDIOM (horns_residence): a click on a non-adjacent entity only WALKS adjacent, so a guest out of reach is approached by clicking an empty adjacent cell first. Boot = fixture->manual slot, title Continue (down 1), same as inn_guests_loop.",
-	"fixture_save": "inn_guests_ext_start",
-	"starts_at_title": true,
-	"steps": [
-		{ "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-		{ "action": "press", "name": "confirm" },
-		{ "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-		{ "action": "move", "direction": "down", "steps": 1 },
-		{ "action": "press", "name": "confirm" },
-		{ "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-		{ "action": "assert_state", "path": "current_map", "equals": "inn" },
-		{ "action": "assert_state", "path": "times_slept", "equals": 16 },
-		{ "action": "assert_state", "path": "player_cell", "equals": [12, 3] },
-
-		{ "_comment": "TEN rostered, still TWO seats: the count is identical to inn_guests_full_loop's boot because seats never grow with the roster. 23 = 16 ungated entities + hungry_patron (day) + the 3 _returned Horns (door_mounted) + klbkch + rags + the PC. from_start because the boot render lands before world_ready, ahead of this step's since-marker.", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 23, "fallbacks": 0 }, "from_start": true, "timeout_sec": 5 },
-
-		{ "action": "screenshot", "name": "00_klbkch_and_rags_seated" },
-
-		{ "_comment": "== RAGS: on shift, register-pure == her chair is (12,5). Step south onto (12,4) first, plain floor in the row ABOVE the seat lanes; the boot cell sits one further north so the player's own sprite never stacks behind a seated guest in the boot shot. rags_inn opens directly (guest rows carry no talk_pool) and it is the inn register: no medicine, no carved pawn, no price, and nothing she would say to goblins. The fixture's hot_meal is still in the pack and no serve is banked this waking, so Serve renders UNLOCKED in slot 1 -- she is served later, from her topic node, on a bowl cooked after the window slides.", "action": "click", "cell": [12, 4] },
-		{ "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [12, 4] }, "timeout_sec": 10 },
-		{ "action": "click", "cell": [12, 5] },
-		{ "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "rags_inn" }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Rags", "text": "Human place. Warm. I count doors first. Two. Window there. Then I sit.", "options": [
-			{ "text": "Push a bowl across the table to her. (Serve)", "locked": false, "requirement": "" },
-			{ "text": "\"You don't have to watch the doors in here.\"", "locked": false, "requirement": "" },
-			{ "text": "\"Sit as long as you want.\"", "locked": false, "requirement": "" }
-		] }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-		{ "_comment": "Her ONE off-duty topic: the doors, the tables, and a grudging word about Erin. Early-volume register throughout -- one to four words, no articles, no fluency, and the intelligence in what she chooses to say.", "action": "click_dialogue_option", "option": 2 },
-		{ "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Rags", "text": "Always watch doors. Not for here. For after. ...Tables here flat. No wobble. Tribe has rocks. I do not complain. Inn Human cooks. Plays chess. Feeds goblins. Stupid. Works. Hate that it works." }, "timeout_sec": 5 },
-		{ "action": "screenshot", "name": "01_rags_offduty" },
-		{ "_comment": "Exit is visible option 2 (Serve unlocked in slot 1, taken later).", "action": "click_dialogue_option", "option": 2 },
-		{ "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-		{ "_comment": "== KLBKCH: on shift, register-pure, servable from the GREET node == his chair is (11,5). Step west onto (11,4) first, plain floor in the row ABOVE the seat lanes, which lands the player north-adjacent to him.", "action": "click", "cell": [11, 4] },
-		{ "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [11, 4] }, "timeout_sec": 10 },
-		{ "action": "click", "cell": [11, 5] },
-		{ "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "klbkch_inn" }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Klbkch", "text": "Guardsman Klbkch. Off duty, which I am told is a condition a person can be in. I have been sitting for forty minutes. I am not yet certain what I have achieved.", "options": [
-			{ "text": "Bring him a bowl from the kitchen. (Serve)", "locked": false, "requirement": "" },
-			{ "text": "\"Resting isn't supposed to achieve anything.\"", "locked": false, "requirement": "" },
-			{ "text": "\"You're doing it correctly, Klbkch.\"", "locked": false, "requirement": "" }
-		] }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-		{ "_comment": "SERVE FROM THE GREET NODE. Effects are the shipped four one-verb dicts: bank the serve key, served_customer++, gold+2, consume the hot_meal. The Hive is never named on any node of this graph, which is the register-purity proof his plaza post cannot give.", "action": "click_dialogue_option", "option": 1 },
-		{ "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer" }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "hot_meal" }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Klbkch", "text": "Thank you. I will record the evening as follows. A meal was carried to me by someone who was not required to carry it, and I was not required to ask. That is what resting accomplished. It is a great deal more than I expected of it." }, "timeout_sec": 5 },
-		{ "action": "assert_state", "path": "gold", "equals": 13 },
-		{ "action": "screenshot", "name": "02_klbkch_served" },
-		{ "action": "click_dialogue_option", "option": 1 },
-		{ "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-		{ "_comment": "== SLIDE ONE == a real sleep at your_bed takes times_slept 16 -> 17, so the start goes 6 -> 7 and the window seats [rags, wilovan]: Klbkch leaves, Rags STAYS, Wilovan arrives.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 3] },
-		{ "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn_upstairs", "cell": [9, 3] }, "timeout_sec": 5 },
-		{ "action": "move", "direction": "up", "steps": 1 },
-		{ "action": "assert_state", "path": "player_cell", "equals": [9, 2] },
-		{ "action": "press", "name": "interact" },
-		{ "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
-		{ "action": "assert_state", "path": "times_slept", "equals": 17 },
-
-		{ "action": "teleport", "map": "inn", "cell": [12, 3] },
-		{ "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn", "cell": [12, 3] }, "timeout_sec": 5 },
-		{ "_comment": "Still exactly two seats filled after the slide. 23 -> 24 is NOT a third guest: the sleep met the garden legs and banked garden_door_unlocked, so the always-authored garden_door (3,8) turns present in the same rebuild (inn_guests_loop and inn_guests_full_loop both pin the same step).", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 24, "fallbacks": 0 }, "timeout_sec": 5 },
-
-		{ "_comment": "KLBKCH ROTATED OUT: the chair the player could not enter last night is plain floor now, and the walk lands on it. present_when absence is STRUCTURAL, not a hidden sprite.", "action": "click", "cell": [11, 5] },
-		{ "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [11, 5] }, "timeout_sec": 15 },
-
-		{ "_comment": "== A SECOND BOWL == the pack is empty and two chairs are full, so cook one. stew_pot (4,1) is a requires_skill prop and the 2026-07-10 ruling stands: interact NEVER auto-casts, so the skill is chosen from the hotbar. This fixture's known field skills render as [1 Basic Cleaning, 2 Light, 3 Basic Cooking, 4 Appraise Foe, 5 Charming Smile], so basic_cooking is slot 3. Approach (4,2), then a BLOCKED move up sets facing without moving (the walkthroughs' robust-facing idiom) before the cast.", "action": "click", "cell": [4, 2] },
-		{ "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [4, 2] }, "timeout_sec": 20 },
-		{ "action": "move", "direction": "up", "steps": 1 },
-		{ "action": "assert_state", "path": "player_cell", "equals": [4, 2] },
-		{ "action": "press", "name": "hotbar_3" },
-		{ "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "basic_cooking", "target": "stew_pot" }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "hot_meal" }, "timeout_sec": 5 },
-
-		{ "_comment": "== RAGS STAYED == she is in BOTH windows (start 6 -> [klbkch,rags], start 7 -> [rags,wilovan]), which makes this a slide and not a swap. Walk back east to the boot cell, north-adjacent to her chair. The sleep re-armed her once_per_waking leg and the cooked bowl is in hand, so Serve is unlocked again.", "action": "click", "cell": [12, 4] },
-		{ "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [12, 4] }, "timeout_sec": 20 },
-		{ "action": "click", "cell": [12, 5] },
-		{ "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "rags_inn" }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-		{ "action": "click_dialogue_option", "option": 2 },
-		{ "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Rags", "text": "Always watch doors. Not for here. For after. ...Tables here flat. No wobble. Tribe has rocks. I do not complain. Inn Human cooks. Plays chess. Feeds goblins. Stupid. Works. Hate that it works." }, "timeout_sec": 5 },
-		{ "_comment": "SERVE FROM THE TOPIC NODE (the contract's second serve site). Chieftain eats last, always last -- and tonight she does not.", "action": "click_dialogue_option", "option": 1 },
-		{ "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer" }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "hot_meal" }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Rags", "text": "Hot. Good. ...Chieftain eats last. Always last. Tonight, first. Tell no one." }, "timeout_sec": 5 },
-		{ "action": "assert_state", "path": "gold", "equals": 15 },
-		{ "action": "screenshot", "name": "03_rags_served" },
-		{ "action": "click_dialogue_option", "option": 1 },
-		{ "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-		{ "action": "assert_state", "path": "accomplishments.served_customer", "equals": 5 },
-
-		{ "_comment": "== WILOVAN ARRIVED == his chair is (12,6), directly under Rags's, the same vertical stack the shipped pisces (6,5)/selys (6,6) pair already runs. Approach from (11,6), plain floor west of it. Both bowls are spent, so his Serve renders VISIBLE-LOCKED ('requires Hot Meal') in slot 1 on BOTH nodes.", "action": "click", "cell": [11, 6] },
-		{ "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [11, 6] }, "timeout_sec": 20 },
-		{ "action": "click", "cell": [12, 6] },
-		{ "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "wilovan_inn" }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Wilovan", "text": "Sir. A good evening to you, and a very good room to have it in. No business tonight, you'll be relieved to hear. A gentleman does occasionally sit somewhere nobody owes anybody anything.", "options": [
-			{ "text": "Bring him a bowl from the kitchen. (Serve)", "locked": true, "requirement": "requires Hot Meal" },
-			{ "text": "\"No business at all?\"", "locked": false, "requirement": "" },
-			{ "text": "\"Enjoy the quiet, then.\"", "locked": false, "requirement": "" }
-		] }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-		{ "_comment": "His ONE off-duty topic, and every word of it oblique: a colleague, an errand, a hat. The commission, the three doors, Coyle, Farley, the marker and the fence shelf all stay at the Invrisil parlor, and the trade is never named.", "action": "click_dialogue_option", "option": 2 },
-		{ "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Wilovan", "text": "None whatever, sir. My colleague is off attending an errand of the sort that keeps a man out past a decent hour, and I declined to attend it with him. A room where the fellow at the next table hasn't the first idea what I do, and no reason at all to ask, is a rare comfort. You'll note I've kept the hat on. That isn't a warning this evening. It's simply a good hat." }, "timeout_sec": 5 },
-		{ "action": "screenshot", "name": "04_wilovan_offduty" },
-		{ "_comment": "Serve stays visible-locked on this node too, so the exit is visible option 2.", "action": "click_dialogue_option", "option": 2 },
-		{ "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-		{ "_comment": "== SLIDE TWO == another sleep takes times_slept 17 -> 18, start 7 -> 8, seating [wilovan, grimalkin]: Rags leaves, Wilovan STAYS, and the biggest rig in the game takes the front-row chair.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 3] },
-		{ "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn_upstairs", "cell": [9, 3] }, "timeout_sec": 5 },
-		{ "action": "move", "direction": "up", "steps": 1 },
-		{ "action": "press", "name": "interact" },
-		{ "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
-		{ "action": "assert_state", "path": "times_slept", "equals": 18 },
-
-		{ "action": "teleport", "map": "inn", "cell": [12, 3] },
-		{ "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn", "cell": [12, 3] }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 24, "fallbacks": 0 }, "timeout_sec": 5 },
-		{ "action": "screenshot", "name": "05_wilovan_and_grimalkin_seated" },
-
-		{ "_comment": "RAGS ROTATED OUT: her chair is floor again, and the walk lands on it. Then east to (14,4), the plain-floor cell directly north of Grimalkin's corner and his only approach -- the wall takes (15,5), pantry_door holds (14,6), and (13,5) belongs to pisces_mounting whenever the door arc is mid-flight.", "action": "click", "cell": [12, 5] },
-		{ "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [12, 5] }, "timeout_sec": 15 },
-		{ "action": "click", "cell": [14, 4] },
-		{ "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [14, 4] }, "timeout_sec": 20 },
-
-		{ "_comment": "== GRIMALKIN: on shift, register-pure == off duty means a LIGHTER session, not no session, and he is still measuring the room. The permit office never comes up: no forms, no fitness read, no lift pass, no study enrollment or turn-in. Serve is visible-locked with an empty pack.", "action": "click", "cell": [14, 5] },
-		{ "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "grimalkin_inn" }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Grimalkin", "text": "Sit down properly if you are going to sit. Hips back, chest up, and stop hovering. I am off duty. Off duty means today's session was light. Two hours. You have the face of someone about to argue with the word light.", "options": [
-			{ "text": "Set a full bowl down in front of him. (Serve)", "locked": true, "requirement": "requires Hot Meal" },
-			{ "text": "\"Two hours is light?\"", "locked": false, "requirement": "" },
-			{ "text": "\"I'll leave you to your rest day.\"", "locked": false, "requirement": "" }
-		] }, "timeout_sec": 5 },
-		{ "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-		{ "action": "click_dialogue_option", "option": 2 },
-		{ "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Grimalkin", "text": "Light is a ratio, not a number. Half the load, half the volume, all of the intent. And I am still working, since you ask. Fourteen people have stood up out of a chair since I sat down. Five did it correctly. The tall one clearing tables has better hip mobility than half my Pallass intake and has no idea. I intend to tell her before I leave. They never do thank me, and they always improve." }, "timeout_sec": 5 },
-		{ "action": "screenshot", "name": "06_grimalkin_offduty" },
-		{ "action": "click_dialogue_option", "option": 2 },
-		{ "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-		{ "_comment": "REGISTER-PURITY, asserted as ABSENCE across the whole run: not one of the four home hubs ever opened at this table.", "action": "assert_event_absent", "type": "dialogue_started", "payload_contains": { "conversation": "rags_meeting" } },
-		{ "action": "assert_event_absent", "type": "dialogue_started", "payload_contains": { "conversation": "invrisil_wilovan" } },
-		{ "action": "assert_event_absent", "type": "dialogue_started", "payload_contains": { "conversation": "pallass_grimalkin" } }
-	]
+ "_comment": "d1 #247 FoTI EXTENSION -- the only live coverage klbkch_inn, rags_inn, wilovan_inn and grimalkin_inn have. Off inn_guests_ext_start: all TEN rostered met AND the three quest terminals banked, so the pool is 10 and times_slept=16 puts the window start at 16%10=6, seating KLBKCH (11,5) + RAGS (12,5). Two real sleeps walk the window through the whole new block: 17 seats [rags, wilovan] and 18 seats [wilovan, grimalkin], so every new register opens live and each of the four is proven to arrive AND to leave. Legs: (1) ALL FOUR NEW SEATS RENDER, in the east block beside the ledger. Spacing was set by GRIMALKIN, whose 224px rig is the biggest shipped: the first pass sat him at (12,6) next to Wilovan at (11,6) and the windowed check killed it (Wilovan vanished behind his arm, the player two rows north ate his head -- Relc's (2,5) lesson repeating), so he holds the far-east CORNER (14,5) where the wall takes his right side and nothing but floor sits above him. Note that ANY two roster members can co-render, not just adjacent indices: with a partial met-pool the window's neighbours change, so no seat pair may rely on the full roster's ordering; (2) REGISTER-PURITY -- klbkch_inn opens and the Hive is never named, rags_inn opens and never touches the medicine trade or the carved pawn, wilovan_inn never names the trade or a single beat of a_gentlemans_disagreement, grimalkin_inn never mentions a form; (3) SERVE ON BOTH NODES -- Klbkch is served from his GREET node on the fixture's bowl, Rags from her OFF-DUTY TOPIC node on a bowl COOKED at the stew pot (helper 2 grants basic_cooking), so both serve sites are live and served_customer banks twice; Wilovan and Grimalkin pin the VISIBLE-LOCKED render on both of their nodes with an empty pack; (4) ARRIVE AND LEAVE -- Klbkch's chair is walked ONTO at t=17 and Rags's at t=18, which is the structural-absence proof (is_cell_blocked/entity_at/_build_entities all skip an off-shift guest), while Rags stays across 16->17 and Wilovan across 17->18, so each transition is a SLIDE and not a swap. INTERACT IDIOM (horns_residence): a click on a non-adjacent entity only WALKS adjacent, so a guest out of reach is approached by clicking an empty adjacent cell first. Boot = fixture->manual slot, title Continue (down 1), same as inn_guests_loop.",
+ "fixture_save": "inn_guests_ext_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 16
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    3
+   ]
+  },
+  {
+   "_comment": "TEN rostered, still TWO seats: the count is identical to inn_guests_full_loop's boot because seats never grow with the roster. 23 = 16 ungated entities + hungry_patron (day) + the 3 _returned Horns (door_mounted) + klbkch + rags + the PC. from_start because the boot render lands before world_ready, ahead of this step's since-marker.",
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 23,
+    "fallbacks": 0
+   },
+   "from_start": true,
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_klbkch_and_rags_seated"
+  },
+  {
+   "_comment": "== RAGS: on shift, register-pure == her chair is (12,5). Step south onto (12,4) first, plain floor in the row ABOVE the seat lanes; the boot cell sits one further north so the player's own sprite never stacks behind a seated guest in the boot shot. rags_inn opens directly (guest rows carry no talk_pool) and it is the inn register: no medicine, no carved pawn, no price, and nothing she would say to goblins. The fixture's hot_meal is still in the pack and no serve is banked this waking, so Serve renders UNLOCKED in slot 1 -- she is served later, from her topic node, on a bowl cooked after the window slides.",
+   "action": "click",
+   "cell": [
+    12,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     12,
+     4
+    ]
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "click",
+   "cell": [
+    12,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "rags_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Human place. Warm. I count doors first. Two. Window there. Then I sit.",
+    "options": [
+     {
+      "text": "Push a bowl across the table to her. (Serve)",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"You don't have to watch the doors in here.\"",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"Sit as long as you want.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Her ONE off-duty topic: the doors, the tables, and a grudging word about Erin. Early-volume register throughout -- one to four words, no articles, no fluency, and the intelligence in what she chooses to say.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Always watch doors. For after. Tables here flat. No wobble. Tribe has rocks. I do not complain. Inn Human cooks. Plays chess. Feeds goblins. Stupid. Works."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "01_rags_offduty"
+  },
+  {
+   "_comment": "Exit is visible option 2 (Serve unlocked in slot 1, taken later).",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== KLBKCH: on shift, register-pure, servable from the GREET node == his chair is (11,5). Step west onto (11,4) first, plain floor in the row ABOVE the seat lanes, which lands the player north-adjacent to him.",
+   "action": "click",
+   "cell": [
+    11,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     11,
+     4
+    ]
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "click",
+   "cell": [
+    11,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "klbkch_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Klbkch",
+    "text": "Guardsman Klbkch. Off duty for another three hours. I have been sitting for forty minutes. I am not yet certain what I have achieved.",
+    "options": [
+     {
+      "text": "Bring him a bowl from the kitchen. (Serve)",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"Resting isn't supposed to achieve anything.\"",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"You're doing it correctly, Klbkch.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "SERVE FROM THE GREET NODE. Effects are the shipped four one-verb dicts: bank the serve key, served_customer++, gold+2, consume the hot_meal. The Hive is never named on any node of this graph, which is the register-purity proof his plaza post cannot give.",
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "served_customer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_lost",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Klbkch",
+    "text": "Thank you. I will record the evening as follows. A meal was carried to me by someone who was not required to carry it, and I was not required to ask. The bowl is warm. I will sit a while longer."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 13
+  },
+  {
+   "action": "screenshot",
+   "name": "02_klbkch_served"
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== SLIDE ONE == a real sleep at your_bed takes times_slept 16 -> 17, so the start goes 6 -> 7 and the window seats [rags, wilovan]: Klbkch leaves, Rags STAYS, Wilovan arrives.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     9,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 17
+  },
+  {
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    12,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     12,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Still exactly two seats filled after the slide. 23 -> 24 is NOT a third guest: the sleep met the garden legs and banked garden_door_unlocked, so the always-authored garden_door (3,8) turns present in the same rebuild (inn_guests_loop and inn_guests_full_loop both pin the same step).",
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 24,
+    "fallbacks": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "KLBKCH ROTATED OUT: the chair the player could not enter last night is plain floor now, and the walk lands on it. present_when absence is STRUCTURAL, not a hidden sprite.",
+   "action": "click",
+   "cell": [
+    11,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     11,
+     5
+    ]
+   },
+   "timeout_sec": 15
+  },
+  {
+   "_comment": "== A SECOND BOWL == the pack is empty and two chairs are full, so cook one. stew_pot (4,1) is a requires_skill prop and the 2026-07-10 ruling stands: interact NEVER auto-casts, so the skill is chosen from the hotbar. This fixture's known field skills render as [1 Basic Cleaning, 2 Light, 3 Basic Cooking, 4 Appraise Foe, 5 Charming Smile], so basic_cooking is slot 3. Approach (4,2), then a BLOCKED move up sets facing without moving (the walkthroughs' robust-facing idiom) before the cast.",
+   "action": "click",
+   "cell": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     4,
+     2
+    ]
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "hotbar_3"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cooking",
+    "target": "stew_pot"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== RAGS STAYED == she is in BOTH windows (start 6 -> [klbkch,rags], start 7 -> [rags,wilovan]), which makes this a slide and not a swap. Walk back east to the boot cell, north-adjacent to her chair. The sleep re-armed her once_per_waking leg and the cooked bowl is in hand, so Serve is unlocked again.",
+   "action": "click",
+   "cell": [
+    12,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     12,
+     4
+    ]
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "click",
+   "cell": [
+    12,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "rags_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Always watch doors. For after. Tables here flat. No wobble. Tribe has rocks. I do not complain. Inn Human cooks. Plays chess. Feeds goblins. Stupid. Works."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "SERVE FROM THE TOPIC NODE (the contract's second serve site). Chieftain eats last, always last -- and tonight she does not.",
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "served_customer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_lost",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Rags",
+    "text": "Hot. Good. Chieftain eats last. Always last. Tonight, first. Tell no one."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 15
+  },
+  {
+   "action": "screenshot",
+   "name": "03_rags_served"
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.served_customer",
+   "equals": 5
+  },
+  {
+   "_comment": "== WILOVAN ARRIVED == his chair is (12,6), directly under Rags's, the same vertical stack the shipped pisces (6,5)/selys (6,6) pair already runs. Approach from (11,6), plain floor west of it. Both bowls are spent, so his Serve renders VISIBLE-LOCKED ('requires Hot Meal') in slot 1 on BOTH nodes.",
+   "action": "click",
+   "cell": [
+    11,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     11,
+     6
+    ]
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "click",
+   "cell": [
+    12,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "wilovan_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Wilovan",
+    "text": "Sir. A good evening to you, and a very good room to have it in. No business tonight, you'll be relieved to hear. Just this chair, and whatever the kitchen has in the pot.",
+    "options": [
+     {
+      "text": "Bring him a bowl from the kitchen. (Serve)",
+      "locked": true,
+      "requirement": "requires Hot Meal"
+     },
+     {
+      "text": "\"No business at all?\"",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"Enjoy the quiet, then.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "His ONE off-duty topic, and every word of it oblique: a colleague, an errand, a hat. The commission, the three doors, Coyle, Farley, the marker and the fence shelf all stay at the Invrisil parlor, and the trade is never named.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Wilovan",
+    "text": "None whatever, sir. My colleague is off attending an errand of the sort that keeps a man out past a decent hour, and I declined to attend it with him. A room where the fellow at the next table hasn't the first idea what I do, and no reason at all to ask, is a rare comfort. You'll note I've kept the hat on. It is simply a good hat, sir."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_wilovan_offduty"
+  },
+  {
+   "_comment": "Serve stays visible-locked on this node too, so the exit is visible option 2.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== SLIDE TWO == another sleep takes times_slept 17 -> 18, start 7 -> 8, seating [wilovan, grimalkin]: Rags leaves, Wilovan STAYS, and the biggest rig in the game takes the front-row chair.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     9,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 18
+  },
+  {
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    12,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     12,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 24,
+    "fallbacks": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "05_wilovan_and_grimalkin_seated"
+  },
+  {
+   "_comment": "RAGS ROTATED OUT: her chair is floor again, and the walk lands on it. Then east to (14,4), the plain-floor cell directly north of Grimalkin's corner and his only approach -- the wall takes (15,5), pantry_door holds (14,6), and (13,5) belongs to pisces_mounting whenever the door arc is mid-flight.",
+   "action": "click",
+   "cell": [
+    12,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     12,
+     5
+    ]
+   },
+   "timeout_sec": 15
+  },
+  {
+   "action": "click",
+   "cell": [
+    14,
+    4
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     14,
+     4
+    ]
+   },
+   "timeout_sec": 20
+  },
+  {
+   "_comment": "== GRIMALKIN: on shift, register-pure == off duty means a LIGHTER session, not no session, and he is still measuring the room. The permit office never comes up: no forms, no fitness read, no lift pass, no study enrollment or turn-in. Serve is visible-locked with an empty pack.",
+   "action": "click",
+   "cell": [
+    14,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "grimalkin_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Grimalkin",
+    "text": "Sit down properly if you are going to sit. Hips back, chest up, and stop hovering. I am off duty. Off duty means today's session was light. Two hours. Sled drags and stair work, logged.",
+    "options": [
+     {
+      "text": "Set a full bowl down in front of him. (Serve)",
+      "locked": true,
+      "requirement": "requires Hot Meal"
+     },
+     {
+      "text": "\"Two hours is light?\"",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"I'll leave you to your rest day.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Grimalkin",
+    "text": "Two hours at half my working load. The volume came down by half as well. The intent does not change. And I am still working, since you ask. Fourteen people have stood up out of a chair since I sat down. Five did it correctly. The tall one clearing tables has better hip mobility than half my Pallass intake and has no idea. I intend to tell her before I leave. She will not thank me."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "06_grimalkin_offduty"
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "REGISTER-PURITY, asserted as ABSENCE across the whole run: not one of the four home hubs ever opened at this table.",
+   "action": "assert_event_absent",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "rags_meeting"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "invrisil_wilovan"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "pallass_grimalkin"
+   }
+  }
+ ]
 }

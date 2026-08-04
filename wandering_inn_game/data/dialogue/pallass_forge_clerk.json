@@ -95,7 +95,7 @@
   },
   "tempering_sold": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Posted price, paid in full. Work it into the edge the night before — I don't sell instructions, only the flask.",
+   "text": "Posted price, paid in full. Work it into the edge the night before you need it. Questions of application go to the smiths on the floor. I sell the flask and record the fee.",
    "options": [
     {
      "text": "Understood.",
@@ -105,7 +105,7 @@
   },
   "permit_intro": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Five gold, filed same-day, no exceptions and no discounts — that's the posted price. Grimalkin reads your fitness after, at the exam floor on the far end of this office; I only handle paper.",
+   "text": "Five gold, filed same-day, no exceptions and no discounts: that is the posted price. Grimalkin reads your fitness afterward, at the exam floor on the far end of this office. I only handle paper.",
    "options": [
     {
      "text": "File it. (5 gold)",
@@ -130,7 +130,7 @@
   },
   "permit_filed_reaction": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Filed. Grimalkin's at the exam floor, far end of this office — see him before you come back asking about a stamp.",
+   "text": "Filed. Grimalkin is at the exam floor, far end of this office. See him before you come back asking about a stamp.",
    "options": [
     {
      "text": "Understood.",
@@ -140,7 +140,7 @@
   },
   "permit_status": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Filed and pending. Grimalkin reads the fitness, not me — he's at the exam floor, far end of this office. I stamp once he signs off, not before.",
+   "text": "Filed and pending. Grimalkin reads the fitness; he is at the exam floor, far end of this office. This window stamps after he signs. Until his mark arrives, the file sits in my tray.",
    "options": [
     {
      "text": "Understood.",
@@ -150,7 +150,7 @@
   },
   "collect_stamp": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Grimalkin's mark is on the file. Three gold for the stamp itself — posted price, same as the filing.",
+   "text": "Grimalkin's mark is on the file. Three gold for the stamp itself: posted price, same as the filing.",
    "options": [
     {
      "text": "Collect the stamped pass. (3 gold)",
@@ -175,7 +175,7 @@
   },
   "stamp_reaction": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Stamped. The lift answers to it now — don't lose the paper, I don't file duplicates.",
+   "text": "Stamped. The lift answers to it now. Do not lose the paper. This office does not file duplicates.",
    "options": [
     {
      "text": "My thanks.",
@@ -185,7 +185,7 @@
   },
   "queue_release": {
    "speaker": "Forge-Tier Clerk",
-   "text": "I only handle paper, and this is paper, so we are finally in agreement about something. The release side is held because this office is waiting on its own supplies, which are in the queue. But an endorsed entry outranks a held release. That is the rule. Nobody has ever used it.",
+   "text": "The release is held pending requisitions filed with the Supply Office, two tiers down. However, an endorsed entry outranks a held release. The rule is posted beside the door, and it has been posted there longer than I have held this window. There is no recorded use of it.",
    "options": [
     {
      "text": "Use it.",
@@ -204,7 +204,7 @@
   },
   "queue_release_why": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Because you have to walk to the other office first, and everybody assumes the answer is no. It is generally no. It is not no today.",
+   "text": "Because you have to walk to the other office first, and everybody assumes the answer is no. On most days that assumption is correct. Today you arrive with an endorsement, and the rule applies.",
    "options": [
     {
      "text": "Then countersign it.",
@@ -219,7 +219,7 @@
   },
   "queue_release_done": {
    "speaker": "Forge-Tier Clerk",
-   "text": "Countersigned. Take it to the consignee. She signs last, which is the only part of this that was ever simple.",
+   "text": "Countersigned. Take it to the consignee. She signs last. The copy stays in my tray; the sheet she signs travels with you.",
    "options": [
     {
      "text": "She signs last.",

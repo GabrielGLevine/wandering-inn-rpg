@@ -578,7 +578,7 @@
    "dialogue": [
     {
      "speaker": "Octavia",
-     "text": "You look like someone who could use a potion. Everyone can use a potion. Especially mine, which are very reasonably priced and only occasionally on fire."
+     "text": "You look like someone who could use a potion. Everyone can use a potion. Mine are only occasionally on fire — once."
     }
    ]
   },
@@ -675,7 +675,10 @@
    "_comment": "GH#165 [Alchemist] L14 bench ([Perfect Reduction], ATTESTED 6.39 Xif): the wave's only recipe grant gets a live station -- a granted verb that works nowhere reads broken (controller adjudication of lane deviation B). Consuming recipe: engine's dup-output guard (#155 M1) applies.",
    "id": "alchemy_bench_reduction",
    "kind": "prop",
-   "cell": [4, 7],
+   "cell": [
+    4,
+    7
+   ],
    "display_name": "Reduction Bench",
    "sprite": "alchemy_bench_dark",
    "requires_skill": "perfect_reduction",
@@ -695,7 +698,10 @@
    "_comment": "v0.15 T4.1 market observables (2). Both sit in the tier's north/south dead bands, off every canonical's bounds lap (y2/y9 and x0/x25 stay clear) — see pallass_peek's route.",
    "id": "market_ordinance_wall",
    "kind": "prop",
-   "cell": [10, 3],
+   "cell": [
+    10,
+    3
+   ],
    "display_name": "Posted Ordinances",
    "sprite": "guild_notice_wall",
    "observe": "Civic ordinances under glass, numbered and dated, the oldest one on the wall older than the wall. Nothing is pinned over anything else. There is a numbered slot for every notice and no notice without a slot.",
@@ -703,7 +709,9 @@
    "toast": "Ordinances, numbered and glassed. Somewhere in Pallass a clerk owns the key to this case, and only that clerk.",
    "variants": [
     {
-     "when": {"elevator_pass_stamped": 1},
+     "when": {
+      "elevator_pass_stamped": 1
+     },
      "toast": "Ordinance 44, third column: tier passes are the property of the city and the responsibility of the bearer. Yours is in your pocket, and now you know whose it is."
     }
    ]
@@ -711,10 +719,17 @@
   {
    "id": "market_public_scales",
    "kind": "prop",
-   "cell": [14, 8],
+   "cell": [
+    14,
+    8
+   ],
    "display_name": "The Public Scales",
    "sprite": "pedestal",
-   "tint": [0.72, 0.68, 0.6],
+   "tint": [
+    0.72,
+    0.68,
+    0.6
+   ],
    "observe": "A weighing pillar set out where anyone can use it, brass pans hanging true, the city's own test weights chained to the column. Any stallkeeper's measure can be checked here against the city's, in front of everyone.",
    "on_interact_accomplishment": "eyed_the_public_scales",
    "toast": "You set a hand on the pan and it swings back level. The chained weights have inspection dates stamped into them, the last one this month."

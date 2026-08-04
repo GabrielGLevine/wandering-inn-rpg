@@ -12,7 +12,7 @@
        "night"
       ]
      },
-     "text": "Fewer eyes on me after dark. I prefer it that way — no one flinches until I am mid-sentence."
+     "text": "Fewer eyes on me after dark. I prefer it that way. The square empties, the lamps get lit, and I can work through my notes without an audience."
     },
     {
      "requires": {
@@ -20,7 +20,7 @@
        "learned_magic_from_pisces": 1
       }
      },
-     "text": "The pupil returns. Your channels are... adequate now. Do try not to embarrass the discipline in public."
+     "text": "The pupil returns. Hm. Your channels are adequate now. Do try not to embarrass the discipline in public."
     },
     {
      "requires": {
@@ -44,7 +44,7 @@
        "studied_necromancy": 1
       }
      },
-     "text": "My other pupil. Say it quietly — the Watch counts my acquaintances. How fares the honest art?"
+     "text": "My other pupil. The Watch keeps a count of my acquaintances, and you are on it now. How fares the honest art?"
     },
     {
      "_comment": "Spec 4 (Task 6.1): three CONTEXTUALIZING reactions, one per lattice counter, appended in pilgrimage order under last-match-wins so the most recent discovery opens. He never assigns and never assembles -- each line reacts to a piece the REGION handed the player, and the picture waits for Act V.",
@@ -53,7 +53,7 @@
        "lattice_witch_lore": 1
       }
      },
-     "text": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's and she FED hers too. That word keeps recurring."
+     "text": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's, and she fed hers too. Fed. That word keeps recurring."
     },
     {
      "requires": {
@@ -61,7 +61,7 @@
        "lattice_hedault_reading": 1
       }
      },
-     "text": "Hedault read your frame unbidden and charged you nothing, which from that man is appetite, not generosity. I know the feeling. He is better at settings than I will ever be. Deny I said it."
+     "text": "Hedault read your frame unbidden and charged you nothing, and from that man a waived fee is appetite. I know the feeling. He is better at settings than I will ever be. I am still deciding what to do with knowing it."
     },
     {
      "requires": {
@@ -69,7 +69,7 @@
        "lattice_forge_rune": 1
       }
      },
-     "text": "A Drake forge taught you in an afternoon what my tuition has been circling for a month. They FEED their runes. Maintenance, they call it. I am revising my rates. Downward. Do not comment."
+     "text": "A Drake forge taught you in an afternoon what my tuition has been circling for a month. They feed their runes. Feed them, on a schedule. Maintenance, they call it. I am revising my rates. Downward. The new schedule is chalked on my slate already."
     },
     {
      "_comment": "Act V: two thread-current arms, appended after the lattice trio so last-match-wins keeps his greeting on the newest state. Neither can shadow a pinned canonical -- both counters are Act V's own, unheld by every shipped fixture.",
@@ -118,7 +118,7 @@
      "end": true
     },
     {
-     "text": "You hold yourself like a swordsman, not a scholar.",
+     "text": "You hold yourself like a swordsman more than a scholar.",
      "requires": {
       "accomplishment": {
        "learned_magic_from_pisces": 1,
@@ -298,7 +298,7 @@
     },
     {
      "_comment": "Act V (#270 beat 1, spec 7 amendment 2) THE DESCENT ASK. Gate is ALL THREE lattice counters, which is the amendment's 'fires when lattice_forge_rune banks' in data terms -- the forge rune is last in the spine's own order. NO bank on this option: seal_descent_agreed rides the ACCEPT below, so a player who opens the pitch and walks away can come back (hide_when is the accept's counter, not a read-flag). Appended LAST so every cursor-pinned canonical stays byte-identical.",
-     "text": "Riverfarm, Invrisil, Pallass. Three answers, and I still can't see the shape they make.",
+     "text": "Riverfarm, Invrisil, Pallass — someone was always feeding a ward. Tell me what that means.",
      "requires": {
       "accomplishment": {
        "lattice_witch_lore": 1,
@@ -337,7 +337,7 @@
   },
   "horns_bridge": {
    "speaker": "Pisces",
-   "text": "Horns of Hammerad. Yes. Say it quietly and do not congratulate me. There is a name on their roster and a share of their debts attached to it, and that is the whole of what membership consists of. I am not in the hole with them because the interesting half of the work is here — things that are written do not read themselves, and nobody else in this city can. Ceria calls that being hired. Ceria also calls my handwriting adequate, so her judgement is not beyond dispute.",
+   "text": "Horns of Hammerad. Yes. There is a name on their roster and a share of their debts attached to it. That is membership. I am not in the hole with them because the interesting half of the work is here — things that are written do not read themselves, and nobody else in this city can. Ceria calls that being hired. Ceria also calls my handwriting adequate, so her judgement is not beyond dispute.",
    "options": [
     {
      "text": "Four of you, then.",
@@ -351,7 +351,7 @@
   },
   "horns_bridge_two": {
    "speaker": "Pisces",
-   "text": "Four. Yvlon holds what is falling, Ksmvr counts what is left, Ceria decides which of the two we do next, and I am told afterwards. It is not a democracy and it is not, strictly, a friendship. It has kept four people alive who had no business staying that way, and I have stopped auditing the arrangement. Next question — about magic, ideally.",
+   "text": "Four. Yvlon holds what is falling, Ksmvr counts what is left, Ceria decides, and I am told afterwards. The arrangement has kept four people alive who had no business remaining so. I audited the arrangement for a month, expecting to find the error. There is no error. I have not repeated the audit.",
    "options": [
     {
      "text": "Back to magic, then.",
@@ -381,7 +381,7 @@
   "descent_ask": {
    "_comment": "#270 beat 1. The scroll leg (scroll_secret_shared) is an OR-ENRICHMENT, never a requirement: with the treatise read he connects it explicitly, without it his own arithmetic carries the ask, so the [Mage] line stays optional. Spoiler bar: he names an appetite and a hand, never what is on the other end.",
    "speaker": "Pisces",
-   "text": "Three regions taught you the same word in three accents and not one of them noticed doing it. A witch feeds hers. An enchanter reads the draw as craftsmanship. A forge calls it maintenance and bills by the hour. Under this city is wardwork by the hand that cut our frame, and it has been drawing since before Liscor had walls. I want to read it standing in front of it.",
+   "text": "Three regions taught you the same word in three accents and not one of them noticed doing it. A witch feeds hers, milk and a word. An enchanter prices the draw and calls it craftsmanship. Pallass bills it as maintenance. Maintenance. Under this city is wardwork by the hand that cut our frame, and it has been drawing since before Liscor had walls. I want to read it standing in front of it.",
    "text_variants": [
     {
      "requires": {
@@ -389,7 +389,7 @@
        "scroll_secret_shared": 1
       }
      },
-     "text": "Your treatise said it in the third paragraph and I chose to admire the penmanship instead. Bound, fed, and waiting a very long time. Three regions have since handed me the same word in three accents, and the hand that cut our frame cut the seal under this city. I want to read it standing in front of it."
+     "text": "Your treatise said it in the third paragraph and I chose to admire the penmanship instead. Bound, fed, and waiting, with no term given. Three regions have since handed me the same word in three accents, and the hand that cut our frame cut the seal under this city. I want to read it standing in front of it."
     }
    ],
    "options": [
@@ -417,7 +417,7 @@
   },
   "descent_expect": {
    "speaker": "Pisces",
-   "text": "Something that was fed on purpose, by people who expected to be dead long before it stopped needing feeding. Past that I have guesses, and I do not perform guesses in public. That is the honest answer. I dislike it enormously.",
+   "text": "Something that was fed on purpose, by people who expected to be dead long before it stopped needing feeding. Past that I have guesses, and I do not perform guesses in public. The honest answer is thinner than I would like.",
    "options": [
     {
      "text": "Then we go down. I'll walk you to it.",
@@ -455,7 +455,7 @@
   "second_door_bridge": {
    "_comment": "Spec 7 amendment 1: the counter id heard_pisces_second_door is SHIPPED and frozen, so it keeps its id -- but the fiction is dead. Every surface it touches now reads 'the seal's wardwork', never a second door and never another portal. Node id kept for the same freeze reason.",
    "speaker": "Pisces",
-   "text": "The same hand, then, on both sides of the city. That is not a coincidence; that is a pattern, and patterns are the only honest language the dead leave behind. I should very much like to read that wardwork myself — after you have slept. Some findings deserve a rested mind.",
+   "text": "The same hand, then, on both sides of the city. Two workings, one wardwright, and no version of that I can make boring. I should very much like to read that wardwork myself — after you have slept. My notes on our frame want reorganizing before I stand in front of its sibling.",
    "options": [
     {
      "text": "Back to the top.",
@@ -469,14 +469,14 @@
   },
   "door_consult": {
    "speaker": "Pisces",
-   "text": "A door that changes its mind about where it goes. How very like this city — even the fixtures have moods. Three ways to satisfy my curiosity: bleed for it, talk me into caring, or prove you can read a ward without my help. Choose, and do not waste my morning.",
+   "text": "A door that changes its mind about where it goes. How very like this city — even the fixtures have moods. You could bleed for my curiosity, if that is your instrument. You could attempt to talk me into caring, which has been done, rarely. Or prove you can read a ward without my help, and I will be forced to take you seriously. Choose, and do not waste my morning.",
    "options": [
     {
      "text": "I'll clear whatever's coming through myself.",
      "goto": "consult_fight_response"
     },
     {
-     "text": "Come look at it yourself. Your kind of magic, not mine.",
+     "text": "Come look at it yourself. This is your kind of magic.",
      "goto": "consult_talk_pitch"
     },
     {
@@ -487,7 +487,7 @@
   },
   "consult_fight_response": {
    "speaker": "Pisces",
-   "text": "Bleeding it is. Predictable, but effective. Go on, then. I shall be here, dry and uninjured, exactly as planned.",
+   "text": "Bleeding it is. Predictable, but effective. Go on, then. I shall be here with my notes. Do try to leave the frame intact.",
    "options": [
     {
      "text": "Wish me luck.",
@@ -511,7 +511,7 @@
   },
   "consult_talk_argue": {
    "speaker": "Pisces",
-   "text": "...A glance. Hm. If it truly reads as spatial and not necrotic, I could examine it without touching a thing. Fine, for the intellectual insult of not knowing, not for you.",
+   "text": "A glance. Hm. If it truly reads as spatial and not necrotic, I could examine it without touching a thing. Fine — for the intellectual insult of not knowing. Do not mistake this for a favor.",
    "options": [
     {
      "text": "Then it's settled. [Charming Smile]",
@@ -577,7 +577,7 @@
   },
   "consult_skill_report": {
    "speaker": "Pisces",
-   "text": "...Correct. Aggravatingly correct. You have the eye, if not the training. Do not let it go to your head. The training is where the real work is.",
+   "text": "Hm. Correct. Aggravatingly correct. You have the eye, if not the training. Do not let it go to your head. The training is where the real work is.",
    "options": [
     {
      "text": "I'll take the compliment anyway.",
@@ -587,7 +587,7 @@
   },
   "pisces_fence": {
    "speaker": "Pisces",
-   "text": "...Observant. A rapier, in fact, before any of this. My father's trade — his grip, his footwork, his opinions on both. I set it down for magic, and he has yet to forgive either of us. The footwork stayed. It wins me arguments the diction loses.",
+   "text": "Observant. A rapier, in fact, before any of this. My father's trade — his grip, his footwork, his opinions on both. I set it down for magic, and he has yet to forgive either of us. The footwork stayed. The weight still goes forward when I argue, and the back heel comes up. I stopped trying to train that out.",
    "options": [
     {
      "text": "Do you miss it?",
@@ -605,7 +605,7 @@
   },
   "pisces_fence_two": {
    "speaker": "Pisces",
-   "text": "I sold the blade years ago, when circumstances were... instructive. One does not miss a thing so much as the hands remember it. A sniff. Next question — preferably about magic, which unlike the past improves under examination.",
+   "text": "I sold the blade years ago, under circumstances I will call instructive. I do not miss it, exactly. The hands remember it at odd hours. This morning, in fact, halfway through a citation.",
    "options": [
     {
      "text": "Back to magic, then.",
@@ -633,7 +633,7 @@
   },
   "lesson_casting": {
    "speaker": "Pisces",
-   "text": "A sword asks only your arm. A spell asks your mind and your mana in the same instant: intent, shape, and cost, released together or not at all. Fumble any one of the three and you have merely gestured. Precision, traveler. Whatever the Watch mutters about my craft, it taught me precision.",
+   "text": "A sword asks only your arm. A spell asks your mind and your mana in the same instant. Intent comes first — what the spell is for, held plainly. Then shape. Shape is where the hands and the diction earn their keep — no, that understates it: shape is where pupils fail. Cost you do not choose; the magic takes it when intent and shape are ready, and if you have fumbled either, you have merely gestured. Precision, traveler. Whatever the Watch mutters about my craft, it taught me precision.",
    "options": [
     {
      "text": "So what do I cast first?",
@@ -647,7 +647,7 @@
   },
   "lesson_light": {
    "speaker": "Pisces",
-   "text": "[Light]. Always [Light]. It is cheap, it is obedient, and it fails without a corpse, a fire, or an inquest. Kindle one steady orb and you have proven the channel holds. Master that, and only then do we discuss the interesting spells.",
+   "text": "[Light]. Always [Light]. It is cheap and it is obedient. When it fails, it merely goes out — no fire, no inquest, which for a man of my reputation is the deciding virtue. Kindle one steady orb and you have proven the channel holds. Master that, and only then do we discuss the interesting spells.",
    "options": [
     {
      "text": "I'm ready. Show me the words.",
@@ -671,7 +671,7 @@
   },
   "sealed": {
    "speaker": "Pisces",
-   "text": "There. The channel is opened — crudely, but opened. Sleep on it; the shape settles by morning, as these things do. And, traveler, when your first orb kindles, you will understand why I do not apologize for what I am.",
+   "text": "There. The channel is opened — crudely, but opened. Sleep on it; the shape settles by morning, as these things do. And, traveler, when your first orb kindles, hold it a moment before you let it go. I still do, every casting. Nobody has ever asked me why.",
    "options": [
     {
      "text": "Thank you, Pisces.",
@@ -681,21 +681,21 @@
   },
   "door_recap": {
    "speaker": "Pisces",
-   "text": "Then attend, because I dislike repeating myself. The door remembers being elsewhere; it wants an anchor to remember BY. East across the floodplains, well past the gate road, there is a seam of old dressed stone in the open grass — a ruin, collapsed and rude, but its plinth still cradles an anchor stone. Retrieve it. Krshia's resonant catalyst will attune the pairing. And do try not to die somewhere so architecturally disappointing.",
+   "text": "Then attend, because I dislike repeating myself. The door remembers being elsewhere; what it lacks is an anchor to remember by. East across the floodplains, well past the gate road, there is a seam of old dressed stone in the open grass — a ruin, collapsed and rude, but its plinth still cradles an anchor stone. Retrieve it. Krshia's resonant catalyst will attune the pairing. The ruin itself was indifferently cut before it ever collapsed. Mind the overhangs going in.",
    "options": [
     {
      "text": "East past the gate road. Understood.",
      "end": true
     },
     {
-     "text": "'Architecturally disappointing.' You've been there?",
+     "text": "'Indifferently cut.' You've been there?",
      "goto": "door_recap_two"
     }
    ]
   },
   "door_recap_two": {
    "speaker": "Pisces",
-   "text": "I have STANDARDS, not an itinerary. The Guild survey called it a seam and moved on; I call it a doorframe that lost its house. Go and prove one of us right.",
+   "text": "I have standards. They have never required me to visit. The Guild survey wrote it down as a seam and moved on; I read the same survey and saw a doorframe standing with its building gone. Go and look at the plinth. It will settle which of us read the page correctly.",
    "options": [
     {
      "text": "On my way.",
@@ -705,7 +705,7 @@
   },
   "door_attune": {
    "speaker": "Pisces",
-   "text": "Then the scholarship is done and the tedium begins. Keep both near the door and REST. Attunement is not a lever, it is a residency — the frame learns the stone the way a house learns its family: overnight, and more than once. Sleep. Let the inn do the part no [Mage] can rush.",
+   "text": "Then the scholarship is done and the tedium begins. Keep both near the door, and rest. Rest is the instruction; I am aware of how it sounds. Attunement is a residency — the frame learns the stone the way a house learns its family: overnight, and more than once. Sleep. Let the inn do the part no [Mage] can rush.",
    "options": [
     {
      "text": "Sleep on it. Literally. Got it.",
@@ -716,7 +716,7 @@
   "necro_deflect": {
    "_comment": "Two-visit deflect->teach per spec §5; the deflect option banks asked_about_necromancy and hides itself, which reveals the second ask on the next hub entry.",
    "speaker": "Pisces",
-   "text": "No. — You mistake me: not 'no, never.' No as a complete sentence, which is more courtesy than this city has ever extended to my discipline. Necromancy is not a flourish one appends to a hobbyist's repertoire. It is the study they exile you for. Ask me again when you have decided you mean it.",
+   "text": "No. — You mistake me: not 'no, never.' No as a complete sentence, which is more courtesy than this city has ever extended to my discipline. Necromancy is the study they exile you for, and I will not hand it over as a flourish for your repertoire. Ask me again when you have decided you mean it.",
    "options": [
     {
      "text": "Fine.",
@@ -726,7 +726,7 @@
   },
   "necro_teach": {
    "speaker": "Pisces",
-   "text": "...You are aware of what they call me in this square. You have heard the Watch's tone when my name comes up. And still you ask. Very well — sit. First principle: the dead do not mind. The living mind enormously, and you will learn to weather that, or you will quit. Bone answers a precise mind. Yours is nearly adequate.",
+   "text": "You are aware of what they call me in this square. You have heard the Watch's tone when my name comes up. And still you ask. Very well — sit. First principle: the dead do not mind. The living mind enormously, and you will learn to weather that, or you will quit. Bone answers a precise mind. Yours is nearly adequate.",
    "options": [
     {
      "text": "Show me.",
@@ -756,7 +756,7 @@
   },
   "scroll_secret": {
    "speaker": "Pisces",
-   "text": "Let me see that. Hm. Hmm. Whoever wrote this treatise anchored their wards the way I would — which is to say, correctly — and they were writing ABOUT your pantry. Do you understand? Someone documented that door before your innkeeper was born. It has been bound, fed, and waiting a very long time. I would call that ominous, if I were the sort to alarm people. I am. Be alarmed.",
+   "text": "Let me see that. Hm. Hmm. Whoever wrote this treatise anchored their wards the way I would — which is to say, correctly — and the subject of their treatise is your pantry. Do you understand? Someone documented that door before your innkeeper was born. It has been bound, fed, and waiting a very long time. I went looking for the paragraph that names what all the feeding is for. There is no such paragraph. I have read the treatise twice through to be certain, and I will read it again tonight.",
    "options": [
     {
      "text": "Then we keep going.",

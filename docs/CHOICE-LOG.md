@@ -3039,3 +3039,94 @@ plausible-looking wrong number within reach is what produced the bug.
     fully gated, zero playtest blockers expected on the delta; the
     user's morning verdicts shape wave-2, not this tag). User re-rules
     by reverting the tag if wanted.
+
+## Voice pass (2026-08-03, voice-pass branch)
+
+1. **W2 dispatched as ONE 36-agent workflow, not ≤8-agent rounds:**
+   plan's round structure existed for usage pacing; the workflow
+   concurrency cap self-paces and the USAGE-GUARD hook covers
+   mid-flight escalation. Guard was OK (9%/33%) at dispatch.
+2. **14 card-vs-constraint conflicts in W2 resolved by agents,
+   accepted on review:** every case favored either fact survival
+   (Liscor restored, stew restored, treeline kept) or gate-regex
+   compliance over card verbatim text (wilovan "entire", smith
+   ", not", drayman antithesis pruning incl. player option
+   meaning-preserving flip). Full list in W2 task output.
+3. **{addr} token drop in one lift-attendant variant accepted:**
+   card-ordered verbatim text omits it; token survives elsewhere
+   in file; file-level token survival verified corpus-wide vs HEAD.
+4. **W4 HELD at CAUTION (burn-rate only, 89%/hr post-W2 spike;
+   base 42%/45%):** background watcher polls usage every 5m,
+   W4 dispatches when tier returns OK. No user gate.
+5. **W4 52-FAIL routed to Fable reconciliation BEFORE any W5 loop:**
+   failure signal is systemic (button placement on hubs + wit
+   density), not per-file; blind loops would re-run the same
+   generous bible reading or overcorrect to flatness. Detector
+   hits on §5-sanctioned keeps (rags served, zevara_oath_two,
+   tallyman + pisces_seal reveals) need overruling, which only
+   Fable's allocation authority can do. This IS the plan's
+   escalate-to-Fable path, batched.
+6. **Voice pass WOUND DOWN at WINDDOWN tier (session 71%,
+   61%/hr):** W2+W4 burned ~4.3M subagent tokens in one session
+   window. Resume queue with verbatim prompts in
+   docs/dialogue-voice/W5-QUEUE.md; watcher resumes on OK.
+7. **SHIP on Fable's terminal adjudication despite 3/3 spot-read
+   FAILs:** hits split A5-registry re-flags (pre-ruled accepted
+   noise) vs residual wit-density in canonically witty T3 voices —
+   the register-only-dullness constraint (user-fixed) caps how flat
+   Pisces/Olesm can go. Convergence stalled: readers now flag
+   W6-installed replacement lines. Corpus-level product: all
+   critique worst-lines dead, typography zero, barks reshaped and
+   passing, 9/25 sampled files fully PASS, anti 2/30 from 62.
+   Re-openable by user taste read; per-file hostile bar recorded
+   as not-met for olesm_intro/pisces_magic/invrisil_fixer.
+
+## 2026-08-04 — board hygiene: martial picks made, orphaned deferrals filed
+
+User directive: *"make whatever determinations necessary to get them on
+the board, so they're not lost."* Wave-autonomy directive (2026-07-28)
+applied — picks made, logged here, surfaced at close. All revocable.
+
+1. **The martial exploration [Skills] doc was tracked in NO issue.** It
+   existed only as `docs/design/2026-08-03-martial-exploration-skills.md`
+   plus CHOICE-LOG v018-close rulings #8/#9 and morning-queue item 1 —
+   invisible to `gh issue list`. It was the largest unscheduled body of
+   work on the project and a fresh session planning from the board would
+   not have seen it. Root cause of the class: "READY FOR USER PICKS" is
+   not a tracked state.
+2. **Funded slate DECIDED (#380), five attested verbs + the [Ice Floor]
+   grant:** [Even Footing] (2.24 Toren), [Greater Strength] (1.10 Garia),
+   [Broader Shoulders] (1.11), [Durable Picks] (6.02 Numbtongue),
+   [Bar Fighting] (1.28 Erin). Four are data-only/zero-engine; [Even
+   Footing] is one engine-light passive cell-class read. Rationale for
+   pairing it with the [Ice Floor] grant in ONE wave: the mage verb makes
+   the ice, the martial verb crosses it — the thesis stated mechanically
+   instead of argued. Closes v018-close ruling #8.
+3. **Three siblings split out rather than bundled**, each on a distinct
+   blocker: [Basic Repair] (#381) needs #348 slice 2 (`state_set`);
+   [Rope Work] (#382) is mechanically ratified but its name is INVENTED
+   and holds for an ACK ([Eagle Eyes] precedent); [Flame Jet]→corpse
+   (#383) is a four-part package whose yield cannot be a table row
+   (spec §6 puts yields on `use_skill`). Closes v018-close ruling #9's
+   "rides with the martial picks" by filing beside them.
+4. **Tier C deferral behind #335 UNCHANGED.** Doc §8 / spec §9 slice 3
+   stands: an emergent resolution nobody notices is wasted content. Not
+   re-litigated.
+5. **Cite these skills by NAME, never by the doc's `#N` rows.** The
+   numbering drifts *within the doc* (§0 has [Campfire Chef] #9 /
+   [Bar Fighting] #10; §5 says Campfire Chef #10; §8 says Bar Fighting
+   #11) and the numbers read as GitHub issue refs while not being them —
+   doc "#19 [Detect Flaw]" is not GH#19. Only #348 and #335 in that doc
+   are real issue references.
+6. **Three v0.18-close deferrals were filed to the board and never
+   actually filed (#384):** the #360 extreme-flip triage (v018-close #5),
+   the ai_kit-stratified parity envelope (#6, explicitly marked "board"),
+   and the W3 `acts.json` row (#10). Until the envelope exists there is
+   no class-balance gate, only monotonicity — worth knowing before the
+   next balance-touching wave claims coverage. NOT filed, deliberately:
+   `atmosphere.gd _set_emitter_state` (v017-close #8) — that ruling calls
+   it cosmetic and notes world.gd's mirror already covers it.
+7. **Process note:** "deferred to the board" is not a filing. Two waves
+   produced six such items and zero issues. A close is not done until
+   every DEFERRED/board line in its adjudication block has an issue
+   number written next to it.

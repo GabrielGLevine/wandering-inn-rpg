@@ -3,109 +3,617 @@
  "fixture_save": "inn_guests_full_start",
  "starts_at_title": true,
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "inn" },
-  { "action": "assert_state", "path": "times_slept", "equals": 10 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 6] },
-
-  { "_comment": "SIX rostered, still TWO seats: the count is identical to inn_guests_loop's boot because seats never grow with the roster. 23 = 16 ungated entities + hungry_patron (day) + the 3 _returned Horns (door_mounted) + relc + zevara + the PC. from_start because the boot render lands before world_ready, ahead of this step's since-marker.", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 23, "fallbacks": 0 }, "from_start": true, "timeout_sec": 5 },
-
-  { "action": "screenshot", "name": "00_relc_and_zevara_seated" },
-
-  { "_comment": "== RELC: on shift, register-pure, servable from the TOPIC node == his chair is (1,5), the west corner. Step north onto (2,5) first -- plain floor, and the cell his chair occupied until the crowding check moved him -- which lands the player east-adjacent to him.", "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 5] },
-  { "_comment": "Now cardinally adjacent, so this click faces + interacts in one. relc_inn opens directly (guest rows carry no talk_pool), and it is the off-shift register: the spar, the wager and the spare spear all live on relc_intro out on the road. The hot_meal is held and no serve is banked this waking, so Serve is visible + unlocked in slot 1 and the good-chair topic is slot 2.", "action": "click", "cell": [1, 5] },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "relc_inn" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Relc", "text": "Hah! There you are. Good chair, good fire, no gate to stand at. Do not tell the Captain how comfortable I look.", "options": [
-   { "text": "Bring him a bowl from the kitchen. (Serve)", "locked": false, "requirement": "" },
-   { "text": "\"So that's the good chair, is it?\"", "locked": false, "requirement": "" },
-   { "text": "\"Your secret's safe, Relc.\"", "locked": false, "requirement": "" }
-  ] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "His ONE off-duty topic: the chair, the fire, the standing-all-day ache. No spar offer, no dummies, no wager, nothing under the city -- the register-purity proof.", "action": "click_dialogue_option", "option": 2 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Relc", "text": "Close enough to the fire that my tail stops complaining, far enough that I do not cook. Took me three visits to work that out. And standing all day does something to a Drake. You do not notice until you sit down, and then your legs file a complaint. So it is chair, fire, food, in that order. The wall can hold itself up for one night. It has had practice." }, "timeout_sec": 5 },
-  { "_comment": "SERVE FROM THE TOPIC NODE (the contract's second serve site, which inn_guests_loop only ever exercises from a greet). Serve is still slot 1 here; effects are the same four one-verb dicts: bank the serve key, served_customer++, gold+2, consume the hot_meal.", "action": "click_dialogue_option", "option": 1 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "hot_meal" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Relc", "text": "Ha! Look at the size of that. You know what the gatehouse calls dinner? Bread. Cold bread, if the shift ran long, and someone always says it builds character. Right. Nobody talk to me for a bit." }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "gold", "equals": 13 },
-  { "action": "screenshot", "name": "01_relc_served" },
-  { "action": "click_dialogue_option", "option": 1 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== A SECOND BOWL == the tray is empty and the other chair is still full, so cook one. stew_pot (4,1) is a requires_skill prop and the 2026-07-10 ruling stands: interact NEVER auto-casts, so the skill is chosen from the hotbar (work_loop's own idiom). This fixture's known field skills render as [1 Basic Cleaning, 2 Light, 3 Basic Cooking, 4 Appraise Foe, 5 Charming Smile], so basic_cooking is slot 3. Approach (4,2), then a BLOCKED move up sets facing without moving (the walkthroughs' robust-facing idiom) before the cast.", "action": "click", "cell": [4, 2] },
-  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [4, 2] }, "timeout_sec": 10 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [4, 2] },
-  { "action": "press", "name": "hotbar_3" },
-  { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "basic_cooking", "target": "stew_pot" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "hot_meal" }, "timeout_sec": 5 },
-
-  { "_comment": "== ZEVARA: on shift, register-pure, servable from the GREET node == her chair (3,6) is east of the boot cell. Krshia's (4,6) chair is off shift this waking, so it is plain floor and serves as the approach. Her greet is thaw-zero: nobody has found her yet.", "action": "click", "cell": [4, 6] },
-  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [4, 6] }, "timeout_sec": 10 },
-  { "action": "click", "cell": [3, 6] },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "zevara_inn" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Zevara", "text": "Off shift, which means nobody has found me yet. Give it an hour. If a runner comes through that door with my name in his mouth, you did not see me.", "options": [
-   { "text": "Bring her a bowl from the kitchen. (Serve)", "locked": false, "requirement": "" },
-   { "text": "\"An evening to yourself, then?\"", "locked": false, "requirement": "" },
-   { "text": "\"I never saw you, Captain.\"", "locked": false, "requirement": "" }
-  ] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Serve from the GREET node this time, on the freshly cooked bowl. Her served line is the one degree of thaw the profile allows, and it is bought by COMPETENCE (the tray carried clean across a full room), never by flattery.", "action": "click_dialogue_option", "option": 1 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "served_customer" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "item_lost", "payload_contains": { "item": "hot_meal" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Zevara", "text": "You carried that across a full room without spilling it and without asking anyone to move. You have no idea how rare that is on my side of the gate. ...It is good. Thank you. I will deny the tone I said it in." }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "gold", "equals": 15 },
-  { "action": "screenshot", "name": "02_zevara_served" },
-  { "action": "click_dialogue_option", "option": 1 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.served_customer", "equals": 5 },
-
-  { "_comment": "== THE SLIDE ACROSS THE ROSTER SEAM == a real sleep at your_bed takes times_slept 10 -> 11, so start goes 4 -> 5 and the window seats [zevara, selys]: the LAST roster name plus the FIRST, which is the wrap edge only a full pool can produce.", "action": "teleport", "map": "inn_upstairs", "cell": [9, 3] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn_upstairs", "cell": [9, 3] }, "timeout_sec": 5 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [9, 2] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "phase_changed", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "times_slept", "equals": 11 },
-
-  { "action": "teleport", "map": "inn", "cell": [2, 6] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "inn", "cell": [2, 6] }, "timeout_sec": 5 },
-  { "_comment": "Still exactly two seats filled after the slide. 23 -> 24 is NOT a third guest: the sleep completed the resonant_catalyst attunement and banked garden_door_unlocked, so the always-authored garden_door (3,8) turns present in the same rebuild (inn_guests_loop pins the same step).", "action": "wait_for_event", "type": "ui_entities_rendered", "payload_contains": { "sprites": 24, "fallbacks": 0 }, "timeout_sec": 5 },
-
-  { "_comment": "RELC ROTATED OUT: the chair the player could not enter an hour ago is plain floor now, and the walk lands on it (present_when absence is STRUCTURAL -- is_cell_blocked/entity_at/_build_entities all skip an off-shift guest). Then back to (2,6), the only cell in this corner cardinally adjacent to Zevara.", "action": "click", "cell": [1, 5] },
-  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [1, 5] }, "timeout_sec": 10 },
-  { "action": "click", "cell": [2, 6] },
-  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [2, 6] }, "timeout_sec": 10 },
-
-  { "_comment": "ZEVARA STAYED: she is in BOTH windows (start 4 -> [relc,zevara], start 5 -> [zevara,selys]), which makes this a slide and not a swap. The sleep re-armed her once_per_waking leg but both bowls are spent, so Serve renders VISIBLE-LOCKED ('requires Hot Meal') in slot 1 and her off-duty topic is slot 2.", "action": "click", "cell": [3, 6] },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "zevara_inn" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Zevara", "text": "Off shift, which means nobody has found me yet. Give it an hour. If a runner comes through that door with my name in his mouth, you did not see me.", "options": [
-   { "text": "Bring her a bowl from the kitchen. (Serve)", "locked": true, "requirement": "requires Hot Meal" },
-   { "text": "\"An evening to yourself, then?\"", "locked": false, "requirement": "" },
-   { "text": "\"I never saw you, Captain.\"", "locked": false, "requirement": "" }
-  ] }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "_comment": "Her ONE off-duty topic: a Watch Captain failing to relax, drafting rosters she will not live to work. No cisterns, no summons, no seal, no authorization of any kind -- the something-beneath arc routes through zevara_intro at the gate and this register absorbs none of it.", "action": "click_dialogue_option", "option": 2 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Zevara", "text": "Relax. People say it as though it were a thing you do with your hands. I sat down an hour ago and I have written half a duty roster since. Tomorrow's, then the day after's, then one for a week I will not live to see. The stew is the only part of this evening I am not scheduling." }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "03_zevara_offduty_after_slide" },
-  { "_comment": "Serve stays visible-locked on this node too, so the exit is visible option 2.", "action": "click_dialogue_option", "option": 2 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 },
-
-  { "_comment": "SELYS CAME BACK ROUND: start 5 seats the roster's LAST name and then wraps to its FIRST, so the pilot pair's opener returns to (6,6) directly after the PR2b pair's waking. Reached the long way round -- hungry_patron (5,6) and the map's own (7,6) block the direct lines -- via (6,7).", "action": "click", "cell": [6, 7] },
-  { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [6, 7] }, "timeout_sec": 10 },
-  { "action": "click", "cell": [6, 6] },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "selys_inn" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "speaker": "Selys", "text": "You actually work here? That explains why the stew smells like something worth queuing for." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "04_window_wrapped_selys_back" },
-  { "_comment": "Exit is visible option 3 (Serve visible-locked in slot 1, her desk topic in slot 2).", "action": "click_dialogue_option", "option": 3 },
-  { "action": "wait_for_event", "type": "ui_dialogue_hidden", "timeout_sec": 5 }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn"
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "_comment": "SIX rostered, still TWO seats: the count is identical to inn_guests_loop's boot because seats never grow with the roster. 23 = 16 ungated entities + hungry_patron (day) + the 3 _returned Horns (door_mounted) + relc + zevara + the PC. from_start because the boot render lands before world_ready, ahead of this step's since-marker.",
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 23,
+    "fallbacks": 0
+   },
+   "from_start": true,
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_relc_and_zevara_seated"
+  },
+  {
+   "_comment": "== RELC: on shift, register-pure, servable from the TOPIC node == his chair is (1,5), the west corner. Step north onto (2,5) first -- plain floor, and the cell his chair occupied until the crowding check moved him -- which lands the player east-adjacent to him.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    5
+   ]
+  },
+  {
+   "_comment": "Now cardinally adjacent, so this click faces + interacts in one. relc_inn opens directly (guest rows carry no talk_pool), and it is the off-shift register: the spar, the wager and the spare spear all live on relc_intro out on the road. The hot_meal is held and no serve is banked this waking, so Serve is visible + unlocked in slot 1 and the good-chair topic is slot 2.",
+   "action": "click",
+   "cell": [
+    1,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "relc_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Hah! There you are. Good chair, good fire. Nobody has stationed me at a gate all evening. The Captain still thinks I am out walking the road.",
+    "options": [
+     {
+      "text": "Bring him a bowl from the kitchen. (Serve)",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"So that's the good chair, is it?\"",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"Your secret's safe, Relc.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "His ONE off-duty topic: the chair, the fire, the standing-all-day ache. No spar offer, no dummies, no wager, nothing under the city -- the register-purity proof.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Close enough to the fire that my tail stops complaining, far enough that I do not cook. Took me three visits to work that out. Standing all day does something to a Drake. You do not notice until you sit down. Then it catches up with you all at once. Chair first. After that, somebody feeds me. I can hear the kitchen from here."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "SERVE FROM THE TOPIC NODE (the contract's second serve site, which inn_guests_loop only ever exercises from a greet). Serve is still slot 1 here; effects are the same four one-verb dicts: bank the serve key, served_customer++, gold+2, consume the hot_meal.",
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "served_customer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_lost",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Relc",
+    "text": "Ha! Look at the size of that. You know what the gatehouse calls dinner? Bread. Cold bread, if the shift ran long, and someone always says it builds character. Right. Nobody talk to me for a bit."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 13
+  },
+  {
+   "action": "screenshot",
+   "name": "01_relc_served"
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== A SECOND BOWL == the tray is empty and the other chair is still full, so cook one. stew_pot (4,1) is a requires_skill prop and the 2026-07-10 ruling stands: interact NEVER auto-casts, so the skill is chosen from the hotbar (work_loop's own idiom). This fixture's known field skills render as [1 Basic Cleaning, 2 Light, 3 Basic Cooking, 4 Appraise Foe, 5 Charming Smile], so basic_cooking is slot 3. Approach (4,2), then a BLOCKED move up sets facing without moving (the walkthroughs' robust-facing idiom) before the cast.",
+   "action": "click",
+   "cell": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     4,
+     2
+    ]
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "hotbar_3"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "skill_used",
+   "payload_contains": {
+    "skill": "basic_cooking",
+    "target": "stew_pot"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_gained",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== ZEVARA: on shift, register-pure, servable from the GREET node == her chair (3,6) is east of the boot cell. Krshia's (4,6) chair is off shift this waking, so it is plain floor and serves as the approach. Her greet is thaw-zero: nobody has found her yet.",
+   "action": "click",
+   "cell": [
+    4,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     4,
+     6
+    ]
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "click",
+   "cell": [
+    3,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "zevara_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "Off shift, which means nobody has found me yet. Give it an hour. If a runner comes through that door with my name in his mouth, send him to the gatehouse first. The night sergeant can sign for anything short of a breach.",
+    "options": [
+     {
+      "text": "Bring her a bowl from the kitchen. (Serve)",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"An evening to yourself, then?\"",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"I never saw you, Captain.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Serve from the GREET node this time, on the freshly cooked bowl. Her served line is the one degree of thaw the profile allows, and it is bought by COMPETENCE (the tray carried clean across a full room), never by flattery.",
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "served_customer"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_lost",
+   "payload_contains": {
+    "item": "hot_meal"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "You carried that across a full room without spilling it and without asking anyone to move. You have no idea how rare that is on my side of the gate. It is good. Thank you. The roster can wait another quarter hour."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 15
+  },
+  {
+   "action": "screenshot",
+   "name": "02_zevara_served"
+  },
+  {
+   "action": "click_dialogue_option",
+   "option": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.served_customer",
+   "equals": 5
+  },
+  {
+   "_comment": "== THE SLIDE ACROSS THE ROSTER SEAM == a real sleep at your_bed takes times_slept 10 -> 11, so start goes 4 -> 5 and the window seats [zevara, selys]: the LAST roster name plus the FIRST, which is the wrap edge only a full pool can produce.",
+   "action": "teleport",
+   "map": "inn_upstairs",
+   "cell": [
+    9,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn_upstairs",
+    "cell": [
+     9,
+     3
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "times_slept",
+   "equals": 11
+  },
+  {
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn",
+    "cell": [
+     2,
+     6
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Still exactly two seats filled after the slide. 23 -> 24 is NOT a third guest: the sleep completed the resonant_catalyst attunement and banked garden_door_unlocked, so the always-authored garden_door (3,8) turns present in the same rebuild (inn_guests_loop pins the same step).",
+   "action": "wait_for_event",
+   "type": "ui_entities_rendered",
+   "payload_contains": {
+    "sprites": 24,
+    "fallbacks": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "RELC ROTATED OUT: the chair the player could not enter an hour ago is plain floor now, and the walk lands on it (present_when absence is STRUCTURAL -- is_cell_blocked/entity_at/_build_entities all skip an off-shift guest). Then back to (2,6), the only cell in this corner cardinally adjacent to Zevara.",
+   "action": "click",
+   "cell": [
+    1,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     1,
+     5
+    ]
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "click",
+   "cell": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     2,
+     6
+    ]
+   },
+   "timeout_sec": 10
+  },
+  {
+   "_comment": "ZEVARA STAYED: she is in BOTH windows (start 4 -> [relc,zevara], start 5 -> [zevara,selys]), which makes this a slide and not a swap. The sleep re-armed her once_per_waking leg but both bowls are spent, so Serve renders VISIBLE-LOCKED ('requires Hot Meal') in slot 1 and her off-duty topic is slot 2.",
+   "action": "click",
+   "cell": [
+    3,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "zevara_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "Off shift, which means nobody has found me yet. Give it an hour. If a runner comes through that door with my name in his mouth, send him to the gatehouse first. The night sergeant can sign for anything short of a breach.",
+    "options": [
+     {
+      "text": "Bring her a bowl from the kitchen. (Serve)",
+      "locked": true,
+      "requirement": "requires Hot Meal"
+     },
+     {
+      "text": "\"An evening to yourself, then?\"",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "\"I never saw you, Captain.\"",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Her ONE off-duty topic: a Watch Captain failing to relax, drafting rosters she will not live to work. No cisterns, no summons, no seal, no authorization of any kind -- the something-beneath arc routes through zevara_intro at the gate and this register absorbs none of it.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Zevara",
+    "text": "I sat down an hour ago and I have written half a duty roster since. Tomorrow's is done. I am partway through the day after's, and under that is one for a week I will not live to see. The stew smells ready. I have not ordered any yet."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_zevara_offduty_after_slide"
+  },
+  {
+   "_comment": "Serve stays visible-locked on this node too, so the exit is visible option 2.",
+   "action": "click_dialogue_option",
+   "option": 2
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "SELYS CAME BACK ROUND: start 5 seats the roster's LAST name and then wraps to its FIRST, so the pilot pair's opener returns to (6,6) directly after the PR2b pair's waking. Reached the long way round -- hungry_patron (5,6) and the map's own (7,6) block the direct lines -- via (6,7).",
+   "action": "click",
+   "cell": [
+    6,
+    7
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "player_moved",
+   "payload_contains": {
+    "cell": [
+     6,
+     7
+    ]
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "click",
+   "cell": [
+    6,
+    6
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "selys_inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Selys",
+    "text": "You actually work here? That explains the stew. The Guild canteen hasn't made anything worth queuing for in years."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_window_wrapped_selys_back"
+  },
+  {
+   "_comment": "Exit is visible option 3 (Serve visible-locked in slot 1, her desk topic in slot 2).",
+   "action": "click_dialogue_option",
+   "option": 3
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  }
  ]
 }

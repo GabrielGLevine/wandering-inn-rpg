@@ -12,13 +12,13 @@
        "night"
       ]
      },
-     "text": "State your business. The tier doesn't sleep, and neither, apparently, do you."
+     "text": "State your business. The tier's night ledger takes entries until last bell, and past that it — you there, papers only on the ledge. State your business."
     },
     {
      "requires": {
       "race": "human"
      },
-     "text": "A Human, this far in. State your business and your sponsor — twice, if the first answer doesn't hold up."
+     "text": "A Human, this far in. State your business and your sponsor. Sponsors get checked twice for Humans, so have the name ready."
     },
     {
      "requires": {
@@ -39,7 +39,7 @@
        "elevator_pass_stamped": 1
       }
      },
-     "text": "You're carrying a forge-tier stamp. That's the permit office's business and not this window's. State whatever this window is for."
+     "text": "You're carrying a forge-tier stamp. That's the permit office's business, and they keep their own ledger of it. State whatever this window is for."
     },
     {
      "requires": {
@@ -106,7 +106,7 @@
   },
   "queue_entry": {
    "speaker": "Tier Clerk",
-   "text": "Held correctly. The entry side is mine and the entry side is clear. What is not clear is the release side, and I cannot endorse a release I do not hold. I can endorse that the entry is clean. That is a real document and it is not nothing.",
+   "text": "Held correctly. The entry side is mine, and the entry side is clear. The release side belongs to the forge office, and I cannot endorse a release I do not hold. I can endorse the entry as clean. Take that to the permit window and ask for the countersign. Next.",
    "options": [
     {
      "text": "Then endorse the entry, and I'll take it up.",
@@ -118,17 +118,17 @@
      "goto": "queue_entry_done"
     },
     {
-     "text": "That is somehow worse than nothing.",
+     "text": "So I queue again at a different window.",
      "end": true
     }
    ]
   },
   "queue_entry_done": {
    "speaker": "Tier Clerk",
-   "text": "Stamped, dated, and correct. Take it to the permit window. And do not say I sent you, because I did not, I endorsed.",
+   "text": "Stamped, dated, and correct. Take it to the permit window. Do not say I sent you. Say the entry is endorsed, which is what the stamp says.",
    "options": [
     {
-     "text": "You endorsed.",
+     "text": "I'll say it's endorsed.",
      "end": true
     }
    ]

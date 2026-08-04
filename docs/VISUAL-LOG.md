@@ -3521,3 +3521,10 @@ clock loops with correct phase identity. Ranked.
   **(P3)** interiors phase-invariant (clock invisible indoors). **(P3)**
   day identity is brightness-only (no hue). **(P3)** debug overlay no
   backing plate (dev-only). **(P3)** sewers ladder scribble at 1x.
+
+## Voice pass close (2026-08-04)
+- WATCH: center dialogue panels (Lyonette intro, Zevara summons) sit
+  flush against the footer hint bar — no clipping observed at current
+  option counts, but zero margin. Pre-existing layout, not introduced
+  by the text pass (verified same geometry pre-pass). Becomes a real
+  bug the day any center-panel conversation gains a 4th option.

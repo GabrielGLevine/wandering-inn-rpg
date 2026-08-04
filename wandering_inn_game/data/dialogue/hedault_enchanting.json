@@ -4,7 +4,7 @@
  "nodes": {
   "hub": {
    "speaker": "Hedault",
-   "text": "State the item and keep your hands where I can see them. I appraise, I correct, I charge exactly what the work is worth. In that order.",
+   "text": "State the item and keep your hands where I can see them. First I appraise. Then I correct, if correction is warranted, and I charge exactly what the work is worth.",
    "options": [
     {
      "text": "The traveler's charm. Improve it. (20 gold)",
@@ -126,7 +126,7 @@
   "door_reading": {
    "speaker": "Hedault",
    "_comment": "The 'catalogued exactly once before' callback is a TRADER's line: it names the fragment this player handed him, so it may only render if they did. Base is the same read without the claim.",
-   "text": "Hold still. There is a residue on your sleeve I do not see twice in a decade. Ruin warding, and it is FED. A live draw, not a set one. I do not invoice for looking.",
+   "text": "Hold still. There is a residue on your sleeve I do not see twice in a decade. Ruin warding. A set ward would have gone quiet years ago; this one is fed, and the draw is live. Looking costs nothing.",
    "text_variants": [
     {
      "requires": {
@@ -134,7 +134,7 @@
        "traded_guardian_fragment": 1
       }
      },
-     "text": "Hold still. There is a residue on your sleeve I have catalogued exactly once before — in this shop, on the fragment you handed me. Ruin warding, and it is FED. A live draw, not a set one. I do not invoice for looking."
+     "text": "Hold still. There is a residue on your sleeve I have catalogued exactly once before — in this shop, on the fragment you handed me. Ruin warding. A set ward would have gone quiet years ago; this one is fed, and the draw is live. Looking costs nothing."
     }
    ],
    "options": [
@@ -156,7 +156,7 @@
   "door_reading_verdict": {
    "_comment": "HIS OWN PIECE ONLY (spec 4): the set-versus-fed distinction is an enchanter's read, and he stops exactly where the fragment_study node stops. The source of the draw is named as unknown, never as a seal.",
    "speaker": "Hedault",
-   "text": "A set ward holds a shape. A fed ward holds an appetite, and an appetite has to be sourced. Whoever hung that frame did not hang it alone. A draw that size runs to something, and the something is not in your pantry. I will not speculate further in a shop. Bring me the setting when you know, and I will price the work correctly.",
+   "text": "A set ward holds a shape. A fed ward has to be sourced, continuously, from somewhere with capacity. Whoever hung that frame did not hang it alone, and I have measured what it pulls. Nothing in your pantry pulls that. I will not speculate further in a shop. Bring me the setting when you know, and I will price the work correctly.",
    "options": [
     {
      "text": "Understood.",
@@ -166,7 +166,7 @@
   },
   "work_done": {
    "speaker": "Hedault",
-   "text": "Done. The work is correct; the item was merely early. Do not thank me, do not shake my hand, and do not let a street enchanter touch it afterward.",
+   "text": "Done. The work is correct; it is on the cloth and the fee is as quoted. Do not thank me or shake my hand. And keep it away from street enchanters afterward.",
    "options": [
     {
      "text": "Understood.",
@@ -177,7 +177,7 @@
   "fragment_study": {
    "speaker": "Hedault",
    "_comment": "b6 #221 the trade-by-CHOICE close + the door-chain lore line. SPOILER BAR: oblique — one school of warding, no names, no volumes. The player gives up guarding_ward (the fragment's combat skill) for the wardstone + the read; keeping the fragment is the equally valid choice.",
-   "text": "Hold. Turn it — there. Ruin warding, and not apprentice work. The same discipline set the frame you woke on your pantry door; one school, long dissolved, and I will not guess at names in a shop. The setting is yours. The fragment stays with someone who can read it properly.",
+   "text": "Hold. Turn it — there. Ruin warding, and well past apprentice work. The same discipline set the frame you woke on your pantry door; one school, long dissolved, and I will not guess at names in a shop. The setting is yours. The fragment stays with someone who can read it properly.",
    "options": [
     {
      "text": "Fair trade.",
@@ -188,10 +188,10 @@
   "heirloom_bench": {
    "speaker": "Hedault",
    "_comment": "He will not work until the lie is named. The two SKILL arms are SEPARATE single-key options (test_content rejects {skill, item} -- pisces_seal.json:112).",
-   "text": "Set it on the cloth. Do not hand it to me. I have looked at it twice already and I will not cut a mount until somebody in this transaction says the true thing out loud: that stone is glass, cut well, sold badly, and about forty years old. I do not work around a lie. I work around a fact, and I invoice for the work.",
+   "text": "Set it on the cloth. Do not hand it to me. I have looked at it twice already and I will not cut a mount until somebody in this transaction says the true thing out loud: that stone is glass, cut well, sold badly, and about forty years old. I will not cut a mount over a lie. It is half-drawn on the bench behind me, and it stays half-drawn until I hear it.",
    "options": [
     {
-     "text": "\"She knows. She's known since she was nineteen. It's the setting she wants honest.\"",
+     "text": "\"She's known since she was nineteen. She wants the setting held, and the stone left as it is.\"",
      "hide_when": {
       "accomplishment": {
        "heirloom_truth_kept": 1
@@ -265,7 +265,7 @@
   },
   "bench_assist": {
    "speaker": "Hedault",
-   "text": "Stand where I put you and keep your hands flat on the cloth. Now read it back to me. If you are right I will not say so; I will simply not correct you, and you may take that as the same thing. There. The ward wants to sit under the setting, not around the stone. It always did.",
+   "text": "Stand where I put you and keep your hands flat on the cloth. Now read it back to me. If you are wrong, I will stop you. There. The ward wants to sit under the setting. It has ignored the stone from the first weighing. Keep your hands flat while I mark the line.",
    "options": [
     {
      "text": "\"Understood.\"",
@@ -276,7 +276,7 @@
   "fence_pointer": {
    "speaker": "Hedault",
    "_comment": "Pointer only -- banks nothing; the FIGHT counter comes off the alley encounter's on_victory.",
-   "text": "Forty years ago somebody took the stone and left the glass, and did it well enough that the family never thought to ask. A stone like that is sold twice in this city and kept once. There is a man with a back door off the alleys and a ledger he would not show the Watch. I do not go there. I am telling you where it is, and that is the entire extent of my involvement.",
+   "text": "Forty years ago somebody took the stone and left the glass, and did it well enough that the family never thought to ask. Do not expect the thief to still hold it. Stones of that quality get sold on. There is a man with a back door off the alleys and a ledger he would not show the Watch. I do not go there. You have the address. I have a mount to cut.",
    "options": [
     {
      "text": "\"That's enough.\"",

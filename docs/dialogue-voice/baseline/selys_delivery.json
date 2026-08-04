@@ -1,0 +1,747 @@
+{
+ "facts": {
+  "$.nodes.delivered.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.delivered.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin"
+   ]
+  },
+  "$.nodes.delivered.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.delivered.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.delivered.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.delivered.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin",
+    "Lism"
+   ]
+  },
+  "$.nodes.delivered_smooth.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.delivered_smooth.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin"
+   ]
+  },
+  "$.nodes.delivered_smooth.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.delivered_smooth.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.delivered_smooth.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin",
+    "Lyonette"
+   ]
+  },
+  "$.nodes.delivered_smooth.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin",
+    "Lism"
+   ]
+  },
+  "$.nodes.errand_kept.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.errand_kept.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Leave"
+   ]
+  },
+  "$.nodes.errand_kept.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Floodplains"
+   ]
+  },
+  "$.nodes.errand_returned.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.errand_returned.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Leave"
+   ]
+  },
+  "$.nodes.errand_returned.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin"
+   ]
+  },
+  "$.nodes.hub.options[10].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Pallass"
+   ]
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Lyonette"
+   ]
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guildmistress"
+   ]
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[8].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[9].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin"
+   ]
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.pallass_sponsor.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "10"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.pallass_sponsor.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.pallass_sponsor.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.nodes.pallass_sponsored_reaction.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Selys"
+   ]
+  },
+  "$.nodes.pallass_sponsored_reaction.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Door",
+    "Guild",
+    "Pallass"
+   ]
+  },
+  "$.nodes.selys_board_context.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.selys_board_context.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.selys_board_context.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor"
+   ]
+  },
+  "$.nodes.selys_board_pick.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.selys_board_pick.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild",
+    "Riverfarm"
+   ]
+  },
+  "$.nodes.selys_gran.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.selys_gran.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.selys_gran.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.selys_gran.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Shivertail",
+    "Silver",
+    "Tekshia"
+   ]
+  },
+  "$.nodes.selys_gran_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.selys_gran_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.selys_gran_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "delivered": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "kept_reward"
+       },
+       {
+        "accomplishment": "errand_decided"
+       },
+       {
+        "gold": 4
+       }
+      ],
+      "goto": "errand_kept",
+      "hide_when": {
+       "accomplishment": {
+        "errand_decided": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "gave_reward"
+       },
+       {
+        "accomplishment": "errand_decided"
+       },
+       {
+        "gold": 3
+       }
+      ],
+      "goto": "errand_returned",
+      "hide_when": {
+       "accomplishment": {
+        "errand_decided": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "hide_when": {
+       "accomplishment": {
+        "errand_decided": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "errand_decided": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "delivered_smooth": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "kept_reward"
+       },
+       {
+        "accomplishment": "errand_decided"
+       },
+       {
+        "gold": 4
+       }
+      ],
+      "goto": "errand_kept",
+      "hide_when": {
+       "accomplishment": {
+        "errand_decided": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "gave_reward"
+       },
+       {
+        "accomplishment": "errand_decided"
+       },
+       {
+        "gold": 3
+       }
+      ],
+      "goto": "errand_returned",
+      "hide_when": {
+       "accomplishment": {
+        "errand_decided": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "hide_when": {
+       "accomplishment": {
+        "errand_decided": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "errand_decided": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "errand_kept": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7"
+   },
+   "errand_returned": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "package_delivered"
+       }
+      ],
+      "goto": "delivered",
+      "hide_when": {
+       "accomplishment": {
+        "package_delivered": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "has_package": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "package_delivered"
+       },
+       {
+        "accomplishment": "selys_impressed"
+       }
+      ],
+      "goto": "delivered_smooth",
+      "hide_when": {
+       "accomplishment": {
+        "package_delivered": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "lyonette_tip": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "delivered",
+      "hide_when": {
+       "accomplishment": {
+        "errand_decided": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "package_delivered": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "selys_gran",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_selys": 2,
+        "errand_decided": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "selys_board_pick",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_selys": 2,
+        "errand_decided": 1
+       },
+       "once_per_waking": "board_pick:selys"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "selys_board_context",
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "open_board_picker": true
+       }
+      ],
+      "end": true,
+      "hide_when": {
+       "board_accepted": true
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "open_board_turnin": true
+       }
+      ],
+      "end": true,
+      "requires": {
+       "board_accepted": true
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "open_board_abandon": true
+       }
+      ],
+      "end": true,
+      "requires": {
+       "board_accepted": true
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "quest": "papers_for_pallass"
+       },
+       {
+        "accomplishment": "pallass_sponsorship_asked"
+       }
+      ],
+      "goto": "pallass_sponsor",
+      "hide_when": {
+       "accomplishment": {
+        "pallass_sponsored": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "invrisil_attuned": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "phase": [
+        "dusk",
+        "night"
+       ]
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "errand_decided": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "cisterns_reported": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "pallass_sponsor": {
+    "options": [
+     {
+      "effects": [
+       {
+        "gold": -10
+       },
+       {
+        "accomplishment": "pallass_sponsored"
+       }
+      ],
+      "goto": "pallass_sponsored_reaction",
+      "requires": {
+       "gold": 10
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7"
+   },
+   "pallass_sponsored_reaction": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7"
+   },
+   "selys_board_context": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7"
+   },
+   "selys_board_pick": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "board_pick:selys"
+       },
+       {
+        "gold": 5
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7"
+   },
+   "selys_gran": {
+    "options": [
+     {
+      "goto": "selys_gran_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7"
+   },
+   "selys_gran_two": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Selys",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

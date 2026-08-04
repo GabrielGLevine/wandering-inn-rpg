@@ -1,0 +1,331 @@
+{
+ "facts": {
+  "$.nodes.bought.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.bought.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lifted.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lifted.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.named.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.named.options[1].text": {
+   "brackets": [
+    "[Charming Smile]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Charming",
+    "Smile",
+    "Tell"
+   ]
+  },
+  "$.nodes.named.options[2].text": {
+   "brackets": [
+    "[Stealth]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Stealth",
+    "Take"
+   ]
+  },
+  "$.nodes.named.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.named.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.named.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.named.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.table.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.table.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.table.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.table.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.table.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.talk_close.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.talk_close.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.talk_pitch.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.talk_pitch.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_other_way.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_other_way.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.the_other_way.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "#318 beat 2, the three-pillar beat, all four forks on ONE node, each with its OWN route counter: block_bought_back (30 gold), block_handed_over ([Charming Smile], no coin), block_lifted ([Stealth]), block_taken (the fight). Fix round 1 split the first two apart (spec section 4). Every non-fight arm also banks the shared seal_block_settled, the ONE gate they all hide on -- hide_when is an AND over one dict, so a shared settle is the only way four forks retire each other. The FIGHT arm commits broker_hands from `the_other_way` and nowhere else.",
+  "nodes": {
+   "bought": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Man with a Rented Table",
+    "text": "\u00a7"
+   },
+   "lifted": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "block_lifted"
+       },
+       {
+        "accomplishment": "seal_block_settled"
+       },
+       {
+        "toast": "The brass is off the cloth and inside your coat before the sentence ends. He talks on to the space where you were standing."
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Man with a Rented Table",
+    "text": "\u00a7"
+   },
+   "named": {
+    "options": [
+     {
+      "_comment": "The spend rides the GATE option so _is_priced_purchase fires and the row renders its price token (as on the scribe's 8-gold arm).",
+      "effects": [
+       {
+        "gold": -30
+       },
+       {
+        "accomplishment": "block_bought_back"
+       },
+       {
+        "accomplishment": "seal_block_settled"
+       },
+       {
+        "toast": "The brass goes into your pack still warm from his hand. Two initials, cut deep, worth thirty gold and a fallen house's whole remaining credit."
+       }
+      ],
+      "goto": "bought",
+      "hide_when": {
+       "accomplishment": {
+        "seal_block_settled": 1
+       }
+      },
+      "requires": {
+       "gold": 30
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "talk_pitch",
+      "hide_when": {
+       "accomplishment": {
+        "seal_block_settled": 1
+       }
+      },
+      "requires": {
+       "skill": "charming_smile"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "lifted",
+      "hide_when": {
+       "accomplishment": {
+        "seal_block_settled": 1
+       }
+      },
+      "requires": {
+       "skill": "sneak"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "the_other_way",
+      "hide_when": {
+       "accomplishment": {
+        "seal_block_settled": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Man with a Rented Table",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "seal_block_settled": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "table": {
+    "options": [
+     {
+      "goto": "named",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Man with a Rented Table",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "seal_block_settled": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "block_taken": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "talk_close": {
+    "options": [
+     {
+      "_comment": "Banks block_handed_over, NOT block_bought_back: no gold rides this arm, so banking the purchase's counter made the resolution row and the steward's report describe a transaction that never happened.",
+      "effects": [
+       {
+        "accomplishment": "block_handed_over"
+       },
+       {
+        "accomplishment": "seal_block_settled"
+       },
+       {
+        "toast": "He puts the brass in your hand and keeps his own hand out a moment longer, as if the table might want it back."
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Man with a Rented Table",
+    "text": "\u00a7"
+   },
+   "talk_pitch": {
+    "options": [
+     {
+      "goto": "talk_close",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Man with a Rented Table",
+    "text": "\u00a7"
+   },
+   "the_other_way": {
+    "_comment": "The ONLY door to broker_hands: the rig is hidden on an unreachable wall cell, so the fight is a choice made in a conversation and cannot be walked into. start_combat is legal only on an end:true option.",
+    "options": [
+     {
+      "effects": [
+       {
+        "start_combat": "broker_hands"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "named",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Man with a Rented Table",
+    "text": "\u00a7"
+   }
+  },
+  "start": "table"
+ }
+}

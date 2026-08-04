@@ -1,0 +1,679 @@
+{
+ "facts": {
+  "$.nodes.agreed_paid.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.agreed_paid.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.agreed_paid.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Coyle",
+    "Hellam"
+   ]
+  },
+  "$.nodes.agreed_persuaded.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.agreed_persuaded.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.agreed_persuaded.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Coyle",
+    "Hellam"
+   ]
+  },
+  "$.nodes.arranged.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Cups"
+   ]
+  },
+  "$.nodes.arranged.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Coyle"
+   ]
+  },
+  "$.nodes.balk.options[0].text": {
+   "brackets": [
+    "[Charming Smile]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Brothers",
+    "Charming",
+    "Smile"
+   ]
+  },
+  "$.nodes.balk.options[1].text": {
+   "brackets": [],
+   "digits": [
+    "10"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.balk.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.balk.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.balk.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Coyle"
+   ]
+  },
+  "$.nodes.cups_favor.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cups_favor.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Brothers",
+    "Wilovan"
+   ]
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "1"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [
+    "1"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [
+    "1"
+   ],
+   "propnouns": [
+    "Coyle"
+   ]
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [
+    "1"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [
+    "1"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Cups"
+   ]
+  },
+  "$.nodes.hub.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Hellam"
+   ]
+  },
+  "$.nodes.hub.options[8].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.just_tea.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Cups"
+   ]
+  },
+  "$.nodes.just_tea.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rumor_counting_house.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rumor_counting_house.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rumor_counting_house.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rumor_door.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rumor_door.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rumor_door.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Drake"
+   ]
+  },
+  "$.nodes.rumor_footpads.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rumor_footpads.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rumor_footpads.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Alley"
+   ]
+  },
+  "$.nodes.rumor_hats.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rumor_hats.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rumor_hats.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Brothers"
+   ]
+  },
+  "$.nodes.rumor_hellam.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rumor_hellam.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rumor_hellam.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Coyle",
+    "Hellam"
+   ]
+  }
+ },
+ "skeleton": {
+  "_comment": "v0.16.1 #15: the two Coyle rumor rows gained `requires.accomplishment.took_brothers_job` -- the gate this hub already uses one row down for the testimony ask. requires.gold is NOT a hiding gate, so a broke first-time visitor used to read both rows spelled out and be told about a man cooking books before anyone had named him. Fixed IN PLACE: no row reordered or inserted, because hub indices are cursor-pinned by QA. The three ungated rumors stay open and can still supply cups_favor's count, so nothing dead-ends.",
+  "nodes": {
+   "agreed_paid": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "secured_testimony"
+       }
+      ],
+      "goto": "arranged",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Cups",
+    "text": "\u00a7"
+   },
+   "agreed_persuaded": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "secured_testimony"
+       }
+      ],
+      "goto": "arranged",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Cups",
+    "text": "\u00a7"
+   },
+   "arranged": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Cups",
+    "text": "\u00a7"
+   },
+   "balk": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "fixer_will_testify"
+       },
+       {
+        "accomplishment": "persuaded_someone"
+       }
+      ],
+      "goto": "agreed_persuaded",
+      "requires": {
+       "accomplishment": {
+        "returned_cups_debt": 1
+       },
+       "skill": "charming_smile"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -10
+       },
+       {
+        "accomplishment": "fixer_will_testify"
+       }
+      ],
+      "goto": "agreed_paid",
+      "requires": {
+       "accomplishment": {
+        "returned_cups_debt": 1
+       },
+       "gold": 10
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Cups",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "returned_cups_debt": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "cups_favor": {
+    "options": [
+     {
+      "effects": [
+       {
+        "item": "cups_debt_chit"
+       },
+       {
+        "accomplishment": "cups_favor_requested"
+       }
+      ],
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Cups",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "gold": -1
+       },
+       {
+        "accomplishment": "heard_rumor_footpads"
+       },
+       {
+        "accomplishment": "bought_rumor_from_cups"
+       }
+      ],
+      "goto": "rumor_footpads",
+      "hide_when": {
+       "accomplishment": {
+        "heard_rumor_footpads": 1
+       }
+      },
+      "requires": {
+       "gold": 1
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -1
+       },
+       {
+        "accomplishment": "heard_rumor_counting_house"
+       },
+       {
+        "accomplishment": "bought_rumor_from_cups"
+       }
+      ],
+      "goto": "rumor_counting_house",
+      "hide_when": {
+       "accomplishment": {
+        "heard_rumor_counting_house": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "took_brothers_job": 1
+       },
+       "gold": 1
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -1
+       },
+       {
+        "accomplishment": "heard_rumor_hellam"
+       },
+       {
+        "accomplishment": "bought_rumor_from_cups"
+       }
+      ],
+      "goto": "rumor_hellam",
+      "hide_when": {
+       "accomplishment": {
+        "heard_rumor_hellam": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "took_brothers_job": 1
+       },
+       "gold": 1
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -1
+       },
+       {
+        "accomplishment": "heard_rumor_hats"
+       },
+       {
+        "accomplishment": "bought_rumor_from_cups"
+       }
+      ],
+      "goto": "rumor_hats",
+      "hide_when": {
+       "accomplishment": {
+        "heard_rumor_hats": 1
+       }
+      },
+      "requires": {
+       "gold": 1
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -1
+       },
+       {
+        "accomplishment": "heard_rumor_door"
+       },
+       {
+        "accomplishment": "bought_rumor_from_cups"
+       }
+      ],
+      "goto": "rumor_door",
+      "hide_when": {
+       "accomplishment": {
+        "heard_rumor_door": 1
+       }
+      },
+      "requires": {
+       "gold": 1
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "cups_favor",
+      "hide_when": {
+       "accomplishment": {
+        "cups_favor_requested": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "bought_rumor_from_cups": 2,
+        "coyle_operation_found": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "balk",
+      "hide_when": {
+       "accomplishment": {
+        "fixer_will_testify": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "took_brothers_job": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "secured_testimony"
+       }
+      ],
+      "goto": "arranged",
+      "hide_when": {
+       "accomplishment": {
+        "secured_testimony": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "fixer_will_testify": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "just_tea",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Cups",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "fixer_will_testify": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "secured_testimony": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "just_tea": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Cups",
+    "text": "\u00a7"
+   },
+   "rumor_counting_house": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Cups",
+    "text": "\u00a7"
+   },
+   "rumor_door": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Cups",
+    "text": "\u00a7"
+   },
+   "rumor_footpads": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Cups",
+    "text": "\u00a7"
+   },
+   "rumor_hats": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Cups",
+    "text": "\u00a7"
+   },
+   "rumor_hellam": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Cups",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

@@ -1,0 +1,157 @@
+{
+ "facts": {
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tally_count.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tally_count.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tally_name.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tally_name.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tally_truth.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tally_truth.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tally_walk.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tally_walk.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.tally_walk.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "hub": {
+    "options": [
+     {
+      "goto": "tally_walk",
+      "hide_when": {
+       "accomplishment": {
+        "ledger_read_true": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_flood_ledger": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Tallyman",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "ledger_read_true": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "tally_count": {
+    "options": [
+     {
+      "goto": "tally_name",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Tallyman",
+    "text": "\u00a7"
+   },
+   "tally_name": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "ledger_read_true"
+       }
+      ],
+      "goto": "tally_truth",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Tallyman",
+    "text": "\u00a7"
+   },
+   "tally_truth": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Tallyman",
+    "text": "\u00a7"
+   },
+   "tally_walk": {
+    "options": [
+     {
+      "goto": "tally_name",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "tally_count",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Tallyman",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

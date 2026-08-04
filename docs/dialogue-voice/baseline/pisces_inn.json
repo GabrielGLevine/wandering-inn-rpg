@@ -1,0 +1,181 @@
+{
+ "facts": {
+  "$.nodes.greet.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.greet.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.greet.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.offduty.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
+  },
+  "$.nodes.offduty.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.offduty.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.served.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.served.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Pisces's INN register. Attached ONLY to pisces_inn_guest; his street hub (pisces_magic) never rides along, so the magic tutoring, the necromancy defence and EVERY door consult stay home-only -- reinforced now that door_mounting.json exists on this same map: the guest row must never touch door mechanics. A magic question is DEFLECTED in the greet, never answered. Serve mirrors selys_inn/patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter. Voice per docs/design/character-profiles.md: haughty THAWING.",
+  "nodes": {
+   "greet": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:pisces_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:pisces_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "offduty",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "_comment": "#349 residence arms. `text_variants` takes `requires` only (no hide_when) and LAST MATCH WINS, so windows are carved by ORDERING. Row 1 = seal_kept_reported -> horns_dig_started, the only stretch inn.json's original Horns rows hold that corner.",
+      "requires": {
+       "accomplishment": {
+        "seal_kept_reported": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "ROW 2, DIG WINDOW: between horns_dig_started and door_mounted no Horn is on the inn map, so row 1 alone described an empty corner.",
+      "requires": {
+       "accomplishment": {
+        "horns_dig_started": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "ROW 3: door_mounted re-arms the twins on the same cells; the corner is occupied again.",
+      "requires": {
+       "accomplishment": {
+        "door_mounted": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "offduty": {
+    "options": [
+     {
+      "effects": [
+       {
+        "bank_first_use": "serve:pisces_inn_guest"
+       },
+       {
+        "accomplishment": "served_customer"
+       },
+       {
+        "gold": 2
+       },
+       {
+        "remove_item": "hot_meal"
+       }
+      ],
+      "goto": "served",
+      "requires": {
+       "item": "hot_meal",
+       "once_per_waking": "serve:pisces_inn_guest"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   },
+   "served": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Pisces",
+    "text": "\u00a7"
+   }
+  },
+  "start": "greet"
+ }
+}

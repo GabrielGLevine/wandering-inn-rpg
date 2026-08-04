@@ -4,7 +4,7 @@
  "nodes": {
   "hub": {
    "speaker": "Lyonette",
-   "text": "The room register. Lyonette's hand, every line ruled straight: names, nights, and three columns of prices that mostly get paid.",
+   "text": "The room register. Lyonette's hand, every line ruled straight: names, nights, and three columns of prices. One entry has been scraped clean and rewritten.",
    "text_variants": [
     {
      "_comment": "#350: FIRST rung on purpose -- later-match-wins, so a tiered player still reads their tier line below.",
@@ -37,7 +37,7 @@
        "room_tier_3": 1
       }
      },
-     "text": "The register lists your room at the top of the page now, underlined once. Lyonette does not underline things twice for anyone."
+     "text": "The register lists your room at the top of the page now, underlined once, the line ruled against a straightedge. The three entries beneath it start lower down the page to make room."
     }
    ],
    "options": [
@@ -153,7 +153,7 @@
   },
   "tier_thanks": {
    "speaker": "Lyonette",
-   "text": "Lyonette enters it without looking up, and the line is perfect anyway. \"Paid in full. I'll have it aired by tonight — you'll sleep better than you have been, which frankly is not difficult.\"",
+   "text": "Lyonette enters it without looking up, and the line comes out straight. \"Paid in full. I'll have it aired and the fire banked by tonight — you'll sleep better than you have been.\"",
    "text_variants": [
     {
      "requires": {
@@ -161,7 +161,7 @@
        "room_tier_1": 1
       }
      },
-     "text": "Lyonette enters it without looking up, and the line is perfect anyway. \"Paid in full. Aired, swept, and the draught stopped — you'll get up with more in you than you have been.\""
+     "text": "Lyonette enters it without looking up, and the line comes out straight. \"Paid in full. Aired and swept. The draught is stopped — you'll get up with more in you than you have been.\""
     },
     {
      "requires": {
@@ -169,7 +169,7 @@
        "room_tier_2": 1
       }
      },
-     "text": "Lyonette blots the line and looks up for once. \"The good mattress and a window that actually shuts. People underestimate the window. You'll feel the difference the next time something hits you.\""
+     "text": "Lyonette blots the line and looks up for once. \"The good mattress and a window that actually shuts. I checked the latch myself this morning.\" She writes the new price small, to fit the column she had already ruled for it."
     },
     {
      "requires": {
@@ -177,7 +177,7 @@
        "room_tier_3": 1
       }
      },
-     "text": "Lyonette underlines it. \"Best bedding in the house, and I will know if you don't use it. Sleep like that and you walk into the next bad morning with something left over.\""
+     "text": "Lyonette underlines it. \"Best bedding in the house, and I will know if you don't use it. The goose down came up from Celum by wagon, and the price of it still makes me angry. Use it.\""
     }
    ],
    "options": [

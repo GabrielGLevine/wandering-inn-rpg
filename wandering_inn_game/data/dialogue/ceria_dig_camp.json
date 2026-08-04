@@ -4,7 +4,7 @@
 	"nodes": {
 		"camp_hub": {
 			"speaker": "Ceria",
-			"text": "You made it. Camp rules: nobody touches anything shiny, nobody wanders past the survey stakes alone. The sealed level's below the pedestal court. We found the site off an old expedition ledger — half the pages were about what they DIDN'T bring out.",
+			"text": "You made it. Camp rules: nobody touches anything shiny, nobody wanders past the survey stakes alone. The sealed level's below the pedestal court. We found the site off an old expedition ledger — half the pages are about what they didn't bring out. It's in my tent, filed with the survey maps.",
 			"options": [
 				{ "text": "Let's open it up.", "hide_when": { "accomplishment": { "horns_dig_joined": 1 } }, "effects": [ { "accomplishment": "horns_dig_joined" } ], "end": true },
 				{ "text": "Just passing through.", "end": true },
@@ -14,7 +14,7 @@
 		"camp_fourth": {
 			"_comment": "#349 four-member reading, camp side. The option is ungated and openable on a first interact, so it asserts NO observation (the earlier 'fourth bedroll' named `dig_camp_remnant`, out of window here). It agrees with a prop that IS live: `dig_camp_notes` shares the hours out EVEN across four names. SPOILER RULE: no door named.",
 			"speaker": "Ceria",
-			"text": "Pisces. He's ours, whatever he tells you about invoices. Four names on the roster and the hours split four ways — he takes his, he just takes them in the city with a treatise open, which is exactly where I want him until there's something down here worth reading. Three of us hold the shovels. That was the trade, and he argued it well.",
+			"text": "Pisces. He's ours. He bills the team by invoice, and the roster carries four names with the hours split four ways. He takes his in the city with a treatise open, which is exactly where I want him until there's something down here worth reading. Three of us hold the shovels. That was the trade, and he argued it well.",
 			"options": [
 				{ "text": "Back to the camp rules.", "goto": "camp_hub" },
 				{ "text": "Fair enough.", "end": true }

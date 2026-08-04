@@ -7,6 +7,6 @@
 			{ "text": "Stand aside. I've killed things bigger than your whole warband. (Warrior)", "requires": { "class": { "warrior": 1 } }, "effects": [ { "accomplishment": "street_cleared" }, { "accomplishment": "persuaded_someone" }, { "accomplishment": "goblins_spared" }, { "remove_entity": "goblin_encounter_2" } ], "goto": "backdown" },
 			{ "text": "(Back away slowly.)", "effects": [ { "accomplishment": "goblin_left_in_peace" }, { "accomplishment": "goblins_spared" } ], "end": true }
 		] },
-		"backdown": { "speaker": "Goblin Warband", "text": "A long pause. The lead goblin sniffs, spits, and waves the others off the road. They keep their eyes on you until the corner.", "options": [ { "text": "Move on.", "end": true } ] }
+		"backdown": { "speaker": "Goblin Warband", "text": "A long pause. The lead goblin sniffs, then spits sideways. A wave, and the others clear the road. They keep their eyes on you until the corner.", "options": [ { "text": "Move on.", "end": true } ] }
 	}
 }

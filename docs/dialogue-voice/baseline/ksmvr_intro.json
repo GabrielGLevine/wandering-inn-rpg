@@ -1,0 +1,56 @@
+{
+ "facts": {
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Ksmvr"
+   ]
+  },
+  "$.nodes.hub.text": {
+   "brackets": [
+    "[Necromancer]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Ceria",
+    "Hammerad",
+    "Horns",
+    "Ksmvr",
+    "Necromancer"
+   ]
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Ceria"
+   ]
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "hub": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Ksmvr",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "vault_construct_downed": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   }
+  },
+  "start": "hub"
+ }
+}

@@ -120,11 +120,11 @@
    "timeout_sec": 5,
    "payload_contains": {
     "speaker": "The Hunter",
-    "text": "Here. Hoof marks come up, stop, turn, and go back, all along one line you can't see from standing. Not one print past it in a mile of treeline. Whatever's holding them isn't teeth. Teeth leave a mess."
+    "text": "Here. Hoof marks come up, stop, turn, go back. Same line, every time. You can't see it from standing. Not one print past it in a mile of treeline. Teeth would've left a mess. There's no mess."
    }
   },
   {
-   "_comment": "thicket_sign: 0 'Then we move the fences, not the deer.' banks herd_rerouted (goto thicket_rerouted, not end), 1 \"I'll walk the line myself.\". Take 0.",
+   "_comment": "thicket_sign: 0 'Then the fences move.' banks herd_rerouted (goto thicket_rerouted, not end), 1 \"I'll walk the line myself.\". Take 0.",
    "action": "wait_frames",
    "frames": 3
   },

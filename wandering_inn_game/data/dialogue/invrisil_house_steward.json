@@ -4,7 +4,7 @@
  "nodes": {
   "waiting": {
    "speaker": "A Woman Who Came in a Carriage",
-   "text": "Sit if you like. I am not waiting for you and I am not waiting for the house. I am waiting for a question to be answered, and I would rather do that in a warm room than in a cold one.",
+   "text": "Sit if you like. My waiting has nothing to do with you, or with this house. A question went out in her hand. When its answer exists, I will carry it back. Until then the fire here is a good one.",
    "text_variants": [
     {
      "requires": {
@@ -12,7 +12,7 @@
        "seal_block_settled": 1
       }
      },
-     "text": "You have something in your coat that is the wrong shape for a coat. Take the chair. Nobody in this house has ever once looked at what is on the table."
+     "text": "You are carrying something with corners in your coat. Take the chair. Nobody in this house looks at what a guest sets on the table."
     },
     {
      "requires": {
@@ -20,7 +20,7 @@
        "house_answer_given": 1
       }
      },
-     "text": "The card was answered, in her own hand, which was the answer. My mistress asked only whether the name was being sold or taken. It was being sold. That is a different letter to write and she has written it."
+     "text": "She answered the card in her own hand. My mistress asked only whether the name was being sold or taken. It was being sold. The second letter went out the same evening, in her own hand again."
     }
    ],
    "options": [
@@ -68,7 +68,7 @@
      "goto": "answered"
     },
     {
-     "text": "\"He had two men. He has neither, and I have the block.\"",
+     "text": "\"I went through his two men and took the block.\"",
      "requires": {
       "accomplishment": {
        "block_taken": 1
@@ -93,17 +93,17 @@
   },
   "who": {
    "speaker": "A Woman Who Came in a Carriage",
-   "text": "A house sent me. You have been in this city long enough to know there is only one answer to that question worth giving and that nobody here gives it. I take a card out and I bring an answer back, and between those two things I sit somewhere warm and I am extremely dull.",
+   "text": "A house sent me. Which house is not mine to say, and you have been in this city long enough not to ask a servant twice. I take a card out and I bring an answer back, and between those two things I keep the carriage ready and I wait.",
    "options": [
     {
-     "text": "\"Dull is a whole profession here.\"",
+     "text": "\"There's a lot of that trade in this city.\"",
      "goto": "waiting"
     }
    ]
   },
   "answered": {
    "speaker": "A Woman Who Came in a Carriage",
-   "text": "Good. Then the name was being sold, not taken, and the lady kept enough of it to be worth the theft. That will go back exactly as you said it and not one word further. She is paid for her trouble and you are paid for yours, and neither of those is a favour. My mistress does not do favours. She does accounts, and she settles them the same week.",
+   "text": "Good. Then he was selling it, and nobody had to take it from him, and the lady kept enough of the name to be worth the theft. That will go back exactly as you said it and not one word further. She is paid for her trouble and you are paid for yours. My mistress does not do favours. She does accounts, and she settles them the same week.",
    "options": [
     {
      "text": "\"Then we're square.\"",

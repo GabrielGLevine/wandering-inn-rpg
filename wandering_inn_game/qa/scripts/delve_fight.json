@@ -3,131 +3,690 @@
  "fixture_save": "delve_fight_start",
  "starts_at_title": true,
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "street" },
-  { "action": "assert_state", "path": "classes.spellsword", "equals": 11 },
-
-  { "_comment": "== ACCEPT at Olesm (29,3) -- visible index 6. Olesm carries a real `talk_pool` (cisterns_reported's own stage bark, since this fixture's backbone includes it) that fires on the FIRST interact of the waking, BEFORE his conversation graph -- a first interact consumes it, the second opens olesm_intro for real (interact()'s documented talk_pool-then-conversation order).", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 6 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "quest_started", "payload_contains": { "id": "what_the_seal_kept" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "horns_delve_started" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "gold_changed", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "text": "The Watch wants eyes on the reopened gallery — proper eyes, not another guardsman who reports 'it is dark.' Five gold now, fifteen when you bring me something I can put in a report. The Guild is sending a Silver-rank team to meet you there." }, "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "gold", "equals": 45 },
-  { "action": "screenshot", "name": "00_accepted" },
-
-  { "_comment": "== teleport across the already-tested sewers/deep_tunnels stretch, landing beside warren_mouth (12,5) -- the SAME dungeon_peek precedent, a fresh move to establish real facing.", "action": "teleport", "map": "deep_tunnels", "cell": [12, 3] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "deep_tunnels" }, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 10 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [12, 4] },
-
-  { "_comment": "== the gallery reopens: horns_delve_started is banked, so warren_mouth's door_when now transitions instead of the old flavor toast.", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "The gallery floor slopes down past where the den used to be, into a chamber someone else has clearly been surveying." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "dungeon_approach" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "dungeon_approach" },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 6] },
-  { "action": "screenshot", "name": "01_gallery_reopened" },
-
-  { "_comment": "== find Ceria (7,5) -- row 6 is clear the whole way, bump up onto her occupied cell to face her.", "action": "move", "direction": "right", "steps": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [7, 6] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "text": "You're the one Olesm's paying to poke the gallery? Good. We're the ones the Guild's paying to make sure you come back out. Ceria Springwalker — Horns of Hammerad." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "text": "Rules are simple. Traps kill more adventurers than monsters do, so nobody touches anything shiny. That includes you." }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "horns_party_formed" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "what_the_seal_kept" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "text": "All right. Four of us on the roster, three of us actually walking in — Pisces bills from a distance. Try to keep up." }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "02_party_formed" },
-
-  { "_comment": "== into trapped_halls via the real new door pair.", "action": "move", "direction": "right", "steps": 6 },
-  { "action": "assert_state", "path": "player_cell", "equals": [13, 6] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "trapped_halls" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 7] },
-
-  { "_comment": "== FIGHT ROUTE: the snare (17,8) -- row 8 is clear the whole way. Interact fields no ally (solo), wins on the T4 build.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [2, 8] },
-  { "action": "move", "direction": "right", "steps": 14 },
-  { "action": "assert_state", "path": "player_cell", "equals": [16, 8] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "action": "combat_autoplay", "max_turns": 300 },
-  { "_comment": "the crate_fight/cisterns_fight idiom: combat_finished (the UI banner event, NOT the bare combat_resolved domain event) with a real animation-time timeout, THEN a confirm press dismisses the banner -- resolve_combat()'s on_victory bank (halls_cleared) fires off THAT press, not automatically.", "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 20 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "halls_cleared" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 5 },
-  { "action": "screenshot", "name": "03_snare_cleared" },
-
-  { "_comment": "== THE VAULT (18,6) -- halls_cleared now met (the encounter_when gate opens) and horns_party_formed already banked (ally_requires met): the FULL 4-body Horns party fields.", "action": "move", "direction": "up", "steps": 2 },
-  { "action": "assert_state", "path": "player_cell", "equals": [16, 6] },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [17, 6] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "combat_started", "timeout_sec": 5 },
-  { "_comment": "Issue #76: the arena-keyed music seam (data/audio.json's music_combat_vault, `combat_started`/{arena:vault}, first-match-wins ahead of the generic music_combat fallback) -- proves the vault boss actually gets its own escalated track, not the plain field-fight loop.", "action": "wait_for_event", "type": "audio_played", "payload_contains": { "id": "music_combat_vault" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "combat.combatants.ceria.alive", "equals": true },
-  { "action": "assert_state", "path": "combat.combatants.yvlon.alive", "equals": true },
-  { "action": "assert_state", "path": "combat.combatants.ksmvr.alive", "equals": true },
-  { "action": "combat_autoplay", "max_turns": 300 },
-  { "action": "wait_for_event", "type": "combat_finished", "payload_contains": { "victory": true }, "timeout_sec": 30 },
-  { "action": "assert_event_logged", "type": "windup_declared" },
-  { "_comment": "Issue #76: the windup mechanism's audio half -- skill_windup_tell fires alongside every windup_declared (slam is the only current grant), a distinct telegraph tell from the resolve-impact sound.", "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "skill_windup_tell" } },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "vault_construct_downed" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_combat_hidden", "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 5 },
-  { "action": "screenshot", "name": "04_vault_won" },
-
-  { "_comment": "== THE FIND beat: seal_kept_door (19,7), post-victory variant.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [17, 7] },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [18, 7] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "seal_kept_found" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "quest_beat_completed", "payload_contains": { "id": "what_the_seal_kept" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "The runes are the same. Not similar — the same hand, the same order, as the door in the inn's pantry." }, "timeout_sec": 5 },
-  { "action": "screenshot", "name": "05_seal_kept_found" },
-
-  { "_comment": "== REPORT: teleport back to Olesm, same visible index 6 (the accept option hid exactly as the report option revealed).", "action": "teleport", "map": "street", "cell": [29, 5] },
-  { "action": "wait_for_event", "type": "map_changed", "payload_contains": { "map": "street" }, "timeout_sec": 5 },
-  { "action": "wait_frames", "frames": 10 },
-  { "action": "move", "direction": "up", "steps": 1 },
-  { "action": "assert_state", "path": "player_cell", "equals": [29, 4] },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "move", "direction": "down", "steps": 6 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "gold_changed", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "seal_kept_reported" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "quest_completed", "payload_contains": { "id": "what_the_seal_kept" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "dialogue_node", "payload_contains": { "text": "A construct, a vault, and ANOTHER rune-door. Do you know what this does to my casualty projections? ...Nothing good. Here is your fifteen. Earned." }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "gold", "equals": 60 },
-  { "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "dialogue_ended", "timeout_sec": 5 },
-  { "action": "screenshot", "name": "06_reported" },
-  { "_comment": "Issue #76: this canonical's two real fights land at least one PC hit (empirically confirmed: rift_vermin_c/snare_ward_a connect on the T4 build) -- whole-run scan for the PC hurt bark (pc_hurt, Voice bus), the same coverage-map idiom inventory_loop uses for its own audio_played proofs.", "action": "assert_event_logged", "type": "audio_played", "payload_contains": { "id": "pc_hurt" } }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "street"
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.spellsword",
+   "equals": 11
+  },
+  {
+   "_comment": "== ACCEPT at Olesm (29,3) -- visible index 6. Olesm carries a real `talk_pool` (cisterns_reported's own stage bark, since this fixture's backbone includes it) that fires on the FIRST interact of the waking, BEFORE his conversation graph -- a first interact consumes it, the second opens olesm_intro for real (interact()'s documented talk_pool-then-conversation order).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "what_the_seal_kept"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "horns_delve_started"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "text": "The Watch wants eyes on the reopened gallery — proper eyes. The last guardsman down there filed three words: 'it is dark.' Five gold now, fifteen when you bring me something I can put in a report. The Guild is sending a Silver-rank team to meet you there."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 45
+  },
+  {
+   "action": "screenshot",
+   "name": "00_accepted"
+  },
+  {
+   "_comment": "== teleport across the already-tested sewers/deep_tunnels stretch, landing beside warren_mouth (12,5) -- the SAME dungeon_peek precedent, a fresh move to establish real facing.",
+   "action": "teleport",
+   "map": "deep_tunnels",
+   "cell": [
+    12,
+    3
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "deep_tunnels"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    4
+   ]
+  },
+  {
+   "_comment": "== the gallery reopens: horns_delve_started is banked, so warren_mouth's door_when now transitions instead of the old flavor toast.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The gallery floor slopes down past where the den used to be, into a chamber someone else has clearly been surveying."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "dungeon_approach"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "dungeon_approach"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    6
+   ]
+  },
+  {
+   "action": "screenshot",
+   "name": "01_gallery_reopened"
+  },
+  {
+   "_comment": "== find Ceria (7,5) -- row 6 is clear the whole way, bump up onto her occupied cell to face her.",
+   "action": "move",
+   "direction": "right",
+   "steps": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "text": "You're the one Olesm's paying to poke the gallery? Good. The Guild sent us along to make sure you come back out. Ceria Springwalker — Horns of Hammerad."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "text": "Rules are simple. Traps kill more adventurers than monsters do, so nobody touches anything shiny. See something worth grabbing, you call me over and you wait."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "horns_party_formed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "what_the_seal_kept"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "text": "All right. Four of us on the roster, three of us actually walking in — Pisces bills from a distance. Try to keep up."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "02_party_formed"
+  },
+  {
+   "_comment": "== into trapped_halls via the real new door pair.",
+   "action": "move",
+   "direction": "right",
+   "steps": 6
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "trapped_halls"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    7
+   ]
+  },
+  {
+   "_comment": "== FIGHT ROUTE: the snare (17,8) -- row 8 is clear the whole way. Interact fields no ally (solo), wins on the T4 build.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    2,
+    8
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 14
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    8
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "_comment": "the crate_fight/cisterns_fight idiom: combat_finished (the UI banner event, NOT the bare combat_resolved domain event) with a real animation-time timeout, THEN a confirm press dismisses the banner -- resolve_combat()'s on_victory bank (halls_cleared) fires off THAT press, not automatically.",
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 20
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "halls_cleared"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "03_snare_cleared"
+  },
+  {
+   "_comment": "== THE VAULT (18,6) -- halls_cleared now met (the encounter_when gate opens) and horns_party_formed already banked (ally_requires met): the FULL 4-body Horns party fields.",
+   "action": "move",
+   "direction": "up",
+   "steps": 2
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    16,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    6
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Issue #76: the arena-keyed music seam (data/audio.json's music_combat_vault, `combat_started`/{arena:vault}, first-match-wins ahead of the generic music_combat fallback) -- proves the vault boss actually gets its own escalated track, not the plain field-fight loop.",
+   "action": "wait_for_event",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "music_combat_vault"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.ceria.alive",
+   "equals": true
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.yvlon.alive",
+   "equals": true
+  },
+  {
+   "action": "assert_state",
+   "path": "combat.combatants.ksmvr.alive",
+   "equals": true
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "payload_contains": {
+    "victory": true
+   },
+   "timeout_sec": 30
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "windup_declared"
+  },
+  {
+   "_comment": "Issue #76: the windup mechanism's audio half -- skill_windup_tell fires alongside every windup_declared (slam is the only current grant), a distinct telegraph tell from the resolve-impact sound.",
+   "action": "assert_event_logged",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "skill_windup_tell"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "vault_construct_downed"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "04_vault_won"
+  },
+  {
+   "_comment": "== THE FIND beat: seal_kept_door (19,7), post-victory variant.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    17,
+    7
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    18,
+    7
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "seal_kept_found"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "what_the_seal_kept"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The runes are the same. Not similar — the same hand, the same order, as the door in the inn's pantry."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "05_seal_kept_found"
+  },
+  {
+   "_comment": "== REPORT: teleport back to Olesm, same visible index 6 (the accept option hid exactly as the report option revealed).",
+   "action": "teleport",
+   "map": "street",
+   "cell": [
+    29,
+    5
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "street"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 10
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    29,
+    4
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 6
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "gold_changed",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "seal_kept_reported"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "what_the_seal_kept"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "text": "A construct. A vault. Another rune-door — another. Do you know what this does to my casualty projections? Nothing good. Here is your fifteen. Earned."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "gold",
+   "equals": 60
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "06_reported"
+  },
+  {
+   "_comment": "Issue #76: this canonical's two real fights land at least one PC hit (empirically confirmed: rift_vermin_c/snare_ward_a connect on the T4 build) -- whole-run scan for the PC hurt bark (pc_hurt, Voice bus), the same coverage-map idiom inventory_loop uses for its own audio_played proofs.",
+   "action": "assert_event_logged",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "pc_hurt"
+   }
+  }
  ]
 }

@@ -159,7 +159,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Hub: heard_thicket_keeps hides the start row and thicket_cleared opens the CLEARED report. 0 '[Ask him to come with you.]', 1 'Just passing through.', 2 \"Whatever was denning on the line isn't anymore.\". Take 2.",
+   "_comment": "Hub: heard_thicket_keeps hides the start row and thicket_cleared opens the CLEARED report. 0 '[Ask him to come with you.]', 1 'Just passing through.', 2 \"The den's empty. Whatever it was.\". Take 2.",
    "action": "move",
    "direction": "down",
    "steps": 2

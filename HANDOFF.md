@@ -4,6 +4,117 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
+## DONE (2026-08-04): dialogue voice pass — SHIPPED via `voice-pass` branch PR
+All 71 dialogue files de-AI'd per the 2026-08-03 critique. Six waves
+(Fable bible/cards → 36-cluster rewrite → cold-reader detection →
+Fable reconciliation → fix wave → Fable terminal adjudication SHIP).
+Corpus: antithesis 62→2, typography tells 0, worst-lines dead, barks
+reshaped. QA: five repair rounds re-pinned ~200 verbatim-prose waits
+across ~90 script files + sync'd 3 map-embedded duplicates; sweep
+205/205, playtest clean. Artifacts under docs/dialogue-voice*.
+Follow-ups filed: #388 (map talk_pools out of scope), #370-372
+(user playtest notes). VISUAL-LOG: center-panel footer margin watch.
+Gate script stays: qa/scripts/dialogue_voice_gate.py guards future
+dialogue edits (snapshot baseline committed).
+
+## ARCHIVED RUNNING BLOCK (2026-08-03 evening): dialogue voice pass, branch `voice-pass`
+De-AI rewrite of all 71 dialogue files per external critique
+(docs/dialogue-voice/critique-2026-08-03.md). Spec + plan in
+docs/superpowers/{specs,plans}/2026-08-03-dialogue-voice-pass*.
+DONE: Tasks 1-6 — gate script (qa/scripts/dialogue_voice_gate.py,
+self-testing; snapshot baseline committed), 36-cluster manifest,
+Fable bible + 36 cards (docs/dialogue-voice-bible.md, -cards/),
+W2 rewrite (36 sibling-blind agents, 288 nodes, 68 files changed),
+W3 final gate CLEAN (anti=6/30), W4 cold-reader detection
+(report-w4.json: 52/71 FAIL — typography dead, residue = button
+placement/density tell 2, 4 unsanctioned sentiment-deflects, smith
+reveal leak, bark template x3; several hits are bible-§5 sanctioned
+keeps the auditor can't know). NEXT (exact steps + verbatim prompts:
+docs/dialogue-voice/W5-QUEUE.md): Fable reconciliation ruling →
+w5-directive.md → W5 cluster wave → gate stays CLEAN → sampled
+re-detect → W6 close per plan Task 8. SESSION WOUND DOWN at
+WINDDOWN tier (session 71%, burn-rate); background watcher polls
+until OK (post-reset ~4h), resume from W5-QUEUE Step 1.
+CHOICE-LOG "Voice pass" block has 6 rulings. Task 7a DONE:
+Fable reconciliation committed (w5-directive.md, 50 REAL in 29
+cluster orders); W5 wave queued behind session reset (~60m),
+watcher auto-resumes.
+Unrelated: filed #370 (Relc front-on first meeting), #371 (inn
+one-party-at-a-time canonical groups), #372 (Floodplains
+tutorializing defeat text) from user playtest notes.
+
+### Board hygiene (2026-08-04) — martial picks DECIDED, orphaned deferrals filed
+User directive: get the martial work on the board so it isn't lost.
+Found: the martial exploration [Skills] doc was tracked in NO issue —
+design doc + CHOICE-LOG rulings + morning-queue item only, invisible to
+`gh issue list`, and the largest unscheduled body of work on the project.
+Picks MADE under wave-autonomy (all revocable, rationale in CHOICE-LOG
+"2026-08-04 — board hygiene"): **#380** wave-1 = [Even Footing],
+[Greater Strength], [Broader Shoulders], [Durable Picks], [Bar Fighting]
++ the [Ice Floor] grant (four data-only; Even Footing is one passive
+cell-class read; pairs with Ice Floor deliberately — mage makes the ice,
+martial crosses it). Split on distinct blockers: **#381** [Basic Repair]
+(needs #348 slice 2), **#382** [Rope Work] (INVENTED name, only item
+still wanting a user ACK), **#383** [Flame Jet]→corpse (four-part
+package; yield can't be a table row per spec §6). Tier C stays behind
+#335, unchanged. Closes v018-close rulings #8 and #9.
+**#384** files three v0.18-close items that were deferred "to the board"
+and never actually filed: #360 extreme-flip triage, ai_kit-stratified
+parity envelope (until it exists there is NO class-balance gate, only
+monotonicity), W3 acts.json row.
+Morning-queue item 1 struck through — it no longer blocks.
+TRAP for anyone reading the martial doc: cite skills by NAME. Its `#N`
+row numbers drift between its own sections AND read as GitHub issue refs
+without being them (doc "#19 [Detect Flaw]" is not GH#19). Only #348 and
+#335 in that doc are real issue numbers.
+PROCESS: "deferred to the board" is not a filing. Two waves produced six
+such items and zero issues. A close isn't done until every DEFERRED/board
+line in its adjudication block has an issue number beside it.
+
+### Blind machine-playtest triage (2026-08-03) — #373-#379 filed, user takes next wave
+Four blind browser-agent reports (v0.16.1, 2026-08-02 + three legs
+2026-08-03). Every claim re-verified against HEAD before filing; the
+already-fixed and the agent-artifact halves were dropped, not filed.
+**#373 (blocker, S, successor-ready)** — combat's empty-target mode is
+sticky: `_input_target` (combat_screen.gd:1017-1032) swallows movement
+actions and `targeting_controller.enter()` never auto-cancels on an empty
+candidate list, so Attack-with-no-target parks the player in a modal state
+that eats every key but Esc. ONE bug behind both reported symptoms
+("movement fails silently" + "no target in reach"); ~8 repros across three
+sessions; the agent's zone-of-control theory is wrong.
+**#374 (bug, S, successor-ready — REWRITTEN 2026-08-03 on user ruling)** —
+the ambush gating Liscor is INTENDED; the original gate-geometry framing
+was wrong and is withdrawn. Real defect: Continue-after-Defeat restores
+the `auto_pre_combat` slot written at COMBAT_STARTED (game.gd:82-86 →
+combat_screen.gd:946), which is BY CONSTRUCTION a cell inside the
+encounter's trigger radius — so the next step re-fires the fight you just
+lost. Also explains the "respawn moves between deaths" report (the slot is
+rewritten per fight; deterministic, but unnamed). Fix seam:
+`warded_encounters` (wi_game.gd:72, checked :368) gains an exit-clearing
+entry on defeat load — wake where you fell, encounter stays live, walking
+away works first try. Lands WITH #372 (copy half of the same beat).
+**#375 (S)** —
+`inn_sign` at [6,6] blocks a third of the GH#185-widened facade; move to
+[5,6]. Carries a stale-comment one-liner (world.gd:148 claims
+clamped-follow is unexercised; floodplains 40x26 exercises it).
+**#376 (art)** — `your_bed` and `inn_chest` read as each other; BOTH
+playtests made the identical inversion, and v0.17's relc_spar toast now
+points at "bed" explicitly. Directive case: tint-is-not-disambiguation.
+**#377 (S)** — pause_menu builds no scrim; combat HP text bleeds through
+"Abandon to Last Save". **#378 (M)** — seven Serve options gate on
+`hot_meal`, whose only producer needs `basic_cooking`; same issue carries
+the three-cauldrons-one-silhouette tint debt the entity comment admits.
+**#379 (S, copy)** — Resonance is shipped/save-persisted/sleep-grown and
+explained nowhere; open question in all four reports.
+Already fixed, do NOT re-open: save-less Continue (greyed), sleep-is-the-verb
+signposting (relc_spar toast), journal scroll (#216 slice 2), unlabelled
+creation cards (deliberate, hotfix #3), single-tile inn door (GH#185).
+Agent artifacts, discounted with evidence: missable toasts (`_toast_seconds`
+scales; 0.4s cap is QA-mode only), "attack only works orthogonally"
+(`is_adjacent` is Chebyshev, diagonals included), walked-off-screen past the
+map edge (camera clamp is correct; the agent admits it could not identify
+its own sprite).
+
 ## Current state (2026-08-03, overnight session close — v0.17.0 SHIPPED, v0.18.0 closing)
 **v0.17.0 TAGGED + Release/Pages GREEN. v0.18 wave-1 train COMPLETE
 (#364-#368, five lanes, 20 agents, dual adversarial lenses), close in

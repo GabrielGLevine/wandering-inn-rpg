@@ -1,0 +1,194 @@
+{
+ "facts": {
+  "$.nodes.banter.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.banter.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.banter.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.bought.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.bought.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.bought.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [
+    "7"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [
+    "7"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [
+    "10"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Pallass"
+   ]
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "City",
+    "Crafts",
+    "Gnoll",
+    "Pallass"
+   ]
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Wave D-1 (#155): Xif's 'Cunning Crafts' stall. Voice: friendly, distractible, cost-minded, 'I am a City Gnoll, if anyone asks.' Shop is haggle-FALSE (Pallass civic doctrine -- posted prices, final). Sells components + a potion. ONE Saliss banter name-drop (the 'naked lunatic' line), NEVER near Onieva or identity. His [Perfect Reduction]/[Poison Immunity] stay dialogue color, never player grants.",
+  "nodes": {
+   "banter": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Xif",
+    "text": "\u00a7"
+   },
+   "bought": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Xif",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "effects": [
+       {
+        "gold": -7
+       },
+       {
+        "item": "solvent_phial"
+       },
+       {
+        "accomplishment": "bought_from_xif"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 7
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -7
+       },
+       {
+        "item": "mineral_salts"
+       },
+       {
+        "accomplishment": "bought_from_xif"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 7
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -10
+       },
+       {
+        "item": "mending_draught"
+       },
+       {
+        "accomplishment": "bought_from_xif"
+       }
+      ],
+      "goto": "bought",
+      "requires": {
+       "gold": 10
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "banter",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Xif",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "bought_from_xif": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   }
+  },
+  "start": "hub"
+ }
+}

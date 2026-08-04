@@ -361,7 +361,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Kitchen's slowing down for the night, but the door's not locked on you. Sit, stay warm, and don't let the wind convince you the walk back is a good idea."
+    "text": "Kitchen's slowing down for the night, but the door's not locked on you. Sit, stay warm, and think hard before you try the walk back in that wind."
    },
    "timeout_sec": 5
   },

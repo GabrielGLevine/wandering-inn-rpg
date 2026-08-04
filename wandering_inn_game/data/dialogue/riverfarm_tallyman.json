@@ -3,7 +3,7 @@
  "nodes": {
   "hub": {
    "speaker": "The Tallyman",
-   "text": "Mill's yours to walk. Mind the wheel pit; it's deeper than it looks and twice as unfriendly.",
+   "text": "Mill's yours to walk. Mind the wheel pit. Two men have gone down it since spring, and one of them was me.",
    "text_variants": [
     {
      "requires": {
@@ -37,21 +37,21 @@
   },
   "tally_walk": {
    "speaker": "The Tallyman",
-   "text": "Right. Barley in, barley out, household by household. Every column adds but one, and that one's been short three seasons running and getting shorter.",
+   "text": "Right. Barley in, barley out, household by household. Every column adds but one. That one's been short three seasons running, and it's getting shorter.",
    "options": [
     {
      "text": "Which household?",
      "goto": "tally_name"
     },
     {
-     "text": "Could be the count, not the crop.",
+     "text": "Could be the count's off and the crop's fine.",
      "goto": "tally_count"
     }
    ]
   },
   "tally_count": {
    "speaker": "The Tallyman",
-   "text": "Four counts, and the last one with the headman's own stick alongside mine. It isn't the count. It's the crop.",
+   "text": "Four counts, and the last one with the headman's own stick alongside mine. The stick came out the same as my tally, all the way down the column. If the count were wrong, the stick would have caught it. So it's the crop.",
    "options": [
     {
      "text": "Then whose crop?",
@@ -76,7 +76,7 @@
   },
   "tally_truth": {
    "speaker": "The Tallyman",
-   "text": "Three seasons of it. Tell the headman gently or don't tell him at all. He's a fair man on a good day and this is not one of his good days.",
+   "text": "Three seasons of it. Tell the headman gently or don't tell him at all. He's a fair man on a good day. He has not had one lately.",
    "options": [
     {
      "text": "Gently, then.",

@@ -1,0 +1,1485 @@
+{
+ "facts": {
+  "$.nodes.briefing.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.briefing.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.briefing.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor",
+    "Relc",
+    "Take"
+   ]
+  },
+  "$.nodes.chess.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.chess.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.chess.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.chess.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.chess_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.chess_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.chess_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Council"
+   ]
+  },
+  "$.nodes.cisterns.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cisterns.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cisterns.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch",
+    "Zevara"
+   ]
+  },
+  "$.nodes.cisterns.options[3].text": {
+   "brackets": [
+    "[Appraise Foe]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Appraise",
+    "Foe"
+   ]
+  },
+  "$.nodes.cisterns.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cisterns.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cisterns.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cisterns.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cisterns.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cisterns.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.cisterns.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cisterns.text_variants[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Council"
+   ]
+  },
+  "$.nodes.cisterns_brief.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cisterns_brief.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cisterns_brief.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Dungeon",
+    "Watch"
+   ]
+  },
+  "$.nodes.cisterns_done.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.nodes.cisterns_done.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Council"
+   ]
+  },
+  "$.nodes.cisterns_intel.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.cisterns_intel.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Council",
+    "Watch"
+   ]
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[10].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[11].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.hub.options[12].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[13].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [
+    "[Appraise Foe]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Appraise",
+    "Foe",
+    "What"
+   ]
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[6].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.nodes.hub.options[8].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.nodes.hub.options[9].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Council"
+   ]
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [
+    "[Tactician]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Tactician"
+   ]
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lism_errand.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lism_errand.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.lism_errand.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_ambition.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_ambition.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_ambition.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_ambition.text": {
+   "brackets": [
+    "[Strategist]",
+    "[Tacticians]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Strategist",
+    "Tacticians"
+   ]
+  },
+  "$.nodes.olesm_ambition_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_ambition_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_ambition_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_invite.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_invite.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.nodes.olesm_chess_invite.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Tuesday"
+   ]
+  },
+  "$.nodes.olesm_chess_loss.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.nodes.olesm_chess_loss.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_loss.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_puzzle.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_puzzle.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_puzzle.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_puzzle.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_puzzle.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_setup.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_setup.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_setup.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_win.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.nodes.olesm_chess_win.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_win.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_wrong_pieces.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_wrong_pieces.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_wrong_pieces.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_wrong_queen.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_wrong_queen.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_chess_wrong_queen.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_doubt.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_doubt.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_doubt.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_doubt.text": {
+   "brackets": [
+    "[Tactician]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Council",
+    "Liscor",
+    "Tactician"
+   ]
+  },
+  "$.nodes.olesm_doubt_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.olesm_doubt_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.nodes.olesm_doubt_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.resolution.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.nodes.resolution.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.resolution.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Council",
+    "Raskghar"
+   ]
+  },
+  "$.nodes.resonance.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.resonance.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.resonance.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.resonance.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor"
+   ]
+  },
+  "$.nodes.resonance_two.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.resonance_two.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.resonance_two.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal_bounty_pitch.options[0].text": {
+   "brackets": [
+    "[Charming Smile]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Charming",
+    "Smile",
+    "You"
+   ]
+  },
+  "$.nodes.seal_bounty_pitch.options[1].text": {
+   "brackets": [],
+   "digits": [
+    "12"
+   ],
+   "propnouns": []
+  },
+  "$.nodes.seal_bounty_pitch.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal_bounty_pitch.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Gnoll"
+   ]
+  },
+  "$.nodes.seal_bounty_posted.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal_bounty_posted.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.nodes.seal_bounty_posted.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.nodes.seal_bounty_posted.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.nodes.seal_kept_report.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal_kept_report.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.nodes.seal_kept_report.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal_survey_offer.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal_survey_offer.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal_survey_offer.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild",
+    "Silver",
+    "Watch"
+   ]
+  }
+ },
+ "skeleton": {
+  "nodes": {
+   "briefing": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "chess": {
+    "options": [
+     {
+      "goto": "chess_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "chess_two": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "cisterns": {
+    "options": [
+     {
+      "effects": [
+       {
+        "quest": "cisterns"
+       },
+       {
+        "accomplishment": "heard_about_cisterns"
+       }
+      ],
+      "goto": "cisterns_brief",
+      "hide_when": {
+       "accomplishment": {
+        "heard_about_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "cisterns_reported"
+       },
+       {
+        "accomplishment": "commended_by_olesm"
+       },
+       {
+        "gold": 6
+       }
+      ],
+      "goto": "cisterns_done",
+      "hide_when": {
+       "accomplishment": {
+        "cisterns_reported": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "cleared_the_nest": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "cisterns_reported"
+       },
+       {
+        "accomplishment": "commended_by_olesm"
+       },
+       {
+        "gold": 6
+       }
+      ],
+      "goto": "cisterns_done",
+      "hide_when": {
+       "accomplishment": {
+        "cisterns_reported": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "watch_swept_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "resolved_the_cisterns"
+       },
+       {
+        "accomplishment": "cisterns_reported"
+       },
+       {
+        "accomplishment": "commended_by_olesm"
+       },
+       {
+        "gold": 6
+       }
+      ],
+      "goto": "cisterns_intel",
+      "hide_when": {
+       "accomplishment": {
+        "cisterns_reported": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "scouted_the_nest": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "heard_about_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "cleared_the_nest": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "watch_swept_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "scouted_the_nest": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "cisterns_reported": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "cisterns_brief": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "cisterns_done": {
+    "_comment": "GH#152: the runner beat here is the PRODUCER of watch_runner_pointed (banked in the report options) -- the previously zero-producer gate on Zevara's summons, which dead-ended the whole Raskghar arc / Act III. GH#152-FOLLOWUP: the runner POINTER is code-banked at the sleep beat once Act II conditions hold (_maybe_fire_tremor_pointer, sleep_beat.gd -- STRUCTURAL_LITERALS means code-banked; both the #152 scout and controller missed this). Do NOT bank watch_runner_pointed here: dialogue banks bypassed the deliberate act pacing (shipped briefly in #153, reverted same day). Legibility of the pointer lives in the #148 lattice (Erin/Olesm/Krshia relay lines on watch_runner_pointed).",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "cisterns_intel": {
+    "_comment": "GH#152: the runner beat here is the PRODUCER of watch_runner_pointed (banked in the report options) -- the previously zero-producer gate on Zevara's summons, which dead-ended the whole Raskghar arc / Act III. GH#152-FOLLOWUP: the runner POINTER is code-banked at the sleep beat once Act II conditions hold (_maybe_fire_tremor_pointer, sleep_beat.gd -- STRUCTURAL_LITERALS means code-banked; both the #152 scout and controller missed this). Do NOT bank watch_runner_pointed here: dialogue banks bypassed the deliberate act pacing (shipped briefly in #153, reverted same day). Legibility of the pointer lives in the #148 lattice (Erin/Olesm/Krshia relay lines on watch_runner_pointed).",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "hub": {
+    "options": [
+     {
+      "goto": "chess",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "resonance",
+      "requires": {
+       "skill": "observe"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "cisterns",
+      "hide_when": {
+       "accomplishment": {
+        "heard_about_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "heard_olesm_briefing"
+       }
+      ],
+      "goto": "briefing",
+      "hide_when": {
+       "accomplishment": {
+        "heard_olesm_briefing": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_the_deep_tremor": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "heard_olesm_resolution"
+       }
+      ],
+      "goto": "resolution",
+      "hide_when": {
+       "accomplishment": {
+        "heard_olesm_resolution": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "cleared_the_warren": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "olesm_doubt",
+      "requires": {
+       "accomplishment": {
+        "cisterns_reported": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "olesm_ambition",
+      "requires": {
+       "accomplishment": {
+        "chatted_with_olesm": 3,
+        "cisterns_reported": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "olesm_chess_invite",
+      "hide_when": {
+       "accomplishment": {
+        "chess_with_olesm": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "chatted_with_olesm": 3,
+        "cisterns_reported": 1
+       },
+       "gold": 2
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "lism_errand",
+      "hide_when": {
+       "accomplishment": {
+        "completed_bounty_bounty_sewer_survey": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "accepted_bounty_bounty_sewer_survey": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "cisterns",
+      "hide_when": {
+       "accomplishment": {
+        "cisterns_reported": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_about_cisterns": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "quest": "what_the_seal_kept"
+       },
+       {
+        "accomplishment": "horns_delve_started"
+       },
+       {
+        "gold": 5
+       }
+      ],
+      "goto": "seal_survey_offer",
+      "hide_when": {
+       "accomplishment": {
+        "horns_delve_started": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "post_game": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": 15
+       },
+       {
+        "accomplishment": "seal_kept_reported"
+       }
+      ],
+      "goto": "seal_kept_report",
+      "hide_when": {
+       "accomplishment": {
+        "seal_kept_reported": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "seal_kept_found": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "Act V beat 3, THE TALK PATH (#270), paying off his own shipped seal_kept_report line. Gated on the ward fact alone -- by which route the player learned it is not Olesm's business -- and hidden once the seal is settled by any path. Appended LAST: the gate counter is Act V's own, so no shipped fixture sees this row.",
+      "goto": "seal_bounty_pitch",
+      "hide_when": {
+       "accomplishment": {
+        "seal_resolved": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "read_the_feeding_ward": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "phase": [
+        "dusk",
+        "night"
+       ]
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "class": {
+        "tactician": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "heard_olesm_briefing": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "cleared_the_warren": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "seal_kept_reported": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "lism_errand": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "olesm_ambition": {
+    "options": [
+     {
+      "goto": "olesm_ambition_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "olesm_ambition_two": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "olesm_chess_invite": {
+    "options": [
+     {
+      "goto": "olesm_chess_setup",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "olesm_chess_loss": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "olesm_chess_puzzle": {
+    "options": [
+     {
+      "goto": "olesm_chess_wrong_pieces",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "olesm_chess_wrong_queen",
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "chess_with_olesm"
+       },
+       {
+        "gold": 2
+       }
+      ],
+      "goto": "olesm_chess_win",
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "chess_with_olesm"
+       },
+       {
+        "gold": -2
+       }
+      ],
+      "goto": "olesm_chess_loss",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "olesm_chess_setup": {
+    "options": [
+     {
+      "goto": "olesm_chess_puzzle",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "olesm_chess_win": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "olesm_chess_wrong_pieces": {
+    "options": [
+     {
+      "goto": "olesm_chess_puzzle",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "olesm_chess_wrong_queen": {
+    "options": [
+     {
+      "goto": "olesm_chess_puzzle",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "olesm_doubt": {
+    "options": [
+     {
+      "goto": "olesm_doubt_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "olesm_doubt_two": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "resolution": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "resonance": {
+    "options": [
+     {
+      "goto": "resonance_two",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "resonance_two": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "seal_bounty_pitch": {
+    "_comment": "The witch pattern: a Skill leg (visible-LOCKED) and a priced alternate (grey-visible when broke), both landing on the same posted outcome, plus an always-available exit. The Skill does not skip the negotiation -- it IS the negotiation, and it lands on the quest's last beat, not past it. REWARD ADJUDICATION: the posting is FICTION, not a bounties.json row -- a real row would mint accepted_/completed_bounty counters outside this wave's frozen list and re-pin every board canonical; the mechanical payoff is the quest's own resolution_paths grant.",
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "seal_kept_fed"
+       },
+       {
+        "accomplishment": "seal_resolved"
+       }
+      ],
+      "goto": "seal_bounty_posted",
+      "requires": {
+       "skill": "charming_smile"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "gold": -12
+       },
+       {
+        "accomplishment": "seal_kept_fed"
+       },
+       {
+        "accomplishment": "seal_resolved"
+       }
+      ],
+      "goto": "seal_bounty_posted",
+      "requires": {
+       "gold": 12
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "seal_bounty_posted": {
+    "_comment": "A seal_opened arm, because the FIGHT fork's no-dead-end hatch lets a player who broke the seal and could not finish the warden still fund the keeper. hide_when is FORBIDDEN here -- hiding the arm would close the hatch.",
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "seal_opened": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "seal_kept_report": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   },
+   "seal_survey_offer": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Olesm",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}

@@ -365,7 +365,7 @@
    }
   },
   {
-   "_comment": "flood_reported_worked: 0 'It counts better in daylight.' ends.",
+   "_comment": "flood_reported_worked: 0 'Easier to count in daylight.' ends.",
    "action": "wait_frames",
    "frames": 3
   },

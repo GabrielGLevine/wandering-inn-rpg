@@ -4,7 +4,7 @@
  "nodes": {
   "commission": {
    "speaker": "A Lady with a Ring Box",
-   "text": "I have been sitting in a paper shop for an hour, because a paper shop is the only room on this street where a woman may hold something closed and nobody asks her to open it.",
+   "text": "I have been sitting in a paper shop for an hour. On this street it is the one room where a woman may hold something closed and nobody asks her to open it. You are the first person to stop at this table.",
    "text_variants": [
     {
      "requires": {
@@ -12,7 +12,7 @@
        "heirloom_commission_started": 1
       }
      },
-     "text": "You went, then. Sit down and tell me what he said, and please tell me the whole of it. I have had forty years of the polite half."
+     "text": "You went, then. Sit down and tell me what he said. Every word, please. People have been giving me the polite half of things for forty years."
     },
     {
      "requires": {
@@ -20,7 +20,7 @@
        "setting_commissioned": 1
       }
      },
-     "text": "It sits differently on the chain. I noticed before I looked. Thank you for the part of that which was not the silver."
+     "text": "It sits differently on the chain. I noticed before I looked. You were paid for the silver. Thank you for the remainder."
     },
     {
      "_comment": "#318. Every v0.18 variant gates on a counter no shipped fixture holds, so the pinned I1 canonicals can never match one (the text_variants-vs-pinned-base trap).",
@@ -29,7 +29,7 @@
        "house_card_shown": 1
       }
      },
-     "text": "I have not put the card down since it came and I have not answered it either. Both of those are being noticed by somebody, I expect."
+     "text": "I have not put the card down since it came. The answer I keep putting off. The corner of it is going soft where my thumb sits."
     },
     {
      "requires": {
@@ -183,7 +183,7 @@
   "terms_card": {
    "speaker": "A Lady with a Ring Box",
    "_comment": "The thread's premise, in her own voice: the second of the two assets her shipped `terms` node names is the one being spent.",
-   "text": "Somebody has, and it has been out in this city doing business without me for long enough that a woman who notices everything has noticed. I will not answer that card until I can say who. Start at the counter of this very shop. There is a scribe there who rents a blank seal by the hour and who has never once asked me how I am.",
+   "text": "Somebody has, and it has been out in this city doing business without me for long enough that a woman who notices everything has seen it. I will not answer that card until I can say who. Start at the counter of this very shop. There is a scribe there who rents a blank seal by the hour and who has never once asked me how I am.",
    "options": [
     {
      "text": "\"I'll start with the scribe.\"",
@@ -193,7 +193,7 @@
   },
   "the_name": {
    "speaker": "A Lady with a Ring Box",
-   "text": "A rented block and a good hand. I am not angry at him. I am forty years past being angry at the small ones, and he is very small. Take the block off whatever table it is sitting on and I will answer the card myself, in my own hand, which is a thing I have been putting off doing for a very long time.",
+   "text": "A rented block and a good hand. I am not angry at him. There were larger people to be angry at, forty years of them, and he is very small. Take the block off whatever table it is sitting on and I will answer the card myself, in my own hand, which is a thing I have been putting off doing for a very long time.",
    "options": [
     {
      "text": "\"It'll be off the table today.\"",
@@ -203,7 +203,7 @@
   },
   "after": {
    "speaker": "A Lady with a Ring Box",
-   "text": "She has not replied. She will not. That is not how any of it works and I would not have the first idea what to do with a reply if one came. What I have instead is a card in a drawer with my own name on the back of it, and the strange discovery that I would rather be noticed than left alone.",
+   "text": "She has not replied. She will not. That is not how any of it works and I would not have the first idea what to do with a reply if one came. What I have instead is a card in a drawer with my own name on the back of it. I have taken it out twice this morning already. I could not tell you why.",
    "options": [
     {
      "text": "\"That's a house asset too.\"",
@@ -238,7 +238,7 @@
   },
   "why_keep": {
    "speaker": "A Lady with a Ring Box",
-   "text": "Because she wore it to every hard thing she ever did and it never once let her down. That part was never glass. That is the only part of it that was ever real, and it lives in the setting, not the stone.",
+   "text": "Because she wore it to every hard thing she ever did and it never once let her down. The stone was glass for all forty of those years. It did not matter then and I will not let it start mattering now. I want the setting held properly. The stone can stay glass.",
    "options": [
     {
      "text": "\"Who's refusing the work?\"",
@@ -248,7 +248,7 @@
   },
   "terms": {
    "speaker": "A Lady with a Ring Box",
-   "text": "There is an enchanter with a bench in the alleys who will not touch a piece until somebody in the transaction tells him the truth about it. He is right to insist and I cannot be the one who does it. Twenty five gold when it is set. Do not be charming at him. My house has exactly two assets left: its name, and the habit people have of not looking past it. The enchanter may have the truth. He may not have the name.",
+   "text": "There is an enchanter with a bench in the alleys who will not touch a piece until somebody in the transaction tells him the truth about it. He is right to insist and I cannot be the one who does it. Twenty five gold when it is set. Do not be charming at him. My house is down to two assets. The name is one. The other is the habit people have of not looking past it. Tell him the truth of the stone and keep the name out of his order book.",
    "options": [
     {
      "text": "\"I'll tell him.\"",
@@ -258,7 +258,7 @@
   },
   "handover": {
    "speaker": "A Lady with a Ring Box",
-   "text": "Then it is done, and done in the open, which I did not expect and did not know I wanted. Here. My mother had a second piece, plain, honest, worth a tenth of the first and worn twice as often. I would rather it went to somebody who earned it than sat in a box being important.",
+   "text": "Then it is done, and done in the open, which I did not expect and did not know I wanted. Here. My mother had a second piece, plain, honest, worth a tenth of the first and worn twice as often. I would rather it went to somebody who earned it. It has spent long enough in the box.",
    "options": [
     {
      "text": "\"I'll take it.\"",
@@ -281,7 +281,7 @@
      "end": true
     },
     {
-     "text": "\"Keep it. The work was the payment.\"",
+     "text": "\"Keep it. I don't need paying for this.\"",
      "hide_when": {
       "accomplishment": {
        "setting_commissioned": 1

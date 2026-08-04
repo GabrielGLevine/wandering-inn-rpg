@@ -3,7 +3,7 @@
  "nodes": {
   "confront": {
    "speaker": "Stone Golems",
-   "text": "Two grey shapes flank a stall of unclaimed crates, carved plating catching the tier's flat light. Neither has moved in the time you've watched. Both turn to face you at once.",
+   "text": "Two grey shapes flank a stall of unclaimed crates, carved plating catching the tier's flat light. Neither has moved since you first looked. Both faces come around to you at the same moment, on the same silent hinge.",
    "options": [
     {
      "text": "[Strike first.]",

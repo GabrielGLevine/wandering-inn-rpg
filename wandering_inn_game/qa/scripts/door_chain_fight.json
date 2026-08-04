@@ -73,7 +73,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Mounted, hinged, and — observe — already holding a hop to Liscor's gate district without so much as a rune of encouragement. It works. Now let us see how far it can go."
+    "text": "Mounted and hinged. Observe — already holding a hop to Liscor's gate district, and nobody has offered it so much as a rune of encouragement. It works. The next test is range."
    },
    "timeout_sec": 5
   },
@@ -83,7 +83,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Options: [0 'How far CAN it go?', 1 'One thing at a time.']. This canonical takes the SHORT exit (index 1) -- horns_dig_flow takes index 0 and the door_mounting_far branch, so the two scripts cover both of the scene's exits, and both exits must bank the identical set.",
+   "_comment": "Options: [0 'How far can it actually go?', 1 'One thing at a time.']. This canonical takes the SHORT exit (index 1) -- horns_dig_flow takes index 0 and the door_mounting_far branch, so the two scripts cover both of the scene's exits, and both exits must bank the identical set.",
    "action": "move",
    "direction": "down",
    "steps": 1
@@ -198,7 +198,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "A door that changes its mind about where it goes. How very like this city — even the fixtures have moods. Three ways to satisfy my curiosity: bleed for it, talk me into caring, or prove you can read a ward without my help. Choose, and do not waste my morning."
+    "text": "A door that changes its mind about where it goes. How very like this city — even the fixtures have moods. You could bleed for my curiosity, if that is your instrument. You could attempt to talk me into caring, which has been done, rarely. Or prove you can read a ward without my help, and I will be forced to take you seriously. Choose, and do not waste my morning."
    },
    "timeout_sec": 5
   },
@@ -212,7 +212,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "Bleeding it is. Predictable, but effective. Go on, then. I shall be here, dry and uninjured, exactly as planned."
+    "text": "Bleeding it is. Predictable, but effective. Go on, then. I shall be here with my notes. Do try to leave the frame intact."
    },
    "timeout_sec": 5
   },

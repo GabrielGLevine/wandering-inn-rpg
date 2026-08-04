@@ -1,0 +1,516 @@
+{
+ "facts": {
+  "$.nodes.broker.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.broker.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.broker.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission_brief.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission_brief.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission_brief.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission_drift.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission_drift.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission_report.options[0].text": {
+   "brackets": [
+    "[The standard measures recovery. It's printed on his own notice.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "The"
+   ]
+  },
+  "$.nodes.commission_report.options[1].text": {
+   "brackets": [
+    "[Show her the billet you ran.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Show"
+   ]
+  },
+  "$.nodes.commission_report.options[2].text": {
+   "brackets": [
+    "[Tell her what happened to the calibration rig.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Tell"
+   ]
+  },
+  "$.nodes.commission_report.options[3].text": {
+   "brackets": [
+    "[Tell her the argument is settled.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Tell"
+   ]
+  },
+  "$.nodes.commission_report.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission_report.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission_settled.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission_settled.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission_settled.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission_settled.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.commission_settled.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[2].text": {
+   "brackets": [
+    "[Ask what the seal news cost the tier.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Ask"
+   ]
+  },
+  "$.nodes.hub.options[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[4].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[5].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor"
+   ]
+  },
+  "$.nodes.seal.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.seal.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.spec.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.spec.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.spec.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.standard.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.standard.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.standard.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Voice contract: docs/design/character-profiles.md 'Forge-Tier Smith' (proud/laconic; pride lives in the spec, never in her own skill). The forge tier is reachable ONLY through the elevator_pass_stamped lift, so the base hub IS the post-permit read and no permit-keyed variant is authored -- v0.15 T4.1, CHOICE-LOG.",
+  "nodes": {
+   "broker": {
+    "options": [
+     {
+      "goto": "commission_report",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "commission_report",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Smith",
+    "text": "\u00a7"
+   },
+   "commission": {
+    "options": [
+     {
+      "effects": [
+       {
+        "quest": "tempered_standards"
+       },
+       {
+        "accomplishment": "standards_commission_taken"
+       }
+      ],
+      "goto": "commission_brief",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Smith",
+    "text": "\u00a7"
+   },
+   "commission_brief": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "goto": "commission_drift",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Smith",
+    "text": "\u00a7"
+   },
+   "commission_drift": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Smith",
+    "text": "\u00a7"
+   },
+   "commission_report": {
+    "options": [
+     {
+      "_comment": "TALK arm. Banks standards_brokered and goes on to the resolution -- brokering is a separate act from reporting it, which is why it does not bank the terminal itself.",
+      "effects": [
+       {
+        "accomplishment": "standards_brokered"
+       }
+      ],
+      "goto": "broker",
+      "hide_when": {
+       "accomplishment": {
+        "standards_brokered": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "read_the_examination_standard": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "standards_tempered"
+       }
+      ],
+      "goto": "commission_settled",
+      "requires": {
+       "accomplishment": {
+        "temper_run": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "standards_tempered"
+       }
+      ],
+      "goto": "commission_settled",
+      "requires": {
+       "accomplishment": {
+        "golem_recalibrated": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "standards_tempered"
+       }
+      ],
+      "goto": "commission_settled",
+      "requires": {
+       "accomplishment": {
+        "standards_brokered": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Smith",
+    "text": "\u00a7"
+   },
+   "commission_settled": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Smith",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "golem_recalibrated": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "temper_run": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "standards_brokered": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "hub": {
+    "options": [
+     {
+      "goto": "spec",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "standard",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "seal",
+      "requires": {
+       "accomplishment": {
+        "seal_resolved": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "v0.16 P1 start. requires-hidden on saw_the_failed_temper (banked only by forge_reject_bin, which near_pallass never interacts), so pallass_walkthrough's 3-row hub pin and its index navigation are untouched.",
+      "goto": "commission",
+      "hide_when": {
+       "accomplishment": {
+        "standards_commission_taken": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "saw_the_failed_temper": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "commission_report",
+      "hide_when": {
+       "accomplishment": {
+        "standards_tempered": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "standards_commission_taken": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Smith",
+    "text": "\u00a7",
+    "text_variants": [
+     {
+      "requires": {
+       "accomplishment": {
+        "forge_golems_culled": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "seal_resolved": 1
+       }
+      },
+      "text": "\u00a7"
+     }
+    ]
+   },
+   "seal": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Smith",
+    "text": "\u00a7"
+   },
+   "spec": {
+    "options": [
+     {
+      "goto": "standard",
+      "text": "\u00a7"
+     },
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Smith",
+    "text": "\u00a7"
+   },
+   "standard": {
+    "options": [
+     {
+      "goto": "hub",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Forge-Tier Smith",
+    "text": "\u00a7"
+   }
+  },
+  "start": "hub"
+ }
+}
