@@ -1,6 +1,6 @@
 # Dialogue Voice Pass Implementation Plan
 
-**Status:** DONE (2026-08-04 — shipped via voice-pass branch; Fable terminal adjudication SHIP, 205/205 sweep, playtest clean)
+> Status: **DONE** (2026-08-04 — shipped via voice-pass branch; Fable terminal adjudication SHIP, 205/205 sweep, playtest clean)
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
