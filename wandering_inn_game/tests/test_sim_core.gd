@@ -2269,6 +2269,38 @@ func _init() -> void:
 		"the real charm replaces the grace entry outright, so the marker draws it and sleep counts it")
 	assert(over_entry.get("cell", []) == [30, 21], "and it carries the cell the marker needs")
 
+	# ...and the OTHER direction, which is the one that ate player state
+	# (reviewer lens A): a real charm already standing must survive a defeat.
+	# `start_combat` does not read `warded_encounters`, so a player can ward an
+	# encounter and then walk up and interact with it anyway; losing that fight
+	# used to overwrite {sleeps: 2, map, cell} with the grace, silently deleting
+	# a paid-for [Greater Hearthward] (marker and second night with it), after
+	# which ONE step out of the radius cleared the suppression outright.
+	var gWardKept := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gWardKept.player_skills.append("test_greater_ward")
+	gWardKept.transition("floodplains", Vector2i(30, 20))
+	gWardKept.player_facing = Vector2i.DOWN
+	assert(String(gWardKept.use_skill_field("test_greater_ward").get("warded", "")) == "goblin_encounter_1",
+		"the two-sleep charm lands on the encounter first")
+	gWardKept.arm_exit_grace("goblin_encounter_1")
+	# TRAP: a whole-dict `==` cannot be used here. Godot compares a Dictionary's
+	# NESTED containers by reference, so an entry carrying `cell` never equals a
+	# freshly-built literal (that is why the grace's own whole-dict assert above,
+	# which has no nested array, is the only one written that way).
+	var kept_entry: Dictionary = gWardKept.warded_encounters.get("goblin_encounter_1", {})
+	assert(kept_entry.keys().size() == 3 and int(kept_entry.get("sleeps", 0)) == 2
+			and String(kept_entry.get("map", "")) == "floodplains" and kept_entry.get("cell", []) == [30, 21],
+		"a defeat NEVER overwrites a real charm -- the two-sleep entry is untouched, cell and all")
+	assert(not kept_entry.has("until_exit"), "and no grace key is smuggled onto it")
+	_events.clear()
+	assert(gWardKept.move_player(Vector2i.DOWN) and gWardKept.combat == null and _count("combat_started") == 0,
+		"the real charm still delivers GH#374's guarantee: the next step does not re-fire")
+	assert(gWardKept.move_player(Vector2i.UP) and gWardKept.warded_encounters.has("goblin_encounter_1"),
+		"...and leaving the radius does NOT consume it -- a charm ends at sleep, on its own count")
+	gWardKept.sleep()
+	assert(int((gWardKept.warded_encounters["goblin_encounter_1"] as Dictionary).get("sleeps", 0)) == 1,
+		"the second night the player paid for is still there")
+
 	# == GH#380: THE `unsteady` CELL CLASS + THE [Even Footing] PASSIVE READ ==
 	# Injected onto a real map so the loader path is the shipped one: an
 	# `unsteady` list joins `blocked` exactly as `freezable` does. (2,2) in the

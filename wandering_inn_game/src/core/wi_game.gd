@@ -416,8 +416,19 @@ static func _nearest_cardinal(dir: Vector2i) -> Vector2i:
 ## construction: `interact` routes straight to `start_combat`, which never reads
 ## `warded_encounters` (only `_check_trigger_radius` does). Deliberately
 ## re-engaging a fight you lost stays possible; blundering back into it does not.
+##
+## A REAL CHARM ALREADY STANDING IS NEVER OVERWRITTEN (reviewer lens A). The
+## player can ward an encounter and then walk up and interact with it anyway --
+## `start_combat` does not read `warded_encounters` -- so losing that fight used
+## to replace a paid-for {sleeps, map, cell} entry with this one, silently
+## destroying the charm (its marker with it) and, for a two-sleep [Greater
+## Hearthward], a whole extra night of it. There is nothing to arm in that case:
+## `_check_trigger_radius` short-circuits on ANY entry, so the real charm already
+## delivers GH#374's guarantee, and it expires on its own count.
 func arm_exit_grace(encounter_id: String) -> void:
 	if encounter_id == "":
+		return
+	if warded_encounters.has(encounter_id) and not _has_exit_grace(encounter_id):
 		return
 	warded_encounters[encounter_id] = {"until_exit": true, "map": current_map}
 
