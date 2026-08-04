@@ -1489,7 +1489,7 @@ func _init() -> void:
 	assert(not gAcc.equip("test_charm_over"), "over-capacity equip is refused")
 	assert(String(gAcc.equipped.get("accessory_3", "?")) == "", "refused equip leaves accessory_3 empty")
 	assert(_count("item_equipped") == 0, "refused equip emits no item_equipped")
-	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle.", "over-capacity equip emits the capacity refusal toast idiom")
+	assert(_count("toast") == 1 and String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first.", "over-capacity equip emits the capacity refusal toast idiom")
 	assert(gAcc.inventory.has("test_charm_over"), "the refused item is still carried (never equipped, never dropped)")
 
 	assert(gAcc.equip("test_charm_reduc"), "equip the third (zero-resonance) accessory, filling all three slots")
@@ -1505,7 +1505,7 @@ func _init() -> void:
 	assert(gAcc.unequip("accessory_1") and gAcc.unequip("accessory_2") and gAcc.unequip("accessory_3"), "unequip clears all three accessory slots")
 	_events.clear()
 	assert(not gAcc.equip("test_charm_over"), "test_charm_over (resonance 3) alone still exceeds capacity 2 even with every slot free")
-	assert(String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle.", "same capacity refusal, now with all slots free -- proves it's a resonance gate, not a slot-count gate")
+	assert(String(_events[-1]["payload"]["text"]) == "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first.", "same capacity refusal, now with all slots free -- proves it's a resonance gate, not a slot-count gate")
 
 	assert(gAcc.equip("test_ring_res1"), "resonance-1 ring equips into the freed accessory slot")
 	assert(gAcc.equip("test_blade_res1"), "resonance-1 weapon swap onto rusty_sword (0->1) fits: total exactly 2")
@@ -2186,6 +2186,180 @@ func _init() -> void:
 	assert(int((gGreaterWard.warded_encounters["goblin_encounter_1"] as Dictionary).get("sleeps", 0)) == 1, "greater ward decrements to one remaining sleep")
 	gGreaterWard.sleep()
 	assert(not gGreaterWard.warded_encounters.has("goblin_encounter_1"), "greater ward clears after its second sleep")
+
+	# == GH#374: THE DEFEAT GRACE ==
+	# `arm_exit_grace` writes {until_exit, map} into the SAME dictionary the
+	# hearthward charm uses, so this block proves the three things that make the
+	# two shapes safely co-tenant: it suppresses the proximity trigger, leaving
+	# the radius ends it, and sleep ends it for free off the ward decrement's own
+	# `get("sleeps", 1)` default (THE contract stated at the write site -- if that
+	# default ever changes, this is the assert that fails).
+	var gGrace := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	# (30,21) is Chebyshev 2 from goblin_encounter_1 at (30,23), radius 2 -- the
+	# exact cell the auto_pre_combat snapshot restores a defeated player to.
+	gGrace.transition("floodplains", Vector2i(30, 21))
+	gGrace.arm_exit_grace("goblin_encounter_1")
+	assert(gGrace.warded_encounters.get("goblin_encounter_1", {}) == {"until_exit": true, "map": "floodplains"},
+		"the grace entry is exactly {until_exit, map} -- no cell (nothing to draw) and no sleeps (see below)")
+	_events.clear()
+	assert(gGrace.move_player(Vector2i.DOWN) and gGrace.player_cell == Vector2i(30, 22),
+		"a graced player can take a real step DEEPER into the radius")
+	assert(gGrace.combat == null and _count("combat_started") == 0,
+		"...and the ambush they just lost does not re-fire -- the whole point of GH#374")
+	assert(gGrace.warded_encounters.has("goblin_encounter_1"), "still inside: the grace holds")
+	assert(gGrace.move_player(Vector2i.UP) and gGrace.move_player(Vector2i.UP) and gGrace.player_cell == Vector2i(30, 20),
+		"walking out to Chebyshev 3 leaves the radius")
+	assert(not gGrace.warded_encounters.has("goblin_encounter_1"),
+		"THE EXIT: leaving the radius erases the grace, so the next approach is a fresh decision")
+	_events.clear()
+	assert(gGrace.move_player(Vector2i.DOWN), "walking back in is a real move")
+	assert(gGrace.combat != null and _count("combat_started") == 1,
+		"...and the ambush springs again -- the grace was a reprieve, never a clear")
+
+	# The ward-decrement DEFAULT is what retires a grace the player never walks
+	# out of (they slept in the field, or the encounter is interact-triggered and
+	# has no radius to leave). One sleep, gone -- no `sleeps` key needed.
+	var gGraceSleep := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gGraceSleep.transition("floodplains", Vector2i(30, 21))
+	gGraceSleep.arm_exit_grace("goblin_encounter_1")
+	assert(not (gGraceSleep.warded_encounters["goblin_encounter_1"] as Dictionary).has("sleeps"),
+		"the grace deliberately carries NO sleeps key")
+	gGraceSleep.sleep()
+	assert(not gGraceSleep.warded_encounters.has("goblin_encounter_1"),
+		"sleep()'s int(ward.get('sleeps', 1)) - 1 == 0 erases it on the FIRST sleep -- the stated contract")
+	gGraceSleep.arm_exit_grace("")
+	assert(gGraceSleep.warded_encounters.is_empty(),
+		"an empty encounter id arms nothing (the load path's own no-op guard)")
+
+	# The grace is SAVE-PERSISTED, because warded_encounters is -- and it rides
+	# a JSON round-trip, where a bool is the one thing that could come back as
+	# something `_has_exit_grace` no longer recognizes. No save-format bump: the
+	# key is additive inside an existing Dictionary field, and save.gd's
+	# validator checks that field's SHAPE (Dictionary), never its entries'.
+	var gGraceSave := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gGraceSave.transition("floodplains", Vector2i(30, 21))
+	gGraceSave.arm_exit_grace("goblin_encounter_1")
+	var grace_json: Variant = JSON.parse_string(JSON.stringify(WISave.serialize(gGraceSave)))
+	assert(grace_json is Dictionary, "the grace-carrying save serializes to valid JSON")
+	var gGraceRestored := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	assert(WISave.apply(gGraceRestored, grace_json as Dictionary), "a save carrying a defeat grace applies")
+	assert(gGraceRestored.warded_encounters.get("goblin_encounter_1", {}) == {"until_exit": true, "map": "floodplains"},
+		"the grace round-trips byte-for-byte through JSON -- `true` comes back a bool, not a string or a float")
+	_events.clear()
+	assert(gGraceRestored.move_player(Vector2i.DOWN) and _count("combat_started") == 0,
+		"...and still suppresses the ambush after the round trip, which is the only thing that matters")
+
+	# INVISIBILITY, both halves. A charm the player never cast must not be
+	# rendered as one (world.gd skips `until_exit` at its marker loop) and must
+	# not block one they DO cast -- a graced encounter stays a ward candidate and
+	# the real charm overwrites the grace outright.
+	var gGraceWard := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gGraceWard.player_skills.append("test_ward")
+	gGraceWard.transition("floodplains", Vector2i(30, 20))
+	gGraceWard.player_facing = Vector2i.DOWN
+	gGraceWard.arm_exit_grace("goblin_encounter_1")
+	_events.clear()
+	var over_grace := gGraceWard.use_skill_field("test_ward")
+	assert(String(over_grace.get("warded", "")) == "goblin_encounter_1",
+		"a real ward cast still finds a graced encounter -- the grace is invisible to the charm")
+	assert(_toast_texts() == ["The charm settles. Whatever waits there cannot cross it."],
+		"...and never answers with the already-warded refusal, which would be a lie about a charm never cast")
+	var over_entry: Dictionary = gGraceWard.warded_encounters["goblin_encounter_1"]
+	assert(int(over_entry.get("sleeps", 0)) == 1 and not over_entry.has("until_exit"),
+		"the real charm replaces the grace entry outright, so the marker draws it and sleep counts it")
+	assert(over_entry.get("cell", []) == [30, 21], "and it carries the cell the marker needs")
+
+	# == GH#380: THE `unsteady` CELL CLASS + THE [Even Footing] PASSIVE READ ==
+	# Injected onto a real map so the loader path is the shipped one: an
+	# `unsteady` list joins `blocked` exactly as `freezable` does. (2,2) in the
+	# sewers is plain open floor otherwise (test_traversal_seams' own control).
+	var unsteady_scene := WISceneCatalog.compose()
+	(unsteady_scene["maps"]["sewers"] as Dictionary)["unsteady"] = [[2, 2]]
+	var gNoFooting := WIGame.new(unsteady_scene, wave_b_skill_config, _sink, 12345, combat_config)
+	gNoFooting.transition("sewers", Vector2i(2, 3))
+	assert(gNoFooting.is_cell_blocked(Vector2i(2, 2)), "an unsteady cell blocks by default -- it is a hazard, not decor")
+	_events.clear()
+	assert(not gNoFooting.move_player(Vector2i.UP), "...and refuses the step")
+	assert(gNoFooting.player_cell == Vector2i(2, 3) and _count("player_blocked") == 1, "the refusal is the ordinary blocked bump")
+
+	var gFooting := WIGame.new(unsteady_scene, wave_b_skill_config, _sink, 12345, combat_config)
+	gFooting.player_skills.append("even_footing")
+	gFooting.transition("sewers", Vector2i(2, 3))
+	assert(not gFooting.is_cell_blocked(Vector2i(2, 2)), "[Even Footing] opens it as a PASSIVE read -- no cast, no state, no save key")
+	assert(gFooting.move_player(Vector2i.UP) and gFooting.player_cell == Vector2i(2, 2), "the holder walks it for real")
+	# Scope, both ways: the exemption is bound to `unsteady` alone.
+	assert(gFooting.is_cell_blocked(Vector2i(1, 2)), "a plain blocked cell still blocks the holder")
+	assert(gFooting.is_cell_blocked(Vector2i(3, 5)), "and the FREEZABLE channel still blocks -- warriors do not walk on open water")
+	assert(gFooting._cell_properties(Vector2i(2, 2)) == {"freezable": false, "unsteady": true},
+		"the cell-property vocabulary publishes the new class beside freezable")
+	assert(gNoFooting._cell_properties(Vector2i(3, 5)) == {"freezable": true, "unsteady": false},
+		"...and the two classes are independent, never one relabelled")
+
+	# == GH#383: THE AUTHORED-YIELD ARM IS ALREADY SHIPPED ==
+	# The rider is a PROOF, not an edit: `use_skill` has carried {item,
+	# accomplishment, toast} for years, and field_skills.gd routes a prop whose
+	# `requires_skill` names the cast skill ABOVE the property table. That
+	# precedence is what lets flame_jet cook ONE authored corpse without a
+	# `burns` flag enrolling it in the shipped burns x burnable row as a
+	# universal debris-burner. Both legs run against the REAL interactions.json
+	# (WISceneCatalog.compose() injects it), so the burn row is genuinely live.
+	var cook_skills: Array = wave_b_skills.duplicate(true)
+	cook_skills.append({WIKeys.ID: "test_field_flame", WIKeys.DISPLAY_NAME: "[Test Field Flame]", WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "field_ambient": "The flame finds nothing worth taking."})
+	cook_skills.append({WIKeys.ID: "test_burning_flame", WIKeys.DISPLAY_NAME: "[Test Burning Flame]", WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "burns": true, "field_ambient": "The flame finds nothing worth taking."})
+	var cook_skill_config := {WIKeys.SKILLS: cook_skills}
+	var corpse_row := {
+		WIKeys.ID: "test_corpse", WIKeys.KIND: "prop", WIKeys.CELL: [2, 2], WIKeys.DISPLAY_NAME: "Cooling Carcass",
+		"burnable": true,
+		"requires_skill": "test_field_flame",
+		"on_skill_use": {"item": "test_cooked_haunch", "accomplishment": "cooked_a_kill", "toast": "The fat catches. What was carrion an hour ago is supper now."},
+	}
+
+	# Leg (a): the AUTHORED yield resolves -- item into the pack, counter banked,
+	# authored toast, and the prop survives (it was cooked, not destroyed).
+	var cook_scene := WISceneCatalog.compose()
+	(cook_scene["maps"]["sewers"]["entities"] as Array).append(corpse_row.duplicate(true))
+	var gCook := WIGame.new(cook_scene, cook_skill_config, _sink, 12345, combat_config)
+	gCook.player_skills.append("test_field_flame")
+	gCook.transition("sewers", Vector2i(2, 3))
+	gCook.player_facing = Vector2i.UP
+	_events.clear()
+	var cooked := gCook.use_skill_field("test_field_flame")
+	assert(String(cooked.get("item", "")) == "test_cooked_haunch", "the authored arm resolves its yield")
+	assert(gCook.inventory.has("test_cooked_haunch"), "the yield lands in the pack")
+	assert(gCook.accomplishment_count("cooked_a_kill") == 1, "the arm banks its own counter")
+	assert(_toast_texts().has("The fat catches. What was carrion an hour ago is supper now."), "and speaks its authored line")
+	assert(not gCook.find_entity("test_corpse").is_empty(), "the corpse is COOKED, not consumed -- no entity_removed")
+	assert(_count("entity_removed") == 0 and _count("terrain_changed") == 0, "the burn row never ran")
+
+	# Leg (b): PRECEDENCE. Same prop, but now the cast skill carries `burns` and
+	# the prop is `burnable`, so the shipped table row genuinely matches -- and
+	# the authored arm above it still wins.
+	var precedence_scene := WISceneCatalog.compose()
+	var burns_corpse: Dictionary = corpse_row.duplicate(true)
+	burns_corpse["requires_skill"] = "test_burning_flame"
+	(precedence_scene["maps"]["sewers"]["entities"] as Array).append(burns_corpse)
+	var gPrecedence := WIGame.new(precedence_scene, cook_skill_config, _sink, 12345, combat_config)
+	gPrecedence.player_skills.append("test_burning_flame")
+	gPrecedence.transition("sewers", Vector2i(2, 3))
+	gPrecedence.player_facing = Vector2i.UP
+	_events.clear()
+	var precedence := gPrecedence.use_skill_field("test_burning_flame")
+	assert(String(precedence.get("item", "")) == "test_cooked_haunch", "the authored arm beats the property table on the same prop")
+	assert(not gPrecedence.find_entity("test_corpse").is_empty() and _count("entity_removed") == 0,
+		"...so a burns-carrying cast on an authored burnable yields instead of scorching")
+	assert(gPrecedence.accomplishment_count("burned_the_debris") == 0, "the burn row's counter never banks")
+
+	# Leg (c): the NO-FLAG guard, stated as a test. A skill WITHOUT `burns`
+	# cannot reach the table at all, which is exactly why ruling 6 keeps the flag
+	# off flame_jet: the corpse's authored arm is the only thing it can cook.
+	var gNoBurns := WIGame.new(WISceneCatalog.compose(), cook_skill_config, _sink, 12345, combat_config)
+	gNoBurns.player_skills.append("test_field_flame")
+	gNoBurns.transition("sewers", Vector2i(2, 2))
+	gNoBurns.player_facing = Vector2i.LEFT  # faces (1,2) = the shipped burnable debris
+	_events.clear()
+	var no_burns := gNoBurns.use_skill_field("test_field_flame")
+	assert(String(no_burns.get("ambient", "")) == "test_field_flame", "a flag-less skill falls through to ambient on a burnable prop")
+	assert(not gNoBurns.find_entity("sewer_debris").is_empty(), "a combat spell without `burns` is never a universal debris-burner")
 
 	# v0.16.1 #6 ECONOMY: the [Hedge Remedy] brew arms are INGREDIENT-GATED, and
 	# the gate is what bounds the brew -> sell-to-Eloise loop (she stands on the

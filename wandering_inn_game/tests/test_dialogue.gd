@@ -549,6 +549,37 @@ func test_item_requires_stays_visible_locked() -> void:
 	assert(not d2.choose(0).is_empty(), "choose() resolves once the item gate is met")
 
 
+## GH#378 arm 1: the requirement suffix learns an item-level `source_hint`.
+## Eleven dialogue files carry 21 hot_meal-gated Serve options and a combat PC
+## can never satisfy the gate -- the ruling keeps cooking as the gate but makes
+## it LEGIBLE, and one engine seam covers all 21 instances plus every future
+## item gate. Three legs: it renders, its absence is inert, and it never leaks
+## into an option that is actually unlocked.
+func test_item_requires_source_hint_renders_and_absence_is_inert() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
+		{"text": "Serve them.", "requires": {"item": "hot_meal"}, "end": true},
+		{"text": "give bowl", "requires": {"item": "stew_bowl"}, "end": true},
+		{"text": "leave", "end": true},
+	]}}}
+	var catalog := {
+		"hot_meal": {"name": "Hot Meal", "source_hint": "the inn's stew pot, if you know a pot"},
+		"stew_bowl": {"name": "Bowl of Stew"},
+	}
+	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "items": catalog, "inventory": []}, Callable())
+	d.begin()
+	var opts := d.current_options()
+	assert(String(opts[0]["requirement"]) == "requires Hot Meal — the inn's stew pot, if you know a pot",
+		"a source_hint renders as the suffix's second clause, after the item name")
+	assert(String(opts[1]["requirement"]) == "requires Bowl of Stew",
+		"an item WITHOUT the key keeps the pre-#378 suffix byte-identical -- absence is inert")
+	assert(String(opts[2]["requirement"]) == "", "an ungated option carries no requirement at all")
+
+	var d2 := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "items": catalog, "inventory": ["hot_meal"]}, Callable())
+	d2.begin()
+	assert(not bool(d2.current_options()[0]["locked"]) and String(d2.current_options()[0]["requirement"]) == "",
+		"a MET item gate renders no suffix, so the hint can never nag someone already holding the thing")
+
+
 func test_item_requires_falls_back_to_raw_id_when_uncatalogued() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "give bowl", "requires": {"item": "stew_bowl"}, "end": true},
@@ -1088,6 +1119,7 @@ func _init() -> void:
 	test_compound_accomplishment_once_per_waking_gate()
 	test_compound_once_per_waking_item_gate()
 	test_item_requires_stays_visible_locked()
+	test_item_requires_source_hint_renders_and_absence_is_inert()
 	test_item_requires_falls_back_to_raw_id_when_uncatalogued()
 	test_item_requires_unlocks_after_real_pickup()
 	test_unrecognized_requires_key_stays_visible_and_locked()

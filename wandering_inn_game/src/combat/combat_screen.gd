@@ -940,10 +940,19 @@ func _on_banner_tapped() -> void:
 
 func _close_banner() -> void:
 	var was_victory: bool = _combat() != null and _combat().outcome.get("victory", false)
+	# GH#374: the id of the fight we are about to rewind, captured BEFORE
+	# resolve_combat() clears it. The reloaded snapshot is by construction a cell
+	# inside this encounter's trigger radius, so the load arms an exit grace on
+	# it (game.gd) -- otherwise the next step re-fires the fight just lost.
+	# The String() wrap is load-bearing, not decoration: test_combat_visuals and
+	# test_settings both compile this file against STUBBED autoloads (`var Game:
+	# Variant = null`), where a bare `Game.sim.pending_encounter()` has no
+	# inferrable type and the := ternary fails to compile.
+	var lost_encounter := "" if was_victory else String(Game.sim.pending_encounter())
 	Game.sim.resolve_combat()
 	_teardown_board()
 	if not was_victory:
-		if not Game.load_slot("auto_pre_combat", "defeat"):
+		if not Game.load_slot("auto_pre_combat", "defeat", lost_encounter):
 			Game.reset()
 
 

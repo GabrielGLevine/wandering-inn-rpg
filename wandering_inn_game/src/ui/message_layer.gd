@@ -197,6 +197,10 @@ var _showing_housekeeping := false
 ## already been popped by the time it is showing.
 var _showing_protected := false
 var _toast_draining := false
+## GH#335 item 6: per-source round-robin cursor for LIST-shaped `interior_flavor`
+## (see `_pick_flavor_line`). Presentation-side and process-lifetime, exactly
+## like wi_audio.gd's `_variant_index` -- never save state, never sim RNG.
+var _flavor_index: Dictionary = {}
 ## Open full-screen modals, keyed by their own SHOWN event id. A SET rather than
 ## a counter so a doubled show/hide pair cannot strand the drain paused forever
 ## -- the drain resumes the moment this is empty. See `_drain_toasts`.
@@ -233,24 +237,49 @@ func _first_pickup_hint_text() -> String:
 ##   4. "Nothing there."
 ## The biome default is "" rather than "inn": a map that forgets to declare a
 ## biome must fall through to the flat line, not silently inherit Erin's voice.
+##
+## GH#335 item 6 -- STRING OR ARRAY, at all three levels. One line repeated at
+## every empty poke is what makes a room feel switched-off, so any of the three
+## sources may now be a LIST and the reader rotates it. Non-repeating by
+## construction: the cursor advances one entry per USE, so a room with two or
+## more lines can never answer twice the same way in a row.
 func _interact_nothing_text() -> String:
 	if Game.sim != null:
 		var maps: Dictionary = WIDataRegistry.scene_config().get("maps", {})
 		var map_id := String(Game.sim.current_map)
 		var map_cfg: Dictionary = maps.get(map_id, {})
-		var map_line := String(map_cfg.get("interior_flavor", ""))
+		var map_line := _pick_flavor_line("map:%s" % map_id, map_cfg.get("interior_flavor", ""))
 		if map_line != "":
 			return map_line
 		var biome_id := String(map_cfg.get("biome", ""))
 		var biome: Dictionary = WIDataRegistry.biomes().get(biome_id, {})
 		var by_map: Dictionary = biome.get("interior_flavor_by_map", {})
-		var venue_line := String(by_map.get(map_id, ""))
+		var venue_line := _pick_flavor_line("venue:%s" % map_id, by_map.get(map_id, ""))
 		if venue_line != "":
 			return venue_line
-		var line := String(biome.get("interior_flavor", ""))
+		var line := _pick_flavor_line("biome:%s" % biome_id, biome.get("interior_flavor", ""))
 		if line != "":
 			return line
 	return "Nothing there."
+
+
+## Round-robin over an authored line list, keyed per source so the map level,
+## the per-venue biome level and the biome default each keep their own cursor.
+## This is the AUDIO `_variant_index` idiom (wi_audio.gd), and it is deliberately
+## a PRESENTATION-side counter, never the sim's seeded RNG: which flavor line a
+## poke answers with is not gameplay, and borrowing a draw from the sim stream
+## would make every QA/balance seed depend on how often the player poked walls.
+## A plain String passes straight through and never touches the cursor, so every
+## single-line map behaves exactly as it did before this generalization.
+func _pick_flavor_line(key: String, raw: Variant) -> String:
+	if raw is Array:
+		var lines: Array = raw
+		if lines.is_empty():
+			return ""
+		var idx := int(_flavor_index.get(key, 0)) % lines.size()
+		_flavor_index[key] = (idx + 1) % lines.size()
+		return String(lines[idx])
+	return String(raw)
 
 
 func _first_wake_hint_text() -> String:
