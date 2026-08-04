@@ -295,13 +295,30 @@ func _build_help_panel() -> void:
 	UIChrome.add_margins(margin, 26, 20, 26, 20)
 	_help_root.add_child(margin)
 
-	var stack := VBoxContainer.new()
-	stack.add_theme_constant_override("separation", 8)
-	margin.add_child(stack)
+	var outer := VBoxContainer.new()
+	outer.add_theme_constant_override("separation", 8)
+	margin.add_child(outer)
 
 	var title := UIChrome.make_label("Help", "Menu")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	stack.add_child(title)
+	outer.add_child(title)
+
+	# The sections scroll; the TITLE and the BACK ROW do not. Back rode off the
+	# bottom of the parchment the moment this page went from 6 sections to 9
+	# (windowed catch, GH#386) -- the same failure a4 #216 already fixed once by
+	# growing the panel, which is a fix with an expiry date. Outside the scroll,
+	# Back is reachable at any section count and any text scale.
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	outer.add_child(scroll)
+
+	var stack := VBoxContainer.new()
+	stack.add_theme_constant_override("separation", 8)
+	stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(stack)
 
 	_help_sections = _load_help_sections()
 	for section: Dictionary in _help_sections:
@@ -312,10 +329,10 @@ func _build_help_panel() -> void:
 
 	var spacer := Control.new()
 	spacer.custom_minimum_size = Vector2(0.0, 10.0)
-	stack.add_child(spacer)
+	outer.add_child(spacer)
 
 	_help_back_label = UIChrome.make_label("> Back", "Menu")
-	stack.add_child(_help_back_label)
+	outer.add_child(_help_back_label)
 	_help_back_label.mouse_filter = Control.MOUSE_FILTER_STOP
 	_help_back_label.gui_input.connect(_on_help_back_gui_input)
 

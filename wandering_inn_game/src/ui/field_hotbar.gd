@@ -51,9 +51,16 @@ const TOAST_BAND_RESERVE := \
 ## are phase-invariant (VISUAL-LOG P3), so indoors the player had no read at all.
 ## Three DISTINCT SILHOUETTES, never three tints of one shape (2026-08-02 ruling):
 ## a rayed disc, a half disc on a horizon line, a crescent.
-const PHASE_GLYPH_SIZE := Vector2(40.0, 40.0)
+## SIZED AND FRAMED AS A HOTBAR SLOT, deliberately: the glyph sits on the bar's
+## own baseline and must read as part of that row, not as loose furniture. The
+## first pass put it on the parchment STRIP at 40px -- a 9-slice whose patch
+## margin is 20, so at 40 square it is all corners and no centre, and it drew as
+## a dark blob with the mark invisible inside it (windowed catch).
+const PHASE_GLYPH_SIZE := WIHotbar.SLOT_SIZE
 const PHASE_GLYPH_GAP := 8.0
-const PHASE_GLYPH_INK := Color(0.16, 0.13, 0.10)
+## Dark ink on the light parchment plate -- the same read the AP pips, the MP
+## diamonds and the slot's own key numeral all take on this chrome.
+const PHASE_GLYPH_INK := Color(0.18, 0.13, 0.08)
 const PHASE_GLYPHS := {"day": "sun", "dusk": "half_sun", "night": "crescent"}
 
 var _hotbar: WIHotbar
@@ -155,12 +162,21 @@ func _build_toggle() -> void:
 ## The glyph is drawn, not sprited: data/sprites.json is another lane's file
 ## every wave, and three vector marks at 40px need no atlas pick to read.
 func _build_phase_glyph() -> void:
-	_phase_plate = UIChrome.make_texture_panel(UIChrome.PARCHMENT_STRIP)
+	_phase_plate = Control.new()
 	_phase_plate.name = "PhaseGlyphPlate"
 	_phase_plate.custom_minimum_size = PHASE_GLYPH_SIZE
 	_phase_plate.size = PHASE_GLYPH_SIZE
 	_phase_plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(_phase_plate)
+	var frame := NinePatchRect.new()
+	frame.texture = WIHotbar.FRAME_TEXTURE
+	frame.patch_margin_left = UIChrome.PATCH_MARGIN
+	frame.patch_margin_right = UIChrome.PATCH_MARGIN
+	frame.patch_margin_top = UIChrome.PATCH_MARGIN
+	frame.patch_margin_bottom = UIChrome.PATCH_MARGIN
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_phase_plate.add_child(frame)
 	_phase_glyph = PhaseGlyph.new()
 	_phase_glyph.name = "PhaseGlyph"
 	_phase_glyph.ink = PHASE_GLYPH_INK
@@ -586,7 +602,7 @@ class PhaseGlyph extends Control:
 
 	func _draw() -> void:
 		var mid := size * 0.5
-		var r := minf(size.x, size.y) * 0.26
+		var r := minf(size.x, size.y) * 0.20
 		match glyph:
 			"half_sun":
 				var base := mid.y + r * 0.55
@@ -598,11 +614,12 @@ class PhaseGlyph extends Control:
 					var to := Vector2(mid.x, base) + Vector2(cos(a), sin(a)) * (r * 1.95)
 					draw_line(from, to, ink, 1.5)
 			"crescent":
-				# Drawn as a filled disc with a second, offset disc cut out of it
-				# in the PLATE's own colour would need the plate's pixels; the
-				# outline form needs no such read and survives any chrome swap.
-				draw_arc(mid, r * 1.15, PI * 0.32, PI * 1.72, 28, ink, 2.0)
-				draw_arc(mid + Vector2(r * 0.62, -r * 0.20), r * 1.05, PI * 1.30, TAU + PI * 0.42, 24, ink, 1.5)
+				# A FAT C, not a ring with a nick in it. The first pass drew a
+				# thin near-closed arc plus a second "bite" arc, and at 52px the
+				# bite did not render at all -- it read as a broken circle, which
+				# is not a moon (windowed catch). Thickness plus a wide opening is
+				# what carries a crescent at this size.
+				draw_arc(mid, r * 1.05, PI * 0.42, PI * 1.58, 26, ink, 3.5)
 			_:
 				draw_arc(mid, r, 0.0, TAU, 28, ink, 2.0)
 				for i in 8:

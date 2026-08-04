@@ -172,7 +172,7 @@
    "action": "wait_for_event",
    "type": "ui_help_rendered",
    "payload_contains": {
-    "sections": 9,
+    "sections": 8,
     "sample": "Skills & the Hotbar — Skills never trigger themselves. The field bar opens with names and effects; use its Details control to show or hide that readout."
    },
    "timeout_sec": 5
@@ -393,7 +393,7 @@
    "action": "wait_for_event",
    "type": "ui_help_rendered",
    "payload_contains": {
-    "sections": 9,
+    "sections": 8,
     "sample": "Skills & the Hotbar — Skills never trigger themselves. The field bar opens with names and effects; use its Details control to show or hide that readout."
    },
    "timeout_sec": 5

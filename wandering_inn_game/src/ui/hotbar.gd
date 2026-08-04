@@ -22,9 +22,11 @@ const COOLDOWN_BADGE_RIM := Color(0.98, 0.86, 0.62)
 const COOLDOWN_BADGE_INK := Color(0.99, 0.95, 0.88)
 const COOLDOWN_BADGE_SIZE := 16.0
 const COOLDOWN_BADGE_FONT_PX := 11
-## The key-hint numeral's own ink. The theme default is dark, and the carved
-## slot frame it sits on is dark -- see `_make_slot`'s key-hint block.
-const KEY_HINT_COLOR := Color(0.98, 0.93, 0.80)
+## The key-hint numeral's own ink. The carved slot frame is LIGHT parchment (the
+## AP pips and MP diamonds beside it are both dark for the same reason) -- a
+## first pass here drew the numeral in warm white and it vanished into the
+## corner it sits on, which is the bug it was meant to fix (windowed catch).
+const KEY_HINT_COLOR := Color(0.14, 0.10, 0.06)
 
 ## Issue #57: a left-click on a rendered slot activates it EXACTLY as its
 ## number key -- callers (field_hotbar.gd/combat_screen.gd, via combat_hud.gd)
@@ -167,7 +169,10 @@ func _make_slot(slot: Dictionary, selected: bool) -> Control:
 	if key_hint != "":
 		var key_label := UIChrome.make_label("", "Small")
 		key_label.text = key_hint
-		key_label.position = Vector2(4, 1)
+		# (5, 5), not (4, 1): the slot's 9-slice corner ornament occupies the top
+		# 4px band, and a numeral parked in it lost its head -- which is why the
+		# cue read as absent (v0.17 close called the 1-slot bar numberless).
+		key_label.position = Vector2(5, 5)
 		key_label.custom_minimum_size = Vector2(14, 14)
 		key_label.size = Vector2(14, 14)
 		key_label.add_theme_color_override("font_color", KEY_HINT_COLOR)
@@ -228,7 +233,7 @@ class CooldownBadge extends Control:
 		var mid := size * 0.5
 		var r := size.x * 0.5
 		draw_circle(mid, r, WIHotbar.COOLDOWN_BADGE_COLOR)
-		draw_arc(mid, r - 0.5, 0.0, TAU, 20, WIHotbar.COOLDOWN_BADGE_RIM, 1.0)
+		draw_arc(mid, r - 0.5, 0.0, TAU, 20, WIHotbar.COOLDOWN_BADGE_RIM, 1.5)
 		var font := ThemeDB.get_fallback_font()
 		var text := str(rounds)
 		var extents := font.get_string_size(text, HORIZONTAL_ALIGNMENT_CENTER, -1.0, COOLDOWN_BADGE_FONT_PX)
