@@ -304,7 +304,7 @@ func _build_help_panel() -> void:
 	outer.add_child(title)
 
 	# The sections scroll; the TITLE and the BACK ROW do not. Back rode off the
-	# bottom of the parchment the moment this page went from 6 sections to 9
+	# bottom of the parchment the moment this page went from 6 sections to 8
 	# (windowed catch, GH#386) -- the same failure a4 #216 already fixed once by
 	# growing the panel, which is a fix with an expiry date. Outside the scroll,
 	# Back is reachable at any section count and any text scale.
