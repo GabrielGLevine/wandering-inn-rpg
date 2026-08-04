@@ -67,7 +67,51 @@ the pot is. **Ruling to confirm or overturn: a combat PC being shut out of the
 Serve economy until they take a cooking Skill.** I said yes, signposted. The
 alternative is a vendor route, which GH#334 already ruled against.
 
-## 5. Panels and the quiet things
+## 5. Faces — the six new rigs (added after the first draft of this brief)
+
+**Load: any save.** Six characters stopped wearing other people's skins:
+
+| who | wore | now |
+|---|---|---|
+| Selys (guild desk) | `citizen_f` — a HUMAN woman, green-tinted | a Drake |
+| Octavia (Pallass market) | `citizen_f` — same human rig | a Stitch-girl |
+| Ilvo (guild) | `tier_clerk`, a Pallass civic sash | a Liscor Drake |
+| Krshia (street + inn) | the generic traveler rig + brown tint | her own |
+| Wilovan (parlor + inn) | **`pc_gnoll_m` — the PLAYER'S OWN SKIN** | his own |
+| Pisces (inn guest) | a hooded grey bust with no eye pixels | a face |
+
+**The reads I want:** does Krshia land as a *merchant* now (the first generation
+came back an armored brawler and was thrown out)? Does Wilovan read as the
+Gentleman Caller — courtesy over menace? Is Pisces recognisably a smug young
+necromancer rather than a hood?
+
+**Known and deliberate:** Wilovan ships **idle-only**. He is a fielded combat
+ally, so in the hired_blades fight his attacks fall back to the idle pose
+instead of a swing. Nothing breaks; it just lacks flourish. Tell me if that
+reads as broken rather than plain, and I'll generate his combat set (~6 gens).
+
+## 6. A pot is a pot (#391)
+
+**Load: `martial_field_armed` or any save with a cooking Skill.**
+
+Cooking-family Skills used to be bound to SPECIFIC props. Now any pot answers
+any cooking-family Skill. Try [Basic Cooking] on the inn's **witch kettle**
+(6,2) — previously it only spoke to [Hedge Remedy] and you'd have walked to
+Riverfarm for a pot that would talk to you. Then the stew pot (4,1): it must
+still give its own authored line, not the generic one.
+
+**The question:** does the generic line ("You get the pot hot, work with what is
+in it, and it comes out food") feel acceptable as the *fallback*, or does it
+flatten places that deserve their own words? Every prop can still override.
+
+## 7. The leak is gone from the inn (#392)
+
+**Load: any early save.** The hole in the common-room wall at (9,7) is no longer
+there until the door chain arms it. Walk the room and confirm it now reads as a
+room rather than as a puzzle you can't touch — and that nothing looks *missing*
+where it used to sit.
+
+## 8. Panels and the quiet things
 
 **Load: any save.**
 
@@ -84,6 +128,19 @@ alternative is a vendor route, which GH#334 already ruled against.
   is a bug and it violates opaque-until-sleep.
 
 ---
+
+## What the machines already proved — do NOT spend eyes here
+
+206/206 canonical scripts, 33/33 unit suites, data_lint, the comment census,
+the dialogue voice gate and leak_check are all green, and the shipped-ids
+freeze is re-cut. Logic is covered. **Everything above is asking for FEEL, taste
+or a cold read — the things a green gate cannot see.**
+
+Specifically already proven by machine, no need to re-check: the ambush no
+longer re-fires when you walk away; `state_set` survives a save AND a sleep; an
+absent encounter neither blocks nor ambushes; a cook gets a meal from the
+kettle while the stew pot keeps its own line; the sign no longer blocks the
+west inn door; no canonical seed flipped.
 
 ## The one thing I need a word on
 
