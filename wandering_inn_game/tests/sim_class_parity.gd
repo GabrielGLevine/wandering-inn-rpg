@@ -98,6 +98,14 @@ extends SceneTree
 ## may legitimately bust its ceiling -- that is a re-read, not a bug: re-run,
 ## paste the numbers, and move the ceiling deliberately.
 ##
+## BUT AN UNEVALUATED CEILING IS NOT A HELD CEILING (review round, lens A). Going
+## UNGATED is exactly what a data change can cause -- a build leaves the parity
+## set, or a new grant flips a row MUTE->SPOKEN and strands the stratum it left
+## at n<2 -- so under the gate every RATIFIED key whose band ran must have been
+## evaluated, or the run reds. Otherwise the report prints "an UNGATED stratum is
+## not a pass" and then exits 0. `WI_PARITY_BAND` narrows what is expected and
+## says so out loud: a one-band run is a PARTIAL fence, never a merge-train green.
+##
 ## WHAT THE FIRST STRATIFIED READ FOUND (2026-08-04). Splitting collapses band 10
 ## (0.617 -> 0.340 SPOKEN / 0.087 MUTE): at that band the whole apparent gap WAS
 ## the confound. It barely moves bands 14 and 18, and at band 14 the MUTE stratum
@@ -656,22 +664,60 @@ func _init() -> void:
 	if ungated > 0:
 		print("  %d stratum row(s) carry no ceiling. An UNGATED stratum is not covered by anything;" % ungated)
 		print("  it is not a pass. Censored strata need a floor-resolution roster before they can be.")
+	# COVERAGE (review round, adversarial lens A). A ceiling that is never
+	# EVALUATED is not a ceiling that held -- and a stratum can stop being
+	# evaluated for exactly the reasons a data change causes: a build leaves the
+	# parity set, or a new grant flips a row MUTE->SPOKEN and drops the stratum it
+	# left to n<2. Without this check the run prints "an UNGATED stratum is not a
+	# pass" and then exits 0, which is the gate contradicting itself, and a
+	# candidate branch could retire a ratified ceiling on the way past. So: every
+	# PROPOSED_ENVELOPE key whose band actually ran must have been gated this run,
+	# or the gate reds. `WI_PARITY_BAND` legitimately narrows WHICH keys are
+	# expected -- and is called out below, because a one-band run is a partial
+	# fence and must never read as the whole one.
+	var gated_keys := {}
+	for row: Array in envelope_rows:
+		if bool(row[5]):
+			gated_keys["%d/%s" % [int(row[0]), String(row[1])]] = true
+	var expected: Array = []
+	var missing: Array = []
+	for key: String in PROPOSED_ENVELOPE:
+		if only_band >= 0 and int(key.split("/")[0]) != only_band:
+			continue
+		expected.append(key)
+		if not gated_keys.has(key):
+			missing.append(key)
+	print("  COVERAGE: %d of %d ratified ceiling(s) evaluated this run (%d in PROPOSED_ENVELOPE overall)." % [
+		expected.size() - missing.size(), expected.size(), PROPOSED_ENVELOPE.size(),
+	])
+	if only_band >= 0:
+		print("  WI_PARITY_BAND=%d: this run is a PARTIAL fence -- it says nothing about the other" % only_band)
+		print("  bands' ceilings. A merge-train green needs the unrestricted run.")
+	for key: String in missing:
+		print("  MISSING CEILING %s: ratified, and this run produced no gateable stratum for it." % key)
+		print("  A ratified stratum that stopped existing is a change to WHAT is measured. Re-read it.")
 	print("")
-	if busts.is_empty():
+	if busts.is_empty() and missing.is_empty():
 		print("ENVELOPE: every gateable stratum is inside its ceiling.")
 	else:
-		print("ENVELOPE: %d stratum row(s) BUST their ceiling." % busts.size())
+		print("ENVELOPE: %d stratum row(s) BUST their ceiling, %d ratified ceiling(s) went unevaluated." % [
+			busts.size(), missing.size(),
+		])
 		for row: Array in busts:
 			print("  band %d %s: spread %.3f > ceiling %.2f (drawn from %.3f). Read what moved --" % [
 				int(row[0]), String(row[1]), float(row[3]), float(row[6]), float(row[7]),
 			])
 			print("  a bust is a class getting further from its stratum-mates, not a harness fault.")
 	if gate_on:
-		if busts.is_empty():
-			print("PASS: class-parity harness terminated cleanly over %d cells x %d seeded runs; envelope GATE ON, no busts" % [total_cells, RUNS_PER_CELL])
+		if busts.is_empty() and missing.is_empty():
+			print("PASS: class-parity harness terminated cleanly over %d cells x %d seeded runs; envelope GATE ON, %d ceiling(s) evaluated, no busts" % [
+				total_cells, RUNS_PER_CELL, expected.size(),
+			])
 			quit(0)
 		else:
-			print("FAIL: WI_PARITY_ENVELOPE_GATE=1 and %d stratum row(s) are over ceiling" % busts.size())
+			print("FAIL: WI_PARITY_ENVELOPE_GATE=1 -- %d stratum row(s) over ceiling, %d ratified ceiling(s) unevaluated" % [
+				busts.size(), missing.size(),
+			])
 			quit(1)
 		return
 	print("REPORT-ONLY by default (#360/#211 harness-first): the envelope above PROPOSES, it does")

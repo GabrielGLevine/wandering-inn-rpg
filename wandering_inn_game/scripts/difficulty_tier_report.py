@@ -20,8 +20,11 @@ THREE things fail this report now (#384 item 1 ratified two of them 2026-08-04):
      off a clean 0/141 read (CHOICE-LOG v018-close #5 called it ready).
   3. EXTREME FLIPS -- no cell may reach 0.00/1.00 at a tier where Silver carried
      a real coin, EXCEPT the named entries in EXTREME_FLIP_WHITELIST, each of
-     which carries the justification that earned it. Anything not on that list
-     reds, which is the whole point of a named list over a loosened threshold.
+     which carries the justification that earned it AND the Silver it was argued
+     from. Anything not on that list reds, which is the whole point of a named
+     list over a loosened threshold; and an entry whose Silver has moved past
+     NOISE lapses back onto that list, because the argument on file is then
+     about a different fight.
 
 `--report-only` restores the pre-ratification behaviour (prints everything,
 fails on nothing but 1) -- for exploring a candidate tune without a red.
@@ -52,22 +55,38 @@ EXTREME_MARGIN = 0.10
 # RATIFIED 2026-08-04 (#384 item 1). NAMED exceptions, keyed by (cell id exactly
 # as this report prints it, tier) so a rename fails CLOSED -- the entry goes
 # stale, the flip stops being whitelisted, and the gate reds.
+#
+# EACH ENTRY ALSO PINS THE SILVER IT WAS ARGUED FROM (review round, adversarial
+# lens A). Both justifications below rest on a NUMBER -- "an 0.81-Silver cell",
+# "0.13 off the floor" -- and a whitelist keyed only by (cell, tier) would keep
+# swallowing the flip after that number moved, which is a DIFFERENT phenomenon
+# wearing the same key. `silver` is the value the entry was drawn from; when the
+# live Silver walks more than NOISE off it the entry LAPSES, the flip goes back
+# on the unlisted pile, and the gate reds until somebody re-argues it. This is
+# the same self-invalidating shape sim_class_parity.gd's ENVELOPE DRIFT uses for
+# the parity ceilings -- an accepted exception must not outlive its premise.
 EXTREME_FLIP_WHITELIST = {
-    ("invrisil / alley_fence_t3_warrior10_solo", "bronze"):
-        "Bronze exists to make fights easier. An 0.81-Silver social-region fence "
-        "fight saturating at the easiest tier is the knob working as intended, "
-        "not a regression, and re-tuning the cell to preserve a sub-1.00 Bronze "
-        "would be tuning data for the gate's benefit -- backwards. Gold still "
-        "carries a real coin on the same cell (0.36), so it is not flat.",
-    ("ruin / ruin_guardian_w8_solo", "gold"):
-        "The mirror case at the other rail. NOT in the #384 ruling's premise, "
-        "which named one flip -- this read found two, both pre-existing at HEAD "
-        "(sim_combat_batch reads none of this lane's files). 0.13 Silver on an "
-        "UNGATED cell -- the deliberately-losing SOLO read of a boss the region "
-        "fields Relc for -- reaching 0.00 at the hardest tier is the same knob "
-        "working. A cell sitting 0.13 off the floor was never carrying a coin "
-        "the way an 0.81 cell is. Revocable: the alternative is a gate that is "
-        "red on the day it ratifies.",
+    ("invrisil / alley_fence_t3_warrior10_solo", "bronze"): {
+        "silver": 0.81,
+        "why":
+            "Bronze exists to make fights easier. An 0.81-Silver social-region fence "
+            "fight saturating at the easiest tier is the knob working as intended, "
+            "not a regression, and re-tuning the cell to preserve a sub-1.00 Bronze "
+            "would be tuning data for the gate's benefit -- backwards. Gold still "
+            "carries a real coin on the same cell (0.36), so it is not flat.",
+    },
+    ("ruin / ruin_guardian_w8_solo", "gold"): {
+        "silver": 0.13,
+        "why":
+            "The mirror case at the other rail. NOT in the #384 ruling's premise, "
+            "which named one flip -- this read found two, both pre-existing at HEAD "
+            "(sim_combat_batch reads none of this lane's files). 0.13 Silver on an "
+            "UNGATED cell -- the deliberately-losing SOLO read of a boss the region "
+            "fields Relc for -- reaching 0.00 at the hardest tier is the same knob "
+            "working. A cell sitting 0.13 off the floor was never carrying a coin "
+            "the way an 0.81 cell is. Revocable: the alternative is a gate that is "
+            "red on the day it ratifies.",
+    },
 }
 
 
@@ -190,24 +209,43 @@ def main():
     print("   extreme is SATURATION, counted separately and never gated)")
     unlisted = []
     fired = set()
+    lapsed = []
     if not material:
         print("   CLEAN: 0 material flips; %d saturation touches" % saturated)
     else:
         print("   %d material flip(s), %d saturation touches:" % (len(material), saturated))
         for c, tier, v, s, g in material:
             key = (c, tier)
-            listed = key in EXTREME_FLIP_WHITELIST
+            entry = EXTREME_FLIP_WHITELIST.get(key)
+            # An entry only covers the flip it was ARGUED about: same cell, same
+            # tier, same Silver within NOISE. Past that the premise is gone and
+            # the exception lapses -- see the whitelist's own head comment.
+            drifted = entry is not None and abs(s - entry["silver"]) > NOISE
+            listed = entry is not None and not drifted
             if listed:
                 fired.add(key)
             else:
                 unlisted.append((c, tier, v, s, g))
+            if drifted:
+                lapsed.append((key, entry["silver"], s))
+                mark = "  <-- WHITELIST LAPSED (drawn at silver %.2f, now %.2f)" % (entry["silver"], s)
+            else:
+                mark = "  [WHITELISTED]" if listed else "  <-- NOT WHITELISTED"
             print("   %-52s %-6s %.2f (silver %.2f)%s%s"
-                  % (c, tier, v, s, "  [GATED]" if g else "", "  [WHITELISTED]" if listed else "  <-- NOT WHITELISTED"))
-    for key, why in sorted(EXTREME_FLIP_WHITELIST.items()):
+                  % (c, tier, v, s, "  [GATED]" if g else "", mark))
+    for key, entry in sorted(EXTREME_FLIP_WHITELIST.items()):
         print()
-        print("   WHITELISTED %s @ %s%s" % (key[0], key[1], "" if key in fired else "   [STALE -- no longer flips]"))
-        for chunk in _wrap(why, 70):
+        print("   WHITELISTED %s @ %s (drawn at silver %.2f)%s"
+              % (key[0], key[1], entry["silver"],
+                 "" if key in fired else "   [STALE -- no longer covers a live flip]"))
+        for chunk in _wrap(entry["why"], 70):
             print("      %s" % chunk)
+    if lapsed:
+        print()
+        print("   %d whitelist entr(ies) LAPSED: the cell still flips, but not from the" % len(lapsed))
+        print("   Silver the justification was written about, so the argument on file is")
+        print("   about a different fight. Re-read the cell and re-argue the entry (or drop")
+        print("   it) -- do NOT just move the pinned silver to match.")
     if unlisted:
         print()
         print("   %d flip(s) are NOT on the whitelist. Either the difficulty knob broke a" % len(unlisted))
