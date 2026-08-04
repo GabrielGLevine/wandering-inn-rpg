@@ -119,7 +119,14 @@ func save_manual(slot: String = "manual") -> bool:
 	return true
 
 
-func load_slot(slot: String, reason: String = "") -> bool:
+## GH#374: `grace_encounter` is the id of the encounter the player just LOST to,
+## threaded here by combat_screen.gd's true-defeat branch (the only caller that
+## ever passes it, alongside reason:"defeat"). It is armed on the freshly-loaded
+## sim, BEFORE GAME_LOADED, so every listener that rebuilds from that event
+## (world.gd's ward marker among them) already sees final state. The sim is
+## never asked to write this itself -- the grace is a consequence of reloading,
+## and WIGame holds no reference to the thing that reloaded it.
+func load_slot(slot: String, reason: String = "", grace_encounter: String = "") -> bool:
 	var path := "%s/%s.json" % [SAVE_DIR, slot]
 	if not FileAccess.file_exists(path):
 		return false
@@ -130,6 +137,8 @@ func load_slot(slot: String, reason: String = "") -> bool:
 	if not WISave.apply(trial, parsed):
 		return false
 	sim = trial
+	if grace_encounter != "":
+		sim.arm_exit_grace(grace_encounter)
 	ObservableBus.emit_domain_event(WIEvents.GAME_LOADED, {"reason": reason})
 	return true
 

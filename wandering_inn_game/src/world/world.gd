@@ -1811,6 +1811,13 @@ func _reconcile_ward_visuals() -> void:
 		return
 	for encounter_id: String in Game.sim.warded_encounters:
 		var ward: Dictionary = Game.sim.warded_encounters[encounter_id]
+		# GH#374: skip the invisible defeat grace. It shares this dictionary with
+		# real charms but the player never cast it, so drawing a hearthward charm
+		# for it would be a lie about what they can do. Explicit rather than
+		# leaning on its missing `cell` key below -- the intent has to be legible
+		# to whoever next adds a suppression shape here.
+		if bool(ward.get("until_exit", false)):
+			continue
 		if String(ward.get("map", "")) != Game.sim.current_map:
 			continue
 		var raw_cell: Array = ward.get("cell", [])

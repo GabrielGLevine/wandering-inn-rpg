@@ -248,8 +248,18 @@ func _requirement_text(req: Dictionary, opt: Dictionary = {}) -> String:
 	if req.has("gold"):
 		return "costs %d gold" % _priced_gold(int(req["gold"]), opt)
 	if req.has("item"):
+		# GH#378 arm 1: an item-level `source_hint` (items.json) rides the
+		# requirement suffix so a locked option says where the thing comes from,
+		# not just that it is missing. ONE seam covers every item gate in the
+		# game -- the 21 hot_meal-gated Serve options that motivated it are data,
+		# not 21 rewordings. Absent key = the pre-#378 suffix, byte-identical.
 		var items: Dictionary = _ctx.get("items", {})
-		return "requires %s" % String(items.get(String(req["item"]), {}).get("name", String(req["item"])))
+		var rec: Dictionary = items.get(String(req["item"]), {})
+		var item_label := String(rec.get("name", String(req["item"])))
+		var source_hint := String(rec.get("source_hint", ""))
+		if source_hint != "":
+			return "requires %s — %s" % [item_label, source_hint]
+		return "requires %s" % item_label
 	if req.has("race"):
 		return "requires being %s" % String(req["race"])
 	if req.has("phase"):

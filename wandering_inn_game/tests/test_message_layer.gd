@@ -18,6 +18,7 @@ func _init() -> void:
 	_check_housekeeping_class(raw)
 	_check_hold_curve(raw)
 	_check_movement_dismiss_protection(raw)
+	_check_interior_flavor_rotation(raw)
 	print("PASS: toast queue survives transitions (defer + combat bank)")
 	quit(0)
 
@@ -205,3 +206,55 @@ func _check_movement_dismiss_protection(raw: String) -> void:
 		var arm := handler.get_slice("WIEvents.%s:" % other_arm, 1).get_slice("WIEvents.", 0)
 		assert(arm.find("_showing_protected") == -1,
 			"%s must NOT consult _showing_protected -- the exemption is scoped to movement" % other_arm)
+
+
+## GH#335 item 6: `interior_flavor` is now String OR Array, at all three levels
+## of the resolution chain (map -> biome-by-map -> biome default). One line
+## repeated at every empty poke is what makes a room feel switched off, so a
+## list rotates -- NON-REPEATING by construction, since the cursor advances one
+## entry per use. Exercised on the autoload-stubbed instance: `_pick_flavor_line`
+## is deliberately pure (no Game, no WIDataRegistry), which is what lets the
+## generalization be proven here instead of only through a live map.
+func _check_interior_flavor_rotation(raw: String) -> void:
+	var layer := _stubbed_instance(raw)
+
+	# A plain String is untouched and never consumes a cursor slot -- every
+	# single-line map behaves exactly as it did before the generalization.
+	for _i in 3:
+		assert(String(layer.call("_pick_flavor_line", "map:inn", "The common room is warm.")) == "The common room is warm.",
+			"a String source returns itself, every time")
+	assert((layer.get("_flavor_index") as Dictionary).is_empty(),
+		"a String source never touches the round-robin cursor")
+
+	var lines := ["one", "two", "three"]
+	var picked: Array[String] = []
+	for _i in 7:
+		picked.append(String(layer.call("_pick_flavor_line", "map:room", lines)))
+	assert(picked == ["one", "two", "three", "one", "two", "three", "one"],
+		"a list rotates in authored order and wraps -- got %s" % [picked])
+	for i in picked.size() - 1:
+		assert(picked[i] != picked[i + 1], "NON-REPEATING: no poke ever answers with the line the last one did")
+
+	# Per-source cursors: the three levels of the fallback chain each keep their
+	# own place, so a biome default rotating cannot desync a map's own list.
+	assert(String(layer.call("_pick_flavor_line", "biome:inn", lines)) == "one",
+		"a different source key starts its own cursor at the top")
+	assert(String(layer.call("_pick_flavor_line", "map:room", lines)) == "two",
+		"...and does not disturb the first source's position")
+
+	# Degenerate shapes stay harmless: an empty list reads as "nothing authored"
+	# (the caller falls through to the next chain level), a single-entry list
+	# repeats without ever going out of range.
+	assert(String(layer.call("_pick_flavor_line", "map:empty", [])) == "",
+		"an empty list is treated as absent, so the fallback chain continues")
+	assert(String(layer.call("_pick_flavor_line", "map:solo", ["only"])) == "only"
+			and String(layer.call("_pick_flavor_line", "map:solo", ["only"])) == "only",
+		"a one-entry list is stable and never indexes past its end")
+	layer.free()
+
+	# Source tripwire: the cursor must stay a presentation-side counter. Reaching
+	# for the sim's seeded RNG here would make every QA/balance seed depend on how
+	# often a player pokes walls (the wi_audio.gd `_variant_index` rationale).
+	var picker := raw.get_slice("func _pick_flavor_line", 1).get_slice("\nfunc ", 0)
+	assert(picker.find("rng") == -1 and picker.find("rand") == -1,
+		"_pick_flavor_line must never draw from the sim RNG -- flavor variety is not gameplay")
