@@ -4,7 +4,9 @@
   "burns",
   "freezes",
   "cleans",
-  "toggles_light"
+  "toggles_light",
+  "repairs",
+  "anchors"
  ],
  "target_properties": {
   "burnable": "entity",
@@ -13,7 +15,9 @@
   "dirty": "entity",
   "hearth": "entity",
   "unlit": "entity",
-  "person": "entity"
+  "person": "entity",
+  "broken": "entity",
+  "gap": "entity"
  },
  "outcomes": [
   "remove_scorch",
@@ -103,12 +107,13 @@
    "toast_default": "[Basic Cleaning] — The grime lifts away and the surface comes up clean."
   },
   {
-   "_comment": "The douse cell. No reversal substrate in v1 (spec §4.1), so the refusal IS the answer.",
+   "_comment": "The douse cell. No reversal substrate in v1 (spec §4.1), so the refusal IS the answer. toast_from=skill because `freezes` has TWO carriers now and a row line naming one lies about the other; frost_touch authors no key and takes the default.",
    "skill_property": "freezes",
    "target_property": "hearth",
    "outcome": "refuse",
    "persistence": "none",
-   "toast_from": "row",
+   "toast_from": "skill",
+   "toast_key": "frost_hearth_refusal",
    "toast_default": "[Snap Freeze] — Frost crawls onto the hot stone and vanishes before it can settle. The fire goes on eating. Your cold has no purchase on it."
   },
   {
@@ -116,8 +121,31 @@
    "target_property": "person",
    "outcome": "refuse",
    "persistence": "none",
-   "toast_from": "row",
+   "toast_from": "skill",
+   "toast_key": "frost_person_refusal",
    "toast_default": "[Snap Freeze] — The cold gathers in your palm and stops there. You are pointing a killing frost at someone who has done nothing to you. Your hand comes down."
+  },
+  {
+   "_comment": "state_set on a `broken` carrier: one-way, save-persisted, and a traversal seam the world keeps open.",
+   "skill_property": "repairs",
+   "target_property": "broken",
+   "outcome": "state_set",
+   "persistence": "permanent",
+   "counter_key": "state_counter",
+   "toast_from": "skill",
+   "toast_key": "repair_toast",
+   "toast_default": "[Basic Repair] — You put the break back the way it was meant to sit. It holds."
+  },
+  {
+   "_comment": "The traversal pair's other half; same permanence class as the repair row.",
+   "skill_property": "anchors",
+   "target_property": "gap",
+   "outcome": "state_set",
+   "persistence": "permanent",
+   "counter_key": "state_counter",
+   "toast_from": "skill",
+   "toast_key": "anchor_toast",
+   "toast_default": "[Rope Work] — You make the line fast and set it taut across. The crossing stays a crossing."
   }
  ]
 }

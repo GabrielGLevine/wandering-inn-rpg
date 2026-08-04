@@ -11,6 +11,22 @@
    17
   ]
  ],
+ "_comment_unsteady": "[Even Footing] chute up the east outcrop. (31,4)-(31,6) were ALREADY blocked, so blocked_cells and every route are unchanged; a holder cuts (31,3)->(31,6) from 7 steps to 3. Pebble-dressed so it reads as scree, not masonry. NOT the pond: walking a warrior over open water reads wrong.",
+ "unsteady": [
+  [
+   31,
+   4
+  ],
+  [
+   31,
+   5
+  ],
+  [
+   31,
+   6
+  ]
+ ],
+ "unsteady_toast": "Scree slides out from under your boot and rattles away down the slope. Getting up that needs surer feet than yours.",
  "_comment": "`goblin_encounter_2` (28,18) and `chieftains_raid` (31,7) are unaffected (interact-only, no trigger_radius) and sit well outside this zone.",
  "blocked": [
   [
@@ -869,10 +885,25 @@
    ]
   },
   {
-   "sprite": "boulder",
+   "_comment": "Scree dressing for the unsteady chute; suppresses the biome blocked-prop so it reads as loose ground.",
+   "sprite": "pebble",
+   "cell": [
+    31,
+    4
+   ]
+  },
+  {
+   "sprite": "pebble",
    "cell": [
     31,
     5
+   ]
+  },
+  {
+   "sprite": "pebble",
+   "cell": [
+    31,
+    6
    ]
   },
   {
@@ -1948,6 +1979,36 @@
    "observe": "A boulder standing clear of the reeds with the whole pond below it. The razorbeak keeps climbing it and screaming at the water, which is either an opinion or a report.",
    "on_interact_accomplishment": "found_pond_vantage",
    "toast": "It wheels out over the pond, hangs, and comes back loud. There is something square and man-made on the bottom, a stride out from the bank — too far to reach across open water, and water can be made to bear weight."
+  },
+  {
+   "_comment": "AUTHORED arm only, never a `burnable` tag: flame_jet has no `burns` flag, so no other burnable prop changes. ONE-SHOT via present_when.absent on its own counter. Sited off every QA-walked cell, 5 clear of goblin_encounter_1's radius.",
+   "id": "corusdeer_carcass",
+   "kind": "prop",
+   "cell": [
+    35,
+    20
+   ],
+   "display_name": "Corusdeer Carcass",
+   "sprite": "corusdeer",
+   "tint": [
+    0.62,
+    0.6,
+    0.58
+   ],
+   "present_when": {
+    "absent": {
+     "cooked_a_kill": 1
+    }
+   },
+   "requires_skill": "flame_jet",
+   "observe": "A young corusdeer down in the grass with its neck wrong, cold hours ago and not yet found by anything with teeth. The hide is whole. The haunches are worth carrying, if you had a way to make them keep.",
+   "locked_toast": "The meat is good and it will not stay good. Raw and cold, it is no use to you, and you have no way to change that.",
+   "skill_hint_toast": "Hauling at it with your hands gets you nothing. Fire is what this wants.",
+   "on_skill_use": {
+    "item": "seared_venison",
+    "accomplishment": "cooked_a_kill",
+    "toast": "[Flame Jet] — You hold the lance short and run it along the haunch until the fat goes loud and the outside blackens. What was carrion an hour from now is supper tonight. You cut what will travel and leave the rest to the grass."
+   }
   }
  ],
  "cover_skip": [

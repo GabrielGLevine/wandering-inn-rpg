@@ -637,10 +637,34 @@ func _entity_ids(scene: Dictionary) -> Dictionary:
 	return out
 
 
+## #348 slice 2: a `state_set` row banks the counter named by whatever field the
+## row's `counter_key` points at ON THE CARRIER, so the property table is the
+## producer registry for those ids. test_reachability already walks this; THIS
+## walk was the one that did not, which made a `present_when.absent` gate on a
+## repaired/anchored carrier read as an unproduced counter (GH#381/#382).
+func _state_set_counter_keys(scene: Dictionary) -> Array:
+	var keys: Array = []
+	for raw_row: Variant in (scene.get("interactions", {}) as Dictionary).get("interactions", []):
+		if not (raw_row is Dictionary):
+			continue
+		var row := raw_row as Dictionary
+		if String(row.get("outcome", "")) != "state_set":
+			continue
+		var key := String(row.get("counter_key", ""))
+		if key != "" and not keys.has(key):
+			keys.append(key)
+	return keys
+
+
 func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> void:
+	var state_set_keys: Array = _state_set_counter_keys(scene)
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):
+			for state_key: String in state_set_keys:
+				var state_counter := String(entity.get(state_key, ""))
+				if state_counter != "":
+					produced[state_counter] = true
 			if String(entity.get("kind", "")) == "encounter":
 				# GH#211: combat_banking banks fought_<encounter_id> on every
 				# weighted victory -- a real code-banked producer per encounter.

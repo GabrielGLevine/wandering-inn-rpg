@@ -1167,6 +1167,38 @@
 			"price": 1,
 			"description": "A single arrow pulled back out of the straw, fletching creased where it went in. Straight enough to shoot again, once.",
 			"lore": "The barracks yard counts its shafts twice a day and still comes up short, so nobody minds one walking off in a recruit's pack. Everybody who ever drilled here has done it."
+		},
+		{
+			"_comment": "[Bar Fighting] yield. damage_mod 1 = tempering_oil parity, not a new tier. No price (hot_meal precedent).",
+			"id": "improvised_cudgel",
+			"name": "Improvised Cudgel",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"use_effect": { "next_fight": { "damage_mod": 1 } },
+			"description": "A table leg wrenched loose at the joint, one end still wearing its socket. Heavier than it looks and balanced nowhere at all.",
+			"lore": "Every innkeeper who has kept a room past midnight knows which piece of furniture comes apart fastest, and none of them will tell you which."
+		},
+		{
+			"_comment": "[Flame Jet] carcass yield. hp_mod 2 = fine_meal parity, flavor not power. No price (hot_meal precedent).",
+			"id": "seared_venison",
+			"name": "Seared Venison",
+			"kind": "meal",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"use_effect": { "next_fight": { "hp_mod": 2 } },
+			"description": "Thick cuts off the haunch, blackened outside and still red at the middle, wrapped in a cloth that will never come clean.",
+			"lore": "Corusdeer run hot enough to scorch grass where they bed down, and hunters on the Floodplains say the meat cooks half the way there on its own."
 		}
 	]
 }

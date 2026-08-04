@@ -30,6 +30,10 @@ const EXPECTED_ITEMS := {
 	"wool_tuft": ["Worth 1 gold"],
 	"shed_antler": ["Worth 6 gold"],
 	"loose_arrow": ["Worth 1 gold"],
+	# GH#380/#383 yields: both priceless (never merchandise), so only the
+	# next_fight clause composes.
+	"improvised_cudgel": ["Next fight: +1 damage (single use)"],
+	"seared_venison": ["Next fight: +2 HP (single use)"],
 	"parcel_plains_wool": [],
 	"parcel_that_ticks": [],
 	"parcel_watch_dispatch": [],
@@ -212,6 +216,14 @@ const EXPECTED_SKILLS := {
 	"perfect_reduction": [],
 	"sworn_fang_ride_together": [],
 	"sworn_fang_boon": ["+8 to hit"],
+	# GH#380/#381/#382 martial exploration slate: no `effect` block on any of
+	# them, so every line is [] -- the frost_touch/kindle shape.
+	"even_footing": [],
+	"greater_strength": [],
+	"broader_shoulders": [],
+	"bar_fighting": [],
+	"basic_repair": [],
+	"rope_work": [],
 }
 
 ## The FIELD variant (`WIEffectText.field_effect_lines`), pinned separately from
@@ -233,6 +245,12 @@ const EXPECTED_FIELD_SKILLS := {
 	"light": [],
 	"observe": [],
 	"hedge_remedy": [],
+	# GH#380/#383 dual-context pair: combat spells that now reach the field bar.
+	# Both must stay field-SILENT (their effect types are combat-only), so the
+	# hotbar readout falls back to display_name -- description out on the map
+	# while the combat HUD keeps the cost line pinned in EXPECTED_SKILLS.
+	"icy_floor": [],
+	"flame_jet": [],
 }
 
 

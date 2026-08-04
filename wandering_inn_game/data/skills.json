@@ -65,14 +65,17 @@
 			"description": "A hissing dart of goblin fire."
 		},
 		{
+			"_comment": "NO `burns` FLAG: it would enroll this in the burns x burnable row and make a combat spell a universal debris-burner. Its one field use is the AUTHORED carcass arm, which beats the table by dispatch precedence.",
 			"id": "flame_jet",
 			"display_name": "[Flame Jet]",
-			"contexts": ["combat"],
+			"contexts": ["combat", "exploration"],
+			"field": true,
 			"ap_cost": 2,
 			"mp_cost": 4,
 			"element": "fire",
 			"icon": "icon_flame_jet",
 			"effect": { "type": "line_damage", "length": 4 },
+			"field_ambient": "[Flame Jet] — Fire runs out of your palm, finds nothing worth burning, and dies in the air.",
 			"description": "A roaring lance of goblin-fire down the line."
 		},
 		{
@@ -224,16 +227,22 @@
 			"description": "A fist-sized spike of ice, hurled hard enough to crack shields."
 		},
 		{
-			"_comment": "Canon pass: renamed [Icy Floor] -> [Ice Floor] (id `icy_floor` UNCHANGED -- save-compat).",
+			"_comment": "Renamed [Icy Floor] -> [Ice Floor], id UNCHANGED (save-compat). SECOND `freezes` carrier -- which is why both freezes REFUSAL rows read copy off the skill, not the row: a row line would name the wrong Skill.",
 			"id": "icy_floor",
 			"display_name": "[Ice Floor]",
-			"contexts": ["combat"],
+			"contexts": ["combat", "exploration"],
+			"field": true,
+			"freezes": true,
 			"ap_cost": 2,
 			"mp_cost": 4,
 			"element": "ice",
 			"icon": "icon_icy_floor",
 			"effect": { "type": "icy_floor", "range": 3, "radius": 1, "duration_rounds": 2, "applies": { "slowed": { "pool_penalty": 2 } } },
-			"description": "The stones glaze over, and footing becomes a rumor."
+			"freeze_toast": "[Ice Floor] — The spell wants a floor and takes the water instead. Grey ice spreads out from the bank in one long crack, thick enough to stand on. It will not last past your next rest.",
+			"field_ambient": "[Ice Floor] — Frost sheets out across the ground and thins away to nothing. There is no standing water here for it to lock.",
+			"frost_hearth_refusal": "[Ice Floor] — Ice skids over the hot stone and is gone before it can settle. The fire goes on eating.",
+			"frost_person_refusal": "[Ice Floor] — The glaze starts under their boots and you stop it there. Putting someone on their back on ice is a thing you do to an enemy.",
+			"description": "The stones glaze over, and footing becomes a rumor. Still water takes it the same way, and holds."
 		},
 		{
 			"id": "flame_scythe",
@@ -1250,6 +1259,59 @@
 				"amount": 8
 			},
 			"description": "Two bodies, one certainty. The strike lands because both of you already knew it would."
+		},
+		{
+			"_comment": "PASSIVE: no `field`, no hotbar slot. wi_game.gd's _even_footing_crosses pins THIS id; exemption is bound to `unsteady` alone, never `freezable`.",
+			"id": "even_footing",
+			"display_name": "[Even Footing]",
+			"contexts": ["exploration"],
+			"description": "Loose stone and wet plank hold under you where they would drop anyone else."
+		},
+		{
+			"id": "greater_strength",
+			"display_name": "[Greater Strength]",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Greater Strength] — You set your shoulder to nothing in particular and let the breath out. Nothing here needs moving.",
+			"description": "Strength enough to shift what was set down to stay put."
+		},
+		{
+			"id": "broader_shoulders",
+			"display_name": "[Broader Shoulders]",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Broader Shoulders] — You square the pack and stand easier under it. There is nothing here worth carrying out.",
+			"description": "A load that would bow anyone else rides easy on you, and rides all day."
+		},
+		{
+			"id": "bar_fighting",
+			"display_name": "[Bar Fighting]",
+			"contexts": ["exploration"],
+			"field": true,
+			"field_ambient": "[Bar Fighting] — Your hand goes looking for something with weight to it. This room has nothing to offer.",
+			"description": "Any common room is full of weapons. The trick is reaching one before the other fellow does."
+		},
+		{
+			"_comment": "`repairs` keys the repairs x broken -> state_set row. One-way by substrate: no un-repair row exists.",
+			"id": "basic_repair",
+			"display_name": "[Basic Repair]",
+			"contexts": ["exploration"],
+			"field": true,
+			"repairs": true,
+			"repair_toast": "[Basic Repair] — You work the break until it sits the way it was meant to sit. It holds when you lean on it, and it will hold tomorrow.",
+			"field_ambient": "[Basic Repair] — You look for the break and find none. Whatever is here is already holding.",
+			"description": "A break put back the way it was meant to sit, and it stays put."
+		},
+		{
+			"_comment": "`anchors` keys the anchors x gap -> state_set row. INVENTED NAME (canon [Rope Arrow] is past the spoiler bar): pin the ID, never the bracket string, so a rename stays a one-string diff.",
+			"id": "rope_work",
+			"display_name": "[Rope Work]",
+			"contexts": ["exploration"],
+			"field": true,
+			"anchors": true,
+			"anchor_toast": "[Rope Work] — You make the line fast, drop the tail across, and set it taut. The crossing is a crossing now, and it stays one.",
+			"field_ambient": "[Rope Work] — You pay out a length and look for something to make it fast to. Nothing here will hold a line.",
+			"description": "A line made fast at both ends. A gap crossed once stays crossed for whoever comes next."
 		}
 	]
 }
