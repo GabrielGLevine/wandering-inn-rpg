@@ -167,6 +167,17 @@
    }
   },
   {
+   "_comment": "== GH#372: THE DEFEAT COPY IS STATE-AWARE ==. This is the pre-tutorial defeat -- classless, solo, sparred_with_relc unbanked (met_relc is not banked yet either at this point in the run) -- and the veil's third line is the one that varies: instead of the shipped catch-all 'Try again, or step more carefully' it points at the Drake on this road who will teach the player to fight. `variant` rides UI_DEFEAT_VEIL_RENDERED for exactly this reason: the copy only ever appears behind a gate, so without a payload key it would ship structurally untested. Cursor-scoped (wait_for_event, not a whole-run assert) so it is THIS defeat's veil. PLACEMENT IS LOAD-BEARING: the reload's own ui_ward_rendered fires BEFORE the veil emit (world rebuild, then main.swap_to_world -> play_defeat), so pinning the veil any earlier would drag the since-cursor past the ward render the invisibility proof above depends on.",
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_rendered",
+   "payload_contains": {
+    "map": "floodplains",
+    "variant": "pre_spar",
+    "lines": 3
+   },
+   "timeout_sec": 5
+  },
+  {
    "_comment": "THE CAN-FAIL, positive half: a REAL move_player DEEPER into the radius -- (30,22) is Chebyshev 1, well inside -- and combat_started must still stand at 1. Without the grace this step is a second ambush; assert_event_count is whole-run, so a re-fire shows up here as 2.",
    "action": "move",
    "direction": "down",
@@ -455,12 +466,15 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Issue #78: the defeat interstitial's own coverage event -- QA/headless collapses its paced reveal+choice to an instant emit (sleep_veil.gd's play_defeat(), same _is_qa() collapse the opener/epilogue already use), so this run still lands back in the reloaded floodplains state below WITHOUT ever waiting on the interactive Continue/Title choice. `map` names the SAME location the reload just restored.",
-   "action": "assert_event_logged",
+   "_comment": "Issue #78: the defeat interstitial's own coverage event -- QA/headless collapses its paced reveal+choice to an instant emit (sleep_veil.gd's play_defeat(), same _is_qa() collapse the opener/epilogue already use), so this run still lands back in the reloaded floodplains state below WITHOUT ever waiting on the interactive Continue/Title choice. `map` names the SAME location the reload just restored. GH#372: cursor-scoped (was a whole-run assert_event_logged) so the variant pinned here is THIS defeat's, not the earlier leg's -- and it re-derives to pre_spar honestly: met_relc banked in between, but the spar itself never happened, and the reloaded snapshot is chieftains_raid's own pre-combat state.",
+   "action": "wait_for_event",
    "type": "ui_defeat_veil_rendered",
    "payload_contains": {
-    "map": "floodplains"
-   }
+    "map": "floodplains",
+    "variant": "pre_spar",
+    "lines": 3
+   },
+   "timeout_sec": 5
   },
   {
    "action": "assert_state",

@@ -522,7 +522,13 @@ func _readout_text(view: RefCounted, in_targeting: bool, targeting_state: Dictio
 			note = "  (no line of sight)"
 		elif bool(targeting_state.get("out_of_range", false)):
 			note = "  (out of range)"
-		return _compose_readout(head, "No target in reach (%s)" % cancel_glyph + note, info_line)
+		# GH#373: the readout NAMES both exits now. Before combat_screen.gd's
+		# empty-list escape arm, this state ate every key but Esc; the arrows
+		# are now a real way out, so the line that describes the state has to
+		# say so. Both halves are device glyphs (kb "Esc"/"Arrows", pad
+		# "B"/"stick") -- WIInputHints is threaded in as plain strings by the
+		# composition root, this file holds no autoload reference.
+		return _compose_readout(head, "No target in reach (%s, or %s to move)" % [cancel_glyph, move_glyph] + note, info_line)
 	var target_id := String(targets[int(targeting_state.get("index", 0))])
 	var t: Dictionary = view.combatant(target_id)
 	return _compose_readout(
