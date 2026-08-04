@@ -78,7 +78,7 @@ const L5_HORNS_FOUR_MEMBER_ANCHORS := [
 	["ceria_intro", "hub", "four of us on the roster"],
 	["ksmvr_intro", "hub", "there are four of us"],
 	["pisces_magic", "horns_bridge", "horns of hammerad"],
-	["ceria_dig_camp", "camp_fourth", "four names on the roster"],
+	["ceria_dig_camp", "camp_fourth", "the roster carries four names"],
 ]
 
 

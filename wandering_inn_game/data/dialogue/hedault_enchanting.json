@@ -191,7 +191,7 @@
    "text": "Set it on the cloth. Do not hand it to me. I have looked at it twice already and I will not cut a mount until somebody in this transaction says the true thing out loud: that stone is glass, cut well, sold badly, and about forty years old. I will not cut a mount over a lie. It is half-drawn on the bench behind me, and it stays half-drawn until I hear it.",
    "options": [
     {
-     "text": "\"She knows. She's known since she was nineteen. She wants the setting held properly, and the stone left as it is.\"",
+     "text": "\"She's known since she was nineteen. She wants the setting held, and the stone left as it is.\"",
      "hide_when": {
       "accomplishment": {
        "heirloom_truth_kept": 1

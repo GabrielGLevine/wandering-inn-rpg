@@ -385,7 +385,7 @@
    "text": "Sweep the cisterns. You know what a sweep costs? Six Watchmen off the wall, lanterns, a healer on standby, and a form in triplicate explaining to the Council why the wall was six thin. Give me one reason worth the ink.",
    "options": [
     {
-     "text": "If it's under the city and moving, it's Watch business before it becomes an emergency. File the form after.",
+     "text": "Under the city and moving, it's Watch business before it's an emergency. File after.",
      "goto": "sweep_argue"
     },
     {

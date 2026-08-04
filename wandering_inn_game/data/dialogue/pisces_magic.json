@@ -298,7 +298,7 @@
     },
     {
      "_comment": "Act V (#270 beat 1, spec 7 amendment 2) THE DESCENT ASK. Gate is ALL THREE lattice counters, which is the amendment's 'fires when lattice_forge_rune banks' in data terms -- the forge rune is last in the spine's own order. NO bank on this option: seal_descent_agreed rides the ACCEPT below, so a player who opens the pitch and walks away can come back (hide_when is the accept's counter, not a read-flag). Appended LAST so every cursor-pinned canonical stays byte-identical.",
-     "text": "Everywhere I've been, someone was feeding a ward. Riverfarm, Invrisil, Pallass. Tell me what that means.",
+     "text": "Riverfarm, Invrisil, Pallass — someone was always feeding a ward. Tell me what that means.",
      "requires": {
       "accomplishment": {
        "lattice_witch_lore": 1,

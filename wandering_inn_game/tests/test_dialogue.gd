@@ -119,12 +119,12 @@ func test_grimalkin_studies_gates_on_the_real_graph() -> void:
 	_events.clear()
 	var d3 := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {"completed_bounty_grimalkin_study_combat": 1}, "names": {}, "board_accepted": false}, _sink)
 	d3.begin()
-	assert(String(_events[0]["payload"]["text"]) == "The field subject returns. Your engagement data survived review. It is in the literature now; that is the only compliment I issue.",
+	assert(String(_events[0]["payload"]["text"]) == "The field subject returns. Your engagement data survived review. It is in the literature now, fourth appendix, entered under a subject number. State your business.",
 		"combat-study completion variant verbatim")
 	_events.clear()
 	var d4 := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {"completed_bounty_grimalkin_study_casting": 1}, "names": {}, "board_accepted": false}, _sink)
 	d4.begin()
-	assert(String(_events[0]["payload"]["text"]) == "The casting subject. Your wind held past the eighth measure, which surprised exactly one of us. Speak.",
+	assert(String(_events[0]["payload"]["text"]) == "The casting subject. Your wind held past the eighth measure. The file has it already. Speak.",
 		"casting-study completion variant verbatim")
 
 
