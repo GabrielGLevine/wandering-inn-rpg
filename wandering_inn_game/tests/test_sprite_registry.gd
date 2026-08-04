@@ -33,9 +33,37 @@ func _init() -> void:
 	_assert_no_pc_sprites_in_scene()
 	assert(not WISpriteRegistry.has_sprite("missing_sprite"), "registry should reject unknown sprite ids")
 	_assert_biome_tiles_build()
+	_assert_ice_tile_is_bespoke_and_opaque()
 	_assert_missing_sheet_fallback()
 	print("PASS: sprite registry catalog builds SpriteFrames")
 	quit(0)
+
+
+## The frozen-cell overlay tile. CONTRACT: exactly one 16x16 tile at (0,0),
+## fully OPAQUE (a frozen cell must hide the water beneath it, not tint it),
+## and never the placeholder. TRAP: this sheet is authored/owned art, NOT a
+## bundle path -- a public checkout must render real ice, so a fallback here
+## is a red, not a degrade.
+func _assert_ice_tile_is_bespoke_and_opaque() -> void:
+	var path := "res://assets/tiles/ice/ice_floor_tiles.png"
+	assert(FileAccess.file_exists(path), "ice overlay sheet missing: " + path)
+	assert(not WISpriteRegistry.is_fallback_sheet(path), "ice overlay fell back to placeholder: " + path)
+	var ts: TileSet = WISpriteRegistry.tile_set_for(path, 16)
+	assert(ts != null, "ice overlay TileSet failed to build")
+	assert(ts.tile_size == Vector2i(16, 16), "ice overlay tile size must be 16x16")
+	var src := ts.get_source(0) as TileSetAtlasSource
+	assert(src != null, "ice overlay TileSet needs atlas source 0")
+	assert(src.has_tile(Vector2i(0, 0)), "ice overlay needs tile (0,0) -- world.gd paints that coord")
+	var tex: Texture2D = src.texture
+	assert(tex != null, "ice overlay atlas needs a texture")
+	assert(tex.get_width() == 16 and tex.get_height() == 16, "ice overlay must be a single 16x16 tile, got %dx%d" % [tex.get_width(), tex.get_height()])
+	var img: Image = tex.get_image()
+	var transparent := 0
+	for y: int in range(img.get_height()):
+		for x: int in range(img.get_width()):
+			if img.get_pixel(x, y).a < 1.0:
+				transparent += 1
+	assert(transparent == 0, "ice overlay must be fully opaque, %d translucent px" % transparent)
 
 
 func _assert_visual_log_assets_are_real(catalog: Dictionary) -> void:
