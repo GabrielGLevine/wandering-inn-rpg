@@ -1,4 +1,4 @@
-# v0.19 close — five reads (2026-08-04)
+# v0.19 close — eight reads (2026-08-04)
 
 Everything here loads from **Title → Playtest States** (debug builds only). It
 installs into the game's own dedicated `playtest` slot and loads it directly,
@@ -148,9 +148,11 @@ west inn door; no canonical seed flipped.
 It shipped under the invented name so the wave would not stall, and it is pinned
 by skill id everywhere, so renaming it is a one-string diff whenever you say so.
 
-Also yours, not mine: **PixelLab is at $1.53 with zero subscription generations
-left** (everyone assumed ~$2.70). Six bespoke NPC rigs are carried unfunded in
-#390. A top-up is a money decision.
+Also yours, not mine: **PixelLab is down to ~$1.14 with zero subscription
+generations.** The six rigs above were funded out of it — the "unfundable"
+ruling on #390 was wrong by about 12x (a rig is 2 generations, ~$0.13, not an
+envelope). What is still unfunded is Wilovan's combat animation set and the
+Tier 2/3 polish rows. A top-up is a money decision.
 
 ## Not in this wave, deliberately
 
