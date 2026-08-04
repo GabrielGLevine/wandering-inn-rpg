@@ -409,6 +409,31 @@ func _init() -> void:
 	assert(w1_bad_cell.frozen_cells.is_empty(), "the inert row freezes nothing")
 	assert(w1_bad_cell.is_cell_blocked(Vector2i(3, 5)),
 		"the water channel stays impassable -- the inert row flipped no walkability")
+	# (C) THE WILDCARD HOLE (slice 2, hostile-row lens). `refuse` declares
+	# PLACEMENT_ANY, so the `wants != placement` half of the binding guard
+	# cannot reject a garbage placement for it -- only the membership `match`
+	# can, and a match with no default arm silently tests NOTHING. Both shapes
+	# below are one wrong character in `target_properties`, and both used to
+	# make the row fire on EVERY cast of the skill property, at an empty floor
+	# cell, with the refusal line as the only tell.
+	for w1_bogus: String in ["entty", WIFieldSkills.PLACEMENT_ANY]:
+		var w1_wild_scene := _w1_scene()
+		w1_wild_scene["interactions"] = {
+			"skill_properties": ["freezes"], "target_properties": {"person": w1_bogus},
+			"outcomes": WIFieldSkills.OUTCOMES,
+			"interactions": [{
+				"skill_property": "freezes", "target_property": "person",
+				"outcome": "refuse", "persistence": "none",
+				"toast_from": "row", "toast_default": "W1 wildcard refusal.",
+			}],
+		}
+		var w1_wild := _w1_game(w1_wild_scene)
+		# An empty floor cell: no entity at all, so no `person` carrier either.
+		_w1_face(w1_wild, Vector2i(10, 3), Vector2i.LEFT)
+		assert(w1_wild.use_skill_field("w1_ice_floor").get("ambient", "") == "w1_ice_floor",
+			"a refuse row whose target placement is '%s' resolves NO row -- ambient, not a blanket refusal" % w1_bogus)
+		assert(String(_w1_last("toast").get("text", "")) != "W1 wildcard refusal.",
+			"the hostile row's line never reaches the player")
 
 	print("PASS: property-interaction table -- mirror contract, injection, new carriers, precedence (burn + dirty), verb/placement binding, thaw/state_set/refuse, inert fallthrough")
 	quit(0)

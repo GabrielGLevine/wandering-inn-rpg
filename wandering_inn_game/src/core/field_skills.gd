@@ -226,6 +226,19 @@ func _resolve_property(skill_id: String, skill: Dictionary, target: Dictionary, 
 			PLACEMENT_CELL:
 				if not _cell_carries(target_prop, faced_cell, current_map, frozen_cells, cell_properties):
 					continue
+			_:
+				# TOTALITY GUARD (hostile-row lens). A placement that is neither
+				# shipped shape -- a typo, a half-merge, the ANY wildcard leaked
+				# into the target vocabulary -- reaches here ONLY under a
+				# wildcard verb, because every other verb's `wants` check above
+				# already rejected it. Without this arm the row would skip the
+				# membership test ENTIRELY and fire on every cast: one wrong
+				# character in interactions.json's `target_properties` would turn
+				# every carrier of the skill property into a blanket refusal,
+				# with a nonsense line as the only tell. data_lint's PLACEMENTS
+				# check is the first layer; this is the engine mirror that makes
+				# the "makes such a row inert here" contract above actually true.
+				continue
 		match outcome:
 			OUTCOME_REMOVE_SCORCH:
 				return _outcome_remove_scorch(skill_id, row, target, current_map)
