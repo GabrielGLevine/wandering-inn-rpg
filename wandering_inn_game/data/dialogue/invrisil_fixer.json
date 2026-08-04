@@ -6,7 +6,7 @@
 			"speaker": "Cups",
 			"text": "Tea comes free with the rumor. Rumor's a gold the cup. Sit on the crate — mind the wobble, it's structural. Now. What are we drinking?",
 			"text_variants": [
-				{ "requires": { "accomplishment": { "fixer_will_testify": 1 } }, "text": "Testimony's steeping — my face on paper, gods help my complexion. One cup left in the pot worth pouring, and that's Hellam. Say when." },
+				{ "requires": { "accomplishment": { "fixer_will_testify": 1 } }, "text": "Testimony's steeping — my name on paper by week's end. One cup left in the pot worth pouring, and that's Hellam. Say when." },
 				{ "requires": { "accomplishment": { "secured_testimony": 1 } }, "text": "Hellam signed, I signed, and for once I'm in the best rumor on the street instead of selling it. Tea's still a gold. Sit, the pot's fresh." }
 			],
 			"options": [
@@ -39,7 +39,7 @@
 		},
 		"rumor_hellam": {
 			"speaker": "Cups",
-			"text": "Master Hellam — silk trade, salt tongue. Coyle soured their partnership over a warehouse lease, then bought that same lease through a cousin. Hellam keeps the grudge fed and walked like a prize hound. He's wanted to testify against Coyle for years. You'd be doing him the favor.",
+			"text": "Master Hellam — silk trade, salt tongue. Coyle soured their partnership over a warehouse lease, then bought that same lease through a cousin. Hellam keeps the grudge fed and walked like a prize hound. He's wanted to testify against Coyle for years.",
 			"options": [
 				{ "text": "Another cup.", "goto": "hub" },
 				{ "text": "Then I'll go see Hellam.", "end": true }
@@ -47,7 +47,7 @@
 		},
 		"rumor_hats": {
 			"speaker": "Cups",
-			"text": "The Brothers? Sweetest muggers you'll ever meet. Tip the hat, beg your pardon. Then they relieve you of exactly what's owed, to the clip — I've had ruder service in shops. But the whole street knows the arithmetic. Hat on, you talk. Hat comes off, you run, and you don't spend breath asking why.",
+			"text": "The Brothers? Sweetest muggers you'll ever meet. Tip the hat, beg your pardon. Then they relieve you of exactly what's owed, to the clip — I've had ruder service in shops. But the whole street knows the arithmetic. Hat on, you talk. Hat comes off, you run.",
 			"options": [
 				{ "text": "Another cup.", "goto": "hub" },
 				{ "text": "Fair warning. Thanks.", "end": true }
@@ -65,7 +65,7 @@
 			"speaker": "Cups",
 			"text": "Not for cups of tea, friend. You want my face on this, you've got to be worth the risk first — and 'worth it' isn't free, is it, given what a hat can turn into round here.",
 			"text_variants": [
-				{ "requires": { "accomplishment": { "returned_cups_debt": 1 } }, "text": "Swearing's different water, friend. Rumor carries no name — nobody ever knows who poured it first. Testimony has my face on it, and Coyle prices faces. I'd like mine kept where it is." }
+				{ "requires": { "accomplishment": { "returned_cups_debt": 1 } }, "text": "Swearing's different water, friend. Nobody ever knows who poured a rumor first. A testimony sheet has my name at the bottom, and Coyle pays men to read names. I'd like mine kept where it is." }
 			],
 			"options": [
 				{ "text": "Stand with the Brothers, and every hat tips your way. [Charming Smile]", "requires": { "accomplishment": { "returned_cups_debt": 1 }, "skill": "charming_smile" }, "effects": [ { "accomplishment": "fixer_will_testify" }, { "accomplishment": "persuaded_someone" } ], "goto": "agreed_persuaded" },
@@ -75,7 +75,7 @@
 		},
 		"cups_favor": {
 			"speaker": "Cups",
-			"text": "Here's the third thing, then, since you keep buying the first two. I owe the Brothers a debt I've been quietly not paying. A chit, is all. But it's got Wilovan's own mark on it, and I'd rather it went back through a friendly hand than a collecting one. Carry it to the parlor, quiet as you came by it, and we'll talk about faces.",
+			"text": "Here's the third thing, then, since you keep buying the first two. I owe the Brothers a debt I've been quietly not paying. A chit, is all. But it's got Wilovan's own mark on it, and I'd rather it went back quiet, with you, before anyone's sent to collect it. Carry it to the parlor, quiet as you came by it, and we'll talk about faces.",
 			"options": [
 				{ "text": "I'll see it done.", "effects": [ { "item": "cups_debt_chit" }, { "accomplishment": "cups_favor_requested" } ], "goto": "hub" }
 			]
@@ -98,7 +98,7 @@
 		},
 		"arranged": {
 			"speaker": "Cups",
-			"text": "Done and done. Hellam didn't even finish his cup. Signed and sanded before it cooled. Sealed it himself, then asked could he sign twice. Take the papers wherever names like Coyle's go to be spent. And friend — my own name's in the middle of this one. The pot's gone cold while I've sat here reading my own signature back.",
+			"text": "Done and done. Hellam didn't even finish his cup. Signed and sanded before it cooled. Sealed it himself, then asked could he sign twice. Take the papers wherever names like Coyle's go to be spent. And friend — my own name's in the middle of this one. First time for that. The pot's gone cold.",
 			"options": [
 				{ "text": "You earned the byline, Cups.", "end": true }
 			]

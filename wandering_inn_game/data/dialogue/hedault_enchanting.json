@@ -188,10 +188,10 @@
   "heirloom_bench": {
    "speaker": "Hedault",
    "_comment": "He will not work until the lie is named. The two SKILL arms are SEPARATE single-key options (test_content rejects {skill, item} -- pisces_seal.json:112).",
-   "text": "Set it on the cloth. Do not hand it to me. I have looked at it twice already and I will not cut a mount until somebody in this transaction says the true thing out loud: that stone is glass, cut well, sold badly, and about forty years old. I will not work over a lie. I price what is true.",
+   "text": "Set it on the cloth. Do not hand it to me. I have looked at it twice already and I will not cut a mount until somebody in this transaction says the true thing out loud: that stone is glass, cut well, sold badly, and about forty years old. I will not cut a mount over a lie. It is half-drawn on the bench behind me, and it stays half-drawn until I hear it.",
    "options": [
     {
-     "text": "\"She knows. She's known since she was nineteen. It's the setting she wants honest.\"",
+     "text": "\"She knows. She's known since she was nineteen. She wants the setting held properly, and the stone left as it is.\"",
      "hide_when": {
       "accomplishment": {
        "heirloom_truth_kept": 1
@@ -265,7 +265,7 @@
   },
   "bench_assist": {
    "speaker": "Hedault",
-   "text": "Stand where I put you and keep your hands flat on the cloth. Now read it back to me. If you are right I will not say so; I will simply not correct you, and you may take that as the same thing. There. The ward wants to sit under the setting. It has ignored the stone from the first weighing. Keep your hands flat while I mark the line.",
+   "text": "Stand where I put you and keep your hands flat on the cloth. Now read it back to me. If you are wrong, I will stop you. There. The ward wants to sit under the setting. It has ignored the stone from the first weighing. Keep your hands flat while I mark the line.",
    "options": [
     {
      "text": "\"Understood.\"",

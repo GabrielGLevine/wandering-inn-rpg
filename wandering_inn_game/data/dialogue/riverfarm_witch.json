@@ -20,7 +20,7 @@
        "heard_price_of_a_favor": 1
       }
      },
-     "text": "You want the blight gone. I want what I'm owed. One of these is easy. Sit. Tea first. There's honey if you take it."
+     "text": "You want the blight gone. I want what I'm owed. Sit. Tea first. There's honey if you take it."
     },
     {
      "requires": {
@@ -137,7 +137,7 @@
   "witch_ward_taught": {
    "_comment": "HER OWN PIECE ONLY (spec 4): a hedge witch's feeding practice, scaled to her hollow. No seal, no lattice, no assembled picture -- she has never been under Liscor.",
    "speaker": "Eloise",
-   "text": "Mine takes milk and a word, every seventh night. Small appetite, small keeping. Yours was built to hold something that argues back, and a ward like that gets fed on purpose, by someone who meant it to outlast them. Don't starve it in a hurry, child. Left hungry, it will start drawing what it needs from whatever is nearest — the heat off your hearth first, then the sleep of whoever lives over it.",
+   "text": "Mine takes milk and a word, every seventh night. Yours was built to hold something that argues back, and a ward like that gets fed on purpose, by someone who meant it to outlast them. Don't starve it in a hurry, child. Left hungry, it will start drawing what it needs from whatever is nearest — the heat off your hearth first, then the sleep of whoever lives over it.",
    "options": [
     {
      "text": "I'll remember that.",
@@ -147,7 +147,7 @@
   },
   "truth": {
    "speaker": "Eloise",
-   "text": "Blight is the word the village picked, and it's the wrong one. Someone there struck a bargain with me — asked a favor, got exactly what they asked for. The price was always the second half of the deal, and they're pretending they forgot that part. The craft has been collecting on the debt ever since, out of their fields.",
+   "text": "There's no blight. Someone in that village struck a bargain with me — asked a favor, got exactly what they asked for. The price was always the second half of the deal, and they're pretending they forgot that part. The craft has been collecting on the debt ever since, out of their fields.",
    "options": [
     {
      "text": "Back to it.",
@@ -161,7 +161,7 @@
   },
   "mediate_pitch": {
    "speaker": "Eloise",
-   "text": "Broker. That's a word for it. Go on, then, make your pitch. I'll hear it out. Being owed has never yet made me unreasonable.",
+   "text": "Broker. That's a word for it. Go on, then, make your pitch. I'll hear it out. I've settled for less than I was owed before now.",
    "options": [
     {
      "text": "Take a year of hearth-tending instead of whatever you were owed.",
@@ -361,7 +361,7 @@
   },
   "witch_ask": {
    "speaker": "Eloise",
-   "text": "Anyone can learn the shape of it. Hats. Herbs, mostly, if I'm honest. Words said over water come later in the learning. The craft itself asks one question first, and clever has nothing to do with the answer.",
+   "text": "Anyone can learn the shape of it. Hats. Herbs, mostly, if I'm honest. Words said over water come later. But the craft asks a question of you first, before any of that.",
    "options": [
     {
      "text": "What's the question?",

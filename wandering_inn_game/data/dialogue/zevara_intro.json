@@ -454,7 +454,7 @@
   },
   "swept": {
    "speaker": "Zevara",
-   "text": "Spiders from the Dungeon. Wonderful. A nest that size costs me six Watchmen and a night of overtime. Consider it swept. I'll pull a squad at dusk and burn the silk out before it spreads. You did right bringing it to me clean, before it had teeth. And good work. Now go tell whoever set you on this that the Watch has it.",
+   "text": "Spiders from the Dungeon. Wonderful. A nest that size costs me six Watchmen and a night of overtime. Consider it swept. I'll pull a squad at dusk and burn the silk out before it spreads. You did right bringing me a species and a location. Half the reports on my desk have neither. And good work. Now go tell whoever set you on this that the Watch has it.",
    "options": [
     {
      "text": "That's all I ask, Captain.",
@@ -468,7 +468,7 @@
   },
   "swept_paid": {
    "speaker": "Zevara",
-   "text": "Funding, not evidence. Fine — my ledger doesn't much care which. I'll pull a squad at dusk and burn the silk out, whatever's actually down there. Set the coin on the desk. It goes down as lanterns and a healer.",
+   "text": "Set it on the desk. It goes down as lanterns and a healer. I'll pull a squad at dusk and burn the silk out, whatever's actually down there. Next time, bring me the count first.",
    "options": [
     {
      "text": "That's all I ask, Captain.",

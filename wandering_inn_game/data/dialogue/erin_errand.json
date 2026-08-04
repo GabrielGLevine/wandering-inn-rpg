@@ -36,7 +36,7 @@
        "won_combat": 1
       }
      },
-     "text": "I know what the road is like. Whatever you fought out there, I'm sure it needed fighting. Just look twice at the next one before you decide what it is. That's all I want. Sign stays up."
+     "text": "I know what the road is like. Whatever you fought out there, I'm sure it needed fighting. Just look twice at the next one before you decide what it is. The sign out front isn't coming down."
     },
     {
      "requires": {
@@ -250,7 +250,7 @@
    "speaker": "Erin",
    "text": "Well, yeah, I feed everyone who turns up. If something's been out there long enough to be older than the wall, it has definitely not had a hot meal in a while, and that seems like the sort of thing somebody ought to fix.",
    "options": [
-    { "text": "That's a lot of kindness for something you've never seen.", "end": true }
+    { "text": "You've never even seen it.", "end": true }
    ]
   },
   "package": {
@@ -354,7 +354,7 @@
   },
   "erin_home": {
    "speaker": "Erin",
-   "text": "Far. Really far. Like, you can't get there by walking, and believe me, I did the math on walking. The math was bad. Anyway! The inn's home now. It has a door and everything, and about half the chairs match. I pick up more whenever a trader has them.",
+   "text": "Far. Really far. Like, you can't get there by walking, and believe me, I checked, back at the start. I stopped checking. Anyway! The inn's home now. It has a door and everything, and about half the chairs match. I pick up more whenever a trader has them.",
    "options": [
     {
      "text": "It suits you.",

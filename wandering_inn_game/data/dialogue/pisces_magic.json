@@ -298,7 +298,7 @@
     },
     {
      "_comment": "Act V (#270 beat 1, spec 7 amendment 2) THE DESCENT ASK. Gate is ALL THREE lattice counters, which is the amendment's 'fires when lattice_forge_rune banks' in data terms -- the forge rune is last in the spine's own order. NO bank on this option: seal_descent_agreed rides the ACCEPT below, so a player who opens the pitch and walks away can come back (hide_when is the accept's counter, not a read-flag). Appended LAST so every cursor-pinned canonical stays byte-identical.",
-     "text": "Riverfarm, Invrisil, Pallass. Three answers, and I still can't see the shape they make.",
+     "text": "Everywhere I've been, someone was feeding a ward. Riverfarm, Invrisil, Pallass. Tell me what that means.",
      "requires": {
       "accomplishment": {
        "lattice_witch_lore": 1,
@@ -351,7 +351,7 @@
   },
   "horns_bridge_two": {
    "speaker": "Pisces",
-   "text": "Four. Yvlon holds what is falling, Ksmvr counts what is left, Ceria decides, and I am told afterwards. The arrangement has kept four people alive who had no business remaining so. I audited it for a month, found no error, and stopped. Next question — about magic, ideally.",
+   "text": "Four. Yvlon holds what is falling, Ksmvr counts what is left, Ceria decides, and I am told afterwards. The arrangement has kept four people alive who had no business remaining so. I audited the arrangement for a month, expecting to find the error. There is no error. I have not repeated the audit.",
    "options": [
     {
      "text": "Back to magic, then.",
@@ -381,7 +381,7 @@
   "descent_ask": {
    "_comment": "#270 beat 1. The scroll leg (scroll_secret_shared) is an OR-ENRICHMENT, never a requirement: with the treatise read he connects it explicitly, without it his own arithmetic carries the ask, so the [Mage] line stays optional. Spoiler bar: he names an appetite and a hand, never what is on the other end.",
    "speaker": "Pisces",
-   "text": "Three regions taught you the same word in three accents and not one of them noticed doing it. A witch feeds hers. An enchanter reads the draw as craftsmanship. A forge calls it maintenance and bills by the hour. Under this city is wardwork by the hand that cut our frame, and it has been drawing since before Liscor had walls. I want to read it standing in front of it.",
+   "text": "Three regions taught you the same word in three accents and not one of them noticed doing it. A witch feeds hers, milk and a word. An enchanter prices the draw and calls it craftsmanship. Pallass bills it as maintenance. Maintenance. Under this city is wardwork by the hand that cut our frame, and it has been drawing since before Liscor had walls. I want to read it standing in front of it.",
    "text_variants": [
     {
      "requires": {
@@ -487,7 +487,7 @@
   },
   "consult_fight_response": {
    "speaker": "Pisces",
-   "text": "Bleeding it is. Predictable, but effective. Go on, then. I shall be here, dry and uninjured, exactly as planned.",
+   "text": "Bleeding it is. Predictable, but effective. Go on, then. I shall be here with my notes. Do try to leave the frame intact.",
    "options": [
     {
      "text": "Wish me luck.",
@@ -605,7 +605,7 @@
   },
   "pisces_fence_two": {
    "speaker": "Pisces",
-   "text": "I sold the blade years ago, under circumstances I will call instructive. I do not miss it, exactly. The hands remember it at odd hours. A sniff. Next question — preferably about magic.",
+   "text": "I sold the blade years ago, under circumstances I will call instructive. I do not miss it, exactly. The hands remember it at odd hours. This morning, in fact, halfway through a citation.",
    "options": [
     {
      "text": "Back to magic, then.",
@@ -647,7 +647,7 @@
   },
   "lesson_light": {
    "speaker": "Pisces",
-   "text": "[Light]. Always [Light]. It is cheap, it is obedient, and it fails without a corpse or a fire. It also fails without an inquest, which for a man of my reputation is the deciding virtue. Kindle one steady orb and you have proven the channel holds. Master that, and only then do we discuss the interesting spells.",
+   "text": "[Light]. Always [Light]. It is cheap and it is obedient. When it fails, it merely goes out — no fire, no inquest, which for a man of my reputation is the deciding virtue. Kindle one steady orb and you have proven the channel holds. Master that, and only then do we discuss the interesting spells.",
    "options": [
     {
      "text": "I'm ready. Show me the words.",

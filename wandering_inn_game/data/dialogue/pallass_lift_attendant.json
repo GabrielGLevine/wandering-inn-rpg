@@ -112,7 +112,7 @@
   },
   "ledger_pitch": {
    "speaker": "Lift Attendant",
-   "text": "Four cycles, and it will be five. The permit office holds the queue and the office's own supplies are in it, so the office cannot clear the queue until the queue clears the office. Nobody may skip it. That includes the queue.",
+   "text": "Four cycles, and it will be five. The permit office holds the queue, and the office's own requisitions are sitting in that queue with everything else. Until their paper moves, nothing behind it moves, and nobody up there will sign out of order.",
    "options": [
     {
      "text": "Somebody should unstick that.",

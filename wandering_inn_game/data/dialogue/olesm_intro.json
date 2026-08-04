@@ -12,7 +12,7 @@
        "night"
       ]
      },
-     "text": "Still counting, this late. Someone has to keep the ledger honest after the Council's gone to bed."
+     "text": "Still counting, this late. The tally has to balance before I sleep, and it doesn't yet."
     },
     {
      "requires": {
@@ -240,7 +240,7 @@
   "seal_bounty_pitch": {
    "_comment": "The witch pattern: a Skill leg (visible-LOCKED) and a priced alternate (grey-visible when broke), both landing on the same posted outcome, plus an always-available exit. The Skill does not skip the negotiation -- it IS the negotiation, and it lands on the quest's last beat, not past it. REWARD ADJUDICATION: the posting is FICTION, not a bounties.json row -- a real row would mint accepted_/completed_bounty counters outside this wave's frozen list and re-pin every board canonical; the mechanical payoff is the quest's own resolution_paths grant.",
    "speaker": "Olesm",
-   "text": "Fed. On a schedule. Forever. Do you know what a standing posting with no end date does to a ledger? It sits there. Every quarter, somebody new asks why we're paying a Gnoll to walk down and feed a door, and every quarter somebody has to be brave enough to sign it again.",
+   "text": "Fed, on a schedule, with no end written anywhere. A posting like that sits on the ledger forever. Every quarter, somebody new asks why we're paying a Gnoll to walk down and feed a door, and every quarter somebody has to be brave enough to sign it again.",
    "options": [
     {
      "text": "[Charming Smile] You've been dreading that door since the survey. Sign it and sleep.",
@@ -448,7 +448,7 @@
   },
   "olesm_doubt_two": {
    "speaker": "Olesm",
-   "text": "So do I. You train your whole life for a day you pray never comes. The better you are, the more boring the city stays. Liscor is very boring. I'm quietly proud of that.",
+   "text": "So do I. You train your whole life for a day you pray never comes. Meanwhile the list stays in the drawer and I check the granary sums instead. Liscor's had ten quiet years. I like to think a few of them are partly mine.",
    "options": [
     {
      "text": "Back to the top.",
@@ -480,7 +480,7 @@
   },
   "olesm_ambition_two": {
    "speaker": "Olesm",
-   "text": "You'd be the second subscriber. The first is me, checking for errors. Thank you. People ask what I do; you asked what I'm for. There's a difference, and it's most of why the second chair stays out.",
+   "text": "You'd be the second subscriber. The first is me, checking for errors. Thank you. People ask what I do; you asked what I'm for. I'm leaving the second chair out.",
    "options": [
     {
      "text": "Back to the top.",
@@ -554,7 +554,7 @@
   },
   "resonance": {
    "speaker": "Olesm",
-   "text": "The weak point? Everyone points at the gap in the south wall, and I have stopped correcting them, because the true answer takes longer to say: Liscor has never been besieged long enough to learn its own supply. Morale holds until the third hungry week, and no one has ever counted past the second. You already knew that. I can see you did. It is, honestly, a relief not to be the only one in the room doing that arithmetic.",
+   "text": "The gap in the south wall? The masons watch that; it's on every list the Council owns. The one I lose sleep over is supply. Liscor has never been besieged long enough to learn its own granaries, and my arithmetic gives out in the third hungry week. You already knew that. I can see you did. It is, honestly, a relief not to be the only one in the room doing that arithmetic.",
    "options": [
     {
      "text": "We should compare notes sometime.",
@@ -586,7 +586,7 @@
   },
   "cisterns": {
    "speaker": "Olesm",
-   "text": "Worried is the professional term, yes. The market's had reports: things moving under the grates, a cistern gone foul, a fishmonger who swears something looked back at him from the dark. Probably nothing. But it is under a walled city, and I would like to be certain. Actually — you have the look of someone who finishes things. Would you go down and settle it?",
+   "text": "Worried is the professional term, yes. The market's had reports: things moving under the grates, a cistern gone foul, a fishmonger who swears something looked back at him from the dark. Probably nothing. But it is under a walled city, and I would like to be certain. Actually — you're standing here and you're armed. Would you go down and settle it?",
    "text_variants": [
     {
      "requires": {
@@ -602,7 +602,7 @@
        "cleared_the_nest": 1
       }
      },
-     "text": "You've the look of someone who's swung a blade recently. The nest under the market. Is it settled? Tell me straight."
+     "text": "There's dust on you from somewhere below street level. The nest under the market. Is it settled? Tell me straight."
     },
     {
      "requires": {
@@ -751,7 +751,7 @@
   },
   "cisterns_done": {
    "speaker": "Olesm",
-   "text": "Then it's over, and the city's quieter for it. Nobody thanks anyone for this kind of work — the streets just stay dull and no one asks why. So let me do it here: you've the Council's gratitude, and mine, which comes with more paperwork attached. If you ever want a game, or a job that needs a clear head, you know where the board is.",
+   "text": "Then it's over, and the city's quieter for it. Nobody thanks anyone for this kind of work. So let me do it here: you've the Council's gratitude, and mine, which comes with more paperwork attached. If you ever want a game, or a job that needs a clear head, you know where the board is.",
    "options": [
     {
      "text": "Anytime, Olesm.",
@@ -762,7 +762,7 @@
   },
   "cisterns_intel": {
    "speaker": "Olesm",
-   "text": "Oh, this is lovely work. You counted them. Exits, chokepoints, the drop where the tunnel falls away. The problem has a shape now, and it fits on one page. The Watch goes in knowing the ground instead of bleeding to learn it. This goes into their brief exactly as you drew it. Take the Council's thanks — and mine, doubled, because you did it the clever way.",
+   "text": "Oh, this is lovely work. You counted them. Exits, chokepoints, the drop where the tunnel falls away. The problem has a shape now, and it fits on one page. The Watch goes in knowing the count and the exits before a boot touches the ladder. This goes into their brief exactly as you drew it. Take the Council's thanks — and mine, doubled, because you did it the clever way.",
    "options": [
     {
      "text": "Glad it's useful.",

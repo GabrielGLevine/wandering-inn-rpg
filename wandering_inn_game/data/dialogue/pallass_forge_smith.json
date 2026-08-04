@@ -120,7 +120,7 @@
   },
   "commission": {
    "speaker": "Forge-Tier Smith",
-   "text": "You counted them. Good. My apprentice has the steadiest hand on this tier. The examiner has failed her nine times running. Between him and me, somebody has this wrong. I do not believe it is her hands.",
+   "text": "You counted them. Good. My apprentice has the steadiest hand on this tier. The examiner has failed her nine times running. I taught those hands myself. Go and find out which of us the standard agrees with.",
    "options": [
     {
      "text": "I'll take the commission.",
@@ -156,7 +156,7 @@
   },
   "commission_drift": {
    "speaker": "Forge-Tier Smith",
-   "text": "It walks its own tolerance and corrects late. On a slab that is a scratch. On a person it is a season. Do not stand where it corrects.",
+   "text": "It walks its own tolerance and corrects late. A slab picks up a scratch. A person picks up the kind of injury you spend a season paying off, so keep clear of the rig while it settles.",
    "options": [
     {
      "text": "Understood.",
@@ -170,7 +170,7 @@
    "options": [
     {
      "_comment": "TALK arm. Banks standards_brokered and goes on to the resolution -- brokering is a separate act from reporting it, which is why it does not bank the terminal itself.",
-     "text": "[The standard measures recovery, not hardness. His own notice says so.]",
+     "text": "[The standard measures recovery. It's printed on his own notice.]",
      "requires": {
       "accomplishment": {
        "read_the_examination_standard": 1
@@ -238,7 +238,7 @@
   },
   "broker": {
    "speaker": "Forge-Tier Smith",
-   "text": "Recovery. It is printed on his own notice, the one that has hung on my wall six years. Take it down and read me the standard clause, line by line. She kept bringing him harder steel because harder is what I taught her. Nine fails. Say the rest of it out loud, because I am not going to.",
+   "text": "Recovery. It is printed on his own notice, the one that has hung on my wall six years. Take it down and read me the standard clause, line by line. She kept bringing him harder steel because that is what I taught her. Nine fails, and the answer hanging on my own wall the whole time. Read me the clause.",
    "options": [
     {
      "text": "She'll hear it from the file before she hears it from either of you.",
