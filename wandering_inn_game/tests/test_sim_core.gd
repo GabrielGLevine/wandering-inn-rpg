@@ -2313,6 +2313,24 @@ func _init() -> void:
 	_events.clear()
 	assert(not gNoFooting.move_player(Vector2i.UP), "...and refuses the step")
 	assert(gNoFooting.player_cell == Vector2i(2, 3) and _count("player_blocked") == 1, "the refusal is the ordinary blocked bump")
+	# S0.1 (phase-0 review): the bump alone made a hazard read as masonry -- the
+	# thesis' own failure mode. The refusal SPEAKS, once per waking per cell.
+	assert(_count("toast") == 1, "an unsteady refusal tells the player the ground is the problem")
+	var unsteady_line := ""
+	for e: Dictionary in _events:
+		if e["type"] == "toast":
+			unsteady_line = String(e["payload"].get("text", ""))
+	assert(unsteady_line.findn("skill") == -1 and unsteady_line.find("[") == -1,
+		"...and it talks about FOOTING, never about which Skill opens it")
+	_events.clear()
+	assert(not gNoFooting.move_player(Vector2i.UP), "the second bump still refuses")
+	assert(_count("toast") == 0, "...but does NOT nag -- once per waking per cell")
+	gNoFooting.sleep()
+	_events.clear()
+	gNoFooting.transition("sewers", Vector2i(2, 3))
+	_events.clear()
+	assert(not gNoFooting.move_player(Vector2i.UP) and _count("toast") == 1, "a sleep re-teaches it")
+	_events.clear()
 
 	var gFooting := WIGame.new(unsteady_scene, wave_b_skill_config, _sink, 12345, combat_config)
 	gFooting.player_skills.append("even_footing")

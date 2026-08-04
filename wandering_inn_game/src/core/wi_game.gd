@@ -183,6 +183,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 			"blocked": blocked,
 			"freezable": freezable,
 			"unsteady": unsteady,
+			"unsteady_toast": m.get("unsteady_toast", ""),
 			"arrival_toasts": m.get("arrival_toasts", []),
 		}
 	_bind_map(String(scene_config["start_map"]))
@@ -317,6 +318,28 @@ func _even_footing_crosses(cell: Vector2i) -> bool:
 	return _is_unsteady(cell) and known_skills().has("even_footing")
 
 
+## GH#380 S0.1 (phase-0 review). An `unsteady` cell is a HAZARD, not a wall --
+## its whole point is that the right Skill crosses it. Blocked-with-no-tell made
+## it read byte-identically to masonry, which is this wave's own thesis failure
+## mode: an input the world takes and does not answer. So a refusal speaks once
+## per waking per cell -- teaches on the first bump, never nags on the second,
+## re-teaches after a sleep. Copy is map-authored (`unsteady_toast`) so a scree
+## slope and a rotten floor can read differently; the fallback is deliberately
+## about FOOTING, never about which Skill opens it (naming the Skill would be
+## a hint system, and the player has not necessarily heard of it yet).
+func _hint_unsteady(cell: Vector2i) -> void:
+	if not _is_unsteady(cell) or known_skills().has("even_footing"):
+		return
+	var hint_key := "unsteady_hint:%s:%d,%d" % [current_map, cell.x, cell.y]
+	if entity_first_use.has(hint_key):
+		return
+	entity_first_use[hint_key] = true
+	var line := String((_maps.get(current_map, {}) as Dictionary).get("unsteady_toast", ""))
+	if line == "":
+		line = "The ground shifts away under your boot. Crossing that needs surer feet than you have."
+	_emit(WIEvents.TOAST, {"text": line})
+
+
 ## #348 slice 1: the CELL-placement half of the property table's target
 ## vocabulary (the entity half is read straight off the faced entity's flags).
 ## A new cell class is a new key here AND in the map loader above (which also
@@ -373,6 +396,7 @@ func move_player(dir: Vector2i) -> bool:
 		return false
 	if is_cell_blocked(target):
 		_emit(WIEvents.PLAYER_BLOCKED, {"cell": [target.x, target.y], "facing": [player_facing.x, player_facing.y]})
+		_hint_unsteady(target)
 		return false
 	player_cell = target
 	_emit(WIEvents.PLAYER_MOVED, {"cell": [target.x, target.y]})
