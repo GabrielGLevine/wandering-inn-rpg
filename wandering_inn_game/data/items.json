@@ -328,6 +328,7 @@
 			"lore": "Drakes fish the pond in fair weather and swear off it every winter, when the water starts moving wrong. The line-sellers do their best business in spring, replacing gear that was 'lost.'"
 		},
 		{
+			"_comment": "GH#378 arm 1: signposts the cooking gate at all 21 Serve options at once. TRAP: test_copy_fit measures the 664px no-autowrap option row at fs14 ONLY (22px spare); at 115%/130% text scale all 21 rows run 59-162px over and the hint clips. No wording fits fs18.",
 			"id": "hot_meal",
 			"name": "Hot Meal",
 			"kind": "meal",
@@ -338,6 +339,7 @@
 			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
+			"source_hint": "the stew pot, if you cook",
 			"description": "A bowl of stew and a heel of bread, still steaming from the pot. Someone's waiting on this.",
 			"lore": "The stew pot doesn't care who it's for — Watch, patron, or the cook themselves. It only cares that it's stirred."
 		},
