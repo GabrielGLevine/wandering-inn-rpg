@@ -1089,7 +1089,7 @@
    "id": "inn_sign",
    "kind": "prop",
    "cell": [
-    6,
+    5,
     6
    ],
    "display_name": "Inn Sign",
@@ -1321,7 +1321,7 @@
    "sprite": "relc",
    "observe": "A Drake built like a barracks door, spear worn smooth from use, standing at ease the way only dangerous people stand. He watches the road and everyone on it. Including you, now.",
    "friendly_line": "Heh. Alright, alright - I like you. You've got the look of someone who buys a guy a drink after. We're good, you and me. Best guardsman in Liscor says so.",
-   "facing": "left",
+   "facing": "down",
    "talk_pool": [
     "Heh. You walk like nobody's ever hit you properly. We should fix that sometime - for fun.",
     "Road's boring today. I keep hoping something stupid charges the gate so I can try out the old Relc Headbutt.",

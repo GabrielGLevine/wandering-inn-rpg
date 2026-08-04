@@ -38,7 +38,12 @@
    ]
   },
   {
-   "_comment": "inn_sign sits at (6,6), one cell WEST of this exact arrival cell -- genuinely untouched ground (no canonical script ever moves west from (7,6); every one of them moves right/down from here). A blocked left-move turns facing onto the sign without displacing player_cell (move_player sets facing before the blocked check), then interact reads it: on_interact_accomplishment + toast, no skill gate.",
+   "_comment": "GH#375: inn_sign moved (6,6)->(5,6) because at (6,6) it left floodplains_inn_door_west (6,5) with ZERO legal interact-approach cells -- [6,4] and [5,5] blocked, [7,5] is the main-door entity -- so GH#185's west widening was dead, not merely 'a third blocked'. Route now: left once ONTO the freed (6,6), left again BLOCKS on the sign at (5,6) and turns facing west without displacing player_cell (move_player sets facing before the blocked check), then interact reads it.",
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
    "action": "move",
    "direction": "left",
    "steps": 1
@@ -71,6 +76,57 @@
   {
    "action": "screenshot",
    "name": "00b_inn_sign"
+  },
+  {
+   "_comment": "GH#375 CAN-FAIL REACHABILITY PIN: from the freed (6,6), north BLOCKS on floodplains_inn_door_west (6,5) and turns facing north; interact must actually enter the inn. A future prop dropped back onto (6,6) reds this leg. Round-trips out again so the original route resumes from (7,6) untouched.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "inn"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "payload_contains": {
+    "map": "floodplains"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    7,
+    6
+   ]
   },
   {
    "action": "move",
