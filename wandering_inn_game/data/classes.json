@@ -217,9 +217,9 @@
 			},
 			"levels": [
 				{ "level": 1, "requires": {}, "grants": ["basic_cooking"] },
-				{ "level": 2, "requires_any": { "cleaned_the_inn": 3, "served_customer": 3, "delivered_item": 3 }, "grants": ["bar_fighting"] },
+				{ "level": 2, "requires_any": { "cleaned_the_inn": 3, "served_customer": 3, "delivered_item": 3 }, "grants": [] },
 				{ "level": 3, "requires_any": { "cleaned_the_inn": 6, "served_customer": 6, "delivered_item": 6 }, "grants": ["lesser_stamina"] },
-				{ "level": 4, "requires_any": { "cleaned_the_inn": 10, "served_customer": 10, "delivered_item": 10, "cooked_meal": 6 }, "grants": [] },
+				{ "level": 4, "requires_any": { "cleaned_the_inn": 10, "served_customer": 10, "delivered_item": 10, "cooked_meal": 6 }, "grants": ["bar_fighting"] },
 				{ "level": 5, "requires_any": { "cleaned_the_inn": 15, "served_customer": 15, "delivered_item": 15, "cooked_meal": 10 }, "grants": ["quick_movement"] },
 				{ "level": 6, "requires_any": { "cleaned_the_inn": 21, "served_customer": 21, "delivered_item": 21, "cooked_meal": 15 }, "grants": [] },
 				{ "level": 7, "requires_any": { "cleaned_the_inn": 28, "served_customer": 28, "delivered_item": 28, "cooked_meal": 21 }, "grants": [] },

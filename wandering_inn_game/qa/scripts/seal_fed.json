@@ -238,11 +238,11 @@
    "frames": 10
   },
   {
-   "_comment": "Act V's two new entities net to ZERO here and the count still moves: seal_warden_alcove (19,6) is an encounter, so it is visible and inert from first arrival (present_when is validator-forbidden on encounters), and pisces_seal_escort (19,8) is present since the descent was agreed -- while ksmvr_plates retires at horns_dig_joined, which this save banked long ago. 12 entities + the PC = 13, the same total dungeon_peek pins from the opposite direction (its fixture keeps Ksmvr and has no escort).",
+   "_comment": "Act V's two new entities net to ZERO here and the count still moves: seal_warden_alcove (19,6) is an encounter, so it is visible and inert from first arrival (present_when is validator-forbidden on encounters), and pisces_seal_escort (19,8) is present since the descent was agreed -- while ksmvr_plates retires at horns_dig_joined, which this save banked long ago. 12 entities + the PC = 13; v019-L2 makes it 17, the four north-gallery entities (span stub, drop, slab, cache) standing unbanked and present here exactly as they do in dungeon_peek.",
    "action": "assert_event_logged",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 13,
+    "sprites": 17,
     "fallbacks": 0
    }
   },
