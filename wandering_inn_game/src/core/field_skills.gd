@@ -13,8 +13,12 @@ extends RefCounted
 ##  * MIRROR CONTRACT: data/interactions.json's "outcomes" must equal
 ##    OUTCOMES exactly (proven in tests/test_interactions_table.gd, policed
 ##    by scripts/data_lint.py). Changing one without the other is a red gate.
-##  * ROW ORDER IS THE CONTRACT: first matching row wins, so the shipped
-##    order (burn, then freeze) reproduces the pre-table precedence.
+##  * ROW ORDER IS THE CONTRACT: first matching row wins. The burn/freeze pair
+##    leads so the pre-table precedence is reproduced, and any pair whose
+##    target properties can hold on the SAME target must be ordered
+##    deliberately -- a frozen water cell carries `frozen` AND `freezable`, so
+##    burns x frozen (thaw) MUST precede burns x freezable (the water refusal)
+##    or fire could never take ice back off the channel.
 ##  * A row whose guard says "already applied" (a frozen cell re-frozen)
 ##    does NOT match -- it falls through to field_ambient exactly as the
 ##    hardcoded arm did.
@@ -24,23 +28,38 @@ extends RefCounted
 ##    is what proves the shipped table is actually wired.
 const OUTCOME_REMOVE_SCORCH := "remove_scorch"
 const OUTCOME_FREEZE_CELL := "freeze_cell"
-const OUTCOMES: Array[String] = [OUTCOME_REMOVE_SCORCH, OUTCOME_FREEZE_CELL]
+const OUTCOME_THAW_CELL := "thaw_cell"
+const OUTCOME_STATE_SET := "state_set"
+const OUTCOME_REFUSE := "refuse"
+const OUTCOMES: Array[String] = [OUTCOME_REMOVE_SCORCH, OUTCOME_FREEZE_CELL, OUTCOME_THAW_CELL, OUTCOME_STATE_SET, OUTCOME_REFUSE]
 ## The two shipped target-property placements (spec §4.2): a boolean flag on
 ## the faced ENTITY (burnable), or a map-authored CELL class (freezable).
+## PLACEMENT_ANY is a VERB-side wildcard only -- never a legal placement for a
+## target property, only the declaration of a verb whose body dereferences
+## NEITHER shape (refuse).
 const PLACEMENT_ENTITY := "entity"
 const PLACEMENT_CELL := "cell"
-## VERB/PLACEMENT BINDING: each verb's body dereferences ONE shape, and the two
-## are opposites -- remove_scorch reads the faced ENTITY (target[id]/[cell]),
-## freeze_cell writes the faced CELL and never reads target. TRAP: a row pairing
-## a verb with the other placement crashes the cast (remove_scorch, empty
-## target) or silently flips an arbitrary cell's walkability (freeze_cell --
-## is_cell_blocked passes ANY frozen cell, so that row is a wall-phase
-## primitive). data_lint.OUTCOME_PLACEMENT fails such a row; _resolve_property
-## makes it inert here. Mirrored in data_lint, asserted in
+const PLACEMENT_ANY := "any"
+## The one DYNAMIC cell class: never authored on a map, it is whatever
+## freeze_cell wrote into `frozen_cells` this waking. Derived HERE (dispatch
+## already carries frozen_cells) so thaw_cell needs no WIGame._cell_properties
+## key. Every other cell property comes from the injected map classes.
+const CELL_PROPERTY_FROZEN := "frozen"
+## VERB/PLACEMENT BINDING: each verb's body dereferences ONE shape --
+## remove_scorch/state_set read the faced ENTITY (target[id]), freeze_cell/
+## thaw_cell write the faced CELL and never read target, refuse reads neither.
+## TRAP: a row pairing a verb with the other placement crashes the cast
+## (remove_scorch, empty target) or silently flips an arbitrary cell's
+## walkability (freeze_cell -- is_cell_blocked passes ANY frozen cell, so that
+## row is a wall-phase primitive). data_lint.OUTCOME_PLACEMENT fails such a row;
+## _resolve_property makes it inert here. Mirrored in data_lint, asserted in
 ## tests/test_interactions_table.gd.
 const OUTCOME_PLACEMENT: Dictionary = {
 	OUTCOME_REMOVE_SCORCH: PLACEMENT_ENTITY,
 	OUTCOME_FREEZE_CELL: PLACEMENT_CELL,
+	OUTCOME_THAW_CELL: PLACEMENT_CELL,
+	OUTCOME_STATE_SET: PLACEMENT_ENTITY,
+	OUTCOME_REFUSE: PLACEMENT_ANY,
 }
 
 var _event_sink: Callable
@@ -139,7 +158,7 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 	# THE PROPERTY TABLE (spec §4.3 precedence step 4). Sits BELOW the authored
 	# per-entity arms and the named generic arms, ABOVE door_flavor/toggles_light
 	# /field_ambient -- the position the two hardcoded arms held, kept exactly.
-	var resolved := _resolve_property(skill_id, skill, target, faced_cell, current_map, frozen_cells, cell_properties)
+	var resolved := _resolve_property(skill_id, skill, target, faced_cell, current_map, frozen_cells, entity_first_use, cell_properties)
 	if not resolved.is_empty():
 		return resolved
 	# b7 #214b: skill-authored door flavor — a data key, not an effect block
@@ -182,9 +201,10 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 ## Pure lookup over the injected table: no RNG, no Node refs, no disk. Returns
 ## the dispatch result of the FIRST row whose skill property, target property
 ## and outcome guard all hold; {} means "no row applies" and the caller keeps
-## falling through. `cell_properties` is the faced cell's class membership
-## ({freezable: bool} today) -- the cell-placement mirror of the entity flags.
-func _resolve_property(skill_id: String, skill: Dictionary, target: Dictionary, faced_cell: Vector2i, current_map: String, frozen_cells: Dictionary, cell_properties: Dictionary) -> Dictionary:
+## falling through. `cell_properties` is the faced cell's MAP-AUTHORED class
+## membership ({freezable: bool} today) -- the cell-placement mirror of the
+## entity flags; dynamic classes are derived in `_cell_carries`.
+func _resolve_property(skill_id: String, skill: Dictionary, target: Dictionary, faced_cell: Vector2i, current_map: String, frozen_cells: Dictionary, entity_first_use: Dictionary, cell_properties: Dictionary) -> Dictionary:
 	for row: Dictionary in _property_rows:
 		var skill_prop := String(row.get("skill_property", ""))
 		if skill_prop == "" or not bool(skill.get(skill_prop, false)):
@@ -192,17 +212,19 @@ func _resolve_property(skill_id: String, skill: Dictionary, target: Dictionary, 
 		var target_prop := String(row.get("target_property", ""))
 		var placement := String(_target_placements.get(target_prop, ""))
 		var outcome := String(row.get("outcome", ""))
+		var wants := String(OUTCOME_PLACEMENT.get(outcome, ""))
 		# Binding guard, BEFORE any placement test: unregistered target property
-		# (placement "") or verb/placement mismatch -> row is inert, cast falls
-		# through to ambient. Shipped rows satisfy it, so the stream is unchanged.
-		if placement == "" or String(OUTCOME_PLACEMENT.get(outcome, "")) != placement:
+		# (placement ""), unknown verb (wants "") or verb/placement mismatch ->
+		# row is inert, cast falls through to ambient. Shipped rows satisfy it,
+		# so the stream is unchanged.
+		if placement == "" or wants == "" or (wants != PLACEMENT_ANY and wants != placement):
 			continue
 		match placement:
 			PLACEMENT_ENTITY:
 				if target.is_empty() or not bool(target.get(target_prop, false)):
 					continue
 			PLACEMENT_CELL:
-				if not bool(cell_properties.get(target_prop, false)):
+				if not _cell_carries(target_prop, faced_cell, current_map, frozen_cells, cell_properties):
 					continue
 		match outcome:
 			OUTCOME_REMOVE_SCORCH:
@@ -213,7 +235,37 @@ func _resolve_property(skill_id: String, skill: Dictionary, target: Dictionary, 
 				if (frozen_cells.get(current_map, {}) as Dictionary).has(faced_cell):
 					continue
 				return _outcome_freeze_cell(skill_id, skill, row, faced_cell, current_map, frozen_cells)
+			OUTCOME_THAW_CELL:
+				return _outcome_thaw_cell(skill_id, skill, row, faced_cell, current_map, frozen_cells)
+			OUTCOME_STATE_SET:
+				# The counter is authored ON THE CARRIER (`counter_key` names the
+				# field), never on the row: one row serves many props and a
+				# shared counter would flip every sibling's visual_states the
+				# first time ANY of them is set. A carrier missing the field
+				# leaves the row inert rather than emitting a hollow toast.
+				var set_counter := String(target.get(String(row.get("counter_key", "")), ""))
+				if set_counter == "":
+					continue
+				# ONE-WAY, so a repeat is a fallthrough, not a second set (the
+				# freeze_cell already-applied precedent). TRAP: entity_first_use
+				# is WAKING-scoped (wi_game.sleep clears it), so a re-cast after
+				# a sleep re-banks the monotone counter -- inert (nothing reads
+				# these counters but visual_states, which is already satisfied),
+				# but a state counter must never gate a quest beat or class gain.
+				if not _bank_first_use(entity_first_use, "state_set", String(target[WIKeys.ID])):
+					continue
+				return _outcome_state_set(skill_id, row, target, set_counter)
+			OUTCOME_REFUSE:
+				return _outcome_refuse(skill_id, row, target, skill)
 	return {}
+
+
+## Cell-class membership for the CELL placement. `frozen` is derived live from
+## frozen_cells; everything else reads the injected map-authored classes.
+func _cell_carries(target_prop: String, faced_cell: Vector2i, current_map: String, frozen_cells: Dictionary, cell_properties: Dictionary) -> bool:
+	if target_prop == CELL_PROPERTY_FROZEN:
+		return (frozen_cells.get(current_map, {}) as Dictionary).has(faced_cell)
+	return bool(cell_properties.get(target_prop, false))
 
 
 ## `remove_scorch` -- the burn shape: permanent removal (removed_entities) +
@@ -250,15 +302,66 @@ func _outcome_freeze_cell(skill_id: String, skill: Dictionary, row: Dictionary, 
 	return {"frozen": [faced_cell.x, faced_cell.y]}
 
 
+## `thaw_cell` -- freeze_cell's inverse over the SAME store: drop the
+## frozen_cells entry and the map's own blocked set applies again. Creates no
+## timed state of its own (a thawed cell is simply not frozen), so nothing
+## persists past the erase. Empty inner map keys are dropped so
+## `frozen_cells.is_empty()` stays an honest "nothing is frozen anywhere".
+func _outcome_thaw_cell(skill_id: String, skill: Dictionary, row: Dictionary, faced_cell: Vector2i, current_map: String, frozen_cells: Dictionary) -> Dictionary:
+	_break_sneak.call()
+	var cells: Dictionary = frozen_cells.get(current_map, {})
+	cells.erase(faced_cell)
+	if cells.is_empty():
+		frozen_cells.erase(current_map)
+	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": ""})
+	_mark_skill_used.call(skill_id)
+	_emit(WIEvents.TERRAIN_CHANGED, {"map": current_map, "cell": [faced_cell.x, faced_cell.y], "to": String(row.get("terrain", ""))})
+	_emit(WIEvents.TOAST, {"text": _row_toast(row, {}, skill)})
+	return {"thawed": [faced_cell.x, faced_cell.y]}
+
+
+## `state_set` -- the counter-backed visual_states swap (the unlit_lantern
+## shape, expressed as a row). ONE-WAY BY SUBSTRATE: counters are monotone and
+## no decrement API exists, so there is no douse/re-dirty row in v1 (spec §4.1).
+## DANGER: the bank is permanent and save-persisted -- a wrong row is durable
+## world state in a player's save, not a toast. Emission order mirrors
+## remove_scorch (skill_used -> accomplishment_recorded -> toast).
+func _outcome_state_set(skill_id: String, row: Dictionary, target: Dictionary, counter: String) -> Dictionary:
+	_break_sneak.call()
+	var prop_id := String(target[WIKeys.ID])
+	_emit(WIEvents.SKILL_USED, {"skill": skill_id, "context": "exploration", "target": prop_id})
+	_mark_skill_used.call(skill_id)
+	_record_accomplishment.call(counter, 1)
+	_emit(WIEvents.TOAST, {"text": _row_toast(row, target, {})})
+	return {"state_set": prop_id}
+
+
+## `refuse` -- an AUTHORED refusal: the ambient/no-effect shape with the row's
+## own copy instead of the skill's generic line. Banks nothing, marks no use,
+## breaks no sneak -- structurally identical to the shipped "Nothing here calls
+## for that." fallthrough, so a refusal can never become a progress path. These
+## rows are the vocabulary teachers (frost at a person, fire at water): the
+## player learns the closed properties from the lines that say no.
+func _outcome_refuse(skill_id: String, row: Dictionary, target: Dictionary, skill: Dictionary) -> Dictionary:
+	var refused_id := "" if target.is_empty() else String(target[WIKeys.ID])
+	_emit(WIEvents.SKILL_NO_EFFECT, {"skill": skill_id, "target": refused_id})
+	_emit(WIEvents.TOAST, {"text": _row_toast(row, target, skill)})
+	return {"refused": skill_id}
+
+
 ## Row copy resolution: `toast_from` picks WHICH side authors the line --
-## "target" (the prop's own burn_toast) or "skill" (the caster's freeze_toast)
-## -- and `toast_default` is the shipped fallback when neither side authored one.
+## "target" (the prop's own burn_toast), "skill" (the caster's freeze_toast), or
+## "row" (the pair itself owns the copy, which is what a refusal cell is) -- and
+## `toast_default` is the shipped fallback when the chosen side authored none.
 func _row_toast(row: Dictionary, target: Dictionary, skill: Dictionary) -> String:
 	var key := String(row.get("toast_key", ""))
 	var fallback := String(row.get("toast_default", ""))
-	if String(row.get("toast_from", "")) == "target":
-		return String(target.get(key, fallback))
-	return String(skill.get(key, fallback))
+	match String(row.get("toast_from", "")):
+		"target":
+			return String(target.get(key, fallback))
+		"skill":
+			return String(skill.get(key, fallback))
+	return fallback
 
 
 func _bank_first_use(entity_first_use: Dictionary, verb: String, entity_id: String) -> bool:

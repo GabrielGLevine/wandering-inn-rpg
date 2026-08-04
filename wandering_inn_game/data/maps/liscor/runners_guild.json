@@ -171,6 +171,7 @@
     2
    ],
    "display_name": "Vess",
+   "person": true,
    "sprite": "drake_patron",
    "tint": [
     0.5,
@@ -215,6 +216,7 @@
     5
    ],
    "display_name": "Resting Runner",
+   "person": true,
    "sprite": "gnoll_traveler",
    "tint": [
     0.72,
@@ -236,6 +238,111 @@
     {
      "speaker": "Resting Runner",
      "text": "...five more minutes."
+    }
+   ]
+  },
+  {
+   "_comment": "#348 slice 2 `hearth` carrier. state_counter names the counter the state_set row banks; visual_states must watch that same id or the one-way set is invisible (data_lint enforces the pair).",
+   "id": "runners_hearth",
+   "kind": "prop",
+   "cell": [
+    2,
+    1
+   ],
+   "display_name": "The Common Hearth",
+   "sprite": "cold_hearth",
+   "hearth": true,
+   "state_counter": "lit_the_runners_hearth",
+   "observe": "A wide stone hearth, swept out and laid ready: split kindling under a lattice of dry birch, waiting on someone with a light. The mantel above it is worn smooth where wet gloves get slapped down.",
+   "kindle_toast": "[Firefly] — The flame takes the birch on the second breath. Heat crawls out into the room and the stone begins giving it back.",
+   "toast": "Split kindling sits laid and ready under dry birch. The hearth is cold, and nobody here carries flint.",
+   "visual_states": [
+    {
+     "when": {
+      "counter": "lit_the_runners_hearth",
+      "at": 1
+     },
+     "sprite": "hearth",
+     "light": {
+      "color": [
+       1.0,
+       0.72,
+       0.42
+      ],
+      "energy": 0.7,
+      "radius": 22,
+      "flicker": true
+     }
+    }
+   ]
+  },
+  {
+   "_comment": "#348 slice 2 `unlit` carrier -- answers BOTH burns and toggles_light through the table; no authored requires_skill arm, which is the whole point (contrast inn's unlit_lantern).",
+   "id": "runners_wall_lamp",
+   "kind": "prop",
+   "cell": [
+    7,
+    1
+   ],
+   "display_name": "The Wall Lamp",
+   "sprite": "unlit_lantern",
+   "unlit": true,
+   "state_counter": "lit_the_runners_lamp",
+   "observe": "A brass lamp bracketed to the wall over the slip rack, glass sooted at the top and dry as bone. The oil ran out some time ago and nobody has come back with more.",
+   "kindle_toast": "[Firefly] — The wick takes the flame and holds it. Yellow light spreads down the wall and over the slips pinned there.",
+   "light_toast": "[Light] — The orb slides into the lamp glass and settles. Yellow light spreads down the wall and over the slips pinned there.",
+   "toast": "A wall lamp over the slip rack, glass sooted and wick dry. It has been dark long enough that the runners read by the door instead.",
+   "visual_states": [
+    {
+     "when": {
+      "counter": "lit_the_runners_lamp",
+      "at": 1
+     },
+     "tint": [
+      1.4,
+      1.25,
+      0.75
+     ],
+     "light": {
+      "color": [
+       1.0,
+       0.85,
+       0.5
+      ],
+      "energy": 0.55,
+      "radius": 14,
+      "flicker": true
+     }
+    }
+   ]
+  },
+  {
+   "_comment": "#348 slice 2 `dirty` carrier: the generalized grime cell. The inn's dirty_table keeps its AUTHORED requires_skill arm and wins by precedence -- this one carries no arm and resolves off the table alone.",
+   "id": "runners_mud_table",
+   "kind": "prop",
+   "cell": [
+    2,
+    6
+   ],
+   "display_name": "The Mud-Tracked Table",
+   "sprite": "dirty_table",
+   "dirty": true,
+   "state_counter": "scrubbed_the_runners_table",
+   "observe": "Road mud dried in ridges across the boards, stamped there by a week of packs set down hard. Somebody wiped one corner of it and gave up.",
+   "clean_toast": "[Basic Cleaning] — You take it off in three passes. The dried mud lifts, the grain comes up pale, and the boards stop smelling of the road.",
+   "toast": "Dried road mud ridges the boards where pack after pack has come down on them. One corner is wiped clean and the rest is not.",
+   "visual_states": [
+    {
+     "when": {
+      "counter": "scrubbed_the_runners_table",
+      "at": 1
+     },
+     "sprite": "table_brown",
+     "tint": [
+      1.0,
+      1.0,
+      1.0
+     ]
     }
    ]
   }

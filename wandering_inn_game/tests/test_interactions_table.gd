@@ -47,6 +47,13 @@ func _w1_skill_config() -> Dictionary:
 		WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "burns": true,
 		"field_ambient": "W1 scorch finds nothing that will take the fire.",
 	})
+	# Slice 2's third synthetic carrier: a brand-new `cleans` skill, the dirty
+	# pass's own "a new carrier is data alone" proof.
+	rows.append({
+		WIKeys.ID: "w1_scrub", WIKeys.DISPLAY_NAME: "[W1 Scrub]",
+		WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "cleans": true,
+		"field_ambient": "W1 scrub finds nothing worth wiping.",
+	})
 	return {WIKeys.SKILLS: rows}
 
 
@@ -67,6 +74,35 @@ func _w1_scene() -> Dictionary:
 		"requires_skill": "w1_scorch",
 		"on_skill_use": {"accomplishment": "w1_authored_burns", "toast": "W1 authored arm toast."},
 	})
+	# THE DIRTY-PASS PRECEDENCE PAIR (slice 2's regression-proof-by-construction
+	# claim, made a test arm): the same `dirty` tag on two props, one of which
+	# also keeps an authored arm for the same skill. The table generalizes over
+	# the untagged-grime one; the authored one must still win on its own entity.
+	ents.append({
+		WIKeys.ID: "w1_grime", WIKeys.KIND: "prop", WIKeys.CELL: [6, 2],
+		WIKeys.DISPLAY_NAME: "W1 Grime", "dirty": true,
+		"state_counter": "w1_grime_cleaned",
+		"clean_toast": "W1 grime toast.",
+	})
+	ents.append({
+		WIKeys.ID: "w1_authored_grime", WIKeys.KIND: "prop", WIKeys.CELL: [8, 2],
+		WIKeys.DISPLAY_NAME: "W1 Authored Grime", "dirty": true,
+		"state_counter": "w1_grime_cleaned",
+		"clean_toast": "W1 grime toast.",
+		"requires_skill": "w1_scrub",
+		"on_skill_use": {"accomplishment": "w1_authored_cleans", "toast": "W1 authored scrub toast."},
+	})
+	# `hearth` + `person` carriers for the state_set and refusal arms.
+	ents.append({
+		WIKeys.ID: "w1_brazier", WIKeys.KIND: "prop", WIKeys.CELL: [10, 2],
+		WIKeys.DISPLAY_NAME: "W1 Brazier", "hearth": true,
+		"state_counter": "w1_brazier_lit",
+		"kindle_toast": "W1 brazier toast.",
+	})
+	ents.append({
+		WIKeys.ID: "w1_bystander", WIKeys.KIND: "npc", WIKeys.CELL: [12, 2],
+		WIKeys.DISPLAY_NAME: "W1 Bystander", "person": true,
+	})
 	return scene
 
 
@@ -74,6 +110,7 @@ func _w1_game(scene: Dictionary) -> WIGame:
 	var g := WIGame.new(scene, _w1_skill_config(), _sink, 4242, _combat_config())
 	g.player_skills.append("w1_ice_floor")
 	g.player_skills.append("w1_scorch")
+	g.player_skills.append("w1_scrub")
 	return g
 
 
@@ -127,12 +164,33 @@ func _init() -> void:
 	for w1_verb: String in WIFieldSkills.OUTCOMES:
 		assert(WIFieldSkills.OUTCOME_PLACEMENT.has(w1_verb),
 			"every shipped verb declares the placement its body dereferences")
-		assert(String(WIFieldSkills.OUTCOME_PLACEMENT[w1_verb]) in [WIFieldSkills.PLACEMENT_ENTITY, WIFieldSkills.PLACEMENT_CELL],
-			"a verb's declared placement is one of the two shipped shapes")
+		assert(String(WIFieldSkills.OUTCOME_PLACEMENT[w1_verb]) in [WIFieldSkills.PLACEMENT_ENTITY, WIFieldSkills.PLACEMENT_CELL, WIFieldSkills.PLACEMENT_ANY],
+			"a verb's declared placement is one of the shipped shapes, or the ANY wildcard")
 	for row: Dictionary in w1_rows:
-		assert(String(WIFieldSkills.OUTCOME_PLACEMENT[String(row["outcome"])])
-				== String(w1_target_props[String(row["target_property"])]),
+		var w1_wants := String(WIFieldSkills.OUTCOME_PLACEMENT[String(row["outcome"])])
+		assert(w1_wants == WIFieldSkills.PLACEMENT_ANY
+				or w1_wants == String(w1_target_props[String(row["target_property"])]),
 			"every shipped row binds its verb to the placement that verb acts on")
+	# PLACEMENT_ANY is a VERB-side wildcard and must never leak into the target
+	# vocabulary -- a target property declaring it would skip the binding guard.
+	for placement: Variant in w1_target_props.values():
+		assert(String(placement) != WIFieldSkills.PLACEMENT_ANY,
+			"no target property may declare the 'any' wildcard as its placement")
+
+	# --- ROW ORDER IS THE CONTRACT (slice 2). A frozen water cell carries BOTH
+	# `frozen` and `freezable`, so the thaw row has to precede the water
+	# refusal or fire could never take ice back off a channel.
+	var w1_thaw_at := -1
+	var w1_water_refusal_at := -1
+	for i in range(w1_rows.size()):
+		var r: Dictionary = w1_rows[i]
+		if String(r["skill_property"]) == "burns" and String(r["target_property"]) == "frozen":
+			w1_thaw_at = i
+		if String(r["skill_property"]) == "burns" and String(r["target_property"]) == "freezable":
+			w1_water_refusal_at = i
+	assert(w1_thaw_at >= 0 and w1_water_refusal_at >= 0, "both burns-on-cell rows ship")
+	assert(w1_thaw_at < w1_water_refusal_at,
+		"burns x frozen (thaw) must precede burns x freezable (the water refusal)")
 
 	# --- Injection: the table reaches the sim through scene_config, not disk.
 	var w1_composed := WISceneCatalog.compose()
@@ -181,6 +239,98 @@ func _init() -> void:
 	assert(int(w1_auth.accomplishments.get("w1_authored_burns", 0)) == 1, "the AUTHORED counter banked instead")
 	assert(int(w1_auth.accomplishments.get("burned_the_debris", 0)) == 0, "the table's counter never banked")
 	assert(String(_w1_last("toast").get("text", "")) == "W1 authored arm toast.", "the authored line spoke")
+
+	# --- thaw_cell (slice 2): a burns carrier takes the ice back off the
+	# channel. Same cell, opposite direction, over the SAME frozen_cells store.
+	var w1_thaw := _w1_game(_w1_scene())
+	_w1_face(w1_thaw, Vector2i(3, 4), Vector2i.DOWN)
+	# The kindle x water refusal is reachable ONLY before the freeze, so it is
+	# proven here rather than in its own game.
+	var w1_water_refused := w1_thaw.use_skill_field("w1_scorch")
+	assert(w1_water_refused.get("refused", "") == "w1_scorch", "burns at open water resolves the refusal row")
+	assert(_w1_types() == ["skill_no_effect", "toast"],
+		"refuse emits exactly skill_no_effect -> toast (the shipped ambient-refusal shape)")
+	assert(w1_thaw.frozen_cells.is_empty(), "a refusal writes no cell state")
+	assert(not w1_thaw.used_skills.has("w1_scorch"), "a refusal never marks the skill used")
+	_events.clear()
+	w1_thaw.use_skill_field("w1_ice_floor")
+	assert(not w1_thaw.is_cell_blocked(Vector2i(3, 5)), "the channel is frozen and crossable")
+	_events.clear()
+	var w1_thaw_result := w1_thaw.use_skill_field("w1_scorch")
+	assert(w1_thaw_result.get("thawed", []) == [3, 5], "the same burns carrier thaws the ice it just crossed")
+	assert(w1_thaw.frozen_cells.is_empty(), "thaw_cell erases the frozen_cells entry, map key and all")
+	assert(w1_thaw.is_cell_blocked(Vector2i(3, 5)), "the thawed channel is impassable water again")
+	assert(_w1_types() == ["skill_used", "terrain_changed", "toast"],
+		"thaw_cell emits exactly skill_used -> terrain_changed -> toast")
+	assert(String(_w1_last("terrain_changed").get("to", "")) == "water", "the row's terrain value rides the event")
+	assert(int(w1_thaw.accomplishments.get("burned_the_debris", 0)) == 0, "thaw_cell banks no counter")
+	# Thawed means NOT frozen: the row stops matching and the water refusal,
+	# which sits below it, is what answers the next cast.
+	_events.clear()
+	assert(w1_thaw.use_skill_field("w1_scorch").get("refused", "") == "w1_scorch",
+		"a second burns cast on the thawed cell falls to the water refusal, never a second thaw")
+
+	# --- state_set (slice 2): counter-backed, ONE-WAY, per-CARRIER counter.
+	var w1_state := _w1_game(_w1_scene())
+	_w1_face(w1_state, Vector2i(10, 3), Vector2i.UP)
+	var w1_set_result := w1_state.use_skill_field("w1_scorch")
+	assert(w1_set_result.get("state_set", "") == "w1_brazier", "burns x hearth resolves state_set on the faced prop")
+	assert(int(w1_state.accomplishments.get("w1_brazier_lit", 0)) == 1,
+		"the CARRIER's own state_counter banks, not a row-level id")
+	assert(_w1_types() == ["skill_used", "accomplishment_recorded", "toast"],
+		"state_set emits exactly skill_used -> accomplishment_recorded -> toast")
+	assert(String(_w1_last("toast").get("text", "")) == "W1 brazier toast.", "the prop's own line spoke")
+	assert(not w1_state.find_entity("w1_brazier").is_empty(), "state_set removes nothing")
+	_events.clear()
+	assert(w1_state.use_skill_field("w1_scorch").get("ambient", "") == "w1_scorch",
+		"a second set on the same prop falls through to ambient (one-way, no double bank)")
+	assert(int(w1_state.accomplishments.get("w1_brazier_lit", 0)) == 1, "the counter banked exactly once")
+	# The douse cell has no substrate, so it is an authored refusal even on a
+	# prop whose state is already set.
+	_events.clear()
+	assert(w1_state.use_skill_field("w1_ice_floor").get("refused", "") == "w1_ice_floor",
+		"freezes x hearth is the authored douse refusal")
+	assert(int(w1_state.accomplishments.get("w1_brazier_lit", 0)) == 1, "the refusal banks nothing")
+	# A carrier missing the counter field leaves the row INERT rather than
+	# emitting a hollow toast (the mismatched-row degradation contract).
+	var w1_keyless_scene := _w1_scene()
+	for raw_ent: Variant in (w1_keyless_scene["maps"]["sewers"]["entities"] as Array):
+		if raw_ent is Dictionary and String((raw_ent as Dictionary).get(WIKeys.ID, "")) == "w1_brazier":
+			(raw_ent as Dictionary).erase("state_counter")
+	var w1_keyless := _w1_game(w1_keyless_scene)
+	_w1_face(w1_keyless, Vector2i(10, 3), Vector2i.UP)
+	assert(w1_keyless.use_skill_field("w1_scorch").get("ambient", "") == "w1_scorch",
+		"a hearth carrier with no state_counter resolves NO row -- it falls through to ambient")
+	assert(w1_keyless.accomplishments.is_empty(), "the inert row banks nothing")
+
+	# --- THE DIRTY PASS + its precedence proof. The table generalizes over an
+	# untagged-grime prop; an authored arm on an equally-tagged prop still wins.
+	var w1_clean := _w1_game(_w1_scene())
+	_w1_face(w1_clean, Vector2i(6, 3), Vector2i.UP)
+	var w1_clean_result := w1_clean.use_skill_field("w1_scrub")
+	assert(w1_clean_result.get("state_set", "") == "w1_grime", "cleans x dirty generalizes over a plain grime prop")
+	assert(int(w1_clean.accomplishments.get("w1_grime_cleaned", 0)) == 1, "the table's carrier counter banked")
+	assert(String(_w1_last("toast").get("text", "")) == "W1 grime toast.", "the prop's clean_toast spoke")
+	_w1_face(w1_clean, Vector2i(8, 3), Vector2i.UP)
+	var w1_clean_auth := w1_clean.use_skill_field("w1_scrub")
+	assert(not w1_clean_auth.has("state_set"),
+		"the table never resolves a dirty prop whose authored arm answers the same skill")
+	assert(int(w1_clean.accomplishments.get("w1_authored_cleans", 0)) == 1, "the AUTHORED counter banked instead")
+	assert(int(w1_clean.accomplishments.get("w1_grime_cleaned", 0)) == 1,
+		"the table's counter did NOT bank a second time off the authored prop")
+	assert(String(_w1_last("toast").get("text", "")) == "W1 authored scrub toast.", "the authored line spoke")
+
+	# --- The refusal cells are refusals, not fallthroughs: a person answers
+	# with the row's own copy and nothing else happens.
+	var w1_person := _w1_game(_w1_scene())
+	_w1_face(w1_person, Vector2i(12, 3), Vector2i.UP)
+	var w1_person_result := w1_person.use_skill_field("w1_ice_floor")
+	assert(w1_person_result.get("refused", "") == "w1_ice_floor", "freezes x person resolves the refusal row")
+	assert(_w1_types() == ["skill_no_effect", "toast"], "the person refusal emits skill_no_effect -> toast")
+	assert(String(_w1_last("toast").get("text", "")) != "W1 ice floor finds nothing to grip.",
+		"an authored refusal speaks its OWN line, never the skill's ambient one")
+	assert(w1_person.frozen_cells.is_empty(), "the person refusal freezes nothing")
+	assert(not w1_person.find_entity("w1_bystander").is_empty(), "the bystander is still standing there")
 
 	# --- Null cells stay null: a carrier-less target falls through to ambient,
 	# and quest-prop safety holds for every burns skill, not just the shipped one.
@@ -260,5 +410,5 @@ func _init() -> void:
 	assert(w1_bad_cell.is_cell_blocked(Vector2i(3, 5)),
 		"the water channel stays impassable -- the inert row flipped no walkability")
 
-	print("PASS: property-interaction table -- mirror contract, injection, new carriers, precedence, verb/placement binding, inert fallthrough")
+	print("PASS: property-interaction table -- mirror contract, injection, new carriers, precedence (burn + dirty), verb/placement binding, thaw/state_set/refuse, inert fallthrough")
 	quit(0)

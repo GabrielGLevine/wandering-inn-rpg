@@ -1306,6 +1306,7 @@
    ],
    "surfaces": {
     "maps": [
+     "runners_guild",
      "sewers"
     ],
     "fixtures": [

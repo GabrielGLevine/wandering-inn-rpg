@@ -384,31 +384,57 @@ def check_moods(parsed: dict, maps: dict, errors: list) -> None:
 # engine-free tier reject an unknown verb; tests/test_interactions_table.gd
 # asserts the JSON's own "outcomes" equals the GDScript const, so the three can
 # never drift silently. A new verb touches all three, deliberately.
-ENGINE_OUTCOMES = ("remove_scorch", "freeze_cell")
+ENGINE_OUTCOMES = ("remove_scorch", "freeze_cell", "thaw_cell", "state_set", "refuse")
 PLACEMENTS = ("entity", "cell")
-TOAST_SOURCES = ("skill", "target")
-# Persistence classes each verb may claim (spec §4.1's table).
+# "row" = the pair itself owns the line (what a refusal cell is); the other two
+# read `toast_key` off the target entity / the casting skill.
+TOAST_SOURCES = ("skill", "target", "row")
+# Persistence classes each verb may claim (spec §4.1's table). `immediate` =
+# thaw_cell, which ERASES a frozen_cells entry and creates no timed state of its
+# own; `none` = the verbs that write no world state at all.
 OUTCOME_PERSISTENCE = {
 	"remove_scorch": {"permanent"},
 	"freeze_cell": {"until_sleep"},
+	"thaw_cell": {"immediate"},
+	"state_set": {"permanent"},
+	"refuse": {"none"},
 }
 # VERB/PLACEMENT BINDING -- mirrors WIFieldSkills.OUTCOME_PLACEMENT. Each verb's
-# body has a fixed target shape: `remove_scorch` dereferences the faced ENTITY,
-# `freeze_cell` writes the faced CELL and never reads the entity. Binding them
-# is what makes "a new ROW is data alone" TRUE: without it a lint-clean row
-# could hard-error a live cast (remove_scorch on a cell class, which reaches
+# body has a fixed target shape: `remove_scorch`/`state_set` dereference the
+# faced ENTITY, `freeze_cell`/`thaw_cell` write the faced CELL and never read
+# the entity, `refuse` reads neither and so binds to "any". Binding them is what
+# makes "a new ROW is data alone" TRUE: without it a lint-clean row could
+# hard-error a live cast (remove_scorch on a cell class, which reaches
 # `target[id]` with target == {}) or silently flip an arbitrary cell's
 # walkability (freeze_cell on an entity class -- `is_cell_blocked` treats every
-# frozen cell as passable, so that row is a wall-phase primitive). Slice 2 adds
-# `dark cell*` and `thaw_cell`, i.e. exactly the pairs this table disambiguates.
+# frozen cell as passable, so that row is a wall-phase primitive).
+PLACEMENT_ANY = "any"
 OUTCOME_PLACEMENT = {
 	"remove_scorch": "entity",
 	"freeze_cell": "cell",
+	"thaw_cell": "cell",
+	"state_set": "entity",
+	"refuse": PLACEMENT_ANY,
 }
-# Verbs whose BODY actually banks `counter` (WIFieldSkills._outcome_*). A row
-# carrying a counter for any other verb is dead data: the field is silently
-# dropped at dispatch.
-OUTCOME_BANKS_COUNTER = {"remove_scorch"}
+# Verbs whose body emits TERRAIN_CHANGED and therefore need a `terrain` value.
+# `terrain` on any other verb is dead data (the field is never read).
+OUTCOME_EMITS_TERRAIN = {"remove_scorch", "freeze_cell", "thaw_cell"}
+# Verbs whose BODY actually banks a counter (WIFieldSkills._outcome_*). A
+# counter field on any other verb is dead data: it is silently dropped at
+# dispatch. The two banking verbs source the id DIFFERENTLY, and the split is
+# deliberate:
+#   remove_scorch -- row-level `counter` (one burn counter for every burnable).
+#   state_set     -- row-level `counter_key` NAMING A FIELD ON THE CARRIER, so
+#                    each prop banks its own id. A shared row-level counter
+#                    would make lighting one lamp flip every sibling lamp's
+#                    visual_states, which is durable wrong state in a save.
+OUTCOME_BANKS_COUNTER = {"remove_scorch", "state_set"}
+OUTCOME_COUNTER_ON_CARRIER = {"state_set"}
+# DYNAMIC cell classes: not authored on any map, produced at runtime by another
+# verb. Their carriers are the carriers of the class that PRODUCES them, so a
+# row targeting one is reachable exactly when the producer's own class is
+# carried. `frozen` is written by freeze_cell over map-authored `freezable`.
+DYNAMIC_CELL_PROPERTIES = {"frozen": "freezable"}
 
 
 def _skill_property_carriers(parsed: dict, prop: str) -> list:
@@ -417,16 +443,27 @@ def _skill_property_carriers(parsed: dict, prop: str) -> list:
 	return [str(s.get("id")) for s in rows if isinstance(s, dict) and s.get(prop) is True]
 
 
+def _entity_carriers(maps: dict, prop: str) -> list:
+	"""(map_id, entity) pairs for every entity carrying an entity-placed flag."""
+	out = []
+	for map_id, m in sorted(maps.items()):
+		for entity in m.get("entities", []):
+			if entity.get(prop) is True:
+				out.append((map_id, entity))
+	return out
+
+
 def _target_property_carriers(maps: dict, prop: str, placement: str) -> list:
 	"""Shipped carriers of a target property: entity flags, or map cell classes."""
 	out = []
+	source = DYNAMIC_CELL_PROPERTIES.get(prop, prop)
 	for map_id, m in sorted(maps.items()):
 		if placement == "entity":
 			for entity in m.get("entities", []):
 				if entity.get(prop) is True:
 					out.append(f"{map_id}:{entity.get('id', '<no id>')}")
-		elif placement == "cell" and m.get(prop):
-			out.append(f"{map_id}:{len(m[prop])}")
+		elif placement == "cell" and m.get(source):
+			out.append(f"{map_id}:{len(m[source])}")
 	return out
 
 
@@ -434,6 +471,46 @@ def _shipped_accomplishments(parsed: dict) -> set:
 	path = DATA / "shipped_ids.json"
 	rows = (parsed.get(path) or {}).get("accomplishments") or []
 	return {str(a) for a in rows}
+
+
+def _check_carrier_counters(row: dict, tp: str, label: str, maps: dict, parsed: dict, errors: list) -> None:
+	"""`state_set`'s counter is authored PER CARRIER, so the check runs per prop.
+
+	Three things have to hold or the one-way set is either invisible or wrong:
+	the row must name the carrier field (`counter_key`); every carrier must
+	author that field with a REGISTERED accomplishment id (same freeze-list
+	discipline the row-level `counter` gets); and the carrier must watch that
+	same id from a `visual_states` row, because with field name tags retired a
+	state change the world does not SHOW is a bank the player never sees.
+	"""
+	key = row.get("counter_key")
+	if not isinstance(key, str) or not key:
+		errors.append(f"interactions.json: {label} outcome 'state_set' banks the counter named by "
+			"'counter_key' (a FIELD on each carrier) -- add a non-empty 'counter_key'")
+		return
+	if row.get("counter") not in (None, ""):
+		errors.append(f"interactions.json: {label} outcome 'state_set' reads its counter off the "
+			"CARRIER, never the row -- drop 'counter' (dead data; a shared id would flip every "
+			"sibling carrier's visual_states at once)")
+	shipped = _shipped_accomplishments(parsed)
+	for map_id, entity in _entity_carriers(maps, tp):
+		eid = entity.get("id", "<no id>")
+		counter = entity.get(key)
+		if not isinstance(counter, str) or not counter:
+			errors.append(f"interactions.json: {label} carrier maps/{map_id}:{eid} authors no "
+				f"non-empty '{key}' -- the row is inert on it (no counter, no state)")
+			continue
+		if shipped and counter not in shipped:
+			errors.append(f"interactions.json: {label} carrier maps/{map_id}:{eid} banks "
+				f"'{counter}', which is not in data/shipped_ids.json's accomplishments -- "
+				"regenerate via scripts/generate_shipped_ids.py")
+		watched = any(isinstance(s, dict)
+			and str((s.get("when") or {}).get("counter", "")) == counter
+			for s in entity.get("visual_states", []))
+		if not watched:
+			errors.append(f"maps/{map_id}: entity '{eid}' carries the '{tp}' property but no "
+				f"visual_states row watches its own '{counter}' -- state_set is ONE-WAY and "
+				"permanent, so a set the world never shows is invisible durable state")
 
 
 def _check_row_counter(row: dict, outcome: str, label: str, parsed: dict, errors: list) -> None:
@@ -453,11 +530,17 @@ def _check_row_counter(row: dict, outcome: str, label: str, parsed: dict, errors
 	"""
 	counter = row.get("counter")
 	if outcome not in OUTCOME_BANKS_COUNTER:
-		if counter not in (None, ""):
-			errors.append(f"interactions.json: {label} outcome '{outcome}' banks no counter, "
-				f"but the row declares counter {counter!r} -- dead data (the field is "
-				"dropped at dispatch); drop it or use a counter-banking verb")
+		for dead in ("counter", "counter_key"):
+			if row.get(dead) not in (None, ""):
+				errors.append(f"interactions.json: {label} outcome '{outcome}' banks no counter, "
+					f"but the row declares {dead} {row[dead]!r} -- dead data (the field is "
+					"dropped at dispatch); drop it or use a counter-banking verb")
 		return
+	if outcome in OUTCOME_COUNTER_ON_CARRIER:
+		return  # handled per carrier by _check_carrier_counters
+	if row.get("counter_key") not in (None, ""):
+		errors.append(f"interactions.json: {label} outcome '{outcome}' banks the ROW's 'counter' -- "
+			"'counter_key' is dead data here (only the carrier-sourced verbs read it)")
 	if counter is None:
 		return  # optional: a burn row may legitimately bank nothing
 	if not isinstance(counter, str) or not counter:
@@ -552,7 +635,7 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 		# OUTCOME_PLACEMENT above for the two failure modes it forecloses.
 		want = OUTCOME_PLACEMENT[outcome]
 		got = target_props.get(tp)
-		if got != want:
+		if want != PLACEMENT_ANY and got != want:
 			errors.append(f"interactions.json: {label} outcome '{outcome}' acts on the faced "
 				f"{want}, but target property '{tp}' is declared placement {got!r} -- bind "
 				f"'{outcome}' to a '{want}'-placement property; WIFieldSkills.OUTCOME_PLACEMENT "
@@ -561,12 +644,27 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 		if row.get("persistence") not in allowed:
 			errors.append(f"interactions.json: {label} outcome '{outcome}' claims persistence "
 				f"{row.get('persistence')!r} -- allowed: {sorted(allowed)}")
-		if row.get("toast_from") not in TOAST_SOURCES:
+		toast_from = row.get("toast_from")
+		if toast_from not in TOAST_SOURCES:
 			errors.append(f"interactions.json: {label} 'toast_from' must be one of {list(TOAST_SOURCES)}")
-		for key in ("toast_key", "toast_default", "terrain"):
+		required = ["toast_default"]
+		# `toast_key` names a field on the chosen side, so it is required exactly
+		# when there IS a side; a toast_from:"row" cell owns its line outright.
+		if toast_from in ("skill", "target"):
+			required.append("toast_key")
+		if outcome in OUTCOME_EMITS_TERRAIN:
+			required.append("terrain")
+		for key in required:
 			if not isinstance(row.get(key), str) or not row[key]:
 				errors.append(f"interactions.json: {label} missing non-empty '{key}'")
+		for dead_key, live in (("toast_key", toast_from in ("skill", "target")),
+				("terrain", outcome in OUTCOME_EMITS_TERRAIN)):
+			if not live and row.get(dead_key) not in (None, ""):
+				errors.append(f"interactions.json: {label} declares '{dead_key}' but nothing reads "
+					"it for this row -- dead data")
 		_check_row_counter(row, outcome, label, parsed, errors)
+		if outcome in OUTCOME_COUNTER_ON_CARRIER:
+			_check_carrier_counters(row, tp, label, maps, parsed, errors)
 		# Per-row carrier cross-ref (spec §5b): a row nothing can reach is dead.
 		if sp in skill_props and not _skill_property_carriers(parsed, sp):
 			errors.append(f"interactions.json: {label} has no skill carrier")
