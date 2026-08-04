@@ -1,4 +1,13 @@
-# b9 audio — #200 boss re-pick (shipped) + #195 Ove Melaa shortlists (listen-gated)
+# b9 audio — #200 boss re-pick (shipped) + #195 Ove Melaa shortlists (REJECTED at the ear-gate)
+
+> **VERDICT (2026-08-04, user ear-gate): the Ove Melaa pack is out.**
+> Nothing in the 27-file listening queue was worth wiring — not the
+> menu scores, not the jingles, not any stinger cluster, not the bed.
+> #195 closed on that judgement. **Do not re-profile or re-shortlist
+> this pack.** The signal pass says only what a file measures, not
+> whether it sounds like this game; the whole pack failing the ear
+> after passing the numbers is the point. Anything below is retained
+> as method, not as candidates.
 
 Method: the #147 signal pass — librosa tempo / RMS(p95) / spectral
 centroid / onset density / chroma-mode over every candidate, calibrated
