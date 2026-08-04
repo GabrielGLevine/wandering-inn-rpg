@@ -215,6 +215,18 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "== THE HUD-JUMP GUARD, first half (GH#386 P3). The bottom cluster's own geometry at a clean boot: `group_width` is the exact slot-row + gap + Details-toggle sum (52 + 8 + 144), and `bar_left` is where the layout PLACED it, not the node's live rect (which is a frame behind the offsets just written to it). Both numbers used to drift across re-layouts of an unchanged bar because the layout read the bar's own size back in.",
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "reason": "world_ready",
+    "slots": 1,
+    "bar_left": 538,
+    "group_width": 204
+   },
+   "timeout_sec": 5
+  },
+  {
    "_comment": "v0.19 L5 (GH#335 item 5): the phase glyph renders on a CLASSLESS New Game, where the field hotbar has ZERO slots. That is the parity case -- the glyph is beside the bar, not part of it, and a player with no Skills yet still gets told what time it is indoors, where the mood grade never changes (VISUAL-LOG P3).",
    "action": "assert_event_logged",
    "type": "ui_phase_glyph_rendered",
@@ -528,6 +540,18 @@
   {
    "action": "wait_for_event",
    "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE HUD-JUMP GUARD, second half (GH#386 P3). Same pin as the boot leg above, read AFTER reduce_motion was toggled ON, Text Scale stepped to 115%, and a whole Save/Load round trip tore down and rebuilt every UI layer. The finding was that the bottom cluster sat ~25px left and ~4% wider after exactly this trip. Identical numbers on both sides is the proof, and it is a NUMBER now rather than two screenshots someone has to remember to compare.",
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_rendered",
+   "payload_contains": {
+    "reason": "world_ready",
+    "slots": 1,
+    "bar_left": 538,
+    "group_width": 204
+   },
    "timeout_sec": 5
   },
   {

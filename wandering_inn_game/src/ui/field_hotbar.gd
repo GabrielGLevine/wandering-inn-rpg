@@ -74,6 +74,12 @@ var _selection_label_backing: Control
 var _phase_plate: Control
 var _phase_glyph: PhaseGlyph
 var _phase_glyph_name := ""
+## Left edge `_layout_controls` last PLACED the slot row at. Reported instead of
+## `_hotbar.global_position.x` because a Control's live rect is a frame behind
+## the anchors/offsets just written to it -- reading it back gave a payload that
+## described the PREVIOUS layout, which is worse than useless in a regression
+## guard for a layout bug.
+var _bar_left := 0.0
 var _field_skills: Array = []
 var _last_slots: Array = []
 var _readout_lines: Array = []
@@ -366,8 +372,12 @@ func _render(reason: String = "skills") -> void:
 	_hotbar.render(slots, -1)
 	_update_readout()
 	_update_toggle_label()
-	_layout_controls()
-	_emit_rendered(reason)
+	# The payload carries the cluster's rect, so it must not be sent from a
+	# frame on which the rect was not computable.
+	if _layout_controls():
+		_emit_rendered(reason)
+	else:
+		call_deferred("_emit_rendered", reason)
 
 
 func _set_expanded(value: bool, persist: bool, reason: String) -> void:
@@ -376,8 +386,10 @@ func _set_expanded(value: bool, persist: bool, reason: String) -> void:
 	_expanded = value
 	_update_readout()
 	_update_toggle_label()
-	_layout_controls()
-	_emit_rendered(reason)
+	if _layout_controls():
+		_emit_rendered(reason)
+	else:
+		call_deferred("_emit_rendered", reason)
 
 
 func _update_readout() -> void:
@@ -407,23 +419,55 @@ func _emit_rendered(reason: String) -> void:
 		"slot_numbers": _slot_numbers.duplicate(),
 		"fallback_labels": _fallback_labels.duplicate(),
 		"readout_lines": _readout_lines.duplicate(),
+		# GH#386 P3: the bottom cluster's own geometry, so "the HUD jumped left
+		# after a Settings visit" is a NUMBER a headless run can compare instead
+		# of two screenshots someone has to remember to take.
+		"bar_left": int(round(_bar_left)),
+		"group_width": int(round(_group_width())),
 	})
 
 
-func _layout_controls() -> void:
+## Width of the bottom cluster (slot row + gap + Details toggle). One
+## derivation, read by `_layout_controls` and reported in the rendered payload,
+## so the number the log carries is the number the layout used.
+func _group_width() -> float:
+	if _hotbar == null:
+		return 0.0
+	var w := _hotbar.rendered_width()
+	if _toggle != null and _toggle.visible:
+		w += TOGGLE_GAP + TOGGLE_SIZE.x
+	return w
+
+
+## Returns FALSE when the layout could not be computed yet, so a caller that was
+## about to report the cluster's geometry can defer instead of reporting a rect
+## that does not exist.
+func _layout_controls() -> bool:
 	if _hotbar == null or _root == null:
-		return
+		return false
 	var viewport := get_viewport()
 	# TRAP: swapped-out layers can receive bus events before queued deletion.
 	if viewport == null:
-		return
+		return false
 	var viewport_size := viewport.get_visible_rect().size
+	# TRAP (GH#386 P3, the other half of the "bottom HUD jumps" finding): a UI
+	# layer can be laid out on the same frame it is added, BEFORE the viewport
+	# reports a real rect. Centring against a zero-width rect put the whole
+	# cluster 26px off the left screen edge for a frame or two after every world
+	# rebuild -- and a rebuild is what a Save/Load, a defeat and a New Game all
+	# are. Defer rather than guess at a number.
+	if viewport_size.x <= 1.0 or viewport_size.y <= 1.0:
+		call_deferred("_layout_controls")
+		return false
 	var safe := _current_safe_rect()
-	var group_width := _hotbar.size.x
-	if _toggle.visible:
-		group_width += TOGGLE_GAP + TOGGLE_SIZE.x
+	var group_width := _group_width()
 	var group_left := safe.position.x + (safe.size.x - group_width) * 0.5
-	var hotbar_center := group_left + _hotbar.size.x * 0.5
+	_bar_left = group_left
+	# `rendered_width()`, NEVER `_hotbar.size.x`: the bar's size IS the offsets
+	# set below, so reading it here made the layout a feedback loop -- see
+	# hotbar.gd's `_rendered_width` doc for the drift it produced.
+	var bar_width := _hotbar.rendered_width()
+	var hotbar_center := group_left + bar_width * 0.5
 	if _phase_plate != null:
 		# LEFT of the slot group and OUTSIDE the centring math above: a bar that
 		# grew a slot must not shove the glyph, and the glyph must not shift the
@@ -434,12 +478,12 @@ func _layout_controls() -> void:
 			safe.end.y - CONTROLS_BOTTOM_MARGIN - PHASE_GLYPH_SIZE.y)
 	var center_shift := hotbar_center - viewport_size.x * 0.5
 	var safe_bottom := maxf(0.0, viewport_size.y - safe.end.y)
-	_hotbar.offset_left = -_hotbar.size.x * 0.5 + center_shift
-	_hotbar.offset_right = _hotbar.size.x * 0.5 + center_shift
-	_hotbar.offset_top = -_hotbar.size.y - CONTROLS_BOTTOM_MARGIN - safe_bottom
+	_hotbar.offset_left = -bar_width * 0.5 + center_shift
+	_hotbar.offset_right = bar_width * 0.5 + center_shift
+	_hotbar.offset_top = -WIHotbar.SLOT_SIZE.y - CONTROLS_BOTTOM_MARGIN - safe_bottom
 	_hotbar.offset_bottom = -CONTROLS_BOTTOM_MARGIN - safe_bottom
 	if _toggle.visible:
-		_toggle.position = Vector2(group_left + _hotbar.size.x + TOGGLE_GAP, safe.end.y - CONTROLS_BOTTOM_MARGIN - TOGGLE_SIZE.y)
+		_toggle.position = Vector2(group_left + bar_width + TOGGLE_GAP, safe.end.y - CONTROLS_BOTTOM_MARGIN - TOGGLE_SIZE.y)
 	var style := _readout_panel.get_theme_stylebox("panel")
 	var frame_size := WIFieldHotbarLayout.style_frame_size(style)
 	var panel_width := minf(READOUT_MAX_WIDTH, maxf(1.0, safe.size.x - WIFieldHotbarLayout.OUTER_MARGIN * 2.0))
@@ -455,6 +499,7 @@ func _layout_controls() -> void:
 	var content_rect := WIFieldHotbarLayout.style_content_rect(Rect2(Vector2.ZERO, rect.size), style)
 	_readout_label.custom_minimum_size = Vector2(maxf(1.0, content_rect.size.x - READOUT_SCROLLBAR_RESERVE), content_height)
 	_readout_label.size = _readout_label.custom_minimum_size
+	return true
 
 
 func _current_safe_rect() -> Rect2:

@@ -69,6 +69,19 @@ func _slot_index_at(local_pos: Vector2) -> int:
 	return -1
 
 
+## The width `render()` laid the slot row out at, derived from the slot list and
+## nothing else. READ THIS, never `size.x`, when positioning the bar from
+## outside: `size` is derived from the anchors+offsets a positioner sets, so a
+## positioner that reads `size.x` to compute its own offsets is feeding its own
+## output back in -- which is exactly how the bottom HUD cluster crept up to 25px
+## left and 4% wider across re-layouts of an unchanged 3-slot bar (GH#386 P3).
+var _rendered_width := 0.0
+
+
+func rendered_width() -> float:
+	return _rendered_width
+
+
 func render(slots: Array, selected_index: int) -> void:
 	for child: Node in get_children():
 		child.queue_free()
@@ -77,6 +90,7 @@ func render(slots: Array, selected_index: int) -> void:
 		if i > 0:
 			total_width += END_TURN_GAP if bool((slots[i] as Dictionary).get("end_turn_gap", false)) else SLOT_GAP
 		total_width += SLOT_SIZE.x
+	_rendered_width = total_width
 	custom_minimum_size = Vector2(total_width, SLOT_SIZE.y)
 	size = custom_minimum_size
 	offset_left = -total_width * 0.5
