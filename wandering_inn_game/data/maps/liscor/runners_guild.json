@@ -1,6 +1,10 @@
 {
  "_comment": "THE DELIVERY BOARD (runner_board, delivery_board:true) is a SEPARATE mechanical prop, browse-only (WIGame._interact_delivery_board), distinct from THE REQUEST BOARD's own board:true flag so interact()'s prop dispatch routes to the right one.",
  "biome": "inn",
+ "interior_flavor": [
+  "Nothing there. Slip paper and rope wax. The whole room smells like somewhere else's mail.",
+  "Nothing there. Somebody's spare boots wait by the door, laces already loosened for the next run."
+ ],
  "grid": {
   "width": 10,
   "height": 8

@@ -1,6 +1,10 @@
 {
  "_comment": "Palette quarantine (tile-family-verdict.md PASS): forge-bronze-on-slate, steam-white crystal lamps (#E9EEF2, never amber/coin-gold), moods.json pallass_market cool day-graded.",
  "biome": "pallass_market",
+ "interior_flavor": [
+  "Nothing there. Chalked prices and swept stone, and not one thing outside its allotted square.",
+  "Nothing there. A clerk two stalls down writes something about you and moves on."
+ ],
  "grid": {
   "width": 26,
   "height": 11
@@ -330,7 +334,20 @@
    "sprite": "price_board",
    "observe": "Rows of chalked figures, precise to the copper, refreshed each morning by a clerk with steadier hands than yours. Nobody haggles here. Nobody needs to.",
    "on_interact_accomplishment": "read_the_posted_prices",
-   "toast": "Chalk and slate. The numbers don't move for anyone."
+   "toast": "Chalk and slate. The numbers don't move for anyone.",
+   "visual_states": [
+    {
+     "when": {
+      "counter": "read_the_posted_prices",
+      "at": 1
+     },
+     "tint": [
+      0.7,
+      0.7,
+      0.74
+     ]
+    }
+   ]
   },
   {
    "id": "market_stall_a",
@@ -714,6 +731,19 @@
      },
      "toast": "Ordinance 44, third column: tier passes are the property of the city and the responsibility of the bearer. Yours is in your pocket, and now you know whose it is."
     }
+   ],
+   "visual_states": [
+    {
+     "when": {
+      "counter": "read_the_posted_ordinances",
+      "at": 1
+     },
+     "tint": [
+      0.7,
+      0.7,
+      0.74
+     ]
+    }
    ]
   },
   {
@@ -789,7 +819,20 @@
    },
    "observe": "Empty crates stacked a head above the awnings behind the stalls. The razorbeak has decided they belong to the razorbeak, and no stallkeeper has argued yet.",
    "on_interact_accomplishment": "found_market_vantage",
-   "toast": "It goes up off the crates and comes back screaming about the west end. The two standing things down there step aside for anyone whose permit is already filed — and the office that files it is the counter four stalls behind you."
+   "toast": "It goes up off the crates and comes back screaming about the west end. The two standing things down there step aside for anyone whose permit is already filed — and the office that files it is the counter four stalls behind you.",
+   "visual_states": [
+    {
+     "when": {
+      "counter": "found_market_vantage",
+      "at": 1
+     },
+     "tint": [
+      0.7,
+      0.7,
+      0.74
+     ]
+    }
+   ]
   }
  ]
 }

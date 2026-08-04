@@ -1,5 +1,9 @@
 {
  "biome": "pallass_forge",
+ "interior_flavor": [
+  "Nothing there. Quench water and hammer scale, under a wall of work that all passed.",
+  "Nothing there. The heat in here keeps a schedule, and you are not on it."
+ ],
  "grid": {
   "width": 12,
   "height": 9
@@ -208,7 +212,20 @@
    "sprite": "price_board",
    "observe": "A civic notice pinned at eye height, examiner's seal at the corner, the text underneath it read so often the ink has gone grey where thumbs land.",
    "on_interact_accomplishment": "read_the_examination_standard",
-   "toast": "The standard does not measure how hard a blade comes out. It measures how it RECOVERS. Somebody up here has been failing the wrong test perfectly."
+   "toast": "The standard does not measure how hard a blade comes out. It measures how it RECOVERS. Somebody up here has been failing the wrong test perfectly.",
+   "visual_states": [
+    {
+     "when": {
+      "counter": "read_the_examination_standard",
+      "at": 1
+     },
+     "tint": [
+      0.7,
+      0.7,
+      0.74
+     ]
+    }
+   ]
   },
   {
    "id": "forge_apprentice",
@@ -258,7 +275,20 @@
    "sprite": "inn_room_ledger",
    "observe": "A slate ruled into columns: heat, count, quench, result. The result column is chalked over so many times the surface has gone soft.",
    "on_interact_accomplishment": "read_the_apprentice_slate",
-   "toast": "Forty-one attempts. Under the last one, in smaller writing than the rest: TRY THE OTHER WAY ROUND."
+   "toast": "Forty-one attempts. Under the last one, in smaller writing than the rest: TRY THE OTHER WAY ROUND.",
+   "visual_states": [
+    {
+     "when": {
+      "counter": "read_the_apprentice_slate",
+      "at": 1
+     },
+     "tint": [
+      0.7,
+      0.7,
+      0.74
+     ]
+    }
+   ]
   },
   {
    "id": "forge_hall_pattern_wall",

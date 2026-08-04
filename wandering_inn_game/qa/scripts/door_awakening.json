@@ -3,83 +3,488 @@
  "starts_at_title": true,
  "fixture_save": "door_awakening_start",
  "steps": [
-  { "action": "wait_for_event", "type": "ui_title_gate_rendered", "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "ui_title_rendered", "timeout_sec": 5 },
-  { "_comment": "Move down to the 'Continue' row, confirm loads the door_awakening_start manual slot.", "action": "move", "direction": "down", "steps": 1 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "game_loaded", "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "world_ready", "timeout_sec": 5 },
-  { "action": "assert_state", "path": "current_map", "equals": "inn_upstairs" },
-  { "action": "assert_state", "path": "player_cell", "equals": [9, 2] },
-
-  { "_comment": "== Issue #92 R4 pre-bump proof ==. anchor_sliver (resonance 3) is already carried (door_awakening_start fixture, index 2 -- granted alongside anchor_stone at the ruin recovery beat) -- attempting to equip it now, at the shipped default resonance_capacity 2, must hit the SAME capacity-refusal toast gear_loop.json's own stonescale_talisman negative proves (0 used + 3 > 2). Confirms the res-3 tradeoff item is genuinely gated on the growth payoff below, not silently equippable from the start.", "action": "press", "name": "inventory" },
-  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "items": 3, "resonance": { "used": 0, "capacity": 2 } }, "timeout_sec": 5 },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "move_down" },
-  { "action": "wait_for_event", "type": "ui_inventory_selection_rendered", "payload_contains": { "cursor": 2, "item": "anchor_sliver" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first." }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "equipped.accessory_1", "equals": "" },
-  { "action": "assert_event_absent", "type": "item_equipped", "payload_contains": { "item": "anchor_sliver" } },
-  { "action": "press", "name": "inventory" },
-  { "action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== Sleep 1/3: silent study beat (door_study_sleeps 0 -> 1) ==. #49: sleeping at your_bed fires 'Your own bed.' FIRST (sleep_toast), then sleep()'s own stream. Two toasts now queue back-to-back, so the SECOND toast's ui_toast_rendered confirmation needs a real blocking wait_for_event (the queue drains one hold-duration at a time) rather than an immediate assert_event_logged.", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Your own bed." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "day" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_sleep_veil_rendered", "payload_contains": { "lines": 0 }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "You sleep soundly." }, "timeout_sec": 5 },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "door_awakened" } },
-
-  { "_comment": "== Sleep 2/3: still silent (door_study_sleeps 1 -> 2) ==", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Your own bed." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "day" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_sleep_veil_rendered", "payload_contains": { "lines": 0 }, "timeout_sec": 5 },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "door_awakened" } },
-
-  { "_comment": "== Sleep 3/3: the AWAKENING (door_study_sleeps 2 -> 3, door_awakened banks) ==", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Your own bed." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "day" }, "timeout_sec": 5 },
-  { "_comment": "accomplishment_recorded{door_awakened} fires SYNCHRONOUSLY inside this sleep(), strictly BEFORE the veil's deferred coverage event -- must be waited on FIRST (since-marker ordering).", "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "door_awakened" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_sleep_veil_rendered", "payload_contains": { "lines": 1 }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.door_awakened", "equals": 1 },
-  { "action": "assert_state", "path": "door_study_sleeps", "equals": 3 },
-  { "_comment": "door_awakened is the completion counter of the door quest's `attune` beat (the last one). record_accomplishment -> _check_quests fires synchronously inside this SAME sleep(), so the awakening completes the quest here -- the completion coverage door_chain_fight/sequence_break shed when the fetch was split + the attune payoff beat appended. Cumulative (whole-run) asserts, non-perturbing to the veil since-marker above. 2026-07-26 restructure (Task 2.1) RE-PIN: 4 -> 3, since dropping `recover_stone` left 3 beats and completion emits beat_index == beats.size(); re-derived from a real run's events.jsonl. GH#334 ruling 15 RE-PIN: 3 -> 4, the attune beat split into deliver_catalyst + attune, so the quest holds 4 beats again and completion emits beats.size().", "action": "assert_event_logged", "type": "quest_beat_completed", "payload_contains": { "id": "door_that_goes_elsewhere", "beat": 4 } },
-  { "action": "assert_event_logged", "type": "quest_completed", "payload_contains": { "id": "door_that_goes_elsewhere" } },
-
-  { "_comment": "== SEAM 3 (v0.15 A2) ==. The awakening COMPLETES the door quest, so this is the third page that used to read 'No quests in progress.' with nothing to do next. door_awakened banked + spine_started absent => the spine lead, live on the very sleep that opened it. TWO rows in catalog order: this fixture never started the delve either, so the survey lead is still standing -- the strip is a list, not a single next-thing. Read-only detour; the bed and the sleep below are untouched.", "action": "press", "name": "journal" },
-  { "action": "wait_for_event", "type": "ui_journal_shown", "timeout_sec": 5, "payload_contains": { "quest_lines": 0, "lead_lines": ["· The Guild posted a Watch notice about the reopened gallery. (Adventurer's Guild)", "· Pisces keeps looking at the Door like it owes him a letter. (Guild steps, Market Street)"] } },
-  { "action": "screenshot", "name": "00_journal_lead_spine" },
-  { "action": "press", "name": "journal" },
-
-  { "_comment": "== Issue #92 R4, the ONE further sleep needed: resonance_grown banks, resonance_capacity 2 -> 3 ==. catalyst_attunement_sleeps' OWN first increment (0 -> 1) already happened SILENTLY on sleep 3/3 above (door_awakened's own bank made the gate true mid-way through that SAME sleep() call, harmless -- see wi_game.gd's hook doc comment), invisible to that block's own asserts; this is the SECOND increment (1 -> 2, the N=2 threshold), so it's the one that actually banks.", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Your own bed." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "phase_changed", "payload_contains": { "phase": "day" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "resonance_grown" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_sleep_veil_rendered", "payload_contains": { "lines": 1 }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "accomplishments.resonance_grown", "equals": 1 },
-  { "_comment": "== GH#379: the growth beat NAMES Resonance ==. The veil line under the black ('You have room for it now.') is the felt beat and is gone the moment the veil lifts; it never says the word, and neither did the refusal toast this same script pins above. The bank now also emits a `lore: true` toast -- the exact dungeon_attuned idiom, zero new mechanism -- which WIGame._addressed_sink captures into lore_notes, so the definition lands in the journal's Lore section and stays re-readable. Pinned verbatim because it is the only place the mechanic is ever explained in play. assert_event_logged rather than wait_for_event: the toast is emitted INSIDE sleep(), on the same beat as the accomplishment bank and strictly BEFORE the veil's own render event, so it is already behind the cursor by the time the two waits above return.", "action": "assert_event_logged", "type": "toast", "payload_contains": { "lore": true, "text": "Resonance is how much enchantment you can wear at once before the pieces start arguing. Yours grew by one in the night. The anchor stone paid for it." } },
-  { "_comment": "...and the render confirmation, so the line is proven to reach the strip and not merely the bus. This one IS a wait: the strip renders on the drain, a few frames behind the sim emit, so it is genuinely still ahead of the cursor.", "action": "wait_for_event", "type": "ui_toast_rendered", "payload_contains": { "text": "Resonance is how much enchantment you can wear at once before the pieces start arguing. Yours grew by one in the night. The anchor stone paid for it." }, "timeout_sec": 10 },
-  { "action": "assert_state", "path": "lore_notes", "contains": "Resonance is how much enchantment you can wear at once before the pieces start arguing. Yours grew by one in the night. The anchor stone paid for it." },
-
-  { "_comment": "== Issue #92 R4 post-bump proof: the SAME anchor_sliver equip now succeeds at capacity 3 ==", "action": "press", "name": "inventory" },
-  { "action": "wait_for_event", "type": "ui_inventory_shown", "payload_contains": { "resonance": { "used": 0, "capacity": 3 } }, "timeout_sec": 5 },
-  { "action": "press", "name": "move_down" },
-  { "action": "press", "name": "move_down" },
-  { "action": "wait_for_event", "type": "ui_inventory_selection_rendered", "payload_contains": { "cursor": 2, "item": "anchor_sliver" }, "timeout_sec": 5 },
-  { "action": "press", "name": "confirm" },
-  { "action": "wait_for_event", "type": "item_equipped", "payload_contains": { "item": "anchor_sliver", "slot": "accessory_1" }, "timeout_sec": 5 },
-  { "action": "assert_state", "path": "equipped.accessory_1", "equals": "anchor_sliver" },
-  { "action": "press", "name": "inventory" },
-  { "action": "wait_for_event", "type": "ui_inventory_hidden", "timeout_sec": 5 },
-
-  { "_comment": "== The awakened interact rewire: pantry_door now opens the portal menu, not the flavor toast ==", "action": "teleport", "map": "inn", "cell": [13, 6] },
-  { "action": "move", "direction": "right", "steps": 1 },
-  { "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_started", "payload_contains": { "conversation": "portal_menu" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_shown", "timeout_sec": 5 },
-  { "action": "assert_event_absent", "type": "accomplishment_recorded", "payload_contains": { "id": "observed_the_pantry_door" } },
-  { "action": "screenshot", "name": "01_pantry_door_awakened_portal_menu" }
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Move down to the 'Continue' row, confirm loads the door_awakening_start manual slot.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "inn_upstairs"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    9,
+    2
+   ]
+  },
+  {
+   "_comment": "== Issue #92 R4 pre-bump proof ==. anchor_sliver (resonance 3) is already carried (door_awakening_start fixture, index 2 -- granted alongside anchor_stone at the ruin recovery beat) -- attempting to equip it now, at the shipped default resonance_capacity 2, must hit the SAME capacity-refusal toast gear_loop.json's own stonescale_talisman negative proves (0 used + 3 > 2). Confirms the res-3 tradeoff item is genuinely gated on the growth payoff below, not silently equippable from the start.",
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {
+    "items": 3,
+    "resonance": {
+     "used": 0,
+     "capacity": 2
+    }
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "payload_contains": {
+    "cursor": 2,
+    "item": "anchor_sliver"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.accessory_1",
+   "equals": ""
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "item_equipped",
+   "payload_contains": {
+    "item": "anchor_sliver"
+   }
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== Sleep 1/3: silent study beat (door_study_sleeps 0 -> 1) ==. #49: sleeping at your_bed fires 'Your own bed.' FIRST (sleep_toast), then sleep()'s own stream. Two toasts now queue back-to-back, so the SECOND toast's ui_toast_rendered confirmation needs a real blocking wait_for_event (the queue drains one hold-duration at a time) rather than an immediate assert_event_logged.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Your own bed."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {
+    "lines": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "You sleep soundly."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "door_awakened"
+   }
+  },
+  {
+   "_comment": "== Sleep 2/3: still silent (door_study_sleeps 1 -> 2) ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Your own bed."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {
+    "lines": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "door_awakened"
+   }
+  },
+  {
+   "_comment": "== Sleep 3/3: the AWAKENING (door_study_sleeps 2 -> 3, door_awakened banks) ==",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Your own bed."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "accomplishment_recorded{door_awakened} fires SYNCHRONOUSLY inside this sleep(), strictly BEFORE the veil's deferred coverage event -- must be waited on FIRST (since-marker ordering).",
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "door_awakened"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {
+    "lines": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.door_awakened",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "door_study_sleeps",
+   "equals": 3
+  },
+  {
+   "_comment": "door_awakened is the completion counter of the door quest's `attune` beat (the last one). record_accomplishment -> _check_quests fires synchronously inside this SAME sleep(), so the awakening completes the quest here -- the completion coverage door_chain_fight/sequence_break shed when the fetch was split + the attune payoff beat appended. Cumulative (whole-run) asserts, non-perturbing to the veil since-marker above. 2026-07-26 restructure (Task 2.1) RE-PIN: 4 -> 3, since dropping `recover_stone` left 3 beats and completion emits beat_index == beats.size(); re-derived from a real run's events.jsonl. GH#334 ruling 15 RE-PIN: 3 -> 4, the attune beat split into deliver_catalyst + attune, so the quest holds 4 beats again and completion emits beats.size().",
+   "action": "assert_event_logged",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "door_that_goes_elsewhere",
+    "beat": 4
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "door_that_goes_elsewhere"
+   }
+  },
+  {
+   "_comment": "== SEAM 3 (v0.15 A2) ==. The awakening COMPLETES the door quest, so this is the third page that used to read 'No quests in progress.' with nothing to do next. door_awakened banked + spine_started absent => the spine lead, live on the very sleep that opened it. TWO rows in catalog order: this fixture never started the delve either, so the survey lead is still standing -- the strip is a list, not a single next-thing. Read-only detour; the bed and the sleep below are untouched.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "quest_lines": 0,
+    "lead_lines": [
+     "· The Guild posted a Watch notice about the reopened gallery. (Adventurer's Guild)",
+     "· Pisces keeps looking at the Door like it owes him a letter. (Guild steps, Market Street)"
+    ]
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "00_journal_lead_spine"
+  },
+  {
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "_comment": "== Issue #92 R4, the ONE further sleep needed: resonance_grown banks, resonance_capacity 2 -> 3 ==. catalyst_attunement_sleeps' OWN first increment (0 -> 1) already happened SILENTLY on sleep 3/3 above (door_awakened's own bank made the gate true mid-way through that SAME sleep() call, harmless -- see wi_game.gd's hook doc comment), invisible to that block's own asserts; this is the SECOND increment (1 -> 2, the N=2 threshold), so it's the one that actually banks.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "Your own bed."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "phase_changed",
+   "payload_contains": {
+    "phase": "day"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "resonance_grown"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_sleep_veil_rendered",
+   "payload_contains": {
+    "lines": 1
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.resonance_grown",
+   "equals": 1
+  },
+  {
+   "_comment": "== GH#379: the growth beat NAMES Resonance ==. The veil line under the black ('You have room for it now.') is the felt beat and is gone the moment the veil lifts; it never says the word, and neither did the refusal toast this same script pins above. The bank now also emits a `lore: true` toast -- the exact dungeon_attuned idiom, zero new mechanism -- which WIGame._addressed_sink captures into lore_notes, so the definition lands in the journal's Lore section and stays re-readable. Pinned verbatim because it is the only place the mechanic is ever explained in play. assert_event_logged rather than wait_for_event: the toast is emitted INSIDE sleep(), on the same beat as the accomplishment bank and strictly BEFORE the veil's own render event, so it is already behind the cursor by the time the two waits above return.",
+   "action": "assert_event_logged",
+   "type": "toast",
+   "payload_contains": {
+    "lore": true,
+    "text": "Resonance is how much enchantment you can wear at once before the pieces start arguing. Yours grew by one in the night. The anchor stone paid for it."
+   }
+  },
+  {
+   "_comment": "...and the render confirmation, so the line is proven to reach the strip and not merely the bus. This one IS a wait: the strip renders on the drain, a few frames behind the sim emit, so it is genuinely still ahead of the cursor.",
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "payload_contains": {
+    "text": "Resonance is how much enchantment you can wear at once before the pieces start arguing. Yours grew by one in the night. The anchor stone paid for it."
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "lore_notes",
+   "contains": "Resonance is how much enchantment you can wear at once before the pieces start arguing. Yours grew by one in the night. The anchor stone paid for it."
+  },
+  {
+   "_comment": "== Issue #92 R4 post-bump proof: the SAME anchor_sliver equip now succeeds at capacity 3 ==",
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_shown",
+   "payload_contains": {
+    "resonance": {
+     "used": 0,
+     "capacity": 3
+    }
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "press",
+   "name": "move_down"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_selection_rendered",
+   "payload_contains": {
+    "cursor": 2,
+    "item": "anchor_sliver"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "item_equipped",
+   "payload_contains": {
+    "item": "anchor_sliver",
+    "slot": "accessory_1"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "equipped.accessory_1",
+   "equals": "anchor_sliver"
+  },
+  {
+   "action": "press",
+   "name": "inventory"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_inventory_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== The awakened interact rewire: pantry_door now opens the portal menu, not the flavor toast ==",
+   "action": "teleport",
+   "map": "inn",
+   "cell": [
+    13,
+    6
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "portal_menu"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "observed_the_pantry_door"
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_pantry_door_awakened_portal_menu"
+  },
+  {
+   "_comment": "== v0.19 L5 (GH#335 items 2+5), APPENDED. Two surfaces that are PIXELS and were therefore invisible to every headless log in the suite until this wave gave each one an event. (a) THE FACED-INTERACTABLE BRACKET: shown only when the faced cell actually holds a present entity, so it can never promise an interaction that is not there. This run walked onto the pantry door and the bracket said so; it also crossed a cell facing nothing and said THAT, which is the half that proves the honesty (a bracket that were always on would pass a showing:true assert forever).",
+   "action": "assert_event_logged",
+   "type": "ui_affordance_rendered",
+   "payload_contains": {
+    "entity": "pantry_door",
+    "showing": true
+   }
+  },
+  {
+   "action": "assert_event_logged",
+   "type": "ui_affordance_rendered",
+   "payload_contains": {
+    "showing": false
+   }
+  },
+  {
+   "_comment": "(b) THE PHASE GLYPH. Three states, day/dusk/night, and the payload carries the phase NAME and the glyph shape only. OPAQUE-UNTIL-SLEEP is the whole design constraint here: an action-clock countdown was refused (wave ruling 10), so there is no count and no fraction to pin -- what this assert protects is that the surface exists and says nothing more than which part of the day it is.",
+   "action": "assert_event_logged",
+   "type": "ui_phase_glyph_rendered",
+   "payload_contains": {
+    "phase": "day",
+    "glyph": "sun"
+   }
+  },
+  {
+   "_comment": "(c) THE COMPLETION STING (GH#335 item 4). Quest and class banks had a sound; every other counter banked in silence. `accomplishment_noted` is gated on count:1 -- the FIRST bank of a counter -- so it says 'that is new' and never turns into a per-hit combat rattle. WHAT THIS ASSERT DOES AND DOES NOT PROVE (v0.19 L5 reviewer lens A): this run banks FOUR count:1 counters (door_study_sleeps, door_awakened, catalyst_attunement_sleeps, resonance_grown) and exactly ONE sting is logged -- but the other three are eaten by the row's own 400ms cooldown_ms, not by the count gate, because a driven headless run collapses hours of play into seconds. So this is an EXISTENCE pin only. The machine-gun guard is the count:1 payload match in data/audio.json and nothing here measures it; a per-hit melee_hit tally is refused there, at the row.",
+   "action": "assert_event_logged",
+   "type": "audio_played",
+   "payload_contains": {
+    "id": "accomplishment_noted"
+   }
+  }
  ]
 }

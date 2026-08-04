@@ -44,6 +44,25 @@ const READOUT_SELECTION_CLEARANCE := 34.0
 const TOAST_BAND_RESERVE := \
 	-MESSAGE_LAYER_SCRIPT.TOAST_BOTTOM_DEFAULT + MESSAGE_LAYER_SCRIPT.TOAST_PANEL_BASE_SIZE.y
 
+## THE PHASE GLYPH (GH#335 item 5, ruling 10). Three states, day/dusk/night, and
+## NOTHING ELSE: no action count, no fill bar, no "2 moves to dusk". An action
+## clock would render progress-toward, which is refused. What this restores is
+## PARITY: outdoors the mood grade already says the phase out loud, but interiors
+## are phase-invariant (VISUAL-LOG P3), so indoors the player had no read at all.
+## Three DISTINCT SILHOUETTES, never three tints of one shape (2026-08-02 ruling):
+## a rayed disc, a half disc on a horizon line, a crescent.
+## SIZED AND FRAMED AS A HOTBAR SLOT, deliberately: the glyph sits on the bar's
+## own baseline and must read as part of that row, not as loose furniture. The
+## first pass put it on the parchment STRIP at 40px -- a 9-slice whose patch
+## margin is 20, so at 40 square it is all corners and no centre, and it drew as
+## a dark blob with the mark invisible inside it (windowed catch).
+const PHASE_GLYPH_SIZE := WIHotbar.SLOT_SIZE
+const PHASE_GLYPH_GAP := 8.0
+## Dark ink on the light parchment plate -- the same read the AP pips, the MP
+## diamonds and the slot's own key numeral all take on this chrome.
+const PHASE_GLYPH_INK := Color(0.18, 0.13, 0.08)
+const PHASE_GLYPHS := {"day": "sun", "dusk": "half_sun", "night": "crescent"}
+
 var _hotbar: WIHotbar
 var _root: Control
 var _readout_panel: PanelContainer
@@ -58,6 +77,16 @@ var _selection_label: Label
 ## `_position_selection_label`; visibility mirrors the label's own in
 ## `_update_selection_label`.
 var _selection_label_backing: Control
+## Parchment plate + the drawn glyph riding on it, left of the slot group.
+var _phase_plate: Control
+var _phase_glyph: PhaseGlyph
+var _phase_glyph_name := ""
+## Left edge `_layout_controls` last PLACED the slot row at. Reported instead of
+## `_hotbar.global_position.x` because a Control's live rect is a frame behind
+## the anchors/offsets just written to it -- reading it back gave a payload that
+## described the PREVIOUS layout, which is worse than useless in a regression
+## guard for a layout bug.
+var _bar_left := 0.0
 var _field_skills: Array = []
 var _last_slots: Array = []
 var _readout_lines: Array = []
@@ -80,6 +109,7 @@ func _ready() -> void:
 	_root.add_child(_hotbar)
 	_build_readout()
 	_build_toggle()
+	_build_phase_glyph()
 	_selection_label_backing = UIChrome.make_chrome_panel(UIChrome.PARCHMENT_STRIP, UIChrome.STRIP_PATCH_MARGIN)
 	_selection_label_backing.name = "SelectionLabelBacking"
 	_selection_label_backing.visible = false
@@ -127,6 +157,48 @@ func _build_toggle() -> void:
 	_toggle_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_toggle_label.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_toggle.add_child(_toggle_label)
+
+
+## The glyph is drawn, not sprited: data/sprites.json is another lane's file
+## every wave, and three vector marks at 40px need no atlas pick to read.
+func _build_phase_glyph() -> void:
+	_phase_plate = Control.new()
+	_phase_plate.name = "PhaseGlyphPlate"
+	_phase_plate.custom_minimum_size = PHASE_GLYPH_SIZE
+	_phase_plate.size = PHASE_GLYPH_SIZE
+	_phase_plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(_phase_plate)
+	var frame := NinePatchRect.new()
+	frame.texture = WIHotbar.FRAME_TEXTURE
+	frame.patch_margin_left = UIChrome.PATCH_MARGIN
+	frame.patch_margin_right = UIChrome.PATCH_MARGIN
+	frame.patch_margin_top = UIChrome.PATCH_MARGIN
+	frame.patch_margin_bottom = UIChrome.PATCH_MARGIN
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_phase_plate.add_child(frame)
+	_phase_glyph = PhaseGlyph.new()
+	_phase_glyph.name = "PhaseGlyph"
+	_phase_glyph.ink = PHASE_GLYPH_INK
+	_phase_glyph.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_phase_glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_phase_plate.add_child(_phase_glyph)
+
+
+## Re-reads the sim's own phase and announces it. `reason` is diagnostic only --
+## the payload's contract is `{phase, glyph}` and NOTHING that counts toward the
+## next crossing (opaque-until-sleep, see PHASE_GLYPHS' doc comment).
+func _update_phase_glyph() -> void:
+	if _phase_glyph == null or Game.sim == null:
+		return
+	var phase := String(Game.sim.phase())
+	var glyph := String(PHASE_GLYPHS.get(phase, "sun"))
+	if glyph == _phase_glyph_name:
+		return
+	_phase_glyph_name = glyph
+	_phase_glyph.glyph = glyph
+	_phase_glyph.queue_redraw()
+	ObservableBus.emit_domain_event(WIEvents.UI_PHASE_GLYPH_RENDERED, {"phase": phase, "glyph": glyph})
 
 
 func hotbar_node() -> WIHotbar:
@@ -240,7 +312,14 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 				_expanded = false
 				reason = "prior_waking"
 			_apply_visibility()
+			# Boot/post-load re-announce: `_phase_glyph_name` is process-lifetime
+			# memory and a loaded save can land on a different phase than the run
+			# that built this layer, so clear it before reading.
+			_phase_glyph_name = ""
+			_update_phase_glyph()
 			_render(reason)
+		WIEvents.PHASE_CHANGED:
+			_update_phase_glyph()
 		WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED:
 			_render()
 		WIEvents.COMBAT_STARTED:
@@ -309,8 +388,12 @@ func _render(reason: String = "skills") -> void:
 	_hotbar.render(slots, -1)
 	_update_readout()
 	_update_toggle_label()
-	_layout_controls()
-	_emit_rendered(reason)
+	# The payload carries the cluster's rect, so it must not be sent from a
+	# frame on which the rect was not computable.
+	if _layout_controls():
+		_emit_rendered(reason)
+	else:
+		call_deferred("_emit_rendered", reason)
 
 
 func _set_expanded(value: bool, persist: bool, reason: String) -> void:
@@ -319,8 +402,10 @@ func _set_expanded(value: bool, persist: bool, reason: String) -> void:
 	_expanded = value
 	_update_readout()
 	_update_toggle_label()
-	_layout_controls()
-	_emit_rendered(reason)
+	if _layout_controls():
+		_emit_rendered(reason)
+	else:
+		call_deferred("_emit_rendered", reason)
 
 
 func _update_readout() -> void:
@@ -350,31 +435,71 @@ func _emit_rendered(reason: String) -> void:
 		"slot_numbers": _slot_numbers.duplicate(),
 		"fallback_labels": _fallback_labels.duplicate(),
 		"readout_lines": _readout_lines.duplicate(),
+		# GH#386 P3: the bottom cluster's own geometry, so "the HUD jumped left
+		# after a Settings visit" is a NUMBER a headless run can compare instead
+		# of two screenshots someone has to remember to take.
+		"bar_left": int(round(_bar_left)),
+		"group_width": int(round(_group_width())),
 	})
 
 
-func _layout_controls() -> void:
+## Width of the bottom cluster (slot row + gap + Details toggle). One
+## derivation, read by `_layout_controls` and reported in the rendered payload,
+## so the number the log carries is the number the layout used.
+func _group_width() -> float:
+	if _hotbar == null:
+		return 0.0
+	var w := _hotbar.rendered_width()
+	if _toggle != null and _toggle.visible:
+		w += TOGGLE_GAP + TOGGLE_SIZE.x
+	return w
+
+
+## Returns FALSE when the layout could not be computed yet, so a caller that was
+## about to report the cluster's geometry can defer instead of reporting a rect
+## that does not exist.
+func _layout_controls() -> bool:
 	if _hotbar == null or _root == null:
-		return
+		return false
 	var viewport := get_viewport()
 	# TRAP: swapped-out layers can receive bus events before queued deletion.
 	if viewport == null:
-		return
+		return false
 	var viewport_size := viewport.get_visible_rect().size
+	# TRAP (GH#386 P3, the other half of the "bottom HUD jumps" finding): a UI
+	# layer can be laid out on the same frame it is added, BEFORE the viewport
+	# reports a real rect. Centring against a zero-width rect put the whole
+	# cluster 26px off the left screen edge for a frame or two after every world
+	# rebuild -- and a rebuild is what a Save/Load, a defeat and a New Game all
+	# are. Defer rather than guess at a number.
+	if viewport_size.x <= 1.0 or viewport_size.y <= 1.0:
+		call_deferred("_layout_controls")
+		return false
 	var safe := _current_safe_rect()
-	var group_width := _hotbar.size.x
-	if _toggle.visible:
-		group_width += TOGGLE_GAP + TOGGLE_SIZE.x
+	var group_width := _group_width()
 	var group_left := safe.position.x + (safe.size.x - group_width) * 0.5
-	var hotbar_center := group_left + _hotbar.size.x * 0.5
+	_bar_left = group_left
+	# `rendered_width()`, NEVER `_hotbar.size.x`: the bar's size IS the offsets
+	# set below, so reading it here made the layout a feedback loop -- see
+	# hotbar.gd's `_rendered_width` doc for the drift it produced.
+	var bar_width := _hotbar.rendered_width()
+	var hotbar_center := group_left + bar_width * 0.5
+	if _phase_plate != null:
+		# LEFT of the slot group and OUTSIDE the centring math above: a bar that
+		# grew a slot must not shove the glyph, and the glyph must not shift the
+		# bar off centre. Bottom-aligned with the slot row, never with the taller
+		# Details toggle, so it reads as part of the bar's own baseline.
+		_phase_plate.position = Vector2(
+			group_left - PHASE_GLYPH_GAP - PHASE_GLYPH_SIZE.x,
+			safe.end.y - CONTROLS_BOTTOM_MARGIN - PHASE_GLYPH_SIZE.y)
 	var center_shift := hotbar_center - viewport_size.x * 0.5
 	var safe_bottom := maxf(0.0, viewport_size.y - safe.end.y)
-	_hotbar.offset_left = -_hotbar.size.x * 0.5 + center_shift
-	_hotbar.offset_right = _hotbar.size.x * 0.5 + center_shift
-	_hotbar.offset_top = -_hotbar.size.y - CONTROLS_BOTTOM_MARGIN - safe_bottom
+	_hotbar.offset_left = -bar_width * 0.5 + center_shift
+	_hotbar.offset_right = bar_width * 0.5 + center_shift
+	_hotbar.offset_top = -WIHotbar.SLOT_SIZE.y - CONTROLS_BOTTOM_MARGIN - safe_bottom
 	_hotbar.offset_bottom = -CONTROLS_BOTTOM_MARGIN - safe_bottom
 	if _toggle.visible:
-		_toggle.position = Vector2(group_left + _hotbar.size.x + TOGGLE_GAP, safe.end.y - CONTROLS_BOTTOM_MARGIN - TOGGLE_SIZE.y)
+		_toggle.position = Vector2(group_left + bar_width + TOGGLE_GAP, safe.end.y - CONTROLS_BOTTOM_MARGIN - TOGGLE_SIZE.y)
 	var style := _readout_panel.get_theme_stylebox("panel")
 	var frame_size := WIFieldHotbarLayout.style_frame_size(style)
 	var panel_width := minf(READOUT_MAX_WIDTH, maxf(1.0, safe.size.x - WIFieldHotbarLayout.OUTER_MARGIN * 2.0))
@@ -390,6 +515,7 @@ func _layout_controls() -> void:
 	var content_rect := WIFieldHotbarLayout.style_content_rect(Rect2(Vector2.ZERO, rect.size), style)
 	_readout_label.custom_minimum_size = Vector2(maxf(1.0, content_rect.size.x - READOUT_SCROLLBAR_RESERVE), content_height)
 	_readout_label.size = _readout_label.custom_minimum_size
+	return true
 
 
 func _current_safe_rect() -> Rect2:
@@ -461,3 +587,42 @@ func _collect_field_skills() -> Array:
 	# inside `_render()`'s per-skill loop) to keep both in lockstep -- a
 	# skipped id is skipped everywhere, not just in the visual row.
 	return loadout.filter(func(id: Variant) -> bool: return Game.sim.skills.has(String(id)))
+
+
+## The three phase marks, drawn. SILHOUETTE is the whole disambiguation budget
+## here -- same ink, same plate, three different outlines -- because a shade
+## variant never reads as a separate thing (2026-08-02 ruling) and this glyph is
+## read at a glance in the corner of the eye, not studied.
+##   sun      full disc + eight rays
+##   half_sun half disc sitting ON a horizon rule that overhangs it
+##   crescent disc with a second disc bitten out of its upper right
+class PhaseGlyph extends Control:
+	var glyph := "sun"
+	var ink := Color(0.16, 0.13, 0.10)
+
+	func _draw() -> void:
+		var mid := size * 0.5
+		var r := minf(size.x, size.y) * 0.20
+		match glyph:
+			"half_sun":
+				var base := mid.y + r * 0.55
+				draw_arc(Vector2(mid.x, base), r, PI, TAU, 24, ink, 2.0)
+				draw_line(Vector2(mid.x - r * 2.1, base), Vector2(mid.x + r * 2.1, base), ink, 2.0)
+				for i in 3:
+					var a := PI + PI * (float(i) + 1.0) / 4.0
+					var from := Vector2(mid.x, base) + Vector2(cos(a), sin(a)) * (r * 1.45)
+					var to := Vector2(mid.x, base) + Vector2(cos(a), sin(a)) * (r * 1.95)
+					draw_line(from, to, ink, 1.5)
+			"crescent":
+				# A FAT C, not a ring with a nick in it. The first pass drew a
+				# thin near-closed arc plus a second "bite" arc, and at 52px the
+				# bite did not render at all -- it read as a broken circle, which
+				# is not a moon (windowed catch). Thickness plus a wide opening is
+				# what carries a crescent at this size.
+				draw_arc(mid, r * 1.05, PI * 0.42, PI * 1.58, 26, ink, 3.5)
+			_:
+				draw_arc(mid, r, 0.0, TAU, 28, ink, 2.0)
+				for i in 8:
+					var a := TAU * float(i) / 8.0
+					draw_line(mid + Vector2(cos(a), sin(a)) * (r * 1.4),
+							mid + Vector2(cos(a), sin(a)) * (r * 1.9), ink, 1.5)

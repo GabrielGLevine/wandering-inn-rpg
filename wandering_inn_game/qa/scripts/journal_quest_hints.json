@@ -92,7 +92,8 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 14
+   "steps": 2,
+   "_comment": "THE OFF SWITCH. Pause -> Settings (row 8) -> a fresh open puts the cursor on 'Difficulty' (index 0) since GH#386 regrouped ROWS gameplay-first; down x2 reaches 'Quest Hints' (index 2). Confirm turns the default-ON knob off."
   },
   {
    "action": "press",
@@ -107,10 +108,10 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "down x2 -> 'Back' (index 16, past #345's 'Difficulty' row), confirm closes settings and the pause menu resumes; cancel closes the pause menu.",
+   "_comment": "up x3 from 'Quest Hints' (index 2) wraps to 'Back' (index 16), confirm closes settings, cancel closes pause -- the knob is the ONLY thing this leg changed.",
    "action": "move",
-   "direction": "down",
-   "steps": 2
+   "direction": "up",
+   "steps": 3
   },
   {
    "action": "press",
@@ -185,7 +186,7 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 14
+   "steps": 2
   },
   {
    "action": "press",
@@ -201,8 +202,8 @@
   },
   {
    "action": "move",
-   "direction": "down",
-   "steps": 2
+   "direction": "up",
+   "steps": 3
   },
   {
    "action": "press",

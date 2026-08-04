@@ -1,6 +1,10 @@
 {
  "_comment": "Zevara Sunderscale STAYS at the gate (zevara_intro's own framing untouched)",
  "biome": "inn",
+ "interior_flavor": [
+  "Nothing there. Stone, kit racks, and the smell of oil worked into wood over years.",
+  "Nothing there. A shield knocks against its peg down the corridor, then goes quiet."
+ ],
  "grid": {
   "width": 14,
   "height": 8

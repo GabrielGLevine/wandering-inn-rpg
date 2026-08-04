@@ -1,5 +1,10 @@
 {
  "biome": "street",
+ "interior_flavor": [
+  "Nothing there. A Drake shoulders past; Liscor has no patience for loiterers.",
+  "Nothing there. Gutter runoff and market noise two streets over, off a wall repointed twice.",
+  "Nothing there. Someone leans out an upstairs shutter, decides you are nothing, and pulls it to."
+ ],
  "grid": {
   "width": 32,
   "height": 20
