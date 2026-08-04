@@ -28,7 +28,8 @@
   {
    "action": "move",
    "direction": "down",
-   "steps": 11
+   "steps": 12,
+   "_comment": "down x12 from the fresh-open cursor ('Difficulty', index 0) reaches 'Credits...' (index 12, in the reference group). GH#386 (v0.19 L5) regrouped the settings ROWS gameplay-first."
   },
   {
    "action": "press",
