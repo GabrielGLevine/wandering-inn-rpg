@@ -657,7 +657,7 @@
   },
   "render_scale": 0.55,
   "shadow": true,
-  "_comment_ysort": "GH#127: +20 is wrong-signed for south-approached furniture -- it drew the bed OVER the fronting player. Covers all six beds/cots. TRAP: at 0.55 the art is 1.86 cells tall, so it overhangs the cell NORTH and at bias 0 it amputated a PC standing there (riverfarm_guest_cot (8,4), garden_bed (11,4) both have walkable north cells). -32 = the stairs_up remedy for the same tall-sprite defect -- two cells, NOT -16, which only ties the approach key. Negative keeps the south contract (a PC south still draws in front).",
+  "_comment_ysort": "Covers all six beds/cots. TRAP: 0.55 makes the art 1.86 cells tall, overhanging the cell NORTH; bias 0 amputated a PC standing there (riverfarm_guest_cot (8,4), garden_bed (11,4) have walkable north cells). -32 = the `stairs_up` remedy, NOT -16 (ties the approach key) and never positive (paints over the fronting player).",
   "field_y_sort_bias_px": -32.0
  },
  "door": {
