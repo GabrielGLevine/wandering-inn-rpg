@@ -4,44 +4,55 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
-## RUNNING (2026-08-04): v0.19 (wave-2) — "the world answers the hand"
-Plan: `docs/superpowers/plans/2026-08-04-v019-wave2-plan.md` (authoritative).
-Two Fable passes produced it — a spec audit of all 22 milestone issues
-(every claim re-checked against HEAD; four false premises corrected in
-#380 alone; #349 found ~90% already shipped) and a holistic wave shape.
-Each issue carries its audit as a GitHub comment; **where the audit and
-an issue body disagree, the audit wins.**
+## DONE (2026-08-04): v0.19 (wave-2) — "the world answers the hand" — SHIPPED
 
-**Slate: 20 in, 2 cut.** #371 (inn presence) and #388 (map talk_pools)
-moved to the new **v0.20** milestone with rationale + the audit's
-measured scope, so neither is a "deferred to the board" ghost. #348 stays
-an umbrella closing on the K5 discovery playtest; #349 is verify-and-close;
-#385 is Tier-1-only with the Tier-2/3 split FILED at close.
+**Tagged v0.19.0.** 19 of 20 issues closed; #348 stays open by design (its
+close condition is the K5 discovery playtest, below). #390 filed for the
+#385 Tier 2/3 art carry. v0.20 milestone now holds #371, #388, #390.
 
-**Phase structure.** Phase 0 (running) = two disjoint worktrees landing
-EVERY `src/core` edit in the wave at once, so phase 1 can fan out six-wide
-over pure data/copy/UI/art. `src/core` is FROZEN for phase 1 — any lane
-needing a seam STOPS and reports (a one-hunk patch lane is cheaper than
-the seam reversal this project has already logged once). Phase 2 = anchored
-merge train L6→L1→L3→L4→L2→L5, then `--import` (new image assets), full
-gates, machine-playtest. Phase 3 = close + tag v0.19.0.
+Thesis: every verb the player aims at the world lands on something real and
+visibly resolves. Built forward (property layer #387, martial verbs
+#380-#383, feedback tells #335) and repaired backward (the eight blind-
+playtest findings #372-#379, each the same defect stated differently).
 
-**Landed on main already:** #375 + #370. #375 was stricter than filed —
-the west inn door had ZERO legal approach cells, not "a third blocked";
-`tutorial_flow` now carries a can-fail reachability pin (65/65 crossing
-canonicals green).
+Planning: two Fable passes (spec audit of all 22 issues + holistic shape),
+reconciled in `docs/superpowers/plans/2026-08-04-v019-wave2-plan.md`. Each
+issue carries its audit as a GitHub comment; **where audit and issue body
+disagree, the audit wins.** 14 rulings in the CHOICE-LOG close block.
 
-**13 rulings made under wave autonomy** (plan §6, all revocable, CHOICE-LOG
-at close). The ones most likely to be overruled: [Ice Floor] ships as
-dual-context on the EXISTING `icy_floor` id rather than a second id with a
-colliding display name; [Durable Picks] deferred (its granting classes
-`miner`/`laborer` do not exist); the Serve economy stays cooking-gated but
-signposted via one `source_hint` seam covering all 21 options; [Rope Work]
-ships under its invented name, pinned by id so a rename is one string.
-**Budget fact everyone had wrong: PixelLab is $1.53 with 0 subscription
-generations left, not ~$2.7.** Pack-first is now mandatory; the bespoke-rig
-art rows cannot be funded and are carried with reasons. A top-up is the one
-genuine user decision in the slate.
+**Structure that worked: phase 0 landed EVERY `src/core` edit first**, in two
+disjoint worktrees, so phase 1 could fan six lanes wide over pure
+data/copy/UI/art. Eight lane merges, ZERO conflicts. Repeat this shape.
+
+**Structure that leaked: cross-lane handoffs.** Three defects were each a
+handoff where both lanes did their own half correctly and nobody closed the
+seam — the ice tile shipped dead (L4 made it, L5 owned the wiring), the
+kitchen tint survived (L3 held it for L4's sprites, which landed), and
+`journal_categories` went unpinned when L2's data changed a script L5 owned.
+The train caught all three, by luck as much as design. **Next wave: name the
+counterpart lane in each brief and make handoff-closure an explicit train
+step.**
+
+**Dual adversarial review is load-bearing, not ceremony.** Lanes reported
+fully green (33/33 units, 205/205 canonicals) and reviewers still found: a
+`state_set` that was not actually permanent (its one-way guard read
+`entity_first_use`, which `sleep()` clears, so an already-set carrier replayed
+first-time copy and re-banked a SAVE-PERSISTED counter once per sleep,
+unbounded); a `thaw_cell` leaving ice painted over open water; a ward grace
+that overwrote a player's paid-for [Hearthward] charm; consolidation going
+mouse-dead at 5+ field slots; and the Serve `source_hint` clipping at both
+accessibility text scales. **Every BLOCK came from a different lens** — single-
+lens review would have missed one.
+
+**Open for you:**
+1. **[Rope Work]** — the invented name is the one item still wanting an ACK.
+   Pinned by id, so a rename is a one-string diff.
+2. **PixelLab top-up** — $1.53 and 0 subscription generations. Six bespoke rig
+   rows are carried unfunded (#390). Money is yours to decide.
+3. **K5 discovery playtest** — the post-tag event that closes #348 and decides
+   slice 3. A stranger plays; the question is whether they FIND the property
+   layer without being told.
+4. Standing: [Perfect Reduction] fence-vs-grant, Raskghar ear-gate, #253.
 
 ## DONE (2026-08-04): dialogue voice pass — SHIPPED via `voice-pass` branch PR
 All 71 dialogue files de-AI'd per the 2026-08-03 critique. Six waves
