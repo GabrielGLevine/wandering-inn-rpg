@@ -129,16 +129,14 @@ const WATER_SHIMMER_SHADER := preload("res://src/world/shaders/water_shimmer.gds
 ## rank of identically-straight stalks.
 const SWAY_SPEED := 1.2
 const WATER_SHIMMER_SPEED := 1.0
-## TRAP: do not swap this to (1,7) -- PIL alpha-scan confirms it is a
-## completely flat solid-fill tile (every pixel in the 16x16 region is the
-## identical (62,146,209), zero variance); a frost tint over it still reads
-## as perfectly flat/invisible. (1,5) is one of the sheet's genuine
-## rippled-open-water tiles (5 distinct blue shades, a real subtle wave
-## pattern) -- same swap as the water-shimmer cap default just below, so a
-## frozen cell reads as a distinctly textured, frost-tinted surface instead
-## of a slightly-lighter flat rectangle.
-const ICE_CAP_COORD := Vector2i(1, 5)
-const ICE_TINT := Color(0.74, 0.86, 1.0, 0.92)
+## GH#380/#385 P1: a frozen cell is a BESPOKE ice tile, never a tinted water
+## tile. The tinted-water arm shipped twice and was retracted twice -- the
+## CHOICE-LOG pulled the pale-blue slab, and the standing directive is that
+## tint is not disambiguation: a shade variant never reads as a different
+## thing. The sheet is a single 16x16 tile, so the coord is (0,0) and the
+## layer is NOT modulated (its own pixels carry the frost).
+const ICE_SHEET := "res://assets/tiles/ice/ice_floor_tiles.png"
+const ICE_CAP_COORD := Vector2i(0, 0)
 const VIGNETTE_SHADER := preload("res://src/world/shaders/vignette.gdshader")
 
 ## Must match src/world/main.gd's WORLD_VIEWPORT_SIZE
@@ -1000,8 +998,7 @@ func _build_ice_overlay() -> void:
 
 func _paint_ice_cell(cell: Vector2i) -> void:
 	if _ice_overlay == null:
-		_ice_overlay = WITileBoardBuilder.make_tile_layer(_field_root, WATER_SHEET, 16, WISpriteRegistry)
-		_ice_overlay.modulate = ICE_TINT
+		_ice_overlay = WITileBoardBuilder.make_tile_layer(_field_root, ICE_SHEET, 16, WISpriteRegistry)
 		_ice_overlay.z_index = 1
 		_field_root.add_child(_ice_overlay)
 	_ice_overlay.set_cell(cell, 0, ICE_CAP_COORD)

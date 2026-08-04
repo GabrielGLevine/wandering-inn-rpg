@@ -270,6 +270,14 @@ func _rebuild_options() -> void:
 			text = "%s%d. %s" % [mark, i + 1, String(opt["text"])]
 		var l := UIChrome.make_label()
 		l.text = text
+		# v0.19 integration: option rows wrap instead of clipping. GH#378's
+		# `source_hint` pushed all 21 signposted Serve rows past the panel's
+		# 664px no-autowrap width at BOTH accessibility text scales (115% by
+		# 59-70px, 130% by 149-162px) -- clipping the one string whose whole job
+		# is to un-stick a stuck player. Shortening cannot fix it: at fs18 the
+		# un-hinted row already eats 586 of 664px. test_copy_fit cannot see this
+		# (it measures font_size 14 only), so the row has to be able to grow.
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.custom_minimum_size = Vector2(0.0, 30.0)
 		if locked:
 			l.add_theme_color_override("font_color", LOCKED_COLOR)
