@@ -1,0 +1,819 @@
+{
+ "verdicts": [
+  {
+   "file": "hedault_enchanting.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 1,
+     "node": "heirloom_truth",
+     "quote": "A mount for glass is not a lesser commission. It is a different one"
+    },
+    {
+     "tell": 1,
+     "node": "heirloom_bench",
+     "quote": "I will not work over a lie. I price what is true."
+    },
+    {
+     "tell": 2,
+     "node": "bench_assist",
+     "quote": "If you are right I will not say so; I will simply not correct you, and you may take that as the same thing."
+    },
+    {
+     "tell": 9,
+     "node": "heirloom_bench",
+     "quote": "She knows. She's known since she was nineteen. It's the setting she wants honest."
+    }
+   ],
+   "notes": "The file has clearly been through a voice pass: the critique's cited worst line (\"A draw that size runs to something, and the something is not in your pantry.\") is gone, rewritten to the plainer \"I have measured what it pulls. Nothing in your pantry pulls that.\"; there is no CAPS, no ellipsis staging, no \"the whole of/the entire\"; several nodes end flat or on repeated instructions (fence_pointer's \"I have a mount to cut.\", bench_assist's doubled \"keep your hands flat\"), which is exactly fixes 1 and 4. But the signature tell survives at above-cap density: four antithesis constructions in seven nodes (\"not work over a lie / price what is true\", \"not a lesser commission / a different one\", \"set ward holds a shape / fed ward has to be sourced\", \"took the stone and left the glass\"), and the two heirloom epigrams are Worst-Lines-table caliber \u2014 negation-pair buttons in which Hedault states his own thesis, the same nine-word shape as the table's \"That is not a boast. That is the entire business.\" bench_assist adds one too-perfectly-balanced wit line, and the setting-not-stone reveal (already catalogued under tell 9 for this questline) is named aloud in a player option. Two-plus distinct strong tells with screenshot-worthy instances: FAIL, though narrowly \u2014 this file reads like the corpus after remediation, not before, and killing or roughening the two heirloom epigrams would likely flip it to PASS."
+  },
+  {
+   "file": "olesm_intro.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 2,
+     "node": "olesm_ambition_two",
+     "quote": "People ask what I do; you asked what I'm for. There's a difference, and it's most of why the second chair stays out."
+    },
+    {
+     "tell": 1,
+     "node": "cisterns_intel",
+     "quote": "The Watch goes in knowing the ground instead of bleeding to learn it."
+    },
+    {
+     "tell": 2,
+     "node": "resonance",
+     "quote": "Morale holds until the third hungry week, and no one has ever counted past the second."
+    },
+    {
+     "tell": 2,
+     "node": "olesm_doubt_two",
+     "quote": "The better you are, the more boring the city stays. Liscor is very boring. I'm quietly proud of that."
+    },
+    {
+     "tell": 9,
+     "node": "resonance",
+     "quote": "The weak point? Everyone points at the gap in the south wall, and I have stopped correcting them, because the true answer takes longer to say: Liscor has never been besieged long enough to learn its own supply."
+    },
+    {
+     "tell": 7,
+     "node": "seal_bounty_pitch",
+     "quote": "Fed. On a schedule. Forever."
+    },
+    {
+     "tell": 8,
+     "node": "seal_kept_report",
+     "quote": "Do you know what this does to my casualty projections? Nothing good."
+    },
+    {
+     "tell": 8,
+     "node": "hub",
+     "quote": "You have the look of someone who counts the exits on the way into a room."
+    }
+   ],
+   "notes": "This file has clearly been scrubbed against the rubric's surface tells \u2014 zero CAPS, zero ellipsis staging, no \"the whole of/entire\" closers, and the previously cited Worst Line (\"A resignation wearing a hat.\") is gone \u2014 but the structural tells survive at full strength. Tell 2 is the killer: of the ~20 substantial Olesm nodes, roughly 80% close on an engineered button (\"Someone has to keep the ledger honest after the Council's gone to bed.\", \"I have a column that badly wants a number in it.\", \"I need to write this down before it stops making sense.\"), which matches the corpus's 70% long-node rate; nothing dies flat except two nodes. The olesm_ambition_two closer is Worst-Lines-grade on its own: an antithesis epigram in which the character names his own theme (fix #5), the exact class of \"That is not a boast. That is the entire business.\" Tell 9's signature reframe (the apparent weak point isn't the real one) runs verbatim in resonance, and tell 8 operates within the single file: the \"Do you know what X does to Y? [deadpan]\" frame appears twice (seal_bounty_pitch: \"Do you know what a standing posting with no end date does to a ledger? It sits there.\"), and \"the look of someone who ...\" appears three times (hub, cisterns, cisterns variant). Prose triads beyond the 3-path quest design (\"Fed. On a schedule. Forever.\", \"A construct. A vault. Another rune-door \u2014 another.\") and the dry-understatement closer (\"The seal will hold. Probably.\") round it out. It is the best-disguised file a trained reader would still flag: uniform polish, no dropped thread, every node witty \u2014 tell 10 in miniature. FAIL on multiple distinct strong tells (2, 9, 8) plus one egregious instance."
+  },
+  {
+   "file": "zevara_intro.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 1,
+     "node": "swept_paid",
+     "quote": "Funding, not evidence."
+    },
+    {
+     "tell": 3,
+     "node": "zevara_oath_two",
+     "quote": "But \u2014 thank you. File it under 'said once.'"
+    },
+    {
+     "tell": 2,
+     "node": "zevara_oath",
+     "quote": "Archiving them is a one-line requisition. I haven't written it."
+    },
+    {
+     "tell": 2,
+     "node": "shift",
+     "quote": "The wall stands. Ten years, no breach. I count that every morning, before the rosters."
+    },
+    {
+     "tell": 2,
+     "node": "swept",
+     "quote": "You did right bringing it to me clean, before it had teeth."
+    }
+   ],
+   "notes": "The file has visibly been revised against this rubric \u2014 no CAPS (tell 4), no ellipses (tell 5), no \"the whole of\" closers (tell 6), the table's cited worst line (\"Luck is what people call other people's overtime\") is deleted, and several nodes now end flat (\"Mind the ink, it's still wet.\", \"Two pages so far. Attendance and dates.\", \"Same grate, south of here.\") \u2014 but it still fails on two distinct strong tells plus one egregious instance. Egregious: \"Funding, not evidence.\" is one of the critique's own verbatim tell-1 exhibits and survives untouched at the top of swept_paid. Tell 3 recurs in exactly the form the critique pinned on Zevara (warm beat, instant deflect): \"But \u2014 thank you. File it under 'said once.'\" is the same template as the flagged \"I will deny the tone I said it in\", just repainted. Button density (tell 2) remains well above human baseline: the oath node's crafted reveal-closer \"I haven't written it.\", the shift node's poignant litany, oldblood's \"You want fire that works, requisition a mage.\", and swept's manufactured figurative closer \"before it had teeth\" are all screenshot-grade closers, and authority still has the character naming her own thesis (\"boring gates, boring reports\" \u2014 rubric fix 5). Secondary residue a trained reader would notice: uniform polish with no dull or dropped line anywhere (tell 10 in miniature), and the bureaucracy-as-metaphor groove (\"I file it where I file all last resorts\", \"worth the ink\", \"It goes down as lanterns and a healer\") repeating within one file the way tell 8's queue joke repeats across files. Verdict FAIL: >=2 distinct strong tells (1, 2, 3), one of them a line already in the critique's example list."
+  },
+  {
+   "file": "invrisil_fixer.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 1,
+     "node": "rumor_hats",
+     "quote": "Hat on, you talk. Hat comes off, you run, and you don't spend breath asking why."
+    },
+    {
+     "tell": 1,
+     "node": "balk",
+     "quote": "Rumor carries no name \u2014 nobody ever knows who poured it first. Testimony has my face on it, and Coyle prices faces."
+    },
+    {
+     "tell": 1,
+     "node": "cups_favor",
+     "quote": "I'd rather it went back through a friendly hand than a collecting one."
+    },
+    {
+     "tell": 2,
+     "node": "arranged",
+     "quote": "The pot's gone cold while I've sat here reading my own signature back."
+    },
+    {
+     "tell": 2,
+     "node": "rumor_hellam",
+     "quote": "He's wanted to testify against Coyle for years. You'd be doing him the favor."
+    },
+    {
+     "tell": 3,
+     "node": "hub",
+     "quote": "Testimony's steeping \u2014 my face on paper, gods help my complexion."
+    }
+   ],
+   "notes": "The file has visibly been scrubbed against the rubric \u2014 the critique's cited worst line is gone, there are no CAPS (tell 4) and no ellipsis staging (tell 5), and two nodes end deliberately flat (\"Costs the same, mind.\"; the just_tea crate line) \u2014 but the sentence-shape DNA survives intact and a trained reader who wrote this critique would flag it as the same hand. Tell 1 fires at least three times on one NPC where the rubric's own fix caps it at one total: the balanced pair in rumor_hats, the rumor-vs-testimony contrast in balk's variant (with \"faces... prices faces\" noun-repeat-as-wit, the exact cadence the Worst Lines table tags in hedault_enchanting), and the friendly-hand/collecting-one swap. Tell 2 still closes roughly six of nine substantive nodes with a button \u2014 \"You'd be doing him the favor.\", \"you don't spend breath asking why\", \"we'll talk about faces\", \"wedding manners and all\" \u2014 with the arranged closer (\"reading my own signature back\") being screenshot-grade manufactured poignancy, and rumor_hats stacking tells 1+2 in one sentence the way the critique screenshots the seal-broker line. Tell 3 runs once in textbook form: sincere beat (\"my face on paper\") instantly deflected by a quip (\"gods help my complexion\"). Finally, the tea/water conceit (\"steeping\", \"different water\", \"the water's warmer already\", \"one cup won't drown a man like Coyle\", \"pour it in ink\") holds across all ten nodes without a single lapse \u2014 the uniform, never-dropped-thread polish that is tell 10's structural core. Three distinct strong tells clears the >=2 FAIL bar."
+  },
+  {
+   "file": "invrisil_seal_broker.json",
+   "verdict": "PASS",
+   "tell_hits": [
+    {
+     "tell": 2,
+     "node": "bought",
+     "quote": "Put it away. Deeper than that."
+    },
+    {
+     "tell": 2,
+     "node": "talk_close",
+     "quote": "Tell them the block was destroyed. Tell them a bad season did it."
+    }
+   ],
+   "notes": "PASS, though not clean. The file has visibly been through the voice pass: the critique's own Worst Lines entry for this file (\"That is not a boast. That is the entire business.\") is gone, and tells 1, 4, 5, 6, and 7 are entirely absent \u2014 no bare antithesis, no CAPS, no ellipsis staging, no \"the whole of/entire\" closer, no triads. Multiple nodes end flat or on concrete detail per the rubric's fix list (\"There is a cleaner square in the middle where it sat.\", \"I would have taken almost anything.\", \"Then the next customer sat down and I had a cut to price.\"), and the broker repeats himself and hedges like a person (\"my rates for that matter, since I have never hidden the rates\", \"that I could find\", \"all things considered\"). What survives is two tell-#2 closer-beats logged above \u2014 \"Deeper than that.\" is a button, and the \"Tell them / Tell them\" pair is anaphora in closer position \u2014 plus the quotable mid-node coinage \"I have never once borrowed upward\" (noun-repeat-as-wit adjacent). I judged all three against the Worst Lines bar and none clears it: the first is an imperative tied to a physical action, the second is two-beat lie-coaching whose \"bad season\" is a tracked callback, the third reads as an old criminal's rehearsed patter. Fewer than two strong tells and no egregious instance; a trained reader would call this the most human file they'd been shown from this corpus, while still suspecting the same hand on a full read of the closers."
+  },
+  {
+   "file": "invrisil_house_steward.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 1,
+     "node": "answered",
+     "quote": "My mistress does not do favours. She does accounts, and she settles them the same week."
+    },
+    {
+     "tell": 2,
+     "node": "who",
+     "quote": "You have been in this city long enough to know there is only one answer to that question worth giving and that nobody here gives it."
+    },
+    {
+     "tell": 2,
+     "node": "waiting (text_variants[1])",
+     "quote": "That is a different letter to write and she has written it."
+    }
+   ],
+   "notes": "The file has clearly been revised since the 2026-08-03 critique: the Worst Lines entry attributed to it (\"I am not waiting for you and I am not waiting for the house...\") is gone, there are no CAPS words, no mid-line ellipses, no triads, and the base waiting node ends on a flat fact (\"Until then the fire here is a good one.\") per fix #1. But the payoff node reinstates the corpus signature: \"My mistress does not do favours. She does accounts, and she settles them the same week.\" is bare tell-#1 antithesis stacked with a tell-#2 button \u2014 structurally the same nine-word aphorism the rubric screenshots from invrisil_seal_broker.json (\"That is not a boast. That is the entire business.\"), and it sits on the node that carries the gold grant, i.e. the line most players will read. Two further nodes land buttons: the who node's manufactured paradox-epigram and the variant's write/written verb-echo closer, which matches the noun-repeat-as-wit cadence flagged for hedault_enchanting.json. Every sentence is balanced and polished \u2014 an unnamed carriage servant with zero flat or dull lines, consistent with tell #10's uniform-literacy problem, though that is only fully judgeable at corpus level. Judged text values only; the toast string (\"...never once had to check the count\") is the same aphorist hand but was excluded as a non-text field. Two distinct strong tells (1 and 2), with the favours/accounts line alone close to egregious: FAIL."
+  },
+  {
+   "file": "riverfarm_witch.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 9,
+     "node": "truth",
+     "quote": "Blight is the word the village picked, and it's the wrong one."
+    },
+    {
+     "tell": 2,
+     "node": "mediate_pitch",
+     "quote": "Being owed has never yet made me unreasonable."
+    },
+    {
+     "tell": 2,
+     "node": "witch_lesson",
+     "quote": "The craft grows from what a person already is. Mine roots in kindness."
+    },
+    {
+     "tell": 2,
+     "node": "hub",
+     "quote": "You want the blight gone. I want what I'm owed. One of these is easy."
+    },
+    {
+     "tell": 2,
+     "node": "witch_ward_taught",
+     "quote": "Small appetite, small keeping."
+    }
+   ],
+   "notes": "This file has visibly been through a voice pass \u2014 the rubric's own Worst Lines entry for riverfarm_witch.json (\"Distance is just another kindness...\") is gone, tells 3/4/5/6/11 are clean, and a few nodes end flat and human (\"It might do.\", \"And keep it out of the damp.\"). But two distinct strong tells survive. First, tell 9: the quest reveal is the corpus's single reframe template \u2014 the apparent object isn't the real one (blight = uncollected debt, not disease), stated in the node's opening line; against a rubric that already lists four identical reframes, this fifth is an instant flag. Second, tell 2 at Worst-Lines density: every node over ~200 chars still lands a manufactured epigram \u2014 \"Being owed has never yet made me unreasonable\" is a bumper-sticker litotes exactly like \"Luck is what people call other people's overtime\"; \"Mine roots in kindness\" is the character naming her own thesis (the rubric's fix #5, and the same defect as the forge smith's \"she paid for both\"); the hub variant runs setup\u2192parallel\u2192quip in seventeen words; \"Small appetite, small keeping.\" is a balanced two-beat aphorism from a hedge hermit. Weaker signals noted but not counted: the \"Hats. Herbs... Words said over water\" triad (tell 7, softened by hedging) and \"it's the wrong one\" doubling as an X-not-Y (tell 1). Two strong distinct tells (2, 9) meets the FAIL bar despite the partial scrub."
+  },
+  {
+   "file": "pallass_forge_smith.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 1,
+     "node": "commission_drift",
+     "quote": "On a slab that is a scratch. On a person it is a season."
+    },
+    {
+     "tell": 2,
+     "node": "commission_drift",
+     "quote": "Do not stand where it corrects."
+    },
+    {
+     "tell": 2,
+     "node": "spec",
+     "quote": "The hammer hangs on its peg for all of it."
+    },
+    {
+     "tell": 3,
+     "node": "broker",
+     "quote": "Say the rest of it out loud, because I am not going to."
+    },
+    {
+     "tell": 2,
+     "node": "commission",
+     "quote": "Between him and me, somebody has this wrong. I do not believe it is her hands."
+    },
+    {
+     "tell": 9,
+     "node": "broker",
+     "quote": "Recovery. It is printed on his own notice, the one that has hung on my wall six years."
+    }
+   ],
+   "notes": "This file has plainly been revised against the critique \u2014 both Worst Lines the rubric attributes to pallass_forge_smith (\"So he is right and I am right and she paid for both.\" and \"Nobody was wrong. That was the whole problem.\") are gone, there are zero CAPS words, zero mid-line ellipses, no triads, no \"the whole of\" closers, several nodes now die on flat logistics (\"Pull the vent chain on your way past.\"), and the mid-line self-correction \"Hand me the tongs \u2014 no, the short ones.\" is genuine human texture. But the residue still flags. commission_drift is the egregious node: four consecutive polished sentences stacking a perfectly balanced scratch/season antithesis with an echo-closer button \u2014 exactly the too-quotable-for-the-moment manufactured aphorism the Worst Lines table screenshots. Roughly half the speaker nodes still land a button (spec's hammer-on-peg image, commission's \"not her hands\" turn-and-close), broker runs the sentiment-then-deflect template in the exact shape of the rubric's tell-3 examples (\"Tell no one.\" / \"I will deny the tone I said it in.\"), and the recovery-not-hardness reveal \u2014 the rubric's named tell-9 instance for this very file \u2014 survives intact, with a bonus noun-repeat-as-wit (\"harder steel because harder is what I taught her\"). Three distinct strong tells plus one egregious node clears the FAIL bar; a trained reader who wrote this critique would flag the file, though as the corpus's best-revised entry rather than its worst offender."
+  },
+  {
+   "file": "pisces_magic.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 3,
+     "node": "pisces_fence_two",
+     "quote": "The hands remember it at odd hours. A sniff. Next question \u2014 preferably about magic."
+    },
+    {
+     "tell": 3,
+     "node": "horns_bridge_two",
+     "quote": "I audited it for a month, found no error, and stopped. Next question \u2014 about magic, ideally."
+    },
+    {
+     "tell": 7,
+     "node": "descent_ask",
+     "quote": "A witch feeds hers. An enchanter reads the draw as craftsmanship. A forge calls it maintenance and bills by the hour."
+    },
+    {
+     "tell": 7,
+     "node": "greet",
+     "quote": "Riverfarm, Invrisil, Pallass. Three answers, and I still can't see the shape they make."
+    },
+    {
+     "tell": 7,
+     "node": "lesson_light",
+     "quote": "It is cheap, it is obedient, and it fails without a corpse or a fire."
+    },
+    {
+     "tell": 1,
+     "node": "necro_teach",
+     "quote": "First principle: the dead do not mind. The living mind enormously, and you will learn to weather that, or you will quit."
+    },
+    {
+     "tell": 1,
+     "node": "necro_taught",
+     "quote": "A fencer's trick first, a spell second."
+    },
+    {
+     "tell": 1,
+     "node": "door_recap_two",
+     "quote": "I have standards. They have never required me to visit."
+    },
+    {
+     "tell": 2,
+     "node": "sealed",
+     "quote": "I still do, every casting. Nobody has ever asked me why."
+    },
+    {
+     "tell": 2,
+     "node": "descent_agreed",
+     "quote": "I am not carrying yours; I have a spine to preserve and a reputation that assumes I never lift anything."
+    },
+    {
+     "tell": 2,
+     "node": "consult_fight_response",
+     "quote": "I shall be here, dry and uninjured, exactly as planned."
+    }
+   ],
+   "notes": "The file has visibly been de-telled against the rubric's surface checks: no CAPS-shouting, no ellipsis-as-stage-direction, no \"the whole of / the entire,\" and the two lines the critique itself cited from this character (\"It is not a democracy...\" and \"the whole of what membership consists of\") are gone from horns_bridge, replaced with the flatter \"That is membership.\" A few nodes now end on flat facts (\"Mind the overhangs going in.\", \"The new schedule is chalked on my slate already.\"), which is real progress. But the structural machinery survives at flaggable density. The killer is tell 3 running twice in one file with near-identical wiring: two unrelated confessions (missing his father's rapier; admitting the Horns' arrangement works) both cap with the same defensive pivot \u2014 \"Next question \u2014 preferably about magic\" / \"Next question \u2014 about magic, ideally.\" That is a template with two coats of paint, exactly the pattern the rubric names. Tell 7 fires repeatedly and labelled (\"Three regions taught you the same word in three accents\" followed by a witch/enchanter/forge triple; the player's own \"Riverfarm, Invrisil, Pallass\"; \"bound, fed, and waiting\" appearing in two separate nodes), tell 1 persists (\"the dead do not mind. The living mind enormously\" is noun-repeat-as-wit worthy of the Worst Lines table; \"A fencer's trick first, a spell second.\"), and a clear majority of nodes still land a button, including three separate self-aware-quip closers about his own vanity (rope, spine, \"dry and uninjured\"). Pisces' canonical pomposity buys cover for wit, but not for the same three sentence machines recurring node after node \u2014 a trained reader flags it. Two-plus distinct strong tells (1, 2, 3, 7): FAIL. Full path: /Users/gabriel/wandering-inn-rpg/wandering_inn_game/data/dialogue/pisces_magic.json."
+  },
+  {
+   "file": "rags_inn.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 3,
+     "node": "served",
+     "quote": "Hot. Good. Chieftain eats last. Always last. Tonight, first. Tell no one."
+    },
+    {
+     "tell": 1,
+     "node": "greet",
+     "quote": "You again. Camp ate. Still count doors. Habit, not you."
+    },
+    {
+     "tell": 2,
+     "node": "offduty",
+     "quote": "Always watch doors. For after. Tables here flat. No wobble. Tribe has rocks. I do not complain. Inn Human cooks. Plays chess. Feeds goblins. Stupid. Works."
+    }
+   ],
+   "notes": "Automatic FAIL: the served node's text is quoted verbatim in the rubric's own Worst Lines table (rags_inn.json row \u2014 \"even the pidgin character lands a button\") and \"Tell no one.\" is cited by name in tell #3's example list as one of the near-identical sentiment-then-deflect served nodes \u2014 a single egregious, already-screenshot instance. Beyond that, the file independently clears the >=2-strong-tells bar: the greet text_variant closes on a bare \"X, not Y\" antithesis (\"Habit, not you.\"), the corpus-signature pattern the rubric explicitly notes the goblin chieftain should not share with the Watch Captain and tea-fixer; and offduty runs setup-turn-epigram to the compressed closer \"Stupid. Works.\" All three nodes in the file land a button (Habit, not you. / Stupid. Works. / Tell no one.), a 3-for-3 closer rate tell #2 identifies as inhuman. Mitigations noted for fairness: no CAPS, no ellipsis staging, no \"the whole of\", no triads, and Rags's pidgin is the rubric's own cited ~5% idiosyncratic exception \u2014 but that exemption covers register, not structure, and structurally every node here is a machined epigram."
+  },
+  {
+   "file": "ceria_intro.json",
+   "verdict": "PASS",
+   "tell_hits": [
+    {
+     "tell": 2,
+     "node": "dig_unknown",
+     "quote": "Usually that means valuable or it means dangerous. I plan the camp for dangerous."
+    }
+   ],
+   "notes": "Narrow pass. The file is markedly cleaner than the corpus baseline the rubric describes: no CAPS (tell 4), no ellipsis-as-stage-direction (tell 5), no \"the whole of/entire\" closers (tell 6), no labelled triads (tell 7), no sentiment-then-deflect (tell 3), no bare \"X, not Y\" antithesis (tell 1), and three of six primary nodes end flat/functional (\"...Ceria Springwalker \u2014 Horns of Hammerad.\", \"...you call me over and you wait.\", \"We need one more pair of hands.\"), which breaks the every-node-lands-a-button profile. The one strong hit is dig_unknown: \"Usually that means valuable or it means dangerous. I plan the camp for dangerous.\" is a textbook setup-turn-epigram with the same noun-repeat-as-wit cadence as the critique's #1 worst line (\"...the something is not in your pantry\") and would plausibly make a Worst Lines table \u2014 it should be rewritten (e.g., end on \"I plan the camp for dangerous\" losing the echo, or cut the generalization sentence). Sub-threshold but noted: the triple-beat horns_party_formed variant ending \"Try to keep up.\", the \"charges accordingly\" dry quip in dig_pitch, and \"And bring your own rope.\" \u2014 quip-closer energy at roughly half the nodes, and Ceria is never boring; in a single-NPC file that reads as consistent character voice rather than corpus sameness, but a second line at dig_unknown's level anywhere in this file would flip it to FAIL under the two-strong-tells bar."
+  },
+  {
+   "file": "ceria_dig_camp.json",
+   "verdict": "PASS",
+   "tell_hits": [
+    {
+     "tell": 2,
+     "node": "camp_fourth",
+     "quote": "Three of us hold the shovels. That was the trade, and he argued it well."
+    }
+   ],
+   "notes": "Two nodes, both largely clean under a hostile read. camp_hub carries zero rubric patterns: no antithesis-pair, no CAPS, no ellipsis staging, no triad (two camp rules, not three), no 'the whole of' closer, and \u2014 decisively \u2014 it ends on a flat logistical fact ('It's in my tent, filed with the survey maps'), which is the rubric's own prescribed fix #1 rather than a button. The single hit is camp_fourth's closer, 'That was the trade, and he argued it well.', a genuine setup-turn-tag button (tell #2); but measured against the Worst Lines bar it is a grounded negotiation detail with a dry tag, not a detachable aphorism, so it is a weak instance, not egregious. The mid-node wit ('half the pages are about what they didn't bring out', 'exactly where I want him until there's something down here worth reading') is polished-competent, which slightly supports corpus-level tell #10, but that tell cannot be established from one literate speaker in one file. One non-egregious hit fails to meet the FAIL threshold of two distinct strong tells or one egregious line."
+  },
+  {
+   "file": "door_mounting.json",
+   "verdict": "PASS",
+   "tell_hits": [
+    {
+     "tell": 2,
+     "node": "door_mounting",
+     "quote": "and nobody has offered it so much as a rune of encouragement",
+     "text_quote_confidence": "verbatim"
+    }
+   ],
+   "notes": "Two Pisces nodes plus three player options; both speaker nodes are long enough (>150 chars) to be in the rubric's high-risk band, yet neither trips the corpus signature. No bare \"X, not Y\" antithesis (tell 1), no CAPS (4), no mid-line ellipsis staging (5), no \"the whole of/entire\" closer (6), no triad (7), no sentiment-then-deflect (3), no reveal-reframe (9), no combat-bark template (11). The second node ends on flat logistics \u2014 \"Krshia stocks the catalysts, and I have already started on the calculations for our half of the work.\" \u2014 which is precisely the die-flat texture the critique's fix #1 asks for. The one line a hostile reader circles is the \"rune of encouragement\" quip: a polished setting-pun with model-ish quip cadence, logged above as a weak tell-2 adjacency, but it sits mid-node rather than as a button, matches Pisces's canonically snide, performative register, and would not survive scrutiny for the Worst Lines table. \"It works. The next test is range.\" is clipped but functional, not epigrammatic. Net: zero strong tells, one weak arguable \u2014 under the FAIL bar (>=2 strong or one egregious). Source: /Users/gabriel/wandering-inn-rpg/wandering_inn_game/data/dialogue/door_mounting.json judged against /Users/gabriel/wandering-inn-rpg/docs/dialogue-voice/critique-2026-08-03.md."
+  },
+  {
+   "file": "erin_errand.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 2,
+     "node": "erin_home",
+     "quote": "I did the math on walking. The math was bad."
+    },
+    {
+     "tell": 2,
+     "node": "hub (text_variant: won_combat)",
+     "quote": "Just look twice at the next one before you decide what it is. That's all I want. Sign stays up."
+    },
+    {
+     "tell": 3,
+     "node": "erin_home_two",
+     "quote": "I keep deciding that on purpose, so it's nice when it lands by accident. Hang on \u2014 bread's about done and I have to pull it."
+    },
+    {
+     "tell": 3,
+     "node": "hub (text_variant: errand_decided)",
+     "quote": "I even got to sit down this morning, for about a minute."
+    },
+    {
+     "tell": 8,
+     "node": "erin_meal",
+     "quote": "Don't ask me to explain the math."
+    },
+    {
+     "tell": 2,
+     "node": "erin_pond",
+     "quote": "It's gone by morning. I haven't gone down to watch."
+    },
+    {
+     "tell": 2,
+     "node": "hub (text_variant: goblins_spared)",
+     "quote": "Talked. With words."
+    },
+    {
+     "tell": 10,
+     "node": "erin_pond_two (player option)",
+     "quote": "That's a lot of kindness for something you've never seen."
+    }
+   ],
+   "notes": "The file has plainly been scrubbed of the surface tells \u2014 zero CAPS (tell 4), zero mid-line ellipses (tell 5; the rubric's own example \"\u2026Can you look?\" appears here de-ellipsised in erin_door_flicker), no bare \"X, not Y\" antithesis (tell 1), no \"the whole of\" closers (tell 6) \u2014 but the structural tells survive intact and a trained reader would flag it within three nodes. Roughly two-thirds of the ~20 text blobs land a button closer (tell 2): \"The math was bad\" is Worst-Lines-grade noun-repeat-as-wit in the exact cadence of the rubric's \"runs to something, and the something is not in your pantry\"; \"Sign stays up.\" and \"I haven't gone down to watch.\" are the same clipped-epigram closer as \"Tell no one.\"; \"Talked. With words.\" is chat-model staccato comedy. The sentiment-then-deflect template (tell 3) that the rubric already caught Erin running (\"no more feelings before lunch, house rule\") runs twice more here \u2014 sincerity about home instantly escaped via bread, warmth undercut by \"for about a minute\". The math punchline is a within-file groove used twice as a closer (tell 8's found-a-groove pattern), and even throwaway player exits are polished quips (\"It's a date. The chess kind.\", \"All part of the service.\", and a player line that names the pond scene's theme aloud), so no line anywhere is allowed to be flat (tell 10). Four distinct tells with at least two screenshot-grade instances: FAIL."
+  },
+  {
+   "file": "krshia_inn.json",
+   "verdict": "PASS",
+   "tell_hits": [
+    {
+     "tell": 2,
+     "node": "served",
+     "quote": "Hrr. Hot through, and full to the lip. The Silverfangs remember generous hands."
+    }
+   ],
+   "notes": "Three nodes, one flagged. The only genuine hit is tell #2: the served node lands a quotable epigram button (\"The Silverfangs remember generous hands.\"), the same setup-then-closer shape the rubric catalogs \u2014 though it is partially defensible as canon Gnoll voice (tribes-remember phrasing) rather than pure model cadence, which keeps it out of Worst Lines territory. Everything else the rubric hunts for is conspicuously absent: no \"X, not Y\" antithesis, no CAPS, no ellipsis staging, no \"the whole of\" closer, no triad, and \u2014 notably \u2014 the served node breaks the corpus-wide sentiment-then-deflect template (#3) that the critique says every served node runs. The stall node ends on a flat concrete fact (\"The shutters are down and the weights are in their box.\"), which matches the critique's own fix #1, suggesting this file was written or revised with the rubric in hand. Remaining softness is polish-level (balanced parallel clauses, \"Buyers smell the desperation on a stall\" as merchant maxim), but that is in-register for a literate Silverfang merchant and merely competent, not screenshotable. One non-egregious hit does not meet the FAIL bar of two distinct strong tells or one egregious instance."
+  },
+  {
+   "file": "olesm_inn.json",
+   "verdict": "PASS",
+   "tell_hits": [
+    {
+     "tell": 2,
+     "node": "greet",
+     "quote": "I promised myself one night off and I have spent it counting how many people can reach that door before I can."
+    }
+   ],
+   "notes": "Only one arguable hit and it is borderline-competent, not egregious: the greet node lands a setup-turn button, and offduty carries one quotable near-aphorism (\"Whoever sits with their back to the door is brave or new.\") \u2014 but at 1 button per 3 nodes this sits inside the rubric's own allowance for real speech (one rhetorical peak per scene). Every corpus-defining tell is specifically absent: no \"X, not Y\" antithesis (#1), no CAPS (#4), no mid-line ellipsis (#5), no \"the whole of/the entire\" closer (#6), and \u2014 decisively \u2014 the served node breaks the sentiment-then-deflect template (#3) that the critique says fires on every served node, ending instead on doubled plain sincerity (\"Thank you. Really \u2014 thank you.\"). The file also exhibits the critique's prescribed humanizing fixes: offduty ends on a flat fact (\"and my stew goes cold in the meantime\"), Olesm hedges and revises mid-thought (\"an open file, possibly, but I keep revising it\"), and repeats himself (\"I've been saying later for three hours\"). The three-part room reading in offduty is too loose to count as a #7 triad. One distinct weak-to-moderate tell, nothing Worst-Lines-grade: PASS."
+  },
+  {
+   "file": "wilovan_inn.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 2,
+     "node": "greet (text_variants[0])",
+     "quote": "The fire's making most of the noise in here."
+    },
+    {
+     "tell": 2,
+     "node": "offduty",
+     "quote": "It is simply a good hat, {addr}, and the peg by the door is too far to keep an eye on."
+    },
+    {
+     "tell": 3,
+     "node": "served",
+     "quote": "That's very kind, {addr}. A man in my line gets offered a great many things and pays for most of them one way or another. This is a bowl of stew somebody just handed me."
+    },
+    {
+     "tell": 1,
+     "node": "greet (text_variants[0])",
+     "quote": "some evenings are quieter than others and the quiet ones are worth sitting in"
+    }
+   ],
+   "notes": "The file scrubs the typographic tells (no CAPS, no mid-line ellipses, no triads, no \"the whole of\") but keeps the rhetorical ones, and Wilovan's canonically ornate register does not cover for structure. Three of the four text values land a manufactured closer (tell 2): the hat-on-peg quip in \"offduty\" and \"The fire's making most of the noise in here.\" are both screenshot-grade buttons \u2014 setup, turn, epigram \u2014 where a human would let the line die on the chair or the pot. The \"served\" node is the damning one: the critique measured that every served node in the corpus runs warm-beat-then-wry-reframe, the file's own _comment admits \"Serve mirrors selys_inn/zevara_inn\", and the text delivers exactly that template \u2014 gratitude, then the offered-and-paid-for vs. just-handed-to-me contrast reveal (tell 3, with tell-1 antithesis embedded), then a final button (\"before the stew goes cold\"). The greet variant additionally carries the noun-repeat-as-wit cadence flagged in the Worst Lines table (\"quieter than others and the quiet ones\"), stating a mini-thesis and then confirming it (\"This is one of them.\"). Only the base greet node ends acceptably flat. Two-plus distinct strong tells: a trained reader who has seen the other 72 files flags this hand immediately."
+  },
+  {
+   "file": "relc_intro.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 3,
+     "node": "meet (went_alone variant)",
+     "quote": "I don't know whether to buy you a drink or write you up. Reckless conduct is a real charge. Next time I file it."
+    },
+    {
+     "tell": 7,
+     "node": "spar_offer",
+     "quote": "Rules: you move, you hit, no crying."
+    },
+    {
+     "tell": 2,
+     "node": "gift",
+     "quote": "What you carry decides which moves you get."
+    },
+    {
+     "tell": 2,
+     "node": "relc_army",
+     "quote": "I am done marching. Kept the spear."
+    },
+    {
+     "tell": 3,
+     "node": "relc_army_two",
+     "quote": "Short version: I got tired of holes in the ground and people I liked going into them. Watch work, the worst thing I dig is paperwork."
+    },
+    {
+     "tell": 2,
+     "node": "relc_wager",
+     "quote": "Watch doesn't pay enough for me to keep losing bets to my own students. The paymaster docks me for less."
+    },
+    {
+     "tell": 1,
+     "node": "relc_army",
+     "quote": "Liscor's got one. It just never comes home. I did."
+    }
+   ],
+   "notes": "FAIL on three distinct strong tells. (1) Tell #3 is the killer: the went_alone variant runs the exact sentiment-then-deflect template the critique already attributed to Relc by name \u2014 sincere dread (\"every version ends with a body bag\") snapped into a defensive quip about filing a reckless-conduct charge \u2014 and relc_army_two repeats the template (dead comrades pivoting to a dig/paperwork noun-pun, itself the Worst Lines table's noun-repeat-as-wit cadence). (2) Tell #7: \"Rules: you move, you hit, no crying.\" is a colon-labelled triad matching the rubric's examples verbatim in shape, then reused near-identically in the variant (\"Same rules: move, hit, no crying.\"), brushing tell #8's groove-reuse. (3) Tell #2 is systemic: of 13 text blocks, only warns and the dusk variant end flat; everything else lands a button (\"What you carry decides which moves you get.\" closing a tutorial node, \"I am done marching. Kept the spear.\", \"The paymaster docks me for less.\", \"Straw's forgiving that way.\", \"I lose the middle of it every time.\"). Mitigations noted: zero CAPS, zero ellipsis staging, no \"the whole of/entire\", no bare \"X, not Y.\" string (tell #1 appears only as the softer contrast-pivot shape), and the deliberate drink-costs repetition in relc_army_two gestures at the critique's fix #4 \u2014 but it wraps that repetition in yet another quotable button, so the fix reads as one more tell. A trained reader who has seen the rest of this corpus flags this file inside two nodes."
+  },
+  {
+   "file": "pallass_den_keeper.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 3,
+     "node": "carried",
+     "quote": "That is not how it is done and I am not going to say another word about it. Take the small jar. No, take it."
+    },
+    {
+     "tell": 3,
+     "node": "hub (text_variants[0])",
+     "quote": "Sit down, {addr}. You are eating something."
+    },
+    {
+     "tell": 9,
+     "node": "month_two",
+     "quote": "It is exactly how it works and every single person in that chain is doing their job correctly. Nobody up here is lazy, {addr}."
+    },
+    {
+     "tell": 2,
+     "node": "released",
+     "quote": "I am going to frame this notice."
+    },
+    {
+     "tell": 2,
+     "node": "month",
+     "quote": "I have hatchlings upstairs chewing yesterday's bread and a shelf with a tin-shaped hole in it."
+    }
+   ],
+   "notes": "This file was plainly revised after the critique \u2014 both queue-recursion Worst Lines the rubric quotes from pallass_den_keeper.json are gone, and the surface tells are scrubbed (no CAPS, no ellipses, no bare antithesis, no \"the whole of\" closer, one node ends flat on the bread line, and the keeper deliberately repeats \"four cycles late and every stamp on it correct\" per fix #4). But the scrub removed typography, not templates. The completion node \"carried\" runs the sentiment-then-deflect template verbatim in shape (warm beat, refusal to be sincere, gruff gift-command \u2014 instance #14 of the pattern the rubric says every served node runs), and the hub variant runs the same command-as-affection move a second time in seven nodes. \"month_two\" states the corpus's one reveal aloud \u2014 nobody-at-fault, correctness-is-the-blocker \u2014 a near-duplicate of the forge smith's \"Nobody was wrong. That was the whole problem.\" from the sibling Pallass file. And five of seven texts still land a turned closer (\"frame this notice\", \"tin-shaped hole\", the ironic dock line), against exactly one flat ending. Uniformly de-contracted emphatic cadence (\"I am going to\", \"You are eating\", \"It is exactly\") completes the picture. Two distinct strong tells (3 and 9) plus button density: a trained reader who has seen this corpus flags it."
+  },
+  {
+   "file": "pallass_lift_attendant.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 8,
+     "node": "ledger_pitch",
+     "quote": "the office cannot clear the queue until the queue clears the office. Nobody may skip it. That includes the queue."
+    },
+    {
+     "tell": 2,
+     "node": "seal",
+     "quote": "The tin is four cycles late, {addr}. Liscor is two hundred miles away."
+    },
+    {
+     "tell": 2,
+     "node": "ledger_settled",
+     "quote": "Ride free while I am on the gate, {addr}. That is the only thing I own to give."
+    },
+    {
+     "tell": 1,
+     "node": "ledger_brief_two",
+     "quote": "The consignee signs last. She cannot sign first."
+    }
+   ],
+   "notes": "FAIL on one egregious instance plus multiple strong tells. The ledger_pitch node contains the recursive-bureaucracy queue joke that the rubric itself quotes verbatim under tell #8 as one of three cross-file reuses \u2014 a trained reader holding this critique flags the file on that line alone, and it doubles as a stacked triple-button (tell #2). Beyond that, the seal node closes on a textbook setup-turn-epigram (tin four cycles late vs. Liscor two hundred miles away), the shipment_carried variant of ledger_settled caps its warm beat with a manufactured aphorism (\"That is the only thing I own to give.\"), and ledger_brief_two runs the bare antithesis pattern (\"signs last / cannot sign first\") that is tell #1's signature. In fairness, the file is better than the corpus average the critique describes: hub, cycle, and the loop_walked variant end on flat logistics or practical detail, there are no CAPS, no ellipsis staging, and no theme-naming. But roughly half the substantive nodes still land an engineered closer, and the pre-cited queue gag makes the verdict unambiguous."
+  },
+  {
+   "file": "kingslayer_den.json",
+   "verdict": "PASS",
+   "tell_hits": [
+    {
+     "tell": 11,
+     "node": "confront",
+     "quote": "Eight points settle on the stone, and it covers half the distance to you in one step.",
+     "tell_note_quote_context": ""
+    }
+   ],
+   "notes": "Single-node file; only prose is the confront node text (options are bracketed action labels, not prose). It evades the corpus's measured tells cleanly: no antithesis pair, no CAPS, no mid-line ellipsis, no \"the whole of/entire\", no triad, no sentiment-deflect, and the node does not land an epigram button \u2014 it closes on physical escalation rather than a quotable turn. The one hostile reach is tell #11 (combat-bark template: sensory sentence + flat closer): the node is sensory-led and ends flat, but the closer is straight menace (\"covers half the distance to you in one step\"), not the dry-understatement wit of the flagged examples (\"Things armored like that rarely need to\"), so it is a weak partial match, not a strong hit. \"They named it for the King it caught out hunting.\" is the most polished line but is mid-node exposition, not screenshot-worthy for the Worst Lines table. One weak hit, zero strong, nothing egregious: PASS."
+  },
+  {
+   "file": "gallery_vermin_nest.json",
+   "verdict": "PASS",
+   "tell_hits": [
+    {
+     "tell": 11,
+     "node": "confront",
+     "quote": "What little light gets past the rubble sits on the wet patch and on eyes low to the ground, more than a few of them."
+    }
+   ],
+   "notes": "Single-node encounter file; only one prose text value plus two bracketed option labels ([Strike first.] / [Back away.]) that carry no voice. The node follows the rubric's combat-bark shape (tell 11: sensory build, then a short dry line), and \"more than a few of them\" is the same dry enemy-count understatement as the cited \"There are two of them.\" (razorbeak_nest.json) \u2014 that is the one real fingerprint here, and a hostile reader who had seen the other five bark files might add this as a sixth instance of the template. But it stops short of egregious: the closer \"They are feeding at the leak.\" is a flat fact, not a button (it is literally what fix 1 prescribes), there is no antithesis, no CAPS, no ellipsis-staging, no triad, no aphorism, and nothing here would survive in the Worst Lines table. One moderate hit on one tell, no second distinct tell \u2014 below the FAIL bar of two strong tells or one egregious line."
+  },
+  {
+   "file": "boulevard_duel_ring.json",
+   "verdict": "PASS",
+   "tell_hits": [],
+   "notes": "Single-node file with ~110 chars of NPC prose \u2014 squarely in the \"too short to tell\" class the rubric itself flags. The NPC line (\"One of them keeps wrapping his hands and does not look up. \\\"Coyle pays for a good show. You in, or just looking?\\\"\") ends on a functional question, not an epigram button; no CAPS, no mid-line ellipsis, no antithesis pair, no triad, no \"the whole of\" closer, and the register (clipped, incurious, transactional) plausibly fits an illiterate ring-second rather than the corpus's uniform balanced-clause voice. The one whiff is the good show \u2192 \"I'd make a poor show\" inversion in the [Charming Smile] option \u2014 a faint echo of the rubric's noun-repeat-as-wit cadence \u2014 but it is a single, mild callback in a player-choice label, below the \"screenshot for the Worst Lines table\" bar. It approximately matches tell #11's sensory-beat-then-line shape, but the closer is a question, not the dry-understatement template. Zero strong tells; verdict PASS."
+  },
+  {
+   "file": "yvlon_intro.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 11,
+     "node": "hub (text_variants[0], requires horns_party_formed)",
+     "quote": "Dust this thick means nothing's walked here in years, or whatever does walk here leaves no tracks. Walk behind me until we know which."
+    },
+    {
+     "tell": 3,
+     "node": "hub (text_variants[1], requires vault_construct_downed)",
+     "quote": "Solid work back there. You'd pass for a second-string Silver-rank. Now help me with this strap."
+    },
+    {
+     "tell": 2,
+     "node": "hub",
+     "quote": "I've dug graves for people who got that wrong."
+    }
+   ],
+   "notes": "The file dodges the loud typographic tells \u2014 no CAPS (#4), no mid-line ellipsis (#5), no bare \"X, not Y\" antithesis (#1) \u2014 and the lone player option \"Noted.\" plus the flat strap-fact ending of variant 2 are genuinely human moves. But two variants match corpus templates closely enough to screenshot. The horns_party_formed variant is the tell-#11 bark template exactly: sensory observation, balanced either/or deduction, dry understatement closer, sitting cleanly beside \"Alone, they'd already be running. There are two of them.\" \u2014 with a bonus \"walked here / walk here / Walk behind me\" repetition-as-cadence that echoes the Worst Lines' noun-repeat wit. The vault_construct_downed variant is sentiment-then-deflect (#3): warm beat, backhanded qualifier, instant pivot to business \u2014 the same one-template emotion the rubric counted 13 times. And the hub default caps itself with a quotable grave-digging button (#2), meaning every NPC line in the file runs setup \u2192 turn \u2192 closer with no line permitted to be dull (#10 at micro scale). Two distinct strong tells plus uniform button density: a trained reader who has the rubric flags this file. FAIL, though narrowly \u2014 killing the \"until we know which\" callback and letting variant 1 end on the dust fact would likely flip it."
+  },
+  {
+   "file": "riverfarm_villager.json",
+   "verdict": "FAIL",
+   "tell_hits": [
+    {
+     "tell": 2,
+     "node": "remember",
+     "quote": "I should be angry. I keep meaning to be angry."
+    },
+    {
+     "tell": 1,
+     "node": "remember",
+     "quote": "There was a voice in my mouth for weeks and it weren't mine."
+    },
+    {
+     "tell": 3,
+     "node": "hub",
+     "quote": "It's gone again. Thank you. Them beans went in crooked last month."
+    }
+   ],
+   "notes": "The hub node is competent camouflage \u2014 it visibly implements the critique's own fix list (self-correction, dropped thread, flat mundane ending, dialect register break), which a hostile reader would note reads like the rubric applied as a checklist. But the emotional payoff node \"remember\" reverts fully to model cadence and would screenshot cleanly: it ends on a doubled anaphora closer (\"I should be angry. I keep meaning to be angry.\") \u2014 the exact repetition-with-twist button the critique calls textbook LLM under tells #2 and the invrisil_house_steward Worst Line \u2014 and its centerpiece image is a negation reveal (\"a voice in my mouth... and it weren't mine\") in the same shape as tell #1's \"Whatever's holding them isn't teeth.\" Supporting damage: \"A price I said yes to. Never read the terms, none of us did.\" is contract-register wit from a farmer whose dialect elsewhere is \"weren't\" and \"Them beans\" \u2014 tell #10's uniform-literacy problem wearing a rustic coat \u2014 and the variant runs the tell-#3 template (warm beat \"Thank you\", instant flight into beans) with mundane deflection substituted for the defensive quip. The uniform hand also shows in three parallel \"keep\" constructions across three text blocks (\"Everyone keeps asking after me\" / \"I keep losing the thread of it\" / \"I keep meaning to be angry\"). Two-plus distinct strong tells concentrated in one ~180-char node: FAIL."
+  }
+ ],
+ "fails": [
+  "hedault_enchanting.json",
+  "olesm_intro.json",
+  "zevara_intro.json",
+  "invrisil_fixer.json",
+  "invrisil_house_steward.json",
+  "riverfarm_witch.json",
+  "pallass_forge_smith.json",
+  "pisces_magic.json",
+  "rags_inn.json",
+  "erin_errand.json",
+  "wilovan_inn.json",
+  "relc_intro.json",
+  "pallass_den_keeper.json",
+  "pallass_lift_attendant.json",
+  "yvlon_intro.json",
+  "riverfarm_villager.json"
+ ],
+ "audit": {
+  "budget_tells": {
+   "2": false,
+   "3": false,
+   "9": false,
+   "10": false,
+   "11": false
+  },
+  "violations": [
+   {
+    "tell": 2,
+    "files": [
+     "wandering_inn_game/data/dialogue/hedault_enchanting.json"
+    ],
+    "quote": "I will not work over a lie. I price what is true."
+   },
+   {
+    "tell": 2,
+    "files": [
+     "wandering_inn_game/data/dialogue/hedault_enchanting.json"
+    ],
+    "quote": "It is a different one, and I would rather be told than discover it at the bench."
+   },
+   {
+    "tell": 2,
+    "files": [
+     "wandering_inn_game/data/dialogue/invrisil_merchant_prince.json"
+    ],
+    "quote": "Everyone has one, and today I am buying above market."
+   },
+   {
+    "tell": 2,
+    "files": [
+     "wandering_inn_game/data/dialogue/invrisil_merchant_prince.json"
+    ],
+    "quote": "I prefer enemies with prices. Friends run so very much dearer."
+   },
+   {
+    "tell": 2,
+    "files": [
+     "wandering_inn_game/data/dialogue/invrisil_stationer_client.json"
+    ],
+    "quote": "She does not write to people like me. She writes about them, and only once something with her attention on it has started to move."
+   },
+   {
+    "tell": 2,
+    "files": [
+     "wandering_inn_game/data/dialogue/invrisil_stationer_client.json"
+    ],
+    "quote": "A glass stone is exactly the right size to stay beneath that notice. I intend to keep it there."
+   },
+   {
+    "tell": 2,
+    "files": [
+     "wandering_inn_game/data/dialogue/riverfarm_witch.json"
+    ],
+    "quote": "The craft itself asks one question first, and clever has nothing to do with the answer."
+   },
+   {
+    "tell": 2,
+    "files": [
+     "wandering_inn_game/data/dialogue/riverfarm_witch.json"
+    ],
+    "quote": "The craft grows from what a person already is. Mine roots in kindness."
+   },
+   {
+    "tell": 2,
+    "files": [
+     "wandering_inn_game/data/dialogue/rags_inn.json"
+    ],
+    "quote": "Hot. Good. Chieftain eats last. Always last. Tonight, first. Tell no one."
+   },
+   {
+    "tell": 2,
+    "files": [
+     "wandering_inn_game/data/dialogue/ksmvr_plates.json"
+    ],
+    "quote": "I did not die. This is the preferred outcome."
+   },
+   {
+    "tell": 3,
+    "files": [
+     "wandering_inn_game/data/dialogue/rags_inn.json"
+    ],
+    "quote": "Hot. Good. Chieftain eats last. Always last. Tonight, first. Tell no one."
+   },
+   {
+    "tell": 3,
+    "files": [
+     "wandering_inn_game/data/dialogue/zevara_intro.json"
+    ],
+    "quote": "But \u2014 thank you. File it under 'said once.' Now get out of my gatehouse before I find you a shift."
+   },
+   {
+    "tell": 3,
+    "files": [
+     "wandering_inn_game/data/dialogue/pisces_inn.json"
+    ],
+    "quote": "Though I observe that I have finished it, and I observe you observing."
+   },
+   {
+    "tell": 9,
+    "files": [
+     "wandering_inn_game/data/dialogue/pallass_lift_attendant.json"
+    ],
+    "quote": "the office cannot clear the queue until the queue clears the office. Nobody may skip it. That includes the queue."
+   },
+   {
+    "tell": 10,
+    "files": [
+     "wandering_inn_game/data/dialogue/riverfarm_tallyman.json"
+    ],
+    "quote": "A thief rounds up. They round down and carry the shame home with them."
+   },
+   {
+    "tell": 10,
+    "files": [
+     "wandering_inn_game/data/dialogue/pallass_forge_smith.json"
+    ],
+    "quote": "Recovery. It is printed on his own notice, the one that has hung on my wall six years."
+   },
+   {
+    "tell": 10,
+    "files": [
+     "wandering_inn_game/data/dialogue/invrisil_stationer_client.json"
+    ],
+    "quote": "I want the setting held properly. The stone can stay glass."
+   },
+   {
+    "tell": 10,
+    "files": [
+     "wandering_inn_game/data/dialogue/pisces_seal.json"
+    ],
+    "quote": "A ward this careful was not built to imprison. It was built to keep something, the way you keep a fire"
+   },
+   {
+    "tell": 11,
+    "files": [
+     "wandering_inn_game/data/dialogue/crab_nest.json"
+    ],
+    "quote": "It starts toward you at a walk and does not speed up."
+   },
+   {
+    "tell": 11,
+    "files": [
+     "wandering_inn_game/data/dialogue/corusdeer_range.json"
+    ],
+    "quote": "One ear turns back toward the herd, then returns to you, and stays."
+   }
+  ]
+ }
+}
