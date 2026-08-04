@@ -1,5 +1,5 @@
 {
- "_comment": "#348 property table (spec docs/design/2026-08-02-emergent-skill-interactions-spec.md); resolved in WIFieldSkills.dispatch, policed by data_lint. ROW ORDER IS THE CONTRACT (first match wins): a frozen water cell carries BOTH `frozen` and `freezable`, so thaw must precede the water refusal. state_set banks the CARRIER's `counter_key`, never a row-level id -- one shared counter would flip every sibling prop at once.",
+ "_comment": "#348 property table (spec docs/design/2026-08-02-emergent-skill-interactions-spec.md); resolved in WIFieldSkills.dispatch, policed by data_lint. ROW ORDER IS THE CONTRACT (first match wins): a frozen water cell carries BOTH `frozen` and `freezable`, so thaw must precede the water refusal. state_set banks the CARRIER's `counter_key`, never a row id.",
  "skill_properties": [
   "burns",
   "freezes",
@@ -17,7 +17,8 @@
   "unlit": "entity",
   "person": "entity",
   "broken": "entity",
-  "gap": "entity"
+  "gap": "entity",
+  "cookware": "entity"
  },
  "outcomes": [
   "remove_scorch",
@@ -107,7 +108,7 @@
    "toast_default": "[Basic Cleaning] — The grime lifts away and the surface comes up clean."
   },
   {
-   "_comment": "The douse cell. No reversal substrate in v1 (spec §4.1), so the refusal IS the answer. toast_from=skill: `freezes` has TWO carriers and a row line naming one lies about the other.",
+   "_comment": "The douse cell. No reversal substrate in v1 (spec §4.1), so the refusal IS the answer. toast_from=skill: `freezes` has two carriers; a row line naming one lies about the other.",
    "skill_property": "freezes",
    "target_property": "hearth",
    "outcome": "refuse",

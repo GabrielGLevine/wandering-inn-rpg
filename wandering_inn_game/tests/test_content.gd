@@ -380,8 +380,14 @@ func _validate_consume_subset(maps: Dictionary) -> void:
 		for ent: Dictionary in maps[map_id].get("entities", []):
 			if not ent.has("on_skill_use"):
 				continue
+			# GH#391: the ingredient gate may live on the ARM instead of the prop
+			# (a cauldron must not demand yarrow before it will let you cook
+			# plain stew). WIGame.use_skill prefers the arm's own requires_item
+			# when it carries one, so this subset check has to read the same
+			# place or it reports a free-craft that cannot happen.
+			var arm_req: Variant = (ent["on_skill_use"] as Dictionary).get("requires_item", null) if ent["on_skill_use"] is Dictionary else null
+			var raw_req: Variant = arm_req if arm_req != null else ent.get("requires_item", "")
 			var req: Array = []
-			var raw_req: Variant = ent.get("requires_item", "")
 			if raw_req is Array: req = raw_req
 			elif String(raw_req) != "": req = [String(raw_req)]
 			var payloads: Array = [ent["on_skill_use"]]
@@ -1001,20 +1007,18 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 				continue
 			var entity_id: String = String(entity["id"])
 			var when: Dictionary = entity["present_when"]
-			# 2026-08-02 (GH#334 note 18, ruling b) NARROWED, not lifted. The
-			# hazard this arm names is exact and mechanical: `_check_trigger_radius`
-			# (wi_game.gd) never consults `entity_present`, so a present_when
-			# encounter THAT CAN AMBUSH would be invisible and unblocked yet still
-			# fire. That same function returns early for any encounter with no
-			# `trigger_radius` -- an interact-only encounter cannot ambush at all,
-			# so structural absence is safe there and is the only way to express
-			# "this threat arrives as a consequence" (encounter_when leaves the
-			# rig standing as furniture and only refuses the fight). Keep the ban
-			# for every encounter that carries a trigger_radius.
-			_check(
-				String(entity.get("kind", "")) != "encounter" or not entity.has("trigger_radius"),
-				"entity %s: present_when is forbidden on a kind:encounter that carries a trigger_radius -- _check_trigger_radius never consults presence, so it would be invisible/unblocked yet still ambush; use encounter_when" % entity_id
-			)
+			# 2026-08-02 (GH#334 note 18, ruling b) narrowed this to a ban on
+			# trigger_radius encounters; GH#392 LIFTS it by fixing the cause.
+			# The hazard was exact and mechanical: `_check_trigger_radius` did
+			# not consult `entity_present`, so a present_when encounter that
+			# could ambush would be invisible and unblocked yet still fire. That
+			# function now checks presence first (wi_game.gd), and
+			# `is_cell_blocked` already did, so both halves agree. A
+			# trigger_radius encounter may now be absent-until-armed instead of
+			# standing in the room as inert furniture the player cannot act on
+			# -- which is what the inn's rift_vermin_leak was doing.
+			# TRIPWIRE for the fix lives in test_sim_core (an absent encounter
+			# standing on the player's next cell must neither block nor fire).
 			_check(when.has("requires") or when.has("phase") or when.has("absent") or when.has("guest") or when.has("companion"), "entity %s present_when has no recognized shape (only 'requires'/'phase'/'absent'/'guest'/'companion' are sanctioned)" % entity_id)
 			if when.has("phase"):
 				for p: Variant in when["phase"]:

@@ -477,6 +477,15 @@ func _check_trigger_radius(skipped_ids: Array[String] = []) -> void:
 			continue
 		if not ent.has("trigger_radius"):
 			continue
+		# GH#392: presence gates the AMBUSH too. Until this line existed,
+		# _check_trigger_radius consulted only encounter_when, so a
+		# present_when'd encounter would have been invisible and unblocked yet
+		# still sprung -- which is exactly why test_content FORBADE present_when
+		# on a trigger_radius encounter. `is_cell_blocked` already respects
+		# entity_present, so with this the two halves finally agree and an
+		# encounter can be absent-until-armed instead of standing around inert.
+		if not entity_present(ent):
+			continue
 		if not _encounter_gate_met(ent):
 			continue
 		var ent_id := String(ent[WIKeys.ID])
@@ -581,6 +590,16 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	var skill_uses: Dictionary = target.get("skill_uses", {}) as Dictionary
 	if skill_uses.has(skill_id):
 		skill_arm = skill_uses[skill_id]
+	elif String(target.get("requires_skill", "")) == skill_id and target.has("on_skill_use"):
+		skill_arm = target["on_skill_use"]
+	elif bool(target.get("cookware", false)) and (skills.get(skill_id, {}) as Dictionary).has("cookware_use"):
+		# GH#391: A POT IS A POT. Any `cookware` prop answers any cooking-family
+		# Skill, and the SKILL carries what it makes -- so a new pot is ONE TAG,
+		# not an authored arm per Skill, and a cooking build is not sent across
+		# regions to find the one station that accepts its verb. The prop's own
+		# authored arm still wins above (every bespoke line is untouched); this
+		# only fills the cells nobody wrote.
+		skill_arm = (skills[skill_id] as Dictionary)["cookware_use"]
 	elif target.has("on_skill_use"):
 		skill_arm = target["on_skill_use"]
 	if target.is_empty() or skill_arm == null:
@@ -598,7 +617,14 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	# byte-identical. SCOPE: this String|Array contract covers the BENCH seam only;
 	# the dialogue-effect remove_item path (see _apply_dialogue_effects) remains
 	# String-only by design.
-	var req_items: Array = _as_item_list(target.get("requires_item", ""))
+	# GH#391: the ingredient gate belongs to the ARM, not the pot. A witch's
+	# cauldron demanding yarrow before it will let you cook plain stew is the
+	# exact friction this issue names -- so an arm may carry its own
+	# `requires_item` and, when it does, it OVERRIDES the prop's. Props that
+	# author no arm-level gate keep the prop-level one unchanged, so every
+	# shipped bench recipe is byte-identical.
+	var gate_source: Dictionary = skill_arm as Dictionary
+	var req_items: Array = _as_item_list(gate_source["requires_item"]) if gate_source.has("requires_item") else _as_item_list(target.get("requires_item", ""))
 	for req_item: String in req_items:
 		if not inventory.has(req_item):
 			var item_hint := String(target.get("item_hint_toast", "Bare hands won't do it. Something in your pack might."))

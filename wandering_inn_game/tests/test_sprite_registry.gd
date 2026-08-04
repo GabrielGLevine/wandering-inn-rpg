@@ -277,8 +277,21 @@ func _build_expected_counts() -> Dictionary:
 	counts["a_hunter/idle"] = 4
 	counts["a_hunter/walk"] = 6
 
+	## #390: wilovan is now a BESPOKE rig, idle only. The walk/slice/cast/hit/
+	## death rows below are the pc_gnoll_m set he used to borrow -- kept as pins
+	## so that generating his combat set later lands on an already-asserted
+	## frame count instead of a fresh guess. Absent animations are never checked
+	## (the loop walks the ENTRY's animations), so these are inert until then.
 	for anim_name in [["idle", 4], ["walk", 6], ["slice", 3], ["cast", 6], ["hit", 6], ["death", 7]]:
 		counts["wilovan/%s" % anim_name[0]] = int(anim_name[1])
+
+	## #390 bespoke rigs (OWNED PixelLab v3, 8-dir generated, 3 facings kept +
+	## side mirrored). IDLE ONLY by design: all four are field-only NPCs, so
+	## board_renderer.play_anim's documented fallback (missing anim -> idle_side)
+	## is never reached for them. Wilovan is the exception and keeps his full set
+	## because combatants.json fields him.
+	for bespoke_rig in ["selys", "krshia", "octavia", "ilvo", "gnoll_ranger"]:
+		counts["%s/idle" % bespoke_rig] = 4
 
 	counts["relc/idle"] = 4
 	counts["relc/walk"] = 6

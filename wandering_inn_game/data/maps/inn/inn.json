@@ -892,7 +892,7 @@
     6
    ],
    "display_name": "Krshia",
-   "sprite": "gnoll_traveler",
+   "sprite": "krshia",
    "facing": "down",
    "conversation": "krshia_inn",
    "present_when": {
@@ -918,11 +918,6 @@
      "speaker": "Krshia",
      "text": "The market can keep until morning. A good bowl and a warm fire, yes?"
     }
-   ],
-   "tint": [
-    0.8,
-    0.66,
-    0.5
    ]
   },
   {
@@ -1345,17 +1340,18 @@
    "display_name": "Hearth-Side Kettle",
    "sprite": "witch_kettle_hook",
    "requires_skill": "hedge_remedy",
-   "requires_item": "dried_yarrow_bundle",
    "item_hint_toast": "The kettle wants yarrow before it gives anything back.",
    "skill_hint_toast": "The kettle's on. The inn won't mind one more thing brewing, so long as it means well.",
    "locked_toast": "A kettle, singing low. It's just a kettle, unless you know otherwise.",
    "on_skill_use": {
+    "requires_item": "dried_yarrow_bundle",
     "accomplishment": "witch_craft_used",
     "item": "remedy_draught",
     "remove_item": "dried_yarrow_bundle",
     "toast": "[Hedge Remedy] — The inn's kettle does in a pinch, just like she said. The steam settles into something kinder."
    },
-   "_comment": "GH#131: on (6,2), a blocked kitchen-counter cell (#116 dress-a-blocked-cell); approach (6,3) facing up, which test_sim_core asserts open. NOT (2,2) -- test_sim_core walks it. Same ingredient gate as eloise_cauldron. GH#378 arm 2: kettle-on-a-crane, the row's only vertical silhouette; tint retired."
+   "_comment": "GH#131: on (6,2), a blocked kitchen-counter cell (#116 pattern); approach (6,3) facing up, asserted open by test_sim_core. NOT (2,2) -- test_sim_core walks it. GH#378 arm 2: kettle-on-a-crane, the row's only vertical silhouette; tint retired.",
+   "cookware": true
   },
   {
    "id": "inn_chef_counter",
@@ -1410,7 +1406,8 @@
     "item": "hot_meal",
     "toast": "[Basic Cooking] — The stew comes out rich and hot."
    },
-   "_comment": "The kitchen HERO pot; keeps `cauldron`. Tint RETIRED (GH#378 arm 2) now that short_order and inn_witch_kettle carry their own silhouettes -- tint is not disambiguation. `render_scale` here is a DEAD FIELD."
+   "_comment": "The kitchen HERO pot; keeps `cauldron`. Tint RETIRED (GH#378 arm 2) now that its two siblings carry their own silhouettes -- tint is not disambiguation. `render_scale` here is a DEAD FIELD.",
+   "cookware": true
   },
   {
    "id": "short_order",
@@ -1428,7 +1425,8 @@
     "accomplishment": "stretched_the_order",
     "toast": "[Basic Cooking] — You thin the stock, fold in day-old bread, and stretch the short order into a full service. Lyonette's shortfall vanishes into the pot."
    },
-   "_comment": "GH#378 arm 2: its OWN silhouette (flat hotplate + firebox), so the kitchen's three skill-gated stations stop being one sprite under three tints. `skill_hint_toast` states the no-yield outcome up front -- same gate as stew_pot (4,1), no `item` in the arm. work_loop 6b.5 pins it; the other two stay verbatim (wrong_order_loop)."
+   "_comment": "GH#378 arm 2: its OWN silhouette (flat hotplate + firebox) -- the kitchen's three stations were one sprite under three tints. `skill_hint_toast` states the no-yield outcome up front: same gate as stew_pot, no `item`. work_loop 6b.5 pins it.",
+   "cookware": true
   },
   {
    "id": "stairs_up",
@@ -1533,7 +1531,7 @@
    ]
   },
   {
-   "_comment": "`allies:[\"relc\"]`/`ally_requires:{met_relc:1}` mirrors D2's tuned harness cell (`rift_vermin_leak_w8_relc`, the 0.55-0.95 band) rather than the harder ungated `_solo`. GH#150: encounter_when arms the FIGHT on the door chain (present_when is validator-forbidden on encounters -- trigger_radius never consults presence). Pre-quest the leak stays VISIBLE as inert foreshadowing with its own observe; hiding it would recreate #149's invisible-blocking-cell class. Task 2.4 moved the arming counter to door_mounted and the fiction with it. Old saves reach door_mounted through Task 2.6's backfill.",
+   "_comment": "GH#392: ABSENT until the door chain arms it. It used to stand here from the first waking as visible-but-inert 'foreshadowing' (GH#150), which read only as a hole you cannot act on. present_when was forbidden on a trigger_radius encounter until #392 made _check_trigger_radius consult entity_present; test_sim_core carries the tripwire. Safer than hiding the sprite (#149's invisible-blocking-cell class). Frees (9,7).",
    "id": "rift_vermin_leak",
    "kind": "encounter",
    "cell": [
@@ -1566,6 +1564,11 @@
     "pedestal_unsealed"
    ],
    "encounter_when": {
+    "requires": {
+     "door_mounted": 1
+    }
+   },
+   "present_when": {
     "requires": {
      "door_mounted": 1
     }

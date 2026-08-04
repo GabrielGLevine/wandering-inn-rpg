@@ -268,12 +268,7 @@
    ],
    "display_name": "Selys",
    "person": true,
-   "sprite": "citizen_f",
-   "tint": [
-    0.45,
-    1.0,
-    0.55
-   ],
+   "sprite": "selys",
    "observe": "A Drake behind a counter she clearly wishes were taller. Tired, sharp, quick with a ledger. She has sized up a hundred adventurers today and found most of them wanting.",
    "friendly_line": "...Huh. You're actually pleasant. That's rare on this side of the counter. Fine - your paperwork jumps the line today. Don't make it weird.",
    "facing": "down",
@@ -482,12 +477,7 @@
    ],
    "display_name": "Ilvo",
    "person": true,
-   "sprite": "tier_clerk",
-   "tint": [
-    0.66,
-    0.9,
-    0.58
-   ],
+   "sprite": "ilvo",
    "facing": "left",
    "present_when": {
     "phase": [

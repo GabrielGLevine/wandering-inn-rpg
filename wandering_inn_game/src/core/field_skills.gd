@@ -142,6 +142,12 @@ func dispatch(skill_id: String, known: bool, target: Dictionary, faced_cell: Vec
 	if not target.is_empty() and (target.get("skill_uses", {}) as Dictionary).has(skill_id):
 		_break_sneak.call()
 		return _use_skill.call(skill_id, String(target[WIKeys.ID]))
+	# GH#391: any pot is a pot. A `cookware` prop routes ANY cooking-family
+	# Skill through the same use_skill seam; WIGame.use_skill picks the skill's
+	# own `cookware_use` arm when the prop authored nothing for this Skill.
+	if not target.is_empty() and bool(target.get("cookware", false)) and (skill.get("cookware_use", {}) as Dictionary).size() > 0:
+		_break_sneak.call()
+		return _use_skill.call(skill_id, String(target[WIKeys.ID]))
 	if skill_id == "observe" and not target.is_empty():
 		_break_sneak.call()
 		var observe_line := String(target.get("observe", "You watch. Details surface."))

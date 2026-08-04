@@ -1573,12 +1573,7 @@
    ],
    "display_name": "Krshia",
    "person": true,
-   "sprite": "gnoll_traveler",
-   "tint": [
-    0.8,
-    0.66,
-    0.5
-   ],
+   "sprite": "krshia",
    "observe": "A Gnoll with a merchant's smile and a soldier's eyes. She prices you the moment you approach, and remembers the number.",
    "friendly_line": "You have a warm way about you, and warmth I can trade with. Come - for you, I will call it a fair price, and I will mean it. This is not nothing, from me.",
    "facing": "right",

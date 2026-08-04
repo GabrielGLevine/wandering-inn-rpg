@@ -258,7 +258,7 @@
     6
    ],
    "display_name": "A Gnoll with a Bad Ankle",
-   "sprite": "gnoll_traveler",
+   "sprite": "gnoll_ranger",
    "facing": "right",
    "observe": "Boot off, ankle up on the bench, and a bowl of something going cold while she tells the story properly rather than quickly.",
    "talk_pool": [

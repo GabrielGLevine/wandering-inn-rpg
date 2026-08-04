@@ -2307,6 +2307,74 @@ func _init() -> void:
 	assert(int((gWardKept.warded_encounters["goblin_encounter_1"] as Dictionary).get("sleeps", 0)) == 1,
 		"the second night the player paid for is still there")
 
+	# == GH#391: A POT IS A POT ==
+	# Cooking-family Skills used to be bound to SPECIFIC named props, so a
+	# cooking build had to cross regions to find the one station that took its
+	# verb. Any `cookware` prop now answers any cooking-family Skill, with the
+	# SKILL carrying what it makes -- while every prop's own authored arm still
+	# wins, so the bespoke copy is untouched.
+	var gPot := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gPot.player_skills.append("basic_cooking")
+	gPot.transition("inn", Vector2i(6, 3))
+	gPot.player_facing = Vector2i.UP
+	_events.clear()
+	# inn_witch_kettle (6,2) authors ONLY a hedge_remedy arm. Before #391 a cook
+	# standing at her own inn's kettle got nothing.
+	var pot_res := gPot.use_skill_field("basic_cooking")
+	assert(gPot.inventory.has("hot_meal"), "a cook works the inn's kettle and gets a meal -- any pot is a pot")
+	assert(gPot.accomplishment_count("cooked_meal") >= 1, "...banking the cooking counter, not the witch's")
+	assert(gPot.accomplishment_count("witch_craft_used") == 0, "...and NOT the arm the prop authored for another Skill")
+	assert(not pot_res.is_empty(), "the generic cookware arm resolves through the same use_skill seam")
+	# The bespoke arm still wins where one exists: the stew pot keeps its own line.
+	var gStew := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gStew.player_skills.append("basic_cooking")
+	gStew.transition("inn", Vector2i(4, 2))
+	gStew.player_facing = Vector2i.UP
+	_events.clear()
+	gStew.use_skill_field("basic_cooking")
+	var stew_authored := false
+	for e: Dictionary in _events:
+		if e["type"] == "toast" and String(e["payload"].get("text", "")).contains("rich and hot"):
+			stew_authored = true
+	assert(stew_authored, "the stew pot's AUTHORED line still wins over the generic arm")
+
+	# == GH#392: PRESENCE GATES THE AMBUSH, NOT JUST THE SPRITE ==
+	# test_content used to FORBID present_when on a trigger_radius encounter
+	# because _check_trigger_radius consulted only encounter_when -- an absent
+	# encounter would have been invisible and unblocked yet still sprung. This
+	# is the tripwire for the fix: remove the presence check from
+	# _check_trigger_radius and the "does not fire" assert reds.
+	var absent_scene := WISceneCatalog.compose()
+	(absent_scene["maps"]["sewers"]["entities"] as Array).append({
+		WIKeys.ID: "unarmed_leak",
+		WIKeys.KIND: "encounter",
+		WIKeys.CELL: [3, 8],
+		WIKeys.DISPLAY_NAME: "Unarmed Leak",
+		"arena": "goblin_ambush",
+		"enemies": ["goblin_raider"],
+		"allies": [],
+		"trigger_radius": 1,
+		"present_when": {"requires": {"leak_armed": 1}},
+	})
+	var gAbsent := WIGame.new(absent_scene, wave_b_skill_config, _sink, 12345, combat_config)
+	gAbsent.transition("sewers", Vector2i(3, 6))
+	_events.clear()
+	assert(not gAbsent.is_cell_blocked(Vector2i(3, 8)), "an ABSENT encounter does not block its cell")
+	# A real move INTO the radius is what arms an ambush (transition/teleport
+	# never do), so this is the step that would fire it.
+	assert(gAbsent.move_player(Vector2i.DOWN) and gAbsent.player_cell == Vector2i(3, 7), "step into the radius")
+	assert(gAbsent.combat == null and _count("combat_started") == 0,
+		"...it does NOT ambush -- presence gates the trigger radius, not only the sprite")
+	assert(gAbsent.move_player(Vector2i.DOWN) and gAbsent.player_cell == Vector2i(3, 8),
+		"...and the player walks straight through the cell it would have occupied")
+	# Arm it: the same encounter, now present, behaves exactly as before.
+	gAbsent.record_accomplishment("leak_armed", 1)
+	gAbsent.transition("sewers", Vector2i(3, 6))
+	_events.clear()
+	assert(gAbsent.is_cell_blocked(Vector2i(3, 8)), "once armed it blocks again")
+	assert(gAbsent.move_player(Vector2i.DOWN), "the step into the radius is legal")
+	assert(gAbsent.combat != null and _count("combat_started") == 1, "...and the ambush fires on approach")
+
 	# == GH#380: THE `unsteady` CELL CLASS + THE [Even Footing] PASSIVE READ ==
 	# Injected onto a real map so the loader path is the shipped one: an
 	# `unsteady` list joins `blocked` exactly as `freezable` does. (2,2) in the

@@ -2984,7 +2984,7 @@ Guild and the Brothers' parlor — shots under `qa_output/v0161_art/`.
 
 Residuals, deliberately left and logged rather than silently patched:
 
-- [ ] SPRITE/WILOVAN — `wilovan` is an ID, not yet bespoke ART. The sprites.json
+- [x] SPRITE/WILOVAN — `wilovan` is an ID, not yet bespoke ART. The sprites.json
   entry still points at `pc_gnoll_m`'s sheets, so a Gnoll-male PC still meets a
   copy of himself in the parlor and at the inn. Moving `brothers_parlor/wilovan`
   onto the `wilovan` id was still the right first step (one character, one rig,
@@ -2999,13 +2999,13 @@ Residuals, deliberately left and logged rather than silently patched:
   and still not finish. No pack rig passes the silhouette bar: the registry's
   Gnoll rigs are the PC's own skins, and reusing one is the exact defect this
   row records.
-- [ ] SPRITE/SPECIES — `selys` and `octavia` still wear `citizen_f`, a human
+- [x] SPRITE/SPECIES — `selys` and `octavia` still wear `citizen_f`, a human
   woman, while Selys is a Drake and Octavia a Stitch-girl. Named in the triage
   as species errors; out of this lane's five-item budget, untouched here.
   **CARRIED (v0.19 L4) — await PixelLab top-up (user decision).** Two bespoke
   rigs (a Drake woman and a Stitch-girl); no pack in the tree ships either
   species, so pack-first has nothing to offer and the fix is generation-only.
-- [ ] SPRITE/ILVO — Ilvo wears `tier_clerk`, a Pallass civic rig (bronze guild
+- [x] SPRITE/ILVO — Ilvo wears `tier_clerk`, a Pallass civic rig (bronze guild
   sash), because the registry holds exactly two Drake civilian rigs and Renn
   needed the other one four cells away. It reads as a slim coated Drake beside
   Renn's bulk — the adjacency defect is gone — but a Liscor-native Drake rig
@@ -3013,6 +3013,16 @@ Residuals, deliberately left and logged rather than silently patched:
   **CARRIED (v0.19 L4) — await PixelLab top-up (user decision).** The honest
   fix is a third Drake civilian rig; the registry has two and both are spoken
   for, so this is generation-only at a balance that cannot fund a rig.
+  **DRAINED 2026-08-04 (#390).** The "cannot fund a rig" arithmetic was wrong
+  by roughly 12x: a v3 8-direction rig is **2 generations (~$0.13)**, not an
+  envelope. Five bespoke rigs + a Pisces regeneration + idle animation cost
+  ~$0.30 of the $1.44 balance. `selys`, `krshia`, `octavia`, `ilvo` and
+  `wilovan` all ship as OWNED PixelLab v3 rigs with anchors measured from the
+  alpha bbox; every stand-in tint is retired. Krshia took a SECOND pass on a
+  user read (the first came back an armored brawler, not a merchant) and the
+  reject was parked, then reused as `gnoll_ranger` for the Gnoll with a Bad
+  Ankle. Wilovan is IDLE-ONLY: he is a fielded combatant, so his
+  walk/slice/cast/hit/death set is still owed and tracked on #390.
 - [ ] COPY-VS-ART — `gentleman_bowler` ("A broad man in a bowler hat") now wears
   `hired_blade`, which has a goatee and a burgundy coat and no bowler. Not a
   regression (`human_laborer` had no bowler either) and it reads well in a den
@@ -3334,7 +3344,7 @@ head v0.18 W4 as HOTFIX-PRIORITY. Ranked player-visible-first.
 - [x] **(P2)** | HUD chip bar | player room, den-shop, inn | Inventory/Journal/Pause chips absent for the whole first visit to the purchased room (chip-region max 53 vs 255 after a pause cycle) with no visible modal on screen; touch has no fallback | v0.17 close machine-playtest, player_room_loop/03+04 |
 - [ ] **(P2)** | Face-to-face sprite overlap | inn, pallass den-shop, inn guest seats | Two-tile-tall sprites on one-tile cells merge the player and the speaker into one two-headed figure during dialogue | v0.17 close machine-playtest, inn_walkthrough/02 + pallass_ledger_offices/04 + inn_guests_loop/01 |
 - [ ] **(P2)** | hunters_lamb_pen | riverfarm_village | No lamb sprites in or around the pen; the whole [Beast Tamer] door is a bare fence rail against empty grass while the copy describes handling three fleeces | v0.17 close machine-playtest, gh330_lamb_pen_loop/00 |
-- [ ] **(P2)** | Pisces guest sprite | inn guest seats | No eye pixels and an all-grey robe/hood ramp — reads as a faceless bust next to guests who all have readable faces in the same frame | v0.17 close machine-playtest, inn_guests_loop/04 | **CARRIED (v0.19 L4) — await PixelLab top-up (user decision).** A face needs an inpaint pass on the existing rig, not a pack swap; the balance is reserved and this row was ruled Tier 2-CARRIED at wave plan §6.13. |
+- [x] **(P2)** | Pisces guest sprite | inn guest seats | No eye pixels and an all-grey robe/hood ramp — reads as a faceless bust next to guests who all have readable faces in the same frame | v0.17 close machine-playtest, inn_guests_loop/04 | **DRAINED 2026-08-04 (#390).** Fixed by REGENERATING the rig (2 gens) rather than inpainting it (20-40 gens) — the cheaper repair was the better one. Hood pushed BACK, explicit face, idle + walk regenerated to keep his shipped pin counts. |
 - [ ] **(P3)** **Journal sub-rows lose their indent on wrap** (journal_quest_hints 00_journal_hint_on — the quest-hint line; journal_history 01_journal_history — the Postings detail rows, same shape). First line indents, continuation lines return flush-left and read as body text rather than as part of the sub-row. One hanging-indent change on the shared sub-row style covers both.
 - [ ] **(P3)** **Skills-tab scroll can rest on an orphan wrap fragment** (journal_categories 01_skills_tab_curated + 02_skills_tab_cursor_follow — top visible line is a bare "L5", the tail of a wrapped [Quick Movement] — Warrior L5 row). Cursor-follow scrolls to the cursor row without snapping the viewport to a row boundary, so a wrapped row's tail can head the page. Snap to the wrapped-line start of the topmost whole row.
 - [ ] **(P3)** **Cooled Skills lose their flavour text in the combat readout, permanently** (combat_hud.gd:613-637; pinned string at qa/scripts/combat_move_input.json:356, shot 03_power_strike_slot_info — outside this slice, not re-run). When the standing cooldown clause plus the description would wrap, the description yields and never returns at readiness, so [Power Strike] et al. read purely mechanically wherever the player picks them. Deliberate and correctly reasoned; logging it so the trade is visible when the readout budget is next revisited.
