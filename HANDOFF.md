@@ -30,6 +30,34 @@ Unrelated: filed #370 (Relc front-on first meeting), #371 (inn
 one-party-at-a-time canonical groups), #372 (Floodplains
 tutorializing defeat text) from user playtest notes.
 
+### Board hygiene (2026-08-04) — martial picks DECIDED, orphaned deferrals filed
+User directive: get the martial work on the board so it isn't lost.
+Found: the martial exploration [Skills] doc was tracked in NO issue —
+design doc + CHOICE-LOG rulings + morning-queue item only, invisible to
+`gh issue list`, and the largest unscheduled body of work on the project.
+Picks MADE under wave-autonomy (all revocable, rationale in CHOICE-LOG
+"2026-08-04 — board hygiene"): **#380** wave-1 = [Even Footing],
+[Greater Strength], [Broader Shoulders], [Durable Picks], [Bar Fighting]
++ the [Ice Floor] grant (four data-only; Even Footing is one passive
+cell-class read; pairs with Ice Floor deliberately — mage makes the ice,
+martial crosses it). Split on distinct blockers: **#381** [Basic Repair]
+(needs #348 slice 2), **#382** [Rope Work] (INVENTED name, only item
+still wanting a user ACK), **#383** [Flame Jet]→corpse (four-part
+package; yield can't be a table row per spec §6). Tier C stays behind
+#335, unchanged. Closes v018-close rulings #8 and #9.
+**#384** files three v0.18-close items that were deferred "to the board"
+and never actually filed: #360 extreme-flip triage, ai_kit-stratified
+parity envelope (until it exists there is NO class-balance gate, only
+monotonicity), W3 acts.json row.
+Morning-queue item 1 struck through — it no longer blocks.
+TRAP for anyone reading the martial doc: cite skills by NAME. Its `#N`
+row numbers drift between its own sections AND read as GitHub issue refs
+without being them (doc "#19 [Detect Flaw]" is not GH#19). Only #348 and
+#335 in that doc are real issue numbers.
+PROCESS: "deferred to the board" is not a filing. Two waves produced six
+such items and zero issues. A close isn't done until every DEFERRED/board
+line in its adjudication block has an issue number beside it.
+
 ### Blind machine-playtest triage (2026-08-03) — #373-#379 filed, user takes next wave
 Four blind browser-agent reports (v0.16.1, 2026-08-02 + three legs
 2026-08-03). Every claim re-verified against HEAD before filing; the

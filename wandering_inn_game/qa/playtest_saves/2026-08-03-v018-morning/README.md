@@ -4,12 +4,16 @@ Every ask ships with a prepared state or a one-page read. Load lines
 assume the windowed game (`/usr/local/bin/godot --path wandering_inn_game`).
 
 ## Picks (paper reads, ~15 min)
-1. **Martial exploration Skills** — docs/design/2026-08-03-martial-exploration-skills.md.
-   Read §0 (top-10 table) + §8 (wave shape). PICK the funded set (my
-   recommendation: #1 [Even Footing], #4 [Basic Repair], #5 [Broader
-   Shoulders] + your taste from tier 2). Your Ice-Floor/Flame-Jet mage
-   mirrors ship in the same wave-2 package (both deferred pending these
-   picks — CHOICE-LOG v018-close #8/#9).
+1. ~~**Martial exploration Skills**~~ **DECIDED 2026-08-04 on user
+   directive ("get them on the board so they're not lost") — this item no
+   longer blocks.** Picks made and filed: **#380** funds [Even Footing],
+   [Greater Strength], [Broader Shoulders], [Durable Picks],
+   [Bar Fighting] + the [Ice Floor] grant. Split out on distinct
+   blockers: **#381** [Basic Repair] (needs #348 slice 2), **#382**
+   [Rope Work] (INVENTED name — the one thing still wanting your ACK),
+   **#383** [Flame Jet]→corpse package. Tier C stays behind #335.
+   Rationale in CHOICE-LOG "2026-08-04 — board hygiene". All revocable;
+   read #380 if you want to overrule the slate rather than the doc.
 2. **[Perfect Reduction]** — CHOICE-LOG v018-close #4. Spec fenced it as
    dialogue color; W5 shipped it as an Alchemist L14 grant with an
    ATTESTED 6.39 citation. KEEP THE GRANT or RESTORE THE FENCE (reversal
