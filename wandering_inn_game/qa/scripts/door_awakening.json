@@ -470,15 +470,6 @@
    }
   },
   {
-   "_comment": "(b) THE PHASE GLYPH. Three states, day/dusk/night, and the payload carries the phase NAME and the glyph shape only. OPAQUE-UNTIL-SLEEP is the whole design constraint here: an action-clock countdown was refused (wave ruling 10), so there is no count and no fraction to pin -- what this assert protects is that the surface exists and says nothing more than which part of the day it is.",
-   "action": "assert_event_logged",
-   "type": "ui_phase_glyph_rendered",
-   "payload_contains": {
-    "phase": "day",
-    "glyph": "sun"
-   }
-  },
-  {
    "_comment": "(c) THE COMPLETION STING (GH#335 item 4). Quest and class banks had a sound; every other counter banked in silence. `accomplishment_noted` is gated on count:1 -- the FIRST bank of a counter -- so it says 'that is new' and never turns into a per-hit combat rattle. WHAT THIS ASSERT DOES AND DOES NOT PROVE (v0.19 L5 reviewer lens A): this run banks FOUR count:1 counters (door_study_sleeps, door_awakened, catalyst_attunement_sleeps, resonance_grown) and exactly ONE sting is logged -- but the other three are eaten by the row's own 400ms cooldown_ms, not by the count gate, because a driven headless run collapses hours of play into seconds. So this is an EXISTENCE pin only. The machine-gun guard is the count:1 payload match in data/audio.json and nothing here measures it; a per-hit melee_hit tally is refused there, at the row.",
    "action": "assert_event_logged",
    "type": "audio_played",

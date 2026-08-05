@@ -181,7 +181,3 @@ const UI_CREDITS_LINK_OPENED := &"ui_credits_link_opened"
 ## bracket itself is pixels a headless log cannot see; this is what makes it
 ## assertable at all.
 const UI_AFFORDANCE_RENDERED := &"ui_affordance_rendered"
-## The 3-state day/dusk/night glyph beside the field hotbar. `{phase, glyph}`.
-## OPAQUE-UNTIL-SLEEP: carries the phase NAME only -- never an action count,
-## never a fraction, never anything that says how close the next crossing is.
-const UI_PHASE_GLYPH_RENDERED := &"ui_phase_glyph_rendered"

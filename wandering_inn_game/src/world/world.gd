@@ -999,7 +999,13 @@ func _build_ice_overlay() -> void:
 func _paint_ice_cell(cell: Vector2i) -> void:
 	if _ice_overlay == null:
 		_ice_overlay = WITileBoardBuilder.make_tile_layer(_field_root, ICE_SHEET, 16, WISpriteRegistry)
-		_ice_overlay.z_index = 1
+		# Finding 17 (playtest): z_index=1 is a canvas-GLOBAL sort key, so the
+		# cap outdrew every y-sorted entity at z=0 -- the PLAYER standing on
+		# frozen water rendered UNDER the ice (the same global-vs-y-sort trap
+		# entity_visual_factory's bias comment documents). z=0: the lazy append
+		# still lands the layer after the water overlays in tree order, so ice
+		# covers water, and everything that walks sorts above it.
+		_ice_overlay.z_index = 0
 		_field_root.add_child(_ice_overlay)
 	_ice_overlay.set_cell(cell, 0, ICE_CAP_COORD)
 

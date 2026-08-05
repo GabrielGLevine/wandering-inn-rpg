@@ -4,6 +4,30 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
+## DONE (2026-08-05, second sitting): findings 16-21 resolved
+
+- **16** road_mothbears stood on the road all day as an invisible blocking
+  square ("come back at night"). present_when now phase-gates EXISTENCE
+  (safe since #392); by day the verge is genuinely empty.
+- **17** TWO y-sort fixes: the ice overlay's z_index=1 was canvas-GLOBAL and
+  drew the cap OVER a player standing on frozen water -> z=0 (windowed
+  proof: property_seams 03_standing_on_the_ice). The scree spill at 0.9
+  overhung its cell north and painted over the player -> 0.5 = exactly one
+  cell, zero overhang.
+- **18** rags_scouting_party no longer appears before the Erin gate
+  (present_when mirrors the encounter requires). She STAYS post-settle --
+  the farewell re-talk is canonical-pinned (rags_meeting_loop taught me
+  that; the first cut had an absent arm and broke 4 canonicals).
+- **19** phase glyph REMOVED (user verdict: environment says it), event +
+  pins excised; hotbar group now clamps clear of the input-hint ribbon
+  (HINT_BAND_CLEARANCE, windowed proof at 9 slots).
+- **20** all six martial icons regenerated in the shipped flat bright
+  single-object language (v1s were muddy 32px miniatures).
+- **21** guild_notice_wall reuses the request_board prop (its art read as a
+  giant scroll).
+
+Gates: data_lint OK, census RC=0, 33/33 units, ci_sweep ALL 207 green.
+
 ## DONE (2026-08-05): playtest fix wave — all 15 findings resolved (Fable)
 
 All 14 sitting findings + the prop-legibility directive (finding 15), fixed on

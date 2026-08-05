@@ -419,7 +419,7 @@
     5
    ],
    "display_name": "Notice Wall",
-   "sprite": "guild_notice_wall",
+   "sprite": "request_board",
    "facing": "right",
    "on_interact_accomplishment": "read_guild_notices",
    "toast": "A second board, smaller and less official: lost gear, room-for-rent scraps, one challenge to a duel that's clearly gone unanswered a long time. Anything worth chasing copies into your journal as a lead: a name and a place, nothing promised.",
@@ -437,7 +437,8 @@
       0.74
      ]
     }
-   ]
+   ],
+   "_comment": " Finding 21: the bespoke notice-wall art read as a giant scroll; reuses the request_board prop the player already knows two cells away (same board family, honestly a second board)."
   },
   {
    "_comment": "talk_pool fires first-talk-of-the-waking as before",

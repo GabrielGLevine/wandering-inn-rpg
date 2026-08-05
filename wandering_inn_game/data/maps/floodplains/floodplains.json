@@ -1863,7 +1863,14 @@
     }
    },
    "observe": "A small figure on the rise south, standing very still. It has been watching you for a while, and it wants you to know that.",
-   "_comment": "b1 #199 'The Chieftain's Price'. Conversation-first (NO trigger radius — she waits; interact opens rags_meeting; combat only via the betrayal close's start_combat). present_when = the composed conduct+relationship gate (design doc 2026-07-19-b1-rags-design.md section 2; absent arm = never hunted the camp). Interim sprite: rags registry entry reuses the goblin_chieftain sheet reduced+tinted until the c3 bespoke (VISUAL-LOG row)."
+   "_comment": "b1 #199 'The Chieftain's Price'. Conversation-first (NO trigger radius — she waits; interact opens rags_meeting; combat only via the betrayal close's start_combat). present_when = the composed conduct+relationship gate (design doc 2026-07-19-b1-rags-design.md section 2; absent arm = never hunted the camp). Interim sprite: rags registry entry reuses the goblin_chieftain sheet reduced+tinted until the c3 bespoke (VISUAL-LOG row). Finding 18: present_when mirrors the encounter requires -- she does not STAND on the rise before the Erin gate; STAYS post-settle (farewell re-talk is pinned, rags_meeting_loop).",
+   "present_when": {
+    "requires": {
+     "reward_acknowledged": 1,
+     "chatted_with_erin": 3,
+     "goblins_spared": 1
+    }
+   }
   },
   {
    "_comment": "v0.16 F1 (#308). TRAP: door_when is requires-ONLY, so the peaceful gate's absent arm has to live on present_when -- a betrayal win banks rags_meeting_settled too.",
@@ -1897,7 +1904,7 @@
    }
   },
   {
-   "_comment": "v0.16.1 #21 (ruling: docs/CHOICE-LOG.md): RE-HOMED off invrisil_boulevard [5,15], a walled city. [23,12] is the verge of the POI-A shoulder -- the road spur at (20..22,12)/(22,13), a carter pull-off, which is what the observe and both bounty copies say. Review round 2 moved it here from [23,2], plain grass ten rows off the nearest dirt_01 layer, where the copy named a road the map does not draw. Chebyshev 1 reaches the spur, NOT the artery (rows 14/15); nearest canonical-walked cell is 4 away, harvested from a full sweep. Shape follows goblin_night_patrol; arena boulder_flats. `mothbears_culled` UNCHANGED: bounty condition, in shipped_ids.",
+   "_comment": "Finding 16: stood on the road ALL DAY as an invisible blocking square ('come back at night'). present_when phase-gates EXISTENCE (safe since GH#392); by day the verge is empty ground. encounter_when stays as the night arm.",
    "id": "road_mothbears",
    "kind": "encounter",
    "beast": true,
@@ -1919,21 +1926,14 @@
      "night"
     ]
    },
+   "present_when": {
+    "phase": [
+     "night"
+    ]
+   },
    "trigger_radius": 1,
    "observe": "Two heavy shapes working the verge of the wagon road, wings folded tight, close enough to the carter camps to smell the fires. Only after dark.",
    "gate_closed_toast": "The road's empty in the daylight. Whatever works this verge keeps to the dark.",
-   "visual_states": [
-    {
-     "_comment": "Marker visible ONLY while the night encounter_when gate can fire",
-     "when": {
-      "phase": [
-       "day",
-       "dusk"
-      ]
-     },
-     "hidden": true
-    }
-   ],
    "on_victory": "mothbears_culled"
   },
   {

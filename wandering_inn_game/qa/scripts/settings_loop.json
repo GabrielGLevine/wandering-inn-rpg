@@ -227,15 +227,6 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "v0.19 L5 (GH#335 item 5): the phase glyph renders on a CLASSLESS New Game, where the field hotbar is at its narrowest -- ONE slot ([Basic Cleaning]), the `slots: 1` the guard above pins. That is the parity case -- the glyph is beside the bar, not part of it, and a player with almost no Skills yet still gets told what time it is indoors, where the mood grade never changes (VISUAL-LOG P3).",
-   "action": "assert_event_logged",
-   "type": "ui_phase_glyph_rendered",
-   "payload_contains": {
-    "phase": "day",
-    "glyph": "sun"
-   }
-  },
-  {
    "action": "wait_for_event",
    "type": "ui_gdi_opener_rendered",
    "payload_contains": {
