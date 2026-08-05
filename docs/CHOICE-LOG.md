@@ -3312,3 +3312,16 @@ applied — picks made, logged here, surfaced at close. All revocable.
    overestimate that kept rig rows carried for three milestones. Future
    art budgeting uses measured rate; re-derive on the first call of any
    new generation kind.
+9. **Retirement needs a first-class validator concept (#396):** deleting
+   the thicket offer left `heard_thicket_keeps` with zero producers and
+   five legitimate legacy consumers — test_content/test_reachability
+   red by design. Ruling: the den fight stays LEGACY-ONLY (it is the
+   retired quest's fight target; new saves get the winter routes), and
+   Lane D adds a RETIRED_ACCOMPLISHMENTS registry the two validators
+   honor (counter retired 2026-08-05, consumers legal, producers
+   forbidden). Reusable for every future quest retirement.
+10. **Offering pot stays visible (#396 Lane C):** `interact_when` does
+   not exist in the engine; the pot uses the `variants` idiom
+   (wolf_scent_cache precedent) — visible-but-flavor before
+   `heard_the_makings`, gather surface after. Structurally hiding
+   shipped scenery with present_when was rejected.
