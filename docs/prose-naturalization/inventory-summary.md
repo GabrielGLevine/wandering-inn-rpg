@@ -36,23 +36,23 @@ Unknown dialogue string keys: **0** (none). Excluded as structure: `goto`×534, 
 | region | strings | functional | scenic | character-bearing | landmark | queue |
 |---|--:|--:|--:|--:|--:|--:|
 | pallass | 149 | 51 | 82 | 16 | 0 | **15** |
-| riverfarm | 134 | 43 | 82 | 9 | 0 | **7** |
+| riverfarm | 134 | 45 | 80 | 9 | 0 | **7** |
 | invrisil | 125 | 29 | 52 | 42 | 2 | **9** |
 | liscor | 97 | 27 | 32 | 37 | 1 | **4** |
 | floodplains | 89 | 33 | 50 | 5 | 1 | **9** |
-| inn | 89 | 40 | 16 | 33 | 0 | **1** |
-| dungeon | 61 | 24 | 27 | 8 | 2 | **9** |
+| inn | 89 | 42 | 14 | 33 | 0 | **1** |
+| dungeon | 61 | 29 | 25 | 5 | 2 | **10** |
 | sewers | 48 | 19 | 26 | 2 | 1 | **2** |
 | ruin | 43 | 5 | 28 | 8 | 2 | **6** |
 | garden | 12 | 1 | 11 | 0 | 0 | **2** |
-| **total** | **847** | **272** (32%) | **406** (48%) | **160** (19%) | **9** (1%) | **64** |
+| **total** | **847** | **281** (33%) | **400** (47%) | **157** (19%) | **9** (1%) | **65** |
 
 ### Field → register
 
 | field | n | registers |
 |---|--:|---|
-| `observe` | 340 | character-bearing 64 · functional 14 · scenic 262 |
-| `toast` | 203 | character-bearing 13 · functional 48 · scenic 142 |
+| `observe` | 340 | character-bearing 64 · functional 16 · scenic 260 |
+| `toast` | 203 | character-bearing 10 · functional 55 · scenic 138 |
 | `text` | 65 | character-bearing 63 · scenic 2 |
 | `locked_toast` | 61 | functional 61 |
 | `skill_hint_toast` | 48 | functional 48 |
@@ -76,7 +76,7 @@ Unknown dialogue string keys: **0** (none). Excluded as structure: `goto`×534, 
 | `repair_toast` | 1 | functional 1 |
 | `burn_toast` | 1 | functional 1 |
 
-`toast` splits by PATH, not by key name: 48 of them sit under `on_skill_use` and are functional/skill-outcome — the receipt for a Skill the player spent. Only 0 of those carry a non-functional override.
+`toast` splits by PATH, not by key name: 57 of them sit under `on_skill_use`/`skill_uses` and are functional/skill-outcome — the receipt for a Skill the player spent. Only 0 of those carry a non-functional override.
 
 ## 3. Tell-family counts
 
@@ -117,12 +117,12 @@ A functional or scenic string is a **demotion candidate** when ANY of: `closer_s
 
 | trigger | candidates |
 |---|--:|
-| `closer_score` | 47 |
+| `closer_score` | 48 |
 | `neg_correction` | 4 |
 | `anon_agent` | 17 |
-| **queue total** (a string may trip more than one) | **64** |
-| — of those, scenic | 50 |
-| — of those, functional | 14 |
+| **queue total** (a string may trip more than one) | **65** |
+| — of those, scenic | 49 |
+| — of those, functional | 16 |
 
 **5 strings are named by hand** — by the issue, or by the controller's fix ruling — and are RESERVED out of the holdout so a random draw can never make named work untouchable. They are flagged `issue_named_work` in the region files:
 
@@ -132,7 +132,7 @@ A functional or scenic string is a **demotion candidate** when ANY of: `closer_s
 - `map:liscor/street.json:$.entities[12].observe` — controller-named: four negation-correction shapes stacked in one scenic string at closer 1 — the shape the counter-only queue could not see
 - `map:pallass/pallass_den_shop.json:$.entities[6].toast` — issue-named button: two excellent specific sentences, then a third that tells the reader what to think about them
 
-**UNRULED SIBLING, flagged for the controller:** 9 map strings sit under `skill_uses`, which `field_skills.gd:138` documents as *"a per-skill map of `on_skill_use` arms"* — the multi-Skill spelling of the same block. The fix ruling scoped skill-outcome to `on_skill_use` (48 strings) and this pass implements exactly that scope, so these are still classified by entity/field like any other prose (character-bearing 3, scenic 6). If the register is meant to follow the engine's semantics rather than the block's name, this is the follow-up.
+**RULED 2026-08-05:** 9 map strings under `skill_uses` (`field_skills.gd:138`: *"a per-skill map of `on_skill_use` arms"*) follow the engine's semantics: same block, same register — functional/skill-outcome, exactly like `on_skill_use`.
 
 ## 5. Landmark scarcity, measured
 

@@ -11,8 +11,8 @@
  "_region": "riverfarm",
  "_registers": {
   "character-bearing": 9,
-  "functional": 43,
-  "scenic": 82
+  "functional": 45,
+  "scenic": 80
  },
  "strings": [
   {
@@ -178,8 +178,8 @@
    "neg_correction": 0,
    "protected": false,
    "region": "riverfarm",
-   "register": "scenic",
-   "tag": "prop",
+   "register": "functional",
+   "tag": "skill-outcome",
    "text": "[Basic Cleaning] — You clear the shed floor and stack every sack up off the boards. The count comes right the moment anyone can see all of it at once.",
    "word_count": 30
   },
@@ -199,8 +199,8 @@
    "neg_correction": 0,
    "protected": false,
    "region": "riverfarm",
-   "register": "scenic",
-   "tag": "prop",
+   "register": "functional",
+   "tag": "skill-outcome",
    "text": "[Basic Cooking] — You feed the flood crew out of the mill's own pot, and they work the shed twice over for it. The count comes right in the doing.",
    "word_count": 30
   },

@@ -11,8 +11,8 @@
  "_region": "inn",
  "_registers": {
   "character-bearing": 33,
-  "functional": 40,
-  "scenic": 16
+  "functional": 42,
+  "scenic": 14
  },
  "strings": [
   {
@@ -766,8 +766,8 @@
    "neg_correction": 0,
    "protected": false,
    "region": "inn",
-   "register": "scenic",
-   "tag": "quest-prop",
+   "register": "functional",
+   "tag": "skill-outcome",
    "text": "[Detect Magic] — The old wardwork wakes just enough to be read: someone bound this cellar's door long before it learned to go elsewhere.",
    "word_count": 24
   },
@@ -787,8 +787,8 @@
    "neg_correction": 0,
    "protected": false,
    "region": "inn",
-   "register": "scenic",
-   "tag": "quest-prop",
+   "register": "functional",
+   "tag": "skill-outcome",
    "text": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away.",
    "word_count": 42
   },

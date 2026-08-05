@@ -1,6 +1,6 @@
 {
  "_count": 61,
- "_demotion_candidates": 9,
+ "_demotion_candidates": 10,
  "_demotion_rule": {
   "anon_agent": 2,
   "closer_score": 2,
@@ -10,10 +10,10 @@
  "_python": "3.12.3",
  "_region": "dungeon",
  "_registers": {
-  "character-bearing": 8,
-  "functional": 24,
+  "character-bearing": 5,
+  "functional": 29,
   "landmark": 2,
-  "scenic": 27
+  "scenic": 25
  },
  "strings": [
   {
@@ -1076,8 +1076,8 @@
    "neg_correction": 0,
    "protected": false,
    "region": "dungeon",
-   "register": "scenic",
-   "tag": "quest-prop",
+   "register": "functional",
+   "tag": "skill-outcome",
    "text": "[Detect Magic] — Wardwork, and awake. It does not flare and settle the way a bound ward should. It holds one low steady note, like a breath nobody has to let out, and you have felt that note somewhere else.",
    "word_count": 40
   },
@@ -1097,8 +1097,8 @@
    "neg_correction": 1,
    "protected": false,
    "region": "dungeon",
-   "register": "character-bearing",
-   "tag": "names-cast",
+   "register": "functional",
+   "tag": "skill-outcome",
    "text": "[Detect Magic] — The ward opens under your sight and does not stop opening. It is not holding anything shut. It is POURING: one direction, one slow measured rate, into whatever the stone is between. It has poured since before the city. Pisces, very quietly: \"Ah. So that is what the others were.\"",
    "word_count": 53
   },
@@ -1118,8 +1118,8 @@
    "neg_correction": 0,
    "protected": false,
    "region": "dungeon",
-   "register": "character-bearing",
-   "tag": "names-cast",
+   "register": "functional",
+   "tag": "skill-outcome",
    "text": "[Detect Magic] — Every reading you have taken lines up at once: the inn's frame, the ruin's socket, the seam back down the hall, the hollow west of Riverfarm. Not four wards. One lattice, and this door is where it drains to. Something behind this stone has been drinking Liscor's oldest work since before Liscor. Pisces uses a word you have never heard him use in public.",
    "word_count": 67
   },
@@ -1141,16 +1141,18 @@
    "neg_correction": 0,
    "protected": false,
    "region": "dungeon",
-   "register": "scenic",
-   "tag": "quest-prop",
+   "register": "functional",
+   "tag": "skill-outcome",
    "text": "[Observe] — Worked stone, deliberate, and not one line of it reads like a lock. Whatever this door is for, it is not keeping people out. You would have to stand here longer, with someone who knows more than you do.",
    "word_count": 41
   },
   {
    "anon_agent": 0,
    "closer_score": 4,
-   "demotion_candidate": false,
-   "demotion_triggers": [],
+   "demotion_candidate": true,
+   "demotion_triggers": [
+    "closer_score"
+   ],
    "display_name": "A Sealed Rune-Door",
    "entity_id": "seal_kept_door",
    "field": "toast",
@@ -1162,8 +1164,8 @@
    "neg_correction": 0,
    "protected": false,
    "region": "dungeon",
-   "register": "character-bearing",
-   "tag": "names-cast",
+   "register": "functional",
+   "tag": "skill-outcome",
    "text": "[Observe] — You take the runes in order, the way you would read a sentence. The turns repeat at a fixed interval. The pantry frame does exactly that, at exactly that interval, and this one is worn deeper: it has been doing it longer. Behind you, Pisces says nothing, which from him is applause.",
    "word_count": 54
   },

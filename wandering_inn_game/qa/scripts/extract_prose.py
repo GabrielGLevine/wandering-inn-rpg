@@ -34,8 +34,8 @@ data/maps/**/*.json 2026-08-05, not guessed)
   INCLUDED -- string-valued keys:
     observe                    338   object/entity examine text
     toast                      205   generic interaction resolution
-                                     (48 of them under `on_skill_use` --
-                                      see SKILL-OUTCOME below)
+                                     (57 of them under `on_skill_use` or
+                                      `skill_uses` -- see SKILL-OUTCOME below)
     locked_toast                61   gate refusal (skill/item absent)
     skill_hint_toast            48   "this wants a Skill" nudge
     once_per_waking_toast       20   already-done-today no-op
@@ -71,9 +71,10 @@ data/maps/**/*.json 2026-08-05, not guessed)
   skill-verb toast keys (kindle/anchor/light/clean/repair/burn, 7 strings) are
   the *minority* spelling of "the player spent a Skill and this is the
   result". The majority spelling is `on_skill_use.toast` -- 48 strings whose
-  key is the generic `toast`. Both are classified functional/skill-outcome by
-  the PATH they sit on. Keying that register on the key name undercounted it
-  by 48/55.
+  key is the generic `toast` -- plus `skill_uses` (9 strings; field_skills.gd
+  documents it as a per-skill map of on_skill_use arms; RULED same register
+  2026-08-05). All are classified functional/skill-outcome by the PATH they
+  sit on. Keying that register on the key name undercounted it by 57/64.
 
   EXCLUDED, and why:
     talk_pool, talk_pool_stages (+ its `lines`/`line`), talk_banks, banks
@@ -246,7 +247,8 @@ KNOWN_NON_PROSE = {
 ACC_KEYS = ("on_interact_accomplishment", "on_open_accomplishment",
             "on_enter_accomplishment", "accomplishment", "banks_accomplishment",
             "on_victory")
-SKILL_USE_BLOCK = "on_skill_use"
+SKILL_USE_BLOCKS = ("on_skill_use", "skill_uses")  # skill_uses = per-skill map
+# of on_skill_use arms (field_skills.gd) -- same register, ruled 2026-08-05.
 
 
 def is_toast_key(k):
@@ -586,7 +588,7 @@ def classify_row(r, overrides):
     # block the engine runs when the player spends a Skill on a prop; every
     # prose string inside it is that expenditure's receipt. 48 strings today,
     # all spelled `toast`, which the key-name rule missed entirely.
-    if f".{SKILL_USE_BLOCK}." in r["field_path"]:
+    if any(f".{b}." in r["field_path"] for b in SKILL_USE_BLOCKS):
         return "functional", "skill-outcome"
     if f in SKILL_OUTCOME_FIELDS:
         return "functional", "skill-outcome"
@@ -1126,9 +1128,10 @@ def write_inventory_summary(rows, classified, keeps, hold_ids, ranked, outdir):
     for f, c in sorted(fr.items(), key=lambda kv: -sum(kv[1].values())):
         L.append(f"| `{f}` | {sum(c.values())} | "
                  + " · ".join(f"{k} {v}" for k, v in sorted(c.items())) + " |")
-    su = [c for c in classified if f".{SKILL_USE_BLOCK}." in c["field_path"]]
+    su = [c for c in classified
+          if any(f".{b}." in c["field_path"] for b in SKILL_USE_BLOCKS)]
     L.append(f"\n`toast` splits by PATH, not by key name: {len(su)} of them sit "
-             f"under `on_skill_use` and are functional/skill-outcome — the "
+             f"under `on_skill_use`/`skill_uses` and are functional/skill-outcome — the "
              f"receipt for a Skill the player spent. Only "
              f"{sum(1 for c in su if c['register'] != 'functional')} of those "
              "carry a non-functional override.\n")
@@ -1212,19 +1215,12 @@ def write_inventory_summary(rows, classified, keeps, hold_ids, ranked, outdir):
     for c in sorted(nw, key=lambda x: x["id"]):
         L.append(f"- `{c['id']}` — {c['issue_named_work']}")
     L.append("")
-    su_unruled = [c for c in classified if ".skill_uses." in c["field_path"]]
-    su_regs = collections.Counter(c["register"] for c in su_unruled)
-    L.append(f"**UNRULED SIBLING, flagged for the controller:** "
-             f"{len(su_unruled)} map strings sit under `skill_uses`, which "
-             "`field_skills.gd:138` documents as *\"a per-skill map of "
-             "`on_skill_use` arms\"* — the multi-Skill spelling of the same "
-             "block. The fix ruling scoped skill-outcome to `on_skill_use` "
-             f"({len([c for c in classified if f'.{SKILL_USE_BLOCK}.' in c['field_path']])} "
-             "strings) and this pass implements exactly that scope, so these "
-             "are still classified by entity/field like any other prose ("
-             + ", ".join(f"{k} {v}" for k, v in sorted(su_regs.items()))
-             + "). If the register is meant to follow the engine's semantics "
-             "rather than the block's name, this is the follow-up.\n")
+    su_sib = [c for c in classified if ".skill_uses." in c["field_path"]]
+    L.append(f"**RULED 2026-08-05:** {len(su_sib)} map strings under "
+             "`skill_uses` (`field_skills.gd:138`: *\"a per-skill map of "
+             "`on_skill_use` arms\"*) follow the engine's semantics: same "
+             "block, same register — functional/skill-outcome, exactly like "
+             "`on_skill_use`.\n")
 
     # landmark
     L.append("## 5. Landmark scarcity, measured\n")
@@ -1904,8 +1900,9 @@ def self_test():
           regs <= {"functional", "scenic", "character-bearing", "landmark"}, str(regs))
 
     # 8a. skill-outcome is classified by PATH (fix I2)
-    su = [r for r in m if f".{SKILL_USE_BLOCK}." in r["field_path"]]
-    check("every on_skill_use string is functional/skill-outcome",
+    su = [r for r in m
+          if any(f".{b}." in r["field_path"] for b in SKILL_USE_BLOCKS)]
+    check("every on_skill_use/skill_uses string is functional/skill-outcome",
           su and all(cls[r["id"]] == ("functional", "skill-outcome") for r in su),
           f"{len(su)} strings")
     named = [r for r in m if r["field"] in SKILL_OUTCOME_FIELDS]
