@@ -1,5 +1,5 @@
 # BLIND REVIEW VIEW -- maps
-# GH#397 Phase 0. 120 strings, shuffled with random.Random(397).
+# GH#397. 120 strings, shuffled with random.Random(397). python 3.12.3.
 # Metadata deliberately stripped: no filenames, no speakers, no schema keys,
 # no region. Row numbers are the ONLY handle; sample-key.json maps them back.
 # Read each row cold. Score per review-rubric.md. Do not seek context.

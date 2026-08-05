@@ -1,11 +1,16 @@
 {
- "_note": "Peaks. Phase 2/3 must not flatten these. Seeded from the issue's counterevidence list (resolved file:line -> id) plus lane-added earned lines in protected-keeps-extra.json.",
+ "_count": 12,
+ "_note": "Peaks and models. Phase 2/3 must not flatten these, and a keep OUTRANKS a register rule: a protected string is never rewritten even where it trips one, and it CONSUMES the relevant budget. Each entry is pinned to {file, field_path, exact_text}; line numbers are deliberately absent, because a line number re-points silently after a reformat and a field path does not. `verify-untouched` and self-test both assert the live text at field_path still equals exact_text.",
+ "_python": "3.12.3",
  "_seed": 397,
  "_unresolved": [],
  "keeps": {
   "dlg:drayman_dispute.json:$.nodes.calmed.text": {
+   "exact_text": "Slow. Right. Pin came loose past the gate, cart's been dragging since, which means it's under the load. Never hit the road. Huh. I'll get the boards down and dig it out. Sergeant's been shouting at me for an hour and got less done.",
+   "field_path": "$.nodes.calmed.text",
+   "file": "wandering_inn_game/data/dialogue/drayman_dispute.json",
    "reason": "issue-counterevidence: axle-pin reasoning unfolds messily",
-   "source": "wandering_inn_game/data/dialogue/drayman_dispute.json:17"
+   "source": "issue counterevidence list (bound by snippet, not line)"
   },
   "dlg:erin_errand.json:$.nodes.door_paths.text": {
    "also": {
@@ -13,12 +18,18 @@
     "reason": "the graph carrying the issue's protected 'smug at pigeons' line. Erin's whole turn runs on enthusiasm and bad structure ('I don't know! That's the fun part. Okay, so --') and never arrives anywhere polished. Protected as the calibration example for permitted inarticulacy.",
     "source": "lane read 2026-08-05"
    },
+   "exact_text": "I don't know! That's the fun part. Okay, so — Pisces knows creepy old magic, he's usually by the Guild steps on Market Street being smug at pigeons. Or the frame itself, the grain does a thing — look at it properly if you know how. Or the scratching in my cellar, you could — okay, forget the cellar one. Don't do the cellar one. If you go anyway, bring a weapon and don't tell me about it after.",
+   "field_path": "$.nodes.door_paths.text",
+   "file": "wandering_inn_game/data/dialogue/erin_errand.json",
    "reason": "issue-counterevidence: 'being smug at pigeons'",
-   "source": "wandering_inn_game/data/dialogue/erin_errand.json:309"
+   "source": "issue counterevidence list (bound by snippet, not line)"
   },
   "dlg:rags_meeting.json:$.nodes.winter_ways.text": {
+   "exact_text": "Two ways. Gnoll moves goods. Hunters need hands. No, three. Scavengers press hollow.",
+   "field_path": "$.nodes.winter_ways.text",
+   "file": "wandering_inn_game/data/dialogue/rags_meeting.json",
    "reason": "issue-counterevidence: Rags miscounts and self-corrects",
-   "source": "wandering_inn_game/data/dialogue/rags_meeting.json:415"
+   "source": "issue counterevidence list (bound by snippet, not line)"
   },
   "dlg:relc_descent.json:$.nodes.join.text": {
    "also": {
@@ -26,42 +37,74 @@
     "reason": "bark/narration that ends on unresolved threat rather than wit: 'Something moved back there when we walked in.' Ending shape = unresolved detail. Same graph as the issue's protected Relc joke, and shows the file is not carried by the joke alone.",
     "source": "lane read 2026-08-05"
    },
+   "exact_text": "Bones. Old fires, cold a long time. One way out and we're standing in it. Hear that? Something moved back there when we walked in. Big, and it's been down here a good long while. Deep tunnels, huh? You know what lives in deep tunnels? Me. As of today. Come on. Stay behind the spear.",
+   "field_path": "$.nodes.join.text",
+   "file": "wandering_inn_game/data/dialogue/relc_descent.json",
    "reason": "issue-counterevidence: Relc's deep-tunnel joke, voice-distinctive",
-   "source": "wandering_inn_game/data/dialogue/relc_descent.json:6"
+   "source": "issue counterevidence list (bound by snippet, not line)"
   },
   "dlg:riverfarm_villager.json:$.nodes.hub.text": {
+   "exact_text": "They take a beat too long to look at you. \"The hens are laying again. No. That weren't your question. Everyone keeps asking after me.\"",
+   "field_path": "$.nodes.hub.text",
+   "file": "wandering_inn_game/data/dialogue/riverfarm_villager.json",
    "kind": "MODEL",
    "reason": "'The hens are laying again. No. That weren't your question.' A speaker losing and recovering his own thread. Ending shape = interruption. The corpus needs more of this and the rubric's UNIFORM family exists to find where it is missing.",
    "source": "lane read 2026-08-05"
   },
   "dlg:riverfarm_villager.json:$.nodes.remember.text": {
+   "exact_text": "Pieces. A price I said yes to. Never read the terms, none of us did. There was a voice in my mouth for weeks and it weren't mine. I should be angry. I keep meaning to be angry.",
+   "field_path": "$.nodes.remember.text",
+   "file": "wandering_inn_game/data/dialogue/riverfarm_villager.json",
    "kind": "PEAK",
    "reason": "'I should be angry. I keep meaning to be angry.' Smoke score 2 (short punch after long setup) but the repeat is a man failing to finish a feeling -- the T1 register working exactly as the dialogue bible's worked pair intends. Protected so a second dialogue pass cannot 'clean' it. Second recorded smoke-score disagreement.",
    "source": "lane read 2026-08-05"
   },
   "map:garden/garden_sanctuary.json:$.entities[2].observe": {
+   "exact_text": "Someone carried a real bed out here, onto real grass, under a sky that isn't real. It's made up with clean linen anyway, like that settles the argument.",
+   "field_path": "$.entities[2].observe",
+   "file": "wandering_inn_game/data/maps/garden/garden_sanctuary.json",
    "kind": "PEAK",
    "reason": "'a sky that isn't real. It's made up with clean linen anyway, like that settles the argument.' Earned: the absurdity is physically present in the scene, and the closer is dry rather than thematic -- it declines to explain the garden. Garden is a landmark location with 12 strings total; this is where its allowance belongs.",
    "source": "lane read 2026-08-05"
   },
+  "map:garden/garden_sanctuary.json:$.entities[4].visual_states[0].observe": {
+   "exact_text": "A drake in stone, spear planted, watching over ground that used to worry the whole city. Liscor sealed the dark for good, once the warren was cleared — masonry over memory, and no one asked for thanks. This is as close as the hill gets to giving one anyway.",
+   "field_path": "$.entities[4].visual_states[0].observe",
+   "file": "wandering_inn_game/data/maps/garden/garden_sanctuary.json",
+   "kind": "PEAK",
+   "reason": "the war-memorial plinth: 'Liscor sealed the dark for good, once the warren was cleared -- masonry over memory, and no one asked for thanks. This is as close as the hill gets to giving one anyway.' An EARNED peak. It only renders after raskghar_sealed, so the player has done the thing it commemorates; the inference is about a city's recorded action, not an invisible person's motive; and the dry closer declines the thanks rather than supplying a moral. REGISTER STAYS SCENIC: no chain runs through this prop, so it is not landmark and must not be promoted -- a scenic string may be a protected peak without changing register. Added by controller ruling (fix I4) after the review found the tooling had no way to see it: closer 0, anon 0, neg 0, so no counter flags it and nothing would have stopped a lane flattening it.",
+   "source": "controller ruling 2026-08-05 (GH#397 fix wave, review item I4)"
+  },
   "map:pallass/pallass_den_shop.json:$.entities[4].observe": {
+   "exact_text": "Jars in a rank, labels in a hand that got neater partway along the shelf and then went back to how it was.",
+   "field_path": "$.entities[4].observe",
+   "file": "wandering_inn_game/data/maps/pallass/pallass_den_shop.json",
    "kind": "MODEL",
    "reason": "scenic register with an inference that stays inside the evidence: 'labels in a hand that got neater partway along the shelf and then went back to how it was.' The handwriting is visible; the narrator never claims to know why. Contrast the same file's House Slate toast, which ends 'In Pallass, that is a document nobody filed' -- named in the issue as a button.",
    "source": "lane read 2026-08-05"
   },
   "map:pallass/pallass_den_shop.json:$.entities[5].observe": {
+   "exact_text": "A bench cut down to knee height, three sets of claw-marks along the front edge at three different heights.",
+   "field_path": "$.entities[5].observe",
+   "file": "wandering_inn_game/data/maps/pallass/pallass_den_shop.json",
    "kind": "MODEL",
    "reason": "scenic register, textbook. 'A bench cut down to knee height, three sets of claw-marks along the front edge at three different heights.' Two concrete observations, ZERO inference, and the reader assembles the hatchlings unaided. This is the target sound for 449 scenic strings.",
    "source": "lane read 2026-08-05"
   },
   "map:pallass/pallass_den_shop.json:$.entities[5].toast": {
+   "exact_text": "Something small goes very still behind the bench, decides you are not interesting, and resumes an argument you cannot follow about whose turn it is.",
+   "field_path": "$.entities[5].toast",
+   "file": "wandering_inn_game/data/maps/pallass/pallass_den_shop.json",
    "kind": "PEAK",
    "reason": "'resumes an argument you cannot follow about whose turn it is.' Smoke score 2 and an anonymous agent, so the tooling flags it -- and the tooling is wrong here. The inference is about audible present behaviour, not an absent person's motives, and it is funny without being a verdict. Recorded as a smoke-score disagreement per review-rubric.md section 7.",
    "source": "lane read 2026-08-05"
   },
   "map:riverfarm/witch_hut.json:$.entities[4].toast": {
+   "exact_text": "The ash is banked the way you bank a fire you mean to wake in the morning. It has been cold for years.",
+   "field_path": "$.entities[4].toast",
+   "file": "wandering_inn_game/data/maps/riverfarm/witch_hut.json",
    "reason": "issue-counterevidence: banked ash earns its reversal from evidence",
-   "source": "wandering_inn_game/data/maps/riverfarm/witch_hut.json:240"
+   "source": "issue counterevidence list (bound by snippet, not line)"
   }
  }
 }

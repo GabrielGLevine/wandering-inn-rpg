@@ -2,8 +2,24 @@
 
 **Status:** the measurement instrument for acceptance criteria 2, 6 and 9.
 **Applies to:** `sample-dialogue-blind.txt`, `sample-maps-blind.txt` (Phase 0
-baseline) and the same views regenerated over revised prose plus the untouched
-`holdout.json` (Phase 5 exit read).
+baseline) and the same views regenerated over revised prose, plus
+`sample-holdout-blind.txt` — the untouched `holdout.json` rendered in the same
+blind format (Phase 5 exit read).
+
+> **Comparability of the sample and the holdout.** The holdout is drawn from
+> the **same eligibility pool as the blind samples**: strings of ≥6 words, with
+> protected keeps and the hand-named work list reserved out. The two views are
+> therefore one population read twice — revised strings on one side, untouched
+> strings on the other — and the §2/§6 procedure applies identically to both.
+> The §2 sampling caveat below applies to both equally, which is the point: a
+> holdout drawn from *everything* would be half-full of "Nothing there." and
+> would score lower than the sample for reasons that have nothing to do with
+> the rewrites. Read the holdout with the same instrument, in the same session,
+> and report its numbers separately.
+>
+> Before trusting a Phase 5 read, confirm the holdout is actually untouched:
+> `python3 qa/scripts/extract_prose.py verify-untouched --dir docs/prose-naturalization`
+> exits 1 if any holdout or protected-keep string moved a byte.
 
 ---
 

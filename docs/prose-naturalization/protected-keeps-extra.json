@@ -2,6 +2,11 @@
  "_note": "GH#397 lane-added protected keeps, merged into protected-keeps.json by `extract_prose.py all`. The issue's own five counterevidence lines are resolved from file:line automatically and are NOT repeated here. Two kinds of entry: PEAK (an earned high-style line Phase 2/3 must not flatten) and MODEL (a line that is exactly what its target register should sound like -- protected because region lanes need calibration examples inside the corpus, not only in the bible).",
  "_selection": "Chosen by reading the low-closer-score tail of inventory.jsonl for concrete specificity, plus the messy/unfinished shapes the issue's counterevidence list points at. Deliberately small: the objective is fewer jewels with more air, so a long keep list would defeat the pass. extract_prose.py self-test FAILS on an id that does not bind.",
 
+ "map:garden/garden_sanctuary.json:$.entities[4].visual_states[0].observe": {
+  "kind": "PEAK",
+  "reason": "the war-memorial plinth: 'Liscor sealed the dark for good, once the warren was cleared -- masonry over memory, and no one asked for thanks. This is as close as the hill gets to giving one anyway.' An EARNED peak. It only renders after raskghar_sealed, so the player has done the thing it commemorates; the inference is about a city's recorded action, not an invisible person's motive; and the dry closer declines the thanks rather than supplying a moral. REGISTER STAYS SCENIC: no chain runs through this prop, so it is not landmark and must not be promoted -- a scenic string may be a protected peak without changing register. Added by controller ruling (fix I4) after the review found the tooling had no way to see it: closer 0, anon 0, neg 0, so no counter flags it and nothing would have stopped a lane flattening it.",
+  "source": "controller ruling 2026-08-05 (GH#397 fix wave, review item I4)"
+ },
  "map:pallass/pallass_den_shop.json:$.entities[5].observe": {
   "kind": "MODEL",
   "reason": "scenic register, textbook. 'A bench cut down to knee height, three sets of claw-marks along the front edge at three different heights.' Two concrete observations, ZERO inference, and the reader assembles the hatchlings unaided. This is the target sound for 449 scenic strings.",
