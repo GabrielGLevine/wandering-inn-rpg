@@ -206,31 +206,28 @@ const RUIN_CELLS := [
 ]
 
 const RIVERFARM_CELLS := [
-	# #396, 2026-08-05: THE HOLLOW'S BRIAR FIGHTS ARE SOLO NOW. witch_hollow.json
-	# dropped `allies`/`ally_requires` from briar_collectors and
-	# briar_collectors_deep (user ruling: nobody local walks you to the hollow),
-	# so every `_hunter` briar cell was DELETED rather than re-banded -- a
-	# with-ally read there measures a field NO cohort can bring, including legacy
-	# saves holding hunter_will_come (that counter now fields the shepherd at
-	# river_wolf_pack, in the village, only). The solo cells took the gates, and
-	# BOTH pairs were retuned to keep the fights viable alone -- THE LEVERS AND
-	# THE ARGUMENT LIVE HERE (combatants.json's `_comment`s carry a pointer and the
-	# numbers only, to stay under the repo's data-comment census):
+	# THE HOLLOW'S BRIAR FIGHTS ARE SOLO. witch_hollow.json fields no ally for
+	# briar_collectors / briar_collectors_deep, so every `_hunter` briar cell is
+	# DELETED rather than re-banded: a with-ally read measures a field NO cohort
+	# can bring, legacy hunter_will_come saves included (that counter fields the
+	# shepherd at river_wolf_pack, in the village, only). The solo cells hold the
+	# gates, and BOTH pairs were retuned to stay viable alone -- LEVERS AND
+	# ARGUMENT LIVE HERE (combatants.json's `_comment`s carry a pointer + the
+	# numbers only, for the data-comment census):
 	#   shallow briar_collector_a/_b: con 30 -> 24 both, weapon_die untouched.
 	#     t3_warrior10 solo 0.33 -> 0.69. con alone was lever enough.
-	#   deep briar_collector_deep_a/_b: con 34/36 -> 25/27 AND weapon_die 7/6 ->
-	#     4/3. con FIRST per the spec's retune rule, but con is a weak lever on
-	#     this pair (-6 each bought +0.07 of win rate), so weapon_die carries the
-	#     rest; the resulting tanky / low-per-hit / one-big-skill profile is
-	#     heirloom_fence + fence_doorman's shipped solo-gated shape, not a new
-	#     idea. t3_warrior10 solo 0.22 -> 0.63, warrior5_mage5 solo 0.01 -> 0.28.
-	# power_level is UNTOUCHED on all four (8.0 / 9.5): what the retune moved is
-	# the party size these fights are authored against, not their place in the
-	# region, and power_level is the XP/banking weight for the latter. Retuning it
-	# would move WICombatBanking's enemy-party power and the progression pace with
-	# it, for a design point that did not change.
-	# The two w10 (warrior5_mage5) solo cells stay MEASURED as the off-build
-	# historical baselines, per region-tiers.md's off-tier-baseline rule.
+	#   deep briar_collector_deep_a/_b: CUT ON BOTH AXES -- con 34/36 -> 25/27 AND
+	#     weapon_die 7/6 -> 4/3. con first per the retune rule, but it is a weak
+	#     lever here (-6 each bought +0.07), so weapon_die carries the rest.
+	#     t3_warrior10 solo 0.22 -> 0.63, warrior5_mage5 solo 0.01 -> 0.28.
+	#     NOT heirloom_fence + fence_doorman's tanky/low-per-hit shape: that pair
+	#     is con 40/48 at ~5.0/7.5 mean damage a swing (str/2 + 1d(weapon_die)),
+	#     this one con 25/27 at ~10.5/10.0. Shared: only a's one-big-skill.
+	# power_level UNTOUCHED on all four (8.0 / 9.5): the retune moved the party
+	# size these fights are authored against, not their place in the region, and
+	# power_level is WICombatBanking's enemy-party XP weight for the latter.
+	# The two w10 (warrior5_mage5) solo cells stay MEASURED off-build baselines,
+	# per region-tiers.md's off-tier-baseline rule.
 	{"name": "briar_collectors_w10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "warrior5_mage5", "solo": true},
 	# The shallow briar stop at Riverfarm's own expected level (10), SOLO. Window
 	# is the thicket-solo precedent (riverfarm_thicket_patch_t3_solo, 0.55-0.95)
@@ -241,15 +238,14 @@ const RIVERFARM_CELLS := [
 	# before it, 0.91 with the retired ally), margins 0.14/0.26.
 	{"name": "briar_collectors_t3_warrior10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
 	{"name": "briar_collectors_deep_w10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "warrior5_mage5", "solo": true},
-	# RIVERFARM'S STOP CELL (its own expected level, 10) -- SOLO since #396, and
-	# the gate that blight_lifted's fight route lives or dies by. Band is the
-	# measured 0.63 +/- 0.07 (the retune-rule envelope the #396 spec authored),
-	# check_rounds ON: median 3 with the rounds histogram 60% on 3, so the 3-12
-	# bar is a real check here and not the coin flip it is on the shallow cell.
-	# Pre-#396 this cell's gated twin was the with-ally
-	# briar_collectors_deep_t3_warrior10_hunter at 0.78-0.92 (deleted); solo read
-	# 0.22 at the same build, which closed the fight route and fired the retune
-	# rule. What the deleted cell's history recorded and is still worth keeping:
+	# RIVERFARM'S STOP CELL (its own expected level, 10) -- SOLO, and the gate
+	# blight_lifted's fight route lives or dies by. Band is the measured 0.63 +/-
+	# 0.07, the retune-rule envelope worded by the #396 PLAN (Task 6 Step 3), NOT
+	# by the spec. check_rounds ON: median 3 carries 60% of the histogram, so the
+	# 3-12 bar is a real check here (contrast the t5 rung below).
+	# The deleted with-ally twin (briar_collectors_deep_t3_warrior10_hunter,
+	# 0.78-0.92) read 0.22 solo at this build, which closed the fight route and
+	# fired the retune rule. Its history's still-live mechanism note:
 	# GH#337 re-authored it 0.79 -> 0.85 / 0.72-0.85 -> 0.78-0.92 because 0.85 sat
 	# exactly ON the old ceiling, and the mechanism was cooldowns turning
 	# briar_collector_deep_a's one power_strike into two ordinary swings while the
@@ -276,13 +272,15 @@ const RIVERFARM_CELLS := [
 	# Region-band ORDERING is evidenced by the measured medians recorded in the
 	# PR body, not by the gate. If a run lands outside 0.55-0.95, move the DATA
 	# (con/weapon_die), never the window.
-	# NO check_rounds, for the same reason the stop cell above carries none:
-	# this roster/build/shape lands median 2 (measured on the shipped cell too,
-	# 100 runs), so the 3-12 rounds bar would red on the SHIPPED numbers these
-	# rigs clone verbatim. check_rounds in RIVERFARM_CELLS belongs to the
-	# HUNTER (party) cells, which run long enough to clear it. Adding it here
-	# would mean moving con off thicket_remnant's numbers, which ruling 2
-	# forbids.
+	# NO check_rounds, for the same reason the stop cell above carries none: this
+	# roster/build/shape lands median 2 (measured, 100 runs), so the 3-12 rounds
+	# bar would red on the SHIPPED numbers these rigs clone verbatim.
+	# THE RULE FOR RIVERFARM_CELLS: check_rounds only where the median has clear
+	# mass separation -- briar_collectors_deep_t3_warrior10_solo keeps it at 60%
+	# of runs on 3. The counterexample that set the rule is
+	# briar_collectors_deep_t5_sw14_solo, whose histogram {2:48, 3:50, 4:2} is a
+	# two-run coin flip on the median: its bar was DROPPED rather than defended.
+	# Never move data to protect a rounds bar (ruling 2).
 	{"name": "granary_scavengers_t3_warrior10_solo", "arena": "inn_cellar", "enemies": ["granary_scavenger_a", "granary_scavenger_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
 	{"name": "thicket_line_den_t3_warrior10_solo", "arena": "witch_hollow", "enemies": ["line_stalker_a", "line_stalker_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
 	# MAIN-LINE BAND LADDER rung 1 of 4 (Phase 9, 2026-07-27). The four rungs
@@ -315,12 +313,12 @@ const RIVERFARM_CELLS := [
 	# was SIZED so this rung's statement survives intact: solo reads 0.94 inside
 	# the SAME 0.88-0.98 window (margins 0.06/0.04), the step over Invrisil's 0.84
 	# widens 0.08 -> 0.10, and the ladder still descends 0.94 > 0.84 > 0.69 > 0.61.
-	# check_rounds stays ON and passes at median 3, but note the rounds histogram
-	# splits 48/50 across 2 and 3: if a future unrelated tune flips that median to
-	# 2 the honest fix is this file's own documented one (the stop-band cells'
-	# comment below) -- drop check_rounds on a solo Riverfarm cell whose shape
-	# lands median 2, do not move data to protect the rounds bar.
-	{"name": "briar_collectors_deep_t5_sw14_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t4_spellsword14_party", "solo": true, "win_lo": 0.88, "win_hi": 0.98, "check_rounds": true},
+	# NO check_rounds, dropped with the solo move: the histogram is {2:48, 3:50,
+	# 4:2}, so the passing median 3 is TWO RUNS from being a 2 and the 3-12 bar
+	# would red on an unrelated tune. Win rate is what this rung asserts; the
+	# rounds bar in this region belongs to the stop cell above, whose median 3
+	# carries 60% of its runs (see that comment for the rule).
+	{"name": "briar_collectors_deep_t5_sw14_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t4_spellsword14_party", "solo": true, "win_lo": 0.88, "win_hi": 0.98},
 ]
 
 const INVRISIL_CELLS := [

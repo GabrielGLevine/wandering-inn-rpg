@@ -70,7 +70,7 @@ for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skill
 	# underlying env-var hooks sim_combat_batch.gd itself honors (both unset =
 	# unchanged single-process behavior, proven byte-identical).
 	wandering_inn_game/scripts/harness_shard_diff.sh --shards 4 --baseline-ref main
-	# Difficulty-tier sweep (GH#360a) — the 141 cells at x0.75/x1.0/x1.3 via
+	# Difficulty-tier sweep (GH#360a) — the 135 cells at x0.75/x1.0/x1.3 via
 	# WI_DIFFICULTY_MULT on the ONE batch driver. THREE GATES, ON BY DEFAULT
 	# (#384 item 1, ratified 2026-08-04): inert-at-Silver (the explicit x1.0 leg
 	# is identical to a plain run), per-cell monotonicity, and extreme flips with

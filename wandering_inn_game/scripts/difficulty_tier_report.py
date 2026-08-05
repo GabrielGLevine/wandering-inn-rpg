@@ -103,7 +103,10 @@ EXTREME_FLIP_WHITELIST = {
             "it over the line. Tuning the pair to hold this cell under 0.10 would mean "
             "tuning data for the gate's benefit against the design build's own gate "
             "(briar_collectors_t3_warrior10_solo, 0.55-0.95) -- backwards. The DESIGN "
-            "build keeps a real coin at every tier, which is where the coin belongs.",
+            "build keeps a real coin at every tier, which is where the coin belongs. "
+            "LAPSE RANGE: this pin can only lapse UPWARD (Silver > 0.19 at NOISE 0.05); "
+            "a fall to 0.09 re-classifies the Gold flip as saturation before the lapse "
+            "check runs, so the entry would go STALE, never LAPSED.",
     },
 }
 
