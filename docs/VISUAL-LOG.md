@@ -3077,10 +3077,11 @@ Residuals, logged rather than silently shipped:
   bbox (53/64), scale holds the ~26px footprint the tuft-at-1.6 had.
   Evidence `lanes/l390-evidence/worn_grass_bed_pair_4x.png` (shipped tuft vs
   new prop, same compositor, real floodplains grass tile, 1x and 4x).
-- [x] PROP/NO-LAMBS — the Hunter's Lamb Pen has fencing and no lambs. The
+- [~] PROP/NO-LAMBS — the Hunter's Lamb Pen has fencing and no lambs. The
   animals live entirely in the display name, the observe, and the tend toasts.
   A small lamb sprite inside the rails would make the pen read as a pen rather
-  than as a fence.
+  than as a fence. (`[~]` not `[x]`: zero map files reference `lamb` yet —
+  the pen stays lamb-less in game until the #396 wiring lands.)
   **SPRITE DRAINED 2026-08-05 (#390); WIRING OWED BY #396.** Two rigs, not one
   retint: `lamb` (standing) and `lamb_lying` (curled on the ground) — distinct
   silhouettes per the tint directive, and the pair matches #396's own observe
@@ -3676,7 +3677,8 @@ roughly an order of magnitude in our favour.
 
 **Budget, measured.** Start $0.83 credits, 0 subscription generations
 (2055/2000 used, so every generation bills as overage). Twelve generations
-built the whole `a_shepherd` rig for **$0.15**; twelve more built Wilovan's
+built the whole `a_shepherd` rig for **$0.15** (#396 Task 1 — that rig lands
+on `issue/396-riverfarm-redesign`, not this branch); twelve more built Wilovan's
 combat set for **$0.13**; one 16-candidate object pack (20 generations) carried
 FIVE separate rows for **$0.09**. That is **~$0.012 per generation**, against
 the ~$0.065 the #390 comment extrapolated and the "one rig would consume the
