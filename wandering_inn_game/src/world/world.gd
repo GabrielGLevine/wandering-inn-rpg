@@ -999,14 +999,18 @@ func _build_ice_overlay() -> void:
 func _paint_ice_cell(cell: Vector2i) -> void:
 	if _ice_overlay == null:
 		_ice_overlay = WITileBoardBuilder.make_tile_layer(_field_root, ICE_SHEET, 16, WISpriteRegistry)
-		# Finding 17 (playtest): z_index=1 is a canvas-GLOBAL sort key, so the
-		# cap outdrew every y-sorted entity at z=0 -- the PLAYER standing on
-		# frozen water rendered UNDER the ice (the same global-vs-y-sort trap
-		# entity_visual_factory's bias comment documents). z=0: the lazy append
-		# still lands the layer after the water overlays in tree order, so ice
-		# covers water, and everything that walks sorts above it.
+		# Finding 17, SECOND FIX -- the first (z_index 1 -> 0) was verified
+		# against a frame where the player stood BESIDE the plate, a false
+		# positive the next playtest caught immediately: at EQUAL z, canvas
+		# order falls back to TREE order, and this overlay is created lazily
+		# on the first freeze, i.e. appended AFTER _entities_root -- so it
+		# still painted over the player standing on it. The overlay must sit
+		# BEFORE the y-sorted entities container in the tree: above floors,
+		# walls and water (all earlier siblings), below everything that walks.
 		_ice_overlay.z_index = 0
 		_field_root.add_child(_ice_overlay)
+		if _entities_root != null and _entities_root.get_parent() == _field_root:
+			_field_root.move_child(_ice_overlay, _entities_root.get_index())
 	_ice_overlay.set_cell(cell, 0, ICE_CAP_COORD)
 
 

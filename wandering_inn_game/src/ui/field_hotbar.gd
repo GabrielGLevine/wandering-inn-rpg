@@ -29,9 +29,12 @@ const READOUT_SCROLLBAR_RESERVE := 14.0
 const CONTROLS_BOTTOM_MARGIN := 10.0
 const READOUT_GAP := 8.0
 const READOUT_SELECTION_CLEARANCE := 34.0
-## Finding 19: keep the slot group right of the input-hint ribbon's band
-## (message_layer.gd HINT_PANEL_LEFT 8 + the longest device label ~330 + gap).
-const HINT_BAND_CLEARANCE := 368.0
+## Finding 19: minimum gap between the input-hint ribbon's live right edge
+## and the slot group. The band itself comes from MESSAGE_LAYER_SCRIPT's
+## static hint_band_width -- a constant here broke at 130% text scale.
+const HINT_BAND_GAP := 12.0
+## Fallback when no hint has rendered yet (kb label ~330px + 8px inset).
+const HINT_BAND_FALLBACK := 340.0
 ## THE TOAST BAND. The toast strip is bottom-RIGHT anchored and draws on a
 ## higher CanvasLayer (12) than this one, so where the two rects met, the toast
 ## simply painted over the legend -- slot lines stopped dead at the toast
@@ -424,12 +427,14 @@ func _layout_controls() -> bool:
 	var group_width := _group_width()
 	var group_left := safe.position.x + (safe.size.x - group_width) * 0.5
 	# Finding 19 (playtest): at 9 slots the centred group ran under the
-	# bottom-left input-hint ribbon and slot 1's plate painted over its tail
-	# ("I — invent…"). Clamp the group's left edge clear of the band the
-	# ribbon actually occupies (kb labels are the long case, ~330px + its
-	# 8px inset); centring is cosmetic, the ribbon is information. The
-	# windowed martial_field_loop shot is the proof for this number.
-	group_left = maxf(group_left, safe.position.x + HINT_BAND_CLEARANCE)
+	# bottom-left input-hint ribbon. Clamp the group's left edge clear of the
+	# ribbon's LIVE band (device labels and text scale both change its width;
+	# the first fix used a constant and a larger text scale walked the ribbon
+	# over slot 1). Centring is cosmetic, the ribbon is information.
+	var hint_band: float = MESSAGE_LAYER_SCRIPT.hint_band_width
+	if hint_band <= 0.0:
+		hint_band = HINT_BAND_FALLBACK
+	group_left = maxf(group_left, safe.position.x + hint_band + HINT_BAND_GAP)
 	_bar_left = group_left
 	# `rendered_width()`, NEVER `_hotbar.size.x`: the bar's size IS the offsets
 	# set below, so reading it here made the layout a feedback loop -- see

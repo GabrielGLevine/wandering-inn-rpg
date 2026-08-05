@@ -126,6 +126,11 @@ const HINT_PAPER_SIDE_PAD := HINT_PAPER_BOTTOM_PAD
 ## here and the label ellipsizes rather than running under the toast strip.
 const HINT_PANEL_MAX_WIDTH := 640.0
 const HINT_PANEL_LEFT := 8.0
+## Live right edge of the input-hint ribbon (finding 19): HINT_PANEL_LEFT +
+## the current rendered width, updated on every resize (device swaps and text
+## scale both change it). Static so the field hotbar can read it without a
+## node reference; 0.0 until the first hint renders.
+static var hint_band_width := 0.0
 const HINT_PANEL_BOTTOM := -8.0
 
 ## Toasts use layer 12: above journal/inventory modals (10), below the sleep
@@ -645,6 +650,11 @@ func _resize_hint_panel() -> void:
 	var width := clampf(ceilf(text_size.x + 2.0 * side), HINT_PANEL_MIN_SIZE.x, HINT_PANEL_MAX_WIDTH)
 	var text_h := font.get_height(font_size)
 	var size := Vector2(width, _hint_panel_height_for(text_h))
+	# Finding 19, round 2: the field hotbar clamps its slot group clear of
+	# this ribbon, and a CONSTANT clamp broke the moment text scale grew the
+	# label (the playtest at a larger scale had the ribbon overhanging slot 1).
+	# Publish the REAL rendered band so the hotbar reads geometry, not a guess.
+	hint_band_width = HINT_PANEL_LEFT + width
 	_hint_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_hint_panel.custom_minimum_size = size
 	_hint_panel.size = size
