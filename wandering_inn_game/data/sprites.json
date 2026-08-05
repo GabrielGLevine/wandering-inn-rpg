@@ -6011,7 +6011,7 @@
   }
  },
  "krshia": {
-  "_comment": "OWNED PixelLab v3 (#390). Gnoll [Shopkeeper]; was `gnoll_traveler` + tint, shared with Xif. SECOND PASS on a user read: the first came back an armored brawler (parked, reused as `gnoll_ranger`). Anchor MEASURED.",
+  "_comment": "OWNED PixelLab v3 (#390). Gnoll [Shopkeeper]; was `gnoll_traveler` + tint. SECOND PASS: v1 read as a brawler (reused as `gnoll_ranger`). Anchor MEASURED.",
   "directional": true,
   "render_scale": 0.4915,
   "anchor": [
@@ -6033,9 +6033,9 @@
   }
  },
  "octavia": {
-  "_comment": "OWNED PixelLab v3 (#390). Stitch-girl alchemist, visible seams; she wore `citizen_f`, a human woman. Anchor MEASURED from the alpha bbox.",
+  "_comment": "OWNED PixelLab v3 (#390, finding 10 SECOND PASS: v1 shipped too light; canon Octavia is DARK-SKINNED). Palette explicit per her profile; pale seams = species signifier. Anchor MEASURED.",
   "directional": true,
-  "render_scale": 0.4677,
+  "render_scale": 0.4531,
   "anchor": [
    0.5,
    0.75
