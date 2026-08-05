@@ -304,6 +304,12 @@ Process lessons this session (fold candidates for wi-running-the-machine
 2. Board: #348 open (slice 2+), #347 open (migration behind rulings),
    #360 open (flip-gate triage + stratified envelope), #359/#134/#318
    close via the train PRs.
+3. **Riverfarm Hunter→Shepherd swap SPEC'D, not implemented** (user
+   ruling 2026-08-05: Hunter-of-Noelictus confusion, swap character).
+   docs/superpowers/specs/2026-08-05-riverfarm-shepherd-swap-design.md
+   — all internal ids frozen (shipped-ids contract), surface-only swap,
+   5 QA speaker re-pins measured, new a_shepherd sprite needed.
+   Awaiting user spec review before plan/implementation.
 
 
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)
