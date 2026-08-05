@@ -2722,6 +2722,37 @@
    0.75
   ]
  },
+ "a_shepherd": {
+  "_comment": "OWNED PixelLab v3 (#396 Task 1). A Shepherd -- replaces a_hunter as the riverfarm_village character surface. Brimmed felt hat + long wooden crook ARE the silhouette contract: cold-read at gameplay zoom (4x, VIEW_SIZE 320x180) against human_laborer (Former Headman), citizen_f (A Villager) and the retired a_hunter. Sheet names + animation keys mirror a_hunter exactly (Idle_* / Run_*, directional, side sheet mirrors for west); frame_size, render_scale and anchor are MEASURED rather than copied -- the v3 canvas is 184px, so render_scale 0.3837 lands the 86px figure at a_hunter's 33px on-screen height (citizen_f 30, human_laborer 30.2), and the anchor is the alpha-bbox feet plane 135/184 with x taken from the BOOT span, not the crook-skewed full bbox.",
+  "directional": true,
+  "render_scale": 0.3837,
+  "animations": {
+   "idle": {
+    "sheet_down": "res://assets/sprites/a_shepherd/Idle_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/a_shepherd/Idle_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/a_shepherd/Idle_Up-Sheet.png",
+    "frame_size": [
+     184,
+     184
+    ],
+    "fps": 6
+   },
+   "walk": {
+    "sheet_down": "res://assets/sprites/a_shepherd/Run_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/a_shepherd/Run_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/a_shepherd/Run_Up-Sheet.png",
+    "frame_size": [
+     184,
+     184
+    ],
+    "fps": 8
+   }
+  },
+  "anchor": [
+   0.4946,
+   0.7337
+  ]
+ },
  "wilovan": {
   "_comment": "OWNED PixelLab v3 (#390). Gnoll Gentleman Caller: bowler, cane, waistcoat (the id used to wear `pc_gnoll_m`, the PLAYER's skin). IDLE ONLY: board_renderer falls back to idle_side / fades a missing death, so his attacks lack flourish until the combat set exists (#390).",
   "directional": true,

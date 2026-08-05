@@ -283,6 +283,13 @@ func _build_expected_counts() -> Dictionary:
 	counts["a_hunter/idle"] = 4
 	counts["a_hunter/walk"] = 6
 
+	## #396 Task 1: a_shepherd succeeds a_hunter on riverfarm_village. Sheet
+	## names and animation keys mirror a_hunter; the FRAME COUNTS do not --
+	## the v3 idle ships its reference pose plus 4 generated frames (5), and
+	## walk is the walking-6-frames template (6, same as a_hunter's Run).
+	counts["a_shepherd/idle"] = 5
+	counts["a_shepherd/walk"] = 6
+
 	## #390: wilovan is now a BESPOKE rig, idle only. The walk/slice/cast/hit/
 	## death rows below are the pc_gnoll_m set he used to borrow -- kept as pins
 	## so that generating his combat set later lands on an already-asserted
