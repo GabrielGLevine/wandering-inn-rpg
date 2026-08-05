@@ -88,7 +88,10 @@ def expand_dialogue_graph(graph: dict, shared: dict) -> dict:
         tv = node.get("text_variants")
         if isinstance(tv, list):
             for i, v in enumerate(tv):
-                tv[i] = rep(v) if isinstance(v, str) else v
+                if isinstance(v, str):
+                    tv[i] = rep(v)
+                elif isinstance(v, dict) and isinstance(v.get("text"), str):
+                    v["text"] = rep(v["text"])
         for o in node.get("options", []) or []:
             if isinstance(o, dict) and "text" in o:
                 o["text"] = rep(o.get("text"))

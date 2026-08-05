@@ -15,14 +15,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.delivered.text_variants[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Erin",
-    "Lism"
-   ]
-  },
   "$.nodes.delivered_smooth.options[2].text": {
    "brackets": [],
    "digits": [],
@@ -39,14 +31,6 @@
    "propnouns": [
     "Erin",
     "Lyonette"
-   ]
-  },
-  "$.nodes.delivered_smooth.text_variants[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Erin",
-    "Lism"
    ]
   },
   "$.nodes.errand_kept.options[0].text": {
@@ -287,6 +271,14 @@
    "propnouns": [
     "Erin"
    ]
+  },
+  "$.text_banks.the_erin_file_is_closed": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin",
+    "Lism"
+   ]
   }
  },
  "skeleton": {
@@ -356,7 +348,7 @@
         "errand_decided": 1
        }
       },
-      "text": "\u00a7"
+      "text": "@the_erin_file_is_closed"
      }
     ]
    },
@@ -425,7 +417,7 @@
         "errand_decided": 1
        }
       },
-      "text": "\u00a7"
+      "text": "@the_erin_file_is_closed"
      }
     ]
    },
@@ -735,7 +727,8 @@
   "start": "hub",
   "text_banks": {
    "i_ll_keep_it": "\u00a7",
-   "send_it_back_to": "\u00a7"
+   "send_it_back_to": "\u00a7",
+   "the_erin_file_is_closed": "\u00a7"
   }
  }
 }

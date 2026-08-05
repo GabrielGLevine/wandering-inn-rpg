@@ -65,8 +65,25 @@ static func _read_json(path: String) -> Dictionary:
 ## see exactly the shapes that shipped before banks existed. Banks may not
 ## reference banks (data_lint enforces); an unresolvable ref is a hard
 ## assert because a silently dropped line pool is a content bug.
+const SHARED_TALK_PATH := "res://data/maps/_shared_talk.json"
+static var _shared_talk_cache: Dictionary = {}
+
+
+static func _shared_talk() -> Dictionary:
+	if _shared_talk_cache.is_empty() and FileAccess.file_exists(SHARED_TALK_PATH):
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SHARED_TALK_PATH))
+		_shared_talk_cache = (parsed as Dictionary).get("banks", {}) if parsed is Dictionary else {}
+	return _shared_talk_cache
+
+
 static func _expand_talk_banks(map: Dictionary, map_id: String) -> Dictionary:
-	var banks: Dictionary = map.get("talk_banks", {})
+	var banks: Dictionary = map.get("talk_banks", {}).duplicate()
+	# Cross-map lines (quest nudges mirrored on two maps) live once in
+	# _shared_talk.json; map-local banks resolve first, shadowing forbidden
+	# by data_lint.
+	for shared_name: String in _shared_talk():
+		if not banks.has(shared_name):
+			banks[shared_name] = _shared_talk()[shared_name]
 	if banks.is_empty():
 		return map
 	for e: Variant in map.get("entities", []):

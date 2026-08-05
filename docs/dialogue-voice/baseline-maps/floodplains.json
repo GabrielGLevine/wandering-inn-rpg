@@ -1489,7 +1489,7 @@
     "sprite": "turf_cut_mouth"
    },
    {
-    "_comment": "Finding 16: stood on the road ALL DAY as an invisible blocking square ('come back at night'). present_when phase-gates EXISTENCE (safe since GH#392); by day the verge is empty ground. encounter_when stays as the night arm.",
+    "_comment": "Finding 16: stood on the road ALL DAY as an invisible blocking square. present_when phase-gates EXISTENCE (safe since GH#392); by day the verge is empty. encounter_when stays as the night arm.",
     "allies": [],
     "arena": "boulder_flats",
     "beast": true,

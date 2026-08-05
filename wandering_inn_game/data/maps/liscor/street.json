@@ -20,9 +20,6 @@
    "Erin beat me in eleven moves yesterday. Eleven! I wrote them all down. I'm going to frame the humiliation and study it daily.",
    "You, me, the board, one hour. I've been saving an opening that is either brilliant or a resignation with extra steps."
   ],
-  "olesm_shared_2": [
-   "A runner was asking after you. Captain wants you at the gate."
-  ],
   "pisces_shared": [
    "Ah. You. Acceptable timing. I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
    "Your channel has stopped embarrassing you, I trust. Good. I dislike wasted instruction; it reflects on the instructor.",
@@ -31,7 +28,9 @@
   "krshia_shared": [
    "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
    "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
-   "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
+   "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week."
+  ],
+  "krshia_corusdeer": [
    "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
   ]
  },
@@ -1150,7 +1149,7 @@
       "resolved_the_cisterns": 1
      },
      "lines": [
-      "Word is the cistern thing's settled. Olesm will want it from you, not rumor."
+      "@word_is_the_cistern"
      ]
     },
     {
@@ -1458,7 +1457,7 @@
       "heard_the_deep_tremor": 1
      },
      "lines": [
-      "You've got the look of someone the Watch pointed at a hole in the ground."
+      "@you_ve_got_the"
      ]
     },
     {
@@ -1600,7 +1599,7 @@
     "Silverfang goods - fair weight, fair price. I do not haggle down, and I do not forget a face.",
     "You carry yourself better than before. Good. A city notices such things, even when its people pretend not to.",
     "Speak plainly with me and we get along well. The other kind of talk, I have no patience for.",
-    "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+    "@krshia_corusdeer"
    ],
    "_comment": "stages are last-match-wins; keep story order — earliest gates first; relays outrank standing signposts",
    "talk_pool_stages": [
@@ -1622,7 +1621,8 @@
       "chatted_with_krshia": 4
      },
      "lines": [
-      "@krshia_shared"
+      "@krshia_shared",
+      "@krshia_corusdeer"
      ]
     },
     {
@@ -1631,7 +1631,7 @@
       "heard_about_cisterns": 1
      },
      "lines": [
-      "Olesm's been muttering at sewer maps all morning — go rescue him from himself."
+      "@olesm_s_been_muttering"
      ]
     },
     {
@@ -1641,7 +1641,8 @@
       "resolved_the_cisterns": 1
      },
      "lines": [
-      "@krshia_shared"
+      "@krshia_shared",
+      "@krshia_corusdeer"
      ]
     },
     {
@@ -1660,7 +1661,8 @@
       "heard_the_deep_tremor": 1
      },
      "lines": [
-      "@krshia_shared"
+      "@krshia_shared",
+      "@krshia_corusdeer"
      ]
     },
     {
@@ -1669,7 +1671,7 @@
       "door_understood": 1
      },
      "lines": [
-      "Pisces said something about a ruin east past the gate road. He used the word 'trivial,' which means it isn't."
+      "@pisces_said_something_about"
      ]
     },
     {
@@ -1679,7 +1681,8 @@
       "recovered_anchor_stone": 1
      },
      "lines": [
-      "@krshia_shared"
+      "@krshia_shared",
+      "@krshia_corusdeer"
      ]
     },
     {
@@ -1689,7 +1692,7 @@
       "recovered_anchor_stone": 1
      },
      "lines": [
-      "You have everything. Pisces is by the Guild steps, being smug at pigeons."
+      "@you_have_everything_pisces"
      ]
     },
     {
@@ -1708,7 +1711,8 @@
       "door_awakened": 1
      },
      "lines": [
-      "@krshia_shared"
+      "@krshia_shared",
+      "@krshia_corusdeer"
      ]
     },
     {
@@ -1719,7 +1723,8 @@
      },
      "lines": [
       "The carts went south and came back empty, yes? Do not tell me what they carried. I priced it as wool.",
-      "@krshia_shared"
+      "@krshia_shared",
+      "@krshia_corusdeer"
      ]
     }
    ],

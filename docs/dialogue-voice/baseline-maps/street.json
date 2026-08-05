@@ -31,13 +31,6 @@
     "Runner"
    ]
   },
-  "$.entities[11].talk_pool_stages[2].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
   "$.entities[11].talk_pool_stages[4].lines[0]": {
    "brackets": [],
    "digits": [],
@@ -85,13 +78,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.entities[13].talk_pool[4]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
   "$.entities[13].talk_pool_stages[0].lines[0]": {
    "brackets": [],
    "digits": [],
@@ -111,23 +97,6 @@
    "brackets": [],
    "digits": [],
    "propnouns": []
-  },
-  "$.entities[13].talk_pool_stages[2].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[13].talk_pool_stages[6].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[13].talk_pool_stages[8].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Guild"
-   ]
   },
   "$.entities[13].talk_pool_stages[9].lines[0]": {
    "brackets": [],
@@ -179,11 +148,6 @@
    "propnouns": []
   },
   "$.entities[2].talk_pool_stages[2].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[2].talk_pool_stages[3].lines[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -281,6 +245,13 @@
    "digits": [],
    "propnouns": []
   },
+  "$.talk_banks.krshia_corusdeer[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
   "$.talk_banks.krshia_shared[0]": {
    "brackets": [],
    "digits": [],
@@ -300,13 +271,6 @@
     "Gnolls"
    ]
   },
-  "$.talk_banks.krshia_shared[3]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
   "$.talk_banks.olesm_shared[0]": {
    "brackets": [
     "[Tactician]"
@@ -322,11 +286,6 @@
    "propnouns": []
   },
   "$.talk_banks.olesm_shared[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.talk_banks.olesm_shared_2[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -1256,7 +1215,7 @@
      {
       "id": "zevara_thread_cisterns_report",
       "lines": [
-       "\u00a7"
+       "@word_is_the_cistern"
       ],
       "requires_accomplishment": {
        "resolved_the_cisterns": 1
@@ -1432,7 +1391,7 @@
     "toast": "Warm bread smell over the whole row. No one's minding the stall this exact moment. The loaves aren't going anywhere without a fight."
    },
    {
-    "_comment": "Finding 13: he wore `hired_blade`, a COMBATANT rig, forbidden on a friendly. Anonymous-archetype name; shares `human_laborer` with the drayman (anonymous extras may), dusty tint keeps the two co-visible men distinct.",
+    "_comment": "Finding 13: he wore `hired_blade`, a COMBATANT rig, forbidden on a friendly. Shares `human_laborer` with the drayman (anonymous extras may); dusty tint keeps the two distinct.",
     "cell": [
      18,
      2
@@ -1564,7 +1523,7 @@
      {
       "id": "pisces_thread_deep_tremor",
       "lines": [
-       "\u00a7"
+       "@you_ve_got_the"
       ],
       "requires_accomplishment": {
        "heard_the_deep_tremor": 1
@@ -1710,7 +1669,7 @@
      "\u00a7",
      "\u00a7",
      "\u00a7",
-     "\u00a7"
+     "@krshia_corusdeer"
     ],
     "talk_pool_stages": [
      {
@@ -1727,7 +1686,8 @@
      {
       "id": "krshia_friend_of_the_silverfangs",
       "lines": [
-       "@krshia_shared"
+       "@krshia_shared",
+       "@krshia_corusdeer"
       ],
       "requires_accomplishment": {
        "chatted_with_krshia": 4,
@@ -1737,7 +1697,7 @@
      {
       "id": "krshia_thread_cisterns",
       "lines": [
-       "\u00a7"
+       "@olesm_s_been_muttering"
       ],
       "requires_accomplishment": {
        "heard_about_cisterns": 1
@@ -1747,7 +1707,8 @@
       "_comment": "M2 warm terminal: retire to krshia_friend_of_the_silverfangs's WARM friend-tier lines, not the cold base pool -- by the time a thread retires the player is a friend of the Silverfangs, so every terminal register stays warm (the warm stages above keep their own gates+positions). Same warm lines across all four krshia retire stages below.",
       "id": "krshia_thread_cisterns_neutral",
       "lines": [
-       "@krshia_shared"
+       "@krshia_shared",
+       "@krshia_corusdeer"
       ],
       "requires_accomplishment": {
        "resolved_the_cisterns": 1
@@ -1766,7 +1727,8 @@
       "_comment": "M2 warm terminal: krshia_friend_of_the_silverfangs WARM lines (see krshia_thread_cisterns_neutral).",
       "id": "krshia_thread_gate_neutral",
       "lines": [
-       "@krshia_shared"
+       "@krshia_shared",
+       "@krshia_corusdeer"
       ],
       "requires_accomplishment": {
        "heard_the_deep_tremor": 1
@@ -1775,7 +1737,7 @@
      {
       "id": "krshia_thread_ruin_east",
       "lines": [
-       "\u00a7"
+       "@pisces_said_something_about"
       ],
       "requires_accomplishment": {
        "door_understood": 1
@@ -1785,7 +1747,8 @@
       "_comment": "M2 warm terminal: krshia_friend_of_the_silverfangs WARM lines (see krshia_thread_cisterns_neutral).",
       "id": "krshia_thread_ruin_neutral",
       "lines": [
-       "@krshia_shared"
+       "@krshia_shared",
+       "@krshia_corusdeer"
       ],
       "requires_accomplishment": {
        "recovered_anchor_stone": 1
@@ -1794,7 +1757,7 @@
      {
       "id": "krshia_thread_pisces_ready",
       "lines": [
-       "\u00a7"
+       "@you_have_everything_pisces"
       ],
       "requires_accomplishment": {
        "bought_catalyst": 1,
@@ -1814,7 +1777,8 @@
       "_comment": "M2 warm terminal: krshia_friend_of_the_silverfangs WARM lines (see krshia_thread_cisterns_neutral).",
       "id": "krshia_thread_door_neutral",
       "lines": [
-       "@krshia_shared"
+       "@krshia_shared",
+       "@krshia_corusdeer"
       ],
       "requires_accomplishment": {
        "door_awakened": 1
@@ -1825,7 +1789,8 @@
       "id": "krshia_thread_goblin_run",
       "lines": [
        "\u00a7",
-       "@krshia_shared"
+       "@krshia_shared",
+       "@krshia_corusdeer"
       ],
       "requires_accomplishment": {
        "camp_trade_brokered": 1
@@ -2231,8 +2196,10 @@
    }
   ],
   "talk_banks": {
+   "krshia_corusdeer": [
+    "\u00a7"
+   ],
    "krshia_shared": [
-    "\u00a7",
     "\u00a7",
     "\u00a7",
     "\u00a7"
@@ -2240,9 +2207,6 @@
    "olesm_shared": [
     "\u00a7",
     "\u00a7",
-    "\u00a7"
-   ],
-   "olesm_shared_2": [
     "\u00a7"
    ],
    "pisces_shared": [

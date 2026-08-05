@@ -35,6 +35,8 @@ static func expand(graph: Dictionary, shared: Dictionary) -> Dictionary:
 			for i in tv.size():
 				if tv[i] is String:
 					tv[i] = _resolve(tv[i], local, shared)
+				elif tv[i] is Dictionary and (tv[i] as Dictionary).get("text") is String:
+					(tv[i] as Dictionary)["text"] = _resolve((tv[i] as Dictionary)["text"], local, shared)
 		for o: Variant in n.get("options", []):
 			if o is Dictionary and (o as Dictionary).get("text") is String:
 				(o as Dictionary)["text"] = _resolve((o as Dictionary)["text"], local, shared)

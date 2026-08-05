@@ -47,7 +47,8 @@ def walk_map_texts(obj, path="$", in_talk=False):
     if isinstance(obj, dict):
         for k, v in obj.items():
             p = f"{path}.{k}"
-            if k == "talk_banks" and isinstance(v, dict):
+            if k in ("talk_banks", "banks") and isinstance(v, dict):
+                # "banks" = maps/_shared_talk.json top-level key (cross-map bank file)
                 for name, lines in v.items():
                     if isinstance(lines, list):
                         for i, line in enumerate(lines):
@@ -77,7 +78,7 @@ def map_skeleton(obj, in_talk=False):
     if isinstance(obj, dict):
         out = {}
         for k, v in obj.items():
-            if k == "talk_banks" and isinstance(v, dict):
+            if k in ("talk_banks", "banks") and isinstance(v, dict):
                 out[k] = {name: ([MASK if isinstance(x, str) else map_skeleton(x) for x in lines]
                                  if isinstance(lines, list) else map_skeleton(lines))
                           for name, lines in v.items()}

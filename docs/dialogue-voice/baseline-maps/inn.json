@@ -35,28 +35,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.entities[0].talk_pool_stages[14].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[15].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[17].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[18].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
   "$.entities[0].talk_pool_stages[19].lines[0]": {
    "brackets": [],
    "digits": [],
@@ -64,29 +42,12 @@
     "Zevara"
    ]
   },
-  "$.entities[0].talk_pool_stages[21].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[0].talk_pool_stages[22].lines[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[0].talk_pool_stages[23].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Guild"
-   ]
-  },
   "$.entities[0].talk_pool_stages[24].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[26].lines[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -666,7 +627,7 @@
      {
       "id": "erin_thread_cisterns",
       "lines": [
-       "\u00a7"
+       "@olesm_s_been_muttering"
       ],
       "requires_accomplishment": {
        "heard_about_cisterns": 1
@@ -675,7 +636,7 @@
      {
       "id": "erin_thread_cisterns_report",
       "lines": [
-       "\u00a7"
+       "@word_is_the_cistern"
       ],
       "requires_accomplishment": {
        "resolved_the_cisterns": 1
@@ -693,7 +654,7 @@
      {
       "id": "erin_thread_gate_runner",
       "lines": [
-       "\u00a7"
+       "@olesm_shared_2"
       ],
       "requires_accomplishment": {
        "watch_runner_pointed": 1
@@ -702,7 +663,7 @@
      {
       "id": "erin_thread_deep_tremor",
       "lines": [
-       "\u00a7"
+       "@you_ve_got_the"
       ],
       "requires_accomplishment": {
        "heard_the_deep_tremor": 1
@@ -729,7 +690,7 @@
      {
       "id": "erin_thread_ruin_east",
       "lines": [
-       "\u00a7"
+       "@pisces_said_something_about"
       ],
       "requires_accomplishment": {
        "door_understood": 1
@@ -747,7 +708,7 @@
      {
       "id": "erin_thread_pisces_ready",
       "lines": [
-       "\u00a7"
+       "@you_have_everything_pisces"
       ],
       "requires_accomplishment": {
        "bought_catalyst": 1,
@@ -775,7 +736,7 @@
      {
       "id": "erin_thread_horns_gallery",
       "lines": [
-       "\u00a7"
+       "@ceria_s_team_went"
       ],
       "requires_accomplishment": {
        "horns_delve_started": 1

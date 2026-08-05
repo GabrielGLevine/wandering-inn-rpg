@@ -32,11 +32,6 @@
     "Guild"
    ]
   },
-  "$.entities[1].talk_pool_stages[3].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[1].talk_pool_stages[5].lines[0]": {
    "brackets": [],
    "digits": [],
@@ -303,7 +298,7 @@
      {
       "id": "selys_thread_horns_gallery",
       "lines": [
-       "\u00a7"
+       "@ceria_s_team_went"
       ],
       "requires_accomplishment": {
        "horns_delve_started": 1

@@ -1,0 +1,69 @@
+{
+ "facts": {
+  "$.banks.ceria_s_team_went[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.banks.olesm_s_been_muttering[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.banks.olesm_shared_2[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.banks.pisces_said_something_about[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.banks.word_is_the_cistern[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.banks.you_have_everything_pisces[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.banks.you_ve_got_the[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  }
+ },
+ "skeleton": {
+  "_comment": "Cross-map talk lines (quest nudges mirrored on several maps) live here once; any map talk_pool/stage lines array splices with \"@<name>\" (map-local talk_banks resolve first; shadowing is a lint error). Expanded at compose like map-local banks. Edits here need a FULL sweep.",
+  "banks": {
+   "ceria_s_team_went": [
+    "\u00a7"
+   ],
+   "olesm_s_been_muttering": [
+    "\u00a7"
+   ],
+   "olesm_shared_2": [
+    "\u00a7"
+   ],
+   "pisces_said_something_about": [
+    "\u00a7"
+   ],
+   "word_is_the_cistern": [
+    "\u00a7"
+   ],
+   "you_have_everything_pisces": [
+    "\u00a7"
+   ],
+   "you_ve_got_the": [
+    "\u00a7"
+   ]
+  }
+ }
+}

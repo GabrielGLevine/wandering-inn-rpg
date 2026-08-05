@@ -559,7 +559,7 @@
       "heard_about_cisterns": 1
      },
      "lines": [
-      "Olesm's been muttering at sewer maps all morning — go rescue him from himself."
+      "@olesm_s_been_muttering"
      ]
     },
     {
@@ -568,7 +568,7 @@
       "resolved_the_cisterns": 1
      },
      "lines": [
-      "Word is the cistern thing's settled. Olesm will want it from you, not rumor."
+      "@word_is_the_cistern"
      ]
     },
     {
@@ -586,7 +586,7 @@
       "watch_runner_pointed": 1
      },
      "lines": [
-      "A runner was asking after you. Captain wants you at the gate."
+      "@olesm_shared_2"
      ]
     },
     {
@@ -595,7 +595,7 @@
       "heard_the_deep_tremor": 1
      },
      "lines": [
-      "You've got the look of someone the Watch pointed at a hole in the ground."
+      "@you_ve_got_the"
      ]
     },
     {
@@ -622,7 +622,7 @@
       "door_understood": 1
      },
      "lines": [
-      "Pisces said something about a ruin east past the gate road. He used the word 'trivial,' which means it isn't."
+      "@pisces_said_something_about"
      ]
     },
     {
@@ -641,7 +641,7 @@
       "recovered_anchor_stone": 1
      },
      "lines": [
-      "You have everything. Pisces is by the Guild steps, being smug at pigeons."
+      "@you_have_everything_pisces"
      ]
     },
     {
@@ -668,7 +668,7 @@
       "horns_delve_started": 1
      },
      "lines": [
-      "Ceria's team went down to the gallery already. They'll wait. Ceria said so. Twice."
+      "@ceria_s_team_went"
      ]
     },
     {

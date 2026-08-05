@@ -3524,7 +3524,9 @@ func _init() -> void:
 	# renders live (no fixture banks a delivered_* counter). Stage precedence
 	# on the SHIPPED entity rows, and the grate's observe override (its
 	# interact toast is door-blocked once heard_about_cisterns banks). ---
-	var ack_street: Dictionary = _load_json("res://data/maps/liscor/street.json")
+	# Rows come from compose(), not raw disk: talk banks (local + _shared_talk)
+	# expand there, and talk_pool_line renders literal "@refs" otherwise.
+	var ack_street: Dictionary = WISceneCatalog.compose()["maps"]["street"]
 	var zev_row: Dictionary = (ack_street["entities"] as Array).filter(func(e: Variant) -> bool: return String((e as Dictionary).get("id", "")) == "zevara")[0]
 	var ack_counts := {"delivered_delivery_gate_dispatch": 1}
 	var ack_lines: Array = []
@@ -3544,7 +3546,7 @@ func _init() -> void:
 	ack_soc.talk_pool_line(zev_row, {})
 	assert(ack_lines[-1].begins_with("Word is the cistern thing's settled."),
 		"an active story thread outranks both delivery stages (acks sit first = lowest priority)")
-	var erin_row: Dictionary = (_load_json("res://data/maps/inn/inn.json")["entities"] as Array).filter(func(e: Variant) -> bool: return String((e as Dictionary).get("id", "")) == "erin")[0]
+	var erin_row: Dictionary = ((WISceneCatalog.compose()["maps"]["inn"] as Dictionary)["entities"] as Array).filter(func(e: Variant) -> bool: return String((e as Dictionary).get("id", "")) == "erin")[0]
 	ack_counts.clear()
 	ack_counts["delivered_delivery_inn_hamper"] = 1
 	ack_soc.talk_pool_line(erin_row, {})

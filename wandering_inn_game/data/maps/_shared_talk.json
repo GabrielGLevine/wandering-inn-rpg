@@ -1,0 +1,26 @@
+{
+ "_comment": "Cross-map talk lines (quest nudges mirrored on several maps) live here once; any map talk_pool/stage lines array splices with \"@<name>\" (map-local talk_banks resolve first; shadowing is a lint error). Expanded at compose like map-local banks. Edits here need a FULL sweep.",
+ "banks": {
+  "ceria_s_team_went": [
+   "Ceria's team went down to the gallery already. They'll wait. Ceria said so. Twice."
+  ],
+  "olesm_s_been_muttering": [
+   "Olesm's been muttering at sewer maps all morning — go rescue him from himself."
+  ],
+  "pisces_said_something_about": [
+   "Pisces said something about a ruin east past the gate road. He used the word 'trivial,' which means it isn't."
+  ],
+  "word_is_the_cistern": [
+   "Word is the cistern thing's settled. Olesm will want it from you, not rumor."
+  ],
+  "you_have_everything_pisces": [
+   "You have everything. Pisces is by the Guild steps, being smug at pigeons."
+  ],
+  "you_ve_got_the": [
+   "You've got the look of someone the Watch pointed at a hole in the ground."
+  ],
+  "olesm_shared_2": [
+   "A runner was asking after you. Captain wants you at the gate."
+  ]
+ }
+}

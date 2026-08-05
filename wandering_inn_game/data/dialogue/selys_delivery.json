@@ -305,7 +305,7 @@
        "errand_decided": 1
       }
      },
-     "text": "The Erin file is closed. Guild business, the board's behind you. Gossip, go ask Lism."
+     "text": "@the_erin_file_is_closed"
     }
    ]
   },
@@ -374,7 +374,7 @@
        "errand_decided": 1
       }
      },
-     "text": "The Erin file is closed. Guild business, the board's behind you. Gossip, go ask Lism."
+     "text": "@the_erin_file_is_closed"
     }
    ]
   },
@@ -444,6 +444,7 @@
  },
  "text_banks": {
   "i_ll_keep_it": "I'll keep it. Courier's fee.",
-  "send_it_back_to": "Send it back to Erin."
+  "send_it_back_to": "Send it back to Erin.",
+  "the_erin_file_is_closed": "The Erin file is closed. Guild business, the board's behind you. Gossip, go ask Lism."
  }
 }
