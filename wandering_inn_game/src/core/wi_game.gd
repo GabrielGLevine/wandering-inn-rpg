@@ -69,6 +69,14 @@ var pending_meal: Dictionary = {}
 var frozen_cells: Dictionary = {}
 var sneaking := false
 var hotbar_loadout: Array[String] = []
+## Encounter-id -> suppression entry. TWO shapes share this dictionary:
+##  * a real player-cast charm -- {sleeps, map, cell} (see `_ward_field`);
+##  * GH#374's DEFEAT GRACE -- {until_exit, map}, written by `arm_exit_grace`
+##    off the defeat-reload path, carrying NO `cell` and NO `sleeps`.
+## The grace is deliberately INVISIBLE: `world.gd`'s ward marker skips it and
+## `_ward_field` refuses to see it as an existing charm (a charm the player
+## never cast must never be drawn, nor block one they do cast). Only
+## `_check_trigger_radius` treats the two the same, which is the whole point.
 var warded_encounters: Dictionary = {}
 var companion: String = ""
 ## "animated" (fades at sleep) or "tamed" (persists sleep) -- one source-keyed
@@ -106,7 +114,7 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 	# #348 slice 1: the property table rides scene_config (WISceneCatalog composes
 	# data/interactions.json into it) -- INJECTED, never read from disk here, so
 	# core stays pure and a hand-built scene_config can run with no table at all.
-	_field_skills = WIFieldSkills.new(sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _toggle_light, _blink_field, _ward_field, _animate_field, _door_openable, scene_config.get("interactions", {}))
+	_field_skills = WIFieldSkills.new(sink, skills, _break_sneak, _toggle_sneak, _mark_skill_used, record_accomplishment, remove_entity, use_skill, _toggle_light, _blink_field, _ward_field, _animate_field, _door_openable, scene_config.get("interactions", {}), accomplishment_count)
 	_interactions = WIInteractions.new(sink, _accomplishment_gate_met, record_accomplishment, _break_sneak, _talk_pool_line, start_dialogue, sleep, _interact_board, _interact_delivery_board, _interact_portal_menu, _interact_fence_menu, transition, _current_map_name, _resolve_skill_use_effect, _holds_weapon_family, known_skills, _apply_gold_effect, use_skill, _encounter_gate_met, start_combat, pickup, _has_required_items)
 	_sleep_beat = WISleepBeat.new(sink, record_accomplishment, accomplishment_count, known_skills, _class_display_name, _enriched_offer, _set_pending_consolidation, _bank_reached_two_classes_if_earned, _resolve_evolutions, _quests_completed_count, start_quest, _grow_resonance, skills)
 	_banking = WICombatBanking.new(sink, _mark_skill_used, find_entity, record_accomplishment, accomplishment_count, _roll_loot, remove_entity, (combat_config.get("progression", {}) as Dictionary).get("challenge", {}), combat_config.get("classes", {}), (combat_config.get("combatants", {}) as Dictionary).get("combatants", []))
@@ -145,20 +153,50 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 		var blocked := {}
 		for cell: Array in m.get("blocked", []):
 			blocked[Vector2i(int(cell[0]), int(cell[1]))] = true
+		var freezable := {}
 		for raw_seg: Variant in (m.get("walls", {}) as Dictionary).get("segments", []):
 			if raw_seg is Dictionary:
+				# Playtest fix wave (user ruling 2026-08-04): ALL water is
+				# freezable — that is the point of a generalized property. A
+				# walls segment tagged `water: true` (data_lint keeps the tag
+				# in lockstep with the water sheet) contributes every cell to
+				# `freezable`, so a player aiming a freeze at ANY open water
+				# gets ice, not the "no standing water" ambient. Before this,
+				# the floodplains pond had 1 freezable cell of ~23 and the
+				# sewers channels 2 of 28 — the QA scripts teleported to the
+				# tagged cells; a person aimed anywhere else and read the
+				# fallback as "the feature is broken".
+				var seg_is_water := bool((raw_seg as Dictionary).get("water", false))
 				for seg_cell: Vector2i in segment_cells(raw_seg as Dictionary):
 					blocked[seg_cell] = true
-		var freezable := {}
+					if seg_is_water:
+						freezable[seg_cell] = true
 		for cell: Array in m.get("freezable", []):
 			var fc := Vector2i(int(cell[0]), int(cell[1]))
 			freezable[fc] = true
 			blocked[fc] = true
+		# GH#380 [Even Footing]: the SECOND cell class, and the first one no cast
+		# ever touches. Same loader shape as `freezable` (a map-authored cell
+		# list that joins `blocked`), but the way through is a PASSIVE READ in
+		# is_cell_blocked, not a Skill you aim. Deliberately NOT folded onto
+		# `freezable`: warriors walking on open water reads wrong.
+		# AUTHORING CONTRACT (mirrors `freezable`): an `unsteady` cell is a
+		# blocked cell, so the map must dress it -- a biome blocked-prop, a
+		# floor_layers overlay, or a `cover_skip` row -- and it counts in
+		# `ui_map_rendered`'s `blocked_cells`, so a map gaining its first
+		# unsteady cell re-pins that map's canonical.
+		var unsteady := {}
+		for cell: Array in m.get("unsteady", []):
+			var uc := Vector2i(int(cell[0]), int(cell[1]))
+			unsteady[uc] = true
+			blocked[uc] = true
 		_maps[map_id] = {
 			"grid": Vector2i(int(m["grid"]["width"]), int(m["grid"]["height"])),
 			"entities": ents,
 			"blocked": blocked,
 			"freezable": freezable,
+			"unsteady": unsteady,
+			"unsteady_toast": m.get("unsteady_toast", ""),
 			"arrival_toasts": m.get("arrival_toasts", []),
 		}
 	_bind_map(String(scene_config["start_map"]))
@@ -267,7 +305,7 @@ static func segment_cells(seg: Dictionary) -> Array[Vector2i]:
 func is_cell_blocked(cell: Vector2i) -> bool:
 	if cell.x < 0 or cell.y < 0 or cell.x >= grid_size.x or cell.y >= grid_size.y:
 		return true
-	if _map_blocked.has(cell) and not _is_frozen(cell):
+	if _map_blocked.has(cell) and not _is_frozen(cell) and not _even_footing_crosses(cell):
 		return true
 	for ent: Dictionary in entities.values():
 		if ent[WIKeys.CELL] == cell and entity_present(ent):
@@ -279,12 +317,50 @@ func _is_freezable(cell: Vector2i) -> bool:
 	return (_maps.get(current_map, {}).get("freezable", {}) as Dictionary).has(cell)
 
 
+func _is_unsteady(cell: Vector2i) -> bool:
+	return (_maps.get(current_map, {}).get("unsteady", {}) as Dictionary).has(cell)
+
+
+## GH#380 [Even Footing]: the passive read, in the [Wild Affinity] shape
+## (`known_skills().has(id)` inside the function that needs it -- no cast, no
+## stored state, no save key). Gated behind the cheap `_is_unsteady` dictionary
+## hit FIRST so the hot blocking path never pays for a `known_skills()` rebuild
+## on ordinary walls: only a cell a map explicitly declared unsteady can reach
+## the skill read. The skill id is pinned here; L2 authors the row and grants.
+func _even_footing_crosses(cell: Vector2i) -> bool:
+	return _is_unsteady(cell) and known_skills().has("even_footing")
+
+
+## GH#380 S0.1 (phase-0 review). An `unsteady` cell is a HAZARD, not a wall --
+## its whole point is that the right Skill crosses it. Blocked-with-no-tell made
+## it read byte-identically to masonry, which is this wave's own thesis failure
+## mode: an input the world takes and does not answer. So a refusal speaks once
+## per waking per cell -- teaches on the first bump, never nags on the second,
+## re-teaches after a sleep. Copy is map-authored (`unsteady_toast`) so a scree
+## slope and a rotten floor can read differently; the fallback is deliberately
+## about FOOTING, never about which Skill opens it (naming the Skill would be
+## a hint system, and the player has not necessarily heard of it yet).
+func _hint_unsteady(cell: Vector2i) -> void:
+	if not _is_unsteady(cell) or known_skills().has("even_footing"):
+		return
+	var hint_key := "unsteady_hint:%s:%d,%d" % [current_map, cell.x, cell.y]
+	if entity_first_use.has(hint_key):
+		return
+	entity_first_use[hint_key] = true
+	var line := String((_maps.get(current_map, {}) as Dictionary).get("unsteady_toast", ""))
+	if line == "":
+		line = "The ground shifts away under your boot. Crossing that needs surer feet than you have."
+	_emit(WIEvents.TOAST, {"text": line})
+
+
 ## #348 slice 1: the CELL-placement half of the property table's target
 ## vocabulary (the entity half is read straight off the faced entity's flags).
-## `freezable` is the one shipped cell class; a new one is a new key here AND
-## in the map loader above (which also decides whether it blocks).
+## A new cell class is a new key here AND in the map loader above (which also
+## decides whether it blocks). `unsteady` (GH#380) is published here for
+## symmetry and for any future property row; no shipped interactions.json row
+## names it today, so it is inert in `WIFieldSkills._resolve_property`.
 func _cell_properties(cell: Vector2i) -> Dictionary:
-	return {"freezable": _is_freezable(cell)}
+	return {"freezable": _is_freezable(cell), "unsteady": _is_unsteady(cell)}
 
 
 func _is_frozen(cell: Vector2i) -> bool:
@@ -333,6 +409,7 @@ func move_player(dir: Vector2i) -> bool:
 		return false
 	if is_cell_blocked(target):
 		_emit(WIEvents.PLAYER_BLOCKED, {"cell": [target.x, target.y], "facing": [player_facing.x, player_facing.y]})
+		_hint_unsteady(target)
 		return false
 	player_cell = target
 	_emit(WIEvents.PLAYER_MOVED, {"cell": [target.x, target.y]})
@@ -354,6 +431,57 @@ static func _nearest_cardinal(dir: Vector2i) -> Vector2i:
 	return dir
 
 
+## GH#374, the DEFEAT GRACE. Continue-after-defeat reloads `auto_pre_combat`,
+## and that slot is BY CONSTRUCTION a cell inside the encounter's own trigger
+## radius (game.gd writes it at COMBAT_STARTED, i.e. after `move_player` already
+## walked the player in) -- so before this, the very next step re-fired the fight
+## you just lost, forever. Arming a grace suppresses that ONE encounter's
+## proximity trigger until the player leaves its radius.
+##
+## PURITY: called from the Game autoload's load path, never from inside the sim
+## -- WIGame holds no autoload reference and no combat-screen reference, and the
+## grace is a consequence of RELOADING, not of anything the sim did.
+##
+## SLEEP IS THE OTHER EXIT, AND IT IS FREE -- THIS IS A CONTRACT, NOT AN
+## ACCIDENT: the entry deliberately carries NO `sleeps` key, so `sleep()`'s
+## decrement reads `int(ward.get("sleeps", 1)) - 1` == 0 and erases it at the
+## FIRST sleep. Do not add a `sleeps` key here, and do not change that default
+## without coming back to this comment: together they are the guarantee that a
+## grace can never outlive one waking.
+##
+## Interact-triggered encounters get an entry too, and it is inert for them by
+## construction: `interact` routes straight to `start_combat`, which never reads
+## `warded_encounters` (only `_check_trigger_radius` does). Deliberately
+## re-engaging a fight you lost stays possible; blundering back into it does not.
+##
+## A REAL CHARM ALREADY STANDING IS NEVER OVERWRITTEN (reviewer lens A). The
+## player can ward an encounter and then walk up and interact with it anyway --
+## `start_combat` does not read `warded_encounters` -- so losing that fight used
+## to replace a paid-for {sleeps, map, cell} entry with this one, silently
+## destroying the charm (its marker with it) and, for a two-sleep [Greater
+## Hearthward], a whole extra night of it. There is nothing to arm in that case:
+## `_check_trigger_radius` short-circuits on ANY entry, so the real charm already
+## delivers GH#374's guarantee, and it expires on its own count.
+func arm_exit_grace(encounter_id: String) -> void:
+	if encounter_id == "":
+		return
+	if warded_encounters.has(encounter_id) and not _has_exit_grace(encounter_id):
+		return
+	warded_encounters[encounter_id] = {"until_exit": true, "map": current_map}
+
+
+## True only for GH#374's invisible defeat grace, never for a player-cast charm.
+func _has_exit_grace(encounter_id: String) -> bool:
+	var entry: Variant = warded_encounters.get(encounter_id)
+	return entry is Dictionary and bool((entry as Dictionary).get("until_exit", false))
+
+
+## The encounter the live (or just-finished-but-unresolved) fight belongs to.
+## Read by combat_screen.gd's defeat branch BEFORE `resolve_combat()` clears it.
+func pending_encounter() -> String:
+	return _pending_encounter
+
+
 func _check_trigger_radius(skipped_ids: Array[String] = []) -> void:
 	if combat != null or dialogue != null:
 		return
@@ -362,14 +490,34 @@ func _check_trigger_radius(skipped_ids: Array[String] = []) -> void:
 			continue
 		if not ent.has("trigger_radius"):
 			continue
+		# GH#392: presence gates the AMBUSH too. Until this line existed,
+		# _check_trigger_radius consulted only encounter_when, so a
+		# present_when'd encounter would have been invisible and unblocked yet
+		# still sprung -- which is exactly why test_content FORBADE present_when
+		# on a trigger_radius encounter. `is_cell_blocked` already respects
+		# entity_present, so with this the two halves finally agree and an
+		# encounter can be absent-until-armed instead of standing around inert.
+		if not entity_present(ent):
+			continue
 		if not _encounter_gate_met(ent):
 			continue
 		var ent_id := String(ent[WIKeys.ID])
-		if dormant_encounters.has(ent_id) or skipped_ids.has(ent_id) or warded_encounters.has(ent_id):
+		if dormant_encounters.has(ent_id) or skipped_ids.has(ent_id):
 			continue
 		var ent_cell: Vector2i = ent[WIKeys.CELL]
 		var dist := maxi(absi(player_cell.x - ent_cell.x), absi(player_cell.y - ent_cell.y))
 		if dist > int(ent["trigger_radius"]) - _wild_affinity_reduction(ent):
+			# GH#374: THE EXIT. Leaving the radius is what ends the defeat grace
+			# -- the player has walked away from the fight they lost, so the next
+			# approach is a fresh decision and springs the ambush again. Real
+			# charms are untouched here; they end at sleep, on their own count.
+			# The ward test moved BELOW this branch (it used to short-circuit
+			# above the distance math) so an out-of-radius step can reach it; the
+			# math is pure, so a warded encounter's event stream is unchanged.
+			if _has_exit_grace(ent_id):
+				warded_encounters.erase(ent_id)
+			continue
+		if warded_encounters.has(ent_id):
 			continue
 		if sneaking:
 			# Credit one danger per entity when its live phase/range gate is met.
@@ -455,6 +603,16 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	var skill_uses: Dictionary = target.get("skill_uses", {}) as Dictionary
 	if skill_uses.has(skill_id):
 		skill_arm = skill_uses[skill_id]
+	elif String(target.get("requires_skill", "")) == skill_id and target.has("on_skill_use"):
+		skill_arm = target["on_skill_use"]
+	elif bool(target.get("cookware", false)) and (skills.get(skill_id, {}) as Dictionary).has("cookware_use"):
+		# GH#391: A POT IS A POT. Any `cookware` prop answers any cooking-family
+		# Skill, and the SKILL carries what it makes -- so a new pot is ONE TAG,
+		# not an authored arm per Skill, and a cooking build is not sent across
+		# regions to find the one station that accepts its verb. The prop's own
+		# authored arm still wins above (every bespoke line is untouched); this
+		# only fills the cells nobody wrote.
+		skill_arm = (skills[skill_id] as Dictionary)["cookware_use"]
 	elif target.has("on_skill_use"):
 		skill_arm = target["on_skill_use"]
 	if target.is_empty() or skill_arm == null:
@@ -472,7 +630,14 @@ func use_skill(skill_id: String, target_id: String) -> Dictionary:
 	# byte-identical. SCOPE: this String|Array contract covers the BENCH seam only;
 	# the dialogue-effect remove_item path (see _apply_dialogue_effects) remains
 	# String-only by design.
-	var req_items: Array = _as_item_list(target.get("requires_item", ""))
+	# GH#391: the ingredient gate belongs to the ARM, not the pot. A witch's
+	# cauldron demanding yarrow before it will let you cook plain stew is the
+	# exact friction this issue names -- so an arm may carry its own
+	# `requires_item` and, when it does, it OVERRIDES the prop's. Props that
+	# author no arm-level gate keep the prop-level one unchanged, so every
+	# shipped bench recipe is byte-identical.
+	var gate_source: Dictionary = skill_arm as Dictionary
+	var req_items: Array = _as_item_list(gate_source["requires_item"]) if gate_source.has("requires_item") else _as_item_list(target.get("requires_item", ""))
 	for req_item: String in req_items:
 		if not inventory.has(req_item):
 			var item_hint := String(target.get("item_hint_toast", "Bare hands won't do it. Something in your pack might."))
@@ -699,7 +864,11 @@ func _ward_field(skill_id: String, skill: Dictionary, faced_cell: Vector2i) -> D
 		if dormant_encounters.has(ent_id) or not _encounter_gate_met(ent):
 			continue
 		var ent_cell: Vector2i = ent[WIKeys.CELL]
-		if warded_encounters.has(ent_id):
+		# GH#374: the defeat grace is INVISIBLE to the charm. "The charm already
+		# holds here." over a grace the player never cast is a lie, and refusing
+		# the cast would eat a real Skill use for nothing -- so a graced
+		# encounter stays a candidate and the real ward simply overwrites it.
+		if warded_encounters.has(ent_id) and not _has_exit_grace(ent_id):
 			if _cell_in_radius(faced_cell, ent_cell, int(ent["trigger_radius"])):
 				already_warded = true
 			continue
@@ -2284,7 +2453,13 @@ func resonance_used() -> int:
 	return _equipped_resonance_total()
 
 
-const _CAPACITY_REFUSAL_TOAST := "It buzzes once against the others, like a wasp against glass, and will not settle."
+## GH#379: Resonance is shipped, save-persisted, sleep-grown and printed on the
+## inventory header ("Resonance: 1/2") -- and its two LIVE moments never said the
+## word, so the refusal read as an unexplained mood. The sensory line is the
+## ratified 2026-07-07 copy and stays verbatim; the naming sentence and the
+## remedy are appended after it. The other live moment is the growth beat's lore
+## toast in sleep_beat.gd.
+const _CAPACITY_REFUSAL_TOAST := "It buzzes once against the others, like a wasp against glass, and will not settle. You are wearing all the Resonance you can hold. Something has to come off first."
 const _ACCESSORY_SLOTS_FULL_TOAST := "There's nowhere left on you for it to rest. It waits in your palm, patient as stone."
 
 

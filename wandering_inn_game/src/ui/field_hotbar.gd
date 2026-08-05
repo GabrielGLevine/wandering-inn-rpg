@@ -29,6 +29,12 @@ const READOUT_SCROLLBAR_RESERVE := 14.0
 const CONTROLS_BOTTOM_MARGIN := 10.0
 const READOUT_GAP := 8.0
 const READOUT_SELECTION_CLEARANCE := 34.0
+## Finding 19: minimum gap between the input-hint ribbon's live right edge
+## and the slot group. The band itself comes from MESSAGE_LAYER_SCRIPT's
+## static hint_band_width -- a constant here broke at 130% text scale.
+const HINT_BAND_GAP := 12.0
+## Fallback when no hint has rendered yet (kb label ~330px + 8px inset).
+const HINT_BAND_FALLBACK := 340.0
 ## THE TOAST BAND. The toast strip is bottom-RIGHT anchored and draws on a
 ## higher CanvasLayer (12) than this one, so where the two rects met, the toast
 ## simply painted over the legend -- slot lines stopped dead at the toast
@@ -44,6 +50,7 @@ const READOUT_SELECTION_CLEARANCE := 34.0
 const TOAST_BAND_RESERVE := \
 	-MESSAGE_LAYER_SCRIPT.TOAST_BOTTOM_DEFAULT + MESSAGE_LAYER_SCRIPT.TOAST_PANEL_BASE_SIZE.y
 
+
 var _hotbar: WIHotbar
 var _root: Control
 var _readout_panel: PanelContainer
@@ -58,6 +65,12 @@ var _selection_label: Label
 ## `_position_selection_label`; visibility mirrors the label's own in
 ## `_update_selection_label`.
 var _selection_label_backing: Control
+## Left edge `_layout_controls` last PLACED the slot row at. Reported instead of
+## `_hotbar.global_position.x` because a Control's live rect is a frame behind
+## the anchors/offsets just written to it -- reading it back gave a payload that
+## described the PREVIOUS layout, which is worse than useless in a regression
+## guard for a layout bug.
+var _bar_left := 0.0
 var _field_skills: Array = []
 var _last_slots: Array = []
 var _readout_lines: Array = []
@@ -255,10 +268,16 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 		WIEvents.DIALOGUE_ENDED:
 			_dialogue_open = false
 			_apply_visibility()
-		WIEvents.UI_PAUSE_SHOWN, WIEvents.UI_JOURNAL_SHOWN, WIEvents.UI_INVENTORY_SHOWN:
+		# The consolidation prompt joins the modal set (v0.19 integration). It is
+		# centred, and the expanded readout is MOUSE_FILTER_STOP and grows one
+		# line per field slot -- so from FIVE slots on it covered the prompt's
+		# rows and ate the click, leaving Consolidate / keep-them-apart
+		# mouse-dead (keyboard still worked). v0.19's own warrior grants are what
+		# push a martial build past five, so this wave introduced the reach.
+		WIEvents.UI_PAUSE_SHOWN, WIEvents.UI_JOURNAL_SHOWN, WIEvents.UI_INVENTORY_SHOWN, WIEvents.UI_CONSOLIDATION_PROMPT_RENDERED:
 			_panel_open = true
 			_apply_visibility()
-		WIEvents.UI_PAUSE_HIDDEN, WIEvents.UI_JOURNAL_HIDDEN, WIEvents.UI_INVENTORY_HIDDEN:
+		WIEvents.UI_PAUSE_HIDDEN, WIEvents.UI_JOURNAL_HIDDEN, WIEvents.UI_INVENTORY_HIDDEN, WIEvents.UI_CONSOLIDATION_PROMPT_HIDDEN:
 			_panel_open = false
 			_apply_visibility()
 		WIEvents.UI_SLEEP_VEIL_FINISHED:
@@ -269,7 +288,15 @@ func _on_domain_event(type: String, _payload: Dictionary) -> void:
 
 
 func _apply_visibility() -> void:
-	visible = not (_combat_hidden or _dialogue_open or _panel_open)
+	visible = not (_combat_hidden or _dialogue_open or _panel_open or _consolidation_pending())
+
+
+## Derived from sim state, NOT from the event flag, because ordering defeats the
+## flag: a save loaded mid-offer reconstructs the prompt in `_ready()` and only
+## then emits WORLD_READY, whose arm resets `_panel_open` to false and would put
+## the readout back over the prompt.
+func _consolidation_pending() -> bool:
+	return Game.sim != null and not (Game.sim.pending_consolidation as Dictionary).is_empty()
 
 
 func _render(reason: String = "skills") -> void:
@@ -309,8 +336,12 @@ func _render(reason: String = "skills") -> void:
 	_hotbar.render(slots, -1)
 	_update_readout()
 	_update_toggle_label()
-	_layout_controls()
-	_emit_rendered(reason)
+	# The payload carries the cluster's rect, so it must not be sent from a
+	# frame on which the rect was not computable.
+	if _layout_controls():
+		_emit_rendered(reason)
+	else:
+		call_deferred("_emit_rendered", reason)
 
 
 func _set_expanded(value: bool, persist: bool, reason: String) -> void:
@@ -319,8 +350,10 @@ func _set_expanded(value: bool, persist: bool, reason: String) -> void:
 	_expanded = value
 	_update_readout()
 	_update_toggle_label()
-	_layout_controls()
-	_emit_rendered(reason)
+	if _layout_controls():
+		_emit_rendered(reason)
+	else:
+		call_deferred("_emit_rendered", reason)
 
 
 func _update_readout() -> void:
@@ -350,31 +383,72 @@ func _emit_rendered(reason: String) -> void:
 		"slot_numbers": _slot_numbers.duplicate(),
 		"fallback_labels": _fallback_labels.duplicate(),
 		"readout_lines": _readout_lines.duplicate(),
+		# GH#386 P3: the bottom cluster's own geometry, so "the HUD jumped left
+		# after a Settings visit" is a NUMBER a headless run can compare instead
+		# of two screenshots someone has to remember to take.
+		"bar_left": int(round(_bar_left)),
+		"group_width": int(round(_group_width())),
 	})
 
 
-func _layout_controls() -> void:
+## Width of the bottom cluster (slot row + gap + Details toggle). One
+## derivation, read by `_layout_controls` and reported in the rendered payload,
+## so the number the log carries is the number the layout used.
+func _group_width() -> float:
+	if _hotbar == null:
+		return 0.0
+	var w := _hotbar.rendered_width()
+	if _toggle != null and _toggle.visible:
+		w += TOGGLE_GAP + TOGGLE_SIZE.x
+	return w
+
+
+## Returns FALSE when the layout could not be computed yet, so a caller that was
+## about to report the cluster's geometry can defer instead of reporting a rect
+## that does not exist.
+func _layout_controls() -> bool:
 	if _hotbar == null or _root == null:
-		return
+		return false
 	var viewport := get_viewport()
 	# TRAP: swapped-out layers can receive bus events before queued deletion.
 	if viewport == null:
-		return
+		return false
 	var viewport_size := viewport.get_visible_rect().size
+	# TRAP (GH#386 P3, the other half of the "bottom HUD jumps" finding): a UI
+	# layer can be laid out on the same frame it is added, BEFORE the viewport
+	# reports a real rect. Centring against a zero-width rect put the whole
+	# cluster 26px off the left screen edge for a frame or two after every world
+	# rebuild -- and a rebuild is what a Save/Load, a defeat and a New Game all
+	# are. Defer rather than guess at a number.
+	if viewport_size.x <= 1.0 or viewport_size.y <= 1.0:
+		call_deferred("_layout_controls")
+		return false
 	var safe := _current_safe_rect()
-	var group_width := _hotbar.size.x
-	if _toggle.visible:
-		group_width += TOGGLE_GAP + TOGGLE_SIZE.x
+	var group_width := _group_width()
 	var group_left := safe.position.x + (safe.size.x - group_width) * 0.5
-	var hotbar_center := group_left + _hotbar.size.x * 0.5
+	# Finding 19 (playtest): at 9 slots the centred group ran under the
+	# bottom-left input-hint ribbon. Clamp the group's left edge clear of the
+	# ribbon's LIVE band (device labels and text scale both change its width;
+	# the first fix used a constant and a larger text scale walked the ribbon
+	# over slot 1). Centring is cosmetic, the ribbon is information.
+	var hint_band: float = MESSAGE_LAYER_SCRIPT.hint_band_width
+	if hint_band <= 0.0:
+		hint_band = HINT_BAND_FALLBACK
+	group_left = maxf(group_left, safe.position.x + hint_band + HINT_BAND_GAP)
+	_bar_left = group_left
+	# `rendered_width()`, NEVER `_hotbar.size.x`: the bar's size IS the offsets
+	# set below, so reading it here made the layout a feedback loop -- see
+	# hotbar.gd's `_rendered_width` doc for the drift it produced.
+	var bar_width := _hotbar.rendered_width()
+	var hotbar_center := group_left + bar_width * 0.5
 	var center_shift := hotbar_center - viewport_size.x * 0.5
 	var safe_bottom := maxf(0.0, viewport_size.y - safe.end.y)
-	_hotbar.offset_left = -_hotbar.size.x * 0.5 + center_shift
-	_hotbar.offset_right = _hotbar.size.x * 0.5 + center_shift
-	_hotbar.offset_top = -_hotbar.size.y - CONTROLS_BOTTOM_MARGIN - safe_bottom
+	_hotbar.offset_left = -bar_width * 0.5 + center_shift
+	_hotbar.offset_right = bar_width * 0.5 + center_shift
+	_hotbar.offset_top = -WIHotbar.SLOT_SIZE.y - CONTROLS_BOTTOM_MARGIN - safe_bottom
 	_hotbar.offset_bottom = -CONTROLS_BOTTOM_MARGIN - safe_bottom
 	if _toggle.visible:
-		_toggle.position = Vector2(group_left + _hotbar.size.x + TOGGLE_GAP, safe.end.y - CONTROLS_BOTTOM_MARGIN - TOGGLE_SIZE.y)
+		_toggle.position = Vector2(group_left + bar_width + TOGGLE_GAP, safe.end.y - CONTROLS_BOTTOM_MARGIN - TOGGLE_SIZE.y)
 	var style := _readout_panel.get_theme_stylebox("panel")
 	var frame_size := WIFieldHotbarLayout.style_frame_size(style)
 	var panel_width := minf(READOUT_MAX_WIDTH, maxf(1.0, safe.size.x - WIFieldHotbarLayout.OUTER_MARGIN * 2.0))
@@ -390,6 +464,7 @@ func _layout_controls() -> void:
 	var content_rect := WIFieldHotbarLayout.style_content_rect(Rect2(Vector2.ZERO, rect.size), style)
 	_readout_label.custom_minimum_size = Vector2(maxf(1.0, content_rect.size.x - READOUT_SCROLLBAR_RESERVE), content_height)
 	_readout_label.size = _readout_label.custom_minimum_size
+	return true
 
 
 func _current_safe_rect() -> Rect2:
@@ -461,3 +536,12 @@ func _collect_field_skills() -> Array:
 	# inside `_render()`'s per-skill loop) to keep both in lockstep -- a
 	# skipped id is skipped everywhere, not just in the visual row.
 	return loadout.filter(func(id: Variant) -> bool: return Game.sim.skills.has(String(id)))
+
+
+## The three phase marks, drawn. SILHOUETTE is the whole disambiguation budget
+## here -- same ink, same plate, three different outlines -- because a shade
+## variant never reads as a separate thing (2026-08-02 ruling) and this glyph is
+## read at a glance in the corner of the eye, not studied.
+##   sun      full disc + eight rays
+##   half_sun half disc sitting ON a horizon rule that overhangs it
+##   crescent disc with a second disc bitten out of its upper right

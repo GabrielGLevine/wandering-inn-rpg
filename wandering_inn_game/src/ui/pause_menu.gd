@@ -14,6 +14,31 @@ const SLOT_PICKER_PANEL_SIZE := Vector2(460.0, 250.0)
 const SLOT_ROW_CHAR_BUDGET := 50
 const SLOT_PICKER_BACK := "Back"
 
+## GH#377. All three roots below are PRESET_CENTER fixed-size panels, so before
+## this the paused world drew at full strength around and behind them -- combat
+## HP readouts and the feed sat a few pixels from "Abandon to Last Save" and
+## read as part of the menu. ONE full-rect dimmer covers all three (a panel is
+## never the thing that dims; the layer is), and it is a plain hide/show, no
+## tween: pause is an interruption, not a mood beat.
+##
+## 0.55 is INVENTED, not matched -- there was no partial-alpha dimmer anywhere
+## in the codebase to inherit from. The nearest idiom is sleep_veil.gd's
+## full-rect black ColorRect, and what this borrows from it is the click-leak
+## contract, not the alpha: MOUSE_FILTER_STOP so a click on the dimmed world
+## can never fall through to the board/field underneath while a modal is up.
+## The windowed combat_abandon shot is the arbiter for the number.
+## 0.70 (was the invented 0.55): the playtest read combat HP text through the
+## dim as "showing through the menu" -- white text at 45% is still legible, at
+## 30% it recedes. User report outranks the earlier +-0.1 fence.
+const SCRIM_COLOR := Color(0.0, 0.0, 0.0, 0.70)
+## Playtest fix wave (finding 6): this CanvasLayer shipped at the default
+## layer 1, so combat chrome (turn banner, per-combatant HP text) drew ABOVE
+## both the scrim and the menu panels -- enemy health read at full strength
+## through "Abandon to Last Save". Pause is a modal interruption: it sits
+## above toasts (12) and below the sleep veil (30) per message_layer.gd's
+## layer map.
+const PAUSE_CANVAS_LAYER := 20
+
 var open := false
 
 var journal_ref: Node = null
@@ -48,12 +73,29 @@ var _slot_root: Control
 var _slot_title_label: Label
 var _slot_labels: Array[Label] = []
 
+var _scrim: ColorRect
+
 
 func _active_rows() -> Array:
 	return COMBAT_ROWS if Game.sim.combat != null else ROWS
 
 
 func _ready() -> void:
+	layer = PAUSE_CANVAS_LAYER
+	# FIRST child of this CanvasLayer, before any panel: same-layer siblings
+	# draw in tree order, so being first is what puts the dimmer BEHIND all
+	# three roots and in front of everything on earlier layers (the combat
+	# screen and the world viewport both qualify). Mouse picking runs the
+	# reverse of that order, so the panels still take their own clicks and the
+	# scrim only catches what misses them.
+	_scrim = ColorRect.new()
+	_scrim.name = "PauseScrim"
+	_scrim.color = SCRIM_COLOR
+	UIChrome.full_rect(_scrim)
+	_scrim.mouse_filter = Control.MOUSE_FILTER_STOP
+	_scrim.hide()
+	add_child(_scrim)
+
 	_root = Control.new()
 	UIChrome.apply_theme(_root)
 	_root.set_anchors_preset(Control.PRESET_CENTER)
@@ -72,7 +114,7 @@ func _ready() -> void:
 	menu_stack.add_theme_constant_override("separation", 6)
 	menu_margin.add_child(menu_stack)
 	for i in ROWS.size():
-		var row := UIChrome.make_label("", "Menu")
+		var row := UIChrome.make_label("", "MenuInk")
 		row.custom_minimum_size = Vector2(220.0, 36.0)
 		menu_stack.add_child(row)
 		_row_labels.append(row)
@@ -101,7 +143,7 @@ func _ready() -> void:
 	_confirm_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	confirm_stack.add_child(_confirm_label)
 	for i in CONFIRM_ROWS.size():
-		var row := UIChrome.make_label("", "Menu")
+		var row := UIChrome.make_label("", "MenuInk")
 		confirm_stack.add_child(row)
 		_confirm_option_labels.append(row)
 	confirm_stack.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -124,18 +166,36 @@ func _ready() -> void:
 	var slot_stack := VBoxContainer.new()
 	slot_stack.add_theme_constant_override("separation", 6)
 	slot_margin.add_child(slot_stack)
-	_slot_title_label = UIChrome.make_label("", "Menu")
+	_slot_title_label = UIChrome.make_label("", "MenuInk")
 	slot_stack.add_child(_slot_title_label)
 	var slot_spacer := Control.new()
 	slot_spacer.custom_minimum_size = Vector2(0.0, 4.0)
 	slot_stack.add_child(slot_spacer)
 	for i in _slot_rows().size():
-		var row := UIChrome.make_label("", "Menu")
+		var row := UIChrome.make_label("", "MenuInk")
 		row.custom_minimum_size = Vector2(412.0, 32.0)
 		slot_stack.add_child(row)
 		_slot_labels.append(row)
 	slot_stack.mouse_filter = Control.MOUSE_FILTER_STOP
 	slot_stack.gui_input.connect(_on_slot_gui_input)
+
+	for root: Control in [_root, _confirm_root, _slot_root]:
+		root.visibility_changed.connect(_sync_scrim)
+	_sync_scrim()
+
+
+## GH#377: the scrim's entire lifecycle, derived rather than called. Driving it
+## off the three roots' own `visibility_changed` signals (instead of a line at
+## each of the eight show/hide sites) means a future fourth show site cannot
+## forget it -- and it reads the roots' OWN `visible`, not
+## `is_visible_in_tree()`, so hiding the whole layer never feeds back into it.
+## "Settings" hides `_root` without showing a sibling, so the scrim correctly
+## goes with it: the settings panel is its own surface and owns its own
+## backdrop question.
+func _sync_scrim() -> void:
+	if _scrim == null:
+		return
+	_scrim.visible = _root.visible or _confirm_root.visible or _slot_root.visible
 
 
 func _unhandled_input(event: InputEvent) -> void:

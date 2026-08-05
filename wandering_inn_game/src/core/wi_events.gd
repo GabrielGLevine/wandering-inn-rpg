@@ -172,3 +172,12 @@ const UI_HINTS_REPLAYED := &"ui_hints_replayed"
 const UI_HELP_RENDERED := &"ui_help_rendered"
 const UI_CREDITS_RENDERED := &"ui_credits_rendered"
 const UI_CREDITS_LINK_OPENED := &"ui_credits_link_opened"
+
+## The faced-interactable bracket's state CHANGED (shown, hidden, or moved to a
+## different cell/entity). Emitted only on a real transition, never per
+## reconcile call -- the reconciler runs on ten event types and most of them
+## leave the answer identical. `{showing, cell:[x,y], entity}`; `cell` is the
+## faced cell even while hidden, `entity` is "" when nothing is there. The
+## bracket itself is pixels a headless log cannot see; this is what makes it
+## assertable at all.
+const UI_AFFORDANCE_RENDERED := &"ui_affordance_rendered"

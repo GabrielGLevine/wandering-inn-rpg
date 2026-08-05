@@ -532,11 +532,48 @@ func play_defeat() -> void:
 	_run_defeat.call_deferred()
 
 
+## GH#372. Line 3 used to tell every player, at every point in the story, to
+## "step more carefully" -- advice that is useless to someone who has not yet
+## learned there IS a spear lesson on the road, and patronising to someone who
+## has cleared the warren. Two variants replace it at the ONE authored beat
+## where losing is close to expected: the floodplains ambush, before the
+## tutorial spar and before the first sleep.
+##
+## SCOPE IS map + counters, deliberately NOT a per-encounter copy table: one
+## beat does not earn a data schema, and the moment a second defeat beat wants
+## its own line is the moment to data-drive this. `slept` (not `times_slept`)
+## is the gate-visible counter, per the GH#130 bed-nudge precedent.
+##
+## Lines 1 and 2 never vary. Line 2 -- "the fight undone" -- is literally true
+## since GH#374's ward grace landed: the reload rewinds to the pre-fight cell
+## AND the encounter holds its fire until you walk away from it.
+const DEFEAT_VARIANT_MAP := "floodplains"
+const DEFEAT_NUDGE_LINES := {
+	"pre_spar": "A Drake with a spear guards this road, bored enough to teach. Ask him to show you how to hold one.",
+	"pre_sleep": "You have not slept once under this sky. The inn keeps a bed upstairs, and mornings here are kinder than the nights.",
+	"default": "Try again, or step more carefully.",
+}
+
+
+## Which closer this defeat earns. Composed at render time off live sim state
+## -- the sim is ALREADY the reloaded pre-combat snapshot by the time
+## `play_defeat()` runs (main.gd swaps the world first), so these counters read
+## the state the player wakes into, which is the state the line describes.
+func _defeat_variant() -> String:
+	if Game.sim == null or String(Game.sim.current_map) != DEFEAT_VARIANT_MAP:
+		return "default"
+	if Game.sim.accomplishment_count("sparred_with_relc") == 0:
+		return "pre_spar"
+	if Game.sim.accomplishment_count("slept") == 0:
+		return "pre_sleep"
+	return "default"
+
+
 func _defeat_lines() -> Array[String]:
 	return [
 		"[Defeat.]",
 		"You wake at %s, the fight undone." % _map_display_name(String(Game.sim.current_map)),
-		"Try again, or step more carefully.",
+		String(DEFEAT_NUDGE_LINES[_defeat_variant()]),
 	]
 
 
@@ -603,8 +640,15 @@ func _wait_for_defeat_choice() -> bool:
 	return _defeat_choice_result
 
 
+## GH#372, the QA-first half: `variant` joins the payload so authored copy that
+## only ever appears under a gate is still structurally pinnable. Additive key
+## -- every shipped `payload_contains` subset match survives by construction --
+## and it is derived, never stored, so it can never disagree with the line the
+## player just read (both call sites compose from `_defeat_variant()`).
 func _emit_defeat_rendered(count: int) -> void:
-	ObservableBus.emit_domain_event(WIEvents.UI_DEFEAT_VEIL_RENDERED, {"lines": count, "map": String(Game.sim.current_map)})
+	ObservableBus.emit_domain_event(WIEvents.UI_DEFEAT_VEIL_RENDERED, {
+		"lines": count, "map": String(Game.sim.current_map), "variant": _defeat_variant(),
+	})
 
 
 ## v0.16.1 finding 24: the defeat presentation now OWNS the moment the world's

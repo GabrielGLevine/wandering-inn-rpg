@@ -57,6 +57,13 @@ const VEIL_COPY_TABLES := [
 	"FINALE_CLOSE_LINES", "FINALE_LINK_LINE", "SEAL_TRANSITION_LINE",
 	"WATCH_RUNNER_VEIL_LINE",
 	"_EVOLUTION_RESULT_FLAVOR",
+	# GH#372's defeat closers. `_defeat_lines()` composes line 3 from this table,
+	# and the two gated variants only ever render behind a map+counter gate --
+	# so without a row here they would be the only veil copy in the file that
+	# ships unmeasured, and the next edit to them would be unmeasured too.
+	# Dictionary-shaped exactly like _EVOLUTION_RESULT_FLAVOR: the keys
+	# ("pre_spar"/"pre_sleep"/"default") are filtered by `_looks_like_identifier`.
+	"DEFEAT_NUDGE_LINES",
 ]
 
 
@@ -126,7 +133,7 @@ func _check_drift_tripwires() -> void:
 	var src := FileAccess.get_file_as_string("res://src/ui/dialogue_panel.gd")
 	assert(src.contains("Vector2(720.0, 232.0)"), "dialogue_panel.gd's PANEL_SIZE literal drifted from the mirrored PANEL_SIZE_X/Y (720.0, 232.0) -- update this test's mirrored consts")
 	var settings_src := FileAccess.get_file_as_string("res://src/ui/settings_panel.gd")
-	assert(settings_src.contains("const HELP_PANEL_SIZE := Vector2(620.0, 530.0)"), "settings_panel.gd's HELP_PANEL_SIZE literal drifted from the mirrored HELP_PANEL_WIDTH (620.0) -- update this test's mirrored consts")
+	assert(settings_src.contains("const HELP_PANEL_SIZE := Vector2(620.0, 680.0)"), "settings_panel.gd's HELP_PANEL_SIZE literal drifted from the mirrored HELP_PANEL_WIDTH (620.0) -- update this test's mirrored consts")
 	assert(settings_src.contains("const HELP_TEXT_WIDTH := HELP_PANEL_SIZE.x - 52.0"), "settings_panel.gd's HELP_TEXT_WIDTH derivation drifted from the mirrored HELP_TEXT_WIDTH (HELP_PANEL_WIDTH - 52.0) -- update this test's mirrored const")
 
 
@@ -702,13 +709,44 @@ func _mirrored_requirement_suffix(option_text: String, requires: Dictionary) -> 
 	elif requires.has("gold"):
 		requirement = "costs %d gold" % int(requires["gold"])
 	elif requires.has("item"):
-		requirement = "requires %s" % String(requires["item"]).capitalize()
+		# GH#378 arm 1: the item arm reads the REAL catalog, because the rendered
+		# suffix now composes two authored strings -- items.json's `name` and its
+		# optional `source_hint` -- and a hint is exactly the kind of copy that
+		# quietly runs the row past the panel edge. Option labels carry NO
+		# autowrap (dialogue_panel.gd's `_rebuild_options` builds a plain
+		# UIChrome.make_label), so an overflow CLIPS rather than folding: an
+		# unmeasured hint would silently amputate the very signpost it exists to
+		# give. Measured budget at font_size 14: the longest shipped Serve option
+		# leaves ~190px for the hint body, roughly 21-24 characters.
+		var rec: Dictionary = _item_catalog().get(String(requires["item"]), {})
+		var item_label := String(rec.get("name", String(requires["item"]).capitalize()))
+		var source_hint := String(rec.get("source_hint", ""))
+		requirement = "requires %s" % item_label
+		if source_hint != "":
+			requirement = "requires %s — %s" % [item_label, source_hint]
 	else:
 		return ""  # accomplishment/board_accepted/etc -- hide_when-style gates never render a suffix
 	var core := requirement.trim_prefix("requires ").trim_prefix("costs ")
 	if option_text.contains(core):
 		return ""
 	return "  (%s)" % requirement
+
+
+## data/items.json keyed by id, loaded once. Kept lazy rather than folded into
+## `_init`'s setup so the suite's existing startup order is untouched.
+var _items_by_id: Dictionary = {}
+var _items_loaded := false
+
+
+func _item_catalog() -> Dictionary:
+	if not _items_loaded:
+		_items_loaded = true
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/items.json"))
+		if parsed is Dictionary:
+			for rec: Variant in (parsed as Dictionary).get("items", []):
+				if rec is Dictionary:
+					_items_by_id[String((rec as Dictionary).get("id", ""))] = rec
+	return _items_by_id
 
 
 func _paginate(text: String) -> Array[String]:

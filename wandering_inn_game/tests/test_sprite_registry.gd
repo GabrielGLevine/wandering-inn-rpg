@@ -33,9 +33,37 @@ func _init() -> void:
 	_assert_no_pc_sprites_in_scene()
 	assert(not WISpriteRegistry.has_sprite("missing_sprite"), "registry should reject unknown sprite ids")
 	_assert_biome_tiles_build()
+	_assert_ice_tile_is_bespoke_and_opaque()
 	_assert_missing_sheet_fallback()
 	print("PASS: sprite registry catalog builds SpriteFrames")
 	quit(0)
+
+
+## The frozen-cell overlay tile. CONTRACT: exactly one 16x16 tile at (0,0),
+## fully OPAQUE (a frozen cell must hide the water beneath it, not tint it),
+## and never the placeholder. TRAP: this sheet is authored/owned art, NOT a
+## bundle path -- a public checkout must render real ice, so a fallback here
+## is a red, not a degrade.
+func _assert_ice_tile_is_bespoke_and_opaque() -> void:
+	var path := "res://assets/tiles/ice/ice_floor_tiles.png"
+	assert(FileAccess.file_exists(path), "ice overlay sheet missing: " + path)
+	assert(not WISpriteRegistry.is_fallback_sheet(path), "ice overlay fell back to placeholder: " + path)
+	var ts: TileSet = WISpriteRegistry.tile_set_for(path, 16)
+	assert(ts != null, "ice overlay TileSet failed to build")
+	assert(ts.tile_size == Vector2i(16, 16), "ice overlay tile size must be 16x16")
+	var src := ts.get_source(0) as TileSetAtlasSource
+	assert(src != null, "ice overlay TileSet needs atlas source 0")
+	assert(src.has_tile(Vector2i(0, 0)), "ice overlay needs tile (0,0) -- world.gd paints that coord")
+	var tex: Texture2D = src.texture
+	assert(tex != null, "ice overlay atlas needs a texture")
+	assert(tex.get_width() == 16 and tex.get_height() == 16, "ice overlay must be a single 16x16 tile, got %dx%d" % [tex.get_width(), tex.get_height()])
+	var img: Image = tex.get_image()
+	var transparent := 0
+	for y: int in range(img.get_height()):
+		for x: int in range(img.get_width()):
+			if img.get_pixel(x, y).a < 1.0:
+				transparent += 1
+	assert(transparent == 0, "ice overlay must be fully opaque, %d translucent px" % transparent)
 
 
 func _assert_visual_log_assets_are_real(catalog: Dictionary) -> void:
@@ -165,6 +193,9 @@ func _build_expected_counts() -> Dictionary:
 	counts["warded_seam/idle"] = 1
 	counts["dirty_table/idle"] = 1
 	counts["cauldron/idle"] = 1
+	counts["short_order_range/idle"] = 1
+	counts["witch_kettle_hook/idle"] = 1
+	counts["corusdeer_carcass/idle"] = 1
 	counts["bed/idle"] = 1
 	counts["door/idle"] = 1
 
@@ -188,6 +219,12 @@ func _build_expected_counts() -> Dictionary:
 
 	counts["icon_sneak/idle"] = 1
 	counts["icon_invisibility/idle"] = 1
+
+	# Playtest fix wave (finding 3): the martial slate's icons. data_lint's
+	# check_skill_icons is the gate that keeps a field skill from shipping
+	# icon-less again.
+	for icon_id: String in ["icon_even_footing", "icon_greater_strength", "icon_broader_shoulders", "icon_bar_fighting", "icon_rope_work", "icon_basic_repair"]:
+		counts[icon_id + "/idle"] = 1
 
 	for icon_id: String in ["icon_power_shot", "icon_keen_eye", "icon_quick_nock", "icon_piercing_shot", "icon_spellbound_strike", "icon_sudden_strike"]:
 		counts[icon_id + "/idle"] = 1
@@ -246,8 +283,26 @@ func _build_expected_counts() -> Dictionary:
 	counts["a_hunter/idle"] = 4
 	counts["a_hunter/walk"] = 6
 
+	## #390: wilovan is now a BESPOKE rig, idle only. The walk/slice/cast/hit/
+	## death rows below are the pc_gnoll_m set he used to borrow -- kept as pins
+	## so that generating his combat set later lands on an already-asserted
+	## frame count instead of a fresh guess. Absent animations are never checked
+	## (the loop walks the ENTRY's animations), so these are inert until then.
 	for anim_name in [["idle", 4], ["walk", 6], ["slice", 3], ["cast", 6], ["hit", 6], ["death", 7]]:
 		counts["wilovan/%s" % anim_name[0]] = int(anim_name[1])
+
+	## #390 bespoke rigs (OWNED PixelLab v3, 8-dir generated, 3 facings kept +
+	## side mirrored). IDLE ONLY by design: all four are field-only NPCs, so
+	## board_renderer.play_anim's documented fallback (missing anim -> idle_side)
+	## is never reached for them. Wilovan is the exception and keeps his full set
+	## because combatants.json fields him.
+	for bespoke_rig in ["selys", "krshia", "octavia", "ilvo", "gnoll_ranger"]:
+		counts["%s/idle" % bespoke_rig] = 4
+
+	# Playtest fix wave (findings 2, 4, 15): the corusdeer state sprites (a
+	# tint is not a state) and the legible scree dressing.
+	counts["corusdeer_wounded/idle"] = 1
+	counts["scree_spill/idle"] = 1
 
 	counts["relc/idle"] = 4
 	counts["relc/walk"] = 6

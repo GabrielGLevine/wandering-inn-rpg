@@ -1,1254 +1,1796 @@
 {
-	"skills": [
-		{
-			"id": "basic_cleaning",
-			"display_name": "[Basic Cleaning]",
-			"icon": "icon_basic_cleaning",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Basic Cleaning] — You wipe down the nearest surface out of old habit. It gleams.",
-			"description": "Cleans mundane messes with supernatural ease."
-		},
-		{
-			"id": "basic_swordwork",
-			"display_name": "[Basic Swordwork]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "hit_bonus", "amount": 5 },
-			"description": "Steadier hands with any blade."
-		},
-		{
-			"id": "tough_body",
-			"display_name": "[Tough Body]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "hp_bonus", "amount": 10 },
-			"description": "A frame hardened by work and worse."
-		},
-		{
-			"id": "power_strike",
-			"display_name": "[Power Strike]",
-			"contexts": ["combat"],
-			"ap_cost": 3,
-			"weapon": "sword",
-			"icon": "icon_power_strike",
-			"effect": { "type": "damage_mult", "mult": 2.0 },
-			"cooldown_rounds": 2,
-			"description": "Everything behind one blow."
-		},
-		{
-			"id": "counter_strike",
-			"display_name": "[Counter Strike]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "riposte", "mult": 0.8 },
-			"description": "The next blade that finds you meets an answer."
-		},
-		{
-			"id": "battle_momentum",
-			"display_name": "[Battle Momentum]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "ap_on_kill", "amount": 1 },
-			"description": "A felled foe quickens the blood."
-		},
-		{
-			"_comment": "GH#90 rider: `applies.burning` (2 dmg/round tick, 3 rounds) -- a fire bolt catching cloth/fur alight is the direct fictional read, no reach needed.",
-			"id": "flame_bolt",
-			"display_name": "[Flame Bolt]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"element": "fire",
-			"icon": "icon_flame_bolt",
-			"effect": { "type": "spell_damage", "range": 4, "applies": { "burning": { "tick_damage": 2, "duration_rounds": 3 } } },
-			"description": "A hissing dart of goblin fire."
-		},
-		{
-			"id": "flame_jet",
-			"display_name": "[Flame Jet]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"mp_cost": 4,
-			"element": "fire",
-			"icon": "icon_flame_jet",
-			"effect": { "type": "line_damage", "length": 4 },
-			"description": "A roaring lance of goblin-fire down the line."
-		},
-		{
-			"id": "frost_bolt",
-			"display_name": "[Frost Bolt]",
-			"contexts": ["combat"],
-			"ap_cost": 1,
-			"mp_cost": 2,
-			"element": "ice",
-			"icon": "icon_frost_bolt",
-			"effect": { "type": "spell_damage", "range": 4, "applies": { "slowed": { "pool_penalty": 2 } } },
-			"description": "A dart of biting cold that clings to the legs."
-		},
-		{
-			"id": "mana_shield",
-			"display_name": "[Mana Shield]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "mana_shield" },
-			"description": "Woven mana drinks the blow before flesh does."
-		},
-		{
-			"id": "quick_cast",
-			"display_name": "[Quick Cast]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "quick_cast" },
-			"description": "The first spell leaves the fingers before the thought finishes."
-		},
-		{
-			"_comment": "`toggles_light` puts [Light] on the same footing as the `sneaks` Skills: one flag, one arm, on/off with its own copy on each side. Before v0.16.1 the orb had no off path at all -- a hardcoded id check in field_skills.gd hard-SET the flag, so re-casting while lit did nothing and only sleep() ever cleared it. field_ambient is the ON line, field_ambient_off the OFF line.",
-			"id": "light",
-			"display_name": "[Light]",
-			"icon": "icon_light",
-			"contexts": ["exploration"],
-			"field": true,
-			"toggles_light": true,
-			"field_ambient": "[Light] — A steady white orb rises to follow you, throwing back the dark.",
-			"field_ambient_off": "[Light] — You let the orb thin out. The dark closes back in, patient as ever.",
-			"description": "A mage's first, faithful spell: a small orb of steady white light."
-		},
-		{
-			"id": "quick_movement",
-			"display_name": "[Quick Movement]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "move_pool_bonus", "amount": 1 },
-			"description": "The feet decide before the mind does."
-		},
-		{
-			"id": "second_wind",
-			"display_name": "[Second Wind]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"icon": "icon_second_wind",
-			"effect": { "type": "heal", "amount": 8 },
-			"description": "Breath returns, and the body remembers it can go on."
-		},
-		{
-			"id": "dangersense",
-			"display_name": "[Dangersense]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "dangersense" },
-			"description": "A cold prickle at the neck, a heartbeat before harm."
-		},
-		{
-			"id": "piercing_strikes",
-			"display_name": "[Piercing Strikes]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"weapon": "spear",
-			"icon": "icon_piercing_strikes",
-			"effect": { "type": "damage_mult", "mult": 1.4 },
-			"description": "Thrusts that seek the seams in any guard."
-		},
-		{
-			"id": "quick_slash",
-			"display_name": "[Quick Slash]",
-			"contexts": ["combat"],
-			"ap_cost": 1,
-			"weapon": "sword",
-			"icon": "icon_quick_slash",
-			"effect": { "type": "damage_mult", "mult": 0.7 },
-			"description": "A cut loosed before the guard can rise."
-		},
-		{
-			"id": "flash_cut",
-			"display_name": "[Flash Cut]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"weapon": "sword",
-			"icon": "icon_flash_cut",
-			"effect": { "type": "damage_mult", "mult": 1.4 },
-			"description": "One bright line. The eye catches up too late."
-		},
-		{
-			"id": "devastating_slash",
-			"display_name": "[Devastating Slash]",
-			"contexts": ["combat"],
-			"ap_cost": 3,
-			"weapon": "sword",
-			"icon": "icon_devastating_slash",
-			"effect": { "type": "damage_mult", "mult": 2.6 },
-			"cooldown_rounds": 2,
-			"description": "Mid-swing, the blade bends its path toward whatever is unguarded."
-		},
-		{
-			"id": "triple_thrust",
-			"display_name": "[Triple Thrust]",
-			"contexts": ["combat"],
-			"ap_cost": 3,
-			"weapon": "spear",
-			"icon": "icon_triple_thrust",
-			"effect": { "type": "damage_mult", "mult": 2.0 },
-			"cooldown_rounds": 2,
-			"description": "Three points of pain in a single breath."
-		},
-		{
-			"id": "extended_sweep",
-			"display_name": "[Extended Sweep]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"weapon": "spear",
-			"icon": "icon_extended_sweep",
-			"effect": { "type": "damage_mult", "mult": 1.3 },
-			"description": "A wide, raking arc that finds an opening no straight thrust could."
-		},
-		{
-			"id": "spear_flurry",
-			"display_name": "[Spear Flurry]",
-			"contexts": ["combat"],
-			"ap_cost": 3,
-			"weapon": "spear",
-			"icon": "icon_spear_flurry",
-			"effect": { "type": "damage_mult", "mult": 2.6 },
-			"cooldown_rounds": 2,
-			"description": "For one moment the air is stitched with spearpoints."
-		},
-		{
-			"id": "ice_shard",
-			"display_name": "[Ice Shard]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"mp_cost": 3,
-			"element": "ice",
-			"icon": "icon_ice_shard",
-			"effect": { "type": "spell_damage", "range": 4 },
-			"description": "A fist-sized spike of ice, hurled hard enough to crack shields."
-		},
-		{
-			"_comment": "Canon pass: renamed [Icy Floor] -> [Ice Floor] (id `icy_floor` UNCHANGED -- save-compat).",
-			"id": "icy_floor",
-			"display_name": "[Ice Floor]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"mp_cost": 4,
-			"element": "ice",
-			"icon": "icon_icy_floor",
-			"effect": { "type": "icy_floor", "range": 3, "radius": 1, "duration_rounds": 2, "applies": { "slowed": { "pool_penalty": 2 } } },
-			"description": "The stones glaze over, and footing becomes a rumor."
-		},
-		{
-			"id": "flame_scythe",
-			"display_name": "[Flame Scythe]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"mp_cost": 4,
-			"element": "fire",
-			"icon": "icon_flame_scythe",
-			"effect": { "type": "spell_damage", "range": 1 },
-			"description": "An arm's-length arc of fire, reaped close."
-		},
-		{
-			"id": "flare_burst",
-			"display_name": "[Flare Burst]",
-			"contexts": ["combat"],
-			"ap_cost": 1,
-			"mp_cost": 2,
-			"element": "fire",
-			"icon": "icon_flare_burst",
-			"effect": { "type": "spell_damage", "range": 3 },
-			"description": "A snap of light and heat that leaves spots dancing in the eyes."
-		},
-		{
-			"_comment": "Instant damage only -- no terrain write, no status write, no expiry seam (contrast icy_floor, which glazes+slows for `duration_rounds`).",
-			"id": "flame_pillar",
-			"icon": "icon_flame_pillar",
-			"display_name": "[Flame Pillar]",
-			"contexts": ["combat"],
-			"ap_cost": 3,
-			"mp_cost": 5,
-			"element": "fire",
-			"effect": { "type": "blast_damage", "range": 3, "radius": 1 },
-			"description": "A ring of fire blooms at the target's feet, then erupts into a roaring pillar."
-		},
-		{
-			"id": "keener_edge",
-			"display_name": "[Keener Edge]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"weapon": "sword",
-			"icon": "icon_keener_edge",
-			"effect": { "type": "damage_mult", "mult": 1.6 },
-			"description": "Mana runs down the blade until the edge sings."
-		},
-		{
-			"_comment": "Structurally unreachable by `sim_combat_batch.gd` (spellsword is never assigned in the harness's BUILDS array, same as fire_mage/ice_mage precedent) -- no balance-harness re-run needed.",
-			"id": "spellbound_strike",
-			"display_name": "[Spellbound Strike]",
-			"icon": "icon_spellbound_strike",
-			"contexts": ["combat"],
-			"ap_cost": 3,
-			"mp_cost": 3,
-			"effect": { "type": "damage_mult", "mult": 3.0 },
-			"cooldown_rounds": 2,
-			"description": "Every spell you have ever cast settles into the strike, and the strike remembers all of them at once."
-		},
-		{
-			"id": "lesser_stamina",
-			"display_name": "[Lesser Stamina]",
-			"contexts": ["exploration"],
-			"description": "Chores that would tire another barely slow you."
-		},
-		{
-			"id": "basic_cooking",
-			"display_name": "[Basic Cooking]",
-			"icon": "icon_basic_cooking",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Basic Cooking] — You picture the dish this place is missing. Your hands twitch toward a ladle that isn't there.",
-			"description": "Simple meals come out right, every time."
-		},
-		{
-			"id": "lesser_strength",
-			"display_name": "[Lesser Strength]",
-			"contexts": ["exploration"],
-			"description": "Trays, kegs, and crates feel lighter than they should."
-		},
-		{
-			"_comment": "Canon pass: renamed [Observe] -> [Appraise Foe] (id `observe` UNCHANGED -- save-compat; ids are never player-visible).",
-			"id": "observe",
-			"display_name": "[Appraise Foe]",
-			"icon": "icon_observe",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Appraise Foe] — You take in the empty space around you. Nothing here rewards a closer look.",
-			"description": "A measuring look that reads a room, a person, a problem, and files it away for later."
-		},
-		{
-			"id": "battlefield_awareness",
-			"display_name": "[Battlefield Awareness]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "move_pool_bonus", "amount": 1 },
-			"description": "The whole field resolves into a map. You always know the one step that matters."
-		},
-		{
-			"id": "soothe_clientele",
-			"display_name": "[Soothe Clientele]",
-			"icon": "icon_soothe_clientele",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Soothe Clientele] — You offer the empty room a calming word. Only the dust settles.",
-			"description": "A word and a refilled glass, and the room's troubles ease. Patrons forget whatever was gnawing at them."
-		},
-		{
-			"id": "unerring_aim",
-			"display_name": "[Unerring Aim]",
-			"icon": "icon_unerring_aim",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Unerring Aim] — You size up a throw out of habit. Nothing here is worth the toss.",
-			"description": "Whatever you throw finds its mark: a mug slid down the bar, a rag, or a troublemaker's head."
-		},
-		{
-			"id": "sweep_the_tables",
-			"display_name": "[Sweep the Tables]",
-			"icon": "icon_sweep_the_tables",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Sweep the Tables] — You reach to clear the dishes. The tables here are already bare.",
-			"description": "A cluttered table comes clean in a single pass, the dishes spirited back to the kitchen."
-		},
-		{
-			"id": "servers_prescience",
-			"display_name": "[Server's Prescience]",
-			"icon": "icon_servers_prescience",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Server's Prescience] — You listen for what the room needs next. All quiet, for now.",
-			"description": "You know what a guest wants before they raise a hand: the empty cup, the missing fork, the order about to be called."
-		},
-		{
-			"id": "charming_smile",
-			"display_name": "[Charming Smile]",
-			"icon": "icon_charming_smile",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Charming Smile] — You flash a warm, easy smile at no one in particular. A passing sparrow seems charmed, at least.",
-			"description": "A warm, disarming smile that puts people at ease and turns a cold first meeting friendly."
-		},
-		{
-			"id": "calming_touch",
-			"display_name": "[Calming Touch]",
-			"icon": "icon_calming_touch",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"effect": { "type": "spell_damage", "range": 1, "applies": { "slowed": { "pool_penalty": 2 } } },
-			"description": "A steadying word and a calming hand; the fight drains out of a foe, and their guard turns slow and uncertain."
-		},
-		{
-			"_comment": "raskghar_awakened's ONLY skill, so the AI (`_act_ranged`'s spell_id scan) always picks it -- guaranteed real, no dead-code risk, cast almost every turn it's in range.",
-			"id": "raskghar_maul",
-			"display_name": "[Raskghar Maul]",
-			"contexts": ["combat"],
-			"ap_cost": 3,
-			"effect": { "type": "spell_damage", "range": 2, "applies": { "slowed": { "pool_penalty": 2 }, "weakened": { "duration_rounds": 1 } } },
-			"description": "A sweeping, reaching swipe of claw and forearm that batters the legs out from under you and leaves them slow to answer."
-		},
-		{
-			"_comment": "Canon rename: [Frost Touch] -> [Snap Freeze] (id `frost_touch` UNCHANGED -- save-compat).",
-			"id": "frost_touch",
-			"display_name": "[Snap Freeze]",
-			"icon": "icon_frost_bolt",
-			"contexts": ["exploration"],
-			"field": true,
-			"freezes": true,
-			"freeze_toast": "[Snap Freeze] — You lay your palm to the water and cold spiders out from it. In a breath the channel locks to grey-white ice, thick enough to bear your weight. It will not last past your next rest.",
-			"field_ambient": "[Snap Freeze] — Frost blooms from your fingers and hangs glittering in the air. There is nothing here for it to grip.",
-			"description": "A breath of deep cold that skins still water in load-bearing ice."
-		},
-		{
-			"_comment": "Canon rename: [Kindle] -> [Firefly] (id `kindle` UNCHANGED -- save-compat).",
-			"id": "kindle",
-			"display_name": "[Firefly]",
-			"icon": "icon_flame_jet",
-			"contexts": ["exploration"],
-			"field": true,
-			"burns": true,
-			"field_ambient": "[Firefly] — A curl of flame dances up over your knuckles and gutters out. Nothing here will take the fire.",
-			"description": "A conjured flame, hot enough to take dry debris and old timber in moments."
-		},
-		{
-			"_comment": "Canon rename (closes the provisional naming AND the real class grant): [Sneak] -> [Stealth] (id `sneak` UNCHANGED -- save-compat; ids are never player-visible, verified by grep -- no UI surface renders a raw id).",
-			"id": "sneak",
-			"display_name": "[Stealth]",
-			"icon": "icon_sneak",
-			"contexts": ["exploration", "combat"],
-			"field": true,
-			"sneaks": true,
-			"ap_cost": 1,
-			"effect": { "type": "move_pool_bonus", "amount": 2 },
-			"description": "A soft step that slips past watching eyes and clears ground when blades are drawn."
-		},
-		{
-			"_comment": "COEXISTENCE CONTRACT (unchanged): [Stealth] and [Invisibility] both flip the SAME single field `sneaking` bool -- one stance, two keys.",
-			"id": "invisibility",
-			"display_name": "[Invisibility]",
-			"icon": "icon_invisibility",
-			"contexts": ["exploration", "combat"],
-			"field": true,
-			"sneaks": true,
-			"sneak_visual": { "alpha": 0.35, "shimmer": true },
-			"ap_cost": 1,
-			"mp_cost": 3,
-			"effect": { "type": "invisibility", "duration_rounds": 3, "applies": { "invisible": { "untargetable": true } } },
-			"description": "A working that bends the light around you until even a careful eye finds nothing worth watching."
-		},
-		{
-			"_comment": "GH#94 icon drain: icon_power_shot added (code-drawn fletched-arrow glyph, tools/sync_assets.py::_draw_placeholder shape 'arrow_power').",
-			"id": "power_shot",
-			"display_name": "[Power Shot]",
-			"icon": "icon_power_shot",
-			"contexts": ["combat"],
-			"ap_cost": 3,
-			"weapon": "bow",
-			"effect": { "type": "damage_mult", "mult": 2.0 },
-			"cooldown_rounds": 2,
-			"description": "A full draw, held a breath too long, loosed dead center."
-		},
-		{
-			"_comment": "GH#70 [Archer].",
-			"id": "quick_nock",
-			"display_name": "[Quick Nock]",
-			"icon": "icon_quick_nock",
-			"contexts": ["combat"],
-			"ap_cost": 1,
-			"weapon": "bow",
-			"effect": { "type": "damage_mult", "mult": 0.7 },
-			"description": "Nock, draw, loose — before the first arrow lands, the second is already gone."
-		},
-		{
-			"_comment": "Reuses line_damage VERBATIM (flame_jet's own effect type/resolver, WISkillEffects._resolve_line_damage) -- an arrow that overpenetrates instead of a jet of fire, weapon-gated to bow instead of element-gated.",
-			"id": "piercing_shot",
-			"display_name": "[Piercing Shot]",
-			"icon": "icon_piercing_shot",
-			"contexts": ["combat"],
-			"ap_cost": 3,
-			"weapon": "bow",
-			"effect": { "type": "line_damage", "length": 4 },
-			"cooldown_rounds": 2,
-			"description": "One arrow, and everything in its path pays the same price."
-		},
-		{
-			"_comment": "Deliberately NOT the same skill id as `observe` (a distinct grant, not a re-grant of Tactician's [Appraise Foe]) -- no combat effect, exploration-only, contexts/field/field_ambient shape copied from `observe` verbatim.",
-			"id": "keen_eye",
-			"display_name": "[Keen Eye]",
-			"icon": "icon_keen_eye",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Keen Eye] — You read the room the way you'd read a stand of trees for game: what moved, what didn't, what's worth a second look. Nothing here needs tracking.",
-			"description": "A hunter's habit of noticing: the broken twig, the wrong shadow, the one thing that doesn't belong."
-		},
-		{
-			"_comment": "Enemy-only (vault_construct, data/combatants.json) -- no class grants it.",
-			"id": "slam",
-			"display_name": "[Slam]",
-			"contexts": ["combat"],
-			"ap_cost": 4,
-			"windup_cadence": 2,
-			"effect": { "type": "blast_damage", "range": 1, "radius": 1, "windup_rounds": 1, "applies": { "rooted": { "duration_rounds": 1 } } },
-			"description": "A vast fist draws back, and the floor itself seems to brace."
-		},
-		{
-			"_comment": "Id `directed_strike` is PINNED (Lane B builds against it) and unchanged -- only display_name substitutes, the same id-stable/display-swap convention sneak->[Stealth]/observe->[Appraise Foe] already established.",
-			"id": "directed_strike",
-			"icon": "icon_directed_strike",
-			"display_name": "[Chosen Blow]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"effect": { "type": "damage_mult", "mult": 1.6 },
-			"description": "You read the opening before it's there, and the blow lands exactly where it was always going to."
-		},
-		{
-			"id": "flanking_step",
-			"display_name": "[Flanking Step]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "move_pool_bonus", "amount": 1 },
-			"description": "A half-step that puts you exactly where the fight isn't looking."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- no wiki match found; mirrors [Battlefield Awareness]'s own unflagged precedent (Tactician's L1 grant, same idiom).",
-			"id": "read_the_field",
-			"display_name": "[Read the Field]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "hit_bonus", "amount": 10 },
-			"description": "The whole board resolves at once — every gap in a guard, every foot planted wrong."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked, no match.",
-			"id": "measured_words",
-			"icon": "icon_measured_words",
-			"display_name": "[Measured Words]",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Measured Words] — You turn a careful phrase to no one in particular. It lands, as it always does, on empty air.",
-			"description": "Every word chosen and weighed before it leaves the mouth — the kind of care that opens doors a blunt tongue never finds."
-		},
-		{
-			"_comment": "Costs MP unlike second_wind (a genuine resource tax distinguishing the two self/ally heals) and heals less (6 vs second_wind's 8) since it can reach a second body.",
-			"id": "soothing_presence",
-			"icon": "icon_soothing_presence",
-			"display_name": "[Soothing Presence]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"mp_cost": 3,
-			"effect": { "type": "heal", "amount": 6, "ally_target": true },
-			"description": "A calm that isn't performed — it settles over the room, and over a hurting friend, the same way."
-		},
-		{
-			"_comment": "AP-only (no mp_cost, a construct's ward isn't a spell) -- a small mend plus a defensive ward is the direct read for an escort construct covering its hurt sibling/boss.",
-			"id": "guarding_ward",
-			"display_name": "[Guarding Ward]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"effect": { "type": "heal", "amount": 4, "ally_target": true, "applies": { "guarded": { "duration_rounds": 1 } } },
-			"description": "A muttered ward and a steadying hand — the hurt eases, and the next blow lands a little softer."
-		},
-		{
-			"id": "open_doors",
-			"icon": "icon_open_doors",
-			"display_name": "[Open Doors]",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Open Doors] — You offer the easy, practiced warmth that opens rooms. There is no room here to open.",
-			"door_flavor": "[Open Doors] — The door was not locked. It opens anyway, with tremendous ceremony, and somewhere the Skill feels appreciated.",
-			"description": "Doors that would stay shut for anyone else swing open at your approach — goodwill has its own kind of key."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect index), no match for a bare trap-sense Skill.",
-			"id": "find_trap",
-			"icon": "icon_find_trap",
-			"display_name": "[Find Trap]",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Find Trap] — You scan the ground and walls out of old habit. Nothing here is rigged.",
-			"description": "A practiced eye for the telltale signs of a trap: a loose stone, a taut wire, a floor that doesn't quite match."
-		},
-		{
-			"_comment": "Field-only, same requires_skill+on_skill_use seam, no new sim code.",
-			"id": "disarm_trap",
-			"icon": "icon_disarm_trap",
-			"display_name": "[Disarm Trap]",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Disarm Trap] — Your fingers twitch through the motions of a disarm. There is nothing here to still.",
-			"description": "Steady hands and a thief's patience: whatever waits to spring, waits a little longer."
-		},
-		{
-			"_comment": "Id `sudden_strike` is PINNED and unchanged -- only display_name substitutes.",
-			"id": "sudden_strike",
-			"display_name": "[Sneak Attack]",
-			"icon": "icon_sudden_strike",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"once_per_fight": true,
-			"effect": { "type": "damage_mult", "mult": 1.8 },
-			"description": "One chance, taken before the fight knows to expect it."
-		},
-		{
-			"_comment": "Id PINNED.",
-			"id": "called_shot",
-			"icon": "icon_called_shot",
-			"display_name": "[Called Shot]",
-			"contexts": ["combat"],
-			"ap_cost": 3,
-			"weapon": "bow",
-			"effect": { "type": "damage_mult", "mult": 2.2 },
-			"cooldown_rounds": 2,
-			"description": "A shot picked out in advance, and placed exactly there."
-		},
-		{
-			"_comment": "Id PINNED.",
-			"id": "piercing_volley",
-			"icon": "icon_piercing_volley",
-			"display_name": "[Piercing Volley]",
-			"contexts": ["combat"],
-			"ap_cost": 3,
-			"weapon": "bow",
-			"effect": { "type": "line_damage", "length": 5 },
-			"cooldown_rounds": 2,
-			"description": "A punishing volley loosed down the line, arrow after arrow finding the same seam."
-		},
-		{
-			"_comment": "flame_jet stays untouched (still the only line-shaped fire skill); this is the practical EARLY single-target active fire lacked entirely.",
-			"id": "flame_dart",
-			"icon": "icon_flame_dart",
-			"display_name": "[Flame Dart]",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"mp_cost": 3,
-			"element": "fire",
-			"effect": { "type": "spell_damage", "range": 4 },
-			"description": "A guttering mote of flame flung hard and fast, spent before it can gutter out."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect/P), no match for a bare hospitality-themed Skill.",
-			"id": "perfect_hospitality",
-			"icon": "icon_perfect_hospitality",
-			"display_name": "[Perfect Hospitality]",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Perfect Hospitality] — You straighten a chair, smooth a cloth, ready the room out of habit. There's no one here to welcome yet.",
-			"description": "Every guest finds exactly the welcome they didn't know they needed — a warm room, a full glass, a seat that was somehow already theirs."
-		},
-		{
-			"_comment": "`weapon: bow` gates it through the SAME `weapon_gated_kit` filter every other weapon-tagged skill already uses, so it only ever contributes with a bow equipped -- the 'bow passive' framing holds exactly.",
-			"id": "steady_draw",
-			"display_name": "[Steady Draw]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"weapon": "bow",
-			"effect": { "type": "hit_bonus", "amount": 8 },
-			"description": "Breath out, string back, and the point of aim simply stops drifting — a drawn bow held as still as a nail in a beam."
-		},
-		{
-			"_comment": "Deliberately carries NEITHER `ap_cost`/`effect` NOR `field: true` -- a pure passive identity trait, the SAME shape lesser_stamina/lesser_strength already ship (flavor-only, never castable).",
-			"id": "bargain",
-			"display_name": "[Bargain]",
-			"contexts": ["exploration"],
-			"description": "An instinct for what a price is REALLY worth, and the nerve to say so out loud. Where haggling is welcome, the asking price comes down for you."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked, no match.",
-			"id": "appraise_goods",
-			"icon": "icon_appraise_goods",
-			"display_name": "[Appraise Goods]",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Appraise Goods] — You turn an imagined item over in your hands out of habit, weighing a price that isn't there.",
-			"description": "A trader's eye: where a thing came from, what it's really worth, and whether the asking price is honest."
-		},
-		{
-			"_comment": "No `ap_cost`/`effect`/`field` -- same passive-identity shape as bargain above.",
-			"id": "bulk_terms",
-			"display_name": "[Bulk Terms]",
-			"contexts": ["exploration"],
-			"trade_bonus": 0.1,
-			"description": "Wholesale eyes on a retail world — goods move through you in bulk, and the numbers favor the one who moves them."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- passive-identity shape matches bargain/lesser_stamina.",
-			"id": "runners_legs",
-			"display_name": "[Runner's Legs]",
-			"contexts": ["exploration"],
-			"description": "The road is long. Your legs have stopped caring."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED -- Fals, 7.00; passive-identity shape matches bargain/lesser_stamina.",
-			"id": "efficient_run",
-			"display_name": "[Efficient Run]",
-			"contexts": ["exploration"],
-			"description": "Every stride lands cleanly, wasting neither breath nor road."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki name carries an unresolved early-volume citation; battlefield_awareness's move_pool_bonus shape verbatim.",
-			"id": "enhanced_movement",
-			"display_name": "[Enhanced Movement]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "move_pool_bonus", "amount": 1 },
-			"description": "The opening between one step and the next becomes a road of its own."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL -- noun-phrase replacement for the rejected imperative [Brew Remedy].",
-			"id": "hedge_remedy",
-			"display_name": "[Hedge Remedy]",
-			"icon": "icon_hedge_remedy",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Hedge Remedy] — You stir an absent pot and sort imaginary roots. The working needs a real cauldron.",
-			"description": "Root, leaf, patience, and the exact moment the pot should leave the fire."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL -- hp_bonus reuses tough_body's passive combat shape; witch kit stays AP-only.",
-			"id": "witchs_warding",
-			"display_name": "[Witch's Warding]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "hp_bonus", "amount": 8 },
-			"description": "A quiet promise laid over skin and spirit: not this one, not yet."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL -- calming_touch's no-MP spell_damage shape, range 3, weakened rider; no element counter.",
-			"id": "evil_eye",
-			"display_name": "[Evil Eye]",
-			"icon": "icon_evil_eye",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"effect": { "type": "spell_damage", "range": 3, "applies": { "weakened": { "duration_rounds": 1 } } },
-			"description": "One hard look catches like a curse, and certainty drains from the target's limbs."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED -- Pisces' spell list; frost_bolt's costs and range without a rider.",
-			"id": "bone_dart",
-			"display_name": "[Bone Dart]",
-			"icon": "icon_bone_dart",
-			"contexts": ["combat"],
-			"ap_cost": 1,
-			"mp_cost": 2,
-			"element": "death",
-			"effect": { "type": "spell_damage", "range": 4 },
-			"description": "A splinter of white bone snaps into being and flies point-first."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED -- Pisces; spell_damage reuses shipped range and weakened-rider seams.",
-			"id": "deathbolt",
-			"display_name": "[Deathbolt]",
-			"icon": "icon_deathbolt",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"mp_cost": 4,
-			"element": "death",
-			"effect": { "type": "spell_damage", "range": 4, "applies": { "weakened": { "duration_rounds": 1 } } },
-			"description": "A black-green lance that leaves warmth and courage guttering behind it."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED -- Pisces and Ceria, 2.15; field_ambient shape matches other prop-cast utility skills.",
-			"id": "detect_magic",
-			"display_name": "[Detect Magic]",
-			"icon": "icon_detect_magic",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Detect Magic] — You open your senses. No nearby working answers.",
-			"description": "Magic leaves pressure, color, and intent behind. You have learned how to look."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED -- Erin, 2.17; field_ambient shape matches basic_cooking with a distinct icon.",
-			"id": "advanced_cooking",
-			"display_name": "[Advanced Cooking]",
-			"icon": "icon_advanced_cooking",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Advanced Cooking] — You compose a meal in your head. It needs a proper station: a chef's counter, or a stall burner.",
-			"description": "Cast at a chef's station to plate a fine meal — worth an extra 2 HP in your next fight. A kitchen becomes possibility: timing, balance, and the dish hidden inside the ingredients."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED -- Erin, 2.17; passive-identity shape limited to recipes and practiced arts.",
-			"id": "perfect_recall",
-			"display_name": "[Perfect Recall]",
-			"contexts": ["exploration"],
-			"description": "Every recipe and practiced motion waits exactly where you left it."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- field prop-cast shape matches advanced_cooking.",
-			"id": "signature_dish",
-			"display_name": "[Signature Dish]",
-			"icon": "icon_signature_dish",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Signature Dish] — The dish is already clear in your mind. Only the kitchen is missing.",
-			"description": "One dish bears your hand so completely that no other cook could make it the same."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED with AMBIGUOUS-lean-PASS flag -- accepted 2026-07-15 despite renumbering drift; steady_draw's hit_bonus amount reused.",
-			"id": "eagle_eyes",
-			"display_name": "[Eagle Eyes]",
-			"icon": "icon_eagle_eyes",
-			"contexts": ["exploration", "combat"],
-			"field": true,
-			"field_ambient": "[Eagle Eyes] — Distance sharpens, but there is no vantage here worth claiming.",
-			"ap_cost": 0,
-			"effect": { "type": "hit_bonus", "amount": 8 },
-			"description": "Distance gives up its secrets: tracks, motion, and the one detail that does not belong."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- sudden_strike's once-per-fight numbers with a bow gate.",
-			"id": "marked_quarry",
-			"display_name": "[Marked Quarry]",
-			"icon": "icon_marked_quarry",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"weapon": "bow",
-			"once_per_fight": true,
-			"effect": { "type": "damage_mult", "mult": 1.8 },
-			"description": "You choose the quarry before drawing. The arrow only completes the decision."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED -- Valceif, 2.15; combat half reuses move_pool_bonus verbatim.",
-			"id": "double_step",
-			"display_name": "[Double Step]",
-			"icon": "icon_double_step",
-			"contexts": ["exploration", "combat"],
-			"field": true,
-			"blinks": true,
-			"blink_range": 2,
-			"ap_cost": 1,
-			"effect": { "type": "move_pool_bonus", "amount": 2 },
-			"description": "One stride becomes two, with the road between them briefly optional."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED -- Pisces' Tier-3 spell. FIELD HALF MP-INFORMATIONAL, matching shipped [Invisibility]; combat spends the listed 3 MP. Combat half reuses move_pool_bonus verbatim.",
-			"id": "flash_step",
-			"display_name": "[Flash Step]",
-			"icon": "icon_flash_step",
-			"contexts": ["exploration", "combat"],
-			"field": true,
-			"blinks": true,
-			"blink_range": 4,
-			"ap_cost": 2,
-			"mp_cost": 3,
-			"effect": { "type": "move_pool_bonus", "amount": 3 },
-			"description": "The first lesson is footwork. The second is leaving distance behind."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED -- Pisces; field-only companion working at the three authored bone piles.",
-			"id": "animate_dead",
-			"display_name": "[Animate Dead]",
-			"icon": "icon_animate_dead",
-			"contexts": ["exploration"],
-			"field": true,
-			"animates": true,
-			"mp_cost": 4,
-			"description": "Old bones remember just enough motion to answer a practiced command."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- one-sleep trigger-radius suppression.",
-			"id": "hearthward_charm",
-			"display_name": "[Hearthward Charm]",
-			"icon": "icon_hearthward_charm",
-			"contexts": ["exploration"],
-			"field": true,
-			"wards": true,
-			"description": "Thread, wax, and intent laid where danger means to cross."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- distinct two-sleep ward id; never re-semanticize hearthward_charm.",
-			"id": "greater_hearthward",
-			"display_name": "[Greater Hearthward]",
-			"icon": "icon_greater_hearthward",
-			"contexts": ["exploration"],
-			"field": true,
-			"wards": true,
-			"ward_sleeps": 2,
-			"description": "A stronger charm remembers its boundary after one night has passed."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (6.39, Octavia). [Mixer] L1 field bench-cast: consumes nothing v1 (basic_cooking precedent), yields a low-tier consumable + banks synthesized_draught. field_ambient shape matches basic_cooking.",
-			"id": "low_grade_synthesis",
-			"display_name": "[Low-Grade Synthesis]",
-			"icon": "icon_low_grade_synthesis",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Low-Grade Synthesis] — You measure out a working in your head. It wants a real bench and a burner you don't have here.",
-			"description": "The first thing any mixer learns: crude reagents over a low flame, and a result that mostly behaves."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (6.39). Pure passive identity (actives-become-passives directive) -- botched mixtures burn off clean; no bench, no hotbar slot. Icon carried for the journal panel only.",
-			"id": "cleansing_heat",
-			"display_name": "[Cleansing Heat]",
-			"icon": "icon_cleansing_heat",
-			"contexts": ["exploration"],
-			"description": "A botched mixture never festers. Heat takes the failure cleanly, and the bench is ready for the next attempt."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (6.39). [Mixer] L5 field bench-cast: yields solvent_phial (a component item) + banks synthesized_draught.",
-			"id": "magic_water_solvent",
-			"display_name": "[Magic-Water Solvent]",
-			"icon": "icon_magic_water_solvent",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Magic-Water Solvent] — You think through the dilution, drop by drop. Without magic-water and a clean phial, it stays a thought.",
-			"description": "Magic-water, drawn down and clarified until it will lift what plain water cannot. The base every finer working starts from."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (6.39). [Mixer] L7 field bench-cast: yields mineral_salts (a component item) + banks synthesized_draught.",
-			"id": "mineral_distillation",
-			"display_name": "[Mineral Distillation]",
-			"icon": "icon_mineral_distillation",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[Mineral Distillation] — You picture the slow boil and the salts left behind. It needs a retort and a fire you don't have here.",
-			"description": "Boil a mineral wash down far enough and what remains is pure salts, the backbone of any potion worth the name."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL, canon-plausible. [Alchemist] L10 field bench-cast: the first component-consuming recipe -- eats solvent_phial + mineral_salts (requires_item + remove_item String|Array seam, #155) and yields tonic_of_the_clear_eye + banks synthesized_draught.",
-			"id": "true_synthesis",
-			"display_name": "[True Synthesis]",
-			"icon": "icon_true_synthesis",
-			"contexts": ["exploration"],
-			"field": true,
-			"field_ambient": "[True Synthesis] — You lay the whole working out in your mind, solvent into salts in the one order that holds. Only a proper bench will bear it.",
-			"description": "Where a mixer combines, an alchemist transforms. Solvent and salts, brought together in the right hand, become something neither one was."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (3.23 L). [Beast Tamer] L1 pure passive identity (actives-become-passives directive) -- no hotbar slot; icon carried for the journal panel only.",
-			"id": "healthy_rearing",
-			"display_name": "[Healthy Rearing]",
-			"icon": "icon_healthy_rearing",
-			"contexts": ["exploration"],
-			"description": "Animals in your care simply do better. They eat, they mend, they trust. It is not magic, except in the way it is."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (4.21 E). Passive on the PLAYER record (no effect key -- the kit fold would buff the PC); the companion-side +hit lives in basic_command_boon, injected onto the companion combatant at roster build (wi_game.gd, GH#156).",
-			"id": "animals_basic_command",
-			"display_name": "[Animals: Basic Command]",
-			"icon": "icon_animals_basic_command",
-			"contexts": ["exploration"],
-			"description": "Sit. Stay. Strike. A trained beast hears the shape of your intent, not just the word."
-		},
-		{
-			"_comment": "COMPANION BOON (GH#156): hidden effect-carrier for [Animals: Basic Command] -- never granted to a class, never hotbar-bound; appended to the COMPANION combatant's skill list at roster inject. hit_bonus amount reuses the steady_draw/eagle_eyes tuned value.",
-			"id": "basic_command_boon",
-			"display_name": "[Animals: Basic Command]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "hit_bonus", "amount": 8 },
-			"description": "A trained beast fights like it has heard the plan."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED shape '[Lesser Bond: Name]' (3.11 E). Field tame: `tames: true` routes through the companion_source seam (wi_game.gd _animate_field) -- casts at tameable props carrying `companion_source`, refusal toast otherwise. Tamed companions PERSIST sleep.",
-			"id": "lesser_bond",
-			"display_name": "[Lesser Bond]",
-			"icon": "icon_lesser_bond",
-			"contexts": ["exploration"],
-			"field": true,
-			"tames": true,
-			"mp_cost": 2,
-			"field_ambient": "[Lesser Bond] — You reach out, and nothing here reaches back. The wild keeps its own company today.",
-			"description": "A thin thread of trust, offered and accepted. It is not ownership. Nothing about it is ownership."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL, care-tier canon-plausible (flagged in spec). Field cast at wounded-beast props via the requires_skill/on_skill_use seam; banks tended_beasts.",
-			"id": "beasts_mending",
-			"display_name": "[Beast's Mending]",
-			"icon": "icon_beasts_mending",
-			"contexts": ["exploration"],
-			"field": true,
-			"mp_cost": 2,
-			"field_ambient": "[Beast's Mending] — Your hands know what to do, but nothing hurt waits here to be helped.",
-			"description": "Splint, salve, and a steadiness that tells a frightened animal the worst is over."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (Mrsha pre-upgrade). Passive: beast-kind (`beast: true`) ambush encounters trigger at radius -1 for this player -- code seam at wi_game.gd _wild_affinity_reduction, AMBUSH CHECK ONLY. [Peace of the Wild] supersedes at -2.",
-			"id": "wild_affinity",
-			"display_name": "[Wild Affinity]",
-			"icon": "icon_wild_affinity",
-			"contexts": ["exploration"],
-			"description": "Wild things startle later around you, and settle sooner. You smell like something that belongs."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL (companion max-hp step). Passive on the PLAYER record; the companion-side +hp lives in pack_bond_boon, injected at roster build (GH#156).",
-			"id": "pack_bond",
-			"display_name": "[Pack Bond]",
-			"icon": "icon_pack_bond",
-			"contexts": ["exploration"],
-			"description": "The bond runs both ways now. What follows you is harder to kill, because it knows you are coming back for it."
-		},
-		{
-			"_comment": "COMPANION BOON (GH#156): hidden effect-carrier for [Pack Bond] -- never granted to a class; appended to the COMPANION combatant at roster inject.",
-			"id": "pack_bond_boon",
-			"display_name": "[Pack Bond]",
-			"contexts": ["combat"],
-			"ap_cost": 0,
-			"effect": { "type": "hp_bonus", "amount": 4 },
-			"description": "Harder to kill, because it knows you are coming back for it."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (5.06 M) -- the [Wild Affinity] upgrade. Same code seam (wi_game.gd _wild_affinity_reduction), reduction 2, supersedes.",
-			"id": "peace_of_the_wild",
-			"display_name": "[Peace of the Wild]",
-			"icon": "icon_peace_of_the_wild",
-			"contexts": ["exploration"],
-			"description": "The wild has decided about you. Wolves note you and go back to their business; even the small things stop holding their breath."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (Two Rats interlude). [Druid] L16 combat cast: spell_damage range 1 + applies.rooted (slam's shipped rider shape). element nature banks nature_cast for free via the element-counter seam.",
-			"id": "thorn_hand",
-			"display_name": "[Thorn Hand]",
-			"icon": "icon_thorn_hand",
-			"contexts": ["combat"],
-			"ap_cost": 2,
-			"mp_cost": 3,
-			"element": "nature",
-			"effect": { "type": "spell_damage", "range": 1, "applies": { "rooted": { "duration_rounds": 1 } } },
-			"description": "Green shoots burst from your palm and take the enemy at the ankle. The ground remembers being wild."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (6.56, Yvlon). Swordsman L14, line's first non-mult active -- line_damage (piercing_shot resolver), sword-gated.",
-			"id": "crescent_cut",
-			"display_name": "[Crescent Cut]",
-			"icon": "icon_crescent_cut",
-			"contexts": [
-				"combat"
-			],
-			"ap_cost": 3,
-			"weapon": "sword",
-			"effect": {
-				"type": "line_damage",
-				"length": 3
-			},
-			"description": "A single sweeping arc, wide enough that everyone caught in its path shares the wound."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (Vol 7 Gecko interlude, Relc). Spearmaster L14 through-the-target thrust -- line_damage, spear-gated.",
-			"id": "pierce_thrust",
-			"display_name": "[Pierce Thrust]",
-			"icon": "icon_pierce_thrust",
-			"contexts": [
-				"combat"
-			],
-			"ap_cost": 3,
-			"weapon": "spear",
-			"effect": {
-				"type": "line_damage",
-				"length": 3
-			},
-			"description": "The spear goes in and keeps going, and whatever stood behind the first foe learns why the line matters."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (4.27 H, Ceria/Illphres). Ice Mage L14 heavy shield. mana_shield absorber keys on the literal id 'mana_shield' (wi_combat.gd), already inherited from [Mage] L2 -- this capstone reinforces the shielded identity, not a second absorber.",
-			"id": "ice_wall",
-			"display_name": "[Ice Wall]",
-			"icon": "icon_ice_wall",
-			"contexts": [
-				"combat"
-			],
-			"ap_cost": 0,
-			"effect": {
-				"type": "mana_shield"
-			},
-			"description": "A slab of conjured ice rises between you and the blow, and drinks it cold."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (Vol <=7). Fire Mage L14 incantation-free flame -- quick_cast capstone (line already holds [Quick Cast] via [Mage] L1).",
-			"id": "flashfire_spellcraft",
-			"display_name": "[Flashfire Spellcraft]",
-			"icon": "icon_flashfire_spellcraft",
-			"contexts": [
-				"combat"
-			],
-			"ap_cost": 0,
-			"effect": {
-				"type": "quick_cast"
-			},
-			"description": "No words, no gathering. The flame is simply already there, because you did not wait for it."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED. Sharpshooter L14. damage_mult with a weakened rider -- the damage_mult arm gains status application (skill_effects.gd), mirroring spell_damage; existing damage_mult skills carry no `applies` so the combat sim stays byte-identical.",
-			"id": "blinding_arrow",
-			"display_name": "[Blinding Arrow]",
-			"icon": "icon_blinding_arrow",
-			"contexts": [
-				"combat"
-			],
-			"ap_cost": 2,
-			"weapon": "bow",
-			"effect": {
-				"type": "damage_mult",
-				"mult": 1.2,
-				"applies": {
-					"weakened": {
-						"duration_rounds": 1
-					}
-				}
-			},
-			"description": "A shaft loosed to burst bright at the eyes — little force behind it, but the target fights half-blind for it."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED. Infiltrator L14 blink-flavored repositioning -- turn-start move_pool passive (0 AP), enhanced_movement shape at +2.",
-			"id": "shadowstep",
-			"display_name": "[Shadowstep]",
-			"icon": "icon_shadowstep",
-			"contexts": [
-				"combat"
-			],
-			"ap_cost": 0,
-			"effect": {
-				"type": "move_pool_bonus",
-				"amount": 2
-			},
-			"description": "You step into one shadow and out of another, and the distance between never happened."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED [Instantaneous Barrage (Phantom Arrows)]. Strategist L14, weaponless line_damage (no weapon gate -- conjured arrows). Ship id phantom_barrage; display keeps the shorter attested form.",
-			"id": "phantom_barrage",
-			"display_name": "[Instantaneous Barrage]",
-			"icon": "icon_phantom_barrage",
-			"contexts": [
-				"combat"
-			],
-			"ap_cost": 3,
-			"effect": {
-				"type": "line_damage",
-				"length": 4
-			},
-			"cooldown_rounds": 2,
-			"description": "A hundred arrows that were never real fall in the same instant, and everything beneath them is."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED. Emissary L14 social passive -- identity line (no combat effect, no dialogue gate wired this wave). pack_bond passive-record shape.",
-			"id": "trusted_voice",
-			"display_name": "[Trusted Voice]",
-			"icon": "icon_trusted_voice",
-			"contexts": [
-				"exploration"
-			],
-			"description": "When you speak, people lean in to believe you. Doors that stay shut for other envoys open at your word."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (5.59, Drassi -- barmaid-line inn work). Barmaid L14. Keeps the attested name; distinct id because shipped `servers_prescience` (a [Server] field skill) already owns that snake_case. dangersense passive.",
-			"id": "barmaids_prescience",
-			"display_name": "[Server's Prescience]",
-			"icon": "icon_barmaids_prescience",
-			"contexts": [
-				"combat"
-			],
-			"ap_cost": 0,
-			"effect": {
-				"type": "dangersense"
-			},
-			"description": "You feel the room tilt toward trouble a breath before it does: a dropped tray, a raised fist, a blade under a coat."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL (collision adjudication) -- [Server's Prescience] went to the barmaid sibling, so the hustle voice ships instead. Server L14, move_pool +1 turn-start passive.",
-			"id": "swift_service",
-			"display_name": "[Swift Service]",
-			"icon": "icon_swift_service",
-			"contexts": [
-				"combat"
-			],
-			"ap_cost": 0,
-			"effect": {
-				"type": "move_pool_bonus",
-				"amount": 1
-			},
-			"description": "Every step between the tables is already planned, so your feet never waste one."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED. Merchant L14 field value-read -- field_ambient identity (appraise_goods shape), no combat effect.",
-			"id": "evaluation_of_wealth",
-			"display_name": "[Evaluation of Wealth]",
-			"icon": "icon_evaluation_of_wealth",
-			"contexts": [
-				"exploration"
-			],
-			"field": true,
-			"field_ambient": "[Evaluation of Wealth] — You weigh the room for what it is worth. Nothing here carries a price worth naming today.",
-			"description": "A glance tells you the true worth of a thing: what it cost, what it will fetch, and what the seller hopes you do not notice."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (4.24, 4.44 M). Courier L14. Ships as couriers_double_step because shipped [Runner] L5 [Double Step] owns `double_step`; passive move_pool +2 (distinct from the inherited active).",
-			"id": "couriers_double_step",
-			"display_name": "[Double Step]",
-			"icon": "icon_couriers_double_step",
-			"contexts": [
-				"combat"
-			],
-			"ap_cost": 0,
-			"effect": {
-				"type": "move_pool_bonus",
-				"amount": 2
-			},
-			"description": "The road learns your name. Two strides for every one, and it never seems to tire you."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED. Witch L14 omen-read -- dangersense passive, the hedge-craft foresight.",
-			"id": "tea_omens",
-			"display_name": "[Tea Omens]",
-			"icon": "icon_tea_omens",
-			"contexts": [
-				"combat"
-			],
-			"ap_cost": 0,
-			"effect": {
-				"type": "dangersense"
-			},
-			"description": "The leaves settle into shapes, and the shapes are always about what is coming. Usually it is bad. Usually you are ready."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED [Supplies:]. Chef L14. Restocks one flarepepper_powder at each rest via the sleep() hook (wi_game.gd, known_skills gate, never stacks); passive identity record.",
-			"id": "flarepepper_supplies",
-			"display_name": "[Supplies: Flarepepper Powder]",
-			"icon": "icon_flarepepper_supplies",
-			"contexts": [
-				"exploration"
-			],
-			"description": "Your pack is never quite empty. There is always one more twist of flarepepper put by, ready for the pan."
-		},
-		{
-			"_comment": "CANON-VERDICT: ATTESTED (6.39, Xif). Alchemist L14 field bench-cast (true_synthesis shape) -- reduces crude_draught into tonic_of_the_clear_eye. Recipe rides an alchemy bench's on_skill_use; no bench wired this wave (field_ambient identity until one is placed).",
-			"id": "perfect_reduction",
-			"display_name": "[Perfect Reduction]",
-			"icon": "icon_perfect_reduction",
-			"contexts": [
-				"exploration"
-			],
-			"field": true,
-			"field_ambient": "[Perfect Reduction] — You lay out the reduction in your head, crude draught to clear tonic. It wants a proper bench you do not have here.",
-			"description": "Where a lesser hand throws out the crude batch, you boil it down to its one true part: nothing wasted, nothing left but the working itself."
-		},
-		{
-			"_comment": "CANON-VERDICT: ORIGINAL (collision adjudication -- research's [Lesser Bond] is ATTESTED 6.08 but the id is the shipped [Beast Tamer] tame verb). Beast Master L14. Passive on the PLAYER record (no effect -- the kit fold would buff the PC unconditionally); the +hit lives in sworn_fang_boon, injected PC-side at roster build while a companion rides (GH#156 pattern inverted).",
-			"id": "sworn_fang_ride_together",
-			"display_name": "[Sworn Fang: Ride Together]",
-			"icon": "icon_sworn_fang_ride_together",
-			"contexts": [
-				"exploration"
-			],
-			"description": "You and the beast beneath you think as one animal now. Where it turns, you strike; where you lean, it carries you."
-		},
-		{
-			"_comment": "COMPANION BOON (GH#165, inverse of GH#156): hidden PC-side carrier for [Sworn Fang: Ride Together] -- never granted to a class, never hotbar-bound; appended to the PC combatant at roster build while a companion rides. hit_bonus reuses the basic_command_boon tuned value.",
-			"id": "sworn_fang_boon",
-			"display_name": "[Sworn Fang: Ride Together]",
-			"contexts": [
-				"combat"
-			],
-			"ap_cost": 0,
-			"effect": {
-				"type": "hit_bonus",
-				"amount": 8
-			},
-			"description": "Two bodies, one certainty. The strike lands because both of you already knew it would."
-		}
-	]
+ "skills": [
+  {
+   "id": "basic_cleaning",
+   "display_name": "[Basic Cleaning]",
+   "icon": "icon_basic_cleaning",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "cleans": true,
+   "field_ambient": "[Basic Cleaning] — You wipe down the nearest surface out of old habit. It gleams.",
+   "description": "Cleans mundane messes with supernatural ease."
+  },
+  {
+   "id": "basic_swordwork",
+   "display_name": "[Basic Swordwork]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "hit_bonus",
+    "amount": 5
+   },
+   "description": "Steadier hands with any blade."
+  },
+  {
+   "id": "tough_body",
+   "display_name": "[Tough Body]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "hp_bonus",
+    "amount": 10
+   },
+   "description": "A frame hardened by work and worse."
+  },
+  {
+   "id": "power_strike",
+   "display_name": "[Power Strike]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "weapon": "sword",
+   "icon": "icon_power_strike",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 2.0
+   },
+   "cooldown_rounds": 2,
+   "description": "Everything behind one blow."
+  },
+  {
+   "id": "counter_strike",
+   "display_name": "[Counter Strike]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "riposte",
+    "mult": 0.8
+   },
+   "description": "The next blade that finds you meets an answer."
+  },
+  {
+   "id": "battle_momentum",
+   "display_name": "[Battle Momentum]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "ap_on_kill",
+    "amount": 1
+   },
+   "description": "A felled foe quickens the blood."
+  },
+  {
+   "_comment": "GH#90 rider: `applies.burning` (2 dmg/round tick, 3 rounds) -- a fire bolt catching cloth/fur alight is the direct fictional read, no reach needed.",
+   "id": "flame_bolt",
+   "display_name": "[Flame Bolt]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "element": "fire",
+   "icon": "icon_flame_bolt",
+   "effect": {
+    "type": "spell_damage",
+    "range": 4,
+    "applies": {
+     "burning": {
+      "tick_damage": 2,
+      "duration_rounds": 3
+     }
+    }
+   },
+   "description": "A hissing dart of goblin fire."
+  },
+  {
+   "_comment": "NO `burns` FLAG: it would enroll this in the burns x burnable row and make a combat spell a universal debris-burner. Its one field use is the AUTHORED carcass arm, which wins by dispatch precedence.",
+   "id": "flame_jet",
+   "display_name": "[Flame Jet]",
+   "contexts": [
+    "combat",
+    "exploration"
+   ],
+   "field": true,
+   "ap_cost": 2,
+   "mp_cost": 4,
+   "element": "fire",
+   "icon": "icon_flame_jet",
+   "effect": {
+    "type": "line_damage",
+    "length": 4
+   },
+   "field_ambient": "[Flame Jet] — Fire runs out of your palm, finds nothing worth burning, and dies in the air.",
+   "description": "A roaring lance of goblin-fire down the line."
+  },
+  {
+   "id": "frost_bolt",
+   "display_name": "[Frost Bolt]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 1,
+   "mp_cost": 2,
+   "element": "ice",
+   "icon": "icon_frost_bolt",
+   "effect": {
+    "type": "spell_damage",
+    "range": 4,
+    "applies": {
+     "slowed": {
+      "pool_penalty": 2
+     }
+    }
+   },
+   "description": "A dart of biting cold that clings to the legs."
+  },
+  {
+   "id": "mana_shield",
+   "display_name": "[Mana Shield]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "mana_shield"
+   },
+   "description": "Woven mana drinks the blow before flesh does."
+  },
+  {
+   "id": "quick_cast",
+   "display_name": "[Quick Cast]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "quick_cast"
+   },
+   "description": "The first spell leaves the fingers before the thought finishes."
+  },
+  {
+   "_comment": "`toggles_light` puts [Light] on the same footing as the `sneaks` Skills: one flag, one arm, on/off with its own copy on each side. Before v0.16.1 the orb had no off path at all -- a hardcoded id check in field_skills.gd hard-SET the flag, so re-casting while lit did nothing and only sleep() ever cleared it. field_ambient is the ON line, field_ambient_off the OFF line.",
+   "id": "light",
+   "display_name": "[Light]",
+   "icon": "icon_light",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "toggles_light": true,
+   "field_ambient": "[Light] — A steady white orb rises to follow you, throwing back the dark.",
+   "field_ambient_off": "[Light] — You let the orb thin out. The dark closes back in, patient as ever.",
+   "description": "A mage's first, faithful spell: a small orb of steady white light."
+  },
+  {
+   "id": "quick_movement",
+   "display_name": "[Quick Movement]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "move_pool_bonus",
+    "amount": 1
+   },
+   "description": "The feet decide before the mind does."
+  },
+  {
+   "id": "second_wind",
+   "display_name": "[Second Wind]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "icon": "icon_second_wind",
+   "effect": {
+    "type": "heal",
+    "amount": 8
+   },
+   "description": "Breath returns, and the body remembers it can go on."
+  },
+  {
+   "id": "dangersense",
+   "display_name": "[Dangersense]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "dangersense"
+   },
+   "description": "A cold prickle at the neck, a heartbeat before harm."
+  },
+  {
+   "id": "piercing_strikes",
+   "display_name": "[Piercing Strikes]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "weapon": "spear",
+   "icon": "icon_piercing_strikes",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 1.4
+   },
+   "description": "Thrusts that seek the seams in any guard."
+  },
+  {
+   "id": "quick_slash",
+   "display_name": "[Quick Slash]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 1,
+   "weapon": "sword",
+   "icon": "icon_quick_slash",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 0.7
+   },
+   "description": "A cut loosed before the guard can rise."
+  },
+  {
+   "id": "flash_cut",
+   "display_name": "[Flash Cut]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "weapon": "sword",
+   "icon": "icon_flash_cut",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 1.4
+   },
+   "description": "One bright line. The eye catches up too late."
+  },
+  {
+   "id": "devastating_slash",
+   "display_name": "[Devastating Slash]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "weapon": "sword",
+   "icon": "icon_devastating_slash",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 2.6
+   },
+   "cooldown_rounds": 2,
+   "description": "Mid-swing, the blade bends its path toward whatever is unguarded."
+  },
+  {
+   "id": "triple_thrust",
+   "display_name": "[Triple Thrust]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "weapon": "spear",
+   "icon": "icon_triple_thrust",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 2.0
+   },
+   "cooldown_rounds": 2,
+   "description": "Three points of pain in a single breath."
+  },
+  {
+   "id": "extended_sweep",
+   "display_name": "[Extended Sweep]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "weapon": "spear",
+   "icon": "icon_extended_sweep",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 1.3
+   },
+   "description": "A wide, raking arc that finds an opening no straight thrust could."
+  },
+  {
+   "id": "spear_flurry",
+   "display_name": "[Spear Flurry]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "weapon": "spear",
+   "icon": "icon_spear_flurry",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 2.6
+   },
+   "cooldown_rounds": 2,
+   "description": "For one moment the air is stitched with spearpoints."
+  },
+  {
+   "id": "ice_shard",
+   "display_name": "[Ice Shard]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "mp_cost": 3,
+   "element": "ice",
+   "icon": "icon_ice_shard",
+   "effect": {
+    "type": "spell_damage",
+    "range": 4
+   },
+   "description": "A fist-sized spike of ice, hurled hard enough to crack shields."
+  },
+  {
+   "_comment": "Renamed [Icy Floor] -> [Ice Floor], id UNCHANGED (save-compat). SECOND `freezes` carrier -- why both freezes REFUSAL rows read copy off the skill: a row line would name the wrong Skill.",
+   "id": "icy_floor",
+   "display_name": "[Ice Floor]",
+   "contexts": [
+    "combat",
+    "exploration"
+   ],
+   "field": true,
+   "freezes": true,
+   "ap_cost": 2,
+   "mp_cost": 4,
+   "element": "ice",
+   "icon": "icon_icy_floor",
+   "effect": {
+    "type": "icy_floor",
+    "range": 3,
+    "radius": 1,
+    "duration_rounds": 2,
+    "applies": {
+     "slowed": {
+      "pool_penalty": 2
+     }
+    }
+   },
+   "freeze_toast": "[Ice Floor] — The spell wants a floor and takes the water instead. Grey ice spreads from the bank in one long crack, thick enough to stand on. It will not last past your next rest.",
+   "field_ambient": "[Ice Floor] — Frost sheets out across the ground and thins away to nothing. There is no standing water here for it to lock.",
+   "frost_hearth_refusal": "[Ice Floor] — Ice skids over the hot stone and is gone before it can settle. The fire goes on eating.",
+   "frost_person_refusal": "[Ice Floor] — The glaze starts under their boots and you stop it there. Putting someone on their back on ice is a thing you do to an enemy.",
+   "description": "The stones glaze over, and footing becomes a rumor. Still water takes it the same way, and holds."
+  },
+  {
+   "id": "flame_scythe",
+   "display_name": "[Flame Scythe]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "mp_cost": 4,
+   "element": "fire",
+   "icon": "icon_flame_scythe",
+   "effect": {
+    "type": "spell_damage",
+    "range": 1
+   },
+   "description": "An arm's-length arc of fire, reaped close."
+  },
+  {
+   "id": "flare_burst",
+   "display_name": "[Flare Burst]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 1,
+   "mp_cost": 2,
+   "element": "fire",
+   "icon": "icon_flare_burst",
+   "effect": {
+    "type": "spell_damage",
+    "range": 3
+   },
+   "description": "A snap of light and heat that leaves spots dancing in the eyes."
+  },
+  {
+   "_comment": "Instant damage only -- no terrain write, no status write, no expiry seam (contrast icy_floor, which glazes+slows for `duration_rounds`).",
+   "id": "flame_pillar",
+   "icon": "icon_flame_pillar",
+   "display_name": "[Flame Pillar]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "mp_cost": 5,
+   "element": "fire",
+   "effect": {
+    "type": "blast_damage",
+    "range": 3,
+    "radius": 1
+   },
+   "description": "A ring of fire blooms at the target's feet, then erupts into a roaring pillar."
+  },
+  {
+   "id": "keener_edge",
+   "display_name": "[Keener Edge]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "weapon": "sword",
+   "icon": "icon_keener_edge",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 1.6
+   },
+   "description": "Mana runs down the blade until the edge sings."
+  },
+  {
+   "_comment": "Structurally unreachable by `sim_combat_batch.gd` (spellsword is never assigned in the harness's BUILDS array, same as fire_mage/ice_mage precedent) -- no balance-harness re-run needed.",
+   "id": "spellbound_strike",
+   "display_name": "[Spellbound Strike]",
+   "icon": "icon_spellbound_strike",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "mp_cost": 3,
+   "effect": {
+    "type": "damage_mult",
+    "mult": 3.0
+   },
+   "cooldown_rounds": 2,
+   "description": "Every spell you have ever cast settles into the strike, and the strike remembers all of them at once."
+  },
+  {
+   "id": "lesser_stamina",
+   "display_name": "[Lesser Stamina]",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "Chores that would tire another barely slow you."
+  },
+  {
+   "id": "basic_cooking",
+   "display_name": "[Basic Cooking]",
+   "icon": "icon_basic_cooking",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Basic Cooking] — You picture the dish this place is missing. Your hands twitch toward a ladle that isn't there.",
+   "description": "Simple meals come out right, every time.",
+   "_comment_cookware": "GH#391: the generic `cookware` arm; a prop's own authored arm still wins.",
+   "cookware_use": {
+    "accomplishment": "cooked_meal",
+    "item": "hot_meal",
+    "toast": "[Basic Cooking] — You get the pot hot, work with what is in it, and it comes out food."
+   }
+  },
+  {
+   "id": "lesser_strength",
+   "display_name": "[Lesser Strength]",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "Trays, kegs, and crates feel lighter than they should."
+  },
+  {
+   "_comment": "Canon pass: renamed [Observe] -> [Appraise Foe] (id `observe` UNCHANGED -- save-compat; ids are never player-visible).",
+   "id": "observe",
+   "display_name": "[Appraise Foe]",
+   "icon": "icon_observe",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Appraise Foe] — You take in the empty space around you. Nothing here rewards a closer look.",
+   "description": "A measuring look that reads a room, a person, a problem, and files it away for later."
+  },
+  {
+   "id": "battlefield_awareness",
+   "display_name": "[Battlefield Awareness]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "move_pool_bonus",
+    "amount": 1
+   },
+   "description": "The whole field resolves into a map. You always know the one step that matters."
+  },
+  {
+   "id": "soothe_clientele",
+   "display_name": "[Soothe Clientele]",
+   "icon": "icon_soothe_clientele",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Soothe Clientele] — You offer the empty room a calming word. Only the dust settles.",
+   "description": "A word and a refilled glass, and the room's troubles ease. Patrons forget whatever was gnawing at them."
+  },
+  {
+   "id": "unerring_aim",
+   "display_name": "[Unerring Aim]",
+   "icon": "icon_unerring_aim",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Unerring Aim] — You size up a throw out of habit. Nothing here is worth the toss.",
+   "description": "Whatever you throw finds its mark: a mug slid down the bar, a rag, or a troublemaker's head."
+  },
+  {
+   "id": "sweep_the_tables",
+   "display_name": "[Sweep the Tables]",
+   "icon": "icon_sweep_the_tables",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Sweep the Tables] — You reach to clear the dishes. The tables here are already bare.",
+   "description": "A cluttered table comes clean in a single pass, the dishes spirited back to the kitchen."
+  },
+  {
+   "id": "servers_prescience",
+   "display_name": "[Server's Prescience]",
+   "icon": "icon_servers_prescience",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Server's Prescience] — You listen for what the room needs next. All quiet, for now.",
+   "description": "You know what a guest wants before they raise a hand: the empty cup, the missing fork, the order about to be called."
+  },
+  {
+   "id": "charming_smile",
+   "display_name": "[Charming Smile]",
+   "icon": "icon_charming_smile",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Charming Smile] — You flash a warm, easy smile at no one in particular. A passing sparrow seems charmed, at least.",
+   "description": "A warm, disarming smile that puts people at ease and turns a cold first meeting friendly."
+  },
+  {
+   "id": "calming_touch",
+   "display_name": "[Calming Touch]",
+   "icon": "icon_calming_touch",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "effect": {
+    "type": "spell_damage",
+    "range": 1,
+    "applies": {
+     "slowed": {
+      "pool_penalty": 2
+     }
+    }
+   },
+   "description": "A steadying word and a calming hand; the fight drains out of a foe, and their guard turns slow and uncertain."
+  },
+  {
+   "_comment": "raskghar_awakened's ONLY skill, so the AI (`_act_ranged`'s spell_id scan) always picks it -- guaranteed real, no dead-code risk, cast almost every turn it's in range.",
+   "id": "raskghar_maul",
+   "display_name": "[Raskghar Maul]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "effect": {
+    "type": "spell_damage",
+    "range": 2,
+    "applies": {
+     "slowed": {
+      "pool_penalty": 2
+     },
+     "weakened": {
+      "duration_rounds": 1
+     }
+    }
+   },
+   "description": "A sweeping, reaching swipe of claw and forearm that batters the legs out from under you and leaves them slow to answer."
+  },
+  {
+   "_comment": "Canon rename: [Frost Touch] -> [Snap Freeze] (id `frost_touch` UNCHANGED -- save-compat).",
+   "id": "frost_touch",
+   "display_name": "[Snap Freeze]",
+   "icon": "icon_frost_bolt",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "freezes": true,
+   "freeze_toast": "[Snap Freeze] — You lay your palm to the water and cold spiders out from it. In a breath the channel locks to grey-white ice, thick enough to bear your weight. It will not last past your next rest.",
+   "field_ambient": "[Snap Freeze] — Frost blooms from your fingers and hangs glittering in the air. There is nothing here for it to grip.",
+   "description": "A breath of deep cold that skins still water in load-bearing ice."
+  },
+  {
+   "_comment": "Canon rename: [Kindle] -> [Firefly] (id `kindle` UNCHANGED -- save-compat).",
+   "id": "kindle",
+   "display_name": "[Firefly]",
+   "icon": "icon_flame_jet",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "burns": true,
+   "field_ambient": "[Firefly] — A curl of flame dances up over your knuckles and gutters out. Nothing here will take the fire.",
+   "description": "A conjured flame, hot enough to take dry debris and old timber in moments."
+  },
+  {
+   "_comment": "Canon rename (closes the provisional naming AND the real class grant): [Sneak] -> [Stealth] (id `sneak` UNCHANGED -- save-compat; ids are never player-visible, verified by grep -- no UI surface renders a raw id).",
+   "id": "sneak",
+   "display_name": "[Stealth]",
+   "icon": "icon_sneak",
+   "contexts": [
+    "exploration",
+    "combat"
+   ],
+   "field": true,
+   "sneaks": true,
+   "ap_cost": 1,
+   "effect": {
+    "type": "move_pool_bonus",
+    "amount": 2
+   },
+   "description": "A soft step that slips past watching eyes and clears ground when blades are drawn."
+  },
+  {
+   "_comment": "COEXISTENCE CONTRACT (unchanged): [Stealth] and [Invisibility] both flip the SAME single field `sneaking` bool -- one stance, two keys.",
+   "id": "invisibility",
+   "display_name": "[Invisibility]",
+   "icon": "icon_invisibility",
+   "contexts": [
+    "exploration",
+    "combat"
+   ],
+   "field": true,
+   "sneaks": true,
+   "sneak_visual": {
+    "alpha": 0.35,
+    "shimmer": true
+   },
+   "ap_cost": 1,
+   "mp_cost": 3,
+   "effect": {
+    "type": "invisibility",
+    "duration_rounds": 3,
+    "applies": {
+     "invisible": {
+      "untargetable": true
+     }
+    }
+   },
+   "description": "A working that bends the light around you until even a careful eye finds nothing worth watching."
+  },
+  {
+   "_comment": "GH#94 icon drain: icon_power_shot added (code-drawn fletched-arrow glyph, tools/sync_assets.py::_draw_placeholder shape 'arrow_power').",
+   "id": "power_shot",
+   "display_name": "[Power Shot]",
+   "icon": "icon_power_shot",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "weapon": "bow",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 2.0
+   },
+   "cooldown_rounds": 2,
+   "description": "A full draw, held a breath too long, loosed dead center."
+  },
+  {
+   "_comment": "GH#70 [Archer].",
+   "id": "quick_nock",
+   "display_name": "[Quick Nock]",
+   "icon": "icon_quick_nock",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 1,
+   "weapon": "bow",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 0.7
+   },
+   "description": "Nock, draw, loose — before the first arrow lands, the second is already gone."
+  },
+  {
+   "_comment": "Reuses line_damage VERBATIM (flame_jet's own effect type/resolver, WISkillEffects._resolve_line_damage) -- an arrow that overpenetrates instead of a jet of fire, weapon-gated to bow instead of element-gated.",
+   "id": "piercing_shot",
+   "display_name": "[Piercing Shot]",
+   "icon": "icon_piercing_shot",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "weapon": "bow",
+   "effect": {
+    "type": "line_damage",
+    "length": 4
+   },
+   "cooldown_rounds": 2,
+   "description": "One arrow, and everything in its path pays the same price."
+  },
+  {
+   "_comment": "Deliberately NOT the same skill id as `observe` (a distinct grant, not a re-grant of Tactician's [Appraise Foe]) -- no combat effect, exploration-only, contexts/field/field_ambient shape copied from `observe` verbatim.",
+   "id": "keen_eye",
+   "display_name": "[Keen Eye]",
+   "icon": "icon_keen_eye",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Keen Eye] — You read the room the way you'd read a stand of trees for game: what moved, what didn't, what's worth a second look. Nothing here needs tracking.",
+   "description": "A hunter's habit of noticing: the broken twig, the wrong shadow, the one thing that doesn't belong."
+  },
+  {
+   "_comment": "Enemy-only (vault_construct, data/combatants.json) -- no class grants it.",
+   "id": "slam",
+   "display_name": "[Slam]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 4,
+   "windup_cadence": 2,
+   "effect": {
+    "type": "blast_damage",
+    "range": 1,
+    "radius": 1,
+    "windup_rounds": 1,
+    "applies": {
+     "rooted": {
+      "duration_rounds": 1
+     }
+    }
+   },
+   "description": "A vast fist draws back, and the floor itself seems to brace."
+  },
+  {
+   "_comment": "Id `directed_strike` is PINNED (Lane B builds against it) and unchanged -- only display_name substitutes, the same id-stable/display-swap convention sneak->[Stealth]/observe->[Appraise Foe] already established.",
+   "id": "directed_strike",
+   "icon": "icon_directed_strike",
+   "display_name": "[Chosen Blow]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "effect": {
+    "type": "damage_mult",
+    "mult": 1.6
+   },
+   "description": "You read the opening before it's there, and the blow lands exactly where it was always going to."
+  },
+  {
+   "id": "flanking_step",
+   "display_name": "[Flanking Step]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "move_pool_bonus",
+    "amount": 1
+   },
+   "description": "A half-step that puts you exactly where the fight isn't looking."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- no wiki match found; mirrors [Battlefield Awareness]'s own unflagged precedent (Tactician's L1 grant, same idiom).",
+   "id": "read_the_field",
+   "display_name": "[Read the Field]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "hit_bonus",
+    "amount": 10
+   },
+   "description": "The whole board resolves at once — every gap in a guard, every foot planted wrong."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked, no match.",
+   "id": "measured_words",
+   "icon": "icon_measured_words",
+   "display_name": "[Measured Words]",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Measured Words] — You turn a careful phrase to no one in particular. It lands, as it always does, on empty air.",
+   "description": "Every word chosen and weighed before it leaves the mouth — the kind of care that opens doors a blunt tongue never finds."
+  },
+  {
+   "_comment": "Costs MP unlike second_wind (a genuine resource tax distinguishing the two self/ally heals) and heals less (6 vs second_wind's 8) since it can reach a second body.",
+   "id": "soothing_presence",
+   "icon": "icon_soothing_presence",
+   "display_name": "[Soothing Presence]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "mp_cost": 3,
+   "effect": {
+    "type": "heal",
+    "amount": 6,
+    "ally_target": true
+   },
+   "description": "A calm that isn't performed — it settles over the room, and over a hurting friend, the same way."
+  },
+  {
+   "_comment": "AP-only (no mp_cost, a construct's ward isn't a spell) -- a small mend plus a defensive ward is the direct read for an escort construct covering its hurt sibling/boss.",
+   "id": "guarding_ward",
+   "display_name": "[Guarding Ward]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "effect": {
+    "type": "heal",
+    "amount": 4,
+    "ally_target": true,
+    "applies": {
+     "guarded": {
+      "duration_rounds": 1
+     }
+    }
+   },
+   "description": "A muttered ward and a steadying hand — the hurt eases, and the next blow lands a little softer."
+  },
+  {
+   "id": "open_doors",
+   "icon": "icon_open_doors",
+   "display_name": "[Open Doors]",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Open Doors] — You offer the easy, practiced warmth that opens rooms. There is no room here to open.",
+   "door_flavor": "[Open Doors] — The door was not locked. It opens anyway, with tremendous ceremony, and somewhere the Skill feels appreciated.",
+   "description": "Doors that would stay shut for anyone else swing open at your approach — goodwill has its own kind of key."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect index), no match for a bare trap-sense Skill.",
+   "id": "find_trap",
+   "icon": "icon_find_trap",
+   "display_name": "[Find Trap]",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Find Trap] — You scan the ground and walls out of old habit. Nothing here is rigged.",
+   "description": "A practiced eye for the telltale signs of a trap: a loose stone, a taut wire, a floor that doesn't quite match."
+  },
+  {
+   "_comment": "Field-only, same requires_skill+on_skill_use seam, no new sim code.",
+   "id": "disarm_trap",
+   "icon": "icon_disarm_trap",
+   "display_name": "[Disarm Trap]",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Disarm Trap] — Your fingers twitch through the motions of a disarm. There is nothing here to still.",
+   "description": "Steady hands and a thief's patience: whatever waits to spring, waits a little longer."
+  },
+  {
+   "_comment": "Id `sudden_strike` is PINNED and unchanged -- only display_name substitutes.",
+   "id": "sudden_strike",
+   "display_name": "[Sneak Attack]",
+   "icon": "icon_sudden_strike",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "once_per_fight": true,
+   "effect": {
+    "type": "damage_mult",
+    "mult": 1.8
+   },
+   "description": "One chance, taken before the fight knows to expect it."
+  },
+  {
+   "_comment": "Id PINNED.",
+   "id": "called_shot",
+   "icon": "icon_called_shot",
+   "display_name": "[Called Shot]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "weapon": "bow",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 2.2
+   },
+   "cooldown_rounds": 2,
+   "description": "A shot picked out in advance, and placed exactly there."
+  },
+  {
+   "_comment": "Id PINNED.",
+   "id": "piercing_volley",
+   "icon": "icon_piercing_volley",
+   "display_name": "[Piercing Volley]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "weapon": "bow",
+   "effect": {
+    "type": "line_damage",
+    "length": 5
+   },
+   "cooldown_rounds": 2,
+   "description": "A punishing volley loosed down the line, arrow after arrow finding the same seam."
+  },
+  {
+   "_comment": "flame_jet stays untouched (still the only line-shaped fire skill); this is the practical EARLY single-target active fire lacked entirely.",
+   "id": "flame_dart",
+   "icon": "icon_flame_dart",
+   "display_name": "[Flame Dart]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "mp_cost": 3,
+   "element": "fire",
+   "effect": {
+    "type": "spell_damage",
+    "range": 4
+   },
+   "description": "A guttering mote of flame flung hard and fast, spent before it can gutter out."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked (Skills Effect/P), no match for a bare hospitality-themed Skill.",
+   "id": "perfect_hospitality",
+   "icon": "icon_perfect_hospitality",
+   "display_name": "[Perfect Hospitality]",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Perfect Hospitality] — You straighten a chair, smooth a cloth, ready the room out of habit. There's no one here to welcome yet.",
+   "description": "Every guest finds exactly the welcome they didn't know they needed — a warm room, a full glass, a seat that was somehow already theirs."
+  },
+  {
+   "_comment": "`weapon: bow` gates it through the SAME `weapon_gated_kit` filter every other weapon-tagged skill already uses, so it only ever contributes with a bow equipped -- the 'bow passive' framing holds exactly.",
+   "id": "steady_draw",
+   "display_name": "[Steady Draw]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "weapon": "bow",
+   "effect": {
+    "type": "hit_bonus",
+    "amount": 8
+   },
+   "description": "Breath out, string back, and the point of aim simply stops drifting — a drawn bow held as still as a nail in a beam."
+  },
+  {
+   "_comment": "Deliberately carries NEITHER `ap_cost`/`effect` NOR `field: true` -- a pure passive identity trait, the SAME shape lesser_stamina/lesser_strength already ship (flavor-only, never castable).",
+   "id": "bargain",
+   "display_name": "[Bargain]",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "An instinct for what a price is REALLY worth, and the nerve to say so out loud. Where haggling is welcome, the asking price comes down for you."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki-checked, no match.",
+   "id": "appraise_goods",
+   "icon": "icon_appraise_goods",
+   "display_name": "[Appraise Goods]",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Appraise Goods] — You turn an imagined item over in your hands out of habit, weighing a price that isn't there.",
+   "description": "A trader's eye: where a thing came from, what it's really worth, and whether the asking price is honest."
+  },
+  {
+   "_comment": "No `ap_cost`/`effect`/`field` -- same passive-identity shape as bargain above.",
+   "id": "bulk_terms",
+   "display_name": "[Bulk Terms]",
+   "contexts": [
+    "exploration"
+   ],
+   "trade_bonus": 0.1,
+   "description": "Wholesale eyes on a retail world — goods move through you in bulk, and the numbers favor the one who moves them."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- passive-identity shape matches bargain/lesser_stamina.",
+   "id": "runners_legs",
+   "display_name": "[Runner's Legs]",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "The road is long. Your legs have stopped caring."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED -- Fals, 7.00; passive-identity shape matches bargain/lesser_stamina.",
+   "id": "efficient_run",
+   "display_name": "[Efficient Run]",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "Every stride lands cleanly, wasting neither breath nor road."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- wiki name carries an unresolved early-volume citation; battlefield_awareness's move_pool_bonus shape verbatim.",
+   "id": "enhanced_movement",
+   "display_name": "[Enhanced Movement]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "move_pool_bonus",
+    "amount": 1
+   },
+   "description": "The opening between one step and the next becomes a road of its own."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL -- noun-phrase replacement for the rejected imperative [Brew Remedy].",
+   "id": "hedge_remedy",
+   "display_name": "[Hedge Remedy]",
+   "icon": "icon_hedge_remedy",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Hedge Remedy] — You stir an absent pot and sort imaginary roots. The working needs a real cauldron.",
+   "description": "Root, leaf, patience, and the exact moment the pot should leave the fire.",
+   "cookware_use": {
+    "accomplishment": "witch_craft_used",
+    "item": "remedy_draught",
+    "remove_item": "dried_yarrow_bundle",
+    "toast": "[Hedge Remedy] — Any pot will do, if the hands mean it. The steam settles into something kinder."
+   }
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL -- hp_bonus reuses tough_body's passive combat shape; witch kit stays AP-only.",
+   "id": "witchs_warding",
+   "display_name": "[Witch's Warding]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "hp_bonus",
+    "amount": 8
+   },
+   "description": "A quiet promise laid over skin and spirit: not this one, not yet."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL -- calming_touch's no-MP spell_damage shape, range 3, weakened rider; no element counter.",
+   "id": "evil_eye",
+   "display_name": "[Evil Eye]",
+   "icon": "icon_evil_eye",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "effect": {
+    "type": "spell_damage",
+    "range": 3,
+    "applies": {
+     "weakened": {
+      "duration_rounds": 1
+     }
+    }
+   },
+   "description": "One hard look catches like a curse, and certainty drains from the target's limbs."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED -- Pisces' spell list; frost_bolt's costs and range without a rider.",
+   "id": "bone_dart",
+   "display_name": "[Bone Dart]",
+   "icon": "icon_bone_dart",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 1,
+   "mp_cost": 2,
+   "element": "death",
+   "effect": {
+    "type": "spell_damage",
+    "range": 4
+   },
+   "description": "A splinter of white bone snaps into being and flies point-first."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED -- Pisces; spell_damage reuses shipped range and weakened-rider seams.",
+   "id": "deathbolt",
+   "display_name": "[Deathbolt]",
+   "icon": "icon_deathbolt",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "mp_cost": 4,
+   "element": "death",
+   "effect": {
+    "type": "spell_damage",
+    "range": 4,
+    "applies": {
+     "weakened": {
+      "duration_rounds": 1
+     }
+    }
+   },
+   "description": "A black-green lance that leaves warmth and courage guttering behind it."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED -- Pisces and Ceria, 2.15; field_ambient shape matches other prop-cast utility skills.",
+   "id": "detect_magic",
+   "display_name": "[Detect Magic]",
+   "icon": "icon_detect_magic",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Detect Magic] — You open your senses. No nearby working answers.",
+   "description": "Magic leaves pressure, color, and intent behind. You have learned how to look."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED -- Erin, 2.17; field_ambient shape matches basic_cooking with a distinct icon.",
+   "id": "advanced_cooking",
+   "display_name": "[Advanced Cooking]",
+   "icon": "icon_advanced_cooking",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Advanced Cooking] — You compose a meal in your head. It needs a proper station: a chef's counter, or a stall burner.",
+   "description": "Cast at a chef's station to plate a fine meal — worth an extra 2 HP in your next fight. A kitchen becomes possibility: timing, balance, and the dish hidden inside the ingredients."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED -- Erin, 2.17; passive-identity shape limited to recipes and practiced arts.",
+   "id": "perfect_recall",
+   "display_name": "[Perfect Recall]",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "Every recipe and practiced motion waits exactly where you left it."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- field prop-cast shape matches advanced_cooking.",
+   "id": "signature_dish",
+   "display_name": "[Signature Dish]",
+   "icon": "icon_signature_dish",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Signature Dish] — The dish is already clear in your mind. Only the kitchen is missing.",
+   "description": "One dish bears your hand so completely that no other cook could make it the same."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED with AMBIGUOUS-lean-PASS flag -- accepted 2026-07-15 despite renumbering drift; steady_draw's hit_bonus amount reused.",
+   "id": "eagle_eyes",
+   "display_name": "[Eagle Eyes]",
+   "icon": "icon_eagle_eyes",
+   "contexts": [
+    "exploration",
+    "combat"
+   ],
+   "field": true,
+   "field_ambient": "[Eagle Eyes] — Distance sharpens, but there is no vantage here worth claiming.",
+   "ap_cost": 0,
+   "effect": {
+    "type": "hit_bonus",
+    "amount": 8
+   },
+   "description": "Distance gives up its secrets: tracks, motion, and the one detail that does not belong."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- sudden_strike's once-per-fight numbers with a bow gate.",
+   "id": "marked_quarry",
+   "display_name": "[Marked Quarry]",
+   "icon": "icon_marked_quarry",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "weapon": "bow",
+   "once_per_fight": true,
+   "effect": {
+    "type": "damage_mult",
+    "mult": 1.8
+   },
+   "description": "You choose the quarry before drawing. The arrow only completes the decision."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED -- Valceif, 2.15; combat half reuses move_pool_bonus verbatim.",
+   "id": "double_step",
+   "display_name": "[Double Step]",
+   "icon": "icon_double_step",
+   "contexts": [
+    "exploration",
+    "combat"
+   ],
+   "field": true,
+   "blinks": true,
+   "blink_range": 2,
+   "ap_cost": 1,
+   "effect": {
+    "type": "move_pool_bonus",
+    "amount": 2
+   },
+   "description": "One stride becomes two, with the road between them briefly optional."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED -- Pisces' Tier-3 spell. FIELD HALF MP-INFORMATIONAL, matching shipped [Invisibility]; combat spends the listed 3 MP. Combat half reuses move_pool_bonus verbatim.",
+   "id": "flash_step",
+   "display_name": "[Flash Step]",
+   "icon": "icon_flash_step",
+   "contexts": [
+    "exploration",
+    "combat"
+   ],
+   "field": true,
+   "blinks": true,
+   "blink_range": 4,
+   "ap_cost": 2,
+   "mp_cost": 3,
+   "effect": {
+    "type": "move_pool_bonus",
+    "amount": 3
+   },
+   "description": "The first lesson is footwork. The second is leaving distance behind."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED -- Pisces; field-only companion working at the three authored bone piles.",
+   "id": "animate_dead",
+   "display_name": "[Animate Dead]",
+   "icon": "icon_animate_dead",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "animates": true,
+   "mp_cost": 4,
+   "description": "Old bones remember just enough motion to answer a practiced command."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- one-sleep trigger-radius suppression.",
+   "id": "hearthward_charm",
+   "display_name": "[Hearthward Charm]",
+   "icon": "icon_hearthward_charm",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "wards": true,
+   "description": "Thread, wax, and intent laid where danger means to cross."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL, canon-plausible flag -- distinct two-sleep ward id; never re-semanticize hearthward_charm.",
+   "id": "greater_hearthward",
+   "display_name": "[Greater Hearthward]",
+   "icon": "icon_greater_hearthward",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "wards": true,
+   "ward_sleeps": 2,
+   "description": "A stronger charm remembers its boundary after one night has passed."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (6.39, Octavia). [Mixer] L1 field bench-cast: consumes nothing v1 (basic_cooking precedent), yields a low-tier consumable + banks synthesized_draught. field_ambient shape matches basic_cooking.",
+   "id": "low_grade_synthesis",
+   "display_name": "[Low-Grade Synthesis]",
+   "icon": "icon_low_grade_synthesis",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Low-Grade Synthesis] — You measure out a working in your head. It wants a real bench and a burner you don't have here.",
+   "description": "The first thing any mixer learns: crude reagents over a low flame, and a result that mostly behaves."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (6.39). Pure passive identity (actives-become-passives directive) -- botched mixtures burn off clean; no bench, no hotbar slot. Icon carried for the journal panel only.",
+   "id": "cleansing_heat",
+   "display_name": "[Cleansing Heat]",
+   "icon": "icon_cleansing_heat",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "A botched mixture never festers. Heat takes the failure cleanly, and the bench is ready for the next attempt."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (6.39). [Mixer] L5 field bench-cast: yields solvent_phial (a component item) + banks synthesized_draught.",
+   "id": "magic_water_solvent",
+   "display_name": "[Magic-Water Solvent]",
+   "icon": "icon_magic_water_solvent",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Magic-Water Solvent] — You think through the dilution, drop by drop. Without magic-water and a clean phial, it stays a thought.",
+   "description": "Magic-water, drawn down and clarified until it will lift what plain water cannot. The base every finer working starts from."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (6.39). [Mixer] L7 field bench-cast: yields mineral_salts (a component item) + banks synthesized_draught.",
+   "id": "mineral_distillation",
+   "display_name": "[Mineral Distillation]",
+   "icon": "icon_mineral_distillation",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Mineral Distillation] — You picture the slow boil and the salts left behind. It needs a retort and a fire you don't have here.",
+   "description": "Boil a mineral wash down far enough and what remains is pure salts, the backbone of any potion worth the name."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL, canon-plausible. [Alchemist] L10 field bench-cast: the first component-consuming recipe -- eats solvent_phial + mineral_salts (requires_item + remove_item String|Array seam, #155) and yields tonic_of_the_clear_eye + banks synthesized_draught.",
+   "id": "true_synthesis",
+   "display_name": "[True Synthesis]",
+   "icon": "icon_true_synthesis",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[True Synthesis] — You lay the whole working out in your mind, solvent into salts in the one order that holds. Only a proper bench will bear it.",
+   "description": "Where a mixer combines, an alchemist transforms. Solvent and salts, brought together in the right hand, become something neither one was."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (3.23 L). [Beast Tamer] L1 pure passive identity (actives-become-passives directive) -- no hotbar slot; icon carried for the journal panel only.",
+   "id": "healthy_rearing",
+   "display_name": "[Healthy Rearing]",
+   "icon": "icon_healthy_rearing",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "Animals in your care simply do better. They eat, they mend, they trust. It is not magic, except in the way it is."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (4.21 E). Passive on the PLAYER record (no effect key -- the kit fold would buff the PC); the companion-side +hit lives in basic_command_boon, injected onto the companion combatant at roster build (wi_game.gd, GH#156).",
+   "id": "animals_basic_command",
+   "display_name": "[Animals: Basic Command]",
+   "icon": "icon_animals_basic_command",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "Sit. Stay. Strike. A trained beast hears the shape of your intent, not just the word."
+  },
+  {
+   "_comment": "COMPANION BOON (GH#156): hidden effect-carrier for [Animals: Basic Command] -- never granted to a class, never hotbar-bound; appended to the COMPANION combatant's skill list at roster inject. hit_bonus amount reuses the steady_draw/eagle_eyes tuned value.",
+   "id": "basic_command_boon",
+   "display_name": "[Animals: Basic Command]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "hit_bonus",
+    "amount": 8
+   },
+   "description": "A trained beast fights like it has heard the plan."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED shape '[Lesser Bond: Name]' (3.11 E). Field tame: `tames: true` routes through the companion_source seam (wi_game.gd _animate_field) -- casts at tameable props carrying `companion_source`, refusal toast otherwise. Tamed companions PERSIST sleep.",
+   "id": "lesser_bond",
+   "display_name": "[Lesser Bond]",
+   "icon": "icon_lesser_bond",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "tames": true,
+   "mp_cost": 2,
+   "field_ambient": "[Lesser Bond] — You reach out, and nothing here reaches back. The wild keeps its own company today.",
+   "description": "A thin thread of trust, offered and accepted. It is not ownership. Nothing about it is ownership."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL, care-tier canon-plausible (flagged in spec). Field cast at wounded-beast props via the requires_skill/on_skill_use seam; banks tended_beasts.",
+   "id": "beasts_mending",
+   "display_name": "[Beast's Mending]",
+   "icon": "icon_beasts_mending",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "mp_cost": 2,
+   "field_ambient": "[Beast's Mending] — Your hands know what to do, but nothing hurt waits here to be helped.",
+   "description": "Splint, salve, and a steadiness that tells a frightened animal the worst is over."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (Mrsha pre-upgrade). Passive: beast-kind (`beast: true`) ambush encounters trigger at radius -1 for this player -- code seam at wi_game.gd _wild_affinity_reduction, AMBUSH CHECK ONLY. [Peace of the Wild] supersedes at -2.",
+   "id": "wild_affinity",
+   "display_name": "[Wild Affinity]",
+   "icon": "icon_wild_affinity",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "Wild things startle later around you, and settle sooner. You smell like something that belongs."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL (companion max-hp step). Passive on the PLAYER record; the companion-side +hp lives in pack_bond_boon, injected at roster build (GH#156).",
+   "id": "pack_bond",
+   "display_name": "[Pack Bond]",
+   "icon": "icon_pack_bond",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "The bond runs both ways now. What follows you is harder to kill, because it knows you are coming back for it."
+  },
+  {
+   "_comment": "COMPANION BOON (GH#156): hidden effect-carrier for [Pack Bond] -- never granted to a class; appended to the COMPANION combatant at roster inject.",
+   "id": "pack_bond_boon",
+   "display_name": "[Pack Bond]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "hp_bonus",
+    "amount": 4
+   },
+   "description": "Harder to kill, because it knows you are coming back for it."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (5.06 M) -- the [Wild Affinity] upgrade. Same code seam (wi_game.gd _wild_affinity_reduction), reduction 2, supersedes.",
+   "id": "peace_of_the_wild",
+   "display_name": "[Peace of the Wild]",
+   "icon": "icon_peace_of_the_wild",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "The wild has decided about you. Wolves note you and go back to their business; even the small things stop holding their breath."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (Two Rats interlude). [Druid] L16 combat cast: spell_damage range 1 + applies.rooted (slam's shipped rider shape). element nature banks nature_cast for free via the element-counter seam.",
+   "id": "thorn_hand",
+   "display_name": "[Thorn Hand]",
+   "icon": "icon_thorn_hand",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "mp_cost": 3,
+   "element": "nature",
+   "effect": {
+    "type": "spell_damage",
+    "range": 1,
+    "applies": {
+     "rooted": {
+      "duration_rounds": 1
+     }
+    }
+   },
+   "description": "Green shoots burst from your palm and take the enemy at the ankle. The ground remembers being wild."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (6.56, Yvlon). Swordsman L14, line's first non-mult active -- line_damage (piercing_shot resolver), sword-gated.",
+   "id": "crescent_cut",
+   "display_name": "[Crescent Cut]",
+   "icon": "icon_crescent_cut",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "weapon": "sword",
+   "effect": {
+    "type": "line_damage",
+    "length": 3
+   },
+   "description": "A single sweeping arc, wide enough that everyone caught in its path shares the wound."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (Vol 7 Gecko interlude, Relc). Spearmaster L14 through-the-target thrust -- line_damage, spear-gated.",
+   "id": "pierce_thrust",
+   "display_name": "[Pierce Thrust]",
+   "icon": "icon_pierce_thrust",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "weapon": "spear",
+   "effect": {
+    "type": "line_damage",
+    "length": 3
+   },
+   "description": "The spear goes in and keeps going, and whatever stood behind the first foe learns why the line matters."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (4.27 H, Ceria/Illphres). Ice Mage L14 heavy shield. mana_shield absorber keys on the literal id 'mana_shield' (wi_combat.gd), already inherited from [Mage] L2 -- this capstone reinforces the shielded identity, not a second absorber.",
+   "id": "ice_wall",
+   "display_name": "[Ice Wall]",
+   "icon": "icon_ice_wall",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "mana_shield"
+   },
+   "description": "A slab of conjured ice rises between you and the blow, and drinks it cold."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (Vol <=7). Fire Mage L14 incantation-free flame -- quick_cast capstone (line already holds [Quick Cast] via [Mage] L1).",
+   "id": "flashfire_spellcraft",
+   "display_name": "[Flashfire Spellcraft]",
+   "icon": "icon_flashfire_spellcraft",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "quick_cast"
+   },
+   "description": "No words, no gathering. The flame is simply already there, because you did not wait for it."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED. Sharpshooter L14. damage_mult with a weakened rider -- the damage_mult arm gains status application (skill_effects.gd), mirroring spell_damage; existing damage_mult skills carry no `applies` so the combat sim stays byte-identical.",
+   "id": "blinding_arrow",
+   "display_name": "[Blinding Arrow]",
+   "icon": "icon_blinding_arrow",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 2,
+   "weapon": "bow",
+   "effect": {
+    "type": "damage_mult",
+    "mult": 1.2,
+    "applies": {
+     "weakened": {
+      "duration_rounds": 1
+     }
+    }
+   },
+   "description": "A shaft loosed to burst bright at the eyes — little force behind it, but the target fights half-blind for it."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED. Infiltrator L14 blink-flavored repositioning -- turn-start move_pool passive (0 AP), enhanced_movement shape at +2.",
+   "id": "shadowstep",
+   "display_name": "[Shadowstep]",
+   "icon": "icon_shadowstep",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "move_pool_bonus",
+    "amount": 2
+   },
+   "description": "You step into one shadow and out of another, and the distance between never happened."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED [Instantaneous Barrage (Phantom Arrows)]. Strategist L14, weaponless line_damage (no weapon gate -- conjured arrows). Ship id phantom_barrage; display keeps the shorter attested form.",
+   "id": "phantom_barrage",
+   "display_name": "[Instantaneous Barrage]",
+   "icon": "icon_phantom_barrage",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 3,
+   "effect": {
+    "type": "line_damage",
+    "length": 4
+   },
+   "cooldown_rounds": 2,
+   "description": "A hundred arrows that were never real fall in the same instant, and everything beneath them is."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED. Emissary L14 social passive -- identity line (no combat effect, no dialogue gate wired this wave). pack_bond passive-record shape.",
+   "id": "trusted_voice",
+   "display_name": "[Trusted Voice]",
+   "icon": "icon_trusted_voice",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "When you speak, people lean in to believe you. Doors that stay shut for other envoys open at your word."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (5.59, Drassi -- barmaid-line inn work). Barmaid L14. Keeps the attested name; distinct id because shipped `servers_prescience` (a [Server] field skill) already owns that snake_case. dangersense passive.",
+   "id": "barmaids_prescience",
+   "display_name": "[Server's Prescience]",
+   "icon": "icon_barmaids_prescience",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "dangersense"
+   },
+   "description": "You feel the room tilt toward trouble a breath before it does: a dropped tray, a raised fist, a blade under a coat."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL (collision adjudication) -- [Server's Prescience] went to the barmaid sibling, so the hustle voice ships instead. Server L14, move_pool +1 turn-start passive.",
+   "id": "swift_service",
+   "display_name": "[Swift Service]",
+   "icon": "icon_swift_service",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "move_pool_bonus",
+    "amount": 1
+   },
+   "description": "Every step between the tables is already planned, so your feet never waste one."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED. Merchant L14 field value-read -- field_ambient identity (appraise_goods shape), no combat effect.",
+   "id": "evaluation_of_wealth",
+   "display_name": "[Evaluation of Wealth]",
+   "icon": "icon_evaluation_of_wealth",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Evaluation of Wealth] — You weigh the room for what it is worth. Nothing here carries a price worth naming today.",
+   "description": "A glance tells you the true worth of a thing: what it cost, what it will fetch, and what the seller hopes you do not notice."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (4.24, 4.44 M). Courier L14. Ships as couriers_double_step because shipped [Runner] L5 [Double Step] owns `double_step`; passive move_pool +2 (distinct from the inherited active).",
+   "id": "couriers_double_step",
+   "display_name": "[Double Step]",
+   "icon": "icon_couriers_double_step",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "move_pool_bonus",
+    "amount": 2
+   },
+   "description": "The road learns your name. Two strides for every one, and it never seems to tire you."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED. Witch L14 omen-read -- dangersense passive, the hedge-craft foresight.",
+   "id": "tea_omens",
+   "display_name": "[Tea Omens]",
+   "icon": "icon_tea_omens",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "dangersense"
+   },
+   "description": "The leaves settle into shapes, and the shapes are always about what is coming. Usually it is bad. Usually you are ready."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED [Supplies:]. Chef L14. Restocks one flarepepper_powder at each rest via the sleep() hook (wi_game.gd, known_skills gate, never stacks); passive identity record.",
+   "id": "flarepepper_supplies",
+   "display_name": "[Supplies: Flarepepper Powder]",
+   "icon": "icon_flarepepper_supplies",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "Your pack is never quite empty. There is always one more twist of flarepepper put by, ready for the pan."
+  },
+  {
+   "_comment": "CANON-VERDICT: ATTESTED (6.39, Xif). Alchemist L14 field bench-cast (true_synthesis shape) -- reduces crude_draught into tonic_of_the_clear_eye. Recipe rides an alchemy bench's on_skill_use; no bench wired this wave (field_ambient identity until one is placed).",
+   "id": "perfect_reduction",
+   "display_name": "[Perfect Reduction]",
+   "icon": "icon_perfect_reduction",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Perfect Reduction] — You lay out the reduction in your head, crude draught to clear tonic. It wants a proper bench you do not have here.",
+   "description": "Where a lesser hand throws out the crude batch, you boil it down to its one true part: nothing wasted, nothing left but the working itself."
+  },
+  {
+   "_comment": "CANON-VERDICT: ORIGINAL (collision adjudication -- research's [Lesser Bond] is ATTESTED 6.08 but the id is the shipped [Beast Tamer] tame verb). Beast Master L14. Passive on the PLAYER record (no effect -- the kit fold would buff the PC unconditionally); the +hit lives in sworn_fang_boon, injected PC-side at roster build while a companion rides (GH#156 pattern inverted).",
+   "id": "sworn_fang_ride_together",
+   "display_name": "[Sworn Fang: Ride Together]",
+   "icon": "icon_sworn_fang_ride_together",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "You and the beast beneath you think as one animal now. Where it turns, you strike; where you lean, it carries you."
+  },
+  {
+   "_comment": "COMPANION BOON (GH#165, inverse of GH#156): hidden PC-side carrier for [Sworn Fang: Ride Together] -- never granted to a class, never hotbar-bound; appended to the PC combatant at roster build while a companion rides. hit_bonus reuses the basic_command_boon tuned value.",
+   "id": "sworn_fang_boon",
+   "display_name": "[Sworn Fang: Ride Together]",
+   "contexts": [
+    "combat"
+   ],
+   "ap_cost": 0,
+   "effect": {
+    "type": "hit_bonus",
+    "amount": 8
+   },
+   "description": "Two bodies, one certainty. The strike lands because both of you already knew it would."
+  },
+  {
+   "_comment": "PASSIVE: no `field`, no hotbar slot. wi_game.gd's _even_footing_crosses pins THIS id; exemption is bound to `unsteady` alone, never `freezable`.",
+   "id": "even_footing",
+   "display_name": "[Even Footing]",
+   "contexts": [
+    "exploration"
+   ],
+   "description": "Loose stone and wet plank hold under you where they would drop anyone else.",
+   "icon": "icon_even_footing"
+  },
+  {
+   "id": "greater_strength",
+   "display_name": "[Greater Strength]",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Greater Strength] — You set your shoulder to nothing in particular and let the breath out. Nothing here needs moving.",
+   "description": "Strength enough to shift what was set down to stay put.",
+   "icon": "icon_greater_strength"
+  },
+  {
+   "id": "broader_shoulders",
+   "display_name": "[Broader Shoulders]",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Broader Shoulders] — You square the pack and stand easier under it. There is nothing here worth carrying out.",
+   "description": "A load that would bow anyone else rides easy on you, and rides all day.",
+   "icon": "icon_broader_shoulders"
+  },
+  {
+   "id": "bar_fighting",
+   "display_name": "[Bar Fighting]",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "field_ambient": "[Bar Fighting] — Your hand goes looking for something with weight to it. This room has nothing to offer.",
+   "description": "Any common room is full of weapons. The trick is reaching one before the other fellow does.",
+   "icon": "icon_bar_fighting"
+  },
+  {
+   "_comment": "`repairs` keys the repairs x broken -> state_set row. One-way by substrate: no un-repair row exists.",
+   "id": "basic_repair",
+   "display_name": "[Basic Repair]",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "repairs": true,
+   "field_ambient": "[Basic Repair] — You look for the break and find none. Whatever is here is already holding.",
+   "description": "A break put back the way it was meant to sit, and it stays put.",
+   "icon": "icon_basic_repair"
+  },
+  {
+   "_comment": "`anchors` keys the anchors x gap -> state_set row. INVENTED NAME (canon [Rope Arrow] is past the spoiler bar): pin the ID, never the bracket string, so a rename stays a one-string diff.",
+   "id": "rope_work",
+   "display_name": "[Rope Work]",
+   "contexts": [
+    "exploration"
+   ],
+   "field": true,
+   "anchors": true,
+   "field_ambient": "[Rope Work] — You pay out a length and look for something to make it fast to. Nothing here will hold a line.",
+   "description": "A line made fast at both ends. A gap crossed once stays crossed for whoever comes next.",
+   "icon": "icon_rope_work"
+  }
+ ]
 }

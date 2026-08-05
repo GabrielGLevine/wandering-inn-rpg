@@ -13,23 +13,24 @@
 # same file.
 #
 # Usage:
-#   scripts/difficulty_tier_sweep.sh [--runs-note TEXT]
+#   scripts/difficulty_tier_sweep.sh [--runs-note TEXT] [--report-only]
 #
 # Output: qa_output/difficulty_tier_sweep/{plain,bronze,silver,gold}.txt plus a
-# report on stdout. Exit 0 = the sweep ran and the INERT-AT-SILVER proof held.
+# report on stdout. Exit 0 = the sweep ran and every RATIFIED GATE held.
 #
-# THE ONE THING THIS SCRIPT ASSERTS (everything else is report-only, per #360's
-# harness-first contract): the x1.0 leg must be byte-identical to a plain,
-# env-unset run. That is the standing promise the difficulty knob was shipped
-# with -- "Silver is 1.0 IS the shipped balance, so every balance cell stays
-# byte-identical by construction" (wi_combat.gd's own field comment) -- and it
-# is exactly the promise a hook like this could silently break.
-#
-# GATE PROPOSALS (report-only until ratified, #211 precedent): the report prints
-# the three signals #360 named -- monotonicity per cell, the Bronze/Gold extreme
-# flips (a cell reaching 0.00 or 1.00 at a tier where Silver did not), and the
-# largest tier deltas. Ratified thresholds land as a --gate mode here, never as
-# a band inside sim_combat_batch.gd (its bands are Silver's contract).
+# THREE GATES, all in difficulty_tier_report.py (thresholds live there, never as
+# a band inside sim_combat_batch.gd -- its bands are Silver's own contract):
+#   1. INERT-AT-SILVER, never report-only. The x1.0 leg must be byte-identical to
+#      a plain, env-unset run: the standing promise the knob shipped with
+#      ("Silver is 1.0 IS the shipped balance", wi_combat.gd's field comment),
+#      and exactly the promise a hook like this could silently break.
+#   2. MONOTONICITY per cell, RATIFIED 2026-08-04 (#384 item 1) off a clean
+#      0/141 read.
+#   3. EXTREME FLIPS, RATIFIED the same day, with a NAMED whitelist carrying a
+#      written justification per entry -- so an accepted flip stays visible and
+#      the NEXT one still reds.
+# `--report-only` prints all three and fails on nothing but 1, for exploring a
+# candidate tune without a red.
 set -u
 HERE="$(cd "$(dirname "$0")/.." && pwd)"        # wandering_inn_game/
 GODOT=/usr/local/bin/godot
@@ -38,10 +39,12 @@ OUTDIR="$HERE/qa_output/difficulty_tier_sweep"
 ALARM=900
 
 NOTE=""
+REPORT_ARGS=()
 while [ "$#" -gt 0 ]; do
 	case "$1" in
 		--runs-note=*) NOTE="${1#*=}" ;;
 		--runs-note) shift; NOTE="${1:?--runs-note requires TEXT}" ;;
+		--report-only) REPORT_ARGS+=("--report-only") ;;
 		*) echo "difficulty_tier_sweep.sh: unknown argument '$1'" >&2; exit 2 ;;
 	esac
 	shift
@@ -75,4 +78,4 @@ run_leg bronze "0.75"
 run_leg silver "1.0"
 run_leg gold   "1.3"
 
-exec python3 "$HERE/scripts/difficulty_tier_report.py" "$OUTDIR" --note "$NOTE"
+exec python3 "$HERE/scripts/difficulty_tier_report.py" "$OUTDIR" --note "$NOTE" ${REPORT_ARGS[@]+"${REPORT_ARGS[@]}"}

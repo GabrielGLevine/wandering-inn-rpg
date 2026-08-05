@@ -192,6 +192,10 @@ const RUIN_CELLS := [
 	{"name": "rift_vermin_leak_w8_relc", "arena": "inn_cellar", "enemies": ["rift_vermin_a", "rift_vermin_b", "rift_vermin_c"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.95},
 	{"name": "rift_vermin_leak_w8_solo", "arena": "inn_cellar", "enemies": ["rift_vermin_a", "rift_vermin_b", "rift_vermin_c"], "build": "warrior5_mage5", "solo": true},
 	{"name": "ruin_guardian_w8_relc", "arena": "ruin_court", "enemies": ["ruin_guardian", "ruin_ward_a", "ruin_ward_b"], "build": "warrior5_mage5", "solo": false, "win_lo": 0.55, "win_hi": 0.8},
+	# TRAP: MEASURED-only (0.13), and NAMED in difficulty_tier_report.py's
+	# EXTREME_FLIP_WHITELIST (Gold takes it to 0.00). Same rule as
+	# alley_fence_t3_warrior10_solo: retune or rename moves both or the tier
+	# gate reds.
 	{"name": "ruin_guardian_w8_solo", "arena": "ruin_court", "enemies": ["ruin_guardian", "ruin_ward_a", "ruin_ward_b"], "build": "warrior5_mage5", "solo": true},
 ]
 
@@ -378,6 +382,10 @@ const INVRISIL_CELLS := [
 	# 0.12/0.28). The pair was tuned to that number from the drafted stats: as
 	# drafted they read 0.48 / median 2, so the fence trades damage for bulk
 	# (str 6, weapon_die 3, con 40) and the doorman keeps the only real punch.
+	# TRAP: this cell is NAMED in difficulty_tier_report.py's
+	# EXTREME_FLIP_WHITELIST (Bronze saturates it to 1.00; ratified as the knob
+	# working). Re-tuning or renaming it stales that entry and the tier gate goes
+	# red -- move both together.
 	{"name": "alley_fence_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["heirloom_fence", "fence_doorman"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	# v0.16 I2 (#306). Interior brawl at Invrisil's expected level, SOLO. Same
 	# window contract as the fence cell: the shipped stop-cell precedent

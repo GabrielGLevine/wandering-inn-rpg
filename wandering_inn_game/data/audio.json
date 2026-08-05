@@ -540,11 +540,13 @@
    "cooldown_ms": 200
   },
   {
+   "_comment": "GH#335 item 4. The three progression stings are a pitch LADDER, descending with the beat's size: level_up 1.0, class_gained 0.88, class_evolved 0.78. They shared one wav at one pitch before.",
    "id": "class_gained",
    "event": "class_gained",
    "stream": "res://assets/audio/sfx/level_up.wav",
    "bus": "SFX",
    "volume_db": -11.0,
+   "pitch_scale": 0.88,
    "cooldown_ms": 200
   },
   {
@@ -655,6 +657,19 @@
    "volume_db": -9.0,
    "pitch_scale": 0.78,
    "cooldown_ms": 200
+  },
+  {
+   "_comment": "GH#335 item 4: non-quest, non-class banks were the last silent completion. GATED count:1 -- first bank only, which also stops a per-hit tally (melee_hit) machine-gunning it. Distinct by stream and pitch.",
+   "id": "accomplishment_noted",
+   "event": "accomplishment_recorded",
+   "payload": {
+    "count": 1
+   },
+   "stream": "res://assets/audio/sfx/save_chime.wav",
+   "bus": "UI",
+   "volume_db": -18.0,
+   "pitch_scale": 1.18,
+   "cooldown_ms": 400
   }
  ],
  "music": [

@@ -4,6 +4,143 @@ Newest first. Each entry: the call, the alternatives, why. Choices that
 change shipped behavior also live in their PR bodies; this is the
 cross-release index of them.
 
+## 2026-08-04 — v0.19 (wave-2) close: "the world answers the hand"
+
+Wave shape and per-issue specs came from two Fable passes (audit of all 22
+milestone issues + holistic shape), reconciled in
+`docs/superpowers/plans/2026-08-04-v019-wave2-plan.md`. Every issue carries its
+audit as a GitHub comment. Rulings below were made under the wave-autonomy
+directive: decided, logged, revocable. **Reverse any of them freely — each is
+one row or one string.**
+
+**1. Slate: 20 in, 2 cut.** #371 (inn presence) and #388 (map talk_pools) went
+to a new **v0.20** milestone with rationale and the audit's measured scope
+attached, so neither is a "deferred to the board" ghost. #371 would have forced
+a second writer into `wi_game.gd` during the one phase that had to be
+single-writer, and its cost is dominated by re-deriving four guest canonicals.
+#388 is the highest QA cost per line on the board: ~40 scripts pin map prose,
+including `line_display_ab`, the GH#324 regression canonical.
+
+**2. #349 kept IN as verify-and-close, against the shape pass's advice.** The
+audit's evidence overrode it: PR #354 plus the voice pass already shipped ~90%,
+and the arena leg resolves as already-shipped-copy — `ceria_intro:9`'s "three
+of us actually walking in — Pisces bills from a distance" IS the explicit
+staging the issue asked for. Blast radius zero. **No roster change**; fielding
+him is a priced M (combatant + kit + `arenas.json` spawn expansion — arena
+`vault` has exactly four `player_spawns` — plus a gated-cell retune) available
+on request. The dig-camp presence row is DECLINED permanently.
+
+**3. [Ice Floor] extends the EXISTING `icy_floor` id to dual context** rather
+than minting a second id with an identical display name. A skill already
+displayed "[Ice Floor]" (ice_mage L10, combat-only) and the morning-README
+paste block proposed a colliding second — two skills sharing one display name
+fails the legibility bar.
+
+**4. [Durable Picks] deferred out of the slate**, 6 → 5. Its granting classes
+(`miner`, `laborer`) do not exist; a class-less skill is dead data by the
+project's own v018-close argument. Re-arms when a labour-line class ships.
+
+**5. Grants:** [Even Footing] → warrior L6 + scout; [Greater Strength] →
+warrior L7; [Broader Shoulders] → trader; [Bar Fighting] → helper (innkeeper
+inherits); [Basic Repair] → warrior; [Rope Work] → scout. The #380 issue named
+three classes that do not exist, so every fit it proposed was re-slotted.
+
+**6. [Rope Work] ships under its invented name.** The discipline that keeps
+this cheap: it is pinned by skill ID and event payload, never by the bracketed
+display string, so a rename is a one-string diff. **This is the one item still
+wanting your ACK.**
+
+**7. #378 — the Serve economy stays cooking-gated, signposted.** A combat PC
+IS meant to be shut out until they take a cooking Skill; three pillars makes
+non-combat Skills first-class, and GH#334 ruling 7 already bars
+meal-as-merchandise. Rather than reword 21 options across 11 files (the issue
+undercounted this as 7), one engine seam — an item-level `source_hint` on the
+requirement suffix — signposts all of them and every future item gate.
+
+**8. #383 — `flame_jet` gets dual context but NOT a `burns` flag.** The flag
+would have enrolled a combat spell in the shipped `burns × burnable` table row
+and turned it into a universal debris-burner in one edit. The corpse carries an
+authored arm instead. Disclosed asymmetry: flame_jet cooks a corpse but does
+not clear debris; kindle clears debris but does not cook.
+
+**9. #372 defeat variants gate on map + accomplishment** (`sparred_with_relc`,
+`slept`), not new flags, and a `variant` key joined
+`UI_DEFEAT_VEIL_RENDERED` so the copy is pinnable at all.
+
+**10. #377 scrim = one full-rect ColorRect, black, alpha 0.55,
+MOUSE_FILTER_STOP.** The issue asked to "match existing precedent"; there is no
+partial-alpha dimmer anywhere in the codebase, so a value had to be invented
+once. The windowed shot is the arbiter and may move it ±0.1.
+
+**11. #335 item 5 = a 3-state diegetic phase glyph** (day/dusk/night). No
+action count, no fill bar — an action clock would render progress-toward and is
+REFUSED. Interiors are phase-invariant, so the glyph restores parity indoors.
+
+**12. #384 item 1 — ratify the extreme-flip gate WITH `alley_fence`
+whitelisted and justified.** Bronze exists to make fights easier; a 0.81 Silver
+cell saturating at Bronze is the knob working on an already-easy social-region
+fight, not a regression. Tuning the cell to preserve a sub-1.00 Bronze would be
+tuning data for the gate's benefit — backwards. The whitelist is a named
+exception carrying its justification, so the NEXT flip still reds.
+
+**13. PixelLab budget was wrong everywhere: $1.53 in credits and ZERO
+subscription generations, not the ~$2.7 every art issue assumed.** Pack-first
+became mandatory. The bespoke-rig rows (krshia, wilovan, selys, octavia, ilvo,
+Pisces-guest) cannot be funded and are carried with reasons on the row. **A
+top-up is yours to decide — it is the one true user call in the slate.**
+
+**14. `unsteady` cells must SPEAK (controller, S0.1).** The new cell class
+shipped blocking-but-silent, reading byte-identically to masonry — this wave's
+own thesis failure mode shipping inside the wave that exists to fix it. A
+blocked step now toasts once per waking per cell, copy map-authored via
+`unsteady_toast`. The line is about FOOTING and deliberately never names
+[Even Footing]: naming it would be a hint system, and the player has not
+necessarily heard of the Skill.
+
+### What adversarial review caught that green gates did not
+
+Both phases' lanes reported fully green (33/33 units, 205/205 canonicals) and
+paired reviewers still found real defects — each BLOCK from a *different* lens,
+so single-lens review would have missed one:
+
+- **`state_set` was not permanent.** Its one-way guard read `entity_first_use`,
+  which `sleep()` clears, so an already-set carrier replayed its first-time
+  toast and re-banked a **save-persisted** counter once per sleep, unbounded,
+  while `data_lint` declared the row's persistence class "permanent". The guard
+  now reads the carrier's own counter. Its regression arm sleeps first —
+  nothing in a single waking can red it — and a negative probe confirms it
+  genuinely fails when stubbed.
+- **`thaw_cell` left the ice cap painted** over open water: the player is shown
+  ice, told the channel runs open, walks in, and is refused with no tell.
+- **The ward grace overwrote a player's paid-for [Hearthward] charm.**
+  Unreachable in shipped data today; latent the moment the martial slate landed.
+- **Consolidation went mouse-dead at 5+ field slots** — the expanded readout is
+  `MOUSE_FILTER_STOP` and covered the prompt. This wave's own warrior grants are
+  what push a martial build past five.
+- **The `source_hint` clipped at both accessibility text scales** (115% by
+  59–70px, 130% by 149–162px) — the one string whose job is to un-stick a stuck
+  player. `test_copy_fit` measures font_size 14 only and could not see it.
+  Option rows autowrap now.
+- **The ice tile shipped DEAD.** L4 generated it; `_paint_ice_cell` still built
+  its overlay from the water sheet under a tint, which is exactly what the P1
+  row forbids and what the CHOICE-LOG has already retracted once.
+- **The kitchen tint survived the wave.** L3 deliberately HELD the tint pending
+  L4's sprites ("dropping it first leaves two identical iron pots"); L4
+  delivered; neither could do the swap because the two files have different
+  owners. The train closed it.
+
+**Process lesson: the ownership split that made six-wide parallelism safe also
+created the misses.** Every one of the last three above is a handoff between
+two lanes that each did its own half correctly. Lane briefs should name the
+*counterpart* lane and require the handing lane to re-verify after the receiving
+lane merges — or the train must own an explicit handoff-closure step, which is
+what happened here by accident rather than by design.
+
+**Also predicted and hit: the composed comment census** (15.1% against a hard
+15.0% CI gate) after six lanes appended to shared data files. ~1.4k chars of
+narrative trimmed; every TRAP, contract and measurement kept. Note the ratio is
+self-damping — comment chars count toward the denominator too.
+
 ## 2026-07-28 — v0.16.1 ART: the pc_* sweep, five reuse fixes, the Coyle sign
 
 **Call: SIX owned PixelLab v3 rigs, then re-cast every `pc_*` row onto new or

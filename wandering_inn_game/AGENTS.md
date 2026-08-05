@@ -71,13 +71,23 @@ for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skill
 	# unchanged single-process behavior, proven byte-identical).
 	wandering_inn_game/scripts/harness_shard_diff.sh --shards 4 --baseline-ref main
 	# Difficulty-tier sweep (GH#360a) — the 141 cells at x0.75/x1.0/x1.3 via
-	# WI_DIFFICULTY_MULT on the ONE batch driver; asserts the x1.0 leg is
-	# identical to a plain run. Report-only until gates ratify.
+	# WI_DIFFICULTY_MULT on the ONE batch driver. THREE GATES, ON BY DEFAULT
+	# (#384 item 1, ratified 2026-08-04): inert-at-Silver (the explicit x1.0 leg
+	# is identical to a plain run), per-cell monotonicity, and extreme flips with
+	# a NAMED whitelist — each entry pins the Silver it was argued from and
+	# LAPSES (reds) when that number moves. --report-only explores a candidate
+	# tune without a red.
 	wandering_inn_game/scripts/difficulty_tier_sweep.sh
 	# Class-parity leg (GH#360b) — mirror-matched builds at total-level bands
-	# 10/14/18 over a fixed arena set; reports max spread per band. Envelope
-	# gate deliberately unratified (ai_kit coverage confound; see CHOICE-LOG).
+	# 10/14/18 over a fixed arena set; reports max spread per band. The WHOLE-BAND
+	# spread is still NOT gateable (ai_kit coverage confound). The ratified gate
+	# (#384 item 2) is the ai_kit-STRATIFIED envelope, report-only by default:
 	/usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_class_parity.gd
+	# Envelope GATE ON — what the merge train runs against a candidate branch.
+	# rc!=0 = a stratum busted its ceiling, OR a ratified ceiling went unevaluated
+	# (a stratum can vanish when a grant flips a row MUTE->SPOKEN).
+	# WI_PARITY_BAND=<10|14|18> narrows the run and is only ever a PARTIAL fence.
+	WI_PARITY_ENVELOPE_GATE=1 /usr/local/bin/godot --headless --path wandering_inn_game --script res://tests/sim_class_parity.gd
 
 	# QA scripts isolate user:// by default via HOME=.godot_home/qa-<script>-<pid>.
 	# Use --user-dir DIR after the mode to choose a stable isolated HOME explicitly.
@@ -258,6 +268,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `work_loop` | 9 | inn work-loop, Helper leg (chores → `class_gained` → level 2) |
 | `crate_fight` | 9 (fixture `post_tutorial_street`) | "Missing Crate" FORCE path; issue #69's Klbkch ally-gate roster proof (`chatted_with_klbkch` fields him, not Relc) |
 | `crate_talk` | 9 (fixture `post_tutorial_street`) | "Missing Crate" WATCH path (no combat) |
+| `d2_shop_shot` | 9 | shop-panel geometry canonical (findings 11/13): the charms menu caps at 684 + scrolls (`panel_capped` pin) — promoted from peek-orphan after the unbounded panel trapped a playtester |
 | `crate_light` | 9 | "Missing Crate" SKILL path ([Light]-studies `cellar_door`) |
 | `journal_skills` | 9 | journal skills-by-class panel; pre/post-first-use reveal |
 | `inventory_loop` | 9 | THE inventory/equipment loop; weapon-gated kit proof |
@@ -266,7 +277,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `hotbar_tab_loop` | 9 (fixture `near_tactician`) | Issue #58: Tab-primed field-hotbar select -- prime/re-prime, wrap-in-place move_right with player_cell unchanged (arrows captured while primed), Esc disarm, confirm fires the number-key-equivalent stream |
 | `social_loop` | 9 (fixture `social_loop_start`) | Social Pillar v1 proof; rotating talk pools + `goblin_parley`'s Warrior-gated intimidate → LIVE [Diplomat] earn at the sleep (#123: fixture no longer pre-holds the class); post-earn [Charming Smile]-gated Watch persuade fires as the issue #50 gate's live proof |
 | `sewers_walkthrough` | 9 (fixture `near_sewers`) | Liscor sewers proof; grate-gate seam + vermin fight |
-| `property_seams` | 9 (fixture `sewers_property_seams`) | #348 property table: freeze_cell (ice floor on water, walked onto) + remove_scorch (debris) + a null cell (untagged prop refused) |
+| `property_seams` | 9 (fixture `sewers_property_seams`) | #348 property table slices 1+2, one leg per outcome verb: freeze_cell (ice floor on water, walked onto) + thaw_cell (a SECOND channel frozen then taken back by the same fire water refuses -- per-cell, first channel stays frozen, blocked step south proves it re-shut) + remove_scorch (debris) + state_set three ways in the runners' guild, teleported to (kindle the hearth, [Light] the wall lamp, [Basic Cleaning] the mud table), each banking the CARRIER's own counter once, plus the one-way second kindle falling to ambient + three authored REFUSALS with their own copy (fire at water, frost at a lit hearth, frost at a person), each pinning toast AND ui_toast_rendered + a null cell (untagged prop refused) |
 | `cisterns_fight` | 9 (fixture `cisterns_fight_start`) | Quest 1 FIGHT path (clear `shield_spiders` nest); issue #69's other Klbkch-allied fight (seed re-verified, not independently roster-asserted -- crate_fight carries that proof) |
 | `cisterns_talk` | 9 (fixture `cisterns_talk_start`) | Quest 1 TALK path (persuade Zevara, no combat) |
 | `cisterns_scout` | 9 (fixture `cisterns_scout_start`) | Quest 1 SKILL path ([Appraise Foe] the `nest_ledge`) |
@@ -412,6 +423,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `invrisil_house_name_talk` | 9 (fixture `invrisil_house_name_talk_start`) | <!-- v018-W3 --> #318 'The Name and the Habit', TALK: the PRE-QUEST scribe (his counter pinned at TWO rows -- the three banking arms hide until the card is shown, the only pin on the #318 option-level quest gate), the Lady's hub with I1 already closed (its option array pinned whole -- proof five new rows moved nothing shipped), the boulevard carriage wake (Magnolia felt, never seen), the scribe's FREE ask refused then his [Charming Smile] chain, the broker's persuade banking `block_handed_over` on 25 gold unspent, the steward's report, the journal's Completed list pinned whole (the surface the fork-mislabel reached), the Lady's coda. Owns three negative pins its siblings cannot: [Appraise Foe] and [Stealth] LOCKED, and the 30-gold buy LOCKED at 25 gold |
 | `invrisil_house_name_skill` | 9 (fixture `invrisil_house_name_skill_start`) | <!-- v018-W3 --> #318 SKILL, the mirror ledger: [Appraise Foe] reads the scribe's blotter, [Stealth] lifts the block off the broker's table (the game's first [Stealth]-gated dialogue option), both persuade arms VISIBLE-LOCKED. Also owns the shared-settle re-entry pin -- all four fork rows retire together off `seal_block_settled` |
 | `invrisil_house_name_fight` | 9 (fixture `invrisil_house_name_fight_start`) | <!-- v018-W3 --> #318 FIGHT, the thread's only coin spend: neither Skill held, so beat 1 takes the 8-gold alternate (25 -> 17) and beat 2 takes `broker_hands`, which composes the SHIPPED `mercantile_alley` arena with the SHIPPED footpad pair (`alley_footpads_t3_warrior10_solo`, no new balance cell). Band fixture at 10, DAY for arena legibility, `on_victory` in its ARRAY form, then the broker's beaten register |
+| `martial_field_loop` | 9 (fixtures `martial_field_start` -> `martial_field_armed`) | <!-- v019-L2 --> GH#380/#381/#382/#383 THE martial exploration canonical: phase 0 at warrior 5 walks every REFUSAL (both maps' own `unsteady_toast`, four `locked_toast`s, the carcass's `skill_unknown`), then the armed fixture swaps in through the pause-Load path and [Even Footing] crosses both unsteady placements, [Greater Strength] opens the north gallery, [Rope Work] rigs the drop and the run leaves through it, [Basic Repair] decks the riverfarm bank walk -- both `state_set` seams then survive a save round-trip AND a sleep (the PERMANENT persistence class, unlike a frozen channel). Also [Broader Shoulders]' waking cap, [Flame Jet]'s one-shot carcass, and [Ice Floor] cast out of combat. `burned_the_debris` absent whole-run is the no-`burns`-flag proof; zero combat |
 
 ## Working conventions
 

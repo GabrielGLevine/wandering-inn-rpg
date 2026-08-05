@@ -549,6 +549,90 @@ func test_item_requires_stays_visible_locked() -> void:
 	assert(not d2.choose(0).is_empty(), "choose() resolves once the item gate is met")
 
 
+## GH#378 arm 1: the requirement suffix learns an item-level `source_hint`.
+## Eleven dialogue files carry 21 hot_meal-gated Serve options and a combat PC
+## can never satisfy the gate -- the ruling keeps cooking as the gate but makes
+## it LEGIBLE, and one engine seam covers all 21 instances plus every future
+## item gate. Three legs: it renders, its absence is inert, and it never leaks
+## into an option that is actually unlocked.
+func test_item_requires_source_hint_renders_and_absence_is_inert() -> void:
+	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
+		{"text": "Serve them.", "requires": {"item": "hot_meal"}, "end": true},
+		{"text": "give bowl", "requires": {"item": "stew_bowl"}, "end": true},
+		{"text": "leave", "end": true},
+	]}}}
+	var catalog := {
+		"hot_meal": {"name": "Hot Meal", "source_hint": "the inn's stew pot, if you know a pot"},
+		"stew_bowl": {"name": "Bowl of Stew"},
+	}
+	var d := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "items": catalog, "inventory": []}, Callable())
+	d.begin()
+	var opts := d.current_options()
+	assert(String(opts[0]["requirement"]) == "requires Hot Meal — the inn's stew pot, if you know a pot",
+		"a source_hint renders as the suffix's second clause, after the item name")
+	assert(String(opts[1]["requirement"]) == "requires Bowl of Stew",
+		"an item WITHOUT the key keeps the pre-#378 suffix byte-identical -- absence is inert")
+	assert(String(opts[2]["requirement"]) == "", "an ungated option carries no requirement at all")
+
+	var d2 := WIDialogue.new(graph, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "items": catalog, "inventory": ["hot_meal"]}, Callable())
+	d2.begin()
+	assert(not bool(d2.current_options()[0]["locked"]) and String(d2.current_options()[0]["requirement"]) == "",
+		"a MET item gate renders no suffix, so the hint can never nag someone already holding the thing")
+
+
+## GH#378 arm 1, the SHIPPED-DATA half: the arm above proves the mechanism on a
+## synthetic catalog, which stays green even if the real key is dropped. This
+## one walks the shipped corpus. It exists because the key lives in
+## data/items.json, whose owner is a different lane -- a merge that loses one
+## line would leave every Serve option silently un-signposted again, and the
+## only thing that would notice today is a 20-minute sweep.
+##
+## DELIBERATELY NOT PINNED HERE: the hint's wording. The exact string is a
+## player-facing surface and its home is the seven QA `"requirement"` pins
+## (inn_guests_loop x3, inn_guests_ext_loop x2, inn_guests_full_loop x1,
+## work_loop x1). This arm owns the MECHANISM surviving -- the key is present,
+## non-empty, and composes into every hot_meal-gated option in the shipped
+## corpus with no file able to opt out.
+func test_shipped_hot_meal_source_hint_reaches_every_serve_option() -> void:
+	var items_by_id := {}
+	for rec: Dictionary in (_load_json("res://data/items.json").get("items", []) as Array):
+		items_by_id[String(rec["id"])] = rec
+	var hot_meal: Dictionary = items_by_id.get("hot_meal", {})
+	var hint := String(hot_meal.get("source_hint", ""))
+	assert(hint != "", "data/items.json's hot_meal row lost its `source_hint` -- every Serve option is an un-signposted grey row again (GH#378 arm 1)")
+	var expected := "requires Hot Meal — %s" % hint
+
+	var dir := DirAccess.open("res://data/dialogue")
+	assert(dir != null, "could not enumerate res://data/dialogue")
+	var files: PackedStringArray = dir.get_files()
+	assert(files.size() > 0, "scanned zero dialogue files -- the sweep would false-pass")
+	var gated := 0
+	var carrying := 0
+	for file_name: String in files:
+		if not file_name.ends_with(".json"):
+			continue
+		var graph: Dictionary = _load_json("res://data/dialogue/%s" % file_name)
+		for node_id: String in (graph.get("nodes", {}) as Dictionary):
+			var node: Dictionary = (graph["nodes"] as Dictionary)[node_id]
+			for opt: Dictionary in (node.get("options", []) as Array):
+				var req: Dictionary = opt.get("requires", {})
+				if String(req.get("item", "")) != "hot_meal":
+					continue
+				gated += 1
+				var one := {"start": "n", "nodes": {"n": {"speaker": "S", "text": "t", "options": [
+					{"text": String(opt["text"]), "requires": {"item": "hot_meal"}, "end": true},
+				]}}}
+				var d := WIDialogue.new(one, {"skills": [], "classes": {}, "accomplishments": {}, "names": {}, "items": items_by_id, "inventory": []}, Callable())
+				d.begin()
+				var row: Dictionary = d.current_options()[0]
+				assert(bool(row["locked"]), "%s[%s] is item-gated on hot_meal but did not render locked with an empty pack" % [file_name, node_id])
+				assert(String(row["requirement"]) == expected,
+					"%s[%s] renders '%s', not the shipped signpost '%s' -- no Serve option may opt out of the source_hint" % [file_name, node_id, String(row["requirement"]), expected])
+				carrying += 1
+	assert(gated >= 21, "expected at least the 21 shipped hot_meal-gated Serve options, found %d -- did the corpus shrink, or did the scan stop finding them?" % gated)
+	assert(carrying == gated, "%d of %d hot_meal gates carried the signpost" % [carrying, gated])
+
+
 func test_item_requires_falls_back_to_raw_id_when_uncatalogued() -> void:
 	var graph := {"start": "hub", "nodes": {"hub": {"speaker": "S", "text": "t", "options": [
 		{"text": "give bowl", "requires": {"item": "stew_bowl"}, "end": true},
@@ -1088,6 +1172,8 @@ func _init() -> void:
 	test_compound_accomplishment_once_per_waking_gate()
 	test_compound_once_per_waking_item_gate()
 	test_item_requires_stays_visible_locked()
+	test_item_requires_source_hint_renders_and_absence_is_inert()
+	test_shipped_hot_meal_source_hint_reaches_every_serve_option()
 	test_item_requires_falls_back_to_raw_id_when_uncatalogued()
 	test_item_requires_unlocks_after_real_pickup()
 	test_unrecognized_requires_key_stays_visible_and_locked()

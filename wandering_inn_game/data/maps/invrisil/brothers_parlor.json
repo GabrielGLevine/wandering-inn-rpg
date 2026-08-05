@@ -304,11 +304,6 @@
    ],
    "display_name": "Wilovan",
    "sprite": "wilovan",
-   "tint": [
-    0.75,
-    0.8,
-    0.68
-   ],
    "facing": "down",
    "observe": "A Gnoll in a vest cut sharper than his manners need to be, tall hat squared like it's holding a rank. He watches the room's exits before he watches you.",
    "friendly_line": "He inclines the hat half an inch — a genuine courtesy, not a performance of one. \"A pleasure,\" he says, and seems to mean it.",
@@ -564,7 +559,12 @@
    "observe": "Banded oak, twice-locked, sitting where the quiet gentleman can count who looks at it.",
    "on_interact_accomplishment": "eyed_the_stash",
    "fence_menu": true,
-   "fence_menu_when": { "requires": { "eyed_the_stash": 1, "brothers_job_done": 1 } },
+   "fence_menu_when": {
+    "requires": {
+     "eyed_the_stash": 1,
+     "brothers_job_done": 1
+    }
+   },
    "toast": "Locked twice over. The quiet gentleman clears his throat, courteously."
   },
   {

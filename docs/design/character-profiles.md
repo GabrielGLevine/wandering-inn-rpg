@@ -119,6 +119,17 @@ canon cites · current sprite state.
   the receptionist.
 - Sprite: stand-in tint (upgrade queued).
 
+## Octavia Cotton (added 2026-08-04, playtest finding 10)
+- Stitch-Girl [Alchemist] (Pallass market consignment stall), Chandrarian.
+- CANON: dark brown skin -- she is a dark-skinned Stitch-girl from Chandrar
+  (wiki). The FIRST v0.19 rig shipped too light (playtest finding 10 --
+  "her sprite doesn't look black" -- caught it); regenerated 2026-08-05 with
+  the palette explicit in the prompt. Any future generation must carry "dark
+  brown skin-fabric" verbatim, plus the visible pale stitching seams that
+  are her species signifier.
+- Voice: fast, transactional, three prices at once, watches your hands.
+- Sprite: bespoke PixelLab v3 8-dir (#390).
+
 ## Dresk Ashgrave
 - Drake, Duty Sergeant (Liscor Watch barracks), stocky, deskbound-but-capable
   build.

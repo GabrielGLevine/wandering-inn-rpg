@@ -2984,7 +2984,7 @@ Guild and the Brothers' parlor — shots under `qa_output/v0161_art/`.
 
 Residuals, deliberately left and logged rather than silently patched:
 
-- [ ] SPRITE/WILOVAN — `wilovan` is an ID, not yet bespoke ART. The sprites.json
+- [x] SPRITE/WILOVAN — `wilovan` is an ID, not yet bespoke ART. The sprites.json
   entry still points at `pc_gnoll_m`'s sheets, so a Gnoll-male PC still meets a
   copy of himself in the parlor and at the inn. Moving `brothers_parlor/wilovan`
   onto the `wilovan` id was still the right first step (one character, one rig,
@@ -2992,14 +2992,37 @@ Residuals, deliberately left and logged rather than silently patched:
   entry's own `_comment` promises is still owed. Same for `krshia`, now on
   `gnoll_traveler` + a brown tint: species-correct and no longer the PC's skin,
   but a canon named [Shopkeeper] sharing the generic traveler rig with Xif.
-- [ ] SPRITE/SPECIES — `selys` and `octavia` still wear `citizen_f`, a human
+  **CARRIED (v0.19 L4) — await PixelLab top-up (user decision).** A named
+  character needs the v2 4-direction character pipeline plus animate-character
+  (walk + idle per facing); at the measured balance ($1.53 credits, 0
+  subscription generations) one rig would consume the lane's whole envelope
+  and still not finish. No pack rig passes the silhouette bar: the registry's
+  Gnoll rigs are the PC's own skins, and reusing one is the exact defect this
+  row records.
+- [x] SPRITE/SPECIES — `selys` and `octavia` still wear `citizen_f`, a human
   woman, while Selys is a Drake and Octavia a Stitch-girl. Named in the triage
   as species errors; out of this lane's five-item budget, untouched here.
-- [ ] SPRITE/ILVO — Ilvo wears `tier_clerk`, a Pallass civic rig (bronze guild
+  **CARRIED (v0.19 L4) — await PixelLab top-up (user decision).** Two bespoke
+  rigs (a Drake woman and a Stitch-girl); no pack in the tree ships either
+  species, so pack-first has nothing to offer and the fix is generation-only.
+- [x] SPRITE/ILVO — Ilvo wears `tier_clerk`, a Pallass civic rig (bronze guild
   sash), because the registry holds exactly two Drake civilian rigs and Renn
   needed the other one four cells away. It reads as a slim coated Drake beside
   Renn's bulk — the adjacency defect is gone — but a Liscor-native Drake rig
   would be the honest fix.
+  **CARRIED (v0.19 L4) — await PixelLab top-up (user decision).** The honest
+  fix is a third Drake civilian rig; the registry has two and both are spoken
+  for, so this is generation-only at a balance that cannot fund a rig.
+  **DRAINED 2026-08-04 (#390).** The "cannot fund a rig" arithmetic was wrong
+  by roughly 12x: a v3 8-direction rig is **2 generations (~$0.13)**, not an
+  envelope. Five bespoke rigs + a Pisces regeneration + idle animation cost
+  ~$0.30 of the $1.44 balance. `selys`, `krshia`, `octavia`, `ilvo` and
+  `wilovan` all ship as OWNED PixelLab v3 rigs with anchors measured from the
+  alpha bbox; every stand-in tint is retired. Krshia took a SECOND pass on a
+  user read (the first came back an armored brawler, not a merchant) and the
+  reject was parked, then reused as `gnoll_ranger` for the Gnoll with a Bad
+  Ankle. Wilovan is IDLE-ONLY: he is a fielded combatant, so his
+  walk/slice/cast/hit/death set is still owed and tracked on #390.
 - [ ] COPY-VS-ART — `gentleman_bowler` ("A broad man in a bowler hat") now wears
   `hired_blade`, which has a goatee and a burgundy coat and no bowler. Not a
   regression (`human_laborer` had no bowler either) and it reads well in a den
@@ -3321,7 +3344,7 @@ head v0.18 W4 as HOTFIX-PRIORITY. Ranked player-visible-first.
 - [x] **(P2)** | HUD chip bar | player room, den-shop, inn | Inventory/Journal/Pause chips absent for the whole first visit to the purchased room (chip-region max 53 vs 255 after a pause cycle) with no visible modal on screen; touch has no fallback | v0.17 close machine-playtest, player_room_loop/03+04 |
 - [ ] **(P2)** | Face-to-face sprite overlap | inn, pallass den-shop, inn guest seats | Two-tile-tall sprites on one-tile cells merge the player and the speaker into one two-headed figure during dialogue | v0.17 close machine-playtest, inn_walkthrough/02 + pallass_ledger_offices/04 + inn_guests_loop/01 |
 - [ ] **(P2)** | hunters_lamb_pen | riverfarm_village | No lamb sprites in or around the pen; the whole [Beast Tamer] door is a bare fence rail against empty grass while the copy describes handling three fleeces | v0.17 close machine-playtest, gh330_lamb_pen_loop/00 |
-- [ ] **(P2)** | Pisces guest sprite | inn guest seats | No eye pixels and an all-grey robe/hood ramp — reads as a faceless bust next to guests who all have readable faces in the same frame | v0.17 close machine-playtest, inn_guests_loop/04 |
+- [x] **(P2)** | Pisces guest sprite | inn guest seats | No eye pixels and an all-grey robe/hood ramp — reads as a faceless bust next to guests who all have readable faces in the same frame | v0.17 close machine-playtest, inn_guests_loop/04 | **DRAINED 2026-08-04 (#390).** Fixed by REGENERATING the rig (2 gens) rather than inpainting it (20-40 gens) — the cheaper repair was the better one. Hood pushed BACK, explicit face, idle + walk regenerated to keep his shipped pin counts. |
 - [ ] **(P3)** **Journal sub-rows lose their indent on wrap** (journal_quest_hints 00_journal_hint_on — the quest-hint line; journal_history 01_journal_history — the Postings detail rows, same shape). First line indents, continuation lines return flush-left and read as body text rather than as part of the sub-row. One hanging-indent change on the shared sub-row style covers both.
 - [ ] **(P3)** **Skills-tab scroll can rest on an orphan wrap fragment** (journal_categories 01_skills_tab_curated + 02_skills_tab_cursor_follow — top visible line is a bare "L5", the tail of a wrapped [Quick Movement] — Warrior L5 row). Cursor-follow scrolls to the cursor row without snapping the viewport to a row boundary, so a wrapped row's tail can head the page. Snap to the wrapped-line start of the topmost whole row.
 - [ ] **(P3)** **Cooled Skills lose their flavour text in the combat readout, permanently** (combat_hud.gd:613-637; pinned string at qa/scripts/combat_move_input.json:356, shot 03_power_strike_slot_info — outside this slice, not re-run). When the standing cooldown clause plus the description would wrap, the description yields and never returns at readiness, so [Power Strike] et al. read purely mechanically wherever the player picks them. Deliberate and correctly reasoned; logging it so the trade is visible when the readout budget is next revisited.
@@ -3502,18 +3525,49 @@ clock loops with correct phase identity. Ranked.
   reach this surface in v0.18.0. RULE: the bespoke ice tile (rime edge /
   fracture silhouette) + "the channel"→cell copy fix land BEFORE any
   freezes-granting skill (ice_floor picks included).
+  **v0.19 L4 — ART LANDED, WIRING AND COPY OWED (row stays open).**
+  `assets/tiles/ice/ice_floor_tiles.png` is on the tree (commit
+  `88bde335`): a 16x16 fully-opaque frozen plate, rime rim + one
+  fracture node + four seams, authored on the Pixel Crawler snow ramp
+  and owned (no manifest row — a public checkout renders real ice).
+  Contract pinned by `test_sprite_registry`'s
+  `_assert_ice_tile_is_bespoke_and_opaque`. Cold-read evidence (tile at
+  8x, tiled 3x3, and an L-shaped frozen patch over the real water cap
+  at 1x and 4x, tinted-water BEFORE in the same frame):
+  `lanes/l4-evidence/ice_tile_before_after_1x.png`, candidates in
+  `ice_tile_candidates.png`. TWO residuals, neither in the art lane's
+  files: (a) `src/world/world.gd:119/140/141/956-962` must point at the
+  new sheet at coord (0,0) and DROP `ICE_TINT`; (b) the
+  "the channel"→cell copy fix lives in `data/skills.json`
+  (`frost_touch.freeze_toast`) and `data/interactions.json` (thaw +
+  refusal toasts), with the string pinned twice in
+  `qa/scripts/sewers_walkthrough.json`. The row closes when those land.
 - [ ] **(P2)** Boulevard plaza razor-edge seam at day (1.47x lum, no
   transition tiles; inverts at night) — wants wang edges.
+  **CARRIED (v0.19 L4): the fix is `floor_layers` rows in
+  `data/maps/invrisil/invrisil_boulevard.json`, a file no v0.19 lane
+  owns.** Not an art-asset gap — the free pack's own transition tiles
+  already exist; what is missing is the map rows that place them.
 - [ ] **(P2)** PC drawn under field chips on bottom-row cells — no
   HUD-safe area (invrisil_house_name_talk 03).
+  **CARRIED (v0.19 L4): `src/ui/**` — the feedback/panels lane's file,
+  fenced out of the art lane by ownership. No sprite change can move a
+  HUD chip off the player.**
 - [ ] **(P2)** Stacked-NPC burial of the reticled speaker in the
   thread's climax column (06) — conversation draw-order/nudge wanted.
+  **CARRIED (v0.19 L4): draw-order/nudge lives in `src/world/world.gd`,
+  not in `data/sprites.json`.** A per-sprite `field_y_sort_bias_px`
+  cannot fix it: the burial is between two ENTITIES on adjacent cells,
+  so any bias that lifts the speaker buries whoever is behind them.
 - [ ] **(P2)** "Inventory" nav pill overflows at 115/130% — the ribbon
   fix's sibling widget, same cure (font-derived rect).
+  **CARRIED (v0.19 L4): `src/ui/**`, the feedback/panels lane.**
 - [ ] **(P2)** "[Mixer] has become [Alchemist]!" enqueued, never
   rendered in its own canonical (15 enqueued/10 rendered, shared FIFO
   with loot) — class evolution wants its own lane or beat; Wave-D's
   moment currently has no photograph.
+  **CARRIED (v0.19 L4): the shared toast FIFO is
+  `src/ui/message_layer.gd`, owned elsewhere this wave.**
 - [ ] **(P3)** Cooldown badge ~1.3:1 vs plate (slot-dim carries the
   meaning; v0.16.2 row half-retired). **(P3)** legend clipped by 4-line
   toast (W4 residual, reproduced). **(P3)** dialogue panel over ribbon
@@ -3528,3 +3582,45 @@ clock loops with correct phase identity. Ranked.
   option counts, but zero margin. Pre-existing layout, not introduced
   by the text pass (verified same geometry pre-pass). Becomes a real
   bug the day any center-panel conversation gains a 4th option.
+
+## v0.19 art & silhouettes lane (2026-08-04)
+
+Three of this lane's four fixes exist because the previous answer was a
+TINT. The acceptance gate was therefore not the windowed capture but the
+COLD READ: render the pair at 1x, side by side, on the real floor tile,
+and ask which one you sleep in / which one cooks the stew. Both
+directions had to pass, because both blind playtests inverted bed and
+chest in both directions.
+
+**Method.** Candidate regions came from `docs/asset-catalog.md` →
+`docs/asset-index.json` → a connected-component bbox scan, never from
+guessed atlas coordinates; every anchor is a measured alpha bbox
+(`scripts/sprite_alpha_probe.py`), never a frame edge. BEFORE frames are
+the shipped sprite rendered by the same compositor as the AFTER, in one
+image, so nothing is read against memory.
+
+| row | fix | evidence |
+|---|---|---|
+| bed reads as a chest, chest reads as a bed (#376, both directions, two playtests) | `bed` → the sheet's tight bed bbox `[1,293,30,54]` at 0.55 (was `[0,296,34,44]` at 0.375 = 11x20px, pillow band 3px). `chest` → the admurin chest `chest_open` already used, `[2,12,28,20]` at 0.85, so closed and open are one object in two states | IN-ENGINE PAIR, real BEFORE run at the lane base `aabec4bd`: `qa/run_qa.sh player_room_loop windowed --seed=9` (03_room_day, 06_reentry) and `qa/run_qa.sh upstairs_walkthrough windowed --seed=9` (03_your_bed_sleep, 01_upstairs_hallway), kept at `lanes/l4-evidence/windowed/` with the read-side-by-side crop `bed_chest_windowed_pair.png`. RGB (not RGBA) diff: player_room bbox (416,144)-(564,268), 12592 px > 8 — the bed-and-chest corner and nothing else on the frame; upstairs bbox (580,104)-(916,492), 11632 px. The PC standing SOUTH of the taller bed still draws in front (GH#127 contract holding). Compositor cold-reads: `bed_chest_coldread.png`, `bed_chest_final.png` |
+| three cauldrons, three gates, one silhouette (#378 arm 2) | `stew_pot` keeps `cauldron` as hero; new `short_order_range` (flat hotplate + firebox) and `witch_kettle_hook` (pot slung from a tall crane). Round pot on stones / wide flat-topped box / vertical hook — three shapes, and the vertical one is what separates the kettle from both pots at 1x | `lanes/l4-evidence/kitchen_trio_before_after.png` (the tint-only trio, then the shipped trio at two scales, 1x and 5x). NO in-engine pair yet, and it is not an oversight: the sprite ids exist but `inn.json`'s three rows still point at the old ones, so an engine shot would photograph the OLD trio. The pair is owed by whoever lands the map rows |
+| corusdeer carcass prop had no sprite (#383) | `corusdeer_carcass` at 0.6, scaled against the live `corusdeer_doe` rig at 0.7 — a carcass reading smaller than its own species is the mismatch to avoid | `lanes/l4-evidence/carcass_scale.png` (two scales beside the live rig on the real floodplains grass tile). No in-engine pair: no map places the carrier prop yet |
+| ice tile is tinted water (P1) | see the P1 row above — art landed, wiring and copy owed | `lanes/l4-evidence/ice_tile_before_after_1x.png` |
+
+**Budget.** Measured at the start of the lane: $1.53 credits, 0
+subscription generations (2040/2000 used) — not the ~$2.7 every art
+issue in the milestone assumed. Pack-first was therefore mandatory and
+it paid: the bed and chest cost nothing (both fixes are a region and a
+scale on sheets already in the tree), and the ice tile cost nothing (it
+is authored, not generated). ONE generation call was made — sanctioned
+spend #3, the cauldron trio — for **$0.09**, and because a
+`create_1_direction_object` pack bills per call rather than per subject,
+the same call carried the kettle, the range AND the carcass at zero
+marginal cost. Balance after: **$1.44**. The bespoke-rig rows above stay
+carried; nothing here changes that they need a top-up.
+
+**What a later art pass should NOT undo.** `bed`'s render_scale is a
+legibility floor, not a taste knob — the 0.375 crop is what two
+independent playtesters read as a chest. `chest` must stay on
+`chest_open`'s sheet and scale. And the kitchen row must stay three
+silhouettes: the tint that used to distinguish them predicted nothing
+(a cooking PC read the kettle dead, a witch PC the reverse).

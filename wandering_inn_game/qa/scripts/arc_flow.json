@@ -819,7 +819,7 @@
    "equals": 1
   },
   {
-   "_comment": "== THE SEAM, BEFORE THE SLEEP ==. The seal ends Act III's only quest thread, so this page carries a header, four Completed lines and 'No quests in progress.'. act_beat_lines (v0.15 A1): the player stands at Act IV's door having earned none of its seven beats, so every row is a '·' OPENING -- an outcome line here is the itinerary leak. lead_lines is EMPTY BY DESIGN (v0.15 A2): Olesm's survey option unlocks on post_game, which banks at the first sleep AFTER the seal, so a lead gated on raskghar_sealed would point at a hidden option for one whole waking. This exact-[] pin IS the refusal-window guard. Whole-list matches -- re-pin from a run if the copy is polished.",
+   "_comment": "== THE SEAM, BEFORE THE SLEEP ==. The seal ends Act III's only quest thread, so this page carries a header, four Completed lines and 'No quests in progress.'. act_beat_lines (v0.15 A1): the player stands at Act IV's door having earned none of its eight beats (#384 item 3 added the eighth, house_name_answered), so every row is a '·' OPENING -- an outcome line here is the itinerary leak. lead_lines is EMPTY BY DESIGN (v0.15 A2): Olesm's survey option unlocks on post_game, which banks at the first sleep AFTER the seal, so a lead gated on raskghar_sealed would point at a hidden option for one whole waking. This exact-[] pin IS the refusal-window guard. Whole-list matches -- re-pin from a run if the copy is polished.",
    "action": "press",
    "name": "journal"
   },
@@ -835,6 +835,7 @@
      "· The Horns are digging east, and they are short a pair of hands.",
      "· Riverfarm's fields hold more trouble than wheat.",
      "· A name needs settling in the City of Adventurers.",
+     "· Someone in Invrisil is signing a name they have no claim to, and the house it belongs to has noticed.",
      "· The Walled City opens for paperwork, not heroics.",
      "· Four adventurers need somewhere to put their feet up.",
      "· The Door strains for somewhere it cannot reach yet."
@@ -961,12 +962,12 @@
    }
   },
   {
-   "_comment": "THE SEAL'S LIGHT TRANSITION rides this sleep: 5 veil lines, re-derived from the run's own events.jsonl -- four progression lines the arc's fights earned (Warrior 6, Warrior 7, Warrior 8, Diplomat 2) plus the GDI's seal beat. GH#337 (skill cooldowns) added the fourth: power_strike now fires every other round, and the plain attacks the melee AI falls through to on the off rounds each bank their own `melee_hit`, so a fixed arc of fights earns MORE Warrior levels than it used to, appended under the black when post_game banks. Before Phase 8 this sleep rendered 3.",
+   "_comment": "THE SEAL'S LIGHT TRANSITION rides this sleep: 8 veil lines (v019-L2: 5 -> 8, one per warrior L6/L7/L8 grant the GH#380 martial slate put on levels the arc's own fights already cross -- the span itself is unchanged), re-derived from the run's own events.jsonl -- four progression lines the arc's fights earned (Warrior 6, Warrior 7, Warrior 8, Diplomat 2) plus the GDI's seal beat. GH#337 (skill cooldowns) added the fourth: power_strike now fires every other round, and the plain attacks the melee AI falls through to on the off rounds each bank their own `melee_hit`, so a fixed arc of fights earns MORE Warrior levels than it used to, appended under the black when post_game banks. Before Phase 8 this sleep rendered 3.",
    "action": "wait_for_event",
    "type": "ui_sleep_veil_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "lines": 5
+    "lines": 8
    }
   },
   {

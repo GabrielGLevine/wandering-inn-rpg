@@ -352,11 +352,16 @@ run_one() {
 	echo $? >"$LOGDIR/$NAME.rc"
 }
 
-# WI_SWEEP_JOBS>1 runs scripts concurrently (local speedup: the 80-script
-# sweep drops from ~3-4 min serial to <1 min at -j8). Default stays 1:
-# CI keeps deterministic streaming output, and the aggregation below is
-# identical either way (it reads only the per-script log + rc files).
-JOBS="${WI_SWEEP_JOBS:-1}"
+# WI_SWEEP_JOBS runs scripts concurrently; runs are fully isolated
+# (per-PID user:// HOMEs, per-script qa_output dirs), and the aggregation
+# below is identical either way (it reads only the per-script log + rc
+# files). DEFAULT IS NOW PARALLEL (user ruling 2026-08-05: "always run with
+# multiple jobs unless there is specifically a reason not to") -- cores-2,
+# capped at 8. The one standing serial reason is WINDOWED runs (window
+# contention, a logged failure mode), and the sweep is headless-only; set
+# WI_SWEEP_JOBS=1 explicitly if streaming per-script output order matters.
+_DEFAULT_JOBS="$( (sysctl -n hw.ncpu 2>/dev/null || nproc 2>/dev/null || echo 4) | awk '{n=$1-2; if(n<1)n=1; if(n>8)n=8; print n}' )"
+JOBS="${WI_SWEEP_JOBS:-$_DEFAULT_JOBS}"
 
 # Phase 1: launch. Missing scripts fail immediately (also the
 # deterministic path for catching a bad --only name).

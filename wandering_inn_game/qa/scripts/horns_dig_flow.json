@@ -180,7 +180,7 @@
    "action": "assert_event_logged",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 21,
+    "sprites": 20,
     "fallbacks": 0
    }
   },
@@ -234,7 +234,7 @@
    "action": "wait_for_event",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 18,
+    "sprites": 17,
     "fallbacks": 0
    },
    "timeout_sec": 5

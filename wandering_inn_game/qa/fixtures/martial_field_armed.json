@@ -1,0 +1,50 @@
+{
+ "_comment": "martial_field_loop's POSITIVE half, swapped in mid-run. Warrior 8 EARNS [Even Footing]/[Greater Strength]/[Basic Repair] off the real grant table (melee_hit 40 is L8's own threshold and one short of L9, so the script's sleep grants nothing and the level toast cannot perturb a pin). The other four ride `player_skills` because their classes -- trader 2, helper 2, scout 15, ice_mage 10 -- are four separate coherent walks and none of them is what this canonical is proving. Same cell/facing as martial_field_start so phase 0's refusals and phase 1's crossings run the identical route. Playtest fix wave (finding 14): +basic_cooking so the pot-is-a-pot read (#391) works from this state -- the brief pointed here for it and the skill was missing.",
+ "version": 5,
+ "state": {
+  "current_map": "floodplains",
+  "player_cell": [
+   31,
+   3
+  ],
+  "player_facing": [
+   0,
+   1
+  ],
+  "classes": {
+   "warrior": 8
+  },
+  "accomplishments": {
+   "met_relc": 1,
+   "sparred_with_relc": 1,
+   "won_combat": 1,
+   "melee_hit": 40
+  },
+  "player_skills": [
+   "basic_cleaning",
+   "broader_shoulders",
+   "bar_fighting",
+   "rope_work",
+   "flame_jet",
+   "icy_floor",
+   "basic_cooking"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "gold": 20,
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

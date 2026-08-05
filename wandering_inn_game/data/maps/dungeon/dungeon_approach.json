@@ -26,6 +26,18 @@
    9
   ]
  ],
+ "_comment_unsteady": "[Even Footing] placement 2: the (3,9) collapse band spills two cells east. NEW blocked cells -- blocked_cells 6 -> 8, dungeon_peek re-pinned. Non-holders swing a row (+2; +4 at (4,10)/(4,11)).",
+ "unsteady": [
+  [
+   4,
+   9
+  ],
+  [
+   5,
+   9
+  ]
+ ],
+ "unsteady_toast": "The spill shifts the moment you put weight on it and keeps shifting. Crossing that takes footing you have not got.",
  "walls": {
   "sheet": "res://assets/tiles/cemetery/Walls.png",
   "tile_px": 16,
@@ -94,6 +106,31 @@
    "sprite": "dungeon_rubble",
    "cell": [
     3,
+    9
+   ],
+   "tint": [
+    0.85,
+    0.82,
+    0.85
+   ]
+  },
+  {
+   "_comment": "Same rubble family as (3,9) so the band reads continuous and the unsteady pair looks like ground, not wall.",
+   "sprite": "dungeon_rubble",
+   "cell": [
+    4,
+    9
+   ],
+   "tint": [
+    0.85,
+    0.82,
+    0.85
+   ]
+  },
+  {
+   "sprite": "dungeon_rubble",
+   "cell": [
+    5,
     9
    ],
    "tint": [

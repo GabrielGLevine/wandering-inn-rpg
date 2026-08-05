@@ -1,14 +1,37 @@
 extends CanvasLayer
 
-# a9 #246: 492 fit the 14-row list; the import/export pair (+2 rows at the
-# ~36px pitch) overflowed the parchment (windowed catch) — grown to match.
-# GH#338/#345: +2 rows ("Quest Hints", "Difficulty") at the same ~36px pitch —
-# same windowed catch, same fix. This is now within one row of the 720px window
-# itself: the NEXT row added here needs a different answer (a scrolling list, or
-# a second page), not another +36.
-const PANEL_SIZE := Vector2(320.0, 716.0)
+# GH#386: THE MAGIC-CONSTANT ERA IS OVER. Every prior row add answered with
+# another +36 on a hardcoded height, and the panel reached 716 of the 720px
+# window -- a scroll bleeding off both screen edges with no room for its own
+# ornament. The rect is DERIVED now (`_measure_rows_panel_size`, live font
+# metrics, the hint-ribbon fix's own idiom) and clamped into the band below, and
+# anything that still does not fit SCROLLS instead of growing. So a future row
+# costs nothing here, and neither does a Text Scale step, which is the case the
+# fixed rect could never answer at all.
+const ROWS_PANEL_MIN := Vector2(320.0, 260.0)
+## Width ceiling leaves the descriptor tails room at 130%. Height ceiling is
+## NOT the target -- the derived height lands near the journal's own framing
+## band (y=82..635) at 100% and near 560 at 130%; the ceiling is only the point
+## past which the list starts scrolling instead of growing, and no shipped text
+## scale reaches it. Set it BELOW the 130% derivation and Back goes off-page --
+## which is exactly what a first pass at 553 did, silently, to the mouse path.
+const ROWS_PANEL_MAX := Vector2(560.0, 620.0)
+const ROWS_MARGIN_X := 30.0
+const ROWS_MARGIN_Y := 22.0
+const ROWS_SCROLLBAR_RESERVE := 14.0
+## Row pitch is ROW_MIN_HEIGHT + ROW_SEPARATION, and it is the number that
+## decides whether 17 rows fit a framed panel. Tuned so the derived height
+## sits inside the journal band at 100% with the 12px "Small" glyphs still
+## clear of both edges.
+const ROW_MIN_HEIGHT := 22.0
+const ROW_SEPARATION := 3
+const GROUP_GAP := 8.0
 const CONTROLS_PANEL_SIZE := Vector2(620.0, 380.0)
-const HELP_PANEL_SIZE := Vector2(620.0, 530.0)
+## GH#386/#379 grew the Help page from 6 sections to 8; 530 no longer carried
+## the "> Back" row. 680 is the height `CREDITS_PANEL_SIZE` already proves fits
+## the 720px window with its ornament intact. MIRRORED by hand in
+## tests/test_copy_fit.gd -- that suite asserts this literal.
+const HELP_PANEL_SIZE := Vector2(620.0, 680.0)
 ## a4 #216: credits content (5 sections) overflowed the 530-tall help panel —
 ## the Back label (now a functional TAP target) rendered below the parchment.
 ## Its own taller panel keeps every row, and Back, on the visible page.
@@ -17,20 +40,40 @@ const HELP_TEXT_WIDTH := HELP_PANEL_SIZE.x - 52.0
 const HELP_CONTENT_PATH := "res://data/help_content.json"
 const CREDITS_CONTENT_PATH := "res://data/credits.json"
 
-## Row list. "Settings" is reached from a LATER-appended row on both
-## pause_menu.gd's ROWS and title_screen.gd's ROWS (never inserted earlier --
-## preserves every existing hardcoded row index in qa/scripts/*.json). Issue
-## #107: "Help..." appended BEFORE "Back" (the SAME slot "Controls..."/
-## "Replay Hints" both occupy -- "Back" stays the fixed last row, the real
-## append-only contract here; the only pins that reference this array's
-## indices live in qa/scripts/settings_loop.json itself, updated alongside).
+## Row list, REGROUPED (GH#386). The old order was pure append history: every
+## new knob landed immediately before "Back" to protect QA pin indices, so by
+## v0.18 the two GAMEPLAY settings sat under file management and the two
+## near-identical labels ("Quest Thread" / "Quest Hints") were four unrelated
+## rows apart. The index contract is a QA-pin concern, not a player concern:
+## the order is grouped by what a player came here to change, and
+## qa/scripts/settings_loop.json is re-pinned in the same commit.
+## "Back" is still the LAST row and still index 16 -- the group sizes happen to
+## preserve it, which is worth stating so nobody reads that as coincidence they
+## may break. Group boundaries are drawn as SPACERS, not header rows: a header
+## would be an unfocusable entry in a list every navigation leg counts through.
 const ROWS := [
+	"Difficulty", "Combat Speed", "Quest Hints", "Quest Thread",
 	"Master volume", "Music volume", "SFX volume",
 	"Fullscreen", "Text Scale", "Reduce Motion",
-	"Controls...", "Replay Hints", "Help...", "Combat Speed", "Quest Thread", "Credits...",
-	"Export Save", "Import Save...", "Quest Hints", "Difficulty", "Back",
+	"Controls...", "Help...", "Credits...", "Replay Hints",
+	"Export Save", "Import Save...",
+	"Back",
 ]
+## Row indices a group gap is drawn ABOVE. Data, so the grouping cannot drift
+## from ROWS by an off-by-one nobody notices until a windowed shot.
+const GROUP_GAP_BEFORE := [4, 7, 10, 14, 16]
 const AUDIO_ROWS := {"Master volume": "Master", "Music volume": "Music", "SFX volume": "SFX"}
+## The descriptor tail the character-creation steps already speak, carried onto
+## the settings row so the two gameplay knobs stop reading as bare state (the
+## v0.17-close P2). Copy is char_creation.gd's own DIFFICULTY_BLURBS /
+## HINT_CHOICES blurbs VERBATIM -- one voice for one knob, whichever door the
+## player came through.
+const DIFFICULTY_TAILS := {
+	"Bronze": "a gentler road",
+	"Silver": "the road as it was cut",
+	"Gold": "no allowances",
+}
+const QUEST_HINT_TAILS := {true: "the journal points the way", false: "quests read as written"}
 
 const MOUSE_LABELS := {
 	"move": "Click ground to walk",
@@ -53,6 +96,8 @@ var _cursor := 0
 var _on_close := Callable()
 
 var _root: Control
+var _rows_scroll: ScrollContainer
+var _rows_title: Label
 var _row_labels: Array[Label] = []
 
 var _controls_root: Control
@@ -90,9 +135,6 @@ func _build_rows_panel() -> void:
 	_root = Control.new()
 	UIChrome.apply_theme(_root)
 	_root.set_anchors_preset(Control.PRESET_CENTER)
-	_root.custom_minimum_size = PANEL_SIZE
-	_root.size = PANEL_SIZE
-	UIChrome.set_offsets(_root, -PANEL_SIZE.x * 0.5, -PANEL_SIZE.y * 0.5, PANEL_SIZE.x * 0.5, PANEL_SIZE.y * 0.5)
 	_root.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.hide()
 	add_child(_root)
@@ -100,25 +142,81 @@ func _build_rows_panel() -> void:
 
 	var margin := MarginContainer.new()
 	UIChrome.full_rect(margin)
-	UIChrome.add_margins(margin, 30, 24, 30, 24)
+	UIChrome.add_margins(margin, int(ROWS_MARGIN_X), int(ROWS_MARGIN_Y), int(ROWS_MARGIN_X), int(ROWS_MARGIN_Y))
 	_root.add_child(margin)
 
-	var stack := VBoxContainer.new()
-	stack.add_theme_constant_override("separation", 6)
-	margin.add_child(stack)
+	var outer := VBoxContainer.new()
+	outer.add_theme_constant_override("separation", 6)
+	margin.add_child(outer)
 
-	var title := UIChrome.make_label("Settings", "Menu")
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	stack.add_child(title)
+	_rows_title = UIChrome.make_label("Settings", "Menu")
+	_rows_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	outer.add_child(_rows_title)
+
+	# The overflow answer settings_panel.gd's own comment asked for since a9
+	# #246. It is inert at every shipped text scale on a 720px window -- the
+	# derived rect fits -- and it is what keeps a future row (or a 130% step, or
+	# a longer descriptor tail) from bleeding off the parchment again.
+	_rows_scroll = ScrollContainer.new()
+	_rows_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_rows_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	_rows_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_rows_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	outer.add_child(_rows_scroll)
+
+	var stack := VBoxContainer.new()
+	stack.add_theme_constant_override("separation", ROW_SEPARATION)
+	stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_rows_scroll.add_child(stack)
 
 	for i in ROWS.size():
+		if GROUP_GAP_BEFORE.has(i):
+			var gap := Control.new()
+			gap.custom_minimum_size = Vector2(0.0, GROUP_GAP)
+			gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			stack.add_child(gap)
 		var row := UIChrome.make_label("", "Small")
-		row.custom_minimum_size = Vector2(260.0, 30.0)
+		row.custom_minimum_size = Vector2(0.0, ROW_MIN_HEIGHT)
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		stack.add_child(row)
 		_row_labels.append(row)
 
 	stack.mouse_filter = Control.MOUSE_FILTER_STOP
 	stack.gui_input.connect(_on_rows_gui_input)
+
+
+## The whole rect, from live font metrics (the hint-ribbon fix's idiom): the
+## widest rendered row decides the width, the row count and group gaps decide
+## the height, and ROWS_PANEL_MIN/MAX bound both. Re-run on every `_refresh()`
+## because a Text Scale step is itself a row in this list -- the one case the
+## old fixed rect could not answer at all.
+func _measure_rows_panel_size() -> Vector2:
+	var probe := _row_labels[0] if not _row_labels.is_empty() else null
+	if probe == null:
+		return ROWS_PANEL_MIN
+	var font := probe.get_theme_font("font")
+	var font_size := probe.get_theme_font_size("font_size")
+	var widest := 0.0
+	for i in ROWS.size():
+		widest = maxf(widest, font.get_string_size("> " + _row_text(i), HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x)
+	var row_h := maxf(ROW_MIN_HEIGHT, float(font.get_height(font_size)))
+	var content_h := float(ROWS.size()) * row_h \
+			+ float(ROWS.size() - 1) * float(ROW_SEPARATION) \
+			+ float(GROUP_GAP_BEFORE.size()) * (GROUP_GAP + float(ROW_SEPARATION))
+	# Title row ("Settings" at Menu weight) plus the outer stack's own 6px gap
+	# under it -- from the label's OWN minimum size, so a Text Scale step moves
+	# it without this function knowing which type variation the title wears.
+	var title_h := (_rows_title.get_minimum_size().y if _rows_title != null else 24.0) + 6.0
+	return Vector2(
+		clampf(widest + ROWS_MARGIN_X * 2.0 + ROWS_SCROLLBAR_RESERVE, ROWS_PANEL_MIN.x, ROWS_PANEL_MAX.x),
+		clampf(content_h + title_h + ROWS_MARGIN_Y * 2.0 + 6.0, ROWS_PANEL_MIN.y, ROWS_PANEL_MAX.y))
+
+
+func _apply_rows_panel_size() -> void:
+	var wanted := _measure_rows_panel_size()
+	_root.custom_minimum_size = wanted
+	_root.size = wanted
+	UIChrome.set_offsets(_root, -wanted.x * 0.5, -wanted.y * 0.5, wanted.x * 0.5, wanted.y * 0.5)
 
 
 func _build_controls_panel() -> void:
@@ -197,13 +295,30 @@ func _build_help_panel() -> void:
 	UIChrome.add_margins(margin, 26, 20, 26, 20)
 	_help_root.add_child(margin)
 
-	var stack := VBoxContainer.new()
-	stack.add_theme_constant_override("separation", 8)
-	margin.add_child(stack)
+	var outer := VBoxContainer.new()
+	outer.add_theme_constant_override("separation", 8)
+	margin.add_child(outer)
 
 	var title := UIChrome.make_label("Help", "Menu")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	stack.add_child(title)
+	outer.add_child(title)
+
+	# The sections scroll; the TITLE and the BACK ROW do not. Back rode off the
+	# bottom of the parchment the moment this page went from 6 sections to 8
+	# (windowed catch, GH#386) -- the same failure a4 #216 already fixed once by
+	# growing the panel, which is a fix with an expiry date. Outside the scroll,
+	# Back is reachable at any section count and any text scale.
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	outer.add_child(scroll)
+
+	var stack := VBoxContainer.new()
+	stack.add_theme_constant_override("separation", 8)
+	stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(stack)
 
 	_help_sections = _load_help_sections()
 	for section: Dictionary in _help_sections:
@@ -214,10 +329,10 @@ func _build_help_panel() -> void:
 
 	var spacer := Control.new()
 	spacer.custom_minimum_size = Vector2(0.0, 10.0)
-	stack.add_child(spacer)
+	outer.add_child(spacer)
 
 	_help_back_label = UIChrome.make_label("> Back", "Menu")
-	stack.add_child(_help_back_label)
+	outer.add_child(_help_back_label)
 	_help_back_label.mouse_filter = Control.MOUSE_FILTER_STOP
 	_help_back_label.gui_input.connect(_on_help_back_gui_input)
 
@@ -402,6 +517,15 @@ func row_rect(i: int) -> Rect2:
 	var label := _row_labels[i]
 	if label == null or not label.visible:
 		return Rect2()
+	# A row scrolled out of the viewport is NOT clickable, and a rect handed out
+	# for one produces a click that lands on nothing and reports nothing. Return
+	# the null rect so a caller fails loud instead (GH#386: the first pass at
+	# this rework clipped "Back" off the page at 115% and every downstream step
+	# timed out five seconds at a time with no cause named).
+	if _rows_scroll != null:
+		var view := Rect2(_rows_scroll.global_position, _rows_scroll.size)
+		if not view.encloses(Rect2(label.global_position, label.size)):
+			return Rect2()
 	return Rect2(label.global_position, label.size)
 
 
@@ -574,12 +698,14 @@ func _row_text(i: int) -> String:
 		# opt-in FIELD-HUD strip (default OFF), this one is the journal's own
 		# next-step sub-row (default ON), and they switch independently.
 		"Quest Hints":
-			return "Quest Hints: %s" % ("On" if WISettings.show_quest_hints() else "Off")
+			var on := WISettings.show_quest_hints()
+			return "Quest Hints: %s — %s" % ["On" if on else "Off", QUEST_HINT_TAILS[on]]
 		# Issue #345. Cycles like Text Scale / Combat Speed rather than
 		# toggling, because it has three positions; the names are Liscor
 		# Hunted's own challenge ranks (canon, wiki-verified).
 		"Difficulty":
-			return "Difficulty: %s" % WISettings.difficulty_label()
+			var rank := String(WISettings.difficulty_label())
+			return "Difficulty: %s — %s" % [rank, String(DIFFICULTY_TAILS.get(rank, ""))]
 		_:
 			return key
 
@@ -589,6 +715,12 @@ func _refresh() -> void:
 		var label := _row_labels[i] as Label
 		var mark := "> " if i == _cursor else "  "
 		label.text = mark + _row_text(i)
+	_apply_rows_panel_size()
+	# Keyboard navigation must not walk off the visible page once the list
+	# scrolls (only reachable at a large Text Scale today, but that is exactly
+	# the state the fixed rect used to lose rows in).
+	if _rows_scroll != null and _cursor >= 0 and _cursor < _row_labels.size():
+		_rows_scroll.ensure_control_visible(_row_labels[_cursor])
 	ObservableBus.emit_domain_event(WIEvents.UI_SETTINGS_RENDERED, {
 		"master": int(WIAudio.get_bus_volume("Master")),
 		"music": int(WIAudio.get_bus_volume("Music")),

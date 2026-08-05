@@ -1,5 +1,9 @@
 {
  "biome": "inn",
+ "interior_flavor": [
+  "Nothing there. Jars from tiers you will never hold a permit for, dusted anyway.",
+  "Nothing there. Something small breathes behind the bench and decides to keep still."
+ ],
  "grid": {
   "width": 11,
   "height": 8
@@ -296,7 +300,20 @@
    "sprite": "inn_room_ledger",
    "observe": "The family's own board: who eats here on credit, and for how long. Names in chalk, never in ink.",
    "on_interact_accomplishment": "read_the_den_family_slate",
-   "toast": "Eleven names carried. One of them has been carried for two years and has no repayment column at all. In Pallass, that is a document nobody filed."
+   "toast": "Eleven names carried. One of them has been carried for two years and has no repayment column at all. In Pallass, that is a document nobody filed.",
+   "visual_states": [
+    {
+     "when": {
+      "counter": "read_the_den_family_slate",
+      "at": 1
+     },
+     "tint": [
+      0.7,
+      0.7,
+      0.74
+     ]
+    }
+   ]
   }
  ]
 }

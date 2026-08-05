@@ -165,6 +165,18 @@ func _collect_skill_tally_producers(skills: Dictionary, produced: Dictionary) ->
 
 
 func _collect_scene_producers(scene: Dictionary, produced: Dictionary) -> void:
+	# #348 slice 2: a `state_set` row's counter is authored on the CARRIER, in
+	# whatever field the row's `counter_key` names -- the property table itself
+	# is the producer registry for those ids.
+	var state_set_keys: Array = []
+	for raw_row: Variant in (scene.get("interactions", {}) as Dictionary).get("interactions", []):
+		if not (raw_row is Dictionary):
+			continue
+		var trow := raw_row as Dictionary
+		if String(trow.get("outcome", "")) == "state_set" and String(trow.get("counter_key", "")) != "":
+			var tkey := String(trow["counter_key"])
+			if not state_set_keys.has(tkey):
+				state_set_keys.append(tkey)
 	for map_id: String in scene.get("maps", {}):
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):
@@ -188,6 +200,8 @@ func _collect_scene_producers(scene: Dictionary, produced: Dictionary) -> void:
 					if variant is Dictionary:
 						_collect_scalar_producer((variant as Dictionary).get("accomplishment", ""), "%s.variants[%d].accomplishment" % [label, variant_index], produced)
 			_collect_scalar_producer(entity.get("on_enter_accomplishment", ""), label + ".on_enter_accomplishment", produced)
+			for state_key: String in state_set_keys:
+				_collect_scalar_producer(entity.get(state_key, ""), "%s.%s (property table state_set)" % [label, state_key], produced)
 			# Task 2.3: on_open_accomplishment is String|Array (on_victory contract).
 			var open_banks: Variant = entity.get("on_open_accomplishment", [])
 			for counter: Variant in (open_banks if open_banks is Array else [open_banks]):

@@ -1,0 +1,21 @@
+OWNED ART — v0.19 art & silhouettes lane
+========================================
+
+Every path below is project-owned and SHIP-OK: it carries NO manifest row,
+ships in the PUBLIC checkout, and needs no private asset bundle. Listed here
+because the standard PixelLab verdict notes live in the gitignored
+potential_assets/license-notes/ tree, which a public checkout never sees.
+
+assets/tiles/ice/ice_floor_tiles.png
+    Hand-authored (scripts, no vendor pixels): a 16x16 opaque frozen-plate
+    tile — rime rim, one fracture node, four seams. Colour ramp derived from
+    the Pixel Crawler snow band's RGB values only; no pack pixels are
+    reproduced. Replaces a tinted reuse of the water sheet.
+
+assets/sprites/short_order_range/Idle-Sheet.png
+assets/sprites/witch_kettle_hook/Idle-Sheet.png
+assets/sprites/corusdeer_carcass/Idle-Sheet.png
+    PixelLab generations (1-direction object pack, 64px, 2026-08-04, tag
+    v019-l4-silhouettes). PixelLab outputs are user-owned and
+    redistributable per its terms of service — the same footing as the
+    shipped cauldron/witch_cauldron/corusdeer rigs.

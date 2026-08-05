@@ -328,6 +328,7 @@
 			"lore": "Drakes fish the pond in fair weather and swear off it every winter, when the water starts moving wrong. The line-sellers do their best business in spring, replacing gear that was 'lost.'"
 		},
 		{
+			"_comment": "GH#378 arm 1: signposts the cooking gate at all 21 Serve options at once. TRAP: test_copy_fit measures the option row at fs14 ONLY (22px spare); at 115%/130% scale every row ran 59-162px over until dialogue_panel gained autowrap. No wording fits fs18.",
 			"id": "hot_meal",
 			"name": "Hot Meal",
 			"kind": "meal",
@@ -338,6 +339,7 @@
 			"resonance": 0,
 			"tier": "mundane",
 			"abilities": [],
+			"source_hint": "the stew pot, if you cook",
 			"description": "A bowl of stew and a heel of bread, still steaming from the pot. Someone's waiting on this.",
 			"lore": "The stew pot doesn't care who it's for — Watch, patron, or the cook themselves. It only cares that it's stirred."
 		},
@@ -1167,6 +1169,38 @@
 			"price": 1,
 			"description": "A single arrow pulled back out of the straw, fletching creased where it went in. Straight enough to shoot again, once.",
 			"lore": "The barracks yard counts its shafts twice a day and still comes up short, so nobody minds one walking off in a recruit's pack. Everybody who ever drilled here has done it."
+		},
+		{
+			"_comment": "[Bar Fighting] yield. damage_mod 1 = tempering_oil parity, not a new tier. No price (hot_meal precedent).",
+			"id": "improvised_cudgel",
+			"name": "Improvised Cudgel",
+			"kind": "tool",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"use_effect": { "next_fight": { "damage_mod": 1 } },
+			"description": "A table leg wrenched loose at the joint, one end still wearing its socket. Heavier than it looks and balanced nowhere at all.",
+			"lore": "Every innkeeper who has kept a room past midnight knows which piece of furniture comes apart fastest, and none of them will tell you which."
+		},
+		{
+			"_comment": "[Flame Jet] carcass yield. hp_mod 2 = fine_meal parity, flavor not power. No price (hot_meal precedent).",
+			"id": "seared_venison",
+			"name": "Seared Venison",
+			"kind": "meal",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 0,
+			"damage_reduction": 0,
+			"resonance": 0,
+			"tier": "mundane",
+			"abilities": [],
+			"use_effect": { "next_fight": { "hp_mod": 2 } },
+			"description": "Thick cuts off the haunch, blackened outside and still red at the middle, wrapped in a cloth that will never come clean.",
+			"lore": "Corusdeer run hot enough to scorch grass where they bed down, and hunters on the Floodplains say the meat cooks half the way there on its own."
 		}
 	]
 }

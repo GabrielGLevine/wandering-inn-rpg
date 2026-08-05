@@ -32,6 +32,11 @@ const CLOSE_HINT_GAP := 6.0
 ## payload too (`skills_note` field) so QA can assert the exact copy without
 ## reading the rendered RichTextLabel.
 const COMBAT_KIT_NOTE := "Combat skills follow your classes and weapon."
+## THE SUB-ROW INDENT. One format string so the quest-hint row and the Postings
+## detail row can never drift apart. `[indent]` is a PARAGRAPH indent -- the
+## continuation lines of a wrapped sub-row stay indented, which three leading
+## spaces could never do (GH#386 P3).
+const SUB_ROW_FMT := "[indent]%s[/indent]"
 
 const _POSTING_TITLES := {
 	"bounty_road_cull": "Goblin Cull, Floodplains Road",
@@ -791,8 +796,37 @@ func _scroll_skill_cursor_into_view(paragraph: int) -> void:
 		_body_label.scroll_to_paragraph(paragraph)
 		return
 	if top >= bar.value and top + _paragraph_height(paragraph) <= bar.value + bar.page:
+		# Visible, so no follow -- but the page may still be HEADED by the tail
+		# of a wrapped row (the v0.17-close P3: the top visible line read as a
+		# bare "L5", the orphaned tail of a [Quick Movement] row). Snap the
+		# viewport to a row boundary without moving the cursor.
+		_snap_scroll_to_paragraph_boundary()
 		return
 	_body_label.scroll_to_paragraph(paragraph)
+
+
+## Nudge the scroll DOWN to the next paragraph start whenever it is resting
+## mid-paragraph, so the topmost visible line is always the first line of a
+## whole row rather than a wrap fragment of the row above. Down, never up: up
+## would re-show a row the reader has already scrolled past, and would fight a
+## deliberate drag. A no-op when already on a boundary, and when the label has
+## not laid out yet (every offset answers 0 there).
+func _snap_scroll_to_paragraph_boundary() -> void:
+	if _body_label == null:
+		return
+	var bar := _body_label.get_v_scroll_bar()
+	if bar == null or bar.page <= 0.0 or bar.value <= 0.0:
+		return
+	var count := _body_label.get_paragraph_count()
+	for p: int in count:
+		var top := float(_body_label.get_paragraph_offset(p))
+		if p > 0 and top <= 0.0:
+			return
+		if top >= bar.value:
+			# The first boundary at or past the rest position. Refuse to snap
+			# past the end of the scrollable range.
+			bar.value = minf(top, maxf(0.0, bar.max_value - bar.page))
+			return
 
 
 ## Height of one rendered paragraph: the next paragraph's offset minus this
@@ -1041,11 +1075,16 @@ func _build_quests_tab() -> Dictionary:
 		for i in _open_quest_lines.size():
 			parts.append(UIChrome.bb_escape(String(_open_quest_lines[i])))
 			# GH#338: the hint rides as an INDENTED sub-row under its own quest
-			# line -- the Postings detail indent, same three spaces, so the two
-			# secondary rows in this tab read as one convention.
+			# line -- the Postings detail indent, so the two secondary rows in
+			# this tab read as one convention. GH#386: `[indent]`, not three
+			# leading SPACES. Spaces indent the first visual line only, so a
+			# sub-row that wrapped returned flush-left and read as body text
+			# rather than as part of the row above it; the tag is a paragraph
+			# indent and survives the wrap. Same fix, same reason, in
+			# `_build_postings_lines`.
 			var hint := String(_open_quest_hint_lines[i]) if i < _open_quest_hint_lines.size() else ""
 			if hint != "":
-				parts.append("   [i]%s[/i]" % UIChrome.bb_escape(hint))
+				parts.append(SUB_ROW_FMT % ("[i]%s[/i]" % UIChrome.bb_escape(hint)))
 	parts.append("")
 	if not _open_completed_quest_lines.is_empty():
 		parts.append("[b]Completed[/b]")
@@ -1234,13 +1273,13 @@ func _build_postings_lines(bounty_pool: Array, delivery_pool: Array) -> Array[St
 		lines.append(UIChrome.bb_escape("%s — %s (%d gold)" % [String(posting["title"]), String(posting["status"]), int(posting["gold"])]))
 		var posting_detail := String(posting["detail"])
 		if posting_detail != "":
-			lines.append("   " + UIChrome.bb_escape(posting_detail))
+			lines.append(SUB_ROW_FMT % UIChrome.bb_escape(posting_detail))
 	var delivery := _posting_slot_state(delivery_pool, Game.sim.accepted_delivery_id, Game.sim.accepted_delivery_baseline, Callable(self, "_delivery_title"), "slip_copy")
 	if not delivery.is_empty():
 		lines.append(UIChrome.bb_escape("%s — %s (%d gold)" % [String(delivery["title"]), String(delivery["status"]), int(delivery["gold"])]))
 		var delivery_detail := String(delivery["detail"])
 		if delivery_detail != "":
-			lines.append("   " + UIChrome.bb_escape(delivery_detail))
+			lines.append(SUB_ROW_FMT % UIChrome.bb_escape(delivery_detail))
 	if lines.is_empty():
 		lines.append("No postings in hand. The boards at the Guilds always have more.")
 	return lines

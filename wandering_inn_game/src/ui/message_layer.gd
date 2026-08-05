@@ -126,6 +126,11 @@ const HINT_PAPER_SIDE_PAD := HINT_PAPER_BOTTOM_PAD
 ## here and the label ellipsizes rather than running under the toast strip.
 const HINT_PANEL_MAX_WIDTH := 640.0
 const HINT_PANEL_LEFT := 8.0
+## Live right edge of the input-hint ribbon (finding 19): HINT_PANEL_LEFT +
+## the current rendered width, updated on every resize (device swaps and text
+## scale both change it). Static so the field hotbar can read it without a
+## node reference; 0.0 until the first hint renders.
+static var hint_band_width := 0.0
 const HINT_PANEL_BOTTOM := -8.0
 
 ## Toasts use layer 12: above journal/inventory modals (10), below the sleep
@@ -197,6 +202,10 @@ var _showing_housekeeping := false
 ## already been popped by the time it is showing.
 var _showing_protected := false
 var _toast_draining := false
+## GH#335 item 6: per-source round-robin cursor for LIST-shaped `interior_flavor`
+## (see `_pick_flavor_line`). Presentation-side and process-lifetime, exactly
+## like wi_audio.gd's `_variant_index` -- never save state, never sim RNG.
+var _flavor_index: Dictionary = {}
 ## Open full-screen modals, keyed by their own SHOWN event id. A SET rather than
 ## a counter so a doubled show/hide pair cannot strand the drain paused forever
 ## -- the drain resumes the moment this is empty. See `_drain_toasts`.
@@ -233,24 +242,49 @@ func _first_pickup_hint_text() -> String:
 ##   4. "Nothing there."
 ## The biome default is "" rather than "inn": a map that forgets to declare a
 ## biome must fall through to the flat line, not silently inherit Erin's voice.
+##
+## GH#335 item 6 -- STRING OR ARRAY, at all three levels. One line repeated at
+## every empty poke is what makes a room feel switched-off, so any of the three
+## sources may now be a LIST and the reader rotates it. Non-repeating by
+## construction: the cursor advances one entry per USE, so a room with two or
+## more lines can never answer twice the same way in a row.
 func _interact_nothing_text() -> String:
 	if Game.sim != null:
 		var maps: Dictionary = WIDataRegistry.scene_config().get("maps", {})
 		var map_id := String(Game.sim.current_map)
 		var map_cfg: Dictionary = maps.get(map_id, {})
-		var map_line := String(map_cfg.get("interior_flavor", ""))
+		var map_line := _pick_flavor_line("map:%s" % map_id, map_cfg.get("interior_flavor", ""))
 		if map_line != "":
 			return map_line
 		var biome_id := String(map_cfg.get("biome", ""))
 		var biome: Dictionary = WIDataRegistry.biomes().get(biome_id, {})
 		var by_map: Dictionary = biome.get("interior_flavor_by_map", {})
-		var venue_line := String(by_map.get(map_id, ""))
+		var venue_line := _pick_flavor_line("venue:%s" % map_id, by_map.get(map_id, ""))
 		if venue_line != "":
 			return venue_line
-		var line := String(biome.get("interior_flavor", ""))
+		var line := _pick_flavor_line("biome:%s" % biome_id, biome.get("interior_flavor", ""))
 		if line != "":
 			return line
 	return "Nothing there."
+
+
+## Round-robin over an authored line list, keyed per source so the map level,
+## the per-venue biome level and the biome default each keep their own cursor.
+## This is the AUDIO `_variant_index` idiom (wi_audio.gd), and it is deliberately
+## a PRESENTATION-side counter, never the sim's seeded RNG: which flavor line a
+## poke answers with is not gameplay, and borrowing a draw from the sim stream
+## would make every QA/balance seed depend on how often the player poked walls.
+## A plain String passes straight through and never touches the cursor, so every
+## single-line map behaves exactly as it did before this generalization.
+func _pick_flavor_line(key: String, raw: Variant) -> String:
+	if raw is Array:
+		var lines: Array = raw
+		if lines.is_empty():
+			return ""
+		var idx := int(_flavor_index.get(key, 0)) % lines.size()
+		_flavor_index[key] = (idx + 1) % lines.size()
+		return String(lines[idx])
+	return String(raw)
 
 
 func _first_wake_hint_text() -> String:
@@ -616,6 +650,11 @@ func _resize_hint_panel() -> void:
 	var width := clampf(ceilf(text_size.x + 2.0 * side), HINT_PANEL_MIN_SIZE.x, HINT_PANEL_MAX_WIDTH)
 	var text_h := font.get_height(font_size)
 	var size := Vector2(width, _hint_panel_height_for(text_h))
+	# Finding 19, round 2: the field hotbar clamps its slot group clear of
+	# this ribbon, and a CONSTANT clamp broke the moment text scale grew the
+	# label (the playtest at a larger scale had the ribbon overhanging slot 1).
+	# Publish the REAL rendered band so the hotbar reads geometry, not a guess.
+	hint_band_width = HINT_PANEL_LEFT + width
 	_hint_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_hint_panel.custom_minimum_size = size
 	_hint_panel.size = size

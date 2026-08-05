@@ -1,5 +1,9 @@
 {
  "biome": "inn",
+ "interior_flavor": [
+  "Nothing there. Chalk dust and boot grit, and a floorboard worn pale where people wait to be called.",
+  "Nothing there. Somewhere behind the desk a drawer shuts. Guild business, and none of it yours."
+ ],
  "grid": {
   "width": 16,
   "height": 12
@@ -263,12 +267,8 @@
     2
    ],
    "display_name": "Selys",
-   "sprite": "citizen_f",
-   "tint": [
-    0.45,
-    1.0,
-    0.55
-   ],
+   "person": true,
+   "sprite": "selys",
    "observe": "A Drake behind a counter she clearly wishes were taller. Tired, sharp, quick with a ledger. She has sized up a hundred adventurers today and found most of them wanting.",
    "friendly_line": "...Huh. You're actually pleasant. That's rare on this side of the counter. Fine - your paperwork jumps the line today. Don't make it weird.",
    "facing": "down",
@@ -419,11 +419,26 @@
     5
    ],
    "display_name": "Notice Wall",
-   "sprite": "guild_notice_wall",
+   "sprite": "request_board",
    "facing": "right",
    "on_interact_accomplishment": "read_guild_notices",
    "toast": "A second board, smaller and less official: lost gear, room-for-rent scraps, one challenge to a duel that's clearly gone unanswered a long time. Anything worth chasing copies into your journal as a lead: a name and a place, nothing promised.",
-   "observe": "Handbills and scraps overlapping the request board's edge. The Guild's actual business spills past its own furniture. Somebody wants a lost warhammer back. Somebody else is renting a room, quiet tenants only."
+   "observe": "Handbills and scraps overlapping the request board's edge. The Guild's actual business spills past its own furniture. Somebody wants a lost warhammer back. Somebody else is renting a room, quiet tenants only.",
+   "visual_states": [
+    {
+     "_comment": "GH#335 item 3: a read prop is SPENT and recedes. Shared tint across every read-once prop in the build; `counter` is this prop's OWN id, never a sibling's shared one.",
+     "when": {
+      "counter": "read_guild_notices",
+      "at": 1
+     },
+     "tint": [
+      0.7,
+      0.7,
+      0.74
+     ]
+    }
+   ],
+   "_comment": " Finding 21: the bespoke notice-wall art read as a giant scroll; reuses the request_board prop the player already knows two cells away (same board family, honestly a second board)."
   },
   {
    "_comment": "talk_pool fires first-talk-of-the-waking as before",
@@ -434,6 +449,7 @@
     3
    ],
    "display_name": "Renn",
+   "person": true,
    "sprite": "drake_patron",
    "tint": [
     0.55,
@@ -461,12 +477,8 @@
     4
    ],
    "display_name": "Ilvo",
-   "sprite": "tier_clerk",
-   "tint": [
-    0.66,
-    0.9,
-    0.58
-   ],
+   "person": true,
+   "sprite": "ilvo",
    "facing": "left",
    "present_when": {
     "phase": [
@@ -493,6 +505,7 @@
     6
    ],
    "display_name": "Yelra",
+   "person": true,
    "sprite": "gnoll_traveler",
    "tint": [
     0.62,

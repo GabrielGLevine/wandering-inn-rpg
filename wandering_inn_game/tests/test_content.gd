@@ -380,8 +380,14 @@ func _validate_consume_subset(maps: Dictionary) -> void:
 		for ent: Dictionary in maps[map_id].get("entities", []):
 			if not ent.has("on_skill_use"):
 				continue
+			# GH#391: the ingredient gate may live on the ARM instead of the prop
+			# (a cauldron must not demand yarrow before it will let you cook
+			# plain stew). WIGame.use_skill prefers the arm's own requires_item
+			# when it carries one, so this subset check has to read the same
+			# place or it reports a free-craft that cannot happen.
+			var arm_req: Variant = (ent["on_skill_use"] as Dictionary).get("requires_item", null) if ent["on_skill_use"] is Dictionary else null
+			var raw_req: Variant = arm_req if arm_req != null else ent.get("requires_item", "")
 			var req: Array = []
-			var raw_req: Variant = ent.get("requires_item", "")
 			if raw_req is Array: req = raw_req
 			elif String(raw_req) != "": req = [String(raw_req)]
 			var payloads: Array = [ent["on_skill_use"]]
@@ -503,6 +509,7 @@ func _init() -> void:
 	_validate_class_skill_grant_ids(classes, skill_ids)
 	_validate_class_skill_grant_ids_shape_cases()
 	_validate_props(scene)
+	_validate_unsteady_authoring(scene)
 	_validate_talk_pool_stages_ascending(scene)
 	_validate_talk_pool_stage_shape(scene)
 	_validate_population_floors(scene)
@@ -637,10 +644,34 @@ func _entity_ids(scene: Dictionary) -> Dictionary:
 	return out
 
 
+## #348 slice 2: a `state_set` row banks the counter named by whatever field the
+## row's `counter_key` points at ON THE CARRIER, so the property table is the
+## producer registry for those ids. test_reachability already walks this; THIS
+## walk was the one that did not, which made a `present_when.absent` gate on a
+## repaired/anchored carrier read as an unproduced counter (GH#381/#382).
+func _state_set_counter_keys(scene: Dictionary) -> Array:
+	var keys: Array = []
+	for raw_row: Variant in (scene.get("interactions", {}) as Dictionary).get("interactions", []):
+		if not (raw_row is Dictionary):
+			continue
+		var row := raw_row as Dictionary
+		if String(row.get("outcome", "")) != "state_set":
+			continue
+		var key := String(row.get("counter_key", ""))
+		if key != "" and not keys.has(key):
+			keys.append(key)
+	return keys
+
+
 func _collect_scene_accomplishments(scene: Dictionary, produced: Dictionary) -> void:
+	var state_set_keys: Array = _state_set_counter_keys(scene)
 	for map_id: String in scene["maps"]:
 		var map: Dictionary = scene["maps"][map_id]
 		for entity: Dictionary in map.get("entities", []):
+			for state_key: String in state_set_keys:
+				var state_counter := String(entity.get(state_key, ""))
+				if state_counter != "":
+					produced[state_counter] = true
 			if String(entity.get("kind", "")) == "encounter":
 				# GH#211: combat_banking banks fought_<encounter_id> on every
 				# weighted victory -- a real code-banked producer per encounter.
@@ -976,20 +1007,18 @@ func _validate_present_when(scene: Dictionary, produced_accomplishments: Diction
 				continue
 			var entity_id: String = String(entity["id"])
 			var when: Dictionary = entity["present_when"]
-			# 2026-08-02 (GH#334 note 18, ruling b) NARROWED, not lifted. The
-			# hazard this arm names is exact and mechanical: `_check_trigger_radius`
-			# (wi_game.gd) never consults `entity_present`, so a present_when
-			# encounter THAT CAN AMBUSH would be invisible and unblocked yet still
-			# fire. That same function returns early for any encounter with no
-			# `trigger_radius` -- an interact-only encounter cannot ambush at all,
-			# so structural absence is safe there and is the only way to express
-			# "this threat arrives as a consequence" (encounter_when leaves the
-			# rig standing as furniture and only refuses the fight). Keep the ban
-			# for every encounter that carries a trigger_radius.
-			_check(
-				String(entity.get("kind", "")) != "encounter" or not entity.has("trigger_radius"),
-				"entity %s: present_when is forbidden on a kind:encounter that carries a trigger_radius -- _check_trigger_radius never consults presence, so it would be invisible/unblocked yet still ambush; use encounter_when" % entity_id
-			)
+			# 2026-08-02 (GH#334 note 18, ruling b) narrowed this to a ban on
+			# trigger_radius encounters; GH#392 LIFTS it by fixing the cause.
+			# The hazard was exact and mechanical: `_check_trigger_radius` did
+			# not consult `entity_present`, so a present_when encounter that
+			# could ambush would be invisible and unblocked yet still fire. That
+			# function now checks presence first (wi_game.gd), and
+			# `is_cell_blocked` already did, so both halves agree. A
+			# trigger_radius encounter may now be absent-until-armed instead of
+			# standing in the room as inert furniture the player cannot act on
+			# -- which is what the inn's rift_vermin_leak was doing.
+			# TRIPWIRE for the fix lives in test_sim_core (an absent encounter
+			# standing on the player's next cell must neither block nor fire).
 			_check(when.has("requires") or when.has("phase") or when.has("absent") or when.has("guest") or when.has("companion"), "entity %s present_when has no recognized shape (only 'requires'/'phase'/'absent'/'guest'/'companion' are sanctioned)" % entity_id)
 			if when.has("phase"):
 				for p: Variant in when["phase"]:
@@ -1941,6 +1970,24 @@ func _validate_deliveries(deliveries: Dictionary, produced_accomplishments: Dict
 				produced.has(accomplishment_id),
 				"delivery %s condition waits on unproduced accomplishment: %s" % [String(delivery["id"]), accomplishment_id]
 			)
+
+
+## GH#380. An `unsteady` cell is a BLOCKED cell whose whole point is that the
+## right Skill crosses it, so a map that declares one and authors no
+## `unsteady_toast` ships this wave's own thesis failure: an input the world
+## takes and does not answer. wi_game.gd carries a footing-flavoured fallback so
+## the seam is never literally silent -- this arm is what stops that fallback
+## from becoming the shipped answer. The line must also never name the Skill
+## (that would be a hint system aimed at a player who has not heard of it).
+func _validate_unsteady_authoring(scene: Dictionary) -> void:
+	for map_id: String in scene["maps"]:
+		var map: Dictionary = scene["maps"][map_id]
+		if (map.get("unsteady", []) as Array).is_empty():
+			continue
+		var line := String(map.get("unsteady_toast", ""))
+		_check(line != "", "map %s declares unsteady cells but authors no unsteady_toast -- the engine fallback is a safety net, not the shipped answer" % map_id)
+		_check(not line.to_lower().contains("even footing"),
+			"map %s unsteady_toast names the Skill that opens it; the line is about FOOTING, never about which Skill the player has not got yet" % map_id)
 
 
 func _validate_props(scene: Dictionary) -> void:

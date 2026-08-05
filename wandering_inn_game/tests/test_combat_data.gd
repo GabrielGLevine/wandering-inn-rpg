@@ -2,6 +2,10 @@ extends SceneTree
 
 
 const KNOWN_ICONLESS_SKILLS := {
+	# Playtest fix wave (finding 3): the martial slate's five entries are GONE
+	# -- icons landed and data_lint.check_skill_icons now hard-fails any field
+	# skill without one, so this allowlist can only ever cover COMBAT-only
+	# skills (enemy verbs the hotbar never renders).
 	"guarding_ward": true,
 	"raskghar_maul": true,
 	"slam": true,

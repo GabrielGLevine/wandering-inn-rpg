@@ -354,7 +354,9 @@ func _render_step() -> void:
 			_choice_carets[i].visible = i == _choice_cursor
 		# Issue #346: say it is not a one-way door. A setup prompt a player
 		# meets once and cannot find again is worse than no prompt.
-		_hint_label.text = "Arrows to choose  •  %s to confirm  •  %s to go back  •  change it any time in Settings" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
+		# GH#386: the fourth segment shipped lowercase beside three capitalised
+		# ones. Every segment in this footer starts a sentence now.
+		_hint_label.text = "Arrows to choose  •  %s to confirm  •  %s to go back  •  Change it any time in Settings" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
 	elif is_name:
 		_name_edit.text = _name if not _name.is_empty() else "Traveler"
 		_hint_label.text = "Type a name  •  %s to continue  •  %s to go back" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
@@ -362,10 +364,16 @@ func _render_step() -> void:
 		for i in PC_OPTIONS.size():
 			_refresh_card(i)
 		_hint_label.text = "Arrows to choose  •  %s to confirm  •  %s to go back" % [WIInputHints.label("confirm"), WIInputHints.label("cancel")]
+	# `cards` rather than a sixth/seventh `options` entry: the pick step's cards
+	# CANNOT carry labels (PC_OPTIONS' constraint block -- identity reads from
+	# the art alone), so `options` stays honestly empty there and this is what
+	# makes the step assertable at all. Additive: every existing `options` pin
+	# is byte-unchanged.
 	ObservableBus.emit_domain_event(WIEvents.UI_CHAR_CREATION_RENDERED, {
 		"step": _step_name(),
 		"options": option_labels,
 		"cursor": _choice_cursor if is_choice else -1,
+		"cards": PC_OPTIONS.size() if _step == Step.PICK else 0,
 	})
 
 

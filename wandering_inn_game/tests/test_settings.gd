@@ -106,7 +106,7 @@ func _reset_test_settings_file() -> void:
 
 func _check_text_scale_math() -> void:
 	var settings_script := load("res://src/ui/wi_settings.gd")
-	var expected_base := {"Label": 14, "Header": 18, "Title": 36, "Menu": 18, "Small": 12, "Lore": 12}
+	var expected_base := {"Label": 14, "Header": 18, "Title": 36, "Menu": 18, "MenuInk": 18, "Small": 12, "Lore": 12}
 
 	assert(int(settings_script.call("scaled_default_font_size", 0)) == 14, "text scale step 0 must restore the exact base default_font_size (14)")
 	var base_types: Dictionary = settings_script.call("scaled_type_font_sizes", 0)
@@ -132,6 +132,7 @@ func _check_text_scale_drift_tripwire() -> void:
 	_assert_theme_const(theme_src, "Header/font_sizes/font_size", 18)
 	_assert_theme_const(theme_src, "Title/font_sizes/font_size", 36)
 	_assert_theme_const(theme_src, "Menu/font_sizes/font_size", 18)
+	_assert_theme_const(theme_src, "MenuInk/font_sizes/font_size", 18)
 	_assert_theme_const(theme_src, "Small/font_sizes/font_size", 12)
 	_assert_theme_const(theme_src, "Lore/font_sizes/font_size", 12)
 

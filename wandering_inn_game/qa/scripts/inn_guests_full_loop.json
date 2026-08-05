@@ -225,8 +225,9 @@
    ]
   },
   {
-   "action": "press",
-   "name": "hotbar_3"
+   "_comment": "v019-L2: was a raw `hotbar_3`. GH#383 gave flame_jet a field context and mage L2 grants it, so slot 3 is no longer [Basic Cooking]. press_field_skill resolves by id, so the next slot shift cannot silently re-point this cast either.",
+   "action": "press_field_skill",
+   "skill": "basic_cooking"
   },
   {
    "action": "wait_for_event",
@@ -479,7 +480,7 @@
    "timeout_sec": 10
   },
   {
-   "_comment": "ZEVARA STAYED: she is in BOTH windows (start 4 -> [relc,zevara], start 5 -> [zevara,selys]), which makes this a slide and not a swap. The sleep re-armed her once_per_waking leg but both bowls are spent, so Serve renders VISIBLE-LOCKED ('requires Hot Meal') in slot 1 and her off-duty topic is slot 2.",
+   "_comment": "ZEVARA STAYED: she is in BOTH windows (start 4 -> [relc,zevara], start 5 -> [zevara,selys]), which makes this a slide and not a swap. The sleep re-armed her once_per_waking leg but both bowls are spent, so Serve renders VISIBLE-LOCKED in slot 1 with GH#378's signposted suffix ('requires Hot Meal — the stew pot, if you cook') and her off-duty topic is slot 2.",
    "action": "click",
    "cell": [
     3,
@@ -504,7 +505,7 @@
      {
       "text": "Bring her a bowl from the kitchen. (Serve)",
       "locked": true,
-      "requirement": "requires Hot Meal"
+      "requirement": "requires Hot Meal — the stew pot, if you cook"
      },
      {
       "text": "\"An evening to yourself, then?\"",

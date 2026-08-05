@@ -139,10 +139,102 @@
    "type": "game_reset"
   },
   {
-   "_comment": "Walk back to (7,6) -- the reverse of the corridor above -- so the ORIGINAL script below (Meet Relc, then the interact-triggered chieftains_raid leg) resumes from its own proven starting cell, byte-unchanged.",
+   "_comment": "== GH#374, HALF ONE: THE GRACE HOLDS, AND IT IS INVISIBLE ==. The leg above proves the RELOAD itself cannot re-fire the ambush (_check_trigger_radius runs only from move_player). It never proved the thing the playtest actually hit: the player is parked at (30,21), Chebyshev 2 from goblin_encounter_1 at (30,23), so the very NEXT STEP -- any step, in any direction that stays within radius 2 -- used to spring the fight they just lost, forever. The defeat load now arms {until_exit:true, map:floodplains} on that encounter id (combat_screen._close_banner captures Game.sim.pending_encounter() before resolve_combat clears it; game.gd's load_slot arms it on the freshly-loaded sim). It shares warded_encounters with the hearthward charm and is deliberately INVISIBLE: no `cell` key, and world.gd's marker loop skips `until_exit` outright, so the ward render count stays 0 -- a charm the player never cast must never be drawn.",
+   "action": "assert_state",
+   "path": "warded_encounters.goblin_encounter_1.until_exit",
+   "equals": true
+  },
+  {
+   "action": "assert_state",
+   "path": "warded_encounters.goblin_encounter_1.map",
+   "equals": "floodplains"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_ward_rendered",
+   "payload_contains": {
+    "map": "floodplains",
+    "count": 0
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "REVIEWER LENS B: the wait above does NOT pin invisibility on its own and must not be read as doing so. `wait_for_event` scans FORWARD from the cursor for the first match, and this map re-renders its wards on every field rebuild and phase crossing -- so a run that drew a charm for the grace (count:1) would simply skip ahead to some later count:0 render and stay green. Verified by mutation: deleting world.gd's `until_exit` skip left this script passing. This is the assertion that actually holds the line -- `assert_event_absent` runs `_has_event`, which scans the WHOLE log from index 0, and defeat_reload never casts a real charm anywhere (the whole-dict `warded_encounters == {}` below is that proof), so ANY count:1 in this run can only be a grace that got drawn. Today the grace is doubly guarded (the marker loop's explicit `until_exit` skip AND the `raw_cell.size() != 2` guard under it); the regression this catches is a future suppression shape that gains a `cell` key and loses the skip.",
+   "action": "assert_event_absent",
+   "type": "ui_ward_rendered",
+   "payload_contains": {
+    "count": 1
+   }
+  },
+  {
+   "_comment": "== GH#372: THE DEFEAT COPY IS STATE-AWARE ==. This is the pre-tutorial defeat -- classless, solo, sparred_with_relc unbanked (met_relc is not banked yet either at this point in the run) -- and the veil's third line is the one that varies: instead of the shipped catch-all 'Try again, or step more carefully' it points at the Drake on this road who will teach the player to fight. `variant` rides UI_DEFEAT_VEIL_RENDERED for exactly this reason: the copy only ever appears behind a gate, so without a payload key it would ship structurally untested. Cursor-scoped (wait_for_event, not a whole-run assert) so it is THIS defeat's veil. PLACEMENT IS LOAD-BEARING: the reload's own ui_ward_rendered fires BEFORE the veil emit (world rebuild, then main.swap_to_world -> play_defeat), so pinning the veil any earlier would drag the since-cursor past the ward render the invisibility proof above depends on.",
+   "action": "wait_for_event",
+   "type": "ui_defeat_veil_rendered",
+   "payload_contains": {
+    "map": "floodplains",
+    "variant": "pre_spar",
+    "lines": 3
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "THE CAN-FAIL, positive half: a REAL move_player DEEPER into the radius -- (30,22) is Chebyshev 1, well inside -- and combat_started must still stand at 1. Without the grace this step is a second ambush; assert_event_count is whole-run, so a re-fire shows up here as 2.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [30, 22]
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_started",
+   "count": 1
+  },
+  {
+   "_comment": "Back to the boundary cell (30,21), Chebyshev 2 -- still inside, still suppressed, and the grace entry is still on the sim.",
    "action": "move",
    "direction": "up",
-   "steps": 15
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [30, 21]
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_started",
+   "count": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "warded_encounters.goblin_encounter_1.until_exit",
+   "equals": true
+  },
+  {
+   "_comment": "THE EXIT. (30,20) is Chebyshev 3 -- outside radius 2 -- and _check_trigger_radius erases the grace at its own dist>radius short-circuit. warded_encounters goes empty by WHOLE-DICT compare (blink_bypass_loop's idiom), which is also the proof no real charm was ever created here.",
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [30, 20]
+  },
+  {
+   "action": "assert_state",
+   "path": "warded_encounters",
+   "equals": {}
+  },
+  {
+   "_comment": "Walk back to (7,6) -- the reverse of the corridor above -- so the ORIGINAL script below (Meet Relc, then the interact-triggered chieftains_raid leg) resumes from its own proven starting cell, byte-unchanged. 14 rather than 15: the grace legs above already spent one net step northward, from (30,21) to (30,20).",
+   "action": "move",
+   "direction": "up",
+   "steps": 14
   },
   {
    "action": "move",
@@ -374,12 +466,15 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Issue #78: the defeat interstitial's own coverage event -- QA/headless collapses its paced reveal+choice to an instant emit (sleep_veil.gd's play_defeat(), same _is_qa() collapse the opener/epilogue already use), so this run still lands back in the reloaded floodplains state below WITHOUT ever waiting on the interactive Continue/Title choice. `map` names the SAME location the reload just restored.",
-   "action": "assert_event_logged",
+   "_comment": "Issue #78: the defeat interstitial's own coverage event -- QA/headless collapses its paced reveal+choice to an instant emit (sleep_veil.gd's play_defeat(), same _is_qa() collapse the opener/epilogue already use), so this run still lands back in the reloaded floodplains state below WITHOUT ever waiting on the interactive Continue/Title choice. `map` names the SAME location the reload just restored. GH#372: cursor-scoped (was a whole-run assert_event_logged) so the variant pinned here is THIS defeat's, not the earlier leg's -- and it re-derives to pre_spar honestly: met_relc banked in between, but the spar itself never happened, and the reloaded snapshot is chieftains_raid's own pre-combat state.",
+   "action": "wait_for_event",
    "type": "ui_defeat_veil_rendered",
    "payload_contains": {
-    "map": "floodplains"
-   }
+    "map": "floodplains",
+    "variant": "pre_spar",
+    "lines": 3
+   },
+   "timeout_sec": 5
   },
   {
    "action": "assert_state",
@@ -405,6 +500,62 @@
    "action": "assert_event_count",
    "type": "combat_started",
    "count": 2
+  },
+  {
+   "_comment": "== GH#374, HALF TWO: RE-ENTRY RE-FIRES ==. The grace is a reprieve, not a clear -- an encounter you walk away from and come back to must fight you again, or the defeat fix would quietly delete content. chieftains_raid carries its own grace from the defeat above (an interact-only encounter, so the entry is INERT for it -- `interact` routes straight to start_combat, which never reads warded_encounters -- and it is cleared at the first sleep like any other). Route: x=30 is clear floor from y=6 to y=22 (no blocked cells, no wall segments, no other entity) and no other radius-carrying encounter comes within 7 cells of it, so this is a pure approach.",
+   "action": "assert_state",
+   "path": "warded_encounters.chieftains_raid.until_exit",
+   "equals": true
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 13
+  },
+  {
+   "_comment": "(30,20) is Chebyshev 3 from goblin_encounter_1 -- one cell short of its radius, so nothing has fired yet.",
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [30, 20]
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_started",
+   "count": 2
+  },
+  {
+   "_comment": "One step back INTO the radius, at the same boundary cell the grace suppressed earlier in this run -- and this time it springs, because the exit consumed the grace and no sleep, charm or dormancy stands in its way.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_count",
+   "type": "combat_started",
+   "count": 3
+  },
+  {
+   "_comment": "Play the re-fired ambush out rather than ending the run mid-board: the run's LAST act should leave the harness in a clean, resolved state. The outcome is deliberately unasserted -- this leg's subject is that the encounter is armed again, not who wins it.",
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "payload_contains": {
+    "id": "pc"
+   },
+   "timeout_sec": 10
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 10
   }
  ]
 }

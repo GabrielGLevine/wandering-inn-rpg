@@ -11,6 +11,22 @@
    17
   ]
  ],
+ "_comment_unsteady": "[Even Footing] chute up the east outcrop. (31,4)-(31,6) were ALREADY blocked, so blocked_cells and every route are unchanged. Scree-dressed, not masonry. NOT the pond -- a warrior on open water reads wrong.",
+ "unsteady": [
+  [
+   31,
+   4
+  ],
+  [
+   31,
+   5
+  ],
+  [
+   31,
+   6
+  ]
+ ],
+ "unsteady_toast": "Scree slides out from under your boot and rattles away down the slope. Getting up that needs surer feet than yours.",
  "_comment": "`goblin_encounter_2` (28,18) and `chieftains_raid` (31,7) are unaffected (interact-only, no trigger_radius) and sit well outside this zone.",
  "blocked": [
   [
@@ -647,7 +663,8 @@
      5
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
-    "tile_px": 16
+    "tile_px": 16,
+    "water": true
    },
    {
     "from": [
@@ -663,7 +680,8 @@
      5
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
-    "tile_px": 16
+    "tile_px": 16,
+    "water": true
    },
    {
     "from": [
@@ -679,7 +697,8 @@
      5
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
-    "tile_px": 16
+    "tile_px": 16,
+    "water": true
    },
    {
     "from": [
@@ -695,7 +714,8 @@
      5
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
-    "tile_px": 16
+    "tile_px": 16,
+    "water": true
    },
    {
     "from": [
@@ -711,7 +731,8 @@
      5
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
-    "tile_px": 16
+    "tile_px": 16,
+    "water": true
    }
   ]
  },
@@ -869,10 +890,25 @@
    ]
   },
   {
-   "sprite": "boulder",
+   "_comment": "Scree at legible scale (findings 4/15). Suppresses the biome blocked-prop so the chute reads as rocky ground.",
+   "sprite": "scree_spill",
+   "cell": [
+    31,
+    4
+   ]
+  },
+  {
+   "sprite": "scree_spill",
    "cell": [
     31,
     5
+   ]
+  },
+  {
+   "sprite": "scree_spill",
+   "cell": [
+    31,
+    6
    ]
   },
   {
@@ -1089,7 +1125,7 @@
    "id": "inn_sign",
    "kind": "prop",
    "cell": [
-    6,
+    5,
     6
    ],
    "display_name": "Inn Sign",
@@ -1321,7 +1357,7 @@
    "sprite": "relc",
    "observe": "A Drake built like a barracks door, spear worn smooth from use, standing at ease the way only dangerous people stand. He watches the road and everyone on it. Including you, now.",
    "friendly_line": "Heh. Alright, alright - I like you. You've got the look of someone who buys a guy a drink after. We're good, you and me. Best guardsman in Liscor says so.",
-   "facing": "left",
+   "facing": "down",
    "talk_pool": [
     "Heh. You walk like nobody's ever hit you properly. We should fix that sometime - for fun.",
     "Road's boring today. I keep hoping something stupid charges the gate so I can try out the old Relc Headbutt.",
@@ -1579,12 +1615,7 @@
     9
    ],
    "display_name": "Wounded Corusdeer",
-   "sprite": "corusdeer",
-   "tint": [
-    0.6,
-    0.52,
-    0.47
-   ],
+   "sprite": "corusdeer_wounded",
    "observe": "A corusdeer, down in the grass with a leg it won't put weight on. Its antlers barely glow. It watches you the way anything hurt watches anything larger. It would let patient hands close, and hands that tend enough hurt beasts learn something no drill yard teaches.",
    "_comment_330": "#330 R3: at tended_beasts 10 it STANDS; the next tend banks corusdeer_healed and it goes home. Shipped strings untouched.",
    "present_when": {
@@ -1832,7 +1863,14 @@
     }
    },
    "observe": "A small figure on the rise south, standing very still. It has been watching you for a while, and it wants you to know that.",
-   "_comment": "b1 #199 'The Chieftain's Price'. Conversation-first (NO trigger radius — she waits; interact opens rags_meeting; combat only via the betrayal close's start_combat). present_when = the composed conduct+relationship gate (design doc 2026-07-19-b1-rags-design.md section 2; absent arm = never hunted the camp). Interim sprite: rags registry entry reuses the goblin_chieftain sheet reduced+tinted until the c3 bespoke (VISUAL-LOG row)."
+   "_comment": "b1 #199 'The Chieftain's Price'. Conversation-first (NO trigger radius — she waits; interact opens rags_meeting; combat only via the betrayal close's start_combat). present_when = the composed conduct+relationship gate (design doc 2026-07-19-b1-rags-design.md section 2; absent arm = never hunted the camp). Interim sprite: rags registry entry reuses the goblin_chieftain sheet reduced+tinted until the c3 bespoke (VISUAL-LOG row). Finding 18: present_when mirrors the encounter requires -- she does not STAND on the rise before the Erin gate; STAYS post-settle (farewell re-talk is pinned, rags_meeting_loop).",
+   "present_when": {
+    "requires": {
+     "reward_acknowledged": 1,
+     "chatted_with_erin": 3,
+     "goblins_spared": 1
+    }
+   }
   },
   {
    "_comment": "v0.16 F1 (#308). TRAP: door_when is requires-ONLY, so the peaceful gate's absent arm has to live on present_when -- a betrayal win banks rags_meeting_settled too.",
@@ -1866,7 +1904,7 @@
    }
   },
   {
-   "_comment": "v0.16.1 #21 (ruling: docs/CHOICE-LOG.md): RE-HOMED off invrisil_boulevard [5,15], a walled city. [23,12] is the verge of the POI-A shoulder -- the road spur at (20..22,12)/(22,13), a carter pull-off, which is what the observe and both bounty copies say. Review round 2 moved it here from [23,2], plain grass ten rows off the nearest dirt_01 layer, where the copy named a road the map does not draw. Chebyshev 1 reaches the spur, NOT the artery (rows 14/15); nearest canonical-walked cell is 4 away, harvested from a full sweep. Shape follows goblin_night_patrol; arena boulder_flats. `mothbears_culled` UNCHANGED: bounty condition, in shipped_ids.",
+   "_comment": "Finding 16: stood on the road ALL DAY as an invisible blocking square ('come back at night'). present_when phase-gates EXISTENCE (safe since GH#392); by day the verge is empty ground. encounter_when stays as the night arm.",
    "id": "road_mothbears",
    "kind": "encounter",
    "beast": true,
@@ -1888,21 +1926,14 @@
      "night"
     ]
    },
+   "present_when": {
+    "phase": [
+     "night"
+    ]
+   },
    "trigger_radius": 1,
    "observe": "Two heavy shapes working the verge of the wagon road, wings folded tight, close enough to the carter camps to smell the fires. Only after dark.",
    "gate_closed_toast": "The road's empty in the daylight. Whatever works this verge keeps to the dark.",
-   "visual_states": [
-    {
-     "_comment": "Marker visible ONLY while the night encounter_when gate can fire",
-     "when": {
-      "phase": [
-       "day",
-       "dusk"
-      ]
-     },
-     "hidden": true
-    }
-   ],
    "on_victory": "mothbears_culled"
   },
   {
@@ -1948,6 +1979,31 @@
    "observe": "A boulder standing clear of the reeds with the whole pond below it. The razorbeak keeps climbing it and screaming at the water, which is either an opinion or a report.",
    "on_interact_accomplishment": "found_pond_vantage",
    "toast": "It wheels out over the pond, hangs, and comes back loud. There is something square and man-made on the bottom, a stride out from the bank — too far to reach across open water, and water can be made to bear weight."
+  },
+  {
+   "_comment": "AUTHORED arm only, never a `burnable` tag: flame_jet has no `burns` flag, so no other burnable prop moves. ONE-SHOT via present_when.absent. Off every QA-walked cell, 5 clear of goblin_encounter_1.",
+   "id": "corusdeer_carcass",
+   "kind": "prop",
+   "cell": [
+    35,
+    20
+   ],
+   "display_name": "Corusdeer Carcass",
+   "sprite": "corusdeer_carcass",
+   "present_when": {
+    "absent": {
+     "cooked_a_kill": 1
+    }
+   },
+   "requires_skill": "flame_jet",
+   "observe": "A young corusdeer down in the grass with its neck wrong, cold hours ago and not yet found by anything with teeth. The hide is whole. The haunches are worth carrying, if you had a way to make them keep.",
+   "locked_toast": "The meat is good and it will not stay good. Raw and cold, it is no use to you, and you have no way to change that.",
+   "skill_hint_toast": "Hauling at it with your hands gets you nothing. Fire is what this wants.",
+   "on_skill_use": {
+    "item": "seared_venison",
+    "accomplishment": "cooked_a_kill",
+    "toast": "[Flame Jet] — You run the lance along the haunch until the fat goes loud and the outside blackens. You cut what will travel and leave the rest to the grass."
+   }
   }
  ],
  "cover_skip": [

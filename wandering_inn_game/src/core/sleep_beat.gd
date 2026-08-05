@@ -177,6 +177,13 @@ func run(classes: Dictionary, accomplishments: Dictionary, combat_config: Dictio
 		if _count("catalyst_attunement_sleeps") >= 2:
 			_record_accomplishment.call("resonance_grown", 1)
 			_grow_resonance.call()
+			# GH#379: the growth used to be felt and never named -- sleep_veil's
+			# line under the black ("You have room for it now.") is the beat, but
+			# it is gone the moment the veil lifts and it never says Resonance.
+			# Same `lore: true` toast idiom the dungeon_attuned bank above uses
+			# (zero new mechanism), so the word lands in the journal's Lore
+			# section where the player can read it back at leisure.
+			_emit(WIEvents.TOAST, {"text": "Resonance is how much enchantment you can wear at once before the pieces start arguing. Yours grew by one in the night. The anchor stone paid for it.", "lore": true})
 			anything_happened = true
 
 	_bank_garden_unlock_if_earned()

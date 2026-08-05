@@ -4,6 +4,122 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
+## DONE (2026-08-05, second sitting): findings 16-21 resolved
+
+- **16** road_mothbears stood on the road all day as an invisible blocking
+  square ("come back at night"). present_when now phase-gates EXISTENCE
+  (safe since #392); by day the verge is genuinely empty.
+- **17** TWO y-sort fixes: the ice overlay's z_index=1 was canvas-GLOBAL and
+  drew the cap OVER a player standing on frozen water -> z=0 (windowed
+  proof: property_seams 03_standing_on_the_ice). The scree spill at 0.9
+  overhung its cell north and painted over the player -> 0.5 = exactly one
+  cell, zero overhang.
+- **18** rags_scouting_party no longer appears before the Erin gate
+  (present_when mirrors the encounter requires). She STAYS post-settle --
+  the farewell re-talk is canonical-pinned (rags_meeting_loop taught me
+  that; the first cut had an absent arm and broke 4 canonicals).
+- **19** phase glyph REMOVED (user verdict: environment says it), event +
+  pins excised; hotbar group now clamps clear of the input-hint ribbon
+  (HINT_BAND_CLEARANCE, windowed proof at 9 slots).
+- **20** all six martial icons regenerated in the shipped flat bright
+  single-object language (v1s were muddy 32px miniatures).
+- **21** guild_notice_wall reuses the request_board prop (its art read as a
+  giant scroll).
+
+Gates: data_lint OK, census RC=0, 33/33 units, ci_sweep ALL 207 green.
+
+## DONE (2026-08-05): playtest fix wave — all 15 findings resolved (Fable)
+
+All 14 sitting findings + the prop-legibility directive (finding 15), fixed on
+`v0.19-wave-2`. Full detail in the two fix-wave commits; the short version:
+
+- **Engine was never broken.** Findings 1/5 were a CONTENT gap (pond had 1
+  freezable cell of ~23) plus an oversold brief. USER RULING now structural:
+  ALL water is freezable — loader derives `freezable` from `water: true`
+  walls segments; data_lint holds tag⇔sheet lockstep; test_sim_core tripwire
+  freezes a never-hand-listed pond cell.
+- **Finding 3:** six icons generated + wired; data_lint.check_skill_icons
+  hard-fails any field skill without one; KNOWN_ICONLESS_SKILLS shrank to
+  combat-only.
+- **Findings 11/13 (the trap):** dialogue options measured by FONT METRICS at
+  real width (first-fit used to read ~2245px for a 4-option hub), panel caps
+  at 684 + scrolling options region, cursor scrolls into view. Esc-escape
+  REFUSED (choices carry commit effects). d2_shop_shot repaired, runs at the
+  130% step where the trap lived, pins panel geometry, PROMOTED into the
+  sweep (207). The "huge empty toast" = the unbounded panel at 130%.
+- **Finding 6:** pause was CanvasLayer 1 under combat chrome — now layer 20,
+  scrim 0.70. **Finding 9:** new MenuInk dark-ink variation for parchment
+  menus (Menu stays cream for dark surfaces).
+- **Finding 2:** corusdeer wounded/dead were tints of the live sprite. The
+  bespoke carcass sprite EXISTED UNWIRED (another cross-lane handoff miss);
+  wired it; generated a lying wounded pose. Three states, three silhouettes.
+- **Finding 7:** the sodden-timber nook was EMPTY — now foreshadowed
+  (observe glint), named (burn_toast), paid (6-gold strongbox, present_when
+  the burn counter), pinned in property_seams.
+- **Findings 4/15:** the chute was 9.6px pebbles; now a legible rubble spill
+  (Rocks.png cluster @0.9). NEW data_lint advisory: any map-referenced sprite
+  rendering under 10px flags (the "third of a tile" floor).
+- **Finding 8:** defeat nudge lines reflavored (voice-bible register).
+- **Finding 12:** Pisces idle regenerated stiller. **Finding 13:** peddler
+  stopped wearing the hired_blade COMBATANT rig; identity + observe added.
+- **Finding 10:** NO CHANGE — canon Octavia Cotton is a dark-skinned
+  Stitch-girl; profile entry added so regenerations hold it.
+- **Finding 14:** martial_field_armed +basic_cooking (loop re-pinned 8→9).
+
+Gates at close: data_lint OK (3 new arms), census RC=0, 33/33 units,
+ci_sweep ALL 207 green, windowed reads: shop@130%, pause-over-combat,
+chute+icons, kitchen. PR #394 updated; v0.19.0 still LOCAL-ONLY.
+
+## DONE (2026-08-04): v0.19 (wave-2) — "the world answers the hand" — SHIPPED
+
+**Tagged v0.19.0.** 19 of 20 issues closed; #348 stays open by design (its
+close condition is the K5 discovery playtest, below). #390 filed for the
+#385 Tier 2/3 art carry. v0.20 milestone now holds #371, #388, #390.
+
+Thesis: every verb the player aims at the world lands on something real and
+visibly resolves. Built forward (property layer #387, martial verbs
+#380-#383, feedback tells #335) and repaired backward (the eight blind-
+playtest findings #372-#379, each the same defect stated differently).
+
+Planning: two Fable passes (spec audit of all 22 issues + holistic shape),
+reconciled in `docs/superpowers/plans/2026-08-04-v019-wave2-plan.md`. Each
+issue carries its audit as a GitHub comment; **where audit and issue body
+disagree, the audit wins.** 14 rulings in the CHOICE-LOG close block.
+
+**Structure that worked: phase 0 landed EVERY `src/core` edit first**, in two
+disjoint worktrees, so phase 1 could fan six lanes wide over pure
+data/copy/UI/art. Eight lane merges, ZERO conflicts. Repeat this shape.
+
+**Structure that leaked: cross-lane handoffs.** Three defects were each a
+handoff where both lanes did their own half correctly and nobody closed the
+seam — the ice tile shipped dead (L4 made it, L5 owned the wiring), the
+kitchen tint survived (L3 held it for L4's sprites, which landed), and
+`journal_categories` went unpinned when L2's data changed a script L5 owned.
+The train caught all three, by luck as much as design. **Next wave: name the
+counterpart lane in each brief and make handoff-closure an explicit train
+step.**
+
+**Dual adversarial review is load-bearing, not ceremony.** Lanes reported
+fully green (33/33 units, 205/205 canonicals) and reviewers still found: a
+`state_set` that was not actually permanent (its one-way guard read
+`entity_first_use`, which `sleep()` clears, so an already-set carrier replayed
+first-time copy and re-banked a SAVE-PERSISTED counter once per sleep,
+unbounded); a `thaw_cell` leaving ice painted over open water; a ward grace
+that overwrote a player's paid-for [Hearthward] charm; consolidation going
+mouse-dead at 5+ field slots; and the Serve `source_hint` clipping at both
+accessibility text scales. **Every BLOCK came from a different lens** — single-
+lens review would have missed one.
+
+**Open for you:**
+1. **[Rope Work]** — the invented name is the one item still wanting an ACK.
+   Pinned by id, so a rename is a one-string diff.
+2. **PixelLab top-up** — $1.53 and 0 subscription generations. Six bespoke rig
+   rows are carried unfunded (#390). Money is yours to decide.
+3. **K5 discovery playtest** — the post-tag event that closes #348 and decides
+   slice 3. A stranger plays; the question is whether they FIND the property
+   layer without being told.
+4. Standing: [Perfect Reduction] fence-vs-grant, Raskghar ear-gate, #253.
+
 ## DONE (2026-08-04): dialogue voice pass — SHIPPED via `voice-pass` branch PR
 All 71 dialogue files de-AI'd per the 2026-08-03 critique. Six waves
 (Fable bible/cards → 36-cluster rewrite → cold-reader detection →
