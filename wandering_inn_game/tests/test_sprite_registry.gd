@@ -220,6 +220,12 @@ func _build_expected_counts() -> Dictionary:
 	counts["icon_sneak/idle"] = 1
 	counts["icon_invisibility/idle"] = 1
 
+	# Playtest fix wave (finding 3): the martial slate's icons. data_lint's
+	# check_skill_icons is the gate that keeps a field skill from shipping
+	# icon-less again.
+	for icon_id: String in ["icon_even_footing", "icon_greater_strength", "icon_broader_shoulders", "icon_bar_fighting", "icon_rope_work", "icon_basic_repair"]:
+		counts[icon_id + "/idle"] = 1
+
 	for icon_id: String in ["icon_power_shot", "icon_keen_eye", "icon_quick_nock", "icon_piercing_shot", "icon_spellbound_strike", "icon_sudden_strike"]:
 		counts[icon_id + "/idle"] = 1
 

@@ -1730,7 +1730,8 @@
    "contexts": [
     "exploration"
    ],
-   "description": "Loose stone and wet plank hold under you where they would drop anyone else."
+   "description": "Loose stone and wet plank hold under you where they would drop anyone else.",
+   "icon": "icon_even_footing"
   },
   {
    "id": "greater_strength",
@@ -1740,7 +1741,8 @@
    ],
    "field": true,
    "field_ambient": "[Greater Strength] — You set your shoulder to nothing in particular and let the breath out. Nothing here needs moving.",
-   "description": "Strength enough to shift what was set down to stay put."
+   "description": "Strength enough to shift what was set down to stay put.",
+   "icon": "icon_greater_strength"
   },
   {
    "id": "broader_shoulders",
@@ -1750,7 +1752,8 @@
    ],
    "field": true,
    "field_ambient": "[Broader Shoulders] — You square the pack and stand easier under it. There is nothing here worth carrying out.",
-   "description": "A load that would bow anyone else rides easy on you, and rides all day."
+   "description": "A load that would bow anyone else rides easy on you, and rides all day.",
+   "icon": "icon_broader_shoulders"
   },
   {
    "id": "bar_fighting",
@@ -1760,7 +1763,8 @@
    ],
    "field": true,
    "field_ambient": "[Bar Fighting] — Your hand goes looking for something with weight to it. This room has nothing to offer.",
-   "description": "Any common room is full of weapons. The trick is reaching one before the other fellow does."
+   "description": "Any common room is full of weapons. The trick is reaching one before the other fellow does.",
+   "icon": "icon_bar_fighting"
   },
   {
    "_comment": "`repairs` keys the repairs x broken -> state_set row. One-way by substrate: no un-repair row exists.",
@@ -1772,7 +1776,8 @@
    "field": true,
    "repairs": true,
    "field_ambient": "[Basic Repair] — You look for the break and find none. Whatever is here is already holding.",
-   "description": "A break put back the way it was meant to sit, and it stays put."
+   "description": "A break put back the way it was meant to sit, and it stays put.",
+   "icon": "icon_basic_repair"
   },
   {
    "_comment": "`anchors` keys the anchors x gap -> state_set row. INVENTED NAME (canon [Rope Arrow] is past the spoiler bar): pin the ID, never the bracket string, so a rename stays a one-string diff.",
@@ -1784,7 +1789,8 @@
    "field": true,
    "anchors": true,
    "field_ambient": "[Rope Work] — You pay out a length and look for something to make it fast to. Nothing here will hold a line.",
-   "description": "A line made fast at both ends. A gap crossed once stays crossed for whoever comes next."
+   "description": "A line made fast at both ends. A gap crossed once stays crossed for whoever comes next.",
+   "icon": "icon_rope_work"
   }
  ]
 }

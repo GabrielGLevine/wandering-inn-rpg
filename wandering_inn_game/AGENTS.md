@@ -268,6 +268,7 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `work_loop` | 9 | inn work-loop, Helper leg (chores → `class_gained` → level 2) |
 | `crate_fight` | 9 (fixture `post_tutorial_street`) | "Missing Crate" FORCE path; issue #69's Klbkch ally-gate roster proof (`chatted_with_klbkch` fields him, not Relc) |
 | `crate_talk` | 9 (fixture `post_tutorial_street`) | "Missing Crate" WATCH path (no combat) |
+| `d2_shop_shot` | 9 | shop-panel geometry canonical (findings 11/13): the charms menu caps at 684 + scrolls (`panel_capped` pin) — promoted from peek-orphan after the unbounded panel trapped a playtester |
 | `crate_light` | 9 | "Missing Crate" SKILL path ([Light]-studies `cellar_door`) |
 | `journal_skills` | 9 | journal skills-by-class panel; pre/post-first-use reveal |
 | `inventory_loop` | 9 | THE inventory/equipment loop; weapon-gated kit proof |

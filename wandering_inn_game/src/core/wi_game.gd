@@ -153,11 +153,24 @@ func _init(scene_config: Dictionary, skill_config: Dictionary, event_sink: Calla
 		var blocked := {}
 		for cell: Array in m.get("blocked", []):
 			blocked[Vector2i(int(cell[0]), int(cell[1]))] = true
+		var freezable := {}
 		for raw_seg: Variant in (m.get("walls", {}) as Dictionary).get("segments", []):
 			if raw_seg is Dictionary:
+				# Playtest fix wave (user ruling 2026-08-04): ALL water is
+				# freezable — that is the point of a generalized property. A
+				# walls segment tagged `water: true` (data_lint keeps the tag
+				# in lockstep with the water sheet) contributes every cell to
+				# `freezable`, so a player aiming a freeze at ANY open water
+				# gets ice, not the "no standing water" ambient. Before this,
+				# the floodplains pond had 1 freezable cell of ~23 and the
+				# sewers channels 2 of 28 — the QA scripts teleported to the
+				# tagged cells; a person aimed anywhere else and read the
+				# fallback as "the feature is broken".
+				var seg_is_water := bool((raw_seg as Dictionary).get("water", false))
 				for seg_cell: Vector2i in segment_cells(raw_seg as Dictionary):
 					blocked[seg_cell] = true
-		var freezable := {}
+					if seg_is_water:
+						freezable[seg_cell] = true
 		for cell: Array in m.get("freezable", []):
 			var fc := Vector2i(int(cell[0]), int(cell[1]))
 			freezable[fc] = true

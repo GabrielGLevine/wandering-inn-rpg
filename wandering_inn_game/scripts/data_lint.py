@@ -137,6 +137,24 @@ def check_maps(maps: dict, errors: list) -> None:
 			elif not _in_grid(cell, grid):
 				errors.append(f"maps/{map_id}: entity '{eid}' cell "
 					f"{cell} out of grid {w}x{h}")
+		# Playtest fix wave (user ruling 2026-08-04): ALL water is freezable.
+		# The loader derives `freezable` from walls segments tagged
+		# `water: true`; this arm keeps the tag in lockstep with the water
+		# sheet in BOTH directions, so a future pond cannot ship as
+		# unfreezable water (the "no standing water" confusion) or as a
+		# water-flagged segment wearing non-water art.
+		walls = m.get("walls", {})
+		for seg in (walls.get("segments", []) if isinstance(walls, dict) else []):
+			if not isinstance(seg, dict):
+				continue
+			is_water_sheet = "Water_tiles" in str(seg.get("sheet", ""))
+			has_flag = bool(seg.get("water", False))
+			if is_water_sheet and not has_flag:
+				errors.append(f"maps/{map_id}: walls segment {seg.get('from')}–{seg.get('to')} "
+					f"uses the water sheet but lacks `water: true` — its cells would not be freezable")
+			elif has_flag and not is_water_sheet:
+				errors.append(f"maps/{map_id}: walls segment {seg.get('from')}–{seg.get('to')} "
+					f"is tagged `water: true` but does not use the water sheet")
 
 
 def check_portals(parsed: dict, maps: dict, errors: list) -> None:
@@ -246,6 +264,30 @@ def _walk_gates(node, map_id: str, entity_id: str, errors: list) -> None:
 	elif isinstance(node, list):
 		for item in node:
 			_walk_gates(item, map_id, entity_id, errors)
+
+
+def check_skill_icons(parsed: dict, errors: list) -> None:
+	"""Playtest fix wave (finding 3, 2026-08-04): every field-usable skill
+	renders on the exploration hotbar, and a missing `icon` degrades to a
+	two-letter fallback label -- five of the six martial skills shipped that
+	way and the user called it non-shippable. Gate: `field: true` requires an
+	`icon`, and the icon id must exist in sprites.json. Passives (no field
+	key) are exempt -- they never occupy a hotbar slot."""
+	skills_path = DATA / "skills.json"
+	sprites_path = DATA / "sprites.json"
+	rows = (parsed.get(skills_path) or {}).get("skills", [])
+	# sprites.json is FLAT (id -> entry), same access as check_sprites.
+	sprites = parsed.get(sprites_path) or {}
+	for s in rows:
+		if not isinstance(s, dict) or s.get("field") is not True:
+			continue
+		sid = str(s.get("id", "<no id>"))
+		icon = str(s.get("icon") or "")
+		if not icon:
+			errors.append(f"skills/{sid}: field skill has no `icon` -- it renders "
+				"as a two-letter fallback on the hotbar (finding 3 class)")
+		elif icon not in sprites:
+			errors.append(f"skills/{sid}: icon '{icon}' not in sprites.json")
 
 
 def check_gate_shapes(maps: dict, errors: list) -> None:
@@ -749,6 +791,7 @@ def main() -> int:
 	check_portals(parsed, maps, errors)
 	check_dialogue(parsed, errors)
 	check_sprites(parsed, errors)
+	check_skill_icons(parsed, errors)
 	check_gate_shapes(maps, errors)
 	check_moods(parsed, maps, errors)
 	advisories: list = []

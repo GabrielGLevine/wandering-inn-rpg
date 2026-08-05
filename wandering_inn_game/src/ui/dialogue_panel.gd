@@ -31,6 +31,7 @@ const SENTENCE_BOUNDARY_WINDOW_FRACTION := 0.2
 var _root: Control
 var _stack: VBoxContainer
 var _options_box: VBoxContainer
+var _options_scroll: ScrollContainer
 var _speaker_label: Label
 var _text_label: Label
 var _more_hint: Label
@@ -100,9 +101,22 @@ func _ready() -> void:
 	_more_hint.hide()
 	stack.add_child(_more_hint)
 
+	# Playtest fix wave (findings 11/13): the options region SCROLLS instead of
+	# growing the panel past the viewport. A shop hub with 8 options + effect
+	# sub-lines used to push its own exit row off-screen -- with no Esc path out
+	# of a conversation, that is a hard trap (the user had to kill the process).
+	# Esc-closes-dialogue was considered and REFUSED: choices carry effects and
+	# commit points (dialogue-committed fights snapshot on the choosing), so a
+	# universal escape would skip them. The authored exit row must simply always
+	# be reachable, which the cap + scroll guarantees.
+	_options_scroll = ScrollContainer.new()
+	_options_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_options_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	stack.add_child(_options_scroll)
 	_options_box = VBoxContainer.new()
 	_options_box.add_theme_constant_override("separation", 1)
-	stack.add_child(_options_box)
+	_options_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_options_scroll.add_child(_options_box)
 	_options_box.mouse_filter = Control.MOUSE_FILTER_STOP
 	_options_box.gui_input.connect(_on_options_gui_input)
 	# GH#196 (mobile blocker): paged text advances by TAP anywhere on the
@@ -204,8 +218,7 @@ func _render_page() -> void:
 	_options_box.visible = on_last
 	# GH#196: paging was INVISIBLE to the event stream (the tap-advance QA
 	# gate could not fail without this) -- confirm which page renders.
-	ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_PAGE_RENDERED,
-		{"page": _page_idx + 1, "pages": _pages.size()})
+	_pending_confirm = {"page": _page_idx + 1, "pages": _pages.size()}
 	if on_last:
 		_rebuild_options()
 	else:
@@ -217,6 +230,14 @@ func _render_page() -> void:
 	_fit_panel_height.call_deferred()
 
 
+## Playtest fix wave (findings 11/13): the page confirm now carries the panel
+## GEOMETRY, one frame after render so every deferred _fit_panel_height has
+## applied. panel_height can never exceed PICKER_MAX_HEIGHT again, and
+## panel_capped=true means the options region is scrolling -- a QA wait on
+## these pins the shop trap shut for good.
+var _pending_confirm: Variant = null
+
+
 func _on_last_page() -> bool:
 	return _page_idx >= _pages.size() - 1
 
@@ -224,12 +245,49 @@ func _on_last_page() -> bool:
 func _fit_panel_height() -> void:
 	if not is_instance_valid(_stack):
 		return
-	var needed := _stack.get_combined_minimum_size().y + 52.0
+	# Measure the stack with the scroll region collapsed so `base` is the
+	# fixed furniture (ribbon + text + margins); the options get whatever
+	# fits under the cap and scroll for the rest.
+	_options_scroll.custom_minimum_size = Vector2(PANEL_SIZE.x - 56.0, 0.0)
+	var base := _stack.get_combined_minimum_size().y + 52.0
+	# An autowrap Label queried before layout reports a min height wrapped at
+	# width 0 (the first fit of a conversation measured ~2245px for a
+	# 4-option hub and emitted a garbage capped=true confirm) -- and setting
+	# size.x does not invalidate the cache. Measure with FONT METRICS at the
+	# real inner width instead (the test_copy_fit method): deterministic on
+	# the first frame, independent of layout timing. 12px = scrollbar room.
+	var inner_w := PANEL_SIZE.x - 56.0 - 12.0
+	var opts_needed := 0.0
+	var opt_sep := float(_options_box.get_theme_constant("separation"))
+	for child: Node in _options_box.get_children():
+		var lbl := child as Label
+		if lbl == null:
+			if child is Control:
+				opts_needed += (child as Control).get_combined_minimum_size().y + opt_sep
+			continue
+		var font := lbl.get_theme_font("font")
+		var fsz := lbl.get_theme_font_size("font_size")
+		var text_h := font.get_multiline_string_size(lbl.text, HORIZONTAL_ALIGNMENT_LEFT, inner_w, fsz).y
+		opts_needed += maxf(text_h, lbl.custom_minimum_size.y) + opt_sep
+	var needed := base + opts_needed
 	_picker_needed_height = needed
-	var h := minf(maxf(PANEL_SIZE.y, needed), PICKER_MAX_HEIGHT) if _picker_active else maxf(PANEL_SIZE.y, needed)
+	var opts_h := minf(opts_needed, maxf(80.0, PICKER_MAX_HEIGHT - base))
+	_options_scroll.custom_minimum_size = Vector2(PANEL_SIZE.x - 56.0, opts_h)
+	var h := minf(maxf(PANEL_SIZE.y, base + opts_h), PICKER_MAX_HEIGHT)
 	_root.custom_minimum_size = Vector2(PANEL_SIZE.x, h)
 	_root.size = Vector2(PANEL_SIZE.x, h)
 	UIChrome.set_offsets(_root, -PANEL_SIZE.x * 0.5, -h - 18.0, PANEL_SIZE.x * 0.5, -18.0)
+	if _pending_confirm != null and _shown:
+		# Playtest fix wave (findings 11/13): the page confirm carries the
+		# panel GEOMETRY, emitted only off a fit whose measurement was real
+		# (box laid out). panel_capped=true is the options scroll engaging;
+		# panel_height can never exceed PICKER_MAX_HEIGHT again.
+		var pc: Dictionary = _pending_confirm
+		_pending_confirm = null
+		ObservableBus.emit_domain_event(WIEvents.UI_DIALOGUE_PAGE_RENDERED,
+			{"page": int(pc["page"]), "pages": int(pc["pages"]),
+			"panel_height": h,
+			"panel_capped": needed > PICKER_MAX_HEIGHT})
 	if _picker_active:
 		_emit_picker_rendered.call_deferred()
 
@@ -425,6 +483,11 @@ func _refresh_cursor() -> void:
 			(_option_labels[i] as Label).text = "%s%d. %s%s" % [mark, i + 1, opt_text, suffix]
 		else:
 			(_option_labels[i] as Label).text = "%s%d. %s" % [mark, i + 1, String(opt["text"])]
+	# Keep the keyboard cursor visible inside the scrolling options region --
+	# without this, arrowing below the fold moves the selection off-screen and
+	# the fold reads as the end of the list.
+	if _cursor >= 0 and _cursor < _option_labels.size() and is_instance_valid(_options_scroll):
+		_options_scroll.ensure_control_visible(_option_labels[_cursor] as Control)
 
 
 func _hide() -> void:

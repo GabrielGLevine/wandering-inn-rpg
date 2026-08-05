@@ -6039,6 +6039,34 @@
      "save"
     ]
    }
+  },
+  {
+   "script": "d2_shop_shot",
+   "seed": 9,
+   "note": "the shop-panel geometry canonical (findings 11/13): the charms menu MUST cap at 684 and scroll (panel_capped pin) -- this script was a peek-style orphan outside the sweep while the shop panel grew past the viewport and trapped the player; promoted so the surface can never rot unwatched again",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "street"
+    ],
+    "fixtures": [
+     "d2_shop"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "krshia_crate"
+    ],
+    "systems": [
+     "dialogue",
+     "economy",
+     "exploration",
+     "settings"
+    ]
+   }
   }
  ]
 }

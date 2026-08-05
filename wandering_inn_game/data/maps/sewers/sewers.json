@@ -55,7 +55,8 @@
      5
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
-    "tile_px": 16
+    "tile_px": 16,
+    "water": true
    },
    {
     "from": [
@@ -71,7 +72,8 @@
      5
     ],
     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
-    "tile_px": 16
+    "tile_px": 16,
+    "water": true
    }
   ]
  },

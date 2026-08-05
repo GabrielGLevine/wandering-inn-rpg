@@ -61,7 +61,7 @@ const DIFFICULTY_DAMAGE_TAKEN_MULTS: Array[float] = [0.75, 1.0, 1.3]
 ## .tres, same discipline test_copy_fit.gd's own mirrored consts use).
 const BASE_DEFAULT_FONT_SIZE := 14
 const BASE_TYPE_FONT_SIZES := {
-	"Label": 14, "Header": 18, "Title": 36, "Menu": 18, "Small": 12, "Lore": 12,
+	"Label": 14, "Header": 18, "Title": 36, "Menu": 18, "MenuInk": 18, "Small": 12, "Lore": 12,
 }
 
 var _settings := ConfigFile.new()

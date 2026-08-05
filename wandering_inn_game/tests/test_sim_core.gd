@@ -2307,6 +2307,23 @@ func _init() -> void:
 	assert(int((gWardKept.warded_encounters["goblin_encounter_1"] as Dictionary).get("sleeps", 0)) == 1,
 		"the second night the player paid for is still there")
 
+	# == PLAYTEST FIX WAVE: ALL WATER IS FREEZABLE (user ruling 2026-08-04) ==
+	# The floodplains pond shipped with ONE freezable cell of ~23 and the sewers
+	# channels 2 of 28 -- aiming a freeze anywhere else hit the "no standing
+	# water" ambient and read as a broken feature. The loader now derives
+	# `freezable` from walls segments tagged `water: true`. Tripwire: a pond
+	# cell that was NEVER in the hand-authored list must freeze.
+	var gPond := WIGame.new(WISceneCatalog.compose(), wave_b_skill_config, _sink, 12345, combat_config)
+	gPond.player_skills.append("icy_floor")
+	gPond.transition("floodplains", Vector2i(8, 19))
+	gPond.player_facing = Vector2i.RIGHT
+	assert(gPond.is_cell_blocked(Vector2i(9, 19)), "open pond water blocks before the freeze")
+	_events.clear()
+	gPond.use_skill_field("icy_floor")
+	assert(_count("terrain_changed") == 1, "a DERIVED pond cell freezes -- water:true segments feed freezable")
+	assert(not gPond.is_cell_blocked(Vector2i(9, 19)), "...and the frozen cell walks")
+	assert(gPond.move_player(Vector2i.RIGHT) and gPond.player_cell == Vector2i(9, 19), "the martial crosses the mage's ice")
+
 	# == GH#391: A POT IS A POT ==
 	# Cooking-family Skills used to be bound to SPECIFIC named props, so a
 	# cooking build had to cross regions to find the one station that took its

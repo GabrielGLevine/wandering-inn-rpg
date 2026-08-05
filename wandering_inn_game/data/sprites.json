@@ -6097,5 +6097,77 @@
     "fps": 6
    }
   }
+ },
+ "icon_even_footing": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_even_footing.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_greater_strength": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_greater_strength.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_broader_shoulders": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_broader_shoulders.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_bar_fighting": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_bar_fighting.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_rope_work": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_rope_work.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "icon_basic_repair": {
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/ui/icons/icon_basic_repair.png",
+    "frame_size": [
+     16,
+     16
+    ],
+    "fps": 1
+   }
+  }
  }
 }

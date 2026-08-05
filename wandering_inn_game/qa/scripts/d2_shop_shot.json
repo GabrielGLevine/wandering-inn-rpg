@@ -1,5 +1,5 @@
 {
- "_comment": "Windowed shop-moment shot (NOT a canonical sweep member -- peek-style utility, excluded from ci_sweep). Loads the d2_shop fixture (Warrior L1 beside Krshia, purse = 5 gold) via title Continue. Proves BOTH halves of the shop UX in one run: (A) at 5 gold the cheapest buy (traveler_charm, 5) is affordable/ungreyed while the 15/18/24 options are greyed -- screenshot 01; (B) buy the charm (Paid 5 gold + Got item), purse -> 0; (C) re-open the stall now broke -> ALL four buy options greyed -- screenshot 03 (the greyed-while-broke proof). (D) 'Show me the charms.' opens the new 'charms' node holding the 6 new accessories/tools -- screenshot 04 (the grown panel + the new Resonance N card lines, all broke-greyed). Windowed so the greyed dialogue options are visually inspectable.",
+ "_comment": "Shop-panel canonical (PROMOTED into the sweep, playtest fix wave 2026-08-04 -- it was a peek-style orphan while the exact surface it watches shipped a player trap). Loads the d2_shop fixture (Warrior L1 beside Krshia, purse = 5 gold) via title Continue. Proves BOTH halves of the shop UX in one run: (A) at 5 gold the cheapest buy (traveler_charm, 5) is affordable/ungreyed while the 15/18/24 options are greyed -- screenshot 01; (B) buy the charm (Paid 5 gold + Got item), purse -> 0; (C) re-open the stall now broke -> ALL four buy options greyed -- screenshot 03 (the greyed-while-broke proof). (D) 'Show me the charms.' opens the new 'charms' node holding the 6 new accessories/tools -- screenshot 04 (the grown panel + the new Resonance N card lines, all broke-greyed). Windowed so the greyed dialogue options are visually inspectable.",
  "fixture_save": "d2_shop",
  "starts_at_title": true,
  "steps": [
@@ -35,6 +35,16 @@
    "action": "wait_for_event",
    "type": "world_ready",
    "timeout_sec": 5
+  },
+  {
+   "_comment": "Playtest fix wave (findings 11/13): the whole script runs at the 130% accessibility step because THAT is where the trap lived -- at fs14 every shop node fits under the 684 cap (max 562), at 130% the stall and charms nodes genuinely overflow and the panel must cap + scroll. The user's report ('huge panel, no way out, had to kill the process') was the 130% case.",
+   "action": "set_text_scale_step",
+   "step": 2
+  },
+  {
+   "action": "assert_settings_value",
+   "path": "text_scale_step",
+   "equals": 2
   },
   {
    "action": "assert_state",
@@ -109,7 +119,8 @@
       "locked": true,
       "requirement": "costs 15 gold",
       "effect_lines": [
-       "+1 damage on melee hits"
+       "+1 damage on melee hits",
+       "Sword kit replaces other weapon Skills in combat"
       ]
      },
      {
@@ -144,10 +155,21 @@
       "requirement": "costs 18 gold",
       "effect_lines": [
        "+1 damage on ranged hits",
-       "Range 4"
+       "Range 4",
+       "Bow kit replaces other weapon Skills in combat"
       ]
      }
     ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Playtest fix wave (findings 11/13): THE TRAP PIN, at the 130% step. Before the fix the panel grew unbounded (autowrap rows measured at width 0 inflated `needed`, and non-picker dialogue had NO height cap), pushing its own exit row off-screen -- the only way out was killing the process. The fit now measures rows by font metrics at the real width and caps at 684 with a scrolling options region. 585 is the stall node's HONEST height at 130%; any regression in the measurement or the cap moves this number.",
+   "action": "wait_for_event",
+   "type": "ui_dialogue_page_rendered",
+   "payload_contains": {
+    "panel_capped": false,
+    "panel_height": 585.0
    },
    "timeout_sec": 5
   },
@@ -214,7 +236,8 @@
       "locked": true,
       "requirement": "costs 15 gold",
       "effect_lines": [
-       "+1 damage on melee hits"
+       "+1 damage on melee hits",
+       "Sword kit replaces other weapon Skills in combat"
       ]
      },
      {
@@ -249,7 +272,8 @@
       "requirement": "costs 18 gold",
       "effect_lines": [
        "+1 damage on ranged hits",
-       "Range 4"
+       "Range 4",
+       "Bow kit replaces other weapon Skills in combat"
       ]
      }
     ]
@@ -277,63 +301,61 @@
     "speaker": "Krshia",
     "options": [
      {
-      "text": "That copper ring. Can't hurt. (4 gold)",
+      "effect_lines": [
+       "+1 HP",
+       "Grants [Dangersense] in combat"
+      ],
       "locked": true,
       "requirement": "costs 4 gold",
-      "effect_lines": [
-       "+1 HP"
-      ]
+      "text": "That copper ring. Can't hurt. (4 gold)"
      },
      {
-      "text": "The handline, for the pond. (4 gold)",
       "locked": true,
-      "requirement": "costs 4 gold"
+      "requirement": "costs 4 gold",
+      "text": "The handline, for the pond. (4 gold)"
      },
      {
-      "text": "The whetstone. (5 gold)",
       "locked": true,
-      "requirement": "costs 5 gold"
+      "requirement": "costs 5 gold",
+      "text": "The whetstone. (5 gold)"
      },
      {
-      "text": "The wax-sealed ward, then. (9 gold)",
-      "locked": true,
-      "requirement": "costs 9 gold",
       "effect_lines": [
        "+2 HP",
        "Resonance 1"
-      ]
+      ],
+      "locked": true,
+      "requirement": "costs 9 gold",
+      "text": "The wax-sealed ward, then. (9 gold)"
      },
      {
-      "text": "The silver-capped fang. (14 gold)",
-      "locked": true,
-      "requirement": "costs 14 gold",
       "effect_lines": [
        "+1 damage on melee hits",
        "Resonance 1"
-      ]
+      ],
+      "locked": true,
+      "requirement": "costs 14 gold",
+      "text": "The silver-capped fang. (14 gold)"
      },
      {
-      "text": "The stone-scale, the one under the counter. (35 gold)",
-      "locked": true,
-      "requirement": "costs 35 gold",
       "effect_lines": [
        "Reduces every hit taken by 1",
-       "Resonance 2"
-      ]
+       "Resonance 2",
+       "Grants [Tough Body] in combat"
+      ],
+      "locked": true,
+      "requirement": "costs 35 gold",
+      "text": "The stone-scale, the one under the counter. (35 gold)"
      },
      {
-      "text": "Back to the regular stall.",
-      "locked": false,
-      "requirement": ""
-     },
-     {
-      "text": "The hunting bow, then. Gnoll-strung, proper draw. (18 gold)",
       "locked": true,
       "requirement": "costs 18 gold",
-      "effect_lines": [
-       "+1 damage on ranged hits",
-       "Range 4"
-      ]
+      "text": "That piece under the far cloth. What is it? (18 gold)"
+     },
+     {
+      "locked": false,
+      "requirement": "",
+      "text": "Back to the regular stall."
      }
     ]
    },
