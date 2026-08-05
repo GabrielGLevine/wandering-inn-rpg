@@ -31,12 +31,13 @@ baselines; 33 unit suites PASS; sweep 207/207; leak_check clean.
 (c14efafb, 9044b9d0, 9554a334) were local-only on this branch and rode
 along with the push. They are spec/plan docs only.
 
-## QUEUE
-- Merge PR #395 — user's call (CI was 7/7 green pre-push; re-check post
-  e9aea87c).
-- v0.19.0 tag re-cut at merge commit + deploy — USER'S CALL.
-- Riverfarm redesign (#396) — plan committed by the other session, 12
-  tasks/4 lanes.
+## QUEUE (updated 2026-08-05, post-merge)
+- PR #395 MERGED (squash, e3835598); #388 closed. PR #393 closed for now
+  (work parked on issue/195-audio-profile-pass). #371 deferred per user.
+- v0.19.0 tag re-cut at a merge commit + deploy — USER'S CALL, not done.
+- Riverfarm redesign (#396) — plan committed, 12 tasks/4 lanes. Next big
+  execute item.
+- #390 VISUAL-LOG Tier 2/3 drain — parallel art lane candidate.
 
 ## DONE (2026-08-05): #388 map talk_pool voice pass — WHOLE CORPUS CLEAN
 
