@@ -31,6 +31,15 @@ baselines; 33 unit suites PASS; sweep 207/207; leak_check clean.
 (c14efafb, 9044b9d0, 9554a334) were local-only on this branch and rode
 along with the push. They are spec/plan docs only.
 
+## RUNNING (2026-08-05): #390 + #396 + #397 execution session
+Session picked up all three, hit WINDDOWN (session 90%) before dispatch.
+State saved; ScheduleWakeup set past the ~25m session reset. On wake:
+`scripts/usage_status.sh --fresh` → plan reads (#396 plan doc +
+docs/VISUAL-LOG.md Tier 2/3 rows) → parallel lanes: art (#390, PixelLab
+~$1.14 left), Riverfarm (#396, branch issue/396-riverfarm-redesign off
+main), prose (#397, phase 0/1 first — bible + blind-review set). Nothing
+dispatched yet; no worktrees exist.
+
 ## QUEUE (updated 2026-08-05, post-merge)
 - PR #395 MERGED (squash, e3835598); #388 closed. PR #393 closed for now
   (work parked on issue/195-audio-profile-pass). #371 deferred per user.
