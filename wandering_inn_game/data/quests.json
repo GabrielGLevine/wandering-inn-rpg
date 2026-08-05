@@ -134,19 +134,35 @@
 			]
 		},
 		{
-			"_comment": "v0.16 #305 R2. Same route-report shape as flood_ledger. The SKILL route reads the ward and banks ward_scrap_read ONLY -- it must never bank detected_wardwork (trapped_halls.json:355 protects that counter's >=3 threshold).",
+			"_comment": "v0.16 #305 R2. SKILL route banks ward_scrap_read ONLY, never detected_wardwork (trapped_halls.json:355 protects its >=3 threshold). RETIRED FOR NEW SAVES 2026-08-05 (#396); successor a_winter_of_teeth.",
 			"id": "what_the_thicket_keeps",
 			"title": "What the Thicket Keeps",
 			"region": "Riverfarm",
 			"beats": [
-				{ "id": "resolve", "description": "The corusdeer herd stops dead at a line in the thicket it will not cross. Walk the line with the hunter and shift the fences off the herd's road, read the old boundary work in the hut at the hollow, or clear whatever has denned on the line.", "complete_when_any": { "herd_rerouted": 1, "ward_scrap_read": 1, "thicket_cleared": 1 } },
-				{ "id": "report", "description": "Tell the hunter what the thicket is keeping, back at his post in the village.", "complete_when": { "thicket_answered": 1 } }
+				{ "id": "resolve", "description": "The corusdeer herd stops dead at a line in the thicket it will not cross. Walk the line with the shepherd and shift the fences off the herd's road, read the old boundary work in the hut at the hollow, or clear whatever has denned on the line.", "complete_when_any": { "herd_rerouted": 1, "ward_scrap_read": 1, "thicket_cleared": 1 } },
+				{ "id": "report", "description": "Tell the shepherd what the thicket is keeping, back at his post in Riverfarm village.", "complete_when": { "thicket_answered": 1 } }
 			],
 			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins) and all three co-bank -- kill the den, then still read the ward. Ladder: read > rerouted > cleared. Killing the predator moves one animal off a line that was never about the predator; moving the fences is the humble, correct answer; reading the boundary is the only one that explains why the line is there at all.",
 			"resolution_paths": [
 				{ "accomplishment": "thicket_cleared", "text": "You cleared the den off the line and let the herd try again." },
 				{ "accomplishment": "herd_rerouted", "text": "You moved the fences instead of the deer, and the herd kept its road." },
 				{ "accomplishment": "ward_scrap_read", "text": "You read the old boundary work and learned what the thicket has been keeping out." }
+			]
+		},
+		{
+			"_comment": "#396. Replaces what_the_thicket_keeps for NEW saves; the legacy def above stays completable forever. FIGHT counter is survived_wolf_night (FROZEN, identical semantics, encounter untouched).",
+			"id": "a_winter_of_teeth",
+			"title": "A Winter of Teeth",
+			"region": "Riverfarm",
+			"beats": [
+				{ "id": "resolve", "description": "Wolf sign thickens toward the hollow and the shepherd is losing lambs. Stand the night watch at the field edge, rebuild the fold from the stacked hurdles, or walk the wolf sign and learn what pushed the pack.", "complete_when_any": { "survived_wolf_night": 1, "fold_rebuilt": 1, "pack_traced": 1 } },
+				{ "id": "report", "description": "Tell the shepherd how the winter gets survived, at the lamb pen.", "complete_when": { "winter_answered": 1 } }
+			],
+			"_resolution_order": "WEAKEST CLAIM FIRST (resolved_path is last-match-wins), all three co-bank. Ladder: traced > fold > watch. One night's wolves buy a night; hurdles buy a winter; knowing why they push is the answer. PRE-BANK COHORT: a new save can win river_wolf_pack before ever talking, so the hub carries a survived_wolf_night text_variant and the offer row stays normal -- accept-then-resolve reads intentional rather than as the New-quest/Quest-complete defect. All three report rows carry heard_winter_teeth beside their route counter so no ungated producer can leak winter_answered.",
+			"resolution_paths": [
+				{ "accomplishment": "survived_wolf_night", "text": "You stood the night watch and the pack paid for the field." },
+				{ "accomplishment": "fold_rebuilt", "text": "You rebuilt the fold, and the wolves stopped mattering." },
+				{ "accomplishment": "pack_traced", "text": "You walked the sign back and found the pack was pushed — their old ground is held by something on the line." }
 			]
 		},
 		{
