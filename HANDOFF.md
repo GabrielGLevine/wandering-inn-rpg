@@ -304,12 +304,17 @@ Process lessons this session (fold candidates for wi-running-the-machine
 2. Board: #348 open (slice 2+), #347 open (migration behind rulings),
    #360 open (flip-gate triage + stratified envelope), #359/#134/#318
    close via the train PRs.
-3. **Riverfarm Hunter→Shepherd swap SPEC'D, not implemented** (user
-   ruling 2026-08-05: Hunter-of-Noelictus confusion, swap character).
-   docs/superpowers/specs/2026-08-05-riverfarm-shepherd-swap-design.md
-   — all internal ids frozen (shipped-ids contract), surface-only swap,
-   5 QA speaker re-pins measured, new a_shepherd sprite needed.
-   Awaiting user spec review before plan/implementation.
+3. **Riverfarm redesign SPEC'D, not implemented** (user rulings
+   2026-08-05: Hunter-of-Noelictus confusion). Grew from surface swap to
+   full redesign:
+   docs/superpowers/specs/2026-08-05-riverfarm-shepherd-and-witch-quests-design.md
+   (supersedes same-day swap spec). Four workstreams: (A) "A Shepherd"
+   character swap, ids frozen; (B) new quest `a_winter_of_teeth` replaces
+   what_the_thicket_keeps (retired for new saves, legacy completable);
+   (C) briar fights lose ally + solo sim re-gate, wolf-night ally stays;
+   (D) new Eloise quest `the_makings` wraps the [Hedge Witch] grant.
+   Lanes + file ownership in spec. Awaiting user spec review before
+   plan/implementation.
 
 
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)

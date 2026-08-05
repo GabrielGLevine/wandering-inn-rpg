@@ -1,6 +1,10 @@
 # Riverfarm NPC swap: The Hunter → The Shepherd (design)
 
-Date: 2026-08-05. Status: SPEC — awaiting user review. No implementation yet.
+Date: 2026-08-05. Status: **SUPERSEDED** same day by
+`2026-08-05-riverfarm-shepherd-and-witch-quests-design.md` (user chose quest
+replacement over surface swap, plus ally rework, naming fix "A Shepherd", and
+a new Eloise craft quest). Constraint analysis below still holds and is
+referenced by the successor.
 
 ## Problem
 
