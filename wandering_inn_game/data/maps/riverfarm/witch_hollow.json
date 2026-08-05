@@ -640,7 +640,7 @@
    ]
   },
   {
-   "_comment": "`ally_requires{hunter_will_come:1}` is banked ONLY by data/dialogue/riverfarm_hunter.json's come-along ask, at the village.",
+   "_comment": "#396: ally removed (user ruling 2026-08-05) -- nobody local walks you to the hollow. Solo sim gates in sim_combat_batch.gd. hunter_will_come still fields the shepherd at river_wolf_pack (village) only.",
    "id": "briar_collectors",
    "kind": "encounter",
    "cell": [
@@ -654,16 +654,12 @@
     "briar_collector_a",
     "briar_collector_b"
    ],
+   "allies": [],
    "on_victory": "drove_off_collectors",
-   "observe": "Briars, moving without wind. They haven't noticed you yet.",
-   "allies": [
-    "riverfarm_hunter"
-   ],
-   "ally_requires": {
-    "hunter_will_come": 1
-   }
+   "observe": "Briars, moving without wind. They haven't noticed you yet."
   },
   {
+   "_comment": "#396: ally removed (user ruling 2026-08-05) -- nobody local walks you to the hollow. Solo sim gates in sim_combat_batch.gd. hunter_will_come still fields the shepherd at river_wolf_pack (village) only.",
    "id": "briar_collectors_deep",
    "kind": "encounter",
    "cell": [
@@ -677,17 +673,12 @@
     "briar_collector_deep_a",
     "briar_collector_deep_b"
    ],
+   "allies": [],
    "on_victory": [
     "drove_off_collectors",
     "blight_lifted"
    ],
-   "observe": "More briars, thicker here, coiled tight around something you can't quite see.",
-   "allies": [
-    "riverfarm_hunter"
-   ],
-   "ally_requires": {
-    "hunter_will_come": 1
-   }
+   "observe": "More briars, thicker here, coiled tight around something you can't quite see."
   },
   {
    "id": "hollow_village_path",

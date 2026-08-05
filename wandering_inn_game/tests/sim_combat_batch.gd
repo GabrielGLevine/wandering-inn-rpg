@@ -31,8 +31,14 @@ const RUNS_PER_CELL := 100
 ## that can move a rung is a real data change, which is precisely what the gate
 ## is for. If a future wave has to let two rungs share a band again, widen this
 ## deliberately and say why, the way GH#337 did.
+##
+## #396 (2026-08-05): rung 1 is now the SOLO read of the Riverfarm capstone --
+## `briar_collectors_deep_t5_sw14_solo`, renamed here with the cell it names,
+## because the hollow stopped fielding an ally. The deep pair's retune was sized
+## to keep this ladder's statement: 0.94 / 0.84 / 0.69 / 0.61, gaps 0.10 / 0.15 /
+## 0.08 -- rung 1 climbs 0.02 and every gap still clears LADDER_TIE by 0.05+.
 const LADDER_RUNGS := [
-	"briar_collectors_deep_t5_sw14_hunter",
+	"briar_collectors_deep_t5_sw14_solo",
 	"hired_blades_t5_sw14_wilovan",
 	"forge_calibration_golem_t5_sw14_solo",
 	"seal_warden_t5_sw14_solo",
@@ -200,34 +206,63 @@ const RUIN_CELLS := [
 ]
 
 const RIVERFARM_CELLS := [
-	{"name": "briar_collectors_w10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "warrior5_mage5", "solo": false},
+	# #396, 2026-08-05: THE HOLLOW'S BRIAR FIGHTS ARE SOLO NOW. witch_hollow.json
+	# dropped `allies`/`ally_requires` from briar_collectors and
+	# briar_collectors_deep (user ruling: nobody local walks you to the hollow),
+	# so every `_hunter` briar cell was DELETED rather than re-banded -- a
+	# with-ally read there measures a field NO cohort can bring, including legacy
+	# saves holding hunter_will_come (that counter now fields the shepherd at
+	# river_wolf_pack, in the village, only). The solo cells took the gates, and
+	# BOTH pairs were retuned to keep the fights viable alone -- THE LEVERS AND
+	# THE ARGUMENT LIVE HERE (combatants.json's `_comment`s carry a pointer and the
+	# numbers only, to stay under the repo's data-comment census):
+	#   shallow briar_collector_a/_b: con 30 -> 24 both, weapon_die untouched.
+	#     t3_warrior10 solo 0.33 -> 0.69. con alone was lever enough.
+	#   deep briar_collector_deep_a/_b: con 34/36 -> 25/27 AND weapon_die 7/6 ->
+	#     4/3. con FIRST per the spec's retune rule, but con is a weak lever on
+	#     this pair (-6 each bought +0.07 of win rate), so weapon_die carries the
+	#     rest; the resulting tanky / low-per-hit / one-big-skill profile is
+	#     heirloom_fence + fence_doorman's shipped solo-gated shape, not a new
+	#     idea. t3_warrior10 solo 0.22 -> 0.63, warrior5_mage5 solo 0.01 -> 0.28.
+	# power_level is UNTOUCHED on all four (8.0 / 9.5): what the retune moved is
+	# the party size these fights are authored against, not their place in the
+	# region, and power_level is the XP/banking weight for the latter. Retuning it
+	# would move WICombatBanking's enemy-party power and the progression pace with
+	# it, for a design point that did not change.
+	# The two w10 (warrior5_mage5) solo cells stay MEASURED as the off-build
+	# historical baselines, per region-tiers.md's off-tier-baseline rule.
 	{"name": "briar_collectors_w10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "warrior5_mage5", "solo": true},
-	{"name": "briar_collectors_t3_spellsword9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "t3_spellsword9", "solo": false},
-	{"name": "briar_collectors_t3_warrior9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "t3_warrior9", "solo": false},
-	{"name": "briar_collectors_t3_warrior10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
-	{"name": "briar_collectors_deep_w10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "warrior5_mage5", "solo": false},
+	# The shallow briar stop at Riverfarm's own expected level (10), SOLO. Window
+	# is the thicket-solo precedent (riverfarm_thicket_patch_t3_solo, 0.55-0.95)
+	# which this cell now shares roster-tier, build and party shape with, and it
+	# carries NO check_rounds for that cell's own documented reason: this
+	# roster/build/shape lands median 2 solo, so a 3-12 bar would red on the
+	# shipped numbers. Measured 0.69 after the con 30 -> 24 retune (0.33 solo
+	# before it, 0.91 with the retired ally), margins 0.14/0.26.
+	{"name": "briar_collectors_t3_warrior10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_a", "briar_collector_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
 	{"name": "briar_collectors_deep_w10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "warrior5_mage5", "solo": true},
-	{"name": "briar_collectors_deep_t3_spellsword9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_spellsword9", "solo": false},
-	{"name": "briar_collectors_deep_t3_warrior9_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior9", "solo": false},
-	# Riverfarm's STOP cell (its own expected level, 10). Floor raised 0.55 -> 0.72
-	# in fix round 1: paired with Invrisil's stop the two windows are DISJOINT
-	# AND ORDERED, so a Riverfarm-harder-than-Invrisil inversion can no longer
-	# pass both gates (at 0.55/0.60 overlap, Riverfarm 0.56 vs Invrisil 0.79 was
-	# green). GH#337 moved both cells together and re-authored both windows --
-	# the pair contract HELD through the cooldown milestone (unlike the sw14
-	# ladder's rung 1/2 step, which did not). Measured 0.85, margins 0.07/0.07.
-	# GH#337 re-author (0.79 -> 0.85, window 0.72-0.85 -> 0.78-0.92). MOVED
-	# INTENTIONALLY, and the pair contract above is what forced the re-author:
-	# 0.85 sat exactly ON the old ceiling (margin 0.00), which is a false-red
-	# waiting for the next unrelated retune. briar_collector_deep_a holds
-	# power_strike, so the hunter party now trades one big enemy hit per two
-	# rounds for two ordinary ones -- and the PC's own damage_mod (knife +1,
-	# fang talisman +1) is added PER HIT, so splitting a big swing into two
-	# small ones is worth +2 damage a round to the player and +0 to a dm-0
-	# collector. That asymmetry is the milestone's one systematic direction.
-	# Still DISJOINT AND ORDERED against Invrisil's stop below (floor 0.78 >
-	# its ceiling 0.77). Margins 0.07/0.07.
-	{"name": "briar_collectors_deep_t3_warrior10_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.78, "win_hi": 0.92, "check_rounds": true},
+	# RIVERFARM'S STOP CELL (its own expected level, 10) -- SOLO since #396, and
+	# the gate that blight_lifted's fight route lives or dies by. Band is the
+	# measured 0.63 +/- 0.07 (the retune-rule envelope the #396 spec authored),
+	# check_rounds ON: median 3 with the rounds histogram 60% on 3, so the 3-12
+	# bar is a real check here and not the coin flip it is on the shallow cell.
+	# Pre-#396 this cell's gated twin was the with-ally
+	# briar_collectors_deep_t3_warrior10_hunter at 0.78-0.92 (deleted); solo read
+	# 0.22 at the same build, which closed the fight route and fired the retune
+	# rule. What the deleted cell's history recorded and is still worth keeping:
+	# GH#337 re-authored it 0.79 -> 0.85 / 0.72-0.85 -> 0.78-0.92 because 0.85 sat
+	# exactly ON the old ceiling, and the mechanism was cooldowns turning
+	# briar_collector_deep_a's one power_strike into two ordinary swings while the
+	# PC's per-HIT damage_mod (knife +1, fang talisman +1) profits twice.
+	# THE T3 STOP-PAIR DISJOINT-WINDOW CONTRACT IS RETIRED BY THIS CHANGE, not
+	# broken: it paired this cell against hired_blades_t3_warrior10_wilovan to
+	# order Riverfarm under Invrisil at the on-level build, and that comparison
+	# assumed both stops field an ally. Riverfarm's no longer does, so the two are
+	# no longer the same measurement and their windows now coincide (0.56-0.70
+	# each) instead of being disjoint. Region ordering is carried where it is
+	# actually asserted -- LADDER_RUNGS at the top of this file, where rung 1 (this
+	# fight at t5_sw14, solo) reads 0.94 over Invrisil's 0.84.
+	{"name": "briar_collectors_deep_t3_warrior10_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.56, "win_hi": 0.70, "check_rounds": true},
 	{"name": "river_wolf_pack_t3_hunter", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": false},
 	{"name": "river_wolf_pack_t3_solo", "arena": "village_edge_night", "enemies": ["river_wolf_a", "river_wolf_b", "river_wolf_c"], "build": "t3_warrior10", "solo": true},
 	{"name": "riverfarm_thicket_patch_t3_solo", "arena": "witch_hollow", "enemies": ["thicket_remnant_a", "thicket_remnant_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95},
@@ -271,7 +306,21 @@ const RIVERFARM_CELLS := [
 	# are the fixed reference the other three moved relative to, and the whole
 	# repair was carried on Invrisil's side of the pair. Every window keeps >=0.03
 	# margin on both sides of its authored value.
-	{"name": "briar_collectors_deep_t5_sw14_hunter", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t4_spellsword14_party", "solo": false, "win_lo": 0.88, "win_hi": 0.98, "check_rounds": true},
+	# #396 (2026-08-05): THE RUNG WENT SOLO, `_hunter` -> `_solo` (and its name in
+	# LADDER_RUNGS with it -- renaming a rung without that edit is its own FAIL).
+	# It had to: the hollow fields no ally for any cohort now, so a with-ally rung
+	# measures a fight nobody can bring, and the #396 solo retune of the deep pair
+	# would have pushed the with-ally read to saturation (0.96 partway through the
+	# retune, against a 0.98 ceiling) -- a false red waiting to happen. The retune
+	# was SIZED so this rung's statement survives intact: solo reads 0.94 inside
+	# the SAME 0.88-0.98 window (margins 0.06/0.04), the step over Invrisil's 0.84
+	# widens 0.08 -> 0.10, and the ladder still descends 0.94 > 0.84 > 0.69 > 0.61.
+	# check_rounds stays ON and passes at median 3, but note the rounds histogram
+	# splits 48/50 across 2 and 3: if a future unrelated tune flips that median to
+	# 2 the honest fix is this file's own documented one (the stop-band cells'
+	# comment below) -- drop check_rounds on a solo Riverfarm cell whose shape
+	# lands median 2, do not move data to protect the rounds bar.
+	{"name": "briar_collectors_deep_t5_sw14_solo", "arena": "witch_hollow", "enemies": ["briar_collector_deep_a", "briar_collector_deep_b"], "build": "t4_spellsword14_party", "solo": true, "win_lo": 0.88, "win_hi": 0.98, "check_rounds": true},
 ]
 
 const INVRISIL_CELLS := [
@@ -306,11 +355,16 @@ const INVRISIL_CELLS := [
 	# part of the curve -- and weapon_die was chosen over con precisely because
 	# it costs this cell the LEAST per point of ladder movement (con +12 buys
 	# -0.07 of rung and costs -0.14 here; weapon_die +2 buys -0.08 and costs
-	# -0.07). Still DISJOINT AND ORDERED beneath Riverfarm's own t3 pair
-	# (ceiling 0.70 < briar_collectors_deep_t3_warrior10_hunter's floor 0.78),
-	# and the gap between the first two stops at this build widens 0.15 -> 0.22,
-	# which is the SAME statement the yardstick rung now makes. Width held at
-	# 0.14, margins 0.07/0.07.
+	# -0.07). Width held at 0.14, margins 0.07/0.07.
+	# #396 (2026-08-05) UPDATE TO THIS COMMENT ONLY -- no number here moved: the
+	# clause that used to sit here ("still DISJOINT AND ORDERED beneath Riverfarm's
+	# own t3 pair, ceiling 0.70 < briar_collectors_deep_t3_warrior10_hunter's floor
+	# 0.78") named a cell that no longer exists. Riverfarm's stop is fought SOLO
+	# now, so the on-level stop-pair comparison lost its shared premise (both stops
+	# fielding an ally) and is retired; the two windows coincide at 0.56-0.70
+	# rather than being disjoint. The stop ORDERING is asserted where it always
+	# really was, LADDER_RUNGS at the top of this file -- rung 1 (Riverfarm, solo)
+	# 0.94 over rung 2 (this captain at the sw14 yardstick) 0.84.
 	{"name": "hired_blades_t3_warrior10_wilovan", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": false, "win_lo": 0.56, "win_hi": 0.70, "check_rounds": true},
 	{"name": "hired_blades_t3_spellsword9_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_spellsword9", "solo": true},
 	{"name": "hired_blades_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["hired_blade_leader", "hired_blade_knife_a", "hired_blade_knife_b"], "build": "t3_warrior10", "solo": true},
