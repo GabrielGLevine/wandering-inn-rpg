@@ -37,17 +37,34 @@ CHOICE-LOG "390/396/397 execution wave" block (PixelLab priority,
 lamb-pen seam split, riverfarm-last for #397, merge order 390→396→397).
 PixelLab balance $0.83, 0 sub gens.
 
-Lanes (all Opus, base 6f053654, overlays copied 370 files each):
-- ART OPERATOR: /tmp/wi-396 (issue/396-riverfarm-redesign) Task 1
-  a_shepherd → then /tmp/wi-390 (issue/390-art-drain) Wilovan anims +
-  Tier 2/3 pack-first drain. Owns ALL PixelLab spend.
-- 396 LANE B: /tmp/wi-396-b (396/lane-b) Task 6 briar solo re-gate.
-  Owns witch_hollow briar blocks + sim_combat_batch + briar combatants.
-- 397 FOUNDATION: /tmp/wi-397 (issue/397-prose-naturalization) Phase 0
-  blind sets + Phase 1 bible DRAFT + register inventory. No rewrites.
-Queued: 396 Lane A (Tasks 2-5, blocks on Task 1 commit) → Lanes C/D
-(Tasks 9-10, 7-8) → Tasks 11-12 close. 397 Phase 2 region fan-out after
-Fable adjudicates the bible (riverfarm excluded until #396 merges).
+State at CAUTION park (session 64%, burn 57%/hr, reset ~205m):
+- **#390 DONE + reviewed + fixed**: issue/390-art-drain @ 20196e37
+  (/tmp/wi-390). Wilovan slice/hit/death wired (traced key-exact);
+  7 rows drained w/ evidence, 5 carried w/ reasons (3 are non-art:
+  floor-material pass, mood night knob, world.gd dialogue separation —
+  FILE A FOLLOW-UP at PR time). Review Critical fixed: Cold Hearth
+  repointed to cold_hearth. Lamb sprites exist; wiring owed by #396.
+  PixelLab $0.46 left; measured rate ~$0.012/gen (CHOICE-LOG ruling 8).
+  NEXT: PR w/ [ci-full], checks-as-own-step, merge FIRST (train order).
+- **#396**: Task 1 a_shepherd DONE (1ea2b4de, issue/396 branch,
+  /tmp/wi-396). Task 6 DONE + reviewed ACCEPT (d680a1ea, 396/lane-b,
+  /tmp/wi-396-b); fix wave RUNNING (parity what-moved note, rung-1
+  check_rounds removal, comment fixes). Lane A (Tasks 2-5) RUNNING in
+  /tmp/wi-396. THEN: review A → merge lane-b into issue/396 → dispatch
+  Lane C (Tasks 9-10) + Lane D (Tasks 7-8; owns riverfarm_fight_start
+  fixture per CHOICE-LOG ruling 5) → Tasks 11-12 close.
+- **#397**: foundation COMPLETE + reviewed + fixed @ a416535a
+  (/tmp/wi-397): extractor (2,292 strings), bible RULED (all 13
+  adjudications in docs/prose-naturalization/bible-adjudication.md),
+  blind sets + 229-id holdout + 12 keeps + landmark registry +
+  verify-untouched tripwire. Phase 2/3 fan-out PARKED for post-reset:
+  design committed on the branch at
+  docs/prose-naturalization/phase2-orchestration.md — 6 map-rewrite
+  lanes (pallass,
+  invrisil, liscor, inn, floodplains+garden, dungeon+sewers+ruin;
+  riverfarm LAST post-396) + dialogue-graph lane, all lanes own map/
+  dialogue files ONLY, pin-deltas go to ONE integrator, baselines regen
+  composed-tree only. Then Phase 4 metrics + Phase 5 blind read (≤40%).
 Execute to completion, NOT to release (user directive).
 
 ## QUEUE (updated 2026-08-05, post-merge)

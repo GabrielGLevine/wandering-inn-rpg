@@ -3291,3 +3291,24 @@ applied — picks made, logged here, surfaced at close. All revocable.
 4. **Merge order 390 → 396 → 397.** #390 is small and touches map
    sprite/scale/mood fields; #397 touches prose fields corpus-wide and
    is long-running — it rebases over the art wiring, not the reverse.
+
+## 2026-08-05 — 390/396/397 wave, mid-session rulings
+
+5. **riverfarm_fight stop-signal discharged (region-tiers §seeds):** post
+   Task-6 solo re-gate, the script's `warrior5_mage5` fixture cannot win
+   the shallow-briar leg at any probed seed (13/13 FAIL; joint pass ≈4%).
+   Ruling: Lane D (Task 8) owns `qa/fixtures/riverfarm_fight_start.json`
+   and moves the fixture build to the tier's reference shape
+   (t3_warrior10) honestly, rather than seed-shopping a 4% coin.
+6. **Sprite-key blast radius is a review class now:** #390's hearth
+   repoint lit riverfarm's Cold Hearth without touching a riverfarm file
+   — a sprite-id consumer audit is mandatory for any repoint, and
+   `--touching sprites.json` under-covers (no surface mapping; smoke tier
+   minimum plus hand-picked canonical owners of consumer maps).
+7. **skill_uses == on_skill_use for prose register** (#397): same engine
+   block per field_skills.gd; 9 strings ruled functional/skill-outcome.
+8. **PixelLab rate corrected: ~$0.012/generation measured** (44 gens =
+   $0.37), not the ~$0.065 the #390/#385 rulings assumed — a 5x
+   overestimate that kept rig rows carried for three milestones. Future
+   art budgeting uses measured rate; re-derive on the first call of any
+   new generation kind.
