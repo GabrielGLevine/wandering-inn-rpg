@@ -19,8 +19,8 @@
    "Hollow's quieter than it should be. Doesn't sit right.",
    "Lost two lambs to something with thorns for teeth. Wasn't a wolf.",
    "Know that treeline better than the headman does. He'd rather not.",
-   "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health.",
-   "The witch? Her business is hers and I keep to mine. Wolves took two lambs this spring — that's my trade, all of it."
+   "Wolf sign's thicker toward the hollow, week by week. The pack's ground moved. Mine didn't.",
+   "The witch? Her business is hers and I keep to mine. Sheep is my trade, all of it."
   ]
  },
  "blocked": [
@@ -1446,7 +1446,7 @@
    ]
   },
   {
-   "_comment": "clear of every blocked cell and every other entity's cell, no trigger_radius so no blast-radius overlap with anything nearby. v0.16.1 #2 DISAMBIGUATION: \"The Hunter\" is a LOCAL GAME HUNTER, not a member of any order. His whole copy surface used to be the hollow, with zero game, meat or pelts in it, while he is mechanically the man who walks you to the witch and fights her briars. The observe line now carries the trade signal, and one line is APPENDED LAST to the base pool and to the thread_neutral stage (which duplicates it). The copy never names or negates the order -- positive trade signal only. NOT renamed: a rename must move combatants.json's display_name too and re-pins five QA speaker payloads.",
+   "_comment": "clear of every blocked cell and every other entity's cell, no trigger_radius. SUPERSEDES the v0.16.1 #2 copy-only disambiguation (it failed, user ruling 2026-08-05): legacy id, the character is A Shepherd (spec 2026-08-05-riverfarm-shepherd-and-witch-quests-design). Id frozen: shipped counters + save entity keys.",
    "id": "riverfarm_hunter",
    "kind": "npc",
    "cell": [
@@ -1454,8 +1454,8 @@
     10
    ],
    "facing": "down",
-   "display_name": "The Hunter",
-   "sprite": "a_hunter",
+   "display_name": "A Shepherd",
+   "sprite": "a_shepherd",
    "talk_pool": [
     "@riverfarm_hunter_shared"
    ],
@@ -1501,13 +1501,25 @@
       "The one that limped is walking sound. I'd stopped expecting it to.",
       "Herd at the north bend, pen full, and hands that aren't mine doing the gentling."
      ]
+    },
+    {
+     "_comment": "#396: appended LAST so last-satisfied-wins puts it above the thicket/lamb registers.",
+     "id": "riverfarm_shepherd_winter_answered",
+     "requires_accomplishment": {
+      "winter_answered": 1
+     },
+     "lines": [
+      "Watch fires stay lit till thaw. Cheap, next to lambs.",
+      "Pack's fed elsewhere or it's thinner. Either way it's off my fields.",
+      "First snow came and the count held. The count held."
+     ]
     }
    ],
-   "observe": "Rope-burned hands, a game bag, and wolf sign on his boots. Whatever he hunts, it walks on four legs.",
+   "observe": "Tar-marked hands, a crook worn smooth, wolf sign on his boots. The flock is penned. He is still watching the treeline.",
    "conversation": "riverfarm_hunter",
    "dialogue": [
     {
-     "speaker": "The Hunter",
+     "speaker": "A Shepherd",
      "text": "Hollow's not safe alone."
     }
    ]
@@ -1690,21 +1702,21 @@
    "on_enter_accomplishment": "observed_riverfarm_mill"
   },
   {
-   "_comment": "#330 R2: a [Beast Tamer] door outside the floodplains. Base banks soothed_a_beast, the variant tended_beasts; pays in wool, never gold.",
+   "_comment": "#330 R2: a [Beast Tamer] door outside the floodplains. Base banks soothed_a_beast, the variant tended_beasts; pays in wool, never gold. #396: legacy id, the character is A Shepherd.",
    "id": "hunters_lamb_pen",
    "kind": "prop",
    "cell": [
     16,
     11
    ],
-   "display_name": "Hunter's Lamb Pen",
+   "display_name": "A Lamb Pen",
    "sprite": "riverfarm_fence_ew",
    "present_when": {
     "requires": {
      "thicket_answered": 1
     }
    },
-   "observe": "Hurdle fencing the hunter threw up after the thicket business. Two ewe lambs inside it, and a third that will not put weight on a foreleg.",
+   "observe": "Hurdle fencing the shepherd threw up after the thicket business. Two ewe lambs inside it, and a third that will not put weight on a foreleg.",
    "on_interact_accomplishment": "soothed_a_beast",
    "once_per_waking": true,
    "once_per_waking_toast": "The lambs have had their handling for today. Crowd them now and you undo it.",
@@ -1817,6 +1829,50 @@
     "gold": 2,
     "toast": "[Broader Shoulders] — You take three at once and walk them up to the shed without stopping. The dray is clear before the second man has picked up his first, and two coins come your way for it."
    }
+  },
+  {
+   "_comment": "#396 a_winter_of_teeth WORK route; fold_rebuilt. absent on its own counter = literal once (hurdles consumed; ruin dig-camp idiom). fence_NS not EW: an EW panel here merged into the pen's own rail run at the windowed read.",
+   "id": "winter_fold_hurdles",
+   "kind": "prop",
+   "cell": [
+    15,
+    12
+   ],
+   "display_name": "Stacked Hurdles",
+   "sprite": "riverfarm_fence_ns",
+   "present_when": {
+    "requires": {
+     "heard_winter_teeth": 1
+    },
+    "absent": {
+     "fold_rebuilt": 1
+    }
+   },
+   "observe": "Hazel hurdles, cut and stacked. Enough to double the fold, if someone puts the day in.",
+   "on_interact_accomplishment": "fold_rebuilt",
+   "toast": "You put the day in. Double hurdles, drained ground, a gate that hangs true. The fold holds a wolf out now, not just sheep in."
+  },
+  {
+   "_comment": "#396 a_winter_of_teeth TRACK route; pack_traced. absent on its own counter = literal once. Copy reveals the displacement and points at the old line. gnaw_pile not trail_gap: trail_gap read as a stump and is riverfarm_hollow_path's own sprite three cells off.",
+   "id": "wolf_sign_trail",
+   "kind": "prop",
+   "cell": [
+    4,
+    13
+   ],
+   "display_name": "Wolf Sign",
+   "sprite": "gnaw_pile",
+   "present_when": {
+    "requires": {
+     "heard_winter_teeth": 1
+    },
+    "absent": {
+     "pack_traced": 1
+    }
+   },
+   "observe": "Prints in the field margin. Too many, too bold, all one direction.",
+   "on_interact_accomplishment": "pack_traced",
+   "toast": "You walk the sign back. The pack came off the north ground by the old line — something denned in it and they gave way. They didn't choose these fields. They were pushed."
   }
  ]
 }
