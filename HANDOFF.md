@@ -4,6 +4,40 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
+## DONE (2026-08-05): anti-duplication gate LIVE (PR #395, unmerged)
+
+`check_prose_duplication` in data_lint HARD-FAILS: (a) any prose string
+>20 chars duplicated in the dialogue corpus or maps talk corpus, (b) any
+raw copy of an already-banked line ("use the @ref"). Both failure modes
+probe-verified. Bank plumbing it flushed out, all shipped in e9aea87c:
+- `data/maps/_shared_talk.json` — CROSS-map talk bank file (7 banks);
+  `WISceneCatalog._expand_talk_banks` falls back local -> shared
+  (shadowing a shared name = lint error). Python mirror + lint resolve
+  identically.
+- Splice hazard ruled: a solo line matching one MEMBER of a multi-line
+  bank cannot ref-swap (ref splices the whole bank) — split the member
+  into its own 1-line bank (street.json krshia_corusdeer precedent).
+- Dict-form text_variants expansion hole fixed (WIDialogueBanks +
+  wi_data_lib); ksmvr_plates/selys_delivery stragglers banked.
+- Voice gate maps mode walks _shared_talk banks as prose; BOTH baselines
+  re-frozen (repo-root docs/dialogue-voice/{baseline,baseline-maps} —
+  NOT wandering_inn_game/docs, easy to snapshot to the wrong place).
+- test_sim_core ack-precedence rows now come from compose(), not raw
+  disk (raw rows carry @refs post-migration).
+Proofs: both corpora byte-identical through expansion vs pre-migration
+baselines; 33 unit suites PASS; sweep 207/207; leak_check clean.
+
+**PR #395 note:** another session's Riverfarm spec/plan commits
+(c14efafb, 9044b9d0, 9554a334) were local-only on this branch and rode
+along with the push. They are spec/plan docs only.
+
+## QUEUE
+- Merge PR #395 — user's call (CI was 7/7 green pre-push; re-check post
+  e9aea87c).
+- v0.19.0 tag re-cut at merge commit + deploy — USER'S CALL.
+- Riverfarm redesign (#396) — plan committed by the other session, 12
+  tasks/4 lanes.
+
 ## DONE (2026-08-05): #388 map talk_pool voice pass — WHOLE CORPUS CLEAN
 
 The maps mode is live in `qa/scripts/dialogue_voice_gate.py` (`--maps`):
