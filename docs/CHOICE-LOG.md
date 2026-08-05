@@ -3267,3 +3267,27 @@ applied — picks made, logged here, surfaced at close. All revocable.
    produced six such items and zero issues. A close is not done until
    every DEFERRED/board line in its adjudication block has an issue
    number written next to it.
+
+## 2026-08-05 — 390/396/397 execution wave (controller rulings, wave-autonomy)
+
+1. **PixelLab spend priority under the $0.83 balance:** (1) `a_shepherd`
+   rig (blocks #396 Task 2's windowed read and the machine playtest),
+   (2) Wilovan combat animations, only the states his fielded kit uses,
+   priority attack > hit > walk > death (board_renderer degrades
+   gracefully on a missing death), (3) anything else only if budget
+   clearly allows. Hard floor $0.10; ONE art operator owns all PixelLab
+   spend across both issues — two lanes drawing on one $0.83 balance
+   cannot both budget-guard it.
+2. **Lamb-pen lambs row (#390 Tier 2) split at the asset/wiring seam:**
+   the art lane generates the sprite + sprites.json entry only;
+   riverfarm_village.json wiring lands on the #396 branch (that file is
+   #396 Lane A property — the exact cross-lane class the v0.19 seam
+   lessons name). Same rule for any #390 row that would touch a
+   riverfarm map: sprite yes, riverfarm wiring no.
+3. **#397 works Riverfarm LAST, after #396 merges.** Its Phase 2 region
+   lanes exclude riverfarm/*; the riverfarm prose pass runs on the
+   composed tree. Voice-gate baselines regenerate on composed trees
+   only, never hand-merged.
+4. **Merge order 390 → 396 → 397.** #390 is small and touches map
+   sprite/scale/mood fields; #397 touches prose fields corpus-wide and
+   is long-running — it rebases over the art wiring, not the reverse.

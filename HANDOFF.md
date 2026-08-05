@@ -31,14 +31,24 @@ baselines; 33 unit suites PASS; sweep 207/207; leak_check clean.
 (c14efafb, 9044b9d0, 9554a334) were local-only on this branch and rode
 along with the push. They are spec/plan docs only.
 
-## RUNNING (2026-08-05): #390 + #396 + #397 execution session
-Session picked up all three, hit WINDDOWN (session 90%) before dispatch.
-State saved; ScheduleWakeup set past the ~25m session reset. On wake:
-`scripts/usage_status.sh --fresh` → plan reads (#396 plan doc +
-docs/VISUAL-LOG.md Tier 2/3 rows) → parallel lanes: art (#390, PixelLab
-~$1.14 left), Riverfarm (#396, branch issue/396-riverfarm-redesign off
-main), prose (#397, phase 0/1 first — bible + blind-review set). Nothing
-dispatched yet; no worktrees exist.
+## RUNNING (2026-08-05): #390 + #396 + #397 execution session (wave 1 live)
+Usage OK (session 0% post-reset, week 12%, fable 10%). Rulings in
+CHOICE-LOG "390/396/397 execution wave" block (PixelLab priority,
+lamb-pen seam split, riverfarm-last for #397, merge order 390→396→397).
+PixelLab balance $0.83, 0 sub gens.
+
+Lanes (all Opus, base 6f053654, overlays copied 370 files each):
+- ART OPERATOR: /tmp/wi-396 (issue/396-riverfarm-redesign) Task 1
+  a_shepherd → then /tmp/wi-390 (issue/390-art-drain) Wilovan anims +
+  Tier 2/3 pack-first drain. Owns ALL PixelLab spend.
+- 396 LANE B: /tmp/wi-396-b (396/lane-b) Task 6 briar solo re-gate.
+  Owns witch_hollow briar blocks + sim_combat_batch + briar combatants.
+- 397 FOUNDATION: /tmp/wi-397 (issue/397-prose-naturalization) Phase 0
+  blind sets + Phase 1 bible DRAFT + register inventory. No rewrites.
+Queued: 396 Lane A (Tasks 2-5, blocks on Task 1 commit) → Lanes C/D
+(Tasks 9-10, 7-8) → Tasks 11-12 close. 397 Phase 2 region fan-out after
+Fable adjudicates the bible (riverfarm excluded until #396 merges).
+Execute to completion, NOT to release (user directive).
 
 ## QUEUE (updated 2026-08-05, post-merge)
 - PR #395 MERGED (squash, e3835598); #388 closed. PR #393 closed for now
