@@ -299,6 +299,11 @@ func _build_expected_counts() -> Dictionary:
 	for bespoke_rig in ["selys", "krshia", "octavia", "ilvo", "gnoll_ranger"]:
 		counts["%s/idle" % bespoke_rig] = 4
 
+	# Playtest fix wave (findings 2, 4, 15): the corusdeer state sprites (a
+	# tint is not a state) and the legible scree dressing.
+	counts["corusdeer_wounded/idle"] = 1
+	counts["scree_spill/idle"] = 1
+
 	counts["relc/idle"] = 4
 	counts["relc/walk"] = 6
 	counts["relc/slice"] = 3

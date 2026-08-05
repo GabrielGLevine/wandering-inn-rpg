@@ -475,7 +475,7 @@
    "field": true,
    "field_ambient": "[Basic Cooking] — You picture the dish this place is missing. Your hands twitch toward a ladle that isn't there.",
    "description": "Simple meals come out right, every time.",
-   "_comment_cookware": "GH#391: the GENERIC arm for any `cookware` prop. A prop's own authored arm still wins; this fires on every other pot.",
+   "_comment_cookware": "GH#391: the generic `cookware` arm; a prop's own authored arm still wins.",
    "cookware_use": {
     "accomplishment": "cooked_meal",
     "item": "hot_meal",

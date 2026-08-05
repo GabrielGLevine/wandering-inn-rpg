@@ -549,8 +549,8 @@ func play_defeat() -> void:
 ## AND the encounter holds its fire until you walk away from it.
 const DEFEAT_VARIANT_MAP := "floodplains"
 const DEFEAT_NUDGE_LINES := {
-	"pre_spar": "A Drake with a spear guards this road. Ask him to show you how.",
-	"pre_sleep": "You have not slept yet. There is a bed upstairs at the inn.",
+	"pre_spar": "A Drake with a spear guards this road, bored enough to teach. Ask him to show you how to hold one.",
+	"pre_sleep": "You have not slept once under this sky. The inn keeps a bed upstairs, and mornings here are kinder than the nights.",
 	"default": "Try again, or step more carefully.",
 }
 

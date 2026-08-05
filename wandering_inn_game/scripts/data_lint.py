@@ -266,6 +266,39 @@ def _walk_gates(node, map_id: str, entity_id: str, errors: list) -> None:
 			_walk_gates(item, map_id, entity_id, errors)
 
 
+def advise_sub_legible_props(parsed: dict, maps: dict, advisories: list) -> None:
+	"""Playtest fix wave (finding 15, user directive 2026-08-04): a prop that
+	occupies ~a third of a tile is NOT legible -- the [Even Footing] chute
+	shipped dressed in 9.6px pebbles and the playtest read the nearby cairn as
+	the feature. Advisory tier: flags any map-referenced sprite whose rendered
+	frame height lands under 10px (16px cell * ~0.6). Decor dressing and props
+	alike; icons/tiles are not map rows so they never trip it."""
+	sprites_path = DATA / "sprites.json"
+	sprites = parsed.get(sprites_path) or {}
+	flagged = set()
+	for map_id, m in sorted(maps.items()):
+		for row_key in ("entities", "decor"):
+			for row in m.get(row_key, []):
+				sid = str(row.get("sprite", ""))
+				if not sid or sid in flagged or sid not in sprites:
+					continue
+				entry = sprites[sid]
+				if not isinstance(entry, dict):
+					continue
+				anims = entry.get("animations", {})
+				rec = anims.get("idle") or (next(iter(anims.values())) if anims else None)
+				if not isinstance(rec, dict):
+					continue
+				region = rec.get("region")
+				fs = rec.get("frame_size", [16, 16])
+				src_h = float(region[3]) if isinstance(region, list) and len(region) == 4 else float(fs[1])
+				rendered = src_h * float(entry.get("render_scale", 1.0))
+				if rendered < 10.0:
+					flagged.add(sid)
+					advisories.append(f"sprite '{sid}' renders {rendered:.1f}px tall on {map_id}/{row.get('id', row_key)} "
+						"-- under the 10px legibility floor (finding 15: a third of a tile does not read)")
+
+
 def check_skill_icons(parsed: dict, errors: list) -> None:
 	"""Playtest fix wave (finding 3, 2026-08-04): every field-usable skill
 	renders on the exploration hotbar, and a missing `icon` degrades to a
@@ -796,6 +829,7 @@ def main() -> int:
 	check_moods(parsed, maps, errors)
 	advisories: list = []
 	advise_unlit_sealed_rooms(maps, parsed, advisories)
+	advise_sub_legible_props(parsed, maps, advisories)
 	interacted_props = advise_acted_on_state(maps, advisories)
 	elapsed_ms = (time.monotonic() - start) * 1000
 	if errors:

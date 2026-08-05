@@ -420,6 +420,48 @@
    "steps": 1
   },
   {
+   "_comment": "Playtest fix wave (finding 7): the nook PAYS OFF now. The strongbox appears only once burned_the_debris banks; a blocked left-step turns to face it, the interact banks the one-shot 6-gold cache. Burning the debris is no longer a verb answered with nothing.",
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "left",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    1,
+    3
+   ]
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "opened_nook_strongbox"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "payload_contains": {
+    "text": "The hinge shears off in your hand. Inside: a wax-wrapped roll of coin, dry as the day it was hidden. 6 gold."
+   },
+   "timeout_sec": 5
+  },
+  {
    "action": "move",
    "direction": "right",
    "steps": 3

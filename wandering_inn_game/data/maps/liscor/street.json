@@ -1318,10 +1318,10 @@
     18,
     2
    ],
-   "display_name": "Peddler",
+   "display_name": "A Road-Peddler",
    "person": true,
-   "sprite": "hired_blade",
-   "observe": "A cart of odds and ends, half of it Watch-stamped. He's not saying how he came by that, and you're not asking.",
+   "sprite": "human_laborer",
+   "observe": "A road-peddler behind a folding stall, half his stock still roped for travel. Everything he sells says somewhere else.",
    "facing": "down",
    "conversation": "peddler_stall",
    "dialogue": [
@@ -1329,7 +1329,13 @@
      "speaker": "Peddler",
      "text": "Watch gear, mostly honest."
     }
-   ]
+   ],
+   "tint": [
+    0.85,
+    0.78,
+    0.62
+   ],
+   "_comment": "Finding 13: he wore `hired_blade`, a COMBATANT rig, forbidden on a friendly. Anonymous-archetype name; shares `human_laborer` with the drayman (anonymous extras may), dusty tint keeps the two co-visible men distinct."
   },
   {
    "id": "krshia_stall",

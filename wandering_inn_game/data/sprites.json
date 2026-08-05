@@ -2723,7 +2723,7 @@
   ]
  },
  "wilovan": {
-  "_comment": "OWNED PixelLab v3 (#390). Gnoll Gentleman Caller: bowler, cane, waistcoat. The id used to point at `pc_gnoll_m`'s SHEETS, so a Gnoll-male PC met himself in the parlor, the inn AND the hired_blades fight. IDLE ONLY: board_renderer falls back to idle_side for a missing attack anim and fades a missing death, so his attacks lose their flourish until the combat set exists (#390).",
+  "_comment": "OWNED PixelLab v3 (#390). Gnoll Gentleman Caller: bowler, cane, waistcoat (the id used to wear `pc_gnoll_m`, the PLAYER's skin). IDLE ONLY: board_renderer falls back to idle_side / fades a missing death, so his attacks lack flourish until the combat set exists (#390).",
   "directional": true,
   "render_scale": 0.4754,
   "anchor": [
@@ -2786,7 +2786,7 @@
   ]
  },
  "pisces": {
-  "_comment": "OWNED PixelLab v3 (#390). REGENERATED: no eye pixels and an all-grey robe/hood ramp read as a faceless bust at guest size. Hood BACK, explicit face. Regenerating (2 gens) beat the assumed inpaint repair (20-40).",
+  "_comment": "OWNED PixelLab v3 (#390). REGENERATED: the old rig was a faceless grey bust at guest size. Hood BACK, explicit face; regen (2 gens) beat the assumed inpaint (20-40).",
   "directional": true,
   "render_scale": 0.4754,
   "animations": {
@@ -6011,7 +6011,7 @@
   }
  },
  "krshia": {
-  "_comment": "OWNED PixelLab v3 (#390). Gnoll [Shopkeeper]; was `gnoll_traveler` + tint, sharing the generic rig with Xif. SECOND PASS on a user read -- the first came back armored and broad-stanced, a brawler not a merchant (parked, and reused as `gnoll_ranger`). Anchor MEASURED.",
+  "_comment": "OWNED PixelLab v3 (#390). Gnoll [Shopkeeper]; was `gnoll_traveler` + tint, shared with Xif. SECOND PASS on a user read: the first came back an armored brawler (parked, reused as `gnoll_ranger`). Anchor MEASURED.",
   "directional": true,
   "render_scale": 0.4915,
   "anchor": [
@@ -6077,7 +6077,7 @@
   }
  },
  "gnoll_ranger": {
-  "_comment": "OWNED PixelLab v3. REUSE of the rejected Krshia v1 (parked at potential_assets/pixellab_2026-08-04_390_rejects): wrong for a [Shopkeeper], right for `rest_gnoll_ranger`, who shared `gnoll_traveler`. Anchor MEASURED.",
+  "_comment": "OWNED PixelLab v3. REUSE of the rejected Krshia v1 (parked in potential_assets): wrong for a [Shopkeeper], right for `rest_gnoll_ranger`. Anchor MEASURED.",
   "directional": true,
   "render_scale": 0.4603,
   "anchor": [
@@ -6165,6 +6165,45 @@
     "frame_size": [
      16,
      16
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "corusdeer_wounded": {
+  "_comment": "OWNED PixelLab (finding 2). Wounded wore the live standing sprite under a tint. Lying, legs folded, head up: hurt but alive. Scale matches corusdeer_carcass (0.6). Anchor from alpha bbox.",
+  "render_scale": 0.6,
+  "anchor": [
+   0.5,
+   0.9062
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/corusdeer_wounded/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "scree_spill": {
+  "_comment": "Findings 4+15: `pebble` at 9.6px did not read (now a data_lint advisory floor). Rocks.png 2x2 cluster at 0.9. DECOR ONLY on unsteady cells: an entity would block [Even Footing] holders.",
+  "render_scale": 0.9,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Rocks.png",
+    "region": [
+     0,
+     32,
+     32,
+     32
+    ],
+    "frame_size": [
+     32,
+     32
     ],
     "fps": 1
    }

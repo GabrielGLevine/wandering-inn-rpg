@@ -211,8 +211,8 @@
     0.34
    ],
    "burnable": true,
-   "observe": "A slumped heap of waterlogged timber and old rope, tarred black and long dead. It chokes the little side-nook past the ladder. Dry enough on top to take a flame, if you had one.",
-   "burn_toast": "[Firefly] — Fire catches the tarred rope and runs greedily through the pile. In moments it is ash and the nook stands open, breathing cold sewer air.",
+   "observe": "A slumped heap of waterlogged timber and old rope, tarred black and long dead. It chokes the little side-nook past the ladder — and something pale glints between the boards, too deep to reach. Dry enough on top to take a flame, if you had one.",
+   "burn_toast": "[Firefly] — Fire catches the tarred rope and runs greedily through the pile. In moments it is ash, the nook stands open, and the pale glint turns out to be a strongbox handle.",
    "locked_toast": "Sodden timber and tarred rope, jammed wall to wall. You could haul at it for an hour, or you could burn it, if you had the means to make fire."
   },
   {
@@ -467,6 +467,27 @@
     "toast": "You work the bone pins loose and unwind the wire. A few coins sit wedged in the silt beneath it, dropped by whoever it once caught.",
     "gold": 1
    }
+  },
+  {
+   "_comment": "Finding 7: the nook was EMPTY -- a verb answered with nothing. Observe foreshadows the glint, burn_toast names the handle, this pays it off (6 gold, `once`). Gate = the burn row's counter.",
+   "id": "nook_strongbox",
+   "kind": "prop",
+   "cell": [
+    0,
+    3
+   ],
+   "display_name": "Silt-Caked Strongbox",
+   "sprite": "crate",
+   "present_when": {
+    "requires": {
+     "burned_the_debris": 1
+    }
+   },
+   "observe": "A little iron strongbox, silt-caked, dragged here by someone who never came back for it.",
+   "on_interact_accomplishment": "opened_nook_strongbox",
+   "once": true,
+   "gold": 6,
+   "toast": "The hinge shears off in your hand. Inside: a wax-wrapped roll of coin, dry as the day it was hidden. 6 gold."
   }
  ]
 }

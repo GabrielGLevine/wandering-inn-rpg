@@ -890,22 +890,22 @@
    ]
   },
   {
-   "_comment": "Scree dressing; suppresses the biome blocked-prop so the chute reads as ground.",
-   "sprite": "pebble",
+   "_comment": "Scree at legible scale (findings 4/15). Suppresses the biome blocked-prop so the chute reads as rocky ground.",
+   "sprite": "scree_spill",
    "cell": [
     31,
     4
    ]
   },
   {
-   "sprite": "pebble",
+   "sprite": "scree_spill",
    "cell": [
     31,
     5
    ]
   },
   {
-   "sprite": "pebble",
+   "sprite": "scree_spill",
    "cell": [
     31,
     6
@@ -1615,12 +1615,7 @@
     9
    ],
    "display_name": "Wounded Corusdeer",
-   "sprite": "corusdeer",
-   "tint": [
-    0.6,
-    0.52,
-    0.47
-   ],
+   "sprite": "corusdeer_wounded",
    "observe": "A corusdeer, down in the grass with a leg it won't put weight on. Its antlers barely glow. It watches you the way anything hurt watches anything larger. It would let patient hands close, and hands that tend enough hurt beasts learn something no drill yard teaches.",
    "_comment_330": "#330 R3: at tended_beasts 10 it STANDS; the next tend banks corusdeer_healed and it goes home. Shipped strings untouched.",
    "present_when": {
@@ -1994,12 +1989,7 @@
     20
    ],
    "display_name": "Corusdeer Carcass",
-   "sprite": "corusdeer",
-   "tint": [
-    0.62,
-    0.6,
-    0.58
-   ],
+   "sprite": "corusdeer_carcass",
    "present_when": {
     "absent": {
      "cooked_a_kill": 1

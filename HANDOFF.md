@@ -4,124 +4,47 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
-## PAUSED (2026-08-04): v0.19 playtest feedback — 14 findings, 1 BLOCKER class, handed off
+## DONE (2026-08-05): playtest fix wave — all 15 findings resolved (Fable)
 
-**State:** PR #394 open (branch `v0.19-wave-2`, 61 commits), **CI 7/7 green**.
-`v0.19.0` tagged LOCALLY ONLY — deliberately not pushed, so Release/Pages do
-not fire. Working tree clean. DO NOT MERGE #394 until the blocker below is
-resolved.
+All 14 sitting findings + the prop-legibility directive (finding 15), fixed on
+`v0.19-wave-2`. Full detail in the two fix-wave commits; the short version:
 
-### PROCESS FAILURE, mine, read this first
-I ran a windowed capture in a detached worktree at `180ebbce` WITHOUT the
-private asset overlay. That violates the iron rule in wi-machine-playtest
-("windowed verification ALWAYS runs on the real asset overlay"). The specific
-conclusion I drew from it survives — I compared TEXT ROW GEOMETRY (option
-positions, exit-row y), which is UI and unaffected by world art, and the rows
-matched to the pixel — but **do not trust that frame for any FEEL judgment**,
-and re-run it properly with the overlay before relying on it.
+- **Engine was never broken.** Findings 1/5 were a CONTENT gap (pond had 1
+  freezable cell of ~23) plus an oversold brief. USER RULING now structural:
+  ALL water is freezable — loader derives `freezable` from `water: true`
+  walls segments; data_lint holds tag⇔sheet lockstep; test_sim_core tripwire
+  freezes a never-hand-listed pond cell.
+- **Finding 3:** six icons generated + wired; data_lint.check_skill_icons
+  hard-fails any field skill without one; KNOWN_ICONLESS_SKILLS shrank to
+  combat-only.
+- **Findings 11/13 (the trap):** dialogue options measured by FONT METRICS at
+  real width (first-fit used to read ~2245px for a 4-option hub), panel caps
+  at 684 + scrolling options region, cursor scrolls into view. Esc-escape
+  REFUSED (choices carry commit effects). d2_shop_shot repaired, runs at the
+  130% step where the trap lived, pins panel geometry, PROMOTED into the
+  sweep (207). The "huge empty toast" = the unbounded panel at 130%.
+- **Finding 6:** pause was CanvasLayer 1 under combat chrome — now layer 20,
+  scrim 0.70. **Finding 9:** new MenuInk dark-ink variation for parchment
+  menus (Menu stays cream for dark surfaces).
+- **Finding 2:** corusdeer wounded/dead were tints of the live sprite. The
+  bespoke carcass sprite EXISTED UNWIRED (another cross-lane handoff miss);
+  wired it; generated a lying wounded pose. Three states, three silhouettes.
+- **Finding 7:** the sodden-timber nook was EMPTY — now foreshadowed
+  (observe glint), named (burn_toast), paid (6-gold strongbox, present_when
+  the burn counter), pinned in property_seams.
+- **Findings 4/15:** the chute was 9.6px pebbles; now a legible rubble spill
+  (Rocks.png cluster @0.9). NEW data_lint advisory: any map-referenced sprite
+  rendering under 10px flags (the "third of a tile" floor).
+- **Finding 8:** defeat nudge lines reflavored (voice-bible register).
+- **Finding 12:** Pisces idle regenerated stiller. **Finding 13:** peddler
+  stopped wearing the hired_blade COMBATANT rig; identity + observe added.
+- **Finding 10:** NO CHANGE — canon Octavia Cotton is a dark-skinned
+  Stitch-girl; profile entry added so regenerations hold it.
+- **Finding 14:** martial_field_armed +basic_cooking (loop re-pinned 8→9).
 
-### FABLE VERDICT (2026-08-04, wound down at WINDDOWN before fixing)
-Reviewed the code against the 14 findings. **The engine is NOT broken; the
-build is not corrupted.** Three verified root causes, in one diagnostic pass:
-
-1. **Findings 1/5 (freeze verbs "not working") = CONTENT GAP + OVERSOLD BRIEF,
-   not engine.** Both reported strings are `field_ambient` FALLBACKS
-   (skills.json:373, :625) — dispatch correctly found no freezable cell where
-   the player aimed. The floodplains "pond" has exactly ONE freezable cell:
-   `[[10,17]]` on a 40x26 map. The playtest brief said "cast [Ice Floor] on
-   the pond, walk across it" — a promise the data never supported; the QA
-   canonical teleports to the one tagged cell, a human aims anywhere.
-   FIX: tag the pond's water band freezable (cells are already blocked, so
-   blocked-counts hold; re-run --touching floodplains) + make the ambient copy
-   honest ("stand at the water's edge"). Same treatment for sewers channels if
-   coverage there is also single-cell.
-2. **Finding 3 (missing hotbar icons) CONFIRMED: five of six martial skills
-   ship `icon: None`** (even_footing, greater_strength, broader_shoulders,
-   bar_fighting, rope_work, basic_repair; icy_floor/flame_jet are fine).
-   L2 never wired icons and no gate checks that a field skill has one.
-   FIX: 5-6 icons (pixflux 64px or pack), sprites.json rows, AND a data_lint
-   arm: field:true + contexts exploration => icon required. User calls this
-   non-shippable; agree.
-3. **Findings 11/13 (shop trap) predate v0.19** (Opus verified at 180ebbce;
-   geometry-only comparison, survives the overlay violation). Real fix is
-   panel height cap + scroll, an Esc path out of conversation hubs, and
-   putting `d2_shop_shot` INTO ci_sweep with repaired pins — it is the one
-   script aimed at this surface and it is not in the sweep.
-
-Remaining findings triaged below by the prior session stand. Sequencing for
-the fix wave: (a) icons + data_lint arm, (b) pond freezable + copy,
-(c) shop panel cap/scroll + Esc + sweep membership, (d) scrim alpha or hide
-combat labels under pause, (e) fixture adds basic_cooking (finding 14),
-(f) art/copy batch (corusdeer states, Pisces idle regen, scree dressing,
-timber yield legibility, sleep-line flavor, yellow-on-parchment contrast,
-peddler identity). Check Octavia against canon FIRST — canon Octavia Cotton
-is dark-skinned (wiki), so finding 10 may be working as intended; answer,
-don't repaint.
-
-### THE BLOCKER (user finding 11 + 13): shop dialogue traps the player
-Krshia (`krshia_crate`) and the street Peddler (`peddler_stall`) — the game's
-only `requires: {gold:}` shop hubs. User reports a huge panel with no way out;
-had to quit the program.
-
-**Verified by me:**
-- The shop panel is UNBOUNDED and does not scroll. On the charms sub-menu (8
-  options with effect sub-lines) the EXIT row "Back to the regular stall" lands
-  at y=662 of a 720px viewport, already clipped by the input-hint bar. One more
-  option or effect line and the only exit is off-screen.
-- **This PREDATES v0.19.** Reproduced identically at `180ebbce`. My autowrap
-  change is NOT the cause — removing it does not fix it.
-- I could NOT reproduce a fully EMPTY panel. Mine renders text. The user's
-  "empty" needs their state or a screenshot — that may be a second, distinct
-  defect. ASK BEFORE ASSUMING it is the same bug.
-- I did not finish checking whether `cancel`/Esc has ANY path out of a dialogue
-  hub (`dialogue_panel.gd:444` handles cancel only for the PICKER). If Esc
-  cannot close a conversation, that is the actual trap and the real fix.
-
-**Why every gate missed it — three independent holes:**
-1. `d2_shop_shot`, the ONE script whose whole purpose is the shop panel
-   screenshot, is **NOT in `ci_sweep`'s canonical list** (grep count 0). It has
-   been failing since at least `180ebbce` and nothing reported it.
-2. The scripts that DO cover `krshia_crate` assert EVENT payloads — option
-   text, locked, requirement — all of which are correct. Event-level QA is
-   structurally blind to "the panel is taller than the screen".
-3. My machine-playtest rotation did not include a shop. The protocol says
-   rotate the subset; I picked combat/inn/street/martial/panels and no vendor.
-
-### The other 13, triaged (NOT yet investigated unless noted)
-- **(3) Martial skills have no hotbar icons — user calls it non-shippable.** Highest
-  priority after the blocker. Likely missing `icon` ids on the five new skills.
-- **(1)/(5) [Ice Floor] and [Snap Freeze] refuse at the pond/channel** ("no
-  standing water" / "nothing here to grip") — the wave's marquee feature not
-  working in play. Suspect the faced-cell freezable lookup vs where the player
-  actually stands. THIS IS THE THESIS FEATURE; treat as near-blocker.
-- **(6) Enemy health numbers show through the pause menu.** I looked at
-  `01_pause_over_combat.png` and judged it acceptable; the user disagrees on
-  their screen. The scrim alpha 0.55 was my invented value — raise it, or the
-  combat HUD needs to hide under pause rather than be dimmed.
-- **(2) Corusdeer healthy/injured/dead differ only by TINT** — direct violation
-  of the tint-is-not-disambiguation directive. Needs distinct art per state.
-- **(14) `martial_field_armed` has no cooking skills** — my prepared playtest
-  state is wrong for the #391 read. Fixture fix.
-- **(12) Pisces idle reads as walking in place** — my v3 "breathing idle"
-  generation drifts the legs. Regenerate with a stiller prompt.
-- **(10) "Octavia is black?"** — check the generated rig's palette against the
-  Stitch-girl profile; may be a bad generation or a tint left on the row.
-- **(4) "What is the scree chute? The cairn on a hill?"** — the [Even Footing]
-  placement does not read as a crossable slope. Dressing problem.
-- **(7) Flame Jet destroys the sodden timber but the point is unclear** — the
-  yield/consequence is not legible.
-- **(9) Yellow menu text on light toast background is hard to read** — contrast.
-- **(8) Sleep prompt copy lacks flavor.**
-- **(13) "Who is the male vendor supposed to be?"** — `peddler`, sprite
-  `hired_blade`; it is a shared/undistinguished rig and the name says nothing.
-
-### Suggested order for whoever picks this up
-1. Reproduce finding 11 WITH the overlay and get the user's exact state.
-2. Answer: can Esc leave a dialogue? If not, that is the fix and it is small.
-3. Cap the dialogue panel height + scroll or paginate options so the exit row
-   is ALWAYS reachable. Add `d2_shop_shot` to `ci_sweep` and repair its stale
-   pins so this can never rot again.
-4. Then finding 3 (icons), then 1/5 (the freeze verbs).
+Gates at close: data_lint OK (3 new arms), census RC=0, 33/33 units,
+ci_sweep ALL 207 green, windowed reads: shop@130%, pause-over-combat,
+chute+icons, kitchen. PR #394 updated; v0.19.0 still LOCAL-ONLY.
 
 ## DONE (2026-08-04): v0.19 (wave-2) — "the world answers the hand" — SHIPPED
 
