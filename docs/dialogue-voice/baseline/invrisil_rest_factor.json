@@ -23,7 +23,9 @@
   "$.nodes.exchange_three.text": {
    "brackets": [],
    "digits": [],
-   "propnouns": []
+   "propnouns": [
+    "Wintersday"
+   ]
   },
   "$.nodes.exchange_two.options[0].text": {
    "brackets": [],
@@ -51,11 +53,6 @@
    "propnouns": []
   },
   "$.nodes.table.options[1].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.nodes.table.options[2].text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -140,7 +137,7 @@
      },
      {
       "end": true,
-      "text": "\u00a7"
+      "text": "@i_ll_leave_you"
      }
     ],
     "speaker": "The House Factor",

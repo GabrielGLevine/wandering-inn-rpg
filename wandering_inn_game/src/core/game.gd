@@ -262,11 +262,13 @@ func _make_sim(creation: Dictionary = {}) -> WIGame:
 	combat_config["progression"] = _load_json("res://data/progression.json")
 	combat_config["fence"] = _load_json("res://data/fence_stock.json")
 	var dialogue_graphs: Dictionary = {}
+	var shared_banks := WIDialogueBanks.load_shared()
 	var dir: DirAccess = DirAccess.open("res://data/dialogue")
 	if dir != null:
 		for f: String in dir.get_files():
-			if f.ends_with(".json"):
-				dialogue_graphs[f.get_basename()] = _load_json("res://data/dialogue/" + f)
+			# Underscore files are banks/config, never conversations.
+			if f.ends_with(".json") and not f.begins_with("_"):
+				dialogue_graphs[f.get_basename()] = WIDialogueBanks.expand(_load_json("res://data/dialogue/" + f), shared_banks)
 	combat_config["dialogue"] = dialogue_graphs
 	var seed_str := String(QAPaths.user_args().get("seed", ""))
 	if seed_str.is_empty() and OS.has_feature("web"):

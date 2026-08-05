@@ -1,24 +1,49 @@
 {
-	"_comment": "Task 2.3: the Horns' camp, attached to ruin_surface's `ceria_dig_camp` NPC. A SEPARATE graph file, not nodes inside ceria_intro.json: a graph is one file (game.gd keys dialogue_graphs by basename) and always opens at its own `start`, with no per-entity start-node override, so camp_hub could never be reached through ceria_intro's hub. The split is also what the place-naming validator wants -- the horns_dig GIVER maps stay disjoint from the join_dig PRODUCER map. SPOILER RULE: no line here names a door; the reveal is the pedestal's open_toast. NO door_retrieved arm lives here: the camp survives the whole haul window, so a past-tense arm would be wrong while the haul is still running; spec 8's past-tense arm stays on ceria_intro's hub.",
-	"start": "camp_hub",
-	"nodes": {
-		"camp_hub": {
-			"speaker": "Ceria",
-			"text": "You made it. Camp rules: nobody touches anything shiny, nobody wanders past the survey stakes alone. The sealed level's below the pedestal court. We found the site off an old expedition ledger — half the pages are about what they didn't bring out. It's in my tent, filed with the survey maps.",
-			"options": [
-				{ "text": "Let's open it up.", "hide_when": { "accomplishment": { "horns_dig_joined": 1 } }, "effects": [ { "accomplishment": "horns_dig_joined" } ], "end": true },
-				{ "text": "Just passing through.", "end": true },
-				{ "text": "Who else is on this crew?", "goto": "camp_fourth" }
-			]
-		},
-		"camp_fourth": {
-			"_comment": "#349 four-member reading, camp side. The option is ungated and openable on a first interact, so it asserts NO observation (the earlier 'fourth bedroll' named `dig_camp_remnant`, out of window here). It agrees with a prop that IS live: `dig_camp_notes` shares the hours out EVEN across four names. SPOILER RULE: no door named.",
-			"speaker": "Ceria",
-			"text": "Pisces. He's ours. He bills the team by invoice, and the roster carries four names with the hours split four ways. He takes his in the city with a treatise open, which is exactly where I want him until there's something down here worth reading. Three of us hold the shovels. That was the trade, and he argued it well.",
-			"options": [
-				{ "text": "Back to the camp rules.", "goto": "camp_hub" },
-				{ "text": "Fair enough.", "end": true }
-			]
-		}
-	}
+ "_comment": "Task 2.3: the Horns' camp, attached to ruin_surface's `ceria_dig_camp` NPC. A SEPARATE graph file, not nodes inside ceria_intro.json: a graph is one file (game.gd keys dialogue_graphs by basename) and always opens at its own `start`, with no per-entity start-node override, so camp_hub could never be reached through ceria_intro's hub. The split is also what the place-naming validator wants -- the horns_dig GIVER maps stay disjoint from the join_dig PRODUCER map. SPOILER RULE: no line here names a door; the reveal is the pedestal's open_toast. NO door_retrieved arm lives here: the camp survives the whole haul window, so a past-tense arm would be wrong while the haul is still running; spec 8's past-tense arm stays on ceria_intro's hub.",
+ "start": "camp_hub",
+ "nodes": {
+  "camp_hub": {
+   "speaker": "Ceria",
+   "text": "You made it. Camp rules: nobody touches anything shiny, nobody wanders past the survey stakes alone. The sealed level's below the pedestal court. We found the site off an old expedition ledger — half the pages are about what they didn't bring out. It's in my tent, filed with the survey maps.",
+   "options": [
+    {
+     "text": "Let's open it up.",
+     "hide_when": {
+      "accomplishment": {
+       "horns_dig_joined": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "horns_dig_joined"
+      }
+     ],
+     "end": true
+    },
+    {
+     "text": "@just_passing_through",
+     "end": true
+    },
+    {
+     "text": "Who else is on this crew?",
+     "goto": "camp_fourth"
+    }
+   ]
+  },
+  "camp_fourth": {
+   "_comment": "#349 four-member reading, camp side. The option is ungated and openable on a first interact, so it asserts NO observation (the earlier 'fourth bedroll' named `dig_camp_remnant`, out of window here). It agrees with a prop that IS live: `dig_camp_notes` shares the hours out EVEN across four names. SPOILER RULE: no door named.",
+   "speaker": "Ceria",
+   "text": "Pisces. He's ours. He bills the team by invoice, and the roster carries four names with the hours split four ways. He takes his in the city with a treatise open, which is exactly where I want him until there's something down here worth reading. Three of us hold the shovels. That was the trade, and he argued it well.",
+   "options": [
+    {
+     "text": "Back to the camp rules.",
+     "goto": "camp_hub"
+    },
+    {
+     "text": "Fair enough.",
+     "end": true
+    }
+   ]
+  }
+ }
 }

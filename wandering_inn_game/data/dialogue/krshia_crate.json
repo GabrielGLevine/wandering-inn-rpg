@@ -712,7 +712,7 @@
    "text": "That one, I do not ask questions about. Silverfang trade brings stranger things than that through Liscor. It came in under the wool two winters back and it has sat under that cloth since. Yours now. Wrap it before you carry it. It hums against tin, yes?",
    "options": [
     {
-     "text": "Show me the stall again.",
+     "text": "@show_me_the_stall",
      "goto": "shop"
     },
     {
@@ -726,7 +726,7 @@
    "text": "Guild paper and a Silverfang stone, together — the city won't ask twice. Keep both on you until the Door has done its work.",
    "options": [
     {
-     "text": "Show me the stall again.",
+     "text": "@show_me_the_stall",
      "goto": "shop"
     },
     {
@@ -740,7 +740,7 @@
    "text": "Sold. Wear it and use it. Mending costs extra. Anything else catch your eye?",
    "options": [
     {
-     "text": "Show me the stall again.",
+     "text": "@show_me_the_stall",
      "goto": "shop"
     },
     {
@@ -817,5 +817,8 @@
     }
    ]
   }
+ },
+ "text_banks": {
+  "show_me_the_stall": "Show me the stall again."
  }
 }

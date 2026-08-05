@@ -12,11 +12,6 @@
     "Ilvo"
    ]
   },
-  "$.nodes.hub.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.hub.options[1].text": {
    "brackets": [],
    "digits": [],
@@ -71,7 +66,7 @@
     "options": [
      {
       "end": true,
-      "text": "\u00a7"
+      "text": "@just_passing_through"
      },
      {
       "effects": [

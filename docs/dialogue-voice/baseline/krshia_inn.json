@@ -1,12 +1,5 @@
 {
  "facts": {
-  "$.nodes.greet.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Serve"
-   ]
-  },
   "$.nodes.greet.options[1].text": {
    "brackets": [],
    "digits": [],
@@ -36,13 +29,6 @@
    "digits": [],
    "propnouns": [
     "Silverfangs"
-   ]
-  },
-  "$.nodes.stall.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Serve"
    ]
   },
   "$.nodes.stall.options[1].text": {
@@ -83,7 +69,7 @@
        "item": "hot_meal",
        "once_per_waking": "serve:krshia_inn_guest"
       },
-      "text": "\u00a7"
+      "text": "@bring_her_a_bowl"
      },
      {
       "goto": "stall",
@@ -129,7 +115,7 @@
        "item": "hot_meal",
        "once_per_waking": "serve:krshia_inn_guest"
       },
-      "text": "\u00a7"
+      "text": "@bring_her_a_bowl"
      },
      {
       "end": true,

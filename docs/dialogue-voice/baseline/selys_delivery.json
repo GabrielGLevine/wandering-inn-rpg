@@ -1,17 +1,5 @@
 {
  "facts": {
-  "$.nodes.delivered.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.nodes.delivered.options[1].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Erin"
-   ]
-  },
   "$.nodes.delivered.options[2].text": {
    "brackets": [],
    "digits": [],
@@ -33,18 +21,6 @@
    "propnouns": [
     "Erin",
     "Lism"
-   ]
-  },
-  "$.nodes.delivered_smooth.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.nodes.delivered_smooth.options[1].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Erin"
    ]
   },
   "$.nodes.delivered_smooth.options[2].text": {
@@ -296,7 +272,21 @@
   "$.nodes.selys_gran_two.text": {
    "brackets": [],
    "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.text_banks.i_ll_keep_it": {
+   "brackets": [],
+   "digits": [],
    "propnouns": []
+  },
+  "$.text_banks.send_it_back_to": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin"
+   ]
   }
  },
  "skeleton": {
@@ -321,7 +311,7 @@
         "errand_decided": 1
        }
       },
-      "text": "\u00a7"
+      "text": "@i_ll_keep_it"
      },
      {
       "effects": [
@@ -341,7 +331,7 @@
         "errand_decided": 1
        }
       },
-      "text": "\u00a7"
+      "text": "@send_it_back_to"
      },
      {
       "goto": "hub",
@@ -390,7 +380,7 @@
         "errand_decided": 1
        }
       },
-      "text": "\u00a7"
+      "text": "@i_ll_keep_it"
      },
      {
       "effects": [
@@ -410,7 +400,7 @@
         "errand_decided": 1
        }
       },
-      "text": "\u00a7"
+      "text": "@send_it_back_to"
      },
      {
       "goto": "hub",
@@ -742,6 +732,10 @@
     "text": "\u00a7"
    }
   },
-  "start": "hub"
+  "start": "hub",
+  "text_banks": {
+   "i_ll_keep_it": "\u00a7",
+   "send_it_back_to": "\u00a7"
+  }
  }
 }

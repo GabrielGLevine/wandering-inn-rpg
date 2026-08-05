@@ -1,22 +1,113 @@
 {
-	"_comment": "Pisces's INN register. Attached ONLY to pisces_inn_guest; his street hub (pisces_magic) never rides along, so the magic tutoring, the necromancy defence and EVERY door consult stay home-only -- reinforced now that door_mounting.json exists on this same map: the guest row must never touch door mechanics. A magic question is DEFLECTED in the greet, never answered. Serve mirrors selys_inn/patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter. Voice per docs/design/character-profiles.md: haughty THAWING.",
-	"start": "greet",
-	"nodes": {
-		"greet": { "speaker": "Pisces", "text": "You are the one with the trays. I am not here for the cuisine, you understand, nor to discuss my work over it. The fire is adequate. My rooms have a window that will not entirely close, which I have raised with the innkeeper and expect to raise again.", "text_variants": [
-			{ "_comment": "#349 residence arms. `text_variants` takes `requires` only (no hide_when) and LAST MATCH WINS, so windows are carved by ORDERING. Row 1 = seal_kept_reported -> horns_dig_started, the only stretch inn.json's original Horns rows hold that corner.", "requires": { "accomplishment": { "seal_kept_reported": 1 } }, "text": "My team have annexed the corner by the fire and appear to consider the matter settled. I am here to observe the decline at close range. The fire is behaving. My rooms have a draft that comes in under the door, and I have moved the bed once already." },
-			{ "_comment": "ROW 2, DIG WINDOW: between horns_dig_started and door_mounted no Horn is on the inn map, so row 1 alone described an empty corner.", "requires": { "accomplishment": { "horns_dig_started": 1 } }, "text": "The corner by the fire is empty and I am told I should feel some way about that. My team are off being strenuous somewhere unlit. I have declined to be strenuous with them, and the fire is still adequate." },
-			{ "_comment": "ROW 3: door_mounted re-arms the twins on the same cells; the corner is occupied again.", "requires": { "accomplishment": { "door_mounted": 1 } }, "text": "My team have reclaimed the corner by the fire and appear to consider the matter settled. I have taken the next table to observe the decline at close range. The fire is generous tonight. The rooms upstairs stay cold past midnight, and I have said so at the bar." }
-		], "options": [
-			{ "text": "Bring him a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:pisces_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:pisces_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
-			{ "text": "\"Not here for the food. Noted.\"", "goto": "offduty" },
-			{ "text": "\"Enjoy the adequate fire.\"", "end": true }
-		] },
-		"offduty": { "speaker": "Pisces", "text": "Tavern fare is a solved problem. Salt and fat, applied in quantity until nobody thinks to ask a second question. I have eaten better in three cities. I have eaten considerably worse in nine. This kitchen I am still placing. I will want more bowls before I commit to a number.", "options": [
-			{ "text": "Bring him a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:pisces_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:pisces_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
-			{ "text": "\"I'll leave you to your standards.\"", "end": true }
-		] },
-		"served": { "speaker": "Pisces", "text": "Hm. It is competent. I have called far worse things competent, and to far worse cooks. Though I observe that I have finished it, and I observe you observing.", "options": [
-			{ "text": "\"I saw nothing. Precisely nothing.\"", "end": true }
-		] }
-	}
+ "_comment": "Pisces's INN register. Attached ONLY to pisces_inn_guest; his street hub (pisces_magic) never rides along, so the magic tutoring, the necromancy defence and EVERY door consult stay home-only -- reinforced now that door_mounting.json exists on this same map: the guest row must never touch door mechanics. A magic question is DEFLECTED in the greet, never answered. Serve mirrors selys_inn/patron_serving: {once_per_waking, item} sanctioned compound, banks the shared served_customer counter. Voice per docs/design/character-profiles.md: haughty THAWING.",
+ "start": "greet",
+ "nodes": {
+  "greet": {
+   "speaker": "Pisces",
+   "text": "You are the one with the trays. I am not here for the cuisine, you understand, nor to discuss my work over it. The fire is adequate. My rooms have a window that will not entirely close, which I have raised with the innkeeper and expect to raise again.",
+   "text_variants": [
+    {
+     "_comment": "#349 residence arms. `text_variants` takes `requires` only (no hide_when) and LAST MATCH WINS, so windows are carved by ORDERING. Row 1 = seal_kept_reported -> horns_dig_started, the only stretch inn.json's original Horns rows hold that corner.",
+     "requires": {
+      "accomplishment": {
+       "seal_kept_reported": 1
+      }
+     },
+     "text": "My team have annexed the corner by the fire and appear to consider the matter settled. I am here to observe the decline at close range. The fire is behaving. My rooms have a draft that comes in under the door, and I have moved the bed once already."
+    },
+    {
+     "_comment": "ROW 2, DIG WINDOW: between horns_dig_started and door_mounted no Horn is on the inn map, so row 1 alone described an empty corner.",
+     "requires": {
+      "accomplishment": {
+       "horns_dig_started": 1
+      }
+     },
+     "text": "The corner by the fire is empty and I am told I should feel some way about that. My team are off being strenuous somewhere unlit. I have declined to be strenuous with them, and the fire is still adequate."
+    },
+    {
+     "_comment": "ROW 3: door_mounted re-arms the twins on the same cells; the corner is occupied again.",
+     "requires": {
+      "accomplishment": {
+       "door_mounted": 1
+      }
+     },
+     "text": "My team have reclaimed the corner by the fire and appear to consider the matter settled. I have taken the next table to observe the decline at close range. The fire is generous tonight. The rooms upstairs stay cold past midnight, and I have said so at the bar."
+    }
+   ],
+   "options": [
+    {
+     "text": "@bring_him_a_bowl",
+     "requires": {
+      "once_per_waking": "serve:pisces_inn_guest",
+      "item": "hot_meal"
+     },
+     "effects": [
+      {
+       "bank_first_use": "serve:pisces_inn_guest"
+      },
+      {
+       "accomplishment": "served_customer"
+      },
+      {
+       "gold": 2
+      },
+      {
+       "remove_item": "hot_meal"
+      }
+     ],
+     "goto": "served"
+    },
+    {
+     "text": "\"Not here for the food. Noted.\"",
+     "goto": "offduty"
+    },
+    {
+     "text": "\"Enjoy the adequate fire.\"",
+     "end": true
+    }
+   ]
+  },
+  "offduty": {
+   "speaker": "Pisces",
+   "text": "Tavern fare is a solved problem. Salt and fat, applied in quantity until nobody thinks to ask a second question. I have eaten better in three cities. I have eaten considerably worse in nine. This kitchen I am still placing. I will want more bowls before I commit to a number.",
+   "options": [
+    {
+     "text": "@bring_him_a_bowl",
+     "requires": {
+      "once_per_waking": "serve:pisces_inn_guest",
+      "item": "hot_meal"
+     },
+     "effects": [
+      {
+       "bank_first_use": "serve:pisces_inn_guest"
+      },
+      {
+       "accomplishment": "served_customer"
+      },
+      {
+       "gold": 2
+      },
+      {
+       "remove_item": "hot_meal"
+      }
+     ],
+     "goto": "served"
+    },
+    {
+     "text": "\"I'll leave you to your standards.\"",
+     "end": true
+    }
+   ]
+  },
+  "served": {
+   "speaker": "Pisces",
+   "text": "Hm. It is competent. I have called far worse things competent, and to far worse cooks. Though I observe that I have finished it, and I observe you observing.",
+   "options": [
+    {
+     "text": "\"I saw nothing. Precisely nothing.\"",
+     "end": true
+    }
+   ]
+  }
+ }
 }

@@ -1,12 +1,5 @@
 {
  "facts": {
-  "$.nodes.greet.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Serve"
-   ]
-  },
   "$.nodes.greet.options[1].text": {
    "brackets": [],
    "digits": [],
@@ -26,13 +19,6 @@
    "brackets": [],
    "digits": [],
    "propnouns": []
-  },
-  "$.nodes.offduty.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Serve"
-   ]
   },
   "$.nodes.offduty.options[1].text": {
    "brackets": [],
@@ -55,6 +41,13 @@
    "brackets": [],
    "digits": [],
    "propnouns": []
+  },
+  "$.text_banks.push_a_bowl_across": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Serve"
+   ]
   }
  },
  "skeleton": {
@@ -82,7 +75,7 @@
        "item": "hot_meal",
        "once_per_waking": "serve:rags_inn_guest"
       },
-      "text": "\u00a7"
+      "text": "@push_a_bowl_across"
      },
      {
       "goto": "offduty",
@@ -128,7 +121,7 @@
        "item": "hot_meal",
        "once_per_waking": "serve:rags_inn_guest"
       },
-      "text": "\u00a7"
+      "text": "@push_a_bowl_across"
      },
      {
       "end": true,
@@ -149,6 +142,9 @@
     "text": "\u00a7"
    }
   },
-  "start": "greet"
+  "start": "greet",
+  "text_banks": {
+   "push_a_bowl_across": "\u00a7"
+  }
  }
 }

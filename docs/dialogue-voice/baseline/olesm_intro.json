@@ -15,8 +15,7 @@
    "digits": [],
    "propnouns": [
     "Liscor",
-    "Relc",
-    "Take"
+    "Relc"
    ]
   },
   "$.nodes.chess.options[0].text": {
@@ -245,13 +244,6 @@
     "Olesm"
    ]
   },
-  "$.nodes.hub.options[8].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Olesm"
-   ]
-  },
   "$.nodes.hub.options[9].text": {
    "brackets": [],
    "digits": [],
@@ -265,9 +257,7 @@
   "$.nodes.hub.text_variants[0].text": {
    "brackets": [],
    "digits": [],
-   "propnouns": [
-    "Council"
-   ]
+   "propnouns": []
   },
   "$.nodes.hub.text_variants[1].text": {
    "brackets": [
@@ -442,22 +432,12 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.olesm_chess_wrong_pieces.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.olesm_chess_wrong_pieces.options[1].text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
   "$.nodes.olesm_chess_wrong_pieces.text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.nodes.olesm_chess_wrong_queen.options[0].text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -515,13 +495,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.resolution.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Olesm"
-   ]
-  },
   "$.nodes.resolution.options[1].text": {
    "brackets": [],
    "digits": [],
@@ -554,7 +527,7 @@
    "brackets": [],
    "digits": [],
    "propnouns": [
-    "Liscor"
+    "Council"
    ]
   },
   "$.nodes.resonance_two.options[0].text": {
@@ -663,6 +636,18 @@
     "Silver",
     "Watch"
    ]
+  },
+  "$.text_banks.set_the_board_olesm": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Olesm"
+   ]
+  },
+  "$.text_banks.show_me_the_board": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
   }
  },
  "skeleton": {
@@ -997,7 +982,7 @@
        },
        "gold": 2
       },
-      "text": "\u00a7"
+      "text": "@set_the_board_olesm"
      },
      {
       "goto": "lism_errand",
@@ -1280,7 +1265,7 @@
     "options": [
      {
       "goto": "olesm_chess_puzzle",
-      "text": "\u00a7"
+      "text": "@show_me_the_board"
      },
      {
       "end": true,
@@ -1294,7 +1279,7 @@
     "options": [
      {
       "goto": "olesm_chess_puzzle",
-      "text": "\u00a7"
+      "text": "@show_me_the_board"
      },
      {
       "end": true,
@@ -1340,7 +1325,7 @@
     "options": [
      {
       "goto": "hub",
-      "text": "\u00a7"
+      "text": "@set_the_board_olesm"
      },
      {
       "end": true,
@@ -1480,6 +1465,10 @@
     "text": "\u00a7"
    }
   },
-  "start": "hub"
+  "start": "hub",
+  "text_banks": {
+   "set_the_board_olesm": "\u00a7",
+   "show_me_the_board": "\u00a7"
+  }
  }
 }

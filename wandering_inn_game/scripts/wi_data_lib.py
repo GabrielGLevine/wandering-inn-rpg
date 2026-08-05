@@ -60,9 +60,48 @@ def known_maps() -> set:
     return maps
 
 
+def load_shared_dialogue_banks() -> dict:
+    """The cross-conversation line bank (data/dialogue/_shared_lines.json)."""
+    p = DIALOGUE_DIR / "_shared_lines.json"
+    return load_json(p).get("banks", {}) if p.exists() else {}
+
+
+def expand_dialogue_graph(graph: dict, shared: dict) -> dict:
+    """Resolve "@<name>" refs in text / text_variants / options[].text.
+    File-local text_banks win over the shared bank; an unresolvable ref
+    raises -- a silently shipped "@foo" string is a content bug."""
+    local = graph.get("text_banks", {})
+    def rep(t):
+        if isinstance(t, str) and t.startswith("@"):
+            name = t[1:]
+            if name in local:
+                return local[name]
+            if name in shared:
+                return shared[name]
+            raise KeyError(f"dialogue ref '@{name}' does not resolve")
+        return t
+    for node in graph.get("nodes", {}).values():
+        if not isinstance(node, dict):
+            continue
+        if "text" in node:
+            node["text"] = rep(node.get("text"))
+        tv = node.get("text_variants")
+        if isinstance(tv, list):
+            for i, v in enumerate(tv):
+                tv[i] = rep(v) if isinstance(v, str) else v
+        for o in node.get("options", []) or []:
+            if isinstance(o, dict) and "text" in o:
+                o["text"] = rep(o.get("text"))
+    return graph
+
+
 def load_dialogue_graphs() -> dict:
-    """Every data/dialogue/*.json graph, stem-keyed."""
+    """Every data/dialogue/*.json graph, stem-keyed, with "@" line refs
+    EXPANDED (underscore-prefixed files are banks/config, never graphs)."""
+    shared = load_shared_dialogue_banks()
     graphs: dict = {}
     for path in sorted(DIALOGUE_DIR.glob("*.json")):
-        graphs[path.stem] = load_json(path)
+        if path.stem.startswith("_"):
+            continue
+        graphs[path.stem] = expand_dialogue_graph(load_json(path), shared)
     return graphs

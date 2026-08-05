@@ -398,7 +398,7 @@
      "goto": "descent_expect"
     },
     {
-     "text": "Then we go down. I'll walk you to it.",
+     "text": "@then_we_go_down",
      "effects": [
       {
        "quest": "what_the_seal_was_feeding"
@@ -420,7 +420,7 @@
    "text": "Something that was fed on purpose, by people who expected to be dead long before it stopped needing feeding. Past that I have guesses, and I do not perform guesses in public. The honest answer is thinner than I would like.",
    "options": [
     {
-     "text": "Then we go down. I'll walk you to it.",
+     "text": "@then_we_go_down",
      "effects": [
       {
        "quest": "what_the_seal_was_feeding"
@@ -462,7 +462,7 @@
      "goto": "greet"
     },
     {
-     "text": "I'll let you get back to it.",
+     "text": "@i_ll_let_you",
      "end": true
     }
    ]
@@ -768,5 +768,8 @@
     }
    ]
   }
+ },
+ "text_banks": {
+  "then_we_go_down": "Then we go down. I'll walk you to it."
  }
 }

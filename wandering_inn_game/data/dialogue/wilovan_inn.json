@@ -1,20 +1,94 @@
 {
-	"_comment": "Wilovan's INN register, gated on brothers_job_done (the close of a_gentlemans_disagreement). Attached ONLY to wilovan_inn_guest; the parlor hub (invrisil_wilovan) never rides along, so the commission, the three doors, Coyle, Farley, the marker and the fence shelf ALL stay in Invrisil, and no follow-up to that quest may appear here in any form. REGISTER-PURE for a Gentleman Caller also means the trade is never NAMED; Ratici is present only as 'my colleague'. Serve mirrors selys_inn/zevara_inn: {once_per_waking, item} sanctioned compound. Voice per docs/design/character-profiles.md: {addr} address (WIAddress resolves it per pc_gender -- never author a literal honorific at a PC), apology-before-courtesy.",
-	"start": "greet",
-	"nodes": {
-		"greet": { "speaker": "Wilovan", "text": "{Addr}. A good evening to you, and a very good room to have it in. No business tonight, you'll be relieved to hear. Just this chair, and whatever the kitchen has in the pot.", "text_variants": [
-			{ "requires": { "accomplishment": { "hat_job_done": 1 } }, "text": "{Addr}. A good evening, and I'll say only that it has been a loud week, {addr}, and this evening is not, and I am grateful to it. Sit, if you've a mind." }
-		], "options": [
-			{ "text": "Bring him a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:wilovan_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:wilovan_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
-			{ "text": "\"No business at all?\"", "goto": "offduty" },
-			{ "text": "\"Enjoy the quiet, then.\"", "end": true }
-		] },
-		"offduty": { "speaker": "Wilovan", "text": "None whatever, {addr}. My colleague is off attending an errand of the sort that keeps a man out past a decent hour, and I declined to attend it with him. A room where the fellow at the next table hasn't the first idea what I do, and no reason at all to ask, is a rare comfort. You'll note I've kept the hat on. It is simply a good hat, {addr}.", "options": [
-			{ "text": "Bring him a bowl from the kitchen. (Serve)", "requires": { "once_per_waking": "serve:wilovan_inn_guest", "item": "hot_meal" }, "effects": [ { "bank_first_use": "serve:wilovan_inn_guest" }, { "accomplishment": "served_customer" }, { "gold": 2 }, { "remove_item": "hot_meal" } ], "goto": "served" },
-			{ "text": "\"Then keep the chair as long as you like.\"", "end": true }
-		] },
-		"served": { "speaker": "Wilovan", "text": "That's very kind, {addr}. A man in my line is not often handed a bowl with nothing asked after it. Hat off for it, plain and slow, and then straight back on before the stew goes cold.", "options": [
-			{ "text": "\"Eat it while it's hot.\"", "end": true }
-		] }
-	}
+ "_comment": "Wilovan's INN register, gated on brothers_job_done (the close of a_gentlemans_disagreement). Attached ONLY to wilovan_inn_guest; the parlor hub (invrisil_wilovan) never rides along, so the commission, the three doors, Coyle, Farley, the marker and the fence shelf ALL stay in Invrisil, and no follow-up to that quest may appear here in any form. REGISTER-PURE for a Gentleman Caller also means the trade is never NAMED; Ratici is present only as 'my colleague'. Serve mirrors selys_inn/zevara_inn: {once_per_waking, item} sanctioned compound. Voice per docs/design/character-profiles.md: {addr} address (WIAddress resolves it per pc_gender -- never author a literal honorific at a PC), apology-before-courtesy.",
+ "start": "greet",
+ "nodes": {
+  "greet": {
+   "speaker": "Wilovan",
+   "text": "{Addr}. A good evening to you, and a very good room to have it in. No business tonight, you'll be relieved to hear. Just this chair, and whatever the kitchen has in the pot.",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "hat_job_done": 1
+      }
+     },
+     "text": "{Addr}. A good evening, and I'll say only that it has been a loud week, {addr}, and this evening is not, and I am grateful to it. Sit, if you've a mind."
+    }
+   ],
+   "options": [
+    {
+     "text": "@bring_him_a_bowl",
+     "requires": {
+      "once_per_waking": "serve:wilovan_inn_guest",
+      "item": "hot_meal"
+     },
+     "effects": [
+      {
+       "bank_first_use": "serve:wilovan_inn_guest"
+      },
+      {
+       "accomplishment": "served_customer"
+      },
+      {
+       "gold": 2
+      },
+      {
+       "remove_item": "hot_meal"
+      }
+     ],
+     "goto": "served"
+    },
+    {
+     "text": "\"No business at all?\"",
+     "goto": "offduty"
+    },
+    {
+     "text": "\"Enjoy the quiet, then.\"",
+     "end": true
+    }
+   ]
+  },
+  "offduty": {
+   "speaker": "Wilovan",
+   "text": "None whatever, {addr}. My colleague is off attending an errand of the sort that keeps a man out past a decent hour, and I declined to attend it with him. A room where the fellow at the next table hasn't the first idea what I do, and no reason at all to ask, is a rare comfort. You'll note I've kept the hat on. It is simply a good hat, {addr}.",
+   "options": [
+    {
+     "text": "@bring_him_a_bowl",
+     "requires": {
+      "once_per_waking": "serve:wilovan_inn_guest",
+      "item": "hot_meal"
+     },
+     "effects": [
+      {
+       "bank_first_use": "serve:wilovan_inn_guest"
+      },
+      {
+       "accomplishment": "served_customer"
+      },
+      {
+       "gold": 2
+      },
+      {
+       "remove_item": "hot_meal"
+      }
+     ],
+     "goto": "served"
+    },
+    {
+     "text": "\"Then keep the chair as long as you like.\"",
+     "end": true
+    }
+   ]
+  },
+  "served": {
+   "speaker": "Wilovan",
+   "text": "That's very kind, {addr}. A man in my line is not often handed a bowl with nothing asked after it. Hat off for it, plain and slow, and then straight back on before the stew goes cold.",
+   "options": [
+    {
+     "text": "\"Eat it while it's hot.\"",
+     "end": true
+    }
+   ]
+  }
+ }
 }

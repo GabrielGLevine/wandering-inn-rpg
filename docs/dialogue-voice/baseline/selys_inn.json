@@ -1,12 +1,5 @@
 {
  "facts": {
-  "$.nodes.greet.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Serve"
-   ]
-  },
   "$.nodes.greet.options[1].text": {
    "brackets": [],
    "digits": [],
@@ -22,19 +15,9 @@
   "$.nodes.greet.text": {
    "brackets": [],
    "digits": [],
-   "propnouns": []
-  },
-  "$.nodes.offduty.options[0].text": {
-   "brackets": [],
-   "digits": [],
    "propnouns": [
-    "Serve"
+    "Guild"
    ]
-  },
-  "$.nodes.offduty.options[1].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
   },
   "$.nodes.offduty.text": {
    "brackets": [],
@@ -77,7 +60,7 @@
        "item": "hot_meal",
        "once_per_waking": "serve:selys_inn_guest"
       },
-      "text": "\u00a7"
+      "text": "@bring_her_a_bowl"
      },
      {
       "goto": "offduty",
@@ -113,11 +96,11 @@
        "item": "hot_meal",
        "once_per_waking": "serve:selys_inn_guest"
       },
-      "text": "\u00a7"
+      "text": "@bring_her_a_bowl"
      },
      {
       "end": true,
-      "text": "\u00a7"
+      "text": "@i_ll_leave_you"
      }
     ],
     "speaker": "Selys",

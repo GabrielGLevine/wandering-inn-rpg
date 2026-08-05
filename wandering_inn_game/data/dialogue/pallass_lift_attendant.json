@@ -34,7 +34,7 @@
      "goto": "seal"
     },
     {
-     "text": "I'll wait for the bell.",
+     "text": "@i_ll_wait_for",
      "end": true
     },
     {
@@ -105,7 +105,7 @@
      "goto": "hub"
     },
     {
-     "text": "I'll wait for the bell.",
+     "text": "@i_ll_wait_for",
      "end": true
     }
    ]
@@ -151,7 +151,7 @@
    "text": "The stamp clerk on the market tier holds the entry side. The permit window holds the release side. The consignee signs last. She cannot sign first. Down at the quarter bell.",
    "options": [
     {
-     "text": "Down at the quarter bell.",
+     "text": "@down_at_the_quarter",
      "end": true
     }
    ]
@@ -239,10 +239,14 @@
    ],
    "options": [
     {
-     "text": "Down at the quarter bell.",
+     "text": "@down_at_the_quarter",
      "end": true
     }
    ]
   }
+ },
+ "text_banks": {
+  "down_at_the_quarter": "Down at the quarter bell.",
+  "i_ll_wait_for": "I'll wait for the bell."
  }
 }

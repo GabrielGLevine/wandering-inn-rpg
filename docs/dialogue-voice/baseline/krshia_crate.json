@@ -15,11 +15,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.bought.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.bought.options[1].text": {
    "brackets": [],
    "digits": [],
@@ -28,11 +23,6 @@
    ]
   },
   "$.nodes.bought.text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.nodes.catalyst_sold.options[0].text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -318,7 +308,8 @@
    "brackets": [],
    "digits": [],
    "propnouns": [
-    "Gnoll"
+    "Gnoll",
+    "Liscor"
    ]
   },
   "$.nodes.krshia_tribe_two.options[0].text": {
@@ -332,11 +323,6 @@
    "propnouns": []
   },
   "$.nodes.krshia_tribe_two.text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.nodes.pallass_stone_sold.options[0].text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -502,6 +488,11 @@
     "Erin",
     "Lyonette"
    ]
+  },
+  "$.text_banks.show_me_the_stall": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
   }
  },
  "skeleton": {
@@ -524,7 +515,7 @@
     "options": [
      {
       "goto": "shop",
-      "text": "\u00a7"
+      "text": "@show_me_the_stall"
      },
      {
       "end": true,
@@ -538,7 +529,7 @@
     "options": [
      {
       "goto": "shop",
-      "text": "\u00a7"
+      "text": "@show_me_the_stall"
      },
      {
       "end": true,
@@ -1061,7 +1052,7 @@
     "options": [
      {
       "goto": "shop",
-      "text": "\u00a7"
+      "text": "@show_me_the_stall"
      },
      {
       "end": true,
@@ -1323,6 +1314,9 @@
     ]
    }
   },
-  "start": "hub"
+  "start": "hub",
+  "text_banks": {
+   "show_me_the_stall": "\u00a7"
+  }
  }
 }

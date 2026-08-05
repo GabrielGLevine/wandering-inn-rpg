@@ -112,11 +112,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.hub.options[3].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.hub.options[4].text": {
    "brackets": [],
    "digits": [],
@@ -345,7 +340,7 @@
      },
      {
       "end": true,
-      "text": "\u00a7"
+      "text": "@just_passing_through"
      },
      {
       "goto": "authority_topic",

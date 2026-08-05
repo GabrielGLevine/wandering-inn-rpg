@@ -119,12 +119,22 @@ def map_speaker_for(data, path):
 
 
 def walk_texts(obj, path="$"):
-    """Yield (json_path, value) for every PROSE_KEYS string; recurse rest."""
+    """Yield (json_path, value) for every PROSE_KEYS string; recurse rest.
+    Dialogue banks (2026-08-05): "@<name>" refs are STRUCTURE (frozen by the
+    skeleton, so a swapped ref is a structural diff); bank values -- both
+    file-local `text_banks` and _shared_lines.json `banks` -- are PROSE,
+    measured once, where they are written."""
     if isinstance(obj, dict):
         for k, v in obj.items():
             p = f"{path}.{k}"
+            if k in ("text_banks", "banks") and isinstance(v, dict):
+                for name, line in v.items():
+                    if isinstance(line, str):
+                        yield f"{p}.{name}", line
+                continue
             if k in PROSE_KEYS and isinstance(v, str):
-                yield p, v
+                if not v.startswith("@"):
+                    yield p, v
             else:
                 yield from walk_texts(v, p)
     elif isinstance(obj, list):
@@ -133,8 +143,16 @@ def walk_texts(obj, path="$"):
 
 def skeleton(obj):
     if isinstance(obj, dict):
-        return {k: (MASK if k in PROSE_KEYS and isinstance(v, str) else skeleton(v))
-                for k, v in obj.items()}
+        out = {}
+        for k, v in obj.items():
+            if k in ("text_banks", "banks") and isinstance(v, dict):
+                out[k] = {name: (MASK if isinstance(line, str) else skeleton(line))
+                          for name, line in v.items()}
+            elif k in PROSE_KEYS and isinstance(v, str):
+                out[k] = v if v.startswith("@") else MASK
+            else:
+                out[k] = skeleton(v)
+        return out
     if isinstance(obj, list):
         return [skeleton(v) for v in obj]
     return obj

@@ -211,10 +211,54 @@ def _check_arrival_free(rid: str, cell: list, dest_map: dict, errors: list) -> N
 
 
 def check_dialogue(parsed: dict, errors: list) -> None:
+	# Dialogue line banks (2026-08-05): every "@<name>" ref in a text slot
+	# must resolve (file-local text_banks first, then _shared_lines.json);
+	# local names may not shadow shared ones (silent divergence); banks may
+	# not reference banks; no bank rots unused.
+	shared_path = DATA / "dialogue" / "_shared_lines.json"
+	shared = (parsed.get(shared_path) or {}).get("banks", {})
+	shared_used = set()
 	for path in sorted(parsed):
 		if path.parent.name != "dialogue":
 			continue
+		if path.stem.startswith("_"):
+			for bname, bline in shared.items():
+				if not isinstance(bline, str) or not bline:
+					errors.append(f"dialogue/_shared_lines: banks['{bname}'] must be a non-empty string")
+				elif bline.startswith("@"):
+					errors.append(f"dialogue/_shared_lines: banks['{bname}'] is a ref -- banks may not reference banks")
+			continue
 		graph = parsed[path]
+		local = graph.get("text_banks", {})
+		local_used = set()
+		for lname, lline in (local.items() if isinstance(local, dict) else []):
+			if lname in shared:
+				errors.append(f"dialogue/{path.stem}: text_banks['{lname}'] shadows a shared bank name")
+			if not isinstance(lline, str) or not lline:
+				errors.append(f"dialogue/{path.stem}: text_banks['{lname}'] must be a non-empty string")
+			elif lline.startswith("@"):
+				errors.append(f"dialogue/{path.stem}: text_banks['{lname}'] is a ref -- banks may not reference banks")
+		def scan_ref(t, where):
+			if isinstance(t, str) and t.startswith("@"):
+				rname = t[1:]
+				if rname in local:
+					local_used.add(rname)
+				elif rname in shared:
+					shared_used.add(rname)
+				else:
+					errors.append(f"dialogue/{path.stem}: {where}: ref '@{rname}' does not resolve")
+		for nid, node in (graph.get("nodes", {}) or {}).items():
+			if not isinstance(node, dict):
+				continue
+			scan_ref(node.get("text"), f"nodes.{nid}.text")
+			for i, v in enumerate(node.get("text_variants", []) or []):
+				scan_ref(v if isinstance(v, str) else (v or {}).get("text") if isinstance(v, dict) else None, f"nodes.{nid}.text_variants[{i}]")
+			for i, o in enumerate(node.get("options", []) or []):
+				if isinstance(o, dict):
+					scan_ref(o.get("text"), f"nodes.{nid}.options[{i}]")
+		for lname in (local if isinstance(local, dict) else {}):
+			if lname not in local_used:
+				errors.append(f"dialogue/{path.stem}: text_banks['{lname}'] is never referenced")
 		name = f"dialogue/{path.stem}"
 		nodes = graph.get("nodes")
 		if not isinstance(nodes, dict) or "start" not in graph:
@@ -238,6 +282,34 @@ def check_dialogue(parsed: dict, errors: list) -> None:
 				if goto is not None and goto not in nodes:
 					errors.append(f"{name}: node '{nid}' option {i} goto "
 						f"'{goto}' targets no node")
+
+
+def check_shared_dialogue_banks_used(parsed: dict, errors: list) -> None:
+	"""Companion to check_dialogue: a shared bank line nobody references."""
+	shared_path = DATA / "dialogue" / "_shared_lines.json"
+	shared = (parsed.get(shared_path) or {}).get("banks", {})
+	if not shared:
+		return
+	used = set()
+	for path in sorted(parsed):
+		if path.parent.name != "dialogue" or path.stem.startswith("_"):
+			continue
+		local = parsed[path].get("text_banks", {})
+		def scan(t):
+			if isinstance(t, str) and t.startswith("@") and t[1:] not in local:
+				used.add(t[1:])
+		for node in (parsed[path].get("nodes", {}) or {}).values():
+			if not isinstance(node, dict):
+				continue
+			scan(node.get("text"))
+			for v in node.get("text_variants", []) or []:
+				scan(v if isinstance(v, str) else (v or {}).get("text") if isinstance(v, dict) else None)
+			for o in node.get("options", []) or []:
+				if isinstance(o, dict):
+					scan(o.get("text"))
+	for bname in shared:
+		if bname not in used:
+			errors.append(f"dialogue/_shared_lines: banks['{bname}'] is never referenced")
 
 
 def check_sprites(parsed: dict, errors: list) -> None:
@@ -860,6 +932,7 @@ def main() -> int:
 	check_interactions(parsed, maps, errors, report)
 	check_portals(parsed, maps, errors)
 	check_dialogue(parsed, errors)
+	check_shared_dialogue_banks_used(parsed, errors)
 	check_sprites(parsed, errors)
 	check_skill_icons(parsed, errors)
 	check_talk_banks(maps, errors)

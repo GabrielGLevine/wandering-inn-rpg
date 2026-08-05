@@ -578,7 +578,7 @@ func _validate_player_string_vocab() -> void:
 	_scan_player_strings(WISceneCatalog.compose(), "res://data/maps/** (composed)", attr, provenance)
 	var dir: DirAccess = DirAccess.open(DIALOGUE_DIR)
 	for file_name: String in dir.get_files():
-		if file_name.ends_with(".json"):
+		if file_name.ends_with(".json") and not file_name.begins_with("_"):
 			var full_path := DIALOGUE_DIR.path_join(file_name)
 			_scan_player_strings(_load_json(full_path), full_path, attr, provenance)
 
@@ -622,7 +622,7 @@ func _load_dialogue_graphs() -> Dictionary:
 		_errors.append("missing dialogue directory")
 		return {}
 	for file_name: String in dir.get_files():
-		if file_name.ends_with(".json"):
+		if file_name.ends_with(".json") and not file_name.begins_with("_"):
 			graphs[file_name.get_basename()] = _load_json(DIALOGUE_DIR.path_join(file_name))
 	_check(not graphs.is_empty(), "no dialogue graphs found")
 	return graphs
@@ -878,7 +878,7 @@ func _validate_address_token_placement() -> void:
 	_scan_address_tokens(WISceneCatalog.compose(), "res://data/maps/** (composed)", "")
 	var dir: DirAccess = DirAccess.open(DIALOGUE_DIR)
 	for file_name: String in dir.get_files():
-		if file_name.ends_with(".json"):
+		if file_name.ends_with(".json") and not file_name.begins_with("_"):
 			var full_path := DIALOGUE_DIR.path_join(file_name)
 			_scan_address_tokens(_load_json(full_path), full_path, "")
 	for path: String in ADDRESS_TOKEN_UNRESOLVABLE_FILES:

@@ -85,7 +85,9 @@
   "$.nodes.ending_extorted.text": {
    "brackets": [],
    "digits": [],
-   "propnouns": []
+   "propnouns": [
+    "Guild"
+   ]
   },
   "$.nodes.hub.options[0].text": {
    "brackets": [],

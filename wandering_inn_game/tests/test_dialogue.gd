@@ -1086,6 +1086,34 @@ func test_wigame_nulls_a_walker_the_fail_safe_finished_at_begin() -> void:
 
 
 func _init() -> void:
+	# == DIALOGUE BANKS EXPAND AT LOAD (user directive 2026-08-05) ==
+	# 62 slots were copy-paste; graphs now bank lines (file-local text_banks +
+	# _shared_lines.json) and reference them with "@<name>". Tripwire: the
+	# expanded corpus contains NO surviving ref, and a known shared verb
+	# expands into the Serve option text every pinned script sees.
+	var _banks_shared := WIDialogueBanks.load_shared()
+	assert(not _banks_shared.is_empty(), "shared dialogue bank loads")
+	var _banks_dir := DirAccess.open("res://data/dialogue")
+	var _serve_seen := false
+	for _bf: String in _banks_dir.get_files():
+		if not _bf.ends_with(".json") or _bf.begins_with("_"):
+			continue
+		var _bg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/dialogue/" + _bf))
+		_bg = WIDialogueBanks.expand(_bg, _banks_shared)
+		for _bn: Variant in (_bg.get("nodes", {}) as Dictionary).values():
+			if not (_bn is Dictionary):
+				continue
+			var _bnode := _bn as Dictionary
+			if _bnode.get("text") is String:
+				assert(not (_bnode["text"] as String).begins_with("@"), "unexpanded dialogue ref in " + _bf)
+			for _bo: Variant in _bnode.get("options", []):
+				if _bo is Dictionary and (_bo as Dictionary).get("text") is String:
+					var _bt := String((_bo as Dictionary)["text"])
+					assert(not _bt.begins_with("@"), "unexpanded option ref in " + _bf)
+					if _bt == "Bring him a bowl from the kitchen. (Serve)":
+						_serve_seen = true
+	assert(_serve_seen, "the shared Serve verb expands into option text")
+
 	WITestWatchdog.arm(self)
 	var ctx := {
 		"skills": ["basic_cleaning"], "classes": {"warrior": 1},
