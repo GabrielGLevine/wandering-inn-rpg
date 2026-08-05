@@ -87,6 +87,27 @@ EXTREME_FLIP_WHITELIST = {
             "the way an 0.81 cell is. Revocable: the alternative is a gate that is "
             "red on the day it ratifies.",
     },
+    ("riverfarm / briar_collectors_w10_solo", "gold"): {
+        "silver": 0.14,
+        "why":
+            "#396 (2026-08-05), the ruin_guardian case one region earlier. This is an "
+            "UNGATED off-build baseline: warrior5_mage5 (the harness's under-geared "
+            "~L8-12 stand-in, four levels under the fight's own design build) taking "
+            "Riverfarm's briars ALONE, which is the only way they can be taken since "
+            "the hollow stopped fielding an ally. It reads 0.14 at Silver -- a losing "
+            "fight by design, kept as the historical baseline per region-tiers.md -- "
+            "and 0.00 at the hardest tier is that same statement, louder. The flip is "
+            "NEW only in the bookkeeping sense: pre-#396 the cell read 0.07, inside "
+            "EXTREME_MARGIN, so the identical Gold 0.00 was counted as saturation "
+            "rather than a flip; the solo retune moved Silver 0.07 -> 0.14 and walked "
+            "it over the line. Tuning the pair to hold this cell under 0.10 would mean "
+            "tuning data for the gate's benefit against the design build's own gate "
+            "(briar_collectors_t3_warrior10_solo, 0.55-0.95) -- backwards. The DESIGN "
+            "build keeps a real coin at every tier, which is where the coin belongs. "
+            "LAPSE RANGE: this pin can only lapse UPWARD (Silver > 0.19 at NOISE 0.05); "
+            "a fall to 0.09 re-classifies the Gold flip as saturation before the lapse "
+            "check runs, so the entry would go STALE, never LAPSED.",
+    },
 }
 
 

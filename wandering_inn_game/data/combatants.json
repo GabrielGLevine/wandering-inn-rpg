@@ -504,7 +504,7 @@
    "skills": []
   },
   {
-   "_comment": "Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); the witch's craft animating that plant into a debt-collecting construct, not an invented species. T5.1 BRIAR-CAMOUFLAGE: green on green under a green canopy; combat_tint pulls them thorn-warm so figure and ground part.",
+   "_comment": "Canon-cite: wiki.wanderinginn.com/Plants -- Birevine ('vines stronger than steel rope, covered in razor-sharp thorns'); the witch's craft animating that plant into a debt-collecting construct, not an invented species. T5.1 BRIAR-CAMOUFLAGE: green on green under a green canopy; combat_tint pulls them thorn-warm so figure and ground part. #396 SOLO RETUNE: con 30 -> 24 on both members, weapon_die untouched (the hollow stopped fielding an ally). Numbers + levers: RIVERFARM_CELLS in tests/sim_combat_batch.gd.",
    "id": "briar_collector_a",
    "power_level": 8.0,
    "display_name": "Briar Collector",
@@ -518,7 +518,7 @@
    "stats": {
     "str": 19,
     "dex": 10,
-    "con": 30,
+    "con": 24,
     "int": 2,
     "wis": 6,
     "cha": 2
@@ -528,7 +528,7 @@
    "skills": []
   },
   {
-   "_comment": "Briar_collectors' second member -- see briar_collector_a's _comment for the full canon cite.",
+   "_comment": "Briar_collectors' second member -- see briar_collector_a's _comment for the canon cite + the #396 solo retune.",
    "id": "briar_collector_b",
    "power_level": 8.0,
    "display_name": "Briar Collector",
@@ -542,7 +542,7 @@
    "stats": {
     "str": 19,
     "dex": 10,
-    "con": 30,
+    "con": 24,
     "int": 2,
     "wis": 6,
     "cha": 2
@@ -552,7 +552,7 @@
    "skills": []
   },
   {
-   "_comment": "Riverfarm's capstone (blight_lifted), FIRST pilgrimage stop = LOWEST band. Phase 9 sweep 2026-07-27: con 38/40 -> 34/36 on the pair, moving the fight down to the 9.5 power_level it was authored at (it was reading level with Invrisil's 11.0). Bands + method: docs/design/2026-07-26-main-quest-line-spec.md sec.6.",
+   "_comment": "Riverfarm's capstone (blight_lifted), FIRST pilgrimage stop = LOWEST band. Phase 9 sweep 2026-07-27: con 38/40 -> 34/36 on the pair, moving the fight down to the 9.5 power_level it was authored at (it was reading level with Invrisil's 11.0). Bands + method: docs/design/2026-07-26-main-quest-line-spec.md sec.6. #396 SOLO RETUNE (rule FIRED -- solo read 0.22 at the design build closed blight_lifted's fight route): CUT ON BOTH AXES, con 34/36 -> 25/27 AND weapon_die 7/6 -> 4/3, power_level held at 9.5. Levers, before/after, ladder: RIVERFARM_CELLS in tests/sim_combat_batch.gd.",
    "id": "briar_collector_deep_a",
    "power_level": 9.5,
    "display_name": "Deep Briar Collector",
@@ -566,19 +566,19 @@
    "stats": {
     "str": 17,
     "dex": 9,
-    "con": 34,
+    "con": 25,
     "int": 3,
     "wis": 6,
     "cha": 2
    },
-   "weapon_die": 7,
+   "weapon_die": 4,
    "ai": "melee",
    "skills": [
     "power_strike"
    ]
   },
   {
-   "_comment": "Briar_collectors_deep's second member -- see briar_collector_deep_a's _comment for the canon cite + escalation rationale.",
+   "_comment": "Briar_collectors_deep's second member -- see briar_collector_deep_a's _comment for the canon cite, the escalation rationale and the #396 solo retune. The pair stays asymmetric: a holds power_strike, b swings plain at +2 con.",
    "id": "briar_collector_deep_b",
    "power_level": 9.5,
    "display_name": "Deep Briar Collector",
@@ -592,12 +592,12 @@
    "stats": {
     "str": 16,
     "dex": 9,
-    "con": 36,
+    "con": 27,
     "int": 3,
     "wis": 6,
     "cha": 2
    },
-   "weapon_die": 6,
+   "weapon_die": 3,
    "ai": "melee",
    "skills": []
   },
