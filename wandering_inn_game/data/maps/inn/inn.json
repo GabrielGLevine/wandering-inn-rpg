@@ -374,7 +374,7 @@
       "cleaned_the_inn": 1
      },
      "lines": [
-      "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+      "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
      ],
      "_comment": "GH#130 bed-onboarding nudge block. One stage per SINGLE-BEAT pre-first-sleep class-gain counter; multi-beat routes (diplomat gossip x3, trader commerce x5) are deliberately un-nudged. Pools AND-gate accomplishments, so OR = sibling stages sharing a line. MUST stay FIRST so any later-satisfied stage overrides it (social.gd:20-22); erin_bed_slept below retires it."
     },
@@ -384,7 +384,7 @@
       "sparred_with_relc": 1
      },
      "lines": [
-      "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+      "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
      ]
     },
     {
@@ -393,7 +393,7 @@
       "learned_magic_from_pisces": 1
      },
      "lines": [
-      "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+      "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
      ]
     },
     {
@@ -402,7 +402,7 @@
       "chess_with_olesm": 1
      },
      "lines": [
-      "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+      "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
      ]
     },
     {
@@ -411,7 +411,7 @@
       "recovered_crate_watch": 1
      },
      "lines": [
-      "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+      "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
      ]
     },
     {
@@ -420,7 +420,7 @@
       "ranged_hit": 3
      },
      "lines": [
-      "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+      "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
      ]
     },
     {
@@ -431,7 +431,7 @@
      },
      "lines": [
       "Sleep good? You've got that just-leveled look about you. I'm basically never wrong about this.",
-      "Morning! Or... whatever time it is. The inn keeps its own clock, honestly."
+      "Morning! Or whatever time it is. The inn keeps its own clock, honestly."
      ]
     },
     {
@@ -441,7 +441,7 @@
       "delivered_delivery_inn_hamper": 1
      },
      "lines": [
-      "The hamper made it! Lyonette counted everything twice and only found ONE thing missing, which — okay, that was me, I ate it. It was for quality! Checking!"
+      "The hamper made it! Lyonette counted everything twice and only found one thing missing, which — okay, that was me, I ate it. It was for quality! Checking!"
      ]
     },
     {
@@ -463,7 +463,7 @@
       "chatted_with_erin": 4
      },
      "lines": [
-      "There you are! Sit down, I'm testing a recipe on you. That came out wrong. WITH you. Testing it with you.",
+      "There you are! Sit down, I'm testing a recipe on you. That came out wrong. With you. Testing it with you.",
       "Lyonette hums when she scrubs now. She'd deny it under oath, so don't tell her I said anything. That was you, by the way.",
       "Some days this place is a lot. Then somebody walks in and it's less a lot. You're one of the less-a-lot ones."
      ]
@@ -496,7 +496,7 @@
       "garden_door_unlocked": 1
      },
      "lines": [
-      "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just... knock first. Old habit."
+      "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just knock first. Old habit."
      ]
     },
     {
@@ -563,7 +563,7 @@
       "cleared_the_warren": 1
      },
      "lines": [
-      "You came back up. TELL Zevara you came back up — she counts."
+      "You came back up. Tell Zevara you came back up — she counts."
      ]
     },
     {
@@ -669,7 +669,7 @@
    "talk_pool": [
     "Yes, I work here. No, I did not always. That is the whole story, and you may have it for the price of a nod.",
     "The floors are clean because I cleaned them. Twice. Mind where you set your boots.",
-    "...You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
+    "You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
    ],
    "talk_pool_stages": [
     {
@@ -678,7 +678,7 @@
       "resolved_wrong_order": 1
      },
      "lines": [
-      "You covered for me. With the order, I mean. You didn't have to, and you didn't make it a story to tell later. That is... rare. Thank you.",
+      "You covered for me. With the order, I mean. You didn't have to, and you didn't make it a story to tell later. That is rare. Thank you.",
       "Sit anywhere you like. The good chair by the fire, even. No, I insist — I'm allowed to insist, it's practically my inn too.",
       "I used to think kindness was something people spent on you to get something back. You keep not doing that. It's unsettling. In a good way. Mostly."
      ]
@@ -700,7 +700,7 @@
      "lines": [
       "Yes, I work here. No, I did not always. That is the whole story, and you may have it for the price of a nod.",
       "The floors are clean because I cleaned them. Twice. Mind where you set your boots.",
-      "...You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
+      "You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
      ]
     }
    ],
@@ -1667,7 +1667,7 @@
      "lines": [
       "I trained formal, once. Robes, theory, the whole overpriced show. Doesn't come up much anymore, and I like it that way.",
       "You want a tip that's actually useful? Watch the ice before you stand on it. I learned that one the expensive way.",
-      "Yvlon says I've gone soft since the inn. I say I've gone SMART. There's a difference, and it involves not getting frostbite on purpose anymore."
+      "Yvlon says I've gone soft since the inn. I say I've gone smart. There's a difference, and it involves not getting frostbite on purpose anymore."
      ]
     }
    ],
@@ -1700,7 +1700,7 @@
    "talk_pool": [
     "The inn's quieter than the Guild hall. I'm starting to see why you like it.",
     "My arm's fine. Stop looking.",
-    "If the door down there opens, I want to be standing in front of it. That's not bravery — it's just where I stand."
+    "If the door down there opens, I want to be standing in front of it. Someone will be. Better me."
    ],
    "talk_pool_stages": [
     {
@@ -1800,7 +1800,7 @@
      "lines": [
       "I trained formal, once. Robes, theory, the whole overpriced show. Doesn't come up much anymore, and I like it that way.",
       "You want a tip that's actually useful? Watch the ice before you stand on it. I learned that one the expensive way.",
-      "Yvlon says I've gone soft since the inn. I say I've gone SMART. There's a difference, and it involves not getting frostbite on purpose anymore."
+      "Yvlon says I've gone soft since the inn. I say I've gone smart. There's a difference, and it involves not getting frostbite on purpose anymore."
      ]
     }
    ],
@@ -1830,7 +1830,7 @@
    "talk_pool": [
     "The inn's quieter than the Guild hall. I'm starting to see why you like it.",
     "My arm's fine. Stop looking.",
-    "If the door down there opens, I want to be standing in front of it. That's not bravery — it's just where I stand."
+    "If the door down there opens, I want to be standing in front of it. Someone will be. Better me."
    ],
    "talk_pool_stages": [
     {

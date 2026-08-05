@@ -1,0 +1,313 @@
+{
+ "facts": {},
+ "skeleton": {
+  "_comment": "TRAP: hearth/long-table/headman-table are added to `blocked` manually (decor never auto-blocks movement)",
+  "ambience": [
+   {
+    "phase": [
+     "dusk",
+     "night"
+    ],
+    "preset": "dust_motes",
+    "rect": "all"
+   }
+  ],
+  "biome": "inn",
+  "blocked": [
+   [
+    2,
+    1
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    8,
+    1
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     2,
+     1
+    ],
+    "light": {
+     "color": [
+      1.0,
+      0.62,
+      0.32
+     ],
+     "energy": 1.1,
+     "flicker": true,
+     "radius": 40
+    },
+    "sprite": "hearth"
+   },
+   {
+    "cell": [
+     2,
+     3
+    ],
+    "sprite": "table_brown"
+   },
+   {
+    "cell": [
+     3,
+     3
+    ],
+    "sprite": "table_brown"
+   },
+   {
+    "cell": [
+     2,
+     2
+    ],
+    "sprite": "stool"
+   },
+   {
+    "cell": [
+     3,
+     2
+    ],
+    "sprite": "stool"
+   },
+   {
+    "cell": [
+     2,
+     4
+    ],
+    "sprite": "stool"
+   },
+   {
+    "cell": [
+     3,
+     4
+    ],
+    "sprite": "stool"
+   },
+   {
+    "cell": [
+     1,
+     2
+    ],
+    "sprite": "barrel"
+   },
+   {
+    "cell": [
+     1,
+     4
+    ],
+    "sprite": "barrel"
+   },
+   {
+    "cell": [
+     1,
+     3
+    ],
+    "sprite": "crate"
+   },
+   {
+    "cell": [
+     8,
+     1
+    ],
+    "sprite": "table_brown"
+   },
+   {
+    "cell": [
+     6,
+     1
+    ],
+    "light": {
+     "color": [
+      1.0,
+      0.75,
+      0.4
+     ],
+     "energy": 0.6,
+     "flicker": true,
+     "radius": 18
+    },
+    "sprite": "sconce"
+   },
+   {
+    "cell": [
+     7,
+     4
+    ],
+    "light": {
+     "color": [
+      1.0,
+      0.75,
+      0.4
+     ],
+     "energy": 0.6,
+     "flicker": true,
+     "radius": 18
+    },
+    "sprite": "sconce"
+   }
+  ],
+  "entities": [
+   {
+    "_comment": "to_cell (11,8) is the SAME open cell the player stood on outside to approach longhouse_door in the first place (the guild_exit/guild_door offset convention).",
+    "cell": [
+     5,
+     6
+    ],
+    "display_name": "Outside",
+    "id": "longhouse_exit",
+    "kind": "door",
+    "sprite": "door",
+    "to_cell": [
+     11,
+     8
+    ],
+    "to_map": "riverfarm_village"
+   },
+   {
+    "_comment": "Mechanically identical to every other sleep prop (sleep: true, checked first in interact()'s prop match)",
+    "cell": [
+     8,
+     4
+    ],
+    "display_name": "A Guest Cot",
+    "id": "riverfarm_guest_cot",
+    "kind": "prop",
+    "observe": "A straw-tick pallet against the wall, blanket already turned down for whoever needs it.",
+    "sleep": true,
+    "sleep_toast": "Straw tick, borrowed blanket \u2014 Riverfarm always finds room for one more.",
+    "sprite": "bed"
+   },
+   {
+    "cell": [
+     8,
+     2
+    ],
+    "display_name": "The Headman's Ledger",
+    "id": "riverfarm_headman_ledger",
+    "kind": "prop",
+    "observe": "A ledger left open on the corner table, the same one he carries everywhere else. Columns re-summed in three different inks \u2014 he never trusts the first count, or the second.",
+    "on_interact_accomplishment": "observed_headman_ledger",
+    "sprite": "inn_room_ledger",
+    "toast": "Grain against debts, and the debts keep winning most years. Best not to read it over his shoulder."
+   }
+  ],
+  "floor_layers": [
+   {
+    "_pick": "#225 floor differentiation: the Riverfarm longhouse reads as darker, rougher rustic timber than the inn's lighter tavern planks. Reuses the SAME Interior_Walls_01 sheet's cooler dark-plank swatch ([12,21]/[13,21]/[12,22]/[13,22], rgb~87,64,49) -- same wood family/license, footstep-wood stays honest.",
+    "cells": "all",
+    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+    "tile_px": 16,
+    "variants": [
+     [
+      12,
+      21
+     ],
+     [
+      13,
+      21
+     ],
+     [
+      12,
+      22
+     ],
+     [
+      13,
+      22
+     ]
+    ]
+   }
+  ],
+  "grid": {
+   "height": 7,
+   "width": 10
+  },
+  "walls": {
+   "segments": [
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "face": [
+      14,
+      7
+     ],
+     "from": [
+      0,
+      0
+     ],
+     "to": [
+      9,
+      0
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      0,
+      1
+     ],
+     "to": [
+      0,
+      6
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      9,
+      1
+     ],
+     "to": [
+      9,
+      6
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      1,
+      6
+     ],
+     "to": [
+      4,
+      6
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      6,
+      6
+     ],
+     "to": [
+      8,
+      6
+     ]
+    }
+   ],
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16
+  }
+ }
+}

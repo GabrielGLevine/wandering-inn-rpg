@@ -1,0 +1,305 @@
+{
+ "facts": {},
+ "skeleton": {
+  "_comment_decor": "Visible generic doors must be entities, not decor, so interaction returns a locked response instead of Nothing there.",
+  "ambience": [
+   {
+    "phase": [
+     "dusk",
+     "night"
+    ],
+    "preset": "dust_motes",
+    "rect": "all"
+   }
+  ],
+  "biome": "inn",
+  "blocked": [],
+  "decor": [
+   {
+    "cell": [
+     6,
+     2
+    ],
+    "sprite": "rug_woven_cream",
+    "tint": [
+     1.0,
+     0.94,
+     0.92
+    ]
+   },
+   {
+    "cell": [
+     10,
+     4
+    ],
+    "sprite": "window_blue"
+   },
+   {
+    "_comment": "v0.17 R2: the corridor's first light source, between hallway_door_b (5,1) and lyonette_door (7,1). Sealed room, so lights_by_day keeps it lit.",
+    "cell": [
+     6,
+     1
+    ],
+    "light": {
+     "color": [
+      1.0,
+      0.78,
+      0.45
+     ],
+     "energy": 0.65,
+     "flicker": true,
+     "radius": 24
+    },
+    "sprite": "sconce"
+   }
+  ],
+  "entities": [
+   {
+    "cell": [
+     1,
+     2
+    ],
+    "display_name": "Down the Stairs",
+    "id": "stairs_down",
+    "kind": "door",
+    "sprite": "stairs_up",
+    "to_cell": [
+     1,
+     7
+    ],
+    "to_map": "inn"
+   },
+   {
+    "_comment": "#350: the first door past the stairhead is what the register leases. `locked_toast` is HELD VERBATIM (upstairs_walkthrough pins it) and still right -- unbought, this is an anonymous shut door. interactions.gd checks door_when BEFORE the use_skill fallthrough. No owned-door sprite exists yet (VISUAL-LOG row); the observe variant is the ownership tell.",
+    "cell": [
+     3,
+     1
+    ],
+    "display_name": "A Closed Door",
+    "door_when": {
+     "open_toast": "The key turns like it has been waiting to. Your room, and nobody else's.",
+     "requires": {
+      "room_purchased": 1
+     },
+     "to_cell": [
+      4,
+      5
+     ],
+     "to_map": "inn_player_room"
+    },
+    "id": "hallway_door_a",
+    "kind": "prop",
+    "locked_toast": "It doesn't budge.",
+    "observe": "Shut, and the card slot in the frame is empty. Somebody paid for this one once and stopped.",
+    "sprite": "door",
+    "visual_states": [
+     {
+      "observe": "Your name in the card slot, in Lyonette's ruled hand, and the key for it somewhere in your pack.",
+      "when": {
+       "at": 1,
+       "counter": "room_purchased"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     5,
+     1
+    ],
+    "display_name": "A Closed Door",
+    "id": "hallway_door_b",
+    "kind": "prop",
+    "locked_toast": "It doesn't budge.",
+    "sprite": "door"
+   },
+   {
+    "_comment": "`sleep_toast` fires BEFORE sleep()'s own stream. GH#334 ruling 3: a VARIANT LADDER now (interactions.gd `_resolve_sleep_toast`), so the room tiers the player bought are audible at the bed instead of the line never changing. Rungs ascend, highest held tier wins; the base rung is byte-identical for an untiered save.",
+    "cell": [
+     9,
+     1
+    ],
+    "display_name": "Your Bed",
+    "id": "your_bed",
+    "kind": "prop",
+    "sleep": true,
+    "sleep_toast": [
+     {
+      "text": "Your own bed.",
+      "when": {}
+     },
+     {
+      "text": "Your own bed, and a mattress that no longer remembers the last guest.",
+      "when": {
+       "room_tier_1": 1
+      }
+     },
+     {
+      "text": "Your own bed, thick blankets, and a shutter that actually closes.",
+      "when": {
+       "room_tier_2": 1
+      }
+     },
+     {
+      "text": "Your own room, warm and quiet, with a bed you are almost sorry to leave.",
+      "when": {
+       "room_tier_3": 1
+      }
+     }
+    ],
+    "sprite": "bed"
+   },
+   {
+    "cell": [
+     9,
+     5
+    ],
+    "contains": [
+     "leather_jerkin"
+    ],
+    "display_name": "Old Chest",
+    "id": "inn_chest",
+    "kind": "prop",
+    "sprite": "chest",
+    "visual_states": [
+     {
+      "sprite": "chest_open",
+      "when": {
+       "container_opened": true
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "Lyonette's room, hinted but never entered. v0.16.1 #7: the +20 field_y_sort_bias_px is DELETED. The field is signed and positive pushes the sort key SOUTH, so a door on the north wall row (holder y 16, biased to 36) outsorted the PC on its only approach [7,2] (holder y 32, no bias) and painted its 22px sprite straight over the player's head and torso. Zero is correct here and buys nothing back: floors and wall bands build into _field_root BEFORE _entities_root, so entities already draw over the wall unconditionally. The two sibling doors at [3,1]/[5,1] never carried a bias.",
+    "cell": [
+     7,
+     1
+    ],
+    "display_name": "Lyonette's Door",
+    "id": "lyonette_door",
+    "kind": "prop",
+    "locked_toast": "Locked. Lyonette keeps exactly one door in this inn that isn't anyone's business but hers.",
+    "observe": "Lyonette's door, shut the way she shuts most things: completely, and without discussion. Whatever the room looks like behind it, you'll have to imagine it; she's not one to leave doors, or herself, half open.",
+    "sprite": "door"
+   }
+  ],
+  "floor_layers": [
+   {
+    "cells": "all",
+    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+    "tile_px": 16,
+    "variants": [
+     [
+      1,
+      21
+     ],
+     [
+      2,
+      21
+     ],
+     [
+      1,
+      22
+     ],
+     [
+      2,
+      22
+     ]
+    ]
+   },
+   {
+    "cells": {
+     "rect": [
+      8,
+      1,
+      3,
+      6
+     ]
+    },
+    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+    "tile_px": 16,
+    "variants": [
+     [
+      16,
+      21
+     ],
+     [
+      17,
+      21
+     ]
+    ]
+   }
+  ],
+  "grid": {
+   "height": 8,
+   "width": 12
+  },
+  "walls": {
+   "segments": [
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "face": [
+      14,
+      7
+     ],
+     "from": [
+      0,
+      0
+     ],
+     "to": [
+      11,
+      0
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      0,
+      1
+     ],
+     "to": [
+      0,
+      7
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      11,
+      1
+     ],
+     "to": [
+      11,
+      7
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      1,
+      7
+     ],
+     "to": [
+      10,
+      7
+     ]
+    }
+   ],
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16
+  }
+ }
+}

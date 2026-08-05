@@ -4,6 +4,27 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
+## DONE (2026-08-05): #388 map talk_pool voice pass — WHOLE CORPUS CLEAN
+
+The maps mode is live in `qa/scripts/dialogue_voice_gate.py` (`--maps`):
+walks talk_pool/talk_pool_stages lines, freezes pool SIZE AND ORDER in the
+skeleton (talk_pool_stages is last-match-wins, so a reorder is a behavior
+change), attributes speakers by entity id. Baseline committed at
+`docs/dialogue-voice/baseline-maps/`; run
+`python3 qa/scripts/dialogue_voice_gate.py check --maps --baseline
+docs/dialogue-voice/baseline-maps` after ANY map-prose edit. MANUAL for now
+(not in ci_sweep pre-flight) — same rollout as the dialogue gate had.
+
+The funded slice (street 97, inn 93, boulevard 33, parlor 23) got the full
+cold-read; the rump turned out to be 5 hard tells across 3 maps, fixed in
+the same pass — the whole 30-map corpus is CLEAN (anti=6 of 30 budget).
+The Zevara tell-6 closer the issue named is dead. Kept deliberately:
+Erin's Earth idioms (she is from Earth), Ratici's 'heretofore' malapropism,
+Pisces's staccato, Olesm's tricolon-as-tactician. The quiet gentleman's
+"..." line became "Mm." (a bark renders it; pure ellipsis is a hard tell).
+Pin-syncs: bed_nudge_loop, thread_lattice_loop, invrisil_walkthrough,
+invrisil_disagreement_talk, wilovan_address_f — all green; sweep 207/207.
+
 ## DONE (2026-08-05, second sitting): findings 16-21 resolved
 
 - **16** road_mothbears stood on the road all day as an invisible blocking

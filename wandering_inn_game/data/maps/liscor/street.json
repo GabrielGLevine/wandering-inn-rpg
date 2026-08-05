@@ -1058,7 +1058,7 @@
     "Gate's clear. Keep it that way and we'll get on fine.",
     "Move along or stand aside. The post is not a meeting spot.",
     "Watch business is Watch business. Yours is likely somewhere else.",
-    "Long shift, nothing's happened. That's the shift going well - for the record."
+    "Long shift, nothing's happened. That's a good shift. You want the exciting kind, go stand somewhere else."
    ],
    "dialogue": [
     {
@@ -1083,8 +1083,8 @@
    "facing": "left",
    "talk_pool": [
     "If you're here to report a crime, the form's on the left. If you're here to commit one, don't. I've had a day.",
-    "Ten years running this Watch. Six weeks of leave, total. That's the whole personality, if you were wondering.",
-    "Relc's off being enormous at someone. Klbkch is... Klbkch. The gate still stands. Don't jinx it."
+    "Ten years running this Watch. Six weeks of leave, total. I counted, on the last one. There wasn't much else to do.",
+    "Relc's off being enormous at someone. Klbkch is exactly where he said he'd be, which somehow worries me more. The gate still stands. Don't jinx it."
    ],
    "_comment_stages": "stages are last-match-wins; keep story order — earliest gates first; relays outrank standing signposts",
    "talk_pool_stages": [
@@ -1106,7 +1106,7 @@
      },
      "lines": [
       "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
-      "The cistern file is closed. Do you know how few files CLOSE in this office? I keep it on top of the stack for morale.",
+      "The cistern file is closed. Do you know how few files close in this office? I keep it on top of the stack for morale.",
       "If you're between jobs, the Watch pays for work already done — the crate crew, the cisterns, anything with a file. My desk, not the Guild's board; that's Selys's paper and her rules."
      ]
     },
@@ -1137,7 +1137,7 @@
      },
      "lines": [
       "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
-      "The cistern file is closed. Do you know how few files CLOSE in this office? I keep it on top of the stack for morale.",
+      "The cistern file is closed. Do you know how few files close in this office? I keep it on top of the stack for morale.",
       "If you're between jobs, the Watch pays for work already done — the crate crew, the cisterns, anything with a file. My desk, not the Guild's board; that's Selys's paper and her rules."
      ]
     }
@@ -1166,7 +1166,7 @@
     "Guardsman Klbkch, Liscor Watch. If you have business, state it plainly. If you have none, the plaza is pleasant and I am content to stand here with you.",
     "You are staring. That is common. Take whatever time you require; I am on duty until nightfall regardless.",
     "Relc is my partner. He is loud, occasionally literal, and the finest spear in the city. I file our reports. The arrangement suits us both.",
-    "The city grows. More carts, more disputes, more forms. I have four hands and still the paperwork accumulates. There is a lesson in that, though I decline to learn it."
+    "The city grows. More carts, more disputes, more forms. I have four hands, and still the paperwork accumulates."
    ],
    "talk_pool_stages": [
     {
@@ -1209,7 +1209,7 @@
       "delivered_delivery_tactics_brief": 1
      },
      "lines": [
-      "Oh! The tactics brief came through — I mean, it came through days ago, but I only just finished annotating it. Three of the openings are WRONG, and I can prove it now, thanks to you."
+      "Oh! The tactics brief came through — I mean, it came through days ago, but I only just finished annotating it. Three of the openings are wrong, and now I can prove it, thanks to you."
      ]
     },
     {
@@ -1230,7 +1230,7 @@
       "chatted_with_olesm": 3
      },
      "lines": [
-      "I set the board up when the bells go quiet now, on the chance you wander past. That isn't pathetic, that's PREPARED.",
+      "I set the board up when the bells go quiet now, on the chance you wander past. A [Tactician] plans for the likely contingencies. You count as one.",
       "Erin beat me in eleven moves yesterday. Eleven! I wrote them all down. I'm going to frame the humiliation and study it daily.",
       "You, me, the board, one hour. I've been saving an opening that is either brilliant or a resignation with extra steps."
      ]
@@ -1261,7 +1261,7 @@
       "heard_the_deep_tremor": 1
      },
      "lines": [
-      "I set the board up when the bells go quiet now, on the chance you wander past. That isn't pathetic, that's PREPARED.",
+      "I set the board up when the bells go quiet now, on the chance you wander past. A [Tactician] plans for the likely contingencies. You count as one.",
       "Erin beat me in eleven moves yesterday. Eleven! I wrote them all down. I'm going to frame the humiliation and study it daily.",
       "You, me, the board, one hour. I've been saving an opening that is either brilliant or a resignation with extra steps."
      ]
@@ -1698,7 +1698,7 @@
       "catalyst_delivered": 1
      },
      "lines": [
-      "The mage has your stone and your dust and no more use for your questions, yes? Then go and sleep, several times. This is the part nobody sells tickets to."
+      "The mage has your stone and your dust and no more use for your questions, yes? Then go and sleep, several times. That part of the work happens with your eyes shut."
      ]
     },
     {

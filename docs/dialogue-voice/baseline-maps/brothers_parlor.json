@@ -1,0 +1,765 @@
+{
+ "facts": {
+  "$.entities[1].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool_stages[0].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Rest"
+   ]
+  },
+  "$.entities[1].talk_pool_stages[0].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool_stages[0].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool_stages[1].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool_stages[1].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool_stages[1].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool_stages[1].lines[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool_stages[2].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool_stages[2].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Coyle"
+   ]
+  },
+  "$.entities[4].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[4].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[5].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[5].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[6].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[6].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "biome": "brothers_parlor",
+  "blocked": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    3,
+    0
+   ],
+   [
+    4,
+    0
+   ],
+   [
+    5,
+    0
+   ],
+   [
+    6,
+    0
+   ],
+   [
+    7,
+    0
+   ],
+   [
+    8,
+    0
+   ],
+   [
+    9,
+    0
+   ],
+   [
+    10,
+    0
+   ],
+   [
+    11,
+    0
+   ],
+   [
+    12,
+    0
+   ],
+   [
+    13,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    13,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    13,
+    2
+   ],
+   [
+    0,
+    3
+   ],
+   [
+    13,
+    3
+   ],
+   [
+    13,
+    4
+   ],
+   [
+    0,
+    5
+   ],
+   [
+    6,
+    5
+   ],
+   [
+    13,
+    5
+   ],
+   [
+    0,
+    6
+   ],
+   [
+    13,
+    6
+   ],
+   [
+    0,
+    7
+   ],
+   [
+    13,
+    7
+   ],
+   [
+    0,
+    8
+   ],
+   [
+    13,
+    8
+   ],
+   [
+    0,
+    9
+   ],
+   [
+    1,
+    9
+   ],
+   [
+    2,
+    9
+   ],
+   [
+    3,
+    9
+   ],
+   [
+    4,
+    9
+   ],
+   [
+    5,
+    9
+   ],
+   [
+    6,
+    9
+   ],
+   [
+    7,
+    9
+   ],
+   [
+    8,
+    9
+   ],
+   [
+    9,
+    9
+   ],
+   [
+    10,
+    9
+   ],
+   [
+    11,
+    9
+   ],
+   [
+    12,
+    9
+   ],
+   [
+    13,
+    9
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     6,
+     5
+    ],
+    "light": {
+     "color": [
+      1.0,
+      0.85,
+      0.6
+     ],
+     "energy": 1.0,
+     "flicker": false,
+     "radius": 40
+    },
+    "sprite": "table_brown"
+   },
+   {
+    "cell": [
+     6,
+     6
+    ],
+    "sprite": "rug_woven_cream",
+    "tint": [
+     1.0,
+     0.92,
+     0.9
+    ]
+   },
+   {
+    "cell": [
+     10,
+     1
+    ],
+    "sprite": "window_blue"
+   },
+   {
+    "cell": [
+     9,
+     5
+    ],
+    "id": "parlor_rug_east",
+    "sprite": "rug_woven_red",
+    "tint": [
+     0.95,
+     0.92,
+     0.96
+    ]
+   },
+   {
+    "cell": [
+     7,
+     1
+    ],
+    "id": "parlor_sconce_e",
+    "light": {
+     "color": [
+      1.0,
+      0.72,
+      0.45
+     ],
+     "energy": 0.9,
+     "flicker": true,
+     "radius": 36
+    },
+    "sprite": "sconce"
+   }
+  ],
+  "entities": [
+   {
+    "_comment": "Round-trip pair with alleys_to_parlor (mercantile_alleys cell 19,12).",
+    "cell": [
+     0,
+     4
+    ],
+    "display_name": "Out to the Alley",
+    "id": "parlor_to_alleys",
+    "kind": "door",
+    "sprite": "door",
+    "to_cell": [
+     18,
+     12
+    ],
+    "to_map": "mercantile_alleys"
+   },
+   {
+    "_comment": "talk_pool stays the pool-then-conversation precedent's first-talk-of-a-waking flavor (interact()'s npc branch), `conversation` carries every later talk into the real graph.",
+    "cell": [
+     6,
+     3
+    ],
+    "conversation": "invrisil_wilovan",
+    "dialogue": [
+     {
+      "speaker": "Wilovan",
+      "text": "Evening, {addr}. Fine weather for good behavior."
+     }
+    ],
+    "display_name": "Wilovan",
+    "facing": "down",
+    "friendly_line": "He inclines the hat half an inch \u2014 a genuine courtesy, not a performance of one. \"A pleasure,\" he says, and seems to mean it.",
+    "id": "wilovan",
+    "kind": "npc",
+    "observe": "A Gnoll in a vest cut sharper than his manners need to be, tall hat squared like it's holding a rank. He watches the room's exits before he watches you.",
+    "sprite": "wilovan",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7",
+     "\u00a7",
+     "\u00a7"
+    ],
+    "talk_pool_stages": [
+     {
+      "id": "wilovan_hat_job_done",
+      "lines": [
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "hat_job_done": 1
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     2,
+     7
+    ],
+    "display_name": "The Guest Couch",
+    "id": "brothers_guest_couch",
+    "kind": "prop",
+    "sleep": true,
+    "sleep_toast": "Even a couch here fits like it was fitted for you. The Brothers do nothing halfway, not even hospitality.",
+    "sprite": "bench"
+   },
+   {
+    "_comment": "Bespoke short-Drake rig replaces the flagged pc_drake_m+tint placeholder. Voice/profile contract: docs/design/character-profiles.md Ratici section (fast, dropped g's, fancy-word overreach, menace opens polite; [Gentleman Thief] 7.24 is the class-name ceiling, [Aerial Dodge] is Vol-8 and BANNED).",
+    "cell": [
+     7,
+     3
+    ],
+    "display_name": "Ratici",
+    "facing": "down",
+    "friendly_line": "A person of discernment, Wilovan said. I withdraw one full half of my suspicions.",
+    "id": "ratici",
+    "kind": "npc",
+    "observe": "A short Drake in careful browns, floppy cap settled down over the neck-spines. His eyes did your full inventory the moment you stepped in, and he's too polite to say what it came to.",
+    "sprite": "ratici",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7",
+     "\u00a7",
+     "\u00a7"
+    ],
+    "talk_pool_stages": [
+     {
+      "id": "ratici_thread_brothers_job",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "took_brothers_job": 1
+      }
+     },
+     {
+      "id": "ratici_thread_operation_neutral",
+      "lines": [
+       "\u00a7",
+       "\u00a7",
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "coyle_operation_found": 1
+      }
+     },
+     {
+      "_comment": "Marker-holders get the warmer register (fence-tier trust, same gate as Wilovan's fence).",
+      "id": "ratici_marker",
+      "lines": [
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "brothers_marker": 1
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     10,
+     5
+    ],
+    "display_name": "A Gentleman in a Bowler",
+    "facing": "left",
+    "id": "gentleman_bowler",
+    "kind": "npc",
+    "observe": "A broad man in a bowler hat, playing solitaire like the deck owes him money. Politely, though.",
+    "sprite": "hired_blade",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7"
+    ],
+    "tint": [
+     0.78,
+     0.75,
+     0.82
+    ]
+   },
+   {
+    "cell": [
+     2,
+     5
+    ],
+    "display_name": "A Tall Gentleman",
+    "facing": "right",
+    "id": "gentleman_tall",
+    "kind": "npc",
+    "observe": "A Gnoll with a folded coat over one arm, keeping polite company with the hat stand and the door.",
+    "sprite": "gnoll_traveler",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7"
+    ],
+    "tint": [
+     0.8,
+     0.75,
+     0.7
+    ]
+   },
+   {
+    "cell": [
+     11,
+     7
+    ],
+    "display_name": "A Quiet Gentleman",
+    "facing": "left",
+    "id": "gentleman_quiet",
+    "kind": "npc",
+    "observe": "A Drake on a stool with his back to the wall, minding the shelf and the chest the way other men mind a fire.",
+    "sprite": "drake_patron",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7"
+    ]
+   },
+   {
+    "cell": [
+     8,
+     1
+    ],
+    "display_name": "The Counter",
+    "id": "parlor_counter_l",
+    "kind": "prop",
+    "observe": "A drink counter kept cleaner than the law would ever ask it to be.",
+    "sprite": "counter_left"
+   },
+   {
+    "cell": [
+     9,
+     1
+    ],
+    "display_name": "The Counter",
+    "id": "parlor_counter_m",
+    "kind": "prop",
+    "observe": "Rings from a hundred glasses, sanded out and earned back.",
+    "sprite": "counter_mid"
+   },
+   {
+    "cell": [
+     11,
+     1
+    ],
+    "display_name": "The Good Shelf",
+    "id": "parlor_bottle_shelf",
+    "kind": "prop",
+    "observe": "Bottles arranged by loyalty rather than label. The top row is for after jobs that went well.",
+    "sprite": "shelf_bottles"
+   },
+   {
+    "cell": [
+     12,
+     2
+    ],
+    "display_name": "A Keg",
+    "id": "parlor_keg_a",
+    "kind": "prop",
+    "observe": "A keg with a tapped face and an honest week's dents.",
+    "sprite": "barrel"
+   },
+   {
+    "cell": [
+     12,
+     3
+    ],
+    "display_name": "A Keg",
+    "id": "parlor_keg_b",
+    "kind": "prop",
+    "observe": "Its brother. Slightly fuller, slightly further from the door.",
+    "sprite": "barrel"
+   },
+   {
+    "_comment": "Card table cluster: table_brown reuse (the existing (6,5) table is Wilovan's SITTING table; this one is the game). Stools flank.",
+    "cell": [
+     9,
+     4
+    ],
+    "display_name": "The Card Table",
+    "id": "card_table",
+    "kind": "prop",
+    "observe": "Coppers, a dog-eared deck, and chalk tallies in three different handwritings. The game never quite ends; it just changes players.",
+    "sprite": "table_brown"
+   },
+   {
+    "cell": [
+     8,
+     4
+    ],
+    "display_name": "A Stool",
+    "id": "card_stool_a",
+    "kind": "prop",
+    "observe": "The wobbly one. Guests get it first.",
+    "sprite": "stool"
+   },
+   {
+    "cell": [
+     10,
+     4
+    ],
+    "display_name": "A Stool",
+    "id": "card_stool_b",
+    "kind": "prop",
+    "observe": "The good stool. You'd have to earn it.",
+    "sprite": "stool"
+   },
+   {
+    "_comment": "Fence-adjacent stash dressing: interact is gated DIEGETICALLY (locked line) on brothers_marker, mirroring Wilovan's fence gate \u2014 no mechanics beyond flavor + the existing fence node carrying actual stock.",
+    "cell": [
+     12,
+     7
+    ],
+    "display_name": "A Banded Chest",
+    "fence_menu": true,
+    "fence_menu_when": {
+     "requires": {
+      "brothers_job_done": 1,
+      "eyed_the_stash": 1
+     }
+    },
+    "id": "parlor_stash_chest",
+    "kind": "prop",
+    "observe": "Banded oak, twice-locked, sitting where the quiet gentleman can count who looks at it.",
+    "on_interact_accomplishment": "eyed_the_stash",
+    "sprite": "chest",
+    "toast": "Locked twice over. The quiet gentleman clears his throat, courteously."
+   },
+   {
+    "cell": [
+     9,
+     8
+    ],
+    "display_name": "The Long Shelf",
+    "id": "parlor_stash_shelf",
+    "kind": "prop",
+    "observe": "Ledgers with no titles and boxes with no labels. Everything here is filed under later.",
+    "sprite": "library_shelf"
+   },
+   {
+    "cell": [
+     1,
+     1
+    ],
+    "display_name": "A Cot",
+    "id": "parlor_cot_a",
+    "kind": "prop",
+    "observe": "Army-neat. Whoever sleeps here folds corners like it still matters.",
+    "sprite": "bed"
+   },
+   {
+    "cell": [
+     3,
+     1
+    ],
+    "display_name": "A Cot",
+    "id": "parlor_cot_b",
+    "kind": "prop",
+    "observe": "Less neat. A paperback under the pillow, spine broken at the same chapter.",
+    "sprite": "bed"
+   },
+   {
+    "_comment": "Bespoke hat-stand sprite replaces the flagged crate placeholder; preserves the Brothers' hats-off tell.",
+    "cell": [
+     1,
+     5
+    ],
+    "display_name": "The Hat Stand",
+    "id": "parlor_hat_stand",
+    "kind": "prop",
+    "observe": "Hats on pegs, every one accounted for. House rule says they stay on. Nobody explains the exceptions, and nobody asks twice.",
+    "sprite": "hat_stand"
+   },
+   {
+    "_comment": "v0.15 T4.4 regional repeatable work, 2 of 3 (the serving_tray idiom: once_per_waking + gold, banked under interactions.gd's `serve:` key). NEW COUNTER invrisil_errands_run, frozen at the next tag. Ungated so the affordance is reachable the first time a player finds the parlor; the marker-holder `variants` arm is the earned RATE, not an entry fee. Cell (5,1) sits between the cots and the counter, off every route the six parlor-touching canonicals walk.",
+    "cell": [
+     5,
+     1
+    ],
+    "display_name": "The Errand Slate",
+    "gold": 2,
+    "id": "parlor_errand_slate",
+    "kind": "prop",
+    "observe": "A slate by the cots, chalked in two hands: addresses with no names against them, times with no dates, and a column of initials down the edge. Small work. The Brothers keep the small work moving because the small work is how they hear things.",
+    "on_interact_accomplishment": "invrisil_errands_run",
+    "once_per_waking": true,
+    "once_per_waking_toast": "The slate is wiped clean. Come back when the chalk's been busy.",
+    "sprite": "note_pinned",
+    "toast": "You take the top line off the slate and walk it across Invrisil: a package nobody described to you, to a door somebody did. Two gold, and the line is wiped before you're back through the alley.",
+    "variants": [
+     {
+      "gold": 3,
+      "toast": "Marker-holder's rate. The line you take is longer, the door further out, and nobody asks you to account for the way round you took getting there.",
+      "when": {
+       "brothers_marker": 1
+      }
+     }
+    ]
+   }
+  ],
+  "floor_layers": [
+   {
+    "_pick": "#225 first floor layer (was biome-default inn plank, zero floor_layers): the Brothers' parlor reads as a richer parquet than the plain inn plank -- a classy gentleman-thieves' establishment. Library pack warm reddish parquet ([21,3]/[22,3]/[21,4]/[23,4], rgb~135,86,50), already manifest-wired (bundle:true). Chosen over castle brown [6,18], which windowed-read too close to the inn plank to differentiate. Rugs (rug_woven_cream/rug_woven_red) still dress it on top; footstep-wood stays honest. (Shares the guild's parquet: both are finer establishments in different cities -- an acceptable, thematic overlap.)",
+    "cells": "all",
+    "sheet": "res://assets/tiles/library/Tiles.png",
+    "tile_px": 16,
+    "variants": [
+     [
+      21,
+      3
+     ],
+     [
+      22,
+      3
+     ],
+     [
+      21,
+      4
+     ],
+     [
+      23,
+      4
+     ]
+    ]
+   }
+  ],
+  "grid": {
+   "height": 10,
+   "width": 14
+  }
+ }
+}

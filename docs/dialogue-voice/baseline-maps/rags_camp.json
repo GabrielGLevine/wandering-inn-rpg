@@ -1,0 +1,497 @@
+{
+ "facts": {
+  "$.entities[5].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[5].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[5].talk_pool[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[5].talk_pool[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "v0.16 F1 (#308) the camp hollow. TRAP: rim boulders and the supply crate are decor AND blocked; bush_green stays walkable per the floodplains precedent. Walk-in only, no portals.json row.",
+  "ambience": [
+   {
+    "phase": [
+     "dusk",
+     "night"
+    ],
+    "preset": "dust_motes",
+    "rect": "all"
+   }
+  ],
+  "biome": "floodplains",
+  "blocked": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    3,
+    0
+   ],
+   [
+    4,
+    0
+   ],
+   [
+    5,
+    0
+   ],
+   [
+    6,
+    0
+   ],
+   [
+    7,
+    0
+   ],
+   [
+    8,
+    0
+   ],
+   [
+    9,
+    0
+   ],
+   [
+    10,
+    0
+   ],
+   [
+    11,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    0,
+    3
+   ],
+   [
+    0,
+    4
+   ],
+   [
+    0,
+    5
+   ],
+   [
+    0,
+    6
+   ],
+   [
+    0,
+    7
+   ],
+   [
+    11,
+    1
+   ],
+   [
+    11,
+    2
+   ],
+   [
+    11,
+    3
+   ],
+   [
+    11,
+    4
+   ],
+   [
+    11,
+    5
+   ],
+   [
+    11,
+    6
+   ],
+   [
+    11,
+    7
+   ],
+   [
+    0,
+    8
+   ],
+   [
+    1,
+    8
+   ],
+   [
+    2,
+    8
+   ],
+   [
+    3,
+    8
+   ],
+   [
+    4,
+    8
+   ],
+   [
+    6,
+    8
+   ],
+   [
+    7,
+    8
+   ],
+   [
+    8,
+    8
+   ],
+   [
+    9,
+    8
+   ],
+   [
+    10,
+    8
+   ],
+   [
+    11,
+    8
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    10,
+    1
+   ],
+   [
+    1,
+    7
+   ],
+   [
+    10,
+    7
+   ],
+   [
+    3,
+    6
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     1,
+     1
+    ],
+    "sprite": "boulder"
+   },
+   {
+    "cell": [
+     10,
+     1
+    ],
+    "sprite": "boulder"
+   },
+   {
+    "cell": [
+     1,
+     7
+    ],
+    "sprite": "boulder"
+   },
+   {
+    "cell": [
+     10,
+     7
+    ],
+    "sprite": "boulder"
+   },
+   {
+    "cell": [
+     3,
+     6
+    ],
+    "sprite": "crate"
+   },
+   {
+    "cell": [
+     2,
+     4
+    ],
+    "sprite": "bush_green"
+   },
+   {
+    "cell": [
+     9,
+     4
+    ],
+    "sprite": "bush_green"
+   },
+   {
+    "cell": [
+     7,
+     7
+    ],
+    "sprite": "bush_green"
+   },
+   {
+    "cell": [
+     3,
+     1
+    ],
+    "sprite": "tree_round"
+   }
+  ],
+  "entities": [
+   {
+    "_comment": "to_cell (17,21) is the SAME cell the player approached rags_camp_mouth from -- the longhouse_exit offset convention. Verified unblocked and unoccupied.",
+    "cell": [
+     5,
+     8
+    ],
+    "display_name": "Back Up to the Plains",
+    "id": "rags_camp_exit",
+    "kind": "door",
+    "sprite": "door",
+    "to_cell": [
+     17,
+     21
+    ],
+    "to_map": "floodplains"
+   },
+   {
+    "_light_comment": "v0.17 R2: the card claimed firelight and the map owned no light. One notch under the floodplains campfire -- kept small on purpose.",
+    "cell": [
+     4,
+     4
+    ],
+    "display_name": "The Fire Pit",
+    "id": "camp_fire_pit",
+    "kind": "prop",
+    "light": {
+     "color": [
+      1.0,
+      0.5,
+      0.2
+     ],
+     "energy": 1.3,
+     "flicker": true,
+     "radius": 44
+    },
+    "observe": "A ring of river stones with a fire kept deliberately small. Someone has banked it low and swept the ash back, so the smoke goes up thin instead of out wide. Nothing about this fire wants to be seen from the road.",
+    "on_interact_accomplishment": "eyed_the_camp_fire",
+    "sprite": "campfire",
+    "toast": "The wood is sorted by burn time in three piles. Somebody in this camp thinks two nights ahead."
+   },
+   {
+    "cell": [
+     2,
+     2
+    ],
+    "display_name": "The Hide Racks",
+    "id": "camp_hide_racks",
+    "kind": "prop",
+    "observe": "Green hides pegged out on a lattice of spear-shafts, scraped down to nothing on one side. The pegs are all different lengths, whittled to fit whatever the rack needed that day.",
+    "on_interact_accomplishment": "read_the_hide_racks",
+    "sprite": "hide_rack",
+    "toast": "Every hide is stretched to the same tension. Whoever runs this rack does not let anyone else near it."
+   },
+   {
+    "cell": [
+     9,
+     2
+    ],
+    "display_name": "The Chieftain's Spot",
+    "id": "camp_chieftains_seat",
+    "kind": "prop",
+    "observe": "A flat stone at the high end of the hollow, worn smooth in one small patch. It faces the way in. There is no cushion, no cover, and nothing near enough to hide behind.",
+    "on_interact_accomplishment": "saw_the_chieftains_seat",
+    "sprite": "boulder",
+    "tint": [
+     0.7,
+     0.72,
+     0.6
+    ],
+    "toast": "From here you can see the cut in the turf, the fire, and everyone's hands at once. It was not chosen for comfort."
+   },
+   {
+    "_comment": "Regional repeatable work, the riverfarm_field_board idiom (once_per_waking + gold + variants) at the Riverfarm 2-gold day-rate.",
+    "cell": [
+     8,
+     5
+    ],
+    "display_name": "A Carrying Yoke",
+    "gold": 2,
+    "id": "camp_carry_yoke",
+    "kind": "prop",
+    "observe": "A shoulder yoke cut for someone half your height, propped against a stack of empty baskets. The baskets go out full and come back full of something else.",
+    "on_interact_accomplishment": "camp_carry_jobs",
+    "once_per_waking": true,
+    "once_per_waking_toast": "The baskets are all out. Nothing left to haul until they come back.",
+    "sprite": "crate",
+    "toast": "You shorten the yoke by two notches and spend the morning hauling water and cut brush. Somebody presses coin into your hand at the end without looking up.",
+    "variants": [
+     {
+      "toast": "The yoke has been left out on your side of the fire. Nobody says anything about it, and nobody moves it back.",
+      "when": {
+       "camp_carry_jobs": 3
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     2,
+     6
+    ],
+    "display_name": "A Goblin on Watch",
+    "facing": "right",
+    "id": "camp_watch_goblin",
+    "kind": "npc",
+    "observe": "A goblin sitting where the light from the cut in the turf lands, sharpening something that is already sharp. It has not looked directly at you once.",
+    "sprite": "goblin_base",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7",
+     "\u00a7",
+     "\u00a7"
+    ],
+    "tint": [
+     0.66,
+     0.62,
+     0.58
+    ]
+   },
+   {
+    "_comment": "v0.16 F1 HELP (#308). VISIBLE-LOCKED, the seal_kept_door idiom: the rack STANDS from arrival and the two route gates live on the variant, not on presence. TRAP: presence gated on the two gates hid the whole route from a player who had not hunted. Reads the frozen corusdeer_culled -- never edits corusdeer_range.",
+    "cell": [
+     9,
+     6
+    ],
+    "display_name": "The Drying Rack",
+    "id": "camp_meat_rack",
+    "kind": "prop",
+    "observe": "A rack of split poles standing empty over a bed of ash. The hunters look north at the range, and then back at it, and say nothing.",
+    "on_interact_accomplishment": "eyed_the_drying_rack",
+    "present_when": {
+     "absent": {
+      "camp_larder_filled": 1
+     }
+    },
+    "sprite": "drying_rack",
+    "toast": "The poles are bare and the ash is cold. Hands on the camp's baskets first, the old one signs at you, and then something big brought down off the range north.",
+    "variants": [
+     {
+      "accomplishment": "camp_larder_filled",
+      "toast": "You hang what you brought back and cut it down thin the way the old one shows you, and by the time the light goes the rack is heavy for the first time this year.",
+      "when": {
+       "camp_carry_jobs": 1,
+       "corusdeer_culled": 1
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     9,
+     6
+    ],
+    "display_name": "The Drying Rack",
+    "id": "camp_meat_rack_hung",
+    "kind": "prop",
+    "observe": "The poles are bowed under strips cut thin and even, and the ash beneath has been banked warm to hold the smoke in them.",
+    "on_interact_accomplishment": "eyed_the_full_rack",
+    "present_when": {
+     "requires": {
+      "camp_larder_filled": 1
+     }
+    },
+    "sprite": "drying_rack_hung",
+    "toast": "Nobody moves the rack aside when you pass it now."
+   },
+   {
+    "_comment": "v0.16 F1 FIGHT (#308). TRAP: allies is EXACTLY TWO by arena capacity -- 4 player_spawns and start_combat appends a tamed companion only at allies.size()+2 <= spawns, so a third ally benches a Beast Tamer's wolf.",
+    "allies": [
+     "rags_ally",
+     "goblin_spear_ally"
+    ],
+    "ally_requires": {
+     "rags_meeting_settled": 1
+    },
+    "arena": "boulder_flats",
+    "cell": [
+     7,
+     3
+    ],
+    "display_name": "Scavengers at the Rim",
+    "encounter_when": {
+     "requires": {
+      "rags_meeting_settled": 1
+     }
+    },
+    "enemies": [
+     "plains_scavenger_a",
+     "plains_scavenger_b",
+     "plains_scavenger_lead"
+    ],
+    "id": "camp_ground_press",
+    "kind": "encounter",
+    "observe": "Three of them stand on the lip of the hollow where it is easiest to come down, looking at the racks and doing arithmetic. Nobody in the camp is pretending not to have noticed.",
+    "on_victory": [
+     "won_combat",
+     "camp_ground_held"
+    ],
+    "sprite": "human_laborer",
+    "tint": [
+     0.86,
+     0.78,
+     0.62
+    ]
+   }
+  ],
+  "floor_layers": [
+   {
+    "cells": "all",
+    "sheet": "res://assets/tiles/floor_tiles_12/grass_01.png",
+    "tile_px": 540,
+    "variants": [
+     [
+      0,
+      0
+     ]
+    ]
+   }
+  ],
+  "grid": {
+   "height": 9,
+   "width": 12
+  }
+ }
+}

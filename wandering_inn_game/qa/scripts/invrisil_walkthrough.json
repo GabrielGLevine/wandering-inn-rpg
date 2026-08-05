@@ -143,7 +143,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "A Rose-Cloaked Shopper",
-    "text": "Number eleven. This IS number eleven. The sign says Havvers and my slip says Bellworth, so one of them is lying."
+    "text": "Number eleven. This is number eleven. The sign says Havvers and my slip says Bellworth, so one of them is lying."
    },
    "timeout_sec": 5
   },

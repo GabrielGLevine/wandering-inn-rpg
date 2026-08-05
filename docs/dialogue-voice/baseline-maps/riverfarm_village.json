@@ -1,0 +1,1987 @@
+{
+ "facts": {
+  "$.entities[18].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[18].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[18].talk_pool[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[18].talk_pool[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[18].talk_pool_stages[0].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[18].talk_pool_stages[1].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[18].talk_pool_stages[2].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[18].talk_pool_stages[2].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[18].talk_pool_stages[2].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[18].talk_pool_stages[2].lines[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[18].talk_pool_stages[3].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[18].talk_pool_stages[3].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[18].talk_pool_stages[3].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[19].talk_pool_stages[0].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[19].talk_pool_stages[0].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[19].talk_pool_stages[0].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool[4]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[0].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[1].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[1].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[1].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[1].lines[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[1].lines[4]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[2].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[2].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[2].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[3].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[3].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[3].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Reachable ONLY via the portal contract (data/portals.json's new 'riverfarm' row, requires_accomplishment riverfarm_attuned, banked by the Guild-board rumor beat)",
+  "_comment_cover_skip": "cover_skip mirrors blocked here because every blocked cell has building, fence, earthwork, or river art; sim blocking is unchanged.",
+  "biome": "riverfarm_village",
+  "blocked": [
+   [
+    7,
+    0
+   ],
+   [
+    8,
+    0
+   ],
+   [
+    9,
+    0
+   ],
+   [
+    10,
+    0
+   ],
+   [
+    11,
+    0
+   ],
+   [
+    12,
+    0
+   ],
+   [
+    13,
+    0
+   ],
+   [
+    7,
+    1
+   ],
+   [
+    8,
+    1
+   ],
+   [
+    9,
+    1
+   ],
+   [
+    10,
+    1
+   ],
+   [
+    11,
+    1
+   ],
+   [
+    12,
+    1
+   ],
+   [
+    13,
+    1
+   ],
+   [
+    8,
+    6
+   ],
+   [
+    9,
+    6
+   ],
+   [
+    10,
+    6
+   ],
+   [
+    11,
+    6
+   ],
+   [
+    12,
+    6
+   ],
+   [
+    13,
+    6
+   ],
+   [
+    14,
+    6
+   ],
+   [
+    8,
+    7
+   ],
+   [
+    9,
+    7
+   ],
+   [
+    10,
+    7
+   ],
+   [
+    11,
+    7
+   ],
+   [
+    12,
+    7
+   ],
+   [
+    13,
+    7
+   ],
+   [
+    14,
+    7
+   ],
+   [
+    3,
+    6
+   ],
+   [
+    4,
+    6
+   ],
+   [
+    5,
+    6
+   ],
+   [
+    6,
+    6
+   ],
+   [
+    3,
+    7
+   ],
+   [
+    4,
+    7
+   ],
+   [
+    5,
+    7
+   ],
+   [
+    6,
+    7
+   ],
+   [
+    16,
+    8
+   ],
+   [
+    17,
+    8
+   ],
+   [
+    18,
+    8
+   ],
+   [
+    19,
+    8
+   ],
+   [
+    16,
+    9
+   ],
+   [
+    17,
+    9
+   ],
+   [
+    18,
+    9
+   ],
+   [
+    19,
+    9
+   ],
+   [
+    19,
+    4
+   ],
+   [
+    20,
+    4
+   ],
+   [
+    21,
+    4
+   ],
+   [
+    19,
+    5
+   ],
+   [
+    20,
+    5
+   ],
+   [
+    21,
+    5
+   ],
+   [
+    21,
+    0
+   ],
+   [
+    21,
+    1
+   ],
+   [
+    21,
+    2
+   ],
+   [
+    21,
+    3
+   ],
+   [
+    21,
+    4
+   ],
+   [
+    21,
+    5
+   ],
+   [
+    21,
+    6
+   ],
+   [
+    21,
+    7
+   ],
+   [
+    21,
+    8
+   ],
+   [
+    21,
+    9
+   ],
+   [
+    21,
+    10
+   ],
+   [
+    21,
+    11
+   ],
+   [
+    21,
+    12
+   ],
+   [
+    21,
+    13
+   ],
+   [
+    21,
+    14
+   ],
+   [
+    21,
+    15
+   ],
+   [
+    22,
+    0
+   ],
+   [
+    22,
+    1
+   ],
+   [
+    22,
+    2
+   ],
+   [
+    22,
+    3
+   ],
+   [
+    22,
+    4
+   ],
+   [
+    22,
+    5
+   ],
+   [
+    22,
+    6
+   ],
+   [
+    22,
+    7
+   ],
+   [
+    22,
+    8
+   ],
+   [
+    22,
+    9
+   ],
+   [
+    22,
+    10
+   ],
+   [
+    22,
+    11
+   ],
+   [
+    22,
+    12
+   ],
+   [
+    22,
+    13
+   ],
+   [
+    22,
+    14
+   ],
+   [
+    22,
+    15
+   ],
+   [
+    23,
+    0
+   ],
+   [
+    23,
+    1
+   ],
+   [
+    23,
+    2
+   ],
+   [
+    23,
+    3
+   ],
+   [
+    23,
+    4
+   ],
+   [
+    23,
+    5
+   ],
+   [
+    23,
+    6
+   ],
+   [
+    23,
+    7
+   ],
+   [
+    23,
+    8
+   ],
+   [
+    23,
+    9
+   ],
+   [
+    23,
+    10
+   ],
+   [
+    23,
+    11
+   ],
+   [
+    23,
+    12
+   ],
+   [
+    23,
+    13
+   ],
+   [
+    23,
+    14
+   ],
+   [
+    23,
+    15
+   ],
+   [
+    3,
+    9
+   ],
+   [
+    4,
+    9
+   ],
+   [
+    2,
+    6
+   ],
+   [
+    2,
+    7
+   ],
+   [
+    2,
+    8
+   ],
+   [
+    11,
+    11
+   ],
+   [
+    8,
+    11
+   ],
+   [
+    15,
+    11
+   ],
+   [
+    17,
+    11
+   ]
+  ],
+  "cover_skip": [
+   [
+    7,
+    0
+   ],
+   [
+    8,
+    0
+   ],
+   [
+    9,
+    0
+   ],
+   [
+    10,
+    0
+   ],
+   [
+    11,
+    0
+   ],
+   [
+    12,
+    0
+   ],
+   [
+    13,
+    0
+   ],
+   [
+    7,
+    1
+   ],
+   [
+    8,
+    1
+   ],
+   [
+    9,
+    1
+   ],
+   [
+    10,
+    1
+   ],
+   [
+    11,
+    1
+   ],
+   [
+    12,
+    1
+   ],
+   [
+    13,
+    1
+   ],
+   [
+    8,
+    6
+   ],
+   [
+    9,
+    6
+   ],
+   [
+    10,
+    6
+   ],
+   [
+    11,
+    6
+   ],
+   [
+    12,
+    6
+   ],
+   [
+    13,
+    6
+   ],
+   [
+    14,
+    6
+   ],
+   [
+    8,
+    7
+   ],
+   [
+    9,
+    7
+   ],
+   [
+    10,
+    7
+   ],
+   [
+    11,
+    7
+   ],
+   [
+    12,
+    7
+   ],
+   [
+    13,
+    7
+   ],
+   [
+    14,
+    7
+   ],
+   [
+    3,
+    6
+   ],
+   [
+    4,
+    6
+   ],
+   [
+    5,
+    6
+   ],
+   [
+    6,
+    6
+   ],
+   [
+    3,
+    7
+   ],
+   [
+    4,
+    7
+   ],
+   [
+    5,
+    7
+   ],
+   [
+    6,
+    7
+   ],
+   [
+    16,
+    8
+   ],
+   [
+    17,
+    8
+   ],
+   [
+    18,
+    8
+   ],
+   [
+    19,
+    8
+   ],
+   [
+    16,
+    9
+   ],
+   [
+    17,
+    9
+   ],
+   [
+    18,
+    9
+   ],
+   [
+    19,
+    9
+   ],
+   [
+    19,
+    4
+   ],
+   [
+    20,
+    4
+   ],
+   [
+    21,
+    4
+   ],
+   [
+    19,
+    5
+   ],
+   [
+    20,
+    5
+   ],
+   [
+    21,
+    5
+   ],
+   [
+    21,
+    0
+   ],
+   [
+    21,
+    1
+   ],
+   [
+    21,
+    2
+   ],
+   [
+    21,
+    3
+   ],
+   [
+    21,
+    4
+   ],
+   [
+    21,
+    5
+   ],
+   [
+    21,
+    6
+   ],
+   [
+    21,
+    7
+   ],
+   [
+    21,
+    8
+   ],
+   [
+    21,
+    9
+   ],
+   [
+    21,
+    10
+   ],
+   [
+    21,
+    11
+   ],
+   [
+    21,
+    12
+   ],
+   [
+    21,
+    13
+   ],
+   [
+    21,
+    14
+   ],
+   [
+    21,
+    15
+   ],
+   [
+    22,
+    0
+   ],
+   [
+    22,
+    1
+   ],
+   [
+    22,
+    2
+   ],
+   [
+    22,
+    3
+   ],
+   [
+    22,
+    4
+   ],
+   [
+    22,
+    5
+   ],
+   [
+    22,
+    6
+   ],
+   [
+    22,
+    7
+   ],
+   [
+    22,
+    8
+   ],
+   [
+    22,
+    9
+   ],
+   [
+    22,
+    10
+   ],
+   [
+    22,
+    11
+   ],
+   [
+    22,
+    12
+   ],
+   [
+    22,
+    13
+   ],
+   [
+    22,
+    14
+   ],
+   [
+    22,
+    15
+   ],
+   [
+    23,
+    0
+   ],
+   [
+    23,
+    1
+   ],
+   [
+    23,
+    2
+   ],
+   [
+    23,
+    3
+   ],
+   [
+    23,
+    4
+   ],
+   [
+    23,
+    5
+   ],
+   [
+    23,
+    6
+   ],
+   [
+    23,
+    7
+   ],
+   [
+    23,
+    8
+   ],
+   [
+    23,
+    9
+   ],
+   [
+    23,
+    10
+   ],
+   [
+    23,
+    11
+   ],
+   [
+    23,
+    12
+   ],
+   [
+    23,
+    13
+   ],
+   [
+    23,
+    14
+   ],
+   [
+    23,
+    15
+   ],
+   [
+    3,
+    9
+   ],
+   [
+    4,
+    9
+   ],
+   [
+    2,
+    6
+   ],
+   [
+    2,
+    7
+   ],
+   [
+    2,
+    8
+   ],
+   [
+    11,
+    11
+   ],
+   [
+    8,
+    11
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     3,
+     10
+    ],
+    "sprite": "crop_row_orange"
+   },
+   {
+    "cell": [
+     4,
+     10
+    ],
+    "sprite": "crop_row_green"
+   },
+   {
+    "cell": [
+     5,
+     11
+    ],
+    "sprite": "crop_row_orange"
+   },
+   {
+    "cell": [
+     6,
+     11
+    ],
+    "sprite": "crop_row_green"
+   },
+   {
+    "cell": [
+     1,
+     3
+    ],
+    "sprite": "tree_autumn_orange"
+   },
+   {
+    "cell": [
+     1,
+     13
+    ],
+    "sprite": "tree_autumn_red"
+   },
+   {
+    "cell": [
+     1,
+     7
+    ],
+    "sprite": "tree_round"
+   },
+   {
+    "cell": [
+     22,
+     5
+    ],
+    "sprite": "riverfarm_rowboat"
+   },
+   {
+    "cell": [
+     0,
+     11
+    ],
+    "sprite": "bush_green"
+   },
+   {
+    "_comment": "bbox check: neighbors at this row are the open approach cell (11,8, south) and floor either side, no collision.",
+    "cell": [
+     11,
+     7
+    ],
+    "sprite": "door"
+   },
+   {
+    "cell": [
+     15,
+     11
+    ],
+    "sprite": "riverfarm_fence_ew"
+   },
+   {
+    "cell": [
+     17,
+     11
+    ],
+    "sprite": "riverfarm_fence_ew"
+   }
+  ],
+  "entities": [
+   {
+    "cell": [
+     10,
+     1
+    ],
+    "display_name": "Raw-Earth Rampart",
+    "id": "riverfarm_earthworks",
+    "kind": "prop",
+    "observe": "Fresh-turned earth, packed and raised into a long low wall. Someone's been digging with purpose, not just drainage.",
+    "on_interact_accomplishment": "observed_riverfarm_earthworks",
+    "sprite": "riverfarm_earthwork",
+    "toast": "Just raised earth. Whatever it's for, nobody's finished it yet."
+   },
+   {
+    "cell": [
+     11,
+     7
+    ],
+    "display_name": "The Longhouse",
+    "id": "longhouse_door",
+    "kind": "door",
+    "observe": "One long thatch ridge, twice the width of any cottage. Smoke curls from a vent at the peak even in daylight.",
+    "on_enter_accomplishment": "observed_riverfarm_longhouse",
+    "sprite": "riverfarm_longhouse",
+    "tint": [
+     0.68,
+     0.72,
+     0.66
+    ],
+    "to_cell": [
+     5,
+     5
+    ],
+    "to_map": "riverfarm_longhouse",
+    "visual_states": [
+     {
+      "tint": [
+       1.2,
+       1.06,
+       0.78
+      ],
+      "when": {
+       "at": 1,
+       "counter": "blight_lifted"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     5,
+     7
+    ],
+    "display_name": "A Thatched Cottage",
+    "id": "riverfarm_cottage_a",
+    "kind": "prop",
+    "observe": "Clay-daub walls, a low thatch roof. A washing line strung between two posts.",
+    "on_interact_accomplishment": "observed_riverfarm_cottage",
+    "sprite": "cottage_thatch_a",
+    "tint": [
+     0.68,
+     0.72,
+     0.66
+    ],
+    "toast": "Someone's home. Best not to just walk in.",
+    "visual_states": [
+     {
+      "tint": [
+       1.2,
+       1.06,
+       0.78
+      ],
+      "when": {
+       "at": 1,
+       "counter": "blight_lifted"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     18,
+     9
+    ],
+    "display_name": "A Thatched Cottage",
+    "id": "riverfarm_cottage_b",
+    "kind": "prop",
+    "observe": "A second cottage, smaller, its thatch newer than its neighbor's.",
+    "on_interact_accomplishment": "observed_riverfarm_cottage",
+    "sprite": "cottage_thatch_b",
+    "tint": [
+     0.68,
+     0.72,
+     0.66
+    ],
+    "toast": "Someone's home. Best not to just walk in.",
+    "visual_states": [
+     {
+      "tint": [
+       1.2,
+       1.06,
+       0.78
+      ],
+      "when": {
+       "at": 1,
+       "counter": "blight_lifted"
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "Sails overhang above the blocked footprint. v0.16.1 #3: moved [20,4] -> [19,4] so the ramp/doorway drawn into the windmill art lands on COLUMN 19, over riverfarm_mill_door's cell [19,5] and the pinned south approach [19,6]. Measured, not guessed: 64x96 sheet, render_scale 1.0, anchor [0.5,0.917], so the art draws from (cell.x*16 - 24); a pixel scan of rows 72-88 puts the doorway at sheet x 30..37. [19,4] was ALREADY blocked, so this moves art only -- no sim change, no canonical churn.",
+    "cell": [
+     19,
+     4
+    ],
+    "display_name": "The Windmill",
+    "id": "riverfarm_windmill_prop",
+    "kind": "prop",
+    "observe": "Sails turning slow in whatever wind there is. The grinding floor above the wheat fields.",
+    "on_interact_accomplishment": "observed_riverfarm_windmill",
+    "sprite": "riverfarm_windmill",
+    "tint": [
+     0.68,
+     0.72,
+     0.66
+    ],
+    "toast": "The sails creak overhead. No one's tending it right now.",
+    "visual_states": [
+     {
+      "tint": [
+       1.2,
+       1.06,
+       0.78
+      ],
+      "when": {
+       "at": 1,
+       "counter": "blight_lifted"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     11,
+     11
+    ],
+    "display_name": "The Village Well",
+    "id": "riverfarm_well",
+    "kind": "prop",
+    "observe": "A stone-ringed well, rope worn smooth by years of hauling. The water's clean this far from the blight talk.",
+    "on_interact_accomplishment": "observed_riverfarm_well",
+    "sprite": "riverfarm_well",
+    "tint": [
+     0.68,
+     0.72,
+     0.66
+    ],
+    "toast": "Cool water, a long way down. You leave the rope where you found it.",
+    "visual_states": [
+     {
+      "tint": [
+       1.2,
+       1.06,
+       0.78
+      ],
+      "when": {
+       "at": 1,
+       "counter": "blight_lifted"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     8,
+     11
+    ],
+    "display_name": "Haystack",
+    "id": "riverfarm_haystack",
+    "kind": "prop",
+    "observe": "Bundled and stacked before the rain, the way a good harvest gets stored.",
+    "sprite": "riverfarm_haystack"
+   },
+   {
+    "cell": [
+     4,
+     11
+    ],
+    "display_name": "Scarecrow",
+    "id": "riverfarm_scarecrow",
+    "kind": "prop",
+    "observe": "Straw and an old coat, arms out over the tilled rows. It isn't working today \u2014 there are crows on its own hat.",
+    "sprite": "riverfarm_scarecrow"
+   },
+   {
+    "cell": [
+     20,
+     6
+    ],
+    "display_name": "The Dock",
+    "id": "riverfarm_dock",
+    "kind": "prop",
+    "observe": "A plank pier reaching out over the river. The village's whole trade with anywhere downstream starts here (wiki Riverfarm, ch. 3.00-3.01 E: 'farming land fed by a river').",
+    "on_interact_accomplishment": "observed_riverfarm_dock",
+    "sprite": "riverfarm_dock_pier",
+    "toast": "Weathered planks, sound underfoot. The current runs steady past the end of it."
+   },
+   {
+    "cell": [
+     3,
+     9
+    ],
+    "display_name": "Fence Rail",
+    "id": "riverfarm_fence_ew_3_9",
+    "kind": "prop",
+    "observe": "Low fence rail, bordering the tilled rows.",
+    "sprite": "riverfarm_fence_ew"
+   },
+   {
+    "cell": [
+     4,
+     9
+    ],
+    "display_name": "Fence Rail",
+    "id": "riverfarm_fence_ew_4_9",
+    "kind": "prop",
+    "observe": "Low fence rail, bordering the tilled rows.",
+    "sprite": "riverfarm_fence_ew"
+   },
+   {
+    "_comment": "GH#334 note 27C + H4: absent on herd_rerouted, twins at (8,9)/(9,9) present; these cells also left `blocked`/`cover_skip` (map array beats presence).",
+    "cell": [
+     5,
+     9
+    ],
+    "display_name": "Fence Rail",
+    "id": "riverfarm_fence_ew_5_9",
+    "kind": "prop",
+    "observe": "Low fence rail, bordering the tilled rows.",
+    "present_when": {
+     "absent": {
+      "herd_rerouted": 1
+     }
+    },
+    "sprite": "riverfarm_fence_ew"
+   },
+   {
+    "cell": [
+     6,
+     9
+    ],
+    "display_name": "Fence Rail",
+    "id": "riverfarm_fence_ew_6_9",
+    "kind": "prop",
+    "observe": "Low fence rail, bordering the tilled rows.",
+    "present_when": {
+     "absent": {
+      "herd_rerouted": 1
+     }
+    },
+    "sprite": "riverfarm_fence_ew"
+   },
+   {
+    "cell": [
+     8,
+     9
+    ],
+    "display_name": "Fence Rail",
+    "id": "riverfarm_fence_ew_8_9",
+    "kind": "prop",
+    "observe": "Rails re-set forty paces east of where they stood. The gap they left is the corusdeer road, and the hoof marks say the herd found it.",
+    "present_when": {
+     "requires": {
+      "herd_rerouted": 1
+     }
+    },
+    "sprite": "riverfarm_fence_ew"
+   },
+   {
+    "cell": [
+     9,
+     9
+    ],
+    "display_name": "Fence Rail",
+    "id": "riverfarm_fence_ew_9_9",
+    "kind": "prop",
+    "observe": "Rails re-set forty paces east of where they stood. The gap they left is the corusdeer road, and the hoof marks say the herd found it.",
+    "present_when": {
+     "requires": {
+      "herd_rerouted": 1
+     }
+    },
+    "sprite": "riverfarm_fence_ew"
+   },
+   {
+    "cell": [
+     2,
+     6
+    ],
+    "display_name": "Fence Rail",
+    "id": "riverfarm_fence_ns_2_6",
+    "kind": "prop",
+    "observe": "Low fence rail, bordering the tilled rows.",
+    "sprite": "riverfarm_fence_ns"
+   },
+   {
+    "cell": [
+     2,
+     7
+    ],
+    "display_name": "Fence Rail",
+    "id": "riverfarm_fence_ns_2_7",
+    "kind": "prop",
+    "observe": "Low fence rail, bordering the tilled rows.",
+    "sprite": "riverfarm_fence_ns"
+   },
+   {
+    "cell": [
+     2,
+     8
+    ],
+    "display_name": "Fence Rail",
+    "id": "riverfarm_fence_ns_2_8",
+    "kind": "prop",
+    "observe": "Low fence rail, bordering the tilled rows.",
+    "sprite": "riverfarm_fence_ns"
+   },
+   {
+    "cell": [
+     11,
+     9
+    ],
+    "conversation": "riverfarm_headman",
+    "dialogue": [
+     {
+      "speaker": "Former Headman",
+      "text": "Not now. Got a village to hold together."
+     }
+    ],
+    "display_name": "Former Headman",
+    "facing": "down",
+    "id": "riverfarm_headman",
+    "kind": "npc",
+    "observe": "A ledger under one arm, mud to the knee, the look of a man doing three jobs badly instead of one job well.",
+    "sprite": "human_laborer",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7",
+     "\u00a7",
+     "\u00a7"
+    ],
+    "talk_pool_stages": [
+     {
+      "_comment": "b7 #207 ack (lowest priority \u2014 hollow thread and blight terminal outrank).",
+      "id": "headman_delivery_seed",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "delivered_delivery_riverfarm_seed": 1
+      }
+     },
+     {
+      "id": "riverfarm_headman_thread_hollow",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "heard_price_of_a_favor": 1
+      }
+     },
+     {
+      "id": "riverfarm_headman_thread_neutral",
+      "lines": [
+       "\u00a7",
+       "\u00a7",
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "blight_lifted": 1
+      }
+     },
+     {
+      "id": "riverfarm_headman_flood_ledger",
+      "lines": [
+       "\u00a7",
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "flood_ledger_settled": 1
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     6,
+     10
+    ],
+    "conversation": "riverfarm_villager",
+    "dialogue": [
+     {
+      "speaker": "A Villager",
+      "text": "..."
+     }
+    ],
+    "display_name": "A Villager",
+    "facing": "down",
+    "id": "riverfarm_charmed_villager",
+    "kind": "npc",
+    "observe": "Ordinary, except for how still they stand, and a faint red thread at the wrist that doesn't match anything else they're wearing.",
+    "sprite": "citizen_f",
+    "talk_pool": [
+     {
+      "echo_of": "riverfarm_witch"
+     }
+    ],
+    "talk_pool_stages": [
+     {
+      "id": "riverfarm_villager_freed",
+      "lines": [
+       "\u00a7",
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "blight_lifted": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "clear of every blocked cell and every other entity's cell, no trigger_radius so no blast-radius overlap with anything nearby. v0.16.1 #2 DISAMBIGUATION: \"The Hunter\" is a LOCAL GAME HUNTER, not a member of any order. His whole copy surface used to be the hollow, with zero game, meat or pelts in it, while he is mechanically the man who walks you to the witch and fights her briars. The observe line now carries the trade signal, and one line is APPENDED LAST to the base pool and to the thread_neutral stage (which duplicates it). The copy never names or negates the order -- positive trade signal only. NOT renamed: a rename must move combatants.json's display_name too and re-pins five QA speaker payloads.",
+    "cell": [
+     13,
+     10
+    ],
+    "conversation": "riverfarm_hunter",
+    "dialogue": [
+     {
+      "speaker": "The Hunter",
+      "text": "Hollow's not safe alone."
+     }
+    ],
+    "display_name": "The Hunter",
+    "facing": "down",
+    "id": "riverfarm_hunter",
+    "kind": "npc",
+    "observe": "Rope-burned hands, a game bag, and wolf sign on his boots. Whatever he hunts, it walks on four legs.",
+    "sprite": "a_hunter",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7",
+     "\u00a7",
+     "\u00a7",
+     "\u00a7"
+    ],
+    "talk_pool_stages": [
+     {
+      "id": "riverfarm_hunter_thread_hollow",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "heard_price_of_a_favor": 1
+      }
+     },
+     {
+      "id": "riverfarm_hunter_thread_neutral",
+      "lines": [
+       "\u00a7",
+       "\u00a7",
+       "\u00a7",
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "blight_lifted": 1
+      }
+     },
+     {
+      "id": "riverfarm_hunter_thicket_answered",
+      "lines": [
+       "\u00a7",
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "thicket_answered": 1
+      }
+     },
+     {
+      "_comment": "#330 R2: the pen answers back. Last-satisfied-wins, so this needs thicket_answered too.",
+      "id": "riverfarm_hunter_lambs_tended",
+      "lines": [
+       "\u00a7",
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "tended_beasts": 10,
+       "thicket_answered": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "THE VILLAGE'S ONLY EXIT (witch_hollow is a dead end off it), so the gate must be met by EVERY arrival, past and present. door_mounted is the one counter both satisfy: the pre-fix path (riverfarm_attuned rumor + a door_mounted-gated carrier at inn/street) and the post-fix one (portals.json's door_awakened row). Gating on either attunement alone re-strands the other cohort -- ruling was riverfarm_attuned, widened because the row moved to door_awakened in the same wave. Never tighten past the row's own gate.",
+    "cell": [
+     12,
+     5
+    ],
+    "display_name": "A Weathered Milestone",
+    "id": "riverfarm_anchor_stone",
+    "kind": "prop",
+    "light": {
+     "color": [
+      0.85,
+      0.7,
+      1.0
+     ],
+     "energy": 0.9,
+     "flicker": false,
+     "radius": 22
+    },
+    "observe": "A worn marker stone at the village's heart. Someone scratched a spiral into its face, long since softened by weather. Attunement is what markers like this are cut for: a door shown the right stone learns the place, and can open onto it ever after.",
+    "on_interact_accomplishment": "observed_riverfarm_anchor_stone",
+    "portal_menu": true,
+    "portal_menu_when": {
+     "requires": {
+      "door_mounted": 1
+     }
+    },
+    "sprite": "anchor_waystone",
+    "tint": [
+     0.55,
+     0.58,
+     0.62
+    ],
+    "toast": "Cold, plain stone, and it stays cold for you. Whatever hung a door somewhere else hasn't hung one yet."
+   },
+   {
+    "cell": [
+     1,
+     11
+    ],
+    "display_name": "A Gap in the Trees",
+    "id": "riverfarm_hollow_path",
+    "kind": "door",
+    "observe": "A narrow break in the treeline, west of the fields. The light changes past the first few trees.",
+    "sprite": "trail_gap",
+    "to_cell": [
+     10,
+     11
+    ],
+    "to_map": "witch_hollow"
+   },
+   {
+    "_comment": "`ally_requires{hunter_will_come:1}` is banked ONLY by data/dialogue/riverfarm_hunter.json's come-along ask, at the village.",
+    "allies": [
+     "riverfarm_hunter"
+    ],
+    "ally_requires": {
+     "hunter_will_come": 1
+    },
+    "arena": "village_edge_night",
+    "beast": true,
+    "cell": [
+     2,
+     14
+    ],
+    "display_name": "Shapes in the Dark",
+    "encounter_when": {
+     "phase": [
+      "night"
+     ]
+    },
+    "enemies": [
+     "river_wolf_a",
+     "river_wolf_b",
+     "river_wolf_c"
+    ],
+    "gate_closed_toast": "Nothing there. Whatever you saw is gone with the light.",
+    "id": "river_wolf_pack",
+    "kind": "encounter",
+    "observe": "Eyes catch the light at the field's edge, gone again when you look straight at them. Only after dark.",
+    "on_victory": "survived_wolf_night",
+    "sprite": "river_wolf_idle",
+    "trigger_radius": 1,
+    "visual_states": [
+     {
+      "_comment": "Marker visible ONLY while the night encounter_when gate can fire",
+      "hidden": true,
+      "when": {
+       "phase": [
+        "day",
+        "dusk"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "interact-only, no trigger_radius, no encounter_when gate (matching corusdeer_range/razorbeak_nest's own unconditional shape). GH#334 note 18 (b): ungated beside the lamb pen from hour one -- furniture, not a threat. present_when is legal here: no trigger_radius.",
+    "allies": [],
+    "arena": "witch_hollow",
+    "cell": [
+     17,
+     13
+    ],
+    "conversation": "riverfarm_thicket_patch",
+    "display_name": "A Creeping Thicket",
+    "enemies": [
+     "thicket_remnant_a",
+     "thicket_remnant_b"
+    ],
+    "id": "riverfarm_thicket_patch",
+    "kind": "encounter",
+    "observe": "Vines thicker than they should be, over the fence line and into the village since the thicket business settled. They creep across open ground, twitching against a wind that isn't blowing.",
+    "on_victory": "thicket_remnants_culled",
+    "present_when": {
+     "requires": {
+      "thicket_answered": 1
+     }
+    },
+    "respawns": true,
+    "sprite": "briar_collector"
+   },
+   {
+    "_comment": "v0.15 T4.4 regional repeatable work, 1 of 3. The serving_tray idiom (once_per_waking + gold, interactions.gd's `serve:` key): a job you can take once a waking, forever. NEW COUNTER riverfarm_field_jobs, frozen at the next tag. 2 gold = half the crude_draught bronze anchor -- below a Guild bounty because there is no risk in it, above nothing because Riverfarm pays on the day.",
+    "cell": [
+     3,
+     10
+    ],
+    "display_name": "The Field-Work Board",
+    "gold": 2,
+    "id": "riverfarm_field_board",
+    "kind": "prop",
+    "observe": "A plank of hooks at the fence line, each hook holding a scrap with a task on it and no name. Ditching, thatch, a fence a cow disagrees with. The scraps come down about as fast as they go up.",
+    "on_interact_accomplishment": "riverfarm_field_jobs",
+    "once_per_waking": true,
+    "once_per_waking_toast": "Every hook is bare. Riverfarm doesn't invent work to keep a stranger busy.",
+    "sprite": "request_board",
+    "toast": "You take a scrap off its hook and spend the morning behind it. Ditching, mostly. The village pays coin because coin is the thing it has least of, and it pays on the day.",
+    "variants": [
+     {
+      "toast": "Somebody chalked your name against a hook before you got there. That is the whole of Riverfarm's vocabulary for gratitude, and it is not a small word.",
+      "when": {
+       "riverfarm_field_jobs": 3
+      }
+     },
+     {
+      "toast": "The hook you get is the one nobody else will touch: the wet corner down by the river, every time. They give it to you because you finish it.",
+      "when": {
+       "riverfarm_field_jobs": 8
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "v0.16 #305: the mill's ground-floor door. [19,5] is inside the windmill's blocked footprint (the longhouse_door precedent). TWO free approaches, [19,6] and [18,5], neither on any walked QA route. mill_exit returns to [19,6] only. v0.16.1 #3: hide_sprite -- the `door` prop was a SECOND doorway pasted on the tower's west corner, y-sorting in front of the mill, one column from the ramp the art already draws. The art carries the entrance now; the entity keeps blocking, observe, to_map and to_cell. `sprite` is retained as the fallback if the mill art is re-cut.",
+    "cell": [
+     19,
+     5
+    ],
+    "display_name": "The Mill",
+    "hide_sprite": true,
+    "id": "riverfarm_mill_door",
+    "kind": "door",
+    "observe": "The mill's ground-floor door, set into the base of the tower on the river side. The sluice hums even with the wheel pinned.",
+    "on_enter_accomplishment": "observed_riverfarm_mill",
+    "sprite": "door",
+    "tint": [
+     0.74,
+     0.7,
+     0.62
+    ],
+    "to_cell": [
+     6,
+     7
+    ],
+    "to_map": "riverfarm_mill"
+   },
+   {
+    "_comment": "#330 R2: a [Beast Tamer] door outside the floodplains. Base banks soothed_a_beast, the variant tended_beasts; pays in wool, never gold.",
+    "cell": [
+     16,
+     11
+    ],
+    "display_name": "Hunter's Lamb Pen",
+    "id": "hunters_lamb_pen",
+    "item": "wool_tuft",
+    "kind": "prop",
+    "observe": "Hurdle fencing the hunter threw up after the thicket business. Two ewe lambs inside it, and a third that will not put weight on a foreleg.",
+    "on_interact_accomplishment": "soothed_a_beast",
+    "on_skill_use": {
+     "accomplishment": "tended_beasts",
+     "item": "wool_tuft",
+     "toast": "[Beast's Mending] \u2014 You strap the lamb's leg, and it stands on it before you have finished. The ewes crowd in to look."
+    },
+    "once_per_waking": true,
+    "once_per_waking_toast": "The lambs have had their handling for today. Crowd them now and you undo it.",
+    "present_when": {
+     "requires": {
+      "thicket_answered": 1
+     }
+    },
+    "requires_skill": "beasts_mending",
+    "sprite": "riverfarm_fence_ew",
+    "toast": "You get a hand under the limping one and hold it until it stops shaking. Fleece comes away on your fingers.",
+    "variants": [
+     {
+      "accomplishment": "tended_beasts",
+      "toast": "They come to the rail for you now. You work burrs out of three fleeces and leave the bad leg for last.",
+      "when": {
+       "soothed_a_beast": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "#330 R4: the wolf's second cache. Same variant-zeroing shape as its floodplains twin; item yield, no gold.",
+    "cell": [
+     14,
+     13
+    ],
+    "display_name": "Gnawed Scatter",
+    "id": "wolf_scent_cache_riverfarm",
+    "item": "copper_luck_band",
+    "kind": "prop",
+    "observe": "A scatter of old bones in the field grass, half sunk. The wolf keeps returning to it, head down, digging and stopping and digging again.",
+    "on_interact_accomplishment": "found_wolf_cache_riverfarm",
+    "present_when": {
+     "companion": "wolf_companion"
+    },
+    "sprite": "gnaw_pile",
+    "toast": "Under a stone, under the turf: a thin copper ring, polished bright by somebody's worried thumbs before they lost it here.",
+    "variants": [
+     {
+      "item": "",
+      "toast": "Turned earth, filled in and gone quiet. The wolf walks past it now.",
+      "when": {
+       "found_wolf_cache_riverfarm": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "[Basic Repair] CARRIER. (19,9) was ALREADY blocked by the cottage block, so it moves no walkability and can persist forever -- which is what lets visual_states show the mend. (20,9) is the cell that opens; face this from (19,10).",
+    "broken": true,
+    "cell": [
+     19,
+     9
+    ],
+    "display_name": "The Plank Walk",
+    "id": "riverfarm_bank_stringer",
+    "kind": "prop",
+    "locked_toast": "The stringers are sound and the boards are somewhere downriver. Standing here wishing at it will not deck it.",
+    "observe": "Two stringers still run out along the bank from the cottage corner, and the decking between them is gone \u2014 lifted by a flood and never replaced. The beams are sound. It is boards it wants.",
+    "repair_toast": "[Basic Repair] \u2014 You cut and lay boards across the stringers until the walk is a walk again. It holds when you lean on it, and it will hold tomorrow.",
+    "sprite": "riverfarm_fence_ns",
+    "state_counter": "bank_planks_mended",
+    "visual_states": [
+     {
+      "sprite": "riverfarm_dock_pier",
+      "when": {
+       "at": 1,
+       "counter": "bank_planks_mended"
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "The cell the mend opens. The bank walk is one cell wide, so this single blocker IS the detour: 13 steps around, 3 through.",
+    "cell": [
+     20,
+     9
+    ],
+    "display_name": "The Washout",
+    "id": "riverfarm_bank_washout",
+    "kind": "prop",
+    "locked_toast": "The bank is cut clean through here, down to brown water. You could go the long way round the cottage, or somebody could put boards back across it.",
+    "observe": "Where the decking used to be there is a scoured trench down to the water, wider than a stride and undercut on both lips.",
+    "present_when": {
+     "absent": {
+      "bank_planks_mended": 1
+     }
+    },
+    "sprite": "deep_fissure"
+   },
+   {
+    "_comment": "[Broader Shoulders] carrier. REPEATABLE (once_per_waking + gold): the work pays, the no-treadmill bar. Sited here, not the north gallery -- this is a trader L2 grant and a trader has to be able to reach its carrier.",
+    "cell": [
+     20,
+     11
+    ],
+    "display_name": "The Dray Load",
+    "id": "riverfarm_bank_load",
+    "kind": "prop",
+    "locked_toast": "You get one sack up and your back tells you about the other eleven. This is a job for somebody built for it.",
+    "observe": "Grain sacks stacked off a dray at the bank head, waiting on however many trips it takes. Two men are looking at them the way you look at a long afternoon.",
+    "on_skill_use": {
+     "accomplishment": "hauled_heavy_load",
+     "gold": 2,
+     "toast": "[Broader Shoulders] \u2014 You take three at once and walk them up to the shed without stopping. The dray is clear before the second man has picked up his first, and two coins come your way for it."
+    },
+    "once_per_waking": true,
+    "once_per_waking_toast": "The dray is empty and the shed is full. Nothing more to shift today.",
+    "requires_skill": "broader_shoulders",
+    "skill_hint_toast": "Dragging them one at a time will take all day. Carrying them properly would not.",
+    "sprite": "barrel"
+   }
+  ],
+  "floor_layers": [
+   {
+    "_pick": "Wheat field -- the owned PixelLab wang tileset, full-wheat corner bit (15, all four bits set) as a flat fill (autotile edges deferred, per handoff open-question 1's simplest resolution: ONE representative tile via the same floor_layers mechanism street/floodplains already use for banded ground).",
+    "cells": {
+     "rect": [
+      15,
+      1,
+      8,
+      5
+     ]
+    },
+    "coords": [
+     3,
+     3
+    ],
+    "sheet": "res://assets/props/riverfarm/tileset_wheat_over_loam.png",
+    "tile_px": 16
+   },
+   {
+    "_pick": "Tilled loam plot (wang tile 0, pure loam) -- crop_row decor sits on top.",
+    "cells": {
+     "rect": [
+      2,
+      9,
+      6,
+      3
+     ]
+    },
+    "coords": [
+     0,
+     0
+    ],
+    "sheet": "res://assets/props/riverfarm/tileset_wheat_over_loam.png",
+    "tile_px": 16
+   },
+   {
+    "_pick": "The river -- Free Pack Water_tiles.png (picks.md sec.2 col2/row7 was PIXEL-FLAT, 1 unique color across the whole 16x16 region, PIL-verified; VISUAL-LOG's issue #30 ART/WATER fix already proved col1/row5 genuinely textured, 5 distinct blue shades, near-identical hue -- reused verbatim here instead of introducing a third variant), same floor_layers mechanism as the wheat band above (handoff open-question 2: static bank row, no animation seam this task; the shimmer OVERLAY -- world.gd's water_shimmer, keyed to walls-segment water only -- is a separate, still-open mechanism decision, not this pick).",
+    "cells": {
+     "rect": [
+      21,
+      0,
+      3,
+      16
+     ]
+    },
+    "coords": [
+     1,
+     5
+    ],
+    "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+    "tile_px": 16
+   }
+  ],
+  "grid": {
+   "height": 16,
+   "width": 24
+  }
+ }
+}

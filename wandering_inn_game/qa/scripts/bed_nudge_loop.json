@@ -50,7 +50,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Hey — you did real work today! I can always tell, the whole inn sort of hums. That means BED. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+    "text": "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
    },
    "timeout_sec": 5,
    "_comment": "GH#130 nudge, exact text; fires on first talk of the waking while class progress is banked and slept is unbanked"
@@ -110,7 +110,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "Erin",
-    "text": "Morning! Or... whatever time it is. The inn keeps its own clock, honestly."
+    "text": "Morning! Or whatever time it is. The inn keeps its own clock, honestly."
    },
    "timeout_sec": 5,
    "_comment": "erin_bed_slept stage won (nudge retired); second-ever talk -> chatted_with_erin==1 -> pool index 1%2 == line 2 (S2), the social.gd rotation rule"

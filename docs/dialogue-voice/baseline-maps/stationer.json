@@ -1,0 +1,392 @@
+{
+ "facts": {
+  "$.entities[1].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool_stages[0].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool_stages[0].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[2].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[2].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[2].talk_pool[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[2].talk_pool[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "v0.16 I1 (#306). Walk-in only (no portals row). Biome + every sprite reused -- zero biomes.json/sprites.json edits. Perimeter is walls.segments, so wall cells are NEVER also in `blocked`; `blocked` holds furniture only, each cell with a matching decor row.",
+  "ambience": [
+   {
+    "phase": [
+     "dusk",
+     "night"
+    ],
+    "preset": "dust_motes",
+    "rect": "all"
+   }
+  ],
+  "biome": "brothers_parlor",
+  "blocked": [
+   [
+    4,
+    5
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     4,
+     5
+    ],
+    "sprite": "table_brown"
+   },
+   {
+    "cell": [
+     3,
+     5
+    ],
+    "sprite": "stool"
+   },
+   {
+    "cell": [
+     5,
+     5
+    ],
+    "sprite": "stool"
+   },
+   {
+    "cell": [
+     6,
+     4
+    ],
+    "sprite": "rug_woven_cream",
+    "tint": [
+     1.0,
+     0.97,
+     0.92
+    ]
+   },
+   {
+    "cell": [
+     7,
+     1
+    ],
+    "sprite": "window_blue"
+   },
+   {
+    "cell": [
+     4,
+     1
+    ],
+    "light": {
+     "color": [
+      1.0,
+      0.82,
+      0.55
+     ],
+     "energy": 0.8,
+     "flicker": true,
+     "radius": 32
+    },
+    "sprite": "sconce"
+   },
+   {
+    "cell": [
+     10,
+     7
+    ],
+    "sprite": "plant_pot"
+   }
+  ],
+  "entities": [
+   {
+    "cell": [
+     6,
+     8
+    ],
+    "display_name": "Out to the Boulevard",
+    "id": "stationer_to_boulevard",
+    "kind": "door",
+    "sprite": "door",
+    "to_cell": [
+     20,
+     2
+    ],
+    "to_map": "invrisil_boulevard"
+   },
+   {
+    "_comment": "I1's GIVER (ruling 1): the commission starts here, never on Hedault's hub.",
+    "cell": [
+     3,
+     2
+    ],
+    "conversation": "invrisil_stationer_client",
+    "display_name": "A Lady with a Ring Box",
+    "facing": "right",
+    "id": "stationer_client",
+    "kind": "npc",
+    "observe": "She has taken the chair furthest from the window and put a small hinged box on the table in front of her, closed. She has not opened it once in the time you have been standing here.",
+    "sprite": "invrisil_lady_client",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7"
+    ],
+    "talk_pool_stages": [
+     {
+      "id": "stationer_client_setting_done",
+      "lines": [
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "setting_commissioned": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "#318 beat 1: ADDITIVE. His talk_pool bark still serves the FIRST interact (Hedault's idiom), so stationer_room_loop's pin holds; the graph opens on the second. The engine has no `conversation_when`, so this attachment is UNCONDITIONAL and beat 1's quest gate lives on the graph's OPTIONS. His second interact now opens a graph rather than a bark, which retargeted line_display_ab's leg B (see .lane-progress SEAMS).",
+    "cell": [
+     8,
+     1
+    ],
+    "conversation": "invrisil_hired_scribe",
+    "display_name": "A Scribe by the Hour",
+    "facing": "down",
+    "id": "stationer_clerk",
+    "kind": "npc",
+    "observe": "Cuffs pinned back, three nibs laid out in order of nerve, and the particular stillness of a man who is paid to have heard nothing.",
+    "sprite": "city_scribe",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7",
+     "\u00a7",
+     "\u00a7"
+    ],
+    "tint": [
+     0.74,
+     0.76,
+     0.86
+    ]
+   },
+   {
+    "cell": [
+     1,
+     1
+    ],
+    "display_name": "Ruled Paper in Three Weights",
+    "id": "stationer_ruled_paper",
+    "kind": "prop",
+    "observe": "Three weights, stacked lightest at the top, each with its price chalked on the edge of the shelf rather than the stock. Nothing here is priced where you can carry the number away.",
+    "sprite": "crate"
+   },
+   {
+    "cell": [
+     2,
+     1
+    ],
+    "display_name": "A Rank of Inks",
+    "id": "stationer_ink_rank",
+    "kind": "prop",
+    "observe": "Four inks, and the fourth is twice the price of the third for a difference you can only see in daylight. Somebody in this city has bought it every week for years.",
+    "sprite": "barrel"
+   },
+   {
+    "cell": [
+     5,
+     1
+    ],
+    "display_name": "The Counter",
+    "id": "stationer_counter_l",
+    "kind": "prop",
+    "observe": "Worn smooth in one narrow band where a hundred people a week have leaned to sign something they had already decided to sign.",
+    "sprite": "counter_left"
+   },
+   {
+    "cell": [
+     6,
+     1
+    ],
+    "display_name": "The Counter's End",
+    "id": "stationer_counter_r",
+    "kind": "prop",
+    "observe": "A brass bell nobody rings, a blotter, and a small mirror angled so the man behind the counter can watch the door without appearing to.",
+    "sprite": "counter_right"
+   },
+   {
+    "cell": [
+     10,
+     5
+    ],
+    "display_name": "A Tray of Sealing Wax",
+    "id": "stationer_wax_tray",
+    "kind": "prop",
+    "observe": "Nine colours of wax and one blank seal for hire. The blank is the most used thing in the shop, by a distance.",
+    "sprite": "wax_seal_tray"
+   },
+   {
+    "cell": [
+     1,
+     5
+    ],
+    "display_name": "A Shelf of Blank Contracts",
+    "id": "stationer_contract_shelf",
+    "kind": "prop",
+    "observe": "Printed forms with the terms left open, sorted by how badly the second party will want to argue later. The thickest stack is the most reasonable-looking one.",
+    "sprite": "library_shelf"
+   },
+   {
+    "cell": [
+     9,
+     3
+    ],
+    "display_name": "The Scribe's Desk",
+    "id": "stationer_scribe_desk",
+    "kind": "prop",
+    "observe": "A desk set at an angle that lets the scribe see the street and the street see nothing. There is a second chair, and it has been sat in recently.",
+    "sprite": "library_desk"
+   },
+   {
+    "cell": [
+     10,
+     1
+    ],
+    "display_name": "A Small Iron Stove",
+    "id": "stationer_stove",
+    "kind": "prop",
+    "observe": "Banked low, kept alive all day. Paper hates damp and this street sits in the river's breath every morning.",
+    "sprite": "barrel"
+   }
+  ],
+  "floor_layers": [
+   {
+    "_pick": "#225 floor differentiation (this key is census-FREE -- _pick carries the rationale so _comment does not have to). The brothers_parlor biome's default floor is the inn plank [1,21], and the parlor itself sits on Library-pack parquet; a stationer one street over must read as neither. Reuses the SAME Interior_Walls_01 sheet's plain pale-board swatch [16,21]/[17,21] -- the shipped runners_guild floor, so sheet, license and footstep-wood are all unchanged. Reads as a swept shop board: cooler and plainer than the parlor's brandy-lit parquet, warmer than stone.",
+    "cells": "all",
+    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+    "tile_px": 16,
+    "variants": [
+     [
+      16,
+      21
+     ],
+     [
+      17,
+      21
+     ]
+    ]
+   }
+  ],
+  "grid": {
+   "height": 9,
+   "width": 12
+  },
+  "walls": {
+   "segments": [
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "face": [
+      14,
+      7
+     ],
+     "from": [
+      0,
+      0
+     ],
+     "to": [
+      11,
+      0
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      0,
+      1
+     ],
+     "to": [
+      0,
+      8
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      11,
+      1
+     ],
+     "to": [
+      11,
+      8
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      1,
+      8
+     ],
+     "to": [
+      5,
+      8
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      7,
+      8
+     ],
+     "to": [
+      10,
+      8
+     ]
+    }
+   ],
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16
+  }
+ }
+}

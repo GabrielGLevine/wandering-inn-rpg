@@ -311,7 +311,7 @@
     "Evening. Might I say, {addr}, you carry yourself like a person things happen to. We collect a few of those.",
     "Manners cost nothing and buy everything, in my experience. Mind the rug — Normen fusses over it more than he'll admit.",
     "You'll notice the hat stays on. Best we keep it that way, between friends.",
-    "We don't steal, whatever you've heard. We RECOVER. It's a finer distinction than it sounds, and it's the whole of our business."
+    "We don't steal, whatever you've heard. We recover. A finer distinction than it sounds, and the foundation of our business."
    ],
    "talk_pool_stages": [
     {
@@ -362,7 +362,7 @@
     "Somethin' I can do for you? Ask quick — I talk faster'n I listen, as it were.",
     "You'll pardon the hat stayin' on. Consider it a heretofore act of civic kindness.",
     "Wilovan does the philosophizin'. I do the notin' of exits. You came in by the only one, incidentally.",
-    "We don't steal. We RECOVER. My associate's phrasin', that. Mine ran less charitable."
+    "We don't steal. We recover. My associate's phrasin', that. Mine ran less charitable."
    ],
    "talk_pool_stages": [
     {
@@ -383,7 +383,7 @@
       "Somethin' I can do for you? Ask quick — I talk faster'n I listen, as it were.",
       "You'll pardon the hat stayin' on. Consider it a heretofore act of civic kindness.",
       "Wilovan does the philosophizin'. I do the notin' of exits. You came in by the only one, incidentally.",
-      "We don't steal. We RECOVER. My associate's phrasin', that. Mine ran less charitable."
+      "We don't steal. We recover. My associate's phrasin', that. Mine ran less charitable."
      ]
     },
     {
@@ -453,7 +453,7 @@
    "facing": "left",
    "observe": "A Drake on a stool with his back to the wall, minding the shelf and the chest the way other men mind a fire.",
    "talk_pool": [
-    "...",
+    "Mm.",
     "The shelf's spoken for, friend. Marker-holders and upward."
    ]
   },

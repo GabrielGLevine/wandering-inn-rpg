@@ -1,0 +1,720 @@
+{
+ "facts": {},
+ "skeleton": {
+  "_comment_gallery": "NORTH GALLERY x14-19 y0-2, sealed by these six + (13,0)/(13,1)/(16,3). Two ways in, neither a spell: [Rope Work] rigs the drop, [Greater Strength] shifts the slab. Rows 0-4 is the only quadrant no QA route walks; blocked_cells 6->12, sprites 13->17 re-pin dungeon_peek.",
+  "biome": "dungeon",
+  "blocked": [
+   [
+    5,
+    3
+   ],
+   [
+    15,
+    3
+   ],
+   [
+    4,
+    11
+   ],
+   [
+    16,
+    11
+   ],
+   [
+    13,
+    2
+   ],
+   [
+    14,
+    3
+   ],
+   [
+    17,
+    3
+   ],
+   [
+    18,
+    3
+   ],
+   [
+    19,
+    3
+   ],
+   [
+    15,
+    1
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     5,
+     3
+    ],
+    "sprite": "dungeon_statue",
+    "tint": [
+     0.75,
+     0.75,
+     0.78
+    ]
+   },
+   {
+    "cell": [
+     15,
+     3
+    ],
+    "sprite": "dungeon_statue",
+    "tint": [
+     0.7,
+     0.7,
+     0.74
+    ]
+   },
+   {
+    "cell": [
+     4,
+     11
+    ],
+    "sprite": "dungeon_rubble",
+    "tint": [
+     0.85,
+     0.82,
+     0.85
+    ]
+   },
+   {
+    "cell": [
+     16,
+     11
+    ],
+    "sprite": "dungeon_rubble",
+    "tint": [
+     0.85,
+     0.82,
+     0.85
+    ]
+   },
+   {
+    "_comment": "Blocked-pair focal (THE BLOCKING CONTRACT).",
+    "cell": [
+     15,
+     1
+    ],
+    "sprite": "dungeon_statue",
+    "tint": [
+     0.68,
+     0.7,
+     0.76
+    ]
+   },
+   {
+    "_comment": "Collapse dressing: the mouth reads as a fall-in, not built masonry.",
+    "cell": [
+     14,
+     3
+    ],
+    "sprite": "dungeon_rubble",
+    "tint": [
+     0.85,
+     0.82,
+     0.85
+    ]
+   },
+   {
+    "cell": [
+     17,
+     3
+    ],
+    "sprite": "dungeon_rubble",
+    "tint": [
+     0.85,
+     0.82,
+     0.85
+    ]
+   },
+   {
+    "cell": [
+     13,
+     2
+    ],
+    "sprite": "dungeon_rubble",
+    "tint": [
+     0.85,
+     0.82,
+     0.85
+    ]
+   }
+  ],
+  "entities": [
+   {
+    "_comment": "Return leg of the new dungeon_approach<->trapped_halls door pair.",
+    "cell": [
+     1,
+     7
+    ],
+    "display_name": "Back Toward the Chamber",
+    "id": "dungeon_approach_return",
+    "kind": "door",
+    "sprite": "door",
+    "to_cell": [
+     13,
+     6
+    ],
+    "to_map": "dungeon_approach"
+   },
+   {
+    "cell": [
+     6,
+     7
+    ],
+    "display_name": "A Loose Flagstone",
+    "id": "pressure_plate_a",
+    "kind": "prop",
+    "observe": "One flagstone sits a hair proud of its neighbors, the mortar cracked clean around its edge. Stepping square on it feels like a very bad idea.",
+    "on_interact_accomplishment": "triggered_pressure_plate",
+    "sprite": "pressure_plate",
+    "toast": "The flagstone gives half an inch under your hand. Somewhere close, something CLICKS. Nothing else happens. This time.",
+    "visual_states": [
+     {
+      "tint": [
+       0.85,
+       0.4,
+       0.35
+      ],
+      "when": {
+       "at": 1,
+       "counter": "triggered_pressure_plate"
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "Own graph (ksmvr_plates.json): the guide option is the real beat, gated on `horns_party_formed` (the party must exist to guide). v0.15 T4.3 round 2: last of the six Horns presence rows to move onto horns_dig_started, so the halls stop holding a copy of Ksmvr while the camp holds one. Contract: inn.json's `ceria_inn_returned`.",
+    "_comment_dig": "Retires PERMANENTLY at horns_dig_STARTED (v0.15 T4.3 round 2 tightened it from Task 2.7's horns_dig_joined, once world.gd's dialogue defer made the earlier counter safe to gate on), the same delve-staging split as the approach map's Horns rows -- see dungeon_approach.json's `ceria` row _comment_dig for the contract. Safe for the seal beat either way: seal_kept_reported gates the dig invitation, so neither counter can bank until what_the_seal_kept is done.",
+    "cell": [
+     7,
+     7
+    ],
+    "conversation": "ksmvr_plates",
+    "display_name": "Ksmvr",
+    "facing": "left",
+    "id": "ksmvr_plates",
+    "kind": "npc",
+    "present_when": {
+     "absent": {
+      "horns_dig_started": 1
+     }
+    },
+    "sprite": "ksmvr"
+   },
+   {
+    "cell": [
+     10,
+     5
+    ],
+    "display_name": "A Dart Slit",
+    "id": "dart_slit_a",
+    "item_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. Bare hands won't do it \u2014 you'd want a proper kit for this.",
+    "kind": "prop",
+    "locked_toast": "A narrow slit runs along the wall at knee height. Whatever is loaded behind it, you have no idea how to disable it.",
+    "on_skill_use": {
+     "accomplishment": "halls_cleared",
+     "remove_item": "trap_kit",
+     "toast": "You trace the mechanism with a careful eye, find the catch, and wedge it still with a wax-and-wire pick from the kit. The slit stays dark."
+    },
+    "requires_item": "trap_kit",
+    "requires_skill": "observe",
+    "skill_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. This wants a careful, deliberate touch, not a shove.",
+    "sprite": "dart_slit_tell"
+   },
+   {
+    "cell": [
+     14,
+     7
+    ],
+    "display_name": "Ordinary Flagstones",
+    "id": "illusory_floor_a",
+    "kind": "prop",
+    "locked_toast": "The floor ahead looks perfectly ordinary. Something about it still itches at the back of your mind.",
+    "on_skill_use": {
+     "accomplishment": "spotted_illusory_floor",
+     "toast": "You look again, and this time you see it: the grain runs the wrong way, and no dust has settled in months. That is not floor. That is a very good painting of floor."
+    },
+    "requires_skill": "observe",
+    "skill_hint_toast": "The floor ahead looks exactly like the floor behind you. Somehow, that is the part that bothers you.",
+    "sprite": "illusory_floor_tell",
+    "tint": [
+     0.95,
+     1.0,
+     0.75
+    ],
+    "visual_states": [
+     {
+      "tint": [
+       0.8,
+       0.35,
+       0.3
+      ],
+      "when": {
+       "at": 1,
+       "counter": "spotted_illusory_floor"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     15,
+     7
+    ],
+    "display_name": "A Warded Seam",
+    "id": "warded_seam",
+    "kind": "prop",
+    "locked_toast": "The stone here looks like all the other stone. It is not.",
+    "on_skill_use": {
+     "accomplishment": "detected_wardwork",
+     "lore": true,
+     "toast": "[Detect Magic] \u2014 The seam lights up like a badly kept secret: old wardwork, still holding, drawn tight around the floor ahead. Now you know exactly what not to trust."
+    },
+    "requires_skill": "detect_magic",
+    "skill_hint_toast": "Something under the stone hums off-key. Eyes that read mana could say what.",
+    "sprite": "warded_seam"
+   },
+   {
+    "allies": [],
+    "arena": "trapped_halls_snare",
+    "cell": [
+     17,
+     8
+    ],
+    "display_name": "A Coiled Wire",
+    "encounter_when": {
+     "requires": {
+      "horns_delve_started": 1
+     }
+    },
+    "enemies": [
+     "snare_ward_a",
+     "snare_ward_b",
+     "rift_vermin_c"
+    ],
+    "gate_closed_toast": "You give the wire a wide berth. Something in the dark past it has not noticed you yet.",
+    "id": "snare_nest_slot",
+    "kind": "encounter",
+    "loot": [
+     {
+      "chance": 1.0,
+      "item": "warded_coil_charm"
+     }
+    ],
+    "observe": "A coil of taut wire lies strung ankle-height between two stones, near-invisible against the dust. Whatever it is rigged to is worse than a stubbed toe.",
+    "on_victory": [
+     "halls_cleared",
+     "cleared_halls_by_force"
+    ],
+    "sprite": "snare_coil"
+   },
+   {
+    "_comment": "Matches rift_vermin_leak/ruin_guardian/awakened_boss's own interact-only convention for a boss the player consciously commits to, not an environmental ambush.",
+    "allies": [
+     "ceria",
+     "yvlon",
+     "ksmvr"
+    ],
+    "ally_hp_penalty": {
+     "ksmvr": {
+      "hp_mod": -18,
+      "when": {
+       "guided_ksmvr_through_plates": 1
+      }
+     }
+    },
+    "ally_requires": {
+     "horns_party_formed": 1
+    },
+    "arena": "vault",
+    "cell": [
+     18,
+     6
+    ],
+    "display_name": "The Vault Threshold",
+    "encounter_when": {
+     "requires": {
+      "halls_cleared": 1,
+      "horns_party_formed": 1
+     }
+    },
+    "enemies": [
+     "vault_construct"
+    ],
+    "gate_closed_toast": "Whatever waits beyond this arch, you are not walking into it yet \u2014 not with the halls still armed, not without the Horns at your back.",
+    "id": "vault_boss_slot",
+    "kind": "encounter",
+    "loot": [
+     {
+      "chance": 1.0,
+      "item": "construct_core_shard"
+     },
+     {
+      "chance": 1.0,
+      "item": "tonic_of_the_clear_eye"
+     }
+    ],
+    "observe": "The hall ends in a sealed archway, and beyond it something vast fills the dark almost completely \u2014 the same shape you glimpsed crouched near the entrance, closer now, utterly still. It is not still the way a statue is still.",
+    "on_victory": [
+     "vault_construct_downed"
+    ],
+    "sprite": "vault_construct",
+    "tint": [
+     0.4,
+     0.4,
+     0.42
+    ]
+   },
+   {
+    "_comment": "FROZEN ID, dead fiction (spec 7 amendment 1): the display name was 'A Second Door'. The entity id is shipped and frozen; the fiction is not. This is a sealed rune-door full of wardwork by the hand that cut the inn's frame -- never a second Magical Door, never another portal. No QA script pins the old label.",
+    "_comment_door": "Act V beat 3, the FIGHT path. door_when is checked BEFORE the interact arm (interactions.gd prop branch order), so once seal_opened banks this stops being a thing to read and becomes a way through. seal_opened banks ONLY on Pisces' open-it fork, so the TALK and SKILL paths leave this door shut forever, as #270 requires.",
+    "_comment_reading": "Act V beat 2, THE READING (#270). Three eyes on one door, the pantry-door consolidation idiom. LATER-SATISFIED-WINS across `variants` makes the bare interact a two-stage narration: with the descent agreed Pisces matches the hand (read_the_seal_runes), and his next read names the appetite (read_the_feeding_ward). That staging is load-bearing -- no main-line beat may sit behind a Skill the player's build might not own (spec 6) -- so the escort is the guaranteed producer of both reads. Pre-descent arms bank `sensed_something_deeper`, never the real reads, which ORDER-GATES the quest: nothing in Act V can bank from a curious Act IV visit. The [Detect Magic] base arm deliberately does NOT bank `detected_wardwork` -- this door is what the four shipped sites drain INTO, and a fifth producer would cheapen the >=3 threshold its payoff variant reads. TRAP (reviewer CRITICAL): variants[0] is the repo's SOLE producer of `seal_kept_found`, and later-satisfied-wins meant the descent arm SHADOWED it -- a save that downed the construct but never touched this door could descend, read, and never bank the find, stranding what_the_seal_kept's vault beat, then seal_kept_reported, then act_iv's gate. BOTH Act V read arms AND the [Observe] arm must compound `seal_kept_found` into their gate (the :404 idiom); dropping it from any arm reopens the hole. Pinned in test_sim_core (_test_seal_door_find_before_read).",
+    "cell": [
+     19,
+     7
+    ],
+    "display_name": "A Sealed Rune-Door",
+    "door_when": {
+     "open_toast": "The seal does not resist. It simply stops being a seal \u2014 the runes go quiet in order, one ring at a time, and the door swings in on three centuries of undisturbed air.",
+     "requires": {
+      "seal_opened": 1
+     },
+     "to_cell": [
+      2,
+      4
+     ],
+     "to_map": "seal_vault"
+    },
+    "id": "seal_kept_door",
+    "kind": "prop",
+    "on_interact_accomplishment": "sensed_something_deeper",
+    "skill_uses": {
+     "detect_magic": {
+      "accomplishment": "sensed_something_deeper",
+      "lore": true,
+      "toast": "[Detect Magic] \u2014 Wardwork, and awake. It does not flare and settle the way a bound ward should. It holds one low steady note, like a breath nobody has to let out, and you have felt that note somewhere else.",
+      "variants": [
+       {
+        "accomplishment": "read_the_feeding_ward",
+        "lore": true,
+        "toast": "[Detect Magic] \u2014 The ward opens under your sight and does not stop opening. It is not holding anything shut. It is POURING: one direction, one slow measured rate, into whatever the stone is between. It has poured since before the city. Pisces, very quietly: \"Ah. So that is what the others were.\"",
+        "when": {
+         "read_the_seal_runes": 1,
+         "seal_descent_agreed": 1
+        }
+       },
+       {
+        "accomplishment": "read_the_feeding_ward",
+        "lore": true,
+        "toast": "[Detect Magic] \u2014 Every reading you have taken lines up at once: the inn's frame, the ruin's socket, the seam back down the hall, the hollow west of Riverfarm. Not four wards. One lattice, and this door is where it drains to. Something behind this stone has been drinking Liscor's oldest work since before Liscor. Pisces uses a word you have never heard him use in public.",
+        "when": {
+         "detected_wardwork": 3,
+         "read_the_seal_runes": 1,
+         "seal_descent_agreed": 1
+        }
+       }
+      ]
+     },
+     "observe": {
+      "accomplishment": "sensed_something_deeper",
+      "toast": "[Observe] \u2014 Worked stone, deliberate, and not one line of it reads like a lock. Whatever this door is for, it is not keeping people out. You would have to stand here longer, with someone who knows more than you do.",
+      "variants": [
+       {
+        "accomplishment": "read_the_seal_runes",
+        "lore": true,
+        "toast": "[Observe] \u2014 You take the runes in order, the way you would read a sentence. The turns repeat at a fixed interval. The pantry frame does exactly that, at exactly that interval, and this one is worn deeper: it has been doing it longer. Behind you, Pisces says nothing, which from him is applause.",
+        "when": {
+         "seal_descent_agreed": 1,
+         "seal_kept_found": 1
+        }
+       }
+      ]
+     }
+    },
+    "sprite": "rune_door",
+    "tint": [
+     0.45,
+     0.45,
+     0.5
+    ],
+    "toast": "The passage doesn't end here \u2014 it just goes quiet, past a bend the light doesn't reach. Whatever's back there, this isn't the moment.",
+    "variants": [
+     {
+      "accomplishment": "seal_kept_found",
+      "lore": true,
+      "toast": "The runes are the same. Not similar \u2014 the same hand, the same order, as the door in the inn's pantry.",
+      "when": {
+       "vault_construct_downed": 1
+      }
+     },
+     {
+      "accomplishment": "read_the_seal_runes",
+      "lore": true,
+      "toast": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. Not a school, not a fashion. A HAND, and it cut this one first.\" He does not look away while he says it.",
+      "when": {
+       "seal_descent_agreed": 1,
+       "seal_kept_found": 1
+      }
+     },
+     {
+      "accomplishment": "read_the_feeding_ward",
+      "lore": true,
+      "toast": "Pisces steps back at last. \"It is not a lock. The lines run one way, they have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\"",
+      "when": {
+       "read_the_seal_runes": 1
+      }
+     },
+     {
+      "accomplishment": "read_the_feeding_ward",
+      "lore": false,
+      "toast": "The runes keep their slow one-way order. Pisces has stopped narrating and started counting under his breath, which is worse.",
+      "when": {
+       "read_the_feeding_ward": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "Act V: THE SEAL'S WARDEN. present_when is validator-forbidden on encounters, so it stands here from first arrival, VISIBLE AND INERT (the rift_vermin_leak pattern) with its own observe + gate_closed_toast. encounter_when arms it on seal_opened alone, which only the FIGHT fork banks. trigger_radius 1 makes it UNSKIPPABLE on that fork -- (18,7) is the only walkable approach to the door and sits one cell off; a sneaking player still slips by and banks sneaked_past_danger. CELL (19,6) is reachable only from (19,5), so it blocks no route, and it is NOT (18,7), which delve_fight stands on. Roster: `seal_warden`, a distinct id per combatants.json:401.",
+    "_comment_loot": "DELIBERATELY no `loot` array: every enchanted accessory this fight could plausibly drop (warded_coil_charm, construct_core_shard, guardian_ward_fragment) is a chance-1.0 drop from a fight the player must already have won to be standing here, and `pickup` no-ops a duplicate id. The reward is the room behind it (seal_anchor_rune) plus the quest's resolution_paths grant.",
+    "_comment_victory": "on_victory is the ENGINE DEFAULT spelled out (test_combat_data requires the key on every encounter): the warden banks no story counter. Act V's resolution belongs to the room behind it -- vault_anchor_stone's open banks seal_resolved -- so sneaking past and flattening it reach the same beat at different cost.",
+    "allies": [],
+    "arena": "vault",
+    "cell": [
+     19,
+     6
+    ],
+    "display_name": "A Shape in the Alcove",
+    "encounter_when": {
+     "requires": {
+      "seal_opened": 1
+     }
+    },
+    "enemies": [
+     "seal_warden"
+    ],
+    "gate_closed_toast": "Dust lies on it in an unbroken sheet, the way dust lies on a thing that has not moved in centuries. Leave it that way.",
+    "id": "seal_warden_alcove",
+    "kind": "encounter",
+    "observe": "An alcove beside the sealed door, and something standing in it: ward-stone, shoulder-high, cut in the same hand as the runes. It is not a statue. Statues are not built facing the door they guard.",
+    "on_victory": [
+     "won_combat"
+    ],
+    "sprite": "ruin_warden",
+    "tint": [
+     0.42,
+     0.42,
+     0.46
+    ],
+    "trigger_radius": 1
+   },
+   {
+    "_comment": "Act V: THE ESCORT. Pisces is the voice at this door -- the prop never speaks (Global Constraint), so everything that needs OPTIONS lives here. present_when brackets from the descent ask onward and never closes: a vanished escort would read as a bug. CELL (19,8) is deliberately NOT (18,7), delve_fight's own standing cell for the seal_kept_found beat -- an entity there would strand a shipped canonical mid-route. Open neighbours (18,8)/(19,9), and no shipped save can hold seal_descent_agreed, so the new blocker strands nothing. Bilocation with the Guild-steps Pisces is the shipped pisces_mounting precedent: different maps, never on screen together.",
+    "cell": [
+     19,
+     8
+    ],
+    "conversation": "pisces_seal",
+    "dialogue": [
+     {
+      "speaker": "Pisces",
+      "text": "Quietly, if you can manage it. I have lost the count twice already and blamed you both times."
+     }
+    ],
+    "display_name": "Pisces",
+    "facing": "up",
+    "id": "pisces_seal_escort",
+    "kind": "npc",
+    "observe": "He has not sat down since you got here. One hand hovers a finger's width off the stone, tracking something along it that nobody else in the hall can see, and his lips move without sound.",
+    "present_when": {
+     "requires": {
+      "seal_descent_agreed": 1
+     }
+    },
+    "sprite": "pisces"
+   },
+   {
+    "_comment": "respawns:true (dormant until the next sleep, the rock_crab_nest/kingslayer_den mechanism).",
+    "allies": [],
+    "arena": "trapped_halls_snare",
+    "cell": [
+     12,
+     11
+    ],
+    "conversation": "gallery_vermin_nest",
+    "display_name": "A Sealed Side-Gallery",
+    "encounter_when": {
+     "requires": {
+      "halls_cleared": 1
+     }
+    },
+    "enemies": [
+     "rift_vermin_a",
+     "rift_vermin_c"
+    ],
+    "gate_closed_toast": "Rubble and old wardwork still choke this side passage. Whatever's back there can wait until the main halls are actually safe.",
+    "id": "gallery_vermin_nest",
+    "kind": "encounter",
+    "observe": "A narrower passage breaks off from the gauntlet proper, half-choked with fallen stone. Small shapes move in the dark past the rubble \u2014 more than one.",
+    "on_victory": "gallery_vermin_culled",
+    "respawns": true,
+    "scales": true,
+    "sprite": "bat"
+   },
+   {
+    "cell": [
+     18,
+     11
+    ],
+    "companion_source": {
+     "companion_id": "skeleton_ally",
+     "kind": "animated",
+     "taken_toast": "The bones rise and fall into step behind you."
+    },
+    "display_name": "Old Bones",
+    "id": "bone_pile_halls",
+    "kind": "prop",
+    "observe": "Old bones, settled where they fell. They are not going anywhere. Probably.",
+    "sprite": "gnaw_pile"
+   },
+   {
+    "_comment": "[Rope Work] CARRIER. `gap` + `state_counter` are the table pair; (13,1) opens. The stub never goes absent, which is what lets visual_states SHOW the line -- a state_set the world never shows is invisible durable state.",
+    "anchor_toast": "[Rope Work] \u2014 You make the line fast to the stub, drop the tail across, and set it taut. The crossing is a crossing now, and it stays one.",
+    "cell": [
+     13,
+     0
+    ],
+    "display_name": "The Broken Span",
+    "gap": true,
+    "id": "halls_span_stub",
+    "kind": "prop",
+    "locked_toast": "You get a hand on the stub and lean out. Nothing about that gap is jumpable, and nothing about the stub is climbable. What it wants is a rope.",
+    "observe": "A stub of masonry where a walkway used to leave this wall, sheared off clean. The other side is still there, four feet out and a long way down. The stub would hold a line all day.",
+    "sprite": "pedestal",
+    "state_counter": "gallery_line_anchored",
+    "visual_states": [
+     {
+      "sprite": "shaft_ladder",
+      "when": {
+       "at": 1,
+       "counter": "gallery_line_anchored"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     13,
+     1
+    ],
+    "display_name": "The Drop",
+    "id": "halls_gallery_drop",
+    "kind": "prop",
+    "locked_toast": "The floor stops. You put a boot to the lip and gravel goes over the edge and keeps going. Not without something to hold.",
+    "observe": "The floor is simply gone here, one span of it, edge to edge. Dropped stone comes back as a sound and not much of one.",
+    "present_when": {
+     "absent": {
+      "gallery_line_anchored": 1
+     }
+    },
+    "sprite": "deep_fissure"
+   },
+   {
+    "_comment": "[Greater Strength] carrier. on_skill_use has NO remove_entity verb (dialogue-side only), so permanence is present_when.absent on the arm's own monotone counter.",
+    "cell": [
+     16,
+     3
+    ],
+    "display_name": "The Fallen Slab",
+    "id": "halls_gallery_slab",
+    "kind": "prop",
+    "locked_toast": "You get both hands under the edge and pull until your eyes swim. It rocks an inch and settles back. Heavier than you.",
+    "observe": "One slab off the ceiling, come down whole and standing on its edge across the gap in the wall. Its own weight is the only thing holding it there.",
+    "on_skill_use": {
+     "accomplishment": "shouldered_the_slab",
+     "toast": "[Greater Strength] \u2014 You set your shoulder low, take the whole weight on your legs, and walk it aside. Stone grinds on stone and the gallery mouth stands open behind it."
+    },
+    "present_when": {
+     "absent": {
+      "shouldered_the_slab": 1
+     }
+    },
+    "requires_skill": "greater_strength",
+    "skill_hint_toast": "Hauling at it idly will not do it. Setting your shoulder to it properly might.",
+    "sprite": "dungeon_rubble",
+    "tint": [
+     0.85,
+     0.82,
+     0.85
+    ]
+   },
+   {
+    "_comment": "Gallery payoff; one-shot via present_when.absent on its own counter.",
+    "cell": [
+     17,
+     1
+    ],
+    "display_name": "The Wardwright's Kit",
+    "gold": 5,
+    "id": "halls_gallery_cache",
+    "kind": "prop",
+    "observe": "A strapped case set down against the wall and never picked up again, the leather gone stiff and pale. Whoever put it there meant to come back through the span.",
+    "on_interact_accomplishment": "found_gallery_cache",
+    "present_when": {
+     "absent": {
+      "found_gallery_cache": 1
+     }
+    },
+    "sprite": "chest",
+    "toast": "The straps give at a pull. Inside: chalk, a bent square, a coil of good wire, and five gold in a twist of cloth that somebody was saving for the walk home."
+   }
+  ],
+  "floor_layers": [
+   {
+    "_pick": "Cemetery-floor variation reusing the dungeon biome's own verified floor-tile neighborhood (2,2)/(3,7) plus the genuinely darker worn variant (2,11) for real wear texture.",
+    "cells": "all",
+    "variants": [
+     [
+      2,
+      2
+     ],
+     [
+      3,
+      7
+     ],
+     [
+      2,
+      11
+     ]
+    ]
+   }
+  ],
+  "grid": {
+   "height": 14,
+   "width": 20
+  },
+  "walls": {
+   "segments": [
+    {
+     "_comment": "clear of every entity/decor/blocked cell.",
+     "from": [
+      9,
+      10
+     ],
+     "to": [
+      9,
+      11
+     ]
+    }
+   ],
+   "sheet": "res://assets/tiles/cemetery/Walls.png",
+   "tile_px": 16
+  }
+ }
+}

@@ -1,0 +1,342 @@
+{
+ "facts": {},
+ "skeleton": {
+  "_comment": "Statue (CASTLE 0.3) + rubble (CAVE) dressing per the family recipe, decor+blocked pairs (the ruin_surface boulder convention).",
+  "_comment_unsteady": "[Even Footing] placement 2: the (3,9) collapse band spills two cells east. NEW blocked cells -- blocked_cells 6 -> 8, dungeon_peek re-pinned. Non-holders swing a row (+2; +4 at (4,10)/(4,11)).",
+  "arrival_toasts": [
+   {
+    "hide_when": {
+     "cleared_the_warren": 1
+    },
+    "lore": true,
+    "requires": {
+     "heard_the_deep_tremor": 1
+    },
+    "text": "The fissure Zevara spoke of is down past the gallery. The dark has a direction today."
+   }
+  ],
+  "biome": "dungeon",
+  "blocked": [
+   [
+    4,
+    2
+   ],
+   [
+    11,
+    2
+   ],
+   [
+    3,
+    9
+   ],
+   [
+    12,
+    9
+   ]
+  ],
+  "decor": [
+   {
+    "_comment": "CASTLE 0.3 statue dressing, blocked-pair (THE BLOCKING CONTRACT).",
+    "cell": [
+     4,
+     2
+    ],
+    "sprite": "dungeon_statue",
+    "tint": [
+     0.75,
+     0.75,
+     0.78
+    ]
+   },
+   {
+    "cell": [
+     11,
+     2
+    ],
+    "sprite": "dungeon_statue",
+    "tint": [
+     0.7,
+     0.7,
+     0.74
+    ]
+   },
+   {
+    "_comment": "CAVE rubble dressing (a collapse band), blocked-pair.",
+    "cell": [
+     3,
+     9
+    ],
+    "sprite": "dungeon_rubble",
+    "tint": [
+     0.85,
+     0.82,
+     0.85
+    ]
+   },
+   {
+    "_comment": "Same rubble family as (3,9) so the band reads continuous and the unsteady pair looks like ground, not wall.",
+    "cell": [
+     4,
+     9
+    ],
+    "sprite": "dungeon_rubble",
+    "tint": [
+     0.85,
+     0.82,
+     0.85
+    ]
+   },
+   {
+    "cell": [
+     5,
+     9
+    ],
+    "sprite": "dungeon_rubble",
+    "tint": [
+     0.85,
+     0.82,
+     0.85
+    ]
+   },
+   {
+    "cell": [
+     12,
+     9
+    ],
+    "sprite": "dungeon_rubble",
+    "tint": [
+     0.85,
+     0.82,
+     0.85
+    ]
+   }
+  ],
+  "entities": [
+   {
+    "_comment": "GH#334 note 20: THE DUNGEON RETURN CARRIER -- the cluster had none, so the Door's dungeon row was one-way. Gates on this map's own portals counter; (2,5) keeps arrival (2,6) clear.",
+    "cell": [
+     2,
+     5
+    ],
+    "display_name": "A Warded Stone",
+    "facing": "right",
+    "id": "dungeon_wardstone",
+    "kind": "prop",
+    "observe": "Somebody warded a way out of here before the passage was ever choked. The vein through it is the same coin-gold as the stones above.",
+    "portal_menu": true,
+    "portal_menu_when": {
+     "requires": {
+      "dungeon_attuned": 1
+     }
+    },
+    "sprite": "wardstone_anchor",
+    "tint": [
+     0.62,
+     0.6,
+     0.72
+    ],
+    "toast": "Set into the wall beside the landing, older than the rubble and colder than the air. The frame of light under its surface answers the moment you look at it."
+   },
+   {
+    "_comment": "Met, it becomes a real door to `deep_tunnels`, landing at (13,5)",
+    "cell": [
+     1,
+     6
+    ],
+    "display_name": "Choked Passage",
+    "door_when": {
+     "open_toast": "The rubble gives at your push \u2014 someone's already cleared a path through. The old gallery beyond is dark, but it is open.",
+     "requires": {
+      "horns_delve_started": 1
+     },
+     "to_cell": [
+      13,
+      5
+     ],
+     "to_map": "deep_tunnels"
+    },
+    "id": "gallery_seal_anchor",
+    "kind": "prop",
+    "observe": "Rubble and worked stone choke a passage that clearly led somewhere once. Someone sealed this side deliberately, and not long ago either.",
+    "on_interact_accomplishment": "found_the_sealed_passage",
+    "sprite": "dungeon_rubble",
+    "tint": [
+     0.5,
+     0.48,
+     0.5
+    ],
+    "toast": "The stone doesn't budge. Whatever's on the other side stays sealed. For now."
+   },
+   {
+    "cell": [
+     8,
+     9
+    ],
+    "display_name": "A Still Shape",
+    "id": "dormant_guardian_marker",
+    "kind": "prop",
+    "observe": "A carved shape crouches against the far wall, limbs folded, its eyeless face turned to the floor. It has not moved since you noticed it. That is the only reason you are still standing here.",
+    "on_interact_accomplishment": "eyed_the_dormant_guardian",
+    "sprite": "dormant_guardian_statue",
+    "tint": [
+     0.4,
+     0.4,
+     0.42
+    ],
+    "toast": "You keep your distance. Whatever wakes it, you would rather not be the one who finds out."
+   },
+   {
+    "_comment": "Grouped with Yvlon/Ksmvr at (7,5)-(9,5), open floor clear of every blocked/decor/entity cell on this map. v0.15 T4.3 round 2: retires on horns_dig_started with the rest of the party. Her own `ceria_intro` banks that counter mid-conversation, which is why this gate needed world.gd's dialogue defer first. Contract: inn.json's `ceria_inn_returned`.",
+    "_comment_dig": "Task 2.7 round 2 -- OWNING SITE for all three delve-staging Horns rows. They had no present_when at all, so once the inn-vs-camp bilocation was fixed the SAME bug relocated here: during The Dig a player could meet camp-Ceria at the ruin and delve-hub-Ceria on the approach in one trip. CURRENT CONTRACT (v0.15 T4.3 round 2, supersedes Task 2.7's horns_dig_joined): each row retires PERMANENTLY at horns_dig_STARTED, the counter the camp rows arm on, so the copy is gone the moment the dig begins rather than when it is joined. That counter was unusable until world.gd learned to DEFER presence reconciles while a dialogue is open and flush once at DIALOGUE_ENDED -- `ceria_intro` banks it mid-conversation and she would otherwise vanish between two of her own lines. No `_returned` twin on the delve maps, deliberately: the Horns left the delve staging for good. Safe for the seal beat: these rows are only load-bearing during what_the_seal_kept, and seal_kept_reported gates the dig invitation, so the counter cannot bank until that quest is done. Every script touching this map runs on a fixture with it absent, so no entity-count pin moves.",
+    "cell": [
+     7,
+     5
+    ],
+    "conversation": "ceria_intro",
+    "display_name": "Ceria Springwalker",
+    "facing": "down",
+    "id": "ceria",
+    "kind": "npc",
+    "present_when": {
+     "absent": {
+      "horns_dig_started": 1
+     }
+    },
+    "sprite": "ceria"
+   },
+   {
+    "_comment": "Own graph (yvlon_intro.json): a hub whose default/text_variants carry the pool bark / halls-anticipating line / post-victory line, no gate of her own (Ceria owns the party-formed beat).",
+    "_comment_dig": "Permanent retirement, no `_returned` twin -- the Horns leave the delve staging for good. Counter tightened to horns_dig_started in v0.15 T4.3 round 2 (see above).",
+    "_comment_v015_split": "v0.15 T4.3 round 2, bilocation collapse: retires on `horns_dig_started` so this row and `yvlon_dig_camp` can never be co-present.",
+    "cell": [
+     8,
+     5
+    ],
+    "conversation": "yvlon_intro",
+    "display_name": "Yvlon Byres",
+    "facing": "down",
+    "id": "yvlon",
+    "kind": "npc",
+    "present_when": {
+     "absent": {
+      "horns_dig_started": 1
+     }
+    },
+    "sprite": "yvlon"
+   },
+   {
+    "_comment": "Own graph (ksmvr_intro.json) is pool + post-victory only",
+    "_comment_dig": "Permanent retirement, no `_returned` twin -- the Horns leave the delve staging for good. Counter tightened to horns_dig_started in v0.15 T4.3 round 2 (see above).",
+    "_comment_v015_split": "v0.15 T4.3 round 2: same bilocation collapse as `yvlon` above.",
+    "cell": [
+     9,
+     5
+    ],
+    "conversation": "ksmvr_intro",
+    "display_name": "Ksmvr",
+    "facing": "down",
+    "id": "ksmvr",
+    "kind": "npc",
+    "present_when": {
+     "absent": {
+      "horns_dig_started": 1
+     }
+    },
+    "sprite": "ksmvr"
+   },
+   {
+    "cell": [
+     14,
+     6
+    ],
+    "display_name": "Deeper In",
+    "id": "dungeon_depths_door",
+    "kind": "door",
+    "sprite": "door",
+    "to_cell": [
+     2,
+     7
+    ],
+    "to_map": "trapped_halls"
+   },
+   {
+    "_comment": "`dungeon_peek`'s own teleport-based route stays unaffected (it never walks this cell).",
+    "allies": [],
+    "arena": "spider_den",
+    "cell": [
+     12,
+     10
+    ],
+    "conversation": "kingslayer_den",
+    "display_name": "Something in the Dark",
+    "enemies": [
+     "kingslayer_spider"
+    ],
+    "id": "kingslayer_den",
+    "kind": "encounter",
+    "loot": [
+     {
+      "chance": 1.0,
+      "item": "kingslayer_fang"
+     }
+    ],
+    "observe": "Silk threads catch the light along the gallery's south wall, thick as rope, all leading back to one dark seam in the stone.",
+    "on_victory": "kingslayer_spiders_culled",
+    "respawns": true,
+    "sprite": "kingslayer_spider"
+   }
+  ],
+  "floor_layers": [
+   {
+    "_pick": "Cemetery-floor variation reusing the dungeon biome's own verified floor-tile neighborhood (2,2)/(3,7) plus the genuinely darker worn variant (2,11) for real wear texture.",
+    "cells": "all",
+    "variants": [
+     [
+      2,
+      2
+     ],
+     [
+      3,
+      7
+     ],
+     [
+      2,
+      11
+     ]
+    ]
+   }
+  ],
+  "grid": {
+   "height": 12,
+   "width": 16
+  },
+  "unsteady": [
+   [
+    4,
+    9
+   ],
+   [
+    5,
+    9
+   ]
+  ],
+  "unsteady_toast": "The spill shifts the moment you put weight on it and keeps shifting. Crossing that takes footing you have not got.",
+  "walls": {
+   "segments": [
+    {
+     "_comment": "A fallen lintel span, interior texture only (ruin_surface's own minimal from/to-only precedent)",
+     "from": [
+      6,
+      4
+     ],
+     "to": [
+      7,
+      4
+     ]
+    }
+   ],
+   "sheet": "res://assets/tiles/cemetery/Walls.png",
+   "tile_px": 16
+  }
+ }
+}

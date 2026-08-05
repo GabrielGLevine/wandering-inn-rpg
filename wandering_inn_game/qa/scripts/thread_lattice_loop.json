@@ -15,8 +15,8 @@
   { "action": "assert_state", "path": "accomplishments.cleared_the_warren", "equals": 1 },
 
   { "_comment": "== ARMED: Erin's relay-5 line plays on the first interact (talk_pool, before her erin_errand graph). ==", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Erin", "text": "You came back up. TELL Zevara you came back up — she counts." }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "payload_contains": { "text": "Erin: You came back up. TELL Zevara you came back up — she counts." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Erin", "text": "You came back up. Tell Zevara you came back up — she counts." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "ui_dialogue_rendered", "payload_contains": { "text": "Erin: You came back up. Tell Zevara you came back up — she counts." }, "timeout_sec": 5 },
 
   { "_comment": "== COMPLETE THE BEAT: swap in the retired fixture (raskghar_sealed banked) into the manual slot, then reload it via the pause-menu Load path (save_migration idiom: cancel -> pause -> down 2 to Load -> confirm -> slot picker -> confirm loads manual). ==", "action": "install_fixture", "fixture": "thread_lattice_retired", "slot": "manual" },
   { "action": "press", "name": "cancel" },
@@ -45,7 +45,7 @@
   { "action": "assert_state", "path": "accomplishments.watch_runner_pointed", "equals": 1 },
   { "_comment": "erin_garden_open sits immediately BEFORE the thread-relay block, so the ARMED gate-runner relay (later in the array) wins -- Erin serves the relay line, NOT the garden reveal. The assert_event_absent below is the CAN-FAIL sentinel: if H1 regressed (garden pair back at array end) the garden reveal would win here, tripping both the wait timeout and the absent-check.", "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Erin", "text": "A runner was asking after you. Captain wants you at the gate." }, "timeout_sec": 5 },
-  { "action": "assert_event_absent", "type": "dialogue_line", "payload_contains": { "speaker": "Erin", "text": "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just... knock first. Old habit." } },
+  { "action": "assert_event_absent", "type": "dialogue_line", "payload_contains": { "speaker": "Erin", "text": "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just knock first. Old habit." } },
 
   { "_comment": "== H1 LEG C (the garden signpost RETURNS when NO relay is armed): swap in garden_quiet (garden_door_unlocked, unvisited, third completed quest is THE WRONG ORDER instead of the cisterns, so ZERO thread counters are set) and reload. With no thread stage met, erin_garden_open is the latest-armed stage and wins her pool. ==", "action": "install_fixture", "fixture": "garden_quiet", "slot": "manual" },
   { "action": "press", "name": "cancel" },
@@ -59,6 +59,6 @@
   { "action": "assert_state", "path": "accomplishments.garden_door_unlocked", "equals": 1 },
   { "_comment": "wrong_order_reported (present only in garden_quiet, never in garden_unlocked) confirms the quiet fixture actually loaded -- and by its construction no thread counter is set.", "action": "assert_state", "path": "accomplishments.wrong_order_reported", "equals": 1 },
   { "_comment": "No relay armed -> the standing garden signpost RETURNS (erin_garden_open, unvisited). CAN-FAIL: if erin_garden_open were still masked (a stray thread counter, or the pair mis-ordered AFTER the relays) this wait would time out.", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Erin", "text": "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just... knock first. Old habit." }, "timeout_sec": 5 }
+  { "action": "wait_for_event", "type": "dialogue_line", "payload_contains": { "speaker": "Erin", "text": "You didn't say anything, so I will: there's a door in the inn that wasn't there yesterday. It's mine. It's — new. Go look, if you want. Just knock first. Old habit." }, "timeout_sec": 5 }
  ]
 }

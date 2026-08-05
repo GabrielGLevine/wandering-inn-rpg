@@ -1,0 +1,361 @@
+{
+ "facts": {
+  "$.entities[3].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[3].talk_pool[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "ambience": [
+   {
+    "preset": "embers",
+    "rect": [
+     2,
+     2,
+     3,
+     2
+    ]
+   }
+  ],
+  "biome": "pallass_forge",
+  "blocked": [
+   [
+    2,
+    2
+   ],
+   [
+    3,
+    2
+   ],
+   [
+    2,
+    4
+   ],
+   [
+    9,
+    2
+   ],
+   [
+    9,
+    5
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     2,
+     2
+    ],
+    "sprite": "forge_station"
+   },
+   {
+    "_light_comment": "v0.17 R2: a forge hall with no light in it. Same molten flicker its pallass_forge twin carries. ONE of the two stations on purpose -- a matched pair reads as a decal. Count 0 -> 1.",
+    "cell": [
+     3,
+     2
+    ],
+    "light": {
+     "color": [
+      0.965,
+      0.333,
+      0.063
+     ],
+     "energy": 0.8,
+     "flicker": true,
+     "radius": 26
+    },
+    "sprite": "forge_station"
+   },
+   {
+    "cell": [
+     2,
+     4
+    ],
+    "sprite": "barrel"
+   },
+   {
+    "cell": [
+     9,
+     2
+    ],
+    "sprite": "crate"
+   },
+   {
+    "cell": [
+     9,
+     5
+    ],
+    "sprite": "library_shelf"
+   }
+  ],
+  "entities": [
+   {
+    "cell": [
+     5,
+     8
+    ],
+    "display_name": "Back to the Tier",
+    "id": "forge_hall_exit",
+    "kind": "door",
+    "observe": "The hall door, propped with a wedge nobody has ever removed. Past it, the tier's noise resumes.",
+    "sprite": "door",
+    "to_cell": [
+     15,
+     4
+    ],
+    "to_map": "pallass_forge"
+   },
+   {
+    "_comment": "P1 SKILL route. requires_skill renders VISIBLE-LOCKED: a player without the arm still sees the route and takes TALK or FIGHT.",
+    "cell": [
+     4,
+     3
+    ],
+    "display_name": "The Temper Bench",
+    "id": "forge_hall_temper_bench",
+    "kind": "prop",
+    "locked_toast": "Heat, metal, and a gauge you cannot read. Guessing here costs somebody a week.",
+    "observe": "A billet clamped mid-process, the quench beside it, a gauge nobody has reset since the last failure. Somebody stopped here on purpose and did not come back.",
+    "on_skill_use": {
+     "accomplishment": "temper_run",
+     "toast": "[Appraise Goods] \u2014 You read the grain off the colour, hold the count two beats longer than the slate says, and quench. The billet comes out with the standard's own answer in it."
+    },
+    "requires_skill": "appraise_goods",
+    "skill_hint_toast": "Colour, count, quench. You can see there is an order to it. You cannot see the order.",
+    "sprite": "temper_bench"
+   },
+   {
+    "cell": [
+     7,
+     2
+    ],
+    "display_name": "The Examination Standard",
+    "id": "forge_hall_standard_notice",
+    "kind": "prop",
+    "observe": "A civic notice pinned at eye height, examiner's seal at the corner, the text underneath it read so often the ink has gone grey where thumbs land.",
+    "on_interact_accomplishment": "read_the_examination_standard",
+    "sprite": "price_board",
+    "toast": "The standard does not measure how hard a blade comes out. It measures how it RECOVERS. Somebody up here has been failing the wrong test perfectly.",
+    "visual_states": [
+     {
+      "tint": [
+       0.7,
+       0.7,
+       0.74
+      ],
+      "when": {
+       "at": 1,
+       "counter": "read_the_examination_standard"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     5,
+     4
+    ],
+    "display_name": "Forge Hall Apprentice",
+    "facing": "up",
+    "friendly_line": "She looks up for exactly as long as the count allows, then back down. From an apprentice on the clock, that is a warm welcome.",
+    "id": "forge_apprentice",
+    "kind": "npc",
+    "observe": "A young Drake with her sleeves pinned back and a scorch on one forearm she has not stopped working long enough to notice.",
+    "sprite": "drake_patron",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7",
+     "\u00a7",
+     "\u00a7"
+    ],
+    "tint": [
+     0.52,
+     0.58,
+     0.66
+    ]
+   },
+   {
+    "cell": [
+     3,
+     5
+    ],
+    "display_name": "The Slack Tub",
+    "id": "forge_hall_slack_tub",
+    "kind": "prop",
+    "observe": "Water gone grey with scale, a skin of oil across the top, and a scum line three fingers above the current level.",
+    "on_interact_accomplishment": "eyed_the_slack_tub",
+    "sprite": "barrel",
+    "toast": "You touch the surface. Warm all the way down. This tub has not been cold in years, and the scum line says nobody has ever had time to change it."
+   },
+   {
+    "cell": [
+     6,
+     5
+    ],
+    "display_name": "The Practice Slate",
+    "id": "forge_hall_apprentice_slate",
+    "kind": "prop",
+    "observe": "A slate ruled into columns: heat, count, quench, result. The result column is chalked over so many times the surface has gone soft.",
+    "on_interact_accomplishment": "read_the_apprentice_slate",
+    "sprite": "inn_room_ledger",
+    "toast": "Forty-one attempts. Under the last one, in smaller writing than the rest: TRY THE OTHER WAY ROUND.",
+    "visual_states": [
+     {
+      "tint": [
+       0.7,
+       0.7,
+       0.74
+      ],
+      "when": {
+       "at": 1,
+       "counter": "read_the_apprentice_slate"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     10,
+     3
+    ],
+    "display_name": "The Pattern Wall",
+    "id": "forge_hall_pattern_wall",
+    "kind": "prop",
+    "observe": "Finished pieces racked in a grid, each with a civic tag wired to it. They are not for sale. They are the argument.",
+    "on_interact_accomplishment": "eyed_the_pattern_wall",
+    "sprite": "library_shelf",
+    "toast": "Every piece on the wall passed. You count the tags: four different smiths, four different answers, one standard. Pallass framed the disagreement and hung it up."
+   },
+   {
+    "_comment": "P1 FIGHT. INTERACT-ONLY -- never add trigger_radius (it would ambush the TALK/SKILL routes; encounter_when gate is mutation-proven by pallass_depth_gates_check). Banks golem_recalibrated ONLY, never forge_golems_culled.",
+    "allies": [],
+    "arena": "forge_hall",
+    "cell": [
+     8,
+     6
+    ],
+    "conversation": "forge_temper_golem",
+    "display_name": "Calibration Rig",
+    "encounter_when": {
+     "requires": {
+      "standards_commission_taken": 1
+     }
+    },
+    "enemies": [
+     "forge_temper_golem"
+    ],
+    "gate_closed_toast": "The rig swings past its own marks and settles wrong, again and again. Whatever is out of true in it is the forge's business \u2014 until somebody on this floor makes it yours.",
+    "id": "forge_temper_golem",
+    "kind": "encounter",
+    "observe": "A squat rig on three legs, gauges banked along its front, correcting its own posture a half-beat after it needs to.",
+    "on_victory": "golem_recalibrated",
+    "sprite": "forge_golem",
+    "tint": [
+     1.22,
+     0.82,
+     0.68
+    ]
+   }
+  ],
+  "grid": {
+   "height": 9,
+   "width": 12
+  },
+  "interior_flavor": [
+   "Nothing there. Quench water and hammer scale, under a wall of work that all passed.",
+   "Nothing there. The heat in here keeps a schedule, and you are not on it."
+  ],
+  "walls": {
+   "segments": [
+    {
+     "face": [
+      0,
+      0
+     ],
+     "from": [
+      0,
+      0
+     ],
+     "to": [
+      11,
+      0
+     ]
+    },
+    {
+     "face": [
+      0,
+      0
+     ],
+     "from": [
+      0,
+      1
+     ],
+     "to": [
+      0,
+      8
+     ]
+    },
+    {
+     "face": [
+      0,
+      0
+     ],
+     "from": [
+      11,
+      1
+     ],
+     "to": [
+      11,
+      8
+     ]
+    },
+    {
+     "face": [
+      0,
+      0
+     ],
+     "from": [
+      1,
+      8
+     ],
+     "to": [
+      4,
+      8
+     ]
+    },
+    {
+     "face": [
+      0,
+      0
+     ],
+     "from": [
+      6,
+      8
+     ],
+     "to": [
+      10,
+      8
+     ]
+    }
+   ],
+   "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
+   "tile_px": 16
+  }
+ }
+}
