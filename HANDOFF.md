@@ -313,8 +313,12 @@ Process lessons this session (fold candidates for wi-running-the-machine
    what_the_thicket_keeps (retired for new saves, legacy completable);
    (C) briar fights lose ally + solo sim re-gate, wolf-night ally stays;
    (D) new Eloise quest `the_makings` wraps the [Hedge Witch] grant.
-   Lanes + file ownership in spec. Awaiting user spec review before
-   plan/implementation.
+   Lanes + file ownership in spec. Issue #396 FILED. PLAN COMMITTED:
+   docs/superpowers/plans/2026-08-05-riverfarm-redesign-396.md (12 tasks,
+   4 lanes, quests.json integrator-owned). DO NOT IMPLEMENT until the
+   currently-active code session lands; then fresh branch off main
+   (issue/396-riverfarm-redesign), cherry-pick the spec/plan doc commits
+   if the #388 branch hasn't merged.
 
 
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)
