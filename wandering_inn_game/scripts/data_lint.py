@@ -299,6 +299,43 @@ def advise_sub_legible_props(parsed: dict, maps: dict, advisories: list) -> None
 						"-- under the 10px legibility floor (finding 15: a third of a tile does not read)")
 
 
+def check_talk_banks(maps: dict, errors: list) -> None:
+	"""Talk-line banks (2026-08-05): a map's talk_banks entries are spliced
+	into talk_pool / talk_pool_stages lines at compose time via "@<name>"
+	refs. This arm keeps the seam honest: every ref resolves, banks are
+	non-empty string lists, banks do not reference banks (no nesting), and
+	no bank rots unused."""
+	for map_id, m in sorted(maps.items()):
+		banks = m.get("talk_banks", {})
+		if not isinstance(banks, dict):
+			errors.append(f"maps/{map_id}: talk_banks must be an object")
+			continue
+		for name, lines in banks.items():
+			if not (isinstance(lines, list) and lines and all(isinstance(x, str) for x in lines)):
+				errors.append(f"maps/{map_id}: talk_banks['{name}'] must be a non-empty list of strings")
+				continue
+			for x in lines:
+				if x.startswith("@"):
+					errors.append(f"maps/{map_id}: talk_banks['{name}'] contains a ref '{x}' -- banks may not reference banks")
+		used = set()
+		def scan(pool):
+			for x in pool:
+				if isinstance(x, str) and x.startswith("@"):
+					name = x[1:]
+					used.add(name)
+					if name not in banks:
+						errors.append(f"maps/{map_id}: talk ref '@{name}' does not resolve")
+		for e in m.get("entities", []):
+			if isinstance(e.get("talk_pool"), list):
+				scan(e["talk_pool"])
+			for st in e.get("talk_pool_stages", []) or []:
+				if isinstance(st, dict) and isinstance(st.get("lines"), list):
+					scan(st["lines"])
+		for name in banks:
+			if name not in used:
+				errors.append(f"maps/{map_id}: talk_banks['{name}'] is never referenced")
+
+
 def check_skill_icons(parsed: dict, errors: list) -> None:
 	"""Playtest fix wave (finding 3, 2026-08-04): every field-usable skill
 	renders on the exploration hotbar, and a missing `icon` degrades to a
@@ -825,6 +862,7 @@ def main() -> int:
 	check_dialogue(parsed, errors)
 	check_sprites(parsed, errors)
 	check_skill_icons(parsed, errors)
+	check_talk_banks(maps, errors)
 	check_gate_shapes(maps, errors)
 	check_moods(parsed, maps, errors)
 	advisories: list = []

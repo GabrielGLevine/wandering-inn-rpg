@@ -4,6 +4,14 @@
   "width": 14,
   "height": 10
  },
+ "talk_banks": {
+  "ratici_shared": [
+   "Somethin' I can do for you? Ask quick — I talk faster'n I listen, as it were.",
+   "You'll pardon the hat stayin' on. Consider it a heretofore act of civic kindness.",
+   "Wilovan does the philosophizin'. I do the notin' of exits. You came in by the only one, incidentally.",
+   "We don't steal. We recover. My associate's phrasin', that. Mine ran less charitable."
+  ]
+ },
  "blocked": [
   [
    0,
@@ -359,10 +367,7 @@
    "observe": "A short Drake in careful browns, floppy cap settled down over the neck-spines. His eyes did your full inventory the moment you stepped in, and he's too polite to say what it came to.",
    "friendly_line": "A person of discernment, Wilovan said. I withdraw one full half of my suspicions.",
    "talk_pool": [
-    "Somethin' I can do for you? Ask quick — I talk faster'n I listen, as it were.",
-    "You'll pardon the hat stayin' on. Consider it a heretofore act of civic kindness.",
-    "Wilovan does the philosophizin'. I do the notin' of exits. You came in by the only one, incidentally.",
-    "We don't steal. We recover. My associate's phrasin', that. Mine ran less charitable."
+    "@ratici_shared"
    ],
    "talk_pool_stages": [
     {
@@ -380,10 +385,7 @@
       "coyle_operation_found": 1
      },
      "lines": [
-      "Somethin' I can do for you? Ask quick — I talk faster'n I listen, as it were.",
-      "You'll pardon the hat stayin' on. Consider it a heretofore act of civic kindness.",
-      "Wilovan does the philosophizin'. I do the notin' of exits. You came in by the only one, incidentally.",
-      "We don't steal. We recover. My associate's phrasin', that. Mine ran less charitable."
+      "@ratici_shared"
      ]
     },
     {

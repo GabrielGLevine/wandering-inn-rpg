@@ -4,6 +4,51 @@
   "width": 16,
   "height": 10
  },
+ "talk_banks": {
+  "erin_shared": [
+   "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+  ],
+  "erin_shared_2": [
+   "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
+   "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
+   "Everything okay? You've got a look. I know that look - I make that look in mirrors."
+  ],
+  "lyonette_shared": [
+   "Yes, I work here. No, I did not always. That is the whole story, and you may have it for the price of a nod.",
+   "The floors are clean because I cleaned them. Twice. Mind where you set your boots.",
+   "You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
+  ],
+  "ceria_inn_shared": [
+   "The couch by the fire is Yvlon's now. Territorial, armswomen.",
+   "Pisces keeps asking about the vault door. I told him to bring his own rope this time.",
+   "Silver-rank pay, Gold-rank stonework down there. Somebody's math is off, and it isn't mine."
+  ],
+  "ceria_inn_shared_2": [
+   "I trained formal, once. Robes, theory, the whole overpriced show. Doesn't come up much anymore, and I like it that way.",
+   "You want a tip that's actually useful? Watch the ice before you stand on it. I learned that one the expensive way.",
+   "Yvlon says I've gone soft since the inn. I say I've gone smart. There's a difference, and it involves not getting frostbite on purpose anymore."
+  ],
+  "yvlon_inn_shared": [
+   "The inn's quieter than the Guild hall. I'm starting to see why you like it.",
+   "My arm's fine. Stop looking.",
+   "If the door down there opens, I want to be standing in front of it. Someone will be. Better me."
+  ],
+  "yvlon_inn_shared_2": [
+   "Ask about the arms all you like, now. Silver-steel, shapeable, better grip than flesh ever gave me. I've stopped flinching from the question, so you don't have to either.",
+   "Keep your guard up on your off-hand side. Most people forget it exists until something reminds them, and I'd rather you learn it from me than the hard way.",
+   "The couch by the fire really is mine. Ceria just likes saying otherwise."
+  ],
+  "ksmvr_inn_shared": [
+   "I have been given a mug of blue fruit juice. I did not ask for it. Erin says this is called 'hospitality.' I am recording it as an asset.",
+   "This inn does not have traps. I checked all the floors. Twice.",
+   "Captain Ceria says I may sit anywhere. I have chosen the corner with two exits."
+  ],
+  "ksmvr_inn_shared_2": [
+   "I was Prognugator, once. Command caste. I was exiled, is the word Klbkch uses. 'Reassigned' is the word I prefer. Neither changes what happened.",
+   "I have counted every safe path between here and the pantry door. If you ever need the fastest one, comrade, ask. I keep the count current.",
+   "Erin gave me a name for the corner I sit in. She calls it 'Ksmvr's Post.' I have accepted the designation. It is efficient."
+  ]
+ },
  "blocked": [
   [
    7,
@@ -361,9 +406,7 @@
    "observe": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her.",
    "friendly_line": "Oh - hi! You've got a good face, you know that? Come in, sit down. I'll find you something warm - on the house, probably. Don't tell Lyonette I said that.",
    "talk_pool": [
-    "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
-    "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
-    "Everything okay? You've got a look. I know that look - I make that look in mirrors.",
+    "@erin_shared_2",
     "If you hear yelling about a door later, that's just the inn being the inn. Don't worry about it."
    ],
    "_comment": "PRIORITY CONTRACT (H1): talk_pool stages are last-match-wins (social.gd), so array order IS priority -- earliest gates first. Armed main-thread relays must stay LATER in the array than the erin_garden_open/erin_garden_shared pair so they outrank the standing garden signpost.",
@@ -374,7 +417,7 @@
       "cleaned_the_inn": 1
      },
      "lines": [
-      "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+      "@erin_shared"
      ],
      "_comment": "GH#130 bed-onboarding nudge block. One stage per SINGLE-BEAT pre-first-sleep class-gain counter; multi-beat routes (diplomat gossip x3, trader commerce x5) are deliberately un-nudged. Pools AND-gate accomplishments, so OR = sibling stages sharing a line. MUST stay FIRST so any later-satisfied stage overrides it (social.gd:20-22); erin_bed_slept below retires it."
     },
@@ -384,7 +427,7 @@
       "sparred_with_relc": 1
      },
      "lines": [
-      "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+      "@erin_shared"
      ]
     },
     {
@@ -393,7 +436,7 @@
       "learned_magic_from_pisces": 1
      },
      "lines": [
-      "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+      "@erin_shared"
      ]
     },
     {
@@ -402,7 +445,7 @@
       "chess_with_olesm": 1
      },
      "lines": [
-      "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+      "@erin_shared"
      ]
     },
     {
@@ -411,7 +454,7 @@
       "recovered_crate_watch": 1
      },
      "lines": [
-      "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+      "@erin_shared"
      ]
     },
     {
@@ -420,7 +463,7 @@
       "ranged_hit": 3
      },
      "lines": [
-      "Hey — you did real work today! I can always tell, the whole inn sort of hums. Bed. Upstairs, the one by the wall. Levels come while you sleep — that's just how it works. Go go go!"
+      "@erin_shared"
      ]
     },
     {
@@ -534,9 +577,7 @@
       "cisterns_reported": 1
      },
      "lines": [
-      "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
-      "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
-      "Everything okay? You've got a look. I know that look - I make that look in mirrors."
+      "@erin_shared_2"
      ]
     },
     {
@@ -572,9 +613,7 @@
       "raskghar_sealed": 1
      },
      "lines": [
-      "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
-      "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
-      "Everything okay? You've got a look. I know that look - I make that look in mirrors."
+      "@erin_shared_2"
      ]
     },
     {
@@ -620,9 +659,7 @@
       "door_awakened": 1
      },
      "lines": [
-      "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
-      "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
-      "Everything okay? You've got a look. I know that look - I make that look in mirrors."
+      "@erin_shared_2"
      ]
     },
     {
@@ -640,9 +677,7 @@
       "horns_party_formed": 1
      },
      "lines": [
-      "Oh! Hi. Sorry - I was somewhere else in my head. You need something? I can usually find something.",
-      "Welcome to The Wandering Inn! That's the whole speech. I'm still workshopping the rest of it.",
-      "Everything okay? You've got a look. I know that look - I make that look in mirrors."
+      "@erin_shared_2"
      ]
     }
    ],
@@ -667,9 +702,7 @@
    "observe": "A human girl playing at composure a size too large for her. Her hands know trays; her chin knows courts. The two have not finished arguing.",
    "friendly_line": "Lyonette's chin lifts, then softens despite itself. You're kind. People are not, usually, to the help. ...It is a small thing. It is not nothing. Sit where you like; I'll bring something hot.",
    "talk_pool": [
-    "Yes, I work here. No, I did not always. That is the whole story, and you may have it for the price of a nod.",
-    "The floors are clean because I cleaned them. Twice. Mind where you set your boots.",
-    "You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
+    "@lyonette_shared"
    ],
    "talk_pool_stages": [
     {
@@ -698,9 +731,7 @@
       "door_understood": 1
      },
      "lines": [
-      "Yes, I work here. No, I did not always. That is the whole story, and you may have it for the price of a nod.",
-      "The floors are clean because I cleaned them. Twice. Mind where you set your boots.",
-      "You said thank you. To me. Hm. Most don't. — Well. Don't let it go to your head."
+      "@lyonette_shared"
      ]
     }
    ],
@@ -1652,9 +1683,7 @@
    },
    "conversation": "ceria_intro",
    "talk_pool": [
-    "The couch by the fire is Yvlon's now. Territorial, armswomen.",
-    "Pisces keeps asking about the vault door. I told him to bring his own rope this time.",
-    "Silver-rank pay, Gold-rank stonework down there. Somebody's math is off, and it isn't mine."
+    "@ceria_inn_shared"
    ],
    "talk_pool_stages": [
     {
@@ -1665,9 +1694,7 @@
       "chatted_with_ceria_inn": 3
      },
      "lines": [
-      "I trained formal, once. Robes, theory, the whole overpriced show. Doesn't come up much anymore, and I like it that way.",
-      "You want a tip that's actually useful? Watch the ice before you stand on it. I learned that one the expensive way.",
-      "Yvlon says I've gone soft since the inn. I say I've gone smart. There's a difference, and it involves not getting frostbite on purpose anymore."
+      "@ceria_inn_shared_2"
      ]
     }
    ],
@@ -1698,9 +1725,7 @@
     }
    },
    "talk_pool": [
-    "The inn's quieter than the Guild hall. I'm starting to see why you like it.",
-    "My arm's fine. Stop looking.",
-    "If the door down there opens, I want to be standing in front of it. Someone will be. Better me."
+    "@yvlon_inn_shared"
    ],
    "talk_pool_stages": [
     {
@@ -1710,9 +1735,7 @@
       "chatted_with_yvlon_inn": 3
      },
      "lines": [
-      "Ask about the arms all you like, now. Silver-steel, shapeable, better grip than flesh ever gave me. I've stopped flinching from the question, so you don't have to either.",
-      "Keep your guard up on your off-hand side. Most people forget it exists until something reminds them, and I'd rather you learn it from me than the hard way.",
-      "The couch by the fire really is mine. Ceria just likes saying otherwise."
+      "@yvlon_inn_shared_2"
      ]
     }
    ],
@@ -1743,9 +1766,7 @@
     }
    },
    "talk_pool": [
-    "I have been given a mug of blue fruit juice. I did not ask for it. Erin says this is called 'hospitality.' I am recording it as an asset.",
-    "This inn does not have traps. I checked all the floors. Twice.",
-    "Captain Ceria says I may sit anywhere. I have chosen the corner with two exits."
+    "@ksmvr_inn_shared"
    ],
    "talk_pool_stages": [
     {
@@ -1755,9 +1776,7 @@
       "chatted_with_ksmvr_inn": 3
      },
      "lines": [
-      "I was Prognugator, once. Command caste. I was exiled, is the word Klbkch uses. 'Reassigned' is the word I prefer. Neither changes what happened.",
-      "I have counted every safe path between here and the pantry door. If you ever need the fastest one, comrade, ask. I keep the count current.",
-      "Erin gave me a name for the corner I sit in. She calls it 'Ksmvr's Post.' I have accepted the designation. It is efficient."
+      "@ksmvr_inn_shared_2"
      ]
     }
    ],
@@ -1786,9 +1805,7 @@
    },
    "conversation": "ceria_intro",
    "talk_pool": [
-    "The couch by the fire is Yvlon's now. Territorial, armswomen.",
-    "Pisces keeps asking about the vault door. I told him to bring his own rope this time.",
-    "Silver-rank pay, Gold-rank stonework down there. Somebody's math is off, and it isn't mine."
+    "@ceria_inn_shared"
    ],
    "talk_pool_stages": [
     {
@@ -1798,9 +1815,7 @@
       "chatted_with_ceria_inn_returned": 3
      },
      "lines": [
-      "I trained formal, once. Robes, theory, the whole overpriced show. Doesn't come up much anymore, and I like it that way.",
-      "You want a tip that's actually useful? Watch the ice before you stand on it. I learned that one the expensive way.",
-      "Yvlon says I've gone soft since the inn. I say I've gone smart. There's a difference, and it involves not getting frostbite on purpose anymore."
+      "@ceria_inn_shared_2"
      ]
     }
    ],
@@ -1828,9 +1843,7 @@
     }
    },
    "talk_pool": [
-    "The inn's quieter than the Guild hall. I'm starting to see why you like it.",
-    "My arm's fine. Stop looking.",
-    "If the door down there opens, I want to be standing in front of it. Someone will be. Better me."
+    "@yvlon_inn_shared"
    ],
    "talk_pool_stages": [
     {
@@ -1840,9 +1853,7 @@
       "chatted_with_yvlon_inn_returned": 3
      },
      "lines": [
-      "Ask about the arms all you like, now. Silver-steel, shapeable, better grip than flesh ever gave me. I've stopped flinching from the question, so you don't have to either.",
-      "Keep your guard up on your off-hand side. Most people forget it exists until something reminds them, and I'd rather you learn it from me than the hard way.",
-      "The couch by the fire really is mine. Ceria just likes saying otherwise."
+      "@yvlon_inn_shared_2"
      ]
     }
    ],
@@ -1870,9 +1881,7 @@
     }
    },
    "talk_pool": [
-    "I have been given a mug of blue fruit juice. I did not ask for it. Erin says this is called 'hospitality.' I am recording it as an asset.",
-    "This inn does not have traps. I checked all the floors. Twice.",
-    "Captain Ceria says I may sit anywhere. I have chosen the corner with two exits."
+    "@ksmvr_inn_shared"
    ],
    "talk_pool_stages": [
     {
@@ -1882,9 +1891,7 @@
       "chatted_with_ksmvr_inn_returned": 3
      },
      "lines": [
-      "I was Prognugator, once. Command caste. I was exiled, is the word Klbkch uses. 'Reassigned' is the word I prefer. Neither changes what happened.",
-      "I have counted every safe path between here and the pantry door. If you ever need the fastest one, comrade, ask. I keep the count current.",
-      "Erin gave me a name for the corner I sit in. She calls it 'Ksmvr's Post.' I have accepted the designation. It is efficient."
+      "@ksmvr_inn_shared_2"
      ]
     }
    ],

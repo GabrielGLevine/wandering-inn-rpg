@@ -39,13 +39,24 @@ MAP_STAGE_KEYS = {"talk_pool_stages"}
 
 
 def walk_map_texts(obj, path="$", in_talk=False):
-    """Yield (json_path, value) for every map talk line; recurse the rest."""
+    """Yield (json_path, value) for every map talk line; recurse the rest.
+    talk_banks values are PROSE (measured once, where they are written);
+    "@<bank>" refs inside pools are STRUCTURE -- the skeleton freeze keeps
+    their identity and order, so a swapped ref is a structural diff, never
+    an invisible masked slot."""
     if isinstance(obj, dict):
         for k, v in obj.items():
             p = f"{path}.{k}"
+            if k == "talk_banks" and isinstance(v, dict):
+                for name, lines in v.items():
+                    if isinstance(lines, list):
+                        for i, line in enumerate(lines):
+                            if isinstance(line, str):
+                                yield f"{p}.{name}[{i}]", line
+                continue
             if k in MAP_TALK_KEYS and isinstance(v, list):
                 for i, line in enumerate(v):
-                    if isinstance(line, str):
+                    if isinstance(line, str) and not line.startswith("@"):
                         yield f"{p}[{i}]", line
             elif k in MAP_STAGE_KEYS and isinstance(v, list):
                 for i, stage in enumerate(v):
@@ -53,7 +64,7 @@ def walk_map_texts(obj, path="$", in_talk=False):
                         if isinstance(stage.get("line"), str):
                             yield f"{p}[{i}].line", stage["line"]
                         for j, line in enumerate(stage.get("lines", [])):
-                            if isinstance(line, str):
+                            if isinstance(line, str) and not line.startswith("@"):
                                 yield f"{p}[{i}].lines[{j}]", line
             else:
                 yield from walk_map_texts(v, p)
@@ -66,14 +77,21 @@ def map_skeleton(obj, in_talk=False):
     if isinstance(obj, dict):
         out = {}
         for k, v in obj.items():
+            if k == "talk_banks" and isinstance(v, dict):
+                out[k] = {name: ([MASK if isinstance(x, str) else map_skeleton(x) for x in lines]
+                                 if isinstance(lines, list) else map_skeleton(lines))
+                          for name, lines in v.items()}
+                continue
             if k in MAP_TALK_KEYS and isinstance(v, list):
-                out[k] = [MASK if isinstance(x, str) else map_skeleton(x) for x in v]
+                out[k] = [(x if isinstance(x, str) and x.startswith("@")
+                           else (MASK if isinstance(x, str) else map_skeleton(x))) for x in v]
             elif k in MAP_STAGE_KEYS and isinstance(v, list):
                 st_out = []
                 for stage in v:
                     if isinstance(stage, dict):
                         st = {sk: (MASK if sk == "line" and isinstance(sv, str)
-                                   else ([MASK if isinstance(x, str) else map_skeleton(x) for x in sv]
+                                   else ([(x if isinstance(x, str) and x.startswith("@")
+                                           else (MASK if isinstance(x, str) else map_skeleton(x))) for x in sv]
                                          if sk == "lines" and isinstance(sv, list)
                                          else map_skeleton(sv)))
                               for sk, sv in stage.items()}

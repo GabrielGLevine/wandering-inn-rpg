@@ -2307,6 +2307,37 @@ func _init() -> void:
 	assert(int((gWardKept.warded_encounters["goblin_encounter_1"] as Dictionary).get("sleeps", 0)) == 1,
 		"the second night the player paid for is still there")
 
+	# == TALK BANKS EXPAND AT COMPOSE (user directive 2026-08-05) ==
+	# 92 of 395 map talk-line slots were verbatim copy-paste; maps now declare
+	# talk_banks once and splice with "@<name>". Expansion is a compose-time
+	# contract: every consumer sees plain string pools with NO refs left.
+	# Tripwire: krshia's street pool must contain her banked regulars, in
+	# order, with zero "@" strings surviving anywhere in any composed map.
+	var bank_scene := WISceneCatalog.compose()
+	var bank_street: Dictionary = bank_scene["maps"]["street"]
+	var krshia_pool: Array = []
+	for bank_ent: Variant in bank_street["entities"]:
+		if bank_ent is Dictionary and String((bank_ent as Dictionary).get("id", "")) == "krshia":
+			for bank_stage: Variant in (bank_ent as Dictionary).get("talk_pool_stages", []):
+				if bank_stage is Dictionary and (bank_stage as Dictionary).get("lines") is Array:
+					krshia_pool = (bank_stage as Dictionary)["lines"]
+					if krshia_pool.size() >= 4:
+						break
+			break
+	assert(krshia_pool.size() >= 4, "krshia's staged pool expanded from its bank")
+	for bank_map_id: String in bank_scene["maps"]:
+		for bank_ent2: Variant in (bank_scene["maps"][bank_map_id] as Dictionary).get("entities", []):
+			if not (bank_ent2 is Dictionary):
+				continue
+			for raw_line: Variant in (bank_ent2 as Dictionary).get("talk_pool", []):
+				assert(not (raw_line is String and (raw_line as String).begins_with("@")),
+					"unexpanded talk ref survived compose on %s" % bank_map_id)
+			for bank_stage2: Variant in (bank_ent2 as Dictionary).get("talk_pool_stages", []):
+				if bank_stage2 is Dictionary:
+					for raw_line2: Variant in (bank_stage2 as Dictionary).get("lines", []):
+						assert(not (raw_line2 is String and (raw_line2 as String).begins_with("@")),
+							"unexpanded talk ref survived compose on %s" % bank_map_id)
+
 	# == PLAYTEST FIX WAVE: ALL WATER IS FREEZABLE (user ruling 2026-08-04) ==
 	# The floodplains pond shipped with ONE freezable cell of ~23 and the sewers
 	# channels 2 of 28 -- aiming a freeze anywhere else hit the "no standing

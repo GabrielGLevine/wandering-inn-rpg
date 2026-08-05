@@ -25,23 +25,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.entities[1].talk_pool_stages[1].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[1].talk_pool_stages[1].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Erin"
-   ]
-  },
-  "$.entities[1].talk_pool_stages[1].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[1].talk_pool_stages[2].lines[0]": {
    "brackets": [],
    "digits": [],
@@ -54,23 +37,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.entities[1].talk_pool_stages[4].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[1].talk_pool_stages[4].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Erin"
-   ]
-  },
-  "$.entities[1].talk_pool_stages[4].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[1].talk_pool_stages[5].lines[0]": {
    "brackets": [],
    "digits": [],
@@ -78,23 +44,6 @@
     "Door",
     "Pallass"
    ]
-  },
-  "$.entities[1].talk_pool_stages[6].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[1].talk_pool_stages[6].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Erin"
-   ]
-  },
-  "$.entities[1].talk_pool_stages[6].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
   },
   "$.entities[4].talk_pool[0]": {
    "brackets": [],
@@ -124,6 +73,23 @@
    "propnouns": []
   },
   "$.entities[6].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.selys_shared[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.selys_shared[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin"
+   ]
+  },
+  "$.talk_banks.selys_shared[2]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -317,9 +283,7 @@
      {
       "id": "selys_past_the_counter",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@selys_shared"
       ],
       "requires_accomplishment": {
        "chatted_with_selys": 2,
@@ -349,9 +313,7 @@
       "_comment": "M2 warm terminal: retire to selys_past_the_counter's WARM lines, not the cold base pool -- once the Horns thread retires the player is past the counter with her, so the terminal register stays warm (the warm stage above keeps its own gate+position). Same warm lines in selys_thread_pallass_neutral below.",
       "id": "selys_thread_horns_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@selys_shared"
       ],
       "requires_accomplishment": {
        "horns_party_formed": 1
@@ -370,9 +332,7 @@
       "_comment": "M2 warm terminal: selys_past_the_counter WARM lines (see selys_thread_horns_neutral).",
       "id": "selys_thread_pallass_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@selys_shared"
       ],
       "requires_accomplishment": {
        "pallass_attuned": 1
@@ -596,6 +556,13 @@
    "Nothing there. Chalk dust and boot grit, and a floorboard worn pale where people wait to be called.",
    "Nothing there. Somewhere behind the desk a drawer shuts. Guild business, and none of it yours."
   ],
+  "talk_banks": {
+   "selys_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ]
+  },
   "walls": {
    "segments": [
     {

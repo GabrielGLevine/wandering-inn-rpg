@@ -28,7 +28,7 @@ static func _compose() -> Dictionary:
 	for path: String in _sorted_map_paths():
 		var map_id: String = path.get_file().get_basename()
 		assert(not maps.has(map_id), "duplicate map key '%s' (%s)" % [map_id, path])
-		maps[map_id] = _read_json(path)
+		maps[map_id] = _expand_talk_banks(_read_json(path), map_id)
 	root["maps"] = maps
 	root["interactions"] = _read_json(INTERACTIONS_PATH)
 	return root
@@ -53,3 +53,43 @@ static func _read_json(path: String) -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	assert(parsed is Dictionary, "invalid JSON at " + path)
 	return parsed
+
+
+## Talk-line banks (user directive 2026-08-05): 92 of 395 map talk-line slots
+## were verbatim copy-paste -- the same line hand-duplicated so it could
+## appear under several stage conditions or on a *_returned entity twin. A
+## map may now declare `"talk_banks": {"<name>": ["line", ...]}` once, and
+## any talk_pool array or talk_pool_stages lines array may splice a bank
+## with the entry "@<name>". Expansion happens HERE, at compose time, so
+## the sim, the presentation layer, the QA driver and the save system all
+## see exactly the shapes that shipped before banks existed. Banks may not
+## reference banks (data_lint enforces); an unresolvable ref is a hard
+## assert because a silently dropped line pool is a content bug.
+static func _expand_talk_banks(map: Dictionary, map_id: String) -> Dictionary:
+	var banks: Dictionary = map.get("talk_banks", {})
+	if banks.is_empty():
+		return map
+	for e: Variant in map.get("entities", []):
+		if not (e is Dictionary):
+			continue
+		var ent := e as Dictionary
+		if ent.get("talk_pool") is Array:
+			ent["talk_pool"] = _splice_refs(ent["talk_pool"], banks, map_id)
+		if ent.get("talk_pool_stages") is Array:
+			for st: Variant in ent["talk_pool_stages"]:
+				if st is Dictionary and (st as Dictionary).get("lines") is Array:
+					(st as Dictionary)["lines"] = _splice_refs((st as Dictionary)["lines"], banks, map_id)
+	return map
+
+
+static func _splice_refs(pool: Array, banks: Dictionary, map_id: String) -> Array:
+	var out: Array = []
+	for entry: Variant in pool:
+		if entry is String and (entry as String).begins_with("@"):
+			var name := (entry as String).substr(1)
+			assert(banks.has(name), "maps/%s: talk bank '@%s' does not resolve" % [map_id, name])
+			for line: Variant in banks[name]:
+				out.append(line)
+		else:
+			out.append(entry)
+	return out

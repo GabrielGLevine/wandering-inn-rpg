@@ -1,51 +1,6 @@
 {
  "facts": {
-  "$.entities[18].talk_pool[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[18].talk_pool[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[18].talk_pool[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[18].talk_pool[3]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[18].talk_pool_stages[0].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[18].talk_pool_stages[1].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[18].talk_pool_stages[2].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[18].talk_pool_stages[2].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[18].talk_pool_stages[2].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[18].talk_pool_stages[2].lines[3]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -80,61 +35,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.entities[20].talk_pool[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[20].talk_pool[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[20].talk_pool[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[20].talk_pool[3]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[20].talk_pool[4]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[20].talk_pool_stages[0].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[20].talk_pool_stages[1].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[20].talk_pool_stages[1].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[20].talk_pool_stages[1].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[20].talk_pool_stages[1].lines[3]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[20].talk_pool_stages[1].lines[4]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[20].talk_pool_stages[2].lines[0]": {
    "brackets": [],
    "digits": [],
@@ -161,6 +61,56 @@
    "propnouns": []
   },
   "$.entities[20].talk_pool_stages[3].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.riverfarm_headman_shared[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.riverfarm_headman_shared[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.riverfarm_headman_shared[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.riverfarm_headman_shared[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.riverfarm_headman_shared_2[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.riverfarm_hunter_shared[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.riverfarm_hunter_shared[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.riverfarm_hunter_shared[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.riverfarm_hunter_shared[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.riverfarm_hunter_shared[4]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -1457,10 +1407,7 @@
     "observe": "A ledger under one arm, mud to the knee, the look of a man doing three jobs badly instead of one job well.",
     "sprite": "human_laborer",
     "talk_pool": [
-     "\u00a7",
-     "\u00a7",
-     "\u00a7",
-     "\u00a7"
+     "@riverfarm_headman_shared"
     ],
     "talk_pool_stages": [
      {
@@ -1476,7 +1423,7 @@
      {
       "id": "riverfarm_headman_thread_hollow",
       "lines": [
-       "\u00a7"
+       "@riverfarm_headman_shared_2"
       ],
       "requires_accomplishment": {
        "heard_price_of_a_favor": 1
@@ -1485,10 +1432,7 @@
      {
       "id": "riverfarm_headman_thread_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@riverfarm_headman_shared"
       ],
       "requires_accomplishment": {
        "blight_lifted": 1
@@ -1564,17 +1508,13 @@
     "observe": "Rope-burned hands, a game bag, and wolf sign on his boots. Whatever he hunts, it walks on four legs.",
     "sprite": "a_hunter",
     "talk_pool": [
-     "\u00a7",
-     "\u00a7",
-     "\u00a7",
-     "\u00a7",
-     "\u00a7"
+     "@riverfarm_hunter_shared"
     ],
     "talk_pool_stages": [
      {
       "id": "riverfarm_hunter_thread_hollow",
       "lines": [
-       "\u00a7"
+       "@riverfarm_headman_shared_2"
       ],
       "requires_accomplishment": {
        "heard_price_of_a_favor": 1
@@ -1583,11 +1523,7 @@
      {
       "id": "riverfarm_hunter_thread_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@riverfarm_hunter_shared"
       ],
       "requires_accomplishment": {
        "blight_lifted": 1
@@ -1982,6 +1918,24 @@
   "grid": {
    "height": 16,
    "width": 24
+  },
+  "talk_banks": {
+   "riverfarm_headman_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "riverfarm_headman_shared_2": [
+    "\u00a7"
+   ],
+   "riverfarm_hunter_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ]
   }
  }
 }

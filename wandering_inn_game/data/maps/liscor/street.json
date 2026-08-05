@@ -9,6 +9,32 @@
   "width": 32,
   "height": 20
  },
+ "talk_banks": {
+  "zevara_shared": [
+   "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
+   "The cistern file is closed. Do you know how few files close in this office? I keep it on top of the stack for morale.",
+   "If you're between jobs, the Watch pays for work already done — the crate crew, the cisterns, anything with a file. My desk, not the Guild's board; that's Selys's paper and her rules."
+  ],
+  "olesm_shared": [
+   "I set the board up when the bells go quiet now, on the chance you wander past. A [Tactician] plans for the likely contingencies. You count as one.",
+   "Erin beat me in eleven moves yesterday. Eleven! I wrote them all down. I'm going to frame the humiliation and study it daily.",
+   "You, me, the board, one hour. I've been saving an opening that is either brilliant or a resignation with extra steps."
+  ],
+  "olesm_shared_2": [
+   "A runner was asking after you. Captain wants you at the gate."
+  ],
+  "pisces_shared": [
+   "Ah. You. Acceptable timing. I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
+   "Your channel has stopped embarrassing you, I trust. Good. I dislike wasted instruction; it reflects on the instructor.",
+   "The bread stall raises its prices after the fourth bell. Buy before. There — advice worth coin, given freely. Note the date."
+  ],
+  "krshia_shared": [
+   "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
+   "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
+   "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
+   "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+  ]
+ },
  "blocked": [
   [
    10,
@@ -1105,9 +1131,7 @@
       "chatted_with_zevara": 2
      },
      "lines": [
-      "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
-      "The cistern file is closed. Do you know how few files close in this office? I keep it on top of the stack for morale.",
-      "If you're between jobs, the Watch pays for work already done — the crate crew, the cisterns, anything with a file. My desk, not the Guild's board; that's Selys's paper and her rules."
+      "@zevara_shared"
      ]
     },
     {
@@ -1136,9 +1160,7 @@
       "cisterns_reported": 1
      },
      "lines": [
-      "You. Good. Stand there and look like a competent citizen where the recruits can see you. That's an order I can't officially give.",
-      "The cistern file is closed. Do you know how few files close in this office? I keep it on top of the stack for morale.",
-      "If you're between jobs, the Watch pays for work already done — the crate crew, the cisterns, anything with a file. My desk, not the Guild's board; that's Selys's paper and her rules."
+      "@zevara_shared"
      ]
     }
    ],
@@ -1230,9 +1252,7 @@
       "chatted_with_olesm": 3
      },
      "lines": [
-      "I set the board up when the bells go quiet now, on the chance you wander past. A [Tactician] plans for the likely contingencies. You count as one.",
-      "Erin beat me in eleven moves yesterday. Eleven! I wrote them all down. I'm going to frame the humiliation and study it daily.",
-      "You, me, the board, one hour. I've been saving an opening that is either brilliant or a resignation with extra steps."
+      "@olesm_shared"
      ]
     },
     {
@@ -1251,7 +1271,7 @@
       "watch_runner_pointed": 1
      },
      "lines": [
-      "A runner was asking after you. Captain wants you at the gate."
+      "@olesm_shared_2"
      ]
     },
     {
@@ -1261,9 +1281,7 @@
       "heard_the_deep_tremor": 1
      },
      "lines": [
-      "I set the board up when the bells go quiet now, on the chance you wander past. A [Tactician] plans for the likely contingencies. You count as one.",
-      "Erin beat me in eleven moves yesterday. Eleven! I wrote them all down. I'm going to frame the humiliation and study it daily.",
-      "You, me, the board, one hour. I've been saving an opening that is either brilliant or a resignation with extra steps."
+      "@olesm_shared"
      ]
     }
    ],
@@ -1335,7 +1353,7 @@
     0.78,
     0.62
    ],
-   "_comment": "Finding 13: he wore `hired_blade`, a COMBATANT rig, forbidden on a friendly. Anonymous-archetype name; shares `human_laborer` with the drayman (anonymous extras may), dusty tint keeps the two co-visible men distinct."
+   "_comment": "Finding 13: he wore `hired_blade`, a COMBATANT rig, forbidden on a friendly. Shares `human_laborer` with the drayman (anonymous extras may); dusty tint keeps the two distinct."
   },
   {
    "id": "krshia_stall",
@@ -1431,9 +1449,7 @@
       "chatted_with_pisces": 3
      },
      "lines": [
-      "Ah. You. Acceptable timing. I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
-      "Your channel has stopped embarrassing you, I trust. Good. I dislike wasted instruction; it reflects on the instructor.",
-      "The bread stall raises its prices after the fourth bell. Buy before. There — advice worth coin, given freely. Note the date."
+      "@pisces_shared"
      ]
     },
     {
@@ -1452,9 +1468,7 @@
       "cleared_the_warren": 1
      },
      "lines": [
-      "Ah. You. Acceptable timing. I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
-      "Your channel has stopped embarrassing you, I trust. Good. I dislike wasted instruction; it reflects on the instructor.",
-      "The bread stall raises its prices after the fourth bell. Buy before. There — advice worth coin, given freely. Note the date."
+      "@pisces_shared"
      ]
     },
     {
@@ -1473,9 +1487,7 @@
       "door_understood": 1
      },
      "lines": [
-      "Ah. You. Acceptable timing. I was on the verge of being bored, and you are marginally better than boredom. I do not say that to many.",
-      "Your channel has stopped embarrassing you, I trust. Good. I dislike wasted instruction; it reflects on the instructor.",
-      "The bread stall raises its prices after the fourth bell. Buy before. There — advice worth coin, given freely. Note the date."
+      "@pisces_shared"
      ]
     },
     {
@@ -1610,10 +1622,7 @@
       "chatted_with_krshia": 4
      },
      "lines": [
-      "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
-      "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
-      "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
-      "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+      "@krshia_shared"
      ]
     },
     {
@@ -1632,10 +1641,7 @@
       "resolved_the_cisterns": 1
      },
      "lines": [
-      "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
-      "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
-      "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
-      "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+      "@krshia_shared"
      ]
     },
     {
@@ -1644,7 +1650,7 @@
       "watch_runner_pointed": 1
      },
      "lines": [
-      "A runner was asking after you. Captain wants you at the gate."
+      "@olesm_shared_2"
      ]
     },
     {
@@ -1654,10 +1660,7 @@
       "heard_the_deep_tremor": 1
      },
      "lines": [
-      "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
-      "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
-      "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
-      "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+      "@krshia_shared"
      ]
     },
     {
@@ -1676,10 +1679,7 @@
       "recovered_anchor_stone": 1
      },
      "lines": [
-      "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
-      "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
-      "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
-      "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+      "@krshia_shared"
      ]
     },
     {
@@ -1708,10 +1708,7 @@
       "door_awakened": 1
      },
      "lines": [
-      "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
-      "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
-      "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
-      "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+      "@krshia_shared"
      ]
     },
     {
@@ -1722,10 +1719,7 @@
      },
      "lines": [
       "The carts went south and came back empty, yes? Do not tell me what they carried. I priced it as wool.",
-      "Good — you. Come stand by the stall; you make the other customers braver. They think if you have not been bitten yet, they will not be.",
-      "I sold honey-bread this morning and thought, that one would like this. So. There is a piece behind the counter. Do not tell the Watch I do favorites.",
-      "You listen the way Gnolls listen. Whole ears. It is rarer in this city than good wool, and wool does not walk up to my stall twice a week.",
-      "A corusdeer came down lame past the east rise. The Watch does not spend healers on beasts. Someone with patient hands could do that animal some good. Hrr."
+      "@krshia_shared"
      ]
     }
    ],

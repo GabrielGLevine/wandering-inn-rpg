@@ -32,47 +32,7 @@
    "digits": [],
    "propnouns": []
   },
-  "$.entities[3].talk_pool[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[3].talk_pool[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[3].talk_pool[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[3].talk_pool[3]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[3].talk_pool_stages[0].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[3].talk_pool_stages[1].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[3].talk_pool_stages[1].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[3].talk_pool_stages[1].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[3].talk_pool_stages[1].lines[3]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -115,6 +75,26 @@
    "propnouns": []
   },
   "$.entities[6].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.ratici_shared[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.ratici_shared[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.ratici_shared[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.ratici_shared[3]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -451,10 +431,7 @@
     "observe": "A short Drake in careful browns, floppy cap settled down over the neck-spines. His eyes did your full inventory the moment you stepped in, and he's too polite to say what it came to.",
     "sprite": "ratici",
     "talk_pool": [
-     "\u00a7",
-     "\u00a7",
-     "\u00a7",
-     "\u00a7"
+     "@ratici_shared"
     ],
     "talk_pool_stages": [
      {
@@ -469,10 +446,7 @@
      {
       "id": "ratici_thread_operation_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@ratici_shared"
       ],
       "requires_accomplishment": {
        "coyle_operation_found": 1
@@ -760,6 +734,14 @@
   "grid": {
    "height": 10,
    "width": 14
+  },
+  "talk_banks": {
+   "ratici_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ]
   }
  }
 }

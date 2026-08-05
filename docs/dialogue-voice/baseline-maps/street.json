@@ -31,21 +31,6 @@
     "Runner"
    ]
   },
-  "$.entities[11].talk_pool_stages[1].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[11].talk_pool_stages[1].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[11].talk_pool_stages[1].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[11].talk_pool_stages[2].lines[0]": {
    "brackets": [],
    "digits": [],
@@ -53,42 +38,12 @@
     "Watch"
    ]
   },
-  "$.entities[11].talk_pool_stages[3].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[11].talk_pool_stages[3].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[11].talk_pool_stages[3].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[11].talk_pool_stages[4].lines[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": [
     "Liscor"
    ]
-  },
-  "$.entities[11].talk_pool_stages[5].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[11].talk_pool_stages[5].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[11].talk_pool_stages[5].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
   },
   "$.entities[11].talk_pool_stages[6].lines[0]": {
    "brackets": [],
@@ -152,181 +107,20 @@
    "digits": [],
    "propnouns": []
   },
-  "$.entities[13].talk_pool_stages[10].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[13].talk_pool_stages[10].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[10].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Gnolls"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[10].lines[3]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
   "$.entities[13].talk_pool_stages[11].lines[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
-  },
-  "$.entities[13].talk_pool_stages[11].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[13].talk_pool_stages[11].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[11].lines[3]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Gnolls"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[11].lines[4]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[1].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[13].talk_pool_stages[1].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[1].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Gnolls"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[1].lines[3]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
   },
   "$.entities[13].talk_pool_stages[2].lines[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[13].talk_pool_stages[3].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[13].talk_pool_stages[3].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[3].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Gnolls"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[3].lines[3]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[4].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[13].talk_pool_stages[5].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[13].talk_pool_stages[5].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[5].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Gnolls"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[5].lines[3]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
   "$.entities[13].talk_pool_stages[6].lines[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
-  },
-  "$.entities[13].talk_pool_stages[7].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[13].talk_pool_stages[7].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[7].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Gnolls"
-   ]
-  },
-  "$.entities[13].talk_pool_stages[7].lines[3]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Watch"
-   ]
   },
   "$.entities[13].talk_pool_stages[8].lines[0]": {
    "brackets": [],
@@ -384,25 +178,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.entities[2].talk_pool_stages[1].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[2].talk_pool_stages[1].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[2].talk_pool_stages[1].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Guild",
-    "Selys",
-    "Watch"
-   ]
-  },
   "$.entities[2].talk_pool_stages[2].lines[0]": {
    "brackets": [],
    "digits": [],
@@ -412,25 +187,6 @@
    "brackets": [],
    "digits": [],
    "propnouns": []
-  },
-  "$.entities[2].talk_pool_stages[4].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[2].talk_pool_stages[4].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[2].talk_pool_stages[4].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Guild",
-    "Selys",
-    "Watch"
-   ]
   },
   "$.entities[3].talk_pool[0]": {
    "brackets": [],
@@ -515,25 +271,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.entities[4].talk_pool_stages[2].lines[0]": {
-   "brackets": [
-    "[Tactician]"
-   ],
-   "digits": [],
-   "propnouns": [
-    "Tactician"
-   ]
-  },
-  "$.entities[4].talk_pool_stages[2].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[4].talk_pool_stages[2].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[4].talk_pool_stages[3].lines[0]": {
    "brackets": [],
    "digits": [],
@@ -544,12 +281,33 @@
    "digits": [],
    "propnouns": []
   },
-  "$.entities[4].talk_pool_stages[4].lines[0]": {
+  "$.talk_banks.krshia_shared[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[4].talk_pool_stages[5].lines[0]": {
+  "$.talk_banks.krshia_shared[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.talk_banks.krshia_shared[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Gnolls"
+   ]
+  },
+  "$.talk_banks.krshia_shared[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Watch"
+   ]
+  },
+  "$.talk_banks.olesm_shared[0]": {
    "brackets": [
     "[Tactician]"
    ],
@@ -558,15 +316,54 @@
     "Tactician"
    ]
   },
-  "$.entities[4].talk_pool_stages[5].lines[1]": {
+  "$.talk_banks.olesm_shared[1]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[4].talk_pool_stages[5].lines[2]": {
+  "$.talk_banks.olesm_shared[2]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
+  },
+  "$.talk_banks.olesm_shared_2[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.pisces_shared[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.pisces_shared[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.pisces_shared[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.zevara_shared[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.zevara_shared[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.zevara_shared[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild",
+    "Selys",
+    "Watch"
+   ]
   }
  },
  "skeleton": {
@@ -1439,9 +1236,7 @@
      {
       "id": "zevara_trusted_irregular",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@zevara_shared"
       ],
       "requires_accomplishment": {
        "chatted_with_zevara": 2,
@@ -1471,9 +1266,7 @@
       "_comment": "M2 warm terminal: retire to zevara_trusted_irregular's WARM lines, not the cold base pool -- by the time the cistern thread retires the player is a trusted irregular, so the terminal register stays warm (the warm stage above keeps its own gate+position).",
       "id": "zevara_thread_cisterns_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@zevara_shared"
       ],
       "requires_accomplishment": {
        "cisterns_reported": 1
@@ -1564,9 +1357,7 @@
      {
       "id": "olesm_board_partner",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@olesm_shared"
       ],
       "requires_accomplishment": {
        "chatted_with_olesm": 3,
@@ -1586,7 +1377,7 @@
      {
       "id": "olesm_thread_gate_runner",
       "lines": [
-       "\u00a7"
+       "@olesm_shared_2"
       ],
       "requires_accomplishment": {
        "watch_runner_pointed": 1
@@ -1596,9 +1387,7 @@
       "_comment": "M2 warm terminal: retire to olesm_board_partner's WARM friend-tier lines, not the cold base pool -- once the gate-runner thread retires the player is Olesm's board partner, so the terminal register stays warm (the warm stages above keep their own gates+positions).",
       "id": "olesm_thread_gate_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@olesm_shared"
       ],
       "requires_accomplishment": {
        "heard_the_deep_tremor": 1
@@ -1765,9 +1554,7 @@
      {
       "id": "pisces_tolerable_company",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@pisces_shared"
       ],
       "requires_accomplishment": {
        "chatted_with_pisces": 3,
@@ -1787,9 +1574,7 @@
       "_comment": "M2 warm terminal: retire to pisces_tolerable_company's WARM lines, not the cold base pool -- once the deep-tremor thread retires the player is tolerable company, so the terminal register stays warm (the warm stage above keeps its own gate+position).",
       "id": "pisces_thread_warren_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@pisces_shared"
       ],
       "requires_accomplishment": {
        "cleared_the_warren": 1
@@ -1808,9 +1593,7 @@
       "_comment": "M2 warm terminal: retire to pisces_tolerable_company's WARM lines, not the cold base pool (same warm register as pisces_thread_warren_neutral above).",
       "id": "pisces_thread_door_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@pisces_shared"
       ],
       "requires_accomplishment": {
        "door_understood": 1
@@ -1944,10 +1727,7 @@
      {
       "id": "krshia_friend_of_the_silverfangs",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@krshia_shared"
       ],
       "requires_accomplishment": {
        "chatted_with_krshia": 4,
@@ -1967,10 +1747,7 @@
       "_comment": "M2 warm terminal: retire to krshia_friend_of_the_silverfangs's WARM friend-tier lines, not the cold base pool -- by the time a thread retires the player is a friend of the Silverfangs, so every terminal register stays warm (the warm stages above keep their own gates+positions). Same warm lines across all four krshia retire stages below.",
       "id": "krshia_thread_cisterns_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@krshia_shared"
       ],
       "requires_accomplishment": {
        "resolved_the_cisterns": 1
@@ -1979,7 +1756,7 @@
      {
       "id": "krshia_thread_gate_runner",
       "lines": [
-       "\u00a7"
+       "@olesm_shared_2"
       ],
       "requires_accomplishment": {
        "watch_runner_pointed": 1
@@ -1989,10 +1766,7 @@
       "_comment": "M2 warm terminal: krshia_friend_of_the_silverfangs WARM lines (see krshia_thread_cisterns_neutral).",
       "id": "krshia_thread_gate_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@krshia_shared"
       ],
       "requires_accomplishment": {
        "heard_the_deep_tremor": 1
@@ -2011,10 +1785,7 @@
       "_comment": "M2 warm terminal: krshia_friend_of_the_silverfangs WARM lines (see krshia_thread_cisterns_neutral).",
       "id": "krshia_thread_ruin_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@krshia_shared"
       ],
       "requires_accomplishment": {
        "recovered_anchor_stone": 1
@@ -2043,10 +1814,7 @@
       "_comment": "M2 warm terminal: krshia_friend_of_the_silverfangs WARM lines (see krshia_thread_cisterns_neutral).",
       "id": "krshia_thread_door_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@krshia_shared"
       ],
       "requires_accomplishment": {
        "door_awakened": 1
@@ -2057,10 +1825,7 @@
       "id": "krshia_thread_goblin_run",
       "lines": [
        "\u00a7",
-       "\u00a7",
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@krshia_shared"
       ],
       "requires_accomplishment": {
        "camp_trade_brokered": 1
@@ -2465,6 +2230,32 @@
     "seed": 11
    }
   ],
+  "talk_banks": {
+   "krshia_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "olesm_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "olesm_shared_2": [
+    "\u00a7"
+   ],
+   "pisces_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "zevara_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ]
+  },
   "walls": {
    "segments": [
     {

@@ -5,6 +5,24 @@
   "width": 24,
   "height": 16
  },
+ "talk_banks": {
+  "riverfarm_headman_shared": [
+   "We don't truck with witches here. Didn't used to, anyway.",
+   "A bad crop year, you learn to count what's yours twice. Once for the harvest, once for what walked off with it.",
+   "Sorry, I don't mean to- never mind. Long nights lately.",
+   "Wolves didn't used to come this close to the fences. Whatever's stirring up that hollow is pushing everything our way, wolves included."
+  ],
+  "riverfarm_headman_shared_2": [
+   "The hollow's west past the fields. Nobody walks you there. Nobody local, anyway."
+  ],
+  "riverfarm_hunter_shared": [
+   "Hollow's quieter than it should be. Doesn't sit right.",
+   "Lost two lambs to something with thorns for teeth. Wasn't a wolf.",
+   "Know that treeline better than the headman does. He'd rather not.",
+   "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health.",
+   "The witch? Her business is hers and I keep to mine. Wolves took two lambs this spring — that's my trade, all of it."
+  ]
+ },
  "blocked": [
   [
    7,
@@ -1338,10 +1356,7 @@
    "display_name": "Former Headman",
    "sprite": "human_laborer",
    "talk_pool": [
-    "We don't truck with witches here. Didn't used to, anyway.",
-    "A bad crop year, you learn to count what's yours twice. Once for the harvest, once for what walked off with it.",
-    "Sorry, I don't mean to- never mind. Long nights lately.",
-    "Wolves didn't used to come this close to the fences. Whatever's stirring up that hollow is pushing everything our way, wolves included."
+    "@riverfarm_headman_shared"
    ],
    "talk_pool_stages": [
     {
@@ -1360,7 +1375,7 @@
       "heard_price_of_a_favor": 1
      },
      "lines": [
-      "The hollow's west past the fields. Nobody walks you there. Nobody local, anyway."
+      "@riverfarm_headman_shared_2"
      ]
     },
     {
@@ -1369,10 +1384,7 @@
       "blight_lifted": 1
      },
      "lines": [
-      "We don't truck with witches here. Didn't used to, anyway.",
-      "A bad crop year, you learn to count what's yours twice. Once for the harvest, once for what walked off with it.",
-      "Sorry, I don't mean to- never mind. Long nights lately.",
-      "Wolves didn't used to come this close to the fences. Whatever's stirring up that hollow is pushing everything our way, wolves included."
+      "@riverfarm_headman_shared"
      ]
     },
     {
@@ -1445,11 +1457,7 @@
    "display_name": "The Hunter",
    "sprite": "a_hunter",
    "talk_pool": [
-    "Hollow's quieter than it should be. Doesn't sit right.",
-    "Lost two lambs to something with thorns for teeth. Wasn't a wolf.",
-    "Know that treeline better than the headman does. He'd rather not.",
-    "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health.",
-    "The witch? Her business is hers and I keep to mine. Wolves took two lambs this spring — that's my trade, all of it."
+    "@riverfarm_hunter_shared"
    ],
    "talk_pool_stages": [
     {
@@ -1458,7 +1466,7 @@
       "heard_price_of_a_favor": 1
      },
      "lines": [
-      "The hollow's west past the fields. Nobody walks you there. Nobody local, anyway."
+      "@riverfarm_headman_shared_2"
      ]
     },
     {
@@ -1467,11 +1475,7 @@
       "blight_lifted": 1
      },
      "lines": [
-      "Hollow's quieter than it should be. Doesn't sit right.",
-      "Lost two lambs to something with thorns for teeth. Wasn't a wolf.",
-      "Know that treeline better than the headman does. He'd rather not.",
-      "Wolf sign's getting thicker toward the hollow, week by week. I'm not walking that treeline for my health.",
-      "The witch? Her business is hers and I keep to mine. Wolves took two lambs this spring — that's my trade, all of it."
+      "@riverfarm_hunter_shared"
      ]
     },
     {

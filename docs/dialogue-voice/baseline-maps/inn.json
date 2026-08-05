@@ -1,30 +1,6 @@
 {
  "facts": {
-  "$.entities[0].talk_pool[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[0].talk_pool[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Inn",
-    "The",
-    "Wandering"
-   ]
-  },
-  "$.entities[0].talk_pool[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool[3]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[0].lines[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -69,25 +45,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.entities[0].talk_pool_stages[16].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[16].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Inn",
-    "The",
-    "Wandering"
-   ]
-  },
-  "$.entities[0].talk_pool_stages[16].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[0].talk_pool_stages[17].lines[0]": {
    "brackets": [],
    "digits": [],
@@ -106,30 +63,6 @@
    "propnouns": [
     "Zevara"
    ]
-  },
-  "$.entities[0].talk_pool_stages[1].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[20].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[20].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Inn",
-    "The",
-    "Wandering"
-   ]
-  },
-  "$.entities[0].talk_pool_stages[20].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
   },
   "$.entities[0].talk_pool_stages[21].lines[0]": {
    "brackets": [],
@@ -153,65 +86,7 @@
    "digits": [],
    "propnouns": []
   },
-  "$.entities[0].talk_pool_stages[25].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[25].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Inn",
-    "The",
-    "Wandering"
-   ]
-  },
-  "$.entities[0].talk_pool_stages[25].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[0].talk_pool_stages[26].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[27].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[27].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Inn",
-    "The",
-    "Wandering"
-   ]
-  },
-  "$.entities[0].talk_pool_stages[27].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[2].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[3].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[4].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[0].talk_pool_stages[5].lines[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -261,21 +136,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.entities[1].talk_pool[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[1].talk_pool[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[1].talk_pool[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.entities[1].talk_pool_stages[0].lines[0]": {
    "brackets": [],
    "digits": [],
@@ -298,105 +158,82 @@
     "Liscor"
    ]
   },
-  "$.entities[1].talk_pool_stages[2].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[1].talk_pool_stages[2].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[1].talk_pool_stages[2].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[30].talk_pool[0]": {
+  "$.talk_banks.ceria_inn_shared[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": [
     "Yvlon"
    ]
   },
-  "$.entities[30].talk_pool[1]": {
+  "$.talk_banks.ceria_inn_shared[1]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[30].talk_pool[2]": {
+  "$.talk_banks.ceria_inn_shared[2]": {
    "brackets": [],
    "digits": [],
    "propnouns": [
     "Gold"
    ]
   },
-  "$.entities[30].talk_pool_stages[0].lines[0]": {
+  "$.talk_banks.ceria_inn_shared_2[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[30].talk_pool_stages[0].lines[1]": {
+  "$.talk_banks.ceria_inn_shared_2[1]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[30].talk_pool_stages[0].lines[2]": {
+  "$.talk_banks.ceria_inn_shared_2[2]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[31].talk_pool[0]": {
+  "$.talk_banks.erin_shared[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.erin_shared_2[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.erin_shared_2[1]": {
    "brackets": [],
    "digits": [],
    "propnouns": [
-    "Guild"
+    "Inn",
+    "The",
+    "Wandering"
    ]
   },
-  "$.entities[31].talk_pool[1]": {
+  "$.talk_banks.erin_shared_2[2]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[31].talk_pool[2]": {
+  "$.talk_banks.ksmvr_inn_shared[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[31].talk_pool_stages[0].lines[0]": {
+  "$.talk_banks.ksmvr_inn_shared[1]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[31].talk_pool_stages[0].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[31].talk_pool_stages[0].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[32].talk_pool[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[32].talk_pool[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[32].talk_pool[2]": {
+  "$.talk_banks.ksmvr_inn_shared[2]": {
    "brackets": [],
    "digits": [],
    "propnouns": [
     "Ceria"
    ]
   },
-  "$.entities[32].talk_pool_stages[0].lines[0]": {
+  "$.talk_banks.ksmvr_inn_shared_2[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": [
@@ -404,120 +241,64 @@
     "Prognugator"
    ]
   },
-  "$.entities[32].talk_pool_stages[0].lines[1]": {
+  "$.talk_banks.ksmvr_inn_shared_2[1]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[32].talk_pool_stages[0].lines[2]": {
+  "$.talk_banks.ksmvr_inn_shared_2[2]": {
    "brackets": [],
    "digits": [],
    "propnouns": [
     "Post"
    ]
   },
-  "$.entities[33].talk_pool[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Yvlon"
-   ]
-  },
-  "$.entities[33].talk_pool[1]": {
+  "$.talk_banks.lyonette_shared[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[33].talk_pool[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Gold"
-   ]
-  },
-  "$.entities[33].talk_pool_stages[0].lines[0]": {
+  "$.talk_banks.lyonette_shared[1]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[33].talk_pool_stages[0].lines[1]": {
+  "$.talk_banks.lyonette_shared[2]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[33].talk_pool_stages[0].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[34].talk_pool[0]": {
+  "$.talk_banks.yvlon_inn_shared[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": [
     "Guild"
    ]
   },
-  "$.entities[34].talk_pool[1]": {
+  "$.talk_banks.yvlon_inn_shared[1]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[34].talk_pool[2]": {
+  "$.talk_banks.yvlon_inn_shared[2]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[34].talk_pool_stages[0].lines[0]": {
+  "$.talk_banks.yvlon_inn_shared_2[0]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[34].talk_pool_stages[0].lines[1]": {
+  "$.talk_banks.yvlon_inn_shared_2[1]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.entities[34].talk_pool_stages[0].lines[2]": {
+  "$.talk_banks.yvlon_inn_shared_2[2]": {
    "brackets": [],
    "digits": [],
    "propnouns": []
-  },
-  "$.entities[35].talk_pool[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[35].talk_pool[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[35].talk_pool[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Ceria"
-   ]
-  },
-  "$.entities[35].talk_pool_stages[0].lines[0]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Klbkch",
-    "Prognugator"
-   ]
-  },
-  "$.entities[35].talk_pool_stages[0].lines[1]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.entities[35].talk_pool_stages[0].lines[2]": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Post"
-   ]
   }
  },
  "skeleton": {
@@ -736,9 +517,7 @@
     "observe": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her.",
     "sprite": "erin",
     "talk_pool": [
-     "\u00a7",
-     "\u00a7",
-     "\u00a7",
+     "@erin_shared_2",
      "\u00a7"
     ],
     "talk_pool_stages": [
@@ -746,7 +525,7 @@
       "_comment": "GH#130 bed-onboarding nudge block. One stage per SINGLE-BEAT pre-first-sleep class-gain counter; multi-beat routes (diplomat gossip x3, trader commerce x5) are deliberately un-nudged. Pools AND-gate accomplishments, so OR = sibling stages sharing a line. MUST stay FIRST so any later-satisfied stage overrides it (social.gd:20-22); erin_bed_slept below retires it.",
       "id": "erin_bed_nudge_helper",
       "lines": [
-       "\u00a7"
+       "@erin_shared"
       ],
       "requires_accomplishment": {
        "cleaned_the_inn": 1
@@ -755,7 +534,7 @@
      {
       "id": "erin_bed_nudge_warrior",
       "lines": [
-       "\u00a7"
+       "@erin_shared"
       ],
       "requires_accomplishment": {
        "sparred_with_relc": 1
@@ -764,7 +543,7 @@
      {
       "id": "erin_bed_nudge_mage",
       "lines": [
-       "\u00a7"
+       "@erin_shared"
       ],
       "requires_accomplishment": {
        "learned_magic_from_pisces": 1
@@ -773,7 +552,7 @@
      {
       "id": "erin_bed_nudge_tactician",
       "lines": [
-       "\u00a7"
+       "@erin_shared"
       ],
       "requires_accomplishment": {
        "chess_with_olesm": 1
@@ -782,7 +561,7 @@
      {
       "id": "erin_bed_nudge_rogue",
       "lines": [
-       "\u00a7"
+       "@erin_shared"
       ],
       "requires_accomplishment": {
        "recovered_crate_watch": 1
@@ -791,7 +570,7 @@
      {
       "id": "erin_bed_nudge_archer",
       "lines": [
-       "\u00a7"
+       "@erin_shared"
       ],
       "requires_accomplishment": {
        "ranged_hit": 3
@@ -905,9 +684,7 @@
      {
       "id": "erin_thread_cisterns_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@erin_shared_2"
       ],
       "requires_accomplishment": {
        "cisterns_reported": 1
@@ -943,9 +720,7 @@
      {
       "id": "erin_thread_raskghar_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@erin_shared_2"
       ],
       "requires_accomplishment": {
        "raskghar_sealed": 1
@@ -991,9 +766,7 @@
      {
       "id": "erin_thread_door_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@erin_shared_2"
       ],
       "requires_accomplishment": {
        "door_awakened": 1
@@ -1011,9 +784,7 @@
      {
       "id": "erin_thread_horns_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@erin_shared_2"
       ],
       "requires_accomplishment": {
        "horns_party_formed": 1
@@ -1041,9 +812,7 @@
     "observe": "A human girl playing at composure a size too large for her. Her hands know trays; her chin knows courts. The two have not finished arguing.",
     "sprite": "lyonette",
     "talk_pool": [
-     "\u00a7",
-     "\u00a7",
-     "\u00a7"
+     "@lyonette_shared"
     ],
     "talk_pool_stages": [
      {
@@ -1069,9 +838,7 @@
      {
       "id": "lyonette_thread_door_neutral",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@lyonette_shared"
       ],
       "requires_accomplishment": {
        "door_understood": 1
@@ -2024,18 +1791,14 @@
     },
     "sprite": "ceria",
     "talk_pool": [
-     "\u00a7",
-     "\u00a7",
-     "\u00a7"
+     "@ceria_inn_shared"
     ],
     "talk_pool_stages": [
      {
       "_comment": "Gates on seal_kept_reported, not door_awakened: this row is gone by horns_dig_started, long before the door wakes. See `ceria_inn_returned` for the window rule.",
       "id": "ceria_inn_settled",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@ceria_inn_shared_2"
       ],
       "requires_accomplishment": {
        "chatted_with_ceria_inn": 3,
@@ -2070,17 +1833,13 @@
     },
     "sprite": "yvlon",
     "talk_pool": [
-     "\u00a7",
-     "\u00a7",
-     "\u00a7"
+     "@yvlon_inn_shared"
     ],
     "talk_pool_stages": [
      {
       "id": "yvlon_inn_settled",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@yvlon_inn_shared_2"
       ],
       "requires_accomplishment": {
        "chatted_with_yvlon_inn": 3,
@@ -2115,17 +1874,13 @@
     },
     "sprite": "ksmvr",
     "talk_pool": [
-     "\u00a7",
-     "\u00a7",
-     "\u00a7"
+     "@ksmvr_inn_shared"
     ],
     "talk_pool_stages": [
      {
       "id": "ksmvr_inn_settled",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@ksmvr_inn_shared_2"
       ],
       "requires_accomplishment": {
        "chatted_with_ksmvr_inn": 3,
@@ -2158,17 +1913,13 @@
     },
     "sprite": "ceria",
     "talk_pool": [
-     "\u00a7",
-     "\u00a7",
-     "\u00a7"
+     "@ceria_inn_shared"
     ],
     "talk_pool_stages": [
      {
       "id": "ceria_inn_returned_settled",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@ceria_inn_shared_2"
       ],
       "requires_accomplishment": {
        "chatted_with_ceria_inn_returned": 3,
@@ -2200,17 +1951,13 @@
     },
     "sprite": "yvlon",
     "talk_pool": [
-     "\u00a7",
-     "\u00a7",
-     "\u00a7"
+     "@yvlon_inn_shared"
     ],
     "talk_pool_stages": [
      {
       "id": "yvlon_inn_returned_settled",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@yvlon_inn_shared_2"
       ],
       "requires_accomplishment": {
        "chatted_with_yvlon_inn_returned": 3,
@@ -2242,17 +1989,13 @@
     },
     "sprite": "ksmvr",
     "talk_pool": [
-     "\u00a7",
-     "\u00a7",
-     "\u00a7"
+     "@ksmvr_inn_shared"
     ],
     "talk_pool_stages": [
      {
       "id": "ksmvr_inn_returned_settled",
       "lines": [
-       "\u00a7",
-       "\u00a7",
-       "\u00a7"
+       "@ksmvr_inn_shared_2"
       ],
       "requires_accomplishment": {
        "chatted_with_ksmvr_inn_returned": 3,
@@ -2350,6 +2093,51 @@
   "grid": {
    "height": 10,
    "width": 16
+  },
+  "talk_banks": {
+   "ceria_inn_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "ceria_inn_shared_2": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "erin_shared": [
+    "\u00a7"
+   ],
+   "erin_shared_2": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "ksmvr_inn_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "ksmvr_inn_shared_2": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "lyonette_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "yvlon_inn_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "yvlon_inn_shared_2": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ]
   },
   "walls": {
    "segments": [
