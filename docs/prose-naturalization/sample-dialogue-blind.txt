@@ -1,0 +1,247 @@
+# BLIND REVIEW VIEW -- dialogue
+# GH#397 Phase 0. 120 strings, shuffled with random.Random(397).
+# Metadata deliberately stripped: no filenames, no speakers, no schema keys,
+# no region. Row numbers are the ONLY handle; sample-key.json maps them back.
+# Read each row cold. Score per review-rubric.md. Do not seek context.
+# ---------------------------------------------------------------------------
+
+  1. Off shift, which means nobody has found me yet. Give it an hour. If a runner comes through that door with my name in his mouth, send him to the gatehouse first. The night sergeant can sign for anything short of a breach.
+
+  2. The Watch swept it. Captain Zevara's people handled it.
+
+  3. The herb sachet, sewn shut. (6 gold)
+
+  4. The obvious answer. Take the piece and the threat dies with it. I made that exact trade against her, three games earlier, and it taught me nothing. Try again.
+
+  5. Guild's near closing. If it's paperwork, it keeps till daylight. Come back when I've slept.
+
+  6. I mapped your ledge sketches against the city plans. There's a gallery below the cisterns older than Liscor's walls, and something has been widening it. Kill it, chase it off — or map it, a map would serve. The one fixed term: it does not follow you up. Take Relc. Please.
+
+  7. Busy morning for the stalls. Mind the queues — the one at my lamp table is out past the awning already.
+
+  8. A set ward holds a shape. A fed ward has to be sourced, continuously, from somewhere with capacity. Whoever hung that frame did not hang it alone, and I have measured what it pulls. Nothing in your pantry pulls that. I will not speculate further in a shop. Bring me the setting when you know, and I will price the work correctly.
+
+  9. I'll take that reading another day.
+
+ 10. Corked and honest. Do not drink the solvent straight — one person did that once and I am still not allowed back in that inn. I mean it about the solvent.
+
+ 11. Two battered Watch training dummies on little wheels. One has a face painted on, mostly worn off at the jaw. Relc runs the drills. Talk to him.
+
+ 12. [Charming Smile] You've been dreading that door since the survey. Sign it and sleep.
+
+ 13. Bring him a bowl from the kitchen. (Serve)
+
+ 14. You made the offices sign each other's paper. I am going to tell that story at every quarter bell for a month. The crate goes down on the next cycle, on top of the load.
+
+ 15. Everyone behind this counter did, once. Then you log your first casualty report. The desk keeps more people alive than a sword does. Took me years to believe that. You don't have to believe it today. Board's behind you, and I've got intake forms with the Guild's name spelled wrong on them.
+
+ 16. The gap in the south wall? The masons watch that; it's on every list the Council owns. The one I lose sleep over is supply. Liscor has never been besieged long enough to learn its own granaries, and my arithmetic gives out in the third hungry week. You already knew that. I can see you did. It is, honestly, a relief not to be the only one in the room doing that arithmetic.
+
+ 17. A rented block and a good hand. I am not angry at him. There were larger people to be angry at, forty years of them, and he is very small. Take the block off whatever table it is sitting on and I will answer the card myself, in my own hand, which is a thing I have been putting off doing for a very long time.
+
+ 18. Shelf's thin, {addr}, and likely stays so. The banded chest by the wall, though — my colleague keeps it interesting for friends of the house.
+
+ 19. Erin's package. I'll spare you the small talk. (Lyonette's advice)
+
+ 20. My team have reclaimed the corner by the fire and appear to consider the matter settled. I have taken the next table to observe the decline at close range. The fire is generous tonight. The rooms upstairs stay cold past midnight, and I have said so at the bar.
+
+ 21. Stay behind my shield arm if it goes bad. Left side. My left. I've dug graves for people who got that wrong.
+
+ 22. You. The one who didn't kill.
+
+ 23. The warehouse, then. Will you come?
+
+ 24. Rules are simple. Traps kill more adventurers than monsters do, so nobody touches anything shiny. See something worth grabbing, you call me over and you wait.
+
+ 25. It's done. The thing under the city won't be climbing up.
+
+ 26. Alone? Ha! You're either very brave or very— actually, no. Just the one thing. I'll hang back at the mouth, then, and let the professional wait by the door for once. Shout if you find teeth. Shout early.
+
+ 27. Close enough to the fire that my tail stops complaining, far enough that I do not cook. Took me three visits to work that out. Standing all day does something to a Drake. You do not notice until you sit down. Then it catches up with you all at once. Chair first. After that, somebody feeds me. I can hear the kitchen from here.
+
+ 28. Miss it? I left people in it. Some I'd still take a spear for, even now. Hey. You did good down there. Buy me that drink sometime and I'll say the long version.
+
+ 29. It is exactly how it works and every single person in that chain is doing their job correctly. Nobody up here is lazy, {addr}. The clerk at the release window checks every stamp twice, both sides, and the dock behind her fills up while she does it.
+
+ 30. I've a few things I don't need. Buying?
+
+ 31. Counter's open. Taking a slip or turning one in? Board's current as of this morning.
+
+ 32. Under the city and moving, it's Watch business before it's an emergency. File after.
+
+ 33. Alone. You went into that thing's own hole alone, no backup, and I offered. I've replayed it a dozen ways and every version ends with a body bag. Instead you're standing here being smug at me about it. Don't do that to me twice.
+
+ 34. Know that treeline better than the headman does. He'd rather not. There's a hut the far side of the hollow. Nobody's opened it in years. Whoever kept it drew that line. You're the reading sort? Start there.
+
+ 35. Not yet placed. I'll take that.
+
+ 36. You want me to walk into someone's pantry and grope at a wild ward with my bare senses. No. I have wards of my own I would rather keep.
+
+ 37. "I'll leave you to your rest day."
+
+ 38. It can. I keep two men at the mouth of this alley for exactly the conversation you are about to have, and they are paid by the week whether they work or not. Shall I call them, or would you like to look at the brass a while longer first?
+
+ 39. Four cycles, and it will be five. The permit office holds the queue, and the office's own requisitions are sitting in that queue with everything else. Until their paper moves, nothing behind it moves, and nobody up there will sign out of order.
+
+ 40. Wait. No. No, you actually mean it. You held a fortune in your hand just now and you're going to burn it — for your Mister Farley, a man in a cheap hat you've never shared a drink with. I have bought forty people in that chair. I want it noted that I offered. Get out. Take the stairs, and touch nothing on the way down.
+
+ 41. I sat down an hour ago and I have written half a duty roster since. Tomorrow's is done. I am partway through the day after's, and under that is one for a week I will not live to see. The stew smells ready. I have not ordered any yet.
+
+ 42. The inn's order ran short. Extend it, for Lyonette's sake. [Charming Smile]
+
+ 43. The wax-sealed ward, then. (9 gold)
+
+ 44. Sit. Eat. That's an order. New recipe — still testing it, but it should stick to your ribs. Call it +2 HP, every fight until you next sleep. Don't ask me to explain the math.
+
+ 45. Anything on you worth my coin?
+
+ 46. Then we go down. I'll walk you to it.
+
+ 47. Filed and stamped — same-day, like I said. The Door will answer for Pallass the next time you ask it. That arrangement took the Guild years.
+
+ 48. Collect the stamped pass. (3 gold)
+
+ 49. Pallass. Guild's got the standing arrangement. I file the sponsorship, you cover the clerk's fee — fee first, actually. It goes through same-day. Ten gold, paid to the Guild, not to me.
+
+ 50. "Not here for the food. Noted."
+
+ 51. The city's lucky it was you.
+
+ 52. I'll leave you to your tally.
+
+ 53. I sold the blade years ago, under circumstances I will call instructive. I do not miss it, exactly. The hands remember it at odd hours. This morning, in fact, halfway through a citation.
+
+ 54. The witch keeps to the hollow. West, past my own fields, where the trees give out. Whatever she's owed, you'll have to settle it out there.
+
+ 55. You wanted to be a hero?
+
+ 56. Oi. Hold up. Big spear, bored Drake. The official business part is me standing here. You came off the inn hill. Name and errand.
+
+ 57. Sold. Don't come back asking for a refund because it didn't work the way you hoped. And keep it out of the damp.
+
+ 58. One of the boulder shapes grinds upright — plates of grey stone sliding over something alive underneath. Sand pours out of the joints. It starts toward you at a walk and does not speed up.
+
+ 59. Posted rate, same as everyone. I don't set the price and I don't move it, whatever they taught you to say back home.
+
+ 60. The old charm-cord, then. (5 gold)
+
+ 61. "Three exchanges. Nobody said a word that mattered."
+
+ 62. That can't be how it works.
+
+ 63. Your door smells of a feeding ward. I keep one myself — smaller. Sit. If you're going to live over one, you'll learn what it eats.
+
+ 64. Give me a day to ready myself.
+
+ 65. Three, then. Do not tell me the third one is the ring. I would have to be gracious about it and I have used all of that up this week.
+
+ 66. Grip, cleared. Wind, cleared — barely. The last measure was whether you quit before I did. You did not. The numbers say you will survive the forge tier. The file will say 'adequate.' Ask around this office what I usually write.
+
+ 67. Right. Right. Standing notice, Guild board, renewed by the season: one keeper, one lantern of mana a month, and a door that is already open at the bottom of it. I'm putting my name on that too. The keeper's first duty changes from feeding it to watching it, and I want that in writing before anyone asks me why. Thank you.
+
+ 68. I've got a few things I don't need, myself. Buying?
+
+ 69. Talked her to terms, they tell me. Didn't figure that witch for a bargaining sort. But the fields don't seem to mind however you settled it.
+
+ 70. There you are. The supply matter. Handled, and quietly. I won't forget that you did that.
+
+ 71. I did not die. This is the preferred outcome.
+
+ 72. Relc. Senior Guardsman, best spear in Liscor. Right now I'm guarding grass. My beat runs from the inn to the city gate, so behave on it. There's goblins about. Sing out if you spot one.
+
+ 73. [The standard measures recovery. It's printed on his own notice.]
+
+ 74. "You've been holding that card since I came in."
+
+ 75. River comes up every spring. Every spring we count what we can carry above the line. This year the count's eleven bushels short. There's no thief in this village. I'd know. That's the bad news. Go down to the mill. Walk the tally with the tallyman. Bring me an answer I can live with.
+
+ 76. Guild's closed for lunch. Unless you're here about the thing Erin won't stop signing her letters about?
+
+ 77. Honestly? There's a class above mine. [Strategist]. Cities write to theirs. Armies wait on them. Some nights I can almost see the shape of the level, like a move you know is on the board and cannot find yet. I've started writing to other [Tacticians]. Comparing games. Doctrine, where anyone will admit to having one. Mistakes — mine, mostly, in generous detail. It may come to nothing. Or every city ends up wanting a copy of it.
+
+ 78. Eleven bushels and a name I'm not saying out loud in my own mill. You'll keep it the same way, if you please.
+
+ 79. Smiths down at the quarter bell, clerks up at the half, and one crate of tin that has been late three cycles running. This morning it was charcoal and a coop of live hens for the ninth tier. You I haven't placed yet, {addr}. Came up on a stamp, then. Stamps don't show on my schedule.
+
+ 80. "Who has been hiring the blank seal?"
+
+ 81. The scavengers off Market Street are dealt with.
+
+ 82. It was older than the city over it.
+
+ 83. You hold yourself like a swordsman more than a scholar.
+
+ 84. There is a Watch keeper now, with a ledger line to his name, and the ward goes on eating on his schedule. I am going to write it up, and I already know the paper will be insufferable.
+
+ 85. That pinch of warding salt, for the threshold.
+
+ 86. Whatever it is, I can have it on paper by this evening, and nobody will ever prove I wrote it. Eleven years at this table. The Watch has my name, and my rates for that matter, since I have never hidden the rates. Nothing to pin to any of it, though they have come and looked.
+
+ 87. Cups will swear to the hiring. So will Hellam — you soured his lease, and he kept the receipts.
+
+ 88. Somebody has to hold the door.
+
+ 89. The craft listens better once the birds stop. Sit. There's tea in the pot yet.
+
+ 90. Enrolled. Fight as you would; I will know if you perform for the ledger. Return when the numbers exist.
+
+ 91. "It's about somebody wearing a house's initials by the hour."
+
+ 92. There. It runs again, and the work it runs through this time is yours, which will outlast the city and annoy me for the rest of my life. It is a repair, and the door behind it stays open; I would call it a rescue if the facts allowed. They do not. I have decided that is the outcome I wanted, and I will be saying so as though I said it first.
+
+ 93. I found Pell. Safe, just turned around.
+
+ 94. Say it plainly. I have a cage to run in three minutes and I would like to run it happy.
+
+ 95. Hah! There you are. Good chair, good fire. Nobody has stationed me at a gate all evening. The Captain still thinks I am out walking the road.
+
+ 96. I need more than rumor. Coyle hired that theft — will you swear to it?
+
+ 97. I learned more from that one loss than from ten wins before it. I have the ten wins; I checked. Her game is written out in my desk, second drawer, and I take it out when a Council report has me stuck. It's out on the desk now, as it happens. The granary tally has had me stuck since yesterday.
+
+ 98. The scavengers dragged it into a cellar. I've seen it myself. (Light)
+
+ 99. The deer stopped at the treeline. Why?
+
+100. I'll see what I can do.
+
+101. Then it's over, and the city's quieter for it. Nobody thanks anyone for this kind of work. So let me do it here: you've the Council's gratitude, and mine, which comes with more paperwork attached. If you ever want a game, or a job that needs a clear head, you know where the board is.
+
+102. Goblins on the road since the thaw. A warband near the gate with a chief who's got actual teeth. Old stones to the north-east? Stay off them. And the pond is deeper than the gatehouse rope. Stay out of it.
+
+103. Steady it. The herd knows your hands now.
+
+104. Still up here? The gallery won't map itself, and I'd rather you were down there with a plan than up here with second thoughts. You have the map. Go.
+
+105. Selys sent the whole reward back with you? That Drake pretends she's all scales. Free breakfast for a week, I mean it.
+
+106. It's dead. Zevara's sealing the gallery.
+
+107. The sewer grates are backing up again and there's scavengers in the cellars. And paperwork. There's always the paperwork. Which is it?
+
+108. It was guarding a door. Wonderful. Somebody left a construct in the dark to watch one door, and we still don't know what's on the other side.
+
+109. You want the blight gone. I want what I'm owed. Sit. Tea first. There's honey if you take it.
+
+110. The register has your name against the draughty single now, in Lyonette's ruled hand. Paid, and the column beside it says so.
+
+111. The other art. The one you actually practice. Teach me.
+
+112. Stand with the Brothers, and every hat tips your way. [Charming Smile]
+
+113. Cunning Crafts, best on the tier. I am a City Gnoll, if anyone asks. Prices are posted and prices are final. This is Pallass. We do not haggle here. What do you need?
+
+114. Ah. My consultant. Your retainer is current and your silence is appreciated. My door — regrettably — is always open to you. Wine?
+
+115. Then there is no confidence to keep. A confidence is a thing a client tells me, and this man was a renter who never said what he was renting. He works a table at the west end of the alleys, past the tea. He pays in coin and he pays late. That's all I know about him.
+
+116. Cups asked me to see something back to you.
+
+117. I hear you're missing a warhammer.
+
+118. Then the hat comes off, {addr}, plain and slow, and everybody in the room reads it correctly and steps back a pace. I'd rather it didn't come to that. My colleague holds the other opinion, which is the reason he isn't going.
+
+119. Small things first. A remedy that means it — stir it thinking of the sick one, and never mind how the pot looks. My cauldron is yours when the fire's lit, and the inn's kettle will do in a pinch. Sleep on it, child. There's yarrow drying over the hearth; we'll start there.
+
+120. The city sets the spec. I hold it. That's the arrangement, and it's better than it sounds. A failure on this tier means an inquest with my name in the file.
+

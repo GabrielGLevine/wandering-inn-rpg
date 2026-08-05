@@ -1,0 +1,45 @@
+{
+ "_note": "GH#397 lane-added protected keeps, merged into protected-keeps.json by `extract_prose.py all`. The issue's own five counterevidence lines are resolved from file:line automatically and are NOT repeated here. Two kinds of entry: PEAK (an earned high-style line Phase 2/3 must not flatten) and MODEL (a line that is exactly what its target register should sound like -- protected because region lanes need calibration examples inside the corpus, not only in the bible).",
+ "_selection": "Chosen by reading the low-closer-score tail of inventory.jsonl for concrete specificity, plus the messy/unfinished shapes the issue's counterevidence list points at. Deliberately small: the objective is fewer jewels with more air, so a long keep list would defeat the pass. extract_prose.py self-test FAILS on an id that does not bind.",
+
+ "map:pallass/pallass_den_shop.json:$.entities[5].observe": {
+  "kind": "MODEL",
+  "reason": "scenic register, textbook. 'A bench cut down to knee height, three sets of claw-marks along the front edge at three different heights.' Two concrete observations, ZERO inference, and the reader assembles the hatchlings unaided. This is the target sound for 449 scenic strings.",
+  "source": "lane read 2026-08-05"
+ },
+ "map:pallass/pallass_den_shop.json:$.entities[4].observe": {
+  "kind": "MODEL",
+  "reason": "scenic register with an inference that stays inside the evidence: 'labels in a hand that got neater partway along the shelf and then went back to how it was.' The handwriting is visible; the narrator never claims to know why. Contrast the same file's House Slate toast, which ends 'In Pallass, that is a document nobody filed' -- named in the issue as a button.",
+  "source": "lane read 2026-08-05"
+ },
+ "map:garden/garden_sanctuary.json:$.entities[2].observe": {
+  "kind": "PEAK",
+  "reason": "'a sky that isn't real. It's made up with clean linen anyway, like that settles the argument.' Earned: the absurdity is physically present in the scene, and the closer is dry rather than thematic -- it declines to explain the garden. Garden is a landmark location with 12 strings total; this is where its allowance belongs.",
+  "source": "lane read 2026-08-05"
+ },
+ "map:pallass/pallass_den_shop.json:$.entities[5].toast": {
+  "kind": "PEAK",
+  "reason": "'resumes an argument you cannot follow about whose turn it is.' Smoke score 2 and an anonymous agent, so the tooling flags it -- and the tooling is wrong here. The inference is about audible present behaviour, not an absent person's motives, and it is funny without being a verdict. Recorded as a smoke-score disagreement per review-rubric.md section 7.",
+  "source": "lane read 2026-08-05"
+ },
+ "dlg:relc_descent.json:$.nodes.join.text": {
+  "kind": "MODEL",
+  "reason": "bark/narration that ends on unresolved threat rather than wit: 'Something moved back there when we walked in.' Ending shape = unresolved detail. Same graph as the issue's protected Relc joke, and shows the file is not carried by the joke alone.",
+  "source": "lane read 2026-08-05"
+ },
+ "dlg:riverfarm_villager.json:$.nodes.remember.text": {
+  "kind": "PEAK",
+  "reason": "'I should be angry. I keep meaning to be angry.' Smoke score 2 (short punch after long setup) but the repeat is a man failing to finish a feeling -- the T1 register working exactly as the dialogue bible's worked pair intends. Protected so a second dialogue pass cannot 'clean' it. Second recorded smoke-score disagreement.",
+  "source": "lane read 2026-08-05"
+ },
+ "dlg:riverfarm_villager.json:$.nodes.hub.text": {
+  "kind": "MODEL",
+  "reason": "'The hens are laying again. No. That weren't your question.' A speaker losing and recovering his own thread. Ending shape = interruption. The corpus needs more of this and the rubric's UNIFORM family exists to find where it is missing.",
+  "source": "lane read 2026-08-05"
+ },
+ "dlg:erin_errand.json:$.nodes.door_paths.text": {
+  "kind": "MODEL",
+  "reason": "the graph carrying the issue's protected 'smug at pigeons' line. Erin's whole turn runs on enthusiasm and bad structure ('I don't know! That's the fun part. Okay, so --') and never arrives anywhere polished. Protected as the calibration example for permitted inarticulacy.",
+  "source": "lane read 2026-08-05"
+ }
+}
