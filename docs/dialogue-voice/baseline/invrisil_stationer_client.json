@@ -165,22 +165,17 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.the_stone.options[1].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.the_stone.text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.why_keep.options[0].text": {
+  "$.nodes.why_keep.text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.why_keep.text": {
+  "$.text_banks.who_s_refusing_the": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -471,7 +466,7 @@
      },
      {
       "goto": "terms",
-      "text": "\u00a7"
+      "text": "@who_s_refusing_the"
      }
     ],
     "speaker": "A Lady with a Ring Box",
@@ -481,13 +476,16 @@
     "options": [
      {
       "goto": "terms",
-      "text": "\u00a7"
+      "text": "@who_s_refusing_the"
      }
     ],
     "speaker": "A Lady with a Ring Box",
     "text": "\u00a7"
    }
   },
-  "start": "commission"
+  "start": "commission",
+  "text_banks": {
+   "who_s_refusing_the": "\u00a7"
+  }
  }
 }

@@ -28,13 +28,114 @@ RE_ANTITHESIS = re.compile(r",\s*not\b")
 RE_DIGITS = re.compile(r"\d+")
 RE_BRACKET = re.compile(r"\[[^\]]+\]")
 
-def walk_texts(obj, path="$"):
-    """Yield (json_path, value) for every PROSE_KEYS string; recurse rest."""
+MAPS = REPO / "wandering_inn_game" / "data" / "maps"
+# GH#388: map prose lives in talk_pool (list[str]) and talk_pool_stages
+# ([{lines: [str,...], line: str, ...}]). ORDER AND SIZE ARE CONTRACT --
+# talk_pool_stages is last-match-wins, so a reorder is a behavior change,
+# not a reword; the skeleton freeze below covers both because list
+# positions are part of the skeleton.
+MAP_TALK_KEYS = {"talk_pool"}
+MAP_STAGE_KEYS = {"talk_pool_stages"}
+
+
+def walk_map_texts(obj, path="$", in_talk=False):
+    """Yield (json_path, value) for every map talk line; recurse the rest.
+    talk_banks values are PROSE (measured once, where they are written);
+    "@<bank>" refs inside pools are STRUCTURE -- the skeleton freeze keeps
+    their identity and order, so a swapped ref is a structural diff, never
+    an invisible masked slot."""
     if isinstance(obj, dict):
         for k, v in obj.items():
             p = f"{path}.{k}"
+            if k in ("talk_banks", "banks") and isinstance(v, dict):
+                # "banks" = maps/_shared_talk.json top-level key (cross-map bank file)
+                for name, lines in v.items():
+                    if isinstance(lines, list):
+                        for i, line in enumerate(lines):
+                            if isinstance(line, str):
+                                yield f"{p}.{name}[{i}]", line
+                continue
+            if k in MAP_TALK_KEYS and isinstance(v, list):
+                for i, line in enumerate(v):
+                    if isinstance(line, str) and not line.startswith("@"):
+                        yield f"{p}[{i}]", line
+            elif k in MAP_STAGE_KEYS and isinstance(v, list):
+                for i, stage in enumerate(v):
+                    if isinstance(stage, dict):
+                        if isinstance(stage.get("line"), str):
+                            yield f"{p}[{i}].line", stage["line"]
+                        for j, line in enumerate(stage.get("lines", [])):
+                            if isinstance(line, str) and not line.startswith("@"):
+                                yield f"{p}[{i}].lines[{j}]", line
+            else:
+                yield from walk_map_texts(v, p)
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            yield from walk_map_texts(v, f"{path}[{i}]")
+
+
+def map_skeleton(obj, in_talk=False):
+    if isinstance(obj, dict):
+        out = {}
+        for k, v in obj.items():
+            if k in ("talk_banks", "banks") and isinstance(v, dict):
+                out[k] = {name: ([MASK if isinstance(x, str) else map_skeleton(x) for x in lines]
+                                 if isinstance(lines, list) else map_skeleton(lines))
+                          for name, lines in v.items()}
+                continue
+            if k in MAP_TALK_KEYS and isinstance(v, list):
+                out[k] = [(x if isinstance(x, str) and x.startswith("@")
+                           else (MASK if isinstance(x, str) else map_skeleton(x))) for x in v]
+            elif k in MAP_STAGE_KEYS and isinstance(v, list):
+                st_out = []
+                for stage in v:
+                    if isinstance(stage, dict):
+                        st = {sk: (MASK if sk == "line" and isinstance(sv, str)
+                                   else ([(x if isinstance(x, str) and x.startswith("@")
+                                           else (MASK if isinstance(x, str) else map_skeleton(x))) for x in sv]
+                                         if sk == "lines" and isinstance(sv, list)
+                                         else map_skeleton(sv)))
+                              for sk, sv in stage.items()}
+                        st_out.append(st)
+                    else:
+                        st_out.append(map_skeleton(stage))
+                out[k] = st_out
+            else:
+                out[k] = map_skeleton(v)
+        return out
+    if isinstance(obj, list):
+        return [map_skeleton(v) for v in obj]
+    return obj
+
+
+def map_speaker_for(data, path):
+    """The owning entity's id -- constraint cards apply per speaker."""
+    m = re.match(r"\$\.entities\[(\d+)\]", path)
+    if m:
+        ents = data.get("entities", [])
+        i = int(m.group(1))
+        if i < len(ents) and isinstance(ents[i], dict):
+            return str(ents[i].get("id", "map"))
+    return "map"
+
+
+def walk_texts(obj, path="$"):
+    """Yield (json_path, value) for every PROSE_KEYS string; recurse rest.
+    Dialogue banks (2026-08-05): "@<name>" refs are STRUCTURE (frozen by the
+    skeleton, so a swapped ref is a structural diff); bank values -- both
+    file-local `text_banks` and _shared_lines.json `banks` -- are PROSE,
+    measured once, where they are written."""
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            p = f"{path}.{k}"
+            if k in ("text_banks", "banks") and isinstance(v, dict):
+                for name, line in v.items():
+                    if isinstance(line, str):
+                        yield f"{p}.{name}", line
+                continue
             if k in PROSE_KEYS and isinstance(v, str):
-                yield p, v
+                if not v.startswith("@"):
+                    yield p, v
             else:
                 yield from walk_texts(v, p)
     elif isinstance(obj, list):
@@ -43,8 +144,16 @@ def walk_texts(obj, path="$"):
 
 def skeleton(obj):
     if isinstance(obj, dict):
-        return {k: (MASK if k in PROSE_KEYS and isinstance(v, str) else skeleton(v))
-                for k, v in obj.items()}
+        out = {}
+        for k, v in obj.items():
+            if k in ("text_banks", "banks") and isinstance(v, dict):
+                out[k] = {name: (MASK if isinstance(line, str) else skeleton(line))
+                          for name, line in v.items()}
+            elif k in PROSE_KEYS and isinstance(v, str):
+                out[k] = v if v.startswith("@") else MASK
+            else:
+                out[k] = skeleton(v)
+        return out
     if isinstance(obj, list):
         return [skeleton(v) for v in obj]
     return obj
@@ -72,20 +181,23 @@ def speaker_for(data, path):
             return node["speaker"]
     return "narrator"
 
-def snapshot_file(f, outdir):
+def snapshot_file(f, outdir, maps_mode=False):
     data = json.loads(f.read_text())
-    base = {"skeleton": skeleton(data),
-            "facts": {p: facts(t) for p, t in walk_texts(data)}}
+    sk = map_skeleton(data) if maps_mode else skeleton(data)
+    walker = walk_map_texts if maps_mode else walk_texts
+    base = {"skeleton": sk,
+            "facts": {p: facts(t) for p, t in walker(data)}}
     (outdir / f.name).write_text(json.dumps(base, indent=1, sort_keys=True))
 
-def check_file(f, basedir):
+def check_file(f, basedir, maps_mode=False):
     hard, warn, anti = [], [], []
     data = json.loads(f.read_text())
     base = json.loads((basedir / f.name).read_text())
-    if skeleton(data) != base["skeleton"]:
+    sk = map_skeleton(data) if maps_mode else skeleton(data)
+    if sk != base["skeleton"]:
         hard.append("structure differs from baseline (non-text change, "
                     "node add/drop, or reordered text_variants)")
-    texts = dict(walk_texts(data))
+    texts = dict((walk_map_texts if maps_mode else walk_texts)(data))
     for path, old in base["facts"].items():
         new = texts.get(path)
         if new is None:
@@ -109,7 +221,7 @@ def check_file(f, basedir):
         if RE_WHOLE.search(t):
             hard.append(f"{path}: 'the whole of/entire'")
         for m in RE_ANTITHESIS.finditer(t):
-            anti.append({"speaker": speaker_for(data, path), "node": path,
+            anti.append({"speaker": (map_speaker_for if maps_mode else speaker_for)(data, path), "node": path,
                          "quote": t[max(0, m.start()-40):m.end()+40]})
     return hard, warn, anti
 
@@ -119,10 +231,12 @@ def main():
     sub.add_parser("self-test")
     sp = sub.add_parser("snapshot")
     sp.add_argument("--out", required=True)
+    sp.add_argument("--maps", action="store_true", help="GH#388: map talk_pool mode")
     sp.add_argument("files", nargs="*")
     cp = sub.add_parser("check")
     cp.add_argument("--baseline", required=True)
     cp.add_argument("--final", action="store_true")
+    cp.add_argument("--maps", action="store_true", help="GH#388: map talk_pool mode")
     cp.add_argument("--report")
     cp.add_argument("files", nargs="*")
     a = ap.parse_args()
@@ -130,18 +244,23 @@ def main():
     if a.cmd == "self-test":
         return self_test()
 
-    files = ([Path(f) if "/" in f else DIALOGUE / f for f in a.files]
-             or sorted(DIALOGUE.glob("*.json")))
+    maps_mode = bool(getattr(a, "maps", False))
+    if maps_mode:
+        files = ([Path(f) for f in a.files]
+                 or sorted(MAPS.glob("**/*.json")))
+    else:
+        files = ([Path(f) if "/" in f else DIALOGUE / f for f in a.files]
+                 or sorted(DIALOGUE.glob("*.json")))
     if a.cmd == "snapshot":
         out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
         for f in files:
-            snapshot_file(f, out)
+            snapshot_file(f, out, maps_mode)
         print(f"snapshot: {len(files)} files -> {out}")
         return 0
 
     report, total_anti, per_speaker, fail = {}, 0, {}, False
     for f in files:
-        hard, warn, anti = check_file(f, Path(a.baseline))
+        hard, warn, anti = check_file(f, Path(a.baseline), maps_mode)
         report[f.name] = {"status": "FAIL" if hard else "PASS",
                           "hard": hard, "warn": warn, "antithesis": anti}
         total_anti += len(anti)

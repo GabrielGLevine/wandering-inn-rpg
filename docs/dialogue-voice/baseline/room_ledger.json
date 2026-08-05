@@ -93,7 +93,9 @@
   "$.nodes.tier_thanks.text_variants[2].text": {
    "brackets": [],
    "digits": [],
-   "propnouns": []
+   "propnouns": [
+    "Celum"
+   ]
   }
  },
  "skeleton": {

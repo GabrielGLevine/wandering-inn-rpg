@@ -296,7 +296,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "A Quiet Gentleman",
-    "text": "..."
+    "text": "Mm."
    },
    "timeout_sec": 5
   },
@@ -309,7 +309,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "A Quiet Gentleman",
-    "text": "..."
+    "text": "Mm."
    },
    "timeout_sec": 5
   },

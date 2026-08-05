@@ -1,0 +1,993 @@
+{
+ "facts": {
+  "$.entities[6].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[6].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[6].talk_pool[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[6].talk_pool[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[6].talk_pool_stages[0].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[6].talk_pool_stages[0].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[6].talk_pool_stages[1].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[6].talk_pool_stages[1].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[6].talk_pool_stages[2].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[6].talk_pool_stages[2].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[6].talk_pool_stages[2].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[7].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[7].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[7].talk_pool[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[7].talk_pool[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[7].talk_pool_stages[0].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[7].talk_pool_stages[0].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[7].talk_pool_stages[1].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[7].talk_pool_stages[1].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[7].talk_pool_stages[1].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Scatter: sparse work-clutter only at stations per direction.md, but no bespoke ingot/tool-rack sprite is picked yet ('future picks')",
+  "_comment_cover_skip": "cover_skip exposes the molten seam art; the five cells remain blocked.",
+  "_comment_scatter": "v0.15 T4.1: the tier's floor read as swept-empty slate between stations. Mill scale and scrap, drifted the way a working floor drifts (the street/floodplains scatter idiom, presentation-only).",
+  "ambience": [
+   {
+    "preset": "embers",
+    "rect": [
+     13,
+     4,
+     5,
+     3
+    ]
+   }
+  ],
+  "biome": "pallass_forge",
+  "blocked": [
+   [
+    0,
+    10
+   ],
+   [
+    1,
+    10
+   ],
+   [
+    2,
+    10
+   ],
+   [
+    3,
+    10
+   ],
+   [
+    4,
+    10
+   ],
+   [
+    5,
+    10
+   ],
+   [
+    6,
+    10
+   ],
+   [
+    7,
+    10
+   ],
+   [
+    8,
+    10
+   ],
+   [
+    9,
+    10
+   ],
+   [
+    10,
+    10
+   ],
+   [
+    11,
+    10
+   ],
+   [
+    12,
+    10
+   ],
+   [
+    13,
+    10
+   ],
+   [
+    14,
+    10
+   ],
+   [
+    15,
+    10
+   ],
+   [
+    16,
+    10
+   ],
+   [
+    17,
+    10
+   ],
+   [
+    18,
+    10
+   ],
+   [
+    19,
+    10
+   ],
+   [
+    20,
+    10
+   ],
+   [
+    21,
+    10
+   ],
+   [
+    22,
+    10
+   ],
+   [
+    23,
+    10
+   ],
+   [
+    24,
+    10
+   ],
+   [
+    25,
+    10
+   ],
+   [
+    21,
+    6
+   ],
+   [
+    21,
+    7
+   ],
+   [
+    13,
+    5
+   ],
+   [
+    14,
+    5
+   ],
+   [
+    15,
+    5
+   ],
+   [
+    16,
+    5
+   ],
+   [
+    17,
+    5
+   ]
+  ],
+  "cover_skip": [
+   [
+    13,
+    5
+   ],
+   [
+    14,
+    5
+   ],
+   [
+    15,
+    5
+   ],
+   [
+    16,
+    5
+   ],
+   [
+    17,
+    5
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     4,
+     1
+    ],
+    "sprite": "tier_wall"
+   },
+   {
+    "cell": [
+     12,
+     1
+    ],
+    "sprite": "tier_wall"
+   },
+   {
+    "cell": [
+     20,
+     1
+    ],
+    "sprite": "tier_wall"
+   },
+   {
+    "cell": [
+     1,
+     2
+    ],
+    "light": {
+     "color": [
+      0.914,
+      0.933,
+      0.949
+     ],
+     "energy": 0.7,
+     "flicker": false,
+     "radius": 24
+    },
+    "sprite": "crystal_lamp"
+   },
+   {
+    "cell": [
+     7,
+     2
+    ],
+    "light": {
+     "color": [
+      0.914,
+      0.933,
+      0.949
+     ],
+     "energy": 0.7,
+     "flicker": false,
+     "radius": 24
+    },
+    "sprite": "crystal_lamp"
+   },
+   {
+    "cell": [
+     13,
+     2
+    ],
+    "light": {
+     "color": [
+      0.914,
+      0.933,
+      0.949
+     ],
+     "energy": 0.7,
+     "flicker": false,
+     "radius": 24
+    },
+    "sprite": "crystal_lamp"
+   },
+   {
+    "cell": [
+     19,
+     2
+    ],
+    "light": {
+     "color": [
+      0.914,
+      0.933,
+      0.949
+     ],
+     "energy": 0.7,
+     "flicker": false,
+     "radius": 24
+    },
+    "sprite": "crystal_lamp"
+   },
+   {
+    "cell": [
+     24,
+     2
+    ],
+    "light": {
+     "color": [
+      0.914,
+      0.933,
+      0.949
+     ],
+     "energy": 0.7,
+     "flicker": false,
+     "radius": 24
+    },
+    "sprite": "crystal_lamp"
+   },
+   {
+    "cell": [
+     12,
+     5
+    ],
+    "sprite": "steam_vent"
+   },
+   {
+    "cell": [
+     18,
+     5
+    ],
+    "light": {
+     "color": [
+      1.0,
+      0.62,
+      0.28
+     ],
+     "energy": 0.85,
+     "flicker": true,
+     "radius": 30
+    },
+    "sprite": "steam_vent"
+   }
+  ],
+  "entities": [
+   {
+    "_comment": "Grimalkin's forge-tier workbench, DRESSING only",
+    "cell": [
+     7,
+     5
+    ],
+    "display_name": "The Magus's Bench",
+    "id": "grimalkin_station",
+    "kind": "prop",
+    "observe": "A workbench of calipers, weights, and chalk lines \u2014 every tool squared to the bench edge. The Magus is up at the office when he is not down here.",
+    "on_interact_accomplishment": "eyed_grimalkins_bench",
+    "sprite": "library_desk",
+    "toast": "Every tool squared to the bench edge. You decide against touching anything."
+   },
+   {
+    "_light_comment": "v0.17 R2: 0.8@26 -> 1.05@42, so the banked mouth reaches the floor of a 26-cell tier.",
+    "cell": [
+     10,
+     6
+    ],
+    "display_name": "Forge Station",
+    "id": "forge_station_a",
+    "kind": "prop",
+    "light": {
+     "color": [
+      0.965,
+      0.333,
+      0.063
+     ],
+     "energy": 1.05,
+     "flicker": true,
+     "radius": 42
+    },
+    "observe": "An anvil bolted to its own slab, a furnace mouth banked low beside it \u2014 cold for now, but built to run hot for a working day at a time.",
+    "on_interact_accomplishment": "eyed_the_forge_station",
+    "sprite": "forge_station",
+    "toast": "The metal underfoot still holds the day's heat, hours after the last hammer fell."
+   },
+   {
+    "_light_comment": "v0.17 R2: the tier's second banked mouth. Count 7 -> 8 = LIGHT_BUDGET, so this map is FULL.",
+    "cell": [
+     17,
+     4
+    ],
+    "display_name": "Forge Station",
+    "id": "forge_station_b",
+    "kind": "prop",
+    "light": {
+     "color": [
+      0.965,
+      0.333,
+      0.063
+     ],
+     "energy": 0.9,
+     "flicker": true,
+     "radius": 34
+    },
+    "observe": "A second bench, same pattern as the first \u2014 built to the same civic spec as the market tier's stalls, just built for heat instead of trade.",
+    "on_interact_accomplishment": "eyed_the_forge_station",
+    "sprite": "forge_station",
+    "toast": "Tool racks, empty for the moment. Whoever works this bench keeps it orderly."
+   },
+   {
+    "cell": [
+     5,
+     7
+    ],
+    "display_name": "Steam Vent",
+    "id": "steam_vent_forge",
+    "kind": "prop",
+    "observe": "A bronze grate exhales a slow white breath, steady as a held note. Somewhere below, something enormous is always working.",
+    "on_interact_accomplishment": "heard_the_machine_below",
+    "sprite": "steam_vent",
+    "toast": "Warm, damp air. A rhythm underneath it, too even to be weather."
+   },
+   {
+    "cell": [
+     22,
+     7
+    ],
+    "display_name": "The Grand Lift",
+    "door_when": {
+     "open_toast": "The brass gate rises with a well-oiled clank, counterweights turning smooth in their track. The lift carries you down, into the ordered quiet of the market tier.",
+     "requires": {
+      "elevator_pass_stamped": 1
+     },
+     "to_cell": [
+      23,
+      7
+     ],
+     "to_map": "pallass_market"
+    },
+    "id": "grand_lift_forge",
+    "kind": "prop",
+    "locked_toast": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open.",
+    "observe": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight. This is how the tiers actually connect.",
+    "sprite": "great_lift"
+   },
+   {
+    "_comment": "respawns:true, MEASURED-only in the harness (a first-of-its-kind region, no established band to hold).",
+    "_comment_tint": "MAP/PALLASS-FORGE-FLOOR: the golem read as parked machinery, same purple-grey as its tier. Ember cast separates it from the brick; rig and stats untouched.",
+    "allies": [],
+    "arena": "forge_hall",
+    "cell": [
+     20,
+     8
+    ],
+    "conversation": "forge_calibration_golem",
+    "display_name": "Miscalibrated Golem",
+    "enemies": [
+     "forge_golem"
+    ],
+    "id": "forge_calibration_golem",
+    "kind": "encounter",
+    "observe": "A stone shape stands too near the tier's own edge, cracks along its arms glowing a shade too bright for the forge-heat alone.",
+    "on_victory": "forge_golems_culled",
+    "respawns": true,
+    "scales": true,
+    "sprite": "forge_golem",
+    "tint": [
+     1.18,
+     0.88,
+     0.74
+    ]
+   },
+   {
+    "_comment": "v0.15 T4.1. Pool = first-talk-of-a-waking flavor, `conversation` carries every later talk (brothers_parlor precedent). NO elevator_pass_stamped stage: the lift is the only live route onto this tier, so the gate is structurally met and the base pool IS the post-permit voice (CHOICE-LOG).",
+    "cell": [
+     11,
+     6
+    ],
+    "conversation": "pallass_forge_smith",
+    "display_name": "Forge-Tier Smith",
+    "facing": "left",
+    "friendly_line": "She sets the hammer down long enough to look at you properly. From her, that reads as a whole conversation.",
+    "id": "forge_smith",
+    "kind": "npc",
+    "observe": "A Drake in a scarred leather apron, forearms banded with old burn-marks she stopped covering years ago. She works without looking up, and the work doesn't suffer for it.",
+    "sprite": "drake_patron",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7",
+     "\u00a7",
+     "\u00a7"
+    ],
+    "talk_pool_stages": [
+     {
+      "id": "smith_golems_culled",
+      "lines": [
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "forge_golems_culled": 1
+      }
+     },
+     {
+      "id": "smith_seal_resolved",
+      "lines": [
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "seal_resolved": 1
+      }
+     },
+     {
+      "id": "smith_standards_tempered",
+      "lines": [
+       "\u00a7",
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "standards_tempered": 1
+      }
+     }
+    ],
+    "tint": [
+     0.62,
+     0.44,
+     0.38
+    ]
+   },
+   {
+    "_comment": "v0.15 T4.1. Brass tint on the shared `tier_clerk` rig: the uniformity IS the Pallass tell, the tint is what keeps three uniformed Drakes apart at a glance (docs/design/character-profiles.md).",
+    "cell": [
+     22,
+     6
+    ],
+    "conversation": "pallass_lift_attendant",
+    "display_name": "Lift Attendant",
+    "facing": "down",
+    "friendly_line": "He tips two fingers off the gate lever. \"Quarter bell,\" he says, which from him is a kindness and a schedule at once.",
+    "id": "lift_attendant",
+    "kind": "npc",
+    "observe": "A Drake in a brass-buttoned lift coat, one hand resting on the gate lever without gripping it. He watches the counterweights instead of the passengers, and knows where both are.",
+    "sprite": "tier_clerk",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7",
+     "\u00a7",
+     "\u00a7"
+    ],
+    "talk_pool_stages": [
+     {
+      "id": "attendant_seal_resolved",
+      "lines": [
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "seal_resolved": 1
+      }
+     },
+     {
+      "id": "attendant_ledger_unstuck",
+      "lines": [
+       "\u00a7",
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "ledger_unstuck": 1
+      }
+     }
+    ],
+    "tint": [
+     0.86,
+     0.72,
+     0.44
+    ]
+   },
+   {
+    "cell": [
+     2,
+     3
+    ],
+    "display_name": "The Tool Wall",
+    "id": "forge_tool_wall",
+    "kind": "prop",
+    "observe": "Tongs, swages and fullers hung in size order along a painted rack, every one of them chalk-outlined on the boards behind it. An empty outline is a tool somebody still has.",
+    "on_interact_accomplishment": "eyed_the_forge_tools",
+    "sprite": "library_shelf",
+    "tint": [
+     0.55,
+     0.58,
+     0.62
+    ],
+    "toast": "You lift a set of tongs off its outline and set it back. Heavier than it looks, and it goes back exactly straight."
+   },
+   {
+    "cell": [
+     4,
+     8
+    ],
+    "display_name": "The Shift Slate",
+    "id": "forge_shift_slate",
+    "kind": "prop",
+    "observe": "Every bench on the tier chalked in a column, the smith's mark beside it and the hours they're owed. Two marks have been rubbed out and rewritten in a different hand.",
+    "on_interact_accomplishment": "read_the_shift_slate",
+    "sprite": "price_board",
+    "toast": "Bench hours, to the quarter. Nobody up here works a minute they can't account for.",
+    "visual_states": [
+     {
+      "tint": [
+       0.7,
+       0.7,
+       0.74
+      ],
+      "when": {
+       "at": 1,
+       "counter": "read_the_shift_slate"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     9,
+     4
+    ],
+    "display_name": "Billet Rack",
+    "id": "forge_billet_rack",
+    "kind": "prop",
+    "observe": "Bar stock stacked by gauge, each bundle strapped and tagged. The tags carry a tier number, a bench number, and nothing else. No names anywhere on them.",
+    "on_interact_accomplishment": "eyed_the_billet_rack",
+    "sprite": "crate",
+    "tint": [
+     0.72,
+     0.76,
+     0.82
+    ],
+    "toast": "Cold iron, cut to length by somebody who measured twice. The strapping doesn't give under your hand."
+   },
+   {
+    "_comment": "Sprite reads picked off the first windowed pass, not off the name: `cauldron` put a FIRE in the quench (a lit pot beside the anvil), `riverfarm_fence_ew` put WOOD against the molten seam, and a second `barrel` cloned the quench 7 cells away. Barrel/boulder/rail-at-the-parapet is what the tier actually reads as.",
+    "cell": [
+     12,
+     6
+    ],
+    "display_name": "The Quench Barrel",
+    "id": "forge_quench_barrel",
+    "kind": "prop",
+    "observe": "A standing barrel of water beside the anvil, skinned over with scale and grey all the way down. The rim is worn smooth in the two places a smith's hands go.",
+    "on_interact_accomplishment": "eyed_the_quench_barrel",
+    "sprite": "barrel",
+    "tint": [
+     0.46,
+     0.56,
+     0.64
+    ],
+    "toast": "The water is warmer than the room around it. Something went in here not long ago."
+   },
+   {
+    "cell": [
+     19,
+     6
+    ],
+    "display_name": "Slag Heap",
+    "id": "forge_slag_heap",
+    "kind": "prop",
+    "observe": "Cooled slag and cracked crucible shards, heaped no higher than a line painted on the flagstones around it. The line has been repainted recently, and brightly.",
+    "on_interact_accomplishment": "eyed_the_slag_heap",
+    "sprite": "boulder",
+    "tint": [
+     0.3,
+     0.28,
+     0.29
+    ],
+    "toast": "Glassy black waste, still holding a little of the day's heat. Even the refuse up here has a level marked on it."
+   },
+   {
+    "cell": [
+     24,
+     6
+    ],
+    "display_name": "The Parapet Rail",
+    "id": "forge_parapet_rail",
+    "kind": "prop",
+    "observe": "A bronze rail along the tier's open edge, polished bright by a hundred people leaning on the same stretch of it while they waited on the cage. Below it the shaft goes down past where the light gives up.",
+    "on_interact_accomplishment": "leaned_on_the_parapet_rail",
+    "sprite": "riverfarm_fence_ew",
+    "tint": [
+     0.74,
+     0.62,
+     0.42
+    ],
+    "toast": "You put a hand on the rail. Warm from the tier, not from the drop. Whoever set it worked out exactly how close a person could stand."
+   },
+   {
+    "_comment": "v0.15 T4.4 regional repeatable work, 3 of 3. NEW COUNTER pallass_fetches_run, frozen at the next tag. Cell (18,4) sits east of forge_station_b, off the bounds lap (rows 2/9, columns 0/25) and off the y=9 lane pallass_walkthrough and pallass_round_trip both use.",
+    "cell": [
+     18,
+     4
+    ],
+    "display_name": "The Fetch Slips",
+    "gold": 2,
+    "id": "forge_fetch_slips",
+    "kind": "prop",
+    "observe": "A rack of numbered slips beside the second bench: a stock number, a bench number, an hour. No names on any of them. Any pair of hands that can read a gauge can take one down.",
+    "on_interact_accomplishment": "pallass_fetches_run",
+    "once_per_waking": true,
+    "once_per_waking_toast": "The rack is empty until the next shift files its slips. Pallass does not run two shifts at once.",
+    "sprite": "delivery_board",
+    "toast": "You take a slip, walk its stock number down to the racks and the finished piece back up. The clerk who pays you writes down the hour you took, to the quarter.",
+    "variants": [
+     {
+      "toast": "The smith hands you the slip before the rack does. She says nothing about it. She wouldn't.",
+      "when": {
+       "pallass_fetches_run": 5
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "v0.16 P1. Cell (15,3) is off every QA lap and assert set, and all four neighbours are open, so no prior save loading here is trapped by the new blocking entity. Full cell audit: the plan's Task 1.2 table.",
+    "cell": [
+     15,
+     3
+    ],
+    "display_name": "The Forge Hall",
+    "id": "forge_hall_door",
+    "kind": "door",
+    "observe": "A wide iron-strapped door standing open on its wedge. Past it: a working hall, and a heat that has its own weather.",
+    "sprite": "door",
+    "to_cell": [
+     5,
+     7
+    ],
+    "to_map": "pallass_forge_hall"
+   },
+   {
+    "cell": [
+     10,
+     4
+    ],
+    "display_name": "The Reject Bin",
+    "id": "forge_reject_bin",
+    "kind": "prop",
+    "observe": "A civic bin beside the second bench, half full of work that never left the tier. Each piece has a tag, and every tag has the same examiner's seal on it.",
+    "on_interact_accomplishment": "saw_the_failed_temper",
+    "sprite": "crate",
+    "toast": "Nine blades in the bin, all from one hand, all failed on the same measure. Somebody up here is doing careful work and failing it the same way every time.",
+    "visual_states": [
+     {
+      "tint": [
+       0.7,
+       0.7,
+       0.74
+      ],
+      "when": {
+       "at": 1,
+       "counter": "saw_the_failed_temper"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     23,
+     4
+    ],
+    "display_name": "The Landing Manifest",
+    "id": "lift_manifest_slate",
+    "kind": "prop",
+    "observe": "A slate of what the cage is carrying today, chalked by hour. Two lines have been rewritten so many times the slate has gone smooth under them.",
+    "on_interact_accomplishment": "read_the_lift_manifest",
+    "sprite": "price_board",
+    "toast": "One crate of tin, den shop, market tier. Logged three cycles running and carried none of them. Beside it, in a tidier hand: HELD, QUEUE.",
+    "visual_states": [
+     {
+      "tint": [
+       0.7,
+       0.7,
+       0.74
+      ],
+      "when": {
+       "at": 1,
+       "counter": "read_the_lift_manifest"
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "P2 HELP leg 1 of 3. once_per_waking books per ENTITY (`serve:<id>`), so three distinct props bank shipment_leg_carried three times in one waking. No lift affordance exists or is being added.",
+    "cell": [
+     19,
+     4
+    ],
+    "display_name": "The Held Pallet",
+    "id": "lift_cargo_pallet",
+    "kind": "prop",
+    "observe": "A pallet strapped and tagged and standing exactly where it has stood for three cycles, one hand's width outside the loading square.",
+    "on_interact_accomplishment": "shipment_leg_carried",
+    "once_per_waking": true,
+    "once_per_waking_toast": "The pallet is where you left it and the cage is where the bell says. Nothing moves again until the next shift.",
+    "sprite": "crate",
+    "toast": "You get the pallet onto the loading square and the strapping squared. The attendant looks at it, looks at the bell, and says nothing, which is the whole permission you are going to get."
+   }
+  ],
+  "floor_layers": [
+   {
+    "_comment": "MAP/PALLASS-FORGE-FLOOR: wall rows 0-1 and the walkable brick were one texture. Row 2 takes the slate band row 9 uses, framing the floor dark top and bottom. No blocking moves.",
+    "cells": {
+     "rect": [
+      0,
+      2,
+      26,
+      1
+     ]
+    },
+    "coords": [
+     0,
+     3
+    ],
+    "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
+    "tile_px": 16
+   },
+   {
+    "cells": {
+     "rect": [
+      0,
+      9,
+      26,
+      1
+     ]
+    },
+    "coords": [
+     0,
+     3
+    ],
+    "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
+    "tile_px": 16
+   },
+   {
+    "_comment": "the brick_over_molten atlas's all-lower molten cell (id0 [0,0]) painted ONLY at the 5 seam cells (paired with `cover_skip` above so the dark blocked overlay skips them).",
+    "cells": {
+     "list": [
+      [
+       13,
+       5
+      ],
+      [
+       14,
+       5
+      ],
+      [
+       15,
+       5
+      ],
+      [
+       16,
+       5
+      ],
+      [
+       17,
+       5
+      ]
+     ]
+    },
+    "coords": [
+     0,
+     0
+    ],
+    "sheet": "res://assets/tiles/pallass/tileset_brick_over_molten_atlas.png",
+    "tile_px": 16
+   },
+   {
+    "cells": {
+     "rect": [
+      20,
+      6,
+      4,
+      3
+     ]
+    },
+    "coords": [
+     16,
+     18
+    ],
+    "sheet": "res://assets/tiles/castle/Tiles.png",
+    "tile_px": 16
+   }
+  ],
+  "grid": {
+   "height": 11,
+   "width": 26
+  },
+  "interior_flavor": [
+   "Nothing there. Warm metal underfoot, and a rhythm below it that never quite stops.",
+   "Nothing there. Every tool on this tier is squared to an edge somebody measured."
+  ],
+  "scatter": [
+   {
+    "cluster": 0.6,
+    "density": 0.05,
+    "pool": [
+     "pebble"
+    ],
+    "seed": 47
+   }
+  ],
+  "walls": {
+   "segments": [
+    {
+     "face": [
+      0,
+      0
+     ],
+     "from": [
+      0,
+      0
+     ],
+     "to": [
+      25,
+      1
+     ]
+    }
+   ],
+   "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
+   "tile_px": 16
+  }
+ }
+}

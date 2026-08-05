@@ -1,12 +1,5 @@
 {
  "facts": {
-  "$.nodes.greet.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Serve"
-   ]
-  },
   "$.nodes.greet.options[1].text": {
    "brackets": [],
    "digits": [],
@@ -52,7 +45,7 @@
        "item": "hot_meal",
        "once_per_waking": "serve:hungry_patron"
       },
-      "text": "\u00a7"
+      "text": "@bring_her_a_bowl"
      },
      {
       "end": true,

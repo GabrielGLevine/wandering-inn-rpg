@@ -1,10 +1,5 @@
 {
  "facts": {
-  "$.nodes.agreed_paid.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.agreed_paid.options[1].text": {
    "brackets": [],
    "digits": [],
@@ -17,11 +12,6 @@
     "Coyle",
     "Hellam"
    ]
-  },
-  "$.nodes.agreed_persuaded.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
   },
   "$.nodes.agreed_persuaded.options[1].text": {
    "brackets": [],
@@ -167,7 +157,9 @@
   "$.nodes.hub.text_variants[0].text": {
    "brackets": [],
    "digits": [],
-   "propnouns": []
+   "propnouns": [
+    "Hellam"
+   ]
   },
   "$.nodes.hub.text_variants[1].text": {
    "brackets": [],
@@ -260,7 +252,9 @@
   "$.nodes.rumor_hellam.options[1].text": {
    "brackets": [],
    "digits": [],
-   "propnouns": []
+   "propnouns": [
+    "Hellam"
+   ]
   },
   "$.nodes.rumor_hellam.text": {
    "brackets": [],
@@ -269,6 +263,11 @@
     "Coyle",
     "Hellam"
    ]
+  },
+  "$.text_banks.pour_for_three_then": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
   }
  },
  "skeleton": {
@@ -283,7 +282,7 @@
        }
       ],
       "goto": "arranged",
-      "text": "\u00a7"
+      "text": "@pour_for_three_then"
      },
      {
       "end": true,
@@ -302,7 +301,7 @@
        }
       ],
       "goto": "arranged",
-      "text": "\u00a7"
+      "text": "@pour_for_three_then"
      },
      {
       "end": true,
@@ -674,6 +673,9 @@
     "text": "\u00a7"
    }
   },
-  "start": "hub"
+  "start": "hub",
+  "text_banks": {
+   "pour_for_three_then": "\u00a7"
+  }
  }
 }

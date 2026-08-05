@@ -231,7 +231,7 @@
      "goto": "why_keep"
     },
     {
-     "text": "\"Who's refusing the work?\"",
+     "text": "@who_s_refusing_the",
      "goto": "terms"
     }
    ]
@@ -241,7 +241,7 @@
    "text": "Because she wore it to every hard thing she ever did and it never once let her down. The stone was glass for all forty of those years. It did not matter then and I will not let it start mattering now. I want the setting held properly. The stone can stay glass.",
    "options": [
     {
-     "text": "\"Who's refusing the work?\"",
+     "text": "@who_s_refusing_the",
      "goto": "terms"
     }
    ]
@@ -300,5 +300,8 @@
     }
    ]
   }
+ },
+ "text_banks": {
+  "who_s_refusing_the": "\"Who's refusing the work?\""
  }
 }

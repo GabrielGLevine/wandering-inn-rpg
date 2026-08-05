@@ -8,6 +8,13 @@
   "width": 16,
   "height": 12
  },
+ "talk_banks": {
+  "selys_shared": [
+   "Oh good, a face that doesn't come with a complaint form. You can stand there as long as you like.",
+   "Tell Erin her letters are still too long. And that I read all of them. Do not pass on the second part.",
+   "Rough week on the board. If you're taking work, take the sane jobs. I flag the sane ones. It's not a service everyone gets."
+  ]
+ },
  "blocked": [
   [
    6,
@@ -297,9 +304,7 @@
       "chatted_with_selys": 2
      },
      "lines": [
-      "Oh good, a face that doesn't come with a complaint form. You can stand there as long as you like.",
-      "Tell Erin her letters are still too long. And that I read all of them. Do not pass on the second part.",
-      "Rough week on the board. If you're taking work, take the sane jobs. I flag the sane ones. It's not a service everyone gets."
+      "@selys_shared"
      ]
     },
     {
@@ -318,7 +323,7 @@
       "horns_delve_started": 1
      },
      "lines": [
-      "Ceria's team went down to the gallery already. They'll wait. Ceria said so. Twice."
+      "@ceria_s_team_went"
      ]
     },
     {
@@ -328,9 +333,7 @@
       "horns_party_formed": 1
      },
      "lines": [
-      "Oh good, a face that doesn't come with a complaint form. You can stand there as long as you like.",
-      "Tell Erin her letters are still too long. And that I read all of them. Do not pass on the second part.",
-      "Rough week on the board. If you're taking work, take the sane jobs. I flag the sane ones. It's not a service everyone gets."
+      "@selys_shared"
      ]
     },
     {
@@ -349,9 +352,7 @@
       "pallass_attuned": 1
      },
      "lines": [
-      "Oh good, a face that doesn't come with a complaint form. You can stand there as long as you like.",
-      "Tell Erin her letters are still too long. And that I read all of them. Do not pass on the second part.",
-      "Rough week on the board. If you're taking work, take the sane jobs. I flag the sane ones. It's not a service everyone gets."
+      "@selys_shared"
      ]
     }
    ],

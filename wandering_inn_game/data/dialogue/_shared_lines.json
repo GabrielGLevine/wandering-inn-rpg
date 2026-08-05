@@ -1,0 +1,10 @@
+{
+ "_comment": "Shared dialogue line bank (user directive 2026-08-05). Option verbs and exit lines that MUST stay uniform across conversations live here once; graphs reference them with \"@<name>\" in any text / text_variants / options[].text slot (file-local text_banks resolve first; shadowing is a lint error). Expansion happens at load (game.gd via WIDialogueBanks, wi_data_lib for tooling), so every consumer and every QA pin sees the resolved line. EDITS HERE NEED A FULL SWEEP: derive_qa_surfaces cannot map a shared line to its crossing scripts, and ~20 canonicals pin these strings verbatim.",
+ "banks": {
+  "bring_her_a_bowl": "Bring her a bowl from the kitchen. (Serve)",
+  "bring_him_a_bowl": "Bring him a bowl from the kitchen. (Serve)",
+  "i_ll_leave_you": "\"I'll leave you to it.\"",
+  "i_ll_let_you": "I'll let you get back to it.",
+  "just_passing_through": "Just passing through."
+ }
+}

@@ -25,7 +25,7 @@
      "goto": "house"
     },
     {
-     "text": "\"I'll leave you to it.\"",
+     "text": "@i_ll_leave_you",
      "end": true
     }
    ]

@@ -1,12 +1,5 @@
 {
  "facts": {
-  "$.nodes.greet.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Serve"
-   ]
-  },
   "$.nodes.greet.options[1].text": {
    "brackets": [],
    "digits": [],
@@ -29,13 +22,6 @@
    "digits": [],
    "propnouns": [
     "Addr"
-   ]
-  },
-  "$.nodes.offduty.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Serve"
    ]
   },
   "$.nodes.offduty.options[1].text": {
@@ -84,7 +70,7 @@
        "item": "hot_meal",
        "once_per_waking": "serve:wilovan_inn_guest"
       },
-      "text": "\u00a7"
+      "text": "@bring_him_a_bowl"
      },
      {
       "goto": "offduty",
@@ -130,7 +116,7 @@
        "item": "hot_meal",
        "once_per_waking": "serve:wilovan_inn_guest"
       },
-      "text": "\u00a7"
+      "text": "@bring_him_a_bowl"
      },
      {
       "end": true,

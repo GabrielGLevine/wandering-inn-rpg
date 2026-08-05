@@ -90,7 +90,10 @@ func _load_dialogue_graphs() -> Dictionary:
 	var dir: DirAccess = DirAccess.open(DIALOGUE_DIR)
 	assert(dir != null, "missing dialogue directory")
 	for file_name: String in dir.get_files():
-		if file_name.ends_with(".json"):
+		# Underscore files are line banks, never graphs -- indexing ["nodes"]
+		# on one aborted the whole producer scan (every id after the crash
+		# read as "disappeared").
+		if file_name.ends_with(".json") and not file_name.begins_with("_"):
 			graphs[file_name.get_basename()] = _load_json(DIALOGUE_DIR.path_join(file_name))
 	return graphs
 

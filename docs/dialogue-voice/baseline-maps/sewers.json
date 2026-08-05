@@ -1,0 +1,496 @@
+{
+ "facts": {},
+ "skeleton": {
+  "_comment": "Water channels are walls.segments on the free_pack Water_tiles sheet, so world.gd's `_build_water_shimmer` paints the shimmer overlay automatically (sheet-match) AND they block movement (segment_cells joins the sim blocked set).",
+  "_comment_decor": "Three carry a phosphor light: both entity lights sit in the north strip, so everything south had no source and the grade alone decided the read. Dimmer/shorter than the phosphor_moss landmark. 5 lights, budget 8, PC [Light] makes 6.",
+  "_comment_freezable": "Freezing the two x=3 channel cells opens a vertical shortcut through blocked water; sleep thaws them.",
+  "ambience": [
+   {
+    "preset": "pond_glints",
+    "rect": [
+     3,
+     5,
+     14,
+     1
+    ]
+   },
+   {
+    "preset": "pond_glints",
+    "rect": [
+     3,
+     9,
+     14,
+     1
+    ]
+   },
+   {
+    "preset": "dust_motes",
+    "rect": "all"
+   }
+  ],
+  "biome": "cave",
+  "blocked": [],
+  "decor": [
+   {
+    "cell": [
+     9,
+     11
+    ],
+    "light": {
+     "color": [
+      0.35,
+      0.85,
+      0.5
+     ],
+     "energy": 0.45,
+     "flicker": false,
+     "radius": 16
+    },
+    "sprite": "mushroom_purple_s"
+   },
+   {
+    "cell": [
+     12,
+     2
+    ],
+    "light": {
+     "color": [
+      0.35,
+      0.85,
+      0.5
+     ],
+     "energy": 0.45,
+     "flicker": false,
+     "radius": 16
+    },
+    "sprite": "mushroom_purple_m"
+   },
+   {
+    "cell": [
+     17,
+     3
+    ],
+    "sprite": "boulder"
+   },
+   {
+    "cell": [
+     1,
+     12
+    ],
+    "sprite": "boulder"
+   },
+   {
+    "cell": [
+     18,
+     11
+    ],
+    "light": {
+     "color": [
+      0.35,
+      0.85,
+      0.5
+     ],
+     "energy": 0.45,
+     "flicker": false,
+     "radius": 16
+    },
+    "sprite": "mushroom"
+   }
+  ],
+  "entities": [
+   {
+    "cell": [
+     2,
+     1
+    ],
+    "display_name": "Ladder Up",
+    "id": "sewer_exit",
+    "kind": "door",
+    "light": {
+     "color": [
+      0.7,
+      0.8,
+      0.95
+     ],
+     "energy": 0.5,
+     "flicker": false,
+     "radius": 22
+    },
+    "sprite": "shaft_ladder",
+    "to_cell": [
+     15,
+     11
+    ],
+    "to_map": "street"
+   },
+   {
+    "_comment": "`burnable: true` is the ONLY tag the fire field seam keys on",
+    "burn_toast": "[Firefly] \u2014 Fire catches the tarred rope and runs greedily through the pile. In moments it is ash, the nook stands open, and the pale glint turns out to be a strongbox handle.",
+    "burnable": true,
+    "cell": [
+     1,
+     2
+    ],
+    "display_name": "Rotten Debris",
+    "id": "sewer_debris",
+    "kind": "prop",
+    "locked_toast": "Sodden timber and tarred rope, jammed wall to wall. You could haul at it for an hour, or you could burn it, if you had the means to make fire.",
+    "observe": "A slumped heap of waterlogged timber and old rope, tarred black and long dead. It chokes the little side-nook past the ladder \u2014 and something pale glints between the boards, too deep to reach. Dry enough on top to take a flame, if you had one.",
+    "sprite": "crate",
+    "tint": [
+     0.5,
+     0.42,
+     0.34
+    ]
+   },
+   {
+    "cell": [
+     5,
+     1
+    ],
+    "display_name": "Phosphor Moss",
+    "id": "phosphor_moss",
+    "kind": "prop",
+    "light": {
+     "color": [
+      0.35,
+      0.85,
+      0.5
+     ],
+     "energy": 0.6,
+     "flicker": false,
+     "radius": 20
+    },
+    "observe": "Pale green moss crusts the old brick in patches, breathing a cold light that never quite reaches the water. Drakes farmed it once, they say, to see down here without lanterns.",
+    "on_interact_accomplishment": "found_phosphor_moss",
+    "sprite": "phosphor_moss",
+    "toast": "Phosphor moss clings to the brick, glowing a sick, cold green. Cool to the touch, and it hisses faintly when your shadow crosses it."
+   },
+   {
+    "cell": [
+     5,
+     3
+    ],
+    "display_name": "Drainage Marker",
+    "id": "drainage_marker",
+    "kind": "prop",
+    "observe": "A carved stone boundary marker, Drake glyphs worn shallow. It counts cisterns and sluice-gates in a hand two centuries dead. Someone scratched a newer mark beside it: a spider, hastily.",
+    "on_interact_accomplishment": "read_drainage_marker",
+    "sprite": "boulder",
+    "toast": "An old Drake drainage marker, its glyphs half-swallowed by grime. You can just make out a map of channels \u2014 and a fresh scratch, shaped like a spider, gouged over the third cistern."
+   },
+   {
+    "cell": [
+     16,
+     12
+    ],
+    "display_name": "Sunken Crate",
+    "id": "sunken_crate",
+    "kind": "prop",
+    "observe": "A market crate, swollen and burst, washed down through a grate above. Whatever was in it fed something down here long ago.",
+    "on_interact_accomplishment": "searched_sunken_crate",
+    "sprite": "crate",
+    "toast": "A ruined crate, half-sunk in silt. Merchant stamps still show under the rot: lost cargo, swallowed by the sewers and picked clean."
+   },
+   {
+    "cell": [
+     14,
+     10
+    ],
+    "display_name": "Webbed Passage",
+    "id": "spider_silk",
+    "kind": "prop",
+    "observe": "Cable-thick silk, black-and-silver banded, stretched wall to wall. Not a house spider's work. Something with a shield on its back spun this, and recently.",
+    "on_interact_accomplishment": "found_spider_silk",
+    "sprite": "spider_web",
+    "toast": "Ropes of banded silk choke the side passage, strong as wire. Wrapped in it, drained pale: a rat, a boot, something that used to be a Watchman's lantern."
+   },
+   {
+    "allies": [],
+    "arena": "sewers_nest",
+    "cell": [
+     7,
+     2
+    ],
+    "display_name": "Sewer Bats",
+    "enemies": [
+     "sewer_vermin",
+     "sewer_vermin"
+    ],
+    "id": "sewer_vermin",
+    "kind": "encounter",
+    "on_victory": [
+     "cleared_sewer_vermin"
+    ],
+    "sprite": "bat",
+    "tint": [
+     0.7,
+     0.72,
+     0.6
+    ]
+   },
+   {
+    "_comment": "Interact-only (no trigger_radius) so C3's SKILL path can [Appraise Foe] the nest without triggering combat.",
+    "allies": [
+     "klbkch"
+    ],
+    "ally_requires": {
+     "chatted_with_klbkch": 1
+    },
+    "arena": "sewers_nest",
+    "cell": [
+     15,
+     10
+    ],
+    "display_name": "Shield Spider Nest",
+    "enemies": [
+     "shield_spider",
+     "shield_spider"
+    ],
+    "id": "shield_spiders",
+    "kind": "encounter",
+    "loot": [
+     {
+      "chance": 0.3,
+      "item": "phosphor_pendant"
+     }
+    ],
+    "observe": "Two of them, banded carapaces catching the moss-light, waiting where the silk is thickest. Their legs test the air toward you. Behind them the tunnel drops away, and more eyes catch the light down there than you want to count.",
+    "on_victory": [
+     "cleared_the_nest",
+     "resolved_the_cisterns"
+    ],
+    "sprite": "shield_spider"
+   },
+   {
+    "_comment": "reachable WITHOUT interacting the interact-only shield_spiders at (15,10), so scouting never trips the fight.",
+    "cell": [
+     17,
+     10
+    ],
+    "display_name": "Overlook Ledge",
+    "id": "nest_ledge",
+    "kind": "prop",
+    "locked_toast": "The ledge overlooks the nest: a perfect vantage, if you had the eye to read one. You don't, quite. Not yet.",
+    "on_skill_use": {
+     "accomplishment": "scouted_the_nest",
+     "toast": "[Appraise Foe] \u2014 You lie flat on the ledge and read the nest like a map. Two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper. That's where the rest of them are. Count, size, exits: you have it all, and you never had to draw a blade."
+    },
+    "requires_skill": "observe",
+    "skill_hint_toast": "A perfect vantage over the nest, for a trained eye.",
+    "sprite": "nest_ledge"
+   },
+   {
+    "_comment": "The descent seam, gated on Act III's tremor beat.",
+    "cell": [
+     8,
+     12
+    ],
+    "display_name": "Collapsed Fissure",
+    "door_when": {
+     "open_toast": "You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above.",
+     "requires": {
+      "heard_the_deep_tremor": 1
+     },
+     "to_cell": [
+      2,
+      2
+     ],
+     "to_map": "deep_tunnels"
+    },
+    "id": "deep_fissure",
+    "kind": "prop",
+    "observe": "The floor gave way here, not long ago: a raw crack breathing air colder and older than the sewers ever hold. The claw-scores on its lip all point one way: down. Something climbed up through this, and means to again.",
+    "on_interact_accomplishment": "found_the_fissure",
+    "sprite": "deep_fissure",
+    "toast": "A fresh fissure splits the sewer floor, exhaling a dry, breathing cold from far below. Deep gouges rake the stone lip. Something big has been using this as a door."
+   },
+   {
+    "cell": [
+     9,
+     1
+    ],
+    "contains": [
+     "note_sewer_surveyor"
+    ],
+    "display_name": "A Surveyor's Page",
+    "id": "note_sewer_surveyor",
+    "kind": "prop",
+    "observe": "A single page, gone soft with damp, wedged where the old brick has cracked.",
+    "on_open_accomplishment": "found_sewer_surveyor_note",
+    "sprite": "note_pinned",
+    "tint": [
+     0.6,
+     0.68,
+     0.6
+    ]
+   },
+   {
+    "_comment": "present_when makes Pell structurally absent\u2014not cosmetically hidden\u2014until missing_recruit_started is banked on the barracks map; prevents pre-quest discovery and render-count drift.",
+    "cell": [
+     11,
+     3
+    ],
+    "conversation": "recruit_pell",
+    "dialogue": [
+     {
+      "speaker": "Pell",
+      "text": "I'm fine. Really. Just \u2014 turned around in the dark, that's all."
+     }
+    ],
+    "display_name": "Recruit Pell",
+    "facing": "down",
+    "id": "recruit_pell",
+    "kind": "npc",
+    "present_when": {
+     "requires": {
+      "missing_recruit_started": 1
+     }
+    },
+    "sprite": "royal_soldier",
+    "tint": [
+     0.6,
+     0.68,
+     0.62
+    ]
+   },
+   {
+    "_comment": "R6 (#95) trap placement 1/2: sewer_vermin nest approach snag.",
+    "cell": [
+     7,
+     3
+    ],
+    "display_name": "A Snagged Tripwire",
+    "id": "sewer_nest_snag",
+    "kind": "prop",
+    "locked_toast": "A length of wire runs low across the passage, pinned to a rusted stanchion. Whatever it's meant to catch, you can't tell how to spring it safe.",
+    "on_skill_use": {
+     "accomplishment": "trap_disarmed",
+     "gold": 1,
+     "toast": "You ease the wire off its catch and coil it loose. A few scavenged links clatter free, worth a coin or two melted down."
+    },
+    "once_per_waking": true,
+    "once_per_waking_toast": "Nothing else glints in the nest today.",
+    "requires_skill": "disarm_trap",
+    "skill_hint_toast": "Wire, taut and low, strung off a rusted stanchion. Something in the nest rigged this. Careful hands could clear it.",
+    "sprite": "snare_coil"
+   },
+   {
+    "_comment": "R6 (#95) trap placement 2/2: shield_spiders/nest_ledge approach snag, south flank away from the y11 walkway cisterns_scout/cisterns_fight both walk edge to edge.",
+    "cell": [
+     13,
+     12
+    ],
+    "display_name": "A Bone-Wire Snare",
+    "id": "sewer_drain_snare",
+    "kind": "prop",
+    "locked_toast": "Bone and wire, tangled at the drain mouth. It has the shape of a trap. You can't read it well enough to touch it \u2014 that's trap-craft, a rogue's trade.",
+    "on_skill_use": {
+     "accomplishment": "trap_disarmed",
+     "gold": 1,
+     "toast": "You work the bone pins loose and unwind the wire. A few coins sit wedged in the silt beneath it, dropped by whoever it once caught."
+    },
+    "once_per_waking": true,
+    "once_per_waking_toast": "The drain has given up all it's going to give today.",
+    "requires_skill": "disarm_trap",
+    "skill_hint_toast": "Bone and wire, tangled at the drain mouth, rigged for something bigger than rats. A steady hand could clear it.",
+    "sprite": "snare_coil"
+   },
+   {
+    "_comment": "Finding 7: the nook was EMPTY. Observe foreshadows the glint, burn_toast names the handle, this pays it off (6 gold, `once`). Gate = the burn row's counter.",
+    "cell": [
+     0,
+     3
+    ],
+    "display_name": "Silt-Caked Strongbox",
+    "gold": 6,
+    "id": "nook_strongbox",
+    "kind": "prop",
+    "observe": "A little iron strongbox, silt-caked, dragged here by someone who never came back for it.",
+    "on_interact_accomplishment": "opened_nook_strongbox",
+    "once": true,
+    "present_when": {
+     "requires": {
+      "burned_the_debris": 1
+     }
+    },
+    "sprite": "crate",
+    "toast": "The hinge shears off in your hand. Inside: a wax-wrapped roll of coin, dry as the day it was hidden. 6 gold."
+   }
+  ],
+  "floor_layers": [
+   {
+    "_pick": "cave-floor variation reusing the cave biome's verified floor-tile neighborhood.",
+    "cells": "all",
+    "variants": [
+     [
+      8,
+      13
+     ],
+     [
+      9,
+      13
+     ],
+     [
+      10,
+      13
+     ]
+    ]
+   }
+  ],
+  "freezable": [
+   [
+    3,
+    5
+   ],
+   [
+    3,
+    9
+   ]
+  ],
+  "grid": {
+   "height": 14,
+   "width": 20
+  },
+  "walls": {
+   "segments": [
+    {
+     "cap": [
+      1,
+      5
+     ],
+     "from": [
+      3,
+      5
+     ],
+     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+     "tile_px": 16,
+     "to": [
+      16,
+      5
+     ],
+     "water": true
+    },
+    {
+     "cap": [
+      1,
+      5
+     ],
+     "from": [
+      3,
+      9
+     ],
+     "sheet": "res://assets/tiles/free_pack/Water_tiles.png",
+     "tile_px": 16,
+     "to": [
+      16,
+      9
+     ],
+     "water": true
+    }
+   ],
+   "sheet": "res://assets/tiles/cave/Tiles.png",
+   "tile_px": 16
+  }
+ }
+}

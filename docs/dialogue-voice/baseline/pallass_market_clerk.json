@@ -33,7 +33,8 @@
    "brackets": [],
    "digits": [],
    "propnouns": [
-    "Human"
+    "Human",
+    "Humans"
    ]
   },
   "$.nodes.hub.text_variants[2].text": {

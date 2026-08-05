@@ -1117,7 +1117,7 @@
      },
      "lines": [
       "Prices hold for you. We have an arrangement, after all.",
-      "My consultant returns. Everything remains... current. Do spend some of it here."
+      "My consultant returns. Everything remains — current. Do spend some of it here."
      ]
     },
     {
@@ -1156,7 +1156,7 @@
    ],
    "observe": "She holds the slip at arm's length, then the shopfront number, then the slip again. Whatever address she was given, this street declines to be it.",
    "talk_pool": [
-    "Number eleven. This IS number eleven. The sign says Havvers and my slip says Bellworth, so one of them is lying.",
+    "Number eleven. This is number eleven. The sign says Havvers and my slip says Bellworth, so one of them is lying.",
     "Three streets, four shopfronts, and not one of them the one I was sent to. Invrisil, that.",
     "You want the glazier, it's the front with the panes stood out on edge. Everything here advertises with the thing itself."
    ]
@@ -1186,7 +1186,7 @@
    "talk_pool": [
     "If you're asking directions, ask somebody stopped. I'm not stopped.",
     "It isn't rudeness. Look at anyone here for two seconds and you'll be sold something.",
-    "Wool like this means nothing except that I bought it here. That is the entire point of it."
+    "Wool like this means nothing except that I bought it here. That is what it is for."
    ]
   },
   {
@@ -1253,7 +1253,7 @@
    ],
    "observe": "Olive work clothes, ink to the second knuckle, and a satchel worn flat on one side from the same walk every day.",
    "talk_pool": [
-    "Six ledgers on this street and no two agree. That isn't fraud. That's just Invrisil.",
+    "Six ledgers on this street and no two agree. In Invrisil that passes for balanced.",
     "I'm between errands. There's no such thing as between errands. There's the next one.",
     "You want a number, ask a clerk. You want what happened, ask a porter."
    ]
@@ -1320,7 +1320,7 @@
       "brothers_job_done": 1
      },
      "lines": [
-      "There was a matter with Master Coyle. It resolved. In this city that is the whole of what you get told.",
+      "There was a matter with Master Coyle. It resolved. In this city that is everything you get told.",
       "The names on the good invitations moved this month. They do that when something has been settled."
      ]
     }

@@ -1,0 +1,385 @@
+{
+ "facts": {
+  "$.entities[1].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool_stages[0].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool_stages[1].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "Zevara Sunderscale STAYS at the gate (zevara_intro's own framing untouched)",
+  "ambience": [
+   {
+    "phase": [
+     "dusk",
+     "night"
+    ],
+    "preset": "dust_motes",
+    "rect": "all"
+   }
+  ],
+  "biome": "inn",
+  "blocked": [
+   [
+    6,
+    2
+   ],
+   [
+    9,
+    2
+   ],
+   [
+    3,
+    2
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     6,
+     2
+    ],
+    "sprite": "table_brown"
+   },
+   {
+    "cell": [
+     9,
+     2
+    ],
+    "sprite": "shelf_bottles"
+   },
+   {
+    "cell": [
+     3,
+     2
+    ],
+    "sprite": "crate"
+   },
+   {
+    "cell": [
+     7,
+     2
+    ],
+    "sprite": "stool"
+   }
+  ],
+  "entities": [
+   {
+    "cell": [
+     2,
+     7
+    ],
+    "display_name": "Liscor Street",
+    "id": "barracks_exit",
+    "kind": "door",
+    "sprite": "door",
+    "to_cell": [
+     21,
+     3
+    ],
+    "to_map": "street"
+   },
+   {
+    "_comment": "talk_pool fires first-talk-of-the-waking as before",
+    "cell": [
+     6,
+     4
+    ],
+    "conversation": "dresk_recruit",
+    "dialogue": [
+     {
+      "speaker": "Sergeant Ashgrave",
+      "text": "Barracks is Watch business only. State yours."
+     }
+    ],
+    "display_name": "Sergeant Ashgrave",
+    "facing": "down",
+    "id": "duty_sergeant",
+    "kind": "npc",
+    "observe": "A belt-slate at his hip, chalk stub worn to a nub, already a line into today's tally. Rust-brown scales, no plate for a desk posting \u2014 he'd rather be finishing the count than talking to you.",
+    "person": true,
+    "sprite": "royal_soldier",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7",
+     "\u00a7"
+    ],
+    "talk_pool_stages": [
+     {
+      "_comment": "b7 #207 ack (lowest priority \u2014 any later stage outranks). delivered_* counters never reset; ack register must read fine forever.",
+      "id": "sergeant_delivery_gear",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "delivered_delivery_barracks_gear": 1
+      }
+     },
+     {
+      "_comment": "b7 #207 standing-run familiarity \u2014 the standing row re-banks every run, so this is a permanent register shift by design.",
+      "id": "sergeant_standing_kit",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "delivered_delivery_standing_barracks_kit": 1
+      }
+     }
+    ],
+    "tint": [
+     0.55,
+     0.35,
+     0.3
+    ]
+   },
+   {
+    "_comment": "she stays at the gate (zevara_intro unchanged)",
+    "cell": [
+     10,
+     5
+    ],
+    "display_name": "Zevara's Desk",
+    "id": "zevara_desk",
+    "kind": "prop",
+    "observe": "Tidier than her schedule allows. A stack of gate-shift reports pinned under a paperweight shaped vaguely like a threat. She is almost never behind it. The gate keeps her busier than her own office does.",
+    "on_interact_accomplishment": "saw_zevaras_desk",
+    "sprite": "library_desk",
+    "toast": "Watch Captain's desk. Empty, same as every other time you've walked past it."
+   },
+   {
+    "cell": [
+     12,
+     3
+    ],
+    "display_name": "The Cell",
+    "id": "cell_door",
+    "kind": "prop",
+    "locked_toast": "Barred, and empty behind the bars. You can tell by the quiet. Whatever ends up in here hasn't happened yet.",
+    "observe": "A single holding cell, iron-barred, straw swept into one corner. Duty-mundane, like everything else in this building \u2014 until it isn't.",
+    "sprite": "door",
+    "tint": [
+     0.5,
+     0.5,
+     0.55
+    ]
+   },
+   {
+    "_comment_330": "#330 R5: was an uncapped, undecayed ranged_hit spigot. One drill a waking now, and it pays a real shaft.",
+    "cell": [
+     11,
+     1
+    ],
+    "display_name": "Archery Butt",
+    "id": "archery_butt",
+    "item": "loose_arrow",
+    "item_hint_toast": "Nothing to shoot with. A bow in hand would do it.",
+    "kind": "prop",
+    "observe": "A straw-packed target lashed to a post, set against the wall where a stray shot won't find a person. Scored through in a tight cluster, more or less \u2014 somebody here takes the drills seriously.",
+    "on_interact_accomplishment": "ranged_hit",
+    "once_per_waking": true,
+    "once_per_waking_toast": "You have shot your quiver dry for today. The straw will keep.",
+    "requires_weapon_family": "bow",
+    "sprite": "training_dummy",
+    "tint": [
+     0.85,
+     0.75,
+     0.45
+    ],
+    "toast": "You put an arrow in the straw. Not bad, for someone who still flinches at the draw."
+   },
+   {
+    "cell": [
+     4,
+     6
+    ],
+    "contains": [
+     "field_whetstone"
+    ],
+    "display_name": "An Overlooked Kit Crate",
+    "id": "spare_kit_crate",
+    "kind": "prop",
+    "observe": "A second kit crate, shoved into the corner and never reshelved. The sergeant's own tally probably missed it.",
+    "sprite": "crate",
+    "tint": [
+     0.5,
+     0.42,
+     0.3
+    ]
+   },
+   {
+    "cell": [
+     9,
+     6
+    ],
+    "contains": [
+     "note_watch_veteran"
+    ],
+    "display_name": "A Watch Veteran's Letter",
+    "id": "note_watch_veteran",
+    "kind": "prop",
+    "observe": "A folded half-letter, tucked behind a loose board. Someone started writing it and never finished.",
+    "on_open_accomplishment": "found_watch_veteran_note",
+    "sprite": "note_pinned",
+    "tint": [
+     0.7,
+     0.65,
+     0.5
+    ]
+   },
+   {
+    "cell": [
+     11,
+     6
+    ],
+    "contains": [
+     "note_old_dread"
+    ],
+    "display_name": "A Ward-Charm Scrap",
+    "id": "note_old_dread",
+    "kind": "prop",
+    "observe": "A scrap of paper pinned low, tucked behind a loose board same as the letter across the room.",
+    "on_open_accomplishment": "found_old_dread_note",
+    "sprite": "note_pinned",
+    "tint": [
+     0.55,
+     0.5,
+     0.45
+    ]
+   }
+  ],
+  "floor_layers": [
+   {
+    "_pick": "#225 floor differentiation: the Watch barracks reads as institutional grey stone, not inn planks. Castle Environment stone-floor block ([4,11]/[5,11]/[6,11]/[4,12], flat warm-grey rgb~104,97,81) -- the pack the asset catalog casts for 'Watch barracks interior'; already manifest-wired (bundle:true) and in-use for pallass. Biome stays 'inn' so footsteps keep the wood family (a biome-key swap is out of this floor lane's scope; logged as follow-up).",
+    "cells": "all",
+    "sheet": "res://assets/tiles/castle/Tiles.png",
+    "tile_px": 16,
+    "variants": [
+     [
+      4,
+      11
+     ],
+     [
+      5,
+      11
+     ],
+     [
+      6,
+      11
+     ],
+     [
+      4,
+      12
+     ]
+    ]
+   }
+  ],
+  "grid": {
+   "height": 8,
+   "width": 14
+  },
+  "interior_flavor": [
+   "Nothing there. Stone, kit racks, and the smell of oil worked into wood over years.",
+   "Nothing there. A shield knocks against its peg down the corridor, then goes quiet."
+  ],
+  "walls": {
+   "segments": [
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "face": [
+      14,
+      7
+     ],
+     "from": [
+      0,
+      0
+     ],
+     "to": [
+      13,
+      0
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      0,
+      1
+     ],
+     "to": [
+      0,
+      7
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      13,
+      1
+     ],
+     "to": [
+      13,
+      7
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      1,
+      7
+     ],
+     "to": [
+      1,
+      7
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      3,
+      7
+     ],
+     "to": [
+      12,
+      7
+     ]
+    }
+   ],
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16
+  }
+ }
+}

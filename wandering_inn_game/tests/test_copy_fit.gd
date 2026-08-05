@@ -295,11 +295,14 @@ func _check_skill_toasts() -> void:
 func _check_dialogue_graphs() -> void:
 	var dir := DirAccess.open(DIALOGUE_DIR)
 	assert(dir != null, "missing dialogue directory")
+	# Dialogue banks (2026-08-05): measure the EXPANDED text -- a "@ref"
+	# measured raw would silently under-measure the shipped line.
+	var shared_banks := WIDialogueBanks.load_shared()
 	for file_name: String in dir.get_files():
-		if not file_name.ends_with(".json"):
+		if not file_name.ends_with(".json") or file_name.begins_with("_"):
 			continue
 		var full_path := DIALOGUE_DIR.path_join(file_name)
-		var graph := _load_json(full_path)
+		var graph := WIDialogueBanks.expand(_load_json(full_path), shared_banks)
 		for node_id: String in graph.get("nodes", {}):
 			if node_id.begins_with("_"):
 				continue

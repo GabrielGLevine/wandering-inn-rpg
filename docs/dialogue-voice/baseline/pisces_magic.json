@@ -108,11 +108,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.descent_ask.options[1].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.descent_ask.options[2].text": {
    "brackets": [],
    "digits": [],
@@ -126,11 +121,6 @@
    ]
   },
   "$.nodes.descent_ask.text_variants[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.nodes.descent_expect.options[0].text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -555,11 +545,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.second_door_bridge.options[1].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.second_door_bridge.text": {
    "brackets": [],
    "digits": [],
@@ -581,6 +566,11 @@
    "propnouns": [
     "Door"
    ]
+  },
+  "$.text_banks.then_we_go_down": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
   }
  },
  "skeleton": {
@@ -717,7 +707,7 @@
        }
       ],
       "goto": "descent_agreed",
-      "text": "\u00a7"
+      "text": "@then_we_go_down"
      },
      {
       "end": true,
@@ -749,7 +739,7 @@
        }
       ],
       "goto": "descent_agreed",
-      "text": "\u00a7"
+      "text": "@then_we_go_down"
      },
      {
       "end": true,
@@ -1331,7 +1321,7 @@
      },
      {
       "end": true,
-      "text": "\u00a7"
+      "text": "@i_ll_let_you"
      }
     ],
     "speaker": "Pisces",
@@ -1353,6 +1343,9 @@
     "text": "\u00a7"
    }
   },
-  "start": "greet"
+  "start": "greet",
+  "text_banks": {
+   "then_we_go_down": "\u00a7"
+  }
  }
 }

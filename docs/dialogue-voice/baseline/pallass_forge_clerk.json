@@ -104,7 +104,10 @@
   "$.nodes.queue_release.text": {
    "brackets": [],
    "digits": [],
-   "propnouns": []
+   "propnouns": [
+    "Office",
+    "Supply"
+   ]
   },
   "$.nodes.queue_release_done.options[0].text": {
    "brackets": [],

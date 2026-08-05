@@ -10,11 +10,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.dig_pitch.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.dig_pitch.options[1].text": {
    "brackets": [],
    "digits": [],
@@ -26,11 +21,6 @@
    "propnouns": [
     "Liscor"
    ]
-  },
-  "$.nodes.dig_unknown.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
   },
   "$.nodes.dig_unknown.text": {
    "brackets": [],
@@ -91,6 +81,11 @@
    "brackets": [],
    "digits": [],
    "propnouns": []
+  },
+  "$.text_banks.i_m_in_where": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
   }
  },
  "skeleton": {
@@ -111,7 +106,7 @@
     "options": [
      {
       "goto": "dig_directions",
-      "text": "\u00a7"
+      "text": "@i_m_in_where"
      },
      {
       "goto": "dig_unknown",
@@ -125,7 +120,7 @@
     "options": [
      {
       "goto": "dig_directions",
-      "text": "\u00a7"
+      "text": "@i_m_in_where"
      }
     ],
     "speaker": "Ceria",
@@ -218,6 +213,9 @@
     "text": "\u00a7"
    }
   },
-  "start": "hub"
+  "start": "hub",
+  "text_banks": {
+   "i_m_in_where": "\u00a7"
+  }
  }
 }

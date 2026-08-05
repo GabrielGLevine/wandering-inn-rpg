@@ -34,11 +34,6 @@
     "Ask"
    ]
   },
-  "$.nodes.hub.options[3].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.hub.options[4].text": {
    "brackets": [],
    "digits": [],
@@ -72,11 +67,6 @@
    "propnouns": []
   },
   "$.nodes.ledger_brief.text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.nodes.ledger_brief_two.options[0].text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -136,11 +126,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.ledger_settled.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.ledger_settled.text": {
    "brackets": [],
    "digits": [],
@@ -166,11 +151,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.seal.options[1].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.seal.text": {
    "brackets": [],
    "digits": [],
@@ -187,6 +167,16 @@
    "propnouns": []
   },
   "$.nodes.traffic.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.text_banks.down_at_the_quarter": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.text_banks.i_ll_wait_for": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -230,7 +220,7 @@
      },
      {
       "end": true,
-      "text": "\u00a7"
+      "text": "@i_ll_wait_for"
      },
      {
       "_comment": "v0.16 P2 start. requires-hidden on read_the_lift_manifest (banked only by lift_manifest_slate, which near_pallass never interacts), so the 3-row pin and index navigation are untouched.",
@@ -293,7 +283,7 @@
     "options": [
      {
       "end": true,
-      "text": "\u00a7"
+      "text": "@down_at_the_quarter"
      }
     ],
     "speaker": "Lift Attendant",
@@ -377,7 +367,7 @@
     "options": [
      {
       "end": true,
-      "text": "\u00a7"
+      "text": "@down_at_the_quarter"
      }
     ],
     "speaker": "Lift Attendant",
@@ -417,7 +407,7 @@
      },
      {
       "end": true,
-      "text": "\u00a7"
+      "text": "@i_ll_wait_for"
      }
     ],
     "speaker": "Lift Attendant",
@@ -438,6 +428,10 @@
     "text": "\u00a7"
    }
   },
-  "start": "hub"
+  "start": "hub",
+  "text_banks": {
+   "down_at_the_quarter": "\u00a7",
+   "i_ll_wait_for": "\u00a7"
+  }
  }
 }

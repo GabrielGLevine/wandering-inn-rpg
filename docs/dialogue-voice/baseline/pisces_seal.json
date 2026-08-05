@@ -33,9 +33,7 @@
   "$.nodes.at_the_door.text_variants[2].text": {
    "brackets": [],
    "digits": [],
-   "propnouns": [
-    "Ceria"
-   ]
+   "propnouns": []
   },
   "$.nodes.at_the_door.text_variants[3].text": {
    "brackets": [],

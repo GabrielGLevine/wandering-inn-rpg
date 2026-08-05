@@ -1,0 +1,338 @@
+{
+ "facts": {
+  "$.entities[1].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "ambience": [
+   {
+    "preset": "dust_motes",
+    "rect": "all"
+   }
+  ],
+  "biome": "inn",
+  "blocked": [
+   [
+    5,
+    4
+   ],
+   [
+    6,
+    4
+   ],
+   [
+    3,
+    6
+   ],
+   [
+    4,
+    6
+   ],
+   [
+    7,
+    2
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     5,
+     4
+    ],
+    "sprite": "table_brown"
+   },
+   {
+    "cell": [
+     6,
+     4
+    ],
+    "sprite": "table_brown"
+   },
+   {
+    "cell": [
+     3,
+     6
+    ],
+    "sprite": "crate"
+   },
+   {
+    "cell": [
+     4,
+     6
+    ],
+    "sprite": "crate"
+   },
+   {
+    "cell": [
+     7,
+     2
+    ],
+    "sprite": "barrel"
+   },
+   {
+    "cell": [
+     5,
+     1
+    ],
+    "light": {
+     "color": [
+      1.0,
+      0.75,
+      0.4
+     ],
+     "energy": 0.6,
+     "flicker": true,
+     "radius": 18
+    },
+    "sprite": "sconce"
+   }
+  ],
+  "entities": [
+   {
+    "cell": [
+     6,
+     8
+    ],
+    "display_name": "Outside",
+    "id": "mill_exit",
+    "kind": "door",
+    "sprite": "door",
+    "to_cell": [
+     19,
+     6
+    ],
+    "to_map": "riverfarm_village"
+   },
+   {
+    "cell": [
+     4,
+     3
+    ],
+    "conversation": "riverfarm_tallyman",
+    "display_name": "The Tallyman",
+    "facing": "down",
+    "id": "mill_tallyman",
+    "kind": "npc",
+    "observe": "A thin man with a hazel stick in each hand, laying them side by side against the light.",
+    "sprite": "human_laborer",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7",
+     "\u00a7"
+    ]
+   },
+   {
+    "cell": [
+     8,
+     3
+    ],
+    "display_name": "The Flood Stacks",
+    "id": "mill_flood_stack",
+    "kind": "prop",
+    "locked_toast": "Sacks stacked low and a season coming for them. Lifting them above the flood line is work, and work is a Skill you either have or you don't.",
+    "observe": "Grain sacks stacked at ankle height on a shed floor, with the river three weeks out.",
+    "skill_uses": {
+     "basic_cleaning": {
+      "accomplishment": "flood_prep_done",
+      "toast": "[Basic Cleaning] \u2014 You clear the shed floor and stack every sack up off the boards. The count comes right the moment anyone can see all of it at once."
+     },
+     "basic_cooking": {
+      "accomplishment": "flood_prep_done",
+      "toast": "[Basic Cooking] \u2014 You feed the flood crew out of the mill's own pot, and they work the shed twice over for it. The count comes right in the doing."
+     }
+    },
+    "sprite": "crate"
+   },
+   {
+    "_comment": "encounter_when ARMS the fight on the quest start; present_when is validator-forbidden on encounters, so the corner stands visible and inert until then (the seal_warden_alcove pattern) and answers a plain interact with gate_closed_toast. Interact-only (no trigger_radius) -- the mill is a working interior and an ambush on the way to the tallyman would cross every TALK/HELP canonical. on_victory is an Array so the route counter is the only thing banked.",
+    "allies": [],
+    "arena": "inn_cellar",
+    "beast": true,
+    "cell": [
+     9,
+     6
+    ],
+    "display_name": "The Granary Corner",
+    "encounter_when": {
+     "requires": {
+      "heard_flood_ledger": 1
+     }
+    },
+    "enemies": [
+     "granary_scavenger_a",
+     "granary_scavenger_b"
+    ],
+    "gate_closed_toast": "Something has been at the sacks in that corner. Nobody here has called it a problem yet, and it is not your count to go digging in.",
+    "id": "mill_granary_scavengers",
+    "kind": "encounter",
+    "observe": "Chaff scattered wide, sacks opened low down, and something breathing behind the last row.",
+    "on_victory": [
+     "granary_cleared"
+    ],
+    "sprite": "bat"
+   },
+   {
+    "cell": [
+     1,
+     6
+    ],
+    "display_name": "The Wheel Pit",
+    "id": "mill_wheel_pit",
+    "kind": "prop",
+    "observe": "A ladder down into a pit of black water, with the wheel standing still in it and the sluice pinned shut against the season.",
+    "on_interact_accomplishment": "observed_mill_wheel_pit",
+    "sprite": "shaft_ladder",
+    "toast": "The pinned sluice carries three seasons of high-water scratches, and each one sits higher than the last."
+   },
+   {
+    "cell": [
+     10,
+     2
+    ],
+    "display_name": "The High Shelf",
+    "id": "mill_high_shelf",
+    "kind": "prop",
+    "observe": "A shelf set higher on the wall than any shelf needs to be, with notches and years cut into the post beside it.",
+    "on_interact_accomplishment": "observed_mill_high_shelf",
+    "sprite": "library_shelf",
+    "toast": "Somebody has cut a notch for every flood since before the village had a headman, and built the shelf a hand above the worst of them."
+   },
+   {
+    "cell": [
+     2,
+     1
+    ],
+    "display_name": "The Tally Sticks",
+    "id": "mill_tally_sticks",
+    "kind": "prop",
+    "observe": "A bundle of split hazel sticks hung on a nail, each notched down one edge.",
+    "on_interact_accomplishment": "observed_mill_tally_sticks",
+    "sprite": "chest",
+    "toast": "Split tallies. One half stays with the mill, one half goes home with the household, and neither can be altered alone."
+   }
+  ],
+  "floor_layers": [
+   {
+    "_pick": "Same cool dark-plank swatch the Riverfarm longhouse picked out of Interior_Walls_01 ([12,21]/[13,21]/[12,22]/[13,22], rgb~87,64,49) -- one region, one interior floor language, and footstep-wood stays honest for a timber mill floor.",
+    "cells": "all",
+    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+    "tile_px": 16,
+    "variants": [
+     [
+      12,
+      21
+     ],
+     [
+      13,
+      21
+     ],
+     [
+      12,
+      22
+     ],
+     [
+      13,
+      22
+     ]
+    ]
+   }
+  ],
+  "grid": {
+   "height": 9,
+   "width": 12
+  },
+  "walls": {
+   "segments": [
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "face": [
+      14,
+      7
+     ],
+     "from": [
+      0,
+      0
+     ],
+     "to": [
+      11,
+      0
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      0,
+      1
+     ],
+     "to": [
+      0,
+      8
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      11,
+      1
+     ],
+     "to": [
+      11,
+      8
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      1,
+      8
+     ],
+     "to": [
+      5,
+      8
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      7,
+      8
+     ],
+     "to": [
+      10,
+      8
+     ]
+    }
+   ],
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16
+  }
+ }
+}

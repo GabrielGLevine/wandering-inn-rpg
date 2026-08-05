@@ -1,0 +1,372 @@
+{
+ "facts": {
+  "$.entities[1].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.entities[3].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Courier"
+   ]
+  }
+ },
+ "skeleton": {
+  "_comment": "THE DELIVERY BOARD (runner_board, delivery_board:true) is a SEPARATE mechanical prop, browse-only (WIGame._interact_delivery_board), distinct from THE REQUEST BOARD's own board:true flag so interact()'s prop dispatch routes to the right one.",
+  "ambience": [
+   {
+    "phase": [
+     "dusk",
+     "night"
+    ],
+    "preset": "dust_motes",
+    "rect": "all"
+   }
+  ],
+  "biome": "inn",
+  "blocked": [
+   [
+    4,
+    2
+   ],
+   [
+    6,
+    2
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     4,
+     2
+    ],
+    "sprite": "counter_left"
+   },
+   {
+    "cell": [
+     6,
+     2
+    ],
+    "sprite": "counter_right"
+   },
+   {
+    "cell": [
+     1,
+     5
+    ],
+    "sprite": "bench"
+   }
+  ],
+  "entities": [
+   {
+    "cell": [
+     5,
+     7
+    ],
+    "display_name": "Liscor Street",
+    "id": "runners_guild_exit",
+    "kind": "door",
+    "sprite": "door",
+    "to_cell": [
+     19,
+     17
+    ],
+    "to_map": "street"
+   },
+   {
+    "_comment": "talk_pool fires her 'First approach' bark (board-copy.md sec.3) before the real conversation graph (vess_counter.json) on the first talk of a waking.",
+    "cell": [
+     5,
+     2
+    ],
+    "conversation": "vess_counter",
+    "dialogue": [
+     {
+      "speaker": "Vess",
+      "text": "Runner's Guild. Counter's open."
+     }
+    ],
+    "display_name": "Vess",
+    "facing": "down",
+    "id": "vess",
+    "kind": "npc",
+    "observe": "A teenage Drake, wiry, a strap-scarred satchel worn even behind the counter \u2014 she never fully sat down, she just stopped moving for a second. Slate-grey scales, a sweat-band she does not need indoors and wears anyway.",
+    "person": true,
+    "sprite": "drake_patron",
+    "talk_pool": [
+     "\u00a7"
+    ],
+    "tint": [
+     0.5,
+     0.55,
+     0.58
+    ]
+   },
+   {
+    "_comment": "browse-only (WIGame._interact_delivery_board), the delivery-loop's twin of THE REQUEST BOARD (guild_board), same header/second_visit/footer shape, distinct delivery_board:true flag so interact()'s prop dispatch routes to the right board.",
+    "cell": [
+     8,
+     3
+    ],
+    "delivery_board": true,
+    "display_name": "The Delivery Board",
+    "facing": "left",
+    "id": "runner_board",
+    "kind": "prop",
+    "observe": "Couriers are made, not hired. Start with the market run. \u2014 the counter",
+    "second_visit_toast": "THE DELIVERY BOARD. Your slip's still logged at the counter. Legs and ledgers don't care how it's going either.",
+    "sprite": "delivery_board",
+    "toast": "THE DELIVERY BOARD. Legs and ledgers. Gold by distance, paid on the mark, same-waking terms. Slips at the counter."
+   },
+   {
+    "_comment": "talk_pool-only, no conversation graph, inert-adjacent.",
+    "cell": [
+     2,
+     5
+    ],
+    "dialogue": [
+     {
+      "speaker": "Resting Runner",
+      "text": "...five more minutes."
+     }
+    ],
+    "display_name": "Resting Runner",
+    "facing": "left",
+    "id": "resting_runner",
+    "kind": "npc",
+    "observe": "A Gnoll runner, propped against the wall by the stool, legs out, boots still laced. Not asleep. Not far from it.",
+    "person": true,
+    "present_when": {
+     "phase": [
+      "day",
+      "dusk"
+     ]
+    },
+    "sprite": "gnoll_traveler",
+    "talk_pool": [
+     "\u00a7"
+    ],
+    "tint": [
+     0.72,
+     0.66,
+     0.58
+    ]
+   },
+   {
+    "_comment": "#348 slice 2 `hearth` carrier. state_counter names the counter the state_set row banks; visual_states must watch that same id or the one-way set is invisible (data_lint enforces the pair).",
+    "cell": [
+     2,
+     1
+    ],
+    "display_name": "The Common Hearth",
+    "hearth": true,
+    "id": "runners_hearth",
+    "kind": "prop",
+    "kindle_toast": "[Firefly] \u2014 The flame takes the birch on the second breath. Heat crawls out into the room and the stone begins giving it back.",
+    "observe": "A wide stone hearth, swept out and laid ready: split kindling under a lattice of dry birch, waiting on someone with a light. The mantel above it is worn smooth where wet gloves get slapped down.",
+    "sprite": "cold_hearth",
+    "state_counter": "lit_the_runners_hearth",
+    "toast": "Split kindling sits laid and ready under dry birch. The hearth is cold, and nobody here carries flint.",
+    "visual_states": [
+     {
+      "light": {
+       "color": [
+        1.0,
+        0.72,
+        0.42
+       ],
+       "energy": 0.7,
+       "flicker": true,
+       "radius": 22
+      },
+      "sprite": "hearth",
+      "when": {
+       "at": 1,
+       "counter": "lit_the_runners_hearth"
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "#348 slice 2 `unlit` carrier -- answers BOTH burns and toggles_light through the table; no authored requires_skill arm, which is the whole point (contrast inn's unlit_lantern).",
+    "cell": [
+     7,
+     1
+    ],
+    "display_name": "The Wall Lamp",
+    "id": "runners_wall_lamp",
+    "kind": "prop",
+    "kindle_toast": "[Firefly] \u2014 The wick takes the flame and holds it. Yellow light spreads down the wall and over the slips pinned there.",
+    "light_toast": "[Light] \u2014 The orb slides into the lamp glass and settles. Yellow light spreads down the wall and over the slips pinned there.",
+    "observe": "A brass lamp bracketed to the wall over the slip rack, glass sooted at the top and dry as bone. The oil ran out some time ago and nobody has come back with more.",
+    "sprite": "unlit_lantern",
+    "state_counter": "lit_the_runners_lamp",
+    "toast": "A wall lamp over the slip rack, glass sooted and wick dry. It has been dark long enough that the runners read by the door instead.",
+    "unlit": true,
+    "visual_states": [
+     {
+      "light": {
+       "color": [
+        1.0,
+        0.85,
+        0.5
+       ],
+       "energy": 0.55,
+       "flicker": true,
+       "radius": 14
+      },
+      "tint": [
+       1.4,
+       1.25,
+       0.75
+      ],
+      "when": {
+       "at": 1,
+       "counter": "lit_the_runners_lamp"
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "#348 slice 2 `dirty` carrier: the generalized grime cell. The inn's dirty_table keeps its AUTHORED requires_skill arm and wins by precedence -- this one carries no arm and resolves off the table alone.",
+    "cell": [
+     2,
+     6
+    ],
+    "clean_toast": "[Basic Cleaning] \u2014 You take it off in three passes. The dried mud lifts, the grain comes up pale, and the boards stop smelling of the road.",
+    "dirty": true,
+    "display_name": "The Mud-Tracked Table",
+    "id": "runners_mud_table",
+    "kind": "prop",
+    "observe": "Road mud dried in ridges across the boards, stamped there by a week of packs set down hard. Somebody wiped one corner of it and gave up.",
+    "sprite": "dirty_table",
+    "state_counter": "scrubbed_the_runners_table",
+    "toast": "Dried road mud ridges the boards where pack after pack has come down on them. One corner is wiped clean and the rest is not.",
+    "visual_states": [
+     {
+      "sprite": "table_brown",
+      "tint": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "when": {
+       "at": 1,
+       "counter": "scrubbed_the_runners_table"
+      }
+     }
+    ]
+   }
+  ],
+  "floor_layers": [
+   {
+    "_pick": "#225 floor differentiation: the Runner's Guild reads as a patterned herringbone wood hall, distinct from the inn's straight tavern planks. Reuses the inn's OWN verified bedroom-corner herringbone swatch (Interior_Walls_01 [16,21]/[17,21], rgb~97,76,38) -- same sheet/family, no new license, footstep-wood stays honest.",
+    "cells": "all",
+    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+    "tile_px": 16,
+    "variants": [
+     [
+      16,
+      21
+     ],
+     [
+      17,
+      21
+     ]
+    ]
+   }
+  ],
+  "grid": {
+   "height": 8,
+   "width": 10
+  },
+  "interior_flavor": [
+   "Nothing there. Slip paper and rope wax. The whole room smells like somewhere else's mail.",
+   "Nothing there. Somebody's spare boots wait by the door, laces already loosened for the next run."
+  ],
+  "walls": {
+   "segments": [
+    {
+     "cap": [
+      10,
+      6
+     ],
+     "face": [
+      10,
+      7
+     ],
+     "from": [
+      0,
+      0
+     ],
+     "to": [
+      9,
+      0
+     ]
+    },
+    {
+     "cap": [
+      10,
+      6
+     ],
+     "from": [
+      0,
+      1
+     ],
+     "to": [
+      0,
+      7
+     ]
+    },
+    {
+     "cap": [
+      10,
+      6
+     ],
+     "from": [
+      9,
+      1
+     ],
+     "to": [
+      9,
+      7
+     ]
+    },
+    {
+     "cap": [
+      10,
+      6
+     ],
+     "from": [
+      1,
+      7
+     ],
+     "to": [
+      4,
+      7
+     ]
+    },
+    {
+     "cap": [
+      10,
+      6
+     ],
+     "from": [
+      6,
+      7
+     ],
+     "to": [
+      8,
+      7
+     ]
+    }
+   ],
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16
+  }
+ }
+}

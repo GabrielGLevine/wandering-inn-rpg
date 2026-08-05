@@ -12,22 +12,12 @@
     "Ceria"
    ]
   },
-  "$.nodes.cleaned.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.cleaned.options[1].text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
   },
   "$.nodes.cleaned.text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
-  "$.nodes.cleaning_directions.options[0].text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -126,17 +116,10 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.erin_door_flicker.options[1].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.erin_door_flicker.text": {
    "brackets": [],
    "digits": [],
-   "propnouns": [
-    "Can"
-   ]
+   "propnouns": []
   },
   "$.nodes.erin_home.options[0].text": {
    "brackets": [],
@@ -206,7 +189,6 @@
    "brackets": [],
    "digits": [],
    "propnouns": [
-    "Krshia",
     "Liscor"
    ]
   },
@@ -299,11 +281,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.hub.options[5].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.hub.options[6].text": {
    "brackets": [],
    "digits": [],
@@ -364,11 +341,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.package.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.package.options[1].text": {
    "brackets": [],
    "digits": [],
@@ -380,6 +352,11 @@
    "propnouns": [
     "Drake"
    ]
+  },
+  "$.text_banks.wait_one_more_thing": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
   }
  },
  "skeleton": {
@@ -399,7 +376,7 @@
     "options": [
      {
       "goto": "hub",
-      "text": "\u00a7"
+      "text": "@wait_one_more_thing"
      },
      {
       "end": true,
@@ -413,7 +390,7 @@
     "options": [
      {
       "goto": "hub",
-      "text": "\u00a7"
+      "text": "@wait_one_more_thing"
      },
      {
       "end": true,
@@ -494,7 +471,7 @@
      },
      {
       "goto": "hub",
-      "text": "\u00a7"
+      "text": "@wait_one_more_thing"
      }
     ],
     "speaker": "Erin",
@@ -684,7 +661,7 @@
      },
      {
       "end": true,
-      "text": "\u00a7"
+      "text": "@just_passing_through"
      },
      {
       "goto": "erin_chess",
@@ -863,7 +840,7 @@
     "options": [
      {
       "goto": "hub",
-      "text": "\u00a7"
+      "text": "@wait_one_more_thing"
      },
      {
       "end": true,
@@ -874,6 +851,9 @@
     "text": "\u00a7"
    }
   },
-  "start": "hub"
+  "start": "hub",
+  "text_banks": {
+   "wait_one_more_thing": "\u00a7"
+  }
  }
 }

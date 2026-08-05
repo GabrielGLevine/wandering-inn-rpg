@@ -1,0 +1,310 @@
+{
+ "facts": {},
+ "skeleton": {
+  "_comment": "Walls: two short rubble columns (x7 top, x4 bottom) that never obstruct the open mid-band (y3-6), so entry->hearth->scouts->warren is always walkable.",
+  "ambience": [
+   {
+    "preset": "dust_motes",
+    "rect": "all"
+   }
+  ],
+  "biome": "cave",
+  "blocked": [],
+  "decor": [
+   {
+    "cell": [
+     10,
+     2
+    ],
+    "sprite": "boulder"
+   },
+   {
+    "cell": [
+     3,
+     3
+    ],
+    "sprite": "mushroom_purple_m"
+   },
+   {
+    "cell": [
+     11,
+     7
+    ],
+    "sprite": "mushroom_purple_s"
+   },
+   {
+    "cell": [
+     6,
+     8
+    ],
+    "sprite": "boulder"
+   }
+  ],
+  "entities": [
+   {
+    "cell": [
+     2,
+     1
+    ],
+    "display_name": "Fissure Up",
+    "id": "tunnel_up",
+    "kind": "door",
+    "light": {
+     "color": [
+      0.7,
+      0.8,
+      0.95
+     ],
+     "energy": 0.4,
+     "flicker": false,
+     "radius": 20
+    },
+    "sprite": "shaft_ladder",
+    "to_cell": [
+     8,
+     12
+    ],
+    "to_map": "sewers"
+   },
+   {
+    "cell": [
+     5,
+     4
+    ],
+    "display_name": "Cold Hearth",
+    "id": "cold_hearth",
+    "kind": "prop",
+    "observe": "A ring of fire-blackened stones, the ash inside long dead and cold. Something sat here in the dark and knew how to keep a fire \u2014 or learned how, the way they say these things learn, when the moon is full and their minds come clear.",
+    "on_interact_accomplishment": "found_cold_hearth",
+    "sprite": "cold_hearth",
+    "toast": "A fire-pit ringed with blackened stones, its ashes cold. Whoever tended it had hands enough to strike a spark, and left gnawed bones banked around the edge, cracked for their marrow."
+   },
+   {
+    "cell": [
+     9,
+     6
+    ],
+    "display_name": "Gnawed Bones",
+    "id": "gnaw_pile",
+    "kind": "prop",
+    "observe": "A midden of cracked bones, marrow sucked clean. Gnoll, most of them. A few too large to name. They have been sorted, almost stacked, as though something down here counts its meals and keeps the score.",
+    "on_interact_accomplishment": "found_gnaw_pile",
+    "sprite": "gnaw_pile",
+    "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered. And that is worse than if they had been."
+   },
+   {
+    "cell": [
+     10,
+     6
+    ],
+    "companion_source": {
+     "companion_id": "skeleton_ally",
+     "kind": "animated",
+     "taken_toast": "The bones rise and fall into step behind you."
+    },
+    "display_name": "Old Bones",
+    "id": "bone_pile_tunnels",
+    "kind": "prop",
+    "observe": "Old bones, settled where they fell. They are not going anywhere. Probably.",
+    "sprite": "gnaw_pile"
+   },
+   {
+    "_comment": "a Raskghar scout PAIR barring the way to the warren.",
+    "allies": [],
+    "arena": "cave_mouth",
+    "cell": [
+     8,
+     4
+    ],
+    "display_name": "Raskghar Scouts",
+    "enemies": [
+     "raskghar_scout",
+     "raskghar_scout"
+    ],
+    "id": "raskghar_scouts",
+    "kind": "encounter",
+    "observe": "Two of them crouch where the tunnel narrows, moon-grey and mountain-shouldered, knuckles to the stone. Their small eyes track you without blinking. Between you and the deeper dark, they are the door \u2014 and the lock.",
+    "on_victory": [
+     "cleared_raskghar_scouts"
+    ],
+    "sprite": "raskghar_scout"
+   },
+   {
+    "_comment": "Reopened-gallery pair with dungeon_approach.gallery_seal_anchor. horns_delve_started requires post_game, whose backbone already includes cleared_the_warren/raskghar_sealed; this door cannot intercept first arrival or reached_the_warren.",
+    "cell": [
+     12,
+     5
+    ],
+    "display_name": "Warren Mouth",
+    "door_when": {
+     "open_toast": "The gallery floor slopes down past where the den used to be, into a chamber someone else has clearly been surveying.",
+     "requires": {
+      "horns_delve_started": 1
+     },
+     "to_cell": [
+      2,
+      6
+     ],
+     "to_map": "dungeon_approach"
+    },
+    "id": "warren_mouth",
+    "kind": "prop",
+    "observe": "The passage opens into a vast pillared gallery, its floor packed smooth by generations of pacing feet. Eyes catch your light far back in the dark and slide away. This is where they den, and where the big one waits, breathing slow in the black.",
+    "on_interact_accomplishment": "reached_the_warren",
+    "sprite": "warren_mouth",
+    "toast": "The tunnel widens into a pillared gallery, the air stirring with breath that is not your own. Something large shifts in the dark ahead, and the pacing scuffs go quiet. You have found the warren.",
+    "variants": [
+     {
+      "toast": "The gallery is silent now. The pacing tracks are old and dust-softened; nothing breathes in the dark ahead. Past the emptied den, the stone the Watch sealed stands unbroken.",
+      "when": {
+       "cleared_the_warren": 1
+      }
+     }
+    ],
+    "visual_states": [
+     {
+      "observe": "Claw-gouges score the pillars, going quiet toward the back. The den is empty \u2014 cleared, then sealed. Whatever the warren was, it is a grave and a door now.",
+      "when": {
+       "at": 1,
+       "counter": "cleared_the_warren"
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "Conditional field cameo only; the awakened_boss entity retains the Relc join/veto conversation and ally gate. b7 #201: seated at (11,4), brushing the walkthrough lane (11,5)/(11,6) so players can't walk past him unseen. b7 #203: absent arm \u2014 the descent window only; post-clear he is back at his permanent floodplains post (which carries the brother_in_arms stage).",
+    "cell": [
+     11,
+     4
+    ],
+    "dialogue": [
+     {
+      "speaker": "Relc",
+      "text": "There it is. Big one first. Questions after."
+     }
+    ],
+    "display_name": "Relc",
+    "facing": "down",
+    "id": "relc_descent_cameo",
+    "kind": "npc",
+    "present_when": {
+     "absent": {
+      "cleared_the_warren": 1
+     },
+     "requires": {
+      "reached_the_warren": 1
+     }
+    },
+    "sprite": "relc"
+   },
+   {
+    "_comment": "Conversation precedes combat. Join alone banks relc_joined_descent for ally_requires; solo never does. Victory banks cleared_the_warren, not raskghar_sealed; respawns=false. Balance: BOSS_CELLS gates warrior2+Relc 0.6-0.75; solo measured.",
+    "allies": [
+     "relc"
+    ],
+    "ally_requires": {
+     "relc_joined_descent": 1
+    },
+    "arena": "deep_warren",
+    "cell": [
+     12,
+     7
+    ],
+    "conversation": "relc_descent",
+    "display_name": "Awakened Raskghar",
+    "enemies": [
+     "raskghar_awakened",
+     "raskghar_scout",
+     "raskghar_scout"
+    ],
+    "id": "awakened_boss",
+    "kind": "encounter",
+    "loot": [
+     {
+      "chance": 1.0,
+      "item": "mending_draught"
+     },
+     {
+      "chance": 1.0,
+      "item": "moonhide_fetish"
+     }
+    ],
+    "observe": "It fills the gallery mouth like a landslide that learned to breathe: upright, moon-grey, a pale mane over shoulders wider than a doorway. Old scars cross its hide, and a Gnoll's picked bones lie stacked at its feet. Its eyes hold on you with something worse than hunger: thought.",
+    "on_victory": [
+     "cleared_the_warren"
+    ],
+    "sprite": "raskghar_awakened"
+   },
+   {
+    "cell": [
+     9,
+     8
+    ],
+    "display_name": "A Raskghar Snare",
+    "id": "warren_side_snare",
+    "kind": "prop",
+    "locked_toast": "Sinew and bone hooks, strung low across the gallery floor. It has the shape of something meant to catch. You don't know how to spring it safely.",
+    "on_skill_use": {
+     "accomplishment": "trap_disarmed",
+     "gold": 2,
+     "toast": "You work the hooks free of the sinew line and let it fall slack. Wedged in the rig: a couple of coins, old and green with tarnish."
+    },
+    "once_per_waking": true,
+    "once_per_waking_toast": "You've picked this snare clean today. The warren restocks on its own schedule.",
+    "requires_skill": "disarm_trap",
+    "skill_hint_toast": "Sinew and bone hooks, strung low across the gallery floor. Whatever set it hunts down here, same as you.",
+    "sprite": "snare_coil"
+   }
+  ],
+  "floor_layers": [
+   {
+    "_pick": "cave-floor variation reusing the cave biome's verified floor-tile neighborhood (same picks as sewers/cave_mouth).",
+    "cells": "all",
+    "variants": [
+     [
+      8,
+      13
+     ],
+     [
+      9,
+      13
+     ],
+     [
+      10,
+      13
+     ]
+    ]
+   }
+  ],
+  "grid": {
+   "height": 10,
+   "width": 14
+  },
+  "walls": {
+   "segments": [
+    {
+     "from": [
+      7,
+      0
+     ],
+     "to": [
+      7,
+      2
+     ]
+    },
+    {
+     "from": [
+      4,
+      7
+     ],
+     "to": [
+      4,
+      9
+     ]
+    }
+   ],
+   "sheet": "res://assets/tiles/cave/Tiles.png",
+   "tile_px": 16
+  }
+ }
+}

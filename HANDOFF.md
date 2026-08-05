@@ -4,6 +4,61 @@ Live current-state doc. Per-issue narrative lives in merged PR bodies
 (`gh pr list --state merged`); adjudications in CHOICE-LOG; build
 history in git. Read order for a fresh session: wi-start-here.
 
+## DONE (2026-08-05): anti-duplication gate LIVE (PR #395, unmerged)
+
+`check_prose_duplication` in data_lint HARD-FAILS: (a) any prose string
+>20 chars duplicated in the dialogue corpus or maps talk corpus, (b) any
+raw copy of an already-banked line ("use the @ref"). Both failure modes
+probe-verified. Bank plumbing it flushed out, all shipped in e9aea87c:
+- `data/maps/_shared_talk.json` — CROSS-map talk bank file (7 banks);
+  `WISceneCatalog._expand_talk_banks` falls back local -> shared
+  (shadowing a shared name = lint error). Python mirror + lint resolve
+  identically.
+- Splice hazard ruled: a solo line matching one MEMBER of a multi-line
+  bank cannot ref-swap (ref splices the whole bank) — split the member
+  into its own 1-line bank (street.json krshia_corusdeer precedent).
+- Dict-form text_variants expansion hole fixed (WIDialogueBanks +
+  wi_data_lib); ksmvr_plates/selys_delivery stragglers banked.
+- Voice gate maps mode walks _shared_talk banks as prose; BOTH baselines
+  re-frozen (repo-root docs/dialogue-voice/{baseline,baseline-maps} —
+  NOT wandering_inn_game/docs, easy to snapshot to the wrong place).
+- test_sim_core ack-precedence rows now come from compose(), not raw
+  disk (raw rows carry @refs post-migration).
+Proofs: both corpora byte-identical through expansion vs pre-migration
+baselines; 33 unit suites PASS; sweep 207/207; leak_check clean.
+
+**PR #395 note:** another session's Riverfarm spec/plan commits
+(c14efafb, 9044b9d0, 9554a334) were local-only on this branch and rode
+along with the push. They are spec/plan docs only.
+
+## QUEUE
+- Merge PR #395 — user's call (CI was 7/7 green pre-push; re-check post
+  e9aea87c).
+- v0.19.0 tag re-cut at merge commit + deploy — USER'S CALL.
+- Riverfarm redesign (#396) — plan committed by the other session, 12
+  tasks/4 lanes.
+
+## DONE (2026-08-05): #388 map talk_pool voice pass — WHOLE CORPUS CLEAN
+
+The maps mode is live in `qa/scripts/dialogue_voice_gate.py` (`--maps`):
+walks talk_pool/talk_pool_stages lines, freezes pool SIZE AND ORDER in the
+skeleton (talk_pool_stages is last-match-wins, so a reorder is a behavior
+change), attributes speakers by entity id. Baseline committed at
+`docs/dialogue-voice/baseline-maps/`; run
+`python3 qa/scripts/dialogue_voice_gate.py check --maps --baseline
+docs/dialogue-voice/baseline-maps` after ANY map-prose edit. MANUAL for now
+(not in ci_sweep pre-flight) — same rollout as the dialogue gate had.
+
+The funded slice (street 97, inn 93, boulevard 33, parlor 23) got the full
+cold-read; the rump turned out to be 5 hard tells across 3 maps, fixed in
+the same pass — the whole 30-map corpus is CLEAN (anti=6 of 30 budget).
+The Zevara tell-6 closer the issue named is dead. Kept deliberately:
+Erin's Earth idioms (she is from Earth), Ratici's 'heretofore' malapropism,
+Pisces's staccato, Olesm's tricolon-as-tactician. The quiet gentleman's
+"..." line became "Mm." (a bark renders it; pure ellipsis is a hard tell).
+Pin-syncs: bed_nudge_loop, thread_lattice_loop, invrisil_walkthrough,
+invrisil_disagreement_talk, wilovan_address_f — all green; sweep 207/207.
+
 ## DONE (2026-08-05, second sitting): findings 16-21 resolved
 
 - **16** road_mothbears stood on the road all day as an invisible blocking
@@ -283,6 +338,21 @@ Process lessons this session (fold candidates for wi-running-the-machine
 2. Board: #348 open (slice 2+), #347 open (migration behind rulings),
    #360 open (flip-gate triage + stratified envelope), #359/#134/#318
    close via the train PRs.
+3. **Riverfarm redesign SPEC'D, not implemented** (user rulings
+   2026-08-05: Hunter-of-Noelictus confusion). Grew from surface swap to
+   full redesign:
+   docs/superpowers/specs/2026-08-05-riverfarm-shepherd-and-witch-quests-design.md
+   (supersedes same-day swap spec). Four workstreams: (A) "A Shepherd"
+   character swap, ids frozen; (B) new quest `a_winter_of_teeth` replaces
+   what_the_thicket_keeps (retired for new saves, legacy completable);
+   (C) briar fights lose ally + solo sim re-gate, wolf-night ally stays;
+   (D) new Eloise quest `the_makings` wraps the [Hedge Witch] grant.
+   Lanes + file ownership in spec. Issue #396 FILED. PLAN COMMITTED:
+   docs/superpowers/plans/2026-08-05-riverfarm-redesign-396.md (12 tasks,
+   4 lanes, quests.json integrator-owned). DO NOT IMPLEMENT until the
+   currently-active code session lands; then fresh branch off main
+   (issue/396-riverfarm-redesign), cherry-pick the spec/plan doc commits
+   if the #388 branch hasn't merged.
 
 
 ## 🧑‍⚖️ TASTE QUEUE (user-held, in rough value order)

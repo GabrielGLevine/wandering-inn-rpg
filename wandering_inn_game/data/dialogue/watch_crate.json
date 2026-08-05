@@ -1,15 +1,93 @@
 {
-	"start": "hub",
-	"nodes": {
-		"hub": { "speaker": "Watch Sergeant", "text": "The sewer grates are backing up again and there's scavengers in the cellars. And paperwork. There's always the paperwork. Which is it?", "text_variants": [
-			{ "requires": { "accomplishment": { "found_the_crate": 1 } }, "text": "Grates are quiet now. Good. One less thing." }
-		], "options": [
-			{ "text": "Point them at the scavengers. [Charming Smile]", "requires": { "accomplishment": { "asked_about_crate": 1 }, "skill": "charming_smile" }, "hide_when": { "accomplishment": { "found_the_crate": 1 } }, "effects": [ { "accomplishment": "recovered_crate_watch" }, { "accomplishment": "found_the_crate" }, { "accomplishment": "persuaded_someone" }, { "remove_entity": "crate_scavengers" } ], "goto": "cleared" },
-			{ "text": "Just passing through.", "end": true },
-			{ "text": "Grease a few palms instead. (2 gold)", "requires": { "accomplishment": { "asked_about_crate": 1 }, "gold": 2 }, "hide_when": { "accomplishment": { "found_the_crate": 1 } }, "effects": [ { "gold": -2 }, { "accomplishment": "recovered_crate_watch" }, { "accomplishment": "found_the_crate" }, { "remove_entity": "crate_scavengers" } ], "goto": "cleared" }
-		] },
-		"cleared": { "speaker": "Watch Sergeant", "text": "Good. Say the word if there's trouble again.", "options": [
-			{ "text": "Will do.", "end": true }
-		] }
-	}
+ "start": "hub",
+ "nodes": {
+  "hub": {
+   "speaker": "Watch Sergeant",
+   "text": "The sewer grates are backing up again and there's scavengers in the cellars. And paperwork. There's always the paperwork. Which is it?",
+   "text_variants": [
+    {
+     "requires": {
+      "accomplishment": {
+       "found_the_crate": 1
+      }
+     },
+     "text": "Grates are quiet now. Good. One less thing."
+    }
+   ],
+   "options": [
+    {
+     "text": "Point them at the scavengers. [Charming Smile]",
+     "requires": {
+      "accomplishment": {
+       "asked_about_crate": 1
+      },
+      "skill": "charming_smile"
+     },
+     "hide_when": {
+      "accomplishment": {
+       "found_the_crate": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "recovered_crate_watch"
+      },
+      {
+       "accomplishment": "found_the_crate"
+      },
+      {
+       "accomplishment": "persuaded_someone"
+      },
+      {
+       "remove_entity": "crate_scavengers"
+      }
+     ],
+     "goto": "cleared"
+    },
+    {
+     "text": "@just_passing_through",
+     "end": true
+    },
+    {
+     "text": "Grease a few palms instead. (2 gold)",
+     "requires": {
+      "accomplishment": {
+       "asked_about_crate": 1
+      },
+      "gold": 2
+     },
+     "hide_when": {
+      "accomplishment": {
+       "found_the_crate": 1
+      }
+     },
+     "effects": [
+      {
+       "gold": -2
+      },
+      {
+       "accomplishment": "recovered_crate_watch"
+      },
+      {
+       "accomplishment": "found_the_crate"
+      },
+      {
+       "remove_entity": "crate_scavengers"
+      }
+     ],
+     "goto": "cleared"
+    }
+   ]
+  },
+  "cleared": {
+   "speaker": "Watch Sergeant",
+   "text": "Good. Say the word if there's trouble again.",
+   "options": [
+    {
+     "text": "Will do.",
+     "end": true
+    }
+   ]
+  }
+ }
 }

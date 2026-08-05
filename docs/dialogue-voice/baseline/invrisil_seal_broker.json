@@ -79,7 +79,9 @@
   "$.nodes.table.text": {
    "brackets": [],
    "digits": [],
-   "propnouns": []
+   "propnouns": [
+    "Watch"
+   ]
   },
   "$.nodes.table.text_variants[0].text": {
    "brackets": [],

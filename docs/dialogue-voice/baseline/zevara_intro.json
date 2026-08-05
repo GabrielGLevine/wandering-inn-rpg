@@ -18,6 +18,7 @@
    "brackets": [],
    "digits": [],
    "propnouns": [
+    "Liscor",
     "Watch"
    ]
   },
@@ -151,7 +152,6 @@
    "brackets": [],
    "digits": [],
    "propnouns": [
-    "Good",
     "Liscor",
     "Watch"
    ]
@@ -167,11 +167,6 @@
    "propnouns": [
     "Back"
    ]
-  },
-  "$.nodes.shift.options[2].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
   },
   "$.nodes.shift.text": {
    "brackets": [],
@@ -274,13 +269,6 @@
     "Watchmen"
    ]
   },
-  "$.nodes.swept.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Captain"
-   ]
-  },
   "$.nodes.swept.options[1].text": {
    "brackets": [],
    "digits": [],
@@ -291,14 +279,8 @@
    "digits": [],
    "propnouns": [
     "Dungeon",
-    "Watch"
-   ]
-  },
-  "$.nodes.swept_paid.options[0].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": [
-    "Captain"
+    "Watch",
+    "Watchmen"
    ]
   },
   "$.nodes.swept_paid.options[1].text": {
@@ -338,6 +320,7 @@
    "brackets": [],
    "digits": [],
    "propnouns": [
+    "Council",
     "Watch"
    ]
   },
@@ -417,6 +400,13 @@
    "brackets": [],
    "digits": [],
    "propnouns": []
+  },
+  "$.text_banks.that_s_all_i": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Captain"
+   ]
   }
  },
  "skeleton": {
@@ -638,7 +628,7 @@
      },
      {
       "end": true,
-      "text": "\u00a7"
+      "text": "@i_ll_let_you"
      }
     ],
     "speaker": "Zevara",
@@ -764,7 +754,7 @@
     "options": [
      {
       "goto": "hub",
-      "text": "\u00a7"
+      "text": "@that_s_all_i"
      },
      {
       "end": true,
@@ -778,7 +768,7 @@
     "options": [
      {
       "goto": "hub",
-      "text": "\u00a7"
+      "text": "@that_s_all_i"
      },
      {
       "end": true,
@@ -925,6 +915,9 @@
     "text": "\u00a7"
    }
   },
-  "start": "hub"
+  "start": "hub",
+  "text_banks": {
+   "that_s_all_i": "\u00a7"
+  }
  }
 }

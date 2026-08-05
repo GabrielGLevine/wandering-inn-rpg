@@ -1,0 +1,2184 @@
+{
+ "facts": {
+  "$.entities[0].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[10].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[11].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[11].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[12].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[13].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[13].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[19].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Zevara"
+   ]
+  },
+  "$.entities[0].talk_pool_stages[22].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[24].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[6].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[6].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[7].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[8].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[8].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[8].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[9].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[9].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[0].talk_pool_stages[9].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool_stages[0].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool_stages[0].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool_stages[0].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool_stages[1].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Liscor"
+   ]
+  },
+  "$.talk_banks.ceria_inn_shared[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Yvlon"
+   ]
+  },
+  "$.talk_banks.ceria_inn_shared[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.ceria_inn_shared[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Gold"
+   ]
+  },
+  "$.talk_banks.ceria_inn_shared_2[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.ceria_inn_shared_2[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.ceria_inn_shared_2[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.erin_shared[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.erin_shared_2[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.erin_shared_2[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Inn",
+    "The",
+    "Wandering"
+   ]
+  },
+  "$.talk_banks.erin_shared_2[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.ksmvr_inn_shared[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.ksmvr_inn_shared[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.ksmvr_inn_shared[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Ceria"
+   ]
+  },
+  "$.talk_banks.ksmvr_inn_shared_2[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Klbkch",
+    "Prognugator"
+   ]
+  },
+  "$.talk_banks.ksmvr_inn_shared_2[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.ksmvr_inn_shared_2[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Post"
+   ]
+  },
+  "$.talk_banks.lyonette_shared[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.lyonette_shared[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.lyonette_shared[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.yvlon_inn_shared[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.talk_banks.yvlon_inn_shared[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.yvlon_inn_shared[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.yvlon_inn_shared_2[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.yvlon_inn_shared_2[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.yvlon_inn_shared_2[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "ambience": [
+   {
+    "phase": [
+     "dusk",
+     "night"
+    ],
+    "preset": "dust_motes",
+    "rect": "all"
+   }
+  ],
+  "biome": "inn",
+  "blocked": [
+   [
+    7,
+    6
+   ],
+   [
+    3,
+    2
+   ],
+   [
+    5,
+    2
+   ],
+   [
+    6,
+    2
+   ],
+   [
+    8,
+    2
+   ],
+   [
+    9,
+    2
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    3,
+    1
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     1,
+     3
+    ],
+    "sprite": "bench"
+   },
+   {
+    "cell": [
+     2,
+     1
+    ],
+    "light": {
+     "color": [
+      1.0,
+      0.62,
+      0.32
+     ],
+     "energy": 1.1,
+     "flicker": true,
+     "radius": 40
+    },
+    "sprite": "hearth"
+   },
+   {
+    "cell": [
+     3,
+     2
+    ],
+    "light": {
+     "color": [
+      1.0,
+      0.58,
+      0.28
+     ],
+     "energy": 0.75,
+     "flicker": true,
+     "radius": 26
+    },
+    "sprite": "grill"
+   },
+   {
+    "cell": [
+     6,
+     2
+    ],
+    "sprite": "counter_mid"
+   },
+   {
+    "cell": [
+     8,
+     2
+    ],
+    "sprite": "counter_mid"
+   },
+   {
+    "cell": [
+     9,
+     2
+    ],
+    "sprite": "counter_right"
+   },
+   {
+    "cell": [
+     8,
+     1
+    ],
+    "sprite": "shelf_bottles"
+   },
+   {
+    "cell": [
+     9,
+     1
+    ],
+    "sprite": "sconce"
+   },
+   {
+    "cell": [
+     6,
+     3
+    ],
+    "sprite": "stool"
+   },
+   {
+    "cell": [
+     8,
+     3
+    ],
+    "sprite": "stool"
+   },
+   {
+    "cell": [
+     6,
+     2
+    ],
+    "sprite": "food_basket"
+   },
+   {
+    "cell": [
+     7,
+     6
+    ],
+    "sprite": "table_brown"
+   },
+   {
+    "cell": [
+     7,
+     6
+    ],
+    "sprite": "food_bread"
+   },
+   {
+    "cell": [
+     5,
+     4
+    ],
+    "sprite": "food_ham"
+   },
+   {
+    "cell": [
+     14,
+     4
+    ],
+    "sprite": "plant_pot"
+   },
+   {
+    "cell": [
+     5,
+     9
+    ],
+    "sprite": "window_blue"
+   },
+   {
+    "cell": [
+     10,
+     9
+    ],
+    "sprite": "window_blue"
+   },
+   {
+    "cell": [
+     12,
+     7
+    ],
+    "sprite": "table_brown"
+   }
+  ],
+  "entities": [
+   {
+    "_comment": "PRIORITY CONTRACT (H1): talk_pool stages are last-match-wins (social.gd), so array order IS priority -- earliest gates first. Armed main-thread relays must stay LATER in the array than the erin_garden_open/erin_garden_shared pair so they outrank the standing garden signpost.",
+    "cell": [
+     7,
+     2
+    ],
+    "conversation": "erin_errand",
+    "dialogue": [
+     {
+      "speaker": "Erin",
+      "text": "Welcome to The Wandering Inn! Mind giving that table a wipe?"
+     }
+    ],
+    "display_name": "Erin",
+    "facing": "down",
+    "friendly_line": "Oh - hi! You've got a good face, you know that? Come in, sit down. I'll find you something warm - on the house, probably. Don't tell Lyonette I said that.",
+    "id": "erin",
+    "kind": "npc",
+    "observe": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her.",
+    "sprite": "erin",
+    "talk_pool": [
+     "@erin_shared_2",
+     "\u00a7"
+    ],
+    "talk_pool_stages": [
+     {
+      "_comment": "GH#130 bed-onboarding nudge block. One stage per SINGLE-BEAT pre-first-sleep class-gain counter; multi-beat routes (diplomat gossip x3, trader commerce x5) are deliberately un-nudged. Pools AND-gate accomplishments, so OR = sibling stages sharing a line. MUST stay FIRST so any later-satisfied stage overrides it (social.gd:20-22); erin_bed_slept below retires it.",
+      "id": "erin_bed_nudge_helper",
+      "lines": [
+       "@erin_shared"
+      ],
+      "requires_accomplishment": {
+       "cleaned_the_inn": 1
+      }
+     },
+     {
+      "id": "erin_bed_nudge_warrior",
+      "lines": [
+       "@erin_shared"
+      ],
+      "requires_accomplishment": {
+       "sparred_with_relc": 1
+      }
+     },
+     {
+      "id": "erin_bed_nudge_mage",
+      "lines": [
+       "@erin_shared"
+      ],
+      "requires_accomplishment": {
+       "learned_magic_from_pisces": 1
+      }
+     },
+     {
+      "id": "erin_bed_nudge_tactician",
+      "lines": [
+       "@erin_shared"
+      ],
+      "requires_accomplishment": {
+       "chess_with_olesm": 1
+      }
+     },
+     {
+      "id": "erin_bed_nudge_rogue",
+      "lines": [
+       "@erin_shared"
+      ],
+      "requires_accomplishment": {
+       "recovered_crate_watch": 1
+      }
+     },
+     {
+      "id": "erin_bed_nudge_archer",
+      "lines": [
+       "@erin_shared"
+      ],
+      "requires_accomplishment": {
+       "ranged_hit": 3
+      }
+     },
+     {
+      "_comment": "Retires the nudge block at the first sleep; superseded in turn by erin_regular and later stages as their gates clear.",
+      "id": "erin_bed_slept",
+      "lines": [
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "slept": 1
+      }
+     },
+     {
+      "_comment": "b7 #207 one-shot ack. Sits after the nudge block and before the warm terminals, which outrank it by design. Board-window caveat: the hamper slip cannot be accepted before times_slept>=1, so this arm renders only while the terminal gates are still unmet -- the promoted standing stage above the terminals carries the ordinary-path ack.",
+      "id": "erin_delivery_hamper",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "delivered_delivery_inn_hamper": 1
+      }
+     },
+     {
+      "id": "erin_regular",
+      "lines": [
+       "\u00a7",
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "chatted_with_erin": 2,
+       "errand_decided": 1
+      }
+     },
+     {
+      "id": "erin_friend_of_the_inn",
+      "lines": [
+       "\u00a7",
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "chatted_with_erin": 4,
+       "resolved_wrong_order": 1
+      }
+     },
+     {
+      "_comment": "b7 #207 standing-run familiarity, promoted ABOVE the warm terminals: a permanent familiarity register legitimately outranks a generic warm terminal. Story threads below still outrank it.",
+      "id": "erin_standing_hamper",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "delivered_delivery_standing_inn_hamper": 1
+      }
+     },
+     {
+      "_comment": "b1 #199 MEDIUM-4a betrayal consequence. Positioned EARLY so the main-thread relays below still outrank it; drove_off_rags never unbanks, so this is the permanent undertone when no thread is live.",
+      "id": "erin_rags_betrayed",
+      "lines": [
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "drove_off_rags": 1
+      }
+     },
+     {
+      "_comment": "CONSTRAINT: repeats every waking until the residue stage below takes over -- it is the game's only signpost toward the new door, so it must keep firing until the player has actually acted on it, never for a fixed number of hearings. Sits immediately BEFORE the thread-relay block so any armed relay wins over it.",
+      "id": "erin_garden_open",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "garden_door_unlocked": 1
+      }
+     },
+     {
+      "_comment": "H1: must sit right after erin_garden_open and before the thread-relay block -- both were authored LAST, which masked every main-thread relay once the garden unlocked. Still retires garden_open on visited_the_garden; armed relays below still outrank it.",
+      "id": "erin_garden_shared",
+      "lines": [
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "visited_the_garden": 1
+      }
+     },
+     {
+      "id": "erin_thread_cisterns",
+      "lines": [
+       "@olesm_s_been_muttering"
+      ],
+      "requires_accomplishment": {
+       "heard_about_cisterns": 1
+      }
+     },
+     {
+      "id": "erin_thread_cisterns_report",
+      "lines": [
+       "@word_is_the_cistern"
+      ],
+      "requires_accomplishment": {
+       "resolved_the_cisterns": 1
+      }
+     },
+     {
+      "id": "erin_thread_cisterns_neutral",
+      "lines": [
+       "@erin_shared_2"
+      ],
+      "requires_accomplishment": {
+       "cisterns_reported": 1
+      }
+     },
+     {
+      "id": "erin_thread_gate_runner",
+      "lines": [
+       "@olesm_shared_2"
+      ],
+      "requires_accomplishment": {
+       "watch_runner_pointed": 1
+      }
+     },
+     {
+      "id": "erin_thread_deep_tremor",
+      "lines": [
+       "@you_ve_got_the"
+      ],
+      "requires_accomplishment": {
+       "heard_the_deep_tremor": 1
+      }
+     },
+     {
+      "id": "erin_thread_warren_cleared",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "cleared_the_warren": 1
+      }
+     },
+     {
+      "id": "erin_thread_raskghar_neutral",
+      "lines": [
+       "@erin_shared_2"
+      ],
+      "requires_accomplishment": {
+       "raskghar_sealed": 1
+      }
+     },
+     {
+      "id": "erin_thread_ruin_east",
+      "lines": [
+       "@pisces_said_something_about"
+      ],
+      "requires_accomplishment": {
+       "door_understood": 1
+      }
+     },
+     {
+      "id": "erin_thread_catalyst",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "recovered_anchor_stone": 1
+      }
+     },
+     {
+      "id": "erin_thread_pisces_ready",
+      "lines": [
+       "@you_have_everything_pisces"
+      ],
+      "requires_accomplishment": {
+       "bought_catalyst": 1,
+       "recovered_anchor_stone": 1
+      }
+     },
+     {
+      "id": "erin_thread_door_resting",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "catalyst_delivered": 1
+      }
+     },
+     {
+      "id": "erin_thread_door_neutral",
+      "lines": [
+       "@erin_shared_2"
+      ],
+      "requires_accomplishment": {
+       "door_awakened": 1
+      }
+     },
+     {
+      "id": "erin_thread_horns_gallery",
+      "lines": [
+       "@ceria_s_team_went"
+      ],
+      "requires_accomplishment": {
+       "horns_delve_started": 1
+      }
+     },
+     {
+      "id": "erin_thread_horns_neutral",
+      "lines": [
+       "@erin_shared_2"
+      ],
+      "requires_accomplishment": {
+       "horns_party_formed": 1
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     9,
+     5
+    ],
+    "conversation": "lyonette_tip",
+    "dialogue": [
+     {
+      "speaker": "Lyonette",
+      "text": "Mind the floors, they're just done."
+     }
+    ],
+    "display_name": "Lyonette",
+    "facing": "left",
+    "friendly_line": "Lyonette's chin lifts, then softens despite itself. You're kind. People are not, usually, to the help. ...It is a small thing. It is not nothing. Sit where you like; I'll bring something hot.",
+    "id": "lyonette",
+    "kind": "npc",
+    "observe": "A human girl playing at composure a size too large for her. Her hands know trays; her chin knows courts. The two have not finished arguing.",
+    "sprite": "lyonette",
+    "talk_pool": [
+     "@lyonette_shared"
+    ],
+    "talk_pool_stages": [
+     {
+      "id": "lyonette_thawed",
+      "lines": [
+       "\u00a7",
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "resolved_wrong_order": 1
+      }
+     },
+     {
+      "id": "lyonette_thread_door",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "door_chain_started": 1
+      }
+     },
+     {
+      "id": "lyonette_thread_door_neutral",
+      "lines": [
+       "@lyonette_shared"
+      ],
+      "requires_accomplishment": {
+       "door_understood": 1
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     5,
+     4
+    ],
+    "display_name": "Dirty Table",
+    "gold_once_per_waking": true,
+    "id": "dirty_table",
+    "kind": "prop",
+    "on_skill_use": {
+     "accomplishment": "cleaned_the_inn",
+     "gold": 1,
+     "toast": "[Basic Cleaning] \u2014 The table is spotless."
+    },
+    "requires_skill": "basic_cleaning",
+    "skill_hint_toast": "The table's a mess of rings and crumbs. It wants a proper wipe-down.",
+    "sprite": "dirty_table",
+    "visual_states": [
+     {
+      "sprite": "table_brown",
+      "tint": [
+       1.0,
+       1.0,
+       1.0
+      ],
+      "when": {
+       "at": 1,
+       "counter": "cleaned_the_inn"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     15,
+     3
+    ],
+    "display_name": "To the Floodplains",
+    "id": "inn_door",
+    "kind": "door",
+    "sprite": "door",
+    "to_cell": [
+     7,
+     6
+    ],
+    "to_map": "floodplains"
+   },
+   {
+    "_comment": "Earned payoff (user directive 2026-07-19): read_dusty_scroll is frozen flavor, consumed by nothing. AFTER learned_magic_from_pisces the later-satisfied variant overrides interact + toast + counter, banking deciphered_dusty_scroll, which unlocks Pisces' scroll_secret beat.",
+    "cell": [
+     12,
+     7
+    ],
+    "display_name": "Dusty Scroll",
+    "id": "dusty_scroll",
+    "kind": "prop",
+    "on_interact_accomplishment": "read_dusty_scroll",
+    "sprite": "dusty_scroll",
+    "toast": "Faded arcane script. You can't read a word of it. Whoever penned this knew magic you don't. Someone in the city must.",
+    "variants": [
+     {
+      "accomplishment": "deciphered_dusty_scroll",
+      "toast": "With what Pisces beat into you, the faded script stops being noise: it is a warding treatise, old and patient, and it keeps circling one subject. A door. Bound, sealed, and fed \u2014 somewhere close. He would want to see this.",
+      "when": {
+       "learned_magic_from_pisces": 1
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     13,
+     1
+    ],
+    "display_name": "Unlit Lantern",
+    "id": "unlit_lantern",
+    "kind": "prop",
+    "on_skill_use": {
+     "accomplishment": "lit_the_common_room",
+     "toast": "[Light] \u2014 A steady white orb settles into the lantern's glass."
+    },
+    "requires_skill": "light",
+    "skill_hint_toast": "The wick's dry and ready. All it wants is a light that doesn't need a match.",
+    "sprite": "unlit_lantern",
+    "visual_states": [
+     {
+      "light": {
+       "color": [
+        1.0,
+        0.85,
+        0.5
+       ],
+       "energy": 0.55,
+       "flicker": true,
+       "radius": 14
+      },
+      "tint": [
+       1.4,
+       1.25,
+       0.75
+      ],
+      "when": {
+       "at": 1,
+       "counter": "lit_the_common_room"
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "Never a quest-giver/vendor (the Serve mini-loop is a repeatable chore, not a quest)",
+    "cell": [
+     5,
+     6
+    ],
+    "conversation": "patron_serving",
+    "dialogue": [
+     {
+      "speaker": "Hungry Patron",
+      "text": "Innkeeper! Anyone?"
+     }
+    ],
+    "display_name": "Hungry Patron",
+    "facing": "left",
+    "id": "hungry_patron",
+    "kind": "npc",
+    "present_when": {
+     "phase": [
+      "day",
+      "dusk"
+     ]
+    },
+    "sprite": "drake_patron"
+   },
+   {
+    "_comment": "GUEST-ROW CONTRACT (owning site -- every guest row points here). present_when.guest = WIInnGuests rotation arm; test_content's co-located validator forces IDENTICAL roster/seats on every guest row: roster grew APPEND-ONLY to ten names, seats stay 2, shift window SLIDES by times_slept over the met pool. Each guest's *_inn conversation is REGISTER-PURE (their hub elsewhere never rides along). SEATS come off the map's free set and must clear: boot cell (2,6), serve lane (4,7)/(5,7)/(6,7), hungry_patron (5,6), garden approach (3,7)->(3,8), walkthrough diagonal (2,3)/(3,3)/(4,4), Lyonette's (9,4) approach, stew-pot approach (4,2), the (2,5) step inn_guests_full_loop walks, door_awakening/portal_menu's (13,6), the leak (9,7), every other chair; connectivity re-proved with ALL rows present. Future inn routes: row 4 or 7, never 5-6. Guest rows are ABSENT in fresh sprite-count canonicals. Selys rotates once chatted_with_selys>=1.",
+    "cell": [
+     6,
+     6
+    ],
+    "conversation": "selys_inn",
+    "dialogue": [
+     {
+      "speaker": "Selys",
+      "text": "Off the clock, for once. Don't tell the Guild I remember how to sit down."
+     }
+    ],
+    "display_name": "Selys",
+    "facing": "down",
+    "id": "selys_inn_guest",
+    "kind": "npc",
+    "present_when": {
+     "guest": {
+      "npc": "selys",
+      "roster": [
+       "selys",
+       "krshia",
+       "olesm",
+       "pisces",
+       "relc",
+       "zevara",
+       "klbkch",
+       "rags",
+       "wilovan",
+       "grimalkin"
+      ],
+      "seats": 2
+     }
+    },
+    "sprite": "citizen_f"
+   },
+   {
+    "_comment": "Krshia rotates once chatted_with_krshia>=1; contract: see selys_inn_guest. Seat (4,6) is the WEST common-room table, deliberately clear of the armed rift_vermin_leak (9,7) so a met-state save never routes a guest visit through the leak's trigger radius. sprite reuses her pc_gnoll_f home stand-in.",
+    "cell": [
+     4,
+     6
+    ],
+    "conversation": "krshia_inn",
+    "dialogue": [
+     {
+      "speaker": "Krshia",
+      "text": "The market can keep until morning. A good bowl and a warm fire, yes?"
+     }
+    ],
+    "display_name": "Krshia",
+    "facing": "down",
+    "id": "krshia_inn_guest",
+    "kind": "npc",
+    "present_when": {
+     "guest": {
+      "npc": "krshia",
+      "roster": [
+       "selys",
+       "krshia",
+       "olesm",
+       "pisces",
+       "relc",
+       "zevara",
+       "klbkch",
+       "rags",
+       "wilovan",
+       "grimalkin"
+      ],
+      "seats": 2
+     }
+    },
+    "sprite": "krshia"
+   },
+   {
+    "_comment": "Olesm rotates once chatted_with_olesm>=1; contract: see selys_inn_guest. Seat (3,5), west-side free floor. At inn_guests_start's times_slept=10 the met pool is 5 (zevara alone unmet), start = 10%5 = 0, so his own seating waits for t=12. sprite reuses his registered home rig.",
+    "cell": [
+     3,
+     5
+    ],
+    "conversation": "olesm_inn",
+    "dialogue": [
+     {
+      "speaker": "Olesm",
+      "text": "One night off. I have already mapped every exit twice. It is a sickness."
+     }
+    ],
+    "display_name": "Olesm",
+    "facing": "down",
+    "id": "olesm_inn_guest",
+    "kind": "npc",
+    "present_when": {
+     "guest": {
+      "npc": "olesm",
+      "roster": [
+       "selys",
+       "krshia",
+       "olesm",
+       "pisces",
+       "relc",
+       "zevara",
+       "klbkch",
+       "rags",
+       "wilovan",
+       "grimalkin"
+      ],
+      "seats": 2
+     }
+    },
+    "sprite": "olesm"
+   },
+   {
+    "_comment": "Pisces rotates once chatted_with_pisces>=1; contract: see selys_inn_guest. Seat (6,5), free floor directly north of Selys's (6,6). BILOCATION SPLIT: present_when has no OR, and pisces_mounting (13,5) occupies exactly the door_retrieved -> door_mounted window -- a window every player reaches with chatted_with_pisces long since banked, so a single guest arm would put a second Pisces in the room. THIS ROW IS THE BEFORE ARM (absent door_retrieved); pisces_inn_guest_returned is the AFTER arm (requires door_mounted). door_mounted implies door_retrieved, so at most ONE ever renders, and through the haul window NEITHER does -- he is at the pantry hanging a door. His guest conversation must never touch door mechanics.",
+    "cell": [
+     6,
+     5
+    ],
+    "conversation": "pisces_inn",
+    "dialogue": [
+     {
+      "speaker": "Pisces",
+      "text": "I am not queueing. I happen to be seated near where a queue would form."
+     }
+    ],
+    "display_name": "Pisces",
+    "facing": "down",
+    "id": "pisces_inn_guest",
+    "kind": "npc",
+    "present_when": {
+     "absent": {
+      "door_retrieved": 1
+     },
+     "guest": {
+      "npc": "pisces",
+      "roster": [
+       "selys",
+       "krshia",
+       "olesm",
+       "pisces",
+       "relc",
+       "zevara",
+       "klbkch",
+       "rags",
+       "wilovan",
+       "grimalkin"
+      ],
+      "seats": 2
+     }
+    },
+    "sprite": "pisces"
+   },
+   {
+    "_comment": "The AFTER arm of the pisces bilocation split (see pisces_inn_guest). Byte-identical to that row apart from the counter gate: requires door_mounted, i.e. the instant pisces_mounting retires itself this seat can take him back. Shares the SAME serve:pisces_inn_guest once_per_waking key deliberately -- the two rows can never be present in the same waking. Naming mirrors the ceria_inn/ceria_inn_returned pair.",
+    "cell": [
+     6,
+     5
+    ],
+    "conversation": "pisces_inn",
+    "dialogue": [
+     {
+      "speaker": "Pisces",
+      "text": "I am not queueing. I happen to be seated near where a queue would form."
+     }
+    ],
+    "display_name": "Pisces",
+    "facing": "down",
+    "id": "pisces_inn_guest_returned",
+    "kind": "npc",
+    "present_when": {
+     "guest": {
+      "npc": "pisces",
+      "roster": [
+       "selys",
+       "krshia",
+       "olesm",
+       "pisces",
+       "relc",
+       "zevara",
+       "klbkch",
+       "rags",
+       "wilovan",
+       "grimalkin"
+      ],
+      "seats": 2
+     },
+     "requires": {
+      "door_mounted": 1
+     }
+    },
+    "sprite": "pisces"
+   },
+   {
+    "_comment": "Relc rotates once chatted_with_relc>=1; contract: see selys_inn_guest. Seat (1,5), NOT the spec's (2,5): the windowed crowding check killed it. His 124px rig runs ~1.8 cells wide and ~2.6 rows tall, and (2,5) sits two rows under yvlon_inn (2,3) and one over the (2,6) boot cell -- Yvlon's skirt ate his head and a player at (2,6) ate his legs. LESSON, and why the contract bans rows 5-6 for routes: reserving cells BY NAME did not protect this seat, because dialogue_walkthrough reached Lyonette by relative moves UP through (2,5); that leg now approaches from (9,4).",
+    "cell": [
+     1,
+     5
+    ],
+    "conversation": "relc_inn",
+    "dialogue": [
+     {
+      "speaker": "Relc",
+      "text": "Off shift. Good chair, good fire. The wall can hold itself up for one night."
+     }
+    ],
+    "display_name": "Relc",
+    "facing": "down",
+    "id": "relc_inn_guest",
+    "kind": "npc",
+    "present_when": {
+     "guest": {
+      "npc": "relc",
+      "roster": [
+       "selys",
+       "krshia",
+       "olesm",
+       "pisces",
+       "relc",
+       "zevara",
+       "klbkch",
+       "rags",
+       "wilovan",
+       "grimalkin"
+      ],
+      "seats": 2
+     }
+    },
+    "sprite": "relc"
+   },
+   {
+    "_comment": "Rotates once chatted_with_zevara>=1; contract: selys_inn_guest. Only roster member with no prior met-state QA coverage -- inn_guests_full_start (all six met) exists to give her leg a script. Seat (3,6) clears Olesm (3,5) + Krshia (4,6). Her guest conversation absorbs NONE of the something-beneath arc (summons + close both route via zevara_intro). Sprite = her registered home rig. ARC-WINDOW SPLIT (v0.15 ruling 1, pisces-pair idiom): THIS IS THE BEFORE ARM (absent heard_the_deep_tremor); zevara_inn_guest_returned = AFTER (requires raskghar_sealed). Between them she runs the descent she ordered -- no chair holds her; GUEST_POOL_GATES states the same disjunction so the seat re-bases, not empties.",
+    "cell": [
+     3,
+     6
+    ],
+    "conversation": "zevara_inn",
+    "dialogue": [
+     {
+      "speaker": "Zevara",
+      "text": "Nobody has found me yet. Do not be the one who does."
+     }
+    ],
+    "display_name": "Zevara",
+    "facing": "down",
+    "id": "zevara_inn_guest",
+    "kind": "npc",
+    "present_when": {
+     "absent": {
+      "heard_the_deep_tremor": 1
+     },
+     "guest": {
+      "npc": "zevara",
+      "roster": [
+       "selys",
+       "krshia",
+       "olesm",
+       "pisces",
+       "relc",
+       "zevara",
+       "klbkch",
+       "rags",
+       "wilovan",
+       "grimalkin"
+      ],
+      "seats": 2
+     }
+    },
+    "sprite": "zevara"
+   },
+   {
+    "_comment": "The AFTER arm of the zevara arc-window split (see zevara_inn_guest). Byte-identical apart from the counter gate: requires raskghar_sealed, the moment she writes the warren down as closed. Shares the SAME zevara_inn conversation (and so its once_per_waking serve key) deliberately -- the two rows can never be present in the same waking, since raskghar_sealed implies heard_the_deep_tremor.",
+    "cell": [
+     3,
+     6
+    ],
+    "conversation": "zevara_inn",
+    "dialogue": [
+     {
+      "speaker": "Zevara",
+      "text": "Nobody has found me yet. Do not be the one who does."
+     }
+    ],
+    "display_name": "Zevara",
+    "facing": "down",
+    "id": "zevara_inn_guest_returned",
+    "kind": "npc",
+    "present_when": {
+     "guest": {
+      "npc": "zevara",
+      "roster": [
+       "selys",
+       "krshia",
+       "olesm",
+       "pisces",
+       "relc",
+       "zevara",
+       "klbkch",
+       "rags",
+       "wilovan",
+       "grimalkin"
+      ],
+      "seats": 2
+     },
+     "requires": {
+      "raskghar_sealed": 1
+     }
+    },
+    "sprite": "zevara"
+   },
+   {
+    "_comment": "Klbkch rotates once chatted_with_klbkch>=1 (banked by his plaza talk_pool on street.json) -- the ONLY new roster member with NO quest gate, so his row carries the `guest` arm alone. Contract: see selys_inn_guest. Seat (11,5), back row of the four new chairs EAST of the ledger: klbkch (11,5), rags (12,5), wilovan (12,6), grimalkin (14,5) -- spacing driven by Grimalkin's rig, see grimalkin_inn_guest's _comment. His conversation keeps the HIVE out of the room entirely.",
+    "cell": [
+     11,
+     5
+    ],
+    "conversation": "klbkch_inn",
+    "dialogue": [
+     {
+      "speaker": "Klbkch",
+      "text": "Off duty. I am told this is a thing a person can be."
+     }
+    ],
+    "display_name": "Klbkch",
+    "facing": "down",
+    "id": "klbkch_inn_guest",
+    "kind": "npc",
+    "present_when": {
+     "guest": {
+      "npc": "klbkch",
+      "roster": [
+       "selys",
+       "krshia",
+       "olesm",
+       "pisces",
+       "relc",
+       "zevara",
+       "klbkch",
+       "rags",
+       "wilovan",
+       "grimalkin"
+      ],
+      "seats": 2
+     }
+    },
+    "sprite": "klbkch"
+   },
+   {
+    "_comment": "Rags appears only after chieftains_price SETTLES (rags_meeting_settled) AND absent drove_off_rags. The second arm is load-bearing: the rags_scouting_party encounter banks rags_meeting_settled from its own on_victory too, so without it a player who drew steel and won would seat the Chieftain he drove off. WIInnGuests.GUEST_POOL_GATES carries the IDENTICAL two-arm spec (its dict-valued form exists for exactly this row), so pool membership and row presence can never disagree. Her met counter banks ONLY on rags_meeting's two peaceful first-contact options, for the same reason. Register-pure: no medicine trade, no carved pawn, no war planning. Seat (12,5); contract: see selys_inn_guest, chair block: see klbkch_inn_guest.",
+    "cell": [
+     12,
+     5
+    ],
+    "conversation": "rags_inn",
+    "dialogue": [
+     {
+      "speaker": "Rags",
+      "text": "Warm here. Two doors. I counted."
+     }
+    ],
+    "display_name": "Rags",
+    "facing": "down",
+    "id": "rags_inn_guest",
+    "kind": "npc",
+    "present_when": {
+     "absent": {
+      "drove_off_rags": 1
+     },
+     "guest": {
+      "npc": "rags",
+      "roster": [
+       "selys",
+       "krshia",
+       "olesm",
+       "pisces",
+       "relc",
+       "zevara",
+       "klbkch",
+       "rags",
+       "wilovan",
+       "grimalkin"
+      ],
+      "seats": 2
+     },
+     "requires": {
+      "rags_meeting_settled": 1
+     }
+    },
+    "sprite": "rags"
+   },
+   {
+    "_comment": "Wilovan appears only after a_gentlemans_disagreement CLOSES (brothers_job_done), belt-and-braces with GUEST_POOL_GATES on the same counter. His conversation is oblique BY CONTRACT: the commission, the three doors, Coyle, Farley, the marker and the fence shelf all stay at invrisil_wilovan, and the trade is never named here. Seat (12,6), front row directly under Rags's chair -- the same vertical stack the shipped pisces (6,5)/selys (6,6) pair already runs, both rigs about one tile wide. Moved off (11,6) when the windowed check found Grimalkin's arm covering him there. Contract: see selys_inn_guest.",
+    "cell": [
+     12,
+     6
+    ],
+    "conversation": "wilovan_inn",
+    "dialogue": [
+     {
+      "speaker": "Wilovan",
+      "text": "Evening, {addr}. No business tonight, you'll be glad to hear."
+     }
+    ],
+    "display_name": "Wilovan",
+    "facing": "down",
+    "id": "wilovan_inn_guest",
+    "kind": "npc",
+    "present_when": {
+     "guest": {
+      "npc": "wilovan",
+      "roster": [
+       "selys",
+       "krshia",
+       "olesm",
+       "pisces",
+       "relc",
+       "zevara",
+       "klbkch",
+       "rags",
+       "wilovan",
+       "grimalkin"
+      ],
+      "seats": 2
+     },
+     "requires": {
+      "brothers_job_done": 1
+     }
+    },
+    "sprite": "wilovan"
+   },
+   {
+    "_comment": "Appears once forge_tier_permit CLOSES (elevator_pass_stamped; belt-and-braces with GUEST_POOL_GATES). Conversation lives in pallass_grimalkin only. SEAT (14,5) FORCED -- owning site of the four-chair spacing rule. 224px rig (~2x4 tiles): at (12,6) the windowed check failed (Wilovan behind his arm, a player at (12,4) covers his head -- the Relc (2,5) lesson), and render_scale is catalog-only (entity_visual_factory.gd:54), so the CELL was the only lever. Accepted costs: (1) his arm crosses pisces_mounting (13,5) -- unreachable state: elevator_pass_stamped's sole producer is portal-only pallass_market and the portal carrier requires door_mounted, which retires pisces_mounting; (2) he blocks one of pantry_door's two live approaches (ksmvr_inn_returned holds (14,7); on his 2 wakings in 10 the Door runs on (13,6) alone -- door_awakening teleport + portal_menu assert). Rig never measured against the figure-height convention (Relc 0.6781 = 43.4px; his ~98px) -- re-measure is a VISUAL-LOG item, not an inn edit.",
+    "cell": [
+     14,
+     5
+    ],
+    "conversation": "grimalkin_inn",
+    "dialogue": [
+     {
+      "speaker": "Grimalkin",
+      "text": "Sit down properly if you are going to sit."
+     }
+    ],
+    "display_name": "Grimalkin",
+    "facing": "down",
+    "id": "grimalkin_inn_guest",
+    "kind": "npc",
+    "present_when": {
+     "guest": {
+      "npc": "grimalkin",
+      "roster": [
+       "selys",
+       "krshia",
+       "olesm",
+       "pisces",
+       "relc",
+       "zevara",
+       "klbkch",
+       "rags",
+       "wilovan",
+       "grimalkin"
+      ],
+      "seats": 2
+     },
+     "requires": {
+      "elevator_pass_stamped": 1
+     }
+    },
+    "sprite": "grimalkin"
+   },
+   {
+    "cell": [
+     10,
+     2
+    ],
+    "display_name": "Laden Tray",
+    "gold": 1,
+    "id": "serving_tray",
+    "kind": "prop",
+    "on_interact_accomplishment": "delivered_item",
+    "once_per_waking": true,
+    "once_per_waking_toast": "The tables are covered. Nothing more to carry out until tomorrow.",
+    "render_scale": 0.5,
+    "sprite": "table_brown",
+    "toast": "You carry the laden tray out to the tables."
+   },
+   {
+    "_comment": "GH#131: on (6,2), a blocked kitchen-counter cell (#116 pattern); approach (6,3) facing up, asserted open by test_sim_core. NOT (2,2) -- test_sim_core walks it. GH#378 arm 2: kettle-on-a-crane, the row's only vertical silhouette; tint retired.",
+    "cell": [
+     6,
+     2
+    ],
+    "cookware": true,
+    "display_name": "Hearth-Side Kettle",
+    "id": "inn_witch_kettle",
+    "item_hint_toast": "The kettle wants yarrow before it gives anything back.",
+    "kind": "prop",
+    "locked_toast": "A kettle, singing low. It's just a kettle, unless you know otherwise.",
+    "on_skill_use": {
+     "accomplishment": "witch_craft_used",
+     "item": "remedy_draught",
+     "remove_item": "dried_yarrow_bundle",
+     "requires_item": "dried_yarrow_bundle",
+     "toast": "[Hedge Remedy] \u2014 The inn's kettle does in a pinch, just like she said. The steam settles into something kinder."
+    },
+    "requires_skill": "hedge_remedy",
+    "skill_hint_toast": "The kettle's on. The inn won't mind one more thing brewing, so long as it means well.",
+    "sprite": "witch_kettle_hook"
+   },
+   {
+    "cell": [
+     5,
+     1
+    ],
+    "display_name": "Chef's Counter",
+    "id": "inn_chef_counter",
+    "kind": "prop",
+    "locked_toast": "A working counter, scrubbed and stocked. The kitchen has standards, and they're looking at you.",
+    "on_skill_use": {
+     "accomplishment": "cooked_meal",
+     "item": "fine_meal",
+     "toast": "[Advanced Cooking] \u2014 Knife-work first, then the pan, then the part nobody can teach. The plate comes out arguing for seconds."
+    },
+    "requires_skill": "advanced_cooking",
+    "skill_hint_toast": "Good stock, better knives, and nobody using either. A real cook could turn this counter into a meal worth naming.",
+    "sprite": "counter_left"
+   },
+   {
+    "cell": [
+     5,
+     2
+    ],
+    "display_name": "The Good Copper Pan",
+    "id": "inn_copper_pan",
+    "kind": "prop",
+    "locked_toast": "The good copper pan, hung out of easy reach. Erin's rule, probably.",
+    "on_skill_use": {
+     "accomplishment": "cooked_meal",
+     "item": "signature_meal",
+     "toast": "[Signature Dish] \u2014 The pan remembers you now. What comes out of it isn't dinner, it's a reputation."
+    },
+    "requires_skill": "signature_dish",
+    "skill_hint_toast": "The good copper pan. It's been waiting for a dish that deserves it.",
+    "sprite": "grill"
+   },
+   {
+    "_comment": "The kitchen HERO pot; keeps `cauldron`. Tint RETIRED (GH#378 arm 2) now that its two siblings carry their own silhouettes -- tint is not disambiguation. `render_scale` here is a DEAD FIELD.",
+    "cell": [
+     4,
+     1
+    ],
+    "cookware": true,
+    "display_name": "Stew Pot",
+    "id": "stew_pot",
+    "kind": "prop",
+    "locked_toast": "You don't know your way around a stew pot. Yet.",
+    "on_skill_use": {
+     "accomplishment": "cooked_meal",
+     "item": "hot_meal",
+     "toast": "[Basic Cooking] \u2014 The stew comes out rich and hot."
+    },
+    "requires_skill": "basic_cooking",
+    "skill_hint_toast": "The stew's at the turn. Someone who knows a pot could bring it home.",
+    "sprite": "cauldron"
+   },
+   {
+    "_comment": "GH#378 arm 2: its OWN silhouette (flat hotplate + firebox) -- the kitchen's three stations were one sprite under three tints. `skill_hint_toast` states the no-yield outcome up front: same gate as stew_pot, no `item`. work_loop 6b.5 pins it.",
+    "cell": [
+     1,
+     1
+    ],
+    "cookware": true,
+    "display_name": "Short-Order Pot",
+    "id": "short_order",
+    "kind": "prop",
+    "locked_toast": "The order's a mess and you haven't the first idea how to stretch it. Not yet.",
+    "on_skill_use": {
+     "accomplishment": "stretched_the_order",
+     "toast": "[Basic Cooking] \u2014 You thin the stock, fold in day-old bread, and stretch the short order into a full service. Lyonette's shortfall vanishes into the pot."
+    },
+    "requires_skill": "basic_cooking",
+    "skill_hint_toast": "Three plates ordered, one pot of stock. You could stretch it to cover them all. Nothing leaves the kitchen in your hands.",
+    "sprite": "short_order_range"
+   },
+   {
+    "cell": [
+     1,
+     8
+    ],
+    "display_name": "Stairs Up",
+    "id": "stairs_up",
+    "kind": "door",
+    "on_enter_accomplishment": "visited_own_room",
+    "sprite": "stairs_up",
+    "to_cell": [
+     1,
+     1
+    ],
+    "to_map": "inn_upstairs"
+   },
+   {
+    "_comment_consolidation": "Pantry-door consolidation (user FEEL verdict 2026-07-19): the runes + wardwork props FOLDED into the door. visual_states swaps in the runed-door sprite once the Magical Door is MOUNTED (garden_door at-pattern, render-only). Task 2.4 moved the counter to door_mounted and added a cold `tint` -- the TINT/observe-swap idiom, NOT `hidden`, which is render-only and would leave an invisible blocker mid-floor (#149's class). Deliberately NO `observe` override: `skill_uses` is routed BEFORE the generic observe arm (field_skills.gd dispatch order), so the field would be shadowed and an override here would be inert copy dressed as a live surface. skill_uses carries BOTH reads: [Observe] banks read_the_door_runes, [Detect Magic] banks detected_wardwork. Old saves reach door_mounted through Task 2.6's backfill.",
+    "_comment_d4": "portal_menu_when is checked before the fallback interaction; once the gate is met, the picker replaces the flavor toast. Task 2.4 moved the gate door_awakened -> door_mounted, MANDATORY rather than cosmetic: portals.json's liscor_street/the_wandering_inn rows now list at door_mounted (the day-one link), and leaving the inn-side CARRIER on door_awakened would have made those rows unreachable from the inn for the whole middle of the chain. street.json's `street_anchor_stone` (the pair's other end) moved with it. Region rows keep their own *_attuned gates, so nothing else opens early.",
+    "_comment_variants": "Task 2.4: ONE arm, and the window is exactly one beat wide BY CONSTRUCTION -- `portal_menu_when` is checked BEFORE the flavor arm (interactions.gd's prop order) and now opens at door_mounted, so from the mounting onward this prop's interact is the PICKER and no toast can render. The surviving arm fires in the door_retrieved -> door_mounted window and is the mounting scene's DISCOVERY BRIDGE: a prop cannot open a conversation, so the toast points at `pisces_mounting`, the NPC beside it. The two old arms were deleted rather than re-copied: both gate at or past door_mounted, so both became unreachable when the picker moved.",
+    "cell": [
+     14,
+     6
+    ],
+    "display_name": "The Pantry Door",
+    "door_flavor_target": true,
+    "id": "pantry_door",
+    "kind": "prop",
+    "observe": "A plain plank door, warped at the bottom from a hundred winters. Nothing about it looks like it goes anywhere but the pantry.",
+    "on_interact_accomplishment": "observed_the_pantry_door",
+    "portal_menu": true,
+    "portal_menu_when": {
+     "requires": {
+      "door_mounted": 1
+     }
+    },
+    "skill_hint_toast": "The frame and the old marks under its paint both want a trained eye \u2014 and maybe more than one kind.",
+    "skill_uses": {
+     "detect_magic": {
+      "accomplishment": "detected_wardwork",
+      "lore": true,
+      "toast": "[Detect Magic] \u2014 The old wardwork wakes just enough to be read: someone bound this cellar's door long before it learned to go elsewhere."
+     },
+     "observe": {
+      "accomplishment": "read_the_door_runes",
+      "lore": true,
+      "toast": "[Observe] \u2014 The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away."
+     }
+    },
+    "sprite": "door",
+    "toast": "Onions, a sack of soft potatoes, a shelf of jarred somethings gone dusty. The pantry door, same as it's always been.",
+    "variants": [
+     {
+      "toast": "The find leans against the pantry frame, unhung, with the old plank door stacked out of the way behind the flour sacks. Pisces has not stopped circling it since the wagon. Ask him about it.",
+      "when": {
+       "door_retrieved": 1
+      }
+     }
+    ],
+    "visual_states": [
+     {
+      "sprite": "pantry_door_runes",
+      "tint": [
+       0.82,
+       0.86,
+       1.0
+      ],
+      "when": {
+       "at": 1,
+       "counter": "door_mounted"
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "THE MOUNTING SCENE's carrier (Task 2.4). kind:npc DELIBERATE + load-bearing (inn_room_ledger precedent): interactions.gd routes `conversation` into start_dialogue for npc/encounter kinds ONLY -- the pantry PROP cannot open a graph; its door_retrieved variant toast points here. No talk_pool -> door_mounting.json opens on FIRST interact. present_when brackets exactly the haul window (door_retrieved until door_mounted, the option the conversation banks): unmissable, unreplayable, quest auto-start fires once. CELL (13,5) deliberately NOT (14,5) (door_chain_scout's [Observe] stance) nor (13,6) (the_wandering_inn arrival cell + portal_menu_start position). Neighbours open; no pre-restructure save holds door_retrieved, so the blocker strands nothing.",
+    "cell": [
+     13,
+     5
+    ],
+    "conversation": "door_mounting",
+    "dialogue": [
+     {
+      "speaker": "Pisces",
+      "text": "A moment. I am counting the ward's repeats, and you are extremely countable."
+     }
+    ],
+    "display_name": "Pisces",
+    "facing": "right",
+    "id": "pisces_mounting",
+    "kind": "npc",
+    "observe": "He has taken his coat off, which for Pisces is manual labour. One hand rests flat on the hauled door's face, the way a physician rests a hand on a patient, and he is listening to something no one else in the room can hear.",
+    "present_when": {
+     "absent": {
+      "door_mounted": 1
+     },
+     "requires": {
+      "door_retrieved": 1
+     }
+    },
+    "sprite": "pisces"
+   },
+   {
+    "_comment": "GH#392: ABSENT until the door chain arms it. It used to stand here from the first waking as visible-but-inert 'foreshadowing' (GH#150), which read only as a hole you cannot act on. present_when was forbidden on a trigger_radius encounter until #392 made _check_trigger_radius consult entity_present; test_sim_core carries the tripwire. Safer than hiding the sprite (#149's invisible-blocking-cell class). Frees (9,7).",
+    "allies": [
+     "relc"
+    ],
+    "ally_requires": {
+     "met_relc": 1
+    },
+    "arena": "inn_cellar",
+    "cell": [
+     9,
+     7
+    ],
+    "display_name": "A Leak in the Wall",
+    "encounter_when": {
+     "requires": {
+      "door_mounted": 1
+     }
+    },
+    "enemies": [
+     "rift_vermin_a",
+     "rift_vermin_b",
+     "rift_vermin_c"
+    ],
+    "id": "rift_vermin_leak",
+    "kind": "encounter",
+    "observe": "Something scratches behind the pantry wall, patient and small. Probably nothing. Probably.",
+    "on_victory": [
+     "cleared_the_leak",
+     "door_understood",
+     "pedestal_unsealed"
+    ],
+    "present_when": {
+     "requires": {
+      "door_mounted": 1
+     }
+    },
+    "sprite": "bat",
+    "tint": [
+     0.55,
+     0.5,
+     0.42
+    ],
+    "visual_states": [
+     {
+      "observe": "The scratching has become a chewing. The Door strains for somewhere it cannot reach yet, and something on the way there has found the gap and has teeth.",
+      "when": {
+       "at": 1,
+       "counter": "door_mounted"
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "CONSTRAINT: the free approach cell is (3,7), facing down. GH#128: the vine door must be EARNED -- base sprite stays garden_door_inner, the at:0 visual_state (always satisfied) hides it, and the at:1 entry un-hides + swaps observe once garden_door_unlocked banks (order-sensitive later-satisfied-wins, world.gd _resolve_entity_render; `hidden` is render-only per wi_game.gd entity_present doc, so the bare-wall interact/observe/toast still work). door_when already gates traversal on the same counter, so sight and passage flip together at the sleep beat. visual_states re-render live on the counter change (_refresh_entity_visual), so no same-map staleness.",
+    "_comment_gh167": "present_when (GH#167 user directive): pre-unlock the entity is ABSENT entirely -- no invisible bump, no wall-dressing; (3,8) left the static blocked set. The at:0 hidden visual_state is now redundant belt-and-braces.",
+    "cell": [
+     3,
+     8
+    ],
+    "display_name": "A Door of Vines",
+    "door_when": {
+     "open_toast": "The vines part like a curtain, and the light beyond doesn't flicker.",
+     "requires": {
+      "garden_door_unlocked": 1
+     },
+     "to_cell": [
+      7,
+      10
+     ],
+     "to_map": "garden_sanctuary"
+    },
+    "id": "garden_door",
+    "kind": "prop",
+    "observe": "Plaster, old and thin, and a nail with nothing hung on it. If something is meant to be here, it isn't yet.",
+    "on_interact_accomplishment": "noticed_the_bare_wall",
+    "present_when": {
+     "requires": {
+      "garden_door_unlocked": 1
+     }
+    },
+    "sprite": "garden_door_inner",
+    "toast": "Bare wall. A nail with nothing hung on it.",
+    "visual_states": [
+     {
+      "hidden": true,
+      "when": {
+       "at": 0,
+       "counter": "garden_door_unlocked"
+      }
+     },
+     {
+      "hidden": false,
+      "observe": "A door of living vines, woven shut and breathing faintly of green. It wasn't here before, and it doesn't pretend otherwise.",
+      "when": {
+       "at": 1,
+       "counter": "garden_door_unlocked"
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "Task 2.3: no longer pool-only -- the `ceria_intro` graph attaches here so the horns_dig invitation is startable AT THE INN, where a post-seal player actually is (the dungeon_approach attachment stays; the graph is shared, not moved). talk_pool + talk_pool_stages + the static dialogue fallback all STAY: the erin/pisces/krshia/selys idiom is pool-and-graph together (first interact = a pool line, subsequent interacts = the graph), and talk_pool_stages' own gate reads chatted_with_ceria_inn, which only the pool produces. v0.15 T4.3 round 2: retires on horns_dig_started with her teammates; the world.gd dialogue defer is what made her own graph's counter usable as her gate. Contract: `ceria_inn_returned` below.",
+    "cell": [
+     8,
+     6
+    ],
+    "conversation": "ceria_intro",
+    "dialogue": [
+     {
+      "speaker": "Ceria Springwalker",
+      "text": "Ask me about the vault again and I'll start charging Pisces rent."
+     }
+    ],
+    "display_name": "Ceria Springwalker",
+    "facing": "left",
+    "id": "ceria_inn",
+    "kind": "npc",
+    "present_when": {
+     "absent": {
+      "horns_dig_started": 1
+     },
+     "requires": {
+      "seal_kept_reported": 1
+     }
+    },
+    "sprite": "ceria",
+    "talk_pool": [
+     "@ceria_inn_shared"
+    ],
+    "talk_pool_stages": [
+     {
+      "_comment": "Gates on seal_kept_reported, not door_awakened: this row is gone by horns_dig_started, long before the door wakes. See `ceria_inn_returned` for the window rule.",
+      "id": "ceria_inn_settled",
+      "lines": [
+       "@ceria_inn_shared_2"
+      ],
+      "requires_accomplishment": {
+       "chatted_with_ceria_inn": 3,
+       "seal_kept_reported": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "v0.15 T4.3 round 2, bilocation collapse: retires on horns_dig_started, the counter the camp rows arm on. Full contract + the v0.14 provenance: `ceria_inn_returned` below.",
+    "cell": [
+     2,
+     3
+    ],
+    "dialogue": [
+     {
+      "speaker": "Yvlon Byres",
+      "text": "My arm's still fine."
+     }
+    ],
+    "display_name": "Yvlon Byres",
+    "facing": "up",
+    "id": "yvlon_inn",
+    "kind": "npc",
+    "present_when": {
+     "absent": {
+      "horns_dig_started": 1
+     },
+     "requires": {
+      "seal_kept_reported": 1
+     }
+    },
+    "sprite": "yvlon",
+    "talk_pool": [
+     "@yvlon_inn_shared"
+    ],
+    "talk_pool_stages": [
+     {
+      "id": "yvlon_inn_settled",
+      "lines": [
+       "@yvlon_inn_shared_2"
+      ],
+      "requires_accomplishment": {
+       "chatted_with_yvlon_inn": 3,
+       "seal_kept_reported": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "v0.15 T4.3 round 2, bilocation collapse -- see `ceria_inn_returned` below.",
+    "cell": [
+     14,
+     7
+    ],
+    "dialogue": [
+     {
+      "speaker": "Ksmvr",
+      "text": "I am still counting exits. There are still two."
+     }
+    ],
+    "display_name": "Ksmvr",
+    "facing": "up",
+    "id": "ksmvr_inn",
+    "kind": "npc",
+    "present_when": {
+     "absent": {
+      "horns_dig_started": 1
+     },
+     "requires": {
+      "seal_kept_reported": 1
+     }
+    },
+    "sprite": "ksmvr",
+    "talk_pool": [
+     "@ksmvr_inn_shared"
+    ],
+    "talk_pool_stages": [
+     {
+      "id": "ksmvr_inn_settled",
+      "lines": [
+       "@ksmvr_inn_shared_2"
+      ],
+      "requires_accomplishment": {
+       "chatted_with_ksmvr_inn": 3,
+       "seal_kept_reported": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "OWNING SITE for the three Horns inn twins. Each Horn has two rows: the ORIGINAL stands from seal_kept_reported to horns_dig_started (then the camp holds them); this twin from door_mounted on. Identical cell/sprite/facing/pool/conversation -- only `id` and `present_when` differ. GATE TRAP: talk-pool counters are id-derived (social.gd's `chatted_with_%s`), so a twin's settled stage must gate on ITS OWN counter; the original's would lock the lines out for anyone who never chatted pre-dig. WINDOW RULE (was nine dead lines): a stage may gate ONLY on counters holdable inside its own row's window -- twins on door_awakened, originals on seal_kept_reported. test_dialogue's `test_horns_inn_settled_stages_serve_inside_their_own_window` walks all nine lines live; re-gate either arm and it reds.",
+    "cell": [
+     8,
+     6
+    ],
+    "conversation": "ceria_intro",
+    "dialogue": [
+     {
+      "speaker": "Ceria Springwalker",
+      "text": "Ask me about the vault again and I'll start charging Pisces rent."
+     }
+    ],
+    "display_name": "Ceria Springwalker",
+    "facing": "left",
+    "id": "ceria_inn_returned",
+    "kind": "npc",
+    "present_when": {
+     "requires": {
+      "door_mounted": 1
+     }
+    },
+    "sprite": "ceria",
+    "talk_pool": [
+     "@ceria_inn_shared"
+    ],
+    "talk_pool_stages": [
+     {
+      "id": "ceria_inn_returned_settled",
+      "lines": [
+       "@ceria_inn_shared_2"
+      ],
+      "requires_accomplishment": {
+       "chatted_with_ceria_inn_returned": 3,
+       "door_awakened": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "Task 2.7 Horns inn twin -- the AFTER arm of the yvlon_inn split; see ceria_inn_returned's _comment for the full contract. Its settled stage gates on chatted_with_yvlon_inn_returned, this row's own id-derived counter, never the original's.",
+    "cell": [
+     2,
+     3
+    ],
+    "dialogue": [
+     {
+      "speaker": "Yvlon Byres",
+      "text": "My arm's still fine."
+     }
+    ],
+    "display_name": "Yvlon Byres",
+    "facing": "up",
+    "id": "yvlon_inn_returned",
+    "kind": "npc",
+    "present_when": {
+     "requires": {
+      "door_mounted": 1
+     }
+    },
+    "sprite": "yvlon",
+    "talk_pool": [
+     "@yvlon_inn_shared"
+    ],
+    "talk_pool_stages": [
+     {
+      "id": "yvlon_inn_returned_settled",
+      "lines": [
+       "@yvlon_inn_shared_2"
+      ],
+      "requires_accomplishment": {
+       "chatted_with_yvlon_inn_returned": 3,
+       "door_awakened": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "Task 2.7 Horns inn twin -- the AFTER arm of the ksmvr_inn split; see ceria_inn_returned's _comment for the full contract. Its settled stage gates on chatted_with_ksmvr_inn_returned, this row's own id-derived counter, never the original's.",
+    "cell": [
+     14,
+     7
+    ],
+    "dialogue": [
+     {
+      "speaker": "Ksmvr",
+      "text": "I am still counting exits. There are still two."
+     }
+    ],
+    "display_name": "Ksmvr",
+    "facing": "up",
+    "id": "ksmvr_inn_returned",
+    "kind": "npc",
+    "present_when": {
+     "requires": {
+      "door_mounted": 1
+     }
+    },
+    "sprite": "ksmvr",
+    "talk_pool": [
+     "@ksmvr_inn_shared"
+    ],
+    "talk_pool_stages": [
+     {
+      "id": "ksmvr_inn_returned_settled",
+      "lines": [
+       "@ksmvr_inn_shared_2"
+      ],
+      "requires_accomplishment": {
+       "chatted_with_ksmvr_inn_returned": 3,
+       "door_awakened": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "GH#92 D3 purchase surface (own conversation -- see room_ledger.json header). kind:npc DELIBERATE on an object: only npc/encounter kinds route interact into start_dialogue; no talk_pool means the conversation opens on the FIRST interact.",
+    "cell": [
+     10,
+     5
+    ],
+    "conversation": "room_ledger",
+    "display_name": "Room Register",
+    "id": "inn_room_ledger",
+    "kind": "npc",
+    "observe": "The inn's room register, open to today. Lyonette's handwriting could win awards; the prices underneath it could start fights.",
+    "sprite": "inn_room_ledger"
+   }
+  ],
+  "floor_layers": [
+   {
+    "_pick": "E3 L1 hall planks: position-hashed variants from the light plank swatch",
+    "cells": "all",
+    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+    "tile_px": 16,
+    "variants": [
+     [
+      1,
+      21
+     ],
+     [
+      2,
+      21
+     ],
+     [
+      1,
+      22
+     ],
+     [
+      2,
+      22
+     ]
+    ]
+   },
+   {
+    "_pick": "E3 L1 kitchen zone: grey cobble swatch",
+    "cells": {
+     "rect": [
+      1,
+      1,
+      4,
+      2
+     ]
+    },
+    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+    "tile_px": 16,
+    "variants": [
+     [
+      9,
+      22
+     ],
+     [
+      9,
+      23
+     ]
+    ]
+   },
+   {
+    "_pick": "E3 L1 bedroom corner: herringbone swatch",
+    "cells": {
+     "rect": [
+      1,
+      6,
+      3,
+      3
+     ]
+    },
+    "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+    "tile_px": 16,
+    "variants": [
+     [
+      16,
+      21
+     ],
+     [
+      17,
+      21
+     ]
+    ]
+   }
+  ],
+  "grid": {
+   "height": 10,
+   "width": 16
+  },
+  "talk_banks": {
+   "ceria_inn_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "ceria_inn_shared_2": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "erin_shared": [
+    "\u00a7"
+   ],
+   "erin_shared_2": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "ksmvr_inn_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "ksmvr_inn_shared_2": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "lyonette_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "yvlon_inn_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ],
+   "yvlon_inn_shared_2": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ]
+  },
+  "walls": {
+   "segments": [
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "face": [
+      14,
+      7
+     ],
+     "from": [
+      0,
+      0
+     ],
+     "to": [
+      15,
+      0
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      0,
+      1
+     ],
+     "to": [
+      0,
+      9
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      15,
+      1
+     ],
+     "to": [
+      15,
+      2
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      15,
+      4
+     ],
+     "to": [
+      15,
+      9
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      1,
+      9
+     ],
+     "to": [
+      14,
+      9
+     ]
+    }
+   ],
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16
+  }
+ }
+}

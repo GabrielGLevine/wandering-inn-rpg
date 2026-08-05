@@ -1,0 +1,642 @@
+{
+ "facts": {
+  "$.entities[1].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool[3]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool_stages[0].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[1].talk_pool_stages[2].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Guild"
+   ]
+  },
+  "$.entities[1].talk_pool_stages[5].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Door",
+    "Pallass"
+   ]
+  },
+  "$.entities[4].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[4].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[5].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[5].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Bronze"
+   ]
+  },
+  "$.entities[6].talk_pool[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[6].talk_pool[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.selys_shared[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.talk_banks.selys_shared[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": [
+    "Erin"
+   ]
+  },
+  "$.talk_banks.selys_shared[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment_lights": "v0.17 R2: the hall had ZERO light sources. `sconce` is not in the `inn` biome's blocked_props, so blocked_cells stays 57 (unchanged).",
+  "ambience": [
+   {
+    "phase": [
+     "dusk",
+     "night"
+    ],
+    "preset": "dust_motes",
+    "rect": "all"
+   }
+  ],
+  "biome": "inn",
+  "blocked": [
+   [
+    6,
+    2
+   ],
+   [
+    7,
+    2
+   ],
+   [
+    9,
+    2
+   ],
+   [
+    10,
+    2
+   ],
+   [
+    13,
+    6
+   ],
+   [
+    12,
+    9
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     4,
+     1
+    ],
+    "light": {
+     "color": [
+      1.0,
+      0.72,
+      0.38
+     ],
+     "energy": 0.85,
+     "flicker": true,
+     "radius": 36
+    },
+    "sprite": "sconce"
+   },
+   {
+    "cell": [
+     11,
+     1
+    ],
+    "light": {
+     "color": [
+      1.0,
+      0.72,
+      0.38
+     ],
+     "energy": 0.85,
+     "flicker": true,
+     "radius": 36
+    },
+    "sprite": "sconce"
+   },
+   {
+    "cell": [
+     6,
+     2
+    ],
+    "sprite": "counter_left"
+   },
+   {
+    "cell": [
+     7,
+     2
+    ],
+    "sprite": "counter_mid"
+   },
+   {
+    "cell": [
+     9,
+     2
+    ],
+    "sprite": "counter_mid"
+   },
+   {
+    "cell": [
+     10,
+     2
+    ],
+    "sprite": "counter_right"
+   },
+   {
+    "cell": [
+     8,
+     4
+    ],
+    "sprite": "rug_woven_cream"
+   },
+   {
+    "cell": [
+     13,
+     6
+    ],
+    "sprite": "table_brown"
+   },
+   {
+    "cell": [
+     12,
+     9
+    ],
+    "sprite": "table_brown"
+   },
+   {
+    "cell": [
+     14,
+     6
+    ],
+    "sprite": "stool"
+   }
+  ],
+  "entities": [
+   {
+    "cell": [
+     8,
+     11
+    ],
+    "display_name": "Liscor Street",
+    "id": "guild_exit",
+    "kind": "door",
+    "sprite": "door",
+    "to_cell": [
+     27,
+     3
+    ],
+    "to_map": "street"
+   },
+   {
+    "_comment": "stages are last-match-wins; keep story order \u2014 earliest gates first; relays outrank standing signposts",
+    "cell": [
+     8,
+     2
+    ],
+    "conversation": "selys_delivery",
+    "dialogue": [
+     {
+      "speaker": "Selys",
+      "text": "Adventurers. Always tracking mud in."
+     }
+    ],
+    "display_name": "Selys",
+    "facing": "down",
+    "friendly_line": "...Huh. You're actually pleasant. That's rare on this side of the counter. Fine - your paperwork jumps the line today. Don't make it weird.",
+    "id": "selys",
+    "kind": "npc",
+    "observe": "A Drake behind a counter she clearly wishes were taller. Tired, sharp, quick with a ledger. She has sized up a hundred adventurers today and found most of them wanting.",
+    "person": true,
+    "sprite": "selys",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7",
+     "\u00a7",
+     "\u00a7"
+    ],
+    "talk_pool_stages": [
+     {
+      "_comment": "b7 #207 ack (lowest priority \u2014 warm terminal and threads outrank).",
+      "id": "selys_delivery_ledger",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "delivered_delivery_guild_ledger": 1
+      }
+     },
+     {
+      "id": "selys_past_the_counter",
+      "lines": [
+       "@selys_shared"
+      ],
+      "requires_accomplishment": {
+       "chatted_with_selys": 2,
+       "errand_decided": 1
+      }
+     },
+     {
+      "_comment": "b7 #212 bond-path signpost keyed on the Tamer chain's entry counter (meeting the dog banks nothing \u2014 CHOICE-LOG). Review reposition: ABOVE the warm terminal so a mid-game soother still hears it (unlock guidance, not flavor); story threads and their neutrals below still outrank. Goes stale once the pup is tamed \u2014 accepted, bounded (CHOICE-LOG).",
+      "id": "selys_signpost_wolf_pup",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "soothed_a_beast": 1
+      }
+     },
+     {
+      "id": "selys_thread_horns_gallery",
+      "lines": [
+       "@ceria_s_team_went"
+      ],
+      "requires_accomplishment": {
+       "horns_delve_started": 1
+      }
+     },
+     {
+      "_comment": "M2 warm terminal: retire to selys_past_the_counter's WARM lines, not the cold base pool -- once the Horns thread retires the player is past the counter with her, so the terminal register stays warm (the warm stage above keeps its own gate+position). Same warm lines in selys_thread_pallass_neutral below.",
+      "id": "selys_thread_horns_neutral",
+      "lines": [
+       "@selys_shared"
+      ],
+      "requires_accomplishment": {
+       "horns_party_formed": 1
+      }
+     },
+     {
+      "id": "selys_thread_pallass",
+      "lines": [
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "pallass_sponsored": 1
+      }
+     },
+     {
+      "_comment": "M2 warm terminal: selys_past_the_counter WARM lines (see selys_thread_horns_neutral).",
+      "id": "selys_thread_pallass_neutral",
+      "lines": [
+       "@selys_shared"
+      ],
+      "requires_accomplishment": {
+       "pallass_attuned": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "the board itself never mutates state.",
+    "board": true,
+    "board_rumors": [
+     {
+      "_comment": "_interact_board banks banks_accomplishment idempotently (record_accomplishment's own >=1 gate semantics, same as read_the_board's own every-visit bank).",
+      "banks_accomplishment": "riverfarm_attuned",
+      "copy": "TRAVELER'S NOTE, pinned crooked. Village called Riverfarm, downriver a fair walk, farming folk, growing fast under some new lord. They've got witch trouble, or so the last one through here said \u2014 crops going bad, nobody saying why out loud. No bounty on it, just word passed along. Ask the Guild about the road if you're curious.",
+      "id": "rumor_riverfarm"
+     },
+     {
+      "_comment": "Stays a SIGNPOST only: banks heard_of_invrisil idempotently on every board browse (_interact_board's existing >=1 semantics), a flavor-only counter no gate reads.",
+      "banks_accomplishment": "heard_of_invrisil",
+      "copy": "A LETTER, sealed in wax gone slightly soft from handling, addressed to no one by name. Inside: impeccable handwriting regrets to inform you of a small disagreement in Invrisil concerning a mutual acquaintance's good name, and would consider it a personal favor \u2014 and a professional one \u2014 if a stranger to the city might look into it. The witch at Riverfarm keeps the stones, should the distance prove an obstacle. Signed only with a small drawing of a hat. The Guildmistress's clerk says it arrived by very ordinary post, which is itself the strangest part.",
+      "id": "rumor_invrisil"
+     },
+     {
+      "_comment": "Points the reader at Olesm by name rather than naming a location a player could act on directly from the board itself. The stipend is HIS option, in olesm_intro.json, gated separately on post_game. That counter banks at the first sleep after the seal -- mid-story, not an end-of-story flag.",
+      "banks_accomplishment": "heard_of_the_gallery_survey",
+      "copy": "A WATCH NOTICE, freshly pinned. The reopened gallery under the old seal is to be surveyed properly before the Council calls it settled \u2014 volunteers with Guild standing should see Olesm Swifttail at the frontage desk. Pay is Watch-scale. The notice does not say what 'properly' means, and nobody pinning notices ever does.",
+      "id": "rumor_dungeon_survey"
+     },
+     {
+      "_comment": "the real quest option lives on his own dresk_recruit.json conversation, gated on this same banked counter.",
+      "banks_accomplishment": "heard_about_missing_recruit",
+      "copy": "WATCH NOTICE, pinned by a hand in a hurry. Recruit Pell missed second muster running. Ashgrave's not calling it desertion, not yet. Anyone with eyes free, ask at the barracks.",
+      "id": "rumor_missing_recruit"
+     },
+     {
+      "_comment": "the real quest option lives on renn_hammer.json, gated on this same banked counter.",
+      "banks_accomplishment": "heard_about_lost_hammer",
+      "copy": "A SCRAP OF PARCHMENT, tacked low, easy to miss. 'LOST: one backup warhammer, plain steel, no love lost between us but I want it back. Ask for Renn. Reward for the honest sort.' The handwriting gets angrier toward the bottom.",
+      "id": "rumor_lost_hammer"
+     }
+    ],
+    "cell": [
+     2,
+     3
+    ],
+    "display_name": "The Request Board",
+    "facing": "right",
+    "id": "guild_board",
+    "kind": "prop",
+    "observe": "Rates set by the Guild. Complaints to the Guildmistress in person. Bring patience. \u2014 S.S.",
+    "second_visit_toast": "The Request Board. Your slip is still logged at the desk. The board does not care how it's going.",
+    "sprite": "request_board",
+    "toast": "The Request Board. Paper three layers deep, new notices pinned straight over the dead ones. A posting pays on turn-in; take one at the Guildmistress's desk so it's logged, and only what you do after counts."
+   },
+   {
+    "_comment": " Finding 21: the bespoke notice-wall art read as a giant scroll; reuses the request_board prop the player already knows two cells away (same board family, honestly a second board).",
+    "cell": [
+     2,
+     5
+    ],
+    "display_name": "Notice Wall",
+    "facing": "right",
+    "id": "guild_notice_wall",
+    "kind": "prop",
+    "observe": "Handbills and scraps overlapping the request board's edge. The Guild's actual business spills past its own furniture. Somebody wants a lost warhammer back. Somebody else is renting a room, quiet tenants only.",
+    "on_interact_accomplishment": "read_guild_notices",
+    "sprite": "request_board",
+    "toast": "A second board, smaller and less official: lost gear, room-for-rent scraps, one challenge to a duel that's clearly gone unanswered a long time. Anything worth chasing copies into your journal as a lead: a name and a place, nothing promised.",
+    "visual_states": [
+     {
+      "_comment": "GH#335 item 3: a read prop is SPENT and recedes. Shared tint across every read-once prop in the build; `counter` is this prop's OWN id, never a sibling's shared one.",
+      "tint": [
+       0.7,
+       0.7,
+       0.74
+      ],
+      "when": {
+       "at": 1,
+       "counter": "read_guild_notices"
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "talk_pool fires first-talk-of-the-waking as before",
+    "cell": [
+     3,
+     3
+    ],
+    "conversation": "renn_hammer",
+    "dialogue": [
+     {
+      "speaker": "Renn",
+      "text": "Still four silver. Still an insult."
+     }
+    ],
+    "display_name": "Renn",
+    "facing": "left",
+    "id": "renn",
+    "kind": "npc",
+    "person": true,
+    "sprite": "drake_patron",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7"
+    ],
+    "tint": [
+     0.55,
+     0.58,
+     0.62
+    ]
+   },
+   {
+    "cell": [
+     2,
+     4
+    ],
+    "dialogue": [
+     {
+      "speaker": "Ilvo",
+      "text": "He'll take it. Watch."
+     }
+    ],
+    "display_name": "Ilvo",
+    "facing": "left",
+    "id": "ilvo",
+    "kind": "npc",
+    "person": true,
+    "present_when": {
+     "phase": [
+      "day",
+      "dusk"
+     ]
+    },
+    "sprite": "ilvo",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7"
+    ]
+   },
+   {
+    "cell": [
+     12,
+     6
+    ],
+    "dialogue": [
+     {
+      "speaker": "Yelra",
+      "text": "Board's behind you, same as it was a minute ago."
+     }
+    ],
+    "display_name": "Yelra",
+    "facing": "down",
+    "id": "yelra",
+    "kind": "npc",
+    "person": true,
+    "sprite": "gnoll_traveler",
+    "talk_pool": [
+     "\u00a7",
+     "\u00a7"
+    ],
+    "tint": [
+     0.62,
+     0.5,
+     0.35
+    ]
+   },
+   {
+    "cell": [
+     14,
+     1
+    ],
+    "contains": [
+     "renns_warhammer"
+    ],
+    "display_name": "A Forgotten Gear Stash",
+    "id": "renns_gear_stash",
+    "kind": "prop",
+    "observe": "A crate shoved against the back wall, half-buried under someone else's forgotten kit.",
+    "on_open_accomplishment": "found_the_warhammer",
+    "sprite": "crate",
+    "tint": [
+     0.45,
+     0.38,
+     0.3
+    ]
+   }
+  ],
+  "floor_layers": [
+   {
+    "_pick": "#225 floor differentiation: the Adventurer's Guild reads as a richer, warmer hall than the inn's rough tavern planks. Library pack warm reddish parquet ([21,3]/[22,3]/[21,4]/[23,4], flat wood rgb~135,86,50) -- the pack the asset catalog casts for 'Liscor guild interiors'; already manifest-wired (bundle:true). Wood floor keeps the biome's wood footstep family honest.",
+    "cells": "all",
+    "sheet": "res://assets/tiles/library/Tiles.png",
+    "tile_px": 16,
+    "variants": [
+     [
+      21,
+      3
+     ],
+     [
+      22,
+      3
+     ],
+     [
+      21,
+      4
+     ],
+     [
+      23,
+      4
+     ]
+    ]
+   }
+  ],
+  "grid": {
+   "height": 12,
+   "width": 16
+  },
+  "interior_flavor": [
+   "Nothing there. Chalk dust and boot grit, and a floorboard worn pale where people wait to be called.",
+   "Nothing there. Somewhere behind the desk a drawer shuts. Guild business, and none of it yours."
+  ],
+  "talk_banks": {
+   "selys_shared": [
+    "\u00a7",
+    "\u00a7",
+    "\u00a7"
+   ]
+  },
+  "walls": {
+   "segments": [
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "face": [
+      14,
+      7
+     ],
+     "from": [
+      0,
+      0
+     ],
+     "to": [
+      15,
+      0
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      0,
+      1
+     ],
+     "to": [
+      0,
+      11
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      15,
+      1
+     ],
+     "to": [
+      15,
+      11
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      1,
+      11
+     ],
+     "to": [
+      7,
+      11
+     ]
+    },
+    {
+     "cap": [
+      14,
+      6
+     ],
+     "from": [
+      9,
+      11
+     ],
+     "to": [
+      14,
+      11
+     ]
+    }
+   ],
+   "sheet": "res://assets/props/free_pack/Interior_Walls_01.png",
+   "tile_px": 16
+  }
+ }
+}

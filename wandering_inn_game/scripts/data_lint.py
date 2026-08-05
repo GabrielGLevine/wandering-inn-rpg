@@ -211,10 +211,54 @@ def _check_arrival_free(rid: str, cell: list, dest_map: dict, errors: list) -> N
 
 
 def check_dialogue(parsed: dict, errors: list) -> None:
+	# Dialogue line banks (2026-08-05): every "@<name>" ref in a text slot
+	# must resolve (file-local text_banks first, then _shared_lines.json);
+	# local names may not shadow shared ones (silent divergence); banks may
+	# not reference banks; no bank rots unused.
+	shared_path = DATA / "dialogue" / "_shared_lines.json"
+	shared = (parsed.get(shared_path) or {}).get("banks", {})
+	shared_used = set()
 	for path in sorted(parsed):
 		if path.parent.name != "dialogue":
 			continue
+		if path.stem.startswith("_"):
+			for bname, bline in shared.items():
+				if not isinstance(bline, str) or not bline:
+					errors.append(f"dialogue/_shared_lines: banks['{bname}'] must be a non-empty string")
+				elif bline.startswith("@"):
+					errors.append(f"dialogue/_shared_lines: banks['{bname}'] is a ref -- banks may not reference banks")
+			continue
 		graph = parsed[path]
+		local = graph.get("text_banks", {})
+		local_used = set()
+		for lname, lline in (local.items() if isinstance(local, dict) else []):
+			if lname in shared:
+				errors.append(f"dialogue/{path.stem}: text_banks['{lname}'] shadows a shared bank name")
+			if not isinstance(lline, str) or not lline:
+				errors.append(f"dialogue/{path.stem}: text_banks['{lname}'] must be a non-empty string")
+			elif lline.startswith("@"):
+				errors.append(f"dialogue/{path.stem}: text_banks['{lname}'] is a ref -- banks may not reference banks")
+		def scan_ref(t, where):
+			if isinstance(t, str) and t.startswith("@"):
+				rname = t[1:]
+				if rname in local:
+					local_used.add(rname)
+				elif rname in shared:
+					shared_used.add(rname)
+				else:
+					errors.append(f"dialogue/{path.stem}: {where}: ref '@{rname}' does not resolve")
+		for nid, node in (graph.get("nodes", {}) or {}).items():
+			if not isinstance(node, dict):
+				continue
+			scan_ref(node.get("text"), f"nodes.{nid}.text")
+			for i, v in enumerate(node.get("text_variants", []) or []):
+				scan_ref(v if isinstance(v, str) else (v or {}).get("text") if isinstance(v, dict) else None, f"nodes.{nid}.text_variants[{i}]")
+			for i, o in enumerate(node.get("options", []) or []):
+				if isinstance(o, dict):
+					scan_ref(o.get("text"), f"nodes.{nid}.options[{i}]")
+		for lname in (local if isinstance(local, dict) else {}):
+			if lname not in local_used:
+				errors.append(f"dialogue/{path.stem}: text_banks['{lname}'] is never referenced")
 		name = f"dialogue/{path.stem}"
 		nodes = graph.get("nodes")
 		if not isinstance(nodes, dict) or "start" not in graph:
@@ -238,6 +282,107 @@ def check_dialogue(parsed: dict, errors: list) -> None:
 				if goto is not None and goto not in nodes:
 					errors.append(f"{name}: node '{nid}' option {i} goto "
 						f"'{goto}' targets no node")
+
+
+def check_prose_duplication(parsed: dict, maps: dict, errors: list) -> None:
+	"""THE ANTI-DUPLICATION GATE (user directive 2026-08-05). The bank
+	mechanisms exist so a line is written once; this arm makes new
+	copy-paste a HARD FAIL that points at them. Scope: prose strings over
+	20 chars (the migration threshold -- shorter strings are idiom, not
+	drift risk), exact match only (a near-duplicate with one word changed
+	is a rewrite, not a copy). Dialogue is checked corpus-wide (file-local
+	text_banks + _shared_lines both exist); map talk lines corpus-wide
+	(map-local talk_banks + _shared_talk both exist). Bank VALUES are
+	exempt -- they are the single source."""
+	MIN_LEN = 21
+	def flag(counter, banked, kind, bank_hint):
+		for t, cnt in counter.items():
+			if cnt > 1:
+				errors.append(f"{kind}: prose duplicated x{cnt} -- bank it ({bank_hint}): \"{t[:70]}\"")
+			elif t in banked:
+				errors.append(f"{kind}: prose already banked as '{banked[t]}' -- use the @ref: \"{t[:70]}\"")
+	# bank VALUES: a raw copy of one is duplication even at count 1
+	dlg_banked = {}
+	shared_lines_path = DATA / "dialogue" / "_shared_lines.json"
+	if shared_lines_path.exists():
+		try:
+			for name, val in json.loads(shared_lines_path.read_text()).get("banks", {}).items():
+				if isinstance(val, str):
+					dlg_banked[val] = name
+		except Exception:
+			pass
+	dlg = {}
+	for path in sorted(parsed):
+		if path.parent.name != "dialogue" or path.stem.startswith("_"):
+			continue
+		for name, val in (parsed[path].get("text_banks", {}) or {}).items():
+			if isinstance(val, str):
+				dlg_banked.setdefault(val, name)
+		for node in (parsed[path].get("nodes", {}) or {}).values():
+			if not isinstance(node, dict):
+				continue
+			texts = [node.get("text")]
+			for v in node.get("text_variants", []) or []:
+				texts.append(v if isinstance(v, str) else (v or {}).get("text") if isinstance(v, dict) else None)
+			for o in node.get("options", []) or []:
+				if isinstance(o, dict):
+					texts.append(o.get("text"))
+			for t in texts:
+				if isinstance(t, str) and len(t) >= MIN_LEN and not t.startswith("@"):
+					dlg[t] = dlg.get(t, 0) + 1
+	flag(dlg, dlg_banked, "dialogue", "text_banks or _shared_lines.json")
+	map_banked = {}
+	shared_talk_path = DATA / "maps" / "_shared_talk.json"
+	if shared_talk_path.exists():
+		try:
+			for name, lines in json.loads(shared_talk_path.read_text()).get("banks", {}).items():
+				for ln in lines if isinstance(lines, list) else []:
+					if isinstance(ln, str):
+						map_banked[ln] = name
+		except Exception:
+			pass
+	mp = {}
+	for map_id, m in sorted(maps.items()):
+		for name, lines in (m.get("talk_banks", {}) or {}).items():
+			for ln in lines if isinstance(lines, list) else []:
+				if isinstance(ln, str):
+					map_banked.setdefault(ln, name)
+		for e in m.get("entities", []):
+			pools = [e.get("talk_pool")] + [st.get("lines") for st in e.get("talk_pool_stages", []) or [] if isinstance(st, dict)]
+			for pool in pools:
+				if isinstance(pool, list):
+					for t in pool:
+						if isinstance(t, str) and len(t) >= MIN_LEN and not t.startswith("@"):
+							mp[t] = mp.get(t, 0) + 1
+	flag(mp, map_banked, "maps", "talk_banks or _shared_talk.json")
+
+
+def check_shared_dialogue_banks_used(parsed: dict, errors: list) -> None:
+	"""Companion to check_dialogue: a shared bank line nobody references."""
+	shared_path = DATA / "dialogue" / "_shared_lines.json"
+	shared = (parsed.get(shared_path) or {}).get("banks", {})
+	if not shared:
+		return
+	used = set()
+	for path in sorted(parsed):
+		if path.parent.name != "dialogue" or path.stem.startswith("_"):
+			continue
+		local = parsed[path].get("text_banks", {})
+		def scan(t):
+			if isinstance(t, str) and t.startswith("@") and t[1:] not in local:
+				used.add(t[1:])
+		for node in (parsed[path].get("nodes", {}) or {}).values():
+			if not isinstance(node, dict):
+				continue
+			scan(node.get("text"))
+			for v in node.get("text_variants", []) or []:
+				scan(v if isinstance(v, str) else (v or {}).get("text") if isinstance(v, dict) else None)
+			for o in node.get("options", []) or []:
+				if isinstance(o, dict):
+					scan(o.get("text"))
+	for bname in shared:
+		if bname not in used:
+			errors.append(f"dialogue/_shared_lines: banks['{bname}'] is never referenced")
 
 
 def check_sprites(parsed: dict, errors: list) -> None:
@@ -297,6 +442,64 @@ def advise_sub_legible_props(parsed: dict, maps: dict, advisories: list) -> None
 					flagged.add(sid)
 					advisories.append(f"sprite '{sid}' renders {rendered:.1f}px tall on {map_id}/{row.get('id', row_key)} "
 						"-- under the 10px legibility floor (finding 15: a third of a tile does not read)")
+
+
+def check_talk_banks(maps: dict, errors: list) -> None:
+	"""Talk-line banks (2026-08-05): a map's talk_banks entries are spliced
+	into talk_pool / talk_pool_stages lines at compose time via "@<name>"
+	refs. This arm keeps the seam honest: every ref resolves, banks are
+	non-empty string lists, banks do not reference banks (no nesting), and
+	no bank rots unused."""
+	shared_path = DATA / "maps" / "_shared_talk.json"
+	try:
+		shared = json.loads(shared_path.read_text()).get("banks", {}) if shared_path.exists() else {}
+	except Exception:
+		shared = {}
+		errors.append("maps/_shared_talk.json: invalid JSON")
+	shared_used = set()
+	for name, lines in shared.items():
+		if not (isinstance(lines, list) and lines and all(isinstance(x, str) for x in lines)):
+			errors.append(f"maps/_shared_talk: banks['{name}'] must be a non-empty list of strings")
+		elif any(x.startswith("@") for x in lines):
+			errors.append(f"maps/_shared_talk: banks['{name}'] contains a ref -- banks may not reference banks")
+	for map_id, m in sorted(maps.items()):
+		banks = m.get("talk_banks", {})
+		if not isinstance(banks, dict):
+			errors.append(f"maps/{map_id}: talk_banks must be an object")
+			continue
+		for name in banks:
+			if name in shared:
+				errors.append(f"maps/{map_id}: talk_banks['{name}'] shadows a _shared_talk bank name")
+		for name, lines in banks.items():
+			if not (isinstance(lines, list) and lines and all(isinstance(x, str) for x in lines)):
+				errors.append(f"maps/{map_id}: talk_banks['{name}'] must be a non-empty list of strings")
+				continue
+			for x in lines:
+				if x.startswith("@"):
+					errors.append(f"maps/{map_id}: talk_banks['{name}'] contains a ref '{x}' -- banks may not reference banks")
+		used = set()
+		def scan(pool):
+			for x in pool:
+				if isinstance(x, str) and x.startswith("@"):
+					name = x[1:]
+					if name in banks:
+						used.add(name)
+					elif name in shared:
+						shared_used.add(name)
+					else:
+						errors.append(f"maps/{map_id}: talk ref '@{name}' does not resolve")
+		for e in m.get("entities", []):
+			if isinstance(e.get("talk_pool"), list):
+				scan(e["talk_pool"])
+			for st in e.get("talk_pool_stages", []) or []:
+				if isinstance(st, dict) and isinstance(st.get("lines"), list):
+					scan(st["lines"])
+		for name in banks:
+			if name not in used:
+				errors.append(f"maps/{map_id}: talk_banks['{name}'] is never referenced")
+	for name in shared:
+		if name not in shared_used:
+			errors.append(f"maps/_shared_talk: banks['{name}'] is never referenced")
 
 
 def check_skill_icons(parsed: dict, errors: list) -> None:
@@ -823,8 +1026,11 @@ def main() -> int:
 	check_interactions(parsed, maps, errors, report)
 	check_portals(parsed, maps, errors)
 	check_dialogue(parsed, errors)
+	check_shared_dialogue_banks_used(parsed, errors)
+	check_prose_duplication(parsed, maps, errors)
 	check_sprites(parsed, errors)
 	check_skill_icons(parsed, errors)
+	check_talk_banks(maps, errors)
 	check_gate_shapes(maps, errors)
 	check_moods(parsed, maps, errors)
 	advisories: list = []

@@ -52,11 +52,6 @@
    "digits": [],
    "propnouns": []
   },
-  "$.nodes.hub.options[3].text": {
-   "brackets": [],
-   "digits": [],
-   "propnouns": []
-  },
   "$.nodes.hub.options[4].text": {
    "brackets": [],
    "digits": [],
@@ -222,7 +217,7 @@
        }
       ],
       "end": true,
-      "text": "\u00a7"
+      "text": "@just_passing_through"
      },
      {
       "_comment": "Spec 4 (Task 6.2) PALLASS CAPSTONE. Placed on GRIMALKIN, not pallass_forge_clerk: the clerk says 'I only handle paper' in three separate nodes, while forge-tier rune practice is Grimalkin's professional register. Gated on the forge chain's terminal (elevator_pass_stamped) + spine_started, hidden once heard; revisit arm on the hub he already sees the player at (spec 8). Carries chatted_with_grimalkin like every other option here; the lattice bank rides the ACCEPT one node down, so declining costs nothing.",

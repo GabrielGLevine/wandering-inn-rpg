@@ -1,0 +1,841 @@
+{
+ "facts": {},
+ "skeleton": {
+  "_comment": "Palette quarantine (tile-family-verdict.md PASS): forge-bronze-on-slate, steam-white crystal lamps (#E9EEF2, never amber/coin-gold), moods.json pallass_market cool day-graded.",
+  "biome": "pallass_market",
+  "blocked": [
+   [
+    0,
+    10
+   ],
+   [
+    1,
+    10
+   ],
+   [
+    2,
+    10
+   ],
+   [
+    3,
+    10
+   ],
+   [
+    4,
+    10
+   ],
+   [
+    5,
+    10
+   ],
+   [
+    6,
+    10
+   ],
+   [
+    7,
+    10
+   ],
+   [
+    8,
+    10
+   ],
+   [
+    9,
+    10
+   ],
+   [
+    10,
+    10
+   ],
+   [
+    11,
+    10
+   ],
+   [
+    12,
+    10
+   ],
+   [
+    13,
+    10
+   ],
+   [
+    14,
+    10
+   ],
+   [
+    15,
+    10
+   ],
+   [
+    16,
+    10
+   ],
+   [
+    17,
+    10
+   ],
+   [
+    18,
+    10
+   ],
+   [
+    19,
+    10
+   ],
+   [
+    20,
+    10
+   ],
+   [
+    21,
+    10
+   ],
+   [
+    22,
+    10
+   ],
+   [
+    23,
+    10
+   ],
+   [
+    24,
+    10
+   ],
+   [
+    25,
+    10
+   ],
+   [
+    21,
+    6
+   ],
+   [
+    21,
+    7
+   ]
+  ],
+  "decor": [
+   {
+    "cell": [
+     4,
+     1
+    ],
+    "sprite": "tier_wall"
+   },
+   {
+    "cell": [
+     12,
+     1
+    ],
+    "sprite": "tier_wall"
+   },
+   {
+    "cell": [
+     20,
+     1
+    ],
+    "sprite": "tier_wall"
+   },
+   {
+    "cell": [
+     1,
+     2
+    ],
+    "light": {
+     "color": [
+      0.914,
+      0.933,
+      0.949
+     ],
+     "energy": 0.7,
+     "flicker": false,
+     "radius": 24
+    },
+    "sprite": "crystal_lamp"
+   },
+   {
+    "cell": [
+     7,
+     2
+    ],
+    "light": {
+     "color": [
+      0.914,
+      0.933,
+      0.949
+     ],
+     "energy": 0.7,
+     "flicker": false,
+     "radius": 24
+    },
+    "sprite": "crystal_lamp"
+   },
+   {
+    "cell": [
+     13,
+     2
+    ],
+    "light": {
+     "color": [
+      0.914,
+      0.933,
+      0.949
+     ],
+     "energy": 0.7,
+     "flicker": false,
+     "radius": 24
+    },
+    "sprite": "crystal_lamp"
+   },
+   {
+    "cell": [
+     19,
+     2
+    ],
+    "light": {
+     "color": [
+      0.914,
+      0.933,
+      0.949
+     ],
+     "energy": 0.7,
+     "flicker": false,
+     "radius": 24
+    },
+    "sprite": "crystal_lamp"
+   },
+   {
+    "cell": [
+     24,
+     2
+    ],
+    "light": {
+     "color": [
+      0.914,
+      0.933,
+      0.949
+     ],
+     "energy": 0.7,
+     "flicker": false,
+     "radius": 24
+    },
+    "sprite": "crystal_lamp"
+   }
+  ],
+  "entities": [
+   {
+    "_comment": "THE PALLASS RETURN CARRIER. pallass_market/pallass_forge have no map exit but each other, so this plinth is the cluster's ONLY way home -- gate it tighter than the portals.json `pallass` row (pallass_attuned) and the tier becomes a one-way trap. Same gate = always met by anyone standing here; the row is the arrival, this is the departure. Unshipped upgrade: an earned carve (`pallass_return_carved`) may re-gate FLAVOR later, never access. on_interact_accomplishment/toast are the unmet-gate arm only (interactions.gd checks portal_menu first), reachable via teleport in pallass_peek.",
+    "cell": [
+     4,
+     6
+    ],
+    "display_name": "A Squared Plinth",
+    "id": "pallass_market_arrival_anchor",
+    "kind": "prop",
+    "observe": "A squared plinth of the same slab the whole tier is cut from. No rune, no seam, nothing carved into it at all \u2014 and still the blankness has an outline, the way a mould does. Whatever door reaches this tier is already remembered here.",
+    "on_interact_accomplishment": "eyed_the_market_arrival_stone",
+    "portal_menu": true,
+    "portal_menu_when": {
+     "requires": {
+      "pallass_attuned": 1
+     }
+    },
+    "sprite": "anchor_waystone_slate",
+    "toast": "Cold, precise stone, and not as blank as it looks. Something the shape of a door is being held in it, patiently, for later."
+   },
+   {
+    "_comment": "The static `dialogue` line below is the no-graph FALLBACK only (interact()'s npc branch falls through to it if start_dialogue ever misses).",
+    "cell": [
+     7,
+     5
+    ],
+    "conversation": "pallass_market_clerk",
+    "dialogue": [
+     {
+      "speaker": "Tier Clerk",
+      "text": "State your business and your sponsor. Everyone's business goes through this window eventually."
+     }
+    ],
+    "display_name": "Tier Clerk",
+    "facing": "down",
+    "id": "tier_clerk_market",
+    "kind": "npc",
+    "sprite": "tier_clerk"
+   },
+   {
+    "cell": [
+     9,
+     6
+    ],
+    "display_name": "The Posted Prices",
+    "id": "price_board_market",
+    "kind": "prop",
+    "observe": "Rows of chalked figures, precise to the copper, refreshed each morning by a clerk with steadier hands than yours. Nobody haggles here. Nobody needs to.",
+    "on_interact_accomplishment": "read_the_posted_prices",
+    "sprite": "price_board",
+    "toast": "Chalk and slate. The numbers don't move for anyone.",
+    "visual_states": [
+     {
+      "tint": [
+       0.7,
+       0.7,
+       0.74
+      ],
+      "when": {
+       "at": 1,
+       "counter": "read_the_posted_prices"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     12,
+     6
+    ],
+    "display_name": "Market Stall",
+    "id": "market_stall_a",
+    "kind": "prop",
+    "observe": "A stall built to the same civic pattern as every other on this tier \u2014 same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+    "on_interact_accomplishment": "browsed_posted_price_stall",
+    "sprite": "market_stall_pallass",
+    "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up \u2014 the price is the price."
+   },
+   {
+    "cell": [
+     15,
+     6
+    ],
+    "display_name": "Market Stall",
+    "id": "market_stall_b",
+    "kind": "prop",
+    "observe": "A stall built to the same civic pattern as every other on this tier \u2014 same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+    "on_interact_accomplishment": "browsed_posted_price_stall",
+    "sprite": "market_stall_pallass_b",
+    "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up \u2014 the price is the price."
+   },
+   {
+    "cell": [
+     13,
+     6
+    ],
+    "display_name": "Food-Stall Burner",
+    "id": "pallass_stall_burner",
+    "kind": "prop",
+    "locked_toast": "A stall burner, hot and jealously watched. Renting it takes more than coin \u2014 it takes credentials.",
+    "on_skill_use": {
+     "accomplishment": "cooked_meal",
+     "item": "fine_meal",
+     "toast": "[Advanced Cooking] \u2014 You cook on a stranger's fire in a city of critics, and the critics go quiet."
+    },
+    "requires_skill": "advanced_cooking",
+    "skill_hint_toast": "The stallkeeper's burner is free between rushes. Pallass argues about everything except good food.",
+    "sprite": "grill"
+   },
+   {
+    "cell": [
+     18,
+     6
+    ],
+    "display_name": "Market Stall",
+    "id": "market_stall_c",
+    "kind": "prop",
+    "observe": "A stall built to the same civic pattern as every other on this tier \u2014 same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+    "on_interact_accomplishment": "browsed_posted_price_stall",
+    "sprite": "market_stall_pallass_c",
+    "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up \u2014 the price is the price."
+   },
+   {
+    "_comment": "Static `dialogue` = no-graph fallback only.",
+    "cell": [
+     15,
+     5
+    ],
+    "conversation": "pallass_market_local",
+    "dialogue": [
+     {
+      "speaker": "Stallkeeper",
+      "text": "The price is on the board. It'll be the same price however long you stare at it."
+     }
+    ],
+    "display_name": "Stallkeeper",
+    "facing": "down",
+    "id": "market_stallkeeper",
+    "kind": "npc",
+    "sprite": "drake_patron"
+   },
+   {
+    "cell": [
+     24,
+     5
+    ],
+    "display_name": "Steam Vent",
+    "id": "steam_vent_market",
+    "kind": "prop",
+    "observe": "A bronze grate exhales a slow white breath, steady as a held note. Somewhere below, something enormous is always working.",
+    "on_interact_accomplishment": "heard_the_machine_below",
+    "sprite": "steam_vent",
+    "toast": "Warm, damp air. A rhythm underneath it, too even to be weather."
+   },
+   {
+    "cell": [
+     19,
+     4
+    ],
+    "display_name": "Permit Office Window",
+    "id": "permit_office_counter",
+    "kind": "prop",
+    "observe": "The window ledge is worn smooth where a thousand wrists have rested, waiting on a stamp. A stencilled plate lists the posted fees. Nobody argues with it.",
+    "on_interact_accomplishment": "leaned_on_the_permit_counter",
+    "sprite": "bar_counter",
+    "toast": "Forms, inkwells, and a bell that has clearly been rung far too many times."
+   },
+   {
+    "_comment": "Static `dialogue` = no-graph fallback only.",
+    "cell": [
+     20,
+     4
+    ],
+    "conversation": "pallass_forge_clerk",
+    "dialogue": [
+     {
+      "speaker": "Forge-Tier Clerk",
+      "text": "State your business and your sponsor, or stand aside for the next in line."
+     }
+    ],
+    "display_name": "Forge-Tier Clerk",
+    "facing": "down",
+    "id": "forge_permit_clerk",
+    "kind": "npc",
+    "sprite": "tier_clerk"
+   },
+   {
+    "_comment": "his ~104px-wide rig visually swallows anything sharing his feet row (the first office cut sat him at (21,4) beside the clerk and the windowed read showed the clerk + counter fully occluded, a same-row y-sort tie)",
+    "cell": [
+     18,
+     3
+    ],
+    "conversation": "pallass_grimalkin",
+    "dialogue": [
+     {
+      "speaker": "Grimalkin",
+      "text": "Measure twice. I have measured everything in this hall at least three times, and I am still finding what I missed."
+     }
+    ],
+    "display_name": "Grimalkin",
+    "facing": "down",
+    "id": "grimalkin",
+    "kind": "npc",
+    "sprite": "grimalkin"
+   },
+   {
+    "_comment": "Extra footprint (21,6)/(21,7) in `blocked` above reads as the cage's own bulk",
+    "cell": [
+     22,
+     7
+    ],
+    "display_name": "The Grand Lift",
+    "door_when": {
+     "open_toast": "The brass gate rises with a well-oiled clank, counterweights turning smooth in their track. The lift carries you up, into noise and heat and orange light.",
+     "requires": {
+      "elevator_pass_stamped": 1
+     },
+     "to_cell": [
+      23,
+      7
+     ],
+     "to_map": "pallass_forge"
+    },
+    "id": "grand_lift_market",
+    "kind": "prop",
+    "locked_toast": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open.",
+    "observe": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight. This is how the tiers actually connect.",
+    "sprite": "great_lift"
+   },
+   {
+    "cell": [
+     23,
+     6
+    ],
+    "display_name": "Grand Lift Overlook",
+    "id": "lift_overlook",
+    "kind": "prop",
+    "locked_toast": "The rail, the drop, the haze. Pallass keeps its details above your pay grade.",
+    "on_skill_use": {
+     "accomplishment": "scouted_vantage",
+     "gold": 1,
+     "toast": "[Eagle Eyes] \u2014 The haze gives up. Nine tiers resolve into stalls, patrol routes, and one dropped coin purse on a ledge two floors down that everyone else is too proud to see."
+    },
+    "once_per_waking": true,
+    "once_per_waking_toast": "No more dropped coins by the railing today. Pallass sweeps on schedule.",
+    "requires_skill": "eagle_eyes",
+    "skill_hint_toast": "Nine tiers of city below, if your eyes are good enough to spend on it.",
+    "sprite": "riverfarm_fence_ew"
+   },
+   {
+    "_comment": "respawns:true, MEASURED-only in the harness (same first-of-its-kind-region reasoning as forge_calibration_golem).",
+    "allies": [],
+    "arena": "market_watch",
+    "cell": [
+     2,
+     8
+    ],
+    "conversation": "market_watchgolems",
+    "display_name": "Stone Golems",
+    "enemies": [
+     "watchgolem_a",
+     "watchgolem_b"
+    ],
+    "id": "market_watchgolems",
+    "kind": "encounter",
+    "observe": "Two grey shapes stand either side of an unclaimed stall, carved plating catching the tier's flat light, neither one moving.",
+    "on_victory": "watchgolems_culled",
+    "respawns": true,
+    "sprite": "watchgolem"
+   },
+   {
+    "_comment": "Wave D-1 (#155): Xif (CANON-NATIVE, 6.09), the 'Cunning Crafts' stall. Gnoll base + tint PLACEHOLDER (shaggy tan, stained many colors, singed twice) pending a dedicated sprite -- VISUAL-LOG flagged. Shop is haggle-false (Pallass civic doctrine). His [Perfect Reduction]/[Poison Immunity] stay DIALOGUE COLOR, never player grants. Saliss = one banter name-drop max, never near identity.",
+    "cell": [
+     5,
+     5
+    ],
+    "conversation": "xif",
+    "dialogue": [
+     {
+      "speaker": "Xif",
+      "text": "Cunning Crafts! Best components on the tier, or the second-best, depending who is asking and how much they are buying."
+     }
+    ],
+    "display_name": "Xif",
+    "facing": "down",
+    "id": "xif",
+    "kind": "npc",
+    "observe": "A City Gnoll in a stained apron, shaggy fur tan under the stains, eyebrows singed down to stubble. He is arguing cheerfully with himself about the price of something.",
+    "sprite": "gnoll_traveler",
+    "tint": [
+     1.08,
+     0.98,
+     0.78
+    ]
+   },
+   {
+    "_comment": "Wave D-1 (#155): Octavia (RELOCATION-FLAGGED -- framed as a Celum day-tripper through the Door on a consignment day-trade, NOT residency; the papers system treats her as a non-citizen trader). Net-new NPC (no prior entity anywhere). SHE teaches [Mixer]: her chain banks the first synthesized_draught (gated on a buy + a warmth beat). 'Apprentice of Saliss' NEVER appears.",
+    "cell": [
+     6,
+     5
+    ],
+    "conversation": "octavia",
+    "dialogue": [
+     {
+      "speaker": "Octavia",
+      "text": "You look like someone who could use a potion. Everyone can use a potion. Mine are only occasionally on fire \u2014 once."
+     }
+    ],
+    "display_name": "Octavia",
+    "facing": "down",
+    "id": "octavia",
+    "kind": "npc",
+    "observe": "A young human woman behind a fold-out consignment stall, talking fast, pricing three things at once and watching your hands to see which one you will pick up.",
+    "sprite": "octavia"
+   },
+   {
+    "_comment": "Wave D-1 (#155): [Mixer] L1 bench (co-located station, inn-kitchen multi-prop precedent). Every alchemist bench cast banks synthesized_draught. Placeholder cauldron sprite pending a dedicated alchemy-bench (VISUAL-LOG).",
+    "cell": [
+     5,
+     7
+    ],
+    "display_name": "Reagent Bench",
+    "id": "alchemy_bench_synthesis",
+    "kind": "prop",
+    "locked_toast": "A working alchemist's bench, burners cold. You would not know where to start.",
+    "observe": "Cheap reagents racked by the burner, and a scorch-ring on the slate where a hundred crude workings went slightly wrong.",
+    "on_skill_use": {
+     "accomplishment": "synthesized_draught",
+     "item": "crude_draught",
+     "toast": "[Low-Grade Synthesis] \u2014 Crude reagents over a low flame, and a draught that mostly does what it should. It will pass."
+    },
+    "requires_skill": "low_grade_synthesis",
+    "skill_hint_toast": "Xif's spare bench, scrubbed and stocked. A low flame and a steady hand would turn it into something.",
+    "sprite": "alchemy_bench"
+   },
+   {
+    "_comment": "Wave D-1 (#155): [Mixer] L5 bench. Yields solvent_phial + banks synthesized_draught.",
+    "cell": [
+     6,
+     7
+    ],
+    "display_name": "Solvent Still",
+    "id": "alchemy_bench_solvent",
+    "kind": "prop",
+    "locked_toast": "A glass drip-still, coiled and cold. The magic-water in it means nothing to you yet.",
+    "observe": "A coil of glass tubing over a low pan, magic-water beading down it one clarified drop at a time.",
+    "on_skill_use": {
+     "accomplishment": "synthesized_draught",
+     "item": "solvent_phial",
+     "toast": "[Magic-Water Solvent] \u2014 The magic-water comes off the coil clear enough to bend the light. One phial, corked and ready."
+    },
+    "requires_skill": "magic_water_solvent",
+    "skill_hint_toast": "A drip-still set for magic-water. Someone who knows the working could draw a clean solvent from it.",
+    "sprite": "alchemy_bench_dark"
+   },
+   {
+    "_comment": "Wave D-1 (#155): [Mixer] L7 bench. Yields mineral_salts + banks synthesized_draught.",
+    "cell": [
+     7,
+     7
+    ],
+    "display_name": "Distilling Retort",
+    "id": "alchemy_bench_distillation",
+    "kind": "prop",
+    "locked_toast": "A bulb of dark glass over cold coals, half full of something grey. Not your trade.",
+    "observe": "A distilling retort, its bulb crusted white at the neck where the salts climb as the wash boils away.",
+    "on_skill_use": {
+     "accomplishment": "synthesized_draught",
+     "item": "mineral_salts",
+     "toast": "[Mineral Distillation] \u2014 You boil the wash honest and slow. What is left is a spoonful of pale salts, the backbone of the next working."
+    },
+    "requires_skill": "mineral_distillation",
+    "skill_hint_toast": "A retort over a banked fire, a mineral wash already loaded. A distiller could boil it down to salts.",
+    "sprite": "alchemy_still"
+   },
+   {
+    "_comment": "Wave D-1 (#155): [Alchemist] L10 bench. First component-consuming recipe -- requires_item + remove_item as ARRAYS (String|Array seam, all-or-nothing): needs BOTH solvent_phial and mineral_salts, consumes both, yields tonic_of_the_clear_eye.",
+    "cell": [
+     8,
+     7
+    ],
+    "display_name": "Xif's Own Bench",
+    "id": "alchemy_bench_true",
+    "item_hint_toast": "The good bench wants both halves of the working in hand: a solvent phial and a measure of mineral salts. You are short at least one.",
+    "kind": "prop",
+    "locked_toast": "The best bench Xif owns, kept for work you cannot do yet.",
+    "observe": "The bench Xif keeps for himself: clean glass, a steady blue burner, and room laid out for two reagents to become a third.",
+    "on_skill_use": {
+     "accomplishment": "synthesized_draught",
+     "item": "tonic_of_the_clear_eye",
+     "remove_item": [
+      "solvent_phial",
+      "mineral_salts"
+     ],
+     "toast": "[True Synthesis] \u2014 Solvent into salts, in the one order that holds. What settles in the vial is clearer than either half went in."
+    },
+    "requires_item": [
+     "solvent_phial",
+     "mineral_salts"
+    ],
+    "requires_skill": "true_synthesis",
+    "skill_hint_toast": "The finest bench on the tier, and it knows it. A true synthesis needs solvent and salts both, and a hand that can bring them together.",
+    "sprite": "alchemy_bench_true"
+   },
+   {
+    "_comment": "GH#165 [Alchemist] L14 bench ([Perfect Reduction], ATTESTED 6.39 Xif): the wave's only recipe grant gets a live station -- a granted verb that works nowhere reads broken (controller adjudication of lane deviation B). Consuming recipe: engine's dup-output guard (#155 M1) applies.",
+    "cell": [
+     4,
+     7
+    ],
+    "display_name": "Reduction Bench",
+    "id": "alchemy_bench_reduction",
+    "item_hint_toast": "The still wants a crude draught to work down. Your pack has nothing worth reducing.",
+    "kind": "prop",
+    "locked_toast": "A reduction still, hissing faintly. The valves mean nothing to you.",
+    "observe": "A copper still on a slow flame, built to boil a crude draught down to what it should have been the first time.",
+    "on_skill_use": {
+     "accomplishment": "synthesized_draught",
+     "item": "tonic_of_the_clear_eye",
+     "remove_item": "crude_draught",
+     "toast": "[Perfect Reduction] \u2014 The still takes the crude draught apart and returns only the part that matters, clear as morning."
+    },
+    "requires_item": "crude_draught",
+    "requires_skill": "perfect_reduction",
+    "skill_hint_toast": "Xif's reduction still, all coils and patience. In the right hands it turns crude work into clean.",
+    "sprite": "alchemy_bench_dark"
+   },
+   {
+    "_comment": "v0.15 T4.1 market observables (2). Both sit in the tier's north/south dead bands, off every canonical's bounds lap (y2/y9 and x0/x25 stay clear) \u2014 see pallass_peek's route.",
+    "cell": [
+     10,
+     3
+    ],
+    "display_name": "Posted Ordinances",
+    "id": "market_ordinance_wall",
+    "kind": "prop",
+    "observe": "Civic ordinances under glass, numbered and dated, the oldest one on the wall older than the wall. Nothing is pinned over anything else. There is a numbered slot for every notice and no notice without a slot.",
+    "on_interact_accomplishment": "read_the_posted_ordinances",
+    "sprite": "guild_notice_wall",
+    "toast": "Ordinances, numbered and glassed. Somewhere in Pallass a clerk owns the key to this case, and only that clerk.",
+    "variants": [
+     {
+      "toast": "Ordinance 44, third column: tier passes are the property of the city and the responsibility of the bearer. Yours is in your pocket, and now you know whose it is.",
+      "when": {
+       "elevator_pass_stamped": 1
+      }
+     }
+    ],
+    "visual_states": [
+     {
+      "tint": [
+       0.7,
+       0.7,
+       0.74
+      ],
+      "when": {
+       "at": 1,
+       "counter": "read_the_posted_ordinances"
+      }
+     }
+    ]
+   },
+   {
+    "cell": [
+     14,
+     8
+    ],
+    "display_name": "The Public Scales",
+    "id": "market_public_scales",
+    "kind": "prop",
+    "observe": "A weighing pillar set out where anyone can use it, brass pans hanging true, the city's own test weights chained to the column. Any stallkeeper's measure can be checked here against the city's, in front of everyone.",
+    "on_interact_accomplishment": "eyed_the_public_scales",
+    "sprite": "pedestal",
+    "tint": [
+     0.72,
+     0.68,
+     0.6
+    ],
+    "toast": "You set a hand on the pan and it swings back level. The chained weights have inspection dates stamped into them, the last one this month."
+   },
+   {
+    "cell": [
+     12,
+     4
+    ],
+    "display_name": "A Family Den Shop",
+    "id": "den_shop_door",
+    "kind": "door",
+    "observe": "A shopfront wedged between two civic frontages, the only door on this row with a hand-painted sign and something cooking behind it.",
+    "sprite": "door",
+    "to_cell": [
+     4,
+     6
+    ],
+    "to_map": "pallass_den_shop"
+   },
+   {
+    "_comment": "P2 HELP leg 2 of 3. variants resolve BEFORE this interact banks, so every carry-leg threshold is (leg index - 1): leg 2 gates on 1.",
+    "cell": [
+     16,
+     4
+    ],
+    "display_name": "The Dray Rank",
+    "id": "market_dray_rank",
+    "kind": "prop",
+    "observe": "A rank of low carts for hire, each chalked with a tier number and a rate, and a queue board nobody is standing at.",
+    "on_interact_accomplishment": "shipment_leg_carried",
+    "once_per_waking": true,
+    "once_per_waking_toast": "The rank is empty until the next rotation. Pallass hires carts on a schedule too.",
+    "sprite": "market_stall_wood",
+    "toast": "You take a cart off the rank, walk the crate off the lift apron and across two blocks of very orderly stone, and nobody stops you once. The paperwork was never about the crate.",
+    "variants": [
+     {
+      "toast": "Second leg, same cart, same two blocks. The rank clerk marks it without looking up, which in Pallass is a commendation.",
+      "when": {
+       "shipment_leg_carried": 1
+      }
+     }
+    ]
+   },
+   {
+    "_comment": "#330 R4: the market perch. observe carries the [Observe] payoff; interact spends the bird on a real lead about the watchgolems.",
+    "cell": [
+     16,
+     3
+    ],
+    "display_name": "Crate Stack",
+    "id": "razorbeak_vantage_pallass",
+    "kind": "prop",
+    "observe": "Empty crates stacked a head above the awnings behind the stalls. The razorbeak has decided they belong to the razorbeak, and no stallkeeper has argued yet.",
+    "on_interact_accomplishment": "found_market_vantage",
+    "present_when": {
+     "companion": "razorbeak_companion"
+    },
+    "sprite": "crate",
+    "toast": "It goes up off the crates and comes back screaming about the west end. The two standing things down there step aside for anyone whose permit is already filed \u2014 and the office that files it is the counter four stalls behind you.",
+    "visual_states": [
+     {
+      "tint": [
+       0.7,
+       0.7,
+       0.74
+      ],
+      "when": {
+       "at": 1,
+       "counter": "found_market_vantage"
+      }
+     }
+    ]
+   }
+  ],
+  "floor_layers": [
+   {
+    "cells": {
+     "rect": [
+      0,
+      9,
+      26,
+      1
+     ]
+    },
+    "coords": [
+     0,
+     3
+    ]
+   },
+   {
+    "cells": {
+     "rect": [
+      20,
+      6,
+      4,
+      3
+     ]
+    },
+    "coords": [
+     16,
+     18
+    ],
+    "sheet": "res://assets/tiles/castle/Tiles.png",
+    "tile_px": 16
+   }
+  ],
+  "grid": {
+   "height": 11,
+   "width": 26
+  },
+  "interior_flavor": [
+   "Nothing there. Chalked prices and swept stone, and not one thing outside its allotted square.",
+   "Nothing there. A clerk two stalls down writes something about you and moves on."
+  ],
+  "walls": {
+   "segments": [
+    {
+     "face": [
+      0,
+      0
+     ],
+     "from": [
+      0,
+      0
+     ],
+     "to": [
+      25,
+      1
+     ]
+    }
+   ],
+   "sheet": "res://assets/tiles/pallass/tileset_slate_over_void_atlas.png",
+   "tile_px": 16
+  }
+ }
+}

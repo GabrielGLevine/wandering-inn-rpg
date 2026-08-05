@@ -245,7 +245,7 @@
    "text": "Finally. Here - she overpaid the courier fee, as always. Take it back or keep it, I honestly don't care which.",
    "options": [
     {
-     "text": "I'll keep it. Courier's fee.",
+     "text": "@i_ll_keep_it",
      "hide_when": {
       "accomplishment": {
        "errand_decided": 1
@@ -265,7 +265,7 @@
      "goto": "errand_kept"
     },
     {
-     "text": "Send it back to Erin.",
+     "text": "@send_it_back_to",
      "hide_when": {
       "accomplishment": {
        "errand_decided": 1
@@ -305,7 +305,7 @@
        "errand_decided": 1
       }
      },
-     "text": "The Erin file is closed. Guild business, the board's behind you. Gossip, go ask Lism."
+     "text": "@the_erin_file_is_closed"
     }
    ]
   },
@@ -314,7 +314,7 @@
    "text": "Hm. Someone's been talking to Lyonette. Fine - here's the fee Erin overpaid, and tell that barmaid she's wasted on pouring drinks.",
    "options": [
     {
-     "text": "I'll keep it. Courier's fee.",
+     "text": "@i_ll_keep_it",
      "hide_when": {
       "accomplishment": {
        "errand_decided": 1
@@ -334,7 +334,7 @@
      "goto": "errand_kept"
     },
     {
-     "text": "Send it back to Erin.",
+     "text": "@send_it_back_to",
      "hide_when": {
       "accomplishment": {
        "errand_decided": 1
@@ -374,7 +374,7 @@
        "errand_decided": 1
       }
      },
-     "text": "The Erin file is closed. Guild business, the board's behind you. Gossip, go ask Lism."
+     "text": "@the_erin_file_is_closed"
     }
    ]
   },
@@ -441,5 +441,10 @@
     }
    ]
   }
+ },
+ "text_banks": {
+  "i_ll_keep_it": "I'll keep it. Courier's fee.",
+  "send_it_back_to": "Send it back to Erin.",
+  "the_erin_file_is_closed": "The Erin file is closed. Guild business, the board's behind you. Gossip, go ask Lism."
  }
 }

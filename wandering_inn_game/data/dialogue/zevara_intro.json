@@ -361,7 +361,7 @@
      "goto": "hub"
     },
     {
-     "text": "I'll let you get back to it.",
+     "text": "@i_ll_let_you",
      "end": true
     }
    ]
@@ -457,7 +457,7 @@
    "text": "Spiders from the Dungeon. Wonderful. A nest that size costs me six Watchmen and a night of overtime. Consider it swept. I'll pull a squad at dusk and burn the silk out before it spreads. You did right bringing me a species and a location. Half the reports on my desk have neither. And good work. Now go tell whoever set you on this that the Watch has it.",
    "options": [
     {
-     "text": "That's all I ask, Captain.",
+     "text": "@that_s_all_i",
      "goto": "hub"
     },
     {
@@ -471,7 +471,7 @@
    "text": "Set it on the desk. It goes down as lanterns and a healer. I'll pull a squad at dusk and burn the silk out, whatever's actually down there. Next time, bring me the count first.",
    "options": [
     {
-     "text": "That's all I ask, Captain.",
+     "text": "@that_s_all_i",
      "goto": "hub"
     },
     {
@@ -504,5 +504,8 @@
     }
    ]
   }
+ },
+ "text_banks": {
+  "that_s_all_i": "That's all I ask, Captain."
  }
 }

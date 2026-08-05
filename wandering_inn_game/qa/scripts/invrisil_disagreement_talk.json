@@ -993,7 +993,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "Master Coyle",
-    "text": "My consultant returns. Everything remains... current. Do spend some of it here."
+    "text": "My consultant returns. Everything remains — current. Do spend some of it here."
    },
    "timeout_sec": 5
   },
@@ -1034,7 +1034,7 @@
    "type": "dialogue_line",
    "payload_contains": {
     "speaker": "A Lady in Plum Silk",
-    "text": "There was a matter with Master Coyle. It resolved. In this city that is the whole of what you get told."
+    "text": "There was a matter with Master Coyle. It resolved. In this city that is everything you get told."
    },
    "timeout_sec": 5
   },

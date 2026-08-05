@@ -130,7 +130,7 @@
      "goto": "olesm_ambition"
     },
     {
-     "text": "Set the board, Olesm.",
+     "text": "@set_the_board_olesm",
      "requires": {
       "gold": 2,
       "accomplishment": {
@@ -377,7 +377,7 @@
    "text": "Safe. Sound. Exactly what I played that day, and exactly why I lost: I traded fear for fear and never once asked what she wanted. Her plan. I never once looked at her plan. Try again.",
    "options": [
     {
-     "text": "Show me the board again.",
+     "text": "@show_me_the_board",
      "goto": "olesm_chess_puzzle"
     },
     {
@@ -391,7 +391,7 @@
    "text": "The obvious answer. Take the piece and the threat dies with it. I made that exact trade against her, three games earlier, and it taught me nothing. Try again.",
    "options": [
     {
-     "text": "Show me the board again.",
+     "text": "@show_me_the_board",
      "goto": "olesm_chess_puzzle"
     },
     {
@@ -511,7 +511,7 @@
    "text": "A Raskghar, awake, under my streets. I get to write that sentence into the minutes now, and initial it. I'm filing this under 'problems the Council pays adventurers for' — which, as of today, includes you. The seal will hold. Probably. Play chess with me sometime; you've earned the good board.",
    "options": [
     {
-     "text": "Set the board, Olesm.",
+     "text": "@set_the_board_olesm",
      "goto": "hub"
     },
     {
@@ -813,5 +813,9 @@
     }
    ]
   }
+ },
+ "text_banks": {
+  "set_the_board_olesm": "Set the board, Olesm.",
+  "show_me_the_board": "Show me the board again."
  }
 }
