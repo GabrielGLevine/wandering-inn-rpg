@@ -80,11 +80,11 @@
    ]
   },
   {
-   "_comment": "Fields only when `hunter_will_come` is banked (data/dialogue/riverfarm_hunter.json's own come-along beat, at the village) -- never on `met_relc` alone.",
+   "_comment": "Fields only when `hunter_will_come` is banked (data/dialogue/riverfarm_hunter.json's own watch ask, at the village) -- never on `met_relc` alone. #396: legacy id, the character is A Shepherd; stats/die/ai/skills untouched.",
    "id": "riverfarm_hunter",
    "power_level": 10.5,
-   "display_name": "The Hunter",
-   "sprite": "a_hunter",
+   "display_name": "A Shepherd",
+   "sprite": "a_shepherd",
    "side": "player",
    "stats": {
     "str": 14,
