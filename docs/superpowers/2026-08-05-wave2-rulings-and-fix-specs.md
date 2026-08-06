@@ -226,3 +226,24 @@ zevara summons_send has zero). Gates: verify-untouched 0, voice gate
 CLEAN hard=0 warn=0 all 9 files, corpus flagged 31→20/577. Dialogue
 lane needs NO further fixes — light re-read rides the integrator
 review. NOTHING left in flight; all seven map lanes + dialogue landed.
+
+## Inn lane review results (CHANGES REQUESTED on player_room; fix wave dispatched)
+H1 pegs "by the door" fabricated (door is 3 cells away) — drop locator.
+M1 introduced adjacency collision (shelf/pegs both flat-fact) — re-vary.
+M2 privacy-door monoculture (4 strings one image; sleep rung 2 lost its
+  bedding image; open_toast lost "and nobody else's") — restore rung-2
+  bedding + the warm closer; at most 2 privacy-door endings survive.
+M3/M4 fix-shape templates (plate-in-motion x2 adjacent; kitchen hints
+  3x same conditional shape; [Signature Dish] hint tautological) —
+  re-vary one plate ending + rewrite the tautological hint.
+M7 Erin observe: restore ONE interpretive move — the premise signal
+  (outsider/strangest-thing) is the map prose's only carrier of it.
+L1 "this morning" unenforced temporal — drop. L5 footlocker "lift the
+  lid" resolves to nothing — honest refusal. L6 same-entity verbatim
+  ending repeat — fix one side.
+M5 seal_fed fixture dead-prose → integrator 4-site re-bake (listed).
+M6 keeps tripwire → integrator protected-keeps additions (listed).
+ADOPTED REFRAMING: Phase 4 anon metric splits NARRATOR vs SPOKEN
+  strings; narrator-only is the §6.4 target basis (inn = 7.9%, under
+  target — record so later passes don't churn the inn chasing patrons'
+  speech).
