@@ -314,3 +314,15 @@ recovery double-beat restored by naming the deer; petitions +
 floors in keeps-petitions/floodplains-garden.json; 1 pin re-synced
 byte-exact (floodplains_price_help); all four synced scripts green.
 Remaining in flight: 396-C + inn fix waves only.
+
+## 396-C fix wave LANDED (4e5ed929) — lane merge-ready
+M2 shape: starter hide_when {witch_lessons} + redundant re-entry row
+deleted (the ask IS the permanent door again; invrisil_seal_broker
+shared-settle precedent; zero/absent accomplishment forms proven
+inexpressible at dialogue.gd:107/:212). Graduate coverage = permanent
+makings_loop legs 7+8 on a new makings_graduate_start fixture. Five
+break-tests: 4 red-correct, 1 disclosed cannot-red (teach requires is a
+belt; the beat gate reds at its real site). Pot filled-state observe
+via visual_states (memorial_plot idiom). Census 15.0% rc 0. Its four
+"inherited reds" are Lane A's retirement class — Lane D's registry fixes
+them; verify at the C+D composed merge gate.
