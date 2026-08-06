@@ -3342,3 +3342,12 @@ applied — picks made, logged here, surfaced at close. All revocable.
    who talks and declines loses the journal pointer (old lead hid on
    accept). RETIGHTEN AT RELEASE CUT: hide_when → heard_winter_teeth
    once shipped_ids regenerates.
+13. **Lamb pen must exist for new saves (#396 close-wave item):**
+   `hunters_lamb_pen` is `present_when {thicket_answered}` (#330 gating),
+   but BOTH new quests' beat copy points at "the lamb pen" and fresh
+   saves never bank the retired quest's counter. Ruling: drop the
+   thicket_answered gate (pen present always; the shepherd keeps sheep —
+   fiction holds; the observe's "after the thicket business" reads as
+   background for fresh players). Land in the Task 11/12 close wave with
+   pin checks: Lane C's lamb props and the makings tend prop sit beside
+   it, and scripts asserting pen presence/absence must re-derive.
