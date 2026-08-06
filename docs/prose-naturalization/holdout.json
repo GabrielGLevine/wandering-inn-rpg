@@ -1,6 +1,6 @@
 {
  "_count": 229,
- "_excluded_count": 2,
+ "_excluded_count": 3,
  "_excluded_note": "verify-untouched SKIPS these ids and reports them by count; the blind control instrument omits their rows. They remain in `ids` and in `_count` -- an exclusion never shrinks the committed inventory. Authority is the INTERSECTION of this block and HOLDOUT_EXCLUSIONS in qa/scripts/extract_prose.py, so neither edit excuses drift on its own.",
  "_fraction": 0.1,
  "_min_words": 6,
@@ -25,6 +25,11 @@
    "excluded": true,
    "excluded_reason": "changed by #396 redesign (merged PR #401), not by the prose pass",
    "what_moved": "one word, `hunter` -> `shepherd`: #396 retired the Hunter and the lamb pen is the shepherd's. The prose pass never opened this string."
+  },
+  "map:riverfarm/riverfarm_village.json:$.entities[8].observe": {
+   "excluded": true,
+   "excluded_reason": "shipped citation leak hotfixed AFTER the Phase-5 blind read completed (the control function was already spent): the pier observe carried a player-visible research note '(wiki Riverfarm, ch. 3.00-3.01 E: ...)', found by both blind readers (C200).",
+   "what_moved": "the parenthetical citation was cut; the two prose sentences are byte-identical."
   }
  },
  "ids": [

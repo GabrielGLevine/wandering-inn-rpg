@@ -1,5 +1,5 @@
 # BLIND REVIEW VIEW -- holdout
-# GH#397. 227 strings, shuffled with random.Random(399). python 3.12.3.
+# GH#397. 226 strings, shuffled with random.Random(399). python 3.12.3.
 # Metadata deliberately stripped: no filenames, no speakers, no schema keys,
 # no region. Row numbers are the ONLY handle; holdout.json maps them back.
 # Read each row cold. Score per review-rubric.md. Do not seek context.
@@ -403,59 +403,57 @@
 
 199. [Advanced Cooking] — You cook on a stranger's fire in a city of critics, and the critics go quiet.
 
-200. A plank pier reaching out over the river. The village's whole trade with anywhere downstream starts here (wiki Riverfarm, ch. 3.00-3.01 E: 'farming land fed by a river').
+200. A tea-tray harness worn shiny at the left shoulder — she pours right-handed and listens left-eared. The cups are chipped. The ears are not.
 
-201. A tea-tray harness worn shiny at the left shoulder — she pours right-handed and listens left-eared. The cups are chipped. The ears are not.
+201. [Detect Magic] — The ward opens under your sight and does not stop opening. It is not holding anything shut. It is POURING: one direction, one slow measured rate, into whatever the stone is between. It has poured since before the city. Pisces, very quietly: "Ah. So that is what the others were."
 
-202. [Detect Magic] — The ward opens under your sight and does not stop opening. It is not holding anything shut. It is POURING: one direction, one slow measured rate, into whatever the stone is between. It has poured since before the city. Pisces, very quietly: "Ah. So that is what the others were."
+202. Nothing there. Someone leans out an upstairs shutter, decides you are nothing, and pulls it to.
 
-203. Nothing there. Someone leans out an upstairs shutter, decides you are nothing, and pulls it to.
+203. Watch Captain's desk. Empty, same as every other time you've walked past it.
 
-204. Watch Captain's desk. Empty, same as every other time you've walked past it.
+204. The construct was very large. I stabbed it anyway. Captain Ceria says this is called 'initiative.'
 
-205. The construct was very large. I stabbed it anyway. Captain Ceria says this is called 'initiative.'
+205. Only the hollow in the grass now, and it is filling in.
 
-206. Only the hollow in the grass now, and it is filling in.
+206. "She'll be glad of the price."
 
-207. "She'll be glad of the price."
+207. From up here the floodplains pretend to be a map. Good eyes could read it.
 
-208. From up here the floodplains pretend to be a map. Good eyes could read it.
+208. Low fence rail, bordering the tilled rows.
 
-209. Low fence rail, bordering the tilled rows.
+209. The briar holds nothing new today.
 
-210. The briar holds nothing new today.
+210. It stays fed. The Watch can pay for it.
 
-211. It stays fed. The Watch can pay for it.
+211. I need to think on that.
 
-212. I need to think on that.
+212. A full working day at heat, then it stands down cold. Push it past that and the slab cracks. A cracked slab is a season of paperwork before the city clears it again. The hammer hangs on its peg for all of it.
 
-213. A full working day at heat, then it stands down cold. Push it past that and the slab cracks. A cracked slab is a season of paperwork before the city clears it again. The hammer hangs on its peg for all of it.
+213. "She's known since she was nineteen. She wants the setting held, and the stone left as it is."
 
-214. "She's known since she was nineteen. She wants the setting held, and the stone left as it is."
+214. You've stopped mid-appraisal. What are you looking at?
 
-215. You've stopped mid-appraisal. What are you looking at?
+215. From here you can see the cut in the turf, the fire, and everyone's hands at once. It was not chosen for comfort.
 
-216. From here you can see the cut in the turf, the fire, and everyone's hands at once. It was not chosen for comfort.
+216. You'll want the long table, {addr}. That's the waiting table. This one's mine, and the gentleman who shares it didn't wait for anybody. Take whatever seat's open down that end.
 
-217. You'll want the long table, {addr}. That's the waiting table. This one's mine, and the gentleman who shares it didn't wait for anybody. Take whatever seat's open down that end.
+217. Zevara's shoulders come down a fraction. Huh. Civil, and no bribe. You would not believe how short that list is. Go on through. And, thank you. Genuinely.
 
-218. Zevara's shoulders come down a fraction. Huh. Civil, and no bribe. You would not believe how short that list is. Go on through. And, thank you. Genuinely.
+218. The ledge overlooks the nest: a perfect vantage, if you had the eye to read one. You don't, quite. Not yet.
 
-219. The ledge overlooks the nest: a perfect vantage, if you had the eye to read one. You don't, quite. Not yet.
+219. [Charming Smile] Tell him what the card cost her.
 
-220. [Charming Smile] Tell him what the card cost her.
+220. The Watch wants eyes on the reopened gallery — proper eyes. The last guardsman down there filed three words: 'it is dark.' Five gold now, fifteen when you bring me something I can put in a report. The Guild is sending a Silver-rank team to meet you there.
 
-221. The Watch wants eyes on the reopened gallery — proper eyes. The last guardsman down there filed three words: 'it is dark.' Five gold now, fifteen when you bring me something I can put in a report. The Guild is sending a Silver-rank team to meet you there.
+221. You ease the wire off its catch and coil it loose. A few scavenged links clatter free, worth a coin or two melted down.
 
-222. You ease the wire off its catch and coil it loose. A few scavenged links clatter free, worth a coin or two melted down.
+222. Pell's back on the roster, thanks to you. Kit's counted, slate's closed. Muster sheet reads full again.
 
-223. Pell's back on the roster, thanks to you. Kit's counted, slate's closed. Muster sheet reads full again.
+223. A drink counter kept cleaner than the law would ever ask it to be.
 
-224. A drink counter kept cleaner than the law would ever ask it to be.
+224. Nothing there. Something small breathes behind the bench and decides to keep still.
 
-225. Nothing there. Something small breathes behind the bench and decides to keep still.
+225. You have the look of someone come to ask a favor. Speak plainly. I have no patience for the other kind.
 
-226. You have the look of someone come to ask a favor. Speak plainly. I have no patience for the other kind.
-
-227. A long pause. The lead goblin sniffs, then spits sideways. A wave, and the others clear the road. They keep their eyes on you until the corner.
+226. A long pause. The lead goblin sniffs, then spits sideways. A wave, and the others clear the road. They keep their eyes on you until the corner.
 

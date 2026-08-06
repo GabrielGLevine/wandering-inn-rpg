@@ -1296,6 +1296,17 @@ HOLDOUT_EXCLUSIONS = {
                       "different line. The pinned text is gone from the tree, "
                       "so there is no wording left to hold.",
     },
+    "map:riverfarm/riverfarm_village.json:$.entities[8].observe": {
+        "excluded": True,
+        "excluded_reason": "shipped citation leak hotfixed AFTER the Phase-5 "
+                           "blind read completed (the control function was "
+                           "already spent): the pier observe carried a "
+                           "player-visible research note '(wiki Riverfarm, "
+                           "ch. 3.00-3.01 E: ...)', found by both blind "
+                           "readers (C200).",
+        "what_moved": "the parenthetical citation was cut; the two prose "
+                      "sentences are byte-identical.",
+    },
 }
 EXCLUSIONS_NOTE = (
     "verify-untouched SKIPS these ids and reports them by count; the blind "

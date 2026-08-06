@@ -1236,7 +1236,7 @@
    ],
    "display_name": "The Dock",
    "sprite": "riverfarm_dock_pier",
-   "observe": "A plank pier reaching out over the river. The village's whole trade with anywhere downstream starts here (wiki Riverfarm, ch. 3.00-3.01 E: 'farming land fed by a river').",
+   "observe": "A plank pier reaching out over the river. The village's whole trade with anywhere downstream starts here.",
    "on_interact_accomplishment": "observed_riverfarm_dock",
    "toast": "Weathered planks, sound underfoot. The current runs steady past the end of it."
   },
