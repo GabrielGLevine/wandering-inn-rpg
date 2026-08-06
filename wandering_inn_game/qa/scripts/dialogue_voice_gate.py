@@ -37,6 +37,35 @@ MAPS = REPO / "wandering_inn_game" / "data" / "maps"
 MAP_TALK_KEYS = {"talk_pool"}
 MAP_STAGE_KEYS = {"talk_pool_stages"}
 
+# GH#397 PROSE-FIELD MASK (integration ruling H2, 2026-08-06). Before this,
+# map_skeleton baked every NON-talk string into the frozen skeleton verbatim --
+# so the maps gate hard-failed ("structure differs from baseline") on every
+# single #397 prose edit, by construction, in every region lane. That made the
+# gate a freeze on prose it was never designed to judge: its tells, its facts
+# and its speaker budget all run over walk_map_texts, which is talk-only.
+#
+# The mask NARROWS the shipped gate deliberately: the #397 prose fields below
+# become masked slots, so the maps gate keeps guarding exactly what it measures
+# -- talk surfaces, and STRUCTURE (a prose field ADDED, DELETED or MOVED is
+# still a skeleton diff; only its CONTENT is now unguarded here). Those fields
+# get their guard from extract_prose.py's `verify-untouched` (holdout + every
+# protected keep, byte-exact at field path) and from the #397 keeps fold.
+#
+# MIRROR CONTRACT with extract_prose.py: MAP_PROSE_KEYS_397 must equal that
+# file's MAP_PROSE_KEYS, and is_prose_key_397 must equal `is_prose_key`
+# (MAP_PROSE_KEYS | is_toast_key). Owner propagation mirrors walk_map_prose
+# exactly -- a prose key carries down through lists and variant dicts, and a
+# NON-prose key resets it, so structural strings inside a variant
+# (`requires.phase: ["dusk"]`) stay frozen. The two walkers stay disjoint:
+# talk_pool/talk_pool_stages/talk_banks/banks are handled above and are in
+# extract_prose's own SKIP_SUBTREES.
+MAP_PROSE_KEYS_397 = {"observe", "friendly_line", "interior_flavor", "copy", "text"}
+MASK_397 = "¶"                 # distinct from MASK so a diff says WHICH mask
+
+
+def is_prose_key_397(k):
+    return k in MAP_PROSE_KEYS_397 or k == "toast" or k.endswith("_toast")
+
 
 def walk_map_texts(obj, path="$", in_talk=False):
     """Yield (json_path, value) for every map talk line; recurse the rest.
@@ -74,7 +103,11 @@ def walk_map_texts(obj, path="$", in_talk=False):
             yield from walk_map_texts(v, f"{path}[{i}]")
 
 
-def map_skeleton(obj, in_talk=False):
+def map_skeleton(obj, owner=None):
+    """The frozen structure. `owner` = the enclosing #397 prose key, if any (see
+    MAP_PROSE_KEYS_397). IDEMPOTENT: re-masking an already-masked skeleton is a
+    no-op, which is what lets check_file normalize a pre-mask baseline forward
+    instead of forcing a re-baseline (see check_file)."""
     if isinstance(obj, dict):
         out = {}
         for k, v in obj.items():
@@ -101,10 +134,15 @@ def map_skeleton(obj, in_talk=False):
                         st_out.append(map_skeleton(stage))
                 out[k] = st_out
             else:
-                out[k] = map_skeleton(v)
+                own = (owner or k) if is_prose_key_397(k) else None
+                if isinstance(v, str):
+                    out[k] = MASK_397 if own else v
+                else:
+                    out[k] = map_skeleton(v, own)
         return out
     if isinstance(obj, list):
-        return [map_skeleton(v) for v in obj]
+        return [(MASK_397 if (owner and isinstance(v, str)) else map_skeleton(v, owner))
+                for v in obj]
     return obj
 
 
@@ -194,7 +232,13 @@ def check_file(f, basedir, maps_mode=False):
     data = json.loads(f.read_text())
     base = json.loads((basedir / f.name).read_text())
     sk = map_skeleton(data) if maps_mode else skeleton(data)
-    if sk != base["skeleton"]:
+    # The shipped baseline-maps snapshot PREDATES the GH#397 prose-field mask, so
+    # its prose slots hold verbatim text. Normalize it FORWARD through the same
+    # (idempotent) masker rather than re-baselining: re-snapshotting on a
+    # composed tree would silently absorb talk-surface and structural drift too,
+    # which is the whole thing this baseline exists to catch.
+    base_sk = map_skeleton(base["skeleton"]) if maps_mode else base["skeleton"]
+    if sk != base_sk:
         hard.append("structure differs from baseline (non-text change, "
                     "node add/drop, or reordered text_variants)")
     texts = dict((walk_map_texts if maps_mode else walk_texts)(data))
@@ -305,6 +349,50 @@ def self_test():
         (lambda d: d["nodes"]["a"].__setitem__(
             "text", "Bring 3 crates to Liscor by dusk. Rules, not favors. The [Innkeeper] knows."), False),  # anti = warn-count only
     ]
+    # MAPS MODE (GH#388) + the GH#397 prose-field mask (H2). The mask must be
+    # exactly as wide as MAP_PROSE_KEYS_397 and no wider: prose CONTENT is free,
+    # while talk surfaces, tells, prose-field add/drop, variant ORDER and every
+    # gating string stay frozen. Cases 3-9 are the mask's fence, in both
+    # directions -- a wider mask (freezing nothing) fails 2/5/6/7/8/9, a missing
+    # mask fails 3/4.
+    old_map = {
+        "biome": "street",
+        "interior_flavor": ["Rain on the flags.", "Someone's shutter bangs."],
+        "entities": [
+            {"id": "guard", "kind": "npc", "sprite": "watch_a",
+             "talk_pool": ["Gate's clear.", "@shared_line"],
+             "observe": "Merchant-livery, not Watch steel.",
+             "friendly_line": "Evening.",
+             "skill_uses": {"observe": {"toast": "[Observe] — a chalked tally."}}},
+            {"id": "bed", "kind": "prop",
+             "sleep_toast": [{"when": {}, "text": "Your own room."},
+                             {"when": {"room_tier_1": 1}, "text": "Bedding turned down."}],
+             "locked_toast": "It does not give."},
+        ],
+        "arrival_toasts": [{"text": "You are in the street.", "when": {}}],
+    }
+    map_cases = [  # (mutator, expect_hard, label)
+        (lambda d: None, False, "untouched"),
+        (lambda d: d["entities"][0]["talk_pool"].__setitem__(0, "All quiet here."),
+         False, "talk_pool REWORD (talk mask, pre-existing)"),
+        (lambda d: d["entities"][0]["talk_pool"].append("One more."),
+         True, "talk_pool APPEND (order+size are contract)"),
+        (lambda d: d["entities"][0]["talk_pool"].__setitem__(0, "Show me a PERMIT."),
+         True, "talk_pool CAPS tell still fires"),
+        (lambda d: d["entities"][0].__setitem__(
+            "observe", "TOTALLY different... prose, not the old line."),
+         False, "#397 prose CONTENT is free (mask working)"),
+        (lambda d: d["entities"][0].pop("observe"),
+         True, "#397 prose field DELETED is still structural"),
+        (lambda d: d["entities"][1].__setitem__("observe", "A new field."),
+         True, "#397 prose field ADDED is still structural"),
+        (lambda d: d["entities"][1]["sleep_toast"][1]["when"].__setitem__("room_tier_9", 1),
+         True, "gating INSIDE a prose variant stays frozen"),
+        (lambda d: d["entities"][1]["sleep_toast"].reverse(),
+         True, "prose variant REORDER stays frozen"),
+        (lambda d: d["entities"][0].__setitem__("sprite", "watch_b"),
+         True, "plain non-prose structure stays frozen"),
+    ]
     failures = 0
     with tempfile.TemporaryDirectory() as td:
         td = Path(td); (td / "b").mkdir(); (td / "d").mkdir()
@@ -315,6 +403,31 @@ def self_test():
             hard, warn, anti = check_file(f, td / "b")
             ok = bool(hard) == expect
             print(f"case {i}: {'ok' if ok else 'WRONG'} hard={hard}")
+            failures += 0 if ok else 1
+
+        mb, md = td / "mb", td / "md"
+        mb.mkdir(); md.mkdir()
+        mf = md / "m.json"
+        mf.write_text(json.dumps(old_map)); snapshot_file(mf, mb, maps_mode=True)
+        # The baseline above is POST-mask. A PRE-mask baseline (what
+        # docs/dialogue-voice/baseline-maps actually is) must normalize forward
+        # to the same thing -- that equality is what makes the shipped baseline
+        # usable unchanged, so assert it rather than trusting it.
+        pre_mask = {"skeleton": json.loads(json.dumps(old_map)),
+                    "facts": {p: facts(t) for p, t in walk_map_texts(old_map)}}
+        (mb / "pre.json").write_text(json.dumps(pre_mask, indent=1, sort_keys=True))
+        post = json.loads((mb / "m.json").read_text())["skeleton"]
+        fwd = map_skeleton(pre_mask["skeleton"])
+        ok = fwd == post and map_skeleton(post) == post
+        print(f"maps case F: {'ok' if ok else 'WRONG'} "
+              "pre-mask baseline normalizes forward; mask is idempotent")
+        failures += 0 if ok else 1
+        for i, (mut, expect, label) in enumerate(map_cases):
+            data = json.loads(json.dumps(old_map)); mut(data)
+            mf.write_text(json.dumps(data))
+            hard, warn, anti = check_file(mf, mb, maps_mode=True)
+            ok = bool(hard) == expect
+            print(f"maps case {i}: {'ok' if ok else 'WRONG'} {label} hard={hard}")
             failures += 0 if ok else 1
     print("self-test:", "PASS" if not failures else f"{failures} FAILURES")
     return 1 if failures else 0

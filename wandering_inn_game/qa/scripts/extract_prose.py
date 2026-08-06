@@ -124,8 +124,12 @@ UNTOUCHABILITY (the Phase 2/3 contract)
     holdout.json ids and protected-keeps.json ids are UNTOUCHABLE, regardless
     of what any ranking says about their file or graph. `verify-untouched`
     recomputes the live text at every one of those field paths and diffs it
-    against the committed baseline inventory. Phase 2, Phase 3 and issue close
-    all run it; it exits 1 with a diff list on any drift.
+    against what that id is PINNED to -- the frozen baseline inventory for a
+    holdout id, the keep's own exact_text for a protected keep (identical for
+    every pre-pass keep; see cmd_verify_untouched for why a keep GRANTED ON A
+    REWRITE has to answer to its own record, and how that cannot launder drift).
+    Phase 2, Phase 3 and issue close all run it; it exits 1 with a diff list on
+    any drift.
 
 USAGE
     python3 qa/scripts/extract_prose.py self-test
@@ -136,7 +140,14 @@ USAGE
     python3 qa/scripts/extract_prose.py holdout-blind   --outdir DIR
     python3 qa/scripts/extract_prose.py classify-probe  [--seed N] [--n 20]
     python3 qa/scripts/extract_prose.py verify-untouched --dir DIR
+    python3 qa/scripts/extract_prose.py keeps           --dir DIR
     python3 qa/scripts/extract_prose.py all             --outdir DIR
+
+    `keeps` rewrites protected-keeps.json ALONE, from the live tree plus
+    protected-keeps-extra.json. It exists because `all` would also rebuild
+    inventory.jsonl -- verify-untouched's frozen baseline, which must never be
+    regenerated mid-pass -- so folding a granted petition into the keeps had no
+    safe path before it.
 """
 import argparse, collections, importlib.util, json, random, re, sys
 from pathlib import Path
@@ -757,43 +768,130 @@ def resolve_issue_keeps(rows):
 # riverfarm's named lines ("the whole of Riverfarm's vocabulary for gratitude",
 # the witch_hut jars/rack saturation pair) are deliberately ABSENT: riverfarm is
 # excluded from this pass by controller ruling, so they are not work this pass.
+# When riverfarm's own pass lands they enter this list PENDING, exactly as the
+# five below did, and graduate to `done` the same way.
+#
+# DONE-FLAG SEMANTICS (#397 integration, the H1 inversion fix). This list is a
+# WORK QUEUE with an audit trail, not a set of invariants about the shipped
+# corpus. Its original resolution rule ("every entry resolves to exactly one
+# live string") inverted the moment a lane did the ruled work: fixing a named
+# line makes its snippet stop matching, so a green self-test turned red as a
+# REWARD for landing the fix, and every region lane tripped it. So each entry
+# now carries an explicit disposition:
+#
+#   done=False (PENDING) -- the work has not landed. The snippet MUST still
+#       resolve to exactly one live string; 0 or >1 matches means the entry has
+#       gone stale (typo, reformat, or a silent rewrite) and is a real failure.
+#   done=True  (DONE)    -- the ruled rewrite has landed. The snippet MUST NO
+#       LONGER resolve. If it still does, the entry was marked done without the
+#       work being done, which is the other direction of the same lie.
+#
+# Both directions are asserted, so neither "fixed but still queued" nor
+# "retired without being fixed" can pass silently. The entry itself is never
+# deleted: the path/snippet/why stay as the audit trail of what was named and
+# why (Fable ruling, pallass item 5: mark done-by-design, keep the trail).
+#
+# `queue_id` (optional) is the inventory id whose counter-driven work-queue
+# membership this entry was the self-test fixture for. PENDING => the id must be
+# in the queue (the queue's triggers demonstrably catch hand-named work).
+# DONE => membership is no longer required and is reported only: the string has
+# been rewritten, and whether its replacement still trips a counter is a
+# separate question with its own answer (liscor's grate keeps a granted §7.3
+# negation, so it stays queued; garden's dancer no longer trips anything).
 ISSUE_NAMED_WORK = [
-    ("wandering_inn_game/data/maps/garden/garden_sanctuary.json",
-     "Someone carved joy here",
-     "issue-named: forbidden inference — neither the joy nor the intent is "
-     "visible, only a dancer's pose (bible §6 rule 1)"),
-    ("wandering_inn_game/data/maps/liscor/street.json",
-     "The skittering keeps its distance",
-     "controller-named: four negation-correction shapes stacked in one scenic "
-     "string at closer 1 — the shape the counter-only queue could not see"),
-    ("wandering_inn_game/data/maps/pallass/pallass_den_shop.json",
-     "In Pallass, that is a document nobody filed",
-     "issue-named button: two excellent specific sentences, then a third that "
-     "tells the reader what to think about them"),
-    ("wandering_inn_game/data/maps/dungeon/trapped_halls.json",
-     "which from him is applause",
-     "issue-named: the `which from X is Y` shape plus the narrator supplying "
-     "the interpretation the player should have made"),
-    ("wandering_inn_game/data/maps/dungeon/trapped_halls.json",
-     "Statues are not built facing the door they guard",
-     "issue-named: partial keep — the threat warning stays, the "
-     "reframe-for-effect second sentence is the work (bible §7)"),
+    {"file": "wandering_inn_game/data/maps/garden/garden_sanctuary.json",
+     "snippet": "Someone carved joy here",
+     "why": "issue-named: forbidden inference — neither the joy nor the intent "
+            "is visible, only a dancer's pose (bible §6 rule 1)",
+     "done": True,
+     "done_by": "397/floodplains-garden — rewritten to the pose alone "
+                "('nothing in either hand'); reviewer judged it best of 35",
+     "queue_id": "map:garden/garden_sanctuary.json:$.entities[0].observe"},
+    {"file": "wandering_inn_game/data/maps/liscor/street.json",
+     "snippet": "The skittering keeps its distance",
+     "why": "controller-named: four negation-correction shapes stacked in one "
+            "scenic string at closer 1 — the shape the counter-only queue "
+            "could not see",
+     "done": True,
+     "done_by": "397/liscor — the stacked negations are gone; the ONE that "
+                "survives ('Rust holds the bars, not a lock') is the granted "
+                "§7.3 keep in keeps-petitions/liscor.json",
+     "queue_id": "map:liscor/street.json:$.entities[12].observe"},
+    {"file": "wandering_inn_game/data/maps/pallass/pallass_den_shop.json",
+     "snippet": "In Pallass, that is a document nobody filed",
+     "why": "issue-named button: two excellent specific sentences, then a "
+            "third that tells the reader what to think about them",
+     "done": True,
+     "done_by": "397/pallass — the interpretive third sentence is gone; M1 "
+                "restored a short resolution clause in its place",
+     "queue_id": ""},
+    {"file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+     "snippet": "which from him is applause",
+     "why": "issue-named: the `which from X is Y` shape plus the narrator "
+            "supplying the interpretation the player should have made",
+     "done": True,
+     "done_by": "397/empty-regions — the `which from X is Y` shape is gone "
+                "from the corpus",
+     "queue_id": ""},
+    {"file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+     "snippet": "Statues are not built facing the door they guard",
+     "why": "issue-named: partial keep — the threat warning stays, the "
+            "reframe-for-effect second sentence is the work (bible §7)",
+     "done": True,
+     "done_by": "397/empty-regions — warning kept, reframe-for-effect cut",
+     "queue_id": ""},
 ]
 
 
-def resolve_named_work(rows):
-    """-> ({id: why}, [unresolved]). Same snippet discipline as the keeps."""
+def named_work_state(rows):
+    """-> [(entry, hits)] for every ISSUE_NAMED_WORK entry, in list order.
+
+    `hits` is the live inventory rows whose text carries the entry's snippet.
+    Same snippet discipline as the keeps: never bound by line number."""
     by_file = collections.defaultdict(list)
     for r in rows:
         by_file[r["file"]].append(r)
+    return [(e, [r for r in by_file.get(e["file"], []) if e["snippet"] in r["text"]])
+            for e in ISSUE_NAMED_WORK]
+
+
+def resolve_named_work(rows):
+    """-> ({id: why}, [unresolved]).
+
+    Only PENDING entries resolve to ids: a DONE entry's work has landed, so it
+    reserves nothing out of the holdout and appears in no report as outstanding
+    work. `unresolved` collects DISPOSITION CONTRADICTIONS in both directions --
+    a pending snippet that no longer resolves to exactly one string, and a done
+    snippet that still resolves."""
     out, unresolved = {}, []
-    for path, snippet, why in ISSUE_NAMED_WORK:
-        hits = [r for r in by_file.get(path, []) if snippet in r["text"]]
-        if len(hits) == 1:
-            out[hits[0]["id"]] = why
+    for e, hits in named_work_state(rows):
+        if e["done"]:
+            if hits:
+                unresolved.append(
+                    f"{e['file']}: marked done but {len(hits)} live matches "
+                    f"remain for {e['snippet']!r}")
+        elif len(hits) == 1:
+            out[hits[0]["id"]] = e["why"]
         else:
-            unresolved.append(f"{path}: {len(hits)} matches for {snippet!r}")
+            unresolved.append(
+                f"{e['file']}: {len(hits)} matches for {e['snippet']!r} "
+                "(pending entry must resolve to exactly one)")
     return out, unresolved
+
+
+KEEPS_NOTE = (
+    "Peaks and models. Phase 2/3 must not flatten these, and a keep OUTRANKS a "
+    "register rule: a protected string is never rewritten even where it trips "
+    "one, and it CONSUMES the relevant budget. Each entry is pinned to "
+    "{file, field_path, exact_text}; line numbers are deliberately absent, "
+    "because a line number re-points silently after a reformat and a field path "
+    "does not. `verify-untouched` and self-test both assert the live text at "
+    "field_path still equals exact_text. An entry carrying "
+    "`pinned_to: \"post-pass\"` was GRANTED ON THE REWRITE (an §1.4 length "
+    "exception, or a negation kept as function) -- its exact_text is the text "
+    "the controller granted, not the pre-pass baseline text, and "
+    "verify-untouched holds it to that. An unmarked divergence from the "
+    "baseline inventory is still a hard failure.")
 
 
 def load_extra_keeps(outdir=None):
@@ -1486,37 +1584,92 @@ def cmd_heatmap(rows, out, keeps=None, hold_set=None, blind_ids=None):
 # ---- verify-untouched (fix C1's mechanical guard) ----------------------------
 def cmd_verify_untouched(docdir):
     """Recompute the live text at every holdout id and every protected-keep id
-    and diff it against the committed baseline inventory. This is the tripwire
-    Phase 2, Phase 3 and issue close all run. Exit 1 on any drift."""
+    and diff it against what that id is PINNED to. This is the tripwire Phase 2,
+    Phase 3 and issue close all run. Exit 1 on any drift.
+
+    TWO AUTHORITIES, deliberately (#397 keeps fold, 2026-08-06):
+
+    * HOLDOUT ids answer to `inventory.jsonl`, the frozen pre-pass baseline. A
+      holdout string is untouched BY DEFINITION -- it is the Phase 5 control
+      group -- so the baseline is the only sound authority and it never moves.
+    * PROTECTED-KEEP ids answer to their OWN `exact_text` (the F8
+      {file, field_path, exact_text} pin). For the keeps that predate the pass
+      this is byte-identical to the baseline, so nothing is loosened. It matters
+      for a keep GRANTED ON POST-PASS TEXT -- a petition where the lane rewrote
+      the string and the controller then granted the rewrite as the protected
+      wording (an §1.4 length exception, or a negation kept as function). Those
+      strings CANNOT answer to a pre-pass baseline: the baseline holds the text
+      the ruling replaced.
+
+    That second authority cannot launder drift. A keep whose exact_text differs
+    from the baseline inventory must SAY SO -- `pinned_to: "post-pass"` plus a
+    reason -- and an unmarked divergence is still a hard failure, reported as
+    "SILENT POST-PASS PIN". So the only way a keep's text can move is by an
+    explicit, reviewable edit to the keep record itself."""
     docdir = Path(docdir)
     base = {r["id"]: r for r in load_inventory(docdir / "inventory.jsonl")}
     hold = rjson(docdir / "holdout.json")["ids"]
     keeps = rjson(docdir / "protected-keeps.json")["keeps"]
     targets = ([(i, "holdout") for i in hold]
                + [(i, "protected-keep") for i in sorted(keeps)])
-    bad = []
+    bad, post_pass = [], []
     for rid, kind in targets:
         row = base.get(rid)
         if row is None:
             bad.append((kind, rid, "NOT IN BASELINE INVENTORY", ""))
             continue
+        rec = keeps.get(rid) if kind == "protected-keep" else None
+        pinned = rec["exact_text"] if rec and rec.get("exact_text") else row["text"]
+        if rec is not None and pinned != row["text"]:
+            if str(rec.get("pinned_to", "")) != "post-pass":
+                bad.append((kind + " SILENT POST-PASS PIN", rid, pinned,
+                            row["text"]))
+                continue
+            post_pass.append(rid)
         cur = live_text(row["file"], row["field_path"])
         if cur is None:
-            bad.append((kind, rid, "FIELD PATH NO LONGER RESOLVES", row["text"]))
-        elif cur != row["text"]:
-            bad.append((kind, rid, cur, row["text"]))
+            bad.append((kind, rid, "FIELD PATH NO LONGER RESOLVES", pinned))
+        elif cur != pinned:
+            bad.append((kind, rid, cur, pinned))
     print(f"verify-untouched: {len(hold)} holdout + {len(keeps)} protected "
           f"= {len(targets)} untouchable strings checked "
           f"(baseline {docdir/'inventory.jsonl'})")
+    if post_pass:
+        print(f"  note {len(post_pass)} keep(s) pinned to POST-PASS text "
+              "(granted on the rewrite, declared in the keep record):")
+        for rid in sorted(post_pass):
+            print(f"       {rid}")
     if not bad:
-        print("  ok   every untouchable string is byte-identical to baseline")
+        print("  ok   every untouchable string is byte-identical to its pin")
         return 0
     print(f"  FAIL {len(bad)} untouchable strings have drifted:")
     for kind, rid, cur, was in bad:
         print(f"\n  [{kind}] {rid}")
-        print(f"    baseline: {' '.join(was.split())[:160]}")
+        print(f"    pinned  : {' '.join(was.split())[:160]}")
         print(f"    current : {' '.join(str(cur).split())[:160]}")
     return 1
+
+
+# ---- keeps regeneration (#397 keeps fold) ------------------------------------
+def cmd_keeps(docdir):
+    """Rewrite protected-keeps.json ALONE from the live tree + the lane-added
+    protected-keeps-extra.json.
+
+    `all` also produces it, but `all` regenerates inventory.jsonl -- which is
+    `verify-untouched`'s frozen baseline and must never be rebuilt mid-pass -- so
+    folding a granted petition into the keeps had no safe path before this. Same
+    build_keeps/writer contract as `all`, byte-for-byte."""
+    docdir = Path(docdir)
+    keeps, unresolved = build_keeps(build_inventory(), docdir)
+    wjson(docdir / "protected-keeps.json", {
+        "_seed": SEED, "_python": PY,
+        "_note": KEEPS_NOTE,
+        "_unresolved": unresolved,
+        "_count": len(keeps),
+        "keeps": keeps})
+    print(f"keeps: {len(keeps)} protected -> {docdir/'protected-keeps.json'}"
+          + (f"  UNRESOLVED: {unresolved}" if unresolved else ""))
+    return 1 if unresolved else 0
 
 
 # ---- classification self-probe (fix I4) --------------------------------------
@@ -1567,14 +1720,7 @@ def cmd_all(outdir):
     keeps, unresolved = build_keeps(rows, outdir)
     wjson(outdir / "protected-keeps.json", {
         "_seed": SEED, "_python": PY,
-        "_note": "Peaks and models. Phase 2/3 must not flatten these, and a "
-                 "keep OUTRANKS a register rule: a protected string is never "
-                 "rewritten even where it trips one, and it CONSUMES the "
-                 "relevant budget. Each entry is pinned to {file, field_path, "
-                 "exact_text}; line numbers are deliberately absent, because a "
-                 "line number re-points silently after a reformat and a field "
-                 "path does not. `verify-untouched` and self-test both assert "
-                 "the live text at field_path still equals exact_text.",
+        "_note": KEEPS_NOTE,
         "_unresolved": unresolved,
         "_count": len(keeps),
         "keeps": keeps})
@@ -1730,6 +1876,37 @@ def self_test():
     check("map walkers disjoint (GH#388 talk vs GH#397 prose)", not overlap,
           str(overlap[:2]))
 
+    # 1a. MIRROR CONTRACT with the gate's GH#397 prose-field mask (H2). The gate
+    #     masks these exact fields out of its frozen map skeleton so a #397 prose
+    #     edit is not a structural diff. If this file's field list grows and the
+    #     gate's does not, the maps gate starts hard-failing legitimate prose
+    #     edits again (the H2 bug, returning); if the GATE's grows first, it
+    #     stops freezing a field nothing else guards. Neither may drift silently.
+    check("gate prose-field mask mirrors MAP_PROSE_KEYS",
+          GATE.MAP_PROSE_KEYS_397 == MAP_PROSE_KEYS,
+          f"gate={sorted(GATE.MAP_PROSE_KEYS_397)} vs ours={sorted(MAP_PROSE_KEYS)}")
+    mask_drift = [k for k in sorted(TOAST_KEYS_SEEN) if not GATE.is_prose_key_397(k)]
+    check("gate prose-field mask covers every seen toast key",
+          not mask_drift, str(mask_drift))
+    mask_wide = [k for k in sorted(KNOWN_NON_PROSE) if GATE.is_prose_key_397(k)]
+    check("gate prose-field mask masks no known NON-prose key",
+          not mask_wide, str(mask_wide))
+    # And the masker itself must be exactly as wide as OUR walker: every string
+    # walk_map_prose claims is a masked slot in the gate's skeleton, and nothing
+    # else is. This is the fence measured on the REAL corpus, not on the lists.
+    mism = []
+    for f in sorted(MAPS.glob("**/*.json")):
+        d = rjson(f)
+        sk = GATE.map_skeleton(d)
+        for p, _, _, _ in walk_map_prose(d):
+            if resolve_path(sk, p) != GATE.MASK_397:
+                mism.append(f"{f.name}{p} not masked")
+        for p, _ in GATE.walk_map_texts(d):
+            if resolve_path(sk, p) == GATE.MASK_397:
+                mism.append(f"{f.name}{p} talk slot got the PROSE mask")
+    check("every walk_map_prose string is a masked slot in the gate skeleton",
+          not mism, str(mism[:3]))
+
     # 1b. same for the dialogue side: our effect-toast walker must not restate
     #     anything GATE.walk_texts already owns.
     dlg_overlap = []
@@ -1850,8 +2027,25 @@ def self_test():
     check("all 5 issue counterevidence keeps resolve to ids",
           not unres and len(keeps) >= 5, str(unres))
     named_work, nw_unres = resolve_named_work(rows)
-    check("all issue/controller-named work strings resolve to ids",
-          not nw_unres and len(named_work) == len(ISSUE_NAMED_WORK), str(nw_unres))
+    nw_state = named_work_state(rows)
+    nw_done = [e for e, _ in nw_state if e["done"]]
+    nw_pending = [e for e, _ in nw_state if not e["done"]]
+    # BOTH directions of the done flag (the H1 inversion fix). Landing the ruled
+    # work must not turn this green leg red, and retiring an entry without doing
+    # the work must not turn a red leg green.
+    check("every issue/controller-named work entry matches its done flag",
+          not nw_unres, str(nw_unres))
+    check(f"the {len(nw_done)} DONE named-work snippets no longer resolve",
+          all(not hits for e, hits in nw_state if e["done"]),
+          str([e["snippet"] for e, hits in nw_state if e["done"] and hits]))
+    check(f"the {len(nw_pending)} PENDING named-work snippets still resolve, "
+          "one string each",
+          all(len(hits) == 1 for e, hits in nw_state if not e["done"]),
+          str([e["snippet"] for e, hits in nw_state
+               if not e["done"] and len(hits) != 1]))
+    check("only PENDING named work is reserved out of the holdout",
+          len(named_work) == len(nw_pending),
+          f"{len(named_work)} reserved vs {len(nw_pending)} pending")
     blind_ids = set(b1) | {r["id"] for r in make_blind(rows, "dialogue")}
     hold = set(make_holdout(rows, set(keeps) | set(named_work), blind_ids))
     check("holdout disjoint from blind sets", not (hold & blind_ids))
@@ -1910,19 +2104,26 @@ def self_test():
           all(cls[r["id"]] == ("functional", "skill-outcome") for r in named),
           f"{len(named)} strings")
 
-    # 8b. the work queue triggers on ANY of the three signals (fix I3), and the
-    #     two lines the issue names by hand must be in it.
+    # 8b. the work queue triggers on ANY of the three signals (fix I3), and any
+    #     STILL-PENDING hand-named line carrying a queue_id must be in it. The
+    #     fixture ids are read off ISSUE_NAMED_WORK rather than duplicated here:
+    #     a second hard-coded copy of the same two strings was the same H1
+    #     inversion bug wearing a different hat (it asserted the PRE-FIX string
+    #     was still queued, so it too went red when the fix landed).
     hold_or_keep = hold | set(keeps)
     queue = {r["id"] for r in m
              if is_demotion_candidate(cls[r["id"]][0], r["tells"])
              and r["id"] not in hold_or_keep}
-    for rid, why in [
-        ("map:garden/garden_sanctuary.json:$.entities[0].observe",
-         "garden 'Someone carved joy here' (closer 1, neg 2)"),
-        ("map:liscor/street.json:$.entities[12].observe",
-         "liscor street grate observe (closer 1, neg 4)"),
-    ]:
-        check(f"work queue contains {why}", rid in queue)
+    for e in ISSUE_NAMED_WORK:
+        if not e["queue_id"]:
+            continue
+        label = f"{e['file'].rsplit('/', 1)[-1]} {e['snippet']!r}"
+        if e["done"]:
+            print(f"  note queue fixture retired (work landed): {label} — "
+                  f"replacement {'still trips' if e['queue_id'] in queue else 'trips nothing'}")
+        else:
+            check(f"work queue contains pending named work {label}",
+                  e["queue_id"] in queue)
     # A hand-named work string need not be IN the counter-driven queue -- the
     # queue is scoped to functional/scenic register mismatch, and one of the
     # issue's named lines ("which from him is applause") is character-bearing,
@@ -1936,12 +2137,24 @@ def self_test():
                if cls[i][0] in ("functional", "scenic")} - queue,
           str(sorted({i for i in named_work
                       if cls[i][0] in ("functional", "scenic")} - queue)))
-    check("queue triggers are all three signals",
-          {t for r in m if r["id"] in queue
-           for t in demotion_triggers(r["tells"])}
-          == {k for k, _ in DEMOTION_TRIGGERS},
-          str(sorted({t for r in m if r["id"] in queue
-                      for t in demotion_triggers(r["tells"])})))
+    # The trigger WIRING is proven on synthetic strings by the three section-7
+    # checks above (closer_score / neg_correction / anon_agent each fire), and
+    # those never move with the corpus. What this leg used to assert -- that the
+    # LIVE queue still holds a member of all three trigger classes -- is the H1
+    # inversion again, third instance: emptying a trigger class is the pass
+    # SUCCEEDING, and after the #397 keeps fold neg_correction's last queued
+    # member became a protected keep (liscor's grate, granted §7.3), so a green
+    # leg went red for exactly the right reason. Kept as a REPORT plus the
+    # property that does not invert: the queue can never report a trigger
+    # outside the ruled three.
+    live_trig = {t for r in m if r["id"] in queue
+                 for t in demotion_triggers(r["tells"])}
+    all_trig = {k for k, _ in DEMOTION_TRIGGERS}
+    check("the queue reports no trigger outside the ruled three",
+          live_trig <= all_trig, str(sorted(live_trig - all_trig)))
+    print("  note live queue trigger classes: "
+          f"{sorted(live_trig) or ['none']} of {sorted(all_trig)} "
+          "(an empty class = the work landed, not a regression)")
 
     # 8c. every hand-audit override must BIND to a real inventory id. Without
     #     this leg a mistyped id is a silent no-op (it was, once).
@@ -2003,6 +2216,7 @@ def main():
     p = sub.add_parser("heatmap"); p.add_argument("--inventory"); p.add_argument("--out", required=True)
     p = sub.add_parser("holdout-blind"); p.add_argument("--outdir", required=True)
     p = sub.add_parser("verify-untouched"); p.add_argument("--dir", default=str(DOCS))
+    p = sub.add_parser("keeps"); p.add_argument("--dir", default=str(DOCS))
     p = sub.add_parser("classify-probe")
     p.add_argument("--seed", type=int, default=PROBE_SEED)
     p.add_argument("--n", type=int, default=20)
@@ -2039,6 +2253,8 @@ def main():
         n = write_holdout_blind(rows, hold, outdir)
         print(f"holdout-blind: {n} rows -> {outdir/'sample-holdout-blind.txt'}")
         return 0
+    if a.cmd == "keeps":
+        return cmd_keeps(a.dir)
     if a.cmd == "verify-untouched":
         return cmd_verify_untouched(a.dir)
     if a.cmd == "classify-probe":
