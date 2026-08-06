@@ -264,3 +264,19 @@ comment; L traced-ladder pin proven load-bearing. FOLLOW-UP RULED into
 396 close wave: derive_qa_surfaces --check gains a both-present-must-
 match guard (manifest fixture vs script fixture_save) — lands green
 today, closes the drift class.
+
+## Liscor review (SHIP, small fix wave dispatched)
+M1 boots word-swap laundering (claim correction + honest rewrite);
+M2 tactile-probe template (runners_guild 3/3) + restore "one corner
+wiped clean" observation; L2 §7.3 exception recorded properly in
+keeps-petitions/liscor.json (grate + Pisces, correct grounds). Sewer
+grate landmark byte-clean vs base AND registry. Everything else clean.
+
+## FG review (ACCEPT, small fix wave dispatched)
+M1 goblin-plinth comparative depends on unguaranteed sibling render
+(partial memorial rows canonical) — state-independent rewrite; M2
+rags_camp motion-closer cluster (5/7 + one prop's observe/toast pair);
+M3 second wolf taken_toast phrase collision with first-met sibling;
+LOW-1 corusdeer-recovery double-beat restored by naming the deer.
+Garden exemplar fix judged BEST of the 35 ("nothing in either hand").
+Six self-synced pins verified byte-exact, all four scripts green.
