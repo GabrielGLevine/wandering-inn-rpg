@@ -2,8 +2,19 @@
  "_region": "pallass",
  "_issue": "GH#397 Phase 2",
  "_lane": "397/pallass",
- "_count": 39,
- "_note": "Pin-sync integrator input. Every changed player-facing prose string in data/maps/pallass/, with the exact pre-change text QA scripts pin. Holdout and protected-keep strings are byte-untouched (extract_prose.py verify-untouched exits 0).",
+ "_base": "65f6e321 (Phase 2/3 orchestration design, controller) -- `old` is BASE text, `new` is post-fix-wave HEAD text",
+ "_count": 42,
+ "_note": "Pin-sync integrator input, REGENERATED base-vs-HEAD after the review fix wave. Every changed player-facing prose string in data/maps/pallass/, with the exact pre-change text QA scripts pin. Holdout and protected-keep strings are byte-untouched (extract_prose.py verify-untouched exits 0). Rows whose `why` carries a `|| FIX WAVE (...)` suffix were rewritten twice -- once by the lane, once by the review fix wave -- and `old` is still the BASE text, never the lane's intermediate; rows whose `why` starts `UNTOUCHED by the lane` are new in the fix wave. Lane peaks petitioned and granted are in docs/prose-naturalization/keeps-petitions/pallass.json.",
+ "_review_fixes_applied": [
+  "H3",
+  "M1",
+  "M3",
+  "M5",
+  "L6",
+  "monoculture re-vary (4 negative-non-event closers)",
+  "M4 (petitions written into the branch)"
+ ],
+ "_accepted_as_deliberate": "Fable ruling item 6: verbatim-identical civic observes and the two identical steam-vent strings (pallass_forge.json/pallass_market.json $.entities[3]/$.entities[8]) are ACCEPTED as deliberate and stay byte-identical. The three MARKET STALL observes are the named exception -- reviewer M3 required them differentiated, so two of the three were rewritten and the \"Efficient. Impersonal.\" doublet survives on market_stall_a only.",
  "_qa_pins_broken": [
   {
    "script": "pallass_ledger_skill",
@@ -54,15 +65,16 @@
    "file": "pallass_market.json"
   }
  ],
+ "_qa_pins_broken_note": "Unchanged at 8 by the fix wave: every fix-wave edit either lands on a string already in this list (pallass_ledger_skill[14], pallass_peek[177], pallass_ledger_carry[32]) or on a string no QA script pins (grepped repo-wide over qa/ and tests/). All 8 are `wait_for_event type:toast payload_contains.text` steps; nothing structural.",
  "deltas": [
   {
    "file": "wandering_inn_game/data/maps/pallass/pallass_den_shop.json",
    "field_path": "$.entities[2].on_skill_use.toast",
    "entity_id": "den_shop_consignment_file",
    "old": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. Tin is not perishable. The salt packed WITH it is, and it is on the same manifest line. Four cycles, and the exemption was on the paper the whole time.",
-   "new": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. The tin is not perishable, the salt packed with it is, and after four cycles both are still on one manifest line.",
+   "new": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. The tin is not perishable, the salt packed with it is, and after four cycles both are still on one manifest line, so the exemption covers the crate.",
    "register": "functional",
-   "why": "bible §8: bare CAPS emphasis (WITH) banned at zero; §1.4 4 sentences in functional/skill-outcome; §1.1 thematic closer. All facts kept (form nine clause four, exemption, tin/salt, four cycles, one manifest line); the tin/salt correction is a §7 legitimate keep (the player needs it)"
+   "why": "bible §8: bare CAPS emphasis (WITH) banned at zero; §1.4 4 sentences in functional/skill-outcome; §1.1 thematic closer. All facts kept (form nine clause four, exemption, tin/salt, four cycles, one manifest line); the tin/salt correction is a §7 legitimate keep (the player needs it) || FIX WAVE (M1): review M1: the lane's rewrite left the chain with no resolution — the player spends [Appraise Goods], finds the exemption, and the receipt never says the exemption applies. Restored as a short resolution clause on the existing sentence (no new button, no irony, no re-statement). All facts still present: form nine clause four, perishable exemption, queue hold, tin/salt, four cycles, one manifest line."
   },
   {
    "file": "wandering_inn_game/data/maps/pallass/pallass_den_shop.json",
@@ -114,9 +126,9 @@
    "field_path": "$.entities[13].toast",
    "entity_id": "forge_parapet_rail",
    "old": "You put a hand on the rail. Warm from the tier, not from the drop. Whoever set it worked out exactly how close a person could stand.",
-   "new": "You put a hand on the rail. Warm from the tier, not from the drop, and it does not shift at all under your weight.",
+   "new": "You put a hand on the rail. Warm from the tier, not from the drop, and cold air comes up the shaft against your wrist.",
    "register": "scenic",
-   "why": "§6.1 motive inference + §6.2 anon closer; forge.json's microhistory is consumed by the reject-bin holdout. The `warm from the tier, not from the drop` correction is the file's one §7 keep (real orientation information)"
+   "why": "§6.1 motive inference + §6.2 anon closer; forge.json's microhistory is consumed by the reject-bin holdout. The `warm from the tier, not from the drop` correction is the file's one §7 keep (real orientation information) || FIX WAVE (re-vary): review monoculture re-vary 1 of 4: the lane's ending (\"it does not shift at all under your weight\") was another negative non-event. Re-shaped to MOTION — cold air up the shaft — which also keeps the warm-rail/cold-drop contrast the observe sets up."
   },
   {
    "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
@@ -141,9 +153,9 @@
    "field_path": "$.entities[18].once_per_waking_toast",
    "entity_id": "lift_cargo_pallet",
    "old": "The pallet is where you left it and the cage is where the bell says. Nothing moves again until the next shift.",
-   "new": "The pallet sits where you put it, squarely inside the loading square.",
+   "new": "The attendant has stopped counting loads for the day. Come back for the pallet on tomorrow's bell.",
    "register": "functional",
-   "why": "bible §10 schedule template + §1.1 closer in functional register; the new line pays off the observe's `one hand's width outside the loading square`"
+   "why": "bible §10 schedule template + §1.1 closer in functional register; the new line pays off the observe's `one hand's width outside the loading square` || FIX WAVE (H3): review H3: the lane's rewrite dropped the refusal AND the re-arm timing that its own four sibling once_per_waking rewrites all carry, and it asserted the pallet was INSIDE the loading square, contradicting the holdout observe at $.entities[18].observe (\"one hand's width outside the loading square\"). Reconciled in the toast alone (the observe is holdout, byte-untouched): refusal = the attendant has stopped counting loads for the day, re-arm = tomorrow's bell, and the pallet's position is left where the observe puts it. Ending shape INSTRUCTION, deliberately unlike $.entities[14].once_per_waking_toast's fact ending in the same file."
   },
   {
    "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
@@ -240,9 +252,9 @@
    "field_path": "$.entities[3].friendly_line",
    "entity_id": "forge_apprentice",
    "old": "She looks up for exactly as long as the count allows, then back down. From an apprentice on the clock, that is a warm welcome.",
-   "new": "She looks up for exactly as long as the count allows, then back down. The count does not miss a beat.",
+   "new": "She looks up for exactly as long as the count allows, then back down. Her lips are moving on a number.",
    "register": "character-bearing",
-   "why": "bible §7 other-shapes (`from X, that is Y` — the `which from X is Y` family, target zero) + §3.5: a friendly_line shows the guard moving, it does not narrate that it moved"
+   "why": "bible §7 other-shapes (`from X, that is Y` — the `which from X is Y` family, target zero) + §3.5: a friendly_line shows the guard moving, it does not narrate that it moved || FIX WAVE (re-vary): review monoculture re-vary 2 of 4: \"The count does not miss a beat\" was a negative non-event closer. Re-shaped to an observed physical DETAIL (she is silently counting), which shows the same thing without asserting the absence of an event."
   },
   {
    "file": "wandering_inn_game/data/maps/pallass/pallass_forge_hall.json",
@@ -303,9 +315,18 @@
    "field_path": "$.entities[12].observe",
    "entity_id": "grand_lift_market",
    "old": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight. This is how the tiers actually connect.",
-   "new": "A bronze-riveted cage with room in it for a wagon, its counterweights climbing the shaft as the cage comes down.",
+   "new": "A bronze-riveted cage with room in it for a wagon, counterweights racked in a shaft that drops past the tiers below this one.",
    "register": "scenic",
-   "why": "demotion candidate (closer_score 3): §2.2 thematic closer; the two tiers now see the same lift from their own side instead of sharing one verbatim string"
+   "why": "demotion candidate (closer_score 3): §2.2 thematic closer; the two tiers now see the same lift from their own side instead of sharing one verbatim string || FIX WAVE (M5): review M5: the lane's rewrite claimed transient motion (\"counterweights climbing the shaft as the cage comes down\") on a lift whose gate is LOCKED until elevator_pass_stamped — the cage is not moving when the player reads this. Transient claim dropped, depth fact restored (the shaft drops past the tiers below), still deliberately distinct from pallass_forge.json's $.entities[4].observe of the same lift."
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[13].on_skill_use.toast",
+   "entity_id": "lift_overlook",
+   "old": "[Eagle Eyes] — The haze gives up. Nine tiers resolve into stalls, patrol routes, and one dropped coin purse on a ledge two floors down that everyone else is too proud to see.",
+   "new": "[Eagle Eyes] — The haze gives up. Nine tiers resolve into stalls, patrol routes, and one dropped coin purse on a ledge two floors down.",
+   "register": "functional",
+   "why": "UNTOUCHED by the lane; changed by the FIX WAVE (L6): review L6: functional/skill-outcome register with a thematic closer the lane left in place (\"that everyone else is too proud to see\") — §1.1 allows no closer here and the register cannot petition for one. Closer cut, zero closers, all facts kept (nine tiers, stalls, patrol routes, one dropped coin purse, two floors down)."
   },
   {
    "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
@@ -348,9 +369,9 @@
    "field_path": "$.entities[25].variants[0].toast",
    "entity_id": "market_dray_rank",
    "old": "Second leg, same cart, same two blocks. The rank clerk marks it without looking up, which in Pallass is a commendation.",
-   "new": "Second leg, same cart, same two blocks. The rank clerk marks it without looking up.",
+   "new": "Second leg, same cart, same two blocks. The rank clerk chalks it onto the queue board under the first.",
    "register": "scenic",
-   "why": "demotion candidate (closer_score) + §7 `which from X is Y` geometry (regex-confirmed, target zero); ends on the §9 silence shape"
+   "why": "demotion candidate (closer_score) + §7 `which from X is Y` geometry (regex-confirmed, target zero); ends on the §9 silence shape || FIX WAVE (re-vary): review monoculture re-vary 4 of 4, and the second NEW \"without looking up\" ending. Re-shaped to MOTION on the queue board the observe already names. After this pass the region has zero \"look up\" ENDINGS; the single surviving mention is mid-string in pallass_forge.json $.entities[6].observe, which the lane correctly left alone."
   },
   {
    "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
@@ -372,12 +393,21 @@
   },
   {
    "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[4].observe",
+   "entity_id": "market_stall_b",
+   "old": "A stall built to the same civic pattern as every other on this tier — same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+   "new": "Counter height, awning pitch and placard all to the same civic pattern as its neighbours. A folded rag is wedged under one leg to bring the counter level.",
+   "register": "scenic",
+   "why": "UNTOUCHED by the lane; changed by the FIX WAVE (M3): review M3: three byte-identical stall observes survived the lane's toast differentiation. Doublet \"Efficient. Impersonal.\" is allowed to survive on exactly ONE (market_stall_a); this one gets the same treatment its toast got — the civic sameness stated once, then one specific physical deviation. Zero inference, ending shape FACT."
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
    "field_path": "$.entities[4].toast",
    "entity_id": "market_stall_b",
    "old": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up — the price is the price.",
-   "new": "You pick a bundle up, read the price off the card, and set it down. The stallkeeper does not look up from the tally.",
+   "new": "You pick a bundle up, read the price off the card, and set it down. The keeper adds a mark to a tally sheet as you do it.",
    "register": "scenic",
-   "why": "same indictment as stall a; differentiated fix (§10 guard 3), ends on the §9 silence shape"
+   "why": "same indictment as stall a; differentiated fix (§10 guard 3), ends on the §9 silence shape || FIX WAVE (re-vary): review monoculture re-vary 3 of 4, and one of the two NEW \"doesn't look up\" endings the lane introduced (three in the region). Re-shaped to MOTION — the keeper does something rather than fails to do something."
   },
   {
    "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
@@ -387,6 +417,15 @@
    "new": "The stallkeeper's burner is free between rushes. Cook a proper meal on it.",
    "register": "functional",
    "why": "§1.1 closer in functional register + the region's civic-generalisation template (§10); skill_hint fires for a player who already HAS the Skill (interactions.gd:161), so the payload is the nudge"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[6].observe",
+   "entity_id": "market_stall_c",
+   "old": "A stall built to the same civic pattern as every other on this tier — same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+   "new": "Counter, awning and placard all to the tier's spec, the third of three in a row. The awning's edge ticks up and down where the canvas has come loose from a grommet.",
+   "register": "scenic",
+   "why": "UNTOUCHED by the lane; changed by the FIX WAVE (M3): review M3, second of the two differentiated stall observes. Same civic-sameness clause, then a different order of deviation, ending shape MOTION so the three stalls no longer share a rhythm or an ending. Zero inference."
   },
   {
    "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",

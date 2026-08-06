@@ -773,7 +773,7 @@
    ],
    "observe": "A bronze rail along the tier's open edge, polished bright by a hundred people leaning on the same stretch of it while they waited on the cage. Below it the shaft goes down past where the light gives up.",
    "on_interact_accomplishment": "leaned_on_the_parapet_rail",
-   "toast": "You put a hand on the rail. Warm from the tier, not from the drop, and it does not shift at all under your weight."
+   "toast": "You put a hand on the rail. Warm from the tier, not from the drop, and cold air comes up the shaft against your wrist."
   },
   {
    "_comment": "v0.15 T4.4 regional repeatable work, 3 of 3. NEW COUNTER pallass_fetches_run, frozen at the next tag. Cell (18,4) sits east of forge_station_b, off the bounds lap (rows 2/9, columns 0/25) and off the y=9 lane pallass_walkthrough and pallass_round_trip both use.",
@@ -882,7 +882,7 @@
    "observe": "A pallet strapped and tagged and standing exactly where it has stood for three cycles, one hand's width outside the loading square.",
    "on_interact_accomplishment": "shipment_leg_carried",
    "once_per_waking": true,
-   "once_per_waking_toast": "The pallet sits where you put it, squarely inside the loading square.",
+   "once_per_waking_toast": "The attendant has stopped counting loads for the day. Come back for the pallet on tomorrow's bell.",
    "toast": "You get the pallet onto the loading square and the strapping squared. The attendant looks at it, looks at the bell, and says nothing."
   }
  ]

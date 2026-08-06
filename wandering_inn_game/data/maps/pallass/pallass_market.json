@@ -371,9 +371,9 @@
    ],
    "display_name": "Market Stall",
    "sprite": "market_stall_pallass_b",
-   "observe": "A stall built to the same civic pattern as every other on this tier — same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+   "observe": "Counter height, awning pitch and placard all to the same civic pattern as its neighbours. A folded rag is wedged under one leg to bring the counter level.",
    "on_interact_accomplishment": "browsed_posted_price_stall",
-   "toast": "You pick a bundle up, read the price off the card, and set it down. The stallkeeper does not look up from the tally."
+   "toast": "You pick a bundle up, read the price off the card, and set it down. The keeper adds a mark to a tally sheet as you do it."
   },
   {
    "id": "pallass_stall_burner",
@@ -402,7 +402,7 @@
    ],
    "display_name": "Market Stall",
    "sprite": "market_stall_pallass_c",
-   "observe": "A stall built to the same civic pattern as every other on this tier — same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+   "observe": "Counter, awning and placard all to the tier's spec, the third of three in a row. The awning's edge ticks up and down where the canvas has come loose from a grommet.",
    "on_interact_accomplishment": "browsed_posted_price_stall",
    "toast": "The stallkeeper answers a question you have not asked by tapping the price card twice."
   },
@@ -499,7 +499,7 @@
    ],
    "display_name": "The Grand Lift",
    "sprite": "great_lift",
-   "observe": "A bronze-riveted cage with room in it for a wagon, its counterweights climbing the shaft as the cage comes down.",
+   "observe": "A bronze-riveted cage with room in it for a wagon, counterweights racked in a shaft that drops past the tiers below this one.",
    "locked_toast": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open.",
    "door_when": {
     "requires": {
@@ -530,7 +530,7 @@
    "on_skill_use": {
     "accomplishment": "scouted_vantage",
     "gold": 1,
-    "toast": "[Eagle Eyes] — The haze gives up. Nine tiers resolve into stalls, patrol routes, and one dropped coin purse on a ledge two floors down that everyone else is too proud to see."
+    "toast": "[Eagle Eyes] — The haze gives up. Nine tiers resolve into stalls, patrol routes, and one dropped coin purse on a ledge two floors down."
    }
   },
   {
@@ -800,7 +800,7 @@
      "when": {
       "shipment_leg_carried": 1
      },
-     "toast": "Second leg, same cart, same two blocks. The rank clerk marks it without looking up."
+     "toast": "Second leg, same cart, same two blocks. The rank clerk chalks it onto the queue board under the first."
     }
    ]
   },
