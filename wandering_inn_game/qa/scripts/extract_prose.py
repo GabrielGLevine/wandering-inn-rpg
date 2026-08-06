@@ -3617,6 +3617,34 @@ def self_test():
           d1["_pins"]["protected_keeps"] == len(rjson(DOCS / "protected-keeps.json")["keeps"])
           and d1["_pins"]["holdout"] == len(rjson(DOCS / "holdout.json")["ids"]))
 
+    # 11h. landmark grants + the §5 reserve arithmetic
+    check("landmark reserve: ceiling == spent + remaining",
+          LANDMARK_CEILING_BEATS == LANDMARK_BEATS_SPENT + LANDMARK_RESERVE_LEFT,
+          f"{LANDMARK_CEILING_BEATS} == {LANDMARK_BEATS_SPENT} + "
+          f"{LANDMARK_RESERVE_LEFT}")
+    check("landmark reserve is not overdrawn", LANDMARK_RESERVE_LEFT >= 0,
+          f"{LANDMARK_RESERVE_LEFT} left")
+    check("every landmark grant binds to a live inventory id",
+          not [g for g in LANDMARK_GRANTS if g not in {r["id"] for r in rows}],
+          str([g for g in LANDMARK_GRANTS if g not in {r["id"] for r in rows}]))
+    check("no grant duplicates a heuristic landmark (a grant is an ALLOCATION)",
+          not (set(LANDMARK_GRANTS) & (lm_ids | set(LANDMARK_DISPOSITIONS))))
+    regf = DOCS / "landmark-registry.json"
+    reg_committed = rjson(regf) if regf.exists() else {"strings": []}
+    check("committed landmark-registry.json holds every ruled landmark + grant",
+          sorted(s["id"] for s in reg_committed["strings"])
+          == sorted(lm_ids | set(LANDMARK_GRANTS)),
+          f"{len(reg_committed['strings'])} rows on disk")
+    check("committed registry restates the reserve as spent/remaining",
+          reg_committed.get("_reserve", {}).get("remaining_beats")
+          == LANDMARK_RESERVE_LEFT
+          and reg_committed.get("_reserve", {}).get("spent_beats")
+          == LANDMARK_BEATS_SPENT)
+    lm_drift = [s["id"] for s in reg_committed["strings"]
+                if live_text(s["file"], s["field_path"]) != s["text"]]
+    check("every registry row's recorded text IS the live text "
+          "(a KEEP-AS-IS grant changes no bytes)", not lm_drift, str(lm_drift[:3]))
+
     print("self-test:", "PASS" if not fails else f"{len(fails)} FAILURES: {fails}")
     return 1 if fails else 0
 

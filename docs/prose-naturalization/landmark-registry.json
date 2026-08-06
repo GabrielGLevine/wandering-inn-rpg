@@ -1,11 +1,18 @@
 {
- "_count": 9,
+ "_count": 10,
  "_dispositions": {
   "KEEP-AS-IS": "Ships as written. Do not touch.",
   "RESTAGE": "Keep the beat AND keep the correction. Lose the CAPS and the staging ONLY. Nothing else about the string changes."
  },
- "_note": "Every landmark string in the corpus, with one ruled disposition each. LANES GET ZERO DISCRETION BEYOND THE DISPOSITION: a landmark string is not an invitation to rewrite, and 'UNRULED' can never appear -- self-test fails if a landmark row has no disposition or a disposition has no landmark row.",
+ "_note": "Every landmark string in the corpus, with one ruled disposition each. LANES GET ZERO DISCRETION BEYOND THE DISPOSITION: a landmark string is not an invitation to rewrite, and 'UNRULED' can never appear -- self-test fails if a landmark row has no disposition or a disposition has no landmark row. Rows carry `source`: `heuristic-landmark` rows are strings classify_row reads as landmark; `controller-grant` rows are beats the controller allocated out of the §5 reserve on petition, and their heuristic register is left as-is on purpose so the allocation stays visible.",
  "_python": "3.12.3",
+ "_reserve": {
+  "ceiling_beats": 12,
+  "grants": 1,
+  "note": "bible §5 RULED the ceiling at 12 beats (8 spent by the ruled landmark strings, 4 in reserve). 1 grant(s) have since been allocated out of that reserve, so **3 remain**. Reserve is allocated by the controller on petition only (§5 counting rule 3); a lane never self-grants.",
+  "remaining_beats": 3,
+  "spent_beats": 9
+ },
  "strings": [
   {
    "beat": "the Anchor (Act V payoff)",
@@ -17,7 +24,8 @@
    "holdout": false,
    "id": "map:dungeon/seal_vault.json:$.entities[1].open_toast",
    "protected": false,
-   "text": "Not a prisoner. An ANCHOR — a twin to the stone the Horns hauled out of the ruin, and it has been drinking the ward's slow pour for three centuries to stay awake. Pisces, hoarse: \"This is why the Door works at all. Somebody left it something to come home to, and then somebody sealed the room and let it drink.\"",
+   "source": "heuristic-landmark",
+   "text": "Not a prisoner. An anchor: a twin to the stone the Horns hauled out of the ruin, and it has been drinking the ward's slow pour for three centuries to stay awake. Pisces, hoarse: \"This is why the Door works at all. Somebody left it something to come home to, and then somebody sealed the room and let it drink.\"",
    "why": "Keep the beat and keep the correction -- 'Not a prisoner.' overturns an expectation the chain spent Act V building, and §7's keep-criterion-as-function protects exactly that. Lose the CAPS on ANCHOR (§8: emphasis capitals, not lettering the player is looking at) and lose the em-dash staging. Nothing else changes; the Pisces quote stays."
   },
   {
@@ -30,6 +38,7 @@
    "holdout": false,
    "id": "map:dungeon/trapped_halls.json:$.entities[8].door_when.open_toast",
    "protected": false,
+   "source": "heuristic-landmark",
    "text": "The seal does not resist. It simply stops being a seal — the runes go quiet in order, one ring at a time, and the door swings in on three centuries of undisturbed air.",
    "why": "Ends on physical fact (three centuries of undisturbed air), no CAPS, no epigram. Earned and already restrained."
   },
@@ -43,6 +52,7 @@
    "holdout": false,
    "id": "map:floodplains/floodplains.json:$.entities[16].door_when.open_toast",
    "protected": false,
+   "source": "heuristic-landmark",
    "text": "The seam splits wider at your touch, cold air breathing out of the dark beneath. You step through, into somewhere else.",
    "why": "Two sentences, ends on motion into somewhere else. Landmark register spent about as cheaply as it can be."
   },
@@ -56,6 +66,7 @@
    "holdout": false,
    "id": "map:invrisil/mercantile_alleys.json:$.entities[13].victory_toast",
    "protected": false,
+   "source": "heuristic-landmark",
    "text": "The Fence's strongbox gives up a lady's stone — forty years missing and still warm with someone else's guilt. It goes in your pack like it weighs more than it does.",
    "why": "victory_toast is landmark-ELIGIBLE per the controller's §5 ruling, and this is one of the two that earn it. 'still warm with someone else's guilt' is the one anonymous agent in the landmark register and it is doing work."
   },
@@ -69,6 +80,7 @@
    "holdout": false,
    "id": "map:invrisil/mercantile_alleys.json:$.entities[15].victory_toast",
    "protected": false,
+   "source": "heuristic-landmark",
    "text": "You take the brass off the cloth yourself. Two letters, cut deep, and a table with nobody left standing beside it.",
    "why": "The second of mercantile_alleys' two distinct chains -- the only file in the corpus entitled to two beats (§5). Ends on an absence: 'a table with nobody left standing beside it.'"
   },
@@ -82,8 +94,25 @@
    "holdout": false,
    "id": "map:liscor/street.json:$.entities[12].door_when.open_toast",
    "protected": false,
+   "source": "heuristic-landmark",
    "text": "You set your shoulder to the grate. The rust gives with a shriek, and cold air breathes up out of the dark. Down you go.",
    "why": "Ends on an instruction-shaped three words ('Down you go.'). Note the SAME prop's `observe` is a demotion candidate with four negation shapes -- the payoff is fine, the scenery around it is the work."
+  },
+  {
+   "beat": "Ordinance 44 / the stamped tier pass (pallass civic chain)",
+   "display_name": "Posted Ordinances",
+   "disposition": "KEEP-AS-IS",
+   "field": "toast",
+   "field_path": "$.entities[22].variants[0].toast",
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "granted": "controller grant 2026-08-06 from the 4-beat reserve (elevator_pass_stamped-gated, chain-earned)",
+   "heuristic_register": "scenic",
+   "holdout": false,
+   "id": "map:pallass/pallass_market.json:$.entities[22].variants[0].toast",
+   "protected": false,
+   "source": "controller-grant",
+   "text": "Ordinance 44, third column: tier passes are the property of the city and the responsibility of the bearer. Yours is in your pocket, and now you know whose it is.",
+   "why": "RULED at #397 integration: GRANT from the reserve, reserve 4->3. The variant fires only under `when {elevator_pass_stamped: 1}`, so the reversal is earned by a gate the player already passed; the civic text is quoted rather than paraphrased; and the second sentence turns the ordinance onto the object in the player's own pocket. Petitioned by the pallass lane, DEFERRED to close in keeps-petitions/pallass.json, granted here. The string ships BYTE-AS-IS -- KEEP-AS-IS is the whole disposition, and the grant changes the registry and the reserve arithmetic, nothing else. Its heuristic register stays `scenic`: classify_row never saw a landmark here, and papering over that with an override would hide the fact that this beat exists by allocation rather than by rule."
   },
   {
    "beat": "the plinth / Door retrieval (base rendering)",
@@ -95,7 +124,8 @@
    "holdout": false,
    "id": "map:ruin/ruin_surface.json:$.entities[5].open_toast",
    "protected": false,
-   "text": "Below the pedestal: not treasure. A DOOR — unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it.",
+   "source": "heuristic-landmark",
+   "text": "Below the pedestal: not treasure. A door, unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it.",
    "why": "Same ruling as seal_vault. 'not treasure. A DOOR —' keeps its correction (the scene actively invited the treasure assumption) and loses the CAPS and the dash staging. The Ceria line and the anchor stone stay."
   },
   {
@@ -108,6 +138,7 @@
    "holdout": false,
    "id": "map:ruin/ruin_surface.json:$.entities[5].open_toast_variants[0].open_toast",
    "protected": false,
+   "source": "heuristic-landmark",
    "text": "Beneath where the door lay, still seated in its groove: the anchor stone. The Horns left nothing else behind.",
    "why": "The stronger of the two renderings: it spends its landmark allowance on an absence ('The Horns left nothing else behind.'). §4 rule 4's worked example. Do not touch."
   },
@@ -121,6 +152,7 @@
    "holdout": true,
    "id": "map:sewers/sewers.json:$.entities[9].door_when.open_toast",
    "protected": false,
+   "source": "heuristic-landmark",
    "text": "You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above.",
    "why": "Physical, sequential, no thesis. The dark swallowing the light is a fact of the descent, not a verdict on it."
   }
