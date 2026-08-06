@@ -232,11 +232,11 @@
    "sprite": "inn_room_ledger",
    "observe": "The shop's own copy of every form the crate has generated, in a stack tall enough to stand a cup on.",
    "requires_skill": "appraise_goods",
-   "skill_hint_toast": "Forms, in an order. There is a shape to the order. You cannot see the shape.",
+   "skill_hint_toast": "The order in the stack is doing work of its own. Appraise it properly and the clause is in there.",
    "locked_toast": "Twelve forms about one crate. You get four pages in before the words stop meaning anything.",
    "on_skill_use": {
     "accomplishment": "exemption_found",
-    "toast": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. Tin is not perishable. The salt packed WITH it is, and it is on the same manifest line. Four cycles, and the exemption was on the paper the whole time."
+    "toast": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. The tin is not perishable, the salt packed with it is, and after four cycles both are still on one manifest line."
    }
   },
   {
@@ -252,8 +252,8 @@
    "observe": "A cleared square of floor by the back wall with a chalk outline on it, the size of one crate, waiting since the first cycle.",
    "on_interact_accomplishment": "shipment_leg_carried",
    "once_per_waking": true,
-   "once_per_waking_toast": "The dock is squared away for today. Whatever else moves, it moves tomorrow.",
-   "toast": "You square the load onto the chalk outline. It fits the way a thing fits when somebody measured it a month ago and has been looking at the empty space since.",
+   "once_per_waking_toast": "The dock is squared away for today, chalk outline and all.",
+   "toast": "You square the load onto the chalk outline. The chalk goes under the crate on all four sides.",
    "variants": [
     {
      "when": {
@@ -300,7 +300,7 @@
    "sprite": "inn_room_ledger",
    "observe": "The family's own board: who eats here on credit, and for how long. Names in chalk, never in ink.",
    "on_interact_accomplishment": "read_the_den_family_slate",
-   "toast": "Eleven names carried. One of them has been carried for two years and has no repayment column at all. In Pallass, that is a document nobody filed.",
+   "toast": "Eleven names carried. One of them has been carried for two years and has no repayment column at all.",
    "visual_states": [
     {
      "when": {

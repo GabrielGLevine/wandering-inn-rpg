@@ -2,7 +2,7 @@
  "biome": "pallass_forge",
  "interior_flavor": [
   "Nothing there. Quench water and hammer scale, under a wall of work that all passed.",
-  "Nothing there. The heat in here keeps a schedule, and you are not on it."
+  "Nothing there. Scorch marks where the tongs get set down."
  ],
  "grid": {
   "width": 12,
@@ -192,9 +192,9 @@
    ],
    "display_name": "The Temper Bench",
    "sprite": "temper_bench",
-   "observe": "A billet clamped mid-process, the quench beside it, a gauge nobody has reset since the last failure. Somebody stopped here on purpose and did not come back.",
+   "observe": "A billet clamped mid-process, the quench beside it, a gauge still reading where the last failure left it.",
    "requires_skill": "appraise_goods",
-   "skill_hint_toast": "Colour, count, quench. You can see there is an order to it. You cannot see the order.",
+   "skill_hint_toast": "Colour, count, quench. Two of those you can judge by eye; the count wants a trained one.",
    "locked_toast": "Heat, metal, and a gauge you cannot read. Guessing here costs somebody a week.",
    "on_skill_use": {
     "accomplishment": "temper_run",
@@ -212,7 +212,7 @@
    "sprite": "price_board",
    "observe": "A civic notice pinned at eye height, examiner's seal at the corner, the text underneath it read so often the ink has gone grey where thumbs land.",
    "on_interact_accomplishment": "read_the_examination_standard",
-   "toast": "The standard does not measure how hard a blade comes out. It measures how it RECOVERS. Somebody up here has been failing the wrong test perfectly.",
+   "toast": "The standard does not measure how hard a blade comes out. It measures how it recovers.",
    "visual_states": [
     {
      "when": {
@@ -243,7 +243,7 @@
    ],
    "facing": "up",
    "observe": "A young Drake with her sleeves pinned back and a scorch on one forearm she has not stopped working long enough to notice.",
-   "friendly_line": "She looks up for exactly as long as the count allows, then back down. From an apprentice on the clock, that is a warm welcome.",
+   "friendly_line": "She looks up for exactly as long as the count allows, then back down. The count does not miss a beat.",
    "talk_pool": [
     "Third year. Third year is when they stop telling you what you did wrong and start writing it down.",
     "I can make it hard. Anyone can make it hard. Making it come back is the part.",
@@ -262,7 +262,7 @@
    "sprite": "barrel",
    "observe": "Water gone grey with scale, a skin of oil across the top, and a scum line three fingers above the current level.",
    "on_interact_accomplishment": "eyed_the_slack_tub",
-   "toast": "You touch the surface. Warm all the way down. This tub has not been cold in years, and the scum line says nobody has ever had time to change it."
+   "toast": "You touch the surface. Warm all the way down, and this tub has not been cold in years. The oil skin closes back over where your finger went."
   },
   {
    "id": "forge_hall_apprentice_slate",
@@ -299,9 +299,9 @@
    ],
    "display_name": "The Pattern Wall",
    "sprite": "library_shelf",
-   "observe": "Finished pieces racked in a grid, each with a civic tag wired to it. They are not for sale. They are the argument.",
+   "observe": "Finished pieces racked in a grid, each with a civic tag wired to it and not one price among them.",
    "on_interact_accomplishment": "eyed_the_pattern_wall",
-   "toast": "Every piece on the wall passed. You count the tags: four different smiths, four different answers, one standard. Pallass framed the disagreement and hung it up."
+   "toast": "Every piece on the wall passed. You count the tags: four different smiths, four different answers, one standard."
   },
   {
    "_comment": "P1 FIGHT. INTERACT-ONLY -- never add trigger_radius (it would ambush the TALK/SKILL routes; encounter_when gate is mutation-proven by pallass_depth_gates_check). Banks golem_recalibrated ONLY, never forge_golems_culled.",
@@ -330,7 +330,7 @@
     }
    },
    "observe": "A squat rig on three legs, gauges banked along its front, correcting its own posture a half-beat after it needs to.",
-   "gate_closed_toast": "The rig swings past its own marks and settles wrong, again and again. Whatever is out of true in it is the forge's business — until somebody on this floor makes it yours.",
+   "gate_closed_toast": "The rig swings past its own marks and settles wrong, again and again. Fixing it belongs to the smith, and she has not asked you to.",
    "on_victory": "golem_recalibrated"
   }
  ]
