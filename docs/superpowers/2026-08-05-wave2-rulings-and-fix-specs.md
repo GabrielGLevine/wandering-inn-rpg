@@ -254,3 +254,13 @@ keeps-petitions/pallass.json; pin-deltas regenerated (42 rows, BASE
 olds, _qa_pins_broken stays 8); ordinance-44 landmark question deferred
 to controller at close (string byte-as-is). Voice-gate maps mode
 deliberately not run (H2 integrator item).
+
+## 396-D fix wave LANDED (7c1c92ae) — lane merge-ready
+H halts proven by rc transitions (0→1→0); all three sibling tripwires
+converted (disclosed, accepted); M1 extended via behaviour-neutral
+hoist; M2 fixed in manifest + AGENTS.md seed-table copy;
+thicket_talk_start KEPT as derivation baseline; M3 honest fixture
+comment; L traced-ladder pin proven load-bearing. FOLLOW-UP RULED into
+396 close wave: derive_qa_surfaces --check gains a both-present-must-
+match guard (manifest fixture vs script fixture_save) — lands green
+today, closes the drift class.
