@@ -37,7 +37,20 @@ CHOICE-LOG "390/396/397 execution wave" block (PixelLab priority,
 lamb-pen seam split, riverfarm-last for #397, merge order 390→396→397).
 PixelLab balance $0.83, 0 sub gens.
 
-WAVE 3 LIVE (post-reset 03:05, 8 Opus agents): fix waves 396-C, 396-D,
+WAVE 3 STATE (WINDDOWN park ~05:30, reset ~09:45): LANDED merge-ready:
+396-D (7c1c92ae), 397 pallass (7f3da96c), empty (8a5ea92a), invrisil
+(240cbf11), liscor (73a20c88). STILL IN FLIGHT at park: 396-C, inn, fg
+fix waves — collect their notifications, bank, re-dispatch post-reset
+if they died. ALL verdicts/specs in
+docs/superpowers/2026-08-05-wave2-rulings-and-fix-specs.md. THEN:
+pin-sync integrator (single writer qa/scripts+tests; fg pins
+pre-synced; ISSUE_NAMED_WORK tool fix; H2 maps-gate mask;
+protected-keeps additions from keeps-petitions/*.json; merge all 397/*
+into issue/397-prose-naturalization; composed gates) -> 396 merge
+lane-c+lane-d + Tasks 11-12 close (+ derive_qa_surfaces fixture guard)
+-> 397 Phase 4 + riverfarm pass + Phase 5 blind read.
+
+Original wave-3 record: fix waves 396-C, 396-D,
 397-invrisil, 397-pallass, 397-empty + reviews inn/liscor/fg. Lane C
 evidence PNGs READ BY CONTROLLER: PASS (lambs distinct standing/lying
 in the rail run; tend prop clear of HUD). Next after wave 3: pin-sync
