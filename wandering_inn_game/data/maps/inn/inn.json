@@ -403,7 +403,7 @@
    ],
    "display_name": "Erin",
    "sprite": "erin",
-   "observe": "A young human, no armor, no weapon, a rag over one shoulder she keeps forgetting she is holding. She talks to the room and to herself in the same breath.",
+   "observe": "A young human, no armor, no weapon, a rag over one shoulder she keeps forgetting she is holding. She talks to the room and to herself in the same breath. She has no idea how strange she is in this world.",
    "friendly_line": "Oh - hi! You've got a good face, you know that? Come in, sit down. I'll find you something warm - on the house, probably. Don't tell Lyonette I said that.",
    "talk_pool": [
     "@erin_shared_2",
@@ -1394,12 +1394,12 @@
    "display_name": "Chef's Counter",
    "sprite": "counter_left",
    "requires_skill": "advanced_cooking",
-   "skill_hint_toast": "Good stock, better knives, and no hands on either. Bring a cook's Skill and the counter is ready.",
+   "skill_hint_toast": "Good stock, better knives, and no hands that know what to do with them. You pick up a knife and put it back.",
    "locked_toast": "A working counter, scrubbed and stocked. The kitchen has standards, and they're looking at you.",
    "on_skill_use": {
     "accomplishment": "cooked_meal",
     "item": "fine_meal",
-    "toast": "[Advanced Cooking] — Knife-work, then the pan, then four minutes you do not look away from. The plate goes out hot."
+    "toast": "[Advanced Cooking] — Knife-work, then the pan, then four minutes you do not look away from, and nothing burns."
    }
   },
   {
@@ -1412,7 +1412,7 @@
    "display_name": "The Good Copper Pan",
    "sprite": "grill",
    "requires_skill": "signature_dish",
-   "skill_hint_toast": "The good copper pan. It comes down when there is a signature dish to cook.",
+   "skill_hint_toast": "Copper, scoured, and heavier than it looks. Not the pan for anything you know how to cook.",
    "locked_toast": "The good copper pan, hung out of easy reach. Erin's rule, probably.",
    "on_skill_use": {
     "accomplishment": "cooked_meal",
@@ -1630,7 +1630,7 @@
    ],
    "display_name": "A Door of Vines",
    "sprite": "garden_door_inner",
-   "observe": "Plaster gone thin and chalky, and one nail driven in at head height with nothing hung on it.",
+   "observe": "Plaster gone thin and chalky, and one nail driven in at head height.",
    "on_interact_accomplishment": "noticed_the_bare_wall",
    "toast": "Bare wall. A nail with nothing hung on it.",
    "door_when": {
@@ -1658,7 +1658,7 @@
       "at": 1
      },
      "hidden": false,
-     "observe": "A door of living vines, woven shut and breathing faintly of green. This wall had a nail in it this morning."
+     "observe": "A door of living vines, woven shut and breathing faintly of green. The nail is gone, and the plaster with it."
     }
    ]
   },

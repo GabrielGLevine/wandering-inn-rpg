@@ -1,5 +1,5 @@
 {
- "_count": 22,
+ "_count": 21,
  "_files": [
   "wandering_inn_game/data/maps/inn/inn.json",
   "wandering_inn_game/data/maps/inn/inn_player_room.json",
@@ -14,7 +14,7 @@
    "entity_id": "erin",
    "field_path": "$.entities[0].observe",
    "file": "wandering_inn_game/data/maps/inn/inn.json",
-   "new": "A young human, no armor, no weapon, a rag over one shoulder she keeps forgetting she is holding. She talks to the room and to herself in the same breath.",
+   "new": "A young human, no armor, no weapon, a rag over one shoulder she keeps forgetting she is holding. She talks to the room and to herself in the same breath. She has no idea how strange she is in this world.",
    "old": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her."
   },
   {
@@ -35,21 +35,21 @@
    "entity_id": "inn_chef_counter",
    "field_path": "$.entities[21].skill_hint_toast",
    "file": "wandering_inn_game/data/maps/inn/inn.json",
-   "new": "Good stock, better knives, and no hands on either. Bring a cook's Skill and the counter is ready.",
+   "new": "Good stock, better knives, and no hands that know what to do with them. You pick up a knife and put it back.",
    "old": "Good stock, better knives, and nobody using either. A real cook could turn this counter into a meal worth naming."
   },
   {
    "entity_id": "inn_chef_counter",
    "field_path": "$.entities[21].on_skill_use.toast",
    "file": "wandering_inn_game/data/maps/inn/inn.json",
-   "new": "[Advanced Cooking] — Knife-work, then the pan, then four minutes you do not look away from. The plate goes out hot.",
+   "new": "[Advanced Cooking] — Knife-work, then the pan, then four minutes you do not look away from, and nothing burns.",
    "old": "[Advanced Cooking] — Knife-work first, then the pan, then the part nobody can teach. The plate comes out arguing for seconds."
   },
   {
    "entity_id": "inn_copper_pan",
    "field_path": "$.entities[22].skill_hint_toast",
    "file": "wandering_inn_game/data/maps/inn/inn.json",
-   "new": "The good copper pan. It comes down when there is a signature dish to cook.",
+   "new": "Copper, scoured, and heavier than it looks. Not the pan for anything you know how to cook.",
    "old": "The good copper pan. It's been waiting for a dish that deserves it."
   },
   {
@@ -91,42 +91,42 @@
    "entity_id": "garden_door",
    "field_path": "$.entities[29].observe",
    "file": "wandering_inn_game/data/maps/inn/inn.json",
-   "new": "Plaster gone thin and chalky, and one nail driven in at head height with nothing hung on it.",
+   "new": "Plaster gone thin and chalky, and one nail driven in at head height.",
    "old": "Plaster, old and thin, and a nail with nothing hung on it. If something is meant to be here, it isn't yet."
   },
   {
    "entity_id": "garden_door",
    "field_path": "$.entities[29].visual_states[1].observe",
    "file": "wandering_inn_game/data/maps/inn/inn.json",
-   "new": "A door of living vines, woven shut and breathing faintly of green. This wall had a nail in it this morning.",
+   "new": "A door of living vines, woven shut and breathing faintly of green. The nail is gone, and the plaster with it.",
    "old": "A door of living vines, woven shut and breathing faintly of green. It wasn't here before, and it doesn't pretend otherwise."
   },
   {
    "entity_id": "player_room_exit",
    "field_path": "$.entities[0].observe",
    "file": "wandering_inn_game/data/maps/inn/inn_player_room.json",
-   "new": "The hall on the other side. Throw the bolt if you want the room to yourself.",
+   "new": "The hall on the other side, and this door swings in when you pull it.",
    "old": "The hall on the other side, and a bolt on this side. The bolt is most of what the lease bought."
   },
   {
    "entity_id": "player_room_bed",
    "field_path": "$.entities[1].sleep_toast[1].text",
    "file": "wandering_inn_game/data/maps/inn/inn_player_room.json",
-   "new": "Your own room. The noise from downstairs stops at the door.",
+   "new": "Your own room, and bedding that goes out to the line and comes back turned down.",
    "old": "Your own room, and bedding aired for you rather than for whoever comes next."
   },
   {
    "entity_id": "player_room_chest",
    "field_path": "$.entities[2].locked_toast",
    "file": "wandering_inn_game/data/maps/inn/inn_player_room.json",
-   "new": "Your own footlocker. No lock on the hasp, so just lift the lid.",
+   "new": "Your own footlocker, empty. Bare boards inside, and one dry hinge.",
    "old": "Your own footlocker. Nothing in it yet that needs a key."
   },
   {
    "entity_id": "player_room_shelf",
    "field_path": "$.entities[4].observe",
    "file": "wandering_inn_game/data/maps/inn/inn_player_room.json",
-   "new": "Three shelves and you have filled none of them.",
+   "new": "Three shelves and you have filled none of them. The lowest board is loose and slides.",
    "old": "Three shelves and you have filled none of them. Depending on the hour that is a sad thing or a hopeful one."
   },
   {
@@ -140,7 +140,7 @@
    "entity_id": "player_room_pegs",
    "field_path": "$.entities[5].observe",
    "file": "wandering_inn_game/data/maps/inn/inn_player_room.json",
-   "new": "A row of pegs by the door, the paint worn off at shoulder height.",
+   "new": "A row of pegs, the paint worn off at shoulder height.",
    "old": "Pegs worn pale at the shoulder height of forty travellers who hung a coat here and went away again."
   },
   {
@@ -151,17 +151,10 @@
    "old": "Shut, and the card slot in the frame is empty. Somebody paid for this one once and stopped."
   },
   {
-   "entity_id": "hallway_door_a",
-   "field_path": "$.entities[1].door_when.open_toast",
-   "file": "wandering_inn_game/data/maps/inn/inn_upstairs.json",
-   "new": "Your room. The key turns like it has been waiting to, and the door gives inward.",
-   "old": "The key turns like it has been waiting to. Your room, and nobody else's."
-  },
-  {
    "entity_id": "lyonette_door",
    "field_path": "$.entities[5].locked_toast",
    "file": "wandering_inn_game/data/maps/inn/inn_upstairs.json",
-   "new": "Locked. Lyonette has the only key.",
+   "new": "Locked, and Lyonette has the only key. The handle turns a quarter of the way and stops.",
    "old": "Locked. Lyonette keeps exactly one door in this inn that isn't anyone's business but hers."
   }
  ]

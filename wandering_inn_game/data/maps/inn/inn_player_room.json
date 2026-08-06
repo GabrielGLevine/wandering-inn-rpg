@@ -201,7 +201,7 @@
     3,
     2
    ],
-   "observe": "The hall on the other side. Throw the bolt if you want the room to yourself."
+   "observe": "The hall on the other side, and this door swings in when you pull it."
   },
   {
    "_comment": "Second sleep site. `your_bed` upstairs is NOT moved or gated: a player who never leases keeps the free bed. Ladder rungs ascend, highest satisfied wins.",
@@ -223,7 +223,7 @@
      "when": {
       "room_tier_1": 1
      },
-     "text": "Your own room. The noise from downstairs stops at the door."
+     "text": "Your own room, and bedding that goes out to the line and comes back turned down."
     },
     {
      "when": {
@@ -243,7 +243,7 @@
    ],
    "display_name": "Your Footlocker",
    "sprite": "chest",
-   "locked_toast": "Your own footlocker. No lock on the hasp, so just lift the lid.",
+   "locked_toast": "Your own footlocker, empty. Bare boards inside, and one dry hinge.",
    "observe": "A plain footlocker at the head of the bed, hasp and no lock. Everything you own would rattle around in it."
   },
   {
@@ -268,7 +268,7 @@
    "display_name": "A Shelf, Mostly Empty",
    "sprite": "library_shelf",
    "locked_toast": "Nothing on the shelves yet. Give it a season.",
-   "observe": "Three shelves and you have filled none of them."
+   "observe": "Three shelves and you have filled none of them. The lowest board is loose and slides."
   },
   {
    "id": "player_room_pegs",
@@ -280,7 +280,7 @@
    "display_name": "A Row of Pegs",
    "sprite": "hat_stand",
    "locked_toast": "You hang the day's coat on a peg.",
-   "observe": "A row of pegs by the door, the paint worn off at shoulder height."
+   "observe": "A row of pegs, the paint worn off at shoulder height."
   }
  ]
 }
