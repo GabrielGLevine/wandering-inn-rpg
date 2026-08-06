@@ -4193,8 +4193,8 @@
   {
    "script": "thicket_keeps_talk",
    "seed": 9,
-   "fixture": "thicket_talk_start",
-   "note": "v0.16 #305 R2 'What the Thicket Keeps' TALK route (terminal path) and the owner of the witch_hut round trip ((1,8) -> hut (4,6) -> (1,8)) plus hut_ward_scrap's LOCKED read: the fixture holds no detect_magic, so the refusal arm is reachable and the whole-run ward_scrap_read/detected_wardwork absences are sound; zero combat with thicket_line_den armed and left standing",
+   "fixture": "thicket_legacy_start",
+   "note": "#396 THE RETIREMENT-CONTRACT canonical: what_the_thicket_keeps' offer row is deleted, so this run starts from thicket_legacy_start (a LEGACY SAVE MID-QUEST -- heard_thicket_keeps pre-banked, the quest already in started_quests) and enters the route through the R2 re-entry row instead of an accept, proving a player who was mid-quest when the redesign shipped still finishes it; quest_started is asserted ABSENT whole-run, because a legacy save can never re-accept a retired quest. Also the v0.16 #305 R2 'What the Thicket Keeps' TALK route (terminal path) and the owner of the witch_hut round trip ((1,8) -> hut (4,6) -> (1,8)) plus hut_ward_scrap's LOCKED read: the fixture holds no detect_magic, so the refusal arm is reachable and the whole-run ward_scrap_read/detected_wardwork absences are sound; zero combat with thicket_line_den armed and left standing",
    "tiers": [
     "full"
    ],

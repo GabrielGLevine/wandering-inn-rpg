@@ -40,15 +40,27 @@ func _init() -> void:
 	_collect_dialogue_producers(graphs, produced)
 	_collect_contract_producers(bounties, deliveries, produced)
 
-	_validate_known_orphans(consumed, produced)
-	_validate_retired(consumed, produced)
-	_validate_negative_control()
+	# #396 lane-d review H: the registry/tripwire checks RETURN failure lines
+	# instead of asserting in their own frame. A failed assert inside a nested
+	# function aborts that frame only -- _init ran on to quit(0), so a real
+	# violation printed SCRIPT ERROR *and* "PASS" and the suite exited 0. Only
+	# an assert in _init's own frame skips quit(0) and lets the watchdog red the
+	# run, which is exactly how the zero-producer gate below has always worked.
+	var registry_failures: Array[String] = []
+	registry_failures.append_array(_known_orphan_failures(consumed, produced))
+	registry_failures.append_array(_retired_failures(consumed, produced))
+	registry_failures.append_array(_negative_control_failures())
 	var missing := _missing_producers(consumed, produced)
 	if not missing.is_empty():
 		print("test_reachability: %d zero-producer gate(s)" % missing.size())
 		for counter: String in missing:
 			print("REACHABILITY_FAIL %s consumed at %s" % [counter, ", ".join(consumed[counter])])
+	if not registry_failures.is_empty():
+		print("test_reachability: %d registry/tripwire failure(s)" % registry_failures.size())
+		for line: String in registry_failures:
+			print("REACHABILITY_FAIL " + line)
 	assert(missing.is_empty(), "zero-producer accomplishment gate(s): " + ", ".join(missing))
+	assert(registry_failures.is_empty(), "registry/tripwire failure(s): " + ", ".join(registry_failures))
 	print("PASS: requires-gate reachability — %d consumed counters, %d real producers, 0 orphans" % [consumed.size(), produced.size()])
 	quit(0)
 
@@ -279,24 +291,38 @@ func _missing_producers(consumed: Dictionary, produced: Dictionary) -> Array[Str
 
 ## A retired row must still be CONSUMED (else it is stale and the exemption is
 ## hiding nothing) and must have NO producer (a new one means the counter is back
-## and the row must go -- retirement is one-way). Mirrors _validate_known_orphans.
-func _validate_retired(consumed: Dictionary, produced: Dictionary) -> void:
+## and the row must go -- retirement is one-way). Mirrors _known_orphan_failures.
+## Returns lines for _init to assert on -- see the H note there before moving an
+## assert back in here.
+func _retired_failures(consumed: Dictionary, produced: Dictionary) -> Array[String]:
+	var failures: Array[String] = []
 	for counter: String in _SHIPPED_IDS_TEST.RETIRED_ACCOMPLISHMENTS:
-		assert(consumed.has(counter), "RETIRED_ACCOMPLISHMENTS.%s is stale: no gate consumes it, so nothing needs the exemption" % counter)
-		assert(not produced.has(counter), "RETIRED_ACCOMPLISHMENTS.%s has a real producer again -- retirement is one-way; drop the registry row" % counter)
+		if not consumed.has(counter):
+			failures.append("RETIRED_ACCOMPLISHMENTS.%s is stale: no gate consumes it, so nothing needs the exemption" % counter)
+		if produced.has(counter):
+			failures.append("RETIRED_ACCOMPLISHMENTS.%s has a real producer again (%s) -- retirement is one-way; drop the registry row" % [counter, ", ".join(produced[counter])])
+	return failures
 
 
-func _validate_known_orphans(consumed: Dictionary, produced: Dictionary) -> void:
+func _known_orphan_failures(consumed: Dictionary, produced: Dictionary) -> Array[String]:
+	var failures: Array[String] = []
 	for counter: String in KNOWN_ORPHAN_GATES:
-		assert(String(KNOWN_ORPHAN_GATES[counter]).begins_with("_comment:"), "KNOWN_ORPHAN_GATES.%s needs an _comment-style justification" % counter)
-		assert(consumed.has(counter), "KNOWN_ORPHAN_GATES.%s is stale: no gate consumes it" % counter)
-		assert(not produced.has(counter), "KNOWN_ORPHAN_GATES.%s is stale: a real producer now exists" % counter)
+		if not String(KNOWN_ORPHAN_GATES[counter]).begins_with("_comment:"):
+			failures.append("KNOWN_ORPHAN_GATES.%s needs an _comment-style justification" % counter)
+		if not consumed.has(counter):
+			failures.append("KNOWN_ORPHAN_GATES.%s is stale: no gate consumes it" % counter)
+		if produced.has(counter):
+			failures.append("KNOWN_ORPHAN_GATES.%s is stale: a real producer now exists (%s)" % [counter, ", ".join(produced[counter])])
+	return failures
 
 
-func _validate_negative_control() -> void:
+func _negative_control_failures() -> Array[String]:
 	var synthetic_consumed := {"fixture_only_counter": ["synthetic gate"]}
 	var missing := _missing_producers(synthetic_consumed, {})
-	assert(missing == ["fixture_only_counter"], "NEGATIVE CONTROL: a counter absent from real producers must fail even if a fixture could hand-bank it")
+	var failures: Array[String] = []
+	if missing != ["fixture_only_counter"]:
+		failures.append("NEGATIVE CONTROL: a counter absent from real producers must fail even if a fixture could hand-bank it (got %s)" % str(missing))
+	return failures
 
 
 func _load_dialogue_graphs() -> Dictionary:

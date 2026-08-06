@@ -445,6 +445,21 @@
    "action": "assert_state",
    "path": "accomplishments.winter_answered",
    "equals": 1
+  },
+  {
+   "_comment": "THE TRACED-PATH RESOLUTION PIN (#396 lane-d review L; invrisil_house_name_talk's journal pin is the precedent). completed_quest_summary renders resolved_path's TEXT into the Completed list, so the journal is where a rung banked by the wrong fork becomes a sentence the player reads about themselves -- quest_completed above proves the quest CLOSED, never WHICH WAY. Whole-list pin (payload_contains compares completed_quest_lines as the entire visible list, the chronicle_loop idiom), and here that list is exactly ONE row, which makes this the LADDER PROOF as well: resolved_path is LAST-MATCH-WINS over quests.json's resolution_paths order (watch, fold, traced), and with ONLY pack_traced banked -- fold_rebuilt and survived_wolf_night are both asserted absent just above -- the sentence that survives must be the TRACED one. A future fork that forgets its own rung falls back to a sibling's ending line and reds here.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "completed_quest_lines": [
+     "A Winter of Teeth (Riverfarm) \u2014 You walked the sign back and found the pack was pushed \u2014 their old ground is held by something on the line."
+    ]
+   }
   }
  ]
 }
