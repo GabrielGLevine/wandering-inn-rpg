@@ -56,6 +56,23 @@ docs/superpowers/2026-08-05-wave2-rulings-and-fix-specs.md.
   docs/prose-naturalization/phase5/phase5-reconciliation.md (rec:
   map-register-only re-authorship under zero-inference scenery default).
 
+## RUNNING (2026-08-06 evening): #398 skill-gated areas (user go)
+PR #402 MERGED (3c9b610b) after the GitHub Actions incident cleared;
+#397 remains OPEN on the Phase-5 gate (round-2 ask below). #398 now
+executing: branch issue/398-skill-gated-areas (spec merged from its
+side branch + plan committed at
+docs/superpowers/plans/2026-08-06-skill-gated-areas-398.md). Codex
+implements (user directive; wi-delegating-to-codex guardrails), Claude
+verifies/reviews/merges. LIVE: Codex Phase-0 (task-mshwwgyo-p0v5c8 in
+/tmp/wi-398 — D1 cuts, D5 registry+lint, D3 proof, D4-if-clean, Flame
+Jet burns) + Opus art lane (/tmp/wi-398-art: briar wall + pond cache;
+PixelLab RENEWED — subscription generations at full, pack-first still
+default). NEXT: Phase-0 review → merge main into branch → five Codex
+pocket lanes (P1-P5, disjoint maps) → reviews → train → machine
+playtest → PR. Codex-dispatch trap: long briefs through the
+codex-rescue forwarder misfire — write brief to a file in the worktree,
+short pointer as task text, companion helper backgrounded from main.
+
 ## 🧑‍⚖️ NEW USER ASKS from this session
 1. **#397 round 2 go/no-go** (above — taste + budget call).
 2. **[Rope Work] ACK still pending** (pre-existing).
