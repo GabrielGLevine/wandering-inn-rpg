@@ -1,0 +1,67 @@
+{
+ "_comment": "#396 the_makings start. Accomplishment block copied verbatim from gh330_lamb_pen_start (a shipped coherence-passing riverfarm baseline: door_awakened + riverfarm_attuned satisfy both maps' MAP_REQUIRES, and thicket_answered keeps hunters_lamb_pen standing so the pen reads whole in the windowed shot), plus mediated_the_debt so the save is unambiguously the PEACEFUL path -- blight_lifted held, drove_off_collectors absent, which is the offer row's ratified gate. witch_lessons and all three makings counters deliberately unbanked. soothed_a_beast stays absent so the sleep grants [Hedge Witch] alone. Standing at (5,9) facing UP into Eloise (5,8), spine_reach's own approach. rng_state reused from gh330_lamb_pen_start's derived value (near_hedge_witch precedent), never hand-typed.",
+ "version": 5,
+ "state": {
+  "current_map": "witch_hollow",
+  "player_cell": [
+   5,
+   9
+  ],
+  "player_facing": [
+   0,
+   -1
+  ],
+  "classes": {
+   "warrior": 5,
+   "mage": 5
+  },
+  "accomplishments": {
+   "blight_lifted": 1,
+   "bought_catalyst": 1,
+   "door_awakened": 1,
+   "catalyst_delivered": 1,
+   "door_chain_started": 1,
+   "door_mounted": 1,
+   "door_retrieved": 1,
+   "door_study_sleeps": 3,
+   "door_understood": 1,
+   "given_spear_by_relc": 1,
+   "heard_price_of_a_favor": 1,
+   "heard_thicket_keeps": 1,
+   "herd_rerouted": 1,
+   "horns_dig_joined": 1,
+   "horns_dig_started": 1,
+   "learned_magic_from_pisces": 1,
+   "mediated_the_debt": 1,
+   "melee_hit": 18,
+   "met_relc": 1,
+   "pedestal_breached": 1,
+   "price_of_a_favor_reported": 1,
+   "recovered_anchor_stone": 1,
+   "riverfarm_attuned": 1,
+   "sparred_with_relc": 1,
+   "spell_cast": 13,
+   "thicket_answered": 1,
+   "won_combat": 3
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-4730320151846205247"
+ }
+}
