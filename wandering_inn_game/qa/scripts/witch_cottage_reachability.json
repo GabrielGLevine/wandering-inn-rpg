@@ -20,7 +20,7 @@
   {"action":"screenshot","name":"01_mouse_reaches_cottage"},
   {"action":"click","cell":[3,7]},
   {"action":"wait_for_event","type":"accomplishment_recorded","payload_contains":{"id":"observed_witch_cottage","count":1},"timeout_sec":5},
-  {"action":"wait_for_event","type":"ui_toast_rendered","payload_contains":{"text":"The door's shut. Whatever's inside isn't asking for company right now."},"timeout_sec":5},
+  {"action":"wait_for_event","type":"ui_toast_rendered","payload_contains":{"text":"The door's shut. Ask her out here instead."},"timeout_sec":5},
   {"action":"assert_state","path":"accomplishments.observed_witch_cottage","equals":1},
   {"action":"wait_frames","frames":10},
   {"action":"screenshot","name":"02_mouse_interacts_with_cottage"},
@@ -31,7 +31,7 @@
   {"action":"assert_state","path":"player_cell","equals":[3,8]},
   {"action":"press","name":"interact"},
   {"action":"wait_for_event","type":"accomplishment_recorded","payload_contains":{"id":"observed_witch_cottage","count":2},"timeout_sec":5},
-  {"action":"wait_for_event","type":"ui_toast_rendered","payload_contains":{"text":"The door's shut. Whatever's inside isn't asking for company right now."},"timeout_sec":5},
+  {"action":"wait_for_event","type":"ui_toast_rendered","payload_contains":{"text":"The door's shut. Ask her out here instead."},"timeout_sec":5},
   {"action":"assert_state","path":"accomplishments.observed_witch_cottage","equals":2},
   {"action":"screenshot","name":"03_keyboard_interacts_with_cottage"}
  ]

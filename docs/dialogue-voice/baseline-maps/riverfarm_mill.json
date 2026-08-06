@@ -126,7 +126,7 @@
     "facing": "down",
     "id": "mill_tallyman",
     "kind": "npc",
-    "observe": "A thin man with a hazel stick in each hand, laying them side by side against the light.",
+    "observe": "\u00b6",
     "sprite": "human_laborer",
     "talk_pool": [
      "\u00a7",
@@ -142,22 +142,22 @@
     "display_name": "The Flood Stacks",
     "id": "mill_flood_stack",
     "kind": "prop",
-    "locked_toast": "Sacks stacked low and a season coming for them. Lifting them above the flood line is work, and work is a Skill you either have or you don't.",
-    "observe": "Grain sacks stacked at ankle height on a shed floor, with the river three weeks out.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "skill_uses": {
      "basic_cleaning": {
       "accomplishment": "flood_prep_done",
-      "toast": "[Basic Cleaning] \u2014 You clear the shed floor and stack every sack up off the boards. The count comes right the moment anyone can see all of it at once."
+      "toast": "\u00b6"
      },
      "basic_cooking": {
       "accomplishment": "flood_prep_done",
-      "toast": "[Basic Cooking] \u2014 You feed the flood crew out of the mill's own pot, and they work the shed twice over for it. The count comes right in the doing."
+      "toast": "\u00b6"
      }
     },
     "sprite": "crate"
    },
    {
-    "_comment": "encounter_when ARMS the fight on the quest start; present_when is validator-forbidden on encounters, so the corner stands visible and inert until then (the seal_warden_alcove pattern) and answers a plain interact with gate_closed_toast. Interact-only (no trigger_radius) -- the mill is a working interior and an ambush on the way to the tallyman would cross every TALK/HELP canonical. on_victory is an Array so the route counter is the only thing banked.",
+    "_comment": "encounter_when ARMS the fight on the quest start; present_when is validator-forbidden on encounters, so the corner stands visible and inert until then (the seal_warden_alcove pattern) and answers a plain interact with gate_closed_toast. Interact-only (no trigger_radius): an ambush on the way to the tallyman would cross every TALK/HELP canonical. on_victory is an Array so the route counter is the only thing banked.",
     "allies": [],
     "arena": "inn_cellar",
     "beast": true,
@@ -175,10 +175,10 @@
      "granary_scavenger_a",
      "granary_scavenger_b"
     ],
-    "gate_closed_toast": "Something has been at the sacks in that corner. Nobody here has called it a problem yet, and it is not your count to go digging in.",
+    "gate_closed_toast": "\u00b6",
     "id": "mill_granary_scavengers",
     "kind": "encounter",
-    "observe": "Chaff scattered wide, sacks opened low down, and something breathing behind the last row.",
+    "observe": "\u00b6",
     "on_victory": [
      "granary_cleared"
     ],
@@ -192,10 +192,10 @@
     "display_name": "The Wheel Pit",
     "id": "mill_wheel_pit",
     "kind": "prop",
-    "observe": "A ladder down into a pit of black water, with the wheel standing still in it and the sluice pinned shut against the season.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_mill_wheel_pit",
     "sprite": "shaft_ladder",
-    "toast": "The pinned sluice carries three seasons of high-water scratches, and each one sits higher than the last."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -205,10 +205,10 @@
     "display_name": "The High Shelf",
     "id": "mill_high_shelf",
     "kind": "prop",
-    "observe": "A shelf set higher on the wall than any shelf needs to be, with notches and years cut into the post beside it.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_mill_high_shelf",
     "sprite": "library_shelf",
-    "toast": "Somebody has cut a notch for every flood since before the village had a headman, and built the shelf a hand above the worst of them."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -218,10 +218,10 @@
     "display_name": "The Tally Sticks",
     "id": "mill_tally_sticks",
     "kind": "prop",
-    "observe": "A bundle of split hazel sticks hung on a nail, each notched down one edge.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_mill_tally_sticks",
     "sprite": "chest",
-    "toast": "Split tallies. One half stays with the mill, one half goes home with the household, and neither can be altered alone."
+    "toast": "\u00b6"
    }
   ],
   "floor_layers": [

@@ -1052,7 +1052,7 @@
     "sprite": "bush_green"
    },
    {
-    "_comment": "bbox check: neighbors at this row are the open approach cell (11,8, south) and floor either side, no collision.",
+    "_comment": "bbox checked: no collision with the (11,8) approach cell south or the floor either side.",
     "cell": [
      11,
      7
@@ -1098,10 +1098,10 @@
     "display_name": "Raw-Earth Rampart",
     "id": "riverfarm_earthworks",
     "kind": "prop",
-    "observe": "Fresh-turned earth, packed and raised into a long low wall. Someone's been digging with purpose, not just drainage.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_riverfarm_earthworks",
     "sprite": "riverfarm_earthwork",
-    "toast": "Just raised earth. Whatever it's for, nobody's finished it yet."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -1111,7 +1111,7 @@
     "display_name": "The Longhouse",
     "id": "longhouse_door",
     "kind": "door",
-    "observe": "One long thatch ridge, twice the width of any cottage. Smoke curls from a vent at the peak even in daylight.",
+    "observe": "\u00b6",
     "on_enter_accomplishment": "observed_riverfarm_longhouse",
     "sprite": "riverfarm_longhouse",
     "tint": [
@@ -1146,7 +1146,7 @@
     "display_name": "A Thatched Cottage",
     "id": "riverfarm_cottage_a",
     "kind": "prop",
-    "observe": "Clay-daub walls, a low thatch roof. A washing line strung between two posts.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_riverfarm_cottage",
     "sprite": "cottage_thatch_a",
     "tint": [
@@ -1154,7 +1154,7 @@
      0.72,
      0.66
     ],
-    "toast": "Someone's home. Best not to just walk in.",
+    "toast": "\u00b6",
     "visual_states": [
      {
       "tint": [
@@ -1177,7 +1177,7 @@
     "display_name": "A Thatched Cottage",
     "id": "riverfarm_cottage_b",
     "kind": "prop",
-    "observe": "A second cottage, smaller, its thatch newer than its neighbor's.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_riverfarm_cottage",
     "sprite": "cottage_thatch_b",
     "tint": [
@@ -1185,7 +1185,7 @@
      0.72,
      0.66
     ],
-    "toast": "Someone's home. Best not to just walk in.",
+    "toast": "\u00b6",
     "visual_states": [
      {
       "tint": [
@@ -1201,7 +1201,7 @@
     ]
    },
    {
-    "_comment": "Sails overhang above the blocked footprint. v0.16.1 #3: [20,4] -> [19,4] puts the art's own doorway on column 19, over riverfarm_mill_door [19,5] and the pinned approach [19,6]. [19,4] was ALREADY blocked: art-only move, no sim change.",
+    "_comment": "Sails overhang above the blocked footprint. The art's own doorway sits on column 19, over riverfarm_mill_door [19,5] and the pinned approach [19,6]; [19,4] was ALREADY blocked, so art-only, no sim change.",
     "cell": [
      19,
      4
@@ -1209,7 +1209,7 @@
     "display_name": "The Windmill",
     "id": "riverfarm_windmill_prop",
     "kind": "prop",
-    "observe": "Sails turning slow in whatever wind there is. The grinding floor above the wheat fields.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_riverfarm_windmill",
     "sprite": "riverfarm_windmill",
     "tint": [
@@ -1217,7 +1217,7 @@
      0.72,
      0.66
     ],
-    "toast": "The sails creak overhead. No one's tending it right now.",
+    "toast": "\u00b6",
     "visual_states": [
      {
       "tint": [
@@ -1240,7 +1240,7 @@
     "display_name": "The Village Well",
     "id": "riverfarm_well",
     "kind": "prop",
-    "observe": "A stone-ringed well, rope worn smooth by years of hauling. The water's clean this far from the blight talk.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_riverfarm_well",
     "sprite": "riverfarm_well",
     "tint": [
@@ -1248,7 +1248,7 @@
      0.72,
      0.66
     ],
-    "toast": "Cool water, a long way down. You leave the rope where you found it.",
+    "toast": "\u00b6",
     "visual_states": [
      {
       "tint": [
@@ -1271,7 +1271,7 @@
     "display_name": "Haystack",
     "id": "riverfarm_haystack",
     "kind": "prop",
-    "observe": "Bundled and stacked before the rain, the way a good harvest gets stored.",
+    "observe": "\u00b6",
     "sprite": "riverfarm_haystack"
    },
    {
@@ -1282,7 +1282,7 @@
     "display_name": "Scarecrow",
     "id": "riverfarm_scarecrow",
     "kind": "prop",
-    "observe": "Straw and an old coat, arms out over the tilled rows. It isn't working today \u2014 there are crows on its own hat.",
+    "observe": "\u00b6",
     "sprite": "riverfarm_scarecrow"
    },
    {
@@ -1293,10 +1293,10 @@
     "display_name": "The Dock",
     "id": "riverfarm_dock",
     "kind": "prop",
-    "observe": "A plank pier reaching out over the river. The village's whole trade with anywhere downstream starts here (wiki Riverfarm, ch. 3.00-3.01 E: 'farming land fed by a river').",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_riverfarm_dock",
     "sprite": "riverfarm_dock_pier",
-    "toast": "Weathered planks, sound underfoot. The current runs steady past the end of it."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -1306,7 +1306,7 @@
     "display_name": "Fence Rail",
     "id": "riverfarm_fence_ew_3_9",
     "kind": "prop",
-    "observe": "Low fence rail, bordering the tilled rows.",
+    "observe": "\u00b6",
     "sprite": "riverfarm_fence_ew"
    },
    {
@@ -1317,11 +1317,11 @@
     "display_name": "Fence Rail",
     "id": "riverfarm_fence_ew_4_9",
     "kind": "prop",
-    "observe": "Low fence rail, bordering the tilled rows.",
+    "observe": "\u00b6",
     "sprite": "riverfarm_fence_ew"
    },
    {
-    "_comment": "GH#334 note 27C + H4: absent on herd_rerouted, twins at (8,9)/(9,9) present; these cells also left `blocked`/`cover_skip` (map array beats presence).",
+    "_comment": "absent on herd_rerouted, twins at (8,9)/(9,9) present; these cells also left `blocked`/`cover_skip` (map array beats presence).",
     "cell": [
      5,
      9
@@ -1329,7 +1329,7 @@
     "display_name": "Fence Rail",
     "id": "riverfarm_fence_ew_5_9",
     "kind": "prop",
-    "observe": "Low fence rail, bordering the tilled rows.",
+    "observe": "\u00b6",
     "present_when": {
      "absent": {
       "herd_rerouted": 1
@@ -1345,7 +1345,7 @@
     "display_name": "Fence Rail",
     "id": "riverfarm_fence_ew_6_9",
     "kind": "prop",
-    "observe": "Low fence rail, bordering the tilled rows.",
+    "observe": "\u00b6",
     "present_when": {
      "absent": {
       "herd_rerouted": 1
@@ -1361,7 +1361,7 @@
     "display_name": "Fence Rail",
     "id": "riverfarm_fence_ew_8_9",
     "kind": "prop",
-    "observe": "Rails re-set forty paces east of where they stood. The gap they left is the corusdeer road, and the hoof marks say the herd found it.",
+    "observe": "\u00b6",
     "present_when": {
      "requires": {
       "herd_rerouted": 1
@@ -1377,7 +1377,7 @@
     "display_name": "Fence Rail",
     "id": "riverfarm_fence_ew_9_9",
     "kind": "prop",
-    "observe": "Rails re-set forty paces east of where they stood. The gap they left is the corusdeer road, and the hoof marks say the herd found it.",
+    "observe": "\u00b6",
     "present_when": {
      "requires": {
       "herd_rerouted": 1
@@ -1393,7 +1393,7 @@
     "display_name": "Fence Rail",
     "id": "riverfarm_fence_ns_2_6",
     "kind": "prop",
-    "observe": "Low fence rail, bordering the tilled rows.",
+    "observe": "\u00b6",
     "sprite": "riverfarm_fence_ns"
    },
    {
@@ -1404,7 +1404,7 @@
     "display_name": "Fence Rail",
     "id": "riverfarm_fence_ns_2_7",
     "kind": "prop",
-    "observe": "Low fence rail, bordering the tilled rows.",
+    "observe": "\u00b6",
     "sprite": "riverfarm_fence_ns"
    },
    {
@@ -1415,7 +1415,7 @@
     "display_name": "Fence Rail",
     "id": "riverfarm_fence_ns_2_8",
     "kind": "prop",
-    "observe": "Low fence rail, bordering the tilled rows.",
+    "observe": "\u00b6",
     "sprite": "riverfarm_fence_ns"
    },
    {
@@ -1427,21 +1427,21 @@
     "dialogue": [
      {
       "speaker": "Former Headman",
-      "text": "Not now. Got a village to hold together."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Former Headman",
     "facing": "down",
     "id": "riverfarm_headman",
     "kind": "npc",
-    "observe": "A ledger under one arm, mud to the knee, the look of a man doing three jobs badly instead of one job well.",
+    "observe": "\u00b6",
     "sprite": "human_laborer",
     "talk_pool": [
      "@riverfarm_headman_shared"
     ],
     "talk_pool_stages": [
      {
-      "_comment": "b7 #207 ack (lowest priority \u2014 hollow thread and blight terminal outrank).",
+      "_comment": "lowest priority: hollow thread and blight terminal outrank.",
       "id": "headman_delivery_seed",
       "lines": [
        "\u00a7"
@@ -1490,14 +1490,14 @@
     "dialogue": [
      {
       "speaker": "A Villager",
-      "text": "..."
+      "text": "\u00b6"
      }
     ],
     "display_name": "A Villager",
     "facing": "down",
     "id": "riverfarm_charmed_villager",
     "kind": "npc",
-    "observe": "Ordinary, except for how still they stand, and a faint red thread at the wrist that doesn't match anything else they're wearing.",
+    "observe": "\u00b6",
     "sprite": "citizen_f",
     "talk_pool": [
      {
@@ -1519,7 +1519,7 @@
     ]
    },
    {
-    "_comment": "clear of blocked/entity cells, no trigger_radius. SUPERSEDES the failed v0.16.1 copy-only disambiguation (user ruling 2026-08-05): legacy id, character is A Shepherd (#396 spec). Id frozen: shipped counters + save keys.",
+    "_comment": "clear of blocked/entity cells, no trigger_radius. Legacy id, character is A Shepherd (#396 spec). Id frozen: shipped counters + save keys.",
     "cell": [
      13,
      10
@@ -1528,14 +1528,14 @@
     "dialogue": [
      {
       "speaker": "A Shepherd",
-      "text": "Hollow's not safe alone."
+      "text": "\u00b6"
      }
     ],
     "display_name": "A Shepherd",
     "facing": "down",
     "id": "riverfarm_hunter",
     "kind": "npc",
-    "observe": "Tar-marked hands, a crook worn smooth, wolf sign on his boots. The flock is penned. He is still watching the treeline.",
+    "observe": "\u00b6",
     "sprite": "a_shepherd",
     "talk_pool": [
      "@riverfarm_hunter_shared"
@@ -1616,7 +1616,7 @@
      "flicker": false,
      "radius": 22
     },
-    "observe": "A worn marker stone at the village's heart. Someone scratched a spiral into its face, long since softened by weather. Attunement is what markers like this are cut for: a door shown the right stone learns the place, and can open onto it ever after.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_riverfarm_anchor_stone",
     "portal_menu": true,
     "portal_menu_when": {
@@ -1630,7 +1630,7 @@
      0.58,
      0.62
     ],
-    "toast": "Cold, plain stone, and it stays cold for you. Whatever hung a door somewhere else hasn't hung one yet."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -1640,7 +1640,7 @@
     "display_name": "A Gap in the Trees",
     "id": "riverfarm_hollow_path",
     "kind": "door",
-    "observe": "A narrow break in the treeline, west of the fields. The light changes past the first few trees.",
+    "observe": "\u00b6",
     "sprite": "trail_gap",
     "to_cell": [
      10,
@@ -1673,10 +1673,10 @@
      "river_wolf_b",
      "river_wolf_c"
     ],
-    "gate_closed_toast": "Nothing there. Whatever you saw is gone with the light.",
+    "gate_closed_toast": "\u00b6",
     "id": "river_wolf_pack",
     "kind": "encounter",
-    "observe": "Eyes catch the light at the field's edge, gone again when you look straight at them. Only after dark.",
+    "observe": "\u00b6",
     "on_victory": "survived_wolf_night",
     "sprite": "river_wolf_idle",
     "trigger_radius": 1,
@@ -1694,7 +1694,7 @@
     ]
    },
    {
-    "_comment": "interact-only, no trigger_radius, no encounter_when gate (matching corusdeer_range/razorbeak_nest's own unconditional shape). GH#334 note 18 (b): ungated beside the lamb pen from hour one -- furniture, not a threat. present_when is legal here: no trigger_radius.",
+    "_comment": "interact-only, no trigger_radius, no encounter_when gate (the corusdeer_range/razorbeak_nest unconditional shape): ungated beside the lamb pen from hour one, furniture not a threat. present_when is legal here: no trigger_radius.",
     "allies": [],
     "arena": "witch_hollow",
     "cell": [
@@ -1709,7 +1709,7 @@
     ],
     "id": "riverfarm_thicket_patch",
     "kind": "encounter",
-    "observe": "Vines thicker than they should be, over the fence line and into the village since the thicket business settled. They creep across open ground, twitching against a wind that isn't blowing.",
+    "observe": "\u00b6",
     "on_victory": "thicket_remnants_culled",
     "present_when": {
      "requires": {
@@ -1720,7 +1720,7 @@
     "sprite": "briar_collector"
    },
    {
-    "_comment": "v0.15 T4.4 regional repeatable work, 1 of 3. The serving_tray idiom (once_per_waking + gold, interactions.gd's `serve:` key): a job you can take once a waking, forever. NEW COUNTER riverfarm_field_jobs, frozen at the next tag. 2 gold = half the crude_draught bronze anchor -- below a Guild bounty because there is no risk in it, above nothing because Riverfarm pays on the day.",
+    "_comment": "Regional repeatable work. The serving_tray idiom (once_per_waking + gold, interactions.gd's `serve:` key): takeable once a waking, forever. Counter riverfarm_field_jobs is frozen. 2 gold = half the crude_draught bronze anchor, below a Guild bounty because there is no risk in it.",
     "cell": [
      3,
      10
@@ -1729,21 +1729,21 @@
     "gold": 2,
     "id": "riverfarm_field_board",
     "kind": "prop",
-    "observe": "A plank of hooks at the fence line, each hook holding a scrap with a task on it and no name. Ditching, thatch, a fence a cow disagrees with. The scraps come down about as fast as they go up.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "riverfarm_field_jobs",
     "once_per_waking": true,
-    "once_per_waking_toast": "Every hook is bare. Riverfarm doesn't invent work to keep a stranger busy.",
+    "once_per_waking_toast": "\u00b6",
     "sprite": "request_board",
-    "toast": "You take a scrap off its hook and spend the morning behind it. Ditching, mostly. The village pays coin because coin is the thing it has least of, and it pays on the day.",
+    "toast": "\u00b6",
     "variants": [
      {
-      "toast": "Somebody chalked your name against a hook before you got there. That is the whole of Riverfarm's vocabulary for gratitude, and it is not a small word.",
+      "toast": "\u00b6",
       "when": {
        "riverfarm_field_jobs": 3
       }
      },
      {
-      "toast": "The hook you get is the one nobody else will touch: the wet corner down by the river, every time. They give it to you because you finish it.",
+      "toast": "\u00b6",
       "when": {
        "riverfarm_field_jobs": 8
       }
@@ -1751,7 +1751,7 @@
     ]
    },
    {
-    "_comment": "v0.16 #305: the mill's ground-floor door. [19,5] is inside the windmill's blocked footprint (longhouse_door precedent). TWO free approaches [19,6]/[18,5], neither on a QA route; mill_exit returns to [19,6] only. v0.16.1 #3: hide_sprite -- the `door` prop was a second doorway y-sorting in front of the mill; the art carries the entrance, the entity keeps blocking/observe/to_map/to_cell, `sprite` retained as fallback.",
+    "_comment": "The mill's ground-floor door. [19,5] is inside the windmill's blocked footprint (longhouse_door precedent). TWO free approaches [19,6]/[18,5], neither on a QA route; mill_exit returns to [19,6] only. hide_sprite: the art carries the entrance, the entity keeps blocking/observe/to_map/to_cell, `sprite` retained as fallback.",
     "cell": [
      19,
      5
@@ -1760,7 +1760,7 @@
     "hide_sprite": true,
     "id": "riverfarm_mill_door",
     "kind": "door",
-    "observe": "The mill's ground-floor door, set into the base of the tower on the river side. The sluice hums even with the wheel pinned.",
+    "observe": "\u00b6",
     "on_enter_accomplishment": "observed_riverfarm_mill",
     "sprite": "door",
     "tint": [
@@ -1784,22 +1784,22 @@
     "id": "hunters_lamb_pen",
     "item": "wool_tuft",
     "kind": "prop",
-    "observe": "Hurdle fencing the shepherd threw up after the thicket business. Two ewe lambs inside it, and a third that will not put weight on a foreleg.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "soothed_a_beast",
     "on_skill_use": {
      "accomplishment": "tended_beasts",
      "item": "wool_tuft",
-     "toast": "[Beast's Mending] \u2014 You strap the lamb's leg, and it stands on it before you have finished. The ewes crowd in to look."
+     "toast": "\u00b6"
     },
     "once_per_waking": true,
-    "once_per_waking_toast": "The lambs have had their handling for today. Crowd them now and you undo it.",
+    "once_per_waking_toast": "\u00b6",
     "requires_skill": "beasts_mending",
     "sprite": "riverfarm_fence_ew",
-    "toast": "You get a hand under the limping one and hold it until it stops shaking. Fleece comes away on your fingers.",
+    "toast": "\u00b6",
     "variants": [
      {
       "accomplishment": "tended_beasts",
-      "toast": "They come to the rail for you now. You work burrs out of three fleeces and leave the bad leg for last.",
+      "toast": "\u00b6",
       "when": {
        "soothed_a_beast": 1
       }
@@ -1816,17 +1816,17 @@
     "id": "wolf_scent_cache_riverfarm",
     "item": "copper_luck_band",
     "kind": "prop",
-    "observe": "A scatter of old bones in the field grass, half sunk. The wolf keeps returning to it, head down, digging and stopping and digging again.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "found_wolf_cache_riverfarm",
     "present_when": {
      "companion": "wolf_companion"
     },
     "sprite": "gnaw_pile",
-    "toast": "Under a stone, under the turf: a thin copper ring, polished bright by somebody's worried thumbs before they lost it here.",
+    "toast": "\u00b6",
     "variants": [
      {
       "item": "",
-      "toast": "Turned earth, filled in and gone quiet. The wolf walks past it now.",
+      "toast": "\u00b6",
       "when": {
        "found_wolf_cache_riverfarm": 1
       }
@@ -1843,9 +1843,9 @@
     "display_name": "The Plank Walk",
     "id": "riverfarm_bank_stringer",
     "kind": "prop",
-    "locked_toast": "The stringers are sound and the boards are somewhere downriver. Standing here wishing at it will not deck it.",
-    "observe": "Two stringers still run out along the bank from the cottage corner, and the decking between them is gone \u2014 lifted by a flood and never replaced. The beams are sound. It is boards it wants.",
-    "repair_toast": "[Basic Repair] \u2014 You cut and lay boards across the stringers until the walk is a walk again. It holds when you lean on it, and it will hold tomorrow.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
+    "repair_toast": "\u00b6",
     "sprite": "riverfarm_fence_ns",
     "state_counter": "bank_planks_mended",
     "visual_states": [
@@ -1867,8 +1867,8 @@
     "display_name": "The Washout",
     "id": "riverfarm_bank_washout",
     "kind": "prop",
-    "locked_toast": "The bank is cut clean through here, down to brown water. You could go the long way round the cottage, or somebody could put boards back across it.",
-    "observe": "Where the decking used to be there is a scoured trench down to the water, wider than a stride and undercut on both lips.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "present_when": {
      "absent": {
       "bank_planks_mended": 1
@@ -1877,7 +1877,7 @@
     "sprite": "deep_fissure"
    },
    {
-    "_comment": "[Broader Shoulders] carrier. REPEATABLE (once_per_waking + gold): the work pays, the no-treadmill bar. Sited here, not the north gallery -- this is a trader L2 grant and a trader has to be able to reach its carrier.",
+    "_comment": "[Broader Shoulders] carrier. REPEATABLE (once_per_waking + gold). Sited here, not the north gallery: a trader L2 grant has to be reachable by a trader.",
     "cell": [
      20,
      11
@@ -1885,17 +1885,17 @@
     "display_name": "The Dray Load",
     "id": "riverfarm_bank_load",
     "kind": "prop",
-    "locked_toast": "You get one sack up and your back tells you about the other eleven. This is a job for somebody built for it.",
-    "observe": "Grain sacks stacked off a dray at the bank head, waiting on however many trips it takes. Two men are looking at them the way you look at a long afternoon.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "on_skill_use": {
      "accomplishment": "hauled_heavy_load",
      "gold": 2,
-     "toast": "[Broader Shoulders] \u2014 You take three at once and walk them up to the shed without stopping. The dray is clear before the second man has picked up his first, and two coins come your way for it."
+     "toast": "\u00b6"
     },
     "once_per_waking": true,
-    "once_per_waking_toast": "The dray is empty and the shed is full. Nothing more to shift today.",
+    "once_per_waking_toast": "\u00b6",
     "requires_skill": "broader_shoulders",
-    "skill_hint_toast": "Dragging them one at a time will take all day. Carrying them properly would not.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "barrel"
    },
    {
@@ -1907,7 +1907,7 @@
     "display_name": "Stacked Hurdles",
     "id": "winter_fold_hurdles",
     "kind": "prop",
-    "observe": "Hazel hurdles, cut and stacked. Enough to double the fold, if someone puts the day in.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "fold_rebuilt",
     "present_when": {
      "absent": {
@@ -1918,7 +1918,7 @@
      }
     },
     "sprite": "riverfarm_fence_ns",
-    "toast": "You put the day in. Double hurdles, drained ground, a gate that hangs true. The fold holds a wolf out now, not just sheep in."
+    "toast": "\u00b6"
    },
    {
     "_comment": "#396 TRACK route; pack_traced. absent-on-own-counter = literal once. gnaw_pile: trail_gap read as a stump and is riverfarm_hollow_path's own sprite three cells off.",
@@ -1929,7 +1929,7 @@
     "display_name": "Wolf Sign",
     "id": "wolf_sign_trail",
     "kind": "prop",
-    "observe": "Bones in the field margin, cracked for the marrow. Too many for one kill. Dragged into the open, all one way.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "pack_traced",
     "present_when": {
      "absent": {
@@ -1940,7 +1940,7 @@
      }
     },
     "sprite": "gnaw_pile",
-    "toast": "You walk the sign back. The pack came off the north ground by the old line \u2014 something denned in it and they gave way. They didn't choose these fields. They were pushed."
+    "toast": "\u00b6"
    },
    {
     "_comment": "#396 TEND beat. Own prop, never touching the #330 counters. (18,11): the plan's (17,11) is a blocked fence flank, and row 12 hides under the hotbar panel.",
@@ -1951,7 +1951,7 @@
     "display_name": "The Limping Lamb",
     "id": "makings_tend_lamb",
     "kind": "prop",
-    "observe": "The third lamb, the one that would not bear weight. Someone has to sit with it long enough to matter.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "craft_tended",
     "present_when": {
      "absent": {
@@ -1962,7 +1962,7 @@
      }
     },
     "sprite": "lamb_lying",
-    "toast": "You sit with it past the point that's useful and into the point that counts. It sleeps. You notice you were humming."
+    "toast": "\u00b6"
    }
   ],
   "floor_layers": [

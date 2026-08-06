@@ -213,7 +213,7 @@
    "type": "toast",
    "timeout_sec": 5,
    "payload_contains": {
-    "text": "Every stopper is waxed and every jar is still full. Whoever kept this house left it ready and never came back for it."
+    "text": "Every stopper is waxed and every jar is still full. The wax was pressed flat by a thumb and never broken since."
    }
   },
   {
@@ -221,7 +221,7 @@
    "type": "ui_toast_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "text": "Every stopper is waxed and every jar is still full. Whoever kept this house left it ready and never came back for it."
+    "text": "Every stopper is waxed and every jar is still full. The wax was pressed flat by a thumb and never broken since."
    }
   },
   {
@@ -262,7 +262,7 @@
    "type": "toast",
    "timeout_sec": 5,
    "payload_contains": {
-    "text": "Yarrow, mostly, and a great deal of it. Somebody kept this place stocked for a house they intended to come back to."
+    "text": "Yarrow, mostly, and a great deal of it. The bundles turn on their strings when the door moves."
    }
   },
   {
@@ -270,7 +270,7 @@
    "type": "ui_toast_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "text": "Yarrow, mostly, and a great deal of it. Somebody kept this place stocked for a house they intended to come back to."
+    "text": "Yarrow, mostly, and a great deal of it. The bundles turn on their strings when the door moves."
    }
   },
   {

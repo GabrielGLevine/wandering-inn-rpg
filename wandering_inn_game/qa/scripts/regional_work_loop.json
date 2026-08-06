@@ -26,7 +26,7 @@
   { "action": "screenshot", "name": "00_riverfarm_field_board" },
 
   { "_comment": "== THE REFUSAL: a second take in the SAME waking pays nothing and banks nothing. entity_first_use is keyed `serve:riverfarm_field_board`, and interactions.gd banks that key BEFORE resolving effects, so the refusal can never burn the wage. ==", "action": "press", "name": "interact" },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Every hook is bare. Riverfarm doesn't invent work to keep a stranger busy." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Every hook is bare. The board is empty till tomorrow." }, "timeout_sec": 5 },
   { "action": "assert_state", "path": "gold", "equals": 62 },
   { "action": "assert_event_count", "type": "accomplishment_recorded", "payload_contains": { "id": "riverfarm_field_jobs" }, "count": 1 },
 

@@ -2273,12 +2273,11 @@ RULED_EXC_SOURCE = ("docs/superpowers/2026-08-05-wave2-rulings-and-fix-specs.md 
                     "— '## Empty-regions lane' item 4 and '## Inn lane'")
 # A region whose Phase 2 pass has not landed is not evidence about the pass. Say
 # so where the numbers are read, or the baseline is read as a result.
-PASS_PENDING_REGIONS = {
-    "riverfarm": "Phase 2 pass NOT LANDED (queued behind the 396 merge). Its "
-                 "numbers are the PRE-pass baseline, which is why it is the "
-                 "outlier in nearly every table — read it as the control, not "
-                 "as a result.",
-}
+# EMPTY since 2026-08-06: riverfarm was the last region lane and its pass has
+# landed, so every number in the report is now a RESULT. The mechanism stays --
+# a pass that lands region by region needs it again, and an unmarked pre-pass
+# baseline sitting in a results table is exactly how a control gets misread.
+PASS_PENDING_REGIONS = {}
 
 
 def _grp(items, key):

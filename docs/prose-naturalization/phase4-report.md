@@ -24,14 +24,12 @@ Touchable **narrator** strings only, because narrator-only is the ruled basis fo
 | invrisil | 100 | 5 (5.0%) | 0 | 1 | fact 68% (`mercantile_alleys.json`) | 7.02 |
 | liscor | 63 | 2 (3.2%) | 0 | 0 | fact 75% (`barracks.json`) | 5.89 |
 | pallass | 116 | 1 (0.9%) | 1 | 1 | fact 55% (`pallass_forge.json`) | 6.20 |
-| riverfarm ‡ | 108 | 22 (20.4%) | 7 | 1 | fact 71% (`witch_hollow.json`) | 5.14 |
+| riverfarm | 116 | 5 (4.3%) | 0 | 1 | fact 55% (`witch_hollow.json`) | 4.94 |
 | ruin | 34 | 0 (0.0%) | 0 | 0 | fact 64% (`ruin_surface.json`) | 5.67 |
 | sewers | 40 | 0 (0.0%) | 1 | 1 | fact 67% (`deep_tunnels.json`) | 5.16 |
-| **maps (all)** | 639 | 35 (5.5%) | 12 | 6 | fact 86% (`dungeon_approach.json`) | 6.17 |
+| **maps (all)** | 647 | 18 (2.8%) | 5 | 6 | fact 86% (`dungeon_approach.json`) | 6.13 |
 | **dialogue (all)** | 7 | 1 (14.3%) | 0 | 0 | — | 5.92 |
-| **corpus (all)** | 646 | 36 (5.6%) | 12 | 6 | fact 86% (`dungeon_approach.json`) | 6.17 |
-
-**‡ riverfarm** — Phase 2 pass NOT LANDED (queued behind the 396 merge). Its numbers are the PRE-pass baseline, which is why it is the outlier in nearly every table — read it as the control, not as a result.
+| **corpus (all)** | 654 | 19 (2.9%) | 5 | 6 | fact 86% (`dungeon_approach.json`) | 6.13 |
 
 
 `anon 4-word` = strings containing `someone` / `somebody` / `whoever` / `whatever` (bible §6's motive words). `closer ≥2` = button smoke score ≥2/5. `negation instances` counts SHAPES, not strings, so one string stacking three shapes counts three. `worst file ending-shape` is the region's most concentrated file on the §9.2 measure. Stdev is pooled over the region's touchable narrator sentences and has **no target**.
@@ -46,10 +44,10 @@ SPOKEN = the words are a character's own (node line, player option, option-bank 
 |---|---|---|--:|
 | dialogue | narrator | `effect-toast` | 7 |
 | dialogue | spoken | `bank-line` | 22 |
-| dialogue | spoken | `node-line` | 555 |
-| dialogue | spoken | `player-option` | 861 |
+| dialogue | spoken | `node-line` | 566 |
+| dialogue | spoken | `player-option` | 878 |
 | maps | narrator | `diegetic-document` | 5 |
-| maps | narrator | `narration` | 760 |
+| maps | narrator | `narration` | 768 |
 | maps | spoken | `ambient-speech` | 63 |
 | maps | spoken | `npc-friendly-line` | 19 |
 
@@ -71,12 +69,12 @@ Bible §7: corpus ceiling **8** negation instances in map prose (from 29 pre-pas
 | invrisil | 100 | 1 | 1 | 0 | 0 | 0 | 0 |
 | liscor | 63 | 0 | 0 | 0 | 0 | 0 | 3 |
 | pallass | 116 | 1 | 1 | 0 | 1 | 0 | 0 |
-| riverfarm | 108 | 1 | 1 | 0 | 7 | 2 | 1 |
+| riverfarm | 116 | 1 | 1 | 0 | 0 | 0 | 1 |
 | ruin | 34 | 0 | 0 | 0 | 0 | 0 | 1 |
 | sewers | 40 | 1 | 1 | 0 | 1 | 0 | 0 |
-| **maps (all)** | 639 | 6 | 6 | 0 | 12 | 3 | 7 |
+| **maps (all)** | 647 | 6 | 6 | 0 | 5 | 1 | 7 |
 | **dialogue (all)** | 7 | 0 | 0 | 0 | 0 | 0 | 0 |
-| **corpus (all)** | 646 | 6 | 6 | 0 | 12 | 3 | 7 |
+| **corpus (all)** | 654 | 6 | 6 | 0 | 5 | 1 | 7 |
 
 The last column is the pre-explained residue: negation inside a protected keep or a holdout string is ruled or frozen, and a later pass cannot touch it. §10 lists each one.
 
@@ -92,7 +90,7 @@ empty-regions item 5, ADOPTED: the four-word figure is the §6.4 metric; report 
 
 | region | NARRATOR touch n | 4-word | 7-word | SPOKEN touch n | 4-word | 7-word | untouchable 4-word (N/S) |
 |---|--:|--:|--:|--:|--:|--:|--:|
-| dialogue | 7 | 1 (14%) | 1 (14%) | 1319 | 76 (6%) | 158 (12%) | 0/16 |
+| dialogue | 7 | 1 (14%) | 1 (14%) | 1347 | 77 (6%) | 161 (12%) | 0/16 |
 | dungeon | 44 | 1 (2%) | 5 (11%) | 1 | 0 (0%) | 0 (0%) | 4/0 |
 | floodplains | 71 | 2 (3%) | 5 (7%) | 2 | 1 (50%) | 1 (50%) | 4/0 |
 | garden | 7 | 0 (0%) | 0 (0%) | 0 | 0 (—) | 0 (—) | 3/0 |
@@ -100,12 +98,12 @@ empty-regions item 5, ADOPTED: the four-word figure is the §6.4 metric; report 
 | invrisil | 100 | 5 (5%) | 10 (10%) | 10 | 0 (0%) | 0 (0%) | 2/0 |
 | liscor | 63 | 2 (3%) | 7 (11%) | 18 | 0 (0%) | 1 (6%) | 1/0 |
 | pallass | 116 | 1 (1%) | 12 (10%) | 8 | 1 (12%) | 1 (12%) | 2/0 |
-| riverfarm | 108 | 22 (20%) | 31 (29%) | 4 | 0 (0%) | 0 (0%) | 2/0 |
+| riverfarm | 116 | 5 (4%) | 15 (13%) | 4 | 0 (0%) | 0 (0%) | 2/0 |
 | ruin | 34 | 0 (0%) | 1 (3%) | 3 | 0 (0%) | 0 (0%) | 2/0 |
 | sewers | 40 | 0 (0%) | 7 (18%) | 2 | 0 (0%) | 0 (0%) | 1/0 |
-| **maps (all)** | 639 | 35 (5%) | 83 (13%) | 69 | 2 (3%) | 8 (12%) | 24/0 |
-| **dialogue (all)** | 7 | 1 (14%) | 1 (14%) | 1319 | 76 (6%) | 158 (12%) | 0/16 |
-| **corpus (all)** | 646 | 36 (6%) | 84 (13%) | 1388 | 78 (6%) | 166 (12%) | 24/16 |
+| **maps (all)** | 647 | 18 (3%) | 67 (10%) | 69 | 2 (3%) | 8 (12%) | 24/0 |
+| **dialogue (all)** | 7 | 1 (14%) | 1 (14%) | 1347 | 77 (6%) | 161 (12%) | 0/16 |
+| **corpus (all)** | 654 | 19 (3%) | 68 (10%) | 1416 | 79 (6%) | 169 (12%) | 24/16 |
 
 ---
 
@@ -148,9 +146,10 @@ The issue states the Pallass anchor about the CITY ('Pallass generally: standard
 | Zevara | 26 | 389 | `watch` 2.1% | `desk` 1.3% | `file` 1.3% | 12/26 (46%) | — |
 | Erin | 24 | 275 | `selys` 1.8% | `cellar` 1.5% | `guild` 1.5% | — | — |
 | Rags | 23 | 106 | `ate` 2.8% | `camp` 2.8% | `doors` 2.8% | — | — |
+| Eloise | 20 | 251 | `craft` 2.4% | `sit` 2.4% | `kettle` 2.0% | — | — |
+| A Shepherd | 19 | 214 | `line` 3.7% | `deer` 1.4% | `every` 1.4% | — | — |
 | Lyonette | 19 | 250 | `line` 3.6% | `lyonette` 2.4% | `room` 2.4% | — | — |
 | Relc | 19 | 275 | `spear` 2.9% | `version` 1.8% | `gate` 1.5% | — | — |
-| Eloise | 17 | 209 | `craft` 2.4% | `sit` 2.4% | `keep` 1.9% | — | — |
 | Selys | 17 | 208 | `fee` 2.4% | `desk` 1.9% | `anything` 1.4% | — | — |
 | A Lady with a Ring Box | 16 | 265 | `hand` 2.3% | `people` 1.9% | `stone` 1.9% | — | — |
 | Cups | 15 | 273 | `cup` 2.2% | `coyle` 1.8% | `hat` 1.8% | — | — |
@@ -158,7 +157,6 @@ The issue states the Pallass anchor about the CITY ('Pallass generally: standard
 | Former Headman | 15 | 207 | `count` 2.9% | `hollow` 2.4% | `village` 2.4% | — | — |
 | Lift Attendant | 13 | 203 | `bell` 3.9% | `quarter` 3.9% | `cage` 2.5% | — | 3/13 (23%) |
 | Grimalkin | 12 | 192 | `file` 2.1% | `measure` 2.1% | `numbers` 2.1% | — | 4/12 (33%) |
-| The Hunter | 11 | 143 | `line` 4.9% | `lambs` 2.8% | `deer` 2.1% | — | — |
 | A Man with a Rented Table | 10 | 143 | `block` 3.5% | `nobody` 2.8% | `nothing` 2.8% | — | — |
 | Ceria | 10 | 153 | `camp` 2.0% | `floodplains` 2.0% | `four` 2.0% | — | — |
 | Forge-Tier Clerk | 10 | 130 | `office` 4.6% | `posted` 3.8% | `filed` 3.1% | — | 0/10 (0%) |
@@ -185,10 +183,10 @@ An OBJECT is one `$.entities[i]` in one map file, counted when it carries at lea
 | invrisil | 78 | 6 (8%) | 3 (4%) | 4 | 2 |
 | liscor | 33 | 3 (9%) | 2 (6%) | 2 | 1 |
 | pallass | 57 | 7 (12%) | 2 (4%) | 3 | 4 |
-| riverfarm | 70 | 25 (36%) | 24 (34%) | 22 | 7 |
+| riverfarm | 73 | 8 (11%) | 5 (7%) | 7 | 1 |
 | ruin | 16 | 3 (19%) | 0 (0%) | 2 | 1 |
 | sewers | 19 | 2 (10%) | 1 (5%) | 1 | 1 |
-| **maps (all)** | 359 | 68 (19%) | 40 (11%) | 50 | 23 |
+| **maps (all)** | 362 | 51 (14%) | 21 (6%) | 35 | 17 |
 
 ---
 
@@ -229,10 +227,10 @@ Ordered proxy over the LAST sentence: interruption (terminal dash / ellipsis / '
 | `pallass/pallass_forge_hall.json` | 16 | fact | 44% | absence 5 · fact 7 · motion 4 | 6.46 |
 | `pallass/pallass_market.json` | 52 | fact | 54% ⚠ | absence 12 · fact 28 · motion 12 | 6.11 |
 | `riverfarm/riverfarm_longhouse.json` | 4 | absence | 50% | absence 2 · fact 1 · motion 1 | 2.81 |
-| `riverfarm/riverfarm_mill.json` | 10 | fact | 50% | absence 1 · fact 5 · motion 4 | 5.71 |
-| `riverfarm/riverfarm_village.json` | 40 | fact | 58% ⚠ | absence 9 · fact 23 · motion 8 | 5.01 |
-| `riverfarm/witch_hollow.json` | 38 | fact | 71% ⚠ | absence 7 · fact 27 · instruction 1 · motion 3 | 4.57 |
-| `riverfarm/witch_hut.json` | 11 | fact | 46% | absence 3 · fact 5 · motion 3 | 3.57 |
+| `riverfarm/riverfarm_mill.json` | 10 | fact | 50% | absence 1 · fact 5 · motion 4 | 6.11 |
+| `riverfarm/riverfarm_village.json` | 46 | fact | 52% ⚠ | absence 9 · fact 24 · instruction 1 · motion 12 | 4.64 |
+| `riverfarm/witch_hollow.json` | 40 | fact | 55% ⚠ | absence 9 · fact 22 · instruction 4 · motion 5 | 4.49 |
+| `riverfarm/witch_hut.json` | 11 | fact | 46% | absence 4 · fact 5 · motion 2 | 3.31 |
 | `ruin/ruin_surface.json` | 28 | fact | 64% ⚠ | absence 8 · fact 18 · motion 2 | 5.44 |
 | `sewers/deep_tunnels.json` | 15 | fact | 67% ⚠ | absence 3 · fact 10 · motion 2 | 4.37 |
 | `sewers/sewers.json` | 25 | fact | 52% ⚠ | absence 5 · fact 13 · motion 7 | 5.56 |
@@ -269,8 +267,8 @@ Ordered proxy over the LAST sentence: interruption (terminal dash / ellipsis / '
 | `pallass/pallass_market.json` | 23 | 10 | 46% | 62 | 24 |
 | `riverfarm/riverfarm_longhouse.json` | 2 | 0 | 0% | 3 | 1 |
 | `riverfarm/riverfarm_mill.json` | 6 | 3 | 60% | 12 | 6 |
-| `riverfarm/riverfarm_village.json` | 32 | 21 | 68% | 56 | 20 |
-| `riverfarm/witch_hollow.json` | 25 | 17 | 71% | 43 | 26 |
+| `riverfarm/riverfarm_village.json` | 35 | 24 | 71% | 62 | 24 |
+| `riverfarm/witch_hollow.json` | 25 | 14 | 58% | 45 | 25 |
 | `riverfarm/witch_hut.json` | 5 | 2 | 50% | 11 | 2 |
 | `ruin/ruin_surface.json` | 16 | 7 | 47% | 39 | 19 |
 | `sewers/deep_tunnels.json` | 7 | 3 | 50% | 16 | 4 |
@@ -373,6 +371,16 @@ Printed INLINE so a counter that fires on a granted keep is pre-explained: a kee
 | `pallass.json` | granted | `pallass/pallass_market.json` · `$.interior_flavor[1]` | §6 | An empty-cell flavour line that characterises the whole city in one observed action, with a real present person doing it — the §6 rule-1 ideal (an action the evidence shows, no mot |
 | `pallass.json` | granted | `pallass/pallass_forge.json` · `$.entities[14].variants[0].toast` | — | The payoff of the region's repeatable-work chain, gated at pallass_fetches_run 5 — the player earned it by running the errand five times. "She wouldn't." is a two-word closer, and  |
 | `pallass.json` | granted | `pallass/pallass_den_shop.json` · `$.entities[1].observe` | — | Two concrete wear-marks, and the inference is about years of one woman's own labour rather than an absent agent — the exact counter-case to the region's civic-schedule template. "B |
+| `riverfarm.json` | petitions | `riverfarm/riverfarm_mill.json` · `$.entities[5].toast` | §6 | §6 rule 1 PERMITTED-CLASS KEEP — and the strongest possible ground: this exact string is the bible's OWN worked exemplar for §6 rule 1, quoted verbatim in narrator-bible.md ('Permi |
+| `riverfarm.json` | petitions | `riverfarm/riverfarm_longhouse.json` · `$.entities[1].observe` | §6 | §6.2 CONSEQUENCE-ANON, the class RULED permitted at the pallass petition and amended into §6 at #397 integration. 'for whoever needs it' points FORWARD at a hypothetical future gue |
+| `riverfarm.json` | petitions | `riverfarm/riverfarm_village.json` · `$.entities[31].locked_toast` | §6 | §6.2 CONSEQUENCE-ANON, second instance. 'This is a job for somebody built for it' names whoever COULD do the lift, not somebody who did anything — a Skill gate stated as a person-s |
+| `riverfarm.json` | petitions | `riverfarm/witch_hut.json` · `$.entities[1].on_skill_use.toast` | §1.4 | LENGTH EXCEPTION §1.4: three sentences in functional/skill-outcome, where the ceiling is two. Petitioned on the precedent already GRANTED twice in this pass for the same shape — du |
+| `riverfarm.json` | petitions | `riverfarm/witch_hut.json` · `$.entities[1].skill_hint_toast` | §7 | §7 NEGATION KEEP IN FUNCTIONAL REGISTER — a counter-invisible one, disclosed rather than quietly kept. 'and not the way dust hums' is a correction geometry that NEITHER regex fires |
+| `riverfarm.json` | petitions | `riverfarm/witch_hut.json` · `$.entities[5].toast` | — | PEAK, and the answer to the §10 worry about this exact file. narrator-bible.md §10 names witch_hut as THE anti-template case study and quotes a 'lazy fix' draft that flattens all f |
+| `riverfarm.json` | recorded_not_fixed | `riverfarm/riverfarm_longhouse.json` · `$.entities[1].sleep_toast` | — |  |
+| `riverfarm.json` | recorded_not_fixed | `riverfarm/riverfarm_mill.json` · `$.entities[2].locked_toast` | — |  |
+| `riverfarm.json` | recorded_not_fixed | `riverfarm/riverfarm_village.json` · `$.entities[31].observe` | — |  |
+| `riverfarm.json` | recorded_not_fixed | `riverfarm/witch_hollow.json` · `$.entities[0].observe` | — |  |
 
 ### 10.3 §9.2 ending-shape exceptions already ruled
 

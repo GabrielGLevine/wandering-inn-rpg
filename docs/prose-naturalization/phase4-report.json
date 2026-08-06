@@ -47,18 +47,18 @@
     "narrator_touchable_anon7": 1,
     "narrator_touchable_n": 7,
     "region": "dialogue",
-    "spoken_all_anon4": 92,
-    "spoken_all_anon7": 182,
-    "spoken_all_n": 1438,
+    "spoken_all_anon4": 93,
+    "spoken_all_anon7": 185,
+    "spoken_all_n": 1466,
     "spoken_holdout_anon4": 16,
     "spoken_holdout_anon7": 23,
     "spoken_holdout_n": 113,
     "spoken_protected_anon4": 0,
     "spoken_protected_anon7": 1,
     "spoken_protected_n": 6,
-    "spoken_touchable_anon4": 76,
-    "spoken_touchable_anon7": 158,
-    "spoken_touchable_n": 1319
+    "spoken_touchable_anon4": 77,
+    "spoken_touchable_anon7": 161,
+    "spoken_touchable_n": 1347
    },
    {
     "narrator_all_anon4": 5,
@@ -250,18 +250,18 @@
     "spoken_touchable_n": 8
    },
    {
-    "narrator_all_anon4": 24,
-    "narrator_all_anon7": 35,
-    "narrator_all_n": 130,
+    "narrator_all_anon4": 7,
+    "narrator_all_anon7": 19,
+    "narrator_all_n": 138,
     "narrator_holdout_anon4": 2,
     "narrator_holdout_anon7": 4,
     "narrator_holdout_n": 21,
     "narrator_protected_anon4": 0,
     "narrator_protected_anon7": 0,
     "narrator_protected_n": 1,
-    "narrator_touchable_anon4": 22,
-    "narrator_touchable_anon7": 31,
-    "narrator_touchable_n": 108,
+    "narrator_touchable_anon4": 5,
+    "narrator_touchable_anon7": 15,
+    "narrator_touchable_n": 116,
     "region": "riverfarm",
     "spoken_all_anon4": 0,
     "spoken_all_anon7": 0,
@@ -331,18 +331,18 @@
     "spoken_touchable_n": 2
    },
    {
-    "narrator_all_anon4": 59,
-    "narrator_all_anon7": 126,
-    "narrator_all_n": 765,
+    "narrator_all_anon4": 42,
+    "narrator_all_anon7": 110,
+    "narrator_all_n": 773,
     "narrator_holdout_anon4": 23,
     "narrator_holdout_anon7": 36,
     "narrator_holdout_n": 103,
     "narrator_protected_anon4": 1,
     "narrator_protected_anon7": 7,
     "narrator_protected_n": 23,
-    "narrator_touchable_anon4": 35,
-    "narrator_touchable_anon7": 83,
-    "narrator_touchable_n": 639,
+    "narrator_touchable_anon4": 18,
+    "narrator_touchable_anon7": 67,
+    "narrator_touchable_n": 647,
     "region": "_maps",
     "spoken_all_anon4": 2,
     "spoken_all_anon7": 9,
@@ -371,92 +371,92 @@
     "narrator_touchable_anon7": 1,
     "narrator_touchable_n": 7,
     "region": "_dialogue",
-    "spoken_all_anon4": 92,
-    "spoken_all_anon7": 182,
-    "spoken_all_n": 1438,
+    "spoken_all_anon4": 93,
+    "spoken_all_anon7": 185,
+    "spoken_all_n": 1466,
     "spoken_holdout_anon4": 16,
     "spoken_holdout_anon7": 23,
     "spoken_holdout_n": 113,
     "spoken_protected_anon4": 0,
     "spoken_protected_anon7": 1,
     "spoken_protected_n": 6,
-    "spoken_touchable_anon4": 76,
-    "spoken_touchable_anon7": 158,
-    "spoken_touchable_n": 1319
+    "spoken_touchable_anon4": 77,
+    "spoken_touchable_anon7": 161,
+    "spoken_touchable_n": 1347
    },
    {
-    "narrator_all_anon4": 60,
-    "narrator_all_anon7": 127,
-    "narrator_all_n": 772,
+    "narrator_all_anon4": 43,
+    "narrator_all_anon7": 111,
+    "narrator_all_n": 780,
     "narrator_holdout_anon4": 23,
     "narrator_holdout_anon7": 36,
     "narrator_holdout_n": 103,
     "narrator_protected_anon4": 1,
     "narrator_protected_anon7": 7,
     "narrator_protected_n": 23,
-    "narrator_touchable_anon4": 36,
-    "narrator_touchable_anon7": 84,
-    "narrator_touchable_n": 646,
+    "narrator_touchable_anon4": 19,
+    "narrator_touchable_anon7": 68,
+    "narrator_touchable_n": 654,
     "region": "_corpus",
-    "spoken_all_anon4": 94,
-    "spoken_all_anon7": 191,
-    "spoken_all_n": 1520,
+    "spoken_all_anon4": 95,
+    "spoken_all_anon7": 194,
+    "spoken_all_n": 1548,
     "spoken_holdout_anon4": 16,
     "spoken_holdout_anon7": 24,
     "spoken_holdout_n": 126,
     "spoken_protected_anon4": 0,
     "spoken_protected_anon7": 1,
     "spoken_protected_n": 6,
-    "spoken_touchable_anon4": 78,
-    "spoken_touchable_anon7": 166,
-    "spoken_touchable_n": 1388
+    "spoken_touchable_anon4": 79,
+    "spoken_touchable_anon7": 169,
+    "spoken_touchable_n": 1416
    }
   ]
  },
  "by_region": {
   "_corpus": {
    "all": {
-    "anon3_strings": 182,
-    "anon4_instances": 162,
-    "anon4_strings": 154,
-    "anon7_instances": 358,
-    "anon7_strings": 318,
+    "anon3_strings": 186,
+    "anon4_instances": 146,
+    "anon4_strings": 138,
+    "anon7_instances": 346,
+    "anon7_strings": 305,
     "caps_bare": 1,
     "caps_lettering": 15,
-    "closer_ge2": 50,
-    "closer_ge3": 18,
-    "neg_instances": 23,
+    "closer_ge2": 44,
+    "closer_ge3": 16,
+    "neg_instances": 24,
     "neg_stacked": 1,
-    "neg_strings": 22,
+    "neg_strings": 23,
     "noun_repeat": 1,
-    "sentences": 5413,
-    "stdev_sentence_words": 6.16,
-    "strings": 2292,
+    "sentences": 5497,
+    "stdev_sentence_words": 6.13,
+    "strings": 2328,
     "the_way_x": 1,
     "which_from": 2,
-    "words": 43234
+    "words": 43777
    },
    "narrator": {
     "all": {
-     "anon3_strings": 69,
-     "anon4_instances": 62,
-     "anon4_strings": 60,
-     "anon7_instances": 134,
-     "anon7_strings": 127,
+     "anon3_strings": 70,
+     "anon4_instances": 45,
+     "anon4_strings": 43,
+     "anon7_instances": 118,
+     "anon7_strings": 111,
      "caps_bare": 1,
      "caps_lettering": 15,
-     "closer_ge2": 24,
-     "closer_ge3": 12,
+     "closer_ge2": 17,
+     "closer_ge3": 10,
      "neg_instances": 13,
      "neg_stacked": 1,
      "neg_strings": 12,
      "noun_repeat": 0,
-     "sentences": 1487,
-     "stdev_sentence_words": 6.21,
-     "strings": 772,
+     "sentences": 1510,
+     "stdev_sentence_words": 6.18,
+     "strings": 780,
      "the_way_x": 1,
      "which_from": 2,
-     "words": 17334
+     "words": 17518
     },
     "holdout": {
      "anon3_strings": 14,
@@ -501,48 +501,48 @@
      "words": 711
     },
     "touchable": {
-     "anon3_strings": 49,
-     "anon4_instances": 37,
-     "anon4_strings": 36,
-     "anon7_instances": 88,
-     "anon7_strings": 84,
+     "anon3_strings": 50,
+     "anon4_instances": 20,
+     "anon4_strings": 19,
+     "anon7_instances": 72,
+     "anon7_strings": 68,
      "caps_bare": 0,
      "caps_lettering": 13,
-     "closer_ge2": 12,
-     "closer_ge3": 3,
+     "closer_ge2": 5,
+     "closer_ge3": 1,
      "neg_instances": 6,
      "neg_stacked": 0,
      "neg_strings": 6,
      "noun_repeat": 0,
-     "sentences": 1219,
-     "stdev_sentence_words": 6.17,
-     "strings": 646,
+     "sentences": 1242,
+     "stdev_sentence_words": 6.13,
+     "strings": 654,
      "the_way_x": 0,
      "which_from": 1,
-     "words": 14275
+     "words": 14459
     }
    },
    "spoken": {
     "all": {
-     "anon3_strings": 113,
-     "anon4_instances": 100,
-     "anon4_strings": 94,
-     "anon7_instances": 224,
-     "anon7_strings": 191,
+     "anon3_strings": 116,
+     "anon4_instances": 101,
+     "anon4_strings": 95,
+     "anon7_instances": 228,
+     "anon7_strings": 194,
      "caps_bare": 0,
      "caps_lettering": 0,
-     "closer_ge2": 26,
+     "closer_ge2": 27,
      "closer_ge3": 6,
-     "neg_instances": 10,
+     "neg_instances": 11,
      "neg_stacked": 0,
-     "neg_strings": 10,
+     "neg_strings": 11,
      "noun_repeat": 1,
-     "sentences": 3926,
-     "stdev_sentence_words": 5.55,
-     "strings": 1520,
+     "sentences": 3987,
+     "stdev_sentence_words": 5.53,
+     "strings": 1548,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 25900
+     "words": 26259
     },
     "holdout": {
      "anon3_strings": 12,
@@ -559,11 +559,11 @@
      "neg_strings": 3,
      "noun_repeat": 0,
      "sentences": 411,
-     "stdev_sentence_words": 5.63,
+     "stdev_sentence_words": 5.62,
      "strings": 126,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 3154
+     "words": 3156
     },
     "protected": {
      "anon3_strings": 1,
@@ -587,49 +587,49 @@
      "words": 254
     },
     "touchable": {
-     "anon3_strings": 100,
-     "anon4_instances": 82,
-     "anon4_strings": 78,
-     "anon7_instances": 193,
-     "anon7_strings": 166,
+     "anon3_strings": 103,
+     "anon4_instances": 83,
+     "anon4_strings": 79,
+     "anon7_instances": 197,
+     "anon7_strings": 169,
      "caps_bare": 0,
      "caps_lettering": 0,
-     "closer_ge2": 19,
+     "closer_ge2": 20,
      "closer_ge3": 5,
-     "neg_instances": 5,
+     "neg_instances": 6,
      "neg_stacked": 0,
-     "neg_strings": 5,
+     "neg_strings": 6,
      "noun_repeat": 1,
-     "sentences": 3472,
-     "stdev_sentence_words": 5.53,
-     "strings": 1388,
+     "sentences": 3533,
+     "stdev_sentence_words": 5.51,
+     "strings": 1416,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 22492
+     "words": 22849
     }
    }
   },
   "_dialogue": {
    "all": {
-    "anon3_strings": 106,
-    "anon4_instances": 99,
-    "anon4_strings": 93,
-    "anon7_instances": 216,
-    "anon7_strings": 183,
+    "anon3_strings": 109,
+    "anon4_instances": 100,
+    "anon4_strings": 94,
+    "anon7_instances": 220,
+    "anon7_strings": 186,
     "caps_bare": 0,
     "caps_lettering": 0,
-    "closer_ge2": 24,
+    "closer_ge2": 25,
     "closer_ge3": 4,
-    "neg_instances": 9,
+    "neg_instances": 10,
     "neg_stacked": 0,
-    "neg_strings": 9,
+    "neg_strings": 10,
     "noun_repeat": 1,
-    "sentences": 3750,
-    "stdev_sentence_words": 5.62,
-    "strings": 1445,
+    "sentences": 3810,
+    "stdev_sentence_words": 5.6,
+    "strings": 1473,
     "the_way_x": 0,
     "which_from": 0,
-    "words": 24879
+    "words": 25236
    },
    "narrator": {
     "all": {
@@ -719,25 +719,25 @@
    },
    "spoken": {
     "all": {
-     "anon3_strings": 106,
-     "anon4_instances": 98,
-     "anon4_strings": 92,
-     "anon7_instances": 215,
-     "anon7_strings": 182,
+     "anon3_strings": 109,
+     "anon4_instances": 99,
+     "anon4_strings": 93,
+     "anon7_instances": 219,
+     "anon7_strings": 185,
      "caps_bare": 0,
      "caps_lettering": 0,
-     "closer_ge2": 24,
+     "closer_ge2": 25,
      "closer_ge3": 4,
-     "neg_instances": 9,
+     "neg_instances": 10,
      "neg_stacked": 0,
-     "neg_strings": 9,
+     "neg_strings": 10,
      "noun_repeat": 1,
-     "sentences": 3738,
-     "stdev_sentence_words": 5.61,
-     "strings": 1438,
+     "sentences": 3798,
+     "stdev_sentence_words": 5.59,
+     "strings": 1466,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 24710
+     "words": 25067
     },
     "holdout": {
      "anon3_strings": 11,
@@ -758,7 +758,7 @@
      "strings": 113,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 2920
+     "words": 2922
     },
     "protected": {
      "anon3_strings": 1,
@@ -782,71 +782,71 @@
      "words": 254
     },
     "touchable": {
-     "anon3_strings": 94,
-     "anon4_instances": 80,
-     "anon4_strings": 76,
-     "anon7_instances": 185,
-     "anon7_strings": 158,
+     "anon3_strings": 97,
+     "anon4_instances": 81,
+     "anon4_strings": 77,
+     "anon7_instances": 189,
+     "anon7_strings": 161,
      "caps_bare": 0,
      "caps_lettering": 0,
-     "closer_ge2": 18,
+     "closer_ge2": 19,
      "closer_ge3": 4,
-     "neg_instances": 4,
+     "neg_instances": 5,
      "neg_stacked": 0,
-     "neg_strings": 4,
+     "neg_strings": 5,
      "noun_repeat": 1,
-     "sentences": 3314,
-     "stdev_sentence_words": 5.59,
-     "strings": 1319,
+     "sentences": 3374,
+     "stdev_sentence_words": 5.57,
+     "strings": 1347,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 21536
+     "words": 21891
     }
    }
   },
   "_maps": {
    "all": {
-    "anon3_strings": 76,
-    "anon4_instances": 63,
-    "anon4_strings": 61,
-    "anon7_instances": 142,
-    "anon7_strings": 135,
+    "anon3_strings": 77,
+    "anon4_instances": 46,
+    "anon4_strings": 44,
+    "anon7_instances": 126,
+    "anon7_strings": 119,
     "caps_bare": 1,
     "caps_lettering": 15,
-    "closer_ge2": 26,
-    "closer_ge3": 14,
+    "closer_ge2": 19,
+    "closer_ge3": 12,
     "neg_instances": 14,
     "neg_stacked": 1,
     "neg_strings": 13,
     "noun_repeat": 0,
-    "sentences": 1663,
-    "stdev_sentence_words": 6.25,
-    "strings": 847,
+    "sentences": 1687,
+    "stdev_sentence_words": 6.22,
+    "strings": 855,
     "the_way_x": 1,
     "which_from": 2,
-    "words": 18355
+    "words": 18541
    },
    "narrator": {
     "all": {
-     "anon3_strings": 69,
-     "anon4_instances": 61,
-     "anon4_strings": 59,
-     "anon7_instances": 133,
-     "anon7_strings": 126,
+     "anon3_strings": 70,
+     "anon4_instances": 44,
+     "anon4_strings": 42,
+     "anon7_instances": 117,
+     "anon7_strings": 110,
      "caps_bare": 1,
      "caps_lettering": 15,
-     "closer_ge2": 24,
-     "closer_ge3": 12,
+     "closer_ge2": 17,
+     "closer_ge3": 10,
      "neg_instances": 13,
      "neg_stacked": 1,
      "neg_strings": 12,
      "noun_repeat": 0,
-     "sentences": 1475,
-     "stdev_sentence_words": 6.21,
-     "strings": 765,
+     "sentences": 1498,
+     "stdev_sentence_words": 6.18,
+     "strings": 773,
      "the_way_x": 1,
      "which_from": 2,
-     "words": 17165
+     "words": 17349
     },
     "holdout": {
      "anon3_strings": 14,
@@ -891,25 +891,25 @@
      "words": 711
     },
     "touchable": {
-     "anon3_strings": 49,
-     "anon4_instances": 36,
-     "anon4_strings": 35,
-     "anon7_instances": 87,
-     "anon7_strings": 83,
+     "anon3_strings": 50,
+     "anon4_instances": 19,
+     "anon4_strings": 18,
+     "anon7_instances": 71,
+     "anon7_strings": 67,
      "caps_bare": 0,
      "caps_lettering": 13,
-     "closer_ge2": 12,
-     "closer_ge3": 3,
+     "closer_ge2": 5,
+     "closer_ge3": 1,
      "neg_instances": 6,
      "neg_stacked": 0,
      "neg_strings": 6,
      "noun_repeat": 0,
-     "sentences": 1207,
-     "stdev_sentence_words": 6.17,
-     "strings": 639,
+     "sentences": 1230,
+     "stdev_sentence_words": 6.13,
+     "strings": 647,
      "the_way_x": 0,
      "which_from": 1,
-     "words": 14106
+     "words": 14290
     }
    },
    "spoken": {
@@ -927,12 +927,12 @@
      "neg_stacked": 0,
      "neg_strings": 1,
      "noun_repeat": 0,
-     "sentences": 188,
-     "stdev_sentence_words": 4.24,
+     "sentences": 189,
+     "stdev_sentence_words": 4.23,
      "strings": 82,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 1190
+     "words": 1192
     },
     "holdout": {
      "anon3_strings": 1,
@@ -990,36 +990,36 @@
      "neg_stacked": 0,
      "neg_strings": 1,
      "noun_repeat": 0,
-     "sentences": 158,
+     "sentences": 159,
      "stdev_sentence_words": 3.97,
      "strings": 69,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 956
+     "words": 958
     }
    }
   },
   "dialogue": {
    "all": {
-    "anon3_strings": 106,
-    "anon4_instances": 99,
-    "anon4_strings": 93,
-    "anon7_instances": 216,
-    "anon7_strings": 183,
+    "anon3_strings": 109,
+    "anon4_instances": 100,
+    "anon4_strings": 94,
+    "anon7_instances": 220,
+    "anon7_strings": 186,
     "caps_bare": 0,
     "caps_lettering": 0,
-    "closer_ge2": 24,
+    "closer_ge2": 25,
     "closer_ge3": 4,
-    "neg_instances": 9,
+    "neg_instances": 10,
     "neg_stacked": 0,
-    "neg_strings": 9,
+    "neg_strings": 10,
     "noun_repeat": 1,
-    "sentences": 3750,
-    "stdev_sentence_words": 5.62,
-    "strings": 1445,
+    "sentences": 3810,
+    "stdev_sentence_words": 5.6,
+    "strings": 1473,
     "the_way_x": 0,
     "which_from": 0,
-    "words": 24879
+    "words": 25236
    },
    "narrator": {
     "all": {
@@ -1109,25 +1109,25 @@
    },
    "spoken": {
     "all": {
-     "anon3_strings": 106,
-     "anon4_instances": 98,
-     "anon4_strings": 92,
-     "anon7_instances": 215,
-     "anon7_strings": 182,
+     "anon3_strings": 109,
+     "anon4_instances": 99,
+     "anon4_strings": 93,
+     "anon7_instances": 219,
+     "anon7_strings": 185,
      "caps_bare": 0,
      "caps_lettering": 0,
-     "closer_ge2": 24,
+     "closer_ge2": 25,
      "closer_ge3": 4,
-     "neg_instances": 9,
+     "neg_instances": 10,
      "neg_stacked": 0,
-     "neg_strings": 9,
+     "neg_strings": 10,
      "noun_repeat": 1,
-     "sentences": 3738,
-     "stdev_sentence_words": 5.61,
-     "strings": 1438,
+     "sentences": 3798,
+     "stdev_sentence_words": 5.59,
+     "strings": 1466,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 24710
+     "words": 25067
     },
     "holdout": {
      "anon3_strings": 11,
@@ -1148,7 +1148,7 @@
      "strings": 113,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 2920
+     "words": 2922
     },
     "protected": {
      "anon3_strings": 1,
@@ -1172,25 +1172,25 @@
      "words": 254
     },
     "touchable": {
-     "anon3_strings": 94,
-     "anon4_instances": 80,
-     "anon4_strings": 76,
-     "anon7_instances": 185,
-     "anon7_strings": 158,
+     "anon3_strings": 97,
+     "anon4_instances": 81,
+     "anon4_strings": 77,
+     "anon7_instances": 189,
+     "anon7_strings": 161,
      "caps_bare": 0,
      "caps_lettering": 0,
-     "closer_ge2": 18,
+     "closer_ge2": 19,
      "closer_ge3": 4,
-     "neg_instances": 4,
+     "neg_instances": 5,
      "neg_stacked": 0,
-     "neg_strings": 4,
+     "neg_strings": 5,
      "noun_repeat": 1,
-     "sentences": 3314,
-     "stdev_sentence_words": 5.59,
-     "strings": 1319,
+     "sentences": 3374,
+     "stdev_sentence_words": 5.57,
+     "strings": 1347,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 21536
+     "words": 21891
     }
    }
   },
@@ -2561,47 +2561,47 @@
   },
   "riverfarm": {
    "all": {
-    "anon3_strings": 12,
-    "anon4_instances": 24,
-    "anon4_strings": 24,
-    "anon7_instances": 37,
-    "anon7_strings": 35,
+    "anon3_strings": 13,
+    "anon4_instances": 7,
+    "anon4_strings": 7,
+    "anon7_instances": 21,
+    "anon7_strings": 19,
     "caps_bare": 0,
     "caps_lettering": 0,
-    "closer_ge2": 8,
-    "closer_ge3": 3,
+    "closer_ge2": 1,
+    "closer_ge3": 1,
     "neg_instances": 2,
     "neg_stacked": 0,
     "neg_strings": 2,
     "noun_repeat": 0,
-    "sentences": 222,
-    "stdev_sentence_words": 5.47,
-    "strings": 134,
+    "sentences": 246,
+    "stdev_sentence_words": 5.28,
+    "strings": 142,
     "the_way_x": 0,
     "which_from": 0,
-    "words": 2483
+    "words": 2669
    },
    "narrator": {
     "all": {
-     "anon3_strings": 12,
-     "anon4_instances": 24,
-     "anon4_strings": 24,
-     "anon7_instances": 37,
-     "anon7_strings": 35,
+     "anon3_strings": 13,
+     "anon4_instances": 7,
+     "anon4_strings": 7,
+     "anon7_instances": 21,
+     "anon7_strings": 19,
      "caps_bare": 0,
      "caps_lettering": 0,
-     "closer_ge2": 8,
-     "closer_ge3": 3,
+     "closer_ge2": 1,
+     "closer_ge3": 1,
      "neg_instances": 2,
      "neg_stacked": 0,
      "neg_strings": 2,
      "noun_repeat": 0,
-     "sentences": 217,
-     "stdev_sentence_words": 5.43,
-     "strings": 130,
+     "sentences": 240,
+     "stdev_sentence_words": 5.23,
+     "strings": 138,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 2459
+     "words": 2643
     },
     "holdout": {
      "anon3_strings": 3,
@@ -2646,25 +2646,25 @@
      "words": 23
     },
     "touchable": {
-     "anon3_strings": 9,
-     "anon4_instances": 22,
-     "anon4_strings": 22,
-     "anon7_instances": 32,
-     "anon7_strings": 31,
+     "anon3_strings": 10,
+     "anon4_instances": 5,
+     "anon4_strings": 5,
+     "anon7_instances": 16,
+     "anon7_strings": 15,
      "caps_bare": 0,
      "caps_lettering": 0,
-     "closer_ge2": 7,
-     "closer_ge3": 2,
+     "closer_ge2": 0,
+     "closer_ge3": 0,
      "neg_instances": 1,
      "neg_stacked": 0,
      "neg_strings": 1,
      "noun_repeat": 0,
-     "sentences": 172,
-     "stdev_sentence_words": 5.14,
-     "strings": 108,
+     "sentences": 195,
+     "stdev_sentence_words": 4.94,
+     "strings": 116,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 2016
+     "words": 2200
     }
    },
    "spoken": {
@@ -2682,12 +2682,12 @@
      "neg_stacked": 0,
      "neg_strings": 0,
      "noun_repeat": 0,
-     "sentences": 5,
-     "stdev_sentence_words": 2.15,
+     "sentences": 6,
+     "stdev_sentence_words": 2.05,
      "strings": 4,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 24
+     "words": 26
     },
     "holdout": {
      "anon3_strings": 0,
@@ -2745,12 +2745,12 @@
      "neg_stacked": 0,
      "neg_strings": 0,
      "noun_repeat": 0,
-     "sentences": 5,
-     "stdev_sentence_words": 2.15,
+     "sentences": 6,
+     "stdev_sentence_words": 2.05,
      "strings": 4,
      "the_way_x": 0,
      "which_from": 0,
-     "words": 24
+     "words": 26
     }
    }
   },
@@ -4564,26 +4564,6 @@
       "status_b": "touchable"
      },
      {
-      "entity_a": 5,
-      "entity_b": 6,
-      "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
-      "id_a": "map:riverfarm/riverfarm_village.json:$.entities[5].observe",
-      "id_b": "map:riverfarm/riverfarm_village.json:$.entities[6].observe",
-      "shape": "fact",
-      "status_a": "touchable",
-      "status_b": "touchable"
-     },
-     {
-      "entity_a": 6,
-      "entity_b": 7,
-      "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
-      "id_a": "map:riverfarm/riverfarm_village.json:$.entities[6].observe",
-      "id_b": "map:riverfarm/riverfarm_village.json:$.entities[7].observe",
-      "shape": "fact",
-      "status_a": "touchable",
-      "status_b": "touchable"
-     },
-     {
       "entity_a": 7,
       "entity_b": 8,
       "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
@@ -4684,6 +4664,26 @@
       "status_b": "touchable"
      },
      {
+      "entity_a": 19,
+      "entity_b": 20,
+      "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
+      "id_a": "map:riverfarm/riverfarm_village.json:$.entities[19].observe",
+      "id_b": "map:riverfarm/riverfarm_village.json:$.entities[20].observe",
+      "shape": "fact",
+      "status_a": "touchable",
+      "status_b": "touchable"
+     },
+     {
+      "entity_a": 20,
+      "entity_b": 21,
+      "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
+      "id_a": "map:riverfarm/riverfarm_village.json:$.entities[20].observe",
+      "id_b": "map:riverfarm/riverfarm_village.json:$.entities[21].observe",
+      "shape": "fact",
+      "status_a": "touchable",
+      "status_b": "touchable"
+     },
+     {
       "entity_a": 21,
       "entity_b": 22,
       "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
@@ -4732,14 +4732,44 @@
       "shape": "fact",
       "status_a": "touchable",
       "status_b": "touchable"
+     },
+     {
+      "entity_a": 31,
+      "entity_b": 32,
+      "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
+      "id_a": "map:riverfarm/riverfarm_village.json:$.entities[31].observe",
+      "id_b": "map:riverfarm/riverfarm_village.json:$.entities[32].observe",
+      "shape": "fact",
+      "status_a": "touchable",
+      "status_b": "touchable"
+     },
+     {
+      "entity_a": 32,
+      "entity_b": 33,
+      "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
+      "id_a": "map:riverfarm/riverfarm_village.json:$.entities[32].observe",
+      "id_b": "map:riverfarm/riverfarm_village.json:$.entities[33].observe",
+      "shape": "fact",
+      "status_a": "touchable",
+      "status_b": "touchable"
+     },
+     {
+      "entity_a": 33,
+      "entity_b": 34,
+      "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
+      "id_a": "map:riverfarm/riverfarm_village.json:$.entities[33].observe",
+      "id_b": "map:riverfarm/riverfarm_village.json:$.entities[34].observe",
+      "shape": "fact",
+      "status_a": "touchable",
+      "status_b": "touchable"
      }
     ],
-    "entities_scored": 32,
-    "entity_collision_pct": 67.7,
-    "entity_collisions": 21,
+    "entities_scored": 35,
+    "entity_collision_pct": 70.6,
+    "entity_collisions": 24,
     "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
-    "string_collisions": 20,
-    "string_pairs": 56
+    "string_collisions": 24,
+    "string_pairs": 62
    },
    {
     "collisions": [
@@ -4844,41 +4874,11 @@
       "status_b": "touchable"
      },
      {
-      "entity_a": 12,
-      "entity_b": 13,
-      "file": "wandering_inn_game/data/maps/riverfarm/witch_hollow.json",
-      "id_a": "map:riverfarm/witch_hollow.json:$.entities[12].observe",
-      "id_b": "map:riverfarm/witch_hollow.json:$.entities[13].observe",
-      "shape": "fact",
-      "status_a": "touchable",
-      "status_b": "touchable"
-     },
-     {
-      "entity_a": 13,
-      "entity_b": 14,
-      "file": "wandering_inn_game/data/maps/riverfarm/witch_hollow.json",
-      "id_a": "map:riverfarm/witch_hollow.json:$.entities[13].observe",
-      "id_b": "map:riverfarm/witch_hollow.json:$.entities[14].item_hint_toast",
-      "shape": "fact",
-      "status_a": "touchable",
-      "status_b": "touchable"
-     },
-     {
       "entity_a": 14,
       "entity_b": 15,
       "file": "wandering_inn_game/data/maps/riverfarm/witch_hollow.json",
       "id_a": "map:riverfarm/witch_hollow.json:$.entities[14].item_hint_toast",
       "id_b": "map:riverfarm/witch_hollow.json:$.entities[15].observe",
-      "shape": "fact",
-      "status_a": "touchable",
-      "status_b": "touchable"
-     },
-     {
-      "entity_a": 15,
-      "entity_b": 16,
-      "file": "wandering_inn_game/data/maps/riverfarm/witch_hollow.json",
-      "id_a": "map:riverfarm/witch_hollow.json:$.entities[15].observe",
-      "id_b": "map:riverfarm/witch_hollow.json:$.entities[16].observe",
       "shape": "fact",
       "status_a": "touchable",
       "status_b": "touchable"
@@ -4915,11 +4915,11 @@
      }
     ],
     "entities_scored": 25,
-    "entity_collision_pct": 70.8,
-    "entity_collisions": 17,
+    "entity_collision_pct": 58.3,
+    "entity_collisions": 14,
     "file": "wandering_inn_game/data/maps/riverfarm/witch_hollow.json",
-    "string_collisions": 26,
-    "string_pairs": 43
+    "string_collisions": 25,
+    "string_pairs": 45
    },
    {
     "collisions": [
@@ -5770,8 +5770,8 @@
     "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_mill.json",
     "region": "riverfarm",
     "sentences_touchable": 14,
-    "stdev_sentence_words_narrator": 6.11,
-    "stdev_sentence_words_touchable": 5.71,
+    "stdev_sentence_words_narrator": 6.36,
+    "stdev_sentence_words_touchable": 6.11,
     "touchable": {
      "dist": {
       "absence": 1,
@@ -5787,64 +5787,66 @@
     "all_scoped": {
      "dist": {
       "absence": 10,
-      "fact": 33,
-      "motion": 11
+      "fact": 34,
+      "instruction": 1,
+      "motion": 15
      },
-     "n": 54,
-     "top_pct": 61.1,
+     "n": 60,
+     "top_pct": 56.7,
      "top_shape": "fact"
     },
     "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
     "region": "riverfarm",
-    "sentences_touchable": 73,
-    "stdev_sentence_words_narrator": 5.52,
-    "stdev_sentence_words_touchable": 5.01,
+    "sentences_touchable": 89,
+    "stdev_sentence_words_narrator": 5.24,
+    "stdev_sentence_words_touchable": 4.64,
     "touchable": {
      "dist": {
       "absence": 9,
-      "fact": 23,
-      "motion": 8
+      "fact": 24,
+      "instruction": 1,
+      "motion": 12
      },
-     "n": 40,
-     "top_pct": 57.5,
+     "n": 46,
+     "top_pct": 52.2,
      "top_shape": "fact"
     }
    },
    {
     "all_scoped": {
      "dist": {
-      "absence": 9,
-      "fact": 30,
-      "instruction": 1,
-      "motion": 3
+      "absence": 11,
+      "fact": 25,
+      "instruction": 4,
+      "motion": 5
      },
-     "n": 43,
-     "top_pct": 69.8,
+     "n": 45,
+     "top_pct": 55.6,
      "top_shape": "fact"
     },
     "file": "wandering_inn_game/data/maps/riverfarm/witch_hollow.json",
     "region": "riverfarm",
-    "sentences_touchable": 56,
-    "stdev_sentence_words_narrator": 4.81,
-    "stdev_sentence_words_touchable": 4.57,
+    "sentences_touchable": 61,
+    "stdev_sentence_words_narrator": 4.72,
+    "stdev_sentence_words_touchable": 4.49,
     "touchable": {
      "dist": {
-      "absence": 7,
-      "fact": 27,
-      "instruction": 1,
-      "motion": 3
+      "absence": 9,
+      "fact": 22,
+      "instruction": 4,
+      "motion": 5
      },
-     "n": 38,
-     "top_pct": 71.1,
+     "n": 40,
+     "top_pct": 55.0,
      "top_shape": "fact"
     }
    },
    {
     "all_scoped": {
      "dist": {
-      "absence": 3,
+      "absence": 4,
       "fact": 6,
-      "motion": 3
+      "motion": 2
      },
      "n": 12,
      "top_pct": 50.0,
@@ -5852,14 +5854,14 @@
     },
     "file": "wandering_inn_game/data/maps/riverfarm/witch_hut.json",
     "region": "riverfarm",
-    "sentences_touchable": 16,
-    "stdev_sentence_words_narrator": 3.88,
-    "stdev_sentence_words_touchable": 3.57,
+    "sentences_touchable": 17,
+    "stdev_sentence_words_narrator": 3.61,
+    "stdev_sentence_words_touchable": 3.31,
     "touchable": {
      "dist": {
-      "absence": 3,
+      "absence": 4,
       "fact": 5,
-      "motion": 3
+      "motion": 2
      },
      "n": 11,
      "top_pct": 45.5,
@@ -6328,6 +6330,116 @@
     "kind": "granted",
     "sections": [],
     "source": "pallass.json"
+   },
+   {
+    "bucket": "petitions",
+    "field_path": "$.entities[5].toast",
+    "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_mill.json",
+    "ground_head": "§6 rule 1 PERMITTED-CLASS KEEP — and the strongest possible ground: this exact string is the bible's OWN worked exemplar for §6 rule 1, quoted verbatim in narrator-bible.md ('Permi",
+    "in_protected_keeps": false,
+    "kind": "petitions",
+    "sections": [
+     "§6"
+    ],
+    "source": "riverfarm.json"
+   },
+   {
+    "bucket": "petitions",
+    "field_path": "$.entities[1].observe",
+    "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_longhouse.json",
+    "ground_head": "§6.2 CONSEQUENCE-ANON, the class RULED permitted at the pallass petition and amended into §6 at #397 integration. 'for whoever needs it' points FORWARD at a hypothetical future gue",
+    "in_protected_keeps": false,
+    "kind": "petitions",
+    "sections": [
+     "§6"
+    ],
+    "source": "riverfarm.json"
+   },
+   {
+    "bucket": "petitions",
+    "field_path": "$.entities[31].locked_toast",
+    "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
+    "ground_head": "§6.2 CONSEQUENCE-ANON, second instance. 'This is a job for somebody built for it' names whoever COULD do the lift, not somebody who did anything — a Skill gate stated as a person-s",
+    "in_protected_keeps": false,
+    "kind": "petitions",
+    "sections": [
+     "§6"
+    ],
+    "source": "riverfarm.json"
+   },
+   {
+    "bucket": "petitions",
+    "field_path": "$.entities[1].on_skill_use.toast",
+    "file": "wandering_inn_game/data/maps/riverfarm/witch_hut.json",
+    "ground_head": "LENGTH EXCEPTION §1.4: three sentences in functional/skill-outcome, where the ceiling is two. Petitioned on the precedent already GRANTED twice in this pass for the same shape — du",
+    "in_protected_keeps": false,
+    "kind": "petitions",
+    "sections": [
+     "§1.4"
+    ],
+    "source": "riverfarm.json"
+   },
+   {
+    "bucket": "petitions",
+    "field_path": "$.entities[1].skill_hint_toast",
+    "file": "wandering_inn_game/data/maps/riverfarm/witch_hut.json",
+    "ground_head": "§7 NEGATION KEEP IN FUNCTIONAL REGISTER — a counter-invisible one, disclosed rather than quietly kept. 'and not the way dust hums' is a correction geometry that NEITHER regex fires",
+    "in_protected_keeps": false,
+    "kind": "petitions",
+    "sections": [
+     "§7"
+    ],
+    "source": "riverfarm.json"
+   },
+   {
+    "bucket": "petitions",
+    "field_path": "$.entities[5].toast",
+    "file": "wandering_inn_game/data/maps/riverfarm/witch_hut.json",
+    "ground_head": "PEAK, and the answer to the §10 worry about this exact file. narrator-bible.md §10 names witch_hut as THE anti-template case study and quotes a 'lazy fix' draft that flattens all f",
+    "in_protected_keeps": false,
+    "kind": "petitions",
+    "sections": [],
+    "source": "riverfarm.json"
+   },
+   {
+    "bucket": "recorded_not_fixed",
+    "field_path": "$.entities[1].sleep_toast",
+    "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_longhouse.json",
+    "ground_head": "",
+    "in_protected_keeps": false,
+    "kind": "recorded_not_fixed",
+    "sections": [],
+    "source": "riverfarm.json"
+   },
+   {
+    "bucket": "recorded_not_fixed",
+    "field_path": "$.entities[2].locked_toast",
+    "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_mill.json",
+    "ground_head": "",
+    "in_protected_keeps": false,
+    "kind": "recorded_not_fixed",
+    "sections": [],
+    "source": "riverfarm.json"
+   },
+   {
+    "bucket": "recorded_not_fixed",
+    "field_path": "$.entities[31].observe",
+    "file": "wandering_inn_game/data/maps/riverfarm/riverfarm_village.json",
+    "ground_head": "",
+    "in_protected_keeps": false,
+    "kind": "recorded_not_fixed",
+    "sections": [],
+    "source": "riverfarm.json"
+   },
+   {
+    "bucket": "recorded_not_fixed",
+    "field_path": "$.entities[0].observe",
+    "file": "wandering_inn_game/data/maps/riverfarm/witch_hollow.json",
+    "ground_head": "",
+    "in_protected_keeps": false,
+    "kind": "recorded_not_fixed",
+    "sections": [],
+    "source": "riverfarm.json"
    }
   ],
   "protected_keeps": [
@@ -6724,18 +6836,18 @@
    "touchable_narrator_strings": 116
   },
   {
-   "anon4_pct": 20.4,
-   "anon4_strings": 22,
-   "anon7_pct": 28.7,
-   "closer_ge2": 7,
+   "anon4_pct": 4.3,
+   "anon4_strings": 5,
+   "anon7_pct": 12.9,
+   "closer_ge2": 0,
    "neg_instances": 1,
-   "pass_pending": "Phase 2 pass NOT LANDED (queued behind the 396 merge). Its numbers are the PRE-pass baseline, which is why it is the outlier in nearly every table — read it as the control, not as a result.",
+   "pass_pending": null,
    "region": "riverfarm",
    "shape_max_file": "wandering_inn_game/data/maps/riverfarm/witch_hollow.json",
-   "shape_max_pct": 71.1,
+   "shape_max_pct": 55.0,
    "shape_max_shape": "fact",
-   "stdev_sentence_words": 5.14,
-   "touchable_narrator_strings": 108
+   "stdev_sentence_words": 4.94,
+   "touchable_narrator_strings": 116
   },
   {
    "anon4_pct": 0.0,
@@ -6766,18 +6878,18 @@
    "touchable_narrator_strings": 40
   },
   {
-   "anon4_pct": 5.5,
-   "anon4_strings": 35,
-   "anon7_pct": 13.0,
-   "closer_ge2": 12,
+   "anon4_pct": 2.8,
+   "anon4_strings": 18,
+   "anon7_pct": 10.4,
+   "closer_ge2": 5,
    "neg_instances": 6,
    "pass_pending": null,
    "region": "_maps",
    "shape_max_file": "wandering_inn_game/data/maps/dungeon/dungeon_approach.json",
    "shape_max_pct": 85.7,
    "shape_max_shape": "fact",
-   "stdev_sentence_words": 6.17,
-   "touchable_narrator_strings": 639
+   "stdev_sentence_words": 6.13,
+   "touchable_narrator_strings": 647
   },
   {
    "anon4_pct": 14.3,
@@ -6794,18 +6906,18 @@
    "touchable_narrator_strings": 7
   },
   {
-   "anon4_pct": 5.6,
-   "anon4_strings": 36,
-   "anon7_pct": 13.0,
-   "closer_ge2": 12,
+   "anon4_pct": 2.9,
+   "anon4_strings": 19,
+   "anon7_pct": 10.4,
+   "closer_ge2": 5,
    "neg_instances": 6,
    "pass_pending": null,
    "region": "_corpus",
    "shape_max_file": "wandering_inn_game/data/maps/dungeon/dungeon_approach.json",
    "shape_max_pct": 85.7,
    "shape_max_shape": "fact",
-   "stdev_sentence_words": 6.17,
-   "touchable_narrator_strings": 646
+   "stdev_sentence_words": 6.13,
+   "touchable_narrator_strings": 654
   }
  ],
  "object_inference": {
@@ -6883,13 +6995,13 @@
     "region": "pallass"
    },
    {
-    "by_anon_motive": 22,
-    "by_closer_ge2": 7,
-    "inferred": 25,
-    "inferred_pct": 35.7,
-    "inferred_touchable_pct": 34.3,
-    "inferred_touchable_trigger": 24,
-    "objects": 70,
+    "by_anon_motive": 7,
+    "by_closer_ge2": 1,
+    "inferred": 8,
+    "inferred_pct": 11.0,
+    "inferred_touchable_pct": 6.8,
+    "inferred_touchable_trigger": 5,
+    "objects": 73,
     "region": "riverfarm"
    },
    {
@@ -6913,13 +7025,13 @@
     "region": "sewers"
    },
    {
-    "by_anon_motive": 50,
-    "by_closer_ge2": 23,
-    "inferred": 68,
-    "inferred_pct": 18.9,
-    "inferred_touchable_pct": 11.1,
-    "inferred_touchable_trigger": 40,
-    "objects": 359,
+    "by_anon_motive": 35,
+    "by_closer_ge2": 17,
+    "inferred": 51,
+    "inferred_pct": 14.1,
+    "inferred_touchable_pct": 5.8,
+    "inferred_touchable_trigger": 21,
+    "objects": 362,
     "region": "_maps"
    }
   ]
@@ -7119,6 +7231,34 @@
      }
     ],
     "touchable": 8
+   },
+   {
+    "anchor_share_pct": null,
+    "anchor_strings": 0,
+    "content_words": 214,
+    "graph_anchor_share_pct": null,
+    "graph_anchor_strings": null,
+    "issue_anchor": null,
+    "speaker": "A Shepherd",
+    "strings": 19,
+    "top": [
+     {
+      "n": 8,
+      "share_pct": 3.7,
+      "word": "line"
+     },
+     {
+      "n": 3,
+      "share_pct": 1.4,
+      "word": "deer"
+     },
+     {
+      "n": 3,
+      "share_pct": 1.4,
+      "word": "every"
+     }
+    ],
+    "touchable": 19
    },
    {
     "anchor_share_pct": null,
@@ -7347,30 +7487,30 @@
    {
     "anchor_share_pct": null,
     "anchor_strings": 0,
-    "content_words": 209,
+    "content_words": 251,
     "graph_anchor_share_pct": null,
     "graph_anchor_strings": null,
     "issue_anchor": null,
     "speaker": "Eloise",
-    "strings": 17,
+    "strings": 20,
     "top": [
      {
-      "n": 5,
+      "n": 6,
       "share_pct": 2.4,
       "word": "craft"
      },
      {
-      "n": 5,
+      "n": 6,
       "share_pct": 2.4,
       "word": "sit"
      },
      {
-      "n": 4,
-      "share_pct": 1.9,
-      "word": "keep"
+      "n": 5,
+      "share_pct": 2.0,
+      "word": "kettle"
      }
     ],
-    "touchable": 15
+    "touchable": 18
    },
    {
     "anchor_share_pct": null,
@@ -8352,34 +8492,6 @@
    {
     "anchor_share_pct": null,
     "anchor_strings": 0,
-    "content_words": 143,
-    "graph_anchor_share_pct": null,
-    "graph_anchor_strings": null,
-    "issue_anchor": null,
-    "speaker": "The Hunter",
-    "strings": 11,
-    "top": [
-     {
-      "n": 7,
-      "share_pct": 4.9,
-      "word": "line"
-     },
-     {
-      "n": 4,
-      "share_pct": 2.8,
-      "word": "lambs"
-     },
-     {
-      "n": 3,
-      "share_pct": 2.1,
-      "word": "deer"
-     }
-    ],
-    "touchable": 11
-   },
-   {
-    "anchor_share_pct": null,
-    "anchor_strings": 0,
     "content_words": 57,
     "graph_anchor_share_pct": null,
     "graph_anchor_strings": null,
@@ -8670,13 +8782,13 @@
    },
    {
     "corpus": "dialogue",
-    "strings": 555,
+    "strings": 566,
     "voice": "spoken",
     "why": "node-line"
    },
    {
     "corpus": "dialogue",
-    "strings": 861,
+    "strings": 878,
     "voice": "spoken",
     "why": "player-option"
    },
@@ -8688,7 +8800,7 @@
    },
    {
     "corpus": "maps",
-    "strings": 760,
+    "strings": 768,
     "voice": "narrator",
     "why": "narration"
    },

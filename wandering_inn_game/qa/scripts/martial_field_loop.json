@@ -376,7 +376,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The bank is cut clean through here, down to brown water. You could go the long way round the cottage, or somebody could put boards back across it."
+    "text": "The bank is cut clean through here, down to brown water. Go the long way round the cottage, or put boards back across it."
    },
    "timeout_sec": 5
   },
