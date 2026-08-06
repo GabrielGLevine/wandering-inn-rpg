@@ -198,3 +198,19 @@ moment any map declares biome:street; out of the 847-corpus by
 extraction scope, not by principle). Finding 5 (last ellipsis strings:
 one is inn's — that lane owns it; one is riverfarm's "..." ambient —
 rides the riverfarm pass post-396). Review post-reset.
+
+## Floodplains+garden lane (landed during quiesce; review PENDING post-reset)
+SHAs 8e94a5c8 + 7462194c + b8f3b64d. 35/101 changed; garden touchable
+anon 0/9 (25% floor is holdout/protected arithmetic); semantic
+absent-agent 8→0; sweep 68/68 GREEN because the lane SYNCED ITS OWN 6
+PINS (beast_tamer_loop, gh330_companion_gate_loop x2,
+floodplains_price_help x2, garden_walkthrough) — a brief deviation
+(integrator owns qa/scripts) but proven red-on-base/green-after and
+DISJOINT from every other lane's pin scripts. RULING: accept as done;
+integrator treats fg pins as PRE-SYNCED and its pin-delta file as
+informational; reviewer verifies the 6 pin edits alongside the prose.
+Petitions RULED: yoke line keep — GRANT (present-behaviour inference,
+pallass den-shop argument; paid for by the [7] dedupe); wild-snap
+locked_toast 3-sentence exception — GRANT (two-word middle beat; gate
+requirement carried by three sibling toasts). Self-test exit 1 = the
+known ISSUE_NAMED_WORK bug (integrator fix, already ruled).
