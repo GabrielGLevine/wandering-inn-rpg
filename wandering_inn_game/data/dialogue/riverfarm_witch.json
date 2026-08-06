@@ -98,7 +98,7 @@
      "goto": "witch_ask"
     },
     {
-     "_comment": "Spec 4 (Task 6.2) RIVERFARM CAPSTONE. Lives on the HUB, not a chain tail, so a save whose price_of_a_favor is already reported still reaches it on any revisit (spec 8, old-save clause). Gated on the quest TERMINAL (price_of_a_favor_reported) rather than blight_lifted, matching Hedault's brothers_job_done and the forge arm's elevator_pass_stamped -- one rule for all three stops. Deliberately NOT excluded on drove_off_collectors: the force path banks the same terminal and Eloise is never removed from the hollow, so gating her out there would strand lattice_witch_lore and make the spine unfinishable for fight players.",
+     "_comment": "RIVERFARM CAPSTONE. On the HUB, not a chain tail, so an already-reported price_of_a_favor still reaches it on revisit. Gated on the quest TERMINAL, matching the other two spine stops. Deliberately NOT excluded on drove_off_collectors: the force path banks the same terminal, so gating her out would leave the spine unfinishable for fight players.",
      "text": "You've been sniffing at me since I came in. Go on.",
      "requires": {
       "accomplishment": {
@@ -112,6 +112,22 @@
       }
      },
      "goto": "witch_ward_lore"
+    },
+    {
+     "_comment": "#396 closer. Appended last, and both counters are 0 in every shipped fixture, so no pinned hub array moves.",
+     "text": "The makings are done.",
+     "requires": {
+      "accomplishment": {
+       "makings_brought": 1,
+       "craft_tended": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "witch_lessons": 1
+      }
+     },
+     "goto": "makings_kettle"
     }
    ]
   },
@@ -360,26 +376,94 @@
    ]
   },
   "witch_ask": {
+   "_comment": "#396: the ask STARTS the_makings, one-shot on its own counter. The bank is here and not on the hub row because that row's hide_when slot holds the drove_off_collectors exclusion, and a second key there would AND (dialogue.gd _meets), showing the offer to force-path players.",
    "speaker": "Eloise",
    "text": "Anyone can learn the shape of it. Hats. Herbs, mostly, if I'm honest. Words said over water come later. But the craft asks a question of you first, before any of that.",
    "options": [
     {
      "text": "What's the question?",
-     "goto": "witch_lesson"
+     "hide_when": {
+      "accomplishment": {
+       "heard_the_makings": 1
+      }
+     },
+     "effects": [
+      {
+       "quest": "the_makings"
+      },
+      {
+       "accomplishment": "heard_the_makings"
+      }
+     ],
+     "goto": "makings_brief"
     },
     {
      "text": "Another day, then.",
      "end": true
+    },
+    {
+     "text": "About the makings.",
+     "requires": {
+      "accomplishment": {
+       "heard_the_makings": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "witch_lessons": 1
+      }
+     },
+     "goto": "makings_brief"
+    }
+   ]
+  },
+  "makings_brief": {
+   "speaker": "Eloise",
+   "text": "Craft isn't told, child. It's done. Three things, then. Fill the pot by my door with what the hollow gives you. Tend something that can't thank you for it. Then come sit my kettle, and we'll see what you felt while you worked.",
+   "options": [
+    {
+     "text": "That's all? Chores?",
+     "goto": "makings_chores"
+    },
+    {
+     "text": "I'll start with the pot.",
+     "end": true
+    }
+   ]
+  },
+  "makings_chores": {
+   "speaker": "Eloise",
+   "text": "Every witch you'll ever fear got that way doing chores with her whole heart in them. The chore is the least of it. What you carry while you do it is the craft.",
+   "options": [
+    {
+     "text": "Then I'll carry it well.",
+     "end": true
+    }
+   ]
+  },
+  "makings_kettle": {
+   "speaker": "Eloise",
+   "text": "Pot filled. A lamb standing sound that wasn't. And you, back at my table with your hands smelling of both. Sit. The kettle's been waiting on you, not the water.",
+   "options": [
+    {
+     "text": "[Sit, and take the lesson.]",
+     "goto": "witch_lesson"
     }
    ]
   },
   "witch_lesson": {
-   "_comment": "The bank option is the spent one (hide_when witch_lessons); the ask path stays replayable as flavor. Gate shape: requires blight_lifted + hide_when drove_off_collectors on the hub option = the ratified peaceful-OR-path exactly (mediated OR paid), single-key hide_when because _meets_hide_when is AND-semantics (dialogue.gd:128).",
+   "_comment": "witch_lessons (FROZEN) stays the ONLY craft bank point, spent on its own hide_when. #396 adds both beat counters, so a legacy save holding it sees nothing new.",
    "speaker": "Eloise",
    "text": "Why did the debt get paid, child? Think past the how of it. Why. You sat at my table and went looking for the ending where nobody bled. That's the question, answered before I asked it. The craft grows from what a person already is. Mine roots in kindness.",
    "options": [
     {
      "text": "Then teach me the first of it.",
+     "requires": {
+      "accomplishment": {
+       "makings_brought": 1,
+       "craft_tended": 1
+      }
+     },
      "hide_when": {
       "accomplishment": {
        "witch_lessons": 1

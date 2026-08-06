@@ -448,7 +448,7 @@
    "observe": "Another of the ring-stones, humming faintly if you hold still."
   },
   {
-   "_comment": "Field-skill first-use idiom (stew_pot/cellar_door precedent)",
+   "_comment": "#396 GATHER beat = a GATED CONTAINER (anchor_stone_pedestal idiom): unmet contains_when falls through to the shipped skill flavor, so the pot is byte-identical until the quest opens, and container_state makes the fill once. Empty contains: you put things IN.",
    "id": "hollow_offering_pot",
    "kind": "prop",
    "cell": [
@@ -465,7 +465,15 @@
     "toast": "[Basic Cooking] — You cook the offering plain and honest, the way you'd feed anyone who'd walked far to eat."
    },
    "observe": "An iron pot set by the cottage door, empty and waiting. Someone means for it to be used.",
-   "cookware": true
+   "cookware": true,
+   "contains": [],
+   "contains_when": {
+    "requires": {
+     "heard_the_makings": 1
+    }
+   },
+   "on_open_accomplishment": "makings_brought",
+   "open_toast": "You work the hollow's margin til the pot is full. Rosehips, dead-nettle, a knot of wool off the briars. Nothing rare. Everything looked at properly."
   },
   {
    "id": "eloise_cauldron",
