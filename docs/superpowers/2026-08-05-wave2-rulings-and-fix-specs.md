@@ -306,3 +306,11 @@ re-varied w/ the wiped-corner observation restored POSITIVELY (file's
 §7.3 allowance already spent on the granted keep); keeps-petitions/
 liscor.json (5 entries, byte-bound). Pin situation unchanged (3 known
 sites, no new breaks; property_seams green). 30 pin-delta rows.
+
+## FG fix wave LANDED (4824e1fe) — lane merge-ready
+M1 state-independent plinth (light through undercut fingers); M2 camp
+de-templated (as/when tails 3→0); M3 second wolf's own beat; LOW-1
+recovery double-beat restored by naming the deer; petitions +
+floors in keeps-petitions/floodplains-garden.json; 1 pin re-synced
+byte-exact (floodplains_price_help); all four synced scripts green.
+Remaining in flight: 396-C + inn fix waves only.
