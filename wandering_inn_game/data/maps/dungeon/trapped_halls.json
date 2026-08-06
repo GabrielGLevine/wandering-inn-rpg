@@ -210,9 +210,9 @@
    ],
    "display_name": "A Loose Flagstone",
    "sprite": "pressure_plate",
-   "observe": "One flagstone sits a hair proud of its neighbors, the mortar cracked clean around its edge. Stepping square on it feels like a very bad idea.",
+   "observe": "One flagstone sits a hair proud of its neighbors, the mortar cracked clean around its edge. Light does not reach the bottom of the crack.",
    "on_interact_accomplishment": "triggered_pressure_plate",
-   "toast": "The flagstone gives half an inch under your hand. Somewhere close, something CLICKS. Nothing else happens. This time.",
+   "toast": "The flagstone gives half an inch under your hand. Somewhere close, a catch clicks. Nothing else happens.",
    "visual_states": [
     {
      "when": {
@@ -256,7 +256,7 @@
    "display_name": "A Dart Slit",
    "sprite": "dart_slit_tell",
    "requires_skill": "observe",
-   "skill_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. This wants a careful, deliberate touch, not a shove.",
+   "skill_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. A careful, deliberate touch could still it.",
    "locked_toast": "A narrow slit runs along the wall at knee height. Whatever is loaded behind it, you have no idea how to disable it.",
    "requires_item": "trap_kit",
    "item_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. Bare hands won't do it — you'd want a proper kit for this.",
@@ -281,11 +281,11 @@
     0.75
    ],
    "requires_skill": "observe",
-   "skill_hint_toast": "The floor ahead looks exactly like the floor behind you. Somehow, that is the part that bothers you.",
-   "locked_toast": "The floor ahead looks perfectly ordinary. Something about it still itches at the back of your mind.",
+   "skill_hint_toast": "The floor ahead looks exactly like the floor behind you. An eye trained to look properly would find the difference.",
+   "locked_toast": "The floor ahead looks perfectly ordinary. You do not have the eye to check.",
    "on_skill_use": {
     "accomplishment": "spotted_illusory_floor",
-    "toast": "You look again, and this time you see it: the grain runs the wrong way, and no dust has settled in months. That is not floor. That is a very good painting of floor."
+    "toast": "You look again, and this time you see it: the grain runs the wrong way, and no dust has settled in months. What you are looking at is a very good painting of floor."
    },
    "visual_states": [
     {
@@ -311,8 +311,8 @@
    "display_name": "A Warded Seam",
    "sprite": "warded_seam",
    "requires_skill": "detect_magic",
-   "skill_hint_toast": "Something under the stone hums off-key. Eyes that read mana could say what.",
-   "locked_toast": "The stone here looks like all the other stone. It is not.",
+   "skill_hint_toast": "Under your boot the stone hums off-key. Eyes that read mana could say what.",
+   "locked_toast": "The stone here looks like all the other stone. Without a reading for mana, that is as far as you get.",
    "on_skill_use": {
     "accomplishment": "detected_wardwork",
     "lore": true,
@@ -328,7 +328,7 @@
    ],
    "display_name": "A Coiled Wire",
    "sprite": "snare_coil",
-   "observe": "A coil of taut wire lies strung ankle-height between two stones, near-invisible against the dust. Whatever it is rigged to is worse than a stubbed toe.",
+   "observe": "A coil of taut wire lies strung ankle-height between two stones, near-invisible against the dust. The far end disappears into the dark.",
    "arena": "trapped_halls_snare",
    "enemies": [
     "snare_ward_a",
@@ -341,7 +341,7 @@
      "horns_delve_started": 1
     }
    },
-   "gate_closed_toast": "You give the wire a wide berth. Something in the dark past it has not noticed you yet.",
+   "gate_closed_toast": "You give the wire a wide berth. Past it, something has walked the dust into a track, and walked the track both ways.",
    "on_victory": [
     "halls_cleared",
     "cleared_halls_by_force"
@@ -368,7 +368,7 @@
     0.4,
     0.42
    ],
-   "observe": "The hall ends in a sealed archway, and beyond it something vast fills the dark almost completely — the same shape you glimpsed crouched near the entrance, closer now, utterly still. It is not still the way a statue is still.",
+   "observe": "The hall ends in a sealed archway. Past it the dark is filled nearly to the edges by the same shape you glimpsed crouched near the entrance, closer now and holding still. There is no dust on it.",
    "arena": "vault",
    "enemies": [
     "vault_construct"
@@ -395,7 +395,7 @@
      "horns_party_formed": 1
     }
    },
-   "gate_closed_toast": "Whatever waits beyond this arch, you are not walking into it yet — not with the halls still armed, not without the Horns at your back.",
+   "gate_closed_toast": "The halls are still armed, and the Horns are not with you. Both have to change before you go through this arch.",
    "on_victory": [
     "vault_construct_downed"
    ],
@@ -435,7 +435,7 @@
      },
      "accomplishment": "seal_kept_found",
      "lore": true,
-     "toast": "The runes are the same. Not similar — the same hand, the same order, as the door in the inn's pantry."
+     "toast": "The runes are the same. The same hand, the same order, as the door in the inn's pantry."
     },
     {
      "when": {
@@ -444,7 +444,7 @@
      },
      "accomplishment": "read_the_seal_runes",
      "lore": true,
-     "toast": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. Not a school, not a fashion. A HAND, and it cut this one first.\" He does not look away while he says it."
+     "toast": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. One person's work, and this door was the first of it.\" He does not look away while he says it."
     },
     {
      "when": {
@@ -452,7 +452,7 @@
      },
      "accomplishment": "read_the_feeding_ward",
      "lore": true,
-     "toast": "Pisces steps back at last. \"It is not a lock. The lines run one way, they have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
+     "toast": "Pisces steps back at last. \"The lines run one way. They have run one way for a very long time, and something on the far side has been drinking the whole while. Your inn has a frame by this hand. Sleep well.\""
     },
     {
      "when": {
@@ -466,7 +466,7 @@
    "skill_uses": {
     "observe": {
      "accomplishment": "sensed_something_deeper",
-     "toast": "[Observe] — Worked stone, deliberate, and not one line of it reads like a lock. Whatever this door is for, it is not keeping people out. You would have to stand here longer, with someone who knows more than you do.",
+     "toast": "[Observe] — Worked stone, cut deliberate. Not one line of it reads like a lock, and nothing here tells you what it is for.",
      "variants": [
       {
        "when": {
@@ -475,14 +475,14 @@
        },
        "accomplishment": "read_the_seal_runes",
        "lore": true,
-       "toast": "[Observe] — You take the runes in order, the way you would read a sentence. The turns repeat at a fixed interval. The pantry frame does exactly that, at exactly that interval, and this one is worn deeper: it has been doing it longer. Behind you, Pisces says nothing, which from him is applause."
+       "toast": "[Observe] — You take the runes in order, the way you would read a sentence. The turns repeat at a fixed interval. The pantry frame does exactly that, at exactly that interval, and this one is worn deeper: it has been doing it longer. Behind you, Pisces says nothing."
       }
      ]
     },
     "detect_magic": {
      "accomplishment": "sensed_something_deeper",
      "lore": true,
-     "toast": "[Detect Magic] — Wardwork, and awake. It does not flare and settle the way a bound ward should. It holds one low steady note, like a breath nobody has to let out, and you have felt that note somewhere else.",
+     "toast": "[Detect Magic] — Wardwork, and awake: it does not flare and settle the way a bound ward should. It holds one low steady note, like a breath nobody has to let out, and you have felt that note somewhere else.",
      "variants": [
       {
        "when": {
@@ -550,7 +550,7 @@
     }
    },
    "gate_closed_toast": "Dust lies on it in an unbroken sheet, the way dust lies on a thing that has not moved in centuries. Leave it that way.",
-   "observe": "An alcove beside the sealed door, and something standing in it: ward-stone, shoulder-high, cut in the same hand as the runes. It is not a statue. Statues are not built facing the door they guard.",
+   "observe": "An alcove beside the sealed door, and something standing in it: ward-stone, shoulder-high, cut in the same hand as the runes. It is not a statue.",
    "_comment_loot": "DELIBERATELY no `loot` array: every enchanted accessory this fight could plausibly drop (warded_coil_charm, construct_core_shard, guardian_ward_fragment) is a chance-1.0 drop from a fight the player must already have won to be standing here, and `pickup` no-ops a duplicate id. The reward is the room behind it (seal_anchor_rune) plus the quest's resolution_paths grant."
   },
   {
@@ -601,7 +601,7 @@
      "halls_cleared": 1
     }
    },
-   "gate_closed_toast": "Rubble and old wardwork still choke this side passage. Whatever's back there can wait until the main halls are actually safe.",
+   "gate_closed_toast": "Rubble and old wardwork still choke this side passage. It can wait until the main halls are clear.",
    "observe": "A narrower passage breaks off from the gauntlet proper, half-choked with fallen stone. Small shapes move in the dark past the rubble — more than one.",
    "scales": true,
    "on_victory": "gallery_vermin_culled"
@@ -635,8 +635,8 @@
    "gap": true,
    "state_counter": "gallery_line_anchored",
    "observe": "A stub of masonry where a walkway used to leave this wall, sheared off clean. The other side is still there, four feet out and a long way down. The stub would hold a line all day.",
-   "locked_toast": "You get a hand on the stub and lean out. Nothing about that gap is jumpable, and nothing about the stub is climbable. What it wants is a rope.",
-   "anchor_toast": "[Rope Work] — You make the line fast to the stub, drop the tail across, and set it taut. The crossing is a crossing now, and it stays one.",
+   "locked_toast": "You get a hand on the stub and lean out. The gap is too wide to jump and the stub too smooth to climb; what it wants is a rope.",
+   "anchor_toast": "[Rope Work] — You make the line fast to the stub, drop the tail across, and set it taut. The line holds your weight and stays where you put it.",
    "visual_states": [
     {
      "when": {
@@ -662,7 +662,7 @@
     }
    },
    "observe": "The floor is simply gone here, one span of it, edge to edge. Dropped stone comes back as a sound and not much of one.",
-   "locked_toast": "The floor stops. You put a boot to the lip and gravel goes over the edge and keeps going. Not without something to hold."
+   "locked_toast": "The floor stops. Gravel goes over the lip when your boot finds it and keeps going, and you are not crossing that without a line."
   },
   {
    "_comment": "[Greater Strength] carrier. on_skill_use has NO remove_entity verb (dialogue-side only), so permanence is present_when.absent on the arm's own monotone counter.",
@@ -708,10 +708,10 @@
      "found_gallery_cache": 1
     }
    },
-   "observe": "A strapped case set down against the wall and never picked up again, the leather gone stiff and pale. Whoever put it there meant to come back through the span.",
+   "observe": "A strapped case set down against the wall and never picked up again, the leather gone stiff and pale.",
    "on_interact_accomplishment": "found_gallery_cache",
    "gold": 5,
-   "toast": "The straps give at a pull. Inside: chalk, a bent square, a coil of good wire, and five gold in a twist of cloth that somebody was saving for the walk home."
+   "toast": "The straps give at a pull. Inside: chalk, a bent square, a coil of good wire, and five gold in a twist of cloth."
   }
  ]
 }

@@ -10,7 +10,7 @@
     "door_retrieved": 1
    },
    "lore": true,
-   "text": "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, and someone's washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court."
+   "text": "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court."
   }
  ],
  "grid": {
@@ -142,8 +142,8 @@
      "door_mounted": 1
     }
    },
-   "observe": "Banked low and fed on whatever burns down here. Somebody turns it every few hours; the ash is raked, not spilled.",
-   "toast": "A cookfire kept small on purpose, ringed with stones somebody carried in. It has been burning longer than a day."
+   "observe": "Banked low and fed on what burns down here. The ash lies raked in a ring, and the coals are still working.",
+   "toast": "A cookfire kept small on purpose, ringed with stones carried in from outside. It has been burning longer than a day."
   },
   {
    "id": "dig_camp_crate",
@@ -207,7 +207,7 @@
    "display_name": "Weathered Sentinel",
    "sprite": "dungeon_statue",
    "observe": "A faceless stone sentinel leans over the court, its shield worn smooth by grit and years. The stance still points toward the cracked plinth.",
-   "toast": "The sentinel's face is gone, but its posture survives: shield toward the court, warning anyone who follows its gaze."
+   "toast": "The sentinel's face is gone. The posture survives: shield raised toward the court."
   },
   {
    "_comment": "OR convergence: pedestal_unsealed banks via guardian court, THIS PLINTH's post-plates arm, or anchor_socket's [Detect Magic] read (the breach beat's three promised routes, live during the dig on horns_dig_joined alone); Pisces TALK/SKILL + the cellar fight arms exist only AFTER the pedestal opens post-restructure -- migrated saves only. Unmet contains_when falls to the locked toast. First open atomically grants anchor_stone + anchor_sliver; repeat idempotent. b10 #204: recovery also needs rune_sequence_done (west plate then east). contains_when also gates horns_dig_joined (horns_dig's pedestal-on-camp order rule); on_open_accomplishment banks [recovered_anchor_stone, pedestal_breached, door_retrieved] TOGETHER so `breach` closes and `haul` opens at the reveal render, never earlier. SPOILER RULE: open_toast IS the reveal; nothing before it on this map names a door.",
@@ -224,7 +224,7 @@
     0.7,
     0.75
    ],
-   "observe": "A stone rests in a shallow cradle atop the plinth, held there by nothing you can see. Something older than the dust stands close enough to notice you noticing.",
+   "observe": "A stone rests in a shallow cradle atop the plinth, held there by nothing you can see.",
    "contains": [
     "anchor_stone",
     "anchor_sliver"
@@ -242,7 +242,7 @@
     "door_retrieved"
    ],
    "open_lore": true,
-   "open_toast": "Below the pedestal: not treasure. A DOOR — unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it.",
+   "open_toast": "Below the pedestal: not treasure. A door, unhung, unmarked, utterly ordinary except that four adventurers go silent around it at once. Ceria, finally: 'That's wardwork. Old, fed wardwork. We're taking it home.' The anchor stone comes up with it.",
    "open_toast_variants": [
     {
      "_comment": "Task 2.6 fix round 1: the MIGRATED-SAVE arm. save.gd's dig backfill grants door_retrieved without pedestal_unsealed/rune_sequence_done, so that player still breaks the seal and would otherwise be told he has just DISCOVERED the door already hanging in his inn. Gated on door_retrieved, which no fresh player can hold at this instant: this same open is its only producer, and interactions.gd resolves the variant BEFORE on_open_accomplishment banks it.",
@@ -254,7 +254,7 @@
     }
    ],
    "on_interact_accomplishment": "found_the_pedestal",
-   "toast": "The stone doesn't move. Whatever holds it there is still standing guard, close enough that reaching for it feels like a very bad idea.",
+   "toast": "The stone doesn't move. It does not even shift in its cradle, and the court has gone very quiet.",
    "variants": [
     {
      "when": {
@@ -277,7 +277,7 @@
       "horns_dig_joined": 1
      },
      "accomplishment": "pedestal_unsealed",
-     "toast": "Both spirals hold their light, and the seam under the plinth stops fighting your hand. Whatever the ward was keeping out, it was never the plates — it was whoever hadn't walked them. Ceria, already reaching for rope: 'Ksmvr. Down. Carefully.'"
+     "toast": "Both spirals hold their light, and the seam under the plinth stops fighting your hand. The ward wanted the plates walked in order, and now they have been. Ceria, already reaching for rope: 'Ksmvr. Down. Carefully.'"
     }
    ],
    "visual_states": [
@@ -307,7 +307,7 @@
    "sprite": "pedestal",
    "requires_skill": "detect_magic",
    "skill_hint_toast": "The socket's empty, but empty like a held breath. The warding reads near-first — the spiral beside the pedestal, then its far twin.",
-   "locked_toast": "A carved socket in the ruin stone. Whatever sat here, someone carried it off.",
+   "locked_toast": "A carved socket in the ruin stone. The hollow is clean-cut and empty.",
    "_comment": "The WARDWORK-READ leg of the breach; the dig-gated variant makes it a REAL producer of `pedestal_unsealed`. Before the fix the only producer reachable during the dig was `ruin_guardian`'s on_victory -- the others sit behind the door chain, which since the restructure starts only AFTER this pedestal opens, so the beat promised three routes and shipped fight-only. Gated on `horns_dig_joined` ONLY, mirroring the ruin_door re-gate. The variant SWAPS the banked counter rather than adding one (`on_skill_use.accomplishment` is String-only); `detected_wardwork` has three other producers and no consumers, so nothing is lost.",
    "on_skill_use": {
     "accomplishment": "detected_wardwork",
@@ -320,7 +320,7 @@
       },
       "accomplishment": "pedestal_unsealed",
       "lore": false,
-      "toast": "[Detect Magic] — You read the binding the way Pisces reads a page, and the reading is the undoing: the ward was keyed to whatever stood guard here, and a keyed ward answers anyone who can say the key back. The seal lets go. Ceria, from the gap: 'Do that again and I'm putting you on the ledger.'"
+      "toast": "[Detect Magic] — The ward was keyed to the guardian that stood here, and the key still works: the seal lets go. Ceria, from the gap: 'Do that again and I'm putting you on the ledger.'"
      }
     ]
    }
@@ -379,7 +379,7 @@
       0.42,
       0.48
      ],
-     "observe": "The stone soldier still stands, and the cradle it stands over is empty. Whatever it was set here to keep was carried out past it and it did not move. A ward outlasts the thing it warded. That is the whole nature of a ward."
+     "observe": "The stone soldier still stands, and the cradle it stands over is empty. The anchor stone was carried out past it and it did not move."
     }
    ]
   },
@@ -424,7 +424,7 @@
    "sprite": "pressure_plate",
    "observe": "The near plate's twin, set apart in the rubble, spiral running the other way. Cold, until its partner isn't.",
    "on_interact_accomplishment": "rune_far_cold",
-   "toast": "Cold stone, unlit. The spiral wants something the press alone doesn't give.",
+   "toast": "Cold stone, unlit. The press alone does not wake it.",
    "variants": [
     {
      "when": {
@@ -456,7 +456,7 @@
     }
    },
    "observe": "Armour half off and stacked in the order it goes back on. She has braced the gap's lip with two stakes and a plank, and she tests the plank every time she passes it.",
-   "friendly_line": "\"Good,\" she says, once, and goes back to the rope. From Yvlon that lands about like a hand on the shoulder.",
+   "friendly_line": "\"Good,\" she says, once, and goes back to the rope.",
    "talk_pool": [
     "Ceria plans it, Ksmvr measures it, I hold the part that's about to fall. That's the arrangement.",
     "Don't stand under a load somebody else is holding. Doesn't matter how strong they are.",
@@ -481,7 +481,7 @@
      "door_mounted": 1
     }
    },
-   "observe": "Three coils of rope laid out in exact parallel, and an Antinium re-counting them, because the count is the point and the rope is only the rope.",
+   "observe": "Three coils of rope laid out in exact parallel, and an Antinium re-counting them.",
    "friendly_line": "\"You are a known quantity now,\" Ksmvr says. \"That is the highest category I have.\"",
    "talk_pool": [
     "Sixty-one strides of rope. I have counted it four times. The number has not improved. I am accounting for that.",
@@ -532,9 +532,9 @@
      "door_mounted": 1
     }
    },
-   "observe": "Spoil from the gap, sorted into two heaps: worked stone in one, plain rubble in the other. Somebody is keeping every piece a chisel ever touched.",
+   "observe": "Spoil from the gap, sorted into two heaps: worked stone in one, plain rubble in the other. Every piece a chisel ever touched is in the first.",
    "on_interact_accomplishment": "eyed_the_dig_spoil",
-   "toast": "Broken stone, sorted by whether anyone shaped it. The carved heap is the smaller one and by a long way the tidier."
+   "toast": "Broken stone in two heaps, worked and unworked. The worked heap is smaller, and still being added to."
   },
   {
    "id": "dig_rope_coil",
@@ -560,7 +560,7 @@
    },
    "observe": "Three lengths of rope, whipped at the ends and hung off a driven stake so that none of it lies in the wet.",
    "on_interact_accomplishment": "eyed_the_dig_rope",
-   "toast": "Good rope, dry, coiled by somebody who has watched bad rope let go."
+   "toast": "Good rope, dry, and not a frayed strand in it."
   },
   {
    "id": "dig_survey_stakes",
@@ -586,7 +586,7 @@
    },
    "observe": "Stakes driven at intervals nobody eyeballed, string run between them, chalk numbers on every one. The line stops dead at the mouth of the pedestal court and does not go in.",
    "on_interact_accomplishment": "eyed_the_survey_stakes",
-   "toast": "The string is taut. Somebody re-tensions it each morning, which is not a thing four adventurers usually bother to do."
+   "toast": "The string is taut. The knot at each stake has been retied more than once."
   },
   {
    "_comment": "v0.15 T4.3, VISUAL-LOG RUIN/MIGRATED-DIORAMA: a migrated save loads with door_mounted banked and walks into the camp's corner reading as a void. This is the SAME cell Ceria stands on and the windows are provably disjoint (hers requires absent door_mounted; this requires it), so exactly one of the two is ever present.",
@@ -605,7 +605,7 @@
    },
    "observe": "Ringed stones around a scatter of white ash, and four flattened squares of ground where bedrolls were. The stakes have been pulled and stacked, the string wound back onto its spool.",
    "on_interact_accomplishment": "found_the_cold_camp",
-   "toast": "Cold days ago. They struck the camp properly, filled the pit, and took the rope with them. Whatever the Horns came down here for, they carried it home."
+   "toast": "Cold days ago. They struck the camp properly, filled the pit, took the rope. Nothing left but the ring of stones."
   }
  ]
 }
