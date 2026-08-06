@@ -276,7 +276,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The poles are bare and the ash is cold. Hands on the camp's baskets first, the old one signs at you, and then something big brought down off the range north."
+    "text": "The poles are bare and the ash is cold. Hands on the camp's baskets first, the old one signs at you, and then a corusdeer brought down off the range north."
    },
    "timeout_sec": 5
   },
@@ -374,7 +374,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Nobody moves the rack aside when you pass it now."
+    "text": "A goblin works a strip loose from the near end, bites off half, and gives you the rest."
    },
    "timeout_sec": 5
   },
