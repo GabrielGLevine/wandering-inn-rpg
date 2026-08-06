@@ -21,5 +21,10 @@
   "register": "functional",
   "tag": "traversal",
   "why": "Warren Mouth. Banks reached_the_warren, but reads as a floor sloping into the next room -- arrival, not payoff."
+ },
+ "map:riverfarm/witch_hollow.json:$.entities[13].open_toast": {
+  "register": "scenic",
+  "tag": "quest-prop",
+  "why": "A Waiting Pot, the Makings gather (landed by #396 AFTER the landmark tier was audited, which is why the heuristic had no ruling for it and self-test went red). `open_toast` here is the GATED-CONTAINER idiom, not a door: nothing opens and nobody travels. It is chore 1 of 2 in `The Makings`, whose payoff is the kettle lesson in riverfarm_witch.json -- so §4 rule 1 (the CHAIN earns landmark, never the prop) and rule 2 (a banked accomplishment is necessary, not sufficient) both put it below the register, on the same grounds as the three door_when demotions above. It also lands where every other riverfarm work-result toast already sits: the field board, the lamb pen and #396's own winter fold toast are all scenic/quest-prop, and one of the four reading as a payoff purely because its key is spelled `open_toast` was an artefact of the key, not a judgement. NOT A REWRITE -- the string is #396 fresh copy, voice-card adjudicated, and ships byte-as-is. If the controller reads the gather as a genuine beat the fix is a §5 reserve grant (3 left), never an edit."
  }
 }

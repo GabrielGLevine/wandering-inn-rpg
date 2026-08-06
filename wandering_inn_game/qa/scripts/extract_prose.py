@@ -131,6 +131,12 @@ UNTOUCHABILITY (the Phase 2/3 contract)
     Phase 2, Phase 3 and issue close all run it; it exits 1 with a diff list on
     any drift.
 
+    ONE NARROW EXEMPTION, and it is not a loophole: a holdout id that a
+    DIFFERENT merged change rewrote (not the prose pass) is EXCLUDED --
+    skipped by `verify-untouched`, reported there by count, dropped from the
+    blind control instrument, and still present in `ids` and `_count`. It is
+    never re-pinned to the new wording. See HOLDOUT_EXCLUSIONS.
+
 USAGE
     python3 qa/scripts/extract_prose.py self-test
     python3 qa/scripts/extract_prose.py field-census
@@ -140,6 +146,7 @@ USAGE
     python3 qa/scripts/extract_prose.py holdout-blind   --outdir DIR
     python3 qa/scripts/extract_prose.py classify-probe  [--seed N] [--n 20]
     python3 qa/scripts/extract_prose.py verify-untouched --dir DIR
+    python3 qa/scripts/extract_prose.py holdout-exclusions --dir DIR
     python3 qa/scripts/extract_prose.py keeps           --dir DIR
     python3 qa/scripts/extract_prose.py landmarks       --dir DIR
     python3 qa/scripts/extract_prose.py report          [--outdir DIR] [--docdir DIR]
@@ -150,7 +157,10 @@ USAGE
     inventory.jsonl -- verify-untouched's frozen baseline, which must never be
     regenerated mid-pass -- so folding a granted petition into the keeps had no
     safe path before it. `landmarks` is the same idea for landmark-registry.json
-    (the file that carries the §5 reserve arithmetic and every controller grant).
+    (the file that carries the §5 reserve arithmetic and every controller grant),
+    and `holdout-exclusions` is the same idea for holdout.json's `excluded`
+    block: it writes that block and re-renders the blind control instrument,
+    and carries `ids`/`_count` through untouched.
 
 PHASE 4 (`report`) -- ADVISORY, NOT A GATE, NOT IN ci_sweep
     Writes phase4-report.md + phase4-report.json on demand: the issue's seven
@@ -163,7 +173,8 @@ PHASE 4 (`report`) -- ADVISORY, NOT A GATE, NOT IN ci_sweep
     FROZEN protected-keeps.json / holdout.json, and rebuilds neither
     inventory.jsonl nor the blind sets.
 """
-import argparse, collections, importlib.util, json, random, re, sys, tempfile
+import argparse, collections, contextlib, importlib.util, io, json, random, re
+import sys, tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
@@ -1243,13 +1254,79 @@ def make_holdout(rows, reserved_ids, blind_ids):
     return sorted(rng.sample(pool, n))
 
 
-def write_holdout_blind(rows, hold_ids, outdir):
+# ---- holdout EXCLUSIONS (#397 riverfarm lane, 2026-08-06) -------------------
+# A holdout string is the Phase 5 CONTROL GROUP: untouched by the prose pass, so
+# verify-untouched pins it to the frozen pre-pass baseline and nothing else.
+#
+# Two riverfarm holdout ids were moved by something that is NOT the prose pass:
+# GH#396's ruled Riverfarm redesign (merged PR #401), which landed BETWEEN the
+# baseline and the riverfarm prose lane. The lane can neither un-change them nor
+# re-pin them:
+#   * re-pinning to the new text makes the keep record the authority for a
+#     holdout string, which is exactly the laundering `verify-untouched`'s
+#     two-authority split was built to refuse; and
+#   * dropping them from `ids` shrinks the committed inventory and silently
+#     moves the Phase 5 denominator.
+# So they are EXCLUDED: still in `ids`, still counted, SKIPPED by the
+# enforcement, and omitted from the blind control instrument -- rendering #396's
+# post-redesign wording into a pre-pass control group is the one thing the
+# holdout exists to prevent.
+#
+# NEITHER EDIT WORKS ALONE. verify-untouched skips the INTERSECTION of this
+# constant and the committed `excluded` block in holdout.json, so hand-editing
+# the artifact does not excuse drift (self-test compares the two) and editing
+# this constant does not either. Both moves are diff-visible, which is the
+# entire mechanism.
+HOLDOUT_EXCLUDED_REASON = ("changed by #396 redesign (merged PR #401), not by "
+                           "the prose pass")
+HOLDOUT_EXCLUSIONS = {
+    "map:riverfarm/riverfarm_village.json:$.entities[27].observe": {
+        "excluded": True,
+        "excluded_reason": HOLDOUT_EXCLUDED_REASON,
+        "what_moved": "one word, `hunter` -> `shepherd`: #396 retired the "
+                      "Hunter and the lamb pen is the shepherd's. The prose "
+                      "pass never opened this string.",
+    },
+    "dlg:riverfarm_hunter.json:$.nodes.hub.options[2].text": {
+        "excluded": True,
+        "excluded_reason": HOLDOUT_EXCLUDED_REASON,
+        "what_moved": "#396 rewrote the hunter's hub and DELETED the pinned "
+                      "option ('The deer stopped at the treeline. Why?'); the "
+                      "surviving options shifted up, so options[2] is now a "
+                      "different line. The pinned text is gone from the tree, "
+                      "so there is no wording left to hold.",
+    },
+}
+EXCLUSIONS_NOTE = (
+    "verify-untouched SKIPS these ids and reports them by count; the blind "
+    "control instrument omits their rows. They remain in `ids` and in `_count` "
+    "-- an exclusion never shrinks the committed inventory. Authority is the "
+    "INTERSECTION of this block and HOLDOUT_EXCLUSIONS in "
+    "qa/scripts/extract_prose.py, so neither edit excuses drift on its own.")
+
+
+def excluded_ids(rec):
+    """The holdout ids the enforcement skips: present in the committed
+    `excluded` block AND in HOLDOUT_EXCLUSIONS, and well-formed in both."""
+    art = rec.get("excluded") or {}
+    return {i for i, v in art.items()
+            if i in HOLDOUT_EXCLUSIONS and isinstance(v, dict)
+            and v.get("excluded") is True
+            and str(v.get("excluded_reason") or "").strip()}
+
+
+def write_holdout_blind(rows, hold_ids, outdir, excluded=frozenset()):
     """The PHASE 5 INSTRUMENT: the holdout in the same blind format as the
-    samples, so the exit read is one procedure applied to two views."""
+    samples, so the exit read is one procedure applied to two views.
+
+    SHUFFLE FIRST, THEN DROP the exclusions: the RNG sees the whole holdout
+    population either way, so an excluded id removes its own row and leaves
+    every other row's position exactly where it was."""
     by_id = {r["id"]: r for r in rows}
     picked = [by_id[i] for i in hold_ids if i in by_id]
     rng = random.Random(SEED + 2)
     rng.shuffle(picked)
+    picked = [r for r in picked if r["id"] not in excluded]
     wtext(Path(outdir) / "sample-holdout-blind.txt",
           render_blind(picked, "holdout", SEED + 2, "holdout.json"))
     return len(picked)
@@ -2018,12 +2095,20 @@ def cmd_verify_untouched(docdir):
     from the baseline inventory must SAY SO -- `pinned_to: "post-pass"` plus a
     reason -- and an unmarked divergence is still a hard failure, reported as
     "SILENT POST-PASS PIN". So the only way a keep's text can move is by an
-    explicit, reviewable edit to the keep record itself."""
+    explicit, reviewable edit to the keep record itself.
+
+    A THIRD, NARROWER CASE (#397 riverfarm lane): a holdout id moved because a
+    DIFFERENT merged change rewrote it, not the prose pass. Those are EXCLUDED --
+    skipped here, reported by count, never re-pinned, never removed from `ids`.
+    See HOLDOUT_EXCLUSIONS for why both the constant and the artifact have to
+    agree before a single id is skipped."""
     docdir = Path(docdir)
     base = {r["id"]: r for r in load_inventory(docdir / "inventory.jsonl")}
-    hold = rjson(docdir / "holdout.json")["ids"]
+    hold_rec = rjson(docdir / "holdout.json")
+    hold = hold_rec["ids"]
+    excluded = excluded_ids(hold_rec)
     keeps = rjson(docdir / "protected-keeps.json")["keeps"]
-    targets = ([(i, "holdout") for i in hold]
+    targets = ([(i, "holdout") for i in hold if i not in excluded]
                + [(i, "protected-keep") for i in sorted(keeps)])
     bad, post_pass = [], []
     for rid, kind in targets:
@@ -2044,9 +2129,17 @@ def cmd_verify_untouched(docdir):
             bad.append((kind, rid, "FIELD PATH NO LONGER RESOLVES", pinned))
         elif cur != pinned:
             bad.append((kind, rid, cur, pinned))
-    print(f"verify-untouched: {len(hold)} holdout + {len(keeps)} protected "
-          f"= {len(targets)} untouchable strings checked "
-          f"(baseline {docdir/'inventory.jsonl'})")
+    print(f"verify-untouched: {len(hold)} holdout"
+          + (f" ({len(excluded)} excluded)" if excluded else "")
+          + f" + {len(keeps)} protected = {len(targets)} untouchable strings "
+          f"checked (baseline {docdir/'inventory.jsonl'})")
+    if excluded:
+        print(f"  note {len(excluded)} holdout string(s) EXCLUDED and skipped "
+              "(moved by a change outside this pass, declared in "
+              "holdout.json `excluded` + HOLDOUT_EXCLUSIONS):")
+        for rid in sorted(excluded):
+            print(f"       {rid}  — "
+                  f"{HOLDOUT_EXCLUSIONS[rid]['excluded_reason']}")
     if post_pass:
         print(f"  note {len(post_pass)} keep(s) pinned to POST-PASS text "
               "(granted on the rewrite, declared in the keep record):")
@@ -2061,6 +2154,38 @@ def cmd_verify_untouched(docdir):
         print(f"    pinned  : {' '.join(was.split())[:160]}")
         print(f"    current : {' '.join(str(cur).split())[:160]}")
     return 1
+
+
+# ---- holdout-exclusion fold (#397 riverfarm lane) ----------------------------
+def cmd_holdout_exclusions(docdir):
+    """Write holdout.json's `excluded` block from HOLDOUT_EXCLUSIONS and
+    re-render the blind control instrument without those rows.
+
+    `ids`, `_count` and every other field are carried through untouched: this
+    subcommand exists for the same reason `keeps` and `landmarks` do -- `all`
+    would rebuild inventory.jsonl, which is verify-untouched's frozen baseline
+    and must never be regenerated mid-pass. An exclusion is metadata ABOUT the
+    frozen holdout, never a change to it."""
+    docdir = Path(docdir)
+    rec = rjson(docdir / "holdout.json")
+    unknown = sorted(set(HOLDOUT_EXCLUSIONS) - set(rec["ids"]))
+    rec["excluded"] = {k: dict(v) for k, v in HOLDOUT_EXCLUSIONS.items()}
+    rec["_excluded_count"] = len(rec["excluded"])
+    rec["_excluded_note"] = EXCLUSIONS_NOTE
+    wjson(docdir / "holdout.json", rec)
+    # the FROZEN baseline text, like the `holdout-blind` subcommand: for every
+    # id the enforcement still covers this is byte-identical to the live tree,
+    # and for an excluded id the baseline is the wording the control group is
+    # supposed to hold -- which is precisely the row being dropped.
+    n = write_holdout_blind(load_inventory(docdir / "inventory.jsonl"),
+                            rec["ids"], docdir, excluded_ids(rec))
+    print(f"holdout-exclusions: {rec['_excluded_count']} excluded of "
+          f"{rec['_count']} holdout ids (ids unchanged) -> "
+          f"{docdir/'holdout.json'}")
+    print(f"  sample-holdout-blind.txt re-rendered: {n} rows")
+    if unknown:
+        print(f"  UNKNOWN (not a committed holdout id): {unknown}")
+    return 1 if unknown else 0
 
 
 # ---- keeps regeneration (#397 keeps fold) ------------------------------------
@@ -3055,7 +3180,7 @@ def cmd_all(outdir):
     blind_ids = {i for c in ("dialogue", "maps") for i in key[c].values()}
     hold = make_holdout(rows, set(keeps) | set(named_work), blind_ids)
     hold_set = set(hold)
-    wjson(outdir / "holdout.json", {
+    hold_rec = {
         "_seed": SEED + 1, "_fraction": HOLDOUT_FRACTION, "_python": PY,
         "_min_words": BLIND_MIN_WORDS,
         "_note": "UNTOUCHABLE by Phase 2/3. Drawn from the SAME >=6-word "
@@ -3066,8 +3191,14 @@ def cmd_all(outdir):
                  "like. Rendered blind in sample-holdout-blind.txt.",
         "_reserved_named_work": named_work,
         "_reserved_unresolved": nw_unresolved,
-        "_count": len(hold), "ids": hold})
-    n_hb = write_holdout_blind(rows, hold, outdir)
+        # exclusions are metadata about the frozen holdout and survive a
+        # regeneration because their authority is a code constant, not this file
+        "_excluded_count": len(HOLDOUT_EXCLUSIONS),
+        "_excluded_note": EXCLUSIONS_NOTE,
+        "excluded": {k: dict(v) for k, v in HOLDOUT_EXCLUSIONS.items()},
+        "_count": len(hold), "ids": hold}
+    wjson(outdir / "holdout.json", hold_rec)
+    n_hb = write_holdout_blind(rows, hold, outdir, excluded_ids(hold_rec))
 
     # classification, per region
     overrides = load_overrides(outdir)
@@ -3335,6 +3466,77 @@ def self_test():
     short = [i for i in hold if by_id[i]["word_count"] < BLIND_MIN_WORDS]
     check(f"every holdout row is >={BLIND_MIN_WORDS} words (same pool as blinds)",
           not short, str(short[:3]))
+
+    # 6d. holdout EXCLUSIONS (#397 riverfarm lane). The mechanism exists so a
+    #     holdout string moved by a DIFFERENT merged change does not read as
+    #     prose-pass drift. Every leg here is about it not becoming a licence.
+    hrec = rjson(DOCS / "holdout.json")
+    hcommitted = set(hrec["ids"])
+    art_excl = hrec.get("excluded") or {}
+    check("every holdout exclusion is a committed holdout id "
+          "(an exclusion cannot invent one)",
+          not (set(HOLDOUT_EXCLUSIONS) - hcommitted),
+          str(sorted(set(HOLDOUT_EXCLUSIONS) - hcommitted)))
+    check("no exclusion shrinks the committed inventory "
+          "(`ids` keeps every excluded id, `_count` == len(ids))",
+          hrec["_count"] == len(hrec["ids"])
+          and not (set(HOLDOUT_EXCLUSIONS) - set(hrec["ids"])),
+          f"_count {hrec['_count']} vs {len(hrec['ids'])} ids")
+    check("the committed `excluded` block and HOLDOUT_EXCLUSIONS agree "
+          "(either alone skips nothing)",
+          {k: dict(v) for k, v in art_excl.items()}
+          == {k: dict(v) for k, v in HOLDOUT_EXCLUSIONS.items()},
+          str(sorted(set(art_excl) ^ set(HOLDOUT_EXCLUSIONS))))
+    check("every exclusion declares excluded:true + a non-empty reason",
+          all(v.get("excluded") is True
+              and str(v.get("excluded_reason") or "").strip()
+              for v in HOLDOUT_EXCLUSIONS.values()))
+    check(f"excluded_ids() resolves all {len(HOLDOUT_EXCLUSIONS)} declared "
+          "exclusions", excluded_ids(hrec) == set(HOLDOUT_EXCLUSIONS),
+          str(sorted(set(HOLDOUT_EXCLUSIONS) - excluded_ids(hrec))))
+    # A malformed or code-only exclusion must SKIP NOTHING. Both directions,
+    # because either one alone becomes the laundering path.
+    check("an artifact-only exclusion is inert",
+          not excluded_ids({"excluded": {
+              "map:riverfarm/riverfarm_mill.json:$.entities[5].toast":
+              {"excluded": True, "excluded_reason": "hand-added, not in code"}}}))
+    check("a code-declared exclusion missing from the artifact is inert",
+          not excluded_ids({"ids": sorted(hcommitted)}))
+    check("an exclusion without a reason is inert",
+          not excluded_ids({"excluded": {
+              i: {"excluded": True, "excluded_reason": ""}
+              for i in HOLDOUT_EXCLUSIONS}}))
+    # An exclusion is only honest if the string ACTUALLY moved: a pre-emptive
+    # one on an unmoved string is a standing licence to edit a control-group
+    # string later, with the paperwork already filed.
+    hbase = {r["id"]: r for r in load_inventory(DOCS / "inventory.jsonl")}
+    unmoved = [i for i in HOLDOUT_EXCLUSIONS
+               if i in hbase
+               and live_text(hbase[i]["file"], hbase[i]["field_path"])
+               == hbase[i]["text"]]
+    check("no exclusion covers a string that has not moved", not unmoved,
+          str(unmoved))
+    # ...and the gate it exempts them from still has to pass.
+    _vu = io.StringIO()
+    with contextlib.redirect_stdout(_vu):
+        vu_rc = cmd_verify_untouched(DOCS)
+    check("verify-untouched exits 0 on the live tree (exclusions applied)",
+          vu_rc == 0, "" if vu_rc == 0 else _vu.getvalue().strip())
+    check(f"verify-untouched reports the {len(HOLDOUT_EXCLUSIONS)} exclusion(s) "
+          "by count rather than hiding them",
+          f"{len(HOLDOUT_EXCLUSIONS)} holdout string(s) EXCLUDED"
+          in _vu.getvalue())
+    with tempfile.TemporaryDirectory() as td:
+        n_all = write_holdout_blind(list(hbase.values()), hrec["ids"], td)
+        n_ex = write_holdout_blind(list(hbase.values()), hrec["ids"], td,
+                                   excluded_ids(hrec))
+        blind = rtext(Path(td) / "sample-holdout-blind.txt")
+    check("the blind control instrument drops exactly the excluded rows",
+          n_all - n_ex == len(HOLDOUT_EXCLUSIONS) and n_all == len(hrec["ids"]),
+          f"{n_all} -> {n_ex}")
+    check("no excluded string's baseline text survives in the control view",
+          not [i for i in HOLDOUT_EXCLUSIONS
+               if i in hbase and " ".join(hbase[i]["text"].split()) in blind])
 
     # 6c. protected keeps are pinned by TEXT AT FIELD PATH, not by line (I7)
     unpinned = [k for k, v in keeps.items()
@@ -3662,6 +3864,7 @@ def main():
     p = sub.add_parser("heatmap"); p.add_argument("--inventory"); p.add_argument("--out", required=True)
     p = sub.add_parser("holdout-blind"); p.add_argument("--outdir", required=True)
     p = sub.add_parser("verify-untouched"); p.add_argument("--dir", default=str(DOCS))
+    p = sub.add_parser("holdout-exclusions"); p.add_argument("--dir", default=str(DOCS))
     p = sub.add_parser("keeps"); p.add_argument("--dir", default=str(DOCS))
     p = sub.add_parser("landmarks"); p.add_argument("--dir", default=str(DOCS))
     p = sub.add_parser("report")
@@ -3701,10 +3904,12 @@ def main():
     if a.cmd == "holdout-blind":
         outdir = Path(a.outdir)
         rows = load_inventory(outdir / "inventory.jsonl")
-        hold = rjson(outdir / "holdout.json")["ids"]
-        n = write_holdout_blind(rows, hold, outdir)
+        rec = rjson(outdir / "holdout.json")
+        n = write_holdout_blind(rows, rec["ids"], outdir, excluded_ids(rec))
         print(f"holdout-blind: {n} rows -> {outdir/'sample-holdout-blind.txt'}")
         return 0
+    if a.cmd == "holdout-exclusions":
+        return cmd_holdout_exclusions(a.dir)
     if a.cmd == "keeps":
         return cmd_keeps(a.dir)
     if a.cmd == "landmarks":

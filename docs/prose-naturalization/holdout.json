@@ -1,5 +1,7 @@
 {
  "_count": 229,
+ "_excluded_count": 2,
+ "_excluded_note": "verify-untouched SKIPS these ids and reports them by count; the blind control instrument omits their rows. They remain in `ids` and in `_count` -- an exclusion never shrinks the committed inventory. Authority is the INTERSECTION of this block and HOLDOUT_EXCLUSIONS in qa/scripts/extract_prose.py, so neither edit excuses drift on its own.",
  "_fraction": 0.1,
  "_min_words": 6,
  "_note": "UNTOUCHABLE by Phase 2/3. Drawn from the SAME >=6-word eligibility pool as the blind samples, and disjoint from both of them, from protected-keeps.json and from the hand-named work below -- so Phase 5 can read the revised sample against the untouched holdout and compare like with like. Rendered blind in sample-holdout-blind.txt.",
@@ -13,6 +15,18 @@
  },
  "_reserved_unresolved": [],
  "_seed": 398,
+ "excluded": {
+  "dlg:riverfarm_hunter.json:$.nodes.hub.options[2].text": {
+   "excluded": true,
+   "excluded_reason": "changed by #396 redesign (merged PR #401), not by the prose pass",
+   "what_moved": "#396 rewrote the hunter's hub and DELETED the pinned option ('The deer stopped at the treeline. Why?'); the surviving options shifted up, so options[2] is now a different line. The pinned text is gone from the tree, so there is no wording left to hold."
+  },
+  "map:riverfarm/riverfarm_village.json:$.entities[27].observe": {
+   "excluded": true,
+   "excluded_reason": "changed by #396 redesign (merged PR #401), not by the prose pass",
+   "what_moved": "one word, `hunter` -> `shepherd`: #396 retired the Hunter and the lamb pen is the shepherd's. The prose pass never opened this string."
+  }
+ },
  "ids": [
   "dlg:ceria_intro.json:$.nodes.dig_unknown.text",
   "dlg:ceria_intro.json:$.nodes.hub.text",
