@@ -1,0 +1,212 @@
+[
+ {
+  "file": "wandering_inn_game/data/maps/liscor/barracks.json",
+  "field_path": "$.entities[2].observe",
+  "entity_id": "zevara_desk",
+  "old": "Tidier than her schedule allows. A stack of gate-shift reports pinned under a paperweight shaped vaguely like a threat. She is almost never behind it. The gate keeps her busier than her own office does.",
+  "new": "Tidier than her schedule allows. A stack of gate-shift reports pinned under a paperweight shaped vaguely like a threat. She is almost never behind it."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/barracks.json",
+  "field_path": "$.entities[3].locked_toast",
+  "entity_id": "cell_door",
+  "old": "Barred, and empty behind the bars. You can tell by the quiet. Whatever ends up in here hasn't happened yet.",
+  "new": "Barred, and empty behind the bars. You can tell by the quiet."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/barracks.json",
+  "field_path": "$.entities[3].observe",
+  "entity_id": "cell_door",
+  "old": "A single holding cell, iron-barred, straw swept into one corner. Duty-mundane, like everything else in this building — until it isn't.",
+  "new": "A single holding cell, iron-barred, straw swept into one corner. The bucket in the other corner is clean and dry."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/barracks.json",
+  "field_path": "$.entities[4].observe",
+  "entity_id": "archery_butt",
+  "old": "A straw-packed target lashed to a post, set against the wall where a stray shot won't find a person. Scored through in a tight cluster, more or less — somebody here takes the drills seriously.",
+  "new": "A straw-packed target lashed to a post, set against the wall where a stray shot won't find a person. Scored through in a tight cluster at chest height, and the post rocks when you test it."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/barracks.json",
+  "field_path": "$.entities[6].observe",
+  "entity_id": "note_watch_veteran",
+  "old": "A folded half-letter, tucked behind a loose board. Someone started writing it and never finished.",
+  "new": "A folded half-letter, tucked behind a loose board. The last line on it stops in the middle of a word."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/guild.json",
+  "field_path": "$.entities[1].friendly_line",
+  "entity_id": "selys",
+  "old": "...Huh. You're actually pleasant. That's rare on this side of the counter. Fine - your paperwork jumps the line today. Don't make it weird.",
+  "new": "Huh. You're actually pleasant. That's rare on this side of the counter. Fine - your paperwork jumps the line today. Don't make it weird."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/guild.json",
+  "field_path": "$.entities[2].second_visit_toast",
+  "entity_id": "guild_board",
+  "old": "The Request Board. Your slip is still logged at the desk. The board does not care how it's going.",
+  "new": "The Request Board. Your slip is still logged at the desk."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/guild.json",
+  "field_path": "$.entities[2].board_rumors[2].copy",
+  "entity_id": "guild_board",
+  "old": "A WATCH NOTICE, freshly pinned. The reopened gallery under the old seal is to be surveyed properly before the Council calls it settled — volunteers with Guild standing should see Olesm Swifttail at the frontage desk. Pay is Watch-scale. The notice does not say what 'properly' means, and nobody pinning notices ever does.",
+  "new": "A WATCH NOTICE, freshly pinned. The reopened gallery under the old seal is to be surveyed properly before the Council calls it settled — volunteers with Guild standing should see Olesm Swifttail at the frontage desk. Pay is Watch-scale. What 'properly' means is left to the surveyor."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/guild.json",
+  "field_path": "$.entities[2].board_rumors[3].copy",
+  "entity_id": "guild_board",
+  "old": "WATCH NOTICE, pinned by a hand in a hurry. Recruit Pell missed second muster running. Ashgrave's not calling it desertion, not yet. Anyone with eyes free, ask at the barracks.",
+  "new": "WATCH NOTICE, pinned by a hand in a hurry. Recruit Pell missed second muster running. Ashgrave has it logged as absence for now. Anyone with eyes free, ask at the barracks."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/guild.json",
+  "field_path": "$.entities[3].observe",
+  "entity_id": "guild_notice_wall",
+  "old": "Handbills and scraps overlapping the request board's edge. The Guild's actual business spills past its own furniture. Somebody wants a lost warhammer back. Somebody else is renting a room, quiet tenants only.",
+  "new": "Handbills and scraps overlapping the request board's edge. One offers a reward for a plain steel warhammer; the notice pinned over its corner wants a quiet tenant for a back room."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/guild.json",
+  "field_path": "$.entities[7].observe",
+  "entity_id": "renns_gear_stash",
+  "old": "A crate shoved against the back wall, half-buried under someone else's forgotten kit.",
+  "new": "A crate shoved against the back wall, half-buried under a spill of unclaimed kit."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/guild.json",
+  "field_path": "$.interior_flavor[1]",
+  "entity_id": null,
+  "old": "Nothing there. Somewhere behind the desk a drawer shuts. Guild business, and none of it yours.",
+  "new": "Nothing there. Somewhere behind the desk a drawer shuts."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
+  "field_path": "$.entities[2].observe",
+  "entity_id": "runner_board",
+  "old": "Couriers are made, not hired. Start with the market run. — the counter",
+  "new": "Couriers are made here, one run at a time. Start with the market run. — the counter"
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
+  "field_path": "$.entities[2].second_visit_toast",
+  "entity_id": "runner_board",
+  "old": "THE DELIVERY BOARD. Your slip's still logged at the counter. Legs and ledgers don't care how it's going either.",
+  "new": "THE DELIVERY BOARD. Your slip's still logged at the counter."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
+  "field_path": "$.entities[3].dialogue[0].text",
+  "entity_id": "resting_runner",
+  "old": "...five more minutes.",
+  "new": "Five more minutes."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
+  "field_path": "$.entities[5].observe",
+  "entity_id": "runners_wall_lamp",
+  "old": "A brass lamp bracketed to the wall over the slip rack, glass sooted at the top and dry as bone. The oil ran out some time ago and nobody has come back with more.",
+  "new": "A brass lamp bracketed to the wall over the slip rack, glass sooted at the top and dry as bone. Tip the reservoir and nothing moves in it."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
+  "field_path": "$.entities[6].observe",
+  "entity_id": "runners_mud_table",
+  "old": "Road mud dried in ridges across the boards, stamped there by a week of packs set down hard. Somebody wiped one corner of it and gave up.",
+  "new": "Road mud dried in ridges across the boards, stamped there by a week of packs set down hard. A dry crumb of it breaks loose under your boot."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
+  "field_path": "$.entities[6].toast",
+  "entity_id": "runners_mud_table",
+  "old": "Dried road mud ridges the boards where pack after pack has come down on them. One corner is wiped clean and the rest is not.",
+  "new": "Dried road mud ridges the boards where pack after pack has come down on them. It would come off with water and an arm behind it."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
+  "field_path": "$.interior_flavor[0]",
+  "entity_id": null,
+  "old": "Nothing there. Slip paper and rope wax. The whole room smells like somewhere else's mail.",
+  "new": "Nothing there. Slip paper, rope wax, and the smell of somewhere else's mail."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
+  "field_path": "$.interior_flavor[1]",
+  "entity_id": null,
+  "old": "Nothing there. Somebody's spare boots wait by the door, laces already loosened for the next run.",
+  "new": "Nothing there. A pair of spare boots waits by the door, laces already loosened for the next run."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/street.json",
+  "field_path": "$.entities[1].observe",
+  "entity_id": "gate_guard",
+  "old": "Watch armor, kept. He stands the post properly: weight even, eyes on the gap in the wall. Bored, but the boredom is a discipline, not a lapse.",
+  "new": "Watch armor, kept. He stands the post properly: weight even, eyes on the gap in the wall. Twice while you stand there, he checks the same empty stretch of road."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/street.json",
+  "field_path": "$.entities[4].friendly_line",
+  "entity_id": "olesm",
+  "old": "Olesm brightens like a lamp. Oh! A friendly face. Most people's eyes glaze when I mention troop dispersal. Yours didn't. Would you... that is... care to see the board sometime? No pressure. A little pressure.",
+  "new": "Olesm brightens like a lamp. Oh! A friendly face. Most people's eyes glaze when I mention troop dispersal. Yours didn't. Would you — that is — care to see the board sometime? No pressure. A little pressure."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/street.json",
+  "field_path": "$.entities[8].toast",
+  "entity_id": "krshia_stall",
+  "old": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling somebody UP, elsewhere — she does not haggle down. A sign says she remembers faces, and debts.",
+  "new": "Silverfang goods, honest prices. A sign on the cloth says she remembers faces, and debts; the Gnoll shopkeeper herself is off up the row, working a price upward."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/street.json",
+  "field_path": "$.entities[11].observe",
+  "entity_id": "pisces",
+  "old": "Thin, immaculate, hungry in a way food will not fix. He holds himself like a duelist and watches hands, not faces. Whatever he studies, it is not small.",
+  "new": "Thin, immaculate, hungry in a way food will not fix. He holds himself like a duelist and watches hands, not faces."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/street.json",
+  "field_path": "$.entities[11].friendly_line",
+  "entity_id": "pisces",
+  "old": "A sniff - though a fractionally warmer one. You are... tolerable company. Rarer praise than you comprehend. I shall permit you to remain within conversational range.",
+  "new": "A sniff - though a fractionally warmer one. You are, I concede, tolerable company. Rarer praise than you comprehend. I shall permit you to remain within conversational range."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/street.json",
+  "field_path": "$.entities[12].observe",
+  "entity_id": "sewer_grate",
+  "old": "Rust holds the bars, not a lock. The draft is steady — a tunnel, not a pit. The skittering keeps its distance. Something down there has learned to avoid shadows.",
+  "new": "Rust holds the bars, not a lock. The draft coming up through them is steady and cold, and it carries the sound of water moving somewhere further in."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/street.json",
+  "field_path": "$.entities[12].visual_states[0].observe",
+  "entity_id": "sewer_grate",
+  "old": "Rust holds the bars, not a lock. The phial crate you eased down the rungs is gone from the ledge below. Collected, unbroken. Somewhere down there, someone's working glass got to keep being glass.",
+  "new": "The phial crate you eased down the rungs is gone from the ledge below. The stone where it sat is clear — nothing broke on the way down."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/street.json",
+  "field_path": "$.entities[16].observe",
+  "entity_id": "cellar_door",
+  "old": "A plain door with dark behind it. The dust on the sill is scuffed one way. Something was dragged in, and not dragged out.",
+  "new": "A plain door with dark behind it. Something heavy came across the sill, and the scuff-marks in the dust all point inward."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/street.json",
+  "field_path": "$.entities[19].toast",
+  "entity_id": "street_anchor_stone",
+  "old": "Cold, plain stone. Whatever it was for, it isn't for anything now.",
+  "new": "Cold, plain stone. Grit slides off the base when you set a hand on it."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/street.json",
+  "field_path": "$.interior_flavor[0]",
+  "entity_id": null,
+  "old": "Nothing there. A Drake shoulders past; Liscor has no patience for loiterers.",
+  "new": "Nothing there. A Drake shoulders past you without slowing."
+ }
+]
