@@ -4,7 +4,7 @@
  "nodes": {
   "at_the_door": {
    "speaker": "Pisces",
-   "text": "Do not touch it yet. I have waited a month to stand in front of this. Grant me the courtesy of a first impression.",
+   "text": "Do not touch it yet. I have waited a month to stand in front of this. Stand there. Look at it with me for a moment.",
    "text_variants": [
     {
      "requires": {
@@ -203,7 +203,7 @@
   },
   "fork_reward_done": {
    "speaker": "Pisces",
-   "text": "There. The pour runs the way it always did, and the work it runs through now is yours, which will outlast the city and annoy me for the rest of my life. Whatever is back there gets to keep sleeping. I have decided that is the outcome I wanted, and I will be saying so as though I said it first.",
+   "text": "There. The pour runs again, and it runs through your work now. Your cut will outlast the city. Whatever is back there goes on sleeping. I have decided that is the outcome I wanted, and I will be saying so as though I said it first.",
    "options": [
     {
      "text": "You did say it first.",
@@ -222,7 +222,7 @@
        "seal_opened": 1
       }
      },
-     "text": "There. It runs again, and the work it runs through this time is yours, which will outlast the city and annoy me for the rest of my life. It is a repair, and the door behind it stays open; I would call it a rescue if the facts allowed. They do not. I have decided that is the outcome I wanted, and I will be saying so as though I said it first."
+     "text": "There. It runs again, and the work it runs through this time is yours. It will outlast the city. It is a repair. The door behind it stays open, and I am not going to call that a rescue. I have decided that is the outcome I wanted, and I will be saying so as though I said it first."
     }
    ]
   },

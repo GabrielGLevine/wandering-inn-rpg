@@ -12,7 +12,7 @@
        "night"
       ]
      },
-     "text": "Stall closes with the light. Come back at a decent hour, or knock loud enough I know it is not the wind."
+     "text": "Stall closes with the light. Come back at a decent hour. If it will not keep, knock hard and keep knocking — the shutters muffle everything."
     },
     {
      "requires": {
@@ -299,7 +299,7 @@
   },
   "goblin_run": {
    "speaker": "Krshia",
-   "text": "Hrr. South. Grain, salt, hide-thread, and a cart that does not stop where anyone is counting. You will not say whose hands take it, and I will not ask, yes? I will price it as wool.",
+   "text": "Hrr. South. Grain, salt, hide-thread, and a cart that does not stop where anyone is counting. Do not tell me whose hands take it off the cart. I will price it as wool.",
    "options": [
     {
      "text": "That's all I'm asking.",
@@ -309,7 +309,7 @@
   },
   "krshia_tribe": {
    "speaker": "Krshia",
-   "text": "My tribe, yes. Plains east and south of here — many hearths, one name. I am a Gnoll with a stall in Liscor, and the tribe is still mine. The necklace is a promise I carry.",
+   "text": "My tribe, yes. Plains east and south of here — many hearths, one name. I am a Gnoll with a stall in Liscor, and the tribe is still mine. The necklace is a promise. I do not take it off.",
    "options": [
     {
      "text": "What's the promise?",
@@ -795,7 +795,7 @@
   },
   "wrong_order_recap": {
    "speaker": "Krshia",
-   "text": "The inn's shortfall, yes. Smooth it here at my stall, or settle it your own way. Either gets Lyonette her full order.",
+   "text": "The inn's shortfall, yes. Smooth it here at my stall, or settle it your own way. Lyonette gets her full order once it is done.",
    "text_variants": [
     {
      "requires": {
