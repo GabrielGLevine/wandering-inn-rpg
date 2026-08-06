@@ -183,3 +183,18 @@ PETITIONS RULED: detect_magic.variants[1] 5-sentence exception GRANTED
   stand (from earlier ruling); petitions must be WRITTEN to the branch
   in the fix wave. ruin:170 "Packed by someone" — KEEP (present-party
   pronoun, reviewer's read adopted).
+
+## Liscor lane (landed clean during quiesce; review PENDING post-reset)
+SHAs 52353c8e + 57147f9f. 30/97 changed; anon 25.8%→11.3% (11
+residuals, all reasoned); 66/68 sweep green, 2 pin reds + test_sim_core
+:3571 — all three PROVEN payload-only by sync-then-revert.
+Petitions (ruled): peaks 1-2 (runners_guild boots-still-laced, street
+one-shout-from-tipping) — GRANT to protected-keeps; 3 (hat-letter copy
+doc closer) — GRANT as diegetic-document exception (§1.1 does not bind
+in-world documents' own voice; record in bible). Finding 4
+(biomes.json street.interior_flavor duplicate template string) —
+integrator work list: rewrite it there too (it is player-facing the
+moment any map declares biome:street; out of the 847-corpus by
+extraction scope, not by principle). Finding 5 (last ellipsis strings:
+one is inn's — that lane owns it; one is riverfarm's "..." ambient —
+rides the riverfarm pass post-396). Review post-reset.
