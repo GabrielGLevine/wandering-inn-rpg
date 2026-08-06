@@ -1,0 +1,442 @@
+{
+ "_comment": "#396 'A Winter of Teeth', the FIGHT route end to end -- and the only live coverage the watch ask and the shepherd-as-ally have after the briar fights lost theirs. Night fixture at the shepherd: offer -> re-open the hub for the now-unlocked watch ask (banking hunter_will_come AFTER dialogue_ended, the end+effects ordering carried from the legacy `agreed` node) -> river_wolf_pack fires off its trigger_radius with the shepherd asserted on the player side INSIDE the open board -> the win banks survived_wolf_night and closes the resolve beat -> the WATCH report closes the quest. Also the text_variant precedence pin: with hunter_will_come and survived_wolf_night both banked, three variants match and the LAST one must win.",
+ "fixture_save": "winter_teeth_night_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    10
+   ]
+  },
+  {
+   "action": "assert_state",
+   "path": "classes.warrior",
+   "equals": 10
+  },
+  {
+   "_comment": "The fixture arrives PAST night_at (actions_since_sleep 1000 vs moods.json's 900), so river_wolf_pack's encounter_when is armed without the 940-interact burst riverfarm_fight needs. The night-fixture pattern, not a shortcut around a real gate: the gate is read, it just reads true on arrival.",
+   "action": "assert_state",
+   "path": "phase",
+   "equals": "night"
+  },
+  {
+   "_comment": "== FIRST CONTACT == the shepherd (13,10), directly east. TWO interacts on first contact: talk_pool line, then riverfarm_hunter (frozen conversation id; the character is A Shepherd).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#396 INDEX RECOUNT, fresh state (nothing winter, nothing thicket): TWO rows. [0] 'Just passing through.' (a1), [1] 'The wolves. Say what you need.' (a6, the offer). HIDDEN: a0 watch-ask (requires heard_winter_teeth -- shut until this very selection banks it), a2-a5 (legacy thicket cluster), a7/a8/a9. Take 1.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_winter_teeth"
+   }
+  },
+  {
+   "_comment": "DESTINATION PIN (#396 ruling 1).",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Three ways I see it. Stand the watch with me and thin them. Rebuild the fold so they stop mattering. Or walk the sign and learn why they came. Wolves don't move ground for nothing."
+   }
+  },
+  {
+   "_comment": "winter_brief: 1 \"I'll see to it.\" ends. Take 1.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE WATCH ASK == the ask is gated on the counter the offer just banked, so it takes a SECOND conversation. Pool is spent this waking, so one interact opens the hub directly; still facing him.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "_comment": "EVENT ORDER (cost two reds): dialogue_started -> dialogue_node -> ui_dialogue_shown. A matched wait_for_event advances the since-cursor, so waiting on ui_dialogue_shown FIRST puts the cursor past the hub's own dialogue_node and the pin below can never match. Pin the node, then confirm the render. #396 INDEX RECOUNT, post-accept (heard_winter_teeth 1, hunter_will_come 0, no route counter): TWO rows, offer and ask SWAPPED. [0] watch-ask (a0, just opened), [1] 'Just passing through.' (a1). HIDDEN: a6 offer (spent, one-shot), a7/a8/a9 (no route counter). Pinned as the exact list because the ask is at index 0 and an index-0 press would 'pass' against almost any hub -- the list is what proves the ask is actually there. Take 0.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Wolf sign's thicker every week. Three lambs gone since spring. The pack's off its own ground and eating mine.",
+    "options": [
+     {
+      "text": "[Offer to stand the night watch with him.]",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Just passing through.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "DESTINATION PIN: watch_agreed.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Field edge, after dark. Bring your own bandages. I've got enough of my own to worry about."
+   }
+  },
+  {
+   "_comment": "watch_agreed: 0 'Deal.' ends -- an end+effects option reports dialogue_ended BEFORE wi_game.gd applies effects (the riverfarm_talk mediate_argue trap, carried from the legacy `agreed` node), so hunter_will_come lands AFTER dialogue_ended/ui_dialogue_hidden, not before. That ordering is the assertion, not an incidental wait.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "hunter_will_come"
+   }
+  },
+  {
+   "_comment": "== THE NIGHT WATCH == river_wolf_pack at village_edge (2,14), trigger_radius 1. Walking to (2,13) is inside the radius and the encounter fires itself -- no interact. Its arena is village_edge_night, which opens SURROUNDED (PC centred, the shepherd adjacent west, the 3-wolf pack ringed N/E/S).",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    2,
+    12
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_started",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "turn_started",
+   "timeout_sec": 10,
+   "payload_contains": {
+    "id": "pc"
+   }
+  },
+  {
+   "_comment": "THE ALLY PROOF, asserted inside the open board: river_wolf_pack is the ONLY encounter still shipping allies:[riverfarm_hunter] + ally_requires{hunter_will_come:1} after #396 stripped both briar fights, so this is the surviving live proof that the watch ask fields the shepherd. Earned in this run, never pre-banked.",
+   "action": "assert_state",
+   "path": "combat.combatants.riverfarm_hunter.side",
+   "equals": "player"
+  },
+  {
+   "action": "screenshot",
+   "name": "01_night_watch_surrounded"
+  },
+  {
+   "action": "combat_autoplay",
+   "max_turns": 300
+  },
+  {
+   "action": "wait_for_event",
+   "type": "combat_finished",
+   "timeout_sec": 30,
+   "payload_contains": {
+    "victory": true
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "survived_wolf_night"
+   }
+  },
+  {
+   "_comment": "survived_wolf_night is the FIGHT route's counter (FROZEN id, semantics untouched -- on_victory still banks it quest-free). What is new is a_winter_of_teeth's resolve beat reading it.",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth",
+    "beat": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_combat_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== REPORT == still the same waking; bump east to face him.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    12,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "_comment": "EVENT ORDER (cost two reds): dialogue_started -> dialogue_node -> ui_dialogue_shown. A matched wait_for_event advances the since-cursor, so waiting on ui_dialogue_shown FIRST puts the cursor past the hub's own dialogue_node and the pin below can never match. Pin the node, then confirm the render. TEXT_VARIANT PRECEDENCE PIN: hunter_will_come AND survived_wolf_night are both banked, so three of the four variants match and _resolved_text takes the LAST match -- the both-banked line, not either single-counter line. The one state that proves the ordering rule in dialogue.gd rather than assuming it.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Didn't figure we'd both still be standing after that. The fires stay lit anyway."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#396 INDEX RECOUNT, post-watch (heard_winter_teeth 1, hunter_will_come 1, survived_wolf_night 1, winter_answered 0): TWO rows, and note a0 is GONE. [0] 'Just passing through.' (a1) -- a0 watch-ask is hidden by its own hide_when{hunter_will_come}, the ask being spent. [1] \"We stood the night. The pack's thinner for it.\" (a7, the WATCH report). HIDDEN: a6 offer (spent), a8/a9 (fold/traced unbanked). So this leg reports at index 1 where the fold and traced legs report at index 2 -- the same quest, three different report indices, which is the whole reason indices are recounted per fixture state. Take 1.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "winter_answered"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth",
+    "beat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
+   }
+  },
+  {
+   "_comment": "DESTINATION PIN: the WATCH closer.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "So we did. One night bought is one night. I'll take it. The fires stay lit regardless."
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Exactly one fight: the briars are on another map and nothing else armed.",
+   "action": "assert_event_count",
+   "type": "combat_started",
+   "payload_contains": {},
+   "count": 1
+  },
+  {
+   "_comment": "Distinct-counter proof. Both route props are PRESENT from the offer onward and deliberately left standing.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "fold_rebuilt"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "pack_traced"
+   }
+  }
+ ]
+}
