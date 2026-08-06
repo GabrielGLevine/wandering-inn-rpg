@@ -468,6 +468,20 @@
 				{ "accomplishment": "block_handed_over", "text": "He put the brass into your hand for nothing and asked you to call it destroyed. You did not call it destroyed, and that is the part of it he will remember.", "grant": { "persuaded_someone": 5, "heard_gossip": 2 } },
 				{ "accomplishment": "block_lifted", "text": "The block left the table mid-sentence and he was still talking when you reached the tea shop. Nobody in the city knows it moved.", "grant": { "sneaked_past_danger": 2, "observed_things": 2 } }
 			]
+		},
+		{
+			"_comment": "#396: wraps the [Hedge Witch] grant in a quest. Offer gate = the ratified peaceful-OR path, unchanged. `tend` is the one travel beat, so it is the one naming a landmark.",
+			"id": "the_makings",
+			"title": "The Makings",
+			"region": "Riverfarm",
+			"beats": [
+				{ "id": "gather", "description": "Fill the waiting pot by Eloise's cottage door with whatever the hollow gives up.", "complete_when": { "makings_brought": 1 } },
+				{ "id": "tend", "description": "Something that cannot thank you needs sitting with. The lamb pen in Riverfarm village.", "complete_when": { "craft_tended": 1 } },
+				{ "id": "lesson", "description": "Go back and sit Eloise's kettle. She has a question and then a first lesson.", "complete_when": { "witch_lessons": 1 } }
+			],
+			"resolution_paths": [
+				{ "accomplishment": "", "text": "You filled her pot, sat with a lamb that could not thank you for it, and she taught you the first of the craft." }
+			]
 		}
 	]
 }

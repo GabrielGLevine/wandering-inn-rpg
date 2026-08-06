@@ -6186,6 +6186,39 @@
      "quests"
     ]
    }
+  },
+  {
+   "_comment": "#396 lane C. Appended last.",
+   "script": "makings_loop",
+   "seed": 9,
+   "fixture": "makings_start",
+   "note": "#396: the_makings, the quest wrapping the [Hedge Witch] grant -- offer row gated to the peaceful path (exact array pins both ways), the pot as a quest-opened container, the pen's limping third lamb, then the kettle banking the frozen witch_lessons and a sleep granting the class -- plus the two GRADUATE legs (review M2/M3): the run's own end state replays into witch_lesson with the teach row pinned ABSENT, and makings_graduate_start (the legacy witch_lessons save) sees no starter row and cannot open the quest",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs",
+     "riverfarm_village",
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "makings_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "riverfarm_witch"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests",
+     "save"
+    ]
+   }
   }
  ]
 }
