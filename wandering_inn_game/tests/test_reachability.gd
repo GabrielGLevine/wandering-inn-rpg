@@ -41,6 +41,7 @@ func _init() -> void:
 	_collect_contract_producers(bounties, deliveries, produced)
 
 	_validate_known_orphans(consumed, produced)
+	_validate_retired(consumed, produced)
 	_validate_negative_control()
 	var missing := _missing_producers(consumed, produced)
 	if not missing.is_empty():
@@ -266,10 +267,23 @@ func _mark_produced(counter: String, label: String, produced: Dictionary) -> voi
 func _missing_producers(consumed: Dictionary, produced: Dictionary) -> Array[String]:
 	var missing: Array[String] = []
 	for counter: String in consumed:
-		if not produced.has(counter) and not KNOWN_ORPHAN_GATES.has(counter):
-			missing.append(counter)
+		if produced.has(counter) or KNOWN_ORPHAN_GATES.has(counter):
+			continue
+		# RETIRED (#396 ruling 9): producers deleted BY DESIGN, consumers legal.
+		if _SHIPPED_IDS_TEST.RETIRED_ACCOMPLISHMENTS.has(counter):
+			continue
+		missing.append(counter)
 	missing.sort()
 	return missing
+
+
+## A retired row must still be CONSUMED (else it is stale and the exemption is
+## hiding nothing) and must have NO producer (a new one means the counter is back
+## and the row must go -- retirement is one-way). Mirrors _validate_known_orphans.
+func _validate_retired(consumed: Dictionary, produced: Dictionary) -> void:
+	for counter: String in _SHIPPED_IDS_TEST.RETIRED_ACCOMPLISHMENTS:
+		assert(consumed.has(counter), "RETIRED_ACCOMPLISHMENTS.%s is stale: no gate consumes it, so nothing needs the exemption" % counter)
+		assert(not produced.has(counter), "RETIRED_ACCOMPLISHMENTS.%s has a real producer again -- retirement is one-way; drop the registry row" % counter)
 
 
 func _validate_known_orphans(consumed: Dictionary, produced: Dictionary) -> void:

@@ -489,6 +489,15 @@ func _init() -> void:
 	# place it is maintained -- test_reachability's own preload pattern.
 	for literal: String in _SHIPPED_IDS_TEST.STRUCTURAL_LITERALS:
 		produced_accomplishments[literal] = true
+	# RETIRED (#396 ruling 9): producers deleted BY DESIGN so legacy mid-quest
+	# saves keep their consumers. Tripwire FIRST, exemption second -- a new scene
+	# producer for a retired id fails here before the id is force-marked.
+	for retired: String in _SHIPPED_IDS_TEST.RETIRED_ACCOMPLISHMENTS:
+		_check(
+			not produced_accomplishments.has(retired),
+			"retired accomplishment %s has a producer again -- retirement is one-way; drop its RETIRED_ACCOMPLISHMENTS row in test_shipped_ids.gd" % retired
+		)
+		produced_accomplishments[retired] = true
 	_validate_conversations(scene, graphs)
 	_validate_variant_entries(scene, graphs)
 	_validate_enchant_pairs(graphs, items)
