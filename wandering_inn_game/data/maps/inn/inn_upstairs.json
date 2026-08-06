@@ -195,7 +195,7 @@
    "display_name": "A Closed Door",
    "sprite": "door",
    "locked_toast": "It doesn't budge.",
-   "observe": "Shut, and the card slot in the frame is empty. Somebody paid for this one once and stopped.",
+   "observe": "Shut, and the card slot in the frame is empty.",
    "visual_states": [
     {
      "when": {
@@ -295,7 +295,7 @@
    ],
    "display_name": "Lyonette's Door",
    "sprite": "door",
-   "locked_toast": "Locked. Lyonette keeps exactly one door in this inn that isn't anyone's business but hers.",
+   "locked_toast": "Locked. Lyonette has the only key.",
    "observe": "Lyonette's door, shut the way she shuts most things: completely, and without discussion. Whatever the room looks like behind it, you'll have to imagine it; she's not one to leave doors, or herself, half open."
   }
  ]
