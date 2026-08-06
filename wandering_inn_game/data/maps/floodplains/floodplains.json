@@ -1132,7 +1132,7 @@
    "sprite": "inn_sign",
    "on_interact_accomplishment": "read_the_inn_sign",
    "toast": "A hand-painted board, letters gone bold where they were traced twice: THE WANDERING INN — NO KILLING GOBLINS.",
-   "observe": "The paint is newer than the post it hangs on. Somebody meant it, and means it still."
+   "observe": "The paint is newer than the post it hangs on. The board turns a little in the wind and knocks against it."
   },
   {
    "_comment": "b7 #214c: the fishing affordance — an item-gated bank prop beside the freezable pond edge ((10,17) itself stays clear for the freeze mechanic). No catch item, no fishing system (CHOICE-LOG): the issue is affordance clarity; banks went_fishing, once per waking. The handline's own lore ('the water starts moving wrong') is the deliberate echo.",
@@ -1154,7 +1154,7 @@
    "item_hint_toast": "Whatever's under there won't come to bare hands. Lism's shelf had a fisher's handline.",
    "on_interact_accomplishment": "went_fishing",
    "once_per_waking": true,
-   "once_per_waking_toast": "The water's gone still. Whatever considered you today is done considering.",
+   "once_per_waking_toast": "The water lies flat again. Leave it until tomorrow.",
    "toast": "You pay out the line into the dark water. Nothing takes it, and nothing was ever going to — whatever keeps this pool knows the difference between an offer and a hook."
   },
   {
@@ -1174,7 +1174,7 @@
    ],
    "observe": "Something square and man-made rests on the pond floor a stride out from the bank, furred with silt. Too far to reach across open water. But water can be made to bear weight, if you know the trick of cold.",
    "on_interact_accomplishment": "found_the_frozen_cache",
-   "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, dry against all odds, a few keepsakes someone drowned here meant never to be found.",
+   "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, still dry: a few keepsakes and a handful of old coin.",
    "gold": 5,
    "variants": [
     {
@@ -1419,8 +1419,8 @@
    ],
    "display_name": "Training Dummies",
    "sprite": "training_dummy",
-   "victory_toast": "Relc whistles. \"Not bad for a start. Now go SLEEP on it — Classes come at the pillow, not the podium. Bed's upstairs at the inn.\"",
-   "observe": "Straw and burlap lashed to posts, hacked half to ribbons. Someone drills here often, and hard. The stitching tells you where a real guard would break.",
+   "victory_toast": "Relc whistles. \"Not bad for a start. Go sleep on it — Classes come while you're out cold. Bed's upstairs at the inn.\"",
+   "observe": "Straw and burlap lashed to posts, hacked half to ribbons at one height, all of it from a spear's reach out. Loose straw is still drifting off the top one.",
    "arena": "training_yard",
    "enemies": [
     "training_dummy_a",
@@ -1461,7 +1461,7 @@
    "locked_toast": "A cairn on a hill. The view is mostly weather.",
    "on_skill_use": {
     "accomplishment": "scouted_vantage",
-    "toast": "[Eagle Eyes] — The plains resolve: the gate road, the ruin east past it, and every fold of dead ground a warband could hide in. You'll walk this land differently now."
+    "toast": "[Eagle Eyes] — The plains resolve: the gate road, the ruin east past it, and every fold of dead ground a warband could hide in."
    }
   },
   {
@@ -1549,7 +1549,7 @@
    },
    "trigger_radius": 1,
    "observe": "A patrol slipping the boulder line, quiet until they're not. Only after dark.",
-   "gate_closed_toast": "Nothing moving out there. Whatever it was keeps day hours, same as everyone sane.",
+   "gate_closed_toast": "Nothing moving out there. Come back after dark.",
    "visual_states": [
     {
      "_comment": "Marker visible ONLY while the night encounter_when gate can fire",
@@ -1616,7 +1616,7 @@
    ],
    "display_name": "Wounded Corusdeer",
    "sprite": "corusdeer_wounded",
-   "observe": "A corusdeer, down in the grass with a leg it won't put weight on. Its antlers barely glow. It watches you the way anything hurt watches anything larger. It would let patient hands close, and hands that tend enough hurt beasts learn something no drill yard teaches.",
+   "observe": "A corusdeer, down in the grass with a leg it won't put weight on. Its antlers barely glow. It watches you come and does not try to rise.",
    "_comment_330": "#330 R3: at tended_beasts 10 it STANDS; the next tend banks corusdeer_healed and it goes home. Shipped strings untouched.",
    "present_when": {
     "absent": {
@@ -1640,7 +1640,7 @@
    "on_interact_accomplishment": "soothed_a_beast",
    "once_per_waking": true,
    "once_per_waking_toast": "It has let you close once today. Don't spend what little trust it has.",
-   "toast": "You move slow, keep your hands low, and it lets you check the leg. That, from a wild thing, is everything.",
+   "toast": "You move slow, keep your hands low, and it lets you check the leg. It puts its head back down while you work.",
    "variants": [
     {
      "when": {
@@ -1668,7 +1668,7 @@
        "tended_beasts": 10
       },
       "accomplishment": "corusdeer_healed",
-      "toast": "[Beast's Mending] — The splint comes away and stays away. It stands, tests the leg, and goes to find the herd. Your hands knew what to do because of this deer."
+      "toast": "[Beast's Mending] — The splint comes away and stays away. It stands, tests the leg, and goes to find the herd."
      }
     ]
    }
@@ -1693,7 +1693,7 @@
      "corusdeer_healed": 1
     }
    },
-   "observe": "A body-shaped hollow pressed into the grass, going green again at the edges. Something lay here a long time, and then stopped needing to.",
+   "observe": "A body-shaped hollow pressed into the grass, still flat in the middle. At the edges the blades are standing up again.",
    "on_interact_accomplishment": "found_the_shed_antler",
    "toast": "In the flattened grass, shed clean at the base: one antler, oaken-brown fading to a red glow at the tip. It is warm to hold, and stays warm.",
    "item": "shed_antler",
@@ -1717,7 +1717,7 @@
    ],
    "display_name": "Wolf Den",
    "sprite": "river_wolf",
-   "observe": "A scrape under the boulder line, and in it one wolf pup, ribs showing, too young to be alone. The pack that left it is not coming back.",
+   "observe": "A scrape under the boulder line, and in it one wolf pup, ribs showing, too young to be alone. There are no prints in the loose earth but its own.",
    "requires_skill": "lesser_bond",
    "skill_hint_toast": "It watches your hands. Whatever you mean to offer it, offer it properly.",
    "locked_toast": "The pup shrinks back. You don't have the hands for this yet — hands like that are learned on hurt animals, one at a time. There's a corusdeer down in the grass east of here that would let you start.",
@@ -1737,7 +1737,7 @@
    ],
    "display_name": "Razorbeak Chick",
    "sprite": "razorbeak",
-   "observe": "A razorbeak chick, blown or chased from the nest scrape, hissing at the whole world from behind a tussock. The nest is close. The parents are not.",
+   "observe": "A razorbeak chick, blown or chased from the nest scrape, hissing at the whole world from behind a tussock. Down still on its shoulders, and it goes up on its toes when you shift your weight.",
    "requires_skill": "lesser_bond",
    "skill_hint_toast": "It stops hissing when you crouch. Interested, then — if you make the offer the right way.",
    "locked_toast": "It snaps at your fingers. Fair enough. Nothing wild takes an offer from hands that have never tended anything.",
@@ -1770,7 +1770,7 @@
    "companion_source": {
     "companion_id": "wolf_companion",
     "kind": "tamed",
-    "taken_toast": "It walks out of the scrape without being asked and stands on your foot. The pack keeps its own counsel about who leaves with whom."
+    "taken_toast": "It walks out of the scrape without being asked and stands on your foot."
    }
   },
   {
@@ -1789,14 +1789,14 @@
     },
     "companion": ""
    },
-   "observe": "The nest scrape has fledged another. This one has already worked out that the tussock is cover and that you are not, and it is holding both facts against you.",
+   "observe": "The nest scrape has fledged another. It puts the tussock between you and itself, and screams from behind it.",
    "requires_skill": "lesser_bond",
    "skill_hint_toast": "It goes still when you crouch, which from a razorbeak is an invitation. Make the offer properly.",
    "locked_toast": "It flares its hackles and holds the tussock. Nothing wild takes an offer from hands that have never tended anything.",
    "companion_source": {
     "companion_id": "razorbeak_companion",
     "kind": "tamed",
-    "taken_toast": "It stalks the length of your arm, finds the shoulder acceptable, and settles there facing backwards. Somebody has to watch the way you came."
+    "taken_toast": "It stalks the length of your arm, finds the shoulder acceptable, and settles there facing backwards."
    }
   },
   {
@@ -1815,14 +1815,14 @@
     },
     "companion": ""
    },
-   "observe": "Late in the season and thin with it, but another scrape further down the boulder line is occupied. Whatever else the floodplains do, they keep doing this.",
+   "observe": "Late in the season and thin with it, but another scrape further down the boulder line is occupied. Fresh-dug, by the earth thrown out behind it.",
    "requires_skill": "lesser_bond",
    "skill_hint_toast": "It is too tired to flinch. Offer, and mean it.",
    "locked_toast": "The pup does not move. Hands that can take an offer like this are learned on hurt animals, one at a time.",
    "companion_source": {
     "companion_id": "wolf_companion",
     "kind": "tamed",
-    "taken_toast": "It leans, the way the first one leaned. You are not being given a replacement. You are being given another one."
+    "taken_toast": "It leans in with its whole small weight, the same as the first one did."
    }
   },
   {
@@ -1862,7 +1862,7 @@
      "fought_chieftains_raid": 1
     }
    },
-   "observe": "A small figure on the rise south, standing very still. It has been watching you for a while, and it wants you to know that.",
+   "observe": "A small figure on the rise south, standing very still. It was there before you looked up, and its head turns when you move.",
    "_comment": "b1 #199 'The Chieftain's Price'. Conversation-first (NO trigger radius — she waits; interact opens rags_meeting; combat only via the betrayal close's start_combat). present_when = the composed conduct+relationship gate (design doc 2026-07-19-b1-rags-design.md section 2; absent arm = never hunted the camp). Interim sprite: rags registry entry reuses the goblin_chieftain sheet reduced+tinted until the c3 bespoke (VISUAL-LOG row). Finding 18: present_when mirrors the encounter requires -- she does not STAND on the rise before the Erin gate; STAYS post-settle (farewell re-talk is pinned, rags_meeting_loop).",
    "present_when": {
     "requires": {
@@ -1959,7 +1959,7 @@
       "found_wolf_cache_floodplains": 1
      },
      "item": "",
-     "toast": "Turned bones and nothing under them now. The wolf has lost interest, which is its own verdict."
+     "toast": "Turned bones and nothing under them now. The wolf noses through once and walks off."
     }
    ]
   },
@@ -1976,9 +1976,9 @@
    "present_when": {
     "companion": "razorbeak_companion"
    },
-   "observe": "A boulder standing clear of the reeds with the whole pond below it. The razorbeak keeps climbing it and screaming at the water, which is either an opinion or a report.",
+   "observe": "A boulder standing clear of the reeds with the whole pond below it. The razorbeak climbs it, screams at the water, comes down, and climbs it again.",
    "on_interact_accomplishment": "found_pond_vantage",
-   "toast": "It wheels out over the pond, hangs, and comes back loud. There is something square and man-made on the bottom, a stride out from the bank — too far to reach across open water, and water can be made to bear weight."
+   "toast": "It wheels out over the pond, hangs, and comes back loud. There is a worked square edge under the silt on the bottom, a stride out from the bank — too far to reach across open water, and water can be made to bear weight."
   },
   {
    "_comment": "AUTHORED arm only, never a `burnable` tag: flame_jet has no `burns` flag, so no other burnable prop moves. ONE-SHOT via present_when.absent. Off every QA-walked cell, 5 clear of goblin_encounter_1.",
@@ -1998,7 +1998,7 @@
    "requires_skill": "flame_jet",
    "observe": "A young corusdeer down in the grass with its neck wrong, cold hours ago and not yet found by anything with teeth. The hide is whole. The haunches are worth carrying, if you had a way to make them keep.",
    "locked_toast": "The meat is good and it will not stay good. Raw and cold, it is no use to you, and you have no way to change that.",
-   "skill_hint_toast": "Hauling at it with your hands gets you nothing. Fire is what this wants.",
+   "skill_hint_toast": "Hauling at it with your hands gets you nothing. Sear the haunches and they will travel.",
    "on_skill_use": {
     "item": "seared_venison",
     "accomplishment": "cooked_a_kill",

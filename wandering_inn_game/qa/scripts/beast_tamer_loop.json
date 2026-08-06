@@ -49,7 +49,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "You move slow, keep your hands low, and it lets you check the leg. That, from a wild thing, is everything."
+    "text": "You move slow, keep your hands low, and it lets you check the leg. It puts its head back down while you work."
    },
    "timeout_sec": 5
   },

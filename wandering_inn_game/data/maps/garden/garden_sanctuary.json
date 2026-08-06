@@ -360,8 +360,8 @@
    "display_name": "The Fountain Statue",
    "sprite": "garden_fountain_statue",
    "hide_sprite": true,
-   "toast": "Cool spray beads on the stone. The statue's face is worn soft — whoever it was, the water remembers them better than the carving does.",
-   "observe": "The stonework is older than the door you came through, and the pose is a dancer's, not a soldier's. Someone carved joy here, and meant it to last."
+   "toast": "Cool spray beads on the stone, gathers along the worn-soft face, and drops back into the basin.",
+   "observe": "The stonework is older than the door you came through, and the pose is a dancer's: arms up, one heel lifted, nothing in either hand."
   },
   {
    "_comment": "pairs with `garden_door` (inn map, cell 3,6).",
@@ -412,7 +412,7 @@
       "at": 1
      },
      "sprite": "memorial_statue_gnoll",
-     "observe": "A gnoll carved in stone, sword low and steady, facing down toward where the path forgets itself. Something old came up from under Liscor once. Something else went down after it, and came back up alone. The warren has been quiet since."
+     "observe": "A gnoll carved in stone, sword low and steady, facing down toward where the path forgets itself. The warren below Liscor has been quiet since."
     }
    ]
   },
@@ -455,7 +455,7 @@
       "at": 1
      },
      "sprite": "memorial_statue_human",
-     "observe": "A human figure in stone, apron tied, a bowl held out in both hands like an offering that never quite finished being made. The inn came up short once. Nobody outside its walls ever had to know."
+     "observe": "A human figure in stone, apron tied, a bowl held out in both hands with no one there to take it. The inn came up short once."
     }
    ]
   },
@@ -477,7 +477,7 @@
       "at": 1
      },
      "sprite": "memorial_statue_goblin",
-     "observe": "A goblin carved in stone, unarmed, hands open at its sides. Not every ending here was a fight. This one is remembered for not being one."
+     "observe": "A goblin carved in stone, unarmed, hands open at its sides — the only figure in the row holding nothing."
     }
    ]
   }
