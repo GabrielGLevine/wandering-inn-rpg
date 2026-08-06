@@ -386,7 +386,6 @@
    "observe": "A tree grown crooked, leaning in over the path like it's listening."
   },
   {
-   "_comment": "stays within the ≤8/map light budget (the only light this map ships).",
    "id": "witch_cottage_prop",
    "kind": "prop",
    "cell": [
@@ -448,7 +447,7 @@
    "observe": "Another of the ring-stones, humming faintly if you hold still."
   },
   {
-   "_comment": "#396 GATHER beat = a GATED CONTAINER (anchor_stone_pedestal idiom): unmet contains_when falls through to the shipped skill flavor, so the pot is byte-identical until the quest opens, and container_state makes the fill once. Empty contains: you put things IN.",
+   "_comment": "#396 GATHER beat = a GATED CONTAINER (anchor_stone_pedestal idiom): an unmet contains_when falls through to the shipped skill flavor, so the pot is byte-identical until the quest opens; container_state fills it once.",
    "id": "hollow_offering_pot",
    "kind": "prop",
    "cell": [
@@ -465,6 +464,15 @@
     "toast": "[Basic Cooking] — You cook the offering plain and honest, the way you'd feed anyone who'd walked far to eat."
    },
    "observe": "An iron pot set by the cottage door, empty and waiting. Someone means for it to be used.",
+   "visual_states": [
+    {
+     "when": {
+      "counter": "makings_brought",
+      "at": 1
+     },
+     "observe": "The pot is full to the rim now, settled a little where the wool packed down. She has not moved it off the doorstep."
+    }
+   ],
    "cookware": true,
    "contains": [],
    "contains_when": {
@@ -667,7 +675,6 @@
    "observe": "Briars, moving without wind. They haven't noticed you yet."
   },
   {
-   "_comment": "#396: ally removed (user ruling 2026-08-05) -- nobody local walks you to the hollow. Solo sim gates in sim_combat_batch.gd. hunter_will_come still fields the shepherd at river_wolf_pack (village) only.",
    "id": "briar_collectors_deep",
    "kind": "encounter",
    "cell": [

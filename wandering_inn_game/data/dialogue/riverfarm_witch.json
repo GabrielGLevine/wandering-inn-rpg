@@ -84,6 +84,7 @@
      "end": true
     },
     {
+     "_comment": "PEACEFUL-OR, derived (restored): requires blight_lifted + hide_when drove_off_collectors IS the ratified peaceful path (mediated OR paid), negated because both slots AND (dialogue.gd:128).",
      "text": "The way you work — the craft. Could a person learn it?",
      "requires": {
       "accomplishment": {
@@ -98,7 +99,7 @@
      "goto": "witch_ask"
     },
     {
-     "_comment": "RIVERFARM CAPSTONE. On the HUB, not a chain tail, so an already-reported price_of_a_favor still reaches it on revisit. Gated on the quest TERMINAL, matching the other two spine stops. Deliberately NOT excluded on drove_off_collectors: the force path banks the same terminal, so gating her out would leave the spine unfinishable for fight players.",
+     "_comment": "RIVERFARM CAPSTONE. On the HUB so an already-reported price_of_a_favor still reaches it on revisit. Gated on the quest TERMINAL like the other two spine stops. NOT excluded on drove_off_collectors: the force path banks the same terminal; excluding it strands the spine.",
      "text": "You've been sniffing at me since I came in. Go on.",
      "requires": {
       "accomplishment": {
@@ -376,7 +377,7 @@
    ]
   },
   "witch_ask": {
-   "_comment": "#396: the ask STARTS the_makings, one-shot on its own counter. The bank is here and not on the hub row because that row's hide_when slot holds the drove_off_collectors exclusion, and a second key there would AND (dialogue.gd _meets), showing the offer to force-path players.",
+   "_comment": "M2: the ask retires on witch_lessons, not its own heard_the_makings -- hide_when ANDs one dict (dialogue.gd:128), so the quest-counter gate alone still rendered for a legacy graduate, opening a quest whose lesson beat can never bank. A re-ask is inert: start_quest returns early (wi_game.gd:1738).",
    "speaker": "Eloise",
    "text": "Anyone can learn the shape of it. Hats. Herbs, mostly, if I'm honest. Words said over water come later. But the craft asks a question of you first, before any of that.",
    "options": [
@@ -384,7 +385,7 @@
      "text": "What's the question?",
      "hide_when": {
       "accomplishment": {
-       "heard_the_makings": 1
+       "witch_lessons": 1
       }
      },
      "effects": [
@@ -402,18 +403,14 @@
      "end": true
     },
     {
-     "text": "About the makings.",
+     "_comment": "M1: witch_lesson was ORPHANED for graduates. APPENDED, requires-hidden, no effects.",
+     "text": "Tell me again where the craft comes from.",
      "requires": {
-      "accomplishment": {
-       "heard_the_makings": 1
-      }
-     },
-     "hide_when": {
       "accomplishment": {
        "witch_lessons": 1
       }
      },
-     "goto": "makings_brief"
+     "goto": "witch_lesson"
     }
    ]
   },
@@ -452,7 +449,7 @@
    ]
   },
   "witch_lesson": {
-   "_comment": "witch_lessons (FROZEN) stays the ONLY craft bank point, spent on its own hide_when. #396 adds both beat counters, so a legacy save holding it sees nothing new.",
+   "_comment": "witch_lessons (FROZEN) is the ONLY craft bank point, spent on its own hide_when. A legacy save holding it gains exactly ONE new #396 row, witch_ask's re-entry here, and nothing more: starter and closer retire on that counter. The beat requires is a belt, covered by makings_loop's graduate legs.",
    "speaker": "Eloise",
    "text": "Why did the debt get paid, child? Think past the how of it. Why. You sat at my table and went looking for the ending where nobody bled. That's the question, answered before I asked it. The craft grows from what a person already is. Mine roots in kindness.",
    "options": [

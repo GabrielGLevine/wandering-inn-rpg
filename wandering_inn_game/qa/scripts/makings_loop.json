@@ -1,5 +1,5 @@
 {
- "_comment": "#396 canonical for `the_makings`, the quest that now wraps the [Hedge Witch] grant. Legs: (1) THE OFFER -- the hub's craft row renders on the peaceful path (exact option-array pin) and the ask inside witch_ask starts the quest, banking heard_the_makings once; (2) THE GATE -- the closer row is ABSENT from the hub between the offer and the beats, which is what keeps witch_lesson's teach option out of reach (that node hangs off makings_kettle alone); (3) GATHER -- hollow_offering_pot's contains_when has opened, so a plain interact fills it (makings_brought, beat 1) where the same press served only the [Basic Cooking] flavor before; (4) TEND -- makings_tend_lamb, the pen's limping third, banks craft_tended (beat 2) and then retires itself on its own absent gate; (5) THE KETTLE -- the closer row now renders, makings_kettle leads into the shipped witch_lesson, and its teach option is finally visible and banks witch_lessons (beat 3 + quest_completed); (6) THE GAIN -- a real sleep grants [Hedge Witch] off that same frozen counter. Then the NEGATIVE leg swaps in the force-path save (drove_off_collectors) through the pause-menu Load path (thread_lattice_loop idiom) and pins the hub array WITHOUT the craft row. Shots 01/02 are the eye-gate for the pot and for the pen reading as a pen (two ewe lambs + the limping third).",
+ "_comment": "#396 canonical for `the_makings`, the quest that now wraps the [Hedge Witch] grant. Legs: (1) THE OFFER -- the hub's craft row renders on the peaceful path (exact option-array pin) and the ask inside witch_ask starts the quest, banking heard_the_makings once; (2) THE GATE -- the closer row is ABSENT from the hub between the offer and the beats, which is what keeps witch_lesson's teach option out of reach (that node hangs off makings_kettle alone); (3) GATHER -- hollow_offering_pot's contains_when has opened, so a plain interact fills it (makings_brought, beat 1) where the same press served only the [Basic Cooking] flavor before; (4) TEND -- makings_tend_lamb, the pen's limping third, banks craft_tended (beat 2) and then retires itself on its own absent gate; (5) THE KETTLE -- the closer row now renders, makings_kettle leads into the shipped witch_lesson, and its teach option is finally visible and banks witch_lessons (beat 3 + quest_completed); (6) THE GAIN -- a real sleep grants [Hedge Witch] off that same frozen counter. Then (7) THE GRADUATE REPLAY (review M3) walks the run's own end state back to her: the closer row has retired, witch_ask's APPENDED re-entry reaches witch_lesson, and the teach option is pinned ABSENT with both beats banked -- so hide_when witch_lessons is the only gate holding it and deleting that key reds this leg. (8) THE LEGACY GRADUATE loads makings_graduate_start (witch_lessons 1, heard_the_makings 0), the pre-#396 cohort the starter's old heard_the_makings gate still rendered for: no starter row, no press that can start the quest, started_quests stays empty. Then the NEGATIVE leg swaps in the force-path save (drove_off_collectors) through the pause-menu Load path (thread_lattice_loop idiom) and pins the hub array WITHOUT the craft row. Shots 01/02 are the eye-gate for the pot and for the pen reading as a pen (two ewe lambs + the limping third).",
  "fixture_save": "makings_start",
  "starts_at_title": true,
  "steps": [
@@ -589,6 +589,364 @@
    "action": "wait_for_event",
    "type": "ui_sleep_veil_finished",
    "timeout_sec": 15
+  },
+  {
+   "_comment": "== (7) THE GRADUATE REPLAY (review M3) == same save, straight off the gain: witch_lessons banked and BOTH beats banked, so hide_when is the only thing holding the teach row. The hub's closer row has retired (its own hide_when), which is what orphaned witch_lesson before M1 -- the re-entry inside witch_ask is now its door. The sleep refilled her talk pool, so the first interact serves a pool line again.",
+   "action": "teleport",
+   "map": "witch_hollow",
+   "cell": [
+    5,
+    9
+   ]
+  },
+  {
+   "action": "wait_for_event",
+   "type": "map_changed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "map": "witch_hollow",
+    "cell": [
+     5,
+     9
+    ]
+   }
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Eloise"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_witch"
+   }
+  },
+  {
+   "_comment": "EXACT hub pin for a graduate: the greeting swaps to the witch_lessons text_variant (last-match-wins) and the closer row is GONE while the craft row stays -- five rows, the same five the offer leg pinned.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "text": "Mind the kettle, apprentice-of-no-one. The craft heard you. Pour before it whistles.",
+    "options": [
+     {
+      "text": "What's this blight really about?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "What have you got, for coin instead of favors?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I've got a few things I don't need, myself. Buying?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Just tea, then.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The way you work — the craft. Could a person learn it?",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "M2 PROOF (post-quest graduate): the quest-starter row is ABSENT -- it retires on witch_lessons now, not on heard_the_makings -- and the appended re-entry is the second row.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "text": "Anyone can learn the shape of it. Hats. Herbs, mostly, if I'm honest. Words said over water come later. But the craft asks a question of you first, before any of that.",
+    "options": [
+     {
+      "text": "Another day, then.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Tell me again where the craft comes from.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "M3 PROOF: the teach option is ABSENT on replay. Both beats are banked here, so its `requires` chain passes and hide_when witch_lessons is the ONLY gate hiding it: delete that key and this pin reds.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "text": "Why did the debt get paid, child? Think past the how of it. Why. You sat at my table and went looking for the ending where nobody bled. That's the question, answered before I asked it. The craft grows from what a person already is. Mine roots in kindness.",
+    "options": [
+     {
+      "text": "I need to think on that.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.witch_lessons",
+   "equals": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== (8) THE LEGACY GRADUATE (review M2 probe) == swap in makings_graduate_start through the same pause-menu Load path: witch_lessons 1, blight_lifted 1, drove_off_collectors 0, heard_the_makings 0 -- the pre-#396 save. THE HOLE: with the starter gated on heard_the_makings alone this cohort could open the_makings, whose lesson beat can never bank again.",
+   "action": "install_fixture",
+   "fixture": "makings_graduate_start",
+   "slot": "manual"
+  },
+  {
+   "action": "press",
+   "name": "cancel"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_pause_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_slot_picker_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "mode": "load"
+   }
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 10
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.witch_lessons",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.blight_lifted",
+   "equals": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "equals": []
+  },
+  {
+   "action": "move",
+   "direction": "up",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "Eloise"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "_comment": "Same five hub rows and the same graduate greeting: the craft row still renders (she is never removed from the peaceful path), so the offer topic is reachable and the retire has to happen one node in.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "text": "Mind the kettle, apprentice-of-no-one. The craft heard you. Pour before it whistles.",
+    "options": [
+     {
+      "text": "What's this blight really about?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "What have you got, for coin instead of favors?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "I've got a few things I don't need, myself. Buying?",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Just tea, then.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The way you work — the craft. Could a person learn it?",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 4
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "M2 PROOF (legacy graduate): no starter row, so there is no press that can start the_makings -- exactly two rows, the leave line and the re-entry.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "text": "Anyone can learn the shape of it. Hats. Herbs, mostly, if I'm honest. Words said over water come later. But the craft asks a question of you first, before any of that.",
+    "options": [
+     {
+      "text": "Another day, then.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Tell me again where the craft comes from.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "The lesson still reads for a graduate (the pre-#396 replay, restored) and the teach row stays spent. Beats are 0 here, so `requires` hides it as well -- the single-belt proof is leg 7's.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "Eloise",
+    "text": "Why did the debt get paid, child? Think past the how of it. Why. You sat at my table and went looking for the ending where nobody bled. That's the question, answered before I asked it. The craft grows from what a person already is. Mine roots in kindness.",
+    "options": [
+     {
+      "text": "I need to think on that.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "started_quests",
+   "equals": []
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
   },
   {
    "_comment": "== NEGATIVE LEG == the force path. Swap makings_forced_start into the manual slot and load it through the pause menu (thread_lattice_loop idiom: cancel -> pause -> down 2 -> confirm -> slot picker -> confirm).",
