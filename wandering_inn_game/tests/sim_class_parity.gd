@@ -23,10 +23,9 @@ extends SceneTree
 ##     single largest confound in this sim, and the companion lines get their
 ##     own clearly-labelled context rows instead.
 ##
-## WEAPON RANGE IS INERT UNDER AUTOPLAY -- MEASURED, NOT ASSUMED, AND THE FIRST
-## AUTHORING OF THIS COMMENT GOT IT WRONG. `_build_pc` below threads
-## `pc[WEAPON_RANGE]` because `wi_game.gd::_build_player_combatant` does
-## (line 2099) and a mirror should mirror. It changes NOTHING, here or anywhere:
+## WEAPON RANGE IS INERT UNDER AUTOPLAY -- MEASURED, NOT ASSUMED. `_build_pc`
+## below threads `pc[WEAPON_RANGE]` because `wi_game.gd::_build_player_combatant`
+## does (line 2099) and a mirror should mirror. It changes NOTHING, anywhere:
 ## every `combat.attack()` call site in `WICombatAI` is guarded by
 ## `combat.is_adjacent()` (combat_ai.gd:66/69/73, 106/108, 149/153), and
 ## `_act_ranged` never calls `attack` at all -- it only fires line/area/spell
@@ -37,13 +36,8 @@ extends SceneTree
 ## stat_growth {dex: 1}, hold no AI-expressible skill, and print BYTE-IDENTICAL
 ## rows on all three rosters (0.74 / 0.34 / 0.00, mean 0.360).
 ##
-## The version of this comment shipped on 2026-08-03 claimed the opposite --
-## that threading the line was the difference between a parity read and "a lie",
-## and that adding it to `sim_combat_batch.gd` would move `sharpshooter14_solo`
-## and every other bow cell. Both halves were false and neither had been run.
-## The line was applied to `sim_combat_batch.gd::_build_pc` in the fix round and
-## moved 0 of 141 cells (full-matrix diff, byte-identical). The harnesses no
-## longer diverge on this and there is no seam.
+## `sim_combat_batch.gd::_build_pc` threads it too and it moved 0 cells there
+## (full-matrix diff, byte-identical): no seam between the two harnesses.
 ##
 ## SO: EVERY BOW ROW BELOW IS MEASURED WITH ARCHERY DELETED, and now says so in
 ## its own row with a RANGE-MUTE flag. This is the `ai_kit` confound wearing a
@@ -144,6 +138,14 @@ const ENVELOPE_MARGIN := 0.10
 ## one -- `ENVELOPE DRIFT` fires the moment the live spread stops matching it,
 ## which is the early warning that some data change moved a parity row.
 ## STRATA WITH NO ENTRY ARE UNGATED BY DESIGN -- censored, or n<2.
+##
+## WHAT MOVED (both band-18 entries now print DRIFT): #396 cut shallow briar con
+## 30 -> 24 to re-gate that fight SOLO, widening this file's `briar_collectors`
+## roster column -- spellsword18 .80->.92, swordsman16_mage2 .39->.72,
+## ice_mage16_warrior2 .29->.52, warrior9_mage9 .23->.42, ranger18 .42->.59,
+## scout18/druid18 pinned 0.00 either way. SPOKEN 0.625->0.655, MUTE 0.362->0.405
+## -- ~30% / ~40% of the ratified headroom spent, 0.075 / 0.065 left. WHY AN
+## ENEMY NERF WIDENS A SPREAD: cutting con only pays builds that already hit.
 const PROPOSED_ENVELOPE := {
 	"10/SPOKEN": {"ceiling": 0.44, "measured": 0.3400},
 	"10/MUTE": {"ceiling": 0.19, "measured": 0.0867},
@@ -172,9 +174,7 @@ const PARITY_ARMOR := "leather_jerkin"
 ##     therefore the distance to a pinned floor, not a measured range: weakening
 ##     scout further could not have moved it, and re-cutting the roster would
 ##     have "improved" it with no class changing. Band 14's floor
-##     (`infiltrator14`, 0.08 / 0.01 / 0.00) was saturated on two rosters of
-##     three. The comment claimed the calibration was done; the numbers it
-##     shipped with said otherwise.
+##     (`infiltrator14`, 0.08 / 0.01 / 0.00) was saturated on two rosters of three.
 ##   authoring 3  (fix round) -- bands 14 and 18 gain a FLOOR-RESOLUTION roster
 ##     chosen so the WEAKEST parity line still has somewhere to be measured
 ##     (band 14 `sewer_vermin_pair`, band 18 `raider_vermin`), and the recap now

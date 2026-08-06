@@ -3267,3 +3267,156 @@ applied — picks made, logged here, surfaced at close. All revocable.
    produced six such items and zero issues. A close is not done until
    every DEFERRED/board line in its adjudication block has an issue
    number written next to it.
+
+## 2026-08-05 — 390/396/397 execution wave (controller rulings, wave-autonomy)
+
+1. **PixelLab spend priority under the $0.83 balance:** (1) `a_shepherd`
+   rig (blocks #396 Task 2's windowed read and the machine playtest),
+   (2) Wilovan combat animations, only the states his fielded kit uses,
+   priority attack > hit > walk > death (board_renderer degrades
+   gracefully on a missing death), (3) anything else only if budget
+   clearly allows. Hard floor $0.10; ONE art operator owns all PixelLab
+   spend across both issues — two lanes drawing on one $0.83 balance
+   cannot both budget-guard it.
+2. **Lamb-pen lambs row (#390 Tier 2) split at the asset/wiring seam:**
+   the art lane generates the sprite + sprites.json entry only;
+   riverfarm_village.json wiring lands on the #396 branch (that file is
+   #396 Lane A property — the exact cross-lane class the v0.19 seam
+   lessons name). Same rule for any #390 row that would touch a
+   riverfarm map: sprite yes, riverfarm wiring no.
+3. **#397 works Riverfarm LAST, after #396 merges.** Its Phase 2 region
+   lanes exclude riverfarm/*; the riverfarm prose pass runs on the
+   composed tree. Voice-gate baselines regenerate on composed trees
+   only, never hand-merged.
+4. **Merge order 390 → 396 → 397.** #390 is small and touches map
+   sprite/scale/mood fields; #397 touches prose fields corpus-wide and
+   is long-running — it rebases over the art wiring, not the reverse.
+
+## 2026-08-05 — 390/396/397 wave, mid-session rulings
+
+5. **riverfarm_fight stop-signal discharged (region-tiers §seeds):** post
+   Task-6 solo re-gate, the script's `warrior5_mage5` fixture cannot win
+   the shallow-briar leg at any probed seed (13/13 FAIL; joint pass ≈4%).
+   Ruling: Lane D (Task 8) owns `qa/fixtures/riverfarm_fight_start.json`
+   and moves the fixture build to the tier's reference shape
+   (t3_warrior10) honestly, rather than seed-shopping a 4% coin.
+6. **Sprite-key blast radius is a review class now:** #390's hearth
+   repoint lit riverfarm's Cold Hearth without touching a riverfarm file
+   — a sprite-id consumer audit is mandatory for any repoint, and
+   `--touching sprites.json` under-covers (no surface mapping; smoke tier
+   minimum plus hand-picked canonical owners of consumer maps).
+7. **skill_uses == on_skill_use for prose register** (#397): same engine
+   block per field_skills.gd; 9 strings ruled functional/skill-outcome.
+8. **PixelLab rate corrected: ~$0.012/generation measured** (44 gens =
+   $0.37), not the ~$0.065 the #390/#385 rulings assumed — a 5x
+   overestimate that kept rig rows carried for three milestones. Future
+   art budgeting uses measured rate; re-derive on the first call of any
+   new generation kind.
+9. **Retirement needs a first-class validator concept (#396):** deleting
+   the thicket offer left `heard_thicket_keeps` with zero producers and
+   five legitimate legacy consumers — test_content/test_reachability
+   red by design. Ruling: the den fight stays LEGACY-ONLY (it is the
+   retired quest's fight target; new saves get the winter routes), and
+   Lane D adds a RETIRED_ACCOMPLISHMENTS registry the two validators
+   honor (counter retired 2026-08-05, consumers legal, producers
+   forbidden). Reusable for every future quest retirement.
+10. **Offering pot stays visible (#396 Lane C):** `interact_when` does
+   not exist in the engine; the pot uses the `variants` idiom
+   (wolf_scent_cache precedent) — visible-but-flavor before
+   `heard_the_makings`, gather surface after. Structurally hiding
+   shipped scenery with present_when was rejected.
+11. **Task 8's true scope (#396, review MJ-1):** the plan's gated
+   watch-ask row shifts VISIBLE hub indices for every legacy fixture
+   (old come-along row was ungated), so the six red canonicals are
+   structural desyncs, not payload re-pins — and the dialogue cursor
+   WRAPS, so a mis-sized hub can silently select the wrong row. Lane D:
+   recount option indices per fixture state, assert node DESTINATIONS
+   not just indices, build the legacy fixture, re-derive seeds, and move
+   the riverfarm_fight fixture build (ruling 5). Accepted as
+   plan-inherited; the lane's "pin-only" claim was wrong and the
+   reviewer's re-run is the record.
+12. **lead_winter gates, full disclosure (#396):** shipped as
+   `requires {price_of_a_favor_reported}` + `hide_when
+   {chatted_with_riverfarm_hunter}` — both validator-forced (non-empty
+   requires; counters must be in shipped_ids). Semantics drift: a player
+   who talks and declines loses the journal pointer (old lead hid on
+   accept). RETIGHTEN AT RELEASE CUT: hide_when → heard_winter_teeth
+   once shipped_ids regenerates.
+13. **Lamb pen must exist for new saves (#396 close-wave item):**
+   `hunters_lamb_pen` is `present_when {thicket_answered}` (#330 gating),
+   but BOTH new quests' beat copy points at "the lamb pen" and fresh
+   saves never bank the retired quest's counter. Ruling: drop the
+   thicket_answered gate (pen present always; the shepherd keeps sheep —
+   fiction holds; the observe's "after the thicket business" reads as
+   background for fresh players). Land in the Task 11/12 close wave with
+   pin checks: Lane C's lamb props and the makings tend prop sit beside
+   it, and scripts asserting pen presence/absence must re-derive.
+# CHOICE-LOG entries owed by #396 (fold at merge)
+
+`docs/CHOICE-LOG.md` lives on `main`, so the #396 close wave writes its
+entries here instead of editing a file the branch does not own. **Controller:
+append these to the `## 2026-08-05 — 390/396/397 wave, mid-session rulings`
+block, continuing its numbering (it ends at 13).** Two of them amend rulings
+already in that block — keep the original ruling and the amendment both, the
+supersession is the record.
+
+14. **Quest replacement over reskin (#396 design ruling):** `what_the_thicket_keeps`
+    was retired intact and `a_winter_of_teeth` written beside it rather than
+    re-dressing the thicket quest as wolves — a reskin would have re-semanticized
+    five shipped counters, and a legacy save mid-thicket had to stay completable
+    forever.
+15. **Briar ally removed, briar fight re-gated solo (#396, user ruling
+    2026-08-05):** nobody local walks you to the hollow anymore, so
+    `briar_collectors`/`briar_collectors_deep` lost their `allies`/`ally_requires`
+    and the sim gates were re-derived at solo strength in `sim_combat_batch.gd`;
+    `hunter_will_come` still fields the shepherd, but only at `river_wolf_pack`
+    in the village.
+16. **`hunter_will_come` reused, semantics preserved (#396):** the frozen counter
+    keeps its exact meaning ("this NPC fields as your ally at the wolf-pack
+    encounter") and the new watch ask REPLACES the come-along ask IN PLACE in the
+    hub's option array — the cursor-pin rule, so no legacy fixture's visible row
+    indices shift.
+17. **The edge cohort loses the un-accepted thicket offer (#396, accepted cost):**
+    a save that heard the thicket brief but never accepted it can no longer accept
+    it (the offer row is gone; the report rows survive), because keeping a dead
+    quest's offer alive for one cohort would have meant shipping two live offer
+    rows on one hub forever.
+18. **Pre-bank cohort gets a text_variant, not a gated offer (#396):** a new save
+    can win `river_wolf_pack` before ever talking to the shepherd, so the hub
+    carries a `survived_wolf_night` variant and the offer row stays normal —
+    accept-then-immediately-resolve reads as intentional, and the spec's
+    `watch_stood` fallback stays unfired unless a playtest verdict says the flow
+    reads glitchy (close-wave playtest verdict: it does not).
+19. **The offering pot is a GATED CONTAINER, not a variants swap (#396 Lane C —
+    amends ruling 10):** ruling 10 chose the `variants` idiom; the shipped shape
+    is `contains` + `contains_when {heard_the_makings}` with a `visual_states`
+    filled-state observe (`anchor_stone_pedestal` + `memorial_plot` idioms).
+    Same outcome ruling 10 wanted — the pot is never structurally hidden and is
+    byte-identical until the quest opens it — reached with the mechanism that
+    actually exists for containers.
+20. **Retirement is a registry, not a deletion (#396 Lane D — implements ruling
+    9):** `RETIRED_ACCOMPLISHMENTS` shipped, `test_content`/`test_reachability`
+    honor it (counter retired, consumers legal, producers forbidden), and
+    `test_reachability`'s nested retirement asserts now HALT with a red exit code
+    instead of printing into a green run — the class of validator hole that made
+    the registry necessary.
+21. **Lamb pen gate dropped, as ruling 13 directed (#396 close wave):**
+    `hunters_lamb_pen` is present unconditionally now; both new quests' copy
+    points at "the lamb pen" and fresh saves never bank the retired quest's
+    `thicket_answered`.
+22. **One adjudicated voice pass, ten amendments to DRAFT-FINAL copy (#396 close
+    wave):** the new card `docs/dialogue-voice-cards/riverfarm-shepherd+bark.md`
+    indicted two announced prose triads (bible ban 7 — the corpus's only other
+    enumeration, `rags_meeting`, deliberately miscounts), three buttons outside
+    the file's one granted peak, one sentiment-then-deflect, one soft antithesis
+    on a speaker whose grant is pinned in a legacy node, and Eloise's hard
+    `, not` antithesis; the shepherd's file now carries TWO cohort-disjoint peaks
+    (legacy "Fences before deer.", live "Wolves and me both…") and that split is
+    ruled, not accidental.
+23. **Two stale map voice baselines re-snapshotted as bookkeeping (#396 close
+    wave, disclosed):** `floodplains.json` and `witch_hut.json` were red against
+    `docs/dialogue-voice/baseline-maps` before this branch existed — PR #399
+    (#390 art drain) changed `sprite` fields in them and never regenerated the
+    maps baseline. Proven prose-identical (the whole diff is two sprite ids and a
+    comment), so re-snapshotting launders nothing and the maps gate is CLEAN
+    again for everyone downstream.

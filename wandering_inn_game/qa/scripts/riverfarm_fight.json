@@ -1,5 +1,5 @@
 {
- "_comment": "8b R3 (issue #11) 'The Price of a Favor' FIGHT path. Loads riverfarm_fight_start (warrior5+mage5, met_relc, 11,10 facing up beside the headman; rng_state=1 seed-searched so all three live fights land victories -- see r3-report.md for the derivation). Full loop: GIVE (headman) -> travel to the hollow -> clear briar_collectors (the shallow wave, intermediate drove_off_collectors) -> clear briar_collectors_deep (the escalation R2 tuned, banks drove_off_collectors AGAIN + blight_lifted, the FIGHT path's own convergence producer) -> REPORT to the headman (price_of_a_favor_reported -> quest_completed). PLUS the night-wolf POSITIVE leg (the arrival negative is R1's): a real actions_since_sleep burst to night, then river_wolf_pack's trigger_radius fires for real and is WON (same relc wiring, harness win_rate 0.84).",
+ "_comment": "8b R3 (issue #11) 'The Price of a Favor' FIGHT path. Loads riverfarm_fight_start (GEARED t3_warrior10 -- warrior 10, no mage, #396 ruling 5 -- met_relc, 11,10 facing up beside the headman; rng_state=1 seed-searched so all three live fights land victories -- see r3-report.md for the derivation). Full loop: GIVE (headman) -> travel to the hollow -> clear briar_collectors (the shallow wave, intermediate drove_off_collectors) -> clear briar_collectors_deep (the escalation R2 tuned, banks drove_off_collectors AGAIN + blight_lifted, the FIGHT path's own convergence producer) -> REPORT to the headman (price_of_a_favor_reported -> quest_completed). PLUS the night-wolf POSITIVE leg (the arrival negative is R1's): a real actions_since_sleep burst to night, then river_wolf_pack's trigger_radius fires for real and is WON (riverfarm_hunter allied -- the ONE fight of the three that still fields an ally; the two briar waves are solo since #396).",
  "fixture_save": "riverfarm_fight_start",
  "starts_at_title": true,
  "steps": [
@@ -44,7 +44,7 @@
   {
    "action": "assert_state",
    "path": "classes.warrior",
-   "equals": 5
+   "equals": 10
   },
   {
    "action": "assert_state",
@@ -125,7 +125,7 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== THE COME-ALONG: the hunter (13,10). First interact = talk_pool line; second opens riverfarm_hunter and asks him along -- banks hunter_will_come LIVE, the ONLY thing that fields riverfarm_hunter as an ally in the three fights below. This is the fix for the Relc-at-Riverfarm ship-blocker: no ally without this beat. Teleport to (12,10), bump right to face him. ==",
+   "_comment": "== THE WATCH ASK (#396, replaces the come-along) == the shepherd (13,10). hunter_will_come still fields him as an ally, but ONLY at river_wolf_pack now -- the briar fights below lost their ally entirely (witch_hollow.json, user ruling: nobody local walks you to the hollow). And the ask is no longer reachable cold: the watch-ask row carries requires{heard_winter_teeth}, so this leg must ACCEPT a_winter_of_teeth first and re-open the hub. Two conversations, which is the honest shape of the new gating. Teleport to (12,10), bump right to face him. ==",
    "action": "teleport",
    "map": "riverfarm_village",
    "cell": [
@@ -146,7 +146,7 @@
    "action": "wait_for_event",
    "type": "dialogue_line",
    "payload_contains": {
-    "speaker": "The Hunter"
+    "speaker": "A Shepherd"
    },
    "timeout_sec": 5
   },
@@ -169,15 +169,101 @@
   },
   {
    "action": "screenshot",
-   "name": "00_hunter_at_village"
+   "name": "00_shepherd_at_village"
   },
   {
-   "_comment": "hub fresh: 0 '[Ask him to come with you.]', 1 'Just passing through.'. Take 0.",
+   "_comment": "#396 INDEX RECOUNT, fresh state (nothing winter, nothing thicket banked): TWO rows. [0] 'Just passing through.' (a1), [1] 'The wolves. Say what you need.' (a6, the winter offer). HIDDEN: a0 watch-ask (requires heard_winter_teeth -- the row this leg is heading for, still shut), a2-a5 (heard_thicket_keeps unbanked; the old offer that used to sit in this cluster is deleted), a7-a9. Take 1.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
    "action": "press",
    "name": "confirm"
   },
   {
-   "_comment": "agreed: 0 'Deal.' ends -- an end+effects option reports dialogue_ended BEFORE wi_game.gd applies effects (the riverfarm_talk mediate_argue trap), so hunter_will_come lands AFTER dialogue_ended/ui_dialogue_hidden here, not before.",
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "heard_winter_teeth"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "DESTINATION PIN (#396 ruling 1): winter_brief, so the wrapped cursor provably took the offer and not 'Just passing through.'. winter_brief: 0 'Where do I start?', 1 \"I'll see to it.\" (end). Take 1 -- winter_topic is winter_teeth_talk's to walk.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Stand the watch with me and we thin them. Or the hurdles are cut for a new fold. That's the two I've got. Wolves don't move ground for nothing."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== RE-OPEN for the watch ask == the talk_pool is spent this waking, so ONE interact goes straight to the hub. Still facing him from the bump above.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#396 INDEX RECOUNT, post-accept state (heard_winter_teeth 1; hunter_will_come 0; no route counter yet): TWO rows again, and the offer/ask have SWAPPED places. [0] '[Offer to stand the night watch with him.]' (a0 -- heard_winter_teeth opened it), [1] 'Just passing through.' (a1). HIDDEN: a6 offer (hide_when its own counter, one-shot), a7/a8/a9 report rows (no route counter banked -- reporting is provably shut here). Take 0.",
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Field edge, after dark. Bring your own bandages. I've got enough of my own to worry about."
+   },
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "watch_agreed: 0 'Deal.' ends -- an end+effects option reports dialogue_ended BEFORE wi_game.gd applies effects (the riverfarm_talk mediate_argue trap, carried from the legacy `agreed` node), so hunter_will_come lands AFTER dialogue_ended/ui_dialogue_hidden here, not before.",
    "action": "wait_frames",
    "frames": 3
   },
@@ -238,7 +324,7 @@
    ]
   },
   {
-   "_comment": "== CLEAR THE SHALLOW WAVE: briar_collectors (9,6). Teleport adjacent, bump-face, interact starts combat directly (interact-only, no conversation on this encounter). ==",
+   "_comment": "== CLEAR THE SHALLOW WAVE, SOLO (#396): briar_collectors (9,6). The ally is GONE from this encounter -- witch_hollow.json dropped allies/ally_requires from both briar fights, so hunter_will_come (banked above) fields nobody here and the gate for this leg is briar_collectors_t3_warrior10_solo, 0.55-0.95. Expect a LONGER fight than the allied version: no second body soaking hits, so more rounds and a real chance of losing at the wrong seed, re-probed at the fixture's existing seed-1 state, which still lands all three victories on the geared build. Teleport adjacent, bump-face, interact starts combat directly (interact-only, no conversation on this encounter). ==",
    "action": "teleport",
    "map": "witch_hollow",
    "cell": [
@@ -281,7 +367,7 @@
   },
   {
    "action": "screenshot",
-   "name": "01_briar_collectors_with_hunter"
+   "name": "01_briar_collectors_solo"
   },
   {
    "action": "combat_autoplay",
@@ -331,7 +417,7 @@
    }
   },
   {
-   "_comment": "== CLEAR THE DEEP WAVE: briar_collectors_deep (4,11). The escalation -- this victory is the FIGHT path's own blight_lifted producer. Screenshot pins the deep-variant sprite read (darker/taller than the shallow wave's). ==",
+   "_comment": "== CLEAR THE DEEP WAVE, SOLO (#396): briar_collectors_deep (4,11). The escalation, and also allyless now -- gate is briar_collectors_deep_t3_warrior10_solo, 0.56-0.70 with check_rounds, the tightest window of the run. This victory is still the FIGHT path's own blight_lifted producer. Screenshot pins the deep-variant sprite read (darker/taller than the shallow wave's). ==",
    "action": "teleport",
    "map": "witch_hollow",
    "cell": [
@@ -4345,6 +4431,12 @@
    "timeout_sec": 10
   },
   {
+   "_comment": "== THE ALLY ASSERTION, KEPT HERE AND ONLY HERE (#396) == river_wolf_pack is the one encounter that still ships allies:[riverfarm_hunter] + ally_requires:{hunter_will_come:1}, so this is the surviving live proof that the watch ask fields the shepherd. The two briar fights above dropped theirs with the ally itself. `side` == player is the roster proof (the arc_flow/animate_companion idiom); asserting it INSIDE the open board is what makes it a fielding proof rather than a data read.",
+   "action": "assert_state",
+   "path": "combat.combatants.riverfarm_hunter.side",
+   "equals": "player"
+  },
+  {
    "action": "screenshot",
    "name": "03_night_wolf_arena"
   },
@@ -4358,7 +4450,7 @@
    "payload_contains": {
     "victory": true
    },
-   "timeout_sec": 20
+   "timeout_sec": 30
   },
   {
    "action": "press",
@@ -4373,9 +4465,27 @@
    "timeout_sec": 5
   },
   {
+   "_comment": "#396: survived_wolf_night is a_winter_of_teeth's FIGHT-route counter (complete_when_any on the resolve beat), so this same victory now closes beat 1 of the quest this run accepted at the watch ask. The counter is frozen and its semantics unchanged -- the quest reading it is what is new.",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "a_winter_of_teeth",
+    "beat": 1
+   },
+   "timeout_sec": 5
+  },
+  {
    "action": "wait_for_event",
    "type": "ui_combat_hidden",
    "timeout_sec": 5
+  },
+  {
+   "_comment": "The winter REPORT is winter_teeth_fight's leg, not this one: this run leaves a_winter_of_teeth open at beat 2 deliberately, so quest_completed must never fire for it here.",
+   "action": "assert_event_absent",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
+   }
   }
  ]
 }

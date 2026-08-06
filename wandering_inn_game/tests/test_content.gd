@@ -489,6 +489,26 @@ func _init() -> void:
 	# place it is maintained -- test_reachability's own preload pattern.
 	for literal: String in _SHIPPED_IDS_TEST.STRUCTURAL_LITERALS:
 		produced_accomplishments[literal] = true
+	# #396 lane-d review M1: a DIALOGUE option effect is the shape the retired
+	# quest's own offer row had, and _validate_effect only registers those from
+	# inside _validate_dialogue_graphs -- i.e. AFTER the tripwire below, which
+	# therefore never saw the shape #396 actually deleted. Pre-scan them here.
+	# The hoist is order-only: nothing in the dialogue walk READS this dict, so
+	# every downstream validator sees exactly the set it always did.
+	_collect_dialogue_accomplishments(graphs, produced_accomplishments)
+	# RETIRED (#396 ruling 9): producers deleted BY DESIGN so legacy mid-quest
+	# saves keep their consumers. Tripwire FIRST, exemption second -- a new scene
+	# or dialogue producer for a retired id fails here before the id is
+	# force-marked, as does a STRUCTURAL_LITERALS collision (those are marked
+	# just above). What NO data scanner can see is a raw code-banked producer
+	# absent from STRUCTURAL_LITERALS -- that blind spot is the registry's, not
+	# this check's, and test_shipped_ids' _check_retired shares it exactly.
+	for retired: String in _SHIPPED_IDS_TEST.RETIRED_ACCOMPLISHMENTS:
+		_check(
+			not produced_accomplishments.has(retired),
+			"retired accomplishment %s has a producer again -- retirement is one-way; drop its RETIRED_ACCOMPLISHMENTS row in test_shipped_ids.gd" % retired
+		)
+		produced_accomplishments[retired] = true
 	_validate_conversations(scene, graphs)
 	_validate_variant_entries(scene, graphs)
 	_validate_enchant_pairs(graphs, items)
@@ -613,6 +633,21 @@ func _load_json(path: String) -> Dictionary:
 		_errors.append("invalid JSON at " + path)
 		return {}
 	return parsed
+
+
+## #396 lane-d review M1: the dialogue-side producer scan, hoisted out of
+## _validate_effect so the RETIRED tripwire in _init runs AFTER it rather than
+## before. `nodes[*].options[*].effects[*]` is the only effects carrier in the
+## corpus (audited 2026-08-05; same shape test_reachability's
+## _collect_dialogue_producers walks) -- a NEW carrier must be added in both.
+func _collect_dialogue_accomplishments(graphs: Dictionary, produced: Dictionary) -> void:
+	for graph_id: String in graphs:
+		var nodes: Dictionary = (graphs[graph_id] as Dictionary).get("nodes", {})
+		for node_id: String in nodes:
+			for option: Dictionary in ((nodes[node_id] as Dictionary).get("options", []) as Array):
+				for effect: Dictionary in (option.get("effects", []) as Array):
+					if effect.has("accomplishment"):
+						produced[String(effect["accomplishment"])] = true
 
 
 func _load_dialogue_graphs() -> Dictionary:

@@ -283,12 +283,22 @@ func _build_expected_counts() -> Dictionary:
 	counts["a_hunter/idle"] = 4
 	counts["a_hunter/walk"] = 6
 
-	## #390: wilovan is now a BESPOKE rig, idle only. The walk/slice/cast/hit/
-	## death rows below are the pc_gnoll_m set he used to borrow -- kept as pins
-	## so that generating his combat set later lands on an already-asserted
-	## frame count instead of a fresh guess. Absent animations are never checked
-	## (the loop walks the ENTRY's animations), so these are inert until then.
-	for anim_name in [["idle", 4], ["walk", 6], ["slice", 3], ["cast", 6], ["hit", 6], ["death", 7]]:
+	## #396 Task 1: a_shepherd succeeds a_hunter on riverfarm_village. Sheet
+	## names and animation keys mirror a_hunter; the FRAME COUNTS do not --
+	## the v3 idle ships its reference pose plus 4 generated frames (5), and
+	## walk is the walking-6-frames template (6, same as a_hunter's Run).
+	counts["a_shepherd/idle"] = 5
+	counts["a_shepherd/walk"] = 6
+
+	## #390: wilovan is a BESPOKE rig, and his COMBAT SET landed 2026-08-05 --
+	## slice/hit/death are real sheets now, pinned at the frame counts v3 actually
+	## produced (reference pose + N generated: 4+1, 4+1, 6+1), which is why slice
+	## and hit no longer carry the borrowed pc_gnoll_m numbers (3 and 6). walk and
+	## cast stay INERT pins -- absent animations are never checked (the loop walks
+	## the ENTRY's animations) -- because nothing in world.gd or board_renderer
+	## plays `walk` for a non-player rig, and his kit carries no spell, so
+	## combat_screen's ranged-cast branch can never pick `cast` for him.
+	for anim_name in [["idle", 4], ["walk", 6], ["slice", 5], ["cast", 6], ["hit", 5], ["death", 7]]:
 		counts["wilovan/%s" % anim_name[0]] = int(anim_name[1])
 
 	## #390 bespoke rigs (OWNED PixelLab v3, 8-dir generated, 3 facings kept +
@@ -303,6 +313,15 @@ func _build_expected_counts() -> Dictionary:
 	# tint is not a state) and the legible scree dressing.
 	counts["corusdeer_wounded/idle"] = 1
 	counts["scree_spill/idle"] = 1
+
+	## #390 Tier-2/3 art drain: single-frame owned props. `lamb`/`lamb_lying`
+	## ship SPRITE-ONLY (the riverfarm rows that place them are #396's branch),
+	## `corusdeer_stag` replaces the doe rig inside wounded_corusdeer's
+	## visual_states, and `hearth`/`worn_grass_bed`/`rug_woven_cream` moved off
+	## pack regions onto owned sheets -- all still 1 frame, so the pin values
+	## below are unchanged for the three repoints and new for the three adds.
+	for owned_prop in ["lamb", "lamb_lying", "corusdeer_stag", "hearth", "worn_grass_bed", "rug_woven_cream"]:
+		counts["%s/idle" % owned_prop] = 1
 
 	counts["relc/idle"] = 4
 	counts["relc/walk"] = 6

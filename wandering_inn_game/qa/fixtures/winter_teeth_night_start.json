@@ -1,0 +1,67 @@
+{
+ "_comment": "#396 winter_teeth_fight's start: NIGHT, at the shepherd. Two deliberate departures from winter_teeth_start. (1) actions_since_sleep 1000 puts the save past moods.json's night_at 900, so river_wolf_pack's encounter_when is armed on arrival -- the established night-fixture pattern (boulevard_night_footpads_start, invrisil_hat_loud_start, feel_peek_night_start all do this) and the reason this script needs none of riverfarm_fight's 940-interact burst to reach night. (2) BAND FIXTURE: the GEARED t3_warrior10 reference build (warrior 10, melee_hit 57 for the L10 requires, gnollish_hunting_knife + leather_jerkin + hedge_ward_charm + hunters_fang_talisman), copied from invrisil_setting_fight_start, because river_wolf_pack is measured at t3_warrior10 in sim_combat_batch's river_wolf_pack_t3_hunter cell -- warrior5+mage5 has no cell there at all. Sums to 10, so its COMBAT_BAND_FIXTURES row is 10. heard_winter_teeth and hunter_will_come both UNBANKED: the script earns the offer and the watch ask live, which is the only thing that fields the shepherd in the fight. TRAP: rng_state is DERIVED (tests/_derive_rng_state.gd), never hand-typed; WISave restores .state directly and RNG_STATE_MIN_MAGNITUDE rejects small ints.",
+ "version": 5,
+ "state": {
+  "current_map": "riverfarm_village",
+  "player_cell": [
+   12,
+   10
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 10
+  },
+  "accomplishments": {
+   "blight_lifted": 1,
+   "bought_catalyst": 1,
+   "door_awakened": 1,
+   "catalyst_delivered": 1,
+   "door_chain_started": 1,
+   "door_mounted": 1,
+   "door_retrieved": 1,
+   "door_study_sleeps": 3,
+   "door_understood": 1,
+   "given_spear_by_relc": 1,
+   "heard_price_of_a_favor": 1,
+   "horns_dig_joined": 1,
+   "horns_dig_started": 1,
+   "learned_magic_from_pisces": 1,
+   "melee_hit": 57,
+   "met_relc": 1,
+   "pedestal_breached": 1,
+   "price_of_a_favor_reported": 1,
+   "recovered_anchor_stone": 1,
+   "riverfarm_attuned": 1,
+   "sparred_with_relc": 1,
+   "spell_cast": 13,
+   "won_combat": 3
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
+  "container_state": {},
+  "actions_since_sleep": 1000,
+  "rng_state": "-6393592048753323481"
+ }
+}

@@ -1,0 +1,71 @@
+{
+ "_comment": "#396 PLAYTEST STATE (2026-08-06 close wave), not referenced by any QA script. winter_teeth_night_start with the two counters the fight needs already banked: heard_winter_teeth (the quest is live) and hunter_will_come (A Shepherd fields as your ally at river_wolf_pack). Same GEARED t3_warrior10 reference build the fight is measured at, same actions_since_sleep 1000 so night is already armed on arrival. Walk WEST off [12,10] to the field edge and the watch fires with him in the turn order. rng_state DERIVED from seed 3960 via tests/_derive_rng_state.gd, never hand-typed.",
+ "version": 5,
+ "state": {
+  "current_map": "riverfarm_village",
+  "player_cell": [
+   12,
+   10
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 10
+  },
+  "accomplishments": {
+   "blight_lifted": 1,
+   "bought_catalyst": 1,
+   "catalyst_delivered": 1,
+   "door_awakened": 1,
+   "door_chain_started": 1,
+   "door_mounted": 1,
+   "door_retrieved": 1,
+   "door_study_sleeps": 3,
+   "door_understood": 1,
+   "given_spear_by_relc": 1,
+   "heard_price_of_a_favor": 1,
+   "heard_winter_teeth": 1,
+   "horns_dig_joined": 1,
+   "horns_dig_started": 1,
+   "hunter_will_come": 1,
+   "learned_magic_from_pisces": 1,
+   "melee_hit": 57,
+   "met_relc": 1,
+   "pedestal_breached": 1,
+   "price_of_a_favor_reported": 1,
+   "recovered_anchor_stone": 1,
+   "riverfarm_attuned": 1,
+   "sparred_with_relc": 1,
+   "spell_cast": 13,
+   "won_combat": 3
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "a_winter_of_teeth"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
+  ],
+  "equipped": {
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
+  },
+  "container_state": {},
+  "actions_since_sleep": 1000,
+  "rng_state": "-4603544096193013334"
+ }
+}

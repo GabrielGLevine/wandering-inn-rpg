@@ -128,7 +128,7 @@
     "kind": "prop",
     "observe": "Cold ash banked neatly against the back of the hearth.",
     "on_interact_accomplishment": "observed_hut_hearth_ash",
-    "sprite": "hearth",
+    "sprite": "cold_hearth",
     "toast": "The ash is banked the way you bank a fire you mean to wake in the morning. It has been cold for years."
    },
    {

@@ -31,14 +31,110 @@ baselines; 33 unit suites PASS; sweep 207/207; leak_check clean.
 (c14efafb, 9044b9d0, 9554a334) were local-only on this branch and rode
 along with the push. They are spec/plan docs only.
 
-## RUNNING (2026-08-05): #390 + #396 + #397 execution session
-Session picked up all three, hit WINDDOWN (session 90%) before dispatch.
-State saved; ScheduleWakeup set past the ~25m session reset. On wake:
-`scripts/usage_status.sh --fresh` → plan reads (#396 plan doc +
-docs/VISUAL-LOG.md Tier 2/3 rows) → parallel lanes: art (#390, PixelLab
-~$1.14 left), Riverfarm (#396, branch issue/396-riverfarm-redesign off
-main), prose (#397, phase 0/1 first — bible + blind-review set). Nothing
-dispatched yet; no worktrees exist.
+## RUNNING (2026-08-05): #390 + #396 + #397 execution session (wave 1 live)
+Usage OK (session 0% post-reset, week 12%, fable 10%). Rulings in
+CHOICE-LOG "390/396/397 execution wave" block (PixelLab priority,
+lamb-pen seam split, riverfarm-last for #397, merge order 390→396→397).
+PixelLab balance $0.83, 0 sub gens.
+
+WAVE 3 STATE (WINDDOWN park ~05:30, reset ~09:45): LANDED merge-ready:
+396-D (7c1c92ae), 397 pallass (7f3da96c), empty (8a5ea92a), invrisil
+(240cbf11), liscor (73a20c88). STILL IN FLIGHT at park: 396-C, inn, fg
+fix waves — collect their notifications, bank, re-dispatch post-reset
+if they died. ALL verdicts/specs in
+docs/superpowers/2026-08-05-wave2-rulings-and-fix-specs.md. THEN:
+pin-sync integrator (single writer qa/scripts+tests; fg pins
+pre-synced; ISSUE_NAMED_WORK tool fix; H2 maps-gate mask;
+protected-keeps additions from keeps-petitions/*.json; merge all 397/*
+into issue/397-prose-naturalization; composed gates) -> 396 merge
+lane-c+lane-d + Tasks 11-12 close (+ derive_qa_surfaces fixture guard)
+-> 397 Phase 4 + riverfarm pass + Phase 5 blind read.
+
+Original wave-3 record: fix waves 396-C, 396-D,
+397-invrisil, 397-pallass, 397-empty + reviews inn/liscor/fg. Lane C
+evidence PNGs READ BY CONTROLLER: PASS (lambs distinct standing/lying
+in the rail run; tend prop clear of HUD). Next after wave 3: pin-sync
+integrator -> 396 merge + Tasks 11-12 close -> 397 Phase 4 + riverfarm
+pass + Phase 5 blind read.
+
+Prior quiesce block (superseded):
+ALL wave-2 rulings + fix specs now IN-REPO:
+docs/superpowers/2026-08-05-wave2-rulings-and-fix-specs.md (petition
+grants/denials, all six fix-wave specs, integrator work list, H2
+maps-gate ruling, controller notes). POST-RESET QUEUE, in order:
+(1) collect any still-running lane notifications (liscor + fg map
+lanes, dialogue fix wave) — do NOT act mid-quiesce; (2) dispatch fix
+waves: 396-C, 396-D, 397-invrisil, 397-pallass, 397-empty (specs in
+the rulings doc); (3) review inn lane + liscor/fg when landed +
+re-review fixed lanes lightly; (4) pin-sync integrator (single writer:
+qa/scripts + test prose pins + H1 ISSUE_NAMED_WORK tool fix + H2
+maps-gate prose-field masking + protected-keeps additions + merge all
+397/* branches into issue/397-prose-naturalization + composed gates);
+(5) 396: merge lane-c+lane-d into issue/396, controller reads
+l396c-evidence PNGs, Tasks 11-12 close (voice pass incl. gnaw_pile
+copy + ruling 13 lamb-pen ungate + machine playtest + states + PR);
+(6) 397: Phase 4 metrics lane, riverfarm prose pass (post-396-merge),
+Phase 5 blind read (exit ≤40%), PR; (7) skill folds (Fable-only:
+wi-writing-qa-scripts event-order + assert table) + HANDOFF close.
+Worktrees live: wi-396{,-b,-c,-d}, wi-397{,-pallass,-invrisil,-empty,
+-dlg,-liscor,-inn,-fg}. Lane branches all local-only except pushed
+mains. PixelLab $0.46.
+
+Prior park record: DONE+
+REVIEWED: 396-C (pot ACCEPT, 3 Majors -> fix spec in session scratchpad
+397-petition-rulings.md), 396-D (reviewer verdict pending), 397 dialogue
+(fix wave was RUNNING), pallass (MERGE-BLOCKED: H2 maps-voice-gate
+masks needed integrator-side + H3 payload regression -> fix spec in
+scratchpad), invrisil+empty (reviews pending/running). STILL RUNNING at
+park: liscor/inn/fg map lanes, D+invrisil+empty reviewers, dialogue fix
+wave — their notifications may arrive mid-quiesce; act on them only
+post-reset. ALL rulings + fix specs: session scratchpad
+397-petition-rulings.md (petition grants, H1 ISSUE_NAMED_WORK tool bug,
+H2 ruling, Lane C fix spec).
+
+Original dispatch record:
+396 Lane C (/tmp/wi-396-c, Tasks 9-10 + lamb wiring rider) + Lane D
+(/tmp/wi-396-d, Tasks 7-8 + rulings 5/9/11); 397 lanes pallass/
+invrisil/empty-regions/dialogue (worktrees /tmp/wi-397-*, pin-deltas
+to docs/prose-naturalization/pin-deltas/). QUEUED on completions:
+397 liscor, inn, floodplains+garden map lanes; then pin-sync
+integrator; then reviews, merges, Tasks 11-12, Phases 4-5.
+
+Prior state (superseded, kept for context):
+- **#390 MERGED + CLOSED** (PR #399, squash 16b21ee1, 7/7 checks read
+  then merged; carried-rows follow-up FILED as #400; worktree+branch
+  cleaned, cherry-checked). PixelLab $0.46 left (rate ruling 8).
+- **396 branch carries main** (merge cd1b8a97: lamb sprites now
+  available for Lane C's pen wiring; census trimmed to 15.0% a THIRD
+  time -- C/D briefs must stay comment-lean).
+- **#396 branch @ 07ca6bb8** (/tmp/wi-396, tree clean): Tasks 1-6 all
+  DONE + adversarially reviewed + fix waves landed; lane-b merged
+  (76fdb8b2). KNOWN REDS by design: test_content/test_reachability
+  (heard_thicket_keeps retired — Lane D builds RETIRED_ACCOMPLISHMENTS
+  validator concept, ruling 9), test_sim_core (lead pins, Lane D), six
+  riverfarm canonicals (STRUCTURAL index desyncs not payload pins —
+  ruling 11: Lane D recounts indices, asserts destinations, legacy
+  fixture, seed re-derive, fixture build move per ruling 5).
+  NEXT: dispatch Lane C (Tasks 9-10; pot uses variants idiom ruling 10;
+  tend-lamb cell [17,11] is BLOCKED, pick another; witch_hollow single
+  writer) + Lane D (Tasks 7-8 + rulings 5/9/11 scope) in parallel
+  (disjoint files) → reviews → Tasks 11-12 close. Task 11 must also
+  reconcile gnaw_pile art vs "prints" observe copy.
+  Census note: branch sits at 14.997% of the 15.0% DATA ceiling —
+  Lanes C/D briefs must carry lean _comments (trim-as-you-add).
+- **#397**: foundation COMPLETE + reviewed + fixed @ a416535a
+  (/tmp/wi-397): extractor (2,292 strings), bible RULED (all 13
+  adjudications in docs/prose-naturalization/bible-adjudication.md),
+  blind sets + 229-id holdout + 12 keeps + landmark registry +
+  verify-untouched tripwire. Phase 2/3 fan-out PARKED for post-reset:
+  design committed on the branch at
+  docs/prose-naturalization/phase2-orchestration.md — 6 map-rewrite
+  lanes (pallass,
+  invrisil, liscor, inn, floodplains+garden, dungeon+sewers+ruin;
+  riverfarm LAST post-396) + dialogue-graph lane, all lanes own map/
+  dialogue files ONLY, pin-deltas go to ONE integrator, baselines regen
+  composed-tree only. Then Phase 4 metrics + Phase 5 blind read (≤40%).
+Execute to completion, NOT to release (user directive).
 
 ## QUEUE (updated 2026-08-05, post-merge)
 - PR #395 MERGED (squash, e3835598); #388 closed. PR #393 closed for now

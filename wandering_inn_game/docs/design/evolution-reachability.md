@@ -226,6 +226,12 @@ This was **built, tested, and reverted** after an empirical check:
   that was deliberately tuned against the T3 "expected build ≈ spellsword
   9" (`docs/design/region-tiers.md`, a **ratified** design table, issue
   #66, 2026-07-11).
+  [Record note, 2026-08-05 (#396 Task 6): the two briar cells cited above
+  no longer exist — the hollow fields no ally, so every `_hunter` briar
+  cell was deleted. Their solo successors are
+  `briar_collectors_t3_warrior10_solo` and
+  `briar_collectors_deep_t3_warrior10_solo`. The finding stands as
+  recorded; only two of the cell names it cited are gone.]
 
 Raising consolidation's floor high enough to meaningfully close the race
 therefore requires re-tuning at least three encounter rosters (and

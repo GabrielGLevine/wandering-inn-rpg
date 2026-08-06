@@ -55,6 +55,11 @@
    "digits": [],
    "propnouns": []
   },
+  "$.nodes.hub.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
   "$.nodes.hub.text": {
    "brackets": [],
    "digits": [],
@@ -76,6 +81,45 @@
    "propnouns": []
   },
   "$.nodes.hub.text_variants[3].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.makings_brief.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.makings_brief.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.makings_brief.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.makings_chores.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.makings_chores.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.makings_kettle.options[0].text": {
+   "brackets": [
+    "[Sit, and take the lesson.]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Sit"
+   ]
+  },
+  "$.nodes.makings_kettle.text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -216,6 +260,11 @@
    "digits": [],
    "propnouns": []
   },
+  "$.nodes.witch_ask.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
   "$.nodes.witch_ask.text": {
    "brackets": [],
    "digits": [],
@@ -334,6 +383,7 @@
       "text": "\u00a7"
      },
      {
+      "_comment": "PEACEFUL-OR, derived (restored): requires blight_lifted + hide_when drove_off_collectors IS the ratified peaceful path (mediated OR paid), negated because both slots AND (dialogue.gd:128).",
       "goto": "witch_ask",
       "hide_when": {
        "accomplishment": {
@@ -348,7 +398,7 @@
       "text": "\u00a7"
      },
      {
-      "_comment": "Spec 4 (Task 6.2) RIVERFARM CAPSTONE. Lives on the HUB, not a chain tail, so a save whose price_of_a_favor is already reported still reaches it on any revisit (spec 8, old-save clause). Gated on the quest TERMINAL (price_of_a_favor_reported) rather than blight_lifted, matching Hedault's brothers_job_done and the forge arm's elevator_pass_stamped -- one rule for all three stops. Deliberately NOT excluded on drove_off_collectors: the force path banks the same terminal and Eloise is never removed from the hollow, so gating her out there would strand lattice_witch_lore and make the spine unfinishable for fight players.",
+      "_comment": "RIVERFARM CAPSTONE. On the HUB so an already-reported price_of_a_favor still reaches it on revisit. Gated on the quest TERMINAL like the other two spine stops. NOT excluded on drove_off_collectors: the force path banks the same terminal; excluding it strands the spine.",
       "goto": "witch_ward_lore",
       "hide_when": {
        "accomplishment": {
@@ -359,6 +409,22 @@
        "accomplishment": {
         "price_of_a_favor_reported": 1,
         "spine_started": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "#396 closer. Appended last, and both counters are 0 in every shipped fixture, so no pinned hub array moves.",
+      "goto": "makings_kettle",
+      "hide_when": {
+       "accomplishment": {
+        "witch_lessons": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "craft_tended": 1,
+        "makings_brought": 1
        }
       },
       "text": "\u00a7"
@@ -401,6 +467,40 @@
       "text": "\u00a7"
      }
     ]
+   },
+   "makings_brief": {
+    "options": [
+     {
+      "goto": "makings_chores",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Eloise",
+    "text": "\u00a7"
+   },
+   "makings_chores": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Eloise",
+    "text": "\u00a7"
+   },
+   "makings_kettle": {
+    "options": [
+     {
+      "goto": "witch_lesson",
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "Eloise",
+    "text": "\u00a7"
    },
    "mediate_argue": {
     "options": [
@@ -603,13 +703,37 @@
     "text": "\u00a7"
    },
    "witch_ask": {
+    "_comment": "M2: the ask retires on witch_lessons, not its own heard_the_makings -- hide_when ANDs one dict (dialogue.gd:128), so the quest-counter gate alone still rendered for a legacy graduate, opening a quest whose lesson beat can never bank. A re-ask is inert: start_quest returns early (wi_game.gd:1738).",
     "options": [
      {
-      "goto": "witch_lesson",
+      "effects": [
+       {
+        "quest": "the_makings"
+       },
+       {
+        "accomplishment": "heard_the_makings"
+       }
+      ],
+      "goto": "makings_brief",
+      "hide_when": {
+       "accomplishment": {
+        "witch_lessons": 1
+       }
+      },
       "text": "\u00a7"
      },
      {
       "end": true,
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "M1: witch_lesson was ORPHANED for graduates. APPENDED, requires-hidden, no effects.",
+      "goto": "witch_lesson",
+      "requires": {
+       "accomplishment": {
+        "witch_lessons": 1
+       }
+      },
       "text": "\u00a7"
      }
     ],
@@ -617,7 +741,7 @@
     "text": "\u00a7"
    },
    "witch_lesson": {
-    "_comment": "The bank option is the spent one (hide_when witch_lessons); the ask path stays replayable as flavor. Gate shape: requires blight_lifted + hide_when drove_off_collectors on the hub option = the ratified peaceful-OR-path exactly (mediated OR paid), single-key hide_when because _meets_hide_when is AND-semantics (dialogue.gd:128).",
+    "_comment": "witch_lessons (FROZEN) is the ONLY craft bank point, spent on its own hide_when. A legacy save holding it gains exactly ONE new #396 row, witch_ask's re-entry here, and nothing more: starter and closer retire on that counter. The beat requires is a belt, covered by makings_loop's graduate legs.",
     "options": [
      {
       "effects": [
@@ -629,6 +753,12 @@
       "hide_when": {
        "accomplishment": {
         "witch_lessons": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "craft_tended": 1,
+        "makings_brought": 1
        }
       },
       "text": "\u00a7"

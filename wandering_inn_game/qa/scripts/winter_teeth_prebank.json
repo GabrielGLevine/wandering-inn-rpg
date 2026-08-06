@@ -1,0 +1,315 @@
+{
+ "_comment": "#396 'A Winter of Teeth', the PRE-BANK COHORT (plan Task 5 step 2 / Task 7's pre-bank leg, shipped as its own canonical rather than an install_fixture leg inside winter_teeth_fight -- a second fixture_save is cleaner than driving the pause-menu Load path, and it keeps the fight script's night state uncontaminated). The edge: a player who already survived the wolves quest-free, then meets the shepherd. Proves the flow reads as intentional -- the hub's text_variant acknowledges the history, no row is unlocked by it until the quest is accepted, accepting completes the resolve beat SILENTLY in the same inline re-evaluation, and the report is waiting in the very next hub. Two player actions, two toasts, one quest, beats in order.",
+ "fixture_save": "winter_teeth_prebank_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    10
+   ]
+  },
+  {
+   "_comment": "The cohort's defining state: the wolves were already fought, quest-free, off river_wolf_pack's on_victory.",
+   "action": "assert_state",
+   "path": "accomplishments.survived_wolf_night",
+   "equals": 1
+  },
+  {
+   "_comment": "== FIRST CONTACT == the shepherd (13,10), directly east. TWO interacts on first contact: talk_pool line, then riverfarm_hunter (frozen conversation id; the character is A Shepherd).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "_comment": "EVENT ORDER (cost two reds): dialogue_started -> dialogue_node -> ui_dialogue_shown. A matched wait_for_event advances the since-cursor, so waiting on ui_dialogue_shown FIRST puts the cursor past the hub's own dialogue_node and the pin below can never match. Pin the node, then confirm the render. THE COHORT'S TWO PROOFS IN ONE PIN. (1) text_variant: survived_wolf_night alone matches only the second variant, so the shepherd opens by acknowledging it -- 'You stood a watch before I ever asked.' The hub SEES the history even though no row does. (2) the exact option list: the watch ask and the watch report are both absent, so the only way forward is the ordinary offer row. This is what makes the flow read as intentional rather than as a quest that skipped itself.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "You stood a watch before I ever asked. Word went round the fields.",
+    "options": [
+     {
+      "text": "Just passing through.",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "The wolves. Say what you need.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_prebank_hub"
+  },
+  {
+   "_comment": "#396 INDEX RECOUNT, PRE-BANK state (survived_wolf_night 1 and nothing else winter): TWO rows. [0] 'Just passing through.' (a1), [1] the offer (a6). HIDDEN: a0 watch-ask AND a7 the watch report -- both carry requires{heard_winter_teeth}, which this cohort has not banked, so having already survived the wolves opens NOTHING until the quest is accepted. That is the edge under test. Take 1.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_winter_teeth"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "01_new_quest_toast"
+  },
+  {
+   "_comment": "THE SILENT RESOLVE, and it is silent in the strongest sense: NO quest_beat_completed fires for beat 1 at all. complete_when_any{survived_wolf_night} is already satisfied when the quest enters started_quests, so the first evaluation records the beat as done with no incomplete->complete transition to report -- there is no beat toast, and the player sees one 'New quest' and nothing contradicting it. (Measured, not assumed: the run's event stream goes quest_started -> heard_winter_teeth -> 'New quest' toast, then nothing until the report banks winter_answered and fires beat 2.) Beat 2 below proves the ABSENCE here is scoped to beat 1 and not a dead assertion.",
+   "action": "assert_event_absent",
+   "type": "quest_beat_completed",
+   "payload_contains": {
+    "id": "a_winter_of_teeth",
+    "beat": 1
+   }
+  },
+  {
+   "_comment": "DESTINATION PIN: winter_brief still plays in full. The shepherd briefs three routes at a player who has already walked one -- accepted as intentional (he is asking for help with a winter, not auditing a checklist); the recut in Task 11 is the pass allowed to soften it.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Stand the watch with me and we thin them. Or the hurdles are cut for a new fold. That's the two I've got. Wolves don't move ground for nothing."
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE REPORT, SAME WAKING, NEXT HUB == pool spent, one interact.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#396 INDEX RECOUNT, post-accept pre-bank (heard_winter_teeth 1, survived_wolf_night 1, hunter_will_come 0, winter_answered 0): THREE rows. [0] watch-ask (a0 -- visible, because hunter_will_come is unbanked: standing another night with him is still on the table and that is correct), [1] 'Just passing through.' (a1), [2] the WATCH report (a7, opened by the counter that arrived with the save). HIDDEN: a6 offer (spent), a8/a9. Note this differs from winter_teeth_fight's post-watch hub, which reports at index 1 because its a0 is spent -- same route counter, different index. Take 2.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "winter_answered"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth",
+    "beat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "02_quest_complete_toast"
+  },
+  {
+   "_comment": "DESTINATION PIN: the WATCH closer, reached without this run ever fighting.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "So we did. That's one night. Another comes tomorrow. I'll stand that too."
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "03_prebank_report"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "TWO PLAYER ACTIONS, TWO TOASTS, ONE QUEST: accept then report. The quest is not started twice and not completed on accept -- the beats land in order, one visit apart.",
+   "action": "assert_event_count",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
+   },
+   "count": 1
+  },
+  {
+   "action": "assert_event_count",
+   "type": "quest_completed",
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
+   },
+   "count": 1
+  },
+  {
+   "_comment": "Day fixture: river_wolf_pack is disarmed, and the win this cohort is credited for happened before the save.",
+   "action": "assert_event_absent",
+   "type": "combat_started",
+   "payload_contains": {}
+  },
+  {
+   "_comment": "Never RE-banked in this run: it arrived with the fixture. The report row reads a counter it did not produce, which is exactly why all three report rows carry heard_winter_teeth beside their route counter.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "survived_wolf_night"
+   }
+  }
+ ]
+}

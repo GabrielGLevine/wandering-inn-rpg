@@ -2,8 +2,8 @@
  "start": "hub",
  "nodes": {
   "hub": {
-   "speaker": "The Hunter",
-   "text": "Hollow's not safe alone. Hasn't been for weeks. The witch? Her business is hers and I keep to mine. Wolves took two lambs this spring. Lambs is my trade.",
+   "speaker": "A Shepherd",
+   "text": "Wolf sign's thicker every week. Three lambs gone since spring. The pack's off its own ground and eating mine.",
    "text_variants": [
     {
      "requires": {
@@ -11,7 +11,7 @@
        "hunter_will_come": 1
       }
      },
-     "text": "Still headed that way? Say when. Fields don't need me today."
+     "text": "Dark soon. Field edge, when you're ready. I'll be there."
     },
     {
      "requires": {
@@ -19,44 +19,45 @@
        "survived_wolf_night": 1
       }
      },
-     "text": "Didn't figure we'd both still be standing after that. Sun goes down and it gets ugly out here. The hollow's not the only one. You've seen it firsthand now."
+     "text": "You stood a watch before I ever asked. Word went round the fields."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "hunter_will_come": 1,
+       "survived_wolf_night": 1
+      }
+     },
+     "text": "Didn't figure we'd both still be standing after that. Sit at my fire any night you like."
+    },
+    {
+     "requires": {
+      "accomplishment": {
+       "winter_answered": 1
+      }
+     },
+     "text": "Count's holding. Fires stay lit till thaw anyway."
     }
    ],
    "options": [
     {
-     "text": "[Ask him to come with you.]",
+     "_comment": "#396: REPLACES the come-along ask IN PLACE (cursor-pin rule). Same frozen counter, same semantics: this NPC fields as ally at river_wolf_pack.",
+     "text": "[Offer to stand the night watch with him.]",
+     "requires": {
+      "accomplishment": {
+       "heard_winter_teeth": 1
+      }
+     },
      "hide_when": {
       "accomplishment": {
        "hunter_will_come": 1
       }
      },
-     "goto": "agreed"
+     "goto": "watch_agreed"
     },
     {
      "text": "@just_passing_through",
      "end": true
-    },
-    {
-     "text": "The deer stopped at the treeline. Why?",
-     "requires": {
-      "accomplishment": {
-       "price_of_a_favor_reported": 1
-      }
-     },
-     "hide_when": {
-      "accomplishment": {
-       "heard_thicket_keeps": 1
-      }
-     },
-     "effects": [
-      {
-       "quest": "what_the_thicket_keeps"
-      },
-      {
-       "accomplishment": "heard_thicket_keeps"
-      }
-     ],
-     "goto": "thicket_brief"
     },
     {
      "_comment": "REPORT ROWS all carry heard_thicket_keeps beside their route counter: hut_ward_scrap has no quest-start gate, so a mage PC could read the scrap on a wander and settle thicket_answered for a quest never offered, firing 'New quest'/'Quest complete' back to back. Stated on all three so a later ungated producer cannot leak either.",
@@ -133,11 +134,90 @@
       }
      },
      "goto": "thicket_brief"
+    },
+    {
+     "_comment": "#396 OFFER. Ungated (ruling 3, untied); hide_when its own counter so it is one-shot.",
+     "text": "The wolves. Say what you need.",
+     "hide_when": {
+      "accomplishment": {
+       "heard_winter_teeth": 1
+      }
+     },
+     "effects": [
+      {
+       "quest": "a_winter_of_teeth"
+      },
+      {
+       "accomplishment": "heard_winter_teeth"
+      }
+     ],
+     "goto": "winter_brief"
+    },
+    {
+     "_comment": "#396 REPORT ROWS (3): each requires heard_winter_teeth BESIDE its route counter (survived_wolf_night banks quest-free at river_wolf_pack on_victory) so no ungated producer leaks winter_answered.",
+     "text": "We stood the night. The pack's thinner for it.",
+     "requires": {
+      "accomplishment": {
+       "heard_winter_teeth": 1,
+       "survived_wolf_night": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "winter_answered": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "winter_answered"
+      }
+     ],
+     "goto": "winter_reported_watch"
+    },
+    {
+     "text": "The fold's rebuilt. Double hurdles, drained ground.",
+     "requires": {
+      "accomplishment": {
+       "heard_winter_teeth": 1,
+       "fold_rebuilt": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "winter_answered": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "winter_answered"
+      }
+     ],
+     "goto": "winter_reported_fold"
+    },
+    {
+     "text": "Your wolves were pushed. Something holds their old ground.",
+     "requires": {
+      "accomplishment": {
+       "heard_winter_teeth": 1,
+       "pack_traced": 1
+      }
+     },
+     "hide_when": {
+      "accomplishment": {
+       "winter_answered": 1
+      }
+     },
+     "effects": [
+      {
+       "accomplishment": "winter_answered"
+      }
+     ],
+     "goto": "winter_reported_traced"
     }
    ]
   },
   "agreed": {
-   "speaker": "The Hunter",
+   "speaker": "A Shepherd",
    "text": "Figured. Bring your own bandages. I've got enough of my own to worry about.",
    "options": [
     {
@@ -149,10 +229,11 @@
      ],
      "end": true
     }
-   ]
+   ],
+   "_comment": "#396: DEAD -- nothing gotos it (the hub's ask gotos watch_agreed); kept because deleting it buys nothing."
   },
   "thicket_brief": {
-   "speaker": "The Hunter",
+   "speaker": "A Shepherd",
    "text": "Corusdeer. Whole herd came down off the north road. Stopped dead at the old line in the thicket. Wouldn't cross. Wouldn't spook. Turned and walked back the way they came. Something taught this herd that line. Two lambs I lost this spring. Something with thorns for teeth took them. So no. I'm not walking in there on my own.",
    "options": [
     {
@@ -170,7 +251,7 @@
    ]
   },
   "thicket_sign": {
-   "speaker": "The Hunter",
+   "speaker": "A Shepherd",
    "text": "Here. Hoof marks come up, stop, turn, go back. Same line, every time. You can't see it from standing. Not one print past it in a mile of treeline. Teeth would've left a mess. There's no mess.",
    "options": [
     {
@@ -192,8 +273,8 @@
    ]
   },
   "thicket_rerouted": {
-   "speaker": "The Hunter",
-   "text": "So you spend the afternoon on it. Two fence lines down, re-set forty paces east. Word goes round the fields before dusk. The herd keeps its road for the winter. The hunter walks the new line twice before he trusts it.",
+   "speaker": "A Shepherd",
+   "text": "So you spend the afternoon on it. Two fence lines down, re-set forty paces east. Word goes round the fields before dusk. The herd keeps its road for the winter. I walk the new line twice before I trust it.",
    "options": [
     {
      "text": "Good enough.",
@@ -202,7 +283,7 @@
    ]
   },
   "thicket_topic": {
-   "speaker": "The Hunter",
+   "speaker": "A Shepherd",
    "text": "Know that treeline better than the headman does. He'd rather not. There's a hut the far side of the hollow. Nobody's opened it in years. Whoever kept it drew that line. You're the reading sort? Start there.",
    "options": [
     {
@@ -216,7 +297,7 @@
    ]
   },
   "thicket_reported_read": {
-   "speaker": "The Hunter",
+   "speaker": "A Shepherd",
    "text": "A ward. Somebody scratched a line in the dirt a hundred years back. The deer still stop at it. Grass grown right over the scratch by now. First real thing anyone's told me about that thicket. The rest was guesses.",
    "options": [
     {
@@ -226,7 +307,7 @@
    ]
   },
   "thicket_reported_rerouted": {
-   "speaker": "The Hunter",
+   "speaker": "A Shepherd",
    "text": "Fences before deer. My father would have said the same and then done the opposite. Herd's watering at the north bend now. Where I can see them. I'll sleep better for it. Haven't lately.",
    "options": [
     {
@@ -236,11 +317,85 @@
    ]
   },
   "thicket_reported_cleared": {
-   "speaker": "The Hunter",
+   "speaker": "A Shepherd",
    "text": "Denning right on the line, of course it was. Well, it's dead now. Line's still there and the deer still won't cross it. One thing learned, then. Lambs go back on the near field tomorrow.",
    "options": [
     {
      "text": "One thing's a start.",
+     "end": true
+    }
+   ]
+  },
+  "winter_brief": {
+   "speaker": "A Shepherd",
+   "text": "Stand the watch with me and we thin them. Or the hurdles are cut for a new fold. That's the two I've got. Wolves don't move ground for nothing.",
+   "options": [
+    {
+     "text": "Where do I start?",
+     "goto": "winter_topic"
+    },
+    {
+     "text": "I'll see to it.",
+     "end": true
+    }
+   ]
+  },
+  "winter_topic": {
+   "speaker": "A Shepherd",
+   "text": "Hurdles are stacked by the pen. The watch is mine, every night. And the sign. I near forgot the sign. Runs the west margin, plain as a road. Walk it back and you'd know what pushed them.",
+   "options": [
+    {
+     "text": "Back up a step.",
+     "goto": "winter_brief"
+    },
+    {
+     "text": "Noted.",
+     "end": true
+    }
+   ]
+  },
+  "watch_agreed": {
+   "_comment": "banks hunter_will_come (FROZEN id): NPC fields as ally at river_wolf_pack. effects+end:true fires DIALOGUE_ENDED before the effect (carried from legacy `agreed`).",
+   "speaker": "A Shepherd",
+   "text": "Field edge, after dark. Bring your own bandages. I've got enough of my own to worry about.",
+   "options": [
+    {
+     "text": "Deal.",
+     "effects": [
+      {
+       "accomplishment": "hunter_will_come"
+      }
+     ],
+     "end": true
+    }
+   ]
+  },
+  "winter_reported_watch": {
+   "speaker": "A Shepherd",
+   "text": "So we did. That's one night. Another comes tomorrow. I'll stand that too.",
+   "options": [
+    {
+     "text": "One night's a start.",
+     "end": true
+    }
+   ]
+  },
+  "winter_reported_fold": {
+   "speaker": "A Shepherd",
+   "text": "Walked it this morning. Gate hangs true. A wolf tests a fence once and remembers. My father built the old fold. This one's dug deeper and the ground's drained.",
+   "options": [
+    {
+     "text": "Sleep well.",
+     "end": true
+    }
+   ]
+  },
+  "winter_reported_traced": {
+   "speaker": "A Shepherd",
+   "text": "Pushed. Off their own ground, by the old line. So it was never my fields they wanted. Wolves and me both, working round something neither of us can see.",
+   "options": [
+    {
+     "text": "Neither of you chose it.",
      "end": true
     }
    ]

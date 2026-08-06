@@ -1,6 +1,6 @@
 {
- "_comment": "v0.16 #305 R2 'What the Thicket Keeps', the TALK route end to end -- and the owner of TWO things besides: the witch_hut ROUND TRIP (witch_hollow (1,8) -> hut (4,6) and back to (1,8)) and hut_ward_scrap's LOCKED read. Hunter start off the new price_of_a_favor_reported-gated hub row -> thicket_brief -> thicket_sign -> the reroute option banking herd_rerouted and completing beat 1 -> the hut and its refusal -> the REROUTED report, completing beat 2. The fixture holds NO detect_magic, which is what makes the locked read reachable and the whole-run ward_scrap_read/detected_wardwork absences sound. Zero combat: thicket_line_den is armed by heard_thicket_keeps and left standing.",
- "fixture_save": "thicket_talk_start",
+ "_comment": "v0.16 #305 R2 'What the Thicket Keeps', the TALK route end to end -- and the owner of TWO things besides: the witch_hut ROUND TRIP (witch_hollow (1,8) -> hut (4,6) and back to (1,8)) and hut_ward_scrap's LOCKED read. #396 RE-ANCHORED: this is now THE RETIREMENT-CONTRACT canonical. The quest's offer row is deleted, so the run starts from thicket_legacy_start (a legacy save mid-quest) and enters the route through the R2 re-entry row instead -> thicket_brief -> thicket_sign -> the reroute option banking herd_rerouted and completing beat 1 -> the hut and its refusal -> the REROUTED report, completing beat 2. quest_started is asserted ABSENT whole-run: a legacy save finishes the retired quest and can never re-accept it. The fixture holds NO detect_magic, which is what makes the locked read reachable and the whole-run ward_scrap_read/detected_wardwork absences sound. Zero combat: thicket_line_den is armed by heard_thicket_keeps and left standing.",
+ "fixture_save": "thicket_legacy_start",
  "starts_at_title": true,
  "steps": [
   {
@@ -50,7 +50,7 @@
    ]
   },
   {
-   "_comment": "== GIVE: the hunter (13,10), directly east. First interact = his talk_pool line; second opens riverfarm_hunter. ==",
+   "_comment": "== RE-ENTRY: the shepherd (13,10), directly east. First interact = his talk_pool line; second opens riverfarm_hunter (frozen conversation id, the character is A Shepherd). ==",
    "action": "press",
    "name": "interact"
   },
@@ -59,7 +59,7 @@
    "type": "dialogue_line",
    "timeout_sec": 5,
    "payload_contains": {
-    "speaker": "The Hunter"
+    "speaker": "A Shepherd"
    }
   },
   {
@@ -80,29 +80,23 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Hub with hunter_will_come unbanked and heard_thicket_keeps unbanked: 0 '[Ask him to come with you.]', 1 'Just passing through.', 2 'The deer stopped at the treeline. Why?'. The three report rows are all hidden by their own route counters. Take 2.",
+   "_comment": "#396 INDEX RECOUNT, legacy state (heard_thicket_keeps 1; no route counter, no heard_winter_teeth, no hunter_will_come). Authored rows 0-9 filter to THREE: [0] 'Just passing through.' (a1, ungated), [1] 'Take me back to that line in the thicket.' (a5, the R2 re-entry -- requires heard_thicket_keeps, hide_when herd_rerouted), [2] 'The wolves. Say what you need.' (a6, the #396 winter offer, ungated). HIDDEN: a0 watch-ask (requires heard_winter_teeth), a2/a3/a4 report rows (route counters unbanked), a7/a8/a9 winter reports. The old offer row a2-of-the-old-hub is GONE, so the accept step this leg used to run is gone with it. Take 1 -- one row PAST 'passing through' and one row SHORT of the winter offer, which is why the destination is pinned below and not the index alone.",
    "action": "move",
    "direction": "down",
-   "steps": 2
+   "steps": 1
   },
   {
    "action": "press",
    "name": "confirm"
   },
   {
+   "_comment": "DESTINATION PIN (#396 ruling 1): the cursor wraps, so a mis-sized hub silently selects a wrong row. The re-entry row banks nothing, so its node text is the only proof it was the row taken -- landing on the winter offer instead would show winter_brief here.",
    "action": "wait_for_event",
-   "type": "quest_started",
+   "type": "dialogue_node",
    "timeout_sec": 5,
    "payload_contains": {
-    "id": "what_the_thicket_keeps"
-   }
-  },
-  {
-   "action": "wait_for_event",
-   "type": "accomplishment_recorded",
-   "timeout_sec": 5,
-   "payload_contains": {
-    "id": "heard_thicket_keeps"
+    "speaker": "A Shepherd",
+    "text": "Corusdeer. Whole herd came down off the north road. Stopped dead at the old line in the thicket. Wouldn't cross. Wouldn't spook. Turned and walked back the way they came. Something taught this herd that line. Two lambs I lost this spring. Something with thorns for teeth took them. So no. I'm not walking in there on my own."
    }
   },
   {
@@ -119,7 +113,7 @@
    "type": "dialogue_node",
    "timeout_sec": 5,
    "payload_contains": {
-    "speaker": "The Hunter",
+    "speaker": "A Shepherd",
     "text": "Here. Hoof marks come up, stop, turn, go back. Same line, every time. You can't see it from standing. Not one print past it in a mile of treeline. Teeth would've left a mess. There's no mess."
    }
   },
@@ -354,10 +348,10 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Hub post-reroute: heard_thicket_keeps hides the start row and herd_rerouted opens the REROUTED report. 0 '[Ask him to come with you.]', 1 'Just passing through.', 2 \"Fences are moved. The herd's got its road.\". Take 2.",
+   "_comment": "#396 INDEX RECOUNT, post-reroute state (heard_thicket_keeps 1, herd_rerouted 1). THREE rows again, but not the same three: [0] 'Just passing through.' (a1), [1] \"Fences are moved. The herd's got its road.\" (a3, the REROUTED report -- herd_rerouted opened it), [2] the winter offer (a6). The re-entry row a5 has RETIRED itself (hide_when herd_rerouted), so the row that was at 1 in the first hub is gone and the report has taken its slot -- same index, different destination, which is exactly the desync this recount exists for. Take 1; the banked counter below is the destination proof.",
    "action": "move",
    "direction": "down",
-   "steps": 2
+   "steps": 1
   },
   {
    "action": "press",
@@ -416,6 +410,27 @@
    "action": "assert_state",
    "path": "accomplishments.thicket_answered",
    "equals": 1
+  },
+  {
+   "_comment": "== THE RETIREMENT CONTRACT (#396) == the counter arrived with the save, never from a producer in this run (there is none left), and the deleted offer row means no quest_started can fire for it. A legacy save completes the retired quest; nothing re-offers it.",
+   "action": "assert_state",
+   "path": "accomplishments.heard_thicket_keeps",
+   "equals": 1
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "what_the_thicket_keeps"
+   }
+  },
+  {
+   "_comment": "The winter offer sat one row below every selection above, visible the whole run. Never taken.",
+   "action": "assert_event_absent",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
+   }
   }
  ]
 }

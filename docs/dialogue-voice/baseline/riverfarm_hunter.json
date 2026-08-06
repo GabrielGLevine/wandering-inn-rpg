@@ -12,11 +12,11 @@
   },
   "$.nodes.hub.options[0].text": {
    "brackets": [
-    "[Ask him to come with you.]"
+    "[Offer to stand the night watch with him.]"
    ],
    "digits": [],
    "propnouns": [
-    "Ask"
+    "Offer"
    ]
   },
   "$.nodes.hub.options[2].text": {
@@ -44,6 +44,21 @@
    "digits": [],
    "propnouns": []
   },
+  "$.nodes.hub.options[7].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[8].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.options[9].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
   "$.nodes.hub.text": {
    "brackets": [],
    "digits": [],
@@ -55,6 +70,16 @@
    "propnouns": []
   },
   "$.nodes.hub.text_variants[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.hub.text_variants[3].text": {
    "brackets": [],
    "digits": [],
    "propnouns": []
@@ -148,11 +173,82 @@
    "brackets": [],
    "digits": [],
    "propnouns": []
+  },
+  "$.nodes.watch_agreed.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.watch_agreed.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_brief.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_brief.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_brief.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_reported_fold.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_reported_fold.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_reported_traced.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_reported_traced.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_reported_watch.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_reported_watch.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_topic.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_topic.options[1].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.winter_topic.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
   }
  },
  "skeleton": {
   "nodes": {
    "agreed": {
+    "_comment": "#396: DEAD -- nothing gotos it (the hub's ask gotos watch_agreed); kept because deleting it buys nothing.",
     "options": [
      {
       "effects": [
@@ -164,16 +260,22 @@
       "text": "\u00a7"
      }
     ],
-    "speaker": "The Hunter",
+    "speaker": "A Shepherd",
     "text": "\u00a7"
    },
    "hub": {
     "options": [
      {
-      "goto": "agreed",
+      "_comment": "#396: REPLACES the come-along ask IN PLACE (cursor-pin rule). Same frozen counter, same semantics: this NPC fields as ally at river_wolf_pack.",
+      "goto": "watch_agreed",
       "hide_when": {
        "accomplishment": {
         "hunter_will_come": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_winter_teeth": 1
        }
       },
       "text": "\u00a7"
@@ -181,28 +283,6 @@
      {
       "end": true,
       "text": "@just_passing_through"
-     },
-     {
-      "effects": [
-       {
-        "quest": "what_the_thicket_keeps"
-       },
-       {
-        "accomplishment": "heard_thicket_keeps"
-       }
-      ],
-      "goto": "thicket_brief",
-      "hide_when": {
-       "accomplishment": {
-        "heard_thicket_keeps": 1
-       }
-      },
-      "requires": {
-       "accomplishment": {
-        "price_of_a_favor_reported": 1
-       }
-      },
-      "text": "\u00a7"
      },
      {
       "_comment": "REPORT ROWS all carry heard_thicket_keeps beside their route counter: hut_ward_scrap has no quest-start gate, so a mage PC could read the scrap on a wander and settle thicket_answered for a quest never offered, firing 'New quest'/'Quest complete' back to back. Stated on all three so a later ungated producer cannot leak either.",
@@ -279,9 +359,88 @@
        }
       },
       "text": "\u00a7"
+     },
+     {
+      "_comment": "#396 OFFER. Ungated (ruling 3, untied); hide_when its own counter so it is one-shot.",
+      "effects": [
+       {
+        "quest": "a_winter_of_teeth"
+       },
+       {
+        "accomplishment": "heard_winter_teeth"
+       }
+      ],
+      "goto": "winter_brief",
+      "hide_when": {
+       "accomplishment": {
+        "heard_winter_teeth": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "_comment": "#396 REPORT ROWS (3): each requires heard_winter_teeth BESIDE its route counter (survived_wolf_night banks quest-free at river_wolf_pack on_victory) so no ungated producer leaks winter_answered.",
+      "effects": [
+       {
+        "accomplishment": "winter_answered"
+       }
+      ],
+      "goto": "winter_reported_watch",
+      "hide_when": {
+       "accomplishment": {
+        "winter_answered": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_winter_teeth": 1,
+        "survived_wolf_night": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "winter_answered"
+       }
+      ],
+      "goto": "winter_reported_fold",
+      "hide_when": {
+       "accomplishment": {
+        "winter_answered": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "fold_rebuilt": 1,
+        "heard_winter_teeth": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "effects": [
+       {
+        "accomplishment": "winter_answered"
+       }
+      ],
+      "goto": "winter_reported_traced",
+      "hide_when": {
+       "accomplishment": {
+        "winter_answered": 1
+       }
+      },
+      "requires": {
+       "accomplishment": {
+        "heard_winter_teeth": 1,
+        "pack_traced": 1
+       }
+      },
+      "text": "\u00a7"
      }
     ],
-    "speaker": "The Hunter",
+    "speaker": "A Shepherd",
     "text": "\u00a7",
     "text_variants": [
      {
@@ -296,6 +455,23 @@
       "requires": {
        "accomplishment": {
         "survived_wolf_night": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "hunter_will_come": 1,
+        "survived_wolf_night": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "requires": {
+       "accomplishment": {
+        "winter_answered": 1
        }
       },
       "text": "\u00a7"
@@ -317,7 +493,7 @@
       "text": "\u00a7"
      }
     ],
-    "speaker": "The Hunter",
+    "speaker": "A Shepherd",
     "text": "\u00a7"
    },
    "thicket_reported_cleared": {
@@ -327,7 +503,7 @@
       "text": "\u00a7"
      }
     ],
-    "speaker": "The Hunter",
+    "speaker": "A Shepherd",
     "text": "\u00a7"
    },
    "thicket_reported_read": {
@@ -337,7 +513,7 @@
       "text": "\u00a7"
      }
     ],
-    "speaker": "The Hunter",
+    "speaker": "A Shepherd",
     "text": "\u00a7"
    },
    "thicket_reported_rerouted": {
@@ -347,7 +523,7 @@
       "text": "\u00a7"
      }
     ],
-    "speaker": "The Hunter",
+    "speaker": "A Shepherd",
     "text": "\u00a7"
    },
    "thicket_rerouted": {
@@ -357,7 +533,7 @@
       "text": "\u00a7"
      }
     ],
-    "speaker": "The Hunter",
+    "speaker": "A Shepherd",
     "text": "\u00a7"
    },
    "thicket_sign": {
@@ -379,7 +555,7 @@
       "text": "\u00a7"
      }
     ],
-    "speaker": "The Hunter",
+    "speaker": "A Shepherd",
     "text": "\u00a7"
    },
    "thicket_topic": {
@@ -393,7 +569,81 @@
       "text": "\u00a7"
      }
     ],
-    "speaker": "The Hunter",
+    "speaker": "A Shepherd",
+    "text": "\u00a7"
+   },
+   "watch_agreed": {
+    "_comment": "banks hunter_will_come (FROZEN id): NPC fields as ally at river_wolf_pack. effects+end:true fires DIALOGUE_ENDED before the effect (carried from legacy `agreed`).",
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "hunter_will_come"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Shepherd",
+    "text": "\u00a7"
+   },
+   "winter_brief": {
+    "options": [
+     {
+      "goto": "winter_topic",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Shepherd",
+    "text": "\u00a7"
+   },
+   "winter_reported_fold": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Shepherd",
+    "text": "\u00a7"
+   },
+   "winter_reported_traced": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Shepherd",
+    "text": "\u00a7"
+   },
+   "winter_reported_watch": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Shepherd",
+    "text": "\u00a7"
+   },
+   "winter_topic": {
+    "options": [
+     {
+      "goto": "winter_brief",
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "A Shepherd",
     "text": "\u00a7"
    }
   },

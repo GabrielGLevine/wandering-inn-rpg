@@ -1,5 +1,13 @@
 # Cluster: riverfarm-hunter+bark — T1 rural + exploration bark
 
+> **SUPERSEDED 2026-08-06 by `riverfarm-shepherd+bark.md` (#396).** The NPC is
+> A Shepherd now; the quest this card was written against
+> (`what_the_thicket_keeps`) is retired for new saves. This card stays as the
+> record of the legacy `thicket_*` nodes it ruled — including the pinned
+> antithesis "Fences before deer.", which keeps its grant THERE and nowhere
+> else. Write against the shepherd card; consult this one only when touching a
+> legacy thicket node.
+
 Read `docs/dialogue-voice-bible.md` first. T1 stats: avg ≤8 words/sentence, no subordinate clauses, no semicolons. The Hunter holds a **pinned antithesis**: "Fences before deer." (`thicket_reported_rerouted`) — keep it exactly; every other X-not-Y in the file dies.
 
 ## riverfarm_hunter.json

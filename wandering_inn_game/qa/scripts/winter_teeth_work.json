@@ -1,0 +1,400 @@
+{
+ "_comment": "#396 'A Winter of Teeth', the WORK (fold) route in ISOLATION -- and the owner of the prop-gating contract: winter_fold_hurdles (15,12) is walked ONTO before the offer (absent), BLOCKS after it (present), and is walked onto again after it pays out (absent{fold_rebuilt:1} retires it), so presence, gating and once-semantics are all proved by cell occupancy rather than by trusting an event. Toast pinned verbatim both as `toast` and `ui_toast_rendered`. Then the FOLD report closes the quest. The other two route counters and hunter_will_come are asserted absent whole-run, so this really is one route alone.",
+ "fixture_save": "winter_teeth_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    10
+   ]
+  },
+  {
+   "_comment": "== PROP ABSENT BEFORE THE OFFER == winter_fold_hurdles sits at (15,12), gated present_when requires{heard_winter_teeth}. Approach from (14,12), directly west -- (15,11) is map-blocked, so west is the only clear cardinal. Nothing is there yet, so the move STEPS ONTO the cell instead of bumping: is_cell_blocked returns true for any PRESENT entity, so occupying (15,12) is the absence proof.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    14,
+    12
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    15,
+    12
+   ]
+  },
+  {
+   "_comment": "== THE OFFER == back to the shepherd; bump east to face him (teleport does not carry facing).",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    12,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "_comment": "== FIRST CONTACT == the shepherd (13,10), directly east. TWO interacts on first contact: the first plays a talk_pool line, the second opens riverfarm_hunter (frozen conversation id; the character is A Shepherd).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#396 INDEX RECOUNT, fresh state (nothing winter, nothing thicket): the hub's 10 authored rows filter to TWO. [0] 'Just passing through.' (a1, ungated), [1] 'The wolves. Say what you need.' (a6, the offer -- hide_when its own counter only). HIDDEN: a0 watch-ask (requires heard_winter_teeth), a2/a3/a4/a5 (the legacy thicket cluster, heard_thicket_keeps unbanked), a7/a8/a9 (the report rows, requires heard_winter_teeth). Take 1; the cursor WRAPS, so the destination is pinned below rather than trusted to the index.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_winter_teeth"
+   }
+  },
+  {
+   "_comment": "DESTINATION PIN (#396 ruling 1): winter_brief proves the offer was the row taken and not 'Just passing through.'",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Stand the watch with me and we thin them. Or the hurdles are cut for a new fold. That's the two I've got. Wolves don't move ground for nothing."
+   }
+  },
+  {
+   "_comment": "winter_brief: 0 'Where do I start?', 1 \"I'll see to it.\" (end). Take 1.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== PROP PRESENT AFTER THE OFFER == same approach, opposite outcome: heard_winter_teeth is banked, so the hurdles exist and the same move is now BLOCKED. Facing is set without stepping, which is what makes the interact land on the prop.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    14,
+    12
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    14,
+    12
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "00_hurdles_stacked"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "fold_rebuilt"
+   }
+  },
+  {
+   "_comment": "ORDER: the inline quest re-evaluation lands the beat BEFORE the prop's toast.",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth",
+    "beat": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You put the day in. Double hurdles, drained ground, a gate that hangs true. The fold holds a wolf out now, not just sheep in."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You put the day in. Double hurdles, drained ground, a gate that hangs true. The fold holds a wolf out now, not just sheep in."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_fold_rebuilt"
+  },
+  {
+   "_comment": "ONCE-SEMANTICS, first half: exactly one bank, from present_when's absent{fold_rebuilt:1}.",
+   "action": "assert_event_count",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "fold_rebuilt"
+   },
+   "count": 1
+  },
+  {
+   "_comment": "ONCE-SEMANTICS, second half: the hurdles are GONE and the cell that just blocked is walkable again. The player ends up standing where the prop was -- there is nothing left to re-interact.",
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    15,
+    12
+   ]
+  },
+  {
+   "_comment": "== REPORT == same waking, pool spent.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    12,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#396 INDEX RECOUNT, post-accept + fold (heard_winter_teeth 1, fold_rebuilt 1, hunter_will_come 0, winter_answered 0): THREE rows. [0] watch-ask (a0), [1] 'Just passing through.' (a1), [2] \"The fold's rebuilt. Double hurdles, drained ground.\" (a8, the FOLD report). HIDDEN: a6 offer (spent), a7/a9 (their route counters unbanked). Same visible SHAPE as the traced hub in winter_teeth_talk but a DIFFERENT row at index 2 -- which is why index 2 is never trusted without the destination pin below. Take 2.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "winter_answered"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth",
+    "beat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
+   }
+  },
+  {
+   "_comment": "DESTINATION PIN: the FOLD closer specifically -- proof index 2 was the fold report and not the traced or watch sibling.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Walked it this morning. Gate hangs true. A wolf tests a fence once and remembers. My father built the old fold. This one's dug deeper and the ground's drained."
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "02_report_fold"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "combat_started",
+   "payload_contains": {}
+  },
+  {
+   "_comment": "Distinct-counter proof: the WORK route in isolation. wolf_sign_trail is present the whole second half of this run and is deliberately left standing.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "pack_traced"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "survived_wolf_night"
+   }
+  },
+  {
+   "_comment": "The watch-ask row sat at index 0 for every selection above and was never taken.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "hunter_will_come"
+   }
+  }
+ ]
+}

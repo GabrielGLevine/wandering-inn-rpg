@@ -23,8 +23,12 @@ Scripts are JSON in `qa/scripts/<name>.json`, run by `qa/test_driver.gd`
 | `press` | `name` | `ACTION_KEYS`: move_up/down/left/right, interact, confirm, cancel, cycle, journal, hotbar_1/2/3, end_turn |
 | `wait_for_event` | `type`, `timeout_sec` (5), `payload_contains` ({}), `from_start` (false) | since-marker below |
 | `assert_event_logged`/`_absent` | `type`, `payload_contains` | cumulative whole-run, not windowed |
+| `assert_event_count` | `type`, `count`, `payload_contains` | exact whole-run count — the once-semantics proof (`== 1` after a repeat press) |
+| `assert_dialogue_displayed` | (see driver) | pins the rendered dialogue panel |
 | `assert_state` | `path`, `equals` or `contains` | see below |
 | `assert_save_exists` | `slot` | checks `user://saves/<slot>.json` |
+| `assert_settings_file_exists` | — | checks `user://settings.cfg` |
+| `assert_audio_bus_send` | `bus`, … | probes an AudioServer bus send |
 | `screenshot` | `name` | no-op in headless |
 | `combat_autoplay` | `max_turns` (200) | drives AI turns to `combat.finished` |
 | `teleport` | `map`, `cell:[x,y]` | debug-only, bypasses doors |
@@ -84,7 +88,15 @@ Once `ui_dialogue_shown` fires, `move` steps the visible OPTION cursor, not
 the body (body stays put). Options are the VISIBLE list only — a hidden
 (`hide_when`/gated) option shifts later indices down. Idiom
 (`dialogue_walkthrough.json`): `ui_dialogue_shown` → `move down 1` → `press
-confirm`.
+confirm`. The cursor WRAPS: a mis-sized hub silently selects a WRONG row
+instead of timing out, so every hub selection must also assert its
+DESTINATION (node text or banked counter), never an index alone (#396).
+
+## Dialogue event order (cost two reds, 2026-08-06)
+The order is `dialogue_started` → `dialogue_node` → `ui_dialogue_shown`.
+Waiting on `ui_dialogue_shown` FIRST advances the since-cursor past the
+hub's own `dialogue_node`, so a later `dialogue_node` pin can never match.
+Pin the node first, or use `from_start`.
 
 ## Fixtures
 **FIXTURE-FIRST POLICY (consultant review, ratified 2026-07-07):** a NEW

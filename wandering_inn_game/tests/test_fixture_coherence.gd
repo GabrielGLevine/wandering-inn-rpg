@@ -47,6 +47,11 @@ const COMBAT_BAND_FIXTURES := {
 	# reference build as that v0.16 pair, against the shipped footpad pair the
 	# alley_footpads_t3_warrior10_solo cell already measures -- no new cell.
 	"invrisil_house_name_fight_start": 10,
+	# --- 396-lane-d --- TAIL under this lane's own marker, same append-only rule
+	# as the v018-W3 row above. winter_teeth_fight rides the GEARED warrior-10
+	# reference build because river_wolf_pack is measured at t3_warrior10
+	# (river_wolf_pack_t3_hunter) and has no warrior5_mage5 cell at all.
+	"winter_teeth_night_start": 10,
 }
 
 const MAP_REQUIRES := {
