@@ -37,7 +37,30 @@ CHOICE-LOG "390/396/397 execution wave" block (PixelLab priority,
 lamb-pen seam split, riverfarm-last for #397, merge order 390→396→397).
 PixelLab balance $0.83, 0 sub gens.
 
-WAVE 2 STATE (QUIESCE park ~23:50; session resets ~03:40): DONE+
+USER-DIRECTED QUIESCE (running on credits; resume post-reset).
+ALL wave-2 rulings + fix specs now IN-REPO:
+docs/superpowers/2026-08-05-wave2-rulings-and-fix-specs.md (petition
+grants/denials, all six fix-wave specs, integrator work list, H2
+maps-gate ruling, controller notes). POST-RESET QUEUE, in order:
+(1) collect any still-running lane notifications (liscor + fg map
+lanes, dialogue fix wave) — do NOT act mid-quiesce; (2) dispatch fix
+waves: 396-C, 396-D, 397-invrisil, 397-pallass, 397-empty (specs in
+the rulings doc); (3) review inn lane + liscor/fg when landed +
+re-review fixed lanes lightly; (4) pin-sync integrator (single writer:
+qa/scripts + test prose pins + H1 ISSUE_NAMED_WORK tool fix + H2
+maps-gate prose-field masking + protected-keeps additions + merge all
+397/* branches into issue/397-prose-naturalization + composed gates);
+(5) 396: merge lane-c+lane-d into issue/396, controller reads
+l396c-evidence PNGs, Tasks 11-12 close (voice pass incl. gnaw_pile
+copy + ruling 13 lamb-pen ungate + machine playtest + states + PR);
+(6) 397: Phase 4 metrics lane, riverfarm prose pass (post-396-merge),
+Phase 5 blind read (exit ≤40%), PR; (7) skill folds (Fable-only:
+wi-writing-qa-scripts event-order + assert table) + HANDOFF close.
+Worktrees live: wi-396{,-b,-c,-d}, wi-397{,-pallass,-invrisil,-empty,
+-dlg,-liscor,-inn,-fg}. Lane branches all local-only except pushed
+mains. PixelLab $0.46.
+
+Prior park record: DONE+
 REVIEWED: 396-C (pot ACCEPT, 3 Majors -> fix spec in session scratchpad
 397-petition-rulings.md), 396-D (reviewer verdict pending), 397 dialogue
 (fix wave was RUNNING), pallass (MERGE-BLOCKED: H2 maps-voice-gate
