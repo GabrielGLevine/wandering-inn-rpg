@@ -983,8 +983,13 @@
   }
  },
  "rug_woven_cream": {
+  "_comment": "#390: the shipped sheet was red-flecked speckle and read as a spill (stationer_room_loop/01). Regenerated with a real warp/weft grid and fringe, judged against `rug_woven_red`. Anchor = bbox 58/64.",
   "_comment_ysort": "GH#127: flat floor decor must ALWAYS render under sorted content -- large north bias keeps it above the floor layers (different parent) but under every y-sorted sibling on any crossed cell. Small biases cannot fix a walk-across prop.",
   "field_y_sort_bias_px": -160.0,
+  "anchor": [
+   0.4922,
+   0.9062
+  ],
   "animations": {
    "idle": {
     "sheet": "res://assets/sprites/rug_woven_cream/Idle-Sheet.png",
@@ -995,7 +1000,7 @@
     "fps": 1
    }
   },
-  "render_scale": 0.35
+  "render_scale": 0.4151
  },
  "table_brown": {
   "animations": {
@@ -2078,19 +2083,18 @@
   }
  },
  "hearth": {
-  "render_scale": 0.5,
+  "_comment": "#390: the old Interior_Props_01 region STRADDLED TWO oven variants -- two half-ovens, no fire, against copy saying the hearth is kept fed. Owned lit hearth on the same id: all five consumers inherit it. `cold_hearth` stays the dead one.",
+  "render_scale": 0.6538,
+  "anchor": [
+   0.4922,
+   0.8906
+  ],
   "animations": {
    "idle": {
-    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
-    "region": [
-     272,
-     56,
-     64,
-     104
-    ],
+    "sheet": "res://assets/sprites/hearth/Idle-Sheet.png",
     "frame_size": [
      64,
-     104
+     64
     ],
     "fps": 1
    }
@@ -2193,19 +2197,20 @@
   }
  },
  "window_blue": {
-  "render_scale": 0.75,
+  "_comment": "#390: the old region was a 16px slice off the SIDE of a chest block, not a window -- hence the grey slab with a blue edge (player_room_loop/00). Real four-pane window on Furniture.png.",
+  "render_scale": 0.85,
   "animations": {
    "idle": {
-    "sheet": "res://assets/props/free_pack/Interior_Props_01.png",
+    "sheet": "res://assets/props/free_pack/Furniture.png",
     "region": [
-     224,
-     4,
-     16,
-     28
+     132,
+     355,
+     24,
+     25
     ],
     "frame_size": [
-     16,
-     28
+     24,
+     25
     ],
     "fps": 1
    }
@@ -2754,7 +2759,7 @@
   ]
  },
  "wilovan": {
-  "_comment": "OWNED PixelLab v3 (#390). Gnoll Gentleman Caller: bowler, cane, waistcoat (the id used to wear `pc_gnoll_m`, the PLAYER's skin). IDLE ONLY: board_renderer falls back to idle_side / fades a missing death, so his attacks lack flourish until the combat set exists (#390).",
+  "_comment": "OWNED PixelLab v3 (#390). Gnoll Gentleman Caller: bowler, cane, waistcoat (the id used to wear `pc_gnoll_m`, the PLAYER's skin). COMBAT SET 2026-08-05: slice/hit/death, three kept facings. `cast`/`walk` stay unreachable for him. Feet plane 95/128, anchor unchanged.",
   "directional": true,
   "render_scale": 0.4754,
   "anchor": [
@@ -2772,6 +2777,36 @@
      128
     ],
     "fps": 6
+   },
+   "slice": {
+    "sheet_down": "res://assets/sprites/wilovan/Slice_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/wilovan/Slice_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/wilovan/Slice_Up-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 8
+   },
+   "hit": {
+    "sheet_down": "res://assets/sprites/wilovan/Hit_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/wilovan/Hit_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/wilovan/Hit_Up-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 10
+   },
+   "death": {
+    "sheet_down": "res://assets/sprites/wilovan/Death_Down-Sheet.png",
+    "sheet_side": "res://assets/sprites/wilovan/Death_Side-Sheet.png",
+    "sheet_up": "res://assets/sprites/wilovan/Death_Up-Sheet.png",
+    "frame_size": [
+     128,
+     128
+    ],
+    "fps": 8
    }
   }
  },
@@ -5849,21 +5884,76 @@
    }
   }
  },
- "worn_grass_bed": {
-  "_comment": "#330 R3: grass_tuft region at prop scale -- the 0.75 tuft was invisible on grass.",
-  "render_scale": 1.6,
+ "corusdeer_stag": {
+  "_comment": "#390: the healed corusdeer stood up on a DOE rig while the observe says 'its antlers barely glow'. Stag rig, antler tips ember-warmed. 40px so it never reads smaller than the wounded rig.",
+  "render_scale": 0.6557,
+  "anchor": [
+   0.4062,
+   0.9688
+  ],
+  "shadow": true,
   "animations": {
    "idle": {
-    "sheet": "res://assets/props/free_pack/Vegetation.png",
+    "sheet": "res://assets/sprites/corusdeer_stag/Idle-Sheet.png",
     "frame_size": [
-     16,
-     16
-    ],
-    "region": [
      64,
-     144,
-     16,
-     16
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "lamb": {
+  "_comment": "#390: hunters_lamb_pen was rail and empty grass while its name, observe and toasts all talk about lambs. Sized to sit UNDER the rail. SPRITE ONLY -- the rows that place it are #396's branch.",
+  "render_scale": 0.4167,
+  "anchor": [
+   0.4453,
+   0.7812
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/lamb/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "lamb_lying": {
+  "_comment": "#390: the pen's third lamb, the one #396's copy says will not bear weight. Distinct silhouette, not a tint.",
+  "render_scale": 0.3667,
+  "anchor": [
+   0.4922,
+   0.75
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/lamb_lying/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "worn_grass_bed": {
+  "_comment": "#390: was the Vegetation tuft at 1.6 -- a clump of blades, not the hollow the copy describes (#330 R3). Now a bespoke bedded hollow with the shed antler in it.",
+  "render_scale": 0.4545,
+  "anchor": [
+   0.4922,
+   0.8281
+  ],
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/worn_grass_bed/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
     ],
     "fps": 1
    }

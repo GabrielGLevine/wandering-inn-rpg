@@ -3267,3 +3267,78 @@ applied — picks made, logged here, surfaced at close. All revocable.
    produced six such items and zero issues. A close is not done until
    every DEFERRED/board line in its adjudication block has an issue
    number written next to it.
+
+## 2026-08-05 — 390/396/397 execution wave (controller rulings, wave-autonomy)
+
+1. **PixelLab spend priority under the $0.83 balance:** (1) `a_shepherd`
+   rig (blocks #396 Task 2's windowed read and the machine playtest),
+   (2) Wilovan combat animations, only the states his fielded kit uses,
+   priority attack > hit > walk > death (board_renderer degrades
+   gracefully on a missing death), (3) anything else only if budget
+   clearly allows. Hard floor $0.10; ONE art operator owns all PixelLab
+   spend across both issues — two lanes drawing on one $0.83 balance
+   cannot both budget-guard it.
+2. **Lamb-pen lambs row (#390 Tier 2) split at the asset/wiring seam:**
+   the art lane generates the sprite + sprites.json entry only;
+   riverfarm_village.json wiring lands on the #396 branch (that file is
+   #396 Lane A property — the exact cross-lane class the v0.19 seam
+   lessons name). Same rule for any #390 row that would touch a
+   riverfarm map: sprite yes, riverfarm wiring no.
+3. **#397 works Riverfarm LAST, after #396 merges.** Its Phase 2 region
+   lanes exclude riverfarm/*; the riverfarm prose pass runs on the
+   composed tree. Voice-gate baselines regenerate on composed trees
+   only, never hand-merged.
+4. **Merge order 390 → 396 → 397.** #390 is small and touches map
+   sprite/scale/mood fields; #397 touches prose fields corpus-wide and
+   is long-running — it rebases over the art wiring, not the reverse.
+
+## 2026-08-05 — 390/396/397 wave, mid-session rulings
+
+5. **riverfarm_fight stop-signal discharged (region-tiers §seeds):** post
+   Task-6 solo re-gate, the script's `warrior5_mage5` fixture cannot win
+   the shallow-briar leg at any probed seed (13/13 FAIL; joint pass ≈4%).
+   Ruling: Lane D (Task 8) owns `qa/fixtures/riverfarm_fight_start.json`
+   and moves the fixture build to the tier's reference shape
+   (t3_warrior10) honestly, rather than seed-shopping a 4% coin.
+6. **Sprite-key blast radius is a review class now:** #390's hearth
+   repoint lit riverfarm's Cold Hearth without touching a riverfarm file
+   — a sprite-id consumer audit is mandatory for any repoint, and
+   `--touching sprites.json` under-covers (no surface mapping; smoke tier
+   minimum plus hand-picked canonical owners of consumer maps).
+7. **skill_uses == on_skill_use for prose register** (#397): same engine
+   block per field_skills.gd; 9 strings ruled functional/skill-outcome.
+8. **PixelLab rate corrected: ~$0.012/generation measured** (44 gens =
+   $0.37), not the ~$0.065 the #390/#385 rulings assumed — a 5x
+   overestimate that kept rig rows carried for three milestones. Future
+   art budgeting uses measured rate; re-derive on the first call of any
+   new generation kind.
+9. **Retirement needs a first-class validator concept (#396):** deleting
+   the thicket offer left `heard_thicket_keeps` with zero producers and
+   five legitimate legacy consumers — test_content/test_reachability
+   red by design. Ruling: the den fight stays LEGACY-ONLY (it is the
+   retired quest's fight target; new saves get the winter routes), and
+   Lane D adds a RETIRED_ACCOMPLISHMENTS registry the two validators
+   honor (counter retired 2026-08-05, consumers legal, producers
+   forbidden). Reusable for every future quest retirement.
+10. **Offering pot stays visible (#396 Lane C):** `interact_when` does
+   not exist in the engine; the pot uses the `variants` idiom
+   (wolf_scent_cache precedent) — visible-but-flavor before
+   `heard_the_makings`, gather surface after. Structurally hiding
+   shipped scenery with present_when was rejected.
+11. **Task 8's true scope (#396, review MJ-1):** the plan's gated
+   watch-ask row shifts VISIBLE hub indices for every legacy fixture
+   (old come-along row was ungated), so the six red canonicals are
+   structural desyncs, not payload re-pins — and the dialogue cursor
+   WRAPS, so a mis-sized hub can silently select the wrong row. Lane D:
+   recount option indices per fixture state, assert node DESTINATIONS
+   not just indices, build the legacy fixture, re-derive seeds, and move
+   the riverfarm_fight fixture build (ruling 5). Accepted as
+   plan-inherited; the lane's "pin-only" claim was wrong and the
+   reviewer's re-run is the record.
+12. **lead_winter gates, full disclosure (#396):** shipped as
+   `requires {price_of_a_favor_reported}` + `hide_when
+   {chatted_with_riverfarm_hunter}` — both validator-forced (non-empty
+   requires; counters must be in shipped_ids). Semantics drift: a player
+   who talks and declines loses the journal pointer (old lead hid on
+   accept). RETIGHTEN AT RELEASE CUT: hide_when → heard_winter_teeth
+   once shipped_ids regenerates.

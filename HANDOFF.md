@@ -31,14 +31,46 @@ baselines; 33 unit suites PASS; sweep 207/207; leak_check clean.
 (c14efafb, 9044b9d0, 9554a334) were local-only on this branch and rode
 along with the push. They are spec/plan docs only.
 
-## RUNNING (2026-08-05): #390 + #396 + #397 execution session
-Session picked up all three, hit WINDDOWN (session 90%) before dispatch.
-State saved; ScheduleWakeup set past the ~25m session reset. On wake:
-`scripts/usage_status.sh --fresh` → plan reads (#396 plan doc +
-docs/VISUAL-LOG.md Tier 2/3 rows) → parallel lanes: art (#390, PixelLab
-~$1.14 left), Riverfarm (#396, branch issue/396-riverfarm-redesign off
-main), prose (#397, phase 0/1 first — bible + blind-review set). Nothing
-dispatched yet; no worktrees exist.
+## RUNNING (2026-08-05): #390 + #396 + #397 execution session (wave 1 live)
+Usage OK (session 0% post-reset, week 12%, fable 10%). Rulings in
+CHOICE-LOG "390/396/397 execution wave" block (PixelLab priority,
+lamb-pen seam split, riverfarm-last for #397, merge order 390→396→397).
+PixelLab balance $0.83, 0 sub gens.
+
+State at CAUTION park #2 (session 76%, reset ~150m from 18:45):
+- **#390 PR #399 OPEN** (head 4e6bb632 [ci-full], checks running).
+  All review findings fixed. NEXT: checks-table-as-own-step → merge
+  FIRST (train order) → file the carried-rows follow-up issue (floor
+  material pass / night mood knob / face-to-face separation).
+  PixelLab $0.46 left; rate ~$0.012/gen (ruling 8).
+- **#396 branch @ 07ca6bb8** (/tmp/wi-396, tree clean): Tasks 1-6 all
+  DONE + adversarially reviewed + fix waves landed; lane-b merged
+  (76fdb8b2). KNOWN REDS by design: test_content/test_reachability
+  (heard_thicket_keeps retired — Lane D builds RETIRED_ACCOMPLISHMENTS
+  validator concept, ruling 9), test_sim_core (lead pins, Lane D), six
+  riverfarm canonicals (STRUCTURAL index desyncs not payload pins —
+  ruling 11: Lane D recounts indices, asserts destinations, legacy
+  fixture, seed re-derive, fixture build move per ruling 5).
+  NEXT: dispatch Lane C (Tasks 9-10; pot uses variants idiom ruling 10;
+  tend-lamb cell [17,11] is BLOCKED, pick another; witch_hollow single
+  writer) + Lane D (Tasks 7-8 + rulings 5/9/11 scope) in parallel
+  (disjoint files) → reviews → Tasks 11-12 close. Task 11 must also
+  reconcile gnaw_pile art vs "prints" observe copy.
+  Census note: branch sits at 14.997% of the 15.0% DATA ceiling —
+  Lanes C/D briefs must carry lean _comments (trim-as-you-add).
+- **#397**: foundation COMPLETE + reviewed + fixed @ a416535a
+  (/tmp/wi-397): extractor (2,292 strings), bible RULED (all 13
+  adjudications in docs/prose-naturalization/bible-adjudication.md),
+  blind sets + 229-id holdout + 12 keeps + landmark registry +
+  verify-untouched tripwire. Phase 2/3 fan-out PARKED for post-reset:
+  design committed on the branch at
+  docs/prose-naturalization/phase2-orchestration.md — 6 map-rewrite
+  lanes (pallass,
+  invrisil, liscor, inn, floodplains+garden, dungeon+sewers+ruin;
+  riverfarm LAST post-396) + dialogue-graph lane, all lanes own map/
+  dialogue files ONLY, pin-deltas go to ONE integrator, baselines regen
+  composed-tree only. Then Phase 4 metrics + Phase 5 blind read (≤40%).
+Execute to completion, NOT to release (user directive).
 
 ## QUEUE (updated 2026-08-05, post-merge)
 - PR #395 MERGED (squash, e3835598); #388 closed. PR #393 closed for now
