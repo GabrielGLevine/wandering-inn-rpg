@@ -1,0 +1,173 @@
+{
+ "_issue": "GH#397 Phase 3 (residual dialogue) — 397/dialogue lane",
+ "_contract": "Prose payload only. Structure frozen: no node/option add-delete-reorder, no gating/effects/goto change, no text_banks key change. dialogue_voice_gate skeleton is byte-stable (hard=0 warn=0 on all 7 files); extract_prose.py verify-untouched exits 0 (241 untouchable strings byte-identical).",
+ "_pin_owner": "Wave B pin-sync integrator owns qa/scripts/*. This lane edited ZERO QA scripts. The `qa_pins` field lists the exact prose-pin sites the rewrite invalidates.",
+ "_counts": {
+  "graphs_judged": 11,
+  "graphs_rewritten": 7,
+  "graphs_skipped": 4,
+  "strings_rewritten": 16,
+  "qa_script_pin_sites": 5,
+  "closer_score_sum_on_rewritten": "29 -> 17",
+  "flagged_ge2_on_rewritten": "13 -> 6",
+  "neg_correction_on_rewritten": "2 -> 0",
+  "dialogue_corpus_flagged_narrator_npc": "31/577 -> 24/577",
+  "dialogue_corpus_neg_correction": "10 -> 8"
+ },
+ "deltas": [
+  {
+   "file": "wandering_inn_game/data/dialogue/krshia_crate.json",
+   "field_path": "$.nodes.hub.text_variants[0].text",
+   "id": "node 'hub' text_variants[0]",
+   "old": "Stall closes with the light. Come back at a decent hour, or knock loud enough I know it is not the wind.",
+   "new": "Stall closes with the light. Come back at a decent hour. If it will not keep, knock hard and keep knocking — the shutters muffle everything.",
+   "verdict": "hub variant landed a negation-correction closer ('it is not the wind'); replaced with plain closing-hours instruction ending on a stall object",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/krshia_crate.json",
+   "field_path": "$.nodes.goblin_run.text",
+   "id": "node 'goblin_run' text",
+   "old": "Hrr. South. Grain, salt, hide-thread, and a cart that does not stop where anyone is counting. You will not say whose hands take it, and I will not ask, yes? I will price it as wool.",
+   "new": "Hrr. South. Grain, salt, hide-thread, and a cart that does not stop where anyone is counting. Do not tell me whose hands take it off the cart. I will price it as wool.",
+   "verdict": "mirrored refusal pair ('You will not X, and I will not Y') is cross-speaker geometry; recast as one plain instruction, wool-pricing landing kept",
+   "qa_pins": [
+    "wandering_inn_game/qa/scripts/floodplains_price_talk.json:132"
+   ]
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/krshia_crate.json",
+   "field_path": "$.nodes.krshia_tribe.text",
+   "id": "node 'krshia_tribe' text",
+   "old": "My tribe, yes. Plains east and south of here — many hearths, one name. I am a Gnoll with a stall in Liscor, and the tribe is still mine. The necklace is a promise I carry.",
+   "new": "My tribe, yes. Plains east and south of here — many hearths, one name. I am a Gnoll with a stall in Liscor, and the tribe is still mine. The necklace is a promise. I do not take it off.",
+   "verdict": "abstract-noun closer after the card-pinned antithesis; 'promise' fact kept, ending moved to a plain physical habit (pinned 'many hearths, one name.' byte-untouched)",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/krshia_crate.json",
+   "field_path": "$.nodes.wrong_order_recap.text",
+   "id": "node 'wrong_order_recap' text",
+   "old": "The inn's shortfall, yes. Smooth it here at my stall, or settle it your own way. Either gets Lyonette her full order.",
+   "new": "The inn's shortfall, yes. Smooth it here at my stall, or settle it your own way. Lyonette gets her full order once it is done.",
+   "verdict": "quest-recap menu totalizer ('Either gets X'); both routes stay findable as plain instruction",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/pisces_seal.json",
+   "field_path": "$.nodes.at_the_door.text",
+   "id": "node 'at_the_door' text",
+   "old": "Do not touch it yet. I have waited a month to stand in front of this. Grant me the courtesy of a first impression.",
+   "new": "Do not touch it yet. I have waited a month to stand in front of this. Stand there. Look at it with me for a moment.",
+   "verdict": "quotable button on the graph's entry node ('the courtesy of a first impression'); replaced with plain instruction",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/pisces_seal.json",
+   "field_path": "$.nodes.fork_reward_done.text",
+   "id": "node 'fork_reward_done' text",
+   "old": "There. The pour runs the way it always did, and the work it runs through now is yours, which will outlast the city and annoy me for the rest of my life. Whatever is back there gets to keep sleeping. I have decided that is the outcome I wanted, and I will be saying so as though I said it first.",
+   "new": "There. The pour runs again, and it runs through your work now. Your cut will outlast the city. Whatever is back there goes on sleeping. I have decided that is the outcome I wanted, and I will be saying so as though I said it first.",
+   "verdict": "three landed moves stacked before the G4-pinned said-it-first closer ('the way it always did' / 'annoy me for the rest of my life' / 'gets to keep sleeping'); stack flattened, pinned final sentence byte-identical",
+   "qa_pins": [
+    "wandering_inn_game/qa/scripts/seal_reward.json:512"
+   ]
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/pisces_seal.json",
+   "field_path": "$.nodes.fork_reward_done.text_variants[0].text",
+   "id": "node 'fork_reward_done' text_variants[0]",
+   "old": "There. It runs again, and the work it runs through this time is yours, which will outlast the city and annoy me for the rest of my life. It is a repair, and the door behind it stays open; I would call it a rescue if the facts allowed. They do not. I have decided that is the outcome I wanted, and I will be saying so as though I said it first.",
+   "new": "There. It runs again, and the work it runs through this time is yours. It will outlast the city. It is a repair. The door behind it stays open, and I am not going to call that a rescue. I have decided that is the outcome I wanted, and I will be saying so as though I said it first.",
+   "verdict": "same stack plus a rescue/repair negation-correction staged in two beats and a semicolon; flattened, pinned final sentence byte-identical",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/ceria_dig_camp.json",
+   "field_path": "$.nodes.camp_fourth.text",
+   "id": "node 'camp_fourth' text",
+   "old": "Pisces. He's ours. He bills the team by invoice, and the roster carries four names with the hours split four ways. He takes his in the city with a treatise open, which is exactly where I want him until there's something down here worth reading. Three of us hold the shovels. That was the trade, and he argued it well.",
+   "new": "Pisces. He's ours. He bills the team by invoice, and the roster carries four names with the hours split four ways. He takes his in the city, with a treatise open. Three of us hold the shovels down here. That was the trade, and he argued it well.",
+   "verdict": "arranged wry clause ('exactly where I want him until there's something worth reading') crowded the G4-upheld card peak; clause dropped so the peak lands with air. Every roster fact kept",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/pisces_magic.json",
+   "field_path": "$.nodes.horns_bridge.text",
+   "id": "node 'horns_bridge' text",
+   "old": "Horns of Hammerad. Yes. There is a name on their roster and a share of their debts attached to it. That is membership. I am not in the hole with them because the interesting half of the work is here — things that are written do not read themselves, and nobody else in this city can. Ceria calls that being hired. Ceria also calls my handwriting adequate, so her judgement is not beyond dispute.",
+   "new": "Horns of Hammerad. Yes. There is a name on their roster and a share of their debts attached to it. That is membership. I am not in the hole with them because the reading is here, and nobody else in this city can do it. Ceria calls that being hired. She is welcome to.",
+   "verdict": "aphorism ('things that are written do not read themselves') plus a two-beat anaphoric undercut closer ('Ceria calls X. Ceria also calls Y'); both replaced with plain speech",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/pisces_magic.json",
+   "field_path": "$.nodes.descent_expect.text",
+   "id": "node 'descent_expect' text",
+   "old": "Something that was fed on purpose, by people who expected to be dead long before it stopped needing feeding. Past that I have guesses, and I do not perform guesses in public. The honest answer is thinner than I would like.",
+   "new": "Something that was fed on purpose, by people who expected to be dead long before it stopped needing feeding. Past that I have guesses and I am keeping them. Ask me again when I have stood in front of it.",
+   "verdict": "abstract verdict closer re-describing the prior sentence, plus a refuse-to-speculate-in-public frame that duplicates Hedault's G4-immune line; ends on deferral instead",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/pisces_magic.json",
+   "field_path": "$.nodes.greet.text_variants[5].text",
+   "id": "node 'greet' text_variants[5]",
+   "old": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's, and she fed hers too. Fed. That word keeps recurring.",
+   "new": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's, and she fed hers too. I have three entries on feeding now and nothing to file them under.",
+   "verdict": "greet variant staged a one-word repeat and then named the theme ('Fed. That word keeps recurring.'); the fact stays, the theme-naming goes, ending is an unfilled ledger",
+   "qa_pins": [
+    "wandering_inn_game/qa/scripts/spine_reach.json:552"
+   ]
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/krshia_inn.json",
+   "field_path": "$.nodes.greet.text",
+   "id": "node 'greet' text",
+   "old": "A Human inn, and the food does not insult me. I walked up from the stall, and there is nobody haggling in my ear, yes?",
+   "new": "A Human inn, and the food is better than the market's. I walked up from the stall, and there is nobody haggling in my ear, yes?",
+   "verdict": "greet node opened on praise-by-negation ('the food does not insult me'), one of seven negations this speaker carries; replaced with a plain comparison to her own market",
+   "qa_pins": [
+    "wandering_inn_game/qa/scripts/inn_guests_loop.json:235"
+   ]
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/hedault_enchanting.json",
+   "field_path": "$.nodes.heirloom_truth.text",
+   "id": "node 'heirloom_truth' text",
+   "old": "Good. Then it goes on the order in those words and the price changes, downward, because glass takes less holding than a stone does. A mount for glass is not a lesser commission. It is a different one, and I would rather be told than discover it at the bench.",
+   "new": "Good. Then it goes on the order in those words and the price changes, downward, because glass takes less holding than a stone does. Different work, correctly priced. I would rather be told than discover it at the bench.",
+   "verdict": "THE ISSUE-NAMED NEG (#397 problem 1, hedault_enchanting.json:258): 'A mount for glass is not a lesser commission. It is a different one'. Negation-correction pair removed; the price fact, the different-work fact and the tell-me-first principle all stay. Hedault's antithesis grant is now HELD, not spent (bible 5d permits either)",
+   "qa_pins": [
+    "wandering_inn_game/qa/scripts/invrisil_setting_talk.json:358"
+   ]
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/olesm_intro.json",
+   "field_path": "$.nodes.hub.text_variants[2].text",
+   "id": "node 'hub' text_variants[2]",
+   "old": "Still up here? The gallery won't map itself, and I'd rather you were down there with a plan than up here with second thoughts. You have the map. Go.",
+   "new": "Still up here? The gallery won't map itself. You have the map, and the grate is still open. Go.",
+   "verdict": "balanced 'rather X than Y' mirror on a hub variant (a second antithesis for a speaker whose grant is pinned at olesm_ambition_two); replaced with plain dispatch ending on a concrete object",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/olesm_intro.json",
+   "field_path": "$.nodes.hub.text_variants[4].text",
+   "id": "node 'hub' text_variants[4]",
+   "old": "The gallery's sealed and the report is filed, which means my column finally has its number. I would still rather have no construct under my streets at all, but 'under control' is a phrase I can file. My thanks, again.",
+   "new": "The gallery's sealed and the report is filed, which means my column finally has its number. I would still rather there were nothing under my streets at all. The file says 'under control'. I will take it. My thanks, again.",
+   "verdict": "motif-wit button on a hub variant (''under control' is a phrase I can file'); recast as plain sequence, thanks lands unadorned",
+   "qa_pins": []
+  },
+  {
+   "file": "wandering_inn_game/data/dialogue/olesm_intro.json",
+   "field_path": "$.nodes.chess.text",
+   "id": "node 'chess' text",
+   "old": "Both sides, yes. It's the only honest way to learn how the enemy thinks. You have to want to win as them. A human beat me across this very board once, so thoroughly I nearly thanked her. I did thank her. Best thing to happen to my game in years.",
+   "new": "Both sides, yes. You cannot learn how the enemy thinks from one side of the board. You have to want to win as them. A human beat me across this very board once, so thoroughly I nearly thanked her. I did thank her.",
+   "verdict": "verdict summary ('Best thing to happen to my game in years.') re-described the landed self-correction and pre-empted chess_two; removed so the emotional beat lands without a clever summary. Opening aphorism de-generalized",
+   "qa_pins": []
+  }
+ ]
+}
