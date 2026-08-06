@@ -280,3 +280,11 @@ M3 second wolf taken_toast phrase collision with first-met sibling;
 LOW-1 corusdeer-recovery double-beat restored by naming the deer.
 Garden exemplar fix judged BEST of the 35 ("nothing in either hand").
 Six self-synced pins verified byte-exact, all four scripts green.
+
+## Empty-regions fix wave LANDED (8a5ea92a) — lane merge-ready
+All fixes + petitions in keeps-petitions/empty-regions.json (6 entries,
+field-path-bound). Pin deltas 72 rows / 49 pin sites / same 17 files;
+sync-then-revert proved ALL GREEN when synced. Integrator residual
+added: mercantile_alleys alley_footpad_snag_b still carries "feels like
+a very bad idea" (out-of-ownership; unify at integration or leave —
+integrator's call with the L3 both-go precedent).
