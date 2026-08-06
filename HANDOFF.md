@@ -38,11 +38,12 @@ lamb-pen seam split, riverfarm-last for #397, merge order 390→396→397).
 PixelLab balance $0.83, 0 sub gens.
 
 State at CAUTION park #2 (session 76%, reset ~150m from 18:45):
-- **#390 PR #399 OPEN** (head 4e6bb632 [ci-full], checks running).
-  All review findings fixed. NEXT: checks-table-as-own-step → merge
-  FIRST (train order) → file the carried-rows follow-up issue (floor
-  material pass / night mood knob / face-to-face separation).
-  PixelLab $0.46 left; rate ~$0.012/gen (ruling 8).
+- **#390 MERGED + CLOSED** (PR #399, squash 16b21ee1, 7/7 checks read
+  then merged; carried-rows follow-up FILED as #400; worktree+branch
+  cleaned, cherry-checked). PixelLab $0.46 left (rate ruling 8).
+- **396 branch carries main** (merge cd1b8a97: lamb sprites now
+  available for Lane C's pen wiring; census trimmed to 15.0% a THIRD
+  time -- C/D briefs must stay comment-lean).
 - **#396 branch @ 07ca6bb8** (/tmp/wi-396, tree clean): Tasks 1-6 all
   DONE + adversarially reviewed + fix waves landed; lane-b merged
   (76fdb8b2). KNOWN REDS by design: test_content/test_reachability
