@@ -1693,7 +1693,7 @@
      "corusdeer_healed": 1
     }
    },
-   "observe": "A body-shaped hollow pressed into the grass, still flat in the middle. At the edges the blades are standing up again.",
+   "observe": "A body-shaped hollow pressed into the grass, still flat in the middle. The corusdeer lay here a long time, and at the edges the blades are already standing up again.",
    "on_interact_accomplishment": "found_the_shed_antler",
    "toast": "In the flattened grass, shed clean at the base: one antler, oaken-brown fading to a red glow at the tip. It is warm to hold, and stays warm.",
    "item": "shed_antler",
@@ -1822,7 +1822,7 @@
    "companion_source": {
     "companion_id": "wolf_companion",
     "kind": "tamed",
-    "taken_toast": "It leans in with its whole small weight, the same as the first one did."
+    "taken_toast": "It gets up on the second try, takes three steps, and sits down hard where it can still see you."
    }
   },
   {

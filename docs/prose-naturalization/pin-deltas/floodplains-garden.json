@@ -53,7 +53,7 @@
   "field_path": "$.entities[22].observe",
   "entity_id": "worn_grass_patch",
   "old": "A body-shaped hollow pressed into the grass, going green again at the edges. Something lay here a long time, and then stopped needing to.",
-  "new": "A body-shaped hollow pressed into the grass, still flat in the middle. At the edges the blades are standing up again."
+  "new": "A body-shaped hollow pressed into the grass, still flat in the middle. The corusdeer lay here a long time, and at the edges the blades are already standing up again."
  },
  {
   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
@@ -95,7 +95,7 @@
   "field_path": "$.entities[27].companion_source.taken_toast",
   "entity_id": "wolf_den_late_litter",
   "old": "It leans, the way the first one leaned. You are not being given a replacement. You are being given another one.",
-  "new": "It leans in with its whole small weight, the same as the first one did."
+  "new": "It gets up on the second try, takes three steps, and sits down hard where it can still see you."
  },
  {
   "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
@@ -193,7 +193,7 @@
   "field_path": "$.entities[6].visual_states[0].observe",
   "entity_id": "memorial_plot_reserved",
   "old": "A goblin carved in stone, unarmed, hands open at its sides. Not every ending here was a fight. This one is remembered for not being one.",
-  "new": "A goblin carved in stone, unarmed, hands open at its sides — the only figure in the row holding nothing."
+  "new": "A goblin carved in stone, unarmed, hands open at its sides. Each finger was cut clear of the next, and the light comes through between them."
  },
  {
   "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
@@ -207,7 +207,7 @@
   "field_path": "$.entities[1].toast",
   "entity_id": "camp_fire_pit",
   "old": "The wood is sorted by burn time in three piles. Somebody in this camp thinks two nights ahead.",
-  "new": "The wood is sorted by burn time in three piles. The smallest pile is going down as you watch."
+  "new": "The wood is sorted by burn time in three piles, and the fast-burning one is a third the height of the others."
  },
  {
   "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
@@ -221,7 +221,7 @@
   "field_path": "$.entities[2].toast",
   "entity_id": "camp_hide_racks",
   "old": "Every hide is stretched to the same tension. Whoever runs this rack does not let anyone else near it.",
-  "new": "Every hide is stretched to the same tension. The whole lattice shifts as one when the wind comes through the hollow."
+  "new": "Every hide is stretched to the same tension. The last row of pegs is driven and has no hide on it yet."
  },
  {
   "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
@@ -242,6 +242,6 @@
   "field_path": "$.entities[7].toast",
   "entity_id": "camp_meat_rack_hung",
   "old": "Nobody moves the rack aside when you pass it now.",
-  "new": "The strips nearest the fire are curling as they dry."
+  "new": "A goblin works a strip loose from the near end, bites off half, and gives you the rest."
  }
 ]
