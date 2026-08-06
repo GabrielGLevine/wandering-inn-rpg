@@ -247,3 +247,10 @@ ADOPTED REFRAMING: Phase 4 anon metric splits NARRATOR vs SPOKEN
   strings; narrator-only is the §6.4 target basis (inn = 7.9%, under
   target — record so later passes don't churn the inn chasing patrons'
   speech).
+
+## Pallass fix wave LANDED (7f3da96c) — lane merge-ready
+All H3/M1/M3/M5/monoculture/L6 fixes verified; petitions in
+keeps-petitions/pallass.json; pin-deltas regenerated (42 rows, BASE
+olds, _qa_pins_broken stays 8); ordinance-44 landmark question deferred
+to controller at close (string byte-as-is). Voice-gate maps mode
+deliberately not run (H2 integrator item).
