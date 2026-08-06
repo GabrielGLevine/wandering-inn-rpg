@@ -1379,7 +1379,7 @@
     "accomplishment": "witch_craft_used",
     "item": "remedy_draught",
     "remove_item": "dried_yarrow_bundle",
-    "toast": "[Hedge Remedy] — The inn's kettle does in a pinch, just like she said. The yarrow goes in and the steam comes off smelling of it."
+    "toast": "[Hedge Remedy] — The inn's kettle does in a pinch, just like she said. The yarrow goes under the lid and the steam thickens over the pot."
    },
    "_comment": "GH#131: on (6,2), a blocked kitchen-counter cell (#116 pattern); approach (6,3) facing up, asserted open by test_sim_core. NOT (2,2) -- test_sim_core walks it. GH#378 arm 2: kettle-on-a-crane, the row's only vertical silhouette; tint retired.",
    "cookware": true

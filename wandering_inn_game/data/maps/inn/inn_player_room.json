@@ -201,7 +201,7 @@
     3,
     2
    ],
-   "observe": "The hall on the other side. A bolt on this side, and it throws easily."
+   "observe": "The hall on the other side. Throw the bolt if you want the room to yourself."
   },
   {
    "_comment": "Second sleep site. `your_bed` upstairs is NOT moved or gated: a player who never leases keeps the free bed. Ladder rungs ascend, highest satisfied wins.",
@@ -223,7 +223,7 @@
      "when": {
       "room_tier_1": 1
      },
-     "text": "Your own room, and bedding aired this morning."
+     "text": "Your own room. The noise from downstairs stops at the door."
     },
     {
      "when": {
@@ -243,7 +243,7 @@
    ],
    "display_name": "Your Footlocker",
    "sprite": "chest",
-   "locked_toast": "Your own footlocker, hasp swinging free. There is no lock on it to turn.",
+   "locked_toast": "Your own footlocker. No lock on the hasp, so just lift the lid.",
    "observe": "A plain footlocker at the head of the bed, hasp and no lock. Everything you own would rattle around in it."
   },
   {
