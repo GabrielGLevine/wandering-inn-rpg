@@ -141,15 +141,29 @@ USAGE
     python3 qa/scripts/extract_prose.py classify-probe  [--seed N] [--n 20]
     python3 qa/scripts/extract_prose.py verify-untouched --dir DIR
     python3 qa/scripts/extract_prose.py keeps           --dir DIR
+    python3 qa/scripts/extract_prose.py landmarks       --dir DIR
+    python3 qa/scripts/extract_prose.py report          [--outdir DIR] [--docdir DIR]
     python3 qa/scripts/extract_prose.py all             --outdir DIR
 
     `keeps` rewrites protected-keeps.json ALONE, from the live tree plus
     protected-keeps-extra.json. It exists because `all` would also rebuild
     inventory.jsonl -- verify-untouched's frozen baseline, which must never be
     regenerated mid-pass -- so folding a granted petition into the keeps had no
-    safe path before it.
+    safe path before it. `landmarks` is the same idea for landmark-registry.json
+    (the file that carries the §5 reserve arithmetic and every controller grant).
+
+PHASE 4 (`report`) -- ADVISORY, NOT A GATE, NOT IN ci_sweep
+    Writes phase4-report.md + phase4-report.json on demand: the issue's seven
+    tell families per region and per corpus, every count split
+    touchable/protected/holdout so a later pass reads honest denominators, and
+    the granted-exception register printed inline so a counter that fires on a
+    ruled keep is pre-explained rather than mistaken for work. The issue forbids
+    new hard synonym quotas; the controller additionally ruled sentence-length
+    stdev report-only with no published target. It reads the live tree plus the
+    FROZEN protected-keeps.json / holdout.json, and rebuilds neither
+    inventory.jsonl nor the blind sets.
 """
-import argparse, collections, importlib.util, json, random, re, sys
+import argparse, collections, importlib.util, json, random, re, sys, tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
@@ -394,8 +408,33 @@ def walk_dialogue_prose(data):
 # perceptual; these exist to RANK work, not to grade prose. The bible says it
 # in one line: the regexes are smoke detectors, the cold read is the gate.
 RE_SENT = re.compile(r"[^.!?]+[.!?]*")
-RE_ANON = re.compile(r"\b(someone|somebody|whoever|whatever|something|nobody|anyone)\b", re.I)
-RE_WHICH_FROM = re.compile(r"\bwhich\s+(?:from|for|in)\s+\w+\s+(?:is|was|counts|passes)\b", re.I)
+# ANON SPLIT (RULED 2026-08-05, empty-regions item 5 — "the four-word figure
+# becomes the §6.4 metric; report both"). The bible's §6 is titled with FOUR
+# words -- someone / somebody / whoever / whatever -- because those are the ones
+# that invent an ABSENT AGENT. The other three are present-tense indefinites
+# ("something moved", "nobody came back", "anyone can see") and inventing nothing
+# is exactly what they do. RE_ANON stays the seven-word union so `tells` and the
+# frozen inventory keep their meaning; Phase 4 reports the split.
+ANON_MOTIVE_WORDS = ("someone", "somebody", "whoever", "whatever")
+ANON_INDEF_WORDS = ("something", "nobody", "anyone")
+RE_ANON_MOTIVE = re.compile(r"\b(%s)\b" % "|".join(ANON_MOTIVE_WORDS), re.I)
+RE_ANON_INDEF = re.compile(r"\b(%s)\b" % "|".join(ANON_INDEF_WORDS), re.I)
+RE_ANON = re.compile(r"\b(%s)\b" % "|".join(ANON_MOTIVE_WORDS + ANON_INDEF_WORDS), re.I)
+# WORD-GAP FIX (#397 Phase 4, found by the floodplains/garden lane): the original
+# pattern allowed exactly ONE word between the preposition and the copula, so
+# "which from him is applause" was caught and "which from a razorbeak is an
+# invitation" -- determiner plus noun -- walked straight through. A short noun
+# phrase (1-3 words, non-greedy) now counts. It stops at 3 deliberately: at 5 the
+# pattern starts collecting ordinary relative clauses, so longer-NP and
+# alternate-copula instances are REPORTED as near-misses (phase4-report §5)
+# rather than silently folded into the counted metric.
+RE_WHICH_FROM = re.compile(
+    r"\bwhich\s+(?:from|for|in)\s+(?:\w+\s+){1,3}?(?:is|was|counts|passes)\b", re.I)
+RE_WHICH_LONG_NP = re.compile(
+    r"\bwhich\s+(?:from|for|in)\s+(?:\w+\s+){4,6}?(?:is|was|counts|passes)\b", re.I)
+RE_WHICH_ALT_VERB = re.compile(
+    r"\bwhich\s+(?:from|for|in)\s+(?:\w+\s+){1,6}?"
+    r"(?:means|reads|amounts|makes|becomes|signifies)\b", re.I)
 RE_THE_WAY_X = re.compile(r"\bthe way (?:a|an|the|you|one|\w+)\s+\w+\s+(?:does|do|is|are|was)\b", re.I)
 RE_NOUN_REPEAT = re.compile(r"\bthe (\w{3,}) is (?:only |just |still )?the \1\b", re.I)
 RE_NEG_CORRECTION = [
@@ -417,6 +456,20 @@ RE_LETTERING_CTX = re.compile(
     r"painted|paint|lettered|letters|lettering|carved|chalk\w*|inked|"
     r"stamped|heading|label|labels|banner|plaque|writing|written|"
     r"scrawl\w*|inscri\w*|engraved)\b", re.I)
+# "IN A ... HAND" (RULED 2026-08-05, pallass petition item 4 — "metrics lane adds
+# hand/chalked/stamped context to the lettering classifier"). The §8 proxy's
+# blind spot: lettering is often attributed by the HANDWRITING that made it
+# ("lettered COYLE AND SONS in a hand that cost more than the paint", "in a
+# clerk's hand") rather than by naming the surface. `chalked`, `stamped` and
+# `stencilled` were already covered by RE_LETTERING_CTX (`chalk\w*`, `stamped`,
+# `stencil\w*`); the hand form was not.
+# The phrase is only ever consulted for a string that ALREADY carries CAPS, so
+# the physical-hand reading ("a knife in a steady hand") cannot produce a
+# lettering verdict on its own -- and the report prints the CUE THAT FIRED for
+# every CAPS string, so a wrong cue is visible instead of buried in a count.
+RE_LETTERING_HAND = re.compile(
+    r"\bin\s+(?:a|an|the|his|her|its|their|one'?s?|smaller|larger|another|"
+    r"the\s+same)\s+(?:[\w'’-]+\s+){0,3}?hand(?:writing|s)?\b", re.I)
 # `copy` is a readable in-world DOCUMENT: its capitals are the document's own
 # heading by definition. The controller's §8 ruling names it explicitly.
 LETTERING_FIELDS = {"copy"}
@@ -461,6 +514,22 @@ def closer_score(text):
     return min(score, 5)
 
 
+def lettering_cue(text, field=None):
+    """Which §8 cue makes a CAPS string diegetic LETTERING, or "" for BARE.
+    Returned verbatim so the report can print the cue beside every CAPS string:
+    a proxy that shows its working can be overruled by judgement, which is what
+    the §8 ruling requires of it."""
+    if field in LETTERING_FIELDS:
+        return f"field:{field}"
+    m = RE_LETTERING_CTX.search(text)
+    if m:
+        return m.group(0).lower()
+    m = RE_LETTERING_HAND.search(text)
+    if m:
+        return " ".join(m.group(0).lower().split())
+    return ""
+
+
 def tells(text, field=None):
     """Per-string advisory tell flags, by the issue's six families, plus the
     three shapes dialogue hard-bans and map prose does not (CAPS / ellipsis /
@@ -469,21 +538,213 @@ def tells(text, field=None):
     ss = sentences(text)
     fs = ss[-1] if ss else ""
     caps = [c for c in GATE.RE_CAPS.findall(text) if c not in GATE.CAPS_WHITELIST]
+    cue = lettering_cue(text, field) if caps else ""
     return {
         "neg_correction": sum(len(p.findall(text)) for p in RE_NEG_CORRECTION),
         "anon_agent": len(RE_ANON.findall(text)),
+        "anon_motive": len(RE_ANON_MOTIVE.findall(text)),
+        "anon_indef": len(RE_ANON_INDEF.findall(text)),
         "which_from": len(RE_WHICH_FROM.findall(text)),
         "the_way_x": len(RE_THE_WAY_X.findall(text)),
         "noun_repeat_wit": len(RE_NOUN_REPEAT.findall(text)),
         "caps": caps,
-        "caps_lettering_ctx": bool(caps) and (field in LETTERING_FIELDS
-                                             or bool(RE_LETTERING_CTX.search(text))),
+        "caps_lettering_ctx": bool(cue),
+        "caps_cue": cue,
         "ellipsis": len(GATE.RE_ELLIPSIS.findall(text)),
         "whole_of": len(GATE.RE_WHOLE.findall(text)),
         "closer_score": closer_score(text),
         "sentences": len(ss),
         "final_sentence_words": wc(fs),
     }
+
+
+# ---- Phase 4: whose voice is this string in? ---------------------------------
+# EVERY Phase 4 count that mentions the narrator is split on this function, so
+# it is derived from the RENDERER, not from a field-name guess, and every arm
+# cites the code that renders it. The rule in one line: a string is SPOKEN when
+# the words are a character's own; NARRATOR otherwise. Transport is irrelevant --
+# `friendly_line` reaches the player as a toast and is still the NPC talking.
+#
+#   dialogue `text`       SPOKEN   node line, attributed to nodes.*.speaker;
+#                                  `options[].text` is the PLAYER's line, which
+#                                  is still a character's voice (the one the
+#                                  player is wearing). Reported separately.
+#   dialogue `text_bank`  SPOKEN   resolved at LOAD into a node `text`,
+#                                  `text_variants` entry or `options[].text`
+#                                  (dialogue_banks.gd:26-43) -- there is no
+#                                  narrator slot a bank can land in. The gate's
+#                                  speaker_for() returns its file-level
+#                                  "narrator" fallback for bank paths because a
+#                                  bank hangs off no node; that fallback is a
+#                                  PATH artefact, not a voice, and is why this
+#                                  arm exists rather than trusting `speaker`.
+#   dialogue `toast`      NARRATOR option-effect resolution emitted as
+#                                  WIEvents.TOAST (wi_game.gd:1408-1412). No
+#                                  speaker, ever.
+#   map `.dialogue[].text` SPOKEN  static entity ambient line, routed through
+#                                  WIAddress.resolve_payload as a dialogue
+#                                  payload (address.gd:36-40).
+#   map `friendly_line`   SPOKEN   the entity's own words; [Charm] emits them
+#                                  verbatim as the toast (field_skills.gd:162-167).
+#   map everything else   NARRATOR observe / *_toast / interior_flavor /
+#                                  arrival_toasts[].text / copy.
+#
+# `copy` is the one honest wobble and is counted NARRATOR-side: a board notice is
+# nobody's speech (it is written matter), and it reaches the player inside a
+# code-built graph whose speaker is the PROP's display_name (wi_game.gd:1539-1563).
+# It is reported as its own sub-bucket everywhere so a reader can subtract it.
+def voice_of(row):
+    """-> ("narrator"|"spoken", one-word why). See the table above."""
+    corpus, field, path = row["corpus"], row["field"], row["field_path"]
+    if corpus == "dialogue":
+        if field == "toast":
+            return "narrator", "effect-toast"
+        if field == "text_bank":
+            return "spoken", "bank-line"
+        return "spoken", "player-option" if row.get("is_player_option") else "node-line"
+    if field == "friendly_line":
+        return "spoken", "npc-friendly-line"
+    if field == "text" and ".dialogue[" in path:
+        return "spoken", "ambient-speech"
+    if field in LETTERING_FIELDS:
+        return "narrator", "diegetic-document"
+    return "narrator", "narration"
+
+
+# ---- Phase 4: ending shapes (bible §9) ---------------------------------------
+# The issue names six shapes and §9 rule 1 says score EVERY string. This is a
+# PROXY, in the same class as every other regex here: it is consistent, which is
+# what a concentration measure needs, and it is not a judgement. Its known
+# divergence from the bible's own hand labels is recorded in the report and in
+# self-test: `Nobody came back to make the ninety-third.` is labelled **fact** by
+# §9's table and **absence** by this proxy, because `nobody` is an absence token.
+# `fact` is the DEFAULT arm and therefore a catch-all -- a big `fact` share means
+# "declarative, not one of the other five", never "well varied".
+ENDING_SHAPES = ("fact", "motion", "interruption", "unresolved", "instruction",
+                 "absence")
+RE_END_INTERRUPT = re.compile(r"(?:—|–|\.\.\.|…|!)\s*[\"'’”\)]?\s*$")
+RE_END_QUESTION = re.compile(r"\?\s*[\"'’”\)]?\s*$")
+RE_YOU_GO = re.compile(r"^\s*(?:down|up|in|out|back|over|on|off)\s+you\s+"
+                       r"(?:go|come)\b", re.I)
+MOTION_VERBS = set("""go goes going went come comes coming came walk walks walking
+walked step steps stepping stepped rise rises rising rose fall falls falling fell
+turn turns turning turned move moves moving moved drift drifts drifting drifted
+climb climbs climbing climbed descend descends descending run runs running ran
+slip slips slipping slipped shift shifts shifted lift lifts lifting lifted drop
+drops dropping dropped pull pulls pulling pulled push pushes pushing pushed carry
+carries carrying carried lead leads leading led follow follows following followed
+swing swings swinging swung settle settles settling settled opens opening closes
+closing pour pours pouring poured spill spills spilling spilled flow flows flowing
+sink sinks sinking scatter scatters scattering scattered cross crosses crossing
+crossed pass passes passing passed head heads heading headed swallow swallows
+swallowed roll rolls rolled slide slides slid arrive arrives arrived leave leaves
+leaving left""".split())
+# Bare `open`/`closed`/`gone` are deliberately absent: they are adjectives at
+# least as often as verbs ("The clerk's window is open."), and a copula guard
+# alone does not catch every such use.
+COPULA_BEFORE = {"is", "are", "was", "were", "be", "been", "looks", "look",
+                 "seems", "seem", "stays", "stay", "sits", "sit", "sat", "lies",
+                 "lie", "stands", "stand", "stood", "feels", "feel"}
+ABSENCE_WORDS = set("""nobody nothing none never empty gone missing silence silent
+unanswered without not no""".split())
+
+
+def _words(s):
+    return [w.strip(".,;:!?\"'’”“()[]—–").lower() for w in s.split()]
+
+
+def ending_shape(text):
+    """One of ENDING_SHAPES for a string's LAST sentence. Ordered rules; the
+    order is the definition and is asserted in self-test."""
+    ss = sentences(text)
+    if not ss:
+        return "fact"
+    fs = ss[-1]
+    if RE_END_INTERRUPT.search(fs):
+        return "interruption"
+    if RE_END_QUESTION.search(fs):
+        return "unresolved"
+    ws = [w for w in _words(fs) if w]
+    if not ws:
+        return "fact"
+    if ws[0] in IMPERATIVE_STARTS or RE_YOU_GO.search(fs):
+        return "instruction"
+    if set(ws) & ABSENCE_WORDS:
+        return "absence"
+    for i, w in enumerate(ws):
+        if w in MOTION_VERBS and not (i and ws[i - 1] in COPULA_BEFORE):
+            return "motion"
+    return "fact"
+
+
+def sentence_lengths(texts):
+    """Every sentence's word count across a group of strings, in order."""
+    return [wc(s) for t in texts for s in sentences(t)]
+
+
+def pstdev(xs):
+    """Population stdev, or 0.0 for fewer than two values. REPORT-ONLY: the
+    controller ruled sentence-length stdev carries NO published target."""
+    if len(xs) < 2:
+        return 0.0
+    mean = sum(xs) / len(xs)
+    return (sum((x - mean) ** 2 for x in xs) / len(xs)) ** 0.5
+
+
+# ---- Phase 4: per-speaker motif concentration (issue problem 4) --------------
+# The wordlists ARE the issue's own problem-4 anchors, expanded to inflections
+# only -- nothing invented, so a high share cannot be an artefact of a list
+# somebody tuned. "Pallass generally" is a GRAPH-scoped anchor (every speaker in
+# a `pallass*` graph), because the issue states it about the city and not about a
+# person. Player-option rows are excluded from every per-speaker figure: the
+# label on an option row is the NPC whose node offers it, so counting them would
+# attribute the player's lines to whoever they are talking to.
+MOTIF_ANCHORS = {
+    "Olesm": {"chess", "board", "boards", "count", "counts", "counted",
+              "counting", "position", "positions", "ledger", "ledgers"},
+    "Pisces": {"scholarship", "scholar", "scholars", "scholarly", "adequate",
+               "adequacy", "inadequate", "precise", "precisely", "precision",
+               "public", "publicly", "speculate", "speculation", "speculating"},
+    "Hedault": {"correct", "correctly", "correctness", "incorrect", "appraise",
+                "appraised", "appraisal", "weight", "weights", "weighed",
+                "price", "prices", "priced"},
+    "Master Coyle": {"inventory", "inventories", "purchase", "purchases",
+                     "purchased", "market", "markets", "value", "valued",
+                     "values"},
+    "Wilovan": {"hat", "hats", "manner", "manners", "door", "doors", "account",
+                "accounts", "accounting"},
+    "Zevara": {"file", "files", "filed", "filing", "shift", "shifts", "staff",
+               "staffed", "staffing", "report", "reports", "reported"},
+}
+MOTIF_GRAPH_ANCHORS = {
+    "pallass": {"standard", "standards", "form", "forms", "measure", "measured",
+                "measurement", "measurements", "queue", "queues", "queued"},
+}
+# Ordinary English, so "the" cannot be anybody's motif. Deliberately short: a
+# long stoplist starts encoding taste about which content words matter.
+STOPWORDS = set("""a an the and or but so if then than that this these those there here
+is are was were be been being am do does did doing done have has had having
+i you he she it we they me him her us them my your his its our their mine yours
+not no nor of in on at to from by for with without into onto over under up down
+out off about again once very too also just only even still yet as like
+what which who whom whose when where why how all any both each few more most
+other some such own same both either neither one two three
+can could will would shall should may might must
+say says said saying tell tells told get gets got make makes made go goes going
+went come comes came know knows knew think thinks thought want wants wanted
+look looks looked see sees saw take takes took put puts give gives gave
+your'e i'm it's don't doesn't didn't isn't aren't wasn't weren't can't won't
+i'll you'll we'll they'll i've you've we've they've that's there's what's
+now well right okay yes yeah ok oh hm hmm ah eh mm
+back thing things bit lot much many little long good bad new old first last
+because before after while until since though although unless whether
+you're he's she's let lets us'
+""".split())
+
+
+def content_words(text):
+    return [w for w in _words(text)
+            if w and w.isalpha() and len(w) > 2 and w not in STOPWORDS]
 
 
 # ---- inventory ---------------------------------------------------------------
@@ -662,6 +923,41 @@ def demotion_triggers(t):
 
 def is_demotion_candidate(register, t):
     return register in ("functional", "scenic") and bool(demotion_triggers(t))
+
+
+def classified_records(rows, keeps, hold_set, named_work, overrides):
+    """The map-prose classification records `all` writes per region -- factored
+    out so `landmarks` and `report` build the SAME records instead of a second,
+    drifting copy. `keeps`/`hold_set` are id containers; for the on-demand
+    subcommands they are the COMMITTED artifacts (protected-keeps.json /
+    holdout.json), which is what verify-untouched enforces."""
+    out = []
+    for r in rows:
+        if r["corpus"] != "maps":
+            continue
+        reg, tag = classify_row(r, overrides)
+        t = r["tells"]
+        untouchable = r["id"] in keeps or r["id"] in hold_set
+        trig = demotion_triggers(t)
+        demote = is_demotion_candidate(reg, t) and not untouchable
+        out.append({
+            "id": r["id"], "region": r["region"], "file": r["file"],
+            "field_path": r["field_path"], "field": r["field"],
+            "register": reg, "tag": tag,
+            "entity_id": (r["entity"] or {}).get("entity_id"),
+            "display_name": (r["entity"] or {}).get("display_name"),
+            "word_count": r["word_count"],
+            "closer_score": t["closer_score"],
+            "anon_agent": t["anon_agent"],
+            "neg_correction": t["neg_correction"],
+            "demotion_candidate": demote,
+            "demotion_triggers": trig if demote else [],
+            "issue_named_work": named_work.get(r["id"]),
+            "holdout": r["id"] in hold_set,
+            "protected": r["id"] in keeps,
+            "text": r["text"],
+        })
+    return out
 
 
 # ---- blind sets --------------------------------------------------------------
@@ -1034,6 +1330,123 @@ LANDMARK_DISPOSITIONS = {
                "an absence: 'a table with nobody left standing beside it.'",
     },
 }
+
+# ---- landmark reserve (bible §5) ---------------------------------------------
+# §5 RULED the corpus ceiling at 12 beats: 8 spent by the nine strings above
+# (mercantile_alleys carries two DISTINCT beats; ruin_surface's two renderings of
+# the plinth are ONE beat), 4 held in reserve by the controller and allocated
+# only on petition. A GRANT is a controller allocation out of that reserve for a
+# string the register HEURISTIC does not classify as landmark -- so it can never
+# be self-granted by a lane, and it never silently rewrites the classifier.
+LANDMARK_CEILING_BEATS = 12
+LANDMARK_BEATS_SPENT_BASE = 8
+
+LANDMARK_GRANTS = {
+    "map:pallass/pallass_market.json:$.entities[22].variants[0].toast": {
+        "disposition": "KEEP-AS-IS",
+        "beat": "Ordinance 44 / the stamped tier pass (pallass civic chain)",
+        "granted": "controller grant 2026-08-06 from the 4-beat reserve "
+                   "(elevator_pass_stamped-gated, chain-earned)",
+        "why": "RULED at #397 integration: GRANT from the reserve, reserve 4->3. "
+               "The variant fires only under `when {elevator_pass_stamped: 1}`, "
+               "so the reversal is earned by a gate the player already passed; "
+               "the civic text is quoted rather than paraphrased; and the second "
+               "sentence turns the ordinance onto the object in the player's own "
+               "pocket. Petitioned by the pallass lane, DEFERRED to close in "
+               "keeps-petitions/pallass.json, granted here. The string ships "
+               "BYTE-AS-IS -- KEEP-AS-IS is the whole disposition, and the grant "
+               "changes the registry and the reserve arithmetic, nothing else. "
+               "Its heuristic register stays `scenic`: classify_row never saw a "
+               "landmark here, and papering over that with an override would "
+               "hide the fact that this beat exists by allocation rather than by "
+               "rule.",
+    },
+}
+# Beats spent = the nine ruled strings' 8 beats + one beat per grant.
+LANDMARK_BEATS_SPENT = LANDMARK_BEATS_SPENT_BASE + len(LANDMARK_GRANTS)
+LANDMARK_RESERVE_LEFT = LANDMARK_CEILING_BEATS - LANDMARK_BEATS_SPENT
+
+LANDMARK_NOTE = (
+    "Every landmark string in the corpus, with one ruled disposition each. "
+    "LANES GET ZERO DISCRETION BEYOND THE DISPOSITION: a landmark string is not "
+    "an invitation to rewrite, and 'UNRULED' can never appear -- self-test fails "
+    "if a landmark row has no disposition or a disposition has no landmark row. "
+    "Rows carry `source`: `heuristic-landmark` rows are strings classify_row "
+    "reads as landmark; `controller-grant` rows are beats the controller "
+    "allocated out of the §5 reserve on petition, and their heuristic register "
+    "is left as-is on purpose so the allocation stays visible.")
+
+
+def landmark_reserve_header():
+    """The §5 arithmetic, restated in the artifact so no reader has to rederive
+    it. `remaining` is the number a future petition is spending against."""
+    return {
+        "ceiling_beats": LANDMARK_CEILING_BEATS,
+        "spent_beats": LANDMARK_BEATS_SPENT,
+        "remaining_beats": LANDMARK_RESERVE_LEFT,
+        "grants": len(LANDMARK_GRANTS),
+        "note": (f"bible §5 RULED the ceiling at {LANDMARK_CEILING_BEATS} beats "
+                 f"({LANDMARK_BEATS_SPENT_BASE} spent by the ruled landmark "
+                 f"strings, 4 in reserve). {len(LANDMARK_GRANTS)} grant(s) have "
+                 f"since been allocated out of that reserve, so "
+                 f"**{LANDMARK_RESERVE_LEFT} remain**. Reserve is allocated by "
+                 "the controller on petition only (§5 counting rule 3); a lane "
+                 "never self-grants."),
+    }
+
+
+def landmark_registry_rows(classified):
+    """Registry rows: every heuristic-landmark string plus every controller
+    grant, one disposition each, sorted by id. A grant is looked up in
+    `classified` like any other map string -- it IS in there, under its
+    heuristic register (`scenic`, for the one grant today), which is exactly
+    the fact its row records."""
+    by_id = {c["id"]: c for c in classified}
+    out = []
+    for c in sorted(classified, key=lambda x: x["id"]):
+        if c["register"] != "landmark":
+            continue
+        d = LANDMARK_DISPOSITIONS.get(c["id"], {})
+        out.append({
+            "id": c["id"], "file": c["file"], "field_path": c["field_path"],
+            "display_name": c["display_name"], "field": c["field"],
+            "source": "heuristic-landmark",
+            "disposition": d.get("disposition", "UNRULED"),
+            "beat": d.get("beat"), "why": d.get("why"),
+            "protected": c["protected"], "holdout": c["holdout"],
+            "text": c["text"],
+        })
+    for gid in sorted(LANDMARK_GRANTS):
+        g = LANDMARK_GRANTS[gid]
+        c = by_id.get(gid, {})
+        out.append({
+            "id": gid, "file": c.get("file"), "field_path": c.get("field_path"),
+            "display_name": c.get("display_name"), "field": c.get("field"),
+            "source": "controller-grant",
+            "granted": g["granted"],
+            "heuristic_register": c.get("register"),
+            "disposition": g["disposition"],
+            "beat": g["beat"], "why": g["why"],
+            "protected": c.get("protected"), "holdout": c.get("holdout"),
+            "text": c.get("text"),
+        })
+    return sorted(out, key=lambda x: (x["id"], x["source"]))
+
+
+def write_landmark_registry(classified, outdir):
+    reg_rows = landmark_registry_rows(classified)
+    wjson(Path(outdir) / "landmark-registry.json", {
+        "_python": PY, "_count": len(reg_rows),
+        "_dispositions": {
+            "KEEP-AS-IS": "Ships as written. Do not touch.",
+            "RESTAGE": "Keep the beat AND keep the correction. Lose the CAPS "
+                       "and the staging ONLY. Nothing else about the string "
+                       "changes.",
+        },
+        "_reserve": landmark_reserve_header(),
+        "_note": LANDMARK_NOTE,
+        "strings": reg_rows})
+    return reg_rows
 
 
 # ---- subcommands -------------------------------------------------------------
@@ -1672,6 +2085,918 @@ def cmd_keeps(docdir):
     return 1 if unresolved else 0
 
 
+# ---- landmark registry regeneration (#397 Phase 4) ---------------------------
+def committed_pins(docdir):
+    """The FROZEN untouchability artifacts, read and never recomputed. An
+    on-demand subcommand must answer to protected-keeps.json + holdout.json --
+    what verify-untouched actually enforces -- and not to a fresh make_holdout()
+    over a post-pass tree, which would draw a different tenth of a corpus whose
+    word counts have moved."""
+    docdir = Path(docdir)
+    keeps = rjson(docdir / "protected-keeps.json")["keeps"]
+    hold = set(rjson(docdir / "holdout.json")["ids"])
+    return keeps, hold
+
+
+def cmd_landmarks(docdir):
+    """Rewrite landmark-registry.json ALONE from the live tree. Same reason
+    `keeps` exists: `all` would also rebuild inventory.jsonl, which is
+    verify-untouched's frozen baseline and must never be regenerated mid-pass."""
+    docdir = Path(docdir)
+    rows = build_inventory()
+    keeps, hold = committed_pins(docdir)
+    named_work, _ = resolve_named_work(rows)
+    classified = classified_records(rows, keeps, hold, named_work,
+                                    load_overrides(docdir))
+    reg_rows = write_landmark_registry(classified, docdir)
+    res = landmark_reserve_header()
+    print(f"landmarks: {len(reg_rows)} rows -> {docdir/'landmark-registry.json'}  "
+          + " ".join(f"{k}={v}" for k, v in sorted(collections.Counter(
+              x["disposition"] for x in reg_rows).items()))
+          + f"  | beats {res['spent_beats']}/{res['ceiling_beats']} spent, "
+          f"{res['remaining_beats']} in reserve ({res['grants']} grant(s))")
+    missing = [r["id"] for r in reg_rows if r["disposition"] == "UNRULED"
+               or not r.get("text")]
+    if missing:
+        print("  FAIL rows without a ruling or without live text: "
+              + ", ".join(missing))
+    return 1 if missing else 0
+
+
+# ---- Phase 4 advisory metrics report -----------------------------------------
+# ADVISORY. NOT WIRED INTO ci_sweep, ON PURPOSE (issue Phase 4: "report-only
+# metrics before considering any new hard gate" + "avoid turning advisory counts
+# into a synonym-replacement game"). Nothing here can fail a build; the exit
+# code is 0 unless the report could not be WRITTEN.
+STATUSES = ("touchable", "protected", "holdout")
+# §9.2 exceptions live in the ruling log rather than in a repo artifact, so they
+# are restated here with their citation -- otherwise a file that legitimately
+# exceeds the advisory cap reads as an unexplained violation.
+RULED_ENDING_EXCEPTIONS = [
+    ("wandering_inn_game/data/maps/sewers/sewers.json", "46%",
+     "empty-regions lane invoked §9.2's loosen-to-50; ACCEPTED — the file was "
+     "at or above this share before the pass"),
+    ("wandering_inn_game/data/maps/sewers/deep_tunnels.json", "47%",
+     "empty-regions lane, same ruling"),
+    ("wandering_inn_game/data/maps/dungeon/seal_vault.json", "50%",
+     "empty-regions lane, same ruling"),
+    ("wandering_inn_game/data/maps/inn/inn_upstairs.json", "55.6%",
+     "inn lane §9.2 exception (baseline 66.7%); ACCEPTED as an improvement on a "
+     "9-string file"),
+]
+RULED_EXC_SOURCE = ("docs/superpowers/2026-08-05-wave2-rulings-and-fix-specs.md "
+                    "— '## Empty-regions lane' item 4 and '## Inn lane'")
+# A region whose Phase 2 pass has not landed is not evidence about the pass. Say
+# so where the numbers are read, or the baseline is read as a result.
+PASS_PENDING_REGIONS = {
+    "riverfarm": "Phase 2 pass NOT LANDED (queued behind the 396 merge). Its "
+                 "numbers are the PRE-pass baseline, which is why it is the "
+                 "outlier in nearly every table — read it as the control, not "
+                 "as a result.",
+}
+
+
+def _grp(items, key):
+    out = collections.defaultdict(list)
+    for it in items:
+        out[key(it)].append(it)
+    return out
+
+
+def _n(pool, pred):
+    return sum(1 for r in pool if pred(r))
+
+
+def family_counts(pool):
+    """The seven tell families for one bucket of rows. Counts are STRINGS unless
+    the name says instances."""
+    t = lambda r: r["tells"]
+    return {
+        "strings": len(pool),
+        "words": sum(r["word_count"] for r in pool),
+        "neg_strings": _n(pool, lambda r: t(r)["neg_correction"] > 0),
+        "neg_instances": sum(t(r)["neg_correction"] for r in pool),
+        "neg_stacked": _n(pool, lambda r: t(r)["neg_correction"] >= 2),
+        "closer_ge2": _n(pool, lambda r: t(r)["closer_score"] >= 2),
+        "closer_ge3": _n(pool, lambda r: t(r)["closer_score"] >= 3),
+        "anon7_strings": _n(pool, lambda r: t(r)["anon_agent"] > 0),
+        "anon7_instances": sum(t(r)["anon_agent"] for r in pool),
+        "anon4_strings": _n(pool, lambda r: t(r)["anon_motive"] > 0),
+        "anon4_instances": sum(t(r)["anon_motive"] for r in pool),
+        "anon3_strings": _n(pool, lambda r: t(r)["anon_indef"] > 0),
+        "which_from": sum(t(r)["which_from"] for r in pool),
+        "the_way_x": sum(t(r)["the_way_x"] for r in pool),
+        "noun_repeat": sum(t(r)["noun_repeat_wit"] for r in pool),
+        "caps_lettering": _n(pool, lambda r: t(r)["caps"] and t(r)["caps_lettering_ctx"]),
+        "caps_bare": _n(pool, lambda r: t(r)["caps"] and not t(r)["caps_lettering_ctx"]),
+        "sentences": sum(t(r)["sentences"] for r in pool),
+        "stdev_sentence_words": round(pstdev(sentence_lengths(
+            [r["text"] for r in pool])), 2),
+    }
+
+
+RE_ENTITY_IDX = re.compile(r"^\$\.entities\[(\d+)\]")
+
+
+def map_document_order():
+    """{file: [id, ...]} in ENTITY-LIST / document order. The inventory is sorted
+    by id, and "$.entities[10]" sorts before "$.entities[2]", so §9 rule 4's
+    adjacency (RULED: entity-list order) has to come from the walker, not from
+    the sorted inventory."""
+    out = {}
+    for f in sorted(MAPS.glob("**/*.json")):
+        rel = f.relative_to(MAPS).as_posix()
+        data = rjson(f)
+        out[f"wandering_inn_game/data/maps/{rel}"] = [
+            f"map:{rel}:{p}" for p, _, _, _ in walk_map_prose(data)]
+    return out
+
+
+def report_data(docdir):
+    """Everything the report says, computed once. The .md is rendered from this
+    dict, so the two artifacts cannot disagree."""
+    docdir = Path(docdir)
+    rows = build_inventory()
+    keeps, hold = committed_pins(docdir)
+    overrides = load_overrides(docdir)
+    named_work, _ = resolve_named_work(rows)
+    by_id = {r["id"]: r for r in rows}
+    reg_by_id = {c["id"]: c["register"] for c in
+                 classified_records(rows, keeps, hold, named_work, overrides)}
+    for r in rows:
+        r["voice"], r["voice_why"] = voice_of(r)
+        r["status"] = ("protected" if r["id"] in keeps
+                       else "holdout" if r["id"] in hold else "touchable")
+        r["shape"] = ending_shape(r["text"])
+        r["register"] = reg_by_id.get(r["id"])
+
+    D = {"_python": PY, "_seed": SEED,
+         "_advisory": "ADVISORY. No metric here is a gate; nothing here is "
+                      "wired into ci_sweep. The issue forbids new hard synonym "
+                      "quotas and the controller ruled sentence-length stdev "
+                      "REPORT-ONLY with no published target.",
+         "_pins": {"protected_keeps": len(keeps), "holdout": len(hold),
+                   "source": "docs/prose-naturalization/protected-keeps.json + "
+                             "holdout.json (frozen; read, never recomputed)"}}
+
+    # ---- voice classification, with its live counts as evidence
+    vw = collections.Counter((r["corpus"], r["voice"], r["voice_why"]) for r in rows)
+    D["voice_split"] = {
+        "rule": "SPOKEN = the words are a character's own (node line, player "
+                "option, option-bank line, map ambient `dialogue[].text`, "
+                "`friendly_line`). NARRATOR = everything else, including "
+                "option-effect toasts and `copy` documents. Transport is "
+                "irrelevant: `friendly_line` ships as a toast and is still the "
+                "NPC talking.",
+        "counts": [{"corpus": c, "voice": v, "why": w, "strings": n}
+                   for (c, v, w), n in sorted(vw.items())],
+    }
+
+    # ---- per region x voice x status, every family
+    regions = sorted({r["region"] for r in rows})
+    D["by_region"] = {}
+    for reg in regions:
+        pool = [r for r in rows if r["region"] == reg]
+        cell = {"all": family_counts(pool)}
+        for v in ("narrator", "spoken"):
+            vp = [r for r in pool if r["voice"] == v]
+            cell[v] = {"all": family_counts(vp)}
+            for s in STATUSES:
+                cell[v][s] = family_counts([r for r in vp if r["status"] == s])
+        D["by_region"][reg] = cell
+    for name, pool in (("maps", [r for r in rows if r["corpus"] == "maps"]),
+                       ("dialogue", [r for r in rows if r["corpus"] == "dialogue"]),
+                       ("corpus", rows)):
+        cell = {"all": family_counts(pool)}
+        for v in ("narrator", "spoken"):
+            vp = [r for r in pool if r["voice"] == v]
+            cell[v] = {"all": family_counts(vp)}
+            for s in STATUSES:
+                cell[v][s] = family_counts([r for r in vp if r["status"] == s])
+        D["by_region"]["_" + name] = cell
+
+    # ---- the four-way anon read (RULED: narrator-only is the §6.4 basis)
+    D["anon_four_ways"] = {
+        "definition": {
+            "motive_4": list(ANON_MOTIVE_WORDS),
+            "indefinite_3": list(ANON_INDEF_WORDS),
+            "seven_word": list(ANON_MOTIVE_WORDS + ANON_INDEF_WORDS),
+            "ruling": "empty-regions item 5, ADOPTED: the four-word figure is "
+                      "the §6.4 metric; report both. The narrator/spoken split "
+                      "is the inn lane's adopted reframing: narrator-only is "
+                      "the target basis, so a region is never churned chasing "
+                      "its patrons' speech.",
+            "targets": "bible §6 rule 4, ADVISORY: corpus ≤12%, unpeopled "
+                       "regions (garden/dungeon/ruin/sewers) ≤15%, populated "
+                       "≤10%. Measured on TOUCHABLE NARRATOR strings.",
+        },
+        "rows": [],
+    }
+    for reg in regions + ["_maps", "_dialogue", "_corpus"]:
+        c = D["by_region"][reg]
+        row = {"region": reg}
+        for v in ("narrator", "spoken"):
+            for s in ("touchable", "protected", "holdout", "all"):
+                f = c[v][s]
+                row[f"{v}_{s}_n"] = f["strings"]
+                row[f"{v}_{s}_anon4"] = f["anon4_strings"]
+                row[f"{v}_{s}_anon7"] = f["anon7_strings"]
+        D["anon_four_ways"]["rows"].append(row)
+
+    # ---- shared geometry: which-from / the-way-X / the-X-is-the-X + near misses
+    geo_hits, near = [], []
+    for r in sorted(rows, key=lambda r: r["id"]):
+        t = r["tells"]
+        if t["which_from"] or t["the_way_x"] or t["noun_repeat_wit"]:
+            geo_hits.append({
+                "id": r["id"], "region": r["region"], "voice": r["voice"],
+                "status": r["status"],
+                "which_from": t["which_from"], "the_way_x": t["the_way_x"],
+                "noun_repeat": t["noun_repeat_wit"],
+                "text": " ".join(r["text"].split())})
+        m = RE_WHICH_LONG_NP.search(r["text"]) or RE_WHICH_ALT_VERB.search(r["text"])
+        if m and not t["which_from"]:
+            near.append({"id": r["id"], "region": r["region"],
+                         "voice": r["voice"], "status": r["status"],
+                         "match": " ".join(m.group(0).split()),
+                         "text": " ".join(r["text"].split())})
+    D["shared_geometry"] = {
+        "target": "bible §7 'other shared shapes': target ZERO (12 instances in "
+                  "map prose pre-pass, 1 in dialogue).",
+        "gap_fix": "RE_WHICH_FROM now allows a 1-3 word noun phrase between the "
+                   "preposition and the copula. 'which from a razorbeak is an "
+                   "invitation' was invisible to the one-word pattern.",
+        "counted": geo_hits,
+        "near_misses": near,
+        "near_miss_note": "NOT counted in the metric: a longer noun phrase "
+                          "(4-6 words) or a non-copular verb (means / reads / "
+                          "amounts / makes / becomes / signifies). Listed so a "
+                          "widened regex is a controller decision rather than a "
+                          "silent one.",
+    }
+
+    # ---- per-speaker motif concentration (dialogue)
+    spk = _grp([r for r in rows if r["corpus"] == "dialogue"
+                and not r["is_player_option"] and r["speaker"] != "narrator"],
+               lambda r: r["speaker"])
+    smrows = []
+    for name in sorted(spk):
+        pool = spk[name]
+        words = [w for r in pool for w in content_words(r["text"])]
+        cnt = collections.Counter(words)
+        top = sorted(cnt.items(), key=lambda kv: (-kv[1], kv[0]))[:3]
+        anchor = MOTIF_ANCHORS.get(name, set())
+        gset = set()
+        for pre, ws in sorted(MOTIF_GRAPH_ANCHORS.items()):
+            if any(r["graph"].startswith(pre) for r in pool):
+                gset |= ws
+        hits = _n(pool, lambda r: bool(set(content_words(r["text"])) & anchor)) \
+            if anchor else 0
+        ghits = _n(pool, lambda r: bool(set(content_words(r["text"])) & gset)) \
+            if gset else 0
+        smrows.append({
+            "speaker": name, "strings": len(pool),
+            "touchable": _n(pool, lambda r: r["status"] == "touchable"),
+            "content_words": len(words),
+            "top": [{"word": w, "n": k,
+                     "share_pct": round(100.0 * k / len(words), 1) if words else 0.0}
+                    for w, k in top],
+            "issue_anchor": sorted(anchor) or None,
+            "anchor_strings": hits,
+            "anchor_share_pct": round(100.0 * hits / len(pool), 1) if anchor else None,
+            "graph_anchor_strings": ghits if gset else None,
+            "graph_anchor_share_pct": (round(100.0 * ghits / len(pool), 1)
+                                       if gset else None),
+        })
+    D["speaker_motif"] = {
+        "method": "Per speaker, over that speaker's NODE lines only. Player "
+                  "option rows are excluded (an option row's `speaker` is the "
+                  "NPC whose node offers it, so counting them would file the "
+                  "player's lines under whoever they are talking to), and the "
+                  "22 `text_bank` rows are excluded with them (the gate's "
+                  "speaker_for() returns its file-level 'narrator' fallback for "
+                  "a bank path). `top` is the single most frequent CONTENT word "
+                  "and its share of the speaker's content words. `issue_anchor` "
+                  "is that speaker's problem-4 anchor list from the issue, "
+                  "expanded to inflections only.",
+        "graph_anchor": {k: sorted(v) for k, v in MOTIF_GRAPH_ANCHORS.items()},
+        "graph_anchor_note": "The issue states the Pallass anchor about the CITY "
+                             "('Pallass generally: standards, forms, "
+                             "measurements, queues'), so it is scoped to "
+                             "speakers appearing in a `pallass*` graph rather "
+                             "than to a person.",
+        "rows": smrows,
+    }
+
+    # ---- fraction of map OBJECTS carrying inferred history / interpretation
+    obj = collections.defaultdict(list)
+    mapless = []
+    for r in rows:
+        if r["corpus"] != "maps" or r["voice"] != "narrator":
+            continue
+        m = RE_ENTITY_IDX.match(r["field_path"])
+        if not m:
+            mapless.append(r)
+            continue
+        obj[(r["region"], r["file"], int(m.group(1)))].append(r)
+    infer = lambda r: r["tells"]["anon_motive"] > 0 or r["tells"]["closer_score"] >= 2
+    orows = []
+    for reg in regions:
+        keys = sorted(k for k in obj if k[0] == reg)
+        if not keys:
+            continue
+        n_inf = sum(1 for k in keys if any(infer(r) for r in obj[k]))
+        n_inf_t = sum(1 for k in keys
+                      if any(infer(r) and r["status"] == "touchable" for r in obj[k]))
+        n_anon = sum(1 for k in keys
+                     if any(r["tells"]["anon_motive"] > 0 for r in obj[k]))
+        n_clos = sum(1 for k in keys
+                     if any(r["tells"]["closer_score"] >= 2 for r in obj[k]))
+        orows.append({"region": reg, "objects": len(keys),
+                      "inferred": n_inf,
+                      "inferred_pct": round(100.0 * n_inf / len(keys), 1),
+                      "inferred_touchable_trigger": n_inf_t,
+                      "inferred_touchable_pct": round(100.0 * n_inf_t / len(keys), 1),
+                      "by_anon_motive": n_anon, "by_closer_ge2": n_clos})
+    tot_keys = sorted(obj)
+    orows.append({
+        "region": "_maps", "objects": len(tot_keys),
+        "inferred": sum(1 for k in tot_keys if any(infer(r) for r in obj[k])),
+        "inferred_pct": round(100.0 * sum(1 for k in tot_keys
+                                          if any(infer(r) for r in obj[k]))
+                              / len(tot_keys), 1),
+        "inferred_touchable_trigger": sum(
+            1 for k in tot_keys
+            if any(infer(r) and r["status"] == "touchable" for r in obj[k])),
+        "inferred_touchable_pct": round(100.0 * sum(
+            1 for k in tot_keys
+            if any(infer(r) and r["status"] == "touchable" for r in obj[k]))
+            / len(tot_keys), 1),
+        "by_anon_motive": sum(1 for k in tot_keys
+                              if any(r["tells"]["anon_motive"] > 0 for r in obj[k])),
+        "by_closer_ge2": sum(1 for k in tot_keys
+                             if any(r["tells"]["closer_score"] >= 2 for r in obj[k])),
+    })
+    D["object_inference"] = {
+        "method": "An OBJECT is one `$.entities[i]` in one map file, counted "
+                  "when it carries at least one narrator prose string. It "
+                  "'carries inference' when any of its narrator strings has a "
+                  "four-word anonymous agent (inferred history) or a button "
+                  "smoke score >=2 (thematic interpretation). "
+                  f"{len(mapless)} narrator strings hang off the MAP rather "
+                  "than an entity (`interior_flavor`, `arrival_toasts[].text`) "
+                  "and are excluded from the denominator.",
+        "map_level_strings_excluded": len(mapless),
+        "rows": orows,
+    }
+
+    # ---- ending shapes: per-file distribution, adjacency, stdev
+    docorder = map_document_order()
+    per_file = []
+    for f in sorted({r["file"] for r in rows if r["corpus"] == "maps"}):
+        fr = [r for r in rows if r["file"] == f]
+        scope = [r for r in fr if r["voice"] == "narrator"
+                 and r["register"] in ("scenic", "functional")]
+        touch = [r for r in scope if r["status"] == "touchable"]
+        def dist(pool):
+            c = collections.Counter(r["shape"] for r in pool)
+            n = sum(c.values())
+            topk = sorted(c.items(), key=lambda kv: (-kv[1], kv[0]))[:1]
+            return {"n": n, "dist": {k: c[k] for k in ENDING_SHAPES if c[k]},
+                    "top_shape": topk[0][0] if topk else None,
+                    "top_pct": round(100.0 * topk[0][1] / n, 1) if n else 0.0}
+
+        per_file.append({
+            "file": f, "region": fr[0]["region"],
+            "touchable": dist(touch), "all_scoped": dist(scope),
+            "stdev_sentence_words_touchable": round(pstdev(sentence_lengths(
+                [r["text"] for r in touch])), 2),
+            "stdev_sentence_words_narrator": round(pstdev(sentence_lengths(
+                [r["text"] for r in fr if r["voice"] == "narrator"])), 2),
+            "sentences_touchable": sum(r["tells"]["sentences"] for r in touch),
+        })
+    # entity-level adjacency (§9 rule 4, RULED = entity-list order)
+    adj = []
+    for f in sorted(docorder):
+        seq, seen = [], {}
+        for rid in docorder[f]:
+            r = by_id.get(rid)
+            if r is None or r["voice"] != "narrator":
+                continue
+            m = RE_ENTITY_IDX.match(r["field_path"])
+            if not m:
+                continue
+            idx = int(m.group(1))
+            if idx not in seen:
+                seen[idx] = r
+                seq.append(idx)
+            elif r["field"] == "observe" and seen[idx]["field"] != "observe":
+                seen[idx] = r          # `observe` is the prop's description
+        shapes = [(i, seen[i]["shape"], seen[i]["status"], seen[i]["id"]) for i in seq]
+        coll = [{"file": f, "entity_a": a[0], "entity_b": b[0], "shape": a[1],
+                 "status_a": a[2], "status_b": b[2], "id_a": a[3], "id_b": b[3]}
+                for a, b in zip(shapes, shapes[1:]) if a[1] == b[1]]
+        # string-level, same document order, as the secondary number
+        sseq = [by_id[i] for i in docorder[f]
+                if i in by_id and by_id[i]["voice"] == "narrator"]
+        srun = sum(1 for a, b in zip(sseq, sseq[1:]) if a["shape"] == b["shape"])
+        if shapes:
+            adj.append({"file": f, "entities_scored": len(shapes),
+                        "entity_collisions": len(coll),
+                        "entity_collision_pct": round(
+                            100.0 * len(coll) / max(1, len(shapes) - 1), 1),
+                        "string_pairs": max(0, len(sseq) - 1),
+                        "string_collisions": srun,
+                        "collisions": coll})
+    shape_presence = {}
+    for reg in regions:
+        pool = [r for r in rows if r["region"] == reg and r["voice"] == "narrator"]
+        present = sorted({r["shape"] for r in pool})
+        shape_presence[reg] = {"shapes_present": present, "count": len(present),
+                               "advisory_min": 4, "meets": len(present) >= 4}
+    D["ending_shapes"] = {
+        "taxonomy": list(ENDING_SHAPES),
+        "method": "Ordered proxy over the LAST sentence: interruption "
+                  "(terminal dash / ellipsis / '!') > unresolved (terminal '?') "
+                  "> instruction (imperative first word, or the 'down you go' "
+                  "idiom) > absence (an absence token: nobody/nothing/none/"
+                  "never/empty/gone/missing/silence/silent/unanswered/without/"
+                  "not/no) > motion (a motion verb not preceded by a copula) > "
+                  "fact (DEFAULT, therefore a catch-all).",
+        "known_divergence": "§9's own table labels 'Nobody came back to make "
+                            "the ninety-third.' a FACT ending; this proxy calls "
+                            "it ABSENCE because `nobody` is an absence token — "
+                            "and §5 itself describes mercantile_alleys' "
+                            "'nobody left standing beside it' as ending on an "
+                            "absence. The bible's labels are hand judgements; "
+                            "the proxy is consistent, which is what a "
+                            "concentration measure needs. It is a smoke "
+                            "detector, not a verdict.",
+        "scope": "§9.2 scopes the per-file cap to SCENIC + FUNCTIONAL strings, "
+                 "so that is the scope here; narrator only.",
+        "advisory_caps": {"ruled": "40% single-ending-shape cap per file, "
+                                   "advisory; loosen to 50% rather than force "
+                                   "churn (bible §9.2 / adjudication row 9.2)",
+                          "region_min_shapes": "at least 4 of 6 per region (§9.3)"},
+        "per_file": per_file,
+        "adjacency": adj,
+        "adjacency_rule": "§9 rule 4, RULED: 'adjacent' means ENTITY-LIST "
+                          "ORDER. One shape per entity: its `observe` if it has "
+                          "one, else its first narrator string in document "
+                          "order. Grid proximity stays a cold-read lens and is "
+                          "deliberately not computed.",
+        "region_shape_presence": shape_presence,
+    }
+
+    # ---- CAPS: lettering context vs bare, with the cue that fired
+    caps_rows = []
+    for r in sorted(rows, key=lambda r: r["id"]):
+        t = r["tells"]
+        if not t["caps"]:
+            continue
+        caps_rows.append({
+            "id": r["id"], "region": r["region"], "field": r["field"],
+            "status": r["status"], "voice": r["voice"],
+            "caps": t["caps"],
+            "class": "lettering" if t["caps_lettering_ctx"] else "BARE",
+            "cue": t["caps_cue"] or None,
+            "text": " ".join(r["text"].split())})
+    D["caps"] = {
+        "rule": "§8 RULED: diegetic lettering PERMITTED, CAPS-as-emphasis 0, "
+                "with a mechanical proxy and judgement as the arbiter. The bare "
+                "list is the work queue.",
+        "proxy_extension": "The 'in a … hand' form is new this phase (pallass "
+                           "petition item 4): lettering attributed by the "
+                           "handwriting that made it. `chalked`, `stamped` and "
+                           "`stencilled` were already covered. The cue that "
+                           "fired is printed for every row so a wrong cue is "
+                           "auditable.",
+        "lettering": sum(1 for c in caps_rows if c["class"] == "lettering"),
+        "bare": sum(1 for c in caps_rows if c["class"] == "BARE"),
+        "rows": caps_rows,
+    }
+
+    # ---- granted-exception register
+    exc = {"protected_keeps": [], "petitions": [], "ruled_ending_exceptions": [],
+           "holdout_by_region": {}}
+    for kid in sorted(keeps):
+        r = by_id.get(kid)
+        rec = keeps[kid]
+        fired = []
+        if r:
+            t = r["tells"]
+            if t["neg_correction"]:
+                fired.append(f"neg_correction {t['neg_correction']}")
+            if t["anon_motive"]:
+                fired.append(f"anon_motive {t['anon_motive']}")
+            if t["anon_indef"]:
+                fired.append(f"anon_indef {t['anon_indef']}")
+            if t["closer_score"] >= 2:
+                fired.append(f"closer {t['closer_score']}")
+            if t["which_from"] or t["the_way_x"] or t["noun_repeat_wit"]:
+                fired.append("shared-geometry")
+            if t["caps"] and not t["caps_lettering_ctx"]:
+                fired.append("CAPS bare")
+            # The sentence ceiling is a MAP-register rule (§1.4, ceiling 2); a
+            # dialogue node line has no such ceiling, so reporting one there
+            # would manufacture a counter nobody wrote.
+            if r["corpus"] == "maps" and t["sentences"] >= 3:
+                fired.append(f"{t['sentences']} sentences (§1.4 ceiling 2)")
+        exc["protected_keeps"].append({
+            "id": kid, "region": (r or {}).get("region"),
+            "pinned_to": rec.get("pinned_to", "baseline"),
+            "counters_fired": fired,
+            "reason_head": " ".join(str(rec.get("reason", "")).split())[:180],
+        })
+    pinned = {(v.get("file"), v.get("field_path")) for v in keeps.values()}
+    pdir = Path(docdir) / "keeps-petitions"
+    for pf in sorted(pdir.glob("*.json")) if pdir.exists() else []:
+        blob = rjson(pf)
+        for key, val in sorted(blob.items()):
+            if not isinstance(val, list):
+                continue
+            for e in val:
+                if not isinstance(e, dict) or not e.get("field_path"):
+                    continue
+                g = " ".join(str(e.get("ground") or e.get("detail") or "").split())
+                kind = str(e.get("kind") or e.get("disposition")
+                           or e.get("ruling") or key)
+                sect = sorted({s for s in ("§1.4", "§7.3", "§9.2", "§3.3", "§6",
+                                           "§7", "§8")
+                               if s in g or s.replace("§", "section ") in g})
+                exc["petitions"].append({
+                    "source": pf.name, "bucket": key, "kind": kind,
+                    "file": e.get("file"), "field_path": e.get("field_path"),
+                    "sections": sect,
+                    "in_protected_keeps": (e.get("file"),
+                                           e.get("field_path")) in pinned,
+                    "ground_head": g[:180]})
+    exc["landmark_grants"] = [
+        dict(g, id=gid, reserve=landmark_reserve_header())
+        for gid, g in sorted(LANDMARK_GRANTS.items())]
+    for f, share, why in RULED_ENDING_EXCEPTIONS:
+        pf = next((p for p in per_file if p["file"] == f), None)
+        exc["ruled_ending_exceptions"].append({
+            "file": f, "lane_recorded_share": share, "ruling": why,
+            "computed_top_shape": (pf or {}).get("touchable", {}).get("top_shape"),
+            "computed_top_pct": (pf or {}).get("touchable", {}).get("top_pct"),
+            "note": "the lane's share and this report's share are computed by "
+                    "different shape proxies and are not expected to agree; "
+                    "both are advisory"})
+    hb = collections.Counter(by_id[i]["region"] for i in hold if i in by_id)
+    exc["holdout_by_region"] = {k: hb[k] for k in sorted(hb)}
+    exc["_source_ruled_exceptions"] = RULED_EXC_SOURCE
+    exc["_note"] = ("Printed INLINE so a counter that fires on a granted keep is "
+                    "pre-explained: a keep OUTRANKS the rule it trips (bible "
+                    "guard §10.2) and CONSUMES the relevant budget. A count in "
+                    "this report is never an instruction to edit one of these.")
+    D["exceptions"] = exc
+
+    # ---- headline: the paper baseline Phase 5's blind read is compared against
+    D["headline"] = []
+    for reg in regions + ["_maps", "_dialogue", "_corpus"]:
+        c = D["by_region"][reg]["narrator"]["touchable"]
+        files = [p for p in per_file
+                 if (reg.startswith("_") or p["region"] == reg)
+                 and p["touchable"]["n"]]
+        if reg == "_dialogue":
+            files = []
+        worst = max(files, key=lambda p: (p["touchable"]["top_pct"], p["file"]),
+                    default=None)
+        D["headline"].append({
+            "region": reg,
+            "pass_pending": PASS_PENDING_REGIONS.get(reg),
+            "touchable_narrator_strings": c["strings"],
+            "anon4_strings": c["anon4_strings"],
+            "anon4_pct": round(100.0 * c["anon4_strings"] / c["strings"], 1)
+                         if c["strings"] else 0.0,
+            "anon7_pct": round(100.0 * c["anon7_strings"] / c["strings"], 1)
+                         if c["strings"] else 0.0,
+            "closer_ge2": c["closer_ge2"],
+            "neg_instances": c["neg_instances"],
+            "shape_max_file": (worst or {}).get("file"),
+            "shape_max_shape": ((worst or {}).get("touchable") or {}).get("top_shape"),
+            "shape_max_pct": ((worst or {}).get("touchable") or {}).get("top_pct"),
+            "stdev_sentence_words": c["stdev_sentence_words"],
+        })
+    return D
+
+
+def _short(region):
+    return region[1:] + " (all)" if region.startswith("_") else region
+
+
+def render_report(D):
+    L = ["# Phase 4 — advisory distribution metrics — GH#397\n",
+         gen_note("report --outdir docs/prose-naturalization") + "\n",
+         "> ## ADVISORY. NO METRIC HERE IS A GATE.\n>\n"
+         "> The issue's Phase 4 is *\"report-only metrics **before** "
+         "considering any new hard gate\"* and *\"avoid turning advisory counts "
+         "into a synonym-replacement game\"*. Nothing in this file is wired "
+         "into `ci_sweep.sh`, and the controller ruled sentence-length stdev "
+         "**report-only with no published target**. Every regex here is a smoke "
+         "detector; the cold read in Phase 5 is the gate.\n",
+         "**Honest denominators.** Every count below is split "
+         "`touchable / protected / holdout`. Protected keeps and holdout "
+         "strings CANNOT be edited (`verify-untouched` fails on a byte of "
+         "drift), so folding them into a corpus rate would quietly move a "
+         "target a later pass has no way to hit. "
+         f"Pins read from the frozen artifacts: **{D['_pins']['protected_keeps']} "
+         f"protected keeps, {D['_pins']['holdout']} holdout strings**.\n",
+         "---\n"]
+
+    # 1. headline
+    L += ["## 1. Headline — the paper baseline for Phase 5\n",
+          "Touchable **narrator** strings only, because narrator-only is the "
+          "ruled basis for the §6.4 anon target (inn lane's adopted "
+          "reframing). Spoken strings get their own read in §4 and §6.\n",
+          "| region | touchable narrator n | anon 4-word | closer ≥2 | negation instances | worst file ending-shape | sentence-length stdev |",
+          "|---|--:|--:|--:|--:|---|--:|"]
+    for h in D["headline"]:
+        f = h["shape_max_file"]
+        shape = (f"{h['shape_max_shape']} {h['shape_max_pct']:.0f}% "
+                 f"(`{f.rsplit('/', 1)[-1]}`)" if f else "—")
+        bold = "**" if h["region"].startswith("_") else ""
+        mark = " ‡" if h["pass_pending"] else ""
+        L.append(f"| {bold}{_short(h['region'])}{mark}{bold} | {h['touchable_narrator_strings']} | "
+                 f"{h['anon4_strings']} ({h['anon4_pct']:.1f}%) | {h['closer_ge2']} | "
+                 f"{h['neg_instances']} | {shape} | {h['stdev_sentence_words']:.2f} |")
+    L.append("")
+    for h in D["headline"]:
+        if h["pass_pending"]:
+            L.append(f"**‡ {_short(h['region'])}** — {h['pass_pending']}\n")
+    L += ["",
+          "`anon 4-word` = strings containing `someone` / `somebody` / "
+          "`whoever` / `whatever` (bible §6's motive words). `closer ≥2` = "
+          "button smoke score ≥2/5. `negation instances` counts SHAPES, not "
+          "strings, so one string stacking three shapes counts three. "
+          "`worst file ending-shape` is the region's most concentrated file on "
+          "the §9.2 measure. Stdev is pooled over the region's touchable "
+          "narrator sentences and has **no target**.\n", "---\n"]
+
+    # 2. voice split
+    v = D["voice_split"]
+    L += ["## 2. Narrator vs spoken — how the split is derived\n",
+          v["rule"] + "\n",
+          "| corpus | voice | renderer | strings |", "|---|---|---|--:|"]
+    for c in v["counts"]:
+        L.append(f"| {c['corpus']} | {c['voice']} | `{c['why']}` | {c['strings']} |")
+    L += ["", "`copy` is the one honest wobble: a board notice is written "
+              "matter rather than anybody's speech, and it reaches the player "
+              "inside a code-built graph whose speaker is the prop's "
+              "display_name (`wi_game.gd:1539-1563`). It is counted "
+              "narrator-side and is broken out as `diegetic-document` above so "
+              "a reader can subtract it.\n", "---\n"]
+
+    # 3. negation + closers
+    L += ["## 3. Negation/correction and closer density\n",
+          "Bible §7: corpus ceiling **8** negation instances in map prose "
+          "(from 29 pre-pass), at most one per file, zero in functional "
+          "register. §2/§5: closers are the scarce register.\n",
+          "| region | narrator n (touch) | neg instances (touch) | neg strings | stacked ≥2 | closer ≥2 | closer ≥3 | neg in protected+holdout |",
+          "|---|--:|--:|--:|--:|--:|--:|--:|"]
+    for reg in [h["region"] for h in D["headline"]]:
+        c = D["by_region"][reg]["narrator"]
+        t, p, ho = c["touchable"], c["protected"], c["holdout"]
+        bold = "**" if reg.startswith("_") else ""
+        L.append(f"| {bold}{_short(reg)}{bold} | {t['strings']} | {t['neg_instances']} | "
+                 f"{t['neg_strings']} | {t['neg_stacked']} | {t['closer_ge2']} | "
+                 f"{t['closer_ge3']} | {p['neg_instances'] + ho['neg_instances']} |")
+    L += ["", "The last column is the pre-explained residue: negation inside a "
+              "protected keep or a holdout string is ruled or frozen, and a "
+              "later pass cannot touch it. §10 lists each one.\n", "---\n"]
+
+    # 4. anon four ways
+    a = D["anon_four_ways"]
+    L += ["## 4. Anonymous-agent inference — reported four ways\n",
+          a["definition"]["ruling"] + "\n",
+          f"- **motive set (4)**: {', '.join(a['definition']['motive_4'])} — "
+          "the words that invent an absent agent; this is the §6.4 metric.\n"
+          f"- **present indefinites (3)**: "
+          f"{', '.join(a['definition']['indefinite_3'])} — they invent nobody, "
+          "which is the point of the split.\n"
+          f"- {a['definition']['targets']}\n",
+          "| region | NARRATOR touch n | 4-word | 7-word | SPOKEN touch n | 4-word | 7-word | untouchable 4-word (N/S) |",
+          "|---|--:|--:|--:|--:|--:|--:|--:|"]
+    for r in a["rows"]:
+        nn, sn = r["narrator_touchable_n"], r["spoken_touchable_n"]
+        un = (r["narrator_protected_anon4"] + r["narrator_holdout_anon4"])
+        us = (r["spoken_protected_anon4"] + r["spoken_holdout_anon4"])
+        bold = "**" if r["region"].startswith("_") else ""
+        L.append(
+            f"| {bold}{_short(r['region'])}{bold} | {nn} | "
+            f"{r['narrator_touchable_anon4']} ({_pct(r['narrator_touchable_anon4'], nn)}) | "
+            f"{r['narrator_touchable_anon7']} ({_pct(r['narrator_touchable_anon7'], nn)}) | "
+            f"{sn} | {r['spoken_touchable_anon4']} ({_pct(r['spoken_touchable_anon4'], sn)}) | "
+            f"{r['spoken_touchable_anon7']} ({_pct(r['spoken_touchable_anon7'], sn)}) | "
+            f"{un}/{us} |")
+    L += ["", "---\n"]
+
+    # 5. shared geometry
+    g = D["shared_geometry"]
+    L += ["## 5. `which from X is Y` / `the way X does` / `the X is the X`\n",
+          g["target"] + "\n", "**Gap fix.** " + g["gap_fix"] + "\n",
+          f"**Counted: {len(g['counted'])}.**\n"]
+    if g["counted"]:
+        L += ["| id | region | voice | status | shapes | string |",
+              "|---|---|---|---|---|---|"]
+        for h in g["counted"]:
+            sh = " ".join(f"{k}×{h[k]}" for k in
+                          ("which_from", "the_way_x", "noun_repeat") if h[k])
+            L.append(f"| `{h['id'].split(':', 1)[1]}` | {h['region']} | {h['voice']} | "
+                     f"{h['status']} | {sh} | {h['text'][:120]} |")
+        L.append("")
+    L += [f"**Near misses — NOT counted: {len(g['near_misses'])}.** "
+          + g["near_miss_note"] + "\n"]
+    if g["near_misses"]:
+        L += ["| id | status | match | string |", "|---|---|---|---|"]
+        for h in g["near_misses"]:
+            L.append(f"| `{h['id'].split(':', 1)[1]}` | {h['status']} | "
+                     f"`{h['match']}` | {h['text'][:110]} |")
+        L.append("")
+    L.append("---\n")
+
+    # 6. speaker motif
+    sm = D["speaker_motif"]
+    L += ["## 6. Per-speaker motif-word concentration (dialogue)\n",
+          sm["method"] + "\n", sm["graph_anchor_note"] + "\n",
+          "| speaker | node lines | content words | top content word | 2nd | 3rd | issue anchor share | pallass anchor share |",
+          "|---|--:|--:|---|---|---|--:|--:|"]
+    for r in sorted(sm["rows"], key=lambda x: (-x["strings"], x["speaker"])):
+        if r["strings"] < 8 and not r["issue_anchor"]:
+            continue
+        top = r["top"] + [None] * 3
+        cell = lambda t: f"`{t['word']}` {t['share_pct']:.1f}%" if t else "—"
+        anc = (f"{r['anchor_strings']}/{r['strings']} "
+               f"({r['anchor_share_pct']:.0f}%)" if r["issue_anchor"] else "—")
+        gan = (f"{r['graph_anchor_strings']}/{r['strings']} "
+               f"({r['graph_anchor_share_pct']:.0f}%)"
+               if r["graph_anchor_strings"] is not None else "—")
+        L.append(f"| {r['speaker']} | {r['strings']} | {r['content_words']} | "
+                 f"{cell(top[0])} | {cell(top[1])} | {cell(top[2])} | {anc} | {gan} |")
+    L += ["", "Speakers with fewer than 8 node lines are omitted from the table "
+              "(they are in the JSON) unless the issue anchors them: a top-word "
+              "share over a handful of lines is noise.\n", "---\n"]
+
+    # 7. object inference
+    oi = D["object_inference"]
+    L += ["## 7. Fraction of map objects carrying inferred history or "
+          "thematic interpretation\n", oi["method"] + "\n",
+          "| region | objects | carry inference | of which trigger is touchable | by 4-word anon | by closer ≥2 |",
+          "|---|--:|--:|--:|--:|--:|"]
+    for r in oi["rows"]:
+        bold = "**" if r["region"].startswith("_") else ""
+        L.append(f"| {bold}{_short(r['region'])}{bold} | {r['objects']} | "
+                 f"{r['inferred']} ({r['inferred_pct']:.0f}%) | "
+                 f"{r['inferred_touchable_trigger']} "
+                 f"({r['inferred_touchable_pct']:.0f}%) | {r['by_anon_motive']} | "
+                 f"{r['by_closer_ge2']} |")
+    L += ["", "---\n"]
+
+    # 8. ending shapes
+    es = D["ending_shapes"]
+    L += ["## 8. Ending shapes, adjacency, and sentence-length spread\n",
+          "**Taxonomy:** " + ", ".join(f"`{s}`" for s in es["taxonomy"]) + ".\n",
+          es["method"] + "\n",
+          "> **Known divergence from §9's hand labels.** " +
+          es["known_divergence"] + "\n",
+          "### 8.1 Per-file distribution (§9.2: 40% advisory, loosen to 50%)\n",
+          es["scope"] + "\n",
+          "| file | touchable n | top shape | top % | distribution | stdev (touchable) |",
+          "|---|--:|---|--:|---|--:|"]
+    over40 = over50 = 0
+    for p in es["per_file"]:
+        t = p["touchable"]
+        if t["n"]:
+            over40 += t["top_pct"] > 40
+            over50 += t["top_pct"] > 50
+        dist = " · ".join(f"{k} {v}" for k, v in sorted(t["dist"].items()))
+        flag = " ⚠" if t["n"] and t["top_pct"] > 50 else ""
+        L.append(f"| `{p['file'].split('maps/')[-1]}` | {t['n']} | "
+                 f"{t['top_shape'] or '—'} | {t['top_pct']:.0f}%{flag} | {dist} | "
+                 f"{p['stdev_sentence_words_touchable']:.2f} |")
+    n_files = sum(1 for p in es["per_file"] if p["touchable"]["n"])
+    L += ["", f"**{over40} of {n_files}** scored files exceed 40%; "
+              f"**{over50}** exceed the loosened 50%. §9.2 anticipated exactly "
+              "this and ruled the number advisory, to be loosened rather than "
+              "churned against — and the reason is visible in the "
+              "distributions: `fact` is the proxy's DEFAULT arm, so a large "
+              "`fact` share means \"declarative, and not one of the other "
+              "five\", which is what a de-buttoned corpus is supposed to look "
+              "like. Read the ⚠ rows as *look here in the cold read*, never as "
+              "*rewrite to hit a number*.\n",
+          "### 8.2 Adjacent-entity ending-shape collisions\n",
+          es["adjacency_rule"] + "\n",
+          "| file | entities scored | collisions | % of pairs | string-level pairs | string-level collisions |",
+          "|---|--:|--:|--:|--:|--:|"]
+    for a in es["adjacency"]:
+        L.append(f"| `{a['file'].split('maps/')[-1]}` | {a['entities_scored']} | "
+                 f"{a['entity_collisions']} | {a['entity_collision_pct']:.0f}% | "
+                 f"{a['string_pairs']} | {a['string_collisions']} |")
+    L += ["", "### 8.3 Six shapes per region (§9.3: at least 4)\n",
+          "| region | shapes present | n | meets ≥4 |", "|---|---|--:|---|"]
+    for reg in sorted(es["region_shape_presence"]):
+        s = es["region_shape_presence"][reg]
+        L.append(f"| {reg} | {', '.join(s['shapes_present'])} | {s['count']} | "
+                 f"{'yes' if s['meets'] else 'NO'} |")
+    L += ["", "---\n"]
+
+    # 9. CAPS
+    cp = D["caps"]
+    L += ["## 9. CAPS — lettering context vs bare\n", cp["rule"] + "\n",
+          cp["proxy_extension"] + "\n",
+          f"**{cp['lettering']} lettering / {cp['bare']} bare.**\n",
+          "| class | cue | id | status | string |", "|---|---|---|---|---|"]
+    for r in sorted(cp["rows"], key=lambda x: (x["class"], x["id"])):
+        L.append(f"| {r['class']} | `{r['cue'] or '—'}` | "
+                 f"`{r['id'].split(':', 1)[1]}` | {r['status']} | "
+                 f"{r['text'][:110]} |")
+    L += ["", "---\n"]
+
+    # 10. exceptions
+    ex = D["exceptions"]
+    fired = [k for k in ex["protected_keeps"] if k["counters_fired"]]
+    L += ["## 10. Granted-exception register — read this before acting on any "
+          "count above\n", ex["_note"] + "\n",
+          f"### 10.1 Protected keeps that FIRE a counter ({len(fired)} of "
+          f"{len(ex['protected_keeps'])})\n",
+          "| id | region | pinned to | counters fired | why (head) |",
+          "|---|---|---|---|---|"]
+    for k in fired:
+        L.append(f"| `{k['id'].split(':', 1)[1]}` | {k['region'] or '—'} | "
+                 f"{k['pinned_to']} | {', '.join(k['counters_fired'])} | "
+                 f"{k['reason_head']} |")
+    L += ["", "### 10.2 Lane petitions ruled by the controller\n",
+          "| source | kind | file · field | sections | ground (head) |",
+          "|---|---|---|---|---|"]
+    for p in ex["petitions"]:
+        L.append(f"| `{p['source']}` | {p['kind']} | "
+                 f"`{str(p['file']).split('maps/')[-1]}` · `{p['field_path']}` | "
+                 f"{', '.join(p['sections']) or '—'} | {p['ground_head']} |")
+    L += ["", "### 10.3 §9.2 ending-shape exceptions already ruled\n",
+          f"Source: {ex['_source_ruled_exceptions']}\n",
+          "| file | lane-recorded share | this report's top shape | ruling |",
+          "|---|--:|---|---|"]
+    for e in ex["ruled_ending_exceptions"]:
+        L.append(f"| `{e['file'].split('maps/')[-1]}` | {e['lane_recorded_share']} | "
+                 f"{e['computed_top_shape'] or '—'} "
+                 f"{('%.0f%%' % e['computed_top_pct']) if e['computed_top_pct'] is not None else ''} | "
+                 f"{e['ruling']} |")
+    L += ["", "The two shares are computed by different shape proxies and are "
+              "not expected to agree. Both are advisory.\n",
+          "### 10.4 Landmark beats granted out of the §5 reserve\n"]
+    if ex["landmark_grants"]:
+        res = ex["landmark_grants"][0]["reserve"]
+        L += [res["note"] + "\n",
+              "| id | disposition | beat | granted |", "|---|---|---|---|"]
+        for g in ex["landmark_grants"]:
+            L.append(f"| `{g['id'].split(':', 1)[1]}` | {g['disposition']} | "
+                     f"{g['beat']} | {g['granted']} |")
+        L += ["", "A grant does not touch the string and does not change the "
+                  "register heuristic: `landmark-registry.json` records it as a "
+                  "`controller-grant` row with its own reserve arithmetic, so "
+                  "the allocation stays visible to every later reader.\n"]
+    L += ["### 10.5 Holdout, by region (frozen for Phase 5)\n",
+          "| region | holdout strings |", "|---|--:|"]
+    for k, n in sorted(ex["holdout_by_region"].items()):
+        L.append(f"| {k} | {n} |")
+    L += ["", "---\n",
+          "## 11. Reproducing this\n",
+          "```sh\n"
+          "python3 qa/scripts/extract_prose.py report --outdir docs/prose-naturalization\n"
+          "python3 qa/scripts/extract_prose.py self-test          # includes report legs\n"
+          "python3 qa/scripts/extract_prose.py verify-untouched   # the untouchability gate\n"
+          "```\n",
+          "The report reads the live tree plus the FROZEN "
+          "`protected-keeps.json` / `holdout.json`. It never rebuilds "
+          "`inventory.jsonl` (verify-untouched's baseline) and never rebuilds "
+          "the blind sets. Two runs on one tree are byte-identical; self-test "
+          "proves it.\n"]
+    return "\n".join(L) + "\n"
+
+
+def cmd_report(outdir, docdir):
+    outdir, docdir = Path(outdir), Path(docdir)
+    D = report_data(docdir)
+    wjson(outdir / "phase4-report.json", D)
+    wtext(outdir / "phase4-report.md", render_report(D))
+    h = {x["region"]: x for x in D["headline"]}
+    m, c = h["_maps"], h["_corpus"]
+    print(f"report: -> {outdir/'phase4-report.md'} + phase4-report.json")
+    print(f"  pins   {D['_pins']['protected_keeps']} protected + "
+          f"{D['_pins']['holdout']} holdout (frozen artifacts)")
+    print(f"  maps   touchable narrator {m['touchable_narrator_strings']}: "
+          f"anon4 {m['anon4_strings']} ({m['anon4_pct']:.1f}%) · "
+          f"closer>=2 {m['closer_ge2']} · neg {m['neg_instances']} · "
+          f"stdev {m['stdev_sentence_words']:.2f}")
+    print(f"  corpus touchable narrator {c['touchable_narrator_strings']}: "
+          f"anon4 {c['anon4_pct']:.1f}% · geometry "
+          f"{len(D['shared_geometry']['counted'])} counted / "
+          f"{len(D['shared_geometry']['near_misses'])} near-miss · CAPS "
+          f"{D['caps']['lettering']} lettering / {D['caps']['bare']} bare")
+    return 0
+
+
 # ---- classification self-probe (fix I4) --------------------------------------
 def cmd_classify_probe(seed, n):
     """Stratified read-out of the register heuristic, for hand-judging. Prints
@@ -1748,39 +3073,14 @@ def cmd_all(outdir):
     overrides = load_overrides(outdir)
     cdir = outdir / "inventory-classified"
     cdir.mkdir(exist_ok=True)
-    classified = []
+    classified = classified_records(rows, keeps, hold_set, named_work, overrides)
     per_region = collections.defaultdict(list)
     counts = collections.defaultdict(collections.Counter)
-    for r in rows:
-        if r["corpus"] != "maps":
-            continue
-        reg, tag = classify_row(r, overrides)
-        t = r["tells"]
-        untouchable = r["id"] in keeps or r["id"] in hold_set
-        trig = demotion_triggers(t)
-        demote = is_demotion_candidate(reg, t) and not untouchable
-        rec = {
-            "id": r["id"], "region": r["region"], "file": r["file"],
-            "field_path": r["field_path"], "field": r["field"],
-            "register": reg, "tag": tag,
-            "entity_id": (r["entity"] or {}).get("entity_id"),
-            "display_name": (r["entity"] or {}).get("display_name"),
-            "word_count": r["word_count"],
-            "closer_score": t["closer_score"],
-            "anon_agent": t["anon_agent"],
-            "neg_correction": t["neg_correction"],
-            "demotion_candidate": demote,
-            "demotion_triggers": trig if demote else [],
-            "issue_named_work": named_work.get(r["id"]),
-            "holdout": r["id"] in hold_set,
-            "protected": r["id"] in keeps,
-            "text": r["text"],
-        }
-        classified.append(rec)
-        per_region[r["region"]].append(rec)
-        counts[r["region"]][reg] += 1
-        if demote:
-            counts[r["region"]]["_demotion_candidates"] += 1
+    for rec in classified:
+        per_region[rec["region"]].append(rec)
+        counts[rec["region"]][rec["register"]] += 1
+        if rec["demotion_candidate"]:
+            counts[rec["region"]]["_demotion_candidates"] += 1
     for region, items in sorted(per_region.items()):
         wjson(cdir / f"{region}.json", {
             "_region": region, "_count": len(items), "_python": PY,
@@ -1797,33 +3097,7 @@ def cmd_all(outdir):
             "strings": items})
 
     # landmark registry -- one disposition per landmark string, no discretion
-    lm = [c for c in classified if c["register"] == "landmark"]
-    reg_rows = []
-    for c in sorted(lm, key=lambda x: x["id"]):
-        d = LANDMARK_DISPOSITIONS.get(c["id"], {})
-        reg_rows.append({
-            "id": c["id"], "file": c["file"], "field_path": c["field_path"],
-            "display_name": c["display_name"], "field": c["field"],
-            "disposition": d.get("disposition", "UNRULED"),
-            "beat": d.get("beat"), "why": d.get("why"),
-            "protected": c["protected"], "holdout": c["holdout"],
-            "text": c["text"],
-        })
-    wjson(outdir / "landmark-registry.json", {
-        "_python": PY, "_count": len(reg_rows),
-        "_dispositions": {
-            "KEEP-AS-IS": "Ships as written. Do not touch.",
-            "RESTAGE": "Keep the beat AND keep the correction. Lose the CAPS "
-                       "and the staging ONLY. Nothing else about the string "
-                       "changes.",
-        },
-        "_note": "Every landmark string in the corpus, with one ruled "
-                 "disposition each. LANES GET ZERO DISCRETION BEYOND THE "
-                 "DISPOSITION: a landmark string is not an invitation to "
-                 "rewrite, and 'UNRULED' can never appear -- self-test fails "
-                 "if a landmark row has no disposition or a disposition has no "
-                 "landmark row.",
-        "strings": reg_rows})
+    reg_rows = write_landmark_registry(classified, outdir)
 
     # heatmap + generated summary
     ranked = cmd_heatmap(rows, outdir / "dialogue-graph-heatmap.md",
@@ -2199,6 +3473,150 @@ def self_test():
           live_text("wandering_inn_game/data/maps/inn/inn.json",
                     "$.entities[9999].observe") is None)
 
+    # ---- 11. PHASE 4 advisory metrics -------------------------------------
+    # Everything here proves the COUNTERS COUNT and the report is reproducible.
+    # None of it asserts a corpus number: a metric leg that says "the corpus
+    # still has N of X" inverts the moment the pass succeeds, which is the H1
+    # bug this file has now been bitten by four times. Synthetic probes and
+    # structural properties only.
+
+    # 11a. narrator vs spoken, on synthetic rows (one per renderer shape) --
+    #      these cannot drift with the corpus -- plus the partition property on
+    #      the real one.
+    def prow(corpus, field, path, opt=False):
+        return {"corpus": corpus, "field": field, "field_path": path,
+                "is_player_option": opt}
+
+    probes = [
+        (prow("dialogue", "text", "$.nodes.hub.text"), ("spoken", "node-line")),
+        (prow("dialogue", "text", "$.nodes.hub.options[0].text", True),
+         ("spoken", "player-option")),
+        (prow("dialogue", "text_bank", "$.text_banks.just_passing_through"),
+         ("spoken", "bank-line")),
+        (prow("dialogue", "toast", "$.nodes.hub.options[0].effects[0].toast", True),
+         ("narrator", "effect-toast")),
+        (prow("maps", "observe", "$.entities[0].observe"), ("narrator", "narration")),
+        (prow("maps", "text", "$.entities[0].dialogue[0].text"),
+         ("spoken", "ambient-speech")),
+        (prow("maps", "friendly_line", "$.entities[0].friendly_line"),
+         ("spoken", "npc-friendly-line")),
+        (prow("maps", "copy", "$.entities[2].board_rumors[0].copy"),
+         ("narrator", "diegetic-document")),
+        (prow("maps", "text", "$.arrival_toasts[0].text"), ("narrator", "narration")),
+        (prow("maps", "locked_toast", "$.entities[3].locked_toast"),
+         ("narrator", "narration")),
+    ]
+    bad_v = [f"{p['field_path']} -> {voice_of(p)} want {w}"
+             for p, w in probes if voice_of(p) != w]
+    check(f"voice_of classifies all {len(probes)} renderer shapes", not bad_v,
+          str(bad_v))
+    check("every live string is narrator XOR spoken",
+          {voice_of(r)[0] for r in rows} == {"narrator", "spoken"})
+    spoken_maps = {r["id"] for r in m if voice_of(r)[0] == "spoken"}
+    want_spoken = {r["id"] for r in m
+                   if r["field"] == "friendly_line"
+                   or (r["field"] == "text" and ".dialogue[" in r["field_path"])}
+    check("spoken map strings == friendly_line + ambient dialogue[].text",
+          spoken_maps == want_spoken,
+          str(sorted(spoken_maps ^ want_spoken)[:3]))
+    check("the only narrator dialogue strings are the option-effect toasts",
+          {r["id"] for r in d if voice_of(r)[0] == "narrator"}
+          == {r["id"] for r in d if r["field"] == "toast"})
+
+    # 11b. the anon split partitions the seven-word union, on every string
+    part = [r["id"] for r in rows if r["tells"]["anon_agent"]
+            != r["tells"]["anon_motive"] + r["tells"]["anon_indef"]]
+    check("anon 7-word count == 4-word motive + 3-word indefinite, every string",
+          not part, str(part[:3]))
+    check("anon_motive fires on 'Someone carved joy here'",
+          tells("Someone carved joy here, and meant it to last.")["anon_motive"] == 1)
+    ind = tells("Something moved. Nobody came. Anyone could see it.")
+    check("anon_motive ignores the three present indefinites",
+          ind["anon_motive"] == 0 and ind["anon_indef"] == 3,
+          f"motive={ind['anon_motive']} indef={ind['anon_indef']}")
+
+    # 11c. the widened which-from (the floodplains/garden lane's two-word gap)
+    check("which_from counts a determiner+noun phrase (the reported gap)",
+          tells("It goes still when you crouch, which from a razorbeak is an "
+                "invitation.")["which_from"] == 1)
+    check("which_from still counts the one-word case it always caught",
+          tells("Pisces says nothing, which from him is applause.")["which_from"] == 1)
+    long_np = "A silence which from the whole of the assembled court is applause."
+    check("which_from stops at three words, so long NPs are not silently counted",
+          tells(long_np)["which_from"] == 0)
+    check("...and a long NP IS surfaced as a near-miss instead",
+          bool(RE_WHICH_LONG_NP.search(long_np)))
+    check("the alternate-copula variant is a near-miss, not a count",
+          bool(RE_WHICH_ALT_VERB.search(
+              "the cloth sitting there with nothing on it, which in this city "
+              "means nobody slows down"))
+          and tells("which in this city means nobody slows down")["which_from"] == 0)
+
+    # 11d. the CAPS lettering proxy, incl. the new "in a ... hand" form
+    check("CAPS lettering cue accepts the 'in a ... hand' form (§8 blind spot)",
+          tells("Set down in a clerk's hand: PASSES ARE PROPERTY OF THE CITY."
+                )["caps_lettering_ctx"])
+    check("chalked / stamped / stencilled were already covered",
+          all(lettering_cue(t) for t in
+              ("Beside it, chalked: HELD.",
+               "A stamped plate: PERMIT.",
+               "A stencilled plate: PERMIT AND STAMP REQUIRED.")))
+    bare = tells("It is not a statue. STATUES do not turn.")
+    check("CAPS with no lettering context stays BARE",
+          bool(bare["caps"]) and not bare["caps_lettering_ctx"],
+          f"caps={bare['caps']} cue={bare['caps_cue']!r}")
+
+    # 11e. ending shapes: the fixtures, and taxonomy closure over the corpus
+    shp = [("Leave it that way.", "instruction"),
+           ("Down you go.", "instruction"),
+           ("The bones rise and fall into step behind you.", "motion"),
+           ("Browsing, or selling?", "unresolved"),
+           ("The dark swallows the light three steps down—", "interruption"),
+           ("It has not looked directly at you once.", "absence"),
+           ("The clerk's window is open.", "fact")]
+    bad_s = [f"{t!r} -> {ending_shape(t)} want {w}"
+             for t, w in shp if ending_shape(t) != w]
+    check(f"ending_shape assigns all {len(shp)} documented fixtures", not bad_s,
+          str(bad_s))
+    check("every live string scores inside the six-shape taxonomy",
+          {ending_shape(r["text"]) for r in rows} <= set(ENDING_SHAPES))
+    print("  note documented §9 divergence: 'Nobody came back to make the "
+          f"ninety-third.' -> {ending_shape('Nobody came back to make the ninety-third.')}"
+          " (the bible's table calls it fact; see the report's §8 header)")
+
+    # 11f. the report generates deterministically and writes both artifacts
+    d1, d2 = report_data(DOCS), report_data(DOCS)
+    check("report data is byte-deterministic across two builds",
+          json.dumps(d1, sort_keys=True) == json.dumps(d2, sort_keys=True))
+    md1 = render_report(d1)
+    check("report markdown is byte-deterministic", md1 == render_report(d2))
+    with tempfile.TemporaryDirectory() as td:
+        rc = cmd_report(td, DOCS)
+        pmd, pjs = Path(td) / "phase4-report.md", Path(td) / "phase4-report.json"
+        check("report writes both artifacts and exits 0",
+              rc == 0 and pmd.exists() and pjs.exists())
+        check("the written report equals the rendered one, byte for byte",
+              rtext(pmd) == md1
+              and json.dumps(rjson(pjs), sort_keys=True)
+              == json.dumps(json.loads(json.dumps(d1)), sort_keys=True))
+
+    # 11g. honest denominators: every bucket splits exactly three ways
+    mismatch = []
+    for reg, cell in sorted(d1["by_region"].items()):
+        for v in ("narrator", "spoken"):
+            tot = cell[v]["all"]["strings"]
+            parts = sum(cell[v][s]["strings"] for s in STATUSES)
+            if tot != parts:
+                mismatch.append(f"{reg}/{v}: {tot} != {parts}")
+        if cell["all"]["strings"] != cell["narrator"]["all"]["strings"] \
+                + cell["spoken"]["all"]["strings"]:
+            mismatch.append(f"{reg}: voices do not sum to all")
+    check("every reported bucket == touchable + protected + holdout, and "
+          "narrator + spoken == all", not mismatch, str(mismatch[:3]))
+    check("the report's pin counts come from the frozen artifacts",
+          d1["_pins"]["protected_keeps"] == len(rjson(DOCS / "protected-keeps.json")["keeps"])
+          and d1["_pins"]["holdout"] == len(rjson(DOCS / "holdout.json")["ids"]))
+
     print("self-test:", "PASS" if not fails else f"{len(fails)} FAILURES: {fails}")
     return 1 if fails else 0
 
@@ -2217,6 +3635,12 @@ def main():
     p = sub.add_parser("holdout-blind"); p.add_argument("--outdir", required=True)
     p = sub.add_parser("verify-untouched"); p.add_argument("--dir", default=str(DOCS))
     p = sub.add_parser("keeps"); p.add_argument("--dir", default=str(DOCS))
+    p = sub.add_parser("landmarks"); p.add_argument("--dir", default=str(DOCS))
+    p = sub.add_parser("report")
+    p.add_argument("--outdir", default=str(DOCS))
+    p.add_argument("--docdir", default=str(DOCS),
+                   help="where the frozen protected-keeps.json / holdout.json "
+                        "live (default: the docs dir it writes to)")
     p = sub.add_parser("classify-probe")
     p.add_argument("--seed", type=int, default=PROBE_SEED)
     p.add_argument("--n", type=int, default=20)
@@ -2255,6 +3679,10 @@ def main():
         return 0
     if a.cmd == "keeps":
         return cmd_keeps(a.dir)
+    if a.cmd == "landmarks":
+        return cmd_landmarks(a.dir)
+    if a.cmd == "report":
+        return cmd_report(a.outdir, a.docdir)
     if a.cmd == "verify-untouched":
         return cmd_verify_untouched(a.dir)
     if a.cmd == "classify-probe":
