@@ -162,7 +162,7 @@ Per-string rulings: `landmark-registry.json`. Lanes get zero discretion beyond t
 | `inventory-classified/<region>.json` | Phase 2 work order: every map string with register, rationale tag, demotion triggers, holdout/protected flags, and its text. |
 | `classification-overrides.json` | hand-audit corrections as data, each with a `why`. HAND-AUTHORED INPUT. |
 | `protected-keeps-extra.json` | lane-added peaks/models. HAND-AUTHORED INPUT. |
-| `protected-keeps.json` | 12 peaks/models, each pinned to {file, field_path, exact_text}. UNTOUCHABLE. |
+| `protected-keeps.json` | 29 peaks/models/exceptions, each pinned to {file, field_path, exact_text}. UNTOUCHABLE. |
 | `holdout.json` | 229 ids (10%), drawn from the same ≥6-word pool as the blind sets, disjoint from both and from the keeps. UNTOUCHABLE. |
 | `sample-dialogue-blind.txt · sample-maps-blind.txt` | 120 metadata-stripped rows each, seed 397. |
 | `sample-holdout-blind.txt` | the Phase 5 instrument: the holdout in the same blind format, so the exit read is one procedure over two views. |
@@ -173,6 +173,18 @@ Per-string rulings: `landmark-registry.json`. Lanes get zero discretion beyond t
 | `narrator-bible.md` | Phase 1, RULED. |
 | `bible-adjudication.md` | the controller's rulings on the draft's 13 [ADJUDICATE] items. The ruling record. |
 | `inventory-commentary.md` | hand-written frozen commentary, appended below. |
+
+> **The `protected-keeps.json` row above was hand-corrected 12 → 29** at #397
+> integration (2026-08-06), when the seventeen controller-GRANTED lane petitions
+> in `keeps-petitions/*.json` were folded into `protected-keeps-extra.json`
+> (12 pre-existing + 17 = 29) and `protected-keeps.json` was rebuilt with the new
+> `extract_prose.py keeps` subcommand. Only that number was touched: the rest of
+> this page is still the Phase-1 generated text and could NOT be regenerated,
+> because `all` would also rebuild `inventory.jsonl` — `verify-untouched`'s
+> frozen baseline, which must never be rebuilt over revised prose. The live
+> counts are always
+> `python3 qa/scripts/extract_prose.py verify-untouched` (229 holdout + 29
+> protected = 258 untouchable strings as of that integration).
 
 ---
 

@@ -102,6 +102,22 @@ bank progress (a lift ride, a guest cot, `"Your own bed."`).
 1. **Plain, fast, and finished when the information is delivered.** No
    thematic closer, ever. This register has no landmark allowance and cannot
    petition for one.
+   - **§1.1 does not bind an in-world document's own voice** (RULED, liscor
+     petition 3; recorded here at #397 integration, 2026-08-06). A `copy`
+     string is not authorial narration — it is a physical document the player is
+     **reading, quoted**. The closer ban exists to stop the NARRATOR telling the
+     reader what to think; a letter's own sign-off, or an in-world speaker's
+     aside quoted inside it, is that document's voice and is the content.
+     §1.4 already excepts `copy` from the sentence ceiling and §8 already
+     permits its heading capitals ("whose capitals are the document by
+     definition") — this is the same carve-out finished, on the same grounds.
+   - Exemplar: `liscor/guild.json · board_rumors[1].copy` (protected keep) —
+     the hat-letter, whose closing remark is attributed to the Guildmistress's
+     clerk, not to the narrator. Its wax, its handwriting and its drawing of a
+     hat are the Invrisil chain's only in-world hook.
+   - The carve-out is **`copy` only**, and only for the document's own voice.
+     Narration *around* a document (the `observe` that describes the board it
+     is pinned to) is ordinary functional/scenic prose and rule 1 binds it.
 2. **The instruction is the payload.** If a player needs the string to act,
    ornament competes with it. A hint may be atmospheric in its *first* clause
    and must be unambiguous in its last.
@@ -416,6 +432,20 @@ somewhere else.
 2. **An anonymous agent may not close a string.** If the last sentence
    introduces `someone`/`somebody`/`whoever`, the inference has become the
    point. Cut it or move it earlier.
+   - **CONSEQUENCE-ANON is a PERMITTED CLASS** (RULED 2026-08-05, pallass
+     petition item 3; amended into §6 at #397 integration, 2026-08-06). A
+     **hypothetical future consequence-bearer is not an inferred absent
+     agent**: nothing is claimed about anybody who was here, so there is no
+     microhistory and no invented motive. It states a cost, which is
+     information the player acts on.
+     - Permitted: `pallass/pallass_forge_hall.json · locked_toast` — "Heat,
+       metal, and a gauge you cannot read. Guessing here costs somebody a
+       week." *`somebody` is whoever would pay for the mistake, not somebody
+       who did something. The counter still scores `anon_agent 1` here; the
+       counter is wrong, and this class is how the bible says so.*
+     - Still forbidden, for contrast: the same word pointing BACKWARD at an
+       agent the evidence does not show — "Somebody wanted this hidden."
+       *That is rule 1's motive claim, and closing on it is this rule.*
 3. **One inferred microhistory per map FILE.** This is the `witch_hut` rule
    (§2). A house may have one absent owner, not three.
 4. **Targets. RULED — advisory, never a gate.**
