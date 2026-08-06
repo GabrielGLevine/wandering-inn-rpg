@@ -298,3 +298,11 @@ wrong, both are pinned) and one RE-GREENED (walkthrough:473 via the M2
 revert). Pin-deltas 50 rows, BASE olds. NOTE: ISSUE_NAMED_WORK bug did
 NOT trip for invrisil (no named-work strings in region) — the H1 tool
 fix remains needed for pallass/garden/liscor/dungeon entries only.
+
+## Liscor fix wave LANDED (73a20c88) — lane merge-ready
+M1 grounded honestly ("laces slack through every eyelet" — the purpose
+clause was the illegal half, not the pronoun); M2 mud-table pair
+re-varied w/ the wiped-corner observation restored POSITIVELY (file's
+§7.3 allowance already spent on the granted keep); keeps-petitions/
+liscor.json (5 entries, byte-bound). Pin situation unchanged (3 known
+sites, no new breaks; property_seams green). 30 pin-delta rows.
