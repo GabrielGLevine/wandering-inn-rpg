@@ -358,3 +358,15 @@ cannot launder); biomes street line + mercantile both-go. FULL SWEEP
 GRANT landmark from reserve (Phase 4 lane adds the registry row;
 reserve 4→3). Remaining: Phase 4 (running), 396 close wave (running),
 riverfarm pass (post-396-merge), baselines regen, Phase 5, PRs.
+
+## Phase 4 LANDED (9f60df20 + 72cbd985)
+Advisory report shipped (report/keeps/landmarks subcommands; nothing in
+ci_sweep); renderer-derived narrator-vs-spoken split; self-test 86/86.
+PAPER BASELINE: passed regions touchable-narrator anon-4 = 2.4% vs
+riverfarm control 20.4% — the pass measurably worked. Ordinance-44
+landmark row landed (reserve 4→3). Flags for Phase 5's cold read:
+fact-endings top shape in 25/30 files (proxy coarseness + real §10
+signal); garden/ruin/sewers at 3-of-6 shapes; adjacency hotspots
+barracks 83% / witch_hollow 71%.
+PR #401: first run hit GitHub Actions infra errors (Bad Gateway before
+any project step) — failed jobs re-run, watching.
