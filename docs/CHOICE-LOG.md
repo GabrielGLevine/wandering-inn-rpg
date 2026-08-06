@@ -3325,3 +3325,20 @@ applied — picks made, logged here, surfaced at close. All revocable.
    (wolf_scent_cache precedent) — visible-but-flavor before
    `heard_the_makings`, gather surface after. Structurally hiding
    shipped scenery with present_when was rejected.
+11. **Task 8's true scope (#396, review MJ-1):** the plan's gated
+   watch-ask row shifts VISIBLE hub indices for every legacy fixture
+   (old come-along row was ungated), so the six red canonicals are
+   structural desyncs, not payload re-pins — and the dialogue cursor
+   WRAPS, so a mis-sized hub can silently select the wrong row. Lane D:
+   recount option indices per fixture state, assert node DESTINATIONS
+   not just indices, build the legacy fixture, re-derive seeds, and move
+   the riverfarm_fight fixture build (ruling 5). Accepted as
+   plan-inherited; the lane's "pin-only" claim was wrong and the
+   reviewer's re-run is the record.
+12. **lead_winter gates, full disclosure (#396):** shipped as
+   `requires {price_of_a_favor_reported}` + `hide_when
+   {chatted_with_riverfarm_hunter}` — both validator-forced (non-empty
+   requires; counters must be in shipped_ids). Semantics drift: a player
+   who talks and declines loses the journal pointer (old lead hid on
+   accept). RETIGHTEN AT RELEASE CUT: hide_when → heard_winter_teeth
+   once shipped_ids regenerates.
