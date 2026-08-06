@@ -85,17 +85,17 @@
  },
  {
   "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
-  "field_path": "$.entities[2].observe",
-  "entity_id": "runner_board",
-  "old": "Couriers are made, not hired. Start with the market run. — the counter",
-  "new": "Couriers are made here, one run at a time. Start with the market run. — the counter"
- },
- {
-  "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
   "field_path": "$.entities[2].second_visit_toast",
   "entity_id": "runner_board",
   "old": "THE DELIVERY BOARD. Your slip's still logged at the counter. Legs and ledgers don't care how it's going either.",
   "new": "THE DELIVERY BOARD. Your slip's still logged at the counter."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
+  "field_path": "$.entities[2].observe",
+  "entity_id": "runner_board",
+  "old": "Couriers are made, not hired. Start with the market run. — the counter",
+  "new": "Couriers are made here, one run at a time. Start with the market run. — the counter"
  },
  {
   "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
@@ -116,14 +116,14 @@
   "field_path": "$.entities[6].observe",
   "entity_id": "runners_mud_table",
   "old": "Road mud dried in ridges across the boards, stamped there by a week of packs set down hard. Somebody wiped one corner of it and gave up.",
-  "new": "Road mud dried in ridges across the boards, stamped there by a week of packs set down hard. A dry crumb of it breaks loose under your boot."
+  "new": "Road mud dried in ridges across the boards, stamped there by a week of packs set down hard. One corner is scrubbed down to bare wood, and the ridges start again an inch from it."
  },
  {
   "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
   "field_path": "$.entities[6].toast",
   "entity_id": "runners_mud_table",
   "old": "Dried road mud ridges the boards where pack after pack has come down on them. One corner is wiped clean and the rest is not.",
-  "new": "Dried road mud ridges the boards where pack after pack has come down on them. It would come off with water and an arm behind it."
+  "new": "Dried road mud ridges the boards where pack after pack has come down on them. The boards still smell of the road."
  },
  {
   "file": "wandering_inn_game/data/maps/liscor/runners_guild.json",
@@ -137,7 +137,7 @@
   "field_path": "$.interior_flavor[1]",
   "entity_id": null,
   "old": "Nothing there. Somebody's spare boots wait by the door, laces already loosened for the next run.",
-  "new": "Nothing there. A pair of spare boots waits by the door, laces already loosened for the next run."
+  "new": "Nothing there. A pair of spare boots by the door, laces slack through every eyelet."
  },
  {
   "file": "wandering_inn_game/data/maps/liscor/street.json",

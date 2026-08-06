@@ -3,7 +3,7 @@
  "biome": "inn",
  "interior_flavor": [
   "Nothing there. Slip paper, rope wax, and the smell of somewhere else's mail.",
-  "Nothing there. A pair of spare boots waits by the door, laces already loosened for the next run."
+  "Nothing there. A pair of spare boots by the door, laces slack through every eyelet."
  ],
  "grid": {
   "width": 10,
@@ -332,9 +332,9 @@
    "sprite": "dirty_table",
    "dirty": true,
    "state_counter": "scrubbed_the_runners_table",
-   "observe": "Road mud dried in ridges across the boards, stamped there by a week of packs set down hard. A dry crumb of it breaks loose under your boot.",
+   "observe": "Road mud dried in ridges across the boards, stamped there by a week of packs set down hard. One corner is scrubbed down to bare wood, and the ridges start again an inch from it.",
    "clean_toast": "[Basic Cleaning] — You take it off in three passes. The dried mud lifts, the grain comes up pale, and the boards stop smelling of the road.",
-   "toast": "Dried road mud ridges the boards where pack after pack has come down on them. It would come off with water and an arm behind it.",
+   "toast": "Dried road mud ridges the boards where pack after pack has come down on them. The boards still smell of the road.",
    "visual_states": [
     {
      "when": {
