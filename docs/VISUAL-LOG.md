@@ -3742,3 +3742,17 @@ NOT art rows at all — they need a floor-material pass across maps this lane do
 not own, a per-layer night knob that does not exist in the mood schema, or a
 dialogue-time separation in `world.gd`. Filing them as art kept them looking
 cheap for three milestones. They are not.
+
+## #396 close wave (2026-08-06) — `a_shepherd` eye-gate, PASSED
+
+| row | verdict | evidence |
+|---|---|---|
+| `a_shepherd` must read as a DIFFERENT PERSON from `a_hunter` at gameplay zoom, not a re-dressed one (the v0.16.1 copy-only disambiguation failed exactly here, and the tint directive forbids shade variants standing in for distinct things) | **PASS — eye-gate read by the controller, recorded here.** The brimmed felt hat and the long crook carry the read at 1x: the hat breaks the head outline the whole village cast shares, and the crook puts a vertical line outside the body silhouette that no other Riverfarm figure has. Judged against the three neighbours he actually stands beside (`human_laborer` 30.2px, `citizen_f` 30.0px, retired `a_hunter` 33px) at the shipped `render_scale` 0.3837 = 33px, so he is the same size class and still a distinct shape | `potential_assets/pixellab_2026-08-05_396/silhouette_check_1x.png` (the gate shot — cold read at gameplay zoom) + `silhouette_check.png` (4x), `facings_8x.png`, `idle_filmstrip.png` / `walk_filmstrip.png` (all three kept facings, both clips), `rot_{north,east,south}.png`. In-engine, standing in the village beside the pen: `lanes/l396c-evidence/02_pen_lambs_tend.png` (+ `pen_lambs_zoom_2x.png`) |
+
+**What a later pass should NOT undo.** `render_scale` 0.3837 and anchor
+`[0.4946, 0.7337]` are both MEASURED, not chosen: the v3 canvas is 184px and
+the anchor's x comes off the BOOT span, because the crook skews the full alpha
+bbox and anchoring to it walks the figure sideways off its cell. The hat and
+crook are the silhouette contract — a later re-cut may repaint him, but a
+hatless or crookless shepherd re-opens the disambiguation row that the copy
+alone could not close.
