@@ -50,7 +50,7 @@
   { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [10, 5]} },
   { "action": "press_field_skill", "skill": "observe" },
   { "action": "wait_for_event", "type": "skill_used", "payload_contains": {"skill": "observe", "target": "stationer_wax_tray"}, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": {"text": "Nine colours of wax and one blank seal for hire. The blank is the most used thing in the shop, by a distance."}, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": {"text": "All nine colours on the tray have cooled hard in their slots. The tenth slot, cut for the blank seal for hire, sits empty."}, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "_comment": "== THE CLERK'S POOL. He is the room's second talk-pool NPC and stays live forever -- first interact serves pool index 0. ==", "action": "wait_frames", "frames": 1 },
   { "action": "move", "direction": "left", "steps": 1 },

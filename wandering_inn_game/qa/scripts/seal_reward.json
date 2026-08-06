@@ -301,7 +301,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. Not a school, not a fashion. A HAND, and it cut this one first.\" He does not look away while he says it."
+    "text": "Pisces reaches the door before you do and stops a handspan short of it. \"The same hand. One person's work, and this door was the first of it.\" He does not look away while he says it."
    },
    "timeout_sec": 5
   },
@@ -509,7 +509,7 @@
    "timeout_sec": 5,
    "payload_contains": {
     "speaker": "Pisces",
-    "text": "There. The pour runs the way it always did, and the work it runs through now is yours, which will outlast the city and annoy me for the rest of my life. Whatever is back there gets to keep sleeping. I have decided that is the outcome I wanted, and I will be saying so as though I said it first."
+    "text": "There. The pour runs again, and it runs through your work now. It will still be carrying when the walls above it come down, and I shall have to look at it every time I come back down here, which I expect to do often. Whatever is back there goes on sleeping. I have decided that is the outcome I wanted, and I will be saying so as though I said it first."
    }
   },
   {

@@ -1939,7 +1939,7 @@ func _init() -> void:
 	for e: Dictionary in _events:
 		if e["type"] == "toast":
 			reveal_toast = String(e["payload"].get("text", ""))
-	assert(reveal_toast.begins_with("Below the pedestal: not treasure. A DOOR"), "open_toast is the LAST toast of the open, after the pickups' own")
+	assert(reveal_toast.begins_with("Below the pedestal: not treasure. A door,"), "open_toast is the LAST toast of the open, after the pickups' own")
 
 	# 2026-07-27 (Task 2.6 fix round 1): the MIGRATED-SAVE arm of that same open.
 	# save.gd's dig backfill hands an old door-chain save door_retrieved without
@@ -3568,7 +3568,7 @@ func _init() -> void:
 	gAck.record_accomplishment("delivered_delivery_grate_phials")
 	_events.clear()
 	gAck.use_skill_field("observe")
-	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "Rust holds the bars, not a lock. The phial crate you eased down the rungs is gone from the ledge below. Collected, unbroken. Somewhere down there, someone's working glass got to keep being glass."),
+	assert(_events.any(func(e: Dictionary) -> bool: return e["type"] == "toast" and String(e["payload"]["text"]) == "The phial crate you eased down the rungs is gone from the ledge below. The stone where it sat is clear — nothing broke on the way down."),
 		"the grate's delivered observe override renders (the only ack surface its door_when leaves reachable)")
 
 	# --- b7 #212: the bond-path rumor keys on the Tamer chain's entry
@@ -3998,7 +3998,7 @@ func _init() -> void:
 	_events.clear()
 	arrival_game.transition("inn", Vector2i(2, 3))
 	arrival_game.transition("ruin_surface", Vector2i(17, 5))
-	assert(_toast_texts().any(func(t: String) -> bool: return t == "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, and someone's washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court."),
+	assert(_toast_texts().any(func(t: String) -> bool: return t == "East past the gate road, across the floodplains — this is the ruin. Survey stakes, a banked fire, washing on a line: the Horns got here first. The sealed level is deeper in, under the pedestal court."),
 		"ruin_surface arrival toast fires when horns_dig_started met and door_retrieved unmet")
 	arrival_game.record_accomplishment("door_retrieved")
 	_events.clear()

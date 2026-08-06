@@ -1,0 +1,449 @@
+{
+ "_region": "pallass",
+ "_issue": "GH#397 Phase 2",
+ "_lane": "397/pallass",
+ "_base": "65f6e321 (Phase 2/3 orchestration design, controller) -- `old` is BASE text, `new` is post-fix-wave HEAD text",
+ "_count": 42,
+ "_note": "Pin-sync integrator input, REGENERATED base-vs-HEAD after the review fix wave. Every changed player-facing prose string in data/maps/pallass/, with the exact pre-change text QA scripts pin. Holdout and protected-keep strings are byte-untouched (extract_prose.py verify-untouched exits 0). Rows whose `why` carries a `|| FIX WAVE (...)` suffix were rewritten twice -- once by the lane, once by the review fix wave -- and `old` is still the BASE text, never the lane's intermediate; rows whose `why` starts `UNTOUCHED by the lane` are new in the fix wave. Lane peaks petitioned and granted are in docs/prose-naturalization/keeps-petitions/pallass.json.",
+ "_review_fixes_applied": [
+  "H3",
+  "M1",
+  "M3",
+  "M5",
+  "L6",
+  "monoculture re-vary (4 negative-non-event closers)",
+  "M4 (petitions written into the branch)"
+ ],
+ "_accepted_as_deliberate": "Fable ruling item 6: verbatim-identical civic observes and the two identical steam-vent strings (pallass_forge.json/pallass_market.json $.entities[3]/$.entities[8]) are ACCEPTED as deliberate and stay byte-identical. The three MARKET STALL observes are the named exception -- reviewer M3 required them differentiated, so two of the three were rewritten and the \"Efficient. Impersonal.\" doublet survives on market_stall_a only.",
+ "_qa_pins_broken": [
+  {
+   "script": "pallass_ledger_skill",
+   "step": 14,
+   "field": "$.entities[2].on_skill_use.toast",
+   "file": "pallass_den_shop.json"
+  },
+  {
+   "script": "pallass_standards_talk",
+   "step": 23,
+   "field": "$.entities[2].toast",
+   "file": "pallass_forge_hall.json"
+  },
+  {
+   "script": "pallass_depth_gates_check",
+   "step": 66,
+   "field": "$.entities[7].gate_closed_toast",
+   "file": "pallass_forge_hall.json"
+  },
+  {
+   "script": "pallass_peek",
+   "step": 177,
+   "field": "$.entities[13].toast",
+   "file": "pallass_forge.json"
+  },
+  {
+   "script": "regional_work_loop",
+   "step": 48,
+   "field": "$.entities[14].once_per_waking_toast",
+   "file": "pallass_forge.json"
+  },
+  {
+   "script": "pallass_ledger_carry",
+   "step": 15,
+   "field": "$.entities[18].toast",
+   "file": "pallass_forge.json"
+  },
+  {
+   "script": "pallass_peek",
+   "step": 76,
+   "field": "$.entities[22].toast",
+   "file": "pallass_market.json"
+  },
+  {
+   "script": "pallass_ledger_carry",
+   "step": 32,
+   "field": "$.entities[25].variants[0].toast",
+   "file": "pallass_market.json"
+  }
+ ],
+ "_qa_pins_broken_note": "Unchanged at 8 by the fix wave: every fix-wave edit either lands on a string already in this list (pallass_ledger_skill[14], pallass_peek[177], pallass_ledger_carry[32]) or on a string no QA script pins (grepped repo-wide over qa/ and tests/). All 8 are `wait_for_event type:toast payload_contains.text` steps; nothing structural.",
+ "deltas": [
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_den_shop.json",
+   "field_path": "$.entities[2].on_skill_use.toast",
+   "entity_id": "den_shop_consignment_file",
+   "old": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. Tin is not perishable. The salt packed WITH it is, and it is on the same manifest line. Four cycles, and the exemption was on the paper the whole time.",
+   "new": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. The tin is not perishable, the salt packed with it is, and after four cycles both are still on one manifest line, so the exemption covers the crate.",
+   "register": "functional",
+   "why": "bible §8: bare CAPS emphasis (WITH) banned at zero; §1.4 4 sentences in functional/skill-outcome; §1.1 thematic closer. All facts kept (form nine clause four, exemption, tin/salt, four cycles, one manifest line); the tin/salt correction is a §7 legitimate keep (the player needs it) || FIX WAVE (M1): review M1: the lane's rewrite left the chain with no resolution — the player spends [Appraise Goods], finds the exemption, and the receipt never says the exemption applies. Restored as a short resolution clause on the existing sentence (no new button, no irony, no re-statement). All facts still present: form nine clause four, perishable exemption, queue hold, tin/salt, four cycles, one manifest line."
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_den_shop.json",
+   "field_path": "$.entities[2].skill_hint_toast",
+   "entity_id": "den_shop_consignment_file",
+   "old": "Forms, in an order. There is a shape to the order. You cannot see the shape.",
+   "new": "The order in the stack is doing work of its own. Appraise it properly and the clause is in there.",
+   "register": "functional",
+   "why": "bible §1.1/§1.4: functional hint, 3 sentences over the 2-sentence ceiling, built as a rhetorical triple with no payload; §10 template — near-twin of pallass_forge_hall's flagged hint"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_den_shop.json",
+   "field_path": "$.entities[3].once_per_waking_toast",
+   "entity_id": "den_shop_receiving_dock",
+   "old": "The dock is squared away for today. Whatever else moves, it moves tomorrow.",
+   "new": "The dock is squared away for today, chalk outline and all.",
+   "register": "functional",
+   "why": "bible §10 named template (the Pallass schedule/civic closer: 4 of the 6 lines the bible quotes as invisible-to-every-counter are this region's); §1.1 closer in functional register; anon `Whatever`"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_den_shop.json",
+   "field_path": "$.entities[3].toast",
+   "entity_id": "den_shop_receiving_dock",
+   "old": "You square the load onto the chalk outline. It fits the way a thing fits when somebody measured it a month ago and has been looking at the empty space since.",
+   "new": "You square the load onto the chalk outline. The chalk goes under the crate on all four sides.",
+   "register": "scenic",
+   "why": "bible §6.1 forbidden inference (a month of looking is neither visible nor an action); §6.3 + guard 10.2 — den_shop's one inferred microhistory is consumed by the protected jars keep; `the way a thing fits` is the §7 geometry family"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_den_shop.json",
+   "field_path": "$.entities[6].toast",
+   "entity_id": "den_shop_family_slate",
+   "old": "Eleven names carried. One of them has been carried for two years and has no repayment column at all. In Pallass, that is a document nobody filed.",
+   "new": "Eleven names carried. One of them has been carried for two years and has no repayment column at all.",
+   "register": "scenic",
+   "why": "issue-named button (extract_prose ISSUE_NAMED_WORK; bible §2 example): the first two sentences are named as excellent, the third tells the reader what to think about them"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
+   "field_path": "$.entities[10].toast",
+   "entity_id": "forge_billet_rack",
+   "old": "Cold iron, cut to length by somebody who measured twice. The strapping doesn't give under your hand.",
+   "new": "Cold iron, every bar cut to the same length as the one beside it. The strapping doesn't give under your hand.",
+   "register": "scenic",
+   "why": "§6.1 + §3.4 motif restraint: the narrator supplies Grimalkin's own motif (`Measure twice`) as an inference about an absent hand; the visible evidence replaces it"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
+   "field_path": "$.entities[13].toast",
+   "entity_id": "forge_parapet_rail",
+   "old": "You put a hand on the rail. Warm from the tier, not from the drop. Whoever set it worked out exactly how close a person could stand.",
+   "new": "You put a hand on the rail. Warm from the tier, not from the drop, and cold air comes up the shaft against your wrist.",
+   "register": "scenic",
+   "why": "§6.1 motive inference + §6.2 anon closer; forge.json's microhistory is consumed by the reject-bin holdout. The `warm from the tier, not from the drop` correction is the file's one §7 keep (real orientation information) || FIX WAVE (re-vary): review monoculture re-vary 1 of 4: the lane's ending (\"it does not shift at all under your weight\") was another negative non-event. Re-shaped to MOTION — cold air up the shaft — which also keeps the warm-rail/cold-drop contrast the observe sets up."
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
+   "field_path": "$.entities[14].once_per_waking_toast",
+   "entity_id": "forge_fetch_slips",
+   "old": "The rack is empty until the next shift files its slips. Pallass does not run two shifts at once.",
+   "new": "The rack is empty until the next shift files its slips.",
+   "register": "functional",
+   "why": "bible §10: quoted verbatim as one of the schedule-template lines no counter can see; §1.1 closer in functional register"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
+   "field_path": "$.entities[17].toast",
+   "entity_id": "lift_manifest_slate",
+   "old": "One crate of tin, den shop, market tier. Logged three cycles running and carried none of them. Beside it, in a tidier hand: HELD, QUEUE.",
+   "new": "One crate of tin, den shop, market tier. Logged three cycles running and carried none of them. Beside it, chalked in a tidier hand: HELD, QUEUE.",
+   "register": "scenic",
+   "why": "bible §8 lettering proxy: the capitals ARE diegetic (chalk on the manifest slate) but no written-surface noun appeared in the string, so the proxy read them as bare emphasis. One word makes proxy and judgement agree; no other change"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
+   "field_path": "$.entities[18].once_per_waking_toast",
+   "entity_id": "lift_cargo_pallet",
+   "old": "The pallet is where you left it and the cage is where the bell says. Nothing moves again until the next shift.",
+   "new": "The attendant has stopped counting loads for the day. Come back for the pallet on tomorrow's bell.",
+   "register": "functional",
+   "why": "bible §10 schedule template + §1.1 closer in functional register; the new line pays off the observe's `one hand's width outside the loading square` || FIX WAVE (H3): review H3: the lane's rewrite dropped the refusal AND the re-arm timing that its own four sibling once_per_waking rewrites all carry, and it asserted the pallet was INSIDE the loading square, contradicting the holdout observe at $.entities[18].observe (\"one hand's width outside the loading square\"). Reconciled in the toast alone (the observe is holdout, byte-untouched): refusal = the attendant has stopped counting loads for the day, re-arm = tomorrow's bell, and the pallet's position is left where the observe puts it. Ending shape INSTRUCTION, deliberately unlike $.entities[14].once_per_waking_toast's fact ending in the same file."
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
+   "field_path": "$.entities[18].toast",
+   "entity_id": "lift_cargo_pallet",
+   "old": "You get the pallet onto the loading square and the strapping squared. The attendant looks at it, looks at the bell, and says nothing, which is the whole permission you are going to get.",
+   "new": "You get the pallet onto the loading square and the strapping squared. The attendant looks at it, looks at the bell, and says nothing.",
+   "register": "scenic",
+   "why": "demotion candidate (closer_score 3): the trailing clause is a verdict on a silence that the silence already delivers (§2.2). Ends on the §9 silence shape"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
+   "field_path": "$.entities[2].toast",
+   "entity_id": "forge_station_b",
+   "old": "Tool racks, empty for the moment. Whoever works this bench keeps it orderly.",
+   "new": "Tool racks, empty for the moment, and the bench still ticking as it cools.",
+   "register": "scenic",
+   "why": "§6.1 (an absent worker's habits are not visible) + §6.2 anon closer; forge.json's one inferred microhistory is consumed by the reject-bin holdout"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
+   "field_path": "$.entities[4].observe",
+   "entity_id": "grand_lift_forge",
+   "old": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight. This is how the tiers actually connect.",
+   "new": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight.",
+   "register": "scenic",
+   "why": "demotion candidate (closer_score 3): §2.2 thematic closer. Also de-duplicates a string authored verbatim in two files"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
+   "field_path": "$.entities[6].friendly_line",
+   "entity_id": "forge_smith",
+   "old": "She sets the hammer down long enough to look at you properly. From her, that reads as a whole conversation.",
+   "new": "She sets the hammer down long enough to look at you properly. The billet on the anvil goes a shade darker while she does.",
+   "register": "character-bearing",
+   "why": "bible §7 other-shapes (`from X ... is Y`, target zero) + §3.5: the reaction is shown (the work cooling is the cost of her attention) instead of summarised"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
+   "field_path": "$.entities[7].friendly_line",
+   "entity_id": "lift_attendant",
+   "old": "He tips two fingers off the gate lever. \"Quarter bell,\" he says, which from him is a kindness and a schedule at once.",
+   "new": "He tips two fingers off the gate lever. \"Quarter bell,\" he says, and puts them back.",
+   "register": "character-bearing",
+   "why": "bible §7: the `which from X is Y` shape the issue names by hand, target zero (regex-confirmed instance) + §3.5"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
+   "field_path": "$.entities[8].observe",
+   "entity_id": "forge_tool_wall",
+   "old": "Tongs, swages and fullers hung in size order along a painted rack, every one of them chalk-outlined on the boards behind it. An empty outline is a tool somebody still has.",
+   "new": "Tongs, swages and fullers hung in size order along a painted rack, every one of them chalk-outlined on the boards behind it. One outline in the middle of the row is bare.",
+   "register": "scenic",
+   "why": "§6.2: the anon closes the string and the inference becomes the point. The evidence stays; the reader assembles the missing tool (§2.3, the file-mates of the den-shop MODEL)"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge.json",
+   "field_path": "$.interior_flavor[1]",
+   "entity_id": null,
+   "old": "Nothing there. Every tool on this tier is squared to an edge somebody measured.",
+   "new": "Nothing there. Scale on the flags and the smell of hot iron.",
+   "register": "functional",
+   "why": "§6.2 anon closer, and the third use of `squared to the/an edge` in one file (the Magus's bench observe and toast carry the other two)"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge_hall.json",
+   "field_path": "$.entities[1].observe",
+   "entity_id": "forge_hall_temper_bench",
+   "old": "A billet clamped mid-process, the quench beside it, a gauge nobody has reset since the last failure. Somebody stopped here on purpose and did not come back.",
+   "new": "A billet clamped mid-process, the quench beside it, a gauge still reading where the last failure left it.",
+   "register": "scenic",
+   "why": "demotion candidate (closer_score, anon_agent); §6.1 motive inference (`on purpose`, `did not come back`), §6.2 anon closing the string. Evidence kept, reader assembles it (§2.3)"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge_hall.json",
+   "field_path": "$.entities[1].skill_hint_toast",
+   "entity_id": "forge_hall_temper_bench",
+   "old": "Colour, count, quench. You can see there is an order to it. You cannot see the order.",
+   "new": "Colour, count, quench. Two of those you can judge by eye; the count wants a trained one.",
+   "register": "functional",
+   "why": "demotion candidate (closer_score); §1.4 3 sentences over the functional ceiling, rhetorical triple, no payload"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge_hall.json",
+   "field_path": "$.entities[2].toast",
+   "entity_id": "forge_hall_standard_notice",
+   "old": "The standard does not measure how hard a blade comes out. It measures how it RECOVERS. Somebody up here has been failing the wrong test perfectly.",
+   "new": "The standard does not measure how hard a blade comes out. It measures how it recovers.",
+   "register": "scenic",
+   "why": "bible §8 bare CAPS emphasis (RECOVERS) at zero — the §4 RESTAGE pattern: keep the correction, lose the staging; §6.2 anon closer about a person standing in the room. `recovers` retained verbatim because pallass_forge_smith.json cites the notice ('The standard measures recovery')"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge_hall.json",
+   "field_path": "$.entities[3].friendly_line",
+   "entity_id": "forge_apprentice",
+   "old": "She looks up for exactly as long as the count allows, then back down. From an apprentice on the clock, that is a warm welcome.",
+   "new": "She looks up for exactly as long as the count allows, then back down. Her lips are moving on a number.",
+   "register": "character-bearing",
+   "why": "bible §7 other-shapes (`from X, that is Y` — the `which from X is Y` family, target zero) + §3.5: a friendly_line shows the guard moving, it does not narrate that it moved || FIX WAVE (re-vary): review monoculture re-vary 2 of 4: \"The count does not miss a beat\" was a negative non-event closer. Re-shaped to an observed physical DETAIL (she is silently counting), which shows the same thing without asserting the absence of an event."
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge_hall.json",
+   "field_path": "$.entities[4].toast",
+   "entity_id": "forge_hall_slack_tub",
+   "old": "You touch the surface. Warm all the way down. This tub has not been cold in years, and the scum line says nobody has ever had time to change it.",
+   "new": "You touch the surface. Warm all the way down, and this tub has not been cold in years. The oil skin closes back over where your finger went.",
+   "register": "scenic",
+   "why": "§6.2 anon closing the string on an inference about absent people's time (§6.1 motive-adjacent); §6.3 surplus microhistory in a file that keeps one"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge_hall.json",
+   "field_path": "$.entities[6].observe",
+   "entity_id": "forge_hall_pattern_wall",
+   "old": "Finished pieces racked in a grid, each with a civic tag wired to it. They are not for sale. They are the argument.",
+   "new": "Finished pieces racked in a grid, each with a civic tag wired to it and not one price among them.",
+   "register": "scenic",
+   "why": "demotion candidate (closer_score 3); §7.4 `not P. A Q.` mechanical shape + abstract closer noun, and the file's one negation allowance (§7.3) is spent on the examination standard, which is the §7 keep"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge_hall.json",
+   "field_path": "$.entities[6].toast",
+   "entity_id": "forge_hall_pattern_wall",
+   "old": "Every piece on the wall passed. You count the tags: four different smiths, four different answers, one standard. Pallass framed the disagreement and hung it up.",
+   "new": "Every piece on the wall passed. You count the tags: four different smiths, four different answers, one standard.",
+   "register": "scenic",
+   "why": "§2.2 thematic closer restating the count at a higher abstraction (poster test) and the region's civic-generalisation template (§10)"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge_hall.json",
+   "field_path": "$.entities[7].gate_closed_toast",
+   "entity_id": "forge_temper_golem",
+   "old": "The rig swings past its own marks and settles wrong, again and again. Whatever is out of true in it is the forge's business — until somebody on this floor makes it yours.",
+   "new": "The rig swings past its own marks and settles wrong, again and again. Fixing it belongs to the smith, and she has not asked you to.",
+   "register": "functional",
+   "why": "demotion candidate (closer_score, anon_agent ×2); §1.2 a gate message states its condition — the gate is standards_commission_taken, which the forge smith gives (pallass_forge_smith.json, leads.json)"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_forge_hall.json",
+   "field_path": "$.interior_flavor[1]",
+   "entity_id": null,
+   "old": "Nothing there. The heat in here keeps a schedule, and you are not on it.",
+   "new": "Nothing there. Scorch marks where the tongs get set down.",
+   "register": "functional",
+   "why": "demotion candidate (closer_score) and one of the four lines the bible §10 quotes verbatim as the region's counter-invisible schedule template; §1.1 closer in functional register"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[0].observe",
+   "entity_id": "pallass_market_arrival_anchor",
+   "old": "A squared plinth of the same slab the whole tier is cut from. No rune, no seam, nothing carved into it at all — and still the blankness has an outline, the way a mould does. Whatever door reaches this tier is already remembered here.",
+   "new": "A squared plinth of the same slab the whole tier is cut from. No rune, no seam, nothing carved into it at all, and the blankness still has an outline to it.",
+   "register": "scenic",
+   "why": "§7 other-shapes `the way a mould does` (regex-confirmed, target zero) + §6.2 anon closer + a thematic closer that pre-empts the prop's own holdout toast. Every fact kept"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[12].observe",
+   "entity_id": "grand_lift_market",
+   "old": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight. This is how the tiers actually connect.",
+   "new": "A bronze-riveted cage with room in it for a wagon, counterweights racked in a shaft that drops past the tiers below this one.",
+   "register": "scenic",
+   "why": "demotion candidate (closer_score 3): §2.2 thematic closer; the two tiers now see the same lift from their own side instead of sharing one verbatim string || FIX WAVE (M5): review M5: the lane's rewrite claimed transient motion (\"counterweights climbing the shaft as the cage comes down\") on a lift whose gate is LOCKED until elevator_pass_stamped — the cage is not moving when the player reads this. Transient claim dropped, depth fact restored (the shaft drops past the tiers below), still deliberately distinct from pallass_forge.json's $.entities[4].observe of the same lift."
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[13].on_skill_use.toast",
+   "entity_id": "lift_overlook",
+   "old": "[Eagle Eyes] — The haze gives up. Nine tiers resolve into stalls, patrol routes, and one dropped coin purse on a ledge two floors down that everyone else is too proud to see.",
+   "new": "[Eagle Eyes] — The haze gives up. Nine tiers resolve into stalls, patrol routes, and one dropped coin purse on a ledge two floors down.",
+   "register": "functional",
+   "why": "UNTOUCHED by the lane; changed by the FIX WAVE (L6): review L6: functional/skill-outcome register with a thematic closer the lane left in place (\"that everyone else is too proud to see\") — §1.1 allows no closer here and the register cannot petition for one. Closer cut, zero closers, all facts kept (nine tiers, stalls, patrol routes, one dropped coin purse, two floors down)."
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[13].once_per_waking_toast",
+   "entity_id": "lift_overlook",
+   "old": "No more dropped coins by the railing today. Pallass sweeps on schedule.",
+   "new": "No more dropped coins by the railing today.",
+   "register": "functional",
+   "why": "bible §10: quoted verbatim as a schedule-template line no counter can see; §1.1 closer in functional register"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[22].toast",
+   "entity_id": "market_ordinance_wall",
+   "old": "Ordinances, numbered and glassed. Somewhere in Pallass a clerk owns the key to this case, and only that clerk.",
+   "new": "Numbered, dated, and locked under glass. You read four of them and put your hands back in your pockets.",
+   "register": "scenic",
+   "why": "§10 (the anon rule binds semantically, not lexically): an unnamed inferred agent closes the string and no counter can see it, plus the civic-generalisation template. Facts kept: numbered, dated, glassed and locked"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[25].once_per_waking_toast",
+   "entity_id": "market_dray_rank",
+   "old": "The rank is empty until the next rotation. Pallass hires carts on a schedule too.",
+   "new": "Every cart on the rank is out. The next rotation brings them back.",
+   "register": "functional",
+   "why": "bible §10: quoted verbatim as a schedule-template line; §1.1 closer in functional register. Reworded rather than truncated so it does not become the forge rack's twin"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[25].toast",
+   "entity_id": "market_dray_rank",
+   "old": "You take a cart off the rank, walk the crate off the lift apron and across two blocks of very orderly stone, and nobody stops you once. The paperwork was never about the crate.",
+   "new": "You take a cart off the rank, walk the crate off the lift apron and across two blocks of very orderly stone, and nobody stops you once.",
+   "register": "scenic",
+   "why": "demotion candidate (closer_score 3): the second sentence states the chain's thesis for the player (§2.2). See PETITION in the lane report"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[25].variants[0].toast",
+   "entity_id": "market_dray_rank",
+   "old": "Second leg, same cart, same two blocks. The rank clerk marks it without looking up, which in Pallass is a commendation.",
+   "new": "Second leg, same cart, same two blocks. The rank clerk chalks it onto the queue board under the first.",
+   "register": "scenic",
+   "why": "demotion candidate (closer_score) + §7 `which from X is Y` geometry (regex-confirmed, target zero); ends on the §9 silence shape || FIX WAVE (re-vary): review monoculture re-vary 4 of 4, and the second NEW \"without looking up\" ending. Re-shaped to MOTION on the queue board the observe already names. After this pass the region has zero \"look up\" ENDINGS; the single surviving mention is mid-string in pallass_forge.json $.entities[6].observe, which the lane correctly left alone."
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[2].observe",
+   "entity_id": "price_board_market",
+   "old": "Rows of chalked figures, precise to the copper, refreshed each morning by a clerk with steadier hands than yours. Nobody haggles here. Nobody needs to.",
+   "new": "Rows of chalked figures, precise to the copper, refreshed each morning by a clerk with steadier hands than yours.",
+   "register": "scenic",
+   "why": "demotion candidate (anon_agent): two anons in a rhetorical doublet closer. The no-haggling fact stays findable on the same prop's toast (`The numbers don't move for anyone.`) and in the stallkeeper's own line"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[3].toast",
+   "entity_id": "market_stall_a",
+   "old": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up — the price is the price.",
+   "new": "Goods in rows, each with a chalked price card leaning against it. The card at the end of the row is turned face down.",
+   "register": "scenic",
+   "why": "demotion candidate (closer_score 5) + §7 `the X is the X` geometry (regex-confirmed, target zero); the string was authored three times over (stalls a/b/c), so the three fixes differ per §10 guard 3"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[4].observe",
+   "entity_id": "market_stall_b",
+   "old": "A stall built to the same civic pattern as every other on this tier — same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+   "new": "Counter height, awning pitch and placard all to the same civic pattern as its neighbours. A folded rag is wedged under one leg to bring the counter level.",
+   "register": "scenic",
+   "why": "UNTOUCHED by the lane; changed by the FIX WAVE (M3): review M3: three byte-identical stall observes survived the lane's toast differentiation. Doublet \"Efficient. Impersonal.\" is allowed to survive on exactly ONE (market_stall_a); this one gets the same treatment its toast got — the civic sameness stated once, then one specific physical deviation. Zero inference, ending shape FACT."
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[4].toast",
+   "entity_id": "market_stall_b",
+   "old": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up — the price is the price.",
+   "new": "You pick a bundle up, read the price off the card, and set it down. The keeper adds a mark to a tally sheet as you do it.",
+   "register": "scenic",
+   "why": "same indictment as stall a; differentiated fix (§10 guard 3), ends on the §9 silence shape || FIX WAVE (re-vary): review monoculture re-vary 3 of 4, and one of the two NEW \"doesn't look up\" endings the lane introduced (three in the region). Re-shaped to MOTION — the keeper does something rather than fails to do something."
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[5].skill_hint_toast",
+   "entity_id": "pallass_stall_burner",
+   "old": "The stallkeeper's burner is free between rushes. Pallass argues about everything except good food.",
+   "new": "The stallkeeper's burner is free between rushes. Cook a proper meal on it.",
+   "register": "functional",
+   "why": "§1.1 closer in functional register + the region's civic-generalisation template (§10); skill_hint fires for a player who already HAS the Skill (interactions.gd:161), so the payload is the nudge"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[6].observe",
+   "entity_id": "market_stall_c",
+   "old": "A stall built to the same civic pattern as every other on this tier — same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+   "new": "Counter, awning and placard all to the tier's spec, the third of three in a row. The awning's edge ticks up and down where the canvas has come loose from a grommet.",
+   "register": "scenic",
+   "why": "UNTOUCHED by the lane; changed by the FIX WAVE (M3): review M3, second of the two differentiated stall observes. Same civic-sameness clause, then a different order of deviation, ending shape MOTION so the three stalls no longer share a rhythm or an ending. Zero inference."
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[6].toast",
+   "entity_id": "market_stall_c",
+   "old": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up — the price is the price.",
+   "new": "The stallkeeper answers a question you have not asked by tapping the price card twice.",
+   "register": "scenic",
+   "why": "same indictment as stall a; differentiated fix (§10 guard 3), ends on motion"
+  },
+  {
+   "file": "wandering_inn_game/data/maps/pallass/pallass_market.json",
+   "field_path": "$.entities[9].observe",
+   "entity_id": "permit_office_counter",
+   "old": "The window ledge is worn smooth where a thousand wrists have rested, waiting on a stamp. A stencilled plate lists the posted fees. Nobody argues with it.",
+   "new": "The window ledge is worn smooth where a thousand wrists have rested, waiting on a stamp. A stencilled plate lists the posted fees.",
+   "register": "scenic",
+   "why": "§6.2 anon closer and §6.1 (what absent people do not do is not an action the evidence shows); market.json ran four `nobody argues/haggles` constructions, one of them a holdout"
+  }
+ ]
+}

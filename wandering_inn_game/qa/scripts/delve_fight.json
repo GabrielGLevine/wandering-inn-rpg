@@ -174,7 +174,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The gallery floor slopes down past where the den used to be, into a chamber someone else has clearly been surveying."
+    "text": "The gallery floor slopes down past where the den used to be. You come out in the delve's staging chamber."
    },
    "timeout_sec": 5
   },
@@ -568,7 +568,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The runes are the same. Not similar — the same hand, the same order, as the door in the inn's pantry."
+    "text": "The runes are the same. The same hand, the same order, as the door in the inn's pantry."
    },
    "timeout_sec": 5
   },

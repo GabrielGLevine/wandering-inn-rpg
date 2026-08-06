@@ -95,7 +95,7 @@
    "action": "assert_event_logged",
    "type": "toast",
    "payload_contains": {
-    "text": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away."
+    "text": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating all the way around the jamb. It holds still while you watch it and shifts the moment you look away."
    }
   },
   {

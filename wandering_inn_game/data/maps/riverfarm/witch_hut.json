@@ -170,7 +170,7 @@
    ]
   },
   {
-   "_comment": "R2 SKILL route. detect_magic is the requires_skill GATE and the arm banks ward_scrap_read ONLY -- it must never bank detected_wardwork. trapped_halls.json:355 states the Act V door deliberately withholds a fifth producer because it would cheapen the >=3 threshold its payoff variant reads (qa/fixtures/seal_reward_start.json:31 pins the value at 3). Reading this scrap teaches the same literacy without spending that budget.",
+   "_comment": "detect_magic is the requires_skill GATE and the arm banks ward_scrap_read ONLY -- it must never bank detected_wardwork. The Act V door deliberately withholds a fifth producer of that counter because it would cheapen the >=3 threshold its payoff variant reads (qa/fixtures/seal_reward_start.json pins the value at 3). Reading this scrap teaches the same literacy without spending that budget.",
    "id": "hut_ward_scrap",
    "kind": "prop",
    "cell": [
@@ -198,7 +198,7 @@
     "lore": true,
     "toast": "[Detect Magic] — The shard is one link of a boundary that used to ring the whole thicket. It still pulls, faintly, along the exact line the deer refuse to cross. It was drawn to keep something in, and it has been failing at that for a very long time."
    },
-   "observe": "A shard of grey stone on the shelf, set down carefully by someone who meant to come back for it."
+   "observe": "A palm of grey stone laid flat on the shelf, square to its edge. Nothing else up there is square to anything."
   },
   {
    "id": "hut_stoppered_jars",
@@ -211,7 +211,7 @@
    "sprite": "shelf_bottles",
    "observe": "A row of stoppered jars along the top shelf, their labels faded to a suggestion.",
    "on_interact_accomplishment": "observed_hut_stoppered_jars",
-   "toast": "Every stopper is waxed and every jar is still full. Whoever kept this house left it ready and never came back for it."
+   "toast": "Every stopper is waxed and every jar is still full. The wax was pressed flat by a thumb and never broken since."
   },
   {
    "id": "hut_drying_rack",
@@ -224,7 +224,7 @@
    "sprite": "library_shelf",
    "observe": "A rack of bundled stems, dried long past any use.",
    "on_interact_accomplishment": "observed_hut_drying_rack",
-   "toast": "Yarrow, mostly, and a great deal of it. Somebody kept this place stocked for a house they intended to come back to."
+   "toast": "Yarrow, mostly, and a great deal of it. The bundles turn on their strings when the door moves."
   },
   {
    "id": "hut_hearth_ash",

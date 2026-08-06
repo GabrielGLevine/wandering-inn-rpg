@@ -258,7 +258,7 @@
    "action": "assert_event_logged",
    "type": "toast",
    "payload_contains": {
-    "text": "[Appraise Foe] — You lie flat on the ledge and read the nest like a map. Two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper. That's where the rest of them are. Count, size, exits: you have it all, and you never had to draw a blade."
+    "text": "[Appraise Foe] — You lie flat on the ledge and read the nest like a map: two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper. The rest of them are down that tunnel."
    }
   },
   {

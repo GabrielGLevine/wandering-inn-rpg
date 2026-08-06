@@ -115,7 +115,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "[Appraise Foe] — Now you know the gap in the watch, the true ledger comes easy: tucked behind a false-backed drawer no honest desk needs. Forty gold to a 'removal man,' dated the night before Coyle's own theft: his hand, his numbers, his mistake. The drawer's second catch gives up a shallow hidden safe behind it, empty now but scored where something heavier than coin sat until recently."
+    "text": "[Appraise Foe] — Now you know the gap in the watch, the true ledger comes easy: tucked behind a false-backed drawer no honest desk needs. Forty gold to a 'removal man,' dated the night before Coyle's own theft: his hand, his numbers, his mistake."
    },
    "timeout_sec": 5
   },

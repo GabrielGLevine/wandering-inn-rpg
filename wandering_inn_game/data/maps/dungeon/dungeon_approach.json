@@ -176,7 +176,7 @@
     }
    },
    "toast": "Set into the wall beside the landing, older than the rubble and colder than the air. The frame of light under its surface answers the moment you look at it.",
-   "observe": "Somebody warded a way out of here before the passage was ever choked. The vein through it is the same coin-gold as the stones above."
+   "observe": "A way out of here, warded into the stone before the passage was ever choked. The vein through it is the same coin-gold as the stones above."
   },
   {
    "_comment": "Met, it becomes a real door to `deep_tunnels`, landing at (13,5)",
@@ -193,7 +193,7 @@
     0.48,
     0.5
    ],
-   "observe": "Rubble and worked stone choke a passage that clearly led somewhere once. Someone sealed this side deliberately, and not long ago either.",
+   "observe": "Rubble and worked stone choke a passage that led somewhere once. The stones sit in courses, and there is barely any dust on them.",
    "on_interact_accomplishment": "found_the_sealed_passage",
    "toast": "The stone doesn't budge. Whatever's on the other side stays sealed. For now.",
    "door_when": {
@@ -205,7 +205,7 @@
      13,
      5
     ],
-    "open_toast": "The rubble gives at your push — someone's already cleared a path through. The old gallery beyond is dark, but it is open."
+    "open_toast": "The rubble gives at your push; the path through it was cleared before you got here. The old gallery beyond is dark, but it is open."
    }
   },
   {
@@ -222,9 +222,9 @@
     0.4,
     0.42
    ],
-   "observe": "A carved shape crouches against the far wall, limbs folded, its eyeless face turned to the floor. It has not moved since you noticed it. That is the only reason you are still standing here.",
+   "observe": "A carved shape crouches against the far wall, limbs folded, its eyeless face turned to the floor. It has not moved since you noticed it.",
    "on_interact_accomplishment": "eyed_the_dormant_guardian",
-   "toast": "You keep your distance. Whatever wakes it, you would rather not be the one who finds out."
+   "toast": "You keep your distance. A shallow arc is scored into the floor in front of it, ending under one folded knee."
   },
   {
    "_comment": "Grouped with Yvlon/Ksmvr at (7,5)-(9,5), open floor clear of every blocked/decor/entity cell on this map. v0.15 T4.3 round 2: retires on horns_dig_started with the rest of the party. Her own `ceria_intro` banks that counter mid-conversation, which is why this gate needed world.gd's dialogue defer first. Contract: inn.json's `ceria_inn_returned`.",

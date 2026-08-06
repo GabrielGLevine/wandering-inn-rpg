@@ -3,7 +3,7 @@
  "biome": "pallass_forge",
  "interior_flavor": [
   "Nothing there. Warm metal underfoot, and a rhythm below it that never quite stops.",
-  "Nothing there. Every tool on this tier is squared to an edge somebody measured."
+  "Nothing there. Scale on the flags and the smell of hot iron."
  ],
  "grid": {
   "width": 26,
@@ -474,7 +474,7 @@
    "sprite": "forge_station",
    "observe": "A second bench, same pattern as the first — built to the same civic spec as the market tier's stalls, just built for heat instead of trade.",
    "on_interact_accomplishment": "eyed_the_forge_station",
-   "toast": "Tool racks, empty for the moment. Whoever works this bench keeps it orderly.",
+   "toast": "Tool racks, empty for the moment, and the bench still ticking as it cools.",
    "_light_comment": "v0.17 R2: the tier's second banked mouth. Count 7 -> 8 = LIGHT_BUDGET, so this map is FULL.",
    "light": {
     "color": [
@@ -509,7 +509,7 @@
    ],
    "display_name": "The Grand Lift",
    "sprite": "great_lift",
-   "observe": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight. This is how the tiers actually connect.",
+   "observe": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight.",
    "locked_toast": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open.",
    "door_when": {
     "requires": {
@@ -567,7 +567,7 @@
    ],
    "facing": "left",
    "observe": "A Drake in a scarred leather apron, forearms banded with old burn-marks she stopped covering years ago. She works without looking up, and the work doesn't suffer for it.",
-   "friendly_line": "She sets the hammer down long enough to look at you properly. From her, that reads as a whole conversation.",
+   "friendly_line": "She sets the hammer down long enough to look at you properly. The billet on the anvil goes a shade darker while she does.",
    "talk_pool": [
     "Bench is rated for a working day at a time. It gets one, and not a bell more.",
     "Stand clear of the quench, {addr}. Steam doesn't care whose day it is.",
@@ -626,7 +626,7 @@
    ],
    "facing": "down",
    "observe": "A Drake in a brass-buttoned lift coat, one hand resting on the gate lever without gripping it. He watches the counterweights instead of the passengers, and knows where both are.",
-   "friendly_line": "He tips two fingers off the gate lever. \"Quarter bell,\" he says, which from him is a kindness and a schedule at once.",
+   "friendly_line": "He tips two fingers off the gate lever. \"Quarter bell,\" he says, and puts them back.",
    "talk_pool": [
     "Down at the quarter bell, up at the half. If you aren't sure which, wait. The bell is sure.",
     "Mind the gate track, {addr}. It shuts on a count, not on a look.",
@@ -672,7 +672,7 @@
     0.58,
     0.62
    ],
-   "observe": "Tongs, swages and fullers hung in size order along a painted rack, every one of them chalk-outlined on the boards behind it. An empty outline is a tool somebody still has.",
+   "observe": "Tongs, swages and fullers hung in size order along a painted rack, every one of them chalk-outlined on the boards behind it. One outline in the middle of the row is bare.",
    "on_interact_accomplishment": "eyed_the_forge_tools",
    "toast": "You lift a set of tongs off its outline and set it back. Heavier than it looks, and it goes back exactly straight."
   },
@@ -718,7 +718,7 @@
    ],
    "observe": "Bar stock stacked by gauge, each bundle strapped and tagged. The tags carry a tier number, a bench number, and nothing else. No names anywhere on them.",
    "on_interact_accomplishment": "eyed_the_billet_rack",
-   "toast": "Cold iron, cut to length by somebody who measured twice. The strapping doesn't give under your hand."
+   "toast": "Cold iron, every bar cut to the same length as the one beside it. The strapping doesn't give under your hand."
   },
   {
    "_comment": "Sprite reads picked off the first windowed pass, not off the name: `cauldron` put a FIRE in the quench (a lit pot beside the anvil), `riverfarm_fence_ew` put WOOD against the molten seam, and a second `barrel` cloned the quench 7 cells away. Barrel/boulder/rail-at-the-parapet is what the tier actually reads as.",
@@ -773,7 +773,7 @@
    ],
    "observe": "A bronze rail along the tier's open edge, polished bright by a hundred people leaning on the same stretch of it while they waited on the cage. Below it the shaft goes down past where the light gives up.",
    "on_interact_accomplishment": "leaned_on_the_parapet_rail",
-   "toast": "You put a hand on the rail. Warm from the tier, not from the drop. Whoever set it worked out exactly how close a person could stand."
+   "toast": "You put a hand on the rail. Warm from the tier, not from the drop, and cold air comes up the shaft against your wrist."
   },
   {
    "_comment": "v0.15 T4.4 regional repeatable work, 3 of 3. NEW COUNTER pallass_fetches_run, frozen at the next tag. Cell (18,4) sits east of forge_station_b, off the bounds lap (rows 2/9, columns 0/25) and off the y=9 lane pallass_walkthrough and pallass_round_trip both use.",
@@ -788,7 +788,7 @@
    "observe": "A rack of numbered slips beside the second bench: a stock number, a bench number, an hour. No names on any of them. Any pair of hands that can read a gauge can take one down.",
    "on_interact_accomplishment": "pallass_fetches_run",
    "once_per_waking": true,
-   "once_per_waking_toast": "The rack is empty until the next shift files its slips. Pallass does not run two shifts at once.",
+   "once_per_waking_toast": "The rack is empty until the next shift files its slips.",
    "gold": 2,
    "toast": "You take a slip, walk its stock number down to the racks and the finished piece back up. The clerk who pays you writes down the hour you took, to the quarter.",
    "variants": [
@@ -854,7 +854,7 @@
    "sprite": "price_board",
    "observe": "A slate of what the cage is carrying today, chalked by hour. Two lines have been rewritten so many times the slate has gone smooth under them.",
    "on_interact_accomplishment": "read_the_lift_manifest",
-   "toast": "One crate of tin, den shop, market tier. Logged three cycles running and carried none of them. Beside it, in a tidier hand: HELD, QUEUE.",
+   "toast": "One crate of tin, den shop, market tier. Logged three cycles running and carried none of them. Beside it, chalked in a tidier hand: HELD, QUEUE.",
    "visual_states": [
     {
      "when": {
@@ -882,8 +882,8 @@
    "observe": "A pallet strapped and tagged and standing exactly where it has stood for three cycles, one hand's width outside the loading square.",
    "on_interact_accomplishment": "shipment_leg_carried",
    "once_per_waking": true,
-   "once_per_waking_toast": "The pallet is where you left it and the cage is where the bell says. Nothing moves again until the next shift.",
-   "toast": "You get the pallet onto the loading square and the strapping squared. The attendant looks at it, looks at the bell, and says nothing, which is the whole permission you are going to get."
+   "once_per_waking_toast": "The attendant has stopped counting loads for the day. Come back for the pallet on tomorrow's bell.",
+   "toast": "You get the pallet onto the loading square and the strapping squared. The attendant looks at it, looks at the bell, and says nothing."
   }
  ]
 }

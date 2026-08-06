@@ -298,7 +298,7 @@
     "display_name": "Bent Tree",
     "id": "hollow_tree_0",
     "kind": "prop",
-    "observe": "A tree grown crooked, leaning in over the path like it's listening.",
+    "observe": "\u00b6",
     "sprite": "hollow_canopy_tree"
    },
    {
@@ -309,7 +309,7 @@
     "display_name": "Bent Tree",
     "id": "hollow_tree_1",
     "kind": "prop",
-    "observe": "A tree grown crooked, leaning in over the path like it's listening.",
+    "observe": "\u00b6",
     "sprite": "hollow_canopy_tree"
    },
    {
@@ -320,7 +320,7 @@
     "display_name": "Bent Tree",
     "id": "hollow_tree_2",
     "kind": "prop",
-    "observe": "A tree grown crooked, leaning in over the path like it's listening.",
+    "observe": "\u00b6",
     "sprite": "hollow_canopy_tree"
    },
    {
@@ -331,7 +331,7 @@
     "display_name": "Bent Tree",
     "id": "hollow_tree_3",
     "kind": "prop",
-    "observe": "A tree grown crooked, leaning in over the path like it's listening.",
+    "observe": "\u00b6",
     "sprite": "hollow_canopy_tree"
    },
    {
@@ -342,7 +342,7 @@
     "display_name": "Bent Tree",
     "id": "hollow_tree_4",
     "kind": "prop",
-    "observe": "A tree grown crooked, leaning in over the path like it's listening.",
+    "observe": "\u00b6",
     "sprite": "hollow_canopy_tree"
    },
    {
@@ -353,11 +353,11 @@
     "display_name": "Bent Tree",
     "id": "hollow_tree_5",
     "kind": "prop",
-    "observe": "A tree grown crooked, leaning in over the path like it's listening.",
+    "observe": "\u00b6",
     "sprite": "hollow_canopy_tree"
    },
    {
-    "_comment": "West treeline = BACKDROP, not lid. Each canopy covers the FIVE rows above its base cell; plain y-sort drew it over everything under it. field_y_sort_bias_px -80 (inn_roof key: sort-only, pixels unmoved) lifts the key clear, so witch_hut_door [1,7], the PC at [1,8], hollow_offering_pot [2,7] and thicket_line_den [2,2] render IN FRONT; tree stacking survives (-32 < 16 < 64). Tint MEASURED not the lever: the door read identically occluded.",
+    "_comment": "West treeline = BACKDROP, not lid. Each canopy covers the FIVE rows above its base cell. field_y_sort_bias_px -80 (inn_roof key: sort-only, pixels unmoved) lifts the key clear, so witch_hut_door [1,7], the PC at [1,8], hollow_offering_pot [2,7] and thicket_line_den [2,2] render IN FRONT; tree stacking survives (-32 < 16 < 64). Tint is not the lever here.",
     "cell": [
      0,
      3
@@ -366,7 +366,7 @@
     "field_y_sort_bias_px": -80.0,
     "id": "hollow_tree_6",
     "kind": "prop",
-    "observe": "A tree grown crooked, leaning in over the path like it's listening.",
+    "observe": "\u00b6",
     "sprite": "hollow_canopy_tree"
    },
    {
@@ -378,7 +378,7 @@
     "field_y_sort_bias_px": -80.0,
     "id": "hollow_tree_7",
     "kind": "prop",
-    "observe": "A tree grown crooked, leaning in over the path like it's listening.",
+    "observe": "\u00b6",
     "sprite": "hollow_canopy_tree"
    },
    {
@@ -390,7 +390,7 @@
     "field_y_sort_bias_px": -80.0,
     "id": "hollow_tree_8",
     "kind": "prop",
-    "observe": "A tree grown crooked, leaning in over the path like it's listening.",
+    "observe": "\u00b6",
     "sprite": "hollow_canopy_tree"
    },
    {
@@ -411,10 +411,10 @@
      "flicker": true,
      "radius": 28
     },
-    "observe": "A mossy, sagging roof, a crooked chimney, and one window that's always lit no matter the hour.",
+    "observe": "\u00b6",
     "on_interact_accomplishment": "observed_witch_cottage",
     "sprite": "witch_cottage",
-    "toast": "The door's shut. Whatever's inside isn't asking for company right now."
+    "toast": "\u00b6"
    },
    {
     "cell": [
@@ -424,7 +424,7 @@
     "display_name": "A Standing Stone",
     "id": "hollow_glow_1",
     "kind": "prop",
-    "observe": "A stone taller than it should be able to stand on its own, glowing faint purple at the seams.",
+    "observe": "\u00b6",
     "sprite": "hollow_glow_stone",
     "tint": [
      1.0,
@@ -440,7 +440,7 @@
     "display_name": "A Standing Stone",
     "id": "hollow_glow_2",
     "kind": "prop",
-    "observe": "Another of the ring-stones, humming faintly if you hold still.",
+    "observe": "\u00b6",
     "sprite": "hollow_glow_stone"
    },
    {
@@ -451,7 +451,7 @@
     "display_name": "A Standing Stone",
     "id": "hollow_glow_3",
     "kind": "prop",
-    "observe": "Another of the ring-stones, humming faintly if you hold still.",
+    "observe": "\u00b6",
     "sprite": "hollow_glow_stone"
    },
    {
@@ -470,20 +470,20 @@
     "display_name": "A Waiting Pot",
     "id": "hollow_offering_pot",
     "kind": "prop",
-    "locked_toast": "Something's meant to go in this, cooked properly. You don't know your way around a stew pot. Yet.",
-    "observe": "An iron pot set by the cottage door, empty and waiting. Someone means for it to be used.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "on_open_accomplishment": "makings_brought",
     "on_skill_use": {
      "accomplishment": "cooked_the_offering",
-     "toast": "[Basic Cooking] \u2014 You cook the offering plain and honest, the way you'd feed anyone who'd walked far to eat."
+     "toast": "\u00b6"
     },
-    "open_toast": "You work the hollow's margin til the pot is full. Rosehips, dead-nettle, a knot of wool off the briars. Nothing rare. Everything looked at properly.",
+    "open_toast": "\u00b6",
     "requires_skill": "basic_cooking",
-    "skill_hint_toast": "The pot waits for something cooked plain and honest.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "cauldron",
     "visual_states": [
      {
-      "observe": "The pot is full to the rim now, settled a little where the wool packed down. She has not moved it off the doorstep.",
+      "observe": "\u00b6",
       "when": {
        "at": 1,
        "counter": "makings_brought"
@@ -492,7 +492,7 @@
     ]
    },
    {
-    "_comment": "v0.16.1 #6 ECONOMY: the brew arm is INGREDIENT-GATED (requires_item + on_skill_use.remove_item, the #155 bench seam). Bounds the brew->sell arbitrage by yarrow on hand; CONSUMING also arms wi_game.gd's dup-output refusal (returns BEFORE record_accomplishment), so pack-spam banks no free witch_craft_used toward [Witch]. Coverage: qa/scripts/witch_brew_loop.json.",
+    "_comment": "The brew arm is INGREDIENT-GATED (requires_item + on_skill_use.remove_item, the #155 bench seam). Bounds brew->sell arbitrage by yarrow on hand; CONSUMING also arms wi_game.gd's dup-output refusal (returns BEFORE record_accomplishment), so pack-spam banks no free witch_craft_used toward [Witch]. Coverage: qa/scripts/witch_brew_loop.json.",
     "cell": [
      6,
      8
@@ -500,18 +500,18 @@
     "cookware": true,
     "display_name": "Eloise's Cauldron",
     "id": "eloise_cauldron",
-    "item_hint_toast": "The kettle wants yarrow before it gives anything back.",
+    "item_hint_toast": "\u00b6",
     "kind": "prop",
-    "locked_toast": "A witch's cauldron, warm and waiting. Whatever it wants from you, it isn't just stirring.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "witch_craft_used",
      "item": "remedy_draught",
      "remove_item": "dried_yarrow_bundle",
      "requires_item": "dried_yarrow_bundle",
-     "toast": "[Hedge Remedy] \u2014 You stir like you're sorry for the sick, the way she said. What comes off the ladle is the color of meaning it."
+     "toast": "\u00b6"
     },
     "requires_skill": "hedge_remedy",
-    "skill_hint_toast": "The cauldron's lit and the water's talking to itself. Hands that mean it could bring a remedy out of that.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "witch_cauldron"
    },
    {
@@ -523,14 +523,14 @@
     "display_name": "Threshold Candles",
     "id": "hollow_threshold_candles",
     "kind": "prop",
-    "locked_toast": "A row of cold candle-stubs, set either side of the door. Whatever lights them, it isn't a match.",
-    "observe": "Cold wax and old wicks, set along the threshold like they're waiting for something specific.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "on_skill_use": {
      "accomplishment": "lit_the_threshold_candles",
-     "toast": "[Light] \u2014 The candles catch, one after another, without a flame ever touching them."
+     "toast": "\u00b6"
     },
     "requires_skill": "light",
-    "skill_hint_toast": "Cold candle-stubs either side of the door. No match will do it.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "unlit_lantern",
     "visual_states": [
      {
@@ -565,14 +565,14 @@
     "display_name": "A Tangled Knot",
     "id": "hollow_true_knot",
     "kind": "prop",
-    "locked_toast": "Roots and briar, knotted tighter than any plant ties itself. Whatever it's holding, an untrained eye won't find it.",
-    "observe": "A snarl of root and briar at the center of the standing stones, tied in a knot that doesn't look like it grew that way.",
+    "locked_toast": "\u00b6",
+    "observe": "\u00b6",
     "on_skill_use": {
      "accomplishment": "blight_lifted",
-     "toast": "[Observe] \u2014 The knot isn't wood at all, once you look right at it: a price, tied off and waiting to be paid. You pay it yourself, plainly, and the tension goes out of the air like a held breath let go."
+     "toast": "\u00b6"
     },
     "requires_skill": "observe",
-    "skill_hint_toast": "The knot is too deliberate for briar. It wants a closer look than eyes give for free.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "hollow_mushroom_cluster"
    },
    {
@@ -583,14 +583,14 @@
     "display_name": "Leyline Stone",
     "id": "leyline_stone",
     "kind": "prop",
-    "locked_toast": "A standing stone, older than the village and not saying anything about it.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "detected_wardwork",
      "lore": true,
-     "toast": "[Detect Magic] \u2014 Light runs under the turf in one long seam, straight through the stone and away west. The hollow is built on a current."
+     "toast": "\u00b6"
     },
     "requires_skill": "detect_magic",
-    "skill_hint_toast": "The stone sits where the ground feels heaviest. That's not an accident.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "hollow_glow_stone"
    },
    {
@@ -603,14 +603,14 @@
     "dialogue": [
      {
       "speaker": "Eloise",
-      "text": "Tea's still hot. The offer doesn't get warmer with asking twice."
+      "text": "\u00b6"
      }
     ],
     "display_name": "Eloise",
     "facing": "down",
     "id": "riverfarm_witch",
     "kind": "npc",
-    "observe": "A small grey witch in a hat pressed with tea leaves and old flowers. She holds a cup like the answer to a question you haven't asked yet.",
+    "observe": "\u00b6",
     "sprite": "eloise",
     "talk_pool": [
      "\u00a7",
@@ -664,7 +664,7 @@
     ]
    },
    {
-    "_comment": "#396: ally removed (user ruling 2026-08-05) -- nobody local walks you to the hollow. Solo sim gates in sim_combat_batch.gd. hunter_will_come still fields the shepherd at river_wolf_pack (village) only.",
+    "_comment": "#396: ally removed -- nobody local walks you to the hollow. Solo sim gates in sim_combat_batch.gd. hunter_will_come still fields the shepherd at river_wolf_pack (village) only.",
     "allies": [],
     "arena": "witch_hollow",
     "cell": [
@@ -678,7 +678,7 @@
     ],
     "id": "briar_collectors",
     "kind": "encounter",
-    "observe": "Briars, moving without wind. They haven't noticed you yet.",
+    "observe": "\u00b6",
     "on_victory": "drove_off_collectors",
     "sprite": "briar_collector"
    },
@@ -696,7 +696,7 @@
     ],
     "id": "briar_collectors_deep",
     "kind": "encounter",
-    "observe": "More briars, thicker here, coiled tight around something you can't quite see.",
+    "observe": "\u00b6",
     "on_victory": [
      "drove_off_collectors",
      "blight_lifted"
@@ -711,7 +711,7 @@
     "display_name": "A Gap in the Trees",
     "id": "hollow_village_path",
     "kind": "door",
-    "observe": "The trees thin out this way. Open fields past the last few trunks.",
+    "observe": "\u00b6",
     "sprite": "trail_gap",
     "to_cell": [
      2,
@@ -720,7 +720,7 @@
     "to_map": "riverfarm_village"
    },
    {
-    "_comment": "R6 (#95) trap placement: a briar-snare east of briar_collectors' nest (9,6).",
+    "_comment": "a briar-snare east of briar_collectors' nest (9,6).",
     "cell": [
      10,
      7
@@ -728,20 +728,20 @@
     "display_name": "A Briar Snare",
     "id": "hollow_briar_snare",
     "kind": "prop",
-    "locked_toast": "The brambles here twist into a tight loop, low to the ground. It doesn't look natural. You can't tell how to clear it without setting it off.",
+    "locked_toast": "\u00b6",
     "on_skill_use": {
      "accomplishment": "trap_disarmed",
      "gold": 1,
-     "toast": "You work the knot loose one bramble at a time, careful of the thorns. Snagged in the weave: a coin, tarnished green from the damp."
+     "toast": "\u00b6"
     },
     "once_per_waking": true,
-    "once_per_waking_toast": "The briar holds nothing new today.",
+    "once_per_waking_toast": "\u00b6",
     "requires_skill": "disarm_trap",
-    "skill_hint_toast": "Brambles knotted into a tight loop, low against the undergrowth. Nothing grows that way on its own.",
+    "skill_hint_toast": "\u00b6",
     "sprite": "snare_coil"
    },
    {
-    "_comment": "v0.16 #305 ruling 3: a NEW door, leaving witch_cottage_prop [3,7] and witch_cottage_reachability.json byte-untouched (that canonical pins the cottage's single approach [3,8] and its toast twice). [1,7]'s only free cardinal neighbour is [1,8]. sprite `door`, NOT witch_cottage: that art is 5x5 cells and would redraw the cottage two cells away. No `light`: the cottage prop is this map's only one. Tint = sunlit timber, deliberate: hollow-green here vanished against the treeline.",
+    "_comment": "A separate door, so witch_cottage_prop [3,7] and witch_cottage_reachability.json stay untouched. [1,7]'s only free cardinal neighbour is [1,8]. sprite `door`, NOT witch_cottage: that art is 5x5 cells and would redraw the cottage two cells away. No `light`: the cottage prop is this map's only one. Tint = sunlit timber: hollow-green vanished against the treeline.",
     "cell": [
      1,
      7
@@ -749,7 +749,7 @@
     "display_name": "The Old Hut",
     "id": "witch_hut_door",
     "kind": "door",
-    "observe": "A second, smaller house at the hollow's west edge, its roof half fallen in. The lintel is cut with a line of shallow marks, worn nearly smooth, and the door stands open on the dark.",
+    "observe": "\u00b6",
     "on_enter_accomplishment": "observed_witch_hut",
     "sprite": "codex_hut",
     "tint": [
@@ -781,10 +781,10 @@
      "line_stalker_a",
      "line_stalker_b"
     ],
-    "gate_closed_toast": "The bracken is pressed flat and the smell of it is old. Nothing about this is your business until somebody tells you otherwise.",
+    "gate_closed_toast": "\u00b6",
     "id": "thicket_line_den",
     "kind": "encounter",
-    "observe": "Bracken pressed flat in a hollow under the northern trees, and the smell of something that has been eating well.",
+    "observe": "\u00b6",
     "on_victory": [
      "thicket_cleared"
     ],

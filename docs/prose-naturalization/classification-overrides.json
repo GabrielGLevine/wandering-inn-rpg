@@ -1,0 +1,30 @@
+{
+ "_note": "GH#397 Phase 0/2 hand-audit corrections to extract_prose.py's register heuristic. Applied by `extract_prose.py all`; recorded as DATA so the classification stays reproducible. Every entry needs a `why`. Phase 2 region lanes may add entries, and must log them here rather than silently re-judging in place. extract_prose.py self-test FAILS if an id here is not in the inventory, so a stale override can never become a silent no-op.",
+ "_audit": "Landmark tier (the scarce register that drives the scarcity budget) was audited in FULL, all rows, 2026-08-05. Functional/scenic/character-bearing were audited by tag-group sample, not row by row.",
+
+ "map:floodplains/floodplains.json:$.entities[13].victory_toast": {
+  "register": "character-bearing",
+  "tag": "npc-voice",
+  "why": "Banks sparred_with_relc so the heuristic called it a payoff, but the string IS Relc talking ('Relc whistles...') and delivering the Classes tutorial nudge. Character-bearing: his voice is the content. Also carries a CAPS tell (SLEEP) that map prose is not yet gated on."
+ },
+ "map:dungeon/dungeon_approach.json:$.entities[1].door_when.open_toast": {
+  "register": "functional",
+  "tag": "traversal",
+  "why": "Choked Passage. Banks found_the_sealed_passage, but the prose is a traversal result -- rubble gives, gallery is open. A discovery FLAG is not a landmark BEAT; the register is the reading experience, not the state change."
+ },
+ "map:inn/inn.json:$.entities[29].door_when.open_toast": {
+  "register": "functional",
+  "tag": "traversal",
+  "why": "A Door of Vines. Banks noticed_the_bare_wall (a flavour/observation counter). The prose is a door opening; the garden reveal beyond it is where the landmark register belongs, and garden_sanctuary owns its own rows."
+ },
+ "map:sewers/deep_tunnels.json:$.entities[5].door_when.open_toast": {
+  "register": "functional",
+  "tag": "traversal",
+  "why": "Warren Mouth. Banks reached_the_warren, but reads as a floor sloping into the next room -- arrival, not payoff."
+ },
+ "map:riverfarm/witch_hollow.json:$.entities[13].open_toast": {
+  "register": "scenic",
+  "tag": "quest-prop",
+  "why": "A Waiting Pot, the Makings gather (landed by #396 AFTER the landmark tier was audited, which is why the heuristic had no ruling for it and self-test went red). `open_toast` here is the GATED-CONTAINER idiom, not a door: nothing opens and nobody travels. It is chore 1 of 2 in `The Makings`, whose payoff is the kettle lesson in riverfarm_witch.json -- so §4 rule 1 (the CHAIN earns landmark, never the prop) and rule 2 (a banked accomplishment is necessary, not sufficient) both put it below the register, on the same grounds as the three door_when demotions above. It also lands where every other riverfarm work-result toast already sits: the field board, the lamb pen and #396's own winter fold toast are all scenic/quest-prop, and one of the four reading as a payoff purely because its key is spelled `open_toast` was an artefact of the key, not a judgement. NOT A REWRITE -- the string is #396 fresh copy, voice-card adjudicated, and ships byte-as-is. If the controller reads the gather as a genuine beat the fix is a §5 reserve grant (3 left), never an edit."
+ }
+}

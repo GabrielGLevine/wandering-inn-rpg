@@ -28,7 +28,7 @@
        "heard_olesm_briefing": 1
       }
      },
-     "text": "Still up here? The gallery won't map itself, and I'd rather you were down there with a plan than up here with second thoughts. You have the map. Go."
+     "text": "Still up here? The gallery won't map itself. You have the map. Mark what you find on it and bring it back to this desk. Go."
     },
     {
      "requires": {
@@ -44,7 +44,7 @@
        "seal_kept_reported": 1
       }
      },
-     "text": "The gallery's sealed and the report is filed, which means my column finally has its number. I would still rather have no construct under my streets at all, but 'under control' is a phrase I can file. My thanks, again."
+     "text": "The gallery's sealed and the report is filed, which means my column finally has its number. I would still rather there were nothing under my streets at all. The file says 'under control'. I will take it. My thanks, again."
     }
    ],
    "options": [
@@ -522,7 +522,7 @@
   },
   "chess": {
    "speaker": "Olesm",
-   "text": "Both sides, yes. It's the only honest way to learn how the enemy thinks. You have to want to win as them. A human beat me across this very board once, so thoroughly I nearly thanked her. I did thank her. Best thing to happen to my game in years.",
+   "text": "Both sides, yes. I miss half the position if I only ever sit in one chair. You have to want to win as them. A human beat me across this very board once, so thoroughly I nearly thanked her. I did thank her, and then I played her opening against myself for a month.",
    "options": [
     {
      "text": "You lost, and you're pleased?",

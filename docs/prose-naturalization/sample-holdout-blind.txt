@@ -1,0 +1,459 @@
+# BLIND REVIEW VIEW -- holdout
+# GH#397. 226 strings, shuffled with random.Random(399). python 3.12.3.
+# Metadata deliberately stripped: no filenames, no speakers, no schema keys,
+# no region. Row numbers are the ONLY handle; holdout.json maps them back.
+# Read each row cold. Score per review-rubric.md. Do not seek context.
+# ---------------------------------------------------------------------------
+
+  1. A plank of hooks at the fence line, each hook holding a scrap with a task on it and no name. Ditching, thatch, a fence a cow disagrees with. The scraps come down about as fast as they go up.
+
+  2. Coyle's answered for it. Farley's name is clear.
+
+  3. A lady's heirloom. She was told you'd refuse it.
+
+  4. Your door smells of a feeding ward. I keep one myself — smaller. Sit. If you're going to live over one, you'll learn what it eats.
+
+  5. Right. Right. Standing notice, Guild board, renewed by the season: one keeper, one lantern of mana a month, no questions logged about what it feeds. I'm putting my name on it, which means when it lapses it will be my fault. That sits better than not knowing did. Thank you.
+
+  6. [Broader Shoulders] — You take three at once and walk them up to the shed without stopping. The dray is clear before the second man has picked up his first, and two coins come your way for it.
+
+  7. Don't see many of you up this tier. And now I'm staring. Sorry. It's not personal, you're just not a common sight up here.
+
+  8. A twist of mineral salts. (6 gold)
+
+  9. Your uncle's board notice — the gallery he means?
+
+ 10. If I knew, I wouldn't need a dig. Whatever it is, someone sealed it on purpose and did a very good job. Usually that means valuable or it means dangerous. I plan the camp for dangerous.
+
+ 11. The board's behind you. Reading it is free. Taking a posting means telling me, so I can log it and not have to chase you across Liscor. Anything else worth walking to, write it down — that's what the leads page in your journal is for.
+
+ 12. Whatever it is, I can have it on paper by this evening, and nobody will ever prove I wrote it. Eleven years at this table. The Watch has my name, and my rates for that matter, since I have never hidden the rates. Nothing to pin to any of it, though they have come and looked.
+
+ 13. The road's empty in the daylight. Whatever works this verge keeps to the dark.
+
+ 14. Queen takes the bishop. End the threat now.
+
+ 15. My uncle's notice? That's the same gallery under the cisterns — down the green sewer-grate off the south square, same as I'd send you for the nest. He wants two things confirmed in writing: the old drainage marker, still legible or not, and whether the phosphor moss has spread past the first junction. Both, mind. If one's missing, he'll send the page back and I'll hear about it at dinner.
+
+ 16. The seal is broken, but the warding still holds the stone fast. Two spiral plates flank the court — the carving beside the pedestal looks like a beginning.
+
+ 17. The thing under the market. I hear it's handled. Good. I sleep worse than you'd think over not knowing what's beneath my own streets. However you settled it, the Watch owes you a quiet night.
+
+ 18. I am not queueing. I happen to be seated near where a queue would form.
+
+ 19. Then stand clear of it. The reading has to stay open while the seal comes apart, which means I am occupied and you are on your own for whatever objects to this. Something will. Expect a guardian.
+
+ 20. Come look at it yourself. This is your kind of magic.
+
+ 21. It bites you exactly once, decides you took it well, and climbs your sleeve to glare at the horizon from a better vantage.
+
+ 22. The passage doesn't end here — it just goes quiet, past a bend the light doesn't reach. Whatever's back there, this isn't the moment.
+
+ 23. You sent a runner for me?
+
+ 24. Somebody has, and it has been out in this city doing business without me for long enough that a woman who notices everything has seen it. I will not answer that card until I can say who. Start at the counter of this very shop. There is a scribe there who rents a blank seal by the hour and who has never once asked me how I am.
+
+ 25. Draw accepted, and the coin with it. My position was lost — I sat with it a season, I know what you had on that board. She played on from here and took me apart. I'm entering it in the book as a draw, two gold to me, and copying the final position in beneath it.
+
+ 26. [Basic Command] Steady it. Slow words, open hands.
+
+ 27. Courier's fee it is. Erin won't miss it, and you look like someone who walked the Floodplains to earn it. We're square — tell her the package landed.
+
+ 28. Lyonette's door, shut the way she shuts most things: completely, and without discussion. Whatever the room looks like behind it, you'll have to imagine it; she's not one to leave doors, or herself, half open.
+
+ 29. The shopfront door, hung so it swings shut on its own. Past it, the market tier goes back to being civic.
+
+ 30. Rope, spare stakes, a folded tarp, and three days of dried rations for four people. Packed by someone who has done this before.
+
+ 31. "Then keep the chair as long as you like."
+
+ 32. Stone shaped like a soldier, or close enough that the difference doesn't help you. It hasn't moved since you stepped into this room. That is not the same as harmless.
+
+ 33. She pushes a bowl of salted something across the counter at you without being asked, and takes the coin for it without apologising.
+
+ 34. I stretched the order in the kitchen. No one will know it ran short.
+
+ 35. You never talk about where you're from.
+
+ 36. A scatter of old bones the wolf will not leave alone. It noses through them, circles, noses again, and looks back at you as though the next part is your job.
+
+ 37. Yes. This is mine. Stamps whole, lid tight. My thanks. Take that corner — it goes behind the counter.
+
+ 38. Off the clock, for once. Don't tell the Guild I remember how to sit down.
+
+ 39. A stone plinth at the far end of the row, otherwise unremarkable, waiting on whatever the inn hasn't settled yet.
+
+ 40. It goes still when you crouch, which from a razorbeak is an invitation. Make the offer properly.
+
+ 41. An Antinium of Liscor's Watch — dark chitin, four arms, antennae, twin swords worn at the hips like a closed argument. He stands still the way patient things do.
+
+ 42. The pup shrinks back. You don't have the hands for this yet — hands like that are learned on hurt animals, one at a time. There's a corusdeer down in the grass east of here that would let you start.
+
+ 43. A barmaid hears everything worth hearing in this city. But fine - go in blind if you prefer.
+
+ 44. Cold, precise stone, and not as blank as it looks. Something the shape of a door is being held in it, patiently, for later.
+
+ 45. Something toward the Watch's supply fund. (10 gold)
+
+ 46. The cradle on top is empty and the seam beneath it stands open on nothing. Whatever the ruin was built around, the ruin isn't holding it any more.
+
+ 47. Human place. Warm. I count doors first. Two. Window there. Then I sit.
+
+ 48. Pallass. Guild's got the standing arrangement. I file the sponsorship, you cover the clerk's fee — fee first, actually. It goes through same-day. Ten gold, paid to the Guild, not to me.
+
+ 49. A workbench of calipers, weights, and chalk lines — every tool squared to the bench edge. The Magus is up at the office when he is not down here.
+
+ 50. "The package is where it ought to be."
+
+ 51. [Detect Magic] — Light runs under the turf in one long seam, straight through the stone and away west. The hollow is built on a current.
+
+ 52. Rings from a hundred glasses, sanded out and earned back.
+
+ 53. There is, {addr}, and I'll ask your pardon before I describe it, because describing it is most of the offence. A small parcel wants to be somewhere else by morning. The man expecting it drinks at the Adventurer's Rest. House rule there is that nobody raises a voice. We hold to it. So does everybody who owes them a table.
+
+ 54. Mind the floors, they're just done.
+
+ 55. Xif's spare bench, scrubbed and stocked. A low flame and a steady hand would turn it into something.
+
+ 56. [Detect Magic] — The seam lights up like a badly kept secret: old wardwork, still holding, drawn tight around the floor ahead. Now you know exactly what not to trust.
+
+ 57. Stand aside. I've killed things bigger than your whole warband. (Warrior)
+
+ 58. Bench hours, to the quarter. Nobody up here works a minute they can't account for.
+
+ 59. A Human, this far in. State your business and your sponsor. Sponsors get checked twice for Humans, so have the name ready.
+
+ 60. You went, then. Sit down and tell me what he said. Every word, please. People have been giving me the polite half of things for forty years.
+
+ 61. It goes up off the crates and comes back screaming about the west end. The two standing things down there step aside for anyone whose permit is already filed — and the office that files it is the counter four stalls behind you.
+
+ 62. One moment; three columns into a tally. Say hello properly and I'll lose my place gladly.
+
+ 63. A coat over the chair back, good cloth, nobody in it. The table has two cups and one of them has been sitting there since before you arrived.
+
+ 64. Just raised earth. Whatever it's for, nobody's finished it yet.
+
+ 65. Down at the quarter bell, up at the half. The Liscor news rode up on the same cycle as the tin did. I heard it four times before the cage reached the landing.
+
+ 66. "You bought the block off him."
+
+ 67. Why did the debt get paid, child? Think past the how of it. Why. You sat at my table and went looking for the ending where nobody bled. That's the question, answered before I asked it. The craft grows from what a person already is. Mine roots in kindness.
+
+ 68. The one who went down the tunnels and climbed back out. The gallery's bricked and the streets are quiet. There's a report on my desk with your name in it, and I signed it this time. Rest. You've earned a boring week.
+
+ 69. "Give me a moment with it."
+
+ 70. A Gnoll traveler, tan road-cloak, watching the crowd the way a stranger watches weather.
+
+ 71. Low fence rail, bordering the tilled rows.
+
+ 72. Two stringers still run out along the bank from the cottage corner, and the decking between them is gone — lifted by a flood and never replaced. The beams are sound. It is boards it wants.
+
+ 73. A stub of masonry where a walkway used to leave this wall, sheared off clean. The other side is still there, four feet out and a long way down. The stub would hold a line all day.
+
+ 74. Hrr. Hot through, and full to the lip. The Silverfangs remember generous hands.
+
+ 75. Smiths down at the quarter bell, clerks up at the half, and one crate of tin that has been late three cycles running. This morning it was charcoal and a coop of live hens for the ninth tier. You I haven't placed yet, {addr}. Came up on a stamp, then. Stamps don't show on my schedule.
+
+ 76. Low fence rail, bordering the tilled rows.
+
+ 77. You have the look of someone who felt something they cannot name. I get that look often, usually right before someone asks me to explain it for free. Go on, then. Tell me what you sensed.
+
+ 78. For a marker-holder, {addr}, always. One piece worth mentioning came through recently — sewer work, but honest sewer work, if you follow. No questions asked on either side of the counter.
+
+ 79. Because you're not us, {addr}, and we mean that as flattery. Every hand in this brotherhood is known to the Watch by its glove size. A stranger's word will actually get listened to. Also — and a man says this with affection — things happen to you, {addr}. We have watched it happen twice since Tuesday. We'd like to point you at Master Coyle and observe.
+
+ 80. The sewer grates are backing up again and there's scavengers in the cellars. And paperwork. There's always the paperwork. Which is it?
+
+ 81. A narrow slit runs along the wall at knee height. Whatever is loaded behind it, you have no idea how to disable it.
+
+ 82. A bronze rail along the tier's open edge, polished bright by a hundred people leaning on the same stretch of it while they waited on the cage. Below it the shaft goes down past where the light gives up.
+
+ 83. Bleeding it is. Predictable, but effective. Go on, then. I shall be here with my notes. Do try to leave the frame intact.
+
+ 84. Something's come through our pantry door. Will you look at it?
+
+ 85. Nine blades in the bin, all from one hand, all failed on the same measure. Somebody up here is doing careful work and failing it the same way every time.
+
+ 86. Not for sale. The ledger goes to the Watch, the Guild, and the criers.
+
+ 87. Sign me on as a field subject. Three engagements, logged.
+
+ 88. The witch keeps to the hollow. West, past my own fields, where the trees give out. Whatever she's owed, you'll have to settle it out there.
+
+ 89. Word from the gate says the Watch moved on the cisterns. Was that your doing? I want to hear how it fell out.
+
+ 90. Price kept. Goblins remember. Longer than Humans.
+
+ 91. Empty crates stacked a head above the awnings behind the stalls. The razorbeak has decided they belong to the razorbeak, and no stallkeeper has argued yet.
+
+ 92. A narrow break in the treeline, west of the fields. The light changes past the first few trees.
+
+ 93. You lower yourself into the fissure. The sewer's damp falls away behind you, and a dry, ancient cold rises to meet your hands. The dark below swallows the last of the light from above.
+
+ 94. Two shapes peel off the shadowed colonnade, unhurried, the way people move when they've done this before. Only after dark.
+
+ 95. There is an enchanter with a bench in the alleys who will not touch a piece until somebody in the transaction tells him the truth about it. He is right to insist and I cannot be the one who does it. Twenty five gold when it is set. Do not be charming at him. My house is down to two assets. The name is one. The other is the habit people have of not looking past it. Tell him the truth of the stone and keep the name out of his order book.
+
+ 96. Have the draughty single properly aired and banked. (25 gold)
+
+ 97. [The offices countersigned each other. It's released.]
+
+ 98. A retort over a banked fire, a mineral wash already loaded. A distiller could boil it down to salts.
+
+ 99. You take a scrap off its hook and spend the morning behind it. Ditching, mostly. The village pays coin because coin is the thing it has least of, and it pays on the day.
+
+100. A stone plinth, swept clean, facing the axis like the others. Whatever belongs here hasn't been carried up from below yet.
+
+101. The pond narrows here over a drop the light doesn't reach. Every so often the water moves wrong, and then it stops, the way a room stops when you walk into it. Whatever keeps this water is not interested in being caught.
+
+102. Your name in the card slot, in Lyonette's ruled hand, and the key for it somewhere in your pack.
+
+103. The meat is good and it will not stay good. Raw and cold, it is no use to you, and you have no way to change that.
+
+104. You pay out the line into the dark water. Nothing takes it, and nothing was ever going to — whatever keeps this pool knows the difference between an offer and a hook.
+
+105. Just cover the shortfall myself. (2 gold)
+
+106. She pours you a cup without being asked. "On the house," she says, "which is the only kind of trade I ever regret."
+
+107. Somewhere, a door shuts softly. The garden doesn't dim.
+
+108. Any word from the exam floor?
+
+109. Deposit's already paid, so don't ask where it came from. Wear it in good health. More under the tarp.
+
+110. Selys is still waiting on that package — the Adventurer's Guild, same as it ever was.
+
+111. The stew's at the turn. Someone who knows a pot could bring it home.
+
+112. Still four silver. Still an insult.
+
+113. Corked and honest. Do not drink the solvent straight — one person did that once and I am still not allowed back in that inn. I mean it about the solvent.
+
+114. Anything come through lately? (Show the marker.)
+
+115. The hunter's fang. Make it more than a trophy. (35 gold)
+
+116. One long thatch ridge, twice the width of any cottage. Smoke curls from a vent at the peak even in daylight.
+
+117. Anything on you worth my coin?
+
+118. A gap in the row of shopfronts, three strides wide and going darker the further in it goes. A stride past the wall line the paving changes underfoot, boulevard marble to whatever the alleys were laid with.
+
+119. The water is warmer than the room around it. Something went in here not long ago.
+
+120. Once a quarter, for inspection, and the notice goes up two days ahead so nobody is stranded. If the day catches you up here anyway, the service stair at the west end stays open. Nine flights. Take water up with you, the stairwell holds the forge heat past sundown.
+
+121. You brace the stack and ease the wedge free by hand. Behind the bottom crate: a couple of coins someone forgot to collect.
+
+122. A sword asks only your arm. A spell asks your mind and your mana in the same instant. Intent comes first — what the spell is for, held plainly. Then shape. Shape is where the hands and the diction earn their keep — no, that understates it: shape is where pupils fail. Cost you do not choose; the magic takes it when intent and shape are ready, and if you have fumbled either, you have merely gestured. Precision, traveler. Whatever the Watch mutters about my craft, it taught me precision.
+
+123. It has not learned to be afraid of hands yet. Make the offer before it does.
+
+124. Not a fresh game, actually. Same position, move for move: my opening, her replies, right up to the moment I stopped seeing straight. Eleven moves in, my bishop's aimed at your king and I am, in my own defense, feeling rather clever about it. Somewhere in here she found a door I didn't. Find it again and I'll believe two people can see the same board the same way.
+
+125. The bones rise and fall into step behind you.
+
+126. A pallet strapped and tagged and standing exactly where it has stood for three cycles, one hand's width outside the loading square.
+
+127. I did not die. This is the preferred outcome.
+
+128. Riverfarm, Invrisil, Pallass — someone was always feeding a ward. Tell me what that means.
+
+129. Guild's closed for lunch. Unless you're here about the thing Erin won't stop signing her letters about?
+
+130. The runes keep their slow one-way order. Pisces has stopped narrating and started counting under his breath, which is worse.
+
+131. So we heard, {addr}. Mister Farley walked out this morning, hat restored to him at the gate. My colleague brushed the cell dust off the brim first and took his time about it.
+
+132. The rail, the drop, the haze. Pallass keeps its details above your pay grade.
+
+133. I'll see what I can do.
+
+134. Oldblood Drake, light scales, a scar down the left of her jaw she's long past explaining. She reads the gate the way a clerk reads a ledger: every figure accounted for, and every one of them a suspect.
+
+135. I kept the guardian's fragment. Cut it from that.
+
+136. The stone sits where the ground feels heaviest. That's not an accident.
+
+137. Faded arcane script. You can't read a word of it. Whoever penned this knew magic you don't. Someone in the city must.
+
+138. You're the one Olesm's paying to poke the gallery? Good. The Guild sent us along to make sure you come back out. Ceria Springwalker — Horns of Hammerad.
+
+139. Coin instead of words. Simpler, some days. The order goes out full and Erin hears nothing of the shortfall. We are square, you and I.
+
+140. Something's meant to go in this, cooked properly. You don't know your way around a stew pot. Yet.
+
+141. Olive work clothes, ink to the second knuckle, and a satchel worn flat on one side from the same walk every day.
+
+142. Its brother. Slightly fuller, slightly further from the door.
+
+143. Weathered planks, sound underfoot. The current runs steady past the end of it.
+
+144. Hm. Correct. Aggravatingly correct. You have the eye, if not the training. Do not let it go to your head. The training is where the real work is.
+
+145. That bow strung up back there. Practice grade. (8 gold)
+
+146. "He never noticed it leave the table."
+
+147. You don't know your way around a stew pot. Yet.
+
+148. Papers, then, same as everyone through this gate. Sponsor's name, and don't waste my morning.
+
+149. He offers a smile with the price tag still visible on the underside. "Charming," he allows, in the tone of a man crossing an item off a ledger.
+
+150. The deep end? Nobody catches anything out of that. Krshia says it's been that way since before there was a wall on Liscor. I take a bowl out sometimes and leave it on the flat rock. It's gone by morning. I haven't gone down to watch.
+
+151. You have a warm way about you, and warmth I can trade with. Come - for you, I will call it a fair price, and I will mean it. This is not nothing, from me.
+
+152. One slab off the ceiling, come down whole and standing on its edge across the gap in the wall. Its own weight is the only thing holding it there.
+
+153. The stone doesn't budge. Whatever's on the other side stays sealed. For now.
+
+154. The pinned sluice carries three seasons of high-water scratches, and each one sits higher than the last.
+
+155. There is a Watch keeper now, with a ledger line to his name, and the ward goes on eating on his schedule. I am going to write it up, and I already know the paper will be insufferable.
+
+156. Cut into the slab, in a hand that expected readers: a tally. Ninety-one marks, then a gap, then one more in a different chisel. Nobody came back to make the ninety-third.
+
+157. The desk is yours to use. Nothing on it yet is asking to be done.
+
+158. You said the necklace was a promise.
+
+159. Done. Truly done. I keep waiting for you to name a price, and you don't. Do you know how strange that is to me? Where I'm from, a favour like this would have gone into a ledger before you'd even agreed to it. Here. It's what I could scrape together, and no, I'll not hear a word against taking it. Thank you. And not the court kind. The real one. The kitchen's still warm. Go and have the end of the bread.
+
+160. Split tallies. One half stays with the mill, one half goes home with the household, and neither can be altered alone.
+
+161. Silk threads catch the light along the gallery's south wall, thick as rope, all leading back to one dark seam in the stone.
+
+162. Three of them stand on the lip of the hollow where it is easiest to come down, looking at the racks and doing arithmetic. Nobody in the camp is pretending not to have noticed.
+
+163. It walks its own tolerance and corrects late. A slab picks up a scratch. A person picks up the kind of injury you spend a season paying off, so keep clear of the rig while it settles.
+
+164. What do you expect to find?
+
+165. Why'd you take this job? It's eating you.
+
+166. Another Worker, identical to the first in the way coins from one mint are identical. It sweeps the same three cobbles until they answer for something.
+
+167. A folding table rented by the day, a cloth over it, and a brass block sitting on the cloth with two letters cut into the face. He has not covered it, because covering a thing is how a street learns you have one.
+
+168. [Basic Cooking] — You thin the stock, fold in day-old bread, and stretch the short order into a full service. Lyonette's shortfall vanishes into the pot.
+
+169. Then it'll have to be another way.
+
+170. The spill shifts the moment you put weight on it and keeps shifting. Crossing that takes footing you have not got.
+
+171. You get both hands under the edge and pull until your eyes swim. It rocks an inch and settles back. Heavier than you.
+
+172. A plain footlocker at the head of the bed, hasp and no lock. Everything you own would rattle around in it.
+
+173. Pour for three. Set it up with Hellam.
+
+174. State your business and your sponsor. Everyone's business goes through this window eventually.
+
+175. Heard from who? Okay, yes. I play a little. And by a little I mean I will destroy you and feel great about it. It's the one thing I never have to think about. Board's behind the bar — the black queen's a salt cellar until somebody finds the real one.
+
+176. You shorten the yoke by two notches and spend the morning hauling water and cut brush. Somebody presses coin into your hand at the end without looking up.
+
+177. Ah. My consultant. Your retainer is current and your silence is appreciated. My door — regrettably — is always open to you. Wine?
+
+178. Bracken pressed flat in a hollow under the northern trees, and the smell of something that has been eating well.
+
+179. A drip-still set for magic-water. Someone who knows the working could draw a clean solvent from it.
+
+180. A carved stone boundary marker, Drake glyphs worn shallow. It counts cisterns and sluice-gates in a hand two centuries dead. Someone scratched a newer mark beside it: a spider, hastily.
+
+181. A road-peddler behind a folding stall, half his stock still roped for travel. Everything he sells says somewhere else.
+
+182. "I went through his two men and took the block."
+
+183. A worn marker stone, older than the buildings that grew up around it. Nobody living remembers who set it, or why it sits exactly here.
+
+184. I have. The forge tier runs on rune-fed work. Every ward up there eats on a schedule a smith keeps in a ledger. Two feedings a shift, logged. No smith keeps one for your door. Stand still.
+
+185. Three regions taught you the same word in three accents and not one of them noticed doing it. A witch feeds hers, milk and a word. An enchanter prices the draw and calls it craftsmanship. Pallass bills it as maintenance. Maintenance. Under this city is wardwork by the hand that cut our frame, and it has been drawing since before Liscor had walls. I want to read it standing in front of it.
+
+186. Olive work clothes, ink-stained cuffs. A clerk between one ledger and the next.
+
+187. Nine blades in your reject bin, all failed the same way.
+
+188. Then it is done, and done in the open, which I did not expect and did not know I wanted. Here. My mother had a second piece, plain, honest, worth a tenth of the first and worn twice as often. I would rather it went to somebody who earned it. It has spent long enough in the box.
+
+189. There you are. A crew opening the grates under the market broke through into tunnels nobody dug. They go down, and they keep going. Olesm's maps say they shouldn't exist. I need somebody who isn't Watch to go and look. That's you.
+
+190. Sails turning slow in whatever wind there is. The grinding floor above the wheat fields.
+
+191. A Drake forge taught you in an afternoon what my tuition has been circling for a month. They feed their runes. Feed them, on a schedule. Maintenance, they call it. I am revising my rates. Downward. The new schedule is chalked on my slate already.
+
+192. That's a proper bowl of stew. Barley in it and everything. Where does she even get barley before the pass opens?
+
+193. Two men paid by the week whether they work or not, and plainly out of practice.
+
+194. It's not asking much. You'd know in a glance.
+
+195. Then take the brass and take it now, before anybody thinks to ask me where it went. I have been careful for eleven years about which names I borrow and I have never once borrowed upward. Tell them the block was destroyed. Tell them a bad season did it.
+
+196. You look like someone who could use a potion. Everyone can use a potion. Mine are very reasonably priced and only occasionally on fire — once. The scorch is still on the counter. Solvent or salts, six gold either way. What do you need?
+
+197. Old bones, settled where they fell. They are not going anywhere. Probably.
+
+198. The inn's room register, open to today. Lyonette's handwriting could win awards; the prices underneath it could start fights.
+
+199. [Advanced Cooking] — You cook on a stranger's fire in a city of critics, and the critics go quiet.
+
+200. A tea-tray harness worn shiny at the left shoulder — she pours right-handed and listens left-eared. The cups are chipped. The ears are not.
+
+201. [Detect Magic] — The ward opens under your sight and does not stop opening. It is not holding anything shut. It is POURING: one direction, one slow measured rate, into whatever the stone is between. It has poured since before the city. Pisces, very quietly: "Ah. So that is what the others were."
+
+202. Nothing there. Someone leans out an upstairs shutter, decides you are nothing, and pulls it to.
+
+203. Watch Captain's desk. Empty, same as every other time you've walked past it.
+
+204. The construct was very large. I stabbed it anyway. Captain Ceria says this is called 'initiative.'
+
+205. Only the hollow in the grass now, and it is filling in.
+
+206. "She'll be glad of the price."
+
+207. From up here the floodplains pretend to be a map. Good eyes could read it.
+
+208. Low fence rail, bordering the tilled rows.
+
+209. The briar holds nothing new today.
+
+210. It stays fed. The Watch can pay for it.
+
+211. I need to think on that.
+
+212. A full working day at heat, then it stands down cold. Push it past that and the slab cracks. A cracked slab is a season of paperwork before the city clears it again. The hammer hangs on its peg for all of it.
+
+213. "She's known since she was nineteen. She wants the setting held, and the stone left as it is."
+
+214. You've stopped mid-appraisal. What are you looking at?
+
+215. From here you can see the cut in the turf, the fire, and everyone's hands at once. It was not chosen for comfort.
+
+216. You'll want the long table, {addr}. That's the waiting table. This one's mine, and the gentleman who shares it didn't wait for anybody. Take whatever seat's open down that end.
+
+217. Zevara's shoulders come down a fraction. Huh. Civil, and no bribe. You would not believe how short that list is. Go on through. And, thank you. Genuinely.
+
+218. The ledge overlooks the nest: a perfect vantage, if you had the eye to read one. You don't, quite. Not yet.
+
+219. [Charming Smile] Tell him what the card cost her.
+
+220. The Watch wants eyes on the reopened gallery — proper eyes. The last guardsman down there filed three words: 'it is dark.' Five gold now, fifteen when you bring me something I can put in a report. The Guild is sending a Silver-rank team to meet you there.
+
+221. You ease the wire off its catch and coil it loose. A few scavenged links clatter free, worth a coin or two melted down.
+
+222. Pell's back on the roster, thanks to you. Kit's counted, slate's closed. Muster sheet reads full again.
+
+223. A drink counter kept cleaner than the law would ever ask it to be.
+
+224. Nothing there. Something small breathes behind the bench and decides to keep still.
+
+225. You have the look of someone come to ask a favor. Speak plainly. I have no patience for the other kind.
+
+226. A long pause. The lead goblin sniffs, then spits sideways. A wave, and the others clear the road. They keep their eyes on you until the corner.
+

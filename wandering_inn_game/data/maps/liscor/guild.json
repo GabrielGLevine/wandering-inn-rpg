@@ -2,7 +2,7 @@
  "biome": "inn",
  "interior_flavor": [
   "Nothing there. Chalk dust and boot grit, and a floorboard worn pale where people wait to be called.",
-  "Nothing there. Somewhere behind the desk a drawer shuts. Guild business, and none of it yours."
+  "Nothing there. Somewhere behind the desk a drawer shuts."
  ],
  "grid": {
   "width": 16,
@@ -277,7 +277,7 @@
    "person": true,
    "sprite": "selys",
    "observe": "A Drake behind a counter she clearly wishes were taller. Tired, sharp, quick with a ledger. She has sized up a hundred adventurers today and found most of them wanting.",
-   "friendly_line": "...Huh. You're actually pleasant. That's rare on this side of the counter. Fine - your paperwork jumps the line today. Don't make it weird.",
+   "friendly_line": "Huh. You're actually pleasant. That's rare on this side of the counter. Fine - your paperwork jumps the line today. Don't make it weird.",
    "facing": "down",
    "talk_pool": [
     "Guild's the usual mess. Bounties on the board, arguments over the board, somebody bleeding near the board.",
@@ -377,7 +377,7 @@
    "facing": "right",
    "board": true,
    "toast": "The Request Board. Paper three layers deep, new notices pinned straight over the dead ones. A posting pays on turn-in; take one at the Guildmistress's desk so it's logged, and only what you do after counts.",
-   "second_visit_toast": "The Request Board. Your slip is still logged at the desk. The board does not care how it's going.",
+   "second_visit_toast": "The Request Board. Your slip is still logged at the desk.",
    "observe": "Rates set by the Guild. Complaints to the Guildmistress in person. Bring patience. — S.S.",
    "board_rumors": [
     {
@@ -396,13 +396,13 @@
      "_comment": "Points the reader at Olesm by name rather than naming a location a player could act on directly from the board itself. The stipend is HIS option, in olesm_intro.json, gated separately on post_game. That counter banks at the first sleep after the seal -- mid-story, not an end-of-story flag.",
      "id": "rumor_dungeon_survey",
      "banks_accomplishment": "heard_of_the_gallery_survey",
-     "copy": "A WATCH NOTICE, freshly pinned. The reopened gallery under the old seal is to be surveyed properly before the Council calls it settled — volunteers with Guild standing should see Olesm Swifttail at the frontage desk. Pay is Watch-scale. The notice does not say what 'properly' means, and nobody pinning notices ever does."
+     "copy": "A WATCH NOTICE, freshly pinned. The reopened gallery under the old seal is to be surveyed properly before the Council calls it settled — volunteers with Guild standing should see Olesm Swifttail at the frontage desk. Pay is Watch-scale. What 'properly' means is left to the surveyor."
     },
     {
      "_comment": "the real quest option lives on his own dresk_recruit.json conversation, gated on this same banked counter.",
      "id": "rumor_missing_recruit",
      "banks_accomplishment": "heard_about_missing_recruit",
-     "copy": "WATCH NOTICE, pinned by a hand in a hurry. Recruit Pell missed second muster running. Ashgrave's not calling it desertion, not yet. Anyone with eyes free, ask at the barracks."
+     "copy": "WATCH NOTICE, pinned by a hand in a hurry. Recruit Pell missed second muster running. Ashgrave has it logged as absence for now. Anyone with eyes free, ask at the barracks."
     },
     {
      "_comment": "the real quest option lives on renn_hammer.json, gated on this same banked counter.",
@@ -424,7 +424,7 @@
    "facing": "right",
    "on_interact_accomplishment": "read_guild_notices",
    "toast": "A second board, smaller and less official: lost gear, room-for-rent scraps, one challenge to a duel that's clearly gone unanswered a long time. Anything worth chasing copies into your journal as a lead: a name and a place, nothing promised.",
-   "observe": "Handbills and scraps overlapping the request board's edge. The Guild's actual business spills past its own furniture. Somebody wants a lost warhammer back. Somebody else is renting a room, quiet tenants only.",
+   "observe": "Handbills and scraps overlapping the request board's edge. One offers a reward for a plain steel warhammer; the notice pinned over its corner wants a quiet tenant for a back room.",
    "visual_states": [
     {
      "_comment": "GH#335 item 3: a read prop is SPENT and recedes. Shared tint across every read-once prop in the build; `counter` is this prop's OWN id, never a sibling's shared one.",
@@ -539,7 +539,7 @@
     0.38,
     0.3
    ],
-   "observe": "A crate shoved against the back wall, half-buried under someone else's forgotten kit.",
+   "observe": "A crate shoved against the back wall, half-buried under a spill of unclaimed kit.",
    "contains": [
     "renns_warhammer"
    ],

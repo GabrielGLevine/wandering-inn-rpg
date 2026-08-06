@@ -1,0 +1,247 @@
+[
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[13].observe",
+  "entity_id": "relc_spar",
+  "old": "Straw and burlap lashed to posts, hacked half to ribbons. Someone drills here often, and hard. The stitching tells you where a real guard would break.",
+  "new": "Straw and burlap lashed to posts, hacked half to ribbons at one height, all of it from a spear's reach out. Loose straw is still drifting off the top one."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[13].victory_toast",
+  "entity_id": "relc_spar",
+  "old": "Relc whistles. \"Not bad for a start. Now go SLEEP on it — Classes come at the pillow, not the podium. Bed's upstairs at the inn.\"",
+  "new": "Relc whistles. \"Not bad for a start. Go sleep on it — Classes come while you're out cold. Bed's upstairs at the inn.\""
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[15].on_skill_use.toast",
+  "entity_id": "hilltop_cairn",
+  "old": "[Eagle Eyes] — The plains resolve: the gate road, the ruin east past it, and every fold of dead ground a warband could hide in. You'll walk this land differently now.",
+  "new": "[Eagle Eyes] — The plains resolve: the gate road, the ruin east past it, and every fold of dead ground a warband could hide in."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[18].gate_closed_toast",
+  "entity_id": "goblin_night_patrol",
+  "old": "Nothing moving out there. Whatever it was keeps day hours, same as everyone sane.",
+  "new": "Nothing moving out there. Come back after dark."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[21].observe",
+  "entity_id": "wounded_corusdeer",
+  "old": "A corusdeer, down in the grass with a leg it won't put weight on. Its antlers barely glow. It watches you the way anything hurt watches anything larger. It would let patient hands close, and hands that tend enough hurt beasts learn something no drill yard teaches.",
+  "new": "A corusdeer, down in the grass with a leg it won't put weight on. Its antlers barely glow. It watches you come and does not try to rise."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[21].on_skill_use.variants[0].toast",
+  "entity_id": "wounded_corusdeer",
+  "old": "[Beast's Mending] — The splint comes away and stays away. It stands, tests the leg, and goes to find the herd. Your hands knew what to do because of this deer.",
+  "new": "[Beast's Mending] — The splint comes away and stays away. It stands, tests the leg, and goes to find the herd."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[21].toast",
+  "entity_id": "wounded_corusdeer",
+  "old": "You move slow, keep your hands low, and it lets you check the leg. That, from a wild thing, is everything.",
+  "new": "You move slow, keep your hands low, and it lets you check the leg. It puts its head back down while you work."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[22].observe",
+  "entity_id": "worn_grass_patch",
+  "old": "A body-shaped hollow pressed into the grass, going green again at the edges. Something lay here a long time, and then stopped needing to.",
+  "new": "A body-shaped hollow pressed into the grass, still flat in the middle. The corusdeer lay here a long time, and at the edges the blades are already standing up again."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[23].observe",
+  "entity_id": "wolf_den",
+  "old": "A scrape under the boulder line, and in it one wolf pup, ribs showing, too young to be alone. The pack that left it is not coming back.",
+  "new": "A scrape under the boulder line, and in it one wolf pup, ribs showing, too young to be alone. There are no prints in the loose earth but its own."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[24].observe",
+  "entity_id": "razorbeak_chick",
+  "old": "A razorbeak chick, blown or chased from the nest scrape, hissing at the whole world from behind a tussock. The nest is close. The parents are not.",
+  "new": "A razorbeak chick, blown or chased from the nest scrape, hissing at the whole world from behind a tussock. Down still on its shoulders, and it goes up on its toes when you shift your weight."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[25].companion_source.taken_toast",
+  "entity_id": "wolf_den_spring",
+  "old": "It walks out of the scrape without being asked and stands on your foot. The pack keeps its own counsel about who leaves with whom.",
+  "new": "It walks out of the scrape without being asked and stands on your foot."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[26].companion_source.taken_toast",
+  "entity_id": "razorbeak_chick_fledgling",
+  "old": "It stalks the length of your arm, finds the shoulder acceptable, and settles there facing backwards. Somebody has to watch the way you came.",
+  "new": "It stalks the length of your arm, finds the shoulder acceptable, and settles there facing backwards."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[26].observe",
+  "entity_id": "razorbeak_chick_fledgling",
+  "old": "The nest scrape has fledged another. This one has already worked out that the tussock is cover and that you are not, and it is holding both facts against you.",
+  "new": "The nest scrape has fledged another. It puts the tussock between you and itself, and screams from behind it."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[27].companion_source.taken_toast",
+  "entity_id": "wolf_den_late_litter",
+  "old": "It leans, the way the first one leaned. You are not being given a replacement. You are being given another one.",
+  "new": "It gets up on the second try, takes three steps, and sits down hard where it can still see you."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[27].observe",
+  "entity_id": "wolf_den_late_litter",
+  "old": "Late in the season and thin with it, but another scrape further down the boulder line is occupied. Whatever else the floodplains do, they keep doing this.",
+  "new": "Late in the season and thin with it, but another scrape further down the boulder line is occupied. Fresh-dug, by the earth thrown out behind it."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[28].observe",
+  "entity_id": "rags_scouting_party",
+  "old": "A small figure on the rise south, standing very still. It has been watching you for a while, and it wants you to know that.",
+  "new": "A small figure on the rise south, standing very still. It was there before you looked up, and its head turns when you move."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[31].variants[0].toast",
+  "entity_id": "wolf_scent_cache_floodplains",
+  "old": "Turned bones and nothing under them now. The wolf has lost interest, which is its own verdict.",
+  "new": "Turned bones and nothing under them now. The wolf noses through once and walks off."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[32].observe",
+  "entity_id": "razorbeak_vantage_floodplains",
+  "old": "A boulder standing clear of the reeds with the whole pond below it. The razorbeak keeps climbing it and screaming at the water, which is either an opinion or a report.",
+  "new": "A boulder standing clear of the reeds with the whole pond below it. The razorbeak climbs it, screams at the water, comes down, and climbs it again."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[32].toast",
+  "entity_id": "razorbeak_vantage_floodplains",
+  "old": "It wheels out over the pond, hangs, and comes back loud. There is something square and man-made on the bottom, a stride out from the bank — too far to reach across open water, and water can be made to bear weight.",
+  "new": "It wheels out over the pond, hangs, and comes back loud. There is a worked square edge under the silt on the bottom, a stride out from the bank — too far to reach across open water, and water can be made to bear weight."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[33].skill_hint_toast",
+  "entity_id": "corusdeer_carcass",
+  "old": "Hauling at it with your hands gets you nothing. Fire is what this wants.",
+  "new": "Hauling at it with your hands gets you nothing. Sear the haunches and they will travel."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[3].observe",
+  "entity_id": "inn_sign",
+  "old": "The paint is newer than the post it hangs on. Somebody meant it, and means it still.",
+  "new": "The paint is newer than the post it hangs on. The board turns a little in the wind and knocks against it."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[4].once_per_waking_toast",
+  "entity_id": "pond_edge",
+  "old": "The water's gone still. Whatever considered you today is done considering.",
+  "new": "The water lies flat again. Leave it until tomorrow."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/floodplains.json",
+  "field_path": "$.entities[5].toast",
+  "entity_id": "frozen_cache",
+  "old": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, dry against all odds, a few keepsakes someone drowned here meant never to be found.",
+  "new": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, still dry: a few keepsakes and a handful of old coin."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/garden/garden_sanctuary.json",
+  "field_path": "$.entities[0].observe",
+  "entity_id": "garden_fountain_statue_gaze",
+  "old": "The stonework is older than the door you came through, and the pose is a dancer's, not a soldier's. Someone carved joy here, and meant it to last.",
+  "new": "The stonework is older than the door you came through, and the pose is a dancer's: arms up, one heel lifted, nothing in either hand."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/garden/garden_sanctuary.json",
+  "field_path": "$.entities[0].toast",
+  "entity_id": "garden_fountain_statue_gaze",
+  "old": "Cool spray beads on the stone. The statue's face is worn soft — whoever it was, the water remembers them better than the carving does.",
+  "new": "Cool spray beads on the stone, gathers along the worn-soft face, and drops back into the basin."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/garden/garden_sanctuary.json",
+  "field_path": "$.entities[3].visual_states[0].observe",
+  "entity_id": "memorial_plot_warren",
+  "old": "A gnoll carved in stone, sword low and steady, facing down toward where the path forgets itself. Something old came up from under Liscor once. Something else went down after it, and came back up alone. The warren has been quiet since.",
+  "new": "A gnoll carved in stone, sword low and steady, facing down toward where the path forgets itself. The warren below Liscor has been quiet since."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/garden/garden_sanctuary.json",
+  "field_path": "$.entities[5].visual_states[0].observe",
+  "entity_id": "memorial_plot_wrong_order",
+  "old": "A human figure in stone, apron tied, a bowl held out in both hands like an offering that never quite finished being made. The inn came up short once. Nobody outside its walls ever had to know.",
+  "new": "A human figure in stone, apron tied, a bowl held out in both hands with no one there to take it. The inn came up short once."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/garden/garden_sanctuary.json",
+  "field_path": "$.entities[6].visual_states[0].observe",
+  "entity_id": "memorial_plot_reserved",
+  "old": "A goblin carved in stone, unarmed, hands open at its sides. Not every ending here was a fight. This one is remembered for not being one.",
+  "new": "A goblin carved in stone, unarmed, hands open at its sides. Each finger was cut clear of the next, and the light comes through between them."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+  "field_path": "$.entities[1].observe",
+  "entity_id": "camp_fire_pit",
+  "old": "A ring of river stones with a fire kept deliberately small. Someone has banked it low and swept the ash back, so the smoke goes up thin instead of out wide. Nothing about this fire wants to be seen from the road.",
+  "new": "A ring of river stones with a fire kept deliberately small, banked low, the ash swept back behind it. The smoke goes up thin and straight and gets lost above the rim."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+  "field_path": "$.entities[1].toast",
+  "entity_id": "camp_fire_pit",
+  "old": "The wood is sorted by burn time in three piles. Somebody in this camp thinks two nights ahead.",
+  "new": "The wood is sorted by burn time in three piles, and the fast-burning one is a third the height of the others."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+  "field_path": "$.entities[2].observe",
+  "entity_id": "camp_hide_racks",
+  "old": "Green hides pegged out on a lattice of spear-shafts, scraped down to nothing on one side. The pegs are all different lengths, whittled to fit whatever the rack needed that day.",
+  "new": "Green hides pegged out on a lattice of spear-shafts, scraped down to nothing on one side. Each peg has been whittled to a different length to fit its own hole."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+  "field_path": "$.entities[2].toast",
+  "entity_id": "camp_hide_racks",
+  "old": "Every hide is stretched to the same tension. Whoever runs this rack does not let anyone else near it.",
+  "new": "Every hide is stretched to the same tension. The last row of pegs is driven and has no hide on it yet."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+  "field_path": "$.entities[4].observe",
+  "entity_id": "camp_carry_yoke",
+  "old": "A shoulder yoke cut for someone half your height, propped against a stack of empty baskets. The baskets go out full and come back full of something else.",
+  "new": "A yoke cut for goblin shoulders, half the height of yours, propped against a stack of empty baskets. The baskets go out full and come back full of water and cut brush."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+  "field_path": "$.entities[6].toast",
+  "entity_id": "camp_meat_rack",
+  "old": "The poles are bare and the ash is cold. Hands on the camp's baskets first, the old one signs at you, and then something big brought down off the range north.",
+  "new": "The poles are bare and the ash is cold. Hands on the camp's baskets first, the old one signs at you, and then a corusdeer brought down off the range north."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",
+  "field_path": "$.entities[7].toast",
+  "entity_id": "camp_meat_rack_hung",
+  "old": "Nobody moves the rack aside when you pass it now.",
+  "new": "A goblin works a strip loose from the near end, bites off half, and gives you the rest."
+ }
+]

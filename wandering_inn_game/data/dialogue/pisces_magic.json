@@ -53,7 +53,7 @@
        "lattice_witch_lore": 1
       }
      },
-     "text": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's, and she fed hers too. Fed. That word keeps recurring."
+     "text": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's, and she fed hers too. The two traditions agree that a ward can be fed, and between them they have not produced a word for the practice. I shall be supplying one before the month is out."
     },
     {
      "requires": {
@@ -337,7 +337,7 @@
   },
   "horns_bridge": {
    "speaker": "Pisces",
-   "text": "Horns of Hammerad. Yes. There is a name on their roster and a share of their debts attached to it. That is membership. I am not in the hole with them because the interesting half of the work is here — things that are written do not read themselves, and nobody else in this city can. Ceria calls that being hired. Ceria also calls my handwriting adequate, so her judgement is not beyond dispute.",
+   "text": "Horns of Hammerad. Yes. There is a name on their roster and a share of their debts attached to it. That is membership. I am not in the hole with them because the reading is here, and nobody else in this city can do it. Ceria calls that being hired. Which is accurate as far as the coin goes. I have never troubled to correct the rest of it, and I would rather you did not either.",
    "options": [
     {
      "text": "Four of you, then.",
@@ -417,7 +417,7 @@
   },
   "descent_expect": {
    "speaker": "Pisces",
-   "text": "Something that was fed on purpose, by people who expected to be dead long before it stopped needing feeding. Past that I have guesses, and I do not perform guesses in public. The honest answer is thinner than I would like.",
+   "text": "Something that was fed on purpose, by people who expected to be dead long before it stopped needing feeding. Past that I have guesses and I am keeping them. Ask me again when I have stood in front of it.",
    "options": [
     {
      "text": "@then_we_go_down",

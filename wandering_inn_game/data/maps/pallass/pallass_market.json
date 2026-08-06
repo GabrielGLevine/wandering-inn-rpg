@@ -300,7 +300,7 @@
      "pallass_attuned": 1
     }
    },
-   "observe": "A squared plinth of the same slab the whole tier is cut from. No rune, no seam, nothing carved into it at all — and still the blankness has an outline, the way a mould does. Whatever door reaches this tier is already remembered here.",
+   "observe": "A squared plinth of the same slab the whole tier is cut from. No rune, no seam, nothing carved into it at all, and the blankness still has an outline to it.",
    "on_interact_accomplishment": "eyed_the_market_arrival_stone",
    "toast": "Cold, precise stone, and not as blank as it looks. Something the shape of a door is being held in it, patiently, for later."
   },
@@ -332,7 +332,7 @@
    ],
    "display_name": "The Posted Prices",
    "sprite": "price_board",
-   "observe": "Rows of chalked figures, precise to the copper, refreshed each morning by a clerk with steadier hands than yours. Nobody haggles here. Nobody needs to.",
+   "observe": "Rows of chalked figures, precise to the copper, refreshed each morning by a clerk with steadier hands than yours.",
    "on_interact_accomplishment": "read_the_posted_prices",
    "toast": "Chalk and slate. The numbers don't move for anyone.",
    "visual_states": [
@@ -360,7 +360,7 @@
    "sprite": "market_stall_pallass",
    "observe": "A stall built to the same civic pattern as every other on this tier — same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
    "on_interact_accomplishment": "browsed_posted_price_stall",
-   "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up — the price is the price."
+   "toast": "Goods in rows, each with a chalked price card leaning against it. The card at the end of the row is turned face down."
   },
   {
    "id": "market_stall_b",
@@ -371,9 +371,9 @@
    ],
    "display_name": "Market Stall",
    "sprite": "market_stall_pallass_b",
-   "observe": "A stall built to the same civic pattern as every other on this tier — same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+   "observe": "Counter height, awning pitch and placard all to the same civic pattern as its neighbours. A folded rag is wedged under one leg to bring the counter level.",
    "on_interact_accomplishment": "browsed_posted_price_stall",
-   "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up — the price is the price."
+   "toast": "You pick a bundle up, read the price off the card, and set it down. The keeper adds a mark to a tally sheet as you do it."
   },
   {
    "id": "pallass_stall_burner",
@@ -385,7 +385,7 @@
    "display_name": "Food-Stall Burner",
    "sprite": "grill",
    "requires_skill": "advanced_cooking",
-   "skill_hint_toast": "The stallkeeper's burner is free between rushes. Pallass argues about everything except good food.",
+   "skill_hint_toast": "The stallkeeper's burner is free between rushes. Cook a proper meal on it.",
    "locked_toast": "A stall burner, hot and jealously watched. Renting it takes more than coin — it takes credentials.",
    "on_skill_use": {
     "accomplishment": "cooked_meal",
@@ -402,9 +402,9 @@
    ],
    "display_name": "Market Stall",
    "sprite": "market_stall_pallass_c",
-   "observe": "A stall built to the same civic pattern as every other on this tier — same counter height, same awning pitch, same posted-price placard. Efficient. Impersonal.",
+   "observe": "Counter, awning and placard all to the tier's spec, the third of three in a row. The awning's edge ticks up and down where the canvas has come loose from a grommet.",
    "on_interact_accomplishment": "browsed_posted_price_stall",
-   "toast": "Goods arranged in neat rows, prices chalked and unmoving. The stallkeeper barely looks up — the price is the price."
+   "toast": "The stallkeeper answers a question you have not asked by tapping the price card twice."
   },
   {
    "_comment": "Static `dialogue` = no-graph fallback only.",
@@ -447,7 +447,7 @@
    ],
    "display_name": "Permit Office Window",
    "sprite": "bar_counter",
-   "observe": "The window ledge is worn smooth where a thousand wrists have rested, waiting on a stamp. A stencilled plate lists the posted fees. Nobody argues with it.",
+   "observe": "The window ledge is worn smooth where a thousand wrists have rested, waiting on a stamp. A stencilled plate lists the posted fees.",
    "on_interact_accomplishment": "leaned_on_the_permit_counter",
    "toast": "Forms, inkwells, and a bell that has clearly been rung far too many times."
   },
@@ -499,7 +499,7 @@
    ],
    "display_name": "The Grand Lift",
    "sprite": "great_lift",
-   "observe": "A bronze-riveted cage, tall enough to swallow a wagon, counterweights racked in a shaft that drops past sight. This is how the tiers actually connect.",
+   "observe": "A bronze-riveted cage with room in it for a wagon, counterweights racked in a shaft that drops past the tiers below this one.",
    "locked_toast": "The brass gate is locked. A stencilled plate: PERMIT AND STAMP REQUIRED. The clerk's window is open.",
    "door_when": {
     "requires": {
@@ -516,7 +516,7 @@
   {
    "id": "lift_overlook",
    "once_per_waking": true,
-   "once_per_waking_toast": "No more dropped coins by the railing today. Pallass sweeps on schedule.",
+   "once_per_waking_toast": "No more dropped coins by the railing today.",
    "kind": "prop",
    "cell": [
     23,
@@ -530,7 +530,7 @@
    "on_skill_use": {
     "accomplishment": "scouted_vantage",
     "gold": 1,
-    "toast": "[Eagle Eyes] — The haze gives up. Nine tiers resolve into stalls, patrol routes, and one dropped coin purse on a ledge two floors down that everyone else is too proud to see."
+    "toast": "[Eagle Eyes] — The haze gives up. Nine tiers resolve into stalls, patrol routes, and one dropped coin purse on a ledge two floors down."
    }
   },
   {
@@ -723,7 +723,7 @@
    "sprite": "guild_notice_wall",
    "observe": "Civic ordinances under glass, numbered and dated, the oldest one on the wall older than the wall. Nothing is pinned over anything else. There is a numbered slot for every notice and no notice without a slot.",
    "on_interact_accomplishment": "read_the_posted_ordinances",
-   "toast": "Ordinances, numbered and glassed. Somewhere in Pallass a clerk owns the key to this case, and only that clerk.",
+   "toast": "Numbered, dated, and locked under glass. You read four of them and put your hands back in your pockets.",
    "variants": [
     {
      "when": {
@@ -793,14 +793,14 @@
    "observe": "A rank of low carts for hire, each chalked with a tier number and a rate, and a queue board nobody is standing at.",
    "on_interact_accomplishment": "shipment_leg_carried",
    "once_per_waking": true,
-   "once_per_waking_toast": "The rank is empty until the next rotation. Pallass hires carts on a schedule too.",
-   "toast": "You take a cart off the rank, walk the crate off the lift apron and across two blocks of very orderly stone, and nobody stops you once. The paperwork was never about the crate.",
+   "once_per_waking_toast": "Every cart on the rank is out. The next rotation brings them back.",
+   "toast": "You take a cart off the rank, walk the crate off the lift apron and across two blocks of very orderly stone, and nobody stops you once.",
    "variants": [
     {
      "when": {
       "shipment_leg_carried": 1
      },
-     "toast": "Second leg, same cart, same two blocks. The rank clerk marks it without looking up, which in Pallass is a commendation."
+     "toast": "Second leg, same cart, same two blocks. The rank clerk chalks it onto the queue board under the first."
     }
    ]
   },

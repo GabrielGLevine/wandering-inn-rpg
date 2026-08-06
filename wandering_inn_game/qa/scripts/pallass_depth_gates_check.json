@@ -449,7 +449,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The rig swings past its own marks and settles wrong, again and again. Whatever is out of true in it is the forge's business — until somebody on this floor makes it yours."
+    "text": "The rig swings past its own marks and settles wrong, again and again. Fixing it belongs to the smith, and she has not asked you to."
    },
    "timeout_sec": 5
   },

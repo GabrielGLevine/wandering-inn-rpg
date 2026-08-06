@@ -161,7 +161,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "The runner ducks inside, and you finally see the whole of it: crates stacked to the rafters, more of Coyle's livery than a legitimate warehouse ever needs. Wherever the come-along ends, it ends here."
+    "text": "The runner ducks inside, and the gap in the shutters gives you the rest of it: crates stacked to the rafters, more of Coyle's livery than a legitimate warehouse ever needs. The door swings shut on the last of it."
    },
    "timeout_sec": 5
   },
