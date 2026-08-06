@@ -177,6 +177,14 @@
    "timeout_sec": 5
   },
   {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "00_makings_brief"
+  },
+  {
    "_comment": "'I'll start with the pot.' at visible index 1 closes the conversation.",
    "action": "move",
    "direction": "down",
@@ -479,6 +487,14 @@
    "timeout_sec": 5
   },
   {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "03_kettle"
+  },
+  {
    "action": "press",
    "name": "confirm"
   },
@@ -534,6 +550,14 @@
    "timeout_sec": 5
   },
   {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "04_first_lesson"
+  },
+  {
    "action": "press",
    "name": "confirm"
   },
@@ -579,6 +603,14 @@
     "class": "hedge_witch"
    },
    "timeout_sec": 10
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "05_class_gained"
   },
   {
    "action": "assert_state",

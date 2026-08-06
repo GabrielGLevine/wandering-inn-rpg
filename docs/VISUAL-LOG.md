@@ -3756,3 +3756,72 @@ bbox and anchoring to it walks the figure sideways off its cell. The hat and
 crook are the silhouette contract — a later re-cut may repaint him, but a
 hatless or crookless shepherd re-opens the disambiguation row that the copy
 alone could not close.
+
+### #396 close machine playtest — new findings (2026-08-06)
+
+Six scenes, windowed, serial, real overlay; evidence under
+`lanes/l396-close-evidence/<script>/`. Every scene PASSED (verdicts in the
+close-wave report); these are the rows the screenshots opened. One finding was
+FIXED inside the wave and is recorded as fixed.
+
+- [x] **(FIXED in-wave)** | `winter_topic` paged | `riverfarm_hunter.json` | The
+  voice amendment pushed the node to 205 chars, one over `PAGE_CHAR_BUDGET`
+  (200), with no sentence boundary in the last 20% — so it split into page 1
+  plus a SECOND PAGE CONTAINING "…them." | `winter_teeth_talk/03_winter_topic`
+  (the committed shot is the FIXED single-page render; the "…them." frame was
+  the pre-fix capture) | **Trimmed to 186 chars, single page, retaken
+  windowed.** Authoring rule this teaches: a T1 node past ~190 chars is a
+  two-pager, and QA screenshots show the LAST page (`_is_qa()` jumps there), so
+  a tiny tail page is invisible to a headless-green run and obvious in a shot.
+- [ ] **(P2)** | village rows 12–13 sit inside the field-skill legend panel's
+  band | `riverfarm_village` | With details expanded (the default — the button
+  reads "Hide details [H]"), the bottom-anchored panel covers ~2 cell rows
+  whenever the camera is bottom-clamped. Both of #396's non-combat route props
+  live there: `wolf_sign_trail` [4,13] is two-thirds behind the panel at the
+  moment of interaction, and `winter_fold_hurdles` [15,12] has only the top of
+  its tall sprite showing — with the PC ITSELF fully occluded while standing at
+  [14,12]. The target reticle and the toasts still read, so it is friction, not
+  a blocker | `winter_teeth_talk/01_wolf_sign_before`,
+  `winter_teeth_work/00_hurdles_stacked` | Fix candidates: move both props up a
+  row (cheap, but re-derives two canonicals' routes), or give the panel a
+  world-clearance rule like the hotbar's `HINT_BAND_CLEARANCE`. Lane C already
+  paid this tax once — the tend prop sits at row 11 for exactly this reason. |
+- [ ] **(P3)** | "Stacked Hurdles" reads as another fence post | `riverfarm_village`
+  | `winter_fold_hurdles` borrows `riverfarm_fence_ns`, so the WORK route's
+  material cache reads as one more upright beside the pen rail rather than
+  hazel hurdles cut and stacked, which is what its observe promises. The
+  sprite choice was deliberate (an EW panel merged INTO the rail run) — the
+  answer is a stacked-bundle sprite, not another fence rotation |
+  `winter_teeth_work/00_hurdles_stacked` (present) vs `01_fold_rebuilt`
+  (consumed — the same frame minus the post) |
+- [ ] **(P3)** | night watch: the ALLY's HP is the one number you cannot read |
+  `river_wolf_pack` arena | The wolves' numerals are white-on-dark and legible;
+  the PC's and A Shepherd's sit on their own near-black night sprites
+  ("15/40" for the shepherd needed a 4x crop to read). New stakes, same
+  carried "night maps' inverted hierarchy" row: this fight is the first where a
+  player must decide whether to protect an ally, which means reading his HP |
+  `winter_teeth_fight/01_night_watch_surrounded` |
+- [ ] **(P3)** | `riverfarm_bank_washout` reads as an unrecognizable grey smear
+  | `riverfarm_village` | The prop borrows `deep_fissure` (a dungeon sprite);
+  at [20,9] it half-overhangs the river tiles and becomes the brightest-value
+  object in that quadrant, pulling the eye to nothing. Its observe is a scoured
+  trench down to the water — a bank-erosion sprite, or the fissure re-tinted to
+  wet earth | visible in every village capture, clearest in
+  `winter_teeth_talk/00_shepherd_hub_offer` |
+- [ ] **(P4)** | the shepherd's hub opens on the exit line | `riverfarm_hunter.json`
+  | With `heard_winter_teeth` unbanked the visible rows are
+  "1. Just passing through." then "2. The wolves. Say what you need.", cursor
+  defaulting to row 1 — a player who confirms on reflex leaves without hearing
+  the quest exists. It is the cursor-pin rule's cost (the offer row was
+  appended after the frozen ask slot), and reordering re-pins every legacy
+  fixture's hub indices — ruling 11's exact hazard, so it needs a lane that can
+  re-derive them | `winter_teeth_talk/00_shepherd_hub_offer`,
+  `winter_teeth_prebank/00_prebank_hub` |
+
+**What genuinely lands** (keep this — it tells the next session what not to
+break): the hat-and-crook silhouette is unmistakable at gameplay zoom, even
+half-lit at night; the three-lamb pen reads as a pen with sheep and the
+reticle picks out the limping third; all three route toasts render their full
+three lines with no fold clipping; and the PEAK line
+("Wolves and me both, working round something neither of us can see.") lands
+on one page with the quest-complete toast beside it.

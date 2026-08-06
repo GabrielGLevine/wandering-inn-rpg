@@ -108,6 +108,10 @@
    "timeout_sec": 5
   },
   {
+   "action": "screenshot",
+   "name": "00_prebank_hub"
+  },
+  {
    "_comment": "#396 INDEX RECOUNT, PRE-BANK state (survived_wolf_night 1 and nothing else winter): TWO rows. [0] 'Just passing through.' (a1), [1] the offer (a6). HIDDEN: a0 watch-ask AND a7 the watch report -- both carry requires{heard_winter_teeth}, which this cohort has not banked, so having already survived the wolves opens NOTHING until the quest is accepted. That is the edge under test. Take 1.",
    "action": "move",
    "direction": "down",
@@ -132,6 +136,14 @@
    "payload_contains": {
     "id": "heard_winter_teeth"
    }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "01_new_quest_toast"
   },
   {
    "_comment": "THE SILENT RESOLVE, and it is silent in the strongest sense: NO quest_beat_completed fires for beat 1 at all. complete_when_any{survived_wolf_night} is already satisfied when the quest enters started_quests, so the first evaluation records the beat as done with no incomplete->complete transition to report -- there is no beat toast, and the player sees one 'New quest' and nothing contradicting it. (Measured, not assumed: the run's event stream goes quest_started -> heard_winter_teeth -> 'New quest' toast, then nothing until the report banks winter_answered and fires beat 2.) Beat 2 below proves the ABSENCE here is scoped to beat 1 and not a dead assertion.",
@@ -229,6 +241,14 @@
    }
   },
   {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "02_quest_complete_toast"
+  },
+  {
    "_comment": "DESTINATION PIN: the WATCH closer, reached without this run ever fighting.",
    "action": "wait_for_event",
    "type": "dialogue_node",
@@ -241,6 +261,10 @@
   {
    "action": "wait_frames",
    "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "03_prebank_report"
   },
   {
    "action": "press",

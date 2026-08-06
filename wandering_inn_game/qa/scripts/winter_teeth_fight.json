@@ -91,6 +91,10 @@
    "timeout_sec": 5
   },
   {
+   "action": "screenshot",
+   "name": "00_hub_night"
+  },
+  {
    "_comment": "#396 INDEX RECOUNT, fresh state (nothing winter, nothing thicket): TWO rows. [0] 'Just passing through.' (a1), [1] 'The wolves. Say what you need.' (a6, the offer). HIDDEN: a0 watch-ask (requires heard_winter_teeth -- shut until this very selection banks it), a2-a5 (legacy thicket cluster), a7/a8/a9. Take 1.",
    "action": "move",
    "direction": "down",
@@ -210,6 +214,10 @@
    "frames": 3
   },
   {
+   "action": "screenshot",
+   "name": "02_watch_agreed"
+  },
+  {
    "action": "press",
    "name": "confirm"
   },
@@ -284,6 +292,14 @@
    "payload_contains": {
     "victory": true
    }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "03_watch_resolved"
   },
   {
    "action": "press",
@@ -401,6 +417,10 @@
   {
    "action": "wait_frames",
    "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "04_report_watch"
   },
   {
    "action": "press",

@@ -198,6 +198,14 @@
    ]
   },
   {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "00_hurdles_stacked"
+  },
+  {
    "action": "press",
    "name": "interact"
   },
@@ -341,6 +349,10 @@
   {
    "action": "wait_frames",
    "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "02_report_fold"
   },
   {
    "action": "press",

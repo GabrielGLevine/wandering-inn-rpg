@@ -1775,7 +1775,7 @@
     "to_map": "riverfarm_mill"
    },
    {
-    "_comment": "#330 R2 [Beast Tamer] door: base banks soothed_a_beast, the variant tended_beasts, paid in wool. #396: legacy id; A Shepherd; present ALWAYS (ruling 13 dropped the thicket_answered gate -- entities never block, so nothing moved but visibility).",
+    "_comment": "#330 R2 [Beast Tamer] door: base banks soothed_a_beast, the variant tended_beasts, paid in wool. #396: legacy id; A Shepherd; present ALWAYS (ruling 13), so [16,11] is now blocked like the rail cells either side of it (a present entity blocks its own cell).",
     "cell": [
      16,
      11

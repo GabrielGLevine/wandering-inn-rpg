@@ -80,6 +80,10 @@
    "timeout_sec": 5
   },
   {
+   "action": "screenshot",
+   "name": "00_shepherd_hub_offer"
+  },
+  {
    "_comment": "#396 INDEX RECOUNT, fresh state (nothing winter, nothing thicket): the hub's 10 authored rows filter to TWO. [0] 'Just passing through.' (a1, ungated), [1] 'The wolves. Say what you need.' (a6, the offer -- hide_when its own counter only). HIDDEN: a0 watch-ask (requires heard_winter_teeth), a2/a3/a4/a5 (the legacy thicket cluster, heard_thicket_keeps unbanked), a7/a8/a9 (the report rows, requires heard_winter_teeth). Take 1; the cursor WRAPS, so the destination is pinned below rather than trusted to the index.",
    "action": "move",
    "direction": "down",
@@ -121,6 +125,10 @@
    "frames": 3
   },
   {
+   "action": "screenshot",
+   "name": "02_winter_brief"
+  },
+  {
    "action": "press",
    "name": "confirm"
   },
@@ -130,13 +138,17 @@
    "timeout_sec": 5,
    "payload_contains": {
     "speaker": "A Shepherd",
-    "text": "Hurdles are stacked by the pen. The watch is mine, every night. Company's welcome. And the sign. I near forgot the sign. Runs the west margin, plain as a road. Walk it back and you'd know what pushed them."
+    "text": "Hurdles are stacked by the pen. The watch is mine, every night. And the sign. I near forgot the sign. Runs the west margin, plain as a road. Walk it back and you'd know what pushed them."
    }
   },
   {
    "_comment": "winter_topic: 0 'Back up a step.' returns to winter_brief, 1 'Noted.' ends. Take 0 -- the round trip proves the topic node is not a dead end.",
    "action": "wait_frames",
    "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "03_winter_topic"
   },
   {
    "action": "press",
@@ -260,6 +272,14 @@
     4,
     12
    ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "01_wolf_sign_before"
   },
   {
    "action": "press",
@@ -407,6 +427,10 @@
    "frames": 3
   },
   {
+   "action": "screenshot",
+   "name": "04_peak_traced"
+  },
+  {
    "action": "press",
    "name": "confirm"
   },
@@ -460,6 +484,14 @@
      "A Winter of Teeth (Riverfarm) \u2014 You walked the sign back and found the pack was pushed \u2014 their old ground is held by something on the line."
     ]
    }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "05_journal_after_traced"
   }
  ]
 }
