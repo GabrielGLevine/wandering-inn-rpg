@@ -37,7 +37,19 @@ CHOICE-LOG "390/396/397 execution wave" block (PixelLab priority,
 lamb-pen seam split, riverfarm-last for #397, merge order 390→396→397).
 PixelLab balance $0.83, 0 sub gens.
 
-WAVE 2 LIVE (fresh window 22:05, six Opus lanes dispatched):
+WAVE 2 STATE (QUIESCE park ~23:50; session resets ~03:40): DONE+
+REVIEWED: 396-C (pot ACCEPT, 3 Majors -> fix spec in session scratchpad
+397-petition-rulings.md), 396-D (reviewer verdict pending), 397 dialogue
+(fix wave was RUNNING), pallass (MERGE-BLOCKED: H2 maps-voice-gate
+masks needed integrator-side + H3 payload regression -> fix spec in
+scratchpad), invrisil+empty (reviews pending/running). STILL RUNNING at
+park: liscor/inn/fg map lanes, D+invrisil+empty reviewers, dialogue fix
+wave — their notifications may arrive mid-quiesce; act on them only
+post-reset. ALL rulings + fix specs: session scratchpad
+397-petition-rulings.md (petition grants, H1 ISSUE_NAMED_WORK tool bug,
+H2 ruling, Lane C fix spec).
+
+Original dispatch record:
 396 Lane C (/tmp/wi-396-c, Tasks 9-10 + lamb wiring rider) + Lane D
 (/tmp/wi-396-d, Tasks 7-8 + rulings 5/9/11); 397 lanes pallass/
 invrisil/empty-regions/dialogue (worktrees /tmp/wi-397-*, pin-deltas
