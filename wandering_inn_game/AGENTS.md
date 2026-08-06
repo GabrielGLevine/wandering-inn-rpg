@@ -108,7 +108,7 @@ for architecture rationale + north star (BG3-in-Wandering-Inn, team of 1, [Skill
 	wandering_inn_game/qa/ci_sweep.sh --tier smoke               # load_gate + one canonical per subsystem, <3min, runs on every CI push
 	wandering_inn_game/qa/ci_sweep.sh --touching <path>[,<path>] # maps changed paths -> surface tags -> the crossing canonicals (lane re-gates)
 	wandering_inn_game/scripts/derive_qa_surfaces.py             # regenerate qa/manifest.json's surfaces after adding/editing a QA script or fixture
-	wandering_inn_game/scripts/derive_qa_surfaces.py --check      # verify surfaces aren't stale (what the drift check runs)
+	wandering_inn_game/scripts/derive_qa_surfaces.py --check      # verify surfaces aren't stale (what the drift check runs); ALSO fatal when a manifest row's `fixture` contradicts its script's own `fixture_save` (#396: both present must match — the derivation prefers the script's, so a stale row used to stay green forever)
 	wandering_inn_game/qa/run_qa.sh load_gate headless          # loads every .gd/.tscn/.tres; catches parse/compile errors. NATIVE-ONLY (see below)
 	wandering_inn_game/qa/run_qa.sh inn_walkthrough headless   # full inn journey, no screenshots
 	wandering_inn_game/qa/run_qa.sh inn_walkthrough windowed   # same + screenshots (a window opens briefly)

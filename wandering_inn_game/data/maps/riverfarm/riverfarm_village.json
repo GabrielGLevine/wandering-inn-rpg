@@ -1717,7 +1717,7 @@
    "on_enter_accomplishment": "observed_riverfarm_mill"
   },
   {
-   "_comment": "#330 R2 [Beast Tamer] door: base banks soothed_a_beast, the variant tended_beasts, paid in wool. #396: legacy id; A Shepherd.",
+   "_comment": "#330 R2 [Beast Tamer] door: base banks soothed_a_beast, the variant tended_beasts, paid in wool. #396: legacy id; A Shepherd; present ALWAYS (ruling 13 dropped the thicket_answered gate -- entities never block, so nothing moved but visibility).",
    "id": "hunters_lamb_pen",
    "kind": "prop",
    "cell": [
@@ -1726,11 +1726,6 @@
    ],
    "display_name": "A Lamb Pen",
    "sprite": "riverfarm_fence_ew",
-   "present_when": {
-    "requires": {
-     "thicket_answered": 1
-    }
-   },
    "observe": "Hurdle fencing the shepherd threw up after the thicket business. Two ewe lambs inside it, and a third that will not put weight on a foreleg.",
    "on_interact_accomplishment": "soothed_a_beast",
    "once_per_waking": true,
@@ -1890,7 +1885,7 @@
    "toast": "You walk the sign back. The pack came off the north ground by the old line — something denned in it and they gave way. They didn't choose these fields. They were pushed."
   },
   {
-   "_comment": "#396 TEND beat. Own prop, never touching the #330 counters. (18,11): the plan's (17,11) is a blocked fence flank, and row 12 hides under the hotbar panel. Sits under the east panel's art, inside the rail run. (18,10)/(18,12)/(19,11) stay open.",
+   "_comment": "#396 TEND beat. Own prop, never touching the #330 counters. (18,11): the plan's (17,11) is a blocked fence flank, and row 12 hides under the hotbar panel.",
    "id": "makings_tend_lamb",
    "kind": "prop",
    "cell": [

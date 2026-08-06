@@ -248,7 +248,7 @@
  "skeleton": {
   "nodes": {
    "agreed": {
-    "_comment": "#396: DEAD -- nothing gotos it (the hub's ask gotos watch_agreed). Kept only because data_lint does not flag orphan nodes and deleting it buys nothing.",
+    "_comment": "#396: DEAD -- nothing gotos it (the hub's ask gotos watch_agreed); kept because deleting it buys nothing.",
     "options": [
      {
       "effects": [
