@@ -2,8 +2,8 @@
  "_comment": "THE DELIVERY BOARD (runner_board, delivery_board:true) is a SEPARATE mechanical prop, browse-only (WIGame._interact_delivery_board), distinct from THE REQUEST BOARD's own board:true flag so interact()'s prop dispatch routes to the right one.",
  "biome": "inn",
  "interior_flavor": [
-  "Nothing there. Slip paper and rope wax. The whole room smells like somewhere else's mail.",
-  "Nothing there. Somebody's spare boots wait by the door, laces already loosened for the next run."
+  "Nothing there. Slip paper, rope wax, and the smell of somewhere else's mail.",
+  "Nothing there. A pair of spare boots waits by the door, laces already loosened for the next run."
  ],
  "grid": {
   "width": 10,
@@ -208,8 +208,8 @@
    "facing": "left",
    "delivery_board": true,
    "toast": "THE DELIVERY BOARD. Legs and ledgers. Gold by distance, paid on the mark, same-waking terms. Slips at the counter.",
-   "second_visit_toast": "THE DELIVERY BOARD. Your slip's still logged at the counter. Legs and ledgers don't care how it's going either.",
-   "observe": "Couriers are made, not hired. Start with the market run. — the counter"
+   "second_visit_toast": "THE DELIVERY BOARD. Your slip's still logged at the counter.",
+   "observe": "Couriers are made here, one run at a time. Start with the market run. — the counter"
   },
   {
    "_comment": "talk_pool-only, no conversation graph, inert-adjacent.",
@@ -241,7 +241,7 @@
    "dialogue": [
     {
      "speaker": "Resting Runner",
-     "text": "...five more minutes."
+     "text": "Five more minutes."
     }
    ]
   },
@@ -292,7 +292,7 @@
    "sprite": "unlit_lantern",
    "unlit": true,
    "state_counter": "lit_the_runners_lamp",
-   "observe": "A brass lamp bracketed to the wall over the slip rack, glass sooted at the top and dry as bone. The oil ran out some time ago and nobody has come back with more.",
+   "observe": "A brass lamp bracketed to the wall over the slip rack, glass sooted at the top and dry as bone. Tip the reservoir and nothing moves in it.",
    "kindle_toast": "[Firefly] — The wick takes the flame and holds it. Yellow light spreads down the wall and over the slips pinned there.",
    "light_toast": "[Light] — The orb slides into the lamp glass and settles. Yellow light spreads down the wall and over the slips pinned there.",
    "toast": "A wall lamp over the slip rack, glass sooted and wick dry. It has been dark long enough that the runners read by the door instead.",
@@ -332,9 +332,9 @@
    "sprite": "dirty_table",
    "dirty": true,
    "state_counter": "scrubbed_the_runners_table",
-   "observe": "Road mud dried in ridges across the boards, stamped there by a week of packs set down hard. Somebody wiped one corner of it and gave up.",
+   "observe": "Road mud dried in ridges across the boards, stamped there by a week of packs set down hard. A dry crumb of it breaks loose under your boot.",
    "clean_toast": "[Basic Cleaning] — You take it off in three passes. The dried mud lifts, the grain comes up pale, and the boards stop smelling of the road.",
-   "toast": "Dried road mud ridges the boards where pack after pack has come down on them. One corner is wiped clean and the rest is not.",
+   "toast": "Dried road mud ridges the boards where pack after pack has come down on them. It would come off with water and an arm behind it.",
    "visual_states": [
     {
      "when": {

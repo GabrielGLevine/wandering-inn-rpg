@@ -248,7 +248,7 @@
    ],
    "display_name": "Zevara's Desk",
    "sprite": "library_desk",
-   "observe": "Tidier than her schedule allows. A stack of gate-shift reports pinned under a paperweight shaped vaguely like a threat. She is almost never behind it. The gate keeps her busier than her own office does.",
+   "observe": "Tidier than her schedule allows. A stack of gate-shift reports pinned under a paperweight shaped vaguely like a threat. She is almost never behind it.",
    "on_interact_accomplishment": "saw_zevaras_desk",
    "toast": "Watch Captain's desk. Empty, same as every other time you've walked past it."
   },
@@ -266,8 +266,8 @@
     0.5,
     0.55
    ],
-   "locked_toast": "Barred, and empty behind the bars. You can tell by the quiet. Whatever ends up in here hasn't happened yet.",
-   "observe": "A single holding cell, iron-barred, straw swept into one corner. Duty-mundane, like everything else in this building — until it isn't."
+   "locked_toast": "Barred, and empty behind the bars. You can tell by the quiet.",
+   "observe": "A single holding cell, iron-barred, straw swept into one corner. The bucket in the other corner is clean and dry."
   },
   {
    "id": "archery_butt",
@@ -283,7 +283,7 @@
     0.75,
     0.45
    ],
-   "observe": "A straw-packed target lashed to a post, set against the wall where a stray shot won't find a person. Scored through in a tight cluster, more or less — somebody here takes the drills seriously.",
+   "observe": "A straw-packed target lashed to a post, set against the wall where a stray shot won't find a person. Scored through in a tight cluster at chest height, and the post rocks when you test it.",
    "requires_weapon_family": "bow",
    "item_hint_toast": "Nothing to shoot with. A bow in hand would do it.",
    "_comment_330": "#330 R5: was an uncapped, undecayed ranged_hit spigot. One drill a waking now, and it pays a real shaft.",
@@ -326,7 +326,7 @@
     0.65,
     0.5
    ],
-   "observe": "A folded half-letter, tucked behind a loose board. Someone started writing it and never finished.",
+   "observe": "A folded half-letter, tucked behind a loose board. The last line on it stops in the middle of a word.",
    "contains": [
     "note_watch_veteran"
    ],
