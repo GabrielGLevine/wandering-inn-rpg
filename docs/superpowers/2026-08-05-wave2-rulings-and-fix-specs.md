@@ -326,3 +326,23 @@ belt; the beat gate reds at its real site). Pot filled-state observe
 via visual_states (memorial_plot idiom). Census 15.0% rc 0. Its four
 "inherited reds" are Lane A's retirement class — Lane D's registry fixes
 them; verify at the C+D composed merge gate.
+
+## Inn fix wave LANDED (d42dc14a) — WAVE 3 COMPLETE
+All fixes; Erin premise line restored at closer 0; sleep ladder reads
+as an upgrade again; open_toast base-verbatim restore RE-GREENED
+player_room_loop:503/858; pin-deltas 21 rows. Region closer≥2 now 0.
+
+## WAVE 3 FINAL STATE — everything merge-ready
+396: lane-c 4e5ed929 + lane-d 7c1c92ae → merge into issue/396, composed
+gate (C's inherited reds resolve via D's registry), then Tasks 11-12.
+397 lane branches fix-complete: dialogue 4680190e, pallass 7f3da96c,
+invrisil 240cbf11, empty 8a5ea92a, liscor 73a20c88, fg 4824e1fe, inn
+d42dc14a → INTEGRATOR next (single writer qa/scripts+tests): merge all
+seven into issue/397-prose-naturalization; apply pin-deltas/*.json
+(fg+its resync pre-synced; invrisil has ONE new red at
+invrisil_disagreement_stealth:118); fold keeps-petitions/*.json into
+protected-keeps; ISSUE_NAMED_WORK tool fix (done-flag semantics);
+H2 maps-gate prose-field mask in dialogue_voice_gate map_skeleton;
+seal_fed 4-site re-bake; biomes.json street interior_flavor template;
+mercantile "very bad idea" residual (L3 both-go precedent, its call);
+test_sim_core:1942/:4001 + :3571 pins; composed full sweep + 33 units.
