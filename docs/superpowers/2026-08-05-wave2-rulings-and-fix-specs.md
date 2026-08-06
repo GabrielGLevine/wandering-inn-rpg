@@ -214,3 +214,15 @@ pallass den-shop argument; paid for by the [7] dedupe); wild-snap
 locked_toast 3-sentence exception — GRANT (two-word middle beat; gate
 requirement carried by three sibling toasts). Self-test exit 1 = the
 known ISSUE_NAMED_WORK bug (integrator fix, already ruled).
+
+## Dialogue fix wave (landed during quiesce) — 397/dialogue COMPLETE
+SHAs 0ffea9ff + 4680190e. All 14 review fixes applied: HIGH-1 G4 lapse
+recorded at w5-directive.md:27 + proper card-voice rewrite; HIGH-2
+false grate claim gone; 6 rejects re-done; both dropped shortlist
+graphs (zevara_intro, invrisil_stationer_client) judged + executed;
+clipped verdicts 3→1 (survivor is BASE text); pin sites now 7 (2 new:
+invrisil_setting_talk:99, invrisil_house_name_talk:1074;
+zevara summons_send has zero). Gates: verify-untouched 0, voice gate
+CLEAN hard=0 warn=0 all 9 files, corpus flagged 31→20/577. Dialogue
+lane needs NO further fixes — light re-read rides the integrator
+review. NOTHING left in flight; all seven map lanes + dialogue landed.
