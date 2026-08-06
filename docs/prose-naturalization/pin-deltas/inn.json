@@ -1,0 +1,168 @@
+{
+ "_count": 22,
+ "_files": [
+  "wandering_inn_game/data/maps/inn/inn.json",
+  "wandering_inn_game/data/maps/inn/inn_player_room.json",
+  "wandering_inn_game/data/maps/inn/inn_upstairs.json"
+ ],
+ "_generated_by": "extract_prose.walk_map_prose over base issue/397-prose-naturalization vs HEAD (397/inn)",
+ "_note": "GH#397 Phase 2 pin deltas for region inn. One row per prose string whose text moved. Field-path sets are asserted identical between base and HEAD, so no string was added, dropped or re-keyed. QA scripts pinning any `old` value below need the `new` value; the expected-pin table in the lane report lists which scripts.",
+ "_python": "3.12.3",
+ "_region": "inn",
+ "deltas": [
+  {
+   "entity_id": "erin",
+   "field_path": "$.entities[0].observe",
+   "file": "wandering_inn_game/data/maps/inn/inn.json",
+   "new": "A young human, no armor, no weapon, a rag over one shoulder she keeps forgetting she is holding. She talks to the room and to herself in the same breath.",
+   "old": "A young human, no armor, no weapon, no idea she is the strangest thing in this world. She moves like someone still deciding to be brave. The inn already leans toward her."
+  },
+  {
+   "entity_id": "lyonette",
+   "field_path": "$.entities[1].friendly_line",
+   "file": "wandering_inn_game/data/maps/inn/inn.json",
+   "new": "Lyonette's chin lifts, then softens despite itself. You're kind. People are not, usually, to the help. Sit where you like; I'll bring something hot.",
+   "old": "Lyonette's chin lifts, then softens despite itself. You're kind. People are not, usually, to the help. ...It is a small thing. It is not nothing. Sit where you like; I'll bring something hot."
+  },
+  {
+   "entity_id": "inn_witch_kettle",
+   "field_path": "$.entities[20].on_skill_use.toast",
+   "file": "wandering_inn_game/data/maps/inn/inn.json",
+   "new": "[Hedge Remedy] — The inn's kettle does in a pinch, just like she said. The yarrow goes under the lid and the steam thickens over the pot.",
+   "old": "[Hedge Remedy] — The inn's kettle does in a pinch, just like she said. The steam settles into something kinder."
+  },
+  {
+   "entity_id": "inn_chef_counter",
+   "field_path": "$.entities[21].skill_hint_toast",
+   "file": "wandering_inn_game/data/maps/inn/inn.json",
+   "new": "Good stock, better knives, and no hands on either. Bring a cook's Skill and the counter is ready.",
+   "old": "Good stock, better knives, and nobody using either. A real cook could turn this counter into a meal worth naming."
+  },
+  {
+   "entity_id": "inn_chef_counter",
+   "field_path": "$.entities[21].on_skill_use.toast",
+   "file": "wandering_inn_game/data/maps/inn/inn.json",
+   "new": "[Advanced Cooking] — Knife-work, then the pan, then four minutes you do not look away from. The plate goes out hot.",
+   "old": "[Advanced Cooking] — Knife-work first, then the pan, then the part nobody can teach. The plate comes out arguing for seconds."
+  },
+  {
+   "entity_id": "inn_copper_pan",
+   "field_path": "$.entities[22].skill_hint_toast",
+   "file": "wandering_inn_game/data/maps/inn/inn.json",
+   "new": "The good copper pan. It comes down when there is a signature dish to cook.",
+   "old": "The good copper pan. It's been waiting for a dish that deserves it."
+  },
+  {
+   "entity_id": "inn_copper_pan",
+   "field_path": "$.entities[22].on_skill_use.toast",
+   "file": "wandering_inn_game/data/maps/inn/inn.json",
+   "new": "[Signature Dish] — The pan comes down off its hook for this one. Two tables stop talking when the plate goes past.",
+   "old": "[Signature Dish] — The pan remembers you now. What comes out of it isn't dinner, it's a reputation."
+  },
+  {
+   "entity_id": "short_order",
+   "field_path": "$.entities[24].skill_hint_toast",
+   "file": "wandering_inn_game/data/maps/inn/inn.json",
+   "new": "Three plates ordered, one pot of stock. Stretched right it would cover them all, but nothing leaves this kitchen in your hands.",
+   "old": "Three plates ordered, one pot of stock. You could stretch it to cover them all. Nothing leaves the kitchen in your hands."
+  },
+  {
+   "entity_id": "pantry_door",
+   "field_path": "$.entities[26].skill_uses.observe.toast",
+   "file": "wandering_inn_game/data/maps/inn/inn.json",
+   "new": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating all the way around the jamb. It holds still while you watch it and shifts the moment you look away.",
+   "old": "[Observe] — The grain of the frame isn't grain at all: a pattern worked into the wood, old and deliberate, repeating around the jamb like a held breath. It doesn't move while you watch it. It moves the instant you look away."
+  },
+  {
+   "entity_id": "pisces_mounting",
+   "field_path": "$.entities[27].observe",
+   "file": "wandering_inn_game/data/maps/inn/inn.json",
+   "new": "His coat is off and folded over a chair back. One hand rests flat on the hauled door's face, and he has not spoken since he put it there.",
+   "old": "He has taken his coat off, which for Pisces is manual labour. One hand rests flat on the hauled door's face, the way a physician rests a hand on a patient, and he is listening to something no one else in the room can hear."
+  },
+  {
+   "entity_id": "rift_vermin_leak",
+   "field_path": "$.entities[28].visual_states[0].observe",
+   "file": "wandering_inn_game/data/maps/inn/inn.json",
+   "new": "The scratching has become a chewing. Since the Door went up the gap has widened, and there are teeth-marks in the plaster on this side of it.",
+   "old": "The scratching has become a chewing. The Door strains for somewhere it cannot reach yet, and something on the way there has found the gap and has teeth."
+  },
+  {
+   "entity_id": "garden_door",
+   "field_path": "$.entities[29].observe",
+   "file": "wandering_inn_game/data/maps/inn/inn.json",
+   "new": "Plaster gone thin and chalky, and one nail driven in at head height with nothing hung on it.",
+   "old": "Plaster, old and thin, and a nail with nothing hung on it. If something is meant to be here, it isn't yet."
+  },
+  {
+   "entity_id": "garden_door",
+   "field_path": "$.entities[29].visual_states[1].observe",
+   "file": "wandering_inn_game/data/maps/inn/inn.json",
+   "new": "A door of living vines, woven shut and breathing faintly of green. This wall had a nail in it this morning.",
+   "old": "A door of living vines, woven shut and breathing faintly of green. It wasn't here before, and it doesn't pretend otherwise."
+  },
+  {
+   "entity_id": "player_room_exit",
+   "field_path": "$.entities[0].observe",
+   "file": "wandering_inn_game/data/maps/inn/inn_player_room.json",
+   "new": "The hall on the other side. Throw the bolt if you want the room to yourself.",
+   "old": "The hall on the other side, and a bolt on this side. The bolt is most of what the lease bought."
+  },
+  {
+   "entity_id": "player_room_bed",
+   "field_path": "$.entities[1].sleep_toast[1].text",
+   "file": "wandering_inn_game/data/maps/inn/inn_player_room.json",
+   "new": "Your own room. The noise from downstairs stops at the door.",
+   "old": "Your own room, and bedding aired for you rather than for whoever comes next."
+  },
+  {
+   "entity_id": "player_room_chest",
+   "field_path": "$.entities[2].locked_toast",
+   "file": "wandering_inn_game/data/maps/inn/inn_player_room.json",
+   "new": "Your own footlocker. No lock on the hasp, so just lift the lid.",
+   "old": "Your own footlocker. Nothing in it yet that needs a key."
+  },
+  {
+   "entity_id": "player_room_shelf",
+   "field_path": "$.entities[4].observe",
+   "file": "wandering_inn_game/data/maps/inn/inn_player_room.json",
+   "new": "Three shelves and you have filled none of them.",
+   "old": "Three shelves and you have filled none of them. Depending on the hour that is a sad thing or a hopeful one."
+  },
+  {
+   "entity_id": "player_room_pegs",
+   "field_path": "$.entities[5].locked_toast",
+   "file": "wandering_inn_game/data/maps/inn/inn_player_room.json",
+   "new": "You hang the day's coat on a peg.",
+   "old": "You hang the day's coat and it stays hung. It is a small thing and it is not nothing."
+  },
+  {
+   "entity_id": "player_room_pegs",
+   "field_path": "$.entities[5].observe",
+   "file": "wandering_inn_game/data/maps/inn/inn_player_room.json",
+   "new": "A row of pegs by the door, the paint worn off at shoulder height.",
+   "old": "Pegs worn pale at the shoulder height of forty travellers who hung a coat here and went away again."
+  },
+  {
+   "entity_id": "hallway_door_a",
+   "field_path": "$.entities[1].observe",
+   "file": "wandering_inn_game/data/maps/inn/inn_upstairs.json",
+   "new": "Shut, and the card slot in the frame is empty.",
+   "old": "Shut, and the card slot in the frame is empty. Somebody paid for this one once and stopped."
+  },
+  {
+   "entity_id": "hallway_door_a",
+   "field_path": "$.entities[1].door_when.open_toast",
+   "file": "wandering_inn_game/data/maps/inn/inn_upstairs.json",
+   "new": "Your room. The key turns like it has been waiting to, and the door gives inward.",
+   "old": "The key turns like it has been waiting to. Your room, and nobody else's."
+  },
+  {
+   "entity_id": "lyonette_door",
+   "field_path": "$.entities[5].locked_toast",
+   "file": "wandering_inn_game/data/maps/inn/inn_upstairs.json",
+   "new": "Locked. Lyonette has the only key.",
+   "old": "Locked. Lyonette keeps exactly one door in this inn that isn't anyone's business but hers."
+  }
+ ]
+}
