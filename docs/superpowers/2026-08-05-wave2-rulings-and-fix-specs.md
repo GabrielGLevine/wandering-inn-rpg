@@ -346,3 +346,15 @@ H2 maps-gate prose-field mask in dialogue_voice_gate map_skeleton;
 seal_fed 4-site re-bake; biomes.json street interior_flavor template;
 mercantile "very bad idea" residual (L3 both-go precedent, its call);
 test_sim_core:1942/:4001 + :3571 pins; composed full sweep + 33 units.
+
+## INTEGRATOR LANDED (aa7f9be7..be2d8a52) — 397 branch COMPOSED + GREEN
+7/7 lane merges clean; 88 pins / 42 files, zero old strings remain;
+seal_fed 4-site re-bake coherent; ISSUE_NAMED_WORK done-flags (+2 more
+inversion instances found+fixed); H2 mask (baseline-maps byte-untouched
+— normalize-forward, not re-snapshot; disclosed as narrowing a shipped
+gate); keeps 12→29 w/ two-authority verify-untouched (post-pass pins
+cannot launder); biomes street line + mercantile both-go. FULL SWEEP
+207/207 + units 33/33 + both voice gates CLEAN. Ordinance-44 RULED:
+GRANT landmark from reserve (Phase 4 lane adds the registry row;
+reserve 4→3). Remaining: Phase 4 (running), 396 close wave (running),
+riverfarm pass (post-396-merge), baselines regen, Phase 5, PRs.
