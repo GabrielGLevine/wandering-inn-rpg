@@ -224,7 +224,7 @@
    ],
    "observe": "A carved shape crouches against the far wall, limbs folded, its eyeless face turned to the floor. It has not moved since you noticed it.",
    "on_interact_accomplishment": "eyed_the_dormant_guardian",
-   "toast": "You keep your distance. The eyeless face stays pointed at the floor."
+   "toast": "You keep your distance. A shallow arc is scored into the floor in front of it, ending under one folded knee."
   },
   {
    "_comment": "Grouped with Yvlon/Ksmvr at (7,5)-(9,5), open floor clear of every blocked/decor/entity cell on this map. v0.15 T4.3 round 2: retires on horns_dig_started with the rest of the party. Her own `ceria_intro` banks that counter mid-conversation, which is why this gate needed world.gd's dialogue defer first. Contract: inn.json's `ceria_inn_returned`.",

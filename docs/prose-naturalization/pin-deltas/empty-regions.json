@@ -32,7 +32,7 @@
   "field_path": "$.entities[2].toast",
   "entity_id": "dormant_guardian_marker",
   "old": "You keep your distance. Whatever wakes it, you would rather not be the one who finds out.",
-  "new": "You keep your distance. The eyeless face stays pointed at the floor."
+  "new": "You keep your distance. A shallow arc is scored into the floor in front of it, ending under one folded knee."
  },
  {
   "file": "wandering_inn_game/data/maps/dungeon/seal_vault.json",
@@ -106,6 +106,13 @@
  },
  {
   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
+  "field_path": "$.entities[1].observe",
+  "entity_id": "pressure_plate_a",
+  "old": "One flagstone sits a hair proud of its neighbors, the mortar cracked clean around its edge. Stepping square on it feels like a very bad idea.",
+  "new": "One flagstone sits a hair proud of its neighbors, the mortar cracked clean around its edge. Light does not reach the bottom of the crack."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
   "field_path": "$.entities[1].toast",
   "entity_id": "pressure_plate_a",
   "old": "The flagstone gives half an inch under your hand. Somewhere close, something CLICKS. Nothing else happens. This time.",
@@ -158,7 +165,7 @@
   "field_path": "$.entities[6].gate_closed_toast",
   "entity_id": "snare_nest_slot",
   "old": "You give the wire a wide berth. Something in the dark past it has not noticed you yet.",
-  "new": "You give the wire a wide berth. Nothing past it in the dark has noticed you yet."
+  "new": "You give the wire a wide berth. Past it, something has walked the dust into a track, and walked the track both ways."
  },
  {
   "file": "wandering_inn_game/data/maps/dungeon/trapped_halls.json",
@@ -235,7 +242,7 @@
   "field_path": "$.entities[1].observe",
   "entity_id": "cold_hearth",
   "old": "A ring of fire-blackened stones, the ash inside long dead and cold. Something sat here in the dark and knew how to keep a fire — or learned how, the way they say these things learn, when the moon is full and their minds come clear.",
-  "new": "A ring of fire-blackened stones, the ash inside long dead and cold. Raskghar keep a fire when the moon is full and their minds come clear; this ash is layered, lit and relit."
+  "new": "A ring of fire-blackened stones, the ash inside long dead and cold. It lies in layers — lit, burned down, lit again, four or five times over."
  },
  {
   "file": "wandering_inn_game/data/maps/sewers/deep_tunnels.json",

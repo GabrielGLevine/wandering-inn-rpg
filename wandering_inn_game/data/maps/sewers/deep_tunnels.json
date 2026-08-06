@@ -123,7 +123,7 @@
    ],
    "display_name": "Cold Hearth",
    "sprite": "cold_hearth",
-   "observe": "A ring of fire-blackened stones, the ash inside long dead and cold. Raskghar keep a fire when the moon is full and their minds come clear; this ash is layered, lit and relit.",
+   "observe": "A ring of fire-blackened stones, the ash inside long dead and cold. It lies in layers — lit, burned down, lit again, four or five times over.",
    "on_interact_accomplishment": "found_cold_hearth",
    "toast": "A fire-pit ringed with blackened stones, gnawed bones banked around the edge and cracked open for their marrow. Nothing in the ash has been warm for a long time."
   },

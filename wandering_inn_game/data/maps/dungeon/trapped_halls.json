@@ -210,7 +210,7 @@
    ],
    "display_name": "A Loose Flagstone",
    "sprite": "pressure_plate",
-   "observe": "One flagstone sits a hair proud of its neighbors, the mortar cracked clean around its edge. Stepping square on it feels like a very bad idea.",
+   "observe": "One flagstone sits a hair proud of its neighbors, the mortar cracked clean around its edge. Light does not reach the bottom of the crack.",
    "on_interact_accomplishment": "triggered_pressure_plate",
    "toast": "The flagstone gives half an inch under your hand. Somewhere close, a catch clicks. Nothing else happens.",
    "visual_states": [
@@ -341,7 +341,7 @@
      "horns_delve_started": 1
     }
    },
-   "gate_closed_toast": "You give the wire a wide berth. Nothing past it in the dark has noticed you yet.",
+   "gate_closed_toast": "You give the wire a wide berth. Past it, something has walked the dust into a track, and walked the track both ways.",
    "on_victory": [
     "halls_cleared",
     "cleared_halls_by_force"
