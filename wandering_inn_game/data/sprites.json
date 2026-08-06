@@ -4687,7 +4687,7 @@
   }
  },
  "dungeon_rubble": {
-  "_comment": "PIL connected-component blob scan, greyish-only filter (low channel saturation, mid-tone): bbox (194,83,11,9), the largest of the three, rgb~(80,83,69) -- a muted grey-olive that already sits close to the dungeon floor's own cast.",
+  "_comment": "Blob-scan pick: a muted grey-olive close to the dungeon floor's own cast.",
   "render_scale": 1.4,
   "shadow": true,
   "animations": {
@@ -6325,6 +6325,44 @@
     "frame_size": [
      32,
      32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "briar_wall": {
+  "_comment": "#398 D2. OWNED PixelLab, 32px not the 64px default: a fine lattice speckles at ship scale. Anchor = alpha bbox 30/32; the 6.1% holes ARE the lattice.",
+  "render_scale": 0.75,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/briar_wall/Idle-Sheet.png",
+    "frame_size": [
+     32,
+     32
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pond_cache": {
+  "_comment": "#398 P1 reward. OWNED PixelLab. Distinct silhouette from `chest`, never a recolor. Anchor = alpha bbox 60/64.",
+  "render_scale": 0.36,
+  "anchor": [
+   0.5,
+   0.9375
+  ],
+  "shadow": true,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/sprites/pond_cache/Idle-Sheet.png",
+    "frame_size": [
+     64,
+     64
     ],
     "fps": 1
    }

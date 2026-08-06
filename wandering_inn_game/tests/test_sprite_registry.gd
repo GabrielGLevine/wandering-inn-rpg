@@ -530,6 +530,11 @@ func _build_expected_counts() -> Dictionary:
 	counts["city_gatehouse/idle"] = 1
 	counts["city_gate_arch/idle"] = 1
 
+	# GH#398 skill-gated-area carriers (OWNED PixelLab statics, one frame each):
+	# briar_wall is the P5 burns/cuts blocker, pond_cache the P1 island reward.
+	counts["briar_wall/idle"] = 1
+	counts["pond_cache/idle"] = 1
+
 	return counts
 
 
