@@ -288,3 +288,13 @@ sync-then-revert proved ALL GREEN when synced. Integrator residual
 added: mercantile_alleys alley_footpad_snag_b still carries "feels like
 a very bad idea" (out-of-ownership; unify at integration or leave —
 integrator's call with the L3 both-go precedent).
+
+## Invrisil fix wave LANDED (240cbf11) — lane merge-ready
+All H1/M2-M5/L6/L7/L9/L10 done; anon 7.4% touchable (honest measure),
+region negations = exactly the two granted keeps; pin table now 14 RED
+/ 25 sites incl. ONE NEW red (invrisil_disagreement_stealth:118 — the
+granted S3 trim; the reviewer's "pins the other variant" claim was
+wrong, both are pinned) and one RE-GREENED (walkthrough:473 via the M2
+revert). Pin-deltas 50 rows, BASE olds. NOTE: ISSUE_NAMED_WORK bug did
+NOT trip for invrisil (no named-work strings in region) — the H1 tool
+fix remains needed for pallass/garden/liscor/dungeon entries only.
