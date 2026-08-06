@@ -228,7 +228,7 @@
   "field_path": "$.entities[4].observe",
   "entity_id": "camp_carry_yoke",
   "old": "A shoulder yoke cut for someone half your height, propped against a stack of empty baskets. The baskets go out full and come back full of something else.",
-  "new": "A shoulder yoke cut for goblin shoulders, half the height of yours, propped against a stack of empty baskets. The baskets go out full and come back full of water and cut brush."
+  "new": "A yoke cut for goblin shoulders, half the height of yours, propped against a stack of empty baskets. The baskets go out full and come back full of water and cut brush."
  },
  {
   "file": "wandering_inn_game/data/maps/floodplains/rags_camp.json",

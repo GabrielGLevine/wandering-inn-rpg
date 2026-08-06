@@ -125,7 +125,7 @@
    ],
    "display_name": "A Carrying Yoke",
    "sprite": "crate",
-   "observe": "A shoulder yoke cut for goblin shoulders, half the height of yours, propped against a stack of empty baskets. The baskets go out full and come back full of water and cut brush.",
+   "observe": "A yoke cut for goblin shoulders, half the height of yours, propped against a stack of empty baskets. The baskets go out full and come back full of water and cut brush.",
    "on_interact_accomplishment": "camp_carry_jobs",
    "once_per_waking": true,
    "once_per_waking_toast": "The baskets are all out. Nothing left to haul until they come back.",
