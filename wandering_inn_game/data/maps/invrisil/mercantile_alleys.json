@@ -1259,7 +1259,7 @@
    "sprite": "crate",
    "requires_skill": "disarm_trap",
    "skill_hint_toast": "A stack of crates wedged just wrong, top-heavy and set to come down on whoever pulls from the bottom. Old footpad mischief.",
-   "locked_toast": "The crate stack looks ordinary until you notice the angle: top-heavy, wedged to fall. Pulling from the bottom feels like a very bad idea.",
+   "locked_toast": "The crate stack looks ordinary until you notice the angle: top-heavy, wedged to fall. The wedge is set low, where you would have to reach in under the weight.",
    "on_skill_use": {
     "accomplishment": "trap_disarmed",
     "toast": "You brace the stack and ease the wedge free by hand. Behind the bottom crate: a couple of coins someone forgot to collect.",
