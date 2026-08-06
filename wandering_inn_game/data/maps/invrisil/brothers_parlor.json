@@ -351,7 +351,7 @@
    "display_name": "The Guest Couch",
    "sprite": "bench",
    "sleep": true,
-   "sleep_toast": "Even a couch here fits like it was fitted for you. The Brothers do nothing halfway, not even hospitality."
+   "sleep_toast": "Even the couch here fits like it was fitted for you. You sleep through to morning without waking once."
   },
   {
    "_comment": "Bespoke short-Drake rig replaces the flagged pc_drake_m+tint placeholder. Voice/profile contract: docs/design/character-profiles.md Ratici section (fast, dropped g's, fancy-word overreach, menace opens polite; [Gentleman Thief] 7.24 is the class-name ceiling, [Aerial Dodge] is Vol-8 and BANNED).",
@@ -490,7 +490,7 @@
    ],
    "display_name": "The Good Shelf",
    "sprite": "shelf_bottles",
-   "observe": "Bottles arranged by loyalty rather than label. The top row is for after jobs that went well."
+   "observe": "Bottles ranked by who drinks them. The top row comes down after jobs that went well."
   },
   {
    "id": "parlor_keg_a",
@@ -524,7 +524,7 @@
    ],
    "display_name": "The Card Table",
    "sprite": "table_brown",
-   "observe": "Coppers, a dog-eared deck, and chalk tallies in three different handwritings. The game never quite ends; it just changes players."
+   "observe": "Coppers, a dog-eared deck, and chalk tallies in three different handwritings. A hand reaches past you and adds a chalk stroke to the middle column."
   },
   {
    "id": "card_stool_a",
@@ -578,7 +578,7 @@
    ],
    "display_name": "The Long Shelf",
    "sprite": "library_shelf",
-   "observe": "Ledgers with no titles and boxes with no labels. Everything here is filed under later."
+   "observe": "Ledgers with no titles and boxes with no labels. The dust on the lids stops at the third box along."
   },
   {
    "id": "parlor_cot_a",
@@ -589,7 +589,7 @@
    ],
    "display_name": "A Cot",
    "sprite": "bed",
-   "observe": "Army-neat. Whoever sleeps here folds corners like it still matters."
+   "observe": "Army-neat. Corners squared, blanket tight, and no dent in the pillow at all."
   },
   {
    "id": "parlor_cot_b",
@@ -612,7 +612,7 @@
    ],
    "display_name": "The Hat Stand",
    "sprite": "hat_stand",
-   "observe": "Hats on pegs, every one accounted for. House rule says they stay on. Nobody explains the exceptions, and nobody asks twice."
+   "observe": "Hats on pegs, every one accounted for. House rule says hats stay on, and these came off anyway."
   },
   {
    "_comment": "v0.15 T4.4 regional repeatable work, 2 of 3 (the serving_tray idiom: once_per_waking + gold, banked under interactions.gd's `serve:` key). NEW COUNTER invrisil_errands_run, frozen at the next tag. Ungated so the affordance is reachable the first time a player finds the parlor; the marker-holder `variants` arm is the earned RATE, not an entry fee. Cell (5,1) sits between the cots and the counter, off every route the six parlor-touching canonicals walk.",
@@ -624,12 +624,12 @@
    ],
    "display_name": "The Errand Slate",
    "sprite": "note_pinned",
-   "observe": "A slate by the cots, chalked in two hands: addresses with no names against them, times with no dates, and a column of initials down the edge. Small work. The Brothers keep the small work moving because the small work is how they hear things.",
+   "observe": "A slate by the cots, chalked in two hands: addresses with no names against them, times with no dates, and a column of initials down the edge. Small work, and two of the initials repeat all the way down.",
    "on_interact_accomplishment": "invrisil_errands_run",
    "once_per_waking": true,
    "once_per_waking_toast": "The slate is wiped clean. Come back when the chalk's been busy.",
    "gold": 2,
-   "toast": "You take the top line off the slate and walk it across Invrisil: a package nobody described to you, to a door somebody did. Two gold, and the line is wiped before you're back through the alley.",
+   "toast": "You take the top line off the slate and walk it across Invrisil, no questions asked at either end. Two gold in your hand, and behind you a wet cloth is already going over the line.",
    "variants": [
     {
      "when": {

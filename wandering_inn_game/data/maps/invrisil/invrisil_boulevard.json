@@ -1032,8 +1032,8 @@
    "display_name": "The Rooftop Line",
    "sprite": "riverfarm_fence_ew",
    "requires_skill": "eagle_eyes",
-   "skill_hint_toast": "The rooftops run straighter than the streets. Somebody up there knows it.",
-   "locked_toast": "Slate roofs and chimney smoke. The city keeps its second story to itself.",
+   "skill_hint_toast": "The rooftops run straighter than the streets. Sharp enough eyes could follow one from here.",
+   "locked_toast": "Slate roofs and chimney smoke. No way up from this side of the street.",
    "on_skill_use": {
     "accomplishment": "scouted_vantage",
     "toast": "[Eagle Eyes] — The rooftop line resolves into a second city: runners' shortcuts, a watcher over Coyle's block, and two gentlemen who are always politely elsewhere."
@@ -1067,7 +1067,7 @@
    ],
    "display_name": "The Adventurer's Rest",
    "sprite": "door",
-   "observe": "A house sign with no name on it, only a hand of cards face down and a hat on a peg. Half the silver in this city drinks here and none of it says so out loud.",
+   "observe": "A house sign with no name on it, only a hand of cards face down and a hat on a peg. Two men come out while you stand there, and neither of them holds the door.",
    "to_map": "adventurers_rest",
    "to_cell": [
     6,
@@ -1154,7 +1154,7 @@
      "text": "A woman in a rose-dyed cloak checks a folded slip of paper against a shopfront number, unimpressed by both."
     }
    ],
-   "observe": "She holds the slip at arm's length, then the shopfront number, then the slip again. Whatever address she was given, this street declines to be it.",
+   "observe": "She holds the slip at arm's length, then the shopfront number, then the slip again. Two doors on this stretch are numbered eleven.",
    "talk_pool": [
     "Number eleven. This is number eleven. The sign says Havvers and my slip says Bellworth, so one of them is lying.",
     "Three streets, four shopfronts, and not one of them the one I was sent to. Invrisil, that.",
@@ -1179,10 +1179,10 @@
    "dialogue": [
     {
      "speaker": "",
-     "text": "Blue-grey wool, city cut. She doesn't look at you. Nobody here looks at anybody."
+     "text": "Blue-grey wool, city cut. She has already looked past you."
     }
    ],
-   "observe": "Blue-grey wool, cut the way this city cuts it, and a walking pace she has no intention of breaking for you or anyone.",
+   "observe": "Wool the colour of wet slate, cut close at the shoulder, and a walking pace that does not change when you step into her line.",
    "talk_pool": [
     "If you're asking directions, ask somebody stopped. I'm not stopped.",
     "It isn't rudeness. Look at anyone here for two seconds and you'll be sold something.",
@@ -1279,7 +1279,7 @@
      "text": "Mustard-brown coat, city boots, the specific walk of a man pretending he isn't lost."
     }
    ],
-   "observe": "Mustard-brown coat, good city boots, and the specific unhurried circling of a man who will not be asking anybody.",
+   "observe": "Mustard-brown coat, good city boots, and a third pass down the same twenty yards of colonnade.",
    "talk_pool": [
     "I know exactly where I am. I'm reorienting.",
     "The boulevard runs east. Everything runs east. That's the only fact this city gives away free.",
@@ -1347,7 +1347,7 @@
      "text": "A Gnoll traveler, tan road-cloak, watching the crowd the way a stranger watches weather."
     }
    ],
-   "observe": "A tan road-cloak with the dust still in the weave, and a Gnoll under it reading the crowd the way you would read weather coming.",
+   "observe": "A tan road-cloak with the dust still in the weave, and a Gnoll under it watching the crowd instead of the shopfronts.",
    "talk_pool": [
     "Hrr. So many, and every one of them going somewhere else.",
     "In a hunt-family you know every face by the second day. Here I have been three days and learned none, yes?",
@@ -1370,7 +1370,7 @@
    ],
    "observe": "Stacked shipping crates, waist-high, the kind of cover a man leans on to watch a street without looking like he's watching it.",
    "on_interact_accomplishment": "coyle_operation_found",
-   "toast": "You circle the block twice before it clicks: the modest COYLE AND SONS sign out front doesn't match the two wagons idling round the side, or the men counting crates like men who've been shorted before. Whatever Coyle's really running out of, the front door is the least of it."
+   "toast": "You circle the block twice before it clicks. The modest COYLE AND SONS sign faces the boulevard; the two wagons idling round the side face the alley, and the men loading them count every crate twice."
   },
   {
    "_comment": "GH#68 (Invrisil quest-stage rework): the FIGHT path's Stage 2 tailing chain, first leg.",
@@ -1387,7 +1387,7 @@
     0.45,
     0.4
    ],
-   "observe": "A runner ducks out Coyle's side door with a ledger under one arm, moving with the particular haste of someone who'd rather not be noticed leaving.",
+   "observe": "A runner ducks out Coyle's side door with a ledger under one arm, keeps the wagons between himself and the street, and does not look up once.",
    "on_interact_accomplishment": "spotted_the_runner",
    "toast": "You fall in a comfortable distance behind. The runner doesn't loop, doesn't double back — just walks like a man with somewhere specific to be, heading for the alleys off the boulevard's east end."
   },
@@ -1414,7 +1414,7 @@
    },
    "trigger_radius": 1,
    "observe": "Two shapes peel off the shadowed colonnade, unhurried, the way people move when they've done this before. Only after dark.",
-   "gate_closed_toast": "Nothing under the colonnade but shadow. Whoever works this corner keeps night hours only.",
+   "gate_closed_toast": "Nothing under the colonnade but shadow. Come back after dark.",
    "visual_states": [
     {
      "_comment": "Marker visible ONLY while the night encounter_when gate can fire",
@@ -1457,7 +1457,7 @@
     1
    ],
    "display_name": "A Glazier's Front",
-   "observe": "Panes racked like coins on edge. The glazier watches the street through his own stock, which is either pride or advertising.",
+   "observe": "Panes racked like coins on edge. The glazier watches the street through his own stock.",
    "hide_sprite": true
   },
   {
@@ -1468,7 +1468,7 @@
     1
    ],
    "display_name": "A Cordwainer's Bench",
-   "observe": "Boots on pegs, sorted by wear. The pair in the window has walked to Pallass and back, if the sign is honest. Signs here mostly are.",
+   "observe": "Boots on pegs, sorted by wear. The pair in the window has walked to Pallass and back, if the sign is honest.",
    "hide_sprite": true
   },
   {
@@ -1497,7 +1497,7 @@
     0.42,
     0.38
    ],
-   "observe": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. The frontage behind it is one narrow door and a clean window. Everything that actually moves through this firm goes round the side, on wagons, after dark."
+   "observe": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. Behind it, one narrow door and a clean window, and nothing coming in or out of either while you watch."
   },
   {
    "_comment": "v0.16 I1 (#306): kind flips prop -> door in place on the SAME already-blocked cell (20,1), id and `observe` byte-identical, so invrisil_walkthrough's player_blocked + [Observe] + toast pins stay exact. hide_sprite dropped so the facade reads enterable.",
@@ -1509,7 +1509,7 @@
    ],
    "display_name": "A Stationer's Window",
    "sprite": "door",
-   "observe": "Ruled paper in three weights, ink in four, and a card offering a scribe by the hour in a hand that is itself the advertisement. Half the contracts argued about on this street were bought here first, quietly, by both sides.",
+   "observe": "Ruled paper in three weights, ink in four, and a card offering a scribe by the hour in a hand that is itself the advertisement. The door is propped open, and two voices inside are arguing about a comma.",
    "to_map": "stationer",
    "to_cell": [
     6,
@@ -1533,7 +1533,7 @@
    },
    "observe": "Every front on this stretch has stopped pretending to be busy. A wheel-track runs through the wet marble, wider than a trade wagon lays and far too clean, and it is already curving away three streets north.",
    "on_interact_accomplishment": "carriage_passed",
-   "toast": "Pink lacquer, gone before you turned your head. The boulevard takes a moment to remember it was doing something, and nobody on it says the name out loud."
+   "toast": "Pink lacquer, gone before you turned your head. The fronts on this stretch take a moment to remember they were busy, and not one of them looks north after it."
   }
  ],
  "cover_skip": [

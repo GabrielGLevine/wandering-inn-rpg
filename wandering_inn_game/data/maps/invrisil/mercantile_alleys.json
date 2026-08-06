@@ -1144,7 +1144,7 @@
    "skill_hint_toast": "The clean ledger is the tell. Sizing up what is really here takes a practiced read.",
    "on_skill_use": {
     "accomplishment": "noticed_the_clean_ledger",
-    "toast": "The desk's own ledger reads clean — too clean, the kind of clean a man pays for. Whatever's real is hidden better than this. You'll want to know how this place is watched before you go digging further.",
+    "toast": "The desk's own ledger reads clean — too clean, the kind of clean a man pays for. Find out how the place is watched before you go digging for the real one.",
     "variants": [
      {
       "when": {
@@ -1155,7 +1155,7 @@
      }
     ]
    },
-   "locked_toast": "The desk's own ledger reads clean, which is exactly the kind of clean a man pays for. You don't have the eye to find the real one. Not yet."
+   "locked_toast": "The ledger on the desk reads clean front to back. Finding the one it was written to cover takes an eye you don't have yet."
   },
   {
    "_comment": "GH#68 (Invrisil quest-stage rework): the SKILL path's Stage 2 gate",
@@ -1197,7 +1197,7 @@
    ],
    "observe": "The runner's trail ends at a side door with fresh boot-scuff on the sill and burgundy-and-brass livery moving past the gap in the shutters. Coyle's crew, and no mistaking the building now.",
    "on_interact_accomplishment": "warehouse_located",
-   "toast": "The runner ducks inside, and you finally see the whole of it: crates stacked to the rafters, more of Coyle's livery than a legitimate warehouse ever needs. Wherever the come-along ends, it ends here."
+   "toast": "The runner ducks inside, and the gap in the shutters gives you the rest of it: crates stacked to the rafters, more of Coyle's livery than a legitimate warehouse ever needs. The door swings shut on the last of it."
   },
   {
    "_comment": "matches combatants.json's own wilovan record + sim_combat_batch.gd's `hired_blades_w10_wilovan`/`hired_blades_w10_solo` harness cells (gated 0.6-0.8 with the ally, measured-only solo).",
@@ -1228,7 +1228,7 @@
    "_comment": "R6 (#95) trap placement 1/2: alley_footpads_a leftover, the footpad-era's remnant danger post-safe-passage.",
    "id": "alley_footpad_snag_a",
    "once_per_waking": true,
-   "once_per_waking_toast": "The stash spot sits empty. Knowing this alley, someone will restock it.",
+   "once_per_waking_toast": "The stash spot sits empty. Nothing more to lift here today.",
    "kind": "prop",
    "cell": [
     9,
@@ -1237,11 +1237,11 @@
    "display_name": "A Cutpurse's Snag-Line",
    "sprite": "snare_coil",
    "requires_skill": "disarm_trap",
-   "skill_hint_toast": "A snag-line at ankle height, tied crate to drainpipe. Old footpad work, the kind meant to trip a running mark. Worth clearing.",
-   "locked_toast": "A taut line crosses the alley at ankle height, tied off crate to drainpipe. It's clearly meant to trip someone. You can't see how to clear it safely.",
+   "skill_hint_toast": "A snag-line at ankle height, tied crate to drainpipe — old footpad work, meant to trip a running mark. Worth clearing.",
+   "locked_toast": "A taut line crosses the alley at ankle height, tied off crate to drainpipe. You can't see how to clear it safely.",
    "on_skill_use": {
     "accomplishment": "trap_disarmed",
-    "toast": "You unhook the line and coil it loose. A couple of coins sit tucked in the crate it was tied to, payment nobody came back to collect.",
+    "toast": "You unhook the line and coil it loose. Two coins sit in the crate it was tied to, still folded in a scrap of cloth.",
     "gold": 2
    }
   },
@@ -1249,7 +1249,7 @@
    "_comment": "Avoidable: (11,12)/(13,12) both clear (y12 blocks only x0-7).",
    "id": "alley_footpad_snag_b",
    "once_per_waking": true,
-   "once_per_waking_toast": "Cleaned out — by you, earlier. The alley keeps its own inventory schedule.",
+   "once_per_waking_toast": "Cleaned out — by you, earlier. Nothing behind the bottom crate now but paving.",
    "kind": "prop",
    "cell": [
     12,
@@ -1277,7 +1277,7 @@
    "display_name": "Apothecary Corner",
    "sprite": "alchemy_bench",
    "requires_skill": "low_grade_synthesis",
-   "skill_hint_toast": "A cramped apothecary corner, its burner free for anyone who knows the working. Invrisil rents everything by the hour, including this.",
+   "skill_hint_toast": "A cramped apothecary corner, the burner free and the bench rented by the hour. You would need the working to use either.",
    "locked_toast": "A back-alley apothecary's bench, crowded with someone else's half-finished work. None of it means anything to you.",
    "observe": "Shelves of labelled jars, a rented burner, and a hand-lettered card: WORKING SPACE, BY THE HOUR, NO CREDIT.",
    "on_skill_use": {
@@ -1302,7 +1302,7 @@
     "Do not touch the workbench. Do not touch the wares. Ideally, do not touch anything, including me.",
     "Half this city's 'enchantments' are paint. The other half are apologies. I sell neither."
    ],
-   "observe": "A severe man at a spotless corner bench, tools laid out at right angles. Everything about him says the prices are exact and the opinions are free."
+   "observe": "A severe man at a spotless corner bench, tools laid out at right angles. He looks at your gear before he looks at your face."
   },
   {
    "_comment": "v0.16 I1 FIGHT (#306). INTERACT-ONLY (no trigger_radius) at (11,12): outside both shipped footpad trigger zones and off every pinned cell. Independent of the footpad rigs, so it is correct on a brothers_job_done save. v0.16.1 #11: victory_toast added -- nothing rendered between the fight ending and the Lady's report row, so the player was asked to claim a recovery the game had never shown them. combat_banking's one-shot toast is contract-legal here (the first on_victory id is `original_recovered`, a quest-style String). No item id minted.",

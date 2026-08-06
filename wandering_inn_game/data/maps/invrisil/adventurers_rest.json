@@ -308,7 +308,7 @@
     "radius": 40,
     "flicker": true
    },
-   "observe": "Built for a bigger room than this one, and kept fed accordingly. The chairs nearest it are the worst chairs in the house and they are always taken."
+   "observe": "Built for a bigger room than this one, and fed like it. The chairs closest in are scorched down one side, and both of them are taken."
   },
   {
    "_comment": "Stand-in: library_shelf is the only registered rack; the kit reads from display_name + observe, not the silhouette.",
@@ -331,7 +331,7 @@
    ],
    "display_name": "The Counter",
    "sprite": "bar_counter",
-   "observe": "Elbow-polished to a shine along its whole length except one arm's width at the far end, which is somebody's, permanently."
+   "observe": "Elbow-polished to a shine along its whole length except one arm's width at the far end, where the shine stops dead."
   },
   {
    "id": "rest_long_bench",
@@ -342,7 +342,7 @@
    ],
    "display_name": "The Long Table",
    "sprite": "table_brown",
-   "observe": "Long enough for a full company and set for four. The house leaves it that way on purpose, and everybody in the room has noticed and nobody mentions it."
+   "observe": "Long enough for a full company and set for four. The factor walks its empty half twice while you stand there and adds nothing to it."
   },
   {
    "id": "rest_rank_notice",
@@ -353,7 +353,7 @@
    ],
    "display_name": "The Rank Board",
    "sprite": "request_board",
-   "observe": "Names in three columns, and a fourth column with no heading. The fourth column is shorter than it was last season and nobody has rubbed it out."
+   "observe": "Names in three columns, and a fourth column with no heading. The fourth is shorter than it was last season, and the chalk on it is older than the chalk anywhere else."
   },
   {
    "_comment": "#204 plate NEAR: hanging the hat is the signal. Gated with the FAR plate so the pair cannot bank out of order. Stand-in sprite hat_stand -- no peg rail is registered; a stand reads close and the toast carries the beat.",
@@ -370,9 +370,9 @@
      "hat_job_taken": 1
     }
    },
-   "observe": "Nine pegs. Eight have hats. The third from the left is empty and has been wiped, which is not the same as being unused.",
+   "observe": "Nine pegs. Eight have hats. The third from the left is empty, and wiped clean where the others carry a season of dust.",
    "on_interact_accomplishment": "hat_hook_set",
-   "toast": "You hang your hat on the third peg, brim out, the way the house does it. Across the room a man you have not looked at stops not looking at you."
+   "toast": "You hang your hat on the third peg, brim out. Across the room a man sets his cup down and lets you see him look at you."
   },
   {
    "_comment": "#204 plate FAR = SECOND: banks handoff_quiet ONLY via the variant (hook first); base is wrong-order cold feedback. Zero new sim code.",
@@ -398,7 +398,7 @@
       "hat_hook_set": 1
      },
      "accomplishment": "handoff_quiet",
-     "toast": "The coat is already over the chair back. You lay yours beside it, take the wrong one on the way past, and nobody in this room has raised a voice or an eye."
+     "toast": "The coat is already over the chair back. You lay yours beside it, lift the wrong one on the way past, and the hearth chairs stay exactly as full as they were."
     }
    ]
   },
@@ -425,7 +425,7 @@
      "hat_job_taken": 1
     }
    },
-   "gate_closed_toast": "Two men at the far table are having a conversation you are not in. Tonight, that is all they are."
+   "gate_closed_toast": "Two men at the far table, talking to each other. Nothing here for you tonight."
   },
   {
    "_comment": "#318 beat 3. ORIGINAL UNNAMED ARCHETYPE, never Ressa and never Reynold (spec section 2). `invrisil_lady_client`, not the House Factor's `city_scribe`: two scribe silhouettes in one room read as one person twice, and this rig cannot read as a traveler.",
