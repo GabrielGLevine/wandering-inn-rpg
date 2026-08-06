@@ -172,7 +172,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Eloise",
-    "text": "Craft isn't told, child. It's done. Three things, then. Fill the pot by my door with what the hollow gives you. Tend something that can't thank you for it. Then come sit my kettle, and we'll see what you felt while you worked."
+    "text": "Craft isn't told, child. It's done. Start with the pot by my door — fill it with whatever the hollow gives you. Then find something that can't thank you for it and tend it properly. When that's behind you, my kettle is here, and we'll see what you felt while you worked."
    },
    "timeout_sec": 5
   },
@@ -474,7 +474,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "Eloise",
-    "text": "Pot filled. A lamb standing sound that wasn't. And you, back at my table with your hands smelling of both. Sit. The kettle's been waiting on you, not the water."
+    "text": "Pot filled. A lamb standing sound that wasn't. And you, back at my table with your hands smelling of both. Sit down. I've had the kettle on since you crossed the yard."
    },
    "timeout_sec": 5
   },

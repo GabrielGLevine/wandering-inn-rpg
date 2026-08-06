@@ -149,7 +149,7 @@
    "timeout_sec": 5,
    "payload_contains": {
     "speaker": "A Shepherd",
-    "text": "Three ways I see it. Stand the watch with me and thin them. Rebuild the fold so they stop mattering. Or walk the sign and learn why they came. Wolves don't move ground for nothing."
+    "text": "Stand the watch with me and we thin them. Or the hurdles are cut for a new fold. That's the two I've got. Wolves don't move ground for nothing."
    }
   },
   {
@@ -235,7 +235,7 @@
    "timeout_sec": 5,
    "payload_contains": {
     "speaker": "A Shepherd",
-    "text": "So we did. One night bought is one night. I'll take it. The fires stay lit regardless."
+    "text": "So we did. That's one night. Another comes tomorrow. I'll stand that too."
    }
   },
   {

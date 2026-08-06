@@ -416,7 +416,7 @@
   },
   "makings_brief": {
    "speaker": "Eloise",
-   "text": "Craft isn't told, child. It's done. Three things, then. Fill the pot by my door with what the hollow gives you. Tend something that can't thank you for it. Then come sit my kettle, and we'll see what you felt while you worked.",
+   "text": "Craft isn't told, child. It's done. Start with the pot by my door — fill it with whatever the hollow gives you. Then find something that can't thank you for it and tend it properly. When that's behind you, my kettle is here, and we'll see what you felt while you worked.",
    "options": [
     {
      "text": "That's all? Chores?",
@@ -430,7 +430,7 @@
   },
   "makings_chores": {
    "speaker": "Eloise",
-   "text": "Every witch you'll ever fear got that way doing chores with her whole heart in them. The chore is the least of it. What you carry while you do it is the craft.",
+   "text": "Every witch you'll ever fear got that way doing chores with her whole heart in them. The chore is the least of it. I've been filling that pot a long while and I still look hard at what goes into it.",
    "options": [
     {
      "text": "Then I'll carry it well.",
@@ -440,7 +440,7 @@
   },
   "makings_kettle": {
    "speaker": "Eloise",
-   "text": "Pot filled. A lamb standing sound that wasn't. And you, back at my table with your hands smelling of both. Sit. The kettle's been waiting on you, not the water.",
+   "text": "Pot filled. A lamb standing sound that wasn't. And you, back at my table with your hands smelling of both. Sit down. I've had the kettle on since you crossed the yard.",
    "options": [
     {
      "text": "[Sit, and take the lesson.]",

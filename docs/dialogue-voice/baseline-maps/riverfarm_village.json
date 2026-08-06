@@ -65,6 +65,21 @@
    "digits": [],
    "propnouns": []
   },
+  "$.entities[20].talk_pool_stages[4].lines[0]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[4].lines[1]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.entities[20].talk_pool_stages[4].lines[2]": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
   "$.talk_banks.riverfarm_headman_shared[0]": {
    "brackets": [],
    "digits": [],
@@ -1057,6 +1072,21 @@
      11
     ],
     "sprite": "riverfarm_fence_ew"
+   },
+   {
+    "_comment": "#396: the two ewe lambs the pen's observe names. DECOR on the rail's own cells, already in `blocked`, so no walkability or count moves; appended last to draw over the rail.",
+    "cell": [
+     15,
+     11
+    ],
+    "sprite": "lamb_lying"
+   },
+   {
+    "cell": [
+     17,
+     11
+    ],
+    "sprite": "lamb"
    }
   ],
   "entities": [
@@ -1171,7 +1201,7 @@
     ]
    },
    {
-    "_comment": "Sails overhang above the blocked footprint. v0.16.1 #3: moved [20,4] -> [19,4] so the ramp/doorway drawn into the windmill art lands on COLUMN 19, over riverfarm_mill_door's cell [19,5] and the pinned south approach [19,6]. Measured, not guessed: 64x96 sheet, render_scale 1.0, anchor [0.5,0.917], so the art draws from (cell.x*16 - 24); a pixel scan of rows 72-88 puts the doorway at sheet x 30..37. [19,4] was ALREADY blocked, so this moves art only -- no sim change, no canonical churn.",
+    "_comment": "Sails overhang above the blocked footprint. v0.16.1 #3: [20,4] -> [19,4] puts the art's own doorway on column 19, over riverfarm_mill_door [19,5] and the pinned approach [19,6]. [19,4] was ALREADY blocked: art-only move, no sim change.",
     "cell": [
      19,
      4
@@ -1489,7 +1519,7 @@
     ]
    },
    {
-    "_comment": "clear of every blocked cell and every other entity's cell, no trigger_radius so no blast-radius overlap with anything nearby. v0.16.1 #2 DISAMBIGUATION: \"The Hunter\" is a LOCAL GAME HUNTER, not a member of any order. His whole copy surface used to be the hollow, with zero game, meat or pelts in it, while he is mechanically the man who walks you to the witch and fights her briars. The observe line now carries the trade signal, and one line is APPENDED LAST to the base pool and to the thread_neutral stage (which duplicates it). The copy never names or negates the order -- positive trade signal only. NOT renamed: a rename must move combatants.json's display_name too and re-pins five QA speaker payloads.",
+    "_comment": "clear of blocked/entity cells, no trigger_radius. SUPERSEDES the failed v0.16.1 copy-only disambiguation (user ruling 2026-08-05): legacy id, character is A Shepherd (#396 spec). Id frozen: shipped counters + save keys.",
     "cell": [
      13,
      10
@@ -1497,16 +1527,16 @@
     "conversation": "riverfarm_hunter",
     "dialogue": [
      {
-      "speaker": "The Hunter",
+      "speaker": "A Shepherd",
       "text": "Hollow's not safe alone."
      }
     ],
-    "display_name": "The Hunter",
+    "display_name": "A Shepherd",
     "facing": "down",
     "id": "riverfarm_hunter",
     "kind": "npc",
-    "observe": "Rope-burned hands, a game bag, and wolf sign on his boots. Whatever he hunts, it walks on four legs.",
-    "sprite": "a_hunter",
+    "observe": "Tar-marked hands, a crook worn smooth, wolf sign on his boots. The flock is penned. He is still watching the treeline.",
+    "sprite": "a_shepherd",
     "talk_pool": [
      "@riverfarm_hunter_shared"
     ],
@@ -1552,11 +1582,23 @@
        "tended_beasts": 10,
        "thicket_answered": 1
       }
+     },
+     {
+      "_comment": "#396: appended LAST so last-satisfied-wins puts it above the thicket/lamb registers.",
+      "id": "riverfarm_shepherd_winter_answered",
+      "lines": [
+       "\u00a7",
+       "\u00a7",
+       "\u00a7"
+      ],
+      "requires_accomplishment": {
+       "winter_answered": 1
+      }
      }
     ]
    },
    {
-    "_comment": "THE VILLAGE'S ONLY EXIT (witch_hollow is a dead end off it), so the gate must be met by EVERY arrival, past and present. door_mounted is the one counter both satisfy: the pre-fix path (riverfarm_attuned rumor + a door_mounted-gated carrier at inn/street) and the post-fix one (portals.json's door_awakened row). Gating on either attunement alone re-strands the other cohort -- ruling was riverfarm_attuned, widened because the row moved to door_awakened in the same wave. Never tighten past the row's own gate.",
+    "_comment": "THE VILLAGE'S ONLY EXIT (witch_hollow is a dead end off it): the gate must be met by EVERY arrival cohort. door_mounted is the one counter both the pre-fix path and portals.json's door_awakened row satisfy; gating on either attunement alone re-strands a cohort. Never tighten past the row's own gate.",
     "cell": [
      12,
      5
@@ -1607,7 +1649,7 @@
     "to_map": "witch_hollow"
    },
    {
-    "_comment": "`ally_requires{hunter_will_come:1}` is banked ONLY by data/dialogue/riverfarm_hunter.json's come-along ask, at the village.",
+    "_comment": "`ally_requires{hunter_will_come:1}` is banked ONLY by data/dialogue/riverfarm_hunter.json's watch ask, at the village.",
     "allies": [
      "riverfarm_hunter"
     ],
@@ -1709,7 +1751,7 @@
     ]
    },
    {
-    "_comment": "v0.16 #305: the mill's ground-floor door. [19,5] is inside the windmill's blocked footprint (the longhouse_door precedent). TWO free approaches, [19,6] and [18,5], neither on any walked QA route. mill_exit returns to [19,6] only. v0.16.1 #3: hide_sprite -- the `door` prop was a SECOND doorway pasted on the tower's west corner, y-sorting in front of the mill, one column from the ramp the art already draws. The art carries the entrance now; the entity keeps blocking, observe, to_map and to_cell. `sprite` is retained as the fallback if the mill art is re-cut.",
+    "_comment": "v0.16 #305: the mill's ground-floor door. [19,5] is inside the windmill's blocked footprint (longhouse_door precedent). TWO free approaches [19,6]/[18,5], neither on a QA route; mill_exit returns to [19,6] only. v0.16.1 #3: hide_sprite -- the `door` prop was a second doorway y-sorting in front of the mill; the art carries the entrance, the entity keeps blocking/observe/to_map/to_cell, `sprite` retained as fallback.",
     "cell": [
      19,
      5
@@ -1733,16 +1775,16 @@
     "to_map": "riverfarm_mill"
    },
    {
-    "_comment": "#330 R2: a [Beast Tamer] door outside the floodplains. Base banks soothed_a_beast, the variant tended_beasts; pays in wool, never gold.",
+    "_comment": "#330 R2 [Beast Tamer] door: base banks soothed_a_beast, the variant tended_beasts, paid in wool. #396: legacy id; A Shepherd.",
     "cell": [
      16,
      11
     ],
-    "display_name": "Hunter's Lamb Pen",
+    "display_name": "A Lamb Pen",
     "id": "hunters_lamb_pen",
     "item": "wool_tuft",
     "kind": "prop",
-    "observe": "Hurdle fencing the hunter threw up after the thicket business. Two ewe lambs inside it, and a third that will not put weight on a foreleg.",
+    "observe": "Hurdle fencing the shepherd threw up after the thicket business. Two ewe lambs inside it, and a third that will not put weight on a foreleg.",
     "on_interact_accomplishment": "soothed_a_beast",
     "on_skill_use": {
      "accomplishment": "tended_beasts",
@@ -1860,6 +1902,72 @@
     "requires_skill": "broader_shoulders",
     "skill_hint_toast": "Dragging them one at a time will take all day. Carrying them properly would not.",
     "sprite": "barrel"
+   },
+   {
+    "_comment": "#396 WORK route; fold_rebuilt. absent-on-own-counter = literal once (hurdles consumed; halls_gallery_cache idiom). fence_NS: an EW panel merged into the pen's rail run at the windowed read.",
+    "cell": [
+     15,
+     12
+    ],
+    "display_name": "Stacked Hurdles",
+    "id": "winter_fold_hurdles",
+    "kind": "prop",
+    "observe": "Hazel hurdles, cut and stacked. Enough to double the fold, if someone puts the day in.",
+    "on_interact_accomplishment": "fold_rebuilt",
+    "present_when": {
+     "absent": {
+      "fold_rebuilt": 1
+     },
+     "requires": {
+      "heard_winter_teeth": 1
+     }
+    },
+    "sprite": "riverfarm_fence_ns",
+    "toast": "You put the day in. Double hurdles, drained ground, a gate that hangs true. The fold holds a wolf out now, not just sheep in."
+   },
+   {
+    "_comment": "#396 TRACK route; pack_traced. absent-on-own-counter = literal once. gnaw_pile: trail_gap read as a stump and is riverfarm_hollow_path's own sprite three cells off.",
+    "cell": [
+     4,
+     13
+    ],
+    "display_name": "Wolf Sign",
+    "id": "wolf_sign_trail",
+    "kind": "prop",
+    "observe": "Bones in the field margin, cracked for the marrow. Too many for one kill. Dragged into the open, all one way.",
+    "on_interact_accomplishment": "pack_traced",
+    "present_when": {
+     "absent": {
+      "pack_traced": 1
+     },
+     "requires": {
+      "heard_winter_teeth": 1
+     }
+    },
+    "sprite": "gnaw_pile",
+    "toast": "You walk the sign back. The pack came off the north ground by the old line \u2014 something denned in it and they gave way. They didn't choose these fields. They were pushed."
+   },
+   {
+    "_comment": "#396 TEND beat. Own prop, never touching the #330 counters. (18,11): the plan's (17,11) is a blocked fence flank, and row 12 hides under the hotbar panel. Sits under the east panel's art, inside the rail run. (18,10)/(18,12)/(19,11) stay open.",
+    "cell": [
+     18,
+     11
+    ],
+    "display_name": "The Limping Lamb",
+    "id": "makings_tend_lamb",
+    "kind": "prop",
+    "observe": "The third lamb, the one that would not bear weight. Someone has to sit with it long enough to matter.",
+    "on_interact_accomplishment": "craft_tended",
+    "present_when": {
+     "absent": {
+      "craft_tended": 1
+     },
+     "requires": {
+      "heard_the_makings": 1
+     }
+    },
+    "sprite": "lamb_lying",
+    "toast": "You sit with it past the point that's useful and into the point that counts. It sleeps. You notice you were humming."
    }
   ],
   "floor_layers": [

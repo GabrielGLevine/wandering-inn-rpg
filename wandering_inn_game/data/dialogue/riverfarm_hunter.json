@@ -28,7 +28,7 @@
        "survived_wolf_night": 1
       }
      },
-     "text": "Didn't figure we'd both still be standing after that. The fires stay lit anyway."
+     "text": "Didn't figure we'd both still be standing after that. Sit at my fire any night you like."
     },
     {
      "requires": {
@@ -328,7 +328,7 @@
   },
   "winter_brief": {
    "speaker": "A Shepherd",
-   "text": "Three ways I see it. Stand the watch with me and thin them. Rebuild the fold so they stop mattering. Or walk the sign and learn why they came. Wolves don't move ground for nothing.",
+   "text": "Stand the watch with me and we thin them. Or the hurdles are cut for a new fold. That's the two I've got. Wolves don't move ground for nothing.",
    "options": [
     {
      "text": "Where do I start?",
@@ -342,7 +342,7 @@
   },
   "winter_topic": {
    "speaker": "A Shepherd",
-   "text": "Hurdles are cut and stacked by the pen. Sign runs the west margin, plain as a road. And the watch is mine, every night. Company's welcome.",
+   "text": "Hurdles are stacked by the pen. The watch is mine, every night. Company's welcome. And the sign. I near forgot the sign. Runs the west margin, plain as a road. Walk it back and you'd know what pushed them.",
    "options": [
     {
      "text": "Back up a step.",
@@ -372,7 +372,7 @@
   },
   "winter_reported_watch": {
    "speaker": "A Shepherd",
-   "text": "So we did. One night bought is one night. I'll take it. The fires stay lit regardless.",
+   "text": "So we did. That's one night. Another comes tomorrow. I'll stand that too.",
    "options": [
     {
      "text": "One night's a start.",
@@ -382,7 +382,7 @@
   },
   "winter_reported_fold": {
    "speaker": "A Shepherd",
-   "text": "Walked it this morning. Gate hangs true. A wolf tests a fence once and remembers. My father built the old fold. He'd have said nothing and checked it twice.",
+   "text": "Walked it this morning. Gate hangs true. A wolf tests a fence once and remembers. My father built the old fold. This one's dug deeper and the ground's drained.",
    "options": [
     {
      "text": "Sleep well.",

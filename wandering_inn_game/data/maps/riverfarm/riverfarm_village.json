@@ -19,7 +19,7 @@
    "Hollow's quieter than it should be. Doesn't sit right.",
    "Lost two lambs to something with thorns for teeth. Wasn't a wolf.",
    "Know that treeline better than the headman does. He'd rather not.",
-   "Wolf sign's thicker toward the hollow, week by week. The pack's ground moved. Mine didn't.",
+   "Wolf sign's thicker toward the hollow, week by week. They've left their own ground. Now they're on mine.",
    "The witch? Her business is hers and I keep to mine. Sheep is my trade, all of it."
   ]
  },
@@ -1524,7 +1524,7 @@
       "winter_answered": 1
      },
      "lines": [
-      "Watch fires stay lit till thaw. Cheap, next to lambs.",
+      "Lambs are in before dark now, every night. Nobody argues about it anymore.",
       "Pack's fed elsewhere or it's thinner. Either way it's off my fields.",
       "First snow came and the count held. The count held."
      ]
@@ -1885,7 +1885,7 @@
      "pack_traced": 1
     }
    },
-   "observe": "Prints in the field margin. Too many, too bold, all one direction.",
+   "observe": "Bones in the field margin, cracked for the marrow. Too many for one kill. Dragged into the open, all one way.",
    "on_interact_accomplishment": "pack_traced",
    "toast": "You walk the sign back. The pack came off the north ground by the old line — something denned in it and they gave way. They didn't choose these fields. They were pushed."
   },
