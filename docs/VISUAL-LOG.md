@@ -2883,11 +2883,24 @@ in the same wave rather than logged as owed.
   the display_name), but a distinct shopfront-door sprite or a hanging sign
   would make the facade read "you can go in here" without standing on it.
   Same family as the open b5 #220 shopfront-observe entry above.
-- [ ] **`hearth` is a cold-grey iron sprite with no fire frame**
+- [x] **`hearth` is a cold-grey iron sprite with no fire frame**
   (`adventurers_rest_loop/03_the_hearth.png`): at night the entity light
   sells it, but the sprite itself reads as an unlit oven against copy that
   says "kept fed accordingly". A lit-hearth frame (or a fire overlay prop)
   would close the gap between the art and the line.
+  **DRAINED 2026-08-05 (#390).** The cause was worse than "unlit": the old
+  region `[272,56,64,104]` on free_pack `Interior_Props_01` straddled TWO oven
+  variants on that sheet, so the prop was a composite of two half-ovens and
+  could never have held a fire. Replaced with an OWNED PixelLab lit hearth
+  (stone surround, mantel, flame and embers in the mouth) on the SAME id, so
+  all five consumers inherit it with no map edit; `cold_hearth` stays the
+  separate dead-hearth sprite for `hut_hearth_ash`, whose copy says the ash is
+  years cold. Evidence: real BEFORE at the lane base (path-limited `git stash`
+  + re-import), AFTER on the branch, same script and seed --
+  `lanes/l390-evidence/hearth_inengine_pair.png` (`lanes/l390-evidence/before_03_the_hearth.png` vs
+  `after_03_the_hearth.png`, `adventurers_rest_loop windowed --seed=9`).
+  The fire throws visible warm spill onto the boards, which is what makes
+  "the chairs nearest it are the warmest in the house" true on screen.
 - [ ] **Windowed capture stalled once mid-run** (`invrisil_hat_quiet`, first
   windowed attempt): the run reached its last banked counter and then hung
   before the final screenshot; the alarm killed `run_qa.sh` but left the
@@ -3051,22 +3064,50 @@ Read and passed:
 
 Residuals, logged rather than silently shipped:
 
-- [ ] PROP/BEDDED-GRASS — `worn_grass_bed` is the free-pack Vegetation grass
+- [x] PROP/BEDDED-GRASS — `worn_grass_bed` is the free-pack Vegetation grass
   tuft at prop scale (1.6) with a straw tint. The FIRST pick (`grass_tuft` at
   0.75) was invisible against the grass floor in the windowed read — a real
   fails-to-read defect, caught only by the shot. The scaled version is legible
   as an object but is still a clump of blades, not the body-shaped hollow the
   copy describes. A bespoke bedded-hollow prop (with the shed antler lying in
   it) is the honest fix.
-- [ ] PROP/NO-LAMBS — the Hunter's Lamb Pen has fencing and no lambs. The
+  **DRAINED 2026-08-05 (#390)** — built exactly as this row specified, antler
+  included: an oval of flattened dry stalks with the shed antler lying in it,
+  so the pickup the copy names is IN the art. Anchor measured off the alpha
+  bbox (53/64), scale holds the ~26px footprint the tuft-at-1.6 had.
+  Evidence `lanes/l390-evidence/worn_grass_bed_pair_4x.png` (shipped tuft vs
+  new prop, same compositor, real floodplains grass tile, 1x and 4x).
+- [~] PROP/NO-LAMBS — the Hunter's Lamb Pen has fencing and no lambs. The
   animals live entirely in the display name, the observe, and the tend toasts.
   A small lamb sprite inside the rails would make the pen read as a pen rather
-  than as a fence.
-- [ ] SPRITE/DOE-VS-STAG — the healed animal swaps onto a DOE rig, so the
+  than as a fence. (`[~]` not `[x]`: zero map files reference `lamb` yet —
+  the pen stays lamb-less in game until the #396 wiring lands.)
+  **SPRITE DRAINED 2026-08-05 (#390); WIRING OWED BY #396.** Two rigs, not one
+  retint: `lamb` (standing) and `lamb_lying` (curled on the ground) — distinct
+  silhouettes per the tint directive, and the pair matches #396's own observe
+  copy ("two ewe lambs inside it, and a third that will not put weight on a
+  foreleg"). Both scaled to sit UNDER the pen rail (~15px and ~11px).
+  Controller ruling: this branch ships sprites only, because
+  `riverfarm_village.json` belongs to #396's branch — whoever lands those rows
+  owes the in-engine shot. Evidence `lanes/l390-evidence/lamb_pen_pair_4x.png`
+  (bare rail vs rail + both lambs, on the real riverfarm grass tile).
+- [x] SPRITE/DOE-VS-STAG — the healed animal swaps onto a DOE rig, so the
   antlers the observe line describes ("its antlers barely glow") become the
   doe's ember nubs at the moment it stands. Species and palette are right and
   the shed-antler pickup still reads; a stag-shaped standing rig would close
   the last inch.
+  **DRAINED 2026-08-05 (#390).** `corusdeer_stag` — tall branching antlers,
+  tawny to match both shipped corusdeer rigs, with the antler TIPS
+  ember-warmed (58px, keyline pixels left dark) so "barely glow" still lands
+  rather than being contradicted by a plain brown deer. Wired by swapping the
+  `sprite` field inside `wounded_corusdeer`'s existing `visual_states` arm —
+  same `when`/`counter`/`at`, same tint, nothing else in floodplains touched.
+  Evidence `lanes/l390-evidence/corusdeer_stag_pair_4x.png` (live doe rig vs
+  stag, same compositor and grass tile) plus the 8x tip read parked in
+  `potential_assets/pixellab_2026-08-05_390/stag_ember_8x.png`. TRADE, stated:
+  the doe rig is a 4-frame idle and the stag is 1 frame, so the standing deer
+  no longer breathes — the same shape as the shipped `corusdeer` base rig
+  (also fps 1), and species-correct-and-still beats wrong-species-and-moving.
 
 ## 2026-08-02 wave-2 art drain (PR #344, controller reads on file)
 - ruin_gate wired at floodplains (38,11) — the note-6 "ruins look like a
@@ -3290,10 +3331,13 @@ Rows this pass closes or moves:
 - [x] **`mercantile_alleys` night near-black (widened row) — PARTLY DRAINED.**
   Overworld night value 0.313 → 0.357 while temperature drops −0.24 → −0.36:
   colder, not darker. The arena half of that row is untouched (not this lane).
-- [~] **`hearth` is still a cold unlit oven (`adventurers_rest`) — HALF.** The
-  mechanical half is fixed: the hearth and both sconces were switched OFF in
-  every daytime frame of that room and now burn (`lights_by_day`). The SPRITE
-  still draws as an unlit oven — that is an art row and stays open.
+- [x] **`hearth` is still a cold unlit oven (`adventurers_rest`) — WAS HALF, NOW
+  WHOLE (2026-08-05, #390).** The mechanical half was fixed here: the hearth and
+  both sconces were switched OFF in every daytime frame of that room and now
+  burn (`lights_by_day`). The SPRITE half landed 2026-08-05 — owned lit-hearth
+  art on the same id, in-engine pair
+  `lanes/l390-evidence/hearth_inengine_pair.png`. Both halves are now the same
+  answer: the room's light and the room's art agree that the fire is fed.
 - [~] **`witch_hut` "watch, not a defect" night readability — TAKEN, different
   anchor.** The log named `hut_hearth_ash`; this pass deliberately did not use
   it, because that prop's display name is "The Cold Hearth" and its toast says
@@ -3334,16 +3378,16 @@ head v0.18 W4 as HOTFIX-PRIORITY. Ranked player-visible-first.
 - [x] **(P2)** **Toast is drawn over the field-skill legend and truncates a skill line mid-word** (thicket_keeps_talk 01_witch_hut_interior): slot 3 renders "[Invisibility] — ...until even a careful eye find" and stops at the toast plate's left edge; authored text is "...finds nothing worth watching." The legend plate had room (its right edge is ~185px further out) — this is z-order, not wrapping. The same toast also clips the "Hide details [H]" button's right end, and the same geometry recurs in field_skills_loop 01_field_clean_via_numberkey. Wants the toast to reserve space above the legend, or the legend to yield while a toast is live.
 - [x] **(P2)** **Journal close-hint renders outside the panel at 2.85:1 contrast, half-occluded by the panel's own curl** (field_skills_loop 04_journal_observe_assigned, repeat in 06): "Esc or J to close" is drawn on the bare wood floor to the right of the parchment, glyph rgb ~(14,8,4) on ~(109,86,45) = 2.85:1, below the 3:1 large-text floor, with its left half behind the panel's bottom-right scroll curl. New players get no legible close affordance. Wants the hint moved inside the parchment (footer row) with panel-body ink.
 - [x] **(P2)** **garden_sanctuary's out-of-bounds surround is the brightest thing in the frame** (mood_sheet_night 16_garden_sanctuary): letterbox mean lum 221.9 against 3.1-44.3 on the other 16 night cards (next brightest is pallass_market at 44.3). The dead zone outside the playfield outshines the play area and the top-right nav pills lose contrast against it. The map's identity grade ([1,1,1], vignette 0) is correct and should stay; the surround tile is what breaks the set.
-- [ ] **(P2)** **Pallass market's green creature reads as a pasted-on style family** (mood_sheet_night 09_pallass_market, ~x940-1105 y55-250): fully-saturated chartreuse that stays the loudest colour on the frame even after the [0.62,0.68,0.88] night grade, ~195px tall against ~110px human NPCs in the same shot (1.8x), and soft-shaded with no black keyline while every neighbouring sprite carries one. Three axes of mismatch at once. Wants a desaturation pass + scale reconcile against the market's human NPC height, or a keyline to match the pack it sits in.
+- [ ] **(P2, CARRIED 2026-08-05 #390 — reason at the end of this row)** **Pallass market's green creature reads as a pasted-on style family** (mood_sheet_night 09_pallass_market, ~x940-1105 y55-250): fully-saturated chartreuse that stays the loudest colour on the frame even after the [0.62,0.68,0.88] night grade, ~195px tall against ~110px human NPCs in the same shot (1.8x), and soft-shaded with no black keyline while every neighbouring sprite carries one. Three axes of mismatch at once. Wants a desaturation pass + scale reconcile against the market's human NPC height, or a keyline to match the pack it sits in. **CARRIED 2026-08-05 (#390):** two of the three axes are cheap (scale is one `render_scale`, and a keyline can be dilated onto the sheet programmatically) but the third is a judgement call this lane should not make blind — the creature is a NAMED market beast whose saturation may be deliberate, and the only night evidence we have is a mood-sheet frame, not a run that walks up to it. Doing scale+keyline without a windowed read of the market at day AND night risks a second wrong answer on a row that already has one. Next art pass: shoot `pallass_market` day/night first, then take all three axes in one edit. |
 - [ ] **(P2)** **`guild_notice_wall` renders as a featureless grey blob with a broken outline** (mood_sheet_night 05_guild, ~x240-340 y285-375; repeat silhouette in 11_brothers_parlor ~x900-960 y440-520): flat mid-grey disc, no shading/highlight/subject, dashed dark border that reads as a selection marquee. Sits directly under the fully-drawn `request_board` in the same frame, which makes the unfinished read unmissable. NOT the same case as pallass_market's `anchor_waystone_slate`, whose blankness is authored into its observe copy — leave that one alone.
-- [ ] **(P2)** | rug_woven_cream | inn_upstairs (6,2), stationer, pallass den-shop | Field is random speckle with red flecks — reads as a stain, not a weave; red medallion rug in the same build is the correct reference | v0.17 close machine-playtest, stationer_room_loop/01 + player_room_loop/06 |
+- [x] **(P2)** | rug_woven_cream | inn_upstairs (6,2), stationer, pallass den-shop | Field is random speckle with red flecks — reads as a stain, not a weave; red medallion rug in the same build is the correct reference | v0.17 close machine-playtest, stationer_room_loop/01 + player_room_loop/06 | **DRAINED 2026-08-05 (#390).** Regenerated as an actual weave — warp/weft grid, fringed border, cream where the id says cream — and judged against `rug_woven_red`'s medallion in the same compositor frame, which is the reference this row named. Anchor is now the measured alpha bbox (58/64) instead of the frame bottom; scale 0.35 → 0.4151 keeps the old ~22px footprint. In-engine pair `lanes/l390-evidence/window_rug_inengine_pair.png` (real BEFORE at the lane base, `player_room_loop windowed --seed=9`, `00_door_shut`); RGB diff bbox (580,108)-(968,424) covers the rug and the window in the same frame and nothing else structural. WATCH: the new weave is PALER than the speckle it replaces — correct for "cream", but if a later pass reads it as too bright on dark boards, pull the value down rather than putting the speckle back. |
 - [x] **(P2)** | Hedault workshop night grade | invrisil interiors | World-band mean luminance 22/255, p90 32 — roughly half the next-darkest night scene; floor/wall/NPC all indistinguishable | v0.17 close machine-playtest, invrisil_setting_talk/03 |
-- [ ] **(P2)** | Pallass tier ground plane | pallass market + forge tiers | Full-screen saturated blue checkerboard (#1E3474 + #687EAE grid) reads as a debug grid; untextured navy block by the forge has hard unblended edges | v0.17 close machine-playtest, pallass_ledger_offices/01+02 |
+- [ ] **(P2)** | Pallass tier ground plane | pallass market + forge tiers | Full-screen saturated blue checkerboard (#1E3474 + #687EAE grid) reads as a debug grid; untextured navy block by the forge has hard unblended edges | v0.17 close machine-playtest, pallass_ledger_offices/01+02 | **CARRIED 2026-08-05 (#390), reason on the row:** this is not a sprite pick, it is the tier's FLOOR TILE plus the out-of-playfield surround — fixing it means rewriting `floor_layers` across two Pallass maps (and probably a new textured stone tile), which is map-structure work in files the art lane does not own this week (its fence is sprite/scale/mood fields). It also shares a root with the boulevard-plaza fix that already shipped (flat untextured fill at ceiling value), so it should be taken with that method by whoever owns the Pallass maps next, not bolted on here. |
 - [x] **(P2)** | Invrisil boulevard plaza fill | invrisil_boulevard | Flat untextured #424FA3 rectangle, razor edge against cobbles, brighter than the lamplit street; no texture unlike the riverfarm water tile | v0.17 close machine-playtest, stationer_room_loop/04 |
 - [x] **(P2)** | Toast vs field-skill legend | all maps, HUD | Toast panel occupies the same band as the legend and is drawn over it, truncating legend text mid-word ('...and files i') | v0.17 close machine-playtest, stationer_room_loop/02 |
 - [x] **(P2)** | HUD chip bar | player room, den-shop, inn | Inventory/Journal/Pause chips absent for the whole first visit to the purchased room (chip-region max 53 vs 255 after a pause cycle) with no visible modal on screen; touch has no fallback | v0.17 close machine-playtest, player_room_loop/03+04 |
-- [ ] **(P2)** | Face-to-face sprite overlap | inn, pallass den-shop, inn guest seats | Two-tile-tall sprites on one-tile cells merge the player and the speaker into one two-headed figure during dialogue | v0.17 close machine-playtest, inn_walkthrough/02 + pallass_ledger_offices/04 + inn_guests_loop/01 |
-- [ ] **(P2)** | hunters_lamb_pen | riverfarm_village | No lamb sprites in or around the pen; the whole [Beast Tamer] door is a bare fence rail against empty grass while the copy describes handling three fleeces | v0.17 close machine-playtest, gh330_lamb_pen_loop/00 |
+- [ ] **(P2)** | Face-to-face sprite overlap | inn, pallass den-shop, inn guest seats | Two-tile-tall sprites on one-tile cells merge the player and the speaker into one two-headed figure during dialogue | v0.17 close machine-playtest, inn_walkthrough/02 + pallass_ledger_offices/04 + inn_guests_loop/01 | **CARRIED 2026-08-05 (#390), reason on the row:** no art change fixes it. Every rig involved is already at the family height (~28-33px on-screen, measured this lane: a_hunter 33, citizen_f 30, human_laborer 30.2, wilovan 28), so shrinking sprites to stop the merge would break the whole cast's scale. The real fixes are engine or layout — a dialogue-time separation/dim of the non-speaker in `world.gd`, or moving the NPC cells so conversations happen across a counter — and both are outside a sprite lane's ownership. Needs a code owner, not a pack pick. |
+- [~] **(P2)** | hunters_lamb_pen | riverfarm_village | No lamb sprites in or around the pen; the whole [Beast Tamer] door is a bare fence rail against empty grass while the copy describes handling three fleeces | v0.17 close machine-playtest, gh330_lamb_pen_loop/00 | **SPRITES DRAINED 2026-08-05 (#390): `lamb` + `lamb_lying`, evidence `lanes/l390-evidence/lamb_pen_pair_4x.png`. WIRING DELIBERATELY CARRIED** — the map rows live in `riverfarm_village.json`, which #396's redesign branch owns this week; two lanes writing that file live is the exact collision the lane map forbids. #396 places them and owes `gh330_lamb_pen_loop` windowed. |
 - [x] **(P2)** | Pisces guest sprite | inn guest seats | No eye pixels and an all-grey robe/hood ramp — reads as a faceless bust next to guests who all have readable faces in the same frame | v0.17 close machine-playtest, inn_guests_loop/04 | **DRAINED 2026-08-04 (#390).** Fixed by REGENERATING the rig (2 gens) rather than inpainting it (20-40 gens) — the cheaper repair was the better one. Hood pushed BACK, explicit face, idle + walk regenerated to keep his shipped pin counts. |
 - [ ] **(P3)** **Journal sub-rows lose their indent on wrap** (journal_quest_hints 00_journal_hint_on — the quest-hint line; journal_history 01_journal_history — the Postings detail rows, same shape). First line indents, continuation lines return flush-left and read as body text rather than as part of the sub-row. One hanging-indent change on the shared sub-row style covers both.
 - [ ] **(P3)** **Skills-tab scroll can rest on an orphan wrap fragment** (journal_categories 01_skills_tab_curated + 02_skills_tab_cursor_follow — top visible line is a bare "L5", the tail of a wrapped [Quick Movement] — Warrior L5 row). Cursor-follow scrolls to the cursor row without snapping the viewport to a row boundary, so a wrapped row's tail can head the page. Snap to the wrapped-line start of the topmost whole row.
@@ -3351,13 +3395,13 @@ head v0.18 W4 as HOTFIX-PRIORITY. Ranked player-visible-first.
 - [ ] **(P3)** **Character-creation pick step is unlabelled; new-step footer casing is inconsistent** (char_creation_peek cc1_pick_frame_a — six sprites, no names, `options:[]` in the payload; cc4b_difficulty / cc4c_hints — "Arrows to choose • Enter to confirm • Esc to go back • change it any time in Settings", three capitalised segments then one lowercase). The pick step is now the only labelless step in a flow whose two new steps label every option.
 - [ ] **(P3)** **1-slot hotbar coin drops its key number; 2+ slot coins keep it** (field_skills_loop 05_hotbar_remapped_1slot and 00_hotbar_boot_1slot, line_display_ab 01 — all numberless; feel_peek_day/night 01 and thicket_keeps_talk 01 at 2-3 slots — all numbered). With details hidden the lone icon carries no cue that "1" fires it, and boot is a 1-slot state, so this is the first-session case. Wants the number drawn unconditionally.
 - [ ] **(P3)** **Bottom HUD cluster jumps ~25px left and grows ~4% after the Reduce Motion round trip** (feel_peek_night 01_boulevard_night vs 03_boulevard_night_reduce_motion): icons move [512,556]/[570,614] -> [487,531]/[545,589], button [667,806] -> [654,793], cluster span 294px -> 306px, same map, no world change. Every other 2-slot frame this pass sits at the 512/570/667 positions, so 03 is the outlier. Likely a scale/anchor that reduce_motion resets rather than an animation frame. (Same shot's positive: the motes DO stop live, no rebuild needed.)
-- [ ] **(P3)** **Night city maps invert the read hierarchy — weeds out-pop people** (mood_sheet_night 04_street, 15_mercantile_alleys): street mean lum 27.1 (27.7% of pixels <20), alleys 21.7 (57.1% <20). The saturated green foliage props at street ~(250,170)/(830,230)/(830,355) are the most salient objects in frame, while NPCs outside the sconce pools (street ~(55,350-420) and ~(380,80-130); alleys ~(595-640,265-385) and ~(130-175,285-390)) read as unresolvable silhouettes. The sconce pools themselves work. Wants either the foliage desaturated at night or a small rim/ambient lift on entity sprites.
-- [ ] **(P3)** **inn_upstairs corridor is split by an unmotivated floor-material seam** (mood_sheet_night 03_inn_upstairs, hard vertical edge at x~765): planks lum 59.8 left, olive diagonal-hatch lum 49.8 right, no threshold/rug/divider, and the room's only NPC stands on the olive side. Same tile is the stationer's whole floor (feel_peek_day 02) and a small corner patch in the inn (atmosphere_check 00_start_day, only a 10-lum delta there and harmless). Wants either a divider prop or the corridor unified to one material.
+- [ ] **(P3)** **Night city maps invert the read hierarchy — weeds out-pop people** (mood_sheet_night 04_street, 15_mercantile_alleys): street mean lum 27.1 (27.7% of pixels <20), alleys 21.7 (57.1% <20). The saturated green foliage props at street ~(250,170)/(830,230)/(830,355) are the most salient objects in frame, while NPCs outside the sconce pools (street ~(55,350-420) and ~(380,80-130); alleys ~(595-640,265-385) and ~(130-175,285-390)) read as unresolvable silhouettes. The sconce pools themselves work. Wants either the foliage desaturated at night or a small rim/ambient lift on entity sprites. **CARRIED 2026-08-05 (#390), reason on the row:** neither fix exists as data today. Mood cards grade a WHOLE map, so there is no key that desaturates foliage at night without dragging the NPCs down with it, and "a rim/ambient lift on entity sprites" is a renderer feature (`entity_visual_factory` would need a night-aware modulate), not a sprite or a mood value. Desaturating the foliage SHEETS would fix night by wrecking day. This is a code row wearing an art row's clothes; it needs a per-layer night knob before any art answer is worth shooting. |
+- [ ] **(P3)** **inn_upstairs corridor is split by an unmotivated floor-material seam** (mood_sheet_night 03_inn_upstairs, hard vertical edge at x~765): planks lum 59.8 left, olive diagonal-hatch lum 49.8 right, no threshold/rug/divider, and the room's only NPC stands on the olive side. Same tile is the stationer's whole floor (feel_peek_day 02) and a small corner patch in the inn (atmosphere_check 00_start_day, only a 10-lum delta there and harmless). Wants either a divider prop or the corridor unified to one material. **CARRIED 2026-08-05 (#390), reason on the row:** both candidate fixes leave the sprite lane's fence. Unifying the corridor rewrites `inn_upstairs.json`'s `floor_layers` (map structure, and the same tile is load-bearing in two other rooms), and a divider prop adds a decor ROW, which can move `blocked_cells` and re-pin every upstairs QA route. The window and rug fixes in this same room DID ship this lane because they are pure sprite swaps — this one is not. Take it with the Pallass ground-plane row: one owner, one floor-material pass, one re-pin. |
 - [ ] **(P3)** **Stationer props read as holes, and the clerk/bracket/player stack crowds one 60px band** (line_display_ab 01_interact_at_world_ready): the barrel props at [10,1]/[2,1] carry a pure-black (0,0,0) outline over a body at lum 59 against a lum 48 floor — an 11-unit separation that reads as a shadow, not an object. Separately the clerk [8,1], its affordance bracket and the player [8,2] all occupy full y135-260, so the figures are ambiguous at 1x with only the bracket disambiguating. Both minor; noting for the next interior-contrast pass.
 - [ ] **(P3)** | inn_player_room floor | inn_player_room | Warm plank tile in the bed corner meets the olive interior board over the rest on a bare 90-degree seam with no threshold or rug to justify it | v0.17 close machine-playtest, player_room_loop/05+06 |
 - [ ] **(P3)** | inn_player_room sconce (night) | inn_player_room | Fixture renders as a cold grey bar with no lit core and its warm pool is offset to one side, so the light has no visible source | v0.17 close machine-playtest, player_room_loop/07 |
 - [ ] **(P3)** | Erin opening lines | inn dialogue | Spaced hyphen ' - ' instead of the em dash used everywhere else in the build, on the game's first NPC line | v0.17 close machine-playtest, inn_walkthrough/02 |
-- [ ] **(P3)** | window_blue | inn_upstairs (10,4) | Reads as a dark grey slab with a blue edge rather than a window; doors in the same wall read correctly | v0.17 close machine-playtest, player_room_loop/00 |
+- [x] **(P3)** | window_blue | inn_upstairs (10,4) | Reads as a dark grey slab with a blue edge rather than a window; doors in the same wall read correctly | v0.17 close machine-playtest, player_room_loop/00 | **DRAINED 2026-08-05 (#390).** It was never a window: a component scan of `Interior_Props_01` shows the old region `[224,4,16,28]` is a 16px-wide slice off the SIDE of a chest/bench block, which is exactly why it drew as a slab with one blue edge. The real four-pane window (wooden frame, cross mullion, blue glass) is on free_pack `Furniture.png` at `[132,355,24,25]` — the sheet `unlit_lantern` already uses, so no new licensing — at 0.85 ≈ 20x21px, matching the doors in the same wall. Pair: `lanes/l390-evidence/rug_inengine_pair.png` (tight crop, `player_room_loop/06_reentry`, diff bbox (664,180)-(744,264) = the window cell and nothing else); the same fix is visible in the adventurers_rest pair. |
 - [ ] **(P3)** | Room register node | inn register dialogue | Speaker banner reads 'Lyonette' over body text that is third-person narration about her | v0.17 close machine-playtest, player_room_loop/01 |
 - [ ] **(P3)** **pallass_ledger_offices run hygiene** (pallass_ledger_offices/04_den_keeper_released.png): Not player-visible, but pallass_ledger_offices is the only one of my seven runs that exits noisy: 'WARNING: 23 ObjectDB instances were leaked at exit' plus 'ERROR: 10 resources still in use at exit'. QA_RESULT is PASS with zero failures and all four screenshots land, so this is teardown noise rather than a route failure — flagging it because the other six runs (including two other three-map routes
 
@@ -3624,3 +3668,65 @@ independent playtesters read as a chest. `chest` must stay on
 `chest_open`'s sheet and scale. And the kitchen row must stay three
 silhouettes: the tint that used to distinguish them predicted nothing
 (a cooking PC read the kettle dead, a witch PC the reverse).
+
+## #390 Tier 2/3 art drain (2026-08-05)
+
+The lane the v0.19 section said it could not afford. It was affordable: the
+budget number every art issue in this milestone reasoned from was wrong by
+roughly an order of magnitude in our favour.
+
+**Budget, measured.** Start $0.83 credits, 0 subscription generations
+(2055/2000 used, so every generation bills as overage). Twelve generations
+built the whole `a_shepherd` rig for **$0.15** (#396 Task 1 — that rig lands
+on `issue/396-riverfarm-redesign`, not this branch); twelve more built Wilovan's
+combat set for **$0.13**; one 16-candidate object pack (20 generations) carried
+FIVE separate rows for **$0.09**. That is **~$0.012 per generation**, against
+the ~$0.065 the #390 comment extrapolated and the "one rig would consume the
+lane's whole envelope" ruling #385 was filed under. End balance **$0.46**, hard
+floor $0.10 never approached. The lesson is procedural, not lucky: call
+`get_balance` before and after the FIRST call of a new kind and re-derive the
+rate — every stalled art row in this milestone was blocked by an estimate
+nobody had measured.
+
+**Method.** Pack-first still won where a pack had the art (`window_blue`),
+and the win came from a connected-component scan rather than a region guess —
+which is also how the row's real cause surfaced: the shipped "window" region
+was a slice off the side of a chest, so no scale or tint could ever have saved
+it. Where no pack had the art, ONE `create_1_direction_object` call with 16
+`item_descriptions` produced lamb / lit hearth / bedded hollow / woven rug /
+stag in a single billing event — the v0.19 "a pack bills per call, not per
+subject" trick, used deliberately this time instead of opportunistically.
+Every anchor is a measured alpha bbox; every scale is set from a target
+on-screen height measured off the NEIGHBOURS the sprite has to live beside
+(a_hunter 33px, citizen_f 30.0, human_laborer 30.2, wilovan 28.0), never from
+a round number. Evidence is a real BEFORE at the lane base — for the in-engine
+rows via a path-limited `git stash` + re-import + same script and seed, never
+after-vs-memory — and windowed runs were serial with PNGs copied aside
+immediately, since a re-run clobbers them.
+
+| row | fix | evidence |
+|---|---|---|
+| Wilovan ships IDLE ONLY, attacks fall back to idle (the #390 comment's one named leftover) | `slice` (cane strike, ending on a swoosh), `hit` (recoil + impact stars), `death` (buckle → fall → prone), 3 kept facings each, feet plane holding at 95/128 so the measured anchor is unchanged. Only the states his kit can REACH: `combat_screen` picks `slice` for melee and `cast` for ranged, and basic_swordwork/quick_slash/counter_strike/quick_movement contains no spell, so `cast` stays an inert pin; nothing in `world.gd` or `board_renderer` plays `walk` for a non-player rig, so walk stays unbuilt on purpose rather than by budget | `lanes/l390-evidence/wilovan_combat_set.png` (all three clips, side facing — the one `play_anim`'s `%s_side` actually plays) |
+| `hearth` cold-grey with no fire (carried since v0.16; the v0.18 pass fixed the light half and left this open) | owned lit hearth on the SAME id, so all five consumers inherit it with zero map edits | `lanes/l390-evidence/hearth_inengine_pair.png` |
+| `window_blue` reads as a grey slab | the real four-pane window on `Furniture.png` `[132,355,24,25]` (already-licensed sheet), 0.85 | `lanes/l390-evidence/rug_inengine_pair.png` + visible again in the hearth pair |
+| `rug_woven_cream` reads as a stain | regenerated as a real weave, judged against `rug_woven_red`'s medallion | `lanes/l390-evidence/window_rug_inengine_pair.png` |
+| `worn_grass_bed` is a clump of blades, not a hollow | the bespoke bedded hollow this row asked for BY NAME, shed antler included | `lanes/l390-evidence/worn_grass_bed_pair_4x.png` |
+| lamb pen has no lambs | `lamb` + `lamb_lying` (two silhouettes, not a retint) — SPRITES ONLY, wiring owed by #396's branch | `lanes/l390-evidence/lamb_pen_pair_4x.png` |
+| healed corusdeer stands up as a DOE while the copy names antlers | `corusdeer_stag`, antler tips ember-warmed so "barely glow" stays true; swapped inside the existing `visual_states` arm, sprite field only | `lanes/l390-evidence/corusdeer_stag_pair_4x.png` |
+
+**What a later pass should NOT undo here.** `hearth` must stay one id: the
+five rooms that use it are all rooms whose copy says the fire is fed, and
+`cold_hearth` already exists for the dead one — splitting `hearth` into lit and
+unlit variants would re-open the row it just closed. `lamb`/`lamb_lying` must
+stay TWO sprites; a lying lamb is not a tinted standing lamb, and #396's observe
+copy depends on the third animal reading as down. And the scales in this pass
+are anchored to the measured neighbour heights above — moving one without
+re-measuring the family is how the cast drifts.
+
+**Rows carried, each with its reason written on the row** (Pallass tier ground
+plane, Pallass market's green creature, face-to-face sprite overlap, night maps'
+inverted hierarchy, `inn_upstairs` floor-material seam): three of the five are
+NOT art rows at all — they need a floor-material pass across maps this lane does
+not own, a per-layer night knob that does not exist in the mood schema, or a
+dialogue-time separation in `world.gd`. Filing them as art kept them looking
+cheap for three milestones. They are not.
