@@ -1,7 +1,7 @@
 {
  "biome": "street",
  "interior_flavor": [
-  "Nothing there. A Drake shoulders past; Liscor has no patience for loiterers.",
+  "Nothing there. A Drake shoulders past you without slowing.",
   "Nothing there. Gutter runoff and market noise two streets over, off a wall repointed twice.",
   "Nothing there. Someone leans out an upstairs shutter, decides you are nothing, and pulls it to."
  ],
@@ -1076,7 +1076,7 @@
    "display_name": "Watch Guard",
    "person": true,
    "sprite": "royal_soldier",
-   "observe": "Watch armor, kept. He stands the post properly: weight even, eyes on the gap in the wall. Bored, but the boredom is a discipline, not a lapse.",
+   "observe": "Watch armor, kept. He stands the post properly: weight even, eyes on the gap in the wall. Twice while you stand there, he checks the same empty stretch of road.",
    "friendly_line": "The guard's mouth twitches toward a smile despite himself. Hah. You seem decent enough. Go on through easy - I'll remember the friendly one.",
    "facing": "up",
    "talk_pool": [
@@ -1213,7 +1213,7 @@
    "person": true,
    "sprite": "olesm",
    "observe": "Thin, sky-blue scales, ink drying on three of his claws. A chess board waits at his elbow mid-game, played against himself, to feel how the other side thinks. His eyes are a wild, patterned blue, the one soft thing about a man who counts exits.",
-   "friendly_line": "Olesm brightens like a lamp. Oh! A friendly face. Most people's eyes glaze when I mention troop dispersal. Yours didn't. Would you... that is... care to see the board sometime? No pressure. A little pressure.",
+   "friendly_line": "Olesm brightens like a lamp. Oh! A friendly face. Most people's eyes glaze when I mention troop dispersal. Yours didn't. Would you — that is — care to see the board sometime? No pressure. A little pressure.",
    "facing": "down",
    "talk_pool": [
     "Three reports due by dawn and the ink is winning. If anyone asks, the [Tactician] of Liscor is 'strategizing'.",
@@ -1374,7 +1374,7 @@
     }
    ],
    "on_interact_accomplishment": "browsed_market",
-   "toast": "Silverfang goods, honest prices. The Gnoll shopkeeper is off haggling somebody UP, elsewhere — she does not haggle down. A sign says she remembers faces, and debts."
+   "toast": "Silverfang goods, honest prices. A sign on the cloth says she remembers faces, and debts; the Gnoll shopkeeper herself is off up the row, working a price upward."
   },
   {
    "_comment": "(28,2) was already in the street's static `blocked` list (the gap between the two wall cells), so floor_cells/blocked_cells counts are unchanged.",
@@ -1420,8 +1420,8 @@
    "display_name": "Pisces",
    "person": true,
    "sprite": "pisces",
-   "observe": "Thin, immaculate, hungry in a way food will not fix. He holds himself like a duelist and watches hands, not faces. Whatever he studies, it is not small.",
-   "friendly_line": "A sniff - though a fractionally warmer one. You are... tolerable company. Rarer praise than you comprehend. I shall permit you to remain within conversational range.",
+   "observe": "Thin, immaculate, hungry in a way food will not fix. He holds himself like a duelist and watches hands, not faces.",
+   "friendly_line": "A sniff - though a fractionally warmer one. You are, I concede, tolerable company. Rarer praise than you comprehend. I shall permit you to remain within conversational range.",
    "facing": "left",
    "talk_pool": [
     "You linger. Either you have a question of substance or you are another gawker. I shall assume the former. Generously.",
@@ -1545,7 +1545,7 @@
    ],
    "display_name": "Sewer Grate",
    "sprite": "sewer_grate",
-   "observe": "Rust holds the bars, not a lock. The draft is steady — a tunnel, not a pit. The skittering keeps its distance. Something down there has learned to avoid shadows.",
+   "observe": "Rust holds the bars, not a lock. The draft coming up through them is steady and cold, and it carries the sound of water moving somewhere further in.",
    "visual_states": [
     {
      "_comment": "b7 #207 delivery ack — the fragile phial crate the player lowered was collected intact (prop recipient: the observe IS the ack surface; door_when behavior untouched).",
@@ -1553,7 +1553,7 @@
       "counter": "delivered_delivery_grate_phials",
       "at": 1
      },
-     "observe": "Rust holds the bars, not a lock. The phial crate you eased down the rungs is gone from the ledge below. Collected, unbroken. Somewhere down there, someone's working glass got to keep being glass."
+     "observe": "The phial crate you eased down the rungs is gone from the ledge below. The stone where it sat is clear — nothing broke on the way down."
     }
    ],
    "on_interact_accomplishment": "heard_the_sewers",
@@ -1803,7 +1803,7 @@
    ],
    "display_name": "Dark Cellar",
    "sprite": "door",
-   "observe": "A plain door with dark behind it. The dust on the sill is scuffed one way. Something was dragged in, and not dragged out.",
+   "observe": "A plain door with dark behind it. Something heavy came across the sill, and the scuff-marks in the dust all point inward.",
    "requires_skill": "light",
    "skill_hint_toast": "Pitch black past the first step. You'd need a light that travels with you.",
    "locked_toast": "Too dark to see anything.",
@@ -1886,7 +1886,7 @@
     }
    },
    "on_interact_accomplishment": "observed_street_anchor_stone",
-   "toast": "Cold, plain stone. Whatever it was for, it isn't for anything now.",
+   "toast": "Cold, plain stone. Grit slides off the base when you set a hand on it.",
    "visual_states": [
     {
      "when": {
