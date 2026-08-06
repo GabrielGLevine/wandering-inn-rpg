@@ -1446,7 +1446,7 @@
    ]
   },
   {
-   "_comment": "clear of every blocked cell and every other entity's cell, no trigger_radius. SUPERSEDES the v0.16.1 #2 copy-only disambiguation (it failed, user ruling 2026-08-05): legacy id, the character is A Shepherd (spec 2026-08-05-riverfarm-shepherd-and-witch-quests-design). Id frozen: shipped counters + save entity keys.",
+   "_comment": "clear of blocked/entity cells, no trigger_radius. SUPERSEDES the failed v0.16.1 copy-only disambiguation (user ruling 2026-08-05): legacy id, character is A Shepherd (#396 spec). Id frozen: shipped counters + save keys.",
    "id": "riverfarm_hunter",
    "kind": "npc",
    "cell": [
@@ -1576,7 +1576,7 @@
    "observe": "A narrow break in the treeline, west of the fields. The light changes past the first few trees."
   },
   {
-   "_comment": "`ally_requires{hunter_will_come:1}` is banked ONLY by data/dialogue/riverfarm_hunter.json's come-along ask, at the village.",
+   "_comment": "`ally_requires{hunter_will_come:1}` is banked ONLY by data/dialogue/riverfarm_hunter.json's watch ask, at the village.",
    "id": "river_wolf_pack",
    "kind": "encounter",
    "beast": true,
@@ -1702,7 +1702,7 @@
    "on_enter_accomplishment": "observed_riverfarm_mill"
   },
   {
-   "_comment": "#330 R2: a [Beast Tamer] door outside the floodplains. Base banks soothed_a_beast, the variant tended_beasts; pays in wool, never gold. #396: legacy id, the character is A Shepherd.",
+   "_comment": "#330 R2: a [Beast Tamer] door outside the floodplains. Base banks soothed_a_beast, the variant tended_beasts; pays in wool, never gold. #396: legacy id; A Shepherd.",
    "id": "hunters_lamb_pen",
    "kind": "prop",
    "cell": [
@@ -1831,7 +1831,7 @@
    }
   },
   {
-   "_comment": "#396 a_winter_of_teeth WORK route; fold_rebuilt. absent on its own counter = literal once (hurdles consumed; ruin dig-camp idiom). fence_NS not EW: an EW panel here merged into the pen's own rail run at the windowed read.",
+   "_comment": "#396 WORK route; fold_rebuilt. absent-on-own-counter = literal once (hurdles consumed; halls_gallery_cache idiom). fence_NS: an EW panel merged into the pen's rail run at the windowed read.",
    "id": "winter_fold_hurdles",
    "kind": "prop",
    "cell": [
@@ -1853,7 +1853,7 @@
    "toast": "You put the day in. Double hurdles, drained ground, a gate that hangs true. The fold holds a wolf out now, not just sheep in."
   },
   {
-   "_comment": "#396 a_winter_of_teeth TRACK route; pack_traced. absent on its own counter = literal once. Copy reveals the displacement and points at the old line. gnaw_pile not trail_gap: trail_gap read as a stump and is riverfarm_hollow_path's own sprite three cells off.",
+   "_comment": "#396 TRACK route; pack_traced. absent-on-own-counter = literal once. gnaw_pile: trail_gap read as a stump and is riverfarm_hollow_path's own sprite three cells off.",
    "id": "wolf_sign_trail",
    "kind": "prop",
    "cell": [

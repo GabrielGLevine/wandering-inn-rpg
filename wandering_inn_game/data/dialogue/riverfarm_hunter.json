@@ -24,6 +24,15 @@
     {
      "requires": {
       "accomplishment": {
+       "hunter_will_come": 1,
+       "survived_wolf_night": 1
+      }
+     },
+     "text": "Didn't figure we'd both still be standing after that. The fires stay lit anyway."
+    },
+    {
+     "requires": {
+      "accomplishment": {
        "winter_answered": 1
       }
      },
@@ -145,7 +154,7 @@
      "goto": "winter_brief"
     },
     {
-     "_comment": "#396 REPORT ROWS (3): each carries heard_winter_teeth BESIDE its route counter, mirroring the thicket cluster's guard -- survived_wolf_night is banked by river_wolf_pack's on_victory with no quest gate, so a player can stand the watch before ever talking. Stated on all three so no later ungated producer leaks winter_answered.",
+     "_comment": "#396 REPORT ROWS (3): each requires heard_winter_teeth BESIDE its route counter (survived_wolf_night banks quest-free at river_wolf_pack on_victory) so no ungated producer leaks winter_answered.",
      "text": "We stood the night. The pack's thinner for it.",
      "requires": {
       "accomplishment": {
@@ -221,7 +230,7 @@
      "end": true
     }
    ],
-   "_comment": "#396: LEGACY, unreachable for new saves (the hub's ask now gotos watch_agreed). Kept because legacy saves mid-conversation may sit on it; nothing gates on the node itself."
+   "_comment": "#396: DEAD -- nothing gotos it (the hub's ask gotos watch_agreed). Kept only because data_lint does not flag orphan nodes and deleting it buys nothing."
   },
   "thicket_brief": {
    "speaker": "A Shepherd",
@@ -265,7 +274,7 @@
   },
   "thicket_rerouted": {
    "speaker": "A Shepherd",
-   "text": "So you spend the afternoon on it. Two fence lines down, re-set forty paces east. Word goes round the fields before dusk. The herd keeps its road for the winter. The hunter walks the new line twice before he trusts it.",
+   "text": "So you spend the afternoon on it. Two fence lines down, re-set forty paces east. Word goes round the fields before dusk. The herd keeps its road for the winter. I walk the new line twice before I trust it.",
    "options": [
     {
      "text": "Good enough.",
@@ -346,7 +355,7 @@
    ]
   },
   "watch_agreed": {
-   "_comment": "banks hunter_will_come (FROZEN id, legacy name): semantics preserved -- this NPC fields as ally at river_wolf_pack. effects+end:true fires DIALOGUE_ENDED before the effect (carried from legacy `agreed`).",
+   "_comment": "banks hunter_will_come (FROZEN id): NPC fields as ally at river_wolf_pack. effects+end:true fires DIALOGUE_ENDED before the effect (carried from legacy `agreed`).",
    "speaker": "A Shepherd",
    "text": "Field edge, after dark. Bring your own bandages. I've got enough of my own to worry about.",
    "options": [
