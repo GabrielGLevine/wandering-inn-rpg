@@ -246,7 +246,7 @@
     0.86
    ],
    "facing": "down",
-   "observe": "Cuffs pinned back, three nibs laid out in order of nerve, and the particular stillness of a man who is paid to have heard nothing.",
+   "observe": "Cuffs pinned back, three nibs laid out in order of nerve, and his eyes back on the page the moment yours arrive.",
    "talk_pool": [
     "Contracts, letters, and the occasional apology. The apologies pay best and take longest.",
     "I write what I am told and I remember nothing after. That is the service, entire.",
@@ -265,7 +265,7 @@
    ],
    "display_name": "Ruled Paper in Three Weights",
    "sprite": "crate",
-   "observe": "Three weights, stacked lightest at the top, each with its price chalked on the edge of the shelf rather than the stock. Nothing here is priced where you can carry the number away."
+   "observe": "Stacked lightest at the top, each price chalked on the shelf edge rather than the stock. The stock itself carries no mark at all."
   },
   {
    "id": "stationer_ink_rank",
@@ -276,7 +276,7 @@
    ],
    "display_name": "A Rank of Inks",
    "sprite": "barrel",
-   "observe": "Four inks, and the fourth is twice the price of the third for a difference you can only see in daylight. Somebody in this city has bought it every week for years."
+   "observe": "Four inks in the rank, and the fourth costs twice what the third does for a difference that only shows in daylight. The man behind the counter carries a bottle to the window before he will name a price for it."
   },
   {
    "id": "stationer_counter_l",
@@ -287,7 +287,7 @@
    ],
    "display_name": "The Counter",
    "sprite": "counter_left",
-   "observe": "Worn smooth in one narrow band where a hundred people a week have leaned to sign something they had already decided to sign."
+   "observe": "Worn smooth in one narrow band where the signing gets done, forearm-wide, and rough as new wood either side. A second band at the far end is much shorter and worn just as deep."
   },
   {
    "id": "stationer_counter_r",
@@ -309,7 +309,7 @@
    ],
    "display_name": "A Tray of Sealing Wax",
    "sprite": "wax_seal_tray",
-   "observe": "Nine colours of wax and one blank seal for hire. The blank is the most used thing in the shop, by a distance."
+   "observe": "All nine colours on the tray have cooled hard in their slots. The tenth slot, cut for the blank seal for hire, sits empty."
   },
   {
    "id": "stationer_contract_shelf",
@@ -320,7 +320,7 @@
    ],
    "display_name": "A Shelf of Blank Contracts",
    "sprite": "library_shelf",
-   "observe": "Printed forms with the terms left open, sorted by how badly the second party will want to argue later. The thickest stack is the most reasonable-looking one."
+   "observe": "Blank contracts with the terms left open, sorted by how badly the second party will want to argue later. Read the thickest stack twice."
   },
   {
    "id": "stationer_scribe_desk",
