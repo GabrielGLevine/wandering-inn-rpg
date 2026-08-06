@@ -233,7 +233,36 @@ def derive_all() -> dict:
 	return result
 
 
+def fixture_field_disagreements() -> list[tuple[str, str, str]]:
+	"""#396 close-wave ruling (from the Lane D review): a manifest row's own
+	`fixture` field and its script's `fixture_save` are two hand-maintained
+	copies of ONE fact, and derive_surfaces_for prefers the script's -- so a
+	stale row survives every green drift check. That is exactly what happened
+	at thicket_keeps_talk, whose row still named thicket_talk_start after the
+	script had moved to thicket_legacy_start. Rule: when BOTH are present they
+	must MATCH. One side absent stays legal (a script may carry fixture_save
+	with no row field, and a row may name the fixture for a script that seeds
+	via `legacy_seed`), so this only ever fires on a real contradiction."""
+	manifest = _load(MANIFEST_PATH)
+	out: list[tuple[str, str, str]] = []
+	for entry in manifest["scripts"]:
+		name = entry["script"]
+		row = entry.get("fixture")
+		script_path = os.path.join(SCRIPTS_DIR, f"{name}.json")
+		if not row or not os.path.isfile(script_path):
+			continue
+		own = _load(script_path).get("fixture_save")
+		if own and own != row:
+			out.append((name, str(row), str(own)))
+	return out
+
+
 def cmd_write() -> int:
+	for name, row, own in fixture_field_disagreements():
+		print(f"derive_qa_surfaces: WARNING -- {name}: manifest row fixture "
+			f"'{row}' contradicts the script's fixture_save '{own}'; the "
+			"derivation uses the script's. Fix one of them -- --check is FATAL "
+			"on this.", file=sys.stderr)
 	surfaces_by_script = derive_all()
 	manifest = _load(MANIFEST_PATH)
 	for entry in manifest["scripts"]:
@@ -251,6 +280,16 @@ def cmd_write() -> int:
 def cmd_check() -> int:
 	fresh = derive_all()
 	manifest = _load(MANIFEST_PATH)
+	disagreements = fixture_field_disagreements()
+	if disagreements:
+		print("derive_qa_surfaces: FATAL -- manifest row `fixture` contradicts the "
+			"script's own `fixture_save` (both present must match; the derivation "
+			"silently prefers the script's, so this hides a stale row):", file=sys.stderr)
+		for name, row, own in disagreements:
+			print(f"  {name}: manifest row '{row}' vs script fixture_save '{own}'", file=sys.stderr)
+		print("  fix: correct whichever field is stale, then re-run "
+			"scripts/derive_qa_surfaces.py.", file=sys.stderr)
+		return 1
 	drift = []
 	for entry in manifest["scripts"]:
 		name = entry["script"]

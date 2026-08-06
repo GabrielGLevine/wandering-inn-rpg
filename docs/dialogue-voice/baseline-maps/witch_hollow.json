@@ -357,7 +357,7 @@
     "sprite": "hollow_canopy_tree"
    },
    {
-    "_comment": "West treeline = BACKDROP, not lid. hollow_canopy_tree is 186x215 at 0.38 (~4.4 x 5.1 cells) drawn up from a bottom anchor, so each canopy covers x 0-2 across the FIVE rows above its base cell and plain y-sort drew it over everything under it. field_y_sort_bias_px -80 (the inn_roof key: sort-only, pixels unmoved) lifts the key clear of that footprint, so witch_hut_door [1,7], the PC on its only approach [1,8], hollow_offering_pot [2,7] and thicket_line_den [2,2] render IN FRONT; tree stacking survives (-32 < 16 < 64). Tint was MEASURED not to be the lever: the door read identically at [2.4,2.4,2.4] while occluded.",
+    "_comment": "West treeline = BACKDROP, not lid. Each canopy covers the FIVE rows above its base cell; plain y-sort drew it over everything under it. field_y_sort_bias_px -80 (inn_roof key: sort-only, pixels unmoved) lifts the key clear, so witch_hut_door [1,7], the PC at [1,8], hollow_offering_pot [2,7] and thicket_line_den [2,2] render IN FRONT; tree stacking survives (-32 < 16 < 64). Tint MEASURED not the lever: the door read identically occluded.",
     "cell": [
      0,
      3
@@ -394,7 +394,6 @@
     "sprite": "hollow_canopy_tree"
    },
    {
-    "_comment": "stays within the \u22648/map light budget (the only light this map ships).",
     "cell": [
      3,
      7
@@ -456,27 +455,44 @@
     "sprite": "hollow_glow_stone"
    },
    {
-    "_comment": "Field-skill first-use idiom (stew_pot/cellar_door precedent)",
+    "_comment": "#396 GATHER beat = a GATED CONTAINER (anchor_stone_pedestal idiom): an unmet contains_when falls through to the shipped skill flavor, so the pot is byte-identical until the quest opens; container_state fills it once.",
     "cell": [
      2,
      7
     ],
+    "contains": [],
+    "contains_when": {
+     "requires": {
+      "heard_the_makings": 1
+     }
+    },
     "cookware": true,
     "display_name": "A Waiting Pot",
     "id": "hollow_offering_pot",
     "kind": "prop",
     "locked_toast": "Something's meant to go in this, cooked properly. You don't know your way around a stew pot. Yet.",
     "observe": "An iron pot set by the cottage door, empty and waiting. Someone means for it to be used.",
+    "on_open_accomplishment": "makings_brought",
     "on_skill_use": {
      "accomplishment": "cooked_the_offering",
      "toast": "[Basic Cooking] \u2014 You cook the offering plain and honest, the way you'd feed anyone who'd walked far to eat."
     },
+    "open_toast": "You work the hollow's margin til the pot is full. Rosehips, dead-nettle, a knot of wool off the briars. Nothing rare. Everything looked at properly.",
     "requires_skill": "basic_cooking",
     "skill_hint_toast": "The pot waits for something cooked plain and honest.",
-    "sprite": "cauldron"
+    "sprite": "cauldron",
+    "visual_states": [
+     {
+      "observe": "The pot is full to the rim now, settled a little where the wool packed down. She has not moved it off the doorstep.",
+      "when": {
+       "at": 1,
+       "counter": "makings_brought"
+      }
+     }
+    ]
    },
    {
-    "_comment": "v0.16.1 #6 ECONOMY: the brew arm is INGREDIENT-GATED (requires_item + on_skill_use.remove_item, the #155 bench seam). Two exploits close on one shape: the brew->sell-to-Eloise arbitrage is now bounded by yarrow on hand, and making the arm CONSUMING arms wi_game.gd's dup-output refusal, which returns BEFORE record_accomplishment -- so spamming a full pack no longer banks free witch_craft_used toward [Witch]. Coverage: qa/scripts/witch_brew_loop.json.",
+    "_comment": "v0.16.1 #6 ECONOMY: the brew arm is INGREDIENT-GATED (requires_item + on_skill_use.remove_item, the #155 bench seam). Bounds the brew->sell arbitrage by yarrow on hand; CONSUMING also arms wi_game.gd's dup-output refusal (returns BEFORE record_accomplishment), so pack-spam banks no free witch_craft_used toward [Witch]. Coverage: qa/scripts/witch_brew_loop.json.",
     "cell": [
      6,
      8
@@ -648,13 +664,8 @@
     ]
    },
    {
-    "_comment": "`ally_requires{hunter_will_come:1}` is banked ONLY by data/dialogue/riverfarm_hunter.json's come-along ask, at the village.",
-    "allies": [
-     "riverfarm_hunter"
-    ],
-    "ally_requires": {
-     "hunter_will_come": 1
-    },
+    "_comment": "#396: ally removed (user ruling 2026-08-05) -- nobody local walks you to the hollow. Solo sim gates in sim_combat_batch.gd. hunter_will_come still fields the shepherd at river_wolf_pack (village) only.",
+    "allies": [],
     "arena": "witch_hollow",
     "cell": [
      9,
@@ -672,12 +683,7 @@
     "sprite": "briar_collector"
    },
    {
-    "allies": [
-     "riverfarm_hunter"
-    ],
-    "ally_requires": {
-     "hunter_will_come": 1
-    },
+    "allies": [],
     "arena": "witch_hollow",
     "cell": [
      4,
@@ -735,7 +741,7 @@
     "sprite": "snare_coil"
    },
    {
-    "_comment": "v0.16 #305 ruling 3: a NEW door, leaving witch_cottage_prop [3,7] and witch_cottage_reachability.json byte-untouched (that canonical pins the cottage's single approach [3,8] and its toast twice). [1,7]'s only free cardinal neighbour is [1,8]. sprite `door`, NOT witch_cottage: that art is 5x5 cells and would redraw the cottage two cells away. No `light`: the cottage prop is this map's only one. Tint warmed to sunlit timber once hollow_tree_6's bias stopped the treeline drawing over this cell; [0.62,0.7,0.6] was hollow-green on hollow-green.",
+    "_comment": "v0.16 #305 ruling 3: a NEW door, leaving witch_cottage_prop [3,7] and witch_cottage_reachability.json byte-untouched (that canonical pins the cottage's single approach [3,8] and its toast twice). [1,7]'s only free cardinal neighbour is [1,8]. sprite `door`, NOT witch_cottage: that art is 5x5 cells and would redraw the cottage two cells away. No `light`: the cottage prop is this map's only one. Tint = sunlit timber, deliberate: hollow-green here vanished against the treeline.",
     "cell": [
      1,
      7

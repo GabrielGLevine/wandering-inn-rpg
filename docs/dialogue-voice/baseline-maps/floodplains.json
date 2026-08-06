@@ -1245,7 +1245,8 @@
     ],
     "visual_states": [
      {
-      "sprite": "corusdeer_doe",
+      "_comment_390": "#390: sprite field only, doe -> stag. The observe line names antlers; corusdeer_stag has them, ember-tipped. when/counter/at and tint untouched.",
+      "sprite": "corusdeer_stag",
       "tint": [
        1.0,
        0.97,

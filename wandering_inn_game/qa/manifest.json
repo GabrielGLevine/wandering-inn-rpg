@@ -4193,8 +4193,8 @@
   {
    "script": "thicket_keeps_talk",
    "seed": 9,
-   "fixture": "thicket_talk_start",
-   "note": "v0.16 #305 R2 'What the Thicket Keeps' TALK route (terminal path) and the owner of the witch_hut round trip ((1,8) -> hut (4,6) -> (1,8)) plus hut_ward_scrap's LOCKED read: the fixture holds no detect_magic, so the refusal arm is reachable and the whole-run ward_scrap_read/detected_wardwork absences are sound; zero combat with thicket_line_den armed and left standing",
+   "fixture": "thicket_legacy_start",
+   "note": "#396 THE RETIREMENT-CONTRACT canonical: what_the_thicket_keeps' offer row is deleted, so this run starts from thicket_legacy_start (a LEGACY SAVE MID-QUEST -- heard_thicket_keeps pre-banked, the quest already in started_quests) and enters the route through the R2 re-entry row instead of an accept, proving a player who was mid-quest when the redesign shipped still finishes it; quest_started is asserted ABSENT whole-run, because a legacy save can never re-accept a retired quest. Also the v0.16 #305 R2 'What the Thicket Keeps' TALK route (terminal path) and the owner of the witch_hut round trip ((1,8) -> hut (4,6) -> (1,8)) plus hut_ward_scrap's LOCKED read: the fixture holds no detect_magic, so the refusal arm is reachable and the whole-run ward_scrap_read/detected_wardwork absences are sound; zero combat with thicket_line_den armed and left standing",
    "tiers": [
     "full"
    ],
@@ -4205,7 +4205,7 @@
      "witch_hut"
     ],
     "fixtures": [
-     "thicket_talk_start"
+     "thicket_legacy_start"
     ],
     "skills": [
      "basic_cleaning",
@@ -6064,6 +6064,159 @@
      "economy",
      "exploration",
      "settings"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 396-lane-d --> APPENDED LAST under this lane's marker: the manifest is shared and three sibling lanes append in the same wave, so a tail row under its own anchor conflicts with nothing and moves no shipped row. ci_sweep.sh does not read order.",
+   "script": "winter_teeth_talk",
+   "seed": 9,
+   "fixture": "winter_teeth_start",
+   "note": "#396 'A Winter of Teeth' TRACK route (terminal path) and the owner of the offer conversation (winter_brief <-> winter_topic both directions) plus the REPORT-BLOCKED proof: the post-accept hub's exact option list is pinned with all three report rows hidden. wolf_sign_trail's presence, gating and once-semantics are all proved by cell occupancy (an absent prop's cell is walkable, a present one blocks, and absent{pack_traced} retires it); day fixture, so river_wolf_pack is disarmed and combat_started is absent whole-run",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "winter_teeth_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "riverfarm_hunter"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 396-lane-d --> APPENDED LAST under this lane's marker: the manifest is shared and three sibling lanes append in the same wave, so a tail row under its own anchor conflicts with nothing and moves no shipped row. ci_sweep.sh does not read order.",
+   "script": "winter_teeth_work",
+   "seed": 9,
+   "fixture": "winter_teeth_start",
+   "note": "#396 'A Winter of Teeth' WORK (fold) route in isolation and the owner of the prop-gating contract: winter_fold_hurdles (15,12) is walked ONTO before the offer, BLOCKS after it, and is walked onto again once it pays out. Toast pinned verbatim as both toast and ui_toast_rendered; pack_traced, survived_wolf_night and hunter_will_come all absent whole-run, so it really is one route alone",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "winter_teeth_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "riverfarm_hunter"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 396-lane-d --> APPENDED LAST under this lane's marker: the manifest is shared and three sibling lanes append in the same wave, so a tail row under its own anchor conflicts with nothing and moves no shipped row. ci_sweep.sh does not read order.",
+   "script": "winter_teeth_fight",
+   "seed": 9,
+   "fixture": "winter_teeth_night_start",
+   "note": "#396 'A Winter of Teeth' FIGHT route and the ONLY live coverage the watch ask and the shepherd-as-ally have after #396 stripped both briar fights: river_wolf_pack fires off its trigger_radius with combat.combatants.riverfarm_hunter.side == player asserted INSIDE the open board, off a hunter_will_come earned live. Night fixture (actions_since_sleep 1000) instead of riverfarm_fight's 940-interact burst. Also the text_variant precedence pin -- three variants match and the LAST must win",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "winter_teeth_night_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "riverfarm_hunter"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 396-lane-d --> APPENDED LAST under this lane's marker: the manifest is shared and three sibling lanes append in the same wave, so a tail row under its own anchor conflicts with nothing and moves no shipped row. ci_sweep.sh does not read order.",
+   "script": "winter_teeth_prebank",
+   "seed": 9,
+   "fixture": "winter_teeth_prebank_start",
+   "note": "#396 'A Winter of Teeth' PRE-BANK COHORT: a player who already survived the wolves quest-free, then meets the shepherd. The hub's text_variant acknowledges the history while no row is unlocked by it, accepting completes the resolve beat SILENTLY (measured: NO quest_beat_completed fires for beat 1 -- nothing transitions), and the report waits in the very next hub. Two player actions, two toasts, one quest, beats in order",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "riverfarm_village"
+    ],
+    "fixtures": [
+     "winter_teeth_prebank_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "riverfarm_hunter"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests"
+    ]
+   }
+  },
+  {
+   "_comment": "#396 lane C. Appended last.",
+   "script": "makings_loop",
+   "seed": 9,
+   "fixture": "makings_start",
+   "note": "#396: the_makings, the quest wrapping the [Hedge Witch] grant -- offer row gated to the peaceful path (exact array pins both ways), the pot as a quest-opened container, the pen's limping third lamb, then the kettle banking the frozen witch_lessons and a sleep granting the class -- plus the two GRADUATE legs (review M2/M3): the run's own end state replays into witch_lesson with the teach row pinned ABSENT, and makings_graduate_start (the legacy witch_lessons save) sees no starter row and cannot open the quest",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "inn_upstairs",
+     "riverfarm_village",
+     "witch_hollow"
+    ],
+    "fixtures": [
+     "makings_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "riverfarm_witch"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "exploration",
+     "quests",
+     "save"
     ]
    }
   }

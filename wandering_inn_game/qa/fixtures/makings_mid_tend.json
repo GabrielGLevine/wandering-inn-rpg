@@ -1,0 +1,71 @@
+{
+ "_comment": "#396 PLAYTEST STATE (2026-08-06 close wave), not referenced by any QA script. makings_start advanced to BEAT 2: heard_the_makings + makings_brought banked (her pot is full), craft_tended still open, standing in riverfarm_village one cell east of the lamb pen. Tend the limping lamb at [18,11], then take the hollow path west and sit her kettle. rng_state DERIVED from seed 3961 via tests/_derive_rng_state.gd.",
+ "version": 5,
+ "state": {
+  "current_map": "riverfarm_village",
+  "player_cell": [
+   19,
+   11
+  ],
+  "player_facing": [
+   -1,
+   0
+  ],
+  "classes": {
+   "warrior": 5,
+   "mage": 5
+  },
+  "accomplishments": {
+   "blight_lifted": 1,
+   "bought_catalyst": 1,
+   "catalyst_delivered": 1,
+   "door_awakened": 1,
+   "door_chain_started": 1,
+   "door_mounted": 1,
+   "door_retrieved": 1,
+   "door_study_sleeps": 3,
+   "door_understood": 1,
+   "given_spear_by_relc": 1,
+   "heard_price_of_a_favor": 1,
+   "heard_the_makings": 1,
+   "heard_thicket_keeps": 1,
+   "herd_rerouted": 1,
+   "horns_dig_joined": 1,
+   "horns_dig_started": 1,
+   "learned_magic_from_pisces": 1,
+   "makings_brought": 1,
+   "mediated_the_debt": 1,
+   "melee_hit": 18,
+   "met_relc": 1,
+   "pedestal_breached": 1,
+   "price_of_a_favor_reported": 1,
+   "recovered_anchor_stone": 1,
+   "riverfarm_attuned": 1,
+   "sparred_with_relc": 1,
+   "spell_cast": 13,
+   "thicket_answered": 1,
+   "won_combat": 3
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [
+   "the_makings"
+  ],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "1760592127653779671"
+ }
+}

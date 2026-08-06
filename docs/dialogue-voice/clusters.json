@@ -10,7 +10,7 @@
     {"id": "drayman+bark", "tier": "T0", "files": ["drayman_dispute.json", "crab_nest.json"], "notes": "bark file: crab_nest"},
     {"id": "pell+bark", "tier": "T0", "files": ["recruit_pell.json", "corusdeer_range.json"], "notes": "bark file: corusdeer_range"},
     {"id": "riverfarm-villager", "tier": "T1", "files": ["riverfarm_villager.json"], "notes": ""},
-    {"id": "riverfarm-hunter+bark", "tier": "T1", "files": ["riverfarm_hunter.json", "riverfarm_thicket_patch.json"], "notes": "thicket_patch is exploration bark"},
+    {"id": "riverfarm-hunter+bark", "tier": "T1", "files": ["riverfarm_hunter.json", "riverfarm_thicket_patch.json"], "notes": "thicket_patch is exploration bark; #396 card is riverfarm-shepherd+bark.md (cluster id frozen; the NPC is A Shepherd, riverfarm-hunter+bark.md kept as the legacy thicket-node record)"},
     {"id": "riverfarm-headman", "tier": "T1", "files": ["riverfarm_headman.json"], "notes": ""},
     {"id": "peddler+bark", "tier": "T1", "files": ["peddler_stall.json", "razorbeak_nest.json"], "notes": "bark file: razorbeak_nest"},
     {"id": "relc", "tier": "T2", "files": ["relc_intro.json", "relc_inn.json", "relc_descent.json"], "notes": "same speaker"},
@@ -55,6 +55,7 @@
     "2026-08-03 invrisil_merchant_prince + invrisil_fixer merged as invrisil-coyle: same quest, T3+T2 legal after fixer re-tier; ids invrisil-fixer/invrisil-prince retired",
     "2026-08-03 pallass_market_local split out of market-pallass as singleton: two T2 speakers (clerk + local) violated rule 2",
     "2026-08-03 watch_crate split out of dresk+watch as singleton: Watch Sergeant (street.json display_name) is distinct from Sergeant Ashgrave (barracks.json), both T2; rule 2",
-    "2026-08-03 cluster count 34->36 (two rule-2 splits); every file verified to appear in exactly one cluster"
+    "2026-08-03 cluster count 34->36 (two rule-2 splits); every file verified to appear in exactly one cluster",
+    "2026-08-06 riverfarm-hunter+bark card superseded by riverfarm-shepherd+bark.md (#396): cluster id, tier and file list all frozen; the NPC became A Shepherd and the antithesis grant stays pinned at the legacy thicket_reported_rerouted node"
   ]
 }

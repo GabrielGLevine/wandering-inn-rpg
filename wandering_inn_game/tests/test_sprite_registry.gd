@@ -283,6 +283,13 @@ func _build_expected_counts() -> Dictionary:
 	counts["a_hunter/idle"] = 4
 	counts["a_hunter/walk"] = 6
 
+	## #396 Task 1: a_shepherd succeeds a_hunter on riverfarm_village. Sheet
+	## names and animation keys mirror a_hunter; the FRAME COUNTS do not --
+	## the v3 idle ships its reference pose plus 4 generated frames (5), and
+	## walk is the walking-6-frames template (6, same as a_hunter's Run).
+	counts["a_shepherd/idle"] = 5
+	counts["a_shepherd/walk"] = 6
+
 	## #390: wilovan is a BESPOKE rig, and his COMBAT SET landed 2026-08-05 --
 	## slice/hit/death are real sheets now, pinned at the frame counts v3 actually
 	## produced (reference pose + N generated: 4+1, 4+1, 6+1), which is why slice

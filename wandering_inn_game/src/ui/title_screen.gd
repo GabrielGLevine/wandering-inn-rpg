@@ -29,6 +29,10 @@ const PLAYTEST_FIXTURE_ORDER: Array[String] = [
 	# unsteady chute and the carcass both are. `sewers_property_seams` is the
 	# mage half of the same sentence -- freeze, cross, thaw, kindle, clean.
 	"martial_field_armed", "martial_field_start", "sewers_property_seams",
+	# #396 close. APPENDED at the tail deliberately: playtest_boot pins curated
+	# indices 30 and 33, and appending moves nothing before them. Story order --
+	# meet the shepherd, stand his watch with him fielded, finish Eloise's quest.
+	"winter_teeth_start", "winter_watch_agreed_night", "makings_mid_tend",
 ]
 const PLAYTEST_PAGE_SIZE := 10
 const NEW_GAME_CONFIRM_ROWS := ["No", "Yes"]

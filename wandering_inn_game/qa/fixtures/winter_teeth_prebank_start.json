@@ -1,0 +1,64 @@
+{
+ "_comment": "#396 winter_teeth_prebank's start: the PRE-BANK COHORT. Identical to winter_teeth_start except survived_wolf_night is already 1 -- a player who fought the night wolves off river_wolf_pack's trigger_radius (quest-free, on_victory banks it) before the shepherd ever asked. That is the edge the quest design has to read as intentional rather than glitchy: accepting a_winter_of_teeth completes its resolve beat SILENTLY on accept (complete_when_any already satisfied) and the report row is waiting in the next hub. Two player actions, two toasts. hunter_will_come stays UNBANKED: the counter that fields the shepherd as an ally is not implied by having survived the wolves alone, and the hub's text_variant for this state ('You stood a watch before I ever asked.') is the one that must show. TRAP: rng_state is DERIVED (tests/_derive_rng_state.gd), never hand-typed; WISave restores .state directly and RNG_STATE_MIN_MAGNITUDE rejects small ints.",
+ "version": 5,
+ "state": {
+  "current_map": "riverfarm_village",
+  "player_cell": [
+   12,
+   10
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 5,
+   "mage": 5
+  },
+  "accomplishments": {
+   "blight_lifted": 1,
+   "bought_catalyst": 1,
+   "catalyst_delivered": 1,
+   "door_awakened": 1,
+   "door_chain_started": 1,
+   "door_mounted": 1,
+   "door_retrieved": 1,
+   "door_study_sleeps": 3,
+   "door_understood": 1,
+   "given_spear_by_relc": 1,
+   "heard_price_of_a_favor": 1,
+   "horns_dig_joined": 1,
+   "horns_dig_started": 1,
+   "learned_magic_from_pisces": 1,
+   "melee_hit": 18,
+   "met_relc": 1,
+   "pedestal_breached": 1,
+   "price_of_a_favor_reported": 1,
+   "recovered_anchor_stone": 1,
+   "riverfarm_attuned": 1,
+   "sparred_with_relc": 1,
+   "spell_cast": 13,
+   "survived_wolf_night": 1,
+   "won_combat": 3
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

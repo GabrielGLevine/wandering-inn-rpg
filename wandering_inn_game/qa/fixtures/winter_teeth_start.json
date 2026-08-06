@@ -1,0 +1,63 @@
+{
+ "_comment": "#396 winter_teeth_talk + winter_teeth_work's start: warrior5+mage5 at riverfarm_village (12,10) facing right, directly west of the shepherd (13,10) -- first interact plays his talk_pool line, the second opens riverfarm_hunter. Copied from thicket_talk_start (the region's shipped baseline: post-mounting, door_awakened + riverfarm_attuned, blight_lifted + price_of_a_favor_reported so the region's side quests are legally reachable) with NOTHING added: heard_winter_teeth is unbanked, so the hub shows exactly two rows and the offer is earned live, and heard_thicket_keeps is unbanked too, which keeps every legacy thicket row hidden and the hub small enough to recount by hand. DAY (actions_since_sleep 0) is load-bearing: river_wolf_pack's encounter_when needs night, so both these routes are provably combat-free with the pack disarmed. winter_fold_hurdles (15,12) and wolf_sign_trail (4,13) are both ABSENT at this state (present_when requires heard_winter_teeth), which is what makes the walk-onto-the-cell absence proofs sound. TRAP: rng_state is DERIVED (tests/_derive_rng_state.gd), never hand-typed; WISave restores .state directly and RNG_STATE_MIN_MAGNITUDE rejects small ints.",
+ "version": 5,
+ "state": {
+  "current_map": "riverfarm_village",
+  "player_cell": [
+   12,
+   10
+  ],
+  "player_facing": [
+   1,
+   0
+  ],
+  "classes": {
+   "warrior": 5,
+   "mage": 5
+  },
+  "accomplishments": {
+   "blight_lifted": 1,
+   "bought_catalyst": 1,
+   "door_awakened": 1,
+   "catalyst_delivered": 1,
+   "door_chain_started": 1,
+   "door_mounted": 1,
+   "door_retrieved": 1,
+   "door_study_sleeps": 3,
+   "door_understood": 1,
+   "given_spear_by_relc": 1,
+   "heard_price_of_a_favor": 1,
+   "horns_dig_joined": 1,
+   "horns_dig_started": 1,
+   "learned_magic_from_pisces": 1,
+   "melee_hit": 18,
+   "met_relc": 1,
+   "pedestal_breached": 1,
+   "price_of_a_favor_reported": 1,
+   "recovered_anchor_stone": 1,
+   "riverfarm_attuned": 1,
+   "sparred_with_relc": 1,
+   "spell_cast": 13,
+   "won_combat": 3
+  },
+  "player_skills": [
+   "basic_cleaning"
+  ],
+  "removed_entities": [],
+  "dormant_encounters": [],
+  "generalist_classes": [],
+  "started_quests": [],
+  "pending_consolidation": {},
+  "used_skills": [],
+  "inventory": [
+   "rusty_sword"
+  ],
+  "equipped": {
+   "weapon": "rusty_sword",
+   "armor": ""
+  },
+  "container_state": {},
+  "actions_since_sleep": 0,
+  "rng_state": "-6393592048753323481"
+ }
+}

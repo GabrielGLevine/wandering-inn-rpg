@@ -1,5 +1,5 @@
 {
- "_comment": "v0.16 #305 R2 'What the Thicket Keeps', the FIGHT route -- the only live coverage line_stalker_a/_b have. BAND FIXTURE: warrior 10, no mage, melee_hit 57 (COMBAT_BAND_FIXTURES pins the total at 10), matching the thicket_line_den_t3_warrior10_solo cell sim_combat_batch gates the roster at. Starts in witch_hollow one cell south of the den, takes the fight, autoplays the win pinned as thicket_cleared (on_victory) rather than won_combat, then the CLEARED report row at the hunter. Nothing here touches riverfarm_thicket_patch or the standing thicket-watch bounty -- different entity, different map, different roster ids.",
+ "_comment": "v0.16 #305 R2 'What the Thicket Keeps', the FIGHT route -- the only live coverage line_stalker_a/_b have. BAND FIXTURE: warrior 10, no mage, melee_hit 57 (COMBAT_BAND_FIXTURES pins the total at 10), matching the thicket_line_den_t3_warrior10_solo cell sim_combat_batch gates the roster at. Starts in witch_hollow one cell south of the den, takes the fight, autoplays the win pinned as thicket_cleared (on_victory) rather than won_combat, then the CLEARED report row at the hunter. Nothing here touches riverfarm_thicket_patch or the standing thicket-watch bounty -- different entity, different map, different roster ids. #396: the fixture ALREADY models a legacy save mid-quest (heard_thicket_keeps pre-banked, quest in started_quests), and its warrior-10 band / witch_hollow start cannot merge into thicket_legacy_start, so it keeps thicket_fight_start. Hub indices recounted for the deleted offer row + the gated watch-ask; speaker re-pinned to A Shepherd.",
  "fixture_save": "thicket_fight_start",
  "starts_at_title": true,
  "steps": [
@@ -138,7 +138,7 @@
    "type": "dialogue_line",
    "timeout_sec": 5,
    "payload_contains": {
-    "speaker": "The Hunter"
+    "speaker": "A Shepherd"
    }
   },
   {
@@ -159,10 +159,10 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "Hub: heard_thicket_keeps hides the start row and thicket_cleared opens the CLEARED report. 0 '[Ask him to come with you.]', 1 'Just passing through.', 2 \"The den's empty. Whatever it was.\". Take 2.",
+   "_comment": "#396 INDEX RECOUNT, legacy state (heard_thicket_keeps 1, thicket_cleared 1 from the win above; no heard_winter_teeth, no herd_rerouted). FOUR rows: [0] 'Just passing through.' (a1), [1] \"The den's empty. Whatever it was.\" (a4, the CLEARED report), [2] 'Take me back to that line in the thicket.' (a5, the R2 re-entry -- herd_rerouted unbanked on this route), [3] the #396 winter offer (a6). HIDDEN: a0 watch-ask (requires heard_winter_teeth), a2/a3 (their route counters), a7/a8/a9. Take 1, not the 2 this leg used to take: the old hub's row 0 was the come-along, which the watch-ask replaced and gated, so every visible index shifted down one.",
    "action": "move",
    "direction": "down",
-   "steps": 2
+   "steps": 1
   },
   {
    "action": "press",
@@ -218,6 +218,14 @@
    "type": "accomplishment_recorded",
    "payload_contains": {
     "id": "ward_scrap_read"
+   }
+  },
+  {
+   "_comment": "The #396 winter offer sat one row below the report the whole time (a6, ungated). Never taken -- a legacy save is not silently enrolled in the successor quest.",
+   "action": "assert_event_absent",
+   "type": "quest_started",
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
    }
   }
  ]

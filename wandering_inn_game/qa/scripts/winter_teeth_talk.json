@@ -1,0 +1,497 @@
+{
+ "_comment": "#396 'A Winter of Teeth', the TRACK route end to end -- and the owner of the offer conversation (winter_brief <-> winter_topic, both directions) plus the REPORT-BLOCKED proof. Fresh save at the shepherd: offer -> the full brief/topic walk -> the hub's exact option list pinned with every report row still hidden -> wolf_sign_trail banking pack_traced and closing the resolve beat -> the TRACED report closing the quest. Prop presence and once-semantics are both proved by WALKING: an absent prop's cell is walkable and a present one blocks, so the cell assertions do the work no event can. DAY fixture, so river_wolf_pack is disarmed and combat_started is absent whole-run.",
+ "fixture_save": "winter_teeth_start",
+ "starts_at_title": true,
+ "steps": [
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_gate_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_title_rendered",
+   "timeout_sec": 5
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "game_loaded",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "world_ready",
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "current_map",
+   "equals": "riverfarm_village"
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    12,
+    10
+   ]
+  },
+  {
+   "_comment": "== FIRST CONTACT == the shepherd (13,10), directly east. TWO interacts on first contact: the first plays a talk_pool line, the second opens riverfarm_hunter (frozen conversation id; the character is A Shepherd).",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_line",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd"
+   }
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "screenshot",
+   "name": "00_shepherd_hub_offer"
+  },
+  {
+   "_comment": "#396 INDEX RECOUNT, fresh state (nothing winter, nothing thicket): the hub's 10 authored rows filter to TWO. [0] 'Just passing through.' (a1, ungated), [1] 'The wolves. Say what you need.' (a6, the offer -- hide_when its own counter only). HIDDEN: a0 watch-ask (requires heard_winter_teeth), a2/a3/a4/a5 (the legacy thicket cluster, heard_thicket_keeps unbanked), a7/a8/a9 (the report rows, requires heard_winter_teeth). Take 1; the cursor WRAPS, so the destination is pinned below rather than trusted to the index.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "heard_winter_teeth"
+   }
+  },
+  {
+   "_comment": "DESTINATION PIN (#396 ruling 1): winter_brief proves the offer was the row taken and not 'Just passing through.'",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Stand the watch with me and we thin them. Or the hurdles are cut for a new fold. That's the two I've got. Wolves don't move ground for nothing."
+   }
+  },
+  {
+   "_comment": "winter_brief: take 0 'Where do I start?' -- this script owns the winter_topic walk.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "02_winter_brief"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Hurdles are stacked by the pen. The watch is mine, every night. And the sign. I near forgot the sign. Runs the west margin, plain as a road. Walk it back and you'd know what pushed them."
+   }
+  },
+  {
+   "_comment": "winter_topic: 0 'Back up a step.' returns to winter_brief, 1 'Noted.' ends. Take 0 -- the round trip proves the topic node is not a dead end.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "03_winter_topic"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "_comment": "winter_brief's SECOND emission. Sound because a matched wait advances the since-cursor past the first one, so this can only be satisfied by a fresh entry.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Stand the watch with me and we thin them. Or the hurdles are cut for a new fold. That's the two I've got. Wolves don't move ground for nothing."
+   }
+  },
+  {
+   "_comment": "winter_brief: 0 'Where do I start?', 1 \"I'll see to it.\" (end). Take 1.",
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== REPORT PROVABLY BLOCKED == talk_pool spent this waking, so one interact opens the hub. No route counter is banked yet, so all three report rows must still be hidden.",
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "_comment": "THE EXACT OPTION-LIST PIN, used once and deliberately: payload_contains compares an `options` key as the WHOLE visible list, so this is the machine-checked form of the recount and the only positive proof that a7/a8/a9 are hidden rather than merely unpicked. Base hub text confirms no text_variant matches yet (hunter_will_come / survived_wolf_night / winter_answered all 0). It WILL red if a row is added to this hub -- that is the contract, not a defect.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Wolf sign's thicker every week. Three lambs gone since spring. The pack's off its own ground and eating mine.",
+    "options": [
+     {
+      "text": "[Offer to stand the night watch with him.]",
+      "locked": false,
+      "requirement": ""
+     },
+     {
+      "text": "Just passing through.",
+      "locked": false,
+      "requirement": ""
+     }
+    ]
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "== THE TRACK ROUTE == wolf_sign_trail (4,13), approached from (4,12) directly north. Every present entity blocks its own cell (wi_game.is_cell_blocked), so the bump-move faces the prop without stepping and the unchanged cell IS the presence proof -- the offer above is what made it appear.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    4,
+    12
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    12
+   ]
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "01_wolf_sign_before"
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "pack_traced"
+   }
+  },
+  {
+   "_comment": "ORDER: record_accomplishment re-evaluates quests INLINE, so the resolve beat lands BEFORE the prop's toast -- waiting on the toast first would move the since-cursor past this event.",
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth",
+    "beat": 1
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "toast",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You walk the sign back. The pack came off the north ground by the old line — something denned in it and they gave way. They didn't choose these fields. They were pushed."
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_toast_rendered",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "text": "You walk the sign back. The pack came off the north ground by the old line — something denned in it and they gave way. They didn't choose these fields. They were pushed."
+   }
+  },
+  {
+   "action": "screenshot",
+   "name": "01_wolf_sign_traced"
+  },
+  {
+   "_comment": "ONCE-SEMANTICS, first half: exactly one bank. present_when carries absent{pack_traced:1}, so the prop retires itself the moment it pays out.",
+   "action": "assert_event_count",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "pack_traced"
+   },
+   "count": 1
+  },
+  {
+   "_comment": "ONCE-SEMANTICS, second half: the prop is GONE, so the cell that just blocked is walkable and the player steps into it. There is nothing left to interact with -- the strongest form of 'once' the driver can express.",
+   "action": "move",
+   "direction": "down",
+   "steps": 1
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    4,
+    13
+   ]
+  },
+  {
+   "_comment": "== REPORT == same waking, pool spent, so one interact opens the hub directly. Teleport does not carry facing -- bump east to face him.",
+   "action": "teleport",
+   "map": "riverfarm_village",
+   "cell": [
+    12,
+    10
+   ]
+  },
+  {
+   "action": "move",
+   "direction": "right",
+   "steps": 1
+  },
+  {
+   "action": "press",
+   "name": "interact"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_started",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "conversation": "riverfarm_hunter"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_shown",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "#396 INDEX RECOUNT, post-accept + traced (heard_winter_teeth 1, pack_traced 1, hunter_will_come 0, winter_answered 0): THREE rows. [0] '[Offer to stand the night watch with him.]' (a0), [1] 'Just passing through.' (a1), [2] 'Your wolves were pushed. Something holds their old ground.' (a9, the TRACED report). HIDDEN: a6 offer (spent), a7/a8 (their own route counters unbanked -- the three report rows are siblings, only the one you earned shows). Take 2.",
+   "action": "move",
+   "direction": "down",
+   "steps": 2
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "accomplishment_recorded",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "winter_answered"
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_beat_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth",
+    "beat": 2
+   }
+  },
+  {
+   "action": "wait_for_event",
+   "type": "quest_completed",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "id": "a_winter_of_teeth"
+   }
+  },
+  {
+   "_comment": "DESTINATION PIN: the TRACED closer, not the watch or fold one. This node is the quest's PEAK line.",
+   "action": "wait_for_event",
+   "type": "dialogue_node",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "speaker": "A Shepherd",
+    "text": "Pushed. Off their own ground, by the old line. So it was never my fields they wanted. Wolves and me both, working round something neither of us can see."
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "04_peak_traced"
+  },
+  {
+   "action": "press",
+   "name": "confirm"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "dialogue_ended",
+   "timeout_sec": 5
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_dialogue_hidden",
+   "timeout_sec": 5
+  },
+  {
+   "_comment": "Zero combat: day phase disarms river_wolf_pack's encounter_when, and this route never touches the briars.",
+   "action": "assert_event_absent",
+   "type": "combat_started",
+   "payload_contains": {}
+  },
+  {
+   "_comment": "Distinct-counter proof: walking the sign must never bank the fold route.",
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "fold_rebuilt"
+   }
+  },
+  {
+   "action": "assert_event_absent",
+   "type": "accomplishment_recorded",
+   "payload_contains": {
+    "id": "survived_wolf_night"
+   }
+  },
+  {
+   "action": "assert_state",
+   "path": "accomplishments.winter_answered",
+   "equals": 1
+  },
+  {
+   "_comment": "THE TRACED-PATH RESOLUTION PIN (#396 lane-d review L; invrisil_house_name_talk's journal pin is the precedent). completed_quest_summary renders resolved_path's TEXT into the Completed list, so the journal is where a rung banked by the wrong fork becomes a sentence the player reads about themselves -- quest_completed above proves the quest CLOSED, never WHICH WAY. Whole-list pin (payload_contains compares completed_quest_lines as the entire visible list, the chronicle_loop idiom), and here that list is exactly ONE row, which makes this the LADDER PROOF as well: resolved_path is LAST-MATCH-WINS over quests.json's resolution_paths order (watch, fold, traced), and with ONLY pack_traced banked -- fold_rebuilt and survived_wolf_night are both asserted absent just above -- the sentence that survives must be the TRACED one. A future fork that forgets its own rung falls back to a sibling's ending line and reds here.",
+   "action": "press",
+   "name": "journal"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_journal_shown",
+   "timeout_sec": 5,
+   "payload_contains": {
+    "completed_quest_lines": [
+     "A Winter of Teeth (Riverfarm) \u2014 You walked the sign back and found the pack was pushed \u2014 their old ground is held by something on the line."
+    ]
+   }
+  },
+  {
+   "action": "wait_frames",
+   "frames": 3
+  },
+  {
+   "action": "screenshot",
+   "name": "05_journal_after_traced"
+  }
+ ]
+}

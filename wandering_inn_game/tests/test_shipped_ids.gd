@@ -21,6 +21,19 @@ const STRUCTURAL_LITERALS := [
 	"companion_lost",
 ]
 
+## RETIRED accomplishments (#396 ruling 9) -- THE registry for the one legal way
+## a shipped counter loses every producer: the quest that banked it is retired
+## for NEW saves (offer row deleted) while the counter, its quest def and its
+## legacy CONSUMERS stay forever so mid-quest legacy saves still complete. Read
+## here (freeze check), in test_reachability (zero-producer gate) and in
+## test_content (unproduced-gate checks) -- all three already preload this file.
+## Retiring is not deprecating: there is no successor id to migrate a save TO,
+## so WISave.DEPRECATED_IDS is the wrong tool. A NEW PRODUCER of a retired id
+## fails loudly in `_check_retired` -- retirement is one-way.
+const RETIRED_ACCOMPLISHMENTS := {
+	"heard_thicket_keeps": "_comment: retired 2026-08-05 (#396). what_the_thicket_keeps' offer row deleted from riverfarm_hunter.json's hub; the quest def and its 5 consumers (4 hub rows + witch_hollow.thicket_line_den.encounter_when) stay legal. Successor: heard_winter_teeth (a_winter_of_teeth).",
+}
+
 var _errors: Array[String] = []
 
 
@@ -53,6 +66,7 @@ func _init() -> void:
 		var frozen_ids: Array = frozen.get(id_class, [])
 		total += frozen_ids.size()
 		_check_class(id_class, frozen_ids, live[id_class] as Dictionary)
+	_check_retired(frozen.get("accomplishments", []), live["accomplishments"] as Dictionary)
 
 	if _errors.is_empty():
 		print("PASS: shipped-ids freeze -- %d frozen ids across 5 classes still covered (release %s)" % [total, String(frozen.get("release", "?"))])
@@ -70,6 +84,8 @@ func _check_class(id_class: String, frozen_ids: Array, live_ids: Dictionary) -> 
 		var id := String(raw_id)
 		if live_ids.has(id):
 			continue
+		if id_class == "accomplishments" and RETIRED_ACCOMPLISHMENTS.has(id):
+			continue
 		if deprecated.has(id):
 			var new_id := String(deprecated[id])
 			if live_ids.has(new_id):
@@ -77,6 +93,20 @@ func _check_class(id_class: String, frozen_ids: Array, live_ids: Dictionary) -> 
 			_errors.append("%s: frozen id '%s' is migration-mapped to '%s', but '%s' is ALSO absent from the live catalog -- the mapping target itself must exist" % [id_class, id, new_id, new_id])
 			continue
 		_errors.append("%s: frozen id '%s' has disappeared from its live catalog with no WISave.DEPRECATED_IDS[\"%s\"] entry -- a shipped id may only be deprecated-and-mapped, never silently dropped (spec §2.1)" % [id_class, id, id_class])
+
+
+## Retirement is one-way and never a place to park a typo: every row must carry a
+## justification, still be FROZEN (else it was never shipped and needs no
+## exemption), and have NO live producer (a new one means the counter came back --
+## delete the row instead of letting it mask a real freeze violation).
+func _check_retired(frozen_ids: Array, live_ids: Dictionary) -> void:
+	for id: String in RETIRED_ACCOMPLISHMENTS:
+		if not String(RETIRED_ACCOMPLISHMENTS[id]).begins_with("_comment:"):
+			_errors.append("accomplishments: RETIRED_ACCOMPLISHMENTS['%s'] needs an _comment-style justification" % id)
+		if not frozen_ids.has(id):
+			_errors.append("accomplishments: RETIRED_ACCOMPLISHMENTS['%s'] is not a frozen shipped id -- an unshipped counter needs no retirement exemption, it needs its producer" % id)
+		if live_ids.has(id):
+			_errors.append("accomplishments: RETIRED_ACCOMPLISHMENTS['%s'] has a LIVE PRODUCER again -- retirement is one-way; drop the registry row rather than let it mask a freeze violation" % id)
 
 
 func _load_json(path: String) -> Dictionary:

@@ -3077,12 +3077,24 @@ Residuals, logged rather than silently shipped:
   bbox (53/64), scale holds the ~26px footprint the tuft-at-1.6 had.
   Evidence `lanes/l390-evidence/worn_grass_bed_pair_4x.png` (shipped tuft vs
   new prop, same compositor, real floodplains grass tile, 1x and 4x).
-- [~] PROP/NO-LAMBS — the Hunter's Lamb Pen has fencing and no lambs. The
+- [x] PROP/NO-LAMBS — the Hunter's Lamb Pen has fencing and no lambs. The
   animals live entirely in the display name, the observe, and the tend toasts.
   A small lamb sprite inside the rails would make the pen read as a pen rather
-  than as a fence. (`[~]` not `[x]`: zero map files reference `lamb` yet —
-  the pen stays lamb-less in game until the #396 wiring lands.)
-  **SPRITE DRAINED 2026-08-05 (#390); WIRING OWED BY #396.** Two rigs, not one
+  than as a fence.
+  **WIRED 2026-08-05 (#396 lane C) — the in-engine shot #390 owed.** The rail
+  run now holds three animals on one visible row: `lamb_lying` at (15,11) and
+  `lamb` at (17,11) as DECOR on the rail's own already-blocked cells (no
+  walkability, entity-count or approach-cell change), and `makings_tend_lamb` —
+  the limping third the observe names, and `the_makings`' tend beat — as a
+  quest-gated prop at (18,11), under the east panel's own art. Windowed read
+  (`lanes/l396c-evidence/02_pen_lambs_tend.png`, zoom
+  `pen_lambs_zoom_2x.png`, from `makings_loop`): lying and standing read as
+  two different animals at gameplay zoom, and the pen reads as a pen.
+  Residual, not a blocker: the limping third reuses `lamb_lying`, so it is the
+  standing ewe that separates the two lying silhouettes and the interactive
+  lamb is told apart by its affordance and name, not its posture. A third
+  posture rig (standing wrong on a foreleg) would close that inch.
+  **SPRITE DRAINED 2026-08-05 (#390).** Two rigs, not one
   retint: `lamb` (standing) and `lamb_lying` (curled on the ground) — distinct
   silhouettes per the tint directive, and the pair matches #396's own observe
   copy ("two ewe lambs inside it, and a third that will not put weight on a
@@ -3387,7 +3399,7 @@ head v0.18 W4 as HOTFIX-PRIORITY. Ranked player-visible-first.
 - [x] **(P2)** | Toast vs field-skill legend | all maps, HUD | Toast panel occupies the same band as the legend and is drawn over it, truncating legend text mid-word ('...and files i') | v0.17 close machine-playtest, stationer_room_loop/02 |
 - [x] **(P2)** | HUD chip bar | player room, den-shop, inn | Inventory/Journal/Pause chips absent for the whole first visit to the purchased room (chip-region max 53 vs 255 after a pause cycle) with no visible modal on screen; touch has no fallback | v0.17 close machine-playtest, player_room_loop/03+04 |
 - [ ] **(P2)** | Face-to-face sprite overlap | inn, pallass den-shop, inn guest seats | Two-tile-tall sprites on one-tile cells merge the player and the speaker into one two-headed figure during dialogue | v0.17 close machine-playtest, inn_walkthrough/02 + pallass_ledger_offices/04 + inn_guests_loop/01 | **CARRIED 2026-08-05 (#390), reason on the row:** no art change fixes it. Every rig involved is already at the family height (~28-33px on-screen, measured this lane: a_hunter 33, citizen_f 30, human_laborer 30.2, wilovan 28), so shrinking sprites to stop the merge would break the whole cast's scale. The real fixes are engine or layout — a dialogue-time separation/dim of the non-speaker in `world.gd`, or moving the NPC cells so conversations happen across a counter — and both are outside a sprite lane's ownership. Needs a code owner, not a pack pick. |
-- [~] **(P2)** | hunters_lamb_pen | riverfarm_village | No lamb sprites in or around the pen; the whole [Beast Tamer] door is a bare fence rail against empty grass while the copy describes handling three fleeces | v0.17 close machine-playtest, gh330_lamb_pen_loop/00 | **SPRITES DRAINED 2026-08-05 (#390): `lamb` + `lamb_lying`, evidence `lanes/l390-evidence/lamb_pen_pair_4x.png`. WIRING DELIBERATELY CARRIED** — the map rows live in `riverfarm_village.json`, which #396's redesign branch owns this week; two lanes writing that file live is the exact collision the lane map forbids. #396 places them and owes `gh330_lamb_pen_loop` windowed. |
+- [x] **(P2)** | hunters_lamb_pen | riverfarm_village | No lamb sprites in or around the pen; the whole [Beast Tamer] door is a bare fence rail against empty grass while the copy describes handling three fleeces | v0.17 close machine-playtest, gh330_lamb_pen_loop/00 | **SPRITES DRAINED 2026-08-05 (#390): `lamb` + `lamb_lying`, evidence `lanes/l390-evidence/lamb_pen_pair_4x.png`. WIRED 2026-08-05 (#396 lane C):** `lamb_lying` (15,11) + `lamb` (17,11) as decor on the rail's own blocked cells, plus the quest-gated `makings_tend_lamb` at (18,11) as the limping third. Windowed read `lanes/l396c-evidence/02_pen_lambs_tend.png` (+ `pen_lambs_zoom_2x.png`) from `makings_loop`, which also re-gates the pen's own route; `gh330_lamb_pen_loop` re-run green at seed 7. |
 - [x] **(P2)** | Pisces guest sprite | inn guest seats | No eye pixels and an all-grey robe/hood ramp — reads as a faceless bust next to guests who all have readable faces in the same frame | v0.17 close machine-playtest, inn_guests_loop/04 | **DRAINED 2026-08-04 (#390).** Fixed by REGENERATING the rig (2 gens) rather than inpainting it (20-40 gens) — the cheaper repair was the better one. Hood pushed BACK, explicit face, idle + walk regenerated to keep his shipped pin counts. |
 - [ ] **(P3)** **Journal sub-rows lose their indent on wrap** (journal_quest_hints 00_journal_hint_on — the quest-hint line; journal_history 01_journal_history — the Postings detail rows, same shape). First line indents, continuation lines return flush-left and read as body text rather than as part of the sub-row. One hanging-indent change on the shared sub-row style covers both.
 - [ ] **(P3)** **Skills-tab scroll can rest on an orphan wrap fragment** (journal_categories 01_skills_tab_curated + 02_skills_tab_cursor_follow — top visible line is a bare "L5", the tail of a wrapped [Quick Movement] — Warrior L5 row). Cursor-follow scrolls to the cursor row without snapping the viewport to a row boundary, so a wrapped row's tail can head the page. Snap to the wrapped-line start of the topmost whole row.
@@ -3711,7 +3723,7 @@ immediately, since a re-run clobbers them.
 | `window_blue` reads as a grey slab | the real four-pane window on `Furniture.png` `[132,355,24,25]` (already-licensed sheet), 0.85 | `lanes/l390-evidence/rug_inengine_pair.png` + visible again in the hearth pair |
 | `rug_woven_cream` reads as a stain | regenerated as a real weave, judged against `rug_woven_red`'s medallion | `lanes/l390-evidence/window_rug_inengine_pair.png` |
 | `worn_grass_bed` is a clump of blades, not a hollow | the bespoke bedded hollow this row asked for BY NAME, shed antler included | `lanes/l390-evidence/worn_grass_bed_pair_4x.png` |
-| lamb pen has no lambs | `lamb` + `lamb_lying` (two silhouettes, not a retint) — SPRITES ONLY, wiring owed by #396's branch | `lanes/l390-evidence/lamb_pen_pair_4x.png` |
+| lamb pen has no lambs | `lamb` + `lamb_lying` (two silhouettes, not a retint); wired into the pen by #396 lane C, third lamb included | `lanes/l390-evidence/lamb_pen_pair_4x.png` + in-engine `lanes/l396c-evidence/02_pen_lambs_tend.png` |
 | healed corusdeer stands up as a DOE while the copy names antlers | `corusdeer_stag`, antler tips ember-warmed so "barely glow" stays true; swapped inside the existing `visual_states` arm, sprite field only | `lanes/l390-evidence/corusdeer_stag_pair_4x.png` |
 
 **What a later pass should NOT undo here.** `hearth` must stay one id: the
@@ -3730,3 +3742,86 @@ NOT art rows at all — they need a floor-material pass across maps this lane do
 not own, a per-layer night knob that does not exist in the mood schema, or a
 dialogue-time separation in `world.gd`. Filing them as art kept them looking
 cheap for three milestones. They are not.
+
+## #396 close wave (2026-08-06) — `a_shepherd` eye-gate, PASSED
+
+| row | verdict | evidence |
+|---|---|---|
+| `a_shepherd` must read as a DIFFERENT PERSON from `a_hunter` at gameplay zoom, not a re-dressed one (the v0.16.1 copy-only disambiguation failed exactly here, and the tint directive forbids shade variants standing in for distinct things) | **PASS — eye-gate read by the controller, recorded here.** The brimmed felt hat and the long crook carry the read at 1x: the hat breaks the head outline the whole village cast shares, and the crook puts a vertical line outside the body silhouette that no other Riverfarm figure has. Judged against the three neighbours he actually stands beside (`human_laborer` 30.2px, `citizen_f` 30.0px, retired `a_hunter` 33px) at the shipped `render_scale` 0.3837 = 33px, so he is the same size class and still a distinct shape | `potential_assets/pixellab_2026-08-05_396/silhouette_check_1x.png` (the gate shot — cold read at gameplay zoom) + `silhouette_check.png` (4x), `facings_8x.png`, `idle_filmstrip.png` / `walk_filmstrip.png` (all three kept facings, both clips), `rot_{north,east,south}.png`. In-engine, standing in the village beside the pen: `lanes/l396c-evidence/02_pen_lambs_tend.png` (+ `pen_lambs_zoom_2x.png`) |
+
+**What a later pass should NOT undo.** `render_scale` 0.3837 and anchor
+`[0.4946, 0.7337]` are both MEASURED, not chosen: the v3 canvas is 184px and
+the anchor's x comes off the BOOT span, because the crook skews the full alpha
+bbox and anchoring to it walks the figure sideways off its cell. The hat and
+crook are the silhouette contract — a later re-cut may repaint him, but a
+hatless or crookless shepherd re-opens the disambiguation row that the copy
+alone could not close.
+
+### #396 close machine playtest — new findings (2026-08-06)
+
+Six scenes, windowed, serial, real overlay; evidence under
+`lanes/l396-close-evidence/<script>/`. Every scene PASSED (verdicts in the
+close-wave report); these are the rows the screenshots opened. One finding was
+FIXED inside the wave and is recorded as fixed.
+
+- [x] **(FIXED in-wave)** | `winter_topic` paged | `riverfarm_hunter.json` | The
+  voice amendment pushed the node to 205 chars, one over `PAGE_CHAR_BUDGET`
+  (200), with no sentence boundary in the last 20% — so it split into page 1
+  plus a SECOND PAGE CONTAINING "…them." | `winter_teeth_talk/03_winter_topic`
+  (the committed shot is the FIXED single-page render; the "…them." frame was
+  the pre-fix capture) | **Trimmed to 186 chars, single page, retaken
+  windowed.** Authoring rule this teaches: a T1 node past ~190 chars is a
+  two-pager, and QA screenshots show the LAST page (`_is_qa()` jumps there), so
+  a tiny tail page is invisible to a headless-green run and obvious in a shot.
+- [ ] **(P2)** | village rows 12–13 sit inside the field-skill legend panel's
+  band | `riverfarm_village` | With details expanded (the default — the button
+  reads "Hide details [H]"), the bottom-anchored panel covers ~2 cell rows
+  whenever the camera is bottom-clamped. Both of #396's non-combat route props
+  live there: `wolf_sign_trail` [4,13] is two-thirds behind the panel at the
+  moment of interaction, and `winter_fold_hurdles` [15,12] has only the top of
+  its tall sprite showing — with the PC ITSELF fully occluded while standing at
+  [14,12]. The target reticle and the toasts still read, so it is friction, not
+  a blocker | `winter_teeth_talk/01_wolf_sign_before`,
+  `winter_teeth_work/00_hurdles_stacked` | Fix candidates: move both props up a
+  row (cheap, but re-derives two canonicals' routes), or give the panel a
+  world-clearance rule like the hotbar's `HINT_BAND_CLEARANCE`. Lane C already
+  paid this tax once — the tend prop sits at row 11 for exactly this reason. |
+- [ ] **(P3)** | "Stacked Hurdles" reads as another fence post | `riverfarm_village`
+  | `winter_fold_hurdles` borrows `riverfarm_fence_ns`, so the WORK route's
+  material cache reads as one more upright beside the pen rail rather than
+  hazel hurdles cut and stacked, which is what its observe promises. The
+  sprite choice was deliberate (an EW panel merged INTO the rail run) — the
+  answer is a stacked-bundle sprite, not another fence rotation |
+  `winter_teeth_work/00_hurdles_stacked` (present) vs `01_fold_rebuilt`
+  (consumed — the same frame minus the post) |
+- [ ] **(P3)** | night watch: the ALLY's HP is the one number you cannot read |
+  `river_wolf_pack` arena | The wolves' numerals are white-on-dark and legible;
+  the PC's and A Shepherd's sit on their own near-black night sprites
+  ("15/40" for the shepherd needed a 4x crop to read). New stakes, same
+  carried "night maps' inverted hierarchy" row: this fight is the first where a
+  player must decide whether to protect an ally, which means reading his HP |
+  `winter_teeth_fight/01_night_watch_surrounded` |
+- [ ] **(P3)** | `riverfarm_bank_washout` reads as an unrecognizable grey smear
+  | `riverfarm_village` | The prop borrows `deep_fissure` (a dungeon sprite);
+  at [20,9] it half-overhangs the river tiles and becomes the brightest-value
+  object in that quadrant, pulling the eye to nothing. Its observe is a scoured
+  trench down to the water — a bank-erosion sprite, or the fissure re-tinted to
+  wet earth | visible in every village capture, clearest in
+  `winter_teeth_talk/00_shepherd_hub_offer` |
+- [ ] **(P4)** | the shepherd's hub opens on the exit line | `riverfarm_hunter.json`
+  | With `heard_winter_teeth` unbanked the visible rows are
+  "1. Just passing through." then "2. The wolves. Say what you need.", cursor
+  defaulting to row 1 — a player who confirms on reflex leaves without hearing
+  the quest exists. It is the cursor-pin rule's cost (the offer row was
+  appended after the frozen ask slot), and reordering re-pins every legacy
+  fixture's hub indices — ruling 11's exact hazard, so it needs a lane that can
+  re-derive them | `winter_teeth_talk/00_shepherd_hub_offer`,
+  `winter_teeth_prebank/00_prebank_hub` |
+
+**What genuinely lands** (keep this — it tells the next session what not to
+break): the hat-and-crook silhouette is unmistakable at gameplay zoom, even
+half-lit at night; the three-lamb pen reads as a pen with sheep and the
+reticle picks out the limping third; all three route toasts render their full
+three lines with no fold clipping; and the PEAK line
+("Wolves and me both, working round something neither of us can see.") lands
+on one page with the quest-complete toast beside it.
