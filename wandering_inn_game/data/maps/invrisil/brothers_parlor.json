@@ -314,7 +314,7 @@
    "sprite": "wilovan",
    "facing": "down",
    "observe": "A Gnoll in a vest cut sharper than his manners need to be, tall hat squared like it's holding a rank. He watches the room's exits before he watches you.",
-   "friendly_line": "He inclines the hat half an inch — a genuine courtesy, not a performance of one. \"A pleasure,\" he says, and seems to mean it.",
+   "friendly_line": "He inclines the hat half an inch — a genuine courtesy, not a performance of one. \"A pleasure,\" he says.",
    "talk_pool": [
     "Evening. Might I say, {addr}, you carry yourself like a person things happen to. We collect a few of those.",
     "Manners cost nothing and buy everything, in my experience. Mind the rug — Normen fusses over it more than he'll admit.",
@@ -490,7 +490,7 @@
    ],
    "display_name": "The Good Shelf",
    "sprite": "shelf_bottles",
-   "observe": "Bottles ranked by who drinks them. The top row comes down after jobs that went well."
+   "observe": "Bottles arranged by loyalty rather than label. The top row is for after jobs that went well."
   },
   {
    "id": "parlor_keg_a",
@@ -578,7 +578,7 @@
    ],
    "display_name": "The Long Shelf",
    "sprite": "library_shelf",
-   "observe": "Ledgers with no titles and boxes with no labels. The dust on the lids stops at the third box along."
+   "observe": "The ledgers have no titles and the boxes have no labels, and the third box along still carries a shipping tag with the writing inked out."
   },
   {
    "id": "parlor_cot_a",
@@ -636,7 +636,7 @@
       "brothers_marker": 1
      },
      "gold": 3,
-     "toast": "Marker-holder's rate. The line you take is longer, the door further out, and nobody asks you to account for the way round you took getting there."
+     "toast": "Marker-holder's rate. A longer line, a door further out of the way, and three gold for it instead of two."
     }
    ]
   }

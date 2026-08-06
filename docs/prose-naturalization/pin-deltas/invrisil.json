@@ -8,6 +8,13 @@
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/adventurers_rest.json",
+  "field_path": "$.entities[5].observe",
+  "entity_id": "rest_trophy_rack",
+  "old": "Bows, a cracked buckler, one very good spear. Nothing here was donated. Every piece was left behind by somebody who did not come back for it, and the house does not say which.",
+  "new": "Bows, a cracked buckler, one very good spear. Nothing here was donated. Each piece has a name cut into it somewhere, and the house has put no card under any of them."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/invrisil/adventurers_rest.json",
   "field_path": "$.entities[6].observe",
   "entity_id": "rest_bar_counter_l",
   "old": "Elbow-polished to a shine along its whole length except one arm's width at the far end, which is somebody's, permanently.",
@@ -57,17 +64,17 @@
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/brothers_parlor.json",
+  "field_path": "$.entities[1].friendly_line",
+  "entity_id": "wilovan",
+  "old": "He inclines the hat half an inch — a genuine courtesy, not a performance of one. \"A pleasure,\" he says, and seems to mean it.",
+  "new": "He inclines the hat half an inch — a genuine courtesy, not a performance of one. \"A pleasure,\" he says."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/invrisil/brothers_parlor.json",
   "field_path": "$.entities[2].sleep_toast",
   "entity_id": "brothers_guest_couch",
   "old": "Even a couch here fits like it was fitted for you. The Brothers do nothing halfway, not even hospitality.",
   "new": "Even the couch here fits like it was fitted for you. You sleep through to morning without waking once."
- },
- {
-  "file": "wandering_inn_game/data/maps/invrisil/brothers_parlor.json",
-  "field_path": "$.entities[9].observe",
-  "entity_id": "parlor_bottle_shelf",
-  "old": "Bottles arranged by loyalty rather than label. The top row is for after jobs that went well.",
-  "new": "Bottles ranked by who drinks them. The top row comes down after jobs that went well."
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/brothers_parlor.json",
@@ -81,7 +88,7 @@
   "field_path": "$.entities[16].observe",
   "entity_id": "parlor_stash_shelf",
   "old": "Ledgers with no titles and boxes with no labels. Everything here is filed under later.",
-  "new": "Ledgers with no titles and boxes with no labels. The dust on the lids stops at the third box along."
+  "new": "The ledgers have no titles and the boxes have no labels, and the third box along still carries a shipping tag with the writing inked out."
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/brothers_parlor.json",
@@ -112,6 +119,13 @@
   "new": "You take the top line off the slate and walk it across Invrisil, no questions asked at either end. Two gold in your hand, and behind you a wet cloth is already going over the line."
  },
  {
+  "file": "wandering_inn_game/data/maps/invrisil/brothers_parlor.json",
+  "field_path": "$.entities[20].variants[0].toast",
+  "entity_id": "parlor_errand_slate",
+  "old": "Marker-holder's rate. The line you take is longer, the door further out, and nobody asks you to account for the way round you took getting there.",
+  "new": "Marker-holder's rate. A longer line, a door further out of the way, and three gold for it instead of two."
+ },
+ {
   "file": "wandering_inn_game/data/maps/invrisil/invrisil_boulevard.json",
   "field_path": "$.entities[1].skill_hint_toast",
   "entity_id": "rooftop_line",
@@ -123,21 +137,21 @@
   "field_path": "$.entities[1].locked_toast",
   "entity_id": "rooftop_line",
   "old": "Slate roofs and chimney smoke. The city keeps its second story to itself.",
-  "new": "Slate roofs and chimney smoke. No way up from this side of the street."
+  "new": "Slate roofs and chimney smoke, one ridge behind another. Picking a line through it takes sharper eyes than yours."
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/invrisil_boulevard.json",
   "field_path": "$.entities[3].observe",
   "entity_id": "boulevard_to_adventurers_rest",
   "old": "A house sign with no name on it, only a hand of cards face down and a hat on a peg. Half the silver in this city drinks here and none of it says so out loud.",
-  "new": "A house sign with no name on it, only a hand of cards face down and a hat on a peg. Two men come out while you stand there, and neither of them holds the door."
+  "new": "A house sign with no name on it, only a hand of cards face down and a hat on a peg. Two men come out and let the door swing shut behind them."
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/invrisil_boulevard.json",
   "field_path": "$.entities[5].observe",
   "entity_id": "invrisil_extra_1",
   "old": "She holds the slip at arm's length, then the shopfront number, then the slip again. Whatever address she was given, this street declines to be it.",
-  "new": "She holds the slip at arm's length, then the shopfront number, then the slip again. Two doors on this stretch are numbered eleven."
+  "new": "She holds the slip at arm's length, then the shopfront number, then the slip again. Her slip and the door agree on the number and disagree on the name."
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/invrisil_boulevard.json",
@@ -151,7 +165,7 @@
   "field_path": "$.entities[6].observe",
   "entity_id": "invrisil_extra_2",
   "old": "Blue-grey wool, cut the way this city cuts it, and a walking pace she has no intention of breaking for you or anyone.",
-  "new": "Wool the colour of wet slate, cut close at the shoulder, and a walking pace that does not change when you step into her line."
+  "new": "She is in blue-grey city wool, and her walking pace does not change when you step into her line."
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/invrisil_boulevard.json",
@@ -193,7 +207,7 @@
   "field_path": "$.entities[16].observe",
   "entity_id": "boulevard_glazier",
   "old": "Panes racked like coins on edge. The glazier watches the street through his own stock, which is either pride or advertising.",
-  "new": "Panes racked like coins on edge. The glazier watches the street through his own stock."
+  "new": "A pane goes up onto the rack on edge, coin-thin, and the glazier lines his eye along it to the street."
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/invrisil_boulevard.json",
@@ -201,13 +215,6 @@
   "entity_id": "boulevard_cordwainer",
   "old": "Boots on pegs, sorted by wear. The pair in the window has walked to Pallass and back, if the sign is honest. Signs here mostly are.",
   "new": "Boots on pegs, sorted by wear. The pair in the window has walked to Pallass and back, if the sign is honest."
- },
- {
-  "file": "wandering_inn_game/data/maps/invrisil/invrisil_boulevard.json",
-  "field_path": "$.entities[19].observe",
-  "entity_id": "boulevard_coyle_front",
-  "old": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. The frontage behind it is one narrow door and a clean window. Everything that actually moves through this firm goes round the side, on wagons, after dark.",
-  "new": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. Behind it, one narrow door and a clean window, and nothing coming in or out of either while you watch."
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/invrisil_boulevard.json",
@@ -232,6 +239,13 @@
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/mercantile_alleys.json",
+  "field_path": "$.entities[5].on_skill_use.variants[0].toast",
+  "entity_id": "counting_house_ledger",
+  "old": "[Appraise Foe] — Now you know the gap in the watch, the true ledger comes easy: tucked behind a false-backed drawer no honest desk needs. Forty gold to a 'removal man,' dated the night before Coyle's own theft: his hand, his numbers, his mistake. The drawer's second catch gives up a shallow hidden safe behind it, empty now but scored where something heavier than coin sat until recently.",
+  "new": "[Appraise Foe] — Now you know the gap in the watch, the true ledger comes easy: tucked behind a false-backed drawer no honest desk needs. Forty gold to a 'removal man,' dated the night before Coyle's own theft: his hand, his numbers, his mistake."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/invrisil/mercantile_alleys.json",
   "field_path": "$.entities[5].locked_toast",
   "entity_id": "counting_house_ledger",
   "old": "The desk's own ledger reads clean, which is exactly the kind of clean a man pays for. You don't have the eye to find the real one. Not yet.",
@@ -249,7 +263,7 @@
   "field_path": "$.entities[9].once_per_waking_toast",
   "entity_id": "alley_footpad_snag_a",
   "old": "The stash spot sits empty. Knowing this alley, someone will restock it.",
-  "new": "The stash spot sits empty. Nothing more to lift here today."
+  "new": "The line is coiled where you dropped it. The crate it was tied to is open and bare."
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/mercantile_alleys.json",
@@ -305,27 +319,34 @@
   "field_path": "$.entities[3].observe",
   "entity_id": "stationer_ruled_paper",
   "old": "Three weights, stacked lightest at the top, each with its price chalked on the edge of the shelf rather than the stock. Nothing here is priced where you can carry the number away.",
-  "new": "Three weights, stacked lightest at the top, each with its price chalked on the shelf edge rather than the stock. One of the three prices has been rubbed out and written again."
+  "new": "Stacked lightest at the top, each price chalked on the shelf edge rather than the stock. The stock itself carries no mark at all."
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/stationer.json",
   "field_path": "$.entities[4].observe",
   "entity_id": "stationer_ink_rank",
   "old": "Four inks, and the fourth is twice the price of the third for a difference you can only see in daylight. Somebody in this city has bought it every week for years.",
-  "new": "Four inks, and the fourth is twice the price of the third for a difference you can only see in daylight. The third bottle has not been opened."
+  "new": "Four inks in the rank, and the fourth costs twice what the third does for a difference that only shows in daylight. The man behind the counter carries a bottle to the window before he will name a price for it."
+ },
+ {
+  "file": "wandering_inn_game/data/maps/invrisil/stationer.json",
+  "field_path": "$.entities[5].observe",
+  "entity_id": "stationer_counter_l",
+  "old": "Worn smooth in one narrow band where a hundred people a week have leaned to sign something they had already decided to sign.",
+  "new": "Worn smooth in one narrow band where the signing gets done, forearm-wide, and rough as new wood either side. A second band at the far end is much shorter and worn just as deep."
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/stationer.json",
   "field_path": "$.entities[7].observe",
   "entity_id": "stationer_wax_tray",
   "old": "Nine colours of wax and one blank seal for hire. The blank is the most used thing in the shop, by a distance.",
-  "new": "Nine colours of wax and one blank seal for hire. The blank comes back to the tray still warm."
+  "new": "All nine colours on the tray have cooled hard in their slots. The tenth slot, cut for the blank seal for hire, sits empty."
  },
  {
   "file": "wandering_inn_game/data/maps/invrisil/stationer.json",
   "field_path": "$.entities[8].observe",
   "entity_id": "stationer_contract_shelf",
   "old": "Printed forms with the terms left open, sorted by how badly the second party will want to argue later. The thickest stack is the most reasonable-looking one.",
-  "new": "Printed forms with the terms left open, sorted by how badly the second party will want to argue later. The thickest stack has slipped forward off the shelf edge."
+  "new": "Blank contracts with the terms left open, sorted by how badly the second party will want to argue later. Read the thickest stack twice."
  }
 ]

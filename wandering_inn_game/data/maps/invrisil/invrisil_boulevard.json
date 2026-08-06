@@ -1033,7 +1033,7 @@
    "sprite": "riverfarm_fence_ew",
    "requires_skill": "eagle_eyes",
    "skill_hint_toast": "The rooftops run straighter than the streets. Sharp enough eyes could follow one from here.",
-   "locked_toast": "Slate roofs and chimney smoke. No way up from this side of the street.",
+   "locked_toast": "Slate roofs and chimney smoke, one ridge behind another. Picking a line through it takes sharper eyes than yours.",
    "on_skill_use": {
     "accomplishment": "scouted_vantage",
     "toast": "[Eagle Eyes] — The rooftop line resolves into a second city: runners' shortcuts, a watcher over Coyle's block, and two gentlemen who are always politely elsewhere."
@@ -1067,7 +1067,7 @@
    ],
    "display_name": "The Adventurer's Rest",
    "sprite": "door",
-   "observe": "A house sign with no name on it, only a hand of cards face down and a hat on a peg. Two men come out while you stand there, and neither of them holds the door.",
+   "observe": "A house sign with no name on it, only a hand of cards face down and a hat on a peg. Two men come out and let the door swing shut behind them.",
    "to_map": "adventurers_rest",
    "to_cell": [
     6,
@@ -1154,7 +1154,7 @@
      "text": "A woman in a rose-dyed cloak checks a folded slip of paper against a shopfront number, unimpressed by both."
     }
    ],
-   "observe": "She holds the slip at arm's length, then the shopfront number, then the slip again. Two doors on this stretch are numbered eleven.",
+   "observe": "She holds the slip at arm's length, then the shopfront number, then the slip again. Her slip and the door agree on the number and disagree on the name.",
    "talk_pool": [
     "Number eleven. This is number eleven. The sign says Havvers and my slip says Bellworth, so one of them is lying.",
     "Three streets, four shopfronts, and not one of them the one I was sent to. Invrisil, that.",
@@ -1182,7 +1182,7 @@
      "text": "Blue-grey wool, city cut. She has already looked past you."
     }
    ],
-   "observe": "Wool the colour of wet slate, cut close at the shoulder, and a walking pace that does not change when you step into her line.",
+   "observe": "She is in blue-grey city wool, and her walking pace does not change when you step into her line.",
    "talk_pool": [
     "If you're asking directions, ask somebody stopped. I'm not stopped.",
     "It isn't rudeness. Look at anyone here for two seconds and you'll be sold something.",
@@ -1457,7 +1457,7 @@
     1
    ],
    "display_name": "A Glazier's Front",
-   "observe": "Panes racked like coins on edge. The glazier watches the street through his own stock.",
+   "observe": "A pane goes up onto the rack on edge, coin-thin, and the glazier lines his eye along it to the street.",
    "hide_sprite": true
   },
   {
@@ -1497,7 +1497,7 @@
     0.42,
     0.38
    ],
-   "observe": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. Behind it, one narrow door and a clean window, and nothing coming in or out of either while you watch."
+   "observe": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. The frontage behind it is one narrow door and a clean window. Everything that actually moves through this firm goes round the side, on wagons, after dark."
   },
   {
    "_comment": "v0.16 I1 (#306): kind flips prop -> door in place on the SAME already-blocked cell (20,1), id and `observe` byte-identical, so invrisil_walkthrough's player_blocked + [Observe] + toast pins stay exact. hide_sprite dropped so the facade reads enterable.",
