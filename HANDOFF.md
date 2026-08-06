@@ -37,7 +37,14 @@ CHOICE-LOG "390/396/397 execution wave" block (PixelLab priority,
 lamb-pen seam split, riverfarm-last for #397, merge order 390→396→397).
 PixelLab balance $0.83, 0 sub gens.
 
-USER-DIRECTED QUIESCE (running on credits; resume post-reset).
+WAVE 3 LIVE (post-reset 03:05, 8 Opus agents): fix waves 396-C, 396-D,
+397-invrisil, 397-pallass, 397-empty + reviews inn/liscor/fg. Lane C
+evidence PNGs READ BY CONTROLLER: PASS (lambs distinct standing/lying
+in the rail run; tend prop clear of HUD). Next after wave 3: pin-sync
+integrator -> 396 merge + Tasks 11-12 close -> 397 Phase 4 + riverfarm
+pass + Phase 5 blind read.
+
+Prior quiesce block (superseded):
 ALL wave-2 rulings + fix specs now IN-REPO:
 docs/superpowers/2026-08-05-wave2-rulings-and-fix-specs.md (petition
 grants/denials, all six fix-wave specs, integrator work list, H2
