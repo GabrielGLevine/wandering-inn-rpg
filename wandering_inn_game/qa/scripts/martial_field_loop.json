@@ -271,7 +271,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The floor stops. You put a boot to the lip and gravel goes over the edge and keeps going. Not without something to hold."
+    "text": "The floor stops. Gravel goes over the lip when your boot finds it and keeps going, and you are not crossing that without a line."
    },
    "timeout_sec": 5
   },
@@ -316,7 +316,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "You get a hand on the stub and lean out. Nothing about that gap is jumpable, and nothing about the stub is climbable. What it wants is a rope."
+    "text": "You get a hand on the stub and lean out. The gap is too wide to jump and the stub too smooth to climb; what it wants is a rope."
    },
    "timeout_sec": 5
   },
@@ -808,7 +808,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "[Rope Work] — You make the line fast to the stub, drop the tail across, and set it taut. The crossing is a crossing now, and it stays one."
+    "text": "[Rope Work] — You make the line fast to the stub, drop the tail across, and set it taut. The line holds your weight and stays where you put it."
    },
    "timeout_sec": 5
   },

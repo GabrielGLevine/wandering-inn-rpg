@@ -286,7 +286,7 @@
    "action": "wait_for_event",
    "type": "ui_toast_rendered",
    "payload_contains": {
-    "text": "You circle the block twice before it clicks: the modest COYLE AND SONS sign out front doesn't match the two wagons idling round the side, or the men counting crates like men who've been shorted before. Whatever Coyle's really running out of, the front door is the least of it."
+    "text": "You circle the block twice before it clicks. The modest COYLE AND SONS sign faces the boulevard; the two wagons idling round the side face the alley, and the men loading them count every crate twice."
    },
    "timeout_sec": 5
   },
@@ -411,7 +411,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Ruled paper in three weights, ink in four, and a card offering a scribe by the hour in a hand that is itself the advertisement. Half the contracts argued about on this street were bought here first, quietly, by both sides."
+    "text": "Ruled paper in three weights, ink in four, and a card offering a scribe by the hour in a hand that is itself the advertisement. The door is propped open, and two voices inside are arguing about a comma."
    },
    "timeout_sec": 5
   },
@@ -890,7 +890,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Even a couch here fits like it was fitted for you. The Brothers do nothing halfway, not even hospitality."
+    "text": "Even the couch here fits like it was fitted for you. You sleep through to morning without waking once."
    },
    "timeout_sec": 5
   },

@@ -909,7 +909,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Three plates ordered, one pot of stock. You could stretch it to cover them all. Nothing leaves the kitchen in your hands."
+    "text": "Three plates ordered, one pot of stock. Stretched right it would cover them all, but nothing leaves this kitchen in your hands."
    },
    "timeout_sec": 5
   },

@@ -245,7 +245,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Cold stone, unlit. The spiral wants something the press alone doesn't give."
+    "text": "Cold stone, unlit. The press alone does not wake it."
    },
    "timeout_sec": 5
   },
@@ -423,7 +423,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Cold days ago. They struck the camp properly, filled the pit, and took the rope with them. Whatever the Horns came down here for, they carried it home."
+    "text": "Cold days ago. They struck the camp properly, filled the pit, took the rope. Nothing left but the ring of stones."
    },
    "timeout_sec": 5
   },

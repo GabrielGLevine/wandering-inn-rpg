@@ -388,7 +388,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Pink lacquer, gone before you turned your head. The boulevard takes a moment to remember it was doing something, and nobody on it says the name out loud."
+    "text": "Pink lacquer, gone before you turned your head. The fronts on this stretch take a moment to remember they were busy, and not one of them looks north after it."
    },
    "timeout_sec": 5
   },
@@ -1071,7 +1071,7 @@
    "type": "dialogue_node",
    "payload_contains": {
     "speaker": "A Lady with a Ring Box",
-    "text": "I answered it in my own hand. Two lines and no apology in either of them. That is the first thing I have signed in eleven years that nobody had to be told about afterwards.",
+    "text": "I answered it in my own hand. Two lines and no apology in either of them. Eleven years, and every other thing I signed in them was explained to somebody afterwards. I have been adding that up all morning and the figure does not improve.",
     "options": [
      {
       "locked": false,
