@@ -260,7 +260,7 @@
    ],
    "display_name": "Sunken Crate",
    "sprite": "crate",
-   "observe": "A market crate, swollen and burst, washed down through a grate above. Whatever was in it fed something down here long ago.",
+   "observe": "A market crate, swollen and burst, washed down through a grate above. Nothing left inside it but silt.",
    "on_interact_accomplishment": "searched_sunken_crate",
    "toast": "A ruined crate, half-sunk in silt. Merchant stamps still show under the rot: lost cargo, swallowed by the sewers and picked clean."
   },
@@ -348,7 +348,7 @@
    "skill_hint_toast": "A perfect vantage over the nest, for a trained eye.",
    "on_skill_use": {
     "accomplishment": "scouted_the_nest",
-    "toast": "[Appraise Foe] — You lie flat on the ledge and read the nest like a map. Two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper. That's where the rest of them are. Count, size, exits: you have it all, and you never had to draw a blade."
+    "toast": "[Appraise Foe] — You lie flat on the ledge and read the nest like a map: two sentries on the silk, a brood-hollow behind them, and a tunnel dropping away toward the Dungeon proper. The rest of them are down that tunnel."
    },
    "locked_toast": "The ledge overlooks the nest: a perfect vantage, if you had the eye to read one. You don't, quite. Not yet."
   },
@@ -362,9 +362,9 @@
    ],
    "display_name": "Collapsed Fissure",
    "sprite": "deep_fissure",
-   "observe": "The floor gave way here, not long ago: a raw crack breathing air colder and older than the sewers ever hold. The claw-scores on its lip all point one way: down. Something climbed up through this, and means to again.",
+   "observe": "The floor gave way here, not long ago: a raw crack breathing air colder and older than the sewers ever hold. The claw-scores on its lip all point one way: down.",
    "on_interact_accomplishment": "found_the_fissure",
-   "toast": "A fresh fissure splits the sewer floor, exhaling a dry, breathing cold from far below. Deep gouges rake the stone lip. Something big has been using this as a door.",
+   "toast": "A fresh fissure splits the sewer floor, gouges raked deep into the stone lip. Something big has been using it as a door. A dry cold breathes up out of it and does not stop.",
    "door_when": {
     "requires": {
      "heard_the_deep_tremor": 1
@@ -439,8 +439,8 @@
    "display_name": "A Snagged Tripwire",
    "sprite": "snare_coil",
    "requires_skill": "disarm_trap",
-   "skill_hint_toast": "Wire, taut and low, strung off a rusted stanchion. Something in the nest rigged this. Careful hands could clear it.",
-   "locked_toast": "A length of wire runs low across the passage, pinned to a rusted stanchion. Whatever it's meant to catch, you can't tell how to spring it safe.",
+   "skill_hint_toast": "Wire, taut and low, strung off a rusted stanchion. Careful hands could clear it.",
+   "locked_toast": "A length of wire runs low across the passage, pinned to a rusted stanchion. You can't tell how to spring it safe.",
    "on_skill_use": {
     "accomplishment": "trap_disarmed",
     "toast": "You ease the wire off its catch and coil it loose. A few scavenged links clatter free, worth a coin or two melted down.",
@@ -461,10 +461,10 @@
    "sprite": "snare_coil",
    "requires_skill": "disarm_trap",
    "skill_hint_toast": "Bone and wire, tangled at the drain mouth, rigged for something bigger than rats. A steady hand could clear it.",
-   "locked_toast": "Bone and wire, tangled at the drain mouth. It has the shape of a trap. You can't read it well enough to touch it — that's trap-craft, a rogue's trade.",
+   "locked_toast": "Bone and wire tangled at the drain mouth, in the shape of a trap. You can't read it well enough to touch it — that's trap-craft, a rogue's trade.",
    "on_skill_use": {
     "accomplishment": "trap_disarmed",
-    "toast": "You work the bone pins loose and unwind the wire. A few coins sit wedged in the silt beneath it, dropped by whoever it once caught.",
+    "toast": "You work the bone pins loose and unwind the wire. A few coins come loose from the silt beneath it.",
     "gold": 1
    }
   },
@@ -483,7 +483,7 @@
      "burned_the_debris": 1
     }
    },
-   "observe": "A little iron strongbox, silt-caked, dragged here by someone who never came back for it.",
+   "observe": "A little iron strongbox, silt-caked, dragged into the nook and left there.",
    "on_interact_accomplishment": "opened_nook_strongbox",
    "once": true,
    "gold": 6,

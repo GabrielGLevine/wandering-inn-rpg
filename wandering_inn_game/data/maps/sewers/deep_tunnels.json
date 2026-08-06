@@ -123,9 +123,9 @@
    ],
    "display_name": "Cold Hearth",
    "sprite": "cold_hearth",
-   "observe": "A ring of fire-blackened stones, the ash inside long dead and cold. Something sat here in the dark and knew how to keep a fire — or learned how, the way they say these things learn, when the moon is full and their minds come clear.",
+   "observe": "A ring of fire-blackened stones, the ash inside long dead and cold. Raskghar keep a fire when the moon is full and their minds come clear; this ash is layered, lit and relit.",
    "on_interact_accomplishment": "found_cold_hearth",
-   "toast": "A fire-pit ringed with blackened stones, its ashes cold. Whoever tended it had hands enough to strike a spark, and left gnawed bones banked around the edge, cracked for their marrow."
+   "toast": "A fire-pit ringed with blackened stones, gnawed bones banked around the edge and cracked open for their marrow. Nothing in the ash has been warm for a long time."
   },
   {
    "id": "gnaw_pile",
@@ -136,9 +136,9 @@
    ],
    "display_name": "Gnawed Bones",
    "sprite": "gnaw_pile",
-   "observe": "A midden of cracked bones, marrow sucked clean. Gnoll, most of them. A few too large to name. They have been sorted, almost stacked, as though something down here counts its meals and keeps the score.",
+   "observe": "A midden of cracked bones, marrow sucked clean. They have been sorted by size, almost stacked. Gnoll, most of them; a few too large to name.",
    "on_interact_accomplishment": "found_gnaw_pile",
-   "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's. They are stacked, not scattered. And that is worse than if they had been."
+   "toast": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's."
   },
   {
    "id": "bone_pile_tunnels",
@@ -166,7 +166,7 @@
    ],
    "display_name": "Raskghar Scouts",
    "sprite": "raskghar_scout",
-   "observe": "Two of them crouch where the tunnel narrows, moon-grey and mountain-shouldered, knuckles to the stone. Their small eyes track you without blinking. Between you and the deeper dark, they are the door — and the lock.",
+   "observe": "Two of them crouch where the tunnel narrows, moon-grey and mountain-shouldered, knuckles to the stone. Their small eyes track you without blinking. Behind them the tunnel keeps going down.",
    "arena": "cave_mouth",
    "enemies": [
     "raskghar_scout",
@@ -203,7 +203,7 @@
       "counter": "cleared_the_warren",
       "at": 1
      },
-     "observe": "Claw-gouges score the pillars, going quiet toward the back. The den is empty — cleared, then sealed. Whatever the warren was, it is a grave and a door now."
+     "observe": "Claw-gouges score the pillars, going quiet toward the back. The den is empty — cleared, then sealed."
     }
    ],
    "toast": "The tunnel widens into a pillared gallery, the air stirring with breath that is not your own. Something large shifts in the dark ahead, and the pacing scuffs go quiet. You have found the warren.",
@@ -216,7 +216,7 @@
      2,
      6
     ],
-    "open_toast": "The gallery floor slopes down past where the den used to be, into a chamber someone else has clearly been surveying."
+    "open_toast": "The gallery floor slopes down past where the den used to be. You come out in the delve's staging chamber."
    }
   },
   {
@@ -282,7 +282,7 @@
   {
    "id": "warren_side_snare",
    "once_per_waking": true,
-   "once_per_waking_toast": "You've picked this snare clean today. The warren restocks on its own schedule.",
+   "once_per_waking_toast": "You've picked this snare clean today. Nothing has been re-rigged since.",
    "kind": "prop",
    "cell": [
     9,
@@ -291,8 +291,8 @@
    "display_name": "A Raskghar Snare",
    "sprite": "snare_coil",
    "requires_skill": "disarm_trap",
-   "skill_hint_toast": "Sinew and bone hooks, strung low across the gallery floor. Whatever set it hunts down here, same as you.",
-   "locked_toast": "Sinew and bone hooks, strung low across the gallery floor. It has the shape of something meant to catch. You don't know how to spring it safely.",
+   "skill_hint_toast": "Sinew and bone hooks, strung low across the gallery floor. Trained hands would start with the hooks.",
+   "locked_toast": "Sinew and bone hooks, strung low across the gallery floor. You don't know how to spring it safely.",
    "on_skill_use": {
     "accomplishment": "trap_disarmed",
     "toast": "You work the hooks free of the sinew line and let it fall slack. Wedged in the rig: a couple of coins, old and green with tarnish.",
