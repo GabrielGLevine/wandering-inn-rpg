@@ -28,7 +28,7 @@
        "heard_olesm_briefing": 1
       }
      },
-     "text": "Still up here? The gallery won't map itself. You have the map, and the grate is still open. Go."
+     "text": "Still up here? The gallery won't map itself. You have the map. Mark what you find on it and bring it back to this desk. Go."
     },
     {
      "requires": {
@@ -522,7 +522,7 @@
   },
   "chess": {
    "speaker": "Olesm",
-   "text": "Both sides, yes. You cannot learn how the enemy thinks from one side of the board. You have to want to win as them. A human beat me across this very board once, so thoroughly I nearly thanked her. I did thank her.",
+   "text": "Both sides, yes. I miss half the position if I only ever sit in one chair. You have to want to win as them. A human beat me across this very board once, so thoroughly I nearly thanked her. I did thank her, and then I played her opening against myself for a month.",
    "options": [
     {
      "text": "You lost, and you're pleased?",

@@ -53,7 +53,7 @@
        "lattice_witch_lore": 1
       }
      },
-     "text": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's, and she fed hers too. I have three entries on feeding now and nothing to file them under."
+     "text": "Ward-lore from a hedge witch. Do not make that face — hers is older than the Guild's, and she fed hers too. The two traditions agree that a ward can be fed, and between them they have not produced a word for the practice. I shall be supplying one before the month is out."
     },
     {
      "requires": {
@@ -337,7 +337,7 @@
   },
   "horns_bridge": {
    "speaker": "Pisces",
-   "text": "Horns of Hammerad. Yes. There is a name on their roster and a share of their debts attached to it. That is membership. I am not in the hole with them because the reading is here, and nobody else in this city can do it. Ceria calls that being hired. She is welcome to.",
+   "text": "Horns of Hammerad. Yes. There is a name on their roster and a share of their debts attached to it. That is membership. I am not in the hole with them because the reading is here, and nobody else in this city can do it. Ceria calls that being hired. Which is accurate as far as the coin goes. I have never troubled to correct the rest of it, and I would rather you did not either.",
    "options": [
     {
      "text": "Four of you, then.",

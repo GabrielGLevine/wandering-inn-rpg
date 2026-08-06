@@ -12,7 +12,7 @@
        "night"
       ]
      },
-     "text": "Stall closes with the light. Come back at a decent hour. If it will not keep, knock hard and keep knocking — the shutters muffle everything."
+     "text": "Stall closes with the light. Come back at a decent hour, or knock and keep at it. The front of the table is boxed and the good stock went in first. What is left out is cloth and trestles."
     },
     {
      "requires": {
@@ -299,7 +299,7 @@
   },
   "goblin_run": {
    "speaker": "Krshia",
-   "text": "Hrr. South. Grain, salt, hide-thread, and a cart that does not stop where anyone is counting. Do not tell me whose hands take it off the cart. I will price it as wool.",
+   "text": "Hrr. South. Grain, salt, hide-thread, and a cart that does not stop where anyone is counting. I will not ask whose hands it ends in. On my books it is wool, and you pay the wool price.",
    "options": [
     {
      "text": "That's all I'm asking.",

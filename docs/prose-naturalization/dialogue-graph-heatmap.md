@@ -1,5 +1,17 @@
 # Dialogue graph heatmap — GH#397 Phase 3 targeting
 
+> **POINT-IN-TIME TARGETING ARTIFACT — superseded once Phase 3 lands.** The
+> scores, densities and quoted strings below describe the corpus as it stood
+> when Phase 3 was *aimed*, and Phase 3 has since rewritten some of the very
+> strings quoted here. Read it as the reading order that was used, never as a
+> description of the current tree. **Do not regenerate it to "fix" the drift**:
+> a re-run would silently re-rank against already-revised prose and destroy the
+> record of what was targeted and why. The live-tree measurement is Phase 4's
+> job. **`inventory.jsonl` must NEVER be regenerated** either — it is
+> `verify-untouched`'s baseline, and rebuilding it over revised prose would make
+> the holdout/protected-keep guard vacuously pass. (Hand-added header, 2026-08-05,
+> #397 dialogue lane fix wave; a regeneration drops it.)
+
 **GENERATED** by `qa/scripts/extract_prose.py heatmap` — seed 397, python 3.12.3, deterministic (a re-run on the same tree is byte-identical). Do not hand-edit.
 
 > ## ⚠ THE RANKING DOES NOT GRANT PERMISSION TO EDIT
