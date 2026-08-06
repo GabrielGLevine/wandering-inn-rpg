@@ -37,7 +37,15 @@ CHOICE-LOG "390/396/397 execution wave" block (PixelLab priority,
 lamb-pen seam split, riverfarm-last for #397, merge order 390→396→397).
 PixelLab balance $0.83, 0 sub gens.
 
-State at CAUTION park #2 (session 76%, reset ~150m from 18:45):
+WAVE 2 LIVE (fresh window 22:05, six Opus lanes dispatched):
+396 Lane C (/tmp/wi-396-c, Tasks 9-10 + lamb wiring rider) + Lane D
+(/tmp/wi-396-d, Tasks 7-8 + rulings 5/9/11); 397 lanes pallass/
+invrisil/empty-regions/dialogue (worktrees /tmp/wi-397-*, pin-deltas
+to docs/prose-naturalization/pin-deltas/). QUEUED on completions:
+397 liscor, inn, floodplains+garden map lanes; then pin-sync
+integrator; then reviews, merges, Tasks 11-12, Phases 4-5.
+
+Prior state (superseded, kept for context):
 - **#390 MERGED + CLOSED** (PR #399, squash 16b21ee1, 7/7 checks read
   then merged; carried-rows follow-up FILED as #400; worktree+branch
   cleaned, cherry-checked). PixelLab $0.46 left (rate ruling 8).
