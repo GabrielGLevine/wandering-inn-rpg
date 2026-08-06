@@ -13,8 +13,7 @@
    -1
   ],
   "classes": {
-   "warrior": 5,
-   "mage": 5
+   "warrior": 10
   },
   "accomplishments": {
    "met_relc": 1,
@@ -29,7 +28,7 @@
    "catalyst_delivered": 1,
    "riverfarm_attuned": 1,
    "won_combat": 3,
-   "melee_hit": 18,
+   "melee_hit": 57,
    "learned_magic_from_pisces": 1,
    "spell_cast": 13,
    "horns_dig_started": 1,
@@ -48,14 +47,20 @@
   "pending_consolidation": {},
   "used_skills": [],
   "inventory": [
-   "rusty_sword"
+   "gnollish_hunting_knife",
+   "leather_jerkin",
+   "hedge_ward_charm",
+   "hunters_fang_talisman"
   ],
   "equipped": {
-   "weapon": "rusty_sword",
-   "armor": ""
+   "weapon": "gnollish_hunting_knife",
+   "armor": "leather_jerkin",
+   "accessory_1": "hedge_ward_charm",
+   "accessory_2": "hunters_fang_talisman"
   },
   "container_state": {},
   "actions_since_sleep": 0,
   "rng_state": "-1966449618399012673"
- }
+ },
+ "_comment_396_build": "#396 BUILD MOVE (ruling 5, stop-signal discharge). Was warrior5+mage5 with a rusty_sword. Task 6 removed the ally from briar_collectors AND briar_collectors_deep, and that build CANNOT win the solo shallow briar fight at any reasonable seed -- 13/13 probed seeds FAIL, and the post-retune solo win rates say why: 0.14 shallow / 0.28 deep at warrior5_mage5 against 0.69 / 0.63 at t3_warrior10. Seed-shopping a 0.14 fight is dishonest even when a seed exists. So the fixture moved to the tier's own reference shape, the GEARED t3_warrior10 build sim_combat_batch measures both briar cells and river_wolf_pack at: warrior 10 (melee_hit raised 18 -> 57 for the L10 requires), gnollish_hunting_knife + leather_jerkin + hedge_ward_charm + hunters_fang_talisman -- copied field-for-field from invrisil_setting_fight_start, the shipped geared-t3 template. COMBAT_BAND_FIXTURES already pins this fixture at 10 and warrior 10 still sums to 10, so the band row is unchanged. mage is gone; learned_magic_from_pisces/spell_cast stay banked as honest unrelated history (the flood_ledger_fight_start convention) and no Riverfarm gate reads them. riverfarm_fight's own classes.warrior assertion moved 5 -> 10 with it. SEED DERIVATION: probed the geared build against the reshaped canonical starting from the seed this fixture already carried (.seed=1) and it PASSES first try -- all three fights land victories with the two briars solo. So rng_state is UNCHANGED at seed 1's state; the build was the whole problem, not the draw. Kept rather than seed-shopped for novelty: an unchanged pin is the smallest honest diff, and passing at the tier's own measured rates (0.69 / 0.63 solo, plus the allied wolf fight) is a normal draw rather than an outlier fished out of a 0.14 fight. If a future roster change flips one, re-search seeds 2,3,4... through tests/_derive_rng_state.gd until all three land victories at one shared state."
 }
