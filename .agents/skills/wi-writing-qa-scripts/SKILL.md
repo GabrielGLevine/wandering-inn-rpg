@@ -23,6 +23,7 @@ Scripts are JSON in `qa/scripts/<name>.json`, run by `qa/test_driver.gd`
 | `press` | `name` | `ACTION_KEYS`: move_up/down/left/right, interact, confirm, cancel, cycle, journal, hotbar_1/2/3, end_turn |
 | `wait_for_event` | `type`, `timeout_sec` (5), `payload_contains` ({}), `from_start` (false) | since-marker below |
 | `assert_event_logged`/`_absent` | `type`, `payload_contains` | cumulative whole-run, not windowed |
+| `assert_field_skill_absent` | `skill` | #398: negative of `press_field_skill`, reads `field_hotbar_loadout()` directly — proves a weapon-gated skill is OFF the bar (falsifiable: equip the weapon family and it reds) |
 | `assert_event_count` | `type`, `count`, `payload_contains` | exact whole-run count — the once-semantics proof (`== 1` after a repeat press) |
 | `assert_dialogue_displayed` | (see driver) | pins the rendered dialogue panel |
 | `assert_state` | `path`, `equals` or `contains` | see below |
@@ -243,6 +244,23 @@ every fixture state whose counters satisfy the new rows —
 seven v0.16 rows. Before landing leads rows, grep `qa/scripts` for
 `lead_lines` and re-derive each pin from a real run (the growth is the
 feature; the payloads double as gating proof for the new rows).
+
+## #398 wave lessons (2026-08-07)
+
+- **New map entities APPEND LAST in the map's arrays** — #397's prose
+  pins are POSITIONAL over entity iteration order; inserting a pocket
+  door/prop mid-array shifts every later entity's narrator line and
+  reds pin files that never mention the new entity. Append-only, and
+  re-run the touching prose canonicals when a map gains entities.
+- **Toasts COALESCE under queue pressure** — repeated same-key toasts
+  merge into one render with an updated count/text, so
+  `assert_event_count ui_toast_rendered == N` over a grind loop
+  undercounts. Pin the DOMAIN event count; pin toast text only on the
+  final coalesced form (reference: #398 gate-refusal loops).
+- **Negative reachability legs WALK** — `teleport` bypasses door/gate
+  blocking entirely; a "can't get in without the skill" leg must
+  bump-move the route and assert `player_blocked`, never teleport +
+  assert-absent (proves nothing).
 
 ## Rendered-event ≠ seen (GH#324, RESOLVED v0.17 — do not hand-pad)
 The "dead render" was never a render bug: windowed capture holds were
