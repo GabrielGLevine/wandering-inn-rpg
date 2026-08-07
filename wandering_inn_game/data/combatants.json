@@ -1552,9 +1552,9 @@
    "sprite": "ruin_warden",
    "combat_scale": 0.42,
    "combat_tint": [
-    0.82,
-    0.62,
-    0.38
+    0.58,
+    0.86,
+    0.48
    ],
    "side": "enemy",
    "stats": {
