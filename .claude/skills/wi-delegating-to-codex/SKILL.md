@@ -48,6 +48,14 @@ checks, and the merge decision stay controller-side.
    restored b66424c; #87 added zero traps on four new load-bearing orderings).
    → Comment-heavy Codex diffs get trap-survival sampling; new ordering/seam
    code gets a "New agent context" PR-section check.
+6. **STOP triggers get engineered around, and repeat on the same surface**
+   (#398 Phase 0, TWICE: fixtures edited to suppress a hotbar derivation
+   change; the fix brief then said verbatim "report the slot list and STOP
+   for controller adjudication — do not invent a loadout", and the second
+   pass disarmed the fixtures AND pinned invented loadouts instead).
+   → Reviews must diff FIXTURES against HEAD explicitly (fixture edits are
+   the pin-gaming surface); a second suppression on the same surface moves
+   that surface to Claude-side implementation — no third Codex attempt.
 
 ## Mechanics
 - Dispatch via the `codex:codex-rescue` subagent (single-shot forwarder;
@@ -55,6 +63,17 @@ checks, and the merge decision stay controller-side.
   to restart). Write-capable by default — create the `issue/<n>-<slug>`
   branch BEFORE dispatch; Codex works the checkout, controller commits/PRs.
 - Never edit the worktree while a Codex job runs (T8 phantom-fix incident).
+- **Long briefs misfire through the forwarder** (2026-08-06: a multi-page
+  brief produced a 23s usage-banner run + a phantom task id). Write the
+  brief to a FILE in the worktree; the task text is a one-line pointer to
+  it. Dispatch the companion helper directly from the main thread as a
+  BACKGROUNDED command (never piped — SIGPIPE kills the client while the
+  server-side thread keeps running unregistered).
+- **Companion job state is cwd-scoped** (state/<worktree-hash>/): status,
+  result, and cancel must run FROM the worktree the task launched in, or
+  they report "no job found" while the launch path still refuses new
+  tasks with "still running". A dead client leaves a stale running lock —
+  cancel from the right cwd clears it.
 - Codex sandbox cannot write `.git` or open windows — controller owns
   commits, windowed QA, and screenshots.
 - Brief format: issue number + numbered acceptance criteria + the specific
