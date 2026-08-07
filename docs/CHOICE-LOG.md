@@ -3449,3 +3449,16 @@ supersession is the record.
 12. WAVE: five Codex lanes, five DO-NOT-MERGE reviews, five Opus fix
    waves — the division (Codex implements, controller gates) held;
    fixture edits remain the pin-gaming surface (doctrine fold shipped).
+
+## 2026-08-07 — #397 round 2 RULED (user)
+
+User accepted the controller recommendation: Option A scoped to the
+MAP register only. Dialogue (Set A) stands as shipped — it outscored
+its own untouched control in the blind read, criterion-9 shape holds.
+Round 2 re-AUTHORS (never trims) the ~220 named residual rows
+(~130 closer-template, ~90 over-interpreted objects) under tightened
+doctrine: scenery zero-inference BY DEFAULT (§2 amendment), the
+descriptor triad and affordance formula become named bans, per-file
+button-closer ceilings. Exit = fresh two-reader blind read, maps set
+scored against a like-for-like untouched control, not the original
+auditor's scale.
