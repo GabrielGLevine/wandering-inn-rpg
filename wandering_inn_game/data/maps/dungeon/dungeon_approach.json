@@ -176,7 +176,7 @@
     }
    },
    "toast": "Set into the wall beside the landing, older than the rubble and colder than the air. The frame of light under its surface answers the moment you look at it.",
-   "observe": "A way out of here, warded into the stone before the passage was ever choked. The vein through it is the same coin-gold as the stones above."
+   "observe": "The way out of here is cut into the wall stone, ward-lines deep in the face of it. Coin-gold veins the rock, the same gold that runs the courses overhead."
   },
   {
    "_comment": "Met, it becomes a real door to `deep_tunnels`, landing at (13,5)",
@@ -222,7 +222,7 @@
     0.4,
     0.42
    ],
-   "observe": "A carved shape crouches against the far wall, limbs folded, its eyeless face turned to the floor. It has not moved since you noticed it.",
+   "observe": "A carved figure crouches against the far wall, knees drawn up and arms folded in, its eyeless face bowed at the floor. It stays exactly as it is for as long as you stand there.",
    "on_interact_accomplishment": "eyed_the_dormant_guardian",
    "toast": "You keep your distance. A shallow arc is scored into the floor in front of it, ending under one folded knee."
   },

@@ -292,7 +292,7 @@
    "sprite": "pressure_plate",
    "observe": "One flagstone sits a hair proud of its neighbors, the mortar cracked clean around its edge. Light does not reach the bottom of the crack.",
    "on_interact_accomplishment": "triggered_pressure_plate",
-   "toast": "The flagstone gives half an inch under your hand. Somewhere close, a catch clicks. Nothing else happens.",
+   "toast": "The flagstone drops half an inch under your palm. A catch clicks somewhere back inside the wall, and nothing comes of it.",
    "visual_states": [
     {
      "when": {
@@ -336,13 +336,13 @@
    "display_name": "A Dart Slit",
    "sprite": "dart_slit_tell",
    "requires_skill": "observe",
-   "skill_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. A careful, deliberate touch could still it.",
+   "skill_hint_toast": "A narrow slit at knee height, running the length of the wall. Look at it properly first — there is a mechanism behind it to find.",
    "locked_toast": "A narrow slit runs along the wall at knee height. Whatever is loaded behind it, you have no idea how to disable it.",
    "requires_item": "trap_kit",
-   "item_hint_toast": "A narrow slit runs along the wall at knee height, primed and waiting. Bare hands won't do it — you'd want a proper kit for this.",
+   "item_hint_toast": "A narrow slit at knee height, with the mechanism seated behind the stone. Bare fingers will not reach the catch; this one takes a trap kit.",
    "on_skill_use": {
     "accomplishment": "halls_cleared",
-    "toast": "You trace the mechanism with a careful eye, find the catch, and wedge it still with a wax-and-wire pick from the kit. The slit stays dark.",
+    "toast": "You follow the mechanism back to its catch and wedge it there with a wax-and-wire pick from the kit. The slit goes dark, and the kit is spent doing it.",
     "remove_item": "trap_kit"
    }
   },
@@ -365,7 +365,7 @@
    "locked_toast": "The floor ahead looks perfectly ordinary. You do not have the eye to check.",
    "on_skill_use": {
     "accomplishment": "spotted_illusory_floor",
-    "toast": "You look again, and this time you see it: the grain runs the wrong way, and no dust has settled in months. What you are looking at is a very good painting of floor."
+    "toast": "You look properly, and the floor ahead stops matching the floor behind: the grain runs crossways, and the paint edge stops a finger short of the wall. Months of dust lie on everything down here except that patch."
    },
    "visual_states": [
     {
@@ -421,7 +421,7 @@
      "horns_delve_started": 1
     }
    },
-   "gate_closed_toast": "You give the wire a wide berth. Past it, something has walked the dust into a track, and walked the track both ways.",
+   "gate_closed_toast": "You step wide around the wire. The dust past it is trodden into a track and the track runs both ways; leave the passage until the delve is under way.",
    "on_victory": [
     "halls_cleared",
     "cleared_halls_by_force"
@@ -546,7 +546,7 @@
    "skill_uses": {
     "observe": {
      "accomplishment": "sensed_something_deeper",
-     "toast": "[Observe] — Worked stone, cut deliberate. Not one line of it reads like a lock, and nothing here tells you what it is for.",
+     "toast": "[Observe] — Tool marks in every line of it, top to bottom, and not one line that reads as a lock. The face of it says nothing about what the door is for.",
      "variants": [
       {
        "when": {
@@ -629,8 +629,8 @@
      "seal_opened": 1
     }
    },
-   "gate_closed_toast": "Dust lies on it in an unbroken sheet, the way dust lies on a thing that has not moved in centuries. Leave it that way.",
-   "observe": "An alcove beside the sealed door, and something standing in it: ward-stone, shoulder-high, cut in the same hand as the runes. It is not a statue.",
+   "gate_closed_toast": "Dust lies over it in one unbroken sheet, and the sheet is centuries thick. Leave the dust where it is.",
+   "observe": "An alcove beside the sealed door, and something standing in it: ward-stone, shoulder-high, cut in the hand that cut the runes. Its shoulders and its knees carry seams, and no statue in this dungeon has those.",
    "_comment_loot": "DELIBERATELY no `loot` array: every enchanted accessory this fight could plausibly drop (warded_coil_charm, construct_core_shard, guardian_ward_fragment) is a chance-1.0 drop from a fight the player must already have won to be standing here, and `pickup` no-ops a duplicate id. The reward is the room behind it (seal_anchor_rune) plus the quest's resolution_paths grant."
   },
   {
@@ -654,7 +654,7 @@
    "dialogue": [
     {
      "speaker": "Pisces",
-     "text": "Quietly, if you can manage it. I have lost the count twice already and blamed you both times."
+     "text": "Do not talk to me for a moment. I am at the ninth turn of it and I would rather not begin again."
     }
    ]
   },
@@ -698,9 +698,9 @@
    "companion_source": {
     "companion_id": "skeleton_ally",
     "kind": "animated",
-    "taken_toast": "The bones rise and fall into step behind you."
+    "taken_toast": "The bones stand joint by joint and follow a pace behind you."
    },
-   "observe": "Old bones, settled where they fell. They are not going anywhere. Probably."
+   "observe": "Old bones, dry and disjointed, lying in the angle where the wall meets the floor."
   },
   {
    "_comment": "[Rope Work] CARRIER. `gap` + `state_counter` are the table pair; (13,1) opens. The stub never goes absent, which is what lets visual_states SHOW the line -- a state_set the world never shows is invisible durable state.",
@@ -715,7 +715,7 @@
    "gap": true,
    "state_counter": "gallery_line_anchored",
    "observe": "A stub of masonry where a walkway used to leave this wall, sheared off clean. The other side is still there, four feet out and a long way down. The stub would hold a line all day.",
-   "locked_toast": "You get a hand on the stub and lean out. The gap is too wide to jump and the stub too smooth to climb; what it wants is a rope.",
+   "locked_toast": "You get a hand on the stub and lean out over the gap. Set a rope here — it is too wide to jump and too smooth to climb.",
    "anchor_toast": "[Rope Work] — You make the line fast to the stub, drop the tail across, and set it taut. The line holds your weight and stays where you put it.",
    "visual_states": [
     {
@@ -742,7 +742,7 @@
     }
    },
    "observe": "The floor is simply gone here, one span of it, edge to edge. Dropped stone comes back as a sound and not much of one.",
-   "locked_toast": "The floor stops. Gravel goes over the lip when your boot finds it and keeps going, and you are not crossing that without a line."
+   "locked_toast": "The floor stops at a clean edge and picks up again a span out, with nothing but air between. You will need a line run from this edge to the other to get across."
   },
   {
    "_comment": "[Greater Strength] carrier. on_skill_use has NO remove_entity verb (dialogue-side only), so permanence is present_when.absent on the arm's own monotone counter.",
