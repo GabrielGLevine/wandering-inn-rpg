@@ -700,7 +700,7 @@
    "display_name": "Lyonette",
    "sprite": "lyonette",
    "observe": "A human girl playing at composure a size too large for her. Her hands know trays; her chin knows courts. The two have not finished arguing.",
-   "friendly_line": "Lyonette's chin lifts, then softens despite itself. You're kind. People are not, usually, to the help. Sit where you like; I'll bring something hot.",
+   "friendly_line": "Lyonette sets the cloth down and stops counting cutlery. Most people talk at me, or straight past me. You looked at me while you spoke. There's a bench by the hearth nobody has claimed, and I'll have something hot on the table before you're sat down.",
    "talk_pool": [
     "@lyonette_shared"
    ],
@@ -755,7 +755,7 @@
    "display_name": "Dirty Table",
    "sprite": "dirty_table",
    "requires_skill": "basic_cleaning",
-   "skill_hint_toast": "The table's a mess of rings and crumbs. It wants a proper wipe-down.",
+   "skill_hint_toast": "Rings, crumbs, and a smear of gravy going tacky on the boards. One good wipe-down clears the lot.",
    "on_skill_use": {
     "accomplishment": "cleaned_the_inn",
     "gold": 1,
@@ -823,7 +823,7 @@
    "display_name": "Unlit Lantern",
    "sprite": "unlit_lantern",
    "requires_skill": "light",
-   "skill_hint_toast": "The wick's dry and ready. All it wants is a light that doesn't need a match.",
+   "skill_hint_toast": "Dry wick, trimmed, and the glass wiped clean. An orb of cold light would sit in there as well as any flame.",
    "on_skill_use": {
     "accomplishment": "lit_the_common_room",
     "toast": "[Light] — A steady white orb settles into the lantern's glass."
@@ -1358,7 +1358,7 @@
    "on_interact_accomplishment": "delivered_item",
    "gold": 1,
    "once_per_waking": true,
-   "once_per_waking_toast": "The tables are covered. Nothing more to carry out until tomorrow.",
+   "once_per_waking_toast": "Every table out there has its plate. The tray stands empty by the counter until tomorrow's service.",
    "toast": "You carry the laden tray out to the tables."
   },
   {
@@ -1399,7 +1399,7 @@
    "on_skill_use": {
     "accomplishment": "cooked_meal",
     "item": "fine_meal",
-    "toast": "[Advanced Cooking] — Knife-work, then the pan, then four minutes you do not look away from, and nothing burns."
+    "toast": "[Advanced Cooking] — Vegetables browned, stew reduced until a spoon stands up in it, bread out of the cloth warm. The fine meal goes out on a plate wiped clean at the rim."
    }
   },
   {
@@ -1413,7 +1413,7 @@
    "sprite": "grill",
    "requires_skill": "signature_dish",
    "skill_hint_toast": "Copper, scoured, and heavier than it looks. Not the pan for anything you know how to cook.",
-   "locked_toast": "The good copper pan, hung out of easy reach. Erin's rule, probably.",
+   "locked_toast": "The copper pan hangs above the range on its own hook, scoured bright. It comes down for a signature dish and nothing less.",
    "on_skill_use": {
     "accomplishment": "cooked_meal",
     "item": "signature_meal",
@@ -1451,7 +1451,7 @@
    "sprite": "short_order_range",
    "requires_skill": "basic_cooking",
    "skill_hint_toast": "Three plates ordered, one pot of stock. Stretched right it would cover them all, but nothing leaves this kitchen in your hands.",
-   "locked_toast": "The order's a mess and you haven't the first idea how to stretch it. Not yet.",
+   "locked_toast": "One pot of stock and three plates called for. Stretching the one across the three is a cook's trick, and you have not got it.",
    "on_skill_use": {
     "accomplishment": "stretched_the_order",
     "toast": "[Basic Cooking] — You thin the stock, fold in day-old bread, and stretch the short order into a full service. Lyonette's shortfall vanishes into the pot."
@@ -1485,7 +1485,7 @@
    ],
    "display_name": "The Pantry Door",
    "sprite": "door",
-   "observe": "A plain plank door, warped at the bottom from a hundred winters. Nothing about it looks like it goes anywhere but the pantry.",
+   "observe": "Six planks, one strap hinge, a latch worn pale on the thumb side. The bottom edge is warped, and the draught under it comes through smelling of onions.",
    "_comment_variants": "Task 2.4: ONE arm, and the window is exactly one beat wide BY CONSTRUCTION -- `portal_menu_when` is checked BEFORE the flavor arm (interactions.gd's prop order) and now opens at door_mounted, so from the mounting onward this prop's interact is the PICKER and no toast can render. The surviving arm fires in the door_retrieved -> door_mounted window and is the mounting scene's DISCOVERY BRIDGE: a prop cannot open a conversation, so the toast points at `pisces_mounting`, the NPC beside it. The two old arms were deleted rather than re-copied: both gate at or past door_mounted, so both became unreachable when the picker moved.",
    "variants": [
     {
@@ -1528,7 +1528,7 @@
     "detect_magic": {
      "accomplishment": "detected_wardwork",
      "lore": true,
-     "toast": "[Detect Magic] — The old wardwork wakes just enough to be read: someone bound this cellar's door long before it learned to go elsewhere."
+     "toast": "[Detect Magic] — The frame reads as warding, layer over layer, the deepest of it older than the paint above it. All of it is live, and it is keyed to the cellar side of the door."
     }
    },
    "skill_hint_toast": "The frame and the old marks under its paint both want a trained eye — and maybe more than one kind."
@@ -1553,7 +1553,7 @@
    "sprite": "pisces",
    "facing": "right",
    "conversation": "door_mounting",
-   "observe": "His coat is off and folded over a chair back. One hand rests flat on the hauled door's face, and he has not spoken since he put it there.",
+   "observe": "Coat off and folded over the chair back, sleeves turned up past the elbow. He keeps one palm flat on the door's face, and his other hand taps a count against his thigh.",
    "dialogue": [
     {
      "speaker": "Pisces",
@@ -1576,7 +1576,7 @@
     0.5,
     0.42
    ],
-   "observe": "Something scratches behind the pantry wall, patient and small. Probably nothing. Probably.",
+   "observe": "Scratching behind the pantry wall, down low at the level of the skirting board. It stops when you hold still and starts again when you move.",
    "arena": "inn_cellar",
    "enemies": [
     "rift_vermin_a",

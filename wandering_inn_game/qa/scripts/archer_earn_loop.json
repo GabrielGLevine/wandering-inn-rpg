@@ -403,7 +403,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "You put an arrow in the straw. Not bad, for someone who still flinches at the draw."
+    "text": "The arrow goes into the straw a hand left of the cluster at chest height. You walk down and pull it out for the next one."
    },
    "timeout_sec": 5
   },
@@ -434,7 +434,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "You have shot your quiver dry for today. The straw will keep."
+    "text": "Your quiver is empty, and every shaft of it is standing in the straw. Pulling them and shooting again is tomorrow's work."
    },
    "timeout_sec": 5
   },

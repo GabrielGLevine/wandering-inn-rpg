@@ -2,7 +2,7 @@
  "_comment": "Zevara Sunderscale STAYS at the gate (zevara_intro's own framing untouched)",
  "biome": "inn",
  "interior_flavor": [
-  "Nothing there. Stone, kit racks, and the smell of oil worked into wood over years.",
+  "Nothing there. Bare stone, and a rack of spare kit with every strap buckled the same way.",
   "Nothing there. A shield knocks against its peg down the corridor, then goes quiet."
  ],
  "grid": {
@@ -289,8 +289,8 @@
    "_comment_330": "#330 R5: was an uncapped, undecayed ranged_hit spigot. One drill a waking now, and it pays a real shaft.",
    "on_interact_accomplishment": "ranged_hit",
    "once_per_waking": true,
-   "once_per_waking_toast": "You have shot your quiver dry for today. The straw will keep.",
-   "toast": "You put an arrow in the straw. Not bad, for someone who still flinches at the draw.",
+   "once_per_waking_toast": "Your quiver is empty, and every shaft of it is standing in the straw. Pulling them and shooting again is tomorrow's work.",
+   "toast": "The arrow goes into the straw a hand left of the cluster at chest height. You walk down and pull it out for the next one.",
    "item": "loose_arrow"
   },
   {

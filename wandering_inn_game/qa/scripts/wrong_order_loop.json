@@ -192,7 +192,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The order's a mess and you haven't the first idea how to stretch it. Not yet."
+    "text": "One pot of stock and three plates called for. Stretching the one across the three is a cook's trick, and you have not got it."
    },
    "timeout_sec": 5
   },
