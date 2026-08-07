@@ -59,8 +59,9 @@ docstring above):
      every shipped entity today, defensive for tomorrow),
      on_skill_use.accomplishment (+ its `variants` override),
      on_interact_accomplishment (+ its own `variants` override),
-     the property table's `state_set` carrier counters (the field each
-     state_set row's `counter_key` names -- see _state_set_counter_keys),
+     the property table's CARRIER-sourced counters (the field each
+     `counter_key` names, for state_set rows and for rows declaring
+     counter_from "target" -- see _carrier_counter_keys),
      on_open_accomplishment, on_enter_accomplishment, a non-empty talk_pool
      (-> heard_gossip + chatted_with_<id>), board_rumors[].banks_accomplishment.
   4. Dialogue-effect producers: every `{"accomplishment": id}` effect across
@@ -122,20 +123,26 @@ def map_ids(scene: dict) -> list:
     return sorted(str(k) for k in scene.get("maps", {}))
 
 
-def _state_set_counter_keys() -> list:
-    """#348 slice 2 census source 3b: `state_set` rows bank a counter authored
-    ON THE CARRIER, under whatever field the row's `counter_key` names. Derived
-    from the table rather than hardcoded, so a new state_set row registers its
-    carriers' counters with zero edits here.
+def _carrier_counter_keys() -> list:
+    """#348 slice 2 census source 3b: table rows whose counter is authored ON THE
+    CARRIER, under whatever field the row's `counter_key` names. Two shapes, one
+    derivation: `state_set` (carrier-sourced by substrate) and, since #398-p2,
+    any row declaring counter_from "target" (a row-defaulted verb whose carriers
+    may override the shared id -- the collapsed gallery's shoring banks its own
+    burn instead of sewers' `burned_the_debris`). Derived from the table rather
+    than hardcoded, so a new row registers its carriers' counters with zero edits
+    here, and DELETING a carrier's field drops the id from the freeze list --
+    which a STRUCTURAL_LITERALS entry would silently prevent.
     """
     table = load_json(DATA / "interactions.json")
     return sorted({str(row["counter_key"]) for row in table.get("interactions", [])
-        if isinstance(row, dict) and row.get("outcome") == "state_set" and row.get("counter_key")})
+        if isinstance(row, dict) and row.get("counter_key")
+        and (row.get("outcome") == "state_set" or row.get("counter_from") == "target")})
 
 
 def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: dict, deliveries: dict) -> list:
     out = set(STRUCTURAL_LITERALS)
-    state_set_keys = _state_set_counter_keys()
+    carrier_counter_keys = _carrier_counter_keys()
 
     for skill in skills.get("skills", []):
         if "weapon" in skill:
@@ -186,9 +193,9 @@ def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: 
                 out.update(str(o) for o in opened_ids)
             if "on_enter_accomplishment" in entity:
                 out.add(str(entity["on_enter_accomplishment"]))
-            for state_key in state_set_keys:
-                if entity.get(state_key):
-                    out.add(str(entity[state_key]))
+            for carrier_key in carrier_counter_keys:
+                if entity.get(carrier_key):
+                    out.add(str(entity[carrier_key]))
             if entity.get("talk_pool"):
                 out.add("heard_gossip")
                 out.add("chatted_with_%s" % entity["id"])

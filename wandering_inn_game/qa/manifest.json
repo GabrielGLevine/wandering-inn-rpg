@@ -6304,6 +6304,120 @@
      "exploration"
     ]
    }
+  },
+  {
+   "_comment": "<!-- 398-p2 --> Appended last under the collapsed-gallery lane marker.",
+   "script": "collapsed_gallery_pick",
+   "seed": 9,
+   "fixture": "collapsed_gallery_pick_start",
+   "note": "#398 P2 item route: a held trap-kit pick opens the mortared rubble without being consumed, the Shield Spider nest is observed and cleared, and the one-shot strongbox yields Old Delver's Clasp.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "deep_tunnels"
+    ],
+    "fixtures": [
+     "collapsed_gallery_pick_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 398-p2 --> Appended last under the collapsed-gallery lane marker.",
+   "script": "collapsed_gallery_strength",
+   "seed": 9,
+   "fixture": "collapsed_gallery_strength_start",
+   "note": "#398 P2 martial route: a distinct Warrior fixture uses [Greater Strength] on the fallen beam, then clears the same nest and claims the same one-shot reward.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "deep_tunnels"
+    ],
+    "fixtures": [
+     "collapsed_gallery_strength_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "greater_strength",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 398-p2 --> Appended last under the collapsed-gallery lane marker.",
+   "script": "collapsed_gallery_burn",
+   "seed": 9,
+   "fixture": "collapsed_gallery_burn_start",
+   "note": "#398 P2 property route: [Flame Jet]'s burns flag removes the tarred shoring through the shared property table, then the player clears the nest and claims the strongbox reward. Also the CROSS-MAP isolation leg (review HIGH-1): the shoring banks its OWN burned_the_gallery_shoring via the row's counter_from=target override, burned_the_debris is asserted absent, and the run walks THROUGH the sewers nook cell (0,3) to prove that strongbox stayed shut.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "deep_tunnels",
+     "sewers"
+    ],
+    "fixtures": [
+     "collapsed_gallery_burn_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "flame_jet",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 398-p2 --> Appended last under the collapsed-gallery lane marker.",
+   "script": "collapsed_gallery_negative",
+   "seed": 9,
+   "fixture": "collapsed_gallery_unready_start",
+   "note": "#398 P2 locked-state proof: all three distinct blockers teach the alternate routes, remain impassable, and the uncleared pocket has neither an interactive reward nor a granted clasp.",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "deep_tunnels"
+    ],
+    "fixtures": [
+     "collapsed_gallery_unready_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
   }
  ]
 }

@@ -11,3 +11,13 @@
   lighting may want the same ~lift. Not a blocker — flagging for the next
   calibration pass.
 
+## 2026-08-06 — #398-p2 collapsed gallery
+
+- **Timber/beam sprite wanted for the fallen beam** (deep_tunnels
+  `collapsed_gallery_beam`, cell (14,2)). It ships as `boulder` under a
+  brown tint, and the #398-p2 review called that out: tint is not
+  disambiguation, so a rock recoloured brown does not read as a fallen
+  support beam next to a rubble plug and a tarred crate. Ask: one
+  horizontal timber/beam prop at cave scale; the [Greater Strength] mode
+  is the only one whose blocker has no sprite of its own.
+

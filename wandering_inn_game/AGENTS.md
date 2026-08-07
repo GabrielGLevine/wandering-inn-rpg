@@ -432,6 +432,10 @@ Full mechanism detail, rollout narrative, design rationale for every system: `do
 | `briar_arch_fire` | 9 (fixture `near_briar_arch_fire`) | <!-- 398-pocket-p5 --> Burns the western briar with [Flame Jet], banks the shared dungeon trace, and opens the unique cache; cut and combat counters stay absent |
 | `briar_arch_cut` | 9 (fixture `near_briar_arch_cut`) | <!-- 398-pocket-p5 --> Sword-equipped [Power Strike] cuts the western briar, banks the same trace, and clears the armed ward encounter; burn stays absent |
 | `briar_arch_locked` | 9 (fixture `near_briar_arch_locked`) | <!-- 398-pocket-p5 --> Pins the two-mode refusal, impassable wall, all gate counters absent, and the structurally absent cache from an inside probe |
+| `collapsed_gallery_pick` | 9 (fixture `collapsed_gallery_pick_start`) | <!-- 398-p2 --> Held-pick route through mortared rubble; trap kit remains held, nest is observed and cleared, strongbox yields `old_delvers_clasp` |
+| `collapsed_gallery_strength` | 9 (fixture `collapsed_gallery_strength_start`) | <!-- 398-p2 --> Distinct Warrior fixture uses [Greater Strength] on the fallen beam, then clears the nest and claims the shared reward |
+| `collapsed_gallery_burn` | 9 (fixture `collapsed_gallery_burn_start`) | <!-- 398-p2 --> [Flame Jet] burns the tarred shoring through the property table, then clears the nest and claims the shared reward; CROSS-MAP isolation leg (review HIGH-1) -- the shoring banks its OWN `burned_the_gallery_shoring` via the burns row's `counter_from: target` override, `burned_the_debris` asserted absent, and the run walks THROUGH the sewers nook cell (0,3) to prove that strongbox stayed shut |
+| `collapsed_gallery_negative` | 9 (fixture `collapsed_gallery_unready_start`) | <!-- 398-p2 --> All three blocker hints, impassable cells, and structurally absent pre-clear reward |
 
 ## Working conventions
 

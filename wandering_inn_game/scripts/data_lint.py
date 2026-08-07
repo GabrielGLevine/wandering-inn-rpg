@@ -848,6 +848,13 @@ PLACEMENTS = ("entity", "cell")
 # "row" = the pair itself owns the line (what a refusal cell is); the other two
 # read `toast_key` off the target entity / the casting skill.
 TOAST_SOURCES = ("skill", "target", "row")
+# The same discriminator for the COUNTER a banking verb writes (#398-p2 review
+# HIGH-1, WIFieldSkills._row_counter). "row" (or the field omitted) = the row's
+# own `counter`, the pre-#398 behavior; "target" = the CARRIER names it, in the
+# field `counter_key` points at, with the row `counter` as the fallback for
+# carriers that author none. No "skill" arm: _outcome_remove_scorch is handed no
+# skill dict, so a caster-sourced counter would resolve to the fallback always.
+COUNTER_SOURCES = ("row", "target")
 # Persistence classes each verb may claim (spec §4.1's table). `immediate` =
 # thaw_cell, which ERASES a frozen_cells entry and creates no timed state of its
 # own; `none` = the verbs that write no world state at all.
@@ -882,7 +889,8 @@ OUTCOME_EMITS_TERRAIN = {"remove_scorch", "freeze_cell", "thaw_cell"}
 # counter field on any other verb is dead data: it is silently dropped at
 # dispatch. The two banking verbs source the id DIFFERENTLY, and the split is
 # deliberate:
-#   remove_scorch -- row-level `counter` (one burn counter for every burnable).
+#   remove_scorch -- row-level `counter` (one burn counter for every burnable),
+#                    OVERRIDABLE per carrier via counter_from:"target" (#398-p2).
 #   state_set     -- row-level `counter_key` NAMING A FIELD ON THE CARRIER, so
 #                    each prop banks its own id. A shared row-level counter
 #                    would make lighting one lamp flip every sibling lamp's
@@ -972,6 +980,51 @@ def _check_carrier_counters(row: dict, tp: str, label: str, maps: dict, parsed: 
 				"permanent, so a set the world never shows is invisible durable state")
 
 
+def _check_counter_override(row: dict, tp: str, label: str, maps: dict, parsed: dict, errors: list) -> None:
+	"""counter_from:"target" on a ROW-DEFAULTED banking verb (#398-p2 HIGH-1).
+
+	burns x burnable is ONE row over every burnable in the game, so its row-level
+	`counter` made every burn line the same world event: burning the sewers
+	debris banked the id a deep-tunnels strongbox gated on, two maps away. The
+	override lets a carrier name its own id in the field `counter_key` points at.
+	What has to hold, or the override is worse than no override:
+	  * the row still carries a `counter` FALLBACK -- carriers that opt out
+	    (sewers' own debris) must keep banking something, not silently nothing;
+	  * every override id is a REGISTERED accomplishment, the same freeze-list
+	    discipline the row-level `counter` gets (an unregistered id banks into
+	    saves as something no census knows);
+	  * an override is not the row default spelled again -- that reads as an
+	    opt-in while banking the shared id, which is the bug this field fixes.
+	"""
+	key = row.get("counter_key")
+	if not isinstance(key, str) or not key:
+		errors.append(f"interactions.json: {label} declares counter_from 'target' but names no "
+			"'counter_key' -- the field on the carrier that holds its own counter id")
+		return
+	fallback = row.get("counter")
+	if not isinstance(fallback, str) or not fallback:
+		errors.append(f"interactions.json: {label} declares counter_from 'target' with no row-level "
+			f"'counter' fallback -- every carrier authoring no '{key}' would bank nothing at all")
+	shipped = _shipped_accomplishments(parsed)
+	for map_id, entity in _entity_carriers(maps, tp):
+		eid = entity.get("id", "<no id>")
+		if key not in entity:
+			continue  # opted out: the row `counter` fallback answers for this carrier
+		counter = entity.get(key)
+		if not isinstance(counter, str) or not counter:
+			errors.append(f"interactions.json: {label} carrier maps/{map_id}:{eid} declares '{key}' "
+				f"{counter!r} -- an override must be a non-empty accomplishment id")
+			continue
+		if shipped and counter not in shipped:
+			errors.append(f"interactions.json: {label} carrier maps/{map_id}:{eid} banks override "
+				f"'{counter}', which is not in data/shipped_ids.json's accomplishments -- "
+				"regenerate via scripts/generate_shipped_ids.py")
+		if counter == fallback:
+			errors.append(f"interactions.json: {label} carrier maps/{map_id}:{eid} overrides '{key}' "
+				f"with the row's own '{fallback}' -- drop the field instead; a lookalike override "
+				"still banks the shared id and reads in review as if it did not")
+
+
 def _check_row_counter(row: dict, outcome: str, label: str, parsed: dict, errors: list) -> None:
 	"""Spec §5(c): a row's `counter` gets the standard producer/consumer treatment.
 
@@ -988,18 +1041,26 @@ def _check_row_counter(row: dict, outcome: str, label: str, parsed: dict, errors
 	banks one is silently dropped at dispatch, i.e. dead data.
 	"""
 	counter = row.get("counter")
+	counter_from = row.get("counter_from")
 	if outcome not in OUTCOME_BANKS_COUNTER:
-		for dead in ("counter", "counter_key"):
+		for dead in ("counter", "counter_key", "counter_from"):
 			if row.get(dead) not in (None, ""):
 				errors.append(f"interactions.json: {label} outcome '{outcome}' banks no counter, "
 					f"but the row declares {dead} {row[dead]!r} -- dead data (the field is "
 					"dropped at dispatch); drop it or use a counter-banking verb")
 		return
+	if counter_from not in (None, "") and counter_from not in COUNTER_SOURCES:
+		errors.append(f"interactions.json: {label} 'counter_from' must be one of "
+			f"{list(COUNTER_SOURCES)} when present")
 	if outcome in OUTCOME_COUNTER_ON_CARRIER:
+		if counter_from not in (None, ""):
+			errors.append(f"interactions.json: {label} outcome '{outcome}' is carrier-sourced BY "
+				"SUBSTRATE (it has no row-level default to fall back to), so 'counter_from' is dead "
+				"data -- drop it; 'counter_key' alone names the carrier field")
 		return  # handled per carrier by _check_carrier_counters
-	if row.get("counter_key") not in (None, ""):
+	if counter_from != "target" and row.get("counter_key") not in (None, ""):
 		errors.append(f"interactions.json: {label} outcome '{outcome}' banks the ROW's 'counter' -- "
-			"'counter_key' is dead data here (only the carrier-sourced verbs read it)")
+			"'counter_key' is dead data here unless the row declares counter_from 'target'")
 	if counter is None:
 		return  # optional: a burn row may legitimately bank nothing
 	if not isinstance(counter, str) or not counter:
@@ -1136,6 +1197,8 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 		_check_row_counter(row, outcome, label, parsed, errors)
 		if outcome in OUTCOME_COUNTER_ON_CARRIER:
 			_check_carrier_counters(row, tp, label, maps, parsed, errors)
+		elif outcome in OUTCOME_BANKS_COUNTER and row.get("counter_from") == "target":
+			_check_counter_override(row, tp, label, maps, parsed, errors)
 		# Per-row carrier cross-ref (spec §5b): a row nothing can reach is dead.
 		if sp in skill_props and not _skill_property_carriers(parsed, sp):
 			errors.append(f"interactions.json: {label} has no skill carrier")

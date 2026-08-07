@@ -127,6 +127,10 @@ const ENCOUNTER_CELLS := [
 	{"name": "raskghar_scouts_w2_relc", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": false},
 	{"name": "raskghar_scouts_w2_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior2", "solo": true},
 	{"name": "raskghar_scouts_w5_solo", "arena": "cave_mouth", "enemies": ["raskghar_scout", "raskghar_scout"], "build": "warrior5_mage5", "solo": true},
+	# #398-p2 collapsed-gallery stop: three Shield Spiders are +4 power over
+	# the shipped two-spider sewer nest. At the deep-tunnels build it measures
+	# 0.61 wins / 4 median rounds, inside the standard 0.55-0.95 / 3-12 gate.
+	{"name": "collapsed_gallery_nest_w10_solo", "arena": "sewers_nest", "enemies": ["shield_spider", "shield_spider", "shield_spider"], "build": "warrior5_mage5", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "crate_scavengers_w1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": true},
 	{"name": "crate_scavengers_w1_klbkch", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": false, "ally": "klbkch"},
 	{"name": "supplier_scavengers_w1_solo", "arena": "goblin_ambush", "enemies": ["goblin_raider", "goblin_raider"], "build": "warrior1_tutorial", "solo": true},

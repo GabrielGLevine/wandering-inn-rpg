@@ -15,6 +15,7 @@ const EXPECTED_ITEMS := {
 	"ratici_gray_feather": ["+1 HP", "Resonance 1", "Worth 11 gold"],
 	"ratici_parlor_coin": ["Resonance 1", "Worth 13 gold"],
 	"hedaults_warded_setting": ["+2 HP", "Reduces every hit taken by 1", "Resonance 1", "Worth 45 gold"],
+	"old_delvers_clasp": ["+2 HP", "Reduces every hit taken by 1", "Resonance 1", "Worth 35 gold"],
 	"gnollish_hunting_knife": ["+1 damage on melee hits", "Sword kit replaces other weapon Skills in combat", "Worth 15 gold"],
 	"wool_lined_cloak": ["+3 HP", "Worth 18 gold"],
 	"copper_luck_band": ["+1 HP", "Grants [Dangersense] in combat", "Worth 4 gold"],
