@@ -3339,14 +3339,25 @@ def self_test():
     d = [r for r in rows if r["corpus"] == "dialogue"]
     m = [r for r in rows if r["corpus"] == "maps"]
     dw, mw = sum(r["word_count"] for r in d), sum(r["word_count"] for r in m)
+    # The MAP baselines moved after the issue froze: #396 (riverfarm redesign)
+    # and #398 (five skill-gated pockets) both shipped map prose between the
+    # Phase-0 audit and round 2. Refreshed 2026-08-07 with the round-2 train,
+    # deliberately and with provenance -- the issue's own figures (825 / 18.5k)
+    # stay recorded here because they are what its percentages were computed
+    # against. The tolerance is NOT widened: this still trips on a runaway, it
+    # just measures drift from the last ruled baseline instead of from a
+    # historical one. Refreshing it is a controller act, never a lane's.
+    MAP_STRINGS_BASELINE = 915    # issue's frozen audit: 825
+    MAP_WORDS_BASELINE = 20646    # issue's frozen audit: 18500
     check("dialogue strings within 5% of issue's 1482",
           abs(len(d) - 1482) / 1482 < 0.05, f"{len(d)}")
     check("dialogue words within 5% of issue's 24.5k",
           abs(dw - 24500) / 24500 < 0.05, f"{dw}")
-    check("map strings within 5% of issue's 825",
-          abs(len(m) - 825) / 825 < 0.05, f"{len(m)}")
-    check("map words within 8% of issue's 18.5k",
-          abs(mw - 18500) / 18500 < 0.08, f"{mw}")
+    check(f"map strings within 5% of ruled baseline {MAP_STRINGS_BASELINE}",
+          abs(len(m) - MAP_STRINGS_BASELINE) / MAP_STRINGS_BASELINE < 0.05,
+          f"{len(m)}")
+    check(f"map words within 8% of ruled baseline {MAP_WORDS_BASELINE}",
+          abs(mw - MAP_WORDS_BASELINE) / MAP_WORDS_BASELINE < 0.08, f"{mw}")
 
     # 2b. the option-effect toasts the gate does not walk (fix I1)
     eff = [r for r in d if r["field"] == "toast"]

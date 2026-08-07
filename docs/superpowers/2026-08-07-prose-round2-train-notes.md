@@ -169,3 +169,35 @@ working ledger.
   backwards. New mop-up candidate: wi_game.gd:951 hardcodes the
   retired "bones rise and fall" line as taken_toast's ENGINE default
   — outside the corpus, unguarded by any prose gate.
+
+## 18. CONTROLLER RULING (train, 2026-08-07): CADENCE REBALANCE BEFORE THE BLIND READ
+
+Composed measurement, 188 worklist rows, base a33e2cf6 vs train:
+
+| | base | train |
+|---|---|---|
+| words | 4202 | 5227 (**+24.4%**) |
+| 1-sentence rows | 43 | 26 |
+| 2-sentence rows | 113 | **138** |
+| 2-sentence share | 60.1% | **73.4%** |
+
+The pass killed the button-closer engine and grew a NEW one: a
+two-sentence fact-stop cadence on three of every four re-authored
+rows. Both Phase-5 readers named "uniform plainness is itself a
+machine signature" as a detectable tell, and round 1's whole lesson is
+that a corpus-wide rhythm reads as authored no matter how clean each
+sentence is. Shipping this to the blind read would spend the decisive
+instrument on a corpus with a known defect.
+
+RULED: a cadence rebalance wave runs BEFORE Task 4. Targets:
+- 2-sentence share **≤55%** over the 188 rows (below base's 60.1%,
+  because base was already mode-heavy and the pass must not merely
+  restore the old shape).
+- Net words **DOWN** vs the train (rebalance by CUTTING — merge or
+  drop a sentence — never by padding; that fixes cadence and
+  inflation with one move).
+- No row may re-acquire a banned shape (button/triad/affordance/
+  one-word coda) to hit the number; the advisory arms stay at zero
+  attributable hits.
+- Facts, pins, and untouchables are governed exactly as in the
+  writing wave; ruled rows (Relc, Olesm) stay frozen.
