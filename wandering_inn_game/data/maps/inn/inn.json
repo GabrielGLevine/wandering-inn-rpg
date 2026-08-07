@@ -700,7 +700,7 @@
    "display_name": "Lyonette",
    "sprite": "lyonette",
    "observe": "A human girl playing at composure a size too large for her. Her hands know trays; her chin knows courts. The two have not finished arguing.",
-   "friendly_line": "Lyonette sets the cloth down and stops counting cutlery. Most people talk at me, or straight past me. You looked at me while you spoke. There's a bench by the hearth nobody has claimed, and I'll have something hot on the table before you're sat down.",
+   "friendly_line": "Lyonette sets the cloth down and stops counting cutlery. Most people talk straight past me. Sit where you like — I'll bring something hot.",
    "talk_pool": [
     "@lyonette_shared"
    ],

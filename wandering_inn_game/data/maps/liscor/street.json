@@ -1077,7 +1077,7 @@
    "person": true,
    "sprite": "royal_soldier",
    "observe": "Watch armor, kept. He stands the post properly: weight even, eyes on the gap in the wall. Twice while you stand there, he checks the same empty stretch of road.",
-   "friendly_line": "The guard takes his weight off the wall and moves his spear out of the gateway before you ask. Hah. You'll do. Go on through, and mind the carts coming the other way at the gap.",
+   "friendly_line": "The guard's eyes leave the road for a moment and settle on you. Hah. You'll do. Go on through, and I'll know your face next time.",
    "facing": "up",
    "talk_pool": [
     "Gate's clear. Keep it that way and we'll get on fine.",
@@ -1213,7 +1213,7 @@
    "person": true,
    "sprite": "olesm",
    "observe": "Thin, sky-blue scales, ink drying on three of his claws. A chess board waits at his elbow mid-game, played against himself, to feel how the other side thinks. His eyes are a wild, patterned blue, the one soft thing about a man who counts exits.",
-   "friendly_line": "Olesm's tail comes up off the cobbles and he loses his place in the tally. Oh! You didn't glaze over. People glaze over when I say troop dispersal. Come and look at the board sometime, when you have an hour and nothing better to do with it.",
+   "friendly_line": "Olesm brightens like a lamp. Oh! A friendly face. Most people's eyes glaze when I mention troop dispersal. Yours didn't. Would you — that is — care to see the board sometime? No pressure. A little pressure.",
    "facing": "down",
    "talk_pool": [
     "Three reports due by dawn and the ink is winning. If anyone asks, the [Tactician] of Liscor is 'strategizing'.",
@@ -1363,7 +1363,7 @@
    ],
    "display_name": "Krshia's Stall",
    "sprite": "market_stall_silverfang",
-   "observe": "Silverfang goods on a spread cloth: cheap tin and cord along the front edge, bolts of good plains wool set back where you have to reach past them. A hand-lettered card is propped against the near stack.",
+   "observe": "A card propped against the near stack warns that the seller remembers faces. Silverfang goods: cheap tin and cord at the front edge, bolts of plains wool set back behind them.",
    "variants": [
     {
      "_comment": "b7 #207 delivery ack — the wool bolt the player carried is shelved and selling (prop recipient: no talk_pool, the interact toast IS the ack surface; a toast variant so every player sees it without a skill).",
@@ -1374,7 +1374,7 @@
     }
    ],
    "on_interact_accomplishment": "browsed_market",
-   "toast": "Silverfang goods, honest prices, and a card on the cloth that says the seller remembers faces and debts. Krshia is four stalls up the row with her back to you, working a price upward."
+   "toast": "The Gnoll who keeps the stall is working a price upward, and the card on the cloth says she remembers faces and debts. Silverfang goods at honest prices, cheapest to the front."
   },
   {
    "_comment": "(28,2) was already in the street's static `blocked` list (the gap between the two wall cells), so floor_cells/blocked_cells counts are unchanged.",

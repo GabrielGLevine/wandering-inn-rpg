@@ -594,7 +594,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Silverfang goods, honest prices, and a card on the cloth that says the seller remembers faces and debts. Krshia is four stalls up the row with her back to you, working a price upward."
+    "text": "The Gnoll who keeps the stall is working a price upward, and the card on the cloth says she remembers faces and debts. Silverfang goods at honest prices, cheapest to the front."
    },
    "timeout_sec": 5
   },

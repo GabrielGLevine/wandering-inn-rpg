@@ -1,7 +1,7 @@
 {
  "biome": "inn",
  "interior_flavor": [
-  "Nothing there. Chalk dust and boot grit, and the floorboard in front of the desk is rubbed pale.",
+  "Nothing there. The floorboard in front of the desk is walked pale, chalk dust in the grain.",
   "Nothing there. Somewhere behind the desk a drawer shuts."
  ],
  "grid": {
@@ -408,7 +408,7 @@
      "_comment": "the real quest option lives on renn_hammer.json, gated on this same banked counter.",
      "id": "rumor_lost_hammer",
      "banks_accomplishment": "heard_about_lost_hammer",
-     "copy": "A SCRAP OF PARCHMENT, tacked low and half hidden under the notice above it. 'LOST: one backup warhammer, plain steel, no ornament on it anywhere, and I want it back. Ask for Renn. Reward for the honest sort.' The bottom line is pressed hard into the paper and the letters run downhill off the edge."
+     "copy": "A SCRAP OF PARCHMENT, tacked low and half hidden under the notice above it. 'LOST: one backup warhammer, plain steel, no love lost between us but I want it back. Ask for Renn. Reward for the honest sort.' The bottom line runs downhill off the edge of the paper."
     }
    ]
   },
@@ -423,8 +423,8 @@
    "sprite": "request_board",
    "facing": "right",
    "on_interact_accomplishment": "read_guild_notices",
-   "toast": "The smaller board, and nobody official keeps it: lost gear, rooms going spare, one duel challenge with nothing written under it. What is worth chasing copies into your journal as a lead, with a name and a place to start from.",
-   "observe": "Handbills three deep on the plaster, the outer ones lapping over the request board's edge. The top layer offers a reward for a plain steel warhammer, and half a card under it advertises a back room to let, quiet tenants only.",
+   "toast": "The smaller board carries lost gear, rooms going spare, and one duel challenge with nothing written under it. Anything worth chasing copies into your journal as a lead: a name and a place, nothing promised.",
+   "observe": "Handbills pinned onto the plaster, the outer ones lapping over the request board's edge. One offers a reward for a plain steel warhammer; half a card under it advertises a back room to let, quiet tenants only.",
    "visual_states": [
     {
      "_comment": "GH#335 item 3: a read prop is SPENT and recedes. Shared tint across every read-once prop in the build; `counter` is this prop's OWN id, never a sibling's shared one.",

@@ -229,7 +229,7 @@
      "when": {
       "room_tier_3": 1
      },
-     "text": "The best bedding in the house is on this bed: thick sheets, a wool blanket, a pillow that holds its shape. The door shuts, and the common room goes quiet behind it."
+     "text": "The best bedding in the house is on this bed: thick sheets under a wool blanket, and a pillow that holds its shape."
     }
    ],
    "observe": "Made up tight, corners squared. Lyonette did that, and she will know if you undo it badly."
@@ -256,7 +256,7 @@
    "display_name": "A Writing Desk",
    "sprite": "library_desk",
    "locked_toast": "The desk is yours to use. Nothing on it yet is asking to be done.",
-   "observe": "Narrow desk under the window, one drawer, no key in it. A pale ring the size of a cup bottom sits in the varnish, and an ink-stain marks the near corner."
+   "observe": "Narrow desk under the window, one drawer. A pale cup-ring in the varnish."
   },
   {
    "id": "player_room_shelf",

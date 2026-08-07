@@ -38,16 +38,18 @@
     "field_path": "$.entities[4].toast",
     "pin_type": "payload_contains.text (wait_for_event toast)",
     "old": "You put an arrow in the straw. Not bad, for someone who still flinches at the draw.",
-    "new": "The arrow goes into the straw a hand left of the cluster at chest height. You walk down and pull it out for the next one.",
-    "rederived_from": "qa_output/archer_earn_loop/events.jsonl (headless run, --seed=9)"
+    "new": "The shaft goes into the straw and stands there. You walk down and pull it out for the next draw.",
+    "rederived_from": "qa_output/archer_earn_loop/events.jsonl (headless run, --seed=9, GH#397 round-2 FIX WAVE re-derivation)",
+    "superseded_lane_value": "The arrow goes into the straw a hand left of the cluster at chest height. You walk down and pull it out for the next one."
    },
    {
     "map_file": "wandering_inn_game/data/maps/liscor/barracks.json",
     "field_path": "$.entities[4].once_per_waking_toast",
     "pin_type": "payload_contains.text (wait_for_event toast)",
     "old": "You have shot your quiver dry for today. The straw will keep.",
-    "new": "Your quiver is empty, and every shaft of it is standing in the straw. Pulling them and shooting again is tomorrow's work.",
-    "rederived_from": "qa_output/archer_earn_loop/events.jsonl (headless run, --seed=9)"
+    "new": "Your arm is done for today. The shafts are out of the straw and back in the quiver.",
+    "rederived_from": "qa_output/archer_earn_loop/events.jsonl (headless run, --seed=9, GH#397 round-2 FIX WAVE re-derivation)",
+    "superseded_lane_value": "Your quiver is empty, and every shaft of it is standing in the straw. Pulling them and shooting again is tomorrow's work."
    }
   ],
   "guild_interior_walkthrough": [
@@ -56,8 +58,9 @@
     "field_path": "$.entities[3].toast",
     "pin_type": "payload_contains.text (wait_for_event toast)",
     "old": "A second board, smaller and less official: lost gear, room-for-rent scraps, one challenge to a duel that's clearly gone unanswered a long time. Anything worth chasing copies into your journal as a lead: a name and a place, nothing promised.",
-    "new": "The smaller board, and nobody official keeps it: lost gear, rooms going spare, one duel challenge with nothing written under it. What is worth chasing copies into your journal as a lead, with a name and a place to start from.",
-    "rederived_from": "qa_output/guild_interior_walkthrough/events.jsonl (headless run, --seed=9)"
+    "new": "The smaller board carries lost gear, rooms going spare, and one duel challenge with nothing written under it. Anything worth chasing copies into your journal as a lead: a name and a place, nothing promised.",
+    "rederived_from": "qa_output/guild_interior_walkthrough/events.jsonl (headless run, --seed=9, GH#397 round-2 FIX WAVE re-derivation)",
+    "superseded_lane_value": "The smaller board, and nobody official keeps it: lost gear, rooms going spare, one duel challenge with nothing written under it. What is worth chasing copies into your journal as a lead, with a name and a place to start from."
    }
   ],
   "property_seams": [
@@ -66,8 +69,9 @@
     "field_path": "$.entities[6].clean_toast",
     "pin_type": "payload_contains.text (wait_for_event toast)",
     "old": "[Basic Cleaning] — You take it off in three passes. The dried mud lifts, the grain comes up pale, and the boards stop smelling of the road.",
-    "new": "[Basic Cleaning] — The dried mud breaks up under the cloth and goes off the edge of the table in flakes. What is left is pale grain, dry to the touch.",
-    "rederived_from": "qa_output/property_seams/events.jsonl (headless run, --seed=9)"
+    "new": "[Basic Cleaning] — The dried mud comes off in flakes under the cloth. The grain shows pale, and the road smell goes with it.",
+    "rederived_from": "qa_output/property_seams/events.jsonl (headless run, --seed=9, GH#397 round-2 FIX WAVE re-derivation)",
+    "superseded_lane_value": "[Basic Cleaning] — The dried mud breaks up under the cloth and goes off the edge of the table in flakes. What is left is pale grain, dry to the touch."
    }
   ],
   "gate_district_walkthrough": [
@@ -76,8 +80,9 @@
     "field_path": "$.entities[8].toast",
     "pin_type": "payload_contains.text (wait_for_event toast)",
     "old": "Silverfang goods, honest prices. A sign on the cloth says she remembers faces, and debts; the Gnoll shopkeeper herself is off up the row, working a price upward.",
-    "new": "Silverfang goods, honest prices, and a card on the cloth that says the seller remembers faces and debts. Krshia is four stalls up the row with her back to you, working a price upward.",
-    "rederived_from": "qa_output/gate_district_walkthrough/events.jsonl (headless run, --seed=9)"
+    "new": "The Gnoll who keeps the stall is working a price upward, and the card on the cloth says she remembers faces and debts. Silverfang goods at honest prices, cheapest to the front.",
+    "rederived_from": "qa_output/gate_district_walkthrough/events.jsonl (headless run, --seed=9, GH#397 round-2 FIX WAVE re-derivation)",
+    "superseded_lane_value": "Silverfang goods, honest prices, and a card on the cloth that says the seller remembers faces and debts. Krshia is four stalls up the row with her back to you, working a price upward."
    }
   ],
   "delivery_loop": [
@@ -101,5 +106,6 @@
    "new": "The mattress has fresh straw in it and the blanket has been beaten out. It smells of soap and nothing else.",
    "rederived_from": "tests/test_sim_core.gd run output: the failing assert printed the engine-resolved rung, and the test re-runs PASS against the value taken from it"
   }
- ]
+ ],
+ "_fix_wave": "Round-2 fix wave (adversarial-review findings, same worktree): five pins were re-derived a SECOND time from fresh headless runs at seed 9 after the flagged strings were re-authored; each row keeps the lane's intermediate value under `superseded_lane_value`. delivery_loop and wrong_order_loop and work_loop pins were unchanged by the fix wave and re-ran green as regression cover."
 }

@@ -403,7 +403,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The arrow goes into the straw a hand left of the cluster at chest height. You walk down and pull it out for the next one."
+    "text": "The shaft goes into the straw and stands there. You walk down and pull it out for the next draw."
    },
    "timeout_sec": 5
   },
@@ -434,7 +434,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "Your quiver is empty, and every shaft of it is standing in the straw. Pulling them and shooting again is tomorrow's work."
+    "text": "Your arm is done for today. The shafts are out of the straw and back in the quiver."
    },
    "timeout_sec": 5
   },
