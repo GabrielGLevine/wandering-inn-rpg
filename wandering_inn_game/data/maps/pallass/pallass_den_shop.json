@@ -232,11 +232,11 @@
    "sprite": "inn_room_ledger",
    "observe": "The shop's own copy of every form the crate has generated, in a stack tall enough to stand a cup on.",
    "requires_skill": "appraise_goods",
-   "skill_hint_toast": "The order in the stack is doing work of its own. Appraise it properly and the clause is in there.",
+   "skill_hint_toast": "The forms are stacked in filing order, oldest at the bottom — appraise the stack and the clause comes out of it.",
    "locked_toast": "Twelve forms about one crate. You get four pages in before the words stop meaning anything.",
    "on_skill_use": {
     "accomplishment": "exemption_found",
-    "toast": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. The tin is not perishable, the salt packed with it is, and after four cycles both are still on one manifest line, so the exemption covers the crate."
+    "toast": "[Appraise Goods] — Four cycles of manifests list the tin and the salt packed with it on one line, and the salt is perishable household stock where the tin is not. Under form nine, clause four, that stock carries an exemption from queue hold — and one manifest line puts the crate inside it."
    }
   },
   {
@@ -274,7 +274,7 @@
    "sprite": "shelf_bottles",
    "observe": "Jars in a rank, labels in a hand that got neater partway along the shelf and then went back to how it was.",
    "on_interact_accomplishment": "eyed_the_den_spice_shelf",
-   "toast": "Half the jars are from tiers you will never have a permit for. The keeper does not explain how, and you decide not to ask in a city this fond of paperwork."
+   "toast": "Tier stamps on the jar shoulders. Half of them are numbers your permit does not reach. The keeper watches you read them and goes back to her tally."
   },
   {
    "id": "den_shop_hatchling_bench",

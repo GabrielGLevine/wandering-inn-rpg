@@ -194,8 +194,8 @@
    "sprite": "temper_bench",
    "observe": "A billet clamped mid-process, the quench beside it, a gauge still reading where the last failure left it.",
    "requires_skill": "appraise_goods",
-   "skill_hint_toast": "Colour, count, quench. Two of those you can judge by eye; the count wants a trained one.",
-   "locked_toast": "Heat, metal, and a gauge you cannot read. Guessing here costs somebody a week.",
+   "skill_hint_toast": "Colour and quench you can read off the billet yourself. The count between them takes a trained eye — appraise it and the numbers come clear.",
+   "locked_toast": "The gauge on the bench is reading in marks you do not know. Setting the count by guess would spoil the billet and the week of work in it.",
    "on_skill_use": {
     "accomplishment": "temper_run",
     "toast": "[Appraise Goods] — You read the grain off the colour, hold the count two beats longer than the slate says, and quench. The billet comes out with the standard's own answer in it."
@@ -210,7 +210,7 @@
    ],
    "display_name": "The Examination Standard",
    "sprite": "price_board",
-   "observe": "A civic notice pinned at eye height, examiner's seal at the corner, the text underneath it read so often the ink has gone grey where thumbs land.",
+   "observe": "Two thumbprints gone grey in the margin of the examination standard. The examiner's seal is down in the corner, the sheet pinned at eye height.",
    "on_interact_accomplishment": "read_the_examination_standard",
    "toast": "The standard does not measure how hard a blade comes out. It measures how it recovers.",
    "visual_states": [
@@ -260,7 +260,7 @@
    ],
    "display_name": "The Slack Tub",
    "sprite": "barrel",
-   "observe": "Water gone grey with scale, a skin of oil across the top, and a scum line three fingers above the current level.",
+   "observe": "A scum ring goes right around the inside of the tub three fingers above the water, and the water below it is grey with scale under an unbroken skin of oil.",
    "on_interact_accomplishment": "eyed_the_slack_tub",
    "toast": "You touch the surface. Warm all the way down, and this tub has not been cold in years. The oil skin closes back over where your finger went."
   },
@@ -299,7 +299,7 @@
    ],
    "display_name": "The Pattern Wall",
    "sprite": "library_shelf",
-   "observe": "Finished pieces racked in a grid, each with a civic tag wired to it and not one price among them.",
+   "observe": "A grid of finished pieces the width of the wall, one to a slot. Each has a wired civic tag on it, giving a smith's mark and a measure but no price.",
    "on_interact_accomplishment": "eyed_the_pattern_wall",
    "toast": "Every piece on the wall passed. You count the tags: four different smiths, four different answers, one standard."
   },
@@ -330,7 +330,7 @@
     }
    },
    "observe": "A squat rig on three legs, gauges banked along its front, correcting its own posture a half-beat after it needs to.",
-   "gate_closed_toast": "The rig swings past its own marks and settles wrong, again and again. Fixing it belongs to the smith, and she has not asked you to.",
+   "gate_closed_toast": "The rig overshoots its marks and settles wrong, then does it again while you watch. The smith has not asked you to put a hand on it.",
    "on_victory": "golem_recalibrated"
   }
  ]

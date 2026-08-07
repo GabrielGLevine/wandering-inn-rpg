@@ -198,7 +198,7 @@
   { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": { "cell": [24, 6] } },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "leaned_on_the_parapet_rail" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You put a hand on the rail. Warm from the tier, not from the drop, and cold air comes up the shaft against your wrist." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "You lean on the bronze rail. Warm brass under your palm; from the shaft, cold air and the clank of the cage somewhere below." }, "timeout_sec": 5 },
   { "action": "screenshot", "name": "14c_forge_parapet_rail" },
 
   { "_comment": "== 3/3: the slag heap (19,6), the tier's east working end. ==", "action": "teleport", "map": "pallass_forge", "cell": [19, 7] },
