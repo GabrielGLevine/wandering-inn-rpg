@@ -1,5 +1,34 @@
 {
  "_issue": "GH#397 round 2 — map-register re-authorship, lane l1 (region: invrisil)",
+ "_fix_wave": {
+  "_what": "Adversarial review of 0775c365 found 13 defects; this pass fixes exactly those rows (round-2 fix wave, uncommitted).",
+  "_functional_actionability": [
+   "mercantile_alleys $.entities[10].skill_hint_toast — re-authored so the last clause cues the action in the modal idiom (interactions.gd:156-161: the hint fires only for a player who already KNOWS disarm_trap)",
+   "mercantile_alleys $.entities[9].skill_hint_toast — re-authored as a prompt; no longer reports the on_skill_use outcome",
+   "adventurers_rest $.entities[11].gate_closed_toast — not-yet signal restored (sibling shape)"
+  ],
+  "_fact_fixes": [
+   "adventurers_rest $.entities[9].toast — 'ninth of nine' re-attached to the HATS (nine pegs, third peg); invented window removed (no window entity/decor in the file)",
+   "brothers_parlor $.entities[20].variants[0].toast — 'further out of the way' returned to the DOOR, invented 'takes two knocks' dropped, final clause rebuilt",
+   "mercantile_alleys $.entities[10].once_per_waking_toast — reward-already-taken signal restored (mirrors the reward site: nothing behind the bottom crate), invented count 'three of them' dropped",
+   "mercantile_alleys $.entities[8].observe — NOT-Watch decision fact restored as physical observation (no Watch steel among them), not as a negation-correction",
+   "mercantile_alleys $.entities[20].observe — fence-thread link restored as a LEDGER-READABLE fact (the second tally's own delivery line reads the plain door at the alley's end, the round-trip door alleys_to_parlor at (19,12)); zero anonymous agents, zero inference"
+  ],
+  "_trims_reauthored": [
+   "invrisil_boulevard $.entities[19].observe — beat order changed (side doors, then frontage, then board); COYLE AND SONS + burgundy/brass + side-traffic kept",
+   "adventurers_rest $.entities[5].observe — re-authored; name-cut-into-each-piece and no-card-from-the-house kept",
+   "stationer $.entities[10].observe — persistence coda and the reused 'Banked low,' opener removed; the file's ONE button is $.entities[2].observe (non-lane), this row carries zero",
+   "stationer $.entities[9].observe — self-cancelling chair state resolved; the second-chair fact (#318) kept"
+  ],
+  "_controller_ruled": "brothers_parlor $.entities[6].observe — 'set where' replaced by pure position; 'he is already looking at you' kept as the row's ONE §3 interpretive move",
+  "_pins_rederived": "4 of the 8 (invrisil_hat_quiet 35, invrisil_v016_gate_check 43, invrisil_walkthrough 74, stationer_room_loop 37). Method: ran each script FIRST with the stale pin, then read the toast payload that follows the step's own route anchor in qa_output/<script>/events.jsonl (skill_used target / accomplishment_recorded id / player_blocked cell) and wrote THAT text into the pin; all four then re-run PASS. The other 4 deltas were untouched by the fix wave.",
+  "_gates": {
+   "verify_untouched": "rc=0",
+   "data_lint": "rc=0; 85 narrator-template advisory hits, byte-identical to the pre-fix count, and none of the 13 fixed strings scores button/triad/affordance",
+   "qa": "stationer_room_loop / invrisil_hat_quiet / invrisil_v016_gate_check / invrisil_walkthrough all PASS at seed 9",
+   "unit": "test_content.gd PASS, test_copy_fit.gd PASS (3696 strings measured), 0 'ERROR: FAIL'"
+  }
+ },
  "_lane": "397r2/l1 (worktree /tmp/wi-397r2-l1); NOT committed — controller commits",
  "_rows": "34 rows (every invrisil row of the frozen round2-worklist.jsonl) re-authored; 0 skipped",
  "_files_touched": [
@@ -10,8 +39,9 @@
   "wandering_inn_game/data/maps/invrisil/stationer.json"
  ],
  "_qa_scripts_touched": "5 scripts, 8 payload_contains prose pins, text only — no route, assertion, fixture or step added/removed/reordered",
- "_pin_derivation": "Each pin was set from the shipped map value, then the owning script was RUN headless (qa/run_qa.sh <script> headless --seed=9 and again under ci_sweep.sh --touching), and the `toast` payload text emitted in that run's qa_output/<script>/events.jsonl was compared byte-for-byte against the pin. All 8 sites MATCH a real run. No fixture was edited and no assertion was weakened.",
- "_gates": {
+ "_pin_derivation": "Each pin was set from the shipped map value, then the owning script was RUN headless (qa/run_qa.sh <script> headless --seed=9 and again under ci_sweep.sh --touching), and the `toast` payload text emitted in that run's qa_output/<script>/events.jsonl was compared byte-for-byte against the pin. All 8 sites MATCH a real run. FIX WAVE: 4 of the 8 were re-derived the same way after the round-2 fix wave (see _fix_wave._pins_rederived). No fixture was edited and no assertion was weakened.",
+ "_gates_lane": {
+  "_note": "measured at 0775c365, BEFORE the round-2 fix wave; the fix wave's own gate run is _fix_wave._gates",
   "data_lint": "rc=0",
   "round2_advisories_on_touched_files": "16 lines -> 6 lines; all 6 belong to strings OUTSIDE the frozen worklist (see _residual_advisories). The lane's own 34 strings score 0 button / 0 triad / 0 affordance.",
   "verify_untouched": "rc=0 before work and rc=0 after (255 untouchable strings byte-identical)",
@@ -72,7 +102,7 @@
  "_disclosed_verbatim_carryovers": [
   {
    "path": "invrisil_boulevard.json $.entities[19].observe",
-   "kept": "burgundy and brass, lettered COYLE AND SONS in a ...",
+   "kept": "burgundy and brass, lettered COYLE AND SONS",
    "why": "diegetic lettering + firm colours are the fact payload and the §8 lettering-context exemplar; overall similarity to the old string 0.22"
   },
   {
@@ -87,7 +117,7 @@
    "step": 35,
    "source": "wandering_inn_game/data/maps/invrisil/adventurers_rest.json::$.entities[9].toast",
    "old": "You hang your hat on the third peg, brim out. Across the room a man sets his cup down and lets you see him look at you.",
-   "new": "Your hat goes onto the third peg, brim out, ninth of nine. A man by the window lowers his cup an inch and holds it there, watching you do it.",
+   "new": "Your hat goes onto the third peg, brim out — nine hats on the rail now. Across the room a man lowers his cup an inch and holds it there, watching you do it.",
    "derived_from": "qa_output/invrisil_hat_quiet/events.jsonl toast payload — byte-identical MATCH"
   },
   {
@@ -111,7 +141,7 @@
    "step": 43,
    "source": "wandering_inn_game/data/maps/invrisil/adventurers_rest.json::$.entities[11].gate_closed_toast",
    "old": "Two men at the far table, talking to each other. Nothing here for you tonight.",
-   "new": "The two at the far table have their heads together and their voices under the room. Neither looks up when you stop beside them.",
+   "new": "Two heads together at the far table, their voices kept under the room. You have no business with them yet.",
    "derived_from": "qa_output/invrisil_v016_gate_check/events.jsonl toast payload — byte-identical MATCH"
   },
   {
@@ -127,7 +157,7 @@
    "step": 74,
    "source": "wandering_inn_game/data/maps/invrisil/invrisil_boulevard.json::$.entities[19].observe",
    "old": "A modest hanging board, burgundy and brass, lettered COYLE AND SONS in a hand that cost more than the paint. The frontage behind it is one narrow door and a clean window. Everything that actually moves through this firm goes round the side, on wagons, after dark.",
-   "new": "The hanging board is burgundy and brass, lettered COYLE AND SONS in a signwriter's hand. Under it the frontage is one narrow door and one clean window; the doors standing open on this building are all round the side, facing the alley.",
+   "new": "Every door standing open on this building is round the side, facing the alley. The frontage keeps one narrow door and one clean window. The board hanging over them is burgundy and brass, lettered COYLE AND SONS.",
    "derived_from": "qa_output/invrisil_walkthrough/events.jsonl toast payload — byte-identical MATCH"
   },
   {
@@ -143,7 +173,7 @@
    "step": 37,
    "source": "wandering_inn_game/data/maps/invrisil/stationer.json::$.entities[9].observe",
    "old": "A desk set at an angle that lets the scribe see the street and the street see nothing. There is a second chair, and it has been sat in recently.",
-   "new": "The desk stands at an angle to the window: the page faces the wall, the scribe faces the street. The second chair is drawn up close on the page side and pushed back at a slant.",
+   "new": "The desk sits at an angle to the window: the page faces the wall, the scribe faces the street. On the page side there is a second chair, pushed back from the desk and left at a slant.",
    "derived_from": "qa_output/stationer_room_loop/events.jsonl toast payload — byte-identical MATCH"
   }
  ]

@@ -453,7 +453,7 @@
    "display_name": "A Quiet Gentleman",
    "sprite": "drake_patron",
    "facing": "left",
-   "observe": "A Drake with his back to the wall, on a stool set where the good shelf and the banded chest are both in front of him. When you look at the chest, he is already looking at you.",
+   "observe": "A Drake with his back to the wall, on a stool, the good shelf and the banded chest both in front of him. When you look at the chest, he is already looking at you.",
    "talk_pool": [
     "Mm.",
     "The shelf's spoken for, friend. Marker-holders and upward."
@@ -636,7 +636,7 @@
       "brothers_marker": 1
      },
      "gold": 3,
-     "toast": "The marker buys you the longer line: a street further out, a door that takes two knocks. Three gold for it instead of the usual two."
+     "toast": "The line you take off the slate runs longer this time, out to a door further out of the way. The marker makes it three gold; without it the walk pays two."
     }
    ]
   }

@@ -1158,7 +1158,7 @@
     "wilovan_will_fight": 1
    },
    "on_victory": "forced_confession",
-   "observe": "Three men, burgundy and brass at collar and cuff — Coyle's colours — filling the passage shoulder to shoulder. Two have clubs; the third holds a knife low along his forearm."
+   "observe": "Three men shoulder to shoulder across the passage, burgundy and brass at collar and cuff — Coyle's livery. Clubs and knives in their hands, and not a piece of Watch steel among them."
   },
   {
    "_comment": "Trap placement 1/2: alley_footpads_a leftover, remnant danger post-safe-passage.",
@@ -1173,7 +1173,7 @@
    "display_name": "A Cutpurse's Snag-Line",
    "sprite": "snare_coil",
    "requires_skill": "disarm_trap",
-   "skill_hint_toast": "The line runs ankle-high from the crate to the drainpipe, and it is pulled tight. Slack it at the crate end and it comes away whole.",
+   "skill_hint_toast": "A line at ankle height, drawn tight from the crate to the drainpipe. The knot at the crate end is where careful hands would start.",
    "locked_toast": "A taut line crosses the alley at ankle height, tied off crate to drainpipe. You can't see how to clear it safely.",
    "on_skill_use": {
     "accomplishment": "trap_disarmed",
@@ -1185,7 +1185,7 @@
    "_comment": "Avoidable: (11,12)/(13,12) both clear. Row 12 blocks x0-1 and x7; x2-6 is the #398 counting-room floor, sealed from the corridor by the x7 wall.",
    "id": "alley_footpad_snag_b",
    "once_per_waking": true,
-   "once_per_waking_toast": "You cleared this one earlier. The crates sit flat now, three of them, with the wedge tossed in the top one.",
+   "once_per_waking_toast": "The crates sit flat where you left them, and the space behind the bottom one is bare paving.",
    "kind": "prop",
    "cell": [
     12,
@@ -1194,7 +1194,7 @@
    "display_name": "A Rigged Crate Stack",
    "sprite": "crate",
    "requires_skill": "disarm_trap",
-   "skill_hint_toast": "Top crate out past the base of the stack, and one low wedge taking the whole lean. The wedge is oak, shaved flat on the side that faces out.",
+   "skill_hint_toast": "One low oak wedge is taking the whole lean, shaved flat where it faces out. Pulling at the crates will not do it; working that wedge out properly might.",
    "locked_toast": "The crate stack looks ordinary until you notice the angle: top-heavy, wedged to fall. The wedge is set low, where you would have to reach in under the weight.",
    "on_skill_use": {
     "accomplishment": "trap_disarmed",
@@ -1386,7 +1386,7 @@
     "requires": {"cleared_counting_room_guard": 1},
     "absent": {"claimed_counting_room_goods": 1}
    },
-   "observe": "Two tallies are pinned to the bale for the same goods at two prices. The second is addressed to no name at all, only a hat and a feather inked in the corner.",
+   "observe": "Two tallies pinned to the bale, the same goods priced twice. The second carries no buyer's name — a hat and a feather inked in the corner, and under it a delivery line: the plain door at the alley's end.",
    "contains": ["sealed_factor_bale"],
    "on_open_accomplishment": "claimed_counting_room_goods",
    "open_toast": "The seal parts. The bale is compact enough to carry and valuable enough to explain the locked room."

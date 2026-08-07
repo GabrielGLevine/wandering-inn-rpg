@@ -331,7 +331,7 @@
    ],
    "display_name": "The Scribe's Desk",
    "sprite": "library_desk",
-   "observe": "The desk stands at an angle to the window: the page faces the wall, the scribe faces the street. The second chair is drawn up close on the page side and pushed back at a slant."
+   "observe": "The desk sits at an angle to the window: the page faces the wall, the scribe faces the street. On the page side there is a second chair, pushed back from the desk and left at a slant."
   },
   {
    "id": "stationer_stove",
@@ -342,7 +342,7 @@
    ],
    "display_name": "A Small Iron Stove",
    "sprite": "barrel",
-   "observe": "Banked low, with a deep bed of ash under the grate. The paper stacks nearest it stand a hand's width clear of the iron, and the air over the stove plate keeps moving all day."
+   "observe": "The fire is low and the ash under the grate is deep. The nearest stacks of paper stand a hand's width off the iron."
   }
  ]
 }

@@ -1497,7 +1497,7 @@
     0.42,
     0.38
    ],
-   "observe": "The hanging board is burgundy and brass, lettered COYLE AND SONS in a signwriter's hand. Under it the frontage is one narrow door and one clean window; the doors standing open on this building are all round the side, facing the alley."
+   "observe": "Every door standing open on this building is round the side, facing the alley. The frontage keeps one narrow door and one clean window. The board hanging over them is burgundy and brass, lettered COYLE AND SONS."
   },
   {
    "_comment": "v0.16 I1 (#306): kind flips prop -> door in place on the SAME already-blocked cell (20,1), id and `observe` byte-identical, so invrisil_walkthrough's player_blocked + [Observe] + toast pins stay exact. hide_sprite dropped so the facade reads enterable.",

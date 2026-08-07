@@ -304,7 +304,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "The two at the far table have their heads together and their voices under the room. Neither looks up when you stop beside them."
+    "text": "Two heads together at the far table, their voices kept under the room. You have no business with them yet."
    },
    "timeout_sec": 5
   },

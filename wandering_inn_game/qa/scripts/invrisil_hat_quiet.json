@@ -38,7 +38,7 @@
   { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [1, 7]} },
   { "action": "press", "name": "interact" },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": {"id": "hat_hook_set"}, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": {"text": "Your hat goes onto the third peg, brim out, ninth of nine. A man by the window lowers his cup an inch and holds it there, watching you do it."}, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": {"text": "Your hat goes onto the third peg, brim out — nine hats on the rail now. Across the room a man lowers his cup an inch and holds it there, watching you do it."}, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "wait_frames", "frames": 10 },
   { "action": "screenshot", "name": "02_the_third_peg" },

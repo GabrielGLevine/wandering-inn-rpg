@@ -40,7 +40,7 @@
   { "action": "assert_event_logged", "type": "player_blocked", "payload_contains": {"cell": [9, 3]} },
   { "action": "press_field_skill", "skill": "observe" },
   { "action": "wait_for_event", "type": "skill_used", "payload_contains": {"skill": "observe", "target": "stationer_scribe_desk"}, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": {"text": "The desk stands at an angle to the window: the page faces the wall, the scribe faces the street. The second chair is drawn up close on the page side and pushed back at a slant."}, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": {"text": "The desk sits at an angle to the window: the page faces the wall, the scribe faces the street. On the page side there is a second chair, pushed back from the desk and left at a slant."}, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "ui_toast_rendered", "timeout_sec": 5 },
   { "action": "move", "direction": "down", "steps": 2 },
   { "action": "assert_state", "path": "player_cell", "equals": [8, 5] },
