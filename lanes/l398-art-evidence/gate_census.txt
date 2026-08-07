@@ -1,0 +1,65 @@
+GDSCRIPT code=38661 comments=9039 ratio=18.9% target<=20.0%
+  DIR   7.8%    89c  1049code  qa
+  DIR  33.3%   260c   521code  src/audio
+  DIR  27.4%   968c  2562code  src/combat
+  DIR  18.8%  1500c  6465code  src/core
+  DIR  26.2%  2331c  6568code  src/ui
+  DIR  24.3%   808c  2518code  src/world
+  DIR  13.1%  2709c 17927code  tests
+  DIR  26.2%   374c  1051code  tools
+   53.9%    69c    59code  wandering_inn_game/src/core/inn_guests.gd
+   46.3%   422c   490code  wandering_inn_game/src/ui/message_layer.gd
+   44.4%    12c    15code  wandering_inn_game/src/core/bounty_scaling.gd
+   40.1%   311c   465code  wandering_inn_game/src/ui/sleep_veil.gd
+   38.9%    37c    58code  wandering_inn_game/src/core/quests.gd
+   38.7%   149c   236code  wandering_inn_game/src/core/field_skills.gd
+   38.2%    21c    34code  wandering_inn_game/tests/test_reload_caches.gd
+   37.0%    97c   165code  wandering_inn_game/src/ui/wi_settings.gd
+   34.9%   438c   816code  wandering_inn_game/src/ui/journal.gd
+   33.5%    68c   135code  wandering_inn_game/tests/test_inn_guests.gd
+DATA chars=1408940 _comment_chars=211323 ratio=15.0% target<=15.0%
+  DIR  25.2%    1935c     7678all  data/acts.json
+  DIR  13.2%    4192c    31800all  data/arenas.json
+  DIR   8.9%    2872c    32226all  data/audio.json
+  DIR  22.9%    2102c     9174all  data/biomes.json
+  DIR   4.7%    1232c    26188all  data/bounties.json
+  DIR  18.6%    8936c    48137all  data/classes.json
+  DIR  28.3%    9819c    34743all  data/combatants.json
+  DIR  16.5%     288c     1746all  data/credits.json
+  DIR   2.2%     188c     8704all  data/deliveries.json
+  DIR  11.2%   40692c   363623all  data/dialogue
+  DIR  28.6%     559c     1955all  data/fence_stock.json
+  DIR  13.8%     229c     1658all  data/help_content.json
+  DIR  16.6%     904c     5458all  data/interactions.json
+  DIR  11.3%    5753c    51046all  data/items.json
+  DIR  13.5%     598c     4416all  data/leads.json
+  DIR  24.0%     272c     1133all  data/maps/_shared_talk.json
+  DIR  25.8%    9681c    37541all  data/maps/dungeon
+  DIR  13.9%    7225c    52160all  data/maps/floodplains
+  DIR  12.6%     945c     7512all  data/maps/garden
+  DIR  27.9%   19103c    68490all  data/maps/inn
+  DIR  11.9%   10214c    85987all  data/maps/invrisil
+  DIR  14.2%   10572c    74708all  data/maps/liscor
+  DIR  12.2%    7381c    60412all  data/maps/pallass
+  DIR  11.7%    8091c    69418all  data/maps/riverfarm
+  DIR  31.2%    7127c    22826all  data/maps/ruin
+  DIR  11.6%    2486c    21342all  data/maps/sewers
+  DIR  32.0%    3516c    10986all  data/moods.json
+  DIR  47.8%    1943c     4061all  data/portals.json
+  DIR  76.3%     684c      896all  data/progression.json
+  DIR  11.7%    4885c    41718all  data/quests.json
+  DIR   0.0%       0c      279all  data/scene_root.json
+  DIR   2.8%     648c    23177all  data/shipped_ids.json
+  DIR  22.1%   13377c    60531all  data/skills.json
+  DIR  16.7%   22666c   135432all  data/sprites.json
+  DIR  11.7%     208c     1779all  data/system_bestowals.json
+   76.3%     684c      896all  wandering_inn_game/data/progression.json
+   64.3%     582c      905all  wandering_inn_game/data/dialogue/_shared_lines.json
+   47.8%    1943c     4061all  wandering_inn_game/data/portals.json
+   47.0%    1215c     2584all  wandering_inn_game/data/dialogue/door_mounting.json
+   43.7%    1067c     2440all  wandering_inn_game/data/dialogue/ceria_dig_camp.json
+   32.0%    3516c    10986all  wandering_inn_game/data/moods.json
+   31.2%    7127c    22826all  wandering_inn_game/data/maps/ruin/ruin_surface.json
+   31.0%    1824c     5881all  wandering_inn_game/data/maps/dungeon/seal_vault.json
+   31.0%    2636c     8501all  wandering_inn_game/data/maps/dungeon/dungeon_approach.json
+   29.6%    2198c     7417all  wandering_inn_game/data/dialogue/pallass_grimalkin.json
