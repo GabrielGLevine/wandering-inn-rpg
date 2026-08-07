@@ -201,7 +201,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "It is already standing when you come. It lets you run a hand down the leg once, then turns and goes up the rise at a trot, and does not look back."
+    "text": "It is standing when you come up, weight on all four legs. You get one hand down the leg before it swings away from you and takes the rise at a trot."
    },
    "timeout_sec": 5
   },
