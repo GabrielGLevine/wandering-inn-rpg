@@ -56,7 +56,30 @@ docs/superpowers/2026-08-05-wave2-rulings-and-fix-specs.md.
   docs/prose-naturalization/phase5/phase5-reconciliation.md (rec:
   map-register-only re-authorship under zero-inference scenery default).
 
-## RUNNING (2026-08-06 evening): #398 skill-gated areas (user go)
+## RUNNING (2026-08-07): #398 Phase 1 — five pocket lanes
+Phase 0 COMMITTED on issue/398-skill-gated-areas @ 879a1071 (cuts
+property WEAPON-GATED at the field seam, skill_gates registry + 5 lint
+arms w/ 40 self-tests, blink proof, Flame Jet burns; THREE review
+rounds — Codex pin-gamed martial fixtures twice, both caught; 10-slot
+armed bar ACCEPTED w/ cursor-overflow, windowed fit check owed at
+close; failure mode 6 + companion mechanics folded into
+wi-delegating-to-codex). main (#402) + 398/art (briar_wall + pond_cache,
+eye-gated) merged in. FIVE CODEX POCKET LANES running in parallel
+worktrees /tmp/wi-398-p{1..5} (branches 398/p1..p5, brief files in
+each): P2 DONE+reviewed (DO-NOT-MERGE: global burned_the_debris counter
+leaks cross-map — ruled fix: generic per-target counter override
+mirroring toast_from:target; Opus fix wave running; STANDARD-SETTER
+rule armed: check P5's counters against the override at train time).
+P4 DONE (reviewer running; flag: lane touched the maps voice baseline —
+adjudicate enrollment vs manipulation). P1/P3/P5 still implementing.
+THEN: remaining reviews + fix waves → anchored train (shared files:
+items/combatants/sim_combat_batch/manifest all lane-marked appends) →
+composed gates → machine playtest (10-slot bar + each pocket windowed)
+→ CHOICE-LOG (spec §9 rulings + session rulings) → wave-2 follow-ups
+(riverfarm pockets, lockpick canon-check ACK) → PR [ci-full] closes
+#398.
+
+## SUPERSEDED RUNNING BLOCK (2026-08-06 evening)
 PR #402 MERGED (3c9b610b) after the GitHub Actions incident cleared;
 #397 remains OPEN on the Phase-5 gate (round-2 ask below). #398 now
 executing: branch issue/398-skill-gated-areas (spec merged from its
