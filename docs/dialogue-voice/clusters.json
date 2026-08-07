@@ -40,6 +40,7 @@
     {"id": "invrisil-coyle", "tier": "T3+T2", "files": ["invrisil_merchant_prince.json", "invrisil_fixer.json"], "notes": "same quest (Coyle); fixer (Cups) re-tiered T2 street-trade"},
     {"id": "invrisil-stationer-shop", "tier": "T2+T3", "files": ["invrisil_hired_scribe.json", "invrisil_stationer_client.json"], "notes": "same shop, same quest chain; scribe re-tiered T2; stationer reveal LOSES its shape (bible 5b)"},
     {"id": "invrisil-steward", "tier": "T3+T2", "files": ["invrisil_house_steward.json", "invrisil_rest_factor.json"], "notes": "rest factor re-tiered T2 publican register"},
+    {"id": "invrisil-counting-factor", "tier": "T2", "files": ["invrisil_counting_factor.json"], "notes": "#398 new graph; singleton by rule 2 (invrisil-steward already carries a T2 factor); antithesis grant: zero; NO peak"},
     {"id": "invrisil-broker", "tier": "T3", "files": ["invrisil_seal_broker.json"], "notes": "worst-lines table entry; antithesis grant: zero"}
   ],
   "changelog": [
@@ -56,6 +57,7 @@
     "2026-08-03 pallass_market_local split out of market-pallass as singleton: two T2 speakers (clerk + local) violated rule 2",
     "2026-08-03 watch_crate split out of dresk+watch as singleton: Watch Sergeant (street.json display_name) is distinct from Sergeant Ashgrave (barracks.json), both T2; rule 2",
     "2026-08-03 cluster count 34->36 (two rule-2 splits); every file verified to appear in exactly one cluster",
-    "2026-08-06 riverfarm-hunter+bark card superseded by riverfarm-shepherd+bark.md (#396): cluster id, tier and file list all frozen; the NPC became A Shepherd and the antithesis grant stays pinned at the legacy thicket_reported_rerouted node"
+    "2026-08-06 riverfarm-hunter+bark card superseded by riverfarm-shepherd+bark.md (#396): cluster id, tier and file list all frozen; the NPC became A Shepherd and the antithesis grant stays pinned at the legacy thicket_reported_rerouted node",
+    "2026-08-06 invrisil_counting_factor.json enrolled as new singleton cluster invrisil-counting-factor (#398): T2 factor/trade register, card docs/dialogue-voice-cards/invrisil-counting-factor.md; sited beside invrisil-steward but NOT merged into it (rule 2 -- invrisil_rest_factor.json is already T2 there); antithesis grant zero, PEAK deliberately none; cluster count 36->37"
   ]
 }

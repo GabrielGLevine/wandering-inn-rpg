@@ -464,6 +464,9 @@ const INVRISIL_CELLS := [
 	# rest_bravo_a/b's own con/weapon_die in combatants.json, which this lane does
 	# not own -- recorded as a seam, not silently absorbed. Margins 0.08/0.06.
 	{"name": "rest_bravos_t3_warrior10_solo", "arena": "merchant_warehouse", "enemies": ["rest_bravo_a", "rest_bravo_b"], "build": "t3_warrior10", "solo": true, "win_lo": 0.85, "win_hi": 0.99, "check_rounds": true},
+	# #398 P4 counting-room pocket. Both new combatants sit 2-3 levels above
+	# Invrisil's 8-10 band; this is the shipped solo composition and arena.
+	{"name": "counting_room_guard_t3_warrior10_solo", "arena": "mercantile_alley", "enemies": ["factor_enforcer", "factor_clerk_guard"], "build": "t3_warrior10", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 const BUILDS := [

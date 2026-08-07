@@ -30,6 +30,7 @@ const EXPECTED_ITEMS := {
 	"wool_tuft": ["Worth 1 gold"],
 	"shed_antler": ["Worth 6 gold"],
 	"loose_arrow": ["Worth 1 gold"],
+	"sealed_factor_bale": ["Worth 28 gold"],
 	# GH#380/#383 yields: both priceless (never merchandise), so only the
 	# next_fight clause composes.
 	"improvised_cudgel": ["Next fight: +1 damage (single use)"],
