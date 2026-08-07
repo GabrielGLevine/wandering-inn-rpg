@@ -517,7 +517,7 @@
    "display_name": "Threshold Candles",
    "sprite": "unlit_lantern",
    "requires_skill": "light",
-   "skill_hint_toast": "Cold candle-stubs down both sides of the door. Light of your own making would set them going.",
+   "skill_hint_toast": "A struck match does nothing to the wicks at this door. They will only take a light you make yourself.",
    "locked_toast": "A row of cold candle-stubs, set either side of the door. Bring a light that needs no striking.",
    "on_skill_use": {
     "accomplishment": "lit_the_threshold_candles",
@@ -565,7 +565,7 @@
     "accomplishment": "blight_lifted",
     "toast": "[Observe] — Look at it squarely and the knot resolves into a price, tied off and unpaid. You pay it where you stand, and the pull goes out of the briar all across the hollow."
    },
-   "observe": "A snarl of root and briar at the center of the standing stones. The strands all lie one way, drawn out toward the stone nearest them."
+   "observe": "Root and briar have grown into a single knot at the middle of the standing stones. The strands are all pulled tight, each toward whichever stone stands closest."
   },
   {
    "id": "leyline_stone",
@@ -724,7 +724,7 @@
    "display_name": "A Briar Snare",
    "sprite": "snare_coil",
    "requires_skill": "disarm_trap",
-   "skill_hint_toast": "Brambles knotted into a tight loop, low against the undergrowth. A snare — and you know how snares come apart.",
+   "skill_hint_toast": "Bramble twisted into a running loop at ankle height — a snare, and the knot in it is one your hands already know.",
    "locked_toast": "The brambles here twist into a tight loop, low to the ground. Pull anywhere and the whole loop moves.",
    "on_skill_use": {
     "accomplishment": "trap_disarmed",
@@ -747,7 +747,7 @@
     1.02,
     0.78
    ],
-   "observe": "A second house at the hollow's west edge, smaller, its roof half down and its door standing open. A line of shallow marks runs across the lintel, worn nearly smooth.",
+   "observe": "At the hollow's west edge stands a second house, smaller than the cottage, with half its roof fallen in. The door is open on the dark, and shallow marks cross the lintel in a line worn nearly smooth.",
    "to_map": "witch_hut",
    "to_cell": [
     4,

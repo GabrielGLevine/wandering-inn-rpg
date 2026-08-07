@@ -1336,7 +1336,7 @@
    ],
    "display_name": "Fence Rail",
    "sprite": "riverfarm_fence_ns",
-   "observe": "Lichen up the top rail, one stretch of it rubbed bare."
+   "observe": "The top rail is rubbed bare along one stretch, and it gives a dry knock when you set a hand on it."
   },
   {
    "id": "riverfarm_fence_ns_2_7",
@@ -1554,7 +1554,7 @@
     0.58,
     0.62
    ],
-   "observe": "A worn marker stone at the village's heart, a weather-softened spiral cut into its face. Attunement: show a door the right stone and the door learns the place, and can open onto it ever after. The ring of grass around it is worn down to dirt.",
+   "observe": "The stone stands at the middle of the village with a spiral cut into its face, softened by weather. Attunement works like this: show a door the right stone and the door learns the place, and can open onto it ever after. The grass around its base is worn down to bare dirt.",
    "portal_menu": true,
    "portal_menu_when": {
     "requires": {
@@ -1614,7 +1614,7 @@
     ]
    },
    "trigger_radius": 1,
-   "observe": "Eyes at the field's edge, low down, catching what light there is. They go out when you look straight at them and come back when you look away.",
+   "observe": "After dark the field's edge has eyes in it, low to the ground and catching the light. Look straight at them and they go out. They are back as soon as your eye moves off.",
    "gate_closed_toast": "Stubble, a fence post, and daylight. One patch of grass lies flat, and the dew is gone off it.",
    "visual_states": [
     {
@@ -1832,7 +1832,7 @@
    "once_per_waking": true,
    "once_per_waking_toast": "The dray stands empty and the shed is stacked to the door. The bank head has no more work in it until tomorrow.",
    "observe": "Grain sacks off a dray at the bank head, a dozen of them on the boards. Two men stand looking at the stack with their hands on their hips.",
-   "locked_toast": "One sack comes up off the dray. Your back is done at that, and there are eleven more on it.",
+   "locked_toast": "The first sack moves. Your back has nothing for the eleven behind it. Shifting a stack like that takes strength you have not learned yet.",
    "skill_hint_toast": "Dragging them one at a time will take all day. Carrying them properly would not.",
    "on_skill_use": {
     "accomplishment": "hauled_heavy_load",

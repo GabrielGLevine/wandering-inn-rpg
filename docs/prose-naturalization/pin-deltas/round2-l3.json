@@ -4,6 +4,7 @@
  "_note": "payload_contains text pins re-derived from REAL headless runs (qa/run_qa.sh <script> headless --seed=9), read out of qa_output/<script>/events.jsonl -- never hand-typed. Each `new` is the byte-exact toast/ui_toast_rendered payload the engine emitted after the re-authored map string landed.",
  "_seed": 9,
  "_python": "3.12.3",
+ "_fix_wave": "397r2/l3 FIX WAVE (adversarial review of b32a40d0): 10 strings re-authored. Exactly ONE pin carrier moved again -- thicket_keeps_skill steps 22/23 (witch_hut $.entities[1].on_skill_use.toast, re-authored under amendment 2's Skill-receipt carve-out to restore the containment + long-failure facts). Its `new` below is the fix-wave text, re-derived from a REAL run (events.jsonl), and `fix_wave_old` records the round-2 lane text it replaced. Step 22 still co-asserts `lore: true`. An exhaustive reverse check (every payload_contains string in qa/scripts/ tested against every field of every entity touched) confirms the other nine re-authored strings carry NO pin: the neighbouring pins on those same entities sit on fields the fix wave did not touch (village[31].once_per_waking_toast in martial_field_loop, village[23].gate_closed_toast in riverfarm_walkthrough, hollow[15].on_skill_use.toast in riverfarm_skill, hut[1].locked_toast in thicket_keeps_talk, hut[2].toast in thicket_keeps_skill). flood_ledger_talk and martial_field_loop entries below are UNCHANGED by the fix wave.",
  "scripts": {
   "flood_ledger_talk": [
    {
@@ -38,13 +39,15 @@
     "step": 22,
     "event": "toast",
     "old": "[Detect Magic] — The shard is one link of a boundary that used to ring the whole thicket. It still pulls, faintly, along the exact line the deer refuse to cross. It was drawn to keep something in, and it has been failing at that for a very long time.",
-    "new": "[Detect Magic] — The shard is one link of a boundary that once ringed the thicket, and the pull in it still runs the exact line the deer refuse to cross. It faces inward, and there is very little of it left."
+    "new": "[Detect Magic] — What is left here is one link of a boundary that once closed around the whole thicket. Its pull still faces inward, along the exact line the deer refuse to cross. It was drawn to keep something in; it stopped doing that a very long time ago.",
+    "fix_wave_old": "[Detect Magic] — The shard is one link of a boundary that once ringed the thicket, and the pull in it still runs the exact line the deer refuse to cross. It faces inward, and there is very little of it left."
    },
    {
     "step": 23,
     "event": "ui_toast_rendered",
     "old": "[Detect Magic] — The shard is one link of a boundary that used to ring the whole thicket. It still pulls, faintly, along the exact line the deer refuse to cross. It was drawn to keep something in, and it has been failing at that for a very long time.",
-    "new": "[Detect Magic] — The shard is one link of a boundary that once ringed the thicket, and the pull in it still runs the exact line the deer refuse to cross. It faces inward, and there is very little of it left."
+    "new": "[Detect Magic] — What is left here is one link of a boundary that once closed around the whole thicket. Its pull still faces inward, along the exact line the deer refuse to cross. It was drawn to keep something in; it stopped doing that a very long time ago.",
+    "fix_wave_old": "[Detect Magic] — The shard is one link of a boundary that once ringed the thicket, and the pull in it still runs the exact line the deer refuse to cross. It faces inward, and there is very little of it left."
    },
    {
     "step": 52,

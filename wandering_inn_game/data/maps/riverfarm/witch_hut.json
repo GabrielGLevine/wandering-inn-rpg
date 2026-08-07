@@ -196,7 +196,7 @@
    "on_skill_use": {
     "accomplishment": "ward_scrap_read",
     "lore": true,
-    "toast": "[Detect Magic] — The shard is one link of a boundary that once ringed the thicket, and the pull in it still runs the exact line the deer refuse to cross. It faces inward, and there is very little of it left."
+    "toast": "[Detect Magic] — What is left here is one link of a boundary that once closed around the whole thicket. Its pull still faces inward, along the exact line the deer refuse to cross. It was drawn to keep something in; it stopped doing that a very long time ago."
    },
    "observe": "A palm of grey stone lying flat on the shelf, one edge set square to the front. The rest of the shelf runs crooked."
   },
@@ -209,7 +209,7 @@
    ],
    "display_name": "The Stoppered Jars",
    "sprite": "shelf_bottles",
-   "observe": "A row of stoppered jars along the top shelf, the ink on their labels gone brown and past reading.",
+   "observe": "The top shelf holds a row of stoppered jars with nothing left readable on the labels.",
    "on_interact_accomplishment": "observed_hut_stoppered_jars",
    "toast": "Every stopper is waxed and every jar is still full. The wax was pressed flat by a thumb and never broken since."
   },
