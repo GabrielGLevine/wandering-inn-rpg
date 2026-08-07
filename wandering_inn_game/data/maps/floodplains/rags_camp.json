@@ -111,7 +111,7 @@
     0.72,
     0.6
    ],
-   "observe": "A flat stone at the high end of the hollow, one patch of it worn to a shine. It faces the only way in, and the ground around it is bare on every side.",
+   "observe": "At the top of the hollow there is one flat stone, a patch of its surface rubbed smooth. The cut in the turf runs straight up to it, and the ground on all sides of it is bare.",
    "on_interact_accomplishment": "saw_the_chieftains_seat",
    "toast": "From here you can see the cut in the turf, the fire, and everyone's hands at once. It was not chosen for comfort."
   },
@@ -125,7 +125,7 @@
    ],
    "display_name": "A Carrying Yoke",
    "sprite": "crate",
-   "observe": "A yoke cut for goblin shoulders, half your height, propped against a stack of baskets. The baskets are wet through and there is cut brush caught in the weave of the top one.",
+   "observe": "The yoke leaning on the basket stack was cut for goblin shoulders and stands about waist-high on you. The baskets are dark with water to the rim, and bits of cut brush are still snagged in the top one's weave.",
    "on_interact_accomplishment": "camp_carry_jobs",
    "once_per_waking": true,
    "once_per_waking_toast": "Every basket is out and the yoke is lying on the ground. There is nothing to haul here until you have slept.",
@@ -188,7 +188,7 @@
       "corusdeer_culled": 1
      },
      "accomplishment": "camp_larder_filled",
-     "toast": "You hang what you brought back and the old one shows you how thin to cut it. The rack is bowed with the weight of it by the time the light goes."
+     "toast": "You bring the carcass down to the poles, and the old one pinches finger and thumb nearly shut to show you the thickness. Hanging all of it takes until the light goes."
     }
    ]
   },

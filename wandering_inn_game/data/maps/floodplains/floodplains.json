@@ -1238,7 +1238,7 @@
     0.78,
     0.9
    ],
-   "observe": "Something square and worked sits on the pond floor under a coat of silt, a stride out from the bank. The strip of water between it and the bank is a hand deep and dead still.",
+   "observe": "Something square and worked sits on the pond floor under a coat of silt, a stride out from the bank. The strip of water between it and the bank is a hand deep and dead still, and where the bank shades it the surface has already gone to a skin of ice.",
    "on_interact_accomplishment": "found_the_frozen_cache",
    "toast": "Kneeling on the ice, you lever the silt-caked strongbox free. Drake-work, old, its lock long rusted through. Inside, still dry: a few keepsakes and a handful of old coin.",
    "gold": 5,
@@ -1884,7 +1884,7 @@
    },
    "observe": "Late in the season and thin with it, but another scrape further down the boulder line is occupied. Fresh-dug, by the earth thrown out behind it.",
    "requires_skill": "lesser_bond",
-   "skill_hint_toast": "It is too tired to flinch when you crouch beside it. A Skill would carry further here than your hands will.",
+   "skill_hint_toast": "You crouch down beside the scrape and it does not lift its head. Put the offer to it where it lies; it is not going to come up to meet you.",
    "locked_toast": "The pup does not move. Hands that can take an offer like this are learned on hurt animals, one at a time.",
    "companion_source": {
     "companion_id": "wolf_companion",

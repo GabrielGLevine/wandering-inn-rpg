@@ -75,8 +75,9 @@
     "action": "wait_for_event toast payload_contains.text",
     "source_string": "map:floodplains/rags_camp.json:$.entities[6].variants[0].toast",
     "old": "You hang what you brought back and cut it down thin the way the old one shows you, and by the time the light goes the rack is heavy for the first time this year.",
-    "new": "You hang what you brought back and the old one shows you how thin to cut it. The rack is bowed with the weight of it by the time the light goes.",
-    "derived_from": "qa_output/floodplains_price_help/events.jsonl event #182 (type toast)"
+    "new": "You bring the carcass down to the poles, and the old one pinches finger and thumb nearly shut to show you the thickness. Hanging all of it takes until the light goes.",
+    "derived_from": "qa_output/floodplains_price_help/events.jsonl event #173 (type toast) — FIX WAVE re-derivation after the amendment-6 re-authorship of this string",
+    "superseded_by_fix_wave": "You hang what you brought back and the old one shows you how thin to cut it. The rack is bowed with the weight of it by the time the light goes."
    },
    {
     "script": "wandering_inn_game/qa/scripts/floodplains_price_gate_proof.json",
@@ -360,5 +361,20 @@
    "verdict": "Textbook triple cadence (beads / gathers / drops) in one sentence. Re-authored as two observations, one of them the player's own hand, so the interact has a body in it. Facts kept: cold spray, the basin, the worn-soft face. The garden's protected strings (the bed, the plinths, the war-memorial peak) are byte-untouched, and this file now carries ZERO round-2 advisories. Ending: fact.",
    "qa_pins": []
   }
- ]
+ ],
+ "_fix_wave": {
+  "_scope": "GH#397 r2 adversarial-review fix wave on 397r2/l4. Five strings re-authored/repaired; nothing else in this record changes.",
+  "rows": [
+   "map:floodplains/floodplains.json:$.entities[5].observe — stranded freeze teach restored as a physical fact (ice already skinning the shaded edge of the still strip); the freezability signal no longer depends on the companion-gated $.entities[32].toast.",
+   "map:floodplains/floodplains.json:$.entities[27].skill_hint_toast — re-authored (6-word verbatim lead dropped) and the abstract 'A Skill would carry further' clause replaced with the family's diegetic 'offer' idiom, with no fifth paraphrase of the hurt-animals hands motif.",
+   "map:floodplains/rags_camp.json:$.entities[3].observe — re-authored from scratch (was a 10-word verbatim lead plus a one-word insertion).",
+   "map:floodplains/rags_camp.json:$.entities[4].observe — re-authored from scratch (was a word-swap).",
+   "map:floodplains/rags_camp.json:$.entities[6].variants[0].toast — re-authored from scratch (was the old clause inventory reordered); the one pin below was re-derived."
+  ],
+  "untouched_by_ruling": [
+   "map:floodplains/floodplains.json:$.entities[12].observe — accepted petition, byte-frozen.",
+   "map:floodplains/floodplains.json:$.entities[4].once_per_waking_toast — intent shading adjudicated defensible.",
+   "map:floodplains/floodplains.json:$.entities[32].toast — off-worklist, pinned by gh330_companion_gate_loop."
+  ]
+ }
 }
