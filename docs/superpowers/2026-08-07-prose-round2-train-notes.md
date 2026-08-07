@@ -106,6 +106,25 @@ working ledger.
    companion-gated. Fix wave restores an ungated physical-fact freeze
    cue in [5].observe itself.
 
+11. **Amendment-2 Skill-receipt carve-out RULED + committed** (l3
+   review I4): on_skill_use/skill_uses toasts report what the Skill
+   reads, no allowance spent, canon guard bounds. Resolves the
+   promotion-time rule collision; retro-covers l5/l6's
+   over-declarations.
+12. **Matcher recall gaps recorded** (l1 I6, l3 M5): the persistence
+   coda variant "and the <NP with modifiers> keeps ..." and bare
+   "wants" as affordance both evade the arms. Note at promotion
+   decision; the arms stay smoke, not verdicts.
+13. **Sentence-shape convergence is a cross-lane risk** (l3 I3: 62%
+   two-sentence → 81%; l2 review: 68%): fix waves instructed to
+   rebalance. At train, measure the composed two-sentence share over
+   all re-authored rows vs the 65% corpus baseline — if the pass
+   TIGHTENED the distribution, that is a new mechanical tell and a
+   surface for the blind read.
+14. **Process note:** merged main into lane worktrees while fix waves
+   were live (docs-only, read-not-write surfaces — no collision, but
+   the never-edit-while-delegated rule says don't repeat it).
+
 ## Lane status
 
 - ALL SIX LANDED: l1 0775c365 (34), l2 faf2e7b6 (28), l3 b32a40d0
