@@ -116,6 +116,11 @@ const LOADOUT_CELLS := [
 	{"name": "hollow_herb_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["hollow_herb_sachet"]},
 	{"name": "guardian_ward_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["guardian_ward_fragment"]},
 	{"name": "moonhide_fetish_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["moonhide_fetish"]},
+	# #398 P1 review M4: the pond seal was a stat-clone of warded_coil_charm, so it
+	# moved onto flat damage_reduction with NO hp_mod -- the one axis the accessory
+	# pool leaves open. Measured here for the same reason every other unique
+	# accessory above is: a DR carrier changes outcomes when it is worn.
+	{"name": "pond_seal_solo", "comp": "goblin_ambush", "build": "warrior2", WIKeys.WEAPON: "rusty_sword", "armor": "", "accessories": ["pond_survey_seal"]},
 ]
 
 const ENCOUNTER_CELLS := [
@@ -180,6 +185,22 @@ const ENCOUNTER_CELLS := [
 	# Floodplains band; they are recorded in the PR body (RULING A).
 	{"name": "camp_ground_press_t1_rags_ally", "arena": "boulder_flats", "enemies": ["plains_scavenger_a", "plains_scavenger_b", "plains_scavenger_lead"], "build": "warrior2", "ally": "rags_ally", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 	{"name": "camp_ground_press_t1_spear_ally", "arena": "boulder_flats", "enemies": ["plains_scavenger_a", "plains_scavenger_b", "plains_scavenger_lead"], "build": "warrior2", "ally": "goblin_spear_ally", "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
+	# #398 P1 pond-island encounter cells. Both solo -- the map entity fields no
+	# ally. TWO cells because a skill-gated pocket has TWO different populations
+	# and only one of them can own a band (region-tiers.md "Gated vs.
+	# measured-only"): the region yardstick is warrior2, but warrior2 CANNOT
+	# REACH this island -- neither a freezes carrier nor [Double Step] is in its
+	# kit -- so gating the yardstick cell would contract a band to a build that
+	# never arrives. The yardstick cell therefore stays MEASURED, in the
+	# rock_crab_nest_t1_solo shape ("do not solo this at warrior2"), and the
+	# GATING AUTHORITY is the entrant build that actually crosses.
+	{"name": "pond_guardian_t1_warrior2_solo", "arena": "boulder_flats", "enemies": ["pond_guardian"], "build": "warrior2", "solo": true},
+	# The gate class made honest: [Double Step] arrives at Runner 5
+	# (completed_delivery 10, classes.json), and a player who ran ten deliveries
+	# on the Floodplains holds a combat class too -- warrior 5 is the same
+	# melee_hit-18 kit both #398 P1 mode fixtures field, so this cell IS the
+	# build the mode-B canonical plays. Tune combatant data only.
+	{"name": "pond_guardian_t1_runner5_warrior5_solo", "arena": "boulder_flats", "enemies": ["pond_guardian"], "build": "t1_runner5_warrior5", "solo": true, "win_lo": 0.55, "win_hi": 0.95, "check_rounds": true},
 ]
 
 const BOSS_CELLS := [
@@ -481,6 +502,12 @@ const BUILDS := [
 	{"name": "beast_master10_melee", "classes": {"beast_master": 10}, WIKeys.AI: "melee", "matrix": false},
 	{"name": "druid14_caster", "classes": {"druid": 14}, WIKeys.AI: "caster", "matrix": false},
 	{"name": "mage5_necromancer7_caster", "classes": {"mage": 5, "necromancer": 7}, WIKeys.AI: "caster", "matrix": false},
+	# #398 P1: the skill-gated pocket's ENTRANT build. matrix:false -- it exists
+	# for the pond-island cell only, not as a new COMPOSITIONS column. Runner
+	# contributes dex (stat_growth) and, at 5, [Double Step]; the fight itself is
+	# carried by the warrior half, which is why this reads as a real T1-tail
+	# melee build rather than a courier trying to punch a crab.
+	{"name": "t1_runner5_warrior5", "classes": {"runner": 5, "warrior": 5}, "matrix": false},
 	{"name": "warrior5_mage5", "classes": {"warrior": 5, "mage": 5}, "gated": false},
 	{"name": "warrior5_mage5_caster", "classes": {"warrior": 5, "mage": 5}, WIKeys.AI: "caster", "gated": false},
 	{"name": "t3_spellsword9", "classes": {"spellsword": 9}, "gated": false, WIKeys.WEAPON: "gnollish_hunting_knife", "armor": "leather_jerkin", "accessories": ["hedge_ward_charm", "hunters_fang_talisman"]},

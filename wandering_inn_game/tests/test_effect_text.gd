@@ -79,6 +79,7 @@ const EXPECTED_ITEMS := {
 	"warded_coil_charm": ["+2 HP", "Resonance 1"],
 	"kingslayer_fang": ["+1 damage on melee hits", "+1 HP", "Resonance 1", "Grants [Battle Momentum] in combat"],
 	"guardian_ward_fragment": ["+2 HP", "Reduces every hit taken by 1", "Resonance 1", "Grants [Guarding Ward] in combat"],
+	"pond_survey_seal": ["Reduces every hit taken by 1", "Resonance 1"],
 	# 2026-07-26 Act V terminus reward (data/maps/dungeon/seal_vault.json's
 	# vault_anchor_stone). construct_core_shard's curve, guardian_ward's grant,
 	# no price (one-of-a-kind find, never vendored).

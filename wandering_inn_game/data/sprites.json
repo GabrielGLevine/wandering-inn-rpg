@@ -2728,7 +2728,7 @@
   ]
  },
  "a_shepherd": {
-  "_comment": "OWNED PixelLab v3 (#396 Task 1). A Shepherd -- replaces a_hunter as the riverfarm_village character surface. Brimmed felt hat + long wooden crook ARE the silhouette contract: cold-read at gameplay zoom (4x, VIEW_SIZE 320x180) against human_laborer (Former Headman), citizen_f (A Villager) and the retired a_hunter. Sheet names + animation keys mirror a_hunter exactly (Idle_* / Run_*, directional, side sheet mirrors for west); frame_size, render_scale and anchor are MEASURED rather than copied -- the v3 canvas is 184px, so render_scale 0.3837 lands the 86px figure at a_hunter's 33px on-screen height (citizen_f 30, human_laborer 30.2), and the anchor is the alpha-bbox feet plane 135/184 with x taken from the BOOT span, not the crook-skewed full bbox.",
+  "_comment": "OWNED PixelLab v3 (#396 Task 1). A Shepherd replaces a_hunter as the riverfarm_village character surface. Brimmed felt hat + long wooden crook ARE the silhouette contract, cold-read at gameplay zoom against human_laborer, citizen_f and the retired a_hunter. Sheet names + animation keys mirror a_hunter exactly (Idle_* / Run_*, directional, side sheets mirror west). MEASURED, not copied: the v3 canvas is 184px, so render_scale 0.3837 lands the 86px figure at a_hunter's 33px on-screen height, and the anchor is the alpha-bbox feet plane 135/184 with x from the BOOT span, not the full bbox.",
   "directional": true,
   "render_scale": 0.3837,
   "animations": {
@@ -6363,6 +6363,26 @@
     "frame_size": [
      64,
      64
+    ],
+    "fps": 1
+   }
+  }
+ },
+ "pond_reeds": {
+  "_comment": "#398 P1 review M2: NOT pond_edge's grass_tuft under a tint (2026-08-02 ruling). Free-Pack Vegetation cattail -- seed-head on a bare stem against grass_tuft's dense 16x16 clump. Alpha bbox IS the region (15x26), so bottom-centre is exact; no override.",
+  "render_scale": 0.7,
+  "animations": {
+   "idle": {
+    "sheet": "res://assets/props/free_pack/Vegetation.png",
+    "region": [
+     145,
+     166,
+     15,
+     26
+    ],
+    "frame_size": [
+     15,
+     26
     ],
     "fps": 1
    }

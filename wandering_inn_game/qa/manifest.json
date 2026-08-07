@@ -6221,6 +6221,117 @@
      "save"
     ]
    }
+  },
+  {
+   "_comment": "<!-- 398-p1 --> APPENDED LAST under the pond-island lane marker.",
+   "script": "pond_island_freeze",
+   "seed": 9,
+   "fixture": "pond_island_freeze_start",
+   "note": "#398 P1 mode A on the re-sited island: the reeds carrier answers the bump the launch pad (13,20) makes, [Snap Freeze] opens the narrows (12,20), and the retuned +2-band guardian and victory-gated unique cache pay out",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "pond_island_freeze_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_touch"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 398-p1 --> APPENDED LAST under the pond-island lane marker.",
+   "script": "pond_island_blink",
+   "seed": 9,
+   "fixture": "pond_island_blink_start",
+   "note": "#398 P1 mode B: the honest Runner 5 build crosses exactly the one water cell (12,20) from the same launch pad and reaches the same guardian and unique cache; frozen_cells stays empty whole-run",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "pond_island_blink_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "double_step"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 398-p1 --> APPENDED LAST under the pond-island lane marker.",
+   "script": "pond_island_negative",
+   "seed": 9,
+   "fixture": "pond_island_negative_start",
+   "note": "#398 P1 negative: neither mode leaves the launch pad; the narrows answers with a block and nothing, the reeds carrier answers from that SAME cell naming freeze and [Double Step], and no guardian/cache reward fires",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "pond_island_negative_start"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 398-p1 --> APPENDED LAST under the pond-island lane marker.",
+   "script": "pond_frozen_cache",
+   "seed": 9,
+   "fixture": "pond_frozen_cache_start",
+   "note": "#398 P1 review H2: the SHIPPED frozen_cache beat, and the first coverage bounty_pond_keepsakes' found_the_frozen_cache objective has had. Proves the shipped strings against the shipped geometry -- (10,17) frozen, the player STANDING on it at (10,17), 'Kneeling on the ice' firing off (10,18), gold 20 -> 25",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "floodplains"
+    ],
+    "fixtures": [
+     "pond_frozen_cache_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "frost_touch"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
   }
  ]
 }
