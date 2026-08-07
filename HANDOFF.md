@@ -56,59 +56,59 @@ docs/superpowers/2026-08-05-wave2-rulings-and-fix-specs.md.
   docs/prose-naturalization/phase5/phase5-reconciliation.md (rec:
   map-register-only re-authorship under zero-inference scenery default).
 
-## RUNNING (2026-08-07): #398 Phase 1 — five pocket lanes
-Phase 0 COMMITTED on issue/398-skill-gated-areas @ 879a1071 (cuts
-property WEAPON-GATED at the field seam, skill_gates registry + 5 lint
-arms w/ 40 self-tests, blink proof, Flame Jet burns; THREE review
-rounds — Codex pin-gamed martial fixtures twice, both caught; 10-slot
-armed bar ACCEPTED w/ cursor-overflow, windowed fit check owed at
-close; failure mode 6 + companion mechanics folded into
-wi-delegating-to-codex). main (#402) + 398/art (briar_wall + pond_cache,
-eye-gated) merged in. FIVE CODEX POCKET LANES running in parallel
-worktrees /tmp/wi-398-p{1..5} (branches 398/p1..p5, brief files in
-each): P2 DONE+reviewed (DO-NOT-MERGE: global burned_the_debris counter
-leaks cross-map — ruled fix: generic per-target counter override
-mirroring toast_from:target; Opus fix wave running; STANDARD-SETTER
-rule armed: check P5's counters against the override at train time).
-P4 DONE (reviewer running; flag: lane touched the maps voice baseline —
-adjudicate enrollment vs manipulation). P1/P3/P5 still implementing.
-THEN: remaining reviews + fix waves → anchored train (shared files:
-items/combatants/sim_combat_batch/manifest all lane-marked appends) →
-composed gates → machine playtest (10-slot bar + each pocket windowed)
-→ CHOICE-LOG (spec §9 rulings + session rulings) → wave-2 follow-ups
-(riverfarm pockets, lockpick canon-check ACK) → PR [ci-full] closes
-#398.
+## DONE (2026-08-07): #398 CLOSED — skill-gated pocket areas, wave 1 (PR #405, 289d05e5)
 
-## SUPERSEDED RUNNING BLOCK (2026-08-06 evening)
-PR #402 MERGED (3c9b610b) after the GitHub Actions incident cleared;
-#397 remains OPEN on the Phase-5 gate (round-2 ask below). #398 now
-executing: branch issue/398-skill-gated-areas (spec merged from its
-side branch + plan committed at
-docs/superpowers/plans/2026-08-06-skill-gated-areas-398.md). Codex
-implements (user directive; wi-delegating-to-codex guardrails), Claude
-verifies/reviews/merges. LIVE: Codex Phase-0 (task-mshwwgyo-p0v5c8 in
-/tmp/wi-398 — D1 cuts, D5 registry+lint, D3 proof, D4-if-clean, Flame
-Jet burns) + Opus art lane (/tmp/wi-398-art: briar wall + pond cache;
-PixelLab RENEWED — subscription generations at full, pack-first still
-default). NEXT: Phase-0 review → merge main into branch → five Codex
-pocket lanes (P1-P5, disjoint maps) → reviews → train → machine
-playtest → PR. Codex-dispatch trap: long briefs through the
-codex-rescue forwarder misfire — write brief to a file in the worktree,
-short pointer as task text, companion helper backgrounded from main.
+Five pockets shipped, each teaching one field skill through a
+gate → payoff loop. Full narrative in the PR body; rulings in
+CHOICE-LOG's 2026-08-07 block (spec §9 + 6 wave rulings). Highlights:
+- Descriptive `skill_gates` registry + 5 data_lint arms; two-mode rule
+  lint-enforced, QA walk legs stay the reachability authority
+  (negative legs WALK and assert player_blocked — never teleport).
+- cuts WEAPON-GATED at the field seam (one predicate, three call
+  sites); 10-slot armed bar ACCEPTED (windowed fit proof paid).
+- Per-target counter overrides (counter_from/counter_key) kill the
+  cross-map counter-leak class; on_skill_use.accomplishment widened
+  String|Array; RETIRED_ACCOMPLISHMENTS + staged_target_properties.
+- Machine playtest headline: crate atlas region was a mis-sliced
+  sliver GAME-WIDE; bar_counter + stool drew NOTHING (invisible inn
+  furniture); barrel was a pot. All four fixed by measurement,
+  eye-read + windowed, combat-board regression clean (also closed the
+  carried forge_hall cover row).
+- Process: five Codex lanes → five DO-NOT-MERGE reviews (each a
+  different structural hole) → Opus fix waves. Division held. Doctrine
+  fold (failure mode 6: STOP-suppression two-strikes) shipped to main
+  mid-train; wi-writing-qa-scripts folds shipped at close
+  (assert_field_skill_absent, append-last entities, coalesced toasts).
+- Composed bar at merge: units ALL, harness 146 cells, tier sweep PASS
+  (2 bronze flips whitelisted per alley_fence precedent), full sweep
+  230/230, voice gates CLEAN, verify-untouched 0, census 14.97%.
+- Follow-ups filed: #403 (wave-2 riverfarm pockets, now unblocked),
+  #404 (lockpick canon-ACK). Playtest P2/P3 art rows in VISUAL-LOG.
+- Known cosmetic: "Docs drift" advisory check reds on the 398 plan
+  lacking a DONE/ACTIVE header — checker/format disagreement, needs a
+  one-line checker or plan-template fix, NOT a real drift.
 
 ## 🧑‍⚖️ NEW USER ASKS from this session
-1. **#397 round 2 go/no-go** (above — taste + budget call).
+1. **#397 round 2 go/no-go** (Phase-5 blind read EXIT NOT MET —
+   docs/prose-naturalization/phase5/phase5-reconciliation.md; rec:
+   map-register-only re-authorship, zero-inference scenery default).
 2. **[Rope Work] ACK still pending** (pre-existing).
-3. v0.19.0 tag re-cut + deploy still user's call; this session merged
-   three PRs to main UNRELEASED per directive.
+3. **v0.19.0 tag re-cut + deploy** still user's call; this session
+   merged FOUR PRs to main unreleased per directive (#399, #401,
+   #402, #405).
+4. **#404 lockpick canon-ACK** (wave-2 gate).
 
-## QUEUE (updated 2026-08-05, post-merge)
-- PR #395 MERGED (squash, e3835598); #388 closed. PR #393 closed for now
-  (work parked on issue/195-audio-profile-pass). #371 deferred per user.
+## QUEUE (updated 2026-08-07, post-#398)
+- **#403 wave-2 riverfarm pockets** — unblocked (#396 merged); next
+  execute item after the user asks clear.
+- **#404 lockpick canon-ACK** — user gate, then small.
+- **#400** (#390 carried art rows) + VISUAL-LOG P2/P3 rows from the
+  #398 playtest — parallel art lane candidate (PixelLab at full).
+- **#397 round 2** — gated on user go/no-go (ask 1 above).
 - v0.19.0 tag re-cut at a merge commit + deploy — USER'S CALL, not done.
-- Riverfarm redesign (#396) — plan committed, 12 tasks/4 lanes. Next big
-  execute item.
-- #390 VISUAL-LOG Tier 2/3 drain — parallel art lane candidate.
+- Docs-drift checker vs plan-header format — one-line fix, unowned.
+- PR #393 closed for now (work parked on issue/195-audio-profile-pass).
+  #371 deferred per user.
 
 ## DONE (2026-08-05): #388 map talk_pool voice pass — WHOLE CORPUS CLEAN
 
