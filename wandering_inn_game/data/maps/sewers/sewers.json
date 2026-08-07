@@ -311,7 +311,7 @@
    ],
    "display_name": "Shield Spider Nest",
    "sprite": "shield_spider",
-   "observe": "Two of them where the silk runs thickest, banded carapaces picking up the moss-light. Their forelegs come off the ground and test the air in your direction. Past them the tunnel drops away, and there are more eyes down there than these two.",
+   "observe": "Two of them where the silk runs thickest, banded carapaces picking up the moss-light. Their forelegs come off the ground and test the air in your direction. Past them the tunnel drops away, and there are more eyes down there than you are going to stand and count.",
    "arena": "sewers_nest",
    "enemies": [
     "shield_spider",
@@ -362,7 +362,7 @@
    ],
    "display_name": "Collapsed Fissure",
    "sprite": "deep_fissure",
-   "observe": "The floor here has dropped into a raw-edged crack with no wear on the lip. Cold air comes up out of it, colder and drier than the sewer. The claw-scores along the edge all rake the same way, downward.",
+   "observe": "The floor here has dropped away into a crack with no bottom in sight. Cold air comes up out of it, colder and drier than anything the sewer holds. The lip is raked with claw-scores, all of them running the same way, down.",
    "on_interact_accomplishment": "found_the_fissure",
    "toast": "A fresh fissure splits the sewer floor, gouges raked deep into the stone lip. Something big has been using it as a door. A dry cold breathes up out of it and does not stop.",
    "door_when": {

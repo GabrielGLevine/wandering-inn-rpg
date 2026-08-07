@@ -654,7 +654,7 @@
    "dialogue": [
     {
      "speaker": "Pisces",
-     "text": "Do not talk to me for a moment. I am at the ninth turn of it and I would rather not begin again."
+     "text": "Quiet, for a moment. I am tracing a line I cannot see. If I lose it I will blame you, and we will both know I am lying."
     }
    ]
   },
@@ -700,7 +700,7 @@
     "kind": "animated",
     "taken_toast": "The bones stand joint by joint and follow a pace behind you."
    },
-   "observe": "Old bones, dry and disjointed, lying in the angle where the wall meets the floor."
+   "observe": "Old bones, dry and disjointed, lying out in the open on bare flagstone."
   },
   {
    "_comment": "[Rope Work] CARRIER. `gap` + `state_counter` are the table pair; (13,1) opens. The stub never goes absent, which is what lets visual_states SHOW the line -- a state_set the world never shows is invisible durable state.",
@@ -742,7 +742,7 @@
     }
    },
    "observe": "The floor is simply gone here, one span of it, edge to edge. Dropped stone comes back as a sound and not much of one.",
-   "locked_toast": "The floor stops at a clean edge and picks up again a span out, with nothing but air between. You will need a line run from this edge to the other to get across."
+   "locked_toast": "The floor stops dead and starts again a span out, with the dark going down between. No rope goes anywhere from this lip. The line has to be run from the stub of the broken span."
   },
   {
    "_comment": "[Greater Strength] carrier. on_skill_use has NO remove_entity verb (dialogue-side only), so permanence is present_when.absent on the arm's own monotone counter.",

@@ -256,7 +256,7 @@
    "toast": "The sentinel's face is gone. The posture survives: shield raised toward the court."
   },
   {
-   "_comment": "OR convergence: pedestal_unsealed banks via guardian court, THIS PLINTH's post-plates arm, or anchor_socket's [Detect Magic] read (the breach beat's three promised routes, live during the dig on horns_dig_joined alone); Pisces TALK/SKILL + the cellar fight arms exist only AFTER the pedestal opens post-restructure -- migrated saves only. Unmet contains_when falls to the locked toast. First open atomically grants anchor_stone + anchor_sliver; repeat idempotent. b10 #204: recovery also needs rune_sequence_done (west plate then east). contains_when also gates horns_dig_joined (horns_dig's pedestal-on-camp order rule); on_open_accomplishment banks [recovered_anchor_stone, pedestal_breached, door_retrieved] TOGETHER so `breach` closes and `haul` opens at the reveal render, never earlier. SPOILER RULE: open_toast IS the reveal; nothing before it on this map names a door.",
+   "_comment": "OR convergence: pedestal_unsealed banks via guardian court, THIS PLINTH's post-plates arm, or anchor_socket's [Detect Magic] read (the breach beat's three promised routes, live during the dig on horns_dig_joined alone); Pisces TALK/SKILL + the cellar fight arms exist only AFTER the pedestal opens post-restructure -- migrated saves only. Unmet contains_when falls to the locked toast. First open atomically grants anchor_stone + anchor_sliver; repeat idempotent. b10 #204: recovery also needs rune_sequence_done -- NEAR plate rune_plate_near (16,6) FIRST, then FAR rune_plate_far (15,4), i.e. east then west (x increases east). contains_when also gates horns_dig_joined (horns_dig's pedestal-on-camp order rule); on_open_accomplishment banks [recovered_anchor_stone, pedestal_breached, door_retrieved] TOGETHER so `breach` closes and `haul` opens at the reveal render, never earlier. SPOILER RULE: open_toast IS the reveal; nothing before it on this map names a door.",
    "id": "anchor_stone_pedestal",
    "kind": "prop",
    "cell": [
@@ -606,7 +606,7 @@
    },
    "observe": "Three lengths of rope, whipped at the ends and hung off a driven stake so that none of it lies in the wet.",
    "on_interact_accomplishment": "eyed_the_dig_rope",
-   "toast": "Three coils of hemp, dry all through and not a frayed strand among them."
+   "toast": "Three coils of rope, dry the whole way through and not a frayed strand in the lot."
   },
   {
    "id": "dig_survey_stakes",
@@ -651,7 +651,7 @@
    },
    "observe": "Ringed stones around a scatter of white ash, and four flattened squares of ground where bedrolls were. The stakes have been pulled and stacked, the string wound back onto its spool.",
    "on_interact_accomplishment": "found_the_cold_camp",
-   "toast": "The ash is cold through and has been for days. They filled the pit in before they went and pulled the rope off its stake; only the ring of stones still stands where the fire was."
+   "toast": "The ash inside the stone ring is cold all the way through, and has been for days. The fire-pit is filled in level with the ground, and the rope that was here is gone."
   },
   {
    "id": "briar_arch_rubble_northwest",

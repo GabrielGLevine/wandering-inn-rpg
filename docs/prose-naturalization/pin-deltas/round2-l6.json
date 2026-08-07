@@ -7,7 +7,11 @@
   "rows_rewritten": 39,
   "files_touched_data": 6,
   "qa_scripts_repinned": 10,
-  "pin_sites_updated": 21
+  "pin_sites_updated": 21,
+  "fix_wave_rows_reauthored": 9,
+  "fix_wave_comments_corrected": 1,
+  "fix_wave_pin_sites_updated": 6,
+  "fix_wave_scripts_repinned": 4
  },
  "scripts": {
   "arc_flow": {
@@ -20,18 +24,22 @@
      "entity_id": "cold_hearth",
      "pin_sites": 1,
      "old": "A fire-pit ringed with blackened stones, gnawed bones banked around the edge and cracked open for their marrow. Nothing in the ash has been warm for a long time.",
-     "new": "A fire-pit inside a ring of blackened stones, with gnawed bones banked up against the ring and split lengthwise for the marrow. There is no heat left anywhere in the ash.",
+     "new": "A pit at the middle of the stone ring, the ash in it dead to the bottom. Bones banked up against the stones, every one of them opened for the marrow.",
      "new_present_in_live_script": true,
-     "old_absent_from_live_script": true
+     "old_absent_from_live_script": true,
+     "round2_first_pass_new": "A fire-pit inside a ring of blackened stones, with gnawed bones banked up against the ring and split lengthwise for the marrow. There is no heat left anywhere in the ash.",
+     "fix_wave_repinned": true
     },
     {
      "row_id": "map:sewers/deep_tunnels.json:$.entities[2].toast",
      "entity_id": "gnaw_pile",
      "pin_sites": 1,
      "old": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's.",
-     "new": "A heap of gnawed bones, split along their length for the marrow. Some of them are Gnoll, and one of them is a Drake's.",
+     "new": "Cracked bones in a heap, dry and light in the hand. Most of them Gnoll; one of them a Drake's.",
      "new_present_in_live_script": true,
-     "old_absent_from_live_script": true
+     "old_absent_from_live_script": true,
+     "round2_first_pass_new": "A heap of gnawed bones, split along their length for the marrow. Some of them are Gnoll, and one of them is a Drake's.",
+     "fix_wave_repinned": true
     }
    ]
   },
@@ -45,18 +53,22 @@
      "entity_id": "cold_hearth",
      "pin_sites": 1,
      "old": "A fire-pit ringed with blackened stones, gnawed bones banked around the edge and cracked open for their marrow. Nothing in the ash has been warm for a long time.",
-     "new": "A fire-pit inside a ring of blackened stones, with gnawed bones banked up against the ring and split lengthwise for the marrow. There is no heat left anywhere in the ash.",
+     "new": "A pit at the middle of the stone ring, the ash in it dead to the bottom. Bones banked up against the stones, every one of them opened for the marrow.",
      "new_present_in_live_script": true,
-     "old_absent_from_live_script": true
+     "old_absent_from_live_script": true,
+     "round2_first_pass_new": "A fire-pit inside a ring of blackened stones, with gnawed bones banked up against the ring and split lengthwise for the marrow. There is no heat left anywhere in the ash.",
+     "fix_wave_repinned": true
     },
     {
      "row_id": "map:sewers/deep_tunnels.json:$.entities[2].toast",
      "entity_id": "gnaw_pile",
      "pin_sites": 1,
      "old": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's.",
-     "new": "A heap of gnawed bones, split along their length for the marrow. Some of them are Gnoll, and one of them is a Drake's.",
+     "new": "Cracked bones in a heap, dry and light in the hand. Most of them Gnoll; one of them a Drake's.",
      "new_present_in_live_script": true,
-     "old_absent_from_live_script": true
+     "old_absent_from_live_script": true,
+     "round2_first_pass_new": "A heap of gnawed bones, split along their length for the marrow. Some of them are Gnoll, and one of them is a Drake's.",
+     "fix_wave_repinned": true
     }
    ]
   },
@@ -104,9 +116,11 @@
      "entity_id": "dig_camp_remnant",
      "pin_sites": 1,
      "old": "Cold days ago. They struck the camp properly, filled the pit, took the rope. Nothing left but the ring of stones.",
-     "new": "The ash is cold through and has been for days. They filled the pit in before they went and pulled the rope off its stake; only the ring of stones still stands where the fire was.",
+     "new": "The ash inside the stone ring is cold all the way through, and has been for days. The fire-pit is filled in level with the ground, and the rope that was here is gone.",
      "new_present_in_live_script": true,
-     "old_absent_from_live_script": true
+     "old_absent_from_live_script": true,
+     "round2_first_pass_new": "The ash is cold through and has been for days. They filled the pit in before they went and pulled the rope off its stake; only the ring of stones still stands where the fire was.",
+     "fix_wave_repinned": true
     }
    ]
   },
@@ -206,9 +220,11 @@
      "entity_id": "halls_gallery_drop",
      "pin_sites": 1,
      "old": "The floor stops. Gravel goes over the lip when your boot finds it and keeps going, and you are not crossing that without a line.",
-     "new": "The floor stops at a clean edge and picks up again a span out, with nothing but air between. You will need a line run from this edge to the other to get across.",
+     "new": "The floor stops dead and starts again a span out, with the dark going down between. No rope goes anywhere from this lip. The line has to be run from the stub of the broken span.",
      "new_present_in_live_script": true,
-     "old_absent_from_live_script": true
+     "old_absent_from_live_script": true,
+     "round2_first_pass_new": "The floor stops at a clean edge and picks up again a span out, with nothing but air between. You will need a line run from this edge to the other to get across.",
+     "fix_wave_repinned": true
     }
    ]
   },
@@ -295,8 +311,10 @@
    "field_path": "$.entities[10].dialogue[0].text",
    "entity_id": "pisces_seal_escort",
    "old": "Quietly, if you can manage it. I have lost the count twice already and blamed you both times.",
-   "new": "Do not talk to me for a moment. I am at the ninth turn of it and I would rather not begin again.",
-   "pinned_by": []
+   "new": "Quiet, for a moment. I am tracing a line I cannot see. If I lose it I will blame you, and we will both know I am lying.",
+   "pinned_by": [],
+   "round2_first_pass_new": "Do not talk to me for a moment. I am at the ninth turn of it and I would rather not begin again.",
+   "fix_wave": "fix-wave finding 2 (BLOCKING): 'the ninth turn of it' invented a number with no referent anywhere in the map, the quest or pisces_seal.json -- canon-guard violation. Re-authored with NO count. This row is SPEECH (`dialogue[].text`), so docs/dialogue-voice-bible.md governs, not this bible: restored Pisces's staccato self-deprecating register and the original's self-blaming joke class (the shipped pisces_magic idiom 'Do not let me forget the rope; I will pretend I never needed reminding'), not narrator prose and not a flat imperative."
   },
   {
    "row_id": "map:dungeon/trapped_halls.json:$.entities[12].companion_source.taken_toast",
@@ -313,8 +331,10 @@
    "field_path": "$.entities[12].observe",
    "entity_id": "bone_pile_halls",
    "old": "Old bones, settled where they fell. They are not going anywhere. Probably.",
-   "new": "Old bones, dry and disjointed, lying in the angle where the wall meets the floor.",
-   "pinned_by": []
+   "new": "Old bones, dry and disjointed, lying out in the open on bare flagstone.",
+   "pinned_by": [],
+   "round2_first_pass_new": "Old bones, dry and disjointed, lying in the angle where the wall meets the floor.",
+   "fix_wave": "fix-wave finding 4 (BLOCKING): geometrically false. bone_pile_halls sits at (18,11); every walls.segments run in trapped_halls.json is in x0-9 / y10-13, and the only nearby non-floor cell is the blocked dungeon_rubble decor at (16,11), two cells west. No wall is adjacent, so there is no wall/floor angle to lie in. Re-authored to the true geometry: open flagstone floor."
   },
   {
    "row_id": "map:dungeon/trapped_halls.json:$.entities[13].locked_toast",
@@ -333,10 +353,12 @@
    "field_path": "$.entities[14].locked_toast",
    "entity_id": "halls_gallery_drop",
    "old": "The floor stops. Gravel goes over the lip when your boot finds it and keeps going, and you are not crossing that without a line.",
-   "new": "The floor stops at a clean edge and picks up again a span out, with nothing but air between. You will need a line run from this edge to the other to get across.",
+   "new": "The floor stops dead and starts again a span out, with the dark going down between. No rope goes anywhere from this lip. The line has to be run from the stub of the broken span.",
    "pinned_by": [
     "martial_field_loop"
-   ]
+   ],
+   "round2_first_pass_new": "The floor stops at a clean edge and picks up again a span out, with nothing but air between. You will need a line run from this edge to the other to get across.",
+   "fix_wave": "fix-wave finding 1 (BLOCKING): the round-2 refusal said 'a line run from this edge to the other', which misdirects -- halls_gallery_drop carries NO `gap` property, so the interactions.json anchors->gap row can never fire on it. The only [Rope Work] anchor in the file is halls_span_stub (13,0) (gap:true, state_counter gallery_line_anchored), interactable from (12,0)/(14,0). Re-authored to point at the broken span's stub, which is where the line actually gets set."
   },
   {
    "row_id": "map:dungeon/trapped_halls.json:$.entities[1].toast",
@@ -448,8 +470,10 @@
    "field_path": "$.entities[15].toast",
    "entity_id": "dig_rope_coil",
    "old": "Good rope, dry, and not a frayed strand in it.",
-   "new": "Three coils of hemp, dry all through and not a frayed strand among them.",
-   "pinned_by": []
+   "new": "Three coils of rope, dry the whole way through and not a frayed strand in the lot.",
+   "pinned_by": [],
+   "round2_first_pass_new": "Three coils of hemp, dry all through and not a frayed strand among them.",
+   "fix_wave": "fix-wave finding 9 (MINOR): 'hemp' was invented -- nothing in ruin_surface.json, items.json or the horns_dig chain names the rope's material. Material dropped; the count of three coils (the fact payload) stays."
   },
   {
    "row_id": "map:ruin/ruin_surface.json:$.entities[17].toast",
@@ -457,10 +481,12 @@
    "field_path": "$.entities[17].toast",
    "entity_id": "dig_camp_remnant",
    "old": "Cold days ago. They struck the camp properly, filled the pit, took the rope. Nothing left but the ring of stones.",
-   "new": "The ash is cold through and has been for days. They filled the pit in before they went and pulled the rope off its stake; only the ring of stones still stands where the fire was.",
+   "new": "The ash inside the stone ring is cold all the way through, and has been for days. The fire-pit is filled in level with the ground, and the rope that was here is gone.",
    "pinned_by": [
     "door_chain_talk"
-   ]
+   ],
+   "round2_first_pass_new": "The ash is cold through and has been for days. They filled the pit in before they went and pulled the rope off its stake; only the ring of stones still stands where the fire was.",
+   "fix_wave": "fix-wave finding 8 (MINOR): two collisions with this entity's own UNCHANGED observe. (a) 'pulled the rope off its stake' implied a still-driven stake while the observe says 'The stakes have been pulled and stacked'; the stake claim is gone and the rope is simply absent. (b) 'only the ring of stones still stands' claimed exclusivity while the observe still shows four flattened bedroll squares; the exclusivity claim is gone. Facts kept: ash cold for days, pit filled, rope taken, stone ring present."
   },
   {
    "row_id": "map:ruin/ruin_surface.json:$.entities[1].observe",
@@ -536,11 +562,13 @@
    "field_path": "$.entities[1].toast",
    "entity_id": "cold_hearth",
    "old": "A fire-pit ringed with blackened stones, gnawed bones banked around the edge and cracked open for their marrow. Nothing in the ash has been warm for a long time.",
-   "new": "A fire-pit inside a ring of blackened stones, with gnawed bones banked up against the ring and split lengthwise for the marrow. There is no heat left anywhere in the ash.",
+   "new": "A pit at the middle of the stone ring, the ash in it dead to the bottom. Bones banked up against the stones, every one of them opened for the marrow.",
    "pinned_by": [
     "arc_flow",
     "deep_descent"
-   ]
+   ],
+   "round2_first_pass_new": "A fire-pit inside a ring of blackened stones, with gnawed bones banked up against the ring and split lengthwise for the marrow. There is no heat left anywhere in the ash.",
+   "fix_wave": "fix-wave finding 3 (BLOCKING), half A: the round-2 pass INTRODUCED twin phrasing between this toast ('split lengthwise for the marrow') and gnaw_pile's ('split along their length for the marrow') where the round-1 originals were differentiated ('cracked open for their marrow' / 'splintered for their marrow'). This half is rebuilt distinctly -- 'opened for the marrow', hearth-first framing (pit, stone ring, dead ash) -- and the gnaw_pile half takes the 'cracked' idiom instead."
   },
   {
    "row_id": "map:sewers/deep_tunnels.json:$.entities[2].toast",
@@ -548,11 +576,13 @@
    "field_path": "$.entities[2].toast",
    "entity_id": "gnaw_pile",
    "old": "A heap of gnawed bones, splintered for their marrow. Some are Gnoll. One is a Drake's.",
-   "new": "A heap of gnawed bones, split along their length for the marrow. Some of them are Gnoll, and one of them is a Drake's.",
+   "new": "Cracked bones in a heap, dry and light in the hand. Most of them Gnoll; one of them a Drake's.",
    "pinned_by": [
     "arc_flow",
     "deep_descent"
-   ]
+   ],
+   "round2_first_pass_new": "A heap of gnawed bones, split along their length for the marrow. Some of them are Gnoll, and one of them is a Drake's.",
+   "fix_wave": "fix-wave finding 3 (BLOCKING), half B: aligned to this entity's OWN unchanged observe idiom, which says 'A midden of cracked bones' -- the round-2 toast had drifted to 'split along their length'. Both facts stay in-field (Gnoll majority, one Drake). Differentiated from the cold_hearth toast, which now uses 'opened for the marrow'."
   },
   {
    "row_id": "map:sewers/deep_tunnels.json:$.entities[4].observe",
@@ -636,8 +666,10 @@
    "field_path": "$.entities[7].observe",
    "entity_id": "shield_spiders",
    "old": "Two of them, banded carapaces catching the moss-light, waiting where the silk is thickest. Their legs test the air toward you. Behind them the tunnel drops away, and more eyes catch the light down there than you want to count.",
-   "new": "Two of them where the silk runs thickest, banded carapaces picking up the moss-light. Their forelegs come off the ground and test the air in your direction. Past them the tunnel drops away, and there are more eyes down there than these two.",
-   "pinned_by": []
+   "new": "Two of them where the silk runs thickest, banded carapaces picking up the moss-light. Their forelegs come off the ground and test the air in your direction. Past them the tunnel drops away, and there are more eyes down there than you are going to stand and count.",
+   "pinned_by": [],
+   "round2_first_pass_new": "Two of them where the silk runs thickest, banded carapaces picking up the moss-light. Their forelegs come off the ground and test the air in your direction. Past them the tunnel drops away, and there are more eyes down there than these two.",
+   "fix_wave": "fix-wave finding 7 (MINOR): 'more eyes down there than these two' deflated the threat to a bare arithmetic comparison. Restored the magnitude dodge of the round-1 original's class ('than you want to count'), written fresh rather than reverted verbatim."
   },
   {
    "row_id": "map:sewers/sewers.json:$.entities[9].observe",
@@ -645,8 +677,36 @@
    "field_path": "$.entities[9].observe",
    "entity_id": "deep_fissure",
    "old": "The floor gave way here, not long ago: a raw crack breathing air colder and older than the sewers ever hold. The claw-scores on its lip all point one way: down.",
-   "new": "The floor here has dropped into a raw-edged crack with no wear on the lip. Cold air comes up out of it, colder and drier than the sewer. The claw-scores along the edge all rake the same way, downward.",
-   "pinned_by": []
+   "new": "The floor here has dropped away into a crack with no bottom in sight. Cold air comes up out of it, colder and drier than anything the sewer holds. The lip is raked with claw-scores, all of them running the same way, down.",
+   "pinned_by": [],
+   "round2_first_pass_new": "The floor here has dropped into a raw-edged crack with no wear on the lip. Cold air comes up out of it, colder and drier than the sewer. The claw-scores along the edge all rake the same way, downward.",
+   "fix_wave": "fix-wave finding 6 (MINOR): 'no wear on the lip' contradicted this entity's own UNCHANGED toast, 'gouges raked deep into the stone lip'. The wear claim is dropped and the lip is now described as raked with the claw-scores that the toast asserts; the cold-air and downward-direction facts are unchanged."
   }
- ]
+ ],
+ "_fix_wave": {
+  "when": "2026-08-07, after the adversarial review of 0808cf3a",
+  "scope": "9 authored strings re-authored + 1 `_comment` corrected. Findings 1-4 BLOCKING, 5-10 MINOR. Explicitly LEFT ALONE per the review: deep_tunnels[3] observe (holdout; the 'Probably.' coda is the blind-control artifact and is mandatory), trapped_halls[9] observe no-statue warning (ruled grounded), trapped_halls[1] toast 'back inside the wall' (ruled fine), wi_game.gd:951 engine default (controller-side at train).",
+  "contract_amendment": "The round-1 contract line above said `git diff -U0` over data/maps touches ONLY authored string lines. This fix wave ALSO edits one non-player-facing `_comment` (ruin_surface $.entities[5]._comment, finding 5) -- a documentation correction, not prose, not extracted by extract_prose.py and not linted by data_lint's R2 arms. Still no entity add/remove/reorder, no key rename, no gating change.",
+  "comment_correction": {
+   "field_path": "$.entities[5]._comment",
+   "file": "wandering_inn_game/data/maps/ruin/ruin_surface.json",
+   "old_fragment": "b10 #204: recovery also needs rune_sequence_done (west plate then east).",
+   "new_fragment": "b10 #204: recovery also needs rune_sequence_done -- NEAR plate rune_plate_near (16,6) FIRST, then FAR rune_plate_far (15,4), i.e. east then west (x increases east).",
+   "why": "finding 5 (MINOR): the comment said 'west plate then east', which is backwards. x increases east, so the NEAR plate (16,6) is EAST of the FAR plate (15,4); rune_plate_near's own _comment says 'NEAR plate = FIRST in sequence' and rune_plate_far banks rune_sequence_done only via its rune_near_pressed variant. The player-facing strings were already correct (entities[5].variants[2].toast 'The near plate first, then its far twin'; entities[6].skill_hint_toast 'The warding reads near-first'), so only the author-facing comment was misleading."
+  },
+  "inference_allowance_accounting": {
+   "finding": "10 (MINOR): allowance accounting.",
+   "declared_in_round_1_of_the_lane": 4,
+   "retroactively_free": "map:ruin/ruin_surface.json:$.entities[6].on_skill_use.variants[0].toast -- a [Detect Magic] `on_skill_use` RECEIPT. Bible round-2 amendment 2's Skill-receipt carve-out (RULED at l3 review, 2026-08-07) says on_skill_use/skill_uses toast fields report what the Skill READS, including the non-visible (history, keying, containment, species), bounded by the canon guard, and spend NO allowance. The amendment names this case explicitly: 'This retroactively covers the allowances l5/l6 declared on detect-magic-class receipts (harmless over-declarations).'",
+   "actually_spent": 3,
+   "of_a_ceiling_of": 4,
+   "note": "The l6 declaration was a harmless over-declaration, not a miss: it was made before the carve-out was ruled. Net: the lane spent 3 of 4 file allowances, and no file in the lane is over its ONE-per-file ceiling."
+  },
+  "gates": {
+   "verify_untouched": "rc=0 -- 229 holdout (3 excluded) + 29 protected = 255 untouchable strings byte-identical to their pins.",
+   "data_lint": "rc=0. 88 corpus-wide R2 narrator-template advisories -- byte-identical to the pre-fix-wave baseline, so ZERO advisories are attributable to a fix-wave string. Residual hits in the six touched files (trapped_halls 4 buttons, ruin_surface 2 buttons + 1 triad, deep_tunnels 2 buttons, sewers 2 buttons + 1 triad + 1 affordance, seal_vault 1 triad) all belong to strings this lane may not edit (protected keep, holdout, or a row outside the frozen worklist); none is a string the lane authored.",
+   "qa": "All 10 lane pin carriers re-run FOREGROUND and SEQUENTIAL at their manifest seeds after the fix wave: arc_flow s9, deep_descent s9, delve_skill s1, door_chain_talk s9, dungeon_peek s9, horns_dig_plates s9, martial_field_loop s9, property_seams s9, ruin_walkthrough s9, sewers_walkthrough s9 -- every one QA_RESULT: PASS with passed:true, failures:[], and zero SCRIPT ERROR / Parse Error / WARNING lines.",
+   "pin_derivation": "The 6 changed pin sites were re-derived from REAL runs, never hand-guessed: the new string was written into both the map and the owning script, then the script was run headless at its seed. payload_contains is a subset match on the live emitted toast, so a pin that did not match the live text fails the step -- the green run IS the derivation. A repo-wide scan of qa/scripts/, qa/fixtures/ and tests/*.gd for any >=20-char chunk of the 9 superseded strings returns 0 hits, so no partial pin was left stale."
+  }
+ }
 }
