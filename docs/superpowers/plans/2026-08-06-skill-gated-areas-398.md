@@ -1,6 +1,6 @@
 # Skill-Gated Areas wave-1 — implementation plan (issue #398)
 
-> Status: ACTIVE. Spec (design authority):
+> Status: **DONE** (shipped via PR #405, 2026-08-07). Spec (design authority):
 > `docs/superpowers/specs/2026-08-05-skill-gated-areas-design.md` (merged
 > onto this branch from `spec/skill-gated-areas`). Where this plan and the
 > spec disagree, the spec's §5/§10 (deltas + kill criteria) win; execution
