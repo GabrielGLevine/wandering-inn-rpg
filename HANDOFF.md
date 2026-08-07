@@ -88,10 +88,17 @@ CHOICE-LOG's 2026-08-07 block (spec §9 + 6 wave rulings). Highlights:
   lacking a DONE/ACTIVE header — checker/format disagreement, needs a
   one-line checker or plan-template fix, NOT a real drift.
 
+## RUNNING (2026-08-07): #397 round 2 — map-register re-authorship
+USER RULED: Option A, maps only (CHOICE-LOG 2026-08-07; issue #397
+comment). Plan COMMITTED:
+docs/superpowers/plans/2026-08-07-prose-round2-397.md. State: waiting
+on usage window (CAUTION at ruling time); NEXT = Task 0 (mechanical
+work-list freeze → round2-worklist.jsonl) + Task 1 (bible amendments,
+Fable-authored) then ~6 Opus lanes. Dialogue is SHIPPED — do not
+re-open Set A.
+
 ## 🧑‍⚖️ NEW USER ASKS from this session
-1. **#397 round 2 go/no-go** (Phase-5 blind read EXIT NOT MET —
-   docs/prose-naturalization/phase5/phase5-reconciliation.md; rec:
-   map-register-only re-authorship, zero-inference scenery default).
+1. ~~#397 round 2 go/no-go~~ RULED 2026-08-07: A-maps-only (above).
 2. **[Rope Work] ACK still pending** (pre-existing).
 3. **v0.19.0 tag re-cut + deploy** still user's call; this session
    merged FOUR PRs to main unreleased per directive (#399, #401,
