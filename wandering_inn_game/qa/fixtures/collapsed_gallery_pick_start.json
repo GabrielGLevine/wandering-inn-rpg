@@ -1,0 +1,11 @@
+{
+ "_comment": "P2 pick-route fixture: Act-III backbone, deep_tunnels at the rubble line, and a trap_kit held but never consumed. Warrior 5 + Mage 5 is the above-band solo build used by the nest proof; rng_state is the repository's derived seed-9 state.",
+ "version": 5,
+ "state": {
+  "current_map": "deep_tunnels", "player_cell": [13, 1], "player_facing": [1, 0],
+  "classes": {"warrior": 5, "mage": 5},
+  "accomplishments": {"reached_liscor": 1, "met_relc": 1, "sparred_with_relc": 1, "learned_magic_from_pisces": 1, "heard_about_cisterns": 1, "resolved_the_cisterns": 1, "heard_the_deep_tremor": 1, "won_combat": 3, "melee_hit": 18, "spell_cast": 13},
+  "player_skills": ["basic_cleaning", "observe"], "removed_entities": [], "dormant_encounters": [], "generalist_classes": [], "started_quests": [], "pending_consolidation": {}, "used_skills": [],
+  "inventory": ["rusty_sword", "leather_jerkin", "trap_kit"], "equipped": {"weapon": "rusty_sword", "armor": "leather_jerkin"}, "container_state": {}, "gold": 20, "actions_since_sleep": 0, "rng_state": "-6393592048753323481"
+ }
+}

@@ -1201,6 +1201,22 @@
 			"use_effect": { "next_fight": { "hp_mod": 2 } },
 			"description": "Thick cuts off the haunch, blackened outside and still red at the middle, wrapped in a cloth that will never come clean.",
 			"lore": "Corusdeer run hot enough to scorch grass where they bed down, and hunters on the Floodplains say the meat cooks half the way there on its own."
+		},
+		{
+			"_comment": "#398-p2 collapsed-gallery strongbox yield. Enchanted accessory at deep-tunnels reward strength; unique one-shot source.",
+			"id": "old_delvers_clasp",
+			"name": "Old Delver's Clasp",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 2,
+			"damage_reduction": 1,
+			"resonance": 1,
+			"tier": "enchanted",
+			"price": 35,
+			"abilities": [],
+			"description": "A broad brass cloak clasp etched with a shallow ward. The enchantment turns aside the first edge of a blow.",
+			"lore": "The leather rotted away long ago, but the clasp stayed shut inside a delver's strongbox."
 		}
 	]
 }

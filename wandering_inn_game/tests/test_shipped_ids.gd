@@ -176,17 +176,22 @@ func _map_ids(scene: Dictionary) -> Dictionary:
 	return out
 
 
-## #348 slice 2: `state_set` banks a counter authored ON THE CARRIER, under the
-## field each state_set row's `counter_key` names. Derived from the table (not
-## hardcoded) so a new row registers its carriers with no edit here -- the exact
-## mirror of scripts/generate_shipped_ids.py's _state_set_counter_keys.
-func _state_set_counter_keys() -> Array:
+## #348 slice 2 + #398-p2: the table's CARRIER-sourced counters, authored on the
+## prop under the field each row's `counter_key` names. Two row shapes feed it --
+## `state_set` (carrier-sourced by substrate) and any row declaring counter_from
+## "target" (a row-defaulted verb whose carrier overrides the shared id). Derived
+## from the table (not hardcoded) so a new row registers its carriers with no
+## edit here, and so deleting a carrier's field DROPS the id from the freeze list
+## -- the exact mirror of generate_shipped_ids.py's _carrier_counter_keys.
+func _carrier_counter_keys() -> Array:
 	var keys: Array = []
 	for row: Variant in (WISceneCatalog.compose().get("interactions", {}) as Dictionary).get("interactions", []):
 		if not (row is Dictionary):
 			continue
 		var r := row as Dictionary
-		if String(r.get("outcome", "")) == "state_set" and String(r.get("counter_key", "")) != "":
+		if String(r.get("counter_key", "")) == "":
+			continue
+		if String(r.get("outcome", "")) == "state_set" or String(r.get("counter_from", "")) == "target":
 			var key := String(r["counter_key"])
 			if not keys.has(key):
 				keys.append(key)
@@ -197,7 +202,7 @@ func _produced_accomplishments(scene: Dictionary, graphs: Dictionary, skills: Di
 	var out: Dictionary = {}
 	for lit: String in STRUCTURAL_LITERALS:
 		out[lit] = true
-	var state_set_keys := _state_set_counter_keys()
+	var carrier_counter_keys := _carrier_counter_keys()
 
 	for skill: Dictionary in skills.get("skills", []):
 		if skill.has("weapon"):
@@ -240,9 +245,9 @@ func _produced_accomplishments(scene: Dictionary, graphs: Dictionary, skills: Di
 				out[String(counter)] = true
 			if entity.has("on_enter_accomplishment"):
 				out[String(entity["on_enter_accomplishment"])] = true
-			for state_key: String in state_set_keys:
-				if String(entity.get(state_key, "")) != "":
-					out[String(entity[state_key])] = true
+			for carrier_key: String in carrier_counter_keys:
+				if String(entity.get(carrier_key, "")) != "":
+					out[String(entity[carrier_key])] = true
 			if entity.has("talk_pool") and not (entity["talk_pool"] as Array).is_empty():
 				out["heard_gossip"] = true
 				out["chatted_with_%s" % String(entity["id"])] = true

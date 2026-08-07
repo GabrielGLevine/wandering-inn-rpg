@@ -308,6 +308,85 @@ class TestInteractionsTable(unittest.TestCase):
         errors, _ = self._run(table)
         self.assertEqual(errors, [])
 
+    # --- #398-p2 review HIGH-1: the per-carrier counter override ------------
+    # One row over every burnable in the game was also ONE world-event id, so
+    # burning the sewers debris opened a strongbox two maps down. These arms
+    # police the fix's vocabulary; the engine half is proven in
+    # tests/test_interactions_table.gd.
+    def _override_table(self, **row):
+        table = self._mutated()
+        table["interactions"][0].update({"counter_from": "target",
+            "counter_key": "burn_counter", **row})
+        return table
+
+    def _override_maps(self, **entity):
+        return {"m": {**GRID, "entities": [
+            {"id": "debris", "cell": [0, 0], "burnable": True},
+            {"id": "shoring", "cell": [1, 0], "burnable": True, **entity}]}}
+
+    def test_counter_override_passes_when_registered(self):
+        errors, _ = self._run(self._override_table(),
+            maps=self._override_maps(burn_counter="burned_the_shoring"),
+            shipped={"accomplishments": ["burned_the_debris", "burned_the_shoring"]})
+        self.assertEqual(errors, [])
+
+    def test_counter_override_opt_out_carrier_is_fine(self):
+        # The sewers-debris case: authors no override, keeps the row default.
+        errors, _ = self._run(self._override_table(), maps=self._override_maps())
+        self.assertEqual(errors, [])
+
+    def test_counter_override_needs_a_counter_key(self):
+        table = self._override_table()
+        del table["interactions"][0]["counter_key"]
+        errors, _ = self._run(table, maps=self._override_maps())
+        self.assertTrue(any("names no 'counter_key'" in e for e in errors), errors)
+
+    def test_counter_override_needs_a_row_fallback(self):
+        table = self._override_table()
+        del table["interactions"][0]["counter"]
+        errors, _ = self._run(table, maps=self._override_maps())
+        self.assertTrue(any("no row-level 'counter' fallback" in e for e in errors), errors)
+
+    def test_unregistered_override_id_fails(self):
+        errors, _ = self._run(self._override_table(),
+            maps=self._override_maps(burn_counter="burned_the_shoring"))
+        self.assertTrue(any("banks override 'burned_the_shoring'" in e for e in errors), errors)
+
+    def test_override_that_repeats_the_row_default_fails(self):
+        # A lookalike override reads as isolation in review while banking the
+        # shared id -- exactly the bug, wearing the fix's clothes.
+        errors, _ = self._run(self._override_table(),
+            maps=self._override_maps(burn_counter="burned_the_debris"))
+        self.assertTrue(any("with the row's own 'burned_the_debris'" in e for e in errors), errors)
+
+    def test_bogus_counter_source_fails(self):
+        errors, _ = self._run(self._override_table(counter_from="skill"),
+            maps=self._override_maps())
+        self.assertTrue(any("'counter_from' must be one of" in e for e in errors), errors)
+
+    def test_counter_key_without_counter_from_is_dead_data(self):
+        errors, _ = self._run(self._mutated(row_counter_key="burn_counter"))
+        self.assertTrue(any("dead data here unless the row declares counter_from" in e
+            for e in errors), errors)
+
+    def test_counter_from_on_a_carrier_sourced_verb_is_dead_data(self):
+        # state_set has no row default to fall back to, so the discriminator
+        # would be a lie: its counter is ALWAYS the carrier's.
+        table = self._mutated(
+            target_properties={"hearth": "entity"},
+            interactions=[{
+                "skill_property": "burns", "target_property": "hearth",
+                "outcome": "state_set", "persistence": "permanent",
+                "counter_key": "state_counter", "counter_from": "target",
+                "toast_from": "target", "toast_key": "kindle_toast",
+                "toast_default": "It lights.",
+            }])
+        errors, _ = self._run(table, maps={"m": {**GRID, "entities": [
+            {"id": "brazier", "cell": [0, 0], "hearth": True,
+             "state_counter": "burned_the_debris",
+             "visual_states": [{"when": {"counter": "burned_the_debris", "at": 1}}]}]}})
+        self.assertTrue(any("carrier-sourced BY SUBSTRATE" in e for e in errors), errors)
+
 
 # --- Issue #398 Phase 0: descriptive skill-gate registry --------------------
 SKILL_GATE_PARSED = {

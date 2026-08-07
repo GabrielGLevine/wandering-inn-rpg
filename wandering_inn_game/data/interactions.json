@@ -34,11 +34,14 @@
  ],
  "interactions": [
   {
+   "_comment": "counter_from=target (#398-p2 review HIGH-1): a burnable may name its OWN counter in `burn_counter`; carriers that author none keep banking the row's `burned_the_debris`. One row over every burnable in the game cannot also be one world event.",
    "skill_property": "burns",
    "target_property": "burnable",
    "outcome": "remove_scorch",
    "persistence": "permanent",
    "counter": "burned_the_debris",
+   "counter_from": "target",
+   "counter_key": "burn_counter",
    "terrain": "scorched",
    "toast_from": "target",
    "toast_key": "burn_toast",
@@ -159,6 +162,8 @@
    "outcome": "remove_scorch",
    "persistence": "permanent",
    "counter": "cut_through_growth",
+   "counter_from": "target",
+   "counter_key": "cut_counter",
    "terrain": "cleared",
    "toast_from": "target",
    "toast_key": "cut_toast",
