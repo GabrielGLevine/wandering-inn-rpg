@@ -474,7 +474,7 @@
    "sprite": "forge_station",
    "observe": "A second bench, same pattern as the first — built to the same civic spec as the market tier's stalls, just built for heat instead of trade.",
    "on_interact_accomplishment": "eyed_the_forge_station",
-   "toast": "Tool racks, empty for the moment, and the bench still ticking as it cools.",
+   "toast": "The bench ticks twice under your hand as it cools, and the racks above it are empty down to the pegs.",
    "_light_comment": "v0.17 R2: the tier's second banked mouth. Count 7 -> 8 = LIGHT_BUDGET, so this map is FULL.",
    "light": {
     "color": [
@@ -496,7 +496,7 @@
    ],
    "display_name": "Steam Vent",
    "sprite": "steam_vent",
-   "observe": "A bronze grate exhales a slow white breath, steady as a held note. Somewhere below, something enormous is always working.",
+   "observe": "A bronze floor grate breathing white steam in slow pushes. The flags around it carry a beat you can feel through your boots.",
    "on_interact_accomplishment": "heard_the_machine_below",
    "toast": "Warm, damp air. A rhythm underneath it, too even to be weather."
   },
@@ -566,7 +566,7 @@
     0.38
    ],
    "facing": "left",
-   "observe": "A Drake in a scarred leather apron, forearms banded with old burn-marks she stopped covering years ago. She works without looking up, and the work doesn't suffer for it.",
+   "observe": "A Drake in a leather apron scarred through in three places, both forearms banded with old burn-marks. Her eyes stay on the colour of the billet; her free hand finds the tongs without going to look for them.",
    "friendly_line": "She sets the hammer down long enough to look at you properly. The billet on the anvil goes a shade darker while she does.",
    "talk_pool": [
     "Bench is rated for a working day at a time. It gets one, and not a bell more.",
@@ -625,7 +625,7 @@
     0.44
    ],
    "facing": "down",
-   "observe": "A Drake in a brass-buttoned lift coat, one hand resting on the gate lever without gripping it. He watches the counterweights instead of the passengers, and knows where both are.",
+   "observe": "The lift coat is brass-buttoned to the throat, and the Drake wearing it keeps one hand along the gate lever without closing on it. He calls the quarter bell a beat before the cage comes up into the frame.",
    "friendly_line": "He tips two fingers off the gate lever. \"Quarter bell,\" he says, and puts them back.",
    "talk_pool": [
     "Down at the quarter bell, up at the half. If you aren't sure which, wait. The bell is sure.",
@@ -716,7 +716,7 @@
     0.76,
     0.82
    ],
-   "observe": "Bar stock stacked by gauge, each bundle strapped and tagged. The tags carry a tier number, a bench number, and nothing else. No names anywhere on them.",
+   "observe": "Bar stock in strapped bundles, sorted by gauge. Wrist-thick at the bottom of the rack, pencil-thin at the top. The paper tag on each bundle gives a tier number and a bench number.",
    "on_interact_accomplishment": "eyed_the_billet_rack",
    "toast": "Cold iron, every bar cut to the same length as the one beside it. The strapping doesn't give under your hand."
   },
@@ -753,7 +753,7 @@
     0.28,
     0.29
    ],
-   "observe": "Cooled slag and cracked crucible shards, heaped no higher than a line painted on the flagstones around it. The line has been repainted recently, and brightly.",
+   "observe": "Cooled slag and cracked crucible shards, heaped to just under a line painted on the flagstones around the pile. Fresh paint on the line, the brush marks still crisp at the edges.",
    "on_interact_accomplishment": "eyed_the_slag_heap",
    "toast": "Glassy black waste, still holding a little of the day's heat. Even the refuse up here has a level marked on it."
   },
@@ -773,7 +773,7 @@
    ],
    "observe": "A bronze rail along the tier's open edge, polished bright by a hundred people leaning on the same stretch of it while they waited on the cage. Below it the shaft goes down past where the light gives up.",
    "on_interact_accomplishment": "leaned_on_the_parapet_rail",
-   "toast": "You put a hand on the rail. Warm from the tier, not from the drop, and cold air comes up the shaft against your wrist."
+   "toast": "You lean on the bronze rail. Warm brass under your palm; from the shaft, cold air and the clank of the cage somewhere below."
   },
   {
    "_comment": "v0.15 T4.4 regional repeatable work, 3 of 3. NEW COUNTER pallass_fetches_run, frozen at the next tag. Cell (18,4) sits east of forge_station_b, off the bounds lap (rows 2/9, columns 0/25) and off the y=9 lane pallass_walkthrough and pallass_round_trip both use.",
@@ -785,7 +785,7 @@
    ],
    "display_name": "The Fetch Slips",
    "sprite": "delivery_board",
-   "observe": "A rack of numbered slips beside the second bench: a stock number, a bench number, an hour. No names on any of them. Any pair of hands that can read a gauge can take one down.",
+   "observe": "A rack of numbered slips beside the second bench. A stock number, a bench number and an hour on each one; no name on any of them.",
    "on_interact_accomplishment": "pallass_fetches_run",
    "once_per_waking": true,
    "once_per_waking_toast": "The rack is empty until the next shift files its slips.",
@@ -815,7 +815,7 @@
     5,
     7
    ],
-   "observe": "A wide iron-strapped door standing open on its wedge. Past it: a working hall, and a heat that has its own weather."
+   "observe": "A wide iron-strapped door wedged open on the sill, and past it the hall runs hotter and louder than the tier does."
   },
   {
    "id": "forge_reject_bin",
@@ -883,7 +883,7 @@
    "on_interact_accomplishment": "shipment_leg_carried",
    "once_per_waking": true,
    "once_per_waking_toast": "The attendant has stopped counting loads for the day. Come back for the pallet on tomorrow's bell.",
-   "toast": "You get the pallet onto the loading square and the strapping squared. The attendant looks at it, looks at the bell, and says nothing."
+   "toast": "You walk the pallet the last hand's width onto the loading square and square the strapping after it. The attendant looks at the load, then writes an hour beside it on the cage slate."
   }
  ]
 }

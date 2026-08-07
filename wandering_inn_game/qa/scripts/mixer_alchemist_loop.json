@@ -21,7 +21,7 @@
   { "_comment": "== PHASE A cast 1: [Low-Grade Synthesis] (slot 1) at alchemy_bench_synthesis (5,7). Player boots facing up onto it.", "action": "press", "name": "hotbar_1" },
   { "action": "wait_for_event", "type": "skill_used", "payload_contains": { "skill": "low_grade_synthesis", "context": "exploration", "target": "alchemy_bench_synthesis" }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "accomplishment_recorded", "payload_contains": { "id": "synthesized_draught" }, "timeout_sec": 5 },
-  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Low-Grade Synthesis] — Crude reagents over a low flame, and a draught that mostly does what it should. It will pass." }, "timeout_sec": 5 },
+  { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "[Low-Grade Synthesis] — Cheap reagents over a low flame, stirred until the colour holds. The draught comes out cloudy and does most of what a draught should." }, "timeout_sec": 5 },
   { "action": "wait_for_event", "type": "item_gained", "payload_contains": { "item": "crude_draught" }, "timeout_sec": 5 },
   { "_comment": "#330 R5 THE BENCH CURE, proven here: a SECOND cast with the crude_draught still in the pack refuses BEFORE banking. This produce-only arm used to bank synthesized_draught on a pickup that silently failed, so mashing a full pack carried the [Alchemist] curve with nothing entering the world.", "action": "press", "name": "hotbar_1" },
   { "action": "wait_for_event", "type": "toast", "payload_contains": { "text": "Your pack already holds one of those. No sense making a second you cannot carry." }, "timeout_sec": 5 },

@@ -94,7 +94,7 @@
    "action": "wait_for_event",
    "type": "toast",
    "payload_contains": {
-    "text": "You get the pallet onto the loading square and the strapping squared. The attendant looks at it, looks at the bell, and says nothing."
+    "text": "You walk the pallet the last hand's width onto the loading square and square the strapping after it. The attendant looks at the load, then writes an hour beside it on the cage slate."
    },
    "timeout_sec": 5
   },
