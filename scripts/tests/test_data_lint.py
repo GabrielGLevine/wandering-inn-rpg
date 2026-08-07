@@ -225,6 +225,14 @@ class TestInteractionsTable(unittest.TestCase):
         self.assertTrue(any("has no skill carrier" in e for e in errors))
         self.assertTrue(any("has no shipped target carrier" in e for e in errors))
 
+    def test_staged_target_property_allows_phase_split_then_lapses(self):
+        table = self._mutated()
+        table["staged_target_properties"] = ["burnable"]
+        errors, _ = self._run(table, maps={"m": {**GRID, "entities": []}})
+        self.assertEqual(errors, [])
+        errors, _ = self._run(table)
+        self.assertTrue(any("now has shipped carriers" in e for e in errors), errors)
+
     def test_duplicate_row_is_unreachable(self):
         table = self._mutated()
         table["interactions"].append(json.loads(json.dumps(table["interactions"][0])))
@@ -299,6 +307,101 @@ class TestInteractionsTable(unittest.TestCase):
         del table["interactions"][0]["counter"]
         errors, _ = self._run(table)
         self.assertEqual(errors, [])
+
+
+# --- Issue #398 Phase 0: descriptive skill-gate registry --------------------
+SKILL_GATE_PARSED = {
+    data_lint.DATA / "skills.json": {"skills": [
+        {"id": "freeze", "freezes": True},
+        {"id": "blink", "blinks": True, "blink_range": 2},
+        {"id": "cut", "cuts": True},
+    ]},
+    data_lint.DATA / "classes.json": {"classes": [
+        {"id": "mage", "levels": [{"level": 1, "grants": ["freeze"]}]},
+        {"id": "runner", "levels": [{"level": 1, "grants": ["blink"]}]},
+        {"id": "warrior", "levels": [{"level": 1, "grants": ["cut"]}]},
+    ]},
+}
+
+
+def _good_skill_gate_map():
+    return {**GRID, "entities": [
+        {"id": "cache", "cell": [3, 1]},
+        {"id": "guide", "cell": [0, 2]},
+    ], "skill_gates": {"pocket": {
+        "modes": [
+            {"mechanism": "property", "skill_property": "freezes", "cells": [[1, 1]]},
+            {"mechanism": "blink", "min_range": 2, "from": [0, 1], "to": [2, 1]},
+        ],
+        "rewards": ["cache"],
+    }}}
+
+
+class TestSkillGates(unittest.TestCase):
+    def _run(self, map_doc):
+        errors = []
+        data_lint.check_skill_gates(SKILL_GATE_PARSED, {"m": map_doc}, errors)
+        return errors
+
+    def test_good_registry_passes(self):
+        self.assertEqual(self._run(_good_skill_gate_map()), [])
+
+    def test_arm_1_modes_need_distinct_mechanisms_or_properties(self):
+        doc = _good_skill_gate_map()
+        doc["skill_gates"]["pocket"]["modes"][1] = {
+            "mechanism": "property", "skill_property": "freezes", "cells": [[2, 1]]}
+        errors = self._run(doc)
+        self.assertTrue(any("distinct mechanisms" in error for error in errors), errors)
+
+    def test_arm_2_class_unions_are_pairwise_distinct_across_all_modes(self):
+        doc = _good_skill_gate_map()
+        doc["skill_gates"]["pocket"]["modes"].append({
+            "mechanism": "arm", "skill": "freeze", "cells": [[3, 2]]})
+        errors = self._run(doc)
+        self.assertTrue(any("identical class unions" in error for error in errors), errors)
+
+    def test_arm_2_empty_union_needs_explicit_non_skill_gate(self):
+        doc = _good_skill_gate_map()
+        doc["skill_gates"]["pocket"]["modes"][1] = {
+            "mechanism": "social", "props": ["guide"]}
+        errors = self._run(doc)
+        self.assertTrue(any("empty skill-granter union" in error and "gate" in error
+            for error in errors), errors)
+        doc["skill_gates"]["pocket"]["modes"][1]["gate"] = "dialogue"
+        self.assertEqual(self._run(doc), [])
+
+    def test_arm_3_carriers_and_blink_range_must_be_real(self):
+        doc = _good_skill_gate_map()
+        doc["skill_gates"]["pocket"]["modes"][0]["props"] = ["missing"]
+        doc["skill_gates"]["pocket"]["modes"][0]["cells"] = [[4, 0]]
+        doc["skill_gates"]["pocket"]["modes"][1]["min_range"] = 3
+        errors = self._run(doc)
+        joined = "\n".join(errors)
+        self.assertIn("does not resolve", joined)
+        self.assertIn("not a real cell", joined)
+        self.assertIn("exceeds shipped blink range", joined)
+
+    def test_blink_none_reports_invalid_value_not_exceeded_range(self):
+        doc = _good_skill_gate_map()
+        doc["skill_gates"]["pocket"]["modes"][1]["min_range"] = None
+        errors = self._run(doc)
+        self.assertTrue(any("positive integer" in error for error in errors), errors)
+        self.assertFalse(any("None exceeds" in error for error in errors), errors)
+
+    def test_arm_4_rewards_must_resolve_on_the_same_map(self):
+        doc = _good_skill_gate_map()
+        doc["skill_gates"]["pocket"]["rewards"] = ["elsewhere"]
+        errors = self._run(doc)
+        self.assertTrue(any("rewards do not resolve" in error for error in errors), errors)
+
+    def test_arm_5_missing_registry_is_report_only(self):
+        map_doc = {**GRID, "entities": [
+            {"id": "brush", "cell": [1, 1], "burnable": True},
+        ]}
+        advisories = []
+        data_lint.advise_missing_skill_gates({"m": map_doc}, advisories)
+        self.assertEqual(len(advisories), 1)
+        self.assertIn("burnable blocker", advisories[0])
 
 
 class TestRealTree(unittest.TestCase):
