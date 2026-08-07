@@ -4,7 +4,7 @@
  "_lane": "397r2/l2",
  "_base": "a33e2cf6 (#397 r2 Task 1: bible round-2 amendments + advisory lint arms) -- `old` is that base text, `new` is this lane's re-authored text",
  "_rows": 28,
- "_note": "Round-2 re-authorship of the 28 pallass rows in lane-rows.jsonl (4 files). Fresh authorship under the amended doctrine: zero inference by default, descriptor triad / affordance formula / >1 button-family closer per file banned, round-1 repair templates (one-word deflation codas, inserted self-corrections, trim scars) banned. Zero inference allowances were spent (see _inference_allowances). Untouchables byte-identical: extract_prose.py verify-untouched exits 0 before and after. No structural edits -- 28 changed lines against 28 removed lines across the four map files, and reverting the 28 values reproduces the base JSON byte-for-byte.",
+ "_note": "Round-2 re-authorship of the 28 pallass rows in lane-rows.jsonl (4 files). Fresh authorship under the amended doctrine: zero inference by default, descriptor triad / affordance formula / >1 button-family closer per file banned, round-1 repair templates (one-word deflation codas, inserted self-corrections, trim scars) banned. Zero inference allowances were spent (see _inference_allowances). Untouchables byte-identical: extract_prose.py verify-untouched exits 0 before and after. No structural edits -- 28 changed lines against 28 removed lines across the four map files, and reverting the 28 values reproduces the base JSON byte-for-byte. FIX WAVE (round-2 adversarial review of faf2e7b6): 10 of the 28 values were re-authored again -- the Xif's-own-bench locked_toast/observe physical self-contradiction (cold burner vs lit blue flame), six rows that were skeleton edits rather than fresh authorship (amendment 6), one undeclared habit-inference on the examination standard plus the matching clause on the permit counter, and two intra-file echoes (face-down card, 'Cheap reagents'). Two pins re-derived from fresh runs. Still 28 changed lines against 28 removed lines across the four map files; no structural edits.",
  "_inference_allowances": {
   "pallass_den_shop.json": "NONE USED -- the file's one allowance is already consumed by protected/holdout keeps ($.entities[5].toast, $.entities[1].observe) per bible guard 10.2.",
   "pallass_forge.json": "NONE USED -- consumed by keeps $.entities[16].toast (holdout, inferred microhistory) and $.entities[14].variants[0].toast (protected).",
@@ -27,8 +27,8 @@
    "field_path": "$.entities[2].on_skill_use.toast",
    "row_id": "map:pallass/pallass_den_shop.json:$.entities[2].on_skill_use.toast",
    "old": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. The tin is not perishable, the salt packed with it is, and after four cycles both are still on one manifest line, so the exemption covers the crate.",
-   "new": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. The tin is not perishable and the salt packed with it is, and four cycles of manifests have listed the two on one line, so the exemption reaches the crate.",
-   "rederived_from": "real run: wandering_inn_game/qa/run_qa.sh pallass_ledger_skill headless --seed=9 -- pin set from the observed toast payload in qa_output/pallass_ledger_skill/events.jsonl, then re-run QA_RESULT: PASS"
+   "new": "[Appraise Goods] — Four cycles of manifests list the tin and the salt packed with it on one line, and the salt is perishable household stock where the tin is not. Under form nine, clause four, that stock carries an exemption from queue hold — and one manifest line puts the crate inside it.",
+   "rederived_from": "real run (round-2 FIX WAVE re-derivation): wandering_inn_game/qa/run_qa.sh pallass_ledger_skill headless --seed=9 -- the field was re-authored again for the fix-wave findings, so the pin was re-set from the observed toast payload in qa_output/pallass_ledger_skill/events.jsonl, then re-run QA_RESULT: PASS"
   },
   {
    "script": "pallass_peek",
@@ -87,8 +87,8 @@
    "field_path": "$.entities[17].on_skill_use.toast",
    "row_id": "map:pallass/pallass_market.json:$.entities[17].on_skill_use.toast",
    "old": "[Low-Grade Synthesis] — Crude reagents over a low flame, and a draught that mostly does what it should. It will pass.",
-   "new": "[Low-Grade Synthesis] — Cheap reagents over a low flame, stirred until the colour holds. The draught comes out cloudy and does most of what a draught should.",
-   "rederived_from": "real run: wandering_inn_game/qa/run_qa.sh mixer_alchemist_loop headless --seed=9 -- pin set from the observed toast payload in qa_output/mixer_alchemist_loop/events.jsonl, then re-run QA_RESULT: PASS"
+   "new": "[Low-Grade Synthesis] — You hold it over a low flame until the colour settles, then cork it cloudy and most of the way to a proper draught.",
+   "rederived_from": "real run (round-2 FIX WAVE re-derivation): wandering_inn_game/qa/run_qa.sh mixer_alchemist_loop headless --seed=9 -- the field was re-authored again for the fix-wave findings, so the pin was re-set from the observed toast payload in qa_output/mixer_alchemist_loop/events.jsonl, then re-run QA_RESULT: PASS"
   }
  ],
  "strings": [
@@ -101,7 +101,7 @@
     "BUTTON"
    ],
    "old": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. The tin is not perishable, the salt packed with it is, and after four cycles both are still on one manifest line, so the exemption covers the crate.",
-   "new": "[Appraise Goods] — Form nine, clause four: perishable household stock is exempt from queue hold. The tin is not perishable and the salt packed with it is, and four cycles of manifests have listed the two on one line, so the exemption reaches the crate."
+   "new": "[Appraise Goods] — Four cycles of manifests list the tin and the salt packed with it on one line, and the salt is perishable household stock where the tin is not. Under form nine, clause four, that stock carries an exemption from queue hold — and one manifest line puts the crate inside it."
   },
   {
    "id": "map:pallass/pallass_den_shop.json:$.entities[2].skill_hint_toast",
@@ -170,7 +170,7 @@
     "BUTTON"
    ],
    "old": "A rack of numbered slips beside the second bench: a stock number, a bench number, an hour. No names on any of them. Any pair of hands that can read a gauge can take one down.",
-   "new": "A rack of numbered slips beside the second bench. A stock number, a bench number and an hour on each one; no name on any of them."
+   "new": "The rack by the second bench is hung with numbered slips. Below the number, three lines to a slip: stock number, bench number, hour. Not one carries a name."
   },
   {
    "id": "map:pallass/pallass_forge.json:$.entities[15].observe",
@@ -277,7 +277,7 @@
     "BUTTON"
    ],
    "old": "A civic notice pinned at eye height, examiner's seal at the corner, the text underneath it read so often the ink has gone grey where thumbs land.",
-   "new": "The examination standard, pinned at eye height. The examiner's seal sits in the corner. Two grey thumbprints in the margin, where everyone holds it to read."
+   "new": "Two thumbprints gone grey in the margin of the examination standard. The examiner's seal is down in the corner, the sheet pinned at eye height."
   },
   {
    "id": "map:pallass/pallass_forge_hall.json:$.entities[4].observe",
@@ -288,7 +288,7 @@
     "BUTTON"
    ],
    "old": "Water gone grey with scale, a skin of oil across the top, and a scum line three fingers above the current level.",
-   "new": "Grey water under a skin of oil, and a scum line ringing the tub three fingers above where the level stands now."
+   "new": "A scum ring goes right around the inside of the tub three fingers above the water, and the water below it is grey with scale under an unbroken skin of oil."
   },
   {
    "id": "map:pallass/pallass_forge_hall.json:$.entities[6].observe",
@@ -297,7 +297,7 @@
    "register": "scenic",
    "families": [],
    "old": "Finished pieces racked in a grid, each with a civic tag wired to it and not one price among them.",
-   "new": "Finished work racked in a grid, wall to wall, each piece with a civic tag wired through it. The tags carry marks and measures; not one of them carries a price."
+   "new": "A grid of finished pieces the width of the wall, one to a slot. Each has a wired civic tag on it, giving a smith's mark and a measure but no price."
   },
   {
    "id": "map:pallass/pallass_forge_hall.json:$.entities[7].gate_closed_toast",
@@ -341,7 +341,7 @@
     "BUTTON"
    ],
    "old": "[Low-Grade Synthesis] — Crude reagents over a low flame, and a draught that mostly does what it should. It will pass.",
-   "new": "[Low-Grade Synthesis] — Cheap reagents over a low flame, stirred until the colour holds. The draught comes out cloudy and does most of what a draught should."
+   "new": "[Low-Grade Synthesis] — You hold it over a low flame until the colour settles, then cork it cloudy and most of the way to a proper draught."
   },
   {
    "id": "map:pallass/pallass_market.json:$.entities[19].locked_toast",
@@ -352,7 +352,7 @@
     "BUTTON"
    ],
    "old": "A bulb of dark glass over cold coals, half full of something grey. Not your trade.",
-   "new": "A bulb of dark glass over cold coals, half full of grey wash. The wash takes one particular heat, and nothing on the retort tells you which."
+   "new": "A grey wash sits half-way up the dark glass, the coals beneath it cold. Reducing it to salts is a distiller's job, not yours."
   },
   {
    "id": "map:pallass/pallass_market.json:$.entities[20].locked_toast",
@@ -364,7 +364,7 @@
     "OVERAUTH"
    ],
    "old": "The best bench Xif owns, kept for work you cannot do yet.",
-   "new": "Xif's own bench, and the burner under the good glass is cold. Lighting it for a true synthesis is work your hands have not learned."
+   "new": "Xif's own bench, the burner under it already lit. You have no true synthesis to put over that flame."
   },
   {
    "id": "map:pallass/pallass_market.json:$.entities[20].observe",
@@ -386,7 +386,7 @@
     "BUTTON"
    ],
    "old": "A rank of low carts for hire, each chalked with a tier number and a rate, and a queue board nobody is standing at.",
-   "new": "Low carts in a rank with their shafts down, each chalked with a tier number and a rate. The queue board beside them is wiped clean, and nobody is standing at it."
+   "new": "Low carts for hire in a rank, shafts down on the stone. A tier number and a rate are chalked on every tailboard. The queue board at the head of the rank stands with no one at it."
   },
   {
    "id": "map:pallass/pallass_market.json:$.entities[3].observe",
@@ -409,7 +409,7 @@
     "BUTTON"
    ],
    "old": "Forms, inkwells, and a bell that has clearly been rung far too many times.",
-   "new": "You put your weight on the ledge where everyone else does. On the other side of it, a clerk turns a form face down and rings the bell for the next in line."
+   "new": "You put your weight on the ledge, and on the far side of the glass a clerk stamps a form, drops it beside her inkwell and rings the bell."
   }
  ]
 }

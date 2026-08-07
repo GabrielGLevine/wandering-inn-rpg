@@ -449,7 +449,7 @@
    "sprite": "bar_counter",
    "observe": "The window ledge is worn smooth where a thousand wrists have rested, waiting on a stamp. A stencilled plate lists the posted fees.",
    "on_interact_accomplishment": "leaned_on_the_permit_counter",
-   "toast": "You put your weight on the ledge where everyone else does. On the other side of it, a clerk turns a form face down and rings the bell for the next in line."
+   "toast": "You put your weight on the ledge, and on the far side of the glass a clerk stamps a form, drops it beside her inkwell and rings the bell."
   },
   {
    "_comment": "Static `dialogue` = no-graph fallback only.",
@@ -616,7 +616,7 @@
    "on_skill_use": {
     "accomplishment": "synthesized_draught",
     "item": "crude_draught",
-    "toast": "[Low-Grade Synthesis] — Cheap reagents over a low flame, stirred until the colour holds. The draught comes out cloudy and does most of what a draught should."
+    "toast": "[Low-Grade Synthesis] — You hold it over a low flame until the colour settles, then cork it cloudy and most of the way to a proper draught."
    }
   },
   {
@@ -651,7 +651,7 @@
    "sprite": "alchemy_still",
    "requires_skill": "mineral_distillation",
    "skill_hint_toast": "A retort over a banked fire, a mineral wash already loaded. A distiller could boil it down to salts.",
-   "locked_toast": "A bulb of dark glass over cold coals, half full of grey wash. The wash takes one particular heat, and nothing on the retort tells you which.",
+   "locked_toast": "A grey wash sits half-way up the dark glass, the coals beneath it cold. Reducing it to salts is a distiller's job, not yours.",
    "observe": "A distilling retort, its bulb crusted white at the neck where the salts climb as the wash boils away.",
    "on_skill_use": {
     "accomplishment": "synthesized_draught",
@@ -676,7 +676,7 @@
    ],
    "item_hint_toast": "The good bench wants both halves of the working in hand: a solvent phial and a measure of mineral salts. You are short at least one.",
    "skill_hint_toast": "The finest bench on the tier, and it knows it. A true synthesis needs solvent and salts both, and a hand that can bring them together.",
-   "locked_toast": "Xif's own bench, and the burner under the good glass is cold. Lighting it for a true synthesis is work your hands have not learned.",
+   "locked_toast": "Xif's own bench, the burner under it already lit. You have no true synthesis to put over that flame.",
    "observe": "The bench Xif keeps for himself. Clean glass in a rack, two empty measures set side by side at the front edge. The blue flame under it burns without a flicker.",
    "on_skill_use": {
     "accomplishment": "synthesized_draught",
@@ -790,7 +790,7 @@
    ],
    "display_name": "The Dray Rank",
    "sprite": "market_stall_wood",
-   "observe": "Low carts in a rank with their shafts down, each chalked with a tier number and a rate. The queue board beside them is wiped clean, and nobody is standing at it.",
+   "observe": "Low carts for hire in a rank, shafts down on the stone. A tier number and a rate are chalked on every tailboard. The queue board at the head of the rank stands with no one at it.",
    "on_interact_accomplishment": "shipment_leg_carried",
    "once_per_waking": true,
    "once_per_waking_toast": "Every cart on the rank is out. The next rotation brings them back.",

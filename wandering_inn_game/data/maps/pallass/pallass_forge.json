@@ -785,7 +785,7 @@
    ],
    "display_name": "The Fetch Slips",
    "sprite": "delivery_board",
-   "observe": "A rack of numbered slips beside the second bench. A stock number, a bench number and an hour on each one; no name on any of them.",
+   "observe": "The rack by the second bench is hung with numbered slips. Below the number, three lines to a slip: stock number, bench number, hour. Not one carries a name.",
    "on_interact_accomplishment": "pallass_fetches_run",
    "once_per_waking": true,
    "once_per_waking_toast": "The rack is empty until the next shift files its slips.",
