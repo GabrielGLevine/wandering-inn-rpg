@@ -193,6 +193,12 @@ func _state_set_counter_keys() -> Array:
 	return keys
 
 
+## String|Array -> every id the arm banks (the on_victory/on_open contract).
+func _note_banked(raw: Variant, out: Dictionary) -> void:
+	for counter: Variant in (raw if raw is Array else [raw]):
+		out[String(counter)] = true
+
+
 func _produced_accomplishments(scene: Dictionary, graphs: Dictionary, skills: Dictionary, bounties: Dictionary, deliveries: Dictionary) -> Dictionary:
 	var out: Dictionary = {}
 	for lit: String in STRUCTURAL_LITERALS:
@@ -218,17 +224,19 @@ func _produced_accomplishments(scene: Dictionary, graphs: Dictionary, skills: Di
 				# and test_content:647 (the freeze regen that missed this arm
 				# went red on exactly the 40 ids it froze).
 				out["fought_%s" % String(entity["id"])] = true
+			# #398-P3: String|Array here too (the on_open_accomplishment
+			# contract below) -- the fourth mirror of the same walk.
 			if entity.has("on_skill_use"):
 				var skill_use: Dictionary = entity["on_skill_use"]
 				if skill_use.has("accomplishment"):
-					out[String(skill_use["accomplishment"])] = true
+					_note_banked(skill_use["accomplishment"], out)
 				for variant: Dictionary in (skill_use.get("variants", []) as Array):
 					if variant.has("accomplishment"):
-						out[String(variant["accomplishment"])] = true
+						_note_banked(variant["accomplishment"], out)
 			for sid: String in (entity.get("skill_uses", {}) as Dictionary):
 				var arm: Dictionary = (entity["skill_uses"] as Dictionary)[sid]
 				if arm.has("accomplishment"):
-					out[String(arm["accomplishment"])] = true
+					_note_banked(arm["accomplishment"], out)
 			if entity.has("on_interact_accomplishment"):
 				out[String(entity["on_interact_accomplishment"])] = true
 				for variant: Dictionary in (entity.get("variants", []) as Array):

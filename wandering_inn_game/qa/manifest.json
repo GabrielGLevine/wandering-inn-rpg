@@ -6221,6 +6221,91 @@
      "save"
     ]
    }
+  },
+  {
+   "_comment": "#398-P3 lane marker; rows appended last.",
+   "script": "warded_side_vault_rogue",
+   "seed": 1,
+   "fixture": "warded_side_vault_rogue_start",
+   "note": "#398 pocket mode A: [Find Trap] then [Disarm Trap], whose terminal banks BOTH warded_vault_disarmed and the shared warded_side_vault_open the guard's encounter_when reads; then the retuned construct (ai melee, con 30), the dungeon-thread clue, and the unique counterweight",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "warded_side_vault_rogue_start"
+    ],
+    "skills": [
+     "disarm_trap",
+     "find_trap",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration",
+     "traps"
+    ]
+   }
+  },
+  {
+   "script": "warded_side_vault_warrior",
+   "seed": 9,
+   "fixture": "warded_side_vault_warrior_start",
+   "note": "#398 pocket mode B: the noisy [Greater Strength] pry banking warded_vault_forced_noisy plus the same shared warded_side_vault_open, then the same guard and the same unique reward from the other entrance",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "warded_side_vault_warrior_start"
+    ],
+    "skills": [
+     "greater_strength",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "script": "warded_side_vault_gate_check",
+   "seed": 9,
+   "fixture": "warded_side_vault_gate_start",
+   "note": "#398 pocket negative and the pocket's REACHABILITY AUTHORITY: a kitless Mage walks the seal perimeter and takes player_blocked on all ten y10 threshold cells plus (9,11)/(9,12)/(9,13) from x10 on the east face, refuses at both named modes in place, and DERIVES reward-absence (no counter banks, no combat, nothing gained, player_moved never fires for a pocket cell). No teleport",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "trapped_halls"
+    ],
+    "fixtures": [
+     "warded_side_vault_gate_start"
+    ],
+    "skills": [
+     "find_trap",
+     "greater_strength",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
   }
  ]
 }

@@ -264,10 +264,15 @@ func _collect_scalar_counter(raw_counter: Variant, label: String, consumed: Dict
 	(consumed[counter] as Array).append(label)
 
 
+## #398-P3: a skill/interact arm's `accomplishment` is String|ARRAY (the
+## on_victory/on_open contract WIGame.use_skill now banks over), so "scalar"
+## means one-or-many here. A bare String() over an Array would credit a garbage
+## "['a', 'b']" producer and report both real ids as unproduced.
 func _collect_scalar_producer(raw_counter: Variant, label: String, produced: Dictionary) -> void:
-	var counter := String(raw_counter)
-	if counter != "":
-		_mark_produced(counter, label, produced)
+	for entry: Variant in (raw_counter if raw_counter is Array else [raw_counter]):
+		var counter := String(entry)
+		if counter != "":
+			_mark_produced(counter, label, produced)
 
 
 func _mark_produced(counter: String, label: String, produced: Dictionary) -> void:

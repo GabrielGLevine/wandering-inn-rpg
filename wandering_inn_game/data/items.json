@@ -1201,6 +1201,21 @@
 			"use_effect": { "next_fight": { "hp_mod": 2 } },
 			"description": "Thick cuts off the haunch, blackened outside and still red at the middle, wrapped in a cloth that will never come clean.",
 			"lore": "Corusdeer run hot enough to scorch grass where they bed down, and hunters on the Floodplains say the meat cooks half the way there on its own."
+		},
+		{
+			"_comment": "#398-P3 warded side-vault loot anchor.",
+			"id": "wardwrights_counterweight",
+			"name": "Wardwright's Counterweight",
+			"kind": "accessory",
+			"weapon_family": "none",
+			"damage_mod": 0,
+			"hp_mod": 2,
+			"damage_reduction": 0,
+			"resonance": 1,
+			"tier": "enchanted",
+			"abilities": ["dangersense"],
+			"description": "A palm-sized lead weight scored with ward-lines that twitch toward hidden danger.",
+			"lore": "Every trap in the side vault pulled against this weight. Marks on its rim match the sealed rune-door farther east."
 		}
 	]
 }

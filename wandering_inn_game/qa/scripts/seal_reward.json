@@ -238,11 +238,11 @@
    "frames": 10
   },
   {
-   "_comment": "Act V's two new entities net to ZERO here and the count still moves: seal_warden_alcove (19,6) is an encounter, so it is visible and inert from first arrival (present_when is validator-forbidden on encounters), and pisces_seal_escort (19,8) is present since the descent was agreed -- while ksmvr_plates retires at horns_dig_joined, which this save banked long ago. 12 entities + the PC = 13; v019-L2 makes it 17, the four north-gallery entities (span stub, drop, slab, cache) standing unbanked and present here exactly as they do in dungeon_peek.",
+   "_comment": "Act V's two new entities net to ZERO here and the count still moves: seal_warden_alcove (19,6) is an encounter, so it is visible and inert from first arrival (present_when is validator-forbidden on encounters), and pisces_seal_escort (19,8) is present since the descent was agreed -- while ksmvr_plates retires at horns_dig_joined, which this save banked long ago. 12 entities + the PC = 13; v019-L2 makes it 17, the four north-gallery entities (span stub, drop, slab, cache) standing unbanked and present here exactly as they do in dungeon_peek. #398-P3 RE-PIN 17 -> 20 (H4: this assertion's deletion was unauthorized; the honest fix is a re-pin). DERIVED by running this script and reading its own ui_entities_rendered payload, not by arithmetic: the side vault's `warded_side_vault_snare_tell`, `warded_side_vault_pry_plate` and the `warded_side_vault_construct` encounter all stand present at this save's state (it banks none of the five vault counters), while `warded_side_vault_snare_release` and `warded_side_vault_cache` are requires-gated and absent. Same +3 dungeon_peek reads, from a completely different save -- which is the point of keeping the pin in all four scripts.",
    "action": "assert_event_logged",
    "type": "ui_entities_rendered",
    "payload_contains": {
-    "sprites": 17,
+    "sprites": 20,
     "fallbacks": 0
    }
   },

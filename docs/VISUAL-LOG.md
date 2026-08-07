@@ -3845,3 +3845,36 @@ on one page with the quest-complete toast beside it.
   asserts green either way | (capture at close) | Ruling context: the 10-slot
   bar is ACCEPTED (slot 10 is cursor/mouse-reachable, number keys stay 1–9);
   this row is about whether it FITS, not whether it is reachable. |
+
+## #398 P3 — the warded side vault: two art asks OWED (2026-08-07)
+
+Both are sprite-legibility rows raised by the P3 fix-wave review, not bugs:
+headless asserts green either way, so only an eye can settle them. They pair
+with the standing directive that **tint is not disambiguation** (2026-08-02):
+a shade variant never reads as a separate thing, distinct silhouettes do.
+
+- [ ] **(ART, owed)** | `pressure_plate` now carries THREE distinct jobs on one
+  map | `data/maps/dungeon/trapped_halls.json` | `pressure_plate_a` (6,7) is a
+  *trap to trigger*, `warded_side_vault_snare_release` (2,10) is a *mechanism to
+  disarm*, and `warded_side_vault_pry_plate` (7,10) is a *slab to lever out* —
+  three different verbs behind one sprite id, two of them five cells apart on
+  the same y-band. A player who has learned "flagstone = do not touch" from
+  (6,7) meets the same art at (7,10) where the correct move is to heave it. The
+  fix is silhouette, not tint: the release wants visible wire/catch furniture,
+  the pry plate wants a raised, canted edge you can read a lever into.
+  **Owed:** one windowed `warded_side_vault_warrior` capture at
+  `00_warrior_vault_open`, plus one `dungeon_peek` at
+  `04_trapped_halls_landing`, read at 1x — do the three plates read as three
+  things? | (capture at close) |
+- [ ] **(ART, owed)** | the construct is `ruin_warden` at a warden tint |
+  `data/combatants.json` `side_vault_construct`, `trapped_halls.json`
+  `warded_side_vault_construct` | The entity carries `tint [0.58,0.64,0.76]` on
+  the map and `combat_tint [0.72,0.8,0.88]` on the board over the SAME
+  `ruin_warden` art the ruin guardians use. That is exactly the shade-variant
+  pattern the tint directive rules out: on the field it must read as a warded
+  vault mechanism, not "a ruin warden that is slightly bluer". Cheapest honest
+  fix is a distinct silhouette pass (ward-line etching, a narrower stance) or a
+  dedicated sprite; the tints stay as grade, never as identity. **Owed:** one
+  windowed `warded_side_vault_rogue` capture at `00_rogue_vault_open` (field
+  read) and one at the combat board, read beside a `ruin_guardian` fight |
+  (capture at close) |

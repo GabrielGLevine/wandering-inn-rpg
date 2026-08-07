@@ -131,6 +131,11 @@ def _state_set_counter_keys() -> list:
         if isinstance(row, dict) and row.get("outcome") == "state_set" and row.get("counter_key")})
 
 
+def _banked_ids(raw) -> list:
+    """String|Array -> the ids it banks (the on_victory/on_open contract)."""
+    return [str(entry) for entry in (raw if isinstance(raw, list) else [raw])]
+
+
 def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: dict, deliveries: dict) -> list:
     out = set(STRUCTURAL_LITERALS)
     state_set_keys = _state_set_counter_keys()
@@ -154,10 +159,13 @@ def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: 
                 out.add("fought_%s" % str(entity["id"]))
             skill_use = entity.get("on_skill_use", {})
             if "accomplishment" in skill_use:
-                out.add(str(skill_use["accomplishment"]))
+                # #398-P3: String|Array (the on_open_accomplishment contract
+                # below) -- a bare str() over a list would freeze one garbage
+                # "['a', 'b']" id and silently drop the real ones.
+                out.update(_banked_ids(skill_use["accomplishment"]))
             for variant in skill_use.get("variants", []):
                 if "accomplishment" in variant:
-                    out.add(str(variant["accomplishment"]))
+                    out.update(_banked_ids(variant["accomplishment"]))
             # v0.16 close: the per-skill arm map (`skill_uses`) wins over
             # `on_skill_use` at runtime (wi_game.gd:427-433) and test_content
             # already counts its arms as producers (:466-469); omitting it
@@ -166,10 +174,10 @@ def produced_accomplishments(scene: dict, graphs: dict, skills: dict, bounties: 
                 if not isinstance(arm, dict):
                     continue
                 if "accomplishment" in arm:
-                    out.add(str(arm["accomplishment"]))
+                    out.update(_banked_ids(arm["accomplishment"]))
                 for variant in arm.get("variants", []):
                     if "accomplishment" in variant:
-                        out.add(str(variant["accomplishment"]))
+                        out.update(_banked_ids(variant["accomplishment"]))
             if "on_interact_accomplishment" in entity:
                 out.add(str(entity["on_interact_accomplishment"]))
                 for variant in entity.get("variants", []):
