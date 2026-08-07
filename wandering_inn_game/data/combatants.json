@@ -1595,7 +1595,32 @@
    "weapon_die": 5,
    "damage_reduction": 0,
    "ai": "melee",
-   "skills": ["power_strike", "slam"]
+   "skills": ["power_strike", "slam"],
+   "_comment": "#398 P4 pocket, power 12 (two above T3). Tuned as a pair with factor_clerk_guard; new ids keep every shipped composition isolated.",
+   "id": "factor_enforcer",
+   "power_level": 12.0,
+   "display_name": "The Factor's Enforcer",
+   "sprite": "hired_blade",
+   "combat_scale": 0.28,
+   "combat_tint": [0.42, 0.48, 0.56],
+   "side": "enemy",
+   "stats": {"str": 10, "dex": 10, "con": 48, "int": 7, "wis": 7, "cha": 8},
+   "weapon_die": 4,
+   "ai": "melee",
+   "skills": ["power_strike"]
+  },
+  {
+   "_comment": "#398 P4 pocket, power 13 (three above T3). The low-damage half of the bulky pair.",
+   "id": "factor_clerk_guard",
+   "power_level": 13.0,
+   "display_name": "The Closed-Account Clerk",
+   "sprite": "city_scribe",
+   "combat_tint": [0.62, 0.58, 0.48],
+   "side": "enemy",
+   "stats": {"str": 6, "dex": 12, "con": 40, "int": 9, "wis": 8, "cha": 9},
+   "weapon_die": 3,
+   "ai": "melee",
+   "skills": []
   }
  ]
 }

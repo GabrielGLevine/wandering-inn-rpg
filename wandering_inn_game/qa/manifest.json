@@ -6253,28 +6253,31 @@
    }
   },
   {
-   "_comment": "#398 pocket lane P5. Appended last.",
-   "script": "briar_arch_cut",
+   "_comment": "<!-- 398-lane-p4 --> Appended last under the pocket marker.",
+   "script": "counting_room_social",
    "seed": 9,
-   "fixture": "near_briar_arch_cut",
-   "note": "#398 P5 mode B: a sword-equipped Warrior cuts the western briar wall with [Power Strike], reaches the same dungeon trace, and clears the armed briar-ward encounter at its gated cell. Owns the cut half of the private-counter contract (review C1); both shared row-default ids and the burn id stay absent.",
+   "fixture": "counting_room_social_start",
+   "note": "#398 P4 social route: [Bargain] factor gate, destination-node proof, live tuned guard fight, and trade-bale claim",
    "tiers": [
     "full"
    ],
    "surfaces": {
     "maps": [
-     "ruin_surface"
+     "mercantile_alleys"
     ],
     "fixtures": [
-     "near_briar_arch_cut"
+     "counting_room_social_start"
     ],
     "skills": [
-     "basic_cleaning",
-     "power_strike"
+     "basic_cleaning"
     ],
-    "dialogue": [],
+    "dialogue": [
+     "invrisil_counting_factor"
+    ],
     "systems": [
      "combat",
+     "dialogue",
+     "economy",
      "exploration"
     ]
    }
@@ -6417,6 +6420,97 @@
     "dialogue": [],
     "systems": [
      "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 398-lane-p4 --> Appended last under the pocket marker.",
+   "script": "counting_room_quiet",
+   "seed": 9,
+   "fixture": "near_invrisil_stealth",
+   "note": "#398 P4 quiet route: [Appraise Foe] times the side shutter, the live alley ambush is resolved on the opened cell, then the tuned guard and the trade-bale claim",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "mercantile_alleys"
+    ],
+    "fixtures": [
+     "near_invrisil_stealth"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "observe"
+    ],
+    "dialogue": [],
+    "systems": [
+     "combat",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 398-lane-p4 --> Appended last under the pocket marker.",
+   "script": "counting_room_force",
+   "seed": 9,
+   "fixture": "invrisil_hat_start",
+   "note": "#398 P4 force route: [Greater Strength] banks noisy_entry, the factor's exact reactive line is asserted, then the tuned guard and the trade-bale claim",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "brothers_parlor",
+     "mercantile_alleys"
+    ],
+    "fixtures": [
+     "invrisil_hat_start"
+    ],
+    "skills": [
+     "basic_cleaning",
+     "greater_strength"
+    ],
+    "dialogue": [
+     "invrisil_counting_factor"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
+     "economy",
+     "exploration"
+    ]
+   }
+  },
+  {
+   "_comment": "<!-- 398-lane-p4 --> Appended last under the pocket marker.",
+   "script": "counting_room_gate_check",
+   "seed": 9,
+   "fixture": "near_trader",
+   "note": "#398 P4 negative: visible-locked Bargain, both arm refusals, and the pocket sealed -- walked into the (7,12) seam, reward cells never entered, spawn counter never banked",
+   "tiers": [
+    "full"
+   ],
+   "surfaces": {
+    "maps": [
+     "mercantile_alleys",
+     "pallass_market"
+    ],
+    "fixtures": [
+     "near_trader"
+    ],
+    "skills": [
+     "basic_cleaning"
+    ],
+    "dialogue": [
+     "invrisil_counting_factor"
+    ],
+    "systems": [
+     "combat",
+     "dialogue",
      "economy",
      "exploration"
     ]

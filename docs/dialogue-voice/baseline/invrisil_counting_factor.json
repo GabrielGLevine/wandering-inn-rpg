@@ -1,0 +1,106 @@
+{
+ "facts": {
+  "$.nodes.rear_account.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.rear_account.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.terms.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.terms.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.threshold.options[0].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.threshold.options[1].text": {
+   "brackets": [
+    "[Bargain]"
+   ],
+   "digits": [],
+   "propnouns": [
+    "Bargain",
+    "Put"
+   ]
+  },
+  "$.nodes.threshold.options[2].text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  },
+  "$.nodes.threshold.text": {
+   "brackets": [],
+   "digits": [],
+   "propnouns": []
+  }
+ },
+ "skeleton": {
+  "_comment": "#398 P4: the counting-room front gate. Bargain is visible-locked so the factor teaches the social route without hiding it; the noisy_entry option reaches one reactive line without changing the route.",
+  "nodes": {
+   "rear_account": {
+    "options": [
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Counting-Room Factor",
+    "text": "\u00a7"
+   },
+   "terms": {
+    "options": [
+     {
+      "effects": [
+       {
+        "accomplishment": "counting_room_invited"
+       }
+      ],
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Counting-Room Factor",
+    "text": "\u00a7"
+   },
+   "threshold": {
+    "options": [
+     {
+      "goto": "rear_account",
+      "requires": {
+       "accomplishment": {
+        "noisy_entry": 1
+       }
+      },
+      "text": "\u00a7"
+     },
+     {
+      "goto": "terms",
+      "requires": {
+       "skill": "bargain"
+      },
+      "text": "\u00a7"
+     },
+     {
+      "end": true,
+      "text": "\u00a7"
+     }
+    ],
+    "speaker": "The Counting-Room Factor",
+    "text": "\u00a7"
+   }
+  },
+  "start": "threshold"
+ }
+}
