@@ -150,7 +150,7 @@
    "type": "toast",
    "timeout_sec": 5,
    "payload_contains": {
-    "text": "[Detect Magic] — The shard is one link of a boundary that used to ring the whole thicket. It still pulls, faintly, along the exact line the deer refuse to cross. It was drawn to keep something in, and it has been failing at that for a very long time.",
+    "text": "[Detect Magic] — The shard is one link of a boundary that once ringed the thicket, and the pull in it still runs the exact line the deer refuse to cross. It faces inward, and there is very little of it left.",
     "lore": true
    }
   },
@@ -159,7 +159,7 @@
    "type": "ui_toast_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "text": "[Detect Magic] — The shard is one link of a boundary that used to ring the whole thicket. It still pulls, faintly, along the exact line the deer refuse to cross. It was drawn to keep something in, and it has been failing at that for a very long time."
+    "text": "[Detect Magic] — The shard is one link of a boundary that once ringed the thicket, and the pull in it still runs the exact line the deer refuse to cross. It faces inward, and there is very little of it left."
    }
   },
   {
@@ -360,7 +360,7 @@
    "type": "toast",
    "timeout_sec": 5,
    "payload_contains": {
-    "text": "Latched from the inside, and the hut was shut when you found it. You decide not to work that through any further today."
+    "text": "The latch is on the inside of the shutter, and the hut was shut when you came to it. Dust lies along the sill, unbroken."
    }
   },
   {
@@ -368,7 +368,7 @@
    "type": "ui_toast_rendered",
    "timeout_sec": 5,
    "payload_contains": {
-    "text": "Latched from the inside, and the hut was shut when you found it. You decide not to work that through any further today."
+    "text": "The latch is on the inside of the shutter, and the hut was shut when you came to it. Dust lies along the sill, unbroken."
    }
   },
   {

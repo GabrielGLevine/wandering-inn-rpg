@@ -196,9 +196,9 @@
    "on_skill_use": {
     "accomplishment": "ward_scrap_read",
     "lore": true,
-    "toast": "[Detect Magic] — The shard is one link of a boundary that used to ring the whole thicket. It still pulls, faintly, along the exact line the deer refuse to cross. It was drawn to keep something in, and it has been failing at that for a very long time."
+    "toast": "[Detect Magic] — The shard is one link of a boundary that once ringed the thicket, and the pull in it still runs the exact line the deer refuse to cross. It faces inward, and there is very little of it left."
    },
-   "observe": "A palm of grey stone laid flat on the shelf, square to its edge. Nothing else up there is square to anything."
+   "observe": "A palm of grey stone lying flat on the shelf, one edge set square to the front. The rest of the shelf runs crooked."
   },
   {
    "id": "hut_stoppered_jars",
@@ -209,7 +209,7 @@
    ],
    "display_name": "The Stoppered Jars",
    "sprite": "shelf_bottles",
-   "observe": "A row of stoppered jars along the top shelf, their labels faded to a suggestion.",
+   "observe": "A row of stoppered jars along the top shelf, the ink on their labels gone brown and past reading.",
    "on_interact_accomplishment": "observed_hut_stoppered_jars",
    "toast": "Every stopper is waxed and every jar is still full. The wax was pressed flat by a thumb and never broken since."
   },
@@ -250,7 +250,7 @@
    "sprite": "window_blue",
    "observe": "One shutter, latched, with daylight coming through the slats in bars.",
    "on_interact_accomplishment": "observed_hut_shuttered_window",
-   "toast": "Latched from the inside, and the hut was shut when you found it. You decide not to work that through any further today."
+   "toast": "The latch is on the inside of the shutter, and the hut was shut when you came to it. Dust lies along the sill, unbroken."
   }
  ]
 }

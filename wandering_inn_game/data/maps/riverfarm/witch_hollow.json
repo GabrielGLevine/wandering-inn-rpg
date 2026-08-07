@@ -335,7 +335,7 @@
    ],
    "display_name": "Bent Tree",
    "sprite": "hollow_canopy_tree",
-   "observe": "A tree grown crooked, leaning in over the path like it's listening."
+   "observe": "A tree grown out sideways over the path. You go under it with your head down."
   },
   {
    "id": "hollow_tree_5",
@@ -494,8 +494,8 @@
    "sprite": "witch_cauldron",
    "requires_skill": "hedge_remedy",
    "item_hint_toast": "The kettle wants yarrow before it gives anything back.",
-   "skill_hint_toast": "The cauldron's lit and the water's talking to itself. Hands that mean it could bring a remedy out of that.",
-   "locked_toast": "The cauldron is warm and the water turns itself over. A spoon goes in, comes back out, and the turning carries on the same.",
+   "skill_hint_toast": "The cauldron is lit and the water is already moving. Stir it properly and there is a remedy in it.",
+   "locked_toast": "You put the spoon in and take it out again. The water goes on turning at its own pace, and nothing in the pot has changed.",
    "on_skill_use": {
     "requires_item": "dried_yarrow_bundle",
     "accomplishment": "witch_craft_used",
@@ -517,7 +517,7 @@
    "display_name": "Threshold Candles",
    "sprite": "unlit_lantern",
    "requires_skill": "light",
-   "skill_hint_toast": "Cold candle-stubs either side of the door. No match will do it.",
+   "skill_hint_toast": "Cold candle-stubs down both sides of the door. Light of your own making would set them going.",
    "locked_toast": "A row of cold candle-stubs, set either side of the door. Bring a light that needs no striking.",
    "on_skill_use": {
     "accomplishment": "lit_the_threshold_candles",
@@ -563,9 +563,9 @@
    "locked_toast": "Roots and briar, knotted tighter than any plant ties itself. The middle of it will not hold your eye.",
    "on_skill_use": {
     "accomplishment": "blight_lifted",
-    "toast": "[Observe] — The knot isn't wood at all, once you look right at it: a price, tied off and waiting to be paid. You pay it yourself, plainly, and the tension goes out of the air like a held breath let go."
+    "toast": "[Observe] — Look at it squarely and the knot resolves into a price, tied off and unpaid. You pay it where you stand, and the pull goes out of the briar all across the hollow."
    },
-   "observe": "A snarl of root and briar at the center of the standing stones. Every strand of it pulls the same way, toward the nearest stone."
+   "observe": "A snarl of root and briar at the center of the standing stones. The strands all lie one way, drawn out toward the stone nearest them."
   },
   {
    "id": "leyline_stone",
@@ -724,7 +724,7 @@
    "display_name": "A Briar Snare",
    "sprite": "snare_coil",
    "requires_skill": "disarm_trap",
-   "skill_hint_toast": "Brambles knotted into a tight loop, low against the undergrowth. Nothing grows that way on its own.",
+   "skill_hint_toast": "Brambles knotted into a tight loop, low against the undergrowth. A snare — and you know how snares come apart.",
    "locked_toast": "The brambles here twist into a tight loop, low to the ground. Pull anywhere and the whole loop moves.",
    "on_skill_use": {
     "accomplishment": "trap_disarmed",
@@ -747,7 +747,7 @@
     1.02,
     0.78
    ],
-   "observe": "A second, smaller house at the hollow's west edge, its roof half fallen in. The lintel is cut with a line of shallow marks, worn nearly smooth, and the door stands open on the dark.",
+   "observe": "A second house at the hollow's west edge, smaller, its roof half down and its door standing open. A line of shallow marks runs across the lintel, worn nearly smooth.",
    "to_map": "witch_hut",
    "to_cell": [
     4,

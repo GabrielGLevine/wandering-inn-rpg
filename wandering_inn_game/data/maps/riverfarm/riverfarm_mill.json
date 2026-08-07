@@ -259,7 +259,7 @@
    "display_name": "The Granary Corner",
    "sprite": "bat",
    "beast": true,
-   "observe": "Chaff scattered wide, sacks opened low down, and something breathing behind the last row.",
+   "observe": "Chaff trodden flat across the boards, and the corner sacks are open along their bottom seams. Something behind the last row is breathing.",
    "gate_closed_toast": "Something has been at the sacks in that corner. Nobody here has called it a problem yet.",
    "arena": "inn_cellar",
    "enemies": [
@@ -300,7 +300,7 @@
    "sprite": "library_shelf",
    "observe": "A shelf set higher on the wall than any shelf needs to be, with notches and years cut into the post beside it.",
    "on_interact_accomplishment": "observed_mill_high_shelf",
-   "toast": "Somebody has cut a notch for every flood since before the village had a headman, and built the shelf a hand above the worst of them."
+   "toast": "Each notch is a flood, with its year cut underneath. The oldest years run back past the village's first headman, and the shelf clears the highest notch by a hand."
   },
   {
    "id": "mill_tally_sticks",
