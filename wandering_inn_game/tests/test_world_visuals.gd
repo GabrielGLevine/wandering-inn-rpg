@@ -40,6 +40,13 @@ func _function_body(source: String, function_name: String) -> String:
 	return source.get_slice("func %s(" % function_name, 1).get_slice("\nfunc ", 0)
 
 
+func _cleared_terrain_visual_contract_holds(source: String) -> bool:
+	var handler := _function_body(source, "_on_domain_event")
+	var terrain_arm := handler.get_slice("elif type == WIEvents.TERRAIN_CHANGED:", 1).get_slice("\n\telif type", 0)
+	return terrain_arm.find('"scorched":\n\t\t\t\t\t_spawn_burn_poof(tc_cell)') != -1 \
+		and terrain_arm.find('"cleared":\n\t\t\t\t\t_spawn_burn_poof(tc_cell)') != -1
+
+
 func _blocked_prop_pool_contract_holds() -> bool:
 	var biomes: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/biomes.json"))
 	var sprites: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/sprites.json"))
@@ -548,6 +555,11 @@ func _init() -> void:
 	var factory_source := FileAccess.get_file_as_string("res://src/world/entity_visual_factory.gd")
 	assert(not source.is_empty(), "world.gd must exist")
 	assert(not factory_source.is_empty(), "entity_visual_factory.gd must exist (#194b seam 1)")
+	assert(_cleared_terrain_visual_contract_holds(source),
+		"terrain=cleared must reuse the shipped removal poof used by scorched")
+	assert(not _cleared_terrain_visual_contract_holds(source.replace(
+		'\t\t\t\t"cleared":\n\t\t\t\t\t_spawn_burn_poof(tc_cell)\n', "")),
+		"cleared terrain visual contract must fail when its match arm is deleted")
 	assert(_blocked_prop_pool_contract_holds(),
 		"inn, street, cave, and floodplains need sprite-registry-backed blocked_props pools")
 	for helper: String in ["field_blocked_prop_index", "field_blocked_render_plan", "cover_skip_errors"]:

@@ -3825,3 +3825,23 @@ reticle picks out the limping third; all three route toasts render their full
 three lines with no fold clipping; and the PEAK line
 ("Wolves and me both, working round something neither of us can see.") lands
 on one page with the quest-complete toast beside it.
+
+## #398 Phase 0 — one windowed eye-check OWED at issue close (2026-08-06)
+
+- [ ] **(EYE-GATE, owed)** | a TEN-slot field bar vs the input-hint band |
+  `field_hotbar.gd` `_layout_controls` | #398's weapon gate fields
+  `[Power Strike]` off an equipped sword, so an armed warrior's AUTO bar grows
+  by one and `martial_field_loop`'s armed phase now renders **10 slots**
+  (previously 9). Finding 19 is the exact precedent: at NINE slots the centred
+  group already ran under the bottom-left input-hint ribbon, and the clamp
+  (`group_left = max(centred, safe.x + MESSAGE_LAYER_SCRIPT.hint_band_width +
+  HINT_BAND_GAP)`) is what keeps it clear. A tenth slot widens the group by one
+  `SLOT_SIZE.x` against a ribbon whose width is LIVE (device labels + text
+  scale), so the clamp can push the group right until the far end runs into the
+  bottom-right toast band instead — the other rect this layout has already lost
+  a fight with. **Owed:** one windowed `martial_field_loop` capture at the
+  armed-phase hotbar assert, read at 1x, at default AND 130% text scale, with
+  the keyboard hint label showing. Headless is blind to it — the slot count
+  asserts green either way | (capture at close) | Ruling context: the 10-slot
+  bar is ACCEPTED (slot 10 is cursor/mouse-reachable, number keys stay 1–9);
+  this row is about whether it FITS, not whether it is reachable. |

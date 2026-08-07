@@ -6,9 +6,9 @@ extends SceneTree
 ##
 ## WHY A DEDICATED SUITE: the whole point of the redesign is that the
 ## category/slottable rule is derived ONCE, in the sim, and that the derivation
-## AGREES with the two live hotbar filters it is supposed to be a restatement
-## of. That agreement is a drift tripwire over another file's source text
-## (`combat_hud.gd`'s filter), which belongs nowhere near a rendering test.
+## AGREES with the two hotbar eligibility shapes it is supposed to restate.
+## Field visibility can additionally depend on equipped weapon state, which
+## this suite source-pins while the sim suite exercises behaviorally.
 
 
 var _events: Array = []
@@ -81,9 +81,8 @@ func _check_category_partition(skills: Dictionary) -> void:
 
 
 ## SPEC RULING 3, the agreement check. `skill_category` is a RESTATEMENT of the
-## two filters that decide what actually reaches a bar; if either of those moves
-## and this one doesn't, the journal starts lying again -- exactly the defect
-## the redesign exists to fix. Two teeth:
+## two eligibility shapes that decide whether a Skill can reach a bar; if either
+## moves and this one doesn't, the journal starts lying again. Two teeth:
 ##   (a) BEHAVIOURAL -- re-derive both live filters over the whole catalog here
 ##       and demand the same answer, entry by entry.
 ##   (b) SOURCE-TEXT -- pin the filter expressions themselves. `combat_hud.gd`
@@ -94,7 +93,8 @@ func _check_filter_agreement(skills: Dictionary) -> void:
 		var sk: Dictionary = skills[id]
 		# combat_hud.gd's rebuild_slots kit filter, verbatim.
 		var combat_bar_takes_it: bool = (sk.get("contexts", []) as Array).has("combat") and int(sk.get("ap_cost", 0)) > 0
-		# wi_game.gd's field_hotbar_loadout candidate filter, verbatim.
+		# Catalog eligibility; live field visibility may additionally require the
+		# declared weapon family to be equipped.
 		var field_bar_takes_it: bool = bool(sk.get("field", false))
 		var category := WIGame.skill_category(sk)
 		var slottable := WIGame.SLOTTABLE_SKILL_CATEGORIES.has(category)
@@ -111,8 +111,11 @@ func _check_filter_agreement(skills: Dictionary) -> void:
 	assert(hud_source.contains("if WIGame.skill_bar(sk) in [\"combat\", \"both\"]:"),
 		"combat_hud.gd's combat-bar kit filter no longer consumes WIGame.skill_bar -- the v0.17 train swap (GH#336 seam) collapsed the third filter copy onto the derived source; if the filter moved again, re-point this pin at the new consumer line")
 	var sim_source := _read("res://src/core/wi_game.gd")
-	assert(sim_source.contains("if bool((skills.get(id, {}) as Dictionary).get(\"field\", false)):"),
-		"field_hotbar_loadout's candidate filter moved -- re-derive WIGame.skill_category against it")
+	assert(sim_source.contains("if _field_skill_available(id):"),
+		"field_hotbar_loadout must consume the shared live field-eligibility helper")
+	assert(sim_source.contains("and _field_skill_weapon_ready(skill_id)")
+		and sim_source.contains("String(equipped_weapon.get(\"weapon_family\", \"\")) == required_family"),
+		"live field eligibility must preserve equipped weapon-family gating")
 
 
 ## `bar` says which bar a tick on the row actually moves. `hotbar_loadout` is
@@ -287,21 +290,25 @@ func _check_checkbox_honesty() -> void:
 ## deleted as unused.
 func _check_auto_bar_cap() -> void:
 	var g := _new_game()
+	g.inventory.clear()
+	g.equipped[WIKeys.WEAPON] = ""
 	var field_ids: Array[String] = []
 	for id: String in g.skills:
-		if bool((g.skills[id] as Dictionary).get("field", false)):
+		var skill := g.skills[id] as Dictionary
+		if bool(skill.get("field", false)) \
+				and not (bool(skill.get("cuts", false)) and String(skill.get(WIKeys.WEAPON, "")) != ""):
 			field_ids.append(id)
 	assert(field_ids.size() > WIGame.AUTO_SLOT_CAP,
 		"fixture: the shipped catalog must carry more than %d field Skills for the over-cap case to be reachable at all" % WIGame.AUTO_SLOT_CAP)
 
-	# Under the cap: AUTO is byte-identical to the plain known-and-field
-	# derivation (the a7 #208 parity contract test_sim_core pins).
+	# Under the cap: AUTO is byte-identical to the currently eligible field
+	# derivation (weapon-tagged cuts are intentionally absent while unarmed).
 	g.player_skills = field_ids.slice(0, WIGame.AUTO_SLOT_CAP - 1)
 	assert(g.field_hotbar_loadout() == g.player_skills,
-		"under the cap, AUTO is the unfiltered field list exactly")
+		"under the cap, AUTO is the unfiltered eligible field list exactly")
 
-	# OVER the cap: still the unfiltered field list. Every field Skill the
-	# player earned is on the bar; none is silently dropped.
+	# OVER the cap: still the unfiltered eligible field list. Every currently
+	# usable field Skill the player earned is on the bar; none is dropped.
 	g.player_skills = field_ids.duplicate()
 	var bar: Array = g.field_hotbar_loadout()
 	assert(bar == field_ids,

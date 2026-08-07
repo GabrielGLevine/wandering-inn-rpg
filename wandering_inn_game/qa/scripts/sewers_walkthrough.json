@@ -176,11 +176,18 @@
    "timeout_sec": 5
   },
   {
-   "_comment": "== PLAYTEST FEATURE 3: cast [Light] on the PC (ambient path) mid-sewers. The near_sewers fixture carries light/frost_touch/kindle in player_skills, so the field hotbar renders 4 slots: 1 [Basic Cleaning] (innate), 2 [Light], 3 [Snap Freeze], 4 [Firefly] (the disclosed-affordance seam skills). Pressing hotbar_2 while facing a non-light-prop cell takes use_skill_field's field_ambient path (no sewers prop carries requires_skill==light), which sets light_active and conjures the PC-following glow. Proves: the ambient skill_used stream (target empty), the new follows-you toast copy, ui_pc_light_rendered{active:true}, and the round-trippable sim flag. ==",
+   "_comment": "== PLAYTEST FEATURE 3: cast [Light] on the PC (ambient path) mid-sewers. The near_sewers fixture carries light/frost_touch/kindle plus an equipped sword, so the field hotbar honestly renders 5 slots: 1 [Basic Cleaning], 2 [Light], 3 [Snap Freeze], 4 [Firefly], 5 [Power Strike]. Pressing hotbar_2 while facing a non-light-prop cell takes use_skill_field's field_ambient path, sets light_active and conjures the PC-following glow. ==",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 4
+    "slots": 5,
+    "readout_lines": [
+     "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
+     "2  [Light] — A mage's first, faithful spell: a small orb of steady white light.",
+     "3  [Snap Freeze] — A breath of deep cold that skins still water in load-bearing ice.",
+     "4  [Firefly] — A conjured flame, hot enough to take dry debris and old timber in moments.",
+     "5  [Power Strike] — Everything behind one blow."
+    ]
    }
   },
   {

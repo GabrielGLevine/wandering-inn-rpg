@@ -6,7 +6,8 @@
   "cleans",
   "toggles_light",
   "repairs",
-  "anchors"
+  "anchors",
+  "cuts"
  ],
  "target_properties": {
   "burnable": "entity",
@@ -18,8 +19,12 @@
   "person": "entity",
   "broken": "entity",
   "gap": "entity",
-  "cookware": "entity"
+  "cookware": "entity",
+  "cuttable": "entity"
  },
+ "staged_target_properties": [
+  "cuttable"
+ ],
  "outcomes": [
   "remove_scorch",
   "freeze_cell",
@@ -147,6 +152,17 @@
    "toast_from": "target",
    "toast_key": "anchor_toast",
    "toast_default": "[Rope Work] — You make the line fast and set it taut across. The crossing stays a crossing."
+  },
+  {
+   "skill_property": "cuts",
+   "target_property": "cuttable",
+   "outcome": "remove_scorch",
+   "persistence": "permanent",
+   "counter": "cut_through_growth",
+   "terrain": "cleared",
+   "toast_from": "target",
+   "toast_key": "cut_toast",
+   "toast_default": "Steel cuts through the growth. The way is clear."
   }
  ]
 }

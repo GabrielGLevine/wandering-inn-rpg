@@ -60,11 +60,16 @@
    }
   },
   {
-   "_comment": "Boot hotbar: 2 slots -- innate [Basic Cleaning] + tactician's [Appraise Foe]. Helper's [Basic Cooking] joins at the sleep (catalog order slots it BETWEEN them, so [Appraise Foe] moves 2 -> 3 exactly when the class lands -- both hotbar_3 appraisal presses below happen post-sleep).",
+   "_comment": "Boot hotbar: 3 slots -- [Basic Cleaning], spear-gated [Piercing Strikes], [Appraise Foe]. [Basic Cooking] joins at sleep, moving [Appraise Foe] 3 -> 4.",
    "action": "wait_for_event",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 2
+    "slots": 3,
+    "readout_lines": [
+     "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
+     "2  [Piercing Strikes] — Thrusts that seek the seams in any guard.",
+     "3  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."
+    ]
    },
    "timeout_sec": 5
   },
@@ -204,11 +209,17 @@
    }
   },
   {
-   "_comment": "The grant reached the field hotbar: [Basic Cooking] is field-tagged, 2 -> 3 slots live at the sleep beat.",
+   "_comment": "The grant reached the armed field hotbar: [Basic Cooking] joins live, 3 -> 4 slots.",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 3
+    "slots": 4,
+    "readout_lines": [
+     "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
+     "2  [Piercing Strikes] — Thrusts that seek the seams in any guard.",
+     "3  [Basic Cooking] — Simple meals come out right, every time.",
+     "4  [Appraise Foe] — A measuring look that reads a room, a person, a problem, and files it away for later."
+    ]
    }
   },
   {
@@ -377,10 +388,10 @@
   },
   {
    "action": "press",
-   "name": "hotbar_3"
+   "name": "hotbar_4"
   },
   {
-   "_comment": "Hotbar slot 3 is [Appraise Foe] -- catalog order innate basic_cleaning (1), helper's basic_cooking (2), tactician's observe (3), the SAME slot field_skills_loop.json's own precedent uses.",
+   "_comment": "Hotbar slot 4 is [Appraise Foe] after [Basic Cleaning], spear-gated [Piercing Strikes], and [Basic Cooking].",
    "action": "wait_for_event",
    "type": "skill_used",
    "payload_contains": {
@@ -426,7 +437,7 @@
   },
   {
    "action": "press",
-   "name": "hotbar_3"
+   "name": "hotbar_4"
   },
   {
    "action": "wait_for_event",

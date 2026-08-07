@@ -2,10 +2,11 @@ extends SceneTree
 
 const SHIPPED_IDS_PATH := "res://data/shipped_ids.json"
 const DIALOGUE_DIR := "res://data/dialogue"
+const GENERATOR_PATH := "res://scripts/generate_shipped_ids.py"
 
 const STRUCTURAL_LITERALS := [
 	"observed_things", "befriended_moments", "deliberate_commerce",
-	"burned_the_debris", "sneaked_past_danger", "read_the_board",
+	"burned_the_debris", "cut_through_growth", "sneaked_past_danger", "read_the_board",
 	"read_the_delivery_board", "door_study_sleeps", "door_awakened",
 	"watch_runner_pointed", "reached_two_classes", "garden_door_unlocked",
 	"post_game", "victories", "melee_hit", "ranged_hit", "spell_cast",
@@ -39,6 +40,18 @@ var _errors: Array[String] = []
 
 func _init() -> void:
 	WITestWatchdog.arm(self)
+	var generator_source := FileAccess.get_file_as_string(GENERATOR_PATH)
+	var generator_retired := _generator_retired_accomplishments(generator_source)
+	var mirror_error := _retired_mirror_error(generator_retired)
+	if mirror_error != "":
+		_errors.append(mirror_error)
+	var drift_source := generator_source.replace(
+		'FROZEN_RETIRED_ACCOMPLISHMENTS = ["heard_thicket_keeps"]',
+		'FROZEN_RETIRED_ACCOMPLISHMENTS = ["mirror_drift"]')
+	assert(drift_source != generator_source,
+		"retired-accomplishment mirror mutation must alter the generator fixture")
+	assert(_retired_mirror_error(_generator_retired_accomplishments(drift_source)) != "",
+		"retired-accomplishment mirror check must fail on generator/test drift")
 	var frozen: Dictionary = _load_json(SHIPPED_IDS_PATH)
 	var classes: Dictionary = _load_json("res://data/classes.json")
 	var skills: Dictionary = _load_json("res://data/skills.json")
@@ -76,6 +89,27 @@ func _init() -> void:
 			print("  SHIPPED_ID_FAIL " + e)
 	assert(_errors.is_empty(), "%d shipped-id freeze violations:\n%s" % [_errors.size(), "\n".join(_errors)])
 	quit()
+
+
+func _generator_retired_accomplishments(source: String) -> Array:
+	var marker := "FROZEN_RETIRED_ACCOMPLISHMENTS = "
+	if source.find(marker) == -1:
+		return []
+	var literal := source.get_slice(marker, 1).get_slice("\n", 0)
+	var parsed: Variant = JSON.parse_string(literal)
+	return parsed if parsed is Array else []
+
+
+func _retired_mirror_error(generator_ids: Array) -> String:
+	var generator_sorted: Array = generator_ids.duplicate()
+	var test_sorted: Array = RETIRED_ACCOMPLISHMENTS.keys()
+	generator_sorted.sort()
+	test_sorted.sort()
+	if generator_sorted == test_sorted:
+		return ""
+	return ("accomplishments: MIRROR CONTRACT drift between generate_shipped_ids.py " \
+		+ "FROZEN_RETIRED_ACCOMPLISHMENTS %s and test_shipped_ids.gd " \
+		+ "RETIRED_ACCOMPLISHMENTS %s") % [generator_sorted, test_sorted]
 
 
 func _check_class(id_class: String, frozen_ids: Array, live_ids: Dictionary) -> void:

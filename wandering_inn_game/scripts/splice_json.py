@@ -164,9 +164,12 @@ def main() -> int:
         got = after.get(args.container)
         if not isinstance(got, list) or len(got) != expected_count:
             raise SystemExit("splice_json: FAILED count proof (%s)" % args.container)
-        new_id = json.loads(record).get("id")
-        if new_id is not None and not any(isinstance(e, dict) and e.get("id") == new_id for e in got):
-            raise SystemExit("splice_json: FAILED placement proof: id %r not a direct child of %r" % (new_id, args.container))
+        record_value = json.loads(record)
+        new_id = record_value.get("id") if isinstance(record_value, dict) else record_value
+        placed = (any(isinstance(e, dict) and e.get("id") == new_id for e in got)
+            if isinstance(record_value, dict) else got[-1] == record_value)
+        if new_id is not None and not placed:
+            raise SystemExit("splice_json: FAILED placement proof: %r not a direct child of %r" % (new_id, args.container))
     else:
         if args.key not in after or len(after) != expected_count:
             raise SystemExit("splice_json: FAILED placement proof: %r not a TOP-LEVEL key (the watchgolem trap)" % args.key)
@@ -175,7 +178,9 @@ def main() -> int:
         raise SystemExit("splice_json: FAILED byte-identity proof outside the splice region")
 
     open(args.file, "w").write(spliced)
-    print("splice_json: OK — %s +1 (%s)" % (args.file, args.key or json.loads(record).get("id", "?")))
+    record_value = json.loads(record)
+    record_label = record_value.get("id", "?") if isinstance(record_value, dict) else record_value
+    print("splice_json: OK — %s +1 (%s)" % (args.file, args.key or record_label))
     return 0
 
 

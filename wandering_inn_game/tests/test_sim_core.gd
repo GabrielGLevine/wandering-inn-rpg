@@ -2941,14 +2941,14 @@ func _init() -> void:
 	assert(_count("skill_used") == 0, "unknown field skill does nothing")
 
 	var g_nf := WIGame.new(scene_p1, skills_p1, _sink, 12345)
-	g_nf.player_skills.append("power_strike")  # combat skill, no `field` tag
+	g_nf.player_skills.append("power_strike")  # field-tagged, but weapon-gated
 	assert(g_nf.known_skills().has("power_strike"), "power_strike is known for this case")
 	_events.clear()
 	var nf := g_nf.use_skill_field("power_strike")
-	assert(nf.is_empty(), "non-field skill is refused in the field")
-	assert(_count("skill_no_effect") == 1, "non-field field-use emits skill_no_effect")
-	assert(_count("toast") == 1, "non-field field-use toasts a refusal")
-	assert(_count("skill_used") == 0, "non-field field-use fires nothing")
+	assert(nf.is_empty(), "weapon-gated field skill is refused while unarmed")
+	assert(_count("skill_no_effect") == 1, "weapon-gated refusal emits skill_no_effect")
+	assert(_count("toast") == 1, "weapon-gated refusal toasts")
+	assert(_count("skill_used") == 0, "weapon-gated refusal fires nothing")
 
 	var g_na := WIGame.new(scene_p1, skills_p1, _sink, 12345)
 	g_na.skills["synthetic_field"] = {WIKeys.ID: "synthetic_field", WIKeys.DISPLAY_NAME: "[Synthetic]", WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true}
@@ -3263,15 +3263,28 @@ func _init() -> void:
 	assert(not econ_ld.has("items"), "pure-coin loot payload omits the items key (item-only stream stays byte-identical)")
 
 	var gLoad := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gLoad.inventory.clear()
+	gLoad.equipped[WIKeys.WEAPON] = ""
 	gLoad.classes = {"warrior": 1, "tactician": 1, "helper": 1}
 	assert(gLoad.hotbar_loadout.is_empty(), "fresh game starts in AUTO mode (empty loadout)")
 	var manual_field: Array = []
 	for raw: Variant in gLoad.known_skills():
 		var id := String(raw)
-		if bool((gLoad.skills.get(id, {}) as Dictionary).get("field", false)):
+		var skill: Dictionary = gLoad.skills.get(id, {})
+		if bool(skill.get("field", false)) and not bool(skill.get("cuts", false)):
 			manual_field.append(id)
-	assert(gLoad.field_hotbar_loadout() == manual_field, "AUTO field_hotbar_loadout() matches the manual known_skills()-filtered-by-field derivation exactly (byte-parity proof)")
-	assert(gLoad.field_hotbar_loadout() == ["basic_cleaning", "basic_cooking", "observe"], "AUTO field order: innate first, then catalog-order class grants (warrior contributes no field skills; helper's basic_cooking, then tactician's observe)")
+	assert(gLoad.field_hotbar_loadout() == manual_field, "AUTO field hotbar excludes weapon-gated cuts skills while unarmed")
+	assert(gLoad.field_hotbar_loadout() == ["basic_cleaning", "basic_cooking", "observe"], "unarmed AUTO field order is byte-stable: innate, helper, tactician")
+	gLoad.inventory.assign(["rusty_sword"])
+	gLoad.equipped[WIKeys.WEAPON] = "rusty_sword"
+	assert(gLoad.field_hotbar_loadout() == ["basic_cleaning", "power_strike", "basic_cooking", "observe"],
+		"equipped sword exposes only the matching cuts skill")
+	gLoad.inventory.assign(["relcs_spare_spear"])
+	gLoad.equipped[WIKeys.WEAPON] = "relcs_spare_spear"
+	assert(gLoad.field_hotbar_loadout() == ["basic_cleaning", "piercing_strikes", "basic_cooking", "observe"],
+		"equipped spear exposes only the matching cuts skill")
+	gLoad.inventory.clear()
+	gLoad.equipped[WIKeys.WEAPON] = ""
 
 	assert(WIGame.apply_loadout(["a", "b", "c"], []) == ["a", "b", "c"], "empty loadout is a pure passthrough (AUTO)")
 	assert(WIGame.apply_loadout(["a", "b", "c"], ["c", "a"]) == ["c", "a"], "non-empty loadout reorders to LOADOUT order and drops unlisted candidates")
@@ -3281,8 +3294,14 @@ func _init() -> void:
 	# sites (sleep() end, accept_consolidation() end) are one-line reconciles
 	# over this helper; arms exercise the helper's whole decision table. ---
 	var gAuto := WIGame.new(WISceneCatalog.compose(), _load_json("res://data/skills.json"), _sink, 12345, combat_config)
+	gAuto.inventory.clear()
+	gAuto.equipped[WIKeys.WEAPON] = ""
 	gAuto.classes = {"warrior": 1, "tactician": 1, "helper": 1}
 	gAuto.hotbar_loadout.assign(["basic_cleaning"])
+	var before_no_power: Array = gAuto.known_skills().filter(func(id: Variant) -> bool: return String(id) != "power_strike")
+	gAuto._auto_slot_new_field_skills(before_no_power)
+	assert(not gAuto.hotbar_loadout.has("power_strike"),
+		"a newly granted weapon-gated cuts skill does not auto-slot while unarmed")
 	_events.clear()
 	var before_no_observe: Array = gAuto.known_skills().filter(func(id: Variant) -> bool: return String(id) != "observe")
 	gAuto._auto_slot_new_field_skills(before_no_observe)

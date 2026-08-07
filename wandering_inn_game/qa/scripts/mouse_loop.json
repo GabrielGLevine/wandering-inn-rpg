@@ -13,7 +13,7 @@
   { "action": "assert_state", "path": "classes.warrior", "equals": 1 },
   { "action": "assert_state", "path": "player_cell", "equals": [2, 3] },
   { "action": "assert_state", "path": "actions_since_sleep", "equals": 0 },
-  { "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 1 } },
+  { "action": "assert_event_logged", "type": "ui_field_hotbar_rendered", "payload_contains": { "slots": 2, "readout_lines": ["1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.", "2  [Power Strike] — Everything behind one blow."] } },
 
   { "_comment": "== A: DISTANT prop click stops WITHOUT interacting == dirty_table sits at (5,4); Chebyshev dist from (2,3) is max(3,1)=3, so this is the non-adjacent branch -- issue #109 narrowed the approach-cell candidates to dirty_table's 4 CARDINAL neighbors only ((4,4)/(6,4)/(5,3)/(5,5) -- the pre-fix search also tried the 4 diagonal neighbors and picked (4,3) at 2 steps; that neighbor is gone from the candidate set now, so BFS's nearest open CARDINAL approach cell is (5,3) (3 straight-right steps), and the walk stops there, never interacting.", "action": "click", "cell": [5, 4] },
   { "action": "wait_for_event", "type": "player_moved", "payload_contains": { "cell": [5, 3] }, "timeout_sec": 5 },

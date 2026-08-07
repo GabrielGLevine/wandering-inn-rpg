@@ -93,7 +93,7 @@ RELEASE = "0.19.0"
 # ---------------------------------------------------------------------------
 STRUCTURAL_LITERALS = [
     "observed_things", "befriended_moments", "deliberate_commerce",
-    "burned_the_debris", "sneaked_past_danger", "read_the_board",
+    "burned_the_debris", "cut_through_growth", "sneaked_past_danger", "read_the_board",
     "read_the_delivery_board", "door_study_sleeps", "door_awakened",
     "watch_runner_pointed", "reached_two_classes", "garden_door_unlocked",
     "post_game", "victories", "melee_hit", "ranged_hit", "spell_cast",
@@ -109,6 +109,7 @@ STRUCTURAL_LITERALS = [
     # line. Same shape in tests/test_shipped_ids.gd.
     "companion_lost",
 ]
+FROZEN_RETIRED_ACCOMPLISHMENTS = ["heard_thicket_keeps"]
 
 
 def catalog_ids(catalog: dict, key: str) -> list:
@@ -240,7 +241,8 @@ def build_payload() -> dict:
         "skills": catalog_ids(skills, "skills"),
         "items": catalog_ids(items, "items"),
         "maps": map_ids(scene),
-        "accomplishments": produced_accomplishments(scene, graphs, skills, bounties, deliveries),
+        "accomplishments": sorted(set(produced_accomplishments(scene, graphs, skills, bounties, deliveries))
+            | set(FROZEN_RETIRED_ACCOMPLISHMENTS)),
     }
 
 

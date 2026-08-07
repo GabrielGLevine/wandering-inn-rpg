@@ -57,6 +57,8 @@ from pathlib import Path
 from wi_data_lib import DATA
 
 GATE_KEYS = ("door_when", "contains_when", "portal_menu_when", "fence_menu_when")
+SKILL_GATE_MECHANISMS = {"property", "blink", "arm", "social", "endure"}
+SKILL_GATE_NON_SKILL_GATES = {"dialogue", "item", "endure"}
 MOOD_PHASES = ("day", "dusk", "night")
 # world.gd's own SKY_GRADE_EPSILON -- the two must agree or the lint would
 # police a different sealed/sky split than the engine reads.
@@ -155,6 +157,185 @@ def check_maps(maps: dict, errors: list) -> None:
 			elif has_flag and not is_water_sheet:
 				errors.append(f"maps/{map_id}: walls segment {seg.get('from')}–{seg.get('to')} "
 					f"is tagged `water: true` but does not use the water sheet")
+
+
+def _catalog_rows(parsed: dict, filename: str, key: str) -> list:
+	doc = parsed.get(DATA / filename) or {}
+	rows = doc.get(key, []) if isinstance(doc, dict) else []
+	return [row for row in rows if isinstance(row, dict)]
+
+
+def _skill_granters(parsed: dict) -> dict:
+	out: dict[str, set[str]] = {}
+	for cls in _catalog_rows(parsed, "classes.json", "classes"):
+		class_id = str(cls.get("id", ""))
+		for level in cls.get("levels", []):
+			if not isinstance(level, dict):
+				continue
+			for skill_id in level.get("grants", []):
+				out.setdefault(str(skill_id), set()).add(class_id)
+	return out
+
+
+def _mode_skill_ids(mode: dict, skills: list, entities: dict) -> set[str]:
+	mechanism = str(mode.get("mechanism", ""))
+	if mechanism == "property":
+		prop = str(mode.get("skill_property", ""))
+		return {str(skill.get("id")) for skill in skills if skill.get(prop) is True}
+	if mechanism == "blink":
+		minimum = int(mode.get("min_range", 0)) if _int_like(mode.get("min_range", 0)) else 0
+		return {str(skill.get("id")) for skill in skills
+			if skill.get("blinks") is True and int(skill.get("blink_range", 0)) >= minimum}
+	out: set[str] = set()
+	raw_skills = mode.get("skills", [])
+	if isinstance(raw_skills, str):
+		raw_skills = [raw_skills]
+	if isinstance(raw_skills, list):
+		out.update(str(skill_id) for skill_id in raw_skills)
+	if isinstance(mode.get("skill"), str):
+		out.add(str(mode["skill"]))
+	raw_props = mode.get("props", [])
+	if isinstance(raw_props, str):
+		raw_props = [raw_props]
+	if isinstance(mode.get("prop"), str):
+		raw_props = list(raw_props) + [mode["prop"]]
+	for prop_id in raw_props if isinstance(raw_props, list) else []:
+		entity = entities.get(str(prop_id), {})
+		if isinstance(entity.get("requires_skill"), str):
+			out.add(str(entity["requires_skill"]))
+		out.update(str(skill_id) for skill_id in (entity.get("skill_uses", {}) or {}))
+	return out
+
+
+def check_skill_gates(parsed: dict, maps: dict, errors: list) -> None:
+	"""Validate the descriptive two-mode registry; runtime never reads it."""
+	skills = _catalog_rows(parsed, "skills.json", "skills")
+	granters = _skill_granters(parsed)
+	max_blink = max((int(skill.get("blink_range", 0)) for skill in skills
+		if skill.get("blinks") is True), default=0)
+	for map_id, map_doc in sorted(maps.items()):
+		registry = map_doc.get("skill_gates")
+		if registry is None:
+			continue
+		if not isinstance(registry, dict):
+			errors.append(f"maps/{map_id}: skill_gates must be an object")
+			continue
+		grid = map_doc.get("grid", {})
+		entities = {str(entity.get("id", "")): entity
+			for entity in map_doc.get("entities", []) if isinstance(entity, dict)}
+		for gate_id, gate in sorted(registry.items()):
+			label = f"maps/{map_id}: skill_gates.{gate_id}"
+			if not isinstance(gate, dict):
+				errors.append(f"{label} must be an object")
+				continue
+			modes = gate.get("modes")
+			if not isinstance(modes, list) or len(modes) < 2 or not all(isinstance(mode, dict) for mode in modes):
+				errors.append(f"{label} needs at least two object modes")
+				continue
+			signatures = {(str(mode.get("mechanism", "")), str(mode.get("skill_property", "")))
+				for mode in modes}
+			if len(signatures) < 2:
+				errors.append(f"{label} modes need distinct mechanisms or distinct skill properties")
+			class_sets: list[frozenset[str]] = []
+			for index, mode in enumerate(modes):
+				mode_label = f"{label}.modes[{index}]"
+				mechanism = str(mode.get("mechanism", ""))
+				if mechanism not in SKILL_GATE_MECHANISMS:
+					errors.append(f"{mode_label} mechanism {mechanism!r} is not one of {sorted(SKILL_GATE_MECHANISMS)}")
+				skill_ids = _mode_skill_ids(mode, skills, entities)
+				class_union = frozenset(class_id for skill_id in skill_ids
+					for class_id in granters.get(skill_id, set()))
+				class_sets.append(class_union)
+				non_skill_gate = mode.get("gate")
+				if non_skill_gate is not None and non_skill_gate not in SKILL_GATE_NON_SKILL_GATES:
+					errors.append(f"{mode_label} gate {non_skill_gate!r} is not one of "
+						f"{sorted(SKILL_GATE_NON_SKILL_GATES)}")
+				if not class_union and non_skill_gate not in SKILL_GATE_NON_SKILL_GATES:
+					errors.append(f"{mode_label} has an empty skill-granter union; declare an explicit "
+						f"non-skill gate with gate: dialogue|item|endure")
+				if mechanism == "property" and not skill_ids:
+					errors.append(f"{mode_label} skill_property {mode.get('skill_property')!r} has no skill carrier")
+				raw_props = mode.get("props", [])
+				if isinstance(raw_props, str):
+					raw_props = [raw_props]
+				if isinstance(mode.get("prop"), str):
+					raw_props = list(raw_props) + [mode["prop"]]
+				for prop_id in raw_props if isinstance(raw_props, list) else []:
+					if str(prop_id) not in entities:
+						errors.append(f"{mode_label} prop {prop_id!r} does not resolve on this map")
+				cells = mode.get("cells", [])
+				if not isinstance(cells, list):
+					errors.append(f"{mode_label} cells must be an array")
+					cells = []
+				for key in ("from", "to"):
+					if key in mode:
+						cells = list(cells) + [mode[key]]
+				for cell in cells:
+					if not _cell_shape_ok(cell) or not _in_grid(cell, grid):
+						errors.append(f"{mode_label} cell {cell!r} is not a real cell in this map's grid")
+				if not cells and not raw_props:
+					errors.append(f"{mode_label} names no cell or prop carrier")
+				if mechanism == "blink":
+					minimum = mode.get("min_range")
+					if not _int_like(minimum) or int(minimum) < 1:
+						errors.append(f"{mode_label} min_range {minimum!r} must be a positive integer "
+							f"no greater than shipped blink range {max_blink}")
+					elif int(minimum) > max_blink:
+						errors.append(f"{mode_label} min_range {minimum!r} exceeds shipped blink range {max_blink}")
+			seen_class_sets: dict[frozenset[str], int] = {}
+			duplicate_pairs: list[tuple[int, int, frozenset[str]]] = []
+			for index, class_union in enumerate(class_sets):
+				if class_union in seen_class_sets:
+					duplicate_pairs.append((seen_class_sets[class_union], index, class_union))
+				else:
+					seen_class_sets[class_union] = index
+			for first, second, class_union in duplicate_pairs:
+				errors.append(f"{label} modes[{first}] and [{second}] have identical class unions "
+					f"{sorted(class_union)}; every mode pair must differ")
+			rewards = gate.get("rewards")
+			if not isinstance(rewards, list) or not rewards:
+				errors.append(f"{label} rewards must name at least one same-map entity")
+			elif any(not isinstance(reward, str) or reward not in entities for reward in rewards):
+				missing = [reward for reward in rewards if not isinstance(reward, str) or reward not in entities]
+				errors.append(f"{label} rewards do not resolve on this map: {missing}")
+
+
+def _water_cells(map_doc: dict) -> set[tuple[int, int]]:
+	out = {tuple(map(int, cell)) for cell in map_doc.get("freezable", []) if _cell_shape_ok(cell)}
+	for seg in (map_doc.get("walls", {}) or {}).get("segments", []):
+		if not isinstance(seg, dict) or seg.get("water") is not True:
+			continue
+		start, end = seg.get("from"), seg.get("to")
+		if not _cell_shape_ok(start) or not _cell_shape_ok(end):
+			continue
+		x1, y1, x2, y2 = int(start[0]), int(start[1]), int(end[0]), int(end[1])
+		if x1 == x2:
+			out.update((x1, y) for y in range(min(y1, y2), max(y1, y2) + 1))
+		elif y1 == y2:
+			out.update((x, y1) for x in range(min(x1, x2), max(x1, x2) + 1))
+	return out
+
+
+def advise_missing_skill_gates(maps: dict, advisories: list) -> None:
+	for map_id, map_doc in sorted(maps.items()):
+		if map_doc.get("skill_gates"):
+			continue
+		water = _water_cells(map_doc)
+		blocked = {tuple(map(int, cell)) for cell in map_doc.get("blocked", []) if _cell_shape_ok(cell)} | water
+		blocked.update(tuple(map(int, entity["cell"])) for entity in map_doc.get("entities", [])
+			if isinstance(entity, dict) and _cell_shape_ok(entity.get("cell")))
+		grid = map_doc.get("grid", {})
+		crossing = False
+		for x, y in water:
+			for (dx, dy) in ((1, 0), (0, 1)):
+				a, b = (x - dx, y - dy), (x + dx, y + dy)
+				if _in_grid(a, grid) and _in_grid(b, grid) and a not in blocked and b not in blocked:
+					crossing = True
+		burn_line = any(isinstance(entity, dict) and entity.get("burnable") is True
+			for entity in map_doc.get("entities", []))
+		if crossing or burn_line:
+			kinds = "/".join(part for part, present in (("freezable crossing", crossing), ("burnable blocker", burn_line)) if present)
+			advisories.append(f"maps/{map_id}: {kinds} but no skill_gates registry")
 
 
 def check_portals(parsed: dict, maps: dict, errors: list) -> None:
@@ -858,6 +1039,7 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 	doc = parsed[path]
 	skill_props = doc.get("skill_properties")
 	target_props = doc.get("target_properties")
+	staged_target_props = doc.get("staged_target_properties", [])
 	rows = doc.get("interactions")
 	if not (isinstance(skill_props, list) and skill_props
 			and all(isinstance(p, str) for p in skill_props)):
@@ -866,6 +1048,13 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 	if not (isinstance(target_props, dict) and target_props):
 		errors.append("interactions.json: 'target_properties' must be a non-empty {name: placement} map")
 		return
+	if not isinstance(staged_target_props, list) or any(not isinstance(prop, str)
+			for prop in staged_target_props) or len(set(staged_target_props)) != len(staged_target_props):
+		errors.append("interactions.json: 'staged_target_properties' must be a duplicate-free string list")
+		staged_target_props = []
+	for prop in staged_target_props:
+		if prop not in target_props:
+			errors.append(f"interactions.json: staged target property '{prop}' is not registered")
 	if not isinstance(rows, list) or not rows:
 		errors.append("interactions.json: 'interactions' must be a non-empty list of rows")
 		return
@@ -885,7 +1074,11 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 			errors.append(f"interactions.json: skill property '{prop}' is registered but no "
 				"skills.json row carries it -- dead vocabulary")
 	for prop, placement in sorted(target_props.items()):
-		if placement in PLACEMENTS and not _target_property_carriers(maps, prop, placement):
+		carriers = _target_property_carriers(maps, prop, placement) if placement in PLACEMENTS else []
+		if prop in staged_target_props and carriers:
+			errors.append(f"interactions.json: staged target property '{prop}' now has shipped carriers; "
+				"remove it from staged_target_properties")
+		elif placement in PLACEMENTS and not carriers and prop not in staged_target_props:
 			errors.append(f"interactions.json: target property '{prop}' is registered but no "
 				f"map carries it as a {placement} property -- dead vocabulary")
 	seen = set()
@@ -946,7 +1139,7 @@ def check_interactions(parsed: dict, maps: dict, errors: list, report: list) -> 
 		# Per-row carrier cross-ref (spec §5b): a row nothing can reach is dead.
 		if sp in skill_props and not _skill_property_carriers(parsed, sp):
 			errors.append(f"interactions.json: {label} has no skill carrier")
-		if not _target_property_carriers(maps, tp, target_props.get(tp, "")):
+		if tp not in staged_target_props and not _target_property_carriers(maps, tp, target_props.get(tp, "")):
 			errors.append(f"interactions.json: {label} has no shipped target carrier")
 	# TOTALITY CENSUS (spec §4.2 tier 3): the whole cross-product, classified.
 	# Report-only by design -- a null cell is the SHIPPED fallthrough
@@ -1018,6 +1211,7 @@ def main() -> int:
 		return 1
 	maps = _compose_maps(parsed, errors)
 	check_maps(maps, errors)
+	check_skill_gates(parsed, maps, errors)
 	# MERGE NOTE (v0.18 W1): this pair is parked HERE, at the top of the check_*
 	# block, and its REPORT print at the very bottom of main() -- both as far as
 	# possible from the advisory region a sibling lane is extending this wave, so
@@ -1034,6 +1228,8 @@ def main() -> int:
 	check_gate_shapes(maps, errors)
 	check_moods(parsed, maps, errors)
 	advisories: list = []
+	skill_gate_advisories: list = []
+	advise_missing_skill_gates(maps, skill_gate_advisories)
 	advise_unlit_sealed_rooms(maps, parsed, advisories)
 	advise_sub_legible_props(parsed, maps, advisories)
 	interacted_props = advise_acted_on_state(maps, advisories)
@@ -1055,6 +1251,12 @@ def main() -> int:
 		print(f"data_lint: ADVISORY -- {len(advisories)}/{interacted_props} props that bank "
 			"an interact accomplishment show no visual change for it (GH#335 item 3); "
 			"re-run with --advisories to list them. Report-only, never fails.")
+	if skill_gate_advisories:
+		if list_advisories:
+			for advisory in skill_gate_advisories:
+				print(f"data_lint: ADVISORY -- {advisory}")
+		print(f"data_lint: ADVISORY -- {len(skill_gate_advisories)} map(s) show a likely traversal gate "
+			"but carry no skill_gates registry. Report-only, never fails.")
 	for line in report:
 		print(f"data_lint: REPORT -- {line}")
 	return 0

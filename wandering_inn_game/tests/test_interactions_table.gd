@@ -54,6 +54,11 @@ func _w1_skill_config() -> Dictionary:
 		WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "cleans": true,
 		"field_ambient": "W1 scrub finds nothing worth wiping.",
 	})
+	rows.append({
+		WIKeys.ID: "w1_cut", WIKeys.DISPLAY_NAME: "[W1 Cut]",
+		WIKeys.CONTEXTS: ["exploration"], WIKeys.FIELD: true, "cuts": true,
+		"field_ambient": "W1 cut finds nothing to clear.",
+	})
 	return {WIKeys.SKILLS: rows}
 
 
@@ -103,14 +108,22 @@ func _w1_scene() -> Dictionary:
 		WIKeys.ID: "w1_bystander", WIKeys.KIND: "npc", WIKeys.CELL: [12, 2],
 		WIKeys.DISPLAY_NAME: "W1 Bystander", "person": true,
 	})
+	ents.append({
+		WIKeys.ID: "w1_briars", WIKeys.KIND: "prop", WIKeys.CELL: [14, 2],
+		WIKeys.DISPLAY_NAME: "W1 Briars", "cuttable": true,
+		"cut_toast": "W1 briars cut toast.",
+	})
 	return scene
 
 
 func _w1_game(scene: Dictionary) -> WIGame:
 	var g := WIGame.new(scene, _w1_skill_config(), _sink, 4242, _combat_config())
+	g.inventory.clear()
+	g.equipped[WIKeys.WEAPON] = ""
 	g.player_skills.append("w1_ice_floor")
 	g.player_skills.append("w1_scorch")
 	g.player_skills.append("w1_scrub")
+	g.player_skills.append("w1_cut")
 	return g
 
 
@@ -139,12 +152,31 @@ func _init() -> void:
 
 	# --- The table itself: shape, closed vocabularies, mirror contract.
 	var table := _load_json("res://data/interactions.json")
+	var shipped_skills: Array = _load_json("res://data/skills.json")[WIKeys.SKILLS]
+	var shipped_by_id: Dictionary = {}
+	for skill: Dictionary in shipped_skills:
+		shipped_by_id[String(skill[WIKeys.ID])] = skill
+	for cut_skill: String in ["power_strike", "piercing_strikes"]:
+		assert((shipped_by_id[cut_skill][WIKeys.CONTEXTS] as Array) == ["combat", "exploration"]
+			and bool(shipped_by_id[cut_skill][WIKeys.FIELD])
+			and bool(shipped_by_id[cut_skill]["cuts"]),
+			"%s carries the exact dual-context field cuts shape" % cut_skill)
+	assert(bool(shipped_by_id["flame_jet"]["burns"]), "flame_jet carries burns")
 	var w1_rows: Array = table["interactions"]
 	assert(w1_rows.size() >= 1, "the property table carries at least one row")
 	assert(table["outcomes"] == WIFieldSkills.OUTCOMES,
 		"MIRROR CONTRACT: data/interactions.json outcomes must equal WIFieldSkills.OUTCOMES")
 	var w1_skill_props: Array = table["skill_properties"]
 	var w1_target_props: Dictionary = table["target_properties"]
+	var w1_order: Array = w1_rows.map(func(row: Dictionary) -> String:
+		return "%s x %s" % [String(row["skill_property"]), String(row["target_property"])])
+	assert(w1_order == [
+		"burns x burnable", "freezes x freezable", "burns x frozen",
+		"burns x freezable", "burns x hearth", "burns x unlit",
+		"toggles_light x unlit", "cleans x dirty", "freezes x hearth",
+		"freezes x person", "repairs x broken", "anchors x gap",
+		"cuts x cuttable",
+	], "property rows keep their exact shipped order; cuts x cuttable appends last")
 	for row: Dictionary in w1_rows:
 		assert(w1_skill_props.has(String(row["skill_property"])), "every row's skill property is registered")
 		assert(w1_target_props.has(String(row["target_property"])), "every row's target property is registered")
@@ -228,6 +260,46 @@ func _init() -> void:
 	assert(String(_w1_last("terrain_changed").get("to", "")) == "scorched", "the row's terrain value rides the event")
 	assert(String(_w1_last("toast").get("text", "")) == "W1 thicket toast.",
 		"toast_from=target reads the PROP's authored line")
+
+	var w1_cut := _w1_game(_w1_scene())
+	_w1_face(w1_cut, Vector2i(14, 3), Vector2i.UP)
+	var w1_cut_result := w1_cut.use_skill_field("w1_cut")
+	assert(w1_cut_result.get("burned", "") == "w1_briars",
+		"cuts x cuttable reuses remove_scorch without a sibling verb")
+	assert(w1_cut.find_entity("w1_briars").is_empty(), "the cuttable carrier is removed permanently")
+	assert(int(w1_cut.accomplishments.get("cut_through_growth", 0)) == 1,
+		"the cuts row banks its own row-parameterized counter")
+	assert(String(_w1_last("terrain_changed").get("to", "")) == "cleared",
+		"the cuts row supplies its own terrain value")
+	assert(String(_w1_last("toast").get("text", "")) == "W1 briars cut toast.",
+		"toast_from=target reads the cuttable PROP's authored line")
+
+	# Phase-0 review can-fail: the two shipped martial cutters are field
+	# affordances only while their declared weapon family is EQUIPPED.
+	var w1_bare_cut := _w1_game(_w1_scene())
+	w1_bare_cut.player_skills.append("power_strike")
+	_w1_face(w1_bare_cut, Vector2i(14, 3), Vector2i.UP)
+	var w1_bare_result := w1_bare_cut.use_skill_field("power_strike")
+	assert(w1_bare_result.is_empty(), "barehanded power_strike refuses a cuttable target")
+	assert(not w1_bare_cut.find_entity("w1_briars").is_empty(),
+		"barehanded refusal does not remove the cuttable target")
+	assert(int(w1_bare_cut.accomplishments.get("cut_through_growth", 0)) == 0,
+		"barehanded refusal does not bank the cuts counter")
+	assert(_w1_types() == ["skill_no_effect", "toast"],
+		"barehanded refusal emits only skill_no_effect -> toast")
+
+	var w1_armed_cut := _w1_game(_w1_scene())
+	w1_armed_cut.player_skills.append("power_strike")
+	w1_armed_cut.inventory.assign(["rusty_sword"])
+	w1_armed_cut.equipped[WIKeys.WEAPON] = "rusty_sword"
+	_w1_face(w1_armed_cut, Vector2i(14, 3), Vector2i.UP)
+	var w1_armed_result := w1_armed_cut.use_skill_field("power_strike")
+	assert(w1_armed_result.get("burned", "") == "w1_briars",
+		"sword-equipped power_strike resolves the cuts row")
+	assert(w1_armed_cut.find_entity("w1_briars").is_empty(),
+		"armed power_strike removes the cuttable target")
+	assert(int(w1_armed_cut.accomplishments.get("cut_through_growth", 0)) == 1,
+		"armed power_strike banks the cuts counter")
 
 	# --- Precedence (spec §4.3): the authored arm beats the table on its own
 	# entity, even when that entity also carries the target property.

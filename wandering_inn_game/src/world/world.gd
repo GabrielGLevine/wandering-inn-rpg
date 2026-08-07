@@ -1796,6 +1796,8 @@ func _on_domain_event(type: String, payload: Dictionary) -> void:
 					_unpaint_ice_cell(tc_cell)
 				"scorched":
 					_spawn_burn_poof(tc_cell)
+				"cleared":
+					_spawn_burn_poof(tc_cell)
 	elif type in [WIEvents.WORLD_READY, WIEvents.CLASS_GAINED, WIEvents.CLASS_LEVEL_UP, WIEvents.CLASS_EVOLVED, WIEvents.LOADOUT_CHANGED, WIEvents.COMBAT_STARTED, WIEvents.DIALOGUE_STARTED]:
 		# The first five are exactly the events
 		# `field_hotbar.gd`'s `_render()` re-derives the slot LIST on -- the

@@ -1,5 +1,5 @@
 {
- "_comment": "Issue #58: Tab-primed field-hotbar selection loop. Same title-Continue opening as field_skills_loop (near_tactician fixture: warrior L1 at the inn, [Basic Cleaning] innate, 1-slot bar). Proves: the bar renders (slots:1); Tab primes the keyboard cursor onto slot 0 (a ui_field_hotbar_selection_rendered event, index 0, label \"[Basic Cleaning]\"); move_right on a 1-slot bar wraps to itself (a FRESH selection event, still index 0) and the player's cell is provably unchanged -- arrows never reach Game.sim.move_player while primed; Esc disarms (selection event index -1, both skill/label empty); Tab re-primes (proves disarm didn't wedge the seam); confirm on the faced dirty_table fires the EXACT SAME stream field_skills_loop's number-key press does (skill_used{basic_cleaning,dirty_table} + cleaned_the_inn + toast) -- the number-key-equivalence exit criterion -- and activation's own one-shot disarm is proven by the trailing index:-1 selection event.",
+ "_comment": "Issue #58: Tab-primed field-hotbar selection loop. Same title-Continue opening as field_skills_loop (near_tactician fixture: warrior L1 at the inn, [Basic Cleaning] innate + sword-gated [Power Strike] off the equipped rusty_sword, 2-slot bar). Proves: the bar renders (slots:2); Tab primes the keyboard cursor onto slot 0 (a ui_field_hotbar_selection_rendered event, index 0, label \"[Basic Cleaning]\"); move_right steps to slot 1 and a second move_right WRAPS back to slot 0, with the player's cell provably unchanged across both -- arrows never reach Game.sim.move_player while primed; Esc disarms (selection event index -1, both skill/label empty); Tab re-primes (proves disarm didn't wedge the seam); confirm on the faced dirty_table fires the EXACT SAME stream field_skills_loop's number-key press does (skill_used{basic_cleaning,dirty_table} + cleaned_the_inn + toast) -- the number-key-equivalence exit criterion -- and activation's own one-shot disarm is proven by the trailing index:-1 selection event.",
  "fixture_save": "near_tactician",
  "starts_at_title": true,
  "steps": [
@@ -55,11 +55,15 @@
    ]
   },
   {
-   "_comment": "Bar renders 1 innate slot, same as field_skills_loop's own opening proof.",
+   "_comment": "near_tactician equips the rusty_sword, so the bar renders innate [Basic Cleaning] plus sword-gated [Power Strike].",
    "action": "assert_event_logged",
    "type": "ui_field_hotbar_rendered",
    "payload_contains": {
-    "slots": 1
+    "slots": 2,
+    "readout_lines": [
+     "1  [Basic Cleaning] — Cleans mundane messes with supernatural ease.",
+     "2  [Power Strike] — Everything behind one blow."
+    ]
    }
   },
   {
@@ -120,7 +124,30 @@
    "name": "00_hotbar_primed_label"
   },
   {
-   "_comment": "== move_right ON A 1-SLOT BAR WRAPS TO ITSELF, and arrows never reach Game.sim.move_player while primed == a fresh selection-rendered event fires (set_selected always redraws, even onto the same index) and the player's cell is provably unchanged from the assert just above.",
+   "_comment": "== move_right STEPS to the second slot, and arrows never reach Game.sim.move_player while primed == the selection moves to [Power Strike] while the player's cell stays unchanged.",
+   "action": "press",
+   "name": "move_right"
+  },
+  {
+   "action": "wait_for_event",
+   "type": "ui_field_hotbar_selection_rendered",
+   "payload_contains": {
+    "index": 1,
+    "skill": "power_strike",
+    "label": "[Power Strike]"
+   },
+   "timeout_sec": 5
+  },
+  {
+   "action": "assert_state",
+   "path": "player_cell",
+   "equals": [
+    5,
+    3
+   ]
+  },
+  {
+   "_comment": "== WRAP == a second move_right runs off the end of the 2-slot bar and comes back to slot 0. This is `_move_field_slot_cursor`'s `(idx + delta + count) % count` -- the modulo the 1-slot bar used to cover for free, and the same wrap the 10-slot armed bar leans on to reach slot ten with no number key.",
    "action": "press",
    "name": "move_right"
   },
